@@ -103,15 +103,6 @@ feature -- Measurement
                         Result := c_gtk_widget_height (widget)
 		end
 	
-	maximum_height: INTEGER is
-                        -- Maximum height that application wishes widget
-                        -- instance to have
- 		do
-                        check
-                                not_yet_implemented: False
-                        end
-		end	
-
         maximum_width: INTEGER is
                         -- Maximum width that application wishes widget
                         -- instance to have
@@ -121,20 +112,25 @@ feature -- Measurement
                         end
 		end	
 	
-	minimum_width: INTEGER is
-			-- Minimum width of widget
-		do
+	maximum_height: INTEGER is
+                        -- Maximum height that application wishes widget
+                        -- instance to have
+ 		do
                         check
                                 not_yet_implemented: False
                         end
 		end	
 
+	minimum_width: INTEGER is
+			-- Minimum width of widget
+		do
+                        Result := c_gtk_widget_minimum_width (widget)
+		end	
+
 	minimum_height: INTEGER is
 			-- Minimum height of widget
 		do
-                        check
-                                not_yet_implemented: False
-                        end
+                        Result := c_gtk_widget_minimum_height (widget)
 		end	
 	
 feature -- Resizing
@@ -143,19 +139,19 @@ feature -- Resizing
 			-- Set both width and height to `new_width'
 			-- and `new_height'.
                 do
-                        gtk_widget_set_usize (widget, new_width, new_height)
+                        c_gtk_widget_set_size (widget, new_width, new_height)
 		end
 
 	set_width (new_width :INTEGER) is
 			-- Set width to `new_width'.
                 do
-                        gtk_widget_set_usize (widget, new_width, height)
+                        c_gtk_widget_set_size (widget, new_width, -1)
 		end
 	
 	set_height (new_height: INTEGER) is
 			-- Set height to `new_height'.
 		do
-                        gtk_widget_set_usize (widget, width, new_height)
+                        c_gtk_widget_set_size (widget, -1, new_height)
 		end
 
 	set_maximum_height (max_height: INTEGER) is
@@ -174,22 +170,25 @@ feature -- Resizing
                         end		
 		end
 
-        set_minimum_height (min_height: INTEGER) is
-                        -- Set `minimum__height' to `min_height'.
+        set_minimum_size (min_width, min_height: INTEGER) is
+                        -- Set `minimum_width' to `min_width'.
+			-- Set `minimum__height' to `min_height'.
 		do
-                        check
-                                not_yet_implemented: False
-                        end		
+			gtk_widget_set_usize (widget, min_width, min_height) 
 		end
 
         set_minimum_width (min_width: INTEGER) is
                         -- Set `minimum_width' to `min_width'.
 		do
-                        check
-                                not_yet_implemented: False
-                        end		
+			gtk_widget_set_usize (widget, min_width, -1) 
 		end
 	
+        set_minimum_height (min_height: INTEGER) is
+                        -- Set `minimum__height' to `min_height'.
+		do
+			gtk_widget_set_usize (widget, -1, min_height) 
+		end
+
 	set_x (new_x: INTEGER) is
 			-- Put at horizontal position `new_x' relative
 			-- to parent.

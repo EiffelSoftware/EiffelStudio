@@ -1,0 +1,1 @@
+nmake /f Makefile_finalize_client Makefile_finalize_server

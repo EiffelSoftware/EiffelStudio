@@ -1,0 +1,30 @@
+
+import "oaidl.idl";
+
+[
+	object, oleautomation,
+	uuid(7E8227B1-110E-4d6b-99A6-DCD5101091A4), 
+	version(1.0)
+]
+interface IFolderBrowser : IUnknown
+{
+	[helpstring ("Folder chosen by the user.")]
+	HRESULT FolderName ([out] LPTSTR* result);
+};
+
+[
+	uuid(BA223FC7-F4BF-4ec8-85F1-A6F113BDAAFA),			
+	helpstring ("browse folder library"),	
+	version (1.0), 
+]
+library FolderBrowser
+{
+	importlib ("stdole32.tlb");
+	[
+		uuid(524055AE-3734-40bb-ADF3-70B36899302A)
+	]
+	coclass FolderBrowser			// name of coclass 
+	{
+		interface IFolderBrowser;	
+	}
+}

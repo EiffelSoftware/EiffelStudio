@@ -31,7 +31,7 @@ fullrf emitter.exe
 unset TMP_EIFFEL
 
 remtrace Compiling Fusion Support
-cdd %EIFFEL_SRC\dotnet\VisualStudio\EnvSDK\EiffelPkgs\EifPrj\FusionSupport
+cdd %EIFFEL_SRC\dotnet\VisualStudio\EnvSDK\EiffelPkgs\ISE.VS.FusionSupport
 call nmake
 copy ISE.VS.FusionSupport.dll %INSTALL_DIR\dotnet_binaries
 

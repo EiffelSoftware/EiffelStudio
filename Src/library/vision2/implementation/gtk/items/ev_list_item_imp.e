@@ -165,7 +165,7 @@ feature -- Element change
 			combo_par ?= parent_imp
 			if (combo_par /= Void) then
 				C.gtk_combo_set_item_string (
-					combo_par.c_object,
+					combo_par.container_widget,
 					c_object, a_gs.item
 				)
 			end

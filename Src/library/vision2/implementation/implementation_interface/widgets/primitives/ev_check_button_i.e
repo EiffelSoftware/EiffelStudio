@@ -16,6 +16,11 @@ inherit
 			interface
 		end
 
+	EV_SELECT_BUTTON_I
+		redefine
+			interface
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECK_BUTTON
@@ -43,6 +48,9 @@ end -- class EV_CHECK_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/24 20:32:36  brendel
+--| Added inheritance of EV_SELECT_BUTTON_I.
+--|
 --| Revision 1.4  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

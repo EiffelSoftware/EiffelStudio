@@ -434,8 +434,8 @@ feature -- Status report
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := (internal_file.attributes.to_integer & feature {FILE_ATTRIBUTES}.device.to_integer) = 
-				feature {FILE_ATTRIBUTES}.device.to_integer
+			Result := (internal_file.attributes & feature {FILE_ATTRIBUTES}.device) = 
+				feature {FILE_ATTRIBUTES}.device
 		end
 
 	is_directory: BOOLEAN is
@@ -444,8 +444,8 @@ feature -- Status report
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := (internal_file.attributes.to_integer & feature {FILE_ATTRIBUTES}.directory.to_integer) = 
-				feature {FILE_ATTRIBUTES}.directory.to_integer
+			Result := (internal_file.attributes & feature {FILE_ATTRIBUTES}.directory) = 
+				feature {FILE_ATTRIBUTES}.directory
 		end
 
 	is_symlink: BOOLEAN is

@@ -13,7 +13,7 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include <sys/types.h>
-#include "logfile.h"
+#include "eif_logfile.h"
 #include "stream.h"
 #include "ewbio.h"
 

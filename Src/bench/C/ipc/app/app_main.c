@@ -14,7 +14,7 @@
 #include "eif_portable.h"
 #include <sys/types.h>
 #include <stdio.h>
-#include "logfile.h"
+#include "eif_logfile.h"
 #ifdef I_STRING
 #include <string.h>
 #else

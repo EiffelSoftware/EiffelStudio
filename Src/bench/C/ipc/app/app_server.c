@@ -16,7 +16,7 @@
 #include "ewbio.h"
 #include "stream.h"
 #include "transfer.h"
-#include "logfile.h"
+#include "eif_logfile.h"
 #include "rqst_const.h"
 
 /* This variable records whether the workbench application was launched via

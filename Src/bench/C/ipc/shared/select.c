@@ -31,7 +31,7 @@
 /* #include "timehdr.h" */
 
 #ifdef EIF_WIN32
-#include "logfile.h"
+#include "eif_logfile.h"
 
 #ifndef NOFILE
 #define NOFILE VAL_NOFILE	/* File descriptor limit */

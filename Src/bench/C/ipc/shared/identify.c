@@ -26,7 +26,7 @@
 #include "eif_portable.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "logfile.h"
+#include "eif_logfile.h"
 #include "timehdr.h"
 #include "ewbio.h"
 #include "identify.h"

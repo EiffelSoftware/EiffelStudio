@@ -25,7 +25,7 @@
 #include "stream.h"
 
 #ifdef EIF_WIN32
-#include "logfile.h"
+#include "eif_logfile.h"
 #endif
 
 #define GRACETIME	5	/* Number of seconds to wait before immediate exit */

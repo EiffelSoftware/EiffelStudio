@@ -85,6 +85,22 @@ feature -- Element change
 			wel_set_background_color (background_color_imp)
 		end
 
+feature -- Basic operation
+
+	index_from_position (value_x, value_y: INTEGER): INTEGER is
+			-- One-based character index of the character which is
+			-- the nearest to `a_x' and `a_y' position in the client
+			-- area.
+			-- A returned coordinate can be negative if the
+			-- character has been scrolled outside the edit
+			-- control's client area. The coordinates are truncated
+			-- to integer values and are in screen units relative
+			-- to the upper-left corner of the client area of the
+			-- control.
+		do
+			result := character_index_from_position (value_x, value_y) + 1
+		end
+
 end -- class EV_TEXT
 
 --|----------------------------------------------------------------

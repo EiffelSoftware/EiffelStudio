@@ -2141,6 +2141,43 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		eif_interp_generator ();
 		break;
 
+	case BC_ZERO:
+		{
+		struct item *first = otop();	/* First operand will be replace by result */
+		switch(first->type & SK_HEAD) {
+			case SK_INT:
+				first->it_long = (EIF_INTEGER) 0;
+				break;
+			case SK_FLOAT:
+				first->it_float = (EIF_REAL) 0.0;
+				break;
+			case SK_DOUBLE:
+				first->it_double = (EIF_DOUBLE) 0.0;
+				break;
+			default: eif_panic(MTC botched);
+			}
+		}
+		break;
+
+		/* Call to `one' */
+	case BC_ONE:
+		{
+		struct item *first = otop();	/* First operand will be replace by result */
+		switch(first->type & SK_HEAD) {
+			case SK_INT:
+				first->it_long = (EIF_INTEGER) 1;
+				break;
+			case SK_FLOAT:
+				first->it_float = (EIF_REAL) 1.0;
+				break;
+			case SK_DOUBLE:
+				first->it_double = (EIF_DOUBLE) 1.0;
+				break;
+			default: eif_panic(MTC botched);
+			}
+		}
+		break;
+
 	/*
 	 * Diadic operators.
 	 */

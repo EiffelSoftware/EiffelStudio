@@ -1,2 +1,2 @@
-set ISE_EIFFEL=D:\Dev\Eiffel52
+set ISE_EIFFEL=d:\dev\eiffel52
 nmake /f Makefile.msc

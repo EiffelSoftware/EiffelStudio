@@ -62,6 +62,25 @@ feature -- Basic Operations
 			Result := ccom_target_feature (initializer, target, feature_name, file_name)
 		end
 
+	flush_completion_features (a_file_name: STRING) is
+			-- Flush temporary completion features for a specifi file
+			-- `a_file_name' [in].  
+		do
+			ccom_flush_completion_features (initializer, a_file_name)
+		end
+
+	initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
+			-- Initialize a feature for completion without compiltation
+			-- `a_name' [in].  
+			-- `a_arguments' [in].  
+			-- `a_argument_types' [in].  
+			-- `a_return_type' [in].  
+			-- `a_feature_type' [in].  
+			-- `a_file_name' [in].  
+		do
+			ccom_initialize_feature (initializer, a_name, a_arguments.item, a_argument_types.item, a_return_type, a_feature_type, a_file_name)
+		end
+
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -94,6 +113,18 @@ feature {NONE}  -- Externals
 			-- Feature information
 		external
 			"C++ [ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
+		end
+
+	ccom_flush_completion_features (cpp_obj: POINTER; a_file_name: STRING) is
+			-- Flush temporary completion features for a specifi file
+		external
+			"C++ [ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"](EIF_OBJECT)"
+		end
+
+	ccom_initialize_feature (cpp_obj: POINTER; a_name: STRING; a_arguments: POINTER; a_argument_types: POINTER; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
+			-- Initialize a feature for completion without compiltation
+		external
+			"C++ [ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo.h%"](EIF_OBJECT,VARIANT *,VARIANT *,EIF_OBJECT,EIF_INTEGER,EIF_OBJECT)"
 		end
 
 	ccom_delete_ceiffel_completion_info_coclass (a_pointer: POINTER) is

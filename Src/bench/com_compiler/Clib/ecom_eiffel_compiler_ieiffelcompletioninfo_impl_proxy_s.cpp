@@ -200,6 +200,80 @@ rt_ce.free_memory_bstr (tmp_file_name);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+void ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy::ccom_flush_completion_features(  /* [in] */ EIF_OBJECT a_file_name )
+
+/*-----------------------------------------------------------
+	Flush temporary completion features for a specifi file
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelCompletionInfo == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelCompletionInfo_, (void **)&p_IEiffelCompletionInfo);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_a_file_name = 0;
+	tmp_a_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_file_name));
+	
+	hr = p_IEiffelCompletionInfo->flush_completion_features(tmp_a_file_name);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_a_file_name);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy::ccom_initialize_feature(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ VARIANT * a_arguments,  /* [in] */ VARIANT * a_argument_types,  /* [in] */ EIF_OBJECT a_return_type,  /* [in] */ EIF_INTEGER a_feature_type,  /* [in] */ EIF_OBJECT a_file_name )
+
+/*-----------------------------------------------------------
+	Initialize a feature for completion without compiltation
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelCompletionInfo == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelCompletionInfo_, (void **)&p_IEiffelCompletionInfo);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_a_name = 0;
+	tmp_a_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_name));
+	BSTR tmp_a_return_type = 0;
+	tmp_a_return_type = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_return_type));
+	ULONG tmp_a_feature_type = 0;
+	tmp_a_feature_type = (ULONG)a_feature_type;
+	BSTR tmp_a_file_name = 0;
+	tmp_a_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_file_name));
+	
+	hr = p_IEiffelCompletionInfo->initialize_feature(tmp_a_name,*(VARIANT*)a_arguments,*(VARIANT*)a_argument_types,tmp_a_return_type,tmp_a_feature_type,tmp_a_file_name);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_a_name);
+rt_ce.free_memory_bstr (tmp_a_return_type);
+rt_ce.free_memory_bstr (tmp_a_file_name);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 EIF_POINTER ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy::ccom_item()
 
 /*-----------------------------------------------------------

@@ -38,6 +38,20 @@ feature -- Status Report
 			Result := True
 		end
 
+	flush_completion_features_user_precondition (a_file_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `flush_completion_features'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	initialize_feature_user_precondition (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `initialize_feature'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	add_local (name: STRING; type: STRING) is
@@ -87,6 +101,33 @@ feature -- Basic Operations
 			-- `file_name' [in].  
 		require
 			target_feature_user_precondition: target_feature_user_precondition (target, feature_name, file_name)
+		deferred
+
+		end
+
+	flush_completion_features (a_file_name: STRING) is
+			-- Flush temporary completion features for a specifi file
+			-- `a_file_name' [in].  
+		require
+			flush_completion_features_user_precondition: flush_completion_features_user_precondition (a_file_name)
+		deferred
+
+		end
+
+	initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
+			-- Initialize a feature for completion without compiltation
+			-- `a_name' [in].  
+			-- `a_arguments' [in].  
+			-- `a_argument_types' [in].  
+			-- `a_return_type' [in].  
+			-- `a_feature_type' [in].  
+			-- `a_file_name' [in].  
+		require
+			non_void_a_arguments: a_arguments /= Void
+			valid_a_arguments: a_arguments.item /= default_pointer
+			non_void_a_argument_types: a_argument_types /= Void
+			valid_a_argument_types: a_argument_types.item /= default_pointer
+			initialize_feature_user_precondition: initialize_feature_user_precondition (a_name, a_arguments, a_argument_types, a_return_type, a_feature_type, a_file_name)
 		deferred
 
 		end

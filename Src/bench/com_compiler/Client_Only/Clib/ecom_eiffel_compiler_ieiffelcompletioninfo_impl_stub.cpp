@@ -205,6 +205,81 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelCompletionInfo_impl_stub::target_featu
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelCompletionInfo_impl_stub::flush_completion_features(  /* [in] */ BSTR a_file_name )
+
+/*-----------------------------------------------------------
+	Flush temporary completion features for a specifi file
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_a_file_name = NULL;
+	if (a_file_name != NULL)
+	{
+		tmp_a_file_name = eif_protect (rt_ce.ccom_ce_bstr (a_file_name));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("flush_completion_features", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_a_file_name != NULL) ? eif_access (tmp_a_file_name) : NULL));
+	if (tmp_a_file_name != NULL)
+		eif_wean (tmp_a_file_name);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelCompletionInfo_impl_stub::initialize_feature(  /* [in] */ BSTR a_name, /* [in] */ VARIANT a_arguments, /* [in] */ VARIANT a_argument_types, /* [in] */ BSTR a_return_type, /* [in] */ ULONG a_feature_type, /* [in] */ BSTR a_file_name )
+
+/*-----------------------------------------------------------
+	Initialize a feature for completion without compiltation
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_a_name = NULL;
+	if (a_name != NULL)
+	{
+		tmp_a_name = eif_protect (rt_ce.ccom_ce_bstr (a_name));
+	}
+	EIF_OBJECT tmp_a_arguments = NULL;
+	tmp_a_arguments = eif_protect (rt_ce.ccom_ce_variant (a_arguments));
+	EIF_OBJECT tmp_a_argument_types = NULL;
+	tmp_a_argument_types = eif_protect (rt_ce.ccom_ce_variant (a_argument_types));
+	EIF_OBJECT tmp_a_return_type = NULL;
+	if (a_return_type != NULL)
+	{
+		tmp_a_return_type = eif_protect (rt_ce.ccom_ce_bstr (a_return_type));
+	}
+	EIF_INTEGER tmp_a_feature_type = (EIF_INTEGER)a_feature_type;
+	EIF_OBJECT tmp_a_file_name = NULL;
+	if (a_file_name != NULL)
+	{
+		tmp_a_file_name = eif_protect (rt_ce.ccom_ce_bstr (a_file_name));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("initialize_feature", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_a_name != NULL) ? eif_access (tmp_a_name) : NULL), ((tmp_a_arguments != NULL) ? eif_access (tmp_a_arguments) : NULL), ((tmp_a_argument_types != NULL) ? eif_access (tmp_a_argument_types) : NULL), ((tmp_a_return_type != NULL) ? eif_access (tmp_a_return_type) : NULL), (EIF_INTEGER)tmp_a_feature_type, ((tmp_a_file_name != NULL) ? eif_access (tmp_a_file_name) : NULL));
+	if (tmp_a_name != NULL)
+		eif_wean (tmp_a_name);
+	if (tmp_a_arguments != NULL)
+		eif_wean (tmp_a_arguments);
+	if (tmp_a_argument_types != NULL)
+		eif_wean (tmp_a_argument_types);
+	if (tmp_a_return_type != NULL)
+		eif_wean (tmp_a_return_type);
+	if (tmp_a_file_name != NULL)
+		eif_wean (tmp_a_file_name);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelCompletionInfo_impl_stub::Release()
 
 /*-----------------------------------------------------------

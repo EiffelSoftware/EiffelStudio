@@ -130,7 +130,7 @@ feature -- Type check, byte code and dead code removal
 			open_type: OPEN_TYPE_A
 			is_in_creation_expression: BOOLEAN
 		do
-			last_type := context.item
+			last_type := context_last_type
 
 				-- Retrieve if we are type checking a routine that is the creation
 				-- routine of a creation expression. As soon as we know this, we
@@ -391,6 +391,14 @@ end
 					-- corresponding error.
 				report_error_for_feature (a_feature)
 			end
+		end
+
+	context_last_type: TYPE_A is
+			-- Context type in which access is performed.
+		do
+			Result := context.item
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	associated_class (a_constraint: TYPE_A): CLASS_C is

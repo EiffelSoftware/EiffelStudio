@@ -49,7 +49,7 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #endif
 
 #if !defined CUSTOM || defined NEED_ARGV_H
-#include "eif_argv.h"
+#include "rt_argv.h"
 #endif
 
 #include "eif_lmalloc.h"

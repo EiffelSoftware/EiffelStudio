@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 						-- We open the file_selection dialog on the last opened directory.
 						!! environment_variable
 						new_name_chooser := name_chooser (Project_tool)
-						last_directory_opened := environment_variable.get (Bench_Directory_List)
+						last_directory_opened := environment_variable.get (Studio_Directory_List)
 						if last_directory_opened /= Void then
 							new_name_chooser.set_last_directory_viewed(last_directory_opened.substring(1,last_directory_opened.index_of(';',1) -1 ))
 						end
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 								Warning_messages.w_file_not_exist (project_file_name), 
 								Interface_names.b_Ok, Void, Void)
 					else
-						ebench_name := clone ((create {EIFFEL_ENV}).Ebench_command_name)
+						ebench_name := clone ((create {EIFFEL_ENV}).Estudio_command_name)
 						ebench_name.append (" ")
 						ebench_name.append (project_file_name)
 						launch_ebench (ebench_name)
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 						-- We open the file_selection dialog on the last opened directory.
 						!! environment_variable
 						new_name_chooser := name_chooser (Project_tool)
-						last_directory_opened := environment_variable.get (Bench_Directory_List)
+						last_directory_opened := environment_variable.get (Studio_Directory_List)
 						if last_directory_opened /= Void then
 							new_name_chooser.set_last_directory_viewed(last_directory_opened.substring(1,last_directory_opened.index_of(';',1) -1 ))
 						end
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 									Warning_messages.w_file_not_exist (file_name), 
 									Interface_names.b_Ok, Void, Void)
 							else
-								ebench_name := clone ((create {EIFFEL_ENV}).Ebench_command_name)
+								ebench_name := clone ((create {EIFFEL_ENV}).Estudio_command_name)
 								ebench_name.append (" ")
 								ebench_name.append (file_name)
 								launch_ebench (ebench_name)

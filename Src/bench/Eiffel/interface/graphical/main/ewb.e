@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			launcher: COMMAND_EXECUTOR
 		do
 			create launcher
-			launcher.execute ((create {EIFFEL_ENV}).ebench_command_name)
+			launcher.execute ((create {EIFFEL_ENV}).Estudio_command_name)
 			die (-1)
 		end
 

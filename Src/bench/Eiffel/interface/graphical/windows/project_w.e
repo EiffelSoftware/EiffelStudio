@@ -1616,7 +1616,7 @@ feature -- Graphical Interface
 			create environment_variable
 
 				--| Need to put the string in SYSTEM_CONSTANTS
-			last_opened_projects := environment_variable.get (Bench_Recent_Files)
+			last_opened_projects := environment_variable.get (Studio_Recent_Files)
 			create recent_project_list.make	
 			recent_project_list.compare_objects
 
@@ -1688,7 +1688,7 @@ feature -- Graphical Interface
 					i := i + 1
 				end
 				create environment_variable
-				environment_variable.put (last_opened_projects, Bench_Recent_Files)
+				environment_variable.put (last_opened_projects, Studio_Recent_Files)
 			end
 		end
 

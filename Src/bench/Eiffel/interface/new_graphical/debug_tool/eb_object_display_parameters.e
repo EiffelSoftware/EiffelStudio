@@ -163,7 +163,7 @@ feature -- Transformation
 				ft.after
 			loop
 				f := ft.item_for_iteration
-				if f.is_attribute and then not f.is_none_attribute then
+				if f.is_attribute then
 					has_attributes := True
 				elseif f.is_once then
 					has_onces := True

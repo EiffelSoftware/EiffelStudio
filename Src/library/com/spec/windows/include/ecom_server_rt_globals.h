@@ -15,6 +15,7 @@
 #include <setjmp.h>
 #include "eif_eiffel.h"
 #include "eif_except.h"
+#include "ecom_rt_globals.h"
 
 
 #ifdef __cplusplus
@@ -30,11 +31,11 @@ extern struct xstack eif_stack;
 	RTEA ((char *)0,0, (char *)0);\
 	exvect->ex_jbuf = (char *) exenv;\
 	if (return_hr_value = setjmp (exenv)) \
-		return (HRESULT)(MAKE_HRESULT (1, FACILITY_ITF, 1024 + return_hr_value))
+		return (HRESULT)(f.hresult (return_hr_value))
 
  
 #ifdef RTEOK 
-	#define END_ECATCH RTEOK 
+	#define END_ECATCH d_data.db_callstack_depth--; exok()
 #else 
 	#define END_ECATCH expop (&eif_stack);\
 						exok() 

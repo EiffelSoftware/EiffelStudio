@@ -128,10 +128,10 @@ feature -- Access
 			end
 			l_class_c := f.written_class
 				--| FIXME: JFIAT: 2004-01-05 : Does not support once evalution on generic
+				--| this is related to dialog and issue to provide derivation selection
 				
 			l_class_type := l_class_c.types.first
-
-				--| FIXME jfiat [2004/03/15] : is it needed ? to be checked
+			--| FIXME jfiat [2004/03/15] : do we really need to use adapted_class_type (..) ?
 			l_class_type := adapted_class_type (l_class_type, f.associated_feature_i)
 
 			l_icd_class := icor_debug_class (l_class_type)
@@ -174,15 +174,15 @@ feature -- Access
 			if l_icd_function /= Void then
 
 				debug ("debugger_trace_eval_data")
-					display_funct_info_on_object (l_icd_function) -- FIXME: JFIAT
+					display_funct_info_on_object (l_icd_function)
 				end
 
 				if dvalue = Void then
 					l_icdv_obj := icd_value_by_address (addr)
-						-- FIXME l_icdv_obj might be Void if object not found ...
+						-- FIXME JFIAT: l_icdv_obj might be Void if object not found ...
 						-- how come ?
+						-- should be fixed now, but .. may occur regarding to .NET GC
 				else
-						-- FIXME JFIAT: basic type, how do we handle this now ???
 					if dvalue.is_basic then
 						l_icdv_obj := dotnet_metamorphose_basic_to_reference_value (dvalue).value_dotnet				
 					else
@@ -256,45 +256,6 @@ feature -- Access
 			end
 		end
 		
-	display_funct_info_on_object (icd_f: ICOR_DEBUG_FUNCTION) is
-			-- Display information related to feature `icd_f'
-			-- debug purpose only
-		local
-			mdi: MD_IMPORT
-		do
-			if icd_f /= Void then
-				mdi := icd_f.get_class.get_module.interface_md_import
-				print (generating_type + " : Fct evaluation : " + mdi.get_method_props (icd_f.get_token) + "%N")
-				print (generating_type + " :      on class : " + mdi.get_typedef_props (icd_f.get_class.get_token) + "%N")
-			end
-		end
-		
-	display_info_on_object (icdv: ICOR_DEBUG_VALUE) is
-			-- Display information related to object `icdv'
-			-- debug purpose only
-		local
-			edvi: EIFNET_DEBUG_VALUE_INFO
-			retried: BOOLEAN
-		do
-			if not retried then
-				create edvi.make (icdv)
-				if edvi.has_object_interface then
-					print (generating_type + " : ClassName = " + edvi.value_class_name + "%N")
-				else
-					if edvi.is_reference_type then
-						print ("IsNull =? " + edvi.is_null.out +"%N")
-					end
-					print (generating_type + " : Basic type = " + edvi.is_basic_type.out + "%N")
-				end
-			else
-				print (generating_type + " : Error in display info .. %N")
-			end
-		rescue
-			retried := True
-			retry
-		end
-		
-
 feature {NONE} -- Implementation
 
 	dump_value_to_icdv (dmv: DUMP_VALUE): ICOR_DEBUG_VALUE is
@@ -417,7 +378,9 @@ feature -- Helpers
 			if dv /= Void then
 				Result := dv.icd_referenced_value
 			else
-				--| FIXME jfiat [2004/02/19] : how can this happens ???!!!
+				--| FIXME jfiat [2004/02/19] : can't find object by address .. how can this happens ???!!!
+				-- should be fixed now, but .. may occur regarding to .NET GC
+				-- we need to find a way to keep strong references
 			end
 		end
 
@@ -429,4 +392,48 @@ feature -- Helpers
 			Result := Application.imp_dotnet.kept_object_item (addr)
 		end
 
+feature {NONE} -- Debug purpose only
+
+	display_funct_info_on_object (icd_f: ICOR_DEBUG_FUNCTION) is
+			-- Display information related to feature `icd_f'
+			-- debug purpose only
+		local
+			mdi: MD_IMPORT
+		do
+			debug ("debugger_trace_eval_data")
+				if icd_f /= Void then
+					mdi := icd_f.get_class.get_module.interface_md_import
+					print (generating_type + " : Fct evaluation : " + mdi.get_method_props (icd_f.get_token) + "%N")
+					print (generating_type + " :      on class : " + mdi.get_typedef_props (icd_f.get_class.get_token) + "%N")
+				end			
+			end
+		end
+		
+	display_info_on_object (icdv: ICOR_DEBUG_VALUE) is
+			-- Display information related to object `icdv'
+			-- debug purpose only
+		local
+			edvi: EIFNET_DEBUG_VALUE_INFO
+			retried: BOOLEAN
+		do
+			debug ("debugger_trace_eval_data")
+				if not retried then
+					create edvi.make (icdv)
+					if edvi.has_object_interface then
+						print (generating_type + " : ClassName = " + edvi.value_class_name + "%N")
+					else
+						if edvi.is_reference_type then
+							print ("IsNull =? " + edvi.is_null.out +"%N")
+						end
+						print (generating_type + " : Basic type = " + edvi.is_basic_type.out + "%N")
+					end
+				else
+					print (generating_type + " : Error in display info .. %N")
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 end -- class DBG_EVALUATOR

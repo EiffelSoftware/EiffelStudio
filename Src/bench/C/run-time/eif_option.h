@@ -72,7 +72,6 @@ struct eif_opt {
 #define OPT_NO				0		 /* No option */
 #define OPT_ALL				1		 /* Yes/all option */
 
-extern struct eif_opt foption[];	/* Frozen option table */
 extern struct eif_opt *eoption;		/* Melted option table */
 
 extern int is_debug(int st_type, char *key);		/* Debug level query */
@@ -85,7 +84,6 @@ extern int is_debug(int st_type, char *key);		/* Debug level query */
 #define IN_ACE_FILE	2	/* Mask for checking whether profile(yes) is in the Ace file */
 
 extern char starting_working_directory [MAX_PATH];
-extern EIF_INTEGER prof_enabled;	  /* Is the Eiffel profiler on */
 
 #ifdef HAS_GETRUSAGE	/* Variable to get the total execution time */
 extern struct prof_rusage *init_date;
@@ -95,8 +93,8 @@ extern double init_date;
 extern SYSTEMTIME *init_date;
 #endif /* HAS_GERUSAGE */
 
-/* #define prof_enabled    EIF_TEST(prof_enabled & IN_ACE_FILE) */      /* Has the profiler been enabled in the ACE file? */
-#define prof_recording	EIF_TEST(prof_enabled & PROF_RECORDING)   /* Is the profile currently recording? */
+/* #define prof_enabled    EIF_TEST(egc_prof_enabled & IN_ACE_FILE) */      /* Has the profiler been enabled in the ACE file? */
+#define prof_recording	EIF_TEST(egc_prof_enabled & PROF_RECORDING)   /* Is the profile currently recording? */
 
 extern int trace_call_level;			/* Call level to report at E-TRACE output */
 

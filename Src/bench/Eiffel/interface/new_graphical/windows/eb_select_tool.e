@@ -27,7 +27,7 @@ inherit
 creation
 	make
 
-feature --Initialization
+feature {NONE} -- Initialization
 	
 	make (man: EB_TOOL_MANAGER) is
 		do
@@ -47,6 +47,8 @@ feature --Initialization
 --			end
 --		end
 
+feature {EB_TOOL_MANAGER} -- Initialization
+	
 	build_interface is
 		do
 			create container.make (parent)

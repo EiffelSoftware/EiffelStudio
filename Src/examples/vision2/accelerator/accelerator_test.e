@@ -29,6 +29,8 @@ feature -- Initialization
 			key: EV_KEY
 			key_constants: EV_KEY_CONSTANTS
 		do
+				-- Create `key_constants' for access to Vision2
+				-- key constants.
 			create key_constants
 			
 				-- Create `key' representing q.

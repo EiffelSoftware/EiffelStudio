@@ -1,5 +1,5 @@
 indexing
-	description: "Class regenerating the command instanciator."
+	description: "Class regenerating the command instantiator."
 	date: "$Date$"
 	id: "$Id$"
 	revision: "$Revision$"
@@ -56,7 +56,7 @@ feature -- Access
 			-- Add `a_command' in `command_list'.
 		do
 			command_list.extend (a_command)
-			overwrite_text
+--			overwrite_text
 		end
 
 	remove_command (a_command: CMD) is
@@ -64,7 +64,7 @@ feature -- Access
 		do
 			command_list.start
 			command_list.prune (a_command)
-			overwrite_text
+--			overwrite_text
 		end
 	
 	update_command is
@@ -171,12 +171,14 @@ feature {NONE} -- Code generation
 			-- Code corresponding to the local declaration.
 		local
 			temp: STRING
+			i: INTEGER
 		do
 			!! Result.make (0)
 			if not a_cmd.arguments.empty then
 				Result.append ("%T%Tlocal%N")
 				from
 					a_cmd.arguments.start
+					i := 1
 				until
 					a_cmd.arguments.after
 				loop
@@ -184,11 +186,13 @@ feature {NONE} -- Code generation
 					temp := clone (a_cmd.arguments.item.eiffel_type)
 					temp.to_lower
 					Result.append (temp)
+					Result.append_integer (i)
 					Result.append (": ")
 					temp.to_upper
 					Result.append (temp)
 					Result.append ("%N")
 					a_cmd.arguments.forth
+					i := i + 1
 				end
 			end
 		end
@@ -211,6 +215,7 @@ feature {NONE} -- Code generation
 					temp := clone (a_cmd.arguments.item.eiffel_type)
 					temp.to_lower
 					Result.append (temp)
+					Result.append_integer (i)
 					Result.append (" ?= creation_arg @ ")
 					Result.append_integer (i)
 					result.append ("%N")
@@ -225,12 +230,14 @@ feature {NONE} -- Code generation
 			-- in the call to the creation procedure.
 		local
 			temp: STRING
+			i: INTEGER
 		do
 			!! Result.make (0)
 			if not a_cmd.arguments.empty then	
 				Result.append (" (")
 				from
 					a_cmd.arguments.start
+					i := 1
 				until
 					a_cmd.arguments.after
 				loop
@@ -238,7 +245,9 @@ feature {NONE} -- Code generation
 					temp := clone (a_cmd.arguments.item.eiffel_type)
 					temp.to_lower
 					Result.append (temp)
+					Result.append_integer (i)
 					a_cmd.arguments.forth
+					i := i + 1
 					if not a_cmd.arguments.after then
 						Result.append (", ")
 					end

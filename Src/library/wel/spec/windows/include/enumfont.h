@@ -9,9 +9,6 @@
 #	include "wel.h"
 #endif
 
-#ifndef __WEL_GLOBALS__
-#	include "wel_globals.h"
-#endif
 
 typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
 	(EIF_OBJ,     /* WEL_FONT_FAMILY_ENUMERATOR Eiffel object */
@@ -20,6 +17,11 @@ typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
 	 EIF_INTEGER, /* Font type */
 	 EIF_POINTER  /* user-data */
 	 );
+
+#ifndef __WEL_GLOBALS__
+#	include "wel_globals.h"
+#endif
+
 /* Eiffel routine signature for `converter' */
 
 int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, int, LPARAM);

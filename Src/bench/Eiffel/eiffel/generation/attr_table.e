@@ -45,7 +45,7 @@ feature
 			cl_type: CLASS_TYPE;
 			first_class: CLASS_C;
 			i, nb, old_position: INTEGER
-			local_copy: like Current
+			local_copy: ATTR_TABLE
 		do
 			old_position := position;
 
@@ -101,7 +101,7 @@ feature
 			class_type: CLASS_TYPE;
 			i, nb, index: INTEGER;
 			attr_entry: ATTR_ENTRY
-			local_copy: like Current
+			local_copy: ATTR_TABLE
 		do
 			from
 					-- Private table

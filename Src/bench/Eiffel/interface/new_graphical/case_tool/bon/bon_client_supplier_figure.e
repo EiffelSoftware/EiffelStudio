@@ -168,7 +168,7 @@ feature -- Status setting
 						-- The current value of `x2' and `y2' are equal to the
 						-- centre of the class bubble, and hence must be translated
 						-- to match the intersection of the line with the bubble.
-						-- This improves the bahaviour, as the cut is no longer moved
+						-- This improves the behaviour, as the cut is no longer moved
 						-- within the class bubble when the link is very short.
 					x2 := x2 + lines.i_th (lines.count).point_b.x
 					y2 := y2 + lines.i_th (lines.count).point_b.y
@@ -646,6 +646,7 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 				bon_client_label_font.height)
 			label_font.set_height ((label_font.height * client.world.point.scale_y).rounded)	
 			d.set_font (label_font)
+			name_figure.set_font (label_font)
 			if name_figure.is_show_requested then
 				d.draw_text_top_left (
 					name_figure.point.x_abs - drawable_position.x,

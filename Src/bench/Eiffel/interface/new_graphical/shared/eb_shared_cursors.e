@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 	pixmap_lookup: HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is
 			-- Lookup hash table for Studio pixmaps
 		once
-			create Result.make (256)
+			create Result.make (32)
 			Result.put ([1, 1], "class")
 			Result.put ([1, 2], "clientlnk")
 			Result.put ([1, 3], "cluster")
@@ -203,6 +203,10 @@ feature {NONE} -- Implementation
 			Result.put ([1, 16], "Xstopexec")
 			Result.put ([2, 1], "cut_selection")
 			Result.put ([2, 2], "copy_selection")
+			Result.put ([2, 3], "Xclass_list")
+			Result.put ([2, 4], "class_list")
+			Result.put ([2, 5], "closed_hand")
+			Result.put ([2, 6], "open_hand")
 
 			Result.compare_objects
 		end

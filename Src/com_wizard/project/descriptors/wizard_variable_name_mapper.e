@@ -58,7 +58,7 @@ feature -- Access
 		do
 			from
 				i := 1
-				create Result.make (0)
+				create Result.make (100)
 				privious_upper := True
 			variant 
 				a_name.count - i + 1
@@ -161,12 +161,55 @@ feature -- Access
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			create Result.make (0)
+			create Result.make (100)
 			Result.append (Ccom_clause)
 			Result.append (name_for_feature (a_name))
 		ensure
 			non_void_feature_name: Result /= Void
 			valid_feature_name: not Result.empty
+		end
+
+	header_name (a_name: STRING): STRING is
+			-- Name for header file.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+		local
+			tmp_string: STRING
+		do
+			create Result.make (20)
+			Result.append ("ecom_")
+			Result.append (a_name)
+			Result.append (".h")
+
+			tmp_string := clone (Result)
+			tmp_string.to_lower
+			if library_headers.has (tmp_string) then
+				if not standard_structures.has (a_name) then
+					Result.insert ("_x", Result.index_of ('.', 1))
+				end
+			end
+		ensure
+			non_void_header_name: Result /= Void
+			valid_header_name: not Result.empty
+		end
+
+	library_headers: HASH_TABLE [STRING, STRING] is
+			-- Names of header files in EiffelCOM library.
+		once
+			create result.make (10)
+			Result.compare_objects
+
+			Result.put ("ecom_guid.h", "ecom_guid.h")
+			Result.put ("ecom_exception.h", "ecom_exception.h")
+			Result.put ("ecom_flags.h", "ecom_flags.h")
+			Result.put ("ecom_font.h", "ecom_font.h")
+			Result.put ("ecom_fontevents.h", "ecom_fontevents.h")
+			Result.put ("ecom_ifont.h", "ecom_ifont.h")
+			Result.put ("ecom_ipicture.h", "ecom_ipicture.h")
+			Result.put ("ecom_picture", "ecom_picture")
+			Result.put ("ecom_stdfont.h", "ecom_stdfont.h")
+			Result.put ("ecom_stdpicture.h", "ecom_stdpicture.h")
 		end
 
 	standard_structures: HASH_TABLE [STRING, STRING] is

@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!DRAWING_AREA!Result.make ("Drawing_area", Current)
+			create {DRAWING_AREA} Result.make ("Drawing_area", Current)
 		end
 
 	set_widgets is
@@ -39,38 +39,38 @@ feature
 			center1, center2, center3, center4: COORD_XY_FIG
 		do
 			draw_a ?= main_widget
-			!!circle1.make
-			!!circle2.make
-			!!circle3.make
-			!!circle4.make
+			create circle1.make
+			create circle2.make
+			create circle3.make
+			create circle4.make
 			circle1.set_radius (20)
 			circle2.set_radius (20)
 			circle3.set_radius (20)
 			circle4.set_radius (20)
-			!!center1
+			create center1
 			center1.set_x (30)
 			center1.set_y (30)
 			circle1.set_center (center1)
-			!!center2
+			create center2
 			center2.set_x (30)
 			center2.set_y (70)
 			circle2.set_center (center2)
-			!!center3
+			create center3
 			center3.set_x (70)
 			center3.set_y (30)
 			circle3.set_center (center3)
-			!!center4
+			create center4
 			center4.set_x (70)
 			center4.set_y (70)
 			circle4.set_center (center4)
-			!!color1.make
-			!!color2.make
-			!!color3.make
-			!!color4.make
-			!!interior1.make
-			!!interior2.make
-			!!interior3.make
-			!!interior4.make
+			create color1.make
+			create color2.make
+			create color3.make
+			create color4.make
+			create interior1.make
+			create interior2.make
+			create interior3.make
+			create interior4.make
 			interior1.set_solid_fill
 			interior2.set_solid_fill
 			interior3.set_solid_fill

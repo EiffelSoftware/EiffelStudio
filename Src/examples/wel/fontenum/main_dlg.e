@@ -27,7 +27,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -107,8 +107,8 @@ feature -- Basic operations
 	dispose is
 			-- Called when the main dialog is destroyed.
 		do
-			{WEL_FONT_FAMILY_ENUMERATOR} Precursor
-			{WEL_MAIN_DIALOG} Precursor
+			Precursor {WEL_FONT_FAMILY_ENUMERATOR}
+			Precursor {WEL_MAIN_DIALOG}
 		end
 
 end -- class MAIN_DIALOG

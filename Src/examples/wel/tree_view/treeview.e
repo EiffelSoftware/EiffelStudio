@@ -28,7 +28,7 @@ inherit
 			on_tvn_setdispinfo
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			bitmap_icon_application		: INTEGER
 			background_color			: WEL_COLOR_REF
 		do
-			{WEL_TREE_VIEW} Precursor (a_parent, a_x, a_y, a_width, a_height, an_id)
+			Precursor {WEL_TREE_VIEW} (a_parent, a_x, a_y, a_width, a_height, an_id)
 
 				-- create the image list
 			create image_list.make(16, 16, Ilc_color32, False)

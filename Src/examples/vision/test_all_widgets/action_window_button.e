@@ -7,7 +7,7 @@ inherit
 			make as attach_to_widget
 		end
 
-creation
+create
 	associate
 
 feature

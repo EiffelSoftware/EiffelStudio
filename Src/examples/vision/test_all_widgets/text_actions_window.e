@@ -11,7 +11,7 @@ inherit
 			finish
 		end
 
-creation
+create
 
 	make
 
@@ -30,14 +30,14 @@ feature
 	set_other_widgets is
 		do
 			set_size (330, 470)
-			!!modify_b.associate (Current, b_modify, "Modify", 20, 300)
-			!!sel_begin_b.associate (Current, b_sel_begin, "Sel begin", 20, 340)
-			!!sel_end_b.associate (Current, b_sel_end, "Sel end", 20, 380)
-			!!cursor_pos_b.associate (Current, b_cursor_pos, "Cursor pos", 180, 300)
-			!!margin_hei_b.associate (Current, b_margin_hei, "Margin hei", 180, 340)
-			!!margin_wid_b.associate (Current, b_margin_wid, "Margin wid", 180, 380)
-			!!clear_sel_b.associate (Current, b_clear_sel, "Clear sel", 20, 420)
-			!!set_sel_b.associate (Current, b_set_sel, "Set sel", 180, 420)
+			create modify_b.associate (Current, b_modify, "Modify", 20, 300)
+			create sel_begin_b.associate (Current, b_sel_begin, "Sel begin", 20, 340)
+			create sel_end_b.associate (Current, b_sel_end, "Sel end", 20, 380)
+			create cursor_pos_b.associate (Current, b_cursor_pos, "Cursor pos", 180, 300)
+			create margin_hei_b.associate (Current, b_margin_hei, "Margin hei", 180, 340)
+			create margin_wid_b.associate (Current, b_margin_wid, "Margin wid", 180, 380)
+			create clear_sel_b.associate (Current, b_clear_sel, "Clear sel", 20, 420)
+			create set_sel_b.associate (Current, b_set_sel, "Set sel", 180, 420)
 			modify_action:=False
 		end
 

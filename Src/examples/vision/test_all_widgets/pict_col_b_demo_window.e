@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!PICT_COLOR_B!Result.make ("Pict_col_b", Current)
+			create {PICT_COLOR_B} Result.make ("Pict_col_b", Current)
 		end
 
 	set_widgets is

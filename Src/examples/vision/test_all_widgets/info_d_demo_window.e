@@ -9,7 +9,7 @@ inherit
 			make as info_d_make
 		end
 
-creation
+create
 
 	make
 

@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!PUSH_B!Result.make ("Button", Current)
+			create {PUSH_B} Result.make ("Button", Current)
 		end
 
 	set_widgets is

@@ -9,7 +9,7 @@ inherit
 			make as warning_d_make
 		end
 
-creation
+create
 
 	make
 

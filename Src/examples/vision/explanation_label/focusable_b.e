@@ -13,7 +13,7 @@ inherit
 		end
 	FOCUSABLE
 
-creation
+create
 	make
 
 feature

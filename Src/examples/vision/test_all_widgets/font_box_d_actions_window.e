@@ -11,7 +11,7 @@ inherit
 			finish
 		end
 
-creation
+create
 
 	make
 
@@ -36,20 +36,20 @@ feature
 	set_other_widgets is
 		do
 			set_size (330, 550)
-			!!allow_resize_b.associate (Current, b_allow_resize, "Allow resize", 20, 260)
-			!!forbid_resize_b.associate (Current, b_forbid_resize, "Forbid resize", 180, 260)
-			!!popup_b.associate (Current, b_popup, "Popup", 20, 300)
-			!!popdown_b.associate (Current, b_popdown, "Popdown", 180, 300)
-			!!hide_apply_b.associate (Current, b_hide_apply, "Hide Apply", 20, 340)
-			!!show_apply_b.associate (Current, b_show_apply, "Show Apply", 180, 340)
-			!!hide_cancel_b.associate (Current, b_hide_cancel, "Hide Cancel", 20, 380)
-			!!show_cancel_b.associate (Current, b_show_cancel, "Show Cancel", 180, 380)
-			!!hide_ok_b.associate (Current, b_hide_ok, "Hide Ok", 20, 420)
-			!!show_ok_b.associate (Current, b_show_ok, "Show Ok", 180, 420)
-			!!apply_action_b.associate (Current, b_apply_action, "Apply Action", 20, 460)
-			!!cancel_action_b.associate (Current, b_cancel_action, "Cancel action", 180, 460)
-			!!ok_action_b.associate (Current, b_ok_action, "Ok action", 180, 500)
-			!!font_b.associate (Current, b_font, "Font", 20, 500)
+			create allow_resize_b.associate (Current, b_allow_resize, "Allow resize", 20, 260)
+			create forbid_resize_b.associate (Current, b_forbid_resize, "Forbid resize", 180, 260)
+			create popup_b.associate (Current, b_popup, "Popup", 20, 300)
+			create popdown_b.associate (Current, b_popdown, "Popdown", 180, 300)
+			create hide_apply_b.associate (Current, b_hide_apply, "Hide Apply", 20, 340)
+			create show_apply_b.associate (Current, b_show_apply, "Show Apply", 180, 340)
+			create hide_cancel_b.associate (Current, b_hide_cancel, "Hide Cancel", 20, 380)
+			create show_cancel_b.associate (Current, b_show_cancel, "Show Cancel", 180, 380)
+			create hide_ok_b.associate (Current, b_hide_ok, "Hide Ok", 20, 420)
+			create show_ok_b.associate (Current, b_show_ok, "Show Ok", 180, 420)
+			create apply_action_b.associate (Current, b_apply_action, "Apply Action", 20, 460)
+			create cancel_action_b.associate (Current, b_cancel_action, "Cancel action", 180, 460)
+			create ok_action_b.associate (Current, b_ok_action, "Ok action", 180, 500)
+			create font_b.associate (Current, b_font, "Font", 20, 500)
 			apply_action:=False
 			ok_action:=False
 			cancel_action:=False

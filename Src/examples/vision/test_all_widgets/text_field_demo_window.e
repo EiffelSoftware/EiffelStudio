@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!TEXT_FIELD!Result.make ("Text_field", Current)
+			create {TEXT_FIELD} Result.make ("Text_field", Current)
 		end
 
 	set_widgets is

@@ -10,7 +10,7 @@ inherit
 			set_other_widgets_sensitive
 		end
 
-creation
+create
 
 	make
 
@@ -25,11 +25,11 @@ feature
 	set_other_widgets is
 		do
 			set_size (330, 430)
-			!!output_only_b.associate (Current, b_output_only, "Output only", 20, 300)
-			!!input_output_b.associate (Current, b_input_output, "Input-output", 180, 300)
-			!!show_value_b.associate (Current, b_show_value, "Show value", 20, 340)
-			!!hide_value_b.associate (Current, b_hide_value, "Hide value", 180, 340)
-			!!set_text_b.associate (Current, b_set_text, "Set text", 20, 380)
+			create output_only_b.associate (Current, b_output_only, "Output only", 20, 300)
+			create input_output_b.associate (Current, b_input_output, "Input-output", 180, 300)
+			create show_value_b.associate (Current, b_show_value, "Show value", 20, 340)
+			create hide_value_b.associate (Current, b_hide_value, "Hide value", 180, 340)
+			create set_text_b.associate (Current, b_set_text, "Set text", 20, 380)
 		end
 
 	descendant_actions(arg: INTEGER_REF) is

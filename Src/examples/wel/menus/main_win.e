@@ -11,7 +11,7 @@ inherit
 			background_brush
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

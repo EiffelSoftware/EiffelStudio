@@ -10,7 +10,7 @@ inherit
 			on_color_control
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

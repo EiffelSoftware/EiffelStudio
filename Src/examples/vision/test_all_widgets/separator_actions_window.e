@@ -10,7 +10,7 @@ inherit
 			set_other_widgets_sensitive
 		end
 
-creation
+create
 
 	make
 
@@ -26,12 +26,12 @@ feature
 	set_other_widgets is
 		do
 			set_size (330, 470)
-			!!set_horiz_b.associate (Current, b_set_horiz, "Set horiz.", 20, 300)
-			!!single_line_b.associate (Current, b_single_line, "Single line", 20, 340)
-			!!single_dashed_b.associate (Current, b_single_dashed, "Single dashed", 20, 380)
-			!!set_vert_b.associate (Current, b_set_vert, "Set  Vert.", 180, 300)
-			!!double_line_b.associate (Current, b_double_line, "Double line", 180, 340)
-			!!double_dashed_b.associate (Current, b_double_dashed, "Double dashed", 180, 380)
+			create set_horiz_b.associate (Current, b_set_horiz, "Set horiz.", 20, 300)
+			create single_line_b.associate (Current, b_single_line, "Single line", 20, 340)
+			create single_dashed_b.associate (Current, b_single_dashed, "Single dashed", 20, 380)
+			create set_vert_b.associate (Current, b_set_vert, "Set  Vert.", 180, 300)
+			create double_line_b.associate (Current, b_double_line, "Double line", 180, 340)
+			create double_dashed_b.associate (Current, b_double_dashed, "Double dashed", 180, 380)
 		end
 
 	descendant_actions(arg: INTEGER_REF) is

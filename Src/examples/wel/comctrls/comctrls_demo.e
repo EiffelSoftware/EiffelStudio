@@ -7,7 +7,7 @@ inherit
 			init_application
 		end
 
-creation
+create
 	make
 
 feature

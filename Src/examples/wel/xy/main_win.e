@@ -9,7 +9,7 @@ inherit
 			on_left_button_down
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -8,7 +8,7 @@ inherit
 		export
 			{NONE} all
 		end
-creation
+create
 	make
 
 feature {NONE} -- Initialization

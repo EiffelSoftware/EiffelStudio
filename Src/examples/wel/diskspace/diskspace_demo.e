@@ -5,7 +5,7 @@ indexing
 class
 	DISKSPACE_DEMO
 
-creation
+create
 	make
 
 feature -- Initialization

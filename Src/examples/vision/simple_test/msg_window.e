@@ -10,7 +10,7 @@ inherit
 
 	COMMAND
 
-creation
+create
 
 	make
 

@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -14,7 +14,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!FRAME!Result.make ("Frame", Current)
+			create {FRAME} Result.make ("Frame", Current)
 		end
 
 	set_widgets is
@@ -25,7 +25,7 @@ feature
 			main_widget.set_x_y (30, 30)
 			f_widget ?= main_widget
 			f_widget.set_size (170, 70)
-			!!button.make ("button", f_widget)
+			create button.make ("button", f_widget)
 			button.set_text ("Button")
 			button.forbid_recompute_size
 			button.set_size (100, 35)

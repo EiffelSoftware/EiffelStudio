@@ -4,7 +4,7 @@ class
 inherit
 	GAME_CONSTANTS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

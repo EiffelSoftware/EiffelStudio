@@ -7,7 +7,7 @@ inherit
 			idle_action
 		end
 
-creation
+create
 	make
 
 feature

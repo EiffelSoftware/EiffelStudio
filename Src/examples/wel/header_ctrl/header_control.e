@@ -31,7 +31,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 				an_id: INTEGER) is
 			-- Create the control and some items in it.
 		do
- 			{WEL_HEADER_CONTROL} Precursor (a_parent, a_x, a_y, a_width, a_height, an_id)
+ 			Precursor {WEL_HEADER_CONTROL} (a_parent, a_x, a_y, a_width, a_height, an_id)
  			insert_text_header_item ("First Name", 100, 0, 0)
  			insert_text_header_item ("Last Name", 100, 0, 1)
  			insert_text_header_item ("Phone", 80, 0, 2)

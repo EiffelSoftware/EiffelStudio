@@ -7,7 +7,7 @@ inherit
 			accelerators
 		end
 
-creation
+create
 	make
 
 feature

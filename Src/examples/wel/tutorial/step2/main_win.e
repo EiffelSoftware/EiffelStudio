@@ -8,7 +8,7 @@ inherit
 			closeable
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

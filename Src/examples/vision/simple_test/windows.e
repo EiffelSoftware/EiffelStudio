@@ -14,14 +14,14 @@ feature
 			-- Screen associated with
 			-- program
 		once
-			!!Result.make ("");
+			create Result.make ("");
 		end;
 
 	init_toolkit: TOOLKIT_IMP is
 			-- The exmaple uses the
 			-- Motif toolkit
 		once
-			!!Result.make ("");
+			create Result.make ("");
 		end;
 
 	init_windowing is
@@ -35,19 +35,19 @@ feature
 	message_box: MSG_WINDOW is
 			-- Popup message window
 		once
-			!!Result.make ("Message", main_window);
+			create Result.make ("Message", main_window);
 		end;
 
 	main_window: WINDOW1 is
 			-- Main window of the example
 		once
-			!!Result.make ("Main", a_screen)
+			create Result.make ("Main", a_screen)
 		end;
 
 	other_window: WINDOW2 is
 			-- Secondary window of the example
 		once
-			!!Result.make ("Window", a_screen)
+			create Result.make ("Window", a_screen)
 		end;
 
 end

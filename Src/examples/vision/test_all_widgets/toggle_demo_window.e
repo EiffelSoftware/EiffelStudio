@@ -4,7 +4,7 @@ inherit
 
 	DEMO_WINDOW
 
-creation
+create
 
 	make
 
@@ -12,7 +12,7 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!TOGGLE_B!Result.make ("Toggle_b", Current)
+			create {TOGGLE_B} Result.make ("Toggle_b", Current)
 		end
 
 	set_widgets is

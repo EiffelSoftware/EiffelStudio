@@ -4,7 +4,7 @@ class
 inherit
 	LINKED_LIST [G]
 
-creation
+create
 	make
 
 feature -- Access

@@ -10,7 +10,7 @@ inherit
 			set_other_widgets_sensitive
 		end
 
-creation
+create
 
 	make
 
@@ -31,17 +31,17 @@ feature
 	set_other_widgets is
 		do
 			set_size (330, 550)
-			!!start_b.associate (Current, b_start, "Start", 20, 300)
-			!!finish_b.associate (Current, b_finish, "Finish", 180, 300)
-			!!forth_b.associate (Current, b_forth, "Forth", 20, 340)
-			!!wipe_out_b.associate (Current, b_wipe_out, "Wipe out", 180, 340)
-			!!put_right_b.associate (Current, b_put_right, "Put right", 20, 380)
-			!!remove_b.associate (Current, b_remove, "Remove", 180, 380)
-			!!item_b.associate (Current, b_item, "Item", 20, 420)
-			!!select_item_b.associate (Current, b_select_item, "Select item", 180, 420)
-			!!selected_it_b.associate (Current, b_selected_it, "Selected it", 20, 460)
-			!!selected_pos_b.associate (Current, b_selected_pos, "Selected pos", 180, 460)
-			!!set_visible_item_count_b.associate (Current, b_set_visible_item_count, "Set visibl it count", 20, 500)
+			create start_b.associate (Current, b_start, "Start", 20, 300)
+			create finish_b.associate (Current, b_finish, "Finish", 180, 300)
+			create forth_b.associate (Current, b_forth, "Forth", 20, 340)
+			create wipe_out_b.associate (Current, b_wipe_out, "Wipe out", 180, 340)
+			create put_right_b.associate (Current, b_put_right, "Put right", 20, 380)
+			create remove_b.associate (Current, b_remove, "Remove", 180, 380)
+			create item_b.associate (Current, b_item, "Item", 20, 420)
+			create select_item_b.associate (Current, b_select_item, "Select item", 180, 420)
+			create selected_it_b.associate (Current, b_selected_it, "Selected it", 20, 460)
+			create selected_pos_b.associate (Current, b_selected_pos, "Selected pos", 180, 460)
+			create set_visible_item_count_b.associate (Current, b_set_visible_item_count, "Set visibl it count", 20, 500)
 		end
 
 	descendant_actions(arg: INTEGER_REF) is
@@ -69,7 +69,7 @@ feature
 					prompt.remove_ok_action (Current, b_put_right)
 					prompt.remove_cancel_action (Current, b_cancel)
 					prompt.popdown
-					!! elem.make_from_string (prompt.selection_text)
+					create elem.make_from_string (prompt.selection_text)
 					widget.put_right (elem)
 					set_widgets_sensitive
 					prompt_type:=0

@@ -11,7 +11,7 @@ inherit
 			finish
 		end
 
-creation
+create
 
 	make
 
@@ -28,13 +28,13 @@ feature
 	set_other_widgets is
 		do
 			set_size (330, 470)
-			!!move_action_b.associate (Current, b_move_action, "Move action", 20, 300)
-			!!val_ch_act_b.associate (Current, b_val_ch_act, "Val ch act", 20, 340)
-			!!set_granul_b.associate (Current, b_set_granul, "Set granul", 20, 380)
-			!!set_max_b.associate (Current, b_set_max, "Set max", 180, 300)
-			!!set_min_b.associate (Current, b_set_min, "Set min", 180, 340)
-			!!set_value_b.associate (Current, b_set_value, "Set value", 180, 380)
-			!!value_b.associate (Current, b_value, "Value", 20, 380)
+			create move_action_b.associate (Current, b_move_action, "Move action", 20, 300)
+			create val_ch_act_b.associate (Current, b_val_ch_act, "Val ch act", 20, 340)
+			create set_granul_b.associate (Current, b_set_granul, "Set granul", 20, 380)
+			create set_max_b.associate (Current, b_set_max, "Set max", 180, 300)
+			create set_min_b.associate (Current, b_set_min, "Set min", 180, 340)
+			create set_value_b.associate (Current, b_set_value, "Set value", 180, 380)
+			create value_b.associate (Current, b_value, "Value", 20, 380)
 			move_action:=False
 			val_ch_act:=False
 		end

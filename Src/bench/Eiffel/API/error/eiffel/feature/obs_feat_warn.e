@@ -42,7 +42,7 @@ feature
 			a_clickable.put_string (" is obsolete: ");
 			a_clickable.put_string (obsolete_feature.obsolete_message);
 			a_clickable.put_string (" (class ");
-			a_clickable.put_string (associated_class.class_name);
+			a_clickable.put_string (associated_class.signature);
 			a_clickable.put_string (")");
 			a_clickable.new_line;
 		end;

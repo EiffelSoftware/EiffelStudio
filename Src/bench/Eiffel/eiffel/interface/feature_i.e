@@ -602,7 +602,7 @@ feature -- Byte code computation
 			melted_feature.set_body_id (dispatch.real_body_id);
 	
 			if not System.freeze then
-				M_feature_server.put (melted_feature);
+				Tmp_m_feature_server.put (melted_feature);
 			end;
 
 			Dispatch_table.mark_melted (dispatch);
@@ -1643,7 +1643,7 @@ feature -- Didier stuff
 			-- predecessors are the sames
 			-- for each matching predecessors,
 			-- body id are the same
-			io.putstring ("implement feature_i.compatible%N");
+	--		io.putstring ("implement feature_i.compatible%N");
 		end;
 
 end

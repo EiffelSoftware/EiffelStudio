@@ -143,14 +143,25 @@ feature -- Melting
 			--    2) Sequence of descriptor byte code
 		local
 			ba: BYTE_ARRAY;
-			md: MELTED_DESC
+			md: MELTED_DESC;
+			actual_count: INTEGER
 		do
 				-- Initialization.
 			ba := Byte_array;
 			ba.clear;
 
+			from
+				start
+			until
+				after
+			loop
+				if not item.class_type.is_precompiled then
+					actual_count := actual_count + 1
+				end;
+				forth
+			end;
 				-- Write the number descriptors.
-			ba.append_integer (class_types.count);
+			ba.append_integer (actual_count);
 
 				-- Append the byte of each individual
 				-- class type descriptor.
@@ -171,7 +182,9 @@ feature -- Melting
 			until
 				after
 			loop
-				item.make_byte_code (ba);
+				if not item.class_type.is_precompiled then
+					item.make_byte_code (ba);
+				end;
 				forth
 			end
 		end;

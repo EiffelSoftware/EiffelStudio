@@ -1,8 +1,12 @@
-system ewb
+system es3
 
 root
 
 	ewb (root_cluster): "make"
+
+default
+
+	assertion (no)
 
 cluster
 
@@ -84,7 +88,11 @@ cluster
 
 --	 Root
 
-		 root_cluster:		"$BENCH/Eiffel/ewb";
+		 root_cluster:		"$BENCH/Eiffel/root";
+
+	-- Switch:
+	
+		switch: 			"$BENCH/Eiffel/batch_bench/bench";
 
 	-- graphical interface (bench):
 

@@ -49,7 +49,10 @@ feature
 			until
 				offright or else not Result
 			loop
-				Result := duplication.has (key_for_iteration);
+				Result := duplication.has (key_for_iteration) or else
+						-- If the name has been added and removed, no
+						-- refreezing is needed.
+					item_for_iteration.occurence = 0;
 				forth;
 			end;
 		end;
@@ -81,9 +84,6 @@ feature
 		do
 			info := item (external_name);
 			info.remove_occurence;
-			if info.occurence = 0 then
-				remove (external_name)
-			end;
 		end;
 
 	freeze is

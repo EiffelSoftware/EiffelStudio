@@ -55,7 +55,10 @@ feature
 			-- Counter for routine ids
 
 	type_id_counter: COUNTER;
-			-- Counter of instance of CLASS_TYPE
+			-- Counter of valid instances of CLASS_TYPE
+
+	static_type_id_counter: COUNTER;
+			-- Counter of instances of CLASS_TYPE
 
 	feature_counter: COUNTER;
 			-- Counter of instances of FEATURE_AS
@@ -104,10 +107,10 @@ feature
 			--|SHOULD eventually be removed.
 
 	id_array: ARRAY [CLASS_C];
-			-- Array of classes indexed by their class ids
+			-- Array of classes indexed by their class `id's
 
 	class_types: ARRAY [CLASS_TYPE];
-			-- Array of class types indexed by their type ids
+			-- Array of class types indexed by their `type_id'
 
 	type_set: ROUT_ID_SET;
 			-- Set of the routine ids for which a type table should
@@ -190,6 +193,9 @@ feature
 	max_precompiled_id: INTEGER;
 			-- Greatest precompiled class id
 
+	max_precompiled_type_id: INTEGER;
+			-- Greatest precompiled class type id
+
 	freeze_set1: LINKED_SET [INTEGER];
 			-- List of class ids for which a source C compilation is
 			-- needed when freezing.
@@ -248,6 +254,21 @@ feature
 	precompilation: BOOLEAN;
 			-- Are we currently doing a precompilation?
 
+	makefile_generator: MAKEFILE_GENERATOR;
+			-- Makefile generator.
+
+	array_make_name: STRING;
+			-- Name of the C routine corresponding to the
+			-- make routine of ARRAY[ANY]. Needed for the
+			-- "strip" functionality.
+			-- Having an attribute is a temporary solution.
+			-- There is a problem when ARRAY[ANY] is precompiled
+			-- and a new generic derivation is introduced later on
+			-- (the name will change, and not be compatible with the
+			-- contenrt of the precompiled object file). The patch 
+			-- consists of saving the name the very first time it
+			-- is computed.
+
 	make is
 			-- Create the system.
 		do
@@ -278,6 +299,7 @@ feature
 			!!body_id_counter.make;
 			!!routine_id_counter.make;
 			!!type_id_counter;
+			!!static_type_id_counter;
 			!!body_index_counter;
 			!!feature_counter;
 				-- Routine table controler creation
@@ -1004,8 +1026,8 @@ end;
 					a_class.melt_descriptor_tables;
 					id_cursor := id_cursor.right;
 				end;
+				melted_set.wipe_out;
 			end;
-			melted_set.wipe_out;
 		end;
 
 	make_update is
@@ -1075,7 +1097,8 @@ debug ("ACTIVITY")
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
 end;
-				nb_tables := nb_tables + a_class.types.count;
+				nb_tables := nb_tables + 
+					(a_class.types.count - a_class.nb_precompiled_class_types);
 				id_cursor := id_cursor.right
 			end;
 				-- Write the number of feature tables to update
@@ -1104,14 +1127,16 @@ end;
 				until
 					type_cursor = Void
 				loop
-					feat_tbl := m_feat_tbl_server.item
+					if not type_cursor.item.is_precompiled then
+						feat_tbl := m_feat_tbl_server.item
 												(type_cursor.item.type_id);
 debug ("ACTIVITY")
 	io.error.putstring ("melting class desc of ");
 	type_cursor.item.type.trace;
 	io.error.new_line;
 end;
-					feat_tbl.store (Update_file);
+						feat_tbl.store (Update_file);
+					end;
 					type_cursor := type_cursor.right
 				end;
 				id_cursor := id_cursor.right
@@ -1310,6 +1335,8 @@ end;
 			Byte_server.take_control (Tmp_byte_server);
 			Inv_byte_server.take_control (Tmp_inv_byte_server);
 			Depend_server.take_control (Tmp_depend_server);
+			M_feat_tbl_server.take_control (Tmp_m_feat_tbl_server);
+			M_feature_server.take_control (Tmp_m_feature_server);
 			M_rout_id_server.take_control (Tmp_m_rout_id_server);
 			M_desc_server.take_control (Tmp_m_desc_server);
 		end;
@@ -1327,8 +1354,13 @@ feature  -- Freeezing
 			descriptors: ARRAY [INTEGER];
 			i, nb: INTEGER;
 		do
+			if precompilation then
+				!PRECOMP_MAKER!makefile_generator.make
+			else
+				!WBENCH_MAKER!makefile_generator.make
+			end;
 				-- Re-process dynamic types
-			process_dynamic_types;
+--			process_dynamic_types;
 
 				-- Process the C pattern table
 debug ("ACTIVITY")
@@ -1391,11 +1423,27 @@ end;
 				loop
 					a_class := id_array.item (descriptors.item (i));
 					if a_class /= Void then
+						melted_set.put (a_class.id);
+					end;
+					i := i + 1
+				end;
+				from
+					id_list := melted_set;
+					id_cursor := id_list.first_element;
+debug ("COUNT")
+	i := melted_set.count;
+end;
+				until
+					id_cursor = Void
+				loop
+					a_class := class_of_id (id_cursor.item);
 debug ("COUNT")
 	io.error.putstring ("(");
-	io.error.putint (nb -i + 1);
+	io.error.putint (i);
 	io.error.putstring (") ");
+	i := i - 1;
 end;
+					if a_class /= Void then
 							-- Verbose
 						io.error.putstring ("Generating descriptors of ");
 						io.error.putstring (a_class.class_name);
@@ -1403,11 +1451,12 @@ end;
 	
 						a_class.generate_descriptor_tables;
 					end;
-					i := i + 1;
+					id_cursor := id_cursor.right;
 				end;
 			end;
 
 			m_desc_server.clear;
+			melted_set.wipe_out;
 
 			from
 				id_list := freeze_set1;
@@ -1451,12 +1500,14 @@ debug ("COUNT")
 	io.error.putstring (") ");
 	i := i - 1;
 end;
-					-- Verbose
-				io.error.putstring ("Pass 5 on class ");
-				io.error.putstring (a_class.class_name);
-				io.error.new_line;
+				if not a_class.is_precompiled then
+						-- Verbose
+					io.error.putstring ("Pass 5 on class ");
+					io.error.putstring (a_class.class_name);
+					io.error.new_line;
 
-				a_class.generate_feature_table;
+					a_class.generate_feature_table;
+				end;
 
 				id_cursor := id_cursor.right
 			end;
@@ -1544,6 +1595,10 @@ end;
 		end;
 
 	shake is
+		local
+			exec_unit: EXECUTION_UNIT;
+			external_unit: EXT_EXECUTION_UNIT;
+			info: EXTERNAL_INFO;
 		do
 		
 				-- Real shake compresses the dispatch and execution tables
@@ -1552,6 +1607,22 @@ end;
 
 			--real_shake;
 
+			from
+				execution_table.start
+			until
+				execution_table.offright
+			loop
+				exec_unit := execution_table.item_for_iteration;
+				if exec_unit.is_valid and then exec_unit.is_external then
+					external_unit ?= exec_unit;
+					check
+						externals.has (external_unit.external_name);
+					end;
+					info := externals.item (external_unit.external_name);
+					info.set_execution_unit (external_unit);
+				end;	
+				execution_table.forth
+			end;
 
 				-- Reset the frozen level since the execution table
 				-- is re-built now.
@@ -1588,6 +1659,11 @@ feature -- Final mode generation
 					-- Since a clas can be removed, test if `a_class' is
 					-- not Void.
 				if a_class /= Void then
+debug ("COUNT");
+	io.error.putstring ("(");
+	io.error.putint (nb-i+1);
+	io.error.putstring (") ");
+end;
 						-- Verbose
 					io.error.putstring ("Processing polymorphism of class ");
 					io.error.putstring (a_class.class_name);
@@ -1608,9 +1684,9 @@ feature -- Final mode generation
 				-- Dead code removal
 			remove_dead_code;
 
-			process_dynamic_types;
+			!FINAL_MAKER!makefile_generator.make;
 
-			Makefile_generator.init;
+--			process_dynamic_types;
 
 				-- Generation of C files associated to the classes of
 				-- the system.
@@ -1643,8 +1719,7 @@ end;
 			generate_table;
 
 				-- Generate makefile
-			Makefile_generator.generate;
-			Makefile_generator.clear;
+			generate_make_file;
 
 				-- Clean Eiffel table
 			Eiffel_table.wipe_out;
@@ -1752,7 +1827,7 @@ feature -- Generation
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			class_type: CLASS_TYPE;
-			old_type_id, new_type_id, i, nb: INTEGER;
+			new_type_id, i, nb: INTEGER;
 			type_cursor: LINKABLE [CLASS_TYPE];
 		do
 				-- First re-process all the type id of instances of
@@ -1797,7 +1872,6 @@ end;
 					type_cursor = Void
 				loop
 					class_type := type_cursor.item;
-					old_type_id := class_type.type_id;
 					new_type_id := type_id_counter.next;
 					class_type.set_type_id (new_type_id);
 debug ("ACTIVITY")
@@ -1866,7 +1940,13 @@ end;
 				i > nb
 			loop
 				class_type := class_types.item (i);
+if class_type /= Void then
 				class_type.skeleton.generate_size (file);
+else
+	-- FIXME
+	-- Process_dynamic_types has been TEMPORARILY removed
+				file.putstring ("0");
+end;
 				file.putstring (",");
 				file.new_line;
 				i := i + 1;
@@ -1891,10 +1971,15 @@ end;
 				i > nb
 			loop
 				class_type := class_types.item (i);
+if class_type /= Void then
 				skeleton := class_type.skeleton;
 				nb_ref := skeleton.nb_reference;
 				nb_exp := skeleton.nb_expanded;
 				Reference_file.putint (nb_ref + nb_exp);
+else
+		-- FIXME process_dynamic_types TEMPORARILY removed
+	Reference_file.putint (0);
+end;
 				Reference_file.putchar (',');
 				Reference_file.new_line;
 				i := i + 1;
@@ -1913,6 +1998,8 @@ end;
 			types: TYPE_LIST;
 			type_cursor: LINKABLE [CLASS_TYPE];
 			f_name: STRING;
+				-- cltype_array is indexed by `id' not by `type_id'
+				-- as `class_types'
 			cltype_array: ARRAY [CLASS_TYPE];
 		do
 			nb := Type_id_counter.value;
@@ -1929,8 +2016,11 @@ end;
 				until
 					i > nb
 				loop
+if class_types.item (i) /= Void then
+	-- FIXME
 					class_types.item (i).skeleton.make_extern_declarations;
-				   i := i + 1;
+end;
+					i := i + 1;
 				end;
 				f_name := generation_path.twin;
 				f_name.append ("/Eskelet.h");
@@ -1980,7 +2070,7 @@ end;
 				end;
 				Skeleton_file.new_line;
 
-				!!cltype_array.make (1, nb);
+				!!cltype_array.make (1, static_type_id_counter.value);
 			end;
 
 			from
@@ -1990,10 +2080,14 @@ end;
 			loop
 				cl_type := class_types.item (i);
 					-- Classes could be removed
+if cl_type /= Void then
 				cl_type.generate_skeleton1;
 				if not final_mode then
 					cltype_array.put (cl_type, cl_type.id);
 				end;
+else
+		-- FIXME
+end;
 				i := i + 1;
 			end;
 
@@ -2009,7 +2103,17 @@ end;
 				i > nb
 			loop
 				cl_type := class_types.item (i);
+if cl_type /= Void then
 				cl_type.generate_skeleton2;
+else
+		-- FIXME
+	if final_mode then
+		Skeleton_file.putstring ("{ 0, %"INVALID_TYPE%", (char**)0, 0,0,0,0}");
+	else
+		Skeleton_file.putstring ("{ 0, %"INVALID_TYPE%", (char**)0, 0,0,0,0,%N");
+		Skeleton_file.putstring ("'\0', '\0', 0, 0 , \0, 0 , {0,0,0,0}}");
+	end;
+end;
 				Skeleton_file.putstring (",%N");
 				i := i + 1;
 			end;
@@ -2104,7 +2208,12 @@ end;
 				until
 					i > nb
 				loop
+if class_types.item (i) /= Void then
 					class_types.item (i).generate_cecil (Cecil_file);
+else
+		-- FIXME
+		Cecil_file.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
+end;
 					Cecil_file.putstring (",%N");
 					i := i + 1;
 				end;
@@ -2179,7 +2288,10 @@ end;
 				i > nb
 			loop
 				cl_type := class_types.item (i);
+if cl_type /= Void then
+		-- FIXME
 				cl_type.generate_conformance_table;
+end;
 				i := i + 1;
 			end;
 
@@ -2196,8 +2308,13 @@ end;
 				i > nb
 			loop
 				cl_type := class_types.item (i);
+if cl_type /= Void then
 				Conformance_file.putstring ("&conf");
 				Conformance_file.putint (cl_type.type_id);
+else
+		-- FIXME
+	Conformance_file.putstring ("(struct conform *)0");
+end;
 				Conformance_file.putstring (",%N");
 				i := i + 1;
 			end;
@@ -2223,6 +2340,8 @@ end;
 				i > nb
 			loop
 				class_type := class_types.item (i);
+if class_type /= Void then
+-- FIXME
 				if class_type.has_creation_routine then
 					!!rout_entry;
 					rout_entry.set_type_id (i);
@@ -2230,6 +2349,7 @@ end;
 					rout_entry.set_kind (Initialization_id);
 					rout_table.add (rout_entry);
 				end;
+end;
 				i := i + 1;
 			end;
 			rout_table.write;
@@ -2326,6 +2446,8 @@ feature -- Dispose routine
 				i > nb 
 			loop
 				class_type := class_types.item (i);
+if class_type /= Void then
+	-- FIXME
 				feature_i := class_type.dispose_feature;
 				if feature_i /= Void then
 					!!rout_entry;
@@ -2336,6 +2458,7 @@ feature -- Dispose routine
 					rout_entry.set_kind (feature_i.body_id);
 					rout_table.add (rout_entry);
 				end;
+end;
 				i := i + 1;
 			end;
 			rout_table.write;
@@ -2384,18 +2507,28 @@ feature -- Plug and Makefile file
 			Plug_file.putstring (set_count_name);
 			Plug_file.putstring ("();%N");
 
-			--! make array declaration
-			array_cl := class_of_id (array_id);
-				--! Array ref type (i.e. ARRAY[ANY])
-			cl_type := Instantiator.Array_type.associated_class_type; 
-			id := cl_type.id;
-			arr_type_id := cl_type.type_id;
-			creators := array_cl.creators;
-			creators.start;
-			creation_feature := array_cl.feature_table.item
+			--| make array declaration
+			--| Temporary solution. When a system uses precompiled information,
+			--| the C code for ARRAY[ANY] is never re-generated, but the computed
+			--| name of the make routine will (unfortunately) change. Therefore, the
+			--| name in the plug file might not match the name in the precompiled
+			--| C file... Heavy!
+			if (array_make_name = Void) or not uses_precompiled then
+				array_cl := class_of_id (array_id);
+					--! Array ref type (i.e. ARRAY[ANY])
+				cl_type := Instantiator.Array_type.associated_class_type; 
+				id := cl_type.id;
+				arr_type_id := cl_type.type_id;
+				creators := array_cl.creators;
+				creators.start;
+				creation_feature := array_cl.feature_table.item
 											(creators.key_for_iteration);
-			arr_make_name := Encoder.feature_name
-							(id, creation_feature.body_id).duplicate;
+				arr_make_name := Encoder.feature_name
+								(id, creation_feature.body_id).duplicate;
+				array_make_name := arr_make_name.duplicate;
+			else
+				arr_make_name := array_make_name
+			end;
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring ("();%N");
@@ -2477,9 +2610,9 @@ feature -- Plug and Makefile file
 	generate_make_file is
 			-- Generate make file
 		do
-			Makefile_generator.init;
-			Makefile_generator.generate;
-			Makefile_generator.clear;
+			makefile_generator.generate;
+			makefile_generator.clear;
+			makefile_generator := Void
 		end;
 
 feature -- Dispatch and execution tables generation
@@ -2920,6 +3053,12 @@ feature -- Precompilation
 		do
 			server_controler.save_precompiled_id;
 			max_precompiled_id := class_counter.value;
+			max_precompiled_type_id := static_type_id_counter.value;
+		end;
+
+	uses_precompiled: BOOLEAN is
+		do
+			Result := (server_controler.last_precompiled_id > 0)
 		end;
 
 feature -- Debug purpose

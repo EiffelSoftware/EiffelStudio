@@ -55,6 +55,15 @@ feature
 			file_ids.add (current_id);
 		end;
 
+	put_precompiled (fid: INTEGER; item_id: INTEGER; sinf: SERVER_INFO) is
+		local
+			server_file: SERVER_FILE;
+			info: SERVER_INFO
+		do
+			file_ids.add (fid);
+			force (sinf, item_id);
+		end;
+
 	Size_limit: INTEGER is
 			-- Limit of the size of one file under the control	
 			-- of the current server
@@ -324,15 +333,19 @@ feature
 					offright
 				loop
 					old_info := item_for_iteration;
+					old_server_file :=
+						Server_controler.file_of_id (old_info.id);
+					an_id := key_for_iteration;
 					if old_info.id = file_id then
-						an_id := key_for_iteration;
-							-- Put in purged server alive item	
-						new.write (item (an_id));
+						if old_server_file.precompiled then
+							new.put_precompiled (file_id, an_id, old_info);
+						else
+								-- Put in purged server alive item	
+							new.write (item (an_id));
 	
-							-- Remove occurence from file where item was stored
-						old_server_file :=
-							Server_controler.file_of_id (old_info.id);
-						old_server_file.remove_occurence;
+								-- Remove occurence from file where item was stored
+							old_server_file.remove_occurence;
+						end;
 					end;
 					forth
 				end;

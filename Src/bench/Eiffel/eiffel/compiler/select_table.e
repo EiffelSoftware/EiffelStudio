@@ -107,7 +107,9 @@ feature -- Generation
 			until
 				desc_list.after
 			loop
-				desc_list.item.generate;
+				if not desc_list.item.class_type.is_precompiled then
+					desc_list.item.generate;
+				end;
 				desc_list.forth
 			end;
 		end;

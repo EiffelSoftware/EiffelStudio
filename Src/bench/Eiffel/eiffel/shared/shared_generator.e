@@ -1,6 +1,10 @@
 -- Shared access to generator of routine and attribute offset tables
 
 class SHARED_GENERATOR
+
+inherit
+
+	SHARED_WORKBENCH
 	
 feature {NONE}
 
@@ -12,12 +16,6 @@ feature {NONE}
 
 	Rout_generator: ROUT_GENERATOR is
 			-- Generator of routine tables
-		once
-			!!Result
-		end;
-
-	Makefile_generator: MAKEFILE_GENERATOR is
-			-- Makefile generator
 		once
 			!!Result
 		end;

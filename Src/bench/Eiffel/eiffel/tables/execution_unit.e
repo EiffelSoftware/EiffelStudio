@@ -60,6 +60,10 @@ feature
 				written_type :=	class_type.written_type (written_class);
 				if written_type = Void then
 					Result := False
+				elseif
+					written_type.associated_class_type.is_precompiled
+				then
+					Result := True
 				else
 					Result := Body_server.has (body_id);
 				end;

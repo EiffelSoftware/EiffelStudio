@@ -1,9 +1,9 @@
--- Makefile generation control. The generated Makefile.SH is to be ran through
+-- Makefile generation control. The generated Makefile.SH is to be run through
 -- /bin/sh to get properly instantiated for a given platform. A partial linking
 -- of `Packet_number' files is done, as needed to avoid kernel internal argument
 -- space overflow.
 
-class MAKEFILE_GENERATOR 
+deferred class MAKEFILE_GENERATOR 
 
 inherit
 
@@ -15,10 +15,15 @@ inherit
 			context as byte_context
 		end;
 
-feature
+feature -- Attributes
 
 	object_basket: EXTEND_STACK [STRING];
-			-- The entire set of object files we have to make
+			-- The entire set of class object files we have 
+			-- to make
+
+	system_basket: EXTEND_STACK [STRING];
+			-- The entire set of system object files we have 
+			-- to make
 
 	empty_class_types: SORTED_SET [INTEGER];
 			-- Set of all the class types that have no used
@@ -27,14 +32,22 @@ feature
 
 	partial_objects: INTEGER;
 			-- Number of partial objects files needed
+			-- for class object files
 
-	Packet_number: INTEGER is 300;
+	partial_system_objects: INTEGER;
+			-- Number of partial object files needed
+			-- for system object files
+
+	Packet_number: INTEGER is 200;
 			-- Maximum number of files in a single linking phase
 
-	init is
+feature -- Initialization
+
+	make is
 			-- Creation
 		do
 			!!object_basket.make;
+			!!system_basket.make;
 			!!empty_class_types.make
 		end;
 
@@ -42,35 +55,48 @@ feature
 			-- Forget the lists
 		do
 			object_basket := Void;
+			system_basket := Void;
 			empty_class_types := Void;
 		end;
 
-	generate is
-			-- Generate make file
-		local
-			i, nb: INTEGER;
-			run_time_name: STRING;
-			final_mode: BOOLEAN;
+feature
+
+	run_time: STRING is
+			-- Run time with which the application must be linked
+		deferred
+		end;
+
+	system_name: STRING is
+			-- Name of executable
 		do
-			Make_file.open_write;
-				-- Generate main /bin/sh preamble
-			generate_preamble;
-				-- Customize main Makefile macros
-			generate_customization;
-				-- How to produce a .o from a .c file
-			generate_compilation_rule;
-			final_mode := byte_context.final_mode;
-			if final_mode then
-				add_final_mode_objects;
-				add_table_objects;
-			else
-				add_workbench_mode_objects;
-			end;
-			add_common_objects;
-				-- Insert all the objects in the basket, so that we may
-				-- count them.
-			add_eiffel_objects;
-				-- Compute number of partial objects needed.
+			Result := System.system_name	
+		end;
+
+feature -- Object basket managment
+
+	add_specific_objects is
+			-- Add objects specific to Current compilation mode.
+		deferred
+		end;
+
+	add_eiffel_objects is
+			-- Insert objects files in basket.
+		deferred
+		end;
+
+	add_common_objects is
+			-- Add common objects file
+		do
+			system_basket.put ("Econform.o");
+			system_basket.put ("Eplug.o");
+			system_basket.put ("Eskelet.o");
+			system_basket.put ("Evisib.o");
+			system_basket.put ("Emain.o");
+		end;
+
+	compute_partial_objects is
+			-- Compute number of partial objects needed.
+		do
 			partial_objects := object_basket.count // Packet_number;
 			if (object_basket.count \\ Packet_number) /= 0 and
 				partial_objects > 0
@@ -80,19 +106,69 @@ feature
 			if partial_objects = 1 then
 				partial_objects := 0;
 			end;
-			if (partial_objects = 0) and System.precompilation then
-				partial_objects := 1	
+
+			partial_system_objects := system_basket.count // Packet_number;
+			if (system_basket.count \\ Packet_number) /= 0 and
+				partial_system_objects > 0
+			then
+				partial_system_objects := partial_system_objects + 1;
 			end;
-				-- Now genrate the objects lists
+			if partial_system_objects = 1 then
+				partial_system_objects := 0;
+			end;
+		end;
+
+feature -- Actual generation
+
+	generate is
+			-- Generate make file
+		do
+			Make_file.open_write;
+				-- Generate main /bin/sh preamble
+			generate_preamble;
+				-- Customize main Makefile macros
+			generate_customization;
+				-- How to produce a .o from a .c file
+			generate_compilation_rule;
+
+				-- Add objects specific to Current compilation mode
+			add_specific_objects;
+				-- Add objects common to all compilation modes.
+			add_common_objects;
+				-- Insert all the class objects in the basket, so 
+				-- that we may count them.
+			add_eiffel_objects;
+
+				-- Compute number of partial objects needed
+				-- and generate corresponding object lists.
+			compute_partial_objects;
 			generate_objects_lists;
+
 				-- Generate external objects
 			generate_externals;
+
 				-- Generate executable
 			generate_executable;
+
 				-- End production
 			generate_ending;
+
 			Make_file.close;
 			object_basket.wipe_out;
+			system_basket.wipe_out;
+		end;
+
+feature -- Generation, Header
+
+	generate_compilation_rule is
+			-- Generates the .c -> .o compilation rule
+		deferred
+		end;
+
+	generate_specific_defines is
+			-- Generate specific "-D" flags.
+			-- Do nothing by default.
+		do
 		end;
 
 	generate_preamble is
@@ -123,9 +199,7 @@ feature
 				%SHELL = /bin/sh%N%
 				%CC = $cc%N%
 				%CFLAGS = $optimize $ccflags $large ");
-			if byte_context.workbench_mode then
-				Make_file.putstring ("-DWORKBENCH ");
-			end;
+			generate_specific_defines;
 			Make_file.putstring ("-I$(RUN_TIME3)%N%
 				%LDFLAGS = $ldflags%N%
 				%LIBS = $libs%N%
@@ -138,163 +212,17 @@ feature
 				%$spitshell >>Makefile <<'!NO!SUBS!'%N");
 		end;
 
-	add_eiffel_objects is
-			-- Insert objects file in basket
-		local
-			i, nb: INTEGER;
-			a_class: CLASS_C;
-			types: TYPE_LIST;
-			cl_type: CLASS_TYPE;
-			workbench_mode: BOOLEAN;
-			object_name, file_name: STRING;
-		do
-			workbench_mode := byte_context.workbench_mode;
-			from
-				i := 1;
-				nb := System.class_counter.value;
-			until
-				i > nb
-			loop
-				a_class := System.class_of_id (i);
-				if a_class /= Void then
-					from
-						types := a_class.types;
-						types.start
-					until
-						types.offright
-					loop
-						cl_type := types.item;
-							-- C code
-
-						if	workbench_mode or else
-							not empty_class_types.has (cl_type.id)
-						then
-							object_name := cl_type.base_file_name;
-							!!file_name.make (16);
-							file_name.append (object_name);
-							file_name.append (".o");
-							object_basket.put (file_name);
-						end;
-							-- Descriptor file
-						if workbench_mode then
-							!!file_name.make (16);
-							file_name.append (object_name);
-							file_name.append ("D.o");
-							object_basket.put (file_name);
-						end;
-						types.forth;
-					end;
-					if workbench_mode then
-							-- Feature table
-						object_name := a_class.base_file_name;
-						!!file_name.make (16);
-						file_name.append (object_name);
-						file_name.append_integer (i);
-						file_name.append ("F.o");
-						object_basket.put (file_name);
-					end;
-				end;
-				i := i + 1;
-			end;
-		end;
-
-	add_table_objects is
-			-- Add table objects to the object list.
-		local
-			file_name: STRING;
-			i, nb: INTEGER;
-		do
-			from
-				i := 1;
-				nb := Rout_generator.file_counter;
-			until
-				i > nb
-			loop
-				!!file_name.make (16);
-				file_name.append ("Erout");
-				file_name.append_integer (i);
-				file_name.append (".o");
-				object_basket.put(file_name);
-				i := i + 1;
-			end;
-
-			from
-				i := 1;
-				nb := Attr_generator.file_counter;
-			until
-				i > nb
-			loop
-				!!file_name.make (16);
-				file_name.append ("Eattr");
-				file_name.append_integer (i);
-				file_name.append (".o");
-				object_basket.put(file_name);
-				i := i + 1;
-			end;
-		end;
-
-	add_final_mode_objects is
-			-- Add final mode specific files to the object list
-		do
-			object_basket.put ("Eref.o");
-			object_basket.put ("Esize.o");
-		end;
-
-	add_workbench_mode_objects is
-			-- Add workbench mode specific files to the object list
-		do
-			object_basket.put ("Eoption.o");
-			object_basket.put ("Epattern.o");
-			object_basket.put ("Efrozen.o");
-			object_basket.put ("Edispatch.o");
-			object_basket.put ("Ecall.o");
-			--object_basket.put ("Ehisto.o");
-		end;
-
-	add_common_objects is
-			-- Add common objects file
-		do
-			object_basket.put ("Econform.o");
-			object_basket.put ("Eplug.o");
-			object_basket.put ("Eskelet.o");
-			object_basket.put ("Evisib.o");
-			object_basket.put ("Emain.o");
-		end;
-
-	generate_compilation_rule is
-			-- Generates the .c -> .o compilation rule
-		do
-			if byte_context.final_mode then
-				Make_file.putstring ("%
-					%.SUFFIXES: .x%N%N%
-					%.c.o:%N%
-					%%T$(CC) $(CFLAGS) -c $<%N%N%
-					%.x.c:%N%
-					%%T$(RUN_TIME3)/x2c < $< > $@%N%N%
-					%.x.o:%N%
-					%%T$(RUN_TIME3)/x2c < $< > $*.c%N%
-					%%T$(CC) $(CFLAGS) -c $*.c%N%
-					%%T$(RM) $*.c%N%N");
-			elseif System.precompilation then
-				Make_file.putstring ("%
-					%.c.o:%N%
-					%%T$(CC) $(CFLAGS) -c $<%N%
-					%%T$(RM) $*.c%N%N");
-			else
-				Make_file.putstring ("%
-					%.c.o:%N%
-					%%T$(CC) $(CFLAGS) -c $<%N%N");
-			end
-		end;
+feature -- Generation, Object list(s)
 
 	generate_objects_lists is
-			-- Generate the OBJECTS macros in Makefile
+			-- Generate the OBJECTS/OBJ1,OBJ2,OBJ3... and
+			-- EOBJECTS/EOBJ1,EOBJ2,EOBJ3... macros in Makefile
 		local
 			i: INTEGER;
 			macro_name: STRING;
 		do
 			if partial_objects = 0 then
-				generate_macro ("OBJECTS");
+				generate_macro ("OBJECTS", object_basket);
 			else
 				from
 					i := 1;
@@ -304,14 +232,65 @@ feature
 					!!macro_name.make (4);
 					macro_name.append ("OBJ");
 					macro_name.append_integer (i);
-					generate_macro (macro_name);
+					generate_macro (macro_name, object_basket);
+					i := i + 1;
+				end;
+			end;
+
+			if partial_system_objects = 0 then
+				generate_macro ("EOBJECTS", system_basket);
+			else
+				from
+					i := 1;
+				until
+					i > partial_system_objects
+				loop
+					!!macro_name.make (4);
+					macro_name.append ("EOBJ");
+					macro_name.append_integer (i);
+					generate_macro (macro_name, system_basket);
 					i := i + 1;
 				end;
 			end;
 		end;
 	
+	generate_macro (mname: STRING; basket: EXTEND_STACK [STRING]) is
+			-- Generate a bunch of objects to be put in macro `mname'
+		local
+			size, amount: INTEGER;
+			file_name: STRING;
+		do
+			Make_file.putstring (mname);
+			Make_file.putstring (" = ");
+			from
+				amount := 0;
+				size := mname.count + 3;
+			until
+				amount >= Packet_number or basket.empty
+			loop
+				file_name := basket.item;
+				basket.remove;
+				size := size + file_name.count + 1;
+				if size > 78 then
+					Make_file.putchar ('\');
+					Make_file.new_line;
+					Make_file.putchar ('%T');
+					size := 8 + file_name.count + 1;
+					Make_file.putstring (file_name);
+				else
+					Make_file.putstring (file_name);
+				end;
+				Make_file.putchar (' ');
+				amount := amount + 1;
+			end;
+			Make_file.new_line;
+			Make_file.new_line;
+		end;
+
+feature -- Generation, External archives and object files.
+
 	generate_externals is
-			-- Generate declration fo the external variable
+			-- Generate declaration fo the external variable
 		local
 			object_file_names: FIXED_LIST [STRING];
 			i, nb: INTEGER;
@@ -333,114 +312,50 @@ feature
 				Make_file.new_line;
 			end
 		end;
-			
-	generate_macro (mname: STRING) is
-			-- Generate a bunch of objects to be put in macro `mname'
-		local
-			size, amount: INTEGER;
-			file_name: STRING;
-		do
-			Make_file.putstring (mname);
-			Make_file.putstring (" = ");
-			from
-				amount := 0;
-				size := mname.count + 3;
-			until
-				amount >= Packet_number or object_basket.empty
-			loop
-				file_name := object_basket.item;
-				object_basket.remove;
-				size := size + file_name.count + 1;
-				if size > 78 then
-					Make_file.putchar ('\');
-					Make_file.new_line;
-					Make_file.putchar ('%T');
-					size := 8 + file_name.count + 1;
-					Make_file.putstring (file_name);
-				else
-					Make_file.putstring (file_name);
-				end;
-				Make_file.putchar (' ');
-				amount := amount + 1;
-			end;
-			Make_file.new_line;
-			Make_file.new_line;
-		end;
 
-	generate_ending is
-			-- Ends Makefile wrapping scheme
-		do
-			Make_file.putstring ("%
-				%!NO!SUBS!%N%
-				%chmod 644 Makefile%N%
-				%$eunicefix Makefile%N");
-		end;
+feature -- Generation (Linking rules)
 
 	generate_executable is
 			-- Generate rules to produce executable
-		local
-			run_time: STRING;
 		do
 			Make_file.putstring ("all: ");
 			Make_file.putstring (System.system_name);
 			Make_file.new_line;
 			Make_file.new_line;
-			if byte_context.final_mode then
-				run_time := "$(RUN_TIME3)/libruntime.a";
-			else
-				run_time := "$(RUN_TIME3)/libwkbench.a";
+			if (partial_objects /= 0) then
+				generate_partial_linking (partial_objects, False)
 			end;
-			if partial_objects = 0 then
-				generate_simple_executable (run_time);
-			else
-				generate_partial_linking (run_time);
+			if (partial_system_objects /= 0) then
+				generate_partial_linking (partial_system_objects, True)
 			end;
+			generate_simple_executable
 		end;
 	
-	generate_objects_macros is
-			-- Generate the object macros (dependencies for final executable)
-		local
-			i: INTEGER;
-		do
-			if partial_objects = 0 then
-				Make_file.putstring ("$(OBJECTS)");
-			else
-				from
-					i := 1;
-				until
-					i > partial_objects
-				loop
-					if i > 1 then
-						Make_file.putchar (' ');
-					end;
-					Make_file.putstring ("obj");
-					Make_file.putint (i);
-					Make_file.putstring (".o");
-					i := i + 1;
-				end;
-			end;
-		end;
 
-	generate_simple_executable (run_time: STRING) is
+	generate_simple_executable is
 			-- Generate rule to produce simple executable, linked in
 			-- with `run_time' archive.
 		do
 			Make_file.putstring (System.system_name);
 			Make_file.putstring (": ");
-			generate_objects_macros;
+			generate_objects_macros (partial_objects, False);
+			Make_file.putchar (' ');
+			generate_objects_macros (partial_system_objects, True);
+			Make_file.new_line;
+			Make_file.putstring ("%T$(RM) ");
+			Make_file.putstring (system_name);
 			Make_file.new_line;
 			Make_file.putstring ("%T$(CC) -o ");
-			if System.precompilation then
-				Make_file.putstring ("driver")
-			else
-				Make_file.putstring (System.system_name);
-			end;
+			Make_file.putstring (system_name);
 			Make_file.putstring ("%
 				% $(CFLAGS) $(LDFLAGS) ");
-			generate_objects_macros;
+			generate_objects_macros (partial_objects, False);
+			Make_file.putchar (' ');
+			generate_objects_macros (partial_system_objects, True);
 			Make_file.putchar (' ');
 			Make_file.putchar ('\');
 			Make_file.new_line;
+			generate_other_objects;
 			Make_file.putstring ("%T%T");
 			if System.object_file_names /= Void then
 				Make_file.putstring ("$(EXTERNALS) ");
@@ -458,10 +373,51 @@ feature
 --				Make_file.new_line;
 --			end;
 
+			generate_additional_rules;
 			Make_file.new_line;
 		end;
 
-	generate_partial_linking (run_time: STRING) is
+	generate_additional_rules is
+		do
+		end;
+
+	generate_other_objects is
+		do
+		end;
+
+	generate_objects_macros (nb: INTEGER; system_obj: BOOLEAN) is
+			-- Generate the object macros (dependencies for final executable)
+		local
+			i: INTEGER;
+		do
+			if nb = 0 then
+				if system_obj then
+					Make_file.putstring ("$(EOBJECTS)");
+				else
+					Make_file.putstring ("$(OBJECTS)");
+				end;
+			else
+				from
+					i := 1;
+				until
+					i > nb
+				loop
+					if i > 1 then
+						Make_file.putchar (' ');
+					end;
+					if system_obj then
+						Make_file.putstring ("eobj");
+					else
+						Make_file.putstring ("obj");
+					end;
+					Make_file.putint (i);
+					Make_file.putstring (".o");
+					i := i + 1;
+				end;
+			end;
+		end;
+
+	generate_partial_linking (nb: INTEGER; system_obj: BOOLEAN) is
 			-- Generate rules to produce partial linking and the
 			-- final executable linked in with `run_time'.
 		local
@@ -470,33 +426,71 @@ feature
 			from
 				i := 1;
 			until
-				i > partial_objects
+				i > nb
 			loop
+				if system_obj then
+					Make_file.putstring ("e")
+				end;
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o: $(OBJ");
+				if system_obj then
+					Make_file.putstring (".o: $(EOBJ")
+				else
+					Make_file.putstring (".o: $(OBJ");
+				end;
 				Make_file.putint (i);
 				Make_file.putchar (')');
 				Make_file.new_line;
 					-- The following is not portable (if people want to use
 					-- their own linker).
 				Make_file.putstring ("%Tld -r -o ");
+				if system_obj then
+					Make_file.putstring ("e")
+				end;
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o $(OBJ");
+				if system_obj then
+					Make_file.putstring (".o $(EOBJ")
+				else
+					Make_file.putstring (".o $(OBJ");
+				end;
 				Make_file.putint (i);
 				Make_file.putchar (')');
-				if System.precompilation then
-					Make_file.putstring ("%N%T$(RM) $(OBJ");
+
+				if remove_after_partial then
+					if system_obj then
+						Make_file.putstring ("%N%T$(RM) $(EOBJ");
+					else
+						Make_file.putstring ("%N%T$(RM) $(OBJ");
+					end;
 					Make_file.putint (i);
 					Make_file.putchar (')');
 				end;
+
 				Make_file.new_line;
 				Make_file.new_line;
 				i := i +1 ;
 			end;
-			generate_simple_executable (run_time);
 		end;
+
+	remove_after_partial: BOOLEAN is
+			-- Should the individual objects be removed
+			-- after a partial linking?
+		do
+		end;
+
+feature -- Generation, Tail
+			
+	generate_ending is
+			-- Ends Makefile wrapping scheme
+		do
+			Make_file.putstring ("%
+				%!NO!SUBS!%N%
+				%chmod 644 Makefile%N%
+				%$eunicefix Makefile%N");
+		end;
+
+feature -- Removal of empty classes
 
 	record_empty_class_type (a_class_type: INTEGER) is
 			-- add `a_class_type' to the set of class types that
@@ -504,6 +498,5 @@ feature
 		do
 			empty_class_types.add (a_class_type);
 		end;
-
 
 end

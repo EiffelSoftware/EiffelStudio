@@ -106,26 +106,6 @@ feature
 
 		end; -- generate
 
---	feature_name (i: INTEGER): STRING is
---			-- Feature name in type id `i'
---		local
---			entry: ROUT_ENTRY;
---		do
---			from
---				start
---			until
---				Result /= Void or offright
---			loop
---					-- The test is '<=' and not simply '=' because deferred
---				   -- features do not have any entry in the routine table.
---				entry := item;
---				if i <= entry.type_id then
---					Result := item.routine_name;
---				end;
---				forth;
---			end;
---		end;
-
 	feature_name (type_id: INTEGER): STRING is
 			-- Feature name of the first used feature available
 			-- in a static type greater than `type_id'.

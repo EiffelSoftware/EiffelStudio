@@ -222,8 +222,7 @@ feature {NONE} -- Actions
 				--update_actions
 			end
 		end
-		
-		
+	
 	update_actions is
 			-- Actions to be performed when change widget is updated, redefine for custom 
 			-- behaviour 

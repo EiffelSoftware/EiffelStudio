@@ -44,8 +44,7 @@ feature -- Miscellaneous
 		
 	makefile_macros_bcb: STRING is
 			-- Makefile macros for msc compiler
-		"CC = $(ISE_EIFFEL)\Bcc55\Bin\bcc32.exe%N%
-		%OUTPUT_CMD = -o%N"	
+		"CC = $(ISE_EIFFEL)\Bcc55\Bin\bcc32.exe%N OUTPUT_CMD = -o%N"	
 		
 	lib_generation (a_library_name, obj_name, c_compiler: STRING): STRING is
 			-- lib generation part of Makefile
@@ -111,7 +110,11 @@ feature -- Miscellaneous
 			Result.append ("_final.lib%N%N")
 			Result.append (lib_generation (a_library_name, "WOBJ", c_compiler))
 			Result.append (lib_generation (a_library_name + "_final", "OBJ", c_compiler))
-			Result.append (".cpp.obj:%N	$(CC) $(CFLAGS) ")
+			Result.append (".cpp.obj:")
+			if c_compiler.is_equal ("msc") then
+				Result.append (":")
+			end
+			Result.append ("%N	$(CC) $(CFLAGS) ")
 			if c_compiler.is_equal ("msc") then
 				Result.append (" /nologo ")
 			end

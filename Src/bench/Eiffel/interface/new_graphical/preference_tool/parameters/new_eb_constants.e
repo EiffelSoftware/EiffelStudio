@@ -8,20 +8,6 @@ class
 
 feature {NONE} -- Resources
 
-	General_resources: EB_GENERAL_PARAMETERS is
-			-- General resources
-		once
-			Create Result.make
-			
-		end
-
-	Graphical_resources: EB_GRAPHICAL_PARAMETERS is
-			-- Graphical resources
-		once
-			Create Result.make
-			
-		end
-
 	Pixmaps: EB_SHARED_PIXMAPS is
 	
 		once

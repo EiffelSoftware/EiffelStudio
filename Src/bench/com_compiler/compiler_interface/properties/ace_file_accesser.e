@@ -754,6 +754,12 @@ feature -- Element change
 			set_string_default(feature {FREE_OPTION_SD}.Msil_culture, new_value)
 		end
 		
+	set_metadata_cache_path (new_value: STRING) is
+			-- Set EAC path
+		do
+			set_string_default(feature {FREE_OPTION_SD}.Metadata_cache_path, new_value)
+		end
+		
 feature -- Status report
 
 	last_error_message: STRING

@@ -79,13 +79,13 @@
 						Visible Class_visi_list Class_visibility
 						Creation_restriction Export_restriction External_rename
 						ExternaL_rename_pair Name Ace Cluster_properties
-						Option_name External_name Precompiled_adaptation
+						Option_name External_name
 
 %%
 
 Ace_or_Properties:		Ace
 							{rn_ast = $1;}
-						| Cluster_properties LAC_END
+						| Cluster_properties
 							{rn_ast = $1;}
 						;
 
@@ -123,22 +123,19 @@ Clusters                : /* empty */
 							{$$ = NULL;}
                         | LAC_CLUSTER {list_init();} Cluster_clause_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
+						| LAC_CLUSTER ASemi
+							{$$ = NULL;}
                         ;
 
 Cluster_clause_list     : Cluster_clause
 							{list_push($1);}
-                        | Cluster_clause_list LAC_SEMICOLON Cluster_clause
-							{list_push($3);}
+                        | Cluster_clause_list Cluster_clause
+							{list_push($2);}
                         ;
 
-Cluster_clause          : /* empty */
-							{$$ = NULL;}
-/* Recude/Reduce conflict here */
-                        | Name Parent_tag LAC_COLUMN Name
+Cluster_clause          : Name Parent_tag LAC_COLUMN Name
 							{$$ = create_node4 (CLUSTER_SD,$1,$4,NULL,$2);}
-                        | Name Parent_tag LAC_COLUMN Name LAC_END
-							{$$ = create_node4 (CLUSTER_SD,$1,$4,NULL,$2);}
-                        | Name Parent_tag LAC_COLUMN Name Cluster_properties LAC_END
+                        | Name Parent_tag LAC_COLUMN Name Cluster_properties LAC_END 
 							{$$ = create_node4 (CLUSTER_SD,$1,$4,$5,$2);}
                         ;
 
@@ -148,7 +145,7 @@ Parent_tag              : /* empty */
 							{$$ = $2;}
                         ;
 
-Cluster_properties  	: Use Include Exclude Name_adapt Defaults Options Visible 
+Cluster_properties  	: Use Include Exclude Name_adapt Defaults Options Visible
 							{$$ = create_node7 (CLUST_PROP_SD,$1,$2,$3,$4,$5,$6,$7);}
                         ;
 
@@ -160,28 +157,30 @@ Use                     : /* empty */
 
 Include                 : /* empty */
 							{$$ = NULL;}
-						| LAC_INCLUDE {$$ = NULL;}
                         | LAC_INCLUDE {list_init();} Include_file_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
+						| LAC_INCLUDE ASemi
+						   	{$$ = NULL;}
                         ;
 
 Exclude                 : /* empty */
 							{$$ = NULL;}
-						| LAC_EXCLUDE {$$ = NULL;}
                         | LAC_EXCLUDE {list_init();} Exclude_file_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
+						| LAC_EXCLUDE ASemi
+						   	{$$ = NULL;}
                         ;
 
-Include_file_list		: Name
+Include_file_list		: Name ASemi
 							{list_push(create_node1(INCLUDE_SD,$1));}
-						|	Include_file_list LAC_SEMICOLON Name
-							{list_push(create_node1(INCLUDE_SD,$3));}
+						| Include_file_list Name ASemi
+							{list_push(create_node1(INCLUDE_SD,$2));}
 						;
 
-Exclude_file_list		: Name
+Exclude_file_list		: Name ASemi
 							{list_push(create_node1(EXCLUDE_SD,$1));}
-						|   Exclude_file_list LAC_SEMICOLON Name
-							{list_push(create_node1(EXCLUDE_SD,$3));}
+						| Exclude_file_list Name ASemi
+							{list_push(create_node1(EXCLUDE_SD,$2));}
 						;
 
 File_list               : File_clause
@@ -198,17 +197,17 @@ Name_adapt              : /* empty */
 							{$$ = NULL;}
                         | LAC_ADAPT {list_init();} Cluster_adapt_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
-                        ;
-
-Cluster_adapt_list      : Cluster_adapt_clause
-							{list_push($1);}
-                        | Cluster_adapt_list LAC_SEMICOLON Cluster_adapt_clause
-							{list_push($3);}
-                        ;
-
-Cluster_adapt_clause    : /* empty */
+						| LAC_ADAPT ASemi
 							{$$ = NULL;}
-                        | Cluster_ignore
+                        ;
+
+Cluster_adapt_list      : Cluster_adapt_clause ASemi
+							{list_push($1);}
+                        | Cluster_adapt_list Cluster_adapt_clause ASemi
+							{list_push($2);}
+                        ;
+
+Cluster_adapt_clause    : Cluster_ignore
 							{$$ = create_node1 (CLUST_IGN_SD,$1);}
                         | Cluster_rename_clause
 							{$$ = create_node2 (CLUST_REN_SD,$1,list_new(CONSTRUCT_LIST_SD));}
@@ -236,35 +235,36 @@ Defaults                : /* empty */
 							{$$ = NULL;}
                         | LAC_DEFAULT {list_init();} D_option_clause_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
+						| LAC_DEFAULT ASemi
+							{$$= NULL;}
                         ;
 
 Options                 : /* empty */
 							{$$ = NULL;}
                         | LAC_OPTION {list_init();} O_option_clause_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
-                        ;
-
-D_option_clause_list    : D_option_clause
-							{list_push($1);}
-                        | D_option_clause_list LAC_SEMICOLON D_option_clause
-							{list_push($3);}
-                        ;
-
-D_option_clause         : /* empty */
+						| LAC_OPTION ASemi
 							{$$ = NULL;}
-						| LAC_PRECOMPILED Option_mark Precompiled_adaptation
+                        ;
+
+D_option_clause_list    : D_option_clause ASemi
+							{list_push($1);}
+                        | D_option_clause_list D_option_clause ASemi
+							{list_push($2);}
+                        ;
+
+D_option_clause         : LAC_PRECOMPILED Option_mark
+							{$$ = create_node3(D_PRECOMPILED_SD,create_node(PRECOMPILED_SD),$2,NULL);}
+			   			| LAC_PRECOMPILED Option_mark LAC_END
+							{$$ = create_node3(D_PRECOMPILED_SD,create_node(PRECOMPILED_SD),$2,NULL);}
+                        | LAC_PRECOMPILED Option_mark External_rename LAC_END
 							{$$ = create_node3(D_PRECOMPILED_SD,create_node(PRECOMPILED_SD),$2,$3);}
                         | Option_name Option_mark
 							{$$ = create_node2 (D_OPTION_SD,$1,$2);}
                         ;
 
-Precompiled_adaptation: /* empty */
-							{$$ = NULL;}
-						| External_rename LAC_END
-							{$$ = $1;}
-						;
 
-Option_name				:	LAC_ASSERTION
+Option_name				: LAC_ASSERTION
 							{$$ = create_node(ASSERTION_SD);}
 						| LAC_DEBUG
 							{$$ = create_node(DEBUG_SD);}
@@ -276,15 +276,13 @@ Option_name				:	LAC_ASSERTION
 							{$$ = create_node1(FREE_OPTION_SD,$1);}
 						;
 
-O_option_clause_list    : O_option_clause
+O_option_clause_list    : O_option_clause ASemi
 							{list_push($1);}
-                        | O_option_clause_list LAC_SEMICOLON O_option_clause
-							{list_push($3);}
+                        | O_option_clause_list O_option_clause ASemi
+							{list_push($2);}
                         ;
 
-O_option_clause         : /* empty */
-							{$$ = NULL;}
-                        | Option_name Option_mark Target_list
+O_option_clause         : Option_name Option_mark Target_list
 							{$$ = create_node3 (O_OPTION_SD,$1,$2,$3);}
                         ;
 
@@ -346,17 +344,17 @@ Externals               : /* empty */
 							{$$ = NULL;}
 						| LAC_EXTERNAL {list_init();} Language_contrib_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
-                        ;
-
-Language_contrib_list   : Language_contrib
-							{list_push($1);}
-                        | Language_contrib_list LAC_SEMICOLON Language_contrib
-							{list_push($3);}
-                        ;
-
-Language_contrib        : /* empty */
+						| LAC_EXTERNAL ASemi
 							{$$ = NULL;}
-                        | Language_name LAC_COLUMN {list_init();} File_list
+                        ;
+
+Language_contrib_list   : Language_contrib ASemi
+							{list_push($1);}
+                        | Language_contrib_list Language_contrib ASemi
+							{list_push($2);}
+                        ;
+
+Language_contrib        : Language_name LAC_COLUMN {list_init();} File_list
 							{$$ = create_node2 (LANG_TRIB_SD,$1,list_new(CONSTRUCT_LIST_SD));}
                         ;
 
@@ -383,17 +381,17 @@ Generation              : /* empty */
 							{$$ = NULL;}
 						| LAC_GENERATE {list_init();} Language_gen_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
-                        ;
-
-Language_gen_list       : Language_generation
-							{list_push($1);}
-                        | Language_gen_list LAC_SEMICOLON Language_generation
-							{list_push($3);}
-                        ;
-
-Language_generation     : /* empty */
+						| LAC_GENERATE ASemi
 							{$$ = NULL;}
-                        | Language_name Generate_option LAC_COLUMN Name
+                        ;
+
+Language_gen_list       : Language_generation ASemi
+							{list_push($1);}
+                        | Language_gen_list Language_generation ASemi
+							{list_push($2);}
+                        ;
+
+Language_generation     : Language_name Generate_option LAC_COLUMN Name
 							{$$ = create_node3 (LANG_GEN_SD,$1,$2,$4);}
                         ;
 
@@ -413,17 +411,17 @@ Visible                 : /* empty */
 							{$$ = NULL;}
                         | LAC_VISIBLE {list_init();} Class_visi_list
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
-                        ;
-
-Class_visi_list         : Class_visibility
-							{list_push($1);}
-                        | Class_visi_list LAC_SEMICOLON Class_visibility
-							{list_push($3);}
-                        ;
-
-Class_visibility        : /* empty */
+						| LAC_VISIBLE ASemi
 							{$$ = NULL;}
-                        | Name
+                        ;
+
+Class_visi_list         : Class_visibility ASemi
+							{list_push($1);}
+                        | Class_visi_list Class_visibility ASemi
+							{list_push($2);}
+                        ;
+
+Class_visibility        : Name
 							{$$ = create_node5 (CLAS_VISI_SD,$1,NULL,NULL,NULL,NULL);}
                         | Name LAC_END
 							{$$ = create_node5 (CLAS_VISI_SD,$1,NULL,NULL,NULL,NULL);}
@@ -478,6 +476,10 @@ Name                    : LAC_IDENTIFIER
                         | LAC_STRING
 							{$$ = lace_id (token_str);}
                         ;
+
+ASemi:	/* empty */
+	| LAC_SEMICOLON
+	;
 
 %%
 

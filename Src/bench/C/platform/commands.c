@@ -359,18 +359,6 @@ EIF_OBJ c_code_dir, system_name, prelink_command_name, driver_name;
 #endif
 }
 
-
-/* Misc */
-
-EIF_BOOLEAN tabs_disabled_for_the_platform()
-{
-#if defined EIF_WINDOWS || defined EIF_OS2
-	return EIF_TRUE;
-#else
-	return EIF_FALSE;
-#endif
-}
-
 /* Platform definition */
 
 EIF_BOOLEAN eif_is_os2()

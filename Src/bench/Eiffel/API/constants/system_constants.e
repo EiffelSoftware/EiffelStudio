@@ -16,6 +16,10 @@ feature {NONE}
 
 	Backup_info: STRING is "Info";
 
+	Bench_Directory_List: STRING is "DIRECTORYLIST"
+
+	Bench_Recent_Files: STRING is "BENCH_RECENT_FILES"
+
 	Casegen: STRING is "CASEGEN";
 
 	Case_storage: STRING is "Storage";

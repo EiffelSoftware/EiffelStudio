@@ -348,11 +348,11 @@ feature {NONE} -- Disposal
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 		local
-			l_memory_object: MEMORY
+			l_disposable: DISPOSABLE
 		do
-			l_memory_object ?= Current
-			if l_memory_object /= Void then
-				l_memory_object.dispose
+			l_disposable ?= Current
+			if l_disposable /= Void then
+				l_disposable.dispose
 			end
 		end
 

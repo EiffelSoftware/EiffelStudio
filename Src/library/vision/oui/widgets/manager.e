@@ -23,17 +23,11 @@ feature -- Parent composite
 
 	parent: COMPOSITE is
 			-- Parent of manager widget
-        do
-            Result ?= widget_manager.parent (Current)
-        end;
+		do
+			Result ?= widget_manager.parent (Current)
+		end;
 
 feature -- Color
-
-	foreground: COLOR is obsolete "Use ``foreground_color''"
-			-- Foreground color of manager widget
-		do
-			Result:= foreground_color
-		end;
 
 	foreground_color: COLOR is
 			-- Foreground color of manager widget

@@ -75,6 +75,7 @@ feature -- Basic operations
 				until
 					(dialog.directory.is_empty and shown_once) or created_project
 				loop
+					shown_once := True
 					create_project := True
 					dialog.show_modal_to_window (system_status.main_window)
 						-- If a directory was chosen.

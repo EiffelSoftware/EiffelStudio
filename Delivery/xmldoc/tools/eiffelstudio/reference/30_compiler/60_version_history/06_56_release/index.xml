@@ -82,6 +82,8 @@
 		</heading>
 		<list ordered="false">
 			<item>Fixed crash of the compiler at the very end of a finalization of a system which has an assignment of a manifest type into a variable of type <class_name>ARRAY</class_name> [<keyword>like</keyword> <feature_name>anchor</feature_name>] where<feature_name>anchor</feature_name> is a feature being redefined with a different type in a descendant class.</item>
+			<item>Fixed an issue where compiler would report more than once the same error in an incremental recompilation.</item>
+			<item>Fixed issue where changing a normal routine to an external and having a compile error, and then reverting back to a normal routine while fixing the error would cause the compiler to crash.</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues

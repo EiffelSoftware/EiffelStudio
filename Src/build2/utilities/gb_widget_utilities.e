@@ -6,6 +6,9 @@ indexing
 
 deferred class
 	GB_WIDGET_UTILITIES
+	
+inherit
+	EV_FONT_CONSTANTS
 
 feature -- Basic operations
 
@@ -629,9 +632,9 @@ feature {NONE} -- Implementation
 		require
 			font_not_void: font /= Void
 		do
-			Result := font.family.out + ";"
-			Result.append (font.weight.out + ";")
-			Result.append (font.shape.out + ";")
+			Result := font_constant_to_string (font.family) + ";"
+			Result.append (font_constant_to_string (font.weight) + ";")
+			Result.append (font_constant_to_string (font.shape) + ";")
 			Result.append (font.height_in_points.out + ";")
 			from
 				font.preferred_families.start
@@ -641,6 +644,65 @@ feature {NONE} -- Implementation
 				Result.append (font.preferred_families.item.out)
 				font.preferred_families.forth
 			end
+		end
+		
+	font_constant_to_string (constant: INTEGER): STRING is
+			-- `Result' is font `constant' converted to STRING representation.
+		require
+			valid_constant: valid_family (constant) or valid_shape (constant) or valid_weight (constant)
+		do
+			Result := font_string_lookup.item (constant)
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	string_to_font_constant (string: STRING): INTEGER is
+			-- `Result' is string representation of font constant converted to INTEGER.
+		require
+			string_not_void: string /= Void
+			valid_string: font_integer_lookup.has (string)
+		do
+			Result := font_integer_lookup.item (string)
+		ensure
+			valid_constant: valid_family (Result) or valid_shape (Result) or valid_weight (Result)
+		end
+		
+	font_integer_lookup: HASH_TABLE [INTEGER, STRING] is
+			-- `Result' is a lookup table for all INTEGER font constant values by STRING.
+		once
+			create Result.make (11)
+			Result.extend (1, "FamilyScreen")
+			Result.extend (2, "FamilyRoman")
+			Result.extend (3, "FamilySans")
+			Result.extend (4, "FamilyTypewriter")
+			Result.extend (5, "FamilyModern")
+			Result.extend (6, "WeightThin")
+			Result.extend (7, "WeightRegular")
+			Result.extend (8, "WeightBold")
+			Result.extend (9, "WeightBlack")
+			Result.extend (10, "ShapeRegular")
+			Result.extend (11, "ShapeItalic")
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	font_string_lookup: HASH_TABLE [STRING, INTEGER] is
+			-- `Result' is a lookup table for all STRING font constant values by INTEGER.
+		once
+			create Result.make (11)
+			Result.extend ("FamilyScreen", 1)
+			Result.extend ("FamilyRoman", 2)
+			Result.extend ("FamilySans", 3)
+			Result.extend ("FamilyTypewriter", 4)
+			Result.extend ("FamilyModern", 5)
+			Result.extend ("WeightThin", 6)
+			Result.extend ("WeightRegular", 7)
+			Result.extend ("WeightBold", 8)
+			Result.extend ("WeightBlack", 9)
+			Result.extend ("ShapeRegular", 10)
+			Result.extend ("ShapeItalic", 11)
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	build_string_from_color (color: EV_COLOR): STRING is
@@ -679,9 +741,9 @@ feature {NONE} -- Implementation
 		do
 			internal_string := a_string.twin
 			create Result
-			Result.set_family (get_next_part_of_multi_part_string (a_string).to_integer)
-			Result.set_weight (get_next_part_of_multi_part_string (a_string).to_integer)
-			Result.set_shape (get_next_part_of_multi_part_string (a_string).to_integer)
+			Result.set_family (string_to_font_constant (get_next_part_of_multi_part_string (a_string)))
+			Result.set_weight (string_to_font_constant (get_next_part_of_multi_part_string (a_string)))
+			Result.set_shape (string_to_font_constant (get_next_part_of_multi_part_string (a_string)))
 			Result.set_height_in_points (get_next_part_of_multi_part_string (a_string).to_integer)
 			Result.preferred_families.extend (a_string)
 		ensure

@@ -9,7 +9,7 @@ class
 	
 	-- The following properties from EV_WIDGET are manipulated by `Current'.
 	-- Minimum_width - Performed on the real object only. Not the display object
-	-- Minimum_height - Performed on the real object only, Not the display_object
+	-- Minimum_height - Performed on the real object only. Not the display_object
 
 inherit
 	GB_EV_ANY
@@ -119,12 +119,12 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Minimum_width_string)
 			if element_info /= Void then
-				objects.first.set_minimum_width (element_info.data.to_integer)
+				for_first_object (agent {EV_WIDGET}.set_minimum_height (element_info.data.to_integer))
 			end
 			
 			element_info := full_information @ (Minimum_height_string)
 			if element_info /= Void then
-				objects.first.set_minimum_height (element_info.data.to_integer)
+				for_first_object (agent {EV_WIDGET}.set_minimum_height (element_info.data.to_integer))
 			end
 		end
 
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 		do
 			if not minimum_height.text.is_empty and then minimum_height.text.is_integer then
 				value := minimum_height.text.to_integer
-					objects.first.set_minimum_height (value)
+				for_first_object (agent {EV_WIDGET}.set_minimum_height (value))
 			end
 		end
 		
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 		do
 			if not minimum_width.text.is_empty and then minimum_width.text.is_integer then
 				value := minimum_width.text.to_integer
-					objects.first.set_minimum_width (value)
+				for_first_object (agent {EV_WIDGET}.set_minimum_width (value))
 			end
 		end
 

@@ -189,49 +189,42 @@ feature -- Access
 			end
 		end
 
-	local_dependencies: LINKED_LIST [ASSEMBLY_INFORMATION] is
+	local_dependencies: LINKED_LIST [STRING] is
 			-- Dependencies corresponding to `local_assemblies'
 		require
 			non_void_local_assemblies: local_assemblies /= Void
 			not_empty_local_assemblies: not local_assemblies.is_empty
 		local
-			an_assembly: ASSEMBLY_INFORMATION
-			an_assembly_dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
-			a_dependency: ASSEMBLY_INFORMATION
-			tmp_list: LINKED_LIST [ASSEMBLY_INFORMATION]
+			an_assembly_location: STRING
+			an_assembly_dependencies: LINKED_LIST [STRING]
+			a_dependency: STRING
+			a_key: STRING
+			an_item: STRING
 		do
 			from
-				create tmp_list.make
+				create Result.make
 				local_assemblies.start
 			until
 				local_assemblies.off
 			loop
+				a_key := local_assemblies.key_for_iteration
+				an_item := local_assemblies.item_for_iteration
 				an_assembly_dependencies := local_assembly_dependencies (local_assemblies.key_for_iteration, local_assemblies.item_for_iteration)
-				from
-					an_assembly_dependencies.start
-				until
-					an_assembly_dependencies.after
-				loop
-					a_dependency := an_assembly_dependencies.item					
-					if not a_dependency.name.is_equal (Mscorlib_name) and not has_assembly (tmp_list, a_dependency) then
-						tmp_list.extend (a_dependency)
+				if an_assembly_dependencies /= Void then
+					from
+						an_assembly_dependencies.start
+					until
+						an_assembly_dependencies.after
+					loop
+						a_dependency := an_assembly_dependencies.item					
+						if a_dependency.substring_index ("mscorlib", 1) < 1 and not Result.has (a_dependency) then
+							Result.extend (a_dependency)
+						end
+						an_assembly_dependencies.forth
 					end
-					an_assembly_dependencies.forth
 				end
 				local_assemblies.forth
 			end	
-			from
-				create Result.make
-				tmp_list.start
-			until
-				tmp_list.after
-			loop
-				an_assembly := tmp_list.item
-				if not has_assembly (selected_assemblies, an_assembly) and not has_local_assembly (an_assembly.name) then
-					Result.extend (an_assembly)
-				end
-				tmp_list.forth
-			end
 		end
 
 	eiffel_path_from_info (a_list: LINKED_LIST [ASSEMBLY_INFORMATION]; an_assembly: ASSEMBLY_INFORMATION): STRING is
@@ -542,8 +535,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	local_assembly_dependencies (a_filename, a_path: STRING): LINKED_LIST [ASSEMBLY_INFORMATION] is
-			-- Dependencies of local assembly corresponding to `a_filename', which was imported in `a_path'
+	local_assembly_dependencies (a_filename, a_path: STRING): LINKED_LIST [STRING] is
+			-- Dependencies location of local assembly corresponding to `a_filename', which was imported in `a_path'
 		require
 			non_void_filename: a_filename /= Void
 			not_empty_filename: not a_filename.is_empty
@@ -552,12 +545,7 @@ feature {NONE} -- Implementation
 		local
 			locals: ECOM_ARRAY [STRING]
 			i: INTEGER
-			a_name: STRING
-			a_version: STRING
-			a_culture: STRING
-			a_public_key: STRING
-			an_assembly_info: ASSEMBLY_INFORMATION
-			an_eiffel_path: STRING
+			a_location: STRING
 		do
 			locals := proxy.local_assembly_dependencies (a_filename)
 			check
@@ -569,30 +557,11 @@ feature {NONE} -- Implementation
 			until
 				i = locals.count
 			loop
-				a_name := locals.array_item (i)
-				a_version := locals.array_item (i + 1)
-				a_culture := locals.array_item (i + 2)
-				a_public_key := locals.array_item (i + 4)
-				if (a_name /= Void and then not a_name.is_empty) and (a_version /= Void and then not a_version.is_empty) and
-						(a_culture /= Void and then not a_culture.is_empty) and (a_public_key /= Void and then not a_public_key.is_empty) then
-						
-					create an_assembly_info.make (a_name)
-					an_assembly_info.set_version (a_version)
-					an_assembly_info.set_culture (a_culture)
-					an_assembly_info.set_public_key (a_public_key) 
-					an_eiffel_path := eiffel_path_from_info (available_assemblies, an_assembly_info)
-					if an_eiffel_path = Void then
-						an_eiffel_path := eiffel_path_from_info (selected_assemblies, an_assembly_info)
-					end
-					
-					if an_eiffel_path /= Void and then not an_eiffel_path.is_empty then
-						an_assembly_info.set_path (an_eiffel_path)
-					else
-						an_assembly_info.set_path (a_path)
-					end
-					Result.extend (an_assembly_info)
+				a_location := locals.array_item (i)
+				if (a_location /= Void and then not a_location.is_empty) then 
+					Result.extend (a_location)
 				end
-				i := i + 5
+				i := i + 1
 			end
 		end
 		

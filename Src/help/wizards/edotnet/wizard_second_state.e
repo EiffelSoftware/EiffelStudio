@@ -126,6 +126,7 @@ feature -- Basic Operation
 	update_state_information is
 			-- Check User Entries
 		do
+			wizard_information.set_generate_dll (rb_project_type_dll.is_selected)
 			wizard_information.set_root_class_name (root_class_name.text)
 			wizard_information.set_creation_routine_name (creation_routine_name.text)
 			Precursor

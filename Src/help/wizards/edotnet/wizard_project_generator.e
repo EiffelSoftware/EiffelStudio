@@ -128,6 +128,7 @@ feature {NONE} -- Implementation
 			a_local_assembly: STRING
 			a_path: STRING
 			i: INTEGER
+			a_name: STRING
 		do
 			create Result.make (1024)
 			Result.append (New_line + Tab + Tab + External_classes_comment + New_line)
@@ -173,8 +174,12 @@ feature {NONE} -- Implementation
 				local_assemblies.off
 			loop
 				a_local_assembly := clone (local_assemblies.item_for_iteration)
-				if a_local_assembly /= Void and then not a_local_assembly.is_empty then
-					Result.append (Tab + "all local_assembly_" + i.out + "_generated: " + Inverted_comma + a_local_assembly + Inverted_comma + New_line + New_line)
+				a_name := clone (local_assemblies.key_for_iteration)
+				a_name := a_name.substring (a_name.last_index_of ('\', a_name.count - 4) + 1, a_name.count -4)
+				a_name.to_lower
+				if a_local_assembly /= Void and then not a_local_assembly.is_empty and then a_local_assembly.substring_index (Eiffel_installation_dir_name, 1) > 0 then
+					a_local_assembly.replace_substring_all (Eiffel_installation_dir_name, Eiffel_key)
+					Result.append (Tab + "all local_assembly_" + i.out + "_generated: " + Inverted_comma + a_local_assembly.substring (1, a_local_assembly.count) + a_name + Inverted_comma + New_line + New_line)
 					i := i + 1
 				end			
 				local_assemblies.forth
@@ -193,8 +198,8 @@ feature {NONE} -- Implementation
 			an_assembly: ASSEMBLY_INFORMATION
 			a_dependency: ASSEMBLY_INFORMATION
 			a_local_assembly: STRING
-			local_dependencies: LINKED_LIST [ASSEMBLY_INFORMATION]
-			a_local_dependency: ASSEMBLY_INFORMATION			
+			local_dependencies: LINKED_LIST [STRING]
+			a_local_dependency: STRING		
 		do
 			create Result.make (1024)
 			Result.append (External_keyword + New_line + Tab + Assembly_keyword + New_line)
@@ -247,8 +252,10 @@ feature {NONE} -- Implementation
 					local_dependencies.after
 				loop
 					a_local_dependency := local_dependencies.item
-					Result.append (Tab + Tab + Tab + Inverted_comma + assembly_location (a_local_dependency) + Inverted_comma + Comma + New_line)
-					dependencies.forth
+					if not is_selected_assembly (a_local_dependency) and not is_dependency (a_local_dependency) and not local_assemblies.has (a_local_dependency) then
+						Result.append (Tab + Tab + Tab + Inverted_comma + a_local_dependency + Inverted_comma + Comma + New_line)
+					end
+					local_dependencies.forth
 				end
 			end
 			
@@ -321,5 +328,45 @@ feature {NONE} -- Constants
 
 	Eiffel_key: STRING is "$ISE_EIFFEL"
 			-- Key of environment variable to the Eiffel delivery
-			
+	
+	is_selected_assembly (a_location: STRING): BOOLEAN is
+			-- Is assembly corresponding to `a_location' a selected assembly?
+		require
+			non_void_location: a_location /= Void
+			not_emtpy_location: not a_location.is_empty
+			non_void_selected_assemblies: selected_assemblies /= Void
+		local
+			an_assembly_info: ASSEMBLY_INFORMATION
+		do
+			from
+				selected_assemblies.start
+			until
+				selected_assemblies.after or Result
+			loop
+				an_assembly_info := selected_assemblies.item
+				Result := assembly_location (an_assembly_info).is_equal (a_location)
+				selected_assemblies.forth
+			end
+		end
+		
+	is_dependency (a_location: STRING): BOOLEAN is
+			-- Is assembly corresponding to `a_location' a selected assembly?
+		require
+			non_void_location: a_location /= Void
+			not_emtpy_location: not a_location.is_empty
+			non_void_dependencies: dependencies /= Void
+		local
+			an_assembly_info: ASSEMBLY_INFORMATION
+		do
+			from
+				dependencies.start
+			until
+				dependencies.after or Result
+			loop
+				an_assembly_info := dependencies.item
+				Result := assembly_location (an_assembly_info).is_equal (a_location)
+				dependencies.forth
+			end
+		end
+		
 end -- class WIZARD_PROJECT_GENERATOR

@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 			display_first_onces := False
 			display_first_special := True
 			display_first := True
+			update_agent := ~real_update
 		end
 
 	build_interface is
@@ -308,24 +309,12 @@ feature -- Status setting
 
 	update is
 			-- Display current execution status.
+			--| Deferred implementation for optimization purposes.
 		do
-			if Application.status /= Void then
-				pretty_print_cmd.refresh
-				if Application.status.is_stopped then
-					build_local_tree
-					build_object_tree
-				else
-					if current_object /= Void then
-							-- We are after an execution step, save the current object's display.
-						display_first := current_object.display
-						display_first_attributes := current_object.display_attributes
-						display_first_special := current_object.display_special
-						display_first_onces := current_object.display_onces
-					end
-					local_tree.wipe_out
-					object_tree.wipe_out
-				end
-			end
+			(create {EV_ENVIRONMENT}).application.idle_actions.prune_all (update_agent)
+			local_tree.wipe_out
+			object_tree.wipe_out;
+			(create {EV_ENVIRONMENT}).application.idle_actions.extend (update_agent)
 		end
 
 	set_debugger_manager (a_manager: like debugger_manager) is
@@ -429,6 +418,7 @@ feature {EB_SET_SLICE_SIZE_CMD}
 				ost.set_associated_tree_item (Result)
 				Result.set_pebble (ost)
 				Result.set_accept_cursor (ost.stone_cursor)
+				Result.set_deny_cursor (ost.X_stone_cursor)
 			end
 		end
 
@@ -479,6 +469,32 @@ feature {NONE} -- Implementation
 			Result.put (Pixmaps.Icon_immediate_value, Immediate_value)
 			Result.put (Pixmaps.Icon_object_symbol, Special_value)
 			Result.put (Pixmaps.Icon_expanded_object, Expanded_value)
+		end
+
+	update_agent: PROCEDURE [ANY, TUPLE]
+			-- Procedure used to update Current.
+
+	real_update is
+			-- Display current execution status.
+		do
+			(create {EV_ENVIRONMENT}).application.idle_actions.prune_all (update_agent)
+			if Application.status /= Void then
+				pretty_print_cmd.refresh
+				if Application.status.is_stopped then
+					build_local_tree
+					build_object_tree
+				else
+					if current_object /= Void then
+							-- We are after an execution step, save the current object's display.
+						display_first := current_object.display
+						display_first_attributes := current_object.display_attributes
+						display_first_special := current_object.display_special
+						display_first_onces := current_object.display_onces
+					end
+					local_tree.wipe_out
+					object_tree.wipe_out
+				end
+			end
 		end
 
 	build_local_tree is
@@ -701,7 +717,6 @@ feature {NONE} -- Implementation
 	drop_stack_element (st: CALL_STACK_STONE) is
 			-- Display stack element represented by `st'.
 		do
-			Application.set_current_execution_stack (st.level_number)
 			debugger_manager.launch_stone (st)
 		end
 

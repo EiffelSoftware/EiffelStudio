@@ -19,8 +19,6 @@ inherit
 
 	IL_CONST
 	
-	PREDEFINED_NAMES
-	
 creation
 	make
 
@@ -62,12 +60,12 @@ feature -- C code generation
 		do
 			f_name_id := feat.feature_name_id
 
-			if f_name_id = Names_heap.put_name_id then
+			if f_name_id = feature {PREDEFINED_NAMES}.put_name_id then
 					-- Generate built-in feature `put' of class SPECIAL
 				generate_put (feat, buffer);
 			elseif
-				f_name_id = Names_heap.item_name_id or 
-				f_name_id = Names_heap.infix_at_name_id
+				f_name_id = feature {PREDEFINED_NAMES}.item_name_id or 
+				f_name_id = feature {PREDEFINED_NAMES}.infix_at_name_id
 			then
 					-- Generate built-in feature `item' of class SPECIAL
 				generate_item (feat, buffer);
@@ -82,7 +80,7 @@ feature -- C code generation
 		require
 			good_argument: buffer /= Void;
 			feat_exists: feat /= Void;
-			consistency: feat.feature_name.is_equal ("put");
+			consistency: feat.feature_name_id = feature {PREDEFINED_NAMES}.put_name_id;
 		local
 			gen_param: TYPE_I;
 			non_expanded_type: CL_TYPE_I;
@@ -207,7 +205,8 @@ feature -- C code generation
 		require
 			good_argument: buffer /= Void;
 			feat_exists: feat /= Void;
-			consistency: feat.feature_name.is_equal ("item");
+			consistency: feat.feature_name_id = feature {PREDEFINED_NAMES}.item_name_id or
+				feat.feature_name_id = feature {PREDEFINED_NAMES}.infix_at_name_id
 		local
 			gen_param: TYPE_I;
 			non_expanded_type: CL_TYPE_I;

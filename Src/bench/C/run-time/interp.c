@@ -344,7 +344,7 @@ int where;			/* Are we checking invariant before or after compound? */
 	int32 rout_id;					/* Routine id */
 	int32 body_id;					/* Body id of once routine */
 	int current_trace_level;	/* Saved call level for trace, only needed when routine is retried */
-	struct profile_stack *old_p_stk;	/* Saved prof_stack for rescued, and recursive features */
+	char **saved_prof_top;	/* Saved top of `prof_stack' */
 	struct item *result_val;		/* Postcondition result value */
 	RTSN;							/* Save nested flag */
 
@@ -611,8 +611,7 @@ int where;			/* Are we checking invariant before or after compound? */
 				h_top = hec_stack.st_top;	/* Save hector stack */
 				h_cur = hec_stack.st_cur;
 				current_trace_level = trace_call_level;	/* Save trace call level */
-				old_p_stk = prof_stack;
-				prof_stack_init();
+				saved_prof_top = prof_stack->st_top;
 				exvect->ex_jbuf = (char *) exenv;	/* Longjmp address */
 				if (setjmp(exenv))
 					IC = rescue;				/* Jump to rescue clause */
@@ -667,9 +666,7 @@ end:
 		dprintf(2)("BC_RETRY\n");
 #endif
 		trace_call_level = current_trace_level;
-		prof_stack_rewind();
-		prof_stack_free();
-		prof_stack = old_p_stk;
+		prof_stack_rewind(saved_prof_top);
 		in_assertion = 0;
 		offset = get_long();					/* Get the retry offset */
 		IC += offset;

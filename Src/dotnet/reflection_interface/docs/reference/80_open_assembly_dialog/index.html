@@ -1,0 +1,30 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+	<head>
+		<TITLE>Open assembly dialog</TITLE>
+		<LINK REL="StyleSheet" HREF="../../default.css">
+		<META NAME="MS-HKWD" CONTENT="open dialog, open assembly, non-shared assembly, non-shared, signed assembly, signed">
+	</head>
+
+	<body>
+		<br>
+		<center>
+			<h1>The open assembly dialog</h1>
+		</center>
+		<br>
+
+		<p>
+			The <a href = "../60_import_tool/index.html">import tool</a> lists the assemblies from the Global Assembly Cache. Nevertherless, ISE Assembly Manager only requires that an assembly is signed to import it. Therefore, the import tool gives you access to an open assembly dialog (Menu `File', item `Open Assembly').<br>
+			The open assembly dialog is a Windows open file dialog, with default extensions `*.dll; *.exe', which are the only possible extensions for a .NET assembly.
+		</p>
+		<p>
+			<center>
+				<img src = "../../images/open_assembly_dialog.png" no border>
+			</center>
+		</p>
+		<p>
+			When you click on `Open', ISE Assembly Manager will first check that the selected assembly is signed. If it is a signed assembly, it will open the <a href = "../70_import_dialog/index.html">import dialog</a>, which will guide you to import the assembly. Otherwise, a message box will appear, inviting you to sign the assembly before importing it with the assembly manager.
+		</p>
+	</body>
+</html>

@@ -182,14 +182,14 @@ feature -- Syntax errors
 			-- Send to C code of Yacc information for making
 			-- error messages.
 		once
-			error_init ($Current, 	$make_syntax_error,
-									$make_string_too_long,
-									$make_string_extension,
-									$make_string_uncompleted,
-									$make_bad_character,
-									$make_string_empty,
-									$make_id_too_long,
-									$make_basic_generic_type);
+--			error_init ($Current, 	$make_syntax_error,
+--									$make_string_too_long,
+--									$make_string_extension,
+--									$make_string_uncompleted,
+--									$make_bad_character,
+--									$make_string_empty,
+--									$make_id_too_long,
+--									$make_basic_generic_type);
 		end;
 
 	wipe_out is

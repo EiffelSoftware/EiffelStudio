@@ -17,13 +17,13 @@ feature {NONE}
 	Freeze_command_name: STRING is
 		once
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/bin/finish_freezing ")
+			Result.append ("/bench/spec/$(PLATFORM)/bin/finish_freezing ")
 		end;
 
 	help_path: STRING is
 		once
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.append ("/help/")
+			Result.append ("/bench/help/errors/")
 		end;
 
 	bm_Breakpoint: PIXMAP is
@@ -301,7 +301,7 @@ feature {NONE}
 			full_path: STRING
 		do
 			full_path := Eiffel3_dir_name.duplicate;
-			full_path.append ("/bitmaps/");
+			full_path.append ("/bench/bitmaps/");
 			full_path.append (fn);
 			!!Result.make;
 			Result.read_from_file (full_path);

@@ -262,7 +262,7 @@ feature -- Generation, Header
 				%CC = $cc%N%
 				%CFLAGS = $optimize $ccflags $large ");
 			generate_specific_defines;
-			Make_file.putstring ("-I$(RUN_TIME3)%N%
+			Make_file.putstring ("-I$(EIFFEL3)/bench/spec/$(PLATFORM)/include%N%
 				%LDFLAGS = $ldflags%N%
 				%LIBS = $libs%N%
 				%MAKE = make%N%

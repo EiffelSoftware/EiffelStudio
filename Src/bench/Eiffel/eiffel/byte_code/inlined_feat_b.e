@@ -108,6 +108,9 @@ feature
 			if compound /= Void then
 				compound.analyze;
 			end;
+			inlined_dt_current := context.inlined_dt_current;
+
+			context.reset_inlined_dt_current;
 
 				-- Free resources
 			free_inlined_registers (local_regs);
@@ -141,6 +144,9 @@ feature -- Generation
 			feat_bl_generate_parameters (gen_reg)
 
 			inliner.set_inlined_feature (Current);
+
+			generated_file.putchar ('{');
+			generated_file.new_line;
 
 			generated_file.putstring ("/* INLINED CODE (");
 			generated_file.putstring (feature_name);
@@ -201,18 +207,39 @@ feature -- Generation
 			gen_reg.print_register;
 			generated_file.putchar (';');
 			generated_file.new_line
+
 			generated_file.new_line
 
 			Context.set_current_type (current_t);
 			Context.set_inlined_current_register (current_reg);
 
+			if inlined_dt_current > 0 then
+				context.set_inlined_dt_current (inlined_dt_current);
+				generated_file.putchar ('{');
+				generated_file.new_line;
+				generated_file.putstring ("int inlined_dtype = ");
+				generated_file.putstring (gc_upper_dtype_lparan);
+				current_reg.print_register_by_name;
+				generated_file.putchar (')');
+				generated_file.new_line
+			end;
+
 			if compound /= Void then
 				compound.generate
+			end
+
+			if inlined_dt_current > 0 then
+				generated_file.putchar ('}');
+				generated_file.new_line
+				context.set_inlined_dt_current (0);
 			end
 
 			Context.set_inlined_current_register (Void);
 
 			generated_file.putstring ("/* END INLINED CODE */");
+			generated_file.new_line;
+
+			generated_file.putchar ('}');
 			generated_file.new_line;
 
 			Context.set_current_type (old_current_type);
@@ -312,6 +339,9 @@ feature {NONE} -- Registers
 			generated_file.putstring (" 0;");
 			generated_file.new_line;
 		end
+
+	inlined_dt_current: INTEGER;
+		-- Do we optimize the access to the Dynamic type of Current?
 
 feature -- Code to inline
 

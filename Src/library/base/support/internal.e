@@ -43,7 +43,7 @@ feature -- Creation
 			a: ANY
 		do
 			a := class_type.to_c
-			Result := c_type_id ($a)
+			Result := feature {ISE_RUNTIME}.type_id_from_name ($a)
 		ensure
 			valid_result: Result = -1 or else Result >= 0
 		end
@@ -101,7 +101,7 @@ feature -- Access
 		require
 			object_not_void: object /= Void
 		do
-			Result := c_dynamic_type ($object)
+			Result := feature {ISE_RUNTIME}.dynamic_type ($object)
 		end
 
 	generic_dynamic_type (object: ANY; i: INTEGER): INTEGER is
@@ -131,7 +131,7 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			not_special: not is_special (object)
 		do
-			create Result.make_from_c (c_field_name_of_type (i - 1, c_dynamic_type ($object)))
+			create Result.make_from_c (c_field_name_of_type (i - 1, feature {ISE_RUNTIME}.dynamic_type ($object)))
 		ensure
 			Result_exists: Result /= Void
 		end
@@ -163,7 +163,7 @@ feature -- Access
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 		do
-			Result := c_field_type_of_type (i - 1, c_dynamic_type ($object))
+			Result := c_field_type_of_type (i - 1, feature {ISE_RUNTIME}.dynamic_type ($object))
 		end
 
 	field_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
@@ -356,7 +356,7 @@ feature -- Measurement
 		require
 			object_not_void: object /= Void
 		do
-			Result := field_count_of_type (c_dynamic_type ($object))
+			Result := field_count_of_type (feature {ISE_RUNTIME}.dynamic_type ($object))
 		end
 
 	field_count_of_type (type_id: INTEGER): INTEGER is
@@ -396,14 +396,6 @@ feature {NONE} -- Implementation
 			"C [macro %"eif_macros.h%"]"
 		alias
 			"RTRA"
-		end
-
-	c_dynamic_type (object: POINTER): INTEGER is
-			-- Dynamic type of `object'
-		external
-			"C macro signature (EIF_REFERENCE): EIF_INTEGER use %"eif_macros.h%""
-		alias
-			"Dftype"
 		end
 
 	c_field (i: INTEGER; object: POINTER): ANY is
@@ -565,13 +557,6 @@ feature {NONE} -- Implementation
 			"C (long, EIF_REFERENCE, EIF_POINTER) | %"eif_internal.h%""
 		alias
 			"ei_set_pointer_field"
-		end
-
-	c_type_id (s: POINTER): INTEGER is
-		external
-			"C (char *): EIF_INTEGER | %"eif_cecil.h%""
-		alias
-			"eif_type_id"
 		end
 
 	eif_gen_param_id (stype: INTEGER; obj: POINTER; pos: INTEGER): INTEGER is

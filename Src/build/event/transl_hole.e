@@ -40,6 +40,7 @@ feature {NONE}
 		do
 			editor := ed;
 			make_visible (a_parent);
+			register;
 			initialize_transport
 		end;
 

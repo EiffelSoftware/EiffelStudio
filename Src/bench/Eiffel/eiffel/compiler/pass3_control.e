@@ -74,10 +74,10 @@ feature
 		require
 			good_argument: depend_list /= Void
 		local
-			pos: INTEGER;
+			old_cursor: CURSOR;
 		do
 -- FIXME: use `disjoint'
-			pos := depend_list.index;
+			old_cursor := depend_list.cursor;
 			from
 				Result := True;
 				depend_list.start;
@@ -89,7 +89,7 @@ feature
 				Result := propagators.off;
 				depend_list.forth;
 			end;
-			depend_list.go_i_th (pos);
+			depend_list.go_to (old_cursor);
 		end;
 
 	melted_empty_intersection (depend_list: FEATURE_DEPENDANCE): BOOLEAN is
@@ -98,10 +98,10 @@ feature
 		require
 			good_argument: depend_list /= Void
 		local
-			pos: INTEGER;
+			old_cursor: CURSOR;
 		do
 -- FIXME: use `disjoint'
-			pos := depend_list.index;
+			old_cursor := depend_list.cursor;
 			from
 				Result := True;
 				depend_list.start;
@@ -113,7 +113,7 @@ feature
 				Result := melted_propagators.off;
 				depend_list.forth;
 			end;
-			depend_list.go_i_th (pos);
+			depend_list.go_to (old_cursor);
 		end;
 
 	changed_status_empty_intersection (feature_suppliers: TWO_WAY_SORTED_SET [CLASS_ID]): BOOLEAN is

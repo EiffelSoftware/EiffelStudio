@@ -34,12 +34,12 @@ feature
 		require
 			good_argument: t /= Void;
 		local
-			pos: INTEGER
+			old_cursor: CURSOR
 		do
-			pos := index;
+			old_cursor := cursor;
 			search (t);
 			Result := not after;
-			go_i_th (pos);
+			go_to (old_cursor);
 		end;
 
 feature -- Merging

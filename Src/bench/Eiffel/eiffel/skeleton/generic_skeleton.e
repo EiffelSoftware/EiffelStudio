@@ -17,11 +17,11 @@ feature
 		require
 			good_argument: other /= Void
 		local
-			pos, other_pos, old_pos: INTEGER;
+			old_cursor, other_cursor: CURSOR;
 		do
 			if count = other.count then
-				pos := index;
-				other_pos := other.index;
+				old_cursor := cursor;
+				other_cursor := other.cursor;
 				from
 					Result := True;
 					start;
@@ -33,8 +33,8 @@ feature
 					forth;
 					other.forth;
 				end;
-				go_i_th (pos);
-				other.go_i_th (old_pos);
+				go_to (old_cursor);
+				other.go_to (other_cursor);
 			end;
 		end;
 
@@ -43,10 +43,10 @@ feature
 		require
 			good_argument: class_type /= Void
 		local
-			pos: INTEGER;
+			old_cursor: CURSOR;
 		do
 			!!Result.make;
-			pos := index;
+			old_cursor := cursor;
 			from
 				start
 			until
@@ -55,7 +55,7 @@ feature
 				Result.extend (item.instantiation_in (class_type));
 				forth;
 			end;
-			go_i_th (pos);
+			go_to (old_cursor);
 		end;
 
 

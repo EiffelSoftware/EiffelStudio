@@ -170,12 +170,12 @@ feature
 		require
 			positive: type_id > 0
 		local
-			pos: INTEGER;
+			old_cursor: CURSOR;
 		do
-			pos := index;
+			old_cursor := cursor;
 			goto (type_id);
 			Result := not after;
-			go_i_th (pos);
+			go_to (old_cursor);
 		end;
 			
 	goto (type_id: INTEGER) is

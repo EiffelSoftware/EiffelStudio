@@ -102,20 +102,20 @@ feature
 		require
 			good_argument: info /= Void
 		local
-			pos: INTEGER;
+			old_cursor: CURSOR;
 		do
 				-- The position of the list of features must be saved
 				-- because feature `treat_renamings' could call it.
 			if info.a_feature.is_deferred then
-				pos := deferred_features.index;
+				old_cursor := deferred_features.cursor;
 				deferred_features.start;
 				deferred_features.put_left (info);
-				deferred_features.go_i_th (pos);
+				deferred_features.go_to (old_cursor);
 			else
-				pos := features.index;
+				old_cursor := features.cursor;
 				features.start;
 				features.put_left (info);
-				features.go_i_th (pos);
+				features.go_to (old_cursor);
 			end;
 		end;
 

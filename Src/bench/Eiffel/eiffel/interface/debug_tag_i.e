@@ -49,12 +49,12 @@ feature
 			-- Debug purpose
 		local
 			l: LINKED_LIST [STRING];
-			pos: INTEGER;
+			old_cursor: CURSOR;
 		do
 			from
 				io.error.putstring ("tags: ");
 				l := tags;
-				pos := l.index;
+				old_cursor := l.cursor;
 				l.start;
 			until
 				l.after
@@ -63,7 +63,7 @@ feature
 				io.error.putstring (" ");
 				l.forth;
 			end;
-			l.go_i_th (pos);
+			l.go_to (old_cursor);
 		end;
 
 	generate (file: INDENT_FILE; id: CLASS_ID) is

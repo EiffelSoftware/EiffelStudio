@@ -5,20 +5,24 @@ indexing
 external class
 	FORMATTER
 
-inherit
-	GLOBALS
-
 create
-	make_formatter
+	make
 
 feature {NONE} -- Initialization
 
-	frozen make_formatter is
+	frozen make is
 		external
 			"IL creator use Formatter"
 		end
 
 feature -- Basic Operations
+
+	frozen FormatArgumentTypeName (ArgumentType: SYSTEM_TYPE): STRING is
+		external
+			"IL signature (System.Type): System.String use Formatter"
+		alias
+			"FormatArgumentTypeName"
+		end
 
 	frozen FormatStrongName (name: STRING): STRING is
 		external
@@ -32,6 +36,27 @@ feature -- Basic Operations
 			"IL signature (System.String): System.String use Formatter"
 		alias
 			"FormatTypeName"
+		end
+
+	frozen SetEnums (SomeEnums: SYSTEM_COLLECTIONS_ARRAYLIST) is
+		external
+			"IL signature (System.Collections.ArrayList): System.Void use Formatter"
+		alias
+			"SetEnums"
+		end
+
+	frozen IsEnum (type: SYSTEM_TYPE): BOOLEAN is
+		external
+			"IL signature (System.Type): System.Boolean use Formatter"
+		alias
+			"IsEnum"
+		end
+
+	frozen FormatVariableName (name: STRING): STRING is
+		external
+			"IL signature (System.String): System.String use Formatter"
+		alias
+			"FormatVariableName"
 		end
 
 end -- class FORMATTER

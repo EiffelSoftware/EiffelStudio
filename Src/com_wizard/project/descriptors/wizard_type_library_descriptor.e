@@ -287,6 +287,8 @@ feature -- Basic operations
 			i, local_counter, l_count: INTEGER
 			l_string: STRING
 			l_type: WIZARD_TYPE_DESCRIPTOR
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
+			l_component: WIZARD_COMPONENT_DESCRIPTOR
 		do
 			from
 				i := 1
@@ -306,6 +308,19 @@ feature -- Basic operations
 						if l_type.type_kind /= Tkind_alias then
 							if l_type.c_header_file_name /= Void and then not l_type.c_header_file_name.is_empty then
 								l_type.c_header_file_name.insert_string (l_string, l_type.c_header_file_name.index_of ('.', 1))
+							end
+							l_interface ?= l_type
+							if l_interface /= Void then
+								if l_interface.c_declaration_header_file_name /= Void and then not l_interface.c_declaration_header_file_name.is_empty then
+									l_interface.c_declaration_header_file_name.insert_string (l_string, l_interface.c_declaration_header_file_name.index_of ('.', 1))
+								end
+							else
+								l_component ?= l_type
+								if l_component /= Void then
+									if l_component.c_declaration_header_file_name /= Void and then not l_component.c_declaration_header_file_name.is_empty then
+										l_component.c_declaration_header_file_name.insert_string (l_string, l_component.c_declaration_header_file_name.index_of ('.', 1))
+									end
+								end
 							end
 						end
 						l_type.c_type_name.append (l_string)

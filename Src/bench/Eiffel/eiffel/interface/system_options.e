@@ -42,6 +42,12 @@ feature -- Access
 	has_syntax_warning: BOOLEAN
 			-- Does system produce warnings on old syntactical constructs?
 
+	has_old_verbatim_strings: BOOLEAN
+			-- Is old semantics of verbatim strings used?
+
+	has_old_verbatim_strings_warning: BOOLEAN
+			-- Does system produce warnings for old semantics of verbatim strings?
+
 	exception_stack_managed: BOOLEAN;
 			-- Is the exception stack managed in final mode
 
@@ -405,6 +411,22 @@ feature -- Update
 			has_syntax_warning := b
 		ensure
 			has_syntax_warning_set: has_syntax_warning = b
+		end
+	
+	set_old_verbatim_strings (b: BOOLEAN) is
+			-- Set `has_old_verbatim_strings' to `b'.
+		do
+			has_old_verbatim_strings := b
+		ensure
+			has_old_verbatim_strings_set: has_old_verbatim_strings = b
+		end
+	
+	set_old_verbatim_strings_warning (b: BOOLEAN) is
+			-- Set `has_old_verbatim_strings_warning' to `b'.
+		do
+			has_old_verbatim_strings_warning := b
+		ensure
+			has_old_verbatim_strings_warning_set: has_old_verbatim_strings_warning = b
 		end
 	
 	set_console_application (b: BOOLEAN) is

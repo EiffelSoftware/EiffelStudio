@@ -109,6 +109,8 @@ feature -- Properties
 	java_generation,
 	line_generation,
 	multithreaded,
+	old_verbatim_strings,
+	old_verbatim_strings_warning,
 	override_cluster,
 	profile,
 	product,
@@ -211,6 +213,8 @@ feature {NONE} -- Codes and names.
 			Result.force (msil_use_optimized_precompile, "msil_use_optimized_precompile")
 			Result.force (multithreaded, "multithreaded")
 			Result.force (namespace, "namespace")
+			Result.force (old_verbatim_strings, "old_verbatim_strings")
+			Result.force (old_verbatim_strings_warning, "old_verbatim_strings_warning")
 			Result.force (override_cluster, "override_cluster")
 			Result.force (product, "product")
 			Result.force (profile, "profile")
@@ -572,6 +576,24 @@ feature {COMPILER_EXPORTER}
 						error_found := True
 					end
 
+				when old_verbatim_strings then
+					if value.is_no then
+						System.set_old_verbatim_strings (False)
+					elseif value.is_yes then
+						System.set_old_verbatim_strings (True)
+					else
+						error_found := True
+					end
+				
+				when old_verbatim_strings_warning then
+					if value.is_no then
+						System.set_old_verbatim_strings_warning (False)
+					elseif value.is_yes then
+						System.set_old_verbatim_strings_warning (True)
+					else
+						error_found := True
+					end
+				
 				when console_application then
 					if value.is_no then
 						System.set_console_application (False)

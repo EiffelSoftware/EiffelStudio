@@ -47,7 +47,6 @@ feature -- Basic operations
 			component_doc_void: component_document = Void
 		local
 			file: RAW_FILE
-			xml_store: GB_XML_STORE
 			an_element, component_element: XML_ELEMENT
 			toe_document: TOE_DOCUMENT
 			buffer: STRING

@@ -11,49 +11,49 @@ feature -- Access
 
 	Cc_rgbinit: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro <cdlg.h>]"
 		alias
 			"CC_RGBINIT"
 		end
 
 	Cc_fullopen: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro <cdlg.h>]"
 		alias
 			"CC_FULLOPEN"
 		end
 
 	Cc_preventfullopen: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro <cdlg.h>]"
 		alias
 			"CC_PREVENTFULLOPEN"
 		end
 
 	Cc_showhelp: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro <cdlg.h>]"
 		alias
 			"CC_SHOWHELP"
 		end
 
 	Cc_enablehook: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro <cdlg.h>]"
 		alias
 			"CC_ENABLEHOOK"
 		end
 
 	Cc_enabletemplate: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro <cdlg.h>]"
 		alias
 			"CC_ENABLETEMPLATE"
 		end
 
 	Cc_enabletemplatehandle: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro <cdlg.h>]"
 		alias
 			"CC_ENABLETEMPLATEHANDLE"
 		end

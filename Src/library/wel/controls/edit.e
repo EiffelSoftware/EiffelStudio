@@ -103,7 +103,7 @@ feature -- Status setting
 			consistent_selection: start_position <= end_position
 			end_small_enough: end_position <= text_length
 		do
-			cwin_send_message (item, Em_setsel, start_position,
+			cwel_set_selection_edit (item, start_position,
 				end_position)
 		ensure
 			has_selection: has_selection
@@ -271,6 +271,13 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		deferred
+		end
+
+feature {NONE} -- Externals
+
+	cwel_set_selection_edit (hwnd: POINTER; start_pos, end_pos: INTEGER) is
+		external
+			"C [macro <wel.h>]"
 		end
 
 end -- class WEL_EDIT

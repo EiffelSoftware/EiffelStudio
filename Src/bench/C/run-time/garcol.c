@@ -683,20 +683,17 @@ rt_public void reclaim()
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
 #ifdef EIF_WINDOWS
-#ifdef EIF_WIN_31
-	eif_free_dlls();
-#else
+#ifndef EIF_WIN_31
 #ifdef EIF_WIN32
 	eif_cleanup();
 #endif
-	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)
+	/*for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)
 		{
 		cn = c->ck_next;
 		free (c);
-		}
-
-	eif_free_dlls();
+		}*/
 #endif
+	eif_free_dlls();
 #endif
 
 	dle_reclaim();			/* Reclaim resources introduced by DLE */

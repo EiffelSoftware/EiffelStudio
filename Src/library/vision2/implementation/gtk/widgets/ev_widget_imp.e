@@ -152,7 +152,15 @@ feature -- Status report
 	has_focus: BOOLEAN is
 			-- Does the Current widget has the focus.
 		do
-			Result := c_gtk_widget_has_focus (widget)
+			--| FIXME: alex 09221999. Create a feature
+			--| in EV_WIDGET 'can_have_focus'. The postcondition
+			--| of feature 'set_focus' will be
+			--| 'can_have_focus (widget) implies has_focus (widget)'
+			if c_gtk_widget_can_focus (widget) then
+				Result := c_gtk_widget_has_focus (widget)
+			else
+				Result := True
+			end
 		end
 
 feature -- Status setting
@@ -189,7 +197,7 @@ feature -- Status setting
 	set_focus is
 			-- Set focus to Current
 		do
-			gtk_widget_grab_focus (widget)
+			c_gtk_widget_grab_focus (widget)
 		end
 
 	set_capture is

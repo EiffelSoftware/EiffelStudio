@@ -81,6 +81,9 @@ extern "C" {
 	int32 egc_rcoffset;
 	int egc_rcarg;
 
+	char *egc_system_name;
+	EIF_INTEGER egc_compiler_tag;
+
 #ifdef __cplusplus
 }
 #endif

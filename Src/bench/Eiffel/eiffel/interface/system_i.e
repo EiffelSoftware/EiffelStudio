@@ -3174,7 +3174,7 @@ feature -- Dispose routine
 			memory_descendants.clear_all
 
 				-- Recompute it if MEMORY is in system.
-			if memory_class_i /= Void then
+			if memory_class_i /= Void and memory_class_i.is_compiled then
 				formulate_mem_descendants (memory_class, memory_descendants)
 			end
 		end

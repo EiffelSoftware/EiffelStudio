@@ -27,7 +27,7 @@ feature -- Initialization
 			check
 				valid_container: count_imp /= Void
 			end
-			!! wel_window.make_with_coordinates (count_imp.wel_window, "", 0, 0, 0, 0)
+			!! wel_window.make (count_imp.wel_window, "")
 		end
 
 end -- class EV_FIXED_IMP

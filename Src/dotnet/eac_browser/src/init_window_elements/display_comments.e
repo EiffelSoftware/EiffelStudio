@@ -60,20 +60,12 @@ feature -- Basic Operations
 			l_assembly_info: ASSEMBLY_INFORMATION
 			l_member_info: MEMBER_INFORMATION
 		do
-			if not (create {CACHE}).assemblies_informations.has (an_assembly.out) then
-					-- Deserialize information of assembly.
-				(create {CACHE}).deserialize_information_assembly (an_assembly)
-			end
-			if (create {CACHE}).assemblies_informations.has (an_assembly.out) then
-				l_assembly_info := (create {CACHE}).assemblies_informations.item (an_assembly.out)
-				if l_assembly_info /= Void then
-					l_member_info := l_assembly_info.find_type (a_full_dotnet_type_name)
-					if l_member_info /= Void then
-						display (l_member_info)
-					else
-						clear_comments
-					end
-				end
+			create l_assembly_info.make
+			l_member_info := l_assembly_info.find_type (an_assembly.name, a_full_dotnet_type_name)
+			if l_member_info /= Void then
+				display (l_member_info)
+			else
+				clear_comments
 			end
 		end
 
@@ -96,33 +88,25 @@ feature -- Basic Operations
 			l_full_dotnet_type_name ?= l_static_type.item (2)
 			l_consumed_assembly ?= l_static_type.item (1)
 
-			if not (create {CACHE}).assemblies_informations.has (l_consumed_assembly.out) then
-					-- Deserialize information of assembly.
-				(create {CACHE}).deserialize_information_assembly (l_consumed_assembly)
-			end
-			if (create {CACHE}).assemblies_informations.has (l_consumed_assembly.out) then
-				l_assembly_info := (create {CACHE}).assemblies_informations.item (l_consumed_assembly.out)
-				if l_assembly_info /= Void then
-					l_signature := (create {SIGNATURE}).xml_signature_member (a_member, l_full_dotnet_type_name)
-					l_member_info := l_assembly_info.find_feature (l_full_dotnet_type_name, l_signature)
-					if l_member_info /= Void then
-						display (l_member_info)
-					else
-						create l_member_info.make
-						l_member_info.set_name (a_full_dotnet_type_name + "." + l_signature)
-						if l_signature.is_equal ((create {ENUM_TYPE}).from_integer_signature) then
-							l_member_info.set_summary ((create {ENUM_TYPE}).from_integer_comment)
-							display (l_member_info)
-						elseif l_signature.is_equal ((create {ENUM_TYPE}).to_integer_signature) then
-							l_member_info.set_summary ((create {ENUM_TYPE}).to_integer_comment)
-							display (l_member_info)
-						elseif l_signature.is_equal ((create {ENUM_TYPE}).or_signature) then
-							l_member_info.set_summary ((create {ENUM_TYPE}).or_comment)
-							display (l_member_info)
-						else
-							clear_comments
-						end
-					end
+			create l_assembly_info.make
+			l_signature := (create {SIGNATURE}).xml_signature_member (a_member, l_full_dotnet_type_name)
+			l_member_info := l_assembly_info.find_feature (l_consumed_assembly.name, l_full_dotnet_type_name, l_signature)
+			if l_member_info /= Void then
+				display (l_member_info)
+			else
+				create l_member_info.make
+				l_member_info.set_name (a_full_dotnet_type_name + "." + l_signature)
+				if l_signature.is_equal ((create {ENUM_TYPE}).from_integer_signature) then
+					l_member_info.set_summary ((create {ENUM_TYPE}).from_integer_comment)
+					display (l_member_info)
+				elseif l_signature.is_equal ((create {ENUM_TYPE}).to_integer_signature) then
+					l_member_info.set_summary ((create {ENUM_TYPE}).to_integer_comment)
+					display (l_member_info)
+				elseif l_signature.is_equal ((create {ENUM_TYPE}).or_signature) then
+					l_member_info.set_summary ((create {ENUM_TYPE}).or_comment)
+					display (l_member_info)
+				else
+					clear_comments
 				end
 			end
 		end
@@ -139,17 +123,13 @@ feature -- Basic Operations
 			l_member_info: MEMBER_INFORMATION
 			l_signature: STRING
 		do
-			if (create {CACHE}).assemblies_informations.has (an_assembly.out) then
-				l_assembly_info := (create {CACHE}).assemblies_informations.item (an_assembly.out)
-				if l_assembly_info /= Void then
-					l_signature := (create {SIGNATURE}).xml_signature_constructor (a_constructor, a_full_dotnet_type_name)
-					l_member_info := l_assembly_info.find_feature (a_full_dotnet_type_name, l_signature)
-					if l_member_info /= Void then
-						display (l_member_info)
-					else
-						clear_comments
-					end
-				end
+			create l_assembly_info.make
+			l_signature := (create {SIGNATURE}).xml_signature_constructor (a_constructor, a_full_dotnet_type_name)
+			l_member_info := l_assembly_info.find_feature (an_assembly.name, a_full_dotnet_type_name, l_signature)
+			if l_member_info /= Void then
+				display (l_member_info)
+			else
+				clear_comments
 			end
 		end
 
@@ -172,21 +152,13 @@ feature -- Basic Operations
 			l_full_dotnet_type_name ?= l_static_type.item (2)
 			l_consumed_assembly ?= l_static_type.item (1)
 
-			if not (create {CACHE}).assemblies_informations.has (l_consumed_assembly.out) then
-					-- Deserialize information of assembly.
-				(create {CACHE}).deserialize_information_assembly (l_consumed_assembly)
-			end
-			if (create {CACHE}).assemblies_informations.has (l_consumed_assembly.out) then
-				l_assembly_info := (create {CACHE}).assemblies_informations.item (l_consumed_assembly.out)
-				if l_assembly_info /= Void then
-					l_signature := a_property.dotnet_name
-					l_member_info := l_assembly_info.find_feature (l_full_dotnet_type_name, l_signature)
-					if l_member_info /= Void then
-						display (l_member_info)
-					else
-						clear_comments
-					end
-				end
+			create l_assembly_info.make
+			l_signature := a_property.dotnet_name
+			l_member_info := l_assembly_info.find_feature (l_consumed_assembly.name, l_full_dotnet_type_name, l_signature)
+			if l_member_info /= Void then
+				display (l_member_info)
+			else
+				clear_comments
 			end
 		end
 
@@ -209,21 +181,13 @@ feature -- Basic Operations
 			l_full_dotnet_type_name ?= l_static_type.item (2)
 			l_consumed_assembly ?= l_static_type.item (1)
 
-			if not (create {CACHE}).assemblies_informations.has (l_consumed_assembly.out) then
-					-- Deserialize information of assembly.
-				(create {CACHE}).deserialize_information_assembly (l_consumed_assembly)
-			end
-			if (create {CACHE}).assemblies_informations.has (l_consumed_assembly.out) then
-				l_assembly_info := (create {CACHE}).assemblies_informations.item (l_consumed_assembly.out)
-				if l_assembly_info /= Void then
-					l_signature := an_event.dotnet_name
-					l_member_info := l_assembly_info.find_feature (l_full_dotnet_type_name, l_signature)
-					if l_member_info /= Void then
-						display (l_member_info)
-					else
-						clear_comments
-					end
-				end
+			create l_assembly_info.make
+			l_signature := an_event.dotnet_name
+			l_member_info := l_assembly_info.find_feature (l_consumed_assembly.name, l_full_dotnet_type_name, l_signature)
+			if l_member_info /= Void then
+				display (l_member_info)
+			else
+				clear_comments
 			end
 		end
 
@@ -285,20 +249,35 @@ feature {NONE} -- Basic Operations
 			until
 				l_entities.after
 			loop
-				if l_entities.item.dotnet_name.is_equal (a_member.dotnet_name) and then
-					l_entities.item.eiffel_name.is_equal (a_member.eiffel_name) then
+				if l_entities.item.dotnet_name.is_equal (a_member.dotnet_name) then--and then
+					--l_entities.item.eiffel_name.is_equal (a_member.eiffel_name) then
 					if l_entities.item.has_arguments and a_member.has_arguments then
 						if l_entities.item.arguments.count = a_member.arguments.count then
-							l_found := True	
+							if l_entities.item.has_return_value then
+								if l_entities.item.has_return_value and a_member.has_return_value then
+									if l_entities.item.return_type.name.is_equal (a_member.return_type.name) then
+										l_found := True
+									end
+								end
+							else
+								l_found := True
+							end
 						end
 					else
-						l_found := True
+						if l_entities.item.has_return_value then
+							if l_entities.item.has_return_value and a_member.has_return_value then
+								if l_entities.item.return_type.name.is_equal (a_member.return_type.name) then
+									l_found := True
+								end
+							end
+						else
+							l_found := True
+						end
 					end
 				end
 				l_entities.forth
 			end
 
-			--if l_entities.has (a_member) then
 			if l_found then
 				create Result.make
 				Result.put (an_assembly, 1)
@@ -312,17 +291,10 @@ feature {NONE} -- Basic Operations
 				loop
 					l_ancestor_assembly := eac.referenced_assembly (an_assembly, l_ancestors.item.assembly_id)
 					Result := immediate_type_feature (l_ancestor_assembly, a_member, l_ancestors.item.name)
---					ct2 := eac.consumed_type (l_ancestor_assembly, l_ancestors.item.name)
---					if ct2.entities.has (a_member) then
---						Result := l_ancestors.item.name
---					end
 					l_ancestors.forth
 				end
 			end
---		ensure
---			non_void_result: Result /= Void
 		end
-		
 
 invariant
 	non_void_comments_area: comments_area /= Void

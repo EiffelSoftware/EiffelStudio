@@ -9,6 +9,17 @@ class
 
 inherit
 	EXECUTION_ENVIRONMENT
+	
+feature -- Satus setting
+
+	set_clr_version (a_version: STRING) is
+			-- Assign `a_version' to `clr_version'.
+		require
+			a_version /= Void
+		do
+			clr_version := a_version
+		end
+		
 
 feature -- Access
 
@@ -26,12 +37,9 @@ feature -- Access
 	is_visual_studio_wizard: BOOLEAN is
 			-- Has Build been launched from	
 			-- VisualStudio in Wizard mode?
-			-- This is a Once, as it will
-			-- never change during the execution of
-			-- the system.
 		local
 			shared_system_status: GB_SHARED_SYSTEM_STATUS
-		once
+		do
 			create shared_system_status
 			if shared_system_status.system_status.is_wizard_system then
 				Result := True
@@ -51,5 +59,8 @@ feature -- Access
 		ensure
 			Result_exists: Result /= Void and not Result.is_empty
 		end
+		
+	clr_version: STRING
+		-- Version of clr used in geenrated ace files.
 
 end -- class VISUAL_STUDIO_INFORMATION

@@ -35,6 +35,13 @@ feature -- Status Report
 			-- Is `Current' shown relative to another window?
 		deferred
 		end
+		
+	blocking_window: EV_WINDOW is
+			-- `Result' is window `Current' is shown to if
+			-- `is_modal' or `is_relative'.
+		
+		deferred
+		end
 	
 	default_push_button: EV_BUTTON is
 			-- Default pushed button. This is the button that

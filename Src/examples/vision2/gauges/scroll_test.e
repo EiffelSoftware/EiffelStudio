@@ -32,31 +32,67 @@ feature -- Initialization
 			create sb
 			vb.extend (sb)
 			create pb
-			pb.enable_segmentation
+			--pb.enable_segmentation
 			vb.extend (pb)
-			create min_label.make_with_text ("Min: ")
-			hb.extend (min_label)
-			create val_label.make_with_text ("Val: ")
-			hb.extend (val_label)
-			create max_label.make_with_text ("Max: ")
-			hb.extend (max_label)
-			sb.change_actions.extend (~on_change)
+			create min_field.make_with_range (-1000, 1)
+			min_field.set_value (1)
+			hb.extend (create {EV_LABEL}.make_with_text ("Min: "))
+			hb.extend (min_field)
+			create val_field
+			hb.extend (create {EV_LABEL}.make_with_text ("Val: "))
+			hb.extend (val_field)
+			create max_field.make_with_range (1, 1000)
+			max_field.set_value (100)
+			hb.extend (create {EV_LABEL}.make_with_text ("Max: "))
+			hb.extend (max_field)
+
+			min_field.change_actions.extend (~on_min_change)
+			max_field.change_actions.extend (~on_max_change)
+			sb.change_actions.extend (~on_sb_change)
+			val_field.change_actions.extend (~on_val_change)
+
+			val_field.set_range (min_field.value, max_field.value)
+			sb.set_range (min_field.value, max_field.value)
+			pb.set_range (min_field.value, max_field.value)
 		end
 
-	max_label: EV_LABEL
-	min_label: EV_LABEL
-	val_label: EV_LABEL
+	max_field: EV_SPIN_BUTTON
+	min_field: EV_SPIN_BUTTON
+	val_field: EV_SPIN_BUTTON
 
-	sb: EV_VERTICAL_SCROLL_BAR
-	pb: EV_VERTICAL_PROGRESS_BAR
+	sb: EV_HORIZONTAL_SCROLL_BAR
+	pb: EV_HORIZONTAL_PROGRESS_BAR
 
-	on_change is
+	on_min_change is
+		do
+			val_field.set_minimum (min_field.value)
+			sb.set_minimum (min_field.value)
+			pb.set_minimum (min_field.value)
+		end
+
+	on_max_change is
+		do
+			val_field.set_maximum (max_field.value)
+			sb.set_maximum (max_field.value)
+			pb.set_maximum (max_field.value)
+		end
+
+	on_sb_change is
 			-- Scrollbar changes.
 		do
-			min_label.set_text ("Min: " + sb.minimum.out)
-			val_label.set_text ("Val: " + sb.value.out)
-			max_label.set_text ("Max: " + sb.maximum.out)
+			max_field.set_minimum (sb.value)
+			min_field.set_maximum (sb.value)
+			val_field.set_value (sb.value)
 			pb.set_value (sb.value)
+		end
+
+	on_val_change is
+			-- Scrollbar changes.
+		do
+			max_field.set_minimum (val_field.value)
+			min_field.set_maximum (val_field.value)
+			sb.set_value (val_field.value)
+			pb.set_value (val_field.value)
 		end
 
 	first_window: EV_TITLED_WINDOW is

@@ -507,6 +507,11 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 	uint32 field_size;
 	uint32 flags;
 
+	/*** Preconditions ***/
+	assert (source != (EIF_REFERENCE) 0);	/* Must be not NULL. */
+	assert (target != (EIF_REFERENCE) 0);	/* Must be not NULL. */
+	/*** End of preconditions. ***/
+
 	/* Evaluation of the size field to copy */
 	field_size = (HEADER(target)->ov_size & B_SIZE) - LNGPAD_2;
 

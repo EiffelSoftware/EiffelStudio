@@ -18,6 +18,22 @@ feature -- Externals
 --			"C signature (GtkEventBox*, gboolean) use <gtk/gtk.h>"
 --		end
 
+	frozen gdk_screen_get_default: POINTER is
+		external
+			"C signature (): GdkScreen* use <gtk/gtk.h>"
+		end
+		
+	frozen gdk_screen_get_width_mm (a_screen: POINTER): INTEGER is
+		external
+			"C signature (GdkScreen*): gint use <gtk/gtk.h>"
+		end
+
+	frozen gdk_screen_get_height_mm (a_screen: POINTER): INTEGER is
+		external
+			"C signature (GdkScreen*): gint use <gtk/gtk.h>"
+		end
+		
+
 	frozen gdk_window_get_frame_extents (a_window, a_rect: POINTER) is
 		external
 			"C signature (GdkWindow*, GdkRectangle*) use <gtk/gtk.h>"

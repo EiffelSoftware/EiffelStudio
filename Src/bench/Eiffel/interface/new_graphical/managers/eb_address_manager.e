@@ -1397,7 +1397,7 @@ feature {NONE} -- open new class
 			
 			if not do_not_complete and nb > 1 then
 				list := System.classes
-				array_count := list.count
+				array_count := system.class_counter.count
 				from
 					index := 1
 					str_area := str.area

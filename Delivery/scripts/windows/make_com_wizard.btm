@@ -19,26 +19,20 @@ clean_project
 finalize Ace.ace
 fff
 cleanup_eiffel com_wizard.exe
-if not exist com_wizard.exe (echo Couldnt generate the COM wizard & cancel)
+iff not exist com_wizard.exe then
+	echo "Couldnt generate the COM wizard"
+	CANCEL
+endiff
 move com_wizard.exe %INSTALL_DIR\wizards\com
-
-remtrace Compile COM wizard in command line
 clean_project
-finalize Ace_cmd.ace
+
+remtrace Compile COM wizard launcher for GUI mode.
+cdd %EIFFEL_SRC\com_wizard\launcher
+finalize ace.ace
 fff
-cleanup_eiffel com_wizard_cmd.exe
-iff not exist com_wizard_cmd.exe then
-	echo "Couldnt compile com_wizard_cmd.exe"
+cleanup_eiffel com_wizard_launcher.exe
+iff not exist com_wizard_launcher.exe then
+	echo "Couldnt compile com_wizard_launcher.exe"
 	CANCEL
 endiff
-move com_wizard_cmd.exe %INSTALL_DIR\wizards\com
-
-remtrace Compile comspawn.exe
-cd %EIFFEL_SRC\com_wizard\Clib
-cl conspawn.c
-iff not exist conspawn.exe then
-	echo "Couldnt compile conspawn.exe"
-	CANCEL
-endiff
-move conspawn.exe %INSTALL_DIR\wizards\com
-
+move com_wizard_launcher.exe %INSTALL_DIR\wizards\com

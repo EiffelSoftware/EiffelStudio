@@ -472,7 +472,7 @@ public void dead_app()
 	 * option--RAM.
 	 */
 
-	pid_t child_pid;				/* pid of the dead application */
+	Pid_t child_pid;				/* pid of the dead application */
 	int status;						/* Exit status of the application */
 	Request rqst;					/* Request to send */
 	int s = writefd(d_data.d_cs);	/* "socket" to contact ewb */
@@ -483,8 +483,12 @@ public void dead_app()
 
 	/* Eliminate the <defunct> process of the just terminated
 	 * application to avoid the process table to go out of range.
+	 * (Wait only for the application process, which should be 
+	 * already terminated. WNOHANG prevent the calling process
+	 * of `waitpid' to be suspended if the child process is still 
+	 * running (just in case!)).
 	 */
-	child_pid = wait(&status);
+	child_pid = waitpid((Pid_t) d_data.d_app, &status, WNOHANG);
 
 	rqst.rq_type = DEAD;			/* Application is dead */
 	send_packet(s, &rqst);			/* Notify workbench */

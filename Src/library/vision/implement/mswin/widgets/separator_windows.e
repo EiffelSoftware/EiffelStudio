@@ -10,8 +10,9 @@ class
 	SEPARATOR_WINDOWS
 
 inherit
-
 	PRIMITIVE_WINDOWS
+		rename
+			set_managed as widget_set_managed
 		redefine
 			realize,
 			realized,
@@ -19,6 +20,19 @@ inherit
 			set_height,
 			set_x,
 			set_y
+		end
+
+	PRIMITIVE_WINDOWS
+		redefine
+			set_managed,
+			realize,
+			realized,
+			set_width, 
+			set_height,
+			set_x,
+			set_y
+		select
+			set_managed
 		end
 
 	WEL_CONTROL_WINDOW
@@ -46,6 +60,8 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item
 		undefine
+			on_show,
+			on_hide,
 			on_size,
 			on_move,
 			on_right_button_up, on_left_button_down,
@@ -57,7 +73,7 @@ inherit
 			on_paint,
 			class_name
 		end
-		
+
 	SEPARATOR_I
 
 	WEL_PS_CONSTANTS
@@ -108,13 +124,44 @@ feature -- Status report
 		
 feature -- Status setting
 
+
+	set_managed (flag: BOOLEAN) is
+			-- Enable geometry managment on screen widget implementation,
+			-- by window manager of parent widget if `flag', disable it
+			-- otherwise.
+		local
+			mp: MENU_PULL_WINDOWS
+		do
+			if in_menu then
+				if realized then
+					if parent /= Void and parent.realized and then parent.exists then
+						if not managed and then flag then
+							managed := flag
+							mp ?= parent
+							mp.manage_item (Current)
+						elseif managed and then not flag then
+							managed := flag
+							mp ?= parent
+							mp.unmanage_item (Current)
+						end
+					end
+				else
+					managed := flag
+					realize
+				end
+				managed := flag
+			else
+				widget_set_managed (flag)
+			end
+		end
+
 	set_width (a_width: INTEGER) is
 		do
 			if in_menu then
 				debug ("WINDOWS")
-					check
-						inapplicable: False
-					end
+					io.print ("Inapplicable feature: set_width%N")
+					io.print ("called in SEPARATOR_WINDOWS%N")
+					io.print ("Reason: Separator is in menu%N")
 				end
 			else
 				if exists then
@@ -128,9 +175,9 @@ feature -- Status setting
 		do
 			if in_menu then
 				debug ("WINDOWS")
-					check
-						inapplicable: False
-					end
+					io.print ("Inapplicable feature: set_height%N")
+					io.print ("called in SEPARATOR_WINDOWS%N")
+					io.print ("Reason: Separator is in menu%N")
 				end
 			else
 				if exists then
@@ -144,9 +191,9 @@ feature -- Status setting
 		do
 			if in_menu then
 				debug ("WINDOWS")
-					check
-						inapplicable: False
-					end
+					io.print ("Inapplicable feature: set_x%N")
+					io.print ("called in SEPARATOR_WINDOWS%N")
+					io.print ("Reason: Separator is in menu%N")
 				end
 			else
 				if exists then
@@ -160,9 +207,9 @@ feature -- Status setting
 		do
 			if in_menu then
 				debug ("WINDOWS")
-					check
-						inapplicable: False
-					end
+					io.print ("Inapplicable feature: set_y%N")
+					io.print ("called in SEPARATOR_WINDOWS%N")
+					io.print ("Reason: Separator is in menu%N")
 				end
 			else
 				if exists then

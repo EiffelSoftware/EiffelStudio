@@ -18,8 +18,9 @@ inherit
 			full_name, intermediate_name, create_context, 
 			show_tree_elements, hide_tree_elements, tree_element, 
 			is_bulletin, is_in_a_group, is_a_group, save_widget, 
-			reset_callbacks, stored_node, widget,
-			set_modified_flags, help_file_name, retrieve_oui_group_child_widget
+			stored_node, widget, set_modified_flags, 
+			help_file_name, is_able_to_be_grouped,
+			update_group_name_in_tree
 		end;
 	COMPOSITE_C
 		redefine
@@ -29,8 +30,8 @@ inherit
 			full_name, intermediate_name, reset_modified_flags, create_context, 
 			show_tree_elements, hide_tree_elements, undo_cut, cut, tree_element, 
 			cut_list, is_bulletin, is_in_a_group, is_a_group, save_widget, 
-			reset_callbacks, stored_node, widget,
-			set_modified_flags, help_file_name, retrieve_oui_group_child_widget
+			stored_node, widget, set_modified_flags, help_file_name,
+			is_able_to_be_grouped, update_group_name_in_tree
 		select
 			reset_modified_flags, cut_list, cut, 
 			undo_cut, eiffel_callback_calls
@@ -50,7 +51,7 @@ feature
 			Result := Help_const.group_help_fn
 		end;
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_GROUP_TYPE is
 		do
 			Result := group_type.context_type;
 		end;
@@ -96,19 +97,6 @@ feature
 			end;
 		end;
 
-	reset_callbacks is
-		do
-			reset_widget_callbacks;
-			from
-				subtree.start
-			until	
-				subtree.after
-			loop
-				subtree.item.reset_callbacks;
-				subtree.forth
-			end;
-		end;
-
 	reparent_bulletin (a_bulletin: BULLETIN_C; a_list: LINKED_LIST [CONTEXT]) is
 		do
 			initialize;
@@ -116,7 +104,6 @@ feature
 			!!tree_element.make (Current);
 
 			group_type.increment_counter;
-
 				-- update subtree
 			subtree := a_list;
 		end;
@@ -215,9 +202,16 @@ feature
 			Result := True
 		end;
 
+	is_able_to_be_grouped: BOOLEAN is
+            -- Is Current group able to be grouped?
+        do
+            Result := not is_in_a_group and then
+				grouped and then group.count > 1
+        end;
+
 	is_in_a_group: BOOLEAN is
 		do
-			Result := True
+			Result := parent.is_in_a_group
 		end;
 
 	cut_list: LINKED_LIST [CONTEXT] is
@@ -313,7 +307,6 @@ feature
 	-- *******************
 	-- * Code generation *
 	-- *******************
-
 	
 feature {CONTEXT}
 
@@ -369,19 +362,6 @@ feature {NONE}
 			Result.append ("%N%Tmake (a_name: STRING; a_parent: COMPOSITE) is%N%T%Tdo%N%T%T%Teb_bulletin_make (a_name, a_parent);%N");
 		end;
 
-	group_declaration: STRING is
-		do
-			!!Result.make (0);
-			from
-				subtree.start
-			until
-				subtree.after
-			loop
-				Result.append (subtree.item.eiffel_declaration);
-				subtree.forth;
-			end;
-		end;
-
 	group_creation (parent_name: STRING): STRING is
 		do
 			!!Result.make (0);
@@ -433,7 +413,34 @@ feature
 			end;
 		end;
 
-	
+feature {CONTEXT} -- Update name for group	
+
+	update_group_name_in_tree (g: GROUP) is
+			-- Update the eiffel_type for group_c in context
+			-- tree using group `g'.
+		local
+			item: CONTEXT;
+			group_c: GROUP_C
+		do
+			from
+				subtree.start
+			until
+				subtree.after
+			loop
+				item := subtree.item;
+				if item.is_a_group then
+					group_c ?= item;
+					if group_c.group_type = g then
+						group_c.update_tree_element
+					else
+							-- Check to see if a group has `g'
+						group_c.update_group_name_in_tree (g);
+					end;
+				end;
+				subtree.forth
+			end;
+		end;
+
 feature {CONTEXT}
 
 	children_callbacks: STRING is
@@ -465,50 +472,34 @@ feature {CLBKS, CONTEXT}
 			end
 		end;
 
-	
-feature 
+feature -- Code generation
 
 	group_text: STRING is
-		-- Text generated just after the creation of the first
-		-- instance of `group_type', before the reset of the
-		-- flags
+			-- Text generated just after the creation of the first
+			-- instance of `group_type', before the reset of the
+			-- flags. Only generate the declaration for non-group
+			-- composites, the creation and initialization routines.
+			-- This does not generate the class_name, inheritance
+			-- clause and declarations for groups. 
+			--| The class name and declarations for groups are separated since
+			--| group_text is only generated once (at point of group creation)
+			--| and the group eiffel type may change.	
 		local
-			class_name: STRING;
 			color_text: STRING;
 		do
 			group_text_generation := True;
-			class_name := clone (eiffel_type);
-			class_name.to_upper;
 			!!Result.make (100);
-			Result.append ("class ");
-			Result.append (class_name);
 
-			-- ***********
-			-- Inheritance
-			-- ***********
-			Result.append ("%N%Ninherit%N%N%TEB_BULLETIN");
-			Result.append ("%N%T%Trename%N%T%T%Tmake as eb_bulletin_make");
-			Result.append ("%N%T%Tend;");
+				-- Declaration (without groups)
+			Result.append (declaration_without_groups);
 
-			-- ********
-			-- Features
-			-- ********
-			Result.append ("%N%Ncreation%N%N%Tmake");
-			Result.append ("%N%Nfeature%N%N");
-
-			-- Declaration
-			--============
-			Result.append (group_declaration);
-
-			-- Creation
-			--=========
+				-- Creation
 			Result.append (creation_procedure_text);
 			Result.append (group_creation ("Current"));
 			Result.append ("%T%T%Tset_values;%N");
 			Result.append ("%T%Tend;%N");
 
-			-- Initialization
-			--===============
+				-- Initialization
 			Result.append ("%N%Tset_values is%N%T%Tdo%N");
 			Result.append (context_initialization (""));
 			Result.append (font_creation (""));
@@ -528,13 +519,30 @@ feature
 				Result.append ("%N%Tset_colors is%N%T%Tlocal%N%T%T%Ta_color: COLOR;%N%T%T%Ta_pixmap: PIXMAP%N%T%Tdo%N");
 				Result.append (color_text);
 			end;
-			Result.append ("%T%Tend;%N%Nend%N%N");
 			group_text_generation := False;
 		end;
 
-	-- ****************
-	-- Storage features
-	-- ****************
+	declaration_without_groups: STRING is
+			-- Eiffel declaration of widgets.
+			-- Does not generate group declaration.
+		local
+			cont: CONTEXT
+		do
+			!!Result.make (0);
+			from
+				subtree.start
+			until
+				subtree.after
+			loop
+				cont := subtree.item;
+				if not cont.is_a_group then
+					Result.append (subtree.item.eiffel_declaration);
+				end;
+				subtree.forth;
+			end;
+		end;
+
+feature -- Storage
 
 	stored_node: S_GROUP is
 		do
@@ -543,23 +551,6 @@ feature
 
 	retrieved_node: S_GROUP;
 
-	retrieve_oui_group_child_widget is
-			-- Retrieve oui widget info.
-			--| this does not set the
-			--| the context attributes for
-			--| the children since it would
-			--| have been done by the group parent.
-		local
-			parent_widget: COMPOSITE
-		do
-			parent_widget ?= parent.widget;
-			oui_create (parent_widget);
-			group_type.create_oui_group (Current);
-			reset_modified_flags;
-			widget.manage;
-			retrieved_node := Void
-		end;
-
 	retrieve_oui_widget is
 			-- Retrieve oui widget info.
 		local
@@ -567,8 +558,13 @@ feature
 		do
 			parent_widget ?= parent.widget;
 			oui_create (parent_widget);
+				-- When creating the group do not
+				-- call set_context_attributes for children
+				-- groups
 			group_type.create_oui_group (Current);
 			reset_modified_flags;
+				-- This sets the context attributes to	
+				-- all the children as well.
 			retrieved_node.set_context_attributes (Current);
 			widget.manage;
 			retrieved_node := Void

@@ -31,34 +31,39 @@ feature {NONE} -- Initialization
 		do
 			initialize_components
 
-			-- Set up the bindings so that each field on the form is
-			-- bound to a property of Customer
-			return := text_box_id.data_bindings.add ("", cust_list, "ID")
-			return := text_box_title.data_bindings.add ("Text", cust_list, "Title")
-			return := text_box_last_name.data_bindings.add ("Text", cust_list, "LastName")
-			return := text_box_first_name.data_bindings.add ("Text", cust_list, "FirstName")
+				-- Set up the bindings so that each field on the form is
+				-- bound to a property of Customer
+			return := text_box_id.data_bindings.add ("Text", cust_list, "")
+			return := text_box_title.data_bindings.add ("Text", cust_list, "")
+			return := text_box_last_name.data_bindings.add ("Text", cust_list, "")
+			return := text_box_first_name.data_bindings.add ("Text", cust_list, "")
 
-			-- We want to format the date so handle the format and parse events for the
-			-- DOB text box
-			create dob_binding.make ("", cust_list, "")
-			dob_binding.add_format ((create {WINFORMS_CONVERT_EVENT_HANDLER}.make (Current, $text_box_dob_format_date)))
-			dob_binding.add_parse ((create {WINFORMS_CONVERT_EVENT_HANDLER}.make (Current, $text_box_dob_parse_date)))
+				-- We want to format the date so handle the format and parse events for the
+				-- DOB text box
+			create dob_binding.make ("Text", cust_list, "")
+			dob_binding.add_format (
+				(create {WINFORMS_CONVERT_EVENT_HANDLER}.make (Current,
+					$text_box_dob_format_date)))
+			dob_binding.add_parse (
+				(create {WINFORMS_CONVERT_EVENT_HANDLER}.make (Current,
+					$text_box_dob_parse_date)))
 			text_box_dob.data_bindings.add_binding (dob_binding)
+			return := text_box_address.data_bindings.add_string ("Text", cust_list, "")
 
-			return := text_box_address.data_bindings.add_string ("Text", cust_list, "address")
+				-- We want to handle position changing events for the DATA VCR Panel
+				-- Position is managed by the Form's BindingContext so hook the position
+				-- changed event on the BindingContext
+			binding_context.item (cust_list).add_position_changed (
+				create {EVENT_HANDLER}.make (Current, $customers_position_changed))
 
-			-- We want to handle position changing events for the DATA VCR Panel
-			-- Position is managed by the Form's BindingContext so hook the position changed
-			-- event on the BindingContext
-			binding_context.item (cust_list).add_position_changed (create {EVENT_HANDLER}.make (Current, $customers_position_changed))
-
-			-- Set up the initial text for the DATA VCR Panel
+				-- Set up the initial text for the DATA VCR Panel
 			text_box_position.set_text ("Record " + (binding_context.item (cust_list).position + 1).out + " of " + cust_list.count.out)
 
-			-- Set the minimum form size to the client size + the height of the title bar
-			set_minimum_size (create {DRAWING_SIZE}.make (368, (413 + feature {WINFORMS_SYSTEM_INFORMATION}.caption_height)))
+				-- Set the minimum form size to the client size + the height of the title bar
+			set_minimum_size (create {DRAWING_SIZE}.make (368, (413 +
+				feature {WINFORMS_SYSTEM_INFORMATION}.caption_height)))
 
-			feature {WINFORMS_APPLICATION}.run_form (Current)
+			feature {WINFORMS_APPLICATION}.run (Current)
 		end
 
 feature -- Access
@@ -87,7 +92,8 @@ feature -- Access
 	cust_list: CUSTOMER_LIST is
 			-- Customer list
 		once
-			create Result.make
+			create Result
+			Result.initialize
 		ensure
 			non_void_result: Result /= Void
 		end
@@ -146,7 +152,9 @@ feature -- Implementation
 			label_first_name.set_tab_index (5)
 			text_box_first_name.set_location (create {DRAWING_POINT}.make (88, 112))
 			text_box_first_name.set_tab_index (6)
-			text_box_first_name.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.Top | feature {WINFORMS_ANCHOR_STYLES}.left | feature {WINFORMS_ANCHOR_STYLES}.right)
+			text_box_first_name.set_anchor 
+				(feature {WINFORMS_ANCHOR_STYLES}.Top | feature {WINFORMS_ANCHOR_STYLES}.left |
+				feature {WINFORMS_ANCHOR_STYLES}.right)
 			text_box_first_name.set_size (create {DRAWING_SIZE}.make (243, 20))
 			
 			label_last_name.set_location (create {DRAWING_POINT}.make (8, 154))
@@ -155,7 +163,9 @@ feature -- Implementation
 			label_last_name.set_tab_index (7)
 			text_box_last_name.set_location (create {DRAWING_POINT}.make (88, 152))
 			text_box_last_name.set_tab_index (8)
-			text_box_last_name.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.Top | feature {WINFORMS_ANCHOR_STYLES}.left | feature {WINFORMS_ANCHOR_STYLES}.right)
+			text_box_last_name.set_anchor (
+				feature {WINFORMS_ANCHOR_STYLES}.Top | feature {WINFORMS_ANCHOR_STYLES}.left |
+				feature {WINFORMS_ANCHOR_STYLES}.right)
 			text_box_last_name.set_size (create {DRAWING_SIZE}.make (243, 20))
 
 			label_dob.set_location (create {DRAWING_POINT}.make (8, 194))
@@ -164,7 +174,9 @@ feature -- Implementation
 			label_dob.set_tab_index (9)
 			text_box_dob.set_location (create {DRAWING_POINT}.make (88, 192))
 			text_box_dob.set_tab_index (10)
-			text_box_dob.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.top | feature {WINFORMS_ANCHOR_STYLES}.left | feature {WINFORMS_ANCHOR_STYLES}.right)
+			text_box_dob.set_anchor (
+				feature {WINFORMS_ANCHOR_STYLES}.top | feature {WINFORMS_ANCHOR_STYLES}.left |
+				feature {WINFORMS_ANCHOR_STYLES}.right)
 			text_box_dob.set_size (create {DRAWING_SIZE}.make (243, 20))
 
 			label_address.set_location (create {DRAWING_POINT}.make (8, 232))
@@ -175,8 +187,10 @@ feature -- Implementation
 			text_box_address.set_multiline (True)
 			text_box_address.set_accepts_return (True)
 			text_box_address.set_tab_index (12)
-			text_box_address.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.Top | feature {WINFORMS_ANCHOR_STYLES}.Bottom |
-									feature {WINFORMS_ANCHOR_STYLES}.right | feature {WINFORMS_ANCHOR_STYLES}.left )
+			text_box_address.set_anchor (
+				feature {WINFORMS_ANCHOR_STYLES}.Top |
+				feature {WINFORMS_ANCHOR_STYLES}.Bottom |
+				feature {WINFORMS_ANCHOR_STYLES}.right | feature {WINFORMS_ANCHOR_STYLES}.left)
 			text_box_address.set_size (create {DRAWING_SIZE}.make (264, 88))
 
 			button_move_next.set_location (create {DRAWING_POINT}.make (184, 8))
@@ -185,14 +199,16 @@ feature -- Implementation
 			button_move_next.set_tab_index (33)
 			button_move_next.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.top)
 			button_move_next.set_text (">")
-			button_move_next.add_click (create {EVENT_HANDLER}.make (Current, $button_move_next_click))
+			button_move_next.add_click (
+				create {EVENT_HANDLER}.make (Current, $button_move_next_click))
 
 			button_move_prev.set_location (create {DRAWING_POINT}.make (48, 8))
 			button_move_prev.set_flat_style (feature {WINFORMS_FLAT_STYLE}.flat)
 			button_move_prev.set_size (create {DRAWING_SIZE}.make (32, 32))
 			button_move_prev.set_tab_index (31)
 			button_move_prev.set_text ("<")
-			button_move_prev.add_click (create {EVENT_HANDLER}.make (Current, $button_move_prev_click))
+			button_move_prev.add_click (
+				create {EVENT_HANDLER}.make (Current, $button_move_prev_click))
 
 			text_box_position.set_location (create {DRAWING_POINT}.make (88, 14))
 			text_box_position.set_read_only (True)
@@ -214,7 +230,8 @@ feature -- Implementation
 			button_move_first.set_size (create {DRAWING_SIZE}.make (32, 32))
 			button_move_first.set_tab_index (30)
 			button_move_first.set_text ("|<")
-			button_move_first.add_click (create {EVENT_HANDLER}.make (Current, $button_move_first_click))
+			button_move_first.add_click (
+				create {EVENT_HANDLER}.make (Current, $button_move_first_click))
 
 			button_move_last.set_location (create {DRAWING_POINT}.make (224, 8))
 			button_move_last.set_flat_style (feature {WINFORMS_FLAT_STYLE}.flat)
@@ -222,7 +239,8 @@ feature -- Implementation
 			button_move_last.set_tab_index (34)
 			button_move_last.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.Top)
 			button_move_last.set_text (">|")
-			button_move_last.add_click (create {EVENT_HANDLER}.make (Current, $button_move_last_click))
+			button_move_last.add_click (
+				create {EVENT_HANDLER}.make (Current, $button_move_last_click))
 
 			panel_vcr_control.controls.add (text_box_position)
 			panel_vcr_control.controls.add (button_move_first)
@@ -262,7 +280,7 @@ feature {NONE} -- Implementation
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
 		rescue
-			retried := true
+			retried := True
 			retry
 		end
 
@@ -331,7 +349,10 @@ feature {NONE} -- Implementation
 	customers_position_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- Position has changed - update the DATA VCR panel
 		do
-			text_box_position.set_text ("Customers_position_changed...")
+			text_box_position.set_text (feature {SYSTEM_STRING}.Format(
+				"Record {0} of {1}",
+				binding_context.item (cust_list).position + 1,
+				cust_list.count))
 		end
 
 end -- Class SIMPLE_BINDING

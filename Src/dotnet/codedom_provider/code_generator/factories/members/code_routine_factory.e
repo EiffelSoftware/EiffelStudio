@@ -54,6 +54,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					l_routine.set_eiffel_name (a_source.name)
 				end
 				if l_member.is_redefined then
+					l_routine.set_redefined (True)
 					l_parent := l_member.parent
 					if l_parent /= Void then
 						current_type.add_redefine_clause (l_parent.implementing_type, l_member)
@@ -151,8 +152,8 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				set_current_feature (Void)
 				set_last_feature (l_root_procedure)
 
-				Compilation_context.set_root_creation_routine_name (l_root_procedure.name)
-				Compilation_context.set_root_class_name (current_type.name)
+				Compilation_context.set_root_creation_routine_name (l_root_procedure.eiffel_name)
+				Compilation_context.set_root_class_name (current_type.eiffel_name)
 			else
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_current_type, [current_context])
 				set_last_feature (Empty_routine)
@@ -195,6 +196,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 						end
 						create l_property_getter.make (l_getter_name, l_getter.eiffel_name)
 						if l_getter.is_redefined then
+							l_property_getter.set_redefined (True)
 							l_parent := l_getter.parent
 							if l_parent /= Void then
 								current_type.add_redefine_clause (l_parent.implementing_type, l_getter)
@@ -221,6 +223,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 						end
 						create l_property_setter.make (l_setter_name, l_setter.eiffel_name)
 						if l_setter.is_redefined then
+							l_property_setter.set_redefined (True)
 							l_parent := l_setter.parent
 							if l_parent /= Void then
 								current_type.add_redefine_clause (l_parent.implementing_type, l_setter)

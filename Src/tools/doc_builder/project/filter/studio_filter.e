@@ -100,8 +100,6 @@ feature -- Status Setting
 
 	enable_highlighting (a_flag: BOOLEAN) is
 			-- Set `highlighting_enabled'
-		require
-			flag_not_void: a_flag /= Void
 		do
 			highlighting_enabled := a_flag
 		ensure

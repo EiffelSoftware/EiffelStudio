@@ -11,9 +11,8 @@ indexing
 		%Decendants may redefine `initialize' to arrange for `call' to %
 		%be called by an event source. %
 		%Use `block', `pause', `flush' and `resume' to change the behaviour %
-		%of `call'."
-	instructions: 
-		"eg. %
+		%of `call'.%
+		%eg. %
 		% birthday_data: TUPLE [INTEGER, STRING] -- (age, name) %
 		% birthday_actions: ACTIONS_SEQUENCE [like birthday_data] %
 		% create birthday_actions.make (%"birthday%", <<%"age%",%"name%">>) %
@@ -349,15 +348,34 @@ invariant
 
 end
 
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license.
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.5  1999/10/27 17:57:13  oconnor
+--| merged instructions in indexing clause
+--|
 --| Revision 1.4  1999/10/27 17:54:20  oconnor
 --| fixed invariant/precondition to check number of event_data_names
-added logging of neting level
-fixed instructions
+--| added logging of neting level
+--| fixed instructions
 --|
 --| Revision 1.3  1999/10/27 02:11:14  oconnor
 --| removed infeasible wrapper code

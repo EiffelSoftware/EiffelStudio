@@ -29,7 +29,7 @@ inherit
 			update_boolean_resource,
 			update_integer_resource,
 			close, set_title, parse_file,
-			resources
+			resources, history_window_title
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -46,7 +46,7 @@ inherit
 			set_read_only_text_window, process_feature_error,
 			update_boolean_resource,
 			update_integer_resource,
-			close, set_title, parse_file, resources
+			close, set_title, parse_file, resources, history_window_title
 		select
 			reset, close_windows, set_stone
 		end;
@@ -155,6 +155,12 @@ feature -- Access
 			end
 		end;
 
+	history_window_title: STRING is
+			-- Title of the history window
+		do
+			Result := Interface_names.t_Select_class
+		end;
+
 feature -- Status setting
 
 	set_title (s: STRING) is
@@ -198,26 +204,62 @@ feature -- Status setting
 		do
 			read_only_text_window := ed
 		end;
+
+	execute_last_format (s: STONE) is
+			-- Execute the last format with stone `s'.
+			-- If `last_format' is not allowed for `s' (when
+			-- class is a precompile and is hidden) default
+			-- `last_format' to a valid format.
+		require
+			valid_s: s /= Void and then s.is_valid
+		local
+			c: CLASSC_STONE;
+			ci: CLASSI_STONE;
+			class_i: CLASS_I
+		do
+			c ?= s;
+			ci ?= s;
+			if c /= Void then
+				class_i := c.e_class.lace_class;	
+			else
+				class_i := ci.class_i;	
+			end;
+			if class_i.hide_implementation then
+				showtext_frmt_holder.set_sensitive (False);
+				showflat_frmt_holder.set_sensitive (False);
+				showclick_frmt_holder.set_sensitive (False);
+				if 
+					last_format = showtext_frmt_holder or else
+					last_format = showflat_frmt_holder or else
+					last_format = showclick_frmt_holder 
+				then
+					last_format.set_selected (False);
+					last_format := showshort_frmt_holder
+				end
+			else
+				reset_format_buttons
+			end;
+			last_format.execute (s);
+			history.extend (s)
+		end;
  
 feature -- Stone process
  
 	process_classi (s: CLASSI_STONE) is
 		do
 			if text_window.changed then
-				showtext_frmt_holder.execute (s);
+				showtext_frmt_holder.execute (s)
 			else
-				last_format.execute (s);
-				history.extend (s)
+				execute_last_format (s)
 			end
 		end;
  
 	process_class (s: CLASSC_STONE) is
 		do
 			if text_window.changed then
-				showtext_frmt_holder.execute (s);
+				showtext_frmt_holder.execute (s)
 			else
-				last_format.execute (s);
-				history.extend (s)
+				execute_last_format (s)
 			end
 		end;
  
@@ -230,7 +272,7 @@ feature -- Stone process
 			pos, end_pos: INTEGER
 		do
 			if text_window.changed then
-				showtext_frmt_holder.execute (s);
+				showtext_frmt_holder.execute (s)
 			else
 				e_class := s.e_feature.written_class;
 				!! cl_stone.make (e_class);
@@ -260,7 +302,7 @@ feature -- Stone process
 			e_class: E_CLASS
 		do
 			if text_window.changed then
-				showtext_frmt_holder.execute (s);
+				showtext_frmt_holder.execute (s)
 			else
 				e_class := s.e_feature.written_class;
 				!! cl_stone.make (e_class);
@@ -269,7 +311,7 @@ feature -- Stone process
 				text_window.deselect_all;
 				text_window.set_cursor_position (s.start_position);
 				text_window.highlight_selected
-						(s.start_position, s.end_position)
+					(s.start_position, s.end_position)
 			end
 		end;
  
@@ -307,7 +349,16 @@ feature -- Update
 			-- Reset the window contents
 		do
 			old_reset;
+			reset_format_buttons;
 			class_text_field.clear
+		end;
+
+	reset_format_buttons is
+			-- Reset the format buttons to the original state.
+		do
+			showtext_frmt_holder.set_sensitive (True);
+			showflat_frmt_holder.set_sensitive (True);
+			showclick_frmt_holder.set_sensitive (True);
 		end;
 
 	update_class_name (s: STRING) is
@@ -329,9 +380,9 @@ feature -- Update
 			txt, msg: STRING
 		do
 			classc_stone ?= stone;
-			if classc_stone /= Void then
+			e_class := classc_stone.e_class;
+			if classc_stone /= Void and then not e_class.is_precompiled then
 					-- Only interested in compiled classes.
-				e_class := classc_stone.e_class;
 				e_class.parse_ast;
 				syn_error := e_class.last_syntax_error;
 				if syn_error /= Void then	

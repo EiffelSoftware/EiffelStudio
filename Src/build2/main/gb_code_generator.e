@@ -53,7 +53,7 @@ feature -- Basic operation
 			-- Generate the project as per settings in `project_settings'.
 		local	
 			directory: DIRECTORY
-			root_element, current_element, window_element: XML_ELEMENT
+			root_element, current_element, window_element: XM_ELEMENT
 			current_name, current_type: STRING
 			name_counter: INTEGER
 			window_file_name, directory_name, directory_file_name: FILE_NAME
@@ -93,9 +93,9 @@ feature -- Basic operation
 				current_element ?= root_element.item_for_iteration
 				if current_element /= Void then
 				
-				current_name := current_element.name.to_utf8
+				current_name := current_element.name
 					if current_name.is_equal (Item_string) then
-						current_type := current_element.attribute_by_name (type_string).value.to_utf8
+						current_type := current_element.attribute_by_name (type_string).value
 						if current_type.is_equal (directory_string) then
 							from
 								current_element.start
@@ -104,7 +104,7 @@ feature -- Basic operation
 							loop
 								window_element ?= current_element.item_for_iteration
 								if window_element /= Void then
-									current_name := window_element.name.to_utf8
+									current_name := window_element.name
 									if current_name.is_equal (Internal_properties_string)  then
 										full_information := get_unique_full_info (window_element)
 										element_info := full_information @ (name_string)
@@ -593,19 +593,19 @@ feature {NONE} -- Implementation
 			class_text.replace_substring_all (inherited_class_name_tag, a_name)
 		end
 		
-	prepass_xml (element: XML_ELEMENT; info: GB_GENERATED_INFO; depth: INTEGER) is
+	prepass_xml (element: XM_ELEMENT; info: GB_GENERATED_INFO; depth: INTEGER) is
 			-- With information in element, build information into `info'.
 		local
-			current_element: XML_ELEMENT
-			current_data_element: XML_CHARACTER_DATA
+			current_element: XM_ELEMENT
 			current_name, current_type: STRING
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			current_data_element: XM_CHARACTER_DATA
 			action_sequence_info: GB_ACTION_SEQUENCE_INFO
 		do
 			info.set_element (element)
 			if element.has_attribute_by_name (type_string) then
-				current_type := element.attribute_by_name (type_string).value.to_utf8
+				current_type := element.attribute_by_name (type_string).value
 				info.set_type (current_type)
 			end
 	
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation
 			loop
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
-					current_name := current_element.name.to_utf8
+					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
 						prepass_xml (current_element, info.new_child, depth + 1)
 					else
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 							loop
 								current_data_element ?= current_element.item_for_iteration
 								if current_data_element /= Void then
-									action_sequence_info := string_to_action_sequence_info (current_data_element.content.to_utf8)
+									action_sequence_info := string_to_action_sequence_info (current_data_element.content)
 									info.add_new_event (action_sequence_info)
 								end
 								current_element.forth
@@ -681,11 +681,11 @@ feature {NONE} -- Implementation
 					-- in a client based system. This has a special attribute clauses added in the
 					-- file, so we do not add it in the same fashion as other attributes.
 					if system_status.current_project_settings.grouped_locals then
-						add_local_on_grouped_line (generated_info)--generated_info.type, generated_info.name)
+						add_local_on_grouped_line (generated_info)
 					else
-						add_local_on_single_line (generated_info)--generated_info.type, generated_info.name)
+						add_local_on_single_line (generated_info)
 					end
-					create_local (generated_info)--generated_info.name)
+					create_local (generated_info)
 				end
 				all_ids.forth
 			end
@@ -724,7 +724,7 @@ feature {NONE} -- Implementation
 					end
 						-- If name is Void, the we are at the root element of the info.
 						-- This does not represent a widget at all, so do nothing
-				elseif not generated_info.is_root_object then --generated_info.name /= Void then
+				elseif not generated_info.is_root_object then
 					-- Tables need to use put, but this is done in conjunction with the placement.
 					-- So here, we do not add the children of the table, as it will be done later.
 					if generated_info.parent /= Void and then generated_info.parent.type /= Void and then not generated_info.parent.type.is_equal (Ev_table_string) then
@@ -1015,7 +1015,7 @@ feature {NONE} -- Implementation
 			next_index := body.substring_index ("%N", index)
 			temp_string := body.substring (1, index)
 			tab_index := temp_string.last_index_of ('%N', temp_string.count)
-			body.remove_substring (tab_index + 1, next_index)--index, next_index)
+			body.remove_substring (tab_index + 1, next_index)
 		end
 
 	create_local (generated_info: GB_GENERATED_INFO) is
@@ -1052,7 +1052,7 @@ feature {NONE} -- Implementation
 			-- Create `event_connection_string' if empty.
 		do
 			if event_connection_string = Void then
-				event_connection_string := connect_events_comment-- Connect events."
+				event_connection_string := connect_events_comment
 			end
 			event_connection_string := event_connection_string + indent + event
 		end
@@ -1152,7 +1152,7 @@ feature {NONE} -- Implementation
 		-- repeatedly generate the feature, just the connection of the feature to
 		-- the action sequence.
 
-	current_document: XML_DOCUMENT
+	current_document: XM_DOCUMENT
 		-- An XML document representing the current layout built
 		-- by the user. We generate the class text from the information
 		-- held within.

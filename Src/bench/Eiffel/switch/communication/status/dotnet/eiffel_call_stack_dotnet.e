@@ -238,31 +238,33 @@ feature {NONE} -- Initialization
 													l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
 													l_stack_adv := debug_value_from_icdv (l_stack_object)
 													l_hexaddress := l_stack_adv.address
-													l_stack_drv ?= l_stack_adv
-													if l_stack_drv /= Void then
-														l_class_type := l_stack_drv.dynamic_class_type
-													else
-														l_class_type := l_stack_adv.dynamic_class.types.first
-													end
+													if l_hexaddress /= Void then
+														l_stack_drv ?= l_stack_adv
+														if l_stack_drv /= Void then
+															l_class_type := l_stack_drv.dynamic_class_type
+														else
+															l_class_type := l_stack_adv.dynamic_class.types.first
+														end
 
-													create eiffel_cse.make (level)
-													eiffel_cse.set_private_current_object (l_stack_adv)
-													eiffel_cse.set_routine (
-														l_chain,
-														l_frame,
-														l_frame_il,
-														False, 			-- is_melted (No since this is a dotnet system)
-														l_hexaddress,
-														l_class_type, 	-- dynmic class type
-														l_feature_i.written_class, 	-- origin class
-														l_feature_i, 	-- routine, routine_name ...
-														l_il_offset,
-														l_line_number 	-- break_index / line number
-														)
-													call := eiffel_cse
-													
-													extend (call)
-													level := level + 1
+														create eiffel_cse.make (level)
+														eiffel_cse.set_private_current_object (l_stack_adv)
+														eiffel_cse.set_routine (
+															l_chain,
+															l_frame,
+															l_frame_il,
+															False, 			-- is_melted (No since this is a dotnet system)
+															l_hexaddress,
+															l_class_type, 	-- dynmic class type
+															l_feature_i.written_class, 	-- origin class
+															l_feature_i, 	-- routine, routine_name ...
+															l_il_offset,
+															l_line_number 	-- break_index / line number
+															)
+														call := eiffel_cse
+														
+														extend (call)
+														level := level + 1
+													end
 
 													eiffel_cse := Void
 													l_stack_adv := Void

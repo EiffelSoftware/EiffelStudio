@@ -14,125 +14,57 @@ creation
 
 feature -- Access
 
+feature {TTY_RESOURCES} -- Initialization
+
+	initialize (rt: RESOURCE_TABLE) is
+			-- Initialize all rsources valid for Current.
+		do
+--			create windows_text.make_default ("text_on_windows", rt, "", "")
+			create windows_text.make_default ("text_on_windows", rt, "", "-*-*-*-*-*-*-*-*-*-*-*-*-*")
+			create breakable_text.make_default ("breakable text", rt, "red", "-*-courier-medium-r-*-*-12-*-*-*-*-*-*")
+			create class_text.make_default ("class text", rt, "magenta", "-*-times-medium-i-normal-*-12-*-*-*-*-*-*")
+			create cluster_text.make_default ("cluster text", rt, "dark red", "-*-times-medium-i-normal-*-12-*-*-*-*-*-*")
+			create comment_text.make_default ("comment text", rt, "red", "-*-courier-medium-r-*-*-12-*-*-*-*-*-*")
+			create default_text.make_default ("default text", rt, "black", "-*-courier-medium-r-*-*-12-*-*-*-*-*-*")
+			create error_text.make_default ("error text", rt, "red", "-*-times-medium-r-normal-*-12-*-*-*-*-*-*")
+			create feature_text.make_default ("feature text", rt, "dark green", "-*-times-medium-i-normal-*-12-*-*-*-*-*-*")
+			create keyword_text.make_default ("keyword text", rt, "blue", "-*-times-bold-r-normal-*-12-*-*-*-*-*-*")
+			create object_text.make_default ("object text", rt, "dark yellow", "-*-times-medium-i-normal-*-12-*-*-*-*-*-*")
+			create normal_text.make_default ("normal text", rt, "black", "-*-courier-medium-r-*-*-12-*-*-*-*-*-*")
+			create string_text.make_default ("string text", rt, "black", "-*-times-medium-r-normal-*-12-*-*-*-*-*-*")
+			create symbol_text.make_default ("symbol text", rt, "black", "-*-times-medium-r-normal-*-12-*-*-*-*-*-*")
+			create html_text.make_default ("html text", rt, "blue", "-*-times-medium-r-*-*-12-*-*-*-*-*-*")
+
+--			if not Platform_constants.is_windows then
+--				create progress_bar_color.make_default ("progress_bar_color", rt, "blue")
+--				create focus_label_color.make_default ("explanation_label", rt, "LightYellow")
+--				create highlight_line_background_color.make_default ("highlight_background_line_color", rt, "red")
+--				create highlight_line_foreground_color.make_default ("highlight_foreground_line_color", rt, "white")
+--			end
+		end
+
 feature -- Resources
 
-	windows_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("text_on_windows",
-				Graphical_resources.font, Graphical_resources.foreground_color)
-		end
-
-	normal_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("normal text",
-				Graphical_resources.text_font, Graphical_resources.text_foreground_color)
-		end
-
-	default_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("default text",
-				Graphical_resources.default_text_font, Graphical_resources.default_text_color)
-		end
-
-	comment_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("comments",
-				Graphical_resources.comment_font, Graphical_resources.comment_color)
-		end
-
-	string_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("string text",
-				Graphical_resources.string_text_font, Graphical_resources.string_text_color)
-		end
-
-	class_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("class id",
-				Graphical_resources.class_font, Graphical_resources.class_color)
-		end
-
-	cluster_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("custer id",
-				Graphical_resources.cluster_font, Graphical_resources.cluster_color)
-		end
-
-	feature_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds  ("feature id",
-				Graphical_resources.feature_font, Graphical_resources.feature_color)
-		end
-
-	object_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("object id",
-				Graphical_resources.object_font, Graphical_resources.object_color)
-		end
-
-	error_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("error text",
-				Graphical_resources.error_font, Graphical_resources.error_color)
-		end
-
-	breakable_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("breakable text",
-				Graphical_resources.breakable_font, Graphical_resources.breakable_color)
-		end
-
-	keyword_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("keyword id",
-				Graphical_resources.keyword_font, Graphical_resources.keyword_color)
-		end
-
-	symbol_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("symbol id",
-				Graphical_resources.symbol_font, Graphical_resources.symbol_color)
-		end
-
-	html_text: EB_FORMAT_RESOURCE is
-		once
-			Create Result.make_from_olds ("html text",
-				Graphical_resources.html_font, Graphical_resources.html_color)
-		end
-
-	text_background_color: EB_COLOR_RESOURCE is
-		once
-			Create Result.make_from_old (Graphical_resources.text_background_color)
-		end
-
-	bkground_color: EB_COLOR_RESOURCE is
-		once
-			Create Result.make_from_old (Graphical_resources.background_color)
-		end
-
-	progress_bar_color: EB_COLOR_RESOURCE is
-		once
-			Create Result.make_from_old (Graphical_resources.progress_bar_color)
-		end
-
-	highlight_line_background_color: EB_COLOR_RESOURCE is
-		once
-			Create Result.make_from_old (Graphical_resources.highlight_line_background_color)
-		end
-
-	highlight_line_foreground_color: EB_COLOR_RESOURCE is
-		once
-			Create Result.make_from_old (Graphical_resources.highlight_line_foreground_color)
-		end
-
-	stop_color: EB_COLOR_RESOURCE is
-		once
-			Create Result.make_from_old (Graphical_resources.stop_color)
-		end
-
-	focus_label_color: EB_COLOR_RESOURCE is
-		once
-			Create Result.make_from_old (Graphical_resources.focus_label_color)
-		end
+	windows_text: EB_FORMAT_RESOURCE
+	normal_text: EB_FORMAT_RESOURCE
+	default_text: EB_FORMAT_RESOURCE
+	comment_text: EB_FORMAT_RESOURCE
+	string_text: EB_FORMAT_RESOURCE
+	class_text: EB_FORMAT_RESOURCE
+	cluster_text: EB_FORMAT_RESOURCE
+	feature_text: EB_FORMAT_RESOURCE
+	object_text: EB_FORMAT_RESOURCE
+	error_text: EB_FORMAT_RESOURCE
+	breakable_text: EB_FORMAT_RESOURCE
+	keyword_text: EB_FORMAT_RESOURCE
+	symbol_text: EB_FORMAT_RESOURCE
+	html_text: EB_FORMAT_RESOURCE
+	text_background_color: EB_COLOR_RESOURCE
+	bkground_color: EB_COLOR_RESOURCE
+	progress_bar_color: EB_COLOR_RESOURCE
+	highlight_line_background_color: EB_COLOR_RESOURCE
+	highlight_line_foreground_color: EB_COLOR_RESOURCE
+	stop_color: EB_COLOR_RESOURCE
+	focus_label_color: EB_COLOR_RESOURCE
 
 end -- class EB_GRAPHICAL_PARAMETERS

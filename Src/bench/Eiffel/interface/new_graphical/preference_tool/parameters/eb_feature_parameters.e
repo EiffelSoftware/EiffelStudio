@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,36 +12,26 @@ inherit
 creation
 	make
 
+feature {TTY_RESOURCES} -- Initialization
+
+	initialize (rt: RESOURCE_TABLE) is
+			-- Initialize all resources valid for Current.
+		do
+			create tool_width.make ("feature_tool_width", rt, 600);
+			create tool_height.make ("feature_tool_height", rt, 450);
+			create keep_toolbar.make ("show_toolbar", rt, True)
+			create double_line_toolbar.make ("two_lines_toolbar", rt, False)
+			create show_all_callers.make ("show_all_callers", rt, False)
+			create do_flat_in_breakpoints.make ("do_flat_in_breakpoints", rt, True)
+		end
+
 feature -- Access
 
-	tool_width: EB_INTEGER_RESOURCE is
-		do
-			Create Result.make_from_old (Feature_resources.tool_width)
-		end
-
-	tool_height: EB_INTEGER_RESOURCE is
-		do
-			Create Result.make_from_old (Feature_resources.tool_height)
-		end
-
-	keep_toolbar: EB_BOOLEAN_RESOURCE is
-		do
-			Create Result.make_from_old (Feature_resources.keep_toolbar)
-		end
-
-	double_line_toolbar: EB_BOOLEAN_RESOURCE is
-		do
-			Create Result.make_from_old (Feature_resources.double_line_toolbar)
-		end
-
-	show_all_callers: EB_BOOLEAN_RESOURCE is
-		do
-			Create Result.make_from_old (Feature_resources.show_all_callers)
-		end
-
-	do_flat_in_breakpoints: EB_BOOLEAN_RESOURCE is
-		do
-			Create Result.make_from_old (Feature_resources.do_flat_in_breakpoints)
-		end
+	tool_width: EB_INTEGER_RESOURCE
+	tool_height: EB_INTEGER_RESOURCE
+	keep_toolbar: EB_BOOLEAN_RESOURCE
+	double_line_toolbar: EB_BOOLEAN_RESOURCE
+	show_all_callers: EB_BOOLEAN_RESOURCE
+	do_flat_in_breakpoints: EB_BOOLEAN_RESOURCE
 
 end -- class EB_FEATURE_PARAMETERS

@@ -167,6 +167,16 @@ feature {NONE} -- Status report
 			elseif ev_str.is_equal ("click_column") then
 				Result := click_column_id
 
+			-- For ctrees:
+			elseif ev_str.is_equal ("tree_select_row") then
+				Result := tree_select_row_id
+			elseif ev_str.is_equal ("tree_unselect_row") then
+				Result := tree_unselect_row_id
+			elseif ev_str.is_equal ("tree_collapse") then
+				Result := tree_collapse_id
+			elseif ev_str.is_equal ("tree_expand") then
+				Result := tree_expand_id
+
 			-- For text components and combo boxes:
 			elseif ev_str.is_equal ("changed") then
 				Result := changed_id
@@ -177,14 +187,14 @@ feature {NONE} -- Status report
 
 			end
 		ensure
-			event_id_ok: (Result>=0 and Result<=23)
+			event_id_ok: (Result>0 and Result<=23)
 		end
 
 feature {NONE} -- Status setting
 
 	add_command_with_event_data (wid: POINTER; event: STRING; cmd: EV_COMMAND; 
 		     arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA;
-		     mouse_button: INTEGER; double_click: BOOLEAN) is
+		     mouse_button: INTEGER; double_click: BOOLEAN; extra_data: POINTER) is
 			-- Add `cmd' at the end of the list of
 			-- actions to be executed when the 'event'
 			-- happens `arg' will be passed to
@@ -221,7 +231,8 @@ feature {NONE} -- Status setting
 				$ev_d_imp,
 				ev_d_imp.initialize_address,
 				mouse_button,
-				double_click
+				double_click,
+				extra_data
 			)
 			check
 				successfull_connect: con_id > 0
@@ -279,7 +290,8 @@ feature {NONE} -- Status setting
 				Default_pointer,
 				Default_pointer,
 				0,
-				False
+				False,
+				Default_pointer
 			)
 			check
 				successfull_connect: con_id > 0		

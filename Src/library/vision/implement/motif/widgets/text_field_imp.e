@@ -91,6 +91,12 @@ feature -- Removal
 			remove_command (activate_command, a_command, argument)
 		end;
 
+feature -- Non-implemented feature for Motif systems
+
+	wel_set_focus is
+		do
+		end
+
 end -- class TEXT_FIELD_IMP
 
 --|----------------------------------------------------------------

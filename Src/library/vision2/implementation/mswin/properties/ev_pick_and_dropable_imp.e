@@ -489,29 +489,35 @@ feature {EV_ANY_I} -- Implementation
 				widget_imp_at_cursor_position ?= wel_window_at_cursor_position
 					-- Retrieve the implementation of the Vision2 Widget at
 					-- Cursor position and check it is not Void.
-					
-						-- We must now perform special processing for widgets that have an HTTRANSPARENT
-						-- part. In this situation, the widget returned by "wel_point.window_at' may be the
-						-- parent of the widget that is pointed to. For example, if you place a notebook in a box
-						-- and point to the are to the right of the tabs, the widget returned is the box. Julian.
-					composite_window ?= wel_window_at_cursor_position
-					if composite_window /= Void then
-							-- If we are pointing to a window that has children.
+
+			
+					-- We must now perform special processing for widgets that have an HTTRANSPARENT
+					-- part. In this situation, the widget returned by "wel_point.window_at' may be the
+					-- parent of the widget that is pointed to. For example, if you place a notebook in a box
+					-- and point to the are to the right of the tabs, the widget returned is the box. Julian.
+				composite_window ?= wel_window_at_cursor_position
+				if composite_window /= Void then -- and widget_imp_at_cursor_position.parent /= Void then
+						-- If we are pointing to a window that has children.
+					if widget_imp_at_cursor_position /= Void then
+						create client_coordinate_point.make (wel_point.x - widget_imp_at_cursor_position.screen_x,
+							wel_point.y - widget_imp_at_cursor_position.screen_y)
+					else
 						create client_coordinate_point.make (wel_point.x - composite_window.absolute_x, wel_point.y - composite_window.absolute_y)
-							-- Convert the coordinates so that they are relative to the parent window.
-						ptr := composite_window.child_window_from_point (client_coordinate_point)
-							-- Return the child window that is currently pointed to (ignores HTTRANSPARENT).
-							-- May be null if we are not over a HTTRANSPARENT area.
-						if ptr /= null then
-							win := window_of_item (ptr)
-								-- Retrieve the window that is actuall pointed to withing `composite_window'.
-								-- This may be null if it is not a window that we have created.
-							if win /= Void then
-								widget_imp_at_cursor_position ?= win
-									-- Return the actual pointed wiget for use as the real target.
-							end
+					end
+						-- Convert the coordinates so that they are relative to the parent window.
+					ptr := composite_window.child_window_from_point (client_coordinate_point)
+						-- Return the child window that is currently pointed to (ignores HTTRANSPARENT).
+						-- May be null if we are not over a HTTRANSPARENT area.
+					if ptr /= null then
+						win := window_of_item (ptr)
+							-- Retrieve the window that is actuall pointed to withing `composite_window'.
+							-- This may be null if it is not a window that we have created.
+						if win /= Void then
+							widget_imp_at_cursor_position ?= win
+								-- Return the actual pointed wiget for use as the real target.
 						end
 					end
+				end
 				
 				if widget_imp_at_cursor_position = Void then
 						-- We must now check for an internal combo field, and 

@@ -21,7 +21,8 @@ inherit
 			on_wm_vscroll,
 			on_wm_hscroll,
 			default_style,
-			on_wm_notify
+			on_wm_notify,
+			class_requires_icon
 		end
 
 	WEL_SB_CONSTANTS
@@ -166,6 +167,14 @@ feature {NONE} -- Implemetation
 					hwnd := cwin_get_window (hwnd, Gw_hwndnext)
 				end
 			end
+		end
+		
+	class_requires_icon: BOOLEAN is
+			-- Does `Current' require an icon to be registered?
+			-- If `True' `register_class' assigns a class icon, otherwise
+			-- no icon is assigned.
+		do
+			Result := False
 		end
 
 end -- class EV_INTERNAL_SILLY_WINDOW_IMP

@@ -34,6 +34,8 @@ inherit
 	GB_SHARED_OBJECT_EDITORS
 		export {NONE}
 			all
+		undefine
+			default_create, copy, is_equal
 		end
 		
 	GB_NAMING_UTILITIES
@@ -483,11 +485,13 @@ feature {NONE} -- Implementation
 			-- in `name_field'.
 		local
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			current_text: STRING
 		do
-			if valid_class_name (name_field.text) or name_field.text.is_empty  then
-				object.set_edited_name (name_field.text)
-				if object_handler.name_in_use (name_field.text, object) or 
-					(reserved_words.has (name_field.text.as_lower)) or
+			current_text := name_field.text.as_lower
+			if valid_class_name (current_text) or current_text.is_empty  then
+				object.set_edited_name (current_text)
+				if object_handler.name_in_use (current_text, object) or 
+					(reserved_words.has (current_text)) or
 					(build_reserved_words.has (name_field.text.as_lower)) then
 					name_field.set_foreground_color (red)
 				else

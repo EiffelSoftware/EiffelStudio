@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			press_action := ev_pnd_start_transport
 			is_initialized := True
 		end
 
@@ -226,6 +225,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/22 20:24:29  rogers
+--| Removed press_action := ev_pnd_start_transport from initialize.
+--|
 --| Revision 1.36  2000/03/21 01:20:53  rogers
 --| Redefined set_pointer_style, so the parent_imp pointer style is called.
 --|

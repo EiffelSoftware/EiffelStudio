@@ -8,6 +8,15 @@ class
 	EIFNET_DEBUGGER_SYNCHRO
 	
 feature
+
+	init_dbg_synchronisation is
+			-- Initialize eStudio/.NET debugger synchronisation
+		do
+			debug ("DBG_SYNCHRO")
+				print (">>Initialize eStudio/.NET debugger synchronisation%N")
+			end
+			c_init_dbg_synchronisation
+		end
 	
 	start_dbg_timer is
 			-- 
@@ -51,6 +60,13 @@ feature
 
 feature {NONE} -- External DBG Timer
 
+	c_init_dbg_synchronisation is
+		external
+			"C use %"cli_debugger.h%" "
+		alias
+			"dbg_init_synchro"
+		end
+		
 	c_dbg_timer_id: INTEGER is
 		external
 			"C signature (): EIF_INTEGER use %"cli_debugger.h%" "

@@ -85,8 +85,9 @@ feature -- Basic operations
 				system_descriptor.add_coclass (Result)
 			end
 		ensure then
-			valid_interface_descriptors: interface_descriptors /= Void and then
-				(interface_descriptors.count + source_interface_descriptors.count)  = a_type_info.type_attr.count_implemented_types
+			non_void_interface_descriptors: interface_descriptors /= Void
+			valid_interface_descriptors: (interface_descriptors.count + source_interface_descriptors.count)  = 
+				(a_type_info.type_attr.count_implemented_types - number_unknown_interfaces)
 		end
 
 	add_interface_descriptor (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -118,7 +119,6 @@ feature -- Basic operations
 			tmp_type_lib: ECOM_TYPE_LIB;
 			tmp_guid: ECOM_GUID;
 			tmp_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
-			debugg: INTEGER
 			tmp_impl_flag: INTEGER
 			non_resticted_interfaces: LINKED_LIST [WIZARD_INTERFACE_DESCRIPTOR]
 		do
@@ -138,7 +138,6 @@ feature -- Basic operations
 				
 				a_handle := a_type_info.ref_type_of_impl_type (i)
 				tmp_type_info := a_type_info.type_info (a_handle)
-				debugg := tmp_type_info.type_attr.type_kind
 				check
 					is_interface: tmp_type_info.type_attr.type_kind = Tkind_interface or
 						tmp_type_info.type_attr.type_kind = Tkind_dispatch
@@ -152,20 +151,19 @@ feature -- Basic operations
 					create tmp_library_descriptor.make (tmp_type_lib)
 					system_descriptor.add_library_descriptor (tmp_library_descriptor)
 					tmp_library_descriptor.generate
-				end;
+				end
 				if tmp_library_descriptor.descriptors.item (tmp_descriptor_index) = Void then
 					tmp_documentation := tmp_type_lib.documentation (tmp_type_info.index_in_type_lib)
 					tmp_interface_descriptor ?= type_descriptor_factory.create_type_descriptor (tmp_documentation, tmp_type_info)
-					check
-						interface_descriptor: tmp_interface_descriptor /= Void
-					end
 					tmp_library_descriptor.add_descriptor (tmp_interface_descriptor, tmp_descriptor_index)
 				else
 					tmp_interface_descriptor ?= tmp_library_descriptor.descriptors.item (tmp_descriptor_index)
-					check
-						interface_descriptor: tmp_interface_descriptor /= Void
-					end
 				end
+				check
+					interface_descriptor: tmp_interface_descriptor /= Void
+				end
+				
+				
 				if is_fsource (tmp_impl_flag) then
 					add_source_interface_descriptor (tmp_interface_descriptor)
 					if is_fdefault (tmp_impl_flag) then
@@ -176,7 +174,11 @@ feature -- Basic operations
 						end
 					end
 				else
-					add_interface_descriptor (tmp_interface_descriptor)
+					if not tmp_interface_descriptor.c_type_name.is_equal (Iunknown_type) then
+						add_interface_descriptor (tmp_interface_descriptor)
+					else
+						number_unknown_interfaces := number_unknown_interfaces + 1
+					end
 					if is_fdefault (tmp_impl_flag) then
 						default_interface_descriptor := tmp_interface_descriptor
 						if 
@@ -190,14 +192,14 @@ feature -- Basic operations
 					end
 				end
 				i := i + 1
-				debugg := a_type_info.type_attr.count_implemented_types
 			end
 			
 			if default_interface_descriptor = Void then
 				default_interface_descriptor := non_resticted_interfaces.first
 			end
 		ensure 
-			valid_interface_count: (interface_descriptors.count + source_interface_descriptors.count) = a_type_info.type_attr.count_implemented_types
+			valid_interface_count: (interface_descriptors.count + source_interface_descriptors.count) = 
+									(a_type_info.type_attr.count_implemented_types - number_unknown_interfaces)
 			non_void_default_interface: default_interface_descriptor /= Void
 		end
 
@@ -252,6 +254,9 @@ feature {NONE} -- Implementation
 
 	flags: INTEGER
 			-- See ECOM_TYPE_FLAGS for values.
+
+	number_unknown_interfaces: INTEGER
+			-- Number of IUnknown interfaces on Coclass.
 
 end -- class WIZARD_COCLASS_DESCRIPTOR_CREATOR
 

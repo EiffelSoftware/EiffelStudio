@@ -29,7 +29,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := c_hashcode (item).hash_code
+			Result := item.hash_code
 		end
 
 feature -- Element change
@@ -192,14 +192,6 @@ feature {NONE} -- Implementation
 			-- Printable representation of pointer value
 		external
 			"C | %"eif_out.h%""
-		end
-
-	c_hashcode (p: POINTER): INTEGER is
-			-- Hash code value of `p'
-		external
-			"C [macro %"eif_misc.h%"]"
-		alias
-			"conv_pi"
 		end
 
 	c_offset_pointer (p: POINTER; o: INTEGER): POINTER is

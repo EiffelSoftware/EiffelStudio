@@ -23,7 +23,8 @@ inherit
 			set_foreground_color,
 			foreground_color_pointer,
 			on_focus_changed,
-			needs_event_box
+			needs_event_box,
+			event_widget
 		end
  
 	EV_PIXMAPABLE_IMP
@@ -62,6 +63,12 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is True
+	
+	event_widget: POINTER is
+			-- Pointer to the GtkWidget that handles the widget events
+		do
+			Result := visual_widget
+		end
 
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.
@@ -195,11 +202,12 @@ feature -- Status Setting
 			-- Allow the style of the button to be the default push button.
 		do
 			is_default_push_button := True
-			--| FIXME IEK Draw fake default style that represents gtk one (but nicer).
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, feature {EV_GTK_ENUMS}.gtk_can_default_enum)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
 		do
+			Precursor {EV_PRIMITIVE_IMP} (a_color)
 			real_set_foreground_color (text_label, a_color)
 		end
 	

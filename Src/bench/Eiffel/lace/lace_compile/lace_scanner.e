@@ -11,6 +11,11 @@ inherit
 
 	LACE_SCANNER_SKELETON
 
+	PLATFORM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 
 	make
@@ -43,263 +48,267 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 32
+--|#line 37
 
 				current_position.go_to (text_count)
-				comment_list.extend (text_substring (1, text_count - 1))
+				if is_windows then
+					comment_list.extend (text_substring (1, text_count - 1))
+				else
+					comment_list.extend (text_substring (1, text_count))
+				end
 			
 when 2 then
---|#line 39
+--|#line 48
 current_position.go_to (text_count)
 when 3 then
---|#line 40
+--|#line 49
 
 				line_number := line_number + text_count
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 			
 when 4 then
---|#line 49
+--|#line 58
 
 				current_position.go_to (1)
 				last_token := LAC_SEMICOLON
 			
 when 5 then
---|#line 53
+--|#line 62
 
 				current_position.go_to (1)
 				last_token := LAC_COLON
 			
 when 6 then
---|#line 57
+--|#line 66
 
 				current_position.go_to (1)
 				last_token := LAC_COMMA
 			
 when 7 then
---|#line 61
+--|#line 70
 
 				current_position.go_to (1)
 				last_token := LAC_LEFT_PARAM
 			
 when 8 then
---|#line 65
+--|#line 74
 
 				current_position.go_to (1)
 				last_token := LAC_RIGHT_PARAM
 			
 when 9 then
---|#line 73
+--|#line 82
 
 				current_position.go_to (5)
 				last_token := LAC_ADAPT
 			
 when 10 then
---|#line 77
+--|#line 86
 
 				current_position.go_to (3)
 				last_token := LAC_ALL
 			
 when 11 then
---|#line 81
+--|#line 90
 
 				current_position.go_to (2)
 				last_token := LAC_AS
 			
 when 12 then
---|#line 85
+--|#line 94
 
 				current_position.go_to (9)
 				last_token := LAC_ASSERTION
 			
 when 13 then
---|#line 89
+--|#line 98
 
 				current_position.go_to (5)
 				last_token := LAC_CHECK
 			
 when 14 then
---|#line 93
+--|#line 102
 
 				current_position.go_to (7)
 				last_token := LAC_CLUSTER
 			
 when 15 then
---|#line 97
+--|#line 106
 
 				current_position.go_to (6)
 				last_token := LAC_CREATION
 			
 when 16 then
---|#line 101
+--|#line 110
 
 				current_position.go_to (8)
 				last_token := LAC_CREATION
 			
 when 17 then
---|#line 105
+--|#line 114
 
 				current_position.go_to (5)
 				last_token := LAC_DEBUG
 			
 when 18 then
---|#line 109
+--|#line 118
 
 				current_position.go_to (14)
 				last_token := LAC_DISABLED_DEBUG
 			
 when 19 then
---|#line 113
+--|#line 122
 
 				current_position.go_to (7)
 				last_token := LAC_DEFAULT
 			
 when 20 then
---|#line 117
+--|#line 126
 
 				current_position.go_to (3)
 				last_token := LAC_END
 			
 when 21 then
---|#line 121
+--|#line 130
 
 				current_position.go_to (6)
 				last_token := LAC_ENSURE
 			
 when 22 then
---|#line 125
+--|#line 134
 
 				current_position.go_to (7)
 				last_token := LAC_EXCLUDE
 			
 when 23 then
---|#line 129
+--|#line 138
 
 				current_position.go_to (6)
 				last_token := LAC_DEPEND
 			
 when 24 then
---|#line 133
+--|#line 142
 
 				current_position.go_to (6)
 				last_token := LAC_EXPORT
 			
 when 25 then
---|#line 137
+--|#line 146
 
 				current_position.go_to (8)
 				last_token := LAC_EXTERNAL
 			
 when 26 then
---|#line 141
+--|#line 150
 
 				current_position.go_to (8)
 				last_token := LAC_GENERATE
 			
 when 27 then
---|#line 146
+--|#line 155
 
 				current_position.go_to (6)
 				last_token := LAC_IGNORE
 			
 when 28 then
---|#line 150
+--|#line 159
 
 				current_position.go_to (7)
 				last_token := LAC_INCLUDE
 			
 when 29 then
---|#line 154
+--|#line 163
 
 				current_position.go_to (9)
 				last_token := LAC_INVARIANT
 			
 when 30 then
---|#line 158
+--|#line 167
 
 				current_position.go_to (7)
 				last_token := LAC_LIBRARY
 			
 when 31 then
---|#line 162
+--|#line 171
 
 				current_position.go_to (4)
 				last_token := LAC_LOOP
 			
 when 32 then
---|#line 166
+--|#line 175
 
 				current_position.go_to (2)
 				last_token := LAC_NO
 			
 when 33 then
---|#line 170
+--|#line 179
 
 				current_position.go_to (8)
 				last_token := LAC_OPTIMIZE
 			
 when 34 then
---|#line 174
+--|#line 183
 
 				current_position.go_to (6)
 				last_token := LAC_OPTION
 			
 when 35 then
---|#line 178
+--|#line 187
 
 				current_position.go_to (11)
 				last_token := LAC_PRECOMPILED
 			
 when 36 then
---|#line 182
+--|#line 191
 
 				current_position.go_to (6)
 				last_token := LAC_RENAME
 			
 when 37 then
---|#line 186
+--|#line 195
 
 				current_position.go_to (7)
 				last_token := LAC_REQUIRE
 			
 when 38 then
---|#line 190
+--|#line 199
 
 				current_position.go_to (4)
 				last_token := LAC_ROOT
 			
 when 39 then
---|#line 194
+--|#line 203
 
 				current_position.go_to (6)
 				last_token := LAC_SYSTEM
 			
 when 40 then
---|#line 198
+--|#line 207
 
 				current_position.go_to (5)
 				last_token := LAC_TRACE
 			
 when 41 then
---|#line 202
+--|#line 211
 
 				current_position.go_to (3)
 				last_token := LAC_USE
 			
 when 42 then
---|#line 206
+--|#line 215
 
 				current_position.go_to (7)
 				last_token := LAC_VISIBLE
 			
 when 43 then
---|#line 210
+--|#line 219
 
 				current_position.go_to (3)
 				last_token := LAC_YES
 			
 when 44 then
---|#line 218
+--|#line 227
 
 					-- Note: Identifiers are converted to lower-case.
 				token_buffer.clear_all
@@ -309,7 +318,7 @@ when 44 then
 				last_token := LAC_IDENTIFIER
 			
 when 45 then
---|#line 230
+--|#line 239
 
 					-- Empty string.
 				current_position.go_to (2)
@@ -317,7 +326,7 @@ when 45 then
 				last_token := LAC_STRING
 			
 when 46 then
---|#line 236
+--|#line 245
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
@@ -325,7 +334,7 @@ when 46 then
 				last_token := LAC_STRING
 			
 when 47 then
---|#line 242
+--|#line 251
 
 				token_buffer.clear_all
 				if text_count > 1 then
@@ -335,145 +344,145 @@ when 47 then
 				set_start_condition (IN_STR)
 			
 when 48 then
---|#line 251
+--|#line 260
 
 				current_position.go_to (text_count)
 				append_text_to_string (token_buffer)
 			
 when 49 then
---|#line 255
+--|#line 264
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%A')
 			
 when 50 then
---|#line 259
+--|#line 268
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%B')
 			
 when 51 then
---|#line 263
+--|#line 272
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%C')
 			
 when 52 then
---|#line 267
+--|#line 276
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%D')
 			
 when 53 then
---|#line 271
+--|#line 280
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%F')
 			
 when 54 then
---|#line 275
+--|#line 284
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%H')
 			
 when 55 then
---|#line 279
+--|#line 288
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%L')
 			
 when 56 then
---|#line 283
+--|#line 292
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%N')
 			
 when 57 then
---|#line 287
+--|#line 296
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%Q')
 			
 when 58 then
---|#line 291
+--|#line 300
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%R')
 			
 when 59 then
---|#line 295
+--|#line 304
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%S')
 			
 when 60 then
---|#line 299
+--|#line 308
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%T')
 			
 when 61 then
---|#line 303
+--|#line 312
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%U')
 			
 when 62 then
---|#line 307
+--|#line 316
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%V')
 			
 when 63 then
---|#line 311
+--|#line 320
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%%')
 			
 when 64 then
---|#line 315
+--|#line 324
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%'')
 			
 when 65 then
---|#line 319
+--|#line 328
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%"')
 			
 when 66 then
---|#line 323
+--|#line 332
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%(')
 			
 when 67 then
---|#line 327
+--|#line 336
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%)')
 			
 when 68 then
---|#line 331
+--|#line 340
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%<')
 			
 when 69 then
---|#line 335
+--|#line 344
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%>')
 			
 when 70 then
---|#line 339
+--|#line 348
 
 				current_position.go_to (text_count)
 				process_string_character_code (text_substring (3, text_count - 1).to_integer)
 			
 when 71 then
---|#line 343
+--|#line 352
 
 					-- This regular expression should actually be: %\n[ \t\r]*%
 					-- Left as-is for compatibility with previous releases.
@@ -482,7 +491,7 @@ when 71 then
 				current_position.set_line_number (line_number)
 			
 when 72 then
---|#line 350
+--|#line 359
 
 				if text_count > 1 then
 					append_text_substring_to_string (1, text_count - 1, token_buffer)
@@ -495,7 +504,7 @@ when 72 then
 				last_token := LAC_STRING
 			
 when 73 then
---|#line 361
+--|#line 370
 
 					-- Bad special character.
 				current_position.go_to (1)
@@ -503,7 +512,7 @@ when 73 then
 				report_string_bad_special_character_error
 			
 when 74 then
---|#line 367
+--|#line 376
 
 					-- No final double-quote.
 				line_number := line_number + 1
@@ -513,7 +522,7 @@ when 74 then
 				report_string_missing_quote_error (token_buffer)
 			
 when 75 then
---|#line 388
+--|#line 397
 
 				current_position.go_to (1)
 				report_unknown_token_error (text_item (1))

@@ -12,6 +12,11 @@ inherit
 
 	LACE_SCANNER_SKELETON
 
+	PLATFORM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 
 	make
@@ -31,7 +36,11 @@ X		([a-z]|[A-Z]|[0-9]|_)
 
 "--".*		{
 				current_position.go_to (text_count)
-				comment_list.extend (text_substring (1, text_count - 1))
+				if is_windows then
+					comment_list.extend (text_substring (1, text_count - 1))
+				else
+					comment_list.extend (text_substring (1, text_count))
+				end
 			}
 
 -- Separators

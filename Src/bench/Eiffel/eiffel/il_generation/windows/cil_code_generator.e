@@ -659,10 +659,13 @@ feature -- Class info
 		local
 			name, impl_name: STRING
 			native_array: NATIVE_ARRAY_CLASS_TYPE
+			l_external_class: EXTERNAL_CLASS_C
 			class_c: CLASS_C
 			l_type_token: INTEGER
 			l_attributes: INTEGER
 			l_type: CL_TYPE_I
+			l_nested_parent_class: CLASS_C
+			l_nested_parent_class_token: INTEGER
 		do
 			class_c := class_type.associated_class
 			update_parents (class_type, class_c)
@@ -682,8 +685,21 @@ feature -- Class info
 				end
 
 				if class_c.is_external then
-					uni_string.set_string (name)
-					l_type_token := md_emit.define_type_ref (uni_string, assembly_token (class_c))
+					l_external_class ?= class_c
+					if l_external_class /= Void and then l_external_class.is_nested then
+						l_nested_parent_class := l_external_class.enclosing_class
+						uni_string.set_string (l_nested_parent_class.types.first.full_il_type_name)
+						l_nested_parent_class_token := md_emit.define_type_ref (uni_string,
+							assembly_token (l_nested_parent_class))
+						uni_string.set_string (name.substring (
+							name.index_of ('+', 1) + 1, name.count))
+						l_type_token := md_emit.define_type_ref (uni_string,
+							l_nested_parent_class_token)
+					else
+						uni_string.set_string (name)
+						l_type_token := md_emit.define_type_ref (uni_string,
+							assembly_token (class_c))
+					end
 					class_mapping.put (l_type_token, class_type.static_type_id)
 
 						-- Fix `class_type.type' as it only contains a valid

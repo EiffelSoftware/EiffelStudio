@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			!! breakable_font.make (associated_category.breakable_font);
 			!! keyword_font.make (associated_category.keyword_font);
 			!! symbol_font.make (associated_category.symbol_font);
+			!! html_font.make (associated_category.html_font);
 
 			!! text_background_color.make (associated_category.text_background_color);
 			!! text_foreground_color.make (associated_category.text_foreground_color);
@@ -60,6 +61,7 @@ feature {NONE} -- Initialization
 			!! stop_color.make (associated_category.stop_color);
 			!! breakable_color.make (associated_category.breakable_color);
 			!! symbol_color.make (associated_category.symbol_color);
+			!! html_color.make (associated_category.html_color);
 			!! class_color.make (associated_category.class_color);
 			!! cluster_color.make (associated_category.cluster_color);
 			!! feature_color.make (associated_category.feature_color);
@@ -81,6 +83,7 @@ feature {NONE} -- Initialization
 			resources.extend (object_font);
 			resources.extend (string_text_font);
 			resources.extend (symbol_font);
+			resources.extend (html_font);
 
 			resources.extend (background_color);
 			resources.extend (foreground_color);
@@ -99,6 +102,7 @@ feature {NONE} -- Initialization
 			resources.extend (stop_color);
 			resources.extend (string_text_color);
 			resources.extend (symbol_color);
+			resources.extend (html_color);
 			if not Platform_constants.is_windows then
 				resources.extend (focus_label_color);
 				resources.extend (highlight_line_background_color);
@@ -156,7 +160,8 @@ feature {NONE} -- Resources
     error_font,
     breakable_font,
     keyword_font,
-    symbol_font: FONT_PREF_RES
+	symbol_font,
+	html_font: FONT_PREF_RES
  
     text_background_color,
     text_foreground_color,
@@ -169,6 +174,7 @@ feature {NONE} -- Resources
     stop_color,
     breakable_color,
     symbol_color,
+	html_color,
     class_color,
 	cluster_color,
     feature_color,

@@ -153,7 +153,7 @@ feature -- Graphical Interface
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		local
-			showtext_cmd: SHOW_TEXT;
+			showtext_cmd: SHOW_HTML_TEXT;
 			showtext_button: FORMAT_BUTTON
 		do
 			!! showtext_cmd.make (Current);

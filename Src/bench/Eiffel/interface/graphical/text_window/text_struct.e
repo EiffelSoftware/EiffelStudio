@@ -27,8 +27,9 @@ feature
 			put (p, position);
 			clickable_count := clickable_count + 1
 		ensure
-			position = old position + 1;
-			clickable_count = clickable_count + 1
+			position_set: position = old position + 1;
+			clickable_count_set: clickable_count = old clickable_count + 1
+			sorted_insertion: p.start_position > item(position - 1).end_position
 		end;
 
 	trace is
@@ -94,21 +95,31 @@ feature {NONE}
 			-- Search for element which `start_position' is the greatest
 			-- integer lower than or equal to `i'.
 			-- Start if none.
+			-- The array is always sorted
 		do
-			if i <= item (1).end_position then
-				position := 1
-			elseif i >= item (clickable_count).start_position then
-				position := clickable_count
-			else
-				from
-					position := 1
-				until
-					i < item (position + 1).start_position
-				loop
-					position := position + 1
-				end
-			end;
+			position := binary_search (i, lower, clickable_count)
 		end;
+
+	binary_search (key, lower_bound, upper_bound: INTEGER): INTEGER is
+			-- Do a recursive search using the Binary search algorithm.
+		local
+			middle: INTEGER
+		do
+			if lower_bound = upper_bound then
+				if key < item(lower_bound).start_position then
+					Result := lower.max (lower_bound - 1)
+				else
+					Result := lower_bound
+				end
+			else 
+				middle := (lower_bound + upper_bound) // 2
+				if item(middle).end_position < key then
+					Result := binary_search (key, middle + 1, upper_bound)
+				else
+					Result := binary_search (key, lower_bound, middle)
+				end
+			end
+		end
 
 	position: INTEGER
 	

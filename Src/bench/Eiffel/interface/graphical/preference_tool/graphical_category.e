@@ -41,6 +41,7 @@ feature {TTY_RESOURCES} -- Initialization
 			!! text_font.make ("text_font", rt, "");
 			!! string_text_font.make ("string_text_font", rt, "fixed");
 			!! symbol_font.make ("symbol_font", rt, "timr14");
+			!! html_font.make ("html_font", rt, "timr14");
 
 			!! background_color.make ("background_color", rt, "");
 			!! foreground_color.make ("foreground_color", rt, "");
@@ -59,6 +60,8 @@ feature {TTY_RESOURCES} -- Initialization
 			!! stop_color.make ("stop_color", rt, "red");
 			!! string_text_color.make ("string_text_color", rt, "black");
 			!! symbol_color.make ("symbol_color", rt, "black");
+			!! html_color.make ("html_color", rt, "blue");
+
 			if not Platform_constants.is_windows then
 				!! progress_bar_color.make ("progress_bar_color", rt, "blue");
 				!! focus_label_color.make ("explanation_label", rt, "LightYellow");
@@ -89,7 +92,8 @@ feature -- Resources
 	error_font,
 	breakable_font,
 	keyword_font,
-	symbol_font: FONT_RESOURCE
+	symbol_font,
+	html_font: FONT_RESOURCE
 
 	text_background_color,
 	text_foreground_color,
@@ -102,6 +106,7 @@ feature -- Resources
 	breakable_color,
 	focus_label_color,
 	symbol_color,
+	html_color,
 	class_color,
 	cluster_color,
 	feature_color,

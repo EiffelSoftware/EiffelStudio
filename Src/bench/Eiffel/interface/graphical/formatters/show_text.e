@@ -80,20 +80,11 @@ feature -- Formatting
 		do
 			if not retried then
 				classc_stone ?= stone;
-				if 
-					classc_stone /= Void and then classc_stone.is_valid
-				then
+				if classc_stone /= Void and then classc_stone.is_valid then
 					e_class := classc_stone.e_class;
-					if
-						not e_class.is_precompiled
-					and then
-						e_class.lace_class.date_has_changed
-					and then
-						not e_class.has_syntax_error
-					then
-						modified_class := true
-					end;
-				end;
+					modified_class := not e_class.is_precompiled and then
+						e_class.lace_class.date_has_changed and then not e_class.has_syntax_error
+				end
 				if
 					do_format or filtered or modified_class or else
 					(tool.last_format.associated_command /= Current or

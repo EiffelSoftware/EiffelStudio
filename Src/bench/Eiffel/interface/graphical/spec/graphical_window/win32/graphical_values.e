@@ -50,6 +50,9 @@ feature {NONE} -- Initialization
 			symbol_format := format_creation (
 					Graphical_resources.symbol_color.valid_actual_value,
 					Graphical_resources.symbol_font.valid_actual_value)
+			html_format := format_creation (
+					Graphical_resources.html_color.valid_actual_value,
+					Graphical_resources.html_font.valid_actual_value)
 		end
 
 feature -- Access
@@ -87,6 +90,8 @@ feature -- Access
 	symbol_format: WEL_CHARACTER_FORMAT
 			-- Symbol format for text
 
+	html_format: WEL_CHARACTER_FORMAT
+			-- Symbol format for text
 
 feature {NONE} -- Implementation
 
@@ -96,9 +101,8 @@ feature {NONE} -- Implementation
 			valid_color: a_color /= Void;	
 			valid_font: a_font /= Void
 		local
-			c_ref: WEL_COLOR_REF;
-			--f_w: FONT_IMP;
-			f_w: FONT_WINDOWS; --VISIONLITE
+			c_ref: WEL_COLOR_REF
+			f_w: FONT_WINDOWS
 			l_font: WEL_LOG_FONT
 		do
 			!! Result.make;
@@ -109,16 +113,32 @@ feature {NONE} -- Implementation
 			Result.set_face_name (l_font.face_name);
 			Result.set_height (l_font.height);
 			Result.set_char_set (l_font.char_set);
+
 			if l_font.weight = 700 then	
 				Result.set_bold
 			else
 				Result.unset_bold
 			end;
+
 			if l_font.italic then	
 				Result.set_italic
 			else
 				Result.unset_italic
 			end;
+
+			if l_font.underlined then
+				Result.set_underline
+			else
+				Result.unset_underline
+			end
+
+			if l_font.strike_out then
+				Result.set_strike_out
+			else
+				Result.unset_strike_out
+			end
+
+
 			Result.set_pitch_and_family (l_font.pitch_and_family);
 		end
 

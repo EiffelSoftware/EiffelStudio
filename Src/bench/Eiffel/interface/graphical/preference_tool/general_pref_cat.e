@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			!! shell_command.make (associated_category.shell_command);
 			!! filter_name.make (associated_category.filter_name);
 			!! filter_command.make (associated_category.filter_command);
-			!! active_drag_and_drop.make (associated_category.active_drag_and_drop);
+			!! browsing_facilities.make (associated_category.browsing_facilities);
 			!! history_size.make (associated_category.history_size);
 			!! default_window_position.make (associated_category.default_window_position);
 			!! window_free_list_number.make (associated_category.window_free_list_number);
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			resources.extend (shell_command);
 			resources.extend (filter_name);
 			resources.extend (filter_command);
-			resources.extend (active_drag_and_drop);
+			resources.extend (browsing_facilities);
 			resources.extend (history_size);
 			resources.extend (default_window_position);
 			resources.extend (window_free_list_number);
@@ -109,7 +109,7 @@ feature {NONE} -- Resources
 	print_shell_command: STRING_PREF_RES;
 	filter_name: STRING_PREF_RES;
 	filter_command: STRING_PREF_RES;
-	active_drag_and_drop, default_window_position: BOOLEAN_PREF_RES;
+	browsing_facilities, default_window_position: BOOLEAN_PREF_RES;
 	history_size: INTEGER_PREF_RES;
 	window_free_list_number: INTEGER_PREF_RES;
 	color_list: ARRAY_PREF_RES

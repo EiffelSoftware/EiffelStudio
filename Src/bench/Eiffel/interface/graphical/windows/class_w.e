@@ -736,7 +736,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			exp_cmd: SHOW_EXPORTED;
 			exp_button: FORMAT_BUTTON;
 			exp_menu_entry: EB_TICKABLE_MENU_ENTRY;
-			tex_cmd: SHOW_TEXT;
+			tex_cmd: SHOW_HTML_TEXT;
 			tex_button: FORMAT_BUTTON;
 			tex_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			fla_cmd: SHOW_FLAT;

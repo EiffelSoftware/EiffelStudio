@@ -1,37 +1,30 @@
+indexing
+	description: "Element one can click on to select `node': an indirect clicking"
+	date: "$Date$"
+	revision: "$Revision$"
 
--- Element one can click on to select `node': an indirect
--- clicking.
-
-class CLICK_STONE 
+class
+	CLICK_STONE 
 
 creation
-
 	make
 
-feature 
-
-	node: STONE;
+feature -- Initialization
 
 	make (a_node: like node; s, e: INTEGER) is
 			-- Initialize all attributes with arguments.
 		do
-			node := a_node;
-			start_position := s;
+			node := a_node
+			start_position := s
 			end_position := e
 		end;
 
-	start_position: INTEGER;
+feature -- Attributes
 
-	end_position: INTEGER;
+	node: STONE
 
-	start_focus: INTEGER is
-		do
-			Result := start_position
-		end;
+	start_position: INTEGER
 
-	end_focus: INTEGER is
-		do
-			Result := end_position
-		end
+	end_position: INTEGER
 
 end

@@ -52,6 +52,7 @@ ecom_eiffelcomcompiler_ienumeiffelclass_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ienumfeature_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ienumparameter_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj \
 ecom_gce_ise.obj \
 ecom_gec_ise.obj \
 ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
@@ -103,6 +104,7 @@ wecom_eiffelcomcompiler_ienumeiffelclass_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ienumfeature_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ienumparameter_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj \
 wecom_gce_ise.obj \
 wecom_gec_ise.obj \
 wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
@@ -279,4 +281,7 @@ wecom_eiffelcomcompiler_ieiffelenumstring_impl_stub_s.obj: ecom_eiffelcomcompile
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
    
 wecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?

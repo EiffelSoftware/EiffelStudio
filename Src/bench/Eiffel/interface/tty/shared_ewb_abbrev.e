@@ -96,6 +96,8 @@ feature
 	Percentage_abb: CHARACTER is 'p'
 
 	Precompile_abb: CHARACTER is 'p'
+	
+	Finalize_precompile_abb: CHARACTER is 'd'
 
 	Profile_abb: CHARACTER is 'p'
 

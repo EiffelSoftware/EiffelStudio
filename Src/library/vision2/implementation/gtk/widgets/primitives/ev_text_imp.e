@@ -43,6 +43,8 @@ feature -- Access
 		local
 			p: POINTER
 		do
+			--full_collect
+			--full_coalesce
 			p := C.gtk_editable_get_chars (c_object, 0, -1)
 			create Result.make_from_c (p)
 			C.g_free (p)
@@ -210,9 +212,13 @@ feature -- Status setting
 	
 	prepend_text (txt: STRING) is
 			-- Prepend 'txt' to `text'.
+		local
+			temp_caret_pos: INTEGER
 		do
+			temp_caret_pos := caret_position
 			C.gtk_text_set_point (c_object, 0)
 			insert_text (txt)
+			set_caret_position (temp_caret_pos)
 		end
 	
 	delete_text (start, finish: INTEGER) is

@@ -211,8 +211,6 @@ static int process_bit()
 
 	length = yyleng;
 
-printf ("In process bit, length %d\n", length);
-
 	if (length >= IDLENGTH)
 		return EIF_ERROR7;
 

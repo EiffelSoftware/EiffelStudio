@@ -78,7 +78,7 @@ feature -- Basic Operations
 					end
 				else
 					if status_printer /= Void then
-						create l_string_tuple.make
+						create l_string_tuple
 						l_string_tuple.put ("Up-to-date check: '" +	create {STRING}.make_from_cil (assembly.get_name.full_name) +
 							"' has not been modified since last consumption.%N", 1)
 						status_printer.call (l_string_tuple)

@@ -155,6 +155,7 @@ feature -- Status setting
 			-- target that accepts `pebble' during pick and drop.
 		do
 			accept_cursor := a_cursor
+			update_pointer_style (pointed_target)
 		end 
 
 	set_deny_cursor (a_cursor: EV_CURSOR) is
@@ -162,6 +163,7 @@ feature -- Status setting
 			-- target that doesn't accept `pebble' during pick and drop.
 		do
 			deny_cursor := a_cursor
+			update_pointer_style (pointed_target)
 		end
 
 	enable_pebble_positioning is
@@ -305,6 +307,7 @@ feature {EV_ANY_I} -- Implementation
 			a: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE]
 			widget_x, widget_y: INTEGER
 		do
+			
 			rpt := real_pointed_target
 			Result := rpt
 			widget_target ?= rpt
@@ -340,7 +343,7 @@ feature {EV_ANY_I} -- Implementation
 	rubber_band_is_drawn: BOOLEAN
 			-- Is a rubber band line currently on the screen?
 
-	global_pnd_targets: LINKED_LIST [INTEGER] is
+	global_pnd_targets: ARRAYED_LIST [INTEGER] is
 			-- Shortcut to EV_APPLICATION.pnd_targets.
 		local
 			env: EV_ENVIRONMENT

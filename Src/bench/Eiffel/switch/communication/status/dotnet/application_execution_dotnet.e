@@ -57,6 +57,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export 
+			{NONE} all
+		end	
+
 create {SHARED_APPLICATION_EXECUTION}
 	make
 	
@@ -67,6 +72,7 @@ feature {SHARED_APPLICATION_EXECUTION} -- Initialization
 		do
 			Precursor
 			Eifnet_debugger.init
+			agent_update_notify_on_after_stopped :=	agent real_update_notify_on_after_stopped			
 		end
 
 feature -- recycling data
@@ -85,46 +91,56 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			not_alread_inside_notify: not eifnet_debugger.callback_notification_processing
 		local
 			l_status: APPLICATION_STATUS_DOTNET
+			retried: BOOLEAN
 		do
-			debug ("debugger_trace_callback_notify")
-				print ("** ->START::NotifyEstudio ** [" + Eifnet_debugger_info.last_managed_callback_name + "].%N")
-				if callback_notification_processing then
-					print ("** WARNING ** there is already an Estudio notification running%N")
-				end
-			end
-			eifnet_debugger.set_callback_notification_processing (True)
-
-			if 
-				eifnet_debugger /= Void 
-				and then eifnet_debugger.data_changed
-			then
-				l_status := status
-				if
-					l_status.is_stopped
-					and then not l_status.is_evaluating
-				then
-					eifnet_debugger.reset_data_changed
-					if Eifnet_debugger_info.last_managed_callback_is_exit_process then --| Exit Process |--	
-						notify_execution_on_exit_process
-					elseif Eifnet_debugger_info.debugger_error_occurred then
-						notify_execution_on_debugger_error
-					else
-						notify_execution_on_stopped
+			if not retried then
+				debug ("debugger_trace_callback_notify")
+					print ("** ->START::NotifyEstudio ** [" + Eifnet_debugger_info.last_managed_callback_name + "].%N")
+					if callback_notification_processing then
+						print ("** WARNING ** there is already an Estudio notification running%N")
 					end
-				elseif --| Evaluation |--
-					Eifnet_debugger_info.last_managed_callback_is_eval_complete
-					and then l_status.is_evaluating
-				then
-					eifnet_debugger.reset_data_changed
-					notify_evaluation_done
-				else
-					--| do_nothing
 				end
+				eifnet_debugger.set_callback_notification_processing (True)
+	
+				if 
+					eifnet_debugger /= Void 
+					and then eifnet_debugger.data_changed
+				then
+					l_status := status
+					if
+						l_status.is_stopped
+						and then not l_status.is_evaluating
+					then
+						eifnet_debugger.reset_data_changed
+						if Eifnet_debugger_info.last_managed_callback_is_exit_process then --| Exit Process |--	
+							notify_execution_on_exit_process
+						elseif Eifnet_debugger_info.debugger_error_occurred then
+							notify_execution_on_debugger_error
+						else
+							notify_execution_on_stopped
+						end
+					elseif --| Evaluation |--
+						Eifnet_debugger_info.last_managed_callback_is_eval_complete
+						and then l_status.is_evaluating
+					then
+						eifnet_debugger.reset_data_changed
+						notify_evaluation_done
+					else
+						--| do_nothing
+					end
+				end
+				eifnet_debugger.set_callback_notification_processing (False)
+				debug ("debugger_trace_callback_notify")
+					print ("** ->END::NotifyEstudio ** [" + Eifnet_debugger_info.last_managed_callback_name + "].%N")
+				end
+			else
+				io.error.put_string ("ERROR : during APPLICATION_EXECUTION_DOTNET.estudio_callback_notify %N")
+				io.error.flush
+				eifnet_debugger.set_callback_notification_processing (False)				
 			end
-			eifnet_debugger.set_callback_notification_processing (False)
-			debug ("debugger_trace_callback_notify")
-				print ("** ->END::NotifyEstudio ** [" + Eifnet_debugger_info.last_managed_callback_name + "].%N")
-			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR_TOOL, EV_SHARED_APPLICATION}  -- Trigger eStudio status
@@ -1003,7 +1019,7 @@ feature {NONE} -- Events on notification
 				
 				eifnet_debugger.do_continue
 			else
-				Application_notification_controller.notify_on_after_stopped				
+				update_notify_on_after_stopped
 			end			
 		end
 		
@@ -1060,6 +1076,52 @@ feature {NONE} -- Events on notification
 				print ("%T   - Function = " + l_function.to_string + "%N")
 			end
 		end
+		
+feature -- update processing
+
+	agent_update_notify_on_after_stopped: PROCEDURE [ANY, TUPLE]
+			-- Procedure used as agent for `update_notify_on_after_stopped'
+		
+	update_notify_on_after_stopped is
+			-- Ask to notify studio right after the execution is stopped
+			-- but in the studio graphical loop
+		do
+				--FIXME jfiat: may be we should move this EV_... to another class
+			ev_application.idle_actions.prune_all (agent_update_notify_on_after_stopped)			
+			ev_application.idle_actions.extend (agent_update_notify_on_after_stopped)
+		end
+		
+	real_update_notify_on_after_stopped is
+			-- Proceed effective notification to studio
+			-- make sure we are outside the callback notification
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				debug ("debugger_trace")
+					io.error.put_string (generator + ".real_update_notify_on_after_stopped %N")
+				end
+				ev_application.idle_actions.prune_all (agent_update_notify_on_after_stopped)
+				if not callback_notification_processing then
+					debug ("debugger_trace")
+						io.error.put_string (generator + ".real_update_notify_on_after_stopped : call real notification%N")
+					end
+					Application_notification_controller.notify_on_after_stopped
+				else
+					debug ("debugger_trace")
+						io.error.put_string (generator + ".real_update_notify_on_after_stopped : postpone real notification%N")
+					end
+					ev_application.idle_actions.extend (agent_update_notify_on_after_stopped)
+				end
+			else
+				debug ("debugger_trace")
+					io.error.put_string (generator + ".real_update_notify_on_after_stopped : RESCUED !!!%N")
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end			
 
 feature -- Call stack related
 

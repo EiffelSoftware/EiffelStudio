@@ -33,12 +33,6 @@ default
 	profile(no)
 	trace(no)
 
-
--- Root cluster
--- Wel Wizard
--- Bench Common
--- EiffelBase
-
 cluster
 	root_cluster:		"$EIFFEL_SRC/help/wizards"
 
@@ -63,6 +57,8 @@ cluster
 			"mswin";"CVS"
 		end
 	all helpers (root_cluster): "$/linux_helpers"
+
+	ise_utils:	"$EIFFEL_SRC/Eiffel/interface/new_graphical/to_be_moved"
 
 external
 	include_path:

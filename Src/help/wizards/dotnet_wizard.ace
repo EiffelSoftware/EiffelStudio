@@ -18,7 +18,6 @@ default
 	multithreaded(no)
 	check_vape(yes)
 	arguments("D:\Eiffel50\bench\wizards\new_projects\dotnet -callback c:\test.txt")
-	arguments("E:\Eiffel50\bench\wizards\new_projects\dotnet -callback c:\test.txt")
 	disabled_debug(yes)
 	disabled_debug("win_dispatcher")
 	disabled_debug("wel")
@@ -32,17 +31,6 @@ default
 	line_generation(no)
 	profile(no)
 	trace(no)
-
-
---	assertion (no)
--- Root cluster
--- Wel Wizard
--- Bench Common
--- EiffelBase
--- WEL
--- EiffelVision2
--- Wizard library
--- Lex and Parse
 
 cluster
 	root_cluster:		"$EIFFEL_SRC\help\wizards"
@@ -59,8 +47,6 @@ cluster
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
 			"CVS"; 
-		default
-			assertion(ensure)
 		end
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
@@ -73,9 +59,7 @@ cluster
 			"unix"; "CVS"
 		end
 
-	all lex:		"$EIFFEL_SRC\library\lex"
-
-	all parse:		"$EIFFEL_SRC\library\parse"
+	ise_utils:	"$EIFFEL_SRC\Eiffel\interface\new_graphical\to_be_moved"
 
 external
 

@@ -8,4 +8,9 @@ feature
 		deferred
 		end;
 
+	label: STRING is
+			-- Label for Current Editable 
+		deferred
+		end;
+
 end

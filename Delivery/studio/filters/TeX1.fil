@@ -1,7 +1,11 @@
--- EFF (Eiffel Filter Format) - ISE Eiffel 4
--- TeX filter #1 (requires `cmbxti10' font)
-
--- Suffix for TeX files
+--!-----------------------------------------------------------------------------
+--! TeX filter #1 for EiffelBench documentation output.
+--!-----------------------------------------------------------------------------
+--! Requires `cmbxti10' font
+--!-----------------------------------------------------------------------------
+--! $Date$
+--! $Revision$
+--!-----------------------------------------------------------------------------
 
 Suffix				|tex
 
@@ -50,3 +54,13 @@ Escape>                 |$>$
 Escape-                 |$-$
 Escape%*                |$%*$
 Escape/                 |$/$
+
+--!-----------------------------------------------------------------------------
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------

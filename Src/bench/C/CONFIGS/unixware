@@ -4,6 +4,7 @@
 # Configured by: manuelt
 # Target system: unix_sv emc 4.2mp 2.1 i386 x86at 
 
+command_makefile='make'
 shared_suffix='.so'
 shared_prefix='lib'
 d_bsdsig='undef'

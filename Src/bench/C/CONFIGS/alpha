@@ -19,6 +19,7 @@ eiflib='finalized'
 wkeiflib='wkbench'
 suffix='.a'
 
+command_makefile='make'
 ld='ld'
 ar='ar'
 

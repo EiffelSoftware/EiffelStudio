@@ -10,6 +10,7 @@
 # Configured by: eiffel
 # Target system: aix cediag 2 3 000012287600 
 
+command_makefile='make'
 d_bsdsig='undef'
 d_bsd='undef'
 d_eunice='undef'

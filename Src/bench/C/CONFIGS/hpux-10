@@ -9,6 +9,7 @@
 # Configuration time: Fri May  8 23:24:41 METDST 1998
 # Configured by: lully
 # Target system: hp-ux phaeton b.10.20 c 9000800 156868352 32-user license 
+command_makefile='make'
 d_bsdsig='undef'
 ld='ld'
 ar='ar'

@@ -49,6 +49,7 @@ mv='/usr/5bin/mv'
 ranlib=':'
 rm='/usr/5bin/rm'
 eunicefix=':'
+command_makefile='make'
 
 #######################################
 # Flags for run-time compilation only #

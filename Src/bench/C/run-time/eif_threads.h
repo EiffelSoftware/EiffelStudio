@@ -360,7 +360,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
         if (WaitForSingleObject(sem, INFINITE)==WAIT_FAILED) \
                 eif_thr_panic (msg)
 #define EIF_SEM_TRYWAIT(sem,r,msg) \
-        r = (WaitForSingleObject(sem, INFINITE)); \
+        r = (WaitForSingleObject(sem, 0)); \
         if (r==WAIT_FAILED) eif_thr_panic (msg); \
         r = (r!=WAIT_TIMEOUT)
 #define EIF_SEM_DESTROY(sem,msg) \
@@ -559,7 +559,7 @@ typedef struct {
 #define EIF_THR_EXIT(arg)			taskDelete(taskIdSelf())
 #define EIF_THR_JOIN(which)
 #define EIF_THR_JOIN_ALL
-#define EIF_THR_YIELD				sched_yield()
+#define EIF_THR_YIELD				/*sched_yield()*/
 #define EIF_THR_SET_PRIORITY(tid,prio) taskPrioritySet(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio) taskPriorityGet(tid,&(prio))
 

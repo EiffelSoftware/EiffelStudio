@@ -20,7 +20,8 @@ inherit
 			disable_select,
 			enable_select,
 			toggle,
-			interface
+			interface,
+			on_activate
 		end
 
 create
@@ -81,7 +82,9 @@ feature -- Status setting
 	toggle is
 			-- Change the checked state of the menu-item.
 		do
-			enable_select
+			check
+				inapplicable_for_radio_items: False
+			end
 		end
 
 feature -- Contract support
@@ -156,6 +159,14 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_MENU_ITEM
 
+feature {NONE} -- Implementation
+
+	on_activate is
+		do
+			enable_select
+			interface.press_actions.call ([])
+		end
+
 invariant
 	radio_group_not_void_implies_has_current:
 		radio_group /= Void implies radio_group.has (Current)
@@ -186,6 +197,10 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/24 16:50:58  brendel
+--| Made `toggle' inapplicable.
+--| Added redefine of `on_activate', since toggle cannot be called anymore.
+--|
 --| Revision 1.14  2000/02/24 01:45:59  brendel
 --| Improved contracts.
 --| Fully implemented.

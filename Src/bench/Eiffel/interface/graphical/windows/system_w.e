@@ -75,9 +75,9 @@ feature -- Update
 			-- Process syntax error.
 		do
 			if text_window.changed then
-				showtext_command.execute (syn);
+				showtext_frmt_holder.execute (syn);
 			else
-				showtext_command.execute (syn);
+				showtext_frmt_holder.execute (syn);
 				text_window.deselect_all;
 				text_window.set_cursor_position (syn.start_position);
 				text_window.highlight_selected (syn.start_position,
@@ -90,7 +90,7 @@ feature -- Update
 	process_class (a_stone: CLASSC_STONE) is
 		do
 			if text_window.changed then
-				showtext_command.execute (a_stone);
+				showtext_frmt_holder.execute (a_stone);
 			else
 				text_window.search_stone (a_stone)
 			end
@@ -99,7 +99,7 @@ feature -- Update
 	process_classi (a_stone: CLASSI_STONE) is
 		do
 			if text_window.changed then
-				showtext_command.execute (a_stone);
+				showtext_frmt_holder.execute (a_stone);
 			else
 				text_window.search_stone (a_stone)
 			end
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			build_format_bar;
 			!! command_bar.make (new_name, global_form);
 			build_command_bar;
-			text_window.set_last_format (default_format);
+			text_window.set_last_format_2 (default_format);
 			attach_all
 		end;
 
@@ -212,17 +212,21 @@ feature {NONE} -- Implementation; Graphical Interface
 			mod_cmd: SHOW_MODIFIED;
 			mod_button: EB_BUTTON;
 			list_cmd: SHOW_CLUSTERS;
-			list_button: EB_BUTTON
+			list_button: EB_BUTTON;
+			showtext_cmd: SHOW_TEXT;
+			showtext_button: EB_BUTTON
 		do
-			!! showtext_command.make (format_bar, text_window);
-			format_bar.attach_top (showtext_command, 0);
-			format_bar.attach_left (showtext_command, 0);
+			!! showtext_cmd.make (text_window);
+			!! showtext_button.make (showtext_cmd, format_bar);
+			!! showtext_frmt_holder.make (showtext_cmd, showtext_button);
+			format_bar.attach_top (showtext_button, 0);
+			format_bar.attach_left (showtext_button, 0);
 
 			!! list_cmd.make (text_window);
 			!! list_button.make (list_cmd, format_bar);
 			!! showlist_frmt_holder.make (list_cmd, list_button);
 			format_bar.attach_top (list_button, 0);
-			format_bar.attach_left_widget (showtext_command, list_button, 0);
+			format_bar.attach_left_widget (showtext_button, list_button, 0);
 
 			!! showclasses_command.make (format_bar, text_window);
 			format_bar.attach_top (showclasses_command, 0);

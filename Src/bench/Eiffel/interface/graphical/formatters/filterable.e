@@ -9,7 +9,7 @@ deferred class FILTERABLE
 
 inherit
 
-	FORMATTER
+	FORMATTER_2
 		redefine
 			filter
 		end

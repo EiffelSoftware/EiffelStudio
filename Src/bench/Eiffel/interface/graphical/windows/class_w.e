@@ -97,7 +97,7 @@ feature -- Stone process
 	process_classi (s: CLASSI_STONE) is
 		do
 			if text_window.changed then
-				showtext_command.execute (s);
+				showtext_frmt_holder.execute (s);
 			else
 				last_format.execute (s);
 				history.extend (s)
@@ -107,7 +107,7 @@ feature -- Stone process
 	process_class (s: CLASSC_STONE) is
 		do
 			if text_window.changed then
-				showtext_command.execute (s);
+				showtext_frmt_holder.execute (s);
 			else
 				last_format.execute (s);
 				history.extend (s)
@@ -121,11 +121,11 @@ feature -- Stone process
 			e_class: E_CLASS
 		do
 			if text_window.changed then
-				showtext_command.execute (s);
+				showtext_frmt_holder.execute (s);
 			else
 				e_class := s.e_feature.written_class;
 				!! cl_stone.make (e_class);
-				showtext_command.execute (cl_stone);
+				showtext_frmt_holder.execute (cl_stone);
 				history.extend (stone);
 				text_window.deselect_all;
 				text_window.highlight_selected
@@ -140,10 +140,10 @@ feature -- Stone process
 			cl_stone: CLASSC_STONE
 		do
 			if text_window.changed then
-				showtext_command.execute (s)
+				showtext_frmt_holder.execute (s)
 			else
 				!! cl_stone.make (s.associated_class);
-				showtext_command.execute (cl_stone);
+				showtext_frmt_holder.execute (cl_stone);
 				text_window.deselect_all;
 				text_window.set_cursor_position
 						(s.start_position);
@@ -208,9 +208,9 @@ feature -- Forms And Holes
 
 feature -- Formats
 
-	showflat_command: SHOW_FLAT;
+	showflat_frmt_holder: FORMAT_HOLDER;
 
-	showflatshort_command: SHOW_FS;
+	showflatshort_frmt_holder: FORMAT_HOLDER;
 
 	showancestors_frmt_holder: FORMAT_HOLDER;
 
@@ -224,9 +224,9 @@ feature -- Formats
 
 	showroutines_frmt_holder: FORMAT_HOLDER;
 
-	showshort_command: SHOW_SHORT;
+	showshort_frmt_holder: FORMAT_HOLDER;
 
-	showclick_command: SHOW_CLICK_CL;
+	showclick_frmt_holder: FORMAT_HOLDER;
 
 	showdeferreds_frmt_holder: FORMAT_HOLDER;
 
@@ -254,7 +254,7 @@ feature -- Grahpical Interface
 			build_format_bar;
 			!! command_bar.make (new_name, global_form);
 			build_command_bar;
-			text_window.set_last_format (default_format);
+			text_window.set_last_format_2 (default_format);
 			attach_all 
 		end;
 
@@ -458,13 +458,33 @@ feature {NONE} -- Implementation; Graphical Interface
 			exp_cmd: SHOW_EXPORTED;
 			exp_button: EB_BUTTON;
 			cus_cmd: SHOW_CUSTOM;
-			cus_button: EB_BUTTON
+			cus_button: EB_BUTTON;
+			tex_cmd: SHOW_TEXT;
+			tex_button: EB_BUTTON;
+			fla_cmd: SHOW_FLAT;
+			fla_button: EB_BUTTON;
+			fs_cmd: SHOW_FS;
+			fs_button: EB_BUTTON;
+			sho_cmd: SHOW_SHORT;
+			sho_button: EB_BUTTON;
+			click_cmd: SHOW_CLICK_CL;
+			click_button: EB_BUTTON
 		do
-			!! showtext_command.make (format_bar, text_window);
-			!! showflat_command.make (format_bar, text_window);
-			!! showflatshort_command.make (format_bar, text_window);
-			!! showshort_command.make (format_bar, text_window);
-			!! showclick_command.make (format_bar, text_window);
+			!! tex_cmd.make (text_window);
+			!! tex_button.make (tex_cmd, format_bar);
+			!! showtext_frmt_holder.make (tex_cmd, tex_button);
+			!! fla_cmd.make (text_window);
+			!! fla_button.make (fla_cmd, format_bar);
+			!! showflat_frmt_holder.make (fla_cmd, fla_button);
+			!! fs_cmd.make (text_window);
+			!! fs_button.make (fs_cmd, format_bar);
+			!! showflatshort_frmt_holder.make (fs_cmd, fs_button);
+			!! sho_cmd.make (text_window);
+			!! sho_button.make (sho_cmd, format_bar);
+			!! showshort_frmt_holder.make (sho_cmd, sho_button);
+			!! click_cmd.make (text_window);
+			!! click_button.make (click_cmd, format_bar);
+			!! showclick_frmt_holder.make (click_cmd, click_button);
 			!! anc_cmd.make (text_window);
 			!! anc_button.make (anc_cmd, format_bar);
 			!! showancestors_frmt_holder.make (anc_cmd, anc_button);
@@ -500,18 +520,18 @@ feature {NONE} -- Implementation; Graphical Interface
 			cus_button.add_button_press_action (3, cus_cmd, cus_cmd);
 			!! showcustom_frmt_holder.make (cus_cmd, cus_button);
 
-			format_bar.attach_top (showtext_command, 0);
-			format_bar.attach_left (showtext_command, 0);
-			format_bar.attach_top (showflat_command, 0);
-			format_bar.attach_left_widget (showtext_command, showclick_command, 0);
-			format_bar.attach_top (showflatshort_command, 0);
-			format_bar.attach_left_widget (showclick_command, showflat_command, 0);
-			format_bar.attach_top (showshort_command, 0);
-			format_bar.attach_left_widget (showflat_command, showshort_command, 0);
-			format_bar.attach_top (showclick_command, 0);
-			format_bar.attach_left_widget (showshort_command, showflatshort_command, 0);
+			format_bar.attach_top (tex_button, 0);
+			format_bar.attach_left (tex_button, 0);
+			format_bar.attach_top (fla_button, 0);
+			format_bar.attach_left_widget (tex_button, click_button, 0);
+			format_bar.attach_top (fs_button, 0);
+			format_bar.attach_left_widget (click_button, fla_button, 0);
+			format_bar.attach_top (sho_button, 0);
+			format_bar.attach_left_widget (fla_button, sho_button, 0);
+			format_bar.attach_top (click_button, 0);
+			format_bar.attach_left_widget (sho_button, fs_button, 0);
 			format_bar.attach_top (anc_button, 0);
-			format_bar.attach_left_widget (showflatshort_command, anc_button, 15);
+			format_bar.attach_left_widget (fs_button, anc_button, 15);
 			format_bar.attach_top (des_button, 0);
 			format_bar.attach_left_widget (anc_button, des_button, 0);
 			format_bar.attach_top (cli_button, 0);

@@ -30,8 +30,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create the hash table.
 		do
-			!! clusters.make;
-			!! cluster_counter;
+			!! clusters.make
 		end;
 
 feature -- Properties
@@ -220,11 +219,6 @@ feature -- Update
 
 feature {COMPILER_EXPORTER} -- Implementation
 
-	cluster_counter: COUNTER;
-			-- Counter of clusters
-
-feature {COMPILER_EXPORTER} -- Implementation
-
 	set_clusters (l: like clusters) is
 			-- Assign `l' to `clusters'.
 		do
@@ -259,7 +253,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 -- FIXME: is_equal must be redefined as well...
 -- FIXME
 			make
-			cluster_counter.set_value (other.cluster_counter.value)
 			override_cluster_name := other.override_cluster_name
 			from
 				other.clusters.start
@@ -514,6 +507,28 @@ feature {COMPILER_EXPORTER} -- Implementation
 				end
 			end
 		end;
+
+feature {COMPILER_EXPORTER} -- Merging
+
+	merge (other: like Current) is
+			-- Merge `other' to current universe.
+			-- Used when merging precompilations.
+		require
+			other_not_void: other /= Void
+		local
+			other_clusters: LINKED_LIST [CLUSTER_I]
+			c: CLUSTER_I
+		do
+			other_clusters := other.clusters;
+			from other_clusters.start until other_clusters.after loop
+-- TO DO: Check cluster tags.
+				c := other_clusters.item;
+				if not has_cluster_of_path (c.path) then
+					insert_cluster (c)
+				end;
+				other_clusters.forth
+			end
+		end
 
 feature {COMPILER_EXPORTER} -- Precompilation
 

@@ -46,7 +46,7 @@ feature -- Modification & Insertion
 	set_stipple (a_pixmap: PIXMAP) is
 			-- Set `stipple' to `a_pixmap'.
 		require
-			a_pixmap_valid: ((a_pixmap = Void)) implies a_pixmap.is_valid
+			a_pixmap_valid: (a_pixmap /= Void) implies a_pixmap.is_valid
 		do
 			stipple := a_pixmap;
 		ensure
@@ -65,7 +65,7 @@ feature -- Modification & Insertion
 	set_tile (a_pixmap: PIXMAP) is
 			-- Set `tile' to `a_pixmap'.
 		require
-			a_pixmap_valid: ((a_pixmap = Void)) implies a_pixmap.is_valid
+			a_pixmap_valid: (a_pixmap /= Void) implies a_pixmap.is_valid
 		do
 			tile := a_pixmap;
 		ensure
@@ -136,8 +136,8 @@ feature {NONE} -- Access
 
 invariant
 
-	(not (stipple = Void)) implies stipple.is_valid;
-	(not (tile = Void)) implies tile.is_valid
+	valid_stipple: (stipple /= Void) implies stipple.is_valid;
+	valid_tile: (tile /= Void) implies tile.is_valid
 
 end -- class FILLABLE
 

@@ -86,7 +86,7 @@ feature -- Modification & Insertion
 		do
 			origin_user_type := 4;
 		ensure then
-			origin.is_surimposable (center)
+			origin.is_superimposable (center)
 		end; 
 
 	set_origin_to_first_point is
@@ -94,7 +94,7 @@ feature -- Modification & Insertion
 		do
 			origin_user_type := 2;
 		ensure
-			origin.is_surimposable (first)
+			origin.is_superimposable (first)
 		end;
 
 	set_origin_to_last_point is
@@ -102,7 +102,7 @@ feature -- Modification & Insertion
 		do
 			origin_user_type := 3;
 		ensure
-			origin.is_surimposable (last)
+			origin.is_superimposable (last)
 		end;
 
 	xyrotate (a: REAL; px, py: INTEGER) is
@@ -187,10 +187,10 @@ feature -- Output
 
 feature -- Status report
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the current set of line surimposable to `other' ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the current set of line superimposable to `other' ?
 		require else
-			other_exists: not (other = Void);
+			other_exists: other = Void;
 		local
 			keep_cursor: CURSOR;
 			other_keep_cursor: CURSOR;
@@ -241,24 +241,24 @@ feature {NONE} -- Status report
 
 	compare (other: like Current; direction: BOOLEAN): BOOLEAN is
 			-- Is the sublist of Current beginning at cursor position
-			-- to the end surimposable to the sublist of other beginning
+			-- to the end superimposable to the sublist of other beginning
 			-- at cursor position to the beginning if direction and to the
 			-- end else ?
 		require
-			not (other = Void);
-			not off;
-			not other.off
+			other_exists: other /= Void;
+			not_off: not off;
+			not_other_off: not other.off
 		do
-			if item.is_surimposable (other.item) then
+			if item.is_superimposable (other.item) then
 				from
 				until
-					islast or else (not item.is_surimposable (i_th (index+1)))
+					islast or else (not item.is_superimposable (i_th (index+1)))
 				loop
 					forth
 				end;
 				from
 				until
-					other.islast or else (not other.item.is_surimposable (other.i_th (index+1)))
+					other.islast or else (not other.item.is_superimposable (other.i_th (index+1)))
 				loop
 					if direction then
 						back
@@ -282,8 +282,8 @@ feature {NONE} -- Status report
 
 invariant
 
-	origin_user_type <= 4;
-	(not (drawing = Void)) implies (count <= drawing.max_count_for_draw_polyline)
+	origin_user_type_constarint: origin_user_type <= 4;
+	drawable: (drawing /= Void) implies (count <= drawing.max_count_for_draw_polyline)
 
 end -- class POLYGON
 

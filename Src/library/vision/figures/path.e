@@ -43,7 +43,7 @@ feature {FIGURE} -- Modification & Insertion
 	set_drawing_attributes (drawing: DRAWING_I) is
 			-- Set the attributes to `a_drawing'.
 		require
-			drawing_exists: not (drawing = Void)
+			drawing_exists: drawing /= Void
 		do
 			drawing.set_logical_mode (logical_function_mode);
 			drawing.set_subwindow_mode (subwindow_mode);
@@ -72,12 +72,19 @@ feature {FIGURE} -- Modification & Insertion
 
 invariant
 
-	(fill_style /= FillTiled) implies (not (foreground_color = Void));
-	(fill_style = FillOpaqueStippled) implies (not (background_color = Void));
-	((line_style = LineDoubleDash) and (fill_style /= FillTiled)) implies (not (background_color = Void));
-	(line_style /= LineSolid) implies (not (dash_pattern = Void));
-	(fill_style = FillTiled) implies (not (tile = Void));
-	((fill_style = FillStippled) or (fill_style = FillOpaqueStippled)) implies (not (stipple = Void))
+	foreground_when_not_tiled:
+		 (fill_style /= FillTiled) implies foreground_color /= Void;
+	background_when_Opaque_Stippled:
+		(fill_style = FillOpaqueStippled) implies background_color /= Void;
+	backgropund_on_double_dash:	
+		((line_style = LineDoubleDash) and (fill_style /= FillTiled)) implies 
+			background_color /= Void;
+	dash_pattern_on_non_solid: 
+		(line_style /= LineSolid) implies dash_pattern /= Void;
+	tile_on_tiled: (fill_style = FillTiled) implies tile /= Void;
+	stipple_on_stippled: 
+		((fill_style = FillStippled) or (fill_style = FillOpaqueStippled)) 
+			implies stipple /= Void
 
 end -- class PATH
 

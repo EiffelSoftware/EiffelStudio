@@ -36,7 +36,7 @@ feature {FIGURE} -- Modification & Insertion
 	set_drawing_attributes (drawing: DRAWING_I) is
 			-- Set the attributes to `a_drawing'.
 		require
-			drawing_exists: not (drawing = Void)
+			drawing_exists: drawing /= Void
 		do
 			drawing.set_logical_mode (logical_function_mode);
 			drawing.set_subwindow_mode (subwindow_mode);
@@ -59,10 +59,14 @@ feature {FIGURE} -- Modification & Insertion
 
 invariant
 
-	(fill_style = FillTiled) implies (not (tile = Void));
-	((fill_style = FillStippled) or (fill_style = FillOpaqueStippled)) implies (not (stipple = Void));
-	(fill_style /= FillTiled) implies (not (foreground_color = Void));
-	(fill_style = FillOpaqueStippled) implies (not (background_color = Void))
+	tile_when_tiled: (fill_style = FillTiled) implies tile /= Void;
+	stipple_when_stippled:
+		((fill_style = FillStippled) or (fill_style = FillOpaqueStippled)) 
+			implies stipple /= Void;
+	foreground_color_when_not_tileD:
+		(fill_style /= FillTiled) implies foreground_color /= Void;
+	background_when_opaque_stipple:
+		(fill_style = FillOpaqueStippled) implies background_color /= Void
 
 end -- class INTERIOR
 

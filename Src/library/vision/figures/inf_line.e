@@ -38,48 +38,35 @@ feature -- Modification & Insertion
 	set (o1, o2: like p1) is
 			-- Set the two end points of the line.
 		require else
-			o1_exists: not (o1 = Void);
-			o2_exists: not (o2 = Void);
-			not o1.is_surimposable (o2)
+			not o1.is_superimposable (o2)
 		do
 			p1 := o1;
 			p2 := o2;
 			set_conf_modified
-		ensure then
-			p1 = o1;
-			p2 = o2
 		end;
 
 	set_p2 (p: like p2) is
 			-- Set the second point.
 		require else
-			p_exists: not (p = Void);
-			not p1.is_surimposable (p)
+			not p1.is_superimposable (p)
 		do
 			p2 := p;
 			set_conf_modified
-		ensure then
-			p2 = p
 		end;
 
 	set_p1 (p: like p1) is
 			-- Set the first point.
 		require else
-			p_exists: not (p = Void);
-			not p2.is_surimposable (p)
+			not p2.is_superimposable (p)
 		do
 			p1 := p;
 			set_conf_modified
-		ensure then
-			p1 = p
 		end;
 
 feature -- Output
 
 	draw is
 			-- Draw the line.
-		require else
-			drawing_attached: not (drawing = Void)
 		do
 			if drawing.is_drawable then
 				drawing.set_cap_style (CapProjecting);
@@ -97,10 +84,8 @@ feature -- Status report
 			Result := false
 		end;
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the line surimposable to `other' ?
-		require else
-			other_exists: not (other = Void)
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the line superimposable to `other' ?
 		do
 			Result := 0 = ((p2.y-p1.y)*(other.p2.x-other.p1.x)-(p2.x-p1.x)*(other.p2.y-other.p1.y))
 		end;
@@ -122,7 +107,7 @@ feature {CONFIGURE_NOTIFY} -- Updating
 
 invariant
 
-	not p1.is_surimposable (p2)
+	not p1.is_superimposable (p2)
 
 end -- class INF_LINE
 

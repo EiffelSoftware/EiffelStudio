@@ -41,7 +41,7 @@ feature -- Output
 	draw is
 			-- Draw the current text.
 		require else
-			a_drawing_attached: not (drawing = Void)
+			a_drawing_attached: drawing /= Void
 		do
 			if drawing.is_drawable then
 				set_drawing_attributes (drawing);

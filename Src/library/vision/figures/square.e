@@ -13,7 +13,7 @@ inherit
 			make
 		redefine
 			draw, set_number_of_sides,
-			is_surimposable, contains
+			is_superimposable, contains
 		end
 
 creation
@@ -84,18 +84,19 @@ feature -- Output
 
 feature -- Status report
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the current square surimposable to `other' ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the current square superimposable to `other' ?
 			--| not finished
 		require else
-			other_exists: not (other = Void)
+			other_exists: other /= Void
 		do
-			Result := center.is_surimposable (other.center) and (radius = other.radius) and (orientation = other.orientation)
+			Result := center.is_superimposable (other.center) and
+				(radius = other.radius) and (orientation = other.orientation)
 		end;
 
 invariant
 
-	number_of_sides = 4
+	side_constraint: number_of_sides = 4
 
 end -- class SQUARE
 

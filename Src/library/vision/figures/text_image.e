@@ -62,7 +62,7 @@ feature -- Output
 	draw is
 			-- Draw the current text.
 		require else
-			a_drawing_attached: not (drawing = Void)
+			a_drawing_attached: drawing /= Void
 		do
 			if drawing.is_drawable then
 				drawing.set_subwindow_mode (subwindow_mode);
@@ -75,8 +75,8 @@ feature -- Output
 
 invariant
 
-	not (foreground_color = Void);
-	not (background_color = Void)
+	foreground_color_exists: foreground_color /= Void;
+	background_color_exists: background_color /= Void
 
 end -- class TEXT_IMAGE
 

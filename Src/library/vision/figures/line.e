@@ -51,12 +51,12 @@ feature -- Modification & Insertion
 	set (o1, o2: like p1) is
 			-- Set the two end points of the line.
 		require
-			o1_exists: not (o1 = Void);
-			o2_exists: not (o2 = Void);
+			o1_exists: o1 /= Void;
+			o2_exists: o2 /= Void;
 		deferred
 		ensure
-			p1 = o1;
-			p2 = o2
+			p1_set: p1 = o1;
+			p2_set: p2 = o2
 		end;
 
 
@@ -65,7 +65,7 @@ feature -- Modification & Insertion
 		do
 			origin_user_type := 2;
 		ensure
-			origin.is_surimposable (p1)
+			origin.is_superimposable (p1)
 		end;
 
 	set_origin_to_middle is
@@ -79,25 +79,25 @@ feature -- Modification & Insertion
 		do
 			origin_user_type := 3;
 		ensure
-			origin.is_surimposable (p2)
+			origin.is_superimposable (p2)
 		end;
 
 	set_p1 (p: like p1) is
 			-- Set the first point.
 		require
-			p_exists: not (p = Void)
+			p_exists: p /= Void
 		deferred
 		ensure
-			p1 = p
+			p1_set: p1 = p
 		end;
 
 	set_p2 (p: like p2) is
 			-- Set the second point.
 		require
-			p_exists: not (p = Void)
+			p_exists: p /= Void
 		deferred
 		ensure
-			p2 = p
+			p2_set: p2 = p
 		end;
 
 	xyrotate (a: REAL; px, py: INTEGER) is
@@ -160,13 +160,12 @@ feature -- Updating
 			unset_conf_modified
 		end;
 
-
 invariant
 
-	origin_user_type <= 4;
-	is_null = (is_horizontal and is_vertical);
-	not (p1 = Void);
-	not (p2 = Void)
+	origin_user_type_constraint: origin_user_type <= 4;
+	existence: is_null = (is_horizontal and is_vertical);
+	start_exists: p1 /= Void;
+	end_exists: p2 /= Void
 
 end -- class LINE
 

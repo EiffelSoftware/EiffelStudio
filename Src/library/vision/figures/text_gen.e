@@ -155,74 +155,74 @@ feature -- Modification & Insertion
 	set_base_center (a_point: like top_left) is
 			-- Set `base_center' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void)
+			a_point_exists: a_point /=Void
 		do
 			top_left.set (a_point.x-(string_width // 2),  a_point.y-ascent);
 			set_conf_modified
 		ensure
-			base_center.is_surimposable (a_point)
+			base_center.is_superimposable (a_point)
 		end;
 
 	set_base_left (a_point: like top_left) is
 			-- Set `base_left' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void)
+			a_point_exists: a_point /=Void
 		do
 			top_left.set (a_point.x, a_point.y-ascent);
 			set_conf_modified
 		ensure
-			base_left.is_surimposable (a_point)
+			base_left.is_superimposable (a_point)
 		end;
 
 	set_base_right (a_point: like top_left) is
 			-- Set `base_right' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void)
+			a_point_exists: a_point /=Void
 		do
 			top_left.set ( a_point.x-string_width, a_point.y-ascent);
 			set_conf_modified
 		ensure
-			base_right.is_surimposable (a_point)
+			base_right.is_superimposable (a_point)
 		end;
 
 	set_bottom_center (a_point: like top_left) is
 			-- Set `bottom_center' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void)
+			a_point_exists: a_point /=Void
 		do
 			top_left.set (a_point.x-(string_width // 2 ), a_point.y-ascent-descent);
 			set_conf_modified
 		ensure
-			bottom_center.is_surimposable (a_point)
+			bottom_center.is_superimposable (a_point)
 		end;
 
 	set_bottom_left (a_point: like top_left) is
 			-- Set `bottom_left' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void)
+			a_point_exists: a_point /=Void
         	do
             		top_left.set (a_point.x, a_point.y-ascent-descent);
 					set_conf_modified
 		ensure
-			bottom_left.is_surimposable (a_point)
+			bottom_left.is_superimposable (a_point)
 		end;
 
 	set_bottom_right (a_point: like top_left) is
 			-- Set `bottom_right' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void);
+			a_point_exists: a_point /=Void;
         	do
             		top_left.set (a_point.x-string_width, a_point.y-ascent-descent);
 					set_conf_modified
 		ensure
-			bottom_right.is_surimposable (a_point)
+			bottom_right.is_superimposable (a_point)
 		end;
 
 	set_font (a_font: FONT) is
 			-- Set `font' to `a_font'.
 		require
-			a_font_exists: not (font = Void);
-			a_font_specified: font.is_specified
+			a_font_exists: a_font /= Void;
+			a_font_specified: a_font.is_specified
 		do
 			font := a_font;
 			set_conf_modified
@@ -231,34 +231,34 @@ feature -- Modification & Insertion
 	set_middle_center (a_point: like top_left) is
 			-- Set `middle_center' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void);
+			a_point_exists: a_point /=Void;
 		do
 			top_left.set (a_point.x- (string_width//2), a_point.y-((ascent+descent)// 2));
 			set_conf_modified
 		ensure
-			middle_center.is_surimposable (a_point)
+			middle_center.is_superimposable (a_point)
 		end;
 
 	set_middle_left (a_point: like top_left) is
 			-- Set `middle_left' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void);
+			a_point_exists: a_point /=Void;
         	do
             		top_left.set (a_point.x, a_point.y- ((ascent+descent) // 2));
 					set_conf_modified
 		ensure
-			middle_left.is_surimposable (a_point)
+			middle_left.is_superimposable (a_point)
 		end;
 
 	set_middle_right (a_point: like top_left) is
 			-- Set `middle_right' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void);
+			a_point_exists: a_point /=Void;
 		do
 			top_left.set (a_point.x-string_width, a_point.y-((ascent+descent) // 2));
 			set_conf_modified
 		ensure
-			middle_right.is_surimposable (a_point)
+			middle_right.is_superimposable (a_point)
 		end;
 
 	set_origin_to_base_center is
@@ -336,7 +336,7 @@ feature -- Modification & Insertion
 	set_text (a_text: STRING) is
 			-- Set `text' to `a_text'.
 		require
-			a_text_exists: not (a_text = Void)
+			a_text_exists: a_text /= Void
 		do
 			text := a_text;
 			set_conf_modified
@@ -345,18 +345,18 @@ feature -- Modification & Insertion
 	set_top_center (a_point: like top_left) is
 			-- Set `top_center' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void);
+			a_point_exists: a_point /=Void;
 		do
 			top_left.set (a_point.x-(string_width // 2), a_point.y);
 			set_conf_modified
 		ensure
-			top_center.is_surimposable (a_point)
+			top_center.is_superimposable (a_point)
 		end;
 
 	set_top_left (a_point: like top_left) is
 			-- Set `top_left' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void);
+			a_point_exists: a_point /=Void;
 		do
 			top_left := a_point;
 			set_conf_modified
@@ -367,12 +367,12 @@ feature -- Modification & Insertion
 	set_top_right (a_point: like top_left) is
 			-- Set `top_right' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void);
+			a_point_exists: a_point /=Void;
         	do
             		top_left.set (a_point.x-string_width, a_point.y);
 					set_conf_modified
 		ensure
-			top_right.is_surimposable (a_point)
+			top_right.is_superimposable (a_point)
 		end;
 
 
@@ -407,12 +407,13 @@ feature -- Modification & Insertion
 
 feature -- Status report
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the current picture surimposable to other ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the current picture superimposable to other ?
 			-- Don't compare font in structure : Must be the
 			-- same in reference.
 		do
-			Result := top_left.is_surimposable (other.top_left) and text.is_equal (other.text) and (font = other.font)
+			Result := top_left.is_superimposable (other.top_left) and 
+				text.is_equal (other.text) and (font = other.font)
 		end; 
 
 feature {NONE} -- Access
@@ -427,7 +428,7 @@ feature {CONFIGURE_NOTIFY} -- Updating
 
 	conf_recompute is
 		do
-			if not (drawing = Void) and
+			if drawing /= Void and
 				font.implementation.is_valid (drawing_i_to_widget_i (drawing)) then
 					ascent := font.implementation.ascent  (drawing_i_to_widget_i (drawing));
 					descent :=font.implementation.descent (drawing_i_to_widget_i (drawing));
@@ -439,11 +440,11 @@ feature {CONFIGURE_NOTIFY} -- Updating
 
 invariant
 
-	origin_user_type <= 10;
-	not (top_left = Void);
-	not (text = Void);
-	not (font = Void);
-	font.is_specified
+	origin_user_type_constraint: origin_user_type <= 10;
+	top_left_exists: top_left /= Void;
+	text_exists: text /= Void;
+	font_exists: font /= Void;
+	font_is_specified: font.is_specified
 
 end -- class TEXT_GEN
 

@@ -65,13 +65,13 @@ feature -- Modification & Insertion
 		do
 			origin_user_type := 2;
 		ensure
-			origin.is_surimposable (upper_left)
+			origin.is_superimposable (upper_left)
 		end;
 
 	set_pixmap (a_pixmap: like pixmap) is
 			-- Set `pixmap' to `a_pixmap'.
 		require
-			a_pixmap_exists: not (a_pixmap = Void)
+			a_pixmap_exists: a_pixmap /= Void
 		do
 			pixmap := a_pixmap;
 			set_conf_modified
@@ -82,7 +82,7 @@ feature -- Modification & Insertion
 	set_upper_left (a_point: like upper_left) is
 			-- Set `upper_left' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void)
+			a_point_exists: a_point /= Void
 		do
 			upper_left := a_point;
 			set_conf_modified
@@ -124,7 +124,7 @@ feature -- Output
 	draw is
 			-- Draw the current pict_color.
 		require else
-			drawing_attached: not (drawing = Void);
+			drawing_attached: drawing /= Void;
 			pixmap_valid: pixmap.is_valid
 		do
 			if drawing.is_drawable then
@@ -137,14 +137,15 @@ feature -- Output
 	
 feature -- Status report
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the current pict_color surimposable to other ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the current pict_color superimposable to other ?
 			-- Not compare pixmap resource structures : they must be the
 			-- same in reference.
 		require else
-			other_exists: not (other = Void)
+			other_exists: other /= Void
 		do
-			Result := upper_left.is_surimposable (other.upper_left) and (pixmap = other.pixmap)
+			Result := upper_left.is_superimposable (other.upper_left) and 
+				(pixmap = other.pixmap)
 		end;
 
 
@@ -160,13 +161,11 @@ feature {CONFIGURE_NOTIFY} -- Updating
 			unset_conf_modified
 		end;
 
-
-
 invariant
 
-	origin_user_type <= 2;
-	not (upper_left = Void);
-	not (pixmap = Void)
+	origin_user_type_constraint: origin_user_type <= 2;
+	upper_left_exists: upper_left /= Void;
+	pixmap_exists: pixmap /= Void
 
 end -- class PICT_COLOR
 

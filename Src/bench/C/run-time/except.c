@@ -125,6 +125,16 @@ rt_public unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
  * (gathered thanks to stack look-ahead).
  */
 rt_private struct exprint eif_except;		/* Where exception has been raised */
+#define EIF_EXCEPT_LOCK	
+#define EIF_EXCEPT_UNLOCK 
+#else	/* EIF_THREADS */
+rt_private	EIF_MUTEX_TYPE *eif_except_lock = (EIF_MUTEX_TYPE *) 0;
+#define EIF_EXCEPT_LOCK	\
+	if (!eif_except_lock) \
+		EIF_MUTEX_CREATE (eif_except_lock, "Couldn't create exception lock");\
+	EIF_MUTEX_LOCK (eif_except_lock, "Couldn't lock exception lock");
+#define EIF_EXCEPT_UNLOCK EIF_MUTEX_UNLOCK (eif_except_lock, "Couldn't unlock exception lock");
+
 
 #endif /* EIF_THREADS */
 
@@ -1659,6 +1669,7 @@ rt_public void esfail(EIF_CONTEXT_NOARG)
 		return;
 
 	/* Signals failure. If the out of memory flags are set, mention it */
+	EIF_EXCEPT_LOCK
 	print_err_msg(stderr, "\n%s: system execution failed.\n", ename);
 	print_err_msg(stderr, "Following is the set of recorded exceptions");
 	if (echmem & MEM_FSTK) {
@@ -1679,7 +1690,7 @@ rt_public void esfail(EIF_CONTEXT_NOARG)
 	echmem |= MEM_PANIC;		/* Backtrack won't attempt any longjmp */
 	(void) backtrack(MTC_NOARG);			/* Unwind the whole stack */
 	dump_trace_stack();			/* Print the stack */
-
+	EIF_EXCEPT_UNLOCK
 #ifdef EIF_WIN32
 	eif_console_cleanup(EIF_TRUE);
 #endif

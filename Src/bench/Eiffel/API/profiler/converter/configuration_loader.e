@@ -41,6 +41,7 @@ feature {NONE} -- Implementation
 			if not retried then
 				!! file_name.make_from_string (profile_path);
 				file_name.extend (prof);
+
 				if not file_name.is_valid then
 					error_occured := true;
 				else

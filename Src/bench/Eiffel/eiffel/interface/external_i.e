@@ -21,6 +21,56 @@ inherit
 			transfer_to
 		end;
 	
+feature -- external characteristics
+
+	has_macro: BOOLEAN;
+		-- Does the external declaration include a macro
+
+	has_signature: BOOLEAN;
+		-- Does the external declaration include a signature ?
+
+	has_argument_list: BOOLEAN;
+		-- Does the signature include arguments ?
+
+	has_result_type: BOOLEAN;
+		-- Does the signature include a result type ?
+
+	has_include_list: BOOLEAN;
+		-- Does the external declaration include a list of include files ?
+
+	macro_type: STRING;
+		-- Type of macro; the name shoud be changed into macro_type or type_name
+
+	macro_file_name: STRING;
+		-- File name including the macro definition
+
+	arg_list: ARRAY[STRING];
+		-- List of arguments for the signature
+
+	result_type: STRING;
+		-- Result type of signature
+
+	include_list: ARRAY[STRING];
+		-- List of include files
+
+	set_external_characteristics (source: EXTERNAL_AS) is
+		-- Set local external characteristics according to the EXTERNAL_AS ones
+		local
+			ext_lang: EXTERNAL_LANG_AS;
+		do
+			ext_lang := source.language_name
+			has_macro := ext_lang.has_macro;
+			has_signature := ext_lang.has_signature;
+			has_argument_list := ext_lang.has_argument_list;
+			has_result_type := ext_lang.has_result_type;
+			has_include_list := ext_lang.has_include_list;
+			macro_type := ext_lang.macro_type;
+			macro_file_name := ext_lang.macro_file_name;
+			arg_list := ext_lang.arg_list;
+			result_type := ext_lang.result_type;
+			include_list := ext_lang.include_list;
+		end;
+
 feature 
 
 	alias_name: STRING;

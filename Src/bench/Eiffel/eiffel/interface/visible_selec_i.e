@@ -53,11 +53,8 @@ feature
 			end;
 		end;
 
-	has_visible: BOOLEAN is
+	has_visible: BOOLEAN is True
 			-- Has the current object some visible features ?
-		do
-			Result := True;
-		end;
 
 	generate_cecil_table (a_class: CLASS_C) is
 			-- Generate cecil table
@@ -150,7 +147,7 @@ feature
 	trace is
 			-- Debug purpose
 		do
-			{VISIBLE_I} precursor
+			{VISIBLE_I} Precursor
 			io.error.putstring (" for ");
 			from
 				visible_features.start;

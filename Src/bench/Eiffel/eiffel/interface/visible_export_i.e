@@ -21,11 +21,8 @@ feature
 			Result := feat.export_status.is_all;
 		end;
 
-	has_visible: BOOLEAN is
+	has_visible: BOOLEAN is True
 			-- Has the current object some visible features ?
-		do
-			Result := True;
-		end;
 
 	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE) is
 			-- Mark visible features from `feat_table'.

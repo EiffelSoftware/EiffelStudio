@@ -1200,7 +1200,7 @@ Creation_constraint: -- Empty
 
 Conditional: Position TE_IF Expression TE_THEN Compound Elseif_list_opt Else_part TE_END
 			{
-				$$ := new_if_as ($3, $5, $6, $7, $1)
+				$$ := new_if_as ($3, $5, $6, $7, $1, current_position)
 			}
 	;
 
@@ -1234,7 +1234,7 @@ Else_part: -- Empty
 
 Multi_branch: TE_INSPECT Position Expression When_part_list_opt Inspect_default TE_END
 			{
-				$$ := new_inspect_as ($3, $4, $5, $2)
+				$$ := new_inspect_as ($3, $4, $5, $2, current_position)
 			}
 	;
 
@@ -1324,7 +1324,7 @@ Inspect_default: -- Empty
  
 Loop: TE_FROM Compound Invariant Variant TE_UNTIL Position Expression TE_LOOP Compound TE_END
 			{
-				$$ := new_loop_as ($2, $3, $4, $7, $9, $6)
+				$$ := new_loop_as ($2, $3, $4, $7, $9, $6, current_position)
 			}
 	;
 
@@ -1356,7 +1356,7 @@ Variant: -- Empty
 
 Debug: Position TE_DEBUG Debug_keys Compound TE_END 
 			{
-				$$ := new_debug_as ($3, $4, $1)
+				$$ := new_debug_as ($3, $4, $1, current_position)
 			}
 	;
 
@@ -1596,7 +1596,7 @@ Call: Position A_feature
 	;
 
 Check: Position TE_CHECK Assertion TE_END
-			{ $$ := new_check_as ($3, $1) }
+			{ $$ := new_check_as ($3, $1, current_position) }
 	;
 
 

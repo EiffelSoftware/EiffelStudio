@@ -143,6 +143,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	can_run_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `can_run'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	compile is
@@ -296,6 +303,14 @@ feature -- Basic Operations
 			-- Is compiler output sent to pipe `output_pipe_name'
 		require
 			is_output_piped_user_precondition: is_output_piped_user_precondition
+		deferred
+
+		end
+
+	can_run: BOOLEAN is
+			-- Can product be run? (i.e. is it activated or was run less than 10 times)
+		require
+			can_run_user_precondition: can_run_user_precondition
 		deferred
 
 		end

@@ -155,6 +155,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Can product be run? (i.e. is it activated or was run less than 10 times)
+	-----------------------------------------------------------*/
+	STDMETHODIMP can_run(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
 	Decrement reference count
 	-----------------------------------------------------------*/
 	STDMETHODIMP_(ULONG) Release();

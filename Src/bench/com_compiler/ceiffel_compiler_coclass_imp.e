@@ -83,6 +83,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	can_run: BOOLEAN is
+			-- Can product be run? (i.e. is it activated or was run less than 10 times)
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	create_item is

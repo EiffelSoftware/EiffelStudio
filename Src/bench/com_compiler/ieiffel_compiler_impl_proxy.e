@@ -79,6 +79,12 @@ feature -- Access
 			Result := ccom_is_output_piped (initializer)
 		end
 
+	can_run: BOOLEAN is
+			-- Can product be run? (i.e. is it activated or was run less than 10 times)
+		do
+			Result := ccom_can_run (initializer)
+		end
+
 feature -- Basic Operations
 
 	compile is
@@ -264,6 +270,12 @@ feature {NONE}  -- Externals
 
 	ccom_is_output_piped (cpp_obj: POINTER): BOOLEAN is
 			-- Is compiler output sent to pipe `output_pipe_name'
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_can_run (cpp_obj: POINTER): BOOLEAN is
+			-- Can product be run? (i.e. is it activated or was run less than 10 times)
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end

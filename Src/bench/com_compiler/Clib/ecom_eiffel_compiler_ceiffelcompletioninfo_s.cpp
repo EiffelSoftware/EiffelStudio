@@ -146,7 +146,7 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_features(  /* [
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_235 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_236 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -197,7 +197,7 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_feature(  /* [i
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_51 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_52 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

@@ -5,7 +5,7 @@ root
 	APPLICATION (root_cluster): "make"
 
 default
-	assertion			(no)
+	assertion			(all)
 	multithreaded		(no)
 	console_application	(no)
 	dynamic_runtime		(no)

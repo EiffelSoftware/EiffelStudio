@@ -171,10 +171,9 @@ feature -- Removal
 
 	prune (v: like item) is
 			-- Remove `v' if present.
+			--| NOTE Behaviour is not the one from DYNAMIC_LIST, but from SET
 		do
-			if has (v) then
-				implementation.prune (v)
-			end
+			implementation.prune (v)
 		end
 
 	remove is
@@ -312,6 +311,10 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/02 01:32:43  brendel
+--| Removed conditional `has (v)' from feature `prune', to let the
+--| implementation take care of this.
+--|
 --| Revision 1.4  2000/02/26 06:26:07  oconnor
 --| added extra postconditions to start and finish
 --|

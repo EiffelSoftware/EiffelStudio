@@ -1057,10 +1057,10 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			str_value := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (str_value)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
-			
+
 			a_list_iter := ev_children.i_th (a_row).list_iter.item
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_iter, a_column, str_value)				
 			
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_iter, a_column, str_value)
 			str_value.memory_free
 		end
 
@@ -1153,19 +1153,20 @@ feature {NONE} -- Implementation
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 
-			-- update the list of rows of the column list:			
+				-- Make sure list is large enough to fit `item_imp'
+			if v.count > column_count then
+				create_list (v.count)
+			end
+
+				-- update the list of rows of the column list:			
 			ev_children.go_i_th (i)
 			ev_children.put_left (item_imp)
 
-			if v.count > column_count then
-				create_list (v.count)
-			else
-					-- Add row to model
-				create a_tree_iter.make
-				item_imp.set_list_iter (a_tree_iter)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
-				update_child (item_imp, ev_children.count)
-			end
+				-- Add row to model
+			create a_tree_iter.make
+			item_imp.set_list_iter (a_tree_iter)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
+			update_child (item_imp, ev_children.count)
 			
 			if item_imp.is_transport_enabled then
 				update_pnd_connection (True)

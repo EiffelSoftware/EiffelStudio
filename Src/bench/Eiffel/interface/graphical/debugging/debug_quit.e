@@ -16,6 +16,7 @@ feature
 		do
 			init (c, a_text_window);
 			!!request.make (Rqst_quit)
+			set_action ("!c<Btn1Down>", Current, kill_it)
 		end;
 
 	non_gui_make is
@@ -25,18 +26,27 @@ feature
 
 	exit_now is
 		do
-			work (void);
+			work (kill_it);
 		end;
 	
 feature {NONE}
 
 	work (argument: ANY) is
 			-- Continue execution.
-		local
-			kill_request: EWB_REQUEST
 		do
 			if Run_info.is_running then
-				if Run_info.is_stopped then
+				if argument /= kill_it then
+					if not Run_info.is_stopped then
+							-- Ask the application to interrupt ASAP.
+						debug_window.clear_window;
+						debug_window.put_string ("System is running%N");
+						debug_window.put_string ("Interruption request%N");
+						debug_window.display;
+						request.make (Rqst_interrupt);
+						request.send
+					end
+				elseif Run_info.is_stopped then
+					request.make (Rqst_quit);
 					request.send;
 					if Run_info.feature_i /= Void then
 						Run_info.set_is_stopped (False);
@@ -44,8 +54,8 @@ feature {NONE}
 								(Run_info.feature_i, Run_info.break_index)
 					end	
 				else
-					!! kill_request.make (Rqst_kill);
-					kill_request.send
+					request.make (Rqst_kill);
+					request.send
 				end;
 			end;
 		end;

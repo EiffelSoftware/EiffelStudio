@@ -3717,7 +3717,6 @@ feature {NONE} -- Implementation
 		local
 			melt_set: like melted_set
 			melted_info: MELTED_INFO
-			ext: EXTERNAL_I
 		do
 			melt_set := melted_set
 			if melt_set = Void then
@@ -3725,14 +3724,7 @@ feature {NONE} -- Implementation
 				melted_set := melt_set
 			end
 
-			if f.is_external then
-				ext ?= f
-				if ext.is_cpp or ext.is_special or ext.encapsulated then
-					create {FEAT_MELTED_INFO} melted_info.make (f, Current)
-				else
-					create {EXT_FEAT_MELTED_INFO} melted_info.make (f, Current)
-				end
-			elseif f = invariant_feature then
+			if f = invariant_feature then
 				create {INV_MELTED_INFO} melted_info.make (f, Current)
 			else
 				create {FEAT_MELTED_INFO} melted_info.make (f, Current)

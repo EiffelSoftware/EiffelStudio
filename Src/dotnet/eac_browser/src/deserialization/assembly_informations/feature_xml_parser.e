@@ -60,96 +60,115 @@ feature
 		local
 			l_name: STRING
 			l_attribute: STRING
+			retried: BOOLEAN
 		do
---			print (start_tag.out)
-			if start_tag.name.is_equal (see_str) then
-				if start_tag.attributes.count > 0 then
-					l_attribute := start_tag.attributes.first.value
-					if l_attribute.item (2).is_equal (':') then
-							-- Is it a reference to a Type or a Feature (M: or P: etc)?
-						l_attribute.keep_tail (l_attribute.count - 2)
+			if not retried then
+	--			print (start_tag.out)
+				if start_tag.name.is_equal (see_str) then
+					if start_tag.attributes.count > 0 then
+						l_attribute := start_tag.attributes.first.value
+						if l_attribute.count > 1 and then l_attribute.item (2).is_equal (':') then
+								-- Is it a reference to a Type or a Feature (M: or P: etc)?
+							l_attribute.keep_tail (l_attribute.count - 2)
+						end
+						current_comment.append (l_attribute)
 					end
-					current_comment.append (l_attribute)
+					current_tag.put (see)
+				elseif start_tag.name.is_equal (para_str) then
+					current_tag.put (para)
+				elseif start_tag.name.is_equal (param_str) then
+					if start_tag.attributes.count > 0 then
+						l_name := start_tag.attributes.first.value
+						A_parameter.set_name (l_name)
+					end
+					current_comment.wipe_out
+					current_tag.put (param)
+				elseif start_tag.name.is_equal (returns_str) then
+					current_comment.wipe_out
+					current_tag.put (returns)
+				elseif start_tag.name.is_equal (summary_str) then
+					current_comment.wipe_out
+					current_tag.put (summary)
+				elseif start_tag.name.is_equal (member_str) then
+					A_member.reset
+					if start_tag.attributes.count > 0 then
+						l_name := start_tag.attributes.first.value
+						l_name.keep_tail (l_name.count - 2)
+						A_member.set_name (l_name)
+					end
+					current_tag.put (member)
+				elseif start_tag.name.is_equal (param_ref_str) then
+					if start_tag.attributes.count > 0 then
+						l_name := start_tag.attributes.first.value
+						current_comment.append (l_name)
+					end
+					current_tag.put (param_ref)
+				else
+					if current_tag = Void then
+						create current_tag.make (10)
+					end
+					-- Unknow tag...
+					current_tag.put (Unknow)
 				end
-				current_tag.put (see)
-			elseif start_tag.name.is_equal (para_str) then
-				current_tag.put (para)
-			elseif start_tag.name.is_equal (param_str) then
-				if start_tag.attributes.count > 0 then
-					l_name := start_tag.attributes.first.value
-					A_parameter.set_name (l_name)
-				end
-				current_comment.wipe_out
-				current_tag.put (param)
-			elseif start_tag.name.is_equal (returns_str) then
-				current_comment.wipe_out
-				current_tag.put (returns)
-			elseif start_tag.name.is_equal (summary_str) then
-				current_comment.wipe_out
-				current_tag.put (summary)
-			elseif start_tag.name.is_equal (member_str) then
-				A_member.reset
-				if start_tag.attributes.count > 0 then
-					l_name := start_tag.attributes.first.value
-					l_name.keep_tail (l_name.count - 2)
-					A_member.set_name (l_name)
-				end
-				current_tag.put (member)
-			elseif start_tag.name.is_equal (param_ref_str) then
-				if start_tag.attributes.count > 0 then
-					l_name := start_tag.attributes.first.value
-					current_comment.append (l_name)
-				end
-				current_tag.put (param_ref)
-			else
-				if current_tag = Void then
-					create current_tag.make (10)
-				end
-				-- Unknow tag...
-				current_tag.put (Unknow)
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	on_content (content: XML_CONTENT) is
 			-- called whenever the parser findes character data
+		local
+			retried: BOOLEAN
 		do
---			print (content.out)
-			inspect 
-				current_tag.item
-			when param then
-				current_comment.append (content.out)
-			when Summary then
-				current_comment.append (content.out)
-			when returns then
-				current_comment.append (content.out)
-			else
-				current_comment.append (content.out)	
+			if not retried then
+	--			print (content.out)
+				inspect 
+					current_tag.item
+				when param then
+					current_comment.append (content.out)
+				when Summary then
+					current_comment.append (content.out)
+				when returns then
+					current_comment.append (content.out)
+				else
+					current_comment.append (content.out)	
+				end
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	on_end_tag (end_tag: XML_END_TAG) is
 			-- called whenever the parser findes an end element
 		local
 			l_str: STRING
+			retried: BOOLEAN
 		do
---			print (end_tag.out)
-			inspect 
-				current_tag.item
---			when Para then
---				current_comment.append (paragraphe_tag)
-			when Param then
-				l_str := format_comment (current_comment)
-				a_parameter.set_description (l_str)
-				a_member.add_parameter (deep_clone (a_parameter))
-			when Summary then
-				l_str := format_comment (current_comment)
-				a_member.set_summary (l_str)
-			when Returns then
-				l_str := format_comment (current_comment)
-				a_member.set_returns (l_str)
-			else
+			if not retried then
+	--			print (end_tag.out)
+				inspect 
+					current_tag.item
+	--			when Para then
+	--				current_comment.append (paragraphe_tag)
+				when Param then
+					l_str := format_comment (current_comment)
+					a_parameter.set_description (l_str)
+					a_member.add_parameter (deep_clone (a_parameter))
+				when Summary then
+					l_str := format_comment (current_comment)
+					a_member.set_summary (l_str)
+				when Returns then
+					l_str := format_comment (current_comment)
+					a_member.set_returns (l_str)
+				else
+				end
+				current_tag.remove
 			end
-			current_tag.remove
+		rescue
+			retried := True
+			retry
 		end
 
 	on_default (data: XML_CHARACTER_ARRAY) is

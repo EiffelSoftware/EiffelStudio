@@ -1,8 +1,8 @@
 indexing
-	description: "Objects that ..."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Preferences of the user for the editor"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EDITOR_PREFERENCES
@@ -16,14 +16,32 @@ inherit
 feature -- Default Initialisation
 
 	default_create is
-			-- Default Initialisation
+			-- Default Initialisations
 		do
 			tabulation_spaces := 4
 			font_name := "Courier New"
 			font_size := 14
+			create normal_text_color.make_rgb(255,255,255)
+			create normal_background_color.make_rgb(0,0,0)
+			create selected_text_color.make_rgb(255,255,255)
+			create selected_background_color.make_rgb(0,0,128)
+			create string_text_color.make_rgb(255,255,204)
+			create string_background_color.make_rgb(153,0,51)
+			create keyword_text_color.make_rgb(0,153,255)
+			create keyword_background_color.make_rgb(0,0,0)
+			create spaces_text_color.make_rgb(0,0,128)
+			create spaces_background_color.make_rgb(0,0,0)
+			create comments_text_color.make_rgb(204,102,255)
+			create comments_background_color.make_rgb(0,0,0)
+			create number_text_color.make_rgb(150,255,150)
+			create number_background_color.make_rgb(0,0,0)
+			create operator_text_color.make_rgb(0,153,255)
+			create operator_background_color.make_rgb(0,0,0)
 		end
 
 feature -- Access
+
+		--| General Preferences
 
 	tabulation_spaces: INTEGER
 		-- number of spaces characters in a tabulation.
@@ -33,14 +51,65 @@ feature -- Access
 		-- characters in the editor
 
 	font_size: INTEGER
-		-- Name of the font used to display
+		-- Size of the font used to display
 		-- characters in the editor
 
 	view_invisible_symbols: BOOLEAN
 		-- Are the spaces, the tabulations and the end_of_line
 		-- character visible?
 
-feature -- Element Change
+		--| Font color Preferences
+
+	normal_text_color: WEL_COLOR_REF
+		-- Color used to display normal text
+
+	normal_background_color: WEL_COLOR_REF
+		-- Background color used to display normal text
+
+	selected_text_color: WEL_COLOR_REF
+		-- Color used to display selected text
+
+	selected_background_color: WEL_COLOR_REF
+		-- Background color used to display selected text
+
+	string_text_color: WEL_COLOR_REF
+		-- Color used to display strings
+
+	string_background_color: WEL_COLOR_REF
+		-- Background color used to display strings
+
+	keyword_text_color: WEL_COLOR_REF
+		-- Color used to display keywords
+
+	keyword_background_color: WEL_COLOR_REF
+		-- Background color used to display keywords
+
+	spaces_text_color: WEL_COLOR_REF
+		-- Color used to display spaces
+
+	spaces_background_color: WEL_COLOR_REF
+		-- Background color used to display spaces
+
+	comments_text_color: WEL_COLOR_REF
+		-- Color used to display comments
+
+	comments_background_color: WEL_COLOR_REF
+		-- Background color used to display comments
+
+	number_text_color: WEL_COLOR_REF
+		-- Color used to display numbers
+
+	number_background_color: WEL_COLOR_REF
+		-- Background color used to display numbers
+
+	operator_text_color: WEL_COLOR_REF
+		-- Color used to display operator
+
+	operator_background_color: WEL_COLOR_REF
+		-- Background color used to display operator
+
+
+feature -- Element Change (General preferences)
 
 	set_font_size(a_font_size: INTEGER) is
 			-- Set `font_size' to `a_font_size'
@@ -88,5 +157,154 @@ feature -- Element Change
 		ensure
 			view_invisible_symbols_set: not view_invisible_symbols
 		end
+
+feature -- Element Change (Font color Preferences)
+
+	set_normal_text_color(a_normal_text_color: WEL_COLOR_REF) is
+			-- Set the color used to display normal text
+		do
+			normal_text_color := a_normal_text_color
+		ensure
+			normal_text_color = a_normal_text_color
+		end
+
+	set_normal_background_color(a_normal_background_color: WEL_COLOR_REF) is
+			-- Set the background color used to display normal text
+		do
+			normal_background_color := a_normal_background_color
+		ensure
+			normal_background_color = a_normal_background_color
+		end
+
+	set_selected_text_color(a_selected_text_color: WEL_COLOR_REF) is
+			-- Set the color used to display selected text
+		do
+			selected_text_color := a_selected_text_color
+		ensure
+			selected_text_color = a_selected_text_color
+		end
+
+	set_selected_background_color(a_selected_background_color: WEL_COLOR_REF) is
+			-- Set the background color used to display selected text
+		do
+			selected_background_color := a_selected_background_color
+		ensure
+			selected_background_color = a_selected_background_color
+		end
+
+	set_string_text_color(a_string_text_color: WEL_COLOR_REF) is
+			-- Set the color used to display string text
+		do
+			string_text_color := a_string_text_color
+		ensure
+			string_text_color = a_string_text_color
+		end
+
+	set_string_background_color(a_string_background_color: WEL_COLOR_REF) is
+			-- Set the background color used to display string text
+		do
+			string_background_color := a_string_background_color
+		ensure
+			string_background_color = a_string_background_color
+		end
+
+	set_keyword_text_color(a_keyword_text_color: WEL_COLOR_REF) is
+			-- Set the color used to display keyword text
+		do
+			keyword_text_color := a_keyword_text_color
+		ensure
+			keyword_text_color = a_keyword_text_color
+		end
+
+	set_keyword_background_color(a_keyword_background_color: WEL_COLOR_REF) is
+			-- Set the background color used to display keyword text
+		do
+			keyword_background_color := a_keyword_background_color
+		ensure
+			keyword_background_color = a_keyword_background_color
+		end
+
+	set_spaces_text_color(a_spaces_text_color: WEL_COLOR_REF) is
+			-- Set the color used to display spaces text
+		do
+			spaces_text_color := a_spaces_text_color
+		ensure
+			spaces_text_color = a_spaces_text_color
+		end
+
+	set_spaces_background_color(a_spaces_background_color: WEL_COLOR_REF) is
+			-- Set the background color used to display spaces text
+		do
+			spaces_background_color := a_spaces_background_color
+		ensure
+			spaces_background_color = a_spaces_background_color
+		end
+
+	set_comments_text_color(a_comments_text_color: WEL_COLOR_REF) is
+			-- Set the color used to display comments text
+		do
+			comments_text_color := a_comments_text_color
+		ensure
+			comments_text_color = a_comments_text_color
+		end
+
+	set_comments_background_color(a_comments_background_color: WEL_COLOR_REF) is
+			-- Set the background color used to display comments text
+		do
+			comments_background_color := a_comments_background_color
+		ensure
+			comments_background_color = a_comments_background_color
+		end
+
+	set_number_text_color(a_number_text_color: WEL_COLOR_REF) is
+			-- Set the color used to display number text
+		do
+			number_text_color := a_number_text_color
+		ensure
+			number_text_color = a_number_text_color
+		end
+
+	set_number_background_color(a_number_background_color: WEL_COLOR_REF) is
+			-- Set the background color used to display number text
+		do
+			number_background_color := a_number_background_color
+		ensure
+			number_background_color = a_number_background_color
+		end
+
+	set_operator_text_color(a_operator_text_color: WEL_COLOR_REF) is
+			-- Set the color used to display operator text
+		do
+			operator_text_color := a_operator_text_color
+		ensure
+			operator_text_color = a_operator_text_color
+		end
+
+	set_operator_background_color(a_operator_background_color: WEL_COLOR_REF) is
+			-- Set the background color used to display operator text
+		do
+			operator_background_color := a_operator_background_color
+		ensure
+			operator_background_color = a_operator_background_color
+		end
+
+invariant
+	font_name_not_void					: font_name /= Void
+	normal_text_color_not_void			: normal_text_color /= Void
+	normal_background_color_not_void	: normal_background_color /= Void
+	selected_text_color_not_void		: selected_text_color /= Void
+	selected_background_color_not_void	: selected_background_color /= Void
+	string_text_color_not_void			: string_text_color /= Void
+	string_background_color_not_void	: string_background_color /= Void
+	keyword_text_color_not_void			: keyword_text_color /= Void
+	keyword_background_color_not_void	: keyword_background_color /= Void
+	spaces_text_color_not_void			: spaces_text_color /= Void
+	spaces_background_color_not_void	: spaces_background_color /= Void
+	comments_text_color_not_void		: comments_text_color /= Void
+	comments_background_color_not_void	: comments_background_color /= Void
+	number_text_color_not_void			: number_text_color /= Void
+	number_background_color_not_void	: number_background_color /= Void
+	operator_text_color_not_void		: operator_text_color /= Void
+	operator_background_color_not_void	: operator_background_color /= Void
 
 end -- class SHARED_EDITOR_PREFERENCES

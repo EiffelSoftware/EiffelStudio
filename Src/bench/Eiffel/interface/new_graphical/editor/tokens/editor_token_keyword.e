@@ -10,7 +10,7 @@ class
 inherit
 	EDITOR_TOKEN_TEXT
 		redefine
-			text_color
+			text_color, background_color
 		end
 
 create
@@ -19,8 +19,13 @@ create
 feature {NONE} -- Implementation
 	
 	text_color: WEL_COLOR_REF is
-		once
-			create Result.make_rgb(0,0,196)
+		do
+			Result := editor_preferences.keyword_text_color
 		end
 
-end -- class EDITOR_SYMBOL
+	background_color: WEL_COLOR_REF is
+		do
+			Result := editor_preferences.keyword_background_color
+		end
+
+end -- class EDITOR_KEYWORD

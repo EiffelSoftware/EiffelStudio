@@ -19,13 +19,13 @@ create
 feature {NONE} -- Implementation
 	
 	text_color: WEL_COLOR_REF is
-		once
-			create Result.make_rgb(128,0,0)
+		do
+			Result := editor_preferences.string_text_color
 		end
 
 	background_color: WEL_COLOR_REF is
-		once
-			create Result.make_rgb(0,196,196)
+		do
+			Result := editor_preferences.string_background_color
 		end
 
 end -- class EDITOR_STRING

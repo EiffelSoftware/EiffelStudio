@@ -10,7 +10,7 @@ class
 inherit
 	EDITOR_TOKEN_TEXT
 		redefine
-			text_color
+			text_color, background_color
 		end
 
 create
@@ -19,8 +19,14 @@ create
 feature {NONE} -- Implementation
 	
 	text_color: WEL_COLOR_REF is
-		once
-			create Result.make_rgb(128,0,128)
+		do
+			Result := editor_preferences.comments_text_color
 		end
+
+	background_color: WEL_COLOR_REF is
+		do
+			Result := editor_preferences.comments_background_color
+		end
+
 
 end -- class EDITOR_COMMENT

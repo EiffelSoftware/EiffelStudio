@@ -368,7 +368,7 @@ feature -- Implementation
 	pointed_target: EV_PICK_AND_DROPABLE is
 			-- Hole at mouse position
 		local
-			widget: EV_WIDGET
+			pnd: EV_PICK_AND_DROPABLE
 			widget_imp: EV_WIDGET_IMP
 			gdkwin, gdkpar, currentwin: POINTER
 			x, y: INTEGER
@@ -383,15 +383,17 @@ feature -- Implementation
 				until
 					global_pnd_targets.off or Result /= Void
 				loop
-					widget ?= id_object (global_pnd_targets.item)
-					widget_imp ?= widget.implementation
-					currentwin := C.gtk_widget_struct_window (	
-						widget_imp.c_object)
-					if
-						currentwin = gdkwin or else
-						currentwin = gdkpar
-					then
-						Result := widget
+					pnd ?= id_object (global_pnd_targets.item)
+					if pnd /= Void then
+						widget_imp ?= pnd.implementation
+						currentwin := C.gtk_widget_struct_window (	
+							widget_imp.c_object)
+						if
+							currentwin = gdkwin or else
+							currentwin = gdkpar
+						then
+							Result := pnd
+						end
 					end
 					global_pnd_targets.forth
 				end
@@ -465,6 +467,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/17 23:22:28  king
+--| Corrected pointed_target to assign attempt to PND
+--|
 --| Revision 1.14  2000/03/15 22:45:37  king
 --| Updated due to interface change in cursor_code
 --|

@@ -40,8 +40,7 @@ feature -- Access
 
 	parent: EV_WIDGET is
 			-- The parent of the Current widget
-			-- If the widget is an EV_WINDOW without parent,
-			-- this attribute will be `Void'
+			-- Can be void.
 		require
 			exists: not destroyed
 		do

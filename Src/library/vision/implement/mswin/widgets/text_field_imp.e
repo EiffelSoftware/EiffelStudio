@@ -93,6 +93,11 @@ feature -- Initialization
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x,y, width, height, id_default)
+
+				if private_attributes.insensitive then
+					disable
+				end
+
 				if private_font /= Void then
 					set_font (private_font)
 				end
@@ -299,7 +304,10 @@ feature {NONE} -- Implementation
 			found: BOOLEAN
 			p : POINTER
 			w: W_MANAGER
+			top_parent: WEL_WINDOW
 		do
+			top_parent := find_top_parent (Current)
+
 			w := widget_manager
 			from
 				w.start
@@ -315,7 +323,11 @@ feature {NONE} -- Implementation
 					w.after or else found or else w.item.depth = 0
 				loop
 					tf ?= w.item.implementation
-					found := tf /= Void
+					if tf /= Void and then top_parent = find_top_parent (tf) then
+						found := True
+					else
+						tf := Void
+					end
 					w.forth
 				end
 				if not found then	
@@ -325,7 +337,11 @@ feature {NONE} -- Implementation
 						found or else w.item.implementation = Current
 					loop
 						tf ?= w.item.implementation
-						found := tf /= Void
+						if tf /= Void and then top_parent = find_top_parent (tf) then
+							found := True
+						else
+							tf := Void
+						end
 						w.forth
 					end
 				end		
@@ -341,7 +357,10 @@ feature {NONE} -- Implementation
 			found: BOOLEAN
 			p : POINTER
 			w: W_MANAGER
+			top_parent: WEL_WINDOW
 		do
+			top_parent := find_top_parent (Current)
+
 			w := widget_manager
 			from
 				w.start
@@ -357,7 +376,11 @@ feature {NONE} -- Implementation
 					w.before or else found or else w.item.depth = 0
 				loop
 					tf ?= w.item.implementation
-					found := tf /= Void
+					if tf /= Void and then top_parent = find_top_parent (tf) then
+						found := True
+					else
+						tf := Void
+					end
 					w.back
 				end
 				if not found then	
@@ -367,7 +390,11 @@ feature {NONE} -- Implementation
 						found or else w.item.implementation = Current
 					loop
 						tf ?= w.item.implementation
-						found := tf /= Void
+						if tf /= Void and then top_parent = find_top_parent (tf) then
+							found := True
+						else
+							tf := Void
+						end
 						w.back
 					end
 				end		
@@ -379,6 +406,25 @@ feature {NONE} -- Implementation
 
 	shift_pressed: BOOLEAN
 			-- Is the shift-key pressed?
+
+	find_top_parent (a_window: WEL_WINDOW): WEL_WINDOW is
+		require
+			a_window_not_void: a_window /= Void
+		local
+			top_parent: WEL_WINDOW
+		do
+			from
+				Result := a_window
+				top_parent := Result.parent
+			until
+				top_parent = Void
+			loop
+				top_parent := Result.parent
+				if top_parent /= Void then
+					Result := top_parent
+				end
+			end
+		end
 
 end -- class TEXT_FIELD_IMP
 

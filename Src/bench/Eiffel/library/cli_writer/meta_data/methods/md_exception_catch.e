@@ -37,13 +37,13 @@ feature -- Status report
 	is_defined: BOOLEAN is
 			-- Is current a fully described exception clause?
 		do
-			Result := state = Frozen_state	
+			Result := Precursor and then class_token /= 0
 		ensure then
 			valid_class_token: Result implies
 				(class_token & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_def or else
 				class_token & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_ref or else
 				class_token & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_spec)
-			valid_state: Result implies state = Frozen_state
+			valid_state: state = Frozen_state implies Result
 		end
 
 	flags: INTEGER_16 is

@@ -83,7 +83,7 @@ feature -- Basic operation
 		do
 			list.wipe_out
 			similar_list.wipe_out
-			description.append ("Testing feature `" + name + "'...")
+			description.append ("Testing feature `" + name + "' with state `empty'...")
 			test_agent.call ([])
 			append_result
 		end
@@ -95,9 +95,9 @@ feature -- Basic operation
 			new_item
 			list.extend (last_item)
 			similar_list.extend (last_item)
-			list.go_i_th (1)
-			similar_list.go_i_th (1)
-			description.append ("Testing feature `" + name + "'...")
+			list.start
+			similar_list.start
+			description.append ("Testing feature `" + name + "' with state `readable'...")
 			test_agent.call ([])
 			append_result
 		end
@@ -111,7 +111,7 @@ feature -- Basic operation
 			similar_list.extend (last_item)
 			list.go_i_th (0)
 			similar_list.go_i_th (0)
-			description.append ("Testing feature `" + name + "'...")
+			description.append ("Testing feature `" + name + "' with state `before'...")
 			test_agent.call ([])
 			append_result
 		end
@@ -123,9 +123,9 @@ feature -- Basic operation
 			new_item
 			list.extend (last_item)
 			similar_list.extend (last_item)
-			list.go_i_th (0)
-			similar_list.go_i_th (0)
-			description.append ("Testing feature `" + name + "'...")
+			list.go_i_th (list.count + 1)
+			similar_list.go_i_th (similar_list.count + 1)
+			description.append ("Testing feature `" + name + "' with state `after'...")
 			test_agent.call ([])
 			append_result
 		end
@@ -183,13 +183,26 @@ feature {NONE} -- Implementation
 			if list.count /= similar_list.count then
 				description.append (" `count' incorrect.%N")
 				test_successful := False
-			elseif list.first /= similar_list.first then 
+			elseif list.empty /= similar_list.empty then 
+				description.append (" `empty' incorrect.%N")
+				test_successful := False
+			elseif not similar_list.empty and then list.first /= similar_list.first then 
 				description.append (" `first' incorrect.%N")
 				test_successful := False
 			elseif list.has (last_item) /= similar_list.has (last_item) then 
 				description.append (" `has' incorrect.%N")
 				test_successful := False
-			elseif similar_list.valid_index (1) implies list.i_th (1) /= similar_list.i_th (1) then 
+			elseif list.after /= similar_list.after then 
+				description.append (" `after' incorrect.%N")
+				description.append ("Your list's after: " + list.after.out + "; LINKED_LIST: " + similar_list.after.out + ".%N")
+				test_successful := False
+			elseif list.before /= similar_list.before then 
+				description.append (" `before' incorrect.%N")
+				test_successful := False
+			elseif list.off /= similar_list.off then 
+				description.append (" `off' incorrect.%N")
+				test_successful := False
+			elseif similar_list.valid_index (1) and then list.i_th (1) /= similar_list.i_th (1) then 
 				description.append (" `i_th' incorrect.%N")
 				test_successful := False
 			elseif list.index /= similar_list.index then
@@ -199,11 +212,11 @@ feature {NONE} -- Implementation
 			elseif list.index_of (last_item, 1) /= similar_list.index_of (last_item, 1) then 
 				description.append (" `index_of' incorrect.%N")
 				test_successful := False
-			elseif (not similar_list.off) implies list.item /= similar_list.item then 
+			elseif (not similar_list.off) and then list.item /= similar_list.item then 
 				description.append (" `item' incorrect.%N")
 				description.append ("Your list's item: " + item_text (list.item) + "; LINKED_LIST: " + item_text (similar_list.item) + "%N")
 				test_successful := False
-			elseif not similar_list.empty implies list.last /= similar_list.last then 
+			elseif not similar_list.empty and then list.last /= similar_list.last then 
 				description.append (" `last' incorrect.%N")
 				test_successful := False
 			elseif list.sequential_occurrences (last_item) /= similar_list.sequential_occurrences (last_item) then 
@@ -212,14 +225,8 @@ feature {NONE} -- Implementation
 			elseif list.occurrences (last_item) /= similar_list.occurrences (last_item) then 
 				description.append (" `occurrences' incorrect.%N")
 				test_successful := False
-			elseif list.after /= similar_list.after then 
-				description.append (" `after' incorrect.%N")
-				test_successful := False
-			elseif list.before /= similar_list.before then 
-				description.append (" `before' incorrect.%N")
-				test_successful := False
 			elseif list.empty /= similar_list.empty then 
-				description.append (" `before' incorrect.%N")
+				description.append (" `empty' incorrect.%N")
 				test_successful := False
 			elseif list.exhausted /= similar_list.exhausted then 
 				description.append (" `exhausted' incorrect.%N")
@@ -232,12 +239,6 @@ feature {NONE} -- Implementation
 				test_successful := False
 			elseif list.islast /= similar_list.islast then 
 				description.append (" `islast' incorrect.%N")
-				test_successful := False
-			elseif list.off /= similar_list.off then 
-				description.append (" `off' incorrect.%N")
-				test_successful := False
-			elseif list.off /= similar_list.off then 
-				description.append (" `off' incorrect.%N")
 				test_successful := False
 			elseif not items_equal then 
 				description.append (" items incorrect.%N")
@@ -280,8 +281,10 @@ feature {NONE} -- Implementation
 				n = 1
 			loop
 				new_item
-				list.extend (last_item)
-				similar_list.extend (last_item)
+				if similar_list.extendible then
+					list.extend (last_item)
+					similar_list.extend (last_item)
+				end
 				n := n - 1
 			end
 		end
@@ -296,8 +299,10 @@ feature {NONE} -- Implementation
 				n = 1
 			loop
 				new_item
-				list.extend (last_item)
-				similar_list.extend (last_item)
+				if similar_list.extendible then
+					list.extend (last_item)
+					similar_list.extend (last_item)
+				end
 				n := n - 1
 			end
 		end
@@ -312,8 +317,10 @@ feature {NONE} -- Implementation
 				n = 1
 			loop
 				new_item
-				list.replace (last_item)
-				similar_list.replace (last_item)
+				if similar_list.writable then
+					list.replace (last_item)
+					similar_list.replace (last_item)
+				end
 				n := n - 1
 			end
 		end
@@ -344,8 +351,10 @@ feature {NONE} -- Implementation
 				n = 1
 			loop
 				new_item
-				list.put_i_th (last_item, n)
-				similar_list.put_i_th (last_item, n)
+				if similar_list.valid_index (n) then
+					list.put_i_th (last_item, n)
+					similar_list.put_i_th (last_item, n)
+				end
 				n := n - 1
 			end
 		end
@@ -360,8 +369,10 @@ feature {NONE} -- Implementation
 				n = 1
 			loop
 				new_item
-				list.put_left (last_item)
-				similar_list.put_left (last_item)
+				if similar_list.extendible and then not similar_list.before then
+					list.put_left (last_item)
+					similar_list.put_left (last_item)
+				end
 				n := n - 1
 			end
 		end
@@ -376,8 +387,10 @@ feature {NONE} -- Implementation
 				n = 1
 			loop
 				new_item
-				list.put_right (last_item)
-				similar_list.put_right (last_item)
+				if similar_list.extendible and then not similar_list.after then
+					list.put_right (last_item)
+					similar_list.put_right (last_item)
+				end
 				n := n - 1
 			end
 		end
@@ -392,8 +405,10 @@ feature {NONE} -- Implementation
 				n = 1
 			loop
 				new_item
-				list.force (last_item)
-				similar_list.force (last_item)
+				if similar_list.extendible then
+					list.force (last_item)
+					similar_list.force (last_item)
+				end
 				n := n - 1
 			end
 		end
@@ -425,6 +440,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/01 22:43:29  brendel
+--| Added better error messages.
+--|
 --| Revision 1.6  2000/03/01 19:16:56  brendel
 --| Improved test sequence.
 --|

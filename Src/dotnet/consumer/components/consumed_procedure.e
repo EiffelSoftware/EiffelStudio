@@ -27,9 +27,15 @@ feature {NONE} -- Initialization
 		do
 			member_make (en, dn)
 			arguments := args
-			is_frozen := froz
-			is_static := static
-			is_deferred := defer
+			if froz then
+				internal_flags := internal_flags | Is_frozen_mask
+			end
+			if static then
+				internal_flags := internal_flags | Is_static_mask
+			end
+			if defer then
+				internal_flags := internal_flags | Is_deferred_mask
+			end
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
@@ -44,14 +50,34 @@ feature -- Access
 	arguments: ARRAY [CONSUMED_ARGUMENT]
 			-- Feature arguments
 	
-	is_frozen: BOOLEAN
+	is_frozen: BOOLEAN is
 			-- Is feature frozen?
-	
-	is_static: BOOLEAN
-		-- Is .NET member static?
+		do
+			Result := internal_flags & Is_frozen_mask = Is_frozen_mask
+		end
 
-	is_deferred: BOOLEAN
+	is_static: BOOLEAN is
+		-- Is .NET member static?
+		do
+			Result := internal_flags & Is_static_mask = Is_static_mask
+		end
+
+	is_deferred: BOOLEAN is
 			-- Is feature deferred?
+		do
+			Result := internal_flags & Is_deferred_mask = Is_deferred_mask
+		end
+
+feature {NONE} -- Internal
+
+	internal_flags: INTEGER
+			-- Store status of current feature.
+
+	is_frozen_mask: INTEGER is 1
+	is_static_mask: INTEGER is 2
+	is_deferred_mask: INTEGER is 4
+			-- Different mask. Be careful when adding new mask
+			-- to update descendants.
 	
 invariant
 	non_void_arguments: arguments /= Void

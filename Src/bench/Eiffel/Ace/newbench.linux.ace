@@ -184,6 +184,7 @@ cluster
 external
 	include_path:
 		"\$(EIFFEL_SRC)/C/bench",
+		"\$(EIFFEL_SRC)/C/platform"
 		"\$(EIFFEL_SRC)/C/liman/shared",
 		"\$(EIFFEL_SRC)/library/event/Clib",
 		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include",

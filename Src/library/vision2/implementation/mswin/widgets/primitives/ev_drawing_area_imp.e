@@ -1,8 +1,7 @@
 indexing
 	description: "EiffelVision drawing area. Implementation interface."
-	note: "The class doesn't inherit from EV_PRIMITIVE_IMP%
-		% because, it is not a WEL_CONTROL. Then, it inherits%
-		% from EV_WIDGET_IMP directly."
+	note: "The dc we use is actually a private dc (See notice on display%
+		% device context. It doesn't need to be released each time."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -15,22 +14,39 @@ inherit
 	EV_DRAWING_AREA_I
 
 	EV_DRAWABLE_IMP
+		undefine
+			background_color,
+			foreground_color
+		redefine
+			foreground_color_imp,
+			set_background_color,
+			set_foreground_color		
+		end
 		
 	EV_PIXMAPABLE_IMP
-		redefine
-			pixmap_size_changed
-		end
 
-	EV_WIDGET_IMP
+	EV_PRIMITIVE_IMP
+		undefine
+			on_key_down,
+			set_default_options
+		redefine
+			foreground_color_imp,
+			background_color_imp,
+			set_background_color,
+			set_foreground_color
+		end
 
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
-			set_parent as wel_set_parent
+			set_parent as wel_set_parent,
+			destroy as wel_destroy,
+			destroy_item as wel_destroy_item
 		undefine
 			set_width,
 			set_height,
 			remove_command,
+			background_brush,
 			on_left_button_down,
 			on_mouse_move,
 			on_left_button_up,
@@ -39,46 +55,99 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_char,
-			on_key_up
+			on_key_up,
+			on_kill_focus,
+			on_set_focus
 		redefine
+			on_size,
 			on_paint,
-			on_wm_erase_background
+			on_wm_erase_background,
+			background_brush,
+			default_style
+		end
+
+	WEL_CS_CONSTANTS
+		export
+			{NONE} all
 		end
 
 creation
-		make
+	make
 
 feature -- Access
 
-	memory_dc: WEL_MEMORY_DC is
-			-- DC on which, we draw the pictures. It is a memory
-			-- dc because it allow us to repaint the drawing area
-			-- each time a Wm_paint message is send by windows.
-		do
-			Result := pixmap_imp
-		end
+	dc: WEL_CLIENT_DC
+			-- A dc to paint on it.
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create an empty drawing area.
-		local
-			par_imp: WEL_COMPOSITE_WINDOW
 		do
-			par_imp ?= par.implementation
-			check
-				par_imp /= Void
-			end
-			wel_make (par_imp, "Drawing area")
+			!! foreground_color_imp.make_system (color_windowtext)
+			!! background_color_imp.make_system (color_window)
+			wel_make (default_parent.item, "Drawing area")
+			!! dc.make (Current)
+			dc.get
+
+			-- We set some default_values
+			dc.set_background_opaque
+			set_logical_mode (3)
+			dc.select_brush (background_brush)
+			dc.select_pen (background_pen)
+			set_line_width (1)
+			set_line_style (ps_solid)
+		end
+
+feature -- Event - command association
+
+	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of action to be executed when
+			-- current area is resized.
+			-- `arg' will be passed to `cmd' whenever it is
+			-- invoked as a callback.
+		do
+			add_command (Cmd_size, cmd, arg)
+		end
+
+feature -- Event - command removal
+
+	remove_resize_commands is
+			-- Remove the list of commands to be executed when
+			-- current area is resized.
+		do
+			remove_command (Cmd_size)
 		end
 
 feature {NONE} -- Implementation
 
-	pixmap_size_changed is
-			-- Pixmap sized has changed.
+	foreground_color_imp: EV_COLOR_IMP
+			-- Color used for the foreground of the drawable,
+			-- used for the text and the drawings.
+
+	background_color_imp: EV_COLOR_IMP
+			-- Current background color
+
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
 		do
-			set_minimum_width (pixmap_imp.width)
-			set_minimum_height (pixmap_imp.height)
+			{EV_PRIMITIVE_IMP} Precursor (color)
+			{EV_DRAWABLE_IMP} Precursor (color)
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			{EV_PRIMITIVE_IMP} Precursor (color)
+			{EV_DRAWABLE_IMP} Precursor (color)
+		end
+
+feature {NONE} -- WEL Implementation
+
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Called when the drawing area is resized.
+		do
+			execute_command (Cmd_size, Void)
 		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
@@ -87,36 +156,70 @@ feature {NONE} -- Implementation
 			-- the `paint_dc'. `invalid_rect' defines
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
+		local
+			clip: EV_RECTANGLE
+			pt: EV_POINT
+			expose_event_data: EV_EXPOSE_EVENT_DATA
 		do
-			paint_dc.select_palette (pixmap_imp.palette)
-			paint_dc.copy_dc (pixmap_imp, client_rect)
+			-- If a pixmap is linked to the area, we draw it
+			if pixmap_imp /= Void then
+				dc.copy_dc (pixmap_imp.dc, client_rect)
+			end
+
+			-- arguments for the paint event.
+			!! pt.set (invalid_rect.left, invalid_rect.top)
+			!! clip.set (pt, invalid_rect.width, invalid_rect.height)
+			!! expose_event_data.make
+			expose_event_data.implementation.set_clip_region (clip)
+			execute_command (Cmd_expose, expose_event_data)
+		end
+
+	on_wm_erase_background (wparam: INTEGER) is
+	  			-- Wm_erasebkgnd message.
+				-- Need to do nothing
+		do
+			disable_default_processing
+		end
+
+	default_style: INTEGER is
+			-- Default style that memories the drawings.
+		do
+			Result := Ws_child + Ws_visible + Cs_owndc
+		end
+
+	wel_window: WEL_WINDOW is
+			-- Current area.
+		do
+			Result := Current
+		end
+
+feature {NONE} -- Inapplicable
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			check
+				Inapplicable: False
+			end
 		end
 
 	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
 		do
 			check
-				do_not_call: False
+				Inapplicable: False
 			end
-		end
-
-	on_wm_erase_background (wparam: INTEGER) is
-   			-- Wm_erasebkgnd message.
-   			-- A WEL_DC and WEL_PAINT_STRUCT are created and passed to the
-   			-- `on_erase_background' routine.
-   			-- To be more efficient when the windows does not have a `background_brush'
-   			-- attribute set, this routine does nothing.
-   			-- (from WEL_FRAME_WINDOW)
-   			-- (export status {NONE})
-   		do
- 				disable_default_processing
- 		end
-
-feature -- Implementation
-
-	wel_window: WEL_WINDOW is
-			-- Current area.
-		do
-			Result ?= Current
 		end
 
 end -- class EV_DRAWING_AREA_IMP

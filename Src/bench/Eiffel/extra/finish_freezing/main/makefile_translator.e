@@ -59,6 +59,7 @@ feature -- Initialization
 				quick_compilation := options.get_boolean ("quick_compilation", True)
 				if quick_compilation and not is_il_code then
 					io.put_string ("Preparing C compilation...%N")
+					io.default_output.flush
 					launch_quick_compilation
 				end
 				

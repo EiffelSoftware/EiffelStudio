@@ -28,6 +28,7 @@ extern "C" {
 
 typedef void (*EIF_SET_REAL_ITEM)(EIF_REFERENCE, EIF_REAL);
 
+#ifdef __cplusplus
 class ecom_runtime_ce
 {
 public:
@@ -163,6 +164,8 @@ public:
 	EIF_REFERENCE ccom_ce_pointed_ifont( IFont * a_interface_pointer );
 	EIF_REFERENCE ccom_ce_pointed_pointed_ifont(IFont * * a_pointer, EIF_OBJECT an_object);
 };
+#endif
+
 #include "ecom_rt_globals.h"
 
 #ifdef __cplusplus

@@ -823,6 +823,12 @@ EIF_INTEGER s;
 				if (eif_access(_concur_paras[idx].uval.s_obj) != NULL)
 					has_sep_obj = 1;
 				break;
+			case Local_reference:
+				CURPO(eif_net_retrieved(s), idx);
+				/* Retrieve the object from network and store it in PARAMETER for
+				 * later access.
+				 */
+				break;
 			default:
 				if (_concur_exception_has_happened) {
 					_concur_command = constant_not_defined;
@@ -913,12 +919,12 @@ EIF_INTEGER s;
 		blen += dlen; \
 	} else { \
 		if (blen) \
-			c_concur_put_stream(s, buf, blen); \
+			c_concur_put_stream(s, (EIF_OBJ)buf, blen); \
 		blen = 0; \
 		if (dlen>=constant_command_buffer_len)  \
-			c_concur_put_stream(s, data, dlen); \
+			c_concur_put_stream(s, (EIF_OBJ)data, dlen); \
 		else { \
-			memcpy(buf+blen, data, dlen); \
+			memcpy(buf+blen, (char *)data, dlen); \
 			blen += dlen; \
 		} \
 	}
@@ -1131,7 +1137,7 @@ EIF_INTEGER s;
 			get_cmd_data(s);
 			if (_concur_command == constant_register) {
 				send_register_ack(s);
-				change_ref_table_and_exported_obj_list(_concur_paras[0].str_val, _concur_paras[1].uval.int_val, _concur_paras[2].uval.int_val, 1);
+				change_ref_table_and_exported_obj_list(_concur_paras[0].uval.int_val, _concur_paras[1].uval.int_val, _concur_paras[2].uval.int_val, 1);
 			}
 			else if (_concur_command != constant_message_ack) {
 				add_nl;

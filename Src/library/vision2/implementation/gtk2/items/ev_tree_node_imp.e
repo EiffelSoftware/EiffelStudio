@@ -129,13 +129,14 @@ feature -- Status setting
 		local
 			a_tree_path: POINTER
 			par_tree: EV_TREE_IMP
+			a_success: BOOLEAN
 		do
 			par_tree := parent_tree_imp
 			a_tree_path := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, list_iter.item)
 			if a_flag then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_expand_row (par_tree.tree_view, a_tree_path, False)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_expand_to_path (par_tree.tree_view, a_tree_path)
 			else
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_collapse_row (par_tree.tree_view, a_tree_path)
+				a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_collapse_row (par_tree.tree_view, a_tree_path)
 			end
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end

@@ -57,6 +57,7 @@ feature {NONE} -- Update
 		local
 			cs: CLASSI_STONE
 			fs: FEATURE_STONE
+			cl: CLUSTER_STONE
 			cl_syntax_s: CL_SYNTAX_STONE
 		do
 			fs ?= s
@@ -70,6 +71,11 @@ feature {NONE} -- Update
 					cs ?= s
 					if cs /= Void then
 						process_class (cs)
+					else
+						cl ?= s
+						if cl /= Void then
+							process_cluster (cl)
+						end
 					end
 				end
 			end
@@ -128,6 +134,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_cluster (a_cluster: CLUSTER_STONE) is
+			-- Process cluster stone.
+		local
+			cmd_string: STRING
+			req: COMMAND_EXECUTOR
+		do
+			cmd_string := command_shell_name
+			if not cmd_string.is_empty then
+				replace_target (cmd_string, a_cluster.file_name)
+				cmd_string.replace_substring_all ("$line", "1")
+				create req
+				req.execute (cmd_string)
+			end
+		end
+		
 	replace_target (cmd: STRING; fn:STRING) is
 			-- Find out if `fn' is a relativ path or not and if it is
 			-- one, complete it to make it absolute, so that the shell

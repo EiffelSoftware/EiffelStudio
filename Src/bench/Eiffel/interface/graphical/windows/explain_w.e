@@ -11,7 +11,7 @@ inherit
 
 	BAR_AND_TEXT
 		redefine
-			build_format_bar, build_text_windows,
+			build_format_bar, set_default_size,
 			tool_name, hole, stone_type, 
 			process_any, build_menus,
 			update_boolean_resource,
@@ -20,7 +20,7 @@ inherit
 		end;
 	BAR_AND_TEXT
 		redefine
-			build_format_bar, build_text_windows,
+			build_format_bar, set_default_size,
 			tool_name,  hole, stone_type, process_any, build_menus,
 			update_boolean_resource,
 			update_integer_resource,
@@ -91,9 +91,22 @@ feature -- Status setting
 
 	process_any (s: like stone) is
 			-- Set `s' to `stone'.
+		local
+			l: LINKED_LIST [STRING]
 		do
 			if s.is_valid then
-				text_window.set_text (s.help_text);
+				text_window.clear_window;
+				l := s.help_text;
+				from
+					l.start
+				until
+					l.after
+				loop
+					text_window.put_string (l.item);
+					text_window.new_line;
+					l.forth
+				end;
+				text_window.display;
 				set_title (s.header);
 				update_save_symbol
 			end
@@ -137,19 +150,6 @@ feature -- Graphical Interface
 			end;
 		end;
 
-	build_text_windows is
-			-- Create `editable_text_window' different ways whether
-			-- the tabulation mecanism is disable or not
-		do
-			if tabs_disabled then
-				!SCROLLED_TEXT_WINDOW! text_window.make (new_name, Current)
-			else
-				!TABBED_TEXT_WINDOW! text_window.make (new_name, Current)
-			end;
-
-			set_mode_for_editing
-		end;
-
 	build_toolbar_menu is
 			-- Build the toolbar menu under the special sub menu.
 		local
@@ -159,7 +159,15 @@ feature -- Graphical Interface
 			edit_bar.init_toggle (toolbar_t);
 			!! toolbar_t.make (format_bar.identifier, special_menu);
 			format_bar.init_toggle (toolbar_t)
-		end
+		end;
+
+	set_default_size is
+			-- Default size of the windows.
+		do
+			eb_shell.set_size
+				(Explain_tool_resources.tool_width.actual_value,
+				Explain_tool_resources.tool_height.actual_value)
+		end;
 
 feature -- Window Properties
 

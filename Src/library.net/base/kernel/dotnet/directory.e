@@ -190,13 +190,16 @@ feature -- Conversion
 			ent := feature {SYSTEM_DIRECTORY}.get_file_system_entries (name.to_cil)
 			c := ent.count
 			dc := name.count
+			if name.item (name.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
+				dc := dc - 1
+			end
 			create Result.make (c)
 			from
 				
 			until
 				i = c
 			loop
-				Result.extend (create {STRING}.make_from_cil (ent.item (i).remove (0, dc)))
+				Result.extend (create {STRING}.make_from_cil (ent.item (i).remove (0, dc + 1)))
 				i := i + 1
 			end
 		end

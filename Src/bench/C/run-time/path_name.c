@@ -387,6 +387,8 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHA
 	strcat (strcat (strcat ((char*)p, "["), (char*)v), "]");
 	strcpy (p, v);
 #elif defined EIF_WIN32 || defined EIF_OS2
+	if (*((char*)v) != '\\' )
+		strcat ((char *)p, "\\");
 	strcat ((char *)p, (char *)v);
 #else	/* Unix */
 	if (*((char*)v) != '/' )

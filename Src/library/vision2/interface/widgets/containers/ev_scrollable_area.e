@@ -36,8 +36,7 @@ feature {NONE} -- Initialization
 			pixmap: EV_PIXMAP
 		do
 			default_create
-			create pixmap
-			pixmap.set_with_named_file ("test_pixmap")
+			create pixmap.make_for_test
 			extend (pixmap)
 		end
 
@@ -169,6 +168,9 @@ end -- class EV_SCROLLABLE_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/20 22:22:38  brendel
+--| Now creates pixmap with make_for_test.
+--|
 --| Revision 1.14  2000/03/18 00:52:23  oconnor
 --| formatting, layout and comment tweaks
 --|

@@ -551,7 +551,6 @@ feature {NONE} -- Implementation
 	adjust_scrollable_area is
 			-- Set initial size of `drawing_area' relative to `scrollable_area'
 		do
-			io.putstring (scrollable_area.width.out + "%N")
 			drawing_area.set_minimum_size (scrollable_area.width.max (first.columns * grid_size + diagram_border * 2),
 				scrollable_area.height.max (first.rows * grid_size + diagram_border * 2))
 		end

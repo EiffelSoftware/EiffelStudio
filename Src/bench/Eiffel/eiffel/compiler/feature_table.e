@@ -729,7 +729,12 @@ end;
 			end;
 		end;
 
-	replicated_features: EXTEND_TABLE [FEATURE_I, INTEGER] is
+	replicated_features: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER] is
+			-- Replicated features for Current feature table
+			-- hashed on body_index
+		local
+			list: ARRAYED_LIST [FEATURE_I];
+			feat: FEATURE_I;
 		do
 			!!Result.make (10);
 			from
@@ -737,10 +742,16 @@ end;
 			until
 				after
 			loop
-				if item_for_iteration.is_replicated and then
-					not item_for_iteration.is_selected then
-					Result.put (item_for_iteration,
-								item_for_iteration.body_index)
+				feat := item_for_iteration;
+				if feat.is_replicated and then
+					feat.is_unselected
+				then
+					list := Result.item (feat.body_index);
+					if list = Void then
+						!! list.make (1);
+						Result.put (list, feat.body_index)
+					end;
+					list.extend (feat);
 				end;
 				forth
 			end

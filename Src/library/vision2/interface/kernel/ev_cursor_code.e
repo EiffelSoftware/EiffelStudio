@@ -9,12 +9,18 @@ indexing
 class
 	EV_CURSOR_CODE
 
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
 create
-	make
+	default_create
 
 feature -- Initialization
 
-	make is
+	default_create is
 			-- Create the object
 		do
 			create {EV_CURSOR_CODE_IMP} implementation
@@ -116,6 +122,9 @@ end -- class EV_CURSOR_CODE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/15 22:48:35  king
+--| Removed make procedure, now using default_create
+--|
 --| Revision 1.6  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

@@ -52,13 +52,12 @@ feature -- IL code generation
 				-- assignment to an attribute.
 			target.generate_il_start_assignment
 
-				-- Generate expression byte code
-			source.generate_il
-
-				-- Get type
-			target_type ?= Context.creation_type (target.type)
+				-- Get types
+			target_type := context.creation_type (target.type)
+			source_type := context.real_type (source.type)
 			check
 				target_type_not_void: target_type /= Void
+				source_type_not_void: source_type /= Void
 			end
 
 				-- FIXME: At the moment we don't know how to
@@ -68,6 +67,16 @@ feature -- IL code generation
 				target_type ?= real_type (target_type)
 			end
 
+				-- Generate expression byte code
+			source.generate_il
+
+			if source_type.is_expanded then
+				if target_type.is_expanded then
+					source.generate_il_metamorphose (source_type, Void, True)
+				else
+					source.generate_il_metamorphose (source_type, target_type, False)
+				end
+			end
 			il_generator.duplicate_top
 
 				-- Generate Test on type
@@ -78,7 +87,8 @@ feature -- IL code generation
 			il_generator.pop
 			if target_type.is_expanded then
 					-- Assignment attempt failed, we simply load previous
-					-- value of `target'.
+					-- value of `target'. It is ok to regenerate `target' as
+					-- it can only be a creatable entity: local, attribute, result.
 				target.generate_il
 			else			
 				il_generator.put_default_value (target_type)
@@ -86,17 +96,10 @@ feature -- IL code generation
 
 			failure_label := il_label_factory.new_label
 			il_generator.branch_to (failure_label)
-			
-			source_type ?= context.real_type (source.type)
 
 			il_generator.mark_label (success_label)
-			if not target_type.is_expanded then
-					-- It is not allowed to generate a `cast' when target type
-					-- is expanded. But since we cannot redefined expanded
-					-- type, we are sure that the type on top of the stack
-					-- is the exact type and therefore we don't need the cast.
-				il_generator.generate_check_cast (source_type, target_type)
-			else
+
+			if target_type.is_expanded then
 				il_generator.generate_unmetamorphose (target_type)
 			end
 
@@ -104,7 +107,7 @@ feature -- IL code generation
 
 				-- Generate assignment header depending of the type
 				-- of the target (local, attribute or result).
-			target.generate_il_assignment (source_type)
+			target.generate_il_reverse_assignment (source_type)
 		end
 
 feature -- Byte code generation
@@ -119,7 +122,7 @@ feature -- Byte code generation
 				-- Generate expression byte code
 			source.make_byte_code (ba)
 
-			source_type ?= context.real_type (source.type)
+			source_type := context.real_type (source.type)
 			make_reverse_code (ba, source_type)
 		end
 

@@ -66,6 +66,9 @@ feature -- Element Change
 				first_data.key.add_left (ti)
 			end
 			set_first_data (tl)
+		ensure
+			tl_linked: tl /= last_data implies
+				(tl.next /= Void and then tl.next.previous = tl)
 		end
 
 	append_data (tl: like first_data) is
@@ -87,7 +90,8 @@ feature -- Element Change
 			end
 			set_last_data (tl)
 		ensure
-			tl_linked: tl.next /= Void and then tl.next.previous = tl
+			tl_linked: tl /= first_data implies
+				(tl.previous /= Void and then tl.previous.next = tl)
 		end
 
 feature -- Removal

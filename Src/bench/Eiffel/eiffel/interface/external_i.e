@@ -9,14 +9,16 @@ inherit
 			transfer_to as procedure_transfer_to
 		redefine
 			melt, execution_unit, generate,
-			access, is_external, new_rout_unit, valid_body_id
+			access, is_external, new_rout_unit, valid_body_id,
+			can_be_inlined
 		end;
 
 	PROCEDURE_I
 		redefine
 			transfer_to,
 			melt, execution_unit, generate,
-			access, is_external, new_rout_unit, valid_body_id
+			access, is_external, new_rout_unit, valid_body_id,
+			can_be_inlined
 		select
 			transfer_to
 		end;
@@ -276,5 +278,9 @@ feature
 				-- An external cannot be melted: no insertion of `exec' in
 				-- `Execution_table'.
 		end;
+
+feature -- Inlining
+
+	can_be_inlined: BOOLEAN is False
 
 end

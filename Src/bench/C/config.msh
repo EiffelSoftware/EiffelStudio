@@ -34,12 +34,19 @@ make='$compiler_path\bin\nmake'
 #link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
 #link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
 #
-#-- no MT
+#-- no MT debug
 #--------
 optimize='-Ox'
 ccflags='-Zi -nologo'
 link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH'
 link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH'
+#
+#-- no MT no debug
+#--------
+#optimize='-Ox'
+#ccflags='-nologo'
+#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
+#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
 #
 cc='cl'
 extra_object_files=''

@@ -177,7 +177,6 @@ feature -- Status setting
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, foreground_color_imp.blue_16_bit)				
 			end
 
-			
 			feature {EV_GTK_EXTERNALS}.gtk_widget_modify_fg (a_c_object, feature {EV_GTK_EXTERNALS}.GTK_STATE_NORMAL_ENUM, color)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_modify_fg (a_c_object, feature {EV_GTK_EXTERNALS}.GTK_STATE_ACTIVE_ENUM, color)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_modify_fg (a_c_object, feature {EV_GTK_EXTERNALS}.GTK_STATE_PRELIGHT_ENUM, color)

@@ -1059,7 +1059,7 @@ static  void    print_instructions ()
 				fprintf(ofp, "%d", (int) bchar ());
 				break;
 			case BC_INT16:
-				fprintf (ofp, "%ld", (int) bwchar ());
+				fprintf (ofp, "%ld", (int) bshort ());
 				break;
 			case BC_INT32:
 				fprintf (ofp,"%ld", blong ());

@@ -60,17 +60,15 @@ feature {NONE} -- Initialization
 			-- 100 as maximum and `par' as parent.
 		do
 			base_make (an_interface)
-			--create container.make (default_parent, "EV_SPIN_BUTTON")
-			--wel_make (container, "", 0, 0, 0, 0, 0)
-			--create up_down.make (container, 0, 0, 20, 0, 0)
-			--up_down.set_buddy_window (Current)
-			--up_down.set_range (0, 100)
-			wel_make (Default_parent, "", 0, 0, 0, 0, 0)
+			create container.make (default_parent, "EV_SPIN_BUTTON")
+			wel_make (container, "", 0, 0, 0, 0, 0)
 		end
 
 	initialize is
-			--|FIXME
+			-- Initialize `Current'.
 		do
+			create up_down.make (container, 0, 0, 20, 0, 0)
+			up_down.set_buddy_window (Current)
 			{EV_GAUGE_IMP} Precursor
 			{EV_TEXT_FIELD_IMP} Precursor
 		end
@@ -114,10 +112,23 @@ feature -- Access
 
 feature -- Status setting
 
-	wel_set_leap (i :INTEGER) is do end
+	wel_set_leap (i :INTEGER) is
+		do
+			leap := i
+		end
 	wel_set_step (i :INTEGER) is do end
-	wel_set_value (i :INTEGER) is do end
-	wel_set_range (i, j: INTEGER) is do end
+
+	wel_set_value (i :INTEGER) is
+		do
+			set_value (i)
+		end
+	wel_set_range (i, j: INTEGER) is
+		local
+			bounds: INTEGER_INTERVAL
+		do
+			create bounds.make (i, j)
+			set_range (bounds)
+		end
 
 
 	destroy is
@@ -141,7 +152,7 @@ feature -- Element change
 	set_range (a_range: INTEGER_INTERVAL) is
 			-- Make `min' the new minimum and `max' the new maximum.
 		do
-	--		up_down.set_range (min, max)
+			up_down.set_range (a_range.lower, a_range.upper)
 		end
 
 feature -- Basic operation
@@ -233,10 +244,10 @@ feature {NONE} -- WEL Implementation
 			-- Change the parent of the current window.
 		do
 			if a_parent /= Void then
-				wel_parent := a_parent
+				wel_window_parent := a_parent
 				cwin_set_parent (container.item, a_parent.item)
 			else
-				wel_parent := Void
+				wel_window_parent := Void
 				cwin_set_parent (container.item, default_pointer)
 			end
 		end
@@ -268,6 +279,11 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/18 17:17:10  rogers
+--| Fixed both make and initialize. Implemented wel_Set_leap,
+--| wel_set_range and wel_Set value. Changed wel_parent references
+--| in wel_Set_parent to wel_window_parent.
+--|
 --| Revision 1.7  2000/03/23 18:41:33  brendel
 --| resize -> wel_resize
 --| move_and_resize -> wel_move_and_resize

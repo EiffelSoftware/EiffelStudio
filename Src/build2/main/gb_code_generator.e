@@ -232,14 +232,29 @@ feature {NONE} -- Implementation
 				temp_index := class_text.substring_index (set_tag, 1)
 				class_text.replace_substring_all (set_tag, "")			
 				class_text.insert_string (set_string, temp_index)
+
+
+					-- Only add the event declaration if it exists.
+					-- If no events were selected, then `event_declaration_string'
+					-- wil be `Void'.
+				if event_connection_string /= Void then
+					temp_index := class_text.substring_index (event_connection_tag, 1)
+					class_text.replace_substring_all (event_connection_tag, "")
+					class_text.insert_string (event_connection_string, temp_index)				
+				else
+					class_text.replace_substring_all (event_connection_tag, "")
+				end
 				
-				temp_index := class_text.substring_index (event_connection_tag, 1)				
-				class_text.replace_substring_all (event_connection_tag, "")
-				class_text.insert_string (event_connection_string, temp_index)
-				
-				temp_index := class_text.substring_index (event_declaration_tag, 1)				
-				class_text.replace_substring_all (event_declaration_tag, "")
-				class_text.insert_string (event_declaration_string, temp_index)
+					-- Only add the event declaration if it exists.
+					-- If no events were selected, then `event_declaration_string'
+					-- wil be `Void'.
+				if event_declaration_string /= Void then
+					temp_index := class_text.substring_index (event_declaration_tag, 1)				
+					class_text.replace_substring_all (event_declaration_tag, "")
+					class_text.insert_string (event_declaration_string, temp_index)
+				else
+					class_text.replace_substring_all (event_declaration_tag, "")
+				end
 
 				
 					-- Need to add pixmap initialization if `class_text' contains
@@ -269,30 +284,37 @@ feature {NONE} -- Implementation
 			temp_index, local_tag_index, create_tag_index: INTEGER
 		do
 				-- Retrieve the template for a class file to generate.
-				create window_template_file.make_open_read (window_template_file_name)
-				create class_text.make (window_template_file.count)
-				window_template_file.start
-				window_template_file.read_stream (window_template_file.count)
-				class_text := window_template_file.last_string
-				window_template_file.close
+			create window_template_file.make_open_read (window_template_file_name)
+			create class_text.make (window_template_file.count)
+			window_template_file.start
+			window_template_file.read_stream (window_template_file.count)
+			class_text := window_template_file.last_string
+			window_template_file.close
+		
+				-- We must now perform the generation into `class_text'.
+				-- First replace the name of the class
+			set_class_name (system_status.current_project_settings.main_window_class_name)
 			
-					-- We must now perform the generation into `class_text'.
-					-- First replace the name of the class
-				set_class_name (system_status.current_project_settings.main_window_class_name)
-				
-				set_inherited_class_name (system_status.current_project_settings.main_window_class_name + class_implementation_extension)
-				
+			set_inherited_class_name (system_status.current_project_settings.main_window_class_name + class_implementation_extension)
+			
+				-- Only add the event implementation if it exists.
+				-- If no events were selected, then `event_implementation_string'
+				-- wil be `Void'.
+			if event_implementation_string /= Void then
 				temp_index := class_text.substring_index (event_declaration_tag, 1)				
 				class_text.replace_substring_all (event_declaration_tag, "")
 				class_text.insert_string (event_implementation_string, temp_index)				
-				
-			-- Store `class_text'.				
-				window_file_name := clone (generated_path)
-				window_file_name.extend ("main_window.e")--system_status.current_project_settings.main_window_file_name)
-				create window_output_file.make_open_write (window_file_name)
-				window_output_file.start
-				window_output_file.putstring (class_text)
-				window_output_file.close
+			else
+				class_text.replace_substring_all (event_declaration_tag, "")
+			end
+			
+				-- Store `class_text'.				
+			window_file_name := clone (generated_path)
+			window_file_name.extend ("main_window.e")--system_status.current_project_settings.main_window_file_name)
+			create window_output_file.make_open_write (window_file_name)
+			window_output_file.start
+			window_output_file.putstring (class_text)
+			window_output_file.close
 		end
 		
 

@@ -37,6 +37,35 @@ feature -- Initialization
 
 			lib_extension := clone (options.get_string ("intermediate_file_ext", "lib"))
 			lib_extension.prepend_character ('.')
+
+			quick_compilation := options.get_boolean ("quick_compilation", True)
+			if quick_compilation then
+				launch_quick_compilation
+			end
+		end
+
+	launch_quick_compilation is
+			-- Launch the `quick_finalize' program with the correct options.
+		local
+			exec: EXECUTION_ENVIRONMENT
+			quick_prg: STRING
+		do
+			quick_prg := clone (eiffel4)
+			quick_prg.append_character (operating_environment.directory_separator)
+			quick_prg.append ("bench")
+			quick_prg.append_character (operating_environment.directory_separator)
+			quick_prg.append ("spec")
+			quick_prg.append_character (operating_environment.directory_separator)
+			quick_prg.append (platform)
+			quick_prg.append_character (operating_environment.directory_separator)
+			quick_prg.append ("bin")
+			quick_prg.append_character (operating_environment.directory_separator)
+			quick_prg.append ("quick_finalize.exe")
+
+			quick_prg.append (" . " + options.get_string ("obj_file_ext", "obj"))
+
+			!! exec
+			exec.system (quick_prg)
 		end
 
 feature -- Access
@@ -52,6 +81,9 @@ feature -- Access
 
 	dependent_directories: LINKED_LIST[STRING]
 			-- Subdirs for this compilation
+
+	quick_compilation: BOOLEAN
+			-- Is the current compilation a quick one?
 
 	delete_next: BOOLEAN		
 			-- Is the next line to be deleted?
@@ -517,7 +549,7 @@ feature {NONE} -- Translation
 			dir: STRING -- the directory
 			filename: STRING -- the filename of the sub makefile
 			number: INTEGER -- the number of the Eobj file
-			F_done, D_done, C_done: BOOLEAN
+			F_done, D_done, C_done, is_emain: BOOLEAN
 			emain_line: STRING
 		do
 			debug ("progress")
@@ -551,6 +583,7 @@ feature {NONE} -- Translation
 				makefile.putstring (directory_separator)
 
 				if filename.is_equal (options.get_string ("emain_text", Void)) then
+					is_emain := True
 					emain_line := lastline.substring( lastline.index_of ('$', 1), lastline.count)
 					if emain_line.count > 0 then
 						subst_eiffel (emain_line)
@@ -579,15 +612,18 @@ feature {NONE} -- Translation
 					makefile.putstring (": Makefile%N")
 				end
 
-				makefile.putstring ("%T ")
+				makefile.putstring ("%T")
 				makefile.putstring (options.get_string ("cd", Void))
 				makefile.putstring (" ")
 				makefile.putstring (dir)
 				makefile.putstring (options.get_string ("subcommand_separator", " && "))
+				if not is_emain then
+					makefile.putstring ("$(START_TEST) ")
+				end
 				makefile.putstring ("$(MAKE)")
 				makefile.putstring (" ")
 
-				if filename.is_equal (options.get_string ("emain_text", Void)) then
+				if is_emain then
 					makefile.putstring (options.get_string ("emain_obj_text", Void))
 				else
 					makefile.putstring (filename)
@@ -595,13 +631,27 @@ feature {NONE} -- Translation
 					makefile.putstring (options.get_string ("intermediate_file_ext", Void))
 				end
 
+				if not is_emain then
+					makefile.putstring (" $(END_TEST)")
+				end
 				makefile.putstring (options.get_string ("subcommand_separator", " && "))
 				makefile.putstring (options.get_string ("cd", Void))
 				makefile.putstring (" ")
 				makefile.putstring (options.get_string ("updir", Void))
-				makefile.putstring ("%N%N")
 
 				read_next
+
+				if is_emain then
+					read_next
+					makefile.putstring ("%N%T$(RM) ")
+					makefile.putstring (dir)
+					makefile.putstring (directory_separator)
+					makefile.putstring ("emain.c%N")
+					is_emain := False
+				end
+
+				makefile.putstring ("%N%N")
+
 				read_next
 				read_next
 
@@ -824,7 +874,9 @@ feature {NONE} -- Translation
 
 				if dir.item (1) = 'E' then
 					selected_object := clone (options.get_string ("eobj_text", Void))
-					selected_object.append_integer (eobj_count)
+					if eobj_count /= 1 then
+						selected_object.append_integer (eobj_count)
+					end
 					selected_object.append_character (')')
 
 					eobj_count := eobj_count+1

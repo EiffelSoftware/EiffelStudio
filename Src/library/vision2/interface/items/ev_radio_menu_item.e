@@ -1,7 +1,7 @@
 indexing	
 	description:
 		"Menu item with state displayed as a circular check box.%N%
-		%`is_selected' is mutualy exclusive with respect to other radio menu%
+		%`is_selected' is mutually exclusive with respect to other radio menu%
 		%items between separators in a menu."
 	status: "See notice at end of class"
 	keywords: "radio, item, menu, check, select, unselect"
@@ -75,6 +75,9 @@ end -- class EV_RADIO_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/05/01 21:34:40  king
+--| Corrected spelling mistake in indexing clause
+--|
 --| Revision 1.17  2000/03/24 03:10:22  oconnor
 --| formatting and comments
 --|

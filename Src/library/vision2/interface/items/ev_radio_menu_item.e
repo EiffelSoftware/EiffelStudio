@@ -1,14 +1,7 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
-	description: 
-		"EiffelVision radio menu item. Item that must be put in%
-		% an EV_MENU_ITEM_HOLDER. It has the same appearance%
-		% than the check menu-item, yet, when a radio menu-item%
-		% is checked, all the other radio menu-item of the%
-		% container are unchecked."
+	description: "Eiffel Vision radio menu item."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "radio, item, menu, check, select, unselect"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,57 +11,22 @@ class
 inherit
 	EV_CHECK_MENU_ITEM
 		redefine
-			make,
-			make_with_text,
-			implementation
+			implementation,
+			create_implementation
 		end
 	
 create
-	make,
-	make_with_text,
-	make_peer_with_text
-	
+	default_create,
+	make_with_text
+
 feature {NONE} -- Initialization
 
-	make (par: like parent) is
-			-- Create the widget with `par' as parent.
+	create_implementation is
 		do
-			!EV_RADIO_MENU_ITEM_IMP! implementation.make
-			implementation.set_interface (Current)
-			set_parent (par)
+			create {EV_RADIO_MENU_ITEM_IMP} implementation.make (Current)
 		end
 
-	make_with_text (par: like parent; txt: STRING) is
-			-- Create an item with `par' as parent and `txt'
-			-- as text.
-		do
-			!EV_RADIO_MENU_ITEM_IMP!implementation.make
-			implementation.set_interface (Current)
-			implementation.set_text (txt)
-			set_parent (par)
-		end
-
-	make_peer_with_text (par: like parent; txt: STRING; peer: EV_RADIO_MENU_ITEM) is
-			-- Create a radio menu item and put it in
-			-- the same group as peer
-		do
-			make_with_text (par, txt)
-			set_peer (peer)
-			set_selected (False)
-		end
-
-feature -- Status Setting
-
-	set_peer (peer: like Current) is
-			-- Put in same group as peer
-		require
-		do
-			implementation.set_peer (peer)
-		ensure
-			same_group: implementation.is_peer (peer)
-		end
-
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	implementation: EV_RADIO_MENU_ITEM_I
 			-- Platform dependent access.
@@ -96,6 +54,11 @@ end -- class EV_RADIO_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/22 19:54:44  brendel
+--| Reworked interface.
+--| Basically removed everything since radiobuttons are now automatically
+--| grouped in menu's separated by separators.
+--|
 --| Revision 1.11  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

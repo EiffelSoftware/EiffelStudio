@@ -7,8 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
---XX deferred class
-class
+deferred class
 	
         EV_WIDGET_IMP
         
@@ -103,13 +102,39 @@ feature -- Measurement
                         Result := c_gtk_widget_height (widget)
 		end
 	
-	minimum_width: INTEGER is 0
-			-- Minimum width of the widget specified by 
-			-- the underlying toolkit
+	maximum_height: INTEGER is
+                        -- Maximum height that application wishes widget
+                        -- instance to have
+ 		do
+                        check
+                                not_yet_implemented: False
+                        end
+		end	
+
+        maximum_width: INTEGER is
+                        -- Maximum width that application wishes widget
+                        -- instance to have
+ 		do
+                        check
+                                not_yet_implemented: False
+                        end
+		end	
 	
-	minimum_height: INTEGER is 0
-			-- Minimum height of the widget specified by 
-			-- the underlying toolkit
+	minimum_width: INTEGER is
+			-- Minimum width of widget
+		do
+                        check
+                                not_yet_implemented: False
+                        end
+		end	
+
+	minimum_height: INTEGER is
+			-- Minimum height of widget
+		do
+                        check
+                                not_yet_implemented: False
+                        end
+		end	
 	
 feature -- Resizing
 
@@ -134,6 +159,38 @@ feature -- Resizing
                         end		
 		end
 
+	set_maximum_height (max_height: INTEGER) is
+                        -- Set `maximum_height' to `max_height'.
+		do
+                        check
+                                not_yet_implemented: False
+                        end		
+		end
+
+        set_maximum_width (max_width: INTEGER) is
+                        -- Set `maximum_width' to `max_width'.
+		do
+                        check
+                                not_yet_implemented: False
+                        end		
+		end
+
+        set_minimum_height (min_height: INTEGER) is
+                        -- Set `minimum__height' to `min_height'.
+		do
+                        check
+                                not_yet_implemented: False
+                        end		
+		end
+
+        set_minimum_width (min_width: INTEGER) is
+                        -- Set `minimum_width' to `min_width'.
+		do
+                        check
+                                not_yet_implemented: False
+                        end		
+		end
+	
 	set_x (new_x: INTEGER) is
 			-- Put at horizontal position `new_x' relative
 			-- to parent.
@@ -147,9 +204,7 @@ feature -- Resizing
 			-- Put at horizontal position `new_x' and at
 			-- vertical position `new_y' relative to parent.
 		do
-                        check
-                                not_yet_implemented: False
-                        end
+			gtk_widget_set_uposition (widget, new_x, new_y)
 		end
 
 	set_y (new_y: INTEGER) is

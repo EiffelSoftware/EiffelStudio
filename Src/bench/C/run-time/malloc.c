@@ -582,8 +582,8 @@ rt_public void sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF
 	REQUIRE ("Not forwarded", !(HEADER (obj)->ov_size & B_FWD));
 	REQUIRE ("Special object", HEADER (obj)->ov_flags & EO_SPEC);
 	REQUIRE ("Special object of expanded", HEADER (obj)->ov_flags & EO_COMP);
-	REQUIRE ("Valid lower", ((lower >= 0) && (lower < RT_SPECIAL_COUNT(obj))));
-	REQUIRE ("Valid upper", ((upper >= 0) && (upper >= lower) && (upper <= RT_SPECIAL_COUNT(obj))));
+	REQUIRE ("Valid lower", ((lower >= 0) && (lower <= RT_SPECIAL_COUNT(obj))));
+	REQUIRE ("Valid upper", ((upper >= lower - 1) && (upper <= RT_SPECIAL_COUNT(obj))));
 
 	RT_GC_PROTECT(obj);
 	elem_size = RT_SPECIAL_ELEM_SIZE(obj);

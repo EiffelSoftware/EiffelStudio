@@ -80,7 +80,7 @@ extern void dostk(void);					/* Set operational stack context */
 RT_LNK void dstop(struct ex_vect *exvect, uint32 offset);	/* Breakable point reached */
 RT_LNK void dstop_nested(struct ex_vect *exvect, uint32 offset);	/* Breakable point reached (nested call) */
 extern void dsync(void);									/* (Re)synchronize d_data cached information */
-extern void dsetbreak(BODY_INDEX body_id, uint32 offset, int what);/* Set/remove breakpoint in feature */
+extern void dsetbreak(BODY_INDEX body_id, int offset, int what);/* Set/remove breakpoint in feature */
 extern void dstatus(int dx);								/* Update execution status (RESUME request) */
 
 /* Debugging stack handling */

@@ -63,17 +63,22 @@ feature
 						written_type.associated_class_type.is_precompiled
 					then
 						Result := True
-					else
-						Result := Body_server.has (body_id)
-								or else has_replicated_body;
+						-- The next line is solely here to grow some extra
+						-- gray hair on the head of whoever is going to read it.
+						-- Seriously: the body id may correspond to a FEATURE_I
+						-- having undergone a "body id change". In that case the
+						-- body id is not valid if the system has an equivalent
+						-- one which is different.
+					elseif (System.onbidt.item (body_id) = body_id) then
+						Result := server_has
 					end;
 				end;
 			end;
 		end;
 
-	has_replicated_body: BOOLEAN is
+	server_has: BOOLEAN is
 		do
-			-- Do nothing
+			Result := Body_server.has (body_id)
 		end;
 
 	is_external: BOOLEAN is

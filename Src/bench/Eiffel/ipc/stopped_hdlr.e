@@ -35,6 +35,7 @@ feature
 			--    assertion tag (undefined if irrelevant)
 		local
 			name: STRING;
+			org_type: INTEGER;
 			dyn_type: INTEGER;
 			offset: INTEGER;
 			address: STRING;
@@ -54,8 +55,9 @@ feature
 			read_string;
 			address := last_string;
 
-				-- Read origin of feature (skip).
+				-- Read origin of feature
 			read_int;
+			org_type := last_int + 1;
 
 				-- Read type of current object.
 				--| Note: the type id on the C side must be 
@@ -78,7 +80,7 @@ feature
 			read_string;
 
 			run_info.set_exception (last_int, last_string);
-			run_info.set (name, address, dyn_type, offset, reason);
+			run_info.set (name, address, org_type, dyn_type, offset, reason);
 
 			display_status;
 		end;
@@ -157,17 +159,17 @@ feature -- Display
 			debug_window.put_clickable_string (os, temp);
 			debug_window.put_string ("]%N%TClass: ");
 			c := Run_info.class_type.associated_class;
-io.error.putstring ("YOP%N");
 			c.append_clickable_name (debug_window);
-io.error.putstring ("YOP%N");
 			debug_window.put_string ("%N%TFeature: `");
 if Run_info.feature_i /= Void then
 			Run_info.feature_i.append_clickable_name (debug_window, c);
+			debug_window.put_string ("' (");
+			Run_info.origin_type.associated_class.append_clickable_name (debug_window);
+			debug_window.put_string (")");
 else
-			debug_window.put_string ("Void FEATURE_I");
+			debug_window.put_string ("Void'");
 end;
-			debug_window.put_string ("'%N");
-			debug_window.put_string ("%TReason: ");
+			debug_window.put_string ("%N%TReason: ");
 				inspect Run_info.reason
 				when Pg_break then
 					debug_window.put_string ("Breakpoint reached%N")
@@ -180,6 +182,7 @@ end;
 				else
 					debug_window.put_string ("Unknown%N");
 				end;	
+if  Run_info.reason = Pg_break then
 			if not Run_info.where.empty then
 				Run_info.where.first.display_arguments;				
 				debug_window.put_string ("Call stack:%N%N");
@@ -198,6 +201,7 @@ end;
 				end;
 				debug_window.new_line;
 			end;
+end;
 
 			debug_window.display;
 		end;

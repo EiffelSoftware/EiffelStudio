@@ -22,6 +22,11 @@ feature
 
 	id: INTEGER;
 
+	set_id (i:INTEGER) is
+		do
+			id := i
+		end;
+
 	make (class_id: INTEGER) is
 		require
 			valid_arg1: class_id > 0;

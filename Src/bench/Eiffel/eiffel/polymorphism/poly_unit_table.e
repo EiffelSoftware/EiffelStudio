@@ -10,7 +10,8 @@ inherit
 		end;
 	IDABLE
 		rename
-			id as rout_id
+			id as rout_id,
+			set_id as set_rout_id
 		end;
 	SHARED_WORKBENCH;
 

@@ -10,4 +10,8 @@ feature
 		deferred
 		end;
 
+	set_id (i: INTEGER) is
+		deferred
+		end;
+
 end

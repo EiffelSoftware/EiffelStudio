@@ -7,7 +7,7 @@ inherit
 	SERVER [REP_CLASS_DEPEND]
 		rename
 			item as server_item,
-			has as old_has,
+			has as server_has,
 			disk_item as disk_server_item
 		export
 			{ANY} server_item
@@ -61,7 +61,7 @@ feature
 		require else
 			positive_id: an_id > 0;
 		do
-			Result := old_has (an_id) or else Tmp_rep_depend_server.has (an_id);
+			Result := server_has (an_id) or else Tmp_rep_depend_server.has (an_id);
 		end;
 
 	Size_limit: INTEGER is 750000;

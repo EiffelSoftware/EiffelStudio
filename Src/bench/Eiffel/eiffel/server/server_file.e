@@ -69,12 +69,17 @@ feature
 	remove_occurence is
 			-- Remove one occurence and remove current file from
 			-- the server controler if null occurence
+			--|Note: If occurrence goes down to 0 the file
+			--|is not removed from disk straight away, since that
+			--|might render a Project irretrievable after an interrupted
+			--|compilation. Instead, the file will be removed at the end of a succesful
+			--|compilation by the server controller.
 		require
 			positive_occurence: occurence > 0
 		do
 			occurence := occurence - 1;
 			if occurence = 0 then
-				Server_controler.remove_file (Current);
+				Server_controler.forget_file (Current)
 			end;
 		ensure
 			occurence = 0 implies (not is_open)

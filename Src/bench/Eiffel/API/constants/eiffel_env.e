@@ -164,12 +164,30 @@ feature {NONE}
 			Result.append ("/bitmaps/search.bm")
 		end;
 	
+	bm_Setstop: STRING is
+		do
+			!!Result.make (50); Result.append (Eiffel3_dir_name);
+			Result.append ("/bitmaps/setstop.bm")
+		end;
+	
 	bm_Shell: STRING is
 		do
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
 			Result.append ("/bitmaps/shell.bm")
 		end;
 	
+	bm_Showaversions: STRING is
+		do
+			!!Result.make (50); Result.append (Eiffel3_dir_name);
+			Result.append ("/bitmaps/showaversions.bm")
+		end;
+
+	bm_Showdversions: STRING is
+		do
+			!!Result.make (50); Result.append (Eiffel3_dir_name);
+			Result.append ("/bitmaps/showdversions.bm")
+		end;
+
 	bm_Showancestors: STRING is
 		do
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
@@ -180,6 +198,12 @@ feature {NONE}
 		do
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
 			Result.append ("/bitmaps/showattributes.bm")
+		end;
+
+	bm_Showcallers: STRING is
+		do
+			!!Result.make (50); Result.append (Eiffel3_dir_name);
+			Result.append ("/bitmaps/showcallers.bm")
 		end;
 
 	bm_Showclients: STRING is
@@ -246,6 +270,12 @@ feature {NONE}
 		do
 			!!Result.make (50); Result.append (Eiffel3_dir_name);
 			Result.append ("/bitmaps/showshort.bm")
+		end;
+
+	bm_Showstops: STRING is
+		do
+			!!Result.make (50); Result.append (Eiffel3_dir_name);
+			Result.append ("/bitmaps/showstops.bm")
 		end;
 
 	bm_Showsuppliers: STRING is

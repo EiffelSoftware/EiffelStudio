@@ -26,6 +26,24 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
+feature -- Status setting
+
+	leap_forward is
+			-- Increase the current value of one leap.
+		require
+			exists: not destroyed
+		do
+			implementation.leap_forward
+		end
+
+	leap_backward is
+			-- Decrease the current value of one leap.
+		require
+			exists: not destroyed
+		do
+			implementation.leap_backward
+		end
+
 feature -- Element change
 
 	set_leap (val: INTEGER) is

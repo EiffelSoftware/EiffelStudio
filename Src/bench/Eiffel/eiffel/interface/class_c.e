@@ -4391,6 +4391,9 @@ feature -- Output
 			gens: like generics
 		do
 			append_name (st)
+			if is_deferred then
+				st.add_char ('*')
+			end
 			gens := generics
 			if gens /= Void then
 				old_cluster := Inst_context.cluster

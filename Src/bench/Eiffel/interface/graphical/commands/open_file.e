@@ -75,15 +75,19 @@ feature {NONE} -- Implementation
 					if
 						f.exists and then f.is_readable and then f.is_plain
 					then
-						class_i := Eiffel_universe.class_with_file_name (fn)
-						if class_i = Void then
+						if not Project_tool.initialized then
 							tool.show_file (f);
-						elseif class_i.compiled then
-							!! classc_stone.make (class_i.compiled_class)
-							tool.process_class (classc_stone);
 						else
-							!! classi_stone.make (class_i)
-							tool.process_classi (classi_stone);
+							class_i := Eiffel_universe.class_with_file_name (fn)
+							if class_i = Void then
+								tool.show_file (f);
+							elseif class_i.compiled then
+								!! classc_stone.make (class_i.compiled_class)
+								tool.process_class (classc_stone);
+							else
+								!! classi_stone.make (class_i)
+								tool.process_classi (classi_stone);
+							end
 						end
 					elseif f.exists and then not f.is_plain then
 						warner (popup_parent).custom_call (Current, 

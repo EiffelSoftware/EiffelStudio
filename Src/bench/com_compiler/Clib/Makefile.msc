@@ -22,9 +22,9 @@ ecom_eiffelcomcompiler_ieiffeldefinitionresult_impl_proxy_s.obj \
 ecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_proxy_s.obj \
 ecom_eiffelcomcompiler_ieiffelcompletioninfo_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ceiffelhtmldocumentationgenerator_s.obj \
 ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.obj \
-ecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.obj \
 ecom_eiffelcomcompiler_ieiffelclassdescriptor_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_stub_s.obj \
@@ -56,6 +56,7 @@ ecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj \
 ecom_gce_eiffelsoftwarecompiler.obj \
 ecom_gec_eiffelsoftwarecompiler.obj \
 ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
+ecom_xcp_ieiffelhtmldocumentationevents_ceiffelhtmldocumentationgenerator.obj \
 server_registration.obj 
 
 WOBJ = wceiffelcompiler_factory.obj \
@@ -74,9 +75,9 @@ wecom_eiffelcomcompiler_ieiffeldefinitionresult_impl_proxy_s.obj \
 wecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_proxy_s.obj \
 wecom_eiffelcomcompiler_ieiffelcompletioninfo_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ceiffelhtmldocumentationgenerator_s.obj \
 wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.obj \
-wecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.obj \
 wecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_proxy_s.obj \
@@ -108,6 +109,7 @@ wecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj \
 wecom_gce_eiffelsoftwarecompiler.obj \
 wecom_gec_eiffelsoftwarecompiler.obj \
 wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
+wecom_xcp_ieiffelhtmldocumentationevents_ceiffelhtmldocumentationgenerator.obj \
 wserver_registration.obj 
 
 
@@ -181,12 +183,18 @@ wecom_eiffelcomcompiler_ieiffelcompletioninfo_impl_stub_s.obj: ecom_eiffelcomcom
 wecom_eiffelcomcompiler_ieiffelcompiler_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelcompiler_impl_stub_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
   
-wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.cpp
+wecom_eiffelcomcompiler_ceiffelhtmldocumentationgenerator_s.obj: ecom_eiffelcomcompiler_ceiffelhtmldocumentationgenerator_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
   
-wecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_stub_s.cpp
-  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?  
-  
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+   
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+   
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+   
 wecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_stub_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
@@ -206,6 +214,9 @@ wecom_gec_eiffelsoftwarecompiler.obj: ecom_gec_eiffelsoftwarecompiler.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj: ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_xcp_ieiffelhtmldocumentationevents_ceiffelhtmldocumentationgenerator.obj: ecom_xcp_ieiffelhtmldocumentationevents_ceiffelhtmldocumentationgenerator.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wserver_registration.obj: server_registration.cpp
@@ -231,10 +242,7 @@ wecom_eiffelcomcompiler_ieiffelcompiler_impl_proxy_s.obj: ecom_eiffelcomcompiler
 
 wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
-  
-wecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.cpp
-  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
-  
+   
 wecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_proxy_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 

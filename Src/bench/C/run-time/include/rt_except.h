@@ -14,6 +14,7 @@
 #define _rt_except_h_
 
 #include "eif_except.h"
+#include "rt_threads.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,6 +38,7 @@ extern void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig);			/* Call sig
 
 #ifdef EIF_THREADS
 extern void eif_except_thread_init (void);
+extern EIF_LW_MUTEX_TYPE *eif_except_lock;
 #endif
 
 #ifdef __cplusplus

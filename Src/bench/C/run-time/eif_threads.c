@@ -157,6 +157,7 @@ rt_public void eif_thr_init_root(void)
 	EIF_LW_MUTEX_CREATE(eif_gc_set_mutex, "Couldn't create GC set mutex");
 	EIF_LW_MUTEX_CREATE(eif_gc_gsz_mutex, "Couldn't create GSZ mutex");
 	EIF_LW_MUTEX_CREATE(eif_thread_launch_mutex, "Cannot create mutex for thread launcher\n");
+	EIF_LW_MUTEX_CREATE (eif_except_lock, "Couldn't create exception lock");
 	EIF_MUTEX_CREATE(eif_global_once_mutex, "Couldn't create global once mutex");
 	eif_thr_register();
 #ifdef EIF_WIN32

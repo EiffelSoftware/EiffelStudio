@@ -80,7 +80,7 @@ default
 	array_optimization (no)
 	dead_code_removal (yes)
 	exception_trace (yes)
-	inlining (no)
+	inlining (yes)
 	inlining_size ("0")
 	arguments ("-from_bench")
 
@@ -221,7 +221,7 @@ cluster
 
 	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
 		exclude
-			"free"; "command_line"; "CVS"; "unix";
+			"free"; "command_line"; "CVS"; "unix"; 
 		end
 
 	all keygen:		"$EIFFEL_SRC\library\keygen"

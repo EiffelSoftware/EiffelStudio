@@ -89,6 +89,9 @@ feature -- Removal
 feature {NONE} -- GUI building
 
 	build_widget (t: STRING) is
+			-- Create Current using `t' as text label.
+		require
+			t_not_void: t /= Void
 		local
 			l_label: EV_LABEL
 			l_hbox: EV_HORIZONTAL_BOX

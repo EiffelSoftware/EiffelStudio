@@ -17,7 +17,7 @@ esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
 esac
-CURRENT=ipc/daemon
+CURRENT=daemon
 DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
 echo "Extracting ${DIR}Makefile (with variable substitutions)"
 
@@ -90,7 +90,7 @@ LIBIPC = $(TOP)/ipc/shared
 LIBIPCNAME = libipc.a
 LIBIPCARCH = $(LIBIPC)/$(LIBIPCNAME)
 LIBIDR = $(TOP)/idrs
-LIBIDRNAME = libidr.a
+LIBIDRNAME = idrs.o
 LIBIDRARCH = $(LIBIDR)/$(LIBIDRNAME)
 
 DPFLAGS = -I$(TOP) -I$(LIBIDR) -I$(LIBIPC) -I$(TOP)/run-time -I$(TOP)/run-time/include

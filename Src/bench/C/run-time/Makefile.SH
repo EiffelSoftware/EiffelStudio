@@ -17,7 +17,7 @@ esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
 esac
-CURRENT=runtime
+CURRENT=run-time
 DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
 echo "Extracting ${DIR}Makefile (with variable substitutions)"
 
@@ -91,6 +91,8 @@ all:: .FORCE_DEPEND
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
 
+IDRS_OBJ = $(TOP)/idrs/idrs.o
+MTIDRS_OBJ = $(TOP)/idrs/MTidrs.o
 NETWORK_OBJ = $(TOP)/ipc/app/network.o
 MTNETWORK_OBJ = $(TOP)/ipc/app/MTnetwork.o
 
@@ -108,6 +110,7 @@ OTHER = main.c except.c
 WADD = debug.c interp.c update.c wbench.c
 
 WOBJ = \
+	       $(IDRS_OBJ) \
 	       $(NETWORK_OBJ) \
 	       debug.o \
 	       interp.o \
@@ -161,6 +164,7 @@ WOBJ = \
 	       wexcept.o 
 
 LOBJ = \
+	       $(IDRS_OBJ) \
 	       malloc.o \
 	       garcol.o \
 	       local.o \
@@ -209,6 +213,7 @@ LOBJ = \
 	       except.o 
 
 EOBJ = \
+	       $(IDRS_OBJ) \
 	       debug.o \
 	       interp.o \
 	       update.o \
@@ -261,6 +266,7 @@ EOBJ = \
 	       bexcept.o 
 
 MT_WOBJ = \
+	       $(MTIDRS_OBJ) \
 	       $(MTNETWORK_OBJ) \
 	       MTdebug.o \
 	       MTinterp.o \
@@ -314,6 +320,7 @@ MT_WOBJ = \
 	       MTwexcept.o 
 
 MT_LOBJ = \
+	       $(MTIDRS_OBJ) \
 	       MTmalloc.o \
 	       MTgarcol.o \
 	       MTlocal.o \
@@ -988,6 +995,11 @@ mt: mtwork mtfinal
 $(TOP)/ipc/app/network.o: .FORCE
 	@echo "Checking "network.o" in "$(TOP)/ipc/app"..."
 	cd $(TOP)/ipc/app; $(MAKE) network.o
+	@echo "Continuing in $(CURRENT)..."
+
+$(TOP)/idrs/idrs.o: .FORCE
+	@echo "Checking "idrs.o" in "$(TOP)/idrs"..."
+	cd $(TOP)/idrs; $(MAKE) idrs.o
 	@echo "Continuing in $(CURRENT)..."
 
 TESTS = mram gram lram eram sram

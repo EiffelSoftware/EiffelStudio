@@ -17,7 +17,7 @@ esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
 esac
-CURRENT=ipc/app
+CURRENT=app
 DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
 echo "Extracting ${DIR}Makefile (with variable substitutions)"
 
@@ -78,10 +78,6 @@ all:: .FORCE_DEPEND
 # Where shared archive is located (path and name)
 LIB_RUNTIME = $(TOP)/run-time
 LIB_IDRS = $(TOP)/idrs
-LIB_IDRSNAME = libidr.a
-LIB_MTIDRSNAME = libmtidr.a
-LIB_IDRS_ARCH = $(LIB_IDRS)/$(LIB_IDRSNAME)
-LIB_MTIDRS_ARCH = $(LIB_IDRS)/$(LIB_MTIDRSNAME)
 LIB_SHARED = $(TOP)/ipc/shared
 LIB_IPCNAME = libipc.a
 LIB_MTIPCNAME = libmtipc.a
@@ -125,13 +121,6 @@ $(LIB_SHARED)/$(LIB_IPCNAME): .FORCE
 
 network.o: $(LIB_SHARED)/$(LIB_IPCNAME)
 
-$(LIB_IDRS)/$(LIB_IDRSNAME): .FORCE
-	@echo "Checking "$(LIB_IDRSNAME)" in "$(LIB_IDRS)"..."
-	cd $(LIB_IDRS); $(MAKE) $(LIB_IDRSNAME)
-	@echo "Continuing in $(CURRENT)..."
-
-network.o: $(LIB_IDRS)/$(LIB_IDRSNAME)
-
 all:: network.o
 
 local_realclean::
@@ -139,7 +128,7 @@ local_realclean::
 
 network.o: $(OBJ)
 	$(RM) $@
-	$(LD) $(JLDFLAGS) -r $(OBJ) -o $@ $(LIB_IPC_ARCH) $(LIB_IDRS_ARCH)
+	$(LD) $(JLDFLAGS) -r $(OBJ) -o $@ $(LIB_IPC_ARCH)
 
 $(LIB_SHARED)/$(LIB_MTIPCNAME): .FORCE
 	@echo "Checking "$(LIB_MTIPCNAME)" in "$(LIB_SHARED)"..."
@@ -148,13 +137,6 @@ $(LIB_SHARED)/$(LIB_MTIPCNAME): .FORCE
 
 MTnetwork.o: $(LIB_SHARED)/$(LIB_MTIPCNAME)
 
-$(LIB_IDRS)/$(LIB_MTIDRSNAME): .FORCE
-	@echo "Checking "$(LIB_MTIDRSNAME)" in "$(LIB_IDRS)"..."
-	cd $(LIB_IDRS); $(MAKE) $(LIB_MTIDRSNAME)
-	@echo "Continuing in $(CURRENT)..."
-
-MTnetwork.o: $(LIB_IDRS)/$(LIB_MTIDRSNAME)
-
 all:: MTnetwork.o
 
 local_realclean::
@@ -162,7 +144,7 @@ local_realclean::
 
 MTnetwork.o: $(MT_OBJ)
 	$(RM) $@
-	$(LD) $(JLDFLAGS) -r $(MT_OBJ) -o $@ $(LIB_MTIPC_ARCH) $(LIB_MTIDRS_ARCH)
+	$(LD) $(JLDFLAGS) -r $(MT_OBJ) -o $@ $(LIB_MTIPC_ARCH)
 
 depend:: ../../mkdep
 

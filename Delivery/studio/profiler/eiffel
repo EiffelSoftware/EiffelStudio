@@ -7,16 +7,16 @@ index_column: 1
 function_time_column: 2
 -- Column where the time spent in the function is stored.
 
-descendent_time_column: 3
+descendant_time_column: 3
 -- Column where the time spent in the descendents of a function is stored.
 
 number_of_calls_column: 4
 -- Column where the number of calls to a function is stored.
 
-function_name_column: 5
+function_name_column: 6
 -- Column where the name of the function is stored.
 
-percentage_column: 0
+percentage_column: 5
 -- Column where the percentage of time spent in the function is stored.
 
 second_percentage_column: 0

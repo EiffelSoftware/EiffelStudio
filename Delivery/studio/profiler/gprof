@@ -1,7 +1,7 @@
 number_of_columns: 7
 index_column: 1
 function_time_column: 3
-descendent_time_column: 4
+descendant_time_column: 4
 number_of_calls_column: 5
 function_name_column: 6
 percentage_column: 2

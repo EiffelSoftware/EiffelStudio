@@ -305,7 +305,9 @@ feature {NONE}-- Initialization
 			set_title ("EiffelCOM Wizard 2.0")
 			
 				--Connect events.
+			exit_menu_item.select_actions.extend (agent on_exit)
 			help_menu_item.select_actions.extend (agent on_help)
+			about_menu_item.select_actions.extend (agent on_about)
 			project_button.select_actions.extend (agent on_project_button_select)
 			com_client_project_radio_button.select_actions.extend (agent on_select_com_client)
 			com_server_project_radio_button.select_actions.extend (agent on_select_com_server)
@@ -387,8 +389,18 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
+	on_exit is
+			-- Called by `select_actions' of `exit_menu_item'.
+		deferred
+		end
+	
 	on_help is
 			-- Called by `select_actions' of `help_menu_item'.
+		deferred
+		end
+	
+	on_about is
+			-- Called by `select_actions' of `about_menu_item'.
 		deferred
 		end
 	
@@ -464,3 +476,15 @@ feature {NONE} -- Implementation
 	
 
 end -- class WIZARD_MAIN_WINDOW_IMP
+
+--+----------------------------------------------------------------
+--| EiffelCOM Wizard
+--| Copyright (C) 1999-2005 Eiffel Software. All rights reserved.
+--| Eiffel Software Confidential
+--| Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+----------------------------------------------------------------
+

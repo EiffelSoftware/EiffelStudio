@@ -152,9 +152,7 @@ feature {NONE} -- Command Actions
 
 	execute (arg: ANY) is
 		do
-			if not text.text.empty and then
-				not equal (text.text, namable.visual_name)
-			then
+			if not equal (text.text, namable.visual_name) then
 				set_name;
 				popdown;
 			end

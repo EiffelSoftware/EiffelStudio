@@ -4,11 +4,23 @@ class BEHAVIOR_EDITOR
 inherit
 
 	FUNC_EDITOR
+		rename
+			clear as func_clear
 		redefine
 			input_list, output_list,
 			input_hole, output_hole,
 			input_stone, output_stone,
 			menu_bar, edited_function
+		end
+	FUNC_EDITOR
+		redefine
+			input_list, output_list,
+			input_hole, output_hole,
+			input_stone, output_stone,
+			menu_bar, edited_function,
+			clear
+		select
+			clear
 		end
 
 creation
@@ -71,6 +83,12 @@ feature -- Editing features
 	focus_label: FOCUS_LABEL is
 		do
 			Result := associated_context_editor.focus_label
+		end;
+
+	clear is
+		do
+			func_clear;
+			current_state := Void
 		end;
 
 feature {NONE} -- Interface

@@ -17,6 +17,8 @@ inherit
             evaluated_class,
             signature,
             description,
+            exports,
+            summary,
             all_callers,
             all_callers_count,
             local_callers,
@@ -42,8 +44,11 @@ inherit
             is_unique,
             is_constant,
             is_obsolete,
+            obsolete_message,
             has_precondition,
+            preconditions,
             has_postcondition,
+            postconditions,
             feature_location,
             parameters,
             return_type,
@@ -166,6 +171,56 @@ feature -- Access
             Result := compiler_feature.type.dump
         end
         
+	exports: IEIFFEL_ENUM_STRING_INTERFACE is
+			-- Exported classes
+		local
+			l_exp_set: EXPORT_SET_I
+			l_list: ARRAYED_LIST [STRING]
+			l_clients: LIST [STRING]
+		do
+			if compiler_feature.export_status.is_set then
+				create l_list.make (4)
+				l_list.compare_objects
+				
+				l_exp_set ?= compiler_feature.export_status
+				check
+					l_exp_set_not_void: l_exp_set /= Void	
+				end
+				if l_exp_set /= Void then
+					from
+						l_exp_set.start
+					until
+						l_exp_set.after
+					loop
+						l_clients := l_exp_set.item.clients
+						if l_clients /= Void then
+							from
+								l_clients.start
+							until
+								l_clients.after
+							loop
+								if not l_list.has (l_clients.item) then
+									l_list.extend (l_clients.item)
+								end
+								l_clients.forth
+							end
+						end
+						l_exp_set.forth
+					end
+				end
+			else
+				create l_list.make (1)
+				if compiler_feature.export_status.is_none then
+					l_list.extend ("NONE")
+				elseif compiler_feature.export_status.is_all then
+					l_list.extend ("ANY")
+				else
+					l_list.extend ("[export clause not accounted for]")
+				end
+			end
+			create {EIFFEL_STRING_ENUMERATOR}Result.make (l_list)
+		end
+        
     external_name: STRING is
             -- Feature external name.
         do
@@ -197,31 +252,34 @@ feature -- Access
 			l_overloads: STRING
 			l_new_lines: BOOLEAN
 		do
- 			extract_description (compiler_feature, compiler_class, name)
- 			Result := extracted_description
- 			if overload_count >0 then
-	 			l_index := Result.index_of ('%N', 1)
-	 			l_new_lines := l_index > 0
-	 			if l_new_lines then
-	 				Result.remove (l_index)
-	 			else
-	 				l_index := Result.count + 1
+			if internal_description = Void then
+	 			extract_description (compiler_feature, compiler_class, name)
+	 			internal_description := extracted_description
+	 			if overload_count >0 then
+		 			l_index := internal_description.index_of ('%N', 1)
+		 			l_new_lines := l_index > 0
+		 			if l_new_lines then
+		 				internal_description.remove (l_index)
+		 			else
+		 				l_index := Result.count + 1
+		 			end
+		 			create l_overloads.make (20)
+		 			l_overloads.append (" (+")
+		 			l_overloads.append (overload_count.out)
+		 			l_overloads.append (" ")
+		 			if overload_count = 1 then
+		 				l_overloads.append ("overload")
+		 			else
+		 				l_overloads.append ("overloads")
+		 			end
+		 			l_overloads.append_character (')')
+		 			if l_new_lines then
+		 				l_overloads.append_character ('%N')
+		 			end
+		 			internal_description.insert_string (l_overloads, l_index)
 	 			end
-	 			create l_overloads.make (20)
-	 			l_overloads.append (" (+")
-	 			l_overloads.append (overload_count.out)
-	 			l_overloads.append (" ")
-	 			if overload_count = 1 then
-	 				l_overloads.append ("overload")
-	 			else
-	 				l_overloads.append ("overloads")
-	 			end
-	 			l_overloads.append_character (')')
-	 			if l_new_lines then
-	 				l_overloads.append_character ('%N')
-	 			end
-	 			Result.insert_string (l_overloads, l_index)
- 			end
+			end
+			Result := internal_description
         ensure then
             result_exists: Result /= void           
         end
@@ -261,6 +319,59 @@ feature -- Access
          ensure then
             result_exists: Result /= void           
         end
+        
+	summary: STRING is
+			-- Feature summary
+		local
+			l_desc: STRING
+			l_lines: LIST [STRING]
+			l_remove: BOOLEAN
+			l_count: INTEGER
+		do
+			l_desc := description
+			if l_desc /= Void and then not l_desc.is_empty then
+				l_lines := l_desc.split ('%N')
+				from
+					l_lines.start	
+					l_lines.forth
+				until
+					l_lines.after
+				loop
+					if not l_remove and then not l_lines.item.is_empty and then l_lines.item.item (1) = ' ' then
+						if l_lines.item.count >= ensure_desc.count and then l_lines.item.substring (1, ensure_desc.count).is_equal (ensure_desc) then
+							l_remove := True
+						elseif l_lines.item.count >= require_desc.count and then l_lines.item.substring (1, require_desc.count).is_equal (require_desc) then
+							l_remove := True
+						end
+					end
+					if l_remove or l_lines.item.is_empty then
+						l_lines.remove
+					else
+						l_count := l_count + l_lines.item.count + 2
+						l_lines.forth
+					end
+				end
+				create Result.make (l_count)
+				if not l_lines.is_empty then
+					from
+						l_lines.start
+						l_lines.forth
+					until
+						l_lines.after
+					loop
+						Result.append (l_lines.item)
+						if not l_lines.islast then
+							if l_lines.item.item (1) = '(' or l_lines.item.item (1) = ' ' or l_lines.item.item (1) = '%T' then
+								Result.append_character ('%N')
+							elseif l_lines.item.item (l_lines.item.count) /= ' ' then
+								Result.append_character (' ')
+							end
+						end
+						l_lines.forth
+					end
+				end
+			end
+		end
 
 	overload_count: INTEGER
 			-- Overload count, used for completion
@@ -488,17 +599,94 @@ feature -- Access
         do
             Result := compiler_feature.is_obsolete
         end
+        
+    obsolete_message: STRING is
+            -- Obsolete message?
+        do
+            Result := compiler_feature.obsolete_message
+        end
 
     has_precondition: BOOLEAN is
             -- Does feature have precondition?
         do
             Result := compiler_feature.has_precondition
         end
+        
+    preconditions: STRING is
+            --  Feature preconditions
+		local
+			l_desc: like description
+			l_lines: LIST [STRING]
+			l_stop: BOOLEAN
+        do
+			l_desc := description
+			if l_desc /= Void then
+				l_lines := l_desc.split ('%N')
+				from
+					l_lines.start	
+				until
+					l_lines.after or l_stop
+				loop
+					if Result /= Void then
+						if l_lines.item.count >= ensure_desc.count and then l_lines.item.substring (1, ensure_desc.count).is_equal (ensure_desc) then
+							l_stop := True
+						else
+							l_lines.item.prune_all_leading (' ')
+							Result.append (l_lines.item)
+							l_lines.forth
+							if not l_lines.after and then l_lines.item.item (l_lines.item.count) = ' ' then
+								Result.append_character ('%N')	
+							end
+						end
+					elseif not l_stop then
+						if Result = Void and then l_lines.item.count >= require_desc.count and then l_lines.item.substring (1, require_desc.count).is_equal (require_desc) then
+							create Result.make (350)
+						end
+						l_lines.forth
+					end
+				end
+			else
+				create Result.make_empty
+			end
+        end
 
     has_postcondition: BOOLEAN is
             -- Does feature have postcondition?
         do
             Result := compiler_feature.has_postcondition
+        end
+        
+    postconditions: STRING is
+            -- Feature postconditions
+		local
+			l_desc: like description
+			l_lines: LIST [STRING]
+        do
+			l_desc := description
+			if l_desc /= Void then
+				l_lines := l_desc.split ('%N')
+				from
+					l_lines.start	
+				until
+					l_lines.after
+				loop
+					if Result /= Void then
+						l_lines.item.prune_all_leading (' ')
+						Result.append (l_lines.item)
+						l_lines.forth
+						if not l_lines.after and then l_lines.item.item (l_lines.item.count) = ' ' then
+							Result.append_character ('%N')	
+						end
+					elseif l_lines.item.count >= ensure_desc.count and then l_lines.item.substring (1, ensure_desc.count).is_equal (ensure_desc) then
+						create Result.make (350)
+						l_lines.forth
+					else
+						l_lines.forth
+					end
+				end
+			else
+				create Result.make_empty
+			end
         end
 
     is_feature (return_value: BOOLEAN_REF) is
@@ -605,6 +793,15 @@ feature {FEATURE_DESCRIPTOR} -- Implementation
 
 feature {NONE} -- Implementation
 
+	require_desc: STRING is "  require"
+			-- require part of description to parse
+		
+	ensure_desc: STRING is "  ensure"
+			-- ensure part of description to parse
+			
+	internal_description: like description
+			-- cached description
+			
 	internal_name: STRING
 			-- Feature name
 

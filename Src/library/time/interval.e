@@ -47,8 +47,8 @@ feature -- Initialization
 			end_exists: e /= Void
 			start_before_end: s <= e
 		do
-			start_bound := deep_clone (s)
-			end_bound := deep_clone (e)
+			start_bound := s.deep_twin
+			end_bound := e.deep_twin
 		ensure
 			start_bound_set: start_bound /= Void and then 
 				deep_equal (start_bound, s)
@@ -257,7 +257,7 @@ feature -- Element change
 			start_bound_exists: s /= Void
 			start_before_end_bound: s <= end_bound
 		do
-			start_bound := deep_clone (s)
+			start_bound := s.deep_twin
 		ensure
 			start_bound_set: equal (start_bound, s)
 		end	
@@ -268,7 +268,7 @@ feature -- Element change
 			end_bound_exists: e /= Void
 			end_after_start_bound: e >= start_bound
 		do
-			end_bound := deep_clone (e)
+			end_bound := e.deep_twin
 		ensure
 			end_bound_set: equal (end_bound, e)
 		end	

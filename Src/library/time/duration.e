@@ -37,7 +37,7 @@ feature -- Element change
 	prefix "+": like Current is
 			-- Unary plus
 		do
-			Result := deep_clone (Current)
+			Result := deep_twin
 		end
 
 	infix "-" (other: like Current): like Current is

@@ -88,12 +88,8 @@ feature -- Status setting
 		require
 			file_name_not_void: file_name /= Void
 			file_name_not_empty: not file_name.empty
-		local
-			file: RAW_FILE
 		do
-			create file.make_open_read (file_name)
-			set_with_file (file)
-			file.close
+			implementation.read_from_named_file(file_name)
 		end
 
 	set_size (a_width, a_height: INTEGER) is
@@ -125,12 +121,13 @@ feature -- Status setting
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current) is 
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		do
-			set_size (other.width, other.height)
-			draw_pixmap (0, 0, other)
+			implementation.copy_pixmap(other)
+--			set_size (other.width, other.height)
+--			draw_pixmap (0, 0, other)
 		end
 
 feature {NONE} -- Implementation
@@ -178,6 +175,11 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/20 23:05:46  pichery
+--| moved the implementation of `copy' and `set_with_named_file' into the
+--| implementation rather than in the interface. These 2 feature are now
+--| implemented differently on GTK and on Windows.
+--|
 --| Revision 1.25  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|

@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 		do
 			wel_make
 			base_make (an_interface)
+			align_text_left
 		end
 		
 	initialize is

@@ -11,11 +11,6 @@ inherit
 			{ANY} server
 		end
 
-	WIZARD_PROCESS_LAUNCHER
-		export
-			{NONE} all
-		end
-
 	WIZARD_RESCUABLE
 		export
 			{NONE} all
@@ -126,11 +121,12 @@ feature -- Basic Operations
 			-- resulting type library file name.
 		local
 			l_text: STRING
+			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			l_text := Idl_compiler.twin
 			l_text.append (" ")
 			l_text.append (Idl_compiler_command_line)
-			message_output.add_message (Current, l_text)
+			message_output.add_message (l_text)
 
 			l_text := environment.destination_folder.twin
 			l_text.append (environment.project_name)
@@ -139,11 +135,17 @@ feature -- Basic Operations
 
 			Env.change_working_directory (environment.destination_folder)
 			generate_command_line_file (Idl_compiler_command_line, Temporary_input_file_name)
-			l_text := Idl_compiler.twin
-			l_text.append (" ")
-			l_text.append (last_make_command)
-			launch (l_text, environment.destination_folder)
-			check_return_code
+			if not environment.abort then
+				l_text := Idl_compiler.twin
+				l_text.append (" ")
+				l_text.append (last_make_command)
+				create l_process_launcher
+				l_process_launcher.run_hidden
+				l_process_launcher.launch (l_text, environment.destination_folder, agent message_output.add_text)
+				if not l_process_launcher.last_launch_successful then
+					environment.set_abort (Idl_compilation_failed)
+				end
+			end
 		end
 
 	compile_iid is
@@ -167,20 +169,28 @@ feature -- Basic Operations
 	link is
 			-- Create proxy/stub dll.
 		local
-			a_string: STRING
+			l_string: STRING
+			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			generate_def_file
-			a_string := linker.twin
-			a_string.append (Space)
-			a_string.append (Linker_command_line)
-			message_output.add_message (Current, a_string)
+			l_string := linker.twin
+			l_string.append (" ")
+			l_string.append (linker_command_line)
+			message_output.add_message (l_string)
 			generate_command_line_file (Linker_command_line, Temporary_input_file_name)
-			a_string := Linker.twin
-			a_string.append (Space)
-			a_string.append (last_make_command)
-			launch (a_string, environment.destination_folder)
-			check_return_code
-			environment.set_proxy_stub_file_name (proxy_stub_file_name)
+			if not environment.abort then
+				l_string := Linker.twin
+				l_string.append (" ")
+				l_string.append (last_make_command)
+				create l_process_launcher
+				l_process_launcher.run_hidden
+				l_process_launcher.launch (l_string, environment.destination_folder, agent message_output.add_text)
+				if not l_process_launcher.last_launch_successful then
+					environment.set_abort (Link_failed)
+				else
+					environment.set_proxy_stub_file_name (proxy_stub_file_name)
+				end
+			end
 		end
 
 	component_empty (a_folder: STRING): BOOLEAN is
@@ -209,9 +219,9 @@ feature -- Basic Operations
 			ace_file_generated: ace_file_generated
 			resource_file_generated: resource_file_generated			
 		local
-			l_displayed: BOOLEAN
 			l_directory: DIRECTORY
-			l_local_folder: STRING
+			l_local_folder, l_cmd: STRING
+			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			-- Delete EIFGEN directory if exists.
 			l_local_folder := a_folder.twin
@@ -222,25 +232,22 @@ feature -- Basic Operations
 				l_directory.recursive_delete
 			end
 
-			l_displayed := displayed_while_running
-			set_displayed_while_running (True)
 			if a_folder.is_equal (Client) or component_empty (a_folder) then
-				launch (precompile_command, a_folder)
+				l_cmd := precompile_command
 			else
-				launch (eiffel_compile_command, a_folder)
+				l_cmd := eiffel_compile_command
 			end
+			create l_process_launcher
+			l_process_launcher.run_hidden
+			l_process_launcher.launch (l_cmd, a_folder, agent message_output.add_text)
 			if eiffel_compilation_successful (a_folder) then
 				l_local_folder := a_folder.twin
-				l_local_folder.append_character (Directory_separator)
-				l_local_folder.append (Eifgen)
-				l_local_folder.append_character (Directory_separator)
-				l_local_folder.append (W_code)
-				launch (finish_freezing_command, l_local_folder)
+				l_local_folder.append ("\EIFGEN\W_Code")
+				l_process_launcher.launch (finish_freezing_command, l_local_folder, agent message_output.add_text)
 				check_finish_freezing_status (a_folder)
 			else
 				environment.set_abort (Eiffel_compilation_error)
 			end		
-			set_displayed_while_running (l_displayed)				
 		end
 
 	check_finish_freezing_status (a_folder: STRING) is
@@ -287,10 +294,13 @@ feature -- Basic Operations
 			-- Register generated proxy stub.
 		local
 			l_string: STRING
+			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			l_string := "regsvr32 /s "
 			l_string.append (environment.proxy_stub_file_name)
-			launch (l_string, environment.destination_folder)
+			create l_process_launcher
+			l_process_launcher.run_hidden
+			l_process_launcher.launch (l_string, environment.destination_folder, agent message_output.add_text)
 		end
 		
 feature {NONE} -- Implementation

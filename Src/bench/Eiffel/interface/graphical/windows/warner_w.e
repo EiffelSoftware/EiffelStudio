@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			if argument /= popdown_action then
 				if last_caller /= void then
 					if argument = help_it then
-						last_caller.execute_warner_help -- (Void)
+						last_caller.execute_warner_help
 					elseif argument = Current then
 						last_caller.execute_warner_ok (Current)
 					end

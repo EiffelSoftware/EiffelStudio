@@ -103,6 +103,12 @@ feature -- Access
     do
       Result := compiler_kernel.html_doc_generator
     end
+    
+  compiler_support: IEIFFEL_SUPPORT_INTERFACE is
+  		-- compiler support
+  	do
+  		Result := compiler_kernel.compiler_support
+  	end
 
 feature -- Basic Operations
 

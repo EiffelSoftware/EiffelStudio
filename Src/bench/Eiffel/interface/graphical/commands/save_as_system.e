@@ -35,9 +35,9 @@ feature -- Updating
 		local
 			show_text: SHOW_TEXT
 		do
-			show_text ?= text_window.last_format.associated_command;
+			show_text ?= tool.last_format.associated_command;
 			if show_text /= Void then
-				Eiffel_project.set_lace_file_name (text_window.file_name)
+				Eiffel_ace.set_file_name (tool.file_name)
 			end;
 		end
 

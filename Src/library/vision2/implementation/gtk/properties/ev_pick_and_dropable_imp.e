@@ -304,7 +304,6 @@ feature -- Implementation
 				enter_notify_connected: enter_notify_connection_id > 0
 				leave_notify_connected: leave_notify_connection_id > 0
 			end
-			target := pointed_target
 			erase_rubber_band
 			disable_capture
 			if button_release_connection_id > 0 then
@@ -338,14 +337,22 @@ feature -- Implementation
 				feature {EV_GTK_EXTERNALS}.gtk_widget_draw (c_object, NULL)
 				feature {EV_GTK_EXTERNALS}.gtk_widget_draw (visual_widget, NULL)				
 			end
-			target := pointed_target
+			
+				-- Call appropriate action sequences
 			if
 				able_to_transport (a_button)
 			then
-				if target /= Void then
+				target := pointed_target
+				if target /= Void and then target.drop_actions.accepts_pebble (pebble) then
 					target.drop_actions.call ([pebble])
+					App_implementation.drop_actions.call ([pebble])
+				else
+					App_implementation.cancel_actions.call ([pebble])
 				end
+			else
+				App_implementation.cancel_actions.call ([pebble])
 			end
+
 			if pick_ended_actions_internal /= Void then
 				pick_ended_actions_internal.call ([target])
 			end
@@ -399,7 +406,7 @@ feature -- Implementation
 			if mode_is_pick_and_drop and not is_destroyed then
 				signal_emit_stop (c_object, "button-press-event")
 			end
-			app_implementation.on_drop (pebble)
+			App_implementation.on_drop (pebble)
 			x_origin := 0
 			y_origin := 0
 			last_pointed_target := Void

@@ -57,15 +57,22 @@ feature {EV_PND_TARGET_IMP} -- Access
 
 feature -- Transport
 
-	transport (data_source: EV_PND_SOURCE_IMP) is
-			-- Start the transport.
+	transport (data_source: EV_PND_SOURCE_IMP; pt: EV_POINT) is
+			-- Start the transport and
+			-- draw the line from the point `pt'.
+			-- If Void, start the line from the current cursor position. 
 		local
 			wel_point: WEL_POINT
 		do
-			!! wel_point.make (0, 0)
-			wel_point.set_cursor_position
-			x0 := wel_point.x
-			y0 := wel_point.y
+			if pt /= Void then
+				x0 := pt.x
+				y0 := pt.y
+			else
+				!! wel_point.make (0, 0)
+				wel_point.set_cursor_position
+				x0 := wel_point.x
+				y0 := wel_point.y
+			end
 			x1 := x0
 			y1 := y0
 			data_source.set_capture

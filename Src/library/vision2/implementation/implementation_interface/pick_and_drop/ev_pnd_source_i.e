@@ -27,7 +27,7 @@ feature -- Access
 			Result := transported_data /= Void and then data_type /= Void
 		end
 
-	activate_pick_and_drop (mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE) is
+	activate_pick_and_drop (pt: EV_POINT; mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE) is
 			-- Activate the mechanism through which
 			-- the current stone may be dragged and
 			-- dropped, when right clicking.
@@ -36,7 +36,7 @@ feature -- Access
 			valid_type: dt_type /= Void	
 		local
 			cmd: EV_ROUTINE_COMMAND
-			arg: EV_ARGUMENT2 [INTEGER, EV_COMMAND]
+			arg: EV_ARGUMENT3 [INTEGER, EV_POINT, EV_COMMAND]
 		do
 			transported_data := dt
 			data_type := dt_type
@@ -44,7 +44,7 @@ feature -- Access
 				transportable: transportable
 			end
 			!! cmd.make (~initialize_transport)
-			!! arg.make (mouse_button, cmd)
+			!! arg.make (mouse_button, pt, cmd)
 			add_button_press_command (mouse_button, cmd, arg)
 		end
 
@@ -70,7 +70,7 @@ feature -- Event - command association
 
 feature {EV_PND_SOURCE_I} -- Implementation
 
-	initialize_transport (arg: EV_ARGUMENT2 [INTEGER, EV_COMMAND]; data: EV_EVENT_DATA) is
+	initialize_transport (arg: EV_ARGUMENT3 [INTEGER, EV_POINT, EV_COMMAND]; data: EV_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
 		deferred
 		end

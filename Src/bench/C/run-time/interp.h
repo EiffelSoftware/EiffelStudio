@@ -13,32 +13,17 @@
 #ifndef _interp_h_
 #define _interp_h_
 
-#include "eif_globals.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "eif_globals.h"
 #include <stdio.h>		/* %%zs added: for FILE definition line 91 */
 #include "portable.h"
 #include "struct.h"
 
-/*
- * Stack data structures.
- */
 
-struct item {
-	uint32 type;				/* Union's discriminent */
-	union {
-		char itu_char;			/* A character value */
-		long itu_long;			/* An integer value */
-		float itu_float;		/* A real value */
-		double itu_double;		/* A double value */
-		char *itu_ref;			/* A reference value */
-		char *itu_bit;			/* A bit reference value */
-		char *itu_ptr;			/* A routine pointer */
-	} itu;
-};
+/* %% ss moved to eif_types.h : struct item */ 
 
 /* Macros for easy reference */
 #define it_char		itu.itu_char
@@ -49,24 +34,7 @@ struct item {
 #define it_ptr		itu.itu_ptr
 #define it_bit		itu.itu_bit
 
-/*
- * Stack used by the interpreter (operational stack)
- */
-
-struct opstack {
-	struct stochunk *st_hd;		/* Head of chunk list */
-	struct stochunk *st_tl;		/* Tail of chunk list */
-	struct stochunk *st_cur;	/* Current chunk in use (where top is) */
-	struct item *st_top;		/* Top (pointer to next free location) */
-	struct item *st_end;		/* First element beyond current chunk */
-};
-
-struct stochunk {
-	struct stochunk *sk_next;	/* Next chunk in stack */
-	struct stochunk *sk_prev;	/* Previous chunk in stack */
-	struct item *sk_arena;		/* Arena where objects are stored */
-	struct item *sk_end;		/* Pointer to first element beyond the chunk */
-};
+/* %%ss moved to eif_types.h : struct opstack, struct stochunk */
 
 /* Interpreter interface to outside world */
 extern void call_disp(uint32 dtype, char *object);			/* Function to call dispose routines */ 
@@ -76,8 +44,8 @@ extern void xinitint(void);				/* Initialize the interpreter */
 extern struct item *opush(register struct item *val);		/* Push value on operational stack */
 extern struct item *opop(void);			/* Remove value from operational stack */
 extern struct item *otop(void);			/* Top of the stack */
-extern struct item *ivalue(int code, int num);		/* Value request from current routine */
-extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);		/* Resynchronize registers on routine */
+extern struct item *ivalue(EIF_CONTEXT int code, int num);		/* Value request from current routine */
+extern void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct item *stack_top);		/* Resynchronize registers on routine */
 
 /* Requesting values via ivalue() */
 #define IV_LOCAL	0				/* Nth local wanted */
@@ -88,8 +56,8 @@ extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);	
 /* Macro used to prepare a cell on top of the stack */
 #define iget()	opush((struct item *) 0)	/* Push empty cell on stack */
 
-extern char *IC;					/* Byte code to interpret */
-extern struct opstack op_stack;		/* Operational stack */
+/* extern char *IC; *//* Byte code to interpret */ /* %%ss */
+/* extern struct opstack op_stack;*//* Operational stack */ /* %%ss */
 extern void idump(FILE *fd, char *start);
 
 /*

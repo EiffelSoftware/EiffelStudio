@@ -1,0 +1,22 @@
+system
+	calculator
+
+root
+	CALCULATOR: make
+
+default
+	il_generation("exe")
+	assertion(no)
+	disabled_debug(yes)
+
+
+	-- EiffelBase
+
+cluster
+	root_cluster:		"."
+
+	all base:		"$EIFFEL_SRC\library\base.net"
+
+
+
+end

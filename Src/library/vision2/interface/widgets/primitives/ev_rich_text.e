@@ -2,6 +2,6 @@ class EV_TEXT
 
 inherit
 
-	MULTI_LINE_ENTRY
+	TEXT_AREA
 
 end -- class EV_TEXT

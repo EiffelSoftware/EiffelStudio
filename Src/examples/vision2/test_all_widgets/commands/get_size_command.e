@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	execute (argument: EV_ARGUMENT3[EV_WIDGET, EV_ENTRY, EV_ENTRY]) is
+	execute (argument: EV_ARGUMENT3[EV_WIDGET, EV_TEXT_FIELD, EV_TEXT_FIELD]) is
 		do
 			argument.second.set_text (argument.first.width.out)
 			argument.third.set_text (argument.first.height.out)

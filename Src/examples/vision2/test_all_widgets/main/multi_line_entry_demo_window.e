@@ -1,14 +1,14 @@
 indexing
 
 	description: 
-	"MULTI_LINE_ENTRY_DEMO_WINDOW, demo window to test multi line entry widget. Belongs to EiffelVision example."
+	"TEXT_AREA_DEMO_WINDOW, demo window to test multi line text area widget. Belongs to EiffelVision example."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 class 
-	MULTI_LINE_ENTRY_DEMO_WINDOW
+	TEXT_AREA_DEMO_WINDOW
 
 inherit
 
@@ -21,7 +21,7 @@ creation
 
 feature -- Access
 
-	main_widget: EV_MULTI_LINE_ENTRY is
+	main_widget: EV_TEXT_AREA is
 		once
 			!!Result.make (Current)
 		end
@@ -36,7 +36,7 @@ feature -- Status setting
 	
 	set_values is
 		do
-			set_title ("Multi line entry demo")
+			set_title ("Text area demo")
 --			main_widget.set_text ("edit me")
 --			main_widget.set_height (40)
 		end

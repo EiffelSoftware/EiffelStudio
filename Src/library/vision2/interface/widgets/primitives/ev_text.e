@@ -1,17 +1,17 @@
 indexing
 
 	description: 
-	"EiffelVision multi line entry. To query multiple lines of text from the user"
+	"EiffelVision text area. To query multiple lines of text from the user"
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_MULTI_LINE_ENTRY
+class EV_TEXT_AREA
 
 inherit
 
-	EV_ENTRY
+	EV_TEXT_COMPONENT
 		redefine
 			make, implementation
 		end
@@ -29,17 +29,17 @@ feature {NONE} -- Initialization
                         -- Create an entry with, `par' as
                         -- parent
 		do
-			!EV_MULTI_LINE_ENTRY_IMP!implementation.make (par)
+			!EV_TEXT_AREA_IMP!implementation.make (par)
 			widget_make (par)
 		end
 	
 
 feature {NONE} -- Implementation
 
-	implementation: EV_MULTI_LINE_ENTRY_I
+	implementation: EV_TEXT_AREA_I
 			-- Implementation 
 			
-end -- class EV_MULTI_LINE_ENTRY
+end -- class EV_TEXT_AREA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

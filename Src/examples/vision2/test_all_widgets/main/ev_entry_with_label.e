@@ -1,8 +1,8 @@
 class 
-	EV_ENTRY_WITH_LABEL
+	EV_TEXT_FIELD_WITH_LABEL
 	
 inherit 
-	EV_ENTRY
+	EV_TEXT_FIELD
 		redefine
 			make
 		end
@@ -16,7 +16,7 @@ creation
 feature -- Initialization
 	
 	make (par: EV_CONTAINER) is
-                        -- Create an entry with, `par' as
+                        -- Create a text field with, `par' as
                         -- parent
 		do
 			!!box.make (par)
@@ -28,7 +28,7 @@ feature -- Initialization
 		end
 	
 	make_with_label (par: EV_CONTAINER; name: STRING) is
-			-- create an entry with name
+			-- create a text field with name
 		do
 			make (par)
 			label.set_text (name)

@@ -34,11 +34,11 @@ feature -- Status setting
 		local
 			set_h_c: SET_HOMOGENEOUS_COMMAND
 			a: EV_ARGUMENT2 [EV_BOX, EV_TOGGLE_BUTTON]
-			a2: EV_ARGUMENT2 [EV_BOX, EV_ENTRY]
+			a2: EV_ARGUMENT2 [EV_BOX, EV_TEXT_FIELD]
 			e: EV_EVENT
 			homogeneous_tb: EV_TOGGLE_BUTTON
 			box_widget: EV_BOX
-			spacing_entry: EV_ENTRY_WITH_LABEL
+			spacing_entry: EV_TEXT_FIELD_WITH_LABEL
 			set_spacing_c: SET_SPACING_COMMAND
                 do
 			Precursor

@@ -1,45 +1,23 @@
 indexing
 
 	description: 
-	"TEXT_FIELD_DEMO_WINDOW, demo window to test text_field widget. Belongs to EiffelVision example."
+		"EiffelVision text area, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class 
-	TEXT_FIELD_DEMO_WINDOW
-
+deferred class
+	
+	EV_TEXT_AREA_I
+	
 inherit
-
-	DEMO_WINDOW
+	
+	EV_TEXT_COMPONENT_I
 	
 
-creation
+end --class EV_TEXT_FIELD_I
 
-	make
-
-feature -- Access
-
-	main_widget: EV_TEXT_FIELD is
-		once
-			!!Result.make (Current)
-		end
-	
-
-feature -- Status setting
-	
-	set_widgets is
-		do
-			main_widget.set_text ("edit me")
-		end
-	
-	set_values is
-		do
-			set_title ("Text field demo")
-		end
-	
-end
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -119,7 +119,7 @@ feature
 	body_index: BODY_INDEX;
 			-- Index of body id
 
-	pattern_id: INTEGER;
+	pattern_id: PATTERN_ID;
 			-- Id of the feature pattern
 
 	rout_id_set: ROUT_ID_SET;
@@ -169,7 +169,7 @@ feature
 			body_index := i;
 		end;
 
-	set_pattern_id (i: INTEGER) is
+	set_pattern_id (i: PATTERN_ID) is
 			-- Assign `i' to `pattern_id'.
 		do
 			pattern_id := i;
@@ -958,7 +958,7 @@ feature -- Polymorphism
  								and then
  								equal (body_index, other.body_index)
  								and then
- 								pattern_id = other.pattern_id
+ 								equal (pattern_id, other.pattern_id)
  				end;
  			end;
  		end;

@@ -343,8 +343,15 @@ feature -- Window Properties
 			-- Is the profile tool hidden?
 
 	tool_name: STRING is
+			-- Name of the tool.
 		do
-			Result := Interface_names.t_Project
+				--| If the tool already has a name, we keep it, otherwise
+				--| we return the default name.
+			if title /= Void then
+				Result := title
+			else
+				Result := Interface_names.t_Project
+			end
 		end
 
 feature -- Window Holders

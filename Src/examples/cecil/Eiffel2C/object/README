@@ -24,9 +24,9 @@ Other:
 		make -f Makefile.<platform> fext.o (on Unix)
 		nmake -f Makefile.win fext.obj (on windows with VC++)
 	o to recompile the eiffel system without changing the external
-		es4 -project tst.epr	(v4.3)
+		ec -project tst.epr	(v4.3)
 	o to recompile the eiffel system and link it with new external object file.
-		es4 -freeze -project tst.epr (v4.3)
+		ec -freeze -project tst.epr (v4.3)
 	o to relink the eiffel system with new object file.
 		cd EIFGEN/W_code; make; cd ../.. (use nmake with VC++)
 	The new executable will be in EIFGEN\W_code directory on windows.

@@ -17,12 +17,12 @@ COMPILATION
 	You can comment or not the `precompiled' option in the default clause of
 	the Ace file. With a precompiled library the system will not be optimized.
 
-	From ebench: open a new project in this directory, choose the proper
+	From estudio: open a new project in this directory, choose the proper
 	ace file (unix.ace, linux.ace, win.ace depending on your platforms), and	
 	then select Compile>finalize. 
 
 	From a console:
-	> es4 -finalize -ace platform.win
+	> ec -finalize -ace platform.win
 	where platform can be unix, linux or win.
 
 	The executable name is `tst' and is located in the root cluster: 

@@ -1,13 +1,13 @@
 CC = gcc
 MAKE = make
-INCLUDE_PATH = $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/include
+INCLUDE_PATH = $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include
 DELDIR = /bin/rm -rf
 LN = /bin/ln -s
 RM = /bin/rm -f
 CP = /bin/cp
 SHELL = /bin/sh
-FINISH_FREEZING = $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/bin/finish_freezing
-ES4 = $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/bin/es4
+FINISH_FREEZING = $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/bin/finish_freezing
+ES4 = $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/bin/ec
 EIFLIB = EIFGEN/W_code/libtst.a 
 LIBS = -lm
 OBJECT = main.o
@@ -20,7 +20,7 @@ compile_eiffel:
 	$(ES4) -freeze; 
 
 compile_c:
-	cd EIFGEN/W_code; $(CP) $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/include/config.sh .; $(SHELL) Makefile.SH; $(MAKE) cecil
+	cd EIFGEN/W_code; $(CP) $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include/config.sh .; $(SHELL) Makefile.SH; $(MAKE) cecil
 mklink:
 	$(LN) EIFGEN/W_code/tst.melted .
 tst: $(OBJECT) $(EIFLIB)

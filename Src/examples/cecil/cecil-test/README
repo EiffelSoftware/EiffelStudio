@@ -27,12 +27,12 @@ Compilation
 
     - To generate only the eiffel lib (from scratch):
         from scratch:
-            es4 -freeze	(or freeze from ebench)
+            ec -freeze	(or freeze from estudio)
             cd EIFGEN/W_code; finish_freezing; make cecil               
         from an existing system on v4.3:
-            es4 -freeze -project tst.epr	(or freeze from ebench)
+            ec -freeze -project tst.epr	(or freeze from estudio)
         from an existing system on v4.2:
-            es4 -freeze -project `pwd`/.	(or freeze from ebench)
+            ec -freeze -project `pwd`/.	(or freeze from estudio)
     - To compile the C CECIL files and the C CECIL object:
         make mklink
         make tst
@@ -49,7 +49,7 @@ Compilation
 		Compile the Eiffel system in frozen or finalize mode
 		from EiffelBench.
 		Compile the main.c file:
-			cl -DEIF_WIN32 -I<INSTALL_DIRECTORY>\bench\spec\windows\include -c main.c (with VC++)
+			cl -DEIF_WIN32 -I<INSTALL_DIRECTORY>\studio\spec\windows\include -c main.c (with VC++)
 		where <INSTALL_DIRECTORY> is the location of your Eiffel delivery.
 		Go to the $/EIFGEN/W_code and generate the CECIL library:
 			nmake cecil (with VC++)

@@ -2,17 +2,10 @@ system
 	tst 
 
 root
-
 	ROOT_CLASS (ROOT_CLUSTER): "make"
 
 default
-
 	assertion (require);
-	-- Uncomment the next line on Windows, with ISE Compiler 4.3
-	-- console_application (yes);
-	-- Comment the next line if you do not want to use
-	-- a precompiled EiffelBase library
---	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base");
 
 cluster
 
@@ -26,10 +19,7 @@ cluster
 			MY_ARRAY;
 		end
 
-
-
--- EiffelBase
-
+		-- EiffelBase
 	all base:		"$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"

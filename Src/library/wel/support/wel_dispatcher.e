@@ -45,7 +45,8 @@ feature {NONE} -- Implementation
 			-- Window messages dispatcher routine
 		local
 			window: WEL_WINDOW
-			previous_state: BOOLEAN
+			returned_value: INTEGER
+			has_return_value: BOOLEAN
 		do
 			window := windows.item (hwnd)
 			debug ("win_dispatcher")
@@ -59,12 +60,18 @@ feature {NONE} -- Implementation
 				check
 					window_exists: window.exists
 				end
-				previous_state := window.default_processing_enabled
+				window.reset_window_processing
 				Result := window.process_message (hwnd, msg, wparam, lparam)
+					--| Store `message_return_value' and `has_return_value' for later
+					--| use, since `call_default_window_procedure' can reset their value.
+				returned_value := window.message_return_value
+				has_return_value := window.has_return_value
 				if window.default_processing_enabled then
 					Result := window.call_default_window_procedure (msg, wparam, lparam)
 				end
-				window.set_default_processing (previous_state)
+				if has_return_value then
+					Result := returned_value
+				end
 			else
 				Result := cwin_def_window_proc (hwnd, msg, wparam, lparam)
 			end
@@ -75,6 +82,7 @@ feature {NONE} -- Implementation
 			-- Dialog box messages dispatcher routine
 		local
 			window: WEL_WINDOW
+			last_result: INTEGER
 		do
 			debug ("dlg_dispatcher")
 				io.print ("in dlg_proc ")
@@ -92,18 +100,23 @@ feature {NONE} -- Implementation
 					-- Wm_initdialog. We set the hwnd value
 					-- to the object because this value
 					-- was unknown until now.
+					--| Since it is not possible to check
+					--| if `set_focus' from WEL_WINDOW has been
+					--| called, Result is set to True.
+					--| As a result, any call to `set_focus' in
+					--| `setup_dialog' from WEL_DIALOG is useless.
 					windows.remove (cwel_temp_dialog_value)
 					window.set_item (hwnd)
 					register_window (window)
-					Result := window.process_message (hwnd,
-						msg, wparam, lparam) /= 0
+					Result := window.process_message (hwnd, msg, wparam, lparam) /= 0
 				end
 				Result := True
 			else
 				window := windows.item (hwnd)
 				if window /= Void then
-					Result := window.process_message (hwnd,
-						msg, wparam, lparam) = -1
+					window.reset_window_processing
+					last_result := window.process_message (hwnd, msg, wparam, lparam)
+					Result := not window.default_processing_enabled
 				end
 			end
 		end

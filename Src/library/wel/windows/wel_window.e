@@ -104,6 +104,12 @@ feature -- Status report
 			Result := default_processing.item
 		end
 
+	message_return_value: INTEGER is	
+			-- Value to be returned to Windows after message processing.
+		do
+			Result := message_return_value_cell.item
+		end
+
 	enabled: BOOLEAN is
 			-- Is the window enabled for mouse and keyboard input?
 		require
@@ -454,6 +460,17 @@ feature -- Status setting
 			default_processing.set_item (False)
 		ensure
 			default_processing_disabled: not default_processing_enabled
+		end
+
+	set_message_return_value (v: INTEGER) is
+			-- Set `v' to `message_return_value'.
+			--| Set also `has_return_value_cell' to `True', used by WEL_DISPATCHER
+			--| when returning a value to Windows.
+		do
+			has_return_value_cell.set_item (True)
+			message_return_value_cell.set_item (v)
+		ensure
+			message_return_value_set: message_return_value = v
 		end
 
 	enable is
@@ -1274,6 +1291,13 @@ feature {NONE} -- Implementation
 			Result.set_item (True)
 		end
 
+	message_return_value_cell: INTEGER_REF is
+			-- Value to be returned to Windows after message processing.
+		once
+			!! Result
+			Result.set_item (0)
+		end
+
 	commands_enabled_ref: BOOLEAN_REF is
 			-- Is the commands execution enabled?
 			-- False by default.
@@ -1420,8 +1444,32 @@ feature {WEL_DISPATCHER}
 		do
 			default_processing.set_item (new_state)
 		ensure
-			default_processing_set:
-				default_processing_enabled = new_state
+			default_processing_set: default_processing_enabled = new_state
+  		end
+  
+	reset_window_processing is
+			-- Reset standard behavior of `Current' to default returned value
+			-- and to an automatic call of the default window procedure.
+		do
+			default_processing.set_item (True)
+			has_return_value_cell.set_item (False)
+			message_return_value_cell.set_item (0)
+		ensure
+			default_processing_set: default_processing_enabled
+			message_return_value_set: message_return_value = 0
+		end
+
+	has_return_value_cell: BOOLEAN_REF is
+			-- Does this window return a value for message currently handled?
+		once
+			!! Result
+			Result.set_item (False)
+		end
+
+	has_return_value: BOOLEAN is
+			-- Does this window return a value for message currently handled?
+		do
+			Result := has_return_value_cell.item
 		end
 
 feature {NONE} -- Removal

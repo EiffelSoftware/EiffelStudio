@@ -82,36 +82,6 @@ feature -- Properties
 			Result := explain_win_mgr.count
 		end;	
 
-feature -- Displaying
-
-	display (ed: TOOL_W) is
-			-- Display `ed' (or raise `ed' if already
-			-- displayed).
-		local
-			bt: BAR_AND_TEXT
-		do
-			if
-				ed.realized
-			then
-				bt ?= ed;
-				if
-					not ed.shown
-				then
---					if bt /= Void then
---						bt.set_default_size;
---						bt.show;
---						bt.set_default_position;
---					else
-						ed.show;
---					end;
-				else
-					ed.raise
-				end
-			else
-				ed.realize
-			end		
-		end;
-
 feature -- Graphical Interface
 
 	close (ed: TOOL_W) is

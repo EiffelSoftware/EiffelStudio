@@ -267,9 +267,26 @@ feature -- Observer pattern
 			valid_stone: a_stone /= Void
 		local
 			new_item: EB_FAVORITES_CLASS
+			l_fcs: EB_FAVORITES_CLASSC_STONE
+			l_fc: EB_FAVORITES_CLASS
 		do
 			create new_item.make_from_class_stone (a_stone, favorites)
 			favorites.extend (new_item)
+			
+			l_fcs ?= a_stone
+			if l_fcs /= Void then
+				l_fc := l_fcs.origin
+				if l_fc /= Void then
+					from
+						l_fc.start
+					until
+						l_fc.after
+					loop
+						new_item.add_feature (l_fc.item.name)
+						l_fc.forth
+					end
+				end
+			end			
 		end
 
 	add_folder (a_folder: EB_FAVORITES_FOLDER) is

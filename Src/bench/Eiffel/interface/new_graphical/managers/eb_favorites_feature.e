@@ -107,6 +107,33 @@ feature -- Convert
 		do
 			create {EB_FAVORITES_FEATURE_STONE} Result.make_from_favorite (Current)
 		end
+		
+feature -- Feature nature
+
+	is_deferred: BOOLEAN is
+		do
+			Result := associated_e_feature.is_deferred
+		end
+
+	is_constant: BOOLEAN is
+		do
+			Result := associated_e_feature.is_constant
+		end
+
+	is_once: BOOLEAN is
+		do
+			Result := associated_e_feature.is_once
+		end
+
+	is_attribute: BOOLEAN is
+		do
+			Result := associated_e_feature.is_attribute
+		end
+
+	is_external: BOOLEAN is
+		do
+			Result := associated_e_feature.is_external
+		end
 
 feature {NONE} -- Implementation
 

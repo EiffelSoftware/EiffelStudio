@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			conv_feat: EB_FAVORITES_FEATURE
 			conv_class: EB_FAVORITES_CLASS
 			conv_folder: EB_FAVORITES_FOLDER
-			l_feat: E_FEATURE
 		do
 			default_create
 			data := an_item
@@ -64,15 +63,15 @@ feature {NONE} -- Initialization
 			elseif an_item.is_feature then
 					-- ...or a feature.
 				conv_feat ?= an_item
-				l_feat := conv_feat.associated_e_feature
 				set_pebble (conv_feat.associated_feature_stone)
-				if l_feat.is_deferred then
+				
+				if conv_feat.is_deferred then
 					set_pixmap (Pixmaps.icon_deferred_feature)
-				elseif l_feat.is_once or l_feat.is_constant then
+				elseif conv_feat.is_once or conv_feat.is_constant then
 					set_pixmap (Pixmaps.icon_once_objects)
-				elseif l_feat.is_attribute then
+				elseif conv_feat.is_attribute then
 					set_pixmap (Pixmaps.icon_attributes)
-				elseif l_feat.is_external then
+				elseif conv_feat.is_external then
 					set_pixmap (Pixmaps.icon_external_feature)
 				else
 					set_pixmap (Pixmaps.icon_feature @ 1)

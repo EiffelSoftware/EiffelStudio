@@ -63,6 +63,35 @@ feature -- Element change
 			-- Nothing to do since the favorites already took away all dead classes.
 		end
 
+	update_folder_item (m: EV_MENU_ITEM) is
+		do
+			m.set_pixmap (pixmaps.icon_favorites_folder @ 1)
+		end
+
+	update_class_item (a_class_item: EB_FAVORITES_CLASS; m: EV_MENU_ITEM) is
+		do
+			if a_class_item.associated_class_c /= Void then
+				m.set_pixmap (Pixmaps.Icon_class_symbol_color)
+			else
+				m.set_pixmap (Pixmaps.Icon_class_symbol_gray)
+			end
+		end
+		
+	update_feature_item (a_feat_item: EB_FAVORITES_FEATURE; m: EV_MENU_ITEM) is
+		do
+			if a_feat_item.is_deferred then
+				m.set_pixmap (Pixmaps.icon_deferred_feature)
+			elseif a_feat_item.is_once or a_feat_item.is_constant then
+				m.set_pixmap (Pixmaps.icon_once_objects)
+			elseif a_feat_item.is_attribute then
+				m.set_pixmap (Pixmaps.icon_attributes)
+			elseif a_feat_item.is_external then
+				m.set_pixmap (Pixmaps.icon_external_feature)
+			else
+				m.set_pixmap (Pixmaps.icon_feature @ 1)
+			end
+		end
+		
 feature {NONE} -- Initialization Implementation
 
 	build_menu is
@@ -128,36 +157,69 @@ feature {NONE} -- Initialization Implementation
 			end
 		end
 
-	favorite_to_menu_item (an_item: EB_FAVORITES_ITEM): EV_MENU is
+	favorite_to_menu_item (an_item: EB_FAVORITES_ITEM): EV_MENU_ITEM is
 		local
 			l_menu_item: EV_MENU_ITEM
-			a_folder_item: EB_FAVORITES_FOLDER
 			a_class_item: EB_FAVORITES_CLASS
-			a_feat_item: EB_FAVORITES_FEATURE
+			l_menu: EV_MENU
 		do
-
+			Result := favorite_to_immediate_menu_item (an_item)
 			if an_item.is_class then
 				a_class_item ?= an_item
-				create Result
-				Result.select_actions.extend (agent favorites_manager.go_to_class (a_class_item))
 				if not a_class_item.is_empty then
+					l_menu ?= Result
+						-- Create sub items
 					from
 						a_class_item.start
 					until
 						a_class_item.after
 					loop
 						l_menu_item := favorite_to_menu_item (a_class_item.item)
-						Result.extend (l_menu_item)
+						l_menu.extend (l_menu_item)
 						a_class_item.forth
 					end
 				end
+			end
+		end
+
+	favorite_to_immediate_menu_item (an_item: EB_FAVORITES_ITEM): EV_MENU_ITEM is
+		local
+			l_menu_item: EV_MENU_ITEM
+			a_folder_item: EB_FAVORITES_FOLDER
+			a_class_item: EB_FAVORITES_CLASS
+			a_feat_item: EB_FAVORITES_FEATURE
+			l_menu: EV_MENU
+		do
+			if an_item.is_class then
+				a_class_item ?= an_item
+				if a_class_item.is_empty then
+					create Result
+					update_class_item (a_class_item, Result)
+					Result.select_actions.extend (agent favorites_manager.go_to_class (a_class_item))
+				else
+						-- Create open this item menu
+					create l_menu_item
+					l_menu_item.set_text (a_class_item.name)
+					l_menu_item.set_data (a_class_item)
+					l_menu_item.select_actions.extend (agent favorites_manager.go_to_class (a_class_item))
+					update_class_item (a_class_item, l_menu_item)
+
+					create l_menu
+					l_menu.extend (l_menu_item)
+					l_menu.extend (create {EV_MENU_SEPARATOR})
+					update_folder_item (l_menu)
+
+					Result := l_menu
+				end
 			elseif an_item.is_folder then
 				a_folder_item ?= an_item
-				Result := build_menu_folder (a_folder_item)				
+				Result := build_menu_folder (a_folder_item)
+				update_folder_item (Result)				
 			elseif an_item.is_feature then
 				a_feat_item ?= an_item
 				create Result
-				Result.select_actions.extend (agent favorites_manager.go_to_feature (a_feat_item))					
+				Result.select_actions.extend (agent favorites_manager.go_to_feature (a_feat_item))
+				update_feature_item (a_feat_item, Result)
 			end
 			Result.set_text (an_item.name)
 			Result.set_data (an_item)
@@ -171,28 +233,27 @@ feature -- Observer pattern
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
 			-- be set to an empty list or `Void'
 		local
-			item_list: EV_MENU_ITEM_LIST
-			a_class_item: EB_FAVORITES_CLASS
-			a_feat_item: EB_FAVORITES_FEATURE
+			l_item: EV_MENU_ITEM
+			l_item_data: EB_FAVORITES_ITEM
+			l_menu: EV_MENU
 			menu_item: EV_MENU_ITEM
 		do
 				-- Create a new entry for `a_item' in the menu.
-			item_list := get_menu_item_from_path (Current, a_path)
-			if item_list /= Void then
-				if a_item.is_class then
-					create {EV_MENU} menu_item
-					a_class_item ?= a_item
-					menu_item.select_actions.extend (agent favorites_manager.go_to_class (a_class_item))
-				elseif a_item.is_folder then
-					create {EV_MENU} menu_item					
-				elseif a_item.is_feature then
-					create menu_item
-					a_feat_item ?= a_item
-					menu_item.select_actions.extend (agent favorites_manager.go_to_feature (a_feat_item))					
+			menu_item := favorite_to_immediate_menu_item (a_item)
+				
+			l_item := get_menu_item_from_path (Current, a_path)
+			l_menu ?= l_item
+			if l_menu /= Void then
+				l_menu.extend (menu_item)
+			elseif l_item /= Void then
+				l_item_data ?= l_item.data
+				if l_item_data.is_class then
+					l_menu ?= favorite_to_immediate_menu_item (l_item_data)
+					replace_class_menu_item_by (l_item, l_menu)
+					if l_menu /= Void then
+						l_menu.extend (menu_item)			
+					end
 				end
-				menu_item.set_text (a_item.name)
-				menu_item.set_data (a_item)
-				item_list.extend (menu_item)
 			end
 		end
 
@@ -203,19 +264,43 @@ feature -- Observer pattern
 			-- be set to an empty list or `Void'
 		local
 			item_list: EV_MENU_ITEM_LIST
-			item_name: STRING
 			menu_item_to_remove: EV_MENU_ITEM
+			a_class_item: EB_FAVORITES_CLASS
+			parent_menu: EV_MENU
+			l_new_item: EV_MENU_ITEM
 		do
 				-- Remove the menu item that match `a_item' from the menu.
-			item_name := a_item.name
-			item_list := get_menu_item_from_path (Current, a_path)
+			item_list ?= get_menu_item_from_path (Current, a_path)
 			if item_list /= Void then
 				menu_item_to_remove ?= item_list.retrieve_item_by_data (a_item, True)
 				if menu_item_to_remove /= Void then
 					item_list.prune_all (menu_item_to_remove)
 				end
+				if a_item.is_feature then
+					a_class_item ?= item_list.data
+					if a_class_item /= Void and then a_class_item.is_empty then
+						l_new_item := favorite_to_immediate_menu_item (a_class_item)
+						parent_menu ?= item_list
+						replace_class_menu_item_by (parent_menu, l_new_item)
+					end
+				end
 			end
 		end
+		
+	replace_class_menu_item_by (mi1, mi2: EV_MENU_ITEM) is
+			-- Replace mi1 by mi2
+		local
+			item_list: EV_ITEM_LIST [EV_ITEM]
+		do
+			item_list := mi1.parent
+			item_list.start
+			item_list.search (mi1)
+			if item_list.exhausted then
+				item_list.extend (mi2)
+			else
+				item_list.replace (mi2)
+			end
+		end		
 
 feature -- Memory management
 
@@ -229,16 +314,22 @@ feature -- Memory management
 
 feature {NONE} -- Implementation
 		
-	get_menu_item_from_path (item_list: EV_MENU_ITEM_LIST; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]): EV_MENU_ITEM_LIST is
+	get_menu_item_from_path (an_item: EV_MENU_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]): EV_MENU_ITEM is
 			-- Get the menu item corresponding to the path `a_path'
 			-- Void if not found.
 		local
 			new_path: like a_path
 			curr_item: EB_FAVORITES_FOLDER
-			sub_menu: EV_MENU
+			sub_menu: EV_MENU_ITEM
+			item_list: EV_MENU_ITEM_LIST
 		do
-			if a_path = Void or else a_path.is_empty then
-				Result := item_list
+			item_list ?= an_item
+			if
+				item_list = Void
+				or else	a_path = Void 
+				or else a_path.is_empty 
+			then
+				Result := an_item
 			else
 				new_path := a_path.twin
 				new_path.start

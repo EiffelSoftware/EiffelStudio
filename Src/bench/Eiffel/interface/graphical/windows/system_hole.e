@@ -59,11 +59,10 @@ feature {NONE}
 				end;
 			elseif argument = name_chooser then
 				!!project_dir.make (name_chooser.selected_file);
-				if project_dir.valid then
+				project_dir.check_directory (warner);
+				if project_dir.is_valid then
 					project_tool.open_command.make_project (project_dir);
 					work (Current)
-				else
-					warner.call (Current, l_Invalid_directory)
 				end
 			elseif argument = warner then
 				name_chooser.call (Current)

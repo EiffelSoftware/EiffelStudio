@@ -23,6 +23,9 @@ feature -- Attributes
 	actual_type: TYPE_A;
 			-- Actual type of the anchored type in a given class
 
+	class_id: INTEGER;
+			-- Class ID of the class where the anchor is referenced
+
 	feature_id: INTEGER;
 			-- Feature ID of the anchor
 
@@ -36,6 +39,7 @@ feature -- Attributes
 		do
 			feature_id := f.feature_id;
 			feature_name := f.feature_name;
+			class_id := System.current_class.id
 		end;
 
 feature -- Primitives
@@ -52,16 +56,48 @@ feature -- Primitives
 			Result := True;
 		end;
 
+	raise_veen (f: FEATURE_I) is
+		local
+			veen: VEEN;
+		do
+			!!veen;
+			veen.set_class (System.current_class);
+			veen.set_feature (f);
+			veen.set_identifier (feature_name);
+			Error_handler.insert_error (veen);
+			Error_handler.raise_error;
+		end;
+
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_FEATURE is
 			-- Calculated type in function of the feauure `f' which has
 			-- the type Current and the feautre table `feat_table
 		local
 			origin_table: HASH_TABLE [FEATURE_I, INTEGER];
-			anchor_feature: FEATURE_I;
+			anchor_feature, orig_feat: FEATURE_I;
 			anchor_type: TYPE;
 		do
 			origin_table := feat_table.origin_table;
-			anchor_feature := origin_table.item (rout_id);
+			if System.current_class.id /= class_id then
+				orig_feat := System.class_of_id (class_id).feature_table
+								.item (feature_name);
+				if orig_feat = Void then
+					raise_veen (f);
+				end;
+				rout_id := orig_feat.rout_id_set.first;
+				if rout_id < 0 then
+					rout_id := - rout_id
+				end;
+				anchor_feature := origin_table.item (rout_id);
+			else
+				anchor_feature := feat_table.item (feature_name);
+				if anchor_feature = Void then
+					raise_veen (f);
+				end;
+				rout_id := anchor_feature.rout_id_set.first;
+				if rout_id < 0 then
+					rout_id := - rout_id
+				end;
+			end;
 			anchor_type := anchor_feature.type;
 			Like_control.on;
 			if Like_control.has (rout_id) then

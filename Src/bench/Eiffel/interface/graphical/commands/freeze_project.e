@@ -56,10 +56,11 @@ feature {NONE}
 						end;
 					end;
 					restore_cursors;
+					error_window.display;
 				elseif argument = warner then
 					name_chooser.call (Current)
 				elseif argument = void then
-					system_tool.show;	
+					system_tool.display;	
 					load_default_ace;	
 					system_tool.set_quit_command (Current, 0);
 						-- 0 /= void
@@ -70,15 +71,12 @@ feature {NONE}
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
 				end;
-				error_window.display;
 			elseif argument = name_chooser then
 				!!project_dir.make (name_chooser.selected_file);
-				if project_dir.valid then
+				project_dir.check_directory (warner);
+				if project_dir.is_valid then
 					project_tool.open_command.make_project (project_dir);
 					work (Current)
-				else
-					warner.custom_call (Current, l_Invalid_directory,
-						"Try again", "Help", "Cancel");		
 				end
 			elseif argument = warner then
 				name_chooser.call (Current)
@@ -153,7 +151,7 @@ feature {NONE}
 		do
 				!!file_name.make (50);	
 				file_name.append (Eiffel3_dir_name);
-				file_name.append ("/bench/help/defaults/Ace");
+				file_name.append ("/bench/help/defaults/Ace.default");
 				system_tool.text_window.show_file_content (file_name);
 		end;
 

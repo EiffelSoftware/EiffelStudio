@@ -1,7 +1,8 @@
 -- This class is virtually the same as REP_NAME_LIST except
 -- that the parent_clause attribute is the class_id of the
 -- parent. (I did not want to store all the information
--- relating to PARENT_C).
+-- relating to PARENT_C). This class is used for storage purposes.
+-- This is then used in class REP_CLASS_INFO.
 
 class S_REP_NAME_LIST
 
@@ -23,8 +24,8 @@ feature
 			-- Parent clause where replication came from 
 
 	replicated_features: LINKED_LIST [S_REP_NAME];
-			-- List of features to be code replicated 
-			-- These features were written_in the same
+			-- List of features to be code replicated.
+			-- The origin of these features were written_in the same
 			-- class 
 
 	make (p: INTEGER) is
@@ -67,6 +68,8 @@ feature
 			end;
 			list.go_to (cur);
 		end;
+
+feature -- Trace
 
 	trace is
 		do

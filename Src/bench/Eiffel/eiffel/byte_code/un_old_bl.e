@@ -45,13 +45,7 @@ feature
 			target_type := Context.real_type (type);
 			register.print_register;
 			generated_file.putstring (" = ");
-			if not target_type.is_basic then
-				generated_file.putstring ("RTCL(");
-				expr.print_register;
-				generated_file.putchar(')');
-			else
-				expr.print_register;	
-			end;
+			expr.print_register;
 			generated_file.putchar (';');
 			generated_file.new_line;
 		end;

@@ -79,6 +79,8 @@ feature	-- Replication
 feature {INSTR_CALL_AS} -- Replication
 
 	set_call (c: like call) is
+		require
+			valid_arg: c /= Void
 		do
 			call := c;
 		end;

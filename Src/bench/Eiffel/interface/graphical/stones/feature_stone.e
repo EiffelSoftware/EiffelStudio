@@ -110,5 +110,13 @@ feature -- dragging
 		do
 			Result := feature_i /= Void
 		end;
+
+	set_positions (s, e: INTEGER) is
+			-- Assign `s' to start_position.
+			-- Assign `e' to end_position.
+		do
+			start_position := s
+			end_position := e
+		end;
  
 end

@@ -49,6 +49,8 @@ feature
 --get_xterm_in_xterminal (xterm_name);
 		end;
 
+	close_windows is do end;
+
 	popup_file_selection is
 		do
 			open_command.execute (text_window);
@@ -133,7 +135,7 @@ feature -- rest
 			-- Build top bar
 		local
 			system_hole: SYSTEM_HOLE;
-			class_hole: CLASS_HOLE;
+			class_hole: PROJ_CLASS_HOLE;
 			routine_hole: ROUTINE_HOLE;
 			object_hole: OBJECT_HOLE;
 			explain_hole: EXPLAIN_HOLE;

@@ -62,6 +62,10 @@ feature -- Type check and byte code
 				vomb2.set_type (error_type);
 				Error_handler.insert_error (vomb2);
 			end;
+			lower.record_dependances;
+			if upper /= Void then
+				upper.record_dependances
+			end;
 		end;
 
 	good_integer_interval: BOOLEAN is
@@ -143,6 +147,8 @@ feature {INTERVAL_AS} -- Replication
 		end;
 
 	set_upper (u: like upper) is
+		require
+			valid_arg: u /= Void
 		do
 			upper := u
 		end;

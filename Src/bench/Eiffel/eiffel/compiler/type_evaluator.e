@@ -28,7 +28,7 @@ feature
 			Like_control.wipe_out;
 			Result := type.solved_type (feat_table, f);
 		rescue
-			if exception = Programmer_exception then
+			if is_programmer_exception ("Like cycle") then
 					-- Cycle in anchor type or unvalid anchor: the
 					-- exception is raise in routine `solved_type' of
 					-- classes LIKE_ID_AS, LIKE_FEATURE and LIKE_ARGUMENT

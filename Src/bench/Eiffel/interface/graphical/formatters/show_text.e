@@ -62,13 +62,14 @@ feature
 				if stone_text /= Void then
 					text_window.clean;
 					display_header (stone);
+					text_window.set_root_stone (stone);
 					text_window.put_string (stone_text);
 					if stone.clickable and (stone.click_list /= Void) then
 						text_window.share (stone.click_list)
 					end;
 					text_window.set_editable;
 					text_window.show_image;
-					text_window.set_root_stone (stone);
+					text_window.set_mode_for_editing;
 					text_window.set_last_format (Current);
 				end
 			end

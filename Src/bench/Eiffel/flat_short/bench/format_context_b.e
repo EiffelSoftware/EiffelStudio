@@ -1,8 +1,12 @@
 class FORMAT_CONTEXT
+
 inherit
-	SHARED_SERVER
+
+	SHARED_SERVER;
+	SHARED_INST_CONTEXT
 
 creation
+
 	make
 
 feature -- compilation test
@@ -20,7 +24,7 @@ feature -- commit / rollback system
 			class_c := c;
 			!!previous.make;
 			!!text.make;
-			!!first_format.make(c.actual_type);
+			!!first_format.make(c.actual_type, is_short);
 			upper_name := c.class_name.duplicate;
 			upper_name.to_upper;
 			previous.add (first_format);
@@ -28,15 +32,18 @@ feature -- commit / rollback system
 				no_internals := true;
 				client := system.any_class.compiled_class;
 			end;
-			!!flat_struct.make (c, client);
+			!!flat_struct.make (c, client, no_internals);
 			flat_struct.fill;
 			if flat_struct.ast /= void then
 				prepare_class_text;
+				System.set_current_class (class_c);
+				Inst_context.set_cluster (class_c.cluster);
 				flat_struct.ast.format (Current);
+				System.set_current_class (Void);
+				Inst_context.set_cluster (Void);
 				end_class_text;
 			end;
-	end;
-
+		end;
 
 	class_c: CLASS_C;
 	
@@ -166,8 +173,6 @@ feature -- text construction
 			!!item.make (s, p);
 			text.add (item);
 		end;
-
-
 
 	put_separator is
 			-- append the separator
@@ -385,17 +390,12 @@ feature -- type control
 			end;
 		end;
 
-
 	index_feature is
 		local
 			name: STRING;
 		do
 		end;
 			
-
-			
-			
-	
 	put_normal_feature is
 		local
 			feature_i: FEATURE_I;
@@ -403,18 +403,21 @@ feature -- type control
 			feature_as: FEATURE_AS;
 			arg: EIFFEL_LIST [EXPR_AS];
 			item: BASIC_TEXT;
+			i, nb: INTEGER;
+			f_name: STRING;
 		do
 			feature_i := format.local_types.target_feature;
 			if dot_needed then
 				put_dot
 			end;
+			f_name := format.local_types.final_name;
 			if feature_i /= void then
 				feature_as := body_server.item (feature_i.body_id);
 				!!stone.make (feature_i, class_c, feature_as.start_position,
 						feature_as.end_position);
-				!CLICKABLE_TEXT!item.make (format.local_types.final_name, stone);
+				!CLICKABLE_TEXT!item.make (f_name, stone);
 			else			
-				!!item.make (format.local_types.final_name)
+				!!item.make (f_name)
 			end;
 			text.add (item);
 			arg ?= arguments;
@@ -432,6 +435,15 @@ feature -- type control
 				else
 					rollback;
 				end;
+				from
+					arg.start;
+					nb := arg.count;
+					i := 1;
+				until	
+					i > nb	
+				loop
+					i := i + i
+				end
 			else
 				last_was_printed := true;
 			end;			
@@ -524,7 +536,7 @@ feature -- type control
 		require
 			good_class: c /= void
 		do
-			format.set_classes (c, format.global_types.target_class);
+			format.set_classes (c, format.global_types.target_class, no_internals);
 		end;
 
 	set_context_features (source, target: FEATURE_I) is
@@ -536,6 +548,11 @@ feature -- type control
 		do
 			format.set_context_features (source, 
 				format.global_types.target_enclosing_feature);
+		end;
+
+	set_in_assertion (b: BOOLEAN) is
+		do
+			format.set_in_assertion (b);
 		end;
 
 	keep_types is
@@ -610,23 +627,6 @@ feature -- infix and prefix control
 
 feature -- comments
 
-	file_list: TABLE [EIFFEL_FILE, INTEGER];
-
-	trailing_comment_exists (pos: INTEGER): BOOLEAN is
-			-- is there a comment after pos
-		local
-			file: EIFFEL_FILE;
-		do
-			if pos >= 0 then
-				file := file_list.item (format.global_types.source_id);
-				if file /= void then
-					file.go_after (pos);
-					Result := file.trailing_comment  /= void;
-				end;
-			end;
-		end;
-
-
 	put_comment (comment: EIFFEL_COMMENTS) is
 		local
 			i: INTEGER;
@@ -634,14 +634,14 @@ feature -- comments
 			begin;
 			if comment /= void then
 				if comment.count > 0 
-					and comment.text.item (i).item (1) /= '|'
+					and comment.text.item (1).item (1) /= '|'
 				then
 					put_string ("-- ");
-					put_string (comment.text.item (0));
+					put_string (comment.text.item (1));
 					from
-						i := 1
+						i := 2
 					until
-						i >= comment.count
+						i > comment.count
 						or else comment.text.item (i).item (1) = '|'
 					loop
 						next_line;
@@ -654,29 +654,6 @@ feature -- comments
 			commit;
 		end;
 			
-				
-	
-	put_trailing_comment (pos: INTEGER) is
-		local
-			file: EIFFEL_FILE;
-			comment: EIFFEL_COMMENTS;
-		do
-			if pos >= 0 then
-				--file := file_list.item (format.global_types.source_id);
-				if file /= void then
-					file.go_after (pos);
-					comment := file.trailing_comment;
-				end;
-				if comment /= void then
-					begin;
-					indent_one_more;
-					next_line;
-					--put_comment 
-					commit;
-				end;
-			end;
-		end;
-	
 	put_origin_comment is
 		local
 			s: STRING;
@@ -711,6 +688,15 @@ feature -- comments
 			Result := class_c.generics.i_th (pos).formal_name.duplicate;
 			Result.to_upper;
 		end;
-	
+
+
+feature -- Feature comments (for FORMAT_FEAT_CONTEXT)
+
+	start_position: INTEGER is
+		do
+			Result := -1
+		end
+
+	put_feature_comments is do end;
 
 end	

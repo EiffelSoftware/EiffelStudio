@@ -63,6 +63,7 @@ feature -- Implementation of inherited deferred features
 			like_argument: LIKE_ARGUMENT;
 			depend_unit: DEPEND_UNIT;
 			s: STRING;
+			veen: VEEN;
 		do
 			anchor_feature := feat_table.item (anchor);
 			if anchor_feature /= Void then
@@ -124,8 +125,12 @@ feature -- Implementation of inherited deferred features
 						Result := like_argument;
 					end;
 				else
-						-- No anchor found
-					Error_handler.raise ("Like_cycle");
+					!!veen;
+					veen.set_class (System.current_class);
+					veen.set_feature (f);
+					veen.set_identifier (anchor);
+					Error_handler.insert_error (veen);
+					Error_handler.raise_error;
 				end;
 				check
 					Result_actual_type_exists: Result.actual_type /= Void

@@ -582,6 +582,13 @@ end;
 			index_small_enough: id <= id_array.count;
 		do
 			Result := id_array.item (id);
+debug ("CLASS_OF_ID")
+io.error.putstring ("Class of id ");
+io.error.putint (id);
+io.error.putstring (": ");
+io.error.putstring (Result.class_name);
+io.error.new_line;
+end;
 		end;
 
 	class_type_of_id (type_id: INTEGER): CLASS_TYPE is
@@ -787,7 +794,6 @@ end;
 
 				make_update;
 			end;
-
 			first_compilation := False;
 		end;
 
@@ -2685,6 +2691,8 @@ feature -- Plug and Makefile file
 								(id, creation_feature.body_id).duplicate;
 				array_make_name := arr_make_name.duplicate;
 			else
+				cl_type := Instantiator.Array_type.associated_class_type; 
+				arr_type_id := cl_type.type_id;
 				arr_make_name := array_make_name
 			end;
 			Plug_file.putstring ("extern void ");
@@ -2823,7 +2831,7 @@ feature -- Main file generation
 				%%Tif (echval = setjmp(exenv))%N%
 				%%T%Tfailure();%N%N%
 				%%Teif_rtinit(argc, argv, envp);%N%
-				%%Temain((char *) 0);%N%
+				%%Temain(argc, argv);%N%
 				%%Treclaim();%N%
 				%%Texit(0);%N%
 				%}%N");
@@ -2887,8 +2895,9 @@ feature -- Main file generation
 			end;
 	
 			Initialization_file.putstring ("%
-				%void emain(args)%N%
-				%char *args;%N%
+				%void emain(argc, argv)%N%
+				%int argc;%N%
+				%char **argv;%N%
 				%{%N%
 				%%Textern char *root_obj;%N");
 
@@ -2923,14 +2932,14 @@ feature -- Main file generation
 					Initialization_file.putstring (c_name);
 					Initialization_file.putstring ("(root_obj");
 					if root_feat.has_arguments then
-						Initialization_file.putstring (", args");
+						Initialization_file.putstring (", argarr(argc, argv)");
 					end;
 					Initialization_file.putstring (");%N");
 				end;
 			else
 				Initialization_file.putstring ("%Tif (rcfid)%N%
 					%%T%Tif (rcarg)%N%
-					%%T%T%T((void (*)()) RTWF(rcst, rcfid, rcdt))(root_obj, args);%N%
+					%%T%T%T((void (*)()) RTWF(rcst, rcfid, rcdt))(root_obj, argarr(argc, argv));%N%
 					%%T%Telse%N%
 					%%T%T%T((void (*)()) RTWF(rcst, rcfid, rcdt))(root_obj);%N");
 			end;
@@ -3216,7 +3225,7 @@ feature -- Conveniences
 
 	reset_system_level_options is
 		do
-			remover_off := False;
+			remover_off := True;
 			code_replication_off := True;
 			exception_stack_managed := False; 
 		end;
@@ -3286,6 +3295,7 @@ feature -- Precompilation
 			server_controler.save_precompiled_id;
 			max_precompiled_id := class_counter.value;
 			max_precompiled_type_id := static_type_id_counter.value;
+			Universe.mark_precompiled;
 		end;
 
 	uses_precompiled: BOOLEAN is

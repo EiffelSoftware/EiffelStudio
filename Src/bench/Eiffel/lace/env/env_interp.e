@@ -48,6 +48,7 @@ feature
 							-- Looking for a non-alphanumeric character
 						from
 							j := i;
+							stop := False
 						until
 							j > Result.count or else stop
 						loop

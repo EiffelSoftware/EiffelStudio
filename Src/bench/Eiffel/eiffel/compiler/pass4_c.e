@@ -19,6 +19,7 @@ feature
 		local
 			temp: STRING
 		do
+			associated_class.update_melted_set;
 			if associated_class.has_features_to_melt then
 					-- Verbose
 				io.error.putstring ("Degree 2: class ");
@@ -36,6 +37,7 @@ feature
 		local
 			temp: STRING
 		do
+			associated_class.update_melted_set;
 			if associated_class.has_features_to_melt then
 					-- Verbose
 				io.error.putstring ("Degree 2: class ");

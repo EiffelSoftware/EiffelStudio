@@ -67,6 +67,8 @@ feature -- Conveniences
 	format (ctxt : FORMAT_CONTEXT) is
 		do
 			ctxt.always_succeed;
-			ctxt.put_string("%'@%'");
+			ctxt.put_string("%'");
+			ctxt.put_string(value.out);
+			ctxt.put_string("%'");
 		end;
 end

@@ -75,6 +75,10 @@ feature -- Debug purpose
 
 feature -- formatter
 
+	format (ctxt: FORMAT_CONTEXT) is
+		deferred
+		end;
+
 	infix "<" (other: EXPORT_I): BOOLEAN is
 		deferred
 		end;

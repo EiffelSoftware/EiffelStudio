@@ -7,6 +7,9 @@ inherit
 
 	SHARED_WORKBENCH;
 	FORMATTER
+		redefine
+			file_name
+		end
 
 creation
 
@@ -30,6 +33,19 @@ feature {NONE}
 	command_name: STRING is do Result := l_Showclusters end;
 
 	title_part: STRING is do Result := l_Clusters_of end;
+
+	file_name (stone: STONE): STRING is
+		local
+			filed_stone: FILED_STONE
+		do
+			filed_stone ?= stone;
+			!!Result.make (0);
+			if filed_stone /= Void then
+				Result.append (filed_stone.file_name);
+				Result.append (".");
+				Result.append (post_fix); --| Should produce Ace.clusters
+			end;
+		end;
  
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Show universe: clusters in class lists, in `text_window'.
@@ -51,6 +67,9 @@ feature {NONE}
 				loop
 					text_window.put_string ("Cluster: ");
 					text_window.put_string (clusters.item.cluster_name);
+					if clusters.item.is_precompiled then
+						text_window.put_string (" (Precompiled)")
+					end;
 					text_window.new_line;
 					classes := clusters.item.classes;
 

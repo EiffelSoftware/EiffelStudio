@@ -52,13 +52,17 @@ feature
 		do
 			set_title (tool_name);
 			set_default_format;
-			text_window.clear_window
+			text_window.clear_window;
 		end;
 
 	set_default_format is
 			-- Default format of windows
 		do
 			-- Do nothing
+		end;
+
+	close_windows is
+		deferred
 		end;
 	
 feature {NONE}

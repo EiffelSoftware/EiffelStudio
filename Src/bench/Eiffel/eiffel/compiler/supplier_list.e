@@ -22,27 +22,26 @@ feature
 		local
 			suppl_info: SUPPLIER_INFO;
 			id: INTEGER;
+			s: SORTED_SET [INTEGER]
 		do
+			s := suppliers (l);
 			from
-				l.start
+				s.start
 			until
-				l.after
+				s.after
 			loop
-				id := l.item.id;
-				goto (l.item.id);
-				suppl_info := item;
-				suppl_info.remove_occurence;
-				if suppl_info.occurence <= 0 then
-					remove;
+				id := s.item;
+				goto (id);
+					-- Defensive programming: according to the
+					-- precondition, after should always be false
+				if not after then
+					suppl_info := item;
+					suppl_info.remove_occurence;
+					if suppl_info.occurence <= 0 then
+						remove;
+					end;
 				end;
-			
-					-- Go to next supplier
-				from
-				until
-					l.after or else	l.item.id /= id
-				loop
-					l.forth;
-				end;
+				s.forth
 			end;
 		end;
 
@@ -54,13 +53,15 @@ feature
 		local
 			suppl_info: SUPPLIER_INFO;
 			id: INTEGER;
+			s: SORTED_SET [INTEGER]
 		do
+			s := suppliers (l);
 			from
-				l.start
+				s.start
 			until
-				l.after
+				s.after
 			loop
-				id := l.item.id;
+				id := s.item;
 debug ("ACTIVITY");
 	io.error.putstring ("SUPPLIER_LIST add_occurence: ");
 	io.error.putstring (System.class_of_id (id).class_name);
@@ -74,12 +75,7 @@ end;
 					suppl_info.add_occurence;
 				end;
 	
-				from
-				until
-					l.after or else l.item.id /= id
-				loop
-					l.forth;
-				end;
+				s.forth;
 			end;
 		ensure
 			consistency: is_ok (l)
@@ -101,6 +97,24 @@ end;
 		end;
 
 feature {NONE}
+
+	suppliers (l: SORTED_SET [DEPEND_UNIT]): SORTED_SET [INTEGER] is
+		local
+			id: INTEGER
+		do
+			!!Result.make;
+			from
+				l.start
+			until
+				l.after
+			loop
+				id := l.item.id;
+				if not Result.has (id) then
+					Result.add (id);
+				end;
+				l.forth
+			end;
+		end;
 
 	goto (id: INTEGER) is
 			-- Move cursor to supplier info of id `id'.
@@ -144,24 +158,21 @@ feature {NONE}
 		local
 			suppl_info: SUPPLIER_INFO;
 			id: INTEGER;
+			s: SORTED_SET [INTEGER];
 		do
+			s := suppliers (l);
 			from	
 				Result := True;
-				l.start;
+				s.start;
 			until
-				l.after or else not Result
+				s.after or else not Result
 			loop
-				id := l.item.id;
+				id := s.item;
 				suppl_info := info (id);
 				Result := 	suppl_info /= Void
 							and then
 							suppl_info.occurence >= 1;
-				from
-				until
-					l.after or else l.item.id /= id
-				loop
-					l.forth;
-				end;
+				s.forth;
 			end;
 		end;
 

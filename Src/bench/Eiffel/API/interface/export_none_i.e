@@ -59,4 +59,9 @@ feature
 		do
 			-- never true
 		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+		do
+			ctxt.put_string ("{NONE}")
+		end;
 end

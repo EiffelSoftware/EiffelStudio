@@ -18,7 +18,7 @@ creation
 	
 feature 
 
-	make (a_composite: COMPOSITE) is
+	make (a_composite: COMPOSITE; cmd: SHELL_COMMAND) is
 			-- Create a file selection dialog
 		do
 			prompt_dialog_create (l_Shell_w, a_composite);
@@ -30,7 +30,8 @@ feature
 			!!cancel_it;
 			add_ok_action (Current, ok_it);
 			add_cancel_action (Current, cancel_it);
-			set_width (200);
+			set_width (350);
+			associcated_command := cmd;
 		end;
 
 	
@@ -41,9 +42,8 @@ feature {NONE}
 
 feature 
 	
-	call (cmd: SHELL_COMMAND) is
+	call is
 		do
-			associcated_command := cmd;
 			set_exclusive_grab;
 			set_selection_text (associcated_command.command_shell_name);
 			popup
@@ -67,7 +67,6 @@ feature {NONE}
 					set_selection_text (cmd_name);
 				end;
 			elseif argument = cancel_it then
-				associcated_command := Void;
 				popdown
 			end
 		end;

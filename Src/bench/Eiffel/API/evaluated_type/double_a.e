@@ -27,7 +27,8 @@ feature
 			if in_generics then
 				Result := other.is_double;
 			else
-				Result := old_conform_to (other, False)
+				Result := old_conform_to (other, False) or else
+				other.actual_type.is_real
 			end;
 		end;
 

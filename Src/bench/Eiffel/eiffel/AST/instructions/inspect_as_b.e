@@ -175,6 +175,8 @@ feature -- Replication
 feature {INSPECT_AS} -- Replication
 
 	set_switch (s: like switch) is
+		require
+			valid_arg: s /= Void
 		do
 			switch := s
 		end;

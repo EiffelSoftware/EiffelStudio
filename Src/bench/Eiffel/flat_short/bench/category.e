@@ -48,14 +48,15 @@ feature
 			until
 				clauses.after or else not Result
 			loop
-				Result := clauses.item.empty
+				Result := clauses.item.empty;
+				clauses.forth
 			end;
 		end;
 
 
 
 	merge (other: like Current) is
-			-- Import other categories clauses. Merge them with
+			-- Import other category clauses. Merge them with
 			-- previous clauses when appropriate
 		require
 			good_argument: other /= void
@@ -74,7 +75,7 @@ feature
 				other_is_stable: other.clauses.count = other_count;
 			variant
 				other_count + clauses_count + 3
-				- clauses.position - other.clauses.position	
+				- clauses.index - other.clauses.index	
 			--	clauses_count + other_count - new_clauses.count + 1
 			until
 				clauses.after
@@ -90,17 +91,21 @@ feature
 					new_clauses.finish;
 					clauses.forth;
 				end;
-				if not  new_clauses.off and not other.clauses.off
-					and then new_clauses.item.compatible (other.clauses.item) 
+				if not new_clauses.off and not other.clauses.off
 				then
-					new_clauses.item.merge (other.clauses.item);
+					if new_clauses.item.compatible (other.clauses.item) then
+						new_clauses.item.merge (other.clauses.item);
+					else
+						new_clauses.add_right (other.clauses.item);
+						new_clauses.finish;
+					end;
 					other.clauses.forth;
 				end;
 				from
 				until
 					other.clauses.after
 					or else ((not clauses.after)
-						and then not (other.clauses.item >= clauses.item))
+						and then (other.clauses.item >= clauses.item))
 				loop
 					new_clauses.add_right (other.clauses.item);
 					new_clauses.finish;
@@ -109,8 +114,6 @@ feature
 			end;
 			clauses := new_clauses;
 		end;
-
-
 
 	add (names_adapter: NAMES_ADAPTER) is
 		require
@@ -143,7 +146,7 @@ feature
 					clauses.item.add (names_adapter.new_as (names));
 				else
 					!!new_clause.make (names_adapter.new_as (names), names.feature_i);
-					clauses.put_right (new_clause)	
+					clauses.add_right (new_clause)	
 				end;
 				synonymous.forth;
 			end
@@ -166,9 +169,9 @@ feature
 
 	infix "<" (other: like Current): BOOLEAN is
 		do
-			Result := comment /= void
-			and (other.comment = void
-				or else comment < other.comment)
+			Result := comment = void
+			or else (other.comment /= void
+				and then comment < other.comment)
 		end;
 				
 

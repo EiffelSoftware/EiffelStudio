@@ -13,14 +13,19 @@ feature
 	append_value (cw: CLICK_WINDOW) is 
 		local
 			os: OBJECT_STONE;
-			class_c: CLASS_C
+			class_c: CLASS_C;
+			void_pointer: POINTER
         do 
 --			class_c := System.class_types.item (dynamic_type + 1).associated_class;
 --			class_c.append_clickable_name (cw);
-			cw.put_string (" [");
-			!! os.make (reference.out);
-			cw.put_clickable_string (os, reference.out);
-			cw.put_string ("]");
+			if (reference = void_pointer) then
+				cw.put_string (" Void")
+			else
+				cw.put_string (" [");
+				!! os.make (reference.out);
+				cw.put_clickable_string (os, reference.out);
+				cw.put_string ("]");
+			end
         end;
 
 	reference: POINTER;

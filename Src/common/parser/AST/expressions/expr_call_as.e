@@ -67,6 +67,8 @@ feature	-- Replication
 feature {EXPR_CALL_AS}
 
 	set_call (c: like call) is
+		require
+			valid_arg: c /= Void
 		do
 			call := c;
 		end

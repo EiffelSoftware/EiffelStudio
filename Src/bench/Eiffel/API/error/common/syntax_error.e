@@ -97,11 +97,19 @@ feature
 			put_string ("Syntax error at line ");
 			put_int (line_number);
 			if Lace.parsed then
-				-- Error happened in a class
-				put_string (" in class ");
-				put_clickable_string (
-						stone (dummy_reference),
-						System.current_class.signature)
+				if Lace.successfull then
+						-- Error happened in a class
+					put_string (" in class ");
+					put_clickable_string (
+							stone (System.current_class),
+							System.current_class.signature)
+				else
+						-- Error happened while parsing a "use" file
+					put_string (" in Cluster_properties %"Use%" file")
+					if file_name /= Void then
+						put_string ("%N     File: "); put_string (file_name);
+					end;
+				end
 			else
 				put_clickable_string (ace_stone (dummy_reference), " in Ace file")
 			end;
@@ -151,7 +159,7 @@ feature
 				c := a_line.item (i);
 				if c = '%T' then
 					put_string ("    ");
-					if i < pos then
+					if i <= pos then
 						nb_tab := nb_tab + 1;
 					end;
 				else
@@ -200,7 +208,7 @@ feature -- stoning
 	stone (reference_class: CLASS_C): CL_SYNTAX_STONE is
 			-- Reference class is useless here
 		do
-			!!Result.make (Current)
+			!!Result.make (Current, reference_class)
 		end;
 
 	ace_stone (reference_class: CLASS_C): ACE_SYNTAX_STONE is

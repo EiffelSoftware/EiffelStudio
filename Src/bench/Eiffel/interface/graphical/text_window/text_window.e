@@ -42,6 +42,14 @@ feature
 
 	last_format: FORMATTER;
 
+	set_mode_for_editing is
+			-- Set edit mode for text modification (set to read only)
+		require
+			not_read_only: not is_read_only
+		do
+			set_read_only	
+		end;
+
 	set_last_format (f: like last_format) is
 			-- Assign `f' to `last_format'.
 		do
@@ -157,7 +165,18 @@ feature
 	synchronize is
 			-- Synchronize clickable elements with text, if possible.
 		do
+			if root_stone /= Void then
+				synchronise_stone;
+			end;
 			last_format.execute (Current)
+		end;
+
+	synchronise_stone is
+			-- Synchronise the root stone of the window
+		require
+			valid_root_stone: root_stone /= Void
+		do
+			-- Do nothing
 		end;
 
 	highlight_focus is
@@ -171,12 +190,11 @@ feature
 
 	deselect_all is
 		do
-			--set_cursor_position (0);
 			highlight_selected (cursor_position, cursor_position)
 		end;
 
 	clean is
-			-- Erase internal structures of current, but keep root_stone.
+			-- Erase internal structures of current
 		do
 			image.clear;
 			clickable_count := 0;
@@ -203,6 +221,7 @@ feature
 
 	clear_window is
 		do
+			set_cursor_position (0);
 			clean;
 			clear;
 			show_image;

@@ -53,7 +53,7 @@ feature {NONE}
 	Bc_char:			CHARACTER is '%/045/';
 	Bc_bool:			CHARACTER is '%/046/';
 	Bc_int:				CHARACTER is '%/047/';
-	Bc_float:			CHARACTER is '%/048/';
+	Bc_double:			CHARACTER is '%/048/';
 	Bc_result:			CHARACTER is '%/049/';
 	Bc_local:			CHARACTER is '%/050/';
 	Bc_arg:				CHARACTER is '%/051/';
@@ -105,7 +105,7 @@ feature {NONE}
 	Bc_bit:				CHARACTER is '%/097/';
 	Bc_array:			CHARACTER is '%/098/';
 	Bc_retrieve_old:	CHARACTER is '%/099/';
-	Bc_yyyy:			CHARACTER is '%/100/';
+	Bc_float:			CHARACTER is '%/100/';
 	Bc_old:				CHARACTER is '%/101/';
 	Bc_add_strip:		CHARACTER is '%/102/';
 	Bc_end_strip:		CHARACTER is '%/103/';
@@ -120,6 +120,7 @@ feature {NONE}
 	Bc_cast_double:		CHARACTER is '%/112/';
 	Bc_inv_null:		CHARACTER is '%/113/';
 	Bc_create_inv:		CHARACTER is '%/114/';
-
+	Bc_end_eval_old:	CHARACTER is '%/115/';
+	Bc_start_eval_old:	CHARACTER is '%/116/';
 
 end

@@ -123,6 +123,7 @@ feature -- Type check, byte code and dead code removal
 						vgcc3.set_target_name (target.access_name);
 						vgcc3.set_type (creation_type);
 						Error_handler.insert_error (vgcc3);
+						Error_handler.raise_error;
 					elseif
 						not new_creation_type.conform_to (creation_type)
 					then
@@ -344,6 +345,8 @@ feature {CREATION_AS}	-- Replication
 		end;
 
 	set_target (t: like target) is
+		require
+			valid_arg: t /= Void
 		do
 			target := t;
 		end;

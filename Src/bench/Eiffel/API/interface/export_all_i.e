@@ -5,7 +5,8 @@ inherit
 	EXPORT_I
 		redefine
 			is_all
-		end
+		end;
+	SHARED_WORKBENCH
 	
 feature 
 
@@ -21,6 +22,10 @@ feature
 		do
 			if other.is_all then
 				Result := True
+			elseif other.is_set then
+				Result := other.valid_for 	
+							(System.any_class.compiled_class) or else
+							other.valid_for (System.general_class.compiled_class)
 			end;
 		end;
 
@@ -60,6 +65,10 @@ feature
 			-- is Current less restrictive than other
 		do
 			Result := not other.is_all;
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+		do
 		end;
 
 end

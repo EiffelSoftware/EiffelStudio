@@ -5,10 +5,10 @@ creation
 
 feature
 
-	make (c: TYPE_A) is
+	make (c: TYPE_A; is_flat_short: BOOLEAN) is
 		do
 			!FEAT1_ADAPTATION!global_types.make (c.associated_class,
-				 c.associated_class);
+				 c.associated_class, is_flat_short);
 			global_types.set_source_type (c);
 			global_types.set_target_type (global_types.source_type);
 			local_types := global_types;
@@ -110,13 +110,13 @@ feature
 			indent_depth := indent_depth - 1;
 		end;
 
-	set_classes (source_class, target_class: CLASS_C) is
+	set_classes (source_class, target_class: CLASS_C; is_flat_short: BOOLEAN) is
 			-- flat, text from source class rewritten for target_class
 		require	
 			source_not_void: source_class /= void;
 			target_not_void: target_class /= void;
 		do
-			!FEAT1_ADAPTATION!global_types.make (source_class, target_class);
+			!FEAT1_ADAPTATION!global_types.make (source_class, target_class, is_flat_short);
 			global_types.set_source_type(source_class.actual_type);
 			global_types.set_target_type(target_class.actual_type);
 		end;
@@ -124,6 +124,11 @@ feature
 	set_context_features (source, target: FEATURE_I) is
 		do
 			global_types.set_context_features (source, target);
+		end;
+
+	set_in_assertion (b: BOOLEAN) is
+		do
+			global_types.set_in_assertion (b)
 		end;
 
 	set_global_types (f: FEAT_ADAPTATION) is

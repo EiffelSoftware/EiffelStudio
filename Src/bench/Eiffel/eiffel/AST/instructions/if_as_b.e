@@ -191,6 +191,8 @@ feature	-- Replication
 feature {IF_AS}	-- Replication
 
 	set_condition (c: like condition) is
+		require
+			valid_arg: c /= Void
 		do
 			condition := c
 		end;

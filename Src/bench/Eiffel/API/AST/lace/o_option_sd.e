@@ -34,9 +34,20 @@ feature
 
 	adapt is
 			-- Option adaptation
+		local
+			vd39: VD39
 		do
 				-- Check class names valididty
-			check_target_list;
+			if 
+				(target_list /= Void)
+			then
+				check_target_list;
+			else
+				!!vd39;
+				vd39.set_cluster (context.current_cluster);
+				vd39.set_option_name (option.option_name);
+				Error_handler.insert_error (vd39)
+			end;
 
 				-- Check sum error
 			Error_handler.checksum;

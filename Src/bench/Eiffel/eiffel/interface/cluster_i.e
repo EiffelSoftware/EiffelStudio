@@ -6,6 +6,7 @@ inherit
 
 	SHARED_ERROR_HANDLER;
 	SHARED_WORKBENCH;
+	SHARED_ENV
 
 creation
 
@@ -19,8 +20,11 @@ feature -- Attributes
 	cluster_name: STRING;
 			-- Cluster name
 
+	dollar_path: STRING;
+			-- Path to the cluster (with environment variables)
+
 	path: STRING;
-			-- Path to the cluster
+			-- Path to the cluster (without environment variables)
 
 	classes: EXTEND_TABLE [CLASS_I, STRING];
 			-- Classes available in the cluster: key is the declared
@@ -66,11 +70,26 @@ feature -- Conveniences
 			is_precompiled := True;
 		end;
 
+	set_dollar_path (s: STRING) is
+			-- Assign `s' to `path'.
+		do
+			dollar_path := s;
+			update_path
+		end;
+
+	update_path is
+		do
+			if dollar_path /= Void then
+				path := Environ.interpret (dollar_path)
+			end;
+		end;
+
 feature -- Creation feature
 
 	make (p: STRING) is
 		do
-			path := p;
+			dollar_path := p;
+			update_path;
 			!!classes.make (10);
 			!!renamings.make;
 			!!ignore.make;
@@ -226,7 +245,7 @@ feature -- Creation feature
 								end;
 									-- The file name may have changed even
 									-- if the class was already in this cluster
-								a_class.set_file_name (class_path);
+								a_class.set_base_name (file_name);
 								a_class.set_cluster (Current);
 								classes.put (a_class, class_name);
 							end;

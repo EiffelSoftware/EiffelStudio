@@ -21,6 +21,11 @@ feature
 			!!search_window.make (c, a_text_window);
 			init (c, a_text_window);
 		end;
+
+	close is
+		do
+			search_window.close
+		end; 
 	
 feature {NONE}
 

@@ -1,8 +1,11 @@
+-- A collection of features with common comment and export
+-- policies
+
 class FEATURE_CLAUSE_EXPORT
 
 inherit
 
-	PART_COMPARABLE
+	COMPARABLE
 
 
 creation
@@ -45,6 +48,7 @@ feature
 		do
 			Result := other.comment = comment
 			and then other.reference.equiv (reference);
+			Result := False
 		end;
 						
 			
@@ -55,7 +59,7 @@ feature
 
 	export_less_than (names: NAMES_LIST): BOOLEAN is
 		do
-			--Result := reference < names.feature_i.export_status;
+			--Result := reference  names.feature_i.export_status;
 		end;
 
 	can_include (names: NAMES_LIST): BOOLEAN is
@@ -68,8 +72,6 @@ feature
 			features.merge (other.features);			
 		end;
 
-
-
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		do
@@ -78,6 +80,7 @@ feature
 			ctxt.put_keyword ("feature");
 			ctxt.put_string (" ");
 			--clients_list.format (ctxt);
+			reference.format (ctxt);
 			ctxt.put_string (" ");
 			ctxt.put_comment (comment);
 			ctxt.next_line;

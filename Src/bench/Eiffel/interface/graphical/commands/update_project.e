@@ -37,16 +37,18 @@ feature {NONE}
 					project_tool.set_changed (true);
 					Workbench.recompile;
 					if Workbench.successfull then
+						link_driver;
 						project_tool.set_changed (false);
 						system.server_controler.wipe_out; -- ???
 						save_workbench_file;
 						error_window.put_string ("System recompiled%N");
 					end;
 					restore_cursors;
+					error_window.display;
 				elseif argument = warner then
 					name_chooser.call (Current)
 				elseif argument = void then
-					system_tool.show;	
+					system_tool.display;	
 					load_default_ace;	
 					system_tool.set_quit_command (Current, 0);
 						-- 0 /= void
@@ -57,15 +59,12 @@ feature {NONE}
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
 				end;
-				error_window.display;
 			elseif argument = name_chooser then
 				!!project_dir.make (name_chooser.selected_file);
-				if project_dir.valid then
+				project_dir.check_directory (warner);
+				if project_dir.is_valid then
 					project_tool.open_command.make_project (project_dir);
 					work (Current)
-				else
-					warner.custom_call (Current, l_Invalid_directory,
-						"Try again", "Help", "Cancel");		
 				end
 			elseif argument = warner then
 				name_chooser.call (Current)
@@ -73,6 +72,33 @@ feature {NONE}
 				-- help window
 			else
 				warner.call(Current, l_Initialize);
+			end;
+		end;
+
+	link_driver is
+		local
+			arg1, arg2: STRING;
+			req: ASYNC_SHELL;
+			cmd_string: STRING
+		do
+			if System.uses_precompiled then
+					-- Source
+				arg1 := Precompilation_directory.name.duplicate;
+				arg1.append ("/EIFFELGEN/W_code/driver");
+					-- Target
+				arg2 := Workbench_generation_path.duplicate;
+				arg2.append ("/")
+				arg2.append (System.system_name);
+					-- Request
+				!!req;
+				!!cmd_string.make (200);
+				cmd_string.append
+						("$EIFFEL3/bench/spec/$PLATFORM/bin/prelink ");
+				cmd_string.append (arg1);
+				cmd_string.append (" ");
+				cmd_string.append (arg2);
+				req.set_command_name (cmd_string);
+				req.send	
 			end;
 		end;
 
@@ -114,7 +140,7 @@ feature {NONE}
 		do
 				!!file_name.make (50);	
 				file_name.append (Eiffel3_dir_name);
-				file_name.append ("/bench/help/defaults/Ace");
+				file_name.append ("/bench/help/defaults/Ace.default");
 				system_tool.text_window.show_file_content (file_name);
 		end;
 				

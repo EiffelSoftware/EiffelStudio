@@ -73,11 +73,9 @@ feature	-- Replication
 
 	replicate (ctxt: REP_CONTEXT): like Current is 
 		do
+			Result := twin;
 			if assertions /= void then
-				Result := twin;
 				Result.set_assertions (assertions.replicate (ctxt));
-			else
-				Result := Current
 			end;
 		end;
 

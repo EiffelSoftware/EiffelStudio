@@ -118,7 +118,7 @@ feature {WINDOW_MGR}
 				ed.hide;
 				ed.reset;
 				active_editors.remove;
-				if free_list.count > free_list_max then
+				if free_list.count >= free_list_max then
 					ed.destroy
 				else
 					free_list.add (ed)

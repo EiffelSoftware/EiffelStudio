@@ -122,6 +122,8 @@ feature	-- Replication
 feature {ELSIF_AS} -- Replication
 
 	set_expr (e: like expr) is
+		require
+			valid_arg: e /= Void
 		do
 			expr := e
 		end;

@@ -76,4 +76,9 @@ feature -- Type check and dead code removal
 			-- Do nothing
 		end;
 
+	record_dependances is
+			-- Record the dependances
+		do
+		end;
+
 end

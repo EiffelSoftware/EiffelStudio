@@ -39,8 +39,7 @@ feature	-- Error handling primitives
 			good_argument: e /= Void
 		do
 debug
-debug_window.put_string ("Inserting error object:%N");
-e.trace;
+error_window.put_string ("Inserting error object:%N"); e.trace;
 end;
 			new_error := True;
 			error_list.add (e);
@@ -52,7 +51,7 @@ end;
 			good_argument: w /= Void
 		do
 debug
-debug_window.put_string ("Inserting warning object:%N");
+error_window.put_string ("Inserting warning object:%N");
 w.trace;
 end;
 			warning_list.add (w);
@@ -81,6 +80,9 @@ end;
 		require
 			has_error: not error_list.empty;
 		do
+debug
+error_window.put_string ("Raising error%N");
+end;
 			raise ("Compiler error");
 		end;
 
@@ -88,7 +90,13 @@ end;
 			-- Check if there are errors in `error_list' and raise
 			-- an error if needed.
 		do
+debug
+error_window.put_string ("Checking sum%N");
+end;
 			if not warning_list.empty then
+debug
+error_window.put_string ("Tracing warnings%N");
+end;
 				trace_warnings;
 			end;
 			if not error_list.empty then
@@ -203,6 +211,9 @@ feature -- Debug purpose
 
 	trace is
 		do
+debug
+error_window.put_string ("Error handler: trace%N")
+end;
 			from
 				error_list.start
 			until

@@ -46,7 +46,7 @@ feature
 				--| If it does not have the same reference then
 				--| replication of new_feature has occurred.
 				--! Hence, we need to update the new_feature
-				--| so it is reference correctly.
+				--| so it is referenced correctly.
 				new_feature := new_feat;
 			end;
 			deferred_features := old_features.deferred_features;

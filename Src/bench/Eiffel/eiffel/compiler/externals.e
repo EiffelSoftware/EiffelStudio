@@ -78,12 +78,14 @@ feature
 		require
 			good_argument: 	external_name /= Void;
 			has_occurence:	has (external_name);
-			good_occurence: item (external_name).occurence > 0;
+			--good_occurence: item (external_name).occurence > 0;
 		local
 			info: EXTERNAL_INFO;
 		do
 			info := item (external_name);
-			info.remove_occurence;
+			if info.occurence /= 0 then
+				info.remove_occurence;
+			end;
 		end;
 
 	freeze is
@@ -112,6 +114,34 @@ feature
 			end;
 				-- Make a duplication
 			make_duplication;
+		end;
+
+feature -- Debug
+
+	trace is
+		local
+			available_keys: ARRAY [STRING];
+			i, nb: INTEGER;
+			external_name: STRING;
+			info: EXTERNAL_INFO;
+		do
+			from
+				io.error.putstring ("************** Externals ***************%N");
+				available_keys := current_keys;
+				i := 1;
+				nb := available_keys.count;
+			until
+				i > nb
+			loop
+				external_name := available_keys.item (i);
+				info := item (external_name);
+				io.error.putstring ("Function name: ");
+				io.error.putstring (external_name);
+				io.error.new_line;
+				io.error.putint (info.occurence);
+				io.error.new_line;
+				i := i + 1;
+			end;
 		end;
 
 end

@@ -25,8 +25,8 @@ feature -- Initialization
 
 	export_status: EXPORT_I is
 			-- Associated export status
-		require
-			System.current_class /= Void;
+--		require
+--			System.current_class /= Void;
 		local
 			export_set: EXPORT_SET_I;
 			client_i: CLIENT_I;

@@ -28,7 +28,7 @@ feature
 	print_register is
 			-- Print real value
 		do
-			generated_file.putstring ("(double) ");
+--			generated_file.putstring ("(double) ");
 			generated_file.putstring (value);
 		end;
 
@@ -43,7 +43,7 @@ feature
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a real manifest constant
 		do
-			ba.append (Bc_float);
+			ba.append (Bc_double);
 			ba.append_real (value.to_double);
 		end;
 

@@ -34,8 +34,8 @@ feature
 			feat := Context.associated_class.feature_table.item (feature_name);
 			inh_assert := Context.inherited_assertion;
 			inh_assert.init;
-			if 	Context.has_inherited_assertion and then
-				not Context.associated_class.is_basic and then
+			Context.set_origin_has_precondition (True);
+			if not Context.associated_class.is_basic and then
 				feat.assert_id_set /= Void then
 				--! Do not get inherited pre & post for basic types
 				formulate_inherited_assertions (feat.assert_id_set);
@@ -46,9 +46,11 @@ feature
 				-- can store information gathered by analyze.
 			enlarge_tree;
 				-- Analyze preconditions
-			have_assert := (precondition /= Void or else
-							inh_assert.has_precondition) and then
-				(workbench_mode or else context.assertion_level.check_precond);
+			if Context.origin_has_precondition then
+				have_assert := (precondition /= Void or else
+								inh_assert.has_precondition) and then
+					(workbench_mode or else context.assertion_level.check_precond);
+			end;
 			if 	have_assert then
 				if workbench_mode then
 					context.add_dt_current;
@@ -619,9 +621,11 @@ feature
 			context.set_assertion_type (In_precondition);
 			workbench_mode := context.workbench_mode;
 			inh_assert := Context.inherited_assertion;
-			have_assert := (precondition /= Void or else
-							inh_assert.has_precondition) and then
-				(workbench_mode or else context.assertion_level.check_precond);
+			if Context.origin_has_precondition then
+				have_assert := (precondition /= Void or else
+								inh_assert.has_precondition) and then
+					(workbench_mode or else context.assertion_level.check_precond);
+			end;
 			if have_assert then
 				if workbench_mode then
 					generated_file.putstring ("if (RTAL & CK_REQUIRE) {");
@@ -861,24 +865,26 @@ feature -- Byte code generation
 	make_body_code (ba: BYTE_ARRAY) is
 			-- Generate compound byte code
 		local
-			have_assert: BOOLEAN;
+			have_assert, has_old: BOOLEAN;
 			inh_assert: INHERITED_ASSERTION;
-			position: INTEGER;
 		do
 			inh_assert := Context.inherited_assertion;
-			have_assert := precondition /= Void or else inh_assert.has_precondition;
+			if Context.origin_has_precondition then
+				have_assert := (precondition /= Void or else 
+								inh_assert.has_precondition);
+			end;
 			if have_assert then
 				context.set_assertion_type (In_precondition);
 				ba.append (Bc_precond);
 				ba.mark_forward;
 			end;
-			if precondition /= Void then
+			if Context.origin_has_precondition and then (precondition /= Void) then
 				context.set_is_prec_first_block (True);
 				precondition.make_byte_code (ba);
 				ba.append (Bc_goto_body);
 				ba.mark_forward;
 			end;
-			if inh_assert.has_precondition then
+			if Context.origin_has_precondition and then inh_assert.has_precondition then
 				inh_assert.make_precondition_byte_code (ba);
 			end;
 			if have_assert then
@@ -891,21 +897,26 @@ feature -- Byte code generation
 				end;
 				ba.write_forward;
 			end;
+
+			has_old := (old_expressions /= Void) or else (inh_assert.has_old_expression);
+			if has_old then
+				ba.append (Bc_start_eval_old);
+				ba.mark_forward;
+			end;
+
 			if 	postcondition /= Void and then 	
 				old_expressions /= Void then
 					-- Make byte code for old expression
 					--! Order is important since interpretor pops expression
 					--! bottom up.
 				from
-					position := local_count + 1;
 					old_expressions.start
 				until
 					old_expressions.after
 				loop
 					old_expressions.item.make_initial_byte_code (ba);
-					position := + 1;
 					old_expressions.forth
-				end
+				end;
 			end;
 				-- Make byte code for inherited old expressions
 			have_assert := postcondition /= Void or else inh_assert.has_postcondition;
@@ -914,6 +925,13 @@ feature -- Byte code generation
 					inh_assert.make_old_exp_byte_code (ba);
 				end;
 			end;
+
+			if has_old then
+				ba.append (Bc_end_eval_old)
+				ba.write_forward;
+			end;
+				-- Go to point for old expressions
+
 			context.record_breakable (ba);	-- Breakpoint on body entrance
 			if compound /= Void then
 				compound.make_byte_code (ba);

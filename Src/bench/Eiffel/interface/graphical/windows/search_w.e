@@ -38,6 +38,13 @@ feature
 			add_cancel_action (Current, cancel_it)
 		end;
 
+	close is
+		do
+			if is_poped_up then
+				popdown
+			end
+		end;
+
 	
 feature {NONE}
 
@@ -49,7 +56,6 @@ feature
 	call is
 			-- Record calling text_window `a_text_window' and popup current.
 		do
-			set_exclusive_grab;
 			popup
 		end;
 

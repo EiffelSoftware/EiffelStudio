@@ -302,6 +302,8 @@ feature
 					generated_file.new_line;
 					generated_file.indent;
 				end;
+				generated_file.putstring ("in_assertion = ~0;");
+				generated_file.new_line;
 				if old_expressions /= Void then
 					from
 						old_expressions.start;
@@ -318,15 +320,12 @@ feature
 					inh_assert.generate_old_variables;
 				end;
 
-				if workbench_mode then
-					generated_file.exdent;
-					generated_file.putchar ('}');
-					generated_file.new_line;
-				else
-					generated_file.exdent;
-					generated_file.putchar ('}');
-					generated_file.new_line;
-				end;
+				generated_file.putstring ("in_assertion = 0;");
+				generated_file.new_line;
+				
+				generated_file.exdent;
+				generated_file.putchar ('}');
+				generated_file.new_line;
 			end;
 		end;
 
@@ -345,14 +344,38 @@ feature -- Inherited Assertions
 			ct: CLASS_TYPE;
 			inh_c: CLASS_C;
 			bd_id, i: INTEGER;
+			gen_prec: BOOLEAN;
+			has_assertion: BOOLEAN;
+			bd_index: INTEGER;
 		do
+				--| Check to see if origin feature has precondition
+			from
+				i := 1;
+				gen_prec := True;
+			until
+				i > assert_id_set.count or else
+				not gen_prec
+			loop
+				inh_f := assert_id_set.item (i);
+				if inh_f.is_origin then
+					gen_prec := inh_f.has_precondition
+				end
+				i := i + 1;
+			end;
+			if not gen_prec then
+				Context.set_origin_has_precondition (False);	
+			end;
 			from
 				i := 1;
 			until
 				i > assert_id_set.count
 			loop
 				inh_f := assert_id_set.item (i);
-				if inh_f.has_assertion then
+					--| Only generate precondition if the origin of 
+					--| the feature has a precondition
+				has_assertion := inh_f.has_postcondition or else
+								 (inh_f.has_precondition and then gen_prec)
+				if has_assertion then
 					--! Has assertion
 					inh_c := System.class_of_id (inh_f.written_in);
 					if inh_c.generics = Void then
@@ -360,9 +383,10 @@ feature -- Inherited Assertions
 					else
 						ct := inh_c.meta_type (Context.current_type).associated_class_type;
 					end;
-					bd_id := System.body_index_table.item (inh_f.body_index);
+					bd_index := inh_f.body_index;
+					bd_id := System.body_index_table.item (bd_index);
 					byte_code := System.byte_server.item (bd_id);
-					if inh_f.has_precondition then
+					if inh_f.has_precondition and gen_prec then
 						Context.inherited_assertion.add_precondition_type (ct, byte_code);
 					end;
 					if inh_f.has_postcondition then
@@ -392,8 +416,8 @@ feature -- Byte code generation
 			feat := Context.associated_class.feature_table.item (feature_name);
 			inh_assert := Context.inherited_assertion;
 			inh_assert.init;
-			if  Context.has_inherited_assertion and then
-				not Context.associated_class.is_basic and then
+			Context.set_origin_has_precondition (True);
+			if  not Context.associated_class.is_basic and then
 				feat.assert_id_set /= Void 
 			then
 					--! Do not get inherited pre & post for basic types

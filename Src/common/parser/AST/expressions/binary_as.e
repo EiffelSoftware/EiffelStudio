@@ -341,11 +341,15 @@ feature -- Replication
 feature {BINARY_AS}	-- Replication
 
 	set_left (l: like left) is
+		require
+			valid_arg: l /= Void
 		do
 			left := l
 		end;
 
 	set_right (l: like right) is
+		require
+			valid_arg: l /= Void
 		do
 			right := l
 		end;

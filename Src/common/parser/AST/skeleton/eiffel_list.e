@@ -77,7 +77,7 @@ feature -- Debugger
 
 
 feature -- Formatter
-	
+
 	format (ctxt : FORMAT_CONTEXT) is
 		local
 			i, l_count: INTEGER;

@@ -4,6 +4,7 @@ class PRECOMP_R
 
 inherit
 
+	WINDOWS;
 	SHARED_WORKBENCH;
 	SHARED_ENV;
 	PROJECT_CONTEXT
@@ -28,7 +29,8 @@ feature
 		do
 			project_name := Environ.interpret (precompiled_project_name);
 			!! project_dir.make (project_name);
-			if project_dir.valid and project_dir.exists then
+			project_dir.check_directory (error_popup_window);
+			if project_dir.is_valid then
 				init_precompilation_directory := project_dir;
 				if Precompilation_directory /= Precompilation_directory then end;
 				!!workb;
@@ -48,15 +50,12 @@ feature
 					System.server_controler.init;
 					System.set_precompilation (False);
 					Workbench.set_precompiled_directory_name (project_name);
+					Universe.update_cluster_paths
 				else
 					io.error.putstring (project_name);
 					io.error.putstring (" is not a precompiled system%N");
 					error_occurred := True
 				end;
-			else
-				io.error.putstring (project_name);
-				io.error.putstring (" is not a valid project name%N");
-				error_occurred := True;
 			end;
 			if error_occurred then
 				die (1);

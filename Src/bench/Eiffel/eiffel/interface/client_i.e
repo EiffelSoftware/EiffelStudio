@@ -43,6 +43,11 @@ feature
 			Result := written_in < other.written_in;
 		end;
 
+	written_class: CLASS_C is
+		do
+			Result :=  System.class_of_id (written_in);
+		end;
+
 feature -- Query
 
 	valid_for (client: CLASS_C): BOOLEAN is
@@ -134,7 +139,7 @@ feature -- Debug purpose
 	trace is
 			-- Debug purpose
 		do
-			io.error.putchar (']');
+			io.error.putchar ('[');
 			io.error.putstring (System.class_of_id (written_in).cluster.path);
 			io.error.putstring ("] : ");
 			from
@@ -172,5 +177,23 @@ feature -- formatter
         end;
 
 
+	format (ctxt: FORMAT_CONTEXT) is
+		local
+			temp: STRING
+		do
+			from
+				clients.start	
+			until
+				clients.after
+			loop
+				temp := clients.item.duplicate;
+				temp.to_upper;
+				ctxt.put_string (temp);
+				clients.forth;
+				if not clients.after then
+					ctxt.put_string (", ");
+				end
+			end
+		end;
 
 end

@@ -1,3 +1,11 @@
+-- This class is used during Degree 3. When replication is detected
+-- (detect_replication in SELECTION_LIST), a rep_name is created
+-- to firstly save the replicated routine. New_feature is different
+-- to rep_feature in such that the rep_feature was recorded before
+-- the unselect process was done. Hence, new_feature is the lastest
+-- version with the rep_feature feature_name from the feature_table.
+-- old_feature refers to the feature in which the origin of rep_feature
+-- comes from.
 class REP_NAME
 
 inherit

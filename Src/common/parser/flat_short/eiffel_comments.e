@@ -17,7 +17,7 @@ feature
 		do
 			position := p;
 			count := 0;
-			!!text.make (0,0);
+			!!text.make (1,1);
 		end;
 
 
@@ -27,11 +27,11 @@ feature
 			i: INTEGER;
 		do
 			from
-				i := 0
+				i := 1
 			until 
 				different 
-				or i >= count
-				or i >=  other.count
+				or i > count
+				or i >  other.count
 			loop
 				if other /= void then
 					Result := (text.item(i)) < (other.text.item(i));
@@ -46,6 +46,8 @@ feature
 		end;
 
 	is_equal (other: like Current): BOOLEAN is
+		require else
+			other = Void	
 		local
 			i : INTEGER;
 		do
@@ -53,10 +55,10 @@ feature
 				if  other.count = count then
 					Result := true;
 					from
-						i := 0
+						i := 1
 					until
 						not Result 
-						or i >= count
+						or i > count
 					loop
 						Result := (text.item (i)).is_equal (other.text.item (i));
 						i := i + 1
@@ -72,8 +74,8 @@ feature
 	add (s: STRING) is
 			-- add a line to the comment
 		do
-			text.force (s, count);
 			count := count + 1;
+			text.force (s, count);
 		end;
 
 	same_as (other: like Current): BOOLEAN is
@@ -96,12 +98,21 @@ feature
 			end;
 		end;
 		
-				
-			
-			
-
-	
 	text: ARRAY [STRING];
+
+	trace is
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > count
+			loop
+				io.error.putstring (text.item(i));
+				i := i + 1;
+			end
+		end
 
 
 end

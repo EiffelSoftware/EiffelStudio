@@ -909,6 +909,22 @@ feature -- Generation
 
 feature -- Melting
 
+	update_melted_set is
+			-- Remove the non valid MELTED_INFO
+		do
+			from
+				melted_set.start
+			until
+				melted_set.after
+			loop
+				if not melted_set.item.is_valid (Current) then
+					melted_set.remove;
+				else
+					melted_set.forth
+				end;
+			end;
+		end;
+
 	melt is
 			-- Melt changed features.
 		require
@@ -1221,7 +1237,6 @@ feature -- Class initialization
 			end;
 
 			if changed_status then
-
 				pass2_controler.add_changed_status (Current);
 				from
 					syntactical_clients.start
@@ -1581,7 +1596,7 @@ feature
 				if c /= Void then
 					des := c.descendants;
 					des.start;
-					des.search_same (Current);
+					des.search (Current);
 					if not des.after then
 						des.remove;
 					end;
@@ -1942,6 +1957,14 @@ feature -- Supplier checking
 			then
 				!!vd27;
 				vd27.set_creation_routine (system_creation);
+				vd27.set_root_class (Current);
+				Error_handler.insert_error (vd27);
+			end;
+			if (system_creation = Void)
+				and then (creators /= Void)
+			then
+				!!vd27;
+				vd27.set_creation_routine ("");
 				vd27.set_root_class (Current);
 				Error_handler.insert_error (vd27);
 			end;
@@ -2771,7 +2794,9 @@ feature -- PS
 feature -- Replication
 
 	propagate_replication (feat_dep: REP_FEATURE_DEPEND) is
-			-- Propagate `feat_dep' to do pass 2
+			-- Propagate `feat_dep' to do Degree 3. This checks
+			-- to see if the feature to be propagated exists in
+			-- the descendant. If not, then remove the rep_depend_unit.
 		local
 			unit: REP_DEPEND_UNIT;
 			class_c: CLASS_C;
@@ -2880,7 +2905,7 @@ end;
 			until
 				rep_class_info.after
 			loop
-				stored_rep_name_list := rep_class_info.item_for_iteration;
+				stored_rep_name_list := rep_class_info.item;
 				rep_features := stored_rep_name_list.replicated_features;
 				from
 					rep_features.start
@@ -2988,6 +3013,7 @@ feature -- Dino stuff
 			end;
 			!!melted_info.make (a_feature);
 			melted_set.put (melted_info);
+			System.freeze_set1.put (id);
 		end;
 
 

@@ -46,7 +46,7 @@ feature
 				feature_i.append_clickable_signature (error_window, parent);
 				put_string (" inherited from: ");
 				parent.append_clickable_name (error_window);
-				put_string (" written in: ");
+				put_string (" Version from: ");
 				feature_i.written_class.append_clickable_name (error_window);
 				new_line;
 				features.forth;

@@ -24,12 +24,21 @@ feature
 		end;
 
 	associated_feature (feat_tbl: FEATURE_TABLE): FEATURE_I is
-            -- Associated feature
-        do
-            check
-                consistency: feat_tbl.has (feature_name)
-            end;
-            Result := feat_tbl.item (feature_name)
-        end;
+			-- Associated feature
+		do
+			check
+				consistency: feat_tbl.has (feature_name)
+			end;
+			Result := feat_tbl.item (feature_name)
+		end;
+
+	is_valid (associated_class: CLASS_C): BOOLEAN is
+			-- Is the melted info still valid ?
+		local
+			feat_tbl: FEATURE_TABLE;
+		do
+			feat_tbl := associated_class.feature_table;
+			Result := feat_tbl.has (feature_name)
+		end;
 
 end

@@ -82,7 +82,7 @@ feature -- Replication
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- adapt to replication
 		do
-			Result := Current
+			Result := twin
 		end;
 		
 end

@@ -156,7 +156,7 @@ feature -- Processing
 			ce_function_return_type.append (Eif_reference)
 
 			create ec_function_name.make (0)
-			ec_function_name.append ("ccom_ce_interface_")
+			ec_function_name.append ("ccom_ec_interface_")
 			ec_function_name.append (eiffel_type)
 			ec_function_name.append_integer (local_counter)
 
@@ -212,7 +212,7 @@ feature -- Processing
 			ce_function_return_type.append (Eif_reference)
 
 			create ec_function_name.make (0)
-			ec_function_name.append ("ccom_ce_record_")
+			ec_function_name.append ("ccom_ec_record_")
 			ec_function_name.append (eiffel_type)
 			ec_function_name.append_integer (local_counter)
 

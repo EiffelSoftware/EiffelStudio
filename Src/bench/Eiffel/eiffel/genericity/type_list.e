@@ -10,8 +10,10 @@ class TYPE_LIST
 
 inherit
 	ARRAYED_LIST [CLASS_TYPE]
-		rename
-			append as arrayed_list_append
+		export
+			{NONE} all
+			{ANY} first, start, after, forth, item, is_empty, count,
+				remove, cursor, go_to, wipe_out, extend
 		end
 
 creation

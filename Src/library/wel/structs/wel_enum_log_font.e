@@ -10,16 +10,13 @@ class
 
 inherit
 	WEL_STRUCTURE
-		redefine
-			make_by_pointer
-		end
 
 creation
-	make_by_pointer
+	make_with_pointer
 
 feature -- Creation
 
-	make_by_pointer (a_pointer: POINTER) is
+	make_with_pointer (a_pointer: POINTER) is
 			-- Copy structure pointed by `a_pointer' into `item'.
 			-- Caution: `a_pointer' must be a pointer
 			-- coming from Windows.
@@ -33,7 +30,7 @@ feature -- Access
 	log_font: WEL_LOG_FONT is
 			-- Defines the attribut of a font
 		do
-			!! Result.make_by_pointer (cwel_enumlogfont_get_elflogfont (item))
+			create Result.make_with_pointer (cwel_enumlogfont_get_elflogfont (item))
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -65,7 +65,6 @@ feature {NONE} -- Initialization
 				-- Add the rich text tab positioner.
 			create tab_positioner.make_with_rich_text (rich_text)
 			tab_control_holder.extend (tab_positioner)
-			tab_control_holder.hide
 			
 				-- Add permitted font heights to `size_selection' combo box.
 			from
@@ -79,6 +78,7 @@ feature {NONE} -- Initialization
 				counter := counter + 2 + (counter // 10)
 			end
 			
+			rich_text.set_caret_position (5)
 				-- Add an example of every available font to `rich_text'.
 			format := rich_text.character_format (1)
 			from
@@ -109,7 +109,14 @@ feature {NONE} -- Initialization
 			
 				-- Initialize a test that checks teh contents of each line.
 			create timer.make_with_interval (2000)
-			timer.actions.extend (agent check_line_positions)		
+			timer.actions.extend (agent check_line_positions)
+			show_actions.extend (agent window_shown)
+		end
+		
+	window_shown is
+			-- `Current' has been shown. Perform necessary processing.
+		do
+			rich_text.set_focus
 		end
 		
 feature {NONE} -- Event handling
@@ -550,28 +557,39 @@ feature {NONE} -- Implementation
 				if paragraph_format.is_left_aligned then
 					left_alignment_button.select_actions.block
 					unselect_all_buttons_except (left_alignment_button)
-					left_alignment_button.enable_select
 					general_label.set_text ("Paragraph formatting left aligned")
 					left_alignment_button.select_actions.resume
 				elseif paragraph_format.is_center_aligned then
 					center_alignment_button.select_actions.block
 					unselect_all_buttons_except (center_alignment_button)
-					center_alignment_button.enable_select
 					general_label.set_text ("Paragraph formatting center aligned")
 					center_alignment_button.select_actions.resume
 				elseif paragraph_format.is_right_aligned then
 					right_alignment_button.select_actions.block
 					unselect_all_buttons_except (right_alignment_button)
-					right_alignment_button.enable_select
 					general_label.set_text ("Paragraph formatting right aligned")
 					right_alignment_button.select_actions.resume
 				elseif paragraph_format.is_justified then
 					right_alignment_button.select_actions.resume
 					unselect_all_buttons_except (justified_button)
-					justified_button.enable_select
 					general_label.set_text ("Paragraph formatting justified")
 					right_alignment_button.select_actions.resume
 				end
+				left_margin.change_actions.block
+				left_margin.set_value (paragraph_format.left_margin)
+				left_margin.change_actions.resume
+				
+				right_margin.change_actions.block
+				right_margin.set_value (paragraph_format.right_margin)
+				right_margin.change_actions.resume
+				
+				top_spacing.change_actions.block
+				top_spacing.set_value (paragraph_format.top_spacing)
+				top_spacing.change_actions.resume
+				
+				bottom_spacing.change_actions.block
+				bottom_spacing.set_value (paragraph_format.bottom_spacing)
+				bottom_spacing.change_actions.resume
 			end
 
 		selection_changed is
@@ -750,8 +768,9 @@ feature {NONE} -- Implementation
 		end
 		
 	unselect_all_buttons_except (a_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
-			-- Unselect all toggle buttons in `parent' of `a_button', excluding `a_button'.
-			-- Do not fire `select_actions' of disabled buttons.
+			-- Unselect all toggle buttons in `parent' of `a_button', excluding `a_button', ensuring
+			-- `a_button' is slected..
+			-- Do not fire `select_actions' of any buttons.
 		require
 			a_button_not_void: a_button /= Void
 			a_button_parented: a_button.parent /= Void
@@ -819,7 +838,75 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	show_paragraph_toolbar_selected is
+			-- Called by `select_actions' of `show_paragraph_toolbar'.
+		do
+			if show_paragraph_toolbar.is_selected then
+				paragraph_toolbar_holder.show
+			else
+				paragraph_toolbar_holder.hide
+			end
+		end
 		
+	left_margin_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `left_margin'.
+		local
+			paragraph: EV_PARAGRAPH_FORMAT
+			line_number: INTEGER
+		do
+			if rich_text.has_selection then
+			else
+				paragraph := rich_text.paragraph_format (rich_text.caret_position)
+				paragraph.set_left_margin (a_value)
+				line_number := rich_text.line_number_from_position (rich_text.caret_position)
+				rich_text.format_paragraph (line_number, line_number, paragraph)
+			end
+		end
+	
+	right_margin_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `right_margin'.
+		local
+			paragraph: EV_PARAGRAPH_FORMAT
+			line_number: INTEGER
+		do
+			if rich_text.has_selection then
+			else
+				paragraph := rich_text.paragraph_format (rich_text.caret_position)
+				paragraph.set_right_margin (a_value)
+				line_number := rich_text.line_number_from_position (rich_text.caret_position)
+				rich_text.format_paragraph (line_number, line_number, paragraph)
+			end
+		end
+	
+	top_spacing_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `top_spacing'.
+		local
+			paragraph: EV_PARAGRAPH_FORMAT
+			line_number: INTEGER
+		do
+			if rich_text.has_selection then
+			else
+				paragraph := rich_text.paragraph_format (rich_text.caret_position)
+				paragraph.set_top_spacing (a_value)
+				line_number := rich_text.line_number_from_position (rich_text.caret_position)
+				rich_text.format_paragraph (line_number, line_number, paragraph)
+			end
+		end
+	
+	bottom_spacing_changed (a_value: INTEGER) is
+			-- Called by `change_actions' of `bottom_spacing'.
+		local
+			paragraph: EV_PARAGRAPH_FORMAT
+			line_number: INTEGER
+		do
+			if rich_text.has_selection then
+			else
+				paragraph := rich_text.paragraph_format (rich_text.caret_position)
+				paragraph.set_bottom_spacing (a_value)
+				line_number := rich_text.line_number_from_position (rich_text.caret_position)
+				rich_text.format_paragraph (line_number, line_number, paragraph)
+			end
+		end
 		
 feature {NONE} -- Implementation
 

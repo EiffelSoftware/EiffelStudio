@@ -254,14 +254,12 @@ feature -- Update
 				need_to_update_attributes := False
 			end
 			if need_to_resynchronize then
-				Project_tool.initialize_text_window_resources;
-				Project_tool.synchronize;
-				System_tool.initialize_text_window_resources;
-				System_tool.synchronize;
-				routine_win_mgr.synchronize;
-				class_win_mgr.synchronize;
-				object_win_mgr.synchronize;
-				explain_win_mgr.synchronize;
+				Project_tool.update_graphical_resources;
+				System_tool.update_graphical_resources;
+				routine_win_mgr.update_graphical_resources;
+				class_win_mgr.update_graphical_resources;
+				object_win_mgr.update_graphical_resources;
+				explain_win_mgr.update_graphical_resources;
 				need_to_resynchronize := False;
 			end
 		end;	

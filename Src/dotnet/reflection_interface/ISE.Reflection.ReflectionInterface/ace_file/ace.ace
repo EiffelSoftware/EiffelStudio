@@ -52,8 +52,8 @@ cluster
 		end
 		
 external
-	assembly: 	"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.dll",
+	assembly: 	"C:\windows\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
+			"C:\windows\Microsoft.NET\Framework\v1.0.2914\System.dll",
 	 		"..\..\bin\ISE.Reflection.Formatter.dll",
 	 		"..\..\bin\ISE.Reflection.EiffelComponents.dll",
 	 		"..\..\bin\ISE.Reflection.EiffelAssemblyCacheHandler.dll",

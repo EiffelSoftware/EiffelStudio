@@ -169,6 +169,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			ass: ASSEMBLY
 			cr: CACHE_READER
+			l_resolver: ASSEMBLY_RESOLVER
 		do
 			if not no_copyright_display then
 				display_copyright		
@@ -218,6 +219,10 @@ feature {NONE} -- Implementation
 				else
 					ass := feature {ASSEMBLY}.load_from (target_path.to_cil)					
 				end
+				
+				create l_resolver.make (feature {APP_DOMAIN}.current_domain)
+				l_resolver.add_resolver_path_from_assembly (ass)
+				
 				if not cr.is_initialized then
 					set_error (Eac_not_initialized, Void)
 				elseif ass = Void then
@@ -233,6 +238,7 @@ feature {NONE} -- Implementation
 					else
 						consume_into_path (ass)
 					end
+					l_resolver.remove_from_app_domain
 				else
 					process_error (error_message)
 				end
@@ -292,7 +298,6 @@ feature {NONE} -- Implementation
 			assembly: ASSEMBLY
 			retried: BOOLEAN
 			l_exe_env: EXECUTION_ENVIRONMENT
-			l_temp_target: STRING
 		do
 			if not retried then
 				if not (list_assemblies or init or usage_display) and target_path = Void then
@@ -312,17 +317,15 @@ feature {NONE} -- Implementation
 				end
 				
 				if not (list_assemblies or init or usage_display) then
-					l_temp_target := target_path.twin
-					if is_path_relative (target_path) then
-						create l_exe_env
-						l_temp_target.prepend (l_exe_env.current_working_directory + "\")
-					end
 					if consume_from_fullname then
-						assembly := feature {ASSEMBLY}.load_string (l_temp_target.to_cil)
+						assembly := feature {ASSEMBLY}.load_string (target_path)
 					else
-						assembly := feature {ASSEMBLY}.load_from (l_temp_target.to_cil)
+						if is_path_relative (target_path) then
+							create l_exe_env
+							target_path.prepend (l_exe_env.current_working_directory + "\")
+						end
+						assembly := feature {ASSEMBLY}.load_from (target_path)
 					end
-					target_path := l_temp_target
 				end
 			else
 				set_error (Invalid_target_path, target_path)
@@ -397,7 +400,7 @@ feature {NONE} -- Implementation
 		local
 			writer: CACHE_WRITER
 		do
-			if ass/= Void then
+			if ass/= Void then			
 				create writer.make (clr_version)
 				if not no_output then
 					display_status ("Consuming " + create {STRING}.make_from_cil (ass.get_name.full_name))
@@ -424,11 +427,10 @@ feature {NONE} -- Implementation
 			assembly: ASSEMBLY
 			consume_folder: DIRECTORY			
 			reconsume: BOOLEAN
-			
 			local_info: LOCAL_CACHE_INFO
 			des: EIFFEL_XML_DESERIALIZER
-			local_info_path: STRING
-		do
+			local_info_path: STRING		
+		do	
 			reconsume := True
 			local_info_path := destination_path.twin
 			if local_info_path.item (local_info_path.count) /= '\' then
@@ -508,8 +510,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
-	
+
 	remove_from_eac (ass: ASSEMBLY) is
 			-- Remove `ass' from EAC
 		require
@@ -546,7 +547,7 @@ feature {NONE} -- Implementation
 
 	destination_path: STRING
 			-- Path where to generate XML
-
+			
 	System_name: STRING is "emitter"
 			-- Name of executable
 

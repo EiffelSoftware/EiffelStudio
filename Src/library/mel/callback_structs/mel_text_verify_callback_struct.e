@@ -2,7 +2,9 @@ indexing
 
 	description: 
 		"Callback structure specific to the text. %
-		%Associated C structure is XmTextVerifyCallbackStruct.";
+		%Associated C structure is XmTextVerifyCallbackStruct. %
+		%`event' is Void if the modification is being done by a routine %
+		%that modifies text.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -104,7 +106,7 @@ feature -- Status setting
 		do
 			c_text_set_do_it (False, handle)
 		ensure
-			not_do_it: do_it 
+			not_do_it: not do_it 
 		end;
 
 feature {NONE} -- Implementation

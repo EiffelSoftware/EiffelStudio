@@ -336,6 +336,11 @@ feature -- Building conformance table
 		require
 			topological_id_processed: topological_id > 0;
 		do
+debug ("CONFORMANCE");
+	io.error.putstring ("Fill conformance table of ");
+	io.error.putstring (class_name);
+	io.error.new_line;
+end;
 				-- Resize the table after the topological sort
 			conformance_table.resize (1, topological_id);
 			conformance_table.clear_all;
@@ -353,6 +358,13 @@ feature -- Building conformance table
 			a_parent: CLASS_C;
 			a_table: ARRAY [BOOLEAN];
 		do
+debug ("CONFORMANCE");
+	io.error.putstring ("%Tset entry of ");
+	io.error.putstring (class_name);
+	io.error.putstring (" in ");
+	io.error.putstring (cl.class_name);
+	io.error.new_line;
+end;
 			a_table := cl.conformance_table;
 			if a_table.item (topological_id) = False then
 					-- The parent has not been inserted yet
@@ -377,12 +389,14 @@ feature -- Propagation of second pass
 			-- class  has varied between two compilations, the feature
 			-- tables of the direct descendants must be recalculated.
 		local
-			descendant: like Current;
+			descendant: CLASS_C;
 			local_cursor: LINKABLE [CLASS_C];
+			expanded_modified: BOOLEAN;
 		do
 			from
 				changed2 := True;
 				local_cursor := descendants.first_element;
+				expanded_modified := pass2_controler.changed_classes.item.expanded_modified;
 			until
 				local_cursor = Void
 			loop
@@ -396,6 +410,9 @@ feature -- Propagation of second pass
 					-- Insert the descendant in the changed classes list
 					-- of the system if not present.
 				pass2_controler.insert_new_class (descendant);
+				if expanded_modified then
+					pass2_controler.set_expanded_modified (descendant);
+				end;
 				pass3_controler.insert_new_class (descendant);
 				pass4_controler.insert_new_class (descendant);
 
@@ -405,14 +422,14 @@ feature -- Propagation of second pass
 
 feature -- Propagation of third pass
 
-	propagate_pass3 (pass2_control: PASS2_CONTROL) is
+	propagate_pass3 (pass2_control: PASS2_CONTROL; status_modified: BOOLEAN) is
 			-- Ask to the compiler to execute the third pass on all
 			-- the clients of the class
 		require
 			good_argument: pass2_control /= Void;
 			good_context: pass2_control.propagate_pass3;
 		local
-			client: like Current;
+			client: CLASS_C;
 			local_cursor: LINKABLE [CLASS_C];
 		do
 			from
@@ -423,6 +440,9 @@ feature -- Propagation of third pass
 				client := local_cursor.item;
 					-- Remember the cause for type checking `client'.
 				client.propagators.update (pass2_control);
+				if status_modified then
+					client.propagators.add_changed_status (id);
+				end;
 --					-- Set the compilation status of the client
 --				client.do_pass3;
 					-- Insert the client in the changed classes list
@@ -456,7 +476,7 @@ feature -- Third pass: byte code production and type check
 			dependances: CLASS_DEPENDANCE;
 			new_suppliers: like suppliers;
 			feature_name: STRING;
-			f_suppliers: SORTED_SET [DEPEND_UNIT];
+			f_suppliers: FEATURE_DEPENDANCE;
 			f_list: SORTED_TWO_WAY_LIST [INTEGER];
 			removed_features: SEARCH_TABLE [FEATURE_I];
 			melted_info: FEAT_MELTED_INFO;
@@ -474,9 +494,10 @@ feature -- Third pass: byte code production and type check
 
 					-- For a changed class, the supplier list has
 					-- to be updated
-				if Depend_server.has (id) then
+				if Tmp_depend_server.has (id) then
+					dependances := Tmp_depend_server.disk_item (id);
+				elseif Depend_server.has (id) then
 					dependances := Depend_server.disk_item (id);
---					dependances.update
 				else
 					!!dependances.make (changed_features.count);
 					dependances.set_id (id);
@@ -550,7 +571,7 @@ feature -- Third pass: byte code production and type check
 					end;
 	
 					if 	feature_i.in_pass3
-							-- No type check for constants and attributed.
+							-- No type check for constants and attributes.
 							-- [It is done in second pass.]
 						and then
 						(	feature_changed
@@ -558,6 +579,8 @@ feature -- Third pass: byte code production and type check
 							not (	f_suppliers = Void
 									or else
 									propagators.empty_intersection (f_suppliers)
+									or else
+									propagators.changed_status_empty_intersection (f_suppliers)
 								)
 						)
 					then
@@ -613,7 +636,7 @@ end;
 						and then
 						not (type_check_error or else feature_i.is_deferred)
 					then
-							-- Remenber the melted feature information
+							-- Remember the melted feature information
 						!!melted_info.make (feature_i);
 						melt_set.put (melted_info);
 					end;
@@ -703,7 +726,7 @@ end;
 		local
 			invar_clause: INVARIANT_AS;
 			invar_byte: INVARIANT_B;
-			f_suppliers: SORTED_SET [DEPEND_UNIT];
+			f_suppliers: FEATURE_DEPENDANCE;
 			invariant_changed: BOOLEAN;
 			melted_info: INV_MELTED_INFO;
 			new_body_id: INTEGER;
@@ -735,6 +758,8 @@ end;
 						not	(	f_suppliers = Void
 								or else
 								propagators.empty_intersection (f_suppliers)
+								or else
+								propagators.changed_status_empty_intersection (f_suppliers)
 							)
 					)
 				then
@@ -1062,7 +1087,11 @@ feature -- Class initialization
 			end;
 
 				-- Deferred mark
+			old_is_deferred := is_deferred;
 			is_deferred := ast.is_deferred;
+			if old_is_deferred /= is_deferred and then old_parents /= Void then
+				pass2_controler.set_deferred_modified (Current);
+			end;
 
 				-- Expanded mark
 			old_is_expanded := is_expanded;
@@ -1142,6 +1171,11 @@ feature -- Class initialization
 			if generics /= Void then
 					-- Check generic parameter declaration rule
 				check_generics;
+			end;
+
+			if old_parents /= Void and then not changed then
+					-- If the class is not changed, it is marked `changed2'
+				changed2 := True
 			end;
 
 				-- Conformance tables incrementality
@@ -1307,10 +1341,6 @@ feature
 			-- Used by remove_useless_classes in SYSTEM_I
 		do
 			if marked_classes.item (id) = False then
-debug ("MARK_CLASS")
-io.error.putstring (class_name);
-io.error.putstring (" marked%N");
-end;
 				marked_classes.put (True, id);
 				from
 					syntactical_suppliers.start

@@ -31,7 +31,7 @@ feature
 			dummy_reference: CLASS_C;
 			class_stone: CLASSC_STONE
 		do
-			error_window.put_string ("Error ");
+			error_window.put_string (Error_string);
 			error_window.put_clickable_string (stone (dummy_reference), code);
 			error_window.put_string (" in class ");
 			compiled_class := System.class_of_id (class_id);

@@ -17,6 +17,9 @@ feature
 			--| when Removed then class has been traversed but class file doen't
 			--| exist anymore. 
 
+	changed_name: BOOLEAN;
+			-- The name of the class in a file has changed?
+
 	time_check is
 			-- Check time stamps of compiled classes of the system
 		require
@@ -50,6 +53,19 @@ feature
 				check_basic_class (System.array_class);
 				check_basic_class (System.pointer_class);
 				check_suppliers_of_unchanged_classes;
+
+				if changed_name then
+					-- The name of the class in a file has changed
+					-- which means that a class has been removed
+
+						-- Reprocess the options
+					Lace.root_ast.process_options;
+
+						-- Check the universe
+					Universe.check_universe;
+
+					changed_name := False;
+				end;
 			end;
 		end;
 
@@ -76,11 +92,16 @@ feature {NONE}
 		
 		local
 			new_date: INTEGER;
+			new_class_name: STRING;
+			lace_class, old_class_i: CLASS_I;
+			cluster: CLUSTER_I;
+			file_name: STRING;
 			dependant: CLASS_C;
 			suppliers: LINKED_LIST [SUPPLIER_CLASS];
 			str: ANY;
-			file: UNIX_FILE;
+			file: EXTEND_FILE;
 			changed: BOOLEAN;
+			vd11: VD11;
 		do
 				-- Time check only the valid classes
 			if System.class_of_id (a_class.id) /= Void then
@@ -96,9 +117,50 @@ feature {NONE}
 					id_array.put (Traversed, a_class.id);
 					if new_date /= a_class.date then
 						changed := True;
-						Workbench.change_class (a_class.lace_class);
+						lace_class := a_class.lace_class;
+						file_name := a_class.file_name;
+						cluster := lace_class.cluster;
+
+						Workbench.change_class (lace_class);
+
+							-- Check class name: if changed then recompile clients
+					  		-- also.
+
+						new_class_name := cluster.read_class_name_in_file (file_name);
+
+						if
+							new_class_name /= Void
+						and then
+			  				not new_class_name.is_equal (a_class.class_name)
+						then
+								-- Check if the new name is valid
+							old_class_i := cluster.classes.item (new_class_name);
+							if old_class_i /= Void then
+									-- Two classes with the same name in cluster
+								!!vd11;
+								vd11.set_a_class (old_class_i);
+								vd11.set_cluster (cluster);
+								vd11.set_file_name (file_name);
+								Error_handler.insert_error (vd11);
+							else
+									-- Remove the old class
+								lace_class.cluster.remove_class (lace_class);
+
+									-- Create a new CLASS_I with the new name	
+				  					-- Update class_name
+								!!lace_class.make;
+								lace_class.set_class_name (new_class_name);
+								lace_class.set_file_name (file_name);
+								lace_class.set_cluster (cluster);
+								cluster.classes.put (lace_class, new_class_name);
+
+									-- Adapt must be done on the class
+								changed_name := True;
+							end;
+						end;
 					end;
 				end;
+				Error_handler.checksum;
 
 					-- Recursive check on suppliers
 				from

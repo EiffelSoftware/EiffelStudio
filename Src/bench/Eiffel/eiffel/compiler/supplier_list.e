@@ -13,7 +13,7 @@ creation
 
 feature 
 
-	remove_occurence (l: SORTED_TWO_WAY_LIST [DEPEND_UNIT]) is
+	remove_occurence (l: FEATURE_DEPENDANCE) is
 			-- Remove one occurence for each supplier of id
 			-- included in `l'.
 		require
@@ -46,7 +46,7 @@ feature
 			end;
 		end;
 
-	add_occurence (l: SORTED_TWO_WAY_LIST [DEPEND_UNIT]) is
+	add_occurence (l: FEATURE_DEPENDANCE) is
 			-- Add one occurence for each supplier of id
 			-- included in `l'.
 		require
@@ -61,6 +61,11 @@ feature
 				l.offright
 			loop
 				id := l.item.id;
+debug ("ACTIVITY");
+	io.error.putstring ("SUPPLIER_LIST add_occurence: ");
+	io.error.putstring (System.class_of_id (id).class_name);
+	io.error.new_line;
+end;
 				suppl_info := info (id);
 				if suppl_info = Void then
 					!!suppl_info.make (System.class_of_id (id));

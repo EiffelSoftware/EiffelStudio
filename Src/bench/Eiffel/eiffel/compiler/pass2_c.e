@@ -41,7 +41,7 @@ feature
 			then
 					-- Analysis of inheritance for a class
 				analyzer.set_a_class (associated_class);
-				analyzer.pass2;
+				analyzer.pass2 (Current);
 
 					-- No error happened: set the compilation status
 					-- of `associated_class'
@@ -51,10 +51,47 @@ feature
 
 					-- Update the freeze list for changed hash tables.
 				if associated_class.changed2 then
-					system.update_freeze_list (associated_class.id);
+					System.freeze_set2.put (associated_class.id);
+					System.melted_set.put (associated_class.id);
 				end;
 
-				history_control.check_overload;
+				History_control.check_overload;
+			end;
+		end;
+
+	propagate (feature_table, resulting_table: FEATURE_TABLE; pass2_control: PASS2_CONTROL) is
+			-- Propagate the pass2 and pass3 according to `resulting_table'
+			-- and `pass2_control'
+		local
+			different_feature_tables: BOOLEAN;
+			propagate_pass2: BOOLEAN;
+			propagate_pass3: BOOLEAN;
+		do
+					-- Incremetality test: asked the compiler to apply at
+					-- least the second pass to the direct descendants
+					-- of the class `associated_class'.
+			different_feature_tables := not resulting_table.equiv (feature_table);
+			propagate_pass3 := pass2_control.propagate_pass3;
+			propagate_pass2 := different_feature_tables or else expanded_modified or else deferred_modified;
+
+			if pass2_control.propagate_pass3 then
+				propagate_pass2 := True;
+				propagate_pass3 := True;
+			end;
+
+			if propagate_pass2 then
+					-- Propagation of second pass in order to update
+					-- feature table of direct descendants
+				associated_class.propagate_pass2;
+				if different_feature_tables then
+					associated_class.set_skeleton (resulting_table.skeleton);
+					resulting_table.melt;
+				end;
+			end;
+			if propagate_pass3 then
+				-- Propagation of third pass in order to type check
+				-- clients of the current class
+				associated_class.propagate_pass3 (pass2_control, expanded_modified or deferred_modified);
 			end;
 		end;
 

@@ -44,7 +44,7 @@ feature
 			old_execute;
 
 				-- Transfer history controler data on disk
-			history_control.transfer;
+			History_control.transfer;
 		end;
 
 	set_expanded_modified (a_class: CLASS_C) is

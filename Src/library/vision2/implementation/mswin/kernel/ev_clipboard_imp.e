@@ -58,13 +58,8 @@ feature -- Access
 		
 	has_text: BOOLEAN is
 			-- Does the clipboard currently contain text?
-		local
-			window: EV_WINDOW
-			wel_window: WEL_WINDOW
 		do
-			create window
-			wel_window ?= window.implementation
-			open_clipboard (wel_window)
+			open_clipboard (Void)
 			Result := clipboard_open and is_clipboard_format_available (feature {WEL_CLIPBOARD_CONSTANTS}.Cf_text)
 			close_clipboard
 		end

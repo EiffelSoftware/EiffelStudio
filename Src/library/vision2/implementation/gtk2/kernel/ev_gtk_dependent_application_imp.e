@@ -222,7 +222,7 @@ feature -- Implementation
 		do
 			a_settings := default_font_description
 			if previous_font_description /= Void then
-				Result := previous_font_description.hash_code /= a_settings.hash_code
+				Result := not previous_font_description.is_equal (a_settings)
 			else
 				Result := True
 			end

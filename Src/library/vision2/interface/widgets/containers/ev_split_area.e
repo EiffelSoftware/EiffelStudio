@@ -293,15 +293,18 @@ feature -- Status setting
 		require
 			position_in_valid_range:
 				(a_split_position >= minimum_split_position and a_split_position <= maximum_split_position)
+		local
+			fcd, scd: INTEGER
 		do
+			fcd := a_split_position
+			scd := select_from (split_box.width, split_box.height) -
+				select_from (sep.width, sep.height) - a_split_position
 			if a_split_position < first_cell.height then
-				set_first_cell_dimension (a_split_position)
-				set_second_cell_dimension (select_from (split_box.width, split_box.height) -
-					select_from (sep.width, sep.height) - a_split_position)
+				set_first_cell_dimension (fcd)
+				set_second_cell_dimension (scd)
 			elseif a_split_position > first_cell.height then
-				set_second_cell_dimension (select_from (split_box.width, split_box.height) -
-					select_from (sep.width, sep.height) - a_split_position)
-				set_first_cell_dimension (a_split_position)
+				set_second_cell_dimension (scd)
+				set_first_cell_dimension (fcd)
 			end
 		ensure
 			--split_position = a_split_position
@@ -539,6 +542,10 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/06 20:39:10  brendel
+--| Modified implementation of set_split_position to calculate the new sizes
+--| before setting any of them.
+--|
 --| Revision 1.23  2000/03/06 20:22:12  brendel
 --| Moved location of 1/2 sep. width calculation.
 --|

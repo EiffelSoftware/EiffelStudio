@@ -4,13 +4,40 @@ inherit
 
 	SHARED_EXEC_ENVIRONMENT
 
-feature
+feature -- Access
 
-	interpret (s: STRING): STRING is
-			-- Interpretation of string `s' where the environment varaibles
+	interpreted_string (s: STRING): STRING is
+			-- Interpretation of string `s' where the environment variables
 			-- are interpreted
 		require
-			good_argument: s /= Void;
+			good_argument: s /= Void
+		do
+			Result := processed_string (s, True)
+		ensure
+			good_result: Result /= Void
+		end
+
+	translated_string (s: STRING): STRING is
+			-- Interpretation of string `s' where the environment variables
+			-- are replaced by "$(VARIABLE)"
+			--| Useful when writing makefiles.
+		require
+			good_argument: s /= Void
+		do
+			Result := processed_string (s, False)
+		ensure
+			good_result: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	processed_string (s: STRING; interpreted: BOOLEAN): STRING is
+			-- Interpretation of string `s' where the environment variables
+			-- are either replaced by their values (`interpreted' = True)
+			-- or replaced by "$(VARIABLE)" in order to be written in
+			-- makefiles
+		require
+			good_argument: s /= Void
 		local
 			current_character, last_character: CHARACTER;
 			s1,s2: STRING;
@@ -73,13 +100,27 @@ feature
 					end;
 					if Result.item (j) = '}' then
 						if j - 1 >= i then
-							s2 := Execution_environment.get (Result.substring (i, j - 1));
+							if interpreted then
+								s2 := Execution_environment.get (Result.substring (i, j - 1));
+							else
+								!! s2.make (15);
+								s2.append ("$(");
+								s2.append (Result.substring (i, j - 1));
+								s2.extend (')')
+							end
 						else
 							!!s2.make (0);
 						end;
 					else
 						if j >= i then
-							s2 := Execution_environment.get (Result.substring (i, j));
+							if interpreted then
+								s2 := Execution_environment.get (Result.substring (i, j));
+							else
+								!! s2.make (15);
+								s2.append ("$(");
+								s2.append (Result.substring (i, j));
+								s2.extend (')')
+							end
 						else
 							!!s2.make (0);
 						end;

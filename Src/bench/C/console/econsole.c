@@ -1,30 +1,49 @@
+/*
+	ECONSOLE.C - a console for Win32.
+
+	The default console in Win32 will not provide any details such as how the
+	window was started or anything for a graphical application.
+
+	This console will run with either a graphical application or a console
+	application.
+
+	Changing the value of windowed_application will set the console to be a 
+	windowed application or a console application.
+
+	More testing needs to be done for a console application being passed large strings.
+*/
+
 #include <stdio.h>
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <commdlg.h>
-#define EIF_WINDOWS
+#define EIF_WINDOWS				/* Used to trick err_msg.h */
 #include "..\..\..\run-time\err_msg.h"
 
 #define BUFFER_SIZE 255
 
-static HANDLE eif_coninfile, eif_conoutfile;
-static char eif_console_buffer [BUFFER_SIZE];
-static char transfer_buffer [30];
-static DWORD buffer_length = 0;
-static int buffer_place = 0;
+static HANDLE eif_coninfile, eif_conoutfile;	/* Handles for the non windowed console 	*/
+static char eif_console_buffer [BUFFER_SIZE];	/* buffer for reads from windowed console	*/
+static char transfer_buffer [30];		/* buffer to output of numbers as strings	*/
+static DWORD buffer_length = 0;			/* Length of data in buffer			*/
+static int buffer_place = 0;			/* Position in buffer we are currently at 	*/
 
-int dummy_length;
+int dummy_length;				/* Length holder for some calls			*/
 
-static int eif_console_eof_value = 0;
-static BOOL eif_console_allocated = FALSE;
+static int eif_console_eof_value = 0;		/* eof of the console?				*/
+static BOOL eif_console_allocated = FALSE;	/* Has the console been allocated yet
+							(an expensive operation			*/
 
-static int console_in_x = 10, console_in_y = 30;
+static int console_in_x = 10, console_in_y = 30;	/* Initial position of the console	*/
 
-BOOL windowed_application = TRUE;
+BOOL windowed_application = TRUE;		/* Is this a windowed application?		*/
+						/* This will most likely crash the system if it 
+							has its value changed after the console
+							is created
+						*/
 
-extern HANDLE eif_coninfile, eif_conoutfile;
-extern HINSTANCE eif_hInstance;
+extern HINSTANCE eif_hInstance;			/* Instance available for windowed applications */
 
+/* Prototypes */
 void eif_console_putint (long l);
 void eif_console_putchar (char c);
 void eif_console_putstring (BYTE *s, long length);
@@ -33,9 +52,13 @@ void eif_GetWindowedInput();
 HWND eif_conout_window;
 LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG lParam);
 void eif_PutWindowedOutput(char *s, int l);
-static HWND hEdit;
+
+static HWND hEdit;				/* Edit window handle				*/
 
 long eif_console_readint()
+/*
+	read an integer from the console
+*/
 {
 	long lastint;
 
@@ -66,6 +89,9 @@ long eif_console_readint()
 }
 
 float eif_console_readreal()
+/*
+	read a real from the console
+*/
 {
 	float lastreal;
 
@@ -95,6 +121,9 @@ float eif_console_readreal()
 }
 
 char eif_console_readchar()
+/*
+	read a character from the console
+*/
 {
 	if (!eif_console_allocated)
 		eif_make_console();
@@ -119,7 +148,10 @@ char eif_console_readchar()
 }
 
 double eif_console_readdouble()
-	{
+/*
+	read a double from the console
+*/
+{
 	double lastdouble;
 
 	if (!eif_console_allocated)
@@ -145,10 +177,16 @@ double eif_console_readdouble()
 		buffer_place = buffer_length;
 
 	return lastdouble;
-	}
+}
 
-long eif_console_readline(char *s,long bound,long start)
-	{
+long eif_console_readline(char *s, long bound, long start)
+/*
+	read a line of input from the console
+	into the buffer s, s has start characters in it and a total 
+	size of bound
+*/
+
+{
 	long amount, read;
 	static char *c = NULL;
 	static BOOL done = FALSE;
@@ -213,31 +251,42 @@ long eif_console_readline(char *s,long bound,long start)
 	}
 
 long eif_console_readstream(char *s, long bound)
-	{
+/*
+	read a stream of input from the console
+	at most bound characters
+*/
+{
 	long amount = bound;
 	BOOL result;
 
 	if (!eif_console_allocated)
 		eif_make_console();
 
-	if (!ReadConsole(eif_coninfile, s, bound, &amount, NULL))
-		 {
-		 eif_console_eof_value = 1;
-		 return bound - amount - 1;
-		 }
+	if (windowed_application)
+		{
+		eif_GetWindowedInput();
+		strcat (eif_console_buffer, "\r\n");
+		buffer_length += 2;
+		}
+	else    
+		if (!ReadConsole(eif_coninfile, s, bound, &amount, NULL))
+			 {
+			 eif_console_eof_value = 1;
+			 return bound - amount - 1;
+			 }
 	return bound - amount - 1;
-	}
+}
 
 
 long eif_console_readword(char *s, long bound, long start)
 /*
-s               target buffer
+s       target buffer
 bound   target buffer size
 start   number of characters already in target buffer
 */
 	{
-		/* Get a word and fill it into `s' (at most `bound' characters),
-		 * with `start' being the amount of bytes already stored within s. This
+	/* Get a word and fill it into `s' (at most `bound' characters),
+	 * with `start' being the amount of bytes already stored within s. This
 	 * means we really have to read (bound - start) characters. Any leading
 	 * spaces are skipped.
 	 */
@@ -283,7 +332,10 @@ start   number of characters already in target buffer
 	}
 
 void eif_console_putint (long l)
-	{
+/*
+	put the ascii representation of l on the console
+*/
+{
 	int t = 0;
 
 	if (!eif_console_allocated)
@@ -297,7 +349,10 @@ void eif_console_putint (long l)
 	}
 
 void eif_console_putchar (char c)
-	{
+/*
+	put the character c on the console
+*/
+{
 	if (!eif_console_allocated)
 		eif_make_console();
 
@@ -309,7 +364,10 @@ void eif_console_putchar (char c)
 	}
 
 void eif_console_putstring (BYTE *s, long length)
-	{
+/*
+	put the string s length l on the console
+*/
+{
 	if (!eif_console_allocated)
 		eif_make_console();
 	if (windowed_application)
@@ -319,7 +377,10 @@ void eif_console_putstring (BYTE *s, long length)
 	}
 
 void eif_console_putreal (double r)
-	{
+/*
+	put the ascii representation of r on the console
+*/
+{
 	int t = 0;
 
 	if (!eif_console_allocated)
@@ -330,10 +391,13 @@ void eif_console_putreal (double r)
 		eif_PutWindowedOutput (transfer_buffer, t);
 	else
 		WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
-	}
+}
 
 void eif_console_putdouble (double d)
-	{
+/*
+	put the ascii representation of d on the console
+*/
+{
 	int t = 0;
 
 	if (!eif_console_allocated)
@@ -344,20 +408,29 @@ void eif_console_putdouble (double d)
 		eif_PutWindowedOutput (transfer_buffer, t);
 	else
 		WriteConsole(eif_conoutfile,transfer_buffer, t, &dummy_length, NULL);
-	}
+}
 
 
 char eif_console_eof ()
+/*
+	Has the equivalent of eof been reached for the console?
+*/
 {
 	return (eif_console_eof_value == 1 ? '\01' : '\00');
 }
 
 void eif_console_next_line()
+/*
+	Force us to read a new line for the next input
+*/
 {
 	buffer_place = buffer_length;
 }
 
 int print_err_msg (FILE *err, char *StrFmt, ...)
+/*
+	Print an error message, modified for special exception processing
+*/
 {
 	va_list ap;
 	int r;
@@ -384,6 +457,9 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	return r;
 }
 BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+/*
+	Display a dialog when an exception trace occurs.
+*/
 {
 	OPENFILENAME ofn;
 	FILE *f;
@@ -444,6 +520,9 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 }
 
 void eif_console_cleanup ()
+/*
+	Cleanup the console
+*/
 {
 	if (windowed_application)
 		DestroyWindow (eif_conout_window);
@@ -455,6 +534,13 @@ void eif_console_cleanup ()
 }
 
 void show_trace()
+/*
+	Show the trace of an exception by displaying the string 
+	that is the exception trace in a dialog
+
+	Reset the string in case we have another PANIC or problem
+	in the reclaim.
+*/
 {
 	if (exception_trace_string != NULL)
 		{
@@ -465,6 +551,10 @@ void show_trace()
 }
 
 void eif_make_console()
+/*
+	Create a console based on windowed_application
+	register cleanup function.
+*/
 {
 	BOOL b;
 	SECURITY_ATTRIBUTES sa;
@@ -521,6 +611,9 @@ void eif_make_console()
 }
 
 BOOL CALLBACK get_input_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+/*
+	Ask for input dialog - this dialog remembers its position
+*/
 {
 	DWORD size;
 
@@ -554,6 +647,9 @@ BOOL CALLBACK get_input_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpar
 
 
 void eif_GetWindowedInput()
+/*
+	Ask for input dialog or use console
+*/
 {
 	if (DialogBox (eif_hInstance, "EIF_GET_INPUT", NULL, get_input_dialog) == IDCANCEL)
 		eio();
@@ -565,6 +661,9 @@ void eif_GetWindowedInput()
 }
 
 LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG lParam)
+/*
+	Console window proc
+*/
 {
 	LPCREATESTRUCT lpcs;
 	
@@ -585,6 +684,9 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 }
 
 void eif_PutWindowedOutput(char *s, int l)
+/*
+	Put the string on the console
+*/
 {
 #define BUFSIZE 16000
 	char *buffer, *sp, *bp, *ss = s;
@@ -592,6 +694,9 @@ void eif_PutWindowedOutput(char *s, int l)
 	int size, t, lv = l, newlines = 0;
 	BOOL update = FALSE;
 
+	/*
+		FIXME: this should be allocated statically
+	*/
 	if ((buffer = calloc (BUFSIZE+1,1)) == NULL) return;
 
 	while (PeekMessage (&msg, (HWND) eif_conout_window, 0L, 0L, PM_REMOVE))
@@ -647,6 +752,9 @@ void eif_PutWindowedOutput(char *s, int l)
 			}
 		}
 	SendMessage (hEdit, WM_SETTEXT, 0, (LPARAM) buffer);
+	/*
+		Only update the text when necessary
+	*/
 	if (update)
 		{
 		SetWindowPos (eif_conout_window, HWND_TOP, 0,0,0,0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);

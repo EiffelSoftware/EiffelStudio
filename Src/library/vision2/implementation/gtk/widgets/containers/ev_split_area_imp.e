@@ -93,9 +93,7 @@ feature
 			-- Position from the left/top of the splitter from `Current'.
 		do
 			Result := gtk_paned_struct_child1_size (c_object)
-			if Result = 0 then
-				Result := minimum_split_position
-			end
+			Result := Result.max (minimum_split_position).min (maximum_split_position)
 		end
 
 	set_first (an_item: like item) is

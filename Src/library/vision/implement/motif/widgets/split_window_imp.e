@@ -309,10 +309,6 @@ end
 				if first_child /= Void and then first_child.managed then
 					resize_first_child
 				end
-			else
-				if realized then
-					update
-				end
 			end
 		end
 

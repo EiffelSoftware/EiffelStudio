@@ -44,6 +44,18 @@ feature -- Access
 			!! Result.make_rgb (255, 255, 255)
 		end
 
+	default_background_color: EV_COLOR is
+			-- Default background color for most of the widgets.
+		do
+			Result := Color_dialog
+		end
+
+	default_foreground_color: EV_COLOR is
+			-- Default foreground color for most of the widgets.
+		do
+			!! Result.make_rgb (0, 0, 0)
+		end
+
 end -- class EV_DEFAULT_COLORS_IMP
 
 --|----------------------------------------------------------------

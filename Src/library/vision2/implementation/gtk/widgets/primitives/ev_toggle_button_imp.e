@@ -17,7 +17,7 @@ inherit
 			interface
 		end
 	
-	EV_BUTTON_IMP
+	EV_SELECT_BUTTON_IMP
 		redefine
 			make,
 			interface
@@ -35,21 +35,7 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_toggle_button_new)
 		end
 
-feature -- Status report
-	
-	is_selected: BOOLEAN is
-                        -- Is toggle pressed
-                do
-			Result := C.gtk_toggle_button_get_active (c_object)
-                end 
-	
 feature -- Status setting
-
-        enable_select is
-        		-- Set `is_selected' `True'.
-                do
-			C.gtk_toggle_button_set_active (c_object, True)
-                end
 
         disable_select is
         		-- Set `is_selected' `False'.
@@ -91,6 +77,9 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/05 17:07:02  king
+--| Removed is_select and enable_select in to select_button
+--|
 --| Revision 1.19  2000/02/24 18:13:43  oconnor
 --| updated to use enable_select/disable_select instead of set_state (BOOLEAN)
 --|

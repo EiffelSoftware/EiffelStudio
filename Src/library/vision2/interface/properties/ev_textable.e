@@ -50,6 +50,7 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
+			no_carriage_returns: not a_text.has ('%R')
 		do
 			implementation.set_text (a_text)
 		ensure

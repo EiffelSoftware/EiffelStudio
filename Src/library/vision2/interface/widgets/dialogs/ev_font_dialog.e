@@ -42,7 +42,7 @@ feature -- Element change
 			implementation.set_font (a_font)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_FONT_DIALOG_I
 	

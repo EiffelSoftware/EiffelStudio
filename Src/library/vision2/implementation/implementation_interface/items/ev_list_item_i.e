@@ -54,7 +54,7 @@ feature -- Access
 			Result ?= Precursor
 		end
 		
-feature {NONE} -- Contract support
+feature -- Contract support
 
 	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
 			-- Is `a_pixmap' equal to `pixmap'?

@@ -23,6 +23,9 @@ inherit
 create
 	default_create
 
+create {EV_FIGURE_WORLD}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is

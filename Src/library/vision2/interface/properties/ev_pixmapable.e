@@ -70,7 +70,7 @@ feature {NONE} -- Contract support
 			Result := implementation.pixmap_equal_to (a_pixmap)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 	implementation: EV_PIXMAPABLE_I
 			-- Responsible for interaction with native graphics toolkit.

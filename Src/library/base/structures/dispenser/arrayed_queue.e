@@ -33,8 +33,9 @@ class ARRAYED_QUEUE [G] inherit
 			grow as array_grow,
 			is_empty as array_empty
 		export
-			{NONE}
-				all
+			{ANY} valid_index
+			{ARRAYED_QUEUE} lower, upper, i_th, area, subarray
+			{NONE} all
 		redefine
 			wipe_out, extend, prunable,
 			linear_representation,

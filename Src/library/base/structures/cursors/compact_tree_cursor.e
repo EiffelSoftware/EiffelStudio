@@ -16,7 +16,7 @@ create
 
 	make
 
-feature {COMPACT_CURSOR_TREE} -- Initialization
+feature {NONE} -- Initialization
 
 	make (i: INTEGER; aft, bef, bel, abv: BOOLEAN) is
 			-- Create a cursor and set it up on `i'.
@@ -32,8 +32,6 @@ feature {COMPACT_CURSOR_TREE} -- Access
 
 	active: INTEGER
 			-- Index of current item
-
-
 
 feature {COMPACT_CURSOR_TREE} -- Status report
 

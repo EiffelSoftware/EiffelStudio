@@ -14,10 +14,9 @@ class LINKED_LIST_CURSOR [G] inherit
 	CURSOR
 
 create
-
 	make
 
-feature {LINKED_LIST} -- Initialization
+feature {NONE} -- Initialization
 
 	make (active_element: like active; aft, bef: BOOLEAN) is
 			-- Create a cursor and set it up on `active_element'.

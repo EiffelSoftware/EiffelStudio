@@ -225,7 +225,7 @@ feature -- Status report
 			Result.append (a_key)
 		end
 
-feature {EV_ANY_I, EV_ACCELERATOR_LIST} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_ACCELERATOR_LIST} -- Implementation
 
 	implementation: EV_ACCELERATOR_I
 			-- Responsible for interaction with native graphics toolkit.

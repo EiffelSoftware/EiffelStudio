@@ -12,6 +12,8 @@ class
 	EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 	
 inherit
+	ANY
+
 	EV_PARAGRAPH_CONSTANTS
 		rename
 			alignment as alignment_flag,

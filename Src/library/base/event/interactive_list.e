@@ -13,6 +13,8 @@ deferred class
 
 inherit
 	ARRAYED_LIST [G]
+		undefine
+			new_filled_list
 		redefine
 			default_create,
 			merge_left,

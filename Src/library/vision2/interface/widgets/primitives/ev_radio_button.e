@@ -55,7 +55,7 @@ feature {NONE} -- Contract support
 		end
 
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_RADIO_BUTTON_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -20,6 +20,8 @@ class BOOL_STRING inherit
 		redefine
 			item, infix "@", put, valid_index
 		end
+		
+	ANY
 
 create
 

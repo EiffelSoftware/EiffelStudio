@@ -12,6 +12,8 @@ class
 	EV_CHARACTER_FORMAT_RANGE_INFORMATION
 	
 inherit
+	ANY
+
 	EV_CHARACTER_FORMAT_CONSTANTS
 		rename
 			effects_vertical_offset as effects_vertical_offset_flag,

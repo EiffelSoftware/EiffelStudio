@@ -33,7 +33,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_FILE_OPEN_DIALOG_I
 		-- Responsible for interaction with native graphics toolkit.

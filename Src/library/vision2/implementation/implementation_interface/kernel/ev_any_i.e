@@ -76,7 +76,7 @@ feature {EV_ANY, EV_ANY_I} -- Command
 			is_destroyed_set: is_destroyed
 		end
 
-feature {EV_ANY_I, EV_ANY} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_ANY
 			-- Provides a common user interface to possibly platform

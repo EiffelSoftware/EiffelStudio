@@ -13,11 +13,7 @@ class
 	DOUBLE_MATH
 
 inherit
-
 	MATH_CONST
-		export
-			{NONE} all
-		end
 
 feature -- Access
 

@@ -350,7 +350,7 @@ feature {NONE} -- Contract support
 				is_editable and caret_position = 1 and not has_selection
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TEXT_COMPONENT_I
 			-- Responsible for interaction with native graphics

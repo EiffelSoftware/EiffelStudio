@@ -194,6 +194,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	interface: EV_VIEWPORT
 
 end -- class EV_VIEWPORT_IMP

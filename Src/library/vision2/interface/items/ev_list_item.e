@@ -88,7 +88,7 @@ feature {NONE} -- Contract support
 				Precursor {EV_DESELECTABLE} and precursor {EV_DESELECTABLE} 
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_LIST_ITEM_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -11,27 +11,29 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class BINARY_TREE [G] inherit
+class
+	BINARY_TREE [G]
 
-		CELL [G]
-			undefine
-				copy, is_equal
-			end
+inherit
+	CELL [G]
+		undefine
+			copy, is_equal
+		end
 
-		TREE [G]
-			redefine
-				parent,
-				is_leaf,
-				subtree_has,
-				subtree_count,
-				fill_list,
-				child_remove,
-				child_after,
-				child_capacity,
-				tree_copy,
-				child_start,
-				child_forth
-			end
+	TREE [G]
+		redefine
+			parent,
+			is_leaf,
+			subtree_has,
+			subtree_count,
+			fill_list,
+			child_remove,
+			child_after,
+			child_capacity,
+			tree_copy,
+			child_start,
+			child_forth
+		end
 
 create
 	make
@@ -43,6 +45,7 @@ feature -- Initialization
 		do
 			item := v
 		ensure
+			node_item: item = v
 			is_root: is_root
 			is_leaf: is_leaf
 		end
@@ -103,10 +106,10 @@ feature -- Access
 			end
 		end
 
-	child_cursor: CURSOR is
+	child_cursor: ARRAYED_LIST_CURSOR is
 			-- Current cursor position
 		do
-			create {ARRAYED_LIST_CURSOR} Result.make (child_index)
+			create Result.make (child_index)
 		end
 
 	left_sibling: like parent is
@@ -137,8 +140,11 @@ feature -- Measurement
 				Result := Result + 1
 			end
 		ensure then
-			valid_arity: Result <= 2
+			valid_arity: Result <= child_capacity
 		end
+
+	child_capacity: INTEGER is 2
+			-- Maximum number of children
 
 feature -- Status report
 
@@ -454,14 +460,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_subtree (other: BINARY_TREE [G]) is
-			-- Copy `other' to subtee.
+	fill_subtree (other: TREE [G]) is
+			-- Copy `other' to subtree.
+		local
+			l_other: like Current
 		do
-			if not other.is_leaf then
-				put_left_child (other.left_child.duplicate_all)
-			end
-			if other.arity >= 2 then
-				put_right_child (other.right_child.duplicate_all)
+			l_other ?= other
+			if l_other /= Void then
+				if not l_other.is_leaf then
+					put_left_child (l_other.left_child.duplicate_all)
+				end
+				if l_other.arity >= 2 then
+					put_right_child (l_other.right_child.duplicate_all)
+				end
 			end
 		end
 
@@ -473,8 +484,6 @@ feature {NONE} -- Implementation
 				Result.compare_objects
 			end
 		end
-
-	child_capacity: INTEGER is 2
 
  	tree_copy (other, tmp_tree: like Current) is
 		local

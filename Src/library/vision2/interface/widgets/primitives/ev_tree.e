@@ -79,7 +79,7 @@ feature -- Status report
 			Result := implementation.selected
 		end
 
-feature {NONE} -- Contract support
+feature -- Contract support
 
 	is_parent_recursive (a_tree_node: EV_TREE_NODE): BOOLEAN is
 			-- Is `a_tree_node' a parent of `Current'?
@@ -89,13 +89,15 @@ feature {NONE} -- Contract support
 			Result := False
 		end
 		
+feature {NONE} -- Contract support
+
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_TREE_NODE_LIST}
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 	implementation: EV_TREE_I	
 			-- Responsible for interaction with native graphics toolkit.

@@ -15,10 +15,9 @@ class CIRCULAR_CURSOR
 	CURSOR
 
 create
-
 	make
 
-feature {LINKED_LIST} -- Initialization
+feature {NONE} -- Initialization
 
 	make (curs: like cursor; int: BOOLEAN; start: INTEGER) is
 			-- Create a cursor and set it up on `active_element'.

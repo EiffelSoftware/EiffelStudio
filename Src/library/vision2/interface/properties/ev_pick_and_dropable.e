@@ -299,7 +299,7 @@ feature {NONE} -- Contract support
 				and pebble = Void
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_PICK_AND_DROPABLE_I
 			-- Responsible for interaction with native graphics toolkit.

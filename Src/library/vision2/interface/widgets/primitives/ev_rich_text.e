@@ -492,7 +492,7 @@ feature {NONE} -- Contract support
 			Result := not buffer_locked_in_append_mode and not buffer_locked_in_format_mode
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_RICH_TEXT_I
 			-- Responsible for interaction with native graphics

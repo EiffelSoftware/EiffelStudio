@@ -118,7 +118,7 @@ feature -- Element change
 			an_item_height_assigned: a_widget.height = a_height
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 	implementation: EV_FIXED_I
 			-- Responsible for interaction with native graphics toolkit.

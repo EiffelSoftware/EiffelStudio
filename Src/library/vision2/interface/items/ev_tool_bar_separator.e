@@ -14,7 +14,7 @@ class
 inherit
 	EV_TOOL_BAR_ITEM
 		export
-			{NONE} all
+			{EV_TOOL_BAR_SEPARATOR} all
 			{ANY} out, tagged_out, parent, equal,
 				conforms_to, generating_type, print,
 				destroy, is_destroyed, set_data, data,

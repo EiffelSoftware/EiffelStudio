@@ -1,35 +1,24 @@
 indexing
-
-	description:
-		"Cursors for hash table traversal"
-
-	status: "See notice at end of class"
-	names: linked_list_cursor, cursor;
-	contents: generic;
+	description: "Cursors for two way lists."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class HASH_TABLE_CURSOR inherit
+class
+	TWO_WAY_LIST_CURSOR [G]
 
-	CURSOR
+inherit
+	LINKED_LIST_CURSOR [G]
+		redefine
+			active
+		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature {TWO_WAY_LIST} -- Implementation
 
-	make (pos: INTEGER) is
-			-- Create a new cursor.
-		do
-			position := pos
-		ensure
-			position_set: position = pos
-		end
-
-feature {HASH_TABLE} -- Access
-
-	position: INTEGER;
-			-- Cursor position
+	active: BI_LINKABLE [G];
+			-- Current element in linked list
 
 indexing
 
@@ -63,6 +52,4 @@ indexing
 			For latest info see award-winning pages: http://eiffel.com
 			]"
 
-end -- class HASH_TABLE_CURSOR
-
-
+end

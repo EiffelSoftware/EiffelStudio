@@ -28,7 +28,7 @@ create
 	default_create,
 	make_with_value_range
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_HORIZONTAL_RANGE_I
 			-- Platform dependent access.

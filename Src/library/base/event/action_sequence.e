@@ -42,6 +42,8 @@ inherit
 	ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]
 		rename
 			make as arrayed_list_make
+		export
+			{ACTION_SEQUENCE} same_items, subarray
 		redefine
 			default_create,
 			set_count
@@ -50,6 +52,11 @@ inherit
 create
 	default_create,
 	make
+
+create {ACTION_SEQUENCE}
+	array_make,
+	arrayed_list_make,
+	make_filled
 
 feature {NONE} -- Initialization
 

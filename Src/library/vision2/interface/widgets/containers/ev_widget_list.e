@@ -27,7 +27,7 @@ inherit
 
 	EV_DYNAMIC_LIST [EV_WIDGET]
 		export
-			{NONE}
+			{EV_WIDGET_LIST}
 				changeable_comparison_criterion,
 				compare_references,
 				compare_objects,
@@ -48,7 +48,7 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_CONTAINER} and Precursor {EV_DYNAMIC_LIST}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_WIDGET_LIST_I
 			-- Responsible for interaction with native graphics toolkit.

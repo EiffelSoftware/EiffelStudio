@@ -13,10 +13,9 @@ class MULTAR_LIST_CURSOR [G] inherit
 	CURSOR
 
 create
-
 	make
 
-feature {MULTI_ARRAY_LIST} -- Initialization
+feature {NONE} -- Initialization
 
 	make (active_element: like active; current_active_index, current_index: INTEGER) is
 			-- Create a cursor and set it up on `active_element'.

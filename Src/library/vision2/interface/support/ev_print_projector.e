@@ -51,7 +51,7 @@ feature -- Basic operations
 			implementation.project
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	context: EV_PRINT_CONTEXT
 

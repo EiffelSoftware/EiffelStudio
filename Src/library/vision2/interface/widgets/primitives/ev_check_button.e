@@ -28,7 +28,7 @@ create
 	default_create,
 	make_with_text
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CHECK_BUTTON_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -9,6 +9,8 @@ class
 	EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 	
 inherit
+	ANY
+
 	EV_RICH_TEXT_CONSTANTS_I
 		export
 			{NONE} all

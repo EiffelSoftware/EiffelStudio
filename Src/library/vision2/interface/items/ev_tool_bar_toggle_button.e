@@ -40,7 +40,7 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_DESELECTABLE} and Precursor {EV_TOOL_BAR_BUTTON} 
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_TOGGLE_BUTTON_I
 			-- Responsible for interaction with native graphics toolkit.

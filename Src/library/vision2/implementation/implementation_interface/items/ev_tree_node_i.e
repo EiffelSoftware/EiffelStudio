@@ -93,7 +93,7 @@ feature -- Status setting
 			state_set: is_expanded = flag
 		end
 		
-feature {NONE} -- Contract support
+feature -- Contract support
 
 	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
 			-- Is `a_pixmap' equal to `pixmap'?

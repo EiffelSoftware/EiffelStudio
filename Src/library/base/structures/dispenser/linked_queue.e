@@ -32,9 +32,12 @@ class LINKED_QUEUE [G] inherit
 		export
 			{NONE}
 				all
+			{LINKED_QUEUE}
+				cursor, valid_cursor, start, forth, go_to,
+				first_element, last_element
 			{ANY}
 				writable, extendible, wipe_out,
-				readable
+				readable, off, before, after, index
 		undefine
 			fill, append, prune,
 			readable, writable, prune_all, extend,
@@ -46,8 +49,10 @@ class LINKED_QUEUE [G] inherit
 		end
 
 create
-
 	make
+
+create {LINKED_QUEUE}
+	ll_make
 
 feature -- Initialization
 

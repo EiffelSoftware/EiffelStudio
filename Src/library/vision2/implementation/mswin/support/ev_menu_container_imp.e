@@ -9,6 +9,8 @@ deferred class
 	EV_MENU_CONTAINER_IMP
 	
 inherit
+	ANY
+
 	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all

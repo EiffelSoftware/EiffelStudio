@@ -113,6 +113,13 @@ feature -- Status report
 			Result := flag_set (style, Ws_maximize)
 		end
 
+	is_displayed: BOOLEAN is
+			-- Is `Current' visible on screen?
+			-- `Result' is False if `is_minimized'.
+		do
+			Result := Precursor {EV_WINDOW_IMP} and not is_minimized
+		end
+
 feature -- Status setting
 
 	raise is
@@ -508,13 +515,6 @@ feature {NONE} -- WEL Implementation
 				end
 				fire_restore_actions := False
 			end
-		end
-		
-	is_displayed: BOOLEAN is
-			-- Is `Current' visible on screen?
-			-- `Result' is False if `is_minimized'.
-		do
-			Result := Precursor {EV_WINDOW_IMP} and not is_minimized
 		end
 	
 	fire_restore_actions: BOOLEAN	

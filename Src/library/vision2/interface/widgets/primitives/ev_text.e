@@ -187,7 +187,7 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_TEXT_COMPONENT} and Precursor {EV_FONTABLE} and has_word_wrapping
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TEXT_I
 			-- Responsible for interaction with native graphics toolkit.

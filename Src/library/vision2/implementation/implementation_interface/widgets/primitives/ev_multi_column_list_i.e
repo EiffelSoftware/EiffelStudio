@@ -26,7 +26,7 @@ inherit
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_I
 
-feature {NONE} -- Initialization
+feature {EV_ANY} -- Initialization
 
 	initialize is
 		do
@@ -480,9 +480,11 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_ITEM_LIST_IMP} -- Implementation
 			-- neither gtk nor windows does it.
 
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST
+
+feature {EV_ANY_I} -- Implementation
 
 	column_titles: LINKED_LIST [STRING]
 			-- All column titles set using `set_column_titles' and

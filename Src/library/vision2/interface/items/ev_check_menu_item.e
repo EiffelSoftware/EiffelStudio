@@ -40,7 +40,7 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_MENU_ITEM} and Precursor {EV_DESELECTABLE} 
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CHECK_MENU_ITEM_I
 			-- Responsible for interaction with native graphics toolkit.

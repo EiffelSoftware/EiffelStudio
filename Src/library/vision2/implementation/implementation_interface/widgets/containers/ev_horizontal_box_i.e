@@ -35,7 +35,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			Result := width
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_BOX
 

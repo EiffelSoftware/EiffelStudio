@@ -215,7 +215,7 @@ feature {EV_RICH_TEXT_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 	changed: BOOLEAN
 		-- Does `internal_out' require recomputation?
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CHARACTER_FORMAT_I
 			-- Implementation of the current object

@@ -238,7 +238,7 @@ feature -- Contract support
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_DOCKABLE_SOURCE_I
 	

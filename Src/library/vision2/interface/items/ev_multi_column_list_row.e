@@ -47,6 +47,9 @@ inherit
 
 create
 	default_create
+	
+create {EV_MULTI_COLUMN_LIST_ROW}
+	make_filled
 
 feature {NONE} -- Contract support
 
@@ -56,7 +59,7 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_ITEM} and Precursor {EV_DESELECTABLE}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_MULTI_COLUMN_LIST_ROW_I
 			-- Responsible for interaction with native graphics toolkit.
@@ -80,6 +83,14 @@ feature {EV_ANY_I} -- Implementation
 			-- `an_item' is about to be removed.
 		do
 			implementation.on_item_removed_at (an_item, item_index)
+		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_ROW

@@ -291,7 +291,7 @@ feature -- Status setting
 				((create {EV_ENVIRONMENT}).application.locked_window = Void)
 		end
 
-feature {EV_WINDOW, EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_WINDOW_I
 			-- Responsible for interaction with native graphics toolkit.

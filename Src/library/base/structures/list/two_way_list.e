@@ -20,7 +20,7 @@ class TWO_WAY_LIST [G] inherit
 			merge_right, merge_left, new_cell,
 			remove, remove_left, remove_right, wipe_out,
 			previous, finish, move, islast, new_chain,
-			forth, back
+			forth, back, cursor
 		select
 			put_front,
 			merge_right,
@@ -43,12 +43,14 @@ class TWO_WAY_LIST [G] inherit
 			put_left, merge_left, remove, new_chain,
 			remove_left, finish, islast, first_element, extend,
 			last_element, previous, new_cell, remove_right,
-			forth, back
+			forth, back, cursor
 		end
 
 create
-
-	make_sublist, make
+	make
+	
+create {TWO_WAY_LIST}
+	make_sublist
 
 feature -- Access
 
@@ -62,6 +64,12 @@ feature -- Access
 	sublist: like Current
 			-- Result produced by last `split'
 
+	cursor: TWO_WAY_LIST_CURSOR [G] is
+			-- Current cursor position
+		do
+			create Result.make (active, after, before)
+		end
+		
 feature -- Status report
 
 	islast: BOOLEAN is

@@ -26,13 +26,10 @@ feature -- Access
 			Result := active.item
 		end
 
-	cursor: CURSOR is
+	cursor: RECURSIVE_TREE_CURSOR [G] is
 			-- Current cursor position
-		local
-			temp: like cursor_anchor
 		do
-			create temp.make (active, active_parent, after, before, below)
-			Result := temp
+			create Result.make (active, active_parent, after, before, below)
 		end
 
 feature -- Measurement
@@ -49,7 +46,7 @@ feature -- Measurement
 	count: INTEGER is
 			-- Number of items in the tree
 		local
-			pos: like cursor_anchor
+			pos: like cursor
 		do
 			pos ?= cursor
 			from
@@ -119,8 +116,7 @@ feature -- Status report
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
 		local
-			temp: like cursor_anchor
-			pos: CURSOR
+			pos, temp: like cursor
 		do
 			temp ?= p
 			if temp /= Void then
@@ -228,7 +224,7 @@ feature -- Cursor movement
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
 		local
-			temp: like cursor_anchor
+			temp: like cursor
 		do
 			temp ?= p
 				check
@@ -309,9 +305,6 @@ feature {NONE} -- Implementation
 	above_node: like active
 			-- Node above root; physical root of tree
 
-	cursor_anchor: RECURSIVE_TREE_CURSOR [G]
-			-- Anchor for definitions concerning cursors
-
 	corresponding_child is
 			-- Make `active' the current child of `active_parent'.
 		require
@@ -322,7 +315,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	unchecked_go (p: like cursor_anchor) is
+	unchecked_go (p: like cursor) is
 			-- Make an attempt to move cursor
 			-- to position `p', without checking
 			-- whether `p' is a valid cursor position

@@ -76,11 +76,10 @@ feature -- Access
 			Result := item_table.item (active)
 		end
 
-	cursor: CURSOR is
+	cursor: COMPACT_TREE_CURSOR is
 			-- Current cursor position
 		do
-			create {COMPACT_TREE_CURSOR} Result.make
-				(active, after, before, below, above)
+			create Result.make (active, after, before, below, above)
 		end
 
 feature -- Measurement

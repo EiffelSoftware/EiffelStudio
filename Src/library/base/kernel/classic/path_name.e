@@ -1,9 +1,5 @@
-
 indexing
-
-	description:
-		"Path name abstraction"
-
+	description: "Path name abstraction"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,9 +13,10 @@ inherit
 			make_from_string as string_make_from_string,
 			extend as string_extend
 		export
-			{NONE} all
-			{ANY} is_empty, empty, to_c, wipe_out, out, string, twin
-			{PATH_NAME} count, area
+			{PATH_NAME} all
+			{ANY} is_empty, empty, to_c, wipe_out, out, string, twin, prunable
+		undefine
+			new_string
 		redefine
 			is_equal
 		end

@@ -10,6 +10,8 @@ deferred class
 	EV_ARROWED_FIGURE
 
 inherit
+	ANY
+
 	EV_FIGURE_MATH
 		export
 			{NONE} all

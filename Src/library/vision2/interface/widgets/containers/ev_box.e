@@ -152,7 +152,7 @@ feature {EV_ANY} -- Contract support
 			)
 		end
 
-feature  {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 	implementation: EV_BOX_I
 			-- Responsible for interaction with native graphics toolkit.

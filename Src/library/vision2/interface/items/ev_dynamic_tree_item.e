@@ -15,7 +15,7 @@ inherit
 	
 	EV_TREE_NODE
 		export
-			{NONE} sequential_occurrences, fill, is_inserted, dl_force, readable,
+			{EV_DYNAMIC_TREE_ITEM} sequential_occurrences, fill, is_inserted, dl_force, readable,
 			writable, first, index_set, infix "@", isfirst, islast, last, put, valid_cursor,
 			valid_index, extendible, prunable, prune_all, before, is_equal, append, back, count,
 			cursor, extend, force, full, go_i_th, go_to, i_th, index_of, merge_left, merge_right,
@@ -317,7 +317,7 @@ feature {NONE} -- Contract support
 			-- during the `expand_actions'.
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 		
 	implementation: EV_TREE_NODE_I
 		-- Responsible for interaction with native graphics toolkit.

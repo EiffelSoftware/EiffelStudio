@@ -24,7 +24,7 @@ inherit
 create
 	default_create
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_HORIZONTAL_SEPARATOR_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -22,6 +22,11 @@ inherit
 create
 	default_create
 
+create {ACTIVE_LIST}
+	array_make,
+	make,
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -62,6 +67,14 @@ feature -- Miscellaneous
 			go_to (a_cursor)
 		end
 
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
+		end
+		
 invariant
 	add_actions_not_void: add_actions /= Void
 	remove_actions_not_void: remove_actions /= Void

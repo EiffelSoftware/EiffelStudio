@@ -8,6 +8,8 @@ deferred class
 	EV_SHARED_TRANSPORT_IMP
 	
 inherit
+	ANY
+
 	WEL_SYSTEM_METRICS
 		export
 			{NONE} all

@@ -393,7 +393,7 @@ feature -- Element change
 			minimum_from_page_set: minimum_from_page = value
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 		
 	implementation: EV_PRINT_DIALOG_I
 		-- Responsible for interaction with native graphics toolkit.

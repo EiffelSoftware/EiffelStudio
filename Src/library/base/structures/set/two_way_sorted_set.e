@@ -61,8 +61,10 @@ class TWO_WAY_SORTED_SET [G -> COMPARABLE] inherit
 		end
 
 create
-
 	make
+
+create {TWO_WAY_SORTED_SET}
+	make_sublist
 
 feature -- Element change
 

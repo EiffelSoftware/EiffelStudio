@@ -336,7 +336,7 @@ feature {NONE} -- Implementation for automatic size compute
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_BOX
 

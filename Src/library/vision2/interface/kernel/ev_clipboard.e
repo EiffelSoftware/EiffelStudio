@@ -53,7 +53,7 @@ feature -- Status setting
 			text_removed: text.is_empty
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CLIPBOARD_I
 		-- Responsible for interaction with native graphics toolkit.

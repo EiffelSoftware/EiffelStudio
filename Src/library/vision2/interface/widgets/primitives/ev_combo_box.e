@@ -72,7 +72,7 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_TEXT_FIELD} and Precursor {EV_LIST_ITEM_LIST}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_COMBO_BOX_I
 			-- Responsible for interaction with native graphics toolkit.

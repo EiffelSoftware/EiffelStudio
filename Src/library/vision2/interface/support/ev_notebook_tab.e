@@ -100,7 +100,7 @@ feature {NONE} -- Contract Support
 			Result := Precursor {EV_TEXTABLE} and Precursor {EV_PIXMAPABLE}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_NOTEBOOK_TAB_I
 			-- Responsible for interaction with native graphics toolkit.

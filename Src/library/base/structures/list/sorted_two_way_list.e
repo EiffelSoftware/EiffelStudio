@@ -29,8 +29,9 @@ class SORTED_TWO_WAY_LIST [G -> COMPARABLE] inherit
 		end
 
 create
-
 	make
+	
+create {SORTED_TWO_WAY_LIST} make_sublist
 
 feature -- Element change
 

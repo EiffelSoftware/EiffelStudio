@@ -31,7 +31,7 @@ class HEAP_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 			{NONE}
 				all
 			{HEAP_PRIORITY_QUEUE}
-				put_i_th
+				put_i_th, area, i_th, valid_index, upper, lower, subarray
 		redefine
 			full, prunable, prune,
 			put, extendible, wipe_out,

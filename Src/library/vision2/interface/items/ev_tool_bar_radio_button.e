@@ -51,7 +51,7 @@ feature {NONE} -- Contract support
 			and then Precursor {EV_TOOL_BAR_BUTTON}
 		end
 
-feature {EV_ANY_I}-- Implementation
+feature {EV_ANY, EV_ANY_I}-- Implementation
 
 	implementation: EV_TOOL_BAR_RADIO_BUTTON_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -17,6 +17,12 @@ inherit
 			snap_to_grid
 		end
 
+create
+	default_create
+
+create {EV_MOVE_HANDLE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is

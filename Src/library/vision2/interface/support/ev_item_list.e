@@ -138,7 +138,7 @@ feature -- Implementation
 			-- May `object_comparison' be changed?
 			-- (Answer: no by default.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_ITEM_LIST_I [G]
 			-- Responsible for interaction with native graphics

@@ -77,10 +77,10 @@ feature -- Access
 			end
 		end
 
-	cursor: CURSOR is
+	cursor: LINKED_LIST_CURSOR [G] is
 			-- Current cursor position
 		do
-			create {LINKED_LIST_CURSOR [G]} Result.make (active, after, before)
+			create Result.make (active, after, before)
 		end
 
 feature -- Measurement
@@ -124,7 +124,7 @@ feature -- Status report
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
 		local
-			ll_c: LINKED_LIST_CURSOR [G]
+			ll_c: like cursor
 			temp, sought: like first_element
 		do
 			ll_c ?= p
@@ -295,7 +295,7 @@ feature -- Cursor movement
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
 		local
-			ll_c: LINKED_LIST_CURSOR [G]
+			ll_c: like cursor
 		do
 			ll_c ?= p
 				check

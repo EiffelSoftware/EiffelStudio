@@ -12,11 +12,7 @@ class
 	EV_MENU_BAR
 
 inherit
-	
 	EV_MENU_ITEM_LIST
-		export
-			{NONE}
-				is_parent_recursive
 		redefine
 			implementation,
 			create_implementation
@@ -33,7 +29,7 @@ feature -- Status report
 			Result := implementation.parent
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_BAR_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 			paint_dc.unselect_pen			
 		end
 	
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_SPLIT_AREA
 

@@ -42,7 +42,7 @@ feature -- Element change
 			implementation.set_color (a_color)
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_COLOR_DIALOG_I
 

@@ -549,7 +549,7 @@ feature {NONE} -- Implementation
 					if l_enum.get_count > 0 then
 						l_enum.skip (1)						
 							-- Then process the following values (arguments)
-						Result := debug_value_list_from_enum (l_enum)
+						Result := debug_value_list_from_enum (l_enum, l_enum.get_count - 1)
 					end
 					l_enum.clean_on_dispose
 				end
@@ -573,29 +573,32 @@ feature {NONE} -- Implementation
 				l_enum := l_il_frame.enumerate_local_variables
 				if l_enum /= Void then
 					l_enum.reset
-					Result := debug_value_list_from_enum (l_enum)
+					Result := debug_value_list_from_enum (l_enum, l_enum.get_count)
 					l_enum.clean_on_dispose
 				else
-					create {LINKED_LIST[EIFNET_ABSTRACT_DEBUG_VALUE]} Result.make
+					create {LINKED_LIST [EIFNET_ABSTRACT_DEBUG_VALUE]} Result.make
 				end
 				l_il_frame.clean_on_dispose
 			end
 		end
 
-	debug_value_list_from_enum (a_enum: ICOR_DEBUG_VALUE_ENUM): LIST [EIFNET_ABSTRACT_DEBUG_VALUE] is
+	debug_value_list_from_enum (a_enum: ICOR_DEBUG_VALUE_ENUM; a_enum_elts: INTEGER): LIST [EIFNET_ABSTRACT_DEBUG_VALUE] is
 		require
 			a_enum /= Void
 		local
-			l_objects_count: INTEGER
+			l_objects_count_to_get: INTEGER
 			l_array_objects: ARRAY [ICOR_DEBUG_VALUE]
 			l_object_index: INTEGER
 			l_icd_val: ICOR_DEBUG_VALUE
 			l_abstract_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
-			l_objects_count := a_enum.get_count
-			if l_objects_count > 0 then
-				create {LINKED_LIST[EIFNET_ABSTRACT_DEBUG_VALUE]} Result.make
-				l_array_objects := a_enum.next (l_objects_count)
+			-- Nota: do not do any reset on a_enum here,
+			-- since we may have move the index to start after the first item
+			-- for instance to get only arguments (for eiffel feature)
+			l_objects_count_to_get := a_enum_elts
+			if l_objects_count_to_get > 0 then
+				create {LINKED_LIST [EIFNET_ABSTRACT_DEBUG_VALUE]} Result.make
+				l_array_objects := a_enum.next (l_objects_count_to_get)
 				if a_enum.last_call_succeed then
 					from
 						l_object_index := l_array_objects.lower

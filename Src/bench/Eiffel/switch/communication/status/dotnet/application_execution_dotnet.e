@@ -508,6 +508,7 @@ feature -- Controle execution
 				l_controller.add_ref
 				l_enum_thread := l_controller.enumerate_threads
 				if l_enum_thread /= Void and then l_enum_thread.count > 0 then
+					l_enum_thread.reset
 					l_th := Eifnet_debugger_info.icd_thread
 					if l_th /= Void then
 						l_last_thread_id := l_th.get_id.to_hex_string
@@ -1236,6 +1237,7 @@ feature -- Call stack related
 
 			l_enum_chain := l_active_thread.enumerate_chains
 			if l_active_thread.last_call_succeed and then l_enum_chain.get_count > 0 then
+				l_enum_chain.reset
 				l_chains := l_enum_chain.next (l_enum_chain.get_count)
 				from
 					c := l_chains.lower
@@ -1251,6 +1253,7 @@ feature -- Call stack related
 					
 						l_enum_frames := l_chain.enumerate_frames
 						if l_chain.last_call_succeed and then l_enum_frames.get_count > 0 then
+							l_enum_frames.reset
 							l_frames := l_enum_frames.next (l_enum_frames.get_count)
 							from
 								i := l_frames.lower

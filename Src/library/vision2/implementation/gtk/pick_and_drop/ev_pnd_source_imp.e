@@ -105,12 +105,6 @@ feature -- Implementation
 			app_imp.on_pick (pebble)
 			interface.pick_actions.call ([a_x, a_y])
 
-			if mode_is_pick_and_drop then
-				is_pnd_in_transport := True
-			else
-				is_dnd_in_transport := True
-			end
-
 			create curs_code
 			if accept_cursor = Void then
 				create accept_cursor.make_with_code (curs_code.standard)
@@ -133,6 +127,8 @@ feature -- Implementation
 			a_screen_x, a_screen_y: INTEGER)
 		is
 			-- Initialize a pick and drop transport.
+		local
+			app_imp: EV_APPLICATION_IMP
 		do		
 			if
 				(mode_is_drag_and_drop and a_button = 1 or
@@ -177,7 +173,7 @@ feature -- Implementation
 					default_translate
 				)
 				button_press_connection_id := last_signal_connection_id
-				if is_dnd_in_transport then
+				if mode_is_drag_and_drop then
 					check
 						release_not_connected: button_release_connection_id = 0
 					end
@@ -211,10 +207,17 @@ feature -- Implementation
 					motion_notify_connected: motion_notify_connection_id > 0
 					enter_notify_connected: enter_notify_connection_id > 0
 					leave_notify_connected: leave_notify_connection_id > 0
-					is_dnd_in_transport_implies_release_connected:
-					is_dnd_in_transport implies button_release_connection_id > 0
+					mode_is_drag_and_drop_implies_release_connected:
+						mode_is_drag_and_drop implies
+						button_release_connection_id > 0
 				end
 				signal_emit_stop (c_object, "button-press-event")
+			elseif mode_is_target_menu and a_button = 3 then
+				app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+				check
+					app_imp_not_void: app_imp /= Void
+				end
+				app_imp.target_menu (pebble).show
 			end
 		end
 
@@ -247,19 +250,25 @@ feature -- Implementation
 				signal_disconnect (button_release_connection_id)
 				button_release_connection_id := 0
 			end
-			signal_disconnect (motion_notify_connection_id)
-			motion_notify_connection_id := 0
-			signal_disconnect (enter_notify_connection_id)
-			enter_notify_connection_id := 0
-			signal_disconnect (leave_notify_connection_id)
-			leave_notify_connection_id := 0
+			if motion_notify_connection_id > 0 then
+				signal_disconnect (motion_notify_connection_id)
+				motion_notify_connection_id := 0
+			end
+			if enter_notify_connection_id > 0 then
+				signal_disconnect (enter_notify_connection_id)
+				enter_notify_connection_id := 0
+			end
+			if leave_notify_connection_id > 0 then
+				signal_disconnect (leave_notify_connection_id)
+				leave_notify_connection_id := 0
+			end
 			if grab_callback_connection_id > 0 then
 				signal_disconnect (grab_callback_connection_id)
 				grab_callback_connection_id := 0
 			end
 			if
-				(a_button = 3 and is_pnd_in_transport) or
-				(a_button = 1 and is_dnd_in_transport)
+				(a_button = 3 and mode_is_pick_and_drop) or
+				(a_button = 1 and mode_is_drag_and_drop)
 			then
 				target := pointed_target
 				if target /= Void then
@@ -268,12 +277,9 @@ feature -- Implementation
 			end
 			enable_transport
 			interface.pointer_motion_actions.resume
-			if not is_dnd_in_transport then
+			if mode_is_pick_and_drop then
 				signal_emit_stop (c_object, "button-press-event")
 			end
-
-			is_dnd_in_transport := False
-			is_pnd_in_transport := False
 
 			post_drop_steps
 
@@ -305,10 +311,6 @@ feature -- Implementation
 				pebble := Void
 			end
 		end
-
-	is_dnd_in_transport,
-	is_pnd_in_transport: BOOLEAN
-			-- Is a particular transport mechanism in operation.
 
 	add_grab_cb is
 			-- Disconnect callback that called us and `enable_capture'.
@@ -515,6 +517,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/25 00:58:36  oconnor
+--| added support of right click PND menus
+--|
 --| Revision 1.23  2000/04/07 17:39:42  king
 --| Added imp comment to pointed_target
 --|

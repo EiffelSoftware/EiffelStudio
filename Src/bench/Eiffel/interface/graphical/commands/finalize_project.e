@@ -165,39 +165,36 @@ feature {NONE} -- Implementation
 
 	launch_c_compilation (argument: ANY) is
 			-- Launch the C compilation in the background.
+		local
+			window: GRAPHICAL_TEXT_WINDOW
 		do
+			window ?= Error_window
+			if window /= Void then
+				window.set_changed (True)
+			end
+
 			if start_c_compilation then
-				error_window.put_string
-					("Launching C compilation in background...");
-				error_window.new_line;
-				Eiffel_project.call_finish_freezing (False);
-			end;
+				error_window.put_string	("Launching C compilation in background...")
+				Eiffel_project.call_finish_freezing (False)
+			end
+
 			if not Eiffel_project.is_final_code_optimal then
-				error_window.put_string ("Warning: the finalized system might not be optimal");
-				error_window.new_line;
-				error_window.put_one_indent;
-				error_window.put_string ("in size and speed. In order to produce an optimal");
-				error_window.new_line;
-				error_window.put_one_indent;
-				error_window.put_string ("executable, finalize from a new project and do");
-				error_window.new_line;
-				error_window.put_one_indent;
-				error_window.put_string ("not use precompilation.");
-				error_window.new_line;
-				error_window.new_line;
+				error_window.put_string ("%NWarning: the finalized system might not be optimal%N%
+								%%Tin size and speed. In order to produce an optimal%N%
+								%%Texecutable, finalize from a new project and do%N%
+								%%Tnot use precompilation.%N")
 			end;
-			if 
-				(last_warner /= Void and argument = last_warner)
-				and then Eiffel_project.lace_has_assertions
-			then
-				error_window.put_string ("Warning: the finalized system incorporates assertions.");
-				error_window.new_line;
-				error_window.put_one_indent;
-				error_window.put_string ("It might therefore not be optimal in size and speed");
-				error_window.new_line;
-				error_window.new_line;
-			end;
-			process_end_compilation
+
+			if (last_warner /= Void and argument = last_warner) and then Eiffel_project.lace_has_assertions then
+				error_window.put_string ("%NWarning: the finalized system incorporates assertions.%N%
+								%%TIt might therefore not be optimal in size and speed.%N%N")
+			end
+
+			Error_window.put_string ("%NSystem recompiled%N")
+
+			if window /= Void then
+				window.set_changed (False)
+			end
 		end;
  
 end -- class FINALIZE_PROJECT

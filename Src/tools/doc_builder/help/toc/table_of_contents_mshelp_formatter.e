@@ -32,7 +32,6 @@ feature -- Processing
 			l_url,
 			l_name,
 			l_anchor: STRING
-			is_dir_url: BOOLEAN
 			l_util: UTILITY_FUNCTIONS
 		do
 			Result := ("<HelpTOCNode")

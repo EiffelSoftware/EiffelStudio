@@ -148,8 +148,6 @@ feature -- Status Setting
 
 	set_included (a_flag: BOOLEAN) is
 			-- Toggle `included'.
-		local
-			l_child: like Current
 		do
 			include := a_flag
 			if not include then
@@ -183,7 +181,6 @@ feature {NONE} -- Implementation
 			l_node: TABLE_OF_CONTENTS_NODE
 			l_widget_node: TABLE_OF_CONTENTS_WIDGET_NODE
 			l_is_heading: BOOLEAN
-			l_icon: STRING
 		do
 			create Result.make (5)
 			if node /= Void and then node.has_child then				

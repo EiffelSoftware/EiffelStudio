@@ -126,9 +126,7 @@ feature -- Basic Operation
 		require else
 			directory_added_succesfully: directory_added_succesfully
 		local
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			window_node: EV_TREE_NODE_LIST
-			tree_item: EV_TREE_ITEM
+			directory_item, parent_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			if executed_once then
 					-- As we are re-doing an undo, we must create directory again.
@@ -137,19 +135,15 @@ feature -- Basic Operation
 			end
 			create directory_item.make_with_name (directory_name)
 			if parent_directory_path.is_empty then
-				add_to_tree_node_alphabetically (window_selector, directory_item)
+				window_selector.add_alphabetically (directory_item)
 			else
-				window_node ?= tree_item_matching_path (window_selector, parent_directory_path)
+				parent_directory := window_selector.directory_object_from_name (parent_directory_path)
 				check
-					window_node_not_void: window_node /= Void
+					parent_directory_not_void: parent_directory /= Void
 				end
-				add_to_tree_node_alphabetically (window_node, directory_item)
+				parent_directory.add_alphabetically (directory_item)
 					-- Ensure `directory_item' is now visible.
-				tree_item ?= window_node
-				check
-					node_was_item: tree_item /= Void
-				end
-				tree_item.expand
+				parent_directory.expand
 			end
 			
 			if not history.command_list.has (Current) then

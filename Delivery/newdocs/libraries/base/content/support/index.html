@@ -7,5 +7,74 @@
 	</HEAD>
 
 	<BODY>
+    <h1>The Support Cluster</h1>
+    <p>The support cluster offers some commonly needed functionality that do not
+    belong to the kernel.</p>
+    <h2> Conversions, mathematical properties and ASCII characters</h2>
+    <p>A few utility classes complement the <a href="../kernel/index.html">kernel</a>
+    facilities. <a CLASS="eclass" HREF="../../reference/support/primes.html">PRIMES</a>,
+    <a CLASS="eclass" HREF="../../reference/support/random.html">RANDOM</a> and <a CLASS="eclass" HREF="../../reference/support/fibonacci.html">FIBONACCI</a>
+    are part of the data structure taxonomy; the others are meant to be used as ancestors by classes needing their features.<br>
+ Two classes provide basic mathematical functions such as logarithms and trigonometric functions:
+    <a CLASS="eclass" HREF="../../reference/support/single_math.html">SINGLE_MATH</a>
+    for single precision and <a CLASS="eclass" HREF="../../reference/support/double_math.html">DOUBLE_MATH</a>
+    for the double-precision variants. <a CLASS="eclass" HREF="../../reference/support/math_const.html">MATH_CONST</a>
+    contains mathematical constants: <SPAN CLASS="esymbol">p</SPAN>, the square root of two, Euler’s constant <SPAN CLASS="esymbol">e</SPAN>.<br>
+ <a CLASS="eclass" HREF="../../reference/support/primes.html">PRIMES</a>, <a CLASS="eclass" HREF="../../reference/support/random.html">RANDOM</a>
+        and <a CLASS="eclass" HREF="../../reference/support/fibonacci.html">FIBONACCI</a>
+        are data structure classes - heirs of <a CLASS="eclass" HREF="../../reference/support/countable_sequence.html">COUNTABLE_SEQUENCE</a>. In all of these classes function
+    <a CLASS="efeature" HREF="../../reference/support/countable_sequence.html#f_i_th">i_th</a>
+    takes an integer
+        argument <SPAN CLASS="elocal">i</SPAN> and will return the i-th element of the sequence under consideration - prime
+        numbers, pseudo-random numbers or Fibonacci numbers. These sequences are active
+        structures, on which forth will advance the current position and item will return the
+        value at the current position. A few other features are specific to each case: for example
+        <a CLASS="efeature" HREF="../../reference/support/primes.html#f_higher_prime">higher_prime</a>
+        will yield the smallest prime greater than or equal to a certain value, and
+        <a CLASS="efeature" HREF="../../reference/support/random.html#f_set_seed">set_seed</a> will define the seed to be used for starting the pseudo-random sequence.
+        </p>
+        <h2>Internal object structures</h2>
+        <p>Class <a CLASS="eclass" HREF="../../reference/support/internal.html">INTERNAL</a>
+        provides low-level access to internal object structures. It, too, is
+        meant to be used as ancestor by classes needing its features.<br>
+        Here are some of the most useful calls and what they yield, <SPAN CLASS="elocal">obj</SPAN> being an entity
+        attached to an object <SPAN CLASS="elocal">O</SPAN> and <SPAN CLASS="elocal">i</SPAN> an integer:</p>
+        <ul>
+          <li><a CLASS="efeature" HREF="../../reference/support/internal.html#f_class_name">class_name</a>
+            <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">obj</SPAN><SPAN CLASS="esymbol">)</SPAN>:
+          the name of the generator class for <SPAN CLASS="elocal">O</SPAN>.</li>
+          <li><a CLASS="efeature" HREF="../../reference/support/internal.html#f_dynamic_type">dynamic_type</a>
+            <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">obj</SPAN><SPAN CLASS="esymbol">)</SPAN>:
+            the integer code for the type of <SPAN CLASS="elocal">O</SPAN>,
+            where each type in a system is identified by a unique code.</li>
+          <li><a CLASS="efeature" HREF="../../reference/support/internal.html#f_field_count">field_count</a>
+            <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">obj</SPAN><SPAN CLASS="esymbol">)</SPAN>:
+            the number of fields in <SPAN CLASS="elocal">O</SPAN>.</li>
+          <li><a CLASS="efeature" HREF="../../reference/support/internal.html#f_physical_size">physical_size</a>
+            <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">obj</SPAN><SPAN CLASS="esymbol">)</SPAN>: the space occupied by <SPAN CLASS="elocal">O</SPAN>, in bytes.</li>
+          <li><SPAN CLASS="efeature">field_xx</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN>,
+          <SPAN CLASS="elocal">obj</SPAN><SPAN CLASS="esymbol">)</SPAN> where
+          <SPAN CLASS="efeature">xx</SPAN> is name or offset: name or offset of the i-th field of
+          <SPAN CLASS="elocal">O</SPAN>.</li>
+          <li><a CLASS="efeature" HREF="../../reference/support/internal.html#f_field">field</a>
+            <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN>, <SPAN CLASS="elocal">obj</SPAN><SPAN CLASS="esymbol">)</SPAN>:
+             the value of the i-th field of <SPAN CLASS="elocal">O</SPAN>, if a reference; declared of type
+          <A CLASS="eclass" HREF="../../reference/support/any.html">ANY</A>
+            in the class.</li>
+          <li><SPAN CLASS="efeature">yy_field</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN>, <SPAN CLASS="elocal">obj</SPAN><SPAN CLASS="esymbol">)</SPAN> where
+          <SPAN CLASS="efeature">yy</SPAN> is boolean, character, integer, real or double: the value
+            of the i-th field of <SPAN CLASS="elocal">O</SPAN>, if of the corresponding type; each declared of the
+            appropriate type in the class.</li>
+          <li><a CLASS="efeature" HREF="../../reference/support/internal.html#f_is_special">is_special</a>
+            <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">obj</SPAN><SPAN CLASS="esymbol">)</SPAN>, a boolean query which indicates whether <SPAN CLASS="elocal">O</SPAN> is a special object
+            (the sequence of values representing the elements of an array or the characters of
+            a string).</li>
+        </ul>
+        <p class="warning"><b>CAUTION:</b> Only very special cases justify the use of this class. Unless you are writing the
+        lowest level of an interface between an Eiffel application and external tools (such as a
+        database management system), and this requires passing to those tools information
+        about the internals of Eiffel objects, you almost certainly should not use
+        <a CLASS="eclass" HREF="../../reference/support/internal.html">INTERNAL</a>.
+        </p>
 	</BODY>
 </HTML>

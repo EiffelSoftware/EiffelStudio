@@ -4594,9 +4594,7 @@ rt_private EIF_REFERENCE object_rread_special (
  */
 rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 {
-#ifdef EIF_ASSERTIONS
 	RT_GET_CONTEXT
-#endif
 
 	EIF_REFERENCE addr, trash = NULL;
 	EIF_TYPED_ELEMENT *l_item;

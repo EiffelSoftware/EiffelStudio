@@ -270,9 +270,7 @@ feature -- Access
 			-- need it anymore.
 		do
 			if mask_dc /= Void and internal_mask_bitmap /= Void then
-				if mask_dc.bitmap_selected then-- and mask_dc.o--mask_dc.bitmap.item /= default_pointer then
-					mask_dc.unselect_bitmap
-				end
+				mask_dc.unselect_bitmap
 				create Result.make_by_bitmap (internal_mask_bitmap)
 				Result.enable_reference_tracking
 				mask_dc.select_bitmap (internal_mask_bitmap)

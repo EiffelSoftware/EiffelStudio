@@ -175,34 +175,36 @@ feature -- Basic operations
 			old_pos, new_pos: INTEGER
 			min, max, p: INTEGER
 		do
-			old_pos := position
-			p := page
-			min := minimum
-			max := maximum
-			if scroll_code = Sb_pagedown then
-				new_pos := old_pos + p
-			elseif scroll_code = Sb_pageup then
-				new_pos := old_pos - p
-			elseif scroll_code = Sb_linedown then
-				new_pos := old_pos + line
-			elseif scroll_code = Sb_lineup then
-				new_pos := old_pos - line
-			elseif scroll_code = Sb_thumbposition then
-				new_pos := pos
-			elseif scroll_code = Sb_thumbtrack then
-				new_pos := pos
-			elseif scroll_code = Sb_top then
-				new_pos := min
-			elseif scroll_code = Sb_bottom then
-				new_pos := max - p + 1
-			end
-			if new_pos > max - p + 1 then
-				new_pos := max - p + 1
-			elseif new_pos < min then
-				new_pos := min
-			end
+			if scroll_code = Sb_endscroll then
+				old_pos := position
+				p := page
+				min := minimum
+				max := maximum
+				if scroll_code = Sb_pagedown then
+					new_pos := old_pos + p
+				elseif scroll_code = Sb_pageup then
+					new_pos := old_pos - p
+				elseif scroll_code = Sb_linedown then
+					new_pos := old_pos + line
+				elseif scroll_code = Sb_lineup then
+					new_pos := old_pos - line
+				elseif scroll_code = Sb_thumbposition then
+					new_pos := pos
+				elseif scroll_code = Sb_thumbtrack then
+					new_pos := pos
+				elseif scroll_code = Sb_top then
+					new_pos := min
+				elseif scroll_code = Sb_bottom then
+					new_pos := max - p + 1
+				end
+				if new_pos > max - p + 1 then
+					new_pos := max - p + 1
+				elseif new_pos < min then
+					new_pos := min
+				end
 
-			set_position (new_pos)
+				set_position (new_pos)
+			end
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is

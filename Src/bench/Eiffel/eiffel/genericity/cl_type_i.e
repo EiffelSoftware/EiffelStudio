@@ -223,7 +223,6 @@ feature -- Status
 			-- Void element type
 		do
 			if is_expanded then
-					-- We only support expanded for external class at the moment.
 				Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype				
 			else
 				if class_id = System.system_string_class.compiled_class.class_id then
@@ -278,10 +277,8 @@ feature -- Status
 				-- External classes have only one type.
 			Result := is_external
 			if not Result then
-					-- Expanded classes, or classes that inherits from external classes
+					-- Classes that inherits from external classes
 					-- have only one generated type.
-					-- FIXME: Manu 06/28/2004: Expanded cannot yet be generated as single type.
---				Result := is_expanded or base_class.is_single
 				Result := base_class.is_single
 			end
 		end

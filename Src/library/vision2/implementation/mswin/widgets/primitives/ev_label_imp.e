@@ -36,15 +36,17 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			font as wel_font,
-			set_font as wel_set_font
+			set_font as wel_set_font,
+			set_text as wel_set_text,
+			destroy as wel_destroy
 		undefine
 			-- We undefine the features redefined by EV_WIDGET_IMP,
 			-- and EV_PRIMITIVE_IMP
 			remove_command,
 			set_width,
 			set_height,
-			destroy,
-			set_text,
+--			destroy,
+--			set_text,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -53,7 +55,9 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up
+			on_key_up,
+			background_color,
+			foreground_color
 		end
 
 creation
@@ -70,7 +74,7 @@ feature -- Initialization
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create the label with `txt' as label.
 		local
-			par_imp: EV_CONTAINER_IMP
+			par_imp: WEL_WINDOW
 		do
 			par_imp ?= par.implementation
 			check
@@ -83,7 +87,7 @@ feature -- Initialization
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			Precursor
+			{EV_PRIMITIVE_IMP} Precursor
 			set_font (font)
 			set_default_size
 		end

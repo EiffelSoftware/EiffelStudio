@@ -166,7 +166,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_proxy::ccom_cl
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
+	ecom_eiffel_compiler::IEnumEiffelClass * ret_value = 0;
 	
 	hr = p_IEiffelClusterDescriptor->classes( &ret_value);
 	if (FAILED (hr))

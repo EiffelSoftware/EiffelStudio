@@ -22,6 +22,8 @@ class IEiffelClusterProperties_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEiffelClusterProperties_s.h"
 
+#include "ecom_eiffel_compiler_IEnumClusterExcludes_s.h"
+
 #include "ecom_eiffel_compiler_IEnumClusterProp_s.h"
 
 #ifdef __cplusplus
@@ -66,12 +68,6 @@ public:
 	Cluster name.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_name(  );
-
-
-	/*-----------------------------------------------------------
-	Cluster name.
-	-----------------------------------------------------------*/
-	void ccom_set_name(  /* [in] */ EIF_OBJECT return_value );
 
 
 	/*-----------------------------------------------------------

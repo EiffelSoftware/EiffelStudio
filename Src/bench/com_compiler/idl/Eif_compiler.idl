@@ -20,6 +20,8 @@ interface IEnumEiffelClass;
 interface IEnumCluster;
 interface IEnumFeature;
 interface IEnumClusterProp;
+interface IEnumClusterExcludes;
+interface IEnumImportedAssemblies;
 interface IEiffelSystemClusters;
 
 typedef enum __EIF_COMPILATION_TYPES
@@ -206,6 +208,58 @@ interface IEnumClusterProp : IUnknown
         [out] IEnumClusterProp ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] IEiffelClusterProperties **rgelt);
+
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid(CA8DB208-5E92-426e-953D-2660C131C618),
+    helpstring ("Eiffel Cluster Exluded Directories Enumeration.")
+]
+
+interface IEnumClusterExcludes : IUnknown
+{
+    HRESULT Next(
+        [out] BSTR *rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumClusterExcludes ** ppenum);
+
+    HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
+
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid(29532371-D58E-42c1-97FC-5FDA6535EBA9),
+    helpstring ("Imported Assemblies Enumeration.")
+]
+
+interface IEnumImportedAssemblies : IUnknown
+{
+    HRESULT Next(
+        [out] BSTR *rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumClusterExcludes ** ppenum);
+
+    HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
 
     HRESULT count ([out, retval] ULONG *return_value);
 };
@@ -556,7 +610,7 @@ interface IEiffelProjectProperties: IDispatch
   HRESULT clusters ([out, retval] IEiffelSystemClusters ** return_value);
 
   [id (116), propget, helpstring ("Imported assemblies.")]
-  HRESULT assemblies ([out, retval] SAFEARRAY (BSTR) * return_value);
+  HRESULT assemblies ([out, retval] IEnumImportedAssemblies ** return_value);
 
   [id (117), helpstring ("Add an assembly to the project.")]
   HRESULT add_assembly ([in] BSTR assembly_path);
@@ -601,6 +655,9 @@ interface IEiffelSystemClusters: IDispatch
 
   [helpstring ("Cluster properties.")]
   HRESULT cluster_properties_by_id ([in] ULONG cluster_id, [out, retval] IEiffelClusterProperties ** return_value);
+
+  [helpstring ("Change cluster name.")]
+  HRESULT change_cluster_name ([in] BSTR a_name, [in] BSTR a_new_name);
 };
 
 //---------------------------------------------------------------------
@@ -614,9 +671,6 @@ interface IEiffelClusterProperties: IDispatch
 {
   [id (DISPID_VALUE), propget, helpstring ("Cluster name.")]
   HRESULT name ([out, retval] BSTR * return_value);
-
-  [id (DISPID_VALUE), propput, helpstring ("Cluster name.")]
-  HRESULT name ([in] BSTR a_name);
 
   [id (200), propget, helpstring ("Full path to cluster.")]
   HRESULT cluster_path ([out, retval] BSTR * path);
@@ -671,7 +725,7 @@ interface IEiffelClusterProperties: IDispatch
                           [in] VARIANT_BOOL evaluate_invariant);
 
   [id (211), helpstring ("List of excluded directories.")]
-  HRESULT excluded ([out, retval] SAFEARRAY (BSTR) * return_value);
+  HRESULT excluded ([out, retval] IEnumClusterExcludes ** return_value);
 
   [id (212), helpstring ("Add a directory to exclude.")]
   HRESULT add_exclude ([in] BSTR dir_name);
@@ -720,6 +774,8 @@ library eiffel_compiler
   interface IEnumCluster;
   interface IEnumFeature;
   interface IEnumClusterProp;
+  interface IEnumClusterExcludes;
+  interface IEnumImportedAssemblies;
   interface IEiffelSystemClusters;
 
   [

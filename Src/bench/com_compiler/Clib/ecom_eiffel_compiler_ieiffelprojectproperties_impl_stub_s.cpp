@@ -577,7 +577,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::clusters(
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::assemblies(  /* [out, retval] */ SAFEARRAY *  * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEnumImportedAssemblies * * return_value )
 
 /*-----------------------------------------------------------
 	Imported assemblies.
@@ -596,7 +596,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::assemblie
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_safearray_bstr (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_115 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -1093,7 +1093,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
 
-				SAFEARRAY *  result = 0;
+				ecom_eiffel_compiler::IEnumImportedAssemblies * result = 0;
 				
 				hr = assemblies (&result);
 				
@@ -1117,8 +1117,8 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProjectProperties_impl_stub::Invoke( D
 				if (pVarResult != NULL)
 				{
 					VariantClear (pVarResult);
-					pVarResult->vt = 8200;
-					pVarResult->parray = result;
+					pVarResult->vt = 13;
+					pVarResult->punkVal = result;
 				}
 					
 			}

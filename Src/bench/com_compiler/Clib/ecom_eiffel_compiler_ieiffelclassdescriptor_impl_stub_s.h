@@ -103,7 +103,7 @@ public:
 	/*-----------------------------------------------------------
 	List of class clients.
 	-----------------------------------------------------------*/
-	STDMETHODIMP clients(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_clients );
+	STDMETHODIMP clients(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_clients );
 
 
 	/*-----------------------------------------------------------
@@ -115,7 +115,7 @@ public:
 	/*-----------------------------------------------------------
 	List of class suppliers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP suppliers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_suppliers );
+	STDMETHODIMP suppliers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_suppliers );
 
 
 	/*-----------------------------------------------------------
@@ -127,7 +127,7 @@ public:
 	/*-----------------------------------------------------------
 	List of direct ancestors of class.
 	-----------------------------------------------------------*/
-	STDMETHODIMP ancestors(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_ancestors );
+	STDMETHODIMP ancestors(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_ancestors );
 
 
 	/*-----------------------------------------------------------
@@ -139,7 +139,7 @@ public:
 	/*-----------------------------------------------------------
 	List of direct descendants of class.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendants(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_descendants );
+	STDMETHODIMP descendants(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_descendants );
 
 
 	/*-----------------------------------------------------------

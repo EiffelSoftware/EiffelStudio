@@ -399,7 +399,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_clie
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
+	ecom_eiffel_compiler::IEnumEiffelClass * ret_value = 0;
 	
 	hr = p_IEiffelClassDescriptor->clients( &ret_value);
 	if (FAILED (hr))
@@ -465,7 +465,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_supp
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
+	ecom_eiffel_compiler::IEnumEiffelClass * ret_value = 0;
 	
 	hr = p_IEiffelClassDescriptor->suppliers( &ret_value);
 	if (FAILED (hr))
@@ -531,7 +531,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_ance
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
+	ecom_eiffel_compiler::IEnumEiffelClass * ret_value = 0;
 	
 	hr = p_IEiffelClassDescriptor->ancestors( &ret_value);
 	if (FAILED (hr))
@@ -597,7 +597,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy::ccom_desc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ecom_eiffel_compiler::IEnumClass * ret_value = 0;
+	ecom_eiffel_compiler::IEnumEiffelClass * ret_value = 0;
 	
 	hr = p_IEiffelClassDescriptor->descendants( &ret_value);
 	if (FAILED (hr))

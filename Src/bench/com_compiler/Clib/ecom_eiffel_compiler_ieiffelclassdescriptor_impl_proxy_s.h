@@ -24,7 +24,7 @@ class IEiffelClassDescriptor_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEnumFeature_s.h"
 
-#include "ecom_eiffel_compiler_IEnumClass_s.h"
+#include "ecom_eiffel_compiler_IEnumEiffelClass_s.h"
 
 #ifdef __cplusplus
 extern "C" {

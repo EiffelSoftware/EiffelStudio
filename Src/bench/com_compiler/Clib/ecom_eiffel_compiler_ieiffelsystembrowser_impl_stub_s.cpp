@@ -30,7 +30,7 @@ ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::~IEiffelSystemBrowser_impl
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_classes(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_classes )
 
 /*-----------------------------------------------------------
 	List of classes in system.
@@ -254,7 +254,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::feature_descr
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_classes )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_classes )
 
 /*-----------------------------------------------------------
 	Search classes with names matching `a_string'.

@@ -309,7 +309,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_featur
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::clients(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_clients )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::clients(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_clients )
 
 /*-----------------------------------------------------------
 	List of class clients.
@@ -362,7 +362,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::client_coun
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::suppliers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_suppliers )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::suppliers(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_suppliers )
 
 /*-----------------------------------------------------------
 	List of class suppliers.
@@ -415,7 +415,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::supplier_co
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestors(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_ancestors )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestors(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_ancestors )
 
 /*-----------------------------------------------------------
 	List of direct ancestors of class.
@@ -468,7 +468,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestor_co
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendants(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClass * * some_descendants )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendants(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_descendants )
 
 /*-----------------------------------------------------------
 	List of direct descendants of class.

@@ -37,6 +37,16 @@ class IEiffelSystemClusters;
 
 
 
+#ifndef __ecom_eiffel_compiler_IEnumImportedAssemblies_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumImportedAssemblies_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumImportedAssemblies;
+}
+#endif
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #ifndef __ecom_eiffel_compiler_IEiffelProjectProperties_INTERFACE_DEFINED__
@@ -190,7 +200,7 @@ public:
 	/*-----------------------------------------------------------
 	Imported assemblies.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assemblies(  /* [out, retval] */ SAFEARRAY *  * return_value ) = 0;
+	virtual STDMETHODIMP assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEnumImportedAssemblies * * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

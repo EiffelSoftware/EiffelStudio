@@ -77,6 +77,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Change cluster name.
+	-----------------------------------------------------------*/
+	STDMETHODIMP change_cluster_name(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_new_name );
+
+
+	/*-----------------------------------------------------------
 	Get type info
 	-----------------------------------------------------------*/
 	STDMETHODIMP GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo );

@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Il code generation
 
-	generate_il_metamorphose (a_type: TYPE_I; real_metamorphose: BOOLEAN) is
+	generate_il_metamorphose (a_type, target_type: TYPE_I; real_metamorphose: BOOLEAN) is
 			-- Generate a metamorphose of target object.
 			-- If `real_metamorphose' is set to True, target is an
 			-- expanded type and feature is defined  in a non-expanded class.
@@ -43,15 +43,44 @@ feature -- Il code generation
 			-- class we simply need to load address of target.
 		local
 			local_number: INTEGER
+			ref_class: CLASS_C
+			basic_i: BASIC_I
+			feat: FEATURE_I
 		do
-			if real_metamorphose then
-				il_generator.generate_metamorphose (a_type)
+			if target_type = Void then
+				if real_metamorphose then
+					il_generator.generate_metamorphose (a_type)
+				else
+					context.add_local (a_type)
+					local_number := context.local_list.count
+					il_generator.put_dummy_local_info (a_type, local_number)
+					il_generator.generate_local_assignment (local_number)
+					il_generator.generate_local_address (local_number)			
+				end
 			else
-				context.add_local (a_type)
-				local_number := context.local_list.count
-				il_generator.put_dummy_local_info (a_type, local_number)
-				il_generator.generate_local_assignment (local_number)
-				il_generator.generate_local_address (local_number)			
+				if a_type.is_basic and then not target_type.is_external then
+					basic_i ?= a_type
+					
+						-- Assign value to a temporary local variable.
+					context.add_local (a_type)
+					local_number := context.local_list.count
+					il_generator.put_dummy_local_info (a_type, local_number)
+					il_generator.generate_local_assignment (local_number)
+					
+						-- Create _REF class
+					il_generator.create_object (basic_i.associated_reference.type)
+					il_generator.duplicate_top
+					
+						-- Call `set_item' from the _REF class
+					ref_class := basic_i.associated_reference.associated_class
+					feat := ref_class.feature_table.item_id (predefined_names.set_item_name_id)
+					
+					il_generator.generate_local (local_number)
+					il_generator.generate_feature_access (basic_i.associated_reference.type,
+						feat.feature_id, False)
+				else
+					il_generator.generate_metamorphose (a_type)
+				end
 			end
 		end
 
@@ -176,4 +205,12 @@ feature -- Inlining
 			Result := Current
 		end
 
+feature {NONE} -- Once
+
+	predefined_names: PREDEFINED_NAMES is
+			-- Fast access to predefined names.
+		once
+			create Result
+		end
+		
 end

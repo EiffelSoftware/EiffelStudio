@@ -216,6 +216,7 @@ feature -- Commands
 			classi: CLASS_I;
 			i, c: INTEGER
 		do
+			Degree_output.put_start_degree_6 (0)
 			classes := System.project_classes;
 			from
 				c := classes.count;

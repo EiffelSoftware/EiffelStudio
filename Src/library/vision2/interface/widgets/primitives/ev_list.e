@@ -139,17 +139,17 @@ feature -- Event : command association
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_select_command (cmd, arguments)
+			implementation.add_select_command (cmd, arg)
 		end
 
-	add_unselect_command (cmd: EV_COMMAND; arguments: EV_ARGUMENT) is	
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when an item has been unselected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_unselect_command (cmd, arguments)
+			implementation.add_unselect_command (cmd, arg)
 		end
 
 feature -- Event -- removing command association

@@ -272,7 +272,7 @@ feature -- Element change
 		do
 			implementation.set_background_color (color)
 		ensure
-			background_color_set: background_color = color
+			background_color_set: background_color.equal_color (color)
 		end
 
 	set_foreground_color (color: EV_COLOR) is

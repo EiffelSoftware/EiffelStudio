@@ -266,12 +266,14 @@ feature {NONE} -- Filling
 			elseif opt.is_free_option then
 				free_option ?= opt
 				if free_option.code = feature {FREE_OPTION_SD}.msil_generation then
-					if generation_combo.is_sensitive then
-						enable_select (generation_combo.i_th (msil_code))
-					else
-						generation_combo.enable_sensitive
-						enable_select (generation_combo.i_th (msil_code))
-						generation_combo.disable_sensitive
+					if val.is_yes and Platform_constants.is_windows then
+						if generation_combo.is_sensitive then
+							enable_select (generation_combo.i_th (msil_code))
+						else
+							generation_combo.enable_sensitive
+							enable_select (generation_combo.i_th (msil_code))
+							generation_combo.disable_sensitive
+						end
 					end
 					is_item_removable := True
 				end
@@ -521,11 +523,11 @@ feature {NONE} -- Initialization
 			create generation_combo
 			generation_combo.set_minimum_width (Layout_constants.dialog_unit_to_pixels(136))
 			create l_item.make_with_text ("Standard (C/byte code)")
-			l_item.select_actions.extend (system_window~enable_c_generation)
+			l_item.select_actions.extend (agent system_window.enable_c_generation)
 			generation_combo.extend (l_item)
 			if Platform_constants.is_windows then
 				create l_item.make_with_text (".NET (MSIL)")
-				l_item.select_actions.extend (system_window~enable_msil_generation)
+				l_item.select_actions.extend (agent system_window.enable_msil_generation)
 				generation_combo.extend (l_item)
 			end
 

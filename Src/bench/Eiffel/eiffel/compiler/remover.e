@@ -95,13 +95,13 @@ end
 				if not depend_unit.is_special then
 					body_id := body_index_table.item (depend_unit.body_index)
 DEBUG ("DEAD_CODE")
+	print_dep (depend_unit)
 	if is_treated (body_id.id, depend_unit.rout_id) then
 		io.putstring ("previously treated%N")
-	else
-		print_dep (depend_unit)
 	end
 end
-					if not is_treated (body_id.id, depend_unit.rout_id) then
+					if not (is_treated (body_id.id, depend_unit.rout_id) or else 
+						depend_unit.rout_id.is_attribute) then
 						mark_treated (body_id.id, depend_unit.rout_id)
 							-- we mark dead because if it was already alive and not
 							-- treated then we are in the case of a double inheritance

@@ -116,6 +116,17 @@ feature -- Access
 	Generated_ec_class_name: STRING is "ecom_generated_ec"
 			-- C++ class name for generated mapper functions Eiffel to C.
 
+	Alias_header_file_name: STRING is "ecom_aliases.h"
+			-- Name of common header file name for aliases.
+
+	Alias_c_writer: WIZARD_WRITER_C_FILE is
+			-- Shared alias C writer.
+		once
+			create Result.make
+			Result.set_header_file_name (Alias_header_file_name)
+			Result.set_header ("System's aliases")
+		end
+
 	Iunknown_guid: ECOM_GUID is
 			-- IUnknown IID
 		once

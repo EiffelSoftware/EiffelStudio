@@ -80,9 +80,10 @@ feature -- Comparison
 				Result := equal (host, other.host) and 
 					equal (username, other.username)
 				if Result then
-					Result := 
-						equal (is_proxy_used, other.is_proxy_used) and then
-						equal (proxy_host, other.proxy_host)
+					Result := equal (is_proxy_used, other.is_proxy_used)
+					if Result and is_proxy_used then
+						Result := equal (proxy_host, other.proxy_host)
+					end
 				end
 			end
 		end

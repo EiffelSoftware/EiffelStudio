@@ -21,8 +21,8 @@ inherit
 		select
 			execute
 		end;
-	SHARED_SERVER;
-	CUSTOM_CALLER
+	CUSTOM_CALLER;
+	EB_CONSTANTS
 
 creation
 
@@ -32,7 +32,9 @@ feature -- Initialization
 
 	make (a_text_window: TEXT_WINDOW) is
 		do
-			init (a_text_window)
+			init (a_text_window);
+			to_show_all_callers :=
+				Feature_tool_resources.show_all_callers.actual_value
 		end;
 
 feature -- Properties
@@ -87,6 +89,16 @@ feature -- Executions
 				old_execute (arg)
 			end
 		end
+
+feature -- Status setting
+
+	set_show_all_callers (b: BOOLEAN) is
+			-- Set `to_show_all_callers' to `b'
+		do
+			to_show_all_callers := b
+		ensure
+			set: to_show_all_callers = b
+		end;
 
 feature {NONE} -- Properties
 

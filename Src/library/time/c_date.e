@@ -167,18 +167,18 @@ feature {NONE} -- `struct tm' encapsulation
 	internal_item: MANAGED_POINTER
 			-- Pointer to `struct tm' area.
 	
-	localtime (i: POINTER): POINTER is
+	localtime (i: TYPED_POINTER [INTEGER]): POINTER is
 			-- Pointer to `struct tm' area.
 		external
-			"C macro signature (time_t *): EIF_POINTER use <time.h>"
+			"C macro signature (time_t *): struct tm * use <time.h>"
 		alias
 			"localtime"
 		end
 
-	gmtime (i: POINTER): POINTER is
+	gmtime (i: TYPED_POINTER [INTEGER]): POINTER is
 			-- Pointer to `struct tm' area in UTC.
 		external
-			"C macro signature (time_t *): EIF_POINTER use <time.h>"
+			"C macro signature (time_t *): struct tm * use <time.h>"
 		alias
 			"gmtime"
 		end

@@ -60,7 +60,7 @@ struct rt_struct {
  * Eiffel calls
  */
 RT_LNK char *eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
-RT_LNK char *stream_eretrieve(char **);		/* Retrieve object store in stream */
+RT_LNK char *stream_eretrieve(char **, long);		/* Retrieve object store in stream */
 RT_LNK char *portable_retrieve(int (*char_read_function)(char *, int));
 
 

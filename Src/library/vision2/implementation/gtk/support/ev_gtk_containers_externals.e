@@ -59,6 +59,11 @@ feature {NONE} -- GTK C functions for general containers
 			"C (GtkWidget *, GtkWidget *) | %"gtk_eiffel.h%""
 		end
 
+	c_gtk_container_remove_all_children (container: POINTER) is
+		external
+			"C (GtkContainer *) | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- GTK C functions for windows
 
 	c_gtk_window_maximum_height (window: POINTER): INTEGER is

@@ -16,9 +16,6 @@ inherit
 	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
-		redefine
-			put, eif_getenv
-		end;
 	SHARED_STDOUT
 
 feature -- Not request-specific environment variables
@@ -160,23 +157,6 @@ feature -- Environment variable setting
 			put (val, variable)
 		end
 
-feature -- Status setting
-
-	put (value,key: STRING) is
-			-- Set the environment variable `key' to `value'.
-		local
-			env_string: STRING
-			env_string_to_c: ANY
-		do
-			env_string := clone (key)
-			env_string.append_character ('=')
-			env_string.append (value)
-			env_string_to_c := env_string.to_c
-			return_code := putenv($env_string_to_c)
-		end
-
-
-
 feature {NONE} -- Implementation
 
 	get_env_variable (v: STRING): STRING is
@@ -186,14 +166,6 @@ feature {NONE} -- Implementation
 			if Result = Void then
 				Result := ""
 			end
-		end;
-
-	eif_getenv (s : POINTER): POINTER is
-			-- Value of environment variable `s'.
-		external
-			"C"
-		alias
-			"getenv"
 		end;
 
 	putenv (s: POINTER): INTEGER is

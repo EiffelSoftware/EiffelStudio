@@ -13,7 +13,6 @@ inherit
 		undefine
 			is_equal
 		end
-	IDABLE;
 	COMPILER_EXPORTER
 
 creation

@@ -9,11 +9,21 @@ inherit
 		export
 			{ANY} merge
 		redefine
-			has, item, ontable, updated_id, change_id
+			has, item, ontable, updated_id, change_id, make
 		end
 
 creation
 	make
+
+
+feature -- Initialisation
+
+	make is
+		-- Creation
+		do
+			{READ_SERVER}Precursor
+			!! cache.make
+		end
 
 feature -- Access
 
@@ -31,12 +41,9 @@ feature -- Access
 			Result := ontable.item (i)
 		end;
 
-	Cache: REP_FEAT_CACHE is
+	cache: REP_FEAT_CACHE 
 			-- Cache for routine tables
-		once
-			!!Result.make;
-		end;
-
+		
 	has (an_id: BODY_ID): BOOLEAN is
 			-- Is the id `an_id' present either in Current or in
 			-- `Tmp_rep_feat_server' ?

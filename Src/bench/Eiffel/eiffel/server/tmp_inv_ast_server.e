@@ -27,14 +27,12 @@ feature
 			{READ_SERVER} Precursor;
 			!!to_remove.make;
 			to_remove.compare_objects
+			!! cache.make
 		end;
 
-	Cache: INV_AST_CACHE is
+	cache: INV_AST_CACHE 
 			-- Cache for routine tables
-		once
-			!!Result.make;
-		end;
-
+		
 	remove_id (i: CLASS_ID) is
 			-- Insert `i' in `to_remove'.
 		do

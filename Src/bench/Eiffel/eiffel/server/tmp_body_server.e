@@ -63,14 +63,12 @@ feature
 		do
 			{READ_SERVER} Precursor
 			!!useless_body_ids.make (1, array_chunk)
+			!! cache.make
 		end;
 
-	Cache: BODY_CACHE is
+	cache: BODY_CACHE 
 			-- Cache for routine tables
-		once
-			!!Result.make;
-		end;
-
+		
 	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
 		do
 			Result := Tmp_ast_server;

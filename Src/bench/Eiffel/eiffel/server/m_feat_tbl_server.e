@@ -4,9 +4,22 @@ class M_FEAT_TBL_SERVER
 
 inherit
 	COMPILER_SERVER [MELTED_FEATURE_TABLE, TYPE_ID]
+		redefine
+			make
+		end
 
 creation
 	make
+
+feature -- Initialisation
+
+	make is
+		-- Creation
+		do
+			{COMPILER_SERVER}Precursor
+			!! cache.make
+		end
+
 	
 feature -- Access
 
@@ -16,12 +29,9 @@ feature -- Access
 			Result := t.type_id
 		end
 
-	Cache: M_FEAT_TBL_CACHE is
+	cache: M_FEAT_TBL_CACHE
 			-- Cache for routine tables
-		once
-			!! Result.make;
-		end
-
+		
 feature -- Server size configuration
 
 	Size_limit: INTEGER is 50

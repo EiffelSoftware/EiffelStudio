@@ -4,9 +4,22 @@ class M_FEATURE_SERVER
 
 inherit
 	COMPILER_SERVER [MELT_FEATURE, REAL_BODY_ID]
+		redefine
+			make
+		end
 
 creation
 	make
+
+feature -- Initialisation
+
+	make is
+		-- Creation
+		do
+			{COMPILER_SERVER}Precursor
+			!! cache.make
+		end
+
 	
 feature -- Access
 
@@ -16,12 +29,9 @@ feature -- Access
 			Result := t.real_body_id
 		end
 
-	Cache: M_FEATURE_CACHE is
+	cache: M_FEATURE_CACHE 
 			-- Cache for routine tables
-		once
-			!! Result.make
-		end
-
+		
 feature -- Server size configuration
 
 	Size_limit: INTEGER is 50

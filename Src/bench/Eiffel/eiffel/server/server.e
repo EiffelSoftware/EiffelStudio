@@ -35,7 +35,7 @@ feature -- Initialization
 
 	make is
 		do
-			tbl_make (Chunk)
+			tbl_make (Chunk)		
 		end
 
 feature -- Access

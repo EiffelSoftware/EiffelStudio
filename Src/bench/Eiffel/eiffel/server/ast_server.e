@@ -4,9 +4,22 @@ class AST_SERVER
 
 inherit
 	COMPILER_SERVER [CLASS_AS, CLASS_ID]
+		redefine
+			make
+		end
 
 creation
 	make
+
+feature -- Initialisation
+
+	make is
+		-- Creation
+		do
+			{COMPILER_SERVER}Precursor
+			!! cache.make
+		end
+
 	
 feature -- Access
 
@@ -16,12 +29,9 @@ feature -- Access
 			Result := t.id
 		end
 
-	Cache: AST_CACHE is
-			-- Cache for routine tables
-		once
-			!! Result.make
-		end
-
+	cache: AST_CACHE 
+		-- Cache for routine tables
+		
 feature -- Server size configuration
 
 	Size_limit: INTEGER is 400

@@ -32,14 +32,12 @@ feature
 		do
 			{COMPILER_SERVER} Precursor
 			!! index.make (50)
+			!! cache.make
 		end
 
-	Cache: REP_CACHE is
+	cache: REP_CACHE 
 			-- Cache for routine tables
-		once
-			!! Result.make
-		end
-
+		
 	id (t: REP_FEATURES): CLASS_ID is
 			-- Id associated with `t'
 		do

@@ -6,50 +6,54 @@ indexing
 deferred class CACHE [T -> IDABLE, H -> COMPILER_ID]
 
 inherit
-	TO_SPECIAL [TWO_ITEMS [T]]
+	
+	TO_SPECIAL [ARRAY [H_CELL[T]]]
 
 	SHARED_CONFIGURE_RESOURCES
-		undefine
-			copy, is_equal, consistent, setup
-		end
 
-feature -- Initialization
+
+feature -- Initialisation
 
 	make is
 			-- Creates a table of Cache_size hash_entry
 		local
 			i: INTEGER
-			t: TWO_ITEMS [T]
+			array: ARRAY [H_CELL[T]]
 		do
 			size := Cache_size
 			count := 0
-			from
-				make_area (size)
+			make_area (Cache_size)
+			!! array_count.make (0, size - 1)
+			!! history.make (size)
+			!! index.make (0, size - 1)
+			from 
 			until
 				i = size
 			loop
-				!! t
-				area.put (t, i)
+				!! array.make (1, 5)
+				area.put (array, i)
 				i := i + 1
 			end
 		end
 
-	make_sized (n : INTEGER)  is
+	make_i (n : INTEGER)  is
 			-- Creates a table of n hash_entry
 		local
 			i: INTEGER
-			t: TWO_ITEMS [T]
+			array: ARRAY [H_CELL[T]]
 		do
 			size := n
 			count := 0
 			make_area (n)
-			from
-				make_area (size)
+			!! array_count.make (0, n - 1)
+			!! history.make (n)
+			!! index.make (0, n - 1)
+			from 
 			until
-				i = size
+				i = n
 			loop
-				!! t
-				area.put (t, i)
+				!! array.make (1, 5)
+				area.put (array, i)
 				i := i + 1
 			end
 		end
@@ -64,7 +68,7 @@ feature -- Initialization
 			Result := Configure_resources.get_integer (s, default_value)
 
 debug ("CACHE_SERVER")
-	io.error.putstring ("size of ")
+	io.error.putstring ("Size of ")
 	io.error.putstring (generator)
 	io.error.putstring (" is ")
 	io.error.putint (Result)
@@ -83,6 +87,9 @@ end
 		deferred
 		end;
 
+	array_count: ARRAY [INTEGER]
+		-- number of element in each sub-array
+
 feature -- Cache manipulations
 							
 	has_id (id: H): BOOLEAN is
@@ -90,13 +97,67 @@ feature -- Cache manipulations
 		require
 			not_void: id /= Void
 		local
-			i: INTEGER
-			t: TWO_ITEMS [T]
+			i, j, k: INTEGER			
+			found: BOOLEAN
+			l_array: ARRAY [H_CELL[T]]
 		do
-			i := id.internal_id \\ size
-			t := area.item (i)
-			Result := (t.first /= Void) and then (equal(t.first.id, id)
-					or else (t.second /= Void and then equal(t.second.id, id)))
+			k := id.internal_id
+			i := k \\ Size
+			from
+				l_array := area.item (i)
+				j := array_count.item (i)
+			until
+				j = 0 or else found
+			loop
+				found := equal(l_array.item(j).item.id,id)
+				j := j - 1
+			end
+			Result := found
+
+Debug ("CACHE")
+	if Size < 500 then
+		from 
+			i :=  0
+			j := Size
+		until
+			i = j
+		loop
+			io.putint (array_count.item (i))
+			if i /= 0 and then i \\ 80 = 0 then
+				io.putstring (" \%N")
+			else
+				io.putstring("-")
+			end
+			i := i + 1
+		end
+	end
+
+	io.putstring ("%N")
+	io.putstring (generator)
+	io.putstring (" has a total of: ")
+	io.putint (Count)
+	io.putstring ("%N")
+	io.putstring ("Result of the has_id: ")
+	io.putbool (found)
+	io.putstring ("%N%N")
+end
+
+Debug ("CACHE_STAT")
+	nb_has_id := nb_has_id + 1
+	if found then
+		nb_has_id_succeded := nb_has_id_succeded + 1
+	end
+	success_has_id := nb_has_id_succeded / nb_has_id
+	success := (nb_has_id_succeded + nb_item_id_succeded) / (nb_has_id + nb_item_id)
+	io.putstring (generator)
+	io.putstring ("%NNumber of has_id: ")
+	io.putint (nb_has_id)
+	io.putstring ("%NProportion of has_id succeded: ")
+	io.putreal (success_has_id)
+	io.putstring ("%NProportion of access succeded: ")
+	io.putreal (success)
+	io.putstring ("%N%N")
+end
 		end
 
 	item_id (id: H): T is
@@ -105,22 +166,76 @@ feature -- Cache manipulations
 		require
 			not_void: id /= Void
 		local
-			i: INTEGER			
-			t: TWO_ITEMS [T]
+			i, j, k: INTEGER			
+			found: BOOLEAN
+			l_array: ARRAY [H_CELL[T]]
+			tmp: H_CELL[T]
 		do
-			i := id.internal_id \\ size
-			t := area.item (i)
-			position := i
-			Result := t.first
-			if Result /= Void and then not equal (Result.id, id) then
-				Result := t.second
-				first := False
-				if Result /= Void and then not equal (Result.id, id) then
-					Result := Void
-				end
-			else
-				first := True
+			k := id.internal_id
+			i := k \\ Size
+			from
+				l_array := area.item (i)
+				k := array_count.item (i)
+				j := k
+			until
+				j = 0 or else found
+			loop
+				found := equal(l_array.item (j).item.id, id)
+				j := j - 1
 			end
+			if found then
+					-- we make the accessed item younger
+				j := j + 1
+				tmp := l_array.item (j)
+				Result := tmp.item
+				history.make_younger (tmp.index)
+				tmp.set_index (history.younger)
+				last_item_array := l_array
+				last_item_pos := j
+			end
+
+Debug ("CACHE")
+	if Size < 500 then
+		from 
+			i :=  0
+			j := Size
+		until
+			i = j
+		loop
+			io.putint (array_count.item (i))
+			if i /= 0 and then i \\ 80 = 0 then
+				io.putstring (" \%N")
+			else
+				io.putstring("-")
+			end
+			i := i + 1
+		end
+	end
+	io.putstring ("%N")
+	io.putstring (generator)
+	io.putstring (" has a total of: ")
+	io.putint (Count)
+	io.putstring ("%NResult of the item_id:")
+	io.putbool (found)
+	io.putstring ("%N%N")
+end
+
+Debug ("CACHE_STAT")
+	nb_item_id := nb_item_id + 1
+	if found then
+		nb_item_id_succeded := nb_item_id_succeded + 1
+	end
+	success_item_id := nb_item_id_succeded / nb_item_id
+	success := (nb_has_id_succeded + nb_item_id_succeded) / (nb_has_id + nb_item_id)
+	io.putstring (generator)
+	io.putstring ("%NNumber of item_id: ")
+	io.putint (nb_item_id)
+	io.putstring ("%NProportion of item_id succeded: ")
+	io.putreal (success_item_id)
+	io.putstring ("%NProportion of access succeded: ")
+	io.putreal (success)
+	io.putstring ("%N%N")
+end
 		end
 	
 	remove_id (id: H) is
@@ -129,197 +244,276 @@ feature -- Cache manipulations
 		require
 			not_void: id /= Void
 		local
-			i: INTEGER
-			t: TWO_ITEMS [T]
-			it: T
+			i, j, k: INTEGER			
+			found: BOOLEAN
+			l_array: ARRAY [H_CELL[T]]
+			tmp: H_CELL[T]
 		do
-			i := id.internal_id \\ size
-			t := area.item (i)
-			it := t.first
-			last_removed_item := Void
-			if it /= Void then 
-				if equal (it.id, id) then
-					t.set_first (t.second)
-					count := count - 1
-				else
-					it := t.second
-					if it /= Void and then equal (it.id, id) then
-						count := count - 1
-					end
+			k := id.internal_id
+			i := k \\ Size
+			from
+				l_array := area.item (i)
+				j := array_count.item (i)
+			until
+				j = 0 or else found
+			loop
+				found := equal (l_array.item (j).item.id, id)
+				j := j - 1
+			end
+			if found then
+				count := count - 1
+				j := j + 1
+				tmp := l_array.item (j)
+				history.remove (tmp.index)
+				from 
+					k := j
+					last_removed_item := tmp.item
+					j := array_count.item (i)
+					array_count.put (j - 1, i)
+				until
+					k = j
+				loop
+					l_array.put (l_array.item (k+1), k)
+					k := k + 1
 				end
-				last_removed_item := it
-				t.set_second (Void)
+				l_array.put (Void, j)
 			end
 		end	
-	
-	change_last_item (v: T) is
-			-- Put v instead of the last item found by item_id
-		require
-			not_void: v /= Void
-		do
-			if first then
-				area.item (position).set_first (v)
-			else
-				area.item (position).set_second (v)
-			end
-		end
 
-	force (v: T) is
-			-- Put a new element in the cache, if it was full 
-			-- remove an element and remind it in last_removed_item	
+	force (e: T) is
+			-- like put if full remove an element 
+			-- to put our new one
 		require
-			not_void: v /= Void
+			not_void: e /= Void
 		local
-			i: INTEGER
-			t: TWO_ITEMS [T]
-			lfirst, lsecond: T
-		do
-			i := v.id.internal_id \\ size
-			t := area.item (i)
-			lfirst := t.first
-			if lfirst /= Void then
-				lsecond := t.second
-				last_removed_item := lsecond
-				if lsecond = Void then
-					count := count + 1
-				end
-				t.set_second (lfirst)
-				t.set_first (v)
-			else	
+			i, t: INTEGER
+			l_array: array [H_CELL[T]]
+			h_cell: H_CELL[T]
+			to_remove: T
+		do	
+			i := e.id.internal_id \\ Size
+			l_array := area.item (i)
+			history.add (e)
+			!! h_cell.make (e, history.younger)
+			to_remove := history.to_remove
+			if to_remove /= Void then
+				internal_remove (to_remove)
+			else
 				last_removed_item := Void
 				count := count + 1
-				t.set_first (v)
 			end
+			t := array_count.item (i)
+			if l_array.count = t then	
+				l_array.grow (2 * t)
+			end
+			array_count.put (t + 1, i)
+			l_array.put (h_cell, t + 1)
 		end
-
-	clear_all, wipe_out is
-			-- Wipe all out
-		local
-			s, i: INTEGER
+		
+	is_full: BOOLEAN is
+			-- is the cache full ?
 		do
-			from
-				s := size
-			until
-				i = s
+			Result := count >= size
+		end				
+
+	is_empty: BOOLEAN is
+			-- is the cache empty ?
+		do
+			Result := count = 0
+		end
+		
+	clear_all, wipe_out is
+			-- wipe all out
+		local
+			s: INTEGER
+		do
+			from 
+				s := Size 
+			until 	
+				s = 0
 			loop
-				area.item (i).wipe_out
-				i := i + 1
+				s := s - 1
+				area.item(s).wipe_out
 			end
+			history.wipe_out
+			array_count.wipe_out
 			count := 0
+			after := True
 		end
 
-	size: INTEGER
-			-- Maximum number of items in the cache
+	change_last_item (e: T) is
+			-- make e take the place of the last item consulted
+		local
+			tmp: H_CELL[T]
+		do
+			tmp := last_item_array.item (last_item_pos)
+			tmp.set_item (e)
+			history.set_item (e,tmp.index) 
+		end
+
+	history: CACHE_HISTORY[T]
+			-- history of the arrivals in the cache
+
+	index: ARRAY[INTEGER]
+			-- index of each item in the history
 
 	count: INTEGER
-			-- Number of element in the cache
+			-- number of item currently in the cache
+
+	size: INTEGER
+			-- maximum number of items in the cache
 
 	last_removed_item: T
-			-- Last automaticly removed item by function force
+			-- last automaticly removed item by function force
 
-feature -- Linear iteration
+feature -- linear iteration
 
 	start is
-			-- Put `item_for_iteration' on the first element of the cache
+			-- put item_for_iteration on the first element of the cache
+		require
+			not_empty: not is_empty
 		local
-			i: INTEGER
+			item_array: INTEGER
 		do
-			if count = 0 then
+			from
+				item_array := 0
+			until
+				item_array = size or else area.item (item_array).item (1) /= Void
+			loop
+				item_array := item_array + 1
+			end
+			if item_array = Size then
 				after := True
 			else
-					-- There IS an element in the cache
-					-- it MUST be a first in a TWO_ITEMS
-				from 
-				until
-					area.item (i).first /= Void
-				loop
-					i := i + 1
-				end
-				position := i
-				first := True
-				item_for_iteration := area.item (i).first
-				after := false
+				after := False
+				last_item_array := area.item (item_array)
+				last_item_array_number := item_array
+				last_item_pos := 1
 			end
 		end
 
 	after: BOOLEAN
-			-- Are we at the end of the CACHE?		
-
+		
 	forth is
-			-- Put `item_for_iteration' on the next element of the cache		
+			-- put item_for_iteration on the next element of the cache
 		local
-			pos: INTEGER
-			lfirst: BOOLEAN
-			item: T
+			item_array, item_number, limit: INTEGER
+			array_current: ARRAY [H_CELL[T]]
+			found: BOOLEAN
 		do
-			from 
-				lfirst := first
-				if lfirst then				
-					pos := position
-					lfirst := False
-					item := area.item (pos).second
-				else
-					lfirst := True
-					pos := position
-					if pos < size - 1 then
-						pos := pos + 1
-						item := area.item (pos).first
-					else
-						after := True
-					end
-				end
+			from
+				item_array := last_item_array_number			
+				item_number := last_item_pos + 1
+				array_current := last_item_array
+				limit := array_count.item (item_array)
 			until
-				item /= Void or else after
+				found or else item_array = size
 			loop
-				if lfirst then
-					lfirst := False
-					item := area.item (pos).second
-				else
-					lfirst := True
-					if pos < size - 1 then
-						pos := pos + 1
-						item := area.item (pos).first
-					else
-						after := True
+				from
+					array_current:= area.item (item_array)
+				until
+					found or else item_number > limit
+				loop
+					found := array_current.item (item_number) /= Void
+					if not found then
+						item_number := item_number + 1
 					end
 				end
-			end				
-			position := pos
-			first := lfirst
-			item_for_iteration := item
-		end
-	
-	item_for_iteration: T 
-			-- Current item used for the linear traversal.
-
-feature {NONE} -- Implementation
-
-	position: INTEGER
-			-- Position in which the last
-			-- searched item was found
-
-	first: BOOLEAN
-			-- Position of the last searched item
-			-- in TWO_ITEMS
-
-	remove_first_found is
-			-- Remove the first element found in the cache.
-			-- Force needs to put a new element in a full cache,
-			-- so we don't touch to count.
-		local
-			t: TWO_ITEMS [T]
-		do
-			start
-			t := area.item (position)
-				-- The first element found will be first in the TWO_ITEMS
-			if t.second /= Void then
-				last_removed_item := t.second
-				t.set_second (Void)
-			else
-				last_removed_item := t.first
-				t.set_first (Void)
+				if not found then
+					item_array := item_array + 1
+					item_number := 1
+				end
 			end
+			if not found then
+				after := True
+			else
+				last_item_array := area.item (item_array)
+				last_item_array_number := item_array
+				last_item_pos := item_number
+			end
+		end					
+
+	item_for_iteration: T is
+			-- give the item in a linear ?????
+		do
+			Result := last_item_array.item (last_item_pos).item
 		end
 
+feature {NONE}
+
+	last_item_array: ARRAY [H_CELL[T]]
+		-- the array in which the last searched item 
+		-- was found
+
+	last_item_pos: INTEGER
+		-- the position in which the last
+		-- searched item was found
+
+	last_item_array_number: INTEGER
+		-- the number of last_item_array	
+							
+feature {NONE} -- to implement force
+
+	internal_remove (e: T) is
+			-- Remove item of id `i' from cache.
+			-- but do not touch to history nor count
+		require
+			not_void: e /= Void
+		local
+			i, j, k: INTEGER			
+			found: BOOLEAN
+			id: COMPILER_ID
+			l_array: ARRAY [H_CELL[T]]
+		do
+			id := e.id
+			k := id.internal_id
+			i := k \\ Size
+			from
+				l_array := area.item (i)
+				j := array_count.item (i)
+			until
+				j = 0 or else found
+			loop
+				found := equal (l_array.item (j).item.id, id)
+				j := j - 1
+			end
+			-- found IS true
+			j := j + 1
+			from 
+				k := j
+				last_removed_item := l_array.item (j).item
+				j := array_count.item (i)
+				array_count.put (j - 1, i)
+			until
+				k = j
+			loop
+				l_array.put (l_array.item (k+1), k)
+				k := k + 1
+			end
+			l_array.put (Void, j)
+		end	
+
+feature {NONE} -- statistics
+
+	nb_has_id: INTEGER
+		-- number of call to has_id
+
+	nb_item_id: INTEGER
+		-- number of call to item_id
+
+	nb_has_id_succeded: INTEGER
+		-- number of succeded call to has_id
+
+	nb_item_id_succeded: INTEGER
+		-- number of succeded call to item_id
+
+	success_has_id: REAL
+		-- proportion of successful calls to has_id
+	
+	success_item_id: REAL
+		-- proportion of successful calls to item_id
+
+	success: REAL
+		-- proportion of successful researchs in the cache
 
 end -- class CACHE

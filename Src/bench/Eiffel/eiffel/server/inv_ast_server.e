@@ -10,20 +10,29 @@ inherit
 		export
 			{ANY} merge
 		redefine
-			has, item
+			has, item, make
 		end
 
 creation
 	make
 
+
+
+feature -- Initialisation
+
+	make is
+		-- Creation
+		do
+			{READ_SERVER}Precursor
+			!! cache.make
+		end
+
+
 feature 
 
-	Cache: INV_AST_CACHE is
+	cache: INV_AST_CACHE 
 			-- Cache for routine tables
-		once
-			!!Result.make;
-		end;
-
+		
 	has (an_id: CLASS_ID): BOOLEAN is
 			-- Is the id `an_id' present either in Current or in
 			-- `Tmp_inv_ast_server' ?

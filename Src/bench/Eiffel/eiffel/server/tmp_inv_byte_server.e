@@ -30,13 +30,11 @@ feature
 			{DELAY_SERVER} Precursor;
 			!!to_remove.make;
 			to_remove.compare_objects
+			!! cache.make
 		end;
 
-	Cache: INV_BYTE_CACHE is
+	cache: INV_BYTE_CACHE 
 			-- Cache for routine tables
-		once
-			!!Result.make;
-		end;
 
 	Delayed: SEARCH_TABLE [CLASS_ID] is
 			-- Cache for delayed items

@@ -6,20 +6,27 @@ class
 inherit
 	COMPILER_SERVER [INVARIANT_B, CLASS_ID]
 		redefine
-			has, item, disk_item
+			has, item, disk_item, make
 		end
 
 creation
 	make
 
+feature -- Initialisation
+
+	make is
+		-- Creation
+		do
+			{COMPILER_SERVER}Precursor
+			!! cache.make
+		end
+
+
 feature -- Access
 
-	Cache: INV_BYTE_CACHE is
+	cache: INV_BYTE_CACHE 
 			-- Cache for routine tables
-		once
-			!!Result.make;
-		end;
-
+		
 	id (t: INVARIANT_B): CLASS_ID is
 			-- Id associated with `t'
 		do

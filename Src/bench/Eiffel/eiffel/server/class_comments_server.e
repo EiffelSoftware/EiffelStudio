@@ -18,6 +18,7 @@ inherit
 creation
 	make
 
+
 feature -- Update
 
 	take_control (other: COMPILER_SERVER [CLASS_COMMENTS, CLASS_ID]) is

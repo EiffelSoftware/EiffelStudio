@@ -52,7 +52,7 @@ feature -- Analyzis
 			workbench_mode: BOOLEAN
 			type_i: TYPE_I
 			feat: FEATURE_I
-			have_precond, have_postcond: BOOLEAN
+			have_precond, have_postcond, has_invariant: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
 			old_exp: UN_OLD_BL
 		do
@@ -71,6 +71,11 @@ feature -- Analyzis
 				-- can store information gathered by analyze.
 			enlarge_tree
 
+				-- Let's check if some invariants are going to be generated.
+				-- It is important to know for `compute_need_gc_hooks' which will
+				-- not try to optimize GC hooks if we are checking invariants.
+			has_invariant := context.workbench_mode or else context.assertion_level.check_invariant
+
 				-- Compute presence or not of pre/postconditions
 			if Context.origin_has_precondition then
 				have_precond := (precondition /= Void or else inh_assert.has_precondition) and then
@@ -80,7 +85,7 @@ feature -- Analyzis
 					(workbench_mode or else context.assertion_level.check_postcond)
 
 				-- Check if we need GC hooks for current body.
-			Context.compute_need_gc_hooks (have_precond or else have_postcond)
+			Context.compute_need_gc_hooks (have_precond or have_postcond or has_invariant)
 
 				-- Analyze arguments
 			analyze_arguments

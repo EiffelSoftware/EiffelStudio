@@ -27,6 +27,13 @@ feature -- Status report
 			// Get type of formal in context of `a_current' object.
 		return context_object.____type().generics [position - 1];
 	}
+
+	public override bool has_formal ()
+		// Does `Current' have a formal generic parameter?
+	{
+		return true;
+	}
+
 /*
 feature -- Settings
 */

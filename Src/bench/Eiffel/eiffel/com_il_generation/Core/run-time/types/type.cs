@@ -21,6 +21,12 @@ feature -- Status Report
 		return false;
 	}
 
+	public virtual bool has_formal ()
+		// Does `Current' have a formal generic parameter?
+	{
+		return false;
+	}
+
 	public virtual String class_name ()
 		// Name of object's generating class who has Current as an EIFFEL_DERIVATION
 		// (base class of the type of which it is a direct instance)

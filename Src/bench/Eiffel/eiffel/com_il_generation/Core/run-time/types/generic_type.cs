@@ -64,8 +64,8 @@ feature -- Status Report
 		return Result;
 	}
 
-	public bool has_formal ()
-		// Does Current have formal generic parameter?
+	public override bool has_formal ()
+		// Does `Current' have a formal generic parameter?
 	{
 		int i, nb;
 		byte l_flags = has_formal_flags;
@@ -77,7 +77,7 @@ feature -- Status Report
 			l_generics = generics;
 
 			for (i = 0, nb = count; i < nb; i++) {
-				if (l_generics [i] is FORMAL_TYPE) {
+				if (l_generics [i].has_formal ()) {
 					has_formal_flags = 0x11;
 					return true;
 				}

@@ -23,7 +23,7 @@ while test $# -gt 0; do
 		ISE_LIBRARIES=$EIFFEL_SRC
 		;;
 		--object)
-		echo `pkg-config gtk+-2.0 --libs` -L/usr/X11R6/lib -lXtst
+		echo $ISE_LIBRARIES/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o `pkg-config gtk+-2.0 --libs` -L/usr/X11R6/lib -lXtst
 		;;
     		--include_path)
 		echo `pkg-config gtk+-2.0 --cflags`

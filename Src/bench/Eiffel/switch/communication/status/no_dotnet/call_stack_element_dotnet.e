@@ -15,20 +15,11 @@ feature {NONE} -- Initialization
 		do
 		end
 
-feature
-	initialize_stack is
-		do
-		end
-
 feature -- Properties
 
 	is_eiffel_call_stack_element: BOOLEAN is
 		do
 		end
-
-	routine: E_FEATURE
-			-- Routine being called
-			-- Note from Arnaud: Computation has been deferred for optimisation purpose
 
 	current_object: ABSTRACT_DEBUG_VALUE is
 			-- Current object value
@@ -36,13 +27,6 @@ feature -- Properties
 		end
 
 	object_address: STRING
-			-- Hector address of associated object 
-			--| Because the debugger is already in communication with
-			--| the application (retrieving information such as locals ...)
-			--| it doesn't ask an hector address for that object until
-			--| the "line" between the two processes is free.
-			--| Initialially it is the physical address but is then
-			--| protected in the `set_hector_addr_for_current_object' routine.
 
 	display_object_address: like object_address
 			

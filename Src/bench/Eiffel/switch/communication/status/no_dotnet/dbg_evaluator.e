@@ -56,10 +56,4 @@ feature -- Access
 		do
 		end
 
-	icd_value_by_address (a_addr: STRING): ICOR_DEBUG_VALUE is
-		do
-		end
-
-	
-
 end -- class DBG_EVALUATOR

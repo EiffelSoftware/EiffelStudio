@@ -13,16 +13,10 @@ create
 feature {NONE} -- Initialisation
 
 	make (a_referenced_value: ICOR_DEBUG_VALUE) is
-			-- Initialize `Current'
-		require
-			argument_not_void: a_referenced_value /= Void
 		do
 		end
 
 	make_from_prepared_value (a_referenced_value: ICOR_DEBUG_VALUE; a_prepared_value: ICOR_DEBUG_VALUE) is
-			-- Initialize `Current'
-		require
-			argument_not_void: a_referenced_value /= Void and then a_prepared_value /= Void
 		do
 		end
 		
@@ -45,6 +39,5 @@ feature -- Interface Access
 	interface_debug_string_value: ICOR_DEBUG_STRING_VALUE is
 		do
 		end
-
 
 end -- class EIFNET_DEBUG_VALUE_INFO

@@ -10,7 +10,7 @@ class
 inherit 
 	LINKED_LIST [ATTACHMENT_WINDOWS]
 
-creation
+create
 	make 
 
 feature -- Access
@@ -47,7 +47,7 @@ feature -- Status setting
 		do
 			a := find_widget (w)
 			if a = Void then
-				!!a.make (w)
+				create a.make (w)
 				extend (a)
 			end
 		end
@@ -61,7 +61,7 @@ feature -- Status setting
 		do
 			a := find_widget (w)
 			if a = Void then 
-				!!a.make (w)
+				create a.make (w)
 				extend (a)
 			end
 			a.attach_left (l, pos, relative);
@@ -76,7 +76,7 @@ feature -- Status setting
 		do
 			a := find_widget (w)
 			if a = Void then 
-				!!a.make (w)
+				create a.make (w)
 				extend (a)
 			end
 			a.attach_right (r, pos, relative);
@@ -91,7 +91,7 @@ feature -- Status setting
 		do
 			a := find_widget (w)
 			if a = Void then 
-				!!a.make (w)
+				create a.make (w)
 				extend (a)
 			end
 			a.attach_top (t, pos, relative);
@@ -105,7 +105,7 @@ feature -- Status setting
 		do
 			a := find_widget (w)
 			if a = Void then 
-				!!a.make (w)
+				create a.make (w)
 				extend (a)
 			end
 			a.attach_bottom (b, pos, relative);

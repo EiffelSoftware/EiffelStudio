@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 
 	cursor_holder: CELL [SCREEN_CURSOR] is
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 end -- class GLOBAL_CURSOR_MANAGER

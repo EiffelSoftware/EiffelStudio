@@ -36,7 +36,7 @@ inherit
 			make
 		end;
 
-creation
+create
 
 	make
 
@@ -77,7 +77,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_message);
+			create ms.make_default_l_to_r (a_message);
 			set_message_string (ms);
 			ms.destroy
 		end;
@@ -88,7 +88,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_cancel_label_string (ms);
 			ms.destroy
 		end;
@@ -99,7 +99,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_help_label_string (ms);
 			ms.destroy
 		end;
@@ -110,7 +110,7 @@ feature -- Status setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_ok_label_string (ms);
 			ms.destroy
 		end;
@@ -163,7 +163,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (cancel_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_cancel_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)
@@ -177,7 +177,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (help_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_help_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)
@@ -191,7 +191,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (ok_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_ok_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)

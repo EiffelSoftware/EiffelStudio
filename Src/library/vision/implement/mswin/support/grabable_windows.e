@@ -93,7 +93,7 @@ feature {NONE} --Implementation
 			area := widget_manager.area
 			from
 				i := 0
-				!! insensitive_list.make
+				create insensitive_list.make
 			until
 				i >= widget_manager.count
 			loop

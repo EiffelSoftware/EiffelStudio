@@ -36,7 +36,7 @@ inherit
 			make, set_foreground_color_from_imp
 		end;
 
-creation
+create
 	make
  
 feature {NONE} -- Initialization
@@ -71,7 +71,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_apply_label_string (ms);
 			ms.destroy
 		end;
@@ -82,7 +82,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_cancel_label_string (ms);
 			ms.destroy
 		end;
@@ -93,7 +93,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_help_label_string (ms);
 			ms.destroy
 		end;
@@ -104,7 +104,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_ok_label_string (ms);
 			ms.destroy
 		end;
@@ -115,7 +115,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_label);
+			create ms.make_default_l_to_r (a_label);
 			set_apply_label_string (ms);
 			ms.destroy
 		end;
@@ -125,7 +125,7 @@ feature -- Status Setting
 		local
 			ms: MEL_STRING
 		do
-			!! ms.make_default_l_to_r (a_text);
+			create ms.make_default_l_to_r (a_text);
 			set_text_string (ms);
 			ms.destroy
 		end;
@@ -190,7 +190,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (apply_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_apply_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)
@@ -204,7 +204,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (cancel_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_cancel_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)
@@ -218,7 +218,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (help_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_help_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)
@@ -232,7 +232,7 @@ feature -- Element change
 		do
 			a_list := vision_command_list (ok_command);
 			if a_list = Void then
-				!! a_list.make;
+				create a_list.make;
 				set_ok_callback (a_list, Void)
 			end;
 			a_list.add_command (a_command, argument)

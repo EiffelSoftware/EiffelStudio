@@ -119,7 +119,7 @@ feature -- Element change
 		local
 			atom: MEL_ATOM
 		do
-			!! atom.make (mel_screen.display, "WM_DELETE_WINDOW", False);
+			create atom.make (mel_screen.display, "WM_DELETE_WINDOW", False);
 			set_delete_response_do_nothing;
 			set_wm_protocol_callback (atom, Current, Void)
 		end;

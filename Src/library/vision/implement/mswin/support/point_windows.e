@@ -10,7 +10,7 @@ class
 inherit
 	WEL_POINT
 
-creation
+create
 	make_by_pointer, make
 
 end -- class POINT_WINDOWS

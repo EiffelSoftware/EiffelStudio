@@ -16,7 +16,7 @@ feature
 		local
 			i : INTEGER
 		once
-			!! Result.make (0,255)
+			create Result.make (0,255)
 			from
 				i := 0
 			variant

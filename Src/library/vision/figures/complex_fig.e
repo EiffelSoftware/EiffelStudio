@@ -64,7 +64,7 @@ inherit
 			add
 		end
 
-creation
+create
 
 	make_fig, make_fig_with_plane
 
@@ -74,9 +74,9 @@ feature -- Initialization
 		do
 			notify_make;
 			linked_list_make;
-			!! changes_box.make;
-			!! surround_box.make;
-			!! origin
+			create changes_box.make;
+			create surround_box.make;
+			create origin
 		ensure
 			is_empty
 		end;

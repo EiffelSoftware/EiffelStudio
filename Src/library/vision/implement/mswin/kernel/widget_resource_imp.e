@@ -10,7 +10,7 @@ class
 inherit
 	WIDGET_RESOURCE_I
 
-creation
+create
 	make
 
 feature -- Initalization

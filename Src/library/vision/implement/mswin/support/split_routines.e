@@ -93,8 +93,8 @@ feature {NONE} -- Implementation
 		local
 			color: WEL_COLOR_REF
 		do
-			!! color.make_system (Color_windowframe)
-			!! Result.make (ps_solid, 1, color)
+			create color.make_system (Color_windowframe)
+			create Result.make (ps_solid, 1, color)
 		ensure
 			result_not_void: Result /= Void
 			result_exists: Result.exists
@@ -105,8 +105,8 @@ feature {NONE} -- Implementation
 		local
 			color: WEL_COLOR_REF
 		do
-			!! color.make_system (Color_btnface)
-			!! Result.make (ps_solid, 1, color)
+			create color.make_system (Color_btnface)
+			create Result.make (ps_solid, 1, color)
 		ensure
 			result_not_void: Result /= Void
 			result_exists: Result.exists
@@ -117,8 +117,8 @@ feature {NONE} -- Implementation
 		local
 			color: WEL_COLOR_REF
 		do
-			!! color.make_system (Color_btnshadow)
-			!! Result.make (ps_solid, 1, color)
+			create color.make_system (Color_btnshadow)
+			create Result.make (ps_solid, 1, color)
 		ensure
 			result_not_void: Result /= Void
 			result_exists: Result.exists
@@ -129,8 +129,8 @@ feature {NONE} -- Implementation
 		local
 			color: WEL_COLOR_REF
 		do
-			!! color.make_system (Color_btnhighlight)
-			!! Result.make (ps_solid, 1, color)
+			create color.make_system (Color_btnhighlight)
+			create Result.make (ps_solid, 1, color)
 		ensure
 			result_not_void: Result /= Void
 			result_exists: Result.exists

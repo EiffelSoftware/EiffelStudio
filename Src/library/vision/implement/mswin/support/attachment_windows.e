@@ -8,7 +8,7 @@ indexing
 class
 	ATTACHMENT_WINDOWS
 
-creation
+create
 	make
 
 feature -- Initialization

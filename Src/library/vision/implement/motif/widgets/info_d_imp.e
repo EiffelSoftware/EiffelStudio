@@ -42,7 +42,7 @@ inherit
 			mel_info_make, mel_info_make_no_auto
 		end
 
-creation
+create
 
 	make
 

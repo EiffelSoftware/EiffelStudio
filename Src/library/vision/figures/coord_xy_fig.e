@@ -98,7 +98,7 @@ feature -- Basic operation
 		require
 			other_exists: other /= Void
 		do
-			!! Result;
+			create Result;
 			Result.set (x - other.x, y - other.y)
 		ensure
 			x_set: Result.x = x - other.x;
@@ -110,7 +110,7 @@ feature -- Basic operation
 		require
 			other_exists: other /= Void
 		do
-			!! Result;
+			create Result;
 			Result.set (x + other.x, y + other.y)
 		ensure
 			x_set: Result.x = x + other.x;
@@ -120,7 +120,7 @@ feature -- Basic operation
 	prefix "-": like Current is
 			-- Make a negative copy of current point
 		do
-			!! Result;
+			create Result;
 			Result.set (-x, -y)
 		ensure
 			x_set: Result.x = -x;
@@ -130,7 +130,7 @@ feature -- Basic operation
 	prefix "+": like Current is
 			-- Make a positive copy of current point
 		do
-			!! Result;
+			create Result;
 			Result.set (x, y)
 		ensure
 			superimposable_result: Result.is_superimposable (Current)
@@ -141,7 +141,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Create a copy of current point.
 		do
-			!! Result;
+			create Result;
 			Result.set (x, y)
 		ensure
 			superimposable_result: Result.is_superimposable (Current)

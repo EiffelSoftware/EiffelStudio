@@ -52,7 +52,7 @@ inherit
 			parent
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

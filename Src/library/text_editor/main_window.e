@@ -19,7 +19,7 @@ inherit
 
 	EV_BASIC_COLORS
 
-creation
+create
 	make_top_level
 
 feature --Access
@@ -49,7 +49,7 @@ feature -- Initialization
 			-- Creation of the window.
 		do
 --			print ("%N")
-			{EV_WINDOW} Precursor
+			Precursor {EV_WINDOW}
 			--maximize
 			create main_box.make (Current)
 			create tool_box.make (main_box)
@@ -88,16 +88,16 @@ feature {NONE} -- Implementation
 --			create {EV_ROUTINE_COMMAND} cmd.make (~on_save)
 			--add_accelerator_command (accelerator, cmd, Void)
 
-			create {EV_ROUTINE_COMMAND} cmd.make (~on_save)
+			create {EV_ROUTINE_COMMAND} cmd.make (agent on_save)
 			save_button.add_click_command (cmd, Void)
 
-			create {EV_ROUTINE_COMMAND} cmd.make (~on_toggle_highlight)
+			create {EV_ROUTINE_COMMAND} cmd.make (agent on_toggle_highlight)
 			toggle_highlight_button.add_click_command (cmd, Void)
 
-			create {EV_ROUTINE_COMMAND} cmd.make (~on_basic_auto_intending)
+			create {EV_ROUTINE_COMMAND} cmd.make (agent on_basic_auto_intending)
 			toggle_basic_auto_intending_button.add_click_command (cmd, Void)
 
-			create {EV_ROUTINE_COMMAND} cmd.make (~on_test)
+			create {EV_ROUTINE_COMMAND} cmd.make (agent on_test)
 			test_button.add_click_command (cmd, Void)
 			
 --			create {EV_ROUTINE_COMMAND} cmd.make (~on_draw_box)

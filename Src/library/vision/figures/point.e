@@ -44,7 +44,7 @@ inherit
 			duplicate
 		end
 
-creation
+create
 
 	make
 

@@ -22,7 +22,7 @@ inherit
 			{NONE} ll_make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -16,7 +16,7 @@ feature -- Access
 			default_font: WEL_FONT
 		do
 			if exists then
-				!! Result.make
+				create Result.make
 				font_windows ?= Result.implementation
 				check
 					font_windows_not_void:
@@ -27,8 +27,8 @@ feature -- Access
 				if private_font /= Void then
 					Result := private_font	
 				else
-					!! Result.make
-					!WEL_ANSI_VARIABLE_FONT! default_font.make
+					create Result.make
+					create {WEL_ANSI_VARIABLE_FONT} default_font.make
 					font_windows ?= Result.implementation
 					font_windows.make_by_wel (default_font)
 				end

@@ -20,7 +20,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	initialize
 
 feature -- Initialization
@@ -28,7 +28,7 @@ feature -- Initialization
 	initialize (a_parent: COMPOSITE) is
 			-- Initialize Current.
 		do
-			!! fs_list.make (20);
+			create fs_list.make (20);
 			init_common_controls_dll
 		end;
 
@@ -51,7 +51,7 @@ feature -- Initialization
 			if not fs_list.is_empty then
 				wcw ?= initializer.tooltip_parent.implementation;
 				if tooltip = Void then
-					!! tooltip.make (wcw, -1);
+					create tooltip.make (wcw, -1);
 					-- tooltip will be collected when initializer
 					-- is collected
 					initializer.set_tooltip (tooltip);
@@ -69,7 +69,7 @@ feature -- Initialization
 					check 
 						ww /= Void
 					end
-					!! wti.make;
+					create wti.make;
 					fs_list.item.set_tool_info (wti);
 					wti.set_window (ww);
 					wti.set_rect (ww.client_rect);

@@ -12,7 +12,7 @@ feature -- Removal
 	actions_manager_list: ACTIONS_MANAGER_LIST_WINDOWS is
 			-- List of actions managers
 		once
-			!! Result.make
+			create Result.make
 		end
 
 end -- class ACTIONS_MANAGER_CONTROLLER_WINDOWS

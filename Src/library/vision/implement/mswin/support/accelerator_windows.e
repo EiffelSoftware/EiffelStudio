@@ -10,7 +10,7 @@ class
 inherit
 	WEL_ACCELERATORS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a accelerator table.
 		do
-			!! accelerator_list.make
+			create accelerator_list.make
 		end
 
 feature -- Status report
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 		local
 			index: INTEGER
 		do
-			!! acc_array.make (accelerator_list.count, accelerator_list.first.structure_size)
+			create acc_array.make (accelerator_list.count, accelerator_list.first.structure_size)
 			from
 				index := 0
 				accelerator_list.start

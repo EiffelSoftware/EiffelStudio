@@ -15,7 +15,7 @@ inherit
 
 	BASIC_ROUTINES
 
-creation
+create
 	read_from_xbm_file
 
 feature -- Initialization
@@ -32,7 +32,7 @@ feature -- Initialization
 			int_width: INTEGER
 		do
 			if not retried then
-				!! file.make (a_filename)
+				create file.make (a_filename)
 				is_valid := false
 				if file.exists then
 					is_valid := true
@@ -70,7 +70,7 @@ feature -- Initialization
 							if width \\ 8 /= 0 then
 								int_width := int_width + 1
 							end
-							!! temporary_storage.make (height, int_width)
+							create temporary_storage.make (height, int_width)
 						until
 							not is_valid or file.end_of_file
 						loop
@@ -149,7 +149,7 @@ feature -- Implementation
 			black, white: CHARACTER
 			s: STRING
 		do
-			!! info_header.make
+			create info_header.make
 			info_header.set_width (width)	 
 			info_header.set_height (height)
 			info_header.set_planes (1)
@@ -164,7 +164,7 @@ feature -- Implementation
 				(row_filler + temporary_storage.width) * temporary_storage.height
 			structure_make
 			i := info_header.structure_size
-			!! s.make (structure_size);
+			create s.make (structure_size);
 			s.fill_blank
 			black := charconv (0)
 			white := charconv (255)

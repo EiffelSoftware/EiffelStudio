@@ -75,7 +75,7 @@ feature -- Status Report
 			bg_color_x: COLOR_IMP
 		do
 			if private_background_color = Void then
-				!! private_background_color.make;
+				create private_background_color.make;
 				bg_color_x ?= private_background_color.implementation;
 				bg_color_x.set_default_pixel (mel_background_color,
 						mel_screen.default_colormap);
@@ -92,7 +92,7 @@ feature -- Status Report
 			bg_pixmap_x: PIXMAP_IMP
 		do
 			if private_background_pixmap = Void then
-				!! private_background_pixmap.make;
+				create private_background_pixmap.make;
 				bg_pixmap_x ?= private_background_pixmap.implementation;		
 				bg_pixmap_x.set_default_pixmap (mel_background_pixmap);
 				bg_pixmap_x.increment_users
@@ -209,7 +209,7 @@ feature -- Status Setting
 		local
 			list: VISION_COMMAND_LIST
 		do
-			!! list.make;
+			create list.make;
 			set_translation (a_translation, list, Void);
 			list.add_command (a_command, argument)
 		end;
@@ -230,7 +230,7 @@ feature -- Element change
 		do
 			list := vision_command_list (destroy_command);	
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_destroy_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -244,7 +244,7 @@ feature -- Element change
 		do
 			list := button_command (event_command (ButtonPressMask));
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_event_handler (ButtonPressMask, list, Void)
 			end;
 			list.add_command (number, a_command, argument)
@@ -258,7 +258,7 @@ feature -- Element change
 		do
 			list := button_command (event_command (ButtonReleaseMask));
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_event_handler (ButtonReleaseMask, list, Void)
 			end;
 			list.add_command (number, a_command, argument)
@@ -563,7 +563,7 @@ feature {NONE} -- Implementation
 	click_actions_table: HASH_TABLE [BUTTON_CLICK_HAND_X, POINTER] is
 			-- Table of click actions for all widgets
 		once
-			!! Result.make (1)
+			create Result.make (1)
 		end;
 
 	button_click_actions: BUTTON_CLICK_HAND_X is
@@ -573,7 +573,7 @@ feature {NONE} -- Implementation
 		do
 			Result := click_actions_table.item (screen_object);
 			if Result = Void then	
-				!! Result.make;
+				create Result.make;
 				click_actions_table.put (Result, screen_object)
 			end;
 		ensure
@@ -649,7 +649,7 @@ feature {WIDGET_IMP} -- Implementation
 		do
 			list := vision_command_list (event_command (a_mask));	
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_event_handler (a_mask, list, an_argument)
 			end;
 			list.add_command (a_command, an_argument)

@@ -17,7 +17,7 @@ inherit
 			make as interior_make
 		end
 
-creation
+create
 
 	make
 
@@ -27,9 +27,9 @@ feature -- Initialization
 			-- Create a text.
 		do
 			init_fig (Void);
-			!! text.make (1);
-			!! font.make;
-			!! top_left;
+			create text.make (1);
+			create font.make;
+			create top_left;
 			ascent := 1;
 			descent := 1;
 			string_width := 1;

@@ -10,7 +10,7 @@ class DELAYED_FOCUS_COMMAND
 inherit
 	COMMAND
 
-creation
+create
 	make
 
 feature -- Initialization

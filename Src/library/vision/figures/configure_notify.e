@@ -12,7 +12,7 @@ class
 
 	CONFIGURE_NOTIFY
 
-creation
+create
 	
 	make
 
@@ -20,7 +20,7 @@ feature -- Initialization
 
 	make is
 		do
-			!! notify_class;
+			create notify_class;
 			set_conf_notify;
 			set_conf_receive
 		ensure

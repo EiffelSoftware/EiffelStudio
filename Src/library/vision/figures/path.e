@@ -25,7 +25,7 @@ inherit
 
 	LINE_WIDTH;
 
-creation
+create
 
 	make
 
@@ -34,11 +34,11 @@ feature -- Initialization
 	make is
 			-- Create a path
 		do
-			!! dash_pattern.make;
+			create dash_pattern.make;
 			dash_pattern.put_right (4);
 			dash_pattern.put_right (4);
 			logical_function_mode := GXcopy;
-			!! foreground_color.make;
+			create foreground_color.make;
 		end;
 
 feature {FIGURE} -- Element change

@@ -46,7 +46,7 @@ feature -- Status setting
 				label_identifier := clone (abstract_menu.identifier);
 				label_identifier.append (" Title");
 				m_p ?= abstract_menu.implementation;
-				!! title_label.make (label_identifier, m_p, True);
+				create title_label.make (label_identifier, m_p, True);
 			end;
 			title_label.set_label_as_string (a_title)
 		end;

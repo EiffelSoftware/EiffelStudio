@@ -11,7 +11,7 @@ inherit
 	FOCUS_LABEL_I;
 	OVERRIDE_S;
 
-creation
+create
 	initialize
 	
 feature -- Constants
@@ -24,7 +24,7 @@ feature -- Initialization
 			-- Initialize Current.
 		do
 			make ("Focus_Label", a_parent);
-			!! label.make ("", Current)
+			create label.make ("", Current)
 			allow_resize
 		end;
 
@@ -47,7 +47,7 @@ feature -- Initialization
 					list ?= button.activate_command.command;
 				end;
 				if list = Void then
-					!! list.make;
+					create list.make;
 					button.set_activate_callback (list, Void)
 				end
 				list.insert_command (focus_command, Void)
@@ -59,7 +59,7 @@ feature -- Initialization
 		local 
 			color: COLOR
 		once
-			!!color.make
+			create color.make
 			color.set_name (Label_color)
 			label.set_background_color (color)
 		end;
@@ -67,7 +67,7 @@ feature -- Initialization
 	focus_command: FOCUS_COMMAND is
 			-- Command called when entering and leaving a focusable widget
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 		end;
 
 feature -- Properties

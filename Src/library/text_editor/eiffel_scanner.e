@@ -38,7 +38,7 @@ inherit
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
 
-creation
+create
 
 	make, execute, benchmark
 
@@ -1143,7 +1143,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			!! an_array.make (0, 137494)
+			create an_array.make (0, 137494)
 			yy_nxt_template_1 (an_array)
 			yy_nxt_template_2 (an_array)
 			yy_nxt_template_3 (an_array)

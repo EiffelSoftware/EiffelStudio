@@ -63,7 +63,7 @@ inherit
 			is_auto_show_cursor_position as is_selection_visible
 		end
 
-creation
+create
 
 	make, make_word_wrapped
 
@@ -108,7 +108,7 @@ feature -- Access
 			-- Coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		do
-			!! Result;
+			create Result;
 			Result.set (x_coordinate (char_pos), y_coordinate (char_pos))
 		end;
 
@@ -190,7 +190,7 @@ feature -- Element change
 		do
 			list := vision_command_list (activate_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_activate_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -204,7 +204,7 @@ feature -- Element change
 		do
 			list := vision_command_list (modify_verify_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_modify_verify_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -218,7 +218,7 @@ feature -- Element change
 		do
 			list := vision_command_list (motion_verify_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_motion_verify_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)

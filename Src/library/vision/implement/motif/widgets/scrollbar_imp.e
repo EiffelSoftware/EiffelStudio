@@ -41,7 +41,7 @@ inherit
 			is_shown as shown
 		end
 
-creation
+create
 
 	make
 
@@ -114,7 +114,7 @@ feature -- Element change
 		do
 			list := vision_command_list (drag_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_drag_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -128,7 +128,7 @@ feature -- Element change
 		do
 			list := vision_command_list (value_changed_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_value_changed_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)

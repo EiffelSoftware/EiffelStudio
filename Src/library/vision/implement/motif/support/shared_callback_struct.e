@@ -18,7 +18,7 @@ feature {NONE} -- Implementation
 
 	last_callback_struct_cell: CELL [MEL_CALLBACK_STRUCT] is
 		once
-		 	!! Result.put (Void)
+		 	create Result.put (Void)
 		end;
 
 	set_last_callback_struct (an_struct: like last_callback_struct) is

@@ -23,7 +23,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 
 	make
 
@@ -33,9 +33,9 @@ feature -- Initialization
 			-- Create a reg_polygon.
 		do
 			init_fig (Void);
-			!! center;
-			!! path.make ;
-			!! interior.make ;
+			create center;
+			create path.make ;
+			create interior.make ;
 			interior.set_no_op_mode;
 			radius := 1;
 			number_of_sides := 3;
@@ -182,14 +182,14 @@ feature -- Output
 			angle: INTEGER;
 		do
 			if drawing.is_drawable then
-				!! polygon.make ;
+				create polygon.make ;
 				polygon.set_conf_not_notify;
 				from
 					i := 0
 				until
 					i >= number_of_sides
 				loop
-					!! a_point;
+					create a_point;
 					angle := i*(360//number_of_sides)+(orientation).truncated_to_integer;
 					a_point.set (	center.x+
 									(radius*cosine ((Pi*angle/180.0).truncated_to_real)).truncated_to_integer,

@@ -246,7 +246,7 @@ feature -- Status setting
 		local
 			list: VISION_COMMAND_LIST
         do
-			!! list.make;
+			create list.make;
 			parent.set_translation (action, list, arg);
 			list.add_command (cmd, arg)
 		end

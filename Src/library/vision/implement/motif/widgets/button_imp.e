@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 							-- is the accelerator text
 						pos := button_text.index_of ('%T', 1);
 						if pos > 1 and then pos /= count then
-							!! acc_text.make_localized (button_text.substring (pos + 1, count));
+							create acc_text.make_localized (button_text.substring (pos + 1, count));
 							set_accelerator_text (acc_text);
 							button_text := button_text.substring (1, pos - 1);
 							acc_set := True;

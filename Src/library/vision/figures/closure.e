@@ -10,7 +10,7 @@ class
 
 	CLOSURE 
 
-creation
+create
 
 	make
 
@@ -19,8 +19,8 @@ feature -- Initialization
 	make is
 			-- Create a closure
 		do
-			!! up_left;
-			!! down_right;
+			create up_left;
+			create down_right;
 			empty := True;
 			infinite := False
 		end; 
@@ -85,7 +85,7 @@ feature -- Conversion
 	as_clip: CLIP is
 			-- `clip` equivallent of `Current`
 		do
-			!! Result;
+			create Result;
 			Result.set (up_left, down_right.x-up_left.x, down_right.y-up_left.y)
 		end;
 
@@ -166,9 +166,9 @@ feature -- Element change
 			clip_up_left, clip_down_right: COORD_XY_FIG;
 		do
 			if not infinite then
-				!!clip_up_left;
+				create clip_up_left;
 				clip_up_left.set (clip.upper_left.x, clip.upper_left.y);
-				!!clip_down_right;
+				create clip_down_right;
 				clip_down_right.set
 					(clip.upper_left.x+clip.width, clip.upper_left.y+clip.height);
 				if empty then

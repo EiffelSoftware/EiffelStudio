@@ -9,7 +9,7 @@ class ACTIONS_MANAGER_LIST_WINDOWS
 inherit
 	LINKED_LIST [ACTIONS_MANAGER]
 
-creation
+create
 	make
 
 feature -- Removal

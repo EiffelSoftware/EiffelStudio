@@ -6,7 +6,7 @@ indexing
 class
 	INTEGER_GENERATOR_WINDOWS
 
-creation
+create
         make
 
 feature -- Initialization

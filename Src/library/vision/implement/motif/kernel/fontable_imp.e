@@ -17,7 +17,7 @@ feature -- Access
 			font_x: FONT_IMP
 		do
 			if private_font = Void then
-				!! private_font.make;
+				create private_font.make;
 				font_x ?= private_font.implementation;
 				font_x.set_default_font (font_list)
 			end;

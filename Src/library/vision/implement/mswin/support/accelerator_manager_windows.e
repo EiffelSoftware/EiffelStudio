@@ -12,7 +12,7 @@ feature {NONE} -- Implementation
 	accelerators: ACCELERATORS_WINDOWS is
 			-- Accelerators for the application
 		once
-			!! Result.make
+			create Result.make
 		end
 
 end -- class ACCELERATOR_MANAGER_WINDOWS

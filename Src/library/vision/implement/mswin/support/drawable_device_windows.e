@@ -141,7 +141,7 @@ feature -- Status setting
 			x1, y1, x2, y2: INTEGER
 		do
 			if clip_list = Void then
-				!! clip_list.make
+				create clip_list.make
 			end
 			x1 := a_clip.upper_left.x
 			y1 := a_clip.upper_left.y
@@ -286,8 +286,8 @@ feature -- Status setting
 			end
 			dib := pw.dib
 			if dib /= Void then
-				!! bitmap.make_by_dib (drawing_dc, dib, dib_rgb_colors)
-				!! draw_brush.make_by_pattern (bitmap)
+				create bitmap.make_by_dib (drawing_dc, dib, dib_rgb_colors)
+				create draw_brush.make_by_pattern (bitmap)
 				if drawing_dc /= Void then
 					update_brush
 				end
@@ -333,7 +333,7 @@ feature -- Input
 			end
 			dib := pw.dib
 			if dib /= Void then
-				!! bitmap.make_by_dib (drawing_dc, dib, dib_rgb_colors)
+				create bitmap.make_by_dib (drawing_dc, dib, dib_rgb_colors)
 				if bitmap.item = bitmap.item.default then
 					-- windows function "CreateDIBitmap" failed
 					exception_raise("Cannot create windows bitmap");
@@ -382,15 +382,15 @@ feature -- Output
 				if bg_color /= Void then
 					color_ref := bg_color
 				else
-					!! color_ref.make_system (Color_window)
+					create color_ref.make_system (Color_window)
 				end
 				old_rop2 := drawing_dc.rop2
 				old_brush := drawing_dc.brush
 				old_pen := drawing_dc.pen
 				drawing_dc.set_rop2 (r2_copypen)
-				!! a_rect.make (0, 0, width, height)
-				!! background_brush.make_solid (color_ref)
-				!! background_pen.make (Ps_solid, 1, color_ref)
+				create a_rect.make (0, 0, width, height)
+				create background_brush.make_solid (color_ref)
+				create background_pen.make (Ps_solid, 1, color_ref)
 				drawing_dc.select_brush (background_brush)
 				drawing_dc.select_pen (background_pen)
 				drawing_dc.rectangle (a_left, a_top, a_right, a_bottom)
@@ -494,9 +494,9 @@ feature -- Output
 			c: CURSOR
 		do
 			if is_closed then
-				!! p_array.make (1, 2 * points.count + 2)
+				create p_array.make (1, 2 * points.count + 2)
 			else
-				!! p_array.make (1, 2 * points.count)
+				create p_array.make (1, 2 * points.count)
 			end
 			i := 1
 			from
@@ -593,7 +593,7 @@ feature -- Output
 			c: CURSOR
 		do
 			if drawing_dc /= Void then
-				!! p_array.make (1, 2 * points.count)
+				create p_array.make (1, 2 * points.count)
 				i := 1
 				from
 					c := points.cursor
@@ -705,7 +705,7 @@ feature -- Implementation
 				if drawing_dc.brush /= Void then
 					drawing_dc.unselect_brush
 				end
-				!! null_brush.make
+				create null_brush.make
 				drawing_dc.select_brush (null_brush)
 			else
 				offset := 1
@@ -722,7 +722,7 @@ feature -- Implementation
 				y3 := center.y - (rheight //2 * sine (an_orientation * Pi / 180)).rounded
 				x4 := center.x + (rwidth //2 * cosine (an_orientation * Pi / 180)).rounded
 				y4 := center.y - (rheight //2 * sine (an_orientation * Pi / 180)).rounded
-				!! points.make (1, 8)
+				create points.make (1, 8)
 				points.put (x1, 1)
 				points.put (y1, 2)
 				points.put (x2, 3)
@@ -762,7 +762,7 @@ feature -- Implementation
 		do
 			inspect fill_style
 				when 0 then
-					!! draw_brush.make_solid (gc_fg_color)
+					create draw_brush.make_solid (gc_fg_color)
 				when 1 then
 				when 2 then
 					drawing_dc.set_text_color (gc_fg_color)
@@ -839,7 +839,7 @@ feature -- Implementation
 		local
 			pen: WEL_PEN
 		do
-			!! pen.make (line_style, line_width, gc_fg_color)
+			create pen.make (line_style, line_width, gc_fg_color)
 			if drawing_dc.pen /= Void then
 				drawing_dc.unselect_pen
 			end
@@ -893,7 +893,7 @@ feature {NONE} -- Implementation
 			if loop_angle < 180 then
 				loop_angle := - loop_angle
 			end
-			!!Result.make (1, 2 * (segment_count + 1))
+			create Result.make (1, 2 * (segment_count + 1))
 			from
 				i := 0
 			until

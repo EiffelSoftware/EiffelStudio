@@ -79,7 +79,7 @@ inherit
 
 	CURSOR_WIDGET_MANAGER
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -87,10 +87,10 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 			-- Create this screen
 		do
-			!! drawing_dc
+			create drawing_dc
 			set_line_width (1);
-			!! gc_fg_color.make_system (color_windowtext)
-			!! gc_bg_color.make_system (color_window)
+			create gc_fg_color.make_system (color_windowtext)
+			create gc_bg_color.make_system (color_window)
 			line_style := ps_solid
 		end
 
@@ -104,7 +104,7 @@ feature -- Access
 		local
 			point: WEL_POINT
 		do
-			!! point.make (0, 0)
+			create point.make (0, 0)
 			point.set_cursor_position 
 			Result := point.x
 		end
@@ -114,7 +114,7 @@ feature -- Access
 		local
 			point: WEL_POINT
 		do
-			!! point.make (0, 0)
+			create point.make (0, 0)
 			point.set_cursor_position 
 			Result := point.y
 		end

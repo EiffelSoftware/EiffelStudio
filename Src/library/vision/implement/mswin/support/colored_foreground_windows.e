@@ -20,7 +20,7 @@ feature
 		do
 			Result := private_foreground_color
 			if Result = Void then
-				!! Result.make
+				create Result.make
 				color_ref ?= Result.implementation
 				color_ref.make_system (Color_windowtext)
 			end

@@ -19,7 +19,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -30,7 +30,7 @@ feature -- Initialization
 			a_name_exists: a_name /= Void
 		do
 			name := clone (a_name)
-			!! details.make
+			create details.make
 		ensure
 			name_set: name.is_equal (a_name)
 		end
@@ -104,7 +104,7 @@ feature -- Status setting
 				details.forth
 			end
 			if efdw = Void then
-				!! efdw.make (name, display_style)
+				create efdw.make (name, display_style)
 				details.extend (efdw)
 			end
 			if not not_raster then

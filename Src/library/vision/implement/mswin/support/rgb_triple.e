@@ -6,7 +6,7 @@ indexing
 class
 	RGB_TRIPLE 
 
-creation
+create
 	make
 
 feature -- Initialisation

@@ -15,7 +15,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make, make_for_screen
 
 feature -- Initialization
@@ -69,7 +69,7 @@ feature -- Input
 			msg_temp: STRING
 			msg_box: WEL_MSG_BOX
 		do
-			!! file.make (a_file_name)
+			create file.make (a_file_name)
 			is_valid := false
 			if file.exists then
 				if file.count > 2 then
@@ -80,8 +80,8 @@ feature -- Input
 						two_characters_read: file.last_string.count = 2
 					end
 					if file.laststring.is_equal ("BM") then
-						!! file.make_open_read (a_file_name)
-						!! dib.make_by_file (file)
+						create file.make_open_read (a_file_name)
+						create dib.make_by_file (file)
 						is_valid := dib.exists
 						depth := dib.color_count
 						height := dib.height
@@ -89,7 +89,7 @@ feature -- Input
 						hot_x := 0
 						hot_y := 0
 					elseif file.laststring.is_equal ("#d") then
-						!! xbm.read_from_xbm_file (a_file_name)
+						create xbm.read_from_xbm_file (a_file_name)
 						dib := xbm
 						is_valid := xbm.is_valid
 						depth := 2
@@ -103,19 +103,19 @@ feature -- Input
 						or file.laststring.is_equal ("RI") then
 							-- Icon, cursor or ANI cursor
 					else
-						!! msg_temp.make (0)
+						create msg_temp.make (0)
 						msg_temp.append ("Unable to determine type for pixmap is file ")
 						msg_temp.append (a_file_name)
 						msg_temp.append (".%N")
-						!! msg_box.make
+						create msg_box.make
 						msg_box.error_message_box (Void, msg_temp, "Error") 
 					end
 				else
-					!! msg_temp.make (0)
+					create msg_temp.make (0)
 					msg_temp.append ("Unable to read pixmap ")
 					msg_temp.append (a_file_name)
 					msg_temp.append (".%N")
-					!! msg_box.make
+					create msg_box.make
 					msg_box.error_message_box (Void, msg_temp, "Error") 
 				end
 				if hot_x = 0 and then hot_y = 0 then
@@ -123,11 +123,11 @@ feature -- Input
 					hot_y := height // 2
 				end
 			else
-				!! msg_temp.make (0)
+				create msg_temp.make (0)
 				msg_temp.append ("Pixmap file ")
 				msg_temp.append (a_file_name)
 				msg_temp.append (" doesn't exist.%N")
-				!! msg_box.make
+				create msg_box.make
 				msg_box.warning_message_box (Void, msg_temp, "Warning") 
 			end
 			last_operation_correct := is_valid
@@ -155,11 +155,11 @@ feature -- Output
 			bitmap: WEL_BITMAP
 			file_name: FILE_NAME
 		do
-			!! file_name.make_from_string (a_file_name)
+			create file_name.make_from_string (a_file_name)
 			if file_name.is_valid then
-				!! dc
+				create dc
 				dc.get
-				!! bitmap.make_by_dib (dc, dib, Dib_rgb_colors)
+				create bitmap.make_by_dib (dc, dib, Dib_rgb_colors)
 				dc.save_bitmap (bitmap, file_name)
 				dc.release
 			end

@@ -28,7 +28,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -38,8 +38,8 @@ feature -- Initialization
 		do
 			init_fig (Void);
 			twl_make;
-			!! path.make ;
-			!! interior.make ;
+			create path.make ;
+			create interior.make ;
 			interior.set_no_op_mode;
 		end;
 
@@ -81,7 +81,7 @@ feature -- Access
 				forth
 			end;
 			go_to (keep_cursor);
-			!!Result;
+			create Result;
 			Result.set (x, y)
 		end;
 
@@ -225,7 +225,7 @@ feature {CONFIGURE_NOTIFY} -- Updating
 			keep_cursor: CURSOR;
 		do
 			from
-				!!surround_box.make;
+				create surround_box.make;
 				keep_cursor := cursor;
 				start;
 			until

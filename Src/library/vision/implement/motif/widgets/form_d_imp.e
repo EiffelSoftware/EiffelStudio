@@ -60,7 +60,7 @@ inherit
 			form_make_no_auto_unmanage
 		end
 
-creation
+create
 
 	make
 

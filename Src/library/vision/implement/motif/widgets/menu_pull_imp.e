@@ -64,7 +64,7 @@ inherit
 			x, y, height, width, parent
 		end
 
-creation
+create
 
 	make
 
@@ -83,9 +83,9 @@ feature {NONE} -- Initialization
 			pulldown_identifier := clone (a_pulldown.identifier);
 			pulldown_identifier.append ("_pull");
 			if man then
-				!! menu_button.make (a_pulldown.identifier, oui_parent);
+				create menu_button.make (a_pulldown.identifier, oui_parent);
 			else
-				!! menu_button.make_unmanaged (a_pulldown.identifier, oui_parent);
+				create menu_button.make_unmanaged (a_pulldown.identifier, oui_parent);
 			end;
 			mel_c ?= menu_button.implementation;
 			mel_make_menu_pull (pulldown_identifier, mel_c.parent);

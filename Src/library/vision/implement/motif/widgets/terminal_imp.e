@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			w: POINTER;
 			list: like children_list
 		do
-			!! Result.make;
+			create Result.make;
 			list := children_list;
 			from
 				list.start
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			w: POINTER;
 			list: like children_list
 		do
-			!! Result.make;
+			create Result.make;
 			list := children_list;
 			from
 				list.start
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			w: POINTER;
 			list: like children_list
 		do
-			!! Result.make;
+			create Result.make;
 			list := children_list;
 			from
 				list.start

@@ -16,7 +16,7 @@ feature -- Access
 	names: HASH_TABLE [RGB_TRIPLE, STRING] is
 			-- Fill the hash-table when called
 		once
-			!! Result.make (800)
+			create Result.make (800)
 			add_names
 		end
 
@@ -773,9 +773,9 @@ feature {NONE} -- Implementation
 			add_name (255, 255, 255, "grey100")
 			add_name (75, 0, 130, "Indigo")
 			add_name (220, 20, 60, "Crimson")
-			!! color.make_system (Color_window)
+			create color.make_system (Color_window)
 			add_name (color.red, color.green, color.blue, "Color_window")
-			!! color.make_system (Color_windowtext)
+			create color.make_system (Color_windowtext)
 			add_name (color.red, color.green, color.blue, "Color_windowtext")
 		end
 
@@ -786,7 +786,7 @@ feature {NONE} -- Implementation
 		local
 			rgb_tripple: RGB_TRIPLE
 		do
-			!! rgb_tripple.make (r, g, b)
+			create rgb_tripple.make (r, g, b)
 			names.put (rgb_tripple, clone (color_name))
 		end
 

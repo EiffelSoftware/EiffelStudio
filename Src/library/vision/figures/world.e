@@ -48,7 +48,7 @@ inherit
 			{ANY} off, after, before
 		end;
 
-creation
+create
 
 	make, make_with_plane
 
@@ -69,15 +69,15 @@ feature -- Initialization
 			until
 				off
 			loop
-				!! ll.make;
+				create ll.make;
 				al_replace (ll);
 				al_forth
 			end;
 			start;
 			notify_make;
-			!! changes_box.make;
-			!! surround_box.make;
-			!! origin;
+			create changes_box.make;
+			create surround_box.make;
+			create origin;
 			set_conf_receive;
 			set_conf_not_notify;
 			conf_notified := Current;
@@ -297,12 +297,12 @@ feature -- Output
 			new_clip: CLIP;
 			first_drawn_plane: INTEGER;
 		do
-			!! box.make;
+			create box.make;
 			box.merge_clip (clip);
 			new_clip := clip;
 			if conf_receive then
 				if conf_modified then
-					!! box.make;
+					create box.make;
 					box.merge_clip (new_clip);
 					box.merge (changes_box);
 					new_clip := box.as_clip;
@@ -312,7 +312,7 @@ feature -- Output
 			else
 				conf_recompute
 			end;
-			!! box.make;
+			create box.make;
 			box.merge_clip (new_clip);
 			if drawing.is_drawable and surround_box.override (new_clip) then
 				world_mark;

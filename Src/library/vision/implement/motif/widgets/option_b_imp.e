@@ -56,7 +56,7 @@ inherit
 			set_size, set_height, set_width
 		end
 
-creation
+create
 
 	make
 

@@ -38,7 +38,7 @@ inherit
 			parent
 		end
 
-creation
+create
 
 	make
 

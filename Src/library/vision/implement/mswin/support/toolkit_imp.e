@@ -27,7 +27,7 @@ inherit
 
 	ACCELERATOR_MANAGER_WINDOWS
 
-creation
+create
 
 	make
 
@@ -54,13 +54,13 @@ feature
 	color (a_color: COLOR): COLOR_IMP is
                         -- MS-Windows implementation of `a_color'
 		do
-			!! Result.make (a_color)
+			create Result.make (a_color)
 		end;
 
 	color_for_screen (a_color: COLOR; a_screen: SCREEN): COLOR_IMP is
 			-- Toolkit implementation of `a_color' for `a_screen'
 		do
-			!! Result.make (a_color)
+			create Result.make (a_color)
 		end;
 
 	exit is
@@ -72,13 +72,13 @@ feature
 	font (a_font: FONT): FONT_IMP is
                         -- MS-Windows implementation of `a_font'
 		do
-			!! Result.make (a_font)
+			create Result.make (a_font)
 		end;
 
 	font_for_screen (a_font: FONT; a_screen: SCREEN): FONT_IMP is
 			-- Toolkit implementation of `a_font' for `a_screen'
 		do
-			!! Result.make (a_font)
+			create Result.make (a_font)
 		end;
 
 	iterate is
@@ -95,31 +95,31 @@ feature
 	pixmap (a_pixmap: PIXMAP): PIXMAP_IMP is
                         -- MS-Windows implementation of `a_pixmap'
 		do
-			!! Result.make (a_pixmap)
+			create Result.make (a_pixmap)
 		end;
 
 	pixmap_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN): PIXMAP_IMP is
 			-- Toolkit implementation of `a_pixmap' for `a_screen'
 		do
-			!! Result.make (a_pixmap)
+			create Result.make (a_pixmap)
 		end;
 
 	screen (a_screen: SCREEN): SCREEN_IMP is
                         -- MS-Windows implementation of `a_screen'
 		do
-			!! Result.make (a_screen)
+			create Result.make (a_screen)
 		end;
 
 	screen_cursor (a_cursor: SCREEN_CURSOR): SCREEN_CURSOR_IMP is
                         -- MS-Windows implementation of `a_cursor'
 		do
-			!! Result.make (a_cursor)
+			create Result.make (a_cursor)
 		end;
 
 	screen_cursor_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN): SCREEN_CURSOR_IMP is
 			-- Toolkit implementation of `a_cursor'
 		do
-			!! Result.make (a_cursor)
+			create Result.make (a_cursor)
 		end;
 
 	set_default_resources (a_list : ARRAY[WIDGET_RESOURCE]) is
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			from
 				accel := accelerators
 				main_w := application_main_window
-				!! msg.make
+				create msg.make
 			until
 				done
 			loop

@@ -27,7 +27,7 @@ inherit
 	
 	EV_BASIC_COLORS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			-- Create the demo in `par'.
 		do
 			make_scanner
-			{EV_TEXT_EDITOR} Precursor (par)
+			Precursor {EV_TEXT_EDITOR} (par)
 
 			set_minimum_size (400, 500)
 		end

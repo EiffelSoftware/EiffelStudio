@@ -28,7 +28,7 @@ inherit
 				{NONE} all
 			end;
 
-creation
+create
 
 	make
 
@@ -39,7 +39,7 @@ feature -- Initialization
 		do
 			init_fig (Void);
 			path_make;
-			!! center;
+			create center;
 			angle1 := 0;
 			angle2 := 360;
    		end;

@@ -36,7 +36,7 @@ inherit
 			is_shown as shown
 		end
 
-creation
+create
 
 	make
 
@@ -103,7 +103,7 @@ feature -- Element change
 			ind: INTEGER;
 			arg1: ANY;
 		do
-			!! warray.make (s_child_list.lower, s_child_list.upper);
+			create warray.make (s_child_list.lower, s_child_list.upper);
 			from 
 				ind := s_child_list.lower
 			until 

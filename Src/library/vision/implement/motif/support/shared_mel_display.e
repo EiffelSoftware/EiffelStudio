@@ -17,7 +17,7 @@ feature {NONE} -- Access
 
 	display_cell: CELL [MEL_DISPLAY] is
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end;
 
 end -- class SHARED_MEL_DISPLAY

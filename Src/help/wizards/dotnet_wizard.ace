@@ -1,56 +1,68 @@
 system
-	wizard
+	"wizard"
 
 root
-	WIZARD_MANAGER: make_and_launch
+	wizard_manager: make_and_launch
 
 default
-	assertion(require)
-	assertion(ensure)
-	assertion(check)
-	address_expression(no)
-	array_optimization(no)
-	console_application(no)
-	dead_code_removal(yes)
-	dynamic_runtime(no)
-	exception_trace(yes)
-	inlining(no)
-	multithreaded(no)
-	check_vape(yes)
-	arguments("F:\Eiffel50\bench\wizards\new_projects\dotnet -callback c:\test.txt")
-	disabled_debug(yes)
-	disabled_debug("win_dispatcher")
-	disabled_debug("wel")
-	disabled_debug("vision2_windows_gdi")
-	disabled_debug("vision2_windows")
-	disabled_debug("wel_gdi_count")
-	disabled_debug("gdi_count")
-	disabled_debug("wel_gdi_references")
-	disabled_debug("dlg_dispatcher")
-	debug(no)
-	line_generation(no)
-	profile(no)
-	trace(no)
+	msil_assembly_compatibility ("None")
+	assertion (no)
+	arguments ("D:\Eiffel52\studio\wizards\new_projects\dotnet -callback c:\test.txt")
+	arguments (" ")
+	disabled_debug (yes)
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("vision2_windows")
+	disabled_debug ("vision2_windows_gdi")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (yes)
+	msil_generation_type ("exe")
+	msil_culture ("n/a")
+	msil_assembly_compatibility ("None")
+	check_vape (yes)
+	console_application (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	exception_trace (yes)
+	inlining (no)
+
 
 cluster
 	root_cluster:		"$EIFFEL_SRC\help\wizards"
 
+
 	all dotnet_wizard (root_cluster):		"$\edotnet"
 
-	bench_common (root_cluster):		"$\bench_common"			
+	bench_common (root_cluster):		"$\bench_common"
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"desc"; "table_eiffel3"; "CVS"; 
 		visible
-			INTEGER_REF;
-			CHARACTER_REF;
-			BOOLEAN_REF;
-			REAL_REF;
-			DOUBLE_REF;
-			CELL;
-			STRING;
-			ARRAY;
+			integer_ref
+				end
+			character_ref
+				end
+			boolean_ref
+				end
+			real_ref
+				end
+			double_ref
+				end
+			cell
+				end
+			string
+				end
+			array
+				end
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
@@ -65,68 +77,88 @@ cluster
 
 	all wizard_library:		"$EIFFEL_SRC\library\wizard"
 		exclude
-			"unix"; "CVS"
+			"unix"; "CVS"; 
 		end
 
-	ise_utils:	"$EIFFEL_SRC\Eiffel\interface\new_graphical\to_be_moved"
-	
-	all com: 	"$EIFFEL_SRC\library\com"
+	all com:		"$EIFFEL_SRC\library\com"
 		exclude
-			"CVS";
+			"CVS"; 
 		visible
-			ECOM_DECIMAL;
-			ECOM_CURRENCY;
-			ECOM_ARRAY;
-			ECOM_VARIANT;
-			ECOM_GUID;
-			ECOM_EXCEP_INFO;
-			ECOM_DISP_PARAMS;
-			ECOM_STATSTG;
-			ECOM_STREAM;
-			ECOM_STORAGE;
-			ECOM_ROOT_STORAGE;
-			ECOM_ENUM_STATSTG;
-			ECOM_HRESULT;
-			ECOM_WIDE_STRING;
-			ECOM_LARGE_INTEGER;
-			ECOM_ULARGE_INTEGER;
-			ECOM_UNKNOWN_INTERFACE;
-			ECOM_AUTOMATION_INTERFACE;
-			ECOM_STUB;
-			ECOM_QUERIABLE;
+			ecom_decimal
+				end
+			ecom_currency
+				end
+			ecom_array
+				end
+			ecom_variant
+				end
+			ecom_guid
+				end
+			ecom_excep_info
+				end
+			ecom_disp_params
+				end
+			ecom_statstg
+				end
+			ecom_stream
+				end
+			ecom_storage
+				end
+			ecom_root_storage
+				end
+			ecom_enum_statstg
+				end
+			ecom_hresult
+				end
+			ecom_wide_string
+				end
+			ecom_large_integer
+				end
+			ecom_ularge_integer
+				end
+			ecom_unknown_interface
+				end
+			ecom_automation_interface
+				end
+			ecom_stub
+				end
+			ecom_queriable
+				end
 		end
 
-	all time: 	"$EIFFEL_SRC\library\time"
+	all time:		"$EIFFEL_SRC\library\time"
 		exclude
-			"french"; "german"; "Clib"; "CVS";
+			"french"; "german"; "Clib"; "CVS"; 
 		visible
 			date_time
 				end
 		end
-		
+
+	all assembly_retriver:		"$EIFFEL_SRC\bench\Eiffel\eiffel\il_generation\windows"
+
+	all fusion:		"$EIFFEL_SRC\bench\Eiffel\library\cli_writer"
+
 external
 
 	include_path:
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
-		"$(EIFFEL_SRC)\help\wizards\edotnet\Clib",
-		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Client\Clib",
-		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Client\Include",
-		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Common\Include",
 		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\time\Clib",
-		"$(EIFFEL_SRC)\library\wizard\help\Clib"
+		"$(EIFFEL_SRC)\library\wizard\help\Clib",
+		"$(EIFFEL_SRC)\bench\Eiffel\library\cli_writer\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\msc\lib\zlib.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\msc\lib\libpng.lib",
-		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Client\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com.lib",
 		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\library\time\spec\msc\lib\datetime.lib",
 		"$(EIFFEL_SRC)\library\wizard\help\Clib\htmlhelp.lib",
-		"$(EIFFEL_SRC)\library\wizard\help\Clib\shell32.lib"
+		"$(EIFFEL_SRC)\library\wizard\help\Clib\shell32.lib",
+		"$(EIFFEL_SRC)\bench\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
+		"corguids.lib"
 
 end

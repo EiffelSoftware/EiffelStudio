@@ -41,15 +41,14 @@ class ARRAYED_TREE [G] inherit
 			has as al_has,
 			readable as readable_child,
 			extend as al_extend,
+			extendible as al_extendible,
 			put as al_put,
 			replace as al_replace,
 			fill as al_fill,
 			writable as writable_child,
-			extendible as al_extendible,
 			remove as al_remove,
 			remove_left as al_remove_left,
 			remove_right as al_remove_right,
-			prunable as al_prunable,
 			linear_representation as al_lin_rep,
 			sequential_representation as al_seq_rep,
 			count as arity,
@@ -76,10 +75,13 @@ class ARRAYED_TREE [G] inherit
 			object_comparison as al_object_comparison			
 		export
 			{NONE}
-				al_extend, al_extendible,
-				al_remove, al_prunable,
-				al_put, al_replace,
-				al_fill, al_lin_rep, al_full;
+				al_extend,  al_duplicate,
+				al_remove,  al_make, 
+				al_put, al_replace, al_has,
+				al_fill,  al_full,
+				al_remove_left, al_remove_right, al_lin_rep, 
+				al_seq_rep, al_put_left, al_put_right,
+				al_merge_left, al_merge_right, al_object_comparison;
 		undefine
 			copy, is_equal, is_leaf, child_isfirst,
 			child_islast, valid_cursor_index,

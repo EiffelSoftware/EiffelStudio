@@ -15,12 +15,12 @@ class ARRAYED_CIRCULAR [G] inherit
 
 	DYNAMIC_CIRCULAR [G]
 		undefine
-			readable, isfirst
+			readable, isfirst, writable
 		redefine
-			start, islast
+			start, islast, wipe_out
 		select
 			remove, go_i_th, after, before, off,
-			prune_all, prune, first
+			prune_all, prune, first, forth
 		end;
 
 	LIST [G]
@@ -32,13 +32,14 @@ class ARRAYED_CIRCULAR [G] inherit
 			off as l_off, 
 			prune as l_prune,
 			prune_all as l_prune_all,
-			go_i_th as l_go_i_th
+			go_i_th as l_go_i_th,
+			forth as l_forth
 		export {NONE}
 			l_after, l_before, l_remove, l_first,
-			l_off, l_prune, l_prune_all, l_go_i_th
+			l_off, l_prune, l_prune_all, l_go_i_th, l_forth
 		undefine
 			last, exhausted, move, valid_cursor_index,
-			isfirst, readable, islast, start
+			isfirst, readable, islast, start, writable
 		end
 
 creation
@@ -53,8 +54,6 @@ feature -- Initialization
 			at_least_one: n >= 1
 		do
 			!!list.make (n)
-		ensure
-			new_count: count = n
 		end
 
 feature -- Measurement
@@ -96,9 +95,10 @@ feature -- Element change
 
 	extend (v : like item) is
 			-- Add `v' to end.
-			-- Do not move cursor.
+			-- Do not move cursor except when off.
 		do
 			list.extend (v)
+			if standard_index = 0 then list.forth end
 		end
 
 	merge_left (other : like Current) is
@@ -126,7 +126,7 @@ feature --  Access
 	cursor : CURSOR is
 			-- Current cursor position
 		do
-			Result := list.cursor
+			!CIRCULAR_CURSOR!Result.make (list.cursor, internal_exhausted, starter)
 		end
 
 feature -- Status report
@@ -145,8 +145,20 @@ feature -- Status report
 
 	valid_cursor (p : CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
+		local
+			c_c : CIRCULAR_CURSOR
 		do
-			Result := list.valid_cursor(p)
+			c_c ?= p;
+			if c_c /= Void then
+				Result := list.valid_cursor(c_c.cursor) and then
+					c_c.starter >= 0 and then c_c.starter <= count
+			end
+		end
+
+	writable : BOOLEAN is
+			-- Is there a current item that may be written?
+		do
+			Result := list.writable
 		end
 
 	isfirst: BOOLEAN is
@@ -177,10 +189,16 @@ feature -- Cursor movement
 
 	go_to (p : CURSOR) is
 			-- Move cursor to position `p'.
+		local
+			c_c : CIRCULAR_CURSOR
 		do
-			list.go_to(p)
+			c_c ?= p;
+			if c_c /= Void then
+				list.go_to (c_c.cursor)
+				internal_exhausted := c_c.internal_exhausted
+				starter := c_c.starter
+			end
 		end
-
 	set_start is
 			-- Select current item as the first.
 		do
@@ -210,7 +228,8 @@ feature -- Element removal
 			count > 1
 		do
 			if standard_isfirst then
-				standard_finish; remove
+				standard_finish;
+				 remove
 			else
 				standard_remove_left
 			end
@@ -231,12 +250,20 @@ feature -- Element removal
 			end
 		end;
 
+	wipe_out is
+			-- Remove all elements.
+		do
+			list.wipe_out
+			starter := 0
+			internal_exhausted := false
+		end;
+
 feature {ARRAYED_CIRCULAR} -- Implementation
 
 	fix_start_for_remove is
 			-- Before deletion, update starting position if necessary.
 		do
-			if count = 1 then
+			if count = 1 or starter = 0 then
 				starter := 0
 			elseif starter = standard_index then
 				if standard_islast then
@@ -340,10 +367,15 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 				list.start
 			end
 
+feature {NONE} -- Inapplicable
+
+	l_forth is
+		do
+		end
+
 invariant
-	count>= 0;
-	starter >= 1;
-	starter <= count
+	non_negative_count: count >= 0;
+	valid_starter: starter >= 0 and starter <= count
 
 end -- class ARRAYED_CIRCUALR
 

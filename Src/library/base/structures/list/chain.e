@@ -145,7 +145,7 @@ feature -- Cursor movement
 				go_i_th (1)
 			end
 		ensure then
-			(not empty) implies isfirst
+			at_first: (not empty) implies isfirst
 		end;
 
 	finish is
@@ -156,7 +156,7 @@ feature -- Cursor movement
 				go_i_th (count)
 			end
 		ensure then
-			(not empty) implies islast
+			at_last: (not empty) implies islast
 		end;
 
 	move (i: INTEGER) is
@@ -192,9 +192,9 @@ feature -- Cursor movement
 				end
 			end
 		ensure
-			too_far_right: (old index + i > count) implies off;
-			too_far_left: (old index + i < 1) implies off;
-			expected_index: (not off) implies (index = old index + i)
+			too_far_right: (old index + i > count) implies exhausted;
+			too_far_left: (old index + i < 1) implies exhausted;
+			expected_index: (not exhausted) implies (index = old index + i)
 		end;
 
 	go_i_th (i: INTEGER) is
@@ -206,8 +206,6 @@ feature -- Cursor movement
 		ensure
 			position_expected: index = i
 		end;
-
-
 
  feature -- Status report
 
@@ -225,7 +223,7 @@ feature -- Cursor movement
 		do
 			Result := not empty and (index = 1)
 		ensure
-			Result implies (not empty)
+			valid_position: Result implies (not empty)
 		end;
 
 	islast: BOOLEAN is
@@ -233,7 +231,7 @@ feature -- Cursor movement
 		do
 			Result := not empty and (index = count)
 		ensure
-			Result implies (not empty)
+			valid_position: Result implies (not empty)
 		end;
 
 	off: BOOLEAN is
@@ -260,7 +258,6 @@ feature -- Element change
 			replace (v)
 		ensure then
 	 		same_count: count = old count;
-			item_inserted: has (v)
 		end;
 
 	put_i_th (v: like item; i: INTEGER) is
@@ -294,8 +291,8 @@ feature -- Transformation
 			go_to (pos);
 			replace (new_item)
 		ensure
-	 		item = old i_th (i);
-	 		i_th (i) = old item
+	 		swapped_to_item: item = old i_th (i);
+	 		swapped_from_item: i_th (i) = old item
 		end;
 
 feature -- Duplication
@@ -349,7 +346,6 @@ feature {NONE} -- Inapplicable
 
 invariant
 
-	empty_list: empty implies off;
 	non_negative_index: index >= 0;
 	index_small_enough: index <= count + 1;
 	off_definition: off = ((index = 0) or (index = count + 1));

@@ -137,12 +137,6 @@ feature -- Access
 			end
 		end;
 
-
-
-
-
-
-
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
@@ -202,7 +196,7 @@ feature -- Modification & Insertion
 			item_put: right_sibling.item = v
 		end;
 
-	replace_child (n: like parent) is
+	put_child, replace_child (n: like parent) is
 			-- Assign `n' to child.
 		do
 			fl_replace (n);

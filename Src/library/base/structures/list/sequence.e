@@ -39,9 +39,9 @@ feature -- Status report
 
 feature -- Element change
 
-	put, force (v: like item) is
+	force (v: like item) is
 			-- Add `v' to end.
-		require else
+		require 
 			extendible
 		do
 			extend (v)
@@ -58,13 +58,21 @@ feature -- Element change
 			from
 				s.start
 			until
-				s.off
+				s.exhausted
 			loop
 				extend (s.item);
 				s.forth
 			end
 		ensure
 	 		new_count: count >= old count
+		end;
+
+	put (v: like item) is
+			-- Add `v' to end.
+		do
+			extend (v)
+		ensure then
+	 		new_count: count = old count + 1;
 		end;
 
 feature -- Removal

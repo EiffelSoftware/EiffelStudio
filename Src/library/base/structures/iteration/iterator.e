@@ -76,15 +76,6 @@ feature -- Cursor movement
 		deferred
 		end;
 
-	until_do is
-			-- Apply `action' to every item of `target' up to 
-			-- but excluding the first one not satisfying `test'.
-			-- (Apply to full list if all items satisfy `test'.)
-		require
-			traversable_exists: target /= Void
-		deferred
-		end;
-
 	do_until is
 			-- Apply `action' to every item of `target' up to 
 			-- and including the first one satisfying `test'.
@@ -94,6 +85,30 @@ feature -- Cursor movement
 		deferred
 		end;
 
+	do_while is
+			-- Apply `action' to every item of `target' up to 
+			-- and including the first one not satisfying `test'.
+			-- (from the `start' of `target')
+		deferred
+		end;
+
+	until_do is
+			-- Apply `action' to every item of `target' up to 
+			-- but excluding the first one satisfying `test'.
+			-- (Apply to full list if no items satisfy `test'.)
+		require
+			traversable_exists: target /= Void
+		deferred
+		end;
+
+	while_do is
+			-- Apply `action' to every item of `target' up to 
+			-- but excluding the first one satisfying not `test'.
+			-- (Apply to full list if all items satisfy `test'.)
+		require
+			traversable_exists: target /= Void
+		deferred
+		end;
 
 	forall: BOOLEAN is
 			-- Is `test' true for all items of `target'?

@@ -69,7 +69,7 @@ feature -- Basic operations
 				Result := n
 			end
 		ensure
-			Result >= 0
+			non_negative_result: Result >= 0
 		end;
 
 	sign (n: INTEGER): INTEGER is
@@ -84,9 +84,9 @@ feature -- Basic operations
 				Result := +1
 			end
 		ensure
-			(n < 0) = (Result = -1);
-			(n = 0) = (Result = 0);
-			(n > 0) = (Result = +1)
+			correct_negative: (n < 0) = (Result = -1);
+			correct_zero: (n = 0) = (Result = 0);
+			correct_positive: (n > 0) = (Result = +1)
 		end;
 		
 	max (n1, n2: INTEGER): INTEGER is
@@ -98,7 +98,7 @@ feature -- Basic operations
 				Result := n2
 			end;
 		ensure
-			(n2 >= n1) = (Result = n2) or else (n1 > n2) = (Result = n1)
+			is_maximum: (n2 >= n1) = (Result = n2) or else (n1 > n2) = (Result = n1)
 		end;
 
 	min (n1, n2: INTEGER): INTEGER is
@@ -110,7 +110,7 @@ feature -- Basic operations
 				Result := n2
 			end
 		ensure
-			(n2 <= n1) = (Result = n2) or else (n1 < n2) = (Result = n1)
+			is_minimum: (n2 <= n1) = (Result = n2) or else (n1 < n2) = (Result = n1)
 		end;
 
 	rsign (r: REAL): INTEGER is
@@ -125,9 +125,9 @@ feature -- Basic operations
 				Result := +1
 			end
 		ensure
-			(r < 0) = (Result = -1);
-			(r = 0) = (Result = 0);
-			(r > 0) = (Result = +1)
+			correct_negative: (r < 0) = (Result = -1);
+			correct_zero: (r = 0) = (Result = 0);
+			correct_positive: (r > 0) = (Result = +1)
 		end;
 		
 	rmax (r1, r2: REAL): REAL is
@@ -139,7 +139,7 @@ feature -- Basic operations
 				Result := r2
 			end
 		ensure
-			(r2 >= r1) = (Result = r2) or else (r1 > r2) = (Result = r1)
+			is_maximum: (r2 >= r1) = (Result = r2) or else (r1 > r2) = (Result = r1)
 		end;
 
 	rmin (r1, r2: REAL): REAL is
@@ -151,7 +151,7 @@ feature -- Basic operations
 				Result := r2
 			end
 		ensure
-			(r2 <= r1) = (Result = r2) or else (r1 < r2) = (Result = r1)
+			is_minimum: (r2 <= r1) = (Result = r2) or else (r1 < r2) = (Result = r1)
 		end;
 
 	bottom_int_div (n1, n2: INTEGER): INTEGER is

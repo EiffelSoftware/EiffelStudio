@@ -15,14 +15,15 @@ class LINKED_STACK [G] inherit
 		undefine
 			replace
 		select
-			item
+			item, put
 		end;
 
 	LINKED_LIST [G]
 		rename
 			item as ll_item,
 			remove as ll_remove,
-			remove_right as remove
+			remove_right as remove,
+			put as ll_put
 		export
 			{NONE} all;
 			{ANY}
@@ -30,7 +31,7 @@ class LINKED_STACK [G] inherit
 				make, wipe_out
 		undefine
 			readable, writable, fill,
-			append, linear_representation, put,
+			append, linear_representation,
 			prune_all
 		redefine
 			extend, force, duplicate
@@ -49,9 +50,9 @@ feature -- Access
 		require else
 			not empty
 		do
-				check
-					before and not empty implies (active = first_element)
-				end;
+			check
+				before and not empty implies (active = first_element)
+			end;
 			Result := first_element.item
 		end;
 
@@ -86,7 +87,7 @@ feature -- Conversion
 				after
 			loop
 				Result.extend (ll_item);
-			forth;
+				forth;
 			end;
 			start;
 			back

@@ -148,6 +148,14 @@ feature {SORTED_TWO_WAY_LIST} -- Implementation
 			!! Result.make
 		end;
 
+feature {NONE} -- Obsolete
+
+	add (v: like item) is
+		obsolete "Use ``extend'' instead"
+		do
+			extend (v)
+		end
+
 end -- class SORTED_TWO_WAY_LIST
 
 

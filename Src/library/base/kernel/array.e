@@ -58,8 +58,8 @@ feature -- Initialization
 				make_area (0)
 			end;
 		ensure
-			(minindex > maxindex) implies (capacity = 0);
-			(minindex <= maxindex) implies (capacity = maxindex - minindex + 1)
+			no_capacity: (minindex > maxindex) implies (capacity = 0);
+			capacity_constraint: (minindex <= maxindex) implies (capacity = maxindex - minindex + 1)
 		end;
 
 	setup (other: like Current) is
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 invariant
 
 	consistent_size: capacity = upper - lower + 1;
-	non_negative_size: capacity >= 0;
+	non_negative_capacity: capacity >= 0;
 
 end -- class ARRAY
 

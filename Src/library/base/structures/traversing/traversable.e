@@ -40,8 +40,6 @@ feature -- Cursor movement
 	start is
 			-- Move to first position if any.
 		deferred
-		ensure
-			empty implies off
 		end;
 
 invariant

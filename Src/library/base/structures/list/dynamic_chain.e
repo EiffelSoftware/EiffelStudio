@@ -78,7 +78,7 @@ feature -- Element change
 		ensure
 	 		new_count: count = old count + old other.count;
 	 		new_index: index = old index + old other.count;
-			is_empty: other.empty
+			other_is_empty: other.empty
 		end;
 
 	merge_right (other: like Current) is
@@ -92,7 +92,7 @@ feature -- Element change
 		ensure
 	 		new_count: count = old count + old other.count;
 	 		same_index: index = old index;
-			is_empty: other.empty
+			other_is_empty: other.empty
 		end;
 
 feature -- Removal

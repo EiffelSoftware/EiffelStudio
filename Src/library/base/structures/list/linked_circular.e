@@ -15,7 +15,7 @@ class LINKED_CIRCULAR [G] inherit
 
 	DYNAMIC_CIRCULAR [G]
 		undefine
-			readable, isfirst
+			readable, isfirst, writable
 		redefine
 			start, islast
 		select
@@ -38,7 +38,7 @@ class LINKED_CIRCULAR [G] inherit
 			l_off, l_prune, l_prune_all, l_go_i_th
 		undefine
 			last, exhausted, move, valid_cursor_index,
-			isfirst, readable, islast, start
+			isfirst, readable, islast, start, writable
 		end
 
 creation
@@ -122,7 +122,7 @@ feature --  Access
 	cursor : CURSOR is
 			-- Current cursor position
 		do
-			Result := list.cursor
+			!CIRCULAR_CURSOR!Result.make (list.cursor, internal_exhausted, starter)
 		end
 
 feature -- Status report
@@ -138,8 +138,19 @@ feature -- Status report
 
 	valid_cursor (p : CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
+		local
+			c_c : CIRCULAR_CURSOR
 		do
-			Result := list.valid_cursor(p)
+			c_c ?= p;
+			if c_c /= Void then
+				Result := list.valid_cursor(c_c.cursor) 
+			end
+		end
+
+	writable : BOOLEAN is
+			-- Is there a current item that may be written?
+		do
+			Result := list.writable
 		end
 
 	isfirst: BOOLEAN is
@@ -170,8 +181,15 @@ feature -- Cursor movement
 
 	go_to (p : CURSOR) is
 			-- Move cursor to position `p'.
+		local
+			c_c : CIRCULAR_CURSOR
 		do
-			list.go_to(p)
+			c_c ?= p;
+			if c_c /= Void then
+				list.go_to (c_c.cursor)
+				internal_exhausted := c_c.internal_exhausted
+				starter := c_c.starter
+			end
 		end
 
 	set_start is

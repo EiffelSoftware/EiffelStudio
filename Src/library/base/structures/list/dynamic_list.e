@@ -103,7 +103,7 @@ feature -- Removal
 			-- (or after if no right neighbor).
 		deferred
 		ensure then
-			empty implies after
+			after_when_empty: empty implies after
 		end;
 
 	remove_left is
@@ -126,7 +126,7 @@ feature -- Removal
 			chain_wipe_out;
 			back
 		ensure then
-			before: before
+			is_before: before
 		end;
 
 end -- class DYNAMIC_LIST

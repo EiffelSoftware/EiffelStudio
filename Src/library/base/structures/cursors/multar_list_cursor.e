@@ -18,10 +18,11 @@ creation
 
 feature {MULTI_ARRAY_LIST} -- Initialization
 
-	make (active_element: like active; current_index: INTEGER) is
+	make (active_element: like active; current_active_index, current_index: INTEGER) is
 			-- Create a cursor and set it up on `active_element'.
 		do
 			active := active_element;
+			active_index := current_active_index
 			index := current_index
 		end;
 
@@ -30,8 +31,11 @@ feature {MULTI_ARRAY_LIST} -- Implementation
 	active: BI_LINKABLE [ARRAYED_LIST [G]];
 		-- Current element in array_sequence list
 
-	index: INTEGER;
+	active_index: INTEGER;
 		-- Index relative to `active.item'
+
+	index: INTEGER
+		-- Index in array_sequence list
 
 end -- class MULTAR_LIST_CURSOR
 

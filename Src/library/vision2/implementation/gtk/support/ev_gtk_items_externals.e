@@ -134,11 +134,11 @@ feature {NONE} -- GTK C function for tree items
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_tree_item_select (item: POINTER) is
+	gtk_tree_item_select (treeItem: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_tree_item_deselect (item: POINTER) is
+	gtk_tree_item_deselect (treeItem: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
 
@@ -151,6 +151,10 @@ feature {NONE} -- GTK C function for tree items
 		end
 
 	c_gtk_tree_item_expanded (item: POINTER): BOOLEAN is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_tree_item_is_selected (tree: POINTER; treeItem: POINTER): BOOLEAN is
 		external "C | %"gtk_eiffel.h%""
 		end
 

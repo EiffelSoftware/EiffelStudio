@@ -86,7 +86,7 @@ feature -- Element change
 			bit_count_set: bit_count = a_bit_count
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

@@ -120,7 +120,7 @@ feature -- Conversion
 			cwin_screen_to_client (window.item, item)
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

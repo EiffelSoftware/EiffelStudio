@@ -254,7 +254,7 @@ feature -- Comparison
 			Result := cwin_equal_rect (item, other.item)
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

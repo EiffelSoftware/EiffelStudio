@@ -332,6 +332,18 @@ feature -- Implementation
 			temp_ptr := feature {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
 			Result := temp_mask
 		end
+
+	enable_debugger is
+			-- Enable the Eiffel debugger
+		do
+			set_debug_mode (1)
+		end
+
+	disable_debugger is
+			-- Disable the Eiffel debugger
+		do
+			set_debug_mode (0)
+		end
 		
 feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 
@@ -421,6 +433,14 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 		end
 
 feature {NONE} -- External implementation
+
+	set_debug_mode (a_mode: INTEGER) is
+			-- Set the value of run time value `debug_mode' to turn Eiffel debugger on or off
+		require
+			valid_mode: a_mode = 0 or a_mode = 1
+		external
+			"C use %"ev_any_imp.h%""
+		end
 
 	enable_ev_gtk_log (a_mode: INTEGER) is
 			-- Connect GTK+ logging to Eiffel exception handler.

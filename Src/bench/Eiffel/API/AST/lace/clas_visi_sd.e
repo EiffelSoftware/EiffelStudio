@@ -132,6 +132,9 @@ feature {COMPILER_EXPORTER}
 			else
 				Result := visible_name;
 			end;
+		ensure
+			external_name_not_void: Result /= Void
+			external_name_in_upper: Result.as_upper.is_equal (Result)
 		end;
 
 	adapt is
@@ -209,6 +212,11 @@ feature {COMPILER_EXPORTER}
 		ensure
 			Result_exists: Result /= Void;
 		end;
+
+invariant
+	class_name_not_void: class_name /= Void
+	class_name_in_upper: class_name.as_upper.is_equal (class_name)
+	visible_name_in_upper: visible_name /= Void implies visible_name.as_upper.is_equal (visible_name)
 	
 end -- class CLAS_VISI_SD
 

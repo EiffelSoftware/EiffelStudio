@@ -6,6 +6,9 @@ deferred class
 	
 inherit
 	EV_ABSTRACT_PICK_AND_DROPABLE
+		undefine
+			default_pixmaps
+		end
 
 feature
 

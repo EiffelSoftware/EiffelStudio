@@ -12,9 +12,9 @@ inherit
 			make
 		end
 
-	EB_GRAPHICAL_PARAMETERS
+	EB_GRAPHICAL_DATA
 		rename
-			make as jnmhr_teiopgheroiu_gnfhmbre98owig
+			Graphical_resources as resources
 		end
 			-- as you can figure out, this rename clause is NOT meant to be permanent
 
@@ -52,16 +52,16 @@ feature -- reset
 			Create Result.make
 
 			Result.add_character_format_with_regions
-				(object_text.actual_value, <<1, 6>>)
+				(resources.object_text.actual_value, <<1, 6>>)
 
 			Result.add_character_format_with_regions
-				(default_text.actual_value, <<7, 12, 17, 23, 28, 34>>)
+				(resources.default_text.actual_value, <<7, 12, 17, 23, 28, 34>>)
 
 			Result.add_character_format_with_regions
-				(class_text.actual_value, <<13, 16, 24, 27>>)
+				(resources.class_text.actual_value, <<13, 16, 24, 27>>)
 
 			Result.add_character_format_with_regions
-				(feature_text.actual_value, <<35, 44>>)
+				(resources.feature_text.actual_value, <<35, 44>>)
 		end
 
 end -- class EB_TEXT_SAMPLE_DISPLAY

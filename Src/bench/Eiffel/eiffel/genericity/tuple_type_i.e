@@ -26,13 +26,13 @@ feature
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 			-- NOTE: any two TUPLES are considered to be 
-			-- the same except for `expandednessï.
+			-- the same except for `expandedness'.
 		local
 			tuple_type_i: TUPLE_TYPE_I
 		do
 			tuple_type_i ?= other
 			if tuple_type_i /= Void then
-				Result := (is_true_expanded = tuple_type_i.is_true_expanded)
+				Result := (is_expanded = tuple_type_i.is_expanded)
 			end
 		end
 
@@ -53,7 +53,7 @@ feature
 			end
 
 			create Result.make (class_id, array)
-			Result.set_is_true_expanded (is_true_expanded)
+			Result.set_is_expanded (is_expanded)
 		end
 
 	il_type_name (a_prefix: STRING): STRING is
@@ -113,8 +113,6 @@ feature -- Generic conformance
 			else
 				buffer.putint (Tuple_type)
 				buffer.putstring (", ")
-				buffer.putint (0)
-				buffer.putstring (", ")
 				buffer.putint (true_generics.count)
 				buffer.putstring (", ")
 				buffer.putint (generated_id (final_mode))
@@ -142,7 +140,6 @@ feature -- Generic conformance
 				cr_info.make_gen_type_byte_code (ba)
 			else
 				ba.append_short_integer (Tuple_type)
-				ba.append_short_integer (0)
 				ba.append_short_integer (true_generics.count)
 				ba.append_short_integer (generated_id (False))
 	
@@ -169,15 +166,12 @@ feature -- Generic conformance
 			else
 				buffer.putint (Tuple_type)
 				buffer.putstring (", ")
-				buffer.putint (0)
-				buffer.putstring (", ")
 				buffer.putint (true_generics.count)
 				buffer.putstring (", ")
 				buffer.putint (generated_id (final_mode))
 				buffer.putstring (", ")
 	
-					-- Increment counter by 4
-				dummy := idx_cnt.next
+					-- Increment counter by 3
 				dummy := idx_cnt.next
 				dummy := idx_cnt.next
 				dummy := idx_cnt.next
@@ -204,8 +198,7 @@ feature -- Generic conformance
 					-- It's an anchored type 
 				cr_info.generate_cid_init (buffer, final_mode, idx_cnt)
 			else
-					-- Increment counter by 4
-				dummy := idx_cnt.next
+					-- Increment counter by 3
 				dummy := idx_cnt.next
 				dummy := idx_cnt.next
 				dummy := idx_cnt.next

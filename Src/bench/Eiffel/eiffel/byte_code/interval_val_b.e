@@ -27,6 +27,7 @@ feature -- Comparison
 			-- Is `other' next to Current?
 		require
 			other_not_void: other /= Void
+			same_type: same_type (other)
 		deferred
 		end
 		
@@ -43,6 +44,8 @@ feature -- Measurement
 			-- Distance between `other' and Current
 		require
 			other_not_void: other /= Void
+			same_type: same_type (other)
+			other_not_less: other >= Current
 		deferred
 		ensure
 			non_negative_result: Result >= 0
@@ -55,6 +58,8 @@ feature -- Iteration
 			-- inclusion of bounds in the range is specified by `is_included' and `is_other_included'.
 		require
 			other_not_void: other /= Void
+			same_type: same_type (other)
+			other_not_less: other >= Current
 			action_not_void: action /= Void
 		deferred
 		end
@@ -66,6 +71,7 @@ feature -- Evaluation
 		require
 			upper_not_void: upper /= Void
 			same_type: same_type (upper)
+			upper_not_less: upper >= Current
 		do
 			create Result.make (Current, upper)
 		ensure
@@ -115,6 +121,7 @@ feature {INTERVAL_B} -- IL code generation
 		require
 			other_not_void: other /= Void
 			same_type: same_type (other)
+			other_not_less: other >= Current
 		deferred
 		end
 

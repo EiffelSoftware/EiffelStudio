@@ -30,6 +30,18 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	tool_tip: STRING is
+			-- Class Tool Tip.
+		do
+			-- Put Implementation here.
+		end
+
+	is_in_system: BOOLEAN is
+			-- Is class in system?
+		do
+			-- Put Implementation here.
+		end
+
 	feature_names: ECOM_ARRAY [STRING] is
 			-- List of names of class features.
 		do

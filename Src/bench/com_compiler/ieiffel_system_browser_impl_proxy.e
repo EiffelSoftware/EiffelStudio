@@ -73,6 +73,20 @@ feature -- Basic Operations
 			Result := ccom_feature_descriptor (initializer, class_name1, feature_name)
 		end
 
+	substring_search_classes (a_string: STRING): IENUM_CLASS_INTERFACE is
+			-- Search classes with names matching `a_string'.
+			-- `a_string' [in].  
+		do
+			Result := ccom_substring_search_classes (initializer, a_string)
+		end
+
+	substring_search_features (a_string: STRING): IENUM_FEATURE_INTERFACE is
+			-- Search feature with names matching `a_string'.
+			-- `a_string' [in].  
+		do
+			Result := ccom_substring_search_features (initializer, a_string)
+		end
+
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -123,6 +137,18 @@ feature {NONE}  -- Externals
 			-- Feature descriptor.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
+		end
+
+	ccom_substring_search_classes (cpp_obj: POINTER; a_string: STRING): IENUM_CLASS_INTERFACE is
+			-- Search classes with names matching `a_string'.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
+		end
+
+	ccom_substring_search_features (cpp_obj: POINTER; a_string: STRING): IENUM_FEATURE_INTERFACE is
+			-- Search feature with names matching `a_string'.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_delete_ieiffel_system_browser_impl_proxy (a_pointer: POINTER) is

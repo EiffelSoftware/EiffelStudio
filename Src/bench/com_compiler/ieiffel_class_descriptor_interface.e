@@ -31,6 +31,20 @@ feature -- Status Report
 			Result := True
 		end
 
+	tool_tip_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `tool_tip'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	is_in_system_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_in_system'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	feature_names_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `feature_names'.
 			-- Redefine in descendants if needed.
@@ -172,6 +186,22 @@ feature -- Basic Operations
 			-- Class external name.
 		require
 			external_name_user_precondition: external_name_user_precondition
+		deferred
+
+		end
+
+	tool_tip: STRING is
+			-- Class Tool Tip.
+		require
+			tool_tip_user_precondition: tool_tip_user_precondition
+		deferred
+
+		end
+
+	is_in_system: BOOLEAN is
+			-- Is class in system?
+		require
+			is_in_system_user_precondition: is_in_system_user_precondition
 		deferred
 
 		end

@@ -24,6 +24,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	tool_tip: STRING is
+			-- Cluster Tool Tip.
+		do
+			-- Put Implementation here.
+		end
+
 	classes: IENUM_CLASS_INTERFACE is
 			-- List of classes in cluster.
 		do
@@ -50,6 +56,30 @@ feature -- Access
 
 	cluster_path: STRING is
 			-- Full path to cluster.
+		do
+			-- Put Implementation here.
+		end
+
+	relative_path: STRING is
+			-- Relative path to cluster.
+		do
+			-- Put Implementation here.
+		end
+
+	is_override_cluster: BOOLEAN is
+			-- Should this cluster classes take priority over other classes with same name?
+		do
+			-- Put Implementation here.
+		end
+
+	is_library: BOOLEAN is
+			-- Should this cluster be treated as library?
+		do
+			-- Put Implementation here.
+		end
+
+	is_recursive: BOOLEAN is
+			-- Should subclusters be included recursively?
 		do
 			-- Put Implementation here.
 		end

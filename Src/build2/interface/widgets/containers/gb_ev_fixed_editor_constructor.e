@@ -759,6 +759,7 @@ feature {NONE} -- Implementation
 			-- check for movement/resizing.
 		local
 			widget: EV_WIDGET
+			list_item: EV_LIST_ITEM
 		do
 			if selected_item_index > 0 then
 				widget := first.i_th (selected_item_index)
@@ -810,6 +811,29 @@ feature {NONE} -- Implementation
 						drawing_area.enable_capture	
 					end
 				end
+			end
+			if a_button = 1 and not resizing_widget and not moving_widget then
+					-- Now select a widget if a user is pressing the left mous button while over
+					-- a widget in the view.
+				from
+					first.start
+				until
+					first.off
+				loop
+					widget := first.item
+					if x > widget.x_position and x < widget.x_position + widget.width and
+						y > widget.y_position and y < widget.y_position + widget.height then
+						selected_item_index := first.index
+						list_item := list.i_th (selected_item_index)
+						list_item.select_actions.block
+						list_item.enable_select
+						list_item.select_actions.resume
+					end
+					if not first.after then
+						first.forth
+					end
+				end
+				draw_widgets
 			end
 		end
 		

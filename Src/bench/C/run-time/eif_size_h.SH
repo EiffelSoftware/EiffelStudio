@@ -63,6 +63,8 @@ $spitshell >>eif_size.h <<'!NO!SUBS!'
 #define DBLPAD(n) (((((n)*DBLSIZ)/ALIGN)+((((n)*DBLSIZ)%ALIGN)?1:0))*ALIGN)
 #define PTRPAD(n) (((((n)*PTRSIZ)/ALIGN)+((((n)*PTRSIZ)%ALIGN)?1:0))*ALIGN)
 
+#define LNGPAD_2 $lngpad_2
+
 #endif
 !NO!SUBS!
 chmod 755 eif_size.h

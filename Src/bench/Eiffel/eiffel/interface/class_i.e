@@ -449,8 +449,6 @@ feature {COMPILER_EXPORTER} -- Compiled class
 				create {POINTER_B} Result.make (Current, True)
 			elseif Current = local_system.special_class then
 				create {SPECIAL_B} Result.make (Current)
-			elseif Current = local_system.to_special_class then
-				create {TO_SPECIAL_B} Result.make (Current)
 			elseif Current = local_system.array_class then
 				create {ARRAY_CLASS_B} Result.make (Current)
 			elseif Current = local_system.string_class then

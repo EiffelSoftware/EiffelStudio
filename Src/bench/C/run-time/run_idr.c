@@ -174,7 +174,7 @@ rt_private void run_idr_write (IDR *bu)
 
 	host_send = htons (send_size);
 
-	if ((char_write_func (&host_send, sizeof (short))) < sizeof (short))
+	if ((char_write_func ((char *)&host_send, sizeof (short))) < sizeof (short))
 		eio();
 
 	while (send_size > 0) {

@@ -183,7 +183,9 @@ rt_public void fatal_error(char *msg);			/* Run-time raised fatal errors */
 rt_public void xraise(int code);			/* Raises an exception with no tag */
 rt_public struct ex_vect *exset(char *name, int origin, char *object);	/* Set execution stack on routine entrance */
 rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, BODY_INDEX bid);	/* Set execution stack on routine entrance */
+#ifndef WORKBENCH
 rt_public struct ex_vect *exft(void);	/* Entry in feature with rescue clause */
+#endif
 
 /* Exception recovery mechanism */
 rt_public void exok(void);				/* Resumption has been successful */
@@ -453,6 +455,7 @@ rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsign
 	return vector;		/* Execution vector of current Eiffel routine */
 }
 
+#ifndef WORKBENCH
 rt_public struct ex_vect *exft(void)
 {
 	/* Get an execution vector, in final mode. We don't bother setting the
@@ -489,6 +492,7 @@ rt_public struct ex_vect *exft(void)
 
 	return vector;		/* Execution vector of current Eiffel routine */
 }
+#endif
 
 rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 		/* Exec. vector of enclosing routine */
@@ -625,7 +629,7 @@ rt_public void exasrt(char *tag, int type)
  * exceptions and perform some cleanup (e.g. in a retrieve operation).
  */
 
-rt_public void excatch(jmp_buf *jmp)
+rt_shared void excatch(jmp_buf *jmp)
 		/* The jump buffer used to catch exception */
 {
 	/* Push a pseudo EX_OSTK execution vector on the exception stack. Whenever
@@ -657,6 +661,116 @@ rt_public void excatch(jmp_buf *jmp)
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 }
+
+/*
+doc:	<routine name="extre" export="public">
+doc:		<summary>Insert an execution vector to post-process exceptions
+doc:		that can be raised during routine execution. E.g., this is
+doc:		required for once routine to update its result on exception.
+doc:		"tre" = TRy Enter.</summary>
+doc:		<return>Execution vector at the top of execution stack.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_public struct ex_vect * extre(void)
+{
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+
+	struct ex_vect *vector; /* Item at the top of the calling stack */
+	struct ex_vect v;
+
+		/* Get last execution vector */
+	vector = extop(&eif_stack);
+
+#ifdef MAY_PANIC
+	if (vector == 0)
+		eif_panic("Missing outer execution vector.");
+	if (vector->ex_type != EX_CALL)
+		eif_panic("Wrong type of outer execution vector.");
+#endif
+
+		/* Save routine execution vector. */
+	v = *vector;
+
+	SIGBLOCK;	/* Critical section, protected against signals */
+
+		/* Put a post-processing vector without catch point
+		 * that will be set after executing `setjmp' to avoid
+		 * state when `ex_jbuf' is set, but not initialized. */
+	vector->ex_type = EX_OSTK;
+	vector->ex_jbuf = (jmp_buf *) 0;
+
+		/* Allocate new execution vector. */
+	vector = exget(&eif_stack);
+	if (vector == (struct ex_vect *) 0) {	/* No more memory */
+		echmem |= MEM_FULL;		/* Exception stack incomplete */
+		xraise(EN_MEM);			/* Non-critical exception */
+	}
+	else {
+			/* Put original routine execution vector to the top. */
+		*vector = v;
+	}
+
+	SIGRESUME;	/* End of critical section, dispatch queued signals */
+
+	return vector;
+}
+
+/*
+doc:	<routine name="extrl" export="public">
+doc:		<summary>Remove post-processing execution vector installed by
+doc:		`extre'. "trl" = TRy Leave.</summary>
+doc:		<return>Execution vector at the top of execution stack.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_public struct ex_vect * extrl(void)
+{
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+
+	struct ex_vect *vector; /* Item at the top of the calling stack */
+	struct ex_vect v;
+
+		/* Get last execution vector. */
+	vector = extop(&eif_stack);
+
+#ifdef MAY_PANIC
+	if (vector == 0)
+		eif_panic("Missing execution vector.");
+	if (vector->ex_type != EX_CALL && vector->ex_type != EX_RESC && vector->ex_type != EX_RETY)
+		eif_panic("Wrong type of execution vector.");
+#endif
+
+		/* Save routine execution vector. */
+	v = *vector;
+	
+	SIGBLOCK;	/* Critical section, protected against signals */
+
+		/* Remove item from the top. */
+	expop(&eif_stack);
+
+		/* Get last execution vector. */
+	vector = extop(&eif_stack);
+
+#ifdef MAY_PANIC
+	if (vector == 0)
+		eif_panic("Missing 'try' execution vector.");
+	if (vector->ex_type != EX_OSTK)
+		eif_panic("Wrong type of 'try' execution vector.");
+#endif
+
+		/* Restore routine execution vector. */
+	*vector = v;
+
+	SIGRESUME;	/* End of critical section, dispatch queued signals */
+
+	return vector;
+}
+
 
 #ifdef EIF_WIN32
 rt_private LONG WINAPI windows_exception_filter (LPEXCEPTION_POINTERS an_exception)

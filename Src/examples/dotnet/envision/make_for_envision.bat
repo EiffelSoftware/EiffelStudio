@@ -299,6 +299,7 @@ mkdir widgets
 cd widgets
 copy %EIFFEL_SRC%\examples\vision2\widgets\*.e 
 copy ..\\..\\eiffel_project.eifp .\\widgets.eifp
+copy %EIFFEL_SRC%\examples\vision2\widgets\*.png 
 mkdir debug
 mkdir release
 copy ..\\..\\..\\template_aces\\widgets_debug.ace .\\debug\\ace.ace
@@ -317,6 +318,7 @@ mkdir step1
 cd step1
 copy %EIFFEL_SRC%\examples\wel\tutorial\step1\*.e 
 copy %EIFFEL_SRC%\examples\wel\tutorial\step1\app.ico 
+copy %EIFFEL_SRC%\examples\wel\tutorial\step1\*.rc 
 mkdir debug
 mkdir release
 cd ..\\..
@@ -332,6 +334,7 @@ mkdir step2
 cd step2
 copy %EIFFEL_SRC%\examples\wel\tutorial\step2\*.e 
 copy %EIFFEL_SRC%\examples\wel\tutorial\step2\app.ico 
+copy %EIFFEL_SRC%\examples\wel\tutorial\step2\*.rc 
 mkdir debug
 mkdir release
 cd ..\\..
@@ -347,6 +350,7 @@ mkdir step3
 cd step3
 copy %EIFFEL_SRC%\examples\wel\tutorial\step3\*.e 
 copy %EIFFEL_SRC%\examples\wel\tutorial\step3\app.ico 
+copy %EIFFEL_SRC%\examples\wel\tutorial\step3\*.rc 
 mkdir debug
 mkdir release
 cd ..\\..
@@ -362,6 +366,7 @@ mkdir step4
 cd step4
 copy %EIFFEL_SRC%\examples\wel\tutorial\step4\*.e 
 copy %EIFFEL_SRC%\examples\wel\tutorial\step4\app.ico 
+copy %EIFFEL_SRC%\examples\wel\tutorial\step4\*.rc 
 mkdir debug
 mkdir release
 cd ..\\..
@@ -376,6 +381,7 @@ cd wel
 mkdir step5
 cd step5
 copy %EIFFEL_SRC%\examples\wel\tutorial\step5\*.e 
+copy %EIFFEL_SRC%\examples\wel\tutorial\step5\*.rc 
 mkdir debug
 mkdir release
 cd ..\\..
@@ -390,6 +396,7 @@ cd wel
 mkdir step6
 cd step6
 copy %EIFFEL_SRC%\examples\wel\tutorial\step6\*.e 
+copy %EIFFEL_SRC%\examples\wel\tutorial\step6\*.rc 
 mkdir debug
 mkdir release
 cd ..\\..
@@ -404,6 +411,7 @@ cd wel
 mkdir step7
 cd step7
 copy %EIFFEL_SRC%\examples\wel\tutorial\step7\*.e 
+copy %EIFFEL_SRC%\examples\wel\tutorial\step7\*.rc 
 mkdir debug
 mkdir release
 cd ..\\..
@@ -418,6 +426,7 @@ cd wel
 mkdir step8
 cd step8
 copy %EIFFEL_SRC%\examples\wel\tutorial\step8\*.e 
+copy %EIFFEL_SRC%\examples\wel\tutorial\step8\*.rc 
 mkdir debug
 mkdir release
 cd ..\\..
@@ -433,6 +442,8 @@ mkdir xcell
 cd xcell
 copy %EIFFEL_SRC%\examples\wel\xcell\*.e
 copy %EIFFEL_SRC%\examples\wel\xcell\*.bmp
+copy %EIFFEL_SRC%\examples\wel\xcell\*.ico 
+copy %EIFFEL_SRC%\examples\wel\xcell\*.rc 
 mkdir debug
 mkdir release
 cd ..\\..

@@ -4284,6 +4284,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- Assign `cl' to `main_parent'.
 		require
 			cl_not_void: cl /= Void
+			il_generation: System.il_generation
 		do
 			main_parent := cl
 		ensure

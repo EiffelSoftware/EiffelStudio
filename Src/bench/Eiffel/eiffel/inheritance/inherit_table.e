@@ -415,7 +415,9 @@ end;
 			a_class.update_generic_features
 
 				-- Find main_parent of current class.
-			compute_main_parent (resulting_table)
+			if System.il_generation then
+				compute_main_parent (resulting_table)
+			end
 
 				-- Put the resulting table in the temporary feature table
 				-- server.
@@ -1421,6 +1423,7 @@ feature {NONE} -- Implementation
 			-- Set `number_of_features' and `main_parent' of `a_class'
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
+			il_generation: System.il_generation
 		local
 			l_parent, l_main_parent: CLASS_C
 			l_number_of_features, l_max: INTEGER

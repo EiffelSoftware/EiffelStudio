@@ -61,7 +61,9 @@ feature -- Access
 			l: LIST [CLASS_I]
 		do
 			Result := selector.text
-			if Result.is_empty then
+			if Result.is_empty or Result.index_of (' ', 1) > 0 then
+					-- Nothing to do as it is empty, or either containing an invalid name
+					-- or simply an anchore type `like x'.
 			else
 				Result.to_upper
 				if expanded_needed then
@@ -84,18 +86,13 @@ feature -- Access
 						gts.after
 					loop
 						generic_type_name := gts.item.code
-						if generic_type_name /= Void then
-							generic_type_name := generic_type_name.as_upper
-							Result.append (generic_type_name)
-						end
+						Result.append (generic_type_name)
 						gts.forth
 						if not gts.after then
 							Result.append (", ")
 						end
 					end
 					Result.append ("]")
-				elseif is_tuple then
-					Result.append (" []")
 				end
 			end
 		end

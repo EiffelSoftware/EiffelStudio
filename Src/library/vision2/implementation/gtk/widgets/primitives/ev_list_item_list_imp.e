@@ -90,10 +90,11 @@ feature {NONE} -- Initialization
 				agent select_callback,
 				Void
 			)
-			temp_sig_id := c_signal_connect (
-					visual_widget,
-					eiffel_to_c ("button-press-event"),
-					agent on_list_clicked
+			real_signal_connect (
+				visual_widget,
+				"button-press-event",
+				agent on_list_clicked,
+				Default_translate
 			)
 		end
 

@@ -29,14 +29,20 @@ feature {NONE}
 			Result := command_catalog
 		end;
 
-	element: CMD;
+	element: USER_CMD;
 
 	page: COMMAND_PAGE;
+
+	parent_type: USER_CMD;
 
 	catalog_work is
 		do
 			parent_work;
+			parent_type ?= element.parent_type;
 			element.remove_class;
+			if parent_type /= Void then
+				parent_type.remove_descendent (element)
+			end
 		end;
 
 feature
@@ -45,10 +51,16 @@ feature
 		do
 			parent_redo
 			element.remove_class;
+			if parent_type /= Void then
+				parent_type.remove_descendent (element)
+			end
 		end;
 
 	undo is
 		do
+			if parent_type /= Void then
+				parent_type.add_descendent (element)
+			end
 			parent_undo;
 			element.recreate_class;
 		end;

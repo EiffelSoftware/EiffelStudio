@@ -2511,8 +2511,7 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, int16 new_id)
 /* max_id : maximal ancestor id; RTUD (no)                          */
 /*------------------------------------------------------------------*/
 
-rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16 min_id, int16 max_id)
-{
+rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16 min_id, int16 max_id) {
 	EIF_ANC_ID_MAP *result;
 	int16 *map, size;
 
@@ -2525,25 +2524,20 @@ rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16 min_id, int16 max_id)
 	result->max_id = max_id;
 	result->map    = result->smap;
 
-	if (min_id <= max_id)
-	{
+	if (min_id <= max_id) {
 		size = (max_id - min_id + 1);
 
-		if (size > 8)
-		{
-			map = (int16 *) eif_malloc (size*sizeof(int16));
+		if (size > 8) {
+			map = (int16 *) eif_calloc (size * sizeof(int16));
 
 			if (map == (int16 *) 0)
 				enomem ();
 
 			result->map = map;
-		}
-
-		memset (result->map, '\0', size*sizeof(int16));
-	}
-	else
-	{
-		memset (result->map, '\0', 8*sizeof(int16));
+		} else
+			memset (result->map, '\0', size * sizeof(int16));
+	} else {
+		memset (result->map, '\0', 8 * sizeof(int16));
 	}
 
 	return result;

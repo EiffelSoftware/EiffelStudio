@@ -11,6 +11,10 @@ iff not isdir %INSTALL_DIR\docs then
 	echo No destination directory for the documentation
 	CANCEL
 endiff
+iff "%@SEARCH[hhc.exe]" == "" then
+	echo Cannot find a version of HTML Help. Cannot continue
+	CANCEL
+endiff
 
 remtrace --------------------------------------------------------
 remtrace Checkout up to date version of XML documentation files |
@@ -83,7 +87,14 @@ remtrace Run the documentation tool to generate the documentation for EiffelStud
 remtrace ----------------------------------------------------------------------------------------
 
 cdd %DOCUMENT_DIR
-doc_builder.exe -gen /xml2help -o /studio -t /mshtml %DOCUMENT_DIR\xmldoc\documentation.dpr
-copy C:\doc\HTML\docs.chm %INSTALL_DIR\docs\eiffel.chm
+doc_builder.exe -gen /xml2help -o /studio -t /mshtml -nohtml %DOCUMENT_DIR\xmldoc\documentation.dpr
+cdd C:\doc\Html
+fullrd docs.chm
+hhc docs.hhp
+copy C:\doc\Html\docs.chm %INSTALL_DIR\docs\eiffel.chm
+
+rem cdd %DOCUMENT_DIR
+rem doc_builder.exe -gen /xml2help -o /studio -t /mshtml %DOCUMENT_DIR\xmldoc\documentation.dpr
+rem copy C:\doc\Html\docs.chm %INSTALL_DIR\docs\eiffel.chm
 
 

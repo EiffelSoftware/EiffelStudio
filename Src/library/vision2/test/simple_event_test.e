@@ -13,7 +13,7 @@ feature -- Access
 
 	first_window: EV_TITLED_WINDOW is
 		once
-			create Result.make
+			create Result
 		end
 
 	selected, pressed, released: BOOLEAN

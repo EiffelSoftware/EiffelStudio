@@ -38,7 +38,7 @@ feature -- Access
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmap representing the item (for buttons)
 		do
-			Result := (create {GB_SHARED_PIXMAPS}).icon_delete_small
+			Result := (create {GB_SHARED_PIXMAPS}).Icon_component_viewer
 		end
 
 feature -- Execution

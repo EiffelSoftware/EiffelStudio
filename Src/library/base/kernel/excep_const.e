@@ -62,7 +62,7 @@ feature -- Access
 
 	Retrieve_exception: INTEGER is 23;
 			-- Exception code for retrieval error;
-			-- may be raised by `retrieved' in `STORABLE'.
+			-- may be raised by `retrieved' in `IO_MEDIUM'.
 
 	Developer_exception: INTEGER is 24;
 			-- Exception code for developer exception

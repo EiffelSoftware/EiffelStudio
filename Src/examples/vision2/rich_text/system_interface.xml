@@ -597,7 +597,9 @@
 <EV_WIDGET><Minimum_width><Constant>font_size_combo_box_width</Constant>
 		</Minimum_width>
 	</EV_WIDGET>
-<EV_GAUGE></EV_GAUGE>
+<EV_GAUGE><Lower>0</Lower>
+	<Upper>200</Upper>
+	</EV_GAUGE>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 <Events><Event>change_actions EV_GAUGE_ACTION_SEQUENCES left_margin_changed</Event>
 	</Events>
@@ -639,7 +641,9 @@
 <EV_WIDGET><Minimum_width><Constant>font_size_combo_box_width</Constant>
 		</Minimum_width>
 	</EV_WIDGET>
-<EV_GAUGE></EV_GAUGE>
+<EV_GAUGE><Lower>0</Lower>
+	<Upper>200</Upper>
+	</EV_GAUGE>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 <Events><Event>change_actions EV_GAUGE_ACTION_SEQUENCES right_margin_changed</Event>
 	</Events>
@@ -681,7 +685,9 @@
 <EV_WIDGET><Minimum_width><Constant>font_size_combo_box_width</Constant>
 		</Minimum_width>
 	</EV_WIDGET>
-<EV_GAUGE></EV_GAUGE>
+<EV_GAUGE><Lower>0</Lower>
+	<Upper>200</Upper>
+	</EV_GAUGE>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 <Events><Event>change_actions EV_GAUGE_ACTION_SEQUENCES top_spacing_changed</Event>
 	</Events>
@@ -723,7 +729,9 @@
 <EV_WIDGET><Minimum_width><Constant>font_size_combo_box_width</Constant>
 		</Minimum_width>
 	</EV_WIDGET>
-<EV_GAUGE></EV_GAUGE>
+<EV_GAUGE><Lower>0</Lower>
+	<Upper>200</Upper>
+	</EV_GAUGE>
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 <Events><Event>change_actions EV_GAUGE_ACTION_SEQUENCES bottom_spacing_changed</Event>
 	</Events>

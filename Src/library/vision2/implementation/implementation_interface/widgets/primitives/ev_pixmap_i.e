@@ -24,13 +24,23 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_locked: BOOLEAN is
+	is_locked: BOOLEAN
 			-- Is the pixmap already set in a drawing area?
 			-- If so, we can not set it to other pixmapable
 			-- widgets.
-		require
-			exists: not destroyed
-		deferred
+
+feature -- Status setting
+
+	lock is
+			-- Lock the pixmap.
+		do
+			is_locked := True
+		end
+
+	unlock is
+			-- Unlock the pixmap.
+		do
+			is_locked := False
 		end
 
 feature -- Measurement

@@ -79,11 +79,21 @@ feature -- Status report
 		end
 
 	shown: BOOLEAN is
-			-- Is current widget visible?
+			-- Is current widget visible in the parent?
+		require
+			exists: not destroyed
+			parent_or_window: implementation.has_parent or
+							is_window
+		do
+			Result := implementation.shown
+		end
+
+	displayed: BOOLEAN is
+			-- Is the current widget visible on the screen?
 		require
 			exists: not destroyed
 		do
-			Result := implementation.shown
+			Result := implementation.displayed
 		end
 
 	managed: BOOLEAN

@@ -83,7 +83,7 @@ inherit
 		redefine
 			on_text_reset, on_text_edited, 
 			on_text_back_to_its_last_saved_state,
-			on_text_fully_loaded
+			on_text_fully_loaded, on_cursor_moved
 		end
 
 	EB_FORMATTER_DATA
@@ -148,6 +148,7 @@ feature {NONE} -- Initialization
 
 				-- Update widgets visibilities
 			update
+			status_bar.remove_cursor_position
 
 				-- Finish initializing the main editor formatters
 			end_build_formatters
@@ -532,6 +533,7 @@ feature {NONE} -- Initialization
 			editor_tool.text_area.add_edition_observer(print_cmd)
 			editor_tool.text_area.add_edition_observer(Current)
 			editor_tool.text_area.drop_actions.set_veto_pebble_function (~can_drop)
+			editor_tool.text_area.add_cursor_observer (Current)
 			add_recyclable (editor_tool)
 
 				-- Build the context tool
@@ -1419,6 +1421,11 @@ feature -- Menu Building
 			add_recyclable (command_menu_item)
 			project_menu.extend (command_menu_item)
 
+				-- Quick melt
+			command_menu_item := Quick_melt_project_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			project_menu.extend (command_menu_item)
+
 				-- Freeze
 			command_menu_item := Freeze_project_cmd.new_menu_item
 			add_recyclable (command_menu_item)
@@ -1932,10 +1939,16 @@ feature -- Resource Update
 			save_only := False
 			str := clone (title)
 			if str @ 1 = '*' then
-				str.tail (str.count - 2)
+				str.keep_tail (str.count - 2)
 				set_title (str)
 			end
 			update_formatters
+			if editor_tool.text_area.syntax_is_correct then
+				status_bar.display_message ("")
+			else
+				status_bar.display_message (Interface_names.L_syntax_error)
+			end
+			text_edited := False
 		end
 
 	save_and (an_action: PROCEDURE [ANY, TUPLE []]) is
@@ -2504,10 +2517,18 @@ feature {NONE} -- Implementation
 		do
 			str := clone (title)
 			if str @ 1 = '*' then
-				str.tail (str.count - 2)
+				str.keep_tail (str.count - 2)
 				set_title (str)
 			end
 			address_manager.disable_formatters
+			status_bar.display_message ("")
+			status_bar.remove_cursor_position
+		end
+
+	on_cursor_moved is
+			-- The cursor has moved, reflect the change in the status bar.
+		do
+			refresh_cursor_position
 		end
 
 	on_text_fully_loaded is
@@ -2515,6 +2536,12 @@ feature {NONE} -- Implementation
 		do
 			update_paste_cmd
 			update_formatters
+			if editor_tool.text_area.syntax_is_correct then
+				status_bar.display_message ("")
+			else
+				status_bar.display_message (Interface_names.L_syntax_error)
+			end
+			refresh_cursor_position
 		end
 
 	on_text_back_to_its_last_saved_state is
@@ -2523,25 +2550,38 @@ feature {NONE} -- Implementation
 		do
 			str := clone (title)
 			if str @ 1 = '*' then
-				str.tail (str.count - 2)
+				str.keep_tail (str.count - 2)
 				set_title (str)
 			end
 			update_formatters
+			text_edited := False
 		end			
-		
+	
+	text_edited: BOOLEAN
+			-- Do we know that the text was edited?
+			-- If so, no need to update the display each time it is edited.
 
 	on_text_edited (unused: BOOLEAN) is
 			-- The text in the editor is modified, add the '*' in the title.
 			-- Gray out the formatters.
 		local
 			str: STRING
+			cst: CLASSI_STONE
 		do
-			str := clone (title)
-			if str @ 1 /= '*' then
-				str.prepend ("* ")
-				set_title (str)
+			if not text_edited then
+				str := clone (title)
+				if str @ 1 /= '*' then
+					str.prepend ("* ")
+					set_title (str)
+				end
+				address_manager.disable_formatters
+				cst ?= stone
+				if cst /= Void then
+					Eiffel_project.Manager.class_is_edited (cst.class_i)
+				end
+				text_edited := True
 			end
-			address_manager.disable_formatters
+			status_bar.display_message ("")
 		end
 
 	on_back is
@@ -2683,6 +2723,19 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation: Editor commands
+
+	refresh_cursor_position is
+			-- Display the current cursor position in the status bar.
+		require
+			text_loaded: not is_empty
+		local
+			cur: TEXT_CURSOR
+			l, c: INTEGER
+		do
+			l := editor_tool.text_area.cursor_y_position
+			c := editor_tool.text_area.cursor_x_position
+			status_bar.set_cursor_position (l, c)
+		end
 
 	select_all is
 			-- Select the whole text in the focused editor.

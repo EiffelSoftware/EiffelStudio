@@ -44,6 +44,7 @@ interface,,,,,,,
 
 
 
+
 Formats,,,,,,
 ,2,Do not display obsolete features in the exported features,Xavier,FMT0001,Xavier,2
 ,2,Let the user customize the formats,Xavier,FMT0002,,
@@ -121,6 +122,18 @@ compiler,,,,
 ,3,"Separate error messages in warnings, obsoletes and errors",Arnaud,CMP0017
 ,4,"If a precompiled library is missing, try to compile anyway (compiler option? Ace option?)",Xavier,CMP0018
 ,3,Report an error when an invalid .def file is specified in `shared_library_definition'.,Manus,CMP0019
+,4,Report several errors at the same time,Emmanuel,CMP0020
+,2,Creation calls should never be polymorphic (and should be candidate to inlining),Xavier,CMP0021
+,2,Deferred features that have only one implementer should not be called polymorphicly either,Xavier,CMP0022
+,3,Optimize the size of polymorphic tables by ordering classes better,Xavier,CMP0023
+,4,Melt agents,Xavier,CMP0024
+,2,Detect and optimize static calls by not passing the object parameter and not even computing it whenever possible,Xavier,CMP0025
+,2,Use & instead of && to translate and to prevent an if block,Xavier,CMP0026
+,2,Remove classes that are never instantiated from the system (warning: they may be instantiated outside Eiffel code or in a STORABLE),Xavier,CMP0027
+,4,Remove the extra indirection in non generic polymorphic calls,Xavier,CMP0028
+,3,Improve the management of SPECIAL[expanded],Xavier,CMP0029
+
+
 
 
 libraries,,,,
@@ -132,3 +145,5 @@ libraries,,,,
 ,3,Add a calendar control in Vision2,Arnaud,LIB0006
 ,3,Add a support for ActiveX in Vision2,Arnaud,LIB0007
 ,2,Introduce agents in EiffelBase,Arnaud,LIB0008
+
+

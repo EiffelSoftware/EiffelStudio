@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	selected_items_not_void: is_usable implies selected_items /= Void
+	checked_items_not_void: is_usable implies checked_items /= Void
 	checked_items_consistent: checked_items.for_all (agent is_item_checked)
 	checked_items_valid: checked_items.count >= 0 and checked_items.count <= count
 	--checked_items_ordered: checked_items.for_all (agent valid_position )

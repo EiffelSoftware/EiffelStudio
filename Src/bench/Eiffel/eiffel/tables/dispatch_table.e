@@ -4,17 +4,11 @@
 class DISPATCH_TABLE 
 
 inherit
-
-	CENTRAL_TABLE [DISPATCH_UNIT]
-		rename
-			append as central_append
-		end;
 	CENTRAL_TABLE [DISPATCH_UNIT]
 		redefine
 			append
-		select
-			append
-		end;
+		end
+
 	SHARED_SERVER
 		undefine
 			copy, setup, consistent, is_equal
@@ -99,7 +93,7 @@ feature -- Merging
 			-- Append  `other' to `Current'.
 			-- Used when merging precompilations.
 		do
-			central_append (other);
+			{CENTRAL_TABLE} precursor (other);
 			frozen_level := counter.total_count;
 			dle_frozen_level := frozen_level
 		end

@@ -642,7 +642,7 @@ rt_public EIF_REFERENCE c_outu(EIF_NATURAL_32 i)
 {
 	RT_GET_CONTEXT
 	register int len;
-	len = sprintf(buffero, "%lu", i);
+	len = sprintf(buffero, "%u", i);
 	return makestr(buffero, len);
 }
 
@@ -658,7 +658,7 @@ rt_public EIF_REFERENCE c_outi(EIF_INTEGER i)
 {
 	RT_GET_CONTEXT
 	register int len;
-	len = sprintf(buffero, "%ld", (long) i);
+	len = sprintf(buffero, "%d", i);
 	return makestr(buffero, len);
 }
 

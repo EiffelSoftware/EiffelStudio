@@ -22,7 +22,8 @@ inherit
 			set_text,
 			text,
 			destroy,
-			destroyed
+			destroyed,
+			dispose
 		end
 
 	EV_TREE_ITEM_HOLDER_IMP
@@ -353,6 +354,41 @@ feature -- Element change
 				a ?= text.to_c
 				c_gtk_ctree_item_set_pixtext (tree_parent_imp.tree_widget, widget, 1, default_pointer, $a, 5)
 			end
+		end
+
+	clear_items is
+			-- Clear all the items of the tree item holder.
+		local
+			list: ARRAYED_LIST [EV_TREE_ITEM_IMP]
+			item: EV_TREE_ITEM_IMP
+		do
+			-- Destroy the implementation of the items
+			-- and remove the children from `ev_children' and `all_children'.
+			from
+				list := ev_children
+				list.start
+			until
+				list.after
+			loop
+				item := list.item
+
+				-- test if the tree item has sub tree items.
+				if item.count > 0 then
+					item.clear_items
+				end
+			
+				item.tree_parent_imp.all_children.start
+				item.tree_parent_imp.all_children.search (item)
+				item.tree_parent_imp.all_children.remove
+
+				-- To be modified
+				gtk_ctree_remove_node (tree_parent_imp.tree_widget, item.widget)
+
+				item.interface.remove_implementation
+
+				list.forth
+			end
+			list.wipe_out
 		end
 
 feature -- Assertion
@@ -763,6 +799,15 @@ feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
 			-- Sets `widget' to the new pointer `p'.
 		do
 			widget := p
+		end
+
+feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
+
+	dispose is
+			-- Function called when the Eiffel
+			-- Object is garbage-collected.
+			-- Does nothing here.
+		do
 		end
 
 end -- class EV_TREE_ITEM_IMP

@@ -1,6 +1,5 @@
 indexing
 	description: "Data panel used for capturing feature parameters."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,16 +7,17 @@ class
 	EB_FEATURE_ENTRY_PANEL
 
 inherit
-	NEW_EB_CONSTANTS
+	EB_ENTRY_PANEL
+		redefine
+			make
+		end
+	EB_FEATURE_TOOL_DATA
 		rename
 			Feature_resources as parameters
 		export
 			{NONE} all
 		end
-	EB_ENTRY_PANEL
-		redefine
-			make
-		end
+	NEW_EB_CONSTANTS
 
 creation
 	make
@@ -29,12 +29,12 @@ feature {NONE} -- Initialization
 		do
 			Precursor (par, a_tool)
 
-			Create tool_width.make_with_resource (Current, parameters.tool_width)
-			Create tool_height.make_with_resource (Current, parameters.tool_height)
-			Create keep_toolbar.make_with_resource (Current, parameters.keep_toolbar)
-			Create double_line_toolbar.make_with_resource (Current, parameters.double_line_toolbar)
-			Create show_all_callers.make_with_resource (Current, parameters.show_all_callers)
-			Create do_flat_in_breakpoints.make_with_resource (Current, parameters.do_flat_in_breakpoints)
+			create tool_width.make_with_resource (Current, parameters.tool_width)
+			create tool_height.make_with_resource (Current, parameters.tool_height)
+			create keep_toolbar.make_with_resource (Current, parameters.keep_toolbar)
+			create double_line_toolbar.make_with_resource (Current, parameters.double_line_toolbar)
+			create show_all_callers.make_with_resource (Current, parameters.show_all_callers)
+			create do_flat_in_breakpoints.make_with_resource (Current, parameters.do_flat_in_breakpoints)
 
 			resources.extend (tool_width)
 			resources.extend (tool_height)
@@ -49,10 +49,10 @@ feature -- Access
 	name: STRING is "Feature tool preferences"
 			-- Current's name
 
-	symbol: PIXMAP is
-		once
+	symbol: EV_PIXMAP is
+		do
 			Result := Pixmaps.bm_Routine
-		end;
+		end
 
 feature {NONE} -- Implementation
 

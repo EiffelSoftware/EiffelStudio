@@ -226,15 +226,16 @@ feature -- Element change
 		local
 			par_imp: EV_CONTAINER_IMP
 		do
+			-- if the widget had a parent, we remove it:
 			if parent_imp /= Void then
-				if (box_widget /= default_pointer) then
-					gtk_object_ref (box_widget)
-				else
+				if (box_widget = default_pointer) then
+					-- the widget is not contained in a box.
 					gtk_object_ref (widget)
 				end
 				parent_imp.remove_child (Current)
 				parent_imp := Void
 			end
+			-- if the new parent is not Void:
 			if par /= Void then
 				par_imp ?= par.implementation
 				check
@@ -243,9 +244,8 @@ feature -- Element change
 				parent_imp ?= par_imp
 				par_imp.add_child (Current)
 				show
-				if (box_widget /= default_pointer) then
-					gtk_object_unref (box_widget)
-				else
+				if (box_widget = default_pointer) then
+					-- the widget is not contained in a box.
 					gtk_object_unref (widget)
 				end
 			end

@@ -74,20 +74,15 @@ feature -- Status report
 
 	is_default: BOOLEAN is
 			-- Is the resource equal to its default value?
+--		require
+--			default_value /= Void
 		deferred
 		end
-
-	has_changed: BOOLEAN is
-			-- Has the resource changed from its old value?
-		deferred
-		end
-
-feature -- Status setting
 
 feature -- Element change
 
 --	set_actual_value (a_value: ANY) is
-		-- Set `actual_value' to `a_value'.
+--		-- Set `actual_value' to `a_value'.
 --	require
 --		a_value_not_void: a_value /= Void
 --	deferred
@@ -105,13 +100,18 @@ feature -- Element change
 		value_set: value.is_equal (new_value)
 	end
 
-feature -- Transformation
-
-feature -- Conversion
-
 feature -- Duplication
 
-feature -- Miscellaneous
+	update_with (other: like Current) is
+			-- Update Current with the value of `other'
+		require
+			other_non_void: other /= Void
+			same_name: name.is_equal (other.name)
+		do
+			set_value (other.value)
+		ensure
+			are_equal: Current.is_equal(other)
+		end
 
 feature -- Basic operations
 
@@ -129,10 +129,6 @@ feature {NONE} -- Obsolete
 			"Used only for system migration; to be deleted with `old_r' type"
 		deferred
 		end
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
 
 invariant
 

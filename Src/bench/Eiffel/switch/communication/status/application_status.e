@@ -127,7 +127,7 @@ feature -- Values
 
 	call_stack (tid: INTEGER): EIFFEL_CALL_STACK is
 		do
-			if call_stack_list.has (tid) then
+			if tid > 0 and then call_stack_list.has (tid) then
 				Result := call_stack_list.item (tid)
 			end
 		ensure

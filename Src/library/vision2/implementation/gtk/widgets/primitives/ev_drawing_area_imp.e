@@ -19,12 +19,23 @@ inherit
 	EV_DRAWABLE_IMP
 
 	EV_PRIMITIVE_IMP
+		undefine
+			background_color,
+			foreground_color,
+			set_background_color,
+			set_foreground_color,
+			set_default_options
+		end
 
-	EV_PIXMAP_CONTAINER_IMP
+	EV_PIXMAPABLE_IMP
 		rename
 			box as widget
-		redefine
-			add_pixmap
+		undefine
+			background_color,
+			foreground_color,
+			set_background_color,
+			set_foreground_color,
+			set_default_options
 		end
 
 creation
@@ -32,32 +43,62 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create an empty drawing area.
 		local
 			par_imp: EV_CONTAINER_IMP
 		do
-			par_imp ?= par.implementation
-			check
-				parent_ok: par_imp /= Void
-			end
-			parent_imp := par_imp
-			widget := c_gtk_pixmap_create_empty (parent_imp.widget)
+--			par_imp ?= par.implementation
+--			check
+--				parent_ok: par_imp /= Void
+--			end
+--			parent_imp := par_imp
+--			widget := c_gtk_pixmap_create_empty (parent_imp.widget)
 		end
 
 feature {EV_CONTAINER} -- Element change
 
-	add_pixmap (pixmap: EV_PIXMAP) is
+	add_pixmap (pix: EV_PIXMAP) is
 			-- Add a pixmap in the container
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 		do
-			pixmap_imp ?= pixmap.implementation
+			pixmap_imp ?= pix.implementation
 			check
 				pixmap_imp_not_void: pixmap_imp /= Void
 			end
 			gtk_widget_set_parent (pixmap_imp.widget, parent_imp.widget)
 			widget := pixmap_imp.widget
+		end
+
+feature -- Event - command association
+
+	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of action to be executed when
+			-- current area is resized.
+			-- `arg' will be passed to `cmd' whenever it is
+			-- invoked as a callback.
+		do
+		end
+
+	add_paint_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget has to be redrawn.
+		do
+		end
+
+feature -- Event - command removal
+
+	remove_resize_commands is
+			-- Remove the list of commands to be executed when
+			-- current area is resized.
+		do
+		end
+
+	remove_paint_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget has to be redrawn.
+		do
 		end
 
 end -- class EV_DRAWING_AREA_IMP

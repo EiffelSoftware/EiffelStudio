@@ -1,0 +1,26 @@
+system
+	registration_service
+
+root
+	REGISTRAR: "start"
+
+default
+	il_generation ("dll")
+	line_generation (yes)
+	assertion (all)
+	verifiable (no)
+
+cluster	
+	root_cluster:	"d:\examples\eiffelsharp\registration\web_service";
+	base:		"d:\elight\emitted\Base";
+	all base_net:	"d:\library\base.net";
+	web:			"d:\elight\emitted\Web";
+	web_Services:	"d:\elight\emitted\WebServices";
+	system_:		"d:\elight\emitted\System";
+
+external
+	assembly: 	"System.dll",
+				"System.Web.dll",
+				"System.Web.Services.dll"
+
+end

@@ -10,6 +10,7 @@ class
 feature -- Access
 
 	Ta_noupdatecp: INTEGER is
+			-- The current position is not updated after each text output call.
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -17,6 +18,7 @@ feature -- Access
 		end
 
 	Ta_updatecp: INTEGER is
+			-- The current position is updated after each text output call.
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -24,6 +26,7 @@ feature -- Access
 		end
 
 	Ta_left: INTEGER is
+			-- The reference point is on the left edge of the bounding rectangle.
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -31,6 +34,7 @@ feature -- Access
 		end
 
 	Ta_right: INTEGER is
+				-- The reference point is on the right edge of the bounding rectangle.
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -38,6 +42,7 @@ feature -- Access
 		end
 
 	Ta_center: INTEGER is
+			-- The reference point is aligned horizontally with the center of the bounding rectangle.
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -45,6 +50,7 @@ feature -- Access
 		end
 
 	Ta_top: INTEGER is
+			-- The reference point is on the top edge of the bounding rectangle.
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -52,6 +58,7 @@ feature -- Access
 		end
 
 	Ta_bottom: INTEGER is
+			-- The reference point is on the bottom edge of the bounding rectangle.
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -59,10 +66,29 @@ feature -- Access
 		end
 
 	Ta_baseline: INTEGER is
+			-- The reference point is on the base line of the text.
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"TA_BASELINE"
+		end
+
+feature -- Vertical text alignement
+
+	Vta_baseline: INTEGER is
+			-- The reference point is on the base line of the text.
+		external
+			"C [macro <windows.h>]"
+		alias
+			"VTA_BASELINE"
+		end
+		
+	Vta_center: INTEGER is
+			-- The reference point is aligned vertically with the center of the bounding rectangle.
+		external
+			"C [macro <windows.h>]"
+		alias
+			"VTA_CENTER"
 		end
 
 feature -- Status report

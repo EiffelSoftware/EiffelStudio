@@ -9,6 +9,7 @@ class
 
 inherit
 	COLOR_CONSTANT
+	ICON_PATH
 	FINDER
 
 create
@@ -116,8 +117,14 @@ feature {NONE} -- Implementation
 			procedures_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
 			procedures: SORTABLE_ARRAY [COMPARABLE_CONSUMED_PROCEDURE]
 		do
-			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Procedure(s) :", title_color))
-			new_line
+			if array.count > 1 then
+				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Procedures :", title_color))
+				new_line
+			elseif array.count = 1 then
+				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Procedure :", title_color))
+				new_line
+			end
+
 			from
 				i := 1
 				create procedures_list.make
@@ -151,6 +158,12 @@ feature {NONE} -- Implementation
 				i > procedures.count
 			loop
 				print_feature (procedures.item (i))
+				if procedures.item (i).is_public then
+					l_line.set_path_icon (Path_icon_public_procedure)
+				else
+					l_line.set_path_icon (Path_icon_protected_procedure)
+				end
+	
 				new_line
 				i := i + 1
 			end
@@ -175,12 +188,6 @@ feature {NONE} -- Implementation
 			end
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (Tabulation, text_color))
 			
-			if a_feature.is_public then
-				l_line.set_path_icon ("Public   ")
-			else
-				l_line.set_path_icon ("Protected   ")
-			end
-
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (a_feature.dotnet_name, dotnet_feature_color))
 
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" : ", text_color))
@@ -249,8 +256,14 @@ feature {NONE} -- Implementation
 			output_string: STRING
 			l_entity: ENTITY_LINE
 		do
-			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Creation routine(s) :", Title_color))
-			new_line
+			if array.count > 1 then
+				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Creation routines :", Title_color))
+				new_line
+			elseif array.count = 1 then
+				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Creation routine :", Title_color))
+				new_line
+			end
+
 			from
 				i := 1
 			until
@@ -263,7 +276,15 @@ feature {NONE} -- Implementation
 					l_line.set_selected (False)
 				end
 
+				if array.item (i).is_public then
+					l_line.set_path_icon (Path_icon_constructor)
+				else
+					l_line.set_path_icon (Path_icon_constructor)
+				end
+	
 				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (Tabulation, text_color))
+
+				l_line.set_path_icon (Path_icon_constructor)
 
 				create l_entity.make_with_image_and_color (array.item (i).eiffel_name, eiffel_feature_color)
 				l_entity.set_data (array.item (i))
@@ -331,8 +352,14 @@ feature {NONE} -- Implementation
 			output_string: STRING
 			l_entity: ENTITY_LINE
 		do
-			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Function(s) :", title_color))
-			new_line
+			if array.count > 1 then
+				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Functions :", title_color))
+				new_line
+			elseif array.count = 1 then
+				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Function :", title_color))
+				new_line
+			end
+
 			from
 				i := 1
 				create functions_list.make
@@ -360,20 +387,6 @@ feature {NONE} -- Implementation
 				functions_list.forth
 			end
 			
---			from
---				i := 1
---				create functions.make (1, array.count)
---			until
---				array = Void 
---				or else i > array.count
---			loop
---				if not array.item (i).is_property_or_event then
---					functions.put (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (array.item (i)), i)
---				end
---
---				i := i + 1
---			end
-			
 			from
 				i := 1
 				functions.sort
@@ -381,6 +394,12 @@ feature {NONE} -- Implementation
 				i > functions.count
 			loop
 				print_feature (functions.item (i))
+
+				if functions.item (i).is_public then
+					l_line.set_path_icon (Path_icon_public_function)
+				else
+					l_line.set_path_icon (Path_icon_protected_function)
+				end
 				
 				l_returned_type := functions.item (i).return_type
 				l_array_returned_type := Void
@@ -425,8 +444,14 @@ feature {NONE} -- Implementation
 			l_entity: ENTITY_LINE
 			a_property: CONSUMED_PROPERTY
 		do
-			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Property(ies) :", title_color))
-			new_line
+			if array.count > 1 then
+				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Properties :", title_color))
+				new_line
+			elseif array.count = 1 then
+				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Property :", title_color))
+				new_line
+			end
+
 			from
 				i := 1
 				create properties_list.make
@@ -462,6 +487,12 @@ feature {NONE} -- Implementation
 			loop
 				print_feature (properties.item (i))
 				
+				if properties.item (i).is_public then
+					l_line.set_path_icon (Path_icon_public_property)
+				else
+					l_line.set_path_icon (Path_icon_protected_property)
+				end
+	
 				l_returned_type := properties.item (i).return_type
 				l_array_returned_type := Void
 				l_array_returned_type ?= l_returned_type
@@ -508,8 +539,14 @@ feature {NONE} -- Implementation
 			l_entity: ENTITY_LINE
 			an_event: CONSUMED_EVENT
 		do
-			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Event(s) :", title_color))
-			new_line
+			if array.count > 1 then
+				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Events :", title_color))
+				new_line
+			elseif array.count = 1 then
+				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Event :", title_color))
+				new_line
+			end
+
 			from
 				i := 1
 				create events_list.make
@@ -550,6 +587,12 @@ feature {NONE} -- Implementation
 			loop
 				print_feature (events.item (i))
 				
+				if events.item (i).is_public then
+					l_line.set_path_icon (Path_icon_public_event)
+				else
+					l_line.set_path_icon (Path_icon_protected_event)
+				end
+	
 				l_returned_type := events.item (i).return_type
 				l_array_returned_type := Void
 				l_array_returned_type ?= l_returned_type
@@ -620,6 +663,12 @@ feature {NONE} -- Implementation
 					l_line.set_selected (True)
 				else
 					l_line.set_selected (False)
+				end
+
+				if attributes.item (i).is_public then
+					l_line.set_path_icon (Path_icon_public_attribute)
+				else
+					l_line.set_path_icon (Path_icon_protected_attribute)
 				end
 
 				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (Tabulation, text_color))

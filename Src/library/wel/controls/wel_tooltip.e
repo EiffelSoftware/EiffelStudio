@@ -16,17 +16,7 @@ inherit
 			default_ex_style
 		end
 
-	WEL_TTM_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_TTS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_TTDT_CONSTANTS
+	WEL_TOOLTIP_CONSTANTS
 		export
 			{NONE} all
 		end

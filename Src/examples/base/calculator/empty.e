@@ -10,7 +10,10 @@ class
 	EMPTY
 
 inherit 
-	STATE 
+	STATE
+		redefine
+			process
+		end
 
 feature 
 
@@ -31,4 +34,10 @@ feature
 			operand_stack.item = 0.0
 		end
 	
+	process is
+			-- Process user's answer.
+		do
+			operation
+		end
+
 end -- class EMPTY 

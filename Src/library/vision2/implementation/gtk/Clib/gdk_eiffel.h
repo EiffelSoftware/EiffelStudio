@@ -35,3 +35,9 @@ external C library
 #define c_gdk_event_rectangle_y(p) (((GdkEventExpose*)p)->area.y)/* integer */
 #define c_gdk_event_rectangle_width(p) (((GdkEventExpose*)p)->area.width)/* integer */
 #define c_gdk_event_rectangle_height(p) (((GdkEventExpose*)p)->area.height)/* integer */
+
+				/* Configure */
+#define c_gdk_event_configure_x(p) (((GdkEventConfigure*)p)->x)/* integer */
+#define c_gdk_event_configure_y(p) (((GdkEventConfigure*)p)->y)/* integer */
+#define c_gdk_event_configure_width(p) (((GdkEventConfigure*)p)->width)/* integer */
+#define c_gdk_event_configure_height(p) (((GdkEventConfigure*)p)->height)/* integer */

@@ -18,6 +18,17 @@ inherit
 			add_child_ok
 		end
 
+feature -- Status setting
+
+	set_position (value: INTEGER) is
+			-- Make `value' the new position of the splitter.
+			-- `value' is given in percentage.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
 feature -- Element change
 
 	add_child (child_imp: EV_WIDGET_IMP) is

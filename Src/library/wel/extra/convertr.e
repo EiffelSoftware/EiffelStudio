@@ -68,6 +68,7 @@ feature -- Basic operations
 		do
 			class_file.putstring ("%Nend -- class ")
 			class_file.putstring (class_name)
+			class_file.new_line
 			class_file.close
 		ensure
 			class_file_is_closed: class_file.is_closed
@@ -155,13 +156,16 @@ feature {NONE} -- Implementation
 			a_file_exists: a_file.exists
 			a_file_is_open: a_file.is_open_write
 		do
-			a_file.putchar ('%T')
-			id.to_lower
-			id.put (id.item (1).upper, 1)
-			a_file.putstring (id)
-			a_file.putstring (": INTEGER is ")
-			a_file.putstring (value)
-			a_file.new_line
+			if id.item (1) /= '_' then
+				-- Do not write ids starting by '_'
+				a_file.putchar ('%T')
+				id.to_lower
+				id.put (id.item (1).upper, 1)
+				a_file.putstring (id)
+				a_file.putstring (": INTEGER is ")
+				a_file.putstring (value)
+				a_file.new_line
+			end
 		end
 
 	white_space (a_c: CHARACTER): BOOLEAN is

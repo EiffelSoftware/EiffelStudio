@@ -10,6 +10,31 @@ deferred class
 inherit
 	EV_SELECTION_DIALOG_I
 
+feature -- Access
+
+	font: EV_FONT is
+			-- Current selected font.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	character_format: EV_CHARACTER_FORMAT is
+			-- Current selected character format.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+feature -- Element change
+
+	select_font (a_font: EV_FONT) is
+			-- Select `a_font'.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 end -- class EV_FONT_DIALOG_I
 
 --|----------------------------------------------------------------

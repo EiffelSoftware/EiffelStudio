@@ -67,10 +67,12 @@ feature -- Byte code generation
 				ba.append (Bc_pfeature);
 				ba.append_integer (rout_info.origin.id);
 				ba.append_integer (rout_info.offset)
+				ba.append_short_integer (-1);
 			else
 				ba.append (Bc_feature);
 				ba.append_integer (feature_id);
 				ba.append_short_integer (cl_type.associated_class_type.id.id - 1)
+				ba.append_short_integer (-1);
 			end
 		end;
 

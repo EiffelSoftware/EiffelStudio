@@ -3,7 +3,7 @@
 LIB_LOCATION = "C:"
 COMP_LOC = "C:\Eiffel43-15"
 CC = cl
-CFLAGS = -c -Ox -I$(LIB_LOCATION)\library\wel\spec\windows\include -I$(COMP_LOC)\bench\spec\windows\include -I$(LIB_LOCATION)\library\old_com\spec\windows\include
+CFLAGS = -c -Zi -I$(LIB_LOCATION)\library\wel\spec\windows\include -I$(COMP_LOC)\bench\spec\windows\include -I$(LIB_LOCATION)\library\old_com\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

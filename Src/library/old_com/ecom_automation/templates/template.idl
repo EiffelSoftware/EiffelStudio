@@ -1,0 +1,72 @@
+//--------------------------------------------------------------------------
+//
+//  EiffelCOM
+//  Copyright (C) Interactive Software Engineering, 1999.
+//
+//  File: template.idl
+//
+//  Contents: definition of dispinterface, library, and coclass 
+//
+//
+//--------------------------------------------------------------------------
+
+import "oaidl.idl";
+
+[
+	uuid(/* To Do! */ ), // uuid of dispinterface, 
+					// should correspond to `dispinterface_id' of class EOLE_ACTIVEX 
+
+	version(/* To Do! */) // version number
+]
+dispinterface /* To Do! */ { // the name of your dispinterface
+
+	properties:		// if your component have any attribute of elementary type
+					// that can be set from the outside world then specify it here.
+					// the following syntax is required
+
+					//  [id(id_n)] property_type property_name;
+
+					// where property_type is the type of the atribute,
+					// property_name is the name of the atribute,
+					// and id_n is a positive integer.
+					// for example:
+					// [id(7)] int x;
+					// each attribute should have an unique ID	
+					// which should correspond to DISPID of class COMPONENT_DISPID 
+	  
+	methods:
+					// specify routines here
+					// the following syntax is required 
+
+					// [id(id_n)] return_type routine_name (argument_1_type arg1, ...);
+
+					// for example:
+					// [id(1)] int sum (int arg1, int arg2);
+					// IDs should correspond to DISPID of class COMPONENT_DISPID 
+					// each routine should have an unique ID		
+};
+
+[
+	uuid(/* To Do! */),	// uuid of typelib
+						// should correspond to `type_id' of class EOLE_ACTIVEX 
+		
+	helpstring (" /* To Do! */"),	// This string corresponds to the name 
+									// of your component and is used by various automation tools 
+	version (/* To Do! */), 		// version number
+	control
+]
+library /* To Do! */	// name of your type library
+{
+	importlib ("stdole32.tlb");
+	
+	[
+		uuid(/* To Do! */), // clsid of the component
+							// should correspond to `clsid' of class EOLE_ACTIVEX 
+			
+		control
+	]
+	coclass /* To Do! */		// name of coclass 
+	{
+		interface /* To Do! */;	// name of dispinterface
+	}
+}

@@ -27,24 +27,8 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			-- `res' and exception (if any) in `exception'.
 			-- By default: set status code with `Eole_e_notimpl'.
 			-- Should be implemented by user
-		local
-			arg1, arg2, res: INTEGER
 		do
-			if is_dispatch_method (flags) then
-				inspect
-					dispid
-				when Dispid_sum then
-					arg1 := params.argument (0).integer4
-					arg2 := params.argument (1).integer4
-					res := arg1 + arg2
-					print ("res = ")
-					print (res)
-					print ("%N")
-					a_res.set_integer4 (res)
-				else
-					exception.set_ole_error_code (Disp_e_membernotfound)
-				end
-			end
+		
 		end
 
 invariant

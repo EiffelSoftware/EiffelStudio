@@ -55,8 +55,7 @@ feature -- Code generation
         do
 			rout_table ?= e
 			name := rout_table.feature_name (type.type_id)
-            gen_file.putstring (name)
-
+			gen_file.putstring (name)
 			Extern_declarations.add_routine (ret_type, name)
         end
 

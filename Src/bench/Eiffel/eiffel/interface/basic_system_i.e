@@ -3,7 +3,6 @@
 class BASIC_SYSTEM_I 
 
 inherit
-
 	SHARED_CODE_FILES
 	
 feature 

@@ -35,10 +35,10 @@ feature -- Access
 
 feature -- Element change
 
-	clear_items is
-			-- Clear all the items of the list.
-		do
-		end
+--	clear_items is
+--			-- Clear all the items of the list.
+--		do
+--		end
 
 feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Implementation
 

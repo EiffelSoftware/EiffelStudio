@@ -145,7 +145,7 @@ feature -- Formatting
 						routine_w ?= tool;
 						if 	
 							routine_w /= Void and then
-							routine_w.stone.e_class.lace_class.hide_implementation
+							routine_w.stone.e_feature.written_class.lace_class.hide_implementation
 						then
 							st := rout_flat_context_text (routine_w.stone);
 							text_window.process_text (st);

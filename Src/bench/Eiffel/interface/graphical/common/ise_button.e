@@ -24,10 +24,6 @@ feature -- Access
 			Result := Current
 		end;
 
-	focus_string: STRING is
-		deferred
-		end
-
 feature -- Status Setting
 
 	set_symbol (p: PIXMAP) is

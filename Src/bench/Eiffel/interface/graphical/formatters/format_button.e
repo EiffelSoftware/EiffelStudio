@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			init_button (implementation);
 			set_symbol (a_format.symbol);
 			add_activate_action (a_format, a_format.tool);
+			set_focus_string (associated_format.name)
 			initialize_focus 
 		end;
 

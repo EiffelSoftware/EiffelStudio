@@ -80,12 +80,16 @@ feature -- Basic Operations
 					-- when an instance of ASSEMBLY is created my using feature{ASSEMLBY}.load
 					-- will alway return a different path if the version number changes. Whereas
 					-- feature{ASSEMLBY}.load_from/.location will always return the same path.
-				l_ca := consumed_assembly_from_path (a_path)
-				if l_ca /= Void then
+				if cache_reader.is_assembly_in_cache (a_path, False) then
 					l_consumed_path := a_path
 				else
-					l_consumed_path := l_assembly.location
+					if cache_reader.is_assembly_in_cache (l_assembly.location, False) then
+						l_consumed_path := l_assembly.location
+					else
+						l_consumed_path := a_path	
+					end
 				end
+				
 					-- only consume `assembly' if assembly has not already been consumed,
 					-- corresponding assembly has been modified or if consumer tool has been 
 					-- modified.
@@ -96,7 +100,7 @@ feature -- Basic Operations
 			
 				create l_consumer.make (Current)
 				
-				l_ca := consumed_assembly_from_path (l_assembly.location)
+				l_ca := consumed_assembly_from_path (l_consumed_path)
 				if not l_ca.gac_path.is_equal (l_assembly.location) then
 						-- Assembly has been added or removed from GAC, so lets update it.
 					l_info := cache_reader.info

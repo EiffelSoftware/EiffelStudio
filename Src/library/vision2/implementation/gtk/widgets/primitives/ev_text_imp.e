@@ -104,25 +104,20 @@ feature -- Status report
 	line_count: INTEGER is
 			-- Number of lines present in widget.
 		local
-			temp_text: STRING
+			temp_caret_pos, txt_length: INTEGER
 		do
-			temp_text := text
-			if temp_text /= Void then
-				Result := temp_text.occurrences ('%N') + 1
-			end
+			temp_caret_pos := caret_position
+			txt_length := text_length
+			set_caret_position (text_length + 1)
+			Result := current_line_number
+			set_caret_position (temp_caret_pos)
 		end
 
 	current_line_number: INTEGER is
 			-- Returns the number of the line the cursor currently
 			-- is on.
-		local
-			p: POINTER
-			temp_string: STRING
 		do
-			p := C.gtk_editable_get_chars (entry_widget, 0, C.gtk_text_get_point (entry_widget))
-			create temp_string.make_from_c (p)
-			C.g_free (p)
-			Result := temp_string.occurrences ('%N') + 1
+			Result := (C.gtk_text_struct_cursor_pos_y (entry_widget) + C.gtk_text_struct_first_onscreen_ver_pixel (entry_widget)) // line_height
 		end
 
 	caret_position: INTEGER is
@@ -191,6 +186,7 @@ feature -- Status setting
 			-- Set the position of the caret to `pos'.
 		do
 			C.gtk_text_set_point (entry_widget, pos - 1)
+			Precursor {EV_TEXT_COMPONENT_IMP} (pos)
 		end
 	
 	insert_text (txt: STRING) is
@@ -270,6 +266,7 @@ feature -- Basic operation
 
 	scroll_to_line (i: INTEGER) is
 		do
+			C.gtk_adjustment_set_value (right_adjustment_struct, (i - 1) * line_height)
 		end
 
 feature -- Assertions
@@ -284,6 +281,22 @@ feature -- Assertions
 		end
 		
 feature {NONE} -- Implementation
+
+	right_adjustment_struct: POINTER is
+			-- 
+		do
+			Result := C.gtk_range_struct_adjustment (C.gtk_scrolled_window_struct_vscrollbar (c_object))
+		end
+
+	line_height: INTEGER is
+			-- 
+		do
+			if private_font /= Void then
+				Result := private_font.ascent + private_font.descent
+			else
+				Result := App_implementation.Default_font_ascent + App_implementation.Default_font_descent
+			end
+		end
 
 	entry_widget: POINTER
 		-- Pointer to the gtk text editable.

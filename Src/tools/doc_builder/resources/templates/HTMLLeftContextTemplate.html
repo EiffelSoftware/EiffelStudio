@@ -1,7 +1,6 @@
 <!-- Includes -->
 <script type="text/javascript" src="../toc.js"></script>
 
-
 <!-- Page Initialization -->
 <script language="javascript">
 
@@ -10,30 +9,31 @@ function pageLoad()
 {
 	clearPreLoadPage();
 	selectFilterNode();
-	ToggleAll();
+	setAll(false);
+	loadCookie();
 }
 
 function clearPreLoadPage()
 //Clear the 'please wait...' loading screen once loading has finished
 {
 	if (document.getElementById) //dom
-	{
-		document.getElementById('prepage').style.visibility='hidden';
-	}
-	else
-	{
-		if (document.layers) //ns4
 		{
-			document.prepage.visibility = 'hidden';
-		}
-		else if (document.all) //ie4
-		{
-			document.all.prepage.style.visibility = 'hidden';
+			document.getElementById('prepage').style.visibility='hidden';
 		}
 		else
 		{
-			document.prepage.style.visibility = 'hidden';
-		}
+			if (document.layers) //ns4
+			{
+				document.prepage.visibility = 'hidden';
+			}
+			else if (document.all) //ie4
+			{
+				document.all.prepage.style.visibility = 'hidden';
+			}
+			else
+			{
+				document.prepage.style.visibility = 'hidden';
+			}
 	}
 }
 
@@ -53,8 +53,8 @@ function selectFilterNode()
 
 		while (query.indexOf('&') > -1)
 		{
-		    keypairs[numKP] = query.substring(0,query.indexOf('&'));
-		    query = query.substring((query.indexOf('&')) + 1);
+			keypairs[numKP] = query.substring(0,query.indexOf('&'));
+			query = query.substring((query.indexOf('&')) + 1);
 			numKP++;
 		}
 
@@ -68,12 +68,25 @@ function selectFilterNode()
 			keyValue = keypairs[i].substring((keypairs[i].indexOf('=')) + 1);
 			// Right of '=' is value.
 		}
-	    if (keyName == "index")
-	    {
+		if (keyName == "index")
+		{
 			keyValue = unescape(keyValue);
 			top.filter_frame.document.theForm.filterMenu.options [keyValue].selected = true;
 		}
 	}
+}
+
+function loadCookie()
+//Load into the content page the file found in cookie.  Used for redirecting back to the required page
+//when a non-frames url is entered into the browser.  If there is no cookie just use the default.
+{
+
+	var cookieValue = getCookie ("redirecturl");
+	if (cookieValue)
+	{
+		parent.content_frame.location.href = cookieValue;
+	}
+
 }
 
 </script>
@@ -81,9 +94,12 @@ function selectFilterNode()
 <!-- DOCUMENT FILTERING AND LOADING -->
 <script language="JavaScript">
 
-function documentLoaded ()
-//A new document was loaded in the content frame, so filter it based on filter.
+function documentLoaded (aUrl)
+//A new document was loaded in the content frame, so filter it based on filter, and sync the toc.
 {
+
+	//Synchronize the TOC
+	synchronize (aUrl);
 
 	//Extract filter words from filter string
 	var widget = top.filter_frame.document.theForm.filterMenu;
@@ -163,9 +179,12 @@ function documentLoaded ()
 			</table>
 	  </div>
 		<form name="theForm">
-		<table class="toc_outer_table">
+		<table class="toc_outer_table" border="0" cellpadding="0" cellspacing="0" height="100%">
 				<tr>
-					<td valign="top">[!TOCHTML!]</td>
+					<td height="15"><a href="javascript:synchronize(parent.content_frame.location.href);"><img src="sync_button.gif" alt="Synchronize Contents"></a></td>
+				</tr>
+				<tr>
+					<td valign="top" height="100%">[!TOCHTML!]</td>
 				</tr>
 			</table>
 		</form>

@@ -20,6 +20,8 @@ inherit
 		end
 
 	DOUBLE_MATH
+		export
+			{NONE} all
 		undefine
 			default_create,
 			is_equal,

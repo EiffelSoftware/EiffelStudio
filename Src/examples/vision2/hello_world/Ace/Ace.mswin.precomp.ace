@@ -12,7 +12,6 @@ default
 
 cluster
 
---	ROOT_CLUSTER: "$EIFFEL4\examples\vision2\hello_world"
-	ROOT_CLUSTER: "."
+	ROOT_CLUSTER: "$EIFFEL4\examples\vision2\hello_world"
 
 end

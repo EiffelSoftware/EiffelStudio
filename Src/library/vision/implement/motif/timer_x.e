@@ -86,9 +86,9 @@ feature
 			not_a_command_void: not (a_command = Void)
 		
 		do
-			c_tmr_set_next_call_back (c_data, a_delay);
 			command := a_command;
-			argument := an_argument
+			argument := an_argument;
+			c_tmr_set_next_call_back (c_data, a_delay);
 		ensure then
 			is_call_back_set and (not is_regular_call_back)
 		end; 
@@ -113,9 +113,9 @@ feature
 			not_a_command_void: not (a_command = Void)
 		
 		do
-			c_tmr_set_rglr_call_back (c_data, a_time);
 			command := a_command;
-			argument := an_argument
+			argument := an_argument;
+			c_tmr_set_rglr_call_back (c_data, a_time);
 		ensure then
 			is_call_back_set and is_regular_call_back
 		end;

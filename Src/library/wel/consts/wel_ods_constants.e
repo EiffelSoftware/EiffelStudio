@@ -44,6 +44,20 @@ feature -- Access
 			"ODS_FOCUS"
 		end
 
+	Ods_default: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"ODS_DEFAULT"
+		end
+
+	Ods_comboboxedit: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"ODS_COMBOBOXEDIT"
+		end
+
 end -- class WEL_ODS_CONSTANTS
 
 --|----------------------------------------------------------------

@@ -76,8 +76,6 @@ feature {NONE}
 feature 
 
 	retrieve (dir_name: STRING) is
-		local
-			void_parent: COMPOSITE_C;
 		do
 			retrieve_by_name (dir_name);
 			stored_contexts := retrieved.stored_contexts;
@@ -89,7 +87,7 @@ feature
 			loop
 				index := 1;
 				current_table := stored_contexts.item;
-				retrieved_data.extend (context_tree (void_parent));
+				retrieved_data.extend (context_tree (Void));
 				stored_contexts.forth
 			end;
 		end;
@@ -142,15 +140,6 @@ feature {NONE}
 				end;
 				retrieved_data.forth;
 			end;
-
-		debug ("storer")
-			io.putstring (Result.entity_name);
-			io.new_line;
 		end;
-
-			
-		end;
-
-
 
 end 

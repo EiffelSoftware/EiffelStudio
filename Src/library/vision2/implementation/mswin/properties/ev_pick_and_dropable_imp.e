@@ -106,7 +106,7 @@ feature -- Status setting
 		end
 	
 
-feature -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	start_transport (
         a_x, a_y, a_button: INTEGER;
@@ -114,7 +114,10 @@ feature -- Implementation
         a_screen_x, a_screen_y: INTEGER)
 	 is
 			-- Initialize the pick and drop mechanism.
-		local
+	require else
+		not_already_transporting: not is_pnd_in_transport and
+			not is_dnd_in_transport 
+	local
 			env: EV_ENVIRONMENT
 			curs_code: EV_CURSOR_CODE
 		do
@@ -131,21 +134,18 @@ feature -- Implementation
 				end
 				env.application.pick_actions.call ([pebble])
 				interface.pick_actions.call ([a_x, a_y])
-
-				if mode_is_pick_and_drop then
+					if mode_is_pick_and_drop then
 					is_pnd_in_transport := True
 				else
 					is_dnd_in_transport := True
 				end
-
 				pointer_x := a_screen_x
 				pointer_y := a_screen_y
 				if pick_x = 0 and pick_y = 0 then
 					pick_x := a_screen_x
 					pick_y := a_screen_y
 				end
-
-				set_capture_type (Capture_heavy)
+					set_capture_type (Capture_normal)--heavy)
 				enable_capture
 	
 				press_action := Ev_pnd_end_transport
@@ -502,6 +502,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/14 16:55:22  rogers
+--| Added pre-condition on start_transport.
+--|
 --| Revision 1.24  2000/04/07 22:41:43  rogers
 --| set normal capture as default.
 --|

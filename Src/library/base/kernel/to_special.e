@@ -27,6 +27,36 @@ feature {NONE} -- Initialization
 			area_allocated: area /= Void and then area.count = n
 		end
 
+feature -- Access
+
+	item, infix "@" (i: INTEGER): T is
+			-- Entry at index `i', if in index interval
+		require
+			valid_index: valid_index (i)
+		do
+			Result := area.item (i)
+		end
+
+feature -- Status report
+
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' within the bounds of Current?
+		do
+			Result := (0 <= i) and then (i < area.count)
+		end
+		
+feature -- Element change
+
+	put (v: T; i: INTEGER) is
+			-- Replace `i'-th entry, if in index interval, by `v'.
+		require
+			valid_index: valid_index (i)
+		do
+			area.put (v, i)
+		ensure
+			inserted: item (i) = v
+		end
+
 feature {NONE} -- Element change
 
 	set_area (other: like area) is

@@ -62,7 +62,7 @@ feature -- Access
 						from
 							i := out_index
 						until
-							Result or i > fl.count
+							Result or i >= fl.count
 						loop
 							Result := fl.item (i) /= Void and then v.is_equal (fl.item (i))
 							i := i + 1
@@ -91,7 +91,7 @@ feature -- Access
 					from
 						i := out_index
 					until
-						Result or i > fl.count
+						Result or i >= fl.count
 					loop
 						Result := v = fl.item (i)
 						i := i + 1

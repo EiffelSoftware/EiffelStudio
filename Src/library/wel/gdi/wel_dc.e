@@ -495,8 +495,8 @@ feature -- Status setting
 			cwin_set_window_ext_ex (item, x_extent, y_extent,
 				default_pointer)
 		ensure
-			x_window_extent_set: window_extent.width = x_extent
-			y_window_extent_set: window_extent.height = y_extent
+			x_window_extent_set: map_mode /= Mm_isotropic implies window_extent.width = x_extent
+			y_window_extent_set: map_mode /= Mm_isotropic implies window_extent.height = y_extent
 		end
 
 	set_window_origin (x_origin, y_origin: INTEGER) is
@@ -522,8 +522,8 @@ feature -- Status setting
 			cwin_set_viewport_ext_ex (item, x_extent, y_extent,
 				default_pointer)
 		ensure
-			x_viewport_extent_set: viewport_extent.width = x_extent
-			y_viewport_extent_set: viewport_extent.height = y_extent
+			x_viewport_extent_set: map_mode /= Mm_isotropic implies viewport_extent.width = x_extent
+			y_viewport_extent_set: map_mode /= Mm_isotropic implies viewport_extent.height = y_extent
 		end
 
 	set_viewport_origin (x_origin, y_origin: INTEGER) is
@@ -1976,7 +1976,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro <windows.h>] (HDC, LPCSTR, int, LPSIZE)"
 		alias
-			"GetTextExtentPoint32"
+			"GetTextExtentPoint"
 		end
 
 	cwin_get_tabbed_text_extent (hdc: POINTER; s: POINTER;

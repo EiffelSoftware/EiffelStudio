@@ -328,7 +328,6 @@ feature {COMMAND_TOOL}
 			elseif edited_command /= Void then
 				set_editable_command (edited_command)
 			end
-			update_boxes
 			update_parent_symbol
 			update_title
 		end
@@ -340,6 +339,7 @@ feature {COMMAND_TOOL}
 		do
 			if current_command /= Void and then current_command /= cmd then
 				save_command
+				current_command.reset
 			end
 			current_command := cmd
 			edited_command ?= cmd
@@ -359,8 +359,9 @@ feature
 			-- Update `labels' and the argument box in 
 			-- `command_tool'.
 		do
---			labels.update_display
+			labels.refresh_display
 			observed_commands.set (instance_of_command_tool.observed_commands)
+			observed_commands.refresh_display
 		end
 
 feature {NONE}
@@ -530,8 +531,7 @@ feature -- Labels
 					popup_error_box (Messages.instance_rem_label_er)
 				else
 					edited_command.remove_label (l)
-					labels.go_i_th (1)
-					labels.update_display
+					labels.refresh_display
 				end
 			end
 		end

@@ -74,14 +74,13 @@ feature -- Basic Operations
 		local
 			l_dir_file, l_ace_file: RAW_FILE
 			l_rel_dir, l_abs_dir, l_compiler_path, l_file, l_dll: STRING
-			l_index, l_index_2, l_counter, i, l_count: INTEGER
+			l_index, l_index_2, l_counter: INTEGER
 			l_exists, l_retried: BOOLEAN
 			l_start_info: SYSTEM_DLL_PROCESS_START_INFO
 			l_process: SYSTEM_DLL_PROCESS
 			l_fcode_dir: DIRECTORY
 			l_res: SYSTEM_OBJECT
 			l_files, l_dlls: LIST [STRING]
-			l_names: NATIVE_ARRAY [ASSEMBLY_NAME]
 		do
 			if not l_retried then
 				successful := False

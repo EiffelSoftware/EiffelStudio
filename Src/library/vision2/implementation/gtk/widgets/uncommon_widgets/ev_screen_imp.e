@@ -104,7 +104,7 @@ feature -- Basic operation
 				x_test_capable: x_test_capable
 			end
 			a_display := x_display
-			C.x_test_grab_control (a_display, True)
+			--C.x_test_grab_control (a_display, True)
 			a_success_flag := C.x_test_fake_motion_event (a_display, -1, a_x, a_y, 0)
 			--C.x_test_grab_control (a_display, False)
 			check
@@ -215,6 +215,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/14 21:18:34  oconnor
+--| commented out x_test_grab_control, not working
+--|
 --| Revision 1.10  2000/04/14 16:59:14  king
 --| Added x_test_grab_control to no effect
 --|

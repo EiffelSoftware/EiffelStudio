@@ -75,12 +75,6 @@ feature -- IL Generation
 			if not is_single_class then
 					-- Clean IL recorded information
 				clean_debug_information (class_type)
-
-					-- Define all features used by ISE runtime.
-				define_runtime_features (class_type)
-
-					-- Generate default constructor.
-				define_default_constructor (class_type, False)
 			end
 
 				-- First generate anchored features as they might be needed by current class
@@ -94,6 +88,12 @@ feature -- IL Generation
 			generate_il_implementation_parents (class_interface)
 
 			if not is_single_class then
+					-- Define all features used by ISE runtime.
+				define_runtime_features (class_type)
+
+					-- Generate default constructor.
+				define_default_constructor (class_type, False)
+
 					-- Generate invariant routine.
 				generate_invariant_feature (class_c.invariant_feature)
 			end

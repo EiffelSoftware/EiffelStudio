@@ -1,0 +1,69 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Query variables</TITLE>
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Bind Variables">
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Mapping Variables">
+		<META NAME="MS-HKWD" CONTENT="Database, Query Variables">
+		<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Binding variables in a database query</H1>
+
+		<P>If you have to execute database queries which only differ in the expression values, you
+		can create a template query and then bind variables into this template for each execution.</P>
+
+		<P>This mechanism can be applied for requests with a result (<A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A>) or without (<A CLASS="eclass" HREF="../../../reference/interface/db_change.html">DB_CHANGE</A>).
+		Hence both classes inherits from <A CLASS="eclass" HREF="../../../reference/support/string_hdl.html">STRING_HDL</A> that actually handle variable binding.</P>
+
+		<P>To use variable binding:</P>
+
+		<UL>
+			<LI><A HREF="#create">Create</A> a template query.
+			<LI><A HREF="#bind">Bind</A> variables to the query.
+		</UL>
+
+		<H2><A NAME="create"></A>Creating a template query</H2>
+
+		<P>Template queries are parsed to replace each variable by its bound value. To create a template
+		query, you have hence to put directly variables where the values would take place.</P>
+		<P>Variables syntax is simple: the ':' special character followed by the variable name.</P>
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">Bind_var</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"firstname"</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_make">make</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_set_query">set_query</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"Select * from CONTACTS where Firstname = ':"</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="efeature">Bind_var</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="estring">"'"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+</CODE><BR>
+
+		<P CLASS="note"><B>Note</B>: The code example shows how to bind variables to a <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> object
+		but the mechanism is exactly the same for <A CLASS="eclass" HREF="../../../reference/interface/db_change.html">DB_CHANGE</A> objects.</P>
+
+		<H2><A NAME="bind"></A>Binding variables to a query</H2>
+
+		<P>Once you have created your query, you can map variable names to values and execute the query:</P>
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">Bind_var</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"firstname"</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/kernel/std_files.html#f_read_line">read_line</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_set_map_name">set_map_name</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/kernel/std_files.html#f_laststring">laststring</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">Bind_var</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_execute_query">execute_query</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_unset_map_name">unset_map_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="efeature">Bind_var</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+<BR>
+
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../30_database_selection/index.html">Performing a database selection.</A><BR>
+					<A HREF="../20_data_modification/index.html">Modifying database content.</A><BR>
+		</P>
+	</BODY>
+</HTML>

@@ -1,0 +1,60 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Database Connection</TITLE>
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Connection">
+		<META NAME="MS-HKWD" CONTENT="Database, Connection">
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Getting Started">
+		<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Connecting to your database</H1>
+
+		<OL>
+			<LI>To connect to your database, you have to create a <B>handle</B>: this handle actually link the interface
+			classes with corresponding implementation classes mapped to your DBMS. This handle is implemented by
+			the <A CLASS="eclass" HREF="../../../reference/dbms/support/database_appl.html">DATABASE_APPL</A> class:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">database_appl</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/dbms/support/database_appl.html">DATABASE_APPL</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Database handle.</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">database_appl</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/dbms/support/database_appl.html#f_login">login</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_psswd</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">database_appl</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/dbms/support/database_appl.html#f_set_base">set_base</A><BR>
+</CODE><BR>
+
+		<P CLASS="note"><B>Note</B>: Notice the call of <A CLASS="efeature" HREF="../../../reference/dbms/support/database_appl.html#f_set_base">set_base</A> that
+		enables to link EiffelStore interface to this specific handle.</P>
+
+		<P CLASS="tip"><B>Tip</B>: You can manage handles to many databases: as an instance of <A CLASS="eclass" HREF="../../../reference/dbms/support/database_appl.html">DATABASE_APPL</A> stands
+		for a specific database handle, you only have to create one instance of <A CLASS="eclass" HREF="../../../reference/dbms/support/database_appl.html">DATABASE_APPL</A> for every DBMS handle you
+		wish to create. Do not forget to call <A CLASS="efeature" HREF="../../../reference/dbms/support/database_appl.html#f_set_base">set_base</A> to activate
+		appropriate handle.</P>
+
+		<P CLASS="note"><B>Note</B>: The generic parameter of <A CLASS="eclass" HREF="../../../reference/dbms/support/database_appl.html">DATABASE_APPL</A> specifies the actual DBMS used.</P>
+
+			<LI>Once your handle is created, you have to create a session manager which will allow you to manage your
+			database, specifically to establish connection, disconnect and also handle errors. The class <A CLASS="eclass" HREF="../../../reference/interface/db_control.html">DB_CONTROL</A> enables your application
+			to plainly control the functioning and status of your database and to request any information about it.
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">session_control</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/interface/db_control.html">DB_CONTROL</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Session control.</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">session_control</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_make">make</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">session_control</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_control.html#f_connect">connect</A><BR>
+</CODE><BR>
+
+		<P CLASS="note"><B>Note</B>: Take a look at the <A HREF="../80_database_control/index.html">database control</A> part to see how
+		to use <A CLASS="eclass" HREF="../../../reference/interface/db_control.html">DB_CONTROL</A> capabilities.</P>
+
+		</OL>
+
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../80_database_control/index.html">Database control and error handling</A><BR>
+					<A HREF="../../20_implementation_layer/index.html">Implementation</A><BR>
+		</P>
+	</BODY>
+</HTML>

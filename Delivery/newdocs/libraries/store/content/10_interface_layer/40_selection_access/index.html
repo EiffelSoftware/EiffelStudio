@@ -1,0 +1,135 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Selection Access</TITLE>
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Selection Result">
+		<META NAME="MS-HKWD" CONTENT="Database, Manipulating Data">
+		<META NAME="MS-HKWD" CONTENT="Database, Query Result">
+		<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Accessing selected data from the database</H1>
+
+		<P>Once you have <A HREF="../30_database_selection/index.html">selected data</A> from the database, it returns a set of rows containing queried columns values.
+		Each row loaded with <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> is stored in a <A CLASS="eclass" HREF="../../../reference/interface/db_result.html">DB_RESULT</A> object. The easiest way to
+		access the data is thus to refer to <A CLASS="eclass" HREF="../../../reference/interface/db_result.html">DB_RESULT</A> objects themselves.
+		</P>
+
+		<P CLASS="note"><B>Note</B>: Take a look at the <A HREF="../50_data_object_coupling/index.html">Database/Eiffel objects Coupling</A> to learn advanced data
+		handling features.</P>
+
+		<P>To use <A CLASS="eclass" HREF="../../../reference/interface/db_result.html">DB_RESULT</A>, process in 2 steps:</P>
+
+		<UL>
+			<LI><A HREF="#retrieve">retrieve</A> <A CLASS="eclass" HREF="../../../reference/interface/db_result.html">DB_RESULT</A> objects.
+
+			<LI><A HREF="#access">access</A> <A CLASS="eclass" HREF="../../../reference/interface/db_result.html">DB_RESULT</A> content.
+		</UL>
+
+		<H2><A NAME="retrieve"></A>Retrieving DB_RESULT objects</H2>
+
+		<P><A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> class provides different ways to customize result loading:</P>
+
+		<UL>
+			<LI>You want to access an <B>unique</B> row: <A CLASS="eclass" HREF="../../../reference/interface/db_result.html">DB_RESULT</A> object is accessible via <A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_cursor">cursor</A>:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_result</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_result.html">DB_RESULT</A><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_query">query</A> (<SPAN CLASS="estring">"..."</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_is_ok">is_ok</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_load_result">load_result</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_result</SPAN> := <SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_cursor">cursor</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+			<LI>You want to load a <B>complete list</B> of rows: <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> can store <A CLASS="eclass" HREF="../../../reference/interface/db_result.html">DB_RESULT</A> objects
+			in a list. To do this, you have mainly to provide a <A CLASS="eclass" HREF="../../../../base/reference/structures/list/list.html">LIST</A> object to <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> with
+			<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_set_container">set_container</A>:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">container</SPAN>: <A CLASS="eclass" HREF="../../../../base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> [<A CLASS="eclass" HREF="../../../reference/interface/db_result.html">DB_RESULT</A>]<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">container</SPAN>.<A CLASS="efeature" HREF="../../../../base/reference/structures/list/arrayed_list.html#f_make">make</A> (<SPAN CLASS="efeature">Max_results</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_set_container">set_container</A> (<SPAN CLASS="efeature">container</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">container</SPAN>.<A CLASS="efeature" HREF="../../../../base/reference/structures/list/arrayed_list.html#f_start">start</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">container</SPAN>.<A CLASS="efeature" HREF="../../../../base/reference/structures/list/arrayed_list.html#f_after">after</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+			<P CLASS="tip"><B>Tip</B>: Provide <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> with the <A CLASS="eclass" HREF="../../../../base/reference/structures/list/list.html">LIST</A> structure convenient
+			for what you need to do with the results.</P>
+
+			<LI><A NAME="action"></A>You want to <B>select part</B> of the result set: you can set an action in <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> that
+			will be executed each time a row is loaded. This action can for instance manipulate current
+			row and define a stop condition.
+			<UL>
+				<LI>You need to define a descendant of class <A CLASS="eclass" HREF="../../../reference/support/action.html">ACTION</A> and set it to <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A>:
+
+<BR><CODE>
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="eclass">MY_ACTION</SPAN><BR>
+<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../../reference/support/action.html">ACTION</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../../reference/support/action.html#f_execute">execute</A>, <A CLASS="efeature" HREF="../../../reference/support/action.html#f_found">found</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+...<BR>
+<SPAN CLASS="efeature">execute</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">i</SPAN> := <SPAN CLASS="efeature">i</SPAN> + 1<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+...<BR>
+<SPAN CLASS="efeature">found</SPAN>: <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">Result</SPAN> := <SPAN CLASS="efeature">i</SPAN> >= <SPAN CLASS="efeature">Max_result</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+				<LI>Then set action to <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A>:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">action</SPAN>: <SPAN CLASS="eclass">MY_ACTION</SPAN><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_set_action">set_action</A> (<SPAN CLASS="efeature">action</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_query">query</A> (<SPAN CLASS="estring">"..."</SPAN>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_is_ok">is_ok</A> <SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_load_result">load_result</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+			</UL>
+		</UL>
+
+		<H2><A NAME="access"></A>Accessing content of DB_RESULT</H2>
+
+		<P>A <A CLASS="eclass" HREF="../../../reference/interface/db_result.html">DB_RESULT</A> object merely carries data retrieved from the database. You have to convert it
+		to a <A CLASS="eclass" HREF="../../../reference/interface/db_tuple.html">DB_TUPLE</A> to access data within the retrieved row conveniently, i.e. mostly the column values:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">tuple</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_tuple.html">DB_TUPLE</A><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">tuple</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">tuple</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_tuple.html#f_copy">copy</A> (<SPAN CLASS="efeature">selection</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_cursor">cursor</A>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">tuple</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_tuple.html#f_count">count</A> &gt;= 2 <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="efeature">tuple</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_tuple.html#f_column_name">column_name</A> (2).<A CLASS="efeature" HREF="../../../../base/reference/kernel/string.html#f_is_equal">is_equal</A> (<SPAN CLASS="estring">"Firstname"</SPAN>)
+<SPAN CLASS="ekeyword">then</SPAN><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/kernel/std_files.html#f_putstring">putstring</A> (<SPAN CLASS="efeature">tuple</SPAN>.<A CLASS="efeature" HREF="../../../reference/interface/db_tuple.html#f_item">item</A> (2).<A CLASS="efeature" HREF="../../../../base/reference/kernel/string.html#f_out">out</A>)<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+</CODE><BR>
+
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../30_database_selection/index.html">Performing a database selection.</A><BR>
+					<A HREF="../50_data_object_coupling/index.html">Coupling database data and Eiffel objects.</A><BR>
+		</P>
+	</BODY>
+</HTML>

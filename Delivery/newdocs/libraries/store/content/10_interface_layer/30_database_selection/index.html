@@ -1,0 +1,47 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Database Selection</TITLE>
+		<META NAME="MS-HKWD" CONTENT="EiffelStore, Selection">
+		<META NAME="MS-HKWD" CONTENT="Database, Selection">
+		<META NAME="MS-HKWD" CONTENT="Database, Retrieving Data">
+		<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Selecting data from the database</H1>
+
+		<P>Use the <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> class to select data from the database. Once you have selected the data,
+		you can <A HREF="../40_selection_access/index.html">access</A> it with convenience using adaptative EiffelStore structures.
+		</P>
+
+		<P CLASS="note"><B>Note</B>: Take a look at the <A HREF="../50_data_object_coupling/index.html">Database/Eiffel objects Coupling</A>
+		if you need information about your database structure.</P>
+
+		<P><A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A> enables your application to get database content using SQL 'select' queries:</P>
+
+		<UL>
+			<LI>You can carry out 'select' queries in an intuitive way using directly the
+			SQL language:
+
+<BR><CODE>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN>: <A CLASS="eclass" HREF="../../../reference/interface/db_selection.html">DB_SELECTION</A><BR>
+&nbsp;&nbsp;&nbsp;...<BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_make">make</A><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_set_query">set_query</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"select * from CONTACTS where firstname = 'John'"</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">selection</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../reference/interface/db_selection.html#f_execute">execute</A><BR>
+</CODE><BR>
+
+			<P CLASS="tip"><B>Tip</B>: Always check the database status for errors after your 'select' query.</P>
+
+			<LI>You can also customize your selection using <A HREF="../60_query_variables/index.html">bind variables</A>.
+
+</UL>
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="../60_query_variables/index.html">Binding variables in a database query.</A><BR>
+					<A HREF="../50_data_object_coupling/index.html">Coupling database objects with Eiffel objects.</A><BR>
+					<A HREF="../40_selection_access/index.html">Accessing selected data from the database.</A><BR>
+		</P>
+	</BODY>
+</HTML>

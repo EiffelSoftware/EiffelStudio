@@ -46,18 +46,31 @@ feature -- Basic Operations
 			l_retried: BOOLEAN
 			l_vs_setup: VS_SETUP
 			l_tasks: ARRAYED_LIST [WIZARD_PROGRESS_REPORTING_TASK]
+			l_path: STRING
 		do
 			if not l_retried then
 				message_output.clear
 				environment.set_error_data (Void)
-				create l_vs_setup.make
-				if not l_vs_setup.valid_vcvars then
-					Environment.set_abort (No_c_compiler)					
-				else
-					if Eiffel_installation_dir_name = Void or else Eiffel_installation_dir_name.is_empty then
-						Environment.set_abort (No_ise_eiffel)
+				if Eiffel_installation_dir_name = Void or else Eiffel_installation_dir_name.is_empty then
+					Environment.set_abort (No_ise_eiffel)
+				end
+				if not Environment.abort then
+					if use_bcb then
+						l_path := env.get ("PATH")
+						l_path.append (";")
+						l_path.append (Eiffel_installation_dir_name)
+						l_path.append ("\BCC55\Bin")
+						env.put (l_path, "PATH")
 					end
-				end			
+					create l_vs_setup.make
+					if not l_vs_setup.valid_vcvars then
+						if not use_bcb then
+							Environment.set_abort (No_c_compiler)
+						elseif environment.idl then
+							Environment.set_abort (No_midl_compiler)
+						end
+					end
+				end
 				if not environment.abort then
 					message_output.add_title ("Processing  %"" + environment.project_name + "%"")
 					create l_tasks.make (8)
@@ -93,6 +106,7 @@ feature -- Basic Operations
 			end
 			if environment.abort then
 				message_output.display_error
+				message_output.add_message ("%R%N%R%N")
 			else
 				message_output.add_title ("Processing finished successfully")
 				message_output.add_message ("%R%N")
@@ -101,7 +115,7 @@ feature -- Basic Operations
 		rescue
 			if not l_retried then
 				environment.set_abort (Exception_raised)
-				environment.set_error_data (tag_name + ":%R%N" + exception_trace)
+				environment.set_error_data (tag_name + ":%N" + exception_trace)
 				l_retried := True
 				retry
 			end

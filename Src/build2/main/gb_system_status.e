@@ -125,6 +125,17 @@ feature -- Status setting
 			not_is_object_structure_changing: not is_object_structure_changing
 		end
 		
+	is_in_debug_mode: BOOLEAN
+		-- Is `EiffelBuild' currently enabled for debugging?
+		
+	enable_debug_mode is
+			--
+		do
+			is_in_debug_mode := True
+		ensure
+			is_in_debug_mode: is_in_debug_mode
+		end
+		
 feature {NONE} -- Implementation
 
 	is_object_structure_changing_cell: CELL [BOOLEAN] is

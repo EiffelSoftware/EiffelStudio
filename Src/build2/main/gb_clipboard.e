@@ -75,7 +75,17 @@ feature {GB_CLIPBOARD_COMMAND} -- Implementation
 			-- This is a minimal representation and does not have it's id's updated, referers connected etc etc.
 			-- Used when you simply need a copy of the clipboard's contents for viewing.
 		do
+
 			if contents_cell.item /= Void then
+			
+				if system_status.is_in_debug_mode then
+					show_element (contents_cell.item, main_window)
+				end				
+				replace_all_instances_with_up_to_date_xml (contents_cell.item)
+				if system_status.is_in_debug_mode then
+					show_element (contents_cell.item, main_window)
+				end				
+
 				Result := new_object (contents_cell.item, True)
 					-- Modify id of `Result' so that it is not the same as that of `Current'.
 			end

@@ -6,7 +6,7 @@ CFLAGS = -c -Ox -I$(LIBRARY)\com\runtime\include -I$(EIFFEL4)\bench\spec\windows
 .cpp.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = ecom_exception.obj ecom_string_convert.obj ecom_structure_wrappers.obj ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj
+OBJ = ecom_exception.obj  ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj ecom_runtime_e_c.obj
 
 ecom_runtime.lib: $(OBJ)
 	if exist $@ del $@

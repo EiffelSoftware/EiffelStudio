@@ -5,8 +5,8 @@
 //
 //  File:		ecom_runtime_c_e.h
 //
-//  Contents:	Runtime conversion functions from C to Eiffel 
-//				
+//  Contents:	Runtime conversion functions from C to Eiffel
+//
 //--------------------------------------------------------------------------
 
 #ifndef __ECOM_RUNTIME_CE_H_INC__
@@ -27,19 +27,19 @@ class ecom_runtime_ce
 {
 public:
 	// Help functions for arrays.
-	
+
 	char * ccom_name_n_dim_array (char * element_name, EIF_INTEGER dim_count);
 	EIF_OBJECT ccom_create_array (char * element_name, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
-	
+
 	int ccom_flat_index (int dim_count, int * element_count, int * index);
 	int ccom_next_index (int dim_count, int * element_count, int * index);
 
 	int ccom_element_number (EIF_INTEGER dim_count, EIF_INTEGER * element_count);
-	int ccom_safearray_next_index (EIF_INTEGER dim_count, 
+	int ccom_safearray_next_index (EIF_INTEGER dim_count,
 					EIF_INTEGER * lower_indeces, EIF_INTEGER * upper_indeces, EIF_INTEGER * index);
 
 	// Automation types
-	
+
 	EIF_REFERENCE ccom_ce_date (DATE a_date);
 	EIF_REFERENCE ccom_ce_bstr (BSTR a_bstr);
 	EIF_REFERENCE ccom_ce_hresult (HRESULT a_hresult);
@@ -47,9 +47,10 @@ public:
 	EIF_REFERENCE ccom_ce_lpstr (LPSTR a_string);
 	EIF_REFERENCE ccom_ce_lpwstr (LPWSTR a_wstring);
 
-	// Pointed 
-	
-	EIF_REFERENCE ccom_ce_pointed_integer (EIF_INTEGER * an_integer);
+	// Pointed
+
+	EIF_REFERENCE ccom_ce_pointed_short (short * an_integer);
+	EIF_REFERENCE ccom_ce_pointed_long (long * an_integer);
 	EIF_REFERENCE ccom_ce_pointed_real (EIF_REAL * a_real);
 	EIF_REFERENCE ccom_ce_pointed_double (EIF_DOUBLE * a_double);
 	EIF_REFERENCE ccom_ce_pointed_character (EIF_CHARACTER * a_character);
@@ -67,7 +68,7 @@ public:
 	EIF_REFERENCE ccom_ce_pointed_unknown (IUnknown * a_unknown);
 
 	// Safearray
-	
+
 	EIF_REFERENCE ccom_ce_safearray_short (SAFEARRAY * a_safearray);
 	EIF_REFERENCE ccom_ce_safearray_long (SAFEARRAY * a_safearray);
 	EIF_REFERENCE ccom_ce_safearray_float (SAFEARRAY * a_safearray);
@@ -83,9 +84,9 @@ public:
 	EIF_REFERENCE ccom_ce_safearray_record (SAFEARRAY * a_safearray);
 	EIF_REFERENCE ccom_ce_safearray_dispatch (SAFEARRAY * a_safearray);
 	EIF_REFERENCE ccom_ce_safearray_unknown (SAFEARRAY * a_safearray);
-	
+
 	// Array
-	
+
 	EIF_REFERENCE ccom_ce_array_short (short * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
 	EIF_REFERENCE ccom_ce_array_long (long * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
 	EIF_REFERENCE ccom_ce_array_float (float * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
@@ -105,15 +106,15 @@ public:
 	EIF_REFERENCE ccom_ce_array_ulong_long (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
 	EIF_REFERENCE ccom_ce_array_dispatch (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
 	EIF_REFERENCE ccom_ce_array_unknown (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count);
-	
+
 	// User Defined
-	
+
 	// Alias
-	
+
 	// Enum
-	
+
 	// Record
-	
+
 	// Interface
 };
 #include "ecom_rt_globals.h"

@@ -147,6 +147,9 @@ feature -- Basic operation
 		
 	replace_object_type (an_object: GB_OBJECT; a_type: STRING) is
 			-- Replace `an_object' with a new object of type `selector_item'.
+			-- Note that as EV_TABLE has no theoretical limit to the number of children
+			-- it may contain, we enlarge the newly created table to hold the number of
+			-- children in `an_object'. Its default size is 1x1.
 		require
 			an_object_not_void: an_object /= Void
 			an_object_object_not_void: an_object.object /= Void
@@ -171,6 +174,7 @@ feature -- Basic operation
 			parent_object: GB_OBJECT
 			original_position: INTEGER
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+			table_object: GB_TABLE_OBJECT
 		do
 				-- Retreive the parent of `an_object'
 				-- we must do this before calling `remove_object_from_parent'.
@@ -197,6 +201,13 @@ feature -- Basic operation
 			
 				-- Add new object to parent of old object.
 			add_object (parent_object, new_object, original_position)			
+			
+			 -- Now, if we are a table, we must resize the table to fit all
+			 -- the new contents.
+			 table_object ?= new_object
+			if table_object /= Void then
+				table_object.resize_to_accomodate (an_object.layout_item.count)
+			end
 				
 			
 				-- Now we must swap the children over.	

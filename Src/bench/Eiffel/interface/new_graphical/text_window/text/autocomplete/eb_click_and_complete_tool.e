@@ -671,7 +671,6 @@ feature -- Class names completion
 			cname: STRING
 			clusters: LINKED_LIST [CLUSTER_I]
 			class_list: ARRAYED_LIST [EB_NAME_FOR_COMPLETION]
-			matcher: KMP_WILD
 			classes: EXTEND_TABLE [CLASS_I, STRING]
 			token				: EDITOR_TOKEN
 			complete, show_all	: BOOLEAN

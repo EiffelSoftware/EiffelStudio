@@ -10,8 +10,12 @@ inherit
 	EV_CELL
 		rename
 			item as cell_item,
-			pointer_motion_actions as grid_pointer_motion_actions,
-			pointer_double_press_actions as grid_pointer_double_press_actions
+			pointer_motion_actions as cell_pointer_motion_actions,
+			pointer_double_press_actions as cell_pointer_double_press_actions,
+			pointer_enter_actions as cell_pointer_enter_actions,
+			pointer_button_press_actions as cell_pointer_button_press_actions,
+			pointer_button_release_actions as cell_pointer_button_release_actions,
+			pointer_leave_actions as cell_pointer_leave_actions
 		redefine
 			implementation,
 			create_implementation,

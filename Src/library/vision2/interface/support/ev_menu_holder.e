@@ -9,6 +9,12 @@ indexing
 class
 	EV_MENU_CONTAINER
 
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
+
 feature -- Implementation
 
 	implementation: EV_MENU_CONTAINER_I

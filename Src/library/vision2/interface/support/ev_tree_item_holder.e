@@ -8,6 +8,12 @@ indexing
 deferred class
 	EV_TREE_ITEM_CONTAINER
 
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
+
 feature {EV_TREE_ITEM, EV_TREE_ITEM_I} -- Implementation
 
 	implementation: EV_TREE_ITEM_CONTAINER_I

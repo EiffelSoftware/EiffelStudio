@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that contain constants for "
-	author: ""
+	description: "Objects that contain constants for file handling."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -94,8 +93,5 @@ feature -- XML saving
 		
 	xml_format: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>"
 		-- XML format type, included at start of `document'.
-		
-	type_string: STRING is "type"
-			-- String used to match type within XML.
 			
 end -- class GB_FILE_CONSTANTS

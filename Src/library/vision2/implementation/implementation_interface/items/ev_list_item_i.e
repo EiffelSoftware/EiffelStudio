@@ -40,6 +40,27 @@ feature -- Status report
 		deferred
 		end
 
+	index: INTEGER is
+			-- Index of the current item.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	is_first: BOOLEAN is
+			-- Is the item first in the list ?
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	is_last: BOOLEAN is
+			-- Is the item last in the list ?
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature -- Status setting
 
 	set_selected (flag: BOOLEAN) is

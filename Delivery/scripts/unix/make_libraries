@@ -10,8 +10,8 @@ remtrace Eiffel2Java
 exprt -r $DEFAULT_CVS_TAG -d Eiffel2Java Src/library/Eiffel2Java
 remtrace event
 exprt -r $DEFAULT_CVS_TAG -d event Src/library/event
-remtrace gel
-exprt -r $DEFAULT_CVS_TAG -d gel Src/library/gel
+remtrace graph
+exprt -r $DEFAULT_CVS_TAG -d graph Src/library/graph
 remtrace lex
 exprt -r $DEFAULT_CVS_TAG -d lex Src/library/lex
 remtrace mel

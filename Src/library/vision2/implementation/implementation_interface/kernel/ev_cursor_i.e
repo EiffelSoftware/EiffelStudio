@@ -24,12 +24,13 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
-	make_by_pixmap (pix: EV_PIXMAP) is
-			-- Create a cursor with `pix' as appearance
+	make_by_filename (filename: STRING) is
+			-- Create a cursor from the given file path
+		require
+			valid_filename: filename /= Void
+			filename_exists: interface.file_exists (filename)
 		deferred
 		end
-
-feature {NONE} -- Implementation
 
 end -- class EV_CURSOR_I
 

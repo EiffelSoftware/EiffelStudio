@@ -26,11 +26,14 @@
   David Schwartz
 */
 
+
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include "eif_lmalloc.h"
+#include <malloc.h>
+
 
 #ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */
@@ -61,7 +64,7 @@ rt_public Malloc_t eif_malloc (register unsigned int nbytes)
 
 	return (Malloc_t) malloc (nbytes);
 
-#elif defined EIF_WIN32 || defined EIF_VMS
+#elif EIF_WIN32 || defined EIF_VMS
 /* For Windows and VMS platforms we use malloc() implemented in the C-library */
 	return malloc (nbytes);
 
@@ -69,6 +72,9 @@ rt_public Malloc_t eif_malloc (register unsigned int nbytes)
 /* For VXWORKS, we have a special run-time. HP provides their own malloc ()
  *we do not have, so we call malloc() from the C-library to perform test */
 #warning: file should not be linked for VXWORKS runtime. 
+	return malloc (nbytes);
+
+#elif !defined HAS_SMART_MMAP && !defined HAS_SBRK
 	return malloc (nbytes);
 
 #else
@@ -88,6 +94,7 @@ rt_public Malloc_t eif_malloc (register unsigned int nbytes)
 
 	return (Malloc_t) arena;
 
+
 #endif /* EIF_THREADS */	
 }
 
@@ -101,6 +108,9 @@ rt_public Malloc_t eif_calloc (unsigned int nelem, unsigned int elsize)
 
 #elif defined VXWORKS
 #warning: file should not be linked for VXWORKS runtime.
+	return calloc (nelem, elsize);
+
+#elif !defined HAS_SMART_MMAP && !defined HAS_SBRK
 	return calloc (nelem, elsize);
 
 #else /* all the other platforms (Unix/Linux) use an eiffel implementation */
@@ -129,6 +139,8 @@ rt_public Malloc_t eif_realloc (register void *ptr, register unsigned int nbytes
 #warning: file should not be linked for VXWORKS runtime.
 	return realloc (ptr,nbytes);
 
+#elif !defined HAS_SMART_MMAP && !defined HAS_SBRK
+	return realloc (ptr, nbytes);
 #else /* all the other platforms (Unix/Linux) use an eiffel implementation */
       /* for eif_realloc() */ 
 
@@ -147,13 +159,16 @@ void eif_free(register void *ptr)
 #if defined EIF_THREADS 
 	free (ptr);
 
-#elif defined EIF_WIN32 || defined EIF_VMS
-	free (ptr);
 
 #elif defined VXWORKS
 #warning: file should not be linked for VXWORKS runtime
 	free (ptr);
 
+#elif defined EIF_WIN32 || defined EIF_VMS
+	free (ptr);
+
+#elif !defined HAS_SMART_MMAP && !defined HAS_SBRK
+	return free (ptr);
 #else /* all the other platforms (Unix/Linux) use an eiffel implementation */
       /* for eif_free() */ 
 

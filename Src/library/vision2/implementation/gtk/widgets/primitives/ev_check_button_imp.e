@@ -16,7 +16,8 @@ inherit
 	EV_TOGGLE_BUTTON_IMP
 		redefine
 			make,
-			create_pixmap_place
+			create_pixmap_place,
+			set_text
 		end
         
 create
@@ -34,9 +35,6 @@ feature {NONE} -- Initialization
 
 			-- Create the `box'.
 			initialize
-
-			-- Create the label with a text set to "".
-			create_text_label ("")
                 end
 
 	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
@@ -48,7 +46,8 @@ feature {NONE} -- Initialization
 			pixmap_imp: EV_PIXMAP_IMP
 		do
 			-- create the pixmap with a default xpm.
---			pixmap_widget := c_gtk_pixmap_create_empty (box)
+			-- We use the pixmap's `create_window' to create the new pixmap
+			-- as we need a GdkWindow.
 			pixmap_widget := c_gtk_pixmap_create_empty (pix_imp.create_window)
 
 			-- Set the pixmap in the `box'.
@@ -58,6 +57,22 @@ feature {NONE} -- Initialization
 			gtk_widget_show (pixmap_widget)
 		end					
 
+feature -- Element change
+
+	set_text (txt: STRING) is
+			-- Set current button text to `txt'.
+			-- Redefined because we want the text to be left-aligned.
+		do
+			{EV_TOGGLE_BUTTON_IMP} Precursor (txt)
+
+			-- We left-align and vertical_center-position the text
+			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
+
+			if pixmap_widget /= default_pointer then
+				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.0, 0.5)
+			end				
+		end
+	
 end -- class EV_CHECK_BUTTON_IMP
 
 --!----------------------------------------------------------------

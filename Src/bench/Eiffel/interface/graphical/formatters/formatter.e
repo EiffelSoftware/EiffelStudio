@@ -178,7 +178,7 @@ feature -- Filters; Implementation
 			end
 		end;
 
-feature {NONE} -- Properties
+feature {FORMAT_BUTTON} -- Properties
 
 	holder: FORMAT_HOLDER
 			-- Holds the format holder in which

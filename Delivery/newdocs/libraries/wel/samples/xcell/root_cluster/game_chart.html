@@ -1,0 +1,120 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.016">
+
+<TITLE>GAME Chart</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<P ALIGN="CENTER">-- Automatic generation produced by ISE Eiffel --<P>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/samples/xcell/root_cluster/game_chart.html">GAME</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="/libraries/wel/samples/xcell/root_cluster/index.html">root_cluster</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants_chart.html">GAME_CONSTANTS</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`card_from_home_cell' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_card_from_home_cell">card_from_home_cell</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">cell_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`card_from_top_of_column' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_card_from_top_of_column">card_from_top_of_column</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">column_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`card_from_xcell' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_card_from_xcell">card_from_xcell</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">cell_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`card_in_xcell' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_card_in_xcell">card_in_xcell</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_card</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/samples/xcell/root_cluster/card_chart.html">CARD</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_xcell</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`card_offset' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_card_offset">Card_offset</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`column_empty' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_column_empty">column_empty</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">column_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`column_from' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_column_from">column_from</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">column_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`column_offset' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_column_offset">Column_offset</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`columns' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_columns">columns</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/wel/samples/xcell/root_cluster/column_chart.html">COLUMN</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`first_card' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_first_card">First_card</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`goal_state' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_goal_state">goal_state</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`home_cell_empty' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_home_cell_empty">home_cell_empty</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">cell_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`home_cell_offset' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_home_cell_offset">Home_cell_offset</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`legal_candidate' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_legal_candidate">legal_candidate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`maximum_game_number' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_maximum_game_number">Maximum_game_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`maximum_number_of_cards' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_maximum_number_of_cards">Maximum_number_of_cards</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`most_left_x_position' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_most_left_x_position">Most_left_x_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`most_top_y_position' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_most_top_y_position">Most_top_y_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`number_of_cells' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_number_of_cells">Number_of_cells</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`number_of_columns' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_number_of_columns">Number_of_columns</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`one_from_top_in_column' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_one_from_top_in_column">one_from_top_in_column</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_column</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`space_between_cards' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_space_between_cards">Space_between_cards</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`space_between_columns' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_space_between_columns">Space_between_columns</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`start_of_column_y_position' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_start_of_column_y_position">Start_of_column_y_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`state_change' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_state_change">state_change</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`the_cards' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_the_cards">the_cards</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="/libraries/wel/samples/xcell/root_cluster/card_chart.html">CARD</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`top_of_column' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_top_of_column">top_of_column</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_card</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/samples/xcell/root_cluster/card_chart.html">CARD</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_column</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`white_offset' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_white_offset">White_offset</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`xcell_empty' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_xcell_empty">xcell_empty</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">cell_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`xcell_offset' was declared in GAME_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game_constants.html#f_xcell_offset">Xcell_offset</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`change_state' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_change_state">change_state</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`deal_game' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_deal_game">deal_game</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_top_from_column' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_remove_top_from_column">remove_top_from_column</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">column_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_go_from' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_set_go_from">set_go_from</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">move_from</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_go_to' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_set_go_to">set_go_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">to</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`shuffle_the_cards' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/samples/xcell/root_cluster/game.html#f_shuffle_the_cards">shuffle_the_cards</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">game_number</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+<P ALIGN="CENTER">-- Generated by ISE Eiffel --<P>
+<P ALIGN="CENTER">-- For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A> --<P>
+</BODY>
+
+</HTML>

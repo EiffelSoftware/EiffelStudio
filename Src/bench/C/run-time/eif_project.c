@@ -18,6 +18,7 @@ extern "C" {
 #endif
 
 
+	EIF_BOOLEAN exception_stack_managed;
 	EIF_INTEGER egc_prof_enabled;	  
 	void (*egc_strmake)(char *, EIF_INTEGER); 
 	void (*egc_strset)(char *, EIF_INTEGER); 

@@ -57,7 +57,7 @@ feature -- For DATABASE_FORMAT
 	date_to_str (object: DATE_TIME): STRING is
 			-- String representation in SQL of `object'
 		do
-			!! Result.make (1)
+			create Result.make (1)
 			Result.append (object.out)
 			Result.precede ('%'')
 			Result.extend ('%'')

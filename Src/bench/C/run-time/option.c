@@ -33,11 +33,6 @@
 #include "eif_except.h"
 #include "eif_timer.h"
 #include "eif_tools.h"		/* For hashcode() */
-#include "eif_err_msg.h"
-
-#ifndef MAX_PATH
-#define MAX_PATH 255
-#endif
 
 rt_public int trace_call_level = 0;	/* call level for E-TRACE
 					 * recursive calls (whether direct or indirect).

@@ -15,15 +15,15 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			copy_to as system_collections_icollection_copy_to,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_count as system_collections_icollection_get_count
+			get_enumerator as ienumerable_get_enumerator,
+			copy_to as icollection_copy_to,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_count as icollection_get_count
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 
 create
@@ -84,21 +84,21 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
+	frozen icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
 		external
 			"IL signature (System.Array, System.Int32): System.Void use System.Drawing.Printing.PrinterSettings+PaperSizeCollection"
 		alias
 			"System.Collections.ICollection.CopyTo"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Drawing.Printing.PrinterSettings+PaperSizeCollection"
 		alias
 			"System.Collections.ICollection.get_SyncRoot"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Drawing.Printing.PrinterSettings+PaperSizeCollection"
 		alias
@@ -112,14 +112,14 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_icollection_get_count: INTEGER is
+	frozen icollection_get_count: INTEGER is
 		external
 			"IL signature (): System.Int32 use System.Drawing.Printing.PrinterSettings+PaperSizeCollection"
 		alias
 			"System.Collections.ICollection.get_Count"
 		end
 
-	frozen system_collections_ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
+	frozen ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
 		external
 			"IL signature (): System.Collections.IEnumerator use System.Drawing.Printing.PrinterSettings+PaperSizeCollection"
 		alias

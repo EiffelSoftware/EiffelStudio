@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	frozen contains (value: SYSTEM_DRAWING_DESIGN_TOOLBOXITEM): BOOLEAN is
+	frozen has (value: SYSTEM_DRAWING_DESIGN_TOOLBOXITEM): BOOLEAN is
 		external
 			"IL signature (System.Drawing.Design.ToolboxItem): System.Boolean use System.Drawing.Design.ToolboxItemCollection"
 		alias

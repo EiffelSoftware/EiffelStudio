@@ -15,15 +15,15 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_count as system_collections_icollection_get_count,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			copy_to as system_collections_icollection_copy_to,
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_count as icollection_get_count,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			copy_to as icollection_copy_to,
+			get_enumerator as ienumerable_get_enumerator
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 
 create
@@ -97,7 +97,7 @@ feature -- Basic Operations
 			"Add"
 		end
 
-	frozen add (schema: SYSTEM_XML_SCHEMA_XMLSCHEMA) is
+	frozen extend (schema: SYSTEM_XML_SCHEMA_XMLSCHEMA) is
 		external
 			"IL signature (System.Xml.Schema.XmlSchema): System.Void use System.Xml.Schema.XmlSchemaCollection"
 		alias
@@ -132,7 +132,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen contains (ns: STRING): BOOLEAN is
+	frozen has (ns: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use System.Xml.Schema.XmlSchemaCollection"
 		alias
@@ -176,21 +176,21 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
+	frozen icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
 		external
 			"IL signature (System.Array, System.Int32): System.Void use System.Xml.Schema.XmlSchemaCollection"
 		alias
 			"System.Collections.ICollection.CopyTo"
 		end
 
-	frozen system_collections_ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
+	frozen ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
 		external
 			"IL signature (): System.Collections.IEnumerator use System.Xml.Schema.XmlSchemaCollection"
 		alias
 			"System.Collections.IEnumerable.GetEnumerator"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Xml.Schema.XmlSchemaCollection"
 		alias
@@ -204,14 +204,14 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_icollection_get_count: INTEGER is
+	frozen icollection_get_count: INTEGER is
 		external
 			"IL signature (): System.Int32 use System.Xml.Schema.XmlSchemaCollection"
 		alias
 			"System.Collections.ICollection.get_Count"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Xml.Schema.XmlSchemaCollection"
 		alias

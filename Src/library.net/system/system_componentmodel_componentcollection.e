@@ -8,17 +8,12 @@ external class
 inherit
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized
+			copy_to as icollection_copy_to,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_READONLYCOLLECTIONBASE
-		rename
-			icollection_copy_to as system_collections_icollection_copy_to,
-			icollection_get_sync_root as system_collections_icollection_get_sync_root,
-			icollection_get_is_synchronized as system_collections_icollection_get_is_synchronized
-		end
 
 create
 	make_componentcollection

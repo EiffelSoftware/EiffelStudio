@@ -154,7 +154,7 @@ feature -- Basic Operations
 			"Insert"
 		end
 
-	frozen contains (item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM): BOOLEAN is
+	frozen has (item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM): BOOLEAN is
 		external
 			"IL signature (System.Windows.Forms.ListViewItem): System.Boolean use System.Windows.Forms.ListView+ListViewItemCollection"
 		alias

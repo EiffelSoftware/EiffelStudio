@@ -15,8 +15,8 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 
@@ -77,7 +77,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Data.OleDb.OleDbErrorCollection"
 		alias
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Data.OleDb.OleDbErrorCollection"
 		alias

@@ -86,7 +86,7 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_item (index: INTEGER; value: STRING) is
+	frozen put_i_th (index: INTEGER; value: STRING) is
 		external
 			"IL signature (System.Int32, System.String): System.Void use System.Collections.Specialized.StringCollection"
 		alias
@@ -102,7 +102,7 @@ feature -- Basic Operations
 			"ToString"
 		end
 
-	frozen add (value: STRING): INTEGER is
+	frozen extend (value: STRING): INTEGER is
 		external
 			"IL signature (System.String): System.Int32 use System.Collections.Specialized.StringCollection"
 		alias
@@ -144,7 +144,7 @@ feature -- Basic Operations
 			"Clear"
 		end
 
-	frozen contains (value: STRING): BOOLEAN is
+	frozen has (value: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use System.Collections.Specialized.StringCollection"
 		alias

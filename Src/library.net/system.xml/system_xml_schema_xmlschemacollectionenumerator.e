@@ -15,9 +15,9 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_IENUMERATOR
 		rename
-			get_current as system_collections_ienumerator_get_current,
-			move_next as system_collections_ienumerator_move_next,
-			reset as system_collections_ienumerator_reset
+			get_current as ienumerator_get_current,
+			move_next as ienumerator_move_next,
+			reset as ienumerator_reset
 		end
 
 create {NONE}
@@ -63,14 +63,14 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_ienumerator_move_next: BOOLEAN is
+	frozen ienumerator_move_next: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Xml.Schema.XmlSchemaCollectionEnumerator"
 		alias
 			"System.Collections.IEnumerator.MoveNext"
 		end
 
-	frozen system_collections_ienumerator_reset is
+	frozen ienumerator_reset is
 		external
 			"IL signature (): System.Void use System.Xml.Schema.XmlSchemaCollectionEnumerator"
 		alias
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_ienumerator_get_current: ANY is
+	frozen ienumerator_get_current: ANY is
 		external
 			"IL signature (): System.Object use System.Xml.Schema.XmlSchemaCollectionEnumerator"
 		alias

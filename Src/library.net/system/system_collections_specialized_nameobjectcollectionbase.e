@@ -15,9 +15,9 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			copy_to as system_collections_icollection_copy_to
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root,
+			copy_to as icollection_copy_to
 		end
 	SYSTEM_RUNTIME_SERIALIZATION_ISERIALIZABLE
 	SYSTEM_RUNTIME_SERIALIZATION_IDESERIALIZATIONCALLBACK
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			"BaseGetAllValues"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Collections.Specialized.NameObjectCollectionBase"
 		alias
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			"get_IsReadOnly"
 		end
 
-	frozen system_collections_icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
+	frozen icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
 		external
 			"IL signature (System.Array, System.Int32): System.Void use System.Collections.Specialized.NameObjectCollectionBase"
 		alias
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			"BaseHasKeys"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Collections.Specialized.NameObjectCollectionBase"
 		alias

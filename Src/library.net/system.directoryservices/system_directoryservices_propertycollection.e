@@ -15,30 +15,30 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			copy_to as icollection_copy_to,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_enumerator as ienumerable_get_enumerator
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 	SYSTEM_COLLECTIONS_IDICTIONARY
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			remove as system_collections_idictionary_remove,
-			has as system_collections_idictionary_contains,
-			clear as system_collections_idictionary_clear,
-			extend as system_collections_idictionary_add,
-			get_keys as system_collections_idictionary_get_keys,
-			get_is_read_only as system_collections_idictionary_get_is_read_only,
-			get_is_fixed_size as system_collections_idictionary_get_is_fixed_size,
-			put_i_th as system_collections_idictionary_set_item,
-			get_item as system_collections_idictionary_get_item
+			copy_to as icollection_copy_to,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_enumerator as ienumerable_get_enumerator,
+			remove as idictionary_remove,
+			has as idictionary_has,
+			clear as idictionary_clear,
+			extend as idictionary_extend,
+			get_keys as idictionary_get_keys,
+			get_is_read_only as idictionary_get_is_read_only,
+			get_is_fixed_size as idictionary_get_is_fixed_size,
+			put_i_th as idictionary_put_i_th,
+			get_item as idictionary_get_item
 		end
 
 create {NONE}
@@ -119,28 +119,28 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_idictionary_get_is_fixed_size: BOOLEAN is
+	frozen idictionary_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.IDictionary.get_IsFixedSize"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.ICollection.get_SyncRoot"
 		end
 
-	frozen system_collections_idictionary_get_is_read_only: BOOLEAN is
+	frozen idictionary_get_is_read_only: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.IDictionary.get_IsReadOnly"
 		end
 
-	frozen system_collections_icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
+	frozen icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
 		external
 			"IL signature (System.Array, System.Int32): System.Void use System.DirectoryServices.PropertyCollection"
 		alias
@@ -154,63 +154,63 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
+	frozen ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
 		external
 			"IL signature (): System.Collections.IEnumerator use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.IEnumerable.GetEnumerator"
 		end
 
-	frozen system_collections_idictionary_contains (value: ANY): BOOLEAN is
+	frozen idictionary_has (value: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.IDictionary.Contains"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.ICollection.get_IsSynchronized"
 		end
 
-	frozen system_collections_idictionary_set_item (key: ANY; value: ANY) is
+	frozen idictionary_put_i_th (key: ANY; value: ANY) is
 		external
 			"IL signature (System.Object, System.Object): System.Void use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.IDictionary.set_Item"
 		end
 
-	frozen system_collections_idictionary_add (key: ANY; value: ANY) is
+	frozen idictionary_extend (key: ANY; value: ANY) is
 		external
 			"IL signature (System.Object, System.Object): System.Void use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.IDictionary.Add"
 		end
 
-	frozen system_collections_idictionary_remove (key: ANY) is
+	frozen idictionary_remove (key: ANY) is
 		external
 			"IL signature (System.Object): System.Void use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.IDictionary.Remove"
 		end
 
-	frozen system_collections_idictionary_get_item (key: ANY): ANY is
+	frozen idictionary_get_item (key: ANY): ANY is
 		external
 			"IL signature (System.Object): System.Object use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.IDictionary.get_Item"
 		end
 
-	frozen system_collections_idictionary_get_keys: SYSTEM_COLLECTIONS_ICOLLECTION is
+	frozen idictionary_get_keys: SYSTEM_COLLECTIONS_ICOLLECTION is
 		external
 			"IL signature (): System.Collections.ICollection use System.DirectoryServices.PropertyCollection"
 		alias
 			"System.Collections.IDictionary.get_Keys"
 		end
 
-	frozen system_collections_idictionary_clear is
+	frozen idictionary_clear is
 		external
 			"IL signature (): System.Void use System.DirectoryServices.PropertyCollection"
 		alias

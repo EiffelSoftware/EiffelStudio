@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_item (index: INTEGER; value: SYSTEM_DIAGNOSTICS_EVENTLOGPERMISSIONENTRY) is
+	frozen put_i_th (index: INTEGER; value: SYSTEM_DIAGNOSTICS_EVENTLOGPERMISSIONENTRY) is
 		external
 			"IL signature (System.Int32, System.Diagnostics.EventLogPermissionEntry): System.Void use System.Diagnostics.EventLogPermissionEntryCollection"
 		alias

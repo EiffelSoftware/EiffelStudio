@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_item (index: INTEGER; value: SYSTEM_COMPONENTMODEL_DESIGN_DESIGNERVERB) is
+	frozen put_i_th (index: INTEGER; value: SYSTEM_COMPONENTMODEL_DESIGN_DESIGNERVERB) is
 		external
 			"IL signature (System.Int32, System.ComponentModel.Design.DesignerVerb): System.Void use System.ComponentModel.Design.DesignerVerbCollection"
 		alias
@@ -101,7 +101,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen contains (value: SYSTEM_COMPONENTMODEL_DESIGN_DESIGNERVERB): BOOLEAN is
+	frozen has (value: SYSTEM_COMPONENTMODEL_DESIGN_DESIGNERVERB): BOOLEAN is
 		external
 			"IL signature (System.ComponentModel.Design.DesignerVerb): System.Boolean use System.ComponentModel.Design.DesignerVerbCollection"
 		alias
@@ -115,7 +115,7 @@ feature -- Basic Operations
 			"AddRange"
 		end
 
-	frozen add (value: SYSTEM_COMPONENTMODEL_DESIGN_DESIGNERVERB): INTEGER is
+	frozen extend (value: SYSTEM_COMPONENTMODEL_DESIGN_DESIGNERVERB): INTEGER is
 		external
 			"IL signature (System.ComponentModel.Design.DesignerVerb): System.Int32 use System.ComponentModel.Design.DesignerVerbCollection"
 		alias

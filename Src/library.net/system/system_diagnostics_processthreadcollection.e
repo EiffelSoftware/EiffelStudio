@@ -8,17 +8,12 @@ external class
 inherit
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized
+			copy_to as icollection_copy_to,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_READONLYCOLLECTIONBASE
-		rename
-			icollection_copy_to as system_collections_icollection_copy_to,
-			icollection_get_sync_root as system_collections_icollection_get_sync_root,
-			icollection_get_is_synchronized as system_collections_icollection_get_is_synchronized
-		end
 
 create
 	make_processthreadcollection
@@ -48,7 +43,7 @@ feature -- Basic Operations
 			"CopyTo"
 		end
 
-	frozen contains (thread: SYSTEM_DIAGNOSTICS_PROCESSTHREAD): BOOLEAN is
+	frozen has (thread: SYSTEM_DIAGNOSTICS_PROCESSTHREAD): BOOLEAN is
 		external
 			"IL signature (System.Diagnostics.ProcessThread): System.Boolean use System.Diagnostics.ProcessThreadCollection"
 		alias
@@ -62,7 +57,7 @@ feature -- Basic Operations
 			"IndexOf"
 		end
 
-	frozen add (thread: SYSTEM_DIAGNOSTICS_PROCESSTHREAD): INTEGER is
+	frozen extend (thread: SYSTEM_DIAGNOSTICS_PROCESSTHREAD): INTEGER is
 		external
 			"IL signature (System.Diagnostics.ProcessThread): System.Int32 use System.Diagnostics.ProcessThreadCollection"
 		alias

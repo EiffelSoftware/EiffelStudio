@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	frozen contains (value: ANY): BOOLEAN is
+	frozen has (value: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.DirectoryServices.ResultPropertyValueCollection"
 		alias

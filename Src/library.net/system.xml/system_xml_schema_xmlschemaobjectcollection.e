@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_item (index: INTEGER; value: SYSTEM_XML_SCHEMA_XMLSCHEMAOBJECT) is
+	put_i_th (index: INTEGER; value: SYSTEM_XML_SCHEMA_XMLSCHEMAOBJECT) is
 		external
 			"IL signature (System.Int32, System.Xml.Schema.XmlSchemaObject): System.Void use System.Xml.Schema.XmlSchemaObjectCollection"
 		alias
@@ -86,7 +86,7 @@ feature -- Basic Operations
 			"GetEnumerator"
 		end
 
-	frozen contains (item: SYSTEM_XML_SCHEMA_XMLSCHEMAOBJECT): BOOLEAN is
+	frozen has (item: SYSTEM_XML_SCHEMA_XMLSCHEMAOBJECT): BOOLEAN is
 		external
 			"IL signature (System.Xml.Schema.XmlSchemaObject): System.Boolean use System.Xml.Schema.XmlSchemaObjectCollection"
 		alias
@@ -100,7 +100,7 @@ feature -- Basic Operations
 			"IndexOf"
 		end
 
-	frozen add (item: SYSTEM_XML_SCHEMA_XMLSCHEMAOBJECT): INTEGER is
+	frozen extend (item: SYSTEM_XML_SCHEMA_XMLSCHEMAOBJECT): INTEGER is
 		external
 			"IL signature (System.Xml.Schema.XmlSchemaObject): System.Int32 use System.Xml.Schema.XmlSchemaObjectCollection"
 		alias

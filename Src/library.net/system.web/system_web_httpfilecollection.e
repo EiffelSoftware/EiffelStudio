@@ -9,9 +9,9 @@ inherit
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			copy_to as system_collections_icollection_copy_to
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root,
+			copy_to as icollection_copy_to
 		end
 	SYSTEM_RUNTIME_SERIALIZATION_ISERIALIZABLE
 	SYSTEM_RUNTIME_SERIALIZATION_IDESERIALIZATIONCALLBACK

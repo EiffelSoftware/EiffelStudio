@@ -177,6 +177,9 @@ feature -- Status setting
 			tree_item: EV_TREE_ITEM
 			conv_spec: SPECIAL_VALUE
 		do
+			debug ("debug_recv")
+				print ("EB_OBJECT_TOOL.refresh%N")
+			end
 			from
 				displayed_objects.start
 			until
@@ -270,6 +273,9 @@ feature -- Status setting
 			conv_stack: CALL_STACK_STONE
 			obj: EB_OBJECT_DISPLAY_PARAMETERS
 		do
+			debug ("debug_recv")
+				print ("EB_OBJECT_TOOL.set_stone%N")
+			end
 			if can_refresh then
 				conv_stack ?= a_stone
 				if conv_stack /= Void then
@@ -584,6 +590,9 @@ feature {NONE} -- Implementation
 	build_object_tree is
 			-- Create the tree that contains object information.
 		do
+			debug ("debug_recv")
+				print ("EB_OBJECT_TOOL.build_object_tree%N")
+			end
 			if current_object /= Void then
 				display_first := current_object.display
 				display_first_attributes := current_object.display_attributes
@@ -612,6 +621,9 @@ feature {NONE} -- Implementation
 		local
 			obj: EB_OBJECT_DISPLAY_PARAMETERS
 		do
+			debug ("debug_recv")
+				print ("EB_OBJECT_TOOL.load_object%N")
+			end
 			create obj.make (cl, addr)
 			obj.to_tree_item (parent)
 		end

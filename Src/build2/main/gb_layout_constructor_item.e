@@ -62,10 +62,13 @@ feature {NONE} -- Initialization
 			-- Create `Current' as a root object.
 		local
 			an_object: GB_TITLED_WINDOW_OBJECT
+			shared_pixmaps: GB_SHARED_PIXMAPS
 		do
 			default_create
+			create shared_pixmaps
 			create an_object.make_with_type_and_object (ev_titled_window_string, display_window)
 			set_text ("TITLED_WINDOW")
+			set_pixmap (shared_pixmaps.pixmap_by_name ("ev_titled_window"))
 			object_handler.add_root_object (an_object)
 			an_object.set_layout_item (Current)
 			builder_window.set_object (an_object)

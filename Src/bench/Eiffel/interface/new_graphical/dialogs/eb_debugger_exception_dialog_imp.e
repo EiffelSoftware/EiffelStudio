@@ -23,12 +23,6 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local 
-			l_ev_vertical_box_1: EV_VERTICAL_BOX
-			l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
-			l_ev_label_1: EV_LABEL
-			l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
-			l_ev_button_1, l_ev_button_2: EV_BUTTON
 		do
 			initialize_constants
 			
@@ -64,8 +58,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.extend (l_ev_button_2)
 			l_ev_horizontal_box_2.extend (l_ev_cell_4)
 			
-			window.set_minimum_width (400)
-			window.set_title ("Debugger :: Exception message")
 			l_ev_vertical_box_1.set_padding_width (tiny_padding)
 			l_ev_vertical_box_1.set_border_width (small_padding)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
@@ -75,6 +67,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.disable_item_expand (wrapping_button)
 			l_ev_label_1.set_text (" Exception message from debugger")
 			l_ev_label_1.set_minimum_height (20)
+			wrapping_button.enable_select
 			wrapping_button.set_text ("wrap")
 			message_text.set_minimum_width (300)
 			message_text.set_minimum_height (80)
@@ -88,6 +81,8 @@ feature {NONE}-- Initialization
 			l_ev_button_1.set_minimum_width (default_button_width)
 			l_ev_button_2.set_text (close_string)
 			l_ev_button_2.set_minimum_width (default_button_width)
+			window.set_minimum_width (400)
+			window.set_title ("Debugger :: Exception message")
 			
 				--Connect events.
 			wrapping_button.select_actions.extend (agent set_wrapping_mode)
@@ -112,8 +107,17 @@ feature -- Access
 
 	wrapping_button: EV_CHECK_BUTTON
 	message_text: EV_TEXT
-	details_box: EV_FRAME
 	details_text: EV_LABEL
+	details_box: EV_FRAME
+
+feature {NONE} -- Implementation
+
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_label_1: EV_LABEL
+	l_ev_button_1,
+	l_ev_button_2: EV_BUTTON
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
 
 feature {NONE} -- Implementation
 

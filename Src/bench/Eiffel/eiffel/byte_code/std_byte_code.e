@@ -248,7 +248,7 @@ feature
 				else
 					type_i := real_type (result_type);
 					type_i.c_type.generate_cast (generated_file);
-					generated_file.putchar ('0;');
+					generated_file.putstring ("0;");
 				end;
 				generated_file.new_line;
 			end;

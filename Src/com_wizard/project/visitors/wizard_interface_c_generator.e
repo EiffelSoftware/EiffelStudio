@@ -69,25 +69,6 @@ feature -- Access
 				end
 			end
 
-			if not a_descriptor.dual and then a_descriptor.properties /= Void and then not a_descriptor.properties.empty then
-				from
-					a_descriptor.properties.start
-				until
-					a_descriptor.properties.off
-				loop
-					prop_generator.generate (a_descriptor.properties.item)
-					if not a_descriptor.dispinterface then
-						cpp_class_writer.add_function (prop_generator.c_setting_feature, Public)
-						cpp_class_writer.add_function (prop_generator.c_access_feature, Public)
-					end
-					if prop_generator.c_header_file /= Void and then not prop_generator.c_header_file.empty then
-						if cpp_class_writer.import_files.occurrences (prop_generator.c_header_file) = 0 then
-							cpp_class_writer.add_import (prop_generator.c_header_file)
-						end
-					end
-					a_descriptor.properties.forth
-				end
-			end
 			Shared_file_name_factory.create_file_name (Current, cpp_class_writer)
 			cpp_class_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 		ensure then

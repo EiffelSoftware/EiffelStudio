@@ -24,6 +24,11 @@ inherit
 			{NONE} all
 		end
 
+	ECOM_VAR_FLAGS
+		export
+			{NONE} all
+		end
+
 	ECOM_INVOKE_KIND
 		export
 			{NONE} all
@@ -51,7 +56,9 @@ feature -- Basic operations
 
 					property_generator.generate (a_desc.name, a_desc.lcid, a_desc.properties.item)
 					cpp_class_writer.add_function (property_generator.c_access_feature, Public)
-					cpp_class_writer.add_function (property_generator.c_setting_feature, Public)
+					if not is_varflag_freadonly (a_desc.properties.item.var_flags) then
+						cpp_class_writer.add_function (property_generator.c_setting_feature, Public)
+					end
 
 					a_desc.properties.forth
 				end

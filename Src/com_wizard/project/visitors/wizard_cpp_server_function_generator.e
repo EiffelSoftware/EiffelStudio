@@ -446,16 +446,22 @@ feature {NONE} -- Implementation
 			Result.append (Type_id)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
+			Result.append (New_line)
 			Result.append (New_line_tab)
 
-			-- eiffel_procedure (eif_access (eiffel_object),
+			Result.append (function_cast_code (Void_c_keyword))
+
+			-- eiffel_procedure 
 			Result.append (Eiffel_procedure_variable_name)
+			Result.append (Close_parenthesis)
 		end
 
 	cecil_function_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Code to set up eif_function call
 		require
 			non_void_visitor: visitor /= Void
+		local
+			return_type: STRING
 		do
 			create Result.make (0)
 			if visitor.is_basic_type then
@@ -464,32 +470,82 @@ feature {NONE} -- Implementation
 					Result := cecil_function_code (Eif_integer_function, Eif_integer_function_name)
 					Result.append (New_line_tab)
 					Result.append (Eif_integer)
+					return_type := clone (Eif_integer)
 				elseif is_character (visitor.vt_type) or is_unsigned_char (visitor.vt_type) then
 					Result := cecil_function_code (Eif_character_function, Eif_character_function_name)	
 					Result.append (New_line_tab)
 					Result.append (Eif_character)
+					return_type := clone (Eif_character)
 				elseif is_real4 (visitor.vt_type) then
 					Result := cecil_function_code (Eif_real_function, Eif_real_function_name)
 					Result.append (New_line_tab)
 					Result.append (Eif_real)
+					return_type := clone (Eif_real)
 				elseif is_real8 (visitor.vt_type) then
 					Result := cecil_function_code (Eif_double_function, Eif_double_function_name)
 					Result.append (New_line_tab)
 					Result.append (Eif_double)
+					return_type := clone (Eif_double)
 				end
 			elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
 				Result := cecil_function_code (Eif_boolean_function, Eif_boolean_function_name)
 				Result.append (New_line_tab)
 				Result.append (Eif_boolean)
+				return_type := clone (Eif_boolean)
 			else
 				Result := cecil_function_code (Eif_reference_function, Eif_reference_function_name)
 				Result.append (New_line_tab)
 				Result.append (Eif_reference)
+				return_type := clone (Eif_reference)
 			end
 			Result.append (Space)
 			Result.append (Tmp_variable_name)
 			Result.append (Space_equal_space)
+
+			Result.append (function_cast_code (return_type))
 			Result.append (Eiffel_function_variable_name)
+			Result.append (Close_parenthesis)
+		end
+
+	function_cast_code (return_type: STRING): STRING is
+			-- Function cast code
+		require
+			non_void_return_type: return_type /= Void
+			valid_return_type: not return_type.empty
+		local
+			visitor: WIZARD_DATA_TYPE_VISITOR
+		do
+			-- (FUNCTION_CAST ('return_type', (EIF_REFERENCE
+			Result := ("(FUNCTION_CAST (")
+
+			Result.append (return_type)
+			Result.append (Comma)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_reference)
+
+			from
+				func_desc.arguments.start
+			until
+				func_desc.arguments.off
+			loop
+				if not is_paramflag_fretval (func_desc.arguments.item.flags) then
+					create visitor
+					visitor.visit (func_desc.arguments.item.type)
+					Result.append (Comma_space)
+					if visitor.is_basic_type then
+						Result.append (visitor.cecil_type)
+					elseif not visitor.is_pointed and is_boolean (visitor.vt_type) then
+						Result.append (Eif_boolean)
+					else
+						Result.append (Eif_reference)
+					end
+				end
+				func_desc.arguments.forth
+			end
+
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+			
 		end
 
 	cecil_function_code (function_type, function_name: STRING): STRING is
@@ -549,8 +605,11 @@ feature {NONE} -- Implementation
 			Result.append (Type_id)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
+			Result.append (New_line)
 			Result.append (New_line_tab)
+			Result.append ("(FUNCTION_CAST ( void, (EIF_REFERENCE))")
 			Result.append (Eiffel_procedure_variable_name)
+			Result.append (Close_parenthesis)
 			Result.append (Space_open_parenthesis)
 			Result.append (Eif_access)
 			Result.append (Space_open_parenthesis)

@@ -12,16 +12,11 @@
 */
 
 #include "eif_config.h"
-#include "eif_portable.h"
-#include "eif_globals.h"
-#include "eif_store.h"	/* For rt_kind_version */
-#include "eif_retrieve.h"	/* For char_read_func */
 #ifdef VXWORKS
-#include "string.h"	/* For memcpy */
+#include <string.h>	/* For memcpy */
 #endif
 
 #include <stdio.h>
-#include "eif_err_msg.h"
 #include <sys/types.h>
 #ifdef I_NETINET_IN
 #include <netinet/in.h>
@@ -30,8 +25,13 @@
 #include <sys/in.h>
 #endif
 #endif
+#include "eif_portable.h"
+#include "eif_globals.h"
+#include "eif_store.h"	/* For rt_kind_version */
+#include "eif_retrieve.h"	/* For char_read_func */
 #include "eif_eiffel.h"
 #include "eif_bits.h"
+#include "eif_err_msg.h"
 #if !defined(CUSTOM) || defined(NEED_RETRIEVE_H)
 #include "eif_retrieve.h"
 #endif

@@ -150,11 +150,9 @@ feature -- Drag and drop
 			if not linkable.selected then
 				linkable.select_it
 			end
-			x0 := x0 - 20;
-			y0 := y0 - 20;
-	--	--	unmanage;
-			drawing_area.set_x_y (x0, y0);
-	--	--	manage;
+			x0 := x0 - 20
+			y0 := y0 - 20
+			drawing_area.set_x_y (x0, y0)
 		end;
 
 feature -- components

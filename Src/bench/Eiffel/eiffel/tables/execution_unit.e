@@ -17,11 +17,6 @@ inherit
 			is_equal
 		end
 
-	SHARED_EXTERNALS
-		undefine
-			is_equal
-		end
-
 	SHARED_TYPE_I
 		export
 			{NONE} all

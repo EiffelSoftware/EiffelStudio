@@ -21,8 +21,18 @@ feature {DOCUMENT_PROJECT} -- Creation
 			-- Create
 		do
 			create filters.make (2)
-			load_filters
+			initialize
 		end		
+
+	initialize is
+			-- Load default filters
+		local
+			l_filter: OUTPUT_FILTER
+		do			
+			create l_filter.make_with_default_flag (unfiltered_flag, unfiltered)
+			add_filter (l_filter)
+			set_filter (l_filter) -- (Default filter)
+		end	
 
 feature -- Access
 
@@ -67,9 +77,31 @@ feature -- Status setting
 			end
 		end
 
+	output_filter_by_primary_flag (a_flag: STRING): OUTPUT_FILTER is
+			-- Select filter to one matching `a_flag', if any
+		local
+			l_filter: OUTPUT_FILTER
+			done: BOOLEAN
+		do
+			from
+				filters.start
+			until
+				filters.after or done
+			loop
+				l_filter ?= filters.item_for_iteration
+				if l_filter /= Void then
+					if l_filter.primary_output_flag /= Void and then l_filter.primary_output_flag.is_equal (a_flag) then
+						Result := l_filter
+						done := True
+					end
+				end
+				filters.forth
+			end
+		end
+
 feature {PREFERENCES_DIALOG, DOCUMENT_PROJECT_PREFERENCES} -- Status setting
 
-	add_filter (a_filter: DOCUMENT_FILTER) is
+	add_filter (a_filter: OUTPUT_FILTER) is
 			-- Add new filter
 		require
 			filter_not_void: a_filter /= Void
@@ -112,16 +144,6 @@ feature -- Conversion
 		end		
 
 feature {NONE} -- Implementation
-
-	load_filters is
-			-- Load default filters
-		local
-			l_filter: OUTPUT_FILTER
-		do			
-			create l_filter.make_with_default_flag (unfiltered_flag, unfiltered)
-			add_filter (l_filter)
-			set_filter (l_filter) -- (Default filter)
-		end	
 
 	unique_id: INTEGER
 			-- Identifier used for filters	

@@ -102,6 +102,16 @@ feature -- Web Help Files
 			Result := l_file_path.string
 		end	
 
+	html_simple_toc_file_name: STRING is
+			-- HTML file for simple toc
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("simple_toc.js.")
+			Result := l_file_path.string
+		end	
+
 feature -- Access
 
 	html_title_token: STRING is "[!Title!]"
@@ -145,6 +155,9 @@ feature -- Access
 	
 	filter_frame_size_token: STRING is "[!FilterFrameSize!]"
 			-- Token to replace filter frame size
+	
+	html_subtoc_hash_token: STRING is "[!TOCHash!]"
+			-- Token to replace with sub-toc hash 
 	
 	chart_suffix: STRING is "_chart"
 			-- Suffix for code chart view files

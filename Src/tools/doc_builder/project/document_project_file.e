@@ -204,13 +204,40 @@ feature -- Basic operations
 			loop
 				l_filter ?= l_filters.item_for_iteration
 				if l_filter /= Void and not l_filter.description.is_equal (project.filter_manager.unfiltered) then
+					
 						-- Write '<filter>'
 					create l_element.make (root, output_filter_tag, l_ns)
 					root.put_last (l_element)
+					
 						-- Write '<filter_description>'
 					create l_child.make (l_element, output_filter_description_tag, l_ns)
 					l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, l_filter.description))
 					l_element.put_last (l_child)
+					
+						-- Write '<filter_highlight_xxx_color>'					
+					create l_child.make (l_element, output_filter_highlight_red_tag, l_ns)
+					l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, l_filter.color.red.out))
+					l_element.put_last (l_child)
+					create l_child.make (l_element, output_filter_highlight_green_tag, l_ns)
+					l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, l_filter.color.green.out))
+					l_element.put_last (l_child)
+					create l_child.make (l_element, output_filter_highlight_blue_tag, l_ns)
+					l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, l_filter.color.blue.out))
+					l_element.put_last (l_child)
+
+					
+						-- Write '<filter_highlight_on>'
+					create l_child.make (l_element, output_filter_highlight_enabled_tag, l_ns)
+					l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, l_filter.highlighting_enabled.out))
+					l_element.put_last (l_child)
+					
+					if l_filter.primary_output_flag /= Void then
+							-- Write '<filter_primary_flag>'
+						create l_child.make (l_element, output_filter_primary_flag_tag, l_ns)
+						l_child.put_first (create {XM_CHARACTER_DATA}.make (l_child, l_filter.primary_output_flag))
+						l_element.put_last (l_child)
+					end
+					
 					from
 						l_filter.output_flags.start
 					until
@@ -438,7 +465,7 @@ feature {NONE} -- Implementation
 			e_not_void: e /= Void
 		local
 			l_elements: DS_LIST [XM_ELEMENT]
-			l_value: STRING
+			l_value: STRING			
 		do			
 			if e.text /= Void then				
 				l_value :=  unescaped_string (e.text)	
@@ -449,10 +476,13 @@ feature {NONE} -- Implementation
 				project.set_name (l_value)
 			end
 				--Location
-			if e.name.is_equal (root_directory_tag) then
+			if e.name.is_equal (root_directory_tag) then								
 				if not (create {DIRECTORY}.make (l_value)).exists then
-					old_root := l_value
-					l_value := prompt_for_new_location (l_value, "project directory", False)
+					l_value := interpreted_path_data (l_value)
+					old_root := l_value.twin
+					if not (create {DIRECTORY}.make (l_value)).exists then						
+						l_value := prompt_for_new_location (l_value, "project directory", False)
+					end
 				end
 				project.set_root_directory (l_value)
 			end
@@ -462,7 +492,10 @@ feature {NONE} -- Implementation
 					l_value.replace_substring_all (old_root, project.root_directory)
 				end
 				if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then
-					l_value := prompt_for_new_location (l_value, "schema file", True)
+					l_value := interpreted_path_data (l_value)
+					if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then
+						l_value := prompt_for_new_location (l_value, "schema file", True)
+					end
 				end		
 				if l_value /= Void and not l_value.is_empty then				
 					project.Shared_document_manager.initialize_schema (l_value)
@@ -473,8 +506,11 @@ feature {NONE} -- Implementation
 				if old_root /= Void and l_value.has_substring (old_root) then
 					l_value.replace_substring_all (old_root, project.root_directory)
 				end
-				if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then					
-					l_value := prompt_for_new_location (l_value, "stylesheet file", True)
+				if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then	
+					l_value := interpreted_path_data (l_value)
+					if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then
+						l_value := prompt_for_new_location (l_value, "stylesheet file", True)
+					end
 				end
 				if l_value /= Void and not l_value.is_empty then
 					project.Shared_document_manager.initialize_stylesheet (l_value)
@@ -483,8 +519,11 @@ feature {NONE} -- Implementation
 			
 				-- Header
 			if e.name.is_equal (header_file_tag) then
-				if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then					
-					l_value := prompt_for_new_location (l_value, "header file", True)
+				if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then
+					l_value := interpreted_path_data (l_value)
+					if not (create {DIRECTORY}.make (l_value)).exists then
+						l_value := prompt_for_new_location (l_value, "header file", True)
+					end
 				end
 				if l_value /= Void and not l_value.is_empty then
 					header_name := l_value
@@ -502,7 +541,10 @@ feature {NONE} -- Implementation
 				-- Footer file
 			if e.name.is_equal (footer_file_tag) then
 				if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then					
-					l_value := prompt_for_new_location (l_value, "footer file", True)
+					l_value := interpreted_path_data (l_value)
+					if not (create {DIRECTORY}.make (l_value)).exists then
+						l_value := prompt_for_new_location (l_value, "footer file", True)
+					end
 				end
 				if l_value /= Void and not l_value.is_empty then
 					footer_name := l_value
@@ -549,11 +591,33 @@ feature {NONE} -- Implementation
 				-- Filters		
 			if e.name.is_equal (output_filter_description_tag) then
 				create filter.make (l_value)
+				create filter_color
+				filter.set_color (filter_color)
 				project.filter_manager.add_filter (filter)
+			end
+			
+			if e.name.is_equal (output_filter_primary_flag_tag) then
+				filter.set_primary_output_flag (l_value)
 			end
 			
 			if e.name.is_equal (output_filter_tag_tag) then
 				filter.add_output_flag (l_value)
+			end
+			
+			if e.name.is_equal (output_filter_highlight_enabled_tag) then
+				filter.enable_highlighting (l_value.is_equal ("True"))
+			end
+			
+			if e.name.is_equal (output_filter_highlight_red_tag) then
+				filter_color.set_red (l_value.to_real)
+			end
+			
+			if e.name.is_equal (output_filter_highlight_green_tag) then
+				filter_color.set_green (l_value.to_real)
+			end
+			
+			if e.name.is_equal (output_filter_highlight_blue_tag) then
+				filter_color.set_blue (l_value.to_real)
 			end
 			
 				-- Shortcuts
@@ -649,6 +713,18 @@ feature {NONE} -- Implementation
 			a_string.replace_substring_all ("&quot;", "%"")
 			Result := a_string
 		end
+
+	filter_color: EV_COLOR
+
+	interpreted_path_data (a_path: STRING): STRING is
+			-- Process `a_path' data
+		local
+			l_interpreter: ENV_INTERP
+		do
+			create l_interpreter
+			Result := l_interpreter.interpreted_string (a_path)
+			Result.replace_substring_all ("\", "/")
+		end		
 
 invariant
 	has_project: project /= Void

@@ -138,12 +138,14 @@ feature {NONE} -- Commands
 								l_title.to_upper								
 								
 								l_html := generated_html (l_file)
+								l_path := l_dir_name.string								
 								l_text := 
 									"<html><head><title>" + 
 									l_title +
 									"</title><link rel=%"stylesheet%" href=%"" + 
 									stylesheet_path (l_file.name, True)	+
-									"%" type=%"text/css%"></head><body><pre>" +
+									"%" type=%"text/css%">" + filter_script (l_dir_name.string) +
+									"</head><body><pre>" +
 									l_html +
 									"</pre></body></html>"
 									
@@ -165,5 +167,68 @@ feature {NONE} -- Commands
 		ensure
 			xml_reader_not_void: Result /= Void
 		end
+		
+feature {NONE} -- Implementation
+		
+	filter_script (a_filename: STRING): STRING is
+			-- Javascript filter script
+		local
+			l_toc_script_name,
+			l_filename,
+			l_toc_name: STRING
+			l_util: UTILITY_FUNCTIONS
+			l_shared_objects: SHARED_OBJECTS
+		do
+			create l_shared_objects
+			create Result.make_empty
+			if l_shared_objects.shared_constants.help_constants.is_web_help then
+				if not l_shared_objects.shared_constants.help_constants.is_tree_web_help then				
+					l_toc_script_name := "simple_toc.js"
+				else				
+					l_toc_script_name := "toc.js"
+				end
+				create l_util
+				l_filename := a_filename
+				l_filename.replace_substring_all (l_shared_objects.shared_constants.application_constants.temporary_html_directory, "")
+				l_filename.replace_substring_all ("\", "/")
+				l_filename.prune_all_leading ('/')
+				l_toc_name := l_util.short_name (l_shared_objects.shared_constants.help_constants.toc.name)
+				if l_filename.substring (1, l_toc_name.count).is_equal (l_toc_name) then
+					l_filename.remove_substring (1, l_toc_name.count)
+				end
+				l_filename := l_util.file_no_extension (l_filename)
+				Result.append ("<script Language=%"JavaScript%" type=%"text/javascript%" src=%"" + relative_path_to_help_project (l_filename) + l_toc_script_name)
+				Result.append ("%"></script><script Language=%"JavaScript%">")
+				Result.append ("doc = '")
+				Result.append (l_filename + ".html';")
+				Result.append ("toc = '" + l_util.short_name (l_shared_objects.shared_constants.help_constants.toc.name) + "';")
+				Result.append ("deleteCookie('tocName');var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);setCookie('tocName', toc, expdate);")
+				Result.append ("if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%
+					%else{var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);setCookie ('delete', 'true', expdate);%
+					%setCookie ('redirecturl', doc, expdate);window.location.replace ('" + relative_path_to_help_project (l_filename) + 
+					l_shared_objects.shared_constants.help_constants.help_project_name + "_no_content.html');}</script>")			
+			end
+		ensure
+			has_result: Result /= Void
+		end	
+		
+	relative_path_to_help_project (a_file: STRING): STRING is
+			-- 
+		local
+			l_link: DOCUMENT_LINK
+			l_path: STRING
+			l_shared_objects: SHARED_OBJECTS
+		do
+			create l_shared_objects
+			l_path := temporary_html_location (a_file, True)			
+			create l_link.make (l_path, l_shared_objects.shared_constants.application_constants.temporary_html_directory.string)
+			Result := l_link.relative_url
+			if Result.last_index_of ('/', Result.count) > 0 then				
+				Result := Result.substring (1, Result.last_index_of ('/', Result.count))
+			end
+			if Result.substring (1, 3).is_equal ("../") then				
+				Result.remove_substring (1, 3)	
+			end
+		end		
 		
 end -- class CODE_HTML_FILTER

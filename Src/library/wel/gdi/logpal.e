@@ -37,16 +37,12 @@ feature -- Access
 	version: INTEGER is
 			-- Windows version number for the structure
 			-- Must be 768 for Windows 3.0 and later
-		require
-			exists: exists
 		do
 			Result := cwel_log_palette_get_version (item)
 		end
 
 	num_entries: INTEGER is
 			-- Number of palette color entries
-		require
-			exists: exists
 		do
 			Result := cwel_log_palette_get_num_entries (item)
 		end
@@ -54,7 +50,6 @@ feature -- Access
 	pal_entry (index: INTEGER): WEL_PALETTE_ENTRY is
 			-- Palette entry at `index'
 		require
-			exists: exists
 			index_inf: index >= 0
 			index_sup: index < num_entries
 		do
@@ -68,8 +63,6 @@ feature -- Element change
 
 	set_version (a_version: INTEGER) is
 			-- Set `version' with `a_version'
-		require
-			exists: exists
 		do
 			cwel_log_palette_set_version (item, a_version)
 		ensure
@@ -78,8 +71,6 @@ feature -- Element change
 
 	set_num_entries (a_num_entries: INTEGER) is
 			-- Set `num_entries' with `a_num_entries'
-		require
-			exists: exists
 		do
 			cwel_log_palette_set_num_entries (item, a_num_entries)
 		ensure
@@ -89,9 +80,7 @@ feature -- Element change
 	set_pal_entry (index: INTEGER; a_pal_entry: WEL_PALETTE_ENTRY) is
 			-- Set `a_pal_entry' at `index'
 		require
-			exists: exists
 			a_pal_entry_not_void: a_pal_entry /= Void
-			a_pal_entry_exists: a_pal_entry.exists
 		do
 			cwel_log_palette_set_pal_entry_red (item, index,
 				a_pal_entry.red)

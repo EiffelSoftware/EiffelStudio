@@ -23,7 +23,6 @@ feature {NONE} -- Initialization
 		require
 			positive_width: a_width >= 0
 			color_not_void: a_color /= Void
-			color_exists: a_color.exists
 		do
 			item := cwin_create_pen (a_style, a_width, a_color.item)
 		ensure
@@ -37,7 +36,6 @@ feature {NONE} -- Initialization
 			-- Make a pen using `a_log_pen'.
 		require
 			a_log_pen_not_void: a_log_pen /= Void
-			a_log_pen_exists: a_log_pen.exists
 		do
 			item := cwin_create_pen_indirect (a_log_pen.item)
 		ensure
@@ -72,7 +70,6 @@ feature -- Access
 			Result := log_pen.color
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 	log_pen: WEL_LOG_PEN is
@@ -83,7 +80,6 @@ feature -- Access
 			!! Result.make_by_pen (Current)
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 feature {NONE} -- Externals

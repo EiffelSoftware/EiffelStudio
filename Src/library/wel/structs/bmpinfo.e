@@ -27,8 +27,6 @@ feature {NONE} -- Initialization
 		require
 			a_bitmap_info_header_not_void: a_bitmap_info_header
 				/= Void
-			a_bitmap_info_header_exists:
-				a_bitmap_info_header.exists
 		do
 			structure_make
 			private_num_rgb_quad := a_num_rgb_quad
@@ -41,8 +39,6 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	bitmap_info_header: WEL_BITMAP_INFO_HEADER is
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (
 				cwel_bitmap_info_get_bitmap_info_header (item))
@@ -50,7 +46,6 @@ feature -- Access
 
 	rgb_quad (index: INTEGER): WEL_RGB_QUAD is
 		require
-			exists: exists
 			positive_index: index > 0
 		do
 			!! Result.make
@@ -65,9 +60,7 @@ feature -- Element change
 
 	set_bitmap_info_header (a_bitmap_info_header: WEL_BITMAP_INFO_HEADER) is
 		require
-			exists: exists
 			a_bitmap_info_header_not_void: a_bitmap_info_header /= Void
-			a_bitmap_info_header_exists: a_bitmap_info_header.exists
 		do
 			memory_copy (a_bitmap_info_header.item, structure_size)
 		ensure
@@ -77,9 +70,7 @@ feature -- Element change
 
 	set_rgb_quad (index: INTEGER; a_rgb_quad: WEL_RGB_QUAD) is
 		require
-			exists: exists
 			a_rgb_quad_not_void: a_rgb_quad /= Void
-			a_rgb_quad_exists: a_rgb_quad.exists
 		do
 			cwel_bitmap_info_set_rgb_quad_rgb_red (item, index,
 				a_rgb_quad.red)

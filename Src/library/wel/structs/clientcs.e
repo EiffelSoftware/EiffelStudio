@@ -37,8 +37,6 @@ feature -- Access
 
 	window_menu: WEL_MENU is
 			-- MDI application's window menu
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (cwel_client_cs_get_window_menu (item))
 		ensure
@@ -48,8 +46,6 @@ feature -- Access
 	first_child: INTEGER is
 			-- Child window identifier of the first MDI child
 			-- window created.
-		require
-			exists: exists
 		do
 			Result := cwel_client_cs_get_first_child (item)
 		end
@@ -59,7 +55,6 @@ feature -- Element change
 	set_window_menu (a_window_menu: WEL_MENU) is
 			-- Set `window_menu' with `a_window_menu'.
 		require
-			exists: exists
 			a_window_menu_not_void: a_window_menu /= Void
 			a_window_menu_exists: a_window_menu.exists
 		do
@@ -70,8 +65,6 @@ feature -- Element change
 
 	set_first_child (a_first_child: INTEGER) is
 			-- Set `first_child' with `a_first_child'.
-		require
-			exists: exists
 		do
 			cwel_client_cs_set_first_child (item, a_first_child)
 		ensure

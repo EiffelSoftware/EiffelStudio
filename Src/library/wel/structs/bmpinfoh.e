@@ -50,71 +50,51 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	width: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapinfoheader_get_width (item)
 		end
 
 	height: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapinfoheader_get_height (item)
 		end
 
 	planes: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapinfoheader_get_planes (item)
 		end
 
 	bit_count: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapinfoheader_get_bitcount (item)
 		end
 
 	compression: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapinfoheader_get_compression (item)
 		end
 
 	size_image: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapinfoheader_get_sizeimage (item)
 		end
 
 	x_pels_per_meter: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapinfoheader_get_xpelspermeter (item)
 		end
 
 	y_pels_per_meter: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapinfoheader_get_ypelspermeter (item)
 		end
 
 	clr_used: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapinfoheader_get_clrused (item)
 		end
 
 	clr_important: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapinfoheader_get_clrimportant (item)
 		end
@@ -122,8 +102,6 @@ feature -- Access
 feature -- Element change
 
 	set_width (a_width: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapinfoheader_set_width (item, a_width)
 		ensure
@@ -131,8 +109,6 @@ feature -- Element change
 		end
 
 	set_height (a_height: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapinfoheader_set_height (item, a_height)
 		ensure
@@ -140,8 +116,6 @@ feature -- Element change
 		end
 
 	set_planes (a_planes: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapinfoheader_set_planes (item, a_planes)
 		ensure
@@ -149,8 +123,6 @@ feature -- Element change
 		end
 
 	set_bit_count (a_bit_count: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapinfoheader_set_bitcount (item, a_bit_count)
 		ensure
@@ -158,8 +130,6 @@ feature -- Element change
 		end
 
 	set_compression (a_compression: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapinfoheader_set_compression (item,
 				a_compression)
@@ -168,8 +138,6 @@ feature -- Element change
 		end
 
 	set_size_image (a_size_image: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapinfoheader_set_sizeimage (item,
 				a_size_image)
@@ -178,8 +146,6 @@ feature -- Element change
 		end
 
 	set_x_pels_per_meter (a_x_pels_per_meter: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapinfoheader_set_xpelspermeter (item,
 				a_x_pels_per_meter)
@@ -189,8 +155,6 @@ feature -- Element change
 		end
 
 	set_y_pels_per_meter (a_y_pels_per_meter: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapinfoheader_set_ypelspermeter (item,
 				a_y_pels_per_meter)
@@ -200,8 +164,6 @@ feature -- Element change
 		end
 
 	set_clr_used (a_clr_used: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapinfoheader_set_clrused (item, a_clr_used)
 		ensure
@@ -209,8 +171,6 @@ feature -- Element change
 		end
 
 	set_clr_important (a_clr_important: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapinfoheader_set_clrimportant (item,
 				a_clr_important)

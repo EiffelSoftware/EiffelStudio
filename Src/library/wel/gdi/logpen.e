@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 		require
 			positive_width: a_width >= 0
 			color_not_void: a_color /= Void
-			color_exists: a_color.exists
 		do
 			structure_make
 			set_style (a_style)
@@ -52,16 +51,12 @@ feature -- Access
 
 	style: INTEGER is
 			-- Pen style
-		require
-			exists: exists
 		do
 			Result := cwel_logpen_get_style (item)
 		end
 
 	width: INTEGER is
 			-- Pen width
-		require
-			exists: exists
 		do
 			Result := cwel_logpen_get_width (item)
 		ensure
@@ -70,21 +65,16 @@ feature -- Access
 
 	color: WEL_COLOR_REF is
 			-- Pen color
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (cwel_logpen_get_color (item))
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 feature -- Element change
 
 	set_style (a_style: INTEGER) is
 			-- Set `style' with `a_style'
-		require
-			exists: exists
 		do
 			cwel_logpen_set_style (item, a_style)
 		ensure
@@ -94,7 +84,6 @@ feature -- Element change
 	set_width (a_width: INTEGER) is
 			-- Set `width' with `a_width'
 		require
-			exists: exists
 			positive_width: a_width >= 0
 		do
 			cwel_logpen_set_width (item, a_width)
@@ -106,9 +95,7 @@ feature -- Element change
 	set_color (a_color: WEL_COLOR_REF) is
 			-- Set `color' with `a_color'
 		require
-			exists: exists
 			a_color_not_void: a_color /= Void
-			a_color_exists: a_color.exists
 		do
 			cwel_logpen_set_color (item, a_color.item)
 		ensure
@@ -176,9 +163,8 @@ feature {NONE} -- Externals
 		end
 
 invariant
-	color_not_void: exists implies color /= Void
-	color_exists: exists implies color.exists
-	positive_width: exists implies width >= 0
+	color_not_void: color /= Void
+	positive_width: width >= 0
 
 end -- class WEL_LOG_PEN
 

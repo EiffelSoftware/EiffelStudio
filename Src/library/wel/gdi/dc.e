@@ -106,7 +106,6 @@ feature -- Status report
 			!! Result.make_by_pointer (cwin_get_bk_color (item))
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 	text_color: WEL_COLOR_REF is
@@ -116,7 +115,6 @@ feature -- Status report
 			!! Result.make_by_pointer (cwin_get_text_color (item))
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 	rop2: INTEGER is
@@ -135,7 +133,6 @@ feature -- Status report
 			!! Result.make_by_pointer (cwin_get_pixel (item, x, y))
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 	viewport_origin: WEL_POINT is
@@ -248,7 +245,6 @@ feature -- Status report
 			!! Result.make (cwin_lo_word (size), cwin_hi_word (size))
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 			positive_width: Result.width >= 0
 			positive_height: Result.height >= 0
 		end
@@ -294,7 +290,6 @@ feature -- Status report
 			!! Result.make (cwin_lo_word (size), cwin_hi_word (size))
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 			positive_width: Result.width >= 0
 			positive_height: Result.height >= 0
 		end
@@ -401,7 +396,6 @@ feature -- Status setting
 		require
 			exists: exists
 			color_not_void: color /= Void
-			color_exists: color.exists
 		do
 			cwin_set_bk_color (item, color.item)
 		ensure
@@ -413,7 +407,6 @@ feature -- Status setting
 		require
 			exists: exists
 			color_not_void: color /= Void
-			color_exists: color.exists
 		do
 			cwin_set_text_color (item, color.item)
 		ensure
@@ -765,7 +758,6 @@ feature -- Basic operations
 			exists: exists
 			string_not_void: string /= Void
 			rect_not_void: rect /= Void
-			rect_exists: rect.exists
 		local
 			a: ANY
 		do
@@ -812,7 +804,6 @@ feature -- Basic operations
 		require
 			exists: exists
 			color_not_void: color /= Void
-			color_exists: color.exists
 		do
 			cwin_set_pixel (item, x, y, color.item)
 		end
@@ -871,7 +862,6 @@ feature -- Basic operations
 		require
 			exists: exists
 			a_rect_not_void: a_rect /= Void
-			a_rect_exists: a_rect.exists
 			a_brush_not_void: a_brush /= Void
 			a_brush_exists: a_brush.exists
 		do
@@ -961,7 +951,6 @@ feature -- Basic operations
 		require
 			exists: exists
 			rect_not_void: rect /= Void
-			rect_exists: rect.exists
 			dc_source_not_void: dc_source /= Void
 			dc_source_exists: dc_source.exists
 		do
@@ -1033,7 +1022,6 @@ feature -- Basic operations
 			positive_width: width >= 0
 			positive_height: height >= 0
 			a_dib_not_void: a_dib /= Void
-			a_dib_exists: a_dib.exists
 		do
 			cwin_stretch_di_bits (item, x_destination,
 				y_destination, width, height, x_source,

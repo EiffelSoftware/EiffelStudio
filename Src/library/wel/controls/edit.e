@@ -268,7 +268,6 @@ feature -- Status report
 				Result.to_integer)
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 feature {NONE} -- Notifications

@@ -38,36 +38,26 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	type: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapfileheader_get_type (item)
 		end
 
 	size: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapfileheader_get_size (item)
 		end
 
 	reserved1: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapfileheader_get_reserved1 (item)
 		end
 
 	reserved2: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapfileheader_get_reserved2 (item)
 		end
 
 	off_bits: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapfileheader_get_off_bits (item)
 		end
@@ -75,8 +65,6 @@ feature -- Access
 feature -- Element change
 
 	set_type (a_type: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapfileheader_set_type (item, a_type)
 		ensure
@@ -84,8 +72,6 @@ feature -- Element change
 		end
 
 	set_size (a_size: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapfileheader_set_size (item, a_size)
 		ensure
@@ -93,8 +79,6 @@ feature -- Element change
 		end
 
 	set_reserved1 (a_reserved1: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapfileheader_set_reserved1 (item, a_reserved1)
 		ensure
@@ -102,8 +86,6 @@ feature -- Element change
 		end
 
 	set_reserved2 (a_reserved2: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapfileheader_set_reserved2 (item, a_reserved2)
 		ensure
@@ -111,8 +93,6 @@ feature -- Element change
 		end
 
 	set_off_bits (a_off_bits: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapfileheader_set_off_bits (item, a_off_bits)
 		ensure

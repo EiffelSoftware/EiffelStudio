@@ -118,8 +118,6 @@ feature -- Access
 			-- device units and the absolute value is matched 
 			-- against the character height of the available 
 			-- fonts.
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_height (item)
 		end
@@ -132,8 +130,6 @@ feature -- Access
 			-- digitization aspect ratio of the available fonts to
 			-- find the closest match, determined by the absolute
 			-- value of the difference. 
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_width (item)
 		end
@@ -143,8 +139,6 @@ feature -- Access
 			-- The angle, in tenths of degrees, of each line of
 			-- text written in the font (relative to the
 			-- bottom of the page). 
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_escapement (item)
 		end
@@ -154,8 +148,6 @@ feature -- Access
 			-- The angle, in tenths of degrees, of each
 			-- character'sbase line (relative to the bottom
 			-- of the page).
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_orientation (item)
 		end
@@ -164,40 +156,30 @@ feature -- Access
 			-- Weight of current font.
 			-- In the range 0 through 1000, for example,
 			-- 400 is normal and 700 is bold).
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_weight (item)
 		end
 
 	italic: BOOLEAN is
 			-- Is current font italic?
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_italic (item) /= 0
 		end
 
 	underlined: BOOLEAN is
 			-- Is current font underlined?
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_underline (item) /= 0
 		end
 
 	strike_out: BOOLEAN is
 			-- Is current font striked out?
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_strikeout (item) /= 0
 		end
 
 	char_set: INTEGER is
 			-- Character set of current font
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_charset (item)
 		end
@@ -207,8 +189,6 @@ feature -- Access
 			-- The output precision defines how closely the output
 			-- must match the requested font's height, width,
 			-- character orientation, escapement, and pitch.
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_outprecision (item)
 		end
@@ -218,8 +198,6 @@ feature -- Access
 			-- The clipping precision defines how to clip
 			-- characters that are partially outside
 			-- the clipping region.
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_clipprecision (item)
 		end
@@ -230,32 +208,24 @@ feature -- Access
 			-- defines how carefully the graphics device interface 
 			-- (GDI) must attempt to match the logical-font 
 			-- attributes to those of an actual physical font.
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_quality (item)
 		end
 
 	pitch: INTEGER is
 			-- Pitch of current font
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_pitch (item)
 		end
 
 	family: INTEGER is
 			-- Family of Current font
-		require
-			exists: exists
 		do
 			Result := cwel_log_font_get_family (item)
 		end
 
 	face_name: STRING is
 			-- Face name of current font
-		require
-			exists: exists
 		do
 			!! Result.make (0)
 			Result.from_c (cwel_log_font_get_facename (item))
@@ -267,192 +237,144 @@ feature -- Status report
 
 	has_default_character_set: BOOLEAN is
 			-- Has current font the default character set?
-		require
-			exists: exists
 		do
 			Result := char_set = Default_charset
 		end
 
 	has_ansi_character_set: BOOLEAN is
 			-- Has current font the ansi character set?
-		require
-			exists: exists
 		do
 			Result := char_set = Ansi_charset
 		end
 
 	has_oem_character_set: BOOLEAN is
 			-- Has current font the OEM character set?
-		require
-			exists: exists
 		do
 			Result := char_set = Oem_charset
 		end
 
 	has_symbol_character_set: BOOLEAN is
 			-- Has current font the symbol character set?
-		require
-			exists: exists
 		do
 			Result := char_set = Symbol_charset
 		end
 
 	has_unicode_character_set: BOOLEAN is
 			-- Has current font the unicode character set?
-		require
-			exists: exists
 		do
 			Result := char_set = Unicode_charset
 		end
 
 	has_character_output_precision: BOOLEAN is
 			-- Has current font the character output precision?
-		require
-			exists: exists
 		do
 			Result := out_precision = Out_character_precis
 		end
 
 	has_default_output_precision: BOOLEAN is
 			-- Has current font the default output precision?
-		require
-			exists: exists
 		do
 			Result := out_precision = Out_default_precis
 		end
 
 	has_string_output_precision: BOOLEAN is
 			-- Has current font the string output precision?
-		require
-			exists: exists
 		do
 			Result := out_precision = Out_string_precis
 		end
 
 	has_stroke_output_precision: BOOLEAN is
 			-- Has current font the stroke output precision?
-		require
-			exists: exists
 		do
 			Result := out_precision = Out_stroke_precis
 		end
 
 	has_character_clipping_precision: BOOLEAN is
 			-- Has current font the character clipping precision?
-		require
-			exists: exists
 		do
 			Result := clip_precision = Clip_character_precis
 		end
 
 	has_default_clipping_precision: BOOLEAN is
 			-- Has current font the default clipping precision?
-		require
-			exists: exists
 		do
 			Result := clip_precision = Clip_default_precis
 		end
 
 	has_stroke_clipping_precision: BOOLEAN is
 			-- Has current font the stroke clipping precision?
-		require
-			exists: exists
 		do
 			Result := clip_precision = Clip_stroke_precis
 		end
 
 	has_default_quality: BOOLEAN is
 			-- Has current font the default quality?
-		require
-			exists: exists
 		do
 			Result := quality = Default_quality
 		end
 
 	has_draft_quality: BOOLEAN is
 			-- Has current font the draft quality?
-		require
-			exists: exists
 		do
 			Result := quality = Draft_quality
 		end
 
 	has_proof_quality: BOOLEAN is
 			-- Has current font the proof quality?
-		require
-			exists: exists
 		do
 			Result := quality = Proof_quality
 		end
 
 	has_default_pitch: BOOLEAN is
 			-- Has current font the default pitch?
-		require
-			exists: exists
 		do
 			Result := pitch = Default_pitch
 		end
 
 	has_fixed_pitch: BOOLEAN is
 			-- Has current font the fixed pitch?
-		require
-			exists: exists
 		do
 			Result := pitch = Fixed_pitch
 		end
 
 	has_variable_pitch: BOOLEAN is
 			-- Has current font the variable pitch?
-		require
-			exists: exists
 		do
 			Result := pitch = Variable_pitch
 		end
 
 	is_dont_care_family: BOOLEAN is
 			-- Is current font in the don t care family?
-		require
-			exists: exists
 		do
 			Result := family = Ff_dontcare
 		end
 
 	is_roman_family: BOOLEAN is
 			-- Is current font in the roman family?
-		require
-			exists: exists
 		do
 			Result := family = Ff_roman
 		end
 
 	is_swiss_family: BOOLEAN is
 			-- Is current font in the swiss family?
-		require
-			exists: exists
 		do
 			Result := family = Ff_swiss
 		end
 
 	is_modern_family: BOOLEAN is
 			-- Is current font in the modern family?
-		require
-			exists: exists
 		do
 			Result := family = Ff_modern
 		end
 
 	is_script_family: BOOLEAN is
 			-- Is current font in the script family?
-		require
-			exists: exists
 		do
 			Result := family = Ff_script
 		end
 
 	is_decorative_family: BOOLEAN is
 			-- Is current font in the decorative family?
-		require
-			exists: exists
 		do
 			Result := family = Ff_decorative
 		end
@@ -461,8 +383,6 @@ feature -- Status setting
 
 	set_height (a_height: INTEGER) is
 			-- Set `height' to `a_height'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_height (item, a_height)
 		ensure
@@ -471,8 +391,6 @@ feature -- Status setting
 
 	set_width (a_width: INTEGER) is
 			-- Set `width' to `a_width'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_width (item, a_width)
 		ensure
@@ -481,8 +399,6 @@ feature -- Status setting
 
 	set_escapement (a_escapement: INTEGER) is
 			-- Set `escapement' to `a_escapement'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_escapement (item, a_escapement)
 		ensure
@@ -491,8 +407,6 @@ feature -- Status setting
 
 	set_orientation (a_orientation: INTEGER) is
 			-- Set `orientation' to `a_orientation'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_orientation (item, a_orientation)
 		ensure
@@ -501,8 +415,6 @@ feature -- Status setting
 
 	set_weight (a_weight: INTEGER) is
 			-- Set `weight' to `a_weight'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_weight (item, a_weight)
 		ensure
@@ -511,8 +423,6 @@ feature -- Status setting
 
 	set_italic is
 			-- Set current font italic.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_italic (item, 1)
 		ensure
@@ -521,8 +431,6 @@ feature -- Status setting
 
 	set_not_italic is
 			-- Set current font not italic.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_italic (item, 0)
 		ensure
@@ -531,8 +439,6 @@ feature -- Status setting
 
 	set_underlined is
 			-- Set current font underlined.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_underline (item, 1)
 		ensure
@@ -541,8 +447,6 @@ feature -- Status setting
 
 	set_not_underlined is
 			-- Set current font not underlined.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_underline (item, 0)
 		ensure
@@ -551,8 +455,6 @@ feature -- Status setting
 
 	set_strike_out is
 			-- Set current font striked out.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_strikeout (item, 1)
 		ensure
@@ -561,8 +463,6 @@ feature -- Status setting
 
 	set_not_strike_out is
 			-- Set current font not striked out.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_strikeout (item, 0)
 		ensure
@@ -571,8 +471,6 @@ feature -- Status setting
 
 	set_char_set (a_char_set: INTEGER) is
 			-- Set `char_set' to `a_char_set'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_charset (item, a_char_set)
 		ensure
@@ -581,8 +479,6 @@ feature -- Status setting
 
 	set_default_character_set is
 			-- Set `char_set' to the default value.
-		require
-			exists: exists
 		do
 			set_char_set (Default_charset)
 		ensure
@@ -591,8 +487,6 @@ feature -- Status setting
 
 	set_ansi_character_set is
 			-- Set `char_set' to ansi.
-		require
-			exists: exists
 		do
 			set_char_set (Ansi_charset)
 		ensure
@@ -601,8 +495,6 @@ feature -- Status setting
 
 	set_oem_character_set is
 			-- Set `char_set' to OEM.
-		require
-			exists: exists
 		do
 			set_char_set (Oem_charset)
 		ensure
@@ -611,8 +503,6 @@ feature -- Status setting
 
 	set_symbol_character_set is
 			-- Set `char_set' to symbol.
-		require
-			exists: exists
 		do
 			set_char_set (Symbol_charset)
 		ensure
@@ -621,8 +511,6 @@ feature -- Status setting
 
 	set_unicode_character_set is
 			-- Set `char_set' to unicode.
-		require
-			exists: exists
 		do
 			set_char_set (Unicode_charset)
 		ensure
@@ -631,8 +519,6 @@ feature -- Status setting
 
 	set_out_precision (a_precision: INTEGER) is
 			-- Set `out_precision' to `a_out_precision'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_outprecision (item, a_precision)
 		ensure
@@ -641,8 +527,6 @@ feature -- Status setting
 
 	set_character_output_precision is
 			-- Set `out_precision' to character precision.
-		require
-			exists: exists
 		do
 			set_out_precision (Out_character_precis)
 		ensure
@@ -652,8 +536,6 @@ feature -- Status setting
 
 	set_default_output_precision is
 			-- Set `out_precision' to default output precision.
-		require
-			exists: exists
 		do
 			set_out_precision (Out_default_precis)
 		ensure
@@ -663,8 +545,6 @@ feature -- Status setting
 
 	set_string_output_precision is
 			-- Set `out_precision' to string output precision.
-		require
-			exists: exists
 		do
 			set_out_precision (Out_string_precis)
 		ensure
@@ -674,8 +554,6 @@ feature -- Status setting
 
 	set_stroke_output_precision is
 			-- Set `out_precision' to stroke output precision.
-		require
-			exists: exists
 		do
 			set_out_precision (Out_stroke_precis)
 		ensure
@@ -685,8 +563,6 @@ feature -- Status setting
 
 	set_character_clipping_precision is
 			-- Set 'clip_precision' to character clipping precision.
-		require
-			exists: exists
 		do
 			set_out_precision (Clip_character_precis)
 		ensure
@@ -696,8 +572,6 @@ feature -- Status setting
 
 	set_clip_precision (a_precision: INTEGER) is
 			-- Set 'clip_precision' to 'a_precision'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_clipprecision (item, a_precision)
 		ensure
@@ -706,8 +580,6 @@ feature -- Status setting
 
 	set_default_clipping_precision is
 			-- Set 'clip_precision' to the default value.
-		require
-			exists: exists
 		do
 			set_clip_precision (Clip_default_precis)
 		ensure
@@ -717,8 +589,6 @@ feature -- Status setting
 
 	set_stroke_clipping_precision is
 			-- Set 'clip_precision' to the storke clipping precision.
-		require
-			exists: exists
 		do
 			set_clip_precision (Clip_stroke_precis)
 		ensure
@@ -728,8 +598,6 @@ feature -- Status setting
 
 	set_quality (a_quality: INTEGER) is
 			-- Set 'quality' to `a_quality'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_quality (item, a_quality)
 		ensure
@@ -738,8 +606,6 @@ feature -- Status setting
 
 	set_default_quality is
 			-- Set 'quality' to the default value.
-		require
-			exists: exists
 		do
 			set_quality (Default_quality)
 		ensure
@@ -748,8 +614,6 @@ feature -- Status setting
 
 	set_draft_quality is
 			-- Set 'quality' to the draft quality.
-		require
-			exists: exists
 		do
 			set_quality (Draft_quality)
 		ensure
@@ -758,8 +622,6 @@ feature -- Status setting
 
 	set_proof_quality is
 			-- Set 'quality' to the proof quality.
-		require
-			exists: exists
 		do
 			set_quality (Proof_quality)
 		ensure
@@ -768,8 +630,6 @@ feature -- Status setting
 
 	set_pitch (a_pitch: INTEGER) is
 			-- Set 'pitch' to `a_pitch'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_pitchandfamily (item,
 				cwin_make_long (a_pitch,
@@ -780,8 +640,6 @@ feature -- Status setting
 
 	set_default_pitch is
 			-- Set 'pitch' to the default value.
-		require
-			exists: exists
 		do
 			set_pitch (Default_pitch)
 		ensure
@@ -790,8 +648,6 @@ feature -- Status setting
 
 	set_fixed_pitch is
 			-- Set 'pitch' to fixed pitch.
-		require
-			exists: exists
 		do
 			set_pitch (Fixed_pitch)
 		ensure
@@ -800,8 +656,6 @@ feature -- Status setting
 
 	set_variable_pitch is
 			-- Set 'pitch' to variable pitch.
-		require
-			exists: exists
 		do
 			set_pitch (Variable_pitch)
 		ensure
@@ -810,8 +664,6 @@ feature -- Status setting
 
 	set_family (a_family: INTEGER) is
 			-- Set 'family' to 'a_family'.
-		require
-			exists: exists
 		do
 			cwel_log_font_set_pitchandfamily (item,
 				cwin_make_long (cwel_log_font_get_pitch (item),
@@ -822,8 +674,6 @@ feature -- Status setting
 
 	set_dont_care_family is
 			-- Set 'family' to don t care family.
-		require
-			exists: exists
 		do
 			set_family (Ff_dontcare)
 		ensure
@@ -832,8 +682,6 @@ feature -- Status setting
 
 	set_roman_family is
 			-- Set 'family' to roman family.
-		require
-			exists: exists
 		do
 			set_family (Ff_roman)
 		ensure
@@ -842,8 +690,6 @@ feature -- Status setting
 
 	set_swiss_family is
 			-- Set 'family' to swiss family.
-		require
-			exists: exists
 		do
 			set_family (Ff_swiss)
 		ensure
@@ -852,8 +698,6 @@ feature -- Status setting
 
 	set_modern_family is
 			-- Set 'family' to modern family.
-		require
-			exists: exists
 		do
 			set_family (Ff_modern)
 		ensure
@@ -862,8 +706,6 @@ feature -- Status setting
 
 	set_script_family is
 			-- Set 'family' to script family.
-		require
-			exists: exists
 		do
 			set_family (Ff_script)
 		ensure
@@ -872,8 +714,6 @@ feature -- Status setting
 
 	set_decorative_family is
 			-- Set 'family' to decorative family.
-		require
-			exists: exists
 		do
 			set_family (Ff_decorative)
 		ensure
@@ -883,7 +723,6 @@ feature -- Status setting
 	set_face_name (a_face_name: STRING) is
 			-- Set `face_name' to `a_face_name'.
 		require
-			exists: exists
 			a_face_name_not_void: a_face_name /= Void
 			valid_count: a_face_name.count <= Max_face_name_length
 		local

@@ -43,7 +43,6 @@ feature -- Access
 			-- Color selected by the user and default color
 			-- selected when the dialog box is created.
 		require
-			exists: exists
 			selected: selected
 		do
 			!! Result.make_by_pointer (
@@ -59,8 +58,6 @@ feature -- Access
 			-- Dialog box creation flags.
 			-- Can be a combination of the values defined in 
 			-- class WEL_CHOOSE_COLOR_CONSTANTS.
-		require
-			exists: exists
 		do
 			Result := cwel_choose_color_get_flags (item)
 		end
@@ -71,8 +68,6 @@ feature -- Element change
 			-- Set `flags' with `a_flags'.
 			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
 			-- values.
-		require
-			exists: exists
 		do
 			cwel_choose_color_set_flags (item, a_flags)
 		ensure
@@ -83,8 +78,6 @@ feature -- Element change
 			-- Add `a_flags' to `flags'.
 			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
 			-- values.
-		require
-			exists: exists
 		do
 			set_flags (set_flag (flags, a_flags))
 		ensure
@@ -95,8 +88,6 @@ feature -- Element change
 			-- Remove `a_flags' from `flags'.
 			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
 			-- values.
-		require
-			exists: exists
 		do
 			set_flags (clear_flag (flags, a_flags))
 		ensure
@@ -106,9 +97,7 @@ feature -- Element change
 	set_rgb_result (color: WEL_COLOR_REF) is
 			-- Set `rgb_result' with `color'
 		require
-			exists: exists
 			color_not_void: color /= Void
-			color_exitst: color.exists
 		do
 			add_flag (Cc_rgbinit)
 			cwel_choose_color_set_rgbresult (item, color.item)
@@ -119,9 +108,7 @@ feature -- Element change
 	set_custom_colors (a_custom_colors: WEL_CUSTOM_COLORS) is
 			-- Set `custom_colors' with `a_custom_colors'.
 		require
-			exists: exists
 			a_custom_colors_not_void: a_custom_colors /= Void
-			a_custom_colors_exists: a_custom_colors.exists
 		do
 			custom_colors := a_custom_colors
 			cwel_choose_color_set_lpcustcolors (item,
@@ -135,8 +122,6 @@ feature -- Status setting
 	prevent_full_open is
 			-- Disable the define custom colors button,
 			-- preventing the user from creating custom colors.
-		require
-			exists: exists
 		do
 			add_flag (Cc_preventfullopen)
 		ensure
@@ -146,8 +131,6 @@ feature -- Status setting
 	allow_full_open is
 			-- Enable the define custom colors button,
 			-- allowing the user from creating custom colors.
-		require
-			exists: exists
 		do
 			remove_flag (Cc_preventfullopen)
 		ensure
@@ -160,8 +143,6 @@ feature -- Status report
 			-- Is `a_flags' set in `flags'?
 			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
 			-- values.
-		require
-			exists: exists
 		do
 			Result := flag_set (flags, a_flags)
 		end
@@ -169,8 +150,6 @@ feature -- Status report
 	full_open_allowed: BOOLEAN is
 			-- Is the define custom colors button enabled?
 			-- This button allows the user to create custom colors.
-		require
-			exists: exists
 		do
 			Result := not has_flag (Cc_preventfullopen)
 		end
@@ -190,7 +169,6 @@ feature {NONE} -- Implementation
 	set_parent (a_parent: WEL_COMPOSITE_WINDOW) is
 			-- Set the parent window with `a_parent'.
 		require
-			exists: exists
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 		do

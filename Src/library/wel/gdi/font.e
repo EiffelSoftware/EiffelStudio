@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			-- Make a font using `a_log_font'.
 		require
 			a_log_font_not_void: a_log_font /= Void
-			a_log_font_exists: a_log_font.exists
 		do
 			item := cwin_create_font_indirect (a_log_font.item)
 		ensure
@@ -56,7 +55,6 @@ feature -- Access
 			!! Result.make_by_font (Current)
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 feature {NONE} -- Implementation

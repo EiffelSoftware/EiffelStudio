@@ -21,6 +21,9 @@ feature -- Commands
 		require
 			observer_not_void: o /= Void
 		do
+			if observers = Void then
+				create observers.make (1)
+			end
 			if not has (o) then
 				observers.extend (o)
 			end			
@@ -30,6 +33,7 @@ feature -- Commands
 			-- Detach observer `o'
 		require
 			has_observer: has (o)
+			observers_list_not_void: observers /= Void
 		do
 			observers.prune (o)
 		end
@@ -40,14 +44,15 @@ feature -- Query
 			-- Is `o' an observer?
 		require
 			observer_not_void: o /= Void
-		do
+			observers_list_not_void: observers /= Void
+		do			
 			Result := observers.has (o)
 		end		
 
 	has_observers: BOOLEAN is
 			-- Has any observers?
-		do
-			Result := observers /= Void and then not observers.is_empty	
+		do			
+			Result := observers /= Void and not observers.is_empty	
 		end		
 
 feature {NONE} -- Implementation

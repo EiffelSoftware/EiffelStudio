@@ -1,6 +1,6 @@
 indexing
 	description: "Common functionality for all views for ES_CLASSes."
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -263,6 +263,11 @@ feature {NONE} -- Implementation
 					>>])
 				else
 					create layout.make_with_world (world)
+					if world.is_uml then
+						layout.set_spacing (150, 150)
+					else
+						layout.set_spacing (40, 40)
+					end
 					layout.layout
 					world.context_editor.history.remove_last
 					world.context_editor.history.register_named_undoable (

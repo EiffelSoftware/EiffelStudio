@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			dark_symbol := cmd.dark_symbol;
 			set_symbol (symbol);
 			add_activate_action (cmd, cmd.name);
-			initialize_focus (a_parent)
+			initialize_focus 
 		end
 
 feature -- Access

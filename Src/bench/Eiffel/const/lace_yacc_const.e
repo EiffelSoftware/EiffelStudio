@@ -46,4 +46,6 @@ feature {NONE}
 
 	executable_name_sd: INTEGER is 157;
 	include_path_name_sd: INTEGER is 159;
+	d_precompiled_sd: INTEGER is 162;
+	precompiled_sd: INTEGER is 163
 end

@@ -235,7 +235,7 @@ int tab;
 			rec_write((char *)o_ref, tab + 3);
 
 			write_tab(tab + 2);
-			sprintf(buffer, "--  end  sub-object --\n");
+			sprintf(buffer, "-- end sub-object --\n");
 			write_out();
 			break;
 		default: 
@@ -258,7 +258,7 @@ int tab;
 					rec_swrite(reference, tab + 3);
 
 					write_tab(tab + 2);
-					sprintf(buffer, "--  end  special object --\n");
+					sprintf(buffer, "-- end special object --\n");
 					write_out();
 				} else {
 					sprintf(buffer, "%s [0x%X]\n",
@@ -284,7 +284,7 @@ int tab;
 	register3 long count;		/* Element count */
 	register4 long elem_size;	/* Element size */
 	char *o_ref;
-	char *reference;
+	char *reference, *bit;
 	long old_count;
 	int dt_type;
 
@@ -296,27 +296,52 @@ int tab;
 	flags = zone->ov_flags;
 	dt_type = (int) (flags & EO_TYPE);
 
-	if (!(flags & EO_REF)) {
-		for (o_ref = object; count > 0; count--,
-					o_ref += elem_size) {
-			write_tab(tab + 1);
-			sprintf(buffer, "%ld: ", old_count - count);
-			write_out();
-			if (dt_type == sp_char)
-				write_char(*o_ref, buffer);
-			else if (dt_type == sp_int)
-				sprintf(buffer, "INTEGER = %ld\n", *(long *)o_ref);
-			else if (dt_type == sp_bool)
-				sprintf(buffer, "BOOLEAN = %s\n", (*o_ref ? "True" : "False"));
-			else if (dt_type == sp_real)
-				sprintf(buffer, "REAL = %f\n", *(float *)o_ref);
-			else if (dt_type == sp_double)
-				sprintf(buffer, "DOUBLE = %.17lf\n", *(double *)o_ref);
-			else
-				sprintf(buffer, "POINTER = C pointer 0x%x\n", *(fnptr *)o_ref);
-			write_out();
-		}
-	} else if (!(flags & EO_COMP))
+	if (!(flags & EO_REF)) 
+		if (flags & EO_COMP) 
+			for (o_ref = object + OVERHEAD; count > 0; count--,
+						o_ref += elem_size) {
+				write_tab(tab + 1);
+				sprintf(buffer, "%ld: expanded ", old_count - count);
+				write_out();
+				sprintf(buffer, "%s\n", System(Dtype(o_ref)).cn_generator);
+				write_out();
+				write_tab(tab + 2);
+				sprintf(buffer, "-- begin sub-object --\n");
+				write_out();
+		
+				rec_write(o_ref, tab + 3);
+	
+				write_tab(tab + 2);
+				sprintf(buffer, "-- end sub-object --\n");
+				write_out();
+			}
+		else
+			for (o_ref = object; count > 0; count--,
+						o_ref += elem_size) {
+				write_tab(tab + 1);
+				sprintf(buffer, "%ld: ", old_count - count);
+				write_out();
+				if (dt_type == sp_char)
+					write_char(*o_ref, buffer);
+				else if (dt_type == sp_int)
+					sprintf(buffer, "INTEGER = %ld\n", *(long *)o_ref);
+				else if (dt_type == sp_bool)
+					sprintf(buffer, "BOOLEAN = %s\n", (*o_ref ? "True" : "False"));
+				else if (dt_type == sp_real)
+					sprintf(buffer, "REAL = %f\n", *(float *)o_ref);
+				else if (dt_type == sp_double)
+					sprintf(buffer, "DOUBLE = %.17lf\n", *(double *)o_ref);
+				else if (dt_type == sp_pointer)
+					sprintf(buffer, "POINTER = C pointer 0x%x\n", *(fnptr *)o_ref);
+				else {
+					/* Must be bit */
+					reference = *(char **) o_ref;
+					sprintf(buffer, "BIT %d = %s\n", 
+							LENGTH(reference), b_out(reference));
+				}
+				write_out();
+			}
+	else 
 		for (o_ref = object; count > 0; count--,
 					o_ref = (char *) ((char **)o_ref + 1)) {
 			write_tab(tab + 1);
@@ -332,25 +357,6 @@ int tab;
 					System(Dtype(reference)).cn_generator, reference);
 			write_out();
 		}
-	else {
-		for (o_ref = object + OVERHEAD; count > 0; count--,
-			o_ref += elem_size) {
-			write_tab(tab + 1);
-			sprintf(buffer, "%ld: expanded ", old_count - count);
-			write_out();
-			sprintf(buffer, "%s\n", System(Dtype(o_ref)).cn_generator);
-			write_out();
-			write_tab(tab + 2);
-			sprintf(buffer, "-- begin sub-object --\n");
-			write_out();
-		
-			rec_write((char *)o_ref, tab + 3);
-
-			write_tab(tab + 2);
-			sprintf(buffer, "--  end  sub-object --\n");
-			write_out();
-		}
-	}
 }
 
 private void write_tab(tab)

@@ -68,7 +68,7 @@ char *object;
 		}
 	case SK_BOOL:
 		{
-			char val = *(char *) val;
+			char val = *(char *) o_ref;
 
 			new_obj = RTLN(ei_str_dtype("BOOLEAN_REF"));
 			*(char *) new_obj = val;
@@ -92,7 +92,7 @@ char *object;
 		}
 	case SK_POINTER:
 		{
-			fnptr val = *(fnptr *) val;
+			fnptr val = *(fnptr *) o_ref;
 
 			new_obj = RTLN(ei_str_dtype("POINTER_REF"));
 			*(fnptr *) new_obj = val;

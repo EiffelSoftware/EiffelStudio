@@ -34,12 +34,18 @@
 
 /* Macro used for allocation:
  *  RTLN(x) allocates a new object of type 'x'
- *  RTLB(x) allocated a new bot object of size 'x'
+ *  RTLB(x) allocated a new bit object of size 'x'
  *  RTUD keep dynamic type  for refreezing
+ *  RTCB(x) clones bit `x'
+ *  RTXB(x,y) copies bit `x' to `y'
+ *  RTEB(x,y) are bits `x' and `y' equal?
  */
 #define RTLN(x) emalloc(x)
 #define RTLB(x)	bmalloc(x)
 #define RTMB(x) makebit(x)
+#define RTCB(x) b_clone(x)
+#define RTXB(x,y) b_copy(x,y)
+#define RTEB(x,y) b_equal(x,y)
 #ifdef WORKBENCH
 #define RTUD(x) fdtypes[x]  /* Updated dynamic type */
 #endif
@@ -216,7 +222,7 @@
 
 /* Other macros used to handle specific needs:
  *  RTMS(x,y) creates an Eiffel string from a C manifest string x, length y.
- *  RTMA(c,d,i,n) creates an Eiffel ARRAY[ANY] (for strip).
+ *  RTST(c,d,i,n) creates an Eiffel ARRAY[ANY] (for strip).
  *  RTXA(x,y) copies 'x' into expanded 'y' with exception if 'x' is void.
  *  RTEQ(x,y) returns true if 'x' = 'y'
  *  RTIE(x) returns true if 'x' is an expanded object
@@ -224,7 +230,7 @@
  *  RTEO(x) returns the address of the enclosing object for expanded 'x'
  */
 #define	RTMS(s) makestr(s,strlen(s))
-#define	RTMA(c,d,i,n) createarr(c,d,i,n);
+#define	RTST(c,d,i,n) striparr(c,d,i,n);
 #define RTXA(x,y) xcopy(x, y)
 #define RTEQ(x,y) xequal(x, y)
 #define RTIE(x) ((x) != (char *) 0 ? HEADER(x)->ov_flags & EO_EXP : 0)

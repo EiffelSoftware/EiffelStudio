@@ -598,7 +598,7 @@ feature {NONE} -- WEL Implementation
 			disabled_state := (draw_item_state & Wel_ownerdraw_constants.Ods_disabled /= 0)
 			desired_width := plain_text_position -- We have used this variable to store the desired width in `on_measure_menu_bar_item'.
 			left_pos_start := (right_pos - left_pos - desired_width) // 2
-			flat_menu_enabled := is_windows_xp_compatible and then has_flat_menu
+			flat_menu_enabled := has_flat_menu
 
 				-- First erase the background
 			if flat_menu_enabled then

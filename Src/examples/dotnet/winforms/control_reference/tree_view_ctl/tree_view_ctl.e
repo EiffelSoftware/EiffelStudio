@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			create l_ext
 			from
 			until
-				i > drives.count
+				i = drives.count
 			loop
 				create l_drive_string.make_from_cil (drives.item (i))
 				l_ptr := feature {MARSHAL}.string_to_hglobal_ansi (l_drive_string.to_cil)

@@ -47,12 +47,12 @@ extern "C" {
 #endif
 
 #if defined LMALLOC_CHECK || defined LMALLOC_DEBUG
-RT_LNK Malloc_t eiffel_malloc (register size_t nbytes, char *file, int line);
+RT_LNK Malloc_t eiffel_malloc (size_t nbytes, char *file, int line);
 RT_LNK Malloc_t eiffel_calloc (size_t nelem, size_t elsize, char *file, int line) ;
 RT_LNK Malloc_t eiffel_realloc (void *ptr, size_t nbytes, char *file, int line);
 RT_LNK void eiffel_free (void *ptr, char *s, int l);
 #else
-RT_LNK Malloc_t eiffel_malloc (register size_t nbytes);
+RT_LNK Malloc_t eiffel_malloc (size_t nbytes);
 RT_LNK Malloc_t eiffel_calloc (size_t nelem, size_t elsize) ;
 RT_LNK Malloc_t eiffel_realloc (void *ptr, size_t nbytes);
 RT_LNK void eiffel_free (void *ptr);

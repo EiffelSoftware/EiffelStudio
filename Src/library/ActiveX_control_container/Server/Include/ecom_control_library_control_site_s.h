@@ -24,25 +24,6 @@ class control_site;
 
 #include "ecom_control_library_IAxWinAmbientDispatch_s.h"
 
-#include "ecom_control_library_IAxWinHostWindow_s.h"
-
-#include "ecom_control_library_IOleClientSite_s.h"
-
-#include "ecom_control_library_IOleInPlaceSiteWindowless_s.h"
-
-#include "ecom_control_library_IOleControlSite_s.h"
-
-#include "ecom_control_library_IOleContainer_s.h"
-
-#include "ecom_control_library_IObjectWithSite_s.h"
-
-#include "ecom_control_library_IPropertyNotifySink_s.h"
-
-#include "ecom_control_library_IDocHostUIHandler_s.h"
-
-#include "ecom_control_library_IAdviseSink_s.h"
-
-#include "ecom_control_library_iserviceprovider_s.h"
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -8,7 +8,7 @@ class
 	CODE_ES_APPLICATION
 
 inherit
-	EV_APPLICATION
+	EV_THREAD_APPLICATION
 
 create
 	make

@@ -190,3 +190,16 @@ int sig;
 
 public void dserver() {}
 #endif
+
+public void dexit(code)
+{
+	/* This routine is called by functions from libipc.a to raise immediate
+	 * termination with a chance to trap the action and perform some clean-up.
+	 * Here we call esdie() which will collect all the Eiffel objects and
+	 * eventually call dispose() on some of them.
+	 */
+
+	esdie(code);						/* Propagate dying request */
+}
+
+

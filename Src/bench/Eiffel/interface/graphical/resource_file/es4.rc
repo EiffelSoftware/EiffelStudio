@@ -33,16 +33,18 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Select directory"
 FONT 8, "HELV"
 BEGIN
-    LTEXT "", ID_LA_DIR, 6, 48, 161, 8, WS_CHILD | WS_VISIBLE | WS_GROUP
-    LTEXT "&Choice", -1, 6, 5, 82, 8, WS_CHILD | WS_VISIBLE | WS_GROUP
-    CONTROL "", ID_CB_LASTDIR, "COMBOBOX", CBS_DROPDOWN | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 6, 15, 161, 95
-    LTEXT "&Directories:", -1, 6, 36, 72, 8, WS_CHILD | WS_VISIBLE | WS_GROUP
-    LISTBOX ID_LB_DIR, 6, 62, 82, 89, LBS_STANDARD | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP | WS_VSCROLL
-    LTEXT "Dri&ves", -1, 6, 155, 36, 8, WS_CHILD | WS_VISIBLE | WS_GROUP
-    CONTROL "", ID_CB_DRIVE, "COMBOBOX", CBS_DROPDOWNLIST | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP | WS_VSCROLL, 6, 165, 82,
-53
-    CONTROL "OK", IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 116, 62, 51, 15
-    CONTROL "Cancel", IDCANCEL, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_GROUP | WS_TABSTOP, 116, 82, 51, 15
+    LTEXT           "",ID_LA_DIR,6,48,161,8
+    LTEXT           "&Choice",-1,6,5,82,8
+    COMBOBOX        ID_CB_LASTDIR,6,15,161,95,CBS_DROPDOWN | WS_GROUP |
+                    WS_TABSTOP| WS_HSCROLL
+    LTEXT           "&Directories:",-1,6,36,72,8
+    LISTBOX         ID_LB_DIR,6,62,82,89,LBS_SORT | WS_VSCROLL | WS_GROUP | 
+                    WS_TABSTOP
+    LTEXT           "Dri&ves",-1,6,155,36,8
+    COMBOBOX        ID_CB_DRIVE,6,165,82,53,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_GROUP | WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,116,62,51,15,WS_GROUP
+    PUSHBUTTON      "Cancel",IDCANCEL,116,82,51,15,WS_GROUP
 END
 
 IDD_REPLACEDIALOG DIALOG DISCARDABLE  10, 10, 228, 82
@@ -70,19 +72,19 @@ BEGIN
                     WS_GROUP | WS_TABSTOP,135,58,29,14
 END
 
-Dlg_graphical_degree_output DIALOG DISCARDABLE  0, 0, 183, 79
+Dlg_graphical_degree_output DIALOGEX 0, 0, 183, 79
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Dialog"
 FONT 8, "MS Sans Serif"
 BEGIN
-    PUSHBUTTON      "Cancel",IDCANCEL,72,59,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,67,58,50,14
     CONTROL         "Progress1",Prg_compilation_progress,"msctls_progress32",
-                    WS_BORDER,9,43,145,11
-    LTEXT           "text degree",Txt_degree,7,7,59,10
-    LTEXT           "100 %",Txt_percentage,158,45,18,10
-    LTEXT           "current degree",Txt_current_degree,74,7,102,10
-    LTEXT           "Current entity",Txt_current_entity,74,16,102,10
-    LTEXT           "text entity",Txt_entity,7,16,59,10
-    LTEXT           "current nbr togo",Txt_current_nbr_to_go,74,25,102,10
-    LTEXT           "nbr togo text",Txt_nbr_to_go,7,25,59,10
+                    0x0,9,40,142,11,WS_EX_STATICEDGE
+    LTEXT           "text degree",Txt_degree,9,7,59,10
+    LTEXT           "100 %",Txt_percentage,155,42,21,10
+    LTEXT           "current degree",Txt_current_degree,69,7,102,10
+    LTEXT           "Current entity",Txt_current_entity,69,16,102,10
+    LTEXT           "text entity",Txt_entity,9,16,59,10
+    LTEXT           "current nbr togo",Txt_current_nbr_to_go,69,25,102,10
+    LTEXT           "nbr togo text",Txt_nbr_to_go,9,25,59,10
 END

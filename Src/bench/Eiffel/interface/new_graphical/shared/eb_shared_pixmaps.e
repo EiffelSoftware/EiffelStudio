@@ -870,6 +870,16 @@ feature -- Icons
 			Result := build_classic_pixmap ("delete_measure")
 		end
 
+	Icon_new_expression: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("new_expression")
+		end
+
+	Icon_edit_expression: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("edit_expression")
+		end
+
 	Icon_remove_exported_feature: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("remove_exported_feature")

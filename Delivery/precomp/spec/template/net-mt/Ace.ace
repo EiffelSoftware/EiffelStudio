@@ -1,0 +1,32 @@
+system EiffelNet-MT
+
+root
+
+        ANY
+
+default
+
+        assertion (require);
+        precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base-mt")
+
+cluster
+
+	-- EiffelNet
+	net:				"$EIFFEL4/library/net";
+	abstract_socket (net):		"$/abstract/socket";
+	net_socket (net):		"$/network/socket";
+	local_socket (net):		"$/local/socket";
+
+	polling_abstract (net):		"$/polling/abstract";
+--	polling_implementation (net):	"$/polling/implementation";
+
+	abstract_client_server (net):	"$/abstract/client_server";
+	net_client_server (net):	"$/network/client_server";
+	local_client_server (net):	"$/local/client_server";
+
+external
+	-- External EiffelNet library 
+        object:
+                "$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libmtnet.a"
+-- win		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/mtnet.lib"
+end

@@ -1,6 +1,6 @@
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib 
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
-CFLAGS = -O2 -DEIF_IL_DLL -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
+CFLAGS = -O2 -tWM -DEIF_IL_DLL -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
 LN = copy
 MAKE = make
 RANLIB = echo

@@ -3,10 +3,10 @@
 CC = cl
 
 # Finalized Version
-CFLAGS = -nologo -c -Ox -DEIF_IL_DLL -W4 -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
+CFLAGS = -nologo -MT -c -Ox -DEIF_IL_DLL -W4 -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
 
 # Debug Version
-#CFLAGS = -c -Zi -nologo -Od -W4 -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
+#CFLAGS = -c -Zi -MT -nologo -Od -W4 -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
 
 all:: ilwel.lib
 	del *.obj

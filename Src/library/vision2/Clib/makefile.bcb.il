@@ -5,7 +5,7 @@ AR = $(ISE_EIFFEL)\BCC55\bin\tlib.exe
 
 
 # Release version
-CFLAGS = -c -O1 -DEIF_IL_DLL \
+CFLAGS = -c -tWM -O1 -DEIF_IL_DLL \
 	-I..\spec\include \
 	-I$(ISE_EIFFEL)\C_library\libpng \
 	-I$(ISE_EIFFEL)\C_library\zlib \

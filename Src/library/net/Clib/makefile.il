@@ -1,6 +1,6 @@
 AR = lib 
 CC = cl
-CFLAGS= -W1 -nologo -Ox -DEIF_IL_DLL -I$(ISE_EIFFEL)\studio\spec\windows\include
+CFLAGS= -W1 -nologo -MT -Ox -DEIF_IL_DLL -I$(ISE_EIFFEL)\studio\spec\windows\include
 LN = copy
 MAKE = make
 RANLIB = echo

@@ -118,13 +118,17 @@ feature -- Generation
 					-- Finish code generation.
 				il_generator.end_module_generation
 				il_generator.end_assembly_generation
+			else
+					-- An error occurred, let's raise an Eiffel compilation
+					-- error that will be caught by WORBENCH_I.recompile.
+				Error_handler.raise_error
 			end
 		rescue
 			if not retried then
 				if not is_assembly_loaded or not is_error_available then
 					Error_handler.insert_error (create {IL_ERROR}.make_com_error)
 				else
-					Error_handler.insert_error ( create {IL_ERROR}.make (il_generator.last_error))
+					Error_handler.insert_error (create {IL_ERROR}.make (il_generator.last_error))
 				end
 				retried := True
 				retry

@@ -478,11 +478,6 @@ feature -- Actions
 			end
 		end
 
-	search_string(searched_string: STRING) is
-			-- Find the string `searched_string')
-		do
-		end
-
 	comment_selection is
 			-- Comment the selected lines.
 		do
@@ -502,6 +497,28 @@ feature -- Actions
 				history.wipe_out
 				invalidate
 				update
+			end
+		end
+
+	search_string(searched_string: STRING) is
+			-- Search `searched_string' in the current text.
+		local
+			end_searched_string: TEXT_CURSOR
+		do
+			text_displayed.search_string(searched_string)
+			if text_displayed.successful_search then
+				cursor.make_from_character_pos(
+					text_displayed.found_string_character_position,
+					text_displayed.found_string_line,
+					Current)
+				create end_searched_string.make_from_character_pos(
+					text_displayed.found_string_character_position + searched_string.count,
+					text_displayed.found_string_line,
+					Current)
+
+				set_selection_start(end_searched_string)
+
+				invalidate_cursor_rect(True)
 			end
 		end
 
@@ -565,6 +582,10 @@ feature {NONE} -- Handle keystokes
 			elseif virtual_key = Vk_r then
 					-- Ctrl-R (redo)
 				redo
+
+			elseif virtual_key = Vk_f then
+					-- Ctrl-F (find)
+				search_string(clipboard)
 			end
 		end
 

@@ -44,6 +44,19 @@ feature -- Access
 			create Result.make
 		end
 
+feature -- Search status
+
+	found_string_line: INTEGER
+			-- Line number of the last found string.
+			-- Valid only if `successful_search' is set.
+
+	found_string_character_position: INTEGER
+			-- Position of the first character within the line of the last string.
+			-- Valid only if `successful_search' is set.
+	
+	successful_search: BOOLEAN
+			-- Was the last call to `search_string' successful?
+
 feature -- test features
 
 	item: like first_displayed_line
@@ -181,25 +194,42 @@ feature -- Basic Operations
 			unsymbol_selection(start_selection, end_selection, "%T")
 		end
 
-	search_string(searched_string: STRING): TEXT_CURSOR is
+	search_string(searched_string: STRING) is
 			-- Search the text for the string `searched_string'.
-			-- Return a cursor on the beggining of the string if found,
-			-- Void otherwise.
+			-- If the search was successful, `successful_search' is
+			-- set to True and `found_string_line' & 
+			-- `found_string_character_position' are set.
 		local
 			found		: BOOLEAN
 			line_string	: STRING
 			found_index : INTEGER
+			line_number : INTEGER
 		do
+				-- Reset the success tag.
+			successful_search := False
+
+				-- Search the string...
 			from
 				start
+				line_number := 0
 			until
 				found_index /= 0 or else after
 			loop
 				line_string := item.image
-				found_index := line_string.substring_index(searched_string, 1)
+				if line_string.count >= searched_string.count then
+					found_index := line_string.substring_index(searched_string, 1)
+				end
+				line_number := line_number + 1
+
+					-- Prepare next iteration.
+				forth
 			end
 
+				-- If the search was successful, set the results attributes.
 			if found_index /= 0 then
+				successful_search := True
+				found_string_line := line_number
+				found_string_character_position := found_index
 			end
 		end
 

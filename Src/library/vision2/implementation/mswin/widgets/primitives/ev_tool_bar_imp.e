@@ -295,7 +295,7 @@ feature -- Element change
 			if separator_button = Void then	
 					-- Then, the text of the button.
 				button_text := button.text -- Speed optimization
-				if button_text /= Void and then not button_text.is_empty then
+				if not button_text.is_empty then
 						--| We now add an empty text to all children without
 						--| text, so that they do not share text with other buttons.
 						--| Only performed when a text is added to the first child.
@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 			until
 				ev_children.off
 			loop
-				if ev_children.item.text = Void then
+				if ev_children.item.text.is_empty then
 					but ?= ev_children.item
 					if but = Void then
 						internal_reset_button (ev_children.item)
@@ -655,7 +655,7 @@ feature {NONE} -- Implementation
 			until
 				ev_children.off or Result = True
 			loop
-				if ev_children.item.text /= Void then
+				if not ev_children.item.text.is_empty then
 					Result := True
 				end
 				ev_children.forth
@@ -674,7 +674,7 @@ feature {NONE} -- Implementation
 			until
 				ev_children.off
 			loop
-				if ev_children.item.text /= Void then
+				if not ev_children.item.text.is_empty then
 					Result := Result + 1
 				end
 				ev_children.forth

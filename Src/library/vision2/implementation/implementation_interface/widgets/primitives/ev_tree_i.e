@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Status report
 
-	ensure_item_visible (tree_item: EV_TREE_ITEM) is
+	ensure_item_visible (an_item: EV_TREE_ITEM) is
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		deferred
@@ -106,6 +106,9 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2001/06/29 22:41:13  king
+--| Corrected argument name of ensure_item_visible
+--|
 --| Revision 1.26  2001/06/25 17:02:22  rogers
 --| Added `ensure_item_visible.
 --|

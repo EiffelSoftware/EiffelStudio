@@ -40,8 +40,9 @@ feature
 		do
 			!!widget.make (entity_name, a_parent);
 			widget.set_default_position (False);
+			widget.allow_resize;
+			widget.realize;
 			if retrieved_node = Void then
-				resize_policy_disabled := True;
 				widget_set_title (entity_name);
 				set_size (300, 300);
 				default_position := True;
@@ -155,16 +156,6 @@ feature {NONE}
 			widget.set_title (new_title);
 		end;
  
-	widget_forbid_resize is
-		do
-			widget.forbid_resize
-		end;
- 
-	widget_allow_resize is
-		do
-			widget.allow_resize
-		end;
- 
 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do
 			opt_list.put (Context_const.geometry_form_nbr,
@@ -180,11 +171,17 @@ feature
 	hide is
 		do
 			widget.popdown;
+			if widget.shown then
+				widget.hide;
+			end
 		end;
 
 	show is
 		do
-			widget.popup
+			widget.popup;
+			if not widget.shown then
+				widget.show;
+			end
 		end;
 
 	shown: BOOLEAN is

@@ -1523,7 +1523,6 @@ rt_public int old_retrieve_read_with_compression ()
 	  int read_size = 0;
 	  int part_read = 0;
 	  int total_read = 0;
-	  register i = 0;
 
 #ifdef EIF_WIN32
 	  if (r_fstoretype == 'F')
@@ -1542,7 +1541,8 @@ rt_public int old_retrieve_read_with_compression ()
 	  eif_cmps_read_u32_from_char_buf ((unsigned char*)pdcmps_in_size, (uint32*)&dcmps_in_size);
 
 	  ptr = cmps_general_buffer;
-	  for (i = 0; i < EIF_CMPS_HEAD_SIZE; i ++) *ptr ++ = cmps_head [i];
+	  memcpy(ptr, cmps_head, EIF_CMPS_HEAD_SIZE);
+	  ptr += EIF_CMPS_HEAD_SIZE;
 	  read_size = dcmps_in_size;
 
 	  while (total_read < read_size) {
@@ -1645,7 +1645,8 @@ rt_public int retrieve_read_with_compression ()
 	eif_cmps_read_u32_from_char_buf ((unsigned char*)pdcmps_in_size, (uint32*)&dcmps_in_size);
 
 	ptr = cmps_general_buffer;
-	for (i = 0; i < EIF_CMPS_HEAD_SIZE; i ++) *ptr ++ = cmps_head [i];
+	memcpy(ptr, cmps_head, EIF_CMPS_HEAD_SIZE);
+	ptr += EIF_CMPS_HEAD_SIZE;
 	read_size = dcmps_in_size;
 	
 	while (end_of_buffer < read_size) {

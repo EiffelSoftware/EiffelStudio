@@ -1,8 +1,6 @@
 indexing
 	description: "Defines the general notions of a stream in for the rich %
 		%edit control."
-	note: "Do not use more than one instance of this class at the same %
-		%time. Nested streams are not supported."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,9 +20,8 @@ feature {NONE} -- Initialization
 			-- Initialize the C variables.
 		do
 			rich_edit_stream_make
-			cwel_set_editstream_procedure_address ($internal_callback)
-			cwel_set_editstream_object (Current)
-			cwel_set_editstream_in (True)
+			cwel_set_editstream_in_procedure_address ($internal_callback)
+			cwel_editstream_set_pfncallback_in (item)
 		end
 
 feature -- Access
@@ -47,18 +44,44 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	internal_callback (a_buffer: POINTER; a_length: INTEGER): INTEGER is
-			-- Set to `a_buffer' a string of `a_length' characters.
+	internal_callback (a_buffer: POINTER; a_buffer_length: INTEGER; a_data_length: POINTER): INTEGER is
+			-- Set to `a_buffer' a string of at most `a_length' characters.
+			-- `a_data_length' is a C-pointer to an integer, that has to
+			-- be set to the length of the data that was actually
+			-- written into `a_buffer'.
 		local
-			a_wel_string: WEL_STRING
+			a: ANY
 		do
+		
 			stream_result := 0
-			read_buffer (a_length)
-			!! a_wel_string.make (buffer)
-			cwel_set_editstream_buffer (a_wel_string.item)
-			cwel_set_editstream_buffer_size (buffer.count)
+			read_buffer (a_buffer_length)
+
+			a := buffer.area
+			c_memcpy (a_buffer, $a, buffer.count)
+			cwel_set_integer_reference_value (a_data_length, buffer.count)
+			
 			Result := stream_result
 		end
+
+feature {NONE} -- Externals
+
+	cwel_set_integer_reference_value (ref: POINTER; value: INTEGER) is
+			-- Sets the contents of a C-pointer to an LONG (`ref') to
+			-- `value'.
+		external
+			"C [macro <estream.h>] (LONG FAR *, int)"
+		end
+
+	cwel_editstream_set_pfncallback_in (ptr: POINTER) is
+		external
+			"C [macro %"estream.h%"]"
+		end
+
+	cwel_set_editstream_in_procedure_address (address: POINTER) is
+		external
+			"C [macro %"estream.h%"]"
+		end
+
 
 end -- class WEL_RICH_EDIT_STREAM_IN
 

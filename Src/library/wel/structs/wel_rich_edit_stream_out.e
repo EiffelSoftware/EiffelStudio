@@ -1,8 +1,6 @@
 indexing
 	description: "Defines the general notions of a stream out for the rich %
 		%edit control."
-	note: "Do not use more than one instance of this class at the same %
-		%time. Nested streams are not supported."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,9 +20,8 @@ feature {NONE} -- Initialization
 			-- Initialize the C variables.
 		do
 			rich_edit_stream_make
-			cwel_set_editstream_procedure_address ($internal_callback)
-			cwel_set_editstream_object (Current)
-			cwel_set_editstream_in (False)
+			cwel_set_editstream_out_procedure_address ($internal_callback)
+			cwel_editstream_set_pfncallback_out (item)
 		end
 
 feature -- Basic operations
@@ -38,17 +35,24 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	internal_callback (a_buffer: POINTER; a_length: INTEGER): INTEGER is
+	internal_callback (buffer: STRING): INTEGER is
 			-- `a_buffer' contains `a_length' characters.
-		local
-			s: STRING
 		do
 			stream_result := 0
-			!! s.make (0)
-			s.from_c (a_buffer)
-			write_buffer (s)
-			cwel_set_editstream_buffer_size (s.count)
+			write_buffer (buffer)
 			Result := stream_result
+		end
+
+feature {NONE} -- Externals
+
+	cwel_editstream_set_pfncallback_out (ptr: POINTER) is
+		external
+			"C [macro %"estream.h%"]"
+		end
+
+	cwel_set_editstream_out_procedure_address (address: POINTER) is
+		external
+			"C [macro %"estream.h%"]"
 		end
 
 end -- class WEL_RICH_EDIT_STREAM_OUT

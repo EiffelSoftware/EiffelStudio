@@ -94,8 +94,8 @@ editor,,,,,,
 ,4,Make it possible to drag the selection (copy/paste),Xavier,EDT0002,,
 ,4,Improve auto-completion in new lines,Xavier,EDT0003,,
 ,2,"Emacs integration with COM on Windows, Netscape on Linux",Arnaud,EDT0004,,
-,3,"Add ""Add setter feature""",Arnaud,EDT0005,,
-,2,Add an option to search outside the comments/indexing clauses,Xavier,EDT0006,,
+,3,"Add ""Add setter feature""",Arnaud,EDT0005
+,2,Add an option to search outside the comments/indexing clauses,Xavier,EDT0006
 ,3,"When a class that does not belong to the universe is typed, put it in red",Manus,EDT0006
 ,4,"Auto-complete when user presses ;,.) …, not only return",Xavier,EDT0008
 
@@ -136,7 +136,7 @@ compiler,,,,
 ,4,Remove deferred classes from the polymorphic tables (and when available also optionally remove classes that are never instantiated),Xavier,CMP0030
 ,3,Drag down the code of features into the nearest common ancestor to all classes that use the feature. Optionally drag the code down to all classes that use the feature (flat out all classes). This should remove polymorphic calls inside features (but increase the code size),Emmanuel,CMP0031
 ,3,Make the finalization independent from the workbench mode: this would remove bugs (cf DH) and facilitate some optimizations,Xavier,CMP0032
-
+,4,"Save project file even if we don't have a successful compilation, so that we can resume compilation later on",,
 
 
 libraries,,,,
@@ -148,5 +148,3 @@ libraries,,,,
 ,3,Add a calendar control in Vision2,Arnaud,LIB0006
 ,3,Add a support for ActiveX in Vision2,Arnaud,LIB0007
 ,2,Introduce agents in EiffelBase,Arnaud,LIB0008
-
-

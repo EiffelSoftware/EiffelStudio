@@ -49,7 +49,18 @@ feature -- Initialization
 			!!image.make (2000)
 		end;
 
+feature -- Access
+
 	image: STRING;
+			-- Filtered output text
+
+	file_suffix: STRING is
+			-- Suffix of the file name where the filtered output text is stored;			-- Void if it has not been specified in the filter specification
+		do
+			if format_table.has (f_Suffix) then
+				Result := format_table.item (f_Suffix).item1
+			end
+		end;
 
 feature -- Text processing
 

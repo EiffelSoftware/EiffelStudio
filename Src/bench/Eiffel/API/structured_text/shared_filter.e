@@ -17,6 +17,7 @@ feature {NONE} -- Major syntactic construct names
 	f_Keyword: STRING is				"keyword";
 	f_New_line: STRING is				"new_line";
 	f_Obsolete: STRING is				"obsolete_clause";
+	f_Suffix: STRING is					"suffix";
 	f_Symbol: STRING is					"symbol";
 	f_Tab: STRING is					"tab";
 	

@@ -6,28 +6,36 @@ indexing
 
 class
 	EV_INTERMEDIARY_ROUTINES
+
+inherit
+	IDENTIFIED
+		undefine
+			copy, is_equal
+		end
+		
+	ANY
 	
 feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 
-	on_timeout_intermediary (a_c_object: POINTER) is
+	on_timeout_intermediary (a_object_id: INTEGER) is
 			-- Timeout has occurred.
 		local
 			a_timeout_imp: EV_TIMEOUT_IMP
 		do
-			a_timeout_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_timeout_imp /= Void then
+			a_timeout_imp ?= eif_id_object (a_object_id)
+			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed then
 				-- Timeout may possibly have been gc'ed.
 				a_timeout_imp.call_timeout_actions
 			end
 		end
 		
-	on_timeout_kamikaze_intermediary (a_c_object: POINTER) is
+	on_timeout_kamikaze_intermediary (a_object_id: INTEGER) is
 			-- Kamikaze Timeout has occurred.
 		local
 			a_timeout_imp: EV_TIMEOUT_IMP
 		do
-			a_timeout_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_timeout_imp /= Void then
+			a_timeout_imp ?= eif_id_object (a_object_id)
+			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed then
 				-- Timeout may possibly have been gc'ed.
 				a_timeout_imp.call_timeout_actions
 			end

@@ -80,8 +80,6 @@ feature -- Setting
 
 	set_is_most_recent_clr_version (a_flag: BOOLEAN) is
 			-- Set `is_most_recent_clr_version' to `a_flag'
-		require
-			flag_not_void: a_flag /= Void
 		do
 			is_most_recent_clr_version := a_flag
 		ensure

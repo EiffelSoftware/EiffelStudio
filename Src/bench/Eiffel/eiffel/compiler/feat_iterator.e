@@ -142,12 +142,16 @@ feature {NONE}
 
 			if just_born then
 
+					-- Marking of the function type if it is
+					-- an anchor.
 				like_feature ?= feat.type
 				if like_feature /= Void then
 					r_id := like_feature.rout_id;
 					like_feat := actual_class.feature_table.
 						feature_of_rout_id (r_id)
-					mark (like_feat, actual_class, r_id)
+					if not like_feat.is_attribute then
+						mark (like_feat, actual_class, r_id)
+					end
 				end
 
 

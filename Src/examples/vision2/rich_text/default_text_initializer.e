@@ -191,41 +191,44 @@ feature -- Status setting
 			
 				-- Now handle paragraph formatting as this may not be buffered.
 				-- The lines for formatting are hard coded from the character offsets of the text. As the actual character offset
-				-- may change due to the dynamic display of fonts, we search for the location of "Spacing and Margins" as it represents
-				-- the start of the paragraphs to be formattted, and then apply a character offset from that point.
+				-- may change due to the dynamic display of fonts, we search for the location of "Alignment" and "Spacing and Margins"
+				-- as they represents the start of the paragraphs to be formattted, and then apply a character offset from that point.
 				
-			paragraph_start_index := rich_text.text.substring_index ("Spacing and Margins", 3800)	
+			paragraph_start_index := rich_text.text.substring_index ("Alignment", 2000)
+			print (paragraph_start_index)
 				
 			create paragraph_format
 			paragraph_format.enable_center_alignment
-			rich_text.format_paragraph (3177, 3177, paragraph_format)
+			rich_text.format_paragraph (paragraph_start_index + 469, paragraph_start_index + 470, paragraph_format)
 
 			paragraph_format.enable_right_alignment
-			rich_text.format_paragraph (3673, 3673, paragraph_format)
+			rich_text.format_paragraph (paragraph_start_index + 965, paragraph_start_index + 966, paragraph_format)
 
 			paragraph_format.enable_justification
-			rich_text.format_paragraph (4150, 4150, paragraph_format)
+			rich_text.format_paragraph (paragraph_start_index + 1442, paragraph_start_index + 1443, paragraph_format)
+		
+			paragraph_start_index := rich_text.text.substring_index ("Spacing and Margins", 3000)
 		
 			create paragraph_format
 			paragraph_format.enable_justification
 			paragraph_format.set_left_margin (200)
-			rich_text.format_paragraph (paragraph_start_index + 21, paragraph_start_index + 21, paragraph_format)
+			rich_text.format_paragraph (paragraph_start_index + 21, paragraph_start_index + 22, paragraph_format)
 			
 			create paragraph_format
 			paragraph_format.enable_justification
 			paragraph_format.set_right_margin (200)
-			rich_text.format_paragraph (paragraph_start_index + 536, paragraph_start_index + 536, paragraph_format)
+			rich_text.format_paragraph (paragraph_start_index + 536, paragraph_start_index + 537, paragraph_format)
 			
 			create paragraph_format
 			paragraph_format.enable_justification
 			paragraph_format.set_top_spacing (100)
-			rich_text.format_paragraph (paragraph_start_index + 1090, paragraph_start_index + 1090, paragraph_format)
+			rich_text.format_paragraph (paragraph_start_index + 1090, paragraph_start_index + 1091, paragraph_format)
 			
 			create paragraph_format
 			paragraph_format.enable_justification
 			paragraph_format.set_top_spacing (0)
 			paragraph_format.set_bottom_spacing (100)
-			rich_text.format_paragraph (paragraph_start_index + 1756, paragraph_start_index + 1756, paragraph_format)			
+			rich_text.format_paragraph (paragraph_start_index + 1756, paragraph_start_index + 1757, paragraph_format)			
 			
 			create font.make_with_values (feature {EV_FONT_CONSTANTS}.family_roman,
 				feature {EV_FONT_CONSTANTS}.weight_regular,

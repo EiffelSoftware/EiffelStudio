@@ -167,7 +167,9 @@ EIF_BOOLEAN c_gtk_widget_minimum_size_set (GtkWidget *w, guint width, guint heig
  *
  * Author : Samik
  *
- *********************************//*  
+ **********************************/
+
+/*
     the coordinates, size and minimum size of a widget
 */
 #define c_gtk_widget_x(p)      (GTK_WIDGET(p)->allocation.x)      /*integer*/
@@ -175,8 +177,12 @@ EIF_BOOLEAN c_gtk_widget_minimum_size_set (GtkWidget *w, guint width, guint heig
 #define c_gtk_widget_width(p)  (GTK_WIDGET(p)->allocation.width)  /*integer*/
 #define c_gtk_widget_height(p) (GTK_WIDGET(p)->allocation.height) /*integer*/
 
-#define c_gtk_widget_minimum_width(p)  (GTK_WIDGET(p)->requisition.width)  /*integer*/
-#define c_gtk_widget_minimum_height(p) (GTK_WIDGET(p)->requisition.height) /*integer*/
+// #define c_gtk_widget_minimum_width(p)  (GTK_WIDGET(p)->requisition.width)  /*integer*/
+// #define c_gtk_widget_minimum_height(p) (GTK_WIDGET(p)->requisition.height) /*integer*/
+
+/* gets minimum width and height */
+EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *widget); 
+EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *widget); 
 
 /* set size */
 void c_gtk_widget_set_size (GtkWidget *widget, int width, int height);

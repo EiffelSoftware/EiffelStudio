@@ -32,17 +32,17 @@ feature -- Access
 
 	width: INTEGER is
 		-- Horizontal size in pixels.
-	deferred
+		deferred
         ensure
             positive: Result > 0
         end
 
 	height: INTEGER is
 		-- Vertical size in pixels.
-	deferred
-	ensure
-		positive: Result > 0
-	end
+		deferred
+		ensure
+			positive: Result > 0
+		end
 
 	line_width: INTEGER is
 			-- Line thickness.

@@ -10,10 +10,26 @@ class
 inherit
 	WIZARD_PROJECT_MANAGER
 		redefine
-			prepare
+			prepare,
+			make_and_launch
 		end
 
-feature -- Initialization
+feature {NONE} -- Initialization
+
+	make_and_launch is
+			-- Initialize and launch application
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				Precursor
+			else
+				write_bench_notification_cancel
+			end
+		rescue
+			retried := true
+			retry
+		end
 
 	prepare is
 			-- Prepare the first window to be displayed.

@@ -27,34 +27,38 @@ feature -- Basic operations
 			valid_input: not inputs.is_empty
 			valid_feature_input: inputs.first.substring_index (Feature_indicator, 1) /= 0
 		local
-			l_comment: STRING
+			l_comment, l_first, l_item: STRING
 		do
 			succeed := False
-			if inputs.first.substring_index (Constant_indicator, 1) < 1 and -- Do not check constant
-					inputs.first.substring_index (Infix_feature_indicator, 1) < 1 and -- Remove infix feature
-					inputs.first.substring_index (Prefix_feature_indicator, 1) < 1 then -- Remove prefix feature
+			inputs.start
+			l_first := inputs.item
+			if l_first.substring_index (Constant_indicator, 1) < 1 and -- Do not check constant
+					l_first.substring_index (Infix_feature_indicator, 1) < 1 and -- Remove infix feature
+					l_first.substring_index (Prefix_feature_indicator, 1) < 1 then -- Remove prefix feature
 
 				create l_comment.make (100)
-
-				inputs.first.replace_substring_all (Feature_indicator, Empty_string)
-
-				parse_signature (inputs.first)
+				l_first.replace_substring_all (Feature_indicator, Empty_string)
+				parse_signature (l_first)
 
 				from
-					inputs.start
 					inputs.forth
+					if not inputs.after then
+						l_item := inputs.item
+					end
 				until
-					inputs.after or else
-					inputs.item.substring_index ("--", 1) <= 0
+					inputs.after or else l_item.substring_index ("--", 1) < 1
 				loop
-					if inputs.item.substring_index ("--", 1) > 0 then
-						inputs.item.replace_substring_all ("--", Empty_string)
-						inputs.item.left_adjust
-						inputs.item.right_adjust
-						l_comment.append (inputs.item)
+					if l_item.substring_index ("--", 1) > 0 then
+						l_item.replace_substring_all ("--", Empty_string)
+						l_item.left_adjust
+						l_item.right_adjust
+						l_comment.append (l_item)
 						l_comment.append ("%N")
 					end
 					inputs.forth
+					if not inputs.after then
+						l_item := inputs.item
+					end
 				end
 
 				if succeed and not l_comment.is_empty then

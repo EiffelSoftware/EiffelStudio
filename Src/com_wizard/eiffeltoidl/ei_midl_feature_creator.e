@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -61,7 +66,7 @@ feature -- Basic operations
 			tmp_name := l_feature.name.twin
 			if c_keywords.has (tmp_name) then
 				tmp_string := tmp_name.twin
-				tmp_string.append (message_output.name_is_C_keyword)
+				tmp_string.append (" is C/C++ keyword, please choose another feature name")
 				message_output.add_warning (Current, tmp_string)
 			end
 			create midl_feature.make (tmp_name)

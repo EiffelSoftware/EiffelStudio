@@ -7,11 +7,6 @@ class
 	WIZARD_IDL_GENERATOR
 
 inherit
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		end
-
 	WIZARD_PROCESS_LAUNCHER
 		export
 			{NONE} all
@@ -19,8 +14,10 @@ inherit
 			launch
 		end
 
-create
-	make
+	WIZARD_ERRORS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -40,7 +37,7 @@ feature -- Basic operations
 		do
 			message_output.add_message (Current, "Processing Eiffel class")
 
-			destination_folder := shared_wizard_environment.destination_folder.twin
+			destination_folder := environment.destination_folder.twin
 
 			destination_folder.append ("idl")
 
@@ -52,9 +49,9 @@ feature -- Basic operations
 
 			create command.make (100)
 			command.append (eiffel_compiler + " -flatshort -filter com ")
-			command.append (shared_wizard_environment.eiffel_class_name)
+			command.append (environment.eiffel_class_name)
 			command.append (" -project ")
-			command.append (shared_wizard_environment.eiffel_project_name)
+			command.append (environment.eiffel_project_name)
 
 			launch (command, destination_folder)
 
@@ -65,17 +62,17 @@ feature -- Basic operations
 
 			if input_data.class_not_found then
 				message_output.add_message (Current, "Error: Class not in project")
-				Shared_wizard_environment.set_abort (Idl_generation_error)
+				environment.set_abort (Idl_generation_error)
 			else
-				if not shared_wizard_environment.abort then
+				if not environment.abort then
 					message_output.add_message (Current, "Generating IDL file")
 					
-					create midl_library.make (shared_wizard_environment.eiffel_class_name)
+					create midl_library.make (environment.eiffel_class_name)
 					create midl_coclass_creator.make
 					midl_coclass_creator.create_from_eiffel_class (input_data.eiffel_class)
 					midl_library.set_coclass (midl_coclass_creator.midl_coclass)
 
-					create idl_file.make_open_write (shared_wizard_environment.idl_file_name)
+					create idl_file.make_open_write (environment.idl_file_name)
 					idl_file.put_string (midl_library.code)
 					idl_file.flush
 					idl_file.close
@@ -83,7 +80,7 @@ feature -- Basic operations
 			end
 		rescue
 			message_output.add_message (Current, "Error: Class not in project")
-			Shared_wizard_environment.set_abort (Idl_generation_error)
+			environment.set_abort (Idl_generation_error)
 		end
 
 feature {NONE} -- Basic operations
@@ -114,7 +111,7 @@ feature {NONE} -- Basic operations
 				output_pipe.read_stream (Block_size)
 				create a_output.make (100)
 			until
-				not output_pipe.last_read_successful or Shared_wizard_environment.abort
+				not output_pipe.last_read_successful or environment.abort
 			loop
 				a_output.append (output_pipe.last_string)
 
@@ -126,7 +123,7 @@ feature {NONE} -- Basic operations
 			output_file.put_string (a_output)
 			output_file.close
 
-			if not Shared_wizard_environment.abort then
+			if not environment.abort then
 				an_integer := cwin_wait_for_single_object (process_info.process_handle, cwin_infinite)
 				check
 					valid_external_call: an_integer = cwin_wait_object_0
@@ -142,13 +139,13 @@ feature {NONE} -- Basic operations
 			input_pipe.close_output
 			last_process_result := a_last_process_result
 		rescue
-			Shared_wizard_environment.set_abort (Idl_generation_error)
+			environment.set_abort (Idl_generation_error)
 		end
 
 	raw_file_name: STRING is
 			-- Intermediate file for IDL generator.
 		once
-			Result := shared_wizard_environment.destination_folder.twin
+			Result := environment.destination_folder.twin
 			Result.append ("idl\e2idl.output")
 	
 		end

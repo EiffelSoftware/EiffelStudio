@@ -1764,11 +1764,11 @@ end:
 	 */
 	case BC_OBJECT_ADDR:
 		{
+		struct item *pointed_object;
+	 	EIF_BOOLEAN is_attribute = (EIF_BOOLEAN) 0;
 #ifdef DEBUG
 		dprintf(2)("BC_OBJECT_ADDR\n");
 #endif
-		struct item *pointed_object;
-	 	EIF_BOOLEAN is_attribute = (EIF_BOOLEAN) 0;
 
 		switch(*IC++) {
 			case BC_LOCAL:
@@ -1876,6 +1876,7 @@ end:
 						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
 						break;
 					case SK_REF:
+						/* No need to call RTAS as the area is the last object allocated and is thus in the NEW set */
 						*(char **) sp_area = it->it_ref;
 						sp_area += sizeof(char *);
 						break;

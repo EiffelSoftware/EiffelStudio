@@ -180,6 +180,7 @@ feature
 			skeleton: SKELETON;
 			table: POLY_TABLE [ENTRY];
 			rout_id: INTEGER;
+			rout_info: ROUT_INFO
 		do
 			generate_header (file);
 			skeleton := class_type.skeleton;
@@ -204,8 +205,8 @@ feature
 			file.putstring ("return *");
 			result_type.c_type.generate_access_cast (file);
 			file.putstring ("(Current + ");
+			rout_id := - rout_id_set.first;
 			if byte_context.final_mode then
-				rout_id := - rout_id_set.first;
 				table := Eiffel_table.item_id (rout_id);
 				if table.is_polymorphic (class_type.type_id) then
 					table_name := clone (Encoder.table_name (rout_id));
@@ -221,6 +222,16 @@ feature
 				else
 					skeleton.generate_offset (file, feature_id);
 				end;
+			elseif
+				Compilation_modes.is_precompiling or
+				class_type.associated_class.is_precompiled
+			then
+				rout_info := System.rout_info_table.item (rout_id);
+				file.putstring ("RTWPA(");
+				file.putint (rout_info.origin);
+				file.putchar (',');
+				file.putint (rout_info.offset);
+				file.putstring (", Dtype(Current))");
 			else
 				file.putstring ("RTWA(");
 				file.putint (class_type.id - 1);

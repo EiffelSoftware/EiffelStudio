@@ -22,7 +22,7 @@ inherit
 			make as button_rel_data_make
 		end
 
-creation
+create
 
 	make
 

@@ -18,7 +18,7 @@ inherit
 			make as button_data_make
 		end
 
-creation
+create
 
 	make
 

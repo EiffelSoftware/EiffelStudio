@@ -22,7 +22,7 @@ inherit
 			{ANY} item, put
 		end
 
-creation
+create
 
 	make
 

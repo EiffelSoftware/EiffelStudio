@@ -11,7 +11,7 @@ inherit
 
 	ABSTRACT_SPECIAL_VALUE
 		redefine
-			set_hector_addr, sorted_children
+			set_hector_addr
 		end;
 
 	OBJECT_ADDR
@@ -208,14 +208,6 @@ feature -- Output
 		do
 			Result := items
 		end
-		
-	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
-			-- Return items as childrens.
-			--| already sorted by list creation.
-			--| this avoid getting, 1, 10, 11, ... 2, 3 ,4 
-		do
-			Result := items
-		end		
 
 feature {NONE} -- Implementation
 	

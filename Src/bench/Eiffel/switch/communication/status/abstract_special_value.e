@@ -11,7 +11,7 @@ inherit
 
 	ABSTRACT_DEBUG_VALUE
 		redefine
-			append_to, address
+			append_to, address, sorted_children
 		end
 
 	SHARED_DEBUG
@@ -42,7 +42,13 @@ feature -- Properties
 	sp_lower, sp_upper: INTEGER
 			-- Bounds for special object inspection
 
-feature -- Output	
+feature -- Output
+
+	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+			-- Return items as childrens.
+		do
+			Result := children
+		end
 
 	expandable: BOOLEAN is 
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)

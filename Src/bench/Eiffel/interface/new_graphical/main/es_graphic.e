@@ -94,12 +94,11 @@ feature {NONE} -- Initialization
 			if rescued = 0 then
 					-- Normal execution
 				default_create
-				license.check_activation_while_running (agent prepare)
-					-- `prepare' is only called when license activation window
-					-- is shown, so when it is not, ie `is_licensed' is True,
-					-- we have to manually call it.
+				license.check_license
 				if license.is_licensed then
-					prepare
+					post_launch_actions.extend (agent prepare)
+				else
+					post_launch_actions.extend (agent license.check_activation_while_running (agent prepare))
 				end
 				launch
 			else

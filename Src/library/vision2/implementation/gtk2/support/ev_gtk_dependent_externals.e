@@ -1820,6 +1820,11 @@ feature -- Externals
 			"C signature (PangoFontDescription*): PangoFontDescription* use <gtk/gtk.h>"
 		end
 
+	frozen pango_font_description_to_string (a_pango_description: POINTER): POINTER is
+		external
+			"C signature (PangoFontDescription*): char* use <gtk/gtk.h>"
+		end
+
 	frozen pango_font_description_set_family (a_pango_description: POINTER; a_family: POINTER) is
 		external
 			"C signature (PangoFontDescription*, char*) use <gtk/gtk.h>"

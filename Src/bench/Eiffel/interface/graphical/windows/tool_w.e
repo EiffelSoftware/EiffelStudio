@@ -141,6 +141,12 @@ feature -- Window Properties
 		do
 		end;
 
+	history_window_title: STRING is
+			-- Title of the history window
+		do
+			Result := Interface_names.t_Empty
+		end;
+
 feature -- Access
 
 	resources: RESOURCE_CATEGORY is
@@ -302,10 +308,16 @@ feature -- Window settings
 		do
 			tab_length := new_length;
 			if read_only_text_window /= editable_text_window then
+				read_only_text_window.set_changed (True);
 				read_only_text_window.set_tab_length (new_length);
+				read_only_text_window.set_changed (False);
+				editable_text_window.set_changed (True);
 				editable_text_window.set_tab_length (new_length);
+				editable_text_window.set_changed (False);
 			else
+				text_window.set_changed (True);
 				text_window.set_tab_length (new_length);
+				text_window.set_changed (False);
 				if 
 					text_window.is_graphical and then 
 					not text_window.text.empty 
@@ -366,11 +378,10 @@ feature -- Text window creation
 				end;
 			else
 				!GRAPHICAL_TEXT_WINDOW! 
-					ro_text_window.make (new_name, global_form)
+					ro_text_window.make_from_tool (new_name, Current)
 			end;
 			set_read_only_text_window (ro_text_window);
-			--if has_editable_text and then not text_window.is_editable then
-			if has_editable_text then 
+			if has_editable_text and then not ro_text_window.is_editable then
 				if tabs_disabled then
 					!SCROLLED_TEXT_WINDOW! 
 						ed_text_window.make_from_tool (new_name, Current)
@@ -381,6 +392,10 @@ feature -- Text window creation
 				set_editable_text_window (ed_text_window)
 				text_window := ed_text_window;
 			else
+				if has_editable_text then
+					set_editable_text_window (ro_text_window)
+					text_window := ro_text_window;
+				end;
 				text_window := ro_text_window;
 			end;
 			check
@@ -457,6 +472,14 @@ feature -- Update
 			-- Synchronize clickable elements with text, if possible.
 		do
 			synchronise_stone
+		end;
+
+	update_graphical_resources is
+			-- Synchronize clickable elements with text, if possible
+			-- and update the graphical values in text window.
+		do
+			initialize_text_window_resources;
+			synchronize
 		end;
 
 	show_file (f: PLAIN_TEXT_FILE) is

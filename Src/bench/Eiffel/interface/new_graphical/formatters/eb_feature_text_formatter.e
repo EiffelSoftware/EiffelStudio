@@ -12,6 +12,8 @@ inherit
 		redefine
 			new_button
 		end
+		
+	EB_SHARED_INTERFACE_TOOLS
 
 feature -- Access
 
@@ -61,6 +63,11 @@ feature -- Formatting
 				end
 				if not last_was_error then
 					if editor.current_text /= formatted_text then
+						if not Eiffel_system.System.il_generation then
+							editor.show_breakpoints
+						else
+							editor.hide_breakpoints
+						end
 						editor.process_text (formatted_text)
 					end
 					if editable then

@@ -5,7 +5,7 @@ indexing
 	id: "$Id$"
 	revision: "$Revision$"
 
-class
+deferred class
 	GENERATED_COMMAND [G]
 
 inherit 
@@ -19,12 +19,17 @@ feature
 	set_target (t: G) is
 			-- Make `t' the target for next execution
 		require
-			not_void: x /= Void
+			not_void: t /= Void
 		do
 			target := t
 		ensure
 			target_set: target_set
 			set_by_argument: target = t
+		end
+
+	target_set: BOOLEAN is
+			-- Has a non-void target been defined?
+		deferred
 		end
 
 end -- class GENERATED_COMMAND

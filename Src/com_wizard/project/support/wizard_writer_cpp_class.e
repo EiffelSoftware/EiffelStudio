@@ -184,6 +184,8 @@ feature -- Access
 			-- Generated code for corresponding header file
 		require
 			ready: can_generate
+		local
+			class_protector: STRING
 		do
 			Result := clone (C_open_comment_line)
 			Result.append (New_line)
@@ -209,6 +211,7 @@ feature -- Access
 			Result.append (Space)
 			Result.append (Cplusplus)
 			Result.append (New_line)
+
 			Result.append (Extern)
 			Result.append (Space)
 			Result.append (Double_quote)
@@ -221,10 +224,42 @@ feature -- Access
 			Result.append (New_line)
 			Result.append (New_line)
 
+			if abstract then
+				class_protector := clone (name)
+				class_protector.prepend ("__")
+				class_protector.append ("_FWD_DEFINED__")
+
+				Result.append (Hash_if_ndef)
+				Result.append (Space)
+				Result.append (class_protector)
+				Result.append (New_line)
+
+				Result.append (Hash_define)
+				Result.append (Space)
+				Result.append (class_protector)
+				Result.append (New_line)
+			end
+
+			
 			Result.append (C_class_keyword)
 			Result.append (Space)
 			Result.append (name)
 			Result.append (Semicolon)
+			Result.append (New_line)
+
+			if abstract then
+				Result.append (Hash_end_if)
+				Result.append (New_line)
+			end
+			Result.append (New_line)
+
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Cplusplus)
+			Result.append (New_line)
+			Result.append (Close_curly_brace)
+			Result.append (New_line)
+			Result.append (Hash_end_if)
 			Result.append (New_line)
 			Result.append (New_line)
 
@@ -242,6 +277,23 @@ feature -- Access
 				Result.append (New_line)
 				import_files.forth
 			end
+
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Cplusplus)
+			Result.append (New_line)
+
+			Result.append (Extern)
+			Result.append (Space)
+			Result.append (Double_quote)
+			Result.append ("C")
+			Result.append (Double_quote)
+			Result.append (Space)
+			Result.append (Open_curly_brace)
+			Result.append (New_line)
+			Result.append (Hash_end_if)
+			Result.append (New_line)
+			Result.append (New_line)
 
 			from
 				global_variables.start
@@ -281,6 +333,21 @@ feature -- Access
 				extern_functions.forth
 			end
 
+			if abstract then
+				class_protector := clone (name)
+				class_protector.prepend ("__")
+				class_protector.append ("_INTERFACE_DEFINED__")
+
+				Result.append (Hash_if_ndef)
+				Result.append (Space)
+				Result.append (class_protector)
+				Result.append (New_line)
+
+				Result.append (Hash_define)
+				Result.append (Space)
+				Result.append (class_protector)
+				Result.append (New_line)
+			end
 			Result.append (C_class_keyword)
 			Result.append (Space)
 			Result.append (name)
@@ -375,6 +442,10 @@ feature -- Access
 			Result.append (Close_curly_brace)
 			Result.append (Semicolon)
 			Result.append (New_line)
+			if abstract then
+				Result.append (Hash_end_if)
+				Result.append (New_line)
+			end
 			Result.append (New_line)
 
 			from
@@ -393,6 +464,7 @@ feature -- Access
 			end
 
 			Result.append (New_line)
+
 			Result.append (Hash_if_def)
 			Result.append (Space)
 			Result.append (Cplusplus)

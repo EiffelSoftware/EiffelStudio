@@ -9,6 +9,14 @@ default
 	assertion (require)
 	assertion (ensure)
 	arguments (" ")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects\new%" Project1 531448")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects\new%" Project1 1648202")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 1648202")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 10158256")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 3540722")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 4525148")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 1900906")
+	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 466758")
 	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 262274")
 	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 524510")
 	arguments ("D:\VSIP\Wizards\Build  visualstudio_project %"C:\Documents and Settings\Julian Rogers\My Documents\Visual Studio Projects%" Project1 524832")
@@ -59,7 +67,7 @@ cluster
 		include
 			"ev_button"; 
 		exclude
-			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e"; "ev_dialog_imp_modeless.e"; 
+			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e"; "ev_dialog_imp_modeless.e"; "ev_sensitive.e"; "ev_sensitive_i.e";
 		end
 
 	all base:		"d:\work\library\base"

@@ -31,7 +31,7 @@ feature {NONE} -- Execution
 			filter: TEXT_FILTER
 		do
 			!! st.make;
-			cmd := clone (associated_cmd);
+			cmd := associated_cmd;
 			cmd.set_structured_text (st);
 			cmd.execute;
 			!! filter.make (filter_name);

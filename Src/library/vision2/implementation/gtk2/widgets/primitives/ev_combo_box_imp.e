@@ -112,9 +112,10 @@ feature {NONE} -- Initialization
 			a_attribute: EV_GTK_C_STRING
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
+			initialize_combo_box_style (container_widget)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_set_model (container_widget, list_store)
 			
-		--	feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_clear (container_widget)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_clear (container_widget)
 			
 			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)
@@ -123,15 +124,28 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 0)
 
 			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
-			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)
-			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
 			create a_attribute.make ("text")
-			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 1)
 
 				-- The combo box is already initialized with a text cell renderer at position 0, that is why we reorder the pixbuf cell renderer to position 0 and set the text column to 1
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_entry_set_text_column (container_widget, 1)
-			
+
 			real_signal_connect (container_widget, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+		end
+
+	initialize_combo_box_style (a_combo_box: POINTER) is
+			-- Remove the default shadow from the toolbar
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					gtk_widget_set_name ((GtkWidget*) $a_combo_box, "v2combobox");
+					gtk_rc_parse_string ("style \"v2-combo-style\" {\n GtkComboBox::appears-as-list = 1\n }\n  widget \"*.v2combobox\" style : highest  \"v2-combo-style\" " );
+				}
+			]"
 		end
 
 	insert_i_th (v: like item; i: INTEGER) is

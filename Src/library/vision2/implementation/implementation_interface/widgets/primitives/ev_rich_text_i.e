@@ -1,39 +1,16 @@
 indexing 
-	description:
-		" EiffelVision text. A text area that contains%
-		% a rich text."
+	description: "EiffelVision text, implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	EV_TEXT
+deferred class
+	EV_TEXT_I
 
 inherit
-	EV_TEXT_AREA
-		redefine
-			implementation,
-			make
-		end
+	EV_TEXT_AREA_I
 
-creation
-	make
-
-feature {NONE} -- Initialization
-
-	make (par: EV_CONTAINER) is
-			-- Create an empty text area with `par' as
-			-- parent.
-		do
-			!EV_TEXT_IMP!implementation.make
-			widget_make (par)
-		end
-
-feature -- Implementation
-
-	implementation: EV_TEXT_I
-
-end -- class EV_TEXT
+end -- class EV_TEXT_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.TypeStorer"
+	assembly: "ISE.Reflection.EiffelAssemblyCacheHandler", "0.0.0.0", "neutral", "5fadf94dea1743a"
 
 external class
 	ISE_REFLECTION_TYPESTORER
@@ -169,13 +170,6 @@ feature -- Basic Operations
 			"Exists"
 		end
 
-	is_valid_directory_path (a_folder_name: STRING): BOOLEAN is
-		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.TypeStorer"
-		alias
-			"IsValidDirectoryPath"
-		end
-		
 	generate_xml_features_element (features: SYSTEM_COLLECTIONS_ARRAYLIST) is
 		external
 			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.ExportClause"
+	assembly: "ISE.Reflection.EiffelComponents", "0.0.0.0", "neutral", "e0f9d13739fa815f"
 
 external class
 	ISE_REFLECTION_EXPORTCLAUSE
@@ -99,25 +100,18 @@ feature -- Basic Operations
 			"EmptyString"
 		end
 
-	make_void is
-		external
-			"IL signature (): System.Void use ISE.Reflection.ExportClause"
-		alias
-			"Make"
-		end
-
-	all_keyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ExportClause"
-		alias
-			"AllKeyword"
-		end
-
 	set_all is
 		external
 			"IL signature (): System.Void use ISE.Reflection.ExportClause"
 		alias
 			"SetAll"
+		end
+
+	make is
+		external
+			"IL signature (): System.Void use ISE.Reflection.ExportClause"
+		alias
+			"Make"
 		end
 
 	closing_curl_bracket: STRING is
@@ -188,6 +182,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.ExportClause"
 		alias
 			"Comma"
+		end
+
+	all_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ExportClause"
+		alias
+			"AllKeyword"
 		end
 
 end -- class ISE_REFLECTION_EXPORTCLAUSE

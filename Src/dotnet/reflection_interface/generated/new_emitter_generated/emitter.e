@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "Emitter"
+	assembly: "ISE.Reflection.Emitter", "1.0.0.62252", "neutral", "30914072a1caac"
 
 external class
 	EMITTER
@@ -27,7 +28,7 @@ feature -- Basic Operations
 			"PrepareEmitFromAssembly"
 		end
 
-	prepare_emit_from_filename (FileName: STRING) is
+	prepare_emit_from_filename (file_name: STRING) is
 		external
 			"IL signature (System.String): System.Void use Emitter"
 		alias

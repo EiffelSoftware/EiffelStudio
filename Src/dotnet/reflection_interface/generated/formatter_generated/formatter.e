@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "Formatter"
+	assembly: "ISE.Reflection.Formatter", "5.0.0.1", "neutral", "6ce2d06b17bd8359"
 
 external class
 	FORMATTER

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.EiffelCodeGeneratorFromXml"
+	assembly: "ISE.Reflection.CodeGenerator", "0.0.0.0", "neutral", "8742b5c9f9654554"
 
 external class
 	ISE_REFLECTION_EIFFELCODEGENERATORFROMXML
@@ -117,18 +118,4 @@ feature -- Basic Operations
 			"MakeFromInfoAndPath"
 		end
 
-	is_valid_filename (a_filename: STRING): BOOLEAN is
-		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.EiffelCodeGeneratorFromXml"
-		alias
-			"IsValidFilename"
-		end
-
-	is_valid_directory_path (a_folder_name: STRING): BOOLEAN is
-		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.EiffelCodeGeneratorFromXml"
-		alias
-			"IsValidDirectoryPath"
-		end
-		
 end -- class ISE_REFLECTION_EIFFELCODEGENERATORFROMXML

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
+	assembly: "ISE.Reflection.EiffelAssemblyCacheHandler", "0.0.0.0", "neutral", "5fadf94dea1743a"
 
 external class
 	ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLERERRORMESSAGES
@@ -90,11 +91,11 @@ feature -- Basic Operations
 			"AssemblyDescriptionReadingFailedMessage"
 		end
 
-	assembly_storage_failed_message: STRING is
+	assembly_storage_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
 		alias
-			"AssemblyStorageFailedMessage"
+			"AssemblyStorageFailed"
 		end
 
 	has_read_lock_message: STRING is
@@ -118,11 +119,11 @@ feature -- Basic Operations
 			"HasWriteLockMessage"
 		end
 
-	assembly_storage_failed: STRING is
+	assembly_storage_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandlerErrorMessages"
 		alias
-			"AssemblyStorageFailed"
+			"AssemblyStorageFailedMessage"
 		end
 
 	index_update_failed: STRING is

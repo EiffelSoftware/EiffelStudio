@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.EiffelAssemblyCacheHandler"
+	assembly: "ISE.Reflection.EiffelAssemblyCacheHandler", "0.0.0.0", "neutral", "5fadf94dea1743a"
 
 external class
 	ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER
@@ -117,7 +118,7 @@ feature -- Access
 		alias
 			"get_EiffelAssembly"
 		end
-		
+
 feature -- Basic Operations
 
 	access_violation_error: STRING is
@@ -160,6 +161,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
 			"ErrorCaption"
+		end
+
+	type_storer_from_class (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): ISE_REFLECTION_TYPESTORER is
+		external
+			"IL signature (ISE.Reflection.EiffelClass): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
+		alias
+			"TypeStorerFromClass"
 		end
 
 	generate_assembly_xml_file is
@@ -232,25 +240,4 @@ feature -- Basic Operations
 			"UpdateAssemblyDescription"
 		end
 
-	type_storer_from_class (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): ISE_REFLECTION_TYPESTORER is
-		external
-			"IL signature (ISE.Reflection.EiffelClass): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"TypeStorerFromClass"
-		end
-
-	is_valid_filename (a_filename: STRING): BOOLEAN is
-		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"IsValidFilename"
-		end
-
-	is_valid_directory_path (a_folder_name: STRING): BOOLEAN is
-		external
-			"IL signature (System.String): System.Boolean use ISE.Reflection.EiffelAssemblyCacheHandler"
-		alias
-			"IsValidDirectoryPath"
-		end
-		
 end -- class ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER

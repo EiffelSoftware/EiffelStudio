@@ -1,6 +1,8 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ArgParser"
+	assembly: "ISE.Reflection.Emitter", "1.0.0.62252", "neutral", "30914072a1caac"
+
 deferred external class
 	ARGPARSER
 

@@ -1,9 +1,16 @@
 indexing
-	Generator: "Eiffel Emitter 2.7b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "ISE.Reflection.InheritanceClause"
+	assembly: "ISE.Reflection.EiffelComponents", "0.0.0.0", "neutral", "e0f9d13739fa815f"
 
 deferred external class
 	ISE_REFLECTION_INHERITANCECLAUSE
+
+inherit
+	ANY
+		redefine
+			is_equal
+		end
 
 feature -- Access
 
@@ -37,25 +44,18 @@ feature -- Basic Operations
 			"StringRepresentation"
 		end
 
+	is_equal (obj: ANY): BOOLEAN is
+		external
+			"IL signature (System.Object): System.Boolean use ISE.Reflection.InheritanceClause"
+		alias
+			"Equals"
+		end
+
 	frozen a_invariant (current_object: ISE_REFLECTION_INHERITANCECLAUSE) is
 		external
 			"IL static signature (ISE.Reflection.InheritanceClause): System.Void use ISE.Reflection.InheritanceClause"
 		alias
 			"_invariant"
-		end
-
-	make (a_source_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.InheritanceClause"
-		alias
-			"Make"
-		end
-
-	equals_inheritance_clause (obj: ISE_REFLECTION_INHERITANCECLAUSE): BOOLEAN is
-		external
-			"IL signature (ISE.Reflection.InheritanceClause): System.Boolean use ISE.Reflection.InheritanceClause"
-		alias
-			"Equals"
 		end
 
 	set_source_name (a_source_name: STRING) is

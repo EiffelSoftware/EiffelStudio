@@ -1,6 +1,8 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	generator: "Eiffel Emitter 2.8b2"
 	external_name: "EmitterMain"
+	assembly: "ISE.Reflection.Emitter", "1.0.0.62252", "neutral", "30914072a1caac"
+
 external class
 	EMITTERMAIN
 
@@ -24,11 +26,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen eiffel_formatting_switch: STRING is
+	frozen default_xml_switch: STRING is
 		external
 			"IL field signature :System.String use EmitterMain"
 		alias
-			"EiffelFormattingSwitch"
+			"DefaultXmlSwitch"
+		end
+
+	frozen default_formatting_switch: STRING is
+		external
+			"IL field signature :System.String use EmitterMain"
+		alias
+			"DefaultFormattingSwitch"
 		end
 
 feature -- Basic Operations

@@ -535,7 +535,7 @@ rt_private void display_reminder(void)
 {
 	char *msg;
 
-	msg = "This program has been produced with a demo or non-commercial version\nof ISE EiffelStudio, the full lifecycle object-oriented development\nenvironment from Interactive Software Engineering (ISE).\nThis version is reserved for non-production use of Eiffel. Any other\nuse requires purchase of a license.\n\nISE offers commercial and academic licenses and\nsupport/maintenance contracts covering diverse needs.\n\nFor more information please contact\nISE at the address below or consult the Eiffel products page\nat http://www.eiffel.com/products/.\n\n\tInteractive Software Engineering\n\tISE Building, 356 Storke Road\n\tGoleta CA 93117 USA \n\tTelephone 805-685-1006, Fax 805-685-6869\n\tE-mail sales@eiffel.com\n\thttp://www.eiffel.com\n";
+	msg = "This program has been produced with a demo or non-commercial version\nof ISE EiffelStudio, the full lifecycle object-oriented development\nenvironment from Eiffel Software.\nThis version is reserved for non-production use of Eiffel. Any other\nuse requires purchase of a license.\n\nEiffel Software offers commercial and academic licenses and\nsupport/maintenance contracts covering diverse needs.\n\nFor more information please contact\nEiffel Software at the address below or consult the Eiffel products page\nat http://www.eiffel.com/products/.\n\n\tEiffel Software\n\t356 Storke Road\n\tGoleta CA 93117 USA \n\tTelephone 805-685-1006, Fax 805-685-6869\n\tE-mail sales@eiffel.com\n\thttp://www.eiffel.com\n";
 
 #ifdef EIF_WIN32
 	MessageBox (NULL, msg, 

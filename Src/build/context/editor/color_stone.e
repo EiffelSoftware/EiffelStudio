@@ -70,6 +70,7 @@ feature
 				    (a_parent /= Void) and then ed /= Void
 		local
 			a_color: COLOR;
+			ti: TOOLTIP_INITIALIZER
 		do
 
 			editor := ed;
@@ -84,7 +85,8 @@ feature
 			set_background_color (a_color);
 			initialize_transport;
 			initialize_focus;
-	--		reset_commands
+ 			ti ?= top
+ 			ti.tooltip_realize
 		end;
 
 	focus_label: FOCUS_LABEL_I is
@@ -95,7 +97,7 @@ feature
                 do
                         ti ?= top
                         check
-                                valid_tooltip_initializer: ti/= void
+                                valid_tooltip_initializer: ti/= Void
                         end
                         Result := ti.label
                 end

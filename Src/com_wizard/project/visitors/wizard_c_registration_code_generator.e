@@ -1163,7 +1163,7 @@ feature {NONE} -- Implementation
 			tmp_string.append (New_line_tab_tab_tab)
 			tmp_string.append (Tab)
 			tmp_string.append ("err = RegSetValueEx (hkey, pEntry->")
-			tmp_string.append (Key_name)
+			tmp_string.append (Value_name)
 			tmp_string.append (", 0, REG_SZ, (const BYTE*)pEntry->")
 			tmp_string.append (Struct_value)
 			tmp_string.append (", (lstrlen (pEntry->")

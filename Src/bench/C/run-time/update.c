@@ -91,6 +91,7 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 
 	count = wlong();			/* Read the count of class types */
 	new_count = count;
+	ccount = wlong();			/* Read the count of classes */
 #ifdef DEBUG
 	dprintf(1)("New class type count: %ld\n", count);
 #endif

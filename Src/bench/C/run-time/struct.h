@@ -159,7 +159,8 @@ struct interface {
 	fnptr toi;			/* Pattern from C code to interpreter */
 };
 
-extern int scount;		/* Size of `fsystem' */
+extern int scount;				/* Number of dynamic types */
+extern int ccount;				/* Number of classes */
 extern long dcount;		/* Size of `fdispatch' */
 extern long mcount;		/* Size of `melt' table */
 

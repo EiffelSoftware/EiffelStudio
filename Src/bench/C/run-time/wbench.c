@@ -304,9 +304,9 @@ public void init_desc()
 	int i;
 	struct bounds def;
 
-	def.max = 0; def.min = scount;
+	def.max = 0; def.min = ccount;
 	bounds_tab = (struct bounds *) 
-			cmalloc (sizeof(struct bounds) * (scount + 1));	
+			cmalloc (sizeof(struct bounds) * (ccount + 1));	
 	if ((struct bounds *) 0 == bounds_tab)
 		enomem();
 	mdesc_tab = (struct mdesc *) 
@@ -316,7 +316,7 @@ public void init_desc()
 	mdesc_tab_size = MDESC_INC;
 	mdesc_count = 0;
 	
-	for (i=1;i<=scount;i++)
+	for (i=1;i<=ccount;i++)
 		bounds_tab[i] = def;
 
 	desc_fill = 0;
@@ -393,7 +393,7 @@ public void create_desc()
 	struct mdesc *mdesc_ptr;
 	int size;
 
-	for (i=upper=1;i<=scount;i++) {
+	for (i=upper=1;i<=ccount;i++) {
 		b = bounds_tab+i;
 		upper += (0==b->max)?0:(i-upper);
 	}

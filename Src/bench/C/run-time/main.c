@@ -33,6 +33,7 @@
 public int cc_for_speed = 1;			/* Fast memory allocation */
 public char *ename;						/* Eiffel program's name */
 public int scount;						/* Number of dynamic types */
+public int ccount;						/* Number of classes */
 public int fcount;						/* Number of frozen dynamic types */
 
 #ifdef WORKBENCH

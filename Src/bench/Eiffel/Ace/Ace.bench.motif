@@ -31,6 +31,7 @@ cluster
 	-- General compilation:
 
 		flat_short:			"$BENCH/Eiffel/flat_short";
+		special_ast:        "$BENCH/Eiffel/special_ast";
 		yacc:				"$BENCH/Eiffel/yacc";
 		const:				"$BENCH/Eiffel/const";
 		error:				"$BENCH/Eiffel/error";

@@ -715,8 +715,10 @@ feature {NONE} -- Implementation
 			if realized then
 				select_item_at (i - 1)
 			end
-			if multiple_selection
-			and then not private_selected_positions.has (i) then
+			if
+				multiple_selection
+				and then not private_selected_positions.has (i)
+			then
 				private_selected_positions.extend (i)
 			else
 				private_selected_position := i

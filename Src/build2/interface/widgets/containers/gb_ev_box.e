@@ -131,7 +131,7 @@ feature -- Access
 		
 		
 	update_widget_expanded (check_button: EV_CHECK_BUTTON; w: EV_WIDGET) is
-			--
+			-- Change the expanded status of `w'.
 		local
 			box_parent: EV_BOX
 		do
@@ -144,6 +144,8 @@ feature -- Access
 			else
 				box_parent.disable_item_expand (w)
 			end
+			system_status.enable_project_modified
+			command_handler.update
 		end
 		
 		

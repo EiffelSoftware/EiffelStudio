@@ -63,7 +63,7 @@ feature
 			current_class: CLASS_C;
 			id: CLASS_ID;
 			deg_output: DEGREE_OUTPUT
-        do
+		do
 			deg_output := Degree_output;
 			deg_output.put_start_degree (Degree_number, changed_classes.count)
 			from
@@ -180,8 +180,8 @@ end;
 			pass_c.set_deferred_modified
 		end;
 
-	 set_separate_modified (a_class: CLASS_C) is
-			-- The separate status of `a_class' has been modified
+	set_separate_modified (a_class: CLASS_C) is
+				-- The separate status of `a_class' has been modified
 		require
 			good_argument: a_class /= Void
 		local

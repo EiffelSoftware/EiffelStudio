@@ -205,6 +205,13 @@ feature -- Access
 			"EM_GETPASSWORDCHAR"
 		end
 
+	Em_scrollcaret: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"EM_SCROLLCARET"
+		end
+
 end -- class WEL_EM_CONSTANTS
 
 --|-------------------------------------------------------------------------

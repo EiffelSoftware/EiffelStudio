@@ -99,7 +99,10 @@ feature {NONE}
 
 	F_code: STRING is "F_code"
 
-	Finish_freezing_script: STRING is "finish_freezing"
+	Finish_freezing_script: STRING is
+		once
+			Result := Platform_constants.Finish_freezing_script
+		end;
 
 	Feature_table_file_suffix: CHARACTER is 'f'
 

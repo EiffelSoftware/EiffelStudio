@@ -157,7 +157,6 @@ feature -- Element change
 			gdkpix, gdkmask: POINTER
 			pixgc, maskgc: POINTER
 			loc_default_pointer: POINTER
-			foreg_clr: EV_COLOR
 		do
 			gdkpix := C.gdk_pixmap_new (default_gdk_window, a_x, a_y, Default_color_depth)
 			pixgc := C.gdk_gc_new (gdkpix)

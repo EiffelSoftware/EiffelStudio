@@ -30,6 +30,7 @@ inherit
 				-- We redefine the following features because a window
 				-- don't have to notify its parent in the following cases.
 			build,
+			parent_ask_resize,
 			set_size,
 			set_minimum_width,
 			set_minimum_height,
@@ -304,6 +305,20 @@ feature -- Resizing
                         end		
 		end
 
+feature -- Event - command association
+
+	add_resize_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when the
+			-- widget is resized.
+		do
+		end
+
+	add_move_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when the
+			-- widget is resized.
+		do
+		end
+
 feature -- Implementation : WEL redefinition
 
 	default_style: INTEGER is
@@ -388,8 +403,20 @@ feature -- Implementation : WEL redefinition
 			current_menu_set: current_menu /= Void
 		end
 
-feature {NONE} -- Implementation
+feature {EV_WIDGET_IMP} -- Implementation
 	
+	parent_ask_resize (new_width, new_height: INTEGER) is
+			-- When the parent asks the resize, it's not 
+			-- necessary to send him back the information
+		do
+			{EV_CONTAINER_IMP} Precursor (new_width, new_height)
+			if child /= Void then
+				child.parent_ask_resize (client_width, client_height)
+			end
+		end
+
+feature {NONE} -- Implementation
+
 	system_metrics: WEL_SYSTEM_METRICS is
 			-- System metrics to query things like
 			-- window_frame_width

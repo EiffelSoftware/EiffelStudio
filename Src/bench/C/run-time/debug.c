@@ -136,7 +136,7 @@ rt_public void dstart(EIF_CONTEXT_NOARG)
 	/* This routine is called at the beginning of every melted feature. It
 	 * builds up a calling context on the debugging stack and initializes it.
 	 */
-
+	EIF_GET_CONTEXT
 	struct dcall *context;		/* The calling context */
 
 	/* If the debugging stack is not empty, then we need to look at the current
@@ -343,7 +343,7 @@ rt_shared void ewhere(EIF_CONTEXT struct where *where)
 	 * NB: the position is not 100% reliable, as the program might well be
 	 * within a C external function, but most of the time, it will be accurate.
 	 */
-
+	EIF_GET_CONTEXT
 	struct ex_vect *ex;				/* Call structure from Eiffel stack */
 	struct dcall *dc;				/* Calling context structure */
 
@@ -385,7 +385,7 @@ rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)
 	 * at the trace stack (where pending exceptions are recorded) since the
 	 * exception hook is executed prior any backtracking is done.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 struct ex_vect *item;	/* Item we deal with */
 	struct xstack saved;			/* Saved stack context */
 
@@ -425,6 +425,7 @@ rt_shared void escontext(EIF_CONTEXT int why)
 	 * Under work bench control, the user may modify those stack, for instance
 	 * to perform a stack dump or to inspect a given local variable.
 	 */
+	EIF_GET_CONTEXT
 
 #ifdef USE_STRUCT_COPY
 	d_cxt.pg_debugger = db_stack;
@@ -462,7 +463,7 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	 * debugging mode, as specified by the workbench (e.g. a step after an
 	 * exception will stop at the first instruction before rescue clause).
 	 */
-
+	EIF_GET_CONTEXT
 	struct dcall *context;			/* Current calling context */
 
 #ifdef USE_STRUCT_COPY
@@ -1179,7 +1180,7 @@ rt_public struct item *docall(EIF_CONTEXT register uint32 body_id, register int 
 	 * the once function is melted, because in that case we just inspect
 	 * the header part of the byte code without modifying any registers.
 	 */
-
+	EIF_GET_CONTEXT
 	char *old_IC;				/* IC back up */
 	uint32 pid;					/* Pattern id of the frozen feature */
 	register3 i;

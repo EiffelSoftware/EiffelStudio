@@ -43,7 +43,7 @@ rt_public char *(*wfeat(int static_type, int32 feature_id, int dyn_type))(EIF_CO
 	 * apply on an object of dynamic type `dyn_type'.
 	 * Return a function pointer.
 	 */
-
+	EIF_GET_CONTEXT
 	int32 rout_id;
 	uint16 body_index;
 	uint32 body_id;
@@ -82,7 +82,7 @@ rt_public char *(*wpfeat(int32 origin, int32 offset, int dyn_type))(EIF_CONTEXT_
 	 * apply on an object of dynamic type `dyn_type'.
 	 * Return a function pointer.
 	 */
-
+	EIF_GET_CONTEXT
 	uint32 body_id;
 
 	nstcall = 0;								/* No invariant check */
@@ -117,7 +117,7 @@ rt_public char *(*wfeat_inv(int static_type, int32 feature_id, char *name, char 
 	 * apply on an object `object'.
 	 * Return a function pointer.
 	 */
-
+	EIF_GET_CONTEXT
 	int dyn_type;
 	int32 rout_id;
 	uint16 body_index;
@@ -167,7 +167,7 @@ rt_public char *(*wpfeat_inv(int32 origin, int32 offset, char *name, char *objec
 	 * apply on an object `object'
 	 * Return a function pointer.
 	 */
-
+	EIF_GET_CONTEXT
 	int dyn_type;
 	uint32 body_id;
 
@@ -213,7 +213,7 @@ rt_public void wexp(EIF_CONTEXT int static_type, int32 feature_id, int dyn_type,
 	 * with static type `stype', dynamic type `dtype' and
 	 * feature id `fid'. Apply the function to `object'
 	 */
-
+	EIF_GET_CONTEXT
 	int32 rout_id;
 	uint16 body_index;
 	uint32 body_id;
@@ -269,7 +269,7 @@ rt_public void wpexp(EIF_CONTEXT int32 origin, int32 offset, int dyn_type, char 
 	 * offset `offset'. Apply the function to `object'
 	 */
 
-	/* int16 body_index;*/ /* %%ss removed */
+	EIF_GET_CONTEXT
 	uint32 body_id;
 	char *OLD_IC;
 
@@ -447,7 +447,7 @@ rt_public char *(*wdisp(int dyn_type))(EIF_CONTEXT_NOARG /* ??? */)
 	 * `routine_id' accessed in Eiffel dynamic type `dyn_type'.
 	 * Return a function pointer.
 	 */
-
+	EIF_GET_CONTEXT
 	uint16 body_index;
 	uint32 body_id;
 

@@ -93,6 +93,7 @@ rt_public char *edclone(EIF_CONTEXT char *source)
 	/* Recursive Eiffel clone. This function recursively clones the source
 	 * object and returns a pointer to the top of the new tree.
 	 */
+	EIF_GET_CONTEXT	
 	char *root = (char *) 0;		/* Root of the deep cloned object */
 	jmp_buf exenv;					/* Environment saving */
 	struct {

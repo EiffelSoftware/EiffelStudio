@@ -12,8 +12,9 @@ inherit
 		rename
 			make as form_d_make
 		end;
-	EB_CONSTANTS;
+	EB_CONSTANTS
 	SHARED_TABS
+	COMMAND
 
 creation
 	make
@@ -25,10 +26,13 @@ feature {NONE} -- Initialization
 		require
 			a_tool_not_void: a_tool /= Void
 		do
-			tool := a_tool;
-			form_d_make (Interface_names.n_X_resource_name, a_tool);
-			set_title (Interface_names.t_Profile_query_window);
-
+			tool := a_tool
+			form_d_make (Interface_names.n_X_resource_name, a_tool)
+			set_title (Interface_names.t_Profile_query_window)
+				--|
+			!! all_subqueries.make
+			!! all_operators.make
+				--| Guillaume 
 			build_interface
 		ensure
 			tool_set: tool.is_equal (a_tool)
@@ -66,7 +70,31 @@ feature -- Status Setting
 			profiler_options := po;
 			profinfo := pi;
 
-			query_text.set_text (pq.image);
+			--|
+			count_active_subqueries
+			if profiler_query.subqueries.count > active_subqueries then
+				from
+					profiler_query.subqueries.go_i_th ( active_subqueries + 1 )
+					profiler_query.subquery_operators.go_i_th ( active_subqueries )
+					if profiler_query.subquery_operators.before then
+						profiler_query.subquery_operators.forth
+					end
+				until
+					profiler_query.subqueries.after 
+				loop
+					all_subqueries.extend ( profiler_query.subqueries.item )
+					profiler_query.subqueries.forth
+					if not profiler_query.subquery_operators.after then
+						all_operators.extend ( profiler_query.subquery_operators.item )
+						profiler_query.subquery_operators.forth
+					end
+				end
+			end
+
+			update_query_form  
+			--| Guillaume - 09/26/97
+
+			-- query_text.set_text (pq.image);
 			text_window.clear_window;
 			text_window.process_text (st);
 			text_window.display
@@ -81,6 +109,47 @@ feature -- Update
 			text_window.init_resource_values;
 			run_subquery_cmd.execute (Void)
 		end
+
+		--|
+	update_query_form is
+		local
+			i : INTEGER
+			scrollable_subquery: SCROLLABLE_SUBQUERY
+		do
+			active_query_window.wipe_out
+			inactive_subqueries_window.wipe_out
+			if all_subqueries.count > 0 then
+				all_subqueries.start
+				!! scrollable_subquery.make_first (all_subqueries.item.image)
+				if all_subqueries.item.is_active then
+					active_query_window.force (scrollable_subquery)
+				else
+					inactive_subqueries_window.force (scrollable_subquery)
+				end
+				if all_operators.count > 0 then
+					from
+						all_subqueries.forth
+						all_operators.start
+						i := 2
+					until
+						all_subqueries.after or else all_operators.after
+					loop
+						!! scrollable_subquery.make_with_operator (all_operators.item.actual_operator, all_subqueries.item.image, i )
+						if all_subqueries.item.is_active then
+							active_query_window.force (scrollable_subquery)
+						else
+							inactive_subqueries_window.force (scrollable_subquery)
+						end
+						all_subqueries.forth
+						all_operators.forth
+						i := i + 1
+					end							
+				end
+			else
+				--| Guillaume - 09/24/97 : display an error message
+			end
+		end
+		--| Guillaume - 09/26/97
 
 feature {NONE} -- Graphical User Interface
 
@@ -98,10 +167,33 @@ feature {NONE} -- Graphical User Interface
 			!! text_sep.make (Interface_names.t_Empty, Current);
 			!! subquery_sep.make (Interface_names.t_Empty, Current);
 
-			!! query_label.make (Interface_names.l_Query, query_form);
-			!! query_text.make (Interface_names.t_Empty, query_form);
-			query_text.set_read_only;
-			query_text.set_rows (3);
+			-- !! query_label.make (Interface_names.l_Query, query_form);
+			-- !! query_text.make (Interface_names.t_Empty, query_form);
+			-- query_text.set_read_only;
+			-- query_text.set_rows (3);
+
+				--|
+			!! active_query_form.make ("active query form", query_form)
+			!! query_button_form.make ("button form", query_form)
+			!! inactive_subqueries_form.make ("inactive subqueries form", query_form)
+
+			!! active_query_label.make ("Active query", active_query_form)
+			!! active_query_window.make ("Active query window", active_query_form)
+			active_query_window.set_multiple_selection
+
+			!! reactivate_label.make ("Reactivate", query_button_form)
+			!! inactivate_label.make ("Inactivate", query_button_form)
+			!! reactivate_button.make ("<-", query_button_form)
+			reactivate_button.set_left
+			!! inactivate_button.make ("->", query_button_form)
+			inactivate_button.set_right
+			reactivate_button.add_activate_action (Current, reactivate_subqueries)
+			inactivate_button.add_activate_action (Current, inactivate_subqueries)
+
+			!! inactive_subqueries_label.make ("Inactive subqueries", inactive_subqueries_form)
+			!! inactive_subqueries_window.make ("Inactive subqueries window", inactive_subqueries_form)
+			inactive_subqueries_window.set_multiple_selection
+				--| Guillaume - 09/26/97
 
 			!! text_label.make (Interface_names.l_Results, text_form);
 			if is_graphics_disabled then
@@ -115,6 +207,12 @@ feature {NONE} -- Graphical User Interface
 			end;
 
 			text_window.init_resource_values;
+			!! subquery_label.make (Interface_names.l_Subquery, subquery_form);
+			!! operator_box.make ("operator_box", subquery_form)
+			operator_box.set_always_one (True)
+			!! and_toggle.make ("AND", operator_box)
+			and_toggle.set_toggle_on
+			!! or_toggle.make ("OR", operator_box)  --| Guillaume - 09/26/97
 			!! subquery_label.make (Interface_names.l_Subquery, subquery_form);
 			!! subquery_text.make (Interface_names.t_Empty, subquery_form);
 
@@ -171,13 +269,61 @@ feature {NONE} -- Graphical User Interface
 			attach_left (button_form, 0);
 
 				--| Attach widgets in forms
-			query_form.attach_top (query_label, 0);
-			query_form.attach_left (query_label, 5);
+			-- query_form.attach_top (query_label, 0);
+			-- query_form.attach_left (query_label, 5);
 
-			query_form.attach_top_widget (query_label, query_text, 2);
-			query_form.attach_right (query_text, 0);
-			query_form.attach_bottom (query_text, 0);
-			query_form.attach_left (query_text, 0);
+			-- query_form.attach_top_widget (query_label, query_text, 2);
+			-- query_form.attach_right (query_text, 0);
+			-- query_form.attach_bottom (query_text, 0);
+			-- query_form.attach_left (query_text, 0);
+
+				--|
+			query_form.attach_left ( active_query_form, 1 )
+			query_form.attach_top ( active_query_form, 1 )
+			query_form.attach_bottom ( active_query_form, 1 )
+			-- query_form.attach_left_widget ( active_query_form, query_button_form, 1)
+			query_form.attach_top ( query_button_form, 1 )
+		 	query_form.attach_bottom ( query_button_form, 1 )
+			-- query_form.attach_left_widget ( query_button_form, inactive_subqueries_form,  1)
+			query_form.attach_bottom ( inactive_subqueries_form, 1)
+			query_form.attach_right ( inactive_subqueries_form, 1 )
+			query_form.attach_right_position ( active_query_form, 40 )
+			query_form.attach_left_position ( query_button_form, 40 )
+			query_form.attach_right_position ( query_button_form, 60 )
+			query_form.attach_left_position ( inactive_subqueries_form, 60 )
+
+			active_query_form.attach_left ( active_query_label, 0 )
+			active_query_form.attach_top ( active_query_label, 0 )
+			active_query_form.attach_right ( active_query_label, 0 )
+			active_query_form.attach_top_widget ( active_query_label, active_query_window, 0)
+			active_query_form.attach_left ( active_query_window, 0 )
+			active_query_form.attach_bottom ( active_query_window, 0 )
+			active_query_form.attach_right ( active_query_window, 0 )
+
+			query_button_form.attach_top ( reactivate_label, 0 )
+			query_button_form.attach_left ( reactivate_label, 0 )
+			query_button_form.attach_right ( reactivate_label, 0 )
+			query_button_form.attach_top_widget ( reactivate_label, reactivate_button, 5 )
+			-- query_button_form.attach_left ( reactivate_button, 0 )
+			query_button_form.attach_left_position ( reactivate_button, 40 )
+			-- query_button_form.attach_right ( reactivate_button, 0 )
+			query_button_form.attach_top_widget ( reactivate_button, inactivate_label, 10 )
+			query_button_form.attach_left ( inactivate_label, 0 )
+			query_button_form.attach_right ( inactivate_label, 0 )
+			query_button_form.attach_top_widget ( inactivate_label, inactivate_button, 5 )
+			-- query_button_form.attach_left ( inactivate_button, 0 )
+			query_button_form.attach_left_position ( inactivate_button, 40 )
+			-- query_button_form.attach_right ( inactivate_button, 0 )
+			-- query_button_form.attach_bottom ( inactivate_button, 0 )
+
+			inactive_subqueries_form.attach_left ( inactive_subqueries_label, 0 )
+			inactive_subqueries_form.attach_top ( inactive_subqueries_label, 0 )
+			inactive_subqueries_form.attach_right ( inactive_subqueries_label, 0 )
+			inactive_subqueries_form.attach_top_widget ( inactive_subqueries_label, inactive_subqueries_window, 0)
+			inactive_subqueries_form.attach_left ( inactive_subqueries_window, 0 )
+			inactive_subqueries_form.attach_bottom ( inactive_subqueries_window, 0 )
+			inactive_subqueries_form.attach_right ( inactive_subqueries_window, 0 )
+				--| Guillaume - 09/26/97
 
 			text_form.attach_top (text_label, 0);
 			text_form.attach_left (text_label, 5);
@@ -187,12 +333,17 @@ feature {NONE} -- Graphical User Interface
 			text_form.attach_left (text_window.widget, 0);
 
 			subquery_form.attach_top (subquery_label, 0);
-			subquery_form.attach_left (subquery_label, 5);
+			subquery_form.attach_left (subquery_label, 2);
 
-			subquery_form.attach_top_widget (subquery_label, subquery_text, 2);
+			-- subquery_form.attach_top_widget (subquery_label, subquery_text, 2);
+			subquery_form.attach_top_position ( subquery_text, 50 )
 			subquery_form.attach_right (subquery_text, 0);
-			subquery_form.attach_bottom (subquery_text, 0);
-			subquery_form.attach_left (subquery_text, 0);
+			-- subquery_form.attach_bottom (subquery_text, 0);
+			-- subquery_form.attach_left (subquery_text, 0);
+			subquery_form.attach_top_widget (subquery_label, operator_box, 1);
+			subquery_form.attach_left (operator_box, 0);
+			subquery_form.attach_left_widget (operator_box, subquery_text, 15);
+			subquery_form.attach_bottom (operator_box, 0);
 
 			button_form.set_fraction_base (6);
 			button_form.attach_left_position (run_button, 0);
@@ -229,7 +380,7 @@ feature {NONE} -- Attributes
 	button_form: FORM;
 			-- Form for the buttons
 
-	query_label,
+	-- query_label,
 			-- Label for `query_text'
 
 	text_label,
@@ -241,8 +392,10 @@ feature {NONE} -- Attributes
 	subquery_text: TEXT_FIELD;
 			-- Text field for eventual subqueries
 
-	query_text: TEXT;
-			-- Text field for the query
+	operator_box: RADIO_BOX
+			-- Select 'and' or 'or' operator
+
+			--| Guillaume - 09/26/97
 
 	text_window: TEXT_WINDOW;
 			-- Output window for the results
@@ -265,7 +418,52 @@ feature {NONE} -- Attributes
 	close_cmd: CLOSE_QUERY_WINDOW_CMD
 			-- Command to close Current
 
+		--|
+
+	active_query_form,
+			-- Form for active query
+
+	query_button_form,
+			-- Form wih buttons allowing subqueries activation/inactivation
+
+	inactive_subqueries_form: FORM
+			-- Form for inactive subqueries
+
+	active_query_label,
+			-- Label for 'active_query_form'
+
+	inactive_subqueries_label,
+			-- Label for 'inactive_subqueries_form'
+
+	reactivate_label,
+			-- Label for 'reactivate_button'
+
+	inactivate_label: LABEL
+			-- Label for 'inactivate_button
+
+	reactivate_button,
+			-- Button to reactivate one or more subqueries
+
+	inactivate_button: ARROW_B
+			-- Button to inactivate one or more subqueries
+
+	active_query_window,
+			--  Scrollable list of active subqueries
+
+	inactive_subqueries_window: SCROLLABLE_LIST
+			-- Scrollable list if inactive queries
+
+	active_subqueries: INTEGER
+			-- number of active subqueries in all_subqueries
+			--| Guillaume - 09/26/97
+
 feature {RUN_SUBQUERY_CMD} -- Attributes
+
+	all_subqueries: LINKED_LIST[SUBQUERY]
+			-- all the subqueries typed
+
+	all_operators: LINKED_LIST[SUBQUERY_OPERATOR]
+			-- all the subquery operators typed
 
 	profiler_query: PROFILER_QUERY;
 			-- Query from which `profinfo' is the result
@@ -276,6 +474,11 @@ feature {RUN_SUBQUERY_CMD} -- Attributes
 	profinfo: PROFILE_INFORMATION;
 			-- Set of information about profiled system, generated
 			-- with help of `profiler_query' and `profiler_options'
+	and_toggle,
+			-- Toggle to select 'AND' operator
+	
+	or_toggle: TOGGLE_B
+			-- Toggle to select 'OR' operator 
 
 feature {CLOSE_QUERY_WINDOW_CMD} -- User Interface
 
@@ -302,5 +505,206 @@ feature {NONE} -- Implementation
 		once 
 			Result := Configure_resources.get_boolean (r_Graphics_disabled, False) 
 		end
+
+		--|
+	count_active_subqueries is
+		do
+			from
+				all_subqueries.start
+				active_subqueries := 0
+			until
+				all_subqueries.after
+			loop
+				if all_subqueries.item.is_active then
+					active_subqueries := active_subqueries + 1
+				end
+				all_subqueries.forth
+			end
+		end
+	
+	inactivate is
+		-- copy all the selected 'scrollable_subquery' from 'active_query_window'
+		-- into 'inactive_subqueries_window', activate the corresponding subqueries
+		-- and operators in 'all_subqueries' and 'all_operators'
+		local
+			selected_positions: SORTED_TWO_WAY_LIST [INTEGER]
+			i: INTEGER
+			inactive_element, active_element: SCROLLABLE_SUBQUERY
+		do
+			if active_query_window.selected_count > 0 then
+				!! selected_positions.make
+				selected_positions.fill ( active_query_window.selected_positions )
+				from
+					selected_positions.sort
+					selected_positions.start
+					i := selected_positions.item
+					active_query_window.go_i_th ( i )
+					inactive_subqueries_window.start
+					-- !! active_element.make
+					-- active_element ?= active_query_window.item
+					-- !! inactive_element.make
+					-- inactive_element ?= inactive_subqueries_window.item
+				until
+					i > selected_positions.last
+				loop
+					if i = selected_positions.item then
+						active_element ?= active_query_window.item
+							--| FIXME: Guillaume - 28/09/97
+							--| Not correct. Must find a way to get the right index 
+							--| of active_query_window.item
+						if not inactive_subqueries_window.empty then
+							from
+								inactive_element ?= inactive_subqueries_window.item
+							until
+								inactive_subqueries_window.after
+								or else inactive_element.index >= active_element.index
+							loop
+								inactive_subqueries_window.forth
+								inactive_element ?= inactive_subqueries_window.item
+							end
+						end
+							--| add the inactivated subquery in the 'inactive_subqueries_window'
+						inactive_subqueries_window.put_left ( active_element )
+						
+							--| inactivate the subquery in 'all_subqueries'
+						all_subqueries.go_i_th ( active_element.index )
+						all_subqueries.item.inactivate
+						
+							--| inactivate the subquery operator in 'all_operators'
+						if not all_operators.empty then
+							if inactive_element = void or else inactive_element.index = 1 then
+								all_operators.go_i_th ( 1 )
+							else
+								all_operators.go_i_th ( active_element.index - 1 )
+							end
+							all_operators.item.inactivate	
+						end 
+						
+							--| remove the inactivated subquery from 'active_query_window'
+						active_query_window.remove
+						i := i + 1
+						-- active_element ?= active_query_window.item
+						
+						selected_positions.forth
+					else
+						i := i + 1
+						active_query_window.forth
+						-- active_element ?= active_query_window.item
+					end
+					profiler_query.set_subqueries ( all_subqueries )
+					profiler_query.set_subquery_operators ( all_operators )
+				end
+				--active_query_window.start
+				--if not active_query_window.after then
+				--	active_element ?= active_query_window.item
+				--	active_element.inactivate_operator
+				--end
+			end
+			update_query_form
+		end
+
+	reactivate is
+		-- copy all the selected 'scrollable_subquery' from 'inactive_subqueries_window'
+		-- into 'active_query_window', activate the corresponding subqueries
+		-- and operators in 'all_subqueries' and 'all_operators'
+		local
+			selected_positions: SORTED_TWO_WAY_LIST [INTEGER]
+			i: INTEGER
+			inactive_element, active_element: SCROLLABLE_SUBQUERY
+		do
+			if inactive_subqueries_window.selected_count > 0 then
+				!! selected_positions.make
+				selected_positions.fill ( inactive_subqueries_window.selected_positions )
+				from
+					selected_positions.sort
+					selected_positions.start
+					i := selected_positions.item
+					inactive_subqueries_window.go_i_th ( i )
+					active_query_window.start
+					!! active_element.make
+					active_element ?= active_query_window.item
+					!! inactive_element.make
+					inactive_element ?= inactive_subqueries_window.item
+				until
+					i > selected_positions.last
+				loop
+					if i = selected_positions.item then
+						inactive_element ?= inactive_subqueries_window.item
+						if not active_query_window.empty then
+							from
+								active_element ?= active_query_window.item
+							until
+								active_query_window.after
+								or else active_element.index >= inactive_element.index
+							loop
+								active_query_window.forth
+								active_element ?= active_query_window.item
+							end
+						end
+
+							--| add the inactivated subquery in the 'inactive_subqueries_window'
+						active_query_window.put_left ( inactive_element )
+						
+							--| reactivate the subquery in 'all_subqueries'
+						all_subqueries.go_i_th ( inactive_element.index )
+						all_subqueries.item.activate
+						
+							--| reactivate the subquery operator in 'all_operators'
+						if not all_operators.empty then
+							if active_element = void or else active_element.index = 1 then
+								all_operators.go_i_th ( 1 )
+							else
+								all_operators.go_i_th ( inactive_element.index - 1 )
+							end
+							all_operators.item.activate
+						end	
+						
+							--| remove the reactivated subquery from 'inactive_subqueries_window'
+						inactive_subqueries_window.remove
+						i := i + 1
+						
+						selected_positions.forth
+					else
+						i := i + 1
+						inactive_subqueries_window.forth
+					end
+					profiler_query.set_subqueries ( all_subqueries )
+					profiler_query.set_subquery_operators ( all_operators )
+				end
+				-- active_query_window.start
+				-- active_query_window.forth
+				--if not active_query_window.after then
+				--	active_element ?= active_query_window.item
+				--	active_element.reactivate_operator
+				--end
+			end
+			update_query_form
+		end
+
+feature {NONE} -- Execution arguments
+
+	reactivate_subqueries: ANY is
+		once
+			!! Result
+		end
+		
+	inactivate_subqueries: ANY is
+		once
+			!! Result
+		end
+		
+feature {NONE} -- execution
+
+	execute (arg: ANY) is
+		do
+			if arg = reactivate_subqueries then
+				reactivate
+				-- update_query_window --| Utile ???
+			elseif arg = inactivate_subqueries then
+				inactivate
+				-- update_query_window
+			end
+		end
+		--| Guillaume - 09/26/97
 
 end -- class PROFILE_QUERY_WINDOW

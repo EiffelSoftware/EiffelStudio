@@ -21,6 +21,8 @@ feature -- Command execution
 			prof_converter: CONVERTER_CALLER
 			conf_load: CONFIGURATION_LOADER
 			prof_invoker: PROFILER_INVOKER
+			information_dlg: WARNER_W
+				--| Guillaume: Pb, utilise WEL...
 		do
 			if arg = Void and then dlg = Void then
 					--| Create the dialog
@@ -48,6 +50,13 @@ feature -- Command execution
 						prof_invoker.invoke_profiler;
 					end;
 					!! prof_converter.make (<<profinfo, compile>>, conf_load.shared_prof_config);
+					!! information_dlg.make(Profile_tool)
+					if prof_converter.conf_load_error then
+						profinfo.append (": File does not exist!")
+						information_dlg.gotcha_call(profinfo)
+					elseif prof_converter.is_last_conversion_ok then
+						information_dlg.gotcha_call("Ready for queries...")
+				 	end; --| Guillaume - 09/26/97
 				end;
 
 					--| Get rid of the object...
@@ -88,7 +97,7 @@ feature {NONE} -- Implementation
 		local
 			l_warner: WARNER_W
 		do
-			l_warner := warner (profile_tool)
+			!! l_warner.make(profile_tool)
 			l_warner.gotcha_call (Warning_messages.w_Load_configuration);
 		end
 

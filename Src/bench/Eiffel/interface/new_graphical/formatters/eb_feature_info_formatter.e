@@ -43,8 +43,9 @@ feature -- Status setting
 			-- Associate current formatter with `a_class'.
 		do
 			associated_feature := a_feature
-			if a_feature = Void then
+			if a_feature = Void or else not a_feature.associated_class.has_feature_table then
 				feature_cmd := Void
+				associated_feature := Void
 			else
 				create_feature_cmd
 			end

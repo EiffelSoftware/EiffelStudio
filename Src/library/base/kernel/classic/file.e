@@ -571,12 +571,18 @@ feature -- Status report
 
 	file_prunable: BOOLEAN is
 			-- May items be removed?
+		obsolete
+			"Use `prunable' instead."
 		do
-			Result := mode >= Write_file and prunable
 		end
 
 	full: BOOLEAN is False
 			-- Is structure filled to capacity?
+
+	prunable: BOOLEAN is
+			-- Is there an item to be removed?
+		do
+		end
 
 feature -- Status setting
 
@@ -1768,22 +1774,13 @@ feature {NONE} -- Inapplicable
 			count = old count
 		end
 
-	prunable: BOOLEAN is
-			-- Is there an item to be removed?
-		do
-		end
-
 	remove is
 			-- Remove current item.
-		require else
-			file_prunable: file_prunable
 		do
 		end
 
 	prune (v: like item) is
 			-- Remove an occurrence of `v' if any.
-		require else
-			prunable: file_prunable
 		do
 		ensure then
 			count <= old count

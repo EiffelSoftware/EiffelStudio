@@ -76,7 +76,9 @@ feature -- Pick and Throw
 	receive (a_stone: STONE) is
 			-- Process dropped stone `a_stone'
 		do
-			tool.receive (a_stone)
+			if a_stone.is_valid and then compatible (a_stone) then
+				tool.receive (a_stone)
+			end
 		end;
 
 feature -- Properties

@@ -23,11 +23,11 @@ feature
 			u_fas_ebuild ?= user
 			n_fas_ebuild ?= new_tmp
 
-			if u_fas_ebuild /= Void or n_fas_ebuild /= Void then
+--			if u_fas_ebuild /= Void or n_fas_ebuild /= Void then
 				!FEATURE_AS_EBUILD! merge_result
-			else
-				!! merge_result
-			end
+--			else
+--				!! merge_result
+--			end
 
 			if new_tmp /= Void then
 				-- Merging feature names
@@ -86,6 +86,6 @@ feature
 			end
 		end;
 
-	merge_result: FEATURE_AS
+	merge_result: EXT_FEATURE_AS
 
 end -- class FEATURE_AS_MERGER

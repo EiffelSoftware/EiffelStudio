@@ -48,7 +48,7 @@ feature {NONE}
 
 	check_bitmaps_directory is
 			-- Set error to True if the Bitmaps
-			-- directory can not be found.
+			-- directory cannot be found.
 		local
 			dir: PLAIN_TEXT_FILE;
 		do
@@ -71,10 +71,10 @@ feature {NONE}
 			dir: PLAIN_TEXT_FILE;
 			path_name: STRING
 		do
-			path_name := Environment.get (Environment.eiffel3_variable_name);
+			path_name := Environment.get (Environment.Eiffel_variable_name);
 			if path_name = Void or else path_name.empty then
 				io.error.putstring ("Environment variable ");
-				io.error.putstring (Environment.eiffel3_variable_name);
+				io.error.putstring (Environment.Eiffel_variable_name);
 				io.error.putstring (" not defined%N");
 				error := True
 			else
@@ -84,7 +84,7 @@ feature {NONE}
 					io.error.putstring (path_name);
 					io.error.putstring (" is not readable.%N");
 					io.error.putstring ("Environment variable ");
-					io.error.putstring (Environment.eiffel3_variable_name);
+					io.error.putstring (Environment.Eiffel_variable_name);
 					io.error.putstring (" needs to be set to the correct directory%N");
 					error := True
 				else

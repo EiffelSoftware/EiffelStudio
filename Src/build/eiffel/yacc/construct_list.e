@@ -17,7 +17,7 @@ inherit
 
 creation
 
-	make
+	make_filled
 
 feature
 

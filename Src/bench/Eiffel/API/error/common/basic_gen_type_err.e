@@ -23,7 +23,7 @@ feature -- Property
 	syntax_message: STRING is
             -- Specific syntax message.
         do
-			Result := "basic type can not have generic derivation"
+			Result := "basic type cannot have generic derivation"
         end;
 
 end -- class BASIC_GEN_TYPE_ERR

@@ -2,9 +2,9 @@ class FEATURE_CLAUSE_AS_EBUILD
 
 inherit
 
-	FEATURE_CLAUSE_AS
+	EXT_FEATURE_CLAUSE_AS
 		redefine
-			set_comments--samik, format_comment, set_comment
+		--	set_comments--samik, format_comment, set_comment
 		end;
 
 feature -- Attributes
@@ -12,8 +12,8 @@ feature -- Attributes
 comment: EIFFEL_COMMENTS;
 
 feature -- Formatting
-	set_comments (c: EIFFEL_FILE) is
-		do
+--	set_comments (c: EIFFEL_FILE) is
+--		do
 
 		--samik	c.go_before (position + 1)
 	--samik		comment := c.trailing_comment 
@@ -29,7 +29,7 @@ feature -- Formatting
         --samik            features.forth
         --samik        end
         --samik    end
-        end;
+  --      end;
 
 	set_comment (c: EIFFEL_COMMENTS) is
 		do

@@ -10,7 +10,7 @@ default
 --			HASH_TABLE as NEW_HASH_TABLE
 --		end;
 
-	assertion (all);
+	assertion (no);
 cluster
 
 	root_cluster: 	"../Main";
@@ -44,7 +44,8 @@ cluster
 	mel_widgets (mel):            "$/widgets";
             
 
-	vision:			 "$EIFFEL4/library/vision/";
+--	vision:			 "$EIFFEL4/library/vision/";
+	vision:             "/ankara2/samik/src/vision/";
 	vision_figures (vision):             "$/figures";
 	vision_imp_motif (vision):           "$/implement/motif";
     	vision_imp_toolkit (vision):         "$/implement/toolkit";
@@ -144,10 +145,10 @@ cluster
                 exclude
                         "syntax_error.e" 
 	        end;
-	api_structured_text (common):"$/eiffel/API/structured_text"; -- Eiffel/API/structured_text/
+		api_structured_text (common):"$/eiffel/API/structured_text"; -- Eiffel/API/structured_text/
 
 
-        --api_shared(api):        "$/shared";
+        api_shared(api):        "$/shared";
         --api_ids(api):           "$/ids";
        -- api_queries(api):       "$/queries";
         --api_interface(api):     "$/interface";
@@ -166,9 +167,19 @@ cluster
 --	eiffel_flatshort (common):	"$/eiffel/flat_short"; -- Part of this is in flat_short
 
 
-	eiffel_const (common):		"$/eiffel/const"; -- from bench: Eiffel/const/
-	eiffel_lace_env (common): 	"$/eiffel/lace/env";
-	eiffel_yacc (common):		"$/eiffel/yacc"; -- Eiffel/yacc
+	eiffel_const (common):		"$/eiffel/const" -- from bench: Eiffel/const/
+default
+    assertion(no);
+end;
+
+    eiffel_lace_env (common): 	"$/eiffel/lace/env"
+default
+    assertion(no);
+end;
+	eiffel_yacc (common):		"$/eiffel/yacc" -- Eiffel/yacc
+default
+	assertion(no);
+end;
 
 	--These seem to be build specific
 --	eiffel_rescue (build):		"$/eiffel/rescue"; -- these classes are in patches
@@ -196,7 +207,7 @@ cluster
 
         common_flat_short (common_parser):   "$/flat_short";
 
-	liman:				"/cannes2/src/PorterPackage4.2a/Src/Eiffel/limand"; --THIS IS TEMPORARY
+	liman (build):				"$/limand";
 
 --	liman_bench(liman):		"$/bench";
 	liman_abstract(liman):		"$/abstract";
@@ -214,12 +225,12 @@ external
 
         object:
 		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a", 
-	    	"$(RUNTIME)/parsing/eiffel/libeiffel.a",
+	    	"$(RUNTIME)/parsing/eiffel/libweiffel.a",
 	    	"$(RUNTIME)/parsing/shared/libparsing.a",
 	    	"$(RUNTIME)/parsing/lace/liblace.a",
 	    	"$(RUNTIME)/platform/libplatform.a",
 --	    	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/eiffel/libeiffel.a",
----	    	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/shared/libparsing.a",
+--	    	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/shared/libparsing.a",
 --	    	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/lace/liblace.a",
 --	    	"/ankara2/samik/src/RT.$(PLATFORM)/platform/libplatform.a",
 		"-lXm -lXt -lX11 -lXpm";	

@@ -12,7 +12,7 @@ feature {NONE}
 
 	eb_screen: SCREEN is
 		once
-			!! Result.make ("seattle:0.0")
+			!! Result.make ("")
 		end
 
 	transporter: TRANSPORTER is

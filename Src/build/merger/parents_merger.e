@@ -72,7 +72,7 @@ feature
 						if parent_found then
 							new_parent := Void;
 								-- Need to merge with new parent template
-								-- If can not find a parent of the same
+								-- If cannot find a parent of the same
 								-- type then discard diff.
 							parent_diffs := user_parent_diffs 
 												(old_new_parents.item, user.item);

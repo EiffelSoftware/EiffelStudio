@@ -2,7 +2,7 @@ class FEATURE_AS_EBUILD
 
 inherit
 
-	FEATURE_AS
+	EXT_FEATURE_AS
 	--	redefine
 --			set_comment, format_comment
 --		end;

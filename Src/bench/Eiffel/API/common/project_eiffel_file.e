@@ -100,7 +100,6 @@ feature -- Access
 			Result ?= retrieved_object (False)
 		ensure
 			valid_result: not error implies Result /= Void
-			version_number_exists: project_version_number /= Void
 		end;
 
 feature -- Update

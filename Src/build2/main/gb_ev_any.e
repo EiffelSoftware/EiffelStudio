@@ -136,7 +136,7 @@ feature {GB_XML_STORE} -- Output
 				--	at_least_one_element_added: element.count > old element.count
 		end
 		
-feature {GB_XML_LOAD} -- Status setting
+feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER} -- Status setting
 		
 	modify_from_xml (element: XML_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.

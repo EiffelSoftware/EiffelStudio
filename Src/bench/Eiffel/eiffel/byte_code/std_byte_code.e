@@ -7,7 +7,8 @@ inherit
 	BYTE_CODE
 		redefine
 			compound, analyze, generate, finish_compound,
-			has_loop, assigns_to
+			has_loop, assigns_to, optimized_byte_node,
+			calls_special_features
 		end;
 
 feature 
@@ -772,7 +773,7 @@ feature
 	generate_invariant (tag: STRING) is
 			-- Generate invariant check with tag `tag'.
 		do
-			if  context.workbench_mode then
+			if context.workbench_mode then
 				generated_file.putstring (tag);
 				generated_file.putchar ('(');
 				context.current_register.print_register_by_name;
@@ -988,5 +989,89 @@ feature -- Array optimization
 				or else
 					(rescue_clause /= Void and then rescue_clause.assigns_to (i))
 		end
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := (compound /= Void and then
+						compound.calls_special_features (array_desc))
+				or else
+					(rescue_clause /= Void and then
+						rescue_clause.calls_special_features (array_desc))
+		end;
+
+	optimized_byte_node: like Current is
+		local
+			opt_context: OPTIMIZATION_CONTEXT
+			optimizer: ARRAY_OPTIMIZER
+		do
+			Result := Current
+			opt_context := initial_optimization_context;
+			if opt_context.array_desc.empty then
+					-- No entity calls a special feature
+			else
+				optimizer := System.remover.array_optimizer;
+				optimizer.push_optimization_context (opt_context);
+				if compound /= Void then
+					compound := compound.optimized_byte_node
+				end;
+				if rescue_clause /= Void then
+					rescue_clause := rescue_clause.optimized_byte_node
+				end;
+				optimizer.pop_optimization_context
+			end
+		end;
+
+	initial_optimization_context: OPTIMIZATION_CONTEXT is
+			-- Record the descendants of array for
+			-- arguments(>0); Result(=0); local(<0)
+			-- but only if the routine calls a special routine
+			-- for this entity
+		local
+			i, n: INTEGER
+			safe_array_desc, array_desc, g: TWO_WAY_SORTED_SET [INTEGER]
+		do
+			!!array_desc.make;
+			!!safe_array_desc.make;
+			!!Result.make (array_desc, safe_array_desc);
+			!!g.make;
+			Result.set_generated_array_desc (g);
+			if arguments /= Void then
+				from
+					n := arguments.count
+					i := 1;
+				until
+					i > n
+				loop
+					if arguments.item (i).conforms_to_array and then
+						calls_special_features (i)
+					then
+						array_desc.extend (i)
+						safe_array_desc.extend (i)
+					end;
+					i := i + 1
+				end;
+			end;
+			if locals /= Void then
+				from
+					n := locals.count
+					i := 1;
+				until
+					i > n
+				loop
+					if locals.item (i).conforms_to_array and then
+						calls_special_features (-i)
+					then
+						array_desc.extend (-i)
+					end;
+					i := i + 1
+				end;
+			end;
+			if result_type /= Void and then
+				result_type.conforms_to_array and then
+				calls_special_features (0)
+			then
+				array_desc.extend (0)
+			end;
+		end;
 
 end

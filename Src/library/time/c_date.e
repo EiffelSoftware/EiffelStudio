@@ -19,9 +19,9 @@ feature -- Status
 	month_now: INTEGER is
 			-- Current month.
 		do
-			Result := get_tm_mon (tm_item)
+			Result := get_tm_mon (tm_item) + 1
 		ensure
-			month_valid: Result >= 0 and Result <= 11
+			month_valid: Result >= 1 and Result <= 12
 		end
 		
 	day_now: INTEGER is

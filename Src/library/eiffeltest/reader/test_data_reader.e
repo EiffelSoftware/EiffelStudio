@@ -138,7 +138,7 @@ feature -- Status report
 					Result := ((data_values @ i).occurrences ('%T') = 0) and
 						(table @ i).input_accepted (data_values @ i)
 				else 
-					Result := True
+					Result := (table @ i).input_accepted (data_values @ i)
 				end
 				i := i + 1
 			end
@@ -220,7 +220,8 @@ feature -- Basic operations
 					if all_values_valid then inject_record (count) end
 				end
 				
-				if invalid and not last_string.empty and is_log_set then
+				if (invalid or not all_values_valid) and not last_string.empty 
+					and is_log_set then
 					log.put_string ("Record " + count.out + " not valid!")
 					log.put_new_line
 				end

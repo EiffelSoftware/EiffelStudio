@@ -198,7 +198,9 @@ feature -- Access
 				if not layout_item.has (menu_object.layout_item) then
 					layout_item.start
 					layout_item.put_left (menu_object.layout_item)
-					layout_item.expand
+					if layout_item.is_expandable then
+						layout_item.expand	
+					end
 				end
 			else
 				widget ?= an_object.object

@@ -1,6 +1,5 @@
 indexing
-	description:
-		"Class describing a condition variable."
+	description: "Class describing a condition variable."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +10,9 @@ class
 inherit
 	OBJECT_OWNER
 	MEMORY
-		redefine dispose end
+		redefine
+			dispose
+		end
 
 creation
 	make
@@ -55,6 +56,7 @@ feature -- Status setting
 			-- Block calling thread on current condition variable.
 		require
 			valid_pointer: is_set
+			a_mutex_not_void: a_mutex /= Void
 		do
 			eif_thr_cond_wait (cond_pointer, a_mutex.mutex_pointer)
 		end
@@ -68,7 +70,6 @@ feature -- Status setting
 			cond_pointer := default_pointer
 		end
 
-
 feature {NONE} -- Implementation
 
 	cond_pointer: POINTER
@@ -81,10 +82,9 @@ feature {NONE} -- Removal
 			-- variable is collected.
 		do
 			if thread_is_owner and is_set then
-				eif_thr_cond_destroy (cond_pointer)
+				destroy
 			end
 		end
-
 
 feature {NONE} -- Externals
 

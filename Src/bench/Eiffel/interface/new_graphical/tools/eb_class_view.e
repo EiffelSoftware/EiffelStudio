@@ -111,16 +111,18 @@ feature -- Status setting
 			end
 	
 			if type_changed then
-					-- Toggle stone flag and change formatters if necessary.
+				-- Toggle stone flag.
             	is_stone_external := not is_stone_external
-            	if is_stone_external then
-					enable_dotnet_formatters (True)
-				else
-					enable_dotnet_formatters (False)
-				end
-            end 	
+            end
+            
+            	-- Update formatters. 
+            if is_stone_external and cst /= Void then
+				enable_dotnet_formatters (True)
+			else
+				enable_dotnet_formatters (False)
+			end
 
-			-- Set the stones.
+				-- Set the stones.
 			from
 				managed_formatters.start
 			until
@@ -282,6 +284,9 @@ feature -- Memory management
 
 feature {NONE} -- Implementation
 
+	used: BOOLEAN
+			-- Has the class view been used yet to perform any formatting?
+
 	tool_bar: EV_TOOL_BAR
 			-- Toolbar containing all buttons.
 
@@ -349,6 +354,8 @@ feature {NONE} -- Implementation
 
 	enable_dotnet_formatters (a_flag: BOOLEAN) is
 			-- Set sensitivity of formatters to 'a_flag'.
+		local
+			l_done: BOOLEAN
 		do
 			from
 				managed_formatters.start
@@ -365,8 +372,35 @@ feature {NONE} -- Implementation
 				end
 				managed_formatters.forth
 			end
-			if a_flag then
+			
+			if not used then
+					-- First time so default to ancestors view.
 				managed_formatters.i_th (5).enable_select
+				used := True
+			end
+			
+				-- Determine which formatter to give focus based upon previous one.
+			if a_flag then
+				if managed_formatters.i_th (1).selected then
+						-- Previously clickable so now move to contract.
+					managed_formatters.i_th (3).enable_select
+				elseif managed_formatters.i_th (2).selected then
+						-- Previously flat so now interface.
+					managed_formatters.i_th (4).enable_select
+				else
+						-- Set formatter to same as previous one.
+					from
+						managed_formatters.start
+					until
+						managed_formatters.after or l_done
+					loop
+						if managed_formatters.item.selected then
+							managed_formatters.i_th (managed_formatters.index_of (managed_formatters.item, 1)).enable_select
+							l_done := True
+						end
+						managed_formatters.forth
+					end
+				end
 			end
 		end
 

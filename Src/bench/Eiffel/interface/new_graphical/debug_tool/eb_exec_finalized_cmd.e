@@ -58,7 +58,7 @@ feature -- Execution
 			wd: EV_WARNING_DIALOG
 		do
 			if Eiffel_project.initialized and then Eiffel_project.system_defined then
-				system_name := clone (Eiffel_system.name)
+				system_name := Eiffel_system.name.twin
 			end
 			if system_name = Void then
 				create wd.make_with_text (Warning_messages.w_Must_finalize_first)

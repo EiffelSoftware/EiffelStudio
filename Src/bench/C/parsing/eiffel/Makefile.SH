@@ -92,7 +92,8 @@ all:: .FORCE_DEPEND
 
 RUN_TIME = ../../run-time
 SHARED_CLIB = ../shared
-CFLAGS = -I$(SHARED_CLIB) -I$(RUN_TIME) -I$(TOP)
+DPFLAGS = -I$(SHARED_CLIB) -I$(RUN_TIME) -I$(TOP)
+CFLAGS = $(DPFLAGS)
 YFLAGS = -d
 
 SRCS = eiffel_c.c eif_err.c encode.c pretrieve.c date.c keyword.c \

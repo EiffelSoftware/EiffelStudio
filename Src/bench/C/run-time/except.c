@@ -1,11 +1,11 @@
 /*
 
- ######  #	#   ####   ######  #####	#####		   ####
- #		#  #   #	#  #	   #	#	 #			#	#
- #####	 ##	#	   #####   #	#	 #			#
- #		 ##	#	   #	   #####	  #	 ###	#
- #		#  #   #	#  #	   #		  #	 ###	#	#
- ######  #	#   ####   ######  #		  #	 ###	 ####
+ ######  #    #   ####   ######  #####    #####           ####
+ #        #  #   #    #  #       #    #     #            #    #
+ #####     ##    #       #####   #    #     #            #
+ #         ##    #       #       #####      #     ###    #
+ #        #  #   #    #  #       #          #     ###    #    #
+ ######  #    #   ####   ######  #          #     ###     ####
 
 	Exception handling routines.
 
@@ -770,7 +770,7 @@ rt_public void eraise(char *tag, long num)
 	 */
 	
 	struct ex_vect *trace;		/* The stack trace entry */
-	struct ex_vect *vector;	 /* The stack trace entry */
+	struct ex_vect *vector;     /* The stack trace entry */
 	char *tg, *obj;
 	int type;
 

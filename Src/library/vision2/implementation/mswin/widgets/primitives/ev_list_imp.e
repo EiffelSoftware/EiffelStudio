@@ -178,7 +178,10 @@ feature -- Status setting
 				unselect_items (0, count - 1)
 			else
 				cwin_send_message (wel_item, Lb_setcursel, -1, 0)
-				on_lbn_selchange
+				if last_selected_item /= Void then
+					-- If there is a selected item then
+					on_lbn_selchange
+				end
 				last_selected_item := Void
 			end
 		end
@@ -516,6 +519,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/02/25 00:34:41  rogers
+--| Clear selection, will only now call on_lbn_selchange when not in multiple_selection mode when there was an item selected. Fixes bug where an attempt to call the events on last_selected_item when it is Voidlast.interface.deselect_actions.call ([])
+--|
 --| Revision 1.38  2000/02/24 21:18:58  rogers
 --| Connected the select and de-select events to the list when in single selection mode. Multiple selection mode still needs connecting.
 --|

@@ -76,7 +76,6 @@ feature -- Type check, byte code and dead code removal
 			a_feature: FEATURE_I
 			export_status: EXPORT_I
 			create_info: CREATE_INFO
-			create_feat: CREATE_FEAT
 			feature_type, local_type: TYPE_A
 			local_b: LOCAL_B
 			attribute_b: ATTRIBUTE_B
@@ -389,8 +388,8 @@ feature -- Type check, byte code and dead code removal
 				create_info := local_type.create_info
 			elseif access.is_attribute then
 				attribute_b ?= access
-				create create_feat.make (attribute_b.attribute_id, attribute_b.routine_id)
-				create_info := create_feat
+				create {CREATE_FEAT} create_info.make (attribute_b.attribute_id,
+					attribute_b.routine_id, context.current_class)
 			end
 			Creation_types.insert (create_info)
 

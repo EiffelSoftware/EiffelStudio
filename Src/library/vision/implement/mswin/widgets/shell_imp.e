@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 						wa.execute (Void)
 					end
 				else
-					!! resize_data.make (owner, a_width, a_height, size_type)
+					create resize_data.make (owner, a_width, a_height, size_type)
 					resize_actions.execute (Current, resize_data)
 				end
 				resize_shell_children (a_width, a_height)
@@ -410,7 +410,7 @@ feature {NONE} -- Implementation
 					w := wel_width
 					h := wel_height
 				end
-				!! track.make (w, h)
+				create track.make (w, h)
 				min_max_info.set_min_track_size (track)
 				min_max_info.set_max_track_size (track)
 			end

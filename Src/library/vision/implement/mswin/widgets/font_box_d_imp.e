@@ -48,7 +48,7 @@ inherit
 			forbid_recompute_size as forbid_resize,
 			allow_recompute_size as allow_resize
 		end
-creation
+create
 	make
  
 feature -- Initialization
@@ -57,7 +57,7 @@ feature -- Initialization
 			-- Create a font box
 		do
 			wel_make
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			a_font_box_d.set_dialog_imp (Current)
 			managed := True
@@ -71,8 +71,8 @@ feature -- Access
 			font_windows: FONT_IMP
 			wel_font: WEL_FONT
 		do
-			!! wel_font.make_indirect (log_font)
-			!! Result.make
+			create wel_font.make_indirect (log_font)
+			create Result.make
 			font_windows ?= Result.implementation
 			check
 				font_windows_not_void: font_windows /= Void

@@ -74,7 +74,7 @@ inherit
 			class_name
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -82,7 +82,7 @@ feature -- Initialization
 	make (a_row_column: ROW_COLUMN; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create the widget
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			initialize
 			managed := man
@@ -191,7 +191,7 @@ feature -- Status setting
 				if not mapping then
 					map_widgets (new_width, height)
 				end
-				{MANAGER_IMP} Precursor (new_width)
+				Precursor {MANAGER_IMP} (new_width)
 			end
 		end
 
@@ -202,7 +202,7 @@ feature -- Status setting
 				if not mapping then
 					map_widgets (new_height, width)
 				end
-				{MANAGER_IMP} Precursor (new_height)
+				Precursor {MANAGER_IMP} (new_height)
 			end
 		end
 
@@ -215,7 +215,7 @@ feature -- Status setting
 				if not mapping then
 					map_widgets (new_width, new_height)
 				end
-				{MANAGER_IMP} Precursor (new_width, new_height)
+				Precursor {MANAGER_IMP} (new_width, new_height)
 			end
 		end
 

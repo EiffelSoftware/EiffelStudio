@@ -14,19 +14,19 @@ inherit
 
 	DRAWABLE_DEVICE_WINDOWS
 
-creation 
+create 
 	make
 
 feature -- Initialization
 
 	make (a_draw_b: DRAW_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 		do
-			!! private_attributes
+			create private_attributes
 			a_draw_b.set_font_imp (Current)
 			parent ?= oui_parent.implementation;
 			set_line_width (1);
 			managed := man
-			!! gc_fg_color.make_system (color_windowtext)
+			create gc_fg_color.make_system (color_windowtext)
 			line_style := ps_solid
 		end
 

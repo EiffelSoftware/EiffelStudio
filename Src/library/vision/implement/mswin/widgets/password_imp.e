@@ -22,7 +22,7 @@ inherit
 		rename
 			default_style as text_field_default_style
 		end
-creation
+create
 	make
 
 feature

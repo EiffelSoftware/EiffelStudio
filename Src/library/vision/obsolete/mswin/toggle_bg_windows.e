@@ -11,7 +11,7 @@ inherit
 
 	TOGGLE_BG_I
 
-creation
+create
 	make
 
 end -- TOGGLE_BG_W 

@@ -15,7 +15,7 @@ inherit
 
 	IO_HANDLER_I
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -33,7 +33,7 @@ inherit
 			mel_toggle_make
 		end
 
-creation
+create
 
 	make
 
@@ -61,7 +61,7 @@ feature -- Element change
 		do
 			list := vision_command_list (arm_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_arm_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -75,7 +75,7 @@ feature -- Element change
 		do
 			list := vision_command_list (disarm_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_disarm_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)
@@ -89,7 +89,7 @@ feature -- Element change
 		do
 			list := vision_command_list (value_changed_command);
 			if list = Void then
-				!! list.make;
+				create list.make;
 				set_value_changed_callback (list, Void)
 			end;
 			list.add_command (a_command, argument)

@@ -15,7 +15,7 @@ inherit
 			child_has_resized
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -23,10 +23,10 @@ feature -- Initialization
 	make (a_top_shell: TOP_SHELL) is
 			-- Make a top shell.
 		do
-			!! private_attributes
+			create private_attributes
 			private_title := a_top_shell.identifier
 			if private_title.is_integer then
-				!! class_icon.make_by_id (private_title.to_integer)
+				create class_icon.make_by_id (private_title.to_integer)
 				if not class_icon.exists then	
 					class_icon := null_class_icon
 				end

@@ -12,7 +12,7 @@ inherit
 	WIDGET_RESOURCE_I;
 	MEL_WIDGET_RESOURCE
 
-creation
+create
 
 	make
 

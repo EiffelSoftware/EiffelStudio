@@ -24,7 +24,7 @@ inherit
 			implementation as dialog_imp
 		end
 
-creation
+create
 
 	make
 	
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			!FONT_BOX_D_IMP!implementation.make (Current, a_parent);
+			create {FONT_BOX_D_IMP} implementation.make (Current, a_parent);
 			set_default
 		ensure
 			parent_set: parent = a_parent;

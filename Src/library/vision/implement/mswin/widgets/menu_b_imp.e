@@ -21,7 +21,7 @@ inherit
 			unrealize,
 			set_insensitive
 		end
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		local
 			mp: MENU_PULL
 		do
-			!! private_attributes
+			create private_attributes
 			text := a_menu_b.identifier
 			parent ?= oui_parent.implementation
 			mp ?= oui_parent
@@ -49,7 +49,7 @@ feature -- Access
 		local
 			system_font: WEL_SYSTEM_FONT
 		do
-			!! system_font.make
+			create system_font.make
 			Result := (text.count + 1) * system_font.log_font.width
 		end	
 	
@@ -57,7 +57,7 @@ feature -- Access
 		local
 			system_font: WEL_SYSTEM_FONT
 		do
-			!! system_font.make
+			create system_font.make
 			Result := system_font.log_font.height
 		end	
 
@@ -71,7 +71,7 @@ feature -- Status setting
 	set_insensitive (flag: BOOLEAN) is
 			-- Set sensitivity of Current to reflect `flag'.
 		do
-			{BUTTON_IMP} Precursor (flag)
+			Precursor {BUTTON_IMP} (flag)
 			if flag then
 				associated_menu.set_insensitive
 			else

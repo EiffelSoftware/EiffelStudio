@@ -38,7 +38,7 @@ inherit
 			allow_recompute_size as allow_resize
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 	make (a_prompt_dialog: PROMPT_D; oui_parent: COMPOSITE) is
 			-- Initialization of message box
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			set_default_attributes
 			a_prompt_dialog.set_dialog_imp (Current)
@@ -488,8 +488,8 @@ feature {NONE} -- Implementation
 			default_windows_font: FONT_IMP
 			wel_ansi_font: WEL_ANSI_VARIABLE_FONT
 		do
-			!! default_font.make
-			!! wel_ansi_font.make
+			create default_font.make
+			create wel_ansi_font.make
 			default_windows_font ?= default_font.implementation
 			default_windows_font.make_by_wel (wel_ansi_font)
 			set_button_font (default_font)
@@ -513,7 +513,7 @@ feature {NONE} -- Implementation
 	create_buttons is
 			-- Create the buttons and hide them if necessary.
 		do
-			!! apply_button.make (Current, apply_label, 0, 0, 0, 0, apply_id)
+			create apply_button.make (Current, apply_label, 0, 0, 0, 0, apply_id)
 			create_default_buttons
 		end
 
@@ -526,15 +526,15 @@ feature {NONE} -- Implementation
 			if the_selection_text = Void then
 				the_selection_text := ""
 			end
-			!! selection_edit.make (Current, the_selection_text, 0, 0, 0, 0, selection_edit_id)
-			!! selection_static.make (Current, "", 0, 0, 0, 0, 0)
-			!! a_dc.make (selection_static)
+			create selection_edit.make (Current, the_selection_text, 0, 0, 0, 0, selection_edit_id)
+			create selection_static.make (Current, "", 0, 0, 0, 0, 0)
+			create a_dc.make (selection_static)
 			a_dc.get
-			!! local_color.make_system (Color_window)
+			create local_color.make_system (Color_window)
 			a_dc.set_background_color (local_color)
 			a_dc.release
 			if selection_label = Void then
-				!! selection_label.make (0)
+				create selection_label.make (0)
 			end
 			set_selection_label (selection_label)
 		end

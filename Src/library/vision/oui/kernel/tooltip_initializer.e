@@ -12,7 +12,7 @@ indexing
 
 class TOOLTIP_INITIALIZER
 
-creation 
+create 
 	tooltip_initialize
 
 feature {NONE} -- Initialization
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			widget_not_void: widget /= void
 		do
 			tooltip_parent := widget
-			!FOCUS_LABEL! label.initialize (widget)
+			create {FOCUS_LABEL} label.initialize (widget)
 		end	
 
 feature -- Actual realization

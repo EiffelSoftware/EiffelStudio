@@ -13,7 +13,7 @@ inherit
         
         SEPARATO_G_I
 
-creation
+create
 
         make
 

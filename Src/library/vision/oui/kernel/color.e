@@ -12,7 +12,7 @@ inherit
 
 	G_ANY
 
-creation
+create
 
 	make
 
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a color
 		do
-			!COLOR_IMP!implementation.make (Current)
+			create {COLOR_IMP} implementation.make (Current)
 		end;
 
 	make_for_screen (a_screen: SCREEN) is
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
 		do
-			!COLOR_IMP!implementation.make_for_screen (Current, a_screen)
+			create {COLOR_IMP} implementation.make_for_screen (Current, a_screen)
 		end;
 
 feature -- Access
@@ -60,7 +60,7 @@ feature -- Duplication
 	duplicate: COLOR is
 			-- An independent copy of the color
 		do
-			!!Result.make;
+			create Result.make;
 			if (name = Void) then
 				Result.set_rgb (red, green, blue);
 			else

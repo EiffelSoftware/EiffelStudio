@@ -31,7 +31,7 @@ inherit
 			display, dispose
 		end;
 
-creation
+create
 
 	make, 
 	make_for_screen
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			if name.item (1) = '-' then
 				from
 					pos := 1;
-					!! parsed.make (1, 13);
+					create parsed.make (1, 13);
 					number := 1
 				until
 					(pos > name.count) or (number = 13)

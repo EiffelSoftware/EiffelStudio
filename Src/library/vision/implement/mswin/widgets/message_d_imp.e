@@ -35,7 +35,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 	make (a_message: MESSAGE_D; oui_parent: COMPOSITE) is
 			-- Initialize a message box.
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			private_title := a_message.identifier
 			check
@@ -97,13 +97,13 @@ feature {NONE} -- implementation
 			a_dc: WEL_CLIENT_DC
 			local_color: WEL_COLOR_REF
 		do
-			!! message_static.make (Current, "", 0, 0, 0, 0, 0)
+			create message_static.make (Current, "", 0, 0, 0, 0, 0)
 			if message = Void then
-				!! message.make (0)
+				create message.make (0)
 			end
-			!! a_dc.make (message_static)
+			create a_dc.make (message_static)
 			a_dc.get
-			!! local_color.make_system (Color_window)
+			create local_color.make_system (Color_window)
 			a_dc.set_background_color (local_color)
 			a_dc.release
 			set_message (message)
@@ -373,8 +373,8 @@ feature {NONE} -- implementation
 			wel_ansi_font: WEL_ANSI_VARIABLE_FONT
 		do
 			default_button_id := ok_id
-			!! default_font.make
-			!! wel_ansi_font.make
+			create default_font.make
+			create wel_ansi_font.make
 			default_windows_font ?= default_font.implementation
 			default_windows_font.make_by_wel (wel_ansi_font)
 			set_button_font (default_font)
@@ -385,7 +385,7 @@ feature {NONE} -- implementation
 			show_ok_button
 			show_cancel_button
 			show_help_button
-			!! message.make (0)
+			create message.make (0)
 			alignment := Left_alignment
 			default_position := true
 		end

@@ -91,7 +91,7 @@ inherit
 
 	COLORED_FOREGROUND_WINDOWS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 	make (a_search_replace: SEARCH_REPLACE_DIALOG; oui_parent: COMPOSITE) is
 			-- Initilaize the search_replace_dialog
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			a_search_replace.set_dialog_imp (Current)
 			set_defaults
@@ -114,19 +114,19 @@ feature {NONE} -- Initialization
 			wc ?= parent
 			make_by_id (wc, Idd_replacedialog)
 			wd ?= Current
-			!! find_next_button.make_by_id (wd, Id_findnext)
-			!! replace_button.make_by_id (wd, Id_replace)
-			!! replace_all_button.make_by_id (wd, Id_replaceall)
-			!! find_edit.make_by_id (wd, Idc_findedit)
-			!! replace_edit.make_by_id (wd, Idc_replaceedit)
-			!! word_check.make_by_id (wd, Idc_wordcheck)
-			!! case_check.make_by_id (wd, Idc_casecheck)
-			!! radio_up.make_by_id (wd, Idc_radioup)
-			!! radio_down.make_by_id (wd, Idc_radiodown)
-			!! radio_box.make_by_id (wd, Idc_radiobox)
-			!! find_static.make_by_id (wd, Id_findstatic)
-			!! replace_static.make_by_id (wd, Id_replacestatic)
-			!! close.make_by_id (wd, Idcancel)
+			create find_next_button.make_by_id (wd, Id_findnext)
+			create replace_button.make_by_id (wd, Id_replace)
+			create replace_all_button.make_by_id (wd, Id_replaceall)
+			create find_edit.make_by_id (wd, Idc_findedit)
+			create replace_edit.make_by_id (wd, Idc_replaceedit)
+			create word_check.make_by_id (wd, Idc_wordcheck)
+			create case_check.make_by_id (wd, Idc_casecheck)
+			create radio_up.make_by_id (wd, Idc_radioup)
+			create radio_down.make_by_id (wd, Idc_radiodown)
+			create radio_box.make_by_id (wd, Idc_radiobox)
+			create find_static.make_by_id (wd, Id_findstatic)
+			create replace_static.make_by_id (wd, Id_replacestatic)
+			create close.make_by_id (wd, Idcancel)
 			activate
 		end
 

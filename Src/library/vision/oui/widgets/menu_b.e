@@ -18,7 +18,7 @@ inherit
 			implementation, parent
 		end
 
-creation
+create
 
 	make, make_unmanaged
 
@@ -59,7 +59,7 @@ feature {NONE} -- Initialziation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			!MENU_B_IMP!implementation.make (Current, man, a_parent);
+			create {MENU_B_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;

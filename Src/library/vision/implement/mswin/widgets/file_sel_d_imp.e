@@ -38,7 +38,7 @@ inherit
 
 	WEL_OFN_CONSTANTS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -47,7 +47,7 @@ feature -- Initialization
 			-- Create a file selection dialog box
 		do
 			parent ?= oui_parent.implementation
-			!! private_attributes
+			create private_attributes
 			a_file_sel_dialog.set_dialog_imp (Current)
 			title := clone (a_file_sel_dialog.identifier)
 		end
@@ -127,7 +127,7 @@ feature -- Status report
 				end
 			end
 			if Result = Void then
-				!! Result.make (0)
+				create Result.make (0)
 			end
 		end
 
@@ -151,7 +151,7 @@ feature -- Status setting
 			wc ?= parent
 			if directory_selection then
 				if directory_dialog = Void then
-					!! directory_dialog.make (wc, Current)
+					create directory_dialog.make (wc, Current)
 				end
 				directory_dialog.set_title (title)
 				directory_dialog.set_search_directory (directory)
@@ -159,10 +159,10 @@ feature -- Status setting
 				directory_dialog.activate
 			else
 				if file_save_selection then
-					!WEL_SAVE_FILE_DIALOG! wel_file_dialog.make
+					create {WEL_SAVE_FILE_DIALOG} wel_file_dialog.make
 					wel_file_dialog.add_flag (ofn_hidereadonly)
 				else
-					!WEL_OPEN_FILE_DIALOG! wel_file_dialog.make
+					create {WEL_OPEN_FILE_DIALOG} wel_file_dialog.make
 					wel_file_dialog.add_flag (Ofn_createprompt)
 				end
 				wel_file_dialog.add_flag (Ofn_nochangedir)
@@ -178,7 +178,7 @@ feature -- Status setting
 				realized := True
 				wel_file_dialog.activate (wc)
 				if wel_file_dialog.selected then
-					!! directory.make (0)
+					create directory.make (0)
 					directory.set (wel_file_dialog.file_name,
 							1, wel_file_dialog.file_name_offset - 2)
 					ok_actions.execute (Current, Void)

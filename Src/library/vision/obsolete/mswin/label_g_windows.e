@@ -12,7 +12,7 @@ inherit
 
 	LABEL_G_I
  
-creation
+create
 	make
 
 end -- class LABEL_G_WINDOWS

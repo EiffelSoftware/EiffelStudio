@@ -11,7 +11,7 @@ inherit
         
         PUSH_BG_I
 
-creation
+create
         make
 
 end -- class PUSH_BG_WINDOWS

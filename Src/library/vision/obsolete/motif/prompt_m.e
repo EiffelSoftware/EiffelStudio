@@ -15,7 +15,7 @@ inherit
 
 	SELECTION_IMP
 
-creation
+create
 	make
  
 end -- class PROMPT_M

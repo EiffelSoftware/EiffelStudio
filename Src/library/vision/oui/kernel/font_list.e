@@ -16,7 +16,7 @@ inherit
 			{NONE} all
 		end;
 
-creation
+create
 
 	make
 
@@ -26,7 +26,7 @@ feature -- Initialization
 			-- Create a font list corresponding to `a_screen'.
 		do
 			screen := a_screen;
-			!FONT_LIST_IMP!implementation.make (Current)
+			create {FONT_LIST_IMP} implementation.make (Current)
 		end;
 	
 feature -- Access

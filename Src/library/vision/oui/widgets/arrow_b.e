@@ -18,7 +18,7 @@ inherit
 			set_left_alignment, set_center_alignment
 		end
 
-creation
+create
 
 	make, make_unmanaged
 
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			!ARROW_B_IMP!implementation.make (Current, man, a_parent);
+			create {ARROW_B_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;

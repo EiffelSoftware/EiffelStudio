@@ -14,7 +14,7 @@ inherit
 
 	G_ANY
 
-creation
+create
 
 	make, 
 	make_for_screen
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- (By default, font allocated will be for 
 			-- the last created screen).
 		do
-			!FONT_IMP!implementation.make (Current)
+			create {FONT_IMP} implementation.make (Current)
 		end;
 
 	make_for_screen (a_screen: SCREEN) is
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
 		do
-			!FONT_IMP!implementation.make_for_screen (Current, a_screen)
+			create {FONT_IMP} implementation.make_for_screen (Current, a_screen)
 		end;
 
 feature -- Access

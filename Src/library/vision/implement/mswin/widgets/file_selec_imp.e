@@ -31,7 +31,7 @@ inherit
 
 	WEL_LBN_CONSTANTS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -40,7 +40,7 @@ feature -- Initialization
 		do
 			managed := man
 			parent ?= oui_parent.implementation
-			!! private_attributes
+			create private_attributes
 			set_form_width (150)
 			set_form_height (100)
 		end
@@ -52,11 +52,11 @@ feature -- Initialization
 
 	realize_children is
 		do
-			!! ok_button.make (Current, "Ok", 160, 20, 20, 5, idok)
-			!! cancel_button.make (Current, "Cancel", 160, 40, 20, 5, idcancel)
-			!! help_button.make (Current, "Help", 160, 60, 20, 5, 1000)
-			!! directories_list.make (Current, 0, 0, 10, 10, 1001)
-			!! directory_label.make (Current, "", 0, 0, 10, 10, 101)
+			create ok_button.make (Current, "Ok", 160, 20, 20, 5, idok)
+			create cancel_button.make (Current, "Cancel", 160, 40, 20, 5, idcancel)
+			create help_button.make (Current, "Help", 160, 60, 20, 5, 1000)
+			create directories_list.make (Current, 0, 0, 10, 10, 1001)
+			create directory_label.make (Current, "", 0, 0, 10, 10, 101)
 			adjust_controls_width
 			adjust_controls_height
 			if help_button_hidden then
@@ -556,8 +556,8 @@ feature {NONE} -- Implementation
 			wel_dc: WEL_SCREEN_DC
 			wel_ft: WEL_SYSTEM_FONT
 		once
-			!! wel_ft.make
-			!! wel_dc
+			create wel_ft.make
+			create wel_dc
 			wel_dc.get
 			wel_dc.select_font (wel_ft)
 			Result := wel_dc.string_height ("I") * 7 // 4

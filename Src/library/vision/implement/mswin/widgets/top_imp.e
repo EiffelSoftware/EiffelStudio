@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 				elseif size_type = Size_restored or else size_type = Size_maximized then
 					shown := True
 					map_actions.execute (Current, Void)
-					!! resize_data.make (owner, a_width, a_height, size_type)
+					create resize_data.make (owner, a_width, a_height, size_type)
 					resize_actions.execute (Current, resize_data)
 				end
 			end
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 	null_class_icon: WEL_NULL_ICON is
 			-- Icon for drawing icon
 		once
-			!! Result
+			create Result
 		end
 
 	class_name: STRING is

@@ -130,7 +130,7 @@ feature -- Output
 				if arc_style = 0 then
 					loc_arc_points.extend (loc_arc_points.first)
 				elseif arc_style = 1 then
-					!!mel_center.make (center.x, center.y);
+					create mel_center.make (center.x, center.y);
 					loc_arc_points.extend (mel_center);
 					loc_arc_points.extend (loc_arc_points.first)
 				end;
@@ -189,21 +189,21 @@ feature -- Output
 			end;
 			cur := points.cursor;
 			from
-				!! list.make_filled (points_count);
+				create list.make_filled (points_count);
 				list.start;
 				points.start
 			until
 				points.after
 			loop
 				p := points.item
-				!! mp.make (p.x, p.y);
+				create mp.make (p.x, p.y);
 				list.replace (mp);
 				list.forth;
 				points.forth
 			end;
 			if not list.after then
 				p := points.first;
-				!! mp.make (p.x, p.y);
+				create mp.make (p.x, p.y);
 				list.replace (mp)
 			end;
 			check
@@ -265,7 +265,7 @@ feature -- Output
 			else
 				loc_arc_points := arc_points (center, radius1, radius2, angle1, angle2, orientation);
 				if arc_style = 1 then
-					!!mel_center.make (center.x, center.y);
+					create mel_center.make (center.x, center.y);
 					loc_arc_points.extend (mel_center);
 					loc_arc_points.extend (loc_arc_points.first)
 				end
@@ -283,14 +283,14 @@ feature -- Output
 		do
 			cur := points.cursor;
 			from
-				!! list.make_filled (points.count);
+				create list.make_filled (points.count);
 				list.start;
 				points.start
 			until
 				points.after
 			loop
 				p := points.item
-				!! mp.make (p.x, p.y);
+				create mp.make (p.x, p.y);
 				list.replace (mp);
 				list.forth;
 				points.forth
@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 			seg_count:= 4 * radius1.max(radius2) * angle2 * deg_rad_rate;
 			point_count := seg_count.rounded + 1;
 			angle_inc := - angle2 * deg_rad_rate / (point_count - 1);
-			!!Result.make_filled (point_count);
+			create Result.make_filled (point_count);
 			array := Result;
 			points_area := array.area;
 			loop_upper_bound := point_count - 1;
@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 				ell_y := radius2 * sine (loop_angle);
 				rot_x := center_x + ell_x * coso - ell_y * sino;
 				rot_y := center_y + ell_x * sino + ell_y * coso;
-				!!a_point.make (rot_x.rounded, rot_y.rounded);
+				create a_point.make (rot_x.rounded, rot_y.rounded);
 				points_area.put (a_point, i);
 				loop_angle := loop_angle + angle_inc;
 				i := i + 1
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 			coso, sino, point_x, point_y, half_r_width_coso, half_r_width_sino, half_r_height_coso, half_r_height_sino: DOUBLE
 			a_point: MEL_POINT
 		do
-			!! Result.make (4);
+			create Result.make (4);
 			coso := cosine (- orientation * Pi / 180); -- Ys are downward under Motif
 			sino := sine (- orientation * Pi / 180);
 			half_r_width_coso := r_width * coso / 2;
@@ -422,19 +422,19 @@ feature {NONE} -- Implementation
 			half_r_height_sino := r_height * sino / 2;
 			point_x := center.x + half_r_width_coso - half_r_height_sino;
 			point_y := center.y + half_r_width_sino + half_r_height_coso;
-			!! a_point.make (point_x.rounded, point_y.rounded);
+			create a_point.make (point_x.rounded, point_y.rounded);
 			Result.extend (a_point);
 			point_x := center.x - half_r_width_coso - half_r_height_sino;
 			point_y := center.y - half_r_width_sino + half_r_height_coso;
-			!! a_point.make (point_x.rounded, point_y.rounded);
+			create a_point.make (point_x.rounded, point_y.rounded);
 			Result.extend (a_point);
 			point_x := center.x - half_r_width_coso + half_r_height_sino;
 			point_y := center.y - half_r_width_sino - half_r_height_coso;
-			!! a_point.make (point_x.rounded, point_y.rounded);
+			create a_point.make (point_x.rounded, point_y.rounded);
 			Result.extend (a_point);
 			point_x := center.x + half_r_width_coso + half_r_height_sino;
 			point_y := center.y + half_r_width_sino - half_r_height_coso;
-			!! a_point.make (point_x.rounded, point_y.rounded);
+			create a_point.make (point_x.rounded, point_y.rounded);
 			Result.extend (a_point)
 		end;
 

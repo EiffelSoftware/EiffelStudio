@@ -20,7 +20,7 @@ inherit
 			is_label
 		end;
 
-creation
+create
 
 	make
 

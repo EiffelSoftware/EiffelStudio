@@ -28,7 +28,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -54,7 +54,7 @@ feature -- Element change
 				ac.set_work_proc_callback (Current, Void);
 				identifier := ac.last_id;
 			end;
-			!! command_info.make (a_command, an_argument);
+			create command_info.make (a_command, an_argument);
 			extend (command_info);
 		end;
 
@@ -66,7 +66,7 @@ feature -- Removal
 		local
 			command_info: COMMAND_EXEC;
 		do
-			!! command_info.make (a_command, an_argument);
+			create command_info.make (a_command, an_argument);
 			start;
 			search (command_info);
 			if not after then

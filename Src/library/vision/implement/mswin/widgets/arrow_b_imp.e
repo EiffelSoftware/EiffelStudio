@@ -13,7 +13,7 @@ inherit
 
 	OWNER_DRAW_BUTTON_WINDOWS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -21,7 +21,7 @@ feature -- Initialization
 	make (an_arrow_button: ARROW_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Make an arrow button.
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			identifier := an_arrow_button.identifier
 			managed := man
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			old_brush, new_brush: WEL_BRUSH
 		do
 			old_brush := a_dc.brush
-			!! new_brush.make_solid (wel_foreground_color)
+			create new_brush.make_solid (wel_foreground_color)
 			a_dc.select_brush (new_brush)			
 			a_dc.polygon (triangle (True))
 			if old_brush /= Void then
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			old_brush, new_brush: WEL_BRUSH
 		do
 			old_brush := a_dc.brush
-			!! new_brush.make_solid (wel_foreground_color)
+			create new_brush.make_solid (wel_foreground_color)
 			a_dc.select_brush (new_brush)
 			a_dc.polygon (triangle(False))
 			if old_brush /= Void then
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 				r.set_right ((r.right - 6).max (r.left))
 				r.set_bottom ((r.bottom - 6).max (r.top))
 			end
-			!! Result.make (1, 8)
+			create Result.make (1, 8)
 			Result.put (r.left ,1)
 			Result.put (r.left ,7)
 			if down  then

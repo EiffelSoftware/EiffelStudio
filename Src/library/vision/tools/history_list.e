@@ -29,7 +29,7 @@ inherit
 			{ANY} off, after, before, isfirst, islast, count, index, first, last, i_th, is_empty
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -38,7 +38,7 @@ feature -- Initialization
 			-- Create a history based on a list.
 		do
 			linked_list_make;
-			!! history_windows.make
+			create history_windows.make
 		end;
 
 feature -- Cursor movement

@@ -21,7 +21,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 
 	make
 
@@ -30,7 +30,7 @@ feature -- Initialization
 	make is
 			-- Create a task.
 		do
-			!TASK_IMP!implementation.make 
+			create {TASK_IMP} implementation.make 
 		end;
 
 feature -- Status report

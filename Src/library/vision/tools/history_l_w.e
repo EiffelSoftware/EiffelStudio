@@ -19,7 +19,7 @@ inherit
 			make as form_d_make
 		end
 
-creation
+create
 
 	make
 
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 			form_d_make (a_name, a_parent);
 			set_size (200,200);
 			set_fraction_base (3);
-			!! scroll_list.make ("list", Current);
-			!! undo_button.make ("undo", Current);
-			!! redo_button.make ("redo", Current);
-			!! close_button.make ("close", Current);
+			create scroll_list.make ("list", Current);
+			create undo_button.make ("undo", Current);
+			create redo_button.make ("redo", Current);
+			create close_button.make ("close", Current);
 			attach_top (scroll_list, 5);
 			attach_left (scroll_list, 5);
 			attach_right (scroll_list, 5);
@@ -193,19 +193,19 @@ feature {NONE} -- Implementation
 	undo_command: HISTORY_UNDO is
 			-- Command associated with the `undo' button.
 		once
-			!! Result
+			create Result
 		end;
 
 	redo_command: HISTORY_REDO is
 			-- Command associated with the `redo' button.
 		once
-			!! Result
+			create Result
 		end;
 
 	click_command: HISTORY_CLCK is
 			-- Command associated with a direct click in the scroll list.
 		once
-			!! Result
+			create Result
 		end;
 
 	close_button: PUSH_B;
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 	close_commmand: POPDOWN_COM is
 			-- Command associated with the `close' button.
 		once
-			!! Result
+			create Result
 		end;
 
 invariant

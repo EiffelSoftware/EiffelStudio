@@ -76,7 +76,7 @@ inherit
 			class_name
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -84,8 +84,8 @@ feature {NONE} -- Initialization
 	make (a_label: LABEL; man: BOOLEAN;  oui_parent: COMPOSITE) is
 			-- Initialize a label
 		do
-			!WEL_ANSI_VARIABLE_FONT! wel_font.make
-			!! private_attributes
+			create {WEL_ANSI_VARIABLE_FONT} wel_font.make
+			create private_attributes
 			parent ?= oui_parent.implementation
 			text := clone (a_label.identifier)
 			a_label.set_font_imp (Current)
@@ -145,7 +145,7 @@ feature -- Element change
 	set_font (a_font: FONT) is
 			-- Set the font for the text
 		do
-			{PRIMITIVE_IMP} Precursor (a_font)
+			Precursor {PRIMITIVE_IMP} (a_font)
 			adjust_label
 		end
 
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			if private_background_color /= Void then
 				paint_dc.set_background_color (background_brush.color)
 			else
-				!! wel_color_ref.make_system (Color_btnface)
+				create wel_color_ref.make_system (Color_btnface)
 				paint_dc.set_background_color (wel_color_ref)
 			end
 			paint_dc.draw_text (text, client_rect, alignment_type +
@@ -231,8 +231,8 @@ feature {NONE} -- Implementation
 			color_windows: COLOR_IMP
 			wel_color_ref: WEL_COLOR_REF
 		do
-			!! wel_color_ref.make_system (Color_windowtext)
-			!! private_foreground_color.make
+			create wel_color_ref.make_system (Color_windowtext)
+			create private_foreground_color.make
 			color_windows ?= private_foreground_color.implementation
 			color_windows.make_by_wel (wel_color_ref)
 			set_center_alignment

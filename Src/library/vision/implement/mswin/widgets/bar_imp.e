@@ -38,7 +38,7 @@ inherit
 
 	SIZEABLE_WINDOWS
 
-creation
+create
 
 	make
 
@@ -48,7 +48,7 @@ feature -- Initialization
 			-- Make a bar.
 		do
 			parent ?= oui_parent.implementation
-			!! private_attributes
+			create private_attributes
 			managed := man
 			set_x (parent.x)
 			set_y (parent.y)
@@ -125,7 +125,7 @@ feature -- Measurement
 		local
 			system_font: WEL_SYSTEM_FONT
 		do
-			!! system_font.make
+			create system_font.make
 			Result := system_font.log_font.height
 		end
 	

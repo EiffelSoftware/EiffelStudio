@@ -21,7 +21,7 @@ inherit
 			implementation, is_fontable
 		end;
 
-creation
+create
 
 	make, make_unmanaged, make_fixed_size, make_fixed_size_unmanaged
 
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			!SCROLLABLE_LIST_IMP!implementation.make (Current, man, is_fixed, a_parent);
+			create {SCROLLABLE_LIST_IMP} implementation.make (Current, man, is_fixed, a_parent);
 			implementation.set_widget_default;
 		end;
 

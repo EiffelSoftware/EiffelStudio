@@ -15,7 +15,7 @@ inherit
 			manage, unmanage
 		end
 
-creation
+create
 	make,
 	make_unmanaged
 

@@ -93,8 +93,8 @@ feature  -- Status report
 		do
 			Result := private_background_color
 			if Result = Void then
-				!! Result.make
-				!! wel_color.make_system (Color_btnface)
+				create Result.make
+				create wel_color.make_system (Color_btnface)
 				Result.set_red (wel_color.red * 256)
 				Result.set_green (wel_color.green * 256)
 				Result.set_blue (wel_color.blue * 256)
@@ -887,10 +887,10 @@ feature -- Removal
 		local
 			translation: TRANSLATION_COMMAND;
 		do
-			!! translation.make (a_translation, a_command, argument);
+			create translation.make (a_translation, a_command, argument);
 			remove_equivalent_translation (translation);
 			if translation_commands = Void then
-				!! translation_commands.make
+				create translation_commands.make
 			end;
 			translation_commands.extend (translation);
 			if translation.key_action then
@@ -1118,7 +1118,7 @@ feature -- Implementation
 			cd: CONTEXT_DATA
 		do
 			if exists then
-				!! cd.make (owner);
+				create cd.make (owner);
 				leave_actions.execute (Current, cd)
 			end
 		end;
@@ -1128,7 +1128,7 @@ feature -- Implementation
 		local
 			cd: CONTEXT_DATA
 		do
-			!! cd.make (owner);
+			create cd.make (owner);
 			enter_actions.execute (Current, cd)
 		end;
 
@@ -1142,7 +1142,7 @@ feature {NONE} -- Implementation
 		local
 			resize_data: RESIZE_CONTEXT_DATA
 		do
-			!! resize_data.make (owner, a_width, a_height, size_type)
+			create resize_data.make (owner, a_width, a_height, size_type)
 			resize_actions.execute (Current, resize_data)
 		end
 
@@ -1185,19 +1185,19 @@ feature {NONE} -- Implementation
 			e_x, e_y: INTEGER
 			ww: WEL_WINDOW
 		do
-			!! wp.make (x_pos, y_pos)
+			create wp.make (x_pos, y_pos)
 			ww ?= Current
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
-			!! cd.make (owner, x_pos, y_pos, e_x, e_y, buttons_state);
+			create cd.make (owner, x_pos, y_pos, e_x, e_y, buttons_state);
 			pointer_motion_actions.execute (Current, cd)
 		end;
 
 	double_click: WEL_DOUBLE_CLICK is
 			-- Windows double click
 		once
-			!! Result
+			create Result
 		ensure
 			result_exists: Result /= Void
 		end;
@@ -1205,7 +1205,7 @@ feature {NONE} -- Implementation
 	left_button_down_widget_implementation: CELL [WIDGET_IMP] is
 			-- Widget down with left button implementation
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		ensure
 			result_exists: Result /= Void
 		end;
@@ -1213,7 +1213,7 @@ feature {NONE} -- Implementation
 	middle_button_down_widget_implementation: CELL [WIDGET_IMP] is
 			-- Widget down with middle button implementation
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		ensure
 			result_exists: Result /= Void
 		end;
@@ -1221,7 +1221,7 @@ feature {NONE} -- Implementation
 	right_button_down_widget_implementation: CELL [WIDGET_IMP] is
 			-- Widget down with right button implementation
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		ensure
 			result_exists: Result /= Void
 		end;
@@ -1266,12 +1266,12 @@ feature {NONE} -- Implementation
 			e_x, e_y: INTEGER
 			ww: WEL_WINDOW
 		do
-			!! wp.make (x_pos, y_pos)
+			create wp.make (x_pos, y_pos)
 			ww ?= Current
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
-			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
+			create cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
 			left_button_motion_actions.execute (Current, cd)
 			--left_button_motion_actions.execute (left_button_down_widget, cd)
 		end;
@@ -1284,12 +1284,12 @@ feature {NONE} -- Implementation
 			e_x, e_y: INTEGER
 			ww: WEL_WINDOW
 		do
-			!! wp.make (x_pos, y_pos)
+			create wp.make (x_pos, y_pos)
 			ww ?= Current
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
-			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
+			create cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
 			middle_button_motion_actions.execute (Current, cd)
 		end;
 
@@ -1301,12 +1301,12 @@ feature {NONE} -- Implementation
 			e_x, e_y: INTEGER
 			ww: WEL_WINDOW
 		do
-			!! wp.make (x_pos, y_pos)
+			create wp.make (x_pos, y_pos)
 			ww ?= Current
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
-			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
+			create cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
 			right_button_motion_actions.execute (Current, cd)
 			--right_button_motion_actions.execute (right_button_down_widget, cd)
 		end;
@@ -1321,15 +1321,15 @@ feature {NONE} -- Implementation
 			e_x, e_y: INTEGER
 			ww: WEL_WINDOW
 		do
-			!! wp.make (a_x, a_y)
+			create wp.make (a_x, a_y)
 			ww ?= Current
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
 			left_button_down_implementation.set_item (true);
 			left_button_down_widget_implementation.replace (Current);
-			!! k.make_from_mouse_state (keys)
-			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
+			create k.make_from_mouse_state (keys)
+			create cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
 			left_button_press_actions.execute (Current, cd)
 		end;
 
@@ -1345,15 +1345,15 @@ feature {NONE} -- Implementation
 			ww: WEL_WINDOW
 		do
 			w := left_button_down_widget
-			!! wp.make (a_x, a_y)
+			create wp.make (a_x, a_y)
 			ww ?= Current
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
 			left_button_down_implementation.set_item (false);
 			left_button_down_widget_implementation.replace (void);
-			!! k.make_from_mouse_state (keys)
-			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
+			create k.make_from_mouse_state (keys)
+			create cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
 			left_button_release_actions.execute (Current, cd)
 		end;
 
@@ -1367,15 +1367,15 @@ feature {NONE} -- Implementation
 			e_x, e_y: INTEGER
 			ww: WEL_WINDOW
 		do
-			!! wp.make (a_x, a_y)
+			create wp.make (a_x, a_y)
 			ww ?= Current
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
 			right_button_down_implementation.set_item (true);
 			right_button_down_widget_implementation.replace (Current);
-			!! k.make_from_mouse_state (keys)
-			!! cd.make (owner, a_x, a_y, e_x, e_y, 3, buttons_state, k);
+			create k.make_from_mouse_state (keys)
+			create cd.make (owner, a_x, a_y, e_x, e_y, 3, buttons_state, k);
 			right_button_press_actions.execute (Current, cd)
 		end;
 
@@ -1391,14 +1391,14 @@ feature {NONE} -- Implementation
 			w: WIDGET_IMP
 		do
 			w := right_button_down_widget
-			!! wp.make (a_x, a_y)
+			create wp.make (a_x, a_y)
 			ww ?= Current
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
 			right_button_down_implementation.set_item (true);
-			!! k.make_from_mouse_state (keys)
-			!! cd.make (owner, a_x, a_y, e_x, e_y, 3, buttons_state, k);
+			create k.make_from_mouse_state (keys)
+			create cd.make (owner, a_x, a_y, e_x, e_y, 3, buttons_state, k);
 			right_button_down_widget_implementation.replace (void);
 			right_button_release_actions.execute (Current, cd)
 		end;
@@ -1413,8 +1413,8 @@ feature {NONE} -- Implementation
 				code_large_enough: code >= virtual_keys.lower
 				code_small_enough: code <= virtual_keys.upper
 			end
-			!! k.make_from_key_state
-			!! cd.make (owner, code, virtual_keys @ code, k);
+			create k.make_from_key_state
+			create cd.make (owner, code, virtual_keys @ code, k);
 			key_press_actions.execute (Current, cd)
 		end;
 
@@ -1428,8 +1428,8 @@ feature {NONE} -- Implementation
 				code_large_enough: code >= virtual_keys.lower
 				code_small_enough: code <= virtual_keys.upper
 			end
-			!! k.make_from_key_state
-			!! cd.make (owner, code, virtual_keys @ code, k);
+			create k.make_from_key_state
+			create cd.make (owner, code, virtual_keys @ code, k);
 			key_release_actions.execute (Current, cd)
 		end;
 
@@ -1438,7 +1438,7 @@ feature {NONE} -- Implementation
 		local
 			cd: CONTEXT_DATA
 		do
-			!! cd.make (owner);
+			create cd.make (owner);
 			destroy_actions.execute (Current, cd)
 		end;
 
@@ -1473,7 +1473,7 @@ feature {NONE} -- Implementation
 	grabbed_cursor_implementation: CELL [SCREEN_CURSOR_IMP] is
 			-- Grabbed cursor implementation
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		ensure
 			result_exists: Result /= Void
 		end;
@@ -1568,13 +1568,13 @@ feature {NONE} -- Implementation
 			and then wel_window /= Void and then wel_window.exists
 			then
 				pixmap_color ?= background_pixmap.implementation
-				!! wel_client_dc.make (wel_window)
+				create wel_client_dc.make (wel_window)
 				wel_client_dc.get
-				!! wel_bitmap.make_by_dib (wel_client_dc, pixmap_color.dib, dib_rgb_colors)
-				!! Result.make_by_pattern (wel_bitmap)
+				create wel_bitmap.make_by_dib (wel_client_dc, pixmap_color.dib, dib_rgb_colors)
+				create Result.make_by_pattern (wel_bitmap)
 				wel_client_dc.release
 			elseif private_background_color = Void then
-				!! Result.make_by_sys_color (Color_btnface + 1)
+				create Result.make_by_sys_color (Color_btnface + 1)
 			else
 				windows_color ?= private_background_color.implementation
 				Result := windows_color.brush

@@ -17,7 +17,7 @@ inherit
 			class_name
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,9 +25,9 @@ feature -- Initialization
 	make (a_radio_box: RADIO_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Make a radio box.
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
-			!! toggle_list.make
+			create toggle_list.make
 			initialize
 			only_one := True
 			managed := man

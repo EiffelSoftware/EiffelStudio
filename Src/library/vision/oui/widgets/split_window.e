@@ -12,7 +12,7 @@ inherit
 			implementation
 		end
 
-creation
+create
 	make_horizontal, make_vertical,
 	make_horizontal_with_proportion, make_vertical_with_proportion
 
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			widget_manager.new (Current, a_parent)
 			identifier:= clone (a_name)
 			is_vertical := vertical
-			!SPLIT_WINDOW_IMP! implementation.make (Current, a_parent, is_vertical)
+			create {SPLIT_WINDOW_IMP} implementation.make (Current, a_parent, is_vertical)
 			implementation.set_widget_default
 			set_default
 		ensure

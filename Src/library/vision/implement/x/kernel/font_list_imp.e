@@ -30,7 +30,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -51,7 +51,7 @@ feature  {NONE} -- Initialization
 			else
 				mel_display ?= a_screen.implementation
 			end;
-			!! list.make (mel_display, "*", 10000);
+			create list.make (mel_display, "*", 10000);
 			from	
 				list.make_filled (list.count);
 				list.start;	
@@ -60,9 +60,9 @@ feature  {NONE} -- Initialization
 				list.after
 			loop
 				if a_screen = Void then
-					!! font.make -- Use last open display
+					create font.make -- Use last open display
 				else
-					!! font.make_for_screen (a_font_list.screen);
+					create font.make_for_screen (a_font_list.screen);
 				end;
 				font_x ?= font.implementation;
 				font_x.only_set_name (list.item);

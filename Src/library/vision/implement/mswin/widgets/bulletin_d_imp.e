@@ -78,7 +78,7 @@ inherit
 
 	WEL_SIZE_CONSTANTS
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 	make (a_bulletin_d : BULLETIN_D; oui_parent: COMPOSITE) is
 			-- Create a bulletin for a dialog
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			a_bulletin_d.set_dialog_imp (Current)
 			managed := True

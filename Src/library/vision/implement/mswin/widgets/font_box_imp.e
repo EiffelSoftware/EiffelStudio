@@ -34,7 +34,7 @@ inherit
 
 	WEL_LBN_CONSTANTS
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -44,8 +44,8 @@ feature -- Initialization
 		do
 			parent ?= oui_parent.implementation
 			managed := man
-			!! fonts.make
-			!! private_attributes
+			create fonts.make
+			create private_attributes
 		end
 
 	build is
@@ -61,13 +61,13 @@ feature -- Initialization
 		local
 			dc: WEL_CLIENT_DC
 		do
-			!! example_text.make (Current, "AbCdEfGhIjKlMnOpQrStUvWxYz1234567890?.,!@#$&", 5, 110, 40, 40, 4)
-			!! font_names.make (Current, 5, 5, 10, 100, 1)
-			!! font_styles.make (Current, 15, 5, 10, 100, 2)
-			!! font_sizes.make (Current, 25, 5, 10, 100, 3)
-			!! ok.make (Current, "Ok", 0, 160, 20, 20, 5);
-			!! cancel.make (Current, "Cancel", 20, 160, 20, 20, 6)
-			!! apply.make (Current, "Apply", 40, 160, 20, 20, 7)
+			create example_text.make (Current, "AbCdEfGhIjKlMnOpQrStUvWxYz1234567890?.,!@#$&", 5, 110, 40, 40, 4)
+			create font_names.make (Current, 5, 5, 10, 100, 1)
+			create font_styles.make (Current, 15, 5, 10, 100, 2)
+			create font_sizes.make (Current, 25, 5, 10, 100, 3)
+			create ok.make (Current, "Ok", 0, 160, 20, 20, 5);
+			create cancel.make (Current, "Cancel", 20, 160, 20, 20, 6)
+			create apply.make (Current, "Apply", 40, 160, 20, 20, 7)
 			adjust_controls_width
 			adjust_controls_height
 			if apply_button_hidden then
@@ -79,7 +79,7 @@ feature -- Initialization
 			if ok_button_hidden then
 				hide_ok_button
 			end
-			!! dc.make (example_text)
+			create dc.make (example_text)
 			dc.get
 			get_fonts (dc, Void)
 			dc.release
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 		local
 			efw: ENUMERATED_FONT_WINDOWS
 		do
-			!! efw.make (elf.log_font.face_name)
+			create efw.make (elf.log_font.face_name)
 			if font_type /= Raster_fonttype then
 				efw.set_not_raster
 			end
@@ -374,7 +374,7 @@ feature {NONE} -- Implementation
 			dc: WEL_CLIENT_DC
 		do
 			from
-				!! dc.make (example_text)
+				create dc.make (example_text)
 				dc.get
 				fonts.start
 			until
@@ -581,9 +581,9 @@ feature {NONE} -- Implementation
 			else
 				wlf := efdw.find_log_font (font_sizes.i_th_text (0))
 			end
-			!! font.make
+			create font.make
 			fw ?= font.implementation
-			!! wf.make_indirect (wlf)
+			create wf.make_indirect (wlf)
 			fw.make_by_wel (wf)
 			example_text.set_font (wf)
 			example_text.invalidate
@@ -607,8 +607,8 @@ feature {NONE} -- Dispose feature
 
 	dispose is
 		do
-			{TERMINAL_IMP} Precursor
-			{WEL_FONT_FAMILY_ENUMERATOR} Precursor
+			Precursor {TERMINAL_IMP}
+			Precursor {WEL_FONT_FAMILY_ENUMERATOR}
 		end
 
 invariant

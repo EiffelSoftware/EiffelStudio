@@ -81,7 +81,7 @@ inherit
 
 	WEL_SIZE_CONSTANTS
 
-creation 
+create 
 	make
 
 feature -- Initialization
@@ -89,7 +89,7 @@ feature -- Initialization
 	make (a_form_d: FORM_D; oui_parent: COMPOSITE) is
 			-- Create the form dialog.
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation;
 			a_form_d.set_dialog_imp (Current);
 			private_title := a_form_d.identifier;
@@ -108,7 +108,7 @@ feature -- Initialization
 			-- Initialize the current form
 		do
 			fraction_base := 100
-			!! form_child_list.make
+			create form_child_list.make
 		end
 
 feature -- Access
@@ -213,7 +213,7 @@ feature -- Status setting
 			-- Show current form dialog and children.
 		do
 			set_enclosing_size
-			{FORM_IMP} Precursor
+			Precursor {FORM_IMP}
 		end
 
 	unrealize is
@@ -221,7 +221,7 @@ feature -- Status setting
 			if insensitive_list /= Void then
 				set_windows_sensitive
 			end
-			{FORM_IMP} Precursor
+			Precursor {FORM_IMP}
 		end
 
 	class_name: STRING is

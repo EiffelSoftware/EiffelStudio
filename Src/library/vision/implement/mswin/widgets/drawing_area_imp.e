@@ -87,7 +87,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -95,17 +95,17 @@ feature -- Initialization
 	make (a_drawing_area: DRAWING_AREA; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a drawing area
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			managed := man
 			set_line_width (1);
-			!! gc_fg_color.make_system (Color_windowtext)
+			create gc_fg_color.make_system (Color_windowtext)
 			if private_background_color /= Void then
-				!! gc_bg_color.make_rgb (private_background_color.red // 256,
+				create gc_bg_color.make_rgb (private_background_color.red // 256,
 					private_background_color.green // 256,
 					private_background_color.blue // 256)
 			else
-				!! gc_bg_color.make_system (Color_window)
+				create gc_bg_color.make_system (Color_window)
 			end
 			line_style := ps_solid
 		end
@@ -117,11 +117,11 @@ feature -- Initialization
 			client_dc: WEL_CLIENT_DC
 		do
 			if not realized then
-				!! background_pen.make (Ps_solid, 1, gc_bg_color)
+				create background_pen.make (Ps_solid, 1, gc_bg_color)
 				wc ?= parent
 				make_with_coordinates (wc, "", x, y, width.min (maximal_width),
 					height.min (maximal_height))
-				!! client_dc.make (Current)
+				create client_dc.make (Current)
 				client_dc.get
 				client_dc.set_background_color (gc_bg_color)
 				client_dc.select_brush (background_brush)
@@ -218,7 +218,7 @@ feature -- Basic operations
 			clip: CLIP
 			msg_box: WEL_MSG_BOX
 		do
-			!! printer_dc.make
+			create printer_dc.make
 			if printer_dc.exists then
 				printer_dc.start_document (a_name)
 				printer_dc.start_page
@@ -228,11 +228,11 @@ feature -- Basic operations
 				painting := True
 				old_dc := drawing_dc
 				drawing_dc := printer_dc
-				!! coord
+				create coord
 				coord.set (0, 0)
-				!! clip
+				create clip
 				clip.set (coord, width, height)
-				!! expose_data.make (owner, clip, 0)
+				create expose_data.make (owner, clip, 0)
 				expose_actions.execute (Current, expose_data)
 				unset_drawing_dc
 				printer_dc.end_page
@@ -240,7 +240,7 @@ feature -- Basic operations
 				drawing_dc := old_dc
 				painting := False
 			else
-				!! msg_box.make
+				create msg_box.make
 				msg_box.basic_message_box (Void, "No default printer set. Printing unavailable.", 
 					"Printer Not Set", Mb_iconstop + Mb_ok)
 			end
@@ -266,11 +266,11 @@ feature -- Basic operations
 			painting := True
 			old_dc := drawing_dc
 			drawing_dc := a_printer_dc
-			!! coord
+			create coord
 			coord.set (0, 0)
-			!! clip
+			create clip
 			clip.set (coord, width, height)
-			!! expose_data.make (owner, clip, 0)
+			create expose_data.make (owner, clip, 0)
 			expose_actions.execute (Current, expose_data)
 			unset_drawing_dc
 			a_printer_dc.end_page
@@ -290,18 +290,18 @@ feature -- Basic operations
 			coord: COORD_XY
 			clip: CLIP
 		do
-			!! virtual_dc.make_by_dc (drawing_dc)
-			!! virtual_bitmap.make_compatible (drawing_dc, width, height)
+			create virtual_dc.make_by_dc (drawing_dc)
+			create virtual_bitmap.make_compatible (drawing_dc, width, height)
 			virtual_dc.select_bitmap (virtual_bitmap)
 			painting := True
 			old_dc := drawing_dc
 			drawing_dc := virtual_dc
 			clear
-			!! coord
+			create coord
 			coord.set (0, 0)
-			!! clip
+			create clip
 			clip.set (coord, width, height)
-			!! expose_data.make (owner, clip, 0)
+			create expose_data.make (owner, clip, 0)
 			expose_actions.execute (Current, expose_data)
 			unset_drawing_dc
 			drawing_dc := old_dc
@@ -318,7 +318,7 @@ feature -- WEL
 			windows_color: COLOR_IMP
 		do
 			if private_background_color = Void then
-				!! Result.make_by_sys_color (Color_windowtext)
+				create Result.make_by_sys_color (Color_windowtext)
 			else
 				windows_color ?= private_background_color.implementation
 				Result := windows_color.brush
@@ -346,11 +346,11 @@ feature -- WEL
 					invalid_rect.top, invalid_rect.right, 
 					invalid_rect.bottom)
 			end
-			!! coord_xy
+			create coord_xy
 			coord_xy.set (invalid_rect.left, invalid_rect.top)
-			!! clip
+			create clip
 			clip.set (coord_xy, invalid_rect.width, invalid_rect.height)
-			!! expose_data.make (widget_oui, clip, 0)
+			create expose_data.make (widget_oui, clip, 0)
 			expose_actions.execute (Current, expose_data)
 		end
 

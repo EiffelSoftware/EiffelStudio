@@ -71,7 +71,7 @@ inherit
 
 	WEL_PS_CONSTANTS
 
-creation
+create
 
 	make
 
@@ -82,7 +82,7 @@ feature -- Initialization
 		local
 			local_menu: WEL_MENU
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			local_menu ?= parent
 			if local_menu /= Void then
@@ -170,7 +170,7 @@ feature -- Status setting
 				end
 				managed := flag
 			else
-				{PRIMITIVE_IMP} Precursor (flag)
+				Precursor {PRIMITIVE_IMP} (flag)
 			end
 		end
 
@@ -299,7 +299,7 @@ feature -- Status setting
 	set_double_dashed_line is
 			-- Set separator to be double dashed.
 		do
-			!! pen.make (Ps_dash, 1, pen_color)
+			create pen.make (Ps_dash, 1, pen_color)
 			double := True
 			if exists then
 				invalidate
@@ -312,7 +312,7 @@ feature -- Status setting
 	set_double_line is
 			-- Set separator to be double line.
 		do
-			!! pen.make (Ps_solid, 1, pen_color)
+			create pen.make (Ps_solid, 1, pen_color)
 			double := True
 			if exists then
 				invalidate
@@ -348,7 +348,7 @@ feature -- Status setting
 	set_no_line is
 			-- Set separator to have no line.
 		do
-			!! pen.make (Ps_null, 1, pen_color)
+			create pen.make (Ps_null, 1, pen_color)
 			if exists then
 				invalidate
 			end
@@ -357,7 +357,7 @@ feature -- Status setting
 	set_single_dashed_line is
 			-- Set separator to be a single dashed line.
 		do
-			!! pen.make (Ps_dash, 1, pen_color)
+			create pen.make (Ps_dash, 1, pen_color)
 			double := False
 			if exists then
 				invalidate
@@ -367,7 +367,7 @@ feature -- Status setting
 	set_single_line is
 			-- Set separator to be a single line.
 		do
-			!! pen.make (Ps_solid, 1, pen_color)
+			create pen.make (Ps_solid, 1, pen_color)
 			double := False
 			if exists then
 				invalidate
@@ -413,8 +413,8 @@ feature {NONE} -- Implementation
 			color: WEL_COLOR_REF
 		do
 			if w3d_separator then
-				!! color.make_system (Color_btnshadow)
-				!! a_pen.make (Ps_solid, 1, color)
+				create color.make_system (Color_btnshadow)
+				create a_pen.make (Ps_solid, 1, color)
 				a_paint_dc.select_pen (a_pen)
 
 				if is_horizontal then
@@ -422,8 +422,8 @@ feature {NONE} -- Implementation
 				else
 					a_paint_dc.line (width // 2 - 1, 0, width // 2 - 1, height)
 				end
-				!! color.make_system (Color_btnhighlight)
-				!! a_pen.make (Ps_solid, 1, color)
+				create color.make_system (Color_btnhighlight)
+				create a_pen.make (Ps_solid, 1, color)
 				a_paint_dc.select_pen (a_pen)
 
 				if is_horizontal then
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 	c_background: WEL_COLOR_REF is
 			-- Color background
 		once
-			!! Result.make_system (Color_window)
+			create Result.make_system (Color_window)
 		end
 
 	pen_color: WEL_COLOR_REF is
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 	black_color: WEL_COLOR_REF is
 			-- Black color
 		once
-			!! Result.make_rgb (0, 0, 0)
+			create Result.make_rgb (0, 0, 0)
 		ensure
 			result_exists: Result /= Void
 		end
@@ -484,7 +484,7 @@ feature {NONE} -- Implementation
 	set_default_pen is
 			-- Set default pen to draw separator.
 		do
-			!! pen.make (Ps_solid, 1, black_color)
+			create pen.make (Ps_solid, 1, black_color)
 		end
 
 	class_name: STRING is

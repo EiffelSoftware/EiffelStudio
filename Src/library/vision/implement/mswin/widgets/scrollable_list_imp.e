@@ -94,7 +94,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -103,7 +103,7 @@ feature -- Initialization
 			oui_parent: COMPOSITE) is
 		do
 			ll_make (10)
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			managed := is_managed
 			private_attributes.set_width (100)
@@ -251,7 +251,7 @@ feature  -- Access
 		do
 			if selected then
 				if multiple_selection then
-					!! Result.make
+					create Result.make
 					from
 						private_selected_positions.start
 					until
@@ -261,7 +261,7 @@ feature  -- Access
 						private_selected_positions.forth
 					end
 				else
-					!! Result.make
+					create Result.make
 					Result.extend (i_th (private_selected_position))
 				end
 			end
@@ -925,7 +925,7 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			!! msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Void, "Cannot allocate enough memory to%
 				% perform request!", "Error")
 		end
@@ -978,7 +978,7 @@ feature {NONE} -- Implementation
 			wc: WEL_COMPOSITE_WINDOW
 		do
 			if multiple_selection then
-				!! private_selected_positions.make
+				create private_selected_positions.make
 			end
 			wc ?= parent
 			wel_make (wc, x, y, width, height, id_default)

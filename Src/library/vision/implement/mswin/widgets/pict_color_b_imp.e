@@ -27,7 +27,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -35,7 +35,7 @@ feature -- Initialization
 	make (a_picture_color_button: PICT_COLOR_B; oui_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create the pict color b
 		do
-			!! private_attributes
+			create private_attributes
 			parent ?= oui_parent.implementation
 			managed := True
 			a_picture_color_button.set_font_imp (Current)
@@ -97,7 +97,7 @@ feature -- Element change
 
 	realize is
 		do
-			{OWNER_DRAW_BUTTON_WINDOWS} Precursor;
+			Precursor{OWNER_DRAW_BUTTON_WINDOWS} ;
 			invalidate
 		end
 
@@ -121,12 +121,12 @@ feature {NONE} -- Implementation
 			e_x, e_y: INTEGER;
 			ww: WEL_WINDOW
 		do
-			!! wp.make (x_pos, y_pos);
+			create wp.make (x_pos, y_pos);
 			ww ?= Current;
 			wp.client_to_screen (ww);
 			e_x := wp.x;
 			e_y := wp.y;
-			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state);
+			create cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state);
 			left_button_motion_actions.execute (Current, cd)
 			if has_capture then
 				if is_being_pressed and not in_button_area (x_pos, y_pos) then
@@ -158,8 +158,8 @@ feature {NONE} -- Implementation
 			e_x, e_y: INTEGER
 			ww: WEL_WINDOW
 		do
-			!! k.make_from_mouse_state (keys)
-			!! wp.make (a_x, a_y)
+			create k.make_from_mouse_state (keys)
+			create wp.make (a_x, a_y)
 			ww ?= Current
 			wp.client_to_screen (ww)
 			e_x := wp.x
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			if exists then
 				invalidate
 			end
-			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
+			create cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
 			left_button_press_actions.execute (Current, cd)
 		end
 
@@ -187,15 +187,15 @@ feature {NONE} -- Implementation
 			ww: WEL_WINDOW
 		do
 			w := left_button_down_widget
-			!! wp.make (a_x, a_y)
+			create wp.make (a_x, a_y)
 			ww ?= Current
 			wp.client_to_screen (ww)
 			e_x := wp.x
 			e_y := wp.y
 			left_button_down_implementation.set_item (false);
 			left_button_down_widget_implementation.replace (Void);
-			!! k.make_from_mouse_state (keys)
-			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
+			create k.make_from_mouse_state (keys)
+			create cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
 			left_button_release_actions.execute (Current, cd)
 			if has_capture then
 				wel_release_capture
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 				check
 					dib_exists: dib /= Void
 				end
-				!! bitmap.make_by_dib (a_dc, dib, dib_rgb_colors)
+				create bitmap.make_by_dib (a_dc, dib, dib_rgb_colors)
 				if alignment_type = center_alignment_type then
 					pixmap_x := (3 + ((internal_width - bitmap.width) // 2))
 					pixmap_y := (3 + ((internal_height - bitmap.height) // 2))
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 				check
 					dib_exists: dib /= Void
 				end
-				!! bitmap.make_by_dib (a_dc, dib, dib_rgb_colors)
+				create bitmap.make_by_dib (a_dc, dib, dib_rgb_colors)
 				if alignment_type = center_alignment_type then
 					pixmap_x := (2 + ((internal_width - bitmap.width) // 2))
 					pixmap_y := (2 + ((internal_height - bitmap.height) // 2))

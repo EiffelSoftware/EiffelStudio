@@ -21,7 +21,7 @@ feature -- Access
 	history: HISTORY_LIST is
 			-- Trace of previously executed commands
 		once
-			!! Result.make
+			create Result.make
 		ensure then
 			result_not_void: Result /= Void
 		end

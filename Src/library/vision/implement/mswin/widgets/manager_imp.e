@@ -21,8 +21,7 @@ feature --Status setting
 	
 	realize is
 		do
-			{COMPOSITE_IMP} Precursor
-
+			Precursor {COMPOSITE_IMP}
 				-- set initial focus
 			if initial_focus /= Void then
 				initial_focus.wel_set_focus

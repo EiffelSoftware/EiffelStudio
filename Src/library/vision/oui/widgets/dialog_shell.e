@@ -21,7 +21,7 @@ inherit
 			implementation as wm_implementation
 		end
 
-creation
+create
 
 	make
 	
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			!DIALOG_SHELL_IMP!implementation.make (current, a_parent);
+			create {DIALOG_SHELL_IMP} implementation.make (current, a_parent);
 			set_default
 		ensure
 			parent_set: parent = a_parent;

@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			elseif type = MotionNotify then
 				Result := motion_notify_data (widget_oui, event)
 			else
-				!! Result.make (widget_oui)
+				create Result.make (widget_oui)
 			end
 		end;
 
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			!! Result.make (5);
+			create Result.make (5);
 			Result.put (and_masks (state, Button1Mask), 1);
 			Result.put (and_masks (state, Button2Mask), 2);
 			Result.put (and_masks (state, Button3Mask), 3);
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 			i: INTEGER;
 			mod: ARRAY [BOOLEAN]
 		do
-			!! Result.make (5);
+			create Result.make (5);
 			Result.set_shift_pressed (and_masks (state, ShiftMask));
 			Result.set_control_pressed (and_masks (state, ControlMask));
 			Result.set_lock_pressed (and_masks (state, LockMask));
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			e: MEL_BUTTON_EVENT
 		do
 			e ?= event;
-			!!Result.make (widget_oui, e.x, e.y, e.x_root, e.y_root, e.button_number, 
+			create Result.make (widget_oui, e.x, e.y, e.x_root, e.y_root, e.button_number, 
 					buttons_state (e.state), modifiers_state (e.state))
 		end;
 
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			e: MEL_BUTTON_EVENT	
 		do
 			e ?= event;
-			!!Result.make (widget_oui, e.x, e.y, e.x_root, e.y_root, e.button_number, 
+			create Result.make (widget_oui, e.x, e.y, e.x_root, e.y_root, e.button_number, 
 					buttons_state (e.state), modifiers_state (e.state))
 		end;
 
@@ -104,11 +104,11 @@ feature {NONE} -- Implementation
 			e: MEL_EXPOSE_EVENT
 		do
 			e ?= event;
-			!!coord;
+			create coord;
 			coord.set (e.x, e.y);
-			!!clip;
+			create clip;
 			clip.set (coord, e.width, e.height);
-			!!Result.make (widget_oui, clip, e.count);
+			create Result.make (widget_oui, clip, e.count);
 		end;
 
 	key_press_data (widget_oui: WIDGET; event: MEL_EVENT): KYPRESS_DATA is
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			e: MEL_KEY_EVENT
 		do
 			e ?= event;
-			!! Result.make (widget_oui, 
+			create Result.make (widget_oui, 
 					e.keycode, 
 					e.string,
 					modifiers_state (e.state));
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			e: MEL_KEY_EVENT
 		do
 			e ?= event;
-			!! Result.make (widget_oui, 
+			create Result.make (widget_oui, 
 					e.keycode, 
 					e.string,
 					modifiers_state (e.state))
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			e: MEL_MOTION_EVENT
 		do
 			e ?= event;
-			!! Result.make (widget_oui,
+			create Result.make (widget_oui,
 					e.x, e.y, e.x_root, e.y_root,
 					buttons_state (e.state))
 		end;

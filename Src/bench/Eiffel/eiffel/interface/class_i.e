@@ -38,6 +38,9 @@ feature
 	base_name: STRING;
 			-- Base file name of the class
 
+	hidden: BOOLEAN;
+			-- Is the class hidden in the precompilation sets?
+
 	file_name: STRING is
 			-- Full file name of the class
 		local
@@ -104,7 +107,8 @@ end;
 			optimize_level := No_optimize;
 			debug_level := No_debug;
 			visible_level := Visible_default;
-			dynamic_calls := No_dynamic
+			dynamic_calls := No_dynamic;
+			hidden := False
 		end;
 
 	set_class_name (s: STRING) is
@@ -230,7 +234,7 @@ feature -- Compiled class
 			Result := not (compiled_class = Void);
 		end; -- compiled
 
-feature -- Comveniences
+feature -- Setting
 
 	set_assertion_level (l: ASSERTION_I) is
 			-- Assign `l' to `assertion_level'.
@@ -248,6 +252,19 @@ end;
 			-- Assign `t' to `trace_level'.
 		do
 			trace_level := t;
+		end;
+
+	set_hide_level (b: BOOLEAN) is
+			-- Assign `b' to `hidden'.
+		do
+			hidden := b
+debug ("HIDE_OPTION")
+	io.error.putstring ("class name: ");
+	io.error.putstring (class_name);
+	io.error.putstring (" is_hidden: ");
+	io.error.putbool (hidden);
+	io.error.new_line;
+end;
 		end;
 
 	set_optimize_level (o: OPTIMIZE_I) is
@@ -332,6 +349,7 @@ end;
 			visible_level := other.visible_level;
 			visible_name := other.visible_name;
 			dynamic_calls := other.dynamic_calls
+			hidden := other.hidden;
 		end;
 
 feature -- Comparison

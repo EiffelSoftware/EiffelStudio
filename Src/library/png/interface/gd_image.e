@@ -214,17 +214,6 @@ feature -- Drawing
 			draw_line(gp2.get_x,gp2.get_y,gp1.get_x,gp1.get_y,color_index) 
 		end
 
-	draw_rectangle (x1,y1,x2,y2,color_index: INTEGER) is
-			-- Draw a rectangle with (x1,y1) and (x2,y2) the coords of 
-			-- two of the opposite summits of the rectangle.
-		require
-			color_index_possible: color_index >=0 and color_index <=255 and then color_index <= color_index_bound
-			point1_inside_the_image:coordinates_within_the_image(x1,y1)
-			point2_inside_the_image:coordinates_within_the_image(x2,y2)
-		do
-			gdImageRectangle(image,x1,y1,x2,y2,color_index)	
-		end
-
 	set_background_color(r,g,b: INTEGER) is
 		-- Set the background color of Current.
 		-- This has to be set before any other color operations.
@@ -293,13 +282,6 @@ feature {NONE} -- Externals
 			"c"
 		alias
 			"gdImageDashedLine"
-		end
-
-	gdImageRectangle(p: POINTER; x1,y1,x2,y2: INTEGER; color_index: INTEGER) is
-		external
-			"c"
-		alias
-			"gdImageRectangle"
 		end
 
 	gdImagePng(p: POINTER; f: POINTER) is

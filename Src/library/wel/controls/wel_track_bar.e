@@ -67,6 +67,23 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	line: INTEGER is
+			-- Number of scroll units per line
+			-- Used when the user use the arrow keys.
+		do
+			Result := cwin_send_message_result (item,
+					Tbm_getlinesize, 0, 0)
+		end
+
+	page: INTEGER is
+			-- Number of scroll units per page
+			-- Used when the user use the page-up,
+			-- page down key or click on the range.
+		do
+			Result := cwin_send_message_result (item,
+					Tbm_getpagesize, 0, 0)
+		end
+
 	position: INTEGER is
 			-- Current position
 		do
@@ -113,6 +130,20 @@ feature -- Status report
 		end
 
 feature -- Element change
+
+	set_line (line_magnitude: INTEGER) is
+			-- Set `line' with `line_magnitude'.
+		do
+			cwin_send_message (item, Tbm_setlinesize,
+				0, line_magnitude)
+		end
+
+	set_page (page_magnitude: INTEGER) is
+			-- Set `page' with `page_magnitude'.
+		do
+			cwin_send_message (item, Tbm_setpagesize,
+				0, page_magnitude)
+		end
 
 	set_position (new_position: INTEGER) is
 			-- Set `position' with `new_position'

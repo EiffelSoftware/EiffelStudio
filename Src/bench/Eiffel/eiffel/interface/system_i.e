@@ -3220,6 +3220,7 @@ end
 			dir_name: DIRECTORY_NAME
 			cecil_file, header_file: INDENT_FILE
 			buffer, header_buffer: GENERATION_BUFFER
+			l_has_visible: BOOLEAN
 		do
 				-- Clear buffers for current generation
 			buffer := generation_buffer
@@ -3244,6 +3245,7 @@ end
 				a_class := class_array.item (i)
 				if a_class /= Void then
 					if a_class.has_visible then
+						l_has_visible := True
 						a_class.generate_cecil
 					end
 				end
@@ -3272,24 +3274,29 @@ end
 				header_buffer.put_in_file (header_file)
 				header_file.close
 
-				buffer.putstring ("%Nstruct ctable egc_ce_rname_init[] = {%N")
-				from
-					i := 1
-					nb := Type_id_counter.value
-				until
-					i > nb
-				loop
-					cl_type := class_types.item (i)
-					if cl_type /= Void then
-						cl_type.generate_cecil (buffer)
-					else
-							-- FIXME
-						buffer.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
+				if not l_has_visible then
+					buffer.putstring ("%Nstruct ctable egc_ce_rname_init[")
+					buffer.putstring (Type_id_counter.value.out)
+					buffer.putstring ("];%N")
+				else
+					buffer.putstring ("%Nstruct ctable egc_ce_rname_init[] = {%N")
+					from
+						i := 1
+						nb := Type_id_counter.value
+					until
+						i > nb
+					loop
+						cl_type := class_types.item (i)
+						if cl_type /= Void and then cl_type.associated_class.has_visible then
+							cl_type.generate_cecil (buffer)
+						else
+							buffer.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
+						end
+						buffer.putstring (",%N")
+						i := i + 1
 					end
-					buffer.putstring (",%N")
-					i := i + 1
+					buffer.putstring ("};%N")
 				end
-				buffer.putstring ("};%N")
 			end
 
 			create_cecil_tables

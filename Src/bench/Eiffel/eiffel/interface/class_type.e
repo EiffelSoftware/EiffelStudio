@@ -1534,30 +1534,28 @@ feature -- Cecil generation
 
 	generate_cecil (buffer: GENERATION_BUFFER) is
 			-- Generation of the Cecil table
+		require
+			has_visible: associated_class.has_visible
 		local
 			final_mode: BOOLEAN
 		do
 			final_mode := byte_context.final_mode
-			if associated_class.has_visible then
-				buffer.putchar ('{')
-				buffer.putstring ("(int32) ")
-				buffer.putint (associated_class.visible_table_size)
-				if final_mode then
-					buffer.putstring (", sizeof(char *(*)()), cl")
-				else
-					buffer.putstring (", sizeof(int32), cl")
-				end
-				buffer.putint (associated_class.class_id)
-				buffer.putstring (", (char *) cr")
-				if final_mode then
-					buffer.putint (type_id)
-				else
-					buffer.putint (associated_class.class_id)
-				end
-				buffer.putchar ('}')
+			buffer.putchar ('{')
+			buffer.putstring ("(int32) ")
+			buffer.putint (associated_class.visible_table_size)
+			if final_mode then
+				buffer.putstring (", sizeof(char *(*)()), cl")
 			else
-				buffer.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
+				buffer.putstring (", sizeof(int32), cl")
 			end
+			buffer.putint (associated_class.class_id)
+			buffer.putstring (", (char *) cr")
+			if final_mode then
+				buffer.putint (type_id)
+			else
+				buffer.putint (associated_class.class_id)
+			end
+			buffer.putchar ('}')
 		end
 
 feature -- Byte code generation

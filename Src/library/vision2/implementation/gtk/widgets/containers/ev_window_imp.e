@@ -60,6 +60,7 @@ feature -- Initialization
 			
 			C.gtk_window_set_policy (c_object, 0, 1, 0) -- allow_shrink = False, allow_grow = True, auto_shrink = False
 			accel_group := C.gtk_accel_group_new
+	
 			C.gtk_window_add_accel_group (c_object, accel_group)
 			default_height := -1
 			default_width := -1
@@ -497,6 +498,10 @@ feature {NONE} -- Implementation
 		do
 			Precursor
 			is_initialized := False
+			set_title("")
+			accel_group := C.gtk_accel_group_new
+			accel_group := C.gtk_accel_group_ref (accel_group)
+			C.gtk_window_add_accel_group (c_object, accel_group)
 			create upper_bar
 			create lower_bar
 			set_maximum_size (32000, 32000)

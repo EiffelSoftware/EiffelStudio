@@ -125,8 +125,6 @@ feature
 	finish is
 			-- Move cursor to last index
 			-- (no effect if chain is empty).
-		require
-			empty_convention: empty implies before
 		deferred
 		ensure
 			at_last: not empty implies islast

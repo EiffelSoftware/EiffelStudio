@@ -55,7 +55,9 @@ feature
 			status: BOOLEAN;
 			uf: RAW_FILE;
 			make_f: PLAIN_TEXT_FILE;
-			message: STRING
+			message: STRING;
+			kept_objects: LINKED_SET [STRING];
+			debug_text: TEXT_WINDOW
 		do
 			if Run_info.is_running then
 				if Run_info.is_stopped then
@@ -66,7 +68,10 @@ debug
 end;
 						-- Ask the application to wean objects the
 						-- debugger doesn't need anymore.
-					keep_objects (window_manager.object_win_mgr.objects_kept);
+					kept_objects := window_manager.object_win_mgr.objects_kept;
+					debug_text ?= debug_window;
+					kept_objects.merge (debug_text.kept_objects);
+					keep_objects (kept_objects);
 
 					status := cont_request.send_byte_code;
 					if status then
@@ -93,10 +98,6 @@ debug
 	io.error.putstring (generator);
 	io.error.putstring (": Start execution%N");
 end;
-
-					-- Get rid of object stones from previous execution.
-					-- (`is_running' must be false).
-				window_manager.object_win_mgr.hang_on;
 
 				if project_tool.initialized and then 
 					System.system_name /= Void 
@@ -126,6 +127,7 @@ end;
 								message.append (Makefile_SH);
 								message.append (" is more recent than the application.%N%
 												%Do you want to compile the generated C code?");
+								warner.set_window (text_window);
 								warner.custom_call (Current, message, " OK ", Void, "Cancel");
 							else
 								application_name.extend (' ');
@@ -135,9 +137,11 @@ end;
 							end;
 						elseif make_f.exists then
 								-- There is no application
+							warner.set_window (text_window);
 							warner.custom_call (Current, "No application was generated.%N%
 										%Do you want to compile the generated C code?", " OK ", Void, "Cancel");
 						else
+							warner.set_window (text_window);
 							warner.gotcha_call ("You must compile a system first%N");
 						end;
 					end

@@ -40,7 +40,7 @@ feature {COMPILER_EXPORTER} -- Access
 			-- class will be generated
 		do
 			if System.in_final_mode then
-				Result := id // System.makefile_generator.Packet_number + 1
+				Result := id // System.makefile_generator.Final_packet_number + 1
 			else
 				Result := internal_id // System.makefile_generator.Packet_number + 1
 			end

@@ -41,7 +41,10 @@ feature -- Attributes
 			-- for system object files
 
 	Packet_number: INTEGER is 33
-			-- Maximum number of files in a single linking phase
+			-- Maximum number of files in a single linking phase in Workbench mode.
+	
+	Final_packet_number: INTEGER is 100
+			-- Maximum number of files in a single linking phase in Final mode.
 
 	System_packet_number: INTEGER is 100
 			-- Maximum number of files in a single linking phase
@@ -62,7 +65,11 @@ feature -- Initialization
 			basket_nb, i: INTEGER
 			basket: LINKED_LIST [STRING]
 		do
-			basket_nb := 1 + System.static_type_id_counter.current_count // Packet_number
+			if System.in_final_mode then
+				basket_nb := 1 + System.static_type_id_counter.current_count // Final_packet_number
+			else
+				basket_nb := 1 + System.static_type_id_counter.current_count // Packet_number
+			end
 			!!object_baskets.make (1, basket_nb)
 			from i := 1 until i > basket_nb loop
 				!!basket.make

@@ -495,6 +495,10 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					end
 					assemblies.forth
 				end
+				
+				if not l_new_assemblies.is_empty or not l_local_assemblies.is_empty then
+					degree_output.put_string ("Importing .NET metadata...")
+				end
 
 					-- Import data for newly introduced assemblies.
 					-- FIXME: Manu 05/03/2002: we should do something here so that

@@ -84,6 +84,9 @@ endiff
 iff defined NO_NEW_EC then
 	echo No new version of EiffelStudio will be compiled
 endiff
+iff defined BUILD_ENTERPRISE_ONLY then
+	echo Only EiffelStudio Enterprise will be build
+endiff
 iff defined NO_DOCUMENTATION then
 	echo No documentation will be generated
 endiff

@@ -460,7 +460,8 @@ feature -- Update
 				read_only_text_window.hide	
 			end
 		ensure
-			editable_text_shown: editable_text_window.shown
+			editable_text_shown: read_only_text_window /= editable_text_window implies
+					editable_text_window.shown
 		end
 
 	update_save_symbol is

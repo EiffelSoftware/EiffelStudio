@@ -4,8 +4,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	GB_ACCESSIBLE_OBJECT_EDITOR
+	
+inherit
+	
+	GB_CONSTANTS
 
 feature {NONE} -- Implementation
 
@@ -148,6 +152,7 @@ feature {NONE} -- Implementation
 			editor: GB_OBJECT_EDITOR
 		do
 			create window
+			window.set_height (Default_floating_object_editor_height)
 			window.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_object_window @ 1)
 			window.close_request_actions.extend (agent remove_floating_object_editor (window))
 			window.close_request_actions.extend (agent window.destroy)
@@ -156,6 +161,7 @@ feature {NONE} -- Implementation
 			floating_object_editors.extend (editor)
 			editor.set_object (object)
 			window.show
+			window.set_maximum_width (window.width)
 		end
 		
 feature {NONE} -- Implementation

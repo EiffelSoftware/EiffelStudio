@@ -23,7 +23,7 @@ creation
 
 feature {NONE} -- Access
 
-	level: INTEGER is
+	position: INTEGER is
 			-- Position of the splitter in the window
 		do
 			if child1 /= Void and then child1.child_cell /= Void then
@@ -36,18 +36,18 @@ feature {NONE} -- Access
 	splitter_region: WEL_REGION is
 			-- A region that recover the splitter
 		do
-			!! Result.make_rect (level, 0, level + size, height)
+			!! Result.make_rect (position, 0, position + size, height)
 		end
 
-	minimum_level: INTEGER is
-			-- Minimum level that the splitter is allowed to go
+	minimum_position: INTEGER is
+			-- Minimum position that the splitter is allowed to go
 			-- Depends of the first child minimum size
 		do
 			Result := 0
 		end	
 
-	maximum_level: INTEGER is
-			-- Maximum level that the splitter is allowed to go
+	maximum_position: INTEGER is
+			-- Maximum position that the splitter is allowed to go
 			-- Depends of the second child minimum size
 		do
 			Result := width - size
@@ -75,16 +75,16 @@ feature -- Element change
 
 feature {NONE} -- Basic operation
 
-	resize_children (a_level: INTEGER) is
-			-- Resize the two children according to the new level of the 
+	resize_children (a_position: INTEGER) is
+			-- Resize the two children according to the new position of the 
 			-- splitter.
 		do
 			if child1 /= Void then
-				child1.parent_ask_resize (a_level, height)
+				child1.parent_ask_resize (a_position, height)
 			end
 			if child2 /= Void then
-				child2.set_move_and_size (a_level + size, 0, 
-					(width - a_level - size).max (0), height)
+				child2.set_move_and_size (a_position + size, 0, 
+					(width - a_position - size).max (0), height)
 			end
 			refresh
 		end
@@ -92,27 +92,27 @@ feature {NONE} -- Basic operation
 feature {NONE} -- Implementation
 
 	draw_split is
-			-- draw a vertical split at `level'.
+			-- draw a vertical split at `position'.
 		local
 			ldc: WEL_CLIENT_DC
-			llevel: INTEGER
+			lposition: INTEGER
 		do
 			-- Some local variable for speed
 			ldc := dc
-			llevel := level
+			lposition := position
 			-- Drawing
 			ldc.get
 			ldc.select_pen (face_pen)
-			ldc.line (llevel, 0, llevel, height)
+			ldc.line (lposition, 0, lposition, height)
 			ldc.select_pen (highlight_pen)
-			ldc.line (llevel + 1, 0, llevel + 1, height)
+			ldc.line (lposition + 1, 0, lposition + 1, height)
 			ldc.select_pen (face_pen)
-			ldc.line (llevel + 2, 0, llevel + 2, height)
-			ldc.line (llevel + 3, 0, llevel + 3, height)
+			ldc.line (lposition + 2, 0, lposition + 2, height)
+			ldc.line (lposition + 3, 0, lposition + 3, height)
 			ldc.select_pen (shadow_pen)
-			ldc.line (llevel + 4, 0, llevel + 4, height)
+			ldc.line (lposition + 4, 0, lposition + 4, height)
 			ldc.select_pen (window_frame_pen)
-			ldc.line (llevel + 5, 0, llevel + 5, height)
+			ldc.line (lposition + 5, 0, lposition + 5, height)
 			ldc.release
 		end
 
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			old_rop2 := ldc.rop2
 			ldc.set_rop2 (R2_xorpen)
 			ldc.select_brush (splitter_brush)
-			ldc.rectangle (temp_level, -1, temp_level + size, height+1)
+			ldc.rectangle (temp_position, -1, temp_position + size, height+1)
 			ldc.set_rop2 (old_rop2)
 			ldc.release
 		end
@@ -182,7 +182,7 @@ feature {NONE} -- WEL Implementation
 			if on_split (a_x) then
 				set_capture
 				is_splitting := True
-				temp_level := level
+				temp_position := position
 				invert_split
 			end
 		end
@@ -195,16 +195,16 @@ feature {NONE} -- WEL Implementation
 			acceptable_x: INTEGER
 		do
 			if is_splitting then
-				if a_x < minimum_level then
-					acceptable_x := minimum_level
-				elseif a_x > maximum_level then
-					acceptable_x := maximum_level
+				if a_x < minimum_position then
+					acceptable_x := minimum_position
+				elseif a_x > maximum_position then
+					acceptable_x := maximum_position
 				else
 					acceptable_x := a_x
 				end
-				if acceptable_x /= temp_level then
+				if acceptable_x /= temp_position then
 					invert_split
-					temp_level := acceptable_x
+					temp_position := acceptable_x
 					invert_split
 				end
 			end
@@ -215,7 +215,7 @@ feature {NONE} -- WEL Implementation
 		do
 			if is_splitting then
 				is_splitting := False
-				resize_children (temp_level)
+				resize_children (temp_position)
 				release_capture
 			end
 		end

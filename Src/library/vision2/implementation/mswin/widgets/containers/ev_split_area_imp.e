@@ -82,7 +82,7 @@ feature -- Access
 	child2: EV_WIDGET_IMP
 				-- The second child of the split area
 
-	level: INTEGER is
+	position: INTEGER is
 			-- Position of the splitter in the window
 		deferred
 		end
@@ -96,7 +96,7 @@ feature -- Access
 	is_splitting: BOOLEAN
 			-- Is the user currently moving the split ?
 
-	temp_level: INTEGER
+	temp_position: INTEGER
 			-- Position of the splitter during the action of
 			-- the user on the splitter.
 
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation for automatic size compute
 			-- No care about has_changes.
 		do
 			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
-			resize_children (level)
+			resize_children (position)
 		end
 
 feature {NONE} -- Implementation
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 	on_split (value: INTEGER): BOOLEAN is
 			-- Is a point with `value' as the coordinate on the split?
 		do
-			Result := (value >= level) and then (value < level + size)
+			Result := (value >= position) and then (value < position + size)
 		end
 
 	refresh is
@@ -318,7 +318,7 @@ feature {NONE} -- WEL Implementation
 feature {NONE} -- Deferred features
 
 	draw_split is
-			-- draw a vertical split at 'level'.
+			-- draw a vertical split at 'position'.
 		deferred
 		end
 
@@ -328,14 +328,14 @@ feature {NONE} -- Deferred features
 		deferred
 		end
 
-	resize_children (a_level: INTEGER) is
-			-- Resize both children according to the new level
-			-- `level' of the splitter.
+	resize_children (a_position: INTEGER) is
+			-- Resize both children according to the new position
+			-- `position' of the splitter.
 		deferred
 		end
 
 Invariant
-	positif_level: level >= 0
+	positif_position: position >= 0
 	dc_not_void: dc /= Void
 
 end -- class EV_SPLIT_AREA_IMP

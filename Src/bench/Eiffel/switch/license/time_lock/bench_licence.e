@@ -8,6 +8,8 @@ class BENCH_LICENSE
 
 inherit
 	LICENSE
+		rename
+			product_key as key
 		redefine
 			verify_current_user
 		end
@@ -114,6 +116,7 @@ feature -- Info
 				date_name := clone ((time + thirty_days).out)
 				environment.put (encoder.encrypt (date_name), "BENCH_TRIAL")
 			end
+			encoder.terminate
 		end
 
 	time_left: INTEGER is
@@ -144,6 +147,7 @@ feature -- Init
 			 then
 				!! encoder.make_with_key (key)
 				licensed := encoder.encrypt (username).is_equal (password)
+				encoder.terminate
 			end
 		end
 

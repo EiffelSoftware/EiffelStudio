@@ -708,11 +708,14 @@ feature -- Element change
 			-- Set the window text
 		require
 			exists: exists
-			a_text_not_void: a_text /= Void
 		local
 			a_wel_string: WEL_STRING
 		do
-			create a_wel_string.make (a_text)
+			if a_text /= Void then
+				create a_wel_string.make (a_text)
+			else
+				create a_wel_string.make_empty (0)
+			end
 			cwin_set_window_text (item, a_wel_string.item)
 		ensure
 			 text_set: text.is_equal (a_text)

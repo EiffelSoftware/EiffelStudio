@@ -28,9 +28,39 @@ feature
 		local
 			clusters: LINKED_LIST [CLUSTER_I];
 			cursor: CURSOR;
+			nb_of_classes: INTEGER;
+			nb_of_clusters: INTEGER;
+			root_cluster: CLUSTER_I
 		do
 			clusters := Universe.clusters;
 			if not clusters.empty then
+			
+				nb_of_clusters := clusters.count;
+				output_window.put_int (nb_of_clusters);
+				if nb_of_clusters > 1 then
+					output_window.put_string (" clusters containing ")
+				else
+					output_window.put_string (" cluster containing ")
+				end;
+				from clusters.start until clusters.after loop
+					nb_of_classes := nb_of_classes + clusters.item.classes.count;
+					clusters.forth
+				end;
+				output_window.put_int (nb_of_classes);
+				if nb_of_classes > 1 then
+					output_window.put_string (" classes");
+				else
+					output_window.put_string (" class");
+				end;
+				output_window.new_line;
+				output_window.put_string ("root: ");
+				System.root_class.compiled_class.append_clickable_signature (output_window);
+				output_window.put_string (" (cluster: ");
+				output_window.put_string (System.root_cluster.cluster_name);
+				output_window.put_string (")");
+				output_window.new_line;
+				output_window.new_line;
+
 					--| Skip precompile clusters for now
 				from
 					clusters.start
@@ -69,15 +99,26 @@ feature
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
 			a_classi: CLASS_I;
 			a_classc: CLASS_C;
+			nb_of_classes: INTEGER
 		do
 			!!sorted_class_names.make;
+			classes := cluster.classes;
+
 			output_window.put_string ("Cluster: ");
 			output_window.put_string (cluster.cluster_name);
 			if cluster.is_precompiled then
-				output_window.put_string (" (Precompiled)")
+				output_window.put_string (" (Precompiled, ")
+			else
+				output_window.put_string (" (")
+			end;
+			nb_of_classes := classes.count;
+			output_window.put_int (nb_of_classes);
+			if nb_of_classes > 1 then
+				output_window.put_string (" classes)")
+			else
+				output_window.put_string (" class)")
 			end;
 			output_window.new_line;
-			classes := cluster.classes;
 
 			from
 				classes.start

@@ -180,7 +180,7 @@ feature -- Access
 	has_unique: BOOLEAN
 			-- Does class have unique feature(s)?
 
-	changed_features: SEARCH_TABLE [STRING]
+	changed_features: SEARCH_TABLE [INTEGER]
 			-- Names of the changed features
 
 	propagators: PASS3_CONTROL
@@ -756,6 +756,7 @@ feature -- Third pass: byte code production and type check
 			rep_dep: REP_CLASS_DEPEND
 			new_suppliers: like suppliers
 			feature_name: STRING
+			feature_name_id: INTEGER
 			f_suppliers: FEATURE_DEPENDANCE
 			removed_features: SEARCH_TABLE [FEATURE_I]
 			type_check_error: BOOLEAN
@@ -827,13 +828,14 @@ io.error.new_line
 end
 
 				if feature_i.to_melt_in (Current) then
+					feature_name_id := feature_i.feature_name_id
 					feature_name := feature_i.feature_name
 
 					has_default_rescue := False
 					if
 						def_resc /= Void
 						and then not def_resc.empty_body
-						and then not equal (def_resc.feature_name, feature_name)
+						and then def_resc.feature_name_id /= feature_name_id
 					then
 						feature_i.create_default_rescue (def_resc.feature_name)
 						has_default_rescue := True
@@ -845,7 +847,7 @@ debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.new_line
 end
 						-- For a feature written in the class
-					feature_changed := 	changed_features.has (feature_name)
+					feature_changed := 	changed_features.has (feature_name_id)
 					
 					if not feature_changed then
 							-- Force a change on all feature of current class if line
@@ -1109,7 +1111,7 @@ end
 						end
 						f_suppliers := clone (ast_context.supplier_ids)
 						if invariant_feature /= Void then
-							f_suppliers.set_feature_name ("_inv_")
+							f_suppliers.set_feature_name (invariant_feature.feature_name)
 							dependances.put (f_suppliers, invariant_feature.body_index)
 						end
 						if new_suppliers = Void then
@@ -1250,10 +1252,10 @@ end
 --			melted_info: INV_MELTED_INFO
 --			new_body_index: INTEGER
 		do
---			f_suppliers := dependances.item ("_inv_")
+--			f_suppliers := dependances.item ("_invariant")
 --
 --			if propagators.invariant_removed then
---				dependances.remove ("_inv_")
+--				dependances.remove ("_invariant")
 --				new_suppliers.remove_occurrence (f_suppliers)
 --				invariant_feature := Void
 --			else
@@ -1296,10 +1298,10 @@ end
 --					then
 --						if f_suppliers /= Void then
 --							new_suppliers.remove_occurrence (f_suppliers)
---							dependances.remove ("_inv_")
+--							dependances.remove ("_invariant")
 --						end
 --						f_suppliers := clone (ast_context.supplier_ids)
---						dependances.put (f_suppliers, "_inv_")
+--						dependances.put (f_suppliers, "_invariant")
 --						new_suppliers.add_occurrence (f_suppliers)
 --
 --debug ("ACTIVITY")
@@ -2978,19 +2980,19 @@ feature -- Actual class type
 			Result.set_is_true_expanded (is_expanded)
 		end
 		
-	insert_changed_feature (feature_name: STRING) is
-			-- Insert feature `feature_name' in `changed_features'.
+	insert_changed_feature (feature_name_id: INTEGER) is
+			-- Insert feature `feature_name_id' in `changed_features'.
 		require
-			good_argument: feature_name /= Void
+			good_argument: feature_name_id > 0
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("CLASS_C: ")
 	io.error.putstring (name)
 	io.error.putstring ("%NChanged_feature: ")
-	io.error.putstring (feature_name)
+	io.error.putstring (Names_heap.item (feature_name_id))
 	io.error.new_line
 end
-			changed_features.put (feature_name)
+			changed_features.put (feature_name_id)
 		end
 	
 	constraint (i: INTEGER): TYPE_A is

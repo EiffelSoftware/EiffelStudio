@@ -14,6 +14,12 @@ inherit
 		select
 			init
 		end;
+	BASIC_ROUTINES
+		export
+			{NONE} ALL
+		undefine
+			setup, consistent, copy, is_equal
+		end
 
 creation
 

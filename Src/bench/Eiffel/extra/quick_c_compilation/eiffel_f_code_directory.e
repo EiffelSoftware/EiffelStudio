@@ -83,14 +83,18 @@ feature
 						create l_directory.make (l_file_name, extension_type, False)
 						directories.extend (l_directory)
 						directories.forth
-			   		elseif not has_finished_file and then (l_files.item.substring_index (".c",1)) > 0 then
-				  		c_files.extend (l_file)
-						c_files.forth
-			   		elseif not has_finished_file and then (l_files.item.substring_index (".x",1)) > 0 then
-				  		x_files.extend (l_file)
-						x_files.forth
 					elseif (l_files.item.is_equal ("Makefile.SH")) then
 						create makefile_sh.make (l_file_name)
+					else
+						if not has_finished_file then
+							if (l_files.item.substring_index (".c",1)) > 0 then
+								c_files.extend (l_file)
+								c_files.forth
+							elseif (l_files.item.substring_index (".x",1)) > 0 then
+								x_files.extend (l_file)
+								x_files.forth
+							end
+						end
 					end
 				end
 				l_files.forth
@@ -106,6 +110,7 @@ feature
 			l_big_file_name, l_makefile_sh_name, l_old_name: STRING
 			l_makefile_sh: PLAIN_TEXT_FILE
 			is_x_file: BOOLEAN
+			is_cpp_file: BOOLEAN
 		do
 			l_files := c_files
 			if l_files /= Void then
@@ -136,8 +141,12 @@ debug ("OUTPUT")
 					print (l_file.name)
 					io.new_line
 end
-					if not is_x_file and then l_file.name.substring_index (".x",1) > 0 then
-						is_x_file := True
+					if not is_x_file then
+						is_x_file := l_file.name.substring_index (".x",1) > 0
+					end
+
+					if not is_cpp_file then
+						is_cpp_file := l_file.name.substring_index ("pp", 1) = l_file.name.count - 1
 					end
 					l_file.open_read
 					l_file.read_all
@@ -151,9 +160,17 @@ end
 
 				l_big_file_name := clone (l_big_file_name)
 				if is_x_file then
-					l_big_file_name.append (".x")
+					if is_cpp_file then
+						l_big_file_name.append (".xpp")
+					else
+						l_big_file_name.append (".x")
+					end
 				else
-					l_big_file_name.append (".c")
+					if is_cpp_file then
+						l_big_file_name.append (".cpp")
+					else
+						l_big_file_name.append (".c")
+					end
 				end
 				big_file.change_name (l_big_file_name)
 			end

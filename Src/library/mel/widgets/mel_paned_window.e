@@ -35,14 +35,14 @@ feature -- Initialization
 		local
 			widget_name: ANY
 		do
-			parent := a_parent;
-			widget_name := a_name.to_c;
-			screen_object := xm_create_paned_window (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.add (Current);
-			set_default;
+			parent := a_parent
+			widget_name := a_name.to_c
+			screen_object := xm_create_paned_window (a_parent.screen_object, $widget_name, default_pointer, 0)
+			Mel_widgets.add (Current)
+			set_default
 			if do_manage then
 				manage
-			end
+			end			
 		ensure
 			exists: not is_destroyed;
 			parent_set: parent = a_parent;
@@ -260,6 +260,16 @@ feature -- Status setting
 		ensure
 			spacing_set: spacing = a_distance
 		end;
+
+	set_vertical is
+		do
+			set_xt_unsigned_char (screen_object,XmNorientation, XmVertical)
+		end
+
+	set_horizontal is
+		do
+			set_xt_unsigned_char (screen_object,XmNorientation, XmHorizontal)
+		end
 
 feature {NONE} -- Implementation
 

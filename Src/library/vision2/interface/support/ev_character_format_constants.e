@@ -36,10 +36,7 @@ feature -- Access
 	Effects_underlined: INTEGER is 128
 		-- Effects underlined valid.
 		
-	Effects_double_underlined: INTEGER is 256
-		-- Effects double underlined valid.
-		
-	Effects_vertical_offset: INTEGER is 512
+	Effects_vertical_offset: INTEGER is 256
 		-- Effects vertical offset valid.
 
 feature -- Contract support
@@ -47,10 +44,11 @@ feature -- Contract support
 	valid_character_format_flag (a_flag: INTEGER): BOOLEAN is
 			-- Is `a_flag' a valid character format flag?
 			-- Used by EV_CHARACTER_FORMAT_RANGE_INFORMATION
-			-- May be any combination of the attribute flags above.
+			-- May be any combination of the attribute flags above, except that
+			-- `Effects_underlined' and `Effects_double_underlined are mutually exclusive
 		do
 			Result := a_flag <= font_family  + font_weight + font_shape + font_height + color + background_color +
-				effects_striked_out + effects_underlined + effects_double_underlined + effects_vertical_offset
+				effects_striked_out + effects_underlined  + effects_vertical_offset
 		end
 
 end -- class EV_CHARACTER_FORMAT_CONSTANTS

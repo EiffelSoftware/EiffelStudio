@@ -28,7 +28,7 @@ class ARRAYED_SET [G] inherit
 		export
 			{ANY} valid_cursor_index, readable, writable
 			{ARRAYED_SET} go_to, area, cursor, full, i_th, lower, upper,
-				subcopy, array_valid_index, valid_cursor, subarray
+				subcopy, valid_cursor, subarray
 			{NONE} all
 		undefine
 			is_inserted,

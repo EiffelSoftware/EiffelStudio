@@ -24,7 +24,6 @@ class ARRAYED_LIST [G] inherit
 			count as array_count,
 			index_set as array_index_set,
 			bag_put as put,
-			valid_index as array_valid_index,
 			resize as array_resize
 		export
 			{NONE}
@@ -33,21 +32,19 @@ class ARRAYED_LIST [G] inherit
 				array_make, subcopy, area, all_default, upper, lower,
 				same_items, subarray
 			{ANY}
-				capacity, array_valid_index
+				capacity
 		undefine
 			linear_representation, prunable, put, is_equal,
 			prune, occurrences, extendible, fill,
 			for_all, there_exists, do_all, do_if
 		redefine
 			extend, prune_all, full, wipe_out,
-			is_inserted, make_from_array, has
-		select
-			array_valid_index
+			is_inserted, make_from_array, has, valid_index
 		end
 
 	DYNAMIC_LIST [G]
 		undefine
-			valid_index, put_i_th,
+			put_i_th,
 			force, is_inserted, copy
 		redefine
 			first, last, swap, wipe_out, i_th, infix "@",
@@ -55,7 +52,7 @@ class ARRAYED_LIST [G] inherit
 			count, prune, remove,
 			put_left, merge_left,
 			merge_right, duplicate, prune_all, has, search,
-			append
+			append, valid_index
 		select
 			count, index_set, i_th, infix "@"
 		end

@@ -337,14 +337,14 @@ feature -- Element change
 			add (l_item)
 		end;
 
-	add_address (address: STRING; e_class: E_CLASS) is
+	add_address (address: STRING; a_name: STRING; e_class: E_CLASS) is
 			-- Put `address' for `e_class'.
 		require
 			valid_address: address /= Void;
 		local
 			l_item: like item
 		do
-			!ADDRESS_TEXT! l_item.make (address, e_class);
+			!ADDRESS_TEXT! l_item.make (address, a_name, e_class);
 			add (l_item)
 		end;
 

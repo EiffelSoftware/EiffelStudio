@@ -132,7 +132,7 @@ feature {TEXT_ITEM} -- Text processing
 	process_address_text (text: ADDRESS_TEXT) is
 			-- Process address text.
 		do
-			put_address (text.address, text.e_class)
+			put_address (text.address, text.name, text.e_class)
 		end;
 
 	process_error_text (text: ERROR_TEXT) is
@@ -264,10 +264,11 @@ feature -- Ouput
 			put_feature (feat, str)
 		end;
 
-	put_address (address: STRING; e_class: E_CLASS) is
-			-- Put `address' for `e_class'.
+	put_address (address: STRING; a_name: STRING; e_class: E_CLASS) is
+			-- Put `address' with `a_name' for `e_class'.
 		require
 			valid_address: address /= Void;
+			valid_name: a_name /= Void;
 		do
 			put_string (address)
 		end;

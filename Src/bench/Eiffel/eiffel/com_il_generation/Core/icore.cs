@@ -1,3 +1,13 @@
+/*
+indexing
+	description: "Interface used initially to make COM interop easier for EiffelCOM. It
+		is also used now to make sure that `core.cs' and `EiffelReflectionEmit' defines
+		the same set of features, since `core.cs' is a wrapper around `EiffelReflectionEmit'.
+
+	date: "$Date$"
+	revision: "$Revision$
+*/
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -91,7 +101,7 @@ public interface ICore
 	void CreateFeatureDescription();
 
 	// Define system entry point( root feature of root class );
-	void DefineEntryPoint( int TypeID, int FeatureID );
+	void DefineEntryPoint (int CreationTypeID, int TypeID, int FeatureID);
 
 /* Error Handling */
 

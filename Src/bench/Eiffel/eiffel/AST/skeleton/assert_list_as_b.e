@@ -4,14 +4,10 @@ inherit
 
 	ASSERT_LIST_AS
 		redefine
-			assertions, put_clause_keywords,
-			clause_name, format_assertions,
-			reset
+			assertions, reset
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -58,11 +54,10 @@ feature -- Format
 		do
 			if assertions /= void then
 				ctxt.begin;
-				ctxt.next_line;
 				put_clause_keywords (ctxt);
 				if not ctxt.troff_format then
-					source_cl := ctxt.format.global_types.source_class;
-					target_cl := ctxt.format.global_types.target_class;
+					source_cl := ctxt.global_adapt.source_enclosing_class;
+					target_cl := ctxt.global_adapt.target_enclosing_class;
 					if source_cl /= target_cl then
 						ctxt.put_space;
 						ctxt.put_text_item (ti_Dashdash);
@@ -71,12 +66,13 @@ feature -- Format
 						ctxt.put_class_name (source_cl);
 					end;
 				end;
-				ctxt.indent_one_more; 
-				ctxt.next_line;
+				ctxt.indent; 
+				ctxt.new_line;
 				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
+				ctxt.set_new_line_between_tokens;
 				ctxt.continue_on_failure;
 				format_assertions (ctxt);
+				ctxt.exdent;
 				if ctxt.last_was_printed then
 					ctxt.set_first_assertion (false);
 					ctxt.commit;
@@ -98,10 +94,10 @@ feature -- Format
 			until
 				i > l_count 
 			loop
-				ctxt.begin;
 				if not_first then
 					ctxt.put_separator;
 				end;
+				ctxt.begin;
 				ctxt.new_expression;
 				assertions.i_th(i).format(ctxt);
 				if ctxt.last_was_printed then
@@ -113,7 +109,8 @@ feature -- Format
 				i := i + 1
 			end;
 			if not_first then
-				ctxt.indent_one_less;
+				ctxt.exdent;
+				ctxt.new_line;
 				ctxt.commit
 			else
 				ctxt.rollback
@@ -140,12 +137,6 @@ feature	-- Replication
 
 feature {NONE}
 	
-	clause_name (ctxt: FORMAT_CONTEXT_B): STRING is
-			-- name of the assertion: require, require else, ensure, 
-			-- ensure then, invariant
-		do
-		end;
-
 	put_clause_keywords (ctxt: FORMAT_CONTEXT_B) is
 			-- Append the assertion keywords ("require", "require else",
 			-- "ensure", "ensure then" or "invariant").
@@ -154,16 +145,16 @@ feature {NONE}
 
 feature {ROUTINE_AS_B} -- Case Storage
 
-	storage_info (classc: CLASS_C): FIXED_LIST [S_TAG_DATA] is
+	storage_info: FIXED_LIST [S_TAG_DATA] is
 			-- Assertion storage info for Case in the 
 			-- context of class `class_c'
 		require
 			 valid_assertions: assertions /= Void
 		local
-			 ctxt: FORMAT_CONTEXT_B;
+			 ctxt: FORMAT_CONTEXT;
 		do
 			!! Result.make (assertions.count);
-			!! ctxt.make_for_case (classc);
+			!! ctxt.make_for_case;
 			from
 				Result.start
 				assertions.start

@@ -16,6 +16,14 @@ inherit
 			out as default_out
 		redefine
 			default_create
+		select
+			default_out
+		end
+
+	EV_TESTABLE_NON_WIDGET
+		undefine
+			default_create,
+			out
 		end
 
 feature {NONE} -- Initialization
@@ -323,6 +331,23 @@ feature -- Status report
 			Result := get_point_by_index (1).angle_abs
 		end
 
+feature -- Miscellaneous
+
+	test_widget: EV_WIDGET is
+			-- Pixmap displaying `Current'.
+		local
+			p: EV_PIXMAP
+			a_world: EV_FIGURE_WORLD
+			a_projector: EV_STANDARD_PROJECTION
+		do
+			create p.make_with_size (100, 200)
+			create a_world
+			a_world.extend (Current)
+			create a_projector.make (a_world, p)
+			a_projector.project
+			Result := p
+		end
+
 feature -- Contract support
 
 	list_has_correct_size (list: like points): BOOLEAN is
@@ -451,6 +476,9 @@ end -- class EV_FIGURE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/25 23:39:40  brendel
+--| Added feature test_widget that returns pixmap with figure projected on it.
+--|
 --| Revision 1.10  2000/02/22 18:39:46  oconnor
 --| updated copyright date and formatting
 --|

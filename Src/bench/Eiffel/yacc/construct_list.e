@@ -9,16 +9,15 @@ inherit
 			copy, setup, consistent, is_equal
 		redefine
 			pass_address
-		end;
+		end
+
 	FIXED_LIST [T]
-		export
-			{NONE} make
 		redefine
 			sequential_index_of
-		end;
+		end
 
 creation
-	make_filled
+	make, make_filled
 
 feature
 

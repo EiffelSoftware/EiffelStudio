@@ -10,7 +10,7 @@ inherit
 		end
 
 creation
-	make
+	make, make_filled
 	
 feature 
 

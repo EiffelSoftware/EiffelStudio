@@ -145,7 +145,7 @@ feature -- Element change
 			-- Make `ft' new font of `Current'.
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
-			if text /= Void then
+			if not text.is_empty then
 				accomodate_text (text)
 			end
 			invalidate

@@ -27,6 +27,7 @@
 #ifdef EIF_VMS
 #include "ipcvms.h"		/* only affects VMS */
 #endif
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "eif_logfile.h"

@@ -112,7 +112,7 @@ feature -- Processing
 				i > nb
 			loop
 				a_class := classes.item (i)
-				if a_class /= Void then
+				if a_class /= Void and then a_class.skeleton /= Void then
 					if a_class.has_types then
 							-- Fill `old_skeletons' with old version of skeleton if it exists.
 						a_class.init_process_skeleton (l_old_skeletons)
@@ -127,7 +127,7 @@ feature -- Processing
 				i > nb
 			loop
 				a_class := classes.item (i)
-				if a_class /= Void then
+				if a_class /= Void and then a_class.skeleton /= Void then
 					if a_class.has_types then
 							-- Process skeleton(s) for `a_class'.
 						a_class.process_skeleton (l_old_skeletons)

@@ -91,9 +91,10 @@ feature -- Comparison
 					end
 					i := i + 1
 				end;
-					-- Second pass for expanded attributes only. This is where we check that the skeleton
-					-- for the expanded type did not change. And we do it recursively until we do not find
-					-- anymore expanded attributes. Fixes eweasel test melt015 and possibly others.
+					-- Second pass for expanded attributes only. This is where we check that the
+					-- skeleton for the expanded type did not change. And we do it recursively
+					-- until we do not find anymore expanded attributes. Fixes eweasel test melt015
+					-- and possibly others.
 				if
 					Result and then
 					expanded_pos >= 0 and then expanded_pos < nb and then
@@ -111,14 +112,22 @@ feature -- Comparison
 						end
 						l_old_skel := old_skeletons.item (l_exp_desc.class_type.type_id)
 						if l_old_skel /= Void then
-								-- We now checks the old skeleton associated to `l_exp_desc' with a new
-								-- one that we generate on the fly. It is definitely not the most efficient
-								-- way because of the creation of a skeleton we will not use, but at least
-								-- do the correct job at finding if a skeleton of a class having expanded
-								-- attributes has changed.
-							Result := l_old_skel.equiv (old_skeletons,
-								l_exp_desc.class_type.associated_class.skeleton.
-									instantiation_in (l_exp_desc.class_type))
+								-- We now checks the old skeleton associated to `l_exp_desc' with a
+								-- new one that we generate on the fly. It is definitely not the
+								-- most efficient way because of the creation of a skeleton we will
+								-- not use, but at least do the correct job at finding if a skeleton
+								-- of a class having expanded attributes has changed.
+							if l_exp_desc.class_type.associated_class.skeleton /= Void then
+								Result := l_old_skel.equiv (old_skeletons,
+									l_exp_desc.class_type.associated_class.skeleton.
+										instantiation_in (l_exp_desc.class_type))
+							else
+									-- Most likeley an external class, therefore its skeleton
+									-- did not change.
+									-- FIXME: Manu: 08/05/2003: Should we create a skeleton even
+									-- for external classes, to avoid this particular case of
+									-- checking voidness of `skeleton' from CLASS_C.
+							end
 						else
 								-- Previous skeleton did not exist, then it definitely changed.
 							Result := False

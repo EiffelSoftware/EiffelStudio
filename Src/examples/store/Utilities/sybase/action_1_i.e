@@ -1,15 +1,9 @@
---|---------------------------------------------------------------
---|      Copyright (C) 1994 Societe des Outils du Logiciel      -- 
---|            104 rue Castagnary 75015 Paris FRANCE            --
---|                     +33-(1)-45-32-58-80                     --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
 indexing
 
 	description: "Nested queries example."
 	product: "EiffelStore"
 	database: "Sybase"
+	Status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
 	author: "Patrice Khawam"
@@ -57,3 +51,16 @@ feature
 		end
 
 end -- class ACTION_1_I
+
+
+--|----------------------------------------------------------------
+--| EiffelStore: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

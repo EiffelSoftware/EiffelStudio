@@ -13,6 +13,8 @@ inherit
 		rename
 			make as make_compressed_scanner_skeleton,
 			reset as reset_compressed_scanner_skeleton
+		export
+			{NONE} all
 		end
 
 	EIFFEL_TOKENS
@@ -52,10 +54,10 @@ creation
 					update_token_list
 					}
 \n+					{
-					from i := 1 until i > text_count loop
+					from i_ := 1 until i_ > text_count loop
 						create {EDITOR_TOKEN_EOL} curr_token.make
 						update_token_list
-						i := i + 1
+						i_ := i_ + 1
 					end
 					}
 
@@ -332,9 +334,7 @@ feature -- Start Job / Reinitialization
 		do
 			reset_compressed_scanner_skeleton
 			eif_buffer.wipe_out
-			create analysed_tokens.make	-- create a new one, the old one
-										-- is still "usable"
-			last_token := Void
+			end_token := Void
 			first_token := Void
 		end
 
@@ -343,7 +343,7 @@ feature -- Access
 	curr_token: EDITOR_TOKEN
 			-- Current token analysed
 
-	last_token: EDITOR_TOKEN
+	end_token: EDITOR_TOKEN
 			-- Last token analysed.
 
 	first_token: EDITOR_TOKEN
@@ -360,13 +360,13 @@ feature {NONE} -- Processing
 	update_token_list is
 			-- Link the current token to the last one.
 		do
-			if last_token = Void then
-				first_token := current_token
+			if end_token = Void then
+				first_token := curr_token
 			else
-				last_token.set_previous_token(curr_token)
+				end_token.set_next_token(curr_token)
 			end
-			curr_token.set_next_token(last_token)
-			last_token := curr_token
+			curr_token.set_previous_token(end_token)
+			end_token := curr_token
 		end
 
 feature {NONE} -- Constants

@@ -12,6 +12,8 @@ inherit
 		rename
 			make as make_compressed_scanner_skeleton,
 			reset as reset_compressed_scanner_skeleton
+		export
+			{NONE} all
 		end
 
 	EIFFEL_TOKENS
@@ -67,17 +69,17 @@ if yy_act <= 5 then
 if yy_act <= 3 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 45
+--|#line 47
 -- Ignore carriage return
 else
---|#line 46
+--|#line 48
 
 					create {EDITOR_TOKEN_SPACE} curr_token.make(text_count)
 					update_token_list
 					
 end
 else
---|#line 50
+--|#line 52
 
 					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
 					update_token_list
@@ -85,16 +87,16 @@ else
 end
 else
 if yy_act = 4 then
---|#line 54
+--|#line 56
 
-					from i := 1 until i > text_count loop
+					from i_ := 1 until i_ > text_count loop
 						create {EDITOR_TOKEN_EOL} curr_token.make
 						update_token_list
-						i := i + 1
+						i_ := i_ + 1
 					end
 					
 else
---|#line 65
+--|#line 67
  
 						-- comments
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -105,22 +107,6 @@ end
 else
 if yy_act <= 7 then
 if yy_act = 6 then
---|#line 73
-
-						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					update_token_list
-					
-else
---|#line 74
-
-						-- Symbols
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					update_token_list
-					
-end
-else
-if yy_act = 8 then
 --|#line 75
 
 						-- Symbols
@@ -135,12 +121,8 @@ else
 					update_token_list
 					
 end
-end
-end
 else
-if yy_act <= 13 then
-if yy_act <= 11 then
-if yy_act = 10 then
+if yy_act = 8 then
 --|#line 77
 
 						-- Symbols
@@ -155,8 +137,12 @@ else
 					update_token_list
 					
 end
+end
+end
 else
-if yy_act = 12 then
+if yy_act <= 13 then
+if yy_act <= 11 then
+if yy_act = 10 then
 --|#line 79
 
 						-- Symbols
@@ -171,10 +157,8 @@ else
 					update_token_list
 					
 end
-end
 else
-if yy_act <= 15 then
-if yy_act = 14 then
+if yy_act = 12 then
 --|#line 81
 
 						-- Symbols
@@ -189,8 +173,10 @@ else
 					update_token_list
 					
 end
+end
 else
-if yy_act = 16 then
+if yy_act <= 15 then
+if yy_act = 14 then
 --|#line 83
 
 						-- Symbols
@@ -199,6 +185,22 @@ if yy_act = 16 then
 					
 else
 --|#line 84
+
+						-- Symbols
+					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					update_token_list
+					
+end
+else
+if yy_act = 16 then
+--|#line 85
+
+						-- Symbols
+					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 86
 
 						-- Symbols
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
@@ -214,36 +216,20 @@ if yy_act <= 22 then
 if yy_act <= 20 then
 if yy_act <= 19 then
 if yy_act = 18 then
---|#line 90
- 
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
-					update_token_list
-					
-else
---|#line 91
- 
-						-- Operator Symbol 
-					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
-					update_token_list
-					
-end
-else
 --|#line 92
  
 						-- Operator Symbol 
 					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					update_token_list
 					
-end
 else
-if yy_act = 21 then
 --|#line 93
  
 						-- Operator Symbol 
 					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					update_token_list
 					
+end
 else
 --|#line 94
  
@@ -252,10 +238,8 @@ else
 					update_token_list
 					
 end
-end
 else
-if yy_act <= 24 then
-if yy_act = 23 then
+if yy_act = 21 then
 --|#line 95
  
 						-- Operator Symbol 
@@ -270,8 +254,10 @@ else
 					update_token_list
 					
 end
+end
 else
-if yy_act = 25 then
+if yy_act <= 24 then
+if yy_act = 23 then
 --|#line 97
  
 						-- Operator Symbol 
@@ -286,12 +272,8 @@ else
 					update_token_list
 					
 end
-end
-end
 else
-if yy_act <= 30 then
-if yy_act <= 28 then
-if yy_act = 27 then
+if yy_act = 25 then
 --|#line 99
  
 						-- Operator Symbol 
@@ -306,8 +288,12 @@ else
 					update_token_list
 					
 end
+end
+end
 else
-if yy_act = 29 then
+if yy_act <= 30 then
+if yy_act <= 28 then
+if yy_act = 27 then
 --|#line 101
  
 						-- Operator Symbol 
@@ -322,10 +308,8 @@ else
 					update_token_list
 					
 end
-end
 else
-if yy_act <= 32 then
-if yy_act = 31 then
+if yy_act = 29 then
 --|#line 103
  
 						-- Operator Symbol 
@@ -340,8 +324,10 @@ else
 					update_token_list
 					
 end
+end
 else
-if yy_act = 33 then
+if yy_act <= 32 then
+if yy_act = 31 then
 --|#line 105
  
 						-- Operator Symbol 
@@ -350,6 +336,22 @@ if yy_act = 33 then
 					
 else
 --|#line 106
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+end
+else
+if yy_act = 33 then
+--|#line 107
+ 
+						-- Operator Symbol 
+					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 108
  
 						-- Operator Symbol 
 					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
@@ -367,36 +369,20 @@ if yy_act <= 39 then
 if yy_act <= 37 then
 if yy_act <= 36 then
 if yy_act = 35 then
---|#line 107
+--|#line 109
  
 						-- Operator Symbol 
 					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					update_token_list
 					
 else
---|#line 108
+--|#line 110
  
 						-- Operator Symbol 
 					create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					update_token_list
 					
 end
-else
---|#line 116
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										update_token_list
-										
-end
-else
-if yy_act = 38 then
---|#line 117
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										update_token_list
-										
 else
 --|#line 118
 
@@ -405,10 +391,8 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 41 then
-if yy_act = 40 then
+if yy_act = 38 then
 --|#line 119
 
 										-- Keyword
@@ -423,8 +407,10 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 42 then
+if yy_act <= 41 then
+if yy_act = 40 then
 --|#line 121
 
 										-- Keyword
@@ -439,12 +425,8 @@ else
 										update_token_list
 										
 end
-end
-end
 else
-if yy_act <= 47 then
-if yy_act <= 45 then
-if yy_act = 44 then
+if yy_act = 42 then
 --|#line 123
 
 										-- Keyword
@@ -459,8 +441,12 @@ else
 										update_token_list
 										
 end
+end
+end
 else
-if yy_act = 46 then
+if yy_act <= 47 then
+if yy_act <= 45 then
+if yy_act = 44 then
 --|#line 125
 
 										-- Keyword
@@ -475,10 +461,8 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 49 then
-if yy_act = 48 then
+if yy_act = 46 then
 --|#line 127
 
 										-- Keyword
@@ -493,8 +477,10 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 50 then
+if yy_act <= 49 then
+if yy_act = 48 then
 --|#line 129
 
 										-- Keyword
@@ -509,14 +495,8 @@ else
 										update_token_list
 										
 end
-end
-end
-end
 else
-if yy_act <= 59 then
-if yy_act <= 55 then
-if yy_act <= 53 then
-if yy_act = 52 then
+if yy_act = 50 then
 --|#line 131
 
 										-- Keyword
@@ -531,8 +511,14 @@ else
 										update_token_list
 										
 end
+end
+end
+end
 else
-if yy_act = 54 then
+if yy_act <= 59 then
+if yy_act <= 55 then
+if yy_act <= 53 then
+if yy_act = 52 then
 --|#line 133
 
 										-- Keyword
@@ -547,10 +533,8 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 57 then
-if yy_act = 56 then
+if yy_act = 54 then
 --|#line 135
 
 										-- Keyword
@@ -565,8 +549,10 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 58 then
+if yy_act <= 57 then
+if yy_act = 56 then
 --|#line 137
 
 										-- Keyword
@@ -581,12 +567,8 @@ else
 										update_token_list
 										
 end
-end
-end
 else
-if yy_act <= 63 then
-if yy_act <= 61 then
-if yy_act = 60 then
+if yy_act = 58 then
 --|#line 139
 
 										-- Keyword
@@ -601,8 +583,12 @@ else
 										update_token_list
 										
 end
+end
+end
 else
-if yy_act = 62 then
+if yy_act <= 63 then
+if yy_act <= 61 then
+if yy_act = 60 then
 --|#line 141
 
 										-- Keyword
@@ -617,10 +603,8 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 65 then
-if yy_act = 64 then
+if yy_act = 62 then
 --|#line 143
 
 										-- Keyword
@@ -635,8 +619,10 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 66 then
+if yy_act <= 65 then
+if yy_act = 64 then
 --|#line 145
 
 										-- Keyword
@@ -645,6 +631,22 @@ if yy_act = 66 then
 										
 else
 --|#line 146
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 66 then
+--|#line 147
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 148
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
@@ -664,36 +666,20 @@ if yy_act <= 72 then
 if yy_act <= 70 then
 if yy_act <= 69 then
 if yy_act = 68 then
---|#line 147
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										update_token_list
-										
-else
---|#line 148
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										update_token_list
-										
-end
-else
 --|#line 149
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										update_token_list
 										
-end
 else
-if yy_act = 71 then
 --|#line 150
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										update_token_list
 										
+end
 else
 --|#line 151
 
@@ -702,10 +688,8 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 74 then
-if yy_act = 73 then
+if yy_act = 71 then
 --|#line 152
 
 										-- Keyword
@@ -720,8 +704,10 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 75 then
+if yy_act <= 74 then
+if yy_act = 73 then
 --|#line 154
 
 										-- Keyword
@@ -736,12 +722,8 @@ else
 										update_token_list
 										
 end
-end
-end
 else
-if yy_act <= 80 then
-if yy_act <= 78 then
-if yy_act = 77 then
+if yy_act = 75 then
 --|#line 156
 
 										-- Keyword
@@ -756,8 +738,12 @@ else
 										update_token_list
 										
 end
+end
+end
 else
-if yy_act = 79 then
+if yy_act <= 80 then
+if yy_act <= 78 then
+if yy_act = 77 then
 --|#line 158
 
 										-- Keyword
@@ -772,10 +758,8 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 82 then
-if yy_act = 81 then
+if yy_act = 79 then
 --|#line 160
 
 										-- Keyword
@@ -790,8 +774,10 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 83 then
+if yy_act <= 82 then
+if yy_act = 81 then
 --|#line 162
 
 										-- Keyword
@@ -800,6 +786,22 @@ if yy_act = 83 then
 										
 else
 --|#line 163
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 83 then
+--|#line 164
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 165
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
@@ -815,36 +817,20 @@ if yy_act <= 89 then
 if yy_act <= 87 then
 if yy_act <= 86 then
 if yy_act = 85 then
---|#line 164
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										update_token_list
-										
-else
---|#line 165
-
-										-- Keyword
-										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										update_token_list
-										
-end
-else
 --|#line 166
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										update_token_list
 										
-end
 else
-if yy_act = 88 then
 --|#line 167
 
 										-- Keyword
 										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										update_token_list
 										
+end
 else
 --|#line 168
 
@@ -853,10 +839,8 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 91 then
-if yy_act = 90 then
+if yy_act = 88 then
 --|#line 169
 
 										-- Keyword
@@ -871,8 +855,10 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 92 then
+if yy_act <= 91 then
+if yy_act = 90 then
 --|#line 171
 
 										-- Keyword
@@ -880,7 +866,23 @@ if yy_act = 92 then
 										update_token_list
 										
 else
---|#line 180
+--|#line 172
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+end
+else
+if yy_act = 92 then
+--|#line 173
+
+										-- Keyword
+										create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										update_token_list
+										
+else
+--|#line 182
 
 										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 										update_token_list
@@ -892,25 +894,11 @@ else
 if yy_act <= 97 then
 if yy_act <= 95 then
 if yy_act = 94 then
---|#line 188
+--|#line 190
 
 										create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 										update_token_list
 										
-else
---|#line 198
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					update_token_list
-					
-end
-else
-if yy_act = 96 then
---|#line 199
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					update_token_list
-					
 else
 --|#line 200
 
@@ -918,10 +906,8 @@ else
 					update_token_list
 					
 end
-end
 else
-if yy_act <= 99 then
-if yy_act = 98 then
+if yy_act = 96 then
 --|#line 201
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
@@ -934,8 +920,10 @@ else
 					update_token_list
 					
 end
+end
 else
-if yy_act = 100 then
+if yy_act <= 99 then
+if yy_act = 98 then
 --|#line 203
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
@@ -943,6 +931,20 @@ if yy_act = 100 then
 					
 else
 --|#line 204
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+end
+else
+if yy_act = 100 then
+--|#line 205
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 206
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					update_token_list
@@ -959,32 +961,18 @@ if yy_act <= 106 then
 if yy_act <= 104 then
 if yy_act <= 103 then
 if yy_act = 102 then
---|#line 205
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					update_token_list
-					
-else
---|#line 206
-
-					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					update_token_list
-					
-end
-else
 --|#line 207
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					update_token_list
 					
-end
 else
-if yy_act = 105 then
 --|#line 208
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					update_token_list
 					
+end
 else
 --|#line 209
 
@@ -992,10 +980,8 @@ else
 					update_token_list
 					
 end
-end
 else
-if yy_act <= 108 then
-if yy_act = 107 then
+if yy_act = 105 then
 --|#line 210
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
@@ -1008,8 +994,10 @@ else
 					update_token_list
 					
 end
+end
 else
-if yy_act = 109 then
+if yy_act <= 108 then
+if yy_act = 107 then
 --|#line 212
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
@@ -1022,12 +1010,8 @@ else
 					update_token_list
 					
 end
-end
-end
 else
-if yy_act <= 114 then
-if yy_act <= 112 then
-if yy_act = 111 then
+if yy_act = 109 then
 --|#line 214
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
@@ -1040,8 +1024,12 @@ else
 					update_token_list
 					
 end
+end
+end
 else
-if yy_act = 113 then
+if yy_act <= 114 then
+if yy_act <= 112 then
+if yy_act = 111 then
 --|#line 216
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
@@ -1054,10 +1042,8 @@ else
 					update_token_list
 					
 end
-end
 else
-if yy_act <= 116 then
-if yy_act = 115 then
+if yy_act = 113 then
 --|#line 218
 
 					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
@@ -1070,9 +1056,25 @@ else
 					update_token_list
 					
 end
+end
+else
+if yy_act <= 116 then
+if yy_act = 115 then
+--|#line 220
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 221
+
+					create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					update_token_list
+					
+end
 else
 if yy_act = 117 then
---|#line 224
+--|#line 226
 
 					code_ := text_substring (4, text_count - 2).to_integer
 					if code_ > Platform.Maximum_character_code then
@@ -1084,7 +1086,7 @@ if yy_act = 117 then
 					update_token_list
 					
 else
---|#line 235
+--|#line 237
 
 					-- Character error. Catch-all rules (no backing up)
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
@@ -1099,26 +1101,10 @@ if yy_act <= 126 then
 if yy_act <= 122 then
 if yy_act <= 120 then
 if yy_act = 119 then
---|#line 236
+--|#line 238
 
 					-- Character error. Catch-all rules (no backing up)
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					update_token_list
-					
-else
---|#line 245
-
-					-- Eiffel String
-					create {EDITOR_TOKEN_STRING} curr_token.make(text)
-					update_token_list
-					
-end
-else
-if yy_act = 121 then
---|#line 246
-
-					-- Eiffel String
-					create {EDITOR_TOKEN_STRING} curr_token.make(text)
 					update_token_list
 					
 else
@@ -1129,18 +1115,34 @@ else
 					update_token_list
 					
 end
+else
+if yy_act = 121 then
+--|#line 248
+
+					-- Eiffel String
+					create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 249
+
+					-- Eiffel String
+					create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					update_token_list
+					
+end
 end
 else
 if yy_act <= 124 then
 if yy_act = 123 then
---|#line 255
+--|#line 257
 
 					-- Eiffel Bit
 					create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 					update_token_list
 					
 else
---|#line 263
+--|#line 265
 
 						-- Eiffel Integer
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
@@ -1149,14 +1151,14 @@ else
 end
 else
 if yy_act = 125 then
---|#line 264
+--|#line 266
 
 						-- Eiffel Integer
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 						update_token_list
 						
 else
---|#line 269
+--|#line 271
 
 						-- Eiffel Integer Error (considered as text)
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
@@ -1170,14 +1172,14 @@ if yy_act <= 130 then
 if yy_act <= 128 then
 if yy_act = 127 then
 	yy_position := yy_position - 1
---|#line 277
+--|#line 279
 
 							-- Eiffel reals & doubles
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 						update_token_list
 						
 else
---|#line 278
+--|#line 280
 
 							-- Eiffel reals & doubles
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
@@ -1186,7 +1188,7 @@ else
 end
 else
 if yy_act = 129 then
---|#line 279
+--|#line 281
 
 							-- Eiffel reals & doubles
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
@@ -1194,7 +1196,7 @@ if yy_act = 129 then
 						
 else
 	yy_position := yy_position - 1
---|#line 280
+--|#line 282
 
 							-- Eiffel reals & doubles
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
@@ -1205,14 +1207,14 @@ end
 else
 if yy_act <= 132 then
 if yy_act = 131 then
---|#line 281
+--|#line 283
 
 							-- Eiffel reals & doubles
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 						update_token_list
 						
 else
---|#line 282
+--|#line 284
 
 							-- Eiffel reals & doubles
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
@@ -1221,7 +1223,7 @@ else
 end
 else
 if yy_act = 133 then
---|#line 295
+--|#line 297
 
 					-- Error (considered as text)
 				create {EDITOR_TOKEN_TEXT} curr_token.make(text)
@@ -1760,9 +1762,7 @@ feature -- Start Job / Reinitialization
 		do
 			reset_compressed_scanner_skeleton
 			eif_buffer.wipe_out
-			create analysed_tokens.make	-- create a new one, the old one
-										-- is still "usable"
-			last_token := Void
+			end_token := Void
 			first_token := Void
 		end
 
@@ -1771,7 +1771,7 @@ feature -- Access
 	curr_token: EDITOR_TOKEN
 			-- Current token analysed
 
-	last_token: EDITOR_TOKEN
+	end_token: EDITOR_TOKEN
 			-- Last token analysed.
 
 	first_token: EDITOR_TOKEN
@@ -1788,13 +1788,13 @@ feature {NONE} -- Processing
 	update_token_list is
 			-- Link the current token to the last one.
 		do
-			if last_token = Void then
-				first_token := current_token
+			if end_token = Void then
+				first_token := curr_token
 			else
-				last_token.set_previous_token(curr_token)
+				end_token.set_next_token(curr_token)
 			end
-			curr_token.set_next_token(last_token)
-			last_token := curr_token
+			curr_token.set_previous_token(end_token)
+			end_token := curr_token
 		end
 
 feature {NONE} -- Constants

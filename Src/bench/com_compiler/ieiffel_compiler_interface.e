@@ -31,6 +31,27 @@ feature -- Status Report
 			Result := True
 		end
 
+	compile_to_pipe_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `compile_to_pipe'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	finalize_to_pipe_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `finalize_to_pipe'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	precompile_to_pipe_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `precompile_to_pipe'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	is_successful_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `is_successful'.
 			-- Redefine in descendants if needed.
@@ -101,6 +122,27 @@ feature -- Status Report
 			Result := True
 		end
 
+	output_pipe_name_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `output_pipe_name'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_output_pipe_name_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_output_pipe_name'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	is_output_piped_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_output_piped'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	compile is
@@ -123,6 +165,30 @@ feature -- Basic Operations
 			-- Precompile.
 		require
 			precompile_user_precondition: precompile_user_precondition
+		deferred
+
+		end
+
+	compile_to_pipe is
+			-- Compile with piped output.
+		require
+			compile_to_pipe_user_precondition: compile_to_pipe_user_precondition
+		deferred
+
+		end
+
+	finalize_to_pipe is
+			-- Finalize with piped output.
+		require
+			finalize_to_pipe_user_precondition: finalize_to_pipe_user_precondition
+		deferred
+
+		end
+
+	precompile_to_pipe is
+			-- Precompile with piped output.
+		require
+			precompile_to_pipe_user_precondition: precompile_to_pipe_user_precondition
 		deferred
 
 		end
@@ -205,6 +271,31 @@ feature -- Basic Operations
 			-- Remove file locks
 		require
 			remove_file_locks_user_precondition: remove_file_locks_user_precondition
+		deferred
+
+		end
+
+	output_pipe_name: STRING is
+			-- Output pipe's name
+		require
+			output_pipe_name_user_precondition: output_pipe_name_user_precondition
+		deferred
+
+		end
+
+	set_output_pipe_name (return_value: STRING) is
+			-- Set output pipe's name
+			-- `return_value' [in].  
+		require
+			set_output_pipe_name_user_precondition: set_output_pipe_name_user_precondition (return_value)
+		deferred
+
+		end
+
+	is_output_piped: BOOLEAN is
+			-- Is compiler output sent to pipe `output_pipe_name'
+		require
+			is_output_piped_user_precondition: is_output_piped_user_precondition
 		deferred
 
 		end

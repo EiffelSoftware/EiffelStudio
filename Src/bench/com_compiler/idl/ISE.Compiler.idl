@@ -199,6 +199,15 @@ interface IEiffelCompiler: IUnknown
   [helpstring ("Precompile.")]
   HRESULT precompile ();
 
+  [helpstring ("Compile with piped output.")]
+  HRESULT compile_to_pipe ();
+
+  [helpstring ("Finalize with piped output.")]
+  HRESULT finalize_to_pipe ();
+
+  [helpstring ("Precompile with piped output.")]
+  HRESULT precompile_to_pipe ();
+
   [helpstring ("Was last compilation successful?")]
   HRESULT is_successful ([out, retval] VARIANT_BOOL * return_value);
 
@@ -228,6 +237,15 @@ interface IEiffelCompiler: IUnknown
 
   [helpstring ("Remove file locks")]
   HRESULT remove_file_locks ();
+
+  [helpstring ("Output pipe's name")]
+  HRESULT output_pipe_name ([out, retval] BSTR * return_value);
+
+  [helpstring ("Set output pipe's name")]
+  HRESULT set_output_pipe_name ([in] BSTR return_value);
+
+  [helpstring ("Is compiler output sent to pipe `output_pipe_name'")]
+  HRESULT is_output_piped ([out, retval] VARIANT_BOOL * return_value);
 
 };
 //---------------------------------------------------------------------

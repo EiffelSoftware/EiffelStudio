@@ -144,7 +144,7 @@ void ecom_eiffel_compiler::IEiffelCompletionEntry_impl_proxy::ccom_is_feature(  
 	};
 	rt_ce.ccom_ce_pointed_boolean ((VARIANT_BOOL *)tmp_return_value, return_value);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_111 (tmp_return_value);
+	grt_ce_ISE.ccom_free_memory_pointed_113 (tmp_return_value);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

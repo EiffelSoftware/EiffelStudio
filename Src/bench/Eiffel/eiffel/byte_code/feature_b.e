@@ -201,8 +201,16 @@ feature -- IL code generation
 
 				class_c := cl_type.base_class
 
+				if class_c.is_native_array then
+					native_array_class_type ?= cl_type.associated_class_type
+					check
+						native_array_class_type_not_void: native_array_class_type /= Void
+					end
+				end
+				
 				invariant_checked := (context.workbench_mode or
 					class_c.assertion_level.check_invariant) and then (not is_first or inv_checked)
+					and then (native_array_class_type = Void)
 				
 				if cl_type.is_expanded then
 						-- Current type is expanded. We need to find out if
@@ -258,13 +266,6 @@ feature -- IL code generation
 					end
 				end
 
-				if class_c.is_native_array then
-					native_array_class_type ?= cl_type.associated_class_type
-					check
-						native_array_class_type_not_void: native_array_class_type /= Void
-					end
-				end
-				
 				if parameters /= Void then
 						-- Generate parameters if any.
 					if
@@ -337,19 +338,19 @@ feature -- IL code generation
 							il_generator.generate_check_cast (Void, return_type)
 						end
 					end
-					if invariant_checked then
-						if type.is_void then
-							il_generator.generate_invariant_checking (cl_type)
-						else
-								-- It is a function and we need to save the result onto
-								-- a local variable.
-							context.add_local (return_type)
-							local_number := context.local_list.count
-							il_generator.put_dummy_local_info (return_type, local_number)
-							il_generator.generate_local_assignment (local_number)
-							il_generator.generate_invariant_checking (cl_type)
-							il_generator.generate_local (local_number)
-						end
+				end
+				if invariant_checked then
+					if type.is_void then
+						il_generator.generate_invariant_checking (cl_type)
+					else
+							-- It is a function and we need to save the result onto
+							-- a local variable.
+						context.add_local (return_type)
+						local_number := context.local_list.count
+						il_generator.put_dummy_local_info (return_type, local_number)
+						il_generator.generate_local_assignment (local_number)
+						il_generator.generate_invariant_checking (cl_type)
+						il_generator.generate_local (local_number)
 					end
 				end
 			end

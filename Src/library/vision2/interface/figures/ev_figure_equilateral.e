@@ -15,7 +15,8 @@ inherit
 	EV_CLOSED_FIGURE
 		redefine
 			default_create,
-			bounding_box
+			bounding_box,
+			make_for_test
 		end
 
 create
@@ -51,15 +52,8 @@ feature -- Initialization
 	make_for_test is
 			-- Create interesting to display.
 		do
-			default_create
-			get_point_by_index (1).set_x (50)
-			get_point_by_index (1).set_y (100)
-			get_point_by_index (2).set_x (3)
-			get_point_by_index (2).set_y (20)
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (
-				0.5, 1.0, 0.5))
-			set_line_width (2)
-			set_side_count (7)
+			Precursor
+			set_side_count (11)
 		end
 
 feature -- Access
@@ -216,6 +210,9 @@ end -- class EV_FIGURE_EQUILATERAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/27 19:10:50  brendel
+--| Centralized testing code.
+--|
 --| Revision 1.6  2000/04/26 16:27:06  brendel
 --| Cosmetics.
 --|

@@ -42,21 +42,6 @@ feature -- Initialization
 			set_point_c (pc)
 		end
 
-	make_for_test is
-			-- Create interesting to display.
-		do
-			default_create
-			get_point_by_index (1).set_x (30)
-			get_point_by_index (1).set_y (10)
-			get_point_by_index (2).set_x (90)
-			get_point_by_index (2).set_y (110)
-			get_point_by_index (3).set_x (10)
-			get_point_by_index (3).set_y (170)
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (
-				1.0, 0.0, 0.0))
-			set_line_width (10)
-		end
-
 feature -- Access
 
 	point_count: INTEGER is
@@ -165,6 +150,9 @@ end -- class EV_FIGURE_ARC
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/27 19:10:50  brendel
+--| Centralized testing code.
+--|
 --| Revision 1.6  2000/04/26 17:27:17  brendel
 --| Corrected index for point.
 --|

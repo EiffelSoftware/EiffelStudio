@@ -13,7 +13,14 @@ class
 inherit
 	EV_ATOMIC_FIGURE
 		redefine
-			default_create
+			default_create,
+			make_for_test
+		end
+
+	EV_FONT_CONSTANTS
+		undefine
+			default_create,
+			out
 		end
 
 create
@@ -26,7 +33,7 @@ feature -- Initialization
 	default_create is
 			-- Create in (0, 0)
 		do
-			Precursor
+			{EV_ATOMIC_FIGURE} Precursor
 			text := ""
 			create font
 		end
@@ -43,13 +50,12 @@ feature -- Initialization
 		end
 
 	make_for_test is
-			-- Create interesting to display.
+			-- Create interesting.
 		do
-			default_create
-			get_point_by_index (1).set_x (3)
-			get_point_by_index (1).set_y (75)
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (0.5, 1.0, 0.0))
-			set_text ("Eiffel Vision")
+			Precursor
+			font.set_family (Ev_font_family_roman)
+			font.set_height (24)
+			set_text ("EiffelVision")
 		end
 
 feature -- Access
@@ -160,6 +166,9 @@ end -- class EV_FIGURE_TEXT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/27 19:10:50  brendel
+--| Centralized testing code.
+--|
 --| Revision 1.6  2000/04/26 15:56:34  brendel
 --| Added CVS Log.
 --| Added copyright notice.

@@ -14,7 +14,8 @@ inherit
 	EV_CLOSED_FIGURE
 		redefine
 			default_create,
-			list_has_correct_size
+			list_has_correct_size,
+			set_random_values_for_points
 		end
 
 create
@@ -28,29 +29,6 @@ feature {NONE}-- Initialization
 			-- Initialize without points
 		do
 			Precursor
-		end
-
-	make_for_test is
-			-- Create interesting to display.
-		do
-			default_create
-			from until point_count = 5 loop
-				add_point (create {EV_RELATIVE_POINT})
-			end
-			get_point_by_index (1).set_x (3)
-			get_point_by_index (1).set_y (3)
-			get_point_by_index (2).set_x (30)
-			get_point_by_index (2).set_y (50)
-			get_point_by_index (3).set_x (90)
-			get_point_by_index (3).set_y (10)
-			get_point_by_index (4).set_x (80)
-			get_point_by_index (5).set_y (190)
-			get_point_by_index (5).set_x (130)
-			get_point_by_index (5).set_y (150)
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (
-				0.5, 1.0, 0.5))
-			set_fill_color (create {EV_COLOR}.make_with_rgb (0.0, 1.0, 0.0))
-			set_line_width (3)
 		end
 
 feature -- Status report
@@ -110,6 +88,17 @@ feature -- Contract support
 			Result := True
 		end
 
+feature {NONE} -- Implementation
+
+	set_random_values_for_points is
+			-- Set all points to have random values for testing purposes.
+		do
+			from until point_count = 10 loop
+				add_point (create {EV_RELATIVE_POINT})
+			end
+			Precursor
+		end
+
 end -- class EV_FIGURE_POLYGON
 
 --!-----------------------------------------------------------------------------
@@ -133,6 +122,9 @@ end -- class EV_FIGURE_POLYGON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/27 19:10:50  brendel
+--| Centralized testing code.
+--|
 --| Revision 1.5  2000/04/26 15:56:34  brendel
 --| Added CVS Log.
 --| Added copyright notice.

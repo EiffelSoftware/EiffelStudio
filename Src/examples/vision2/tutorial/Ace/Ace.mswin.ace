@@ -8,7 +8,7 @@ root
 
 default
 
---	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision2")
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision2")
 	assertion (all)
 
 cluster

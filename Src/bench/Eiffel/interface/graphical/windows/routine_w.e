@@ -15,13 +15,12 @@ inherit
 		rename
 			attach_all as default_attach_all,
 			make as normal_create,
-			reset as old_reset,
-			execute as old_execute
+			reset as old_reset
 		redefine
 			hole, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
 			build_widgets, set_default_size,
-			set_default_position
+			set_default_position, resize_action
 		end
 
 	BAR_AND_TEXT
@@ -30,9 +29,9 @@ inherit
 			build_bar, tool_name, close_windows,
 			build_widgets, attach_all, reset,
 			set_default_size, set_default_position,	
-			make, execute
+			make, resize_action
 		select
-			attach_all, reset, make, execute
+			attach_all, reset, make
 		end
 
 creation
@@ -47,8 +46,7 @@ feature
 			-- Create an object tool.
 		do
 			normal_create (a_screen);
-			text_window.set_read_only;
-			set_action ("<Configure>" , Current, resize_action);
+			text_window.set_read_only
 		end;
 
 	reset is
@@ -116,21 +114,16 @@ feature
 
 feature {NONE}
 
-	resize_action: ANY is
-		once
-			!! Result
-		end
-
-	execute (argument: ANY) is
+	resize_action is
+			-- If the window is moved or resized, raise
+			-- popups with an exclusive grab.
+			-- Move also the choice window and update the text field.
 		do
-			if argument = resize_action then
-				change_class_command.update_text;
-				change_routine_command.update_text;
-				change_class_command.choice.update_position;
-				change_routine_command.choice.update_position
-			else
-				old_execute (argument)
-			end
+			raise_grabbed_popup;
+			change_class_command.update_text;
+			change_routine_command.update_text;
+			change_class_command.choice.update_position;
+			change_routine_command.choice.update_position
 		end;
 
 	set_default_size is

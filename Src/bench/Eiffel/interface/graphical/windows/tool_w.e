@@ -217,4 +217,18 @@ feature {NONE}
 	ungrab is deferred end;
 	
 
+feature {NONE} 
+
+	raise_grabbed_popup is
+			-- Raise popup windows with exclusive grab set.
+		do
+			if confirmer.is_popped_up then
+				confirmer.raise
+			elseif name_chooser.is_popped_up then
+				name_chooser.raise
+			elseif warner.is_exclusive_grab and warner.is_popped_up then
+				warner.raise
+			end
+		end;
+
 end

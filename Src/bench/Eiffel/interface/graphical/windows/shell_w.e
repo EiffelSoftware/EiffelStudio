@@ -46,7 +46,8 @@ feature
 		do
 			set_exclusive_grab;
 			set_selection_text (associcated_command.command_shell_name);
-			popup
+			popup;
+			raise
 		end;
 
 feature {NONE}
@@ -57,15 +58,12 @@ feature {NONE}
 		local
 			cmd_name: STRING;
         do
+			warner.popdown;
 			if argument = ok_it then
 				cmd_name := associcated_command.command_shell_name;
-				if not selection_text.empty then
-					cmd_name.wipe_out;
-					cmd_name.append (clone (selection_text));
-					popdown;
-				else
-					set_selection_text (cmd_name);
-				end;
+				cmd_name.wipe_out;
+				cmd_name.append (clone (selection_text));
+				popdown
 			elseif argument = cancel_it then
 				popdown
 			end

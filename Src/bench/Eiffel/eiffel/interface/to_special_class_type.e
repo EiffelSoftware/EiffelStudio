@@ -77,6 +77,7 @@ feature -- C Code generation
 		do
 			gen_param := first_generic
 			is_expanded := gen_param.is_true_expanded
+			final_mode := byte_context.final_mode
 			type_c := gen_param.c_type
 
 				-- Generate header of feature `make_area'.
@@ -98,16 +99,20 @@ feature -- C Code generation
 			buffer.new_line
 
 			if is_expanded then
-				buffer.putstring ("EIF_REFERENCE loc2 = NULL;")
-				buffer.new_line
 				buffer.putstring ("int16 pdtype;")
 				buffer.new_line
 				buffer.putstring ("EIF_INTEGER elem_size = (EIF_Size(")
 				expanded_type ?= gen_param
 				non_expanded_type := clone (expanded_type)
 				non_expanded_type.set_is_true_expanded (False)
-				dtype := non_expanded_type.type_id - 1
-				buffer.putint (dtype)
+				if final_mode then
+					dtype := non_expanded_type.type_id - 1
+					buffer.putint (dtype)
+				else
+					buffer.putstring("RTUD(")
+					buffer.generate_type_id (non_expanded_type.static_type_id)
+					buffer.putchar (')')
+				end
 				buffer.putstring (") + OVERHEAD);")
 				buffer.new_line
 				create l_local_b
@@ -118,23 +123,16 @@ feature -- C Code generation
 			buffer.new_line
 
 				-- Garbage collector hooks
-			if is_expanded then
-				buffer.putstring ("RTLI(3);")
-			else
-				buffer.putstring ("RTLI(2);")
-			end
+			buffer.putstring ("RTLI(2);")
 			buffer.new_line
 			buffer.put_current_registration (0)
 			buffer.new_line
 			buffer.put_local_registration (1, "loc1")
 			buffer.new_line
-			if is_expanded then
-				buffer.put_local_registration  (2, "loc2")
-			end
 
-			final_mode := byte_context.final_mode
 			if not final_mode or else associated_class.assertion_level.check_precond then
 					-- Generate precondition
+				buffer.new_line
 				if not final_mode then
 					buffer.putstring ("if (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {")
 				else
@@ -222,8 +220,15 @@ feature -- C Code generation
 				if gen_ptype = Void then
 						-- Parameter type is not generic
 					buffer.putstring ("pdtype = ")
-					buffer.putint (dtype)
-					buffer.putstring (";")
+					if final_mode then
+						dtype := non_expanded_type.type_id - 1
+						buffer.putint (dtype)
+					else
+						buffer.putstring("RTUD(")
+						buffer.generate_type_id (non_expanded_type.static_type_id)
+						buffer.putchar (')')
+					end
+					buffer.putchar (';')
 					buffer.new_line
 				else
 						-- Parameter is generic
@@ -270,34 +275,7 @@ feature -- C Code generation
 					buffer.new_line
 				end
 
-				buffer.putchar ('{')
-				buffer.new_line
-				buffer.indent
-				buffer.putstring ("EIF_REFERENCE ref;")
-				buffer.new_line
-				buffer.putstring ("EIF_INTEGER i;")
-				buffer.new_line
-
-				buffer.putstring ("for (ref = loc1+OVERHEAD, i = 0; i < arg1; i++,%
-					% ref += elem_size) {")
-				buffer.new_line
-				buffer.indent
-				buffer.putstring ("HEADER(ref)->ov_size = ref - loc1;")
-				buffer.new_line
-				buffer.putstring ("HEADER(ref)->ov_flags = pdtype | EO_EXP;")
-				buffer.new_line
-
-				expanded_type.generate_expanded_creation (Byte_context.byte_code, l_local_b,
-					not final_mode)
-				buffer.putstring ("ecopy (")
-				l_local_b.print_register
-				buffer.putstring (", ref);")
-				buffer.new_line
-				buffer.exdent
-				buffer.putchar ('}')
-				buffer.new_line
-				buffer.exdent
-				buffer.putchar ('}')
+				buffer.putstring ("sp_init (loc1, pdtype, 0, arg1 - 1);")
 				buffer.new_line
 			else
 				type_c.generate_size (buffer)
@@ -325,6 +303,7 @@ feature -- C Code generation
 					buffer.putchar ('}')
 					buffer.new_line
 					buffer.exdent
+					buffer.putchar ('}')
 					buffer.new_line
 				end
 			end

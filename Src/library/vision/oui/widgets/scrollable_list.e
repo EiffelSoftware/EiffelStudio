@@ -817,6 +817,30 @@ feature -- Element change
 			implementation.add_click_action (a_command, argument)
 		end;
 
+feature -- Default Action commands
+
+	add_default_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to
+			-- execute when items are selected with double
+			-- click or by pressing `RETURN' in current
+			-- scroll list.
+		require
+			exists: not destroyed;
+			not_a_command_void: a_command /= Void
+		do
+			implementation.add_default_action (a_command, 
+							   argument)	
+		end;
+
+	remove_default_action  is
+			-- Remove all actions executed when items are
+			-- selected with double click or by pressing
+			-- `RETURN' in current scroll list.
+		require
+			exists: not destroyed;
+		do
+			implementation.remove_default_action
+		end;
 feature -- Transformation
 
 	swap (i: INTEGER) is

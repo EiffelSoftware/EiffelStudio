@@ -27,12 +27,6 @@ inherit
 
 feature {NONE} -- Implementation
 
-	--| FIXME VB: I would like to have all EV_ITEM_LIST_IMP
-	--| objects to only use insert_i_th and remove_i_th.
-	--| gtk_reorder_child may only call once C function.
-	--| add_to_container will be removed.
-	--| When that is done remove insert_i_th and remove_i_th.
-
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		do
@@ -48,22 +42,19 @@ feature {NONE} -- Implementation
 	remove_i_th (i: INTEGER) is
 			-- Remove item at `i'-th position.
 		local
-			p: POINTER
-			a_child_list: POINTER
 			imp: EV_ITEM_IMP
-		do
-			a_child_list := C.gtk_container_children (list_widget)
-			p := C.g_list_nth_data (
-				a_child_list,
-				i - 1)
-			C.g_list_free (a_child_list)
-
-			C.gtk_object_ref (p)
-			C.gtk_container_remove (list_widget, p)
-			imp ?= eif_object_from_c (p)
-			imp.set_item_parent_imp (Void)
+			item_ptr: POINTER
+		do			
 			child_array.go_i_th (i)
+			imp ?= child_array.i_th (i).implementation
+			check
+				imp_not_void: imp /= Void
+			end
+			item_ptr := imp.c_object
+			C.gtk_object_ref (item_ptr)
+			C.gtk_container_remove (list_widget, item_ptr)
 			child_array.remove
+			imp.set_item_parent_imp (Void)
 		end
 
 feature {NONE} -- Implementation

@@ -80,8 +80,12 @@ feature {NONE} -- Initialization
 			C.gtk_clist_set_shadow_type (list_widget, C.GTK_SHADOW_NONE_ENUM)	
 			C.gtk_scrolled_window_add_with_viewport (c_object, an_event_box)
 			C.gtk_widget_show (list_widget)
+			
 			create ev_children.make (0)
 				-- Make initial hash table with room for 100 child pointers, may be increased later.
+				
+			
+				
 			create tree_node_ptr_table.make (100)
 			C.gtk_clist_set_row_height (list_widget, 0)
 			create timer.make_with_interval (0)
@@ -381,14 +385,26 @@ feature -- Implementation
 			-- Update PND status of list and its children.
 		local
 			a_enable_flag: BOOLEAN
+			i: INTEGER
 		do
+--			from
+--				ev_children.start
+--			until
+--				ev_children.after or else a_enable_flag
+--			loop
+--				a_enable_flag := ev_children.item.is_transport_enabled_iterator
+--				ev_children.forth
+--			end
+
 			from
 				ev_children.start
+				i := 1
 			until
 				ev_children.after or else a_enable_flag
 			loop
+				ev_children.go_i_th (i)
 				a_enable_flag := ev_children.item.is_transport_enabled_iterator
-				ev_children.forth
+				i := i + 1
 			end
 
 			if not is_transport_enabled then
@@ -714,33 +730,35 @@ feature {NONE} -- Implementation
 		do
 			item_imp ?= v.implementation
 			C.gtk_clist_row_move (list_widget, item_imp.index - 1, a_position - 1)
+			ev_children.go_i_th (a_position)
+			ev_children.put_left (item_imp)
 
-				-- Insert `v' in to ev_children list.	
-			create temp_list.make (0)
-			from
-				a_counter := 1
-			until
-				a_counter = a_position
-			loop
-				temp_list.extend (ev_children.i_th (a_counter))
-				a_counter := a_counter + 1
-			end
-			
-				-- Insert `v' at a_position
-			temp_list.extend (item_imp)
-
-			from
-				a_counter := a_position
-			until
-				a_counter = count
-				-- The child to be reordered is always at i_th (count)
-				-- Ie: We are reordering and truncating.
-			loop
-				temp_list.extend (ev_children.i_th (a_counter))
-				a_counter := a_counter + 1
-			end
-
-			ev_children := temp_list	
+--				-- Insert `v' in to ev_children list.	
+--			create temp_list.make (0)
+--			from
+--				a_counter := 1
+--			until
+--				a_counter = a_position
+--			loop
+--				temp_list.extend (ev_children.i_th (a_counter))
+--				a_counter := a_counter + 1
+--			end
+--			
+--				-- Insert `v' at a_position
+--			temp_list.extend (item_imp)
+--
+--			from
+--				a_counter := a_position
+--			until
+--				a_counter = count
+--				-- The child to be reordered is always at i_th (count)
+--				-- Ie: We are reordering and truncating.
+--			loop
+--				temp_list.extend (ev_children.i_th (a_counter))
+--				a_counter := a_counter + 1
+--			end
+--
+--			ev_children := temp_list	
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is

@@ -154,16 +154,11 @@ feature {NONE} -- implementation
 			an_index: INTEGER
 			has_radio_item: BOOLEAN
 			temp_item_pointer: POINTER
-			a_child_list: POINTER
 		do
-			a_child_list := C.gtk_container_children (list_widget)
-			item_imp ?= eif_object_from_c (
-				C.g_list_nth_data (
-					a_child_list,
-					a_position - 1
-				)
-			)
-			C.g_list_free (a_child_list)
+			item_imp ?= child_array.i_th (a_position).implementation
+			check
+				item_imp_not_void: item_imp /= Void
+			end
 			Precursor (a_position)
 			
 			radio_imp ?= item_imp

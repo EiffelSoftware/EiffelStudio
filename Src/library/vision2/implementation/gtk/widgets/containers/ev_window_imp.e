@@ -67,23 +67,8 @@ feature -- Initialization
 
 feature  -- Access
 
-	item: EV_WIDGET is
+	item: EV_WIDGET
 			-- Current item.
-		local
-			p: POINTER
-			o: EV_ANY_IMP
-			a_child_list: POINTER
-		do
-			a_child_list := C.gtk_container_children (hbox)
-			if a_child_list /= NULL then
-				p := C.g_list_nth_data (a_child_list, 0)
-				if p /= NULL then
-					o := eif_object_from_c (p)
-					Result ?= o.interface
-				end
-				C.g_list_free (a_child_list)
-			end
-		end
 
 	screen_x, x_position: INTEGER is
 			-- Horizontal position relative to parent.
@@ -262,7 +247,7 @@ feature -- Element change
 		do
 			i := item
 			if i /= Void then
-				on_removed_item (i)
+				on_removed_item (item)
 				w ?= i.implementation
 				check
 					item_has_implementation: w /= Void
@@ -275,6 +260,7 @@ feature -- Element change
 				C.gtk_box_pack_end (hbox, w.c_object, True, True, 0)
 				on_new_item (v)
 			end
+			item := v
 		end
 
 	set_maximum_width (max_width: INTEGER) is

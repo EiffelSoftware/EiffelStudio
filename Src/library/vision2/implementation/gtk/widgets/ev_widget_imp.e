@@ -291,7 +291,7 @@ feature -- Status report
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
 		do
-			Result := gtk_widget_has_focus (visual_widget)
+			Result := True--gtk_widget_has_focus (visual_widget)
 		end
 		
 	has_capture: BOOLEAN is

@@ -33,10 +33,6 @@ feature -- Access
 
 	i_th (i: INTEGER): G is
 			-- Item at `i'-th position.
-		local
-			child: POINTER
-			imp: EV_ANY_IMP
-			a_child_list: POINTER
 		do
 			Result := child_array.i_th (i)
 		end
@@ -50,11 +46,6 @@ feature -- Measurement
 		end
 
 feature {NONE} -- Implementation
-
-	--| FIXME VB: I would like to have all EV_DYNAMIC_LIST
-	--| objects to only use insert_i_th and remove_i_th.
-	--| gtk_reorder_child may only call once C function.
-	--| add_to_container will be removed.
 
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
@@ -101,10 +92,6 @@ feature {NONE} -- Implementation
 invariant
 
 	child_array_not_void: is_usable implies child_array /= Void
---| FIXME EV_TREE_ITEM_IMP has no list_widget when it has no
---| children. Remove invariant from here?
---	list_widget_not_void:
---		is_useable implies list_widget /= NULL
 
 end -- class EV_DYNAMIC_LIST_IMP
 

@@ -5,7 +5,11 @@ inherit
 	OUTPUT_WINDOW;
 	DRAG_SOURCE;
 	WINDOWS;
-	SHARED_TABS
+	SHARED_TABS;
+	COMMAND
+		redefine
+			context_data_useful
+		end
 
 feature -- Properties
 
@@ -241,16 +245,51 @@ feature {TOOL_W, OBJECT_W} -- Implementation
 
 feature {NONE} -- Command arguments
 
-	new_tooler: ANY is
+	context_data_useful: BOOLEAN is True;
+
+	new_tooler_action: ANY is
 			-- Callback value to indicate that a new tool should come up.
 		once
 			!! Result
 		end;
 
-	modify_event: ANY is
+	super_melt_action: ANY is
+			-- Callback value to indicate that a new tool should come up.
+		once
+			!! Result
+		end;
+
+	modify_event_action: ANY is
 			-- Callback value to indicate that the text has modified.
 		once
 			!! Result
+		end;
+
+	process_action (arg: ANY) is
+			-- Process an action based on `arg'.
+		local
+			super_melt_cmd: SUPER_MELT;
+			but_data: BUTTON_DATA;
+			st: STONE
+		do
+			if arg = new_tooler_action then
+				but_data ?= context_data;
+				update_before_transport (but_data);
+				st := focus;
+				if st /= Void then
+					Project_tool.receive (st);
+					deselect_all
+				end
+			elseif arg = super_melt_action then
+				but_data ?= context_data;
+				update_before_transport (but_data);
+				st := focus;
+				if st /= Void then
+					!! super_melt_cmd.do_nothing;
+					super_melt_cmd.work (st);
+					deselect_all
+				end
+			end
 		end;
 
 end -- class TEXT_WINDOW

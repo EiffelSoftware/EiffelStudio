@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			all_element_not_void: all_element /= Void
 		end
 		
-feature {GB_XML_LOAD, GB_COMPONENT, GB_OBJECT_HANDLER} -- Basic operation
+feature {GB_XML_LOAD, GB_COMPONENT, GB_OBJECT_HANDLER, GB_XML_IMPORT} -- Basic operation
 
 	build is
 			-- For every item in `all_gb_ev', execute the deferred

@@ -128,7 +128,7 @@ feature -- Access
 	name: STRING is "Layout Constructor"
 			-- Full name used to represent `Current'.
 
-feature {GB_XML_LOAD} -- Implementation
+feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 
 	update_expanded_state_from_root_object is
 			-- Update expanded state of root item and all children

@@ -163,6 +163,8 @@ feature {NONE} -- Implementation
 			l_cluster: CLUSTER_SD
 			st: GENERATION_BUFFER
 		do
+			Workbench.create_backup_directory
+
 				-- If parsing was successful, save an modified copy of AST
 			l_ace ?= ast
 			if l_ace /= Void and then l_ace.clusters /= Void then

@@ -52,6 +52,9 @@ rt_shared void hash_free(struct hash *hp)
 
 	xfree((char *) (hp->h_key));			/* Free keys array */
 	xfree((char *) (hp->h_entry));			/* Free entries array */
+	hp->h_key = NULL;
+	hp->h_entry = NULL;
+	hp->h_size = 0;
 }
 
 rt_shared char **hash_search(struct hash *hp, register char *object)

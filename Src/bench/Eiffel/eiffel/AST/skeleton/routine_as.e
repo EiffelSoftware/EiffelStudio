@@ -260,6 +260,8 @@ feature -- Type check, byte code and dead code removal
 		local
 			vxrc: VXRC
 		do
+			error_handler.set_error_position (body_start_position)
+
 				-- Check local variables
 			if locals /= Void then
 				check_locals
@@ -402,6 +404,8 @@ feature -- Type check, byte code and dead code removal
 		do
 			context_class := context.current_class
 			if (is_deferred or is_external) then
+					-- No need to set `error_position' from `Error_handler' since
+					-- it is already set by caller of `check_locals'.
 				create vrrr2
 				context.init_error (vrrr2)
 				vrrr2.set_is_deferred (is_deferred)
@@ -431,6 +435,9 @@ feature -- Type check, byte code and dead code removal
 								-- exception
 							solved_type_exists: solved_type /= Void
 						end
+
+							-- Set position correctly in case there is a validity error.
+						Error_handler.set_error_position (locals.item.start_position)
 	
 						id_list.start
 					until

@@ -115,6 +115,14 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST}
 		end
+		
+	is_parent_recursive (a_list_item: EV_LIST_ITEM): BOOLEAN is
+			-- Is `a_list_item' a parent of `Current'?
+		do
+				-- As we cannot insert a EV_LIST or EV_COMBO_BOX into
+				-- an EV_LIST_ITEM, it cannot be True.
+			Result := False
+		end
 
 feature {EV_ANY_I, EV_LIST_ITEM_LIST} -- Implementation
 

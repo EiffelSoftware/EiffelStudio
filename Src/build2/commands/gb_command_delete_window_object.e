@@ -52,6 +52,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_FILE_REMOVE_RESTORE
+		export
+			{NONE} all
+		end
 	
 create	
 	make
@@ -80,8 +85,8 @@ feature -- Basic Operation
 	execute is
 			-- Execute `Current'.
 		local
-			window_object: GB_TITLED_WINDOW_OBJECT
 			full_file_name, file_location: FILE_NAME
+			window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			window_object ?= Object_handler.deep_object_from_id (original_id)
 			check
@@ -97,27 +102,9 @@ feature -- Basic Operation
 			window_object.window_selector_item.unparent
 			object_handler.mark_as_deleted (window_object)
 			
-				-- Now actually destroy the physical files.
-			create file_location.make_from_string (generated_path)
-			if parent_directory /= Void then
-				file_location.extend (parent_directory)
-			end
-				
-				-- Store the _IMP file.
-			create full_file_name.make_from_string (file_location.string)
-			full_file_name.extend ((window_object.name + Class_implementation_extension).as_lower + ".e")
-			store_file_contents (full_file_name)
-			implementation_file_contents := last_stored_string
-			
-				-- Store the interface file.
-			create full_file_name.make_from_string (file_location.string)
-			full_file_name.extend (window_object.name + ".e")
-			store_file_contents (full_file_name)
-			file_contents := last_stored_string
-			
-				-- Remove the files from the disk.
-			delete_file (create {DIRECTORY}.make (file_location), (window_object.name + Class_implementation_extension).as_lower + ".e")
-			delete_file (create {DIRECTORY}.make (file_location), window_object.name + ".e")
+				-- Store and delete all files associated with `window_object' if any.
+				-- Files associated are only there if already generated.
+			delete_files
 			
 				-- Record `Current' in the history list.
 			if not history.command_list.has (Current) then
@@ -126,34 +113,15 @@ feature -- Basic Operation
 			System_status.enable_project_modified
 			command_handler.update
 		end
-		
-	store_file_contents (file_name: FILE_NAME) is
-			-- Store contents of file `file_name' as text in `last_stored_string'.
-		require
-			file_name_not_void: file_name /= Void
-		local
-			file: PLAIN_TEXT_FILE
-		do
-			create file.make (file_name)
-			if file.exists then
-				file.open_read_write
-				file.read_stream (file.count)
-				last_stored_string := file.laststring
-				file.close
-			end
-		end
-		
-	last_stored_string: STRING
-		-- Last string stored as  result of a call to `store_file_contents'.
 
 	undo is
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		local
-			window_object: GB_TITLED_WINDOW_OBJECT
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			file_name: FILE_NAME
+			window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			window_object ?= Object_handler.deep_object_from_id (original_id)
 			check
@@ -172,20 +140,10 @@ feature -- Basic Operation
 				directory_item.extend (window_object.window_selector_item)
 				directory_item.expand
 			end
-				-- Now actually restore the physical files.
-			create file_name.make_from_string (generated_path)
-			if parent_directory /= Void then
-				file_name.extend (parent_directory)				
-			end
-				-- Restore the implementation file.
-			if implementation_file_contents /= Void then
-				restore_file (create {DIRECTORY}.make (file_name), (window_object.name + Class_implementation_extension).as_lower + ".e", implementation_file_contents)
-			end
 			
-				-- Restore the interface file.
-			if file_contents /= Void then
-				restore_file (create {DIRECTORY}.make (file_name), window_object.name + ".e", file_contents)
-			end
+				-- Restore all files associated with `window_object' if any.
+			restore_files
+			
 			command_handler.update
 		end
 		
@@ -214,19 +172,5 @@ feature {NONE} -- Implementation
 
 	original_id: INTEGER
 		-- id of object that was deleted.
-		
-	file_contents: STRING
-		-- Contents of file before deletion or Void if there was no file.
-		
-	implementation_file_contents: STRING
-		-- Contents of IMP file after deletion
-			
-	generated_path: FILE_NAME is
-			-- `Result' is generated directory for current project.
-		do
-			create Result.make_from_string (system_status.current_project_settings.project_location)
-		ensure
-			result_not_void: Result /= Void
-		end
 
 end -- class GB_COMMAND_DELETE_WINDOW_OBJECT

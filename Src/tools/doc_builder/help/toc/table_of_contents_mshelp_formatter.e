@@ -71,42 +71,6 @@ feature -- Processing
 			end
 			
 			Result.append ("</HelpTOCNode>%N")		
-		end		
-
-feature {NONE} -- Implementation
-
---	node_text (e: XM_ELEMENT): STRING is
---			-- HTML text representing `e' for TOC file
---		require
---			e_not_void: e /= Void
---		local
---			l_title,
---			l_url,
---			l_name: STRING
---			is_dir_url: BOOLEAN
---			l_util: UTILITY_FUNCTIONS
---		do
---			
---			
---			
---			
---			
---			create Result.make_empty
---			l_title := e.attribute_by_name (Title_string).value
---			l_url := e.attribute_by_name (Url_string).value
---			
---			if l_url /= Void and then e.name.is_equal (Folder_string) then
---				is_dir_url := (create {UTILITY_FUNCTIONS}).file_type (l_url).is_empty
---			end
---			
---			if not is_dir_url then
---				create l_util
---				create l_name.make_from_string (l_util.toc_friendly_url (l_url))
---				
---			end
---			
---			
---			Result.append (">")
---		end			
+		end				
 
 end -- class TABLE_OF_CONTENTS_MSHELP_FORMATTER

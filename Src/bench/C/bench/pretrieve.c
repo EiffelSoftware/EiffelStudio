@@ -20,6 +20,7 @@
 #include "rt_retrieve.h"
 #include "rt_hashin.h"
 #include "rt_globals.h"
+#include "rt_assert.h"
 #include "minilzo.h"
 #include <string.h>
 
@@ -37,7 +38,7 @@ rt_public void parsing_retrieve_initialize (void);
 
 /* Private features */
 rt_private void stream_buffer_initialization (EIF_INTEGER file_desc, size_t file_size, long position);
-rt_private int parsing_retrieve_read_with_compression (void);
+rt_private size_t parsing_retrieve_read_with_compression (void);
 rt_private int parsing_char_read (char *, int);
 rt_private int parsing_stream_read (char *pointer, int size);	/* store in stream */
 rt_private char *parsing_stream_buffer;
@@ -128,8 +129,10 @@ int parsing_stream_read(char *pointer, int size)
 
 rt_private void stream_buffer_initialization (EIF_INTEGER file_desc, size_t file_size, long position)
 {
-	long number_left = file_size - position;
+	long number_left = (long) (file_size - position);
 	long number_read;
+
+	REQUIRE("file not too big", file_size <= 0x7FFFFFF);
 
 	if (number_left > parsing_stream_size) {
 		parsing_stream_size = number_left; 
@@ -144,24 +147,19 @@ rt_private void stream_buffer_initialization (EIF_INTEGER file_desc, size_t file
 			eio ();
 }
 
-rt_private int parsing_retrieve_read_with_compression (void)
+rt_private size_t parsing_retrieve_read_with_compression (void)
 {
 	RT_GET_CONTEXT
-#ifdef EIF_VMS
 	void* dcmps_in_ptr = (char *)0;
 	void* dcmps_out_ptr = (char *)0;
 	lzo_uint dcmps_in_size = 0;
-	lzo_uint dcmps_out_size = cmp_buffer_size;
-#else
-	char* dcmps_in_ptr = (char *)0;
-	char* dcmps_out_ptr = (char *)0;
-	int dcmps_in_size = 0;
-	int dcmps_out_size = cmp_buffer_size;
-#endif
+	lzo_uint dcmps_out_size = (lzo_uint) cmp_buffer_size;
 	char* ptr = (char *)0;
 	int read_size = 0;
 	int part_read = 0;
-	
+
+	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0xFFFFFFFF);
+
 	ptr = cmps_general_buffer;
 	if (char_read_func ((char *) &read_size, sizeof(int)) < sizeof(int))
 	  eio();

@@ -209,7 +209,7 @@ feature -- Element change
 				j := j + 1
 			end
 		ensure
-			tabulations_set: tabulations.is_equal (tabs)
+			tabulations_set: tabulations.same_items (tabs)
 		end
 
 	set_tabulation (tab: INTEGER) is

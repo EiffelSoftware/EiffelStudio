@@ -49,5 +49,17 @@
 	/* out.c */
 #define TAG_SIZE 512  /* Maximum size for a single tagged expression */
 
+	/* sig.c */
+/* Make sure NSIG is defined. If not, set it to 32 (cross your fingers)--RAM */
+#ifndef NSIG
+#ifdef EIF_WINDOWS
+#define NSIG 16
+#else
+#define NSIG 32		/* Number of signals (acess from 1 to NSIG-1) */
+#endif
+#endif
+
+#define SIGSTACK	200		/* Size of FIFO stack for signal buffering */
+
 
 #endif	/* _eif_constants_h_ */

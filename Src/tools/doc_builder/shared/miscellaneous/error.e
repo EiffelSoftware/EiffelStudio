@@ -7,8 +7,7 @@ class
 	ERROR
 
 create
-	make,
-	make_with_line_information
+	make
 	
 feature -- Creation
 
@@ -23,15 +22,6 @@ feature -- Creation
 			has_description: description /= Void
 			description_valid: not description.is_empty
 		end
-		
-	make_with_line_information (a_desc: like description; a_no, a_pos: like line_number) is
-			-- New error with description and line data
-		require
-			valid_number: a_no > 0
-			valid_pos: a_pos > 0
-		do
-			make (a_desc)
-		end	
 
 feature -- Status Setting
 

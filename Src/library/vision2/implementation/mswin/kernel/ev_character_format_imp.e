@@ -168,7 +168,6 @@ feature -- Status setting
 			-- Make `value' the new background color.
 		do
 			background_color_imp ?= a_color.implementation
-			remove_mask (cfe_autocolor)
 			wel_set_background_color (background_color_imp)
 			
 		end

@@ -11,13 +11,15 @@ inherit
 		redefine
 			stored_node, is_selectionable, widget,
 			add_widget_callbacks, is_valid_parent,
-			is_able_to_be_grouped
+			is_able_to_be_grouped, add_to_option_list,
+			is_movable, remove_widget_callbacks
 		end;
 	PULLDOWN_C
 		redefine
 			stored_node, create_context, full_name,
 			is_selectionable, widget, add_widget_callbacks,
-			is_valid_parent, is_able_to_be_grouped
+			is_valid_parent, is_able_to_be_grouped,
+			add_to_option_list, is_movable, remove_widget_callbacks
 		select
 			create_context, full_name
 		end;
@@ -49,6 +51,29 @@ feature
 			end;
 		end;
 
+    remove_widget_callbacks is
+            -- Remove callbacks.
+            -- (Need to only remove callbacks part of a list
+            -- since set_action will overwrite previous callbacks).
+		local
+			ms_win: STRING
+        do
+			ms_win := "MS_WINDOW";
+			if not ms_win.is_equal (toolkit.name) then
+            	widget.button.remove_pointer_motion_action (Eb_selection_mgr,
+                    first_arg)
+            	widget.button.remove_enter_action (Eb_selection_mgr, parent);
+			end
+        end;
+
+	add_to_option_list (opt_list: ARRAY [INTEGER]) is
+		do
+			opt_list.put (Context_const.geometry_form_nbr,
+						Context_const.Geometry_format_nbr);
+			opt_list.put (Context_const.pulldown_sm_form_nbr,
+						Context_const.Submenu_format_nbr);
+		end;
+
 	is_valid_parent (parent_context: COMPOSITE_C): BOOLEAN is
 			-- Is `parent_context' a valid parent?
 			--| Valid if parent is not MENU_C
@@ -63,6 +88,11 @@ feature
 		do
 			Result := False
 		end
+
+	is_movable: BOOLEAN is
+		do
+			Result := False
+		end;
 
 feature 
 

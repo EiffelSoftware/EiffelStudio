@@ -110,7 +110,7 @@ feature -- Access
 	label_1_context_menu: WINFORMS_CONTEXT_MENU
 			-- System.Windows.Forms.ContextMenu.
 
-	fontSize: DOUBLE
+	font_size: DOUBLE
 			-- Font face and size.
 
 	mmi_sans_serif, mmi_serif, mmi_mono_space, mmi_small, mmi_medium,
@@ -153,6 +153,8 @@ feature {NONE} -- Implementation
 			label_1.set_size (l_size)
 			label_1.set_text (("Right Click on me - I have a context menu!").to_cil)
 			label_1.set_context_menu (label_1_context_menu)
+		
+			font_size := font_sizes ("Medium")
 			
 			controls.add (label_1)
 		end
@@ -217,7 +219,7 @@ feature {NONE} -- Implementation
 			mi_main_format_font_checked.set_checked (True)
 			mi_context_format_font_checked.set_checked (True)
 
-			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, fontSize))
+			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
 		end
 
 
@@ -237,21 +239,21 @@ feature {NONE} -- Implementation
 			if font_size_string.equals (("&Small").to_cil) then
 				mi_main_format_size_checked := mmi_small
 				mi_context_format_size_checked := cmi_small
-				fontSize := font_sizes ("Small")
+				font_size := font_sizes ("Small")
 			elseif font_size_string.equals (("&Large").to_cil) then
 				mi_main_format_size_checked := mmi_large
 				mi_context_format_size_checked := cmi_large
-				fontSize := font_sizes ("Large")
+				font_size := font_sizes ("Large")
 			else
 				mi_main_format_size_checked := mmi_medium
 				mi_context_format_size_checked := cmi_medium
-				fontSize := font_sizes ("Medium")
+				font_size := font_sizes ("Medium")
 			end
 
 			mi_main_format_size_checked.set_checked (True)
 			mi_context_format_size_checked.set_checked (True)
 
-			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, fontSize))
+			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
 		end
 
 

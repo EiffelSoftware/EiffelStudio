@@ -81,6 +81,8 @@ inherit
 			{ANY} valid_hwnd_constant
 		end
 
+	WEL_RETURN_VALUE
+		
 feature -- Access
 
 	parent: WEL_WINDOW
@@ -106,21 +108,18 @@ feature -- Status report
 			Result := flag_set (style, Ws_child)
 		end
 
-	default_processing_enabled: BOOLEAN is
+	default_processing_enabled: BOOLEAN is 
+		obsolete
+			"Use `default_processing' instead"
 			-- Is the default window processing enabled?
 			-- If True (by default) the standard window
 			-- procedure will be called. Otherwise, the standard
 			-- window procedure will not be called and the
 			-- normal behavior will not occur.
 		do
-			Result := default_processing.item
+			Result := default_processing
 		end
 
-	message_return_value: INTEGER is	
-			-- Value to be returned to Windows after message processing.
-		do
-			Result := message_return_value_cell.item
-		end
 
 	enabled: BOOLEAN is
 			-- Is the window enabled for mouse and keyboard input?
@@ -466,9 +465,9 @@ feature -- Status setting
 			-- each messages received by the window and then the
 			-- normal behavior will occur.
 		do
-			default_processing.set_item (True)
+			set_default_processing (True)
 		ensure
-			default_processing_enabled: default_processing_enabled
+			default_processing_enabled: default_processing
 		end
 
 	disable_default_processing is
@@ -477,20 +476,9 @@ feature -- Status setting
 			-- each messages received by the window and then the
 			-- normal behavior will not occur.
 		do
-			default_processing.set_item (False)
+			set_default_processing (False)
 		ensure
-			default_processing_disabled: not default_processing_enabled
-		end
-
-	set_message_return_value (v: INTEGER) is
-			-- Set `v' to `message_return_value'.
-			--| Set also `has_return_value_cell' to `True', used by WEL_DISPATCHER
-			--| when returning a value to Windows.
-		do
-			has_return_value_cell.set_item (True)
-			message_return_value_cell.set_item (v)
-		ensure
-			message_return_value_set: message_return_value = v
+			default_processing_disabled: not default_processing
 		end
 
 	enable is
@@ -641,9 +629,9 @@ feature -- Element change
 			!! a_wel_string.make (a_text)
 			cwin_set_window_text (item, a_wel_string.item)
 		ensure
-			text_set: text.is_equal (a_text)
+			 text_set: text.is_equal (a_text)
 		end
-
+		
 	set_placement (a_placement: WEL_WINDOW_PLACEMENT) is
 			-- Set `placement' with `a_placement'
 		require
@@ -1234,7 +1222,8 @@ feature -- Messages
 		do
 		end
 
-feature {NONE} -- Implementation
+-- feature {NONE} -- Implementation
+feature {WEL_WINDOW} -- Implementation
 
 	default_window_procedure: POINTER
 			-- Default window procedure
@@ -1312,24 +1301,6 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	default_processing: BOOLEAN_REF is
-			-- Is the default window processing enabled?
-			-- If True (by default) the standard window
-			-- procedure will be called. Otherwise, the standard
-			-- window procedure will not be called and the
-			-- normal behavior will not occur.
-		once
-			!! Result
-			Result.set_item (True)
-		end
-
-	message_return_value_cell: INTEGER_REF is
-			-- Value to be returned to Windows after message processing.
-		once
-			!! Result
-			Result.set_item (0)
-		end
-
 	commands_enabled_ref: BOOLEAN_REF is
 			-- Is the commands execution enabled?
 			-- False by default.
@@ -1381,7 +1352,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-feature {WEL_DISPATCHER}
+feature {WEL_DISPATCHER, WEL_WINDOW}
 
 	window_process_message, process_message (hwnd: POINTER; msg,
 			wparam, lparam: INTEGER): INTEGER is
@@ -1470,39 +1441,6 @@ feature {WEL_DISPATCHER}
 				lparam)
 		end
 
-	set_default_processing (new_state: BOOLEAN) is
-			-- Set the window default processing state with
-			-- `new_state'.
-		do
-			default_processing.set_item (new_state)
-		ensure
-			default_processing_set: default_processing_enabled = new_state
-  		end
-  
-	reset_window_processing is
-			-- Reset standard behavior of `Current' to default returned value
-			-- and to an automatic call of the default window procedure.
-		do
-			default_processing.set_item (True)
-			has_return_value_cell.set_item (False)
-			message_return_value_cell.set_item (0)
-		ensure
-			default_processing_set: default_processing_enabled
-			message_return_value_set: message_return_value = 0
-		end
-
-	has_return_value_cell: BOOLEAN_REF is
-			-- Does this window return a value for message currently handled?
-		once
-			!! Result
-			Result.set_item (False)
-		end
-
-	has_return_value: BOOLEAN is
-			-- Does this window return a value for message currently handled?
-		do
-			Result := has_return_value_cell.item
-		end
 
 feature {NONE} -- Removal
 

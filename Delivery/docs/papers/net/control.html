@@ -2,7 +2,7 @@
 <HEAD>
 <TITLE>Obtaining a Finer Degree of Control</TITLE>
 <LINK REV="made" HREF="mailto:ise@eiffel.com">
-<link rel="stylesheet" type="text/css" href="../../../styles/tech.css">
+<link rel="stylesheet" type="text/css" href="../../styles/tech.css">
 <meta name="Microsoft Border" content="t, default">
 </HEAD>
 
@@ -23,8 +23,7 @@
 <A HREF="toc.html"><IMG SRC="toc.gif" ALIGN=RIGHT ALT="TOC" width="16" height="16"></A>
 <A HREF="working.html#Title"><IMG SRC="previous.gif"
 ALT="Previous" ALIGN="RIGHT" width="16" height="16"></A>
-<H5>The EiffelNet Library</H5>
-</P>
+<h1>The EiffelNet Library</h1>
 <hr>
 
 <H2><A NAME="Title">7 OBTAINING A FINER DEGREE OF CONTROL</A></H2>
@@ -60,7 +59,6 @@ The two sockets must be able to refer to a common address. For a communication w
 	<DT>!! soc1.make_server ("/tmp/here")
 </I>
 </DL></ul>
-</P>
 <P>
 The <I>make_</I> procedures take care of all the hassles of establishing a socket for a client or a server: creating an address object, setting it to the given path name, binding the socket to the address, and in the client case establishing the connection. For finer control, these procedures are still available: you can create a bare socket by using the basic creation procedure <I>make</I> (rather than the more sophisticated <I>make_client </I>and <I>make_server</I>), then create a separate address object, associate the two, and call the <I>bind</I> and <I>connect</I> procedures.
 </P>
@@ -71,7 +69,6 @@ Because communication is bidirectional, the distinction between client and serve
 	<DT>soc1.connect
 </I>
 </DL></ul>
-</P>
 <P>
 To make itself ready for the communication, the server will execute:
 <ul><DL>
@@ -79,7 +76,6 @@ To make itself ready for the communication, the server will execute:
 	<DT>soc1.listen (n)
 </I>
 </DL></ul>
-</P>
 <P>
 where <I>n</I> is a positive integer indicating the maximum number of client connection attempts that may be queued. The value 5, used in the example, is typical for <I>n</I>.
 </P>
@@ -96,7 +92,6 @@ Whenever the server needs to exchange objects with one of the clients, it obtain
 	<DT>soc2.close
 </I>
 </DL></ul>
-</P>
 <P>
 Procedure <I>accept </I>ensures synchronization with the client. When communication is established, <I>accept</I> creates a new socket which will be accessible through attribute <I>accepted</I>, whose value is here assigned to the local entity <I>soc2</I>. To receive objects, the server will use operations of the form introduced earlier (<A HREF="overview.html#iObject Structures">3.4</A>):
 <ul><DL>
@@ -104,7 +99,6 @@ Procedure <I>accept </I>ensures synchronization with the client. When communicat
 	<DT>struct ?= soc2.retrieved
 </I>
 </DL></ul>
-</P>
 <P>
 applying to <I>soc2</I>, not <I>soc1</I>; this makes <I>soc1 </I>available to accept connections with other clients, a fundamental feature of client-server mechanisms.
 </P>
@@ -164,7 +158,6 @@ Here is the server class based on these principles. The actual processing has be
 			<DT><DD><B>end</B></DL>
 	<DT><B>end</B>
 </I></DL></ul>
-</P>
 <P>
 Note that at the end the server should not only closes the original socket <I>soc1 </I>but also unlinks it. It is recommended to have a Rescue clause which, as here, ensures that the socket will be closed and unlinked if the system terminates abnormally before its term.
 <P>Here now is the client class:
@@ -211,7 +204,6 @@ Note that at the end the server should not only closes the original socket <I>so
 				<DT><DD><B>end</B></DL>
 	<DT><B>end</B>
 </I></DL></ul>
-</P>
 
 <H3><A NAME="Different Machines">7.2 Communication between two different machines</A></H3>
 
@@ -233,7 +225,6 @@ The available creation procedures are slightly different. The server will be set
 	<DT>!! soc1.make_server_port (2000)
 </I>
 </DL></ul>
-</P>
 <P>
 For the client, the creation will specify two elements of information: the port number and the server. The server argument, a string, identifies the machine used as a server; it may be the host name of that machine, for example <I>"serverhost" </I>as used in the example; or it can be the machine's internet address, made of a sequence of numbers separated by periods, such as <I>"127.0.0.1"</I>.
 </P>
@@ -275,7 +266,6 @@ The rest of the classes is as before.
 	<DT><B>end</B>
 </I>
 </DL></ul>
-</P>
 
 <P>
 <A HREF="working.html#Title"><IMG SRC="previous.gif" ALT="Previous" width="16" height="16">Previous
@@ -290,10 +280,10 @@ Chapter</A>
 <TABLE BORDER=3 CELLPADDING=1 CELLSPACING=3>
 <TR>
 <TD>
-<A HREF="http://www.eiffel.com/index.html"><IMG ALT="[Home]" SRC="../../../Icons/ise_home.gif" width="40" height="40"></A></TD><TD>
-<A HREF="http://www.eiffel.com/quickref.html"><IMG ALT="[QuickRef]" SRC="../../../Icons/quick.gif" width="40" height="40"></A></TD>
+<A HREF="http://www.eiffel.com/index.html"><IMG ALT="[Home]" SRC="../../Icons/ise_home.gif" width="40" height="40"></A></TD><TD>
+<A HREF="http://www.eiffel.com/quickref.html"><IMG ALT="[QuickRef]" SRC="../../Icons/quick.gif" width="40" height="40"></A></TD>
 <TD>
-<A HREF="http://www.eiffel.com/forms/interaction.html"><IMG ALT="[Interact]" SRC="../../../Icons/feather.gif" width="40" height="40"></A></TD>
+<A HREF="http://www.eiffel.com/forms/interaction.html"><IMG ALT="[Interact]" SRC="../../Icons/feather.gif" width="40" height="40"></A></TD>
 </TR>
 </TABLE>
 </CENTER>

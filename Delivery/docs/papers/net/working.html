@@ -2,7 +2,7 @@
 <HEAD>
 <TITLE>Introduction to the Examples</TITLE>
 <LINK REV="made" HREF="mailto:ise@eiffel.com">
-<link rel="stylesheet" type="text/css" href="../../../styles/tech.css">
+<link rel="stylesheet" type="text/css" href="../../styles/tech.css">
 <meta name="Microsoft Border" content="t, default">
 </HEAD>
 
@@ -23,8 +23,7 @@
 <A HREF="toc.html"><IMG SRC="toc.gif" ALIGN=RIGHT ALT="TOC" width="16" height="16"></A>
 <A HREF="examples_introduction.html#Title"><IMG SRC="previous.gif"
 ALT="Previous" ALIGN="RIGHT" width="16" height="16"></A>
-<H5>The EiffelNet Library</H5>
-</P>
+<h1>The EiffelNet Library</h1>
 <hr>
 
 <H2><A NAME="Title">6 WORKING AT THE PREDEFINED LEVEL</A></H2>
@@ -60,7 +59,6 @@ As noted above, it is possible with sockets, as any other <I>IO_MEDIUM</I>, to s
 		<DT><DD>make
 	<DT><B>end</B>
 </I></DL></ul>
-</P>
 <P>
 Note that to make use of the storage and retrieval facilities the objects to be exchanged must be instances of a class which, as here, is a descendant of <I>STORABLE</I>.
 </P>
@@ -128,7 +126,6 @@ Here is the client class:
 </DL>
 <DT><B>end</B>
 </I></DL></ul>
-</P>
 <P>
 </B></I>The scheme is very simple:
 <ul>
@@ -144,7 +141,6 @@ Here is the client class:
 <BR>
 <li>Finally, a call to <I>cleanup </I>is necessary to close the sockets that have been opened and free the corresponding resources.
 </ul>
-</P>
 <P>
 Of course, in a typical object-oriented design, the class and those which appear in the rest of this set of examples may "do" more than one thing and so may have more routines than the ones shown in this document.
 </P>
@@ -156,7 +152,6 @@ There would be one difference for a <I>NETWORK_CLIENT</I>: procedure <I>make</I>
 <ul><DL>
 <DT><I>make </I>("serverhost", 2000)
 </DL></ul>
-</P>
 <P>
 As noted earlier, you may identify the machine by an Internet address such as <I>"127.0.0.1"</I> rather than by a host name.
 </P>
@@ -202,7 +197,6 @@ Now, the server class:
 	<DT><B>end</B>
 </I>
 </DL></ul>
-</P>
 <P>
 The developer's task is even easier here than on the client side. The last instruction in the creation procedure is <I>execute</I>, inherited from the chosen <I>_SERVER </I>class, which executes a loop that will repeatedly call <I>receive</I>, <I>process_message</I>, <I>respond</I> and <I>close</I>. This loop is actually an infinite one, which will only terminate if the server is killed (in which case a Rescue clause will execute procedure <I>cleanup</I>); indeed, a server is not expected to terminate under normal circumstances.
 </P>
@@ -228,10 +222,10 @@ Chapter</A>
 <TABLE BORDER=3 CELLPADDING=1 CELLSPACING=3>
 <TR>
 <TD>
-<A HREF="http://www.eiffel.com/index.html"><IMG ALT="[Home]" SRC="../../../Icons/ise_home.gif" width="40" height="40"></A></TD><TD>
-<A HREF="http://www.eiffel.com/quickref.html"><IMG ALT="[QuickRef]" SRC="../../../Icons/quick.gif" width="40" height="40"></A></TD>
+<A HREF="http://www.eiffel.com/index.html"><IMG ALT="[Home]" SRC="../../Icons/ise_home.gif" width="40" height="40"></A></TD><TD>
+<A HREF="http://www.eiffel.com/quickref.html"><IMG ALT="[QuickRef]" SRC="../../Icons/quick.gif" width="40" height="40"></A></TD>
 <TD>
-<A HREF="http://www.eiffel.com/forms/interaction.html"><IMG ALT="[Interact]" SRC="../../../Icons/feather.gif" width="40" height="40"></A></TD>
+<A HREF="http://www.eiffel.com/forms/interaction.html"><IMG ALT="[Interact]" SRC="../../Icons/feather.gif" width="40" height="40"></A></TD>
 </TR>
 </TABLE>
 </CENTER>

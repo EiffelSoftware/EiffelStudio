@@ -40,6 +40,7 @@ feature
 			container: EV_CONTAINER
 			menu_bar: EV_MENU_BAR
 			object_menu: EV_MENU
+			menu_item: EV_MENU
 			button: EV_BUTTON
 			event_test_frame: EV_FRAME
 		do
@@ -131,11 +132,10 @@ feature
 			until
 				non_widgets.after
 			loop
-				object_menu.extend (
-					create {EV_MENU_ITEM}.make_with_text (
-						non_widgets.item.generating_type
-					)
+				create menu_item.make_with_text (
+					non_widgets.item.generating_type
 				)
+				object_menu.extend (menu_item)
 				non_widgets.forth
 			end
 		end
@@ -379,6 +379,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/17 01:09:04  oconnor
+--| more tests
+--|
 --| Revision 1.5  2000/02/15 19:50:41  oconnor
 --| more tests
 --|

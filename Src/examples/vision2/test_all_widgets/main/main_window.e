@@ -47,7 +47,7 @@ feature -- Initialization
 			c11: LIST_DEMO_WINDOW
 			c12: TABLE_DEMO_WINDOW
 			c13: DYNAMIC_TABLE_DEMO_WINDOW
---			c14: TREE_DEMO_WINDOW
+			c14: TREE_DEMO_WINDOW
 			c15: MC_LIST_DEMO_WINDOW
 			c16: DIALOG_DEMO_WINDOW
 			c18: COMBO_DEMO_WINDOW
@@ -69,7 +69,7 @@ feature -- Initialization
 			!!c11.make (Current)
 			!!c12.make (Current)		
 			!!c13.make (Current)
---			!!c14.make (Current)
+			!!c14.make (Current)
 			!!c15.make (Current)
 			!!c16.make (Current)
 			!!c18.make (Current)
@@ -87,7 +87,7 @@ feature -- Initialization
 			!!b.make_button (Current, "List", "", c11)
 			!!b.make_button (Current, "Table", "", c12)  --pixname("table")
 			!!b.make_button (Current, "Dynamic Table", "", c13) -- pixname("dtable")
---			!!b.make_button (Current, "Tree", pixname("tree"), c14) 
+			!!b.make_button (Current, "Tree", "", c14)  --pixname("tree")
 			!!b.make_button (Current, "MC List", "", c15)
 			!!b.make_button (Current, "Dialog", "", c16)
 			!!b.make_button (Current, "Combo box", "", c18)
@@ -112,8 +112,12 @@ feature -- Status setting
 	
 	set_values is
 			-- Set the values on the widgets
+		local
+			pwd: EV_PASSWORD_FIELD
+			char: CHARACTER
 		do
 			set_title ("Test all widgets")
+			!! pwd.make (container)
 		end
 
 feature -- Basic operation

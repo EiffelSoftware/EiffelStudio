@@ -10,7 +10,7 @@ class
 inherit
 	PICT_COLOR_B
 		redefine
-			create_ev_widget
+			create_ev_widget, implementation
 		end
 
 creation
@@ -21,16 +21,39 @@ feature
 	create_ev_widget (a_name: STRING;  a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a draw button with `a_name' as identifier
 			-- and `a_parent' as parent.
-		local
-			windows_b: ACTIVE_PICT_COLOR_B_IMP
 		do
-			depth := a_parent.depth+1;
+			depth := a_parent.depth + 1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			!! windows_b.make (Current, man, a_parent);
-			implementation := windows_b;
+			!ACTIVE_PICT_COLOR_B_IMP! implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
+			set_active (True)
 			set_default
 		end
+
+feature -- Status
+
+	active: BOOLEAN is
+			-- Is button active? 
+			--| False means it will be like a PICT_COLOR_B
+		do
+			Result := implementation.active
+		end
+
+feature -- Update
+
+	set_active (flag: BOOLEAN) is
+			-- Set `active' to `flag'.
+			--| True means that the button will react to the mouse_enter
+			--| and mouse_leave events. False means it will behave like
+			--| a PICT_COLOR_B.
+		do
+			implementation.set_active (flag)
+		end
+
+feature {NONE} -- Implementation
+
+	implementation: ACTIVE_PICT_COLOR_B_I
+		-- Implementation class
 
 end -- class ACTIVE_BORDER_PICT_COLOR_B

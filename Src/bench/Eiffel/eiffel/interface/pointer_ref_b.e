@@ -1,21 +1,25 @@
--- Class POINTER_REF
+indexing
+	description: "Compriler representation of POINTER_REF class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class POINTER_REF_B 
 
 inherit
-
 	CLASS_REF_B
 
-creation
-
+create
 	make
 	
-feature 
+feature -- Status report
 
 	valid (desc: ATTR_DESC): BOOLEAN is
 			-- Valididty test for unique attribute of class
+		local
+			l_pointer_desc: POINTER_DESC
 		do
-			Result := desc.is_pointer;
-		end; -- valid
+			l_pointer_desc ?= desc
+			Result := l_pointer_desc /= Void
+		end
 
 end

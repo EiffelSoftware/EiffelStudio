@@ -1,4 +1,7 @@
--- Class CHARACTER_REF
+indexing
+	description: "Compiler representation of CHARACTER_REF class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CHARACTER_REF_B 
 
@@ -8,7 +11,7 @@ inherit
 			make as basic_make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -23,7 +26,7 @@ feature -- Initialization
 			is_wide_set: is_wide = w
 		end
 
-feature -- Property
+feature -- Status report
 
 	is_wide: BOOLEAN
 			-- Is current character a wide one?
@@ -31,12 +34,11 @@ feature -- Property
 	valid (desc: ATTR_DESC): BOOLEAN is
 			-- Valididty test for unique attribute of class
 		local
-			c: CHAR_DESC
+			l_char_desc: CHAR_DESC
 		do
-			Result := desc.is_character
-			if Result then
-				c ?= desc
-				Result := c.is_wide = is_wide
+			l_char_desc ?= desc
+			if l_char_desc /= Void then
+				Result := l_char_desc.is_wide = is_wide
 			end
 		end
 

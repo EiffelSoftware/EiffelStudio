@@ -129,9 +129,11 @@ feature -- Status setting
 			until
 				is_destroyed or else not is_show_requested
 			loop
+				if feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
+					App_implementation.call_idle_actions
+				end
 				dummy := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
 				l_had_exception := app_implementation.gtk_marshal.last_callback_had_exception
-				App_implementation.call_idle_actions
 				if l_had_exception then
 					l_message := app_implementation.gtk_marshal.last_exception_message
 					app_implementation.gtk_marshal.disable_exception_handling

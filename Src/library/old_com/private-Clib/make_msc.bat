@@ -1,2 +1,0 @@
-nmake /f makefile.msc
-

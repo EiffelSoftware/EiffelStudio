@@ -28,17 +28,19 @@ feature -- Access
 		require
 			a_type_not_void: a_type /= Void
 		local
-			suceeded: BOOLEAN
+			assert_enabled: BOOLEAN
 		do
 			if all_objects.has (a_type) then
 					-- Retrieve an already created object.
 				Result := all_objects @ (a_type)
 			else
-				suceeded := (create {ISE_RUNTIME}).check_assert (False)
+				assert_enabled := (create {ISE_RUNTIME}).check_assert (False)
 					-- Create the object and store it for later queries.
 				Result ?= new_instance_of (dynamic_type_from_string (a_type))
 				Result.default_create
-				suceeded := (create {ISE_RUNTIME}).check_assert (True)
+				if assert_enabled then
+					assert_enabled := (create {ISE_RUNTIME}).check_assert (True)
+				end
 				all_objects.put (Result, a_type)
 			end
 		ensure

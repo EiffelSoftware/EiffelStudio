@@ -59,9 +59,11 @@ feature -- Access
 				agent set_maximum_height (?), agent valid_maximum_height (?))
 			
 				-- Set up title.
-			create title_label.make_with_text ("Title")
+			create title_label.make_with_text (gb_ev_window_title)
+			title_label.set_tooltip (gb_ev_window_title_tooltip)
 			Result.extend (title_label)
 			create title
+			title.set_tooltip (gb_ev_window_title_tooltip)
 			Result.extend (title)
 			title.change_actions.extend (agent set_title)
 			title.change_actions.extend (agent update_editors)

@@ -57,6 +57,8 @@ feature {NONE} -- Properties
 		do
 			!! Result.make;
 			!! cmd.make (f.e_feature, f.e_class, Result);
+			-- **** FIXME make this configurable
+			cmd.set_all_callers;
 			if cmd.has_valid_feature then
 				cmd.execute
 			end

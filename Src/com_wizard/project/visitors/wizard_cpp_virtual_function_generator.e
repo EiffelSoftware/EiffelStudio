@@ -29,7 +29,6 @@ feature -- Basic operations
 		local
 			signature: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
-			a_result_type: STRING
 		do
 			func_desc := a_descriptor
 
@@ -146,7 +145,7 @@ feature -- Basic operations
 					if pointed_descriptor /= Void then
 						interface_descriptor := pointed_descriptor.interface_descriptor
 						forward_declarations.force 
-							(forward_interface_declaration (interface_descriptor.c_type_name))
+							(forward_interface_declaration (interface_descriptor.c_type_name, interface_descriptor.namespace))
 							c_header_files_after.force (a_visitor.c_header_file)
 					else
 						c_header_files.force (a_visitor.c_header_file)
@@ -157,35 +156,13 @@ feature -- Basic operations
 			end
 		end
 
-	forward_interface_declaration (a_name: STRING): STRING is
+	forward_interface_declaration (a_name, a_namespace: STRING): STRING is
 			-- Forward declaration of interface.
 		local
-			class_protector: STRING
+			interface_declaration: WIZARD_WRITER_FORWARD_CLASS_DECLARATION
 		do
-			class_protector := clone (a_name)
-			class_protector.prepend ("__")
-			class_protector.append ("_FWD_DEFINED__")
-
-			create Result.make (500)
-			Result.append (Hash_if_ndef)
-			Result.append (Space)
-			Result.append (class_protector)
-			Result.append (New_line)
-
-			Result.append (Hash_define)
-			Result.append (Space)
-			Result.append (class_protector)
-			Result.append (New_line)
-			
-			Result.append (C_class_keyword)
-			Result.append (Space)
-			Result.append (a_name)
-			Result.append (Semicolon)
-			Result.append (New_line)
-
-			Result.append (Hash_end_if)
-			Result.append (New_line)
-			Result.append (New_line)
+			create interface_declaration.make (a_name, a_namespace, True)
+			Result := interface_declaration.generated_code
 		end
 		
 end -- class WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR

@@ -52,7 +52,7 @@ feature -- Behavior
 			else
 				previous_dialog.set_registered_user (False)
 				!! error_box.make
-				error_box.error_message_box (Current, "Entered %"username%" and %"key%" are invalids.", "Registration Error")
+				error_box.error_message_box (Current, "Invalid key.%NPlease make sure you typed it correctly and try again.", "Registration Error")
 			end
 		end
 

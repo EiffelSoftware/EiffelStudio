@@ -9,7 +9,7 @@
 		</paragraph>
 		<paragraph>
 			<image>
-				<url>../../../../../images/eiffelstudio/dialogs_and_wizards/new_expression_definition_dlg.png</url>
+				<url>/images/eiffelstudio/dialogs_and_wizards/new_expression_definition_dlg.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The first part in the dialog makes it possible to select the context of the expression. The default context is the context of the 
@@ -18,5 +18,5 @@
 				<label>currently selected call stack element</label>
 			</link>. This context gives access to the locals, the arguments, the result and the enclosing object features. The object context, that requires a valid object address, gives access to the features of the selected object. The last context, the class-related context, gives access to the once and constants features of that class. It requires a valid class name.
 		</paragraph>
-		<paragraph>The second part prompts for the expression itself. This field supports arguments, dot calls and operators (to a certain extent), but does not support creation expressions, agents or static calls (as in "feature {MY_CLASS}.my_feature"). Genericity is partially supported. Despite these limitations, we believe the expression evaluation tool should provide you with a lot of useful functionality.</paragraph>
+		<paragraph>The second part prompts for the expression itself. This field supports arguments, dot calls and operators (to a certain extent), but does not support creation expressions, agents or static calls (as in "feature {<code><class_name>MY_CLASS</class_name></code>}.<code><feature_name>my_feature</feature_name></code>"). Genericity is partially supported. Despite these limitations, we believe the expression evaluation tool should provide you with a lot of useful functionality.</paragraph>
 	</paragraph></document>

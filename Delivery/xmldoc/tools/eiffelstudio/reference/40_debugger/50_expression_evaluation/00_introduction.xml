@@ -5,7 +5,7 @@
 	<paragraph>
 		<paragraph>
 			<image>
-				<url>../../../../../images/eiffelstudio/debugger/expression_evaluation_tool.png</url>
+				<url>/images/eiffelstudio/debugger/expression_evaluation_tool.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The expression evaluation tool makes it possible to evaluate expressions while the application is stopped. A typical use for it is if you would like to know the result an external feature would return. Since you do not have access to the C memory of the application, doing this is impossible. You may also want to know the result of an Eiffel feature whose body is too complex for you to evaluate.</paragraph>

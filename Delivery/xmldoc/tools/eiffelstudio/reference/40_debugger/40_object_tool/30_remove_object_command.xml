@@ -7,7 +7,7 @@
 				<label>object tool</label>
 			</link> toolbar, this command 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
+				<url>/images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
 			</image> discards an object from the 
 			<link>
 				<url>10_object_view.xml</url>

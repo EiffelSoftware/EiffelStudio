@@ -11,7 +11,7 @@
 		<paragraph>The expression evaluation tool's main part is the list of expressions that should be evaluated.</paragraph>
 		<paragraph>
 			<image>
-				<url>../../../../../images/eiffelstudio/debugger/expression_evaluation_tool.png</url>
+				<url>/images/eiffelstudio/debugger/expression_evaluation_tool.png</url>
 			</image>
 		</paragraph>
 		<paragraph>Its first column gives the context in which the 
@@ -29,7 +29,7 @@
 				<image>
 					<height>8</height>
 					<width>8</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_new_expression_color.gif</url>
+					<url>/images/eiffelstudio/icons/icon_new_expression_color.gif</url>
 				</image> pops up the 
 				<link>
 					<url>20_new_expression_dialog.xml</url>
@@ -40,7 +40,7 @@
 				<image>
 					<height>8</height>
 					<width>8</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_edit_expression_color.gif</url>
+					<url>/images/eiffelstudio/icons/icon_edit_expression_color.gif</url>
 				</image> edits a currently selected expression (it is not possible to change the context of an expression, only the expression itself).
 				<line_break/> The associated key shortcut is F2.
 			</item>
@@ -48,7 +48,7 @@
 				<image>
 					<height>8</height>
 					<width>8</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
+					<url>/images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
 				</image> removes the selected expressions from the list.
 				<line_break/> The associated key shortcut is Del.
 			</item>

@@ -43,7 +43,7 @@
 				<image>
 					<height>8</height>
 					<width>8</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_slice_limits_vsmall_color.gif</url>
+					<url>/images/eiffelstudio/icons/icon_slice_limits_vsmall_color.gif</url>
 				</image>
 				<link>
 					<url>20_slice_size_command.xml</url>
@@ -54,7 +54,7 @@
 				<image>
 					<height>8</height>
 					<width>8</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
+					<url>/images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
 				</image>
 				<link>
 					<url>30_remove_object_command.xml</url>

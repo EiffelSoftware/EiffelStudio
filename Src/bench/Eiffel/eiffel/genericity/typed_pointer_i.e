@@ -95,11 +95,9 @@ feature
 			-- String generated for the type.
 		local
 			l_str: STRING
-			l_type_i: TYPE_I
 			l_type_c: TYPE_C
 		do
-			l_type_i := meta_generic.item (1)
-			l_type_c ?= l_type_i
+			l_type_c ?= meta_generic.item (1)
 			if l_type_c /= Void then
 				l_str := l_type_c.c_string
 			else

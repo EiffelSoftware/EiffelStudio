@@ -12,19 +12,29 @@ inherit
 		rename
 			show as show_internal
 		redefine
-			setup_dialog
+			setup_dialog,
+			is_relative
 		end
 		
 	EV_DIALOG_IMP_COMMON
 		redefine
 			setup_dialog,
-			show
+			show,
+			is_relative
 		select
 			show
 		end
 
 create
 	make_with_dialog_window
+	
+feature -- Status report
+
+	is_relative: BOOLEAN is
+			-- Is `Current' shown relative to another window?
+		do
+			Result := is_show_requested
+		end
 
 feature -- Basic operations
 

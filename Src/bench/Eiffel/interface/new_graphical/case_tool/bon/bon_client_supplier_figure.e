@@ -567,21 +567,21 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 
 			d.set_foreground_color (Default_colors.Blue)
 			d.set_line_width (4)
-			d.draw_polyline (pa, False)
+			d.draw_polyline (offset_coordinates (pa), False)
 			d.set_foreground_color (Default_colors.White)
 			d.set_line_width (2)
-			d.draw_polyline (pa, False)
+			d.draw_polyline (offset_coordinates (pa), False)
 			d.set_foreground_color (Default_colors.Blue)
 			d.set_line_width (0)
 			if t1 /= Void then
-				d.fill_polygon (t1)
+				d.fill_polygon (offset_coordinates (t1))
 			end
 			if t2 /= Void then
-				d.fill_polygon (t2)
+				d.fill_polygon (offset_coordinates (t2))
 			end
 			d.set_line_width (2)
 			if t3 /= Void then
-				d.draw_polyline (t3, False)
+				d.draw_polyline (offset_coordinates (t3), False)
 			end
 			d.set_foreground_color (name_figure.foreground_color)
 			create label_font.make_with_values (
@@ -592,7 +592,11 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 			label_font.set_height ((label_font.height * client.world.point.scale_y).rounded)	
 			d.set_font (label_font)
 			if name_figure.is_show_requested then
-				d.draw_text_top_left (name_figure.point.x_abs, name_figure.point.y_abs, name_figure.text)
+				d.draw_text_top_left (
+					name_figure.point.x_abs - drawable_position.x,
+					name_figure.point.y_abs - drawable_position.y,
+					name_figure.text
+				)
 			end
 		end
 

@@ -12,11 +12,11 @@ inherit
 			world
 		end
 
-	EV_FIGURE_DRAWER
+	ES_DIAGRAM_BUFFER_MANAGER
 		undefine
 			default_create
 		end
-		
+
 	EB_CONTEXT_TOOL_DATA
 		undefine
 			default_create
@@ -175,15 +175,51 @@ feature {NONE} -- Implementation
 	
 	start_capture is
 			-- Enable mouse capture on the drawing area
+		local
+			d_area: EV_DRAWING_AREA
 		do
-			world.context_editor.area.enable_capture
+			d_area := world.context_editor.area
+			if d_area /= Void and then not d_area.has_capture then
+				d_area.enable_capture
+			end
 		end
 		
 	stop_capture is
 			-- Enable mouse capture on the drawing area
+		local
+			d_area: EV_DRAWING_AREA
 		do
+			d_area := world.context_editor.area
 			world.context_editor.scroll_if_necessary
-			world.context_editor.area.disable_capture
+			if d_area /= Void and then d_area.has_capture then
+				d_area.disable_capture
+			end
+		end
+		
+feature -- Implementation (Drawing)
+
+	offset_coordinates (coordinates: ARRAY [EV_COORDINATE]): ARRAY [EV_COORDINATE] is
+			-- 
+		local
+			i: INTEGER
+			coordinate: EV_COORDINATE
+			old_x, old_y: INTEGER
+		do
+			create Result.make (coordinates.lower, coordinates.upper)
+			from
+				i:= Result.lower
+			until
+				i > Result.upper
+			loop
+				coordinate := coordinates @ i
+				old_x := coordinate.x
+				old_y := coordinate.y
+				if coordinate /= Void then
+					create coordinate.set (old_x - drawable_position.x, old_y - drawable_position.y)
+					Result.put (coordinate, i)
+				end
+				i := i + 1
+			end
 		end
 		
 end -- class DIAGRAM_COMPONENT

@@ -11,6 +11,8 @@ inherit
 		redefine
 			test
 		end
+
+	KL_PART_COMPARATOR [G]
 		
 create
 	make
@@ -23,7 +25,7 @@ feature {NONE} -- Initialization
 			an_action_not_void: an_action /= Void
 		do
 			action := an_action
-			create evaluation_tuple.make
+			create evaluation_tuple
 		ensure
 			action_set: action = an_action
 		end
@@ -49,7 +51,15 @@ feature -- Status report
 				Result := action.item (evaluation_tuple)
 			end
 		end
-		
+	
+	less_than (u, v: G): BOOLEAN is
+			-- Is `u' considered less than `v'?
+		do
+			evaluation_tuple.put (u, 1)
+			evaluation_tuple.put (v, 2)
+			Result := action.item (evaluation_tuple)	
+		end
+
 feature {NONE} -- Implementation
 
 	evaluation_tuple: TUPLE [G, G]

@@ -16,8 +16,8 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			label_width: LABEL_G;
-			label_height: LABEL_G;
+			label_width: LABEL;
+			label_height: LABEL;
 		do
 			initialize (Widget_names.drawing_box_form_name, a_parent);
 

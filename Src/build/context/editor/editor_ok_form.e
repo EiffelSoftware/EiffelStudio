@@ -7,11 +7,11 @@ inherit
 
 feature {NONE}
 
-	separator: SEPARATOR_G;
+	separator: SEPARATOR;
 
 	create_ok_button is
 		local
-			ok_button: PUSH_BG;
+			ok_button: PUSH_B;
 		do
 			!!ok_button.make (Widget_names.ok_button_name, Current);
 			ok_button.add_activate_action (command, editor);

@@ -31,7 +31,7 @@ feature -- Interface
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			grid_title: LABEL_G
+			grid_title: LABEL
 			grids: RADIO_BOX
 		do	
 			initialize (Widget_names.grid_form_name, a_parent)

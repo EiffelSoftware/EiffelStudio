@@ -86,10 +86,10 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			pixmap_open_b: PUSH_BG;
-			title_label: LABEL_G;
-			icon_label: LABEL_G;
-			icon_pixmap_label: LABEL_G;
+			pixmap_open_b: PUSH_B;
+			title_label: LABEL;
+			icon_label: LABEL;
+			icon_pixmap_label: LABEL;
 		do	
 			initialize (Widget_names.perm_wind_form_name, a_parent);
 

@@ -18,7 +18,7 @@ feature -- Interface
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			add_submenu: PUSH_BG;
+			add_submenu: PUSH_B;
 		do
 			initialize (Widget_names.bar_form_name, a_parent);
 

@@ -43,8 +43,8 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			label: LABEL_G;
-			pixmap_open_b: PUSH_BG;
+			label: LABEL;
+			pixmap_open_b: PUSH_B;
 		do
 			initialize (Widget_names.pict_color_form_name, a_parent);
 			!!label.make (Widget_names.pixmap_name, Current);

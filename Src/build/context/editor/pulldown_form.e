@@ -53,8 +53,8 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			label_text: LABEL_G;
-			label: LABEL_G;
+			label_text: LABEL;
+			label: LABEL;
 		do
 			initialize (Widget_names.pulldown_form_name, a_parent);
 

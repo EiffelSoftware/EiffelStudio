@@ -48,7 +48,7 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			line_style: LABEL_G;
+			line_style: LABEL;
 			radio_b: RADIO_BOX
 		do
 			initialize (Widget_names.separator_form_name, a_parent);

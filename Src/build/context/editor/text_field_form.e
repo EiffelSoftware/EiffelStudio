@@ -39,7 +39,7 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			size_l: LABEL_G;
+			size_l: LABEL;
 		do
 			initialize (Widget_names.text_field_form_name, a_parent);
 

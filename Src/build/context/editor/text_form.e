@@ -81,8 +81,8 @@ feature
 
 	make_visible (a_parent: COMPOSITE) is
 		local
-			size_l: LABEL_G;
-			width_l, height_l: LABEL_G;
+			size_l: LABEL;
+			width_l, height_l: LABEL;
 		do
 			initialize (Widget_names.text_form_name, a_parent);
 

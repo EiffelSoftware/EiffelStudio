@@ -72,6 +72,9 @@ feature -- Byte code special generation
 			inspect function_type
 			when equal_type then
 				ba.append (Bc_eq)
+			when to_character_type then
+				check integer_type: type_of (basic_type) = integer_type end
+				ba.append (Bc_cast_char)
 			when to_integer_8_type then
 				ba.append (Bc_cast_long)
 				ba.append_integer (8)
@@ -126,6 +129,9 @@ feature -- C special code generation
 			inspect function_type
 			when equal_type then
 				generate_equal (buffer, target, parameter)
+			when to_character_type then
+				buffer.putstring ("(EIF_CHARACTER) ")
+				target.print_register
 			when to_integer_8_type then
 				buffer.putstring ("(EIF_INTEGER_8) ")
 				target.print_register
@@ -194,6 +200,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (one_type, feature {PREDEFINED_NAMES}.one_name_id)
 			Result.put (generator_type, feature {PREDEFINED_NAMES}.generator_name_id)
 			Result.put (generator_type, feature {PREDEFINED_NAMES}.generating_type_name_id)
+			Result.put (to_character_type, feature {PREDEFINED_NAMES}.to_character_name_id)
+			Result.put (to_character_type, feature {PREDEFINED_NAMES}.ascii_char_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.truncated_to_integer_name_id)
 			Result.put (to_integer_8_type, feature {PREDEFINED_NAMES}.to_integer_8_name_id)
 			Result.put (to_integer_16_type, feature {PREDEFINED_NAMES}.to_integer_16_name_id)
@@ -251,6 +259,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (bit_shift_right_type, feature {PREDEFINED_NAMES}.bit_shift_right_name_id)
 			Result.put (bit_shift_right_type, feature {PREDEFINED_NAMES}.infix_shift_right_name_id)
 			Result.put (bit_test_type, feature {PREDEFINED_NAMES}.bit_test_name_id)
+			Result.put (to_character_type, feature {PREDEFINED_NAMES}.to_character_name_id)
+			Result.put (to_character_type, feature {PREDEFINED_NAMES}.ascii_char_name_id)
 			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.truncated_to_integer_name_id)
 			Result.put (to_integer_8_type, feature {PREDEFINED_NAMES}.to_integer_8_name_id)
 			Result.put (to_integer_16_type, feature {PREDEFINED_NAMES}.to_integer_16_name_id)
@@ -292,7 +302,8 @@ feature {NONE} -- Fast access to feature name
 	set_bit_with_mask_type: INTEGER is 27
 	memory_alloc: INTEGER is 28
 	memory_free: INTEGER is 29
-	max_type_id: INTEGER is 29
+	to_character_type: INTEGER is 30
+	max_type_id: INTEGER is 30
 
 feature {NONE} -- Byte code generation
 

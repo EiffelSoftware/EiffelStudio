@@ -66,8 +66,7 @@ feature
 				new_y := 0
 			end;
 			set_x_y (new_x, new_y);
-			question_popup;
-			raise
+			question_popup
 		end;
 
 	call (a_command: COMMAND_W; a_message, ok_label: STRING) is

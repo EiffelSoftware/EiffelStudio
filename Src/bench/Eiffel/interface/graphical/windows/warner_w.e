@@ -73,8 +73,7 @@ feature
 				new_y := 0
 			end;
 			set_x_y (new_x, new_y);
-			warning_popup;
-			raise
+			warning_popup
 		end;
 
 	call (a_command: COMMAND_W; a_message: STRING) is

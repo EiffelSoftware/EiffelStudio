@@ -43,13 +43,13 @@ feature {NONE} -- Initialization
 	make_for_test is
 			-- Instance of `Current' for testing purposes.
 		local
-			radio: EV_RADIO_BUTTON
+			radio: EV_BUTTON
 			i: INTEGER
 		do
 			default_create
 			from i := 1 until i = 6 or full
 			loop
-				create radio.make_with_text ("radio item " + i.out)
+				create radio.make_with_text ("item " + i.out)
 				extend (radio)
 				inspect i
 					when 1 then radio.set_background_color
@@ -109,6 +109,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/26 17:03:10  oconnor
+--| test now uses EV_BUTTON not EV_RADIO_BUTTON
+--|
 --| Revision 1.19  2000/04/05 21:16:18  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -323,6 +323,7 @@ feature {NONE} -- GTK C functions
 
 feature {NONE} -- code in the glue library
 
+
 	c_gtk_init_toolkit is
 		external "C | %"gtk_eiffel.h%""
 		end
@@ -333,6 +334,11 @@ feature {NONE} -- code in the glue library
 		external "C | %"gtk_eiffel.h%""
 		end
 
+	-- widget
+	c_gtk_widget_destroyed (widget: POINTER): BOOLEAN is
+		external "C | %"gtk_eiffel.h%""
+		end
+	
 	c_gtk_pixmap_create_from_xpm (parent: POINTER; fname: POINTER): POINTER is
 		external "C | %"gtk_eiffel.h%""
 		end

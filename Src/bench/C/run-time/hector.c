@@ -94,23 +94,20 @@ rt_public EIF_REFERENCE efreeze(EIF_OBJECT object)
 	 * if it was not possible to freeze the address (e.g. the object was in
 	 * the scavenge zone and it could not be tenured).
 	 */
-
-	EIF_REFERENCE root;						/* Object's physical address */
-	union overhead *zone;			/* Malloc information zone */
-	/* uint32 flags;*/ /* Eiffel flags */ /* %%ss removed */
-
-	/* It is impossible to freeze a special object, for at least two reasons:
+	/* NOTE: be careful when freezing a special object, for at least two reasons:
 	 * the implementation of freezing uses the B_C bit and sprealloc()
 	 * explicitely clears that bit. But more importantly, it might need some
 	 * reallocation and that could force moving its location...
 	 */
 
+	EIF_REFERENCE root;						/* Object's physical address */
+	union overhead *zone;			/* Malloc information zone */
+	/* uint32 flags;*/ /* Eiffel flags */ /* %%ss removed */
+
+
 #ifdef DEBUG2
 		printf ("DEBUG2:-> eif_freeze called on %x\n", object);
 #endif
-
-	if (HEADER(eif_access(object))->ov_flags & EO_SPEC)
-		return (EIF_REFERENCE) 0;
 
 	/* Insert object in Hector table (saved stack), so that the GC always sees
 	 * that object, and keep it alive.

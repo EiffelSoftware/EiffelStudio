@@ -163,9 +163,12 @@ feature -- Access
 
 	parent: EV_CONTAINER is
 			-- Parent of `Current'
+		local
+			l_parent_imp: like parent_imp
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.interface
+			l_parent_imp := parent_imp
+			if l_parent_imp /= Void then
+				Result := l_parent_imp.interface
 			end
 		end
 
@@ -452,11 +455,14 @@ feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Imple
 
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container of `Current'.
+		local
+			l_wel_parent: like wel_parent
 		do
+			l_wel_parent := wel_parent
 			if wel_parent = Default_parent then
 				Result := Void
 			else
-				Result ?= wel_parent
+				Result ?= l_wel_parent
 			end
 		end
 

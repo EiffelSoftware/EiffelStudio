@@ -180,6 +180,9 @@ end;
 			force (f)
 			if last_removed_item /= Void then
 				last_removed_item.close
+				check 
+					not_in_cache: not has_id (last_removed_item.id)
+				end
 			end
 debug ("SERVER")
 	io.error.put_string ("Opening file: ");

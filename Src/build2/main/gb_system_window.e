@@ -44,6 +44,9 @@ feature -- Tab access
 			
 	build_tab: GB_SYSTEM_BUILD_TAB
 			-- Widget describing build tab.
+			
+	generation_tab: GB_SYSTEM_GENERATION_TAB
+			-- Widget describing code generation tab.
 
 feature -- Actions
 
@@ -134,13 +137,17 @@ feature {NONE} -- Initialization
 			create notebook
 			notebook.set_minimum_size (200, 200)
 
-			create general_tab--.make (Current)
+			create general_tab
 			notebook.extend (general_tab)
 			notebook.set_item_text (general_tab, general_tab.name)
 			
 			create build_tab
 			notebook.extend (build_tab)
 			notebook.set_item_text (build_tab, build_tab.name)
+			
+			create generation_tab
+			notebook.extend (generation_tab)
+			notebook.set_item_text (generation_tab, generation_tab.name)
 
 			hbox.extend (notebook)
 			
@@ -192,6 +199,7 @@ feature {NONE} -- Implementation
 			create Result.make (2)
 			Result.extend (general_tab)
 			Result.extend (build_tab)
+			Result.extend (generation_tab)
 		end
 		
 		

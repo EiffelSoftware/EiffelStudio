@@ -88,6 +88,13 @@ inherit
 		undefine
 			default_create
 		end
+
+	GB_GENERAL_UTILITIES
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
 		
 feature {NONE} -- Creation
 
@@ -97,7 +104,6 @@ feature {NONE} -- Creation
 			reset_generation_constants
 		end
 		
-
 feature -- Basic operation
 
 	generate is
@@ -421,7 +427,7 @@ feature {NONE} -- Implementation
 							if project_settings.load_constants then
 								l_string := "string_constant_by_name (%"" + string_constant.name + "%")"
 							else
-								l_string := "%"" + string_constant.value_as_string + "%""
+								l_string := "%"" + escape_special_characters (string_constant.value_as_string) + "%""
 							end
 							generated_constants_string := generated_constants_string + Indent_less_two + string_constant.name + ": STRING is" +
 								indent + "-- `Result' is STRING constant named `" + string_constant.name + "'." + 

@@ -334,9 +334,9 @@ feature {EV_SIZEABLE_IMP} -- Implementation
 			-- Binary integer whith the following meaning :
 			-- bit 1 -> the minimum width needs to be recomputed	(1)
 			-- bit 2 -> the minimum height needs to be recomputed	(2)
-			-- bit 3 -> the user has set the minimum width			(4)
-			-- bit 4 -> the user has set the minimum height			(8)
-			-- bit 5 -> the child only resize its width				(16)
+			-- bit 3 -> the user has set the minimum width		(4)
+			-- bit 4 -> the user has set the minimum height		(8)
+			-- bit 5 -> the child only resize its width			(16)
 			-- bit 6 -> the child only resize its height			(32)
 
 feature {EV_ANY_I} -- deferred feature

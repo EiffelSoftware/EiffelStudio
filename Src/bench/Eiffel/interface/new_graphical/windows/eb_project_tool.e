@@ -10,16 +10,16 @@ inherit
 	EB_TOOL
 		rename
 --			edit_bar as project_toolbar,
---			Project_resources as resources,
 --			progress_dialog as shared_progress_dialog,
+			default_name as empty_tool_name
 		redefine
-			make, tool_name
+			make, empty_tool_name
 --			process_system, process_error,
 --			process_object, process_breakable, process_class,
 --			process_classi, compatible, process_feature,
 --			process_class_syntax, process_ace_syntax,
 --			process_call_stack,
---			update_graphical_resources, help_index, icon_id
+--			update_graphical_resources
 		end
 
 	EB_PROJECT_TOOL_DATA
@@ -29,8 +29,6 @@ inherit
 	EV_COMMAND
 
 	EB_TOOL_MANAGER
-
---	WINDOW_ATTRIBUTES
 
 	EB_SHARED_INTERFACE_TOOLS
 		undefine
@@ -43,8 +41,6 @@ inherit
 
 	PROJECT_CONTEXT
 
---	WIDGET_ROUTINES
-
 creation
 	make
 
@@ -53,18 +49,30 @@ feature {NONE} -- Initialization
 	make (man: EB_TOOL_MANAGER) is
 			-- Create a project application.
 		local
-			app_stopped_cmd: EB_APPLICATION_STOPPED_CMD
 			t_s: EB_TOOL_SUPERVISOR
 		do
---			General_resources.add_user (Current)
---			Project_resources.add_user (Current)
-			register
 			create t_s.make (parent)
 			set_tool_supervisor (t_s)
 			create history.make
 			precursor (man)
-			set_title (Interface_names.t_Project)
---			set_icon_name (tool_name)
+		end
+
+feature {EB_TOOL_MANAGER} -- Initialization
+
+	build_interface is
+			-- Build widgets.
+		local
+			hide_split_windows: BOOLEAN
+--			display_feature_cmd: DISPLAY_ROUTINE_PORTION
+--			display_object_cmd: DISPLAY_OBJECT_PORTION
+			app_stopped_cmd: EB_APPLICATION_STOPPED_CMD
+
+			v_split: EV_VERTICAL_SPLIT_AREA
+		do
+			shown_portions := 1
+
+			set_title (empty_tool_name)
+--			set_icon_name (empty_tool_name)
 
 --			if Pixmaps.bm_Project_icon.is_valid then
 --				set_icon_pixmap (Pixmaps.bm_Project_icon)
@@ -76,32 +84,12 @@ feature {NONE} -- Initialization
 			Application.set_before_stopped_command (app_stopped_cmd)
 			Application.set_after_stopped_command (app_stopped_cmd)
 
---			add_close_command (quit_cmd_holder.associated_command)
 --			set_font_to_default
 --			set_default_position
 
 --			set_composite_attributes (Current)
 --			feature_part.init_text_window
 --			object_part.init_text_window
-
---			global_verti_split_window.update_split
---			hori_split_window.update_split
---			top_verti_split_window.update_split
-
-		end
-
-feature {EB_TOOL_MANAGER} -- Initialization
-
-	build_interface is
-			-- Build widget.
-		local
-			hide_split_windows: BOOLEAN
---			display_feature_cmd: DISPLAY_ROUTINE_PORTION
---			display_object_cmd: DISPLAY_OBJECT_PORTION
-
-			v_split: EV_VERTICAL_SPLIT_AREA
-		do
-			shown_portions := 1
 
 			create container.make (parent)
 
@@ -139,27 +127,6 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			build_top (project_toolbar)
 
 			set_default_size
-			update
-
--- 			create feature_part.form_create (feature_form, 
---					menus @ special_feature_menu, 
---					menus @ edit_feature_menu, 
---					menus @ format_feature_menu,
---					menus @ special_feature_menu)
---
-
---			create object_part.form_create ( object_form, 
---					menus @ special_object_menu, 
---					menus @ edit_object_menu, 
---					menus @ format_object_menu,
---					menus @ special_object_menu)
---
---			if Project_resources.command_bar.actual_value = False then
---				project_toolbar.remove
---			end
---			if Project_resources.format_bar.actual_value = False then
---				format_bar.remove
---			end
 
 --			display_feature_cmd ?= display_feature_cmd_holder.associated_command
 --			display_object_cmd ?= display_object_cmd_holder.associated_command
@@ -185,6 +152,9 @@ feature {EB_TOOL_MANAGER} -- Initialization
 feature -- Resource Update
 
 	register is
+			-- Ask the resource manager to notify Current (i.e. to call `update') each
+			-- time one of the resources he needs has changed.
+			-- Is called by `make'.
 		do
 			register_to ("project_tool_x")
 			register_to ("project_tool_y")
@@ -194,18 +164,25 @@ feature -- Resource Update
 		end
 
 	update is
+			-- Update Current with the registred resources.
 		do
-			if project_tool_bar then
+			if project_toolbar_visible then
 				project_toolbar.show
 			else
 				project_toolbar.hide
 			end
---			Eiffel_project.set_filter_path (new_res.value)
---			Eiffel_project.set_profile_path (new_res.value)
---			Eiffel_project.set_tmp_directory (new_res.value)
+			if project_toolbar_menu_item /= Void then
+				project_toolbar_menu_item.set_selected (project_toolbar_visible)
+			end
+			Eiffel_project.set_filter_path (general_filter_path)
+			Eiffel_project.set_profile_path (general_profile_path)
+			Eiffel_project.set_tmp_directory (general_tmp_path)
 		end
 
 	unregister is
+			-- Ask the resource manager not to notify Current anymore
+			-- when a resource has changed.
+			-- Is called by `destroy'.
 		do
 			unregister_to ("project_tool_x")
 			unregister_to ("project_tool_y")
@@ -214,69 +191,10 @@ feature -- Resource Update
 			unregister_to ("project_tool_bar")
 		end
 
-	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
-		local
---			rout_cli_cmd: SHOW_ROUTCLIENTS
---			display_feature_cmd: DISPLAY_ROUTINE_PORTION
---			display_object_cmd: DISPLAY_OBJECT_PORTION
---			stop_cmd: SHOW_BREAKPOINTS
---			pr: like Project_resources
---			progress_output: DEGREE_OUTPUT
-		do
---			pr := resources
---			if old_res = pr.command_bar then
---				if new_res.actual_value then
---					project_toolbar.show
---				else
---					project_toolbar.hide
---				end
---			elseif old_res = pr.format_bar then
---				if new_res.actual_value then
---					format_bar.show
---				else
---					format_bar.hide
---				end
---			elseif old_res = pr.selector_window then
---				if new_res.actual_value then
---					selector_part.show_selector
---				else
---					selector_part.hide_selector
---				end
---			elseif old_res = pr.feature_window then
---				display_feature_cmd ?= display_feature_cmd_holder.associated_command
---				if new_res.actual_value then
---					display_feature_cmd.show
---				else
---					display_feature_cmd.hide
---				end
---			elseif old_res = pr.object_window then
---				display_object_cmd ?= display_object_cmd_holder.associated_command
---				if new_res.actual_value then
---					display_object_cmd.show
---				else
---					display_object_cmd.hide
---				end
---			end
-		end
-
-	update_string_resource (old_res, new_res: EB_STRING_RESOURCE) is
-		local
---			gr: like General_resources
-		do
---			gr := General_resources
---			if old_res = gr.filter_path then
---				Eiffel_project.set_filter_path (new_res.value)
---			elseif old_res = gr.profile_path then
---				Eiffel_project.set_profile_path (new_res.value)
---			elseif old_res = gr.tmp_path then
---				Eiffel_project.set_tmp_directory (new_res.value)
---			end
-		end
-
-	update_integer_resource (old_res, new_res: EB_INTEGER_RESOURCE) is
-		local
+--	update_integer_resource (old_res, new_res: EB_INTEGER_RESOURCE) is
+--		local
 --			pr: like resources
-		do
+--		do
 --			pr := resources
 --			if new.actual_value >= 0 then
 --				if old_res = pr.tool_x then
@@ -323,7 +241,7 @@ feature -- Resource Update
 --					end
 --				end
 --			end
-		end
+--		end
 
 	update_graphical_resources is
 			-- Synchronize clickable elements with text, if possible
@@ -354,12 +272,6 @@ feature -- Access
 			create Result.make (Void)
 		end
 
---	icon_id: INTEGER is
---			-- Icon id of Current window (for windows)
---		do
---			Result := Interface_names.i_Project_id
---		end
-
 feature -- Window Settings
 
 	set_default_size is
@@ -380,6 +292,9 @@ feature -- Window Settings
 --			end
 			set_size (default_width, default_height)
 		end
+--| FIXME
+--| Christophe, 21 oct 1999
+--| to be rewritten when screen function are availible
 
 	set_initialized is
 			-- Set `initialized' to true.
@@ -389,55 +304,42 @@ feature -- Window Settings
 			initialized = true
 		end
 
-	display is
-			-- Display Current on the screen
-		do
-		end
-
 feature -- Window Properties
 
 	initialized: BOOLEAN
 			-- Is the workbench created?
 
-	is_system_tool_hidden: BOOLEAN
+	system_tool_is_hidden: BOOLEAN
 			-- Is the system tool hidden?
 
-	is_project_tool_hidden: BOOLEAN
+	project_tool_is_hidden: BOOLEAN
 			-- Is the project tool hidden?
 
-	is_preference_tool_hidden: BOOLEAN
+	preference_tool_is_hidden: BOOLEAN
 			-- Is the preference tool hidden?
 
-	is_profile_tool_hidden: BOOLEAN
+	profile_tool_is_hidden: BOOLEAN
 			-- Is the profile tool hidden?
 
-	tool_name: STRING is
-			-- Name of the tool.
+	empty_tool_name: STRING is
+			-- Default name of the tool.
+			-- Used when no projects are opened yet.
 		do
-				--| If the tool already has a name, we keep it, otherwise
-				--| we return the default name.
-			if title /= Void then
-				Result := title
-			else
-				Result := Interface_names.t_Project
-			end
+			Result := Interface_names.t_Project
 		end
 
 feature -- Window Holders
 
 --	stop_points_hole_holder: HOLE_HOLDER
-
 --	system_hole_holder: HOLE_HOLDER
-
 --	class_hole_holder: HOLE_HOLDER
-
 --	routine_hole_holder: HOLE_HOLDER
-
 --	dynamic_lib_hole_holder: HOLE_HOLDER
-
 --	object_hole_holder: HOLE_HOLDER
-
 --	explain_hole_holder: HOLE_HOLDER
+--| FIXME
+--| Christophe, 21 oct 1999 
+--| Drag-and-Drop not implemented yet.
 
 feature -- Pulldown Menus
 
@@ -453,23 +355,6 @@ feature -- Pulldown Menus
 		do
 --			manager.disable_menus
 		end
-
-feature -- Modifiable menus
-
---	melt_menu_entry: EV_MENU_ITEM
-			-- Melt menu entry
-
---	quick_melt_menu_entry: EV_MENU_ITEM
-			-- Quick-Melt menu entry
-
---	freeze_menu_entry: EV_MENU_ITEM
-			-- Freeze menu entry
-
---	finalize_menu_entry: EV_MENU_ITEM
-			-- Finalize menu entry
-
---	precompile_menu_entry: EV_MENU_ITEM
-			-- Precompile menu entry
 
 feature -- Window Forms
 
@@ -509,22 +394,22 @@ feature -- Execution Implementation
 			-- Resize xterm window when drawing area is resized
 		do
 --			if arg = remapped then
---				if is_project_tool_hidden then
+--				if project_tool_is_hidden then
 --						-- The project tool is being deiconified.
---					is_project_tool_hidden := False
+--					project_tool_is_hidden := False
 --					tool_supervisor.show_all_editors
---					if is_profile_tool_hidden then
---						is_profile_tool_hidden := False
+--					if profile_tool_is_hidden then
+--						profile_tool_is_hidden := False
 --						Profile_tool.show
 --					end
---					if is_preference_tool_hidden then
---						is_preference_tool_hidden := False
+--					if preference_tool_is_hidden then
+--						preference_tool_is_hidden := False
 --						Preference_tool.show
 --					end
 --					if is_system_tool_created then
---						if is_system_tool_hidden then
+--						if system_tool_is_hidden then
 --							system_tool.show
---							is_system_tool_hidden := False
+--							system_tool_is_hidden := False
 --						elseif system_tool.in_use then
 --							system_tool.show
 --						end
@@ -536,7 +421,7 @@ feature -- Execution Implementation
 --					raise_grabbed_popup
 --				end
 --			elseif arg = popdown then
---				is_project_tool_hidden := True
+--				project_tool_is_hidden := True
 --				tool_supervisor.hide_all_editors
 --				if
 --					system_tool /= Void and then
@@ -545,15 +430,15 @@ feature -- Execution Implementation
 --				then
 --					system_tool.hide
 --					system_tool.close_windows
---					is_system_tool_hidden := True
+--					system_tool_is_hidden := True
 --				end
 --				if Preference_tool /= Void and then Preference_tool.shown then
 --					Preference_tool.hide
---					is_preference_tool_hidden := True
+--					preference_tool_is_hidden := True
 --				end
 --				if Profile_tool /= Void and then Profile_tool.shown then
 --					Profile_tool.hide
---					is_profile_tool_hidden := True
+--					profile_tool_is_hidden := True
 --				end
 --			end
 		end
@@ -666,8 +551,6 @@ feature -- Graphical Interface
 			clear_bp_cmd: EB_CLEAR_STOP_POINTS_CMD
 			stop_points_cmd: EB_DEBUG_STOPIN_HOLE_CMD
 
-			sep: EV_VERTICAL_SEPARATOR
-
 --			display_feature_cmd: DISPLAY_ROUTINE_PORTION
 --			display_object_cmd: DISPLAY_OBJECT_PORTION
 			melt_cmd: EB_MELT_PROJECT_CMD
@@ -675,7 +558,9 @@ feature -- Graphical Interface
 
 --			do_nothing_cmd: DO_NOTHING_CMD
 
-			b: EV_BUTTON
+			tb: EV_TOOL_BAR
+			b: EV_TOOL_BAR_BUTTON
+			sep: EV_TOOL_BAR_SEPARATOR
 		do
 --			build_file_menu
 
@@ -689,51 +574,53 @@ feature -- Graphical Interface
 				-- Close all command
 
 				-- Regular menu entries.
+			create tb.make (a_toolbar)
+
 			create explain_cmd.make (Current)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Explain)
 			b.add_click_command (explain_cmd, Void)
 
 			create system_cmd.make (parent_window)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_System)
 			b.add_click_command (system_cmd, Void)
 			
 			create class_cmd.make (Current)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Class)
 			b.add_click_command (class_cmd, Void)
 
 			create feature_cmd.make (Current)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Routine)
 			b.add_click_command (feature_cmd, Void)
 
 			create dynamic_lib_cmd.make (parent_window)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Dynamic_lib)
 			b.add_click_command (dynamic_lib_cmd, Void)
 
 			create shell_cmd.make (Current)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Shell)
 			b.add_click_command (shell_cmd, Void)
 --			shell_button.add_third_button_action
 
 			create object_cmd.make (Current)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Object)
 			b.add_click_command (object_cmd, Void)
 
 			create clear_bp_cmd.make (debug_tool)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Clear_breakpoints)
 --			clear_bp_button.set_action ("c<Btn1Down>", 
 --						clear_bp_cmd, clear_bp_cmd.clear_it_action)
 			b.add_click_command (clear_bp_cmd, Void)
 
 			create stop_points_cmd
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Setstop)
 			b.add_click_command (stop_points_cmd, Void)
 
@@ -747,16 +634,19 @@ feature -- Graphical Interface
 --			create display_object_cmd_holder.make (display_object_cmd, display_object_button, display_object_menu_entry)
 --			display_object_cmd.set_holder (display_object_cmd_holder)
 
-			create sep.make (a_toolbar)
+			create sep.make (tb)
+
+			create tb.make_with_size (a_toolbar, 58, 22)
+			a_toolbar.set_child_expandable (tb, False)
 
 			create melt_cmd.make (Current)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Update)
 --			update_button.set_action ("c<Btn1Down>", melt_cmd, update_cmd.generate_code_only)
 			b.add_click_command (melt_cmd, Void)
 
 			create quick_melt_cmd.make (Current)
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Quick_update)
 --			quick_update_button.set_action ("c<Btn1Down>", quick_update_cmd, quick_update_cmd.generate_code_only)
 			b.add_click_command (quick_melt_cmd, Void)
@@ -843,61 +733,19 @@ feature {NONE} -- Properties
 
 feature -- System Execution Modes
 
---	exec_stop_frmt_holder: COMMAND_HOLDER
-			-- Set execution format so that user-defined stop
-			-- points will be taken into account
-
---	exec_nostop_frmt_holder: COMMAND_HOLDER
-			-- Set execution format so that no stop points will
-			-- be taken into account
-
---	exec_step_frmt_holder: COMMAND_HOLDER
-			-- Set execution format so that each breakable points
-			-- of the current feature will be taken into account
-
---	exec_last_frmt_holder: COMMAND_HOLDER
-			-- Set execution format so that only the last
-			-- breakable point of the current feature will be
-			-- taken into account
-
 feature -- Commands
 
---	new_cmd_holder: COMMAND_HOLDER
-			-- To create a new project
-
---	open_cmd_holder: COMMAND_HOLDER
-			-- To open an existing project
-
---	quit_cmd_holder: COMMAND_HOLDER
-			-- To quit the current project
-
---	update_cmd_holder: COMMAND_HOLDER
-
---	quick_update_cmd_holder: COMMAND_HOLDER
-
---	debug_run_cmd_holder: COMMAND_HOLDER
-
---	debug_status_cmd_holder: COMMAND_HOLDER
-
---	debug_quit_cmd_holder: COMMAND_HOLDER
-
---	clear_bp_cmd_holder: COMMAND_HOLDER
-
---	special_cmd_holder: COMMAND_HOLDER
-
---	freeze_cmd_holder: COMMAND_HOLDER
-
---	finalize_cmd_holder: COMMAND_HOLDER
-
---	precompile_cmd_holder: COMMAND_HOLDER
-
---	display_feature_cmd_holder: COMMAND_HOLDER
-
---	display_object_cmd_holder: COMMAND_HOLDER
-
---	up_exception_stack_holder: COMMAND_HOLDER
-
---	down_exception_stack_holder: COMMAND_HOLDER
+	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		require
+			a_menu_exits: a_menu /= Void
+		local
+			cmd: EV_ROUTINE_COMMAND
+		do
+			create project_toolbar_menu_item.make_with_text (a_menu, Interface_names.n_Command_bar_name)
+			create cmd.make (~edit_bar_menu_update)
+			project_toolbar_menu_item.add_select_command (cmd, Void)
+			project_toolbar_menu_item.add_unselect_command (cmd, Void)
+		end
 
 feature -- Hole access
 
@@ -1076,7 +924,7 @@ feature {NONE} -- Implementation
 	project_toolbar: EV_HORIZONTAL_BOX
 
 	hide_class_portion is
-			-- Hide the class potion and hide the menu entries
+			-- Hide the class portion and hide the menu entries
 			-- regarding the feature tool.
 		do
 		end
@@ -1125,7 +973,21 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 
 feature -- to be placed where it belongs
 
+	edit_bar_menu_update (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		require
+			menu_item_exists: project_toolbar_menu_item /= Void
+		do
+			if project_toolbar_menu_item.is_selected then
+				project_toolbar.show
+			else
+				project_toolbar.hide
+			end
+		end
+
+	project_toolbar_menu_item: EV_CHECK_MENU_ITEM
+
 	update_compile_access (b: BOOLEAN) is
+			-- update compile menu (if it exists)
 		local
 			m: EB_PROJECT_WINDOW
 		do
@@ -1182,7 +1044,7 @@ feature -- Tool management features
 	feature_icon_name, object_icon_name, selector_icon_name, debug_icon_name: STRING
 
 	tool_title (t: EB_TOOL): STRING is
-			-- does not work!
+			-- works, but...
 		do
 			if t = debug_part then
 				Result := debug_title
@@ -1196,7 +1058,7 @@ feature -- Tool management features
 		end
 
 	tool_icon_name (t: EB_TOOL): STRING is
-			-- does not work!
+			-- works, but...
 		do
 			if t = debug_part then
 				Result := debug_icon_name
@@ -1210,7 +1072,7 @@ feature -- Tool management features
 		end
 
 	set_tool_title (t: EB_TOOL; s: STRING) is
-			-- does not work!
+			-- works, but...
 		do
 			if t = debug_part then
 				debug_title := s
@@ -1224,7 +1086,7 @@ feature -- Tool management features
 		end
 
 	set_tool_icon_name (t: EB_TOOL; s: STRING) is
-			-- does not work!
+			-- works, but...
 		do
 			if t = debug_part then
 				debug_icon_name := s

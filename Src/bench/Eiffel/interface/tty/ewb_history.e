@@ -64,11 +64,10 @@ feature
 							if feat.rout_id_set.has (rout_id) or else
 								rout_id_set.has (feat.rout_id_set.first) then
 								c.append_clickable_name (output_window);
+								output_window.put_string (" ");
+								feat.append_clickable_name (output_window, c);
 								if c = written_cl then
 									output_window.put_string (" (version from)");
-								else
-									output_window.put_string (" ");
-									feat.append_clickable_signature (output_window, c);
 								end;
 								output_window.new_line;
 								stop := True;

@@ -23,7 +23,7 @@ feature -- Initialization
 			l_host: CLR_HOST
 		do
 			initialize_com
-			l_host := runtime_host (runtime_version, 0)
+			l_host := runtime_host (runtime_version)
 			check
 				l_host_not_void: l_host /= Void
 			end

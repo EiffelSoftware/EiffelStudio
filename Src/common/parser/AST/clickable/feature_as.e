@@ -34,11 +34,6 @@ feature -- Attributes
 			-- second pass of the compiler in order to see if a feature
 			-- has change of body.
 
-	comment: EIFFEL_COMMENTS is
-				-- Routine comments
-			do
-			end
-
 feature -- Initialization
  
 	set is
@@ -116,7 +111,13 @@ feature -- Simple formatting
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			c: EIFFEL_COMMENTS;
+			cont: CONTENT_AS;
+			is_const_or_att: BOOLEAN	
 		do
+			c := ctxt.eiffel_file.current_feature_comments;
+			ctxt.set_feature_comments (c);
 			if feature_names /= Void then
 				ctxt.set_separator (ti_Comma);
 				ctxt.set_space_between_tokens;
@@ -124,8 +125,18 @@ feature -- Simple formatting
 			end
 			body.simple_format (ctxt);
 			ctxt.put_text_item (ti_Semi_colon);
-			format_comment (ctxt);
-			ctxt.new_line;
+			cont := body.content;
+			is_const_or_att := cont = Void or else cont.is_constant;
+			if is_const_or_att and then c /= Void then
+				ctxt.new_line;
+				ctxt.indent;
+				ctxt.indent;
+				ctxt.put_comments (c);
+				ctxt.exdent;
+				ctxt.exdent;
+			else
+				ctxt.new_line;
+			end;
 		end;
 
 feature -- Conveniences
@@ -231,40 +242,6 @@ feature -- Status report
 			-- Result is `0' if not found.
 		do
 			Result := body.index_of_instruction (i)
-		end;
-
-	set_comment (c: EIFFEL_COMMENTS) is
-		do
-		end;
-
-	format_comment (ctxt: FORMAT_CONTEXT) is
-			-- Format comment into `ctxt'.
-		local
-			c: like comment
-		do
-			c := comment;
-			if c /= Void then
-				ctxt.indent;
-				ctxt.indent;
-				ctxt.put_comment (c);
-				ctxt.put_origin_comment;
-				ctxt.exdent;
-				ctxt.exdent;
-			end;
-		end;
-
-	new_ast: like Current is
-		local
-			rout_as: ROUTINE_AS;
-		do
-			rout_as ?= body.content;
-			if rout_as = Void then
-				Result := Current
-			else
-				!! Result;
-				Result.set_content (Current);
-				Result.set_names (feature_names);
-			end;
 		end;
 
 feature --Setting

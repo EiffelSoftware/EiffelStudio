@@ -29,12 +29,12 @@ feature {NONE}
 
 	symbol: PIXMAP is
 		do
-			Result := Pixmaps.user_defined_pixmap
+			Result := Pixmaps.generated_pixmap
 		end
 
 	selected_symbol: PIXMAP is
 		do
-			Result := Pixmaps.selected_user_defined_pixmap
+			Result := Pixmaps.selected_generated_pixmap
 		end
 
 	set_focus_string is

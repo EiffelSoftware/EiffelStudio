@@ -2,6 +2,8 @@ class CHAR_I
 
 inherit
 	BASIC_I
+		rename
+			make as base_make
 		redefine
 			dump,
 			is_char,

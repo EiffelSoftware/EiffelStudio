@@ -79,6 +79,20 @@ feature -- Access
 			"SW_SHOWNOACTIVATE"
 		end
 
+	Sw_parentclosing: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"SW_PARENTCLOSING"
+		end
+
+	Sw_parentopening: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"SW_PARENTOPENING"
+		end
+
 end -- class WEL_SW_CONSTANTS
 
 --|-------------------------------------------------------------------------

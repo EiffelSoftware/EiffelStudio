@@ -34,9 +34,9 @@ libdatetime.a: $(OBJECTS)
 	mkdir -p ../spec/$(PLATFORM)/lib
 	$(RM) $@
 	$(AR) $@ $(OBJECTS)
+	$(RANLIB) $@
 	$(MV) $@ ../spec/$(PLATFORM)/lib
-	$(RANLIB) ../spec/$(PLATFORM)/lib/$@
-#	$(MAKE) clean
+	$(MAKE) clean
 
 clean:
 	$(RM) libdatetime.a $(OBJECTS) config.sh Makefile

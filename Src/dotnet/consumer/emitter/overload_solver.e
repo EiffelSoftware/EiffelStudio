@@ -7,11 +7,15 @@ class
 	OVERLOAD_SOLVER
 
 inherit
+	REFLECTION
+	
 	NAME_FORMATTER
 
 	SHARED_ASSEMBLY_MAPPING
 
 	NAME_SOLVER
+	
+	PROCEDURE_RETRIVER
 
 create
 	make
@@ -245,13 +249,17 @@ feature -- Element Settings
 		local
 			l_meth: METHOD_INFO
 		do
-			l_meth := property.get_get_method_boolean (True)
+			l_meth := property_getter (property)
 			if l_meth /= Void then
-				internal_add_method (l_meth, True)
+				if is_consumed_method (l_meth) then
+					internal_add_method (l_meth, True)
+				end
 			end
-			l_meth := property.get_set_method_boolean (True)
+			l_meth := property_setter (property)
 			if l_meth /= Void then
-				internal_add_method (l_meth, False)
+				if is_consumed_method (l_meth) then
+					internal_add_method (l_meth, False)
+				end
 			end
 		end
 		
@@ -264,17 +272,23 @@ feature -- Element Settings
 			l_meth: METHOD_INFO
 			property_name: STRING
 		do
-			l_meth := event.get_raise_method_boolean (True)
+			l_meth := event_raiser (event)
 			if l_meth /= Void then
-				internal_add_method (l_meth, False)
+				if is_consumed_method (l_meth) then
+					internal_add_method (l_meth, False)
+				end
 			end
-			l_meth := event.get_add_method_boolean (True)
+			l_meth := event_adder (event)
 			if l_meth /= Void then
-				internal_add_method (l_meth, False)
+				if is_consumed_method (l_meth) then
+					internal_add_method (l_meth, False)
+				end
 			end
-			l_meth := event.get_remove_method_boolean (True)
+			l_meth := event_remover (event)
 			if l_meth /= Void then
-				internal_add_method (l_meth, False)
+				if is_consumed_method (l_meth) then
+					internal_add_method (l_meth, False)
+				end
 			end
 		end
 
@@ -285,7 +299,7 @@ feature {NONE} -- Internal Statur Setting
 			-- Remove `get_' for properties getters.
 		require
 			non_void_meth: meth /= void
-			is_consumed_method: (create {REFLECTION}).is_consumed_method (meth)
+			is_consumed_method: is_consumed_method (meth)
 		local
 			name: STRING
 		do

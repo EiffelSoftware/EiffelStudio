@@ -1,5 +1,5 @@
 indexing
-	description: "Class selector used to choose for which application %
+	description: "Class importer used to choose for which application %
 				% class the user wants to generate an object tool %
 				% editor."
 	date: "$Date$"
@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	CLASS_SELECTOR
+	CLASS_IMPORTER
 
 inherit
 
@@ -64,7 +64,7 @@ feature -- Creation
 			set_size (resources.class_selector_width, resources.class_selector_height)
 			!! set_colors
 			set_colors.execute (Current)
-			set_title ("Class selector")
+			set_title ("Class importer")
 			available_label.set_text ("Available classes")
 			available_label.set_left_alignment
 			available_list.set_multiple_selection
@@ -355,4 +355,6 @@ feature -- Lists generation
 			end
 		end
 
-end -- class CLASS_SELECTOR
+end -- class CLASS_IMPORTER
+ 
+

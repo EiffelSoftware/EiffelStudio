@@ -47,7 +47,6 @@ feature -- Initialization
 	launch_quick_compilation is
 			-- Launch the `quick_finalize' program with the correct options.
 		local
-			exec: EXECUTION_ENVIRONMENT
 			quick_prg: STRING
 		do
 			quick_prg := clone (eiffel4)
@@ -64,8 +63,7 @@ feature -- Initialization
 
 			quick_prg.append (" . " + options.get_string ("obj_file_ext", "obj"))
 
-			!! exec
-			exec.system (quick_prg)
+			env.system (quick_prg)
 		end
 
 feature -- Access

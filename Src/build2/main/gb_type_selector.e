@@ -80,8 +80,10 @@ feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_EV_BOX} -- Basic o
 				-- all items in the selector tree are of type
 				-- GB_SELECTOR_ITEM. For example, "widgets" is just a basic
 				-- tree item, as you can do nothing with it.
+				-- The check for object.parent not Void, ensures that we do nothing
+				-- if a window has been picked.
 			if selector_item /= Void then
-				if an_object.object /= Void then
+				if an_object.object /= Void and an_object.parent_object /= Void then
 					selector_item.generate_drop_actions (an_object)	
 				else
 					selector_item.drop_actions.wipe_out

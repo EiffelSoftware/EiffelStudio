@@ -21,13 +21,31 @@ inherit
 		redefine
 			implementation,
 			create_implementation,
-			create_action_sequences
+			create_action_sequences,
+			initialize
 		end
 
 create
 	default_create,
 	make_with_title,
 	make_for_test
+
+feature -- Initialization
+
+	initialize is
+   			-- Mark `Current' as initialized.
+   			-- This must be called during the creation procedure
+   			-- to satisfy the `is_initialized' invariant.
+   			-- Descendants may redefine initialize to perform
+   			-- additional setup tasks.
+		local
+			default_pixmaps: EV_DEFAULT_PIXMAPS
+		do
+			create default_pixmaps
+			set_icon_pixmap (default_pixmaps.Default_window_icon)
+			Precursor
+		end
+
 
 feature -- Access
 
@@ -203,6 +221,9 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/05/03 00:24:36  pichery
+--| Added default window pixmap loading.
+--|
 --| Revision 1.15  2000/04/29 03:39:39  pichery
 --| Removed `icon_mask' & `set_icon_mask'.
 --| Mask are now handled in EV_PIXMAP

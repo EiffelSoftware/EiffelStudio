@@ -60,9 +60,6 @@ feature -- Access
 			edit_chars := C.gtk_editable_get_chars (clipboard_widget, 0, -1)
 			create Result.make_from_c (edit_chars)
 			C.g_free (edit_chars)
-			if Result.is_equal ("") then
-				Result := Void
-			end
 		end
 
 feature -- Status Setting

@@ -34,14 +34,14 @@ feature -- Access
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the item is 
 			-- activated.
 		do
 			add_command (Cmd_item_activate, cmd, arg)			
 		end	
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the item is
 			-- unactivated.
 		do

@@ -370,7 +370,9 @@ feature {NONE} -- Actions
 		local
 			class_type: CLASS_TYPE_AS
 		do
-			class_type := new_class_type_as (n.first, g)
+				-- Class type appearing in a parent clause does
+				-- not hold any qualifier.
+			class_type := new_class_type_as (n.first, g, False, False, False)
 			n.second.set_node (class_type)
 			Result := new_parent_as (class_type, rn, e, u, rd, s)
 		ensure
@@ -730,7 +732,7 @@ feature {NONE} -- Clickable factory
 
 feature {NONE} -- Type factory
 
-	new_class_type (ci: PAIR [ID_AS, CLICK_AST]; generics: EIFFEL_LIST [TYPE]): TYPE is
+	new_class_type (ci: PAIR [ID_AS, CLICK_AST]; generics: EIFFEL_LIST [TYPE]; is_ref, is_exp, is_sep: BOOLEAN): TYPE is
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
 			-- type as a supplier of the class being parsed.
@@ -767,7 +769,7 @@ feature {NONE} -- Type factory
 				end
 				if Result = Void then
 						-- It is a common class type.
-					class_type := new_class_type_as (class_name, generics)
+					class_type := new_class_type_as (class_name, generics, is_ref, is_exp, is_sep)
 						-- Put the supplier in `suppliers'.
 					suppliers.insert_supplier_id (class_name)
 					click_ast.set_node (class_type)
@@ -776,50 +778,6 @@ feature {NONE} -- Type factory
 			end
 		ensure
 			type_not_void: Result /= Void
-		end
-
-	new_expanded_type (ci: PAIR [ID_AS, CLICK_AST]; generics: EIFFEL_LIST [TYPE]): EXP_TYPE_AS is
-			-- New expanded class type;
-			-- Update the clickable list and register the resulting
-			-- type as a supplier of the class being parsed.
-		require
-			ci_not_void: ci /= Void
-			class_name_not_void: ci.first /= Void
-			click_ast_not_void: ci.second /= Void
-		local
-			class_name: ID_AS
-		do
-			class_name := ci.first
-			Result := new_expanded_type_as (class_name, generics)
-			ci.second.set_node (Result)
-			suppliers.insert_supplier_id (class_name)
-		ensure
-			expanded_type_not_void: Result /= Void
-			class_name_set: Result.class_name = ci.first
-			generics_set: Result.generics = generics
-			click_ast_updated: ci.second.node = Result
-		end
-
-	new_separate_type (ci: PAIR [ID_AS, CLICK_AST]; generics: EIFFEL_LIST [TYPE]): SEPARATE_TYPE_AS is
-			-- New separate class type;
-			-- Update the clickable list and register the resulting
-			-- type as a supplier of the class being parsed.
-		require
-			ci_not_void: ci /= Void
-			class_name_not_void: ci.first /= Void
-			click_ast_not_void: ci.second /= Void
-		local
-			class_name: ID_AS
-		do
-			class_name := ci.first
-			Result := new_separate_type_as (class_name, generics)
-			ci.second.set_node (Result)
-			suppliers.insert_supplier_id (class_name)
-		ensure
-			separate_type_not_void: Result /= Void
-			class_name_set: Result.class_name = ci.first
-			generics_set: Result.generics = generics
-			click_ast_updated: ci.second.node = Result
 		end
 
 	new_none_type (click_ast: CLICK_AST; is_generic: BOOLEAN): NONE_TYPE_AS is
@@ -899,17 +857,17 @@ feature {NONE} -- Constants
 			dummy_clicable_as_not_void: Result /= Void
 		end
 
-	Integer_8_classname: STRING is "integer_8"
-	Integer_16_classname: STRING is "integer_16"
-	Integer_classname: STRING is "integer"
-	Integer_64_classname: STRING is "integer_64"
-	Boolean_classname: STRING is "boolean"
-	Character_classname: STRING is "character"
-	Wide_char_classname: STRING is "wide_character"
-	Double_classname: STRING is "double"
-	None_classname: STRING is "none"
-	Pointer_classname: STRING is "pointer"
-	Real_classname: STRING is "real"
+	Integer_8_classname: STRING is "INTEGER_8"
+	Integer_16_classname: STRING is "INTEGER_16"
+	Integer_classname: STRING is "INTEGER"
+	Integer_64_classname: STRING is "INTEGER_64"
+	Boolean_classname: STRING is "BOOLEAN"
+	Character_classname: STRING is "CHARACTER"
+	Wide_char_classname: STRING is "WIDE_CHARACTER"
+	Double_classname: STRING is "DOUBLE"
+	None_classname: STRING is "NONE"
+	Pointer_classname: STRING is "POINTER"
+	Real_classname: STRING is "REAL"
 
 	Initial_formal_parameters_capacity: INTEGER is 8
 				-- Initial capacity for `formal_parameters'

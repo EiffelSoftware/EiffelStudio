@@ -45,13 +45,14 @@ create
 %token		TE_ELSE TE_ELSEIF TE_END TE_ENSURE TE_EXPANDED TE_EXPORT
 %token		TE_EXTERNAL TE_FEATURE TE_FROM TE_FROZEN TE_IF TE_INDEXING
 %token		TE_INFIX TE_INHERIT TE_INSPECT TE_INVARIANT TE_IS
-%token		TE_LIKE TE_LOCAL TE_LOOP TE_OBSOLETE TE_ONCE TE_PRECURSOR
+%token		TE_LIKE TE_LOCAL TE_LOOP TE_OBSOLETE TE_ONCE TE_ONCE_STRING TE_PRECURSOR
 %token		TE_AGENT
-%token		TE_PREFIX TE_REDEFINE TE_RENAME TE_REQUIRE TE_RESCUE
+%token		TE_PREFIX TE_REDEFINE TE_REFERENCE TE_RENAME TE_REQUIRE TE_RESCUE
 %token		TE_RESULT TE_RETRY TE_SELECT TE_SEPARATE TE_THEN TE_UNDEFINE
 %token		TE_UNIQUE TE_UNTIL TE_VARIANT TE_WHEN TE_QUESTION TE_CURLYTILDE
 %token		TE_EMPTY_STRING
 %token		TE_VERBATIM_STRING TE_EMPTY_VERBATIM_STRING
+%token		TE_VOID
 
 %token		TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
 %token		TE_STR_PLUS TE_STR_STAR TE_STR_SLASH TE_STR_MOD
@@ -89,7 +90,7 @@ create
 %type <FEATURE_CLAUSE_AS>	Feature_clause
 %type <FEATURE_SET_AS>		Feature_set
 %type <FORMAL_DEC_AS>		Formal_generic
-%type <ID_AS>				Identifier Index Free_operator
+%type <ID_AS>				Identifier_as_lower Index Free_operator Feature_name_for_call
 %type <IF_AS>				Conditional
 %type <INDEX_AS>			Index_clause
 %type <INSPECT_AS>			Multi_branch
@@ -103,7 +104,7 @@ create
 %type <NESTED_AS>			Call_on_feature_access Call_on_precursor
 							Call_on_feature Call_on_result Call_on_current Call_on_static
 %type <NESTED_EXPR_AS>		Call_on_expression
-%type <OPERAND_AS>			Delayed_actual
+%type <OPERAND_AS>			Delayed_actual Agent_target
 %type <PARENT_AS>			Parent Parent_clause
 %type <PRECURSOR_AS>		A_precursor
 %type <STATIC_ACCESS_AS>	A_static_call A_static_constant_call
@@ -115,6 +116,7 @@ create
 %type <ROUT_BODY_AS>		Routine_body
 %type <ROUTINE_AS>			Routine
 %type <ROUTINE_CREATION_AS>	Agent_call
+%type <PAIR[ROUTINE_CREATION_AS, TOKEN_LOCATION]> Tilda_agent_call
 %type <STRING_AS>			Obsolete Manifest_string External_name Non_empty_string
 %type <TAGGED_AS>			Assertion_clause Assertion_clause_impl
 %type <TUPLE_AS>			Manifest_tuple
@@ -152,7 +154,7 @@ create
 										Local_entity_declaration_list_opt
 										Local_entity_declaration_list
 
-%type <PAIR [ID_AS, CLICK_AST]>			Clickable_identifier Clickable_id
+%type <PAIR [ID_AS, CLICK_AST]>			Clickable_identifier_as_upper Clickable_identifier_as_lower
 
 %type <PAIR [FEATURE_NAME, CLICK_AST]>					Infix Prefix Feature_name New_feature
 %type <PAIR [STRING_AS, CLICK_AST]>						Infix_operator Prefix_operator
@@ -161,7 +163,7 @@ create
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 93
+%expect 91
 
 %%
 
@@ -177,7 +179,7 @@ Eiffel_parser:
 					raise_error
 				end
 			}
-	|	Identifier Type
+	|	Identifier_as_lower Type
 			{
 				if not type_parser then
 					raise_error
@@ -190,7 +192,7 @@ Class_declaration:
 		Indexing							-- $1
 		Header_mark							-- $2
 		TE_CLASS							-- $3
-		Clickable_identifier				-- $4
+		Clickable_identifier_as_upper		-- $4
 		Formal_generics						-- $5
 		External_name						-- $6
 		Obsolete							-- $7
@@ -238,12 +240,21 @@ Class_end: TE_END
 			}
 	;
 
-Clickable_identifier: Clickable_id
-			{ $$ := $1 }
+Clickable_identifier_as_lower: TE_ID
+			{
+				if not case_sensitive then
+					token_buffer.to_lower
+				end
+				$$ := new_clickable_id (create {ID_AS}.initialize (token_buffer))
+			}
 	;
-
-Clickable_id: TE_ID
-			{ $$ := new_clickable_id (create {ID_AS}.initialize (token_buffer)) }
+Clickable_identifier_as_upper: TE_ID
+			{
+				if not case_sensitive then
+					token_buffer.to_upper
+				end
+				$$ := new_clickable_id (create {ID_AS}.initialize (token_buffer))
+			}
 	;
 
 -- Indexing
@@ -289,7 +300,7 @@ Index_clause: Position Index Index_terms ASemi
 			{ $$ := new_index_as ($2, $3, $1) }
 	;
 
-Index: Identifier TE_COLON
+Index: Identifier_as_lower TE_COLON
 			{ $$ := $1 }
 	|	-- Empty
 			{
@@ -320,7 +331,7 @@ Index_terms: Index_value
 			}
 	;
 
-Index_value: Identifier
+Index_value: Identifier_as_lower
 			{ $$ := $1 }
 	|	Manifest_constant
 			{ $$ := $1 }
@@ -440,7 +451,7 @@ Feature_clause: Feature_client_clause
 Feature_client_clause: TE_FEATURE
 			{
 				inherit_context := False
-				fclause_pos := clone (current_position)
+				fclause_pos := current_position.twin
 			}
 		Clients
 			{ $$ := $3 }
@@ -461,17 +472,17 @@ Client_list: TE_LCURLY TE_RCURLY
 			{ $$ := $2 }
 	;
 
-Class_list: Clickable_identifier
+Class_list: Clickable_identifier_as_upper
 			{
 				$$ := new_eiffel_list_id_as (Initial_class_list_size)
 				$$.extend ($1.first)
-				$1.second.set_node (new_class_type_as ($1.first, Void))
+				$1.second.set_node (new_class_type_as ($1.first, Void, False, False, False))
 			}
-	|	Class_list TE_COMMA Clickable_identifier
+	|	Class_list TE_COMMA Clickable_identifier_as_upper
 			{
 				$$ := $1
 				$$.extend ($3.first)
-				$3.second.set_node (new_class_type_as ($3.first, Void))
+				$3.second.set_node (new_class_type_as ($3.first, Void, False, False, False))
 			}
 	;
 
@@ -523,7 +534,7 @@ Feature_name_mark: -- Empty
 			{ is_frozen := True }
 	;
 
-Feature_name: Clickable_identifier
+Feature_name: Clickable_identifier_as_lower
 			{ $$ := new_clickable_feature_name ($1) }
 	|	Infix
 			{ $$ := $1 }
@@ -604,37 +615,37 @@ Parent: Position Parent_clause
 			}
 	;
 
-Parent_clause: Clickable_identifier Generics_opt
+Parent_clause: Clickable_identifier_as_upper Generics_opt
 			{
 				inherit_context := False
 				$$ := new_parent_clause ($1, $2, Void, Void, Void, Void, Void)
 			}
-	|	Clickable_identifier Generics_opt Rename New_exports_opt Undefine_opt Redefine_opt Select_opt TE_END
+	|	Clickable_identifier_as_upper Generics_opt Rename New_exports_opt Undefine_opt Redefine_opt Select_opt TE_END
 			{
 				inherit_context := False
 				$$ := new_parent_clause ($1, $2, $3, $4, $5, $6, $7)
 			}
-	|	Clickable_identifier Generics_opt New_exports Undefine_opt Redefine_opt Select_opt TE_END
+	|	Clickable_identifier_as_upper Generics_opt New_exports Undefine_opt Redefine_opt Select_opt TE_END
 			{
 				inherit_context := False
 				$$ := new_parent_clause ($1, $2, Void, $3, $4, $5, $6)
 			}
-	|	Clickable_identifier Generics_opt Undefine Redefine_opt Select_opt TE_END
+	|	Clickable_identifier_as_upper Generics_opt Undefine Redefine_opt Select_opt TE_END
 			{
 				inherit_context := False
 				$$ := new_parent_clause ($1, $2, Void, Void, $3, $4, $5)
 			}
-	|	Clickable_identifier Generics_opt Redefine Select_opt TE_END
+	|	Clickable_identifier_as_upper Generics_opt Redefine Select_opt TE_END
 			{
 				inherit_context := False
 				$$ := new_parent_clause ($1, $2, Void, Void, Void, $3, $4)
 			}
-	|	Clickable_identifier Generics_opt Select TE_END
+	|	Clickable_identifier_as_upper Generics_opt Select TE_END
 			{
 				inherit_context := False
 				$$ := new_parent_clause ($1, $2, Void, Void, Void, Void, $3)
 			}
-	|	Clickable_identifier Generics_opt TE_END
+	|	Clickable_identifier_as_upper Generics_opt TE_END
 			{
 				inherit_context := True
 				real_class_end_position := current_position.end_position - 3
@@ -830,7 +841,7 @@ Entity_declaration_group: Identifier_list Position TE_COLON Parameter_passing_ty
 	;
 
 Parameter_passing_type: -- Empty
-	|	TE_LSQURE Identifier TE_RSQURE
+	|	TE_LSQURE Identifier_as_lower TE_RSQURE
 			{
 				if il_parser then
 						-- Trigger a syntax error.
@@ -861,13 +872,13 @@ Local_entity_declaration_group: Identifier_list Position TE_COLON Type ASemi
 			{ $$ := new_type_dec_as ($1, $4, $2) }
 	;
 
-Identifier_list: Identifier
+Identifier_list: Identifier_as_lower
 			{
 				create $$.make (Initial_identifier_list_size)
 				Names_heap.put ($1)
 				$$.extend (Names_heap.found_item)
 			}
-	|	Identifier_list TE_COMMA Identifier
+	|	Identifier_list TE_COMMA Identifier_as_lower
 			{
 				$$ := $1
 				Names_heap.put ($3)
@@ -1050,9 +1061,9 @@ Assertion_clause: Set_position Assertion_clause_impl ASemi
 
 Assertion_clause_impl: Position Expression
 			{ $$ := new_tagged_as (Void, $2, $1) }
-	|	Position Identifier TE_COLON Expression
+	|	Position Identifier_as_lower TE_COLON Expression
 			{ $$ := new_tagged_as ($2, $4, $1) }
-	|	Position Identifier TE_COLON 
+	|	Position Identifier_as_lower TE_COLON 
 			-- { $$ := Void }
 	;
 
@@ -1066,22 +1077,24 @@ Type: Class_type
 			{ $$ := $1 }
 	;
 
-Non_class_type: TE_EXPANDED Clickable_identifier Generics_opt
-			{ $$ := new_expanded_type ($2, $3) }
-	|	TE_SEPARATE Clickable_identifier Generics_opt
-			{ $$ := new_separate_type ($2, $3) }
+Non_class_type: TE_EXPANDED Clickable_identifier_as_upper Generics_opt
+			{ $$ := new_class_type ($2, $3, False, True, False) }
+	|	TE_REFERENCE Clickable_identifier_as_upper Generics_opt
+			{ $$ := new_class_type ($2, $3, True, False, False) }
+	|	TE_SEPARATE Clickable_identifier_as_upper Generics_opt
+			{ $$ := new_class_type ($2, $3, False, False, True) }
 	|	TE_BIT Integer_constant
 			{ $$ := new_bits_as ($2) }
-	|	TE_BIT Identifier
+	|	TE_BIT Identifier_as_lower
 			{ $$ := new_bits_symbol_as ($2) }
-	|	TE_LIKE Identifier
+	|	TE_LIKE Identifier_as_lower
 			{ $$ := new_like_id_as ($2) }
 	|	TE_LIKE TE_CURRENT
 			{ $$ := new_like_current_as }
 	;
 
-Class_type: Clickable_id Generics_opt
-			{ $$ := new_class_type ($1, $2) }
+Class_type: Clickable_identifier_as_upper Generics_opt
+			{ $$ := new_class_type ($1, $2, False, False, False) }
 	;
 
 Generics_opt: -- Empty
@@ -1158,6 +1171,9 @@ Formal_generic:
 						-- therefore not part of `TE_ID'.
 					raise_error
 				else
+					if not case_sensitive then
+						token_buffer.to_upper
+					end
 					formal_parameters.extend (create {ID_AS}.initialize (token_buffer))
 				end
 			}
@@ -1270,23 +1286,23 @@ Choice: Integer_constant
 			{ $$ := new_interval_as ($1, Void) }
 	|	Character_constant TE_DOTDOT Character_constant
 			{ $$ := new_interval_as ($1, $3) }
-	|	Identifier
+	|	Identifier_as_lower
 			{ $$ := new_interval_as ($1, Void) }
-	|	Identifier TE_DOTDOT Identifier
+	|	Identifier_as_lower TE_DOTDOT Identifier_as_lower
 			{ $$ := new_interval_as ($1, $3) }
-	|	Identifier TE_DOTDOT Integer_constant
+	|	Identifier_as_lower TE_DOTDOT Integer_constant
 			{ $$ := new_interval_as ($1, $3) }
-	|	Integer_constant TE_DOTDOT Identifier
+	|	Integer_constant TE_DOTDOT Identifier_as_lower
 			{ $$ := new_interval_as ($1, $3) }
-	|	Identifier TE_DOTDOT Character_constant
+	|	Identifier_as_lower TE_DOTDOT Character_constant
 			{ $$ := new_interval_as ($1, $3) }
-	|	Character_constant TE_DOTDOT Identifier
+	|	Character_constant TE_DOTDOT Identifier_as_lower
 			{ $$ := new_interval_as ($1, $3) }
 	|	A_static_constant_call
 			{ $$ := new_interval_as ($1, Void) }
-	|	A_static_constant_call TE_DOTDOT Identifier
+	|	A_static_constant_call TE_DOTDOT Identifier_as_lower
 			{ $$ := new_interval_as ($1, $3) }
-	|	Identifier TE_DOTDOT A_static_constant_call
+	|	Identifier_as_lower TE_DOTDOT A_static_constant_call
 			{ $$ := new_interval_as ($1, $3) }
 	|	A_static_constant_call TE_DOTDOT A_static_constant_call
 			{ $$ := new_interval_as ($1, $3) }
@@ -1338,7 +1354,7 @@ Class_invariant: -- Empty
 
 Variant: -- Empty
 			-- { $$ := Void }
-	|	TE_VARIANT Identifier TE_COLON Expression
+	|	TE_VARIANT Identifier_as_lower TE_COLON Expression
 			{ $$ := new_variant_as ($2, $4, current_position) }
 	|	TE_VARIANT Expression
 			{ $$ := new_variant_as (Void, $2, current_position) }
@@ -1385,13 +1401,13 @@ Rescue: -- Empty
 			}
 	;
 
-Assignment: Position Identifier TE_ASSIGN Expression
+Assignment: Position Identifier_as_lower TE_ASSIGN Expression
 			{ $$ := new_assign_as (new_access_id_as ($2, Void), $4, $1) }
 	|	Position TE_RESULT TE_ASSIGN Expression
 			{ $$ := new_assign_as (new_result_as, $4, $1) }
     ;
 
-Reverse_assignment: Position Identifier TE_ACCEPT Expression
+Reverse_assignment: Position Identifier_as_lower TE_ACCEPT Expression
 			{ $$ := new_reverse_as (new_access_id_as ($2, Void), $4, $1) }
 	|	Position TE_RESULT TE_ACCEPT Expression
 			{ $$ := new_reverse_as (new_result_as, $4, $1) }
@@ -1463,85 +1479,56 @@ Creation_clause:
 			}
 	;
 
-Agent_call:
-		TE_AGENT TE_RESULT TE_DOT Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_result_operand_as, $4, $5) }
-	|	TE_AGENT TE_CURRENT TE_DOT Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $4, $5) }
-	|	TE_AGENT Identifier TE_DOT Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_operand_as (Void, $2, Void), $4, $5) }
-	|	TE_AGENT TE_LPARAN Expression TE_RPARAN TE_DOT Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, $3), $6, $7) }
-	|	TE_AGENT TE_LCURLY Type TE_RCURLY TE_DOT Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (new_operand_as ($3, Void, Void), $6, $7) }
-	|	TE_AGENT TE_QUESTION TE_DOT Identifier Delayed_actuals
-		{ $$ := new_routine_creation_as (Void, $4, $5) }
-	|	TE_AGENT Identifier Delayed_actuals
-		{ $$ := new_unqualified_routine_creation_as (new_operand_as (Void, Void, Void), $2, $3) }
-	|	TE_RESULT TE_TILDE Position Identifier Delayed_actuals
+Agent_call: TE_AGENT Feature_name_for_call Delayed_actuals
+		{ $$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $2, $3, False) }
+	|	TE_AGENT Agent_target TE_DOT Feature_name_for_call Delayed_actuals
+		{ $$ := new_routine_creation_as ($2, $4, $5, True) }
+	|	Tilda_agent_call
 		{
-			$$ := new_routine_creation_as (new_result_operand_as, $4, $5)
+			$$ := $1.first
 			if has_syntax_warning then
 				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make ($3.start_position,
-					$3.end_position, filename, 0, "Use keyword `agent' instead."))
+					create {SYNTAX_WARNING}.make ($1.second.start_position,
+					$1.second.end_position, filename, 0, "Use keyword `agent' instead."))
 			end
 		}
-	|	TE_CURRENT TE_TILDE Position Identifier Delayed_actuals
-		{
-			$$ := new_routine_creation_as (new_operand_as (Void, Void, Void), $4, $5)
-			if has_syntax_warning then
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make ($3.start_position,
-					$3.end_position, filename, 0, "Use keyword `agent' instead."))
-			end
-		}
-	|	Identifier TE_TILDE Position Identifier Delayed_actuals
-		{
-			$$ := new_routine_creation_as (new_operand_as (Void, $1, Void), $4, $5)
-			if has_syntax_warning then
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make ($3.start_position,
-					$3.end_position, filename, 0, "Use keyword `agent' instead."))
-			end
-			
-		}
-	|	TE_LPARAN Expression TE_RPARAN TE_TILDE Position Identifier Delayed_actuals
-		{
-			$$ := new_routine_creation_As (new_operand_as (Void, Void, $2), $6, $7)
-			if has_syntax_warning then
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make ($5.start_position,
-					$5.end_position, filename, 0, "Use keyword `agent' instead."))
-			end
-		}
-	|	TE_LCURLY Type TE_CURLYTILDE Position Identifier Delayed_actuals
-		{
-			$$ := new_routine_creation_as (new_operand_as ($2, Void, Void), $5, $6)
-			if has_syntax_warning then
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make ($4.start_position,
-					$4.end_position, filename, 0, "Use keyword `agent' instead."))
-			end
-		}
-	|	TE_QUESTION TE_TILDE Position Identifier Delayed_actuals
-		{
-			$$ := new_routine_creation_as (Void, $4, $5)
-			if has_syntax_warning then
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make ($3.start_position,
-					$3.end_position, filename, 0, "Use keyword `agent' instead."))
-			end
-		}
-	|	TE_TILDE Position Identifier Delayed_actuals
-		{
-			$$ := new_unqualified_routine_creation_as (new_operand_as (Void, Void, Void), $3, $4)
-			if has_syntax_warning then
-				Error_handler.insert_warning (
-					create {SYNTAX_WARNING}.make ($2.start_position,
-					$2.end_position, filename, 0, "Use keyword `agent' instead."))
-			end
-		}
+	;
+
+--Note: Manu 02/07/2004: we need to expand `Agent_target' otherwise it causes some
+-- Reduce/Reduce conflict. `Tilda_agent_call' should be written as:
+--Tilda_agent_call:	TE_TILDE Position Identifier_as_lower Delayed_actuals
+--		{ $$ := new_old_routine_creation_as ($2, new_operand_as (Void, Void, Void), $3, $4, False) }
+--	|	Agent_target TE_TILDE Position Identifier_as_lower Delayed_actuals
+--		{ $$ := new_old_routine_creation_as ($1, $4, $5, True) }
+--	;
+Tilda_agent_call: TE_TILDE Position Identifier_as_lower Delayed_actuals
+		{ $$ := new_old_routine_creation_as ($2, new_operand_as (Void, Void, Void), $3, $4, False) }
+	|	Identifier_as_lower TE_TILDE Position Identifier_as_lower Delayed_actuals
+		{ $$ := new_old_routine_creation_as ($3, new_operand_as (Void, $1, Void), $4, $5, True) }
+	|	TE_LPARAN Expression TE_RPARAN TE_TILDE Position Identifier_as_lower Delayed_actuals
+		{ $$ := new_old_routine_creation_as ($5, new_operand_as (Void, Void, $2), $6, $7, True) }
+	|	TE_RESULT TE_TILDE Position Identifier_as_lower Delayed_actuals
+		{ $$ := new_old_routine_creation_as ($3, new_result_operand_as, $4, $5, True) }
+	|	TE_CURRENT TE_TILDE Position Identifier_as_lower Delayed_actuals
+		{ $$ := new_old_routine_creation_as ($3, new_operand_as (Void, Void, Void), $4, $5, True) }
+	|	TE_LCURLY Type TE_CURLYTILDE Position Identifier_as_lower Delayed_actuals
+		{ $$ := new_old_routine_creation_as ($4, new_operand_as ($2, Void, Void), $5, $6, True) }
+	|	TE_QUESTION TE_TILDE Position Identifier_as_lower Delayed_actuals
+		{ $$ := new_old_routine_creation_as ($3, Void, $4, $5, True) }
+	;
+
+Agent_target: Identifier_as_lower
+		{ $$ := new_operand_as (Void, $1, Void) }
+	|	TE_LPARAN Expression TE_RPARAN
+		{ $$ := new_operand_as (Void, Void, $2) }	
+	|	TE_RESULT
+		{ $$ := new_result_operand_as }
+	|	TE_CURRENT
+		{ $$ := new_operand_as (Void, Void, Void) }
+	|	TE_LCURLY Type TE_RCURLY
+		{ $$ := new_operand_as ($2, Void, Void)}
+	|	TE_QUESTION
+		{ $$ := Void }
 	;
 
 Delayed_actuals: -- Empty
@@ -1570,19 +1557,21 @@ Delayed_actual: TE_QUESTION
 -- expand it using its definition
 --	|	TE_LCURLY Type TE_RCURLY
 --			{ $$ := new_operand_as ($2, Void, Void) }
-	|	TE_LCURLY Clickable_id TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($2, Void), Void, Void) }
-	|	TE_LCURLY Clickable_id Generics TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($2, $3), Void, Void) }
-	|	TE_LCURLY TE_EXPANDED Clickable_identifier Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_expanded_type ($3, $4), Void, Void) }
-	|	TE_LCURLY TE_SEPARATE Clickable_identifier Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_separate_type ($3, $4), Void, Void) }
+	|	TE_LCURLY Clickable_identifier_as_upper TE_RCURLY
+			{ $$ := new_operand_as (new_class_type ($2, Void, False, False, False), Void, Void) }
+	|	TE_LCURLY Clickable_identifier_as_upper Generics TE_RCURLY
+			{ $$ := new_operand_as (new_class_type ($2, $3, False, False, False), Void, Void) }
+	|	TE_LCURLY TE_REFERENCE Clickable_identifier_as_upper Generics_opt TE_RCURLY
+			{ $$ := new_operand_as (new_class_type ($3, $4, True, False, False), Void, Void) }
+	|	TE_LCURLY TE_EXPANDED Clickable_identifier_as_upper Generics_opt TE_RCURLY
+			{ $$ := new_operand_as (new_class_type ($3, $4, False, True, False), Void, Void) }
+	|	TE_LCURLY TE_SEPARATE Clickable_identifier_as_upper Generics_opt TE_RCURLY
+			{ $$ := new_operand_as (new_class_type ($3, $4, False, False, True), Void, Void) }
 	|	TE_LCURLY TE_BIT Integer_constant TE_RCURLY
 			{ $$ := new_operand_as (new_bits_as ($3), Void, Void) }
-	|	TE_LCURLY TE_BIT Identifier TE_RCURLY
+	|	TE_LCURLY TE_BIT Identifier_as_lower TE_RCURLY
 			{ $$ := new_operand_as (new_bits_symbol_as ($3), Void, Void) }
-	|	TE_LCURLY TE_LIKE Identifier TE_RCURLY
+	|	TE_LCURLY TE_LIKE Identifier_as_lower TE_RCURLY
 			{ $$ := new_operand_as (new_like_id_as ($3), Void, Void) }
 	|	TE_LCURLY TE_LIKE TE_CURRENT TE_RCURLY
 			{ $$ := new_operand_as (new_like_current_as, Void, Void) }
@@ -1624,7 +1613,7 @@ Creation_type: -- Empty
 			{ $$ := $1 }
 	;
 
-Creation_target: Identifier
+Creation_target: Identifier_as_lower
 			{ $$ := new_access_id_as ($1, Void) }
 	|	TE_RESULT
 			{ $$ := new_result_as }
@@ -1632,7 +1621,7 @@ Creation_target: Identifier
 
 Creation_call: -- Empty
 			-- { $$ := Void }
-	|	TE_DOT Identifier Parameters
+	|	TE_DOT Identifier_as_lower Parameters
 			{ $$ := new_access_inv_as ($2, $3) }
 	;
 
@@ -1670,6 +1659,8 @@ Check: Position TE_CHECK Assertion TE_END
 
 Expression: Expression_constant
 			{ create {VALUE_AS} $$.initialize ($1) }
+	|	TE_VOID
+			{ create {VOID_AS} $$ }
 	|	Manifest_array
 			{ create {VALUE_AS} $$.initialize ($1) }
 	|	Manifest_tuple
@@ -1798,11 +1789,11 @@ Call_on_precursor: A_precursor TE_DOT Remote_call
 
 A_precursor: TE_PRECURSOR Parameters
 			{ $$ := new_precursor_as (Void, $2) }
-	|	TE_PRECURSOR TE_LCURLY Clickable_identifier TE_RCURLY Parameters
+	|	TE_PRECURSOR TE_LCURLY Clickable_identifier_as_upper TE_RCURLY Parameters
 			{ $$ := new_precursor ($3, $5, Void) }
-	|	TE_LCURLY TE_LCURLY Clickable_identifier TE_RCURLY TE_RCURLY Position TE_PRECURSOR Parameters
+	|	TE_LCURLY TE_LCURLY Clickable_identifier_as_upper TE_RCURLY TE_RCURLY Position TE_PRECURSOR Parameters
 			{ $$ := new_precursor ($3, $8, $6) }
-	|	TE_LCURLY Clickable_id TE_RCURLY Position TE_PRECURSOR Parameters
+	|	TE_LCURLY Clickable_identifier_as_upper TE_RCURLY Position TE_PRECURSOR Parameters
 			{ $$ := new_precursor ($2, $6, $4) }
 	;
 
@@ -1811,14 +1802,14 @@ Call_on_static: A_static_call TE_DOT Remote_call
 	;
 
 A_static_call:
-		TE_FEATURE TE_LCURLY Class_type TE_RCURLY TE_DOT Identifier Parameters
+		TE_FEATURE TE_LCURLY Class_type TE_RCURLY TE_DOT Identifier_as_lower Parameters
 			{
 				$$ := new_static_access_as ($3, $6, $7);
 			}
 	;
 
 A_static_constant_call:
-		TE_FEATURE TE_LCURLY Class_type TE_RCURLY TE_DOT Identifier
+		TE_FEATURE TE_LCURLY Class_type TE_RCURLY TE_DOT Identifier_as_lower
 			{
 				$$ := new_static_access_as ($3, $6, Void);
 			}
@@ -1837,7 +1828,15 @@ Call_on_feature_access: Feature_access TE_DOT Feature_access
 			{ $$ := new_nested_as ($1, $3) }
 	;
 
-A_feature: Identifier Parameters
+Feature_name_for_call: Identifier_as_lower
+			{ $$ := $1}
+	|	Infix
+			{ $$ := $1.first.internal_name }
+	|	Prefix
+			{ $$ := $1.first.internal_name }
+	;
+
+A_feature: Feature_name_for_call Parameters
 			{
 				inspect id_level
 				when Normal_level then
@@ -1850,7 +1849,7 @@ A_feature: Identifier Parameters
 			}
 	;
 
-Feature_access: Identifier Parameters
+Feature_access: Feature_name_for_call Parameters
 			{ $$ := new_access_feat_as ($1, $2) }
 	;
 
@@ -1896,8 +1895,13 @@ Expression_list: Expression
 -- Miscellaneous
  
 
-Identifier: TE_ID
-			{ create $$.initialize (token_buffer) }
+Identifier_as_lower: TE_ID
+			{
+				if not case_sensitive then
+					token_buffer.to_lower
+				end
+				create $$.initialize (token_buffer)
+			}
 	;
 
 Manifest_constant: Boolean_constant
@@ -1939,6 +1943,11 @@ Expression_constant: Boolean_constant
 			{ $$ := $1 }
 	|	Manifest_string
 			{ $$ := $1 }
+	|	TE_ONCE_STRING Manifest_string
+			{
+				$2.set_is_once_string (True)
+				$$ := $2
+			}
 	;
 
 Boolean_constant: TE_FALSE
@@ -2130,7 +2139,7 @@ Set_position:	-- Empty
 	;
 
 Position: -- Empty
-			{ $$ := clone (current_position) }
+			{ $$ := current_position.twin }
 	;
 
 %%

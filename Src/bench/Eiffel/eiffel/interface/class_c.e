@@ -1192,6 +1192,8 @@ feature -- Generation
 	pass4 is
 			-- Generation of C files for each type associated to the current
 			-- class
+		local
+			temp_index: INTEGER
 		do
 			Inst_context.set_cluster (cluster);
 			from
@@ -1199,10 +1201,12 @@ feature -- Generation
 			until
 				types.after
 			loop
-				types.item.pass4;
+				temp_index := types.index
+				types.item.pass4
+				types.go_i_th (temp_index)
 				types.forth
-			end;
-		end;
+			end
+		end
 
 feature -- Melting
 

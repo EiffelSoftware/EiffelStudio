@@ -150,9 +150,16 @@ feature -- Element change
 
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
+		local
+			ev_tree: EV_TREE_IMP
 		do
+			set_mask (Tvif_text)
 			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 			wel_set_text (txt)
+			if parent_imp /= Void then
+				ev_tree ?= parent_widget.implementation
+				ev_tree.notify_item_info (Current)
+			end
 		end
 
 	add_item (item_imp: EV_TREE_ITEM_IMP) is

@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Initialize `go_up_one_level' to `go_up'
 		do
 			go_up_one_level := go_up;
-			init_from_tool (a_tool)
+			init (a_tool)
 		ensure
 			set: go_up_one_level = go_up
 		end;

@@ -9,18 +9,12 @@ class CLOSE_ALL_CMD
 
 inherit
 	TOOL_COMMAND
+		rename
+			init as make
+		end
 
 creation
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_tool: PROJECT_W) is
-			-- Initialize Current with `a_tool'
-			-- as `tool'.
-		do
-			init_from_tool (a_tool)
-		end
 
 feature -- Properties
 

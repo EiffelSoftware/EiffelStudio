@@ -5,64 +5,176 @@ indexing
 	Revision: "$Revision$"
 
 
-deferred class CONTEXT_EDITOR 
+deferred class CONTEXT_EDITOR
 
 inherit
-
-	COMPOSITE
-		undefine
-			init_toolkit
-		redefine
-			destroy
-		end
+	EV_COMMAND
 
 	WINDOWS
 
 	CONSTANTS
 
-feature {NONE}
+feature {NONE} -- Initialization
+
+	make (par: EV_CONTAINER) is
+			-- Create the pages.
+		local
+			vbox: EV_VERTICAL_BOX
+			geometry_form: GEOMETRY_FORM
+--			label_text_form: LABEL_TEXT_FORM
+			window_form: WINDOW_FORM
+--			separator_form: SEPARATOR_FORM
+			text_form: TEXT_FORM
+--			menu_form: MENU_FORM
+--			bar_form: BAR_FORM
+--			pict_color_form: PICT_COLOR_FORM
+--			arrow_b_form: ARROW_B_FORM
+--			scroll_l_form: SCROLL_L_FORM
+--			font_form: FONT_FORM
+--			scale_form: SCALE_FORM
+--			pulldown_form: PULLDOWN_FORM
+			text_field_form: TEXT_FIELD_FORM
+--			color_form: COLOR_FORM
+--			drawing_box_form: DRAWING_BOX_FORM
+--			bull_resize_form: BULL_RESIZE_FORM
+--			grid_form: GRID_FORM
+--			toggle_form: TOGGLE_FORM
+		do
+			create notebook.make (par)
+
+			create temp_list.make (1, Context_const.total_number_of_forms)
+
+				--XX Replace vertical box by container with only one child...
+			create vbox.make (notebook)
+			notebook.append_page (vbox, "Behavior")
+				--XX insert page to position `form_number'
+			temp_list.put (vbox, 1)
+			create vbox.make (notebook)
+			notebook.append_page (vbox, "Attributes")
+			temp_list.put (vbox, 2)
+			create vbox.make (notebook)
+			notebook.append_page (vbox, "Geometry")
+			temp_list.put (vbox, 3)
+			create vbox.make (notebook)
+			notebook.append_page (vbox, "Colors")
+			temp_list.put (vbox, 4)
+			create vbox.make (notebook)
+			notebook.append_page (vbox, "Alignement")
+			temp_list.put (vbox, 5)
+
+			create forms_list.make (1, Context_const.total_number_of_forms)
+
+			create behavior_form.make (Current)
+			forms_list.put (behavior_form, Context_const.behavior_form_nbr)
+--			create label_text_form.make (Current)
+			create window_form.make (Current)
+			forms_list.put (window_form, Context_const.window_att_form_nbr)
+--			create separator_form.make (Current)
+			create text_form.make (Current)
+			forms_list.put (text_form, Context_const.text_att_form_nbr)
+--			create menu_form.make (Current)
+--			create bar_form.make (Current)
+--			create pict_color_form.make (Current)
+--			create arrow_b_form.make (Current)
+--			create scroll_l_form.make (Current)
+--			create font_form.make (Current)
+--			create alignment_form.make (Current)
+--			create scale_form.make (Current)
+--			create pulldown_form.make (Current)
+			create text_field_form.make (Current)
+			forms_list.put (behavior_form, Context_const.text_field_att_form_nbr)
+--			create color_form.make (Current)
+--			create drawing_box_form.make (Current)
+--			create bull_resize_form.make (Current)
+--			create grid_form.make (Current)
+--			create toggle_form.make (Current)
+
+			set_values
+			set_callbacks
+		end
+
+	set_values is
+		deferred
+		end
+
+	set_callbacks is
+		local
+			cmd: PND_ACCELERATOR
+			arg: EV_ARGUMENT1 [ANY]
+			rcmd: EV_ROUTINE_COMMAND
+		do
+			create cmd
+			create arg.make (edited_context)
+			context_hole.add_button_press_command (3, cmd, arg)
+			create rcmd.make (~init_transport)
+			context_hole.activate_pick_and_drop (rcmd, Void)
+			context_hole.set_data_type (Pnd_types.context_type)
+			context_hole.add_pnd_command (Pnd_types.context_type, Current, Void)
+			notebook.add_pnd_command (Pnd_types.context_type, Current, Void)
+		end
+
+feature {EDITOR_FORM} -- GUI attributes
+
+	notebook: EV_NOTEBOOK
 
 	context_hole: CON_EDIT_HOLE
-	
-feature 
-
-	-- Context edited in the context editor
-	edited_context: CONTEXT
-
-	current_form_number: INTEGER
-	
-feature 
-
-	form_list: ARRAY [EDITOR_FORM]
-
-feature {ALIGNMENT_CMD}
-
-	alignment_form: ALIGNMENT_FORM
-
-	
-feature {NONE}
 
 	behavior_form: BEHAVIOR_FORM
-	
-	formats_rc: ROW_COLUMN
 
-	trash_hole: CUT_HOLE
+feature {NONE} -- Choices of forms
 
-	scrolled_w: SCROLLED_W
-			-- Scrolled window in which will appear the different property sets
+	forms_list: ARRAY [EDITOR_FORM]
+			-- Array of possible forms
 
-feature 
+	temp_list: ARRAY [EV_VERTICAL_BOX]
+			--XX Replace when there will be access to the 
+			-- children of the notebook
 
-	color_form: COLOR_FORM
+feature -- Access
 
-	format_list: FORMAT_LIST
+	edited_context: CONTEXT
+			-- Context edited in the context editor
 
-feature -- Attachments
+	current_page: INTEGER is
+		do
+			Result := notebook.current_page
+		end
 
---	attach_attributes_form (a_form: EDITOR_FORM) is
-			-- Attach `a_form' in current context editor.
---		deferred
---		end
+	set_current_page (index: INTEGER) is
+		do
+			notebook.set_current_page (index)
+		end
+
+	page (i: INTEGER): EV_CONTAINER is
+			-- Container at the position `i' in the `notebook'.
+		do
+--			Result := notebook.page (i)
+			Result := temp_list.item (i)
+		end
+
+	show is
+		deferred
+		end
+
+--feature {ALIGNMENT_CMD}
+
+--	alignment_form: ALIGNMENT_FORM
+
+feature {CONTEXT_EDITOR} -- Command
+
+	init_transport (arg: EV_ARGUMENT; ev_data: EV_BUTTON_EVENT_DATA) is
+		do
+			context_hole.set_transported_data (edited_context)
+		end
+
+	execute (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+			-- Edit the dropped context.
+		local
+			ctxt: CONTEXT
+		do
+			ctxt ?= ev_data.data
+			set_edited_context (ctxt)
+		end
 
 feature -- Editing contexts
 
@@ -73,70 +185,64 @@ feature -- Editing contexts
 			count, i: INTEGER
 			other_editor: like Current
 		do
-				-- See if editor exists for current_form_number
-			other_editor := context_catalog.editor 
-				(new_context, current_form_number)
+				-- See if editor exists for `current_page'
+			other_editor := context_catalog.editor (new_context)
 			if other_editor = Void then
 				if new_context /= edited_context then
 					option_list := new_context.option_list
 					count := option_list.count
-					if current_form_number = 0 then
-						i := count + 1
-					else
-							-- Test if the current form 
-							-- is defined for the context
-						from
-							i := 1
-						until
-							i > count or else
-							option_list @ i = current_form_number
-						loop
-							i := i + 1
-						end
+						-- Test if the current form 
+						-- is defined for the context
+					from
+						i := 1
+					until
+						i > count or else option_list.item (i) = current_page
+					loop
+						i := i + 1
 					end
 					if i > count then
-							-- Could not find. Check to see if the first
-							-- form number is being used
-						other_editor :=	context_catalog.editor (new_context, 
-											option_list @ 1)
-						if other_editor = Void then
-							if edited_context = Void or else
-								not edited_context.eiffel_type.is_equal 
-									(new_context.eiffel_type)
-							then
-								if formats_rc.realized then
-									formats_rc.hide
-								end
-								format_list.update_buttons (option_list)
-								if formats_rc.realized then
-									formats_rc.show
-								end
-							end
-							context_hole.set_full_symbol
-							edited_context := new_context
-							update_title
-							set_form (edited_context.default_option_number)
-						else
-							other_editor.raise
-						end
-					else
-						if edited_context = Void or else
-							not edited_context.eiffel_type.is_equal 
-								(new_context.eiffel_type)
-						then
-							formats_rc.unmanage
-							format_list.update_buttons (option_list)
-							formats_rc.manage
-						end	
-						context_hole.set_full_symbol
-						edited_context := new_context
-						update_title
-						format_list.update_buttons (option_list)
-						set_form (current_form_number)
+							-- Could not find.
+							-- Display the first form (behavior)
+						set_current_page (edited_context.default_option_number)
 					end
+					if edited_context = Void or else
+					not edited_context.eiffel_type.is_equal
+									(new_context.eiffel_type)
+					then
+						edited_context := new_context
+						update_pages (option_list)
+					end
+					context_hole.set_full_symbol
+					update_title
 				end
 			else
-				other_editor.raise
+				other_editor.show
+				other_editor.set_current_page (current_page)
+			end
+		end
+
+	update_pages (opt_list: ARRAY [INTEGER]) is
+			-- Update the pages of the context editor.
+		local
+			i, form_number: INTEGER
+			pg: EV_VERTICAL_BOX
+		do
+			from
+				i := 1
+			until
+				i >= opt_list.count
+			loop
+				form_number := opt_list.item (i)
+				pg ?= page (i)
+--				if pg.child /= Void then
+--						-- there is a form in the page
+--					pg.child.set_parent (Void)
+--				end
+				if form_number /= 0 then
+					forms_list.item (form_number).set_parent (pg)
+					reset_form (form_number)
+				end
+				i := i + 1
 			end
 		end
 
@@ -144,143 +250,48 @@ feature -- Editing contexts
 			-- Update the title of the top shell if necessary
 		deferred
 		end
-	
-	set_form (a_form_number: INTEGER) is
-			-- Display 'a_form' in the context editor window
-		local
-			prev_form, new_form: EDITOR_FORM
-			mp: MOUSE_PTR
-			msg: STRING
-			prev_form_number: INTEGER
-			format: FORMAT_BUTTON
-		do
-			prev_form_number := current_form_number
-			if prev_form_number /= 0 then
-				prev_form := form_list @ (prev_form_number)
-			end
-			current_form_number := a_form_number
-			new_form := form_list @ (current_form_number)
-			if not new_form.is_initialized then
-				if prev_form /= Void then
-					-- This is done here since it
-					-- looks better under X
-					prev_form.hide
-				end
-				!! mp
-				mp.set_watch_shape
-				new_form.make_visible (scrolled_w)
-				mp.restore
-				if prev_form /= Void then
-					format := prev_form.associated_format_button
-					format.unselect_symbol
-				end
-			elseif prev_form /= Void and then
-				prev_form /= new_form
-			then
-				prev_form.hide
-				format := prev_form.associated_format_button
-				format.unselect_symbol
-			end
-			format := new_form.associated_format_button
-			format.set_selected_symbol
-			new_form.show
-			scrolled_w.set_working_area (new_form)
-			new_form.reset
-		end
 
 	behavior_form_shown: BOOLEAN is
-			-- Is current_form a behavior_form?
+			-- Is current_form a `behavior_form'?
 		do
-			Result := (current_form_number = Context_const.behavior_form_nbr)
-		end
-
-feature {FORMAT_BUTTON}
-
-	update_form (form_nbr: INTEGER) is
-			-- Update current form number to	
-			-- `form_nbr' and display the 
-			-- corresponding form page if
-			-- necessary
-		local
-			other_editor: like Current	
-		do
-			if edited_context /= Void and then
-				form_nbr /= current_form_number 
-			then
-				other_editor := context_catalog.editor 
-					(edited_context, form_nbr)
-				if other_editor = Void then
-					set_form (form_nbr)
-				else
-					other_editor.raise
-				end
-			end
+			Result := (current_page = Context_const.behavior_form_nbr)
 		end
 
 feature -- Reseting
 
-	destroy is
-		do
-			behavior_form.unregister_holes
-			alignment_form.unregister_holes
-			color_form.unregister_holes
-			context_hole.unregister
-			trash_hole.unregister
-		end
-
-
 	clear_behavior_editor is
 		do
-			if behavior_form /= Void and then
-				behavior_form.is_initialized 
-			then
+			if behavior_form /= Void then
 				behavior_form.clear_editor
 			end
 		end
 
 	clear is
 			-- Reset the hole of the context editor
-		local
-			current_form: EDITOR_FORM
 		do
-			if current_form_number /= 0 then
-				current_form := form_list @ (current_form_number)
-				current_form.hide
-				current_form.associated_format_button.unselect_symbol
-			end
+			--XX reset and hide all the pages of the notebook
 			edited_context := Void
-			current_form_number := 0
 			set_title (Widget_names.context_editor)
 			set_icon_name (Widget_names.context_editor)
 			context_hole.set_empty_symbol
 			clear_behavior_editor
 		end
 
-	apply_current_form is
-		require
-			valid_form_number: current_form_number /= 0
-		local
-			current_form: EDITOR_FORM
+	apply_form (nb: INTEGER) is
+			-- Apply form with number `form_nbr'.
 		do
-			current_form := form_list @ (current_form_number)
-			current_form.apply
+			forms_list.item (nb).apply
 		end
 
-	reset_current_form is
-		require
-			valid_form_number: current_form_number /= 0
-		local
-			current_form: EDITOR_FORM
+	reset_form (nb: INTEGER) is
+			-- Reset form with number `form_nbr'.
 		do
-			current_form := form_list @ (current_form_number)
-			current_form.reset
+			forms_list.item (nb).reset
 		end
 
 	reset_behavior_editor is
 		do
-			if behavior_form /= Void and then
-				behavior_form.is_initialized 
-			then
+			if behavior_form /= Void then
 				behavior_form.reset_editor
 			end
 		end
@@ -296,27 +307,25 @@ feature -- Reseting
 
 	reset_geometry_form is
 		local
-			geo_form: GEOMETRY_FORM
+--			geo_form: GEOMETRY_FORM
 		do
-			if current_form_number /= 0 then
-				geo_form ?= form_list @ (current_form_number)
-				if geo_form /= Void then
-					geo_form.reset
-				end
-			end
+--			geo_form ?= pages @ (current_form_number)
+--			if geo_form /= Void then
+--				geo_form.reset
+--			end
 		end
 
-	update_translation_page is
-		require
-			behaviour_form_shown: behavior_form_shown 
-		local
-			beh_form: BEHAVIOR_FORM
-		do
-			beh_form ?= form_list @ (current_form_number)
-			beh_form.update_translation_page
-		end
+--	update_translation_page is
+--		require
+--			behaviour_form_shown: behavior_form_shown 
+--		local
+--			beh_form: BEHAVIOR_FORM
+--		do
+--			beh_form ?= form_list @ (current_form_number)
+--			beh_form.update_translation_page
+--		end
 
-feature 
+feature -- Status setting
 
 	set_title (a_title: STRING) is
 			-- Set the title to `a_title'.
@@ -328,8 +337,5 @@ feature
 		deferred
 		end
 
-	top_form: FORM is
-			-- The main form of the context editor
-		deferred
-		end
-end
+end -- class CONTEXT_EDITOR
+

@@ -1,53 +1,43 @@
+indexing
+	description: "Smart text field accepting only integer as entry."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
-class INTEGER_TEXT_FIELD 
+class INTEGER_TEXT_FIELD
 
 inherit
-
-	TEXT_FIELD
-		rename
-			make as text_field_create
-		end
-
+	EB_TEXT_FIELD
 
 creation
+	make_with_label
 
-	make
-
-	
-feature 
-
-	make (a_name: STRING; a_parent: COMPOSITE; cmd: COMMAND; editor: CONTEXT_EDITOR) is
-		do
-			text_field_create (a_name, a_parent);
-			add_activate_action (cmd, editor);
-		end;
+feature -- Access
 
 	set_int_value (value: INTEGER) is
 		local
 			temp: STRING
 		do
-			if not text.empty then
-				set_text ("");
-			end;
-			!!temp.make (0);
-			temp.append_integer (value);
+			create temp.make (0)
+			temp.append_integer (value)
 			set_text (temp)
-		end;
+		end
 	
 	same_value (value: INTEGER): BOOLEAN is
 		local
 			temp: STRING
 		do
-			!!temp.make (0);
-			temp.append_integer (value);
+			create temp.make (0)
+			temp.append_integer (value)
 			Result := text.is_equal (temp)
-		end;
+		end
 
 	int_value: INTEGER is
 		do
 			if text.is_integer then
 				Result := text.to_integer
 			end
-		end;
+		end
 
-end
+end -- class INTEGER_TEXT_FIELD
+

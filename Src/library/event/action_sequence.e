@@ -48,6 +48,7 @@ inherit
 
 creation
 	make
+	make_with_connecting_agent
 
 feature {NONE} -- Initialization
 
@@ -59,7 +60,7 @@ feature {NONE} -- Initialization
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.empty
 			event_data_names_not_void: some_event_data_names /= Void
-			correct_event_data_names_ok:
+			correct_event_data_names_count:
 				 some_event_data_names.count = dummy_event_data.count
 		do
 			linked_list_make
@@ -69,16 +70,43 @@ feature {NONE} -- Initialization
 			name_internal := a_name
 			event_data_names_internal := some_event_data_names
 			state := Normal_state
+		ensure
+			name_assigned: name_internal.is_equal (a_name)
+			event_data_names_assigned: event_data_names_internal.is_equal (some_event_data_names)
+		end
+
+	make_with_connecting_agent (a_name: STRING; some_event_data_names: ARRAY [STRING]; a_connecting_agent: PROCEDURE [ANY, TUPLE []]) is
+			-- Create with `a_name',
+			-- `some_event_data_names' describing each event datum and
+			-- `a_connecting_agent' that will connect the new sequence to an actual event source.
+			-- Begin in `Normal_state'.
+		require
+			name_not_void: a_name /= Void
+			name_not_empty: not a_name.empty
+			event_data_names_not_void: some_event_data_names /= Void
+			correct_event_data_names_count:
+				 some_event_data_names.count = dummy_event_data.count
+			connecting_agent_not_void: a_connecting_agent_not_void
+		do
+			make (a_name, some_event_data_names)
+			source_connection_agent := a_connecting_agent
+		ensure
+			name_assigned: name_internal.is_equal (a_name)
+			event_data_names_assigned: event_data_names_internal.is_equal (some_event_data_names)
+			connecting_agent_assigned: source_connection_agent = a_connecting_agent
 		end
 
 	initialize is
 			-- Called when the first action is added.
-			-- Can be redefined to perform setup tasks such as
-			-- connecting a callback from the event source.
+			-- Calles `source_connection_agent' to attach sequence
+			-- to event source.
 		require
 			not_already_called: not is_initialized
 		do
 			is_initialized := True
+			if source_connection_agent /= Void then
+				source_connection_agent.call ([])
+			end
 		ensure
 			is_initialized
 		end
@@ -278,6 +306,8 @@ feature  {LINKED_LIST} -- Implementation
 
 feature {NONE} -- Implementation
 
+	source_connection_agent: PROCEDURE [ANY, TUPLE []]
+
 	is_aborted_stack: LINKED_STACK [BOOLEAN]
 			-- `item' holds abort status of
 			-- innermost of possibly recursive `call's.
@@ -369,6 +399,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.10  1999/11/17 03:34:03  oconnor
+--| added source_connection_agent
+--|
 --| Revision 1.9  1999/11/05 20:00:11  oconnor
 --| modified to stack CURSORs not just indexs
 --|

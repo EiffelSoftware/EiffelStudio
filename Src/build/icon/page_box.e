@@ -144,14 +144,15 @@ feature
 	number_of_rows_in_page: INTEGER is
 			-- Number of rows in current page
 		local
-			ind: INTEGER
+			pn, ind: INTEGER
 		do
+			pn := Page_number;
 				-- index at top of current page
-			ind := (Page_number - 1) * Page_size + 1;
-			if ind > Page_size then
-				Result := count - ind + 1;
+			ind := (pn - 1) * Page_size + 1;
+			if (pn * Page_size < count) then
+				Result := Page_size
 			else
-				Result := Page_size.min (count)
+				Result := count - ind + 1;
 			end
 		end;
 

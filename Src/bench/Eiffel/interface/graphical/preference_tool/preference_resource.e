@@ -8,13 +8,28 @@ indexing
 deferred class PREFERENCE_RESOURCE
 
 inherit
-	FORM;
+	FORM
+		rename
+			make as form_make
+		end;
 	COMMAND
+
+feature {NONE} -- Initialization
+
+    make (a_resource: like associated_resource) is
+            -- Initialize Current with `a_resource' as `associated_resource'.
+		require
+			resource_not_void: a_resource /= Void
+        do
+            associated_resource := a_resource
+		ensure
+			set: associated_resource = a_resource
+        end
 
 feature -- Validation
 
 	is_resource_valid: BOOLEAN;
-			-- Is Currennt's value valid?
+			-- Is Current's value valid?
 
 	validate is
 			-- Validate Current's value.
@@ -22,12 +37,12 @@ feature -- Validation
 			--| Actual validation should only happen when
 			--| the user specified a new value.
 		deferred
-		end
+		end;
 
-feature {PREFERENCE_CATEGORY} -- User Interface
-
-	display is
-			-- Display Current
+	reset is
+			-- Reset the contents
+		require
+			not_destroyed: not destroyed
 		deferred
 		end
 
@@ -39,6 +54,9 @@ feature {PREFERENCE_CATEGORY} -- Access
 			file_not_void: file /= Void;
 			file_is_open_write: file.is_open_write
 		do
+			if not associated_resource.has_changed then
+				file.putstring ("--");
+			end;
 			file.putstring (associated_resource.name);
 			file.putstring (": ");
 			save_value (file);
@@ -65,10 +83,10 @@ feature {PREFERENCE_CATEGORY} -- Access
 		deferred
 		end
 
-feature {NONE} -- Initialization
-
-	init is
+	init (a_parent: COMPOSITE) is
 			-- Create and attach widgets to Current
+		require
+			valid_parent: a_parent /= Void 
 		deferred
 		end
 
@@ -80,9 +98,6 @@ feature {NONE} -- Properties
 	name_label: LABEL;
 			-- Label which holds the name of `associated_resource'
 
-	a_parent: COMPOSITE
-			-- Parent for Current
-
 feature {NONE} -- Implementation
 
 	raise_warner (message: STRING) is
@@ -93,7 +108,7 @@ feature {NONE} -- Implementation
 			msg: STRING;
 			att: WINDOW_ATTRIBUTES;
 		do
-			!! warning_d.make ("Warning", Current);
+			!! warning_d.make ("Warning", top);
 			!! msg.make (0);
 			msg.append ("Resource `");
 			msg.append (associated_resource.name);
@@ -106,15 +121,11 @@ feature {NONE} -- Implementation
 			warning_d.add_ok_action (Current, warning_d);
 			!! att;
 			att.set_composite_attributes (warning_d);
-			warning_d.popup;
-			warning_d.raise
+			warning_d.popup
 		end;
 
 	execute (argument: ANY) is
 			-- Execute Current.
-			--| If `argument' is of type WARNING_D then
-			--| pop it down, else extended_execute with
-			--| `argument' as argument.
 		local
 			wd: WARNING_D
 		do
@@ -123,16 +134,8 @@ feature {NONE} -- Implementation
 				wd.popdown;
 				wd.destroy
 			else
-				extended_execute (argument)
+				validate
 			end
 		end;
-
-	extended_execute (argument: ANY) is
-			-- Execute Current.
-			--| Only called if `execute' cannot deal with
-			--| `argument'.
-			--| Does nothing by default.
-		do
-		end
 
 end -- class PREFERENCE_RESOURCE

@@ -41,8 +41,11 @@ feature -- Graphical User Interface
 			l_s_d, l_s_d_lower, std_precomp_name, project_name: STRING
 			proj: STRING
 			sep1, sep2, sep3: THREE_D_SEPARATOR
+			inlining_cmd: INLINING_ACE_COMMAND
+			option_form, check_form, radio_form: FORM
+			default_option_box: CHECK_BOX;
+			assertion_radio: RADIO_BOX;
 		once
-			twl := precompiles;
 			!! system_edit.make ("system_edit", dialog.action_form);
 			!! root_class_edit.make ("root_class_edit", dialog.action_form);
 			!! creation_procedure_edit.make ("creation_procedure_edit", dialog.action_form);
@@ -52,56 +55,79 @@ feature -- Graphical User Interface
 			!! root_class_label.make ("root_class_label", dialog.action_form);
 			!! creation_procedure_label.make ("creation_procedure_label", dialog.action_form);
 
-			!! sep1.make (Interface_names.t_Empty, dialog.action_form)
+			twl := precompiles;
+			if twl.count > 0 then
+				!! sep1.make (Interface_names.t_Empty, dialog.action_form)
+				!! precomp_label.make ("precomp_label", dialog.action_form);
+			end
 
-			!! precomp_label.make ("precomp_label", dialog.action_form);
-			!! default_option_label.make ("default_option_label", dialog.action_form);
-			!! assertion_label.make ("assertion_label", dialog.action_form);
-
-			!! precomp_box.make ("precomp_box", dialog.action_form);
-			from
-				twl := precompiles;
-				twl.start;
-				first := True;
-				!! standard_precompiles_reverse.make (3)
-			until
-				twl.after
-			loop
-				!! toggle.make ("toggle", precomp_box);
-				!! subdir.make_from_string (twl.item);
-				l_s_d := last_sub_dir (subdir);
-				l_s_d_lower := clone (l_s_d);
-				l_s_d_lower.to_lower;
-				std_precomp_name := standard_precompiles.item (l_s_d_lower);
-				if std_precomp_name /= Void then
-					standard_precompiles_reverse.put (l_s_d, std_precomp_name);
-					toggle.set_text (std_precomp_name)
-				else
-					standard_precompiles_reverse.put (l_s_d, l_s_d);
-					toggle.set_text (l_s_d);
+			if twl.count > 0 then
+				from
+					twl.start;
+					!! precomp_box.make ("precomp_box", dialog.action_form);
+					first := True;
+					!! standard_precompiles_reverse.make (3)
+				until
+					twl.after
+				loop
+					!! toggle.make ("toggle", precomp_box);
+					!! subdir.make_from_string (twl.item);
+					l_s_d := last_sub_dir (subdir);
+					l_s_d_lower := clone (l_s_d);
+					l_s_d_lower.to_lower;
+					std_precomp_name := standard_precompiles.item (l_s_d_lower);
+					if std_precomp_name /= Void then
+						standard_precompiles_reverse.put (l_s_d, std_precomp_name);
+						toggle.set_text (std_precomp_name)
+					else
+						standard_precompiles_reverse.put (l_s_d, l_s_d);
+						toggle.set_text (l_s_d);
+					end;
+					if first then
+						toggle.set_toggle_on
+					else
+						toggle.set_toggle_off
+					end;
+					first := False;
+					twl.forth
 				end;
-				if first then
-					toggle.set_toggle_on
-				else
-					toggle.set_toggle_off
-				end;
-				first := False;
-				twl.forth
-			end;
-			standard_precompiles_reverse.compare_objects;
+				standard_precompiles_reverse.compare_objects;
+			end
 
 			!! sep2.make (Interface_names.t_Empty, dialog.action_form)
+			!! option_form.make ("Enclosing default option form", dialog.action_form)
+			!! check_form.make ("Check form", option_form)
 
-			!! default_option_box.make ("default_option_box", dialog.action_form);
+			!! default_option_label.make ("default_option_label", check_form);
+			!! default_option_box.make ("default_option_box", check_form)
 			!! multithreaded_toggle.make ("multithreaded", default_option_box)
-			!! inlining_toggle.make ("inlining", default_option_box)
-			!! profiler_toggle.make ("profiler", default_option_box)
+			!! console_application_toggle.make ("console application", default_option_box)
+			!! dynamic_runtime_toggle.make ("dynamic runtime", default_option_box)
 			!! dead_code_removal_toggle.make ("dead_code_removal", default_option_box)
+			!! profiler_toggle.make ("profiler", default_option_box)
 			!! debug_toggle.make ("debug", default_option_box)
+			!! line_generation_toggle.make ("line generation", default_option_box)
+			!! inlining_toggle.make ("inlining", default_option_box)
+			!! inlining_size_edit.make ("inlining_size_edit", default_option_box)
 
-			!! sep3.make (Interface_names.t_Empty, dialog.action_form)
+			inlining_toggle.set_toggle_off
+			inlining_size_edit.set_text ("4")
+			inlining_size_edit.set_insensitive
+				-- Command associates to `inlining_toggle': when we are selecting the
+				-- check box, inlining_size will be enabled, otherwise it will be
+				-- disabled.
+			!! inlining_cmd.make (inlining_toggle, inlining_size_edit)
+			inlining_toggle.add_value_changed_action (inlining_cmd, Void)
 
-			!! assertion_radio.make ("assertion_radio", dialog.action_form);
+				-- We put "4" by default, since it is the standard inlining default value.
+
+			!! sep3.make (Interface_names.t_Empty, option_form)
+			sep3.set_horizontal (False)
+
+			!! radio_form.make ("Radio form", option_form)
+
+			!! assertion_label.make ("assertion_label", radio_form);
+			!! assertion_radio.make ("assertion_radio", radio_form);
 			!! no_ass.make ("ass_no", assertion_radio);
 			!! require_ass.make ("ass_require", assertion_radio);
 			!! ensure_ass.make ("ass_ensure", assertion_radio);
@@ -116,7 +142,9 @@ feature -- Graphical User Interface
 			system_label.set_text ("System name:");
 			root_class_label.set_text ("Root class name:");
 			creation_procedure_label.set_text ("Creation procedure name:");
-			precomp_label.set_text ("Precompiled libraries:");
+			if twl.count > 0 then
+				precomp_label.set_text ("Precompiled libraries:");
+			end
 			default_option_label.set_text ("Default options:");
 			assertion_label.set_text ("Default assertion checking:");
 
@@ -124,10 +152,13 @@ feature -- Graphical User Interface
 			root_class_edit.set_text ("ROOT_CLASS");
 			creation_procedure_edit.set_text ("make");
 
+			console_application_toggle.set_text ("Console application")
+			dynamic_runtime_toggle.set_text ("Dynamic runtime")
 			multithreaded_toggle.set_text ("Multithreaded")
-			inlining_toggle.set_text ("Inlining")
+			inlining_toggle.set_text ("Inlining - Threshold:")
 			profiler_toggle.set_text ("Profiler")
 			dead_code_removal_toggle.set_text ("Dead code removal")
+			line_generation_toggle.set_text ("Line generation")
 			debug_toggle.set_text ("Debug")
 			dead_code_removal_toggle.set_toggle_on
 
@@ -163,35 +194,55 @@ feature -- Graphical User Interface
 			dialog.action_form.attach_right (creation_procedure_edit, 10);
 			dialog.action_form.attach_top_widget (root_class_edit, creation_procedure_edit, 10);
 
-			dialog.action_form.attach_left (sep1, 2);
-			dialog.action_form.attach_right (sep1, 2);
-			dialog.action_form.attach_top_widget (creation_procedure_edit, sep1, 5);
+			if precomp_box /= Void then
+				dialog.action_form.attach_left (sep1, 2);
+				dialog.action_form.attach_right (sep1, 2);
+				dialog.action_form.attach_top_widget (creation_procedure_edit, sep1, 10);
 
-			dialog.action_form.attach_left (precomp_label, 10);
-			dialog.action_form.attach_top_widget (sep1, precomp_label, 5);
+				dialog.action_form.attach_left (precomp_label, 10);
+				dialog.action_form.attach_top_widget (sep1, precomp_label, 5);
 
-			dialog.action_form.attach_left (precomp_box, 10);
-			dialog.action_form.attach_top_widget (precomp_label, precomp_box, 10);
+				dialog.action_form.attach_left (precomp_box, 10);
+				dialog.action_form.attach_top_widget (precomp_label, precomp_box, 10);
 
-			dialog.action_form.attach_left (sep2, 2);
-			dialog.action_form.attach_right (sep2, 2);
-			dialog.action_form.attach_top_widget (precomp_box, sep2, 5);
+				dialog.action_form.attach_left (sep2, 2);
+				dialog.action_form.attach_right (sep2, 2);
+				dialog.action_form.attach_top_widget (precomp_box, sep2, 5);
+			else
+				dialog.action_form.attach_left (sep2, 2);
+				dialog.action_form.attach_right (sep2, 2);
+				dialog.action_form.attach_top_widget (creation_procedure_edit, sep2, 10);
+			end
 
-			dialog.action_form.attach_left (default_option_label, 10);
-			dialog.action_form.attach_top_widget (sep2, default_option_label, 5);
+			dialog.action_form.attach_left (option_form, 0)
+			dialog.action_form.attach_right (option_form, 0)
+			dialog.action_form.attach_bottom (option_form, 0)
+			dialog.action_form.attach_top_widget (sep2, option_form, 5)
 
-			dialog.action_form.attach_left (default_option_box, 10);
-			dialog.action_form.attach_top_widget (default_option_label, default_option_box, 10);
-			
-			dialog.action_form.attach_left (sep3, 2);
-			dialog.action_form.attach_right (sep3, 2);
-			dialog.action_form.attach_top_widget (default_option_box, sep3, 5);
+			option_form.attach_left (check_form, 0)
+			option_form.attach_bottom (check_form, 0)
+			option_form.attach_top (check_form, 0)
 
-			dialog.action_form.attach_left (assertion_label, 10);
-			dialog.action_form.attach_top_widget (sep3, assertion_label, 5);
+			option_form.attach_top (sep3, 0)
+			option_form.attach_bottom (sep3, 0)
+			option_form.attach_left_widget (check_form, sep3, 5)
 
-			dialog.action_form.attach_left (assertion_radio, 10);
-			dialog.action_form.attach_top_widget (assertion_label, assertion_radio, 10);
+			option_form.attach_top (radio_form, 0)
+			option_form.attach_bottom (radio_form, 0)
+			option_form.attach_left_widget (sep3, radio_form, 5)
+			option_form.attach_right (radio_form, 0)
+
+			check_form.attach_top (default_option_label, 5)
+			check_form.attach_left (default_option_label, 10)
+
+			check_form.attach_left (default_option_box, 10)
+			check_form.attach_top_widget (default_option_label, default_option_box, 10)
+
+			radio_form.attach_top (assertion_label, 5)
+			radio_form.attach_left (assertion_label, 10)
+
+			radio_form.attach_left (assertion_radio, 10)
+			radio_form.attach_top_widget (assertion_label, assertion_radio, 10)
 
 			dialog.set_next_label ("Create project");
 			dialog.set_next_sensitive;
@@ -227,12 +278,10 @@ feature -- Information Handling
 				(new_ace.exists and then not new_ace.is_writable) or else
 				not new_ace.is_creatable 
 			 then
-				warner (dialog).gotcha_call 
-						(Warning_messages.w_Not_writable (new_ace.name))
+				warner (dialog).gotcha_call (Warning_messages.w_Not_writable (new_ace.name))
 				processed := False;
 			elseif not id.is_valid then
-				warner (dialog).gotcha_call 
-						(Warning_messages.w_Invalid_system_name (id))
+				warner (dialog).gotcha_call (Warning_messages.w_Invalid_system_name (id))
 				processed := False;
 			else
 				!! id.make (0);
@@ -248,10 +297,10 @@ feature -- Information Handling
 					!! id.make (0);
 					id.append (creation_procedure_edit.text);
 					id.to_lower;
-					if not ((id.empty and then
-						(c_name.is_equal ("ANY") or else
-						c_name.is_equal ("NONE"))) or else
-						id.is_valid)
+					if
+						not (( id.empty and then
+							(c_name.is_equal ("ANY") or else c_name.is_equal ("NONE")))
+							or else id.is_valid)
 					then
 						warner (dialog).gotcha_call 
 							(Warning_messages.w_Invalid_creation_name (id))
@@ -287,6 +336,15 @@ feature -- Execution
 		end;
 
 feature -- Toggles for the default option
+
+	console_application_toggle: TOGGLE_B
+			-- Toggle for having a console application (only on UNIX)
+
+	dynamic_runtime_toggle: TOGGLE_B
+			-- Toggle for using a shared version of the runtime.
+
+	line_generation_toggle: TOGGLE_B
+			-- Toggle for generating the line number in the C generated code.
 
 	multithreaded_toggle: TOGGLE_B
 			-- Toggle for the multithreaded mode.
@@ -337,6 +395,9 @@ feature -- Edit control
 	creation_procedure_edit: TEXT_FIELD;
 			-- Text field to type in the name of the creation procedure.
 
+	inlining_size_edit: TEXT_FIELD
+			-- Text field to type the size of the inlining (default value is 4).
+
 feature -- Text labels
 
 	dir_label: LABEL;
@@ -364,12 +425,6 @@ feature -- Radio Boxes
 
 	precomp_box: CHECK_BOX;
 			-- Check box to display all precompiles
-
-	default_option_box: CHECK_BOX;
-			-- Check box to display wether or not the user is using the multithreaded mode
-
-	assertion_radio: RADIO_BOX;
-			-- Radio box to display assertion checking options
 
 feature {NONE} -- Properties
 
@@ -417,14 +472,20 @@ feature -- Standard precompiles
 			-- A hash table of standard precompiles (base, lex, vision, etc.)
 			-- against their qualified names (EiffelBase, EiffelLex, EiffelVision, etc.)
 		once
-			!! Result.make (3);
+			!! Result.make (15);
 			Result.put ("EiffelBase", "base");
+			Result.put ("Multithreaded EiffelBase", "base-mt")
 			Result.put ("EiffelVision", "vision");
+			Result.put ("Multithreaded EiffelVision", "vision-mt");
 			Result.put ("EiffelParse", "parse");
 			Result.put ("Windows Eiffel Library", "wel");
+			Result.put ("Multithreaded Windows Eiffel Library", "wel-mt");
 			Result.put ("MOTIF Eiffel Library", "mel");
 			Result.put ("Eiffel Math Library", "math");
 			Result.put ("EiffelNet", "net");
+			Result.put ("Multithreaded EiffelNet", "net-mt");
+			Result.put ("EiffelStore", "store");
+			Result.put ("Multithreaded EiffelStore", "store-mt");
 			Result.compare_objects
 		end;
 
@@ -497,51 +558,96 @@ feature {NONE} -- Implementation
 			contents.replace_substring_all ("$root_class_line", root_class_line);	
 
 			!! default_options.make (0);
+
+			default_options.append ("%Tmultithreaded (")
 			if multithreaded_toggle.state then
-				default_options.append ("%Tmultithreaded (yes);%N")
+				default_options.append ("yes)%N")
+			else
+				default_options.append ("no)%N")
 			end
 
-			if inlining_toggle.state then
-				default_options.append ("%Tinlining (yes);%N")
+			default_options.append ("%Tconsole_application (")
+			if console_application_toggle.state then
+				default_options.append ("yes)%N")
+			else
+				default_options.append ("no)%N")
 			end
 
+			default_options.append ("%Tdynamic_runtime (")
+			if dynamic_runtime_toggle.state then
+				default_options.append ("yes)%N")
+			else
+				default_options.append ("no)%N")
+			end
+
+			default_options.append ("%Tdead_code_removal (")
+			if dead_code_removal_toggle.state then
+				default_options.append ("yes)%N")
+			else
+				default_options.append ("no)%N")
+			end
+
+			default_options.append ("%Tprofile (")
 			if profiler_toggle.state then
-				default_options.append ("%Tprofile (yes);%N")
+				default_options.append ("yes)%N")
+			else
+				default_options.append ("no)%N")
 			end
 
-			if debug_toggle.state then
-				default_options.append ("%Tdebug (yes);%N")
-			end
-
-			if not dead_code_removal_toggle.state then
-				default_options.append ("%Tdead_code_removal (no);%N")
+			default_options.append ("%Tline_generation (")
+			if line_generation_toggle.state then
+				default_options.append ("yes)%N")
+			else
+				default_options.append ("no)%N")
 			end
 			
+			default_options.append ("%Tdebug (")
+			if debug_toggle.state then
+				default_options.append ("yes)%N")
+			else
+				default_options.append ("no)%N")
+			end
+			
+			default_options.append ("%Tinlining (")
+			if inlining_toggle.state then
+				default_options.append ("yes)%N%T")
+			else
+				default_options.append ("no)%N%T--")
+			end
+			default_options.append ("inlining_size (%"")
+			default_options.append (inlining_size_edit.text)
+			default_options.append ("%")")
+
+
 			contents.replace_substring_all ("$default_options", default_options);	
 
-			child := precomp_box.children;
 			!! precomp_lines.make (0);
-			if child.count > 0 then
-				from
-					is_first := True;
-					child.start
-				until
-					child.after 
-				loop
-					toggle ?= child.item
-					if toggle.state then
-						precomp_lines.append ("%Tprecompiled (%"");
-						!! d_name.make;
-						d_name.extend_from_array (
-							<<"$EIFFEL4", "precomp", "spec", "$PLATFORM">>);
-						d_name.extend (standard_precompiles_reverse.item (toggle.text));
-						precomp_lines.append (d_name);
-						precomp_lines.append ("%");%N")
+			if precomp_box /= Void then
+					-- There is some precompiled libraries available.
+				child := precomp_box.children;
+				if child.count > 0 then
+					from
+						is_first := True;
+						child.start
+					until
+						child.after 
+					loop
+						toggle ?= child.item
+						if toggle.state then
+							precomp_lines.append ("%Tprecompiled (%"");
+							!! d_name.make;
+							d_name.extend_from_array (
+								<<"$EIFFEL4", "precomp", "spec", "$PLATFORM">>);
+							d_name.extend (standard_precompiles_reverse.item (toggle.text));
+							precomp_lines.append (d_name);
+							precomp_lines.append ("%");%N")
+						end;
+						child.forth;
 					end;
-					child.forth;
 				end;
-			end;
+			end
 			contents.replace_substring_all ("$precompile", precomp_lines);
+
 			if no_ass.state then
 				assert := "no"
 			elseif require_ass.state then
@@ -614,7 +720,7 @@ feature {NONE} -- Implementation
 		require
 			valid_contents: contents /= Void
 		local
-			new_file: RAW_FILE;
+			new_file: PLAIN_TEXT_FILE;
 			fname: FILE_NAME;
 			char: CHARACTER
 		do
@@ -624,6 +730,7 @@ feature {NONE} -- Implementation
 			!! new_file.make (fname);
 			new_file.open_write;
 			if not contents.empty then
+				contents.replace_substring_all ("%R", "")
 				new_file.putstring (contents);
 				char := contents.item (contents.count);
 				if Platform_constants.is_unix and 

@@ -43,6 +43,26 @@ feature -- Properties; Actions
 			end;
 		end;
 
+	previous_action: WIZARD_ACTION is
+			-- Previous step to do in the completion of the wizard.
+			-- Default: Current.
+		require
+			has_previous_action: has_previous_action
+		do
+			if previous = Void then
+				Result := Current
+			else
+				Result := previous_act
+			end;
+		end;
+
+	has_previous_action: BOOLEAN is
+			-- Is there something beyond Current?
+			-- Default: No.
+		do
+			Result := has_previous;
+		end;
+
 	has_next_action: BOOLEAN is
 			-- Is there something beyond Current?
 			-- Default: No.
@@ -176,6 +196,13 @@ feature {NONE} -- Properties
 	has_next: BOOLEAN;
 			-- Are there more action beyond Current?
 			-- Default: No.
+
+	has_previous: BOOLEAN;
+			-- Are there more action before Current?
+			-- Default: No.
+
+	previous_act: WIZARD_ACTION;
+			-- Next action to be executed by the wizard.
 
 	next_act: WIZARD_ACTION;
 			-- Next action to be executed by the wizard.

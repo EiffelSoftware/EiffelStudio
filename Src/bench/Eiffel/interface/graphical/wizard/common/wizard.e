@@ -27,7 +27,7 @@ feature -- Initialization
 			associated_dialog := a_dialog;
 			current_action := an_action;
 			an_action.init (Current, a_dialog);
---			a_dialog.previous_button.add_activate_action (an_action, an_action.previous);
+			a_dialog.previous_button.add_activate_action (an_action, an_action.previous);
 			a_dialog.abort_button.add_activate_action (an_action, an_action.abort);
 			a_dialog.next_button.add_activate_action (an_action, an_action.next)
 		ensure
@@ -55,6 +55,31 @@ feature -- Action Iteration
 			associated_dialog.popup;
 		end;
 
+	previous_action is
+			-- Checks in `current_action' whether there is a previous step.
+			-- If so, it will be invoked, otherwise if `current_action'
+			-- is not aborted the information is to be processed.
+		do
+			if current_action.has_previous_action then
+				current_action := current_action.previous_action;
+			else
+				if current_action.is_finished then
+					current_action.process_information
+					if current_action.processed then
+						associated_dialog.previous_button.remove_activate_action (current_action, current_action.previous);
+						associated_dialog.abort_button.remove_activate_action (current_action, current_action.abort);
+						associated_dialog.next_button.remove_activate_action (current_action, current_action.next)
+						associated_dialog.popdown
+					end
+				else
+					associated_dialog.previous_button.remove_activate_action (current_action, current_action.previous);
+					associated_dialog.abort_button.remove_activate_action (current_action, current_action.abort);
+					associated_dialog.next_button.remove_activate_action (current_action, current_action.next)
+					associated_dialog.popdown;
+				end;
+			end;
+		end;
+
 	next_action is
 			-- Checks in `current_action' whether there is a next step.
 			-- If so, it will be invoked, otherwise if `current_action'
@@ -66,13 +91,13 @@ feature -- Action Iteration
 				if current_action.is_finished then
 					current_action.process_information
 					if current_action.processed then
-					--	associated_dialog.previous_button.remove_activate_action (current_action, current_action.previous);
+						associated_dialog.previous_button.remove_activate_action (current_action, current_action.previous);
 						associated_dialog.abort_button.remove_activate_action (current_action, current_action.abort);
 						associated_dialog.next_button.remove_activate_action (current_action, current_action.next)
 						associated_dialog.popdown
 					end
 				else
-				--	associated_dialog.previous_button.remove_activate_action (current_action, current_action.previous);
+					associated_dialog.previous_button.remove_activate_action (current_action, current_action.previous);
 					associated_dialog.abort_button.remove_activate_action (current_action, current_action.abort);
 					associated_dialog.next_button.remove_activate_action (current_action, current_action.next)
 					associated_dialog.popdown;

@@ -43,24 +43,24 @@ feature -- Graphical User Interface
 			attach_bottom_widget (sep, action_form, 5);
 			attach_bottom_widget (button_form, sep, 5);
 
---			!! previous_button.make ("Previous", button_form);
+			!! previous_button.make ("Previous", button_form);
 			!! abort_button.make ("Cancel", button_form);
 			!! next_button.make ("Next", button_form);
---			previous_button.set_insensitive;
+			previous_button.set_insensitive;
 			next_button.set_insensitive;
 
---			button_form.attach_left (previous_button, 1);
+			button_form.attach_left (previous_button, 1);
 			button_form.attach_left (next_button, 1);
---			button_form.attach_right_position (previous_button, 1);
+			button_form.attach_right_position (previous_button, 1);
 			button_form.attach_right_position (next_button, 1)
---			button_form.attach_right (next_button, 1);
+			button_form.attach_right (next_button, 1);
 			button_form.attach_right (abort_button, 1);
---			button_form.attach_left_position (next_button, 2);
+			button_form.attach_left_position (next_button, 2);
 			button_form.attach_left_position (abort_button, 2);
---			button_form.attach_left_position (abort_button, 1);
---			button_form.attach_right_position (abort_button, 2);
+			button_form.attach_left_position (abort_button, 1);
+			button_form.attach_right_position (abort_button, 2);
 
---			button_form.attach_bottom (previous_button, 5);
+			button_form.attach_bottom (previous_button, 5);
 			button_form.attach_bottom (abort_button, 5);
 			button_form.attach_bottom (next_button, 5)
 		end;
@@ -92,9 +92,9 @@ feature -- Settings
 		require
 			non_void_text: s /= Void
 		do
---			previous_button.set_text (s)
+			previous_button.set_text (s)
 		ensure
---			text_set: equal (previous_button.text, s)
+			text_set: equal (previous_button.text, s)
 		end;
 
 feature -- Sensitivity
@@ -126,13 +126,13 @@ feature -- Sensitivity
 	set_previous_sensitive is
 			-- Set `previous_button' sensitive.
 		do
---			previous_button.set_sensitive
+			previous_button.set_sensitive
 		end;
 
 	set_previous_insensitive is
 			-- Set `previous_button' insensitive.
 		do
---			previous_button.set_insensitive
+			previous_button.set_insensitive
 		end;
 
 feature -- Forms
@@ -149,7 +149,7 @@ feature -- Forms
 
 feature {WIZARD} -- Buttons
 
---	previous_button: PUSH_B;
+	previous_button: PUSH_B;
 			-- Button to go to previous step.
 
 	abort_button: PUSH_B;

@@ -101,6 +101,12 @@ feature {NONE}
 			!!Result.make (workbench_file_name (Eoption));
 		end;
 
+	Address_table_file (final_mode: BOOLEAN): INDENT_FILE is
+			-- File where the encapsulation of function pointers are generated
+		do
+			!!Result.make (gen_file_name (final_mode, Ececil));
+		end;
+
 	Rout_info_file: INDENT_FILE is
 			-- File where the compilation option are generated
 		once

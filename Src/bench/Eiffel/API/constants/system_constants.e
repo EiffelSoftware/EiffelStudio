@@ -61,6 +61,8 @@ feature {NONE}
 
 	Ecall: STRING is "ecall"
 
+	Ececil: STRING is "ececil"
+
 	Econform: STRING is "econform"
 
 	Edispatch: STRING is "edisptch"

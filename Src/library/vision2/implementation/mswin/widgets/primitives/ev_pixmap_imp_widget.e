@@ -184,11 +184,6 @@ feature -- Loading/Saving
 			end
 			Precursor (file_name)
 			update_display
-				-- We must now connect the paint bitmap agent to
-				-- the expose actions, so the new pixmap can be drawn.
-			if not interface.expose_actions.has (paint_bitmap_agent) then
-				interface.expose_actions.extend (paint_bitmap_agent)
-			end
 		end
 
  	set_with_default is
@@ -440,16 +435,33 @@ feature {NONE} -- Implementation
 				display_dc := paint_dc
 
 					-- Call actions
-				expose_actions_internal.call ([
-					invalid_rect.x, invalid_rect.y,
-					invalid_rect.width, invalid_rect.height
-					])
+				call_expose_actions (invalid_rect)
 
 					-- Switch back the dc fron paint_dc to Void.
 					-- (To avoid using the DC outside paint msg)
 				display_dc := Void
 			end
 		end
+		
+	call_expose_actions (invalid_rect: WEL_RECT) is
+			-- Call `expose_actions' with `invalid_rect' defining
+			-- the invalid area and repaint bitmap image.
+		require
+			rect_not_void: invalid_rect /= Void
+		do
+			if parent /= Void then
+					-- We must refresh the bitmap before calling the
+					-- expose actions.
+				paint_bitmap (invalid_rect.x, invalid_rect.y,
+					invalid_rect.width, invalid_rect.height)
+			end
+				-- Actually call the expose actions.
+			expose_actions_internal.call ([
+				invalid_rect.x, invalid_rect.y,
+				invalid_rect.width, invalid_rect.height
+				])
+		end
+		
 
 	paint_bitmap (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Paint the bitmap onto the screen (i.e. the display_dc).
@@ -630,24 +642,19 @@ feature {NONE} -- Private Implementation
 	
 	on_parented is
 			-- `Current' has just been added to a container
+			-- This has been redefined, as the Precursor updates
+			-- the implementation and we no longer need to perform this.
 		do
 			parented := True
-			if paint_bitmap_agent = Void then
-				paint_bitmap_agent := agent paint_bitmap
-			end
-			interface.expose_actions.extend (paint_bitmap_agent)
 		end
 	
 	on_orphaned is
 			-- `Current' has just been removed from a container
+			-- This has been redefined, as the Precursor updates
+			-- the implementation and we no longer need to perform this.
 		do
 			parented := False
-			interface.expose_actions.prune_all (paint_bitmap_agent)
 		end
-
-	paint_bitmap_agent: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER,
-		INTEGER]]
-			-- `paint_bitmap' delayed.
 
 	default_style: INTEGER is
 			-- Default style that memories the drawings.

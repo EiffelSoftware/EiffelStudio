@@ -151,9 +151,6 @@ feature -- Element change
 	xyrotate (a: EV_ANGLE; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
-		require else
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0.0
 		do
 			composite_mark
 			from

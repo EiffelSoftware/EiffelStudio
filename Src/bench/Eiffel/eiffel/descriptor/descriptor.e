@@ -69,7 +69,9 @@ feature -- Generation
 				f.new_line;
 
 				f.generate_static_declaration ("void", "build_desc", <<"void">>);
-
+				f.new_line
+				descriptor_generate_generic (f)
+				f.new_line
 				descriptor_generate_precomp (f)
 			else
 				f.new_line
@@ -145,6 +147,7 @@ feature -- Generation
 			file_exists: f.exists
 		local
 			i: INTEGER
+			cnt: COUNTER
 		do
 			f.putstring ("static struct desc_info desc");
 			f.putstring ("[")
@@ -165,12 +168,13 @@ feature -- Generation
 			end;
 
 			from
+				!!cnt
 				start
 				i := 1
 			until
 				after
 			loop
-				item_for_iteration.generate_precomp (f,i)
+				item_for_iteration.generate_precomp (f,i,cnt)
 				i := i + item_for_iteration.count
 				forth
 			end;

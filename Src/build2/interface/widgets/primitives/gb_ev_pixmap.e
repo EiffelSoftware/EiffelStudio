@@ -68,12 +68,16 @@ feature {GB_CODE_GENERATOR} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			data: STRING
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
-				Result := info.name + ".set_with_named_file (%"" + element_info.data + "%")"
+				data := element_info.data
+				data := data.substring (data.last_index_of ('\', data.count), data.count)
+				data := "constant_by_name (%"pixmap_location%") + %"" + data
+				Result := info.name + ".set_with_named_file (" + data + "%")"
 			end
 			Result := strip_leading_indent (Result)
 		end

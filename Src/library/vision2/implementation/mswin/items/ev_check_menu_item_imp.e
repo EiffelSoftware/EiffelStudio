@@ -17,11 +17,15 @@ inherit
 		end
 
 	EV_MENU_ITEM_IMP
+		undefine
+			on_draw_menu_item_left_part
 		redefine
 			on_activate,
 			interface,
 			initialize
 		end
+		
+	EV_CHECKABLE_MENU_ITEM_IMP
 	
 create
 	make
@@ -59,6 +63,10 @@ feature -- Status setting
 			end
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_CHECK_MENU_ITEM
+	
 feature {NONE} -- Implementation
 
 	on_activate is
@@ -68,7 +76,11 @@ feature {NONE} -- Implementation
 			Precursor
 		end
 
-	interface: EV_CHECK_MENU_ITEM
+	check_mark_bitmap_constant: INTEGER is
+			-- Constant coding for the check mark used in Current.
+		do
+			Result := Wel_drawing_constants.Dfcs_menucheck
+		end
 
 end -- class EV_CHECK_MENU_ITEM_IMP
 

@@ -36,6 +36,11 @@ inherit
 
 	EV_SHARED_GDI_OBJECTS
 
+	WEL_ODT_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_TVN_CONSTANTS
 		export
 			{NONE} all
@@ -182,23 +187,71 @@ feature -- Status setting
 
 feature {NONE} -- WEL Implementation
 
+	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU) is
+			-- The menu char `char_code' has been typed within `corresponding_menu'.
+		local
+			menu_list: EV_MENU_ITEM_LIST
+			menu_list_imp: EV_MENU_ITEM_LIST_IMP
+			win_imp: EV_WINDOW_IMP
+			return_value: INTEGER
+		do
+			win_imp := top_level_window_imp
+			if win_imp /= Void then
+				menu_list ?= win_imp.menu_bar
+				if menu_list /= Void then
+					menu_list_imp ?= menu_list.implementation
+					if menu_list_imp /= Void then
+						return_value := menu_list_imp.on_menu_char (char_code, corresponding_menu)
+						win_imp.set_message_return_value (return_value)
+					end
+				end
+			end
+		end
+
+	on_measure_item (control_id: INTEGER; measure_item: WEL_MEASURE_ITEM_STRUCT) is
+			-- Handle Wm_measureitem messages.
+			-- A owner-draw control identified by `control_id' has
+			-- been changed and must be drawn. `measure_item' contains
+			-- information that the control must fill.
+		require
+			measure_item_valid: measure_item /= Void
+		local
+			menu_item_imp: EV_MENU_ITEM_IMP
+			item_type: INTEGER
+		do
+			item_type := measure_item.ctl_type
+			if item_type = Odt_menu then
+				menu_item_imp ?= eif_id_object (measure_item.item_data)
+				if menu_item_imp /= Void then
+					menu_item_imp.on_measure_item (measure_item)
+				end
+			end
+		end
+
 	on_draw_item (control_id: INTEGER; draw_item: WEL_DRAW_ITEM_STRUCT) is
-			-- Wm_drawitem message.
+			-- Handle Wm_drawitem messages.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `draw_item' contains
 			-- information about the item to be drawn and the type
 			-- of drawing required.
-			--| This is empty as there are currently no controls that
-			--| are owner drawn. If some are added then code to handle
-			--| their re-drawing should be called from here.
 		require
 			draw_item_valid: draw_item /= Void
 		local
 			label_imp: EV_LABEL_IMP
+			item_type: INTEGER
+			menu_item_imp: EV_MENU_ITEM_IMP
 		do
-			label_imp ?= draw_item.window_item
-			if label_imp /= Void then
-				label_imp.on_draw_item (draw_item)
+			item_type := draw_item.ctl_type
+			if item_type = Odt_menu then
+				menu_item_imp ?= eif_id_object (draw_item.item_data)
+				if menu_item_imp /= Void then
+					menu_item_imp.on_draw_item (draw_item)
+				end
+			elseif item_type = Odt_static then
+				label_imp ?= draw_item.window_item
+				if label_imp /= Void then
+					label_imp.on_draw_item (draw_item)
+				end
 			end
 		end
 
@@ -224,7 +277,6 @@ feature {NONE} -- WEL Implementation
 			then
 					-- Not the default color, we need to do something here
 					-- to apply `background_color' to `control'.
-
 				paint_dc.set_text_color (control.foreground_color)
 				paint_dc.set_background_color (control.background_color)
 				brush := allocated_brushes.get (Void, control.background_color)
@@ -635,11 +687,22 @@ feature {NONE} -- Implementation
 			-- `process_message'.
 		local
 			draw_item_struct: WEL_DRAW_ITEM_STRUCT
+			measure_item_struct: WEL_MEASURE_ITEM_STRUCT
+			corresponding_menu: WEL_MENU
+			char_code: CHARACTER
 		do
 			if msg = Wm_drawitem then
-				create draw_item_struct.make_by_pointer (
-					integer_to_pointer (lparam))
+				create draw_item_struct.make_by_pointer (integer_to_pointer (lparam))
 				on_draw_item (wparam, draw_item_struct)
+			elseif msg = Wm_measureitem then
+				create measure_item_struct.make_by_pointer (integer_to_pointer (lparam))
+				on_measure_item (wparam, measure_item_struct)
+			elseif msg = Wm_menuchar then
+				if (wparam & 0xFFFF0000) |>> 16 /= ((create {WEL_MF_CONSTANTS}).Mf_sysmenu) then
+					char_code := chconv (wparam & 0x0000FFFF)
+					create corresponding_menu.make_by_pointer (integer_to_pointer (lparam))
+					on_menu_char (char_code, corresponding_menu)
+				end
 			else
 				Precursor (msg, wparam, lparam)
 			end
@@ -659,6 +722,12 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
 		alias
 			"cwel_integer_to_pointer"
+		end
+
+	chconv (i: INTEGER): CHARACTER is
+			-- Character associated with integer value `i'
+		external
+			"C [macro %"eif_misc.h%"]"
 		end
 
 invariant

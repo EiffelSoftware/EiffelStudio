@@ -108,6 +108,7 @@ inherit
 			window_process_message,
 			on_wm_close,
 			on_wm_window_pos_changing,
+			on_wm_setting_change,
 			set_y_position,
 			set_x_position,
 			show,
@@ -447,6 +448,20 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
+	on_wm_setting_change is
+			-- Wm_settingchange message
+			-- Update the system fonts.
+		local
+			mb_imp: EV_MENU_BAR_IMP
+		do
+			Precursor {WEL_FRAME_WINDOW}
+			
+			if menu_bar /= Void then
+				mb_imp ?= menu_bar.implementation
+				mb_imp.rebuild_control
+			end
+		end
+		
 	wel_destroy_window is
 			-- Destroy the window-widget
 		do
@@ -900,7 +915,6 @@ feature {EV_ANY_I} -- Implementation
 			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 			an_item_imp: EV_ITEM_IMP
 			sensitive: EV_SENSITIVE
---			pebble_result: ANY
 		do	
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position

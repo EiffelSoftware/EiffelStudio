@@ -25,7 +25,8 @@ inherit
 			has_parent,
 			disable_sensitive,
 			enable_sensitive,
-			wel_set_text
+			wel_set_text,
+			dispose
 		end
 
 	EV_MENU_ITEM_LIST_IMP
@@ -35,7 +36,8 @@ inherit
 		redefine
 			interface,
 			make,
-			initialize
+			initialize,
+			dispose
 		end
 
 create
@@ -171,6 +173,75 @@ feature {EV_ANY_I} -- Basic operations
 			end
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	on_measure_menu_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT) is
+			-- Compute and return the width of this menu, and update `tabulation_margin'.
+		local
+			a_menu_item_imp: EV_MENU_ITEM_IMP
+			max_plain_text_width: INTEGER -- maximum size for the plain text
+			max_accel_text_width: INTEGER -- maximum size for the accelerator text
+			max_pixmap_width: INTEGER
+			max_height: INTEGER
+			space_width: INTEGER
+			max_width: INTEGER
+			plain_text_pos: INTEGER
+			accelerator_text_pos: INTEGER
+			border_width: INTEGER
+		do
+			space_width := menu_font.string_width ("W")
+			border_width := menu_font.string_width ("WC")
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				a_menu_item_imp := ev_children.item
+				max_plain_text_width := max_plain_text_width.max (menu_font.string_width (a_menu_item_imp.plain_text_without_ampersands))
+				max_accel_text_width := max_accel_text_width.max (menu_font.string_width (a_menu_item_imp.accelerator_text))
+				if a_menu_item_imp.pixmap_imp /= Void then
+					max_pixmap_width := max_pixmap_width.max (a_menu_item_imp.pixmap_imp.width)
+				end
+				max_height := max_height.max (a_menu_item_imp.desired_height)
+				
+				ev_children.forth
+			end
+			
+			if max_pixmap_width = 0 then
+				plain_text_pos := border_width
+				if max_accel_text_width = 0 then
+					max_width := border_width + max_plain_text_width + border_width
+					accelerator_text_pos := 0
+				else
+					max_width := border_width + max_plain_text_width + space_width + max_accel_text_width + border_width
+					accelerator_text_pos := plain_text_pos + max_plain_text_width + space_width
+				end
+			else
+				plain_text_pos := max_pixmap_width + 6
+				if max_accel_text_width = 0 then
+					max_width := max_pixmap_width + 6 + max_plain_text_width + border_width
+					accelerator_text_pos := 0
+				else
+					max_width := max_pixmap_width + 6 + max_plain_text_width + space_width + max_accel_text_width + border_width
+					accelerator_text_pos := plain_text_pos + max_plain_text_width + space_width
+				end
+			end
+			max_width := max_width - 2 * menu_font.string_width ("B")
+			measure_item_struct.set_item_width (max_width)
+			measure_item_struct.set_item_height (max_height)
+			
+				-- Update the tabulation margins
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				ev_children.item.set_plain_text_position (plain_text_pos)
+				ev_children.item.set_accelerator_text_position (accelerator_text_pos)
+				ev_children.forth
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	update_parent_size is
@@ -217,8 +288,7 @@ feature {NONE} -- Implementation
 			--| FIXME To be implemented for pick-and-dropable.
 		end
 
-	internal_propagate_pointer_double_press
-		(keys, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_double_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 			-- Called on a pointer double press.
 		do
@@ -250,6 +320,18 @@ feature {NONE} -- Implementation
 				to_be_implemented: False
 			end
 		end
+		
+	dispose is
+			-- Destroy the inner structure of `Current'.
+			--
+			-- This function should be called by the GC when the
+			-- object is collected or by the user if `Current' is
+			-- no more usefull.
+		do
+			Precursor {EV_MENU_ITEM_IMP}
+			Precursor {EV_MENU_ITEM_LIST_IMP}
+		end
+		
 
 feature {EV_ANY_I} -- Implementation
 

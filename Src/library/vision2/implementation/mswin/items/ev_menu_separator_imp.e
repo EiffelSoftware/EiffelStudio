@@ -19,7 +19,15 @@ inherit
 	EV_MENU_ITEM_IMP
 		redefine
 			make,
-			interface
+			interface,
+			desired_height,
+			on_measure_item,
+			on_draw_item
+		end
+		
+	EV_SYSTEM_PEN_IMP
+		export
+			{NONE} all
 		end
 
 create
@@ -65,6 +73,74 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Access
 			radio_group := Void
 		ensure
 			void: radio_group = Void
+		end
+
+feature -- WEL Implementation
+
+	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+			-- Process `Wm_drawitem' message.
+		local
+			draw_dc: WEL_CLIENT_DC
+			draw_item_struct_rect: WEL_RECT
+			background_color: WEL_COLOR_REF
+			cur_height_div_two: INTEGER
+			r: WEL_RECT
+			pen: WEL_PEN
+			item_width: INTEGER
+			item_height: INTEGER
+			item_top: INTEGER
+			item_left: INTEGER
+			item_right: INTEGER
+			item_bottom: INTEGER
+		do
+			draw_dc := draw_item_struct.dc
+			draw_item_struct_rect := draw_item_struct.rect_item
+			item_width := draw_item_struct_rect.width
+			item_height := draw_item_struct_rect.height
+			item_top := draw_item_struct_rect.top
+			item_left := draw_item_struct_rect.left
+			item_right := draw_item_struct_rect.right
+			item_bottom := draw_item_struct_rect.bottom
+
+			cur_height_div_two := item_height // 2
+
+			create background_color.make_system (Wel_color_constants.Color_menu)
+			if cur_height_div_two > 1 then
+					-- We need to draw a background.
+				create r.make (item_left, item_top, item_right, item_top + cur_height_div_two - 1)
+				erase_background (draw_dc, r, background_color)
+			end
+
+			pen := shadow_pen
+			draw_dc.select_pen (pen)
+			draw_dc.line (item_left, item_top + cur_height_div_two - 1, item_right, item_top + cur_height_div_two - 1)
+			pen.delete
+
+			pen := highlight_pen
+			draw_dc.select_pen (pen)
+			draw_dc.line (item_left, item_top + cur_height_div_two, item_right, item_top + cur_height_div_two)
+			pen.delete
+
+				-- We need to draw a background.
+			if cur_height_div_two < item_height then
+				create r.make (item_left, item_top + cur_height_div_two + 1, item_right, item_bottom)
+				erase_background (draw_dc, r, background_color)
+			end
+		end
+
+	on_measure_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT) is
+			-- Process `Wm_measureitem' message.
+		do
+			measure_item_struct.set_item_width (0)
+			measure_item_struct.set_item_height (desired_height)
+		end
+		
+feature {EV_ANY_I} -- Implementation
+
+	desired_height: INTEGER is
+			-- Desired height.
+		do
+			Result := (menu_font.string_height ("W") // 2) + 2
 		end
 
 feature {EV_ANY_I} -- Implementation

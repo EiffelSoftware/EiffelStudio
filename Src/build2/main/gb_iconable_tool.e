@@ -11,6 +11,11 @@ deferred class
 		--  which can be set when they are displayed relative to a window.
 		-- This is necessary as on Windows, each relative dialog shares
 		-- as icon and there seemed to be no better solution.
+		
+		-- UPDATE!! The bug on Windows has been fixed so this class is no longer
+		-- required. The implementation of `restore_icon' and `set_default_icon' have
+		-- been removed so they do nothing. Unless more problems arise, this class
+		-- can be removed in the future.
 
 feature -- Access
 
@@ -24,13 +29,11 @@ feature -- Basic operations
 	restore_icon is
 			-- Ensure `icon' is displayed as icon of `Current'.
 		do
-			set_icon_pixmap (icon)
 		end
 		
 	set_default_icon is
 			-- Assign a common default icon to `Current'.
 		do
-			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 
 feature {NONE} -- Implementation

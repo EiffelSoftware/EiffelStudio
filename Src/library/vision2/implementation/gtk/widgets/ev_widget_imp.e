@@ -74,10 +74,10 @@ feature {NONE} -- Initialization
 
 	initialize_events is
 		do
-			if not gtk_widget_no_window (c_object) then
+			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (c_object) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (c_object, Gdk_events_mask)
 			end
-			if not gtk_widget_no_window (visual_widget) and then c_object /= visual_widget then
+			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) and then c_object /= visual_widget then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, Gdk_events_mask)
 			end
 		end
@@ -191,12 +191,17 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+				-- Mouse Wheel implementation.
 				if a_button = 4 then
 					-- This is for scrolling up
-					key_press_actions.call ([create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_page_up)])
+					if mouse_wheel_actions_internal /= Void then
+						mouse_wheel_actions_internal.call ([1])
+					end
 				elseif a_button = 5 then
 					-- This is for scrolling down
-					key_press_actions.call ([create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_page_down)])
+					if mouse_wheel_actions_internal /= Void then
+						mouse_wheel_actions_internal.call ([-1])
+					end
 				end	
 			end
 			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
@@ -301,42 +306,6 @@ feature -- Access
 				Result := Result + y_position
 			end
 		end
-	
---
---	screen_x: INTEGER is
---			-- Horizontal offset relative to screen.
---		local
---			useless_y: INTEGER 
---			success: BOOLEAN
---			gdk_window: POINTER
---			i: INTEGER
---		do			
---			gdk_window := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
---			if gdk_window /= NULL then
---				success := feature {EV_GTK_EXTERNALS}.gdk_window_get_deskrelative_origin (
---					gdk_window,
---					$Result,
---					$useless_y
---					)
---			end
---		end
---
---	screen_y: INTEGER is
---			-- Vertical offset relative to screen. 
---		local
---			useless_x: INTEGER
---			success: BOOLEAN
---			gdk_window: POINTER
---		do			
---			gdk_window := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
---			if gdk_window /= NULL then
---				success := feature {EV_GTK_EXTERNALS}.gdk_window_get_deskrelative_origin (
---					gdk_window,
---					$useless_x,
---					$Result
---					)				
---			end
---		end
 	
 feature -- Status report
 
@@ -788,29 +757,6 @@ feature {EV_ANY_I} -- Contract Support
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_WIDGET
-
-feature {NONE} -- Externals
-
-	gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER) is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_SET_FLAGS"
-		end
-
-	gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_UNSET_FLAGS"
-		end
-
-	gtk_widget_no_window (a_wid: POINTER): BOOLEAN is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_NO_WINDOW"
-		end
 
 end -- class EV_WIDGET_IMP
 

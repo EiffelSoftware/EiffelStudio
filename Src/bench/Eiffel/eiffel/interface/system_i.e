@@ -2064,6 +2064,15 @@ feature -- Dead code removal
 			Result := remover_off or else remover.is_alive (f)
 		end;
 
+feature
+
+	do_not_check_vape: BOOLEAN;
+
+	set_do_not_check_vape (b: BOOLEAN) is
+		do
+			do_not_check_vape := b;
+		end;
+
 feature -- Generation
 
 	generate_table is

@@ -369,13 +369,13 @@ feature {NONE} -- Implementation
 			list_has_been_clicked := False
 		end
 
-	create_focus_in_actions: EV_FOCUS_ACTION_SEQUENCE is
+	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- 	
 		do
 			create Result
 		end
 	
-	create_focus_out_actions: EV_FOCUS_ACTION_SEQUENCE is
+	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- 
 		do
 			create Result

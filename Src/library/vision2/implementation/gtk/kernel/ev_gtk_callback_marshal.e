@@ -296,10 +296,96 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			signal_ids_list.prune_all (a_connection_id)
 		end
 		
+	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
+			-- Tuple containing integer value from first of `args'.
+		do
+			integer_tuple.put (gtk_value_int (args), 1)
+			Result := integer_tuple
+		end	
+		
+	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE is
+			-- Translate function for MCL
+		local
+			gtkarg2: POINTER
+		do
+			gtkarg2 := gtk_args_array_i_th (args, 1)
+			Result := [gtk_value_int (args) + 1, gtk_value_int (gtkarg2)]
+			-- Column is zero based in gtk.
+		end
+	
+	kamikaze_agent (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
+		target: PROCEDURE [ANY, TUPLE]):
+		PROCEDURE [ANY, TUPLE []] is
+			-- Agent to remove `target' and itself form `an_action_sequence'.
+		local
+			kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE[]]]
+		do
+			create kamikaze_cell.put (Void)
+			Result := agent do_kamikaze (
+				an_action_sequence,
+				target,
+				kamikaze_cell
+			)
+			kamikaze_cell.put (Result)
+		end
+	
+	do_kamikaze (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
+		target: PROCEDURE [ANY, TUPLE];
+		kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE]]) is
+			-- Remove `target' and agent for self (from `kamikaze_cell') from
+			-- `an_action_sequence'.
+		do
+			an_action_sequence.prune_all (target)
+			an_action_sequence.prune_all (kamikaze_cell.item)
+		end
+		
+	is_destroyed: BOOLEAN	
+		
+feature {EV_ANY_IMP} -- Intermediary agent routines
+
 	on_key_event_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Intermediate agent to prevent reference on implementation object from agent.
 		do
 			c_get_eif_reference_from_object_id (a_c_object).on_key_event (a_key, a_key_string, a_key_press)
+		end
+		
+	widget_focus_in_intermediary (a_c_object: POINTER) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		do
+			c_get_eif_reference_from_object_id (a_c_object).focus_in_actions_internal.call (Empty_tuple)
+		end
+		
+	widget_focus_out_intermediary (a_c_object: POINTER) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		do
+			c_get_eif_reference_from_object_id (a_c_object).focus_out_actions_internal.call (Empty_tuple)
+		end	
+		
+	text_component_change_intermediary (a_c_object: POINTER) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		local
+			a_text_component_imp: EV_TEXT_COMPONENT_IMP
+		do
+			a_text_component_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_text_component_imp.change_actions_internal.call (Empty_tuple)
+		end
+		
+	text_field_return_intermediary (a_c_object: POINTER) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		local
+			a_text_field_imp: EV_TEXT_FIELD_IMP
+		do
+			a_text_field_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_text_field_imp.return_actions_internal.call (Empty_tuple)
+		end	 	
+		
+	button_select_intermediary (a_c_object: POINTER) is
+			-- Intermediate agent to prevent reference on implementation object from agent.
+		local
+			a_button_imp: EV_BUTTON_IMP
+		do
+			a_button_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_button_imp.select_actions_internal.call (Empty_tuple)
 		end
 
 	connect_button_press_switch_intermediary (a_c_object: POINTER) is
@@ -375,51 +461,6 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 				a_mcl_imp.column_resize_callback (a_tup_int)
 			end
 		end
-		
-	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
-			-- Tuple containing integer value from first of `args'.
-		do
-			integer_tuple.put (gtk_value_int (args), 1)
-			Result := integer_tuple
-		end	
-		
-	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE is
-			-- Translate function for MCL
-		local
-			gtkarg2: POINTER
-		do
-			gtkarg2 := gtk_args_array_i_th (args, 1)
-			Result := [gtk_value_int (args) + 1, gtk_value_int (gtkarg2)]
-			-- Column is zero based in gtk.
-		end
-	
-	kamikaze_agent (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
-		target: PROCEDURE [ANY, TUPLE]):
-		PROCEDURE [ANY, TUPLE []] is
-			-- Agent to remove `target' and itself form `an_action_sequence'.
-		local
-			kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE[]]]
-		do
-			create kamikaze_cell.put (Void)
-			Result := agent do_kamikaze (
-				an_action_sequence,
-				target,
-				kamikaze_cell
-			)
-			kamikaze_cell.put (Result)
-		end
-	
-	do_kamikaze (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
-		target: PROCEDURE [ANY, TUPLE];
-		kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE]]) is
-			-- Remove `target' and agent for self (from `kamikaze_cell') from
-			-- `an_action_sequence'.
-		do
-			an_action_sequence.prune_all (target)
-			an_action_sequence.prune_all (kamikaze_cell.item)
-		end
-		
-	is_destroyed: BOOLEAN
 
 feature {EV_APPLICATION_IMP} -- Destruction
 

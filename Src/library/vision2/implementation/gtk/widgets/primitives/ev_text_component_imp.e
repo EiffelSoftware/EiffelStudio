@@ -22,6 +22,8 @@ inherit
 		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
+		export
+			{EV_GTK_CALLBACK_MARSHAL} change_actions_internal	
 		redefine
 			create_change_actions
 		end
@@ -188,7 +190,8 @@ feature {EV_ANY_I} -- Implementation
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			create Result
-			real_connect_signal_to_actions (entry_widget, "changed", Result, Void)
+			--real_connect_signal_to_actions (entry_widget, "changed", Result, Void)
+			real_signal_connect (visual_widget, "changed", agent gtk_marshal.text_component_change_intermediary (c_object), Void)
 		end
 
 	entry_widget: POINTER is

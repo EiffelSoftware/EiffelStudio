@@ -20,6 +20,9 @@ inherit
 		end
 
 	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
+		export
+			{EV_GTK_CALLBACK_MARSHAL}
+				return_actions_internal
 		redefine
 			create_return_actions
 		end
@@ -119,7 +122,8 @@ feature {EV_ANY_I} -- Implementation
 	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			create Result
-			real_connect_signal_to_actions (entry_widget, "activate", Result, Void)
+			--real_connect_signal_to_actions (entry_widget, "activate", Result, Void)
+			real_signal_connect (visual_widget, "activate", agent gtk_marshal.text_field_return_intermediary (c_object), Void)
 		end
 
 feature {EV_TEXT_FIELD_I} -- Implementation

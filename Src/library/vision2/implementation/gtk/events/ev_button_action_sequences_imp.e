@@ -22,7 +22,8 @@ feature -- Event handling
 		do
 			create Result
 			--real_connect_signal_to_actions (visual_widget, Gtk_signal_clicked, Result, Void)
-			real_connect_signal_to_actions (visual_widget, "clicked", Result, Void)
+			--real_connect_signal_to_actions (visual_widget, "clicked", Result, Void)
+			real_signal_connect (visual_widget, "clicked", agent gtk_marshal.button_select_intermediary (c_object), Void)
 		end
 
 --	Gtk_signal_clicked: INTEGER is

@@ -30,7 +30,7 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 
 OBJECTS= xt_support.o callback.o creation.o pixmap.o font.o \
 		mel_string.o pixel.o pointer.o xm_support.o \
-		c_support.o g_context.o
+		c_support.o g_context.o font_box.o
 
 libMel.a: $(OBJECTS)
 	$(RM) libMel.a

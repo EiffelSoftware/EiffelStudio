@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			cache: CACHE
 			l_item: EV_LIST_ITEM
 		do
-			set_size (10, 10)
+			set_size (400, 85)
 			--set_default_push_button (ok_btn)
 			--set_default_cancel_button (cancel_btn)
 		end
@@ -64,14 +64,12 @@ feature {NONE} -- Implementation
 		local
 			types: LINKED_LIST [SPECIFIC_TYPE]
 			edit: EDIT_FACTORY
-			finder: FINDER
 			eiffel_class_name_to_search: STRING
 		do
 			create edit.make (parent_window)
-			create finder
 			eiffel_class_name_to_search := eiffel_class_name.text
 			eiffel_class_name_to_search.to_upper
-			types := finder.find_eiffel_type_name (eiffel_class_name_to_search)
+			types := (create {FINDER}).find_eiffel_type_name (eiffel_class_name_to_search)
 			edit.edit_result_search_eiffel_type_name (types)
 		end
 

@@ -177,15 +177,14 @@ feature {NONE} -- Feature generation
 			feat_arg: FEAT_ARG
 			type_i: TYPE_I
 			gen_type_i: GEN_TYPE_I
-			arg_names: EIFFEL_LIST [ID_AS]
+			i: INTEGER
 		do
 			if feat.has_arguments then
 				feat_arg := feat.arguments
-				arg_names := feat_arg.argument_names
 				from
 					il_generator.start_arguments_list (feat_arg.count)
 					feat_arg.start
-					arg_names.start
+					i := 1
 				until
 					feat_arg.after
 				loop
@@ -195,7 +194,7 @@ feature {NONE} -- Feature generation
 					end
 					if not type_i.has_formal then
 						if not type_i.is_none then
-							il_generator.generate_feature_argument (arg_names.item, type_i)
+							il_generator.generate_feature_argument (feat_arg.item_name (i), type_i)
 						else
 							check
 								False
@@ -204,10 +203,10 @@ feature {NONE} -- Feature generation
 					else
 						gen_type_i ?= current_class_type.type
 						type_i := type_i.instantiation_in (gen_type_i)
-						il_generator.generate_feature_argument (arg_names.item, type_i)
+						il_generator.generate_feature_argument (feat_arg.item_name (i), type_i)
 					end
 					feat_arg.forth
-					arg_names.forth
+					i := i + 1
 				end
 
 				il_generator.end_arguments_list

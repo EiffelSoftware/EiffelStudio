@@ -52,6 +52,7 @@ feature -- Status report
 			Result := implementation.line_count
 		ensure
 			result_greater_zero: Result > 0
+			result_consistent: Result = text.occurrences ('%N') + 1
 		end 
 
 	first_position_from_line_number (i: INTEGER): INTEGER is

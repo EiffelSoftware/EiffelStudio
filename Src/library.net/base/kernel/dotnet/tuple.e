@@ -184,11 +184,7 @@ feature -- Type queries
 	is_uniform: BOOLEAN is
 			-- Are all items of the same basic type or all of reference type?
 		do
-			if count > 0 then
-				Result := is_tuple_uniform (reference_code)
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (any_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -196,11 +192,7 @@ feature -- Type queries
 	is_uniform_boolean: BOOLEAN is
 			-- Are all items of type BOOLEAN?
 		do
-			if count > 0 then
-				Result := is_tuple_uniform (boolean_code)
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (boolean_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -208,11 +200,7 @@ feature -- Type queries
 	is_uniform_character: BOOLEAN is
 			-- Are all items of type CHARACTER?
 		do
-			if count > 0 then
-				Result := is_tuple_uniform (character_code)
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (character_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -220,23 +208,39 @@ feature -- Type queries
 	is_uniform_double: BOOLEAN is
 			-- Are all items of type DOUBLE?
 		do
-			if count > 0 then
-				Result := is_tuple_uniform (double_code)
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (double_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_integer: BOOLEAN is
+	is_uniform_integer_8: BOOLEAN is
+			-- Are all items of type INTEGER_8?
+		do
+			Result := is_tuple_uniform (integer_8_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_integer_16: BOOLEAN is
+			-- Are all items of type INTEGER_16?
+		do
+			Result := is_tuple_uniform (integer_16_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_integer, is_uniform_integer_32: BOOLEAN is
 			-- Are all items of type INTEGER?
 		do
-			if count > 0 then
-				Result := is_tuple_uniform (integer_code)
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (integer_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_integer_64: BOOLEAN is
+			-- Are all items of type INTEGER_64?
+		do
+			Result := is_tuple_uniform (integer_64_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -244,11 +248,7 @@ feature -- Type queries
 	is_uniform_pointer: BOOLEAN is
 			-- Are all items of type POINTER?
 		do
-			if count > 0 then
-				Result := is_tuple_uniform (pointer_code)
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (pointer_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -256,11 +256,7 @@ feature -- Type queries
 	is_uniform_real: BOOLEAN is
 			-- Are all items of type REAL?
 		do
-			if count > 0 then
-				Result := is_tuple_uniform (real_code)
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (real_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -268,11 +264,7 @@ feature -- Type queries
 	is_uniform_reference: BOOLEAN is
 			-- Are all items of reference type?
 		do
-			if count > 0 then
-				Result := is_tuple_uniform (reference_code)
-			else
-				Result := True
-			end
+			Result := is_tuple_uniform (reference_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -629,6 +621,7 @@ feature {ROUTINE, TUPLE}
 	integer_8_code: INTEGER_8 is 7
 	integer_16_code: INTEGER_8 is 8
 	integer_64_code: INTEGER_8 is 9
+	any_code: INTEGER_8 is 10
 			-- Code used to identify type in tuple.
 
 	valid_typecode (code: INTEGER_8): BOOLEAN is
@@ -643,26 +636,28 @@ feature {NONE} -- Implementation
 			-- Storage where values are kept.
 
 	is_tuple_uniform (code: INTEGER_8): BOOLEAN is
-			-- Are all items in `obj' of type `code'?
-		require
-			valid_count: count > 0
+			-- Are all items of type `code'?
 		local
 			i, nb: INTEGER
 			first_type, type: TYPE
 		do
-			from
-				i := 2
-				nb := count
-				if code /= reference_code then
-					first_type := codemap.item (code)
-				else
-					first_type := fast_item (0).get_type
+			if count > 0 then
+				from
+					i := 2
+					nb := count
+					if code = any_code then
+						first_type := fast_item (0).get_type
+					else
+						first_type := codemap.item (code)
+					end
+				until
+					i > nb or not Result
+				loop
+					Result := first_type.equals_object (fast_item (i - 1))
+					i := i + 1
 				end
-			until
-				i > nb or not Result
-			loop
-				Result := first_type.equals_object (fast_item (i - 1))
-				i := i + 1
+			else
+				Result := True
 			end
 		end
 

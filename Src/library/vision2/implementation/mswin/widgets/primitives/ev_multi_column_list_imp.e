@@ -38,7 +38,7 @@ inherit
 	WEL_LIST_VIEW
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
 			shown as is_displayed,
@@ -117,6 +117,19 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Currently selected item.
@@ -752,6 +765,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.79  2000/04/17 23:30:35  rogers
+--| Added wel_window_parent fix.
+--|
 --| Revision 1.78  2000/04/11 16:58:55  rogers
 --| Removed direct inheritance from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
 --|

@@ -1,539 +1,539 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-  <Module Id="c_library" Guid="116AB8AA-34B0-4E3A-B9B6-FE907569DD39" Language="0" Version="1.0">
-    <Package Id="116AB8AA-34B0-4E3A-B9B6-FE907569DD39" Keywords="MergeModule, MSI, Database" Description="C_library" Manufacturer="ISE Inc" InstallerVersion="200" Languages="1033" Compressed="yes" />
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="Application" Name=".">
-        <Directory Id="C_library" Name="C_LIBR~1" LongName="C_library">
-          <Directory Id="zlib" Name="zlib">
-            <Component Id="turboc.ln32" Guid="CC08FDF1-277D-4582-82D9-E19C987EEFC6">
-              <File Id="turboc.ln32" Name="turboc.$ln" KeyPath="yes" />
-              <File Id="trees.c" Name="trees.c" />
-              <File Id="inftrees.c" Name="inftrees.c" />
-              <File Id="minigzip.c" Name="minigzip.c" />
-              <File Id="make_msc.bat33" Name="make_msc.bat" />
-              <File Id="Makefile" Name="Makefile" />
-              <File Id="Faq" Name="Faq" />
-              <File Id="zlib1.res" Name="zlib1.res" />
-              <File Id="inflate.h" Name="inflate.h" />
-              <File Id="inffast.c" Name="inffast.c" />
-              <File Id="gzio.c" Name="gzio.c" />
-              <File Id="zutil.c" Name="zutil.c" />
-              <File Id="trees.h" Name="trees.h" />
-              <File Id="inftrees.h" Name="inftrees.h" />
-              <File Id="crc32.c" Name="crc32.c" />
-              <File Id="ChangeLog" Name="CHANGE~2" LongName="ChangeLog" />
-              <File Id="example.c40" Name="example.c" />
-              <File Id="zconf.in.h" Name="ZCONFI~1.H" LongName="zconf.in.h" />
-              <File Id="configure46" Name="CONFIG~2" LongName="configure" />
-              <File Id="adler32.c" Name="adler32.c" />
-              <File Id="inffixed.h" Name="inffixed.h" />
-              <File Id="inffast.h" Name="inffast.h" />
-              <File Id="Readme48" Name="Readme" />
-              <File Id="make_bcb.bat49" Name="make_bcb.bat" />
-              <File Id="compress.c" Name="compress.c" />
-              <File Id="algorithm.txt" Name="ALGORI~1.TXT" LongName="algorithm.txt" />
-              <File Id="zutil.h" Name="zutil.h" />
-              <File Id="zlib.BAK" Name="zlib.BAK" />
-              <File Id="crc32.h" Name="crc32.h" />
-              <File Id="zdll.exp" Name="zdll.exp" />
-              <File Id="deflate.c" Name="deflate.c" />
-              <File Id="zlib.3" Name="zlib.3" />
-              <File Id="Makefile.in" Name="Makefile.in" />
-              <File Id="zconf.h" Name="zconf.h" />
-              <File Id="zlib.h" Name="zlib.h" />
-              <File Id="uncompr.c" Name="uncompr.c" />
-              <File Id="infback.c" Name="infback.c" />
-              <File Id="inflate.c" Name="inflate.c" />
-              <File Id="Index" Name="Index" />
-              <File Id="deflate.h" Name="deflate.h" />
-            </Component>
-            <Component Id="minigzip.exe" Guid="880A16D7-1E3E-44E8-9EC2-F7925499FA5C">
-              <File Id="minigzip.exe" Name="minigzip.exe" Checksum="yes" KeyPath="yes" />
-            </Component>
-            <Component Id="minigzip_d.exe" Guid="BA18A6B5-A2C3-415F-ACDE-AD4ED6B8768C">
-              <File Id="minigzip_d.exe" Name="MINIGZ~1.EXE" LongName="minigzip_d.exe" Checksum="yes" KeyPath="yes" />
-            </Component>
-            <Component Id="zlib1.dll" Guid="14A040D6-B06E-40EC-85ED-E3CA019384AC">
-              <File Id="zlib1.dll" Name="zlib1.dll" Checksum="yes" KeyPath="yes" />
-            </Component>
-            <Component Id="example_d.exe" Guid="A453EBC3-11D2-43D2-815B-79977AB6CD45">
-              <File Id="example_d.exe" Name="EXAMPL~1.EXE" LongName="example_d.exe" Checksum="yes" KeyPath="yes" />
-            </Component>
-            <Directory Id="msdos" Name="msdos">
-              <Component Id="Makefile.bor36" Guid="F1BCC193-E9DF-4CD8-AF49-D0275B8301DE">
-                <File Id="Makefile.bor36" Name="Makefile.bor" KeyPath="yes" />
-                <File Id="Makefile.msc56" Name="Makefile.msc" />
-                <File Id="Makefile.emx58" Name="Makefile.emx" />
-                <File Id="Makefile.dj2" Name="Makefile.dj2" />
-                <File Id="Makefile.tc" Name="Makefile.tc" />
-              </Component>
-            </Directory>
-            <Directory Id="amiga" Name="amiga">
-              <Component Id="Makefile.sas" Guid="7BB20349-5415-467B-B6F1-D272291ACF9C">
-                <File Id="Makefile.sas" Name="Makefile.sas" KeyPath="yes" />
-                <File Id="Makefile.pup" Name="Makefile.pup" />
-              </Component>
-            </Directory>
-            <Directory Id="os2" Name="os2" />
-            <Directory Id="old" Name="old">
-              <Component Id="Make_vms.com" Guid="97279857-7510-464C-B311-8D7F4CAB7637">
-                <File Id="Make_vms.com" Name="Make_vms.com" KeyPath="yes" />
-              </Component>
-              <Component Id="zlib.html" Guid="BEC3D895-E871-4E61-BFE8-A762CCCBD53F">
-                <File Id="zlib.html" Name="ZLIB~1.HTM" LongName="zlib.html" KeyPath="yes" />
-                <File Id="Readme35" Name="Readme" />
-                <File Id="Makefile.riscos" Name="MAKEFI~1.RIS" LongName="Makefile.riscos" />
-                <File Id="descrip.mms42" Name="descrip.mms" />
-              </Component>
-              <Directory Id="os21" Name="os2">
-                <Component Id="zlib.def41" Guid="EE53BF81-4457-4C0B-95E4-0E49EE3CD203">
-                  <File Id="zlib.def41" Name="zlib.def" KeyPath="yes" />
-                  <File Id="Makefile.os2" Name="Makefile.os2" />
-                </Component>
-              </Directory>
-            </Directory>
-            <Directory Id="contrib1" Name="contrib">
-              <Component Id="README.contrib" Guid="41984EF9-7A40-458C-B598-F1A2D0B45415">
-                <File Id="README.contrib" Name="README~1.CON" LongName="README.contrib" KeyPath="yes" />
-                <File Id="visualbasic.txt" Name="VISUAL~1.TXT" LongName="visual-basic.txt" />
-              </Component>
-              <Directory Id="minizip" Name="minizip">
-                <Component Id="zip.h" Guid="E87AC111-FECE-41A0-8565-BFBC21B6B4F1">
-                  <File Id="zip.h" Name="zip.h" KeyPath="yes" />
-                  <File Id="minizip.c" Name="minizip.c" />
-                  <File Id="miniunz.c" Name="miniunz.c" />
-                  <File Id="unzip.c" Name="unzip.c" />
-                  <File Id="iowin32.c" Name="iowin32.c" />
-                  <File Id="Makefile38" Name="Makefile" />
-                  <File Id="crypt.h" Name="crypt.h" />
-                  <File Id="ioapi.c" Name="ioapi.c" />
-                  <File Id="ChangeLogUnzip" Name="CHANGE~1" LongName="ChangeLogUnzip" />
-                  <File Id="unzip.h" Name="unzip.h" />
-                  <File Id="iowin32.h" Name="iowin32.h" />
-                  <File Id="ioapi.h" Name="ioapi.h" />
-                  <File Id="zip.c" Name="zip.c" />
-                </Component>
-              </Directory>
-              <Directory Id="iostream2" Name="IOSTRE~1" LongName="iostream2">
-                <Component Id="zstream_test.cpp" Guid="8AFA580B-6C55-49D4-AD88-73B9F2AF3DFC">
-                  <File Id="zstream_test.cpp" Name="ZSTREA~1.CPP" LongName="zstream_test.cpp" KeyPath="yes" />
-                  <File Id="zstream.h" Name="zstream.h" />
-                </Component>
-              </Directory>
-              <Directory Id="untgz" Name="untgz">
-                <Component Id="untgz.c" Guid="711DF58E-E1DC-46B6-A702-D31C5382A374">
-                  <File Id="untgz.c" Name="untgz.c" KeyPath="yes" />
-                  <File Id="Makefile43" Name="Makefile" />
-                  <File Id="Makefile.msc61" Name="Makefile.msc" />
-                </Component>
-              </Directory>
-              <Directory Id="asm586" Name="asm586">
-                <Component Id="Readme.586" Guid="5E6A6A82-A7B9-4A54-8DAE-C59F4252C153">
-                  <File Id="Readme.586" Name="Readme.586" KeyPath="yes" />
-                  <File Id="match.S60" Name="match.S" />
-                </Component>
-              </Directory>
-              <Directory Id="delphi" Name="delphi">
-                <Component Id="ZLibConst.pas" Guid="4FD64F9A-038F-44D0-9A7E-07A25B562AD6">
-                  <File Id="ZLibConst.pas" Name="ZLIBCO~1.PAS" LongName="ZLibConst.pas" KeyPath="yes" />
-                  <File Id="readme.txt52" Name="readme.txt" />
-                  <File Id="ZLib.pas" Name="ZLib.pas" />
-                  <File Id="zlibd32.mak57" Name="zlibd32.mak" />
-                </Component>
-              </Directory>
-              <Directory Id="asm686" Name="asm686">
-                <Component Id="Readme.686" Guid="97378CAC-1A3B-4610-A3D6-3F72A5C1407A">
-                  <File Id="Readme.686" Name="Readme.686" KeyPath="yes" />
-                  <File Id="match.S" Name="match.S" />
-                </Component>
-              </Directory>
-              <Directory Id="iostream" Name="iostream">
-                <Component Id="zfstream.cpp" Guid="11AFE822-489A-43FC-A0A1-028671307E25">
-                  <File Id="zfstream.cpp" Name="zfstream.cpp" KeyPath="yes" />
-                  <File Id="test.cpp" Name="test.cpp" />
-                  <File Id="zfstream.h54" Name="zfstream.h" />
-                </Component>
-              </Directory>
-              <Directory Id="ada" Name="ada">
-                <Component Id="zlib.ads" Guid="7212E14E-CC88-4F41-8BF0-B7294D615621">
-                  <File Id="zlib.ads" Name="zlib.ads" KeyPath="yes" />
-                  <File Id="zlib.adb" Name="zlib.adb" />
-                  <File Id="test.adb" Name="test.adb" />
-                  <File Id="zlibthin.ads" Name="ZLIB-T~1.ADS" LongName="zlib-thin.ads" />
-                  <File Id="zlibthin.adb" Name="ZLIB-T~1.ADB" LongName="zlib-thin.adb" />
-                  <File Id="read.adb" Name="read.adb" />
-                  <File Id="readme.txt47" Name="readme.txt" />
-                  <File Id="mtest.adb" Name="mtest.adb" />
-                  <File Id="zlib.gpr" Name="zlib.gpr" />
-                  <File Id="zlibstreams.ads" Name="ZLIB-S~1.ADS" LongName="zlib-streams.ads" />
-                  <File Id="zlibstreams.adb" Name="ZLIB-S~1.ADB" LongName="zlib-streams.adb" />
-                </Component>
-              </Directory>
-              <Directory Id="asm386" Name="asm386" />
-              <Directory Id="vstudio" Name="vstudio">
-                <Component Id="readme.txt" Guid="F9DFEF57-F439-4668-A9BD-FC00C6585547">
-                  <File Id="readme.txt" Name="readme.txt" KeyPath="yes" />
-                </Component>
-                <Directory Id="vc7" Name="vc7">
-                  <Component Id="zlibvc.vcproj" Guid="0138AE2E-2F76-41C4-BE65-385385856564">
-                    <File Id="zlibvc.vcproj" Name="ZLIBVC~1.VCP" LongName="zlibvc.vcproj" KeyPath="yes" />
-                    <File Id="zlibvc.sln" Name="zlibvc.sln" />
-                    <File Id="zlibvc.def" Name="zlibvc.def" />
-                    <File Id="zlibstat.vcproj" Name="ZLIBST~1.VCP" LongName="zlibstat.vcproj" />
-                    <File Id="zlib.rc" Name="zlib.rc" />
-                    <File Id="minizip.vcproj" Name="MINIZI~1.VCP" LongName="minizip.vcproj" />
-                    <File Id="miniunz.vcproj" Name="MINIUN~1.VCP" LongName="miniunz.vcproj" />
-                  </Component>
-                </Directory>
-              </Directory>
-              <Directory Id="pascal" Name="pascal">
-                <Component Id="readme.txt34" Guid="10BA0F9C-540D-46BF-B722-45F1DD186F74">
-                  <File Id="readme.txt34" Name="readme.txt" KeyPath="yes" />
-                  <File Id="zlibd32.mak" Name="zlibd32.mak" />
-                  <File Id="zlibpas.pas" Name="zlibpas.pas" />
-                  <File Id="example.pas" Name="example.pas" />
-                </Component>
-              </Directory>
-              <Directory Id="testzlib" Name="testzlib">
-                <Component Id="testzlib.c" Guid="02FF9C6F-59F9-4D42-B3BF-A9A833B442AD">
-                  <File Id="testzlib.c" Name="testzlib.c" KeyPath="yes" />
-                  <File Id="testzlib.sln" Name="testzlib.sln" />
-                  <File Id="testzlib.vcproj" Name="TESTZL~1.VCP" LongName="testzlib.vcproj" />
-                </Component>
-              </Directory>
-              <Directory Id="puff" Name="puff">
-                <Component Id="puff.c" Guid="367C2DC8-1B9D-4476-8393-7195B2B9AA35">
-                  <File Id="puff.c" Name="puff.c" KeyPath="yes" />
-                  <File Id="zeros.raw" Name="zeros.raw" />
-                  <File Id="puff.h" Name="puff.h" />
-                  <File Id="Makefile44" Name="Makefile" />
-                  <File Id="Readme50" Name="Readme" />
-                </Component>
-              </Directory>
-              <Directory Id="infback9" Name="infback9">
-                <Component Id="inftree9.h" Guid="4FC0C189-7184-4D97-8A4C-112D8D56DC11">
-                  <File Id="inftree9.h" Name="inftree9.h" KeyPath="yes" />
-                  <File Id="Readme37" Name="Readme" />
-                  <File Id="infback9.c" Name="infback9.c" />
-                  <File Id="inflate9.h" Name="inflate9.h" />
-                  <File Id="inffix9.h" Name="inffix9.h" />
-                  <File Id="inftree9.c" Name="inftree9.c" />
-                  <File Id="infback9.h" Name="infback9.h" />
-                </Component>
-              </Directory>
-              <Directory Id="iostream3" Name="IOSTRE~2" LongName="iostream3">
-                <Component Id="Readme39" Guid="27478BAB-FCDF-4D99-B016-2149986A7053">
-                  <File Id="Readme39" Name="Readme" KeyPath="yes" />
-                  <File Id="test.cc" Name="test.cc" />
-                  <File Id="zfstream.h" Name="zfstream.h" />
-                  <File Id="Todo45" Name="Todo" />
-                  <File Id="zfstream.cc" Name="zfstream.cc" />
-                </Component>
-              </Directory>
-              <Directory Id="inflate86" Name="INFLAT~1" LongName="inflate86">
-                <Component Id="inffas86.c" Guid="631CCEA0-E99A-4790-B660-69E7C3C28255">
-                  <File Id="inffas86.c" Name="inffas86.c" KeyPath="yes" />
-                  <File Id="inffast.S" Name="inffast.S" />
-                </Component>
-              </Directory>
-              <Directory Id="blast" Name="blast">
-                <Component Id="blast.c" Guid="D0307737-8816-4F27-A18D-2BEA76578234">
-                  <File Id="blast.c" Name="blast.c" KeyPath="yes" />
-                  <File Id="test.txt" Name="test.txt" />
-                  <File Id="Readme53" Name="Readme" />
-                  <File Id="blast.h" Name="blast.h" />
-                  <File Id="Makefile59" Name="Makefile" />
-                  <File Id="test.pk" Name="test.pk" />
-                </Component>
-              </Directory>
-              <Directory Id="masmx86" Name="masmx86">
-                <Component Id="readme.txt51" Guid="1C9680E4-C0A8-4292-A3E6-092372CEBA9C">
-                  <File Id="readme.txt51" Name="readme.txt" KeyPath="yes" />
-                  <File Id="mkasm.bat" Name="mkasm.bat" />
-                  <File Id="gvmat32.asm" Name="gvmat32.asm" />
-                  <File Id="gvmat32c.c" Name="gvmat32c.c" />
-                  <File Id="inffas32.asm" Name="inffas32.asm" />
-                </Component>
-              </Directory>
-              <Directory Id="gzappend" Name="gzappend">
-                <Component Id="gzappend.c" Guid="BA2AFFBA-70C5-49A4-A5BC-A0DBB05E4CEE">
-                  <File Id="gzappend.c" Name="gzappend.c" KeyPath="yes" />
-                </Component>
-              </Directory>
-              <Directory Id="masm686" Name="masm686">
-                <Component Id="match.asm" Guid="CD695220-0001-4ABE-84D2-D382AE4ABFAA">
-                  <File Id="match.asm" Name="match.asm" KeyPath="yes" />
-                </Component>
-              </Directory>
-              <Directory Id="delphi2" Name="delphi2" />
-            </Directory>
-            <Directory Id="nt" Name="nt" />
-            <Directory Id="win32" Name="win32">
-              <Component Id="zlib1.rc" Guid="1EAB57E9-48EA-4E80-8F1A-300A30344139">
-                <File Id="zlib1.rc" Name="zlib1.rc" KeyPath="yes" />
-                <File Id="Makefile.bor" Name="Makefile.bor" />
-                <File Id="Makefile.gcc" Name="Makefile.gcc" />
-                <File Id="DLL_FAQ.txt" Name="DLL_FAQ.txt" />
-                <File Id="zlib.def" Name="zlib.def" />
-                <File Id="Makefile.msc" Name="Makefile.msc" />
-                <File Id="Makefile.emx" Name="Makefile.emx" />
-              </Component>
-            </Directory>
-            <Directory Id="as400" Name="as400">
-              <Component Id="zlib.inc" Guid="52AB058B-EC69-47B8-BD38-A042ABC0A0FA">
-                <File Id="zlib.inc" Name="zlib.inc" KeyPath="yes" />
-                <File Id="bndsrc" Name="bndsrc" />
-                <File Id="readme.txt55" Name="readme.txt" />
-                <File Id="compile.clp" Name="compile.clp" />
-              </Component>
-            </Directory>
-            <Directory Id="qnx" Name="qnx">
-              <Component Id="package.qpg" Guid="776603DB-1673-43C0-A028-0BE2962A8F5A">
-                <File Id="package.qpg" Name="package.qpg" KeyPath="yes" />
-              </Component>
-            </Directory>
-          </Directory>
-          <Directory Id="libpng" Name="libpng">
-            <Component Id="pngwutil.c" Guid="9EC9B786-732B-4B4A-A44B-8AE8531914AF">
-              <File Id="pngwutil.c" Name="pngwutil.c" KeyPath="yes" />
-              <File Id="pngpread.c" Name="pngpread.c" />
-              <File Id="libpng.txt" Name="libpng.txt" />
-              <File Id="libpng.3" Name="libpng.3" />
-              <File Id="example.c" Name="example.c" />
-              <File Id="Y2kinfo" Name="Y2kinfo" />
-              <File Id="pngtrans.c" Name="pngtrans.c" />
-              <File Id="pngrio.c" Name="pngrio.c" />
-              <File Id="pngread.c" Name="pngread.c" />
-              <File Id="png.h" Name="png.h" />
-              <File Id="png.5" Name="png.5" />
-              <File Id="configure" Name="CONFIG~1" LongName="configure" />
-              <File Id="Todo" Name="Todo" />
-              <File Id="pngtest.png" Name="pngtest.png" />
-              <File Id="pngconf.h" Name="pngconf.h" />
-              <File Id="make_msc.bat" Name="make_msc.bat" />
-              <File Id="pngwio.c" Name="pngwio.c" />
-              <File Id="pngrtran.c" Name="pngrtran.c" />
-              <File Id="pngnow.png" Name="pngnow.png" />
-              <File Id="pngerror.c" Name="pngerror.c" />
-              <File Id="Install" Name="Install" />
-              <File Id="turboc.ln" Name="turboc.$ln" />
-              <File Id="pnggccrd.c" Name="pnggccrd.c" />
-              <File Id="pngbar.png" Name="pngbar.png" />
-              <File Id="pngwrite.c" Name="pngwrite.c" />
-              <File Id="pngwtran.c" Name="pngwtran.c" />
-              <File Id="make_bcb.bat" Name="make_bcb.bat" />
-              <File Id="pngset.c" Name="pngset.c" />
-              <File Id="License" Name="License" />
-              <File Id="Knownbug" Name="Knownbug" />
-              <File Id="pngvcrd.c" Name="pngvcrd.c" />
-              <File Id="Readme28" Name="Readme" />
-              <File Id="png.c" Name="png.c" />
-              <File Id="pngtest.c" Name="pngtest.c" />
-              <File Id="pngrutil.c" Name="pngrutil.c" />
-              <File Id="libpngpf.3" Name="libpngpf.3" />
-              <File Id="pngmem.c" Name="pngmem.c" />
-              <File Id="Announce" Name="Announce" />
-              <File Id="pngget.c" Name="pngget.c" />
-              <File Id="pngbar.jpg" Name="pngbar.jpg" />
-              <File Id="libpng.LST" Name="libpng.LST" />
-              <File Id="Changes" Name="Changes" />
-            </Component>
-            <Directory Id="scripts" Name="scripts">
-              <Component Id="makevms.com31" Guid="F8D75176-092D-44F0-8600-D9BB3E6F468B">
-                <File Id="makevms.com31" Name="makevms.com" KeyPath="yes" />
-              </Component>
-              <Component Id="makefile.hpux" Guid="95FAF15A-D714-4AD3-B34F-E341796AB1BA">
-                <File Id="makefile.hpux" Name="MAKEFI~1.HPU" LongName="makefile.hpux" KeyPath="yes" />
-                <File Id="libpng.pc.in" Name="LIBPNG~3.IN" LongName="libpng.pc.in" />
-                <File Id="pngw32.rc" Name="pngw32.rc" />
-                <File Id="pngos2.def" Name="pngos2.def" />
-                <File Id="makefile.vcawin32" Name="MAKEFI~1.VCA" LongName="makefile.vcawin32" />
-                <File Id="makefile.atari" Name="MAKEFI~1.ATA" LongName="makefile.atari" />
-                <File Id="makefile.solaris" Name="MAKEFI~1.SOL" LongName="makefile.solaris" />
-                <File Id="makefile.amiga" Name="MAKEFI~1.AMI" LongName="makefile.amiga" />
-                <File Id="pngw32.def" Name="pngw32.def" />
-                <File Id="makefile.acorn" Name="MAKEFI~1.ACO" LongName="makefile.acorn" />
-                <File Id="makefile.vcwin32" Name="MAKEFI~1.VCW" LongName="makefile.vcwin32" />
-                <File Id="makefile.sco" Name="makefile.sco" />
-                <File Id="makefile.msc" Name="makefile.msc" />
-                <File Id="makefile.openbsd" Name="MAKEFI~1.OPE" LongName="makefile.openbsd" />
-                <File Id="makefile.mips" Name="MAKEFI~1.MIP" LongName="makefile.mips" />
-                <File Id="makefile.knr" Name="makefile.knr" />
-                <File Id="makefile.gcmmx" Name="MAKEFI~1.GCM" LongName="makefile.gcmmx" />
-                <File Id="makefile.so9" Name="makefile.so9" />
-                <File Id="makefile.ibmc" Name="MAKEFI~1.IBM" LongName="makefile.ibmc" />
-                <File Id="makefile.freebsd" Name="MAKEFI~1.FRE" LongName="makefile.freebsd" />
-                <File Id="makefile.elf" Name="makefile.elf" />
-                <File Id="makefile.dj2" Name="makefile.dj2" />
-                <File Id="makefile.bc32" Name="MAKEFI~1.BC3" LongName="makefile.bc32" />
-                <File Id="makefile.aix" Name="makefile.aix" />
-                <File Id="makefile.ne12bsd" Name="MAKEFI~1.NE1" LongName="makefile.ne12bsd" />
-                <File Id="makefile.darwin" Name="MAKEFI~1.DAR" LongName="makefile.darwin" />
-                <File Id="makefile.64sunu" Name="MAKEFI~1.64S" LongName="makefile.64sunu" />
-                <File Id="makefile.os2" Name="makefile.os2" />
-                <File Id="makefile.netbsd" Name="MAKEFI~1.NET" LongName="makefile.netbsd" />
-                <File Id="makefile.bcb" Name="makefile.bcb" />
-                <File Id="makefile.32sunu" Name="MAKEFI~1.32S" LongName="makefile.32sunu" />
-                <File Id="makefile.watcom" Name="MAKEFI~1.WAT" LongName="makefile.watcom" />
-                <File Id="makefile.dec" Name="makefile.dec" />
-                <File Id="makefile.cygwin" Name="MAKEFI~1.CYG" LongName="makefile.cygwin" />
-                <File Id="makefile.sunos" Name="MAKEFI~1.SUN" LongName="makefile.sunos" />
-                <File Id="makefile.std25" Name="makefile.std" />
-                <File Id="makefile.hpgcc" Name="MAKEFI~1.HPG" LongName="makefile.hpgcc" />
-                <File Id="libpngconfighead.in" Name="LIBPNG~2.IN" LongName="libpng-config-head.in" />
-                <File Id="makefile.sgi" Name="makefile.sgi" />
-                <File Id="smakefile.ppc" Name="SMAKEF~1.PPC" LongName="smakefile.ppc" />
-                <File Id="makefile.hp64" Name="MAKEFI~1.HP6" LongName="makefile.hp64" />
-                <File Id="makefile.bor" Name="makefile.bor" />
-                <File Id="libpngconfigbody.in" Name="LIBPNG~1.IN" LongName="libpng-config-body.in" />
-                <File Id="descrip.mms" Name="descrip.mms" />
-                <File Id="SCOPTIONS.ppc" Name="SCOPTI~1.PPC" LongName="SCOPTIONS.ppc" />
-                <File Id="makefile.tc327" Name="makefile.tc3" />
-                <File Id="makefile.sggcc" Name="MAKEFI~1.SGG" LongName="makefile.sggcc" />
-                <File Id="makefile.beos" Name="MAKEFI~1.BEO" LongName="makefile.beos" />
-                <File Id="makefile.linux" Name="MAKEFI~1.LIN" LongName="makefile.linux" />
-                <File Id="makefile.gcc" Name="makefile.gcc" />
-                <File Id="libpng.icc" Name="libpng.icc" />
-                <File Id="makefile.intel" Name="MAKEFI~1.INT" LongName="makefile.intel" />
-              </Component>
-            </Directory>
-            <Directory Id="projects" Name="projects">
-              <Component Id="netware.txt" Guid="276B8DCA-EAA2-49C8-945E-19CE5D461786">
-                <File Id="netware.txt" Name="netware.txt" KeyPath="yes" />
-                <File Id="wince.txt" Name="wince.txt" />
-              </Component>
-              <Directory Id="visualc6" Name="visualc6">
-                <Component Id="pngtest.dsp" Guid="15D05069-2139-4A1D-8A6F-148AE4B39EDB">
-                  <File Id="pngtest.dsp" Name="pngtest.dsp" KeyPath="yes" />
-                  <File Id="README.txt24" Name="README.txt" />
-                  <File Id="libpng.dsp" Name="libpng.dsp" />
-                  <File Id="libpng.dsw" Name="libpng.dsw" />
-                </Component>
-              </Directory>
-              <Directory Id="cbuilder5" Name="CBUILD~1" LongName="cbuilder5">
-                <Component Id="libpng.cpp" Guid="90A56721-A4FF-4748-B836-8F488187E44B">
-                  <File Id="libpng.cpp" Name="libpng.cpp" KeyPath="yes" />
-                  <File Id="libpngstat.bpf" Name="LIBPNG~1.BPF" LongName="libpngstat.bpf" />
-                  <File Id="libpng.bpr" Name="libpng.bpr" />
-                  <File Id="libpng.readme.txt" Name="LIBPNG~1.TXT" LongName="libpng.readme.txt" />
-                  <File Id="libpng.bpf" Name="libpng.bpf" />
-                  <File Id="libpng.bpg" Name="libpng.bpg" />
-                  <File Id="zlib.readme.txt" Name="ZLIBRE~1.TXT" LongName="zlib.readme.txt" />
-                  <File Id="libpngstat.bpr" Name="LIBPNG~1.BPR" LongName="libpngstat.bpr" />
-                </Component>
-              </Directory>
-              <Directory Id="visualc71" Name="VISUAL~1" LongName="visualc71">
-                <Component Id="README.txt" Guid="A6B76B42-7917-476C-9CD4-6DBFD0F21EA2">
-                  <File Id="README.txt" Name="README.txt" KeyPath="yes" />
-                  <File Id="pngtest.vcproj" Name="PNGTES~1.VCP" LongName="pngtest.vcproj" />
-                  <File Id="libpng.sln" Name="libpng.sln" />
-                  <File Id="libpng.vcproj" Name="LIBPNG~1.VCP" LongName="libpng.vcproj" />
-                  <File Id="README_zlib.txt" Name="README~1.TXT" LongName="README_zlib.txt" />
-                  <File Id="zlib.vcproj" Name="ZLIB~1.VCP" LongName="zlib.vcproj" />
-                  <File Id="PRJ0041.mak" Name="PRJ0041.mak" />
-                </Component>
-              </Directory>
-              <Directory Id="beos" Name="beos">
-                <Component Id="x86static.proj" Guid="5275839D-18B4-4DB7-8F5C-91F72FADE2E1">
-                  <File Id="x86static.proj" Name="X86-ST~1.PRO" LongName="x86-static.proj" KeyPath="yes" />
-                  <File Id="x86shared.txt" Name="X86-SH~1.TXT" LongName="x86-shared.txt" />
-                  <File Id="x86shared.proj" Name="X86-SH~1.PRO" LongName="x86-shared.proj" />
-                  <File Id="x86static.txt" Name="X86-ST~1.TXT" LongName="x86-static.txt" />
-                </Component>
-              </Directory>
-            </Directory>
-            <Directory Id="wince" Name="wince" />
-            <Directory Id="msvc" Name="msvc" />
-            <Directory Id="contrib" Name="contrib">
-              <Directory Id="gregbook" Name="gregbook">
-                <Component Id="makevms.com" Guid="0D35F8EF-AC46-467A-A8A8-0EC67B296EC3">
-                  <File Id="makevms.com" Name="makevms.com" KeyPath="yes" />
-                </Component>
-                <Component Id="Makefile.unx" Guid="5BC64A1E-3974-4A88-AD89-90092773C0C8">
-                  <File Id="Makefile.unx" Name="Makefile.unx" KeyPath="yes" />
-                  <File Id="Readme" Name="Readme" />
-                  <File Id="writepng.c" Name="writepng.c" />
-                  <File Id="readpng2.c" Name="readpng2.c" />
-                  <File Id="readpng.c" Name="readpng.c" />
-                  <File Id="toucan.png" Name="toucan.png" />
-                  <File Id="writepng.h" Name="writepng.h" />
-                  <File Id="Makefile.sgi" Name="Makefile.sgi" />
-                  <File Id="wpng.c" Name="wpng.c" />
-                  <File Id="Makefile.w32" Name="Makefile.w32" />
-                  <File Id="rpng2win.c" Name="RPNG2-~1.C" LongName="rpng2-win.c" />
-                  <File Id="readpng2.h" Name="readpng2.h" />
-                  <File Id="readpng.h" Name="readpng.h" />
-                  <File Id="License30" Name="License" />
-                  <File Id="rpng2x.c" Name="rpng2-x.c" />
-                  <File Id="rpngwin.c" Name="rpng-win.c" />
-                  <File Id="rpngx.c" Name="rpng-x.c" />
-                </Component>
-              </Directory>
-              <Directory Id="visupng" Name="visupng">
-                <Component Id="cexcept.h" Guid="7C623381-3EAA-45A7-9D7F-4D27BDE5990D">
-                  <File Id="cexcept.h" Name="cexcept.h" KeyPath="yes" />
-                  <File Id="VisualPng.dsp" Name="VISUAL~1.DSP" LongName="VisualPng.dsp" />
-                  <File Id="VisualPng.ico" Name="VISUAL~1.ICO" LongName="VisualPng.ico" />
-                  <File Id="README.txt23" Name="README.txt" />
-                  <File Id="PngFile.c" Name="PngFile.c" />
-                  <File Id="VisualPng.c" Name="VISUAL~1.C" LongName="VisualPng.c" />
-                  <File Id="VisualPng.dsw" Name="VISUAL~1.DSW" LongName="VisualPng.dsw" />
-                  <File Id="VisualPng.png" Name="VISUAL~1.PNG" LongName="VisualPng.png" />
-                  <File Id="resource.h" Name="resource.h" />
-                  <File Id="PngFile.h" Name="PngFile.h" />
-                  <File Id="VisualPng.rc" Name="VISUAL~1.RC" LongName="VisualPng.rc" />
-                </Component>
-              </Directory>
-              <Directory Id="pngsuite" Name="pngsuite">
-                <Component Id="basn3p08.png" Guid="9A8E3E7D-2AAD-4D6E-8347-C002531BD417">
-                  <File Id="basn3p08.png" Name="basn3p08.png" KeyPath="yes" />
-                  <File Id="basn2c08.png" Name="basn2c08.png" />
-                  <File Id="basn0g01.png" Name="basn0g01.png" />
-                  <File Id="basn0g02.png" Name="basn0g02.png" />
-                  <File Id="basn6a16.png" Name="basn6a16.png" />
-                  <File Id="basn0g04.png" Name="basn0g04.png" />
-                  <File Id="basn0g16.png" Name="basn0g16.png" />
-                  <File Id="basn6a08.png" Name="basn6a08.png" />
-                  <File Id="basn4a16.png" Name="basn4a16.png" />
-                  <File Id="basn3p01.png" Name="basn3p01.png" />
-                  <File Id="basn0g08.png" Name="basn0g08.png" />
-                  <File Id="basn3p02.png" Name="basn3p02.png" />
-                  <File Id="basn4a08.png" Name="basn4a08.png" />
-                  <File Id="basn3p04.png" Name="basn3p04.png" />
-                  <File Id="basn2c16.png" Name="basn2c16.png" />
-                </Component>
-              </Directory>
-              <Directory Id="pngminus" Name="pngminus">
-                <Component Id="makevms.com26" Guid="24CBCB42-FC03-470C-8110-DA9773E2E770">
-                  <File Id="makevms.com26" Name="makevms.com" KeyPath="yes" />
-                </Component>
-                <Component Id="png2pnm.c" Guid="0B19B581-EA4D-4809-80EC-610483B8597C">
-                  <File Id="png2pnm.c" Name="png2pnm.c" KeyPath="yes" />
-                  <File Id="pnm2png.bat" Name="pnm2png.bat" />
-                  <File Id="pngminus.sh" Name="pngminus.sh" />
-                  <File Id="png2pnm.sh" Name="png2pnm.sh" />
-                  <File Id="makefile.std" Name="makefile.std" />
-                  <File Id="pnm2png.sh" Name="pnm2png.sh" />
-                  <File Id="makefile.tc3" Name="makefile.tc3" />
-                  <File Id="png2pnm.bat" Name="png2pnm.bat" />
-                  <File Id="Readme29" Name="Readme" />
-                  <File Id="pngminus.bat" Name="pngminus.bat" />
-                  <File Id="pnm2png.c" Name="pnm2png.c" />
-                </Component>
-              </Directory>
-              <Directory Id="msvctest" Name="msvctest" />
-            </Directory>
-          </Directory>
-          <Directory Id="expat" Name="expat">
-            <Directory Id="xmltok" Name="xmltok" />
-            <Directory Id="xmlwf" Name="xmlwf" />
-            <Directory Id="sample" Name="sample" />
-            <Directory Id="xmlparse" Name="xmlparse" />
-            <Directory Id="gennmtab" Name="gennmtab" />
-          </Directory>
-        </Directory>
-      </Directory>
-    </Directory>
-  </Module>
+	<Module Id="c_library" Guid="116AB8AA-34B0-4E3A-B9B6-FE907569DD39" Language="0" Version="1.0">
+		<Package Id="116AB8AA-34B0-4E3A-B9B6-FE907569DD39" Keywords="MergeModule, MSI, Database" Description="C_library" Manufacturer="ISE Inc" InstallerVersion="200" Languages="1033" Compressed="yes" />
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="Application" Name=".">
+				<Directory Id="C_library" Name="C_LIBR~1" LongName="C_library">
+					<Directory Id="zlib" Name="zlib">
+						<Component Id="turboc.ln32" Guid="CC08FDF1-277D-4582-82D9-E19C987EEFC6">
+							<File Id="turboc.ln32" Name="turboc.$ln" KeyPath="yes" />
+							<File Id="trees.c" Name="trees.c" />
+							<File Id="inftrees.c" Name="inftrees.c" />
+							<File Id="minigzip.c" Name="minigzip.c" />
+							<File Id="make_msc.bat33" Name="make_msc.bat" />
+							<File Id="Makefile" Name="Makefile" />
+							<File Id="Faq" Name="Faq" />
+							<File Id="zlib1.res" Name="zlib1.res" />
+							<File Id="inflate.h" Name="inflate.h" />
+							<File Id="inffast.c" Name="inffast.c" />
+							<File Id="gzio.c" Name="gzio.c" />
+							<File Id="zutil.c" Name="zutil.c" />
+							<File Id="trees.h" Name="trees.h" />
+							<File Id="inftrees.h" Name="inftrees.h" />
+							<File Id="crc32.c" Name="crc32.c" />
+							<File Id="ChangeLog" Name="CHANGE~2" LongName="ChangeLog" />
+							<File Id="example.c40" Name="example.c" />
+							<File Id="zconf.in.h" Name="ZCONFI~1.H" LongName="zconf.in.h" />
+							<File Id="configure46" Name="CONFIG~2" LongName="configure" />
+							<File Id="adler32.c" Name="adler32.c" />
+							<File Id="inffixed.h" Name="inffixed.h" />
+							<File Id="inffast.h" Name="inffast.h" />
+							<File Id="Readme48" Name="Readme" />
+							<File Id="make_bcb.bat49" Name="make_bcb.bat" />
+							<File Id="compress.c" Name="compress.c" />
+							<File Id="algorithm.txt" Name="ALGORI~1.TXT" LongName="algorithm.txt" />
+							<File Id="zutil.h" Name="zutil.h" />
+							<File Id="zlib.BAK" Name="zlib.BAK" />
+							<File Id="crc32.h" Name="crc32.h" />
+							<File Id="zdll.exp" Name="zdll.exp" />
+							<File Id="deflate.c" Name="deflate.c" />
+							<File Id="zlib.3" Name="zlib.3" />
+							<File Id="Makefile.in" Name="Makefile.in" />
+							<File Id="zconf.h" Name="zconf.h" />
+							<File Id="zlib.h" Name="zlib.h" />
+							<File Id="uncompr.c" Name="uncompr.c" />
+							<File Id="infback.c" Name="infback.c" />
+							<File Id="inflate.c" Name="inflate.c" />
+							<File Id="Index" Name="Index" />
+							<File Id="deflate.h" Name="deflate.h" />
+						</Component>
+						<Component Id="minigzip.exe" Guid="880A16D7-1E3E-44E8-9EC2-F7925499FA5C">
+							<File Id="minigzip.exe" Name="minigzip.exe" Checksum="yes" KeyPath="yes" />
+						</Component>
+						<Component Id="minigzip_d.exe" Guid="BA18A6B5-A2C3-415F-ACDE-AD4ED6B8768C">
+							<File Id="minigzip_d.exe" Name="MINIGZ~1.EXE" LongName="minigzip_d.exe" Checksum="yes" KeyPath="yes" />
+						</Component>
+						<Component Id="zlib1.dll" Guid="14A040D6-B06E-40EC-85ED-E3CA019384AC">
+							<File Id="zlib1.dll" Name="zlib1.dll" Checksum="yes" KeyPath="yes" />
+						</Component>
+						<Component Id="example_d.exe" Guid="A453EBC3-11D2-43D2-815B-79977AB6CD45">
+							<File Id="example_d.exe" Name="EXAMPL~1.EXE" LongName="example_d.exe" Checksum="yes" KeyPath="yes" />
+						</Component>
+						<Directory Id="msdos" Name="msdos">
+							<Component Id="Makefile.bor36" Guid="F1BCC193-E9DF-4CD8-AF49-D0275B8301DE">
+								<File Id="Makefile.bor36" Name="Makefile.bor" KeyPath="yes" />
+								<File Id="Makefile.msc56" Name="Makefile.msc" />
+								<File Id="Makefile.emx58" Name="Makefile.emx" />
+								<File Id="Makefile.dj2" Name="Makefile.dj2" />
+								<File Id="Makefile.tc" Name="Makefile.tc" />
+							</Component>
+						</Directory>
+						<Directory Id="amiga" Name="amiga">
+							<Component Id="Makefile.sas" Guid="7BB20349-5415-467B-B6F1-D272291ACF9C">
+								<File Id="Makefile.sas" Name="Makefile.sas" KeyPath="yes" />
+								<File Id="Makefile.pup" Name="Makefile.pup" />
+							</Component>
+						</Directory>
+						<Directory Id="os2" Name="os2" />
+						<Directory Id="old" Name="old">
+							<Component Id="Make_vms.com" Guid="97279857-7510-464C-B311-8D7F4CAB7637">
+								<File Id="Make_vms.com" Name="Make_vms.com" KeyPath="yes" />
+							</Component>
+							<Component Id="zlib.html" Guid="BEC3D895-E871-4E61-BFE8-A762CCCBD53F">
+								<File Id="zlib.html" Name="ZLIB~1.HTM" LongName="zlib.html" KeyPath="yes" />
+								<File Id="Readme35" Name="Readme" />
+								<File Id="Makefile.riscos" Name="MAKEFI~1.RIS" LongName="Makefile.riscos" />
+								<File Id="descrip.mms42" Name="descrip.mms" />
+							</Component>
+							<Directory Id="os21" Name="os2">
+								<Component Id="zlib.def41" Guid="EE53BF81-4457-4C0B-95E4-0E49EE3CD203">
+									<File Id="zlib.def41" Name="zlib.def" KeyPath="yes" />
+									<File Id="Makefile.os2" Name="Makefile.os2" />
+								</Component>
+							</Directory>
+						</Directory>
+						<Directory Id="contrib1" Name="contrib">
+							<Component Id="README.contrib" Guid="41984EF9-7A40-458C-B598-F1A2D0B45415">
+								<File Id="README.contrib" Name="README~1.CON" LongName="README.contrib" KeyPath="yes" />
+								<File Id="visualbasic.txt" Name="VISUAL~1.TXT" LongName="visual-basic.txt" />
+							</Component>
+							<Directory Id="minizip" Name="minizip">
+								<Component Id="zip.h" Guid="E87AC111-FECE-41A0-8565-BFBC21B6B4F1">
+									<File Id="zip.h" Name="zip.h" KeyPath="yes" />
+									<File Id="minizip.c" Name="minizip.c" />
+									<File Id="miniunz.c" Name="miniunz.c" />
+									<File Id="unzip.c" Name="unzip.c" />
+									<File Id="iowin32.c" Name="iowin32.c" />
+									<File Id="Makefile38" Name="Makefile" />
+									<File Id="crypt.h" Name="crypt.h" />
+									<File Id="ioapi.c" Name="ioapi.c" />
+									<File Id="ChangeLogUnzip" Name="CHANGE~1" LongName="ChangeLogUnzip" />
+									<File Id="unzip.h" Name="unzip.h" />
+									<File Id="iowin32.h" Name="iowin32.h" />
+									<File Id="ioapi.h" Name="ioapi.h" />
+									<File Id="zip.c" Name="zip.c" />
+								</Component>
+							</Directory>
+							<Directory Id="iostream2" Name="IOSTRE~1" LongName="iostream2">
+								<Component Id="zstream_test.cpp" Guid="8AFA580B-6C55-49D4-AD88-73B9F2AF3DFC">
+									<File Id="zstream_test.cpp" Name="ZSTREA~1.CPP" LongName="zstream_test.cpp" KeyPath="yes" />
+									<File Id="zstream.h" Name="zstream.h" />
+								</Component>
+							</Directory>
+							<Directory Id="untgz" Name="untgz">
+								<Component Id="untgz.c" Guid="711DF58E-E1DC-46B6-A702-D31C5382A374">
+									<File Id="untgz.c" Name="untgz.c" KeyPath="yes" />
+									<File Id="Makefile43" Name="Makefile" />
+									<File Id="Makefile.msc61" Name="Makefile.msc" />
+								</Component>
+							</Directory>
+							<Directory Id="asm586" Name="asm586">
+								<Component Id="Readme.586" Guid="5E6A6A82-A7B9-4A54-8DAE-C59F4252C153">
+									<File Id="Readme.586" Name="Readme.586" KeyPath="yes" />
+									<File Id="match.S60" Name="match.S" />
+								</Component>
+							</Directory>
+							<Directory Id="delphi" Name="delphi">
+								<Component Id="ZLibConst.pas" Guid="4FD64F9A-038F-44D0-9A7E-07A25B562AD6">
+									<File Id="ZLibConst.pas" Name="ZLIBCO~1.PAS" LongName="ZLibConst.pas" KeyPath="yes" />
+									<File Id="readme.txt52" Name="readme.txt" />
+									<File Id="ZLib.pas" Name="ZLib.pas" />
+									<File Id="zlibd32.mak57" Name="zlibd32.mak" />
+								</Component>
+							</Directory>
+							<Directory Id="asm686" Name="asm686">
+								<Component Id="Readme.686" Guid="97378CAC-1A3B-4610-A3D6-3F72A5C1407A">
+									<File Id="Readme.686" Name="Readme.686" KeyPath="yes" />
+									<File Id="match.S" Name="match.S" />
+								</Component>
+							</Directory>
+							<Directory Id="iostream" Name="iostream">
+								<Component Id="zfstream.cpp" Guid="11AFE822-489A-43FC-A0A1-028671307E25">
+									<File Id="zfstream.cpp" Name="zfstream.cpp" KeyPath="yes" />
+									<File Id="test.cpp" Name="test.cpp" />
+									<File Id="zfstream.h54" Name="zfstream.h" />
+								</Component>
+							</Directory>
+							<Directory Id="ada" Name="ada">
+								<Component Id="zlib.ads" Guid="7212E14E-CC88-4F41-8BF0-B7294D615621">
+									<File Id="zlib.ads" Name="zlib.ads" KeyPath="yes" />
+									<File Id="zlib.adb" Name="zlib.adb" />
+									<File Id="test.adb" Name="test.adb" />
+									<File Id="zlibthin.ads" Name="ZLIB-T~1.ADS" LongName="zlib-thin.ads" />
+									<File Id="zlibthin.adb" Name="ZLIB-T~1.ADB" LongName="zlib-thin.adb" />
+									<File Id="read.adb" Name="read.adb" />
+									<File Id="readme.txt47" Name="readme.txt" />
+									<File Id="mtest.adb" Name="mtest.adb" />
+									<File Id="zlib.gpr" Name="zlib.gpr" />
+									<File Id="zlibstreams.ads" Name="ZLIB-S~1.ADS" LongName="zlib-streams.ads" />
+									<File Id="zlibstreams.adb" Name="ZLIB-S~1.ADB" LongName="zlib-streams.adb" />
+								</Component>
+							</Directory>
+							<Directory Id="asm386" Name="asm386" />
+							<Directory Id="vstudio" Name="vstudio">
+								<Component Id="readme.txt" Guid="F9DFEF57-F439-4668-A9BD-FC00C6585547">
+									<File Id="readme.txt" Name="readme.txt" KeyPath="yes" />
+								</Component>
+								<Directory Id="vc7" Name="vc7">
+									<Component Id="zlibvc.vcproj" Guid="0138AE2E-2F76-41C4-BE65-385385856564">
+										<File Id="zlibvc.vcproj" Name="ZLIBVC~1.VCP" LongName="zlibvc.vcproj" KeyPath="yes" />
+										<File Id="zlibvc.sln" Name="zlibvc.sln" />
+										<File Id="zlibvc.def" Name="zlibvc.def" />
+										<File Id="zlibstat.vcproj" Name="ZLIBST~1.VCP" LongName="zlibstat.vcproj" />
+										<File Id="zlib.rc" Name="zlib.rc" />
+										<File Id="minizip.vcproj" Name="MINIZI~1.VCP" LongName="minizip.vcproj" />
+										<File Id="miniunz.vcproj" Name="MINIUN~1.VCP" LongName="miniunz.vcproj" />
+									</Component>
+								</Directory>
+							</Directory>
+							<Directory Id="pascal" Name="pascal">
+								<Component Id="readme.txt34" Guid="10BA0F9C-540D-46BF-B722-45F1DD186F74">
+									<File Id="readme.txt34" Name="readme.txt" KeyPath="yes" />
+									<File Id="zlibd32.mak" Name="zlibd32.mak" />
+									<File Id="zlibpas.pas" Name="zlibpas.pas" />
+									<File Id="example.pas" Name="example.pas" />
+								</Component>
+							</Directory>
+							<Directory Id="testzlib" Name="testzlib">
+								<Component Id="testzlib.c" Guid="02FF9C6F-59F9-4D42-B3BF-A9A833B442AD">
+									<File Id="testzlib.c" Name="testzlib.c" KeyPath="yes" />
+									<File Id="testzlib.sln" Name="testzlib.sln" />
+									<File Id="testzlib.vcproj" Name="TESTZL~1.VCP" LongName="testzlib.vcproj" />
+								</Component>
+							</Directory>
+							<Directory Id="puff" Name="puff">
+								<Component Id="puff.c" Guid="367C2DC8-1B9D-4476-8393-7195B2B9AA35">
+									<File Id="puff.c" Name="puff.c" KeyPath="yes" />
+									<File Id="zeros.raw" Name="zeros.raw" />
+									<File Id="puff.h" Name="puff.h" />
+									<File Id="Makefile44" Name="Makefile" />
+									<File Id="Readme50" Name="Readme" />
+								</Component>
+							</Directory>
+							<Directory Id="infback9" Name="infback9">
+								<Component Id="inftree9.h" Guid="4FC0C189-7184-4D97-8A4C-112D8D56DC11">
+									<File Id="inftree9.h" Name="inftree9.h" KeyPath="yes" />
+									<File Id="Readme37" Name="Readme" />
+									<File Id="infback9.c" Name="infback9.c" />
+									<File Id="inflate9.h" Name="inflate9.h" />
+									<File Id="inffix9.h" Name="inffix9.h" />
+									<File Id="inftree9.c" Name="inftree9.c" />
+									<File Id="infback9.h" Name="infback9.h" />
+								</Component>
+							</Directory>
+							<Directory Id="iostream3" Name="IOSTRE~2" LongName="iostream3">
+								<Component Id="Readme39" Guid="27478BAB-FCDF-4D99-B016-2149986A7053">
+									<File Id="Readme39" Name="Readme" KeyPath="yes" />
+									<File Id="test.cc" Name="test.cc" />
+									<File Id="zfstream.h" Name="zfstream.h" />
+									<File Id="Todo45" Name="Todo" />
+									<File Id="zfstream.cc" Name="zfstream.cc" />
+								</Component>
+							</Directory>
+							<Directory Id="inflate86" Name="INFLAT~1" LongName="inflate86">
+								<Component Id="inffas86.c" Guid="631CCEA0-E99A-4790-B660-69E7C3C28255">
+									<File Id="inffas86.c" Name="inffas86.c" KeyPath="yes" />
+									<File Id="inffast.S" Name="inffast.S" />
+								</Component>
+							</Directory>
+							<Directory Id="blast" Name="blast">
+								<Component Id="blast.c" Guid="D0307737-8816-4F27-A18D-2BEA76578234">
+									<File Id="blast.c" Name="blast.c" KeyPath="yes" />
+									<File Id="test.txt" Name="test.txt" />
+									<File Id="Readme53" Name="Readme" />
+									<File Id="blast.h" Name="blast.h" />
+									<File Id="Makefile59" Name="Makefile" />
+									<File Id="test.pk" Name="test.pk" />
+								</Component>
+							</Directory>
+							<Directory Id="masmx86" Name="masmx86">
+								<Component Id="readme.txt51" Guid="1C9680E4-C0A8-4292-A3E6-092372CEBA9C">
+									<File Id="readme.txt51" Name="readme.txt" KeyPath="yes" />
+									<File Id="mkasm.bat" Name="mkasm.bat" />
+									<File Id="gvmat32.asm" Name="gvmat32.asm" />
+									<File Id="gvmat32c.c" Name="gvmat32c.c" />
+									<File Id="inffas32.asm" Name="inffas32.asm" />
+								</Component>
+							</Directory>
+							<Directory Id="gzappend" Name="gzappend">
+								<Component Id="gzappend.c" Guid="BA2AFFBA-70C5-49A4-A5BC-A0DBB05E4CEE">
+									<File Id="gzappend.c" Name="gzappend.c" KeyPath="yes" />
+								</Component>
+							</Directory>
+							<Directory Id="masm686" Name="masm686">
+								<Component Id="match.asm" Guid="CD695220-0001-4ABE-84D2-D382AE4ABFAA">
+									<File Id="match.asm" Name="match.asm" KeyPath="yes" />
+								</Component>
+							</Directory>
+							<Directory Id="delphi2" Name="delphi2" />
+						</Directory>
+						<Directory Id="nt" Name="nt" />
+						<Directory Id="win32" Name="win32">
+							<Component Id="zlib1.rc" Guid="1EAB57E9-48EA-4E80-8F1A-300A30344139">
+								<File Id="zlib1.rc" Name="zlib1.rc" KeyPath="yes" />
+								<File Id="Makefile.bor" Name="Makefile.bor" />
+								<File Id="Makefile.gcc" Name="Makefile.gcc" />
+								<File Id="DLL_FAQ.txt" Name="DLL_FAQ.txt" />
+								<File Id="zlib.def" Name="zlib.def" />
+								<File Id="Makefile.msc" Name="Makefile.msc" />
+								<File Id="Makefile.emx" Name="Makefile.emx" />
+							</Component>
+						</Directory>
+						<Directory Id="as400" Name="as400">
+							<Component Id="zlib.inc" Guid="52AB058B-EC69-47B8-BD38-A042ABC0A0FA">
+								<File Id="zlib.inc" Name="zlib.inc" KeyPath="yes" />
+								<File Id="bndsrc" Name="bndsrc" />
+								<File Id="readme.txt55" Name="readme.txt" />
+								<File Id="compile.clp" Name="compile.clp" />
+							</Component>
+						</Directory>
+						<Directory Id="qnx" Name="qnx">
+							<Component Id="package.qpg" Guid="776603DB-1673-43C0-A028-0BE2962A8F5A">
+								<File Id="package.qpg" Name="package.qpg" KeyPath="yes" />
+							</Component>
+						</Directory>
+					</Directory>
+					<Directory Id="libpng" Name="libpng">
+						<Component Id="pngwutil.c" Guid="9EC9B786-732B-4B4A-A44B-8AE8531914AF">
+							<File Id="pngwutil.c" Name="pngwutil.c" KeyPath="yes" />
+							<File Id="pngpread.c" Name="pngpread.c" />
+							<File Id="libpng.txt" Name="libpng.txt" />
+							<File Id="libpng.3" Name="libpng.3" />
+							<File Id="example.c" Name="example.c" />
+							<File Id="Y2kinfo" Name="Y2kinfo" />
+							<File Id="pngtrans.c" Name="pngtrans.c" />
+							<File Id="pngrio.c" Name="pngrio.c" />
+							<File Id="pngread.c" Name="pngread.c" />
+							<File Id="png.h" Name="png.h" />
+							<File Id="png.5" Name="png.5" />
+							<File Id="configure" Name="CONFIG~1" LongName="configure" />
+							<File Id="Todo" Name="Todo" />
+							<File Id="pngtest.png" Name="pngtest.png" />
+							<File Id="pngconf.h" Name="pngconf.h" />
+							<File Id="make_msc.bat" Name="make_msc.bat" />
+							<File Id="pngwio.c" Name="pngwio.c" />
+							<File Id="pngrtran.c" Name="pngrtran.c" />
+							<File Id="pngnow.png" Name="pngnow.png" />
+							<File Id="pngerror.c" Name="pngerror.c" />
+							<File Id="Install" Name="Install" />
+							<File Id="turboc.ln" Name="turboc.$ln" />
+							<File Id="pnggccrd.c" Name="pnggccrd.c" />
+							<File Id="pngbar.png" Name="pngbar.png" />
+							<File Id="pngwrite.c" Name="pngwrite.c" />
+							<File Id="pngwtran.c" Name="pngwtran.c" />
+							<File Id="make_bcb.bat" Name="make_bcb.bat" />
+							<File Id="pngset.c" Name="pngset.c" />
+							<File Id="License" Name="License" />
+							<File Id="Knownbug" Name="Knownbug" />
+							<File Id="pngvcrd.c" Name="pngvcrd.c" />
+							<File Id="Readme28" Name="Readme" />
+							<File Id="png.c" Name="png.c" />
+							<File Id="pngtest.c" Name="pngtest.c" />
+							<File Id="pngrutil.c" Name="pngrutil.c" />
+							<File Id="libpngpf.3" Name="libpngpf.3" />
+							<File Id="pngmem.c" Name="pngmem.c" />
+							<File Id="Announce" Name="Announce" />
+							<File Id="pngget.c" Name="pngget.c" />
+							<File Id="pngbar.jpg" Name="pngbar.jpg" />
+							<File Id="libpng.LST" Name="libpng.LST" />
+							<File Id="Changes" Name="Changes" />
+						</Component>
+						<Directory Id="scripts" Name="scripts">
+							<Component Id="makevms.com31" Guid="F8D75176-092D-44F0-8600-D9BB3E6F468B">
+								<File Id="makevms.com31" Name="makevms.com" KeyPath="yes" />
+							</Component>
+							<Component Id="makefile.hpux" Guid="95FAF15A-D714-4AD3-B34F-E341796AB1BA">
+								<File Id="makefile.hpux" Name="MAKEFI~1.HPU" LongName="makefile.hpux" KeyPath="yes" />
+								<File Id="libpng.pc.in" Name="LIBPNG~3.IN" LongName="libpng.pc.in" />
+								<File Id="pngw32.rc" Name="pngw32.rc" />
+								<File Id="pngos2.def" Name="pngos2.def" />
+								<File Id="makefile.vcawin32" Name="MAKEFI~1.VCA" LongName="makefile.vcawin32" />
+								<File Id="makefile.atari" Name="MAKEFI~1.ATA" LongName="makefile.atari" />
+								<File Id="makefile.solaris" Name="MAKEFI~1.SOL" LongName="makefile.solaris" />
+								<File Id="makefile.amiga" Name="MAKEFI~1.AMI" LongName="makefile.amiga" />
+								<File Id="pngw32.def" Name="pngw32.def" />
+								<File Id="makefile.acorn" Name="MAKEFI~1.ACO" LongName="makefile.acorn" />
+								<File Id="makefile.vcwin32" Name="MAKEFI~1.VCW" LongName="makefile.vcwin32" />
+								<File Id="makefile.sco" Name="makefile.sco" />
+								<File Id="makefile.msc" Name="makefile.msc" />
+								<File Id="makefile.openbsd" Name="MAKEFI~1.OPE" LongName="makefile.openbsd" />
+								<File Id="makefile.mips" Name="MAKEFI~1.MIP" LongName="makefile.mips" />
+								<File Id="makefile.knr" Name="makefile.knr" />
+								<File Id="makefile.gcmmx" Name="MAKEFI~1.GCM" LongName="makefile.gcmmx" />
+								<File Id="makefile.so9" Name="makefile.so9" />
+								<File Id="makefile.ibmc" Name="MAKEFI~1.IBM" LongName="makefile.ibmc" />
+								<File Id="makefile.freebsd" Name="MAKEFI~1.FRE" LongName="makefile.freebsd" />
+								<File Id="makefile.elf" Name="makefile.elf" />
+								<File Id="makefile.dj2" Name="makefile.dj2" />
+								<File Id="makefile.bc32" Name="MAKEFI~1.BC3" LongName="makefile.bc32" />
+								<File Id="makefile.aix" Name="makefile.aix" />
+								<File Id="makefile.ne12bsd" Name="MAKEFI~1.NE1" LongName="makefile.ne12bsd" />
+								<File Id="makefile.darwin" Name="MAKEFI~1.DAR" LongName="makefile.darwin" />
+								<File Id="makefile.64sunu" Name="MAKEFI~1.64S" LongName="makefile.64sunu" />
+								<File Id="makefile.os2" Name="makefile.os2" />
+								<File Id="makefile.netbsd" Name="MAKEFI~1.NET" LongName="makefile.netbsd" />
+								<File Id="makefile.bcb" Name="makefile.bcb" />
+								<File Id="makefile.32sunu" Name="MAKEFI~1.32S" LongName="makefile.32sunu" />
+								<File Id="makefile.watcom" Name="MAKEFI~1.WAT" LongName="makefile.watcom" />
+								<File Id="makefile.dec" Name="makefile.dec" />
+								<File Id="makefile.cygwin" Name="MAKEFI~1.CYG" LongName="makefile.cygwin" />
+								<File Id="makefile.sunos" Name="MAKEFI~1.SUN" LongName="makefile.sunos" />
+								<File Id="makefile.std25" Name="makefile.std" />
+								<File Id="makefile.hpgcc" Name="MAKEFI~1.HPG" LongName="makefile.hpgcc" />
+								<File Id="libpngconfighead.in" Name="LIBPNG~2.IN" LongName="libpng-config-head.in" />
+								<File Id="makefile.sgi" Name="makefile.sgi" />
+								<File Id="smakefile.ppc" Name="SMAKEF~1.PPC" LongName="smakefile.ppc" />
+								<File Id="makefile.hp64" Name="MAKEFI~1.HP6" LongName="makefile.hp64" />
+								<File Id="makefile.bor" Name="makefile.bor" />
+								<File Id="libpngconfigbody.in" Name="LIBPNG~1.IN" LongName="libpng-config-body.in" />
+								<File Id="descrip.mms" Name="descrip.mms" />
+								<File Id="SCOPTIONS.ppc" Name="SCOPTI~1.PPC" LongName="SCOPTIONS.ppc" />
+								<File Id="makefile.tc327" Name="makefile.tc3" />
+								<File Id="makefile.sggcc" Name="MAKEFI~1.SGG" LongName="makefile.sggcc" />
+								<File Id="makefile.beos" Name="MAKEFI~1.BEO" LongName="makefile.beos" />
+								<File Id="makefile.linux" Name="MAKEFI~1.LIN" LongName="makefile.linux" />
+								<File Id="makefile.gcc" Name="makefile.gcc" />
+								<File Id="libpng.icc" Name="libpng.icc" />
+								<File Id="makefile.intel" Name="MAKEFI~1.INT" LongName="makefile.intel" />
+							</Component>
+						</Directory>
+						<Directory Id="projects" Name="projects">
+							<Component Id="netware.txt" Guid="276B8DCA-EAA2-49C8-945E-19CE5D461786">
+								<File Id="netware.txt" Name="netware.txt" KeyPath="yes" />
+								<File Id="wince.txt" Name="wince.txt" />
+							</Component>
+							<Directory Id="visualc6" Name="visualc6">
+								<Component Id="pngtest.dsp" Guid="15D05069-2139-4A1D-8A6F-148AE4B39EDB">
+									<File Id="pngtest.dsp" Name="pngtest.dsp" KeyPath="yes" />
+									<File Id="README.txt24" Name="README.txt" />
+									<File Id="libpng.dsp" Name="libpng.dsp" />
+									<File Id="libpng.dsw" Name="libpng.dsw" />
+								</Component>
+							</Directory>
+							<Directory Id="cbuilder5" Name="CBUILD~1" LongName="cbuilder5">
+								<Component Id="libpng.cpp" Guid="90A56721-A4FF-4748-B836-8F488187E44B">
+									<File Id="libpng.cpp" Name="libpng.cpp" KeyPath="yes" />
+									<File Id="libpngstat.bpf" Name="LIBPNG~1.BPF" LongName="libpngstat.bpf" />
+									<File Id="libpng.bpr" Name="libpng.bpr" />
+									<File Id="libpng.readme.txt" Name="LIBPNG~1.TXT" LongName="libpng.readme.txt" />
+									<File Id="libpng.bpf" Name="libpng.bpf" />
+									<File Id="libpng.bpg" Name="libpng.bpg" />
+									<File Id="zlib.readme.txt" Name="ZLIBRE~1.TXT" LongName="zlib.readme.txt" />
+									<File Id="libpngstat.bpr" Name="LIBPNG~1.BPR" LongName="libpngstat.bpr" />
+								</Component>
+							</Directory>
+							<Directory Id="visualc71" Name="VISUAL~1" LongName="visualc71">
+								<Component Id="README.txt" Guid="A6B76B42-7917-476C-9CD4-6DBFD0F21EA2">
+									<File Id="README.txt" Name="README.txt" KeyPath="yes" />
+									<File Id="pngtest.vcproj" Name="PNGTES~1.VCP" LongName="pngtest.vcproj" />
+									<File Id="libpng.sln" Name="libpng.sln" />
+									<File Id="libpng.vcproj" Name="LIBPNG~1.VCP" LongName="libpng.vcproj" />
+									<File Id="README_zlib.txt" Name="README~1.TXT" LongName="README_zlib.txt" />
+									<File Id="zlib.vcproj" Name="ZLIB~1.VCP" LongName="zlib.vcproj" />
+									<File Id="PRJ0041.mak" Name="PRJ0041.mak" />
+								</Component>
+							</Directory>
+							<Directory Id="beos" Name="beos">
+								<Component Id="x86static.proj" Guid="5275839D-18B4-4DB7-8F5C-91F72FADE2E1">
+									<File Id="x86static.proj" Name="X86-ST~1.PRO" LongName="x86-static.proj" KeyPath="yes" />
+									<File Id="x86shared.txt" Name="X86-SH~1.TXT" LongName="x86-shared.txt" />
+									<File Id="x86shared.proj" Name="X86-SH~1.PRO" LongName="x86-shared.proj" />
+									<File Id="x86static.txt" Name="X86-ST~1.TXT" LongName="x86-static.txt" />
+								</Component>
+							</Directory>
+						</Directory>
+						<Directory Id="wince" Name="wince" />
+						<Directory Id="msvc" Name="msvc" />
+						<Directory Id="contrib" Name="contrib">
+							<Directory Id="gregbook" Name="gregbook">
+								<Component Id="makevms.com" Guid="0D35F8EF-AC46-467A-A8A8-0EC67B296EC3">
+									<File Id="makevms.com" Name="makevms.com" KeyPath="yes" />
+								</Component>
+								<Component Id="Makefile.unx" Guid="5BC64A1E-3974-4A88-AD89-90092773C0C8">
+									<File Id="Makefile.unx" Name="Makefile.unx" KeyPath="yes" />
+									<File Id="Readme" Name="Readme" />
+									<File Id="writepng.c" Name="writepng.c" />
+									<File Id="readpng2.c" Name="readpng2.c" />
+									<File Id="readpng.c" Name="readpng.c" />
+									<File Id="toucan.png" Name="toucan.png" />
+									<File Id="writepng.h" Name="writepng.h" />
+									<File Id="Makefile.sgi" Name="Makefile.sgi" />
+									<File Id="wpng.c" Name="wpng.c" />
+									<File Id="Makefile.w32" Name="Makefile.w32" />
+									<File Id="rpng2win.c" Name="RPNG2-~1.C" LongName="rpng2-win.c" />
+									<File Id="readpng2.h" Name="readpng2.h" />
+									<File Id="readpng.h" Name="readpng.h" />
+									<File Id="License30" Name="License" />
+									<File Id="rpng2x.c" Name="rpng2-x.c" />
+									<File Id="rpngwin.c" Name="rpng-win.c" />
+									<File Id="rpngx.c" Name="rpng-x.c" />
+								</Component>
+							</Directory>
+							<Directory Id="visupng" Name="visupng">
+								<Component Id="cexcept.h" Guid="7C623381-3EAA-45A7-9D7F-4D27BDE5990D">
+									<File Id="cexcept.h" Name="cexcept.h" KeyPath="yes" />
+									<File Id="VisualPng.dsp" Name="VISUAL~1.DSP" LongName="VisualPng.dsp" />
+									<File Id="VisualPng.ico" Name="VISUAL~1.ICO" LongName="VisualPng.ico" />
+									<File Id="README.txt23" Name="README.txt" />
+									<File Id="PngFile.c" Name="PngFile.c" />
+									<File Id="VisualPng.c" Name="VISUAL~1.C" LongName="VisualPng.c" />
+									<File Id="VisualPng.dsw" Name="VISUAL~1.DSW" LongName="VisualPng.dsw" />
+									<File Id="VisualPng.png" Name="VISUAL~1.PNG" LongName="VisualPng.png" />
+									<File Id="resource.h" Name="resource.h" />
+									<File Id="PngFile.h" Name="PngFile.h" />
+									<File Id="VisualPng.rc" Name="VISUAL~1.RC" LongName="VisualPng.rc" />
+								</Component>
+							</Directory>
+							<Directory Id="pngsuite" Name="pngsuite">
+								<Component Id="basn3p08.png" Guid="9A8E3E7D-2AAD-4D6E-8347-C002531BD417">
+									<File Id="basn3p08.png" Name="basn3p08.png" KeyPath="yes" />
+									<File Id="basn2c08.png" Name="basn2c08.png" />
+									<File Id="basn0g01.png" Name="basn0g01.png" />
+									<File Id="basn0g02.png" Name="basn0g02.png" />
+									<File Id="basn6a16.png" Name="basn6a16.png" />
+									<File Id="basn0g04.png" Name="basn0g04.png" />
+									<File Id="basn0g16.png" Name="basn0g16.png" />
+									<File Id="basn6a08.png" Name="basn6a08.png" />
+									<File Id="basn4a16.png" Name="basn4a16.png" />
+									<File Id="basn3p01.png" Name="basn3p01.png" />
+									<File Id="basn0g08.png" Name="basn0g08.png" />
+									<File Id="basn3p02.png" Name="basn3p02.png" />
+									<File Id="basn4a08.png" Name="basn4a08.png" />
+									<File Id="basn3p04.png" Name="basn3p04.png" />
+									<File Id="basn2c16.png" Name="basn2c16.png" />
+								</Component>
+							</Directory>
+							<Directory Id="pngminus" Name="pngminus">
+								<Component Id="makevms.com26" Guid="24CBCB42-FC03-470C-8110-DA9773E2E770">
+									<File Id="makevms.com26" Name="makevms.com" KeyPath="yes" />
+								</Component>
+								<Component Id="png2pnm.c" Guid="0B19B581-EA4D-4809-80EC-610483B8597C">
+									<File Id="png2pnm.c" Name="png2pnm.c" KeyPath="yes" />
+									<File Id="pnm2png.bat" Name="pnm2png.bat" />
+									<File Id="pngminus.sh" Name="pngminus.sh" />
+									<File Id="png2pnm.sh" Name="png2pnm.sh" />
+									<File Id="makefile.std" Name="makefile.std" />
+									<File Id="pnm2png.sh" Name="pnm2png.sh" />
+									<File Id="makefile.tc3" Name="makefile.tc3" />
+									<File Id="png2pnm.bat" Name="png2pnm.bat" />
+									<File Id="Readme29" Name="Readme" />
+									<File Id="pngminus.bat" Name="pngminus.bat" />
+									<File Id="pnm2png.c" Name="pnm2png.c" />
+								</Component>
+							</Directory>
+							<Directory Id="msvctest" Name="msvctest" />
+						</Directory>
+					</Directory>
+					<Directory Id="expat" Name="expat">
+						<Directory Id="xmltok" Name="xmltok" />
+						<Directory Id="xmlwf" Name="xmlwf" />
+						<Directory Id="sample" Name="sample" />
+						<Directory Id="xmlparse" Name="xmlparse" />
+						<Directory Id="gennmtab" Name="gennmtab" />
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Module>
 </Wix>

@@ -25,8 +25,6 @@ feature {NONE} -- Initialization
 			-- Create `Current', add `tool1' to left side and add
 			-- tool2 to a GB_TOOL_HOLDER with title `title2' and add
 			-- this to right side.
-		local
-			tool_holder: GB_TOOL_HOLDER
 		do
 			default_create
 			extend (tool1)
@@ -34,16 +32,21 @@ feature {NONE} -- Initialization
 			extend (tool_holder)
 		end
 		
+feature -- Access
+
+	tool_holder: GB_TOOL_HOLDER
+		-- Tool holder containing right hand tool.
+		
 feature -- Basic operation
 
-	minimize_tool (tool_holder: GB_TOOL_HOLDER) is
+	minimize_tool (a_tool_holder: GB_TOOL_HOLDER) is
 			-- Minimize `tool_holder'.
 		do
-			if tool_holder.maximized then
-				tool_holder.disable_maximized
-				tool_holder.reset_maximize_button
+			if a_tool_holder.maximized then
+				a_tool_holder.disable_maximized
+				a_tool_holder.reset_maximize_button
 			end
-			if tool_holder.minimized then
+			if a_tool_holder.minimized then
 				resize_actions.wipe_out
 				set_split_position (restore_position.min (maximum_split_position))
 			else
@@ -54,15 +57,15 @@ feature -- Basic operation
 		end
 		
 		
-	maximize_tool (tool_holder: GB_TOOL_HOLDER) is
+	maximize_tool (a_tool_holder: GB_TOOL_HOLDER) is
 			-- Maximize `tool_holder'.
 		do
-			if tool_holder.minimized then
+			if a_tool_holder.minimized then
 				resize_actions.wipe_out
-				tool_holder.disable_minimized
-				tool_holder.reset_minimize_button
+				a_tool_holder.disable_minimized
+				a_tool_holder.reset_minimize_button
 			end
-			if tool_holder.maximized then
+			if a_tool_holder.maximized then
 				set_split_position (restore_position.min (maximum_split_position))
 			else
 				restore_position := split_position

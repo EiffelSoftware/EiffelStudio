@@ -51,13 +51,10 @@ feature -- Access
 			-- `selected_items' for a single selection list
 		local
 			litem: EV_LIST_ITEM
-			list: ARRAYED_LIST [EV_LIST_ITEM]
-			c: ARRAYED_LIST_CURSOR
 			original_position: INTEGER
 		do
 			original_position := interface.index
 			create Result.make
-			Result.compare_objects
 			if multiple_selection_enabled then
 				from
 					interface.start
@@ -65,10 +62,7 @@ feature -- Access
 					interface.off
 				loop
 					if interface.item.is_selected then
-						litem ?= (interface.item)
-						if litem /= Void then 
-							Result.extend (litem)
-						end
+						Result.extend (interface.item)
 					end
 					interface.forth
 				end
@@ -160,6 +154,9 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/02/29 19:04:16  rogers
+--| Removed some redundent code in selected_items.
+--|
 --| Revision 1.38  2000/02/29 18:26:05  rogers
 --| Removed the deferred status of selected_items and implemented it platform independently.
 --|

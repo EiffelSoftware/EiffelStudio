@@ -55,7 +55,8 @@ feature -- Status setting
 			-- Change the state of selection of the item.
 		require
 			exists: not destroyed
-		deferred
+		do
+			set_selected (not is_selected)
 		end
 
 end -- class EV_COMBO_BOX_ITEM_I

@@ -75,7 +75,7 @@ mkdir setups\Free
 remtrace Preparing Free edition
 copy %INIT_DIR\install\Eiffel55.wsi %INIT_DIR\install\Eiffel55_install.wsi
 WfWI %INIT_DIR\install\Eiffel55_install.wsi /c /p FREEVERSION="TRUE" /p EDITIONNAME="Free Edition"
-move %INIT_DIR\install\Eiffel55.msi setups\Free\
+move %INIT_DIR\install\Eiffel55.msi %INSTALL_DIR\setups\Free\
 del %INIT_DIR\install\Eiffel55_university.msi
 del %INIT_DIR\install\Eiffel55_university.exe
 del %INIT_DIR\install\Eiffel55_university.ini
@@ -86,9 +86,9 @@ del %INIT_DIR\install\Eiffel55_enterprise.ini
 remtrace Preparing University edition
 copy %INIT_DIR\install\Eiffel55.wsi %INIT_DIR\install\Eiffel55_install.wsi
 WfWI %INIT_DIR\install\Eiffel55_install.wsi /c /p FREEVERSION="TRUE" /p EDITIONNAME="University Edition"
-move %INIT_DIR\install\Eiffel55_university.exe setups\University\install.exe
-move %INIT_DIR\install\Eiffel55_university.ini setups\University\install.ini
-move %INIT_DIR\install\Eiffel55_university.msi setups\University\
+move %INIT_DIR\install\Eiffel55_university.exe %INSTALL_DIR\setups\University\install.exe
+move %INIT_DIR\install\Eiffel55_university.ini %INSTALL_DIR\setups\University\install.ini
+move %INIT_DIR\install\Eiffel55_university.msi %INSTALL_DIR\setups\University\
 del %INIT_DIR\install\Eiffel55.msi
 del %INIT_DIR\install\Eiffel55_enterprise.msi
 del %INIT_DIR\install\Eiffel55_enterprise.exe
@@ -97,12 +97,12 @@ del %INIT_DIR\install\Eiffel55_enterprise.ini
 remtrace Preparing Enterprise edition
 copy %INIT_DIR\install\Eiffel55.wsi %INIT_DIR\install\Eiffel55_install.wsi
 WfWI %INIT_DIR\install\Eiffel55_install.wsi /c /p FREEVERSION="FALSE" /p EDITIONNAME="Enterprise Edition"
-copy setup.exe setups\Enterprise
+copy setup.exe %INSTALL_DIR\setups\Enterprise
 copy %INSTALL_DIR\studio\bitmaps\png\logo.png %INSTALL_DIR\setups\Enterprise\setup\install_logo.png
 copy %INSTALL_DIR\studio\bitmaps\png\activation.png %INSTALL_DIR\setups\Enterprise\setup\install_left.png
-move %INIT_DIR\install\Eiffel55_enterprise.exe setups\Enterprise\setup\install.exe
-move %INIT_DIR\install\Eiffel55_enterprise.ini setups\Enterprise\setup\install.ini
-move %INIT_DIR\install\Eiffel55_enterprise.msi setups\Enterprise\setup\
+move %INIT_DIR\install\Eiffel55_enterprise.exe %INSTALL_DIR\setups\Enterprise\setup\install.exe
+move %INIT_DIR\install\Eiffel55_enterprise.ini %INSTALL_DIR\setups\Enterprise\setup\install.ini
+move %INIT_DIR\install\Eiffel55_enterprise.msi %INSTALL_DIR\setups\Enterprise\setup\
 del %INIT_DIR\install\Eiffel55.msi
 del %INIT_DIR\install\Eiffel55_university.msi
 del %INIT_DIR\install\Eiffel55_university.exe

@@ -7,7 +7,7 @@ class
 	CLI_DIRECTORY
 
 inherit
-	WEL_STRUCTURE
+	MEMORY_STRUCTURE
 		rename
 			structure_size as count
 		end

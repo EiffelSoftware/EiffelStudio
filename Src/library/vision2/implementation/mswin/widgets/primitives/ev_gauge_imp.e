@@ -74,18 +74,18 @@ feature -- Element change
 			wel_set_range (minimum, a_maximum)
 		end
 
-	set_range (a_minimum, a_maximum: INTEGER) is
-			-- Set `maximum' to `a_maximum' and `minimum' to `a_minimum'.
+	set_range (a_range: INTEGER_INTERVAL) is
+			-- Set `range' to `a_range'.
 		do
-			wel_set_range (a_minimum, a_maximum)
+			wel_set_range (a_range.lower, a_range.upper)
 		end
 
-	reset_with_range (a_minimum, a_maximum: INTEGER) is
-			-- Re-initialize with `a_maximum' and `a_minimum'.
-			-- Set `value' to `a_minimum'.
+	reset_with_range (a_range: INTEGER_INTERVAL) is
+			-- Set `range' to `a_range'.
+			-- Set `value' to `a_range.lower'.
 		do
-			wel_set_range (a_minimum, a_maximum)
-			wel_set_value (a_minimum)
+			wel_set_range (a_range.lower, a_range.upper)
+			wel_set_value (a_range.lower)
 		end
 
 feature -- Deferred
@@ -144,6 +144,10 @@ end -- class EV_GAUGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/14 22:30:34  brendel
+--| Changed to comply with signature change of `set_range' in EV_GAUGE.
+--| Now takes INTEGER_INTERVAL instead of 2 integers.
+--|
 --| Revision 1.3  2000/02/14 11:40:44  oconnor
 --| merged changes from prerelease_20000214
 --|

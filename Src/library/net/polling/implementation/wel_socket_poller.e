@@ -47,6 +47,14 @@ feature -- Initialisation
 			poller_active: is_poller_active
 		end
 		
+feature -- Execute
+
+	execute (arg: ANY) is
+			-- Poll the socket.
+		do
+			poll
+		end
+
 feature -- Activation
 
 	set_active (a_delay: INTEGER) is

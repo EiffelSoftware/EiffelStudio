@@ -588,28 +588,28 @@ void c_free_java_args (jvalue *args) {
 	free (args);
 }
 
-void c_put_float_arg (JNIEnv *env,jvalue args[],double value,int pos) {
-	args[pos].f = value;
+void c_put_float_arg (JNIEnv *env,jvalue args[],EIF_REAL value,int pos) {
+	args[pos].f = (jfloat) value;
 }
 
-void c_put_boolean_arg (JNIEnv *env,jvalue args[],double value,int pos) {
-	args[pos].b = value;
+void c_put_boolean_arg (JNIEnv *env,jvalue args[],EIF_BOOLEAN value,int pos) {
+	args[pos].z = (jboolean) value;
 }
 
-void c_put_double_arg (JNIEnv *env,jvalue args[],double value,int pos) {
-	args[pos].d = value;
+void c_put_double_arg (JNIEnv *env,jvalue args[],EIF_DOUBLE value,int pos) {
+	args[pos].d = (jdouble) value;
 }
 
-void c_put_int_arg (JNIEnv *env, jvalue args[], int value, int pos) {
-	args[pos].i = value;
+void c_put_int_arg (JNIEnv *env, jvalue args[], EIF_INTEGER value, int pos) {
+	args[pos].i = (jint) value;
 }
 
-void c_put_short_arg (JNIEnv *env, jvalue args[], int value, int pos) {
-	args[pos].s = (short)value;
+void c_put_short_arg (JNIEnv *env, jvalue args[], EIF_INTEGER value, int pos) {
+	args[pos].s = (jshort) value;
 }
 
-void c_put_char_arg (JNIEnv *env, jvalue args[], char value, int pos) {
-	args[pos].c = value;
+void c_put_char_arg (JNIEnv *env, jvalue args[], EIF_CHARACTER value, int pos) {
+	args[pos].c = (jchar) value;
 }
 
 void c_put_object_arg (JNIEnv *env, jvalue args[], jobject value, int pos) {

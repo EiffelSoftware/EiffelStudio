@@ -11,12 +11,33 @@ deferred class
 inherit
 	EV_EVENT_DATA_I	
 		redefine
-			interface
+			print_contents
+		end	
+
+feature -- Access
+
+	clip_region: EV_RECTANGLE
+			-- Exposed region
+
+	exposes_to_come: INTEGER
+			-- Number of expose events to come
+
+feature -- Element change	
+	
+	set_clip_region (clip: EV_RECTANGLE) is
+		do
+			clip_region := clip
+		end 
+
+feature -- Debug
+	
+	print_contents is
+		do
+			io.put_string ("EV_EXPOSE_EVENT_DATA: ")
+			print (widget)
+			clip_region.print_contents
+			io.put_string ("%N")
 		end
-
-feature {NONE} -- Implementation
-
-	interface: EV_EXPOSE_EVENT_DATA	
 
 end -- class EV_EXPOSE_EVENT_DATA_I
 

@@ -426,14 +426,11 @@ interface IEiffelCompletionInfo: IDispatch
 	[id (DISPID_EiffelComCompiler_TargetFeature), helpstring ("Feature information")]
 	HRESULT TargetFeature ([in] BSTR bstrTarget, [in] BSTR bstrFeatureName, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out] BSTR* pbstrFeatureName, [out] VARIANT* pvarDescriptions, [out] VARIANT* pvarReturnTypes, [out] VARIANT* pvarParams);
 
-	[id (DISPID_EiffelComCompiler_ParseSourceForExpr), helpstring ("Parses bstrSrcText and extracts an Eiffel expression at row/col.")]
-	HRESULT ParseSourceForExpr ([in] BSTR bstrSrcText, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out] BSTR* bstrExpr, [out] BSTR* pbstrFeatureName, [out] VARIANT_BOOL* pvbIsClassExpr);
+	[id (DISPID_EiffelComCompiler_FindClassDefinition), helpstring ("Finds target class definition.")]
+	HRESULT FindClassDefinition ([in] BSTR bstrTarget, [out, retval] IEiffelDefinitionResult** ppDefResult);
 
-	[id (DISPID_EiffelComCompiler_FindDefinition), helpstring ("Find targets definition and return filename and location")]
-	HRESULT FindDefinition ([in] BSTR bstrClassText, [in] BSTR bstrTargetFileName, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out, retval] IEiffelDefinitionResult** ppDefResult);
-
-	[id (DISPID_EiffelComCompiler_FindInheritedDefinition), helpstring ("Find targets definition and return filename and location")]
-	HRESULT FindInheritedDefinition ([in] BSTR bstrClassText, [in] BSTR bstrClassName, [in] ULONG ulTargetRow, [in] ULONG ulTargetCol, [out, retval] IEiffelDefinitionResult** ppDefResult);
+	[id (DISPID_EiffelComCompiler_FindFeatureDefinition), helpstring ("Finds target feature definition.")]
+	HRESULT FindFeatureDefinition ([in] BSTR bstrTarget, [in] BSTR bstrClass, [in] BSTR bstrFeature, [out, retval] IEiffelDefinitionFeatureResult** ppDefResult);
 
 	[id (DISPID_EiffelComCompiler_FlushCompletionFeatures), helpstring ("Flush temporary completion features for a specific file")]
 	HRESULT FlushCompletionFeatures ([in] BSTR bstrFileName);
@@ -1684,8 +1681,8 @@ library EiffelComCompiler
 };
 
 //|--------------------------------------------------------------------
-//| Eiffel ENViSioN!: A Visual Studio .NET plugin from Eiffel Software.
-//| Copyright (C) 2001-2003 Eiffel Software
+//| EiffelEnvision: A Visual Studio .NET plugin from Eiffel Software.
+//| Copyright (C) 2001-2005 Eiffel Software
 //| Eiffel Software Confidential
 //| All rights reserved. Duplication and distribution prohibited.
 //|

@@ -31,7 +31,6 @@ feature -- Initialization is
 			
 				-- Set up the build interface if not already done.
 			if main_window.is_empty then
-				main_window.build_interface
 				xml_handler.load_components	
 			end
 		end

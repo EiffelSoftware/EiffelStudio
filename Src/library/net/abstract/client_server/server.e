@@ -10,23 +10,21 @@ indexing
 deferred class SERVER
 
 inherit
-	SOCKET_R
-	SOCKET_STORABLE
+
+	SOCKET_RESOURCES
+
+	STORABLE
 
 feature -- Access
 
 	in : SOCKET
-		-- Receive socket.
+			-- Receive socket.
 
 	outflow : like in
-		-- Send socket
+			-- Send socket
 
-	received: SOCKET_STORABLE
-		-- Last message from socket
-
-	make (a : SOCKET_ADDRESS; queueing : INTEGER) is
-		deferred
-		end
+	received: STORABLE
+			-- Last message from socket
 
 	execute is
 		do
@@ -34,11 +32,31 @@ feature -- Access
 			until
 				false
 			loop
-				receive;
-				process_message;
-				respond;
-				clean_up;
+				receive
+				process_message
+				respond
+				close
 			end
+		end
+
+	queued: INTEGER
+
+	resend (msg: STORABLE) is
+		do
+			msg.general_store (outflow)
+		end
+
+	set_queued (n:INTEGER) is
+		require
+			valid_queue_number: n > 0 and n < 6
+		do
+			queued := n
+		ensure 
+			assigned_queued: queued = n
+		end
+
+	cleanup is
+		deferred
 		end
 
 	close is
@@ -51,20 +69,16 @@ feature -- Access
 
 	respond is
 		do
-		end;
+		end
 
 	receive is
 		deferred
-		end;
-
-	clean_up is
-		deferred
-		end;
+		end
 
 end -- class SERVER
 
 --|----------------------------------------------------------------
---| EiffelBase: library of reusable components for ISE Eiffel 3.
+--| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.

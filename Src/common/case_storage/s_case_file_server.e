@@ -85,7 +85,22 @@ end
 		do
 			path := clone (p);
 			!! saved_classes.make (2)
-		end
+		end;
+
+	remove_tmp_files is
+			-- Remove temporary files (in case of a crash)
+		do
+			if saved_classes /= Void then
+				from
+					saved_classes.start	
+				until
+					saved_classes.after	
+				loop
+					saved_classes.item_for_iteration.remove_tmp_file (path);
+					saved_classes.forth	
+				end
+			end;
+		end;
 
 feature -- Class information
 

@@ -2,7 +2,6 @@ class S_CLASS_DATA
 
 inherit
 
-	STORABLE;
 	S_LINKABLE_DATA
 		rename
 			make as old_make
@@ -216,11 +215,31 @@ feature -- Storing
 			path.append_integer (view_id);
             path.append (Tmp_file_name_ext) 
 			!! internal_file.make_open_write (path);
-			independent_store (internal_file);
+			disk_content.independent_store (internal_file);
 			internal_file.close;
 			disk_content := Void;
 		ensure
 			disk_content_is_void: disk_content = Void
+		end;
+
+	remove_tmp_file (storage_path: STRING) is
+			-- Remove temporary file.
+		require
+			valid_storage_path: storage_path /= Void
+		local
+			internal_file: RAW_FILE;
+			path: STRING
+		do
+			path := clone (storage_path);
+			path.extend (Operating_environment.directory_separator);
+			path.append_integer (directory_number (view_id));
+			path.extend (Operating_environment.directory_separator);
+			path.append_integer (view_id);
+            path.append (Tmp_file_name_ext) ;
+			!! internal_file.make (path);
+			if internal_file.exists then
+				internal_file.delete
+			end
 		end;
 
 	retrieve_from_disk (p: STRING) is
@@ -230,7 +249,8 @@ feature -- Storing
 			valid_view_id: view_id > 0
 		local
 			internal_file: RAW_FILE;
-			path: STRING
+			path: STRING;
+			storable: STORABLE
 		do
 			path := clone (p);
 			path.append_integer (directory_number (view_id));
@@ -239,7 +259,8 @@ feature -- Storing
 			!! internal_file.make (p);
 			if internal_file.exists and then internal_file.is_readable then
 				internal_file.open_read;
-				disk_content ?= retrieved (internal_file);
+				!! storable;	
+				disk_content ?= storable.retrieved (internal_file);
 				check
 					valid_disk_content: disk_content /= Void
 				end

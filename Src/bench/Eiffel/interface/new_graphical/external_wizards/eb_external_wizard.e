@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			-- Remove any blank character and quote at beginning and
 			-- and of the string.
 		do
-			Result := clone (a_string)
+			Result := a_string.twin
 
 			Result.left_adjust
 			Result.right_adjust

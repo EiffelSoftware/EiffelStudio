@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 		require else
 			class_non_void: associated_feature /= Void
 		do
-			create Result.make_from_string (clone (associated_feature.name))
+			create Result.make_from_string (associated_feature.name)
 			Result.add_extension (post_fix)
 		end
 
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 	temp_header: STRING is
 			-- Temporary header displayed during the format processing.
 		do
-			Result := clone (Interface_names.l_Working_formatter)
+			Result := Interface_names.l_Working_formatter.twin
 			Result.append (command_name)
 			Result.append (Interface_names.l_Of_feature)
 			Result.append (associated_feature.name)
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			-- Header displayed when current formatter is selected.
 		do
 			if associated_feature /= Void then
-				Result := clone (capital_command_name)
+				Result := capital_command_name.twin
 				Result.append (Interface_names.l_Of_feature)
 				Result.append (associated_feature.name)
 				Result.append (Interface_names.l_Of_class)

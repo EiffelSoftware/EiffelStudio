@@ -48,11 +48,10 @@ feature {NONE} -- Initialization
 					elseif (entry @ 1).is_equal ("description") then
 						set_description (wrap_word (entry @ 2, 70))
 					elseif (entry @ 1).is_equal ("location") then
-						location := clone(New_project_wizards_path)
+						location := New_project_wizards_path.twin
 						location.extend (entry @ 2)
 					elseif (entry @ 1).is_equal ("platform") then
-						target_platform := clone (entry @ 2)
-						target_platform.to_lower
+						target_platform := entry.item (2).as_lower
 					end
 				end
 			end
@@ -103,7 +102,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (0)
 			from
-				original := clone (a_string)
+				original := a_string.twin
 			until
 				original.count < a_margin
 			loop

@@ -39,7 +39,7 @@ feature -- Initialization
 			-- Create a formatter associated with `a_manager'.
 		do
 			manager := a_manager
-			capital_command_name := clone (command_name)
+			capital_command_name := command_name.twin
 			capital_command_name.left_adjust
 				-- Set the first character to upper case.
 			capital_command_name.put ((capital_command_name @ 1) - 32, 1)
@@ -117,7 +117,7 @@ feature -- Interface
 		local
 			mname: STRING
 		do
-			mname := clone (menu_name)
+			mname := menu_name.twin
 			if accelerator /= Void then
 				mname.append (Tabulation)
 				mname.append (accelerator.out)
@@ -133,7 +133,7 @@ feature -- Interface
 		do
 			create Result
 			Result.set_pixmap (symbol @ 1)
-			tt := clone (capital_command_name)
+			tt := capital_command_name.twin
 			if accelerator /= Void then
 				tt.append (Opening_parenthesis)
 				tt.append (accelerator.out)

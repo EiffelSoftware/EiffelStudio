@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 		require else
 			class_non_void: associated_class /= Void
 		do
-			create Result.make_from_string (clone (associated_class.name))
+			create Result.make_from_string (associated_class.name)
 			Result.add_extension (post_fix)
 		end
 
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 	temp_header: STRING is
 			-- Temporary header displayed during the format processing.
 		do
-			Result := clone (Interface_names.l_Working_formatter)
+			Result := Interface_names.l_Working_formatter.twin
 			Result.append (command_name)
 			Result.append (Interface_names.l_Of_class)
 			if associated_class /= Void then
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			-- Header displayed when current formatter is selected.
 		do
 			if associated_class /= Void then
-				Result := clone (capital_command_name)
+				Result := capital_command_name.twin
 				Result.append (Interface_names.l_Of_class)
 				Result.append (associated_class.name_in_upper)
 			else

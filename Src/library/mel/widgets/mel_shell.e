@@ -381,21 +381,21 @@ feature {NONE} -- External features
 
 	XtGrabNone: INTEGER is
 		external
-			"C : EIF_INTEGER | <X11/Intrinsic.h>"
+			"C [macro <X11/Intrinsic.h>] : EIF_INTEGER"
 		alias
 			"XtGrabNone"
 		end;
 
 	XtGrabNonexclusive: INTEGER is
 		external
-			"C : EIF_INTEGER | <X11/Intrinsic.h>"
+			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
 		alias
 			"XtGrabNonexclusive"
 		end;
 
 	XtGrabExclusive: INTEGER is
 		external
-			"C : EIF_INTEGER | <X11/Intrinsic.h>"
+			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
 		alias
 			"XtGrabExclusive"
 		end;

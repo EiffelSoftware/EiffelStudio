@@ -34,5 +34,12 @@ feature -- Access
 			create Result.make (0)
 			Result.extend ("-- Actions to be performed when `selected_item' changes.")
 		end
+	
+	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; textable: EV_TEXTABLE) is
+			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
+			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+		do
+			--| FIXME implement
+		end
 
 end -- class GB_EV_NOTEBOOK_ACTION_SEQUENCES

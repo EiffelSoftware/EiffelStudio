@@ -49,14 +49,16 @@ feature -- Resizing
 			-- one of the cell, the widget is resized.
 		do
 			minimum_height := value
-			parent_imp.child_minheight_changed (value, Current)
-			if interface.managed then
-				if value > height and then value <= child_cell.height then
-					move_and_resize ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - value)//2 + child_cell.y, width, value, True)
-				end
-			else
-				if value > height then
-					set_height (value)
+			if parent_imp /= Void then
+				parent_imp.child_minheight_changed (value, Current)
+				if interface /= Void and then interface.managed then
+					if value > height and then value <= child_cell.height then
+						move_and_resize ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - value)//2 + child_cell.y, width, value, True)
+					end
+				else
+					if value > height then
+						set_height (value)
+					end
 				end
 			end
 		end
@@ -68,14 +70,16 @@ feature -- Resizing
 			-- of the cell, the widget is resized.
 		do
 			minimum_width := value
-			parent_imp.child_minwidth_changed (value, Current)
-			if interface.managed then
-				if value > width and then value <= child_cell.width then
-					move_and_resize ((child_cell.width - value)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y, value, height, True)
-				end
-			else
-				if value > width then
-					set_width (value)
+			if parent_imp /= Void then
+				parent_imp.child_minwidth_changed (value, Current)
+				if interface.managed then
+					if value > width and then value <= child_cell.width then
+						move_and_resize ((child_cell.width - value)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y, value, height, True)
+					end
+				else
+					if value > width then
+						set_width (value)
+					end
 				end
 			end
 		end
@@ -118,7 +122,7 @@ feature -- Position
 --			fixed_size_flag := True
 --		end
 
-feature -- Post conditions
+feature -- Assertion features
 
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
 		-- Check if the dimensions of the widget are set to 

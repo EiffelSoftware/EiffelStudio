@@ -8,7 +8,7 @@ indexing
 class EV_ARGUMENT1 [G]
 	
 inherit
-	EV_ARGUMENTS
+	EV_ARGUMENT
 
 creation 
 	make

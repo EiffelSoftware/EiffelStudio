@@ -53,7 +53,7 @@ feature -- Basic Operation
 			else
 				child_layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
 			end
-			update_editors_for_name_change (object.object, Void)
+			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
 			command_handler.update
 		end
 		
@@ -71,7 +71,7 @@ feature -- Basic Operation
 			else
 				child_layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
 			end
-			update_editors_for_name_change (object.object, Void)
+			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
 			command_handler.update
 		end
 		

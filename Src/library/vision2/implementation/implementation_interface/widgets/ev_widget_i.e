@@ -59,7 +59,7 @@ feature -- Status setting
 			exists: not destroyed
 		deferred
 		ensure
-			not shown
+			not_shown: not shown
 		end
 	
 	show is

@@ -25,10 +25,10 @@ feature -- Status setting
 		require
 			positive_nb: nb_chunks > 0
 		local
-			tmp: ARRAY [CLI_CELL [WEAK_REFERENCE]]
+			tmp: ARRAYED_LIST [CLI_CELL [WEAK_REFERENCE]]
 		do
 			tmp := (create {IDENTIFIED}).reference_list
-			tmp.grow (tmp.capacity + 1000 * nb_chunks)
+			tmp.resize (tmp.capacity + 1000 * nb_chunks)
 		end
 
 indexing

@@ -403,12 +403,12 @@ feature -- Messages
 		do
 		end
 
-	on_sys_command (command, x_pos, y_pos: INTEGER) is
+	on_sys_command (a_command, x_pos, y_pos: INTEGER) is
 			-- Wm_syscommand message.
 			-- This message is sent when the user selects a command
 			-- from the system menu or when the user selects the
 			-- Maximize or Minimize button.
-			-- See class WEL_SC_CONSTANTS for `command' values.
+			-- See class WEL_SC_CONSTANTS for `a_command' values.
 			-- `x_pos' and `y_pos' specify the x and y coordinates
 			-- of the cursor.
 		require

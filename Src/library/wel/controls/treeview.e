@@ -56,7 +56,6 @@ feature -- Access
 
 feature -- Status report
 
-
 	count: INTEGER is
 			-- Number of items in the tree view window
 		require

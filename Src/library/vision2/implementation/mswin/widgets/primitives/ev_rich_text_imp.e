@@ -21,13 +21,15 @@ inherit
 		rename
 			wel_make as multiple_line_edit_make,
 			make as scrollable_make,
-			make_with_text as scrollable_make_with_text
+			make_with_text as scrollable_make_with_text,
+			make_with_properties as scrollable_make_with_properties
 		export
 			{NONE} 
 				add_change_command, 
 				remove_change_commands,
 				scrollable_make,
 				scrollable_make_with_text,
+				scrollable_make_with_properties,
 				show_vertical_scroll_bar,
 				hide_vertical_scroll_bar,
 				show_horizontal_scroll_bar,
@@ -120,8 +122,7 @@ inherit
 	WEL_CLIPBOARD
 
 creation
-	make,
-	make_with_text,
+	make_with_properties,
 	work_around_make
 
 feature {NONE} -- Initialization
@@ -137,22 +138,15 @@ feature {NONE} -- Initialization
 			set_event_mask (enm_change + enm_keyevents)
 		end
 
-	make_with_text (txt: STRING; hscroll: BOOLEAN) is
+	make_with_properties (txt: STRING; hscroll: BOOLEAN) is
 			-- Create a rich text area with `par' as parent and
-			-- `txt' as text. If `hscroll' then horizontally scrollable.
+			-- `txt' as text. Vertically scrollable and
+			-- if `hscroll' then horizontally scrollable.
 		do
-			scrollable_make_with_text (txt, hscroll, True)
+			scrollable_make_with_properties (txt, hscroll, True)
 			enable_all_notifications
 		end
 	
-	make (hscroll: BOOLEAN) is
-			-- Create an empty rich text area with `par' as
-			-- parent. If `hscroll' then horizontally scrollable.
-		do
-			scrollable_make (hscroll, True)
-			set_event_mask (enm_keyevents + enm_change)
-		end
-
 feature -- Access
 
 	character_format: EV_CHARACTER_FORMAT is

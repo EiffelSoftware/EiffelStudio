@@ -9,9 +9,6 @@ deferred class
 
 inherit
 	EV_BUTTON_EVENT_DATA_I
-		rename
-			widget as source
-		end
 
 feature -- Access	
 	
@@ -21,8 +18,17 @@ feature -- Access
 	data_type: EV_PND_TYPE
 			-- Transported data type
 
-	target: EV_WIDGET
-			-- Target Widget of the Pick And Drop event
+	target: EV_PND_TARGET
+			-- Target Widget of the Pick And Drop event.
+
+	source: EV_PND_SOURCE is
+			-- Source Widget of the Pick and Drop event.
+		do
+			Result ?= widget
+			check
+				source_exists: Result /= Void
+			end
+		end
 
 feature -- Element change
 	
@@ -38,7 +44,7 @@ feature -- Element change
 			data_type := value
 		end
 
-	set_target (targ: EV_WIDGET) is
+	set_target (targ: EV_PND_TARGET) is
 			-- Make `targ' the target of the PND action.
 		do
 			target := targ
@@ -53,7 +59,6 @@ feature -- Element change
 			-- Make `value' the absolute y coordinate
 		deferred
 		end
-
 
 end -- class EV_PND_EVENT_DATA_I
 

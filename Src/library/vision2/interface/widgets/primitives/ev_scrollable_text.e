@@ -22,26 +22,57 @@ inherit
 	
 create
 	make,
-	make_with_text
+	make_with_text,
+	make_horizontally_scrollable,
+	make_vertically_scrollable,
+	make_horizontally_scrollable_with_text,
+	make_vertically_scrollable_with_text
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER; hscroll, vscroll: BOOLEAN) is
-			-- Create an empty text area with `par' as parent.
-			-- If `hscroll' True then horizontally scrollable.
-			-- If `vscroll' True then vertically scrollable.
+	make (par: EV_CONTAINER) is
+			-- Create an empty scrollable text area with `par' as parent.
+			-- Scrollable in both directions.
 		do
-			!EV_SCROLLABLE_TEXT_IMP!implementation.make (hscroll, vscroll)
+			make_with_text (par, "")
+		end
+
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create a text area with `par' as
+			-- parent and `txt' as text.
+			-- Scrollable in both directions.
+		do
+			!EV_SCROLLABLE_TEXT_IMP!implementation.make_with_properties (txt, True, True)
 			widget_make (par)
 		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING; hscroll, vscroll: BOOLEAN) is
-			-- Create a text area with `par' as
-			-- parent and `txt' as text.
-			-- If `hscroll' True then horizontally scrollable.
-			-- If `vscroll' True then vertically scrollable
+	make_horizontally_scrollable (par: EV_CONTAINER) is
+			-- Create a scrollable text area with `par' as a parent
+			-- and only horizontally scrollable.
 		do
-			!EV_SCROLLABLE_TEXT_IMP!implementation.make_with_text (txt, hscroll, vscroll)
+			make_horizontally_scrollable_with_text (par, "")
+		end
+
+	make_vertically_scrollable (par: EV_CONTAINER) is
+			-- Create a scrollable text area with `par' as a parent
+			-- and only vertical scrollable.
+		do
+			make_vertically_scrollable_with_text (par, "")
+		end
+
+	make_horizontally_scrollable_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create a scrollable text area with `par' as a parent,
+			-- `txt' as text and only horizontally scrollable.
+		do
+			!EV_SCROLLABLE_TEXT_IMP!implementation.make_with_properties (txt, True, False)
+			widget_make (par)
+		end
+
+	make_vertically_scrollable_with_text (par: EV_CONTAINER; txt: STRING) is
+			-- Create a scrollable text area with `par' as a parent,
+			-- `txt' as text and only vertical scrollable.
+		do
+			!EV_SCROLLABLE_TEXT_IMP!implementation.make_with_properties (txt, False, True)
 			widget_make (par)
 		end
 

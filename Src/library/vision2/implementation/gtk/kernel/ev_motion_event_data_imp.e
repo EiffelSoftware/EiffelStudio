@@ -35,6 +35,9 @@ feature -- Initialization
 			second:= bit_set (gtk_state, 512)
 			third:= bit_set (gtk_state, 1024)
 
+			absol_x := c_gdk_event_absolute_x (p)
+			absol_y := c_gdk_event_absolute_y (p)
+
 			set_all ( widget, c_gdk_event_x (p), c_gdk_event_y (p),
 					shift, control, first, second, third)
 		end
@@ -44,18 +47,20 @@ feature -- Access
 	absolute_x: INTEGER is
 			-- absolute x of the mouse pointer
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := absol_x
 		end
+
+	absol_x: INTEGER
+			-- value for storing absolute x.
 
 	absolute_y: INTEGER is
 			-- absolute y of the mouse pointer
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := absol_y
 		end
+
+	absol_y: INTEGER
+			-- value for storing absolute y.
 
 end -- class EV_MOTION_EVENT_DATA_IMP
 

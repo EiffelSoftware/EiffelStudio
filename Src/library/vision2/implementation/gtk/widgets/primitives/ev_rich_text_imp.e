@@ -10,19 +10,32 @@ class
 
 inherit
 	EV_RICH_TEXT_I
-		rename
-			make as text_make,
-			make_with_text as text_make_with_text
-		end
-		
+		undefine
+			selected_text
+		end	
 	
 	EV_SCROLLABLE_TEXT_IMP
+		rename
+			make as scrollable_make,
+			make_with_text as scrollable_make_with_text,
+			make_with_properties as scrollable_make_with_properties
 		redefine
 			insert_text
 		end
 
 create
-	make
+	make_with_properties
+
+feature {NONE} -- Initialization
+
+	make_with_properties (txt: STRING; hscroll: BOOLEAN) is
+			-- Create a rich text area setting the text with `txt'.
+			-- Vertically scrollable and if `hscroll' then the
+			-- rich text is horizontally scrollable.
+		do
+			scrollable_make_with_properties (txt, hscroll, True)
+		end
+		
 
 feature -- Access
 

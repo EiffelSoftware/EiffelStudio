@@ -222,11 +222,16 @@ feature -- Element change
 			pixmap_imp: EV_PIXMAP_IMP
 			tempwind: EV_UNTITLED_WINDOW
 		do
-			create tempwind.make_top_level
-			tempwind.show
+			check
+				to_be_implemented: False
+			end
+			--create tempwind.make_top_level
+			--tempwind.show
 			icon_pixmap := pixmap
+
 			pixmap_imp ?= pixmap.implementation
 			gtk_pixmap_get (pixmap_imp.widget, $gdkpix, $gdkmask)
+
 			gdk_window_set_icon (c_gdk_window_from_gtk_widget (widget), pixmap_imp.create_window, gdkpix, gdkmask)
 			--c_gtk_window_set_icon (widget, pixmap_imp.create_window, gdkpix, gdkmask)
                 end

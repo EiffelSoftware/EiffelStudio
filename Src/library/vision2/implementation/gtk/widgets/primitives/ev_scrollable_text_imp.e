@@ -11,39 +11,62 @@ class
 inherit	
 
 	EV_SCROLLABLE_TEXT_I
-		rename
-			make_with_text as text_make_with_text,
-			make as text_make
-		end
-		
+
 	EV_TEXT_IMP
-		rename
-			make_with_text as text_make_with_text,
-			make as text_make
+		export
+			{None} make, make_with_text
 		end
 				
 creation
-	make,
-	make_with_text
+	make_with_properties
 
 feature -- Initialization
 
-	make (hscroll, vscroll: BOOLEAN) is
+	make_with_properties (txt: STRING; hscroll, vscroll: BOOLEAN) is
 			-- Create an empty text area.
 			-- The area will be scrollable
 		do
-			text_make
+			make
+			has_horizontal_scrolling := hscroll
+			has_vertical_scrolling := vscroll
+			set_text (txt)
 			--| FIXME IEK Add scrollable features to widget
 		end
 
-	make_with_text (txt: STRING; hscroll, vscroll: BOOLEAN) is
-			-- Create a text area with `text' as label.
-			-- The area will be scrollable.
+feature -- Implementation
+
+	hide_horizontal_scroll_bar is
+			-- Hide the horizontal scroll bar.
 		do
-			text_make
-			set_text (txt)
+			check
+				to_be_implemented: False
+			end
 		end
-		
+
+	hide_vertical_scroll_bar is
+			-- Hide the vertical scroll bar.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+	show_horizontal_scroll_bar is
+			-- Show the horizontal scroll bar.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+	show_vertical_scroll_bar is
+			-- Show the vertical scroll bar.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
 feature -- Status Report
 	
 	horizontal_scroll_bar_visible: BOOLEAN is
@@ -62,46 +85,13 @@ feature -- Status Report
 			end
 		end
 
-feature -- Status Setting
-
-	show_horizontal_scroll_bar is
-			-- Show horizontal scroll bar.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	show_vertical_scroll_bar is
-			-- Show vertical scroll bar.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	hide_horizontal_scroll_bar is
-			-- Hide horizontal scroll bar.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	hide_vertical_scroll_bar is
-			-- Hide vertical scroll bar.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-	
-feature {NONE}
+feature {NONE} -- Access
 
 	has_horizontal_scrolling: BOOLEAN
-	
+
 	has_vertical_scrolling: BOOLEAN
 
+	
 end -- class EV_SCROLLABLE_TEXT_IMP
 
 --|----------------------------------------------------------------

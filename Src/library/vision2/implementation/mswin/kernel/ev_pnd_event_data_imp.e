@@ -11,9 +11,6 @@ inherit
 	EV_PND_EVENT_DATA_I
 
 	EV_BUTTON_EVENT_DATA_IMP
-		rename
-			widget as source
-		end
 
 feature -- Implementation
 

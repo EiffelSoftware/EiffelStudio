@@ -67,13 +67,19 @@ feature -- Access
 			label: EV_LABEL
 		do
 			Result := Precursor {GB_EV_ANY}
-			create label.make_with_text ("radio button groups")
+			create label.make_with_text ("Merged radio button groups")
 			Result.extend (label)
 			create merged_list
 			merged_list.set_minimum_height (100)
 			merged_list.drop_actions.extend (agent new_merge)
 			merged_list.drop_actions.set_veto_pebble_function (agent veto_merge (?))
 			Result.extend (merged_list)
+			create propagate_foreground_color.make_with_text ("Propagate foreground color")
+			create propagate_background_color.make_with_text ("Propagate background color")
+--			Result.extend (propagate_foreground_color)
+			propagate_foreground_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_foreground_color))
+			propagate_background_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_background_color))
+--			Result.extend (propagate_background_color)
 	
 			update_attribute_editor
 			disable_all_items (Result)
@@ -95,30 +101,32 @@ feature -- Access
 				radio_group_link.set_object (an_object)
 				radio_group_link.set_gb_ev_container (Current)
 				
-				merged_list.extend (radio_group_link)
+				merged_list.extend (radio_group_link)				
+					-- We must now create a new addition for all containers that
+					-- were already linked to `an_object'.
+				container ?= an_object.object
+				other_groups := container.merged_radio_button_groups
+					-- `other' may not be merged to any other groups.
+				if other_groups /= Void then
+					from
+						counter := 1
+					until
+						counter > other_groups.count
+					loop
+						other_object := object_handler.object_from_display_widget (other_groups @ counter)
+						check
+							object_not_void: other_object /= Void
+						end
+						create radio_group_link
+						radio_group_link.set_object (other_object)
+						radio_group_link.set_gb_ev_container (Current)
+						radio_group_link.set_pebble (radio_group_link)
+						counter := counter + 1
+					end
+				end
 					-- We cannot use `for_all_objects' as we need to pass a different argument
 					-- to each object.
 				link_to_object (an_object)
-				
-				-- We must now create a new addition for all containers that
-				-- were already linked to `an_object'.
-				container ?= an_object.object
-				other_groups := container.merged_radio_button_groups
-				from
-					counter := 1
-				until
-					counter > other_groups.count
-				loop
-					other_object := object_handler.object_from_display_widget (other_groups @ counter)
-					check
-						object_not_void: other_object /= Void
-					end
-					create radio_group_link
-					radio_group_link.set_object (other_object)
-					radio_group_link.set_gb_ev_container (Current)
-					radio_group_link.set_pebble (radio_group_link)
-					counter := counter + 1
-				end
 			end
 			
 	update_attribute_editor is
@@ -414,5 +422,7 @@ feature {NONE} -- Implementation
 	merged_list: EV_LIST
 		-- Representation of all containers linked to
 		-- this one for radio button grouping.
+		
+	propagate_foreground_color, propagate_background_color: EV_BUTTON
 
 end -- class GB_EV_CONTAINER

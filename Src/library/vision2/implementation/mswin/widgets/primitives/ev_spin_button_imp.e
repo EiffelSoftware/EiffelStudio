@@ -708,6 +708,15 @@ feature {NONE} -- Implementation
 				(a_width - spin_width, 0, spin_width, a_height, repaint)
 			internal_text_field.ev_apply_new_size
 				(0, 0, a_width - spin_width, a_height, repaint)
+			--| FIXME This fixes the following problem :-
+			--| create titled_window
+			--| titled_window.set_minimum_size (300, 300)
+			--| create spin_button
+			--| titled_window.extend (spin_button)
+			--| titled_window.show
+			--| In this situation, the spin button was not visible.
+			--| There may be a better solution than this. Julian 02/04/03
+			wel_move_and_resize (0, 0, a_width, a_height, repaint)
 		end
 
 feature {NONE} -- Constants

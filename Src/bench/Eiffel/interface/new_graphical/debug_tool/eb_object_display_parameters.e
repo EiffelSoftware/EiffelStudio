@@ -1,6 +1,6 @@
 indexing
 	description: "Flags describing what should be displayed for an object in the object tool."
-	author: "Xavier Rousselot"
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			make (ot, val.dynamic_class, addr)
 		end
 
-	make_from_stack_element (ot: EB_OBJECT_TOOL; elem: CALL_STACK_ELEMENT) is
+	make_from_stack_element (ot: EB_OBJECT_TOOL; elem: EIFFEL_CALL_STACK_ELEMENT) is
 			-- Initialize `Current' and associate it with object
 			-- represented by `elem'.
 		do
@@ -122,8 +122,8 @@ feature -- Transformation
 			Result_not_void: Result /= Void
 		end
 	
-	to_tree_item (parent: EV_TREE_NODE_LIST) is
-			-- Generate a tree item representing the managed object located at `address' and attach it to `parent'.
+	build_object_tree_item is
+			-- Tree item representing the managed object located at `address'.
 		local
 			item: EV_TREE_ITEM
 			title: STRING
@@ -131,8 +131,6 @@ feature -- Transformation
 			ost: OBJECT_STONE
 			has_attributes: BOOLEAN
 			has_onces: BOOLEAN
-			ft: FEATURE_TABLE
-			f: FEATURE_I
 		do
 			debug ("debug_recv")
 				print ("EB_OBJECT_DISPLAY_PARAMETERS.to_tree_item%N")
@@ -148,26 +146,11 @@ feature -- Transformation
 			main_item.set_pebble (ost)
 			main_item.set_data (address)
 			main_item.set_pixmap (Pixmaps.Icon_object_symbol)
-			if to_front then
-				parent.put_front (main_item)
-			else
-				parent.extend (main_item)
-			end
-				-- We detect which subtrees to display.
-			ft := dtype.feature_table
-			from
-				ft.start
-			until
-				ft.after
-			loop
-				f := ft.item_for_iteration
-				if f.is_attribute then
-					has_attributes := True
-				elseif f.is_once then
-					has_onces := True
-				end
-				ft.forth
-			end
+
+				-- Nota: now we assume there are attributes and onces
+				-- an empty tree item is better than a big computation
+			has_attributes := True
+			has_onces := True
 
 			if has_attributes or dtype.is_special or dtype.is_tuple or is_special or dtype.is_external then
 				create attr_item.make_with_text (Interface_names.l_Object_attributes)
@@ -177,12 +160,6 @@ feature -- Transformation
 				attr_item.extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Dummy))
 				attr_item.expand_actions.extend (agent on_expand (attributes_id))
 				attr_item.collapse_actions.extend (agent on_unexpand (attributes_id))
-				if
-					display_attributes and
-					display
-				then
-					attr_item.expand
-				end
 			end
 			if has_onces then
 				create once_item.make_with_text (Interface_names.l_Once_functions)
@@ -193,18 +170,56 @@ feature -- Transformation
 				once_item.extend (item)
 				once_item.expand_actions.extend (agent on_expand (onces_id))
 				once_item.collapse_actions.extend (agent on_unexpand (onces_id))
-				if
-					display_onces and
-					display
-				then
-					once_item.expand
-				end
-			end
-			if display then
-				main_item.expand
 			end
 			main_item.expand_actions.extend (agent on_expand (main_id))
 			main_item.collapse_actions.extend (agent on_unexpand (main_id))
+			object_tree_item := main_item
+		end
+
+	apply_layout is
+			-- Apply wanted layout for tree item `ti'
+			-- which means expand or not tree item
+		do
+			if
+				attr_item /= Void
+				and display_attributes
+				and display
+			then
+				attr_item.expand
+			end
+			if
+				once_item /= Void
+				and display_onces
+				and display
+			then
+				once_item.expand
+			end
+			if display then
+				object_tree_item.expand
+			end
+		end
+
+	build_and_attach_to_parent (parent: EV_TREE_NODE_LIST) is
+			-- Generate a tree item representing the managed object located at `address' and attach it to `parent'.
+		do
+			debug ("debug_recv")
+				print ("EB_OBJECT_DISPLAY_PARAMETERS.attach_to_tree_item%N")
+			end
+			build_object_tree_item
+			attach_to_parent (parent)
+		end
+		
+	attach_to_parent (parent: EV_TREE_NODE_LIST) is
+			-- Generate a tree item representing the managed object located at `address' and attach it to `parent'.
+		require
+			object_tree_item_not_void: object_tree_item /= Void
+		do
+			if to_front then
+				parent.put_front (object_tree_item)
+			else
+				parent.extend (object_tree_item)
+			end
+			apply_layout
 		end
 		
 feature {EB_OBJECT_TOOL} -- Status setting
@@ -323,6 +338,10 @@ feature {NONE} -- Implementation (once)
 			end
 		end
 
+feature -- Access
+
+	object_tree_item: EV_TREE_ITEM
+
 feature {NONE} -- Implementation
 
 	main_id: INTEGER is unique
@@ -433,11 +452,17 @@ feature {NONE} -- Implementation
 				if not attributes_loaded then
 					load_attributes_under (attr_item)
 				end
+				if attr_item.is_empty then
+					attr_item.set_text (attr_item.text + " : None")
+				end
 			when onces_id then
 				display_onces := True
 				if not onces_loaded then
 					load_onces_under (once_item)
 				end
+				if once_item.is_empty then
+					once_item.set_text (once_item.text + " : None")
+				end				
 			when main_id then
 				display := True
 			end

@@ -33,11 +33,6 @@ doc:<file name="equal.c" header="eif_equal.h" version="$Id$" summary="Equality o
 
 #define dprintf(n) if (DEBUG & n) printf
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 #ifndef EIF_THREADS
 /*
 doc:	<attribute name="eif_equality_table" return_type="struct s_table *" export="private">
@@ -117,8 +112,8 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 				* class. `source' and/or `target' cannot be NULL.
 				* Return a boolean.
 				*/
-			register3 EIF_REFERENCE s_ref;
-			register4 EIF_REFERENCE t_ref;
+			EIF_REFERENCE s_ref;
+			EIF_REFERENCE t_ref;
 			uint32 s_size = (HEADER(source)->ov_size) & B_SIZE; /* Size of source special */
 			uint32 t_size = (HEADER(target)->ov_size) & B_SIZE; /* Size of target special */
 		
@@ -208,10 +203,10 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	/*uint32 t_flags;*/					/* Target flags */
 	uint32 s_size;						/* Source size */
 	uint32 t_size;						/* Target size */
-	register3 EIF_REFERENCE s_ref;
-	register4 EIF_REFERENCE t_ref;
-	register5 EIF_INTEGER count;				/* Common count */
-	register6 EIF_INTEGER elem_size;			/* Common element size */
+	EIF_REFERENCE s_ref;
+	EIF_REFERENCE t_ref;
+	EIF_INTEGER count;				/* Common count */
+	EIF_INTEGER elem_size;			/* Common element size */
 	EIF_REFERENCE s_field, t_field;
 
 	if (source == target)
@@ -486,9 +481,9 @@ rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REF
 	 * Return a boolean.
 	 */
 
-	register3 long count;				/* Reference number */
-	register4 EIF_REFERENCE s_ref;
-	register5 EIF_REFERENCE t_ref;
+	long count;				/* Reference number */
+	EIF_REFERENCE s_ref;
+	EIF_REFERENCE t_ref;
 
 	/* Evaluation of the number of references: and iteration on it */
 	for (
@@ -527,13 +522,13 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 	struct cnode *skeleton;	/* Target skeleton */
 	uint32 *types;            /* Target attribute types */
 #ifndef WORKBENCH
-	register3 long *offsets;	/* Target attribute tables */
+	long *offsets;	/* Target attribute tables */
 #else
 	int32 *cn_attr;     		/* Array of attribute keys for target object */
 	int32 attr_key;				/* Attribute key */
 #endif
 	long offset;
-	register5 long index;		/* Target attribute index */
+	long index;		/* Target attribute index */
 	EIF_REFERENCE t_ref, s_ref;
 	int attribute_type;	/* Attribute type in skeleton */
 
@@ -640,13 +635,13 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 	struct cnode *skeleton;	/* Target skeleton */
 	uint32 *types;            /* Target attribute types */
 #ifndef WORKBENCH
-	register3 long *offsets;	/* Target attribute tables */
+	long *offsets;	/* Target attribute tables */
 #else
 	int32 *cn_attr;                /* Array of attribute keys for source object */
 	int32 attr_key;				/* Attribute key */
 #endif
 	long offset;
-	register5 long index;		/* Target attribute index */
+	long index;		/* Target attribute index */
 	EIF_REFERENCE t_ref, s_ref, ref1, ref2;
 	int attribute_type;
 

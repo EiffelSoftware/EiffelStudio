@@ -21,7 +21,7 @@ creation
 
 feature -- Initialization
 
-	make(current_widget:EV_WIDGET; tabs:LINKED_LIST[ANY_TAB]) is
+	make(current_widget:EV_ANY; tabs:LINKED_LIST[ANY_TAB]) is
 			-- Initialize
 		local
 			count: INTEGER
@@ -33,6 +33,7 @@ feature -- Initialization
 				make_top_level
 				set_minimum_width(400)
 				set_minimum_height(300)
+				set_title ("Actions")
 				set_x_y(200,200)
 				create n1.make(Current)
 			end

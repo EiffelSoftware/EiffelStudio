@@ -13,7 +13,7 @@ inherit
 			make
 		end
 	DEMO_WINDOW
-		
+	WIDGET_COMMANDS		
 
 creation
 	make
@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 			!! button.make_with_text (Current, "Button with a very long label")
 			set_child_expandable (button, False)
 			!! button.make_with_text (Current, "Button 3")
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "box")
 			set_parent (par)
 		end
 

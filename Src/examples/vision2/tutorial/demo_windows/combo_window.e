@@ -14,6 +14,10 @@ inherit
 		redefine
 			make
 		end
+	WIDGET_COMMANDS
+	TEXT_COMPONENT_COMMANDS
+	TEXT_FIELD_COMMANDS
+	LIST_COMMANDS
 
 creation
 	make
@@ -35,6 +39,12 @@ feature {NONE} -- Initialization
 			!! item3.make_with_text (Current, "Item 3")
 			set_text ("Please select an item")
 			select_all
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "combo box")
+			add_text_component_commands (Current, event_window, "Combo box")
+			add_text_field_commands (Current, event_window, "combo box")
+			add_list_commands (Current, event_window, "Combo box")
+			set_parent (par)
 		end
 
 	set_tabs is

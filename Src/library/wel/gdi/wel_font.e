@@ -82,6 +82,22 @@ feature -- Setting
 
 			set_indirect (l)
 		end
+		
+	set_height_in_points (a_height_in_points: INTEGER) is
+			-- Set `height' based on `a_height_in_points'.
+		local
+			l: like log_font
+			screen_dc: WEL_SCREEN_DC
+		do
+			create screen_dc
+			screen_dc.get
+			l := log_font
+			l.set_height (- point_to_logical (screen_dc, a_height_in_points, 1))
+			screen_dc.release
+			
+			set_indirect (l)
+		end
+		
 
 feature -- Re-initialisation
 

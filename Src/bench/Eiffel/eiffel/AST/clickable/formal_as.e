@@ -113,8 +113,13 @@ feature -- Output
 feature -- Stoning
  
 	associated_eiffel_class (ref_class: CLASS_I): CLASS_I is
+		local
+			l_class: CLASS_C
 		do  
-			Result := actual_type.associated_class.lace_class
+			l_class := actual_type.associated_class
+			if l_class /= Void then
+				Result := l_class.lace_class
+			end
 		end
 
 feature -- Output

@@ -11,6 +11,13 @@ indexing
 
 class
 	SPECIAL [T]
+	
+inherit
+	ANY
+		redefine
+			is_equal,
+			copy
+		end
 
 create
 	make,
@@ -147,6 +154,17 @@ feature -- Status report
 			Result := (0 <= i) and then (i < count)
 		end
 
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			if count = other.count then
+				Result := same_items (other, other.count - 1)
+			end
+		end
+
 feature -- Element change
 
 	frozen put (v: T; i: INTEGER) is
@@ -157,6 +175,25 @@ feature -- Element change
 			index_small_enough: i < count
 		do
 			native_array.put (i, v)
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
+		local
+			l_old_native: like native_array
+		do
+			l_old_native := native_array
+			standard_copy (other)
+			if l_old_native = Void or else l_old_native.count /= other.count then
+				create native_array.make (other.count)
+			else
+				native_array := l_old_native
+			end
+			
+			feature {SYSTEM_ARRAY}.copy (other.native_array, native_array, other.count)
 		end
 
 feature -- Resizing

@@ -30,9 +30,6 @@ feature
 	interval: INTERVAL_AS
 			-- Current interval processed
 
-	unique_found: BOOLEAN
-			-- Is a unique feature involved in the choices ?
-
 	positive_value_found: BOOLEAN
 			-- Is a positive value involved in the choices ?
 
@@ -58,7 +55,6 @@ feature
 		do
 			unique_names.wipe_out
 			positive_value_found := False
-			unique_found := False
 			type := Void
 			node := Void
 			feature_table := Void
@@ -200,7 +196,6 @@ feature {NONE} -- Implementation
 				Result := bound.make_integer
 				constant_name := constant_i.feature_name
 				if constant_i.is_unique then
-					unique_found := True
 					if unique_names.has (constant_name) then
 							-- Error
 						create vomb4

@@ -14,6 +14,9 @@ inherit
 		end
 		
 	DOUBLE_MATH
+		undefine
+			copy
+		end
 
 create
 	make_with_type,

@@ -70,6 +70,9 @@ feature -- Access
 			-- is currently locked.
 			--
 			-- See `{EV_WINDOW}.lock_update' for more details
+			
+	captured_widget: EV_WIDGET
+			-- Widget currently captured. Void if none.
 
 	help_accelerator: EV_ACCELERATOR
 			-- Accelerator that displays contextual help
@@ -105,6 +108,14 @@ feature -- Access
 		end
 
 feature -- Element Change
+
+	set_captured_widget (a_captured_widget: EV_WIDGET) is
+			-- Set `captured_widget' to the widget that has the current capture 'a_capture_widget'.
+		do
+			captured_widget := a_captured_widget
+		ensure
+			captured_widget_set: captured_widget = a_captured_widget
+		end
 
 	set_help_accelerator (an_accelerator: EV_ACCELERATOR) is
 			-- Assign `an_accelerator' to `help_accelerator'
@@ -185,13 +196,13 @@ feature -- Basic operation
 			-- Cancel contextual help mode when right mouse button is pressed.
 		do
 			if focused_widget /= Void then
-				capture_widget := focused_widget
-				old_pointer_button_press_actions := capture_widget.pointer_button_press_actions
-				capture_widget.pointer_button_press_actions.wipe_out
-				capture_widget.pointer_button_press_actions.extend_kamikaze (contextual_help_procedure)
-				old_pointer_style := capture_widget.pointer_style
-				capture_widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).Help_cursor)
-				capture_widget.enable_capture
+				captured_widget := focused_widget
+				old_pointer_button_press_actions := captured_widget.pointer_button_press_actions
+				captured_widget.pointer_button_press_actions.wipe_out
+				captured_widget.pointer_button_press_actions.extend_kamikaze (contextual_help_procedure)
+				old_pointer_style := captured_widget.pointer_style
+				captured_widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).Help_cursor)
+				captured_widget.enable_capture
 			end
 		end
 	
@@ -390,9 +401,6 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-
-	capture_widget: EV_WIDGET
-			-- Widget that captures input while contextual help is enabled
 	
 	help_handler_procedure: PROCEDURE [ANY, TUPLE] is
 			-- Help handler procedure associated with help accelerator
@@ -442,16 +450,16 @@ feature {NONE} -- Implementation
 			-- Disable contextual help: remove capture and restore mouse pointer style.
 		do
 			check
-				valid_capture_widget: capture_widget /= Void
+				valid_capture_widget: captured_widget /= Void
 			end
 			if old_pointer_button_press_actions /= Void then
-				capture_widget.pointer_button_press_actions.fill (old_pointer_button_press_actions)
+				captured_widget.pointer_button_press_actions.fill (old_pointer_button_press_actions)
 			end
 			check
 				valid_old_pointer_style: old_pointer_style /= Void
 			end
-			capture_widget.set_pointer_style (old_pointer_style)
-			capture_widget.disable_capture
+			captured_widget.set_pointer_style (old_pointer_style)
+			captured_widget.disable_capture
 		end
 	
 	focused_widget_from_container (a_widget: EV_WIDGET): EV_WIDGET is

@@ -89,15 +89,19 @@ feature -- Status setting
 			if fst /= Void then
 				type_changed := (fst.e_class.is_true_external and not is_stone_external) or
 					(not fst.e_class.is_true_external and is_stone_external)
-				if type_changed then
-						-- Toggle stone flag and update formatters if necessary.
-	            	is_stone_external := not is_stone_external
-	            	if is_stone_external then
-						enable_dotnet_formatters (True)
-					else
-						enable_dotnet_formatters (False)
-					end
-            	end 	
+					
+			end
+			
+				-- Toggle stone flag.
+			if type_changed then			
+				is_stone_external := not is_stone_external
+			end 
+			
+				-- Update formatters. 
+            if is_stone_external then
+				enable_dotnet_formatters (True)
+			else
+				enable_dotnet_formatters (False)
 			end
 			
 			if fst = Void then
@@ -331,6 +335,8 @@ feature {NONE} -- Implementation
 
 	enable_dotnet_formatters (a_flag: BOOLEAN) is
 			-- Set sensitivity of formatters to 'a_flag'.
+		local
+			l_done: BOOLEAN
 		do
 			from
 				managed_formatters.start
@@ -347,7 +353,37 @@ feature {NONE} -- Implementation
 				end
 				managed_formatters.forth
 			end
+			
+			if not used then
+					-- First time so default to flat view.
+				managed_formatters.i_th (2).enable_select
+				used := True
+			end
+			
+					-- Determine which formatter to give focus based upon previous one.
+			if a_flag then
+				if managed_formatters.i_th (1).selected then
+						-- Previously text so now move to flat.
+					managed_formatters.i_th (2).enable_select
+				else
+						-- Set formatter to same as previous one.
+					from
+						managed_formatters.start
+					until
+						managed_formatters.after or l_done
+					loop
+						if managed_formatters.item.selected then
+							managed_formatters.i_th (managed_formatters.index_of (managed_formatters.item, 1)).enable_select
+							l_done := True
+						end
+						managed_formatters.forth
+					end
+				end
+			end
 		end
+	
+	used: BOOLEAN
+			-- Has the feature view been used yet to perform any formatting?
 	
 	is_stone_external: BOOLEAN
 			-- Does Current stone represent a .NET class feature?

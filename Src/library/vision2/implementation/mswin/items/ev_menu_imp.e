@@ -15,6 +15,9 @@ inherit
 	EV_MENU_ITEM_HOLDER_IMP
 
 	WEL_MENU
+		rename
+			insert_separator as wel_insert_separator
+		end
 
 creation
 	make,

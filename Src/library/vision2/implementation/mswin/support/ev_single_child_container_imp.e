@@ -169,7 +169,6 @@ feature {EV_ANY_I} -- WEL Implementation
 				item_imp.update_for_pick_and_drop (starting)	
 			end
 		end
-		
 
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
 			-- Is the control of handle `hwnd_control'
@@ -192,22 +191,19 @@ feature {EV_ANY_I} -- WEL Implementation
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Called when `Current' is resized.
 		do
-			if size_type /= Wel_window_constants.Size_minimized then
+			if size_type /= (feature {WEL_WINDOW_CONSTANTS}.Size_minimized) then
 				if item /= Void then
-					item_imp.set_move_and_size (client_x, client_y,
-						client_width, client_height)
+					item_imp.set_move_and_size (client_x, client_y, client_width, client_height)
 				end
 				Precursor {EV_CONTAINER_IMP} (size_type, a_width, a_height)
 			end
 		end
 
-	ev_apply_new_size (a_x_position, a_y_position,
-				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 			if item /= Void then
-				item_imp.ev_apply_new_size (client_x, client_y,
-					client_width, client_height, True)
+				item_imp.ev_apply_new_size (client_x, client_y, client_width, client_height, True)
 			end
 		end
 		

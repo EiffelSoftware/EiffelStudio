@@ -17,13 +17,13 @@ creation
 
 feature
 
-	make (system_array_optimizer: ARRAY_OPTIMIZER; system_inliner: INLINER) is
+	make is
 			-- Initialization
 		do
 			old_make
 			!! control.make
-			array_optimizer := system_array_optimizer
-			inliner := system_inliner
+			!! array_optimizer.make
+			!! inliner.make
 		end
 
 feature
@@ -83,15 +83,17 @@ feature {NONE}
 			depend_feature: FEATURE_I
 			static_class: CLASS_C
 			unit_to_traverse: TRAVERSAL_UNIT
+			local_system: SYSTEM_I
 		do
 			from
+				local_system := System
 				depend_list.start
 			until
 				depend_list.after
 			loop
 				depend_unit := depend_list.item
 				if not depend_unit.is_special then
-					static_class := System.class_of_id (depend_unit.id)
+					static_class := local_system.class_of_id (depend_unit.id)
 					depend_feature := static_class.feature_table.feature_of_feature_id (depend_unit.feature_id)
 					if not is_marked (depend_feature) then
 debug ("DEAD_CODE_REMOVAL")
@@ -108,33 +110,26 @@ end
 				depend_list.forth
 			end
 
-			if array_optimizer /= Void then
-					-- Array optimization
-				array_optimizer.process (written_class, original_feature, depend_list)
-			end
+				-- Array optimization
+			array_optimizer.process (written_class, original_feature, depend_list)
 
-			if inliner /= Void then
-					-- Inlining
-				inliner.process (original_feature)
-			end
+				-- Inlining
+			inliner.process (original_feature)
 		end
 
 	features: INTEGER
 		-- Number of features for the current dot
 
-	features_per_message: INTEGER is 10
-
+	features_per_message: INTEGER is 30
+	
 	mark_alive (feat: FEATURE_I; rout_id_val: ROUTINE_ID) is
 			-- Record feature `feat'
-		local
-			deg_output: DEGREE_OUTPUT
 		do
-			{FEAT_ITERATOR} precursor (feat, rout_id_val)
+			{FEAT_ITERATOR} Precursor (feat, rout_id_val)
 
 			features := features + 1
 			if features = features_per_message then
-				deg_output := Degree_output
-				degree_output.put_dead_code_removal_message (features, control.count)
+				Degree_output.put_dead_code_removal_message (features, control.count)
 debug ("COUNT")
 	io.error.putstring ("[")
 	io.error.putint (control.count)

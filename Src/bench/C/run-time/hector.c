@@ -46,14 +46,15 @@ rt_public struct stack hec_stack = {
 };
 
 /*
-doc:	<attribute name="hec_saved" return_type="struct stack" export="public">
+doc:	<attribute name="hec_saved" return_type="struct stack" export="shared">
 doc:		<summary>This stack records the saved references. Entries in this stack are obtained either via eif_freeze() or eif_adopt(). Hence the stack structure is not completely appropriate and holes may appear. The `free_stack' stack records those holes.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data and `eif_gc_mutex'.</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
 doc:	</attribute>
 */
-rt_public struct stack hec_saved = {
+rt_shared struct stack hec_saved = {
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */

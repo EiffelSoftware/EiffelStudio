@@ -14,6 +14,9 @@ inherit
 		end
 	
 	IDENTIFIED
+		undefine
+			out
+		end
 
 create
 	make
@@ -29,49 +32,69 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Do nothing
 		do
+			bcolor := 0xFFFFFF -- White
+			fcolor := 0 -- Black
+			
+			set_font_attributes
+				(
+					app_implementation.default_font_name_internal,
+					feature {EV_FONT_CONSTANTS}.family_sans,
+					app_implementation.default_font_size_internal,
+					app_implementation.default_font_weight_internal,
+					feature {EV_FONT_CONSTANTS}.shape_regular,
+					0
+				)
 			is_initialized := True
 		end
-		
+
 feature -- Access
 
 	font: EV_FONT is
 			-- Font of the current format
 		do
-			if internal_font_imp /= Void then
-				Result := internal_font_imp.interface
-			else
-				create Result
-			end
+			create Result
+			Result.set_family (family)
+			Result.set_height (height)
+			Result.set_weight (weight)
+			Result.set_shape (shape)
+			Result.preferred_families.extend (name)
 		end
 	
 	color: EV_COLOR is
 			-- Color of the current format
+		local
+			a_color: INTEGER
 		do
-			if internal_color_imp /= Void then
-				Result := internal_color_imp.interface
-			else
-				Result := (create {EV_STOCK_COLORS}).black
-			end
+			a_color := fcolor
+			create Result
+			Result.set_red_with_8_bit ((a_color |<< 24) |>> 24)
+			Result.set_green_with_8_bit ((a_color |<< 16) |>> 24)
+			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
 
 	background_color: EV_COLOR is
 			-- Background Color of the current format
+		local
+			a_color: INTEGER
 		do
-			if internal_background_color_imp /= Void then
-				Result := internal_background_color_imp.interface
-			else
-				Result := (create {EV_STOCK_COLORS}).white
-			end
+			a_color := bcolor
+			create Result
+			Result.set_red_with_8_bit ((a_color |<< 24) |>> 24)
+			Result.set_green_with_8_bit ((a_color |<< 16) |>> 24)
+			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
 		
 	effects: EV_CHARACTER_FORMAT_EFFECTS is
 			-- Character format effects applicable to `font'
 		do
-			if internal_effects /= Void then
-				Result := internal_effects.twin
-			else
-				create Result
+			create Result
+			if is_underlined then
+				Result.enable_underlined
 			end
+			if is_striked_out then
+				Result.enable_striked_out
+			end
+			Result.set_vertical_offset (vertical_offset)
 		end
 
 feature -- Status setting
@@ -79,34 +102,75 @@ feature -- Status setting
 	set_font (a_font: EV_FONT) is
 			-- Make `value' the new font
 		do
-			internal_font_imp ?= a_font.implementation
+			set_font_attributes
+				(
+					a_font.name,
+					a_font.family,
+					a_font.height,
+					a_font.weight,
+					a_font.shape,
+					0
+				)
+		end
+
+	set_font_attributes (a_name: STRING; a_family, a_height, a_weight, a_shape, a_charset: INTEGER) is
+			-- Set internal font attributes
+		do
+			name := a_name
+			family := a_family
+			height := a_height
+			weight := a_weight
+			shape := a_shape
+			char_set := a_charset
 		end
 
 	set_color (a_color: EV_COLOR) is
 			-- Make `value' the new color
 		do
-			internal_color_imp ?= a_color.implementation
+			set_fcolor (a_color.red_8_bit, a_color.green_8_bit, a_color.blue_8_bit)
+		end
+
+	set_fcolor (a_red, a_green, a_blue: INTEGER) is
+			-- Pack `fcolor' with `a_red', `a_green' and `a_blue'
+		do
+			fcolor := a_blue;
+			fcolor := fcolor |<< 8
+			fcolor := fcolor + a_green
+			fcolor := fcolor |<< 8
+			fcolor := fcolor + a_red
+		end
+
+	set_bcolor (a_red, a_green, a_blue: INTEGER) is
+			-- Pack `bcolor' with `a_red', `a_green' and `a_blue'
+		do
+			bcolor := a_blue;
+			bcolor := bcolor |<< 8
+			bcolor := bcolor + a_green
+			bcolor := bcolor |<< 8
+			bcolor := bcolor + a_red
 		end
 
 	set_background_color (a_color: EV_COLOR) is
 			-- Make `value' the new color
 		do
-			internal_background_color_imp ?= a_color.implementation
+			set_bcolor (a_color.red_8_bit, a_color.green_8_bit, a_color.blue_8_bit)
 		end
 		
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
 			-- Make `an_effect' the new `effects'
 		do
-			internal_effects := an_effect.twin
+			set_effects_internal (an_effect.is_underlined, an_effect.is_striked_out, an_effect.vertical_offset)
+		end
+
+	set_effects_internal (a_underlined, a_striked_out: BOOLEAN; a_vertical_offset: INTEGER) is
+			-- 
+		do
+			is_underlined := a_underlined
+			is_striked_out := a_striked_out
+			vertical_offset := a_vertical_offset
 		end
 
 feature {EV_RICH_TEXT_IMP} -- Implementation
-
-	new_text_tag: POINTER is
-			-- Create a new text tag based on state of `Current'
-		do
-			Result := new_text_tag_from_applicable_attributes (dummy_character_format_range_information)
-		end
 		
 	dummy_character_format_range_information: EV_CHARACTER_FORMAT_RANGE_INFORMATION is
 			-- Used for creating a fully set GtkTextTag
@@ -129,96 +193,211 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			-- Create a new text tag based on state of `Current'
 		local
 			color_struct: POINTER
-			propname, propvalue: EV_GTK_C_STRING
-			a_font_imp: EV_FONT_IMP
-			a_color_imp: EV_COLOR_IMP
-			a_effects: EV_CHARACTER_FORMAT_EFFECTS
+			propvalue: EV_GTK_C_STRING
 		do
 			
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
 			
 			if (applicable_attributes.font_family or else applicable_attributes.font_height or else applicable_attributes.font_shape or else applicable_attributes.font_weight) then
-				a_font_imp ?= font.implementation
 				if applicable_attributes.font_family then
-					create propname.make ("family")
-					create propvalue.make (a_font_imp.pango_family_string)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, propname.item, propvalue.item)					
+					create propvalue.make (name)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, family_string, propvalue.item)					
 				end
 				if applicable_attributes.font_height then
-					create propname.make ("size")
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, a_font_imp.pango_height)	
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, size_string, height * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)	
 				end
 				if applicable_attributes.font_shape then
-					create propname.make ("style")
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, a_font_imp.pango_style)		
+					if shape = feature {EV_FONT_CONSTANTS}.shape_italic then
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, style_string, 2)
+					end		
 				end
 				if applicable_attributes.font_weight then
-					create propname.make ("weight")
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, a_font_imp.pango_weight)					
+					inspect
+						weight
+					when
+						feature {EV_FONT_CONSTANTS}.weight_bold
+					then
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string, feature {EV_FONT_IMP}.pango_weight_bold)
+					when
+						feature {EV_FONT_CONSTANTS}.weight_regular
+					then
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string, feature {EV_FONT_IMP}.pango_weight_normal)
+					when
+						feature {EV_FONT_CONSTANTS}.weight_thin
+					then
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string, feature {EV_FONT_IMP}.pango_weight_ultra_light)
+					when
+						feature {EV_FONT_CONSTANTS}.weight_black
+					then
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string, feature {EV_FONT_IMP}.pango_weight_heavy)
+					end				
 				end
 			end
 
+			color_struct := App_implementation.reusable_color_struct
 			if applicable_attributes.color then
-				a_color_imp ?= color.implementation
-				create propname.make ("foreground-gdk")
-				color_struct := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color_imp.red_16_bit)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color_imp.green_16_bit)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color_imp.blue_16_bit)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, propname.item, color_struct, default_pointer)
-				color_struct.memory_free				
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, (fcolor |>> 16) * 257)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((fcolor |<< 16) |>> 24) * 257)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, ((fcolor |<< 24) |>> 24) * 257)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, foreground_gdk_string, color_struct, default_pointer)
+							
 			end
 
 			if applicable_attributes.background_color then
-				a_color_imp ?= background_color.implementation
-				create propname.make ("background-gdk")
-				color_struct := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color_imp.red_16_bit)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color_imp.green_16_bit)
-				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color_imp.blue_16_bit)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, propname.item, color_struct, default_pointer)
-				color_struct.memory_free				
-			end
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, (bcolor |>> 16) * 257)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((bcolor |<< 16) |>> 24) * 257)
+				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, ((bcolor |<< 24) |>> 24) * 257)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, background_gdk_string, color_struct, default_pointer)			
+			end	
 
-			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset) then
-				a_effects := effects
+			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset or else applicable_attributes.effects_double_underlined) then
 				if applicable_attributes.effects_striked_out then
-					create propname.make ("strikethrough")
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, propname.item, a_effects.is_striked_out)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, strikethrough_string, is_striked_out)
 				end
-				if applicable_attributes.effects_underlined then
-					create propname.make ("underline")
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, propname.item, a_effects.is_underlined)
+				if applicable_attributes.effects_underlined and then is_underlined then
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_single_enum)
 				end
+--				if applicable_attributes.effects_double_underlined and then a_effects.is_double_underlined then
+--					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string, feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_double_enum)
+--				end
 				if applicable_attributes.effects_vertical_offset then
-					create propname.make ("rise")
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, a_effects.vertical_offset)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, rise_string, vertical_offset)
 				end
 			end
 		end
+		
+		family_string: POINTER is
+				-- String optimization
+			local
+				a_str: EV_GTK_C_STRING
+			once
+				create a_str.make ("family")
+				Result := a_str.item	
+			end
 
+		size_string: POINTER is
+				-- String optimization
+			local
+				a_str: EV_GTK_C_STRING
+			once
+				create a_str.make ("size")
+				Result := a_str.item	
+			end
+
+		style_string: POINTER is
+				-- String optimization
+			local
+				a_str: EV_GTK_C_STRING
+			once
+				create a_str.make ("style")
+				Result := a_str.item	
+			end
+
+		weight_string: POINTER is
+				-- String optimization
+			local
+				a_str: EV_GTK_C_STRING
+			once
+				create a_str.make ("weight")
+				Result := a_str.item	
+			end
+
+		foreground_gdk_string: POINTER is
+				-- String optimization
+			local
+				a_str: EV_GTK_C_STRING
+			once
+				create a_str.make ("foreground-gdk")
+				Result := a_str.item	
+			end
+
+		background_gdk_string: POINTER is
+				-- String optimization
+			local
+				a_str: EV_GTK_C_STRING
+			once
+				create a_str.make ("background-gdk")
+				Result := a_str.item	
+			end
+
+		underline_string: POINTER is
+				-- String optimization
+			local
+				a_str: EV_GTK_C_STRING
+			once
+				create a_str.make ("underline")
+				Result := a_str.item	
+			end
+
+		strikethrough_string: POINTER is
+				-- String optimization
+			local
+				a_str: EV_GTK_C_STRING
+			once
+				create a_str.make ("strikethrough")
+				Result := a_str.item	
+			end
+
+		rise_string: POINTER is
+				-- String optimization
+			local
+				a_str: EV_GTK_C_STRING
+			once
+				create a_str.make ("rise")
+				Result := a_str.item	
+			end
 
 feature {NONE} -- Implementation
 
-	internal_font_imp: EV_FONT_IMP
-			-- Font of the current format
-	
-	internal_color_imp: EV_COLOR_IMP
-			-- Color of the current format
+	app_implementation: EV_APPLICATION_IMP is
+			-- 
+		once
+			Result ?= (create {EV_ENVIRONMENT}).application.implementation
+		end
+
+	name: STRING
+			-- Face name used by `Current'.
 		
-	internal_background_color_imp: EV_COLOR_IMP
-			-- Background Color of the current format
-	
-	internal_effects: EV_CHARACTER_FORMAT_EFFECTS
-			-- Character format effects applicable to `font'
+	family: INTEGER
+			-- Family used by `Current'.
+		
+	height: INTEGER
+			--  Height of `Current'.
+		
+	weight: INTEGER
+			-- Weight of `Current'.
+		
+	is_bold: BOOLEAN is
+			-- Is `Current' bold?
+		do
+			Result := (weight = feature {EV_FONT_CONSTANTS}.weight_bold)
+		end
+		
+	shape: INTEGER
+			-- Shape of `Current'.
+
+	char_set: INTEGER
+			-- Char set used by `Current'.
+		
+	is_underlined: BOOLEAN
+			-- Is `Current' underlined?
+		
+	is_striked_out: BOOLEAN
+			-- Is `Current' striken out?
+		
+	vertical_offset: INTEGER
+			-- Vertical offset of `Current'.
+
+	fcolor: INTEGER
+			-- foreground color BGR packed into 24 bit.
+		
+	bcolor: INTEGER
+			-- background color BGR packed into 24 bit.
 
 	destroy is
 			-- Clean up
 		do
-			internal_font_imp := Void
-			internal_color_imp := Void
-			internal_background_color_imp := Void
-			internal_effects := Void
+			-- Do nothing
 		end
 
 end -- class EV_CHARACTER_FORMAT_IMP

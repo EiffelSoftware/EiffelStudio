@@ -12,7 +12,7 @@ inherit
 			wipe_out, make
 		end
 
-	SHARED_EXTERNALS
+	SHARED_WORKBENCH
 		export
 			{NONE} all
 		end
@@ -57,18 +57,15 @@ feature -- Processing
 		require
 			new_externals_exists: new_externals /= Void
 		local
-			l_is_il_generation: BOOLEAN
+			l_externals: EXTERNALS
 		do
-			l_is_il_generation := System.il_generation
+			l_externals := System.externals
 			from
 				old_externals.start
 			until
 				old_externals.after
 			loop
-				Externals.remove_occurrence (old_externals.item.external_name_id)
-				if l_is_il_generation then
-					Il_c_externals.remove_external (old_externals.item)
-				end
+				l_externals.remove_external (old_externals.item)
 				old_externals.forth
 			end
 
@@ -77,10 +74,7 @@ feature -- Processing
 			until
 				new_externals.after
 			loop
-				Externals.add_occurrence (new_externals.item.external_name_id)
-				if l_is_il_generation then
-					Il_c_externals.add_external (new_externals.item)
-				end
+				l_externals.add_external (new_externals.item)
 				new_externals.forth
 			end
 		end

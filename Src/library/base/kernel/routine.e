@@ -4,7 +4,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-edeferred class ROUTINE [TBASE, TOPEN -> TUPLE]
+deferred class ROUTINE [TBASE, TOPEN -> TUPLE]
 
 inherit
 	MEMORY

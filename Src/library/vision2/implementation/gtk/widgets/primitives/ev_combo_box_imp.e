@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description: 
@@ -12,14 +14,14 @@ class
 	
 inherit
 	EV_COMBO_BOX_I
+		redefine
+			interface
+		end
 
 	EV_TEXT_FIELD_IMP
-		undefine
-			make_with_text
 		redefine
+			initialize,
 			make,
-			destroy,
-			destroyed,
 			text,
 			set_editable,
 			set_text,
@@ -27,12 +29,7 @@ inherit
 			prepend_text,
 			position,
 			set_position,
-			set_maximum_text_length,
 			select_region,
-			add_return_command,
-			add_change_command,
-			remove_return_commands,
-			remove_change_commands,
 			cut_selection,
 			copy_selection,
 			paste,
@@ -42,26 +39,24 @@ inherit
 			delete_selection,
 			select_all,
 			deselect_all,
-			is_editable
+			is_editable,
+			interface
 		end
 
 	EV_LIST_IMP
 		undefine
 			set_default_colors,
-			set_default_options,
-			is_multiple_selection,
-			set_single_selection,
-			set_multiple_selection
+			multiple_selection_enabled,
+			disable_multiple_selection,
+			enable_multiple_selection
 		redefine
+			gtk_reorder_child,
+			initialize,
 			make,
 			select_item,
-			selected_item,
-			rows,
 			selected,
-			add_item,
-			remove_item,
-			destroy,
-			destroyed
+			add_to_container,
+			interface
 		end
 
 create
@@ -69,21 +64,29 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create a combo-box with `par' as parent.
+	make (an_interface: like interface) is
+			-- Create a combo-box.
 		do
+			base_make (an_interface)
 			-- create of the array where the items will be listed.
 			create ev_children.make (1)
 
 			-- create of the gtk object.
-			widget := gtk_combo_new
-			gtk_object_ref (widget)
+			set_c_object (C.gtk_combo_new)
 
 			-- Pointer to the text we see.
-			entry_widget := c_gtk_combo_entry (widget)
+			entry_widget := C.gtk_combo_struct_entry (c_object)
 
 			-- Pointer to the list of items.
-			list_widget := c_gtk_combo_list (widget)
+			list_widget := C.gtk_combo_struct_list (c_object)
+		end
+
+	initialize is
+		do
+			{EV_LIST_IMP} Precursor
+
+			--| FIXME IEK Action sequence is being connected twice.
+			--{EV_TEXT_FIELD_IMP} Precursor
 		end
 
 feature -- Access
@@ -92,32 +95,16 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			p := gtk_entry_get_text (entry_widget)
+			p := C.gtk_entry_get_text (entry_widget)
 			create Result.make (0)
 			Result.from_c (p)
 		end
 
-	select_item (index: INTEGER) is
+	select_item (an_index: INTEGER) is
 			-- Give the item of the list at the one-base
 			-- index. (Gtk uses 0 based indexs, I think)
 		do
-			gtk_list_select_item (list_widget, index-1)
-		end
-
-	selected_item: EV_LIST_ITEM is
-			-- Item which is currently selected, for a multiple
-			-- selection, it gives the item which has the focus.
-			-- XX Currently just give head of the gtk selection list
-		local
-			index: INTEGER
-		do
-			index := c_gtk_list_selected_item(list_widget)
-			if index = -1 then
-				Result := Void
-			else
-				-- Gtk has 0 based indicies
-				Result ?= (ev_children @ (index+1)).interface
-			end
+			C.gtk_list_select_item (list_widget, an_index - 1)
 		end
 
 feature -- Status report
@@ -125,39 +112,32 @@ feature -- Status report
 	is_editable: BOOLEAN is
 			-- Is the text editable
 		do
-			Result := c_gtk_editable_editable (entry_widget) /= 0
+			Result := C.c_gtk_editable_editable (entry_widget) /= 0
 		end
 
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := c_gtk_editable_has_selection (entry_widget) /= 0
+			Result := C.c_gtk_editable_has_selection (entry_widget) /= 0
 		end
 
 	position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := gtk_text_get_point (entry_widget) + 1
+			Result := C.gtk_text_get_point (entry_widget) + 1
 		end
 
 	selection_start: INTEGER is
 			-- Index of the first character selected
 		do
-			Result := c_gtk_editable_selection_start (entry_widget) + 1
+			Result := C.c_gtk_editable_selection_start (entry_widget) + 1
 		end
 
 	selection_end: INTEGER is
 			-- Index of the last character selected
 		do
-			Result := c_gtk_editable_selection_end (entry_widget)
+			Result := C.c_gtk_editable_selection_end (entry_widget)
 		end
-
-	destroyed: BOOLEAN is
-			-- Is screen window destroyed?
-		do
-			Result := (widget = Default_pointer) and (entry_widget = Default_pointer) and (list_widget = Default_pointer)
-		end
-
 
 feature -- Measurement
 
@@ -171,30 +151,16 @@ feature -- Measurement
 
 feature -- Status report
 
-	destroy is
-			-- destroy the gtk objects.
-		do
-			clear_items
-			if not destroyed then
-	                        gtk_widget_destroy (list_widget)
-	                        gtk_widget_destroy (entry_widget)
-	                        gtk_widget_destroy (widget)
-			end
-			widget := Default_pointer
-			list_widget := Default_pointer
-			entry_widget := Default_pointer			
-		end
-
 	rows: INTEGER is
 		 	-- Number of lines
 		do
-			Result := c_gtk_list_rows (list_widget)
+			Result := C.c_gtk_list_rows (list_widget)
 		end
 
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
 		do
-			Result := c_gtk_list_selected (list_widget)
+			Result := C.c_gtk_list_selected (list_widget) = 0
 		end
 
 feature -- Status setting
@@ -203,7 +169,7 @@ feature -- Status setting
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
 		do
-			gtk_entry_set_editable (entry_widget, flag)
+			C.gtk_entry_set_editable (entry_widget, flag)
 		end
 
 	set_text (txt: STRING) is
@@ -211,7 +177,7 @@ feature -- Status setting
 			a: ANY
 		do
 			a := txt.to_c
-			gtk_entry_set_text (entry_widget, $a)
+			C.gtk_entry_set_text (entry_widget, $a)
 		end
 	
 	append_text (txt: STRING) is
@@ -219,7 +185,7 @@ feature -- Status setting
 			a: ANY
 		do
 			a := txt.to_c
-			gtk_entry_append_text (entry_widget, $a)
+			C.gtk_entry_append_text (entry_widget, $a)
 		end
 	
 	prepend_text (txt: STRING) is
@@ -227,22 +193,22 @@ feature -- Status setting
 			a: ANY
 		do
 			a := txt.to_c
-			gtk_entry_prepend_text (entry_widget, $a)
+			C.gtk_entry_prepend_text (entry_widget, $a)
 		end
 	
 	set_position (pos: INTEGER) is
 		do
-			gtk_text_set_point (entry_widget, pos - 1)
+			C.gtk_text_set_point (entry_widget, pos - 1)
 		end
 	
 	set_maximum_text_length (len: INTEGER) is
 		do
-			gtk_entry_set_max_length (entry_widget, len)
+			C.gtk_entry_set_max_length (entry_widget, len)
 		end
 	
 	select_region (start_pos, end_pos: INTEGER) is
 		do
-			gtk_entry_select_region (entry_widget, start_pos-1, end_pos)
+			C.gtk_entry_select_region (entry_widget, start_pos-1, end_pos)
 		end	
 
 	set_extended_height (value: INTEGER) is
@@ -256,19 +222,19 @@ feature -- Basic operation
 	select_all is
 			-- Select all the text.
 		do
-			gtk_editable_select_region (entry_widget, 0, text_length)
+			C.gtk_editable_select_region (entry_widget, 0, text_length)
 		end
 
 	deselect_all is
 			-- Unselect the current selection.
 		do
-			gtk_editable_select_region (entry_widget, 0, 0)
+			C.gtk_editable_select_region (entry_widget, 0, 0)
 		end
 
 	delete_selection is
 			-- Delete the current selection.
 		do
-			gtk_editable_delete_selection (entry_widget)
+			C.gtk_editable_delete_selection (entry_widget)
 		end
 
 	cut_selection is
@@ -278,7 +244,7 @@ feature -- Basic operation
 			-- If the `selectd_region' is empty, it does
 			-- nothing.
 		do
-			gtk_editable_cut_clipboard (entry_widget)
+			C.gtk_editable_cut_clipboard (entry_widget)
 		end
 
 	copy_selection is
@@ -287,10 +253,10 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			gtk_editable_copy_clipboard (entry_widget)
+			C.gtk_editable_copy_clipboard (entry_widget)
 		end
 
-	paste (index: INTEGER) is
+	paste (an_index: INTEGER) is
 			-- Insert the string which is in the 
 			-- Clipboard at the `index' postion in the
 			-- text.
@@ -299,78 +265,36 @@ feature -- Basic operation
 			pos: INTEGER
 		do
 			pos := position
-			set_position (index)
-			gtk_editable_paste_clipboard (entry_widget)
+			set_position (an_index)
+			C.gtk_editable_paste_clipboard (entry_widget)
 			set_position (pos)
-		end
-
-feature -- Event : command association
-
-	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be
-			-- executed when the "Return" button is pressed
-		do
-			add_command (entry_widget, "activate", cmd,  arg, default_pointer)
-		end
-
-	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text of the widget have changed.
-		do
-			add_command (entry_widget, "changed", cmd,  arg, default_pointer)
-		end
-
-feature -- Event -- removing command association
-
-	remove_return_commands is
-			-- Empty the list of commands to be executed
-			-- when the text field is activated, ie when the user
-			-- press the enter key.
-		local
-			p: POINTER
-		do
-			p := widget
-			widget := entry_widget
-			remove_commands (widget, activate_id)
-			widget := p
-		end
-
-	remove_change_commands is
-			-- Empty the list of commands to be executed
-			-- when the text of the widget have changed.
-		local
-			p: POINTER
-		do
-			p := widget
-			widget := entry_widget
-			remove_commands (widget, changed_id)
-			widget := p
-		end
-
-feature {EV_LIST_ITEM} -- Implementation
-
-	add_item (item_imp: EV_LIST_ITEM_IMP) is
-			-- Add `item' to the list
-		local
-			s: ANY
-		do
-			ev_children.extend (item_imp)
-			s := item_imp.text.to_c
-			gtk_combo_set_item_string (widget, item_imp.widget, $s)
-			gtk_container_add (list_widget, item_imp.widget)
-		end
-
-	remove_item (item_imp: EV_LIST_ITEM_IMP) is
-			-- Remove `item' from the list
-		do
-			ev_children.prune_all (item_imp)
-			gtk_container_remove (list_widget, item_imp.widget)
 		end
 
 feature {NONE} -- Implementation
 
-	entry_widget: POINTER
-		-- A pointer on the text field
+	add_to_container (v: like item) is
+			-- Add `v' to container.
+		local
+			imp: EV_LIST_ITEM_IMP
+			s: ANY
+		do	
+			imp ?= v.implementation
+			s := imp.text.to_c
+			C.gtk_combo_set_item_string (c_object, imp.c_object, $S)
+			C.gtk_container_add (list_widget, imp.c_object)
+		end
+
+	gtk_reorder_child (a_container, a_child: POINTER; an_index: INTEGER) is
+			-- Reorder `a_child' to `an_index' in `c_object'.
+			-- `a_container' is ignored.
+		do
+			C.gtk_box_reorder_child (c_object, a_child, an_index - 1)
+		end
+
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_COMBO_BOX
 
 end -- class EV_COMBO_BOX_IMP
 
@@ -389,3 +313,62 @@ end -- class EV_COMBO_BOX_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.17  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.16.6.13  2000/02/12 00:26:11  king
+--| Implemented gtk_reorder_child
+--|
+--| Revision 1.16.6.12  2000/02/11 18:25:26  king
+--| Added entry widget pointer in EV_TEXT_FIELD_IMP to accomodate the fact that combo box is not an entry widget
+--|
+--| Revision 1.16.6.11  2000/02/11 01:30:50  king
+--| Added fixme to precursor of initialize
+--|
+--| Revision 1.16.6.10  2000/02/11 00:55:26  king
+--| Implemented combo box to allow assertion of items
+--|
+--| Revision 1.16.6.9  2000/01/27 19:29:46  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.16.6.8  2000/01/18 19:33:41  king
+--| Added initialize, removed redefinition of now defunct features
+--|
+--| Revision 1.16.6.7  2000/01/15 00:53:19  oconnor
+--| renamed is_multiple_selection -> multiple_selection_enabled, set_multiple_selection -> enable_multiple_selection & set_single_selection -> disable_multiple_selection
+--|
+--| Revision 1.16.6.6  1999/12/13 20:02:38  oconnor
+--| commented out old command stuff
+--|
+--| Revision 1.16.6.5  1999/12/04 18:59:20  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.16.6.4  1999/12/03 07:48:11  oconnor
+--| fixed gaggle of typos
+--|
+--| Revision 1.16.6.3  1999/12/01 20:27:50  oconnor
+--| tweaks for new externals
+--|
+--| Revision 1.16.6.2  1999/11/30 23:14:20  oconnor
+--| rename widget to c_object
+--| redefine interface to be of mreo refined type
+--|
+--| Revision 1.16.6.1  1999/11/24 17:29:56  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.16.2.3  1999/11/17 01:53:04  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.16.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

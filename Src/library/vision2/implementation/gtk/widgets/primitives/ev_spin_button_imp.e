@@ -1,9 +1,5 @@
 indexing
-	description:
-		" EiffelVision spin button. A single line edit that%
-		% displays only numbers. The user can increase or%
-		% decrease this number by clicking on up or down%
-		% arrow buttons. Gtk implementation."
+	description: "Eiffel Vision spin button. GTK+ Implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,105 +9,52 @@ class
 
 inherit
 	EV_SPIN_BUTTON_I
+		undefine
+			set_default_colors
+		redefine
+			interface
+		end
 
 	EV_GAUGE_IMP
 		undefine
-			set_default_options,
 			set_default_colors
 		redefine
-			make_with_range,
-			adjustment_widget
+			interface,
+			initialize
 		end
 
 	EV_TEXT_FIELD_IMP
 		redefine
-			make
+			make,
+			interface,
+			initialize
 		end
 
 create
-	make,
-	make_with_range
+	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Implementation
 
-	make is
-			-- Create a spin-button with 0 as minimum,
-			-- 100 as maximum and `par' as parent.
+	make (an_interface: like interface) is
+			-- Create the spin button.
 		do
-			-- Parameters are:
-			-- value, lower, upper, step_increment, page_increment.
-			widget := c_gtk_spin_button_new (0, 0, 100, 1, 5)
-			gtk_object_ref (widget)
+			base_make (an_interface)
+			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 5, 0)
+			set_c_object (C.gtk_spin_button_new (adjustment, 0, 0))
+
+			-- Set the entry widget from EV_TEXT_FIELD
+			entry_widget := c_object	
 		end
 
-	make_with_range (min: INTEGER; max: INTEGER) is
-			-- Create a spin-button with `min' as minimum, `max' as maximum
-			-- and `par' as parent.
+	initialize is
 		do
-			-- Parameters are:
-			-- value, lower, upper, step_increment, page_increment.
-			widget := c_gtk_spin_button_new (min, min, max, 1, 5)
-			gtk_object_ref (widget)
+			{EV_TEXT_FIELD_IMP} Precursor
+			ev_gauge_imp_initialize --| {EV_GAUGE} Precursor
 		end
 
-feature -- Access
+feature {EV_ANY_I} -- Implementation
 
-	value: INTEGER is
-			-- Current value of the gauge
-		do
-			Result := gtk_spin_button_get_value_as_int (widget)
-		end
-
-	step: INTEGER is
-			-- Step of the scrolling
-			-- ie : the user clicks on an arrow
-		do
-			Result := c_gtk_spin_button_step (widget)
-		end
-
-	minimum: INTEGER is
-			-- Minimum value
-		do
-			Result := c_gtk_spin_button_minimum (widget)
-		end
-
-	maximum: INTEGER is
-			-- Maximum value
-		do
-			Result := c_gtk_spin_button_maximum (widget)
-		end
-
-	adjustment_widget: POINTER is
-			-- Pointer to adjustment widget
-		do
-			Result := gtk_spin_button_get_adjustment (widget)
-		end
-
-feature -- Element change
-
-	set_value (val: INTEGER) is
-			-- Make `val' the new current value.
-		do
-			gtk_spin_button_set_value (widget, val)
-		end
-
-	set_step (val: INTEGER) is
-			-- Make `val' the new step.
-		do
-			c_gtk_spin_button_set_step (widget, val)
-		end
-
-	set_minimum (val: INTEGER) is
-			-- Make `val' the new minimum.
-		do
-			c_gtk_spin_button_set_minimum (widget, val)
-		end
-
-	set_maximum (val: INTEGER) is
-			-- Make `val' the new maximum.
-		do
-			c_gtk_spin_button_set_maximum (widget, val)
-		end
+	interface: EV_SPIN_BUTTON
 
 end -- class EV_SPIN_BUTTON_IMP
 
@@ -130,3 +73,43 @@ end -- class EV_SPIN_BUTTON_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.6.7  2000/02/11 18:25:27  king
+--| Added entry widget pointer in EV_TEXT_FIELD_IMP to accomodate the fact that combo box is not an entry widget
+--|
+--| Revision 1.5.6.6  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.5.6.5  2000/02/02 01:19:43  brendel
+--| Fixed bug where initialize of EV_WIDGET_IMP was called more than once.
+--|
+--| Revision 1.5.6.4  2000/02/01 01:43:51  brendel
+--| Added undefine of set_default_colors from EV_WIDGET.
+--|
+--| Revision 1.5.6.3  2000/02/01 01:27:55  brendel
+--| Revised.
+--|
+--| Revision 1.5.6.2  2000/01/27 19:29:48  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.6.1  1999/11/24 17:29:58  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.2.3  1999/11/17 01:53:05  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.5.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

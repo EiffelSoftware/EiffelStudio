@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" A class that handle the menu items inside a%
@@ -11,7 +13,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize_handler is
 			-- Create the hash-table.
 		do
 			create menu_items.make (1)
@@ -27,7 +29,7 @@ feature -- Basic operations
 	update_menu is
 			-- Graphical update of the menu
 		local
-			window: EV_UNTITLED_WINDOW_IMP
+			window: EV_WINDOW_IMP
 		do
 			window := top_level_window_imp
 			if window /= Void then
@@ -44,9 +46,9 @@ feature -- Basic operations
 			it: EV_MENU_ITEM_IMP
 		do
 			-- Initializations
-			cc := item_imp.children
+			--| FIXME cc := item_imp.ev_children
 			if menu_items = Void then
-				initialize
+				initialize_handler
 			end
 			ht := menu_items
 
@@ -77,7 +79,7 @@ feature -- Basic operations
 		do
 			-- Initializations
 			ht := menu_items
-			cc := item_imp.children
+			--| FIXME cc := item_imp.ev_children
 
 			-- Remove the item ans sub-items.
 			ht.remove (item_imp.id)
@@ -108,12 +110,12 @@ feature {NONE} -- WEL Implementation
 			-- If this feature is called, it means that the 
 			-- child is a menu.
 		do
-			menu_items.item(menu_id).on_activate
+			--menu_items.item(menu_id).on_activate
 		end
 
 feature {EV_POPUP_MENU_IMP} -- Deferred features
 
-	top_level_window_imp: EV_UNTITLED_WINDOW_IMP is
+	top_level_window_imp: EV_WINDOW_IMP is
 			-- Top level window that contains the current widget.
 		deferred
 		end
@@ -135,3 +137,36 @@ end -- class EV_MENU_ITEM_HANDLER_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.6.5  2000/02/05 02:14:35  brendel
+--| Commented out some implementation.
+--| This class will probably be obsolete anyway.
+--|
+--| Revision 1.3.6.4  2000/02/04 01:05:40  brendel
+--| Rearranged inheritance structure in compliance with revised interface.
+--| Nothing has been implemented yet!
+--|
+--| Revision 1.3.6.3  2000/01/27 19:30:15  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.6.2  1999/12/17 17:01:00  rogers
+--| Altered to fit in with the review branch. Minor changes, code now uses ev_children.
+--|
+--| Revision 1.3.6.1  1999/11/24 17:30:22  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.3  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

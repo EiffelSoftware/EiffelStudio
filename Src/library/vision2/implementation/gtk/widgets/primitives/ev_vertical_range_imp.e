@@ -1,5 +1,5 @@
 indexing 
-	description: "EiffelVision vertical range. Gtk implementation."
+	description: "Eiffel Vision vertical range. GTK+ implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,39 +9,32 @@ class
 
 inherit
 	EV_VERTICAL_RANGE_I
+		redefine
+			interface
+		end
 
 	EV_RANGE_IMP
-		undefine
-			set_default_options
+		redefine
+			interface
 		end
 
 create
-	make,
-	make_with_range
+	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create a scale with 0 as minimum,
-			-- 100 as maximum and `par' as parent.
+	make (an_interface: like interface) is
+			-- Create the vertical range.
 		do
-			-- Parameters are:
-			-- value, lower, upper, step_increment, page_increment.
-			widget := c_gtk_vscale_new (0, 0, 100, 1, 5)
-			gtk_scale_set_digits (widget, 0)
-			gtk_object_ref (widget)
+			base_make (an_interface)
+			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 10, 10)
+			set_c_object (C.gtk_vscale_new (adjustment))		
+			C.gtk_scale_set_digits (c_object, 0)	
 		end
 
-	make_with_range (min: INTEGER; max: INTEGER) is
-			-- Create a scale with `min' as minimum, `max' as maximum
-			-- and `par' as parent.
-		do
-			-- Parameters are:
-			-- value, lower, upper, step_increment, page_increment.
-			widget := c_gtk_vscale_new (min, min, max, 1, 5)
+feature {EV_ANY_I} -- Implementation
 
-			gtk_object_ref (widget)
-		end
+	interface: EV_VERTICAL_RANGE
 
 end -- class EV_VERTICAL_RANGE_IMP
 
@@ -60,3 +53,34 @@ end -- class EV_VERTICAL_RANGE_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.4  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.4.6.3  2000/02/02 01:01:44  brendel
+--| Revised. Created with 0 digits.
+--|
+--| Revision 1.4.6.2  2000/01/27 19:29:50  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.1  1999/11/24 17:29:59  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.3  1999/11/17 01:53:07  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 indexing 
-	description: "EiffelVision file open dialog."
+	description: "Eiffel Vision file open dialog."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,42 +9,30 @@ class
 
 inherit
 	EV_FILE_OPEN_DIALOG_I
+		redefine
+			interface
+		end
 
 	EV_FILE_DIALOG_IMP
+		redefine
+			interface,
+			initialize
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create a window with a parent.
-		local
-			a: ANY
-			s: STRING
-			par_imp: EV_CONTAINER_IMP
+	initialize is
 		do
-			s := "Open file dialog"
-			a := s.to_c
-			par_imp ?= par.implementation
-
-			-- Create the gtk object.
-			widget := gtk_file_selection_new ($a)
-
-			-- Attach the window to `par'.
-			gtk_window_set_transient_for (widget, par_imp.widget)
-			-- Set it as modal (nothing can be done
-			-- until the window is closed).
-			gtk_window_set_modal (widget, True)
-
-			-- Make it appear where the mouse is.
-			gtk_window_set_position (GTK_WINDOW (widget), WINDOW_POSITION_MOUSE)
-
-			-- Connect destroy command to `OK' and `Cancel' buttons.
-			add_dialog_close_command (ok_widget)
-			add_dialog_close_command (cancel_widget)		
+			Precursor
+			set_title ("Open")
 		end
 
+feature {NONE} -- Implementation
+
+	interface: EV_FILE_OPEN_DIALOG
 
 end -- class EV_FILE_OPEN_DIALOG_IMP
 
@@ -63,3 +51,36 @@ end -- class EV_FILE_OPEN_DIALOG_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:31  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.6.5  2000/02/04 04:25:37  oconnor
+--| released
+--|
+--| Revision 1.5.6.4  2000/01/27 23:56:09  brendel
+--| Added redefine of implementation.
+--| Now has title "Open" by default.
+--|
+--| Revision 1.5.6.3  2000/01/27 19:29:41  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.6.2  2000/01/27 02:41:25  brendel
+--| Revised. GTK platform makes no difference in save/open so little to
+--| implement.
+--|
+--| Revision 1.5.6.1  1999/11/24 17:29:52  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision tool-bar separator, implementation interface."
@@ -11,21 +12,17 @@ deferred class
 inherit
 	EV_SEPARATOR_ITEM_I
 		redefine
-			parent_imp,
 			parent
 		end
 
 feature -- Access
 
-	parent: EV_TOOL_BAR is
+	parent: EV_ITEM_LIST [EV_TOOL_BAR_ITEM] is
 			-- The parent of the Current widget
 			-- Can be void.
 		do
 			Result ?= {EV_SEPARATOR_ITEM_I} Precursor
 		end
-
-	parent_imp: EV_TOOL_BAR_IMP
-			-- Parent implementation
 
 end -- class EV_TOOL_BAR_SEPARATOR_I
 
@@ -44,3 +41,34 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:34  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.6.5  2000/02/04 04:02:41  oconnor
+--| released
+--|
+--| Revision 1.6.6.4  2000/02/02 00:48:52  king
+--| Corrected inheritence from item_list from tb button to tb item
+--|
+--| Revision 1.6.6.3  2000/01/28 18:54:18  king
+--| Removed redundant features, changed to generic structure of ev_item_list
+--|
+--| Revision 1.6.6.2  2000/01/27 19:29:53  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.6.1  1999/11/24 17:30:03  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

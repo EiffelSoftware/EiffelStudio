@@ -1,9 +1,6 @@
 indexing
-
-	description: 
-		"EiffelVision text field, gtk implementation."
+	description: "EiffelVision text field. GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -12,126 +9,118 @@ class
 	
 inherit
 	EV_TEXT_FIELD_I
+		redefine
+			interface
+		end
 	
 	EV_TEXT_COMPONENT_IMP
+		redefine
+			interface,
+			initialize
+		end
 	
 	EV_BAR_ITEM_IMP
 
 create
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-        make is
-                        -- Create a gtk entry.
-                do
-                        widget := gtk_entry_new
-			gtk_object_ref (widget)
-                end
-
-	make_with_text (txt: STRING) is
-			-- Create a text area with `par' as
-			-- parent and `txt' as text.
+	make (an_interface: like interface) is
+			-- Create a gtk entry.
 		do
-			make
-			set_text (txt)
+			base_make (an_interface)
+			set_c_object (C.gtk_entry_new)
+			entry_widget := c_object
+		end
+
+	initialize is
+			-- Set up action sequence connection and `Precursor' initialization.
+		do
+			{EV_TEXT_COMPONENT_IMP} Precursor
+			connect_signal_to_actions ("activate", interface.return_actions)
+			connect_signal_to_actions ("changed", interface.change_actions)
 		end
 
 feature -- Access
 
-        text: STRING is
-		local
-			p: POINTER
+	text: STRING is
+			-- Text displayed in field.
 		do
-			p := gtk_entry_get_text (widget)
-			create Result.make (0)
-			Result.from_c (p)
+			create Result.make_from_c (C.gtk_entry_get_text (entry_widget))
 		end
 
 feature -- Status setting
 	
-	set_text (txt: STRING) is
-		local
-			a: ANY
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
 		do
-			a := txt.to_c
-			gtk_entry_set_text (widget, $a)
+			C.gtk_entry_set_text (entry_widget, eiffel_to_c (a_text))
+		end
+
+	set_caret_position (pos: INTEGER) is
+			-- Set the position of the caret to `pos'.
+		do
+			C.gtk_editable_set_position (entry_widget, pos)
 		end
 
 	insert_text (txt: STRING) is
-			-- Insert `txt' at the current position
+			-- Insert `txt' at the current position.
 		local
-			str: STRING
+			pos: INTEGER
 		do
-			str := text
-			str.insert (txt, position)
-			set_text (str)
+			pos := caret_position
+			C.gtk_editable_insert_text (entry_widget, eiffel_to_c (txt), txt.count, $pos)
 		end
 
 	append_text (txt: STRING) is
-		local
-			a: ANY
+			-- Append `txt' to the end of the text.
 		do
-			a := txt.to_c
-			gtk_entry_append_text (widget, $a)
+			C.gtk_entry_append_text (entry_widget, eiffel_to_c (txt))
 		end
 	
 	prepend_text (txt: STRING) is
-		local
-			a: ANY
+			-- Prepend `txt' to the end of the text.
 		do
-			a := txt.to_c
-			gtk_entry_prepend_text (widget, $a)
+			C.gtk_entry_prepend_text (entry_widget, eiffel_to_c (txt))
 		end
 		
-	set_maximum_text_length (len: INTEGER) is
+	set_capacity (len: INTEGER) is
 		do
-			gtk_entry_set_max_length (widget, len)
+			C.gtk_entry_set_max_length (entry_widget, len)
 		end
 	
-	get_maximum_text_length: INTEGER is
+	capacity: INTEGER is
 			-- Return the maximum number of characters that the
 			-- user may enter.
 		do
-			Result := c_gtk_entry_get_max_length (widget)
+			Result := C.c_gtk_entry_get_max_length (entry_widget)
 		end
 
-feature -- Event - command association
-	
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Use 'add_return_command' instead.
+feature -- Status Report
+
+	caret_position: INTEGER is
+			-- Current position of the caret.
 		do
-			add_command (widget, "activate", cmd,  arg, default_pointer)
+			Result := C.gtk_editable_get_position (entry_widget)
 		end
 
-	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text field is activated, ie when the user
-			-- press the enter key.
-		do
-			add_command (widget, "activate", cmd,  arg, default_pointer)
-		end
+feature {NONE} -- Implementation
 
-feature -- Event -- removing command association
+	entry_widget: POINTER
+		-- A pointer on the text field
 
-	remove_activate_commands is
-			-- Use 'remove_return_command' instead.
-		do
-			remove_commands (widget, activate_id)
-		end
+feature {EV_TEXT_FIELD_I} -- Implementation
 
-	remove_return_commands is
-			-- Empty the list of commands to be executed
-			-- when the text field is activated, ie when the user
-			-- press the enter key.
-		do
-			remove_commands (widget, activate_id)
-		end
+	interface: EV_TEXT_FIELD
+			--Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
 
+invariant
+	entry_widget_set: entry_widget /= Default_pointer
 end -- class EV_TEXT_FIELD_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable  components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -145,4 +134,60 @@ end -- class EV_TEXT_FIELD_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.14  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.13.6.12  2000/02/11 18:25:27  king
+--| Added entry widget pointer in EV_TEXT_FIELD_IMP to accomodate the fact that combo box is not an entry widget
+--|
+--| Revision 1.13.6.11  2000/02/10 08:45:18  oconnor
+--| connect_signal_to_actions "changed"
+--|
+--| Revision 1.13.6.10  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.13.6.9  2000/02/01 01:42:34  brendel
+--| Implemented (set_)caret_position.
+--| Improved implementations.
+--|
+--| Revision 1.13.6.8  2000/01/27 19:29:49  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.13.6.7  2000/01/18 07:15:09  oconnor
+--| rewoked in like with new interface class
+--|
+--| Revision 1.13.6.6  2000/01/06 18:43:03  king
+--| Added unimplemented caret_position and set_caret_position
+--|
+--| Revision 1.13.6.5  1999/12/13 20:03:09  oconnor
+--| commented out old command stuff
+--|
+--| Revision 1.13.6.4  1999/12/04 18:59:21  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.13.6.3  1999/12/01 20:27:50  oconnor
+--| tweaks for new externals
+--|
+--| Revision 1.13.6.2  1999/11/30 23:14:21  oconnor
+--| rename widget to c_object
+--| redefine interface to be of mreo refined type
+--|
+--| Revision 1.13.6.1  1999/11/24 17:29:58  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.13.2.3  1999/11/17 01:53:06  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.13.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

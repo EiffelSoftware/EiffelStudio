@@ -1,29 +1,33 @@
 indexing
-
 	description: 
-		"EiffelVision composite, gtk implementation."
+		"Eiffel Vision container, GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "container"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_CONTAINER_IMP
 	
 inherit
 	EV_CONTAINER_I
+		redefine
+			interface
+		end
 
 	EV_WIDGET_IMP
+		redefine
+			interface
+		end
 
-	EV_GTK_CONTAINERS_EXTERNALS
-	
 feature -- Access
 	
 	client_width: INTEGER is
 			-- Width of the client area of container.
 			-- Redefined in children.
 		do
+			-- FIXME why does this return 0
+			-- if it is indeed redefined by children it should be deffered.
 			Result := 0
 		end
 	
@@ -31,13 +35,15 @@ feature -- Access
 			-- Height of the client area of container
 			-- Redefined in children.
 		do
+			-- FIXME why does this return 0
+			-- if it is indeed redefined by children it should be deffered.
 			Result := 0
 		end
 
 	background_pixmap: EV_PIXMAP
 			-- the background pixmap
 	
-feature {EV_RADIO_BUTTON_IMP} -- Access
+feature {EV_RADIO_BUTTON_IMP} -- Access --| FIXME apparently not.
 	
 	radio_button_group: POINTER is
 			-- Gtk radio button group for this container. 
@@ -52,76 +58,26 @@ feature {EV_RADIO_BUTTON_IMP} -- Access
 		end
 	
 	set_rbg_pointer (new_rbg_pointer: POINTER) is
+			-- FIXME What's this?
 		do
 			rbg_pointer := new_rbg_pointer
 		end
 	
 feature -- Element change
-	
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
-		do
-			-- Create `vbox_widget' and `hbox_widget'.
-			add_child_packing (child_imp)
 
-			-- Put the `vbox' into the current container. 
-			gtk_container_add (GTK_CONTAINER (widget), child_imp.vbox_widget)
-
-			-- Sets the resizing options.
-			child_packing_changed (child_imp) 
-		end
-
-	add_child_packing (child_imp: EV_WIDGET_IMP) is
-			-- put the child into a GtkHBox, which will be put in a GtkVBox.
+	replace (v: like item) is
+			-- Replace `item' with `v'.
 		local
-			hbox_wid, vbox_wid: POINTER
+			w: EV_WIDGET_IMP
 		do
-			-- create of gtk hbox and vbox where the widget
-			-- will be placed to allow horizontal and vertical
-			-- resizing options.
-			hbox_wid := gtk_hbox_new (False, 0)
-			vbox_wid := gtk_vbox_new (False, 0)	
-
-			child_imp.set_hbox_widget (hbox_wid)
-			child_imp.set_vbox_widget (vbox_wid)
-			gtk_widget_show (child_imp.hbox_widget)
-			gtk_widget_show (child_imp.vbox_widget)
-
-			-- Put the child in the `hbox'.
-			gtk_box_pack_start (child_imp.hbox_widget, child_imp.widget, 
-			    True,
-			    child_imp.vertical_resizable, 0)
-
-			-- Put the `hbox' in the `vbox'.
-			gtk_box_pack_start (child_imp.vbox_widget, child_imp.hbox_widget, 
-			    True,
-			    child_imp.vertical_resizable, 0)
-
-			gtk_object_unref (child_imp.widget)
-				-- After putting child_imp.widget in child_imp.hbox_widget
-				-- its number of references reached 2, so we have to
-				-- decrease it to 1.
-				-- The number of reference of box_widget is 1 (its parent).
-		end
-
-	remove_child (child_imp: EV_WIDGET_IMP) is	
-			-- Remove the given child from the children of
-			-- the container.
-		do
-			gtk_object_ref (child_imp.widget)
-				-- Increment child_imp.vbox_widget to 2 so it will
-				-- not be destroyed when removed from the `hbox_widget' below.
-
-			-- Remove the child from the `hbox_widget' and remove the `vbox_widget'
-			-- from the current container. 			
-			gtk_container_remove (GTK_CONTAINER (child_imp.hbox_widget), child_imp.widget)
-			gtk_container_remove (GTK_CONTAINER (child_imp.vbox_widget), child_imp.hbox_widget)
-			gtk_container_remove (GTK_CONTAINER (widget), child_imp.vbox_widget)
-
-			-- As they have no more reference, `vbox_widget' and `hbox_widget' have
-			-- been destroyed.
-			child_imp.set_hbox_widget (default_pointer)
-			child_imp.set_vbox_widget (default_pointer)	
+			if not interface.empty then
+				w ?= interface.item.implementation
+				C.gtk_container_remove (c_object, w.c_object)
+			end
+			if v /= Void then
+				w ?= v.implementation
+				C.gtk_container_add (c_object, w.c_object)
+			end
 		end
 
 	set_background_pixmap (pixmap: EV_PIXMAP) is
@@ -131,121 +87,26 @@ feature -- Element change
 		do
 			pix_imp ?= pixmap.implementation
 
-			c_gtk_container_set_bg_pixmap (widget, pix_imp.widget)
-			gtk_widget_show (pix_imp.widget)
+			C.c_gtk_container_set_bg_pixmap (c_object, pix_imp.c_object)
+			C.gtk_widget_show (pix_imp.c_object)
 
 			background_pixmap := pixmap
 		end
-
-feature -- Basic operations
-
-	propagate_background_color is
-			-- Propagate the current background color of the
-			-- container to the children.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	propagate_foreground_color is
-			-- Propagate the current foreground color of the
-			-- container to the children.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-feature -- Assertion test
-
-	add_child_ok: BOOLEAN is
-			-- Used in the precondition of
-			-- 'add_child'. True, if it is ok to add a
-			-- child to container.			
-		do
-			Result := c_gtk_container_nb_children (widget)= 0
-		end
-
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Is `a_child' a child of the container?
-		do
-			if a_child.vbox_widget /= default_pointer then
-				Result := c_gtk_container_has_child (widget, a_child.vbox_widget)
-			else
-				Result := c_gtk_container_has_child (widget, a_child.widget)
-			end
-		end
-
-	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Has `a_child' been added properly?
-		do
-			if a_child.vbox_widget /= default_pointer then
-				Result := c_gtk_container_has_child (widget, a_child.vbox_widget)
-			else
-				Result := c_gtk_container_has_child (widget, a_child.widget)
-			end
-		end
+			-- FIXME NPC
 
 feature {NONE} -- Implementation
 	
 	rbg_pointer: POINTER
-						
 
-feature {EV_CONTAINER_IMP, EV_WIDGET_IMP} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
-	child_packing_changed (the_child: EV_WIDGET_IMP) is
-			-- changed the settings of his child `the_child'.
-			-- The child is contained in a GtkHBox which itself, is in
-			-- a GtkVBox. The GtkVBox is then in the current container.
-		require
-			child_resize_type_value_ok: ((the_child.resize_type >=0) and (the_child.resize_type <=3))
-		local
-			child_interface: EV_WIDGET
-		do
-			child_interface ?= the_child.interface
-			inspect
-				the_child.resize_type
-			when 0 then
-				-- 0 : no horizontal nor vertical resizing, the widget moves
-				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, True, False)
-					-- To forbid vertical resizing
-				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, False)
-					-- To forbid horizontal resizing
-			when 1 then
-				-- 1 : only the width changes
-				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, True, False)
-					-- To forbid vertical resizing
-				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, True)
-					-- To allow horizontal resizing
-			when 2 then
-				-- 2 : only the height changes
-				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, True, True)
-					-- To allow vertical resizing
-				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, False)
-					-- To forbid horizontal resizing
-			when 3 then
-				-- 3 : both width and height change
-				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, True, True)
-					-- To allow vertical resizing
-				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, True)
-					-- To allow horizontal resizing
-			end
-		end
-
-feature -- External
-
-	gtk_menu_bar_set_shadow_type (bar: POINTER; style: INTEGER) is
-		external
-			"C (GtkMenuBar *, gint) | <gtk/gtk.h>"
-		end
-
-	GTK_SHADOW_NONE: INTEGER is 0
-		-- Style used to have no shadow on menu
+	interface: EV_CONTAINER
+			-- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
 
 end -- class EV_CONTAINER_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -259,4 +120,68 @@ end -- class EV_CONTAINER_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.21  2000/02/14 11:40:31  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.20.2.1.2.14  2000/02/08 09:32:09  oconnor
+--| replaced put with replace
+--|
+--| Revision 1.20.2.1.2.13  2000/02/04 04:25:37  oconnor
+--| released
+--|
+--| Revision 1.20.2.1.2.12  2000/01/28 17:42:22  oconnor
+--| removed obsolete features
+--|
+--| Revision 1.20.2.1.2.11  2000/01/27 19:29:42  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.20.2.1.2.10  2000/01/14 20:30:19  oconnor
+--| added comments
+--|
+--| Revision 1.20.2.1.2.9  2000/01/14 20:22:25  oconnor
+--| removed color propogation feature, now in _I
+--|
+--| Revision 1.20.2.1.2.8  1999/12/15 23:47:43  oconnor
+--| improved safety of put
+--|
+--| Revision 1.20.2.1.2.7  1999/12/15 20:17:28  oconnor
+--| reworking box formatting, contracts and names
+--|
+--| Revision 1.20.2.1.2.6  1999/12/15 17:38:46  oconnor
+--| formatting
+--|
+--| Revision 1.20.2.1.2.5  1999/12/04 18:59:18  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.20.2.1.2.4  1999/12/01 17:37:12  oconnor
+--| migrating to new externals
+--|
+--| Revision 1.20.2.1.2.3  1999/12/01 01:02:33  brendel
+--| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied
+--| on specific things like return value BOOLEAN instead of INTEGER.
+--|
+--| Revision 1.20.2.1.2.2  1999/11/30 23:15:47  oconnor
+--| redefine interface to be of more refined type
+--|
+--| Revision 1.20.2.1.2.1  1999/11/24 17:29:53  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.19.2.4  1999/11/17 01:53:03  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.19.2.3  1999/11/09 16:53:15  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.19.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

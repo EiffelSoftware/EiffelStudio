@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description:
@@ -28,7 +30,6 @@ feature {NONE} -- Implementation
 		do
 			widget := gtk_table_new (0, 0, Default_homogeneous)
 				-- table created with 0 row and 0 column.
-			gtk_object_ref (widget)
 		end
 
 feature -- Status report
@@ -139,3 +140,28 @@ end -- class EV_TABLE_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:31  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.6.2  2000/01/27 19:29:43  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.6.1  1999/11/24 17:29:54  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.2.3  1999/11/17 01:53:04  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.9.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

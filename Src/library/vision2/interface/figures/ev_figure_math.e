@@ -38,6 +38,24 @@ feature -- Implementation
 			Result := sqrt (x_dist ^ 2 + y_dist ^ 2).rounded
 		end
 
+	line_angle (x1, y1, x2, y2: INTEGER): REAL is
+			-- Return the angle of the line.
+		do
+			Result := arc_tangent ((y2 - y1) / (x2 - x1))
+		end
+
+	delta_x (angle: REAL; length: INTEGER): INTEGER is
+			-- Get the dx component of line segment with `length' and `angle'.
+		do
+			Result := (cosine (angle) * length).rounded
+		end
+
+	delta_y (angle: REAL; length: INTEGER): INTEGER is
+			-- Get the dy component of line segment with `length' and `angle'.
+		do
+			Result := (sine (angle) * length).rounded
+		end
+
 	point_on_line (x, y, x1, y1, x2, y2, width: INTEGER): BOOLEAN is
 			-- Is the point on the line with `width'?
 		local
@@ -75,42 +93,75 @@ feature -- Implementation
 
 	point_on_ellipse (x, y, xc, yc, r1, r2: INTEGER): BOOLEAN  is
 			-- Determine whether (`x', `y') is inside the specified ellipse.
-			--| With orientation 0.
+			--| With orientation 0.0.
 		do
 			Result := ((x - xc) / r1) ^ 2 + ((y - yc) / r2) ^ 2 <= 1
 		end
 
 	point_on_rectangle (x, y, x1, y1, x2, y2: INTEGER): BOOLEAN is
 			-- Determine whether (`x', `y') is inside the specified box.
-			--| With orientation 0.
+			--| With orientation 0.0.
 		do
 			Result := between (x, x1, x2) and then between (y, y1, y2)
+		end
+
+	point_on_polygon (x, y: INTEGER; points: ARRAY [EV_COORDINATES]): BOOLEAN is
+			-- Is the point (`x', `y') contained in the polygon with `points'?
+			-- Based on code by Hanpeter van Vliet.
+		local
+			hits, y_save, n, i, j, dx, dy, rx, ry, base: INTEGER
+			s: REAL
+		do
+			base := points.lower
+			-- Find a vertex that is not on the halfline.
+			from
+				i := 0
+			until
+				not (i < points.count and then points.item (i + base).y = y)
+			loop
+				i := i + 1
+			end
+			-- Walk the edges of the polygon.
+			from
+				n := 0
+			until
+				n >= points.count
+			loop
+				j := (i + 1) \\ points.count
+				dx := points.item (j + base).x - points.item (i + base).x
+				dy := points.item (j + base).y - points.item (i + base).y
+				-- Ignore horizontal edges completely.
+				if dy /= 0 then
+					-- Check to see if the edge intersects the
+					-- horizontal halfline through (x, y).
+					rx := x - points.item (i + base).x
+					ry := y - points.item (i + base).y
+					-- Deal with edges starting or ending the halfline.
+					if points.item (j + base).y = y and then points.item (j + base).x >= x then
+						y_save := points.item (i + base).y
+					end
+					if points.item (i + base).y = y and then points.item (i + base).x >= x then
+						if (y_save > y) /= (points.item (j + base).y > y) then
+							hits := hits - 1
+						end
+					end
+					-- Tally intersections with halfline.
+					s := ry / dy
+					if s >= 0.0 and then s <= 1.0 and then (s * dx) >= rx then
+						hits := hits + 1
+					end
+				end
+				i := j
+				n := n + 1
+			end
+			-- Inside if number of intersections odd.
+			Result := (hits \\ 2) /= 0
 		end
 
 	between (n, a, b: INTEGER): BOOLEAN is
 			-- Is `n' a value between `a' and `b'?
 		do
-			Result := n >= lowest (a, b) and then n <= highest (a, b)
+			Result := n >= a.min (b) and then n <= a.max (b)
 		end		
-
-	lowest (a, b: INTEGER): INTEGER is
-			-- Returns `b' if `b' < `a', `a' otherwise.
-		do
-			if a < b then
-				Result := a
-			else
-				Result := b
-			end
-		end
-
-	highest (a, b: INTEGER): INTEGER is
-			-- Returns `b' if `b' > `a', `a' otherwise.
-		do
-			if a > b then
-				Result := a
-			else
-				Result := b
-			end
-		end
 
 end -- class EV_FIGURE_MATH

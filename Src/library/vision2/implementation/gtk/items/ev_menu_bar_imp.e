@@ -1,56 +1,54 @@
 indexing
-
-	description: 
-		"EiffelVision menu bar, gtk implementation."
+	description: "Eiffel Vision menu bar. GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 class
-	
 	EV_MENU_BAR_IMP
 	
 inherit
-	
 	EV_MENU_BAR_I
-		
-	EV_MENU_HOLDER_IMP
+		redefine
+			interface
+		end
 
-	EV_WIDGET_IMP
+	EV_MENU_ITEM_LIST_IMP
+		redefine
+			interface,
+			list_widget
+		end
 	
 create
-	
 	make
 
 feature {NONE} -- Initialization
-	
-        make is
-                        -- Create a fixed widget. 
+
+	make (an_interface: like interface) is
 		do
-			widget := gtk_menu_bar_new ()
-		end	
-	
-feature -- Element change	
-	
-	add_menu (menu_imp: EV_MENU_IMP) is
-			-- Add `menu_imp' in the container.
-		do
+			base_make (an_interface)
+			set_c_object (C.gtk_menu_bar_new)
+			C.gtk_widget_show (c_object)
 		end
 
-	remove_menu (menu_imp: EV_MENU_IMP) is
-			-- Remove `menu_imp' from the container.
+	initialize is
 		do
+			is_initialized := True
 		end
 
-feature {NONE} -- Implementation	
+feature {EV_WINDOW_IMP} -- Implementation
 
-	add_menu_item_pointer (item_p: POINTER) is
+	list_widget: POINTER is
+			-- Widget manipulated by list operations.
 		do
-			gtk_menu_bar_append (gtk_menu_bar (widget), item_p)
+			Result := c_object
 		end
 
-end
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_MENU_BAR
+
+end -- class EV_MENU_BAR_IMP
 
 --!----------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -67,3 +65,36 @@ end
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.5  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.4.6.4  2000/02/04 01:17:18  brendel
+--| Added gtk_widget_show in creation procedure, since it does not inherit
+--| from EV_WIDGET_IMP and is not shown by default.
+--|
+--| Revision 1.4.6.3  2000/02/03 23:31:59  brendel
+--| Revised.
+--| Changed inheritance structure.
+--|
+--| Revision 1.4.6.2  2000/01/27 19:29:50  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.1  1999/11/24 17:29:59  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

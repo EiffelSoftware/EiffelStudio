@@ -1,5 +1,5 @@
 indexing 
-	description: "EiffelVision horizontal Progress bar."
+	description: "EiffelV ision horizontal progress bar. GTK+ implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,26 +9,30 @@ class
 
 inherit
 	EV_HORIZONTAL_PROGRESS_BAR_I
+		redefine
+			interface
+		end
 
 	EV_PROGRESS_BAR_IMP
-		undefine
-			set_default_options
 		redefine
-			make
+			initialize,
+			interface
 		end
 
 create
-	make,
-	make_with_range
+	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create the vertical progress bar.
+	initialize is
 		do
-			{EV_PROGRESS_BAR_IMP} Precursor
-			gtk_progress_bar_set_orientation (widget, GTK_PROGRESS_LEFT_TO_RIGHT)
+			Precursor
+			C.gtk_progress_bar_set_orientation (gtk_progress_bar, C.Gtk_progress_left_to_right_enum)
 		end
+			
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_HORIZONTAL_PROGRESS_BAR
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP
 
@@ -47,3 +51,37 @@ end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.6.6  2000/02/14 11:03:56  oconnor
+--| wrapped in event box
+--|
+--| Revision 1.5.6.5  2000/02/04 04:25:38  oconnor
+--| released
+--|
+--| Revision 1.5.6.4  2000/01/31 21:36:32  brendel
+--| Minor cosmetic changes.
+--|
+--| Revision 1.5.6.3  2000/01/27 19:29:46  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.6.2  2000/01/14 21:46:34  king
+--| Converted to fit in with new structure
+--|
+--| Revision 1.5.6.1  1999/11/24 17:29:56  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

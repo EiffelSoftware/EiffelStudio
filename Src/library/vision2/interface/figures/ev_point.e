@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision point. Description of geometric%
 				% abstract coordinates"
@@ -291,3 +293,31 @@ end -- class EV_POINT
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:46  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.4.2.2.4  2000/01/27 19:30:34  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.4.2.2.3  2000/01/24 23:42:48  oconnor
+--| mv ev_coordinates.e ev_point.e
+--|
+--| Revision 1.1.2.1  2000/01/24 23:23:49  oconnor
+--| mv ev_point.e ev_coordinates.e
+--|
+--| Revision 1.6.4.2.2.1  1999/11/24 17:30:39  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision container. Allows only one children.%
@@ -15,8 +17,14 @@ deferred class
 
 inherit
 	EV_CONTAINER_I
+		redefine
+			interface
+		end
 
 	EV_SIZEABLE_CONTAINER_IMP
+		redefine
+			interface
+		end
 
 	EV_MENU_ITEM_HANDLER_IMP
 
@@ -29,7 +37,8 @@ inherit
 			minimum_width,
 			minimum_height
 		redefine
-			move_and_resize
+			move_and_resize,
+			interface
 		end
 
 	WEL_SB_CONSTANTS
@@ -76,19 +85,21 @@ feature -- Element change
 			ww: WEL_WINDOW
 		do
 			if par /= Void then
-				if parent_imp /= Void then
-					parent_imp.remove_child (Current)
-				end
-				ww ?= par.implementation
-				wel_set_parent (ww)
+				--if parent_imp /= Void then
+				--	parent_imp.remove_child (Current)
+				--end
 				par_imp ?= par.implementation
 				check
 					valid_cast: par_imp /= Void
 				end
 				set_top_level_window_imp (par_imp.top_level_window_imp)
+
+				--| FIXME , The child should have already been added.
+				--| par_imp.interface.extend (Current.interface)
 				par_imp.add_child (Current)
+				ww ?= par.implementation
+				wel_set_parent (ww)
 			elseif parent_imp /= Void then
-				parent_imp.remove_child (Current)
 				wel_set_parent (default_parent)
 			end
 		end
@@ -98,7 +109,7 @@ feature -- Element change
 		do
 			if pix /= Void then
 				background_pixmap_imp ?= pix.implementation
-				background_pixmap_imp.reference
+	--			background_pixmap_imp.reference
 			end
 			if exists then
 				invalidate
@@ -183,7 +194,7 @@ feature {NONE} -- WEL Implementation
  							gauge_exists: gauge.exists
  						end
 						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam), get_wm_vscroll_pos (wparam, lparam))
- 						gauge.execute_command (Cmd_gauge, Void)
+ 						--| FIXME gauge.execute_command (Cmd_gauge, Void)
  					end
  				else
  					-- The message comes from a window scroll bar
@@ -211,7 +222,7 @@ feature {NONE} -- WEL Implementation
 	 						gauge_exists: gauge.exists
 	 					end
 						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam), get_wm_vscroll_pos (wparam, lparam))
-	 					gauge.execute_command (Cmd_gauge, Void)
+	 					--| FIXME gauge.execute_command (Cmd_gauge, Void)
 	 				end
 				else
  					-- The message comes from a window scroll bar
@@ -226,7 +237,7 @@ feature {NONE} -- WEL Implementation
 			-- The window is about to be destroyed.
 		do
 			if background_pixmap_imp /= Void then
-				background_pixmap_imp.unreference
+	--			background_pixmap_imp.unreference
 			end
 		end
 
@@ -255,6 +266,10 @@ feature {NONE} -- Implementation : deferred features
 	on_horizontal_scroll (scroll_code, position: INTEGER) is
 		deferred
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_CONTAINER
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
@@ -288,6 +303,39 @@ feature {NONE} -- Feature that should be directly implemented by externals
 		deferred
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite
+		require
+			valid_child: child_imp /= Void
+			not_already_child: not is_child (child_imp)
+			add_child_ok: add_child_ok
+		deferred
+		ensure
+			child_added: child_added (child_imp)
+		end
+
+	remove_child (child_imp: EV_WIDGET_IMP) is
+			-- Remove the given child from the children of
+			-- the container.
+		deferred
+		ensure
+			child_removed: not is_child (child_imp)
+		end
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to container.
+		deferred
+		end
+
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the container?
+		deferred
+		end
+
 end -- class EV_CONTAINER_IMP
 
 --|----------------------------------------------------------------
@@ -305,3 +353,50 @@ end -- class EV_CONTAINER_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.35  2000/02/14 11:40:42  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.34.10.10  2000/02/03 17:01:23  rogers
+--|  Removed code in set_parent that was no longer necessary.
+--|
+--| Revision 1.34.10.9  2000/01/31 23:00:21  rogers
+--| Removed set_text_for_item, implemented set_item_text, and re-implemented child_added.
+--|
+--| Revision 1.34.10.8  2000/01/31 19:30:45  brendel
+--| Added previously deleted features from EV_CONTAINER_I as a temporary measure.
+--|
+--| Revision 1.34.10.7  2000/01/31 17:03:51  brendel
+--| Corrected error in set_parent.
+--|
+--| Revision 1.34.10.6  2000/01/29 01:05:02  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.34.10.5  2000/01/27 19:30:20  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.34.10.4  2000/01/25 17:37:52  brendel
+--| Removed code associated with old events.
+--| Implementation and more removal is needed.
+--|
+--| Revision 1.34.10.3  2000/01/20 17:51:12  king
+--| Commented out *reference of pixmap.
+--|
+--| Revision 1.34.10.2  1999/12/17 00:54:02  rogers
+--| Altered to fit in with the review branch. Redefinitions required.
+--|
+--| Revision 1.34.10.1  1999/11/24 17:30:26  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.34.6.3  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

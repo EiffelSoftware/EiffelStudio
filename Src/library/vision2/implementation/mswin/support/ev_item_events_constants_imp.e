@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "This class is used by EV_ITEM_IMP. It gives%
 				% the identifications of the different events%
@@ -54,3 +56,25 @@ end -- class EV_ITEM_EVENTS_CONSTANTS_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.4.2  2000/01/27 19:30:15  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.4.1  1999/11/24 17:30:21  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

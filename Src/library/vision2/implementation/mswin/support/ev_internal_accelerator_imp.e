@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" An internal accelerator used by EV_ACCELERATOR_TABLE_IMP.%
@@ -90,3 +92,25 @@ end -- class EV_INTERNAL_ACCELERATOR_IMP
 --|----------------------------------------------------------------
 
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.2  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.1.10.2  2000/01/27 19:30:14  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.1.10.1  1999/11/24 17:30:21  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.1.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

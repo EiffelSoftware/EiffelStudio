@@ -1,8 +1,8 @@
 indexing	
 	description: 
-		"EiffelVision base item, implementation interface"
+		"Eiffel Vision item. Implementation interface"
 	status: "See notice at end of class"
-	id: "$$"
+	keywords: "item"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,80 +11,32 @@ deferred class
 
 inherit
 	EV_ANY_I
-
-feature {NONE} -- Initialization
-
-	make is
-			-- Create an empty row with `par' as parent.
-		deferred
+		redefine
+			interface
 		end
 
 feature -- Access
 
-	parent: EV_ITEM_HOLDER is
-			-- The parent of the Current widget
-			-- Can be void.
+	parent: EV_ITEM_LIST [EV_ITEM] is
+			-- Item list containing `Current'.
 		do
 			if parent_imp /= Void then
 				Result ?= parent_imp.interface
-			else
-				Result := Void
 			end
 		end
 
-	parent_imp: EV_ITEM_HOLDER_IMP 
+	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
 			-- The parent of the Current widget
 			-- Can be void.
-
-	index: INTEGER is
-			-- Index of the current item.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
 		deferred
-		ensure
-			valid_index: Result >= 1 and Result <= parent.count + 1
 		end
 
-feature -- Element change
-
-	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			parent_set: parent_set (par)
-		end
-
-	set_parent_with_index (par: like parent; pos: INTEGER) is
-			-- Make `par' the new parent of the widget and set
-			-- the current button at `pos'.
-		require
-			exists: not destroyed
-			valid_index: pos >= 1 and pos <= par.count + 1
-		deferred
-		ensure
-			index_set: index = pos
-		end
-
-	set_index (pos: INTEGER) is
-			-- Make `pos' the new index of the item in the
-			-- list.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
-			valid_index: pos >= 1 and pos <= parent.count + 1
-		deferred
-		ensure
-			index_set: index = pos
-		end
-
-feature -- Assertion
+feature -- Obsolete
 
 	parent_set (par: like parent): BOOLEAN is
 			-- Is the parent set
+		obsolete
+			"dont use it"
 		do
 			if parent_imp /= Void then
 				Result := parent_imp.interface = par
@@ -93,9 +45,15 @@ feature -- Assertion
 			end
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_ITEM
+			-- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
+
 end -- class EV_ITEM_I
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -109,4 +67,49 @@ end -- class EV_ITEM_I
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.9  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.8.6.9  2000/02/04 04:02:40  oconnor
+--| released
+--|
+--| Revision 1.8.6.8  2000/02/03 23:30:59  brendel
+--| Removed deferred and obsolete feature `index'.
+--|
+--| Revision 1.8.6.7  2000/02/02 00:47:42  king
+--| Made parent_imp deferred so it can be defined as a function
+--|
+--| Revision 1.8.6.6  2000/01/28 18:54:18  king
+--| Removed redundant features, changed to generic structure of ev_item_list
+--|
+--| Revision 1.8.6.5  2000/01/27 19:29:51  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.8.6.4  2000/01/14 21:17:20  oconnor
+--| commenting
+--|
+--| Revision 1.8.6.3  1999/12/17 19:14:12  rogers
+--| Removed set_parent, set_parent_with_index and set_index.
+--|
+--| Revision 1.8.6.2  1999/11/30 22:51:01  oconnor
+--| Redefined interface to more refined type
+--|
+--| Revision 1.8.6.1  1999/11/24 17:30:02  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.8.2.3  1999/11/04 23:10:32  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.8.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision multi-column-list, implementation interface."
@@ -23,7 +25,7 @@ inherit
 			background_color
 		end
 
-	EV_ITEM_HOLDER_IMP
+	EV_ITEM_LIST [EV_MULTI_COLUMN_LIST_ROW]
 
 create
 	make_with_size,
@@ -39,7 +41,6 @@ feature {NONE} -- Initialization
 			i: INTEGER
 		do
 			widget := gtk_clist_new (col_nb)
-			gtk_object_ref (widget)
 
 			-- We need to specify a width for the columns
 			-- otherwise the value given by gtk would be wrong.
@@ -459,3 +460,31 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!---------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.21  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.20.6.3  2000/02/02 23:44:26  king
+--| Corrected inheritence from ev_item_list
+--|
+--| Revision 1.20.6.2  2000/01/27 19:29:47  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.20.6.1  1999/11/24 17:29:57  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.20.2.3  1999/11/17 01:53:05  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.20.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

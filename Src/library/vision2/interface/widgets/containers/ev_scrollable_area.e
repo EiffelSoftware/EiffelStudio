@@ -1,9 +1,7 @@
 indexing
-	description: "EiffelVision scrollable area. Scrollable area%
-				% is a container with scrollbars. Scrollable area%
-				% offers automatic scrolling for its child."
+	description: "Eiffel Vision scrollable area."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "container, scroll, scrollbar, viewport"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,200 +9,119 @@ class
 	EV_SCROLLABLE_AREA
 
 inherit
-	EV_CONTAINER 
+	EV_VIEWPORT 
 		redefine
-			make,
 			implementation,
-			manager
+			create_implementation
 		end
 
 create
-	make
+	default_create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create a fixed widget with, `par' as
-			-- parent
+	create_implementation is
 		do
-			!EV_SCROLLABLE_AREA_IMP!implementation.make
-			widget_make (par)
+			create {EV_SCROLLABLE_AREA_IMP} implementation.make (Current)
 		end
 
 feature -- Access
 
-	manager: BOOLEAN is 
-			-- Does the container manage its children?
-		do
-			Result := True
-		end
-
 	horizontal_step: INTEGER is
-			-- Step of the horizontal scrolling
-			-- ie : the user clicks on a horizontal arrow
-		require
-			exists: not destroyed
+			-- Number of pixels scrolled up or down when user clicks
+			-- an arrow on the horizontal scrollbar.
 		do
 			Result := implementation.horizontal_step
 		ensure
-			positive_result: Result >= 0
-		end
-
-	horizontal_leap: INTEGER is
-			-- Leap of the horizontal scrolling
-			-- ie : the user clicks on the horizontal scroll bar
-		require
-			exists: not destroyed
-		do
-			Result := implementation.horizontal_leap
-		ensure
-			positive_result: Result >= 0
+			bridge_ok: Result = implementation.horizontal_step
 		end
 
 	vertical_step: INTEGER is
-			-- Step of the vertical scrolling
-			-- ie : the user clicks on a vertical arrow
-		require
-			exists: not destroyed
+			-- Number of pixels scrolled left or right when user clicks
+			-- an arrow on the vertical scrollbar.
 		do
 			Result := implementation.vertical_step
 		ensure
-			positive_result: Result >= 0
+			bridge_ok: Result = implementation.vertical_step
 		end
 
-	vertical_leap: INTEGER is
-			-- Leap of the vertical scrolling
-			-- ie : the user clicks on the vertical scroll bar
-		require
-			exists: not destroyed
+	is_horizontal_scrollbar_visible: BOOLEAN is
+			-- Should horizontal scrollbar be displayed?
 		do
-			Result := implementation.vertical_leap
+			Result := implementation.is_horizontal_scrollbar_visible
 		ensure
-			positive_result: Result >= 0
+			bridge_ok: Result = implementation.is_horizontal_scrollbar_visible
 		end
 
-	horizontal_value: INTEGER is
-			-- Current position of the horizontal scroll bar
-		require
-			exists: not destroyed
+	is_vertical_scrollbar_visible: BOOLEAN is
+			-- Should vertical scrollbar be displayed?
 		do
-			Result := implementation.horizontal_value
-		end
-
-	vertical_value: INTEGER is
-			-- Current position of the vertical scroll bar
-		require
-			exists: not destroyed
-		do
-			Result := implementation.vertical_value
-		end
-
-	horizontal_minimum: INTEGER is
-			-- Minimal position on the horizontal scroll bar
-		require
-			exists: not destroyed
-		do
-			Result := implementation.horizontal_minimum
-		end
-
-	vertical_minimum: INTEGER is
-			-- Maximal position on the vertical scroll bar
-		require
-			exists: not destroyed
-		do
-			Result := implementation.vertical_minimum
-		end
-
-	horizontal_maximum: INTEGER is
-			-- Maximal position on the horizontal scroll bar
-		require
-			exists: not destroyed
-		do
-			Result := implementation.horizontal_maximum
-		end
-
-	vertical_maximum: INTEGER is
-			-- Maximal position on the vertical scroll bar
-		require
-			exists: not destroyed
-		do
-			Result := implementation.vertical_maximum
+			Result := implementation.is_vertical_scrollbar_visible
+		ensure
+			bridge_ok: Result = implementation.is_vertical_scrollbar_visible
 		end
 
 feature -- Element change
 
-	set_horizontal_step (value: INTEGER) is
-			-- Make `value' the new horizontal step.
+	set_horizontal_step (a_step: INTEGER) is
+			-- Set `horizontal_step' to `a_step'.
 		require
-			exists: not destroyed
-			positive_value: value >= 0
+			a_step_positive: a_step > 0
 		do
-			implementation.set_horizontal_step (value)
+			implementation.set_horizontal_step (a_step)
 		ensure
-			value_set: horizontal_step = value
+			assigned: horizontal_step = a_step
 		end
 
-	set_vertical_step (value: INTEGER) is
-			-- Make `value' the new vertical step.
+	set_vertical_step (a_step: INTEGER) is
+			-- Set `vertical_step' to `a_step'.
 		require
-			exists: not destroyed
-			positive_value: value >= 0
+			a_step_positive: a_step > 0
 		do
-			implementation.set_vertical_step (value)
+			implementation.set_vertical_step (a_step)
 		ensure
-			value_set: vertical_step = value
+			assigned: vertical_step = a_step
 		end
 
-	set_horizontal_leap (value: INTEGER) is
-			-- Make `value' the new horizontal leap.
-		require
-			exists: not destroyed
-			positive_value: value >= 0
+	show_horizontal_scrollbar is
+			-- Display horizontal scrollbar.
 		do
-			implementation.set_horizontal_leap (value)
+			implementation.show_horizontal_scrollbar
 		ensure
-			value_set: horizontal_leap = value
+			shown: is_horizontal_scrollbar_visible
 		end
 
-	set_vertical_leap (value: INTEGER) is
-			-- Make `value' the new vertical leap.
-		require
-			exists: not destroyed
-			positive_value: value >= 0
+	hide_horizontal_scrollbar is
+			-- Do not display horizontal scrollbar.
 		do
-			implementation.set_vertical_leap (value)
+			implementation.hide_horizontal_scrollbar
 		ensure
-			value_set: vertical_leap = value
+			hidden: not is_horizontal_scrollbar_visible
 		end
 
-	set_horizontal_value (value: INTEGER) is
-			-- Make `value' the new horizontal value where `value' is given in percentage.
-			-- As this feature use and integer approximation, the post-condition is not
-			-- always verified.
-		require
-			exists: not destroyed
+	show_vertical_scrollbar is
+			-- Display vertical scrollbar.
 		do
-			implementation.set_horizontal_value (value)
+			implementation.show_vertical_scrollbar
 		ensure
---			value_set: horizontal_value = value
+			shown: is_vertical_scrollbar_visible
 		end
 
-	set_vertical_value (value: INTEGER) is
-			-- Make `value' the new vertical value where `value' is given in percentage.
-			-- As this feature use and integer approximation, the post-condition is not
-			-- always verified.
-		require
-			exists: not destroyed
+	hide_vertical_scrollbar is
+			-- Do not display vertical scrollbar.
 		do
-			implementation.set_vertical_value (value)
+			implementation.hide_vertical_scrollbar
 		ensure
---			value_set: vertical_value = value
+			hidden: not is_vertical_scrollbar_visible
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	implementation: EV_SCROLLABLE_AREA_I
-		-- Platform dependent access
+
+invariant
+	horizontal_step_positive: is_useable implies horizontal_step > 0
+	vertical_step_positive: is_useable implies vertical_step > 0
 
 end -- class EV_SCROLLABLE_AREA
 
@@ -223,3 +140,44 @@ end -- class EV_SCROLLABLE_AREA
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.9  2000/02/14 11:40:51  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.8.6.7  2000/02/14 11:04:28  oconnor
+--| added is_useable to invariants
+--|
+--| Revision 1.8.6.6  2000/02/12 01:04:32  king
+--| Corrected is_vertical_scrollbar_visible due to careless cutting and pasting, doh Vincent
+--|
+--| Revision 1.8.6.5  2000/01/28 20:00:14  oconnor
+--| released
+--|
+--| Revision 1.8.6.4  2000/01/28 19:30:15  brendel
+--| Revision.
+--| Now inherits from EV_VIEWPORT and adds the scrollbars to the viewable area.
+--|
+--| Revision 1.8.6.3  2000/01/27 19:30:52  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.8.6.2  1999/11/24 22:40:59  oconnor
+--| added review notes
+--|
+--| Revision 1.8.6.1  1999/11/24 17:30:52  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.8.2.4  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.8.2.3  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

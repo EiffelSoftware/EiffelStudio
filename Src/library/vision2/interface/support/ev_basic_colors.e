@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "List of default colors used by the system."
 	status: "See notice at end of class."
@@ -12,7 +13,7 @@ feature -- Access
 	white: EV_COLOR is
 			-- White color named "white"
 		once
-			create Result.make_rgb (255, 255, 255)
+			create Result.make_with_rgb (1, 1, 1)
 			Result.set_name ("white")
 		ensure
 			valid_result: Result /= Void
@@ -21,7 +22,7 @@ feature -- Access
 	black: EV_COLOR is
 			-- Black color named "black"
 		once
-			create Result.make_rgb (0, 0, 0)
+			create Result.make_with_rgb (0, 0, 0)
 			Result.set_name ("black")
 		ensure
 			valid_result: Result /= Void
@@ -30,7 +31,7 @@ feature -- Access
 	grey: EV_COLOR is
 			-- Grey color named "grey"
 		once
-			create Result.make_rgb (192, 192, 192)
+			create Result.make_with_rgb (0.7, 0.7, 0.7)
 			Result.set_name ("grey")
 		ensure
 			valid_result: Result /= Void
@@ -39,7 +40,7 @@ feature -- Access
 	dark_grey: EV_COLOR is
 			-- Dark grey color named "dark grey"
 		once
-			create Result.make_rgb (128, 128, 128)
+			create Result.make_with_rgb (0.5, 0.5, 0.5)
 			Result.set_name ("dark grey")
 		ensure
 			valid_result: Result /= Void
@@ -48,7 +49,7 @@ feature -- Access
 	blue: EV_COLOR is
 			-- Blue color named "blue"
 		once
-			create Result.make_rgb (0, 0, 255)
+			create Result.make_with_rgb (0, 0, 1)
 			Result.set_name ("blue")
 		ensure
 			valid_result: Result /= Void
@@ -57,7 +58,7 @@ feature -- Access
 	dark_blue: EV_COLOR is
 			-- Dark blue color named "dark blue"
 		once
-			create Result.make_rgb (0, 0, 128)
+			create Result.make_with_rgb (0, 0, 0.5)
 			Result.set_name ("dark blue")
 		ensure
 			valid_result: Result /= Void
@@ -66,7 +67,7 @@ feature -- Access
 	cyan: EV_COLOR is
 			-- Cyan color named "cyan"
 		once
-			create Result.make_rgb (0, 255, 255)
+			create Result.make_with_rgb (0, 1, 1)
 			Result.set_name ("cyan")
 		ensure
 			valid_result: Result /= Void
@@ -75,7 +76,7 @@ feature -- Access
 	dark_cyan: EV_COLOR is
 			-- Dark cyan color named "dark cyan"
 		once
-			create Result.make_rgb (0, 128, 128)
+			create Result.make_with_rgb (0, 0.5, 0.5)
 			Result.set_name ("dark cyan")
 		ensure
 			valid_result: Result /= Void
@@ -84,7 +85,7 @@ feature -- Access
 	green: EV_COLOR is
 			-- Green color named "green"
 		once
-			create Result.make_rgb (0, 255, 0)
+			create Result.make_with_rgb (0, 1, 0)
 			Result.set_name ("green")
 		ensure
 			valid_result: Result /= Void
@@ -93,7 +94,7 @@ feature -- Access
 	dark_green: EV_COLOR is
 			-- Dark green color named "dark green"
 		once
-			create Result.make_rgb (0, 128, 0)
+			create Result.make_with_rgb (0, 0.5, 0)
 			Result.set_name ("dark green")
 		ensure
 			valid_result: Result /= Void
@@ -102,7 +103,7 @@ feature -- Access
 	yellow: EV_COLOR is
 			-- Yellow color named "yellow"
 		once
-			create Result.make_rgb (255, 255, 0)
+			create Result.make_with_rgb (1, 1, 0)
 			Result.set_name ("yellow")
 		ensure
 			valid_result: Result /= Void
@@ -111,7 +112,7 @@ feature -- Access
 	dark_yellow: EV_COLOR is
 			-- Dark yellow color named "dark yellow"
 		once
-			create Result.make_rgb (128, 128, 0)
+			create Result.make_with_rgb (0.5, 0.5, 0)
 			Result.set_name ("dark yellow")
 		ensure
 			valid_result: Result /= Void
@@ -120,7 +121,7 @@ feature -- Access
 	red: EV_COLOR is
 			-- Red color named "red"
 		once
-			create Result.make_rgb (255, 0, 0)
+			create Result.make_with_rgb (1, 0, 0)
 			Result.set_name ("red")
 		ensure
 			valid_result: Result /= Void
@@ -129,7 +130,7 @@ feature -- Access
 	dark_red: EV_COLOR is
 			-- Dark red color named "dark red"
 		once
-			create Result.make_rgb (128, 0, 0)
+			create Result.make_with_rgb (0.5, 0, 0)
 			Result.set_name ("dark red")
 		ensure
 			valid_result: Result /= Void
@@ -138,7 +139,7 @@ feature -- Access
 	magenta: EV_COLOR is
 			-- Magenta color named "magenta"
 		once
-			create Result.make_rgb (255, 0, 255)
+			create Result.make_with_rgb (1, 0, 1)
 			Result.set_name ("magenta")
 		ensure
 			valid_result: Result /= Void
@@ -147,7 +148,7 @@ feature -- Access
 	dark_magenta: EV_COLOR is
 			-- Dark magenta color named "dark magenta"
 		once
-			create Result.make_rgb (128, 0, 128)
+			create Result.make_with_rgb (0.5, 0, 0.5)
 			Result.set_name ("dark magenta")
 		ensure
 			valid_result: Result /= Void
@@ -196,3 +197,31 @@ end -- class EV_BASIC_COLORS
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:49  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.4  2000/02/05 05:58:47  oconnor
+--| use new color class
+--|
+--| Revision 1.4.6.3  2000/01/28 22:24:21  oconnor
+--| released
+--|
+--| Revision 1.4.6.2  2000/01/27 19:30:47  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.1  1999/11/24 17:30:48  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:12  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

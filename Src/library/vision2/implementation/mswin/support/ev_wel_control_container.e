@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"A common class for the heirs of the WEL_CONTROL_WINDOW."
@@ -16,8 +18,12 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
-			shown as displayed,
-			destroy as wel_destroy
+			shown as is_displayed,
+			destroy as wel_destroy,
+			item as wel_item,
+			enabled as is_sensitive,
+			width as wel_width,
+			height as wel_height
 		undefine
 			window_process_message,
 			set_width,
@@ -164,3 +170,28 @@ end -- class EV_WEL_CONTROL_CONTAINER_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.13  2000/02/14 11:40:42  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.12.10.3  2000/01/27 19:30:17  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.12.10.2  1999/12/17 01:04:18  rogers
+--| Altered to fit in with the review branch. renaming required.
+--|
+--| Revision 1.12.10.1  1999/11/24 17:30:23  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.12.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

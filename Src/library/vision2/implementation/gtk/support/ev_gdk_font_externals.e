@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 	" Externals C function of Gdk and Gtk specific for the%
@@ -9,17 +10,7 @@ indexing
 class
 	EV_GDK_FONT_EXTERNALS
 
-feature {NONE} -- GDK extenals for the fonts
-
-	gdk_font_load (name: POINTER): POINTER is
-		external
-			"C (gchar *): EIF_POINTER | <gdk/gdk.h>"
-		end
-
-	gdk_string_width (font, str: POINTER): INTEGER is
-		external
-			"C | <gdk/gdk.h>"
-		end
+feature
 
 	c_gdk_font_ascent (font: POINTER): INTEGER is
 		external
@@ -31,26 +22,32 @@ feature {NONE} -- GDK extenals for the fonts
 			"C [macro %"gdk_eiffel.h%"]"
 		end
 
-feature {NONE} -- Gtk externals for the fonts
-
-	gtk_font_selection_new: POINTER is
-		external
-			"C (): EIF_POINTER | <gtk/gtk.h>"
-		end
-
-	gtk_font_selection_get_font_name (fontsel: POINTER): POINTER is
-		external
-			"C (GtkFontSelection *): EIF_POINTER | <gtk/gtk.h>"
-		end
-
-	gtk_font_selection_get_font (fontsel:POINTER):POINTER is
-		external
-			"C (GtkFontSelection *): EIF_POINTER | <gtk/gtk.h>"
-		end
-
-	gtk_font_selection_set_font_name (fontsel, name: POINTER) is
-		external
-			"C | <gtk/gtk.h>"
-		end
-
 end -- class EV_GDK_FONT_EXTERNALS
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:29  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.4  2000/02/04 04:53:00  oconnor
+--| released
+--|
+--| Revision 1.4.6.3  2000/01/27 19:29:33  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.2  1999/12/04 18:59:14  oconnor
+--| moved externals into EV_C_EXTERNALS, accessed through EV_ANY_IMP.C
+--|
+--| Revision 1.4.6.1  1999/11/24 17:29:48  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
         description: 
@@ -12,50 +13,27 @@ class
         
 inherit
         EV_CHECK_BUTTON_I
+		redefine
+			interface
+		end
 	
 	EV_TOGGLE_BUTTON_IMP
 		redefine
-			make,
-			create_pixmap_place,
-			set_text
+			make, set_text, interface
 		end
         
 create
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-        make is
+        make (an_interface: like interface) is
                         -- Create a gtk check button.
 		do
- 			-- Create the gtk object.
-			widget := gtk_check_button_new
-			gtk_object_ref (widget)
-
-			-- Create the `box'.
-			initialize
+			base_make (an_interface)
+			set_c_object (C.gtk_check_button_new)
                 end
-
-	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
-			-- prepare the place for the pixmap in the `box'.
-			-- For that, we add a pixmap with a default gdk pixmap
-			-- in the `box'.
-			-- Redefined because we want the pixmap to be on the left.
-		local
-			pixmap_imp: EV_PIXMAP_IMP
-		do
-			-- create the pixmap with a default xpm.
-			-- We use the pixmap's `create_window' to create the new pixmap
-			-- as we need a GdkWindow.
-			pixmap_widget := c_gtk_pixmap_create_empty (pix_imp.create_window)
-
-			-- Set the pixmap in the `box'.
-			gtk_box_pack_start (GTK_BOX (box), pixmap_widget, False, False, 0)
-
-			-- show the pixmap now that it has a parent.
-			gtk_widget_show (pixmap_widget)
-		end					
+			
 
 feature -- Element change
 
@@ -66,12 +44,16 @@ feature -- Element change
 			{EV_TOGGLE_BUTTON_IMP} Precursor (txt)
 
 			-- We left-align and vertical_center-position the text
-			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
+			C.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 
-			if pixmap_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.0, 0.5)
+			if gtk_pixmap /= default_pointer then
+				C.gtk_misc_set_alignment (pixmap_box, 0.0, 0.5)
 			end				
 		end
+
+feature {EV_ANY_I}
+
+	interface: EV_CHECK_BUTTON
 	
 end -- class EV_CHECK_BUTTON_IMP
 
@@ -90,3 +72,37 @@ end -- class EV_CHECK_BUTTON_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.6.5  2000/02/04 04:25:38  oconnor
+--| released
+--|
+--| Revision 1.7.6.4  2000/01/27 19:29:45  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.6.3  2000/01/19 17:24:18  oconnor
+--| renamed label_widget -> text_label & gtk_pixmap -> pixmap_box
+--|
+--| Revision 1.7.6.2  1999/12/23 01:33:39  king
+--| Implemented check button to new structure
+--|
+--| Revision 1.7.6.1  1999/11/24 17:29:56  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.7.2.3  1999/11/17 01:53:04  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.7.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

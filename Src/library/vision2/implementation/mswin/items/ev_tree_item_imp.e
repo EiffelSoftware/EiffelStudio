@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision tree item, Mswindows implementation.";
@@ -10,7 +12,8 @@ class
 inherit
 	EV_TREE_ITEM_I
 		redefine
-			parent_imp
+			parent_imp,
+			interface
 		select
 			parent
 		end
@@ -21,24 +24,31 @@ inherit
 		redefine
 			parent_imp,
 			set_text,
-			destroy
+			destroy,
+			interface
 		end
 
 	EV_TREE_ITEM_HOLDER_IMP
-		rename
-			item_command_count as command_count
+		--|FIXME Where has this gone?
+		--rename
+		--	item_command_count as command_count
 		redefine
-			add_item
+			--add_item,
+			interface
 		end
 
-	EV_PND_SOURCE_IMP
+	EV_PICK_AND_DROPABLE_IMP
+		redefine
+			interface
+		end
 
 	WEL_TREE_VIEW_ITEM
 		rename
 			text as wel_text,
 			set_text as wel_set_text,
 			make as wel_make,
-			children as children_nb
+			children as children_nb,
+			item as wel_item
 		end
 
 	WEL_TVIS_CONSTANTS
@@ -57,46 +67,46 @@ inherit
 		end
 
 creation
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create the item.
 		do
+			base_make (an_interface)
 			wel_make
 			set_mask (Tvif_text + Tvif_state + Tvif_handle)
 		end
 
-	make_with_text (txt: STRING) is
-			-- Create a row with text in it.
+	initialize is
 		do
-			wel_make
-			set_mask (Tvif_text + Tvif_state + Tvif_handle)
-			set_text (txt)
 		end
+
+	--make_with_text (txt: STRING) is
+	--		-- Create a row with text in it.
+	--	do
+	--		wel_make
+	--		set_mask (Tvif_text + Tvif_state + Tvif_handle)
+	--		set_text (txt)
+	--	end
 
 feature -- Access
 
 	parent_imp: EV_TREE_ITEM_HOLDER_IMP
 			-- Parent implementation
 
-	index: INTEGER is
-			-- Index of the current item.
-		do
-			Result := top_parent_imp.internal_get_index (Current) + 1
-		end
+
+	--|FIXME I think this can be inherited now
+	--index: INTEGER is
+	--		-- Index of the current item.
+	--	do
+	--		Result := top_parent_imp.internal_get_index (Current) + 1
+	--	end
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
-			-- Is current object destroyed
-		do
-			Result := not exists
-		end
-
-	children: ARRAYED_LIST [EV_TREE_ITEM_IMP] is
+	ev_children: ARRAYED_LIST [EV_TREE_ITEM_IMP] is
 			-- List of the direct children of the tree-item.
 		do
 			if top_parent_imp = Void then
@@ -144,14 +154,15 @@ feature -- Status setting
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.add_item (Current)
-			end
+		--|FIXME what to do?
+		--	if parent_imp /= Void then
+		--		parent_imp.remove_item (Current)
+		--		parent_imp := Void
+		--	end
+		--	if par /= Void then
+		--		parent_imp ?= par.implementation
+		--		parent_imp.add_item (Current)
+		--	end
 		end
 
 	destroy is
@@ -206,7 +217,7 @@ feature -- Element change
 		local
 			c: ARRAYED_LIST [EV_TREE_ITEM_IMP]
 		do
-			c := children
+			c := ev_children
 			from
 				c.start
 			until
@@ -323,10 +334,16 @@ feature -- Event -- removing command association
 
 feature {NONE} -- Implementation, pick and drop
 
-	widget_source: EV_WIDGET_IMP is
-			-- Widget drag source used for transport
+	set_capture is
+			-- Grab user input.
 		do
-			Result := top_parent_imp
+			top_parent_imp.set_capture
+		end
+
+	release_capture is
+			-- Release user input.
+		do
+			top_parent_imp.release_capture
 		end
 
 feature {EV_TREE_IMP} -- Implementation
@@ -360,7 +377,7 @@ feature {NONE} -- Implementation
 				if index = 1 then
 					top_parent_imp.general_insert_item (item_imp, h_item, Tvi_first)
 				else
-					top_parent_imp.general_insert_item (item_imp, h_item, (children @ (index - 1)).h_item)
+					top_parent_imp.general_insert_item (item_imp, h_item, (ev_children @ (index - 1)).h_item)
 				end
 			else
 				internal_children.go_i_th (pos)
@@ -377,6 +394,10 @@ feature {NONE} -- Implementation
 				internal_children.prune_all (item_imp)
 			end
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TREE_ITEM
 
 end -- class EV_TREE_ITEM_IMP
 
@@ -396,3 +417,31 @@ end -- class EV_TREE_ITEM_IMP
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.25  2000/02/14 11:40:39  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.24.6.4  2000/02/05 02:10:50  brendel
+--| Removed feature `destroyed'.
+--|
+--| Revision 1.24.6.3  2000/01/27 19:30:09  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.24.6.2  1999/12/17 17:29:52  rogers
+--| Altered to fit in with the review branch. Make takes an interface. Now inherits from EV_PICK_AND_dROPABLE_IMP.
+--|
+--| Revision 1.24.6.1  1999/11/24 17:30:17  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.24.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

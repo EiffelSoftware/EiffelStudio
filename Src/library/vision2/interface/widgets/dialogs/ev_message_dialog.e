@@ -1,304 +1,147 @@
 indexing
-	description: "EiffelVision message dialog. Deferred class,%
-				% ancestor of the standard dialogs for warning,%
-				% informations, error or question."
-	note: "Once the dialog is create with the procedure `make_default'%
-		% the status settings features have no effect. To use them,%
-		% the dialog must be first created with `make' and then the%
-		% user choose the buttons he wants in the dialog."
+	description:
+		"EiffelVision message dialog. Dialogs that always consist of %N%
+		%a pixmap, a text and one or more buttons."
 	status: "See notice at end of class"
+	keywords: "dialog, standard, pixmap, text, button, modal"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+class
 	EV_MESSAGE_DIALOG
 
 inherit
-	EV_STANDARD_DIALOG
+	EV_DIALOG
 		redefine
-			implementation
+			initialize
 		end
+
+create
+	default_create,
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
-			-- Create a message box with `par' as parent, `a_title' as
-			-- title and `a_msg' as message.
-		require
-			valid_parent: is_valid (par)
-			valid_title: a_title /= Void
-			valid_message: a_msg /= Void
-		deferred
-		end
-
-	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
-			-- Create the default message dialog with `par' as
-			-- parent, `a_title' as title and `a_msg' as message
-			-- and displays it.
-		require
-			valid_parent: is_valid (par)
-			valid_title: a_title /= Void
-			valid_message: a_msg /= Void
-		deferred
-		end
-
-feature -- Status report
-
-	selected_button: STRING is
-			-- Return the label of the selected button.
-			-- Can be any string in :
-			-- "OK", "Cancel", "Yes", "No", "Abort",
-			-- "Retry", "Ignore", "Help".
+	initialize is
+			-- Initialize to default state.
+		local
+			hb: EV_HORIZONTAL_BOX
+			vb: EV_VERTICAL_BOX
 		do
-			Result := implementation.selected_button
+			Precursor
+			create vb
+			extend (vb)
+			create hb
+			vb.extend (hb)
+			create pixmap_box
+			hb.extend (pixmap_box)
+			hb.disable_child_expand (pixmap_box)
+			create label
+			label.align_text_center
+			hb.extend (label)
+			hb.set_border_width (20)
+			create button_box
+			vb.extend (button_box)
+			button_box.extend (create {EV_CELL})
+			vb.disable_child_expand (button_box)
+			button_box.set_padding (5)
+			button_box.set_border_width (10)
+
+			set_title ("Dialog")
+			set_text ("Your message.")
+			set_buttons (<<"OK", "Cancel">>)
+		end
+
+	make (a_title, a_text: STRING; but_texts: ARRAY [STRING]; a_pixmap: EV_PIXMAP) is
+			-- Initialize.
+		do
+			default_create
+			set_title (a_title)
+			set_text (a_text)
+			set_buttons (but_texts)
+			set_pixmap (a_pixmap)
+		end
+
+feature -- Access
+
+	pixmap: EV_PIXMAP
+			-- Icon associated with dialog.
+
+	text: STRING is
+			-- Text associated with dialog.
+		do
+			Result := label.text
 		end
 
 feature -- Status setting
 
-	show_ok_button is
-			-- Show one button in the dialog : "OK".
-		require
-			exist: not destroyed
+	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Set icon associated with dialog.
 		do
-			implementation.show_ok_button
+			if a_pixmap /= Void then
+				pixmap_box.extend (create {EV_LABEL}.make_with_text ("pixmap%Nto%Nbe%Nimp-%Nleme-%Nnted."))
+			end
 		end
 
-	show_ok_cancel_buttons is
-			-- Show two buttons in the dilaog: "OK" and "Cancel".
+	set_text (a_text: STRING) is
+			-- Set the message of the dialog.
 		require
-			exist: not destroyed
+			a_text_not_void: a_text /= Void
 		do
-			implementation.show_ok_cancel_buttons
+			label.set_text (a_text)
+		ensure
+			assigned: text.is_equal (a_text)
 		end
 
-	show_yes_no_buttons is
-			-- Show two buttons in the dialog: "Yes" and "No".
-		require
-			exist: not destroyed
+	set_buttons (but_texts: ARRAY [STRING]) is
+			-- Set the buttons by label.
+		local
+			i: INTEGER
 		do
-			implementation.show_yes_no_buttons
+			button_box.wipe_out
+			button_box.extend (create {EV_CELL})
+			from i := 1 until i > but_texts.count loop
+				add_button (but_texts @ i)
+				i := i + 1
+			end
+			button_box.extend (create {EV_CELL})
 		end
 
-	show_yes_no_cancel_buttons is
-			-- Show three buttons in the dialog: "Yes", "No" and "Cancel".
-		require
-			exist: not destroyed
+feature {NONE} -- Implementation
+
+	button_box: EV_HORIZONTAL_BOX
+			-- Bar with all buttons of the dialog.
+
+	label: EV_LABEL
+			-- Text label where `text' is displayed.
+
+	pixmap_box: EV_CELL
+			-- Container to display pixmap in.
+
+	add_button (s: STRING) is
+			-- An item has been added to `buttons'.
+		local
+			button: EV_BUTTON
 		do
-			implementation.show_yes_no_cancel_buttons
+			create button.make_with_text (s)
+			button.press_actions.extend (~on_button_press (s))
+			button_box.extend (button)
+			button_box.disable_child_expand (button)
+			button.set_minimum_width (60)
+			button.align_text_center
 		end
 
-	show_abort_retry_ignore_buttons is
-			-- Show three buttons in the dialog: "Abort", "Retry" and "Ignore".
-		require
-			exist: not destroyed
+	on_button_press (a_button_text: STRING) is
+			-- A button with label `a_button_text' has been pressed.
 		do
-			implementation.show_abort_retry_ignore_buttons
+			selected_button := a_button_text
+			hide
 		end
 
-	show_retry_cancel_buttons is
-			-- Show two buttons in the dialog: "Retry" and "Cancel".
-		require
-			exist: not destroyed
-		do
-			implementation.show_retry_cancel_buttons
-		end
+feature -- Status report
 
-	add_help_button is
-			-- Add an "Help" button to the other choosen buttons
-			-- in the dialog box.
-		require
-			exist: not destroyed
-		do
-			implementation.add_help_button
-		end
-
-feature -- Element change
-
-	set_title (str: STRING) is
-			-- Make `str' the new title of the dialog.
-		require
-			exists: not destroyed
-			valid_title: str /= Void
-		do
-			implementation.set_title (str)
-		end
-
-	set_message (str: STRING) is
-			-- Make `str' the new title of the dialog.
-		require
-			exists: not destroyed
-			valid_message: str /= Void
-		do
-			implementation.set_message (str)
-		end
-
-feature -- Event - command association
-
-	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "OK" button is pressed.
-			-- If there is no "OK" button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_ok_command (cmd, arg)
-		end
-
-	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "Cancel" button is pressed.
-			-- If there is no "Cancel" button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_cancel_command (cmd, arg)
-		end
-
-	add_yes_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Yes button is pressed.
-			-- If there is no Yes button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_yes_command (cmd, arg)
-		end
-
-	add_no_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the No button is pressed.
-			-- If there is no No button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_no_command (cmd, arg)
-		end
-
-	add_abort_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Abort button is pressed.
-			-- If there is no Abort button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_abort_command (cmd, arg)
-		end
-
-	add_retry_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Retry button is pressed.
-			-- If there is no Retry button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_retry_command (cmd, arg)
-		end
-
-	add_ignore_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the Ignore button is pressed.
-			-- If there is no Ignore button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_ignore_command (cmd, arg)
-		end
-
-	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "Help" button is pressed.
-			-- If there is no "Help" button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			Implementation.add_help_command (cmd, arg)
-		end
-
-feature -- Event -- removing command association
-
-	remove_ok_commands is
-			-- Empty the list of commands to be executed when
-			-- "OK" button is pressed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_ok_commands
-		end
-
-	remove_cancel_commands is
-			-- Empty the list of commands to be executed when
-			-- "Cancel" button is pressed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_cancel_commands
-		end
-
-	remove_yes_commands is
-			-- Empty the list of commands to be executed when
-			-- "Yes" button is pressed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_yes_commands
-		end
-
-	remove_no_commands is
-			-- Empty the list of commands to be executed when
-			-- "No" button is pressed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_no_commands
-		end
-
-	remove_abort_commands is
-			-- Empty the list of commands to be executed when
-			-- "Abort" button is pressed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_abort_commands
-		end
-
-	remove_retry_commands is
-			-- Empty the list of commands to be executed when
-			-- "Retry" button is pressed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_retry_commands
-		end
-
-	remove_ignore_commands is
-			-- Empty the list of commands to be executed when
-			-- "Ignore" button is pressed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_ignore_commands
-		end
-
-	remove_help_commands is
-			-- Empty the list of commands to be executed when
-			-- "Help" button is pressed.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_help_commands
-		end
-
-feature -- Implementation
-
-	implementation: EV_MESSAGE_DIALOG_I
+	selected_button: STRING
+			-- Label of the last clicked button.
 
 end -- class EV_MESSAGE_DIALOG
 
@@ -317,3 +160,39 @@ end -- class EV_MESSAGE_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.12  2000/02/14 11:40:50  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.11.6.7  2000/01/28 22:24:23  oconnor
+--| released
+--|
+--| Revision 1.11.6.6  2000/01/27 19:30:50  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.11.6.5  2000/01/27 01:05:11  brendel
+--| Buttons are now centered.
+--| Text always fits in the label.
+--| Can be created using `default_create'.
+--|
+--| Revision 1.11.6.4  2000/01/26 16:47:00  brendel
+--| Finished except for pixmap.
+--|
+--| Revision 1.11.6.1  1999/11/24 17:30:50  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.11.2.3  1999/11/04 23:10:54  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.11.2.2  1999/11/02 17:20:12  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

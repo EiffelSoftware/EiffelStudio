@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision dynamic table. Implementation interface."
@@ -28,7 +30,6 @@ feature -- Status setting
 			-- layout, or number of row if column
 			-- layout.
 		require
-			exists: not destroyed
 			positive_number: a_number > 0
 		do
 			finite_dimension := a_number
@@ -38,7 +39,6 @@ feature -- Status setting
 			-- Lay the children out in rows if True,
 			-- in colum otherwise.
 		require
-			exists: not destroyed
 		do
 			is_row_layout := flag
 			set_finite_dimension (finite_dimension.max (1))
@@ -74,3 +74,28 @@ end -- class EV_DYNAMIC_TABLE_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:37  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.6.2  2000/01/27 19:30:01  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.6.1  1999/11/24 17:30:10  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.3  1999/11/04 23:10:41  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

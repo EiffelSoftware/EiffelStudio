@@ -8,16 +8,27 @@
 
 ev_notify: for general notify events with no parameters;
 
-ev_pointer_button: for mouse button up/down events; x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: REAL; y_tilt: REAL; pressure: REAL
+ev_pointer_button: for mouse button up/down events; x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER
 
-ev_pointer_motion: for mouse movement events; x: INTEGER; y: INTEGER; x_tilt: REAL; y_tilt: REAL; pressure: REAL
+ev_pointer_button_left_press = ev_pointer_button (-,-,=1,-,-,>=0.5,-,-): for left mouse button down events
 
-ev_proximity: for proximity in/out events; x: INTEGER; y: INTEGER
+ev_pointer_motion: for mouse movement events; x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER
 
-ev_accelerator: for accelerator events;
+ev_proximity: for proximity in/out events
+
+ev_accelerator: for accelerator events
 
 ev_key: for keyboard events; keycode: INTEGER
 
-ev_expose: for expose events; clip_region: EV_CLIP
+ev_key_string: for keyboard events; keystring: STRING
 
-ev_pnd: for pick and drop events; data: ANY; data_type: EV_PND_TYPE
+ev_geometry: for geometry related events; x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER
+
+ev_pnd_start: for pick and drop transport start events; x: INTEGER; y: INTEGER
+
+ev_item_select: for list item selection events; index: INTEGER; item: EV_LIST_ITEM
+
+# FIXME
+# Here we could pass the previous focused widget: previous: EV_WIDGET
+# Or for focus lose the newly focused widget...
+ev_focus: for lose/gain of keyboard-focus

@@ -1,6 +1,6 @@
 indexing
 	description: "EiffelVision2 polyline figure. Consists of (n-1) lines when%
-		% not closed and n if not closed."
+		% not closed and n if closed and n > 2."
 	date: "$Date$"
 	revision: "$Revision$"
 

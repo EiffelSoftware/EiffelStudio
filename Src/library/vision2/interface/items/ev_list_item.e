@@ -1,9 +1,8 @@
 indexing	
 	description: 
-		"EiffelVision list item. This items are used in %
-		%the EV_LIST or EV_COMBO_BOX."
+		"Eiffel Vision list item. For use in EV_LIST and EV_COMBO_BOX."
 	status: "See notice at end of class"
-	id: "$$"
+	keywords: "list, item"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,181 +12,113 @@ class
 inherit
 	EV_SIMPLE_ITEM
 		redefine
-			implementation,
-			make_with_index,
-			make_with_all,
-			parent
+			create_action_sequences,
+			implementation
 		end
 
 create
-	make,
-	make_with_text,
-	make_with_index,
-	make_with_all
-
-feature {NONE} -- Initialization
-
-	make (par: like parent) is
-			-- Create the widget with `par' as parent.
-		do
-			!EV_LIST_ITEM_IMP!implementation.make
-			implementation.set_interface (Current)
-			set_parent (par)
-		end
-
-	make_with_text (par: like parent; txt: STRING) is
-			-- Create an item with `par' as parent and `txt'
-			-- as text.
-		do
-			!EV_LIST_ITEM_IMP!implementation.make
-			implementation.set_interface (Current)
-			implementation.set_text (txt)
-			set_parent (par)
-		end
-
-	make_with_index (par: like parent; value: INTEGER) is
-			-- Create a row at the given `value' index in the list.
-		do
-			create {EV_LIST_ITEM_IMP} implementation.make
-			{EV_SIMPLE_ITEM} Precursor (par, value)
-		end
-
-	make_with_all (par: like parent; txt: STRING; value: INTEGER) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `value' as index.
-		do
-			create {EV_LIST_ITEM_IMP} implementation.make_with_text (txt)
-			{EV_SIMPLE_ITEM} Precursor (par, txt, value)
-		end
-
-feature -- Access
-
-	parent: EV_LIST is
-			-- Parent of the current item.
-		do
-			Result ?= {EV_SIMPLE_ITEM} Precursor
-		end
+	default_create,
+	make_with_text
 
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is the item selected ?
+			-- Is `Current' selected?
 		require
-			exists: not destroyed
-			has_parent: parent /= Void
+			parent_not_void: parent /= Void
 		do
 			Result := implementation.is_selected
+		ensure
+			bridge_ok: Result = implementation.is_selected
 		end
 
 	is_first: BOOLEAN is
-			-- Is the item first in the list ?
+			-- Is `Current' first in list?
 		require
-			exists: not destroyed
-			has_parent: parent /= Void
+			parent_not_void: parent /= Void
 		do
 			Result := implementation.is_first
+		ensure
+			bridge_ok: Result = implementation.is_first
 		end
 
 	is_last: BOOLEAN is
-			-- Is the item last in the list ?
+			-- Is `Current' last in list?
 		require
-			exists: not destroyed
-			has_parent: parent /= Void
+			parent_not_void: parent /= Void
 		do
 			Result := implementation.is_last
+		ensure
+			bridge_ok: Result = implementation.is_last
 		end
 
 feature -- Status setting
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
+	enable_select is
+			-- Select `Current' in list.
 		require
-			exists: not destroyed
-			has_parent: parent /= Void
+			parent_not_void: parent /= Void
 		do
-			implementation.set_selected (flag)
+			implementation.set_selected (True)
 		ensure
-			state_set: is_selected = flag
+			is_selected: is_selected
+		end
+
+	disable_select is
+			-- Deselect `Current' in list.
+		require
+			parent_not_void: parent /= Void
+		do
+			implementation.set_selected (False)
+		ensure
+			not_selected: not is_selected
 		end
 
 	toggle is
-			-- Change the state of selection of the item.
+			-- Change selection state.
 		require
-			exists: not destroyed
 			has_parent: parent /= Void
 		do
 			implementation.toggle
+		ensure
+			state_changed: old is_selected = not is_selected
 		end
 
-feature -- Event : command association
+feature -- Event handling
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is selected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_select_command (cmd, arg)
-		end
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when item is selected.
 
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unselected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_unselect_command (cmd, arg)		
-		end
-
-	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed
-			-- when the item is double clicked.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_double_click_command (cmd, arg)
-		end	
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is selected.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_unselect_commands			
-		end
-
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is unselected.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_unselect_commands	
-		end
-
-	remove_double_click_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is double-clicked.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_double_click_commands
-		end	
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when item is deselected.
 
 feature -- Implementation
 
 	implementation: EV_LIST_ITEM_I
-			-- Platform dependent access.
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
+
+	create_implementation is
+			-- Create implementation of list item.
+		do
+			create {EV_LIST_ITEM_IMP} implementation.make (Current)
+		end
+
+	create_action_sequences is
+			-- Create action sequences.
+		do
+			{EV_SIMPLE_ITEM} Precursor
+			create select_actions
+			create deselect_actions
+		end
+
+invariant
+	select_actions_not_void: select_actions /= Void
+	deselect_actions_not_void: deselect_actions /= Void
 
 end -- class EV_LIST_ITEM
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -201,4 +132,58 @@ end -- class EV_LIST_ITEM
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.24  2000/02/14 11:40:47  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.23.6.12  2000/01/28 20:00:08  oconnor
+--| released
+--|
+--| Revision 1.23.6.11  2000/01/27 19:30:36  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.23.6.10  2000/01/26 23:21:49  king
+--| Moved make_with_text up to ev_simple_item
+--|
+--| Revision 1.23.6.9  2000/01/14 21:43:35  oconnor
+--| removed parent from redefine clause
+--|
+--| Revision 1.23.6.8  2000/01/14 21:42:38  oconnor
+--| removed parent feature
+--|
+--| Revision 1.23.6.7  2000/01/14 21:41:01  oconnor
+--| removed unused local
+--|
+--| Revision 1.23.6.6  2000/01/14 21:40:30  oconnor
+--| reimplemented parent to call implementation.parent
+--|
+--| Revision 1.23.6.5  2000/01/14 21:37:58  oconnor
+--| commenting
+--|
+--| Revision 1.23.6.4  2000/01/14 21:36:26  oconnor
+--| added and improved contracts, fixed formatting/comments
+--|
+--| Revision 1.23.6.3  2000/01/11 19:28:59  king
+--| Removed useless command association routines
+--|
+--| Revision 1.23.6.2  1999/11/30 22:42:40  oconnor
+--| added  create_implementation , removed make_with_index make_with_all
+--|
+--| Revision 1.23.6.1  1999/11/24 17:30:41  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.23.2.3  1999/11/04 23:10:46  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.23.2.2  1999/11/02 17:20:11  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

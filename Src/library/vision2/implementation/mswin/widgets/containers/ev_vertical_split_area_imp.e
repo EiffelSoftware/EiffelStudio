@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision vertical split area. Mswindows implementation."
 	status: "See notice at end of class"
@@ -242,7 +244,7 @@ feature {NONE} -- WEL Implementation
 			point.screen_to_client (Current)
 			
 			if on_split (point.y) then
-				!! internal_cursor.make_by_predefined_id (Idc_sizens)
+				!! internal_cursor.make_with_predefined_id (Idc_sizens)
 			else
 				internal_cursor := Void
 			end
@@ -314,3 +316,25 @@ end -- EV_VERTICAL_SPLIT_AREA_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.18  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.17.10.2  2000/01/27 19:30:24  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.17.10.1  1999/11/24 17:30:30  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.17.6.3  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision multi-column list row, implementation interface.";
@@ -13,30 +15,29 @@ inherit
 			count as columns,
 			set_count as set_columns
 		redefine
-			parent
+			parent,
+			interface
 		end
 
-	EV_PND_SOURCE_I
-
-	EV_PND_TARGET_I
-
+	EV_PICK_AND_DROPABLE_I
+		redefine
+			interface
+		end
+	
 feature -- Access
 
-	parent: EV_MULTI_COLUMN_LIST is
+	parent: EV_ITEM_LIST [EV_MULTI_COLUMN_LIST_ROW] is
 			-- The parent of the Current widget
 			-- Can be void.
 		do
 			Result ?= {EV_COMPOSED_ITEM_I} Precursor
 		end
 
-
-
 feature -- Status report
 	
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		require
-			exists: not destroyed
 			has_parent: parent_imp /= Void
 		deferred
 		end
@@ -46,7 +47,6 @@ feature -- Status setting
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		require
-			exists: not destroyed
 			has_parent: parent_imp /= Void
 		deferred
 		ensure
@@ -56,49 +56,14 @@ feature -- Status setting
 	toggle is
 			-- Change the state of selection of the item.
 		require
-			exists: not destroyed
 			has_parent: parent_imp /= Void
 		do
 			set_selected (not is_selected)
 		end
 
-feature -- Event : command association
+feature {EV_ANY_I} -- Implementation
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is selected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end	
-
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unselected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed
-			-- when the item is selected.
-		require
-			exists: not destroyed
-		deferred			
-		end	
-
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed
-			-- when the item is unselected.
-		require
-			exists: not destroyed
-		deferred		
-		end
+	interface: EV_MULTI_COLUMN_LIST_ROW
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_I
 
@@ -117,3 +82,37 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.26  2000/02/14 11:40:34  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.25.6.5  2000/02/02 23:46:03  king
+--| Removed command association routines
+--|
+--| Revision 1.25.6.4  2000/01/29 01:05:01  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.25.6.3  2000/01/27 19:29:52  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.25.6.2  1999/12/17 19:06:48  rogers
+--| redefined interface to be a a more refined type. EV_PICK_AND_DROPABLE_I replaces EV_PND_SOURCE and EV_PND_TARGET.
+--|
+--| Revision 1.25.6.1  1999/11/24 17:30:02  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.25.2.3  1999/11/04 23:10:32  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.25.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision text component, implementation interface."
@@ -12,7 +13,6 @@ deferred class
 inherit
 	EV_PRIMITIVE_I
 		redefine
-			set_default_options,
 			set_default_colors
 		end
 
@@ -21,7 +21,6 @@ feature -- Access
 	text: STRING is
 			-- Text of current label
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			Result_not_void: Result /= Void
@@ -30,14 +29,12 @@ feature -- Access
 	text_length: INTEGER is
 			-- Length of the text in the widget
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	selected_text: STRING is
 			-- Text which is currently selected
 		require
-			exists: not destroyed
 		do
 			Result := text.substring (selection_start, selection_end)
 		end
@@ -48,28 +45,24 @@ feature -- Status report
 	is_editable: BOOLEAN is
 			-- Is the text editable
 		require
-			exists: not destroyed
 		deferred
 		end
 
-	position: INTEGER is
+	caret_position: INTEGER is
 			-- Current position of the caret.
 		require
-			exist: not destroyed
 		deferred
 		end
 
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		require
-			exist: not destroyed
 		deferred
 		end
 
 	selection_start: INTEGER is
 			-- Index of the first character selected
 		require
-			exist: not destroyed
 			has_selection: has_selection
 		deferred
 		ensure
@@ -80,7 +73,6 @@ feature -- Status report
 	selection_end: INTEGER is
 			-- Index of the last character selected
 		require
-			exist: not destroyed
 			has_selection: has_selection
 		deferred
 		ensure
@@ -88,30 +80,22 @@ feature -- Status report
 			result_small_enough: Result <= text_length
 		end
 
-	valid_position (pos: INTEGER): BOOLEAN is
+	valid_caret_position (pos: INTEGER): BOOLEAN is
 		require
-			exist: not destroyed
 		do
 			Result := pos > 0 and pos <= text_length			
 		end
 
 feature -- Status setting
 	
-	set_default_options is
-			-- Initialize the options of the widget.
-		do
-			set_vertical_resize (False)
-			set_horizontal_resize (True)
-		end
-
 	set_default_colors is
 			-- Initialize the colors of the widget
 		local
 			color: EV_COLOR
 		do
-			create color.make_rgb (255, 255, 255)
+			create color.make_with_rgb (1, 1, 1)
 			set_background_color (color)
-			create color.make_rgb (0, 0, 0)
+			create color.make_with_rgb (0, 0, 0)
 			set_foreground_color (color)
 		end
 
@@ -119,14 +103,12 @@ feature -- Status setting
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
 		require
-			exists: not destroyed
 		deferred
 		end
 
-	set_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER) is
 			-- set current insertion position
 		require
-			exist: not destroyed			
 			position_large_enough: pos >= 1
 			position_small_enough: pos <= text_length + 1
 --			is_editable: is_editable
@@ -138,7 +120,6 @@ feature -- Element change
 	set_text (txt: STRING) is
 			-- set text in component to 'txt'
 		require
-			exist: not destroyed			
 			valid_text: txt /= Void
 			text_is_editable: is_editable
 		deferred
@@ -149,7 +130,6 @@ feature -- Element change
 	insert_text (txt: STRING) is
 			-- Insert `txt' at the current position.
 		require
-			exists: not destroyed
 			valid_text: txt /= Void
 			is_editable: is_editable
 		deferred
@@ -158,7 +138,6 @@ feature -- Element change
 	append_text (txt: STRING) is
 			-- append 'txt' into component
 		require
-			exist: not destroyed			
 			valid_text: txt /= Void
 			is_editable: is_editable
 		deferred
@@ -169,7 +148,6 @@ feature -- Element change
 	prepend_text (txt: STRING) is
 			-- prepend 'txt' into component
 		require
-			exist: not destroyed			
 			valid_text: txt /= Void
 			is_editable: is_editable
 		deferred
@@ -182,7 +160,6 @@ feature -- Resizing
 	set_minimum_width_in_characters (nb: INTEGER) is
 			-- Make `nb' characters visible on one line.
 		require
-			exists: not destroyed
 			valid_nb: nb > 0
 		deferred
 		end
@@ -194,7 +171,6 @@ feature -- Basic operation
 			-- `start_pos' and `end_pos'. Both `start_pos' and
 			-- `end_pos' are selected.
 		require
-			exist: not destroyed
 			valid_start: start_pos >= 1 and start_pos <= text_length
 			valid_end: end_pos >= 1 and end_pos <= text_length
 		deferred
@@ -207,7 +183,6 @@ feature -- Basic operation
 	select_all is
 			-- Select all the text.
 		require
-			exist: not destroyed
 			positive_length: text_length > 0
 		deferred
 		ensure
@@ -219,7 +194,6 @@ feature -- Basic operation
 	deselect_all is
 			-- Unselect the current selection.
 		require
-			exist: not destroyed
 		deferred
 		ensure
 			has_no_selection: not has_selection
@@ -228,7 +202,6 @@ feature -- Basic operation
 	delete_selection is
 			-- Delete the current selection.
 		require
-			exist: not destroyed
 			has_selection: has_selection
 			is_editable: is_editable
 		deferred
@@ -243,7 +216,6 @@ feature -- Basic operation
 			-- If the `selectd_region' is empty, it does
 			-- nothing.
 		require
-			exists: not destroyed
 			has_selection: has_selection
 			is_editable: is_editable
 		deferred
@@ -255,7 +227,6 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		require
-			exists: not destroyed
 			has_selection: has_selection
 		deferred
 		end
@@ -266,7 +237,6 @@ feature -- Basic operation
 			-- text.
 			-- If the Clipboard is empty, it does nothing. 
 		require
-			exists: not destroyed
 			index_large_enough: index >= 1
 			index_small_enough: index <= text_length + 1
 			is_editable: is_editable
@@ -275,24 +245,22 @@ feature -- Basic operation
 
 feature -- Event - command association
 
-	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text of the widget have changed.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
+--	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add 'cmd' to the list of commands to be executed 
+--			-- when the text of the widget have changed.
+--		require
+--			valid_command: cmd /= Void
+--		deferred
+--		end
 
 feature -- Event -- removing command association
 
-	remove_change_commands is
-			-- Empty the list of commands to be executed
-			-- when the text of the widget have changed.
-		require
-			exists: not destroyed
-		deferred
-		end
+--	remove_change_commands is
+--			-- Empty the list of commands to be executed
+--			-- when the text of the widget have changed.
+--		require
+--		deferred
+--		end
 	
 end --class EV_TEXT_COMPONENT_I
 
@@ -311,3 +279,40 @@ end --class EV_TEXT_COMPONENT_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.36  2000/02/14 11:40:38  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.35.4.6  2000/02/04 07:09:37  oconnor
+--| removed obsolete command features
+--|
+--| Revision 1.35.4.5  2000/02/04 04:10:28  oconnor
+--| released
+--|
+--| Revision 1.35.4.4  2000/01/27 19:30:05  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.35.4.3  1999/12/30 01:59:25  rogers
+--| changed position to caret_position , valid_position to valid_caret_position, set_position to set_caret_position.
+--|
+--| Revision 1.35.4.2  1999/12/03 07:47:01  oconnor
+--| make_rgb (int) -> make_with_rgb (real)
+--|
+--| Revision 1.35.4.1  1999/11/24 17:30:13  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.34.2.3  1999/11/04 23:10:45  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.34.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

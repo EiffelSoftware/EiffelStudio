@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description:
@@ -87,7 +89,6 @@ feature {EV_RADIO_MENU_ITEM_IMP} -- Implementation
 	group: POINTER is
 			-- GSList* that represents group
 		require
-			exists: not destroyed
 		do
 			Result := gtk_radio_menu_item_group (widget)
 		ensure
@@ -113,3 +114,28 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.12  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.11.6.2  2000/01/27 19:29:25  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.11.6.1  1999/11/24 17:29:43  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.11.2.3  1999/11/04 23:10:26  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.11.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision2 toolbar, implementation interface."
 	status: "See notice at end of class."
@@ -9,162 +10,76 @@ class
 
 inherit
 	EV_TOOL_BAR_I
-
-	EV_PRIMITIVE_IMP
-		undefine
-			set_default_options
+		redefine
+			interface
 		end
 
-	EV_ITEM_HOLDER_IMP
-	
+	EV_PRIMITIVE_IMP
+		redefine
+			interface
+		end
+
+	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
+		undefine
+			item_by_data
+		redefine
+			interface,
+			add_to_container
+		end
 
 create
-	make,
-	make_with_size,
-	make_with_height
+	make
 
 feature {NONE} -- Implementation
 
-	make is
+	make (an_interface: like interface) is
 			-- Create the tool-bar.
 		do
-			tool_bar_make
-			button_width := -1
-			button_height := -1
-		end
-
-	make_with_size (w, h: INTEGER) is
-			-- Create the tool-bar with `par' as parent.
-		do
-			tool_bar_make
-			-- Set the width and height
-			button_width := w
-			button_height := h
-			gtk_toolbar_set_space_size (widget, 10)
-		end
-
-	make_with_height (h: INTEGER) is
-			-- Create the tool-bar with all items set to height h
-		do
-			tool_bar_make
-			button_width := -1
-			button_height := h
-			gtk_container_set_border_width (widget, 2)
-		end
-
-	tool_bar_make is
-			-- Abstraction from all three make routines
-		do
-			widget := c_gtk_toolbar_new_horizontal
-			gtk_object_ref (widget)
-			gtk_toolbar_set_tooltips (widget, False)
-
-			-- Create the child list
-			create ev_children.make (0)
-		end
-
-
-feature -- Element change
-
-	clear_items is
-			-- Clear all the items of the list.
-		do
-			-- clear_ev_children
-			-- clear contained gtk objects
-		
-			c_gtk_container_remove_all_children(widget)
-			clear_ev_children		
-		end
-
-	append_space is
-		do
-			gtk_toolbar_append_space(widget)
+			base_make (an_interface)
+			set_c_object (C.gtk_hbox_new (False, 0))
+			list_widget := c_object
 		end
 
 feature -- Implementation
 
-	button_width, button_height: INTEGER
-		-- User set default button dimensions.
-
-	toolbar_size: INTEGER
-
-	resize_button (item_imp: EV_TOOL_BAR_BUTTON_IMP) is
-		-- Set the button dimensions to that set by user.
-		do
-			
-			if item_imp.height > toolbar_size then
-				toolbar_size := item_imp.height
-				set_height (toolbar_size)
-			end
-				
-			if button_width >= 0 then
-				item_imp.set_minimum_width(button_width)
-				item_imp.set_minimum_height(button_height)
-			end
-
-			if button_width = -1 and button_height >= 0 then
-				item_imp.set_minimum_height(button_height)
-			end
-		end
-
-	add_item (item_imp: EV_TOOL_BAR_BUTTON_IMP) is
-			-- Add `item' to the list.
+	add_to_container (v: like item) is
+			-- Add `v' to tool bar, set to non-expandable.
 		local
-			dummy: ANY
-			dummy_string: STRING
-			position: INTEGER
+			old_expand, fill, pad, pack_type: INTEGER
+			wid_imp: EV_WIDGET_IMP
 		do
-			ev_children.extend (item_imp)
-			position := ev_children.count
+			Precursor (v)
+			wid_imp ?= v.implementation
 
-			create dummy_string.make (0)
-			dummy_string := ""
-			dummy := dummy_string.to_c
-
-			resize_button (item_imp)
-			gtk_toolbar_insert_widget (widget, item_imp.widget, $dummy, $dummy, position)
+			C.gtk_box_query_child_packing (
+				list_widget,
+				wid_imp.c_object,
+				$old_expand,
+				$fill,
+				$pad,
+				$pack_type
+			)
+			C.gtk_box_set_child_packing (
+				list_widget,
+				wid_imp.c_object,
+				False,
+				fill.to_boolean,
+				pad,
+				pack_type
+			)
 		end
 
-	insert_item (item_imp: EV_TOOL_BAR_BUTTON_IMP; pos: INTEGER) is
-			-- insert `item_imp' at position pos.
-		local
-			dummy: ANY
-			dummy_string: STRING
-		do     
-			-- if child is already present then remove from tool bar
-			if ev_children.has (item_imp) then
-				gtk_object_ref (item_imp.widget)
-				ev_children.prune_all (item_imp)
-				gtk_container_remove (widget, item_imp.widget)
-			end
-
-			-- Set button to user-defined size (if set)
-			resize_button (item_imp)
-
-			-- Insert value in to children list
-			ev_children.go_i_th (pos - 1)
-			ev_children.put_right (item_imp)
-			
-			-- Create redundant string used to fill signature
-			create dummy_string.make (0)
-			dummy_string := ""
-			dummy := dummy_string.to_c
-						
-			gtk_toolbar_insert_widget (widget, item_imp.widget, $dummy, $dummy, pos - 1)
-			gtk_object_unref (item_imp.widget)
-		end
-
-	remove_item (item_imp: EV_TOOL_BAR_BUTTON_IMP) is
-			-- remove `item_imp' from toolbar.
+	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
+			-- Move `a_child' to `a_position' in `a_container'.
 		do
-			ev_children.prune_all (item_imp)
-			gtk_container_remove (widget, item_imp.widget)
+			check to_be_implemented: False end
 		end
 
-feature -- Implementation
- 
- 	ev_children: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
- 			-- List of the children.
+	list_widget: POINTER
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TOOL_BAR
 
 end -- class EV_TOOL_BAR_IMP
 
@@ -183,3 +98,43 @@ end -- class EV_TOOL_BAR_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.11  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.10.6.7  2000/02/04 21:27:20  king
+--| Made toolbar horizontal box for homogeneous height resizing, changed add_to_container to pack widgets in to the toolbar so they are non-expandable
+--|
+--| Revision 1.10.6.6  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.10.6.5  2000/02/01 20:09:42  king
+--| Changed inheritence to use tool bar items
+--|
+--| Revision 1.10.6.4  2000/01/28 19:03:38  king
+--| Altered to inherit from generic ev_item_list_imp
+--|
+--| Revision 1.10.6.3  2000/01/27 19:29:49  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.10.6.2  2000/01/26 23:44:43  king
+--| Removed redundant features, implemented to fit in with new structure
+--|
+--| Revision 1.10.6.1  1999/11/24 17:29:59  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.10.2.3  1999/11/17 01:53:06  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.10.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "This class is an ancestor of EV_WIDGET_IMP, EV_ITEM_IMP%
 		% and EV_MESSAGE_DIALOG_IMP"
@@ -8,14 +10,13 @@ deferred class
 	EV_EVENT_HANDLER_IMP
 
 inherit	
-        EV_GTK_EXTERNALS
-	EV_GTK_TYPES_EXTERNALS
-	EV_GTK_WIDGETS_EXTERNALS
-	EV_GTK_GENERAL_EXTERNALS
-	EV_GTK_CONTAINERS_EXTERNALS
-        EV_GTK_CONSTANTS
-
 	EV_WIDGET_EVENTS_CONSTANTS_IMP
+
+--	GTK_ENUMS
+
+--	C_GTK_EXTERNALS
+
+--	EV_C_GTK
 
 feature {NONE} -- Initialization
 
@@ -254,7 +255,7 @@ feature {NONE} -- Status setting
 			end
 			ev_str := event.to_c
 			if (wid /= default_pointer) then
-				con_id := c_gtk_signal_connect (
+				con_id := C.c_gtk_signal_connect (
 					wid,
 					$ev_str,
 					cmd.execute_address,
@@ -264,7 +265,7 @@ feature {NONE} -- Status setting
 					$ev_d_imp,
 					ev_d_imp.initialize_address,
 					mouse_button,
-					double_click,
+					0, --| FIXME boolean_to_integer (double_click),
 					extra_data
 				)
 
@@ -315,7 +316,7 @@ feature {NONE} -- Status setting
 		do
 			ev_str:= event.to_c
 			if (wid /= default_pointer) then
-				con_id := c_gtk_signal_connect (
+				con_id := C.c_gtk_signal_connect (
 					wid,
 					$ev_str,
 					cmd.execute_address,
@@ -325,7 +326,7 @@ feature {NONE} -- Status setting
 					Default_pointer,
 					Default_pointer,
 					0,
-					False,
+					0,
 					extra_data
 				)
 				check
@@ -378,7 +379,7 @@ feature {NONE} -- Status setting
 						con_id := list_com.connexion_id
 
 						if (wid /= default_pointer) then
-							gtk_signal_disconnect (wid, con_id)
+							C.gtk_signal_disconnect (wid, con_id)
 						end
 
 						-- remove the command in GTK
@@ -413,7 +414,7 @@ feature {NONE} -- Status setting
 					list_com.exhausted
 				loop
 					if (wid /= default_pointer) then
-						gtk_signal_disconnect (wid, list_com.connexion_id)
+						C.gtk_signal_disconnect (wid, list_com.connexion_id)
 							-- remove the command in GTK
 					end
 
@@ -471,8 +472,46 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Deferred features
 
-	widget: POINTER is
+	c_object: POINTER is
+		deferred
+		end
+
+	C: EV_C_EXTERNALS is
 		deferred
 		end
 
 end -- class EV_EVENT_HANDLER_IMP
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.16  2000/02/14 11:40:29  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.15.4.5  2000/01/27 19:29:33  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.15.4.4  1999/12/08 17:42:27  oconnor
+--| removed more inherited externals
+--|
+--| Revision 1.15.4.3  1999/12/01 17:37:11  oconnor
+--| migrating to new externals
+--|
+--| Revision 1.15.4.2  1999/12/01 01:02:32  brendel
+--| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied on specific things like return value BOOLEAN instead of INTEGER.
+--|
+--| Revision 1.15.4.1  1999/11/24 17:29:47  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.14.2.3  1999/11/09 16:53:15  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.14.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

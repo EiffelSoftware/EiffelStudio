@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Create with a white background.
 		do
 			Precursor
-			create background_color.make_rgb (255, 255, 255)
+			create background_color.make_with_rgb (1, 1, 1)
 		end
 
 feature -- Access

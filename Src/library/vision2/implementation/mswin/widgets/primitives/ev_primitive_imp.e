@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision primitive, mswin implementation."
@@ -13,12 +15,18 @@ deferred class
 	
 inherit
 	EV_PRIMITIVE_I
+		redefine
+			interface
+		end
 
 	EV_WIDGET_IMP
+		redefine
+			interface
+		end
 
 feature -- Access
 
-	top_level_window_imp: EV_UNTITLED_WINDOW_IMP
+	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains the current widget.
 
 feature -- Element change
@@ -32,24 +40,23 @@ feature -- Element change
 			ww: WEL_WINDOW
 		do
 			if par /= Void then
-				if parent_imp /= Void then
-					parent_imp.remove_child (Current)
-				end
+				--if parent_imp /= Void then
+				--	parent_imp.remove_child (Current)
+				--end
+				par_imp ?= par.implementation
+				par_imp.add_child (Current)
 				ww ?= par.implementation
 				wel_set_parent (ww)
-				par_imp ?= par.implementation
 				check
 					valid_cast: par_imp /= Void
 				end
 				set_top_level_window_imp (par_imp.top_level_window_imp)
-				par_imp.add_child (Current)
 			elseif parent_imp /= Void then
-				parent_imp.remove_child (Current)
 				wel_set_parent (default_parent)
 			end
 		end
-
-	set_top_level_window_imp (a_window: EV_UNTITLED_WINDOW_IMP) is
+	
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		do
@@ -66,7 +73,7 @@ feature -- Basic operations
 			hwnd: POINTER
 			window: WEL_WINDOW
 		do
-			hwnd := next_dlgtabitem (top_level_window_imp.item, item, direction)
+			hwnd := next_dlgtabitem (top_level_window_imp.wel_item, wel_item, direction)
 			window := windows.item (hwnd)
 			window.set_focus
 		end
@@ -79,7 +86,7 @@ feature -- Basic operations
 			hwnd: POINTER
 			window: EV_WIDGET_IMP
 		do
-			hwnd := next_dlggroupitem (top_level_window_imp.item, item, direction)
+			hwnd := next_dlggroupitem (top_level_window_imp.wel_item, wel_item, direction)
 			window ?= windows.item (hwnd)
 			check
 				valid_cast: window /= Void
@@ -125,9 +132,9 @@ feature -- Basic operations
 
 feature {NONE} -- Deferred features
 
-	item: POINTER is
-		deferred
-		end
+	--item: POINTER is
+	--	deferred
+	--	end
 
 	windows: HASH_TABLE [WEL_WINDOW, POINTER] is
 		deferred
@@ -149,6 +156,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 		deferred
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_PRIMITIVE
+
 end -- class EV_PRIMITIVE_IMP
 
 --|----------------------------------------------------------------
@@ -166,3 +177,40 @@ end -- class EV_PRIMITIVE_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.21  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.20.6.7  2000/02/03 17:02:03  rogers
+--|  Removed code in set_parent that was no longer necessary.
+--|
+--| Revision 1.20.6.6  2000/02/01 03:29:25  brendel
+--| Commented back out call to remove_child.
+--|
+--| Revision 1.20.6.5  2000/01/31 19:31:32  brendel
+--| Changed back implementation of set_parent.
+--|
+--| Revision 1.20.6.4  2000/01/29 01:05:03  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.20.6.3  2000/01/27 19:30:28  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.20.6.2  1999/12/17 00:33:38  rogers
+--| Altered to fit in with the review branch. Basic alterations, redefinitaions of name clashes etc.
+--|
+--| Revision 1.20.6.1  1999/11/24 17:30:33  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.20.2.3  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

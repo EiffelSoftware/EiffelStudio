@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision pick and drop event data, implementation interface."
 	status: "See notice at end of class";
@@ -15,20 +17,8 @@ feature -- Access
 	data: ANY
 			-- Transported data
 
-	data_type: EV_PND_TYPE
-			-- Transported data type
-
-	target: EV_PND_TARGET
+	target: EV_PICK_AND_DROPABLE
 			-- Target Widget of the Pick And Drop event.
-
-	source: EV_PND_SOURCE is
-			-- Source Widget of the Pick and Drop event.
-		do
-			Result ?= widget
-			check
-				source_exists: Result /= Void
-			end
-		end
 
 feature -- Element change
 	
@@ -37,14 +27,8 @@ feature -- Element change
 		do
 			data := value
 		end
-	
-	set_data_type (value: EV_PND_TYPE) is
-			-- Make `value' the new data type.
-		do
-			data_type := value
-		end
 
-	set_target (targ: EV_PND_TARGET) is
+	set_target (targ: EV_PICK_AND_DROPABLE) is
 			-- Make `targ' the target of the PND action.
 		do
 			target := targ
@@ -59,6 +43,7 @@ feature -- Element change
 			-- Make `value' the absolute y coordinate
 		deferred
 		end
+
 
 end -- class EV_PND_EVENT_DATA_I
 
@@ -77,3 +62,31 @@ end -- class EV_PND_EVENT_DATA_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:34  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.4.2.2.4  2000/01/27 19:29:55  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.4.2.2.3  1999/12/17 18:47:06  rogers
+--| EV_PICK_AND_DROPABLE replaces EV_PND_TARGET.
+--|
+--| Revision 1.4.4.2.2.2  1999/12/09 01:28:20  oconnor
+--| king: removed feature source
+--|
+--| Revision 1.4.4.2.2.1  1999/11/24 17:30:05  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 indexing 
-	description: "EiffelVision horizontal Progress bar, implementation interface."
+	description: "Eiffel Vision horizontal progress bar. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,17 +10,12 @@ deferred class
 inherit
 	EV_PROGRESS_BAR_I
 		redefine
-			set_default_options
+			interface	
 		end
 
-feature -- Status setting
+feature {EV_ANY_I} -- Implementation
 
-	set_default_options is
-			-- Initialize the options of the widget.
-		do
-			set_vertical_resize (False)
-			set_horizontal_resize (True)
-		end
+	interface: EV_HORIZONTAL_PROGRESS_BAR
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR_I
 
@@ -39,3 +34,34 @@ end -- class EV_HORIZONTAL_PROGRESS_BAR_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:38  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.5  2000/02/04 04:10:28  oconnor
+--| released
+--|
+--| Revision 1.4.6.4  2000/01/31 21:31:34  brendel
+--| Changed to comply with revised interface.
+--|
+--| Revision 1.4.6.3  2000/01/27 19:30:03  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.2  2000/01/10 18:42:55  rogers
+--| Changed to fit in with the major Vision2 changes. set_default_options is no longer required. Added interface.
+--|
+--| Revision 1.4.6.1  1999/11/24 17:30:12  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

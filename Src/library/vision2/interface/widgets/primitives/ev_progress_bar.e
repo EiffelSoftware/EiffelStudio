@@ -1,7 +1,8 @@
 indexing 
-	description: "EiffelVision Progress bar."
-	note: "By default, the step is 10."
+	description: "Eiffel Vision progress bar. Gauge displaying a bar graph."
+	note: "Default step is 10."
 	status: "See notice at end of class"
+	keywords: "status, progress, bar"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,64 +15,66 @@ inherit
 			implementation
 		end
 
+feature -- Access
+
+	proportion: REAL is
+			-- Proportion of bar filled. Range: [0,1].
+		do
+			Result := implementation.proportion
+		ensure
+			bridge_ok: Result = implementation.proportion
+		end
+
 feature -- Status report
 
 	is_segmented: BOOLEAN is
-			-- Is the mode in segmented mode?
-		require
-			exist: not destroyed
+			-- Is display segmented?
 		do
 			Result := implementation.is_segmented
-		end
-
-	is_continuous: BOOLEAN is
-			-- Is the mode in continuous mode?
-		require
-			exist: not destroyed
-		do
-			Result := not is_segmented
+		ensure
+			bridge_ok: Result = implementation.is_segmented
 		end
 
 feature -- Status setting
 
-	set_segmented is
-			-- Set the bar in segmented mode.
-		require
-			exist: not destroyed
+	enable_segmentation is
+			-- Display bar divided into segments.
 		do
-			implementation.set_segmented (True)
+			implementation.enable_segmentation
 		ensure
-			segmented: is_segmented
+			is_segmented: is_segmented
 		end
 
-	set_continuous is
-			-- Set the bar in continuous mode.
-			-- Make the bar continuous.
-		require
-			exist: not destroyed
+	disable_segmentation is
+			-- Display bar without segments.
 		do
-			implementation.set_segmented (False)
+			implementation.disable_segmentation
 		ensure
-			continuous: is_continuous
+			not_is_segmented: not is_segmented
 		end
 
-	set_percentage (val: INTEGER) is
-			-- Make `val' the new percentage filled by the
-			-- progress bar.
+	set_proportion (a_proportion: REAL) is
+			-- Display bar with `a_proportion' filled.
 		require
-			exists: not destroyed
-			valid_val: val >= 0 and val <= 100
+			a_proportion_within_range: a_proportion >= 0 and a_proportion <= 1
 		do
-			implementation.set_percentage (val)
+			implementation.set_proportion (a_proportion)
+		ensure
+			assigned: (proportion - a_proportion).abs < step / (maximum - minimum)
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	implementation: EV_PROGRESS_BAR_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
+
+invariant
+	proportion_within_range: proportion >= 0 and proportion <= 1
 
 end -- class EV_PROGRESS_BAR
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -85,5 +88,37 @@ end -- class EV_PROGRESS_BAR
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:53  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.6.5  2000/01/31 21:30:50  brendel
+--| Revised.
+--|
+--| Revision 1.5.6.4  2000/01/28 22:24:25  oconnor
+--| released
+--|
+--| Revision 1.5.6.3  2000/01/27 19:30:56  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.6.2  2000/01/17 19:08:49  oconnor
+--| changed percentage to proportion, set_segmented to enable_segmentation
+--|
+--| Revision 1.5.6.1  1999/11/24 17:30:55  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.2.3  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.5.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

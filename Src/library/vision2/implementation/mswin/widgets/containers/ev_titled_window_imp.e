@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision window. Display a window that allows only one%
@@ -8,19 +10,24 @@ indexing
 	revision: "$Revision$"
 	
 class
-	EV_WINDOW_IMP
+	EV_TITLED_WINDOW_IMP
 
 inherit
-	EV_WINDOW_I
+	EV_TITLED_WINDOW_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
+		redefine
+			interface
+		end
 
-	EV_UNTITLED_WINDOW_IMP
+	EV_WINDOW_IMP
 		rename
 			-- Rename because the postconditions crashes.
 			maximize as wel_maximize,
 			minimize as wel_minimize
 		redefine
 			make,
-			make_with_owner,
 			default_style,
 			on_show,
 			on_size,
@@ -28,36 +35,40 @@ inherit
 			set_title,
 			compute_minimum_height,
 			compute_minimum_size,
-			restore
+			restore,
+			interface
 		end
 
 creation
-	make,
-	make_with_owner,
-	make_root
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create a window. Window does not have any
 			-- parents
 		do
+			base_make (an_interface)
 			title := ""
-			make_top ("EV_WINDOW")
+			make_top ("EV_TITLED_WINDOW")
 		end
 
-	make_with_owner (par: EV_WINDOW) is
-			-- Create a window with a parent.
-			-- For a window, we cannot set the parent after or it does a 
-		local
-			ww: WEL_FRAME_WINDOW
+feature {EV_TITLED_WINDOW} -- Accelerators
+
+	connect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Connect key combination `an_accel' to this window.
 		do
-			title := ""
-			ww ?= par.implementation
 			check
-				valid_owner: ww /= Void
+				to_be_implemented: False
 			end
-			make_child (ww, "EV_WINDOW")
+		end
+
+	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Disconnect key combination `an_accel' from this window.
+		do
+			check
+				to_be_implemented: False
+			end
 		end
 
 feature  -- Access
@@ -103,14 +114,14 @@ feature -- Status report
 			-- Is the window minimized (iconic state)?
 		do
 			Result := flag_set (style, Ws_minimize) or
-						(not shown and bit_set (internal_changes, 1028))
+						(not is_show_requested and bit_set (internal_changes, 1028))
 		end
 
 	is_maximized: BOOLEAN is
 			-- Is the window maximized (take the all screen).
 		do
-			Result := (shown and flag_set (style, Ws_maximize)) or
-						(not shown and bit_set (internal_changes, 256))
+			Result := (is_show_requested and flag_set (style, Ws_maximize)) or
+						(not is_show_requested and bit_set (internal_changes, 256))
 		end
 
 feature -- Status setting
@@ -134,7 +145,7 @@ feature -- Status setting
 			-- Minimize the window.
 			-- Shows the window too.
 		do
-			if shown then
+			if is_show_requested then
 				wel_minimize
 			else
 				internal_changes := set_bit (internal_changes, 1028, True)
@@ -147,7 +158,7 @@ feature -- Status setting
 			-- size, but do not call the precursor otherwise, it
 			-- shows the window.
 		do
-			if shown then
+			if is_show_requested then
 				wel_maximize
 			else
 				internal_changes := set_bit (internal_changes, 256, True)
@@ -160,8 +171,8 @@ feature -- Status setting
 			-- If the window is not shown, it simply regive it
 			-- its freedom to resize.
 		do
-			if shown then
-				{EV_UNTITLED_WINDOW_IMP} Precursor
+			if is_show_requested then
+				{EV_WINDOW_IMP} Precursor
 			else
 				internal_changes := set_bit (internal_changes, 256, False)
 				internal_changes := set_bit (internal_changes, 1028, False)
@@ -318,10 +329,14 @@ feature {NONE} -- WEL Implementation
 			elseif size_type = size_restored or size_type = size_maximized then
 				set_text (title)
 			end
-			{EV_UNTITLED_WINDOW_IMP} Precursor (size_type, a_width, a_height)
+			{EV_WINDOW_IMP} Precursor (size_type, a_width, a_height)
 		end
 
-end -- class EV_WINDOW_IMP
+feature {NONE} -- Implementation
+
+	interface: EV_TITLED_WINDOW
+
+end -- class EV_TITLED_WINDOW_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
@@ -339,3 +354,40 @@ end -- class EV_WINDOW_IMP
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.50  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.49.6.7  2000/02/04 19:08:03  rogers
+--| Removed make_with_owner.
+--|
+--| Revision 1.49.6.6  2000/01/29 01:05:03  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.49.6.5  2000/01/27 19:30:25  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.49.6.4  2000/01/25 23:33:02  brendel
+--| Added (dis)connect_accelerator.
+--|
+--| Revision 1.49.6.3  2000/01/18 00:17:39  rogers
+--| Undefined propatae_foreground_color and propagate_background_color from EV_WINDOW_I.
+--|
+--| Revision 1.49.6.2  1999/12/17 00:44:22  rogers
+--| Altered to fit in with the review branch. Some redefinitions required, make now takes an interface. is_show_requested replaces shown.
+--|
+--| Revision 1.49.6.1  1999/11/24 17:30:30  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.49.2.3  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

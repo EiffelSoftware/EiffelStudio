@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision box, deferred class, parent of vertical and%
@@ -15,30 +17,50 @@ deferred class
 
 inherit
 	EV_BOX_I
+		redefine
+			interface
+		end
 
+	EV_WIDGET_LIST_IMP
+		undefine
+			set_default_minimum_size,
+			enable_sensitive,
+			disable_sensitive,
+			client_width,
+			client_height
+		redefine
+			interface
+		select
+			interface
+		end
+	
 	EV_INVISIBLE_CONTAINER_IMP
+		rename
+			move as move_to,
+			interface as ev_invisible_container_imp_interface
 		undefine
 			compute_minimum_width,
 			compute_minimum_height,
-			compute_minimum_size
+			compute_minimum_size,
+			client_width,
+			client_height
 		redefine
 			make,
-			client_width,
-			client_height,
 			set_focus,
 			has_focus
 		end
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface)is
 				-- Create the box with the default options.
 		do
-			{EV_INVISIBLE_CONTAINER_IMP} Precursor
-			set_text ("EV_BOX")
+			--{EV_INVISIBLE_CONTAINER_IMP} Precursor
+			base_make (an_interface)
+			ev_wel_control_container_make
 			!! ev_children.make (2)
 			is_homogeneous := Default_homogeneous
-			spacing := Default_spacing
+			padding := Default_spacing
 			border_width := Default_border_width
 		end
 
@@ -59,7 +81,7 @@ feature -- Access
 	is_homogeneous: BOOLEAN
 			-- Must the children have the same size ?
 
-	spacing: INTEGER
+	padding: INTEGER
 			-- Space between the objects in the box
 
 	border_width: INTEGER
@@ -69,12 +91,12 @@ feature -- Access
 			-- Total space occupied by spacing. One spacing
 			-- between two consecutives children.
 		do
-			Result := spacing * (childvisible_nb - 1)
+			Result := padding * (childvisible_nb - 1)
 		end
 
 	childvisible_nb: INTEGER
 			-- Number of children which are visible
-
+ 
 	childexpand_nb: INTEGER is
 			-- Number of children, which are expanded and visible
 		do
@@ -90,7 +112,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_child_expandable (child: EV_WIDGET): BOOLEAN is
+	is_child_expanded (child: EV_WIDGET): BOOLEAN is
 			-- Is the child corresponding to `index' expandable. ie: does it
 			-- accept the parent to resize or move it.
 		local
@@ -130,7 +152,7 @@ feature -- Status setting
 		local
 			list: ARRAYED_LIST [INTEGER]
 			child_imp: EV_WIDGET_IMP
-			value, index: INTEGER
+			value, an_index: INTEGER
 			placed: BOOLEAN
 		do
 			-- First, we find the index of the child.
@@ -138,12 +160,12 @@ feature -- Status setting
 			check
 				valid_cast: child_imp /= Void
 			end
-			index := ev_children.index_of (child_imp, 1)
+			an_index := ev_children.index_of (child_imp, 1)
 
 			-- Then, we set the information
 			if flag then
 				if non_expandable_children /= Void then
-					non_expandable_children.prune_all (index)
+					non_expandable_children.prune_all (an_index)
 					if non_expandable_children.empty then
 						non_expandable_children := Void
 					end
@@ -151,7 +173,7 @@ feature -- Status setting
 			else
 				if non_expandable_children = Void then
 					create non_expandable_children.make (1)
-					non_expandable_children.extend (index)
+					non_expandable_children.extend (an_index)
 				else
 					from
 						list := non_expandable_children
@@ -161,14 +183,14 @@ feature -- Status setting
 						placed
 					loop
 						if list.after then
-							list.extend (index)
+							list.extend (an_index)
 							placed := True
 						else
 							value := list.item
-							if index < value then
-								list.put_left (index)
+							if an_index < value then
+								list.put_left (an_index)
 								placed := True
-							elseif index > value then
+							elseif an_index > value then
 								list.forth
 							else
 								placed := True
@@ -198,26 +220,26 @@ feature -- Element change
 			-- the container.
 			local
 				child: EV_WIDGET
-				index: INTEGER
+				an_index: INTEGER
 		do
 			child ?= child_imp.interface
-			index := ev_children.index_of (child_imp, 1)
+			an_index := ev_children.index_of (child_imp, 1)
 			if non_expandable_children /= Void then
-				non_expandable_children.prune_all (index)
+				non_expandable_children.prune_all (an_index)
 					if non_expandable_children.empty then
 						non_expandable_children := Void
 					else
-						update_non_expandable_children (index)
+						update_non_expandable_children (an_index)
 					end
 				end
-
+			child_imp.set_parent (Void)
 			ev_children.prune_all (child_imp)
 			if not ev_children.empty then
 				notify_change (Nc_minsize)
 			end
 		end
 
-feature -- Assertion
+feature -- Contract support
 
   	child_add_successful (new_child: EV_WIDGET_I): BOOLEAN is
   			-- Used in the postcondition of 'add_child'
@@ -230,14 +252,14 @@ feature -- Assertion
 
 feature {NONE} -- Basic operation
  
-	update_non_expandable_children (index: INTEGER) is
+	update_non_expandable_children (index_value: INTEGER) is
 		local 
 			value: INTEGER
 			i: INTEGER
 		do
-		if index <= non_expandable_children.count then
+		if index_value <= non_expandable_children.count then
 			from
-				non_expandable_children.go_i_th (index)
+				non_expandable_children.go_i_th (index_value)
 			until
 				non_expandable_children.off
 			loop
@@ -262,6 +284,10 @@ feature {NONE} -- Basic operation
 			end
 		end
 
+feature {EV_ANY_I} -- Interface
+
+	interface: EV_BOX
+
 end -- class EV_BOX_IMP
 
 --|----------------------------------------------------------------
@@ -279,3 +305,34 @@ end -- class EV_BOX_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.28  2000/02/14 11:40:42  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.26.2.1.2.6  2000/01/31 17:27:46  brendel
+--| Removed set_default_minimum_size from inh. clause.
+--|
+--| Revision 1.26.2.1.2.5  2000/01/27 19:30:19  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.26.2.1.2.4  2000/01/18 00:45:21  rogers
+--| Removed commented parts from ineritance structure. See diff.
+--|
+--| Revision 1.26.2.1.2.2  1999/12/17 00:55:13  rogers
+--| Altered to fit in with the review branch. Redefinitions required. Now inherits from EV_WIDGET_LIST_IMP, make takes an interface.
+--|
+--| Revision 1.26.2.1.2.1  1999/11/24 17:30:25  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.25.2.2  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

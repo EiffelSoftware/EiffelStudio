@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
         description: 
@@ -12,47 +14,57 @@ class
         
 inherit
         EV_RADIO_BUTTON_I
+		redefine
+			interface
+		end
 	
 	EV_CHECK_BUTTON_IMP
-		export {NONE}
-			box,
-			initialize,
-			create_text_label,
-			set_pixmap,
-			unset_pixmap,
-			pixmap_size_ok
 		redefine
-			make,
-			set_parent
+			interface,
+			make
 		end
         
 create
-	make,
-	make_with_text
+	make
+
 
 feature {NONE} -- Initialization
 
-        make is
-                        -- Create a gtk push button.
+        make (an_interface: like interface) is
+                        -- Create a gtk radio button.
 		do
-			widget := gtk_radio_button_new (default_pointer)
-   			gtk_object_ref (widget)
-
-			-- Create the `box'.
-			initialize
-
-			-- Create the label with a text set to "".
-			create_text_label ("")
+			base_make (an_interface)
+			set_c_object (C.gtk_radio_button_new (default_pointer))
                 end
 
-	set_parent (par: EV_CONTAINER) is
-			-- We need to set the group pf the
-			-- radio button.
+
+feature -- Status setting
+
+	set_peer (peer: EV_RADIO_BUTTON) is
+			-- Put radio button in group of `peer'.
+		local
+			peer_imp: EV_RADIO_BUTTON_IMP
 		do
-			{EV_CHECK_BUTTON_IMP} Precursor (par)
-			gtk_radio_button_set_group (widget, parent_imp.radio_button_group)
-			parent_imp.set_rbg_pointer (gtk_radio_button_group (Current.widget))
+			peer_imp ?= peer.implementation
+			check
+				peer_imp_not_void: peer_imp /= Void
+			end
+
+			C.gtk_radio_button_set_group (
+				c_object,
+				C.gtk_radio_button_group (peer_imp.c_object)
+			)
 		end
+
+	remove_from_group is
+			-- Remove radio button from its current group, if any.
+		do
+			C.gtk_radio_button_set_group (c_object, default_pointer)
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_RADIO_BUTTON
 
 end -- class EV_RADIO_BUTTON_IMP
 
@@ -71,3 +83,34 @@ end -- class EV_RADIO_BUTTON_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.13  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.12.6.4  2000/01/27 19:29:48  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.12.6.3  2000/01/19 17:23:45  oconnor
+--| removed call to old ev_textable_imp_initialize
+--|
+--| Revision 1.12.6.2  2000/01/07 00:44:09  king
+--| Implemented radio button to work with new c_object structure
+--|
+--| Revision 1.12.6.1  1999/11/24 17:29:57  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.12.2.3  1999/11/17 01:53:05  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.12.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

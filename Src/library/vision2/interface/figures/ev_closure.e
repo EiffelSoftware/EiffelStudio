@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision closure. Closure of a figure."
 	status: "See notice at end of class"
@@ -61,7 +63,7 @@ feature -- Comparison
 			end
 		end
 
-	override (clip: EV_CLIP): BOOLEAN is
+	override (clip: EV_RECTANGLE): BOOLEAN is
 			-- Does rectangle override clip zone ?
 		require
 			clip /= Void and then down_right /= Void 
@@ -95,7 +97,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	as_clip: EV_CLIP is
+	as_clip: EV_RECTANGLE is
 			-- `clip` equivallent of `Current`
 		do
 			create Result.make
@@ -171,7 +173,7 @@ feature -- Element change
 			end
 		end
 
-	merge_clip (clip: EV_CLIP) is
+	merge_clip (clip: EV_RECTANGLE) is
 			-- Enlarge the rectangle in order to include `clip'.
 		require
 			clip_exists: clip /= Void
@@ -253,3 +255,28 @@ end -- class EV_CLOSURE
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:46  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.4.2.2.3  2000/01/27 19:30:33  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.4.2.2.2  2000/01/24 23:54:21  oconnor
+--| renamed EV_CLIP -> EV_RECTANGLE
+--|
+--| Revision 1.3.4.2.2.1  1999/11/24 17:30:37  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

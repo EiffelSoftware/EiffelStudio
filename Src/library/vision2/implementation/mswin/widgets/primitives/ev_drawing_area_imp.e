@@ -1,9 +1,7 @@
+--| FIXME Not for release
 indexing
-	description: "EiffelVision drawing area. Implementation interface."
-	note: "The dc we use is actually a private dc (See notice on display%
-		% device context. It doesn't need to be released each time."
+	description: "EiffelVision drawing area. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,34 +10,25 @@ class
 
 inherit
 	EV_DRAWING_AREA_I
-
-	EV_DRAWABLE_IMP
-		undefine
-			background_color,
-			foreground_color
 		redefine
-			foreground_color_imp,
-			set_background_color,
-			set_foreground_color		
+			interface
 		end
 
-	EV_PIXMAPABLE_IMP
-		undefine
-			pixmap_size_ok,
-			pixmap_drawable_ok
+	EV_DRAWABLE_IMP
 		redefine
-			set_pixmap,
-			unset_pixmap
+			initialize,
+			interface
 		end
 
 	EV_PRIMITIVE_IMP
 		undefine
-			set_default_options
-		redefine
-			foreground_color_imp,
-			background_color_imp,
 			set_background_color,
-			set_foreground_color
+			set_foreground_color,
+			background_color,
+			foreground_color
+		redefine
+			interface,
+			initialize
 		end
 
 	WEL_CONTROL_WINDOW
@@ -47,9 +36,14 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
-			shown as displayed,
+			shown as is_displayed,
 			destroy as wel_destroy,
-			destroy_item as wel_destroy_item
+			destroy_item as wel_destroy_item,
+			item as wel_item,
+			move as move_to,
+			enabled as is_sensitive,
+			width as wel_width,
+			height as wel_height
 		undefine
 			window_process_message,
 			set_width,
@@ -72,9 +66,7 @@ inherit
 			show,
 			hide
 		redefine
-			on_size,
 			on_paint,
-			on_wm_erase_background,
 			background_brush,
 			default_style
 		end
@@ -84,112 +76,39 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create an empty drawing area.
 		do
-			!! foreground_color_imp.make_system (color_windowtext)
-			!! background_color_imp.make_system (color_window)
-			wel_make (default_parent, "Drawing area")
-			!! dc.make (Current)
-			dc.get
-			initialize
+			base_make (an_interface)
 		end
+
+	initialize is
+			-- Set up action sequence connections
+			-- and `Precursor' initialization.
+		do
+			wel_make (default_parent, "Drawing area")
+			create screen_dc.make (Current)
+			screen_dc.get
+			{EV_DRAWABLE_IMP} Precursor
+			{EV_PRIMITIVE_IMP} Precursor
+		end	
 
 feature -- Access
 
-	dc: WEL_CLIENT_DC
-			-- A dc to paint on it.
-
-feature -- Element change
-
-	set_pixmap (pix: EV_PIXMAP) is
-			-- Make `pix' the new pixmap of the widget.
+	dc: WEL_DC is
+			-- The device context of the control.
 		do
-			pixmap_imp ?= pix.implementation
-			pixmap_imp.lock
-			pixmap_imp.set_parent (Current)
-			set_minimum_size (pixmap_imp.width, pixmap_imp.height)
-			invalidate
+			Result := screen_dc
 		end
 
-	unset_pixmap is
-			-- Remove the pixmap from the container
-		do
-			pixmap_imp.set_parent (Void)
-			pixmap_imp.unlock
-			pixmap_imp := Void
-			set_minimum_size (0, 0)
-		end
-
-feature -- Event - command association
-
-	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of action to be executed when
-			-- current area is resized.
-			-- `arg' will be passed to `cmd' whenever it is
-			-- invoked as a callback.
-		do
-			add_command (Cmd_size, cmd, arg)
-		end
-
-	add_paint_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget has to be redrawn.
-		do
-			add_command (Cmd_paint, cmd, arg)
-		end
-
-feature -- Event - command removal
-
-	remove_resize_commands is
-			-- Remove the list of commands to be executed when
-			-- current area is resized.
-		do
-			remove_command (Cmd_size)
-		end
-
-	remove_paint_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget has to be redrawn.
-		do
-			remove_command (Cmd_paint)
-		end
+	screen_dc: WEL_CLIENT_DC
 
 feature {NONE} -- Implementation
-
-	foreground_color_imp: EV_COLOR_IMP
-			-- Color used for the foreground of the drawable,
-			-- used for the text and the drawings.
-
-	background_color_imp: EV_COLOR_IMP
-			-- Current background color
-
-	set_background_color (color: EV_COLOR) is
-			-- Make `color' the new `background_color'
-		do
-			{EV_PRIMITIVE_IMP} Precursor (color)
-			{EV_DRAWABLE_IMP} Precursor (color)
-		end
-
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'
-		do
-			{EV_PRIMITIVE_IMP} Precursor (color)
-			{EV_DRAWABLE_IMP} Precursor (color)
-		end
-
-feature {NONE} -- WEL Implementation
-
-	on_size (size_type, a_width, a_height: INTEGER) is
-			-- Called when the drawing area is resized.
-		do
-			execute_command (Cmd_size, Void)
-		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_paint message.
@@ -197,29 +116,8 @@ feature {NONE} -- WEL Implementation
 			-- the `paint_dc'. `invalid_rect' defines
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
-		local
-			clip: EV_CLIP
-			pt: EV_COORDINATES
-			expose_event_data: EV_EXPOSE_EVENT_DATA
 		do
-			-- If a pixmap is linked to the area, we draw it
-			if pixmap_imp /= Void then
-				dc.copy_dc (pixmap_imp.internal_dc, invalid_rect) --client_rect)
-			end
-
-			-- arguments for the paint event.
-			!! pt.set (invalid_rect.left, invalid_rect.top)
-			!! clip.set (pt, invalid_rect.width, invalid_rect.height)
-			!! expose_event_data.make
-			expose_event_data.implementation.set_clip_region (clip)
-			execute_command (Cmd_paint, expose_event_data)
-		end
-
-	on_wm_erase_background (wparam: INTEGER) is
-	  			-- Wm_erasebkgnd message.
-				-- Need to do nothing
-		do
-			disable_default_processing
+			interface.expose_actions.call ([invalid_rect.x, invalid_rect.y, invalid_rect.width, invalid_rect.height])
 		end
 
 	default_style: INTEGER is
@@ -277,6 +175,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+feature {NONE} -- Implementation
+
+	interface: EV_DRAWING_AREA
+
 end -- class EV_DRAWING_AREA_IMP
 
 --|----------------------------------------------------------------
@@ -294,3 +196,62 @@ end -- class EV_DRAWING_AREA_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.27  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.26.10.11  2000/01/29 01:05:03  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.26.10.10  2000/01/27 19:30:26  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.26.10.9  2000/01/20 18:29:28  king
+--| Formatting.
+--|
+--| Revision 1.26.10.8  2000/01/20 01:53:12  king
+--| Cleanup of unused code.
+--|
+--| Revision 1.26.10.7  2000/01/19 17:56:28  king
+--| Changed to comply with EV_DRAWABLE.
+--|
+--| Revision 1.26.10.6  2000/01/18 17:22:34  rogers
+--| Added the call to expose_actions in on_paint.
+--|
+--| Revision 1.26.10.5  2000/01/18 01:29:35  king
+--| Removed commented out stuff.
+--| Changed implementation of colors.
+--|
+--| Revision 1.26.10.4  1999/12/17 00:41:32  rogers
+--| Altered to fit in with the review branch. Altered to compile, as last CVS commit of these files would not compile at all.
+--|
+--| Revision 1.26.10.3  1999/12/08 17:34:24  brendel
+--| Commented out old inheritance directives.
+--| Made old event system obsolete.
+--| Added `interface'.
+--| Added `initialize'.
+--| Removed call to initialize in `make'.
+--| Commented out all pixmapable features since drawing area is not pixmapable
+--| anymore.
+--| Improved indexing clause. Moved internal `note' to comment in `make'.
+--| Commmented out color setting routines, since that is handled in EV_DRAWING_AREA
+--| Needs implementation of new events!
+--|
+--| Revision 1.26.10.2  1999/12/07 23:40:07  rogers
+--| Alerations to fit in with the new ii.
+--|
+--| Revision 1.26.10.1  1999/11/24 17:30:32  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.26.6.2  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,7 +1,5 @@
 indexing
-	description: "EiffelVision warning dialog. This dialog%
-			% displays a window with an error bitmap,%
-			% a text inside and a title."
+	description: "EiffelVision error dialog."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,47 +10,28 @@ class
 inherit
 	EV_MESSAGE_DIALOG
 		redefine
-			implementation
+			initialize
 		end
 
 create
-	make,
-	make_default,
+	default_create,
 	make_with_text
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create a message dialog with `par' as parent.
+	initialize is
 		do
-			!EV_ERROR_DIALOG_IMP! implementation.make (par)
-			implementation.set_interface (Current)
---			implementation.build
+			Precursor
+			set_title ("Error")
+			set_buttons (<<"Abort", "Retry", "Ignore">>)
 		end
 
-	make_with_text (par: EV_CONTAINER; a_title, a_msg: STRING) is
-			-- Create a message box with `par' as parent, `a_title' as
-			-- title and `a_msg' as message.
+	make_with_text (a_text: STRING) is
+			-- Create dialog with `a_text'.
 		do
-			!EV_ERROR_DIALOG_IMP! implementation.make_with_text (par, a_title, a_msg)
-			implementation.set_interface (Current)
---			implementation.build
+			default_create
+			set_text (a_text)
 		end
-
-	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
-			-- Create the default message dialog with `par' as
-			-- parent, `a_title' as title and `a_msg' as message
-			-- and displays it.
-		do
-			!EV_ERROR_DIALOG_IMP! implementation.make_default (par, a_title, a_msg)
-			implementation.set_interface (Current)
---			implementation.build
-			implementation.set_default (a_msg, a_title)
-		end
-
-feature {NONE} -- Implementation
-
-	implementation: EV_ERROR_DIALOG_I
 
 end -- class EV_ERROR_DIALOG
 
@@ -71,3 +50,37 @@ end -- class EV_ERROR_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:50  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.6.6  2000/02/05 05:26:14  oconnor
+--| redefine initialize
+--|
+--| Revision 1.9.6.5  2000/01/28 22:24:22  oconnor
+--| released
+--|
+--| Revision 1.9.6.4  2000/01/28 22:20:37  brendel
+--| Added `default_create' to create-clause.
+--|
+--| Revision 1.9.6.3  2000/01/27 19:30:49  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.6.2  2000/01/26 18:17:21  brendel
+--| Completed in a platform independant way.
+--|
+--| Revision 1.9.6.1  1999/11/24 17:30:50  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.2.2  1999/11/02 17:20:12  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

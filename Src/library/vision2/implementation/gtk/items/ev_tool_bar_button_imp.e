@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision2 Toolbar button, a specific button that goes in a tool-bar."
 	status: "See notice at end of class"
@@ -9,145 +10,94 @@ class
 
 inherit
 	EV_TOOL_BAR_BUTTON_I
-		redefine
-			parent_imp
+		select
+			interface
 		end
 
 	EV_SIMPLE_ITEM_IMP
+		rename
+			interface as simple_item_interface
 		undefine
-			pixmap_size_ok,
-			set_foreground_color,
-			set_background_color,
-			create_pixmap_place,
-			set_insensitive,
-			set_text,
+			set_pixmap,
+			remove_pixmap,
 			parent,
-			make_with_text
+			set_text,
+			remove_text
 		redefine
-			initialize,
-			parent_imp
+			initialize
 		end
 
 	EV_BUTTON_IMP
 		rename
-			parent_set as widget_parent_set,
-			parent_imp as widget_parent_imp,
-			set_parent as widget_set_parent
+			interface as button_interface,
+			parent_imp as button_parent_imp,
+			parent_set as button_parent_set,
+			parent as button_parent
 		undefine
-			initialize,
-			has_parent,
-			pixmap_size_ok
+			has_parent
 		redefine
-			set_text,
 			make,
-			create_pixmap_place
+			initialize,
+			initialize_button_box
 		select
-			remove_double_click_commands,
-			add_double_click_command	
+			button_parent_imp,
+			button_parent_set,
+			button_parent
 		end
 
 create
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- create the tool bar button.
-			-- Redefined because the interface does not
-			-- call `widget_make' where we connect `destroy_signal_callback'
-			-- to `destroy' event.
+	make (an_interface: like interface) is
+			-- Create the tool bar button.
 		do
-			{EV_BUTTON_IMP} Precursor
-			initialize_object_handling
-			gtk_button_set_relief (widget, GTK_RELIEF_NONE)
+			base_make (an_interface)
+			set_c_object (C.gtk_button_new)
+			C.gtk_button_set_relief (c_object, C.gtk_relief_none_enum)
+		end
+
+	connect_signals is
+			-- Redefined in radio as press_actions is not connected directly
+		do
+			connect_signal_to_actions ("clicked", interface.press_actions)
 		end
 
 	initialize is
-			-- Creation of vbox for pixmap and caption.
+			-- Initialization of button box and events.
+
 		do
-			box := gtk_vbox_new (False, 5)
-			gtk_widget_show (box)
-			gtk_container_add (GTK_CONTAINER (widget), box)
+			{EV_SIMPLE_ITEM_IMP} Precursor
+			pixmapable_imp_initialize
+			textable_imp_initialize
+			initialize_button_box
+			connect_signals
+			is_initialized := True
 		end
 
-feature -- Access
-
-	index: INTEGER is
-			-- Index of the button in the tool-bar.
+	initialize_button_box is
+			-- Create the box for pixmap and label and connect action sequence.
+		local
+			box: POINTER
 		do
-			Result := parent_imp.ev_children.index_of (Current, 1)
-		end
-
-	parent_imp: EV_TOOL_BAR_IMP
-
-feature -- Element Change
-
-	set_index (pos: INTEGER) is
-			-- Make `pos' the new index of the item in the
-			-- list.
-		do
-			parent_imp.insert_item (Current, pos)
-		end
-
-	set_text (txt: STRING) is
-			-- Set the caption of the tool bar button to txt.
-			-- Aligns pixmap to the middle of the button.
-		do
-			{EV_BUTTON_IMP} Precursor (txt)
-			if pixmap_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0)
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.45)
-			end
-		end
-
-	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
-		do
-			-- Redefinition needed to align pixmap in centre of button.
-			{EV_BUTTON_IMP} Precursor (pix_imp)
-			if pixmap_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0)
-			end
-			if label_widget /= default_pointer then
-				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.45)
-			end
+			box := C.gtk_vbox_new (False, 0)
+			C.gtk_container_add (c_object, box)
+			C.gtk_widget_show (box)
+			C.gtk_box_pack_end (box, text_label, True, True, 0)
+			C.gtk_widget_hide (text_label)
+			C.gtk_box_pack_start (box, pixmap_box, True, True, 0)
+			C.gtk_widget_hide (pixmap_box)
 		end
 
 feature -- Status report
 
-	is_insensitive: BOOLEAN is
-			-- Is the current button insensitive?
+	index: INTEGER is
 		do
-			Result := insensitive
+			if parent_imp /= Void then
+				Result := C.gtk_list_child_position (parent_imp.list_widget, Current.c_object) + 1
+			end 
 		end
-
-feature -- Event : command association
-
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is selected.
-		do
-			add_command (widget, "clicked", cmd, arg, default_pointer)
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is selected.
-		do
-			remove_commands (widget, clicked_id)
-		end
-
-feature -- External
-
-	gtk_button_set_relief (but: POINTER; style: INTEGER) is
-		external
-			"C (GtkButton *, gint) | <gtk/gtk.h>"
-		end
-
-	GTK_RELIEF_NONE: INTEGER is 2
-		-- Style used for no edges around buttons.
 
 end -- class EV_TOOL_BAR_BUTTON_IMP
 
@@ -166,3 +116,40 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!---------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.16  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.15.4.7  2000/02/04 21:22:08  king
+--| Changed packing options for pix and text box
+--|
+--| Revision 1.15.4.6  2000/02/04 04:25:36  oconnor
+--| released
+--|
+--| Revision 1.15.4.5  2000/02/01 20:05:57  king
+--| extracted a connect signals to be redefined in tb_rad_but
+--|
+--| Revision 1.15.4.4  2000/01/28 18:43:00  king
+--| Updated initialize to use pixmapable and textable initialize nam changes
+--|
+--| Revision 1.15.4.3  2000/01/27 19:29:26  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.15.4.2  2000/01/26 23:20:44  king
+--| Implemented to fit in with new structure, index and ordering need implementing, removed redundant features
+--|
+--| Revision 1.15.4.1  1999/11/24 17:29:43  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.13.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

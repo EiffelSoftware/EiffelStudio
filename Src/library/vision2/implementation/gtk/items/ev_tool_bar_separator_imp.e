@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision tool-bar separator, implementation interface."
@@ -11,56 +12,57 @@ class
 inherit
 	EV_TOOL_BAR_SEPARATOR_I
 		redefine
-			parent_imp
+			interface
 		select
-			parent			
+			interface
 		end
 
 	EV_SEPARATOR_ITEM_IMP
-		undefine
-			parent,
-			set_foreground_color,
-			set_background_color
+		rename
+			interface as sep_item_interface
+		undefine	
+			parent
 		redefine
-			parent_imp
+			initialize
+		select
+			widget_parent_imp,
+			widget_parent_set,
+			widget_parent,
+			initialize
 		end
 
-	EV_TOOL_BAR_BUTTON_IMP
+	EV_VERTICAL_SEPARATOR_IMP
 		rename
-			parent as button_parent
+			parent_imp as vsep_parent_imp,
+			parent_set as vsep_parent_set,
+			initialize as vsep_initialize,
+			interface as vsep_interface,
+			parent as vsep_parent
 		undefine
-			old_remove_dblclk,
-			old_add_dblclk
-		redefine
-			make,
-			parent_imp
-		select
-			remove_double_click_commands,
-			add_double_click_command
-		end			
+			has_parent
+		end		
 
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make is
-			-- create the widget
+	initialize is
+			-- Initialize the toolbar separator.
 		do
-			widget := gtk_vseparator_new
-			gtk_object_ref (widget)
-
-			set_minimum_width(8)
-			set_minimum_height(25)
-
-
-			-- The interface does not call `widget_make' so we need 
-			-- to connect `destroy_signal_callback'
-			-- to `destroy' event.
-			initialize_object_handling
+			{EV_SEPARATOR_ITEM_IMP} Precursor
+			set_minimum_width (12)
 		end
 
-	parent_imp: EV_TOOL_BAR_IMP
+feature -- Implementation
+
+	index: INTEGER is
+		do
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TOOL_BAR_SEPARATOR
 
 end -- class EV_TOOL_BAR_SEPARATOR_I
 
@@ -79,3 +81,40 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.11  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.10.6.7  2000/02/04 21:22:35  king
+--| Changed min_wid to 12 pixels
+--|
+--| Revision 1.10.6.6  2000/02/04 04:25:36  oconnor
+--| released
+--|
+--| Revision 1.10.6.5  2000/02/02 00:43:34  king
+--| Removed redefinition of parent_imp
+--|
+--| Revision 1.10.6.4  2000/02/01 20:07:06  king
+--| Tweaked inheritence to fit in with change to tool_bar_item:
+--|
+--| Revision 1.10.6.3  2000/01/28 18:41:03  king
+--| Implemented tb separator to fit in with new structure
+--|
+--| Revision 1.10.6.2  2000/01/27 19:29:26  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.10.6.1  1999/11/24 17:29:44  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.10.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

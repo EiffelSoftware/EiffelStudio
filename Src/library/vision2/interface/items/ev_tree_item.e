@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
 		"EiffelVision tree item. Item that can be put in a tree.%
@@ -16,66 +18,69 @@ inherit
 	EV_SIMPLE_ITEM
 		redefine
 			implementation,
-			make_with_index,
-			make_with_all,
+			create_action_sequences,
+			--make_with_index,
+			--make_with_all,
 			parent
 		end
 
 	EV_TREE_ITEM_HOLDER
 		redefine
-			implementation
+			implementation,
+			create_action_sequences
 		end
 
-	EV_PND_SOURCE
+	EV_PICK_AND_DROPABLE
 		redefine
-			implementation
-		end
-
-	EV_PND_TARGET
-		redefine
-			implementation
+			implementation,
+			create_action_sequences
 		end
 
 create
-	make,
-	make_with_text,
-	make_with_index,
-	make_with_all
+	default_create
+	--make,
+	--make_with_text,
+	--make_with_index,
+	--make_with_all
 
 feature {NONE} -- Initialization
 
-	make (par: like parent) is
-			-- Create the widget with `par' as parent.
-		do
-			!EV_TREE_ITEM_IMP! implementation.make
-			implementation.set_interface (Current)
-			set_parent (par)
-		end
+	--make (par: like parent) is
+	--		-- Create the widget with `par' as parent.
+	--	do
+	--		!EV_TREE_ITEM_IMP! implementation.make
+	--		implementation.set_interface (Current)
+	--		set_parent (par)
+	--	end
 
-	make_with_text (par: like parent; txt: STRING) is
-			-- Create an item with `par' as parent and `txt'
-			-- as text.
-		do
-			!EV_TREE_ITEM_IMP! implementation.make
-			implementation.set_interface (Current)
-			implementation.set_text (txt)
-			set_parent (par)
-		end
+	--make_with_text (par: like parent; txt: STRING) is
+	--		-- Create an item with `par' as parent and `txt'
+	--		-- as text.
+	--	do
+	--		!EV_TREE_ITEM_IMP! implementation.make
+	--		implementation.set_interface (Current)
+	--		implementation.set_text (txt)
+	--		set_parent (par)
+	--	end
 
-	make_with_index (par: like parent; value: INTEGER) is
-			-- Create a row at the given `value' index in the list.
-		do
-			create {EV_TREE_ITEM_IMP} implementation.make
-			{EV_SIMPLE_ITEM} Precursor (par, value)
-		end
+	--make_with_index (par: like parent; value: INTEGER) is
+	--		-- Create a row at the given `value' index in the list.
+	--	do
+	--		create {EV_TREE_ITEM_IMP} implementation.make
+	--		{EV_SIMPLE_ITEM} Precursor (par, value)
+	--	end
 
-	make_with_all (par: like parent; txt: STRING; value: INTEGER) is
-			-- Create a row with `txt' as text at the given
-			-- `value' index in the list.
-		do
-			create {EV_TREE_ITEM_IMP} implementation.make_with_text (txt)
-			{EV_SIMPLE_ITEM} Precursor (par, txt, value)
-		end
+	--make_with_all (par: like parent; txt: STRING; value: INTEGER) is
+	--		-- Create a row with `txt' as text at the given
+	--		-- `value' index in the list.
+	--	do
+	--		create {EV_TREE_ITEM_IMP} implementation.make_with_text (txt)
+	--		{EV_SIMPLE_ITEM} Precursor (par, txt, value)
+	--	end
+
+	--make_with_parent_and_text (par: like parent; txt: STRING) is
+	--	do
+	--	end
 
 feature -- Access
 
@@ -87,14 +92,8 @@ feature -- Access
 
 	top_parent: EV_TREE_ITEM_HOLDER is
 			-- Top item holder that contains the current item.
-		require
-			exists: not destroyed
 		do
-			if implementation.top_parent_imp = Void then
-				Result := Void
-			else
-				Result ?= implementation.top_parent_imp.interface
-			end
+				Result := implementation.top_parent
 		end
 
 feature -- Status report
@@ -102,7 +101,6 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected?
 		require
-			exists: not destroyed
 			in_widget: top_parent /= Void
 		do
 			Result := implementation.is_selected
@@ -111,7 +109,6 @@ feature -- Status report
 	is_expanded: BOOLEAN is
 			-- is the item expanded?
 		require
-			exists: not destroyed
 			in_widget: top_parent /= Void
 		do
 			Result := implementation.is_expanded
@@ -120,7 +117,6 @@ feature -- Status report
 	is_parent: BOOLEAN is
 			-- is the item the parent of other items?
 		require
-			exists: not destroyed
 		do
 			Result := implementation.is_parent
 		end
@@ -130,7 +126,6 @@ feature -- Status setting
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		require
-			exists: not destroyed
 			in_widget: top_parent /= Void
 		do
 			implementation.set_selected (flag)
@@ -141,7 +136,6 @@ feature -- Status setting
 	toggle is
 			-- Change the state of selection of the item.
 		require
-			exists: not destroyed
 			in_widget: top_parent /= Void
 		do
 			implementation.toggle
@@ -150,7 +144,6 @@ feature -- Status setting
 	set_expand (flag: BOOLEAN) is
 			-- Expand the item if `flag', collapse it otherwise.
 		require
-			exists: not destroyed
 			in_widget: top_parent /= Void
 			is_parent: is_parent
 		do
@@ -165,30 +158,27 @@ feature -- Event : command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is selected.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_select_command (cmd, arg)
+			--FIXME implementation.add_select_command (cmd, arg)
 		end
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the item is unselected.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_unselect_command (cmd, arg)		
+			--FIXME implementation.add_unselect_command (cmd, arg)		
 		end
 
 	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the selection subtree is expanded or collapsed.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_subtree_command (cmd, arg)
+			--FIXME implementation.add_subtree_command (cmd, arg)
 		end
 
 	add_button_press_command (mouse_button: INTEGER; 
@@ -196,12 +186,11 @@ feature -- Event : command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when button number 'mouse_button' is pressed.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 			button_large_enough: mouse_button > 0
 			button_small_enough: mouse_button < 4
 		do
-			implementation.add_button_press_command (mouse_button, cmd, arg)
+			--FIXME implementation.add_button_press_command (mouse_button, cmd, arg)
 		end
 
 	add_button_release_command (mouse_button: INTEGER;
@@ -209,12 +198,11 @@ feature -- Event : command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when button number 'mouse_button' is released.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 			button_large_enough: mouse_button > 0
 			button_small_enough: mouse_button < 4
 		do
-			implementation.add_button_release_command (mouse_button, cmd, arg)
+			--FIXME implementation.add_button_release_command (mouse_button, cmd, arg)
 		end
 
 feature -- Event -- removing command association
@@ -223,55 +211,59 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the item is selected.
 		require
-			exists: not destroyed
 		do
-			implementation.remove_unselect_commands			
+			--FIXME implementation.remove_unselect_commands			
 		end
 
 	remove_unselect_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is unselected.
 		require
-			exists: not destroyed
 		do
-			implementation.remove_unselect_commands	
+			--FIXME implementation.remove_unselect_commands	
 		end
 
 	remove_subtree_commands is
 			-- Empty the list of commands to be executed when
 			-- the selection subtree is expanded or collapsed.
 		require
-			exists: not destroyed
 		do
-			implementation.remove_subtree_commands
+			--FIXME implementation.remove_subtree_commands
 		end
 
 	remove_button_press_commands (mouse_button: INTEGER) is
 			-- Empty the list of commands to be executed when
 			-- button number 'mouse_button' is pressed.
 		require
-			exists: not destroyed
 			button_large_enough: mouse_button > 0
 			button_small_enough: mouse_button < 4
 		do
-			implementation.remove_button_press_commands (mouse_button)
+			--FIXME implementation.remove_button_press_commands (mouse_button)
 		end
 
 	remove_button_release_commands (mouse_button: INTEGER) is
 			-- Empty the list of commands to be executed when
 			-- button number 'mouse_button' is released.
 		require
-			exists: not destroyed
 			button_large_enough: mouse_button > 0
 			button_small_enough: mouse_button < 4
 		do
-			implementation.remove_button_release_commands (mouse_button)
+			--FIXME implementation.remove_button_release_commands (mouse_button)
 		end
 
 feature -- Implementation
 
 	implementation: EV_TREE_ITEM_I
 			-- Platform dependent access
+
+	create_implementation is
+		do
+		end
+
+	create_action_sequences is
+		do
+			{EV_TREE_ITEM_HOLDER} Precursor
+		end
 
 end -- class EV_TREE_ITEM
 
@@ -291,3 +283,31 @@ end -- class EV_TREE_ITEM
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.26  2000/02/14 11:40:47  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.25.6.3  2000/01/27 19:30:37  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.25.6.2  1999/12/17 21:10:38  rogers
+--| Now inherits EV_PICK_AND_DROPABLE instead of EV_PND_SOURCE and EV_PND_TARGET. Make procedures have been removed, ready for re-implementation. The addition and removal of commands have been commented, ready for re-implementation.
+--|
+--| Revision 1.25.6.1  1999/11/24 17:30:43  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.25.2.3  1999/11/04 23:10:52  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.25.2.2  1999/11/02 17:20:11  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

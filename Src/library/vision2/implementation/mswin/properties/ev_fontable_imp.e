@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:"EiffelVision fontable, mswindows implementation."
 	note : "When a heir of this class inherits from a WEL object,%
@@ -22,10 +24,7 @@ feature -- Access
 			default_font: WEL_FONT
 		do
 			if private_font = Void then
-				!! private_font.make
-				!WEL_ANSI_VARIABLE_FONT! default_font.make
-				font_windows ?= private_font.implementation
-				font_windows.make_by_wel (default_font)
+				create private_font
 			end
 			Result := private_font	
 		end
@@ -79,3 +78,38 @@ end -- class EV_FONTABLE_IMP
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:40  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.10.6  2000/01/27 19:30:13  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.10.5  2000/01/19 23:44:24  rogers
+--| Removed redundent code in font, when the private_font is void.
+--|
+--| Revision 1.7.10.4  2000/01/19 22:00:27  king
+--| Added function `set_by_wel_font'.
+--| This does not set the variables of EV_FONT!
+--|
+--| Revision 1.7.10.3  2000/01/10 19:19:59  king
+--| Commented out make_with_wel.
+--|
+--| Revision 1.7.10.2  1999/12/17 17:19:03  rogers
+--| Altered to fit in with the review branch. create replaces a !!.
+--|
+--| Revision 1.7.10.1  1999/11/24 17:30:19  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.7.6.3  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

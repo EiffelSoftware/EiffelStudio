@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision Tooltip, implementation interface."
@@ -17,7 +19,6 @@ feature -- Access
 			-- Delay im milliseconds the user has to hold the pointer over
 			-- the widget before the tooltip pop up.
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			positive_result: Result >= 0
@@ -28,7 +29,6 @@ feature -- Status report
 	background_color: EV_COLOR is
 			-- Color used for the background of the widget
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			valid_result: Result /= Void
@@ -38,7 +38,6 @@ feature -- Status report
 			-- Color used for the foreground of the widget
 			-- usually the text.
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			valid_result: Result /= Void
@@ -49,21 +48,18 @@ feature -- Status setting
 	activate is
 			-- Enable the tooltip control.
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	deactivate is
 			-- Disable the tooltip control.
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		require
-			exists: not destroyed
 			valid_color: is_valid (color)
 		deferred
 		ensure
@@ -73,7 +69,6 @@ feature -- Status setting
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		require
-			exists: not destroyed
 			valid_color: is_valid (color)
 		deferred
 		ensure
@@ -85,7 +80,6 @@ feature -- Element change
 	set_delay (value: INTEGER) is
 			-- Make `value' the new delay.
 		require
-			exists: not destroyed
 			positive_value: value >= 0
 		deferred
 		ensure
@@ -96,7 +90,6 @@ feature -- Element change
 			-- Make `txt' the tip that is displayed when the
 			-- user stays on `wid'.
 		require
-			exists: not destroyed
 			valid_widget: is_valid (wid)
 			valid_text: txt /= Void
 		deferred
@@ -119,3 +112,28 @@ end -- class EV_TOOLTIP_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:35  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.6.2  2000/01/27 19:29:55  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.6.1  1999/11/24 17:30:06  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.3  1999/11/04 23:10:33  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

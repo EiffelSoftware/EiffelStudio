@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision print dialog, implementation interface."
 	status: "See notice at end of class"
@@ -15,7 +17,6 @@ feature -- Access
 	from_page: INTEGER is
 			-- Value for the starting page edit control
 		require
-			exist: not destroyed
 		deferred
 		ensure
 			positive_result: Result >= 0
@@ -24,7 +25,6 @@ feature -- Access
 	to_page: INTEGER is
 			-- Value for the ending page edit control
 		require
-			exist: not destroyed
 		deferred
 		ensure
 			positive_result: Result >= 0
@@ -33,7 +33,6 @@ feature -- Access
 	copies: INTEGER is
 			-- Number of copies for the Copies edit control
 		require
-			exist: not destroyed
 		deferred
 		ensure
 			positive_result: Result >= 0
@@ -44,7 +43,6 @@ feature -- Access
 			-- in the From and To page edit controls.
 			-- 1 by default.
 		require
-			exist: not destroyed
 		deferred
 		ensure
 			positive_result: Result >= 0
@@ -55,35 +53,30 @@ feature -- Status report
 	all_pages_selected: BOOLEAN is
 			-- Is the "All pages" radio button selected?
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	page_numbers_selected: BOOLEAN is
 			-- Is the "Page" radio button selected?
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	selection_selected: BOOLEAN is
 			-- Is the "Selection" radio button selected?
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	print_to_file_checked: BOOLEAN is
 			-- Is the "Print to file" check box checked?
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	collate_checked: BOOLEAN is
 			-- Is the "Collate" check box checked?
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -93,7 +86,6 @@ feature -- Status setting
 			-- Select the "Page numbers" radio button.
 			-- By default, the "All pages" button is selected.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -101,14 +93,12 @@ feature -- Status setting
 			-- Select the "Selection" radio button.
 			-- By default, the "All pages" button is selected.
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	check_print_to_file is
 			-- Check the "Print to file" check box.
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			print_to_file_checked: print_to_file_checked
@@ -117,7 +107,6 @@ feature -- Status setting
 	check_collate is
 			-- Check the "Collate" check box.
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			collate_checked: collate_checked
@@ -126,28 +115,24 @@ feature -- Status setting
 	disable_page_numbers is
 			-- Disable the "Page numbers" radio button.
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	disable_selection is
 			-- Disable the "Selection" radio button.
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	disable_print_to_file is
 			-- Disable the "Print to file" check box.
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	hide_print_to_file is
 			-- Hide the "Print to file" check box.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -156,7 +141,6 @@ feature -- Element change
 	set_from_page (value: INTEGER) is
 			-- Make `value' the new `from_page' number.
 		require
-			exists: not destroyed
 			positive_value: value >= 0
 		deferred
 		ensure
@@ -166,7 +150,6 @@ feature -- Element change
 	set_to_page (value: INTEGER) is
 			-- Make `value' the new `to_page' number.
 		require
-			exists: not destroyed
 			positive_value: value >= 0
 		deferred
 		ensure
@@ -176,7 +159,6 @@ feature -- Element change
 	set_copies (value: INTEGER) is
 			-- Make `value' the new `copies' number.
 		require
-			exists: not destroyed
 			positive_value: value >= 0
 		deferred
 		ensure
@@ -186,7 +168,6 @@ feature -- Element change
 	set_maximum_range (value: INTEGER) is
 			-- Make `value' the new maximum_range.
 		require
-			exist: not destroyed
 			positive_value: value >= 0
 		deferred
 		ensure
@@ -210,3 +191,28 @@ end -- class EV_PRINT_DIALOG_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:37  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.6.2  2000/01/27 19:29:59  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.6.1  1999/11/24 17:30:09  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.2.3  1999/11/04 23:10:40  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.2.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Code that represent the keys of the keyboard."
 	note: "Do not inherit from this class."
@@ -683,3 +684,28 @@ end -- class EV_KEY_CODE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:48  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.6.3  2000/01/28 22:24:21  oconnor
+--| released
+--|
+--| Revision 1.2.6.2  2000/01/27 19:30:44  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.6.1  1999/11/24 17:30:46  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.2.2  1999/11/02 17:20:11  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,7 +1,5 @@
 indexing
-	description:
-		" EiffelVision scrollbar. A gauge usely used to %
-		% scroll an area."
+	description: "Eiffel Vision scrollbar. Implementation interface."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,46 +9,6 @@ deferred class
 
 inherit
 	EV_GAUGE_I
-
-feature -- Access
-
-	leap: INTEGER is
-			-- Leap of the scrolling
-			-- ie : the user clicks on the scroll bar
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			positive_result: Result >= 0
-		end
-
-feature -- Status setting
-
-	leap_forward is
-			-- Increase the current value of one leap.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	leap_backward is
-			-- Decrease the current value of one leap.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-feature -- Element change
-
-	set_leap (val: INTEGER) is
-			-- Make `val' the new leap.
-		require
-			exists: not destroyed
-			positive_val: val >= 0
-		deferred
-		ensure
-			val_set: leap = val
-		end
 
 end -- class EV_SCROLL_BAR_I
 
@@ -69,3 +27,37 @@ end -- class EV_SCROLL_BAR_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:38  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.6.5  2000/02/04 04:10:28  oconnor
+--| released
+--|
+--| Revision 1.2.6.4  2000/02/02 00:59:34  brendel
+--| Revised to comply with revised interface.
+--|
+--| Revision 1.2.6.3  2000/01/31 21:31:34  brendel
+--| Changed to comply with revised interface.
+--|
+--| Revision 1.2.6.2  2000/01/27 19:30:05  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.6.1  1999/11/24 17:30:13  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.2.3  1999/11/04 23:10:45  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.2.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

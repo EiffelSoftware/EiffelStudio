@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "A edit control based on EV_RICH_TEXT optimized for%
 					 %source code editing. It supports various advanced %
@@ -41,7 +43,6 @@ feature {NONE} -- Initialization
 		
 	init_accelerators is
 		require
-			exists: not destroyed
 		local
 			accelerator: EV_ACCELERATOR
 			cmd: EV_COMMAND
@@ -68,7 +69,6 @@ feature {NONE} -- Initialization
 
 	accel_on_indent_lines (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		require
-			exists: not destroyed
 		local
 			new_data: EV_EVENT_DATA
 		do
@@ -84,7 +84,6 @@ feature {NONE} -- Initialization
 
 	accel_on_deindent_lines (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		require
-			exists: not destroyed
 		local
 			new_data: EV_EVENT_DATA
 		do
@@ -100,7 +99,6 @@ feature {NONE} -- Initialization
 
 	accel_on_comment_lines (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		require
-			exists: not destroyed
 		local
 			new_data: EV_EVENT_DATA
 		do
@@ -114,7 +112,6 @@ feature {NONE} -- Initialization
 
 	accel_on_decomment_lines (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		require
-			exists: not destroyed
 		local
 			new_data: EV_EVENT_DATA
 		do
@@ -147,7 +144,6 @@ feature -- Status Settings
 	enable_syntax_highlighting is
 			-- Enables syntax highlighting
 		require
-			exists: not destroyed
 			syntax_highlighting_disabled: not syntax_highlighting_enabled
 		do
 			syntax_highlighting_enabled := True
@@ -158,7 +154,6 @@ feature -- Status Settings
 	disable_syntax_highlighting is
 			-- Disables syntax highlighting
 		require
-			exists: not destroyed
 			syntax_highlighting_enabled: syntax_highlighting_enabled
 		do
 			syntax_highlighting_enabled := False
@@ -169,7 +164,6 @@ feature -- Status Settings
 	enable_basic_auto_intending is
 			-- Enables basic auto intending
 		require
-			exists: not destroyed
 			basic_auto_intending_disabled: not basic_auto_intending_enabled
 		do
 			basic_auto_intending_enabled := True
@@ -180,7 +174,6 @@ feature -- Status Settings
 	disable_basic_auto_intending is
 			-- Disables basic auto intending
 		require
-			exists: not destroyed
 			basic_auto_intending_enabled: basic_auto_intending_enabled
 		do
 			basic_auto_intending_enabled := False
@@ -209,7 +202,6 @@ feature -- Element Change
 	comment_lines (first_line, last_line: INTEGER) is
 			-- Comments lines from `first_line' to `last_line'.
 		require
-			exist: not destroyed
 			valid_line_numbers: valid_line_index (first_line) and valid_line_index (last_line)
 		do
 			prepend_lines ("--", first_line, last_line)
@@ -220,7 +212,6 @@ feature -- Element Change
 	indent_lines (first_line, last_line: INTEGER) is
 			-- Indents lines from `first_line' to `last_line'.
 		require
-			exist: not destroyed
 			valid_line_numbers: valid_line_index (first_line) and valid_line_index (last_line)
 		do
 			prepend_lines ("%T", first_line, last_line)
@@ -232,7 +223,6 @@ feature -- Element Change
 			-- Deindents lines from `first_line' to `last_line' (if possible).
 			-- If a line has no whitecharacters at the beginning it won't be changed.
 		require
-			exist: not destroyed
 			valid_line_numbers: valid_line_index (first_line) and valid_line_index (last_line)
 		local
 			i: INTEGER
@@ -258,7 +248,6 @@ feature -- Element Change
 			-- Decomments lines from `first_line' to `last_line' (if possible).
 			-- If a line has no whitecharacters at the beginning it won't be changed.
 		require
-			exist: not destroyed
 			valid_line_numbers: valid_line_index (first_line) and valid_line_index (last_line)
 		local
 			i: INTEGER
@@ -301,7 +290,6 @@ feature -- Element Change
 			-- Prepend `s' at the beginning of the lines with an index
 			-- between `first_line' and `last_line' line.
 		require
-			exist: not destroyed
 			valid_line_numbers: valid_line_index (first_line) and valid_line_index (last_line)
 			s_not_void: s /= Void
 		local
@@ -330,7 +318,6 @@ feature -- Element Change
 			-- If you implement this feature call `execute_highlight'
 			-- whenever you encounter a token that needs to be highlighted.
 		require
-			exists: not destroyed
 			valid_first_position: valid_position (first_pos)
 			valid_last_position: valid_position (last_pos)
 		do
@@ -339,7 +326,6 @@ feature -- Element Change
 	update_highlighting_all is
 			-- Update syntax highlighting for all the text.
 		require
-			exists: not destroyed
 		do
 			if 
 				text_length > 0
@@ -352,7 +338,6 @@ feature -- Element Change
 	update_highlighting_selected_text is
 			-- Update syntax highlighting for all the text that is currently visible.
 		require
-			exists: not destroyed
 			has_selection: has_selection			
 		do
 			update_highlighting (selection_start, selection_end)		
@@ -362,7 +347,6 @@ feature -- Element Change
 			-- Update syntax highlighting beginning with the line that contains `first_pos'
 			-- until the line that conatins `last_pos'. 
 		require
-			exists: not destroyed
 			valid_positions: valid_position (first_pos) and valid_position (last_pos)
 		do
 			update_highlighting_lines (line_number_from_position (first_pos),
@@ -372,7 +356,6 @@ feature -- Element Change
 	update_highlighting_lines (first_line, last_line: INTEGER) is
 			-- Update syntax highlighting for all text between 'first_line' and 'last_line'.
 		require
-			exists: not destroyed
 			valid_lines: valid_line_index (first_line) and valid_line_index (last_line)
 		do
 			update_highlighting (first_position_from_line_number (first_line ),
@@ -386,7 +369,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to intend the currently selected lines.
 		require
-			exists: not destroyed
 		do
 			custom_event_handler.add_command ("indent_lines", cmd, arg)
 		end
@@ -395,7 +377,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to deintend the currently selected lines.
 		require
-			exists: not destroyed
 		do
 			custom_event_handler.add_command ("deindent_lines", cmd, arg)
 		end
@@ -404,7 +385,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to comment the currently selected lines.
 		require
-			exists: not destroyed
 		do
 			custom_event_handler.add_command ("comment_lines", cmd, arg)
 		end
@@ -413,7 +393,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to decomment the currently selected lines.
 		require
-			exists: not destroyed
 		do
 			custom_event_handler.add_command ("decomment_lines", cmd, arg)
 		end
@@ -422,7 +401,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed
 			-- when the user wants to decomment the currently selected lines.
 		require
-			exists: not destroyed
 		do
 			custom_event_handler.add_command ("highlight", cmd, arg)
 		end
@@ -434,7 +412,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the user inputs wants to indent the currently selected lines.
 		require
-			exists: not destroyed
 		do
 			custom_event_handler.remove_all_commands ("indent_lines")			
 		end
@@ -444,7 +421,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the user inputs wants to decomment the currently selected lines.
 		require
-			exists: not destroyed
 		do
 			custom_event_handler.remove_all_commands ("indent_lines")			
 		end
@@ -453,7 +429,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the user inputs wants to comment the currently selected lines.
 		require
-			exists: not destroyed
 		do
 			custom_event_handler.remove_all_commands ("comment_lines")			
 		end
@@ -462,7 +437,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the user inputs wants to decomment the currently selected lines.
 		require
-			exists: not destroyed
 		do
 			custom_event_handler.remove_all_commands ("comment_lines")			
 		end
@@ -471,7 +445,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the user inputs wants to decomment the currently selected lines.
 		require
-			exists: not destroyed
 		do
 			custom_event_handler.remove_all_commands ("highlight")			
 		end
@@ -481,7 +454,6 @@ feature {NONE} -- Implementation
 
 	add_text_editor_commands is
 		require
-			exists: not destroyed
 		local
 			cmd: EV_COMMAND
 		do
@@ -530,7 +502,6 @@ feature {NONE} -- Implementation
 	on_undo (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Undo a the last recorded command
 		require
-			exists: not destroyed
 		do
 			if
 				history.can_undo
@@ -544,7 +515,6 @@ feature {NONE} -- Implementation
 	on_redo (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Redo the last undone command
 		require
-			exists: not destroyed
 		do
 			if
 				history.can_redo
@@ -561,7 +531,6 @@ feature {NONE} -- Implementation
 			-- This function is used to update the syntax 
 			-- highlighting of the text
 		require
-			exists: not destroyed
 		local
 			first_line, last_line: INTEGER
 		do
@@ -581,7 +550,6 @@ feature {NONE} -- Implementation
 
 	on_highlight (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		require
-			exists: not destroyed
 		local
 			highlight_data: EV_HIGHLIGHT_EVENT_DATA
 		do
@@ -597,7 +565,6 @@ feature {NONE} -- Implementation
 	execute_highlight (first_pos, last_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Raise a "highligh" event.
 		require
-			exists: not destroyed
 			valid_positions: valid_position (first_pos) and valid_position (last_pos)
 			format_not_void: format /= Void
 		local
@@ -609,7 +576,6 @@ feature {NONE} -- Implementation
 
 	get_line_range_data_from_selection: EV_LINE_RANGE_EVENT_DATA is
 		require
-			exists: not destroyed
 		do
 			create Result.make (Current, line_number_from_position (selection_start),
 									  line_number_from_position (selection_end))
@@ -619,7 +585,6 @@ feature {NONE} -- Implementation
 			-- Check for certain key combinations and
 			-- trigger their associated commands
 		require
-			exists: not destroyed
 		local
 			key_data: EV_KEY_EVENT_DATA
 			new_data: EV_EVENT_DATA
@@ -717,3 +682,28 @@ end -- class EV_RICH_TEXT
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:24  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.6.2  2000/01/27 19:29:23  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.6.1  1999/11/24 17:29:40  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.2.3  1999/11/04 23:10:25  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.4.2.2  1999/11/02 17:20:01  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

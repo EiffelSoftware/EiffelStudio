@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
 		"EiffelVision item. Top class of menu_item, list_item%
@@ -22,60 +23,9 @@ inherit
 			implementation
 		end
 
-feature {NONE} -- Initialization
-
-	make_with_text (par: like parent; txt: STRING) is
-			-- Create a row with text in it.
-		require
-			valid_text: txt /= Void
-		deferred
-		ensure
-			text_set: text.is_equal (txt)
-		end
-
-	make_with_all (par: like parent; txt: STRING; pos: INTEGER) is
-			-- Create a row with `txt' as text at the given
-			-- `value' index in the list.
-		require
-			valid_parent: par /= Void
-			valid_text: txt /= Void
-			valid_index: pos > 0 and pos <= par.count + 1
-		do
-			-- create {?} implementation.make_with_text (txt)
-			check
-				valid_implementation: implementation /= Void
-			end
-			implementation.set_interface (Current)
-			set_parent_with_index (par, pos)
-		ensure
-			parent_set: parent.is_equal (par)
-			text_set: text.is_equal (txt)
-			index_set: index = pos
-		end
-
-feature -- Access
-
-	text: STRING is
-			-- Current label of the item
-		require
-			exists: not destroyed
-		do
-			Result := implementation.text
-		ensure
-			valid_result: Result /= Void
-		end
-
-feature -- Element change
-
-	set_text (txt: STRING) is
-			-- Make `txt' the new label of the item.
-		require
-			exists: not destroyed
-			valid_text: txt /= Void
-		do
-			implementation.set_text (txt)
-		ensure
-			text_set: text.is_equal (txt)
+	EV_TEXTABLE
+		redefine
+			implementation
 		end
 
 feature -- Implementation
@@ -85,7 +35,7 @@ feature -- Implementation
 
 end -- class EV_ITEM
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision : library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -99,4 +49,43 @@ end -- class EV_ITEM
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.20  2000/02/14 11:40:47  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.19.6.7  2000/02/04 21:14:47  king
+--| Now inheriting from textable
+--|
+--| Revision 1.19.6.6  2000/01/28 22:24:20  oconnor
+--| released
+--|
+--| Revision 1.19.6.5  2000/01/27 19:30:37  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.19.6.4  2000/01/26 23:21:49  king
+--| Moved make_with_text up to ev_simple_item
+--|
+--| Revision 1.19.6.3  2000/01/14 22:28:44  oconnor
+--| removed obsolete creation features
+--|
+--| Revision 1.19.6.2  1999/11/30 22:43:23  oconnor
+--| commented out make_with_parent_and_text
+--|
+--| Revision 1.19.6.1  1999/11/24 17:30:42  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.19.2.3  1999/11/04 23:10:51  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.19.2.2  1999/11/02 17:20:11  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

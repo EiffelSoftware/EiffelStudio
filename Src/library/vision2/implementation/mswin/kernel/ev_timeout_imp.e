@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision timeout, mswindows implementation."
@@ -16,14 +18,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (delay: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	make (an_interface: like interface) is
 			-- Create a timeout that call that launch `cmd' with `arg' every `delay'
 			-- millisecondes.
 		do
-			command := cmd
-			argument := arg
-			period := delay
-			internal_timeout.add_timeout (Current)
+			base_make (an_interface)
+			check
+				to_be_implemented: False
+			end
+		--	command := cmd
+		--	argument := arg
+		--	period := delay
+		--	internal_timeout.add_timeout (Current)
 		end
 
 feature -- Access
@@ -37,7 +43,7 @@ feature -- Access
 	argument: EV_ARGUMENT
 			-- Argument associated with the timeout.
 
-	count: INTEGER
+--	count: INTEGER
 			-- Number of times the command has been executed including
 			-- the current execution.
 
@@ -105,3 +111,29 @@ end -- class EV_TIMEOUT_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.2  2000/02/14 11:40:40  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.1.10.3  2000/02/08 07:21:03  brendel
+--| Minor changes to run through compiler.
+--| Still needs major revision.
+--|
+--| Revision 1.1.10.2  2000/01/27 19:30:11  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.1.10.1  1999/11/24 17:30:18  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.1.6.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

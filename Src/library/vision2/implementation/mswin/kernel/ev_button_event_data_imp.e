@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Objects that ..."
 	author: ""
@@ -20,7 +22,7 @@ feature -- Access
 			ww: WEL_WINDOW
 			pt: WEL_POINT
 		do
-			ww ?= widget.implementation
+	--FIXME		ww ?= widget.implementation
 			!! pt.make (x, y)
 			pt.client_to_screen (ww)
 			Result := pt.x
@@ -32,7 +34,7 @@ feature -- Access
 			ww: WEL_WINDOW
 			pt: WEL_POINT
 		do
-			ww ?= widget.implementation
+	--FIXME		ww ?= widget.implementation
 			!! pt.make (x, y)
 			pt.client_to_screen (ww)
 			Result := pt.y
@@ -55,3 +57,28 @@ end -- class EV_BUTTON_EVENT_DATA_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:40  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.10.3  2000/01/27 19:30:09  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.10.2  1999/12/17 17:27:24  rogers
+--| Altered to fit in with the review branch.
+--|
+--| Revision 1.3.10.1  1999/11/24 17:30:17  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.6.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

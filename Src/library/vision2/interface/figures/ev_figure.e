@@ -1,5 +1,6 @@
 indexing
-	description: "Ancestor of all figures. Each decendant has to specify%
+	description:
+		"Ancestor of all figures. Each decendant has to specify%
 		%the number of points that are needed to represent it.%
 		%If this figure is in a group, all points have to be relative%
 		%to the group('s point)."
@@ -108,6 +109,7 @@ feature -- Status report
 			-- Return point-array in the form of an array with absolute coordinates.
 		local
 			n: INTEGER
+			coord: EV_COORDINATES
 		do
 			from
 				create Result.make (1, points.count)
@@ -115,13 +117,13 @@ feature -- Status report
 			until
 				n > points.count
 			loop
-				Result.force (
-					create {EV_COORDINATES}.set (points.i_th (n).x_abs, points.i_th (n).y_abs),
-					n)
+				create coord.set (get_point_by_index (n).x_abs,
+					get_point_by_index (n).y_abs)
+				Result.force (coord, n)
 				n := n + 1
 			end
 		ensure
-			Result_same_length: Result.count = points.count
+			same_length: Result.count = points.count
 		end
 
 feature -- Status setting
@@ -238,6 +240,36 @@ feature {EV_PROJECTION} -- Events
 		deferred
 		end
 
+	bounding_box: EV_RECTANGLE is
+			-- Calculate the smallest box all points
+			-- of this figure fit in.
+		local
+			min_x, min_y, max_x, max_y: INTEGER
+		do
+			from
+				points.start
+				if not points.after then
+					create Result
+					min_x := points.item.x_abs
+					min_y := points.item.y_abs
+					max_x := min_x
+					max_y := min_y
+				end
+			until
+				points.after
+			loop
+				min_x := points.item.x_abs.min (min_x)
+				min_y := points.item.y_abs.min (min_y)
+				max_x := points.item.x_abs.max (max_x)
+				max_y := points.item.y_abs.max (max_y)
+				points.forth
+			end
+			if Result /= Void then
+				Result.set (create {EV_COORDINATES}.set (min_x, min_y),
+					max_x - min_x + 1, max_y - min_y + 1)
+			end
+		end
+
 feature -- Standard output
 
 	out: STRING is
@@ -288,7 +320,7 @@ feature -- Status report
 			-- Get the orientation of this figure.
 			-- We always take the orientation of the first point for it.
 		do
-			create Result.make_radians (- get_point_by_index (1).angle_abs)
+			create Result.make_radians (get_point_by_index (1).angle_abs)
 		end
 
 feature -- Contract support
@@ -351,7 +383,7 @@ feature -- Contract support
 		end
 
 	all_points_in_group (grp: EV_FIGURE_GROUP): BOOLEAN is
-			-- Are all `points' `in_group' `grp'.
+			-- Are all `points' in group `grp'?
 		require
 			grp_exists: grp /= Void
 		local
@@ -386,6 +418,54 @@ invariant
 	all_points_in_group: group /= Void implies all_points_in_group (group)
 
 	--in_group_implies_group_has_current: group /= Void implies group.has (Current)
-	--| invariant does not hold because it is called at a stange time or something.
+	--| invariant does not hold because it is called at a strange time or something.
 
 end -- class EV_FIGURE
+
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------
+
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:46  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.2.16.2.5  2000/01/28 22:32:33  brendel
+--| Removed "Not for release".
+--|
+--| Revision 1.4.2.16.2.4  2000/01/27 19:30:33  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.2.16.2.3  2000/01/24 23:54:21  oconnor
+--| renamed EV_CLIP -> EV_RECTANGLE
+--|
+--| Revision 1.4.2.16.2.2  1999/12/31 00:48:28  king
+--| Formatting.
+--|
+--| Revision 1.4.2.16.2.1  1999/11/24 17:30:38  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

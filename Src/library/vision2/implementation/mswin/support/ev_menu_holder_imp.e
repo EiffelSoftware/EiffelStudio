@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision menu-container, Mswindows implementation"
 	author: ""
@@ -15,18 +17,18 @@ feature {NONE} -- Initialization
 	initialize_children is
 			-- Create the children list.
 		do
-			create children.make (1)
+			create ev_children.make (1)
 		end
 
 	remove_children is
 			-- Remove the children list.
 		do
-			children := Void
+			ev_children := Void
 		end
 
 feature -- Access
 
-	children: ARRAYED_LIST [EV_MENU_IMP]
+	ev_children: ARRAYED_LIST [EV_MENU]
 			-- Ids of the children of the menu
 			-- We need them in memory because we cannot
 			-- get them from the system
@@ -42,9 +44,9 @@ feature -- Element change
 	clear_items is
 			-- Clear all the items of the list.
 		local
-			cc: ARRAYED_LIST [EV_MENU_IMP]
+			cc: ARRAYED_LIST [EV_MENU]
 		do
-			cc := children
+			cc ?= ev_children
 			if not cc.empty then
 				from
 					cc.start
@@ -57,48 +59,48 @@ feature -- Element change
 			remove_children
 		end
 
-	add_menu (menu_imp: EV_MENU_IMP) is
+	add_menu (menu_imp: EV_MENU) is
 			-- Add `a_menu' into container.
 		local
-			cc: ARRAYED_LIST [EV_ITEM_IMP]
+			cc: ARRAYED_LIST [EV_MENU]
 			it: EV_MENU_ITEM_IMP
 		do
-			-- First, we add the menu here.
-			menu_container.append_popup (menu_imp, menu_imp.text)
-			if children = Void then
-				initialize_children
-			end
-			children.extend (menu_imp)
-
-			-- Then we register the items in it.
-			cc := menu_imp.children
-			if cc /= Void then
-				from
-					cc.start
-				until
-					cc.after
-				loop
-					it ?= cc.item
-					if it /= Void then
-						item_handler.register_item (it)
-					end
-					cc.forth
-				end
-			end
+	--		-- First, we add the menu here.
+	--		menu_container.append_popup (menu_imp.implementation, menu_imp.text)
+	--		if ev_children = Void then
+	--			initialize_children
+	--		end
+	--		ev_children.extend (menu_imp)
+--
+--			-- Then we register the items in it.
+--			cc := menu_imp.ev_children
+--			if cc /= Void then
+--				from
+--					cc.start
+--				until
+--					cc.after
+--				loop
+--					it ?= cc.item
+--					if it /= Void then
+--						item_handler.register_item (it)
+--					end
+--					cc.forth
+--				end
+--			end
 		end
 
-	remove_menu (menu_imp: EV_MENU_IMP) is
+	remove_menu (menu_imp: EV_MENU) is
 			-- Remove menu_imp from the container.
 		local
-			cc: ARRAYED_LIST [EV_ITEM_IMP]
+			cc: ARRAYED_LIST [EV_MENU]
 			it: EV_MENU_ITEM_IMP
 		do
 			-- First, we remove the menu from here.
 			menu_container.delete_position (internal_get_index (menu_imp))
-			children.prune_all (menu_imp)
+			ev_children.prune_all (menu_imp)
 
 			-- Then, we unregister all the items in it.
-			cc := menu_imp.children
+			--| FIXME cc ?= menu_imp.implementation.ev_children
 			if cc /= Void then
 				from
 					cc.start
@@ -114,17 +116,17 @@ feature -- Element change
 			end
 
 			-- The, we chack if there are no more children.
-			if children.empty then
+			if ev_children.empty then
 				remove_children
 			end
 		end
 
 feature -- Basic operation
 
-	internal_get_index (menu_imp: EV_MENU_IMP): INTEGER is
+	internal_get_index (menu_imp: EV_MENU): INTEGER is
 			-- Return the index of `menu_imp' in the list.
 		do
-			Result := children.index_of (menu_imp, 1)
+			Result := ev_children.index_of (menu_imp, 1)
 		end
 
 feature -- Event association
@@ -163,3 +165,32 @@ end -- class EV_MENU_HOLDER_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.10.4  2000/02/04 01:05:40  brendel
+--| Rearranged inheritance structure in compliance with revised interface.
+--| Nothing has been implemented yet!
+--|
+--| Revision 1.9.10.3  2000/01/27 19:30:15  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.10.2  1999/12/17 17:03:15  rogers
+--| Altered to fit in with the review branch. ev_children replaces children. Changes made for this change.
+--|
+--| Revision 1.9.10.1  1999/11/24 17:30:21  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

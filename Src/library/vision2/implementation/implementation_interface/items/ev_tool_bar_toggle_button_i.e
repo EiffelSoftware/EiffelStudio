@@ -1,6 +1,7 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision toogle tool bar, implementation interface."
+		"EiffelVision toggle tool bar, implementation interface."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,62 +16,24 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the current button selected?
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
 		deferred
 		end
 
 feature -- Status setting
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the current button if `flag', deselect it
-			-- otherwise.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
+	enable_select is
+			-- Select the current button.
 		deferred
 		ensure
-			state_set: is_selected = flag
+			selected: is_selected
 		end
 
-feature -- Event : command association
-
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unselected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
+	disable_select is
+			-- Unselect the current button.
 		deferred
+		ensure
+			unselected: not is_selected
 		end
-
-	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is toggled.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-feature -- Event -- removing command association
-
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is unselected.
-		require
-			exists: not destroyed
-		deferred	
-		end
-
-	remove_toggle_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is toggled.
-		require
-			exists: not destroyed
-		deferred	
-		end	
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_I
 
@@ -89,3 +52,37 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:34  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.4.5  2000/02/04 04:02:41  oconnor
+--| released
+--|
+--| Revision 1.6.4.4  2000/02/02 23:46:33  king
+--| Removed has_parent preconds from state selection routines
+--|
+--| Revision 1.6.4.3  2000/01/28 18:54:18  king
+--| Removed redundant features, changed to generic structure of ev_item_list
+--|
+--| Revision 1.6.4.2  2000/01/27 19:29:53  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.4.1  1999/11/24 17:30:03  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.2.3  1999/11/04 23:10:33  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.5.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

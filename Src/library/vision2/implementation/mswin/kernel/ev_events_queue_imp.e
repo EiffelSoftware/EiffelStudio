@@ -1,3 +1,4 @@
+--| FIXME Not for release
 indexing
 	description: 
 		"EiffelVision events queue manager. MSWin Implementation.%

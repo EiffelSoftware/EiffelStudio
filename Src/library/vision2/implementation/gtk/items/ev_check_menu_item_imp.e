@@ -1,101 +1,71 @@
 indexing
-
-	description:
-		"EiffelVision check menu item. gtk implementation."
+	description: "EiffelVision check menu. GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$";
 	revision: "$Revision$"
 
-class EV_CHECK_MENU_ITEM_IMP
+class
+	EV_CHECK_MENU_ITEM_IMP
 
 inherit
 	EV_CHECK_MENU_ITEM_I
 		redefine
-			parent_imp
+			interface
 		end
 
 	EV_MENU_ITEM_IMP
 		redefine
 			make,
-			parent_imp,
-			set_selected,
-			is_selected
+			interface
 		end
 
 create
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create an item with an empty name.
+	make (an_interface: like interface) is
+			-- Create a menu.
 		do
-			-- Create the gtk object.
-			widget := gtk_check_menu_item_new
-			gtk_object_ref (widget)
-			gtk_check_menu_item_set_show_toggle (widget, True)
+			base_make (an_interface)
+			set_c_object (C.gtk_check_menu_item_new)
+			C.gtk_check_menu_item_set_show_toggle (c_object, True)
 
-			-- Create the `box'.
-			initialize
+			--| FIXME Toggle is not shown because we put our
+			--| own box in the item.
+		end
+	
+feature -- Status report
 
-			-- The interface does not call `widget_make' so we need 
-			-- to connect `destroy_signal_callback'
-			-- to `destroy' event.
-			initialize_object_handling
+	is_selected: BOOLEAN is
+			-- Is this menu item checked?
+		do
+			C.gtk_check_menu_item_struct_active (c_object)
 		end
 
-feature -- Access
-
-	parent_imp: EV_MENU_ITEM_HOLDER_IMP
-			-- Parent of the item.
-
-feature -- Status report
-	
-	state: BOOLEAN is
-			-- Is current menu-item checked ?.
-		do
-			Result := c_gtk_check_menu_item_active (widget)
-		end 
-	
-	is_selected: BOOLEAN is
-			-- Is current menu-item checked ?.
-		do
-			Result := c_gtk_check_menu_item_active (widget)
-		end 
-	
 feature -- Status setting
 
-	set_state (flag: BOOLEAN) is
-			-- Make `flag' the new state of the menu-item.
+	enable_select is
+			-- Select this menu item.
 		do
-			gtk_check_menu_item_set_active (widget, flag)
+			C.gtk_check_menu_item_set_active (c_object, True)
 		end
 
-	set_selected (flag: BOOLEAN) is
-			-- Make `flag' the new state of the menu-item.
+	disable_select is
+			-- Deselect this menu item.
 		do
-			gtk_check_menu_item_set_active (widget, flag)
+			C.gtk_check_menu_item_set_active (c_object, False)
 		end
 
-feature -- Event : command association
-
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Make `cmd' the executed command when the item is
-			-- unactivated.
+	toggle is
+			-- Invert the value of `is_selected'.
 		do
-			add_command (widget, "deselect", cmd, arg, default_pointer)
-		end	
-
-feature -- Event -- removing command association
-
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is deactivated.
-		do	
-			remove_commands (widget, deselect_id)
+			C.gtk_check_menu_item_set_active (c_object, not is_selected)
 		end
+
+feature {NONE} -- Implementation
+
+	interface: EV_CHECK_MENU_ITEM
 
 end -- class EV_CHECK_MENU_ITEM_IMP
 
@@ -114,3 +84,35 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.14  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.13.6.5  2000/02/05 01:36:33  brendel
+--| Inherits from EV_MENU_ITEM_IMP instead of EV_MENU_IMP.
+--|
+--| Revision 1.13.6.4  2000/02/04 04:25:36  oconnor
+--| released
+--|
+--| Revision 1.13.6.3  2000/02/03 23:31:59  brendel
+--| Revised.
+--| Changed inheritance structure.
+--|
+--| Revision 1.13.6.2  2000/01/27 19:29:24  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.13.6.1  1999/11/24 17:29:42  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.13.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

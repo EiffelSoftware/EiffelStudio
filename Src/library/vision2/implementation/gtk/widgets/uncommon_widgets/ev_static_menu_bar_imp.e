@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision static menu bar, gtk implementation.";
@@ -14,8 +16,6 @@ inherit
 		end
 
 	EV_MENU_HOLDER_IMP
-		rename
-			make as old_make
 --		undefine
 --			parent
 		redefine
@@ -23,8 +23,6 @@ inherit
 		end
 
 	EV_PRIMITIVE_IMP
-		rename
-			make as old_make
 --		undefine
 --			parent
 		redefine
@@ -35,25 +33,34 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
-	make (par: EV_WINDOW) is         
-			-- Create a menu widget with `par' as parent window.
-		local
-			par_imp: EV_WINDOW_IMP
+
+	make (an_interface: like interface) is
 		do
-			widget := gtk_menu_bar_new ()
-			gtk_menu_bar_set_shadow_type (widget, GTK_SHADOW_NONE)
-			parent_imp ?= par.implementation
+		--FIXME	widget := gtk_menu_bar_new ()
+--FIXME			gtk_menu_bar_set_shadow_type (c_object, GTK_SHADOW_NONE)
+--			parent_imp ?= par.implementation
 			check
-				good_implementation: parent_imp /= Void
+				FIXME: false
 			end
-			show
-			parent_imp.add_static_menu (Current)
-		end	
+		end
+	
+--	make (par: EV_TITLED_WINDOW) is         
+--			-- Create a menu widget with `par' as parent window.
+--		local
+--			par_imp: EV_TITLED_WINDOW_IMP
+--		do
+--			widget := gtk_menu_bar_new ()
+--			parent_imp ?= par.implementation
+--			check
+--				good_implementation: parent_imp /= Void
+--			end
+--			show
+--			parent_imp.add_static_menu (Current)
+--		end	
 
 feature -- Access
 
-	parent_imp: EV_WINDOW_IMP
+	parent_imp: EV_TITLED_WINDOW_IMP
 			-- We have to redefine it here.
 
 feature {NONE} -- Implementation	
@@ -61,13 +68,13 @@ feature {NONE} -- Implementation
 	add_menu (menu_imp: EV_MENU_IMP) is
 		local
 			name: ANY
-			item: POINTER
+			i: POINTER
 		do
 			name := menu_imp.name.to_c
-			item := gtk_menu_item_new_with_label ($name)
-			gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu_imp.widget)
-			gtk_menu_bar_append (GTK_MENU_BAR (widget), item)
-			gtk_widget_show (item)
+			i := gtk_menu_item_new_with_label ($name)
+			gtk_menu_item_set_submenu (GTK_MENU_ITEM (i), menu_imp.c_object)
+			gtk_menu_bar_append (GTK_MENU_BAR (c_object), i)
+			gtk_widget_show (i)
 		end
 
 	remove_menu (menu_imp: EV_MENU_IMP) is
@@ -79,13 +86,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	old_make is
-			-- Do not call.
-		do
-			check
-				Inapplicable: False
-			end
-		end
+--	old_make is
+--			-- Do not call.
+--		do
+--			check
+--				Inapplicable: False
+--			end
+--		end
 
 end -- class EV_STATIC_MENU_BAR_IMP
 
@@ -104,3 +111,34 @@ end -- class EV_STATIC_MENU_BAR_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!---------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.11  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.10.4.4  2000/02/04 18:24:25  oconnor
+--| unreleased
+--|
+--| Revision 1.10.4.3  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.10.4.2  2000/01/27 19:29:51  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.10.4.1  1999/11/24 17:30:01  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.2.4  1999/11/09 16:53:15  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.9.2.3  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

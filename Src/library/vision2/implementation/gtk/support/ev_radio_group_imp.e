@@ -7,23 +7,23 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_RADIO_GROUP_IMP
+	EV_RADIO_GROUP
 
 inherit
-	LINKED_LIST [EV_RADIO_IMP [EV_ANY]]
+	LINKED_LIST [EV_RADIO [EV_ITEM]]
 
 creation
 	make
 
 feature -- Status report
 
-	selected_item: EV_RADIO_IMP [EV_ANY]
+	selected_item: EV_RADIO [EV_ITEM]
 			-- Currently selected item
 
 
 feature -- Element change
 
-	remove_item (an_item: EV_RADIO_IMP [EV_ANY]) is
+	remove_item (an_item: EV_RADIO [EV_ITEM]) is
 			-- Find an item and remove it.
 		require
 			valid_item: has (an_item)
@@ -34,7 +34,7 @@ feature -- Element change
 			item_removed: not has (an_item)
 		end
 
-	add_item (an_item: EV_RADIO_IMP [EV_ANY]) is
+	add_item (an_item: EV_RADIO [EV_ITEM]) is
 			-- Check if the item is not already in the list,
 			-- is not it is added to the list.
 		require
@@ -49,19 +49,19 @@ feature -- Element change
 
 feature -- Basic operations
 
-	last_selected: EV_RADIO_IMP [EV_ANY]
+	last_selected: EV_RADIO [EV_ITEM]
 
-	set_last_selected (an_item: EV_RADIO_IMP [EV_ANY]) is
+	set_last_selected (an_item: EV_RADIO [EV_ITEM]) is
 		do
 			last_selected := an_item
 		end
 
-	just_selected (an_item: EV_RADIO_IMP [EV_ANY]): BOOLEAN is
+	just_selected (an_item: EV_RADIO [EV_ITEM]): BOOLEAN is
 		do
 			Result := equal (last_selected, an_item)
 		end
 
-	set_selection_at (an_item: EV_RADIO_IMP [EV_ANY]) is
+	set_selection_at (an_item: EV_RADIO [EV_ITEM]) is
 			-- Check the given item and uncheck the currently
 			-- selected one.
 		require
@@ -73,7 +73,7 @@ feature -- Basic operations
 			selected_item := an_item
 		end
 
-	set_selection_at_no_event (an_item: EV_RADIO_IMP [EV_ANY]) is
+	set_selection_at_no_event (an_item: EV_RADIO [EV_ITEM]) is
 			-- Select an_item and unselect the currently
 			-- selected one.
 		require
@@ -85,7 +85,7 @@ feature -- Basic operations
 			selected_item := an_item
 		end
 
-end -- class EV_RADIO_GROUP_IMP
+end -- class EV_RADIO_GROUP
 
 --!----------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.

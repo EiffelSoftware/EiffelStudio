@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision pixmap container. %
 				% Mswindows implementation."
@@ -14,18 +16,16 @@ inherit
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
-			-- Current pixmap
+	pixmap: EV_PIXMAP
+			-- An image.
+
+	pixmap_imp: EV_PIXMAP_IMP is
+			-- Implementation of the pixmap contained 
 		do
-			if pixmap_imp /= Void then
-				Result ?= pixmap_imp.interface
-			else
-				Result := Void
+			if pixmap /= Void then
+				Result ?= pixmap.implementation
 			end
 		end
-
-	pixmap_imp: EV_PIXMAP_IMP
-			-- Implementation of the pixmap contained 
 
 feature -- Element change
 
@@ -35,16 +35,27 @@ feature -- Element change
 			-- because a bitmap can be linked to only one dc
 			-- at a time.
 		do
-			pixmap_imp ?= pix.implementation
-			pixmap_imp.reference
+			pixmap := pix
 		end
 
-	unset_pixmap is
-			-- Remove the pixmap from the container
+	set_pixmap_by_filename (file_name: FILE_NAME) is
+			-- Load `file_name' into the pixmap.
 		do
-			pixmap_imp.unreference
-			pixmap_imp ?= Void
-			invalidate
+			check
+				to_be_implemented: False
+			end
+		end
+
+	remove_pixmap is
+			-- Remove the pixmap from the container
+		local
+			current_pixmap_imp: EV_PIXMAP_IMP
+		do
+			pixmap := Void
+	--		current_pixmap_imp := pixmap_imp
+	--		current_pixmap_imp.unreference
+	--		current_pixmap_imp ?= Void
+	--		invalidate
 		end
 
 feature {NONE} -- deferred features
@@ -70,3 +81,42 @@ end -- class EV_PIXMAPABLE_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:40  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.6.7  2000/02/05 02:12:13  brendel
+--| Changed to very basic implementation, where before it did not work at all.
+--|
+--| Revision 1.9.6.6  2000/01/27 19:30:13  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.6.5  2000/01/20 17:50:25  king
+--| Commented out reference and unreference of pixmap until we figure out whether it
+--| is useful.
+--|
+--| Revision 1.9.6.4  2000/01/06 18:41:33  king
+--| Added imp of set_pixmap_by_filename.
+--| Declared remove_pixmap as obsolete.
+--|
+--| Revision 1.9.6.3  1999/12/22 19:18:52  rogers
+--| set_pixmap and remove_pixmap now need locals of type EV_PIXMAP_IMP as pixmap_imp is a function and cannot be assigned directly.
+--|
+--| Revision 1.9.6.2  1999/12/19 20:11:08  oconnor
+--| reversed implementation of pixmap and pixmap_imp
+--|
+--| Revision 1.9.6.1  1999/11/24 17:30:20  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.2.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

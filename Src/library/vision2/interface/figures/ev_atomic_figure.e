@@ -10,6 +10,14 @@ inherit
 	EV_FIGURE
 		redefine
 			default_create
+		select
+			out
+		end
+
+	EV_DRAWABLE_CONSTANTS
+		undefine
+			default_create,
+			out
 		end
 
 feature {NONE} -- Initialization
@@ -17,10 +25,10 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create with default attributes.
 		do
-			create foreground_color.make_rgb (0, 0, 0)
+			create foreground_color.make_with_rgb (0, 0, 0)
 			line_width := 1
-			logical_function_mode := 1 -- 1 GXSET
-			Precursor
+			logical_function_mode := Ev_drawing_mode_copy
+			{EV_FIGURE} Precursor
 		end
 
 feature -- Access

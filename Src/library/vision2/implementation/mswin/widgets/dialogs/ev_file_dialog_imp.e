@@ -1,6 +1,7 @@
+--| FIXME Not for release
 indexing 
-	description: "EiffelVision file selection dialog."
-	note: "Equivalent of the WEL_FILE_DIALOG class."
+	description:
+		"Eiffel Vision file dialog. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,146 +10,93 @@ deferred class
 	EV_FILE_DIALOG_IMP
 
 inherit
-	EV_SELECTION_DIALOG_IMP
+	EV_FILE_DIALOG_I
+
+	EV_STANDARD_DIALOG_IMP
+
+feature {NONE} -- Initialization
+
+	make (an_interface: like interface) is
+			-- Initialize.
+		do
+			base_make (an_interface)
+			wel_make
+			set_filter ("*.*")
+			start_directory := "."
+		end
+
+	initialize is
+		do
+			is_initialized := True
+		end
 
 feature -- Access
 
-	file: STRING is
-			-- Path and name of the currently selected file
-			-- (including path).
+	file_name: STRING is
+			-- Full name of currently selected file including path.
 		do
-			if selected then
+			if selected_button /= Void and then selected_button.is_equal ("OK") then
 				Result := wel_file_name
-			else
-				Result := Void
 			end
 		end
+
+	filter: STRING
+			-- Filter currently applied to file list.
+
+	start_directory: STRING
+			-- Base directory where browsing will start.
 
 feature -- Status report
 
-	file_name: STRING is
-			-- Name of the currently selected file
-			-- (without path).
+	file_title: STRING is
+			-- `file_name' without its path.
 		do
-			if selected then
-				Result := file_title
-			else
-				Result := Void
+			if file_name /= Void then
+				Result := file_name.mirrored
+				Result.head (Result.index_of ('\', 1) - 1)
+				Result.mirror
 			end
 		end
 
-	directory: STRING is
-			-- Path of the current selected file
+	file_path: STRING is
+			-- Path of `file_name'.
 		do
-			if selected then
-				Result := file.substring (1, file_name_offset - 1)
-			else
-				Result := Void
+			if file_name /= Void then
+				Result := clone (file_name)
+				Result.head (Result.count - Result.mirrored.index_of ('\', 1) + 1)
 			end
-		end
-
-	selected_filter: STRING is
-			-- Currently selected filter
-		do
-			if selected then
-				Result := filpatterns.item (filter_index)
-			else
-				Result := Void
-			end
-		end
-
-	selected_filter_name: STRING is
-			-- Name of the currently selected filter
-		do
-			if selected then
-				Result := filnames.item (filter_index)
-			else
-				Result := Void
-			end
-		end
-
-feature -- Status setting
-
-	select_filter (filter: STRING) is
-			-- Select `filter' in the list of filter.
-		local
-			index: INTEGER
-		do
-			index := find_index (filpatterns, filter)
-			set_filter_index (index)
-		end
-
-	select_filter_by_name (name: STRING) is
-			-- Select the filter called `name'.
-		local
-			index: INTEGER
-		do
-			index := find_index (filnames, name)
-			set_filter_index (index)
 		end
 
 feature -- Element change
 
-	set_file (absolute_name: STRING) is
-			-- Make the file given by `absolute_name' the
-			-- new selected file.
+	set_filter (a_filter: STRING) is
+			-- Set `a_filter' as new filter.
 		do
-			set_file_name (absolute_name)
-		end
-
-	set_base_directory (path: STRING) is
-			-- Make `path' the base directory in detrmining files
-			-- to be displayed..
-		do
-			set_initial_directory (path)
-		end
-
-	set_filter (filter_names, filter_patterns: ARRAY [STRING]) is
-			-- Set the file type combo box.
-			-- `filter_names' is an array of string containing
-			-- the filter names and `filter_patterns' is an
-			-- array of string containing the filter patterns.
-			-- Example:
-			--	filter_names = <<"Text file", "All file">>
-			--	filter_patterns = <<"*.txt", "*.*">>
-		do
-			wel_set_filter (filter_names, filter_patterns)
-			filpatterns := filter_patterns
-			filnames := filter_names
-		end
-
-feature {NONE} -- Implementation
-
-	filpatterns: ARRAY [STRING]
-		-- Patterns of the filters of the dialog
-
-	filnames: ARRAY [STRING]
-		-- Names of the filters of the dialog
-
-	find_index (list: ARRAY [STRING]; item: STRING): INTEGER is
-			-- Return the index of `item' in `list'
-		local
-			i: INTEGER
-			found: BOOLEAN
-		do
-			from
-				i := list.lower
-				Result := 1
-			until
-				found or (i = list.upper + 1)
-			loop
-				 if item.is_equal(list.item (i)) then
-					found := True
-				else
-					Result := Result + 1
-				end
-				i := i + 1
+			filter := clone (a_filter)
+			if filter.is_equal ("*.*") then
+				wel_set_filter (<<"All files">>, <<"*.*">>)
+			else
+				wel_set_filter (<<filter, "All files">>, <<filter, "*.*">>)
 			end
+			wel_set_filter_index (0)
 		end
 
-feature {NONE} -- Deferred features
+	set_file_name (a_name: STRING) is
+			-- Make `a_name' the selected file.
+		do
+			wel_set_file_name (a_name)
+		end
 
-	flags: INTEGER is
+	set_start_directory (a_path: STRING) is
+			-- Make `a_path' the base directory.
+		do
+			start_directory := clone (a_path)
+			wel_set_initial_directory (a_path)
+		end
+
+feature -- Deferred
+
+	wel_make is
 		deferred
 		end
 
@@ -156,51 +104,7 @@ feature {NONE} -- Deferred features
 		deferred
 		end
 
-	file_title: STRING is
-		deferred
-		end
-
-	title: STRING is
-		deferred
-		end
-
-	file_name_offset: INTEGER is
-		deferred
-		end
-
-	file_extension_offset: INTEGER is
-		deferred
-		end
-
-	filter_index: INTEGER is
-		deferred
-		end
-
-	Max_file_name_length: INTEGER is
-		deferred
-		end
-
-	set_flags (a_flags: INTEGER) is
-		deferred
-		end
-
-	add_flag (a_flags: INTEGER) is
-		deferred
-		end
-
-	remove_flag (a_flags: INTEGER) is
-		deferred
-		end
-
-	set_file_name (a_file_name: STRING) is
-		deferred
-		end
-
-	set_title (a_title: STRING) is
-		deferred
-		end
-
-	set_default_title is
+	wel_set_file_name (a_file_name: STRING) is
 		deferred
 		end
 
@@ -208,31 +112,11 @@ feature {NONE} -- Deferred features
 		deferred
 		end
 
-	set_filter_index (a_filter_index: INTEGER) is
+	wel_set_filter_index (a_filter_index: INTEGER) is
 		deferred
 		end
 
-	set_initial_directory (a_directory: STRING) is
-		deferred
-		end
-
-	set_initial_directory_as_current is
-		deferred
-		end
-
-	set_default_extension (extension: STRING) is
-		deferred
-		end
-
-	has_flag (a_flags: INTEGER): BOOLEAN is
-		deferred
-		end
-
-	str_filter: WEL_STRING is
-		deferred
-		end
-
-	str_title: WEL_STRING is
+	wel_set_initial_directory (a_directory: STRING) is
 		deferred
 		end
 
@@ -253,3 +137,32 @@ end -- class EV_FILE_DIALOG_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:42  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.10.4  2000/01/27 23:54:33  brendel
+--| Removed feature default_extension.
+--| Implemented file_title and file_path.
+--|
+--| Revision 1.5.10.3  2000/01/27 19:30:18  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.10.2  2000/01/27 18:09:21  brendel
+--| Implemented in compliance with new interface.
+--|
+--| Revision 1.5.10.1  1999/11/24 17:30:24  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

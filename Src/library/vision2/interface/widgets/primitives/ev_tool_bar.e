@@ -1,6 +1,7 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision toolbar. Only bar items can be%
-		% created into a tool-bar."
+	description: "EiffelVision toolbar. Only toolbar items%
+		% can be placed into a tool-bar."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,60 +15,25 @@ inherit
 			implementation
 		end
 
-	EV_ITEM_HOLDER
+	EV_ITEM_LIST [EV_TOOL_BAR_ITEM]
+		undefine
+			create_action_sequences
 		redefine
-			implementation,
-			item_type
+			implementation
 		end
 
 create
-	make,
-	make_with_size,
-	make_with_height
+	default_create
 
 feature -- Initialization
-
-	make (par: EV_CONTAINER) is
-			-- Create the tool-bar with `par' as parent.
-		do
-			!EV_TOOL_BAR_IMP! implementation.make
- 			widget_make (par)
-		end
-
-	make_with_size (par: EV_CONTAINER; w, h: INTEGER) is
-			-- Create the tool-bar with `par' as parent, `w' and `h' as size of
-			-- the buttons.
-			-- On windows comparing to the pixmap inside the button, count 8 more
-			-- pixels for the width, and 7 for the height. By default, the size is
-			-- 24 on 22.
-		require
-			valid_width: w >= 0
-			valid_height: h >= 0
-		do
-			!EV_TOOL_BAR_IMP! implementation.make_with_size (w, h)
- 			widget_make (par)
-		end
-
-	make_with_height (par: EV_CONTAINER; h: INTEGER) is
-			-- Create the tool-bar with 'par' as parent, 'h' as the height of
-			-- of all buttons.
-		require
-			valid_height: h >= 0
-		do
-			!EV_TOOL_BAR_IMP! implementation.make_with_height (h)
-			widget_make (par)
-		end
-
-feature -- Implementation
 
 	implementation: EV_TOOL_BAR_I
 			-- Platform dependent access.
 
-feature {NONE} -- Implementation
-
-	item_type: EV_TOOL_BAR_BUTTON is
-			-- Gives a type.
+	create_implementation is
+			-- Create implementation of button.
 		do
+			create {EV_TOOL_BAR_IMP} implementation.make (Current)
 		end
 
 end -- class EV_TOOL_BAR
@@ -87,3 +53,46 @@ end -- class EV_TOOL_BAR
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:53  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.6.9  2000/02/01 20:17:47  king
+--| Changed inheritence structure to use tool_bar_items
+--|
+--| Revision 1.6.6.8  2000/01/28 22:24:25  oconnor
+--| released
+--|
+--| Revision 1.6.6.7  2000/01/28 19:05:29  king
+--| Altered to new generic structure of ev_item_list
+--|
+--| Revision 1.6.6.6  2000/01/27 19:30:58  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.6.5  2000/01/26 23:17:24  king
+--| Removed redundant features from interface
+--|
+--| Revision 1.6.6.4  2000/01/20 16:48:56  rogers
+--| Implemented create_implementation.
+--|
+--| Revision 1.6.6.3  1999/12/17 19:24:32  rogers
+--| item_type is no longer inherited and therfore is not redefined.
+--|
+--| Revision 1.6.6.2  1999/12/01 19:13:56  rogers
+--| Changed inheritance structure from EV_ITEM_HOLDER to EV_ITEM_LIST
+--|
+--| Revision 1.6.6.1  1999/11/24 17:30:56  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

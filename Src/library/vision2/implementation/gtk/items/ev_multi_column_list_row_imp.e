@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description:
@@ -11,7 +13,7 @@ class
 inherit
 	EV_MULTI_COLUMN_LIST_ROW_I
 		redefine
-			parent_imp
+			interface
 		end
 
 	EV_COMPOSED_ITEM_IMP
@@ -20,15 +22,14 @@ inherit
 			set_count as set_columns
 		undefine
 			destroy,
-			destroyed,
 			parent
 		redefine
+			interface,
 			set_foreground_color,
 			set_background_color,
 			foreground_color,
 			background_color,
-			set_parent,
-			parent_imp
+			set_parent
 		end
 
 create
@@ -355,7 +356,9 @@ feature -- Event -- removing command association
 
 feature {NONE} -- Implementation
 
-	parent_imp: EV_MULTI_COLUMN_LIST_IMP
+	interface: EV_MULTI_COLUMN_LIST_ROW
+
+	--parent_imp: EV_MULTI_COLUMN_LIST_IMP
 		-- Multi-column list that own the current object 
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -375,3 +378,28 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.23  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.22.6.3  2000/02/02 23:43:27  king
+--| Removed definition of parent_imp
+--|
+--| Revision 1.22.6.2  2000/01/27 19:29:25  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.22.6.1  1999/11/24 17:29:43  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.22.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,8 +1,10 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision widget, mswindows implementation."
 	note: "The parent of a widget cannot be void, except for a%
 		%  window. Therefore, each feature that call the parent%
-		%  here need to be redefine by EV_WINDOW to check if%
+		%  here need to be redefine by EV_TITLED_WINDOW to check if%
 		%  parent is `Void'"
 	note: "The current class would be the equivalent of a wel_window%
 		% Yet, it doesn't inherit from wel_window. Then, all the%
@@ -20,11 +22,13 @@ deferred class
 inherit
 	EV_WIDGET_I
 		redefine
-			set_vertical_resize,
-			set_horizontal_resize
+			interface
 		end
 
 	EV_SIZEABLE_IMP
+		redefine
+			interface
+		end
 
 	EV_EVENT_HANDLER_IMP
 
@@ -32,7 +36,10 @@ inherit
 
 	EV_ACCELERATOR_HANDLER_IMP
 
-	EV_PND_SOURCE_IMP
+	EV_PICK_AND_DROPABLE_IMP
+		redefine	
+			interface
+		end
 
 	WEL_WINDOWS_ROUTINES
 		export
@@ -76,19 +83,31 @@ inherit
 
 feature {NONE} -- Initialization
 
-	widget_make (an_interface: EV_WIDGET) is
+	initialize  is
 			-- Creation of the widget.
 		do
-			!! child_cell
-			interface := an_interface
-			set_default_options
+			create child_cell
+			set_vertical_resize (True)
+			set_horizontal_resize (True)
 			set_default_colors
 			set_default_minimum_size
+			show
+			is_initialized := True
 		end
 
 feature -- Access
 
-	cursor: EV_CURSOR is
+	pointer_position: EV_COORDINATES is
+			-- Position of the screen pointer relative to `Current'.
+		do
+			--|FIXME
+			check
+				False
+			end
+			create Result
+		end
+
+	pointer_style: EV_CURSOR is
 			-- Cursor used currently on the widget.
 		do
 			if cursor_imp = Void then
@@ -119,7 +138,15 @@ feature -- Access
 			end
 		end
 
-	top_level_window: EV_WINDOW is
+	tooltip: STRING is
+			-- Text displayed when user moves mouse over widget.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+	top_level_window: EV_TITLED_WINDOW is
 			-- Top level window that contains the current widget.
 		do
 			Result ?= top_level_window_imp.interface
@@ -161,6 +188,58 @@ feature -- Access
 			end
 		end
 
+	x_position: INTEGER is
+			-- Widget x position.
+		do
+			Result := x
+		end
+
+	y_position: INTEGER is
+			-- Widget y position.
+		do
+			Result := y
+		end
+
+	parent: EV_CONTAINER is
+			-- Parent of `Current'
+		do
+			if parent_imp /= Void then
+				Result := parent_imp.interface
+			end
+		end
+
+	wel_width: INTEGER is
+		deferred
+		end
+
+	width: INTEGER is
+		do
+			--|FIXME During the major changes to vision
+			--|This code was changed to wel_width.max (minimum_width)
+			--|It has been changed back, but could possibly violate some
+			--|Tight assertions
+			--|See assertions on EV_WIDGET and EV_WIDGET_I
+			--|Needs to be changed so the user can never return a minimum height
+			--|Less than the height
+			Result := wel_width
+		end
+
+	wel_height: INTEGER is
+		deferred
+		end
+
+	height: INTEGER is
+		do
+			--|FIXME During the major changes to vision
+			--|This code was changed to wel_height.max (minimum_height)
+			--|It has been changed back, but could possibly violate some
+			--|Tight assertions
+			--|See assertions on EV_WIDGET and EV_WIDGET_I
+			--|Needs to be changed so the user can never return a minimum height
+			--|Less than the height
+			Result := wel_height
+		end
+
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -169,17 +248,13 @@ feature -- Status report
 			Result := not exists
 		end
 
-	insensitive: BOOLEAN is
-			-- Is current widget insensitive?
-       	do
-      			Result := not enabled
-		end
-
-	shown: BOOLEAN is
+	is_show_requested: BOOLEAN is
 			-- Is the widget shown in its parent?
 		do
 			Result := flag_set (style, Ws_visible)
 		end
+
+	managed: BOOLEAN is true
 
 feature -- Status setting
 
@@ -188,16 +263,19 @@ feature -- Status setting
 			-- in case it was set insensitive by the child.
 		do
 			if parent_imp /= Void then
-				parent_imp.remove_child (Current)
+				--parent_imp.remove_child (Current)
+				parent_imp.interface.prune (Current.interface)
 			end
 			wel_destroy
+			is_destroyed := True
+			destroy_just_called := True
 		end
 
 	show is
 			-- Show the window
 			-- Need to notify the parent.
 		do
-			show_window (item, Sw_show)
+			show_window (wel_item, Sw_show)
 			if parent_imp /= Void then
 				parent_imp.notify_change (1 + 2)
 			end
@@ -206,13 +284,13 @@ feature -- Status setting
 	hide is
 			-- Hide the window
 		do
-			show_window (item, Sw_hide)
+			show_window (wel_item, Sw_hide)
 			if parent_imp /= Void then
 				parent_imp.notify_change (1 + 2)
 			end
 		end
 
-	set_insensitive (flag: BOOLEAN) is
+	disable_sensitive is
 			-- Set current widget in insensitive mode if
 			-- `flag'. This means that any events with an
 			-- event type of KeyPress, KeyRelease,
@@ -222,11 +300,12 @@ feature -- Status setting
 			-- widget and to all its children.  Set it to
 			-- sensitive mode otherwise.
 		do
-			if flag then
 				disable
-			else
-				enable
-			end
+		end
+
+	enable_sensitive is
+		do
+			enable
 		end
 
 -- 	set_horizontal_resize (flag: BOOLEAN) is
@@ -287,7 +366,7 @@ feature -- Element change
 		deferred
 		end
 
-	set_cursor (value: EV_CURSOR) is
+	set_pointer_style (value: EV_CURSOR) is
 			-- Make `value' the new cursor of the widget
 		do
 			if value /= Void then
@@ -304,7 +383,7 @@ feature -- Element change
 			-- Make `color' the new `background_color'
 		do
 			background_color_imp ?= color.implementation
-			if displayed then
+			if is_displayed then
 				-- If the widget is not hidden then invalidate.
 				invalidate
 			end
@@ -314,9 +393,25 @@ feature -- Element change
 			-- Make `color' the new `foreground_color'
 		do
 			foreground_color_imp ?= color.implementation
-			if displayed then
+			if is_displayed then
 				-- If the widget is not hidden then invalidate.
 				invalidate
+			end
+		end
+
+	set_tooltip (a_text: STRING) is
+			-- Set `tooltip' to `a_text'.
+	    do
+			check
+				to_be_implemented: False
+			end
+		end
+
+	remove_tooltip is
+			-- Set `tooltip' to `Void'.
+	    do
+			check
+				to_be_implemented: False
 			end
 		end
 
@@ -334,229 +429,6 @@ feature -- Accelerators - command association
 			-- `acc' is completed by the user.
 		do
 			remove_accel_commands (acc)
-		end
-
-feature -- Event - command association
-
-	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button no 'mouse_button' is pressed.
-		do
-			inspect mouse_button 
-			when 1 then
-				add_command (Cmd_button_one_press, cmd, arg)
-			when 2 then
-				add_command (Cmd_button_two_press, cmd, arg)
-			when 3 then
-				add_command (Cmd_button_three_press, cmd, arg)
-			else
-				io.putstring ("This button do not exists")
-			end
-		end
-	
-	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button no 'mouse_button' is released.
-		do
-			inspect mouse_button
-			when 1 then
-				add_command (Cmd_button_one_release, cmd, arg)
-			when 2 then
-				add_command (Cmd_button_two_release, cmd, arg)
-			when 3 then
-				add_command (Cmd_button_three_release, cmd, arg)
-			else
-				io.putstring ("This button do not exists")
-			end
-		end
-
-	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button no `mouse_button' is double clicked.
-		do
-			inspect mouse_button
-			when 1 then
-				add_command (Cmd_button_one_dblclk, cmd, arg)
-			when 2 then
-				add_command (Cmd_button_two_dblclk, cmd, arg)
-			when 3 then
-				add_command (Cmd_button_three_dblclk, cmd, arg)
-			else
-				io.putstring ("This button do not exists")
-			end
-		end
-
-	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the mouse move in the widget area.
-			-- Be careful, in this motion-notify, windows considers that
-			-- pushing and releasing a button is a move ???
-			-- Need to be fix, it shouldn't be like this.
-			-- Use the `WM_mousemove' windows event
-		do
-			add_command (Cmd_motion_notify, cmd, arg)
-		end
-	
-	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget is destroyed.
-		do
-			add_command (Cmd_destroy, cmd, arg)
-		end
-
-	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when a key is pressed.
-			-- Use the `Wm_keydown' and the `Wm_char' windows event.
-			-- The result will be this givent by `Wm_char', because the 
-			-- other event give only a virtual key number and not
-			-- the character corresponding to the key.
-		do
-			add_command (Cmd_key_press, cmd, arg)
-		end
-	
-	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when a key is released.
-			-- Use the `Wm_keyup' windows event.
-		do
-			add_command (Cmd_key_release, cmd, arg)
-		end
-
-	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the mouse enters the widget.
-		do
-			add_command (Cmd_enter_notify, cmd, arg)
-		end
-	
-	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the mouse leaves the widget.
-		do
-			add_command (Cmd_leave_notify, cmd, arg)
-		end
-
-	add_get_focus_command  (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget get the focus.
-		do
-			add_command (Cmd_get_focus, cmd, arg)
-		end
-
-	add_lose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the widget lose the focus.
-		do
-			add_command (Cmd_lose_focus, cmd, arg)
-		end
-
-feature -- Event -- removing command association
-
-	remove_button_press_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is pressed.
-		do
-			inspect mouse_button 
-			when 1 then
-				remove_command (Cmd_button_one_press)
-			when 2 then
-				remove_command (Cmd_button_two_press)
-			when 3 then
-				remove_command (Cmd_button_three_press)
-			else
-				io.putstring ("This button do not exists")
-			end
-		end
-
-	remove_button_release_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is released.
-		do
-			inspect mouse_button 
-			when 1 then
-				remove_command (Cmd_button_one_release)
-			when 2 then
-				remove_command (Cmd_button_two_release)
-			when 3 then
-				remove_command (Cmd_button_three_release)
-			else
-				io.putstring ("This button do not exists")
-			end
-		end
-
-	remove_double_click_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is double clicked.
-		do
-			inspect mouse_button 
-			when 1 then
-				remove_command (Cmd_button_one_dblclk)
-			when 2 then
-				remove_command (Cmd_button_two_dblclk)
-			when 3 then
-				remove_command (Cmd_button_three_dblclk)
-			else
-				io.putstring ("This button do not exists")
-			end
-		end
-
-	remove_motion_notify_commands is
-			-- Empty the list of commands to be executed when
-			-- the mouse move.
-		do
-			remove_command (Cmd_motion_notify)
-		end
-
-	remove_destroy_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget is destroyed.
-		do
-			remove_command (Cmd_destroy)
-		end
-
-	remove_key_press_commands is
-			-- Empty the list of commands to be executed when
-			-- a key is pressed on the keyboard while the widget has the
-			-- focus.
-		do
-			remove_command (Cmd_key_press)
-		end
-
-	remove_key_release_commands is
-			-- Empty the list of commands to be executed when
-			-- a key is released on the keyboard while the widget has the
-			-- focus.
-		do
-			remove_command (Cmd_key_release)
-		end
-
-	remove_enter_notify_commands is
-			-- Empty the list of commands to be executed when
-			-- the cursor of the mouse enter the widget.
-		do
-			remove_command (Cmd_enter_notify)
-		end
-
-	remove_leave_notify_commands is
-			-- Empty the list of commands to be executed when
-			-- the cursor of the mouse leave the widget.
-		do
-			remove_command (Cmd_leave_notify)
-		end
-
-	remove_get_focus_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget get the focus.
-		do
-			remove_command (Cmd_get_focus)
-		end
-
-	remove_lose_focus_commands is
-			-- Empty the list of commands to be executed when
-			-- the widget lose the focus.
-		do
-			remove_command (Cmd_lose_focus)
 		end
 
 feature -- Implementation
@@ -584,31 +456,16 @@ feature -- Implementation
 
 feature {NONE} -- Implementation, mouse button events
 
-	get_button_data (button, keys, x_pos, y_pos: INTEGER): EV_BUTTON_EVENT_DATA is
-			-- Give the event data with the values `x_pos',
-			-- `y_pos' and `keys'
-		local
-			wid: EV_WIDGET
-		do
-			!! Result.make
-			wid ?= interface
-			Result.implementation.set_all (wid, x_pos, y_pos, button,
-				flag_set (keys, Mk_shift), flag_set (keys, Mk_control),
-				flag_set (keys, Mk_lbutton), flag_set (keys, Mk_mbutton),
-				flag_set (keys, Mk_rbutton))
-		end
-
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the left button is pressed.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		local
-			data: EV_BUTTON_EVENT_DATA
+			pt: WEL_POINT
 		do
-			if has_command (Cmd_button_one_press) then
-				data := get_button_data (1, keys, x_pos, y_pos)
-				execute_command (Cmd_button_one_press, data)
-			end
+			pt := client_to_screen (x_pos, y_pos)
+			pnd_press (x_pos, y_pos, 1, pt.x, pt.y)
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -616,12 +473,11 @@ feature {NONE} -- Implementation, mouse button events
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		local
-			data: EV_BUTTON_EVENT_DATA
+			pt: WEL_POINT
 		do
-			if has_command (Cmd_button_two_press) then
-				data := get_button_data (2, keys, x_pos, y_pos)
-				execute_command (Cmd_button_two_press, data)
-			end
+			pt := client_to_screen (x_pos, y_pos)
+			pnd_press (x_pos, y_pos, 2, pt.x, pt.y)
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 2, 0, 0, 0, pt.x, pt.y])
 		end
 	
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -629,12 +485,12 @@ feature {NONE} -- Implementation, mouse button events
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		local
-			data: EV_BUTTON_EVENT_DATA
+			pt: WEL_POINT
 		do
-			if has_command (Cmd_button_three_press) then
-				data := get_button_data (3, keys, x_pos, y_pos)
-				execute_command (Cmd_button_three_press, data)
-			end
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0, 0, 0, pt.x, pt.y])
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -642,12 +498,11 @@ feature {NONE} -- Implementation, mouse button events
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		local
-			data: EV_BUTTON_EVENT_DATA
+			pt: WEL_POINT
 		do
-			if has_command (Cmd_button_one_release) then
-				data := get_button_data (1, keys, x_pos, y_pos)
-				execute_command (Cmd_button_one_release, data)
-			end
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			interface.pointer_button_release_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -655,12 +510,11 @@ feature {NONE} -- Implementation, mouse button events
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		local
-			data: EV_BUTTON_EVENT_DATA
+			pt: WEL_POINT
 		do
-			if has_command (Cmd_button_two_release) then
-				data := get_button_data (2, keys, x_pos, y_pos)
-				execute_command (Cmd_button_two_release, data)
-			end
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			interface.pointer_button_release_actions.call ([x_pos, y_pos, 2, 0, 0, 0, pt.x, pt.y])
 		end
 
 	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -668,12 +522,11 @@ feature {NONE} -- Implementation, mouse button events
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		local
-			data: EV_BUTTON_EVENT_DATA
+			pt: WEL_POINT
 		do
-			if has_command (Cmd_button_three_release) then
-				data := get_button_data (3, keys, x_pos, y_pos)
-				execute_command (Cmd_button_three_release, data)
-			end
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			interface.pointer_button_release_actions.call ([x_pos, y_pos, 3, 0, 0, 0, pt.x, pt.y])
 		end
 
 	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -681,12 +534,11 @@ feature {NONE} -- Implementation, mouse button events
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		local
-			data: EV_BUTTON_EVENT_DATA
+			pt: WEL_POINT
 		do
-			if has_command (Cmd_button_one_dblclk) then
-				data := get_button_data (1, keys, x_pos, y_pos)
-				execute_command (Cmd_button_one_dblclk, data)
-			end
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			interface.pointer_double_press_actions.call ([x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y])
 		end
 
 	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -694,12 +546,11 @@ feature {NONE} -- Implementation, mouse button events
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		local
-			data: EV_BUTTON_EVENT_DATA
+			pt: WEL_POINT
 		do
-			if has_command (Cmd_button_two_dblclk) then
-				data := get_button_data (2, keys, x_pos, y_pos)
-				execute_command (Cmd_button_two_dblclk, data)
-			end
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			interface.pointer_double_press_actions.call ([x_pos, y_pos, 2, 0, 0, 0, pt.x, pt.y])
 		end
 
 	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -707,24 +558,38 @@ feature {NONE} -- Implementation, mouse button events
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		local
-			data: EV_BUTTON_EVENT_DATA
+			pt: WEL_POINT
 		do
-			if has_command (Cmd_button_three_press) then
-				data := get_button_data (3, keys, x_pos, y_pos)
-				execute_command (Cmd_button_three_dblclk, data)
-			end
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			interface.pointer_double_press_actions.call ([x_pos, y_pos, 3, 0, 0, 0, pt.x, pt.y])
 		end
 
 feature {NONE} -- Implementation, mouse move, enter and leave events
+
+	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
+			-- 
+		local
+			ww: WEL_WINDOW
+		do
+			create Result.make (a_x, a_y)
+			ww ?= Current
+			check
+				wel_window_not_void: ww/= Void
+			end
+			Result.client_to_screen (ww)
+		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		local
-			data: EV_MOTION_EVENT_DATA
 			wid: EV_WIDGET
+			pt: WEL_POINT
 		do
+			pt := client_to_screen (x_pos, y_pos)
+			pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			if cursor_on_widget.item /= Current then
 				if cursor_on_widget.item /= Void then
 					cursor_on_widget.item.on_mouse_leave
@@ -732,69 +597,47 @@ feature {NONE} -- Implementation, mouse move, enter and leave events
 				cursor_on_widget.replace (Current)
 				on_mouse_enter
 			end
-			if has_command (Cmd_motion_notify) then
-				!! data.make
-				wid ?= interface
-				data.implementation.set_all (wid, x_pos, y_pos,
-				flag_set (keys, Mk_shift), flag_set (keys, Mk_control),
-				flag_set (keys, Mk_lbutton), flag_set (keys, Mk_mbutton),
-				flag_set (keys, Mk_rbutton))
-				execute_command (Cmd_motion_notify, data)
-			end
+			interface.pointer_motion_actions.call ([x_pos, y_pos, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_mouse_enter is
 		do
-			execute_command (Cmd_enter_notify, Void)
+			interface.pointer_enter_actions.call ([])
 		end
 
 feature {EV_WIDGET_IMP} -- on_mouse_leave must be visible 
 
 	on_mouse_leave is
 		do
-			execute_command (Cmd_leave_notify, Void)
+			interface.pointer_leave_actions.call ([])
 		end
 
 feature {NONE} -- Implementation, key events
-
-	get_key_data (virtual_key, key_data: INTEGER): EV_KEY_EVENT_DATA is
-			-- Give the event data with the values `x_pos',
-			-- `y_pos' and `keys'
-		local
-			wid: EV_WIDGET
-		do
-			!! Result.make
-			wid ?= interface
-			Result.implementation.set_all (wid, virtual_key,
-				key_to_string (key_data), key_down (Vk_shift),
-				key_down (Vk_control), key_locked (Vk_capital),
-				key_locked (Vk_numlock), key_locked (Vk_scroll))
-		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- Executed when a key is pressed.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
-		local
-			data: EV_KEY_EVENT_DATA
 		do
-			if has_command (Cmd_key_press) then
-				data := get_key_data (virtual_key, key_data)
-				execute_command (Cmd_key_press, data)
-			end
+			interface.key_press_actions.call ([virtual_key])
 		end
 
 	on_key_up (virtual_key, key_data: INTEGER) is
 			-- Executed when a key is released.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
-		local
-			data: EV_KEY_EVENT_DATA
 		do
-			if has_command (Cmd_key_release) then
-				data := get_key_data (virtual_key, key_data)
-				execute_command (Cmd_key_release, data)
-			end
+			interface.key_release_actions.call ([virtual_key])
+		end
+
+	on_key_string (character_code, key_data: INTEGER) is
+			-- Executed when a key is pressed.
+		local	
+			character_string: STRING
+		do
+			create character_string.make(1)
+			character_string.append_character(character_code.ascii_char)
+			interface.key_press_string_actions.call ([character_string])
 		end
 
 feature {NONE} -- Implementation, focus event
@@ -806,7 +649,7 @@ feature {NONE} -- Implementation, focus event
 			counter: INTEGER
 		do
 				focus_on_widget.put (Current)
-				execute_command (Cmd_get_focus, Void)
+				interface.focus_in_actions.call ([])
 				notebooks := notebook_parent
 				if notebooks /= Void then
 					from
@@ -826,7 +669,7 @@ feature {NONE} -- Implementation, focus event
 			notebooks: ARRAY[EV_NOTEBOOK_IMP]
 			counter: INTEGER
 		do
-			execute_command (Cmd_lose_focus, Void)
+			interface.focus_out_actions.call ([])
 			notebooks := notebook_parent
 			if notebooks /= Void then
 				from
@@ -921,6 +764,8 @@ feature {WEL_DISPATCHER} -- Message dispatcher
 				on_key_down (wparam, lparam)
 			elseif msg = Wm_keyup then
 				on_key_up (wparam, lparam)
+			elseif msg = Wm_char then
+				on_key_string (wparam, lparam)
 			elseif msg = Wm_showwindow then
 				on_wm_show_window (wparam, lparam)
 			elseif msg = Wm_notify then
@@ -940,29 +785,18 @@ feature {NONE} -- Implementation, pick and drop
 			Result := Current
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_WIDGET
+
 feature -- Deferred features
 
-	set_capture is
-			-- Set the mouse capture to the `Current' window.
-			-- Once the window has captured the mouse, all
-			-- mouse input is directed to this window, regardless
-			-- of whether the cursor is over that window. Only
-			-- one window can have the mouse capture at a time.
-		deferred
-		end
-
-	release_capture is
-			-- Release the mouse capture after a call
-			-- to `set_capture'.
-		deferred
-		end
-
-	top_level_window_imp: EV_UNTITLED_WINDOW_IMP is
+	top_level_window_imp: EV_WINDOW_IMP is
 			-- Top level window that contains the current widget.
 		deferred
 		end
 
-	set_top_level_window_imp (a_window: EV_UNTITLED_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		deferred
@@ -970,11 +804,6 @@ feature -- Deferred features
 
 	exists: BOOLEAN is
 			-- Does the window exist?
-		deferred
-		end
-
-	enabled: BOOLEAN is
-			-- Is the window enabled for mouse and keyboard input?
 		deferred
 		end
 
@@ -1063,7 +892,7 @@ feature -- Deferred features
 		deferred
 		end
 
-	item: POINTER is
+	wel_item: POINTER is
 		deferred
 		end
 
@@ -1112,3 +941,67 @@ end -- class EV_WIDGET_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.50  2000/02/14 11:40:42  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.49.6.17  2000/02/09 01:23:59  pichery
+--| - implemented key_press_string_actions for Windows platforms
+--|
+--| Revision 1.49.6.16  2000/02/07 20:44:25  rogers
+--| Removed old command association which is redundent now.
+--|
+--| Revision 1.49.6.15  2000/02/06 22:10:44  brendel
+--| Changed 0 to 0.0 in call to action sequence where doubles where expected
+--| instead of integers. (Fails on `valid_operands').
+--|
+--| Revision 1.49.6.14  2000/02/06 21:21:05  brendel
+--| Fixed bug in call to pointer_motion_actions, where the 3rd, 4th and 5th
+--| argument were integers instead of reals.
+--|
+--| Revision 1.49.6.13  2000/02/04 19:09:21  rogers
+--| Replaced all references to displayed with is_displayed.
+--|
+--| Revision 1.49.6.12  2000/01/29 01:14:01  brendel
+--| Added not yet implemented tootip features.
+--|
+--| Revision 1.49.6.11  2000/01/29 01:00:46  brendel
+--| Changed removing of Current from parent when destroyed.
+--|
+--| Revision 1.49.6.10  2000/01/27 19:30:17  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.49.6.9  2000/01/26 20:00:43  brendel
+--| Merged versions 1.49.1.6 and 1.49.1.8.
+--|
+--| Revision 1.49.6.6  2000/01/25 17:37:51  brendel
+--| Removed code associated with old events.
+--| Implementation and more removal is needed.
+--|
+--| Revision 1.49.6.5  2000/01/21 23:17:01  brendel
+--| Removed deferred features set_capture and release_capture.
+--|
+--| Revision 1.49.6.4  2000/01/19 23:49:02  rogers
+--| Added show to initialize, and added managed which means that all widgets are automatically managed by their parents.
+--|
+--| Revision 1.49.6.3  1999/12/22 17:54:15  rogers
+--| Implemented most of the mouse actions to use the new events.
+--|
+--| Revision 1.49.6.2  1999/12/17 01:00:56  rogers
+--| Altered to fit in with the review branch. No inherits EV_PICK_AND_DROPABLE instead of the two old pick and drop classe. is_show_requested replaces shown.
+--|
+--| Revision 1.49.6.1  1999/11/24 17:30:23  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.49.2.3  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,8 +1,13 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"EiffelVision fixed. Invisible container that allows unlimited number of other widgets to be put inside it. The location of each widget inside is specified by the coordinates of the widget."
+		"EiffelVision fixed. Invisible container that allows%
+		%unlimited number of other widgets to be put inside it.%
+		%The location of each widget inside is specified by%
+		%the coordinates of the widget."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "container, invisible"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -26,13 +31,18 @@ feature {NONE} -- Initialization
 			-- Create a fixed widget with, `par' as
 			-- parent
 		do
-			!EV_FIXED_IMP!implementation.make
+			create {EV_FIXED_IMP} implementation.make
 			widget_make (par)
+		ensure
+			false
+			--| FIXME NPC
 		end
 
-feature -- Access
+feature -- Status report
 	
+	--| FIXME is_manager
 	manager: BOOLEAN is 
+			--|FIXME explain more 
 			-- Does the container manage its children?
 		do
 			Result := False
@@ -59,3 +69,31 @@ end -- class EV_FIXED
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:51  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.6.4  2000/02/05 03:54:55  oconnor
+--| unreelased
+--|
+--| Revision 1.9.6.3  2000/01/28 22:24:23  oconnor
+--| released
+--|
+--| Revision 1.9.6.2  2000/01/27 19:30:51  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.6.1  1999/11/24 17:30:51  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.2.3  1999/11/02 17:20:12  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

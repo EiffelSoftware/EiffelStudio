@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision event data. Gtk implementation";
 	status: "See notice at end of class";
@@ -13,7 +15,9 @@ inherit
 	
 	EV_GTK_EXTERNALS	
 
-	EV_GDK_EXTERNALS	
+	EV_GDK_EXTERNALS
+
+	EV_C_GTK
 	
 feature -- Initialization
 	
@@ -50,3 +54,28 @@ end -- class EV_EVENT_DATA_IMP
 
 
 	
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.6.3  2000/01/27 19:29:28  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.6.2  1999/12/01 17:37:10  oconnor
+--| migrating to new externals
+--|
+--| Revision 1.6.6.1  1999/11/24 17:29:45  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

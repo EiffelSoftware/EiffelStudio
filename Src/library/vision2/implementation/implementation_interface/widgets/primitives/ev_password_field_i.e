@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision password field, implementation interface"
 	status: "See notice at end of class"
@@ -15,7 +17,6 @@ feature -- Access
 	character: CHARACTER is
 			-- Displayed character instead of the text.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -25,7 +26,6 @@ feature -- Element change
 			-- Make `char' the new character displayed in the
 			-- password field.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -46,3 +46,28 @@ end -- class EV_PASSWORD_FIELD_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:38  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.6.2  2000/01/27 19:30:04  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.6.1  1999/11/24 17:30:12  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.2.3  1999/11/04 23:10:45  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.2.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

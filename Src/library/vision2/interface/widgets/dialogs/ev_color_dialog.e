@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision color selection dialog."
 	status: "See notice at end of class"
@@ -31,7 +33,6 @@ feature -- Access
 	color: EV_COLOR is
 			-- Current selected color
 		require
-			exists: not destroyed
 		do
 			Result := implementation.color
 		end
@@ -41,7 +42,6 @@ feature -- Element change
 	select_color (a_color: EV_COLOR) is
 			-- Select `a_color'.
 		require
-			exists: not destroyed
 		do
 			implementation.select_color (a_color)
 		end
@@ -52,7 +52,6 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed when
 			-- the "Help" button is pressed.
 		require
-			exists: not destroyed
 			valid_command: cmd /= Void
 		do
 			implementation.add_help_command (cmd, arg)
@@ -64,7 +63,6 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- "Help" button is pressed.
 		require
-			exists: not destroyed
 		do
 			implementation.remove_help_commands
 		end
@@ -90,3 +88,35 @@ end -- class EV_COLOR_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.9  2000/02/14 11:40:50  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.8.6.4  2000/02/01 16:13:07  brendel
+--| Added FIXME Not for release, since the interface has not been reviewed yet,
+--| and is not implemented on any platform.
+--|
+--| Revision 1.8.6.3  2000/01/28 22:24:22  oconnor
+--| released
+--|
+--| Revision 1.8.6.2  2000/01/27 19:30:49  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.8.6.1  1999/11/24 17:30:50  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.8.2.3  1999/11/04 23:10:54  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.8.2.2  1999/11/02 17:20:12  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" Text field inside a combo-box-ex when it is%
@@ -32,11 +34,11 @@ inherit
 		end
 
 create
-	make_from_combo
+	make_with_combo
 
 feature {NONE} -- Initialization
 
-	make_from_combo (combo: EV_COMBO_BOX_IMP) is
+	make_with_combo (combo: EV_COMBO_BOX_IMP) is
 			-- Create the text-field from `combo'.
 		do
 			parent := combo
@@ -281,3 +283,28 @@ end -- class EV_INTERNAL_COMBO_FIELD_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.10.3  2000/01/29 02:17:44  rogers
+--| Changed reference to make_with_pointer to make_by_pointer.
+--|
+--| Revision 1.2.10.2  2000/01/27 19:30:14  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.10.1  1999/11/24 17:30:21  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.6.3  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

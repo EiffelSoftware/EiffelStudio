@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision horizontal separator,%
 			% windows implementation."
@@ -10,10 +12,15 @@ class
 
 inherit
 	EV_HORIZONTAL_SEPARATOR_I
+		redefine
+			interface
+		select
+			interface
+		end
 
 	EV_SEPARATOR_IMP
-		undefine
-			set_default_options
+		rename
+			interface as ev_separator_imp_interface
 		redefine
 			set_default_minimum_size
 		end
@@ -41,6 +48,8 @@ feature {NONE} -- Implementation
 			paint_dc.line (0, height // 2, width, height // 2)
 		end
 
+	interface: EV_HORIZONTAL_SEPARATOR
+
 end -- class EV_HORIZONTAL_SEPARATOR_IMP
 
 --|----------------------------------------------------------------
@@ -58,3 +67,32 @@ end -- class EV_HORIZONTAL_SEPARATOR_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.10.4  2000/02/08 07:21:03  brendel
+--| Minor changes to run through compiler.
+--| Still needs major revision.
+--|
+--| Revision 1.5.10.3  2000/01/27 19:30:27  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.10.2  2000/01/11 19:47:58  rogers
+--| Modified to comply with the major vision2 changes. See diff for redefinitions. Added interface.
+--|
+--| Revision 1.5.10.1  1999/11/24 17:30:32  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.6.2  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

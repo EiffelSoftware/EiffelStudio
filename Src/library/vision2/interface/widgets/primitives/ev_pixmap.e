@@ -1,7 +1,8 @@
 indexing
-	description: "EiffelVision pixmap. Pixmap is a data structure that contains a picture."
+	description:
+		"Eiffel Vision pixmap. Pixel image that can be modified and displayed."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "drawable, primitives, figures, buffer, bitmap, picture"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,113 +10,85 @@ class
 	EV_PIXMAP
 
 inherit
-	EV_DRAWABLE
+	EV_DRAWING_AREA
 		redefine
+			create_implementation,
 			implementation
 		end
 
 create
-	make_with_size,
-	make_from_file
+	default_create, make_with_size
 
 feature {NONE} -- Initialization
 
-	make_with_size (w, h: INTEGER) is
-			-- Create a pixmap with 'w' and `h' as size.
+	make_with_size (a_x, a_y: INTEGER) is
+			-- Create a pixmap of size `a_x' by `a_y'.
 		require
-			valid_width: w > 0
-			valid_height: h > 0
+			x_coordinate_valid: a_x > 0
+			y_coordinate_valid: a_y > 0
 		do
-			!EV_PIXMAP_IMP! implementation.make_with_size (w, h)
-			implementation.set_interface (Current)
-			implementation.unlock
-		ensure
-			is_valid: is_valid (Current)
+			default_create
+			implementation.set_size (a_x, a_y)
 		end
 
-	make_from_file (file_name: STRING) is
-			-- Load the pixmap described in 'file_name'.
-			-- If the file does not exist, an exception is
-			-- raised, (but the pixmap object is created 
-			-- with an empty pixmap).
+feature -- Status setting
+
+	set_with_buffer (a_buffer: STRING) is
+			-- Load pixmap data from `a_buffer' in memory.
+			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
+			-- exceptions. --FIXME do this!
 		require
-			file_name_exists: file_name /= Void
+			buffer_data_not_void: a_buffer /= Void
+			buffer_not_empty: a_buffer.count > 0
 		do
-			!EV_PIXMAP_IMP! implementation.make
-			implementation.set_interface (Current)
-			implementation.unlock
-			read_from_file (file_name)
-		ensure
-			is_valid: is_valid (Current)
+			implementation.set_with_buffer (a_buffer)
 		end
 
-feature -- Status report
-
-	is_locked: BOOLEAN is
-			-- Is the pixmap already set in a drawing area?
-			-- If so, we can not set it to other pixmapable
-			-- widgets.
+	set_with_file (a_file: IO_MEDIUM) is
+			-- Load pixmap data from data-medium `a_file'.
+			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
+			-- exceptions. --FIXME do this!
 		require
-			exists: not destroyed
+			medium_data_readable: a_file.is_open_read
+			medium_data_is_binary: not a_file.is_plain_text
 		do
-			Result := implementation.is_locked
+			implementation.read_from_file (a_file)
 		end
 
-feature -- Measurement
-
-	width: INTEGER is
-			-- Width of the pixmap in pixels.
+	set_size (a_x, a_y: INTEGER) is
+			-- Set the size of the canvas to `a_x' by `a_y'.
+			-- Image will remain the same dimension.
 		require
-			exists: not destroyed
+			x_coordinate_valid: a_x > 0
+			y_coordinate_valid: a_y > 0
 		do
-			Result := implementation.width
-		ensure
-			positive_result: Result > 0
+			implementation.set_size (a_x, a_y)	
 		end
 
-	height: INTEGER is
-			-- Height of the pixmap in pixels.
+	stretch (a_x, a_y: INTEGER) is
+			-- Stretch the image to fit in size `a_x' by `a_y'.
 		require
-			exists: not destroyed
+			x_coordinate_valid: a_x > 0
+			y_coordinate_valid: a_y > 0
 		do
-			Result := implementation.height
-		ensure
-			positive_result: Result > 0
+			implementation.stretch (a_x, a_y)
 		end
 
-feature -- Basic operation	
-
-	read_from_file (file_name: STRING) is
-			-- Load the pixmap described in 'file_name'.
-			-- If the file does not exist, an exception is
-			-- raised.  
-			-- What about a file in wrong format?
-		require
-			file_name_exists: file_name /= Void
-		local
-			file: RAW_FILE
-			e: EXCEPTIONS
-			str: STRING
-		do
-			-- Check if the file exists
-			create file.make (file_name)
-			if not file.exists then
-				str := "File not found: "
-				str.append (file_name)
-				create e
-				e.raise (str)
-			end
-			implementation.read_from_file (file_name)
-		end
-	
-feature -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_PIXMAP_I
-			-- Implementation of pixmap
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
+
+	create_implementation is
+			-- Create implementation of pixmap with default size.
+		do
+			create {EV_PIXMAP_IMP} implementation.make (Current)
+		end
 
 end -- class EV_PIXMAP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -129,7 +102,54 @@ end -- class EV_PIXMAP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
-
-
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.14  2000/02/14 11:40:53  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.13.6.10  2000/01/28 20:00:22  oconnor
+--| released
+--|
+--| Revision 1.13.6.9  2000/01/27 19:30:58  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.13.6.8  2000/01/14 04:05:11  oconnor
+--| tweaked comments
+--|
+--| Revision 1.13.6.7  1999/12/22 20:02:38  king
+--| Changed make_with_size to use set_size instead of stretch
+--|
+--| Revision 1.13.6.6  1999/12/18 02:25:02  king
+--| Removed clutter from interface, added new features stretch and
+--| make_with_buffer
+--|
+--| Revision 1.13.6.5  1999/12/15 23:51:27  oconnor
+--| formatting
+--|
+--| Revision 1.13.6.4  1999/12/15 23:43:45  oconnor
+--| added FIXME comments
+--|
+--| Revision 1.13.6.3  1999/12/09 23:12:59  brendel
+--| Commented out features that are inapplicable and obsolete.
+--|
+--| Revision 1.13.6.2  1999/12/04 22:47:26  brendel
+--| Removed redefine of create_action_sequence.
+--|
+--| Revision 1.13.6.1  1999/11/24 17:30:57  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.13.2.4  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.13.2.3  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

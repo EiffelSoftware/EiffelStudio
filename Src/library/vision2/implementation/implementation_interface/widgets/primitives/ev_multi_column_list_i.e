@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision multi-column-list, implementation interface."
@@ -11,27 +13,13 @@ deferred class
 
 inherit
 	EV_PRIMITIVE_I
-
-	EV_ITEM_HOLDER_I
-
-feature {NONE} -- Initialization
-
-	make_with_size (col_nb: INTEGER) is         
-			-- Create a list widget with `par' as
-			-- parent and `col_nb' columns.
-			-- By default, a list allow only one selection.
-		deferred
+		rename
+			interface as primitive_interface
 		end
 
-	make_with_text (txt: ARRAY [STRING]) is         
-			-- Create a list widget with `par' as parent,
-			-- and as many columns as the number of titles
-			-- given.
-		require
-			valid_txt: txt /= Void
-		do
-			make_with_size (txt.count)
-			set_columns_title (txt)
+	EV_ITEM_LIST_I [EV_MULTI_COLUMN_LIST_ROW]
+		select
+			interface
 		end
 
 feature -- Access
@@ -39,7 +27,6 @@ feature -- Access
 	columns: INTEGER is
 			-- Number of columns in the list.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -47,7 +34,6 @@ feature -- Access
 			-- Item which is currently selected in a single
 			-- selection mode.
 		require
-			exists: not destroyed
 			single_selection: not is_multiple_selection
 		deferred
 		end
@@ -59,7 +45,6 @@ feature -- Access
 			-- should use `selected_item' rather than 
 			-- `selected_items' for a single selection list
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -68,7 +53,6 @@ feature -- Status report
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -76,7 +60,6 @@ feature -- Status report
 			-- True if the user can choose several items
 			-- False otherwise
 		require
-			exist: not destroyed
 		deferred
 		end
 
@@ -84,42 +67,37 @@ feature -- Status report
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
 		require
-			exist: not destroyed
 		deferred
 		end
 
 	get_column_width (column: INTEGER): INTEGER is
 			-- Width of column `column' in pixel.
 		require
-			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
 		deferred
 		end
 
 feature -- Status setting
 
-	select_item (index: INTEGER) is
-			-- Select an item at the one-based `index' the list.
+	select_item (an_index: INTEGER) is
+			-- Select an item at the one-based `an_index' the list.
 		require
-			exists: not destroyed
-			index_large_enough: index > 0
-			index_small_enough: index <= count
+			index_large_enough: an_index > 0
+			index_small_enough: an_index <= count
 		deferred
 		end
 
-	deselect_item (index: INTEGER) is
-			-- Unselect the item at the one-based `index'.
+	deselect_item (an_index: INTEGER) is
+			-- Unselect the item at the one-based `an_index'.
 		require
-			exists: not destroyed
-			index_large_enough: index > 0
-			index_small_enough: index <= count
+			index_large_enough: an_index > 0
+			index_small_enough: an_index <= count
 		deferred
 		end
 
 	clear_selection is
 			-- Clear the selection of the list.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -127,7 +105,6 @@ feature -- Status setting
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 		require
-			exists: not destroyed
 		deferred	
 		end
 
@@ -135,21 +112,18 @@ feature -- Status setting
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	show_title_row is
 			-- Show the row of the titles.
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	hide_title_row is
 			-- Hide the row of the titles.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -161,7 +135,6 @@ feature -- Status setting
 			-- 1: Right,
 			-- 2: Center,
 		require
-			exists: not destroyed
 			column_exists: column > 1 and column <= columns
 		deferred
 		end
@@ -171,7 +144,6 @@ feature -- Element change
 	set_column_title (txt: STRING; column: INTEGER) is
 			-- Make `txt' the title of the one-based column.
 		require
-			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
 		deferred
 		end
@@ -179,7 +151,6 @@ feature -- Element change
 	set_columns_title (txt: ARRAY [STRING]) is         
 			-- Make `txt' the new titles of the columns.
 		require
-			exists: not destroyed
 			text_not_void: txt /= Void
 			valid_text_length: txt.count <= columns
 		local
@@ -201,7 +172,6 @@ feature -- Element change
 	set_column_width (value: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the one-based column.
 		require
-			exists: not destroyed
 			column_exists: column >= 1 and column <= columns
 		deferred
 		end
@@ -209,7 +179,6 @@ feature -- Element change
 	set_columns_width (value: ARRAY [INTEGER]) is         
 			-- Make `value' the new values of the columns width.
 		require
-			exists: not destroyed
 			value_not_void: value /= Void
 			valid_value_length: value.count <= columns
 		local
@@ -231,75 +200,14 @@ feature -- Element change
 	set_rows_height (value: INTEGER) is
 			-- Make`value' the new height of all the rows.
 		require
-			exists: not destroyed
 		deferred
 		end
 
-feature -- Event : command association
-
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when a row has been selected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
-			-- Add `cmd' to the list of commands to be executed
-			-- when a row has been unselected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when a column has been clicked.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is	
-			-- Empty the list of commands to be executed
-			-- when a row has been selected.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_unselect_commands is	
-			-- Empty the list of commands to be executed
-			-- when a row has been unselected.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-	remove_column_click_commands is
-			-- Empty the list of commands to be executed
-			-- when a column is clicked.
-		require
-			exists: not destroyed
-		deferred
-		end
-
-feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_ITEM_LIST_IMP} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 			-- We have to store the children because
 			-- neither gtk nor windows does it.
-
-	add_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
-			-- Add `item' to the list
-		deferred
-		end
 
 	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Remove `item' from the list
@@ -326,3 +234,43 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!---------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.24  2000/02/14 11:40:38  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.23.6.7  2000/02/02 23:47:55  king
+--| Removed redundant clutter
+--|
+--| Revision 1.23.6.6  2000/01/29 01:05:01  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.23.6.5  2000/01/27 19:30:04  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.23.6.4  1999/12/17 18:01:27  rogers
+--| Redefined interface to be of more refined type. Renamed parameter index to an_index. add_item is no longer applicable. export ev_children to EV_ITEM_LIST_IMP.
+--|
+--| Revision 1.23.6.3  1999/12/09 03:15:06  oconnor
+--| commented out make_with_* features, these should be in interface only
+--|
+--| Revision 1.23.6.2  1999/12/01 19:05:49  rogers
+--| Changed inheritance structure from EV_ITEM_HOLDER_I to EV_ITEM_LIST_I
+--|
+--| Revision 1.23.6.1  1999/11/24 17:30:12  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.23.2.3  1999/11/04 23:10:45  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.23.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -19,7 +19,11 @@
 #include "eif_eiffel.h"
 #include "eif_argv.h"
 
+char * c_match_font_name (char * pattern);
 
+EIF_REFERENCE generize (EIF_OBJECT g_item);
+
+void c_gdk_window_minimize (GdkWindow *wind);
 /*==============================================================================
  Initialization
 --------------------------------------------------------------------------------
@@ -43,7 +47,8 @@ void c_gtk_events_process_events_queue ();
  Data passed back to event handlers
 ------------------------------------------------------------------------------*/
 
-void c_gtk_window_set_icon (GtkWidget *window, GtkWidget *gdkwin, GdkPixmap *pix, GdkBitmap *mask);
+
+void c_gtk_window_set_icon (GtkWidget *window, GtkPixmap *pixmap, GtkWidget *icon_window, GtkPixmap *usermask);
 
 typedef  struct callback_data {
     EIF_PROC rtn;
@@ -120,6 +125,9 @@ gint c_gtk_signal_connect_after (GtkObject *widget,
 			   char mouse_button,
 			   char double_click);
 
+void enable_motion_notify (GtkWidget *widg);
+EIF_BOOLEAN c_is_mouse_over_widget (GtkWidget *widget);
+
 /*------------------------------------------------------------------------------
  Disconnect a call back of a widget/event pair
 ------------------------------------------------------------------------------*/
@@ -157,6 +165,10 @@ void c_gtk_widget_set_all_events (GtkObject *w);
 
 /* Grab the focus */
 void c_gtk_widget_grab_focus (GtkWidget *wid);
+
+/* Set/Release capture for pnd*/
+void c_gtk_widget_set_pnd_grab (GtkWidget *widget, GdkCursor *curs);
+void c_gtk_widget_remove_pnd_grab (GtkWidget *widget);
 
 //* True, if widget is destroyed */
 int c_gtk_widget_destroyed (GtkWidget *widget);
@@ -323,8 +335,8 @@ EIF_POINTER c_gtk_toolbar_new_horizontal (void);
  cursor functions
 ==============================================================================*/
 
-gint c_gtk_widget_set_cursor (GtkWidget *widget, gpointer cursor);
-GdkCursor * c_gtk_create_cursor_with_pixmap (char *fname, gint X, gint Y);
+void c_gtk_widget_set_cursor (GtkWidget *widget, gpointer cursor);
+GdkCursor *c_gtk_create_cursor_with_pixmap (GtkPixmap *gtkpix, gint X, gint Y);
 
 /*==============================================================================
  button functions
@@ -369,7 +381,6 @@ int c_gtk_get_text_length (GtkWidget* text);
 
 /* The maximum length of string in text widget */
 int c_gtk_get_text_max_length (GtkWidget* text);
-
 
 /*==============================================================================
  gtk_combo functions
@@ -599,19 +610,6 @@ void c_gtk_statusbar_item_set_bg_color (GtkWidget *statusbar, int r, int g, int 
 
 /* Pointer to the frame of the status bar */
 #define c_gtk_statusbar_item_frame(p) ((EIF_POINTER) ((GtkStatusbar *)p)->frame)  /*GtkWidget**/
-
-/*==============================================================================
- gtk_pixmap functions
-==============================================================================*/
-
-/* Width of the given pixmap */
-EIF_INTEGER c_gtk_pixmap_width (GtkWidget *pixmap);
-
-/* Height of the given pixmap */
-EIF_INTEGER c_gtk_pixmap_height (GtkWidget *pixmap);
-
-/* Unref the gdk pixmap and the maskof the given pixmap */
-void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap);
 
 /*==============================================================================
  gtk_progressbar functions

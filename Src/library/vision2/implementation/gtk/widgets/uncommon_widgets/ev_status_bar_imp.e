@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision status bar."
 	status: "See notice at end of class"
@@ -10,131 +11,105 @@ class
 inherit
 	EV_STATUS_BAR_I
 		redefine
-			parent_imp
+			interface
+		select
+			interface
 		end
 
 	EV_PRIMITIVE_IMP
 		rename
-			make as wrong_make
+			interface as primitive_interface
 		redefine
-			parent_imp,
-			set_foreground_color,
-			set_background_color
+			initialize
 		end
 
-	EV_ITEM_HOLDER_IMP
+	EV_ITEM_LIST_IMP [EV_STATUS_BAR_ITEM]
+		redefine
+			interface
+		end
 
 create
 	make
 
 feature {NONE}-- Initialization
 
-	make (par: EV_WINDOW) is
+	make (an_interface: like interface) is
 			-- Create a horizontal box in which we will put
 			-- the different status bar, with `par' as parent.
 			-- Create a gtk status bar, with the horizontal box as parent
-		local
-			statusbar_widget: POINTER
 		do
-			widget := gtk_hbox_new (False, 0)
-				-- create the horizontal box with a spacing of 2:
+			base_make (an_interface)
+			set_c_object (C.gtk_hbox_new (False, 0))
+				-- create the horizontal box no spacing
 
-			parent_imp ?= par.implementation
-			check
-				good_implementation: parent_imp /= Void
-			end
-			show
-			parent_imp.add_status_bar (Current)
-				-- add the status bar to the parent, which is a EV_WINDOW
-
-			create ev_children.make (0)
-				-- create the array, where the status_bar_items will be listed
+			list_widget := c_object
 		end
 
-feature -- Access
-
-	parent_imp: EV_WINDOW_IMP
-
-	ev_children: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
-		-- list of status bar contained in the horizontal box
-
-feature -- Element change
-
-	add_item (stat_bar: EV_STATUS_BAR_ITEM_IMP) is
+	initialize is
 		do
-			gtk_box_pack_start ( widget, stat_bar.widget, False, False, 0)
-			stat_bar.set_width (-1)
-				-- Tell the item to expand.
-			if (ev_children.count > 0) then
-				-- if there were already items in the status
-				-- bar, tell the last item not to expand
-				-- anylonger.
-				ev_children.last.set_width (120)
-			end
-			ev_children.extend (stat_bar)
+			C.gtk_widget_show (c_object)
+			set_default_colors
+			is_initialized := True
 		end
 
-	remove_item (stat_bar: EV_STATUS_BAR_ITEM_IMP) is
+feature -- Implementation
+
+	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
+			-- Move `a_child' to `a_position' in `a_container'.
 		do
-			gtk_container_remove ( widget, stat_bar.widget)
-			ev_children.search (stat_bar)
-			if (ev_children.index = count) then
-				-- See if it is the last status item.
-				-- If so, set the width of the new last
-				-- status item to expand.
-				ev_children.remove
-				ev_children.last.set_width (-1)
-			else
-				ev_children.remove
-			end
+			check to_be_implemented: False end
 		end
 
-	set_background_color (color: EV_COLOR) is
-			-- Make `color' the new `background_color'
-		local
-			array: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
-			child: EV_STATUS_BAR_ITEM_IMP
-		do
-			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
+	list_widget: POINTER
 
-			from
-				array := ev_children
-				array.start
-			until
-				array.after
-			loop
-				child := array.item
-				child.set_background_color (color)
-				array.forth
-			end
-		end
+feature {EV_ANY_I} -- Implementation
 
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'
-		local
-			array: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
-			child: EV_STATUS_BAR_ITEM_IMP
-		do
-			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
-
-			from
-				array := ev_children
-				array.start
-			until
-				array.after
-			loop
-				child := array.item
-				child.set_foreground_color (color)
-				array.forth
-			end
-		end
-
-	clear_items is
-			-- Clear all the items of the list.
-			-- (Remove them from the status bar and destroy them).
-		do
-			clear_ev_children
-			c_gtk_container_remove_all_children (widget)
-		end
+	interface: EV_STATUS_BAR
 
 end -- class EV_STATUS_BAR_IMP
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.13  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.12.6.8  2000/02/05 03:21:27  oconnor
+--| renamed interface as primitive_interface
+--|
+--| Revision 1.12.6.7  2000/02/05 01:03:47  oconnor
+--| released
+--|
+--| Revision 1.12.6.6  2000/02/04 22:53:39  king
+--| Made status bar visible in initialize
+--|
+--| Revision 1.12.6.5  2000/02/04 22:43:24  king
+--| Redefined redundant initialize feature, inheritence from primitive needs removing
+--|
+--| Revision 1.12.6.4  2000/02/04 21:28:18  king
+--| Removed dodgy old redundant features
+--|
+--| Revision 1.12.6.3  2000/01/27 19:29:51  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.12.6.2  1999/11/30 23:02:06  oconnor
+--| rename EV_ITEM_HOLDER_IMP to EV_ITEM_LIST_IMP
+--|
+--| Revision 1.12.6.1  1999/11/24 17:30:01  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.12.2.5  1999/11/17 01:53:07  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.12.2.4  1999/11/09 16:53:15  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.12.2.3  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

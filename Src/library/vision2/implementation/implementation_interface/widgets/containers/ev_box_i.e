@@ -1,9 +1,8 @@
 indexing
-
 	description: 
 		"EiffelVision box, implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywords: "container, box"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -11,7 +10,10 @@ deferred class
 	EV_BOX_I
 	
 inherit
-	EV_INVISIBLE_CONTAINER_I
+	EV_WIDGET_LIST_I
+		redefine
+			interface
+		end
 	
 feature -- Constants
 	
@@ -22,83 +24,74 @@ feature -- Constants
 feature -- Access
 
 	is_homogeneous: BOOLEAN is
-			-- Is the current box homogeneous
-		require
-			exists: not destroyed
+			-- Are all children restriced to be the same size.
 		deferred
 		end
 
 	border_width: INTEGER is
-			-- Border width around container
-		require
-			exists: not destroyed
+			-- Width of border around container in pixels.
 		deferred
 		ensure
 			positive_result: Result >= 0
 		end
 
-	spacing: INTEGER is
-			-- Spacing between the objects in the box
-		require
-			exists: not destroyed
+	padding: INTEGER is
+			-- Space between children in pixels.
 		deferred
 		ensure
-			positive_result: Result >= 0
+			positive: Result >= 0
 		end
 
-feature -- Status report
+feature {EV_ANY, EV_ANY_I} -- Status report
 
-	is_child_expandable (child: EV_WIDGET): BOOLEAN is
-			-- Is the child corresponding to `index' expandable. ie: does it
-			-- accept the parent to resize or move it.
+	is_child_expanded (child: EV_WIDGET): BOOLEAN is
+			-- Is `child' expanded to occupy available spare space.
 		require
-			exist: not destroyed
-			has_child: -- To do
+			has_child: interface.has (child)
 		deferred
 		end
 	
-feature -- Status settings
+feature {EV_ANY, EV_ANY_I} -- Status settings
 	
 	set_homogeneous (flag: BOOLEAN) is
-			-- Homogenous controls whether each object in
-			-- the box has the same size.
-		require
-			exist: not destroyed
+			-- Set whether every child is the same size.
 		deferred
+		ensure
+			homogeneous_set: is_homogeneous = flag
 		end
 
 	set_border_width (value: INTEGER) is
-			-- Make `value' the new border width.
+			-- Assign `value' to `border_width'.
 		require
-			exist: not destroyed
 			positive_value: value >= 0
 		deferred
 		ensure
-			border_set: border_width = value
+			border_assigned: border_width = value
 		end	
 	
-	set_spacing (value: INTEGER) is
-			-- Spacing between the objects in the box
+	set_padding (value: INTEGER) is
+			-- Assign `value' to `padding'.
 		require
-			exist: not destroyed
 			positive_value: value >= 0
 		deferred
 		end	
 
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
-			-- Make the child corresponding to `index' expandable if `flag',
-			-- not expandable otherwise.
+			-- Set whether `child' expands to fill avalible spare space.
 		require
-			exist: not destroyed
-			has_child: -- To do
+			has_child: interface.has (child)
 		deferred
 		ensure
-			flag_set: is_child_expandable (child) = flag
+			flag_assigned: is_child_expanded (child) = flag
 		end	
-	
+		
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: EV_BOX
+
 end -- class EV_BOX_I
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -112,4 +105,53 @@ end -- class EV_BOX_I
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.16  2000/02/14 11:40:37  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.15.6.9  2000/02/04 04:09:08  oconnor
+--| released
+--|
+--| Revision 1.15.6.8  2000/01/27 19:30:00  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.15.6.7  1999/12/16 02:25:55  oconnor
+--| spell
+--|
+--| Revision 1.15.6.6  1999/12/15 23:50:50  oconnor
+--| moved expandable implementation to BOX_IMP, redid comments
+--|
+--| Revision 1.15.6.5  1999/12/15 20:17:29  oconnor
+--| reworking box formatting, contracts and names
+--|
+--| Revision 1.15.6.4  1999/12/15 19:58:35  oconnor
+--| fixed has preconditions to use interface.has
+--|
+--| Revision 1.15.6.3  1999/12/15 18:33:04  oconnor
+--| formatting
+--|
+--| Revision 1.15.6.2  1999/11/30 22:48:42  oconnor
+--| Redefined interface to more refined type
+--|
+--| Revision 1.15.6.1  1999/11/24 17:30:09  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.15.2.4  1999/11/09 16:53:16  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.15.2.3  1999/11/04 23:10:41  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.15.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

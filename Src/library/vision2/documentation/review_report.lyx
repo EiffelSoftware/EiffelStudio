@@ -1,4 +1,4 @@
-#This file was created by <oconnor> Fri Sep 10 17:35:01 1999
+#This file was created by <oconnor> Fri Oct 29 13:08:15 1999
 #LyX 1.0 (C) 1995-1999 Matthias Ettrich and the LyX Team
 \lyxformat 2.15
 \textclass article
@@ -57,7 +57,7 @@ Sam O'Connor, Andreas Leitner, Julian Rogers, Alex Buoy & Ian King
 
 \layout Part
 \pagebreak_top 
-Intorduction
+Introduction
 \layout Standard
 \noindent 
 Review held: 08 Sep 1999, ISE meeting room.
@@ -113,6 +113,154 @@ The review only covered a handfull of classes but many important general
 
 The report covers standards and actions decided on during the review as
  well as the basic report of the classes reviwed.
+\layout Part
+
+Design decisions
+\layout Enumerate
+
+Vision2 object will not be reusable, that is to say that calling a crealtion
+ procedure after creation will be illegal.
+ This will be supported by class invariants.
+ In the event that it is benefical to reuse objects for perfomance reasons
+ special remake features will be provided.
+\newline 
+keywords: create make reuse
+\layout Enumerate
+
+A feature that expilicitly destroys an EV object is not needed.
+ If you want to hide it, use hide.
+ If you want to remove it from its parent window reparent it to Void.
+ If you want it's memory to be freed, don't worry, after all the referneces
+ are gone the GC will call EV_ANY_I dispose which will decreace reference
+ counts on the C objects.
+\newline 
+keywords: external destroy dispose
+\layout Enumerate
+
+FIXME Proposed: The eiffel EV objects should not try to mirror the state
+ of the native toolkit objects, rather they should inspect the actual state
+ when needed.
+ If the result of a query is an EV class corresponding to a C object that
+ came from such an inspection, then a global hash table should be checked
+ for exising corresponding EV objects, when the check fails a new object
+ will be created and added to the hash table.
+ (has table must usi OIDs to avoid extra references foiling the GC)
+\newline 
+This removes the problem of having to gaurntee that the eiffel object knows
+ how to keep track of the state of the C object, (it would seem that this
+ is non trivial, for instance gtk_container_destroy destroys all of it's
+ contained wdigets, mabey this will cause problems if the eiffel side was
+ independantly tracking the widgets).
+\newline 
+keywords: external destroy hash
+\layout Enumerate
+
+Hash table of C pointers -> OIDS
+\newline 
+EV_ obj create -> ++ GTK ref,
+\newline 
+EV_ obj dispose -> detach all callbacks -> -- GTK ref -> remove self from
+ hash table
+\newline 
+require externals to be coupled everywhen in _I
+\newline 
+ensure command/query seperation (REALY)
+\newline 
+Contracts for the interface are like this: invariant ensures that implementation
+ exists.
+ postconditions of features foo that just call 
+\begin_inset Quotes eld
+\end_inset 
+
+Result := implementation.foo
+\begin_inset Quotes erd
+\end_inset 
+
+ should be 
+\begin_inset Quotes eld
+\end_inset 
+
+Result := implementation.foo
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Enumerate
+
+require: not is_initialized in all creation procedures
+\layout Enumerate
+
+Color should be 0->1 not 0->255
+\layout Enumerate
+
+prefered widget construction method is somthing like:
+\newline 
+create my_window.make (
+\begin_inset Quotes eld
+\end_inset 
+
+Window title
+\begin_inset Quotes erd
+\end_inset 
+
+)
+\newline 
+create my_hbox.make
+\newline 
+my_window.add (my_hbox)
+\newline 
+create my_label.make (
+\begin_inset Quotes eld
+\end_inset 
+
+this is a label
+\begin_inset Quotes erd
+\end_inset 
+
+)
+\newline 
+create my_button.make (
+\begin_inset Quotes eld
+\end_inset 
+
+OK
+\begin_inset Quotes erd
+\end_inset 
+
+)
+\newline 
+my_hbox.add (my_label)
+\newline 
+my_hbox.add (my_button)
+\layout Enumerate
+
+New creation regieme:
+\newline 
+EV_ANY has forzen make that calls defered real_make.
+ 
+\newline 
+Subclasses are contractualy obliged to call make and initialize exactly
+ once each during creation.
+\newline 
+EV_ANY_I has defered make and frozen base_make that takes and assigns interface:
+ EV_ANY.
+\newline 
+subclasses are contractualy obliged to call base_make exactly once during
+ creation.
+\layout Enumerate
+
+Creation procedures:
+\newline 
+every interface class will have make (no args) that creates a valid, initialized
+ object.
+\newline 
+any convenience procedures like make_with_text or make with_parent will
+ call make first then preform any additional tasks using the interfcace.
+\layout Enumerate
+
+Splash screens do not belong in EV_APPLICATION, if they are really needed
+ we can have EV_SELF_PROMOTING_APPLICATION -> EV_APPLICATION and introduce
+ splashscreens there :) (The current implementation is broken anyway)
 \layout Part
 \pagebreak_top 
 Standards
@@ -453,6 +601,9 @@ Look for needed invariants in the class text (such as exists: not destroyed)
 
 Revise the standards section above to ensure is accuratly captures all informati
 on from the above tasks.
+\layout Enumerate
+
+Redesign EV_CURSOR, at them moment it is impossible to implement on GTK.
 \layout Part
 \pagebreak_top 
 Report

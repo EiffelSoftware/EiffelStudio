@@ -1,6 +1,5 @@
 indexing
-	description:
-		"EiffelVision vertical scroll bar. Gtk implementation."
+	description: "Eiffel Vision vertical scroll bar. GTK+ implementation."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,38 +9,31 @@ class
 
 inherit
 	EV_VERTICAL_SCROLL_BAR_I
+		redefine
+			interface
+		end
 
 	EV_SCROLL_BAR_IMP
-		undefine
-			set_default_options
+		redefine
+			interface
 		end
 
 create
-	make,
-	make_with_range
+	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create a vscrolbar with 0 as minimum,
-			-- 100 as maximum and `par' as parent.
+	make (an_interface: like interface) is
+			-- Create the horizontal scroll bar.
 		do
-			-- Parameters are:
-			-- value, lower, upper, step_increment, page_increment, page_size.
-			widget := c_gtk_vscrollbar_new (0, 0, 100, 1, 5, 1)
-
-			gtk_object_ref (widget)
+			base_make (an_interface)
+			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 10, 10)
+			set_c_object (C.gtk_vscrollbar_new (adjustment))
 		end
 
-	make_with_range (min: INTEGER; max: INTEGER) is
-			-- Create a vscrolbar with `min' as minimum, `max' as maximum
-			-- and `par' as parent.
-		do
-			-- Parameters are:
-			-- value, lower, upper, step_increment, page_increment, page_size.
-			widget := c_gtk_vscrollbar_new (0, 0, 100, 1, 5, 1)
-			gtk_object_ref (widget)
-		end
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_VERTICAL_SCROLL_BAR
 
 end -- class EV_VERTICAL_SCROLL_BAR_IMP
 
@@ -60,3 +52,37 @@ end -- class EV_VERTICAL_SCROLL_BAR_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.6.5  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.3.6.4  2000/01/31 21:36:32  brendel
+--| Minor cosmetic changes.
+--|
+--| Revision 1.3.6.3  2000/01/27 19:29:50  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.6.2  2000/01/15 01:25:36  king
+--| Implemented to fit in with new structure
+--|
+--| Revision 1.3.6.1  1999/11/24 17:29:59  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.3  1999/11/17 01:53:07  oconnor
+--| removed "child packing" hacks and obsolete _ref _unref wrappers
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

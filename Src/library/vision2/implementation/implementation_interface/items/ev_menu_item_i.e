@@ -1,9 +1,6 @@
 indexing
-
-	description: 
-		"EiffelVision menu_item, implementation interface."
+	description: "EiffelVision menu item. Implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -13,116 +10,35 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
-			parent,
-			pixmap_size_ok
-		end
-
-	EV_MENU_ITEM_HOLDER_I
-
-feature -- Access
-
-	parent: EV_MENU_ITEM_HOLDER is
-			-- The parent of the Current widget
-			-- Can be void.
-		do
-			Result ?= {EV_SIMPLE_ITEM_I} Precursor
-		end
-
-	top_parent_imp: EV_MENU_ITEM_HOLDER_IMP is
-			-- Top item holder containing the current item.
-		local
-			itm: EV_MENU_ITEM_IMP
-		do
-			itm ?= parent_imp
-			if itm = Void then
-				Result ?= parent_imp
-			else
-				Result := itm.top_parent_imp
-			end
+			interface
 		end
 
 feature -- Status report
 
-	is_insensitive: BOOLEAN is
-			-- Is current widget insensitive?
-		require
-			exists: not destroyed
-   		deferred
-		end
-
-	is_selected: BOOLEAN is
-			-- True if the current item is selected.
-			-- False otherwise.
-			-- We use it only when the grand parent is an option button.
-		require
-			exists: not destroyed
-   		deferred
+	is_sensitive: BOOLEAN is
+			-- Is `Current' sensitive to user actions?
+		deferred
 		end
 
 feature -- Status setting
 
-	set_insensitive (flag: BOOLEAN) is
-   			-- Set current item in insensitive mode if
-   			-- `flag'. 
-		require
-			exists: not destroyed
-   		deferred
-   		ensure
-   			state_set: is_insensitive = flag
+	enable_sensitive is
+   			-- Set current item sensitive.
+		deferred
  		end
 
-	set_selected (flag: BOOLEAN) is
-   			-- Set current item as the selected one.
-			-- We use it only when the grand parent is an option button.
-		require
-			exists: not destroyed
-			valid_grand_parent: grand_parent_is_option_button
- 		deferred
- 		ensure
-   			state_set: is_selected = flag
-   		end
-
-feature -- Assertion
-
-	grand_parent_is_option_button: BOOLEAN is
-			-- Is true if the grand parent is an option button.
-			-- False otherwise.
+	disable_sensitive is
+   			-- Set current item insensitive.
 		deferred
-		end
+  		end
 
-feature -- Event : command association
+feature {EV_ANY_I} -- Implementation
 
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is selected.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
-		end	
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is selected.
-		require
-			exists: not destroyed
-		deferred			
-		end	
-
-feature {NONE} -- Implementation
-
-	pixmap_size_ok (pix: EV_PIXMAP): BOOLEAN is
-			-- Check if the size of the pixmap is ok for
-			-- the container.
-		do
-			Result := (pix.width <= 16) and (pix.height <= 16)
-		end
+	interface: EV_MENU_ITEM
 
 end -- class EV_MENU_ITEM_I
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision library: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -136,4 +52,45 @@ end -- class EV_MENU_ITEM_I
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.28  2000/02/14 11:40:34  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.27.6.7  2000/02/04 04:02:41  oconnor
+--| released
+--|
+--| Revision 1.27.6.6  2000/02/03 23:32:00  brendel
+--| Revised.
+--| Changed inheritance structure.
+--|
+--| Revision 1.27.6.5  2000/02/02 00:06:45  oconnor
+--| hacking menus
+--|
+--| Revision 1.27.6.4  2000/01/27 19:29:52  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.27.6.3  1999/12/22 18:40:55  rogers
+--| Removed pixmap_size_ok as it is no longer pertinent.
+--|
+--| Revision 1.27.6.2  1999/12/17 19:12:52  rogers
+--| redefined interface to be a a more refined type. EV_PICK_AND_DROPABLE_I
+--| replaces EV_PND_SOURCE and EV_PND_TARGET. Added top_parent.
+--|
+--| Revision 1.27.6.1  1999/11/24 17:30:02  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.27.2.3  1999/11/04 23:10:32  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.27.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "List of default colors used by the system.%
 				% Mswindows implementation"
@@ -6,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_DEFAULT_COLORS_IMP
+	EV_DEFAULT_COLORS_IMP 
 
 inherit
 	WEL_COLOR_CONSTANTS
@@ -21,9 +23,9 @@ feature -- Access
 		local
 			color_imp: EV_COLOR_IMP
 		do
-			!! color_imp.make_system (Color_btnface)
-			!! Result.make
-			Result.set_implementation (color_imp)
+			create Result
+			color_imp ?= Result.implementation
+			color_imp.set_with_system_id (Color_btnface)
 		end
 
 	Color_read_only: EV_COLOR is
@@ -32,16 +34,16 @@ feature -- Access
 		local
 			color_imp: EV_COLOR_IMP
 		do
-			!! color_imp.make_system (Color_inactiveborder)
-			!! Result.make
-			Result.set_implementation (color_imp)
+			create Result
+			color_imp ?= Result.implementation
+			color_imp.set_with_system_id (Color_inactiveborder)
 		end
 
 	Color_read_write: EV_COLOR is
 			-- Color usely used for the background of editable
 			-- when they are in read / write mode
 		do
-			!! Result.make_rgb (255, 255, 255)
+			!! Result.make_with_rgb (1, 1, 1)
 		end
 
 	default_background_color: EV_COLOR is
@@ -53,7 +55,7 @@ feature -- Access
 	default_foreground_color: EV_COLOR is
 			-- Default foreground color for most of the widgets.
 		do
-			!! Result.make_rgb (0, 0, 0)
+			!! Result.make_with_rgb (0, 0, 0)
 		end
 
 end -- class EV_DEFAULT_COLORS_IMP
@@ -73,3 +75,31 @@ end -- class EV_DEFAULT_COLORS_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.10.4  2000/01/27 19:30:14  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.10.3  1999/12/17 17:14:54  rogers
+--| Altered to fit in with the review branch. Alterations to comply with the new colors.
+--|
+--| Revision 1.4.10.2  1999/12/17 17:07:14  rogers
+--| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP. ev_item_holder_imp.e
+--|
+--| Revision 1.4.10.1  1999/11/24 17:30:20  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.4.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

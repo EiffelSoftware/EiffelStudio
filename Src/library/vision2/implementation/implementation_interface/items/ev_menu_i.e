@@ -1,8 +1,6 @@
 indexing
-	description: 
-		"EiffelVision menu, implementation interface."
+	description: "Eiffel Vision menu. Implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -10,51 +8,23 @@ deferred class
 	EV_MENU_I
 	
 inherit
-	EV_MENU_ITEM_HOLDER_I
-
-feature {NONE} -- Initialization
-
-	make is
-			-- Create an empty menu.
-		deferred
-		end	
-
-	make_with_text (txt: STRING) is
-			-- Create an empty menu with `label' as label. 
-		deferred
-		end	
-
-feature -- Access
-
-	text: STRING is
-			-- Label of the current menu
-		require
-			exists: not destroyed
-		deferred
+	EV_MENU_ITEM_I
+		redefine
+			interface
 		end
 
-feature -- Element change
-
-	set_parent (par: EV_MENU_HOLDER) is
-			-- Make `par' the new parent of the item.
-		require
-			exists: not destroyed
-		deferred
+	EV_MENU_ITEM_LIST_I
+		redefine
+			interface
 		end
 
-	set_text (txt: STRING) is
-			-- Assign `txt' to `text'.
-		require
-			exists: not destroyed
-			valid_text: txt /= Void
-		deferred
-		ensure
-			text_set: text.is_equal (txt)
-		end	
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_MENU	
 
 end -- class EV_MENU_I
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -68,4 +38,41 @@ end -- class EV_MENU_I
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.18  2000/02/14 11:40:39  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.17.6.6  2000/02/04 04:10:28  oconnor
+--| released
+--|
+--| Revision 1.17.6.5  2000/02/03 23:32:00  brendel
+--| Revised.
+--| Changed inheritance structure.
+--|
+--| Revision 1.17.6.4  2000/02/02 00:06:45  oconnor
+--| hacking menus
+--|
+--| Revision 1.17.6.3  2000/01/27 19:30:06  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.17.6.2  1999/12/17 18:19:11  rogers
+--| Redfined interface to be of a more refined type.
+--|
+--| Revision 1.17.6.1  1999/11/24 17:30:15  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.17.2.3  1999/11/04 23:10:46  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.17.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

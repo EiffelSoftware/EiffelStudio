@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision Toggle button.%
 				% Mswindows implementation"
@@ -12,21 +14,24 @@ inherit
 	EV_TOGGLE_BUTTON_I
 
 	EV_BUTTON_IMP
+		rename
+			interface as ev_button_imp_interface
 		redefine
 			default_style,
 			on_bn_clicked
+		select
+			ev_button_imp_interface
 		end
 
 creation
-	make,
-	make_with_text
+	make
 
 feature -- Status report
 	
 	state: BOOLEAN is
 			-- Is toggle pressed
 		do
-			Result := cwin_send_message_result (item,
+			Result := cwin_send_message_result (wel_item,
 				Bm_getcheck, 0, 0) = 1
 		end 
 
@@ -37,9 +42,9 @@ feature -- Status setting
 			-- pressed to True.
 		do
 			if flag then
-				cwin_send_message (item, Bm_setcheck, 1, 0)
+				cwin_send_message (wel_item, Bm_setcheck, 1, 0)
 			else
-				cwin_send_message (item, Bm_setcheck, 0, 0)
+				cwin_send_message (wel_item, Bm_setcheck, 0, 0)
 			end
 		end
 
@@ -101,8 +106,8 @@ feature {NONE} -- Notification messages
 	on_bn_clicked is
 			-- When the button is pressed
 		do
-			execute_command (Cmd_click, Void)
-			execute_command (Cmd_toggle, Void)
+			--execute_command (Cmd_click, Void)
+			--execute_command (Cmd_toggle, Void)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -132,3 +137,35 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.15  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.14.4.5  2000/02/08 07:21:03  brendel
+--| Minor changes to run through compiler.
+--| Still needs major revision.
+--|
+--| Revision 1.14.4.4  2000/01/27 19:30:30  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.14.4.3  2000/01/27 00:35:41  rogers
+--| Commented out old command execution.
+--|
+--| Revision 1.14.4.2  2000/01/10 19:03:36  rogers
+--| Changed to comply with major Vision2 changes. see diff for redefinitions. make_with_text is removed. All references to item are replaced with wel_item.
+--|
+--| Revision 1.14.4.1  1999/11/24 17:30:35  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.12.6.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

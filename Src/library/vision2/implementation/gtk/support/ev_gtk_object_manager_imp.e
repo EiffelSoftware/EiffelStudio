@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Hashtable which associates GtkObject handles with%
 				%the corresponding Eiffel";
@@ -10,73 +11,6 @@ feature
 
 feature -- Access
 
-	objects: HASH_TABLE [EV_GTK_ANY_IMP, POINTER] is
-			-- Contains all the GtkObjects created by the application.
-		once
-			create Result.make (Table_size)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	object_from_handle (a_handle: POINTER): EV_GTK_ANY_IMP is
-			-- Returns the Eiffel object associated with 
-			-- `a_handle' if there is one, otherwise the 
-			-- function returns Void. 
-		require
-			a_handle_not_void: a_handle /= Void
-		do
-			Result := objects.item (a_handle)
-		ensure
-			consisten_result: objects.has (a_handle) implies Result /= Void
-		end
-					 
-
-feature -- Basic operations
-
-	register_object (object: EV_GTK_ANY_IMP) is
-			-- Register `object' in the object manager.
-		require
-			object_not_void: object /= Void
-			unregistered: not registered (object)
-		do	
-			objects.put (object, object.handle)
---| FIXME PR 2159
---| When a conflict occurs during this instruction, object is not registrated in
---| the HASH_TABLE, and a contract violation occurs.
---| Suggestion: replace `put' with `force', and see if there is an equivalent
---| problem in `unregister_object' (i gess there is one).
---| This sole bug makes any V2-based application as stable as Netscape under
---| Windows* beta, so i NEED it solved for bootstrapping.
-		ensure
-			registered: registered (object)
-		end
-
-	unregister_object (object: EV_GTK_ANY_IMP) is
-			-- Unregister `object' from the object manager.
-		require
-			object_not_void: object /= Void
-			registered: registered (object)
-		do
-			objects.remove (object.handle)
-		ensure
-			unregistered: not registered (object)
-		end
-
-feature -- Status report
-
-	registered (object: EV_GTK_ANY_IMP): BOOLEAN is
-			-- Is `object' registered?
-		require
-			object_not_void: object /= Void
-		do
-			Result := objects.has_item (object)
-		end
-
-feature {NONE} -- Implementation
-
-	Table_size: INTEGER is 100
-			-- Initial hash table size
-	
 
 end -- class EV_GTK_OBJECT_MANAGER_IMP
 
@@ -95,3 +29,31 @@ end -- class EV_GTK_OBJECT_MANAGER_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:30  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.4.3  2000/02/04 04:56:29  oconnor
+--| released
+--|
+--| Revision 1.4.4.2  2000/01/27 19:29:36  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.4.1  1999/11/24 17:29:50  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.3  1999/11/09 16:53:15  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:03  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

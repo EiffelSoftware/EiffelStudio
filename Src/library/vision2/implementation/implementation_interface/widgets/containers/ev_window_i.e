@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision window, implementation interface."
 	keywords: window
@@ -5,17 +6,23 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	EV_WINDOW_I
+	EV_TITLED_WINDOW_I
 	
 inherit
-	EV_UNTITLED_WINDOW_I
+	EV_WINDOW_I
+		redefine
+			interface
+		end
 
-feature {NONE} -- Initialization
+feature {EV_TITLED_WINDOW} -- Accelerators
 
-	make_with_owner (par: EV_WINDOW) is
-			-- Create a window with `par' as parent.
-			-- The life of the window will depend on
-			-- the one of `par'.
+	connect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Connect key combination `an_accel' to this window.
+		deferred
+		end
+
+	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Disconnect key combination `an_accel' from this window.
 		deferred
 		end
 
@@ -26,7 +33,6 @@ feature  -- Access
 			-- displayed by the window manager when
 			-- application is iconified.
 		require
-			exists: not destroyed
 		deferred
 		end
 	
@@ -35,7 +41,6 @@ feature  -- Access
 			-- to clip `icon_pixmap' bitmap to make the
 			-- icon nonrectangular.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -43,7 +48,6 @@ feature  -- Access
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon.
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			valid_result: Result /= Void
@@ -54,14 +58,12 @@ feature -- Status report
  	is_minimized: BOOLEAN is
 			-- Is the window minimized (iconic state)?
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	is_maximized: BOOLEAN is
 			-- Is the window maximized (take the all screen).
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -71,7 +73,6 @@ feature -- Status setting
 			-- Raise a window. ie: put the window on the front
 			-- of the screen.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -79,14 +80,12 @@ feature -- Status setting
 			-- Lower a window. ie: put the window on the back
 			-- of the screen.
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	minimize is
 			-- Minimize the window.
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			is_minimized: is_minimized
@@ -95,7 +94,6 @@ feature -- Status setting
 	maximize is
 			-- Minimize the window.
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			is_maximized: is_maximized
@@ -105,7 +103,6 @@ feature -- Status setting
 			-- Restore the window when it is minimized or
 			-- maximized. Do nothing otherwise.
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			--| FIXME  post-conditions do not match the state of restore
@@ -118,7 +115,6 @@ feature -- Element change
 	set_icon_name (txt: STRING) is
 			-- Make `txt' the new icon name.
 		require
-			exists: not destroyed
 			valid_name: txt /= Void
 		deferred
 		end
@@ -126,20 +122,22 @@ feature -- Element change
 	set_icon_mask (pixmap: EV_PIXMAP) is
 			-- Make `pixmap' the new icon mask.
 		require
-			exists: not destroyed
-			valid_mask: is_valid (pixmap)
+			pixmap_not_void: pixmap /= Void
 		deferred
 		end
 
 	set_icon_pixmap (pixmap: EV_PIXMAP) is
 			-- Set `icon_pixmap' to `pixmap'.
 		require
-			exists: not destroyed
-			valid_pixmap: is_valid (pixmap)
+			pixmap_not_void: pixmap /= Void
 		deferred
 		end
 
-end -- class EV_WINDOW_I
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TITLED_WINDOW
+
+end -- class EV_TITLED_WINDOW_I
 
 --!----------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -156,3 +154,37 @@ end -- class EV_WINDOW_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.34  2000/02/14 11:40:37  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.33.6.5  2000/02/04 04:09:08  oconnor
+--| released
+--|
+--| Revision 1.33.6.4  2000/01/27 19:30:02  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.33.6.3  2000/01/25 22:16:42  brendel
+--| Added features `(dis)connect_accelerator'.
+--|
+--| Revision 1.33.6.2  1999/11/30 22:48:43  oconnor
+--| Redefined interface to more refined type
+--|
+--| Revision 1.33.6.1  1999/11/24 17:30:11  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.33.2.4  1999/11/04 23:10:42  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.33.2.3  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

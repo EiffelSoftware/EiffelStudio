@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Angle accessable in either degrees or radians."
 	keywords: "angle degrees radians"
@@ -18,6 +19,7 @@ inherit
 		end
 
 creation
+	default_create,
 	make_radians,
 	make_degrees
 
@@ -167,3 +169,31 @@ invariant
 			-- Ensure that the two units agree to withing 1/1000th of an arc
 
 end -- class EV_ANGLE
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.9  2000/02/14 11:40:46  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.4.2.2.4  2000/02/08 00:58:43  oconnor
+--| added default_create
+--|
+--| Revision 1.7.4.2.2.3  2000/02/04 07:52:36  oconnor
+--| released
+--|
+--| Revision 1.7.4.2.2.2  2000/01/27 19:30:32  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.4.2.2.1  1999/11/24 17:30:37  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.7.2.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,102 +1,62 @@
 indexing
-
-	description: 
-		"EiffelVision dialog, gtk implementation."
+	description: "Eiffel Vision dialog. GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_DIALOG_IMP
 	
 inherit
 	EV_DIALOG_I
+		redefine
+			initialize,
+			interface
+		end
 
-	EV_WINDOW_IMP
-		rename
-			set_parent as old_set_parent
-export {NONE}
-	vbox
-		undefine
-			set_default_options
+	EV_TITLED_WINDOW_IMP
 		redefine
 			make,
-			make_with_owner,
-			initialize
-		select
-			old_set_parent
+			interface
 		end
 
 create
-	make,
-	make_with_owner
+	make
 
 feature {NONE} -- Initialization
 	
-	make is
-			-- Create a window.
-			-- Redefined because we want another type of window (GTK_WINDOW_DIALOG).
+	make (an_interface: like interface) is
+			-- Create empty dialog box.
 		do
-			widget := gtk_window_new (GTK_WINDOW_DIALOG)
-			gtk_window_set_position (GTK_WINDOW (widget), WINDOW_POSITION_CENTER)
-
-			-- set the events to be handled by the window
-			c_gtk_widget_set_all_events (widget)
-
-			initialize
-
+			base_make (an_interface)
+			set_c_object (C.gtk_window_new (C.Gtk_window_dialog_enum))
+			C.gtk_object_ref (c_object)
+			C.gtk_widget_realize (c_object)
+			C.gtk_window_set_position (
+				c_object,
+				C.Gtk_win_pos_center_enum
+			)
 		end
 
-        make_with_owner (par: EV_WINDOW) is
-			-- Create a window with `par' as parent.
-			-- The life of the window will depend on
-			-- the one of `par'.
-			-- Redefined because we want another type of window (GTK_WINDOW_DIALOG).
-		local
-			par_imp: EV_WINDOW_IMP
-		do
-			make
-			par_imp ?= par.implementation
-			check
-				parent_imp_exists: par_imp /= Void
-			end
-			-- Attach the window to `par'.
-			gtk_window_set_transient_for (widget, par_imp.widget)
-			parent_imp := par_imp
-		end
+feature -- Basic operations
 
-feature -- Element change
-
-	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-			-- Redefined because we now allow container as parent.
-		local
-			win: EV_WINDOW
+	show_modal is
+			-- Show and wait until window is closed.
 		do
-			win ?= par
-			old_set_parent (win)
+			enable_modal
+			show
+			block
 		end
 
 feature {NONE} -- Implementation
 
-	initialize is
-			-- Create the horizontal box `hbox'
-			-- to put in the window.
-			-- We do not need the `vbox' anymore. We have to keep `hbox'
-			-- because of the EV_DIALOG_I implementation.
-			--! FIXME: Alex 09191999. See with the windows platform, if
-			--! we can change EV_DIALOG_I to avoid using `hbox'.
-		do
-			hbox := gtk_hbox_new (False, 0)
-			gtk_container_add (GTK_CONTAINER (widget), hbox)
-			gtk_widget_show (hbox)
-		end
+	interface: EV_DIALOG
+			-- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
 
 end -- class EV_DIALOG_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -110,4 +70,46 @@ end -- class EV_DIALOG_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.8  2000/02/14 11:40:31  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.7.4.9  2000/02/08 01:00:12  king
+--| Moved modality features from dialog to window
+--|
+--| Revision 1.7.4.8  2000/02/04 04:25:38  oconnor
+--| released
+--|
+--| Revision 1.7.4.7  2000/01/27 19:29:42  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.7.4.6  2000/01/27 01:03:28  brendel
+--| Dialogs now can be resized.
+--|
+--| Revision 1.7.4.5  2000/01/26 22:08:02  brendel
+--| Added `blocking_window' and `set_blocking_window'.
+--|
+--| Revision 1.7.4.4  2000/01/26 18:10:39  brendel
+--| Added features `is_modal', `enable_modal' and `disable_modal'.
+--|
+--| Revision 1.7.4.3  2000/01/26 01:37:48  brendel
+--| Started implementing.
+--|
+--| Revision 1.7.4.2  2000/01/25 18:40:45  oconnor
+--| incomplete reorganisation
+--|
+--| Revision 1.7.4.1  1999/11/24 17:29:53  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.3  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -14,6 +14,7 @@
  Included files
 ==============================================================================*/
 #include <gdk/gdktypes.h>	/* Events are declared here */
+#include <gdk/gdk.h>
 
 /*==============================================================================
  Event handling
@@ -73,6 +74,9 @@
 ==============================================================================*/
 #define c_gdk_font_ascent(p) (((GdkFont*)p)->ascent) /*gint*/
 #define c_gdk_font_descent(p) (((GdkFont*)p)->descent) /*gint*/
+
+GdkGCValues * c_gdk_get_gc_values (GdkGC * gc);
+void c_gdk_free_gc_values (GdkGCValues * gc_values);
 
 /*==============================================================================
  End of file

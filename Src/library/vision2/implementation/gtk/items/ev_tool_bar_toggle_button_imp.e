@@ -1,6 +1,7 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision toogle tool bar, implementation interface."
+		"EiffelVision toggle tool bar, implementation interface."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,15 +12,13 @@ class
 inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON_I
 		redefine
-			parent_imp
+			interface
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
 		redefine
-			make,
-			remove_select_commands,
-			add_select_command,
-			parent_imp
+			interface,
+			make
 		end
 
 create
@@ -27,88 +26,48 @@ create
 
 feature -- Initialization
 
-	make is
-		-- Create the tool-bar toggle button
+	make (an_interface: like interface) is
+		-- Create the tool-bar toggle button.
 		do
-			widget := gtk_toggle_button_new
-			gtk_button_set_relief (widget, GTK_RELIEF_NONE)
-			gtk_object_ref (widget)
-			-- Create the box (for caption and pixmap)
-			initialize
-			initialize_object_handling
+			base_make (an_interface)
+			set_c_object (C.gtk_toggle_button_new)
+			C.gtk_button_set_relief (c_object, C.gtk_relief_none_enum)
 		end
 
 feature -- Status report
 
-	parent_imp: EV_TOOL_BAR_IMP
-
 	is_selected: BOOLEAN is
 			-- Is the current button selected?
 		do
-			Result := c_gtk_toggle_button_active (widget)
+			Result := C.gtk_toggle_button_get_active (c_object)
 		end
 
 feature -- Status setting
 
+	enable_select is
+			-- Select the current button.
+		do
+			set_selected (True)
+		end
+
+	disable_select is
+			-- Unselect the current button.
+		do
+			set_selected (False)
+		end	
+
+feature -- Implementation
+
 	set_selected (flag: BOOLEAN) is
-			-- Select the current button if `flag', deselect it
+			-- Select the current button if `flag', unselect it
 			-- otherwise.
 		do
-			gtk_toggle_button_set_active (widget, flag)
+			C.gtk_toggle_button_set_active (c_object, flag)
 		end
 
-feature -- Event : command association
+feature {EV_ANY_I} -- Implementation
 
-	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is `toggled'.
-		do
-			add_command (widget, "toggled_on_off", cmd, arg, c_gtk_integer_to_pointer (toggled_on_off_state))
-		end
-
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed
-			-- when the item is `selected'.
-		do
-			add_command (widget, "toggled_on", cmd, arg, c_gtk_integer_to_pointer (toggled_on_state))
-		end
-
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is `unselected'.
-		do
-			add_command (widget, "toggled_off", cmd, arg, c_gtk_integer_to_pointer (toggled_off_state))
-		end
-
-	-- State id's for tool bar toggle button states
-
-	toggled_on_off_state: INTEGER is 1
-	toggled_on_state: INTEGER is 2
-	toggled_off_state: INTEGER is 3
-
-
-feature -- Event -- removing command association
-
-	remove_toggle_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is `toggled'.
-		do	
-			remove_commands (widget, toggled_on_off_id)
-		end
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is `selected'.
-		do	
-			remove_commands (widget, toggled_on_id)
-		end
-
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is `unselected'.
-		do	
-			remove_commands (widget, toggled_off_id)
-		end	
+	interface: EV_TOOL_BAR_TOGGLE_BUTTON
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 
@@ -127,3 +86,31 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.9  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.8.4.4  2000/02/04 04:25:36  oconnor
+--| released
+--|
+--| Revision 1.8.4.3  2000/01/28 18:41:57  king
+--| Implemented to fit in with new structure, removed redundant features
+--|
+--| Revision 1.8.4.2  2000/01/27 19:29:26  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.8.4.1  1999/11/24 17:29:44  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

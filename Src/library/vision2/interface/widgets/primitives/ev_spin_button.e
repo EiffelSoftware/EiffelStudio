@@ -1,10 +1,9 @@
 indexing
 	description:
-		" EiffelVision spin button. A single line edit that%
-		% displays only numbers. The user can increase or%
-		% decrease this number by clicking on up or down%
-		% arrow buttons."
+		"Eiffel Vision spin button. Text fields with up and down buttons %N%
+		%located on the right."
 	status: "See notice at end of class"
+	keywords: "gauge, edit, text, number, up, down"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,55 +12,40 @@ class
 
 inherit
 	EV_GAUGE
-		export
-			{NONE} set_step
 		redefine
-			implementation,
-			set_step
+			create_implementation,
+			create_action_sequences,
+			implementation
 		end
 
 	EV_TEXT_FIELD
+		rename
+			change_actions as text_change_actions
 		redefine
-			make,
+			create_implementation,
+			create_action_sequences,
 			implementation
 		end
 
 create
-	make,
-	make_with_range
-
-feature {NONE} -- Initialization
-
-	make (par: EV_CONTAINER) is
-			-- Create a spin-button with 0 as minimum,
-			-- 100 as maximum and `par' as parent.
-		do
-			create {EV_SPIN_BUTTON_IMP} implementation.make
-			widget_make (par)
-		end
-
-	make_with_range (par: EV_CONTAINER; min: INTEGER; max: INTEGER) is
-			-- Create a spin-button with `min' as minimum, `max' as maximum
-			-- and `par' as parent.
-		do
-			create {EV_SPIN_BUTTON_IMP} implementation.make_with_range (min, max)
-			widget_make (par)
-		end
-
-feature {NONE} -- Inapplicable
-
-	set_step (val: INTEGER) is
-			-- Make `val' the new step.
-		do
-			check
-				Inapplicable: False
-			end
-		end
+	default_create,
+	make_with_range,
+	make_with_text
 
 feature {NONE} -- Implementation
 
+	create_implementation is
+		do
+			create {EV_SPIN_BUTTON_IMP} implementation.make (Current)
+		end
+
+	create_action_sequences is
+		do
+			{EV_TEXT_FIELD} Precursor
+			{EV_GAUGE} Precursor
+		end
+
 	implementation: EV_SPIN_BUTTON_I
-			-- Platform dependant access.
 
 end -- class EV_SPIN_BUTTON
 
@@ -80,3 +64,31 @@ end -- class EV_SPIN_BUTTON
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:53  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.6.4  2000/02/02 01:26:58  brendel
+--| This interface is ready to release.
+--|
+--| Revision 1.2.6.3  2000/02/01 01:27:54  brendel
+--| Revised.
+--|
+--| Revision 1.2.6.2  2000/01/27 19:30:57  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.6.1  1999/11/24 17:30:55  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision option button, gtk implementation";
@@ -9,32 +10,32 @@ class
 
 inherit
 	EV_OPTION_BUTTON_I
+		redefine
+			interface
+		end
 
 	EV_MENU_HOLDER_IMP
 		undefine
 			add_menu_ok,
 			set_foreground_color,
 			set_background_color
+		redefine
+			interface
 		end
 
 	EV_BUTTON_IMP
 		rename
-			add_click_command as add_popup_command
+	--		add_click_command as add_popup_command
 		export {NONE}
-			box,
-			initialize,
-			create_text_label,
-			make_with_text
+			initialize
 		undefine
-			set_center_alignment,
-			set_left_alignment, 
-			set_right_alignment,
-			set_text,
+			--set_text,
 			set_foreground_color,
 			set_background_color
 		redefine
+			interface,
 			make,
-			add_popup_command,
+	--		add_popup_command,
 			text,
 			set_foreground_color,
 			set_background_color
@@ -45,15 +46,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make is         
+	make (an_interface: like interface) is         
 			-- Create a menu widget with `par' as parent.
 			-- We can't use `widget_make' here, because a menu
 			-- is not a child, otherwise, you couldn't put more
 			-- than a menu in a window. A menu is an option of a
 			-- window
 		do
-			widget := gtk_option_menu_new ()
-			gtk_object_ref (widget)
+			base_make (an_interface)
+			set_c_object (C.gtk_option_menu_new)
 
 			-- Creating the array containing the menu_items.
 			create menu_items_array.make (0)
@@ -66,7 +67,14 @@ feature -- Status setting
 
 	clear_selection is
 		do
-			gtk_option_menu_set_history (widget, 0)
+			C.gtk_option_menu_set_history (c_object, 0)
+			--| FIXME VB 19991122
+			--| I think it should look something like this:
+		--|	if menu.text /= Void then
+		--|		set_text (menu.text)
+		--|	else
+		--|		set_text (item 0)
+		--|	end
 		end
 
 feature {NONE} -- Status report
@@ -81,7 +89,7 @@ feature {NONE} -- Status report
 			menu_item_found: BOOLEAN
 		do
 			if (menu /= Void) then
-				selected_item_p := c_gtk_option_button_selected_menu_item (widget)
+				selected_item_p := C.c_gtk_option_button_selected_menu_item (c_object)
 				from
 					items_array := menu_items_array
 					menu_item_found := False
@@ -90,7 +98,7 @@ feature {NONE} -- Status report
 					items_array.after or menu_item_found
 				loop
 					local_menu_item := items_array.item
-					if local_menu_item.widget = selected_item_p then
+					if local_menu_item.c_object = selected_item_p then
 						menu_item_found := True
 					end
 					items_array.forth
@@ -113,6 +121,7 @@ feature {NONE} -- Status report
 			-- an item has been selected.
 		do
 			if (menu /= Void) then
+				--| FIXME VB 19991122 Do not call selected_item twice.
 				if (selected_item /= Void) then
 					Result := selected_item.text
 				else
@@ -123,7 +132,7 @@ feature {NONE} -- Status report
 			end
 		end
 
-	menu: EV_MENU_IMP
+	menu: EV_MENU
 			-- The menu contained in the option button.
 
 feature {EV_MENU_ITEM_HOLDER} -- Element change	
@@ -133,17 +142,22 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 			-- Redefined because the text is in a gtk_label.
 		local
 			list: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			menu_imp: EV_MENU_IMP
 		do
-			c_gtk_option_button_set_fg_color (widget, color.red, color.green, color.blue)
+			menu_imp ?= menu.implementation
+			real_set_foreground_color (c_object, color)
+			if C.gtk_bin_struct_child (c_object) /= Default_pointer then
+				real_set_foreground_color (C.gtk_bin_struct_child (c_object), color)
+			end
 
 			-- Color for the menu.
 			if menu /= Void then
-				c_gtk_widget_set_fg_color (menu.widget, color.red, color.green, color.blue)
+				real_set_foreground_color (menu_imp.c_object, color)
 			end
 
 			-- Color for the menu items.
 			if menu_title_widget /= default_pointer then
-				c_gtk_widget_set_fg_color (menu_title_widget, color.red, color.green, color.blue)
+				real_set_foreground_color (menu_title_widget, color)
 			end
 			from
 				list := menu_items_array
@@ -151,7 +165,7 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 			until
 				list.after
 			loop
-				c_gtk_widget_set_fg_color (list.item.widget, color.red, color.green, color.blue)
+				real_set_foreground_color (list.item.c_object, color)
 				list.forth
 			end
 		end
@@ -161,17 +175,19 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 			-- Redefined because the text is in a gtk_label.
 		local
 			list: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			menu_imp: EV_MENU_IMP
 		do
-			c_gtk_option_button_set_bg_color (widget, color.red, color.green, color.blue)
+			menu_imp ?= menu.implementation
+			C.c_gtk_option_button_set_bg_color (c_object, color.red_16_bit, color.green_16_bit, color.blue_16_bit)
 
 			-- Color for the menu.
 			if menu /= Void then
-				c_gtk_widget_set_bg_color (menu.widget, color.red, color.green, color.blue)
+				real_set_background_color (menu_imp.c_object, color)
 			end
 
 			-- Color for the menu items.
 			if menu_title_widget /= default_pointer then
-				c_gtk_widget_set_bg_color (menu_title_widget, color.red, color.green, color.blue)
+				real_set_background_color (menu_title_widget, color)
 			end
 			from
 				list := menu_items_array
@@ -179,60 +195,67 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 			until
 				list.after
 			loop
-				c_gtk_widget_set_bg_color (list.item.widget, color.red, color.green, color.blue)
+				real_set_background_color (list.item.c_object, color)
 				list.forth
 			end
 		end
 
-	add_menu (menu_imp: EV_MENU_IMP) is
+	add_menu (a_menu: EV_MENU) is
 			-- Set menu for menu item
 		local
 			wid: POINTER
 			a: ANY
+			menu_imp: EV_MENU_IMP
 		do
+			menu_imp ?= a_menu.implementation
+			check
+				menu_imp_not_void: menu_imp /= Void
+			end
 			-- Create a menu item with the label set to `text' of `menu_imp':
 			-- This menu_item is not put in the menu_items_array.
 			-- It is only used when the user want to have a title
 			-- for the option button.
 			if ((menu_imp.text /= Void) and then (menu_title_widget = default_pointer)) then
 				a := menu_imp.text.to_c
-				menu_title_widget := gtk_menu_item_new_with_label ($a)
-				gtk_widget_show (menu_title_widget)
+				menu_title_widget := C.gtk_menu_item_new_with_label ($a)
+				C.gtk_widget_show (menu_title_widget)
 				-- Append it so it is the first item.
-				gtk_menu_prepend (menu_imp.widget, menu_title_widget)
+				C.gtk_menu_prepend (menu_imp.c_object, menu_title_widget)
 			end
 
 			-- Add the menu to the option button.
-			gtk_option_menu_set_menu (widget, menu_imp.widget)
+			C.gtk_option_menu_set_menu (c_object, menu_imp.c_object)
 
 			-- Set the menu colors to the same ones as the option button's.
-			c_gtk_widget_set_fg_color (menu_imp.widget, foreground_color.red, foreground_color.green, foreground_color.blue)
-			c_gtk_widget_set_bg_color (menu_imp.widget, background_color.red, background_color.green, background_color.blue)
+			real_set_foreground_color (menu_imp.c_object, foreground_color)
+			real_set_background_color (menu_imp.c_object, background_color)
 
 			-- Status setting.
-			menu := menu_imp
-			menu_items_array := menu.ev_children
+			menu := menu_imp.interface
 		end
 	
-	remove_menu (menu_imp: EV_MENU_IMP) is
+	remove_menu (a_menu: EV_MENU) is
 			-- Remove menu from option button.
 		local
 			default_colors: EV_DEFAULT_COLORS
 				-- Needed to reset the menu's colors to
 				-- the default colors.
+			menu_imp: EV_MENU_IMP
 		do
+			menu_imp ?= a_menu.implementation
+			check
+				menu_imp_not_void: menu_imp /= Void
+			end
 			-- Remove the menu_item added for the menu title.
-			gtk_container_remove (GTK_CONTAINER (menu_imp.widget), menu_title_widget)
+			C.gtk_container_remove (menu_imp.c_object, menu_title_widget)
 
 			-- Remove the gtk_menu from the gtk_option_menu.
-			gtk_option_menu_remove_menu (widget)
+			C.gtk_option_menu_remove_menu (c_object)
 
 			-- Set the menu colors to the default colors. We set it to those colors
 			-- because for now, the user can not set colors on EV_MENU.
-			c_gtk_widget_set_fg_color (menu_imp.widget, default_colors.default_foreground_color.red,
-				default_colors.default_foreground_color.green, default_colors.default_foreground_color.blue)
-			c_gtk_widget_set_bg_color (menu_imp.widget, default_colors.default_background_color.red,
-				default_colors.default_background_color.green, default_colors.default_background_color.blue)
+			real_set_foreground_color (menu_imp.c_object, default_colors.default_foreground_color)
+			real_set_background_color (menu_imp.c_object, default_colors.default_background_color)
 
 			-- Status setting.
 			menu := Void
@@ -242,12 +265,12 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 
 feature -- Event - command association
 
-	add_popup_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
-			-- Add 'cmd' to the list of commands to be executed
-			-- just before the popup is shown.
-		do
-			add_button_press_command (1, cmd, arg)
-		end
+--	add_popup_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+--			-- Add 'cmd' to the list of commands to be executed
+--			-- just before the popup is shown.
+--		do
+--			--add_button_press_command (1, cmd, arg)
+--		end
 
 feature -- Implementation
 
@@ -262,9 +285,12 @@ feature -- Implementation
 		do
 			menu_title_widget := p
 		end
+
+	interface: EV_OPTION_BUTTON
+
 end -- class EV_OPTION_BUTTON_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision : library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -278,4 +304,46 @@ end -- class EV_OPTION_BUTTON_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!---------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.15  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.14.4.1.2.6  2000/02/08 09:32:41  oconnor
+--| removed reference to ev_children
+--|
+--| Revision 1.14.4.1.2.5  2000/02/04 07:56:40  oconnor
+--| removed old command features
+--|
+--| Revision 1.14.4.1.2.4  2000/02/04 04:25:39  oconnor
+--| released
+--|
+--| Revision 1.14.4.1.2.3  2000/02/02 00:05:39  oconnor
+--| modifed for new menu classes
+--|
+--| Revision 1.14.4.1.2.2  2000/01/27 19:29:47  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.14.4.1.2.1  1999/11/24 17:29:57  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.14.2.5  1999/11/18 03:40:42  oconnor
+--| rewrote press command handling to use action sequence
+--|
+--| Revision 1.14.2.4  1999/11/09 16:53:15  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.14.2.3  1999/11/04 23:10:31  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.14.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

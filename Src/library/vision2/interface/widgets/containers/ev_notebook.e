@@ -1,10 +1,10 @@
 indexing
 	description: 
-		"EiffelVision notebook. Notebook is a collection of pages%
-		% that overlap each other. For each page there is a tab%
-		% corresponding to the page."
+		"Eiffel Vision notebook. Multiple widget container. Each child is%N%
+		%displayed on an individual page and may be selected via a tab.%N%
+		%The selected page is displayed above all others."
 	status: "See notice at end of class"
-	id: "$Id$"
+	keywrods: "notebook, tab, page"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -12,178 +12,180 @@ class
 	EV_NOTEBOOK
 
 inherit
-	EV_CONTAINER
+	
+	EV_WIDGET_LIST
 		redefine
 			implementation,
-			make
+			create_action_sequences
 		end
-	
-create
-	make
-	
-feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create a fixed widget with, `par' as
-			-- parent
+feature -- Access 
+
+	item_text (an_item: like item): STRING is
+			-- Label of `an_item'.
+		require
+			has_an_item: has (an_item)
 		do
-			!EV_NOTEBOOK_IMP!implementation.make
-			widget_make (par)
-		end		
+			Result := implementation.item_text (an_item)
+		ensure
+			bridge_ok: Result.is_equal (implementation.item_text (an_item))
+			not_void: Result /= Void
+		end
 
 feature -- Status report
 
-	count: INTEGER is
-			-- Number of pages in the notebook
+	selected_item: like item is
+			-- Page displayed topmost.
+		require
+			item_is_selected: not empty
 		do
-			Result := implementation.count
+			Result := implementation.selected_item
+		ensure
+			bridge_ok: Result = implementation.selected_item
 		end
 
-	current_page: INTEGER is
-			-- Index of the page currently opened
+	selected_item_index: INTEGER is
+			-- Index of `selected_item'.
 		do
-			Result := implementation.current_page
+			Result := implementation.selected_item_index
+		ensure
+			bridge_ok: Result = implementation.selected_item_index
 		end
 
 	tab_position: INTEGER is
-			-- Position of the tabs.
+			-- Position of tabs.
+			-- One of `Tab_left', `Tab_right', `Tab_top' or `Tab_bottom'.
+			-- Default: `Tab_top'
 		do
 			Result := implementation.tab_position
-		ensure
-			correct_pos: Result = Tab_left or Result = Tab_right 
-				or Result = Tab_bottom or Result = Tab_top
 		end
 
 feature -- Status setting
 	
-	set_tab_top is
-			-- Put the tabs at the top of the notebook.
-			-- default.
-		require
-			exists: not destroyed		
+	position_tabs_top is
+			-- Display tabs at top of notebook.
 		do
 			implementation.set_tab_position (Tab_top)
 		ensure
-			position_set: tab_position = Tab_top
+			tab_position_set: tab_position = Tab_top
 		end
 
-	set_tab_bottom is
-			-- Put the tabs at the bottom of the notebook.
-		require
-			exists: not destroyed		
+	position_tabs_bottom is
+			-- Display tabs at bottom of notebook.
 		do
 			implementation.set_tab_position (Tab_bottom)
 		ensure
-			position_set: tab_position = Tab_bottom
+			tab_position_set: tab_position = Tab_bottom
 		end
 
-	set_tab_left is
-			-- Put the tabs at the left of the notebook.
-		require
-			exists: not destroyed		
+	position_tabs_left is
+			-- Display tabs at left of notebook.
 		do
 			implementation.set_tab_position (Tab_left)
 		ensure
-			position_set: tab_position = Tab_left
+			tab_position_set: tab_position = Tab_left
 		end
 
-	set_tab_right is
-			-- Put the tabs at the right of the notebook.
-		require
-			exists: not destroyed		
+	position_tabs_right is
+			-- Display tabs at right of notebook.
 		do
 			implementation.set_tab_position (Tab_right)
 		ensure
-			position_set: tab_position = Tab_right
+			tab_position_set: tab_position = Tab_right
 		end
 
-	set_current_page (index: INTEGER) is
-			-- Make the `index'-th page the currently opened page.
+	set_tab_position (a_tab_position: INTEGER) is
+			-- Display tabes at `a_tab_position'.
 		require
-			exists: not destroyed
-			valid_index: index >= 1 and index <= count
+			a_position_within_range:
+				a_tab_position = Tab_left or a_tab_position = Tab_right or
+				a_tab_position = Tab_bottom or a_tab_position = Tab_top
 		do
-			implementation.set_current_page (index)
+			implementation.set_tab_position (a_tab_position)
+		ensure
+			tab_position_set: tab_position = a_tab_position
 		end
+
+	select_item (an_item: like item) is
+			-- Display `an_item' above all others.
+		require
+			has_an_item: has (an_item)
+		do
+			implementation.select_item (an_item)
+		ensure
+			item_selected: selected_item = an_item
+		end
+
+feature -- Constants
+	
+	Tab_left: INTEGER is unique
+			-- Value used to position tab on the left.
+
+	Tab_right: INTEGER is unique
+			-- Value used to position tab on the right.
+
+	Tab_top: INTEGER is unique
+			-- Value used to position tab at the top.
+
+	Tab_bottom: INTEGER is unique
+			-- Value used to position tab at the bottom.
 
 feature -- Element change
 
-	set_page_title (index: INTEGER; title: STRING) is
-			-- Set the title of the `index' page of the notebook to `title'.
-			-- The first page is the page number 1.
+	set_item_text (an_item: like item; a_text: STRING) is
+			-- Assign `a_text' to the label for `an_item'.
 		require
-			exists: not destroyed
-			good_index: index <= count
+			has_an_item: has (an_item)
+			a_text_not_void: a_text /= Void
 		do
-			implementation.set_page_title (index, title)
-		end
-	
-	append_page (c: EV_WIDGET; title: STRING) is
-		-- New page for notebook containing child 'c' with 
-		-- title as `title'
-		require
-			exists: not destroyed		
-			child_of_notebook: c.parent = Current
-		do
-			implementation.append_page (c.implementation, title)
+			implementation.set_item_text (an_item, a_text)
+		ensure
+			item_text_assigned: item_text (an_item).is_equal (a_text)
 		end
 
-feature -- Miscellaneous - Constants
-	
-	Tab_left: INTEGER is
-			-- Value used to position tab on the left.
-		do
-			Result := implementation.Tab_left
-		end
+feature -- Event handling
 
-	Tab_right: INTEGER is
-			-- Value used to position tab on the right.
-		do
-			Result := implementation.Tab_right
-		end
+	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when `selected_item' changes.
 
-	Tab_top: INTEGER is
-			-- Value used to position tab at the top.
-		do
-			Result := implementation.Tab_top
-		end
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	Tab_bottom: INTEGER is
-			-- Value used to position tab at the bottom.
-		do
-			Result := implementation.Tab_bottom
-		end
-
-feature -- Event - command association
-	
-	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed
-			-- the a page is switch in the notebook.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_switch_command (cmd, arg)
-		end	
-
-feature -- Event -- removing command association
-
-	remove_switch_commands is
-			-- Empty the list of commands to be executed
-			-- when a page is switch in the notebook.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_switch_commands
-		end	
-
-feature {NONE} -- Implementation
-	
 	implementation: EV_NOTEBOOK_I
-	
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
+
+	create_action_sequences is
+			-- Create action sequences for button.
+		do
+			{EV_WIDGET_LIST} Precursor
+			create selection_actions
+		end
+
+	create_implementation is
+			-- Create implementation of button.
+		do
+			create {EV_NOTEBOOK_IMP} implementation.make (Current)
+		end
+
+invariant
+	tab_position_within_range: is_useable implies
+		tab_position = Tab_left or tab_position = Tab_right or
+		tab_position = Tab_bottom or tab_position = Tab_top
+	selected_item_not_void: not empty implies selected_item /= Void
+	selected_item_index_within_range:
+		not empty implies
+		(selected_item_index >= index_of (first, 1) and
+		selected_item_index <= index_of (last, 1))
+	selected_item_is_i_th_of_selected_item_index:
+		not empty implies selected_item = i_th (selected_item_index)
+	selected_item_index_is_index_of_selected_item:
+		not empty implies selected_item_index = index_of (selected_item, 1)
+	selection_actions_not_void:
+			selection_actions /= Void
+
 end -- class EV_NOTEBOOK
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -197,4 +199,63 @@ end -- class EV_NOTEBOOK
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.15  2000/02/14 11:40:51  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.13.6.12  2000/02/08 00:41:46  rogers
+--| Changed the postcondition of item_text.
+--|
+--| Revision 1.13.6.11  2000/01/28 20:00:14  oconnor
+--| released
+--|
+--| Revision 1.13.6.10  2000/01/27 19:30:52  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.13.6.9  2000/01/27 17:45:21  rogers
+--| Added is_useable implies to the start of tab_position_within_range invariant.
+--|
+--| Revision 1.13.6.8  2000/01/19 08:03:47  oconnor
+--| fixed off by one error in invariant
+--|
+--| Revision 1.13.6.7  2000/01/18 23:20:37  king
+--| Altered invariant to check selected_item only when notebook is not empty
+--|
+--| Revision 1.13.6.6  2000/01/18 01:38:41  oconnor
+--| Complete revision.
+--| Commenting, formatting.
+--| Renamed features to refer to item not page.
+--| Now inherits widget list.
+--| Removed side structures holding state info. Now go direct to source.
+--|
+--| Revision 1.13.6.5  2000/01/13 23:58:51  king
+--| Corrected comment for switch action
+--|
+--| Revision 1.13.6.4  2000/01/13 22:30:12  king
+--| Added switch action sequence, count, removed old switch association commands
+--|
+--| Revision 1.13.6.3  2000/01/13 01:18:49  king
+--| Added standard cursor navigation features
+--|
+--| Revision 1.13.6.2  1999/12/17 20:00:49  rogers
+--| redefined implementation to be a a more refined type.
+--| Added deferred features from colelaction.
+--|
+--| Revision 1.13.6.1  1999/11/24 17:30:52  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.13.2.3  1999/11/04 23:10:54  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.13.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

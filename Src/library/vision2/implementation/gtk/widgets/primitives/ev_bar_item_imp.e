@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description: 
@@ -31,3 +32,28 @@ end
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.9  2000/02/14 11:40:32  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.8.6.3  2000/02/04 04:46:24  oconnor
+--| released
+--|
+--| Revision 1.8.6.2  2000/01/27 19:29:45  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.8.6.1  1999/11/24 17:29:56  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.8.2.2  1999/11/02 17:20:04  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+--| FIXME Not for release
 indexing
 	description: 
 	"EiffelVision scrollable text area. To query multiple lines of text from the user."
@@ -17,12 +18,12 @@ inherit
 
 feature -- Inititalization
 
-	make_with_properties (txt: STRING; hscroll, vscroll: BOOLEAN) is
-			-- Create a scrollable text area with text `txt'.
-			-- If `hscroll' True then horizontally scrollable.
-			-- If `vscroll' True then vertically .
-		deferred
-		end
+--	make_with_properties (txt: STRING; hscroll, vscroll: BOOLEAN) is
+--			-- Create a scrollable text area with text `txt'.
+--			-- If `hscroll' True then horizontally scrollable.
+--			-- If `vscroll' True then vertically .
+--		deferred
+--		end
 
 feature -- Status Report
 	

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision accelerator table. This table keep a%
@@ -152,3 +154,25 @@ end -- class EV_ACCELERATOR_TABLE_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.10.2  2000/01/27 19:30:13  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.10.1  1999/11/24 17:30:20  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,6 +1,5 @@
 indexing
-	description:
-		"EiffelVision vertical scroll bar, implementation interface."
+	description: "Eiffel Vision vertical scroll bar. Implementation interface."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,17 +10,12 @@ deferred class
 inherit
 	EV_SCROLL_BAR_I
 		redefine
-			set_default_options
+			interface
 		end
 
-feature {NONE} -- Initialization
+feature {EV_ANY_I} -- Implementation
 
-	set_default_options is
-			-- Common initializations for Gtk and Windows.
-		do
-			set_horizontal_resize (False)
-			set_vertical_resize (True)
-		end
+	interface: EV_VERTICAL_SCROLL_BAR
 
 end -- class EV_VERTICAL_SCROLL_BAR_I
 
@@ -40,3 +34,34 @@ end -- class EV_VERTICAL_SCROLL_BAR_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:39  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.6.5  2000/02/04 04:10:28  oconnor
+--| released
+--|
+--| Revision 1.3.6.4  2000/01/31 21:31:34  brendel
+--| Changed to comply with revised interface.
+--|
+--| Revision 1.3.6.3  2000/01/27 19:30:06  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.6.2  2000/01/06 20:39:50  rogers
+--| Fixed to work with major vision2 changes. Removed set_default_options.
+--|
+--| Revision 1.3.6.1  1999/11/24 17:30:14  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" A silly container that doesn't do anything. Used%
@@ -68,7 +70,7 @@ feature {NONE} -- Implementation
 						check
 							gauge_exists: gauge.exists
 						end
-						gauge.execute_command (gauge.Cmd_gauge, Void)
+						gauge.interface.change_actions.call ([])
 					end
 				end
 			end
@@ -91,3 +93,28 @@ end -- class EV_INTERNAL_SILLY_CONTAINER_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.10.3  2000/02/01 03:31:37  brendel
+--| Changed old event call to new one.
+--|
+--| Revision 1.2.10.2  2000/01/27 19:30:14  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.10.1  1999/11/24 17:30:21  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.6.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

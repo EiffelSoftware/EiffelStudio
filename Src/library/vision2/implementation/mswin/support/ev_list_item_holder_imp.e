@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision list-item container. %
 				% Ms windows implementation"
@@ -9,10 +11,7 @@ deferred class
 	EV_LIST_ITEM_HOLDER_IMP
 
 inherit
-	EV_ARRAYED_LIST_ITEM_HOLDER_IMP
-		redefine
-			move_item
-		end
+	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_LIST_ITEM] 
 
 feature -- Access
 
@@ -25,8 +24,8 @@ feature -- Access
 
 	background_brush: WEL_BRUSH is
 			-- Brush used to clear the list
-		require
-			exitst: not destroyed
+		--require
+		--	exitst: not destroyed
 		do
 			!! Result.make_solid (background_color_imp)
 		ensure
@@ -35,25 +34,25 @@ feature -- Access
 
 feature -- Element change
 
-	insert_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
-			-- Insert `item_imp' at the `index' position.
+	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
+			-- Insert `item_imp' at the `an_index' position.
 		do
-			ev_children.go_i_th (index - 1)
+			ev_children.go_i_th (an_index - 1)
 			ev_children.put_right (item_imp)
-			graphical_insert_item (item_imp, index - 1)
+			graphical_insert_item (item_imp.interface, an_index - 1)
 		end
 
-	move_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
-			-- Move `item_imp' to the `index' position.
+	move_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
+			-- Move `item_imp' to the `an_index' position.
 		local
 			bool: BOOLEAN
 		do
-			bool := item_imp.is_selected
-			remove_item (item_imp)
-			insert_item (item_imp, index)
-			if bool then
-				item_imp.set_selected (True)
-			end
+		--	bool := item_imp.is_selected
+		--	remove_item (item_imp)
+		--	insert_item (item_imp, an_index)
+		--	if bool then
+		--		item_imp.set_selected (True)
+		--	end
 		end
 
 	remove_item (item_imp: EV_LIST_ITEM_IMP) is
@@ -92,7 +91,7 @@ feature -- Basic operations
 				until
 					list.after
 				loop
-					graphical_insert_item (list.item, list.index - 1)
+					graphical_insert_item (list.item.interface, list.index - 1)
 					list.forth
 				end
 			end
@@ -103,8 +102,8 @@ feature -- Basic operations
 		local
 			id: INTEGER
 		do
-			id := ev_children.index_of (item_imp, 1)
-			select_item (id)
+		--	id := ev_children.index_of (item_imp, 1)
+		--	select_item (id)
 		end
 
 	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP) is
@@ -112,8 +111,8 @@ feature -- Basic operations
 		local
 			id: INTEGER
 		do
-			id := ev_children.index_of (item_imp, 1)
-			deselect_item (id)
+		--	id := ev_children.index_of (item_imp, 1)
+		--	deselect_item (id)
 		end
 
 	internal_is_selected (item_imp: EV_LIST_ITEM_IMP): BOOLEAN is
@@ -121,8 +120,8 @@ feature -- Basic operations
 		local
 			id: INTEGER
 		do
-			id := ev_children.index_of (item_imp, 1)
-			Result := is_selected (id - 1)
+		--	id := ev_children.index_of (item_imp, 1)
+		--	Result := is_selected (id - 1)
 		end
 
 	internal_get_text (item_imp: EV_LIST_ITEM_IMP): STRING is
@@ -130,24 +129,24 @@ feature -- Basic operations
 		local
 			id: INTEGER
 		do
-			id := ev_children.index_of (item_imp, 1) - 1
-			Result := i_th_text (id)
+		--	id := ev_children.index_of (item_imp, 1) - 1
+		--	Result := i_th_text (id)
 		end
 
-	internal_set_text (item_imp: EV_LIST_ITEM_IMP; txt: STRING) is
+	internal_set_text (item_imp: EV_LIST_ITEM; txt: STRING) is
 			-- Make `txt' the text of `item_imp'.
 		local
 			id: INTEGER
 		do
-			id := ev_children.index_of (item_imp, 1) - 1
-			delete_string (id)
-			graphical_insert_item (item_imp, id)
+		--	id := ev_children.index_of (item_imp, 1) - 1
+		--	delete_string (id)
+		--	graphical_insert_item (item_imp, id)
 		end
 
 	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
 			-- Return the index of `item_imp' in the list.
 		do
-			Result := ev_children.index_of (item_imp, 1) - 1
+			--Result := ev_children.index_of (item_imp, 1) - 1
 		end
 
 feature {NONE} -- Implementation
@@ -163,23 +162,23 @@ feature {NONE} -- Implementation
 	clear_ev_children is
 			-- Clear all the items of the list.
 		local
-			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+			list: ARRAYED_LIST [EV_LIST_ITEM]
 		do
-			from
-				list := ev_children
-				list.start
-			until
-				list.after
-			loop
-				list.item.interface.remove_implementation
-				list.forth
-			end
-			list.wipe_out
+		--	from
+		--		list := ev_children
+		--		list.start
+		--	until
+		--		list.after
+		--	loop
+		--		list.item.implementation.remove_implementation
+		--		list.forth
+		--	end
+		--	list.wipe_out
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Deferred features
 
-	graphical_insert_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
+	graphical_insert_item (item_imp: EV_LIST_ITEM; an_index: INTEGER) is
 				-- Add the item to the graphical list.
 		deferred
 		end
@@ -233,3 +232,34 @@ end -- class EV_LIST_ITEM_HOLDER_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.18  2000/02/14 11:40:41  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.17.6.5  2000/02/02 21:04:07  rogers
+--| Changed the inheritance of EV_ARRAYED_LIST_ITEM_HOLDER to EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_LIST_ITEM].
+--|
+--| Revision 1.17.6.4  2000/01/27 19:30:15  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.17.6.3  2000/01/19 20:19:25  rogers
+--| Uncommented bodies of insert_item and remove_item.
+--|
+--| Revision 1.17.6.2  1999/12/17 17:05:23  rogers
+--| Altered to fit in with the review branch.
+--|
+--| Revision 1.17.6.1  1999/11/24 17:30:21  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.17.2.2  1999/11/02 17:20:08  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

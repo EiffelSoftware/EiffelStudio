@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision status bar item."
 	status: "See notice at the end of class."
@@ -10,81 +11,64 @@ class
 inherit
 	EV_STATUS_BAR_ITEM_I
 		redefine
+			interface,
 			parent_imp
 		end
 
 	EV_SIMPLE_ITEM_IMP
-		rename
-			set_width as widget_set_width
-		export {NONE}
-			box,
-			initialize,
-			create_text_label
 		undefine
 			parent
 		redefine
-			destroy,
-			make_with_text,
-			set_text,
-			text,
-			set_pixmap,
-			parent_imp,
-			unset_pixmap,
-			set_foreground_color,
-			set_background_color
+			interface,
+			initialize
 		end
 
 create
-	make,
-	make_with_text
+	make
 
 feature -- Initialization
 
-	make is
-			-- Create the status bar item
+	make (an_interface: like interface) is
+			-- Create the status bar item.
+		do
+			base_make (an_interface)
+			set_c_object (C.gtk_frame_new (Default_pointer))
+			C.gtk_frame_set_shadow_type (c_object, C.GTK_SHADOW_IN_ENUM)
+		end
+
+	initialize is
+			-- Initialize the pixmap and text containers
+		do
+			{EV_SIMPLE_ITEM_IMP} Precursor
+			is_initialized := False
+			textable_imp_initialize
+			pixmapable_imp_initialize
+			initialize_status_bar_box
+			is_initialized := True
+		end
+
+	initialize_status_bar_box is
+			-- Place the pixmap and label boxes in to the status bar item
 		local
-			a: ANY
+			box: POINTER
 		do
-			widget := gtk_statusbar_new
-			gtk_object_ref (widget)
-
-			a := status_bar_description.to_c
-			context_id := gtk_statusbar_get_context_id (widget, $a)
-			message_id := 0
-
-			-- Pointer to the gtk_box and gtk_label of the status bar.
-			set_label_widget (c_gtk_statusbar_item_label (widget))
-
-			-- The interface does not call `widget_make' so we need 
-			-- to connect `destroy_signal_callback'
-			-- to `destroy' event.
-			initialize_object_handling
+			box := C.gtk_hbox_new (False, 0)
+			C.gtk_container_add (c_object, box)
+			C.gtk_widget_show (box)
+			C.gtk_box_pack_end (box, text_label, True, True, padding)
+			C.gtk_widget_hide (text_label)
+			C.gtk_box_pack_start (box, pixmap_box, False, False, 0)
+			C.gtk_widget_hide (pixmap_box)
+		ensure
+			status_bar_item_box /= default_pointer
 		end
-
-	make_with_text (txt: STRING) is
-			-- Create an item with `txt' as label
-		do
-			make
-			set_text (txt)
-		end
-
-feature -- Access
-
-	context_id: INTEGER
-
-	message_id: INTEGER
-
-	status_bar_description: STRING is "a status bar item"
-		-- description string needed by gtk
 
 feature -- Status report
-
-	text: STRING
 
 	index: INTEGER is
 			-- Index of the current item.
 		do
-			Result := parent_imp.ev_children.index_of (Current, 1)
+			--Result := parent_imp.ev_children.index_of (Current, 1)
 		end
 
 feature -- Status setting
@@ -94,28 +78,15 @@ feature -- Status setting
 			-- If -1, then the item adapt its size to fit the space
 			-- when the bar gets bigger.
 		do
-			gtk_widget_set_usize (widget, value, -1)
+			C.gtk_widget_set_usize (c_object, value, -1)
 				-- set the minimum width but don't update `width'
-			c_gtk_widget_set_size (widget, value, height)
+			C.c_gtk_widget_set_size (c_object, value, height)
 				-- XX update `width'
 			if (value = -1) then
-				c_gtk_box_set_child_options (parent_imp.widget, widget, True, True)
+				C.c_gtk_box_set_child_options (parent_imp.c_object, c_object, 1, 1)
 			else
-				c_gtk_box_set_child_options (parent_imp.widget, widget, False, True)
+				C.c_gtk_box_set_child_options (parent_imp.c_object, c_object, 0, 1)
 			end
-		end
-
-	destroy is
-			-- Destroy the status bar item implementation.
-			-- Feature redefined to set expand options for the
-			-- last status bar item.
-                do
-			parent_imp.remove_item (Current)
-				-- we do not need to use 'gtk_widget_destroy'
-				-- because the widget is automatically destroyed when
-				-- no more affected to a parent.
-			widget := default_pointer
-				-- optionnal
 		end
 	
 feature -- Element change
@@ -127,91 +98,21 @@ feature -- Element change
 		do
 		end
 
-	set_text (txt: STRING) is
-		-- set `text' to txt
-		local
-			a: ANY
-		do
-			-- first, check if there was already a message in the status bar
-			-- if so, we remove it
-			if message_id > 0 then
-				gtk_statusbar_remove (widget, context_id, message_id)
-			end
-
-			-- set the message of the status bar
-			a := txt.to_c
-			message_id := gtk_statusbar_push (widget, context_id, $a)
-			text := txt		
-		end
-
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'
-		do
-			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
-
-			if label_widget /= default_pointer then
-				c_gtk_widget_set_fg_color (label_widget, color.red, color.green, color.blue)
-			end
-		end
-
-	set_background_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'
-		do
-			c_gtk_statusbar_item_set_bg_color (widget, color.red, color.green, color.blue)
-
-			if label_widget /= default_pointer then
-				c_gtk_widget_set_bg_color (label_widget, color.red, color.green, color.blue)
-			end
-		end
 
 feature {NONE} -- Implementation
 
-	set_pixmap (pix: EV_PIXMAP) is
-			-- Add a pixmap in the status bar item
-		local
-			pixmap_imp: EV_PIXMAP_IMP
+	padding: INTEGER is 3
+			-- Number of pixels of extra space arround text and pixmap.
+
+	status_bar_item_box: POINTER is
+			-- GtkHBox in button.
+			-- Holds label and pixmap.
 		do
-			pixmap_imp ?= pix.implementation
-			check
-				pixmap_imp_not_void: pixmap_imp /= Void
-			end
-
-			-- Create a GtkPixmap to put in the status bar and show it.
-			if (pixmap = Void) then
-				-- No pixmap, so create a GtkPixmap to put
-				-- in the status bar and show it.
-				pixmap_widget := c_gtk_statusbar_item_create_pixmap_place (pixmap_imp.create_window)
-			end
-
-			-- We replace the former gdk_pixmap of the gtk_pixmap (in pixmap_widget)
-			-- by the new one.
-			c_gtk_pixmap_set_from_pixmap (pixmap_widget, pixmap_imp.widget) 
-
-			-- updating status
-			pixmap := pix
---			pixmap_imp.set_parent (Current)
+			Result := C.gtk_container_children (c_object)
+			Result := C.g_list_nth_data (Result, 0)
 		end
 
-	unset_pixmap is
-		local
-			pixmap_imp: EV_PIXMAP_IMP
-		do
-			pixmap_imp ?= pixmap.implementation
-			check
-				pixmap_imp_not_void: pixmap_imp /= Void
-			end
-
-			-- Remove the pixmap from the status bar.
-			-- `pixmap_widget' will be detroyed.
-			c_gtk_statusbar_item_unset_pixmap (widget, pixmap_widget)
-
-			-- updating status
-			pixmap := Void
-			set_pixmap_widget (default_pointer)
---			pixmap_imp.set_parent (Void)
-		end
-
-	parent_imp: EV_STATUS_BAR_IMP
+	interface: EV_STATUS_BAR_ITEM
 
 end -- class EV_STATUS_BAR_ITEM_IMP
 
@@ -230,3 +131,37 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.20  2000/02/14 11:40:27  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.19.4.4  2000/02/05 02:47:46  oconnor
+--| released
+--|
+--| Revision 1.19.4.3  2000/02/04 21:21:21  king
+--| Implemented to fit in with new structure
+--|
+--| Revision 1.19.4.2  2000/01/27 19:29:26  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.19.4.1  1999/11/24 17:29:43  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.18.2.4  1999/11/09 16:53:14  oconnor
+--| reworking dead object cleanup
+--|
+--| Revision 1.18.2.3  1999/11/04 23:10:26  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.18.2.2  1999/11/02 17:20:02  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

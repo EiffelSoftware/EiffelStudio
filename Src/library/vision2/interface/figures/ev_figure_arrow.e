@@ -1,11 +1,16 @@
+--| FIXME Not for release
 indexing
 	description: "EiffelVision2 arrow figure. Represented by two points: a is%
-		% the origin of the arrow and b is the point it points to."
+		% the origin of the arrow and b is the point it points to.%
+		% specify your own arrowhead in the form of angle and proportion."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	EV_FIGURE_ARROW
+
+obsolete
+	"Use line"
 
 inherit
 	EV_ATOMIC_FIGURE
@@ -23,25 +28,33 @@ feature -- Initialization
 			-- Default situation: pa and pb are both (0, 0).
 		do
 			Precursor
+			head_angle := 0.2
+			head_size := 0.1
 		end
 
-	make_with_points (source, target: EV_RELATIVE_POINT) is
+	make_with_points (src, trg: EV_RELATIVE_POINT) is
 			-- Create with points `source' and `target'.
 		require
-			source_exists: source /= Void
-			source_not_in_figure: source.figure = Void
-			target_exists: target /= Void
-			target_not_in_figure: target.figure = Void
+			src_exists: src /= Void
+			src_not_in_figure: src.figure = Void
+			trg_exists: trg /= Void
+			trg_not_in_figure: trg.figure = Void
 		do
 			default_create
-			set_point_a (source)
-			set_point_b (target)
+			set_source (src)
+			set_target (trg)
 		ensure
-			point_a_assigned: point_a = source
-			point_b_assigned: point_b = target
+			source_assigned: source = src
+			target_assigned: target = trg
 		end
 
 feature -- Access
+
+	head_angle: REAL
+			-- The angle the head makes with the line.
+
+	head_size: REAL
+			-- The size of the head relative to the line.
 
 	point_count: INTEGER is
 			-- An arrow consists of 2 points.
@@ -49,13 +62,13 @@ feature -- Access
 			Result := 2
 		end
 
-	point_a: EV_RELATIVE_POINT is
+	source: EV_RELATIVE_POINT is
 			-- The source coordinates of the arrow.
 		do
 			Result := get_point_by_index (1)
 		end
 
-	point_b: EV_RELATIVE_POINT is
+	target: EV_RELATIVE_POINT is
 			-- The target coordinates of the arrow.
 		do
 			Result := get_point_by_index (2)
@@ -63,26 +76,26 @@ feature -- Access
 
 feature -- Status setting
 
-	set_point_a (p1: EV_RELATIVE_POINT) is
-			-- Change the reference of `position_a' with `p1'.
+	set_source (src: EV_RELATIVE_POINT) is
+			-- Change the reference of `source' with `src'.
 		require
-			p1_exists: p1 /= Void
-			p1_not_in_figure: p1.figure = Void
+			src_exists: src /= Void
+			src_not_in_figure: src.figure = Void
 		do
-			set_point_by_index (1, p1)
+			set_point_by_index (1, src)
 		ensure
-			point_a_assigned: p1 = point_a
+			source_assigned: src = source
 		end
 
-	set_point_b (p2: EV_RELATIVE_POINT) is
-			-- Change the reference of `position_b' with `p2'.
+	set_target (trg: EV_RELATIVE_POINT) is
+			-- Change the reference of `target' with `trg'.
 		require
-			p2_exists: p2 /= Void
-			p2_not_in_figure: p2.figure = Void
+			trg_exists: trg /= Void
+			trg_not_in_figure: trg.figure = Void
 		do
-			set_point_by_index (2, p2)
+			set_point_by_index (2, trg)
 		ensure
-			point_a_assigned: p2 = point_b
+			target_assigned: trg = target
 		end
 
 feature -- Events
@@ -91,11 +104,20 @@ feature -- Events
 			-- Is the point on (`x', `y') on this figure?
 		do
 			Result := point_on_segment (x, y,
-				point_a.x_abs, point_a.y_abs,
-				point_b.x_abs, point_b.y_abs, line_width)
+				source.x_abs, source.y_abs,
+				target.x_abs, target.y_abs, line_width)
 			--| FIXME We might want to click on the target-point of
 			--| the arrow as well! Maybe this function should be in
 			--| EV_PROJECTION.... Maybe? Definitely. Not right now, though.
+		end
+
+feature {EV_DRAWABLE_I} -- Status report
+
+	head_length: REAL is
+			-- Returns the distance between `source' and `target' * head_size.
+		do
+			Result := sqrt ((source.x_abs - target.x_abs) ^ 2 +
+				(target.y_abs - source.y_abs) ^ 2) * head_size
 		end
 
 end -- class EV_FIGURE_ARROW

@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
 		"EiffelVision item. Implementation interface"
@@ -11,42 +12,41 @@ deferred class
 
 inherit
 	EV_ITEM_I
+		redefine
+			interface
+		end
 
 	EV_PIXMAPABLE_I
+		redefine
+			interface
+		end
 
-feature {NONE} -- Initialization
-
-	make_with_text (txt: STRING) is
-			-- Create a row with text in it.
-		require
-			valid_text: txt /= Void
-		deferred
-		ensure
-			text_set: text.is_equal (txt)
+	EV_TEXTABLE_I
+		redefine
+			interface
 		end
 
 feature -- Access
 
-	text: STRING is
-			-- Current label of the item
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			valid_result: Result /= Void
+	maximum_pixmap_width: INTEGER is
+			-- Maximum width allowed for `pixmap'.
+		do	
+			Result := 16
+				-- FIXME This should be constant
+				-- ie standard_icon_width = 16
 		end
 
-feature -- Element change
-
-	set_text (txt: STRING) is
-			-- Make `txt' the new label of the item.
-		require
-			exists: not destroyed
-			valid_text: txt /= Void
-		deferred
-		ensure
-			text_set: text.is_equal (txt)
+	maximum_pixmap_height: INTEGER is
+			-- Maximum height allowed for `pixmap'.
+		do
+			Result := 16
+				-- FIXME This should be constant
+				-- ie standard_icon_width = 16
 		end
+
+feature {EV_SIMPLE_ITEM_I} -- Implementation
+
+	interface: EV_SIMPLE_ITEM
 
 end -- class EV_SIMPLE_ITEM_I
 
@@ -65,3 +65,46 @@ end -- class EV_SIMPLE_ITEM_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.21  2000/02/14 11:40:34  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.20.6.8  2000/02/04 21:29:59  king
+--| Removed text features as it now inherits from textable
+--|
+--| Revision 1.20.6.7  2000/02/04 04:02:41  oconnor
+--| released
+--|
+--| Revision 1.20.6.6  2000/01/27 19:29:52  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.20.6.5  2000/01/06 18:43:42  king
+--| Commented out maximum_pixmap_* from inheritance clause.
+--|
+--| Revision 1.20.6.4  2000/01/04 20:03:51  rogers
+--| maximum_pixmap_height and maximum_pixmap_width are now undefined from ev_pixmapable_i.
+--|
+--| Revision 1.20.6.3  1999/12/09 03:15:05  oconnor
+--| commented out make_with_* features, these should be in interface only
+--|
+--| Revision 1.20.6.2  1999/11/30 22:51:01  oconnor
+--| Redefined interface to more refined type
+--|
+--| Revision 1.20.6.1  1999/11/24 17:30:03  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.20.2.3  1999/11/04 23:10:32  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.20.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

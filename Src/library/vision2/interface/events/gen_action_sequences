@@ -130,7 +130,7 @@ while (<>) {
 			chop ($fargs);
 			$filter_code = "\nfeature {NONE} -- Filtering\n\n\tfilter ($fargs) is\n\t\tdo\n\t\t\tif a_$f";
 			foreach $f (@fs) {
-				$filter_code = "$filter_code and $f ";
+				$filter_code = "$filter_code and a_$f ";
 			}
 			$filter_code = "$filter_code then\n\t\t\t\tcall ([$arg_name_list";
 			$source_class = "$source\_ACTION_SEQUENCE";
@@ -169,7 +169,7 @@ indexing
 
 class $classname
 
-inherit EV_ACTION_SEQUENCE [$data_type]
+inherit ACTION_SEQUENCE [$data_type]
 		rename
 			make as $parent_lower\_make
 		redefine
@@ -212,8 +212,14 @@ EOT
 #===============================================================================
 #
 # $Log$
-# Revision 1.2  1999/11/17 02:42:18  brendel
-# Update from development branch. Files tagged with: release_19991116_DEVEL.
+# Revision 1.3  2000/02/14 11:40:46  oconnor
+# merged changes from prerelease_20000214
+#
+# Revision 1.1.2.1.2.2  2000/02/05 05:58:00  oconnor
+# fixed filter bug
+#
+# Revision 1.1.2.1.2.1  1999/11/24 22:48:07  brendel
+# Just managed to compile figure cluster example.
 #
 # Revision 1.1.2.1  1999/11/13 01:21:28  brendel
 # First integration of new event system.

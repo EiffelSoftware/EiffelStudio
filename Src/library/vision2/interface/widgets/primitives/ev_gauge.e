@@ -1,9 +1,9 @@
 indexing
 	description:
-		" Any EiffelVision gauge can be used to retrieve%
-		% a value in a given range. This value can be either%
-		% an integer or a real."
+		"Eiffel Vision gauge. Widgets that describe a range, like %N%
+		%spin buttons and progress bars."
 	status: "See notice at end of class."
+	keywords: "value, step, increment, range"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,171 +13,208 @@ deferred class
 inherit
 	EV_PRIMITIVE
 		redefine
-			implementation
+			implementation,
+			create_action_sequences
 		end
 
 feature {NONE} -- Initialization
 
-	make_with_range (par: EV_CONTAINER; min: INTEGER; max: INTEGER) is
-			-- Create a spin-button with `min' as minimum, `max' as maximum
-			-- and `par' as parent.
-		require
-			valid_range: min <= max
-		deferred
+	make_with_range (a_minimum, a_maximum: INTEGER) is
+			-- Initialize with `a_maximum' and `a_minimum'.
+			-- Initialize `value' with `a_minimum'.
+		do
+			default_create
+			reset_with_range (a_minimum, a_maximum)
 		end
+
+feature -- Events
+
+	change_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when `value' changes.
 
 feature -- Access
 
 	value: INTEGER is
-			-- Current value of the gauge
-		require
-			exists: not destroyed
+			-- Current value of the gauge.
 		do
 			Result := implementation.value
 		ensure
-			position_large_enough: value >= minimum
-			position_small_enough: value <= maximum
+			bridge_ok: Result = implementation.value
 		end
 
 	step: INTEGER is
-			-- Step of the scrolling
-			-- ie : the user clicks on an arrow
-		require
-			exists: not destroyed
+			-- Value by which `value' changes.
 		do
 			Result := implementation.step
 		ensure
-			positive_result: Result >= 0
+			bridge_ok: Result = implementation.step
+		end
+
+	leap: INTEGER is
+			-- Size of page.
+		do
+			Result := implementation.leap
+		ensure
+			bridge_ok: Result = implementation.leap
 		end
 
 	minimum: INTEGER is
-			-- Minimum position
-		require
-			exists: not destroyed
+			-- Lowest value of the gauge.
 		do
 			Result := implementation.minimum
 		ensure
-			small_minimum: Result <= maximum
+			bridge_ok: Result = implementation.minimum
 		end
 
 	maximum: INTEGER is
-			-- Maximum position
-		require
-			exists: not destroyed
+			-- Highest value of the gauge.
 		do
 			Result := implementation.maximum
 		ensure
-			large_maximum: Result >= minimum
+			bridge_ok: Result = implementation.maximum
 		end
 
 feature -- Status setting
 
 	step_forward is
-			-- Increase the current value of one step.
-		require
-			exists: not destroyed
+			-- Increment `value' by `step' if possible.
 		do
 			implementation.step_forward
+		ensure
+			incremented: value = maximum.min (old value + step)
 		end
 
 	step_backward is
-			-- Decrease the current value of one step.
-		require
-			exists: not destroyed
+			-- Decrement `value' by `step' if possible.
 		do
 			implementation.step_backward
+		ensure
+			decremented: value = minimum.max (old value - step)
+		end
+
+	leap_forward is
+			-- Increment `value' by `leap' if possible.
+		do
+			implementation.leap_forward
+		ensure
+			incremented: value = maximum.min (old value + leap)
+		end
+
+	leap_backward is
+			-- Decrement `value' by `leap' if possible.
+		do
+			implementation.leap_backward
+		ensure
+			decremented: value = minimum.max (old value - leap)
 		end
 
 feature -- Element change
 
-	set_value (val: INTEGER) is
-			-- Make `val' the new current value.
+	set_value (a_value: INTEGER) is
+			-- Set `value' to `a_value'.
 		require
-			exists: not destroyed
-			val_large_enough: val >= minimum
-			val_small_enough: val <= maximum
+			a_value_within_bounds: a_value >= minimum
+				and then a_value <= maximum
 		do
-			implementation.set_value (val)
+			implementation.set_value (a_value)
 		ensure
-			value_set: value = val
+			assigned: value = a_value
 		end
 
-	set_step (val: INTEGER) is
-			-- Make `val' the new step.
+	set_step (a_step: INTEGER) is
+			-- Set `step' to `a_step'.
 		require
-			exists: not destroyed
-			positive_val: val >= 0
+			a_step_positive: a_step > 0
 		do
-			implementation.set_step (val)
+			implementation.set_step (a_step)
 		ensure
-			val_set: step = val
+			assigned: step = a_step
 		end
 
-	set_minimum (val: INTEGER) is
-			-- Make `val' the new minimum.
+	set_leap (a_leap: INTEGER) is
+			-- Set `leap' to `a_leap'.
 		require
-			exists: not destroyed
+			a_leap_positive: a_leap > 0
 		do
-			implementation.set_minimum (val)
+			implementation.set_leap (a_leap)
 		ensure
-			minimum_set: minimum = val
+			assigned: leap = a_leap
 		end
 
-	set_maximum (val: INTEGER) is
-			-- Make `val' the new maximum.
+	set_minimum (a_minimum: INTEGER) is
+			-- Set `minimum' to `a_minimum'.
 		require
-			exists: not destroyed
+			a_minimum_not_greater_than_maximum:
+				a_minimum <= maximum
+			a_minimum_not_smaller_than_value:
+				a_minimum <= value			
 		do
-			implementation.set_maximum (val)
+			implementation.set_minimum (a_minimum)
 		ensure
-			maximum_set: maximum = val
+			assigned: minimum = a_minimum
 		end
 
-	set_range (min, max: INTEGER) is
-			-- Make `min' the new minimum and `max' the new maximum.
+	set_maximum (a_maximum: INTEGER) is
+			-- Set `maximum' to `a_maximum'.
 		require
-			exists: not destroyed
-			valid_range: min <= max
+			a_maximum_not_smaller_than_minimum:
+				a_maximum >= minimum
+			a_maximum_not_smaller_than_value:
+				a_maximum >= value			
 		do
-			implementation.set_range (min, max)
+			implementation.set_maximum (a_maximum)
 		ensure
-			minimum_set: minimum = min
-			maximum_set: maximum = max
+			assigned: maximum = a_maximum
 		end
 
-feature -- Event - command association
-	
-	add_change_value_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the user is about to change
-			-- the value of the gauge.
+	set_range (a_minimum, a_maximum: INTEGER) is
+			-- Set `maximum' to `a_maximum' and `minimum' to `a_minimum'.
 		require
-			exists: not destroyed
-			valid_command: cmd /= Void
+			a_maximum_greater_than_or_equal_to_a_minimum:
+				a_maximum >= a_minimum
+			value_within_bounds:
+				value >= a_minimum and then value <= a_maximum
 		do
-			implementation.add_change_value_command (cmd, arg)
+			implementation.set_range (a_minimum, a_maximum)
+		ensure
+			minimum_assigned: minimum = a_minimum
+			maximum_assigned: maximum = a_maximum
 		end
 
-feature -- Event -- removing command association
-
-	remove_change_value_commands is
-			-- Empty the list of commands to be executed
-			-- when the user is about to change
-			-- the value of the gauge.
+	reset_with_range (a_minimum, a_maximum: INTEGER) is
+			-- Re-initialize with `a_maximum' and `a_minimum'.
+			-- Set `value' to `a_minimum'.
 		require
-			exists: not destroyed
+			a_maximum_greater_than_or_equal_to_a_minimum:
+				a_maximum >= a_minimum
 		do
-			implementation.remove_change_value_commands
+			implementation.reset_with_range (a_minimum, a_maximum)
+		ensure
+			value_assigned: value = a_minimum
+			minimum_assigned: minimum = a_minimum
+			maximum_assigned: maximum = a_maximum
 		end
 
 feature {NONE} -- Implementation
 
 	implementation: EV_GAUGE_I
-			-- Platform dependant access.
+
+	create_action_sequences is
+		do
+			Precursor
+			create change_actions
+		end
+
+invariant
+	maximum_greater_than_or_equal_to_minimum: is_useable implies maximum >= minimum
+	value_within_bounds: is_useable implies value >= minimum and then value <= maximum
+	step_positive: is_useable implies step > 0
+	leap_positive: is_useable implies leap > 0
+	change_actions_not_void: is_useable implies change_actions /= Void
 
 end -- class EV_GAUGE
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -191,4 +228,58 @@ end -- class EV_GAUGE
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:52  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.6.11  2000/02/14 11:06:37  oconnor
+--| added is_useable to invariant
+--|
+--| Revision 1.2.6.10  2000/02/10 19:39:54  rogers
+--| The comment on ev_gauge now corerctly reads: Actions performed when `value' changes.
+--|
+--| Revision 1.2.6.9  2000/02/02 00:55:29  brendel
+--| Added features for leaping (or scrolling by page), since they were first
+--| defined in scrollbar and range, but could as well be defined for spinbutton and
+--| progress bar. If not, they can be undefined there.
+--|
+--| Revision 1.2.6.8  2000/02/01 01:30:26  brendel
+--| Fixed bug in `make_with_range'.
+--| Improved contracts.
+--|
+--| Revision 1.2.6.7  2000/01/30 20:58:59  brendel
+--| Added `reset_with_range'. Fixed bug in `make_with_range'.
+--|
+--| Revision 1.2.6.6  2000/01/29 02:42:58  brendel
+--| Improved contracts.
+--|
+--| Revision 1.2.6.5  2000/01/28 22:24:24  oconnor
+--| released
+--|
+--| Revision 1.2.6.4  2000/01/27 19:30:54  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.6.3  2000/01/19 18:10:01  oconnor
+--| formatting
+--|
+--| Revision 1.2.6.2  2000/01/06 20:31:51  rogers
+--| make_with_range no longer takes a parent.
+--|
+--| Revision 1.2.6.1  1999/11/24 17:30:53  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.2.3  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.2.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision Toolbar button, mswindows implementation."
@@ -13,40 +15,43 @@ class
 inherit
 	EV_TOOL_BAR_BUTTON_I
 		redefine
-			parent_imp
+			parent_imp,
+			interface
 		end
 
 	EV_SIMPLE_ITEM_IMP
 		undefine
-			pixmap_size_ok,
 			parent
 		redefine
 			set_text,
 			set_pixmap,
-			parent_imp
+			parent_imp,
+			interface
 		end
 
 	EV_ID_IMP
 
-	EV_PND_SOURCE_IMP
+	EV_PICK_AND_DROPABLE_IMP
+		redefine
+			interface
+		end
 
 creation
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create the item.
 		do
-			id := new_id
+			base_make (an_interface)
+			make_id
 		end
 
-	make_with_text (txt: STRING) is
-			-- Create a row with text in it.
+	initialize is
+			-- Do post creation initialization.
 		do
-			id := new_id
-			set_text (txt)
+			is_initialized := True
 		end
 
 	parent_imp: EV_TOOL_BAR_IMP
@@ -60,58 +65,47 @@ feature -- Access
 			Result := parent_imp.internal_get_index (Current) + 1
 		end
 
-	id: INTEGER
-			-- Identifier of the item
+       set_parent (par: like parent) is
+                       -- Make `par' the new parent of the widget.
+                       -- `par' can be Void then the parent is the screen.
+               do
+				if par /= Void then
+					parent_imp ?= par.implementation
+	                      parent_imp.auto_size
+				else
+					parent_imp := Void
+				end
+               end
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
-			-- Is current object destroyed ?
-			-- Yes if the item doesn't exist in the parent.
-		do
-			Result := False
-		end
-
 	type: INTEGER is
 			-- Type of the button.
-			-- See `add_button' of EV_TOOL_BAR_IMP for values
-			-- explanation.
+			-- Numeric value which the tool_bar_can use to
+			-- Identify the button type. Avoids reverse
+			-- assignment to identify actual type.
 		do
 			Result := 1
 		end
 
-	is_insensitive: BOOLEAN is
+	is_sensitive: BOOLEAN is
 			-- Is the current button insensitive?
 		do
-			Result := not parent_imp.button_enabled (id)
+			Result := parent_imp.button_enabled (id)
 		end
 
 feature -- Status setting
 
-	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
+	enable_sensitive is
+			 -- Enable button.
 		do
-			if parent_imp /= Void then
-				parent_imp.remove_item (Current)
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-				parent_imp.add_item (Current)
-				parent_imp.auto_size
-			end
+			parent_imp.enable_button (id)
 		end
 
-	set_insensitive (flag: BOOLEAN) is
-			-- Make the current button insensitive if `flag' and
-			-- enable if `not flag'
+	disable_sensitive is
+			 -- Disable button.
 		do
-			if flag then
-				parent_imp.disable_button (id)
-			else
-				parent_imp.enable_button (id)
-			end
+			parent_imp.disable_button (id)
 		end
 
 feature -- Element change
@@ -219,7 +213,6 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
 	on_activate is
 			-- Is called by the menu when the item is activated.
 		do
-			execute_command (Cmd_item_activate, Void)
 		end
 
 feature {NONE} -- Implementation, pick and drop
@@ -229,6 +222,22 @@ feature {NONE} -- Implementation, pick and drop
 		do
 			Result := parent_imp
 		end
+
+	set_capture is
+			-- Grab user input.
+		do
+			parent_imp.set_capture
+		end
+
+	release_capture is
+			-- Release user input.
+		do
+			parent_imp.release_capture
+		end
+
+feature {EV_ANY_I} -- Interface
+
+	interface: EV_TOOL_BAR_BUTTON
 
 end -- class EV_TOOL_BAR_BUTTON_IMP
 
@@ -247,3 +256,50 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.10  2000/02/14 11:40:39  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.9.6.10  2000/02/05 02:10:50  brendel
+--| Removed feature `destroyed'.
+--|
+--| Revision 1.9.6.9  2000/02/04 19:24:04  brendel
+--| Removed feature `id' since it is now defined in EV_ID_IMP.
+--|
+--| Revision 1.9.6.8  2000/01/27 19:30:08  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.9.6.7  2000/01/27 01:10:56  rogers
+--| renamed is_insensitive to is_sensitive, and replaced set_insensitive with enable_sensitive and disable_sensitive.
+--|
+--| Revision 1.9.6.6  2000/01/25 17:37:51  brendel
+--| Removed code associated with old events.
+--| Implementation and more removal is needed.
+--|
+--| Revision 1.9.6.5  2000/01/20 20:33:47  rogers
+--| Added a better explanation of type.
+--|
+--| Revision 1.9.6.4  2000/01/20 17:04:48  rogers
+--| In make, base make now is passed an_interface, and initialize is implemented.
+--|
+--| Revision 1.9.6.3  1999/12/22 18:21:15  rogers
+--| Removed undefinition of pixmap_size_ok, as it is no longer inherited at all.
+--|
+--| Revision 1.9.6.2  1999/12/17 17:30:28  rogers
+--| Altered to fit in with the review branch. Make takes an interface. Now inherits from EV_PICK_AND_DROPABLE_IMP.
+--|
+--| Revision 1.9.6.1  1999/11/24 17:30:16  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.9.2.2  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

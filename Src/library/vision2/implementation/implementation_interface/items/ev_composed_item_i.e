@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
 		" EiffelVision composed item, implementation interface."
@@ -15,21 +17,20 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_text (txt: ARRAY [STRING]) is
-			-- Create a row with text in it.
-		require
-			valid_text: txt /= Void
-		deferred
-		ensure
-			text_set: text_set (txt)
-		end
+--	make_with_text (txt: ARRAY [STRING]) is
+--			-- Create a row with text in it.
+--		require
+--			valid_text: txt /= Void
+--		deferred
+--		ensure
+--			text_set: text_set (txt)
+--		end
 
 feature -- Access
 
 	count: INTEGER is
 			-- Number of element in the item
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			positive_result: result >= 0
@@ -38,7 +39,6 @@ feature -- Access
 	cell_text (value: INTEGER): STRING is
 			-- Return the text of the cell number `value' 
 		require
-			exists: not destroyed
 			valid_index: value >= 1 and value <= count
 		deferred
 		ensure
@@ -48,7 +48,6 @@ feature -- Access
 	text: LINKED_LIST [STRING] is
 			-- Current label of the item
 		require
-			exists: not destroyed
 		deferred
 		ensure
 			valid_result: Result /= Void
@@ -60,7 +59,6 @@ feature -- Access
 			-- `value'. On windows platform, 
 			-- if value > 1, the result is void.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -68,7 +66,6 @@ feature -- Access
 			-- Return all the pixmaps of the item.
 			-- Only 1 on windows platform.
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -79,7 +76,6 @@ feature -- Element change
 			-- When there is a parent, the item has the
 			-- count done by the parent.
 		require
-			exists: not destroyed
 			no_parent: parent_imp = Void
 			valid_value: value > 0
 		deferred
@@ -91,7 +87,6 @@ feature -- Element change
 			-- Make `txt' the new label of the `value'-th
 			-- cell of the item.
 		require
-			exists: not destroyed
 			valid_index: value >= 1 and value <= count
 			valid_text: txt /= Void
 		deferred
@@ -102,7 +97,6 @@ feature -- Element change
 	set_text (txt: ARRAY [STRING]) is
 			-- Make `txt' the new label of the item.
 		require
-			exists: not destroyed
 			valid_text: txt /= Void
 		local
 			i: INTEGER
@@ -126,7 +120,6 @@ feature -- Element change
 			-- Make `pix' the new pixmap of the 
 			-- `value'-th cell of the item.
 		require
-			exists: not destroyed
 			valid_index: value >= 1 and value <= count
 			valid_size: (pix /= Void) implies pixmap_size_ok (pix)
 		deferred
@@ -146,7 +139,6 @@ feature -- Element change
 	set_pixmap (pix: ARRAY [EV_PIXMAP]) is
 			-- Make `pix' the new pixmaps of the item.
 		require
-			exists: not destroyed
 			valid_pixmaps: pix /= Void
 			valid_size: pixmaps_size_ok (pix)
 		local
@@ -252,3 +244,31 @@ end -- class EV_COMPOSED_ITEM_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.7  2000/02/14 11:40:33  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.6.6.3  2000/01/27 19:29:51  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.6.6.2  1999/12/09 03:15:05  oconnor
+--| commented out make_with_* features, these should be in interface only
+--|
+--| Revision 1.6.6.1  1999/11/24 17:30:01  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.6.2.3  1999/11/04 23:10:32  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.6.2.2  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

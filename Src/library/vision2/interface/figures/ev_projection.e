@@ -9,22 +9,18 @@ class
 	EV_PROJECTION
 
 create
-	default_create,
 	make
 
 feature -- Initialization
 
-	make (a_world: EV_FIGURE_WORLD; a_device: EV_DRAWABLE) is
+	make (a_world: EV_FIGURE_WORLD) is
 			-- Create projection with `a_world' and `a_device'.
 		require
 			a_world_not_void: a_world /= Void
-			a_device_not_void: a_device /= Void
 		do
 			world := a_world
-			device := a_device
 		ensure
 			world_assigned: world = a_world
-			device_assigned: a_device = device
 		end
 
 feature -- Status setting
@@ -39,26 +35,12 @@ feature -- Status setting
 			world_assigned: world = a_world
 		end
 
-	set_device (a_device: EV_DRAWABLE) is
-			-- Set `device' to `a_device'.
-		require
-			a_device_exists: a_device /= Void
-		do
-			device := a_device
-		ensure
-			device_assigned: device = a_device
-		end
-
 feature -- Access
 
 	world: EV_FIGURE_WORLD
 			-- The figure-world that will be projected.
 
-	device: EV_DRAWABLE
-			-- The device on which the figure-world is projected.
-
 invariant
 	world_exists: world /= Void
-	device_exists: device /= Void
 
 end -- class EV_PROJECTION

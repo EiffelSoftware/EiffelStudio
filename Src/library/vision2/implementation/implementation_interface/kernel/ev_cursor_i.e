@@ -1,6 +1,5 @@
 indexing
-	description:
-		"EiffelVision cursor, implementation interface."
+	description: "Eiffel Vision cursor. Implementation interface."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,41 +9,44 @@ deferred class
 
 inherit
 	EV_ANY_I
+		redefine
+			interface
+		end
 
-feature {NONE} -- Initialization
 
-	make is
-			-- Create a cursor with the default appearance.
+feature -- Access
+
+	pixmap: EV_PIXMAP is
+			-- Used as pointer cursor.
 		deferred
 		end
 
-	make_by_code (code: INTEGER) is
-			-- Create a cursor with the appearance corresponding
-			-- to `value'. See class EV_CURSOR_CODE fo the code.
+	code: INTEGER is
+			-- Toolkit pointer identification code.
 		deferred
 		end
 
-	make_by_filename (filename: STRING) is
-			-- Create a cursor from the given file path
+feature -- Element change
+
+	set_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Set `pixmap' to `a_pixmap'.
 		require
-			valid_filename: filename /= Void
-			filename_exists: file_exists (filename)
+			a_pixmap_not_void: a_pixmap /= Void
 		deferred
+		ensure
+			assigned: pixmap.is_equal (a_pixmap)
 		end
 
-
-	file_exists (file_name: STRING) : BOOLEAN is
-			-- Does the given file name exist?
-		require
-			valid_file: file_name /= Void
-		local
-			file: RAW_FILE
-		do	
-			create file.make (file_name)
-			if file.exists then
-				Result := True
-			end
+	set_code (a_code: INTEGER) is
+			-- Set `code' to `a_code'.
+		deferred
+		ensure
+			assigned: code = a_code
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_CURSOR
 
 end -- class EV_CURSOR_I
 
@@ -63,3 +65,41 @@ end -- class EV_CURSOR_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/02/14 11:40:34  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.4.4.7  2000/02/04 04:15:56  oconnor
+--| release
+--|
+--| Revision 1.4.4.6  2000/02/03 23:19:19  brendel
+--| Added feature `set_code' and `code'.
+--|
+--| Revision 1.4.4.5  2000/01/28 23:20:37  brendel
+--| Revised. Now only has `pixmap' and `set_pixmap'.
+--| Might be added later: set_code.
+--|
+--| Revision 1.4.4.4  2000/01/27 19:29:54  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.4.4.3  1999/12/09 03:15:05  oconnor
+--| commented out make_with_* features, these should be in interface only
+--|
+--| Revision 1.4.4.2  1999/11/30 22:50:47  oconnor
+--| Redefined interface to more refined type
+--|
+--| Revision 1.4.4.1  1999/11/24 17:30:05  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.3  1999/11/02 17:20:05  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

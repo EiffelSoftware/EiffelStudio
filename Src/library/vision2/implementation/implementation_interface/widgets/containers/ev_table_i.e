@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description: 
@@ -22,28 +24,24 @@ feature -- Status report
 	rows: INTEGER is
 			-- Number of rows
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	columns: INTEGER is
 			-- Number of columns
 		require
-			exists: not destroyed
 		deferred
 		end
 
 	row_spacing: INTEGER is
 			-- Spacing between two rows
 		require
-			exists: not destroyed
 		deferred
 		end
 	
 	column_spacing: INTEGER is
 			-- Spacing between two columns
 		require
-			exists: not destroyed
 		deferred
 		end
 
@@ -53,14 +51,12 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		require
-			exist: not destroyed
 		deferred
 		end
 	
 	set_row_spacing (value: INTEGER) is
 			-- Spacing between two rows of the table
 		require
-			exist: not destroyed
 			positive_value: value >= 0
 		deferred
 		end
@@ -68,7 +64,6 @@ feature -- Status settings
 	set_column_spacing (value: INTEGER) is
 			-- Spacing between two columns of the table
 		require
-			exist: not destroyed
 			positive_value: value >= 0
 		deferred
 		end
@@ -81,7 +76,6 @@ feature -- Status settings
 			-- the child, otherwise, the child won't appear in
 			-- the table.
 		require
-			exists: not destroyed
 			the_child_not_void: the_child /= Void
 			good_child: the_child.parent = interface
 			bottom_larger_than_top: bottom > top
@@ -106,3 +100,28 @@ end -- class EV_TABLE_I
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:37  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.6.2  2000/01/27 19:30:02  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.6.1  1999/11/24 17:30:10  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.3  1999/11/04 23:10:42  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:06  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

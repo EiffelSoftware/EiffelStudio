@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision text component. %
 				  % Mswindows implementation"
@@ -11,13 +13,18 @@ deferred class
 
 inherit
 	EV_TEXT_COMPONENT_I
+		--rename
+		--	caret_position as internal_caret_position
+		redefine
+			interface
+		end
 
 	EV_PRIMITIVE_IMP
 		undefine
-			set_default_colors,
-			set_default_options
+			set_default_colors
 		redefine
-			set_default_minimum_size
+			set_default_minimum_size,
+			interface
 		end
 
 feature {NONE} -- Initialization
@@ -37,10 +44,10 @@ feature -- Status report
 			Result := not read_only
 		end
 
-	position: INTEGER is
+	caret_position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := caret_position + 1
+			Result := internal_caret_position + 1
 		end
 
 	selection_start: INTEGER is
@@ -73,20 +80,20 @@ feature -- Status setting
 				end
 			end
 
-	set_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER) is
 			-- set current insertion position
 		do
-			set_caret_position (pos - 1)
+			internal_set_caret_position (pos - 1)
 		end
 
-	set_maximum_text_length (value: INTEGER) is
+	set_capacity (value: INTEGER) is
 			-- Make `value' the new maximal lenght of the text
 			-- in characte number.
 		do
 			set_text_limit (value)
 		end
 
-	get_maximum_text_length: INTEGER is
+	capacity: INTEGER is
 			-- Return the maximum number of characters
 			-- that the user may enter.
 		do
@@ -101,7 +108,7 @@ feature -- element change
 			temp_text: STRING
 		do
 			temp_text := text
-			temp_text.insert (txt, position)
+			temp_text.insert (txt, caret_position)
 			set_text (temp_text)
 		end
 
@@ -151,7 +158,7 @@ feature -- Basic operation
 		local
 			pos: INTEGER
 		do
-			pos := caret_position
+			pos := internal_caret_position
 			set_caret_position (index - 1)
 			clip_paste
 			set_caret_position (pos)
@@ -177,12 +184,12 @@ feature -- Event -- removing command association
 
 feature {NONE} -- Deferred features
 
-	caret_position: INTEGER is
+	internal_caret_position: INTEGER is
 			-- Caret position
 		deferred
 		end
 
-	set_caret_position (a_position: INTEGER) is
+	internal_set_caret_position (a_position: INTEGER) is
 			-- Set the caret position with `position'.
 		deferred
 		end
@@ -247,6 +254,10 @@ feature {NONE} -- Deferred features
 			Result := foreground_color_imp
 		end
 
+feature {NONE} -- interface
+
+	interface: EV_TEXT_COMPONENT
+
 end -- class EV_TEXT_COMPONENT_IMP
 
 --|----------------------------------------------------------------
@@ -264,3 +275,36 @@ end -- class EV_TEXT_COMPONENT_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.26  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.25.4.5  2000/02/01 03:37:59  brendel
+--| Removed undefine of set_default_minimum_size.
+--|
+--| Revision 1.25.4.4  2000/01/27 19:30:29  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.25.4.3  2000/01/18 18:21:25  rogers
+--| Renamed
+--| 	set_maximum_text_length -> set_capacity
+--| 	get_maximum_text_length -> capacity
+--|
+--| Revision 1.25.4.2  1999/12/30 02:01:31  rogers
+--| Changes to fit in with the new work.
+--|
+--| Revision 1.25.4.1  1999/11/24 17:30:34  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.24.6.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision multi-column-list, Mswindows implementation."
@@ -11,6 +13,9 @@ class
 
 inherit
 	EV_MULTI_COLUMN_LIST_I
+		redefine
+			interface
+		end
 
 	EV_PRIMITIVE_IMP
 		redefine
@@ -20,12 +25,13 @@ inherit
 			on_left_button_up,
 			on_middle_button_up,
 			on_right_button_up,
-			on_key_down
+			on_key_down,
+			interface
 		end
 
-	EV_ARRAYED_LIST_ITEM_HOLDER_IMP
+	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
 		redefine
-			move_item
+			interface
 		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
@@ -39,7 +45,7 @@ inherit
 			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
-			shown as displayed,
+			shown as is_displayed,
 			font as wel_font,
 			set_font as wel_set_font,
 			column_count as columns,
@@ -47,8 +53,12 @@ inherit
 			get_item as wel_get_item,
 			insert_item as wel_insert_item,
 			set_column_width as wel_set_column_width,
-			get_column_width as wel_get_column_width
-
+			get_column_width as wel_get_column_width,
+			item as wel_item,
+			move as move_to,
+			enabled as is_sensitive, 
+			width as wel_width,
+			height as wel_height
 		undefine
 			remove_command,
 			set_width,
@@ -82,10 +92,16 @@ inherit
 		end
 
 creation
-	make_with_size,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
+
+	make (an_interface: like interface) is
+		do
+			base_make (an_interface)
+			create ev_children.make (0)
+			wel_make (default_parent, 0, 0, 0, 0, 0)
+		end
 
 	make_with_size (col_nb: INTEGER) is         
 			-- Create a list widget with `col_nb' columns.
@@ -93,7 +109,6 @@ feature {NONE} -- Initialization
 		local
 			a_column: WEL_LIST_VIEW_COLUMN
 			i: INTEGER
-			cmd: EV_ROUTINE_COMMAND
 		do
 			!! ev_children.make (0)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
@@ -112,6 +127,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	--FIXME Should no longer be required as is now in item_list.
+	--item: EV_MULTI_COLUMN_LIST_ROW is
+	--	do
+	--	end
+
 	last_column_width_setting: INTEGER
 		-- The width that the last column was set to by the user.
 
@@ -129,20 +149,20 @@ feature -- Access
 			-- should use `selected_item' rather than 
 			-- `selected_items' for a single selection list
 		local
-			index: INTEGER
+			i: INTEGER
 			interf: EV_MULTI_COLUMN_LIST_ROW
 			c: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 		do
 			from
 				c := ev_children
 				!! Result.make
-				index := 0
+				i := 0
 			until
-				index = selected_count
+				i = selected_count
 			loop
-				interf ?= (c @ (wel_selected_items @ (index) + 1)).interface
+				interf ?= (c @ (wel_selected_items @ i + 1)).interface
 				Result.extend (interf)
-				index := index + 1
+				i := i + 1
 			end			
 		end
 
@@ -156,7 +176,7 @@ feature -- Access
 		do
 			create pt.make (x_pos, y_pos)
 			create info.make_with_point (pt)
-			cwin_send_message (item, Lvm_hittest, 0, info.to_integer)
+			cwin_send_message (wel_item, Lvm_hittest, 0, info.to_integer)
 			if flag_set (info.flags, Lvht_onitemlabel)
 			or flag_set (info.flags, Lvht_onitemicon)
 			then
@@ -201,16 +221,16 @@ feature -- Status report
 
 feature -- Status setting
 
-	select_item (index: INTEGER) is
-			-- Select an item at the one-based `index' the list.
+	select_item (an_index: INTEGER) is
+			-- Select an item at the one-based `an_index' the list.
 		do
-			(ev_children @ index).set_selected (True)
+			(ev_children @ an_index).set_selected (True)
 		end
 
-	deselect_item (index: INTEGER) is
-			-- Unselect the item at the one-based `index'.
+	deselect_item (an_index: INTEGER) is
+			-- Unselect the item at the one-based `an_index'.
 		do
-			(ev_children @ index).set_selected (False)
+			(ev_children @ an_index).set_selected (False)
 		end
 
 	clear_selection is
@@ -224,7 +244,7 @@ feature -- Status setting
 			until
 				c.after
 			loop
-				deselect_item (c.item.index)
+				c.item.set_selected (False)
 				c.forth
 			end
 		end
@@ -350,7 +370,7 @@ feature -- Element change
 			until
 				c.after
 			loop
-				c.item.interface.remove_implementation
+				c.item.interface.destroy
 				c.forth
 			end
 			reset_content
@@ -440,7 +460,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		do
 		end
 
-	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; index: INTEGER) is
+	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' in the list at the index `index'.
 		local
 			list: ARRAYED_LIST [STRING]
@@ -458,23 +478,23 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 				list.after
 			loop
 				create litem.make_with_attributes (Lvif_text, index - 1, list.index - 1, 0, list.item)
-				cwin_send_message (item, Lvm_setitem, 0, litem.to_integer)
+				cwin_send_message (wel_item, Lvm_setitem, 0, litem.to_integer)
 				list.forth
 			end
 
 			-- Then, we update ev_children
-			ev_children.go_i_th (index - 1)
+			ev_children.go_i_th (an_index - 1)
 			ev_children.put_right (item_imp)
 		end
 
-	move_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; index: INTEGER) is
+	move_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
 			-- Move the given item to the given position.
 		local
 			bool: BOOLEAN
 		do
 			bool := item_imp.is_selected
 			remove_item (item_imp)
-			insert_item (item_imp, index)
+			insert_item (item_imp, an_index)
 			if bool then
 				item_imp.set_selected (True)
 			end
@@ -483,14 +503,14 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Remove `item' from the list
 		local
-			index: INTEGER
+			an_index: INTEGER
 		do
 			-- First, we remove the child from the graphical component
-			index := ev_children.index_of (item_imp, 1) - 1
-			delete_item (index)
+			an_index := ev_children.index_of (item_imp, 1) - 1
+			delete_item (an_index)
 
 			-- Then, we update the children
-			ev_children.go_i_th (index + 1)
+			ev_children.go_i_th (an_index + 1)
 			ev_children.remove
 		end
 
@@ -503,37 +523,37 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 	internal_is_selected (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): BOOLEAN is
 			-- Is `item_imp' selected in the list?
 		local
-			index: INTEGER
+			i: INTEGER
 		do
-			index := ev_children.index_of (item_imp, 1) - 1
-			index := get_item_state (index, Lvis_selected)
-			Result := flag_set (index, Lvis_selected)
+			i := ev_children.index_of (item_imp, 1) - 1
+			i := get_item_state (i, Lvis_selected)
+			Result := flag_set (i, Lvis_selected)
 		end
 
 	internal_select (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Select `item_imp' in the list.
 		local
-			index, flags: INTEGER
+			i, flags: INTEGER
 			litem: WEL_LIST_VIEW_ITEM
 		do
-			index := ev_children.index_of (item_imp, 1) - 1
-			create litem.make_with_attributes (Lvif_state, index, 0, 0, "")
+			i := ev_children.index_of (item_imp, 1) - 1
+			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (Lvis_selected)
 			litem.set_statemask (Lvis_selected)	
-			cwin_send_message (item, Lvm_setitemstate, index, litem.to_integer)
+			cwin_send_message (wel_item, Lvm_setitemstate, i, litem.to_integer)
 		end
 
 	internal_deselect (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Deselect `item_imp' in the list.
 		local
-			index, flags: INTEGER
+			i, flags: INTEGER
 			litem: WEL_LIST_VIEW_ITEM
 		do
-			index := ev_children.index_of (item_imp, 1) - 1
-			create litem.make_with_attributes (Lvif_state, index, 0, 0, "")
+			i := ev_children.index_of (item_imp, 1) - 1
+			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (0)
 			litem.set_statemask (Lvis_selected)	
-			cwin_send_message (item, Lvm_setitemstate, index, litem.to_integer)
+			cwin_send_message (wel_item, Lvm_setitemstate, i, litem.to_integer)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -558,21 +578,10 @@ feature {NONE} -- WEL Implementation
 				+ Lvs_report + Lvs_showselalways
 		end
 
-	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
-			-- Propagate `event_id' to the good item.
-		local
-			it: EV_MULTI_COLUMN_LIST_ROW_IMP
-		do
-			it := find_item_at_position (x_pos, y_pos)
-			if it /= Void then
-				it.execute_command (event_id, ev_data)
-			end
-		end
-
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
 			-- A column was tapped.
 		do
-			execute_command (Cmd_column_click, Void)
+			--| FIXME execute_command (Cmd_column_click, Void)
 			disable_default_processing
 		end
 
@@ -581,97 +590,98 @@ feature {NONE} -- WEL Implementation
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			if info.uchanged = Lvif_state and info.isubitem = 0 then
-				if flag_set(info.unewstate, Lvis_selected) and
-						not flag_set(info.uoldstate, Lvis_selected) then
-					item_imp := ev_children @ (info.iitem + 1)
-					item_imp.execute_command (Cmd_item_activate, Void)
-					execute_command (Cmd_select, Void)
-				elseif flag_set(info.uoldstate, Lvis_selected) and
-					not flag_set(info.unewstate, Lvis_selected) then
-					item_imp := ev_children @ (info.iitem + 1)
-					item_imp.execute_command (Cmd_item_deactivate, Void)
-				end
-			end
+			--| FIXME 
+			--if info.uchanged = Lvif_state and info.isubitem = 0 then
+			--	if flag_set(info.unewstate, Lvis_selected) and
+			--			not flag_set(info.uoldstate, Lvis_selected) then
+			--		item_imp := ev_children @ (info.iitem + 1)
+			--		item_imp.execute_command (Cmd_item_activate, Void)
+			--		execute_command (Cmd_select, Void)
+			--	elseif flag_set(info.uoldstate, Lvis_selected) and
+			--		not flag_set(info.unewstate, Lvis_selected) then
+			--		item_imp := ev_children @ (info.iitem + 1)
+			--		item_imp.execute_command (Cmd_item_deactivate, Void)
+			--	end
+			--end
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_lbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
-		local
-			ev_data: EV_BUTTON_EVENT_DATA
+--		local
+--			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			ev_data := get_button_data (1, keys, x_pos, y_pos)
-			if has_command (Cmd_button_one_press) then
-				execute_command (Cmd_button_one_press, ev_data)
-			end
-			internal_propagate_event (Cmd_button_one_press, x_pos, y_pos, ev_data)
+--			ev_data := get_button_data (1, keys, x_pos, y_pos)
+--			if has_command (Cmd_button_one_press) then
+--				execute_command (Cmd_button_one_press, ev_data)
+--			end
+--			internal_propagate_event (Cmd_button_one_press, x_pos, y_pos, ev_data)
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
-		local
-			ev_data: EV_BUTTON_EVENT_DATA
+--		local
+--			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			ev_data := get_button_data (2, keys, x_pos, y_pos)
-			if has_command (Cmd_button_two_press) then
-				execute_command (Cmd_button_two_press, ev_data)
-			end
-			internal_propagate_event (Cmd_button_two_press, x_pos, y_pos, ev_data)
+--			ev_data := get_button_data (2, keys, x_pos, y_pos)
+--			if has_command (Cmd_button_two_press) then
+--				execute_command (Cmd_button_two_press, ev_data)
+--			end
+--			internal_propagate_event (Cmd_button_two_press, x_pos, y_pos, ev_data)
 		end
 
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
-		local
-			ev_data: EV_BUTTON_EVENT_DATA
+--		local
+--			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			ev_data := get_button_data (2, keys, x_pos, y_pos)
-			if has_command (Cmd_button_three_press) then
-				execute_command (Cmd_button_three_press, ev_data)
-			end
-			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos, ev_data)
-			disable_default_processing
+--			ev_data := get_button_data (2, keys, x_pos, y_pos)
+--			if has_command (Cmd_button_three_press) then
+--				execute_command (Cmd_button_three_press, ev_data)
+--			end
+--			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos, ev_data)
+--			disable_default_processing
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_lbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
-		local
-			ev_data: EV_BUTTON_EVENT_DATA
+--		local
+--			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			ev_data := get_button_data (1, keys, x_pos, y_pos)
-			if has_command (Cmd_button_one_release) then
-				execute_command (Cmd_button_one_release, ev_data)
-			end
-			internal_propagate_event (Cmd_button_one_release, x_pos, y_pos, ev_data)
+--			ev_data := get_button_data (1, keys, x_pos, y_pos)
+--			if has_command (Cmd_button_one_release) then
+--				execute_command (Cmd_button_one_release, ev_data)
+--			end
+--			internal_propagate_event (Cmd_button_one_release, x_pos, y_pos, ev_data)
 		end
 
 	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
-		local
-			ev_data: EV_BUTTON_EVENT_DATA
+--		local
+--			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			ev_data := get_button_data (2, keys, x_pos, y_pos)
-			if has_command (Cmd_button_two_release) then
-				execute_command (Cmd_button_two_release, ev_data)
-			end
-			internal_propagate_event (Cmd_button_two_release, x_pos, y_pos, ev_data)
+--			ev_data := get_button_data (2, keys, x_pos, y_pos)
+--			if has_command (Cmd_button_two_release) then
+--				execute_command (Cmd_button_two_release, ev_data)
+--			end
+--			internal_propagate_event (Cmd_button_two_release, x_pos, y_pos, ev_data)
 		end
 
 	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
-		local
-			ev_data: EV_BUTTON_EVENT_DATA
+--		local
+--			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			ev_data := get_button_data (3, keys, x_pos, y_pos)
-			if has_command (Cmd_button_three_release) then
-				execute_command (Cmd_button_three_release, ev_data)
-			end
-			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos, ev_data)
+--			ev_data := get_button_data (3, keys, x_pos, y_pos)
+--			if has_command (Cmd_button_three_release) then
+--				execute_command (Cmd_button_three_release, ev_data)
+--			end
+--			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos, ev_data)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -683,13 +693,13 @@ feature {NONE} -- WEL Implementation
 
 feature -- Inapplicable
 
-	make is
-			-- Not applicable
-		do
-			check
-				Inapplicable: False
-			end
-		end
+	--make is
+	--		-- Not applicable
+	--	do
+	--		check
+	--			Inapplicable: False
+	--		end
+	--	end
 
 feature {EV_PND_TRANSPORTER_IMP}
 
@@ -753,6 +763,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+feature {NONE}
+
+	interface: EV_MULTI_COLUMN_LIST
+
 end -- class EV_MULTI_COLUMN_LIST_IMP
 
 --|----------------------------------------------------------------
@@ -770,3 +784,44 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|---------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.33  2000/02/14 11:40:44  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.31.4.1.2.8  2000/02/04 19:07:33  rogers
+--| Removed a redundent EV_ROUTINE_COMMAND defenition.
+--|
+--| Revision 1.31.4.1.2.7  2000/02/03 17:20:46  brendel
+--| Changed `make_with_size' to `make' in creation clause.
+--|
+--| Revision 1.31.4.1.2.6  2000/01/29 01:05:03  brendel
+--| Tweaked inheritance clause.
+--|
+--| Revision 1.31.4.1.2.5  2000/01/27 19:30:28  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.31.4.1.2.4  2000/01/25 17:37:53  brendel
+--| Removed code associated with old events.
+--| Implementation and more removal is needed.
+--|
+--| Revision 1.31.4.1.2.3  2000/01/19 22:35:45  rogers
+--| Removed item as it is now inherited from EV_ITEM_LIST_IMP.
+--|
+--| Revision 1.31.4.1.2.2  1999/12/17 00:37:46  rogers
+--| Altered to fit in with the review branch. Basic alterations, redefinitaions of name clashes etc. Make now takes an interface. Now inherits from EV_ITEM_LIST_IMP.
+--|
+--| Revision 1.31.4.1.2.1  1999/11/24 17:30:32  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.31.2.2  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision frame, Mswindows implementation."
@@ -11,6 +13,12 @@ class
 
 inherit
 	EV_FRAME_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
+		redefine
+			interface
+		end
 
 	EV_SINGLE_CHILD_CONTAINER_IMP
 		redefine
@@ -21,16 +29,32 @@ inherit
 			set_default_minimum_size,
 			compute_minimum_width,
 			compute_minimum_height,
-			compute_minimum_size
+			compute_minimum_size,
+			interface,
+			initialize
+		select
+			interface
 		end
 
 	EV_FONTABLE_IMP
+		rename
+			interface as ev_fontable_interface
+		end
+
+	EV_TEXTABLE_IMP
+		rename
+			interface as ev_textable_interface
+		undefine
+			set_default_minimum_size
+		end
 
 	EV_SYSTEM_PEN_IMP
 
 	EV_WEL_CONTROL_CONTAINER_IMP
+		rename
+			make as ev_wel_control_container_make,
+			move as move_to
 		redefine
-			make,
 			on_paint,
 			top_level_window_imp,
 			move_and_resize,
@@ -38,22 +62,23 @@ inherit
 		end
 
 creation
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
+			-- Create the frame with the default options.
 		do
-			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
-			!WEL_ANSI_VARIABLE_FONT! wel_font.make
-			wel_set_font (wel_font)
+			base_make (an_interface)
+			ev_wel_control_container_make
 		end
 
-	make_with_text (txt: STRING) is
+	initialize is
+			-- Set default font.
 		do
-			make
-			set_text (txt)
+			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor
+			!WEL_ANSI_VARIABLE_FONT! wel_font.make
+			wel_set_font (wel_font)
 		end
 
 feature -- Access
@@ -82,7 +107,7 @@ feature -- Access
 			Result := (client_rect.height - box_text_height - 2 * box_width).max (0)
 		end
 
-	top_level_window_imp: EV_UNTITLED_WINDOW_IMP
+	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains the current widget.
 
 feature -- Status setting
@@ -107,7 +132,7 @@ feature -- Element change
 			invalidate
 		end
 
-	set_top_level_window_imp (a_window: EV_UNTITLED_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		do
@@ -231,6 +256,15 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
+	--| FIXME
+	align_text_center is do end
+	align_text_right is do end
+	align_text_left is do end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_FRAME
+
 end -- class EV_FRAME_IMP
 
 --|----------------------------------------------------------------
@@ -248,3 +282,32 @@ end -- class EV_FRAME_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.21  2000/02/14 11:40:43  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.20.10.4  2000/02/08 07:21:03  brendel
+--| Minor changes to run through compiler.
+--| Still needs major revision.
+--|
+--| Revision 1.20.10.3  2000/01/27 19:30:20  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.20.10.2  1999/12/17 00:53:26  rogers
+--| Altered to fit in with the review branch. Redefinitions required, make now requires an interface.
+--|
+--| Revision 1.20.10.1  1999/11/24 17:30:26  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.20.6.3  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

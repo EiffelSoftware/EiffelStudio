@@ -1,8 +1,7 @@
 indexing
-	description:
-		" EiffelVision scrollbar. A gauge usely used to%
-		% scroll an area."
+	description: "Eiffel Vision scrollbar."
 	status: "See notice at end of class."
+	keywords: "scroll, bar, horizontal, vertical, gauge, leap, step, page"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,51 +14,7 @@ inherit
 			implementation
 		end
 
-feature -- Access
-
-	leap: INTEGER is
-			-- Leap of the scrolling
-			-- ie : the user clicks on the scroll bar
-		require
-			exists: not destroyed
-		do
-			Result := implementation.leap
-		ensure
-			positive_result: Result >= 0
-		end
-
-feature -- Status setting
-
-	leap_forward is
-			-- Increase the current value of one leap.
-		require
-			exists: not destroyed
-		do
-			implementation.leap_forward
-		end
-
-	leap_backward is
-			-- Decrease the current value of one leap.
-		require
-			exists: not destroyed
-		do
-			implementation.leap_backward
-		end
-
-feature -- Element change
-
-	set_leap (val: INTEGER) is
-			-- Make `val' the new leap.
-		require
-			exists: not destroyed
-			positive_val: val >= 0
-		do
-			implementation.set_leap (val)
-		ensure
-			val_set: leap = val
-		end
-
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	implementation: EV_SCROLL_BAR_I
 			-- Platform dependent access.
@@ -81,3 +36,37 @@ end -- class EV_SCROLL_BAR
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:53  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.6.5  2000/02/02 00:57:44  brendel
+--| Removed leap-functions since they are now defined in EV_GAUGE.
+--|
+--| Revision 1.3.6.4  2000/01/31 21:30:17  brendel
+--| Improved contracts.
+--|
+--| Revision 1.3.6.3  2000/01/28 22:24:25  oconnor
+--| released
+--|
+--| Revision 1.3.6.2  2000/01/27 19:30:56  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.6.1  1999/11/24 17:30:55  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.2.3  1999/11/04 23:10:55  oconnor
+--| updates for new color model, removed exists: not destroyed
+--|
+--| Revision 1.3.2.2  1999/11/02 17:20:13  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

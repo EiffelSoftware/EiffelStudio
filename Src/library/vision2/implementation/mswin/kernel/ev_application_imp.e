@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision application, mswindows implementation."
@@ -11,15 +13,6 @@ class
 	
 inherit
 	EV_APPLICATION_I
-
-	EV_ACCELERATOR_HANDLER_IMP
-		rename
-			application as wrong_application
-		redefine
-			accelerator_table,
-			on_accelerator_command,
-			execute_accel_command
-		end
 
  	WEL_APPLICATION
  		rename
@@ -44,42 +37,64 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create the application.
 		do
+			base_make (an_interface)
 			set_application (Current)
 			create_dispatcher
 			init_instance
 			init_application
 		end
 
-	launch (interface: EV_APPLICATION) is
-			-- Launch the main window and the application.
-		local
-			w: EV_UNTITLED_WINDOW_IMP
+	launch  is
+			-- Start the event loop.
 		do
-			w ?= interface.first_window.implementation
-			if root_windows.empty then
-				add_root_window (w)
-			elseif root_windows.first /= w then
-				root_windows.start
-				root_windows.prune (w)
-				root_windows.put_front (w)
-			end
+			add_root_window (interface.first_window)
+			--root_window)
+			--|FIXME
 			set_root_window
-			interface.initialize
-			if runable then
-				run
-			end
+			run
 			destroy_application
+		end
+
+feature -- Basic operation
+
+        process_events is
+                        -- Process any pending events.
+                        --| Pass control to the GUI toolkit so that it can
+                        --| handle any events that may be in its queue.
+		local
+			msg: WEL_MSG
+			done: BOOLEAN
+		do
+			create msg.make
+			from
+			until done
+			loop
+				msg.peek_all
+				if msg.last_boolean_result then
+					msg.translate
+					msg.dispatch
+				else
+					done := True
+				end
+			end
+			c_sleep (0)
+		end
+
+	sleep (msec: INTEGER) is
+			-- Wait for `msec' milliseconds and return.
+		do
+			c_sleep (msec)
 		end
 
 feature -- Root window
 
-	main_window: EV_UNTITLED_WINDOW_IMP is
+	main_window: EV_WINDOW_IMP is
 			-- Current main window of the application
 		once
-			Result := root_windows.first
+			Result ?= root_windows.first.implementation
 		end
 
 feature -- Status setting
@@ -87,9 +102,6 @@ feature -- Status setting
 	destroy_application is
 			-- Destroy few objects before to leave.
 		do
-			if accelerator_table /= Void then
-				accelerator_table.destroy
-			end
 		end
 
 	set_root_window is
@@ -100,96 +112,57 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_root_window (w: EV_UNTITLED_WINDOW_IMP) is
+	add_root_window (w: EV_WINDOW) is
 			-- Add `w' to the list of root windows.
 		do
 			root_windows.extend (w)
+			--|FIXME .implementation)
 		end
 
-	remove_root_window (w: EV_UNTITLED_WINDOW_IMP) is
+	remove_root_window (w: EV_WINDOW) is
 			-- Remove `w' from the root windows list.
 		do
 			if root_windows.count /= 1 then
 				root_windows.start
 				if root_windows.item = w then
+					--.implementation then
+					--|FIXME
 					root_windows.remove
 					set_root_window
 				else
 					root_windows.prune (w)
+					--.implementation)
+					--|FIXME
 				end
 			end
 		end
 
-feature -- Accelerators - command association
+feature -- Status report
 
-	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when `acc' is completed by the user.
+	tooltip_delay: INTEGER is
+			-- Time in milliseconds before tooltips pop up.
 		do
-			add_accel_command (acc, cmd, arg)
+			check
+				to_be_implemented: False
+			end
 		end
 
-	remove_accelerator_commands (acc: EV_ACCELERATOR) is
-			-- Empty the list of commands to be executed when
-			-- `acc' is completed by the user.
+feature -- Status setting
+
+	set_tooltip_delay (a_delay: INTEGER) is
+			-- Set `tooltip_delay' to `a_delay'.
 		do
-			remove_accel_commands (acc)
+			check
+				to_be_implemented: False
+			end
 		end
 
 feature -- Basic operation
 
-	exit is
-			-- Exit the application
+	destroy is
+			-- End the application.
 		do
 			main_window.destroy
-		end
-
-	splash_pixmap (pix: EV_PIXMAP) is
-			-- Show the splash screen pixmap `pix'.
-		local
-			metric: WEL_SYSTEM_METRICS
-			splash: EV_UNTITLED_WINDOW_IMP
-		do
-			create metric
-			create splash.make
-			splash.set_background_pixmap (pix)
-			splash.set_style (Ws_popup + Ws_overlapped + Ws_clipchildren + Ws_clipsiblings)
-			splash.move ((metric.full_screen_client_area_width - pix.width) // 2, (metric.full_screen_client_area_height - pix.height) // 2)
-			splash.set_minimum_size (pix.width, pix.height)
-			splash.set_maximum_size (metric.screen_width, metric.screen_height)
-			splash_screen := splash
-			splash.show
-		end
-
-feature -- Implementation
-
-	accelerator_table: EV_ACCELERATOR_TABLE_IMP is
-			-- Table that memories and passes the accelerators to the
-			-- system. In this table, all the accelerators are unique.
-		do
-			Result := main_window.accelerator_table
-		end
-
-	execute_accel_command (id: INTEGER; data: EV_EVENT_DATA) is
-			-- Execute the command that correspond to the accelerator
-			-- represented by id.
-			-- If there are no command, it calls the execution of the
-			-- parent.
-		local
-			list: LINKED_LIST [EV_INTERNAL_COMMAND]
-			i: INTEGER
-		do
-			if accelerator_list /= Void and then accelerator_list.has (id) then
-				list := (accelerator_list @ id)
-				from
-					i := 1
-				until
-					i > list.count
-				loop
-					(list @ i).execute (data)
-					i := i + 1
-				end
-			end
 		end
 
 feature {NONE} -- WEL Implemenation
@@ -199,12 +172,6 @@ feature {NONE} -- WEL Implemenation
 
 	rich_edit_dll: WEL_RICH_EDIT_DLL
 			-- Needed if the user want to open a rich edit.
-
-	has_accelerator: BOOLEAN is
-			-- Does the application has an accelerator
-		do
-			Result := not accelerator_table.empty
-		end
 
 	init_application is
 			-- Load the dll needed sometimes
@@ -222,20 +189,14 @@ feature {NONE} -- Message loop, we redefine it because the user
 			-- Windows message loop
 		local
 			msg: WEL_MSG
-			accel: WEL_ACCELERATORS
+			--accel: WEL_ACCELERATORS
 			main_w: WEL_WINDOW
 			done: BOOLEAN
 			dlg: POINTER
 		do
-			-- Destroy the spash screen
-			if splash_screen /= Void then
-				splash_screen.destroy
-				splash_screen := Void
-			end
-
 			-- `accel' and `main_w' are declared
 			-- locally to get a faster access.
-			accel := accelerator_table
+			--accel := accelerator_table
 			main_w := main_window
 
 			-- Process the messages
@@ -257,21 +218,23 @@ feature {NONE} -- Message loop, we redefine it because the user
 								msg.dispatch
 							end
 						else
-							if has_accelerator then
-								msg.translate_accelerator (main_w, accel)
-								if not msg.last_boolean_result then
-									msg.translate
-									msg.dispatch
-								end
-							else
+							--if has_accelerator then
+							--	msg.translate_accelerator (main_w, accel)
+							--	if not msg.last_boolean_result then
+							--		msg.translate
+							--		msg.dispatch
+							--	end
+							--else
 								msg.translate
 								msg.dispatch
-							end
+							--end
 						end
 					end
 				else
-					if idle_action_enabled then
-						idle_action
+					if not internal_idle_actions.empty then
+						internal_idle_actions.call ([])
+					elseif not interface.idle_actions.empty then 
+						interface.idle_actions.call ([])
 					else
 						msg.wait
 					end
@@ -323,6 +286,17 @@ feature {NONE} -- Inapplicable
 			end
  		end
 
+feature -- External Implementation
+
+	c_sleep (v: INTEGER) is
+			-- Sleep for `v' milliseconds
+		external
+			"C | <winbase.h>"
+		alias
+			"Sleep"
+		end
+
+
 end -- class EV_APPLICATION_IMP
 
 --|----------------------------------------------------------------
@@ -340,3 +314,47 @@ end -- class EV_APPLICATION_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.17  2000/02/14 11:40:39  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.16.10.9  2000/01/29 01:13:30  brendel
+--| Added not yet implemented features for tooltips.
+--|
+--| Revision 1.16.10.8  2000/01/27 19:30:09  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.16.10.7  2000/01/26 18:34:10  brendel
+--| Added feature `sleep'.
+--|
+--| Revision 1.16.10.6  2000/01/25 17:37:51  brendel
+--| Removed code associated with old events.
+--| Implementation and more removal is needed.
+--|
+--| Revision 1.16.10.5  2000/01/20 17:36:20  king
+--| Added idle_actions and internal_idle_actions.
+--|
+--| Revision 1.16.10.4  1999/12/17 17:28:05  rogers
+--| Altered to fit in with the review branch. Make takes an interface.
+--|
+--| Revision 1.16.10.3  1999/12/01 00:21:20  oconnor
+--| partial implementation of process_events
+--|
+--| Revision 1.16.10.2  1999/11/30 23:58:17  oconnor
+--| added process_events
+--|
+--| Revision 1.16.10.1  1999/11/24 17:30:17  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.16.6.3  1999/11/02 17:20:07  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

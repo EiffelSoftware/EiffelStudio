@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision vertical box. The children stand%
@@ -11,14 +13,22 @@ class
 
 inherit
 	EV_VERTICAL_BOX_I
-
-	EV_BOX_IMP
 		redefine
-			move_and_resize,
-			set_child_expandable
+			interface
 		end
 
-creation
+	EV_BOX_IMP
+		undefine
+			compute_minimum_height,
+			compute_minimum_width,
+			compute_minimum_size
+		redefine
+			move_and_resize,
+			set_child_expandable,
+			interface
+		end
+
+create
 	make
 
 feature -- Access
@@ -36,10 +46,10 @@ feature -- Status setting
 			notify_change (Nc_minheight)
 		end
 
-	set_spacing (value: INTEGER) is
+	set_padding (value: INTEGER) is
 			-- Make `value' the new spacing of the box.
 		do
-			spacing := value
+			padding := value
 			notify_change (Nc_minheight)
 		end
 
@@ -105,7 +115,7 @@ feature {NONE} -- Basic operation
 				cur := lchild.cursor
 				cwidth := client_width
 				bwidth := border_width
-				space := spacing
+				space := padding
 				children_size := height - 2 * bwidth - total_spacing
 
 				-- Homogeneous state : only the visible children are
@@ -120,7 +130,7 @@ feature {NONE} -- Basic operation
 						lchild.after
 					loop
 						litem := lchild.item
-						if litem.shown then
+						if litem.is_show_requested then
 							localint := rate + rest (total_rest)
 							total_rest := (total_rest - 1).max (0)
 							litem.set_move_and_size (bwidth, mark, cwidth, localint)
@@ -153,7 +163,7 @@ feature {NONE} -- Basic operation
 						lchild.after
 					loop
 						litem := lchild.item
-						if litem.shown then
+						if litem.is_show_requested then
 							if lchild.index /= next_non_expandable then
 								localint := litem.minimum_height + rate + rest (total_rest)
 								if total_rest > 0 then
@@ -203,7 +213,7 @@ feature {NONE} -- Implementation for automatic size compute
 					lchild.after
 				loop
 					litem := lchild.item
-					if litem.shown then
+					if litem.is_show_requested then
 						childvisible_nb := childvisible_nb + 1
 						if litem.minimum_width > value then
 							value := litem.minimum_width
@@ -235,7 +245,7 @@ feature {NONE} -- Implementation for automatic size compute
 						lchild.after
 					loop
 						litem := lchild.item
-						if litem.shown then
+						if litem.is_show_requested then
 							childvisible_nb := childvisible_nb + 1
 							if litem.minimum_height > value then
 								value := litem.minimum_height
@@ -251,7 +261,7 @@ feature {NONE} -- Implementation for automatic size compute
 						lchild.after
 					loop
 						litem := lchild.item
-						if litem.shown then
+						if litem.is_show_requested then
 							value := value + litem.minimum_height
 							childvisible_nb := childvisible_nb + 1
 						end
@@ -283,7 +293,7 @@ feature {NONE} -- Implementation for automatic size compute
 						lchild.after
 					loop
 						litem := lchild.item
-						if litem.shown then
+						if litem.is_show_requested then
 							childvisible_nb := childvisible_nb + 1
 							if litem.minimum_width > wvalue then
 								wvalue := litem.minimum_width
@@ -302,7 +312,7 @@ feature {NONE} -- Implementation for automatic size compute
 						lchild.after
 					loop
 						litem := lchild.item
-						if litem.shown then
+						if litem.is_show_requested then
 							childvisible_nb := childvisible_nb + 1
 							if litem.minimum_width > wvalue then
 								wvalue := litem.minimum_width
@@ -330,6 +340,10 @@ feature {NONE} -- WEL Implementation
 			set_children_height
 		end
 
+feature {NONE} -- Implementation
+
+	interface: EV_VERTICAL_BOX
+
 end -- class EV_VERTICAL_BOX_IMP
 
 --|----------------------------------------------------------------
@@ -347,3 +361,32 @@ end -- class EV_VERTICAL_BOX_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.31  2000/02/14 11:40:43  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.30.4.4  2000/02/01 03:45:55  brendel
+--| Added `interface'.
+--| Rearranged inheritance clause.
+--|
+--| Revision 1.30.4.3  2000/01/27 19:30:24  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.30.4.2  1999/12/17 00:46:30  rogers
+--| Altered to fit in with the review branch. Some redefinitions required. is_show_requested replaces shown.
+--|
+--| Revision 1.30.4.1  1999/11/24 17:30:29  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.28.6.2  1999/11/02 17:20:09  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

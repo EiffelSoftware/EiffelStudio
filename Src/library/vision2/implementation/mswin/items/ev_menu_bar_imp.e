@@ -1,63 +1,41 @@
+--| FIXME Not for release
 indexing
-	description: 
-		"EiffelVision menu bar. Mswindows implementation."
+	description: "Eiffel Vision menu bar. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class 
 	EV_MENU_BAR_IMP
 
---inherit
---	EV_MENU_BAR_I
+inherit
+	EV_MENU_BAR_I
+		redefine
+			interface
+		end
 
---	EV_MENU_ITEM_HOLDER_IMP
---		rename
---			make as wel_make
---		end
-	
---	EV_WIDGET_IMP
---		rename
---			exists as widget_exists
---		end
+	EV_MENU_ITEM_LIST_IMP
+		redefine
+			interface
+		end
 
---	WEL_MENU
---		rename
---			make as wel_make
---		select
---			exists
---		end
+create
+	make
 
---	WEL_TOOL_BAR
---		rename
---			make as wel_make,
---			parent as wel_parent,
---			font as wel_font,
---			set_font as wel_set_font
---		undefine
---			-- We undefine the features redefined by EV_WIDGET_IMP,
---			-- EV_PRIMITIVE_IMP and EV_TEXT_CONTAINER_IMP.
---			remove_command,
---			set_width,
---			set_height,
---			destroy,
---			set_text,
---			on_left_button_down,
---			on_right_button_down,
---			on_left_button_up,
---			on_right_button_up,
---			on_left_button_double_click,
---			on_right_button_double_click,
---			on_mouse_move,
---			on_char,
---			on_key_up
---		end
+feature {NONE} -- Initialization
 
---creation
---	make
-	
-end -- class EV_WEL_MENU_BAR_IMP
+	make (an_interface: like interface) is
+			-- Create the menu bar.
+		do
+			base_make (an_interface)
+			wel_make
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_MENU_BAR
+
+end -- class EV_MENU_BAR_IMP
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
@@ -74,3 +52,33 @@ end -- class EV_WEL_MENU_BAR_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|---------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.5.10.4  2000/02/05 02:25:37  brendel
+--| Revised.
+--| Implemented using newly created EV_MENU_ITEM_LIST.
+--|
+--| Revision 1.5.10.3  2000/02/04 01:05:41  brendel
+--| Rearranged inheritance structure in compliance with revised interface.
+--| Nothing has been implemented yet!
+--|
+--| Revision 1.5.10.2  2000/01/27 19:30:31  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.5.10.1  1999/11/24 17:30:36  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.5.6.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

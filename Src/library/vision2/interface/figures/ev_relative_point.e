@@ -28,6 +28,7 @@ create
 	default_create,
 	make_with_origin,
 	make_with_origin_and_position,
+	make_with_position,
 	make_with_positioner
 
 feature {NONE}  -- Initialization
@@ -58,6 +59,13 @@ feature {NONE}  -- Initialization
 			set_y (new_y)
 		end	
 
+	make_with_position (new_x, new_y: INTEGER) is
+			-- Create on position (`new_x', `new_y').
+		do
+			default_create
+			set_x (new_x)
+			set_y (new_y)
+		end	
 
 	make_with_positioner (pos_agent: like positioner) is
 			-- Create with `pos_agent'.
@@ -210,19 +218,6 @@ feature -- Status setting
 
 	set_origin (new_origin: EV_RELATIVE_POINT) is
 			-- Set the point this point is relative to.
-			--| FIXME This is tricky, because we have the invariant in EV_FIGURE
-			--| This could mess it up completely!!!!
-			--| However, we have nothing do to with it in this scope.
-			--| Maybe export it to {EV_FIGURE}
-
-			--|EV_FIGURE_relative_to_group: group /= Void implies relative_to (group.point)
-			--|EV_FIGURE_all_points_in_group: group /= Void implies all_points_in_group (group)
-
-			-- Can `org' be assigned to `origin'?
-			-- This is the case when the invariant in EV_FIGURE will not break.
-			-- This means that this point will still have to be relative to (valid group point)
-			-- the figure's group's point. What is this point's figure???? or group????
-			-- Use the feature `group' for this.
 		require
 			new_origin_relative_to_group_point_or_positioned:
 				group /= Void implies origin.valid_group_point (group.point)
@@ -277,6 +272,15 @@ feature -- Status setting
 			scale_y := new_scale
 			scale_x := new_scale
 			notify_of_position_change
+		end
+
+feature -- Convenient status setting
+
+	set_x_y, set_position (new_x, new_y: INTEGER) is
+			-- Set both `x' and `y'.
+		do
+			set_x (new_x)
+			set_y (new_y)
 		end
 
 feature {EV_FIGURE} -- Status setting

@@ -1,3 +1,5 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision scroll bar, mswindows implementation."
@@ -10,23 +12,35 @@ deferred class
 
 inherit
 	EV_SCROLL_BAR_I
+		redefine
+			interface
+		end
 
 	EV_GAUGE_IMP
+		redefine
+			interface
+		end
 
 	WEL_SCROLL_BAR
 		rename
 			parent as wel_parent,
 			set_parent as wel_set_parent,
-			shown as displayed,
+			shown as is_displayed,
 			destroy as wel_destroy,
 			position as value,
-			set_position as set_value,
+			set_position as wel_set_value,
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
 			line as step,
 			page as leap,
-			set_line as set_step,
-			set_page as set_leap
+			set_line as wel_set_step,
+			set_page as set_leap,
+			width as wel_width,
+			height as wel_height,
+			move as move_to,
+			enabled as is_sensitive,
+			item as wel_item,
+			set_range as wel_set_range
 		undefine
 			window_process_message,
 			remove_command,
@@ -47,24 +61,17 @@ inherit
 			show,
 			hide
 		redefine
-			default_style
-		end
-
-feature -- Status setting
-
-	leap_forward is
-			-- Increase the current value of one leap.
-		do
-			set_value (maximum.min (value + leap))
-		end
-
-	leap_backward is
-			-- Decrease the current value of one leap.
-		do
-			set_value (minimum.max (value - leap))
+			default_style,
+			on_scroll
 		end
 
 feature {NONE} -- WEL Implementation
+
+	on_scroll (scroll_code, pos: INTEGER) is
+		do
+			Precursor (scroll_code, pos)
+			interface.change_actions.call ([])
+		end
 
 	default_style: INTEGER is
 			-- Default style used to create the control
@@ -120,6 +127,10 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_SCROLL_BAR
+
 end -- class EV_RANGE_IMP
 
 --|----------------------------------------------------------------
@@ -137,3 +148,35 @@ end -- class EV_RANGE_IMP
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.4  2000/02/14 11:40:45  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.3.10.5  2000/02/03 17:23:19  brendel
+--| Removed leap-features since they are now defined in EV_GAUGE.
+--|
+--| Revision 1.3.10.4  2000/02/01 03:36:29  brendel
+--| Cosmetics.
+--| Added redefine of on_scroll to generate events.
+--|
+--| Revision 1.3.10.3  2000/01/27 19:30:29  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.3.10.2  2000/01/06 20:36:41  rogers
+--| Now works with the major changes in Vision2. The interface has been added. A lot of renaming has been done from ancestors, to fit in with changes. See the diff.
+--|
+--| Revision 1.3.10.1  1999/11/24 17:30:34  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.3.6.2  1999/11/02 17:20:10  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

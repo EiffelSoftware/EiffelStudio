@@ -1,7 +1,7 @@
 indexing
-	description:
-		"A separator for the menus."
+	description: "Eiffel Vision menu separator."
 	status: "See notice at end of class."
+	keywords: "menu, item, separator"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,37 +9,26 @@ class
 	EV_MENU_SEPARATOR
 
 inherit
-	EV_SEPARATOR_ITEM
+	EV_MENU_ITEM
+		export
+			{NONE} all
 		redefine
 			implementation,
-			make_with_index
+			create_implementation
 		end
 
 create
-	make,
-	make_with_index
+	default_create
 
-feature {NONE} -- Initialization
-
-	make (par: like parent) is
-			-- Create the widget with `par' as parent.
-		do
-			!EV_MENU_SEPARATOR_IMP! implementation.make
-			implementation.set_interface (Current)
-			set_parent (par)
-		end
-
-	make_with_index (par: like parent; pos: INTEGER) is
-			-- Create a row at the given `value' index in the list.
-		do
-			create {EV_MENU_SEPARATOR_IMP} implementation.make
-			{EV_SEPARATOR_ITEM} Precursor (par, pos)
-		end
-
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	implementation: EV_MENU_SEPARATOR_I
 			-- Platform dependent access
+
+	create_implementation is
+		do
+			create {EV_MENU_SEPARATOR_IMP} implementation.make (Current)
+		end
 
 end -- class EV_MENU_SEPARATOR
 
@@ -58,3 +47,36 @@ end -- class EV_MENU_SEPARATOR
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!----------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/02/14 11:40:47  oconnor
+--| merged changes from prerelease_20000214
+--|
+--| Revision 1.2.6.5  2000/02/05 01:43:44  brendel
+--| Exports all inherited features to {NONE}. Can only be created using
+--| `default_create' and cannot be manipulated or queried.
+--|
+--| Revision 1.2.6.4  2000/02/03 23:32:01  brendel
+--| Revised.
+--| Changed inheritance structure.
+--|
+--| Revision 1.2.6.3  2000/01/28 22:24:20  oconnor
+--| released
+--|
+--| Revision 1.2.6.2  2000/01/27 19:30:36  oconnor
+--| added --| FIXME Not for release
+--|
+--| Revision 1.2.6.1  1999/11/24 17:30:42  oconnor
+--| merged with DEVEL branch
+--|
+--| Revision 1.2.2.2  1999/11/02 17:20:11  oconnor
+--| Added CVS log, redoing creation sequence
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

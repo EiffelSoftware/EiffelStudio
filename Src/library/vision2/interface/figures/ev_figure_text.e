@@ -25,8 +25,7 @@ feature -- Initialization
 		do
 			Precursor
 			text := ""
-			create font.make
-			font.set_name ("fixed")
+			create font
 		end
 
 	make_with_point_and_text (p: EV_RELATIVE_POINT; txt: STRING) is

@@ -58,11 +58,14 @@ feature {AST_FACTORY} -- Initialization
 			feature_names_set: feature_names = f
 			body_set: body = b
 			indexes_set: indexes = i
+			location_not_void: location /= Void
 		end
 
 feature {NONE} -- Initialization
  
 	set_start_position is
+		require
+			location_not_void: location /= Void
 		do
 			--| No need to test whether feature_names is empty, because the class is
 			--| FEATURE_AS and there is allwas at least one feature name
@@ -70,6 +73,8 @@ feature {NONE} -- Initialization
 		end
 
 	set_end_position is
+		require
+			location_not_void: location /= Void
 		do
 			--| No need to test whether feature_names is empty, because the class is
 			--| FEATURE_AS and there is allwas at least one feature name
@@ -470,6 +475,8 @@ feature {COMPILER_EXPORTER} -- Setting
 
 	update_positions (sp: like start_position; ep: like end_position) is
 			-- Set `start_position' to `sp' and `end_position' to `ep'
+		require
+			location_not_void: location /= Void
 		do
 			location.set_start_position (sp)
 			location.set_end_position (ep)
@@ -483,6 +490,8 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- reflect the fact that current feature is not at the 
 			-- same position in the source file.
 			--| `offset' may be positive as well as negative.
+		require
+			location_not_void: location /= Void
 		do
 			location.set_start_position (start_position + offset)
 			location.set_end_position (end_position + offset)

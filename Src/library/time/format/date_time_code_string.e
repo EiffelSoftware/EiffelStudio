@@ -173,28 +173,32 @@ feature -- Interface
 					pos1 := pos2 + 1
 				else
 					code := value.item (i)
-					Result := substrg.count <= code.count_max and substrg.count >= code.count_min
-					if code.is_numeric then
-						Result := Result and substrg.is_integer
-						if code.value_max /= -1 and code.value_min /= -1 then
-							Result := Result and 
-								substrg.to_integer <= code.value_max and
-								substrg.to_integer >= code.value_min
-						end
-					else
-						if code.is_day_text (code.value) then 
-							Result := Result and days.has (tmp_strg)
-						else
-							Result := Result and months.has (tmp_strg)
-						end
-					end
-					code := value.item (i+1)
 					if code /= Void then
-						Result := Result and (pos2 /= s.count) and 
-							substrg2.is_equal (code.value)
+						Result := substrg.count <= code.count_max and 
+						substrg.count >= code.count_min
+						if code.is_numeric then
+							Result := Result and substrg.is_integer
+							if code.value_max /= -1 and 
+								code.value_min /= -1 then
+								Result := Result and 
+									substrg.to_integer <= code.value_max and
+									substrg.to_integer >= code.value_min
+							end
+						else
+							if code.is_day_text (code.value) then 
+								Result := Result and days.has (tmp_strg)
+							else
+								Result := Result and months.has (tmp_strg)
+							end
+						end
+						code := value.item (i+1)
+						if code /= Void then
+							Result := Result and (pos2 /= s.count) and 
+								substrg2.is_equal (code.value)
+						end
+						pos1 := pos2 + 1
+						i := i + 2
 					end
-					pos1 := pos2 + 1
-					i := i + 2
 				end
 			end
 		end	

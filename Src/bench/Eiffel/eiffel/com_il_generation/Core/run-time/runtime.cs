@@ -271,8 +271,8 @@ feature -- Status report
 		if (o is EIFFEL_TYPE_INFO) {
 			info = (EIFFEL_TYPE_INFO) o;
 			der = info.____type ();
-			if (der == null) {
-					// Not a generic class, possibly a good candidate for ARRAY.
+			if (der != null) {
+					// A generic class, possibly a good candidate for ARRAY.
 				Result = info.____class_name ().Equals ("ARRAY");
 			}
 		}

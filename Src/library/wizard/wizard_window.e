@@ -45,48 +45,52 @@ feature {NONE} -- Initialization
 			-- Build the navigation bar.
 		local
 			h1: EV_HORIZONTAL_BOX
-			h2: EV_HORIZONTAL_BOX
 			h_sep: EV_HORIZONTAL_SEPARATOR
 		do	
 			create h_sep
 			a_box.extend(h_sep)
 			a_box.disable_item_expand(h_sep)
-			create h1
-			a_box.extend (h1)
-			a_box.disable_item_expand (h1)
+			create navigation_bar
+			a_box.extend (navigation_bar)
+			a_box.disable_item_expand (navigation_bar)
 
 			create previous_b.make_with_text_and_action ("< Back ", ~previous_page)
 			create next_b.make_with_text_and_action ("Next >", ~next_page)	
 			create cancel_b.make_with_text_and_action ("Cancel", ~cancel_actions)
+			create help_b.make_with_text_and_action ("Help", ~show_help)
 
-			h1.extend (create {EV_CELL})
+			navigation_bar.extend (create {EV_CELL})
 
-			create h2
-			h1.extend (h2)
-			h1.disable_item_expand (h2)
+			create h1
+			navigation_bar.extend (h1)
+			navigation_bar.disable_item_expand (h1)
 
-			h2.extend (previous_b)
+			h1.extend (previous_b)
 			previous_b.set_minimum_width (Default_button_width)
 			previous_b.set_minimum_height (Default_button_height)
 			previous_b.align_text_center
-			h2.disable_item_expand(previous_b)
+			h1.disable_item_expand(previous_b)
 
-			h2.extend (next_b)
+			h1.extend (next_b)
 			next_b.set_minimum_width (Default_button_width)
 			next_b.set_minimum_height (Default_button_height)
 			next_b.align_text_center
-			h2.disable_item_expand (next_b)
+			h1.disable_item_expand (next_b)
 
-			h1.extend (cancel_b)
-			h1.disable_item_expand (cancel_b)
+			navigation_bar.extend (cancel_b)
+			navigation_bar.disable_item_expand (cancel_b)
 			cancel_b.set_minimum_width (Default_button_width)
 			cancel_b.set_minimum_height (Default_button_height)
 			cancel_b.align_text_center
 
-			h1.set_padding (dialog_unit_to_pixels(11))
-			h1.set_border_width (dialog_unit_to_pixels(11))
-		end
-
+			help_b.set_minimum_height (Default_button_height)
+			help_b.set_minimum_width (Default_button_width)
+			help_b.align_text_center
+			
+			navigation_bar.set_padding (dialog_unit_to_pixels(11))
+			navigation_bar.set_border_width (dialog_unit_to_pixels(11))
+		enD
+		
 	load_first_state is
 			-- Load first state.
 		local
@@ -97,6 +101,18 @@ feature {NONE} -- Initialization
 			update_navigation
 		end
 
+feature -- Basic Operations
+
+	add_help_button is
+			-- Add help button to the navigation bar.
+		do
+			check
+				non_void_help_button: help_b /= Void
+			end
+			navigation_bar.extend (help_b)
+			navigation_bar.disable_item_expand (help_b)
+		end
+		
 feature -- Command
 
 	destroy is
@@ -116,8 +132,11 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	previous_b, next_b, cancel_b: EV_BUTTON
+	previous_b, next_b, cancel_b, help_b: EV_BUTTON
 			-- Button ensuring the navigation.
+
+	navigation_bar: EV_HORIZONTAL_BOX
+			-- Horizontal box containing navigation buttons
 
 	wizard_info_page: EV_VERTICAL_BOX
 			-- Page to be completed by the user

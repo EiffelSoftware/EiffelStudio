@@ -25,6 +25,16 @@ feature {NONE} -- Initialization
 			information_set: wizard_information /= Void
 		end
 
+feature -- Access
+
+	current_help_context: WIZARD_HELP_CONTEXT is
+			-- Help context for this window
+		deferred		
+		end	
+		
+	help_filename: STRING
+			-- Path to HTML help file for current state window (without path on windows, with complete path on gtk)
+		
 feature -- Basic Operations
 
 	clean_screen is
@@ -107,6 +117,25 @@ feature -- Basic Operations
 			main_box_has_at_least_one_element: main_box.count > 0
 		end
 
+	display_help is
+			-- Show contextual help.
+		local
+			hc: WIZARD_HELP_CONTEXT
+		do
+			hc := current_help_context
+			if hc /= Void then
+				help_engine.show (hc)
+			end
+		end
+
+	create_help_context (args: TUPLE): WIZARD_HELP_CONTEXT is
+			-- Create help context
+		do			
+			create Result.make (Help_filename)			
+		ensure
+			help_context_created: Result /= Void
+		end
+		
 feature -- Settings
 
 	set_updatable_entries (tab: ARRAY[ACTION_SEQUENCE[TUPLE[]]]) is
@@ -134,7 +163,18 @@ feature -- Settings
 		ensure
 			entries_changed: entries_changed
 		end
-
+	
+	set_help_filename (a_filename: like help_filename) is
+			-- Set `help_filename' with `a_filename'.
+		require
+			non_void_filename: a_filename /= Void
+			not_empty_filename: not a_filename.is_empty
+		do
+			help_filename := a_filename
+		ensure
+			help_filename_set: help_filename.is_equal (a_filename)
+		end
+		
 feature -- Access
 
 	entries_checked: BOOLEAN

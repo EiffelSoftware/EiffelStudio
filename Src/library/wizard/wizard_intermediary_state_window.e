@@ -34,6 +34,7 @@ feature {NONE} -- Basic Operations
 			icon_pixmap: EV_PIXMAP
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
+			tuple: TUPLE
 		do
 				-----------------------------------------------------------
 				-- Create the box that will receive the title and the icon.
@@ -150,6 +151,9 @@ feature {NONE} -- Basic Operations
 			main_box.extend (horizontal_separator)
 			main_box.disable_item_expand (horizontal_separator)
 			main_box.extend (interior_box) -- Expandable item.
+
+			create tuple.make
+			choice_box.set_help_context (~create_help_context (tuple))
 		ensure
 			main_box_has_at_least_one_element: main_box.count > 0
 		end
@@ -163,8 +167,18 @@ feature {NONE} -- Basic Operations
 
 feature {WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
 
+	current_help_context: WIZARD_HELP_CONTEXT is
+			-- Help context for this window
+		local
+			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+		do
+			hc := choice_box.help_context
+			Result ?= hc.item (hc.operands)		
+		end		
+		
 	choice_box: EV_VERTICAL_BOX
 
-	message_box: EV_HORIZONTAL_BOX		-- Box where is displayed the description of current state (gray bkground).
+	message_box: EV_HORIZONTAL_BOX		
+			-- Box where is displayed the description of current state (gray bkground).
 	
 end -- class INTERMEDIARY_STATE_WINDOW

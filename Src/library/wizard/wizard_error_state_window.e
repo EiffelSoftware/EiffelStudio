@@ -13,7 +13,7 @@ inherit
 			build,
 			proceed_with_current_info
 		end
-
+			
 feature -- Initialization
 
 	build is

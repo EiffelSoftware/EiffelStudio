@@ -104,6 +104,14 @@ feature -- Access
 			app_cell.put (app)
 		end
 
+	help_engine: WIZARD_HELP_ENGINE is
+			-- Help engine
+		once
+			create Result.make
+		ensure
+			help_engine_created: Result /= Void
+		end	
+	
 feature -- Colors
 
 	White_color: EV_COLOR is

@@ -18,11 +18,16 @@ feature -- Initialization
 	make is
 			-- Creation procedure.
 		do
-			if Command_line.Argument_count < 2 then
+			if Command_line.Argument_count < 3 then
 				show_usage
 			else
 				if not Command_line.argument (1).substring (1, Ise_src_key.count).is_equal (Ise_src_key) then
 					io.put_string ("Ace file path must start with " + Ise_src_key)
+					io.read_line
+					die (1)
+				end
+				if not third_arg.is_equal (Debug_string) and not third_arg.is_equal (Release_string) then
+					io.put_string ("Third argument must be " + Debug_string + " or " + Release_string + ".")
 					io.read_line
 					die (1)
 				end
@@ -84,8 +89,19 @@ feature -- File management
 			-- Command line that was used to start current execution
 		once
 			create Result
+		ensure
+			non_void_result: Result /= Void
 		end
 		
+	third_arg: STRING is
+			-- Third Argument.
+		once
+			Result := Command_line.argument (3)
+			Result.to_lower
+		ensure
+			non_void_result: Result /= Void
+		end
+
 	save_ace_file is
 			-- Save ace file.
 		require
@@ -141,32 +157,72 @@ feature -- Basic Operations
 			-- Display usage information
 		do
 			io.put_string ("EiffelStudio to ENViSioN! Ace Files Converter Utility 1.0%NCopyright (C) Eiffel Software 2002. All right reserved.%N")
-			io.put_string ("%NSyntax: es_to_envision ace_file_path envision_cluster_path")
+			io.put_string ("%NSyntax: es_to_envision ace_file_path envision_cluster_path true/false")
 		end
 		
 feature {NONE} -- Implementation
 
 	modify_ace_file_content is
 			-- Replace `eiffel_studio_samples_path' with system's second argument.
+			-- Modify line_generation depending on `third_arg'.
+			-- Add precompile file.
 		require
 			non_void_ace_file_content: ace_file_content /= Void
 			valid_argument_count: Command_line.Argument_count >= 2
 		local
 			index, index_2: INTEGER
-			s: STRING
+			second_arg: STRING
 		do
-			s := Command_line.argument (2)
+				-- Replace path to root cluster with second argument.
+			second_arg := Command_line.argument (2)
 			index := ace_file_content.substring_index (eiffel_studio_samples_path, 1)
 			if index > 0 then
 				index_2 := ace_file_content.substring_index ("%"", index)
-				ace_file_content.replace_substring (s, index, index_2 - 1)
+				ace_file_content.replace_substring (second_arg, index, index_2 - 1)
 			end
+			
+				-- Modify line generation depending on `third_arg' and add precompile command.
+			index := ace_file_content.substring_index (Ligne_generation, 1)
+			if index > 0 then
+				index_2 := ace_file_content.substring_index ("(", index)
+				index := ace_file_content.substring_index (")", index_2)
+				if third_arg.is_equal (Debug_string) then
+					ace_file_content.replace_substring ("yes", index_2 + 1, index - 1)
+				elseif third_arg.is_equal (Release_string) then
+					ace_file_content.replace_substring ("no", index_2 + 1, index - 1)
+				end
+				index := ace_file_content.substring_index (")", index_2)
+				ace_file_content.insert ("%N%T" + Precompile_cmd, index + 1)
+			end			
 		end
 
 	eiffel_studio_samples_path: STRING is "$ISE_EIFFEL\examples\"
 			-- Path to EiffelStudio samples as set in Ace file
+			
+	Ligne_generation: STRING is "line_generation"
+			-- line generation command.
+
+	Precompile_cmd: STRING is
+			-- Precompile command.
+		once
+			Result := "precompile (%"$ISE_EIFFEL\ebcl\" + Third_arg + "%")"
+--			if third_arg.is_equal (Debug_string) then
+--				Result.append ("debug%")")
+--			elseif third_arg.is_equal (Release_string) then
+--				Result.append ("release%")")
+--			end
+		ensure
+			nonvoid_result: Result /= Void
+		end
+			
+	Debug_string: STRING is "debug"
+			-- Possible value of third argument.
+
+	Release_string: STRING is "release"
+			-- Possible value of third argument.
 
 invariant
 	valid_arguments_count: Command_line.Argument_count > 1
-	
+	third_argument_true_or_false: third_arg.is_equal (Debug_string) or third_arg.is_equal (Release_string)
+
 end -- class ES_TO_ENVISION

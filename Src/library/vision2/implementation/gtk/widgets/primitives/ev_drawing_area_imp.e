@@ -30,7 +30,8 @@ inherit
 			default_key_processing_blocked,
 			set_focus,
 			dispose,
-			destroy
+			destroy,
+			on_key_event
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -59,7 +60,10 @@ feature {NONE} -- Implementation
 
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
 		do
-			if a_key.is_arrow or else a_key.code = app_implementation.Key_constants.key_tab then
+			if a_key.code = App_implementation.Key_constants.Key_down then
+				C.gtk_widget_queue_draw (visual_widget)
+			end
+			if a_key.is_arrow or else a_key.code = App_implementation.Key_constants.key_tab then
 				Result := True
 			end
 		end
@@ -135,14 +139,36 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			if not has_focus then
 				GTK_WIDGET_SET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
+				if focus_in_actions_internal /= Void then
+					focus_in_actions_internal.block
+					-- This needs to be called manually for cases that gtk doesn't handle.
+				end
 				C.gtk_widget_grab_focus (c_object)
 				GTK_WIDGET_SET_FLAGS (c_object, C.GTK_HAS_FOCUS_ENUM)
 				top_level_window_imp.set_focus_widget (Current)
 				GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
+				if focus_in_actions_internal /= Void then
+					focus_in_actions_internal.resume
+					focus_in_actions_internal.call (App_implementation.Empty_tuple)
+				end
 			end
 		end
 		
 feature {NONE} -- Implementation
+
+	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Key event has occured
+		do
+			Precursor {EV_PRIMITIVE_IMP} (a_key, a_key_string, a_key_press)
+			if not a_key_press then
+				if 
+					a_key.code = App_implementation.Key_constants.Key_up or else a_key.code = App_implementation.Key_constants.Key_down
+				then
+					-- This is a hack for Studio to force trailing cursors to be undrawn upon key scrolling.
+					C.gtk_widget_queue_draw (c_object)
+				end				
+			end
+		end
 
 	destroy is
 		do

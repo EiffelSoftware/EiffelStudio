@@ -117,6 +117,7 @@ end;
 		local
 			real_pass2, do_pass2: BOOLEAN;
 			do_pass3: BOOLEAN;
+			chg3a   : BOOLEAN
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("=============== PASS2_C.propagate ===============%N");
@@ -166,6 +167,10 @@ end;
 			real_pass2 := (not equivalent_table) or else expanded_modified
 					or else deferred_modified or else separate_modified;
 
+					-- If the set of ancestors has changed (changed3a) we
+					-- must propagate.
+			chg3a    := associated_class.changed3a;
+
 					-- If the propagation is the result of assertion
 					-- modifications, only a `light' pass2 must be done
 			do_pass2 := real_pass2 or else assert_prop_list /= Void;
@@ -175,7 +180,7 @@ end;
 				do_pass3 := True;
 			end;
 
-			if do_pass2 then
+			if do_pass2 or else chg3a then
 					-- Propagation of second pass in order to update
 					-- feature table of direct descendants
 				propagate_pass2 (real_pass2);
@@ -184,6 +189,13 @@ end;
 					-- clients of the current class
 					propagate_pass3 (pass2_control, expanded_modified or deferred_modified or separate_modified);
 				end;
+				if chg3a then
+					-- Propagation of third pass in order to type check
+					-- classes which depend on the conformance of the
+					-- current class.
+					force_type_checks (pass2_control);
+				end;
+
 				associated_class.set_skeleton (resulting_table.skeleton);
 				if not System.freeze then
 					resulting_table.melt;
@@ -202,6 +214,7 @@ feature -- Propagation of second pass
 			descendant: CLASS_C;
 			types: LINKED_LIST [CLASS_TYPE];
 			desc: LINKED_LIST [CLASS_C]
+			chg3a : BOOLEAN
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Propagate_pass2. real_pass2: ");
@@ -211,6 +224,7 @@ end;
 			from
 				desc := associated_class.descendants;
 				associated_class.set_changed2 (True);
+				chg3a := associated_class.changed3a
 				desc.start
 			until
 				desc.off
@@ -223,6 +237,10 @@ debug ("ACTIVITY")
 	io.error.putstring (descendant.name);
 	io.error.new_line;
 end;
+				if chg3a then
+					descendant.set_changed3a (True);
+				end;
+
 				pass2_controler.insert_new_class (descendant);
 				if real_pass2 then
 					-- Mark the descendant so if it is not syntactically
@@ -295,5 +313,37 @@ end;
 				clients.forth
 			end;
 		end;
+
+feature -- Force type checks on conformance dependent classes.
+
+	force_type_checks (pass2_control : PASS2_CONTROL) is
+
+		require
+			good_argument : pass2_control /= Void
+		local
+			cdc : LINKED_LIST [CLASS_C];
+			cdi : CLASS_C
+		do
+			cdc := associated_class.conf_dep_classes
+
+			if cdc /= Void then
+				from
+					cdc.start
+				until
+					cdc.after
+				loop
+					cdi := cdc.item;
+
+					cdi.propagators.update (pass2_control);
+					-- Loosing an ancestor is considered to
+					-- be a status change.
+					cdi.propagators.add_changed_status (associated_class.id);
+					pass3_controler.insert_new_class (cdi);
+					pass4_controler.insert_new_class (cdi);
+
+					cdc.forth
+				end
+			end;
+		end
 
 end

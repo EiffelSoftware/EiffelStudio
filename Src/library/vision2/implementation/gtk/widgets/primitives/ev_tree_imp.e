@@ -174,7 +174,9 @@ feature {NONE} -- Implementation
 			imp: EV_TREE_ITEM_IMP
 		do
 			imp ?= v.implementation
+			C.gtk_widget_ref (imp.c_object)
 			C.gtk_tree_remove_item (list_widget, imp.c_object)
+			C.gtk_widget_unref (imp.c_object)
 			C.gtk_tree_insert (list_widget, imp.c_object, a_position - 1)
 		end
 
@@ -208,6 +210,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/13 22:10:13  king
+--| Added reference handling for child reordering
+--|
 --| Revision 1.35  2000/03/10 23:53:10  king
 --| Fixed dereferencing of list widget
 --|

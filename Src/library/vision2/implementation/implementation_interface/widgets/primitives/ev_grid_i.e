@@ -854,10 +854,10 @@ feature -- Status setting
 				items := drawer.items_spanning_vertical_span (viewport.y_offset, viewable_height)
 				if items.count > 0 then
 					row_index := items.first
-					if displayed_row_indexes = Void then
+					if row_indexes_to_visible_indexes = Void then
 						visible_row_index := row_index - 1
 					else
-						visible_row_index := displayed_row_indexes @ row_index
+						visible_row_index := row_indexes_to_visible_indexes @ row_index
 					end
 					vertical_scroll_bar.set_value (visible_row_index)
 				else
@@ -1257,6 +1257,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			old_i: INTEGER
 			internal_index: INTEGER
 			visible_count: INTEGER
+			row_index: INTEGER
+			l_row_count: INTEGER
 		do
 			fixme ("[
 				We always recompute from the first item for now as otherwise we must ensure that we find the top level
@@ -1269,24 +1271,29 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					-- use `row_offsets' and we can perform a shortcut.
 				if row_offsets = Void then
 					create row_offsets.make
-					create displayed_row_indexes.make
+					create row_indexes_to_visible_indexes.make
+					create visible_indexes_to_row_indexes.make
 					row_offsets.extend (0)
 					rows.start
 				else
 					i := row_offsets @ (internal_index)
 					rows.go_i_th (internal_index)
-					displayed_row_indexes.go_i_th (internal_index)
+					row_indexes_to_visible_indexes.go_i_th (internal_index)
+					visible_indexes_to_row_indexes.go_i_th (internal_index)
 				end
 				
 				if row_offsets.count < rows.count + 1 then
 					row_offsets.resize (rows.count + 1)
-					displayed_row_indexes.resize (rows.count + 1)
+					row_indexes_to_visible_indexes.resize (rows.count + 1)
+					visible_indexes_to_row_indexes.resize (rows.count + 1)
 				end
 				from
+					row_index := 1
+					l_row_count := rows.count
 				until
-					rows.off
+					row_index > l_row_count
 				loop
-					current_item := rows.item
+					current_item := rows.i_th (row_index)
 					old_i := i
 					if current_item /= Void and not is_row_height_fixed then
 						i := i + current_item.height
@@ -1296,7 +1303,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					end
 					if current_item.subrow_count > 0 and not current_item.is_expanded then
 						from
-							j := rows.index + 1
+							j := row_index + 1
 							k := j + current_item.subnode_count_recursive
 						until
 							j = k
@@ -1304,13 +1311,14 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 							row_offsets.put_i_th (old_i, j)
 							j := j + 1
 						end
-						displayed_row_indexes.put_i_th (visible_count, rows.index)
-						rows.go_i_th (k - 1)
+						row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
+						row_index := (k - 1)
 						i := old_i
 					else
-						row_offsets.put_i_th (i, rows.index + 1)
-						displayed_row_indexes.put_i_th (visible_count, rows.index)
-						rows.forth
+						row_offsets.put_i_th (i, row_index + 1)
+						row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
+						visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
+						row_index := row_index + 1
 						visible_count := visible_count + 1
 					end
 					
@@ -1351,8 +1359,19 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 		-- Cumulative offset of each row in pixels.
 		-- For example, if there are 5 rows, each with a height of 16 pixels,
 		-- `row_offsets' contains 0, 16, 32, 48, 64, 80 (Note this is 6 items)
+		-- For non-expanded tree node rows (which are therefore hidden), the offset is the same as the parent offset.
 		
-	displayed_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
+	row_indexes_to_visible_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
+		-- Visible index of a row, based on its row index.
+		-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
+		-- would be 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 1, 2, 3...
+		-- Note that the visible index is 0 based.
+	
+	visible_indexes_to_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
+		-- Row index of each visible row in `Current' in order.
+		-- For example, if the first node is a non exapnded tree that has 10 subrows, the contents
+		-- would be 1, 11, 12, 13, 14, ...
+		-- Note that the row indexes are 1 based.
 
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
@@ -1824,7 +1843,7 @@ feature {NONE} -- Drawing implementation
 				if is_row_height_fixed then
 					internal_set_virtual_y_position (row_height * a_value)
 				else
-					internal_set_virtual_y_position (row_offsets.i_th (displayed_row_indexes @ (a_value + 1) + 1))
+					internal_set_virtual_y_position (row_offsets.i_th (visible_indexes_to_row_indexes @ (a_value + 1)))
 				end
 			else
 				internal_set_virtual_y_position (a_value)

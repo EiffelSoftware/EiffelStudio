@@ -46,6 +46,7 @@ feature -- Basic operations
 			enable_modal
 			show
 			block
+			disable_modal
 		end
 
 feature {NONE} -- Implementation
@@ -77,6 +78,9 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/02/22 21:05:07  bonnard
+--| Fixed disfunctionment in `show_modal'. Now modality is supressed when dialog is hidden.
+--|
 --| Revision 1.9  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

@@ -129,13 +129,13 @@ end
 
 			pos := store_append (server_file.descriptor, $t, $make_index, $need_index, $Current)
 			!! info.make (pos, server_file.file_id)
-			server_file.add_occurence
+			server_file.add_occurrence
 
 			old_info := tbl_item (an_id)
 			if old_info /= Void then
 				old_server_file := Server_controler.file_of_id (old_info.file_id)
-				old_server_file.remove_occurence
-				if old_server_file.occurence = 0 then
+				old_server_file.remove_occurrence
+				if old_server_file.occurrence = 0 then
 					file_ids.prune (old_server_file.file_id)
 				end
 			end
@@ -156,8 +156,8 @@ end
 			old_info := tbl_item (an_id)
 			if old_info /= Void then
 				old_server_file := Server_controler.file_of_id (old_info.file_id)
-				old_server_file.remove_occurence
-				if old_server_file.occurence = 0 then
+				old_server_file.remove_occurrence
+				if old_server_file.occurrence = 0 then
 					file_ids.prune (old_server_file.file_id)
 				end
 				tbl_remove (an_id)
@@ -248,7 +248,7 @@ end
 			loop
 				info := item_for_iteration
 				server_file := Server_controler.file_of_id (info.file_id)
-				server_file.remove_occurence
+				server_file.remove_occurrence
 				forth
 			end
 			file_ids.wipe_out
@@ -280,8 +280,8 @@ end
 				old_info := tbl_item (an_id)
 				if old_info /= Void then
 					old_server_file := Server_controler.file_of_id (old_info.file_id)
-					old_server_file.remove_occurence
-					if old_server_file.occurence = 0 then
+					old_server_file.remove_occurrence
+					if old_server_file.occurrence = 0 then
 						file_ids.prune (old_server_file.file_id)
 					end
 				end
@@ -321,7 +321,7 @@ end
 				file_list.after
 			loop
 				server_file := Server_controler.file_of_id (file_list.item)
-				if server_file.occurence = 0 then
+				if server_file.occurrence = 0 then
 					Server_controler.forget_file (server_file)
 					file_list.remove
 				else
@@ -387,11 +387,11 @@ end
 								-- Put in purged server alive item	
 							new.write (item (an_id))
 	
-								-- Remove occurence from file where item was stored
-							old_server_file.remove_occurence
+								-- Remove occurrence from file where item was stored
+							old_server_file.remove_occurrence
 debug ("SERVER")
 	io.putstring (". Occurrences are now: ")
-	io.putint (old_server_file.occurence)
+	io.putint (old_server_file.occurrence)
 	io.new_line
 end
 						end
@@ -482,7 +482,7 @@ debug ("SERVER")
 	old_server_file.trace
 end
 				check
-					is_dead: old_server_file.occurence = 0
+					is_dead: old_server_file.occurrence = 0
 				end
 				old_server_file.delete
 				dead_files.forth

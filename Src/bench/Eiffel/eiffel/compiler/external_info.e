@@ -4,8 +4,8 @@ class EXTERNAL_INFO
 	
 feature 
 
-	occurence: INTEGER;
-			-- Occurence of the external in the system
+	occurrence: INTEGER;
+			-- Occurrence of the external in the system
 
 	real_body_id: INTEGER;
 			-- Body id of the external after freezing
@@ -18,18 +18,18 @@ feature
 			Result := (execution_unit /= Void)
 		end
 
-	add_occurence is
-			-- Increment `occurence' by 1.
+	add_occurrence is
+			-- Increment `occurrence' by 1.
 		do
-			occurence := occurence + 1;
+			occurrence := occurrence + 1;
 		end;
 
-	remove_occurence is
-			-- Decrement occurence by 1.
+	remove_occurrence is
+			-- Decrement occurrence by 1.
 		require
-			good_occurence: occurence > 0;
+			good_occurrence: occurrence > 0;
 		do
-			occurence := occurence - 1;
+			occurrence := occurrence - 1;
 		end;
 
 	set_real_body_id (i: INTEGER) is

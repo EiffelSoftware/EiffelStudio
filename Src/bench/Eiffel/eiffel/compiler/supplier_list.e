@@ -21,8 +21,8 @@ creation
 
 feature 
 
-	remove_occurence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
-			-- Remove one occurence for each supplier of id
+	remove_occurrence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
+			-- Remove one occurrence for each supplier of id
 			-- included in `l'.
 		require
 			good_argument: l /= Void;
@@ -44,8 +44,8 @@ feature
 					-- precondition, after should always be false
 				if not after then
 					suppl_info := item;
-					suppl_info.remove_occurence;
-					if suppl_info.occurence <= 0 then
+					suppl_info.remove_occurrence;
+					if suppl_info.occurrence <= 0 then
 						remove;
 					end;
 				end;
@@ -53,8 +53,8 @@ feature
 			end;
 		end;
 
-	add_occurence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
-			-- Add one occurence for each supplier of id
+	add_occurrence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
+			-- Add one occurrence for each supplier of id
 			-- included in `l'.
 		require
 			good_argument: l /= Void
@@ -71,7 +71,7 @@ feature
 			loop
 				class_id := s.item;
 debug ("ACTIVITY");
-	io.error.putstring ("SUPPLIER_LIST add_occurence: ");
+	io.error.putstring ("SUPPLIER_LIST add_occurrence: ");
 	io.error.putstring (Eiffel_system.class_of_id (class_id).name);
 	io.error.new_line;
 end;
@@ -80,7 +80,7 @@ end;
 					!! suppl_info.make (class_id);
 					put_front (suppl_info);
 				else
-					suppl_info.add_occurence;
+					suppl_info.add_occurrence;
 				end;
 	
 				s.forth;
@@ -227,7 +227,7 @@ end;
 				suppl_info := info (id);
 				Result := 	suppl_info /= Void
 							and then
-							suppl_info.occurence >= 1;
+							suppl_info.occurrence >= 1;
 				s.forth;
 			end;
 		end;
@@ -245,7 +245,7 @@ feature
 			loop
 				io.error.putstring (item.supplier.name);
 				io.error.putstring (" [");
-				io.error.putint (item.occurence);
+				io.error.putint (item.occurrence);
 				io.error.putstring ("]  ");
 				forth;
 			end;

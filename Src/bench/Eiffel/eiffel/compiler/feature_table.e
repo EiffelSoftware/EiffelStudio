@@ -247,7 +247,7 @@ end;
 
 				if 	old_feature_i.written_in = feat_tbl_id then
 					if old_feature_i.is_external then
-							-- Delete one occurence of an external feature
+							-- Delete one occurrence of an external feature
 						external_i ?= old_feature_i;
 debug ("ACTIVITY")
 	io.error.putstring ("Remove external: ");

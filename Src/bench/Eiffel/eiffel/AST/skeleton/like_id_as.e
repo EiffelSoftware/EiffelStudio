@@ -72,7 +72,7 @@ feature -- Implementation of inherited deferred features
 			anchor_feature := feat_table.item (anchor)
 			if anchor_feature /= Void then
 					-- It is an anchored type on a feature: check if the
-					-- anchor feature has not an anchor type itself.
+					-- anchor feature has not an anchored type itself.
 				anchor_type := anchor_feature.type
 				rout_id := anchor_feature.rout_id_set.first
 

@@ -48,15 +48,15 @@ feature -- Status
 				Result := duplication.has (key_for_iteration) or else
 						-- If name has been added and removed, no
 						-- refreezing is needed.
-					item_for_iteration.occurence = 0
+					item_for_iteration.occurrence = 0
 debug
 	if not Result then
 		io.error.putstring ("EXTERNALS.equiv: False on ")
 		io.error.putstring (key_for_iteration)
 		io.error.putstring (" duplication.has: ")
 		io.error.putbool (duplication.has (key_for_iteration))
-		io.error.putstring (" item_for_iteration.occurence: ")
-		io.error.putint (item_for_iteration.occurence)
+		io.error.putstring (" item_for_iteration.occurrence: ")
+		io.error.putint (item_for_iteration.occurrence)
 		io.error.new_line
 	end
 end
@@ -72,8 +72,8 @@ feature -- Basic operatios
 			duplication := clone (Current)
 		end
 	
-	add_occurence (external_name: STRING) is
-			-- Add one occurence of `external_name'.
+	add_occurrence (external_name: STRING) is
+			-- Add one occurrence of `external_name'.
 		require
 			good_argument: external_name /= Void
 		local
@@ -84,30 +84,30 @@ feature -- Basic operatios
 				!!info
 				put (info, external_name)
 			end
-			info.add_occurence
+			info.add_occurrence
 debug
-	io.error.putstring ("After add_occurence (")
+	io.error.putstring ("After add_occurrence (")
 	io.error.putstring (external_name)
 	io.error.putstring (")%N")
 	trace
 end
 		end
 
-	remove_occurence (external_name: STRING) is
-			--Remove one occurence of `external_name'.
+	remove_occurrence (external_name: STRING) is
+			--Remove one occurrence of `external_name'.
 		require
 			good_argument: 	external_name /= Void
-			has_occurence:	has (external_name)
-			--good_occurence: item (external_name).occurence > 0
+			has_occurrence:	has (external_name)
+			--good_occurrence: item (external_name).occurrence > 0
 		local
 			info: EXTERNAL_INFO
 		do
 			info := item (external_name)
-			if info.occurence /= 0 then
-				info.remove_occurence
+			if info.occurrence /= 0 then
+				info.remove_occurrence
 			end
 debug
-	io.error.putstring ("After remove_occurence (")
+	io.error.putstring ("After remove_occurrence (")
 	io.error.putstring (external_name)
 	io.error.putstring (")%N")
 	trace
@@ -135,7 +135,7 @@ end
 			loop
 				external_name := available_keys.item (i)
 				info := item (external_name)
-				if info.occurence <= 0 then
+				if info.occurrence <= 0 then
 					remove (external_name)
 				else
 					if info.is_valid then
@@ -168,7 +168,7 @@ feature -- Merging
 			loop
 				external_name := other.key_for_iteration
 				if has (external_name) then
-					add_occurence (external_name)
+					add_occurrence (external_name)
 				else
 					put (other.item_for_iteration, external_name)
 				end
@@ -199,7 +199,7 @@ feature -- Debug
 				io.error.putstring ("Function name: ")
 				io.error.putstring (external_name)
 				io.error.new_line
-				io.error.putint (info.occurence)
+				io.error.putint (info.occurrence)
 				io.error.new_line
 				i := i + 1
 			end

@@ -1,7 +1,7 @@
 indexing
 	description:
 		"Abstract description of an access to an Eiffel feature (note %
-		%that this access can not be the first call of a nested %
+		%that this access cannot be the first call of a nested %
 		%expression). Version for Bench."
 	date: "$Date$"
 	revision: "$Revision$"

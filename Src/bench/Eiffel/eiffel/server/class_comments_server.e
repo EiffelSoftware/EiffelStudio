@@ -41,8 +41,8 @@ feature -- Update
 				old_info := tbl_item (an_id);
 				if old_info /= Void then
 					old_server_file := Server_controler.file_of_id (old_info.file_id);
-					old_server_file.remove_occurence;
-					if old_server_file.occurence = 0 then
+					old_server_file.remove_occurrence;
+					if old_server_file.occurrence = 0 then
 						file_ids.prune (old_server_file.file_id);
 					end;
 				end;
@@ -82,7 +82,7 @@ feature -- Removal
 			loop
 				info := item_for_iteration;
 				server_file := Server_controler.file_of_id (info.file_id);
-				server_file.remove_occurence;
+				server_file.remove_occurrence;
 				forth;
 			end;
 			clear_all;
@@ -106,8 +106,8 @@ feature -- Removal
 			old_info := tbl_item (an_id);
 			if old_info /= Void then
 				old_server_file := Server_controler.file_of_id (old_info.file_id);
-				old_server_file.remove_occurence;
-				if old_server_file.occurence = 0 then
+				old_server_file.remove_occurrence;
+				if old_server_file.occurrence = 0 then
 					file_ids.prune (old_server_file.file_id);
 				end;
 				tbl_remove (an_id);

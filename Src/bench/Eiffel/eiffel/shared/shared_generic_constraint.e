@@ -46,7 +46,7 @@ feature -- Error reporting
 
 	constraint_error_list: LINKED_LIST [CONSTRAINT_INFO] is
 			-- List of the possible errors in the declaration of an
-			-- occurence of a generic class.
+			-- occurrence of a generic class.
 		do
 			Result := Constraint_error_list_cell.item
 		end

@@ -21,13 +21,13 @@ feature
 			Result := System.class_of_id (supplier_id)
 		end
 
-	occurence: INTEGER;
-			-- Occurence of the supplier in the class
+	occurrence: INTEGER;
+			-- Occurrence of the supplier in the class
 
-	set_occurence (i: INTEGER) is
-			-- Assign `i' to `occurence'.
+	set_occurrence (i: INTEGER) is
+			-- Assign `i' to `occurrence'.
 		do
-			occurence := i;
+			occurrence := i;
 		end;
 
 	make (cl_id: like supplier_id) is
@@ -36,21 +36,21 @@ feature
 			good_argument: cl_id > 0
 		do
 			supplier_id := cl_id
-			occurence := 1
+			occurrence := 1
 		end;
 
-	add_occurence is
-			-- Increment `occurence' of 1.
+	add_occurrence is
+			-- Increment `occurrence' of 1.
 		do
-			occurence := occurence + 1;
+			occurrence := occurrence + 1;
 		end;
 
-	remove_occurence is
-			-- Decrement `occurence' of 1.
+	remove_occurrence is
+			-- Decrement `occurrence' of 1.
 		require
-			good_occurence: occurence >= 1;
+			good_occurrence: occurrence >= 1;
 		do
-			occurence := occurence - 1;
+			occurrence := occurrence - 1;
 		end;
 
 end

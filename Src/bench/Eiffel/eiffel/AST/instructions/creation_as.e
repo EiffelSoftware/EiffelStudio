@@ -172,7 +172,7 @@ feature -- Type check, byte code and dead code removal
 							-- local_evalutor and use of solved typecreate )
 						create not_supported
 						context.init_error (not_supported)
-						not_supported.set_message ("An anchor type cannot be used as an explicit creation type")
+						not_supported.set_message ("An anchored type cannot be used as an explicit creation type")
 						Error_handler.insert_error (not_supported)
 						Error_handler.raise_error
 					end

@@ -63,7 +63,7 @@ feature
 			until
 				old_externals.after
 			loop
-				Externals.remove_occurence (old_externals.item);
+				Externals.remove_occurrence (old_externals.item);
 				old_externals.forth;
 			end;
 
@@ -72,7 +72,7 @@ feature
 			until
 				new_externals.after
 			loop
-				Externals.add_occurence (new_externals.item);
+				Externals.add_occurrence (new_externals.item);
 				new_externals.forth;
 			end;
 		end;

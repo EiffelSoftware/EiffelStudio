@@ -1,0 +1,40 @@
+<document output="studio" title="Tutorial Step 5">
+	<meta_data/>
+	<paragraph>
+		<paragraph>The sample builds on tutorial 
+			<link>
+				<url>/libraries/wel/samples/tutorial/step4/index.html</url>
+				<label>step 4</label>
+			</link> and also demonstrates the use of a WEL_MODAL_DIALOG. The output is shown below: 
+		</paragraph>
+		<image> 
+			<url>step5.png</url> 
+			<alt_text>step5</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the sample, you will see a WEL_FRAME_WINDOW displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button, a WEL_MODAL_DIALOG will pop up which allows you to enter the thickness of the line that is drawn.</paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>This sytem builds on tutorial 
+			<link>
+				<url>/libraries/wel/samples/tutorial/step4/index.html</url>
+				<label>step 4</label>
+			</link> by adding a WEL_MODAL_DIALOG. The class LINE_THICKNESS_DIALOG inherits WEL_MODAL_DIALOG and uses a WEL_SINGLE_LINE_EDIT to input the desired line width. 
+			<paragraph>This sample contains the following classes: 
+				<list ordered="false">
+					<item>TUTORIAL_STEP5</item>
+					<item>MAIN_WINDOW</item>
+					<item>LINE_THICKNESS_DIALOG</item>
+					<item>APPLICATION_IDS</item>
+				</list>
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

@@ -1,0 +1,67 @@
+<document output="studio" title="Tutorial Step 1">
+	<meta_data/>
+	<paragraph>
+		<paragraph> This sample shows you how to set up your first 
+			<link>
+				<url>/libraries/wel/reference/support/wel_application_chart.html</url>
+				<label>WEL_APPLICATION</label>
+			</link> consisting of a single 
+			<link>
+				<url>/libraries/wel/reference/windows/wel_frame_window_chart.html</url>
+				<label>WEL_FRAME_WINDOW</label>
+			</link>. This is one of the simplest WEL applications you can write, and the output is shown below: 
+		</paragraph>
+		<image> 
+			<url>step1.png</url> 
+			<alt_text>step1</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph> After you launch the sample, You should see the window displayed in the screen as illustrated above. You will have full control over the window, and the program will quit when you close the window. </paragraph>
+		<note>
+			<bold>Note:</bold> The size and shape of the window may be different on your machine. 
+		</note>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>Although this system does nothing except create and display a 
+			<link>
+				<url>/libraries/wel/reference/windows/wel_frame_window_chart.html</url>
+				<label>WEL_FRAME_WINDOW</label>
+			</link>, it shows how to set up your first 
+			<link>
+				<url>/libraries/wel/reference/support/wel_application_chart.html</url>
+				<label>WEL_APPLICATION</label>
+			</link>. 
+		</paragraph>
+		<paragraph>This sample only contains one class, 
+			<link>
+				<url>/libraries/wel/samples/tutorial/step1/root_cluster/tutorial_step1_chart.html</url>
+				<label>TUTORIAL_STEP1</label>
+			</link> which inherits 
+			<link>
+				<url>/libraries/wel/reference/support/wel_application_chart.html</url>
+				<label>WEL_APPLICATION</label>
+			</link> and redefines main_window
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>/libraries/wel/content/common_concepts/inheriting_wel_application.html</url>
+				<label>Inheriting WEL application</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>/libraries/wel/content/common_concepts/redefining_main_window.html</url>
+				<label>Redefining main_window</label>
+			</link>
+		</seealso>
+	</paragraph></document>

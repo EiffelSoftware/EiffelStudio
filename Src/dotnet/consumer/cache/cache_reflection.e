@@ -27,61 +27,32 @@ feature -- Access
 			i, j, count: INTEGER
 			ca: CONSUMED_ASSEMBLY
 			cargs: ARRAY [CONSUMED_ARGUMENT]
+			am: ARRAY [CONSUMED_ASSEMBLY]
 		do
 			i := t.get_hash_code
-			local_cache.search (i)
-			if local_cache.found then
-				ct := local_cache.found_item
+			types_cache.search (i)
+			if types_cache.found then
+				ct := types_cache.found_item
 			else
 				ct := consumed_type (t)
 				if ct /= Void then
-					if history.count = Max_cache_items then
-						local_cache.remove (history.item)
-						history.remove
-					end
-					history.put (i)
-					local_cache.put (ct, i)
+					types_cache.put (ct, i)
 				end
 			end
-			if ct /= Void then
+			am := assembly_mapping_array (t.get_assembly.get_name)
+			if ct /= Void and am /= Void then
 				create ca.make (t.get_assembly)
 				if dotnet_name.is_equal (Constructor_name) then
 					constructors := ct.constructors
-					from
-						i := 1
-						count := constructors.count
-					until
-						i > count or found
-					loop
-						cargs := constructors.item (i).arguments
-						if cargs.count = args.get_length then
-							from
-								j := 1
-								found := True
-							until
-								j > cargs.count or not found
-							loop
-								crt := cargs.item (j).type
-								found := crt.name.to_cil.equals (args.item (j - 1).get_full_name) and then
-									crt.assembly.is_equal (create {CONSUMED_ASSEMBLY}.make (args.item (j - 1).get_assembly))
-								j := j + 1
-							end
-						end
-						if found then
-							Result := constructors.item (i).eiffel_name
-						end
-						i := i + 1
-					end
-				elseif args /= Void then
-					functions := ct.functions
-					from
-						i := 1
-					until
-						i > functions.count or found
-					loop
-						if functions.item (i).dotnet_name.is_equal (dotnet_name) then
-							cargs := functions.item (i).arguments
-							if cargs.count = args.count then
+					if constructors /= Void then
+						from
+							i := 1
+							count := constructors.count
+						until
+							i > count or found
+						loop
+							cargs := constructors.item (i).arguments
+							if cargs.count = args.get_length then
 								from
 									j := 1
 									found := True
@@ -90,67 +61,38 @@ feature -- Access
 								loop
 									crt := cargs.item (j).type
 									found := crt.name.to_cil.equals (args.item (j - 1).get_full_name) and then
-										crt.assembly.is_equal (create {CONSUMED_ASSEMBLY}.make (args.item (j - 1).get_assembly))
+										am.item (crt.assembly_id).is_equal (create {CONSUMED_ASSEMBLY}.make (args.item (j - 1).get_assembly))
 									j := j + 1
 								end
 							end
-						end
-						if found then
-							Result := functions.item (i).eiffel_name
-						end
-						i := i + 1
-					end
-					if not found then
-						methods := ct.methods
-						from
-							i := 1
-						until
-							i > methods.count or found
-						loop
-							if methods.item (i).dotnet_name.is_equal (dotnet_name) then
-								cargs := methods.item (i).arguments
-								if cargs.count = args.count then
-									from
-										j := 1
-										found := True
-									until
-										j > cargs.count or not found
-									loop
-										crt := cargs.item (j).type
-										found := crt.name.to_cil.equals (args.item (j - 1).get_full_name) and then
-											crt.assembly.is_equal (create {CONSUMED_ASSEMBLY}.make (args.item (j - 1).get_assembly))
-										j := j + 1
-									end
-								end
+							if found then
+								Result := constructors.item (i).eiffel_name
 							end
+							i := i + 1
 						end
-						if found then
-							Result := methods.item (i).eiffel_name
-						end
-						i := i + 1
 					end
-				else
-					-- No arguments, search fields first
-					fields := ct.fields
-					from
-						i := 1
-					until
-						i > fields.count or found
-					loop
-						found := fields.item (i).dotnet_name.is_equal (dotnet_name)
-						if found then
-							Result := fields.item (i).eiffel_name
-						end
-						i := i + 1
-					end
-					if not found then
-						functions := ct.functions
+				elseif args /= Void then
+					functions := ct.functions
+					if functions /= Void then
 						from
 							i := 1
 						until
 							i > functions.count or found
 						loop
-							found := functions.item (i).dotnet_name.is_equal (dotnet_name)
+							if functions.item (i).dotnet_name.is_equal (dotnet_name) then
+								cargs := functions.item (i).arguments
+								if cargs.count = args.count then
+									from
+										j := 1
+									until
+										j > cargs.count or not found									
+									loop
+										found := crt.name.to_cil.equals (args.item (j - 1).get_full_name) and then
+											am.item (crt.assembly_id).is_equal (create {CONSUMED_ASSEMBLY}.make (args.item (j - 1).get_assembly))
+										j := j + 1
+									end
+								end
+							end
 							if found then
 								Result := functions.item (i).eiffel_name
 							end
@@ -159,38 +101,121 @@ feature -- Access
 					end
 					if not found then
 						methods := ct.methods
+						if methods /= Void then
+							from
+								i := 1
+							until
+								i > methods.count or found
+							loop
+								if methods.item (i).dotnet_name.is_equal (dotnet_name) then
+									cargs := methods.item (i).arguments
+									if cargs.count = args.count then
+										from
+											j := 1
+											found := True
+										until
+											j > cargs.count or not found
+										loop
+											crt := cargs.item (j).type
+											found := crt.name.to_cil.equals (args.item (j - 1).get_full_name) and then
+												am.item (crt.assembly_id).is_equal (create {CONSUMED_ASSEMBLY}.make (args.item (j - 1).get_assembly))
+											j := j + 1
+										end
+									end
+								end
+								if found then
+									Result := methods.item (i).eiffel_name
+								end
+								i := i + 1
+							end
+						end
+					end
+				else
+					-- No arguments, search fields first
+					fields := ct.fields
+					if fields /= Void then
 						from
 							i := 1
 						until
-							i > methods.count or found
+							i > fields.count or found
 						loop
-							found := methods.item (i).dotnet_name.is_equal (dotnet_name)
+							found := fields.item (i).dotnet_name.is_equal (dotnet_name)
 							if found then
-								Result := methods.item (i).eiffel_name
+								Result := fields.item (i).eiffel_name
 							end
 							i := i + 1
+						end						
+					end
+					if not found then
+						functions := ct.functions
+						if functions /= Void then
+							from
+								i := 1
+							until
+								i > functions.count or found
+							loop
+								found := functions.item (i).dotnet_name.is_equal (dotnet_name)
+								if found then
+									Result := functions.item (i).eiffel_name
+								end
+								i := i + 1
+							end
+						end
+					end
+					if not found then
+						methods := ct.methods
+						if methods /= Void then
+							from
+								i := 1
+							until
+								i > methods.count or found
+							loop
+								found := methods.item (i).dotnet_name.is_equal (dotnet_name)
+								if found then
+									Result := methods.item (i).eiffel_name
+								end
+								i := i + 1
+							end
 						end
 					end
 				end
 			end
 		end
-
+ 
+ 	assembly_mapping_array (aname: ASSEMBLY_NAME): ARRAY [CONSUMED_ASSEMBLY] is
+ 			-- Assembly mapping for assembly `aname'.
+ 		require
+ 			non_void_name: aname /= Void
+ 			assembly_in_cache: is_assembly_in_cache (aname)
+ 		local
+  			name: STRING
+ 		do
+			create name.make_from_cil (aname.to_string)
+			assemblies_mappings_cache.search (name)
+			if assemblies_mappings_cache.found then
+				Result := assemblies_mappings_cache.found_item
+			else
+				Result := assembly_mapping (aname).assemblies
+				assemblies_mappings_cache.put (Result, name)
+			end
+  		end
+ 		
 feature {NONE} -- Implementation
 
 	Constructor_name: STRING is ".ctor"
 
-	local_cache: HASH_TABLE [CONSUMED_TYPE, INTEGER] is
+	types_cache: CACHE [CONSUMED_TYPE, INTEGER] is
 			-- Cache for loaded types
 		once
 			create Result.make (Max_cache_items)
 		end
-	
-	history: ARRAYED_QUEUE [INTEGER] is
-			-- Cache key history
+
+	assemblies_mappings_cache: CACHE [ARRAY [CONSUMED_ASSEMBLY], STRING] is
+			-- Cache for assemblies ids mappings
 		once
 			create Result.make (Max_cache_items)
 		end
-
+		
 	Max_cache_items: INTEGER is 20
 			-- Maximum number of types stored in local cache
 

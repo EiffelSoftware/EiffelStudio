@@ -21,16 +21,24 @@ feature -- Conformance
 		require
 			object_not_void: object /= Void
 		do
-			if known_types.valid_index (type_id) then
-				Result := object.get_type = known_types.i_th (type_id).item
+			known_types.search (type_id)
+			if known_types.found then
+				Result := known_types.found_item.item.is_instance_of_type (object)
 			end
 		end
 
 	type_conforms_to (type1, type2: INTEGER): BOOLEAN is
 			-- Does `type1' conform to `type2'?
+		local
+			child: TYPE
 		do
-			if known_types.valid_index (type1) and known_types.valid_index (type2) then
-				Result := known_types.i_th (type1).item = known_types.i_th (type2).item
+			known_types.search (type1)
+			if known_types.found then
+				child := known_types.found_item.item
+				known_types.search (type2)
+				if known_types.found then
+					Result := child.is_subclass_of (known_types.found_item.item)
+				end
 			end
 		end
 		
@@ -59,8 +67,9 @@ feature -- Creation
 		local
 			c: CONSTRUCTOR_INFO
 		do
-			if known_types.valid_index (type_id) then
-				c := known_types.i_th (type_id).item.get_constructor (feature {TYPE}.empty_types)
+			known_types.search (type_id)
+			if known_types.found then
+				c := known_types.found_item.item.get_constructor (feature {TYPE}.empty_types)
 				if c /= Void then
 					Result ?= c.invoke_array_object (Void)
 				end
@@ -225,12 +234,6 @@ feature -- Access
 			not_special: not is_special (object)
 		do
 			Result := field_name_of_type (i, dynamic_type (object))
-			check
-				has_dollars: Result /= Void implies (Result.count > 2 and then Result.substring (1, 2).is_equal ("$$"))
-			end
-			if Result /= Void then
-				Result.keep_tail (Result.count - 2)
-			end
 		ensure
 			Result_exists: Result /= Void
 		end
@@ -245,7 +248,7 @@ feature -- Access
 		do
 			m := get_members (type_id)
 			if m /= Void and then m.valid_index (i) then
-				create Result.make_from_cil (m.i_th (i).item.get_name)
+				create Result.make_from_cil (m.i_th (i).item.get_name.remove (0, 2))
 			end
 		end
 
@@ -333,8 +336,12 @@ feature -- Access
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 			boolean_field: field_type (i, object) = Boolean_type
+-- TEMPORARY HACK until compiler is fixed and Result ?= field (i, object) works properly
+		local
+			bref: BOOLEAN_REF
 		do
-			Result ?= field (i, object)
+			bref ?= field (i, object)
+			Result := bref.item
 		end
 
 	integer_field (i: INTEGER; object: ANY): INTEGER is
@@ -515,6 +522,15 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
+	Object_type: INTEGER is 13
+			-- System.Object type ID
+	
+	New_known_type_id: INTEGER_REF is
+			-- ID for new stored type
+		once
+			Result := 14
+		end
+
 	field_dynamic_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
 			-- Type of `i'-th field of dynamic type `type_id'
 			-- Not used yet, but might be in future.
@@ -533,45 +549,76 @@ feature {NONE} -- Implementation
 
 	insert_type (t: TYPE) is
 			-- Add `t' to the list of known types if it is not already inside.
+		local
+			hash_code: INTEGER
+			cell: CLI_CELL [TYPE]
 		do
-			if not known_types.has (create {CLI_CELL [TYPE]}.put (t)) then
-				known_types.extend (create {CLI_CELL [TYPE]}.put (t))
+			create cell.put (t)
+			known_types_id.search (cell)
+			if not known_types_id.found then
+				known_types.put (cell, New_known_type_id.item)
+				known_types_id.put (New_known_type_id.item, cell)
+				New_known_type_id.set_item (New_known_type_id.item + 1)
 			end
+		ensure
+			not_inserted_if_found_id: known_types_id.found implies known_types_id.count = old known_types_id.count
+			not_inserted_if_found_type: known_types_id.found implies known_types.count = old known_types.count
+			inserted_if_not_found_id: not known_types_id.found implies known_types_id.item (create {CLI_CELL [TYPE]}.put (t)) = old New_known_type_id
+			inserted_if_not_found_type: not known_types_id.found implies known_types.item ((old New_known_type_id).item).is_equal (create {CLI_CELL [TYPE]}.put (t))
 		end
 
 	get_type_index (t: TYPE): INTEGER is
 			-- If type is a known type, return its index,
 			-- otherwise add it to the known types and return its index.
 		do
-			known_types.start
-			known_types.search (create {CLI_CELL [TYPE]}.put (t))
-			if not known_types.after then
-				Result := known_types.index
+			insert_type (t)
+			if known_types_id.found then
+				Result := known_types_id.found_item
 			else
-				known_types.extend (create {CLI_CELL [TYPE]}.put (t))
-				Result := known_types.count
+				Result := New_known_type_id.item - 1
 			end
 		end
 
-	known_types: ARRAYED_LIST [CLI_CELL [TYPE]] is
+	known_types: HASH_TABLE [CLI_CELL [TYPE], INTEGER] is
 			-- All types that have already been identified.
 		once
 			create Result.make (50)
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.IntPtr").to_cil)))
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Object").to_cil)))
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Char").to_cil)))
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Boolean").to_cil)))
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int32").to_cil)))
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Single").to_cil)))
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Double").to_cil)))
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.IntPtr").to_cil)), Pointer_type)
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Char").to_cil)), Character_type)
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Boolean").to_cil)), Boolean_type)
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int32").to_cil)), Integer_32_type)
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Single").to_cil)), Real_type)
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Double").to_cil)), Double_type)
 				-- No expanded type.
-			Result.extend (Void)
+				-- 
 				-- FIXME XR
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("BIT").to_cil)))
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Byte").to_cil)))
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int16").to_cil)))
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int64").to_cil)))
-			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Char").to_cil)))
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("BIT").to_cil)), Bit_type)
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Byte").to_cil)), Integer_8_type)
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int16").to_cil)), Integer_16_type)
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int64").to_cil)), Integer_64_type)
+			Result.put (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Object").to_cil)), Object_type)
+		end
+
+	known_types_id: HASH_TABLE [INTEGER, CLI_CELL [TYPE]] is
+			-- Id of all types that have already been identified.
+			--| Reverse of `known_types'.
+		once
+			create Result.make (50)
+			Result.put (Pointer_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.IntPtr").to_cil)))
+			Result.put (Character_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Char").to_cil)))
+			Result.put (Boolean_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Boolean").to_cil)))
+			Result.put (Integer_32_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int32").to_cil)))
+			Result.put (Real_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Single").to_cil)))
+			Result.put (Double_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Double").to_cil)))
+				-- No expanded type.
+				-- 
+				-- FIXME XR
+			Result.put (Bit_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("BIT").to_cil)))
+			Result.put (Integer_8_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Byte").to_cil)))
+			Result.put (Integer_16_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int16").to_cil)))
+			Result.put (Integer_64_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Int64").to_cil)))
+			Result.put (Character_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Char").to_cil)))
+			Result.put (Object_type, create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Object").to_cil)))
 		end
 
 	abstract_types: HASHTABLE is
@@ -601,25 +648,32 @@ feature {NONE} -- Implementation
 			allm: NATIVE_ARRAY [MEMBER_INFO]
 			c, i: INTEGER
 		do
-			if known_types.valid_index (type_id) then
-				fa := 	feature {BINDING_FLAGS}.instance |
-						feature {BINDING_FLAGS}.public |
-						feature {BINDING_FLAGS}.non_public
-				allm := known_types.i_th (type_id).item.get_members_binding_flags (fa)
-				c := allm.count
-				create Result.make (10)
-				from
-					
-				until
-					i = c
-				loop
-					cv_f ?= allm.item (i)
-					cv_p ?= allm.item (i)
-					if cv_f /= Void or cv_p /= Void then
-						Result.extend (create {CLI_CELL [MEMBER_INFO]}.put (allm.item(i)))
+			known_members.search (type_id)
+			if known_members.found then
+				Result := known_members.found_item
+			else
+				known_types.search (type_id)
+				if known_types.found then
+					fa := 	feature {BINDING_FLAGS}.instance |
+							feature {BINDING_FLAGS}.public |
+							feature {BINDING_FLAGS}.non_public
+					allm := known_types.found_item.item.get_members_binding_flags (fa)
+					c := allm.count
+					create Result.make (10)
+					from
+						
+					until
+						i = c
+					loop
+						cv_f ?= allm.item (i)
+						cv_p ?= allm.item (i)
+						if cv_f /= Void or cv_p /= Void then
+							Result.extend (create {CLI_CELL [MEMBER_INFO]}.put (allm.item(i)))
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
+				known_members.put (Result, type_id)
 			end
 		end
 
@@ -628,7 +682,6 @@ feature {NONE} -- Implementation
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			reference_field: field_type (i, object) = Reference_type
 		local
 			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
 			a: MEMBER_INFO
@@ -646,6 +699,12 @@ feature {NONE} -- Implementation
 					cv_p.set_value (object, value, Void)
 				end
 			end
+		end
+
+	known_members: HASH_TABLE [ARRAYED_LIST [CLI_CELL [MEMBER_INFO]], INTEGER] is
+			-- Buffer for `get_members' lookups
+		once
+			create Result.make (50)
 		end
 
 indexing

@@ -81,7 +81,6 @@ feature -- Basic Operation
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
 			file_name: FILE_NAME
-		--	file: PLAIN_TEXT_FILE
 			full_implementation_file_name, full_file_name: FILE_NAME
 			file_location: FILE_NAME
 		do
@@ -114,8 +113,8 @@ feature -- Basic Operation
 			file_contents := last_stored_string
 			
 				-- Remove the files from the disk.
-			delete_file (file_location, (window_object.name + Class_implementation_extension).as_lower + ".e")
-			delete_file (file_location, window_object.name + ".e")
+			delete_file (create {DIRECTORY}.make (file_location), (window_object.name + Class_implementation_extension).as_lower + ".e")
+			delete_file (create {DIRECTORY}.make (file_location), window_object.name + ".e")
 			
 				-- Record `Current' in the history list.
 			if not history.command_list.has (Current) then
@@ -125,7 +124,9 @@ feature -- Basic Operation
 		end
 		
 	store_file_contents (file_name: FILE_NAME) is
-			--
+			-- Store contents of file `file_name' as text in `last_stored_string'.
+		require
+			file_name_not_void: file_name /= Void
 		local
 			file: PLAIN_TEXT_FILE
 		do
@@ -140,8 +141,7 @@ feature -- Basic Operation
 		
 	last_stored_string: STRING
 		-- Last string stored as  result of a call to `store_file_contents'.
-		
-		
+
 	undo is
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
@@ -172,11 +172,14 @@ feature -- Basic Operation
 			if parent_directory /= Void then
 				file_name.extend (parent_directory)				
 			end
+				-- Restore the implementation file.
 			if implementation_file_contents /= Void then
-				restore_file (file_name, (window_object.name + Class_implementation_extension).as_lower + ".e", implementation_file_contents)
+				restore_file (create {DIRECTORY}.make (file_name), (window_object.name + Class_implementation_extension).as_lower + ".e", implementation_file_contents)
 			end
+			
+				-- Restore the interface file.
 			if file_contents /= Void then
-				restore_file (file_name, window_object.name + ".e", file_contents)
+				restore_file (create {DIRECTORY}.make (file_name), window_object.name + ".e", file_contents)
 			end
 			command_handler.update
 		end

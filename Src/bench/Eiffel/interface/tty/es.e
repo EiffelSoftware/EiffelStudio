@@ -15,7 +15,7 @@ inherit
 		redefine
 			add_usage_special_cmds, add_help_special_cmds,
 			loop_cmd, is_precompiled_option,
-			process_special_options, new_license
+			process_special_options
 		end
 
 creation
@@ -34,13 +34,6 @@ feature -- Access
 		do
 			Result := option.is_equal ("-precompile")
 		end;
-
-feature -- Licensing
-
-	new_license: LICENCE is
-		do
-			!BENCH_LICENCE!Result.make
-		end
 
 feature -- Update
 

@@ -186,16 +186,20 @@ feature {NONE} -- Object retrieval from node.
 							if l_node_name.is_equal (Reference_node) then
 								set_reference_field (i, obj, reference_from_xml (l_field_element))
 							elseif l_node_name.is_equal (String_node) then
-								from
-									l_data ?= l_field_element.item_for_iteration
-									l_string_content := l_data.content.out
-									l_field_element.forth
-								until
-									l_field_element.after
-								loop
-									l_data ?= l_field_element.item_for_iteration
-									l_string_content.append (l_data.content.out)
-									l_field_element.forth
+								if l_field_element.after then
+									l_string_content := Void
+								else
+									from
+										l_data ?= l_field_element.item_for_iteration
+										l_string_content := l_data.content.out
+										l_field_element.forth
+									until
+										l_field_element.after
+									loop
+										l_data ?= l_field_element.item_for_iteration
+										l_string_content.append (l_data.content.out)
+										l_field_element.forth
+									end
 								end
 								set_reference_field (i, obj, l_string_content)
 							elseif l_node_name.is_equal (Array_node) then

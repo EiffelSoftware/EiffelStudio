@@ -35,6 +35,8 @@ feature -- Initialization
 	make_from_string (p: STRING) is
 			-- Create path name object and initialize it with the
 			-- path name `p'
+		require
+			path_not_void: p /= Void
 		do
 			string_make (p.count)
 			append (p)

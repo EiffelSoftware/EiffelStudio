@@ -87,19 +87,19 @@ feature -- Windows Versions
 
 feature -- "Shell and Common controls" Versions
 
---|--------------------------------------------------------------------------|
---| Version |     DLL      |        Distribution Platform                    |
---|---------|--------------|-------------------------------------------------|
---| 4.00    | All          | Microsoft® Windows® 95/Windows NT® 4.0          |
---| 4.70    | All          | Microsoft® Internet Explorer 3.x                |
---| 4.71    | All          | Microsoft® Internet Explorer 4.0                |
---| 4.72    | All          | Microsoft® Internet Explorer 4.01 & Windows® 98 |
---| 5.00    | Shlwapi.dll  | Microsoft® Internet Explorer 5                  |
---| 5.00    | Shell32.dll  | Microsoft® Windows® 2000                        |
---| 5.80    | Comctl32.dll | Microsoft® Internet Explorer 5                  |
---| 5.81    | Comctl32.dll | Microsoft® Windows 2000, Millenium Edition      |
---| 5.81    | Comctl32.dll | Microsoft® Internet Explorer 5.5                |
---|--------------------------------------------------------------------------|
+ --|--------------------------------------------------------------------------|
+ --| Version |     DLL      |        Distribution Platform                    |
+ --|---------|--------------|-------------------------------------------------|
+ --| 4.00    | All          | Microsoft® Windows® 95/Windows NT® 4.0          |
+ --| 4.70    | All          | Microsoft® Internet Explorer 3.x                |
+ --| 4.71    | All          | Microsoft® Internet Explorer 4.0                |
+ --| 4.72    | All          | Microsoft® Internet Explorer 4.01 & Windows® 98 |
+ --| 5.00    | Shlwapi.dll  | Microsoft® Internet Explorer 5                  |
+ --| 5.00    | Shell32.dll  | Microsoft® Windows® 2000                        |
+ --| 5.80    | Comctl32.dll | Microsoft® Internet Explorer 5                  |
+ --| 5.81    | Comctl32.dll | Microsoft® Windows 2000, Millenium Edition      |
+ --| 5.81    | Comctl32.dll | Microsoft® Internet Explorer 5.5                |
+ --|--------------------------------------------------------------------------|
 
 	comctl32_version: INTEGER is
 			-- Version of Comctl32.dll
@@ -240,11 +240,11 @@ end -- class WEL_WINDOWS_VERSION
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 

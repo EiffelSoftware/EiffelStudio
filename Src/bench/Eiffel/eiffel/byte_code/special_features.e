@@ -54,7 +54,7 @@ feature -- Byte code special generation
 	make_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
 		do
 			inspect function_type
-			when equal_type, max_type, min_type ,generator_type, generating_type_type then
+			when equal_type, max_type, min_type ,generator_type then
 				ba.append (bc_code)
 			end
 		end
@@ -73,6 +73,26 @@ feature -- C special code generation
 				buffer.putstring (c_operation)
 				buffer.putchar (' ')
 				parameter.print_register
+			when to_integer_type then
+				buffer.putstring ("(EIF_INTEGER) ")
+				target.print_register
+			when offset_type then
+					-- We do not need to check the kind of basic type, because
+					-- numerical ones are specially handled.
+				inspect type_of (basic_type)
+				when pointer_type then
+					buffer.putstring ("RTPOF(")
+					target.print_register
+					buffer.putchar (',')
+					parameter.print_register
+					buffer.putchar (')')
+				when character_type then
+					buffer.putstring ("(EIF_CHARACTER) (((EIF_INTEGER) ")
+					target.print_register
+					buffer.putstring (") + ")
+					parameter.print_register
+					buffer.putchar (')')
+				end
 			when out_type then
 				inspect type_of (basic_type)
 				when boolean_type then
@@ -101,14 +121,11 @@ feature -- C special code generation
 				when integer_type then
 					buffer.putchar('(')
 					target.print_register
-					buffer.putstring (" > 0 ? ")
+					buffer.putstring (" >= 0 ? ")
 					target.print_register
-					buffer.putstring (" : (-")
+					buffer.putstring (" : -(")
 					target.print_register
-					buffer.putstring (" <= 0 ? 1L : -")
-					target.print_register
-					buffer.putchar(')')
-					buffer.putchar(')')
+					buffer.putstring (" + 1))")
 				when pointer_type then
 					buffer.putstring ("((EIF_INTEGER) ")
 					target.print_register
@@ -165,7 +182,7 @@ feature -- C special code generation
 					target.print_register
 					buffer.putchar (')')					
 				end
-			when generator_type, generating_type_type then
+			when generator_type then
 				inspect type_of (basic_type)
 				when boolean_type then
 					buffer.putstring (" RTMS_EX(%"BOOLEAN%", 7)")
@@ -200,6 +217,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (Void, "abs")
 			Result.put (Void, "generator")
 			Result.put (Void, "generating_type")
+			Result.put (Void, "_infix_plus")
 		end
 
 	function_type_table: HASH_TABLE [INTEGER, STRING] is
@@ -216,7 +234,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (min_type, "min")
 			Result.put (abs_type, "abs")
 			Result.put (generator_type, "generator")
-			Result.put (generating_type_type, "generating_type")
+			Result.put (generator_type, "generating_type")
+			Result.put (to_integer_type, "truncated_to_integer")
+			Result.put (offset_type, "_infix_plus")
 		end
 
 	byte_eiffel_table: HASH_TABLE [CHARACTER, STRING] is
@@ -244,7 +264,8 @@ feature {NONE} -- Fast access to feature name
 	min_type: INTEGER is 6
 	abs_type: INTEGER is 7
 	generator_type: INTEGER is 8
-	generating_type_type: INTEGER is 9
+	to_integer_type: INTEGER is 9
+	offset_type: INTEGER is 10
 
 feature {NONE} -- Type information
 

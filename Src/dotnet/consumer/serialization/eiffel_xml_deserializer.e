@@ -74,7 +74,7 @@ feature -- Basic Operations
 										-- ensure compatibility
 									read_next
 									deserialized_object := reference_from_xml
-									if a_use_bin_if_avail then
+									if a_use_bin_if_avail and deserialized_object /= Void then
 										create ser
 										ser.serialize (deserialized_object, path)
 									end

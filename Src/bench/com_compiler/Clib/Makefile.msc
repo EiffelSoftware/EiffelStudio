@@ -2,7 +2,7 @@
 
 MV = copy
 CC = cl
-OUTPUT_CMD = -Fo
+OUTPUT_CMD = -Fo 
 #CFLAGS = -Zi -W0 -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include 
 CFLAGS = -W0 -Ox -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include
 
@@ -77,7 +77,7 @@ wecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_proxy_s.obj \
 wecom_eiffelcomcompiler_ieiffelcompletioninfo_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ceiffelhtmldocumentationgenerator_s.obj \
 wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.obj \
-wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy.obj \
 wecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.obj \
 wecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_proxy_s.obj \
@@ -189,7 +189,7 @@ wecom_eiffelcomcompiler_ceiffelhtmldocumentationgenerator_s.obj: ecom_eiffelcomc
 wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
    
-wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.cpp
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
    
 wecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.cpp

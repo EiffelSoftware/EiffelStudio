@@ -6,7 +6,8 @@ CC = $cc
 CTAGS = ctags
 OUTPUT_CMD = $output_cmd
 INPUT_CMD = $input_cmd
-JCFLAGS = $(CFLAGS)  $ccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
+JCFLAGS = $(CFLAGS) $ccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
+JMTCFLAGS = $(CFLAGS) $mtccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
 LIB_EXE = $lib_exe
 LN = copy
 MAKE = $make
@@ -73,7 +74,6 @@ OBJECTS = \
 	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\ipc\shared\shword.$obj \
 	$(TOP)\console\winconsole.$lib \
-	$extra_object_files
 
 WOBJECTS = \
 	$(NETWORK) \
@@ -131,7 +131,6 @@ WOBJECTS = \
 	$(INDIR)\weif_special_table.$obj \
 	$(TOP)\idrs\idr.$lib \
 	$(TOP)\console\winconsole.$lib \
-	$extra_object_files
 
 EOBJECTS = \
 	$(INDIR)\wlmalloc.$obj \
@@ -189,72 +188,170 @@ EOBJECTS = \
 	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\console\winconsole.$lib
 
+MT_OBJECTS = \
+	$(INDIR)\MTlmalloc.$obj \
+	$(INDIR)\MTmalloc.$obj \
+	$(INDIR)\MTgarcol.$obj \
+	$(INDIR)\MTlocal.$obj \
+	$(INDIR)\MTexcept.$obj \
+	$(INDIR)\MTstore.$obj \
+	$(INDIR)\MTretrieve.$obj \
+	$(INDIR)\MThash.$obj \
+	$(INDIR)\MTtraverse.$obj \
+	$(INDIR)\MThashin.$obj \
+	$(INDIR)\MTtools.$obj \
+	$(INDIR)\MTinternal.$obj \
+	$(INDIR)\MTplug.$obj \
+	$(INDIR)\MTcopy.$obj \
+	$(INDIR)\MTequal.$obj \
+	$(INDIR)\MTout.$obj \
+	$(INDIR)\MTtimer.$obj \
+	$(INDIR)\MTurgent.$obj \
+	$(INDIR)\MTsig.$obj \
+	$(INDIR)\MThector.$obj \
+	$(INDIR)\MTcecil.$obj \
+	$(INDIR)\MTbits.$obj \
+	$(INDIR)\MTfile.$obj \
+	$(INDIR)\MTdir.$obj \
+	$(INDIR)\MTstring.$obj \
+	$(INDIR)\MTmisc.$obj \
+	$(INDIR)\MTpattern.$obj \
+	$(INDIR)\MTerror.$obj \
+	$(INDIR)\MTumain.$obj \
+	$(INDIR)\MTmemory.$obj \
+	$(INDIR)\MTargv.$obj \
+	$(INDIR)\MTboolstr.$obj \
+	$(INDIR)\MTsearch.$obj \
+	$(INDIR)\MTmain.$obj \
+	$(INDIR)\MToption.$obj \
+	$(INDIR)\MTconsole.$obj \
+	$(INDIR)\MTrun_idr.$obj \
+	$(INDIR)\MTpath_name.$obj \
+	$(INDIR)\MTobject_id.$obj \
+	$(INDIR)\MTcompress.$obj \
+	$(INDIR)\MTeif_threads.$obj \
+	$(INDIR)\MTeif_cond_var.$obj \
+	$(INDIR)\MTeif_once.$obj \
+	$(INDIR)\MTeif_rw_lock.$obj \
+	$(INDIR)\MTeif_project.$obj \
+	$(INDIR)\MTgen_conf.$obj \
+	$(INDIR)\MTrout_obj.$obj \
+	$(INDIR)\MTeif_special_table.$obj \
+	$(TOP)\ipc\shared\MTnetworku.$obj \
+	$(TOP)\ipc\shared\MTshword.$obj \
+	$(TOP)\console\mtwinconsole.$lib \
+
+MT_WOBJECTS = \
+	$(MT_NETWORK) \
+	$(INDIR)\MTwlmalloc.$obj \
+	$(INDIR)\MTwmalloc.$obj \
+	$(INDIR)\MTwgarcol.$obj \
+	$(INDIR)\MTwlocal.$obj \
+	$(INDIR)\MTwexcept.$obj \
+	$(INDIR)\MTwstore.$obj \
+	$(INDIR)\MTwretrieve.$obj \
+	$(INDIR)\MTwhash.$obj \
+	$(INDIR)\MTwtraverse.$obj \
+	$(INDIR)\MTwhashin.$obj \
+	$(INDIR)\MTwtools.$obj \
+	$(INDIR)\MTwinternal.$obj \
+	$(INDIR)\MTwplug.$obj \
+	$(INDIR)\MTwcopy.$obj \
+	$(INDIR)\MTwequal.$obj \
+	$(INDIR)\MTwout.$obj \
+	$(INDIR)\MTwtimer.$obj \
+	$(INDIR)\MTwurgent.$obj \
+	$(INDIR)\MTwsig.$obj \
+	$(INDIR)\MTwhector.$obj \
+	$(INDIR)\MTwcecil.$obj \
+	$(INDIR)\MTwbits.$obj \
+	$(INDIR)\MTwfile.$obj \
+	$(INDIR)\MTwdir.$obj \
+	$(INDIR)\MTwstring.$obj \
+	$(INDIR)\MTwmisc.$obj \
+	$(INDIR)\MTwpattern.$obj \
+	$(INDIR)\MTwerror.$obj \
+	$(INDIR)\MTwumain.$obj \
+	$(INDIR)\MTwmemory.$obj \
+	$(INDIR)\MTwargv.$obj \
+	$(INDIR)\MTwboolstr.$obj \
+	$(INDIR)\MTwsearch.$obj \
+	$(INDIR)\MTwmain.$obj \
+	$(INDIR)\MTdebug.$obj \
+	$(INDIR)\MTinterp.$obj \
+	$(INDIR)\MTwoption.$obj \
+	$(INDIR)\MTupdate.$obj \
+	$(INDIR)\MTwbench.$obj \
+	$(INDIR)\MTwconsole.$obj \
+	$(INDIR)\MTwrun_idr.$obj \
+	$(INDIR)\MTwpath_name.$obj \
+	$(INDIR)\MTwobject_id.$obj \
+	$(INDIR)\MTcompress.$obj \
+	$(INDIR)\MTweif_threads.$obj \
+	$(INDIR)\MTweif_cond_var.$obj \
+	$(INDIR)\MTweif_once.$obj \
+	$(INDIR)\MTeif_rw_lock.$obj \
+	$(INDIR)\MTweif_project.$obj \
+	$(INDIR)\MTwgen_conf.$obj \
+	$(INDIR)\MTwrout_obj.$obj \
+	$(INDIR)\MTweif_special_table.$obj \
+	$(TOP)\idrs\mtidr.$lib \
+	$(TOP)\console\mtwinconsole.$lib \
+
 all:: eif_size.h
 
-
-all:: $(OUTDIR)\finalized.$lib
-
+all:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib $(OUTDIR)\ebench.$lib 
+all:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib
 
 $(OUTDIR)\finalized.$lib: $(OBJECTS)
 	$(RM) $(OUTDIR)\finalized.$lib
 	$link_line
 
-all:: $(OUTDIR)\wkbench.$lib
-
 $(OUTDIR)\wkbench.$lib: $(WOBJECTS)
 	$(RM) $(OUTDIR)\wkbench.$lib
 	$link_wline
 
-mtdll:: mtwkbench.dll
+$(OUTDIR)\mtfinalized.$lib: $(MT_OBJECTS)
+	$(RM) $(OUTDIR)\mtfinalized.$lib
+	$link_mtline
+
+$(OUTDIR)\mtwkbench.$lib: $(MT_WOBJECTS)
+	$(RM) $(OUTDIR)\mtwkbench.$lib
+	$link_mtwline
+
+dll:: mtwkbench.dll mtfinalized.dll
+dll:: wkbench.dll finalized.dll
 
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
-	$(DLLFLAGS) \
-	/OUT:$(DLLDIR)\mtwkbench.dll /IMPLIB:$(DLLDIR)\dll_mtwkbench.lib
+	$(DLLFLAGS)
 
-LINK32_OBJS= $(WOBJECTS)
-mtwkbench.dll : $(DLLDIR) $(LINK32_OBJS)
+mtwkbench.dll : $(DLLDIR) $(MT_WOBJECTS)
 	$(RM) $(DLLDIR)\mtwkbench.dll
-	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
+	$(LINK32) $(LINK32_FLAGS) -OUT:$(DLLDIR)\mtwkbench.dll \
+		-IMPLIB:$(DLLDIR)\dll_mtwkbench.lib $(MT_WOBJECTS)
 
-mtdll:: mtfinalized.dll
-
-LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
-		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
-	$(DLLFLAGS) \
-	/OUT:$(DLLDIR)\mtfinalized.dll /IMPLIB:$(DLLDIR)\dll_mtfinalized.lib
-
-LINK32_OBJS= $(OBJECTS)
-mtfinalized.dll : $(DLLDIR) $(LINK32_OBJS)
+mtfinalized.dll : $(DLLDIR) $(MT_OBJECTS)
 	$(RM) $(DLLDIR)\mtfinalized.dll
-	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
+	$(LINK32) $(LINK32_FLAGS) -OUT:$(DLLDIR)\mtfinalized.dll \
+		-IMPLIB:$(DLLDIR)\dll_mtfinalized.lib $(MT_OBJECTS)
 
-dll:: wkbench.dll
-
-LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
-		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
-	$(DLLFLAGS) \
-	/OUT:$(DLLDIR)\wkbench.dll /IMPLIB:$(DLLDIR)\dll_wkbench.lib
-
-LINK32_OBJS= $(WOBJECTS)
-wkbench.dll : $(DLLDIR) $(LINK32_OBJS)
+wkbench.dll : $(DLLDIR) $(WOBJECTS)
 	$(RM) $(DLLDIR)\wkbench.dll
-	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
+	$(LINK32) $(LINK32_FLAGS) -OUT:$(DLLDIR)\wkbench.dll \
+		-IMPLIB:$(DLLDIR)\dll_wkbench.lib $(WOBJECTS) 
 
-dll:: finalized.dll
-
-LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
-		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
-	$(DLLFLAGS) \
-	/OUT:$(DLLDIR)\finalized.dll /IMPLIB:$(DLLDIR)\dll_finalized.lib
-
-LINK32_OBJS= $(OBJECTS)
-finalized.dll : $(DLLDIR) $(LINK32_OBJS)
+finalized.dll : $(DLLDIR) $(OBJECTS)
 	$(RM) $(DLLDIR)\finalized.dll
-	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
-
+	$(LINK32) $(LINK32_FLAGS) -OUT:$(DLLDIR)\finalized.dll \
+		-IMPLIB:$(DLLDIR)\dll_finalized.lib $(OBJECTS)
 
 ..\console\winconsole.$lib: ..\console\econsole.c ..\console\argcargv.c
+	cd ..\console
+	$(MAKE)
+	cd ..\run-time
+
+..\console\mtwinconsole.$lib: ..\console\econsole.c ..\console\argcargv.c
 	cd ..\console
 	$(MAKE)
 	cd ..\run-time
@@ -264,9 +361,17 @@ finalized.dll : $(DLLDIR) $(LINK32_OBJS)
 	$(MAKE)
 	cd ..\run-time
 
-all:: $(OUTDIR)\ebench.$lib
+..\idrs\mtidr.$lib:
+	cd ..\idrs
+	$(MAKE)
+	cd ..\run-time
 
 ..\ipc\app\network.$lib: ..\ipc\app\app_proto.c
+	cd ..\ipc\app
+	$(MAKE)
+	cd ..\..\run-time
+
+..\ipc\app\mtnetwork.$lib: ..\ipc\app\app_proto.c
 	cd ..\ipc\app
 	$(MAKE)
 	cd ..\..\run-time
@@ -602,6 +707,304 @@ $(INDIR)\bmain.$obj: $(RTSRC)\main.c
 
 $(INDIR)\bexcept.$obj: $(RTSRC)\except.c
 	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK $(RTSRC)\except.c
+
+###################
+# MT_OBJECTS
+###################
+
+$(INDIR)\MTargv.$obj: $(RTSRC)\argv.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\argv.c
+
+$(INDIR)\MTbits.$obj: $(RTSRC)\bits.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\bits.c
+
+$(INDIR)\MTboolstr.$obj: $(RTSRC)\boolstr.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\boolstr.c
+
+$(INDIR)\MTcecil.$obj: $(RTSRC)\cecil.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\cecil.c
+
+$(INDIR)\MTcompress.$obj: $(RTSRC)\compress.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\compress.c
+
+$(INDIR)\MTconsole.$obj: $(RTSRC)\console.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\console.c
+
+$(INDIR)\MTcopy.$obj: $(RTSRC)\copy.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\copy.c
+
+$(INDIR)\MTdir.$obj: $(RTSRC)\dir.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\dir.c
+
+$(INDIR)\MTeif_cond_var.$obj: $(RTSRC)\eif_cond_var.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\eif_cond_var.c
+
+$(INDIR)\MTeif_once.$obj: $(RTSRC)\eif_once.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\eif_once.c
+
+$(INDIR)\MTeif_project.$obj: $(RTSRC)\eif_project.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\eif_project.c
+
+$(INDIR)\MTeif_threads.$obj: $(RTSRC)\eif_threads.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\eif_threads.c
+
+$(INDIR)\MTequal.$obj: $(RTSRC)\equal.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\equal.c
+
+$(INDIR)\MTerror.$obj: $(RTSRC)\error.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\error.c
+
+$(INDIR)\MTexcept.$obj: $(RTSRC)\except.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\except.c
+
+$(INDIR)\MTfile.$obj: $(RTSRC)\file.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\file.c
+
+$(INDIR)\MTgarcol.$obj: $(RTSRC)\garcol.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\garcol.c
+
+$(INDIR)\MTgen_conf.$obj: $(RTSRC)\gen_conf.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\gen_conf.c
+
+$(INDIR)\MTrout_obj.$obj: $(RTSRC)\rout_obj.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\rout_obj.c
+
+$(INDIR)\MTeif_special_table.$obj: $(RTSRC)\eif_special_table.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\eif_special_table.c
+
+$(INDIR)\MThash.$obj: $(RTSRC)\hash.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\hash.c
+
+$(INDIR)\MThashin.$obj: $(RTSRC)\hashin.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\hashin.c
+
+$(INDIR)\MThector.$obj: $(RTSRC)\hector.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\hector.c
+
+$(INDIR)\MTinternal.$obj: $(RTSRC)\internal.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\internal.c
+
+$(INDIR)\MTlmalloc.$obj: $(RTSRC)\lmalloc.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\lmalloc.c
+
+$(INDIR)\MTlocal.$obj: $(RTSRC)\local.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\local.c
+
+$(INDIR)\MTmain.$obj: $(RTSRC)\main.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\main.c
+
+$(INDIR)\MTmalloc.$obj: $(RTSRC)\malloc.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\malloc.c
+
+$(INDIR)\MTmemory.$obj: $(RTSRC)\memory.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\memory.c
+
+$(INDIR)\MTmisc.$obj: $(RTSRC)\misc.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\misc.c
+
+$(INDIR)\MTobject_id.$obj: $(RTSRC)\object_id.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\object_id.c
+
+$(INDIR)\MToption.$obj: $(RTSRC)\option.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\option.c
+
+$(INDIR)\MTout.$obj: $(RTSRC)\out.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\out.c
+
+$(INDIR)\MTpath_name.$obj: $(RTSRC)\path_name.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\path_name.c
+
+$(INDIR)\MTpattern.$obj: $(RTSRC)\pattern.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\pattern.c
+
+$(INDIR)\MTplug.$obj: $(RTSRC)\plug.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\plug.c
+
+$(INDIR)\MTretrieve.$obj: $(RTSRC)\retrieve.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\retrieve.c
+
+$(INDIR)\MTrun_idr.$obj: $(RTSRC)\run_idr.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\run_idr.c
+
+$(INDIR)\MTsearch.$obj: $(RTSRC)\search.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\search.c
+
+$(INDIR)\MTsig.$obj: $(RTSRC)\sig.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\sig.c
+
+$(INDIR)\MTstore.$obj: $(RTSRC)\store.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\store.c
+
+$(INDIR)\MTstring.$obj: $(RTSRC)\string.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\string.c
+
+$(INDIR)\MTtimer.$obj: $(RTSRC)\timer.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\timer.c
+
+$(INDIR)\MTtools.$obj: $(RTSRC)\tools.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\tools.c
+
+$(INDIR)\MTtraverse.$obj: $(RTSRC)\traverse.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\traverse.c
+
+$(INDIR)\MTumain.$obj: $(RTSRC)\umain.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\umain.c
+
+$(INDIR)\MTurgent.$obj: $(RTSRC)\urgent.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\urgent.c
+
+$(INDIR)\MTupdate.$obj: $(RTSRC)\update.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\update.c
+
+$(INDIR)\MTdebug.$obj: $(RTSRC)\debug.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\debug.c
+
+$(INDIR)\MTinterp.$obj: $(RTSRC)\interp.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\interp.c
+
+$(INDIR)\MTeif_rw_lock.$obj : $(RTSRC)\eif_rw_lock.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\eif_rw_lock.c
+
+$(INDIR)\MTwargv.$obj: $(RTSRC)\argv.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\argv.c
+
+$(INDIR)\MTwbench.$obj: $(RTSRC)\wbench.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\wbench.c
+
+$(INDIR)\MTwbits.$obj: $(RTSRC)\bits.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\bits.c
+
+$(INDIR)\MTwboolstr.$obj: $(RTSRC)\boolstr.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\boolstr.c
+
+$(INDIR)\MTwcecil.$obj: $(RTSRC)\cecil.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\cecil.c
+
+$(INDIR)\MTwconsole.$obj: $(RTSRC)\console.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\console.c
+
+$(INDIR)\MTwcopy.$obj: $(RTSRC)\copy.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\copy.c
+
+$(INDIR)\MTwdir.$obj: $(RTSRC)\dir.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\dir.c
+
+$(INDIR)\MTweif_cond_var.$obj: $(RTSRC)\eif_cond_var.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\eif_cond_var.c
+
+$(INDIR)\MTweif_once.$obj: $(RTSRC)\eif_once.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\eif_once.c
+
+$(INDIR)\MTweif_project.$obj: $(RTSRC)\eif_project.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\eif_project.c
+
+$(INDIR)\MTweif_threads.$obj: $(RTSRC)\eif_threads.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\eif_threads.c
+
+$(INDIR)\MTwequal.$obj: $(RTSRC)\equal.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\equal.c
+
+$(INDIR)\MTwerror.$obj: $(RTSRC)\error.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\error.c
+
+$(INDIR)\MTwexcept.$obj: $(RTSRC)\except.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\except.c
+
+$(INDIR)\MTwfile.$obj: $(RTSRC)\file.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\file.c
+
+$(INDIR)\MTwgarcol.$obj: $(RTSRC)\garcol.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\garcol.c
+
+$(INDIR)\MTwgen_conf.$obj: $(RTSRC)\gen_conf.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\gen_conf.c
+
+$(INDIR)\MTweif_special_table.$obj: $(RTSRC)\eif_special_table.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\eif_special_table.c
+
+$(INDIR)\MTwrout_obj.$obj: $(RTSRC)\rout_obj.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\rout_obj.c
+
+$(INDIR)\MTwhash.$obj: $(RTSRC)\hash.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\hash.c
+
+$(INDIR)\MTwhashin.$obj: $(RTSRC)\hashin.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\hashin.c
+
+$(INDIR)\MTwhector.$obj: $(RTSRC)\hector.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\hector.c
+
+$(INDIR)\MTwinternal.$obj: $(RTSRC)\internal.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\internal.c
+
+$(INDIR)\MTwlmalloc.$obj: $(RTSRC)\lmalloc.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\lmalloc.c
+
+$(INDIR)\MTwlocal.$obj: $(RTSRC)\local.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\local.c
+
+$(INDIR)\MTwmain.$obj: $(RTSRC)\main.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\main.c
+
+$(INDIR)\MTwmalloc.$obj: $(RTSRC)\malloc.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\malloc.c
+
+$(INDIR)\MTwmemory.$obj: $(RTSRC)\memory.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\memory.c
+
+$(INDIR)\MTwmisc.$obj: $(RTSRC)\misc.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\misc.c
+
+$(INDIR)\MTwobject_id.$obj: $(RTSRC)\object_id.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\object_id.c
+
+$(INDIR)\MTwoption.$obj: $(RTSRC)\option.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\option.c
+
+$(INDIR)\MTwout.$obj: $(RTSRC)\out.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\out.c
+
+$(INDIR)\MTwpath_name.$obj: $(RTSRC)\path_name.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\path_name.c
+
+$(INDIR)\MTwpattern.$obj: $(RTSRC)\pattern.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\pattern.c
+
+$(INDIR)\MTwplug.$obj: $(RTSRC)\plug.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\plug.c
+
+$(INDIR)\MTwretrieve.$obj: $(RTSRC)\retrieve.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\retrieve.c
+
+$(INDIR)\MTwrun_idr.$obj: $(RTSRC)\run_idr.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\run_idr.c
+
+$(INDIR)\MTwsearch.$obj: $(RTSRC)\search.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\search.c
+
+$(INDIR)\MTwsig.$obj: $(RTSRC)\sig.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\sig.c
+
+$(INDIR)\MTwstore.$obj: $(RTSRC)\store.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\store.c
+
+$(INDIR)\MTwstring.$obj: $(RTSRC)\string.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\string.c
+
+$(INDIR)\MTwtimer.$obj: $(RTSRC)\timer.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\timer.c
+
+$(INDIR)\MTwtools.$obj: $(RTSRC)\tools.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\tools.c
+
+$(INDIR)\MTwtraverse.$obj: $(RTSRC)\traverse.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\traverse.c
+
+$(INDIR)\MTwumain.$obj: $(RTSRC)\umain.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\umain.c
+
+$(INDIR)\MTwurgent.$obj: $(RTSRC)\urgent.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\urgent.c
 
 TESTS = mram gram lram eram sram
 

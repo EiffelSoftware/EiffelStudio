@@ -16,21 +16,17 @@ create
 
 feature
 
-	has_derivation (an_id: INTEGER; a_type: GEN_TYPE_I): BOOLEAN is
+	has_derivation (an_id: INTEGER; a_type: CL_TYPE_I): BOOLEAN is
 		local
 			derivations: FILTER_LIST;
 		do
-			derivations := item (an_id);
+			derivations := item (an_id)
 			if derivations /= Void then
-				derivations.start;
-				derivations.search (a_type);
-				if not derivations.after then
-					Result := True
-				end;
+				Result := derivations.has_item (a_type)
 			end;
 		end;
 
-	insert_derivation (an_id: INTEGER; a_type: GEN_TYPE_I) is
+	insert_derivation (an_id: INTEGER; a_type: CL_TYPE_I) is
 		local
 			derivations: FILTER_LIST;
 			tuple_i: TUPLE_TYPE_I
@@ -53,7 +49,7 @@ end;
 			-- Do not add any TUPLE derivations
 
 			if tuple_i = Void then
-				derivations.put_front (a_type);
+				derivations.extend (a_type);
 			end
 		end;
 

@@ -10,42 +10,42 @@ class
 
 feature -- Access
 
-	Hdi_bitmap: INTEGER is
+	frozen Hdi_bitmap: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_BITMAP"
 		end
 
-	Hdi_format: INTEGER is
+	frozen Hdi_format: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_FORMAT"
 		end
 
-	Hdi_height: INTEGER is
+	frozen Hdi_height: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_HEIGHT"
 		end
 
-	Hdi_lparam: INTEGER is
+	frozen Hdi_lparam: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_LPARAM"
 		end
 
-	Hdi_text: INTEGER is
+	frozen Hdi_text: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_TEXT"
 		end
 
-	Hdi_width: INTEGER is
+	frozen Hdi_width: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"
 		alias

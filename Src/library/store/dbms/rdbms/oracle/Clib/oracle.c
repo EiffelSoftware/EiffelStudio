@@ -57,7 +57,6 @@ struct define
 };
 
 struct describe desc[MAX_SELECT_LIST_SIZE] [MAX_SELECT_LIST_SIZE];
-//struct define def [MAX_DESCRIPTOR] [MAX_SELECT_LIST_SIZE];
 struct define def [MAX_DESCRIPTOR] [MAX_SELECT_LIST_SIZE];
 
 Cda_Def *cda[MAX_DESCRIPTOR];
@@ -93,10 +92,10 @@ short ora_tranNumber=0; /* number of transaction opened at present */
 void c_ora_make (int m_size)
 {
 	int count;
-	
+
 	ora_clear_error ();
 	max_size = m_size;
-	
+
 	for (count = 0; count < MAX_DESCRIPTOR; count++)
 		cda[count] = NULL;
 }
@@ -243,11 +242,11 @@ int ora_exec_immediate (int no_desc, text order[1024])
 		if (error_number) {
 			return error_number;
 		}
-	// Change by David S : Need to free the descriptor after the ora_exec_immediate 
+	// Change by David S : Need to free the descriptor after the ora_exec_immediate
 	// but to do now in Eiffel file
 //	free (cda [no_des]);
 //	cda [no_des] = NULL;
-	}	
+	}
 	return error_number;
 }
 
@@ -278,7 +277,7 @@ int ora_init_order (text order[1024], int no_desc)
 			if (error_number) {
 				return error_number;
 			}
-		} 
+		}
 	sql_function = cda[no_desc]->ft;
 	return error_number;
 }
@@ -318,7 +317,7 @@ sword describe_define(Cda_Def *tmp, int no_desc) {
 //  				deftyp = INT_TYPE;
 //  				desc [no_desc] [col].dbtype = INT_TYPE;
 //  			}
-			
+
 			break;
 
 		default:
@@ -327,7 +326,7 @@ sword describe_define(Cda_Def *tmp, int no_desc) {
 			if (desc [no_desc] [col].dbtype == ROWID_TYPE)
 				desc [no_desc] [col].dbsize = 18;
 			defptr = def [no_desc] [col].buf;
-			deflen = desc [no_desc] [col].dbsize > MAX_ITEM_BUFFER_SIZE ? 
+			deflen = desc [no_desc] [col].dbsize > MAX_ITEM_BUFFER_SIZE ?
 				MAX_ITEM_BUFFER_SIZE : desc [no_desc] [col].dbsize + 1;
 			deftyp = STRING_TYPE;
 			break;
@@ -338,7 +337,7 @@ sword describe_define(Cda_Def *tmp, int no_desc) {
 			return -1;
 		}
 	}
-	
+
 	return col;
 }
 
@@ -383,7 +382,7 @@ void print_rows(Cda_Def *tmp, sword ncols, int no_desc) {
 				//ora_error_handler(tmp);
 				break;
 		}
-		
+
 		for (col = 0; col < ncols ; col++) {
 			/* Check col. return code for null. If
 			   null, print n spaces, else print value. */
@@ -424,14 +423,14 @@ int ora_put_data (int no_des, int index, char *result) {
 	//		default:
 	memcpy((char *)(result), (char *)(def [no_des] [index-1].buf), size);
 	//		break;
-	//	}	
+	//	}
 	// if (ora_tmp == "") {
 	/* the retrived value is NULL, we use empty string to represent NULL */
 	//		result[0] = '\0';
 	//			return 0;
-							
+
 	//			  }
-			  
+
 	//   memcpy(result, def [no_des] [i], odbc_tmp_indicator);
 	/*result[odbc_tmp_indicator] = '\0';*/
 	return (size);
@@ -480,7 +479,7 @@ all select–list items before doing the oexec. */
 			//continue;
 		}
 	}
-	
+
 	/* Execute the statement. */
 	if (oexec(cda[no_desc])) {
 		ora_error_handler(cda[no_desc]);
@@ -541,12 +540,12 @@ int ora_terminate_order (int no_des)
 /* PARAMETERS: no_des- index in descriptor vector.               */
 /* DESCRIPTION:                                                  */
 /*   A SELECT statement is now being executed in DYNAMIC EXECU-  */
-/* TION mode,  the  routine is to FETCH a new tuple from database*/ 
+/* TION mode,  the  routine is to FETCH a new tuple from database*/
 /* and if a new tuple is fetched, return 1 otherwise return 0.   */
 /*                                                               */
 /*****************************************************************/
 int ora_next_row (int no_des)
-{	    
+{
 	Cda_Def *dap = cda[no_des];
 	int col;
 	//ncol = describe_define (dap);
@@ -564,7 +563,7 @@ disregard null fetch ”error”. */
 			if (dap->rc != NULL_VALUE_RETURNED)
 				//ora_error_handler(dap);
 				return 1;
-			else 
+			else
 				return 0;
 		} else {
 			return 0;
@@ -586,7 +585,7 @@ disregard null fetch ”error”. */
 /*       ora_sensitive_mixed()					 */
 /* DESCRIPTION:                                                  */
 /*   Decide if the underlying driver is sensitive to upper/lower */
-/* cases, and what format is stored in database.                 */ 
+/* cases, and what format is stored in database.                 */
 /*                                                               */
 /*****************************************************************/
 
@@ -621,7 +620,7 @@ auto on the do_binds stack. */
 					ora_error_handler(cda[no_desc]);
 					return 1;
 				}
-			}				
+			}
 			if (obndrv(cda[no_desc], ph, -1, (ub1 *) value, -1,
 			VARCHAR2_TYPE, -1, (sb2 *) 0, (text *) 0, -1, -1))
 			{
@@ -682,7 +681,7 @@ int ora_connect (text *name, text *passwd)
 int ora_disconnect (void)
 {
   int count;
-  
+
   ora_clear_error ();
   for (count = 0; count < MAX_DESCRIPTOR; count++)
       ora_terminate_order (count);
@@ -797,7 +796,7 @@ static char *default_date = "11/11/1111 11:11:11";
 int ora_get_date_data (int no_des, int i)
 {
 	int size;
-	
+
 	if (desc [no_des] [i-1].dbtype == DATE_TYPE)
 	{
 		size = desc [no_des] [i-1].buflen;
@@ -865,6 +864,8 @@ int ora_conv_type (int i)
 	{
 		case VARCHAR2_TYPE:
 		case STRING_TYPE:
+		case CHAR_TYPE:
+		case LONG_TYPE:
 			return ORA_EIF_STRING_TYPE;
 		case INT_TYPE:
 			return ORA_EIF_INTEGER_TYPE;
@@ -875,9 +876,10 @@ int ora_conv_type (int i)
 		case DATE_TYPE:
 			return ORA_EIF_DATE_TYPE;
 		default:
-			return ORA_EIF_UNKNOWN_TYPE;
+			return i; /*ORA_EIF_UNKNOWN_TYPE;*/
 																    }
 }
+
 int ora_get_col_type (int no_des, int i) {
 	return ora_conv_type(desc [no_des] [i - 1].dbtype);
 }

@@ -182,7 +182,7 @@ feature -- For database types
 			if field_name.is_equal ("data_type") then
 				if class_name.is_equal ("STRING") then
 					!! data_type
-					if r_any.is_equal ("VARCHAR2") then
+					if r_any.is_equal ("VARCHAR2") or else r_any.is_equal ("CHAR") then
 						data_type.set_item (ora_string_type)
 					elseif r_any.is_equal ("NUMBER") then
 						data_type.set_item (ora_number_type)

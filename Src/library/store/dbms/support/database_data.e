@@ -191,18 +191,18 @@ feature -- Element change
 						end
 						f_double.set_item (db_spec.get_float_data (no_descriptor, ind))
 
-            	    -- REAL type
-                	elseif value_type.item (ind) = Real_type_database then
-                    	if f_any = Void then
-                        	create f_real
+          			  	-- REAL type
+ 		               	elseif value_type.item (ind) = Real_type_database then
+ 		               	    	if f_any = Void then
+              		       	   	create f_real
 							value.put (f_real, ind)
 						else
-	                        f_real ?= f_any
-    	                    if f_real = Void then
-        	                    create f_real
-            	                value.put (f_real, ind)
-                	        end
-                    	end
+							f_real ?= f_any
+    		                    			if f_real = Void then
+        	                    				create f_real
+            	                				value.put (f_real, ind)
+                	        			end
+                    				end
 						f_real.set_item (db_spec.get_real_data (no_descriptor, ind))
 
 					-- BOOLEAN type

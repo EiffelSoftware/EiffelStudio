@@ -116,7 +116,6 @@ feature -- Status setting
 			tst : BOOLEAN
 			database_data: DATABASE_DATA [G]
 		do
---			object := 
 			database_data ?= cursor.data
 			if database_data /= Void then
 				from

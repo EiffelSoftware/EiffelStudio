@@ -14,8 +14,9 @@
 #include <stdio.h>
 #include "eif_config.h"
 #include "eif_portable.h"
+#include "eif_lmalloc.h"	/* for eif_malloc, eif_free */
 
-#ifdef __VMS
+#ifdef EIF_VMS
  /* define these routines in upr case, cause that's how they are in the lib */
 #define lib$find_file LIB$FIND_FILE
 #define sys$getmsg SYS$GETMSG
@@ -28,8 +29,9 @@
 #include <descrip.h>
 #include <ssdef.h>	/* for system services error codes */
 #include <rmsdef.h>	/* for RMS error codes */
-#include <starlet.h>		/* for sys$getmsg() */
+#include <starlet.h>	/* for sys$getmsg() */
 #endif
+
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -396,12 +398,10 @@ rt_public EIF_CHARACTER eif_dir_separator (void)
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return '\\';
-#else
-#ifdef __VMS
+#elif defined EIF_VMS
 	return '.';
 #else
 	return '/';
-#endif	/* vms */
 #endif
 }
 
@@ -415,7 +415,7 @@ rt_public EIF_INTEGER eif_chdir (EIF_OBJ path)
 
 rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 {
-#ifdef __VMS
+#ifdef EIF_VMS
 	/* Need to check if directory is passed as simple name
 	** such as "subdir", or as Unix-like (subdir/ or /top/subdir),
 	** or as VMS style ([.subdir] or [top.subdir] or subdir.dir).
@@ -434,12 +434,12 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 	int		len;
 	struct dsc$descriptor_s	pat;
 	struct dsc$descriptor_s	res;
-	long int		context=0;
+	unsigned int		context=0;
 	int			flags = 0xf;
 	char			mesg[PATH_MAX];
 	/* $DESCRIPTOR(message_text,mesg);	this generates warning */
 	struct dsc$descriptor_s message_text;
-	int			mesglen;
+	unsigned short		mesglen;
 	int			getmsgstatus;
 	/* ASSUMING DIRECTORY IS VALID AND IN VMS FORMAT */
 	/* Set up the pattern descriptor. */
@@ -493,7 +493,8 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 	** that was passed is of the form '[...subdir]' and therefore
 	** a "file not found" error means the directory exists
 	*/
-	return(	( (status==RMS$_FNF) && (name[strlen(name)-1]==']') )
+	i = access (name,0);
+	return ( ( (status==RMS$_FNF) && (name[strlen(name)-1]==']') )
 		||(status==RMS$_NORMAL) /* incase subdir.dir */ );
 
 #elif defined EIF_WIN32		/* ifdef VMS */
@@ -522,7 +523,7 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 {
 	/* Is directory readable */
 
-#ifdef __VMS
+#ifdef EIF_VMS
 	char	copy[PATH_MAX];
 	strcpy(copy,name);
 	if ( -1 == access(dir_dot_dir(copy),R_OK) )
@@ -586,7 +587,7 @@ rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 {
 	/* Is directory writable */
 
-#ifdef __VMS
+#ifdef EIF_VMS
 	char	copy[PATH_MAX];
 	strcpy(copy,name);
 	if ( -1 == access(dir_dot_dir(copy),W_OK) )
@@ -646,7 +647,7 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 {
 	/* Is directory executable */
 
-#ifdef __VMS
+#ifdef EIF_VMS
 	char	copy[PATH_MAX];
 	strcpy(copy,name);
 	if ( -1 == access(dir_dot_dir(copy),X_OK) )
@@ -707,7 +708,7 @@ rt_public void eif_dir_delete(char *name)
 	struct stat buf;				/* File statistics */
 	int status;						/* Status from system call */
 
-#ifdef __VMS
+#ifdef EIF_VMS
 	printf("Directory delete not implemented yet.\n");
 	printf("Directory: %s\n",name);
 #else
@@ -727,7 +728,7 @@ rt_public void eif_dir_delete(char *name)
 #endif	/* vms */
 }
 
-#ifdef __VMS
+#ifdef EIF_VMS
 char *	dir_dot_dir ( char *	duplicate )
 {
 /*	For a given directory path, return the name of the directory file.
@@ -786,13 +787,14 @@ char *	dir_dot_dir ( char *	duplicate )
 /*#define TEST*/
 
     /* Number of elements in vms_versions array */
-#define VERSIZE(e)	(sizeof e->vms_versions / sizeof e->vms_versions[0])
+#define CARDINALITY(a)	( sizeof(a) / sizeof (*a) )
+#define VERSIZE(e)	( CARDINALITY (e->vms_versions ) )
 
 
 /*
 **  Open a directory, return a handle for later use.
 */
-DIR *opendir(char	*name)
+DIR *opendir (char *name)
 {
     DIR		*dd;
 
@@ -855,7 +857,7 @@ static void collectversions(DIR *dd)
     char			buff[sizeof dd->entry.d_name];
     int				i;
     char			*text;
-    long			context;
+    unsigned int 		context;
 
     /* Convenient shorthand. */
     e = &dd->entry;
@@ -911,7 +913,7 @@ struct dirent *readdir(DIR *dd)
     res.dsc$b_dtype = DSC$K_DTYPE_T;
     res.dsc$b_class = DSC$K_CLASS_S;
     if (lib$find_file(&dd->pat, &res, &dd->context) == RMS$_NMF
-     || dd->context == 0L)
+	 || dd->context == 0L)
 	/* None left... */
 	return NULL;
 

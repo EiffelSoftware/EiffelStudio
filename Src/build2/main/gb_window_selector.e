@@ -290,7 +290,6 @@ feature {NONE} -- Implementation
 			titled_window_object := selector_item.object
 			layout_constructor.set_root_window (titled_window_object)
 			titled_window_object.update_representations
-			--Object_handler.recursive_do_all (titled_window_object, agent expand_layout_item)
 			
 				-- Now we must update the displayed display and builder windows.
 				-- Firstly hide the existing windows if shown

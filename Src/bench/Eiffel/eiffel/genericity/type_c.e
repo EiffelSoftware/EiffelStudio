@@ -34,6 +34,11 @@ feature
 			-- Do nothing
 		end;
 
+	is_boolean: BOOLEAN is
+			-- Is C type a boolean type ?
+		deferred
+		end;
+
 	is_void: BOOLEAN is
 			-- Is C type a void type
 		do

@@ -12,6 +12,8 @@ inherit
 
 	WINDOWS
 
+	SHARED_EXEC_ENVIRONMENT
+
 	ERROR_POPUPER
 		redefine
 			continue_after_error_popdown

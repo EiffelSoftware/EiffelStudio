@@ -609,7 +609,8 @@ feature {NONE} -- Implementation
 								name_exists: element_info /= Void
 							end
 							info.set_name (element_info.data)
-							if current_type.is_equal (Ev_titled_window_string) then
+							if current_type.is_equal (Ev_titled_window_string) or
+								current_type.is_equal (Ev_dialog_string) then
 								info.set_as_root_object	
 							end
 							element_info := full_information @ (id_string)
@@ -688,8 +689,7 @@ feature {NONE} -- Implementation
 				generated_info := document_info.generated_info_by_id.item (all_ids.item)
 					-- Fixme, why assign id here? Try generating, and then see new ids after...
 				new_object := object_handler.build_object_from_string_and_assign_id (generated_info.type)
-				if generated_info.parent /= Void and then generated_info.parent.type /= Void and then generated_info.parent.type.is_equal (Ev_titled_window_string) then
-					do_nothing
+				if generated_info.parent /= Void and then generated_info.parent.type /= Void and then generated_info.parent.is_root_object then
 					menu_bar_object ?= new_object
 					if menu_bar_object /= Void then
 						if project_settings.client_of_window then
@@ -706,7 +706,7 @@ feature {NONE} -- Implementation
 					end
 						-- If name is Void, the we are at the root element of the info.
 						-- This does not represent a widget at all, so do nothing
-				elseif generated_info.name /= Void then
+				elseif not generated_info.is_root_object then --generated_info.name /= Void then
 					-- Tables need to use put, but this is done in conjunction with the placement.
 					-- So here, we do not add the children of the table, as it will be done later.
 					if generated_info.parent /= Void and then generated_info.parent.type /= Void and then not generated_info.parent.type.is_equal (Ev_table_string) then

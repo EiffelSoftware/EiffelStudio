@@ -14,7 +14,7 @@ inherit
 feature -- Access
 
 	Funcflag_frestricted: INTEGER is
-			-- Function should not be accessible fro"
+			-- Function should not be accessible from
 			-- This flag is intended for system-level functions or functions
 			-- that you do not want type browsers to display.
 		external
@@ -75,7 +75,7 @@ feature -- Access
 						+ Funcflag_fdisplaybind + Funcflag_fdefaultbind
 		end
 		
-end -- class EOLE_FUNCFLAGS
+end -- class EOLE_FUNC_FLAGS
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

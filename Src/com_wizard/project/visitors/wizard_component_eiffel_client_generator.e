@@ -80,10 +80,10 @@ feature -- Basic operations
 						(function_generator.feature_writer.arguments = Void or else function_generator.feature_writer.arguments.empty)
 					then
 						an_eiffel_writer.add_feature (function_generator.feature_writer, Access)
-						an_eiffel_writer.add_feature (function_generator.external_feature_writer, Access)
+						an_eiffel_writer.add_feature (function_generator.external_feature_writer, Externals)
 					else
 						an_eiffel_writer.add_feature (function_generator.feature_writer, Basic_operations)
-						an_eiffel_writer.add_feature (function_generator.external_feature_writer, Basic_operations)
+						an_eiffel_writer.add_feature (function_generator.external_feature_writer, Externals)
 					end
 
 					a_interface_desc.functions.forth
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			feature_body.append (Space)
 			feature_body.append (ccom_create_from_pointer_feature_name)
 			feature_body.append (Open_parenthesis)
-			feature_body.append (A_pointer)
+			feature_body.append ("cpp_obj")
 			feature_body.append (Close_parenthesis)
 			feature_body.append (New_line_tab_tab_tab)
 

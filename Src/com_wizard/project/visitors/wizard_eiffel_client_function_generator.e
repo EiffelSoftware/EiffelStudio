@@ -63,7 +63,7 @@ feature -- Basic operations
 			feature_writer.set_body (client_body (ccom_func_name))
 
 			external_feature_writer.set_external
-			external_feature_writer.set_body (external_client_body (a_component_descriptor.c_type_name))
+			external_feature_writer.set_body (external_client_body (a_component_descriptor.c_type_name, a_component_descriptor.c_header_file_name))
 		ensure
 			non_void_feature_writer: feature_writer /= Void
 			non_void_external_feature_writer: external_feature_writer /= Void
@@ -71,11 +71,13 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	external_client_body (class_name: STRING): STRING is
+	external_client_body (class_name, header_file_name: STRING): STRING is
 			-- Coclass eiffel client external feature body
 		require
 			non_void_class_name: class_name /= Void
 			valid_class_name: not class_name.empty
+			non_void_header_file_name: header_file_name /= Void
+			valid_header_file_name: not header_file_name.empty
 		local
 			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
 			return_type: STRING
@@ -89,7 +91,9 @@ feature {NONE} -- Implementation
 			Result.append (Cpp_clause)
 			Result.append (class_name)
 			Result.append (Space)
-			Result.append (header_file_name (class_name))
+			Result.append (Percent_double_quote)
+			Result.append (header_file_name)
+			Result.append (Percent_double_quote)			
 			Result.append (Close_bracket)
 			Result.append (Open_parenthesis)
 

@@ -172,6 +172,8 @@ feature
 			!! focus_label.initialize (top_form);
 			!! scrolled_w.make (Widget_names.scrolledwindow, form);
 			dr_area_create (Widget_names.drawingarea, scrolled_w);
+				--| To avoid the `empty_constraint' invariant violation
+			before := True
 			scrolled_w.set_working_area (Current);
 			!! close_button.make (Current, top_form);
 			!! con_ed_hole.make (top_form);

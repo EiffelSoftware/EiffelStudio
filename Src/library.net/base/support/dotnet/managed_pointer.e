@@ -542,9 +542,9 @@ feature {NONE} -- Disposal
 			null: POINTER
 		do
 			item.memory_free
-			item := null
-		ensure then
-			item_reset: item = default_pointer
+					-- We do not reset `item' to `default_pointer'
+					-- because the only way to get there is that current
+					-- instance is not reachable anymore.
 		end
 
 invariant

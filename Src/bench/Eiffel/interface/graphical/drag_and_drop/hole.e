@@ -163,17 +163,26 @@ feature -- Update
 		end;
 
 	process_any (dropped: STONE) is
-			-- Accept all stone types
+			-- Accept all stone types.
 		require
 			valid_stone: dropped /= Void
 		do
 		end;
 
 	process_call_stack (dropped: CALL_STACK_STONE) is
-			-- Accept all stone types
+			-- Accept call stack stones.
 		require
 			valid_stone: dropped /= Void
 		do
+		end;
+
+	process_feature_error (dropped: FEATURE_ERROR_STONE) is
+			-- Accept feature error stones.
+			-- (By default, call `process_feature').
+		require
+			valid_stone: dropped /= Void
+		do
+			process_feature (dropped)
 		end;
 
 end -- class HOLE

@@ -54,8 +54,8 @@ feature {CACHE_READER} -- Access
 			relative_path: STRING
 		do
 			relative_path := relative_assembly_path_from_consumed_assembly (a_assembly)
-			create Result.make (Absolute_path.count + relative_path.count + 1)
-			Result.append (absolute_path)
+			create Result.make (eiffel_assembly_cache_path.count + relative_path.count + 1)
+			Result.append (eiffel_assembly_cache_path)
 			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
 			Result.append (relative_path)
 		ensure
@@ -112,8 +112,8 @@ feature {CACHE_READER} -- Access
 			relative_path: STRING
 		do
 			relative_path := relative_type_path (a_assembly, a_type)
-			create Result.make (absolute_path.count + relative_path.count + 1)
-			Result.append (absolute_path)
+			create Result.make (eiffel_assembly_cache_path.count + relative_path.count + 1)
+			Result.append (eiffel_assembly_cache_path)
 			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
 			Result.append (relative_path)
 		ensure
@@ -124,66 +124,11 @@ feature {CACHE_READER} -- Access
 	info_path: STRING is "info.xml"
 			-- Path to EAC info file relative to `Eac_path'.
 
-	absolute_path: STRING is
-			-- Absolute path to cache
+	eiffel_assembly_cache_path: STRING is
+			-- Path to versioned Eiffel Assembly Cache installation
 		require
-			non_void_clr_version: clr_version /= Void
-		once
-			create Result.make (eiffel_path.count + eac_path.count + clr_version.count)
-			Result.append (eiffel_path)
-			Result.append (eac_path)
-			Result.append (clr_version)
-		ensure
-			exist: Result /= Void
-		end			
-
-	absolute_info_path: STRING is
-			-- Absolute path to EAC assemblies file info
-		require
-			non_void_clr_version: clr_version /= Void
-		once
-			create Result.make (absolute_path.count + info_path.count + 1)
-			Result.append (absolute_path)
-			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
-			Result.append (info_path)
-		ensure
-			non_void_result: Result /= Void
-			valid_result: not Result.is_empty
-		end
-		
-	ise_key: STRING is "ISE_EIFFEL"
-			-- Environment variable $ISE_EIFFEL
-
-	eac_path: STRING is "dotnet\assemblies\"
-			-- EAC path relative to $ISE_EIFFEL
-			
-	clr_version: STRING
-			-- Version of runtime used to consume/read XML.
-
-feature {EMITTER} -- Access
-		
-	internal_eiffel_path: CELL [STRING] is
-			-- internal eiffel path
-		once
-			create Result.put (Void)
-		end
-
-feature {EMITTER} -- Element Change
-	
-	set_internal_eiffel_path (a_path: STRING) is
-			-- set `internal_eiffel_path' to 'a_path'
-		require
-			non_void_path: a_path /= Void
-			valid_path: not a_path.is_empty
-			not_already_set: internal_eiffel_path.item = Void or a_path.is_equal (internal_eiffel_path.item)
-		do
-			internal_eiffel_path.put (a_path)
-		end
-
-feature {NONE} -- Implementation
-
-	eiffel_path: STRING is
-			-- Path to Eiffel installation
+			clr_version_not_void: clr_version /= Void
+			clr_version_not_empty: not clr_version.is_empty
 		local
 			retried: BOOLEAN
 			l_str: SYSTEM_STRING
@@ -192,7 +137,7 @@ feature {NONE} -- Implementation
 			l_file_info: FILE_INFO
 		once
 			if not retried then
-				if internal_eiffel_path.item = Void then
+				if internal_eiffel_cache_path.item = Void then
 					Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_key)
 					if Result = Void then
 						l_registry_key := feature {REGISTRY}.local_machine
@@ -215,10 +160,12 @@ feature {NONE} -- Implementation
 					check
 						Ise_eiffel_defined: Result /= Void
 					end
-					-- set internal eiffel path to registry key
-					internal_eiffel_path.put (Result)
+					Result.append (eac_path)
+					
+						-- set internal EAC path to registry key
+					internal_eiffel_cache_path.put (Result)
 				else
-					Result := internal_eiffel_path.item.twin
+					Result := internal_eiffel_cache_path.item
 				end
 				if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
 					Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
@@ -233,6 +180,48 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
+		end		
+
+	absolute_info_path: STRING is
+			-- Absolute path to EAC assemblies file info
+		require
+			non_void_clr_version: clr_version /= Void
+		once
+			create Result.make (eiffel_assembly_cache_path.count + info_path.count + 1)
+			Result.append (eiffel_assembly_cache_path)
+			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
+			Result.append (info_path)
+		ensure
+			non_void_result: Result /= Void
+			valid_result: not Result.is_empty
+		end
+		
+	ise_key: STRING is "ISE_EIFFEL"
+			-- Environment variable $ISE_EIFFEL
+
+	eac_path: STRING is "dotnet\assemblies\"
+			-- EAC path relative to $ISE_EIFFEL
+			
+	clr_version: STRING
+			-- Version of runtime used to consume/read XML.
+
+feature {EMITTER} -- Access
+		
+	internal_eiffel_cache_path: CELL [STRING] is
+			-- internal eiffel cache path
+		once
+			create Result.put (Void)
+		end
+
+feature {EMITTER} -- Element Change
+	
+	set_internal_eiffel_cache_path (a_path: STRING) is
+			-- set `internal_eiffel_cache_path' to 'a_path'
+		require
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
+		do
+			internal_eiffel_cache_path.put (a_path)
 		end
 		
 end -- class CACHE_PATH

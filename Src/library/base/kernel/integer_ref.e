@@ -73,6 +73,8 @@ feature -- Access
 
 	ascii_char: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
+		obsolete
+			"Use to_character instead"
 		require
 			valid_character_code: is_valid_character_code
 		do

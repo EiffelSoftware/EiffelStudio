@@ -1,4 +1,5 @@
 ,,EiffelStudio list of to-do functionality,,,,,
+,,1 =Low; 5 = High,,,,,
 
 Category,Priority,Description,Submitter,Identifier,Fixer,Est. Time,State
 interface,,,,,,,
@@ -59,6 +60,9 @@ interface,,,,,,,
 ,3,"Add a way to refactor a feature. It can simply be rename the feature and rename it everywhere it is used, or it can be a change in feature signature.",Julian,INT057,,,
 ,3,Use a different icon color for each EiffelStudio session currently up,Julian,INT058,,,
 ,3,Display name of project in title bar,Julian,INT059,,,
+,2,Keep cluster tree expanded in EiffelStudio after recompilation,JJJ,INT060,,,
+,1,Keep history for an edited class even if you have switched to another class and come back.,JJJ,INT061,,,
+
 
 
 Project settings,,,,,,,
@@ -155,9 +159,9 @@ editor,,,,,,,
 
 
 
-compiler,,,,,,,
-,2,Change number of classes per big_file_Cxx.c and make it user-definable,Arnaud,CMP0001,,,
-,3,Track effective object creation => remove classes that are never instanciated (problem comes from reverse assignments),Arnaud,CMP0002,,,
+compiler,,,,
+,2,Change number of classes per big_file_Cxx.c and make it user-definable,Arnaud,CMP0001
+,3,Track effective object creation => remove classes that are never instanciated (problem comes from reverse assignments),Arnaud,CMP0002
 ,4,Propose to discard debug clauses when finalizing,Arnaud,CMP0003
 ,2,Make the EIFGEN directory name user-defined in the Ace or <project_name>_gen,E. Bezaut,CMP0004
 ,3,Ability to create .rc files (Windows),Xavier,CMP0005
@@ -186,10 +190,10 @@ compiler,,,,,,,
 ,4,Remove the extra indirection in non generic polymorphic calls,Xavier,CMP0028
 ,3,Improve the management of SPECIAL[expanded],Xavier,CMP0029
 ,4,Remove deferred classes from the polymorphic tables (and when available also optionally remove classes that are never instantiated),Xavier,CMP0030
-,3,Drag down the code of features into the nearest common ancestor to all classes that use the feature. Optionally drag the code down to all classes that use the feature (flat out all classes). This should remove polymorphic calls inside features (but increase the code size),Emmanuel,CMP0031
-,3,Make the finalization independent from the workbench mode: this would remove bugs (cf DH) and facilitate some optimizations,Xavier,CMP0032
-,4,"Save project file even if we don't have a successful compilation, so that we can resume compilation later on",,CMP0033
-,3,Reorder features to put together the ones that are called at the same time in order to optimize page faults at run-time. This can be applied to feature tables and maybe to the actual order of the pieces of code in the executable,Arnaud,CMP0034
+,3,Drag down the code of features into the nearest common ancestor to all classes that use the feature. Optionally drag the code down to all classes that use the feature (flat out all classes). This should remove polymorphic calls inside features (but increase the code size),Emmanuel,CMP0031,,,
+,3,Make the finalization independent from the workbench mode: this would remove bugs (cf DH) and facilitate some optimizations,Xavier,CMP0032,,,
+,4,"Save project file even if we don't have a successful compilation, so that we can resume compilation later on",,CMP0033,,,
+,3,Reorder features to put together the ones that are called at the same time in order to optimize page faults at run-time. This can be applied to feature tables and maybe to the actual order of the pieces of code in the executable,Arnaud,CMP0034,,,
 ,3,Classes that do not define the code of a polymorphic feature should not appear in polymorphic tables,Xavier,CMP0033,,,
 ,5,Make it possible to only compile classes that have been modified in EiffelStudio (no degree 6),Xavier,CMP0034,Xavier,1,Done
 ,3,Auto-initialize as many onces as possible when the execution starts and remove the tests of initialization from them (start with constant strings),Xavier,CMP0035,,,
@@ -203,8 +207,8 @@ compiler,,,,,,,
 
 
 
-Metrics,,,,,,,
-,3,Hide/Show details in metrics is not optimized (performs the same computations again),Julian,MET0001,,,
+Metrics,,,,
+,3,Hide/Show details in metrics is not optimized (performs the same computations again),Julian,MET0001
 
 
 
@@ -234,10 +238,10 @@ Wizards,,,,,,,
 
 libraries,,,,,,,
 ,3,Design a unmutable STRING class (and a builder for such strings),Arnaud,LIB0001,,,
-,4,Design new libraries,Xavier,LIB0002,,,
-,4,Really test libraries,Xavier,LIB0003,,,
-,4,Keep the documentation up-to-date,Xavier,LIB0004,,,
-,4,Use consistent naming (isfirst/islast),Ian,LIB0005,,,
+,4,Design new libraries,Xavier,LIB0002
+,4,Really test libraries,Xavier,LIB0003
+,4,Keep the documentation up-to-date,Xavier,LIB0004
+,4,Use consistent naming (isfirst/islast),Ian,LIB0005
 ,3,Add a calendar control in Vision2,Arnaud,LIB0006
 ,3,Add a support for ActiveX in Vision2,Arnaud,LIB0007
 ,2,Introduce agents in EiffelBase,Arnaud,LIB0008

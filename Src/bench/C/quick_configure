@@ -41,7 +41,7 @@ EOF
 
 }
 
-skiplep () {
+skiplex () {
 
 cd parsing/eiffel
 

@@ -8,11 +8,6 @@ class
 inherit
 	RESOURCE_FOLDER_I
 
-	WARNING_MESSAGES
-		export
-			{NONE} All
-		end
-
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
 
@@ -216,6 +211,34 @@ feature -- Output
 			end
 			Result.append (identation)
 			Result.append ("</TOPIC>%N")
+		end
+
+feature {NONE} -- Implementation
+
+	w_Not_readable (file_name: STRING): STRING is
+		require
+			file_name_not_void: file_name /= Void
+		do
+			create Result.make (30)
+			Result.append (file_name)
+			Result.append ("%Nis not readable.")
+		end
+
+	w_Not_creatable (file_name: STRING): STRING is
+		require
+			file_name_not_void: file_name /= Void
+		do
+			create Result.make (30)
+			Result.append ("File: ")
+			Result.append (file_name)
+			Result.append (" cannot be created.%NPlease check permissions.")
+		end
+
+	w_Invalid_preference_file_root (file_name: STRING): STRING is
+			-- file named `file_name' is not an XML file with "EIFFEL_DOCUMENT" as
+			-- root tag.
+		do
+			Result := "EIFFEL_DOCUMENT tag missing in file: "+ file_name + "."
 		end
 
 end -- class RESOURCE_FOLDER_IMP

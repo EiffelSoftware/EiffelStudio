@@ -490,7 +490,7 @@ feature -- Comparison
 			set_red (other.red)
 			set_green (other.green)
 			set_blue (other.blue)
-			set_alpha (other.alpha)
+			--|FIXME uncomment later set_alpha (other.alpha)
 		end
 
 feature -- Constants
@@ -571,6 +571,9 @@ end -- class EV_COLOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/16 02:00:24  oconnor
+--| removed set_alpha from copy pending its implementation
+--|
 --| Revision 1.12  2000/03/16 01:12:10  oconnor
 --| Added alpha chanel features.
 --|

@@ -84,6 +84,8 @@ exprt -r %DEFAULT_CVS_TAG -d windows Delivery/precomp/spec/windows
 cdd %INSTALL_DIR
 remtrace wizards
 exprt -r %DEFAULT_CVS_TAG -d wizards Delivery/wizards
+fullrf %INSTALL_DIR\studio\wizards\new_projects\wizard.dsc
+fullrd %INSTALL_DIR\studio\wizards\new_projects\wizard
 remtrace C_library
 exprt -r %DEFAULT_CVS_TAG -d C_library Src/C_library
 remtrace root

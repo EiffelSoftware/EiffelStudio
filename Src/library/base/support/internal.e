@@ -15,10 +15,10 @@ feature -- Access
 	Character_type: INTEGER is 2;
 	Boolean_type:	INTEGER is 3;
 	Integer_type:	INTEGER is 4;
-	Real_type:		INTEGER is 5;
+	Real_type:	INTEGER is 5;
 	Double_type: 	INTEGER is 6;
 	Expanded_type:	INTEGER is 7;
-	Bit_type:		INTEGER is 8;
+	Bit_type:	INTEGER is 8;
 	Pointer_type:	INTEGER is 0;
 
 
@@ -39,7 +39,7 @@ feature -- Access
 		end;
 
 	field (i: INTEGER; object: ANY): ANY is
-			-- Object referenced by the i-th field of `object'
+			-- Object attached to the i-th field of `object'
 			-- (normal and expanded objects)
 		require
 			object_not_void: object /= Void;

@@ -21,7 +21,10 @@ class MULTI_ARRAY_LIST [G] inherit
 			put_front, extend
 		end;
 
-feature --Initialization
+creation
+	make
+
+feature -- Initialization
 
 	make (b: INTEGER) is
 			-- Create an empty list, setting block_size to b
@@ -78,7 +81,7 @@ feature -- Access
 			-- Current cursor position
 		do
 			!MULTAR_LIST_CURSOR [G]! Result.make
-				(active, active.item.index)
+				(active, active.item.index, index)
 		end;
 
 	first_element: BI_LINKABLE [ARRAYED_LIST [G]];
@@ -111,7 +114,8 @@ feature -- Status report
 					al_c /= Void
 				end;
 			Result := (al_c /= Void)
-				and then valid_index (al_c.index)
+				and then valid_cursor_index (al_c.index)
+				and then al_c.active.item.valid_cursor_index (al_c.active_index)
 		end;
 
 feature -- Cursor movement
@@ -178,17 +182,17 @@ feature -- Cursor movement
 			cell: like active;
 			current_array: ARRAYED_LIST [G]
 		do
+			cell := active;
+			current_array := cell.item;
 			if i > 0 then
 				from
-					cell := active;
-					current_array := cell.item;
-					counter := i + active.item.index -1
+					counter := i + active.item.index 
 				until
 					counter <= current_array.count or cell = Void
 				loop
 					counter := counter - current_array.count;
 					cell := cell.right;
-					current_array := cell.item
+					if cell /= Void then current_array := cell.item end
 				end;
 				if cell = Void then
 					cell := last_element;
@@ -196,34 +200,34 @@ feature -- Cursor movement
 					current_array.forth
 				else
 					active := cell;
-					current_array.go_i_th (1 + counter)
+					current_array.go_i_th (counter)
 				end
 			elseif i < 0 then
 				from
-					cell := active;
-					current_array := cell.item;
 					counter := current_array.count - current_array.index - i
 				until
 					counter <= current_array.count or cell = Void
 				loop
 					counter := counter - current_array.count;
 					cell := cell.left;
-					current_array := cell.item
+					if cell /= Void then current_array := cell.item end
 				end;
 				if cell = Void then
 					cell := first_element;
 					current_array.go_i_th (0);
 				else
 					active := cell;
-					current_array.go_i_th (count - counter)
+					current_array.go_i_th (current_array.count - counter)
 				end
 			end;
-			if current_array.before then
-				index := 0
-			elseif current_array.after then
-				index := count
-			else
-				index := index + i
+			if i /= 0 then
+				if current_array.before then
+					index := 0
+				elseif current_array.after then
+					index := count + 1
+				else
+					index := index + i
+				end;
 			end;
 		end;
 			
@@ -237,7 +241,8 @@ feature -- Cursor movement
 					al_c /= Void
 				end;
 			active := al_c.active;
-			active.item.go_i_th (al_c.index)
+			active.item.go_i_th (al_c.active_index)
+			index := al_c.index
 		end;
 
 	search (v: like item) is
@@ -247,27 +252,43 @@ feature -- Cursor movement
 			-- based on `object_comparison'.)
 		local
 			current_array: ARRAYED_LIST [G];
+			old_index: INTEGER;
 			cell: like active;
 		do
 			cell := active;
 			current_array := cell.item;
+			old_index := current_array.index;
 			if object_comparison then
 				current_array.compare_objects
 			else
 				current_array.compare_references
 			end;
 			current_array.search (v);
-			if not current_array.after then
+			if current_array.after then
 				cell := cell.right;
+				index := index + current_array.count - old_index + 1
+			else
+				index := index + current_array.index - old_index 
 			end;
 			from
+			invariant
+				index <= count + 1
 			until
 				not current_array.after or else cell = Void
 			loop
-				current_array := cell.item;
+				current_array := cell.item
+				if object_comparison then
+					current_array.compare_objects
+				else
+					current_array.compare_references
+				end;
+				current_array.start
 				current_array.search (v);
-				if not current_array.after then
+				if current_array.after then
 					cell := cell.right
+					index := index + current_array.count 
+				else
+					index := index + current_array.index - 1
 				end
 			end;
 			if cell /= Void then 
@@ -389,7 +410,9 @@ feature -- Removal
 		do
 			count := 0;
 			index := 0;
+			check first_element /= Void end
 			first_element.item.wipe_out;
+			first_element.forget_right
 			active := first_element;
 			last_element := first_element
 		end;
@@ -444,7 +467,7 @@ feature -- Removal
 			from
 				cell := first_element
 			until
-			cell = Void
+				cell = Void
 			loop
 				array := cell.item;
 				if object_comparison then
@@ -510,7 +533,7 @@ feature {MULTI_ARRAY_LIST} -- Implementation
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
 		do
-			!! Result
+			!! Result.make (block_size)
 		end;
 
 	active_array: ARRAYED_LIST [G] is
@@ -544,7 +567,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	no_deletion: not prunable;
 	writable_definition: writable = not off;
 	readable_definition: readable = not off;
 	extendible_definition: extendible;

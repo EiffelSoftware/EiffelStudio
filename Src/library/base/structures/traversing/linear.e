@@ -101,7 +101,7 @@ feature -- Access
 				end
 			end		
 		ensure
-			object_found: (not exhausted and object_comparison and v /= Void)
+			object_found: (not exhausted and then object_comparison and then v /= Void and then item /= Void)
 				 implies v.is_equal (item);
 			item_found: (not exhausted and not object_comparison)
 				 implies v = item

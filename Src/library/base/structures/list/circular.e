@@ -39,10 +39,10 @@ feature -- Access
 			-- currently defined as first
 		local
 			first_ind, std_ind: INTEGER
-			std_int_exhausted: BOOLEAN
+			p : CURSOR
 		do
+			p := cursor
 			std_ind := standard_index;
-			std_int_exhausted := internal_exhausted
 			start;
 			first_ind := standard_index;
 			Result := std_ind - first_ind + 1;
@@ -50,7 +50,7 @@ feature -- Access
 				Result := count + Result
 			end;
 			move (Result-1)
-			internal_exhausted := std_int_exhausted
+			go_to (p)
 		end
 		
 
@@ -138,9 +138,10 @@ feature -- Cursor movement
 			-- Move cursor to `i'-th item from current position,
 			-- cyclically.
 		local
-			real_move, counter: INTEGER
+			real_move, counter, start_index: INTEGER
 		do
 			if i /= 0 and count > 0 then
+				start_index := index
 				real_move := i \\ count;
 				if real_move < 0 then
 					real_move := count + real_move
@@ -151,6 +152,9 @@ feature -- Cursor movement
 				loop
 					forth;
 					counter := counter + 1
+				end
+				if (start_index + i > count) or (start_index + i < 1) then
+					internal_exhausted := true
 				end
 			end
 		end;
@@ -168,7 +172,7 @@ feature -- Cursor movement
 	set_start is
 			-- Define current position as the first.
 		require
-			not empty
+			not_empty: not empty
 		deferred
 		end;
 

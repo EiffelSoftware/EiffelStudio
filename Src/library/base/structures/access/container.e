@@ -22,7 +22,7 @@ feature -- Access
 			-- based on `object_comparison'.) 
 		deferred
 		ensure
-			Result implies not empty
+			not_found_in_empty: Result implies not empty
 		end;
 
 feature -- Status report
@@ -64,7 +64,7 @@ feature -- Status setting
 		do
 			object_comparison := False
 		ensure
-			not object_comparison
+			reference_comparison: not object_comparison
 		end;
 
 feature -- Conversion
@@ -73,7 +73,6 @@ feature -- Conversion
 			-- Representation as a linear structure
 		deferred
 		end;
-
 
 feature -- Obsolete
 

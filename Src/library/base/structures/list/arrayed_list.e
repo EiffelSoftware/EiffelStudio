@@ -33,7 +33,8 @@ class ARRAYED_LIST [G] inherit
 				capacity
 		undefine
 			linear_representation, prunable, put,
-			prune, consistent, is_equal, occurrences, extendible
+			prune, consistent, is_equal, occurrences, 
+			extendible, has
 		redefine
 			extend, setup, copy, prune_all, full
 		end;
@@ -56,7 +57,8 @@ class ARRAYED_LIST [G] inherit
 				capacity
 		undefine
 			linear_representation, prunable, full, put,
-			prune, consistent, is_equal, occurrences, extendible
+			prune, consistent, is_equal, occurrences,
+			extendible, has
 		redefine 
 			wipe_out, extend,
 			setup, copy, prune_all
@@ -66,7 +68,7 @@ class ARRAYED_LIST [G] inherit
 
 	DYNAMIC_LIST [G]
 		undefine
-			valid_index, has, infix "@", i_th, put_i_th,
+			valid_index, infix "@", i_th, put_i_th,
 			force
 		redefine
 			first, last, swap, wipe_out,
@@ -99,7 +101,7 @@ feature -- Initialization
 		do
 			array_make (1, n)
 		ensure
-			is_before: before
+			correct_position: before
 		end;
 
 feature -- Access
@@ -136,7 +138,7 @@ feature -- Access
 feature -- Measurement
 
 	count: INTEGER;
-		-- Number of item
+		-- Number of items.
 
 feature -- Status report
 
@@ -146,6 +148,7 @@ feature -- Status report
 		end;
 
 	full: BOOLEAN is
+			-- Is structure filled to capacity?
 		do
 			Result := count = capacity
 		end;
@@ -179,7 +182,7 @@ feature -- Cursor movement
 		do
 			index := 1		
 		ensure then
-			empty implies after
+			after_when_empty: empty implies after
 		end;
 
 	finish is
@@ -191,7 +194,7 @@ feature -- Cursor movement
 		--| the cursor is before. The parents (CHAIN, LIST...)
 		--| and decendants (ARRAYED_TREE...) need to be revised.
 		ensure then
-			empty implies before
+			before_when_empty: empty implies before
 		end;
 
 	forth is
@@ -335,15 +338,17 @@ feature -- Removal
 			-- Remove first occurence of `v', if any,
 			-- after cursor position.
 			-- Move cursor to right neighbor
-			-- (or `after' if no right neighbor or 'v'does not occur)
+			-- (or `after' if no right neighbor or `v'does not occur)
 		do
 			if before then index := 1 end;
-			if object_comparison and v /= Void then
-				from
-				until
-					after or else v.is_equal (item)
-				loop
-					forth;
+			if object_comparison then
+				if v /= Void then
+					from
+					until
+						after or else (item /= Void and then v.is_equal (item))
+					loop
+						forth;
+					end
 				end
 			else
 				from
@@ -379,8 +384,6 @@ feature -- Removal
 				put_i_th (default_value, count);
 				count := count -1;
 			end
-		ensure then
-			empty implies after
 		end;
 
 	prune_all (v: like item) is
@@ -392,28 +395,30 @@ feature -- Removal
 			i: INTEGER;
 			val, default_value: like item;
 		do
-			if object_comparison and v /= void then
-				from
-					start
-				until
-					after or else v.is_equal (item)
-				loop
-					index := index + 1;
-				end;
-				from
-					if not after then
-						i := index;
-						index := index + 1
-					end
-				until
-					after
-				loop
-					val := item;
-					if not v.is_equal (val) then
-						put_i_th (val, i);
-						i := i + 1
+			if object_comparison then
+				if v /= void then
+					from
+						start
+					until
+						after or else (item /= Void and then v.is_equal (item))
+					loop
+						index := index + 1;
 					end;
-					index := index + 1;
+					from
+						if not after then
+							i := index;
+							index := index + 1
+						end
+					until
+						after
+					loop
+						val := item;
+						if val /= Void and then not v.is_equal (val) then
+							put_i_th (val, i);
+							i := i + 1
+						end;
+						index := index + 1;
+					end
 				end
 			else
 				from
@@ -439,15 +444,17 @@ feature -- Removal
 					index := index + 1
 				end
 			end;
-			index := i;
-			from 
-			until
-				i >= count
-			loop
-				put_i_th (default_value, i);
-				i := i + 1;
-			end;
-			count := index - 1;
+			if i > 0 then
+				index := i
+				from 
+				until
+					i >= count
+				loop
+					put_i_th (default_value, i);
+					i := i + 1;
+				end;
+				count := index - 1;
+			end
 		ensure then
 			is_after: after;
 		end;	
@@ -477,8 +484,6 @@ feature -- Removal
 			count := 0;
 			index := 0;
 			array_wipe_out;
-		ensure then
-			is_before: before;
 		end;
 
 feature -- Duplication

@@ -30,47 +30,76 @@ feature -- Cursor movement
 			invariant
 				invariant_value 
 			until 
-				off 
+				exhausted
 			loop
 				action ;
 				forth 
 			end
 		ensure then
-			off 
+			exhausted
 		end;
 
 	do_while is
 			-- Apply `action' to every item of `target' up to 
-			-- but excluding the first one not satisfying `test'.
+			-- and including the first one not satisfying `test'.
 			-- (from the `start' of `target')
 		do
 			start;
 			continue_while 
 		ensure then
-			not off implies not test 
+			not exhausted implies not test 
 		end;
 
 	continue_while is
 			-- Apply `action' to every item of `target' up to
-			-- but excluding the first one not satisfying `test'.
+			-- and including the first one not satisfying `test'.
 			-- (from the current position of `target')
 		require else
 			traversable_exists: target /= Void;
 			invariant_satisfied: invariant_value
 		do
 			from
+				if not exhausted then action end
 			invariant
 				invariant_value 
 			until
-				off or else not test 
+				exhausted or else not test 
 			loop
-				action ;
-				forth 
+				forth
+				if not exhausted then action end
 			end
 		ensure then
-			not off implies not test 
+			not exhausted implies not test 
 		end;
 
+	while_do is
+			-- Apply `action' to every item of `target' up to
+			-- but excluding the first one not satisfying `test'.
+			-- (Apply to full list if all items satisfy `test'.)
+		do
+			start
+			while_continue
+		ensure then
+			not exhausted implies not test
+		end
+
+	while_continue is
+			-- Apply `action' to every item of `target' up to
+			-- but excluding the first one not satisfying `test'.
+		do
+			from
+			invariant
+				invariant_value
+			until
+				exhausted or else not test
+			loop
+				action
+				forth
+			end
+		ensure
+			not exhausted implies not test
+		end
+	
 	until_do is
 		   -- Apply `action' to every item of `target' up to
 			-- but excluding the first one satisfying `test'.
@@ -78,6 +107,8 @@ feature -- Cursor movement
 		do
 			start;
 			until_continue
+		ensure then
+			achieved: not exhausted implies test
 		end;
 
 	until_continue is
@@ -91,13 +122,13 @@ feature -- Cursor movement
 			invariant
 				invariant_value
 			until
-				target.off or else test
+				exhausted or else test
 			loop
 				action;
-				target.forth
+				forth
 			end 
 		ensure
-			achieved: target.off or else test;
+			achieved: exhausted or else test;
 			invariant_satisfied: invariant_value
 		end;
 
@@ -109,7 +140,7 @@ feature -- Cursor movement
 			start ;
 			continue_until;
 		ensure then
-			not off implies test 
+			not exhausted implies test 
 		end;
 
 	 continue_until is
@@ -123,17 +154,17 @@ feature -- Cursor movement
 			finished: BOOLEAN
 		do
 			from
-				if not off then action end
+				if not exhausted then action end
 			invariant
 				invariant_value 
 			until
-				off or else test 
+				exhausted or else test 
 			loop
 				forth ;
-				if not off then action end
+				if not exhausted then action end
 			end
 		ensure then
-			not off implies test 
+			not exhausted implies test 
 		end;
 
 	search (b: BOOLEAN) is
@@ -158,12 +189,12 @@ feature -- Cursor movement
 			invariant
 				invariant_value 
 			until 
-				off or else (b = test )
+				exhausted or else (b = test )
 			loop
 				forth 
 			end
 		ensure then
-			not off = (b = test )
+			not exhausted = (b = test )
 		end;
 
 	do_if is
@@ -176,7 +207,7 @@ feature -- Cursor movement
 			invariant
 				invariant_value 
 			until
-				off 
+				exhausted
 			loop
 				if test then action end;
 				forth 
@@ -188,6 +219,9 @@ feature -- Cursor movement
 			-- `n' times if possible, starting from `i'th.
 		require
 			traversable_exists: target /= Void
+			valid_start : i >= 1
+			valid_repetition: n >= 0
+			valid_skip: k >= 1
 		local
 			j: INTEGER
 		do
@@ -199,7 +233,7 @@ feature -- Cursor movement
 			variant
 				i - j
 			until
-				off or else j = i 
+				exhausted or else j = i 
 			loop
 				forth ;
 				j := j + 1
@@ -212,6 +246,8 @@ feature -- Cursor movement
 			-- `n' times if possible.
 		require
 			traversable_exists: target /= Void
+			valid_repetition: n >= 0
+			valid_skip: k >= 1
 		local
 			i, j: INTEGER
 		do
@@ -221,7 +257,7 @@ feature -- Cursor movement
 			variant
 				n - i
 			until
-				off or else i = n
+				exhausted or else i = n
 			loop
 				action ;
 				i := i + 1;
@@ -232,7 +268,7 @@ feature -- Cursor movement
 				variant
 					k - j
 				until 
-					off  or else j = k 
+					exhausted  or else j = k 
 				loop
 					forth ;
 					j := j + 1
@@ -245,7 +281,7 @@ feature -- Cursor movement
 			-- all items of `target'?
 		do
 			search (False);
-			Result := off 
+			Result := exhausted 
 		end;
 
 	exists: BOOLEAN is
@@ -253,7 +289,7 @@ feature -- Cursor movement
 			-- at least one item of `target'?
 		do
 			search (True);
-			Result := not off 
+			Result := not exhausted
 		end;
 
 	start is
@@ -269,7 +305,7 @@ feature -- Cursor movement
 		require
 			traversable_exists: target /= Void
 		do
-			target.start
+			target.forth
 		end;
 
 	off: BOOLEAN is
@@ -278,6 +314,14 @@ feature -- Cursor movement
 			traversable_exists: target /= Void
 		do
 			Result := target.off
+		end;
+
+	exhausted: BOOLEAN is
+			-- Is `target' exhausted?
+		require
+			traversable_exists: target /= Void
+		do
+			Result := target.exhausted
 		end;
 
 end

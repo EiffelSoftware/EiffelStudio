@@ -42,6 +42,13 @@ feature -- Element change
 			putchar (v)
 		end;
 
+	new_line is
+			-- Write a new line character at current position.
+		require
+			extendible
+		deferred
+		end;
+
 	putstring (s: STRING) is
 			-- Write `s' at current position.
 		require

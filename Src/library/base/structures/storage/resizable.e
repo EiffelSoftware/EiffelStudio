@@ -55,7 +55,8 @@ feature -- Resizing
 		do
 			grow (additional_space)
 		ensure
-			capacity >= old capacity + old capacity * Growth_percentage // 100 + 1
+			increased_capacity:
+				capacity >= old capacity + old capacity * Growth_percentage // 100 + 1
 		end;
 
 	grow (i: INTEGER) is

@@ -211,7 +211,7 @@ feature -- Status report
 		do
 			Result := (i >= 0) and (i <= arity + 1)
 		ensure
-			valid_index_definition: Result = (i >= 0) and (i <= arity + 1)
+			valid_cursor_index_definition: Result = (i >= 0) and (i <= arity + 1)
 		end;
 
 feature -- Cursor movement

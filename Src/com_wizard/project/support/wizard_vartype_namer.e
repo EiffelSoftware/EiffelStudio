@@ -14,6 +14,8 @@ inherit
 
 	WIZARD_MESSAGE_OUTPUT
 
+	WIZARD_NAMER_CONSTANTS
+
 create
 	make
 
@@ -139,6 +141,63 @@ feature {NONE} -- Initialization
 			variant_field_names.put (Variant_pdecval, binary_or (Vt_byref, Vt_decimal))
 			variant_field_names.put (Variant_byref, binary_or (Vt_byref, Vt_void))
 
+			create ce_array_function_names.make (30)
+
+			ce_array_function_names.put (Ccom_ce_array_character, Vt_i1)
+			ce_array_function_names.put (Ccom_ce_array_character, Vt_ui1)
+			ce_array_function_names.put (Ccom_ce_array_short, Vt_i2)
+			ce_array_function_names.put (Ccom_ce_array_short, Vt_ui2)
+			ce_array_function_names.put (Ccom_ce_array_long, Vt_i4)
+			ce_array_function_names.put (Ccom_ce_array_long, Vt_ui4)
+			ce_array_function_names.put (Ccom_ce_array_long, Vt_int)
+			ce_array_function_names.put (Ccom_ce_array_long, Vt_uint)
+			ce_array_function_names.put (Ccom_ce_array_float, Vt_r4)
+			ce_array_function_names.put (Ccom_ce_array_double, Vt_r8)
+			ce_array_function_names.put (Ccom_ce_array_currency, Vt_cy)
+			ce_array_function_names.put (Ccom_ce_array_date, Vt_date)
+			ce_array_function_names.put (Ccom_ce_array_bstr, Vt_bstr)
+			ce_array_function_names.put (Ccom_ce_array_hresult, Vt_hresult)
+			ce_array_function_names.put (Ccom_ce_array_hresult, Vt_error)
+			ce_array_function_names.put (Ccom_ce_array_boolean, Vt_bool)
+			ce_array_function_names.put (Ccom_ce_array_variant, Vt_variant)
+			ce_array_function_names.put (Ccom_ce_array_decimal, Vt_decimal)
+			ce_array_function_names.put (Ccom_ce_array_record, Vt_record)
+			ce_array_function_names.put (Ccom_ce_array_lpstr, Vt_lpstr)
+			ce_array_function_names.put (Ccom_ce_array_lpwstr, Vt_lpwstr)
+			ce_array_function_names.put (Ccom_ce_array_long_long, Vt_i8)
+			ce_array_function_names.put (Ccom_ce_array_ulong_long, Vt_ui8)
+			ce_array_function_names.put (Ccom_ce_array_dispatch, Vt_dispatch)
+			ce_array_function_names.put (Ccom_ce_array_unknown, Vt_unknown)
+
+			create ec_array_function_names.make (30)
+
+			ec_array_function_names.put (Ccom_ec_array_character, Vt_i1)
+			ec_array_function_names.put (Ccom_ec_array_character, Vt_ui1)
+			ec_array_function_names.put (Ccom_ec_array_short, Vt_i2)
+			ec_array_function_names.put (Ccom_ec_array_short, Vt_ui2)
+			ec_array_function_names.put (Ccom_ec_array_long, Vt_i4)
+			ec_array_function_names.put (Ccom_ec_array_long, Vt_ui4)
+			ec_array_function_names.put (Ccom_ec_array_long, Vt_int)
+			ec_array_function_names.put (Ccom_ec_array_long, Vt_uint)
+			ec_array_function_names.put (Ccom_ec_array_float, Vt_r4)
+			ec_array_function_names.put (Ccom_ec_array_double, Vt_r8)
+			ec_array_function_names.put (Ccom_ec_array_currency, Vt_cy)
+			ec_array_function_names.put (Ccom_ec_array_date, Vt_date)
+			ec_array_function_names.put (Ccom_ec_array_bstr, Vt_bstr)
+			ec_array_function_names.put (Ccom_ec_array_hresult, Vt_hresult)
+			ec_array_function_names.put (Ccom_ec_array_hresult, Vt_error)
+			ec_array_function_names.put (Ccom_ec_array_boolean, Vt_bool)
+			ec_array_function_names.put (Ccom_ec_array_variant, Vt_variant)
+			ec_array_function_names.put (Ccom_ec_array_decimal, Vt_decimal)
+			ec_array_function_names.put (Ccom_ec_array_record, Vt_record)
+			ec_array_function_names.put (Ccom_ec_array_lpstr, Vt_lpstr)
+			ec_array_function_names.put (Ccom_ec_array_lpwstr, Vt_lpwstr)
+			ec_array_function_names.put (Ccom_ec_array_long_long, Vt_i8)
+			ec_array_function_names.put (Ccom_ec_array_ulong_long, Vt_ui8)
+			ec_array_function_names.put (Ccom_ec_array_dispatch, Vt_dispatch)
+			ec_array_function_names.put (Ccom_ec_array_unknown, Vt_unknown)
+
+
 		ensure
 			non_void_c_names: c_names /= Void
 			non_void_eiffel_names: eiffel_names /= Void
@@ -217,6 +276,28 @@ feature -- Access
 			end
 		end
 
+	ce_array_function_name (a_var_type: INTEGER): STRING is
+			-- CE conversion function name of constant `a_var_type'
+		require
+			valid_var_type: valid_var_type (a_var_type)
+		do	
+			Result := clone (ce_array_function_names.item (a_var_type))
+		ensure
+			non_void_ce_array_function_name: Result /= Void
+			valid_c_name: not Result.empty
+		end
+
+	ec_array_function_name (a_var_type: INTEGER): STRING is
+			-- EC conversion function name of constant `a_var_type'
+		require
+			valid_var_type: valid_var_type (a_var_type)
+		do	
+			Result := clone (ec_array_function_names.item (a_var_type))
+		ensure
+			non_void_ec_array_function_name: Result /= Void
+			valid_c_name: not Result.empty
+		end
+
 feature {NONE} -- Implementation
 
 	c_names: HASH_TABLE [STRING, INTEGER]
@@ -227,6 +308,12 @@ feature {NONE} -- Implementation
 
 	variant_field_names: HASH_TABLE [STRING, INTEGER]
 			-- VARIANT field names.
+
+	ce_array_function_names: HASH_TABLE [STRING, INTEGER]
+			-- CE conversion function names for arrays.
+
+	ec_array_function_names: HASH_TABLE [STRING, INTEGER]
+			-- EC conversion function names for arrays.
 
 invariant
 	non_void_c_names: c_names /= Void

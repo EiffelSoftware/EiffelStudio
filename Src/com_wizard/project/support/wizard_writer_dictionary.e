@@ -775,6 +775,8 @@ feature -- Generator constants -- 8
 
 	Eif_array: STRING is "eif_array"
 
+	An_array: STRING is "an_array"
+
 	Array_word: STRING is "array"
 
 	Count_word: STRING is "count"
@@ -953,90 +955,7 @@ feature -- languages --13
 
 	Eiffel: STRING is "Eiffel"
 
-feature -- VARIANT field names -- 14
-
-	Variant_bval: STRING is "bVal"
-
-	Variant_ival: STRING is "iVal"
-
-	Variant_lval: STRING is "lVal"
-
-	Variant_fltval: STRING is "fltVal"
-
-	Variant_dblval: STRING is "dblVal"
-
-	Variant_boolval: STRING is "boolVal"
-
-	Variant_scode: STRING is "scode"
-
-	Variant_cyval: STRING is "cyVal"
-
-	Variant_date: STRING is "date"
-
-	Variant_bstrval: STRING is "bstrVal"
-
-	Variant_punkval: STRING is "punkVal"
-
-	Variant_pdispval: STRING is "pdispVal"
-
-	Variant_parray: STRING is "parray"
-
-	Variant_pbval: STRING is "pbVal"
-
-	Variant_pival: STRING is "piVal"
-
-	Variant_plval: STRING is "plVal"
-
-	Variant_pfltval: STRING is "pfltVal"
-
-	Variant_pdblval: STRING is "pdblVal"
-
-	Variant_pboolval: STRING is "pboolVal"
-
-	Variant_pscode: STRING is "pscode"
-
-	Variant_pcyval: STRING is "pcyVal"
-
-	Variant_pdate: STRING is "pdate"
-
-	Variant_pbstrval: STRING is "pbstrVal"
-
-	Variant_ppunkval: STRING is "ppunkVal"
-
-	Variant_ppdispval: STRING is "ppdispVal"
-
-	Variant_pparray: STRING is "pparray"
-
-	Variant_pvarval: STRING is "pvarVal"
-
-	Variant_cval: STRING is "cVal"
-
-	Variant_uival: STRING is "uiVal"
-	
-	Variant_ulval: STRING is "ulVal"
-
-	Variant_intval: STRING is "intVal"
-
-	Variant_uintval: STRING is "uintVal"
-
-	Variant_decval: STRING is "decVal"
-
-	Variant_pcval: STRING is "pcVal"
-
-	Variant_puival: STRING is "puiVal"
-	
-	Variant_pulval: STRING is "pulVal"
-
-	Variant_pintval: STRING is "pintVal"
-
-	Variant_puintval: STRING is "puintVal"
-
-	Variant_pdecval: STRING is "pdecVal"
-
-	Variant_byref: STRING is "byref"
-
-feature -- Eiffel keywords -- 15
-
+feature -- Eiffel keywords -- 14
 	Is_keyword: STRING is "is"
 
 	If_keyword: STRING is "if"

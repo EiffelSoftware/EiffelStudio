@@ -425,11 +425,6 @@ feature {NONE} -- External features
 			"C"
 		end; 
 
-	c_exit (val: INTEGER) is
-		external
-			"C"
-		end;
-
 	xt_destroy_application_context (context: POINTER) is
 		external
 			"C"

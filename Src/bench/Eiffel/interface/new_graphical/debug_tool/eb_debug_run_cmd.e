@@ -266,8 +266,6 @@ feature -- Execution
 					create makefile_sh_name.make_from_string (Workbench_generation_path)
 					makefile_sh_name.set_file_name (Makefile_SH)
 					
-					Output_manager.clear
-	
 					create uf.make (Eiffel_system.application_name (True))
 					create make_f.make (makefile_sh_name)
 	
@@ -279,6 +277,8 @@ feature -- Execution
 								<<~c_compile>>)
 							cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 						else
+							Output_manager.clear
+
 							launch_program := True
 							if Application.has_breakpoints and then Application.is_ignoring_stop_points then
 								create ignore_all_breakpoints_confirmation_dialog.make_initialized (

@@ -28,7 +28,7 @@
 #include "eif_error.h"
 #include "eif_main.h"
 #include "eif_compress.h"
-#include "x2c.h"	/* For macro LNGPAD */
+#include "x2c.header"	/* For macro LNGPAD */
 
 #ifdef EIF_WIN32
 #include <io.h>

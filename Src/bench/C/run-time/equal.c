@@ -15,7 +15,7 @@
 #include "eif_equal.h"			/* For Eiffel boolean */
 #include "eif_struct.h"			/* For skeleton structure */
 #include "eif_traverse.h"		/* For traversing objects */
-#include "x2c.h"			/* For macro LNGPAD */
+#include "x2c.header"			/* For macro LNGPAD */
 #include "eif_tools.h"			/* For `nprime' */
 #include "eif_search.h"
 #include "eif_plug.h"			/* for econfg */

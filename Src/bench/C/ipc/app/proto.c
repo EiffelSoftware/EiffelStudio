@@ -39,7 +39,7 @@
 #include "eif_eiffel.h"
 #include "eif_memory.h"
 #include "eif_debug.h"
-#include "x2c.h"	/* For macro LNGPAD */
+#include "x2c.header"	/* For macro LNGPAD */
 #include "proto.h"
 
 #ifdef EIF_WIN32

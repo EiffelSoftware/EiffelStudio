@@ -24,7 +24,7 @@
 #include "eif_local.h"
 #include "eif_hector.h"
 #include "eif_garcol.h"
-#include "x2c.h"		/* For macro LNGPAD */
+#include "x2c.header"		/* For macro LNGPAD */
 
 #define SHALLOW		1		/* Copy first level only */
 #define DEEP		2		/* Recursive copy */

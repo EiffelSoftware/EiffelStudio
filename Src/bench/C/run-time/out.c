@@ -23,7 +23,7 @@
 #include "eif_hector.h"
 #include "eif_bits.h"
 #include "eif_globals.h"
-#include "x2c.h"		/* For macro LNGPAD */
+#include "x2c.header"		/* For macro LNGPAD */
 
 /*
  * Private declarations

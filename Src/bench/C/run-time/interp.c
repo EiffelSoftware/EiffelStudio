@@ -31,7 +31,7 @@
 #include <math.h>
 #include "eif_main.h"
 #include "eif_gen_conf.h"
-#include "x2c.h"		/* For LNGPAD */
+#include "x2c.header"		/* For LNGPAD */
 
 #ifdef CONCURRENT_EIFFEL
 #include "eif_curextern.h"

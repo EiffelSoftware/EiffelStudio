@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 					create csd.make_and_launch (tool, Current, argument)
 				else
 					create fod.make (tool.parent)
-					fod.set_filter (<<"Eiffel Class File (*.e)">>, <<"*.e">>)
+--					fod.set_filter (<<"Eiffel Class File (*.e)">>, <<"*.e">>)
 					create arg.make (fod)
 					fod.add_ok_command (Current, arg)
 					fod.show

@@ -81,7 +81,8 @@ feature {AST_FACTORY} -- Initialization
 			parents_set: parents = p
 			creators_set: creators = c
 			features_set: features = f
-			invariant_part_set: invariant_part = inv
+			empty_invariant_part: invariant_part = Void implies inv = Void or else inv.assertion_list = Void
+			invariant_part_set: invariant_part /= Void implies invariant_part = inv
 			suppliers_set: suppliers = s
 			obsolete_message_set: obsolete_message = o
 			click_list_set: click_list = cl

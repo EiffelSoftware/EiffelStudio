@@ -24,6 +24,8 @@ inherit
 		end
 
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
+		undefine
+			destroy
 		redefine
 			interface,
 			list_widget,

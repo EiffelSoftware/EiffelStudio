@@ -25,8 +25,8 @@ extern "C" {
  * Function declarations 
  */
 
-RT_LNK char *c_generator(register EIF_REFERENCE Current);		/* Eiffel feature `generator' (GENERAL) */
-extern char *c_tagged_out(EIF_OBJECT object);	/* Eiffel feature `tagged_out' (GENERAL) */
+RT_LNK EIF_REFERENCE  c_generator(register EIF_REFERENCE Current); /* Eiffel feature `generator' (GENERAL) */
+extern EIF_REFERENCE c_tagged_out(EIF_OBJECT object);	/* Eiffel feature `tagged_out' (GENERAL) */
 RT_LNK char *eif_out(EIF_REFERENCE object);		/* Build the output of an EIF_REFERENCE */
 extern char *build_out(EIF_OBJECT object);		/* Build tagged out in C buffer */
 
@@ -34,12 +34,12 @@ extern char *build_out(EIF_OBJECT object);		/* Build tagged out in C buffer */
  * Building `out' string for simple types.
  */
 
-extern EIF_REFERENCE c_outb(EIF_BOOLEAN b);		/* %%zs modified EIF_REFERENCE was char * */
-extern EIF_REFERENCE c_outi(EIF_INTEGER i);		/* %%zs modified EIF_REFERENCE was char * */
-extern EIF_REFERENCE c_outr(EIF_REAL f);		/* %%zs modified EIF_REFERENCE was char * */
-extern EIF_REFERENCE c_outd(EIF_DOUBLE d);		/* %%zs modified EIF_REFERENCE was char * */
-extern EIF_REFERENCE c_outc(EIF_CHARACTER c);		/* %%zs modified EIF_REFERENCE was char * */
-extern EIF_REFERENCE c_outp(EIF_POINTER p);		/* %%zs modified EIF_REFERENCE was char * */
+extern EIF_REFERENCE c_outb(EIF_BOOLEAN b);
+extern EIF_REFERENCE c_outi(EIF_INTEGER i);
+extern EIF_REFERENCE c_outr(EIF_REAL f);
+extern EIF_REFERENCE c_outd(EIF_DOUBLE d);
+extern EIF_REFERENCE c_outc(EIF_CHARACTER c);
+extern EIF_REFERENCE c_outp(EIF_POINTER p);
 
 #ifdef WORKBENCH
 

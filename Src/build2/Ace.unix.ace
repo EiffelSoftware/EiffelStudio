@@ -1,31 +1,35 @@
 system
-
-	build	
+	"build"
 
 root
 	GB: execute
 
 default
-	assertion(check)
-	assertion(require)
-	assertion(ensure)
-	arguments(" ")
-	disabled_debug(yes)
-	debug(no)
-	line_generation(no)
-	profile(no)
-	trace(no)
-	il_verifiable(yes)
-	msil_generation_type("exe")
-	check_vape(no)
-	console_application(no)
-	address_expression(no)
-	array_optimization(yes)
-	dead_code_removal(yes)
-	dynamic_runtime(no)
-	exception_trace(yes)
-	inlining(no)
-	multithreaded(no)
+	il_verifiable (yes)
+	msil_generation_type ("exe")
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	arguments (" ")
+	arguments ("--display 10.0.10.118:0")
+	disabled_debug (yes)
+	disabled_debug ("ev_gtk_c_object_dispose")
+	disabled_debug ("ev_gtk_creation")
+	disabled_debug ("ev_gtk_destroy")
+	disabled_debug ("ev_gtk_dispose")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (no)
+	console_application (no)
+	address_expression (no)
+	array_optimization (yes)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (yes)
+	inlining (no)
+	multithreaded (no)
 
 
 -- Note that we exclude ev_widget, as we have a new version for build, which allows
@@ -34,14 +38,14 @@ default
 cluster
 	all build2:		"$WS/build2"
 		exclude
-			"object_editor"; "eifgen"; 
+			"object_editor"; "EIFGEN"; 
 		end
 
 	dev:		"$EIFFEL_SRC/library"
 
 	all gel (dev):		"$/gel"
 		default
-			assertion(no)
+			assertion (no)
 		end
 
 	all vision2 (dev):		"$/vision2"
@@ -50,15 +54,14 @@ cluster
 		exclude
 			"new_figures"; "mswin"; "components"; "obsolete"; "release"; "ev_widget.e"; 
 		default
-			assertion(no)
+			assertion (require)
 		end
 
 	all base:		"$EIFFEL_SRC/library/base"
-
 		exclude
 			"table_eiffel3"; 
 		default
-			assertion(no)
+			assertion (no)
 		end
 
 	exml_interface:		"$WS/exml_02_cvs_anon/exml/exml/lib/interface"
@@ -123,12 +126,14 @@ external
 		"$EIFFEL_SRC/library/vision2/spec/include",
 		"$WS/gobo_16/library/kernel/include",
 		"$WS/exml_02_cvs_anon/exml/exml/lib/implementation/expat/compiler_specific/ise/clib",
-                "$EIFFEL_SRC/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
-                "$EIFFEL_SRC/library/vision2/spec/include"
+		"$EIFFEL_SRC/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+		"$EIFFEL_SRC/library/vision2/spec/include"
 
 	object:
 		"$(WS)/exml_02_cvs_anon/exml/exml/lib/implementation/expat/compiler_specific/ise/clib/exml_expat.a",
-                "$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
-                "$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
-                "-lpng -lz -lXtst -lexpat"
+		"$(EIFFEL_SRC)/C_library/expat/xmlparse/libexpat.a",
+		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+		"-lpng -lz -lXtst"
+
 end

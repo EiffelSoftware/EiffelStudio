@@ -34,7 +34,7 @@ cdd %EIFFEL_SRC\tools
 exprt -r %DEFAULT_CVS_TAG -d doc_builder Src/tools/doc_builder
 cd %EIFFEL_SRC\tools\doc_builder
 clean_project
-finalize docbuilder_classic.ace
+finalize docbuilder.mswin.ace
 fff
 cleanup_eiffel doc_builder.exe
 iff not exist doc_builder.exe then

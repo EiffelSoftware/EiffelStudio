@@ -272,7 +272,11 @@ public:
   -----------------------------------------------------------*/
   ecom_control_library::tagFORMATETC * ccom_ec_pointed_record_2( EIF_REFERENCE eif_ref );
 
-
+  /*-----------------------------------------------------------
+  Convert ARRAY [TAG_FORMATETC_RECORD] to FORMATETC [].
+  -----------------------------------------------------------*/
+  FORMATETC * ecom_gec_control_interfaces2::ccom_ec_array_formatetc (EIF_REFERENCE a_ref, FORMATETC * old);
+  
   /*-----------------------------------------------------------
   Convert X_USER_STGMEDIUM_RECORD to ecom_control_library::_userSTGMEDIUM.
   -----------------------------------------------------------*/
@@ -286,15 +290,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert WIRE_ASYNC_STGMEDIUM_ALIAS to ecom_control_library::wireASYNC_STGMEDIUM.
+  Convert WIRE_ASYNC_STGMEDIUM_ALIAS to ecom_control_library::_userSTGMEDIUM *.
   -----------------------------------------------------------*/
-  ecom_control_library::wireASYNC_STGMEDIUM ccom_ec_alias_wire_async_stgmedium_alias3( EIF_REFERENCE eif_ref );
+  ecom_control_library::_userSTGMEDIUM * ccom_ec_alias_wire_async_stgmedium_alias3( EIF_REFERENCE eif_ref );
 
 
   /*-----------------------------------------------------------
-  Convert CELL [WIRE_ASYNC_STGMEDIUM_ALIAS] to ecom_control_library::wireASYNC_STGMEDIUM *.
+  Convert CELL [WIRE_ASYNC_STGMEDIUM_ALIAS] to ecom_control_library::_userSTGMEDIUM * *.
   -----------------------------------------------------------*/
-  ecom_control_library::wireASYNC_STGMEDIUM * ccom_ec_pointed_cell_6( EIF_REFERENCE eif_ref, ecom_control_library::wireASYNC_STGMEDIUM * old );
+  ecom_control_library::_userSTGMEDIUM * * ccom_ec_pointed_cell_6( EIF_REFERENCE eif_ref, ecom_control_library::_userSTGMEDIUM * * old );
 
 
   /*-----------------------------------------------------------
@@ -772,15 +776,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert WIRE_STGMEDIUM_ALIAS to ecom_control_library::wireSTGMEDIUM.
+  Convert WIRE_STGMEDIUM_ALIAS to ecom_control_library::_userSTGMEDIUM *.
   -----------------------------------------------------------*/
-  ecom_control_library::wireSTGMEDIUM ccom_ec_alias_wire_stgmedium_alias113( EIF_REFERENCE eif_ref );
+  ecom_control_library::_userSTGMEDIUM * ccom_ec_alias_wire_stgmedium_alias113( EIF_REFERENCE eif_ref );
 
 
   /*-----------------------------------------------------------
-  Convert CELL [WIRE_STGMEDIUM_ALIAS] to ecom_control_library::wireSTGMEDIUM *.
+  Convert CELL [WIRE_STGMEDIUM_ALIAS] to ecom_control_library::_userSTGMEDIUM * *.
   -----------------------------------------------------------*/
-  ecom_control_library::wireSTGMEDIUM * ccom_ec_pointed_cell_114( EIF_REFERENCE eif_ref, ecom_control_library::wireSTGMEDIUM * old );
+  ecom_control_library::_userSTGMEDIUM * * ccom_ec_pointed_cell_114( EIF_REFERENCE eif_ref, ecom_control_library::_userSTGMEDIUM * * old );
 
 
   /*-----------------------------------------------------------
@@ -796,15 +800,15 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert WIRE_FLAG_STGMEDIUM_ALIAS to ecom_control_library::wireFLAG_STGMEDIUM.
+  Convert WIRE_FLAG_STGMEDIUM_ALIAS to ecom_control_library::_userFLAG_STGMEDIUM *.
   -----------------------------------------------------------*/
-  ecom_control_library::wireFLAG_STGMEDIUM ccom_ec_alias_wire_flag_stgmedium_alias115( EIF_REFERENCE eif_ref );
+  ecom_control_library::_userFLAG_STGMEDIUM * ccom_ec_alias_wire_flag_stgmedium_alias115( EIF_REFERENCE eif_ref );
 
 
   /*-----------------------------------------------------------
-  Convert CELL [WIRE_FLAG_STGMEDIUM_ALIAS] to ecom_control_library::wireFLAG_STGMEDIUM *.
+  Convert CELL [WIRE_FLAG_STGMEDIUM_ALIAS] to ecom_control_library::_userFLAG_STGMEDIUM * *.
   -----------------------------------------------------------*/
-  ecom_control_library::wireFLAG_STGMEDIUM * ccom_ec_pointed_cell_118( EIF_REFERENCE eif_ref, ecom_control_library::wireFLAG_STGMEDIUM * old );
+  ecom_control_library::_userFLAG_STGMEDIUM * * ccom_ec_pointed_cell_118( EIF_REFERENCE eif_ref, ecom_control_library::_userFLAG_STGMEDIUM * * old );
 
 
   /*-----------------------------------------------------------
@@ -1873,6 +1877,12 @@ public:
   Convert X_TAG_OLECMD_RECORD to ecom_control_library::_tagOLECMD *.
   -----------------------------------------------------------*/
   ecom_control_library::_tagOLECMD * ccom_ec_pointed_record_466( EIF_REFERENCE eif_ref );
+
+
+  /*-----------------------------------------------------------
+  Convert ARRARY [X_TAG_OLECMD_RECORD] to ecom_control_library::_tagOLECMD [].
+  -----------------------------------------------------------*/
+  OLECMD * ccom_ec_array_olecmd (EIF_REFERENCE a_ref, OLECMD * old);
 
 
   /*-----------------------------------------------------------

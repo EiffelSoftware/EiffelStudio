@@ -94,8 +94,12 @@ feature {NONE} -- Initialization
 		do
 			--parent_window (parent_area).lock_update
 			parent_area.initialize_docking_areas (Current)
+			original_height := height
+			original_width := width
 		end
-		
+	
+	original_height, original_width: INTEGER
+		-- Original width and height before dock.
 		
 	docking_ended is
 			-- A dock has ended, so close dialog, and restore `Current'
@@ -115,6 +119,8 @@ feature {NONE} -- Initialization
 				dialog.close_request_actions.extend (agent destroy_dialog_and_restore (dialog))
 				parent_area.linear_representation.prune_all (tool)
 				parent_area.external_representation.extend (tool)
+				dialog.set_width (original_width)
+				dialog.set_height (original_height)
 			end
 			if parent /= Void then
 				parent.prune (Current)

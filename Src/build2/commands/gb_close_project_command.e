@@ -71,8 +71,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		local
-			acc: EV_ACCELERATOR
-			key: EV_KEY
+			--	acc: EV_ACCELERATOR
+			--	key: EV_KEY
 		do
 			Precursor {EB_STANDARD_CMD}
 			set_tooltip ("Close Project")
@@ -122,7 +122,6 @@ feature -- Basic operations
 		perform_close is
 				-- Actually perform the closing of the project.
 			do
-				object_handler.clear_all_objects
 					-- This must be called before we hide the tools, 
 					-- as during this call, we find the parent window
 					-- of the `docked_object_editor'.
@@ -142,14 +141,13 @@ feature -- Basic operations
 				if builder_window.is_show_requested then
 					command_handler.show_hide_builder_window_command.execute
 				end
-					-- Restore display and builder windows to their
-					-- default appeaence, so any settings made during the
-					-- last project are lost.
-				builder_window.restore_to_default
-				display_window.restore_to_default
 				
-					-- Clear the component viewer
-					
+					-- Clear the objects. This will also reset the display and builder
+					-- windows from the titled window object which is the root of the
+					-- layout constructor.
+				object_handler.clear_all_objects
+				
+					-- Clear the component viewer					
 				component_viewer.clear
 				
 					-- Hide the history window.

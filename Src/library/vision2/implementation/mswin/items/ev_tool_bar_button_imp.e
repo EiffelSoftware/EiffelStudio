@@ -97,6 +97,7 @@ feature -- Status setting
 			if par /= Void then
 				parent_imp ?= par.implementation
 				parent_imp.add_item (Current)
+				parent_imp.auto_size
 			end
 		end
 
@@ -119,6 +120,7 @@ feature -- Element change
 			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 			if parent_imp /= Void then
 				parent_imp.internal_reset_button (Current)
+				parent_imp.auto_size
 			end
 		end
 

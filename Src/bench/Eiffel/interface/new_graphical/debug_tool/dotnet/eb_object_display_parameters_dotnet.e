@@ -22,11 +22,8 @@ feature {NONE} -- Debug Value
 		do
 			Result := internal_associated_debug_value
 			if Result = Void then
-				--FIXME: JFIAT
---				if Application.imp_dotnet.know_about_kept_object (address) then
-					Result ?= Application.imp_dotnet.kept_object_item (address)
-					internal_associated_debug_value := Result
---				end
+				Result ?= Application.imp_dotnet.kept_object_item (address)
+				internal_associated_debug_value := Result
 			end
 		end
 

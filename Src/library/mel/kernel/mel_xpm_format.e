@@ -11,7 +11,7 @@ class
 
 inherit
 
-	MEL_XMP_CONSTANTS
+	MEL_XPM_CONSTANTS
 		export
 			{NONE} all
 		end

@@ -51,8 +51,6 @@ doc:<file name="file.c" header="eif_file.h" version="$Id$" summary="Externals fo
 #endif
 
 
-#define FILE_TYPE_MAX  4	/* max size of fopen type string (like "a+b") */
-
 #ifdef EIF_VMS
 #include <assert.h>
 rt_private int err;  		/* for debugging - save errno value */
@@ -103,6 +101,7 @@ struct utimbuf {
 
 #include "eif_file.h"
 #include "rt_lmalloc.h"
+#include "rt_constants.h"
 
 #define FS_START	0			/* Beginning of file for `fseek' */
 #define FS_CUR		1			/* Current position for `fseek' */
@@ -140,28 +139,31 @@ rt_private int unlink(char *path);
 
 rt_public char *file_open_mode (int how, char mode)
 {
-	static char type [FILE_TYPE_MAX];
+	RT_GET_CONTEXT
+#ifndef EIF_THREADS
+	static char file_type [FILE_TYPE_MAX];
+#endif
 
-	type[3] = '\0';
-	type[2] = '\0';
+	file_type[3] = '\0';
+	file_type[2] = '\0';
 	if (how >= 10) how -= 10;
 	switch (how) {
 	case 0: 
-	case 3: type[0] = 'r'; break;
+	case 3: file_type[0] = 'r'; break;
 	case 1:
-	case 4: type[0] = 'w'; break;
+	case 4: file_type[0] = 'w'; break;
 	case 2:
-	case 5: type[0] = 'a'; break;
-	default: type[0] = 'r'; break;
+	case 5: file_type[0] = 'a'; break;
+	default: file_type[0] = 'r'; break;
 	}
-	type[1] = mode;
+	file_type[1] = mode;
 	switch (how) {
 	case 3:
 	case 4:
-	case 5: if (mode == '\0') type[1] = '+';
-			else type[2] = '+';
+	case 5: if (mode == '\0') file_type[1] = '+';
+			else file_type[2] = '+';
 	}
-	return type;
+	return file_type;
 }
 
 rt_public EIF_POINTER file_open(char *name, int how)

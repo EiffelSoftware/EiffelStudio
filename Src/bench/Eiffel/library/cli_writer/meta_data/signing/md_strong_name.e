@@ -72,7 +72,7 @@ feature -- C externals
 		end
 
 	strong_name_hash_size (a_hash_alg: INTEGER; a_hash_size: POINTER): INTEGER is
-			-- Compute  size of buffer in `a_hash_size' needed to hold a hash
+			-- Compute size of buffer in `a_hash_size' needed to hold a hash
 			-- for a given hash algorithm `a_hash_alg'.
 		external
 			"C macro signature (ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"

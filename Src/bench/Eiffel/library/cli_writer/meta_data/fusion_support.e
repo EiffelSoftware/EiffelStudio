@@ -29,10 +29,13 @@ feature -- Access
 			location_not_void: a_loc /= Void
 			location_not_empty: not a_loc.string.is_empty
 		local
-			int: INTEGER
+			is_signed: INTEGER
+			a_bstr: POINTER
 		do
-			last_call_success := c_signed (item, a_loc.item, $int)				
-			Result := int /= 0
+			a_bstr := c_get_bstr (a_loc.item)
+			last_call_success := c_signed (item, a_bstr, $is_signed)				
+			c_free_bstr (a_bstr)
+			Result := is_signed /= 0
 		end
 		
 	get_assembly_info_from_assembly (a_loc: UNI_STRING): FUSION_SUPPORT_ASSEMBLY_INFO is
@@ -42,9 +45,11 @@ feature -- Access
 			location_not_void: a_loc /= Void
 			location_not_empty: not a_loc.string.is_empty
 		local
-			p: POINTER
+			p, a_bstr: POINTER
 		do
-			last_call_success := c_get_assembly_info_from_assembly (item, a_loc.item, $p)
+			a_bstr := c_get_bstr (a_loc.item)
+			last_call_success := c_get_assembly_info_from_assembly (item, a_bstr, $p)
+			c_free_bstr (a_bstr)
 			create Result.make_by_pointer (p)
 		end
 
@@ -65,6 +70,18 @@ feature {NONE} -- Implementation
 
 	new_fusion_support: POINTER is
 			-- New instance of IFusionSupport
+		external
+			"C use %"cli_writer.h%""
+		end
+		
+	c_get_bstr (a_string: POINTER): POINTER is
+			-- Retrieve a BSTR from 'a__string'
+		external
+			"C use %"cli_writer.h%""
+		end
+	
+	c_free_bstr (a_bstr: POINTER) is
+			-- Free memory associated with 'a_bstr'
 		external
 			"C use %"cli_writer.h%""
 		end

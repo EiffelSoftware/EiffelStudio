@@ -7,12 +7,16 @@ indexing
 class SAVE_SYSTEM
 
 inherit
-	SHARED_EIFFEL_PROJECT;	
-	PROJECT_CONTEXT;
+	SHARED_EIFFEL_PROJECT
+
+	SHARED_RESCUE_STATUS
+	
+	PROJECT_CONTEXT
+
 	SAVE_FILE
 		redefine
 			work
-		end;
+		end
 
 creation
 	make
@@ -76,8 +80,11 @@ feature {NONE} -- Implementation
 					Eiffel_ace.set_file_name (file_name);
 				end;
 				text_window.disable_clicking;
+				if tool.stone /= Void and then system_resources.parse_ace_after_saving.actual_value then
+					tool.parse_file
+				end
 				tool.update_save_symbol;
 			end
-		end;
+		end
 
 end -- class SAVE_SYSTEM

@@ -48,7 +48,7 @@ feature
 			cl_type: CLASS_TYPE;
 			first_class: CLASS_C;
 		do
-			pos := position;
+			pos := index;
 				-- If it is not a poofter finalization
 				-- we have a quicker algorithm handy.
 			if not System.poofter_finalization then
@@ -87,7 +87,7 @@ feature
 					forth
 				end;
 			end;
-			go (pos);
+			go_i_th (pos);
 		end;
 
 	generate (file: UNIX_FILE) is

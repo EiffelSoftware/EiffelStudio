@@ -46,14 +46,14 @@ feature
 		do
 			if other.is_set then
 					-- Duplication
-				pos := position;
+				pos := index;
 				start;
 				Result := duplicate (count);
 					-- Merge
 				other_set ?= other;
 				new ?= Result;
 				new.merge (other_set);
-				go (position);
+				go_i_th (pos);
 			elseif other.is_none then
 				Result := Current;
 			else
@@ -74,7 +74,7 @@ feature
 		do
 			other_set ?= other;
 			if other_set /= Void then
-				pos := position;
+				pos := index;
 				from
 					Result := True;
 					start;
@@ -89,7 +89,7 @@ feature
 								export_client.equiv (other_export_client);
 					forth;
 				end;
-				go (pos);
+				go_i_th (pos);
 			else
 				Result := other.is_all;
 			end;
@@ -157,7 +157,7 @@ feature
 		local
 			pos: INTEGER;
 		do
-			pos := position;
+			pos := index;
 			from
 				start;
 			until
@@ -168,7 +168,7 @@ feature
 				end;
 				forth;
 			end;
-			go (pos);
+			go_i_th (pos);
 		end;
 
 	trace is

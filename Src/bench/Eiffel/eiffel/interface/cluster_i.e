@@ -812,7 +812,7 @@ end;
 			rename_clause: RENAME_I;
 			table: EXTEND_TABLE [STRING, STRING];
 		do
-			pos := renamings.position;
+			pos := renamings.index;
 			from
 				renamings.start
 			until

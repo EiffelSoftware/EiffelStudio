@@ -20,8 +20,8 @@ feature
 			pos, other_pos, old_pos: INTEGER;
 		do
 			if count = other.count then
-				pos := position;
-				other_pos := other.position;
+				pos := index;
+				other_pos := other.index;
 				from
 					Result := True;
 					start;
@@ -33,8 +33,8 @@ feature
 					forth;
 					other.forth;
 				end;
-				go (pos);
-				other.go (old_pos);
+				go_i_th (pos);
+				other.go_i_th (old_pos);
 			end;
 		end;
 
@@ -46,7 +46,7 @@ feature
 			pos: INTEGER;
 		do
 			!!Result.make;
-			pos := position;
+			pos := index;
 			from
 				start
 			until
@@ -55,7 +55,7 @@ feature
 				Result.add (item.instantiation_in (class_type));
 				forth;
 			end;
-			go (pos);
+			go_i_th (pos);
 		end;
 
 

@@ -75,7 +75,7 @@ feature
 		local
 			pos: INTEGER;
 		do
-			pos := depend_list.position;
+			pos := depend_list.index;
 			from
 				Result := True;
 				depend_list.start;
@@ -98,7 +98,7 @@ feature
 		local
 			pos: INTEGER;
 		do
-			pos := depend_list.position;
+			pos := depend_list.index;
 			from
 				Result := True;
 				depend_list.start;

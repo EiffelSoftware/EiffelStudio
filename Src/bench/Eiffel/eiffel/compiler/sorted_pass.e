@@ -27,7 +27,7 @@ feature
 			current_class: CLASS_C;
 		do
 			from
-				position := changed_classes.position;
+				position := changed_classes.index;
 				changed_classes.start
 			until
 				after or else changed_classes.after or else found
@@ -46,7 +46,7 @@ feature
 				Result := new_controler (a_class);
 				changed_classes.add (Result);
 			end;
-			changed_classes.go (position);
+			changed_classes.go_i_th (position);
 		ensure then
 			changed_classes.sorted
 		end;

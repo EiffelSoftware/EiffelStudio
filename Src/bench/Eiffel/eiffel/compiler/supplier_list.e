@@ -146,7 +146,7 @@ end;
 		local
 			pos: INTEGER;
 		do
-			pos := position;
+			pos := index;
 			from
 				start
 			until

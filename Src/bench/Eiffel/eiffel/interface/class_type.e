@@ -436,9 +436,9 @@ feature -- Generation
 				file.indent;
 				file.putstring("l[0] + ");
 					-- There is a side effect with generation
-				saved_pos := skeleton.position;
+				saved_pos := skeleton.index;
 				skeleton.generate(file);
-				skeleton.go (saved_pos);
+				skeleton.go_i_th (saved_pos);
 				file.putchar (';');
 				file.new_line;
 				file.exdent;
@@ -447,7 +447,7 @@ feature -- Generation
 					-- Initialize dynaminc type of the expanded object
 				file.putstring ("HEADER(l[0] + ");
 				skeleton.generate(file);
-				skeleton.go (saved_pos);
+				skeleton.go_i_th (saved_pos);
 				file.putstring(")->ov_flags = ");
 				file.putint(exp_desc.type_id - 1);
 				file.putchar (';');
@@ -456,15 +456,15 @@ feature -- Generation
 					-- Mark expanded object
 				file.putstring ("HEADER(l[0] + ");
 				skeleton.generate(file);
-				skeleton.go (saved_pos);
+				skeleton.go_i_th (saved_pos);
 				file.putstring(")->ov_flags |= EO_EXP;");
 				file.new_line;
 				file.putstring ("HEADER(l[0] + ");
 				skeleton.generate(file);
-				skeleton.go (saved_pos);
+				skeleton.go_i_th (saved_pos);
 				file.putstring(")->ov_size = ");
 				skeleton.generate(file);
-				skeleton.go (saved_pos);
+				skeleton.go_i_th (saved_pos);
 				file.putstring (" + (l[0] - l[1]);");
 				file.new_line;
 
@@ -479,7 +479,7 @@ feature -- Generation
 					file.putchar ('(');
 					file.putstring ("l[0] + ");
 					skeleton.generate(file);
-					skeleton.go (saved_pos);
+					skeleton.go_i_th (saved_pos);
 					file.putstring (");");	
 					file.new_line;
 				end;
@@ -516,7 +516,7 @@ feature -- Generation
 			pos: INTEGER
 		do
 			if associated_class.has_expanded then
-				pos := skeleton.position;
+				pos := skeleton.index;
 				from
 					skeleton.go_expanded;
 				until
@@ -530,7 +530,7 @@ feature -- Generation
 					end;
 					skeleton.forth;
 				end;
-				skeleton.go (pos);
+				skeleton.go_i_th (pos);
 			end;
 		end;
 
@@ -559,7 +559,7 @@ feature -- Byte code generation
 
 				feat_tbl := associated_class.feature_table;
 			until
-				melted_list.offright
+				melted_list.after
 			loop
 					-- Generation of byte code
 				melted_list.item.update_dispatch_unit (Current, feat_tbl);

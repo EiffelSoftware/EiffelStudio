@@ -35,10 +35,10 @@ feature
 		local
 			pos: INTEGER
 		do
-			pos := position;
+			pos := index;
 			search (t);
 			Result := not after;
-			go (pos);
+			go_i_th (pos);
 		end;
 
 end

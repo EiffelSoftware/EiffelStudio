@@ -43,7 +43,7 @@ feature
 				check
 					deferred_features.first.a_feature = new_feature
 				end;
-				deferred_features.go (2);
+				deferred_features.go_i_th (2);
 			until
 				deferred_features.after
 			loop

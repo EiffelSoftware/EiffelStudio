@@ -1916,7 +1916,7 @@ feature
 
 					-- Second, check if the formal generic name doen't
 					-- appear twice in `generics'.
-				pos := generics.position;
+				pos := generics.index;
 				from
 					generics.start
 				until

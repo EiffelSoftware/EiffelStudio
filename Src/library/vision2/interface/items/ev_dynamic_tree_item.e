@@ -10,9 +10,24 @@ class
 	EV_DYNAMIC_TREE_ITEM
 
 inherit
+	
+	EV_TREE_NODE_LIST
+		rename
+			changeable_comparison_criterion as old_changeable_comparison_criterion
+		export
+			{NONE} all
+		undefine
+			index_of, is_equal, off, search, occurrences, has, is_in_default_state,
+			item, index, after, is_empty, start, finish, forth
+		redefine
+			implementation
+		end
+	
 	EV_TREE_NODE
 		redefine
 			implementation
+		select
+			changeable_comparison_criterion, parent
 		end
 		
 creation

@@ -37,6 +37,7 @@
 			<TEXT DESCRIPTION="Automatic update when the file has not been modified">automatic_update<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Underscore '_' is a word separator">underscore_is_separator<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Quadruple click selects all">quadruple_click<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Use tabulations for automatic indentation">tab_for_indentation<BOOLEAN>True</BOOLEAN></TEXT>
 			<TOPIC TOPIC_ID="Keyboard_shortcuts" ICON="icon_preferences_folder">
 				<HEAD>Keyboard Shortcuts</HEAD>
 				<TOPIC TOPIC_ID="Autocomplete" ICON="icon_preferences_folder">

@@ -2,7 +2,8 @@ deferred class STONE
 
 inherit
 
-	STONE_TYPES
+	STONE_TYPES;
+	SHARED_CURSORS
 	
 feature -- Properties
 
@@ -25,6 +26,23 @@ feature -- Properties
 	stone_type: INTEGER is 
 			-- Type determining compatibility and cursor shape
 		deferred 
+		end;
+
+	stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with
+			-- Current stone during transport.
+		deferred
+		ensure
+			non_void: Result /= Void
+		end;
+
+feature -- Update
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		require
+			non_void_hole: hole /= Void
+		deferred
 		end;
 
 feature  -- Access
@@ -68,6 +86,11 @@ feature  -- Access
 			-- Is `Current' a valid stone?
 		do
 			Result := True
+		end;
+
+	invalid_stone_message: STRING is
+			-- Message displayed for an invalid_stone
+		do
 		end;
 
 	synchronized_stone: STONE is

@@ -1,162 +1,166 @@
 indexing
 
-	description:	
-		"General notion of a hole.";
+	description: "Object that accepts stones.";
 	date: "$Date$";
-	revision: "$Revision: "
+	revision: "$Revision $"
 
-class HOLE 
+deferred class HOLE
 
 inherit
 
-	ICONED_COMMAND
-		rename
-			init as ic_init,
-			is_valid as pict_color_b_is_valid
-		end;
-	STONE
+	STONE_TYPES;
+	WINDOWS
 
-creation
+feature -- Properties
 
-	make
+	button_data: BUTTON_DATA;
+			-- Context information on where stone was dropped
+			-- relative to the main panel
 
-feature {NONE} -- Initialization
-
-	make (a_composite: COMPOSITE; a_tool: TOOL_W) is
-			-- Create a hole
-		do
-			ic_init (a_composite, a_tool.text_window);
-			tool := a_tool;
-			set_action ("<Btn3Down>", Current, transporter_arg);
-			set_action ("!c<Btn3Down>", Current, new_tooler_arg)
-		ensure
-			parent = a_composite
-		end;
-
-feature -- Pick and Throw
-
-	receive (dropped: STONE) is
-			-- Deal with element `dropped'.
-		do
-			if compatible (dropped) then
-				tool.receive (dropped)
-			end
-		end;
-
-feature -- For redefinition in the descendants.
-
-	symbol: PIXMAP is
-		do
-		end;
-
-	full_symbol: PIXMAP is
-		do
-		end;
-
-	icon_symbol: PIXMAP is
-		do
-			Result := symbol
-		end;
-
-	name: STRING is
-		do
+	target: WIDGET is
+			-- Target widget for stone to be dropped on
+		deferred
 		end;
 
 	stone_type: INTEGER is
+			-- Stone_type that Current hole accepts
+		deferred
+		end;
+
+feature -- Access
+
+	registered: BOOLEAN is
+			-- Is the Current hole registered?
+		do
+			Result := Transporter.registered (Current);
+		end;
+
+feature -- Element change
+
+	register is
+			-- Register current hole
+		require
+			not_registered: not registered
+		do
+			Transporter.register (Current);
+		ensure
+			registered: registered
+		end;
+
+feature -- Removal
+
+	unregister is
+			-- Register current hole
+		require
+			registered: registered
+		do
+			Transporter.unregister (Current);
+		ensure
+			not_registered: not registered
+		end;
+
+feature -- Access
+
+	compatible (dropped: STONE): BOOLEAN is 
+			-- Is stone dropped compatible with Current hole?
+		do 
+			Result := dropped.stone_type = stone_type
+		end;
+
+feature {TRANSPORTER} -- Implementation
+
+	receive (dropped: STONE) is
+			-- Receive dropped stone
+		require
+			valid_stone: dropped /= Void
+		do
+			if stone_type = Any_type then
+				process_any (dropped);
+			elseif compatible (dropped) then
+				dropped.process (Current)
+			end;
+		end;
+
+feature -- Update
+
+	process_ace_syntax (syn: ACE_SYNTAX_STONE) is
+			-- Process ace syntax stone.
+		require
+			valid_stone: syn /= Void
 		do
 		end;
 
-	stone_name: STRING is
-		do
-			Result := name
-		end;
-
-	set_empty_symbol is
-		do
-			if pixmap /= symbol then
-				set_symbol (symbol)
-			end
-		end
-
-	set_full_symbol is
-		do
-			if pixmap /= full_symbol then
-				set_symbol (full_symbol)
-			end
-		end
-
-feature -- useless
-
-	signature: STRING is
-		do
-			Result := stone_name
-		end;
-
-	click_list: ARRAY [CLICK_STONE] is
+	process_object (object_stone: OBJECT_STONE) is
+			-- Process ace syntax stone.
+		require
+			valid_stone: object_stone /= Void
 		do
 		end;
 
-	clickable: BOOLEAN is
+	process_class_syntax (syn: CL_SYNTAX_STONE) is
+			-- Process class syntax stone.
+		require
+			valid_stone: syn /= Void
 		do
 		end;
 
-	origin_text: STRING is
-		do
-		end
-
-feature {NONE} -- Properties
-
-	tool: TOOL_W;
-			-- Tool attached to Current
-
-	transporter_arg: ANY is
-		once
-			!!Result
-		end;
-
-	new_tooler_arg: ANY is
-		once
-			!!Result
-		end;
-
-	icon_name: STRING is
+	process_error (error_stone: ERROR_STONE) is
+			-- Process error stone.
+		require
+			valid_stone: error_stone /= Void
 		do
 		end;
 
-	transport_stone: STONE is
+	process_system (system_stone: SYSTEM_STONE) is
+			-- Process system stone.
+		require
+			valid_stone: system_stone /= Void
 		do
-			Result := tool.text_window.root_stone
 		end;
 
-	compatible (dropped: STONE): BOOLEAN is
-			-- Can current accept `dropped'?
+	process_breakable (bk: BREAKABLE_STONE) is
+			-- Process breakable stone
+		require
+			valid_stone: bk /= Void
 		do
-			Result := dropped /= Void and then (stone_type = dropped.stone_type)
 		end;
 
-feature {NONE} -- Implementation
-
-	work (argument: ANY) is
-		local
-			rs: STONE;
+	process_class (class_stone: CLASSC_STONE) is
+			-- Process class stone.
+		require
+			valid_stone: class_stone /= Void;
+			is_valid: class_stone.is_valid
 		do
-			if argument = transporter_arg then
-				rs := transport_stone;
-				if rs /= Void then
-					tool.transport (rs, void, screen.x, screen.y)
-				end;
-			elseif argument = new_tooler_arg then
-				rs := transport_stone;
-				if rs /= Void then
-					project_tool.receive (rs)
-				end
-			else
-				if tool /= project_tool then
-					tool.synchronize
-				else
-					tool.receive (Current)
-				end
-			end
+		end;
+
+	process_classi (classi_stone: CLASSI_STONE) is
+			-- Process class stone.
+		require
+			valid_stone: classi_stone /= Void;
+			is_valid: classi_stone.is_valid
+		do
+		end;
+
+	process_cluster (cluster_stone: STONE) is
+			-- Process cluster stone.
+		require
+			valid_stone: cluster_stone /= Void
+		do
+		end;
+
+	process_feature (feature_stone: FEATURE_STONE) is
+			-- Process feature stone.
+		require
+			valid_stone: feature_stone /= Void;
+			is_valid: feature_stone.is_valid
+		do
+		end;
+
+	process_any (dropped: STONE) is
+			-- Accept all stone types
+		require
+			valid_stone: dropped /= Void
+		do
 		end;
 
 end -- class HOLE

@@ -32,6 +32,8 @@ feature -- Basic operations
 						i := i + 1
 					end
 				end
+			else
+				Result := False
 			end
 		end
 

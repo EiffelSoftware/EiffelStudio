@@ -78,12 +78,6 @@ doc:	</attribute>
 rt_shared EIF_LW_MUTEX_TYPE *eif_eo_store_mutex = NULL;
 #endif
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
-
 #ifdef DEBUG
 rt_shared long nomark(char *);
 rt_private long chknomark(char *, struct htable *, long);
@@ -371,8 +365,8 @@ doc:	</routine>
 
 rt_shared EIF_OBJECT map_next(void)
 {
-	register1 EIF_OBJECT *item;		/* Item we shall return */
-	register2 struct stchunk *cur;	/* New current chunk */
+	EIF_OBJECT *item;		/* Item we shall return */
+	struct stchunk *cur;	/* New current chunk */
 
 	REQUIRE ("Not at the end of the stack", map_stack.st_bot != map_stack.st_top);
 	
@@ -725,7 +719,7 @@ rt_private void match_simple_stack (struct stack *stk, void (*action_fnptr) (EIF
 	struct stchunk* s;
 	EIF_REFERENCE *object, o_ref;
 	int done = 0;
-	int n;
+	rt_uint_ptr n;
 
 	for (s = stk->st_hd ; s && !done; s = s->sk_next) {
 		object = s->sk_arena;
@@ -759,7 +753,7 @@ rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERE
 	struct stchunk* s;
 	EIF_REFERENCE *object, o_ref;
 	int done = 0;
-	int n;
+	rt_uint_ptr n;
 
 	for (s = stk->st_hd ; s && !done; s = s->sk_next) {
 		object = s->sk_arena;

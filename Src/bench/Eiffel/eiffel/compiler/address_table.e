@@ -379,7 +379,7 @@ feature {NONE} -- Generation
 			feature_id: INTEGER
 			rout_id: ROUTINE_ID
 			args: FEAT_ARG
-			has_arguments: BOOLEAN
+			has_arguments, is_function: BOOLEAN
 			return_type: TYPE_A
 			return_type_string: STRING
 			c_return_type: TYPE_C
@@ -398,6 +398,7 @@ feature {NONE} -- Generation
 				args := a_feature.arguments
 			end
 			return_type := a_feature.type.actual_type
+			is_function := a_feature.is_function
 
 				-- get class types and generate encapsulation for each of them
 			from
@@ -444,7 +445,7 @@ feature {NONE} -- Generation
 						-- without any implementation
 						buffer.putstring ("RTNR();")
 					else
-						if a_feature.is_function then
+						if is_function then
 							buffer.putstring ("return ")
 						end
 
@@ -472,7 +473,7 @@ feature {NONE} -- Generation
 				else
 						-- Workbench mode
 
-					if a_feature.is_function then
+					if is_function then
 						buffer.putstring ("return ")
 					end
 
@@ -501,7 +502,7 @@ feature {NONE} -- Generation
 					buffer.putstring (");%N")
 				end
 
-				buffer.putstring ("%N}%N%N") -- ss MT
+				buffer.putstring ("%N}%N%N")
 
 				types.go_to (cursor)
 				types.forth
@@ -555,7 +556,7 @@ feature {NONE} -- Generation
 			feature_id: INTEGER
 			rout_id: ROUTINE_ID
 			args: FEAT_ARG
-			has_arguments: BOOLEAN
+			has_arguments, is_function: BOOLEAN
 			return_type: TYPE_A
 			return_type_string: STRING
 			c_return_type: TYPE_C
@@ -573,6 +574,7 @@ feature {NONE} -- Generation
 				args := a_feature.arguments
 			end
 			return_type := a_feature.type.actual_type
+			is_function := a_feature.is_function
 
 				-- get class types and generate encapsulation for each of them
 			from
@@ -605,9 +607,15 @@ feature {NONE} -- Generation
 					a_types := <<"EIF_REFERENCE">>
 				end
 
-				buffer.generate_function_signature
-					("char", f_name, True, buffer,
-					<<"Current", "args", "res">>, <<"EIF_REFERENCE", "EIF_ARG_UNION *", "EIF_ARG_UNION *">>)
+				if is_function then
+					buffer.generate_function_signature
+						("char", f_name, True, buffer,
+						<<"Current", "args", "res">>, <<"EIF_REFERENCE", "EIF_ARG_UNION *", "EIF_ARG_UNION *">>)
+				else
+					buffer.generate_function_signature
+						("void", f_name, True, buffer,
+						<<"Current", "args", "res">>, <<"EIF_REFERENCE", "EIF_ARG_UNION *", "EIF_ARG_UNION *">>)
+				end
 
 				buffer.putstring ("%N%T")
 
@@ -618,7 +626,7 @@ feature {NONE} -- Generation
 						-- without any implementation
 						buffer.putstring ("RTNR();")
 					else
-						if a_feature.is_function then
+						if is_function then
 							buffer.putstring ("((*res).")
 							buffer.putstring (c_return_type.union_tag)
 							buffer.putstring (" = ");
@@ -638,7 +646,7 @@ feature {NONE} -- Generation
 														arg_tags (args))
 						end
 
-						if a_feature.is_function then
+						if is_function then
 							buffer.putstring (")");
 						end
 
@@ -653,7 +661,7 @@ feature {NONE} -- Generation
 				else
 						-- Workbench mode
 
-					if a_feature.is_function then
+					if is_function then
 						buffer.putstring ("((*res).")
 						buffer.putstring (c_return_type.union_tag)
 						buffer.putstring (" = ");
@@ -683,21 +691,20 @@ feature {NONE} -- Generation
 													arg_tags (args))
 					end
 
-					if a_feature.is_function then
+					if is_function then
 						buffer.putstring (")");
 					end
 					buffer.putstring (");%N")
 				end
 
-				buffer.putstring ("%Treturn '");
 
-				if a_feature.is_function then
+				if is_function then
+					buffer.putstring ("%Treturn '");
 					buffer.putchar (c_return_type.union_tag.item (1))
-				else
-					buffer.putchar ('v');
+					buffer.putstring ("';%N")
 				end
 
-				buffer.putstring ("';%N}%N%N") -- ss MT
+				buffer.putstring ("}%N%N")
 
 				types.go_to (cursor)
 				types.forth

@@ -29,6 +29,10 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
 		redefine
+			item,
+			count,
+			remove_item_from_position,
+			add_to_container,
 			destroy,
 			interface
 		end
@@ -47,10 +51,21 @@ feature {NONE} -- Initialization
 			col_nb: INTEGER
 		do
 			base_make (an_interface)
-			
+			--| FIXME IEK Columns need to be set on interface creation
+
+			-- Creating the gtk scrolled window
+
+			set_c_object (C.gtk_scrolled_window_new (Default_pointer, Default_pointer))
+			C.gtk_scrolled_window_set_policy (
+				c_object, C.GTK_POLICY_AUTOMATIC_ENUM, C.GTK_POLICY_AUTOMATIC_ENUM
+			)
+
+
 			col_nb := 10
-			set_c_object (C.gtk_clist_new (col_nb))
-			list_widget := c_object
+			list_widget := C.gtk_clist_new (col_nb)
+			C.gtk_widget_show (list_widget)
+			
+			C.gtk_container_add (c_object, list_widget)
 
 			-- We need to specify a width for the columns
 			-- otherwise the value given by gtk would be wrong.
@@ -59,7 +74,7 @@ feature {NONE} -- Initialization
 			until
 				i = col_nb
 			loop
-				C.gtk_clist_set_column_width (c_object, i, 80)
+				C.gtk_clist_set_column_width (list_widget, i, 80)
 				i := i + 1
 			end
 
@@ -72,13 +87,18 @@ feature -- Access
 	columns: INTEGER is
 			-- Number of columns in the list.
 		do
-			Result := C.c_gtk_clist_columns (c_object)
+			Result := C.c_gtk_clist_columns (list_widget)
 		end
 
-	rows: INTEGER is
+	rows, count: INTEGER is
 			-- Number of rows in the list.
 		do
-			Result := C.c_gtk_clist_rows (c_object)
+			Result := C.c_gtk_clist_rows (list_widget)
+		end
+
+	item: EV_MULTI_COLUMN_LIST_ROW is
+		do
+			Result ?= (ev_children @ (index)).interface
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
@@ -87,12 +107,12 @@ feature -- Access
 		local
 			an_index: INTEGER
 		do
-			if (C.c_gtk_clist_selection_length (c_object) = 0 ) then
+			if (C.c_gtk_clist_selection_length (list_widget) = 0 ) then
 				-- there is no selected item
 				Result := Void
 			else
 				-- there is one selected item
-				index := C.c_gtk_clist_ith_selected_item (c_object, 0)
+				an_index := C.c_gtk_clist_ith_selected_item (list_widget, 0)
 				Result ?= (ev_children @ (an_index + 1)).interface
 			end
 		end
@@ -109,14 +129,14 @@ feature -- Access
 			upper: INTEGER
 			row: EV_MULTI_COLUMN_LIST_ROW
 		do
-			upper := C.c_gtk_clist_selection_length (c_object)
+			upper := C.c_gtk_clist_selection_length (list_widget)
 			create Result.make
 			from
 				i := 0
 			until
 				i = upper
 			loop
-				index := C.c_gtk_clist_ith_selected_item (c_object, i)
+				index := C.c_gtk_clist_ith_selected_item (list_widget, i)
 				row ?= (ev_children @ (an_index + 1)).interface
 				Result.extend (row)
 				i := i + 1
@@ -159,27 +179,27 @@ feature -- Status report
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
 		do
-			Result := C.c_gtk_clist_selected (c_object).to_boolean
+			Result := C.c_gtk_clist_selected (list_widget).to_boolean
 		end
 
 	is_multiple_selection: BOOLEAN is
 			-- True if the user can choose several items
 			-- False otherwise
 		do
-			Result := (C.c_gtk_clist_selection_mode (c_object) = C.GTK_SELECTION_MULTIPLE_ENUM)
+			Result := (C.c_gtk_clist_selection_mode (list_widget) = C.GTK_SELECTION_MULTIPLE_ENUM)
 		end
 
 	title_shown: BOOLEAN is
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
 		do
-			Result := C.c_gtk_clist_title_shown (c_object).to_boolean
+			Result := C.c_gtk_clist_title_shown (list_widget).to_boolean
 		end
 
 	get_column_width (a_column: INTEGER): INTEGER is
 			-- Width of column `column' in pixel.
 		do
-			Result := C.c_gtk_clist_column_width (c_object, a_column - 1)
+			Result := C.c_gtk_clist_column_width (list_widget, a_column - 1)
 		end
 
 feature -- Status setting
@@ -194,13 +214,13 @@ feature -- Status setting
 	show_title_row is
 			-- Show the row of the titles.
 		do
-			C.gtk_clist_column_titles_show (c_object)
+			C.gtk_clist_column_titles_show (list_widget)
 		end
 
 	hide_title_row is
 			-- Hide the row of the titles.
 		do
-			C.gtk_clist_column_titles_hide (c_object)
+			C.gtk_clist_column_titles_hide (list_widget)
 		end
 
 	set_multiple_selection is
@@ -208,7 +228,7 @@ feature -- Status setting
 			-- by clicking on several choices.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
-			C.gtk_clist_set_selection_mode (c_object, C.GTK_SELECTION_MULTIPLE_ENUM)
+			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_MULTIPLE_ENUM)
 		end
 
 	set_single_selection is
@@ -216,14 +236,14 @@ feature -- Status setting
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
-			C.gtk_clist_set_selection_mode (c_object, C.GTK_SELECTION_SINGLE_ENUM)
+			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
 		end
 
 	set_column_alignment (type: INTEGER; column: INTEGER) is
 			-- Align the text of the column at left.
 
 		do
-			C.gtk_clist_set_column_justification (c_object, column - 1, type)
+			C.gtk_clist_set_column_justification (list_widget, column - 1, type)
 		end
 
 	select_item (an_index: INTEGER) is
@@ -241,7 +261,7 @@ feature -- Status setting
 	clear_selection is
 			-- Clear the selection of the list.
 		do
-			C.gtk_clist_unselect_all (c_object)
+			C.gtk_clist_unselect_all (list_widget)
 		end
 
 feature -- Element change
@@ -253,20 +273,20 @@ feature -- Element change
 			a: ANY
 		do
 			a := txt.to_c
-			C.gtk_clist_set_column_title (c_object, column - 1, $a)
+			C.gtk_clist_set_column_title (list_widget, column - 1, $a)
 		end
 
 	set_column_width (value: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the column number
 			-- `column'.
 		do
-			C.gtk_clist_set_column_width (c_object, column - 1, value)
+			C.gtk_clist_set_column_width (list_widget, column - 1, value)
 		end
 
 	set_rows_height (value: INTEGER) is
 			-- Make`value' the new height of all the rows.
 		do
-			C.gtk_clist_set_row_height (c_object, value)
+			C.gtk_clist_set_row_height (list_widget, value)
 		end
 
 	clear_items is
@@ -278,8 +298,8 @@ feature -- Element change
 				-- increases speed if there are many elements
 				-- in `ev_children'
 		do
-			--clear_ev_children	
-			C.gtk_clist_clear (c_object)
+			ev_children.wipe_out	
+			C.gtk_clist_clear (list_widget)
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -336,7 +356,7 @@ feature -- Event : command association
 		do
 			-- We pass 0 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
 			i := 0
-			--add_command (c_object, "select_row", cmd, arg, C.c_gtk_integer_to_pointer (i))
+			--add_command (list_widget, "select_row", cmd, arg, C.c_gtk_integer_to_pointer (i))
 		end
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
@@ -347,14 +367,14 @@ feature -- Event : command association
 		do
 			-- We pass 0 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
 			i := 0
-			--add_command (c_object, "unselect_row", cmd, arg, c_gtk_integer_to_pointer (i))
+			--add_command (list_widget, "unselect_row", cmd, arg, c_gtk_integer_to_pointer (i))
 		end
 
 	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when a column is clicked.
 		do
-			--add_command (c_object, "click_column", cmd, arg, default_pointer)
+			--add_command (list_widget, "click_column", cmd, arg, default_pointer)
 		end
 
 feature -- Event -- removing command association
@@ -373,7 +393,7 @@ feature -- Event -- removing command association
 			until
 				list.after
 			loop
-			--	remove_single_command (c_object, select_row_id, list.item)
+			--	remove_single_command (list_widget, select_row_id, list.item)
 				-- we do not need to do "list.forth" as an item has been removed
 				-- that list.
 			end
@@ -393,7 +413,7 @@ feature -- Event -- removing command association
 			until
 				list.after
 			loop
-			--	remove_single_command (c_object, unselect_row_id, list.item)
+			--	remove_single_command (list_widget, unselect_row_id, list.item)
 				-- we do not need to do "list.forth" as an item has been removed
 				-- that list.
 			end
@@ -403,29 +423,33 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when a column is clicked.
 		do
-			--remove_commands (c_object, click_column_id)
+			--remove_commands (list_widget, click_column_id)
 		end
 
-feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
+feature {NONE}
 
-	add_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
-			-- Add `item' to the list
+	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Add `v' to the list.
 		local
 			an_index: INTEGER
 			column_i: INTEGER
+			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
+			item_imp ?= v.implementation
+			item_imp.set_parent_imp (Current)
 			-- update the list of rows of the column list:
 			ev_children.force (item_imp)
 
 			-- add an empty row to the gtk column list:
-			an_index := C.c_gtk_clist_append_row (c_object)
+			an_index := C.c_gtk_clist_append_row (list_widget)
 
 			-- add text in the gtk column list row:
 			from
 				item_imp.internal_text.start
 				column_i := 1
 			until
-				column_i > columns
+				--column_i > columns
+				column_i > item_imp.internal_text.count
 			loop
 				item_imp.set_cell_text ( column_i, item_imp.internal_text.item)
 				item_imp.internal_text.forth
@@ -433,16 +457,23 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			end
 		end
 
-	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+	remove_from_container (v: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Remove `v' from the list.
+		local
+			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			-- Remove the gtk clist row from the gtk clist
-			C.gtk_clist_remove (c_object, item_imp.index - 1)
-
-			-- remove the row from the `ev_children'
-			ev_children.search (item_imp)
-			ev_children.remove
+			item_imp ?= v.implementation
+			remove_item_from_position (item_imp.index)
 		end
 
+	remove_item_from_position (a_position: INTEGER) is
+			-- Remove item from list at `a_position'.
+		do
+			C.gtk_clist_remove (list_widget, a_position - 1)
+			-- remove the row from the `ev_children'
+			ev_children.move (a_position)
+			ev_children.remove
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -483,6 +514,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/02/16 20:25:58  king
+--| Implemented to fit in with new structure
+--|
 --| Revision 1.22  2000/02/15 19:24:35  king
 --| Made compilable
 --|

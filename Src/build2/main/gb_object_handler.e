@@ -91,10 +91,6 @@ feature -- Basic operation
 				all_editors_local.forth
 			end
 			
-				-- We must now update the pick and drop status of the container
-				-- as it may now be full.
-			--container.build_drop_action_for_new_object
-			
 				-- Notify the system that we have modified something.
 			system_status.enable_project_modified
 			command_handler.update
@@ -272,49 +268,7 @@ feature -- Basic operation
 		ensure
 			not_in_objects: not objects.has (an_object)
 		end
-		
-	set_up_drop_actions_for_all_objects is
-			-- Check state of shift key, and set up drop actions
-			-- to accept `pebble' ready for the transport.
-		local
-			environment: EV_ENVIRONMENT
-		do
-			create environment
-			if environment.application.shift_pressed then
-				for_all_objects_build_shift_drop_actions_for_new_object
-			else
-				for_all_objects_build_drop_actions_for_new_object
-			end
-		end
-	
-	for_all_objects_build_drop_actions_for_new_object is
-			-- For every GB_OBJECT in `objects', initialize their
-			-- drop actions to accept a new object if permissible.
-		do
-			from
-				objects.start
-			until
-				objects.off
-			loop
-				objects.item.build_drop_action_for_new_object
-				objects.forth
-			end
-		end
-		
-	for_all_objects_build_shift_drop_actions_for_new_object is
-			-- For every GB_OBJECT in `objects', initialize their shift
-			-- drop actions to insert a new object in their parent.
-		do
-			from
-				objects.start
-			until
-				objects.off
-			loop
-				objects.item.build_shift_drop_action_for_new_object
-				objects.forth
-			end
-		end
-		
+
 	build_object_from_string (a_text: STRING): GB_OBJECT is
 			-- Generate `Result' from `text'.
 		require

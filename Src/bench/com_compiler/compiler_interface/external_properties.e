@@ -10,9 +10,11 @@ inherit
 			object_files,
 			add_object_file,
 			remove_object_file,
+			replace_include_path,
 			include_paths,
 			add_include_path,
 			remove_include_path,
+			replace_object_file,
 			store
 		end
 	LACE_AST_FACTORY
@@ -28,7 +30,6 @@ feature {NONE} -- Implementation
 	make (ace: ACE_FILE_ACCESSER) is
 		do
 			ace_accesser := ace
-			assemblies_list := externals (assembly_keyword)
 			object_files_list := externals (object_keyword)
 			include_paths_list := externals (include_path_keyword)
 		end
@@ -107,27 +108,6 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_assembly (assembly_name: STRING) is
-			-- adds and assembly to the list of assemblies
-		require
-			valid_name: assembly_name /= Void
-			non_empty_name: assembly_name.count > 0
-		do
-			
-		ensure
-			added: assemblies_list.has (assembly_name)
-		end
-		
-	remove_assembly (assembly_name: STRING) is
-			-- removes and assembly from the list of assemblies
-		require
-			valid_name: assembly_name /= Void
-			non_empty_name: assembly_name.count > 0
-		do
-		ensure
-			added: not assemblies_list.has (assembly_name)
-		end
-		
 	add_object_file (object_file: STRING) is
 			-- adds and object file to the list of object files
 		require else
@@ -181,6 +161,27 @@ feature -- Element change
 			removed: not object_files_list.has (object_file)
 		end
 		
+	replace_object_file (new_oject_file, old_object_file: STRING) is
+			-- replace an object file with a new one
+		require else
+			valid_old_file: old_object_file /= Void
+			non_empty_old_file: old_object_file.count > 0
+			valid_new_file: new_oject_file /= Void
+			non_empty_new_file: new_oject_file.count > 0
+		do
+			from
+				object_files_list.start
+			until
+				object_files_list.after
+			loop
+				if object_files_list.item.is_equal(old_object_file) then
+					object_files_list.replace (new_oject_file)
+				end
+				object_files_list.forth
+			end
+		end
+		
+		
 	add_include_path (include_path: STRING) is
 			-- adds and include path to the list of include paths 
 		require else
@@ -230,6 +231,26 @@ feature -- Element change
 			end
 		ensure
 			removed: not include_paths_list.has (include_path)
+		end
+		
+	replace_include_path (new_include_path, old_include_path: STRING) is
+			-- replace an include path with a new one
+		require else
+			valid_old_path: old_include_path /= Void
+			non_empty_old_path: old_include_path.count > 0
+			valid_new_path: new_include_path /= Void
+			non_empty_new_path: new_include_path.count > 0
+		do
+			from
+				include_paths_list.start
+			until
+				include_paths_list.after
+			loop
+				if include_paths_list.item.is_equal(old_include_path) then
+					include_paths_list.replace (new_include_path)
+				end
+				include_paths_list.forth
+			end
 		end
 
 feature -- Basic operations
@@ -287,18 +308,11 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	--assemblies: HASH_TABLE [LINKED_LIST [], INTEGER]
-		-- has table contain the assemblies
-		-- key: integer representation of assembly type
-		-- value: the assembly
-
-	assemblies_list: ARRAYED_LIST [STRING]
 	object_files_list: ARRAYED_LIST [STRING]
 	include_paths_list: ARRAYED_LIST [STRING]
 	
 	ace_accesser: ACE_FILE_ACCESSER
 	
-	assembly_keyword:STRING is "assembly"
 	include_path_keyword: STRING is "include_path"
 	object_keyword: STRING is "object"
 

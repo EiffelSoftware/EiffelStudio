@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>SUBSET Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -34,13 +34,13 @@
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/container.html">CONTAINER</A>
 			<SPAN CLASS="etag">not_found_in_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_is_empty">is_empty</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
 
 	<A NAME="f_count"><A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of items</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/set/set.html">SET</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Comparison</SPAN>
 
 	<A NAME="f_disjoint"><A CLASS="efeature" HREF="../../../../base/reference/structures/set/subset.html#f_disjoint">disjoint</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/structures/set/subset.html">SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -63,7 +63,7 @@
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">set_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_void">void</A>
 			<SPAN CLASS="etag">same_rule</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_object_comparison">object_comparison</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
 	<A NAME="f_extendible"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_extendible">extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -89,7 +89,7 @@
 	<A NAME="f_prunable"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_prunable">prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> May items be removed?</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/collection.html">COLLECTION</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
 
 	<A NAME="f_compare_objects"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_compare_objects">compare_objects</A>
@@ -109,7 +109,7 @@
 			<A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/container.html">CONTAINER</A>
 			<SPAN CLASS="etag">reference_comparison</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_object_comparison">object_comparison</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
 
 	<A NAME="f_extend"><A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -150,7 +150,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/set/set.html">SET</A>
 			<SPAN CLASS="etag">in_set_already</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="etag">added_to_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../../base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
 
 	<A NAME="f_changeable_comparison_criterion"><A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -188,13 +188,13 @@
 			<A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_prunable">prunable</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/collection.html">COLLECTION</A>
 			<SPAN CLASS="etag">wiped_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_is_empty">is_empty</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN>
 
 	<A NAME="f_linear_representation"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/structures/traversing/linear.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Representation as a linear structure</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duplication</SPAN>
 
 	<A NAME="f_duplicate"><A CLASS="efeature" HREF="../../../../base/reference/structures/set/subset.html#f_duplicate">duplicate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
@@ -205,7 +205,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN>
 			<SPAN CLASS="etag">correct_count_1</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">n</SPAN> <A CLASS="esymbol" HREF="../../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_count">count</A> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">n</SPAN>
 			<SPAN CLASS="etag">correct_count_2</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">n</SPAN> <A CLASS="esymbol" HREF="../../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_count">count</A> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/set/set.html#f_count">count</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN>
 
 	<A NAME="f_intersect"><A CLASS="efeature" HREF="../../../../base/reference/structures/set/subset.html#f_intersect">intersect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/structures/set/subset.html">SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -233,7 +233,7 @@
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">set_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_void">void</A>
 			<SPAN CLASS="etag">same_rule</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_object_comparison">object_comparison</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A>
@@ -253,7 +253,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

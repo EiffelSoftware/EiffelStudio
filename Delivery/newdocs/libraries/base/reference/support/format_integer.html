@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>FORMAT_INTEGER Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -20,7 +20,7 @@
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
 	<A CLASS="eclass" HREF="../../../base/reference/support/format_integer.html">FORMAT_INTEGER</A>
 
-<SPAN CLASS="ekeyword">create</SPAN> 
+<SPAN CLASS="ekeyword">create</SPAN>
 
 	<A NAME="f_make"><A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
@@ -45,7 +45,7 @@
 			<SPAN CLASS="etag">width_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">w</SPAN>
 			<SPAN CLASS="etag">right_justified</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_right_justified">right_justified</A>
 			<SPAN CLASS="etag">leading_sign</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_leading_sign">leading_sign</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
 	<A NAME="f_bracketted_negative"><A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_bracketted_negative">bracketted_negative</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
@@ -71,7 +71,7 @@
 
 	<A NAME="f_width"><A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Width of the field.</SPAN>
-	
+
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
 	<A NAME="f_centered"><A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_centered">centered</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -123,7 +123,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are numbers to show sign only when positive?</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
 			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_sign_format">sign_format</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_sign_positive_value">sign_positive_value</A><SPAN CLASS="esymbol">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
 
 	<A NAME="f_asterisk_fill"><A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_asterisk_fill">asterisk_fill</A>
@@ -278,7 +278,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill numbers with zeros.</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
 			<A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_fill_character">fill_character</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'0'</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN>
 
 	<A NAME="f_formatted"><A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_formatted">formatted</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
@@ -286,7 +286,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN>
 			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 			<SPAN CLASS="etag">correct_length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_not_justified">not_justified</A> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_or">or</A> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_width">width</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 	<SPAN CLASS="etag">sign_string_constraint</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/support/format_integer.html#f_sign_string">sign_string</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
@@ -309,7 +309,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>STORABLE Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -144,7 +144,7 @@
 	<A NAME="f_void_call_target"><A CLASS="efeature" HREF="../../../base/reference/kernel/excep_const.html#f_void_call_target">Void_call_target</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Exception code for feature applied to void reference</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/excep_const.html">EXCEP_CONST</A><SPAN CLASS="ecomment">)</SPAN>
-	
+
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
 	<A NAME="f_assertion_violation"><A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_assertion_violation">assertion_violation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -223,7 +223,7 @@
 	<A NAME="f_tag_name"><A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_tag_name">tag_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Tag of last violated assertion clause</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/exceptions.html">EXCEPTIONS</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
 
 	<A NAME="f_catch"><A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_catch">catch</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
@@ -255,7 +255,7 @@
 	<A NAME="f_raise"><A CLASS="efeature" HREF="../../../base/reference/kernel/exceptions.html#f_raise">raise</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Raise a developer exception of name </SPAN><SPAN CLASS="equoted">name</SPAN><SPAN CLASS="ecomment">.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/exceptions.html">EXCEPTIONS</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
 
 	<A NAME="f_basic_store"><A CLASS="efeature" HREF="../../../base/reference/kernel/storable.html#f_basic_store">basic_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">medium</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/io_medium.html">IO_MEDIUM</A><SPAN CLASS="esymbol">)</SPAN>
@@ -299,7 +299,7 @@
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">file_name_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">file_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 			<SPAN CLASS="etag">file_name_meaningful</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">file_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/structures/storage/finite.html#f_is_empty">is_empty</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Setting</SPAN>
 
 	<A NAME="f_set_discard_pointers"><A CLASS="efeature" HREF="../../../base/reference/kernel/storable.html#f_set_discard_pointers">set_discard_pointers</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN>
@@ -309,7 +309,7 @@
 	<A NAME="f_set_new_independent_format"><A CLASS="efeature" HREF="../../../base/reference/kernel/storable.html#f_set_new_independent_format">set_new_independent_format</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> it will use ISE Eiffel 5.0 storable format for</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> storing.</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
@@ -329,7 +329,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

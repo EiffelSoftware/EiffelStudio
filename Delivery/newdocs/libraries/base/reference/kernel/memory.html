@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>MEMORY Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -46,7 +46,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Code for all the memory managed</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> by the garbage collector</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/mem_const.html">MEM_CONST</A><SPAN CLASS="ecomment">)</SPAN>
-	
+
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
 
 	<A NAME="f_gc_statistics"><A CLASS="efeature" HREF="../../../base/reference/kernel/memory.html#f_gc_statistics">gc_statistics</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">collector_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/gc_info.html">GC_INFO</A>
@@ -58,7 +58,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Memory usage information for </SPAN><SPAN CLASS="equoted">memory_type</SPAN><SPAN CLASS="ecomment"></SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">type_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">memory_type</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/mem_const.html#f_total_memory">total_memory</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">memory_type</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/mem_const.html#f_eiffel_memory">eiffel_memory</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">memory_type</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/mem_const.html#f_c_memory">c_memory</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
 	<A NAME="f_chunk_size"><A CLASS="efeature" HREF="../../../base/reference/kernel/memory.html#f_chunk_size">chunk_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
@@ -123,7 +123,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the environment variable EIF_TENURE_MAX</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is defined, it is set to the closest reasonable</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> value from it.</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
 
 	<A NAME="f_allocate_compact"><A CLASS="efeature" HREF="../../../base/reference/kernel/memory.html#f_allocate_compact">allocate_compact</A>
@@ -176,7 +176,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> collection is performed.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">positive_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">value</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
 
 	<A NAME="f_collect"><A CLASS="efeature" HREF="../../../base/reference/kernel/memory.html#f_collect">collect</A>
@@ -209,7 +209,7 @@
 	<A NAME="f_mem_free"><A CLASS="efeature" HREF="../../../base/reference/kernel/memory.html#f_mem_free">mem_free</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Free memory of object at </SPAN><SPAN CLASS="equoted">addr</SPAN><SPAN CLASS="ecomment">.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Preferred interface is </SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/memory.html#f_free">free</A><SPAN CLASS="ecomment">.)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
@@ -229,7 +229,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>RAW_FILE Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -19,7 +19,7 @@
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
 	<A CLASS="eclass" HREF="../../../base/reference/kernel/raw_file.html">RAW_FILE</A>
 
-<SPAN CLASS="ekeyword">create</SPAN> 
+<SPAN CLASS="ekeyword">create</SPAN>
 
 	<A NAME="f_make"><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">fn</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create file object with </SPAN><SPAN CLASS="equoted">fn</SPAN><SPAN CLASS="ecomment"> as file name.</SPAN>
@@ -188,7 +188,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/file.html">FILE</A>
 			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_exists">exists</A>
 			<SPAN CLASS="etag">open_write</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_is_open_write">is_open_write</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
 	<A NAME="f_access_date"><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_access_date">access_date</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
@@ -318,13 +318,13 @@
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/file.html">FILE</A><SPAN CLASS="ecomment">)</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/file.html">FILE</A>
 			<SPAN CLASS="etag">file_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_exists">exists</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
 
 	<A NAME="f_count"><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size in bytes (0 if no associated physical file)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/file.html">FILE</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
 	<A NAME="f_access_exists"><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_access_exists">access_exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -581,7 +581,7 @@
 	<A NAME="f_writable"><A CLASS="efeature" HREF="../../../base/reference/structures/list/sequence.html#f_writable">writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there a current item that may be modified?</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/structures/list/sequence.html">SEQUENCE</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
 
 	<A NAME="f_close"><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_close">close</A>
@@ -774,7 +774,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/file.html">FILE</A>
 			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_exists">exists</A>
 			<SPAN CLASS="etag">open_write</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_is_open_write">is_open_write</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Cursor movement</SPAN>
 
 	<A NAME="f_back"><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_back">back</A>
@@ -846,7 +846,7 @@
 			<SPAN CLASS="ekeyword">True</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/file.html">FILE</A>
 			<SPAN CLASS="etag">file_opened</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_is_closed">is_closed</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
 
 	<A NAME="f_add_permission"><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_add_permission">add_permission</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">who</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">what</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
@@ -1084,7 +1084,7 @@
 			<SPAN CLASS="etag">file_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_exists">exists</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/file.html">FILE</A>
 			<SPAN CLASS="etag">date_changed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_date">date</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_date">date</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
 
 	<A NAME="f_delete"><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_delete">delete</A>
@@ -1128,13 +1128,13 @@
 			<SPAN CLASS="etag">is_closed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_is_closed">is_closed</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/structures/access/collection.html">COLLECTION</A>
 			<SPAN CLASS="etag">wiped_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/structures/storage/finite.html#f_is_empty">is_empty</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN>
 
 	<A NAME="f_linear_representation"><A CLASS="efeature" HREF="../../../base/reference/structures/traversing/linear.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/traversing/linear.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">]</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Representation as a linear structure</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/structures/traversing/linear.html">LINEAR</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Obsolete</SPAN>
 
 	<A NAME="f_lastchar"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_lastchar">lastchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A>
@@ -1156,7 +1156,7 @@
 	<A NAME="f_laststring"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_laststring">laststring</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last string read</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/io_medium.html">IO_MEDIUM</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convenience</SPAN>
 
 	<A NAME="f_copy_to"><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_copy_to">copy_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">file</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -1168,7 +1168,7 @@
 			<SPAN CLASS="etag">file_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">file</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 			<SPAN CLASS="etag">file_is_open_write</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">file</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_is_open_write">is_open_write</A>
 			<SPAN CLASS="etag">current_is_open_read</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_is_open_read">is_open_read</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Input</SPAN>
 
 	<A NAME="f_read_character"><A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_read_character">read_character</A>
@@ -1310,7 +1310,7 @@
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/file.html">FILE</A><SPAN CLASS="ecomment">)</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/file.html">FILE</A>
 			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_file_readable">file_readable</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Iteration</SPAN>
 
 	<A NAME="f_do_all"><A CLASS="efeature" HREF="../../../base/reference/structures/traversing/linear.html#f_do_all">do_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/procedure.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/tuple.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -1341,7 +1341,7 @@
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/structures/traversing/linear.html">LINEAR</A><SPAN CLASS="ecomment">)</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/structures/traversing/traversable.html">TRAVERSABLE</A>
 			<SPAN CLASS="etag">test_exits</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">test</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output</SPAN>
 
 	<A NAME="f_put_boolean"><A CLASS="efeature" HREF="../../../base/reference/kernel/raw_file.html#f_put_boolean">put_boolean</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN>
@@ -1391,7 +1391,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/raw_file.html">RAW_FILE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/raw_file.html#f_put_real">put_real</A><SPAN CLASS="ecomment">.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/io_medium.html">IO_MEDIUM</A>
 			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/file.html#f_extendible">extendible</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 	<SPAN CLASS="etag">not_plain_text</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_is_plain_text">is_plain_text</A>
@@ -1429,7 +1429,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

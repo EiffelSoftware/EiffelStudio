@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>STREAM Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -18,7 +18,7 @@
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
 	<A CLASS="eclass" HREF="../../../base/reference/kernel/stream.html">STREAM</A>
 
-<SPAN CLASS="ekeyword">create</SPAN> 
+<SPAN CLASS="ekeyword">create</SPAN>
 
 	<A NAME="f_make"><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_make">make</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create stream object with a default_size of 100 bytes</SPAN>
@@ -33,7 +33,7 @@
 </A>
 	<A NAME="f_make_with_size"><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_make_with_size">make_with_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create stream object with a default_size of </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> bytes</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
 	<A NAME="f_buffer"><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_buffer">buffer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A></A>
@@ -61,7 +61,7 @@
 			<SPAN CLASS="etag">support_storable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_support_storable">support_storable</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/io_medium.html">IO_MEDIUM</A>
 			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
 	<A NAME="f_exists"><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_exists">Exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">True</SPAN></A>
@@ -120,14 +120,14 @@
 </A>
 	<A NAME="f_support_storable"><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_support_storable">Support_storable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">True</SPAN></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can medium be used to store an Eiffel structure?</SPAN>
-	
+
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
 
 	<A NAME="f_close"><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_close">close</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Close medium.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/io_medium.html">IO_MEDIUM</A>
 			<SPAN CLASS="etag">medium_is_open</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_is_closed">is_closed</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
 
 	<A NAME="f_basic_store"><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_basic_store">basic_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">)</SPAN>
@@ -165,13 +165,13 @@
 	<A NAME="f_set_additional_size"><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_set_additional_size">set_additional_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><SPAN CLASS="equoted">new_size</SPAN><SPAN CLASS="ecomment"> to BUFFER_SIZE, internal value used to</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> increment </SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_buffer_size">buffer_size</A><SPAN CLASS="ecomment"> during storable operations.</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
 
 	<A NAME="f_dispose"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_dispose">dispose</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Ensure this medium is closed when garbage collected.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/io_medium.html">IO_MEDIUM</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Obsolete</SPAN>
 
 	<A NAME="f_lastchar"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_lastchar">lastchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A>
@@ -193,7 +193,7 @@
 	<A NAME="f_laststring"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_laststring">laststring</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last string read</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/io_medium.html">IO_MEDIUM</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Input</SPAN>
 
 	<A NAME="f_read_character"><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_read_character">read_character</A>
@@ -283,7 +283,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/stream.html">STREAM</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_read_stream">read_stream</A><SPAN CLASS="ecomment">.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/io_medium.html">IO_MEDIUM</A>
 			<SPAN CLASS="etag">is_readable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_readable">readable</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output</SPAN>
 
 	<A NAME="f_new_line"><A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_new_line">new_line</A>
@@ -375,7 +375,7 @@
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/io_medium.html">IO_MEDIUM</A>
 			<SPAN CLASS="etag">extendible</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/stream.html#f_extendible">extendible</A>
 			<SPAN CLASS="etag">non_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
@@ -395,7 +395,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

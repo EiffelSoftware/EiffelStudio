@@ -89,10 +89,16 @@ feature -- Status setting
 				end
 				main_socket.connect
 			end
-			bytes_transferred := 0
-			transfer_initiated := False
-			is_packet_pending := False
-			content_length := 0
+			if not is_open then
+				error_code := Connection_refused
+			else
+				bytes_transferred := 0
+				transfer_initiated := False
+				is_packet_pending := False
+				content_length := 0
+			end
+		ensure then
+			open_implies_correct_socket: is_open implies main_socket.socket_ok
 		rescue
 			error_code := Connection_refused
 		end

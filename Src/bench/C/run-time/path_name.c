@@ -323,10 +323,12 @@ rt_public EIF_BOOLEAN eif_path_name_compare(EIF_CHARACTER *s, EIF_CHARACTER *t, 
 
 rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v)
 {
+#ifdef WORKBENCH
+	EIF_GET_CONTEXT
+#endif
+
 		/* If the path is not empty, include a separator */
 		/* Otherwise, it will just be a relative path name */
-
-	EIF_GET_CONTEXT
 
 #ifdef EIF_VMS
 	if (strchr (p, '/')) {	/* probably non-VMS (unix) path spec */
@@ -381,8 +383,9 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 
 rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v)
 {
+#ifdef WORKBENCH
 	EIF_GET_CONTEXT
-
+#endif
 		/* Set the absolute part of the path name p to directory name v */
 #ifdef EIF_VMS
 	/* VMS FIXME: this is not correct - what if path is relative? */
@@ -402,7 +405,9 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHA
 
 rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v)
 {
+#ifdef WORKBENCH
 	EIF_GET_CONTEXT
+#endif
 
 		/* Append the file name part in the path name */
 	if (*((char *)p) == '\0'){

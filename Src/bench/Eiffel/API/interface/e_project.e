@@ -490,7 +490,11 @@ feature -- Update
 			if not retried then
 				Compilation_modes.set_is_finalizing (True);
 				melt;
-				if successful and then not melt_only then
+				if
+					successful and then
+					not melt_only and then
+					not comp_system.lace.compile_all_classes
+				then
 					set_error_status (Ok_status);
 					is_compiling_ref.set_item (True);
 					finalize_system (keep_assertions);

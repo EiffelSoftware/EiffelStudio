@@ -13,6 +13,7 @@ copy generated\Common\Interfaces .\
 copy generated\Common\Structures .\
 
 del Clib\*.cpp
+del Clib\*.c
 del Clib\*.h
 
 copy generated\Client\Clib\*.cpp Clib

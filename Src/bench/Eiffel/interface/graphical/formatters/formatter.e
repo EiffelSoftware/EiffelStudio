@@ -43,9 +43,10 @@ feature -- Callbacks
 			-- for file modification (only showtext
 			-- command can modify text)
 		local
-			old_do_format: BOOLEAN
+			old_do_format: BOOLEAN;
+			mp: MOUSE_PTR
 		do
-			set_global_cursor (watch_cursor);
+			!! mp.set_watch_cursor;
 			text_window.set_changed (false);
 				-- Because the text in the window has been changed,
 				-- we have to force the new format in order to update
@@ -55,13 +56,15 @@ feature -- Callbacks
 			execute_licenced (formatted);
 			do_format := old_do_format;
 			text_window.history.extend (text_window.root_stone);
-			restore_cursors
+			mp.restore
 		end;
 
 feature -- Execution
 
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into watch shape.
+		local
+			mp: MOUSE_PTR
 		do
 			if last_warner /= Void then
 				last_warner.popdown
@@ -73,9 +76,9 @@ feature -- Execution
 				formatted ?= argument
 			end;
 			if not text_window.changed then
-				set_global_cursor (watch_cursor);
+				!! mp.set_watch_cursor;
 				execute_licenced (formatted);
-				restore_cursors;
+				mp.restore;
 			else
 				warner (text_window).call (Current, l_File_changed)
 			end
@@ -96,7 +99,8 @@ feature -- Formatting
 			-- if it's clickable; do nothing otherwise.
 		local
 			retried: BOOLEAN;
-			tool: BAR_AND_TEXT
+			tool: BAR_AND_TEXT;
+			mp: MOUSE_PTR
 		do
 			if not retried then 
 				if 
@@ -107,18 +111,18 @@ feature -- Formatting
 					if stone /= Void and then stone.is_valid then
 						if stone.clickable then
 							display_temp_header (stone);
-							set_global_cursor (watch_cursor);
+							!! mp.set_watch_cursor;
 							text_window.clean;
 							text_window.set_root_stone (stone);
 							text_window.set_file_name (file_name (stone));
 							display_info (stone);
 							text_window.set_editable;
-							text_window.show_image;
+							text_window.display;
 							text_window.set_read_only;
 							text_window.set_last_format (Current);
 							filtered := false;
 							display_header (stone);
-							restore_cursors
+							mp.restore
 						else
 							tool ?= text_window.tool;
 							if tool /= Void then

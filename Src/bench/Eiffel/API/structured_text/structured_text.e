@@ -287,16 +287,4 @@ feature -- Element change
 			add (l_item)
 		end;
 
-	add_breakpoint (bp: DISPLAYED_BREAK; bp_text: STRING) is
-			-- Put `bp_text'.
-		require
-			valid_bp: bp /= Void;
-			valid_bp_text: bp_text /= Void
-		local
-			l_item: like item
-		do
-			!BREAKPOINT_ITEM! l_item.make (bp, bp_text);
-			add (l_item)
-		end;
-
 end -- class STRUCTURED_TEXT

@@ -142,7 +142,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 {A}{X}*						{return process_name(TE_ID);}
 [0-1]+[bB]					{return process_bit();}
 ({U}(_{D}{D}{D})*)|{D}+		{return process_int();}
-({D}*\.{D}+{E})|({D}+\.{D}*{E})|({U}(_{T})*)?\.(({T}_)*{U})?{E}|{U}(_{T})*\.((({T}_)*{U})?{E}) {return process_name(TE_REAL); }
+({D}*\.{D}+{E})|({D}+\.{D}*{E})|(({U}(_{T})*)?\.({T}_)*{U}{E})|({U}(_{T})*\.(({T}_)*{U})?{E})	{return process_name(TE_REAL); }
 \"							{return get_string();}
 \'							{return get_char();}
 <<EOF>>						{

@@ -64,6 +64,16 @@ feature -- Closure
 			end
 		end
 
+	set_focus is
+		local
+			t: TEXT_FIELD_IMP
+		do
+			if toolkit.name.is_equal ("MS_WINDOWS") then
+				t ?= implementation
+				t.wel_set_focus
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	choice: CHOICE_W;

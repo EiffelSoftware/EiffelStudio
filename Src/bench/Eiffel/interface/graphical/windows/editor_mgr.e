@@ -238,8 +238,6 @@ feature {WINDOW_MGR} -- Properties
 				free_list.start;
 				Result := free_list.item;
 				free_list.remove;
-				Result.show;
-				Result.raise
 			else
 				!! mp.set_watch_cursor;
 				!! Result.make_shell (a_parent);

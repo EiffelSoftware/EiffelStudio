@@ -17,7 +17,9 @@ inherit
 		undefine
 			parent
 		redefine
-			set_pixmap, parent_imp, interface, pixmap, remove_pixmap
+			set_pixmap, parent_imp,
+			interface, pixmap,
+			remove_pixmap, destroy
 		end
 
 	EV_INTERNALLY_PROCESSED_TEXTABLE_IMP
@@ -32,7 +34,7 @@ inherit
 
 	EV_TOOLTIPABLE_IMP
 		redefine
-			interface, set_tooltip
+			interface, set_tooltip, destroy
 		end
 
 	WEL_ILC_CONSTANTS
@@ -422,6 +424,14 @@ feature {NONE} -- Implementation
 
 	private_gray_pixmap: EV_PIXMAP
 			-- Internal gray pixmap for Current. Void if none.
+			
+	destroy is
+			-- Destroy `Current'.
+		do
+			Precursor {EV_TOOLTIPABLE_IMP}
+			Precursor {EV_TOOL_BAR_ITEM_IMP}
+		end
+		
 
 feature {NONE} -- Implementation, pick and drop
 

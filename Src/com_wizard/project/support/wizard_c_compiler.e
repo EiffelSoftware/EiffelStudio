@@ -49,33 +49,32 @@ feature -- Basic Operations
 			valid_folder_name: is_valid_folder_name (a_folder_name)
 		local
 			l_directory: DIRECTORY
-			l_string, l_comspec: STRING
+			l_string: STRING
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
-			(create {EXECUTION_ENVIRONMENT}).put (Eiffel_installation_dir_name, "ISE_EIFFEL")
+			Env.put (Eiffel_installation_dir_name, "ISE_EIFFEL")
 			create l_directory.make_open_read (a_folder_name)
-			if l_directory.has_entry ("Makefile." + Ise_c_compiler_value) then
-				l_comspec := Env.get ("ComSpec")
-				check
-					has_comspec: l_comspec /= Void
+			if use_bcb then
+				if l_directory.has_entry ("makefile.bcb") then
+					l_string := "make /f makefile.bcb"
 				end
-				create l_string.make (21)
-				l_string.append ("nmake /f ")
-				if Ise_c_compiler_value.is_equal ("msc") then
-					l_string.append ("makefile.msc")
-				else
-					l_string.append ("makefile.bcb")
+			else
+				if l_directory.has_entry ("makefile.msc") then
+					l_string := "nmake /f makefile.msc"
 				end
-				create l_process_launcher
+			end
+			if l_string /= Void then
+			create l_process_launcher
 				l_process_launcher.run_hidden
 				environment.add_abort_request_action (agent l_process_launcher.terminate_process)
 				l_process_launcher.launch (l_string, a_folder_name, agent message_output.add_text)
-				if not l_process_launcher.last_launch_successful then
+				if not l_process_launcher.last_launch_successful or not l_directory.has_entry ("msc") then
 					environment.set_abort (C_compilation_failed)
-					environment.set_error_data ("in folder " + (create {EXECUTION_ENVIRONMENT}).current_working_directory + "\" + a_folder_name)
+					environment.set_error_data ("in folder " + Env.current_working_directory + "\" + a_folder_name)
 				end
 				environment.remove_abort_request_action
 			end
+			l_directory.close
 		end
 	
 	compile_file (a_file_name: STRING) is

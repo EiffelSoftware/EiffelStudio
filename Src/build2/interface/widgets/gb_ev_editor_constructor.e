@@ -189,7 +189,7 @@ feature {GB_OBJECT, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 			if application.ctrl_pressed then
 				new_object_editor (an_object)
 			else
-				Result := an_object
+				Result := create {GB_STANDARD_OBJECT_STONE}.make_with_object (an_object)
 			end
 		end
 	

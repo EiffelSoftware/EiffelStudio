@@ -5,10 +5,17 @@ indexing
 
 deferred class AST_EIFFEL
 
-inherit
-	AST_YACC
+-- inherit
+-- 	AST_YACC
+ 
+feature -- Visitor
 
-feature -- Access
+	process (v: AST_VISITOR) is
+			-- process current element.
+		require
+			v_not_void: v /= Void
+		deferred			
+		end
 
 --feature {AST_EIFFEL, COMPILER_EXPORTER} -- Output
 --

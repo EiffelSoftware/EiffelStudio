@@ -12,17 +12,20 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (c: like check_list; l: like location) is
+	initialize (c: like check_list; l, e: like location) is
 			-- Create a new CHECK AST node.
 		require
 			non_void_c: c /= Void
 			non_void_l: l /= Void
+			e_not_void: e /= Void
 		do
 			check_list := c
-			location := l
+			location := clone (l)
+			end_location := clone (e)
 		ensure
 			check_list_set: check_list = c
-			location_set: location = l
+			location_set: location.is_equal (l)
+			end_location_set: end_location.is_equal (e)
 		end
 
 feature -- Visitor
@@ -32,6 +35,9 @@ feature -- Visitor
 		do
 			v.process_check_as (Current)
 		end
+
+	end_location: like location
+			-- Line number where `end' keyword is located
 
 feature -- Attributes
 

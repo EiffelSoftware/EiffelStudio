@@ -12,8 +12,7 @@ inherit
 		rename
 			initialize as initialize_basic_type
 		redefine
-			is_equivalent,
-			process
+			is_equivalent
 		end
 
 feature {AST_FACTORY} -- Initialization

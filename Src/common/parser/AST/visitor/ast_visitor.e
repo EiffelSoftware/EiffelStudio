@@ -5,7 +5,7 @@ indexing
 deferred class
 	AST_VISITOR
 
-feature {AST_YACC} -- Initialization
+feature {AST_EIFFEL} -- Initialization
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
 			-- Process `l_as'.

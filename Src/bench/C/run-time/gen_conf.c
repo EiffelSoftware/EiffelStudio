@@ -4,6 +4,7 @@
 	$Id$
 */
 
+#include <assert.h>
 #include "eif_macros.h"
 #include "eif_struct.h"
 #include "eif_gen_conf.h"
@@ -200,6 +201,14 @@ rt_private int16 egc_real_dtype = -1;
 rt_private int16 egc_double_dtype = -1;
 rt_private int16 egc_pointer_dtype = -1;
 rt_private int16 tuple_static_type = -1;
+
+/*------------------------------------------------------------------*/
+/* Clean up.                                                        */
+/* Called from reclaim, and free all global variables allocated     */
+/* for the Generic Conformance.                                     */
+/*------------------------------------------------------------------*/
+
+rt_shared void eif_gen_conf_cleanup ();
 
 /*------------------------------------------------------------------*/
 /* THREADS.                                                         */
@@ -495,7 +504,7 @@ rt_public void eif_gen_conf_init (int max_dtype)
 		eif_par_table2_size = eif_par_table_size;
 	}
 
-	eif_cid_map = (int16 *) eif_malloc(eif_cid_size * sizeof (int16));
+	eif_cid_map = (int16 *) eif_malloc (eif_cid_size * sizeof (int16));
 
 	if (eif_cid_map == (int16 *) 0)
 		enomem();
@@ -594,6 +603,127 @@ rt_public void eif_gen_conf_init (int max_dtype)
 	cid_array [1] = 0;  /* id */
 	cid_array [2] = -1; /* Terminator */
 }
+/*------------------------------------------------------------------*/
+/* Clean up.                                                        */
+/* Called from reclaim, and free all global variables allocated     */
+/* for the Generic Conformance.                                     */
+/*------------------------------------------------------------------*/
+rt_shared void eif_gen_conf_cleanup () 
+{
+	/* Free in reverse order of allocation. */
+
+	int i, j;
+
+#ifdef EIF_THREADS
+	assert (eif_thr_is_root ());
+#endif	/* EIF_THREADS */
+	assert (eif_anc_id_map);
+	assert (eif_conf_tab);
+	assert (eif_derivations);
+	assert (eif_cid_map);
+
+#ifdef WORKBENCH
+	eif_free (rtud_inv);	/* (int16 *) */
+#endif	/* WORKBENCH */
+
+	/* Recursively free eif_anc_id_map */
+	for (i = 0; i < eif_cid_size; i++) {
+		EIF_ANC_ID_MAP *tmp = eif_anc_id_map [i];
+
+		if (tmp == (EIF_ANC_ID_MAP *) 0)
+			continue;
+		if (tmp->map != tmp->smap)
+			eif_free (tmp->map);	/* int16 * */
+		else {
+#ifdef LMALLOC_CHECK
+			assert (!(is_in_lm (tmp->map)));
+#endif	/* LMALLOC_CHECK */
+		}
+		eif_free (tmp);
+	}
+	eif_free (eif_anc_id_map);	
+
+	/* Recursively free eif_conf_tab */
+	for (i = 0; i < eif_cid_size; i++) {
+		EIF_CONF_TAB *tmp = eif_conf_tab [i];	
+
+		if (tmp == (EIF_CONF_TAB *) 0)
+			continue;
+
+		if (tmp->low_tab != tmp->slow_tab)
+			eif_free (tmp->low_tab);	/* unsigned char * */
+		else {
+#ifdef LMALLOC_CHECK
+			assert (!(is_in_lm (tmp->low_tab)));
+#endif	/* LMALLOC_CHECK */
+		}
+		if (tmp->high_tab != tmp->shigh_tab)
+			eif_free (tmp->high_tab);	/* unsigned char * */
+		else {
+#ifdef LMALLOC_CHECK
+			assert (!(is_in_lm (tmp->high_tab)));
+#endif	/* LMALLOC_CHECK */
+		}
+		if (tmp->low_comp != tmp->slow_comp)	
+			eif_free (tmp->low_comp);	 	/* unsigned char * */
+		else {
+#ifdef LMALLOC_CHECK
+			assert (!(is_in_lm (tmp->low_comp)));
+#endif	/* LMALLOC_CHECK */
+		}
+		if (tmp->high_comp != tmp->shigh_comp)	
+			eif_free (tmp->high_comp);	 	/* unsigned char * */
+		else {
+#ifdef LMALLOC_CHECK
+			assert (!(is_in_lm (tmp->high_comp)));
+#endif	/* LMALLOC_CHECK */
+		}
+		eif_free (tmp);
+	}
+	eif_free (eif_conf_tab);	
+
+	/* Recursively free eif_derivations. */
+	for (i = 0; i < eif_cid_size; i++) {
+		EIF_GEN_DER *tmp = eif_derivations [i];
+
+		if (tmp == (EIF_GEN_DER *) 0)
+			continue;
+		if (tmp->typearr != tmp->stypearr)
+			eif_free (tmp->typearr);			/* int16 * */
+		else {
+#ifdef LMALLOC_CHECK
+			assert (!(is_in_lm (tmp->typearr)));
+#endif	/* LMALLOC_CHECK */
+		}
+		if (tmp->gen_seq != tmp->sgen_seq)
+			eif_free (tmp->gen_seq);			/* int16 * */
+		else {
+#ifdef LMALLOC_CHECK
+			assert (!(is_in_lm (tmp->gen_seq)));
+#endif	/* LMALLOC_CHECK */
+		}
+		if (tmp->ptypes != tmp->sptypes)
+			eif_free (tmp->ptypes);		/* int16 * */
+		else {
+#ifdef LMALLOC_CHECK
+			assert (!(is_in_lm (tmp->ptypes)));
+#endif	/* LMALLOC_CHECK */
+		}
+		eif_free (tmp->name);			/* char * */
+		for (j = i + 1; j < eif_cid_size; j++) {
+			if (eif_derivations [j] == tmp)	
+				eif_derivations[j] = (EIF_GEN_DER *) 0;
+				
+		}
+		eif_free (tmp);
+	}
+	eif_free (eif_derivations);	
+
+	eif_free (eif_cid_map);		/* (int16 *) */
+} /* eif_gen_conf_cleanup () */
+
+
+
 /*------------------------------------------------------------------*/
 /* Compute id for `types'. `cache' is used to cache the result in   */
 /* the generated C code if possible.                                */
@@ -988,6 +1118,7 @@ rt_public char eif_gen_is_uniform (EIF_REFERENCE obj, char code)
 
 rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 {
+	EIF_REFERENCE ret;	/* Return value. */
 	int16 dftype, gtype;
 	int pos;
 	EIF_GEN_DER *gdp;
@@ -1121,11 +1252,7 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 
 	*strp = '\0';
 
-	/* We use cmalloc here! The C string will be part of
-	   an Eiffel STRING object.
-	*/
-
-	strp = cmalloc (strlen (tstr) + 1);
+	strp = eif_malloc (strlen (tstr) + 1);
 
 	if (strp == (char *) 0)
 		enomem();
@@ -1136,7 +1263,10 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	EIFMTX_UNLOCK;
 #endif
 
-	return makestr(strp, strlen(strp));
+	ret = makestr(strp, strlen(strp));
+	eif_free (strp);
+
+	return ret;	
 }
 /*------------------------------------------------------------------*/
 /* Type of generic parameter in `obj' at position `pos'.            */
@@ -1226,12 +1356,19 @@ rt_public int16 eif_register_bit_type (long size)
 
 		gdp = eif_new_gen_der(size, (int16*)0, dftype, '1', (char) 0, 0);
 
-		if (prev == (EIF_GEN_DER *)0)
+		if (prev == (EIF_GEN_DER *)0) {
+#ifdef	EIF_REGISTER_BIT_TYPE_DEBUG
+		printf ("Put at %d, (EIFGEN_DER *) 0x%x\n", dftype, gdp);
+#endif
 			eif_derivations [dftype] = gdp;
-		else
+		} else {
 			prev->next = gdp;
 
+#ifdef	EIF_REGISTER_BIT_TYPE_DEBUG
+			printf ("Put at %d, (EIFGEN_DER *) 0x%x\n", gdp->id, gdp);
+#endif
 		eif_derivations[gdp->id] = gdp; /* Self-reference */
+		}
 	}
 
 	return gdp->id;
@@ -1267,6 +1404,7 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 rt_public char *eif_gen_typename (EIF_REFERENCE obj)
 {
 	char    *name;
+	EIF_REFERENCE ret;	/* Return value. */
 
 	if (obj == (EIF_REFERENCE ) 0)
 		return makestr("NONE", 4);
@@ -1281,7 +1419,9 @@ rt_public char *eif_gen_typename (EIF_REFERENCE obj)
 	EIFMTX_UNLOCK;
 #endif
 
-	return makestr(name, strlen(name));
+	ret = makestr(name, strlen(name));
+	eif_free (name);
+	return ret;
 }
 /*------------------------------------------------------------------*/
 /* CID which generates `dftype'. First entry is the length of the   */
@@ -2016,6 +2156,9 @@ finish_simple:
 		}
 	}
 
+#ifdef EIF_NEW_GEN_DER_DEBUG
+	printf ("EIF_NEW_GEN_DER_DEBUG: return : 0x%x\n", result);
+#endif
 	return result;
 }
 /*------------------------------------------------------------------*/
@@ -2232,8 +2375,8 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, int16 new_id)
 
 	if (!was_small)
 	{
-		eif_free ((char *) old_tab);
-		eif_free ((char *) old_comp);
+		eif_free (old_tab);
+		eif_free (old_comp);
 	}
 
 	/* Now update structure values */
@@ -2390,9 +2533,9 @@ rt_private char *eif_typename (int16 dftype)
 
 	len = eif_typename_len (dftype);
 
-	/* We use cmalloc here! */
+	/* We use eif_malloc here! */
 
-	result = cmalloc (len + 1);
+	result = eif_malloc (len + 1);
 
 	if (result == (char *) 0)
 		enomem();
@@ -2493,6 +2636,8 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 		strcat (result, bits);
 
 		gdp->name = bits;
+
+		eif_free (bits);	
 
 		return;
 	}
@@ -2851,6 +2996,9 @@ rt_private void eif_compute_ctab (int16 dftype)
 	{
 		gdp = eif_new_gen_der ((long)0, (int16*) 0, (int16) RTUD_INV(dtype), (char) 0, (char) 0, (int16) 0);
 
+#ifdef	EIF_COMPUTE_CTAB_DEBUG
+		printf ("Put at %d, (EIFGEN_DER *) 0x%x\n", dftype, gdp);
+#endif
 		eif_derivations [dftype] = gdp;
 	}
 
@@ -3100,10 +3248,10 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 		}
 		if (state == 0 && is_type_separator (c)) {
 			state = 1;
-			type_string_array = (char **) realloc (type_string_array, (n + 1) * sizeof (char *));
+			type_string_array = (char **) eif_realloc (type_string_array, (n + 1) * sizeof (char *));
 			if (type_string_array == (char **) 0)
 				enomem();
-			string_type = (char *) malloc ((l + 1) * sizeof (char));
+			string_type = (char *) eif_malloc ((l + 1) * sizeof (char));
 			if (string_type == (char *) 0)
 				enomem();
 			string_type = (char *) memcpy (string_type, type_string + i - l, l);
@@ -3117,10 +3265,10 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 
 	if (type_string_array == (char **) 0) {
 			/* There was only a simple type, not a generic one. */
-		type_string_array = (char **) malloc (sizeof (char *));
+		type_string_array = (char **) eif_malloc (sizeof (char *));
 		if (type_string_array == (char **) 0)
 			enomem();
-		string_type = (char *) malloc ((l + 1) * sizeof (char));
+		string_type = (char *) eif_malloc ((l + 1) * sizeof (char));
 		if (string_type == (char *) 0)
 			enomem();
 		string_type = (char *) memcpy (string_type, type_string + i - l, l);
@@ -3133,9 +3281,9 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 		/* Free all the allocated memory */
 	for (i=0; i <= n - 1; i++) {
 		string_type = type_string_array [i];
-		free (string_type);
+		eif_free (string_type);
 	}
-	free (type_string_array);
+	eif_free (type_string_array);
 
 	return result;
 }
@@ -3183,7 +3331,7 @@ rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array)
 			 * there is no static call context, the last one too as a terminator
 			 * for other generic conformance routines
 			 */
-		typearr = (int16 *) malloc ((n + 2) * sizeof (int16));
+		typearr = (int16 *) eif_malloc ((n + 2) * sizeof (int16));
 		if (typearr == (int16 *)0)
 			enomem();
 		typearr [0] = -1;
@@ -3195,7 +3343,7 @@ rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array)
 		if (error == 0) {
 			result = (EIF_TYPE_ID) eif_compound_id ((int16 *)0, (char *)0,(int16) typearr[1], typearr);
 		}
-		free (typearr);
+		eif_free (typearr);
 	} else
 		result = eifcid(type_string_array [0]);
 
@@ -3227,12 +3375,12 @@ rt_private void eif_type_id_ex (int *error, struct gt_info *type, int gen_number
 	}
 
 		/* Allocate the gtype array with the corresponding number of generics */
-	gtype = (int32 *) malloc (gen_number * sizeof (int32));
+	gtype = (int32 *) eif_malloc (gen_number * sizeof (int32));
 	if (gtype == (int32 *) 0)
 		enomem();
 
 		/* Allocate the itype array with the corresponding number of generics */
-	itype = (int32 *) malloc (gen_number * sizeof (int32));
+	itype = (int32 *) eif_malloc (gen_number * sizeof (int32));
 	if (itype == (int32 *) 0)
 		enomem();
 
@@ -3313,8 +3461,8 @@ rt_private void eif_type_id_ex (int *error, struct gt_info *type, int gen_number
 		*error = 1;
 	}
 
-	free (gtype);
-	free (itype);
+	eif_free (gtype);
+	eif_free (itype);
 }
 
 rt_private int16 gen_type_id (int32 cecil_id)

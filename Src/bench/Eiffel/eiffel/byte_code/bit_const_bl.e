@@ -9,8 +9,7 @@ inherit
 			register, set_register,
 			analyze, generate,
 			propagate, print_register,
-			is_simple_expr, unanalyze,
-			allocates_memory
+			unanalyze
 		end
 
 feature 
@@ -87,10 +86,5 @@ feature
 			buf.putint (value.count)
 			buf.putchar(')')
 		end
-
-	is_simple_expr: BOOLEAN is True
-			-- A string is a simple expression
-
-	allocates_memory: BOOLEAN is True
 
 end

@@ -11,6 +11,11 @@ inherit
 		export
 			{ANY} all
 		end
+		
+	SHARED_CACHE_MUTEX_GUARD
+		export 
+			{NONE} all
+		end
 
 create
 	make
@@ -237,6 +242,7 @@ feature {CACHE_WRITER} -- Implementation
 		local
 			des: EIFFEL_XML_DESERIALIZER
 		do
+			guard.lock
 			if is_initialized then
 				create des
 				des.deserialize (Absolute_info_path, False)
@@ -249,6 +255,7 @@ feature {CACHE_WRITER} -- Implementation
 				create Result.make (clr_version)
 				(create {EIFFEL_XML_SERIALIZER}).serialize (Result, absolute_info_path)
 			end
+			guard.unlock
 		ensure
 			non_void_if_initialized: is_initialized implies Result /= Void
 		end

@@ -888,9 +888,12 @@ feature {NONE} -- Implementation
 	on_lbn_errspace is
 			-- Cannot allocate enough memory
 			-- to meet a specific request
+		local
+			msg_box: WEL_MSG_BOX
 		do
-			information_message_box ("Cannot allocate enough memory to perform%
-				%request!","Error")
+			!! msg_box.make
+			msg_box.information_message_box (Void, "Cannot allocate enough memory to%
+				% perform request!", "Error")
 		end
 
 	on_lbn_dblclk is

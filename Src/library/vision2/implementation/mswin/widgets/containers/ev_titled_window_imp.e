@@ -54,7 +54,8 @@ inherit
 			on_kill_focus,
 			on_menu_command,
 			background_brush,
-			on_draw_item
+			on_draw_item,
+			on_accelerator_command
 		redefine
 			default_ex_style,
 			default_style,
@@ -342,7 +343,6 @@ feature -- Element change
 			if value < width then
 				resize (value, height)
 			end
---			max_track.set_x (value)
 		end
 
 	set_maximum_height (value: INTEGER) is

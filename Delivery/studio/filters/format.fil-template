@@ -38,6 +38,33 @@
 	-- specific for the platform is used.
 
 -------------------------------------------------------------------------------
+-- Hyperlinking items
+-------------------------------------------------------------------------------
+
+menu_bar				|*
+	-- Contains the different menu items.
+
+menu_item				|*
+	-- Any of the global menu items, "Classes", "Clusters", etc.
+	-- If not specified, no text is processed, since without hyperlinking
+	-- menu items are useless.
+	-- Symbol: $file$
+
+class_menu_item			|*
+	-- A link to one of the specified class formats.
+	-- If not specified, no text is processed.
+	-- Symbol: $file$
+
+menu_item_disabled		|*
+	-- The current format.
+
+class_menu_item_disabled|*
+	-- The current format.
+
+cluster_name			|*
+	-- Symbol: $file$.
+
+-------------------------------------------------------------------------------
 -- Major syntactical constructs
 -------------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class"
 	date: "$$"
 	revision: "$$"
-        
+
 class
 	EV_BUTTON_IMP
         
@@ -189,8 +189,8 @@ feature {NONE} -- Implementation
 				select_action
 				dc.fill_rect (client_rect, background_brush)
 				draw_edge (dc)
-				draw_body (dc)
 				draw_focus (dc)
+				draw_body (dc)
 			elseif action = Oda_drawentire then
 				dc.fill_rect (client_rect, background_brush)
 				if struct.item_state = Ods_focus then
@@ -258,6 +258,10 @@ feature {NONE} -- Basic operation
 			else
 				!! inrect.make (5, 5, width - 5, height - 6)
 			end
+
+			-- We select the brushes and color
+			dc.set_text_color (foreground_color_imp)
+			dc.set_background_color (background_color_imp)
 
 			-- If sensitive, we draw everything normaly.
 			if not insensitive then

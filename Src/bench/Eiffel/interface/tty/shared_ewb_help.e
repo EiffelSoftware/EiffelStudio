@@ -149,7 +149,7 @@ feature {NONE}
 
 	stop_help: STRING is "stop on error";
 
-	storage_help: STRING is "store in case format";
+	storage_help: STRING is "store in EiffelCase format";
 
 	suppliers_help: STRING is "show the suppliers of a class";
 

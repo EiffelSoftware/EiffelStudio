@@ -68,28 +68,37 @@ feature {EV_ANY_I} -- Implementation
 
 	compute_minimum_width is
 			-- Recompute the minimum_width of `Current'.
+		local
+			mw: INTEGER
 		do
 			if item_imp /= Void and item_imp.is_show_requested then
-				ev_set_minimum_width (item_imp.minimum_width)
+				mw := item_imp.minimum_width
 			end
+			ev_set_minimum_width (mw)
 		end
 
 	compute_minimum_height is
 			-- Recompute the minimum_width of `Current'.
+		local
+			mh: INTEGER
 		do
 			if item_imp /= Void and item_imp.is_show_requested then
-				ev_set_minimum_height (item_imp.minimum_height)
+				mh := item_imp.minimum_height
 			end
+			ev_set_minimum_height (mh)
 		end
 
 	compute_minimum_size is
 			-- Recompute both the minimum_width the
 			-- minimum_height of `Current'.
+		local
+			mw, mh: INTEGER
 		do
 			if item_imp /= Void and item_imp.is_show_requested then
-				ev_set_minimum_size (item_imp.minimum_width, 
-					item_imp.minimum_height)
+				mw := item_imp.minimum_width
+				mh := item_imp.minimum_height
 			end
+			ev_set_minimum_size (mw, mh)
 		end
 
 	interface: EV_CELL

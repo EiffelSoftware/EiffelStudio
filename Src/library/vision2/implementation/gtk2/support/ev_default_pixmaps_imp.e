@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			a_cs: EV_GTK_C_STRING
 			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create a_cs.make (a_stock_id)
+			a_cs := a_stock_id
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_stock_id (a_cs.item)

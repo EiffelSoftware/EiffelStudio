@@ -83,7 +83,8 @@ inherit
 			on_lbn_selchange,
 			on_lbn_errspace,
 			on_lbn_dblclk,
-			on_key_down	
+			on_key_down,
+			default_ex_style	
 		end
 
 	WEL_LBS_CONSTANTS
@@ -968,6 +969,12 @@ feature {NONE} -- Implementation
 					Ws_tabstop + Ws_border + Ws_vscroll +
 					Lbs_notify + Ws_hscroll
 			end
+		end
+
+	default_ex_style: INTEGER is
+			-- Extended style for creation
+		do
+			Result := Ws_ex_clientedge
 		end
 
 	fill_list_box is

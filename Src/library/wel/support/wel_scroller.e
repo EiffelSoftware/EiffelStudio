@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_SCROLL_BAR_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_with_options
@@ -33,9 +38,13 @@ feature -- Initialization
 			positive_horizontal_size: horizontal_size > 0
 			positive_vertical_size: vertical_size > 0
 			positive_line: line >= 0
+			valid_line: line < horizontal_size and then line < vertical_size
 			positive_page: page >= 0
+			valid_page: page < horizontal_size and then page < vertical_size
 		do
 			window := a_window
+			window_item := a_window.item
+			create scroll_info_struct.make
 			set_horizontal_range (0, horizontal_size)
 			set_vertical_range (0, vertical_size)
 			set_horizontal_line (line)
@@ -77,6 +86,8 @@ feature -- Initialization
 			positive_vertical_page: a_vertical_page >= 0
 		do
 			window := a_window
+			window_item := a_window.item
+			create scroll_info_struct.make
 			set_horizontal_range (a_minimal_horizontal_position,
 				a_maximal_horizontal_position)
 			set_vertical_range (a_minimal_vertical_position,
@@ -105,21 +116,17 @@ feature -- Access
 	horizontal_line: INTEGER
 			-- Number of horizontal scroll units per line
 
-	horizontal_page: INTEGER
-			-- Number of horizontal scroll units per page
-
 	vertical_line: INTEGER
 			-- Number of vertical scroll units per line
-
-	vertical_page: INTEGER
-			-- Number of vertical scroll units per page
 
 	horizontal_position: INTEGER is
 			-- Current position of the horizontal scroll box
 		require
 			window_exists: window.exists
 		do
-			Result := window.horizontal_position
+			scroll_info_struct.set_mask (Sif_pos)
+			cwin_get_scroll_info (window_item, Sb_horz, scroll_info_struct.item)
+			Result := scroll_info_struct.position
 		end
 
 	vertical_position: INTEGER is
@@ -127,7 +134,29 @@ feature -- Access
 		require
 			window_exists: window.exists
 		do
-			Result := window.vertical_position
+			scroll_info_struct.set_mask (Sif_pos)
+			cwin_get_scroll_info (window_item, Sb_vert, scroll_info_struct.item)
+			Result := scroll_info_struct.position
+		end
+
+	horizontal_page: INTEGER is
+			-- Number of scroll units per page
+		require
+			window_exists: window.exists
+		do
+			scroll_info_struct.set_mask (Sif_page)
+			cwin_get_scroll_info (window_item, Sb_horz, scroll_info_struct.item)
+			Result := scroll_info_struct.page
+		end
+
+	vertical_page: INTEGER is
+			-- Number of scroll units per page
+		require
+			window_exists: window.exists
+		do
+			scroll_info_struct.set_mask (Sif_page)
+			cwin_get_scroll_info (window_item, Sb_vert, scroll_info_struct.item)
+			Result := scroll_info_struct.page
 		end
 
 	minimal_horizontal_position: INTEGER is
@@ -135,7 +164,9 @@ feature -- Access
 		require
 			window_exists: window.exists
 		do
-			Result := window.minimal_horizontal_position
+			scroll_info_struct.set_mask (Sif_range)
+			cwin_get_scroll_info (window_item, Sb_horz, scroll_info_struct.item)
+			Result := scroll_info_struct.minimum
 		end
 
 	minimal_vertical_position: INTEGER is
@@ -143,7 +174,9 @@ feature -- Access
 		require
 			window_exists: window.exists
 		do
-			Result := window.minimal_vertical_position
+			scroll_info_struct.set_mask (Sif_range)
+			cwin_get_scroll_info (window_item, Sb_vert, scroll_info_struct.item)
+			Result := scroll_info_struct.minimum
 		end
 
 	maximal_horizontal_position: INTEGER is
@@ -151,7 +184,9 @@ feature -- Access
 		require
 			window_exists: window.exists
 		do
-			Result := window.maximal_horizontal_position
+			scroll_info_struct.set_mask (Sif_range)
+			cwin_get_scroll_info (window_item, Sb_horz, scroll_info_struct.item)
+			Result := scroll_info_struct.maximum
 		end
 
 	maximal_vertical_position: INTEGER is
@@ -159,7 +194,9 @@ feature -- Access
 		require
 			window_exists: window.exists
 		do
-			Result := window.maximal_vertical_position
+			scroll_info_struct.set_mask (Sif_range)
+			cwin_get_scroll_info (window_item, Sb_vert, scroll_info_struct.item)
+			Result := scroll_info_struct.maximum
 		end
 
 feature -- Element change
@@ -173,7 +210,9 @@ feature -- Element change
 			position_large_enough:
 				position >= minimal_horizontal_position
 		do
-			window.set_horizontal_position (position)
+			scroll_info_struct.set_mask (Sif_pos)
+			scroll_info_struct.set_position (position)
+			cwin_set_scroll_info (window_item, Sb_horz, scroll_info_struct.item, True)
 		ensure
 			horizontal_position_set: horizontal_position = position
 		end
@@ -187,7 +226,9 @@ feature -- Element change
 			position_large_enough:
 				position >= minimal_vertical_position
 		do
-			window.set_vertical_position (position)
+			scroll_info_struct.set_mask (Sif_pos)
+			scroll_info_struct.set_position (position)
+			cwin_set_scroll_info (window_item, Sb_vert, scroll_info_struct.item, True)
 		ensure
 			vertical_position_set: vertical_position = position
 		end
@@ -200,7 +241,10 @@ feature -- Element change
 			window_exists: window.exists
 			consistent_range: minimum <= maximum
 		do
-			window.set_horizontal_range (minimum, maximum)
+			scroll_info_struct.set_mask (Sif_range)
+			scroll_info_struct.set_minimum (minimum)
+			scroll_info_struct.set_maximum (maximum)
+			cwin_set_scroll_info (window_item, Sb_horz, scroll_info_struct.item, True)
 		ensure
 			horizontal_minimum_range_set:
 				minimal_horizontal_position = minimum
@@ -216,7 +260,10 @@ feature -- Element change
 			window_exists: window.exists
 			consistent_range: minimum <= maximum
 		do
-			window.set_vertical_range (minimum, maximum)
+			scroll_info_struct.set_mask (Sif_range)
+			scroll_info_struct.set_minimum (minimum)
+			scroll_info_struct.set_maximum (maximum)
+			cwin_set_scroll_info (window_item, Sb_vert, scroll_info_struct.item, True)
 		ensure
 			minimal_vertical_position_set:
 				minimal_vertical_position = minimum
@@ -244,24 +291,30 @@ feature -- Element change
 			vertical_line_set: vertical_line = unit
 		end
 
-	set_horizontal_page (unit: INTEGER) is
+	set_horizontal_page (page_magnitude: INTEGER) is
 			-- Set `horizontal_page' with `unit'.
 		require
-			positive_unit: unit >= 0
+			window_exists: window.exists
+			positive_unit: page_magnitude >= 0
 		do
-			horizontal_page := unit
+			scroll_info_struct.set_mask (Sif_page)
+			scroll_info_struct.set_page (page_magnitude)
+			cwin_set_scroll_info (window_item, Sb_horz, scroll_info_struct.item, True)
 		ensure
-			horizontal_page_set: horizontal_page = unit
+			horizontal_page_set: horizontal_page = page_magnitude
 		end
 
-	set_vertical_page (unit: INTEGER) is
+	set_vertical_page (page_magnitude: INTEGER) is
 			-- Set `vertical_page' with `unit'.
 		require
-			positive_unit: unit >= 0
+			window_exists: window.exists
+			positive_unit: page_magnitude >= 0
 		do
-			vertical_page := unit
+			scroll_info_struct.set_mask (Sif_page)
+			scroll_info_struct.set_page (page_magnitude)
+			cwin_set_scroll_info (window_item, Sb_vert, scroll_info_struct.item, True)
 		ensure
-			vertical_page_set: vertical_page = unit
+			vertical_page_set: vertical_page = page_magnitude
 		end
 
 feature -- Basic operations
@@ -382,6 +435,30 @@ feature -- Basic operations
 			window.vertical_update (inc, position)
 		ensure
 			vertical_position_set: vertical_position = position
+		end
+
+feature {NONE} -- Implementation
+
+	window_item: POINTER
+			-- Handle of `window' for fast access.
+
+	scroll_info_struct: WEL_SCROLL_BAR_INFO
+		-- Associated SCROLLINFO struct to current scrollbars.
+
+feature {NONE} -- Externals
+
+	cwin_set_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER; redraw: BOOLEAN) is
+		external
+			"C [macro <windows.h>] (HWND, int, LPSCROLLINFO, BOOL)"
+		alias
+			"SetScrollInfo"
+		end
+
+	cwin_get_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER) is
+		external
+			"C [macro <windows.h>] (HWND, int, LPSCROLLINFO)"
+		alias
+			"GetScrollInfo"
 		end
 
 invariant

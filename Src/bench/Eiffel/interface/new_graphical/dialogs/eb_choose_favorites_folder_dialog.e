@@ -124,7 +124,7 @@ feature {NONE} -- Vision2 events
 	on_ok is
 			-- Terminate the dialog
 		do
-			if folders_tree.selected then
+			if folders_tree.selected_item /= Void then
 				selected := True
 				internal_chosen_folder ?= folders_tree.selected_item.data
 			end

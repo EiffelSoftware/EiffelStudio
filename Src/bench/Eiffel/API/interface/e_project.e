@@ -251,6 +251,13 @@ feature -- Access
 			Result := proj_dir.is_new
 		end;
 
+	batch_mode: BOOLEAN is
+			-- Is the compiler in batch mode?
+			-- (By default it is true)
+		do
+			Result := mode.item
+		end;
+
 feature -- Error status
 
 	error_occurred: BOOLEAN is
@@ -328,6 +335,14 @@ feature -- Status setting
 			Error_handler.set_error_displayer (ed)
 		ensure
 			set: error_displayer = Error_handler.error_displayer
+		end;
+
+	set_batch_mode (compiler_mode: BOOLEAN) is
+			-- Set `batch_mode' to `compiler_mode'
+		do
+			mode.put (compiler_mode)
+		ensure
+			set: compiler_mode = batch_mode
 		end;
 
 feature -- Update
@@ -649,6 +664,11 @@ feature {NONE} -- Implementation
 		once
 			!! deg_output;
 			!! Result.put (deg_output)
+		end;
+
+	mode: CELL [BOOLEAN] is
+		once
+			!! Result.put (True)
 		end;
 
 	link_driver is

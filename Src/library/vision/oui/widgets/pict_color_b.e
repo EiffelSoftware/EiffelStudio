@@ -17,26 +17,49 @@ inherit
 
 creation
 
-	make
+	make, make_unmanaged
 	
-feature -- Creation 
+feature {NONE} -- Creation 
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a draw button with `a_name' as identifier
 			-- and `a_parent' as parent.
 		require
-			Valid_name: a_name /= Void;
-			Valid_parent: a_parent /= Void;
-			Parent_not_menu_bar: is_valid (a_parent)
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void;
+			parent_not_menu_bar: is_valid (a_parent)
+		do
+			create_ev_widget (a_name, a_parent, True)
+		ensure
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name);
+			managed: managed
+		end;
+
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create an unmanaged draw button with `a_name' as identifier
+			-- and `a_parent' as parent.
+		require
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void;
+			parent_not_menu_bar: is_valid (a_parent)
+		do
+			create_ev_widget (a_name, a_parent, False)
+		ensure
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name);
+			not_managed: not managed
+		end;
+
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+			-- Create a draw button with `a_name' as identifier
+			-- and `a_parent' as parent.
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.pict_color_b (Current);
+			implementation:= toolkit.pict_color_b (Current, man);
 			set_default
-		ensure
-			Parent_set: parent = a_parent;
-			Identifier_set: identifier.is_equal (a_name)
 		end;
 
 feature -- Pixmap 
@@ -46,13 +69,13 @@ feature -- Pixmap
 		do
 			Result := implementation.pixmap
 		ensure
-			valid_result: Result /= Void implies Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid
 		end;
 
 	set_pixmap (a_pixmap: PIXMAP) is
 			-- Draw `a_pixmap' into the picture_button.
 		require
-			a_pixmap_exists: not (a_pixmap = Void);
+			a_pixmap_exists: a_pixmap /= Void;
 			a_pixmap_valid: a_pixmap.is_valid
 		do
 			implementation.set_pixmap (a_pixmap)
@@ -63,7 +86,7 @@ feature -- Pixmap
 	set_pixmap_by_name (a_pixmap_name: STRING) is
 			-- Draw `a_pixmap_name' into the picture_button.
 		require
-			a_pixmap_name_exist: not (a_pixmap_name = Void)
+			a_pixmap_name_exist: a_pixmap_name /= Void
 		local
 			a_pixmap: PIXMAP;
 		do

@@ -6,12 +6,14 @@ inherit
 		rename
 			transfer_to as external_transfer_to
 		redefine
-			unselected, replicated, set_type, is_function, type		
+			unselected, replicated, set_type, is_function, type,
+			new_api_feature
 		end;
 
 	EXTERNAL_I
 		redefine
-			unselected, replicated, transfer_to, set_type, is_function, type
+			unselected, replicated, transfer_to, set_type, is_function, type,
+			new_api_feature
 		select
 			transfer_to
 		end
@@ -60,5 +62,21 @@ feature
 			unselect.set_access_in (in);
 			Result := unselect;
 		end;
+
+feature -- Api creation
+ 
+	new_api_feature: E_FUNCTION is 
+			-- API feature creation
+		local
+			t: TYPE_A
+		do
+			!! Result.make (feature_name, feature_id);
+			t ?= type;
+			if t = Void then
+				t := type.actual_type
+			end;
+			Result.set_type (t);
+			update_api (Result)
+		end
 
 end

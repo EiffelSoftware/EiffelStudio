@@ -115,33 +115,41 @@ feature -- Access
 			clusters.go_to (cur)
 		end
 
-	classes_with_name (class_name: STRING): LINKED_LIST [CLASS_I] is
+	classes_with_name (class_name: STRING): LIST [CLASS_I] is
 			-- Classes with name `class_name' found in the Universe
 		local
 			cur: CURSOR
 			cname: STRING
 			classes: HASH_TABLE [CLASS_I, STRING]
 		do
-			!! Result.make
+			create {ARRAYED_LIST [CLASS_I]} Result.make (2)
 			cname := clone (class_name)
 			cname.to_lower
-			cur := clusters.cursor
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				classes := clusters.item.classes
-				if classes.has (cname) then
-					Result.extend (classes.found_item)
-					Result.forth
+			buffered_classes.search (cname)
+			if not buffered_classes.found then
+				cur := clusters.cursor
+				from
+					clusters.start
+				until
+					clusters.after
+				loop
+					classes := clusters.item.classes
+					if classes.has (cname) then
+						Result.extend (classes.found_item)
+						Result.forth
+					end
+					clusters.forth
 				end
-				clusters.forth
+				clusters.go_to (cur)
+				if Result.count = 1 then
+					buffered_classes.put (Result.first, cname)
+				end
+			else
+				Result.extend (buffered_classes.found_item)
 			end
-			clusters.go_to (cur)
 		end
 
-	compiled_classes_with_name (class_name: STRING): LINKED_LIST [CLASS_I] is
+	compiled_classes_with_name (class_name: STRING): LIST [CLASS_I] is
 			-- Compiled classes with name `class_name' found in the Universe
 		local
 			cur: CURSOR
@@ -149,22 +157,19 @@ feature -- Access
 			class_i: CLASS_I
 			classes: HASH_TABLE [CLASS_I, STRING]
 		do
-			!! Result.make
-			cname := clone (class_name)
-			cname.to_lower
-			cur := clusters.cursor
-			from clusters.start until clusters.after loop
-				classes := clusters.item.classes
-				if classes.has (cname) then
-					class_i := classes.found_item
-					if class_i.compiled then
-						Result.extend (class_i)
-						Result.forth
-					end
+			Result := classes_with_name (class_name)
+			from
+				Result.start
+			until
+				Result.after
+			loop
+				if Result.item.compiled then
+					Result.forth
+				else
+						-- Could be `remove' IF ONLY it was exported in list!!!
+					Result.prune_all (Result.item)
 				end
-				clusters.forth
 			end
-			clusters.go_to (cur)
 		end
 
 	class_named (class_name: STRING cluster: CLUSTER_I): CLASS_I is
@@ -345,7 +350,19 @@ feature -- Update
 			end
 		end
 
+	reset_internals is
+			-- Should be called when a new compilation starts.
+		do
+			buffered_classes.wipe_out
+		end
+
 feature {COMPILER_EXPORTER} -- Implementation
+
+	buffered_classes: HASH_TABLE [CLASS_I, STRING] is
+			-- Hash table that contains recent results of calls to `classes_with_name'.
+		once
+			create Result.make (200)
+		end
 
 	set_clusters (l: like clusters) is
 			-- Assign `l' to `clusters'.

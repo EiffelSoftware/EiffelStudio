@@ -15,6 +15,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_COLOR_CONTROL
+		export
+			{NONE} foreground_color
+		end
+
 creation
 	make_vertical,
 	make_horizontal,
@@ -98,6 +103,14 @@ feature -- Access
 			Result := max
 		end
 
+	background_color: WEL_COLOR_REF is
+			-- Background color used for the background of the
+			-- control
+			-- Can be redefined by the user
+		do
+			!! Result.make_system (Color_scrollbar)
+		end
+
 feature -- Element change
 
 	set_position (new_position: INTEGER) is
@@ -170,6 +183,15 @@ feature -- Basic operations
 				new_pos := minimum
 			end
 			set_position (new_pos)
+		end
+
+feature {NONE} -- Inapplicable
+
+	foreground_color: WEL_COLOR_REF is
+			-- foreground color has no effect here, we define one because
+			-- it can't be void.
+		do
+			!! Result.make_system (Color_windowtext)
 		end
 
 feature {NONE} -- Implementation

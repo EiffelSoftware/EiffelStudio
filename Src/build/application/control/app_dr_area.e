@@ -59,7 +59,7 @@ feature {NONE} -- Removable
 
 feature {NONE}
 
-	new_state: STATE;
+	new_state: BUILD_STATE;
 
 	stone_type: INTEGER is 
 		do 		
@@ -142,7 +142,7 @@ feature {NONE}
 			end
 		end; -- add_line
 
-	copy_state (s: STATE) is
+	copy_state (s: BUILD_STATE) is
 			-- Copy lists from `s' to new_state.
 		do
 			add_new_state;

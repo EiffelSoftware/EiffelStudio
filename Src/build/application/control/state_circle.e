@@ -16,7 +16,7 @@ creation
 	
 feature -- Creation
 
-	data: STATE;
+	data: BUILD_STATE;
 
 	make is
 			-- Create the figures.
@@ -48,7 +48,7 @@ feature
 			path.set_line_width (App_const.standard_thickness * 2)
 		end;
 
- 	set_stone (state: STATE) is
+ 	set_stone (state: BUILD_STATE) is
 			-- Set data to `state' and update the
 			-- text to the data label.
 		require else

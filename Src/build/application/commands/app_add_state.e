@@ -15,7 +15,7 @@ feature {NONE}
 			Result := Command_names.app_add_state_cmd_name
 		end;
 
-	work (added_state: STATE) is
+	work (added_state: BUILD_STATE) is
 			-- Add a state to the application if the state_stone
 			-- is not used by an existing circle. Create a circle 
 			-- and perform the specific_work. 

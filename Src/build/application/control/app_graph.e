@@ -36,10 +36,10 @@ feature
 			!! Result
 		end;
 
-	state (name: STRING): STATE is
+	state (name: STRING): BUILD_STATE is
 			-- Find state with label `name';
 		local
-			s: STATE
+			s: BUILD_STATE
 		do
 			from 
 				start
@@ -60,7 +60,7 @@ feature
 
 	has_state_name (name: STRING): BOOLEAN is
 		local
-			s: STATE;
+			s: BUILD_STATE;
 			other_name: STRING;
 			new_name: STRING
 		do
@@ -82,7 +82,7 @@ feature
 	state_names: LINKED_LIST [STRING] is
 			-- All state names
 		local
-			s: STATE
+			s: BUILD_STATE
 		do
 			from
 				!!Result.make;
@@ -99,10 +99,10 @@ feature
 			end
 		end;
 
-	states: LINKED_LIST [STATE] is
+	states: LINKED_LIST [BUILD_STATE] is
 			-- All states
 		local
-			s: STATE
+			s: BUILD_STATE
 		do
 			from
 				!!Result.make;
@@ -169,7 +169,7 @@ feature
 			Result.append (");%N%T%T%Tinit_windowing%N%T%Tend%N%Nend");
 		end;
 
-	set_initial_state (s: STATE) is
+	set_initial_state (s: BUILD_STATE) is
 			-- Set initial_state to `s'.
 		do
 			initial_state := s
@@ -206,7 +206,7 @@ feature -- Debugging purposes
 			valid_t: s /= Void
 		local
 			st: GRAPH_ELEMENT;
-			s_tate: STATE;
+			s_tate: BUILD_STATE;
 		do
 			io.putstring ("Element Type: ");
 			s_tate ?= s;

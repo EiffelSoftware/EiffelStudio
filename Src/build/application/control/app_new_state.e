@@ -50,7 +50,7 @@ feature
 			add_activate_action (Current, Void)
 		end;
 
-	data: STATE;
+	data: BUILD_STATE;
 
 feature {NONE}
 
@@ -63,7 +63,7 @@ feature {NONE}
 			-- Create a editor for the stone dropped
 			-- if it is not already being edited.
 		local
-			state: STATE;
+			state: BUILD_STATE;
 		do
 			state := dropped.data;
 			if state /= Void then
@@ -75,7 +75,7 @@ feature {NONE}
 			-- Create a new state
 		local
 			add_state_command: APP_ADD_STATE;
-			new_state: STATE
+			new_state: BUILD_STATE
 		do
 			!!new_state.make;
 			new_state.set_internal_name ("");

@@ -44,10 +44,16 @@ cluster
 			"tmp"
 			"temp"
 			"release"
+			"obsolete"
 		end
 
 external
-	include_path:		"$(EIFFEL4)\library\wel\spec\windows\include"
-	object: 			"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+	include_path:		"$(EIFFEL4)\library\vision2\spec\windows\include",
+						"$(EIFFEL4)\library\wel\spec\windows\include"
+
+	object: 			"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+			 			"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+			 			"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\zlib.lib",
+						"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
 
 end -- paintbrush

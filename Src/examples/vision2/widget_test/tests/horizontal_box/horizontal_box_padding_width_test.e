@@ -24,10 +24,8 @@ feature {NONE} -- Implementation
 				"Increase", agent adjust_padding (8))
 			create decrease_padding_button.make_with_text_and_action (
 				"Decrease", agent adjust_padding (-8))
-			create padding_output_label
-			padding_output_label.set_background_color (
-				create {EV_COLOR}.make_with_8_bit_rgb (215, 251, 230))
-			
+				
+			create padding_output_label			
 			horizontal_box.extend (decrease_padding_button)
 			horizontal_box.extend (padding_output_label)
 			horizontal_box.extend (increase_padding_button)

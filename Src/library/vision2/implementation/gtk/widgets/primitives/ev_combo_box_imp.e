@@ -79,14 +79,27 @@ feature {NONE} -- Initialization
 
 			-- Pointer to the list of items.
 			list_widget := C.gtk_combo_struct_list (c_object)
+			--C.gtk_combo_disable_activate (c_object)
 		end
 
 	initialize is
+		local
+			temp_c_object: POINTER
 		do
 			{EV_LIST_IMP} Precursor
 
-			--| FIXME IEK Action sequence is being connected twice.
-			--{EV_TEXT_FIELD_IMP} Precursor
+			--| We don't call EV_TEXT_FIELD_IMP Precursor as this only
+			--| adds two extra ones to what ev_list_imp Precursor calls
+			--| already and the default sequences can only be connected
+			--| once.
+
+
+			--| FIXME IEK  Is this hack acceptable?
+			temp_c_object := c_object
+			c_object := entry_widget
+			connect_signal_to_actions ("activate", interface.return_actions)
+			connect_signal_to_actions ("changed", interface.change_actions)
+			c_object := temp_c_object
 		end
 
 feature -- Access
@@ -298,7 +311,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_COMBO_BOX_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable  components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -312,21 +325,28 @@ end -- class EV_COMBO_BOX_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.17  2000/02/14 11:40:32  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.18  2000/02/14 20:38:35  oconnor
+--| mergerd from HACK-O-RAMA
+--|
+--| Revision 1.16.6.15  2000/02/14 20:21:18  king
+--| Connected signals to entry widget in initialize
+--|
+--| Revision 1.16.6.14  2000/02/14 17:17:22  king
+--| Connected change and activate signals
 --|
 --| Revision 1.16.6.13  2000/02/12 00:26:11  king
 --| Implemented gtk_reorder_child
 --|
 --| Revision 1.16.6.12  2000/02/11 18:25:26  king
---| Added entry widget pointer in EV_TEXT_FIELD_IMP to accomodate the fact that combo box is not an entry widget
+--| Added entry widget pointer in EV_TEXT_FIELD_IMP to accomodate the fact that
+--| combo box is not an entry widget
 --|
 --| Revision 1.16.6.11  2000/02/11 01:30:50  king
 --| Added fixme to precursor of initialize

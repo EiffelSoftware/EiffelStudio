@@ -72,7 +72,7 @@ feature -- Access
 	index: INTEGER is
 			-- Index of the current item.
 		do
-			Result := C.gtk_list_child_position(parent_imp.list_widget, Current.c_object) + 1 
+			Result := C.gtk_list_child_position (parent_imp.list_widget, Current.c_object) + 1 
 		end
 
 feature -- Status report
@@ -185,8 +185,11 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.24  2000/02/14 11:40:27  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.25  2000/02/14 20:38:35  oconnor
+--| mergerd from HACK-O-RAMA
+--|
+--| Revision 1.23.6.20  2000/02/14 20:19:48  king
+--| Corrected indenting on index
 --|
 --| Revision 1.23.6.19  2000/02/11 01:28:46  king
 --| Changed packing of pixmap box to non-expand

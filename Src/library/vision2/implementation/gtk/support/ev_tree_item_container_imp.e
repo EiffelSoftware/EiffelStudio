@@ -11,10 +11,22 @@ inherit
 	EV_TREE_ITEM_CONTAINER_I
 
 	EV_WIDGET_IMP
+		redefine
+			show
+		end
+
 		-- Inheriting from widget, because tree item and subtree
 		-- are widgets in gtk, although it is not a widget in
 		-- EiffelVision. This is just for implementation
 		-- reasons.
+
+feature -- Status settings
+
+	show is
+		do
+			gtk_widget_show (widget)
+			--c_gtk_widget_show_children (widget)
+		end
 
 feature {EV_TREE_ITEM} -- Implementation
 

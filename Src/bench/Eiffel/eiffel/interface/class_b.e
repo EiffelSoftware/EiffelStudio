@@ -8,8 +8,6 @@ inherit
 			actual_type, valid_redeclaration, is_basic
 		end
 
-	SHARED_TYPES
-
 creation
 	make
 	

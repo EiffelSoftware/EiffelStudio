@@ -119,64 +119,69 @@ feature {NONE} -- Externals
 
 	c_size_of_editstream: INTEGER is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		alias
 			"sizeof (EDITSTREAM)"
 		end
 
 	cwel_editstream_set_dwcookie (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		end
 
 	cwel_editstream_set_dwerror (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		end
 
 	cwel_editstream_set_pfncallback (ptr: POINTER; value: POINTER) is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		end
 
 	cwel_editstream_get_dwcookie (ptr: POINTER): INTEGER is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		end
 
 	cwel_editstream_get_dwerror (ptr: POINTER): INTEGER is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		end
 
 	cwel_set_editstream_procedure_address (address: POINTER) is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		end
 
 	cwel_set_editstream_object (object: like Current) is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
+		end
+
+	cwel_release_editstream_object is
+		external
+			"C [macro %"estream.h%"]"
 		end
 
 	cwel_editstream_callback: POINTER is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		end
 
 	cwel_set_editstream_buffer (value: POINTER) is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		end
 
 	cwel_set_editstream_buffer_size (value: INTEGER) is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		end
 
 	cwel_set_editstream_in (value: BOOLEAN) is
 		external
-			"C [macro <estream.h>]"
+			"C [macro %"estream.h%"]"
 		end
 
 end -- class WEL_RICH_EDIT_STREAM

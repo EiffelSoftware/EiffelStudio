@@ -48,6 +48,9 @@ extern EIF_BOOLEAN wel_editstream_in;
 #define cwel_set_editstream_object(_value_) (wel_editstream_object = (EIF_OBJ) eif_adopt (_value_))
 /* Set `wel_editstream_object' with `value' */
 
+#define cwel_release_editstream_object (eif_wean (wel_editstream_object))
+/* Set `wel_editstream_object' with `value' */
+
 #define cwel_set_editstream_buffer(_value_) (wel_editstream_buffer = (EIF_POINTER) _value_)
 /* Set `wel_editstream_buffer' with `value' */
 

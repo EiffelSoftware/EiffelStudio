@@ -29,8 +29,11 @@ extern EIF_OBJ font_family_enumerator;
 #define cwel_set_enum_font_fam_procedure_address(_addr_) (wel_enum_font_fam_procedure = (EIF_ENUM_FONT_FAMILY_PROCEDURE) _addr_)
 /* Set `wel_enum_font_fam_procedure' with `addr' */
 
-#define cwel_set_font_family_enumerator_object(_addr_) (font_family_enumerator = (EIF_OBJ) _addr_)
+#define cwel_set_font_family_enumerator_object(_addr_) (font_family_enumerator = eif_adopt ((EIF_OBJ) _addr_))
 /* Set `font_family_enumerator' with `addr' */
+
+#define cwel_release_font_family_enumerator_object (eif_wean (font_family_enumerator))
+/* Release `font_family_enumerator' with `addr' */
 
 #endif /* __WEL_ENUMFONT__ */
 

@@ -51,7 +51,10 @@ extern EIF_OBJ dispatcher;
 #define cwel_set_dialog_procedure_address(_addr_) (wel_dlgproc = (EIF_DLGPROC) _addr_)
 /* Set `wel_dlgproc' with `addr' */
 
-#define cwel_set_dispatcher_object(_addr_) (dispatcher = (EIF_OBJ) _addr_)
+#define cwel_set_dispatcher_object(_addr_) (dispatcher = (EIF_OBJ) eif_adopt (_addr_))
+/* Set `dispather' with `addr' */
+
+#define cwel_release_dispatcher_object (eif_wean (dispatcher))
 /* Set `dispather' with `addr' */
 
 #endif /* __WEL_DISPATCHER__ */

@@ -3888,66 +3888,66 @@ rt_private void diadic_op(int code)
 #define f first
 #define s second
 
-	second = opop();			/* Fetch second operand */
-	first = otop();				/* First operand will be replace by result */
+	s = opop();			/* Fetch second operand */
+	f = otop();			/* First operand will be replace by result */
 
 	switch (code) {				/* Execute operation */
 
 	/* And operation (boolean). */
 	case BC_AND:
-		first->it_char = (EIF_BOOLEAN) (first->it_char && second->it_char);
+		f->it_char = (EIF_BOOLEAN) (f->it_char && s->it_char);
 		break;
 
 	/* Or operation (boolean). */
 	case BC_OR:
-		first->it_char = (EIF_BOOLEAN) (first->it_char || second->it_char);
+		f->it_char = (EIF_BOOLEAN) (f->it_char || s->it_char);
 		break;
 
 	/* Xor operation (boolean). */
 	case BC_XOR:
-		first->it_char = (EIF_BOOLEAN) ((first->it_char && !second->it_char) ||
-			(!first->it_char && second->it_char));
+		f->it_char = (EIF_BOOLEAN) ((f->it_char && !s->it_char) ||
+			(!f->it_char && s->it_char));
 		break;
 
 	/* Lesser or equal operation. */
 	case BC_LE:
-		eif_interp_gt(first, second);
-		first->it_char = EIF_TEST (!first->it_char);
+		eif_interp_gt(f, s);
+		f->it_char = EIF_TEST (!f->it_char);
 		break;
 
 	/* Lesser than operation. */
 	case BC_LT:
-		eif_interp_lt (first, second);
+		eif_interp_lt (f, s);
 		break;
 
 	/* Greater or equal operation. */
 	case BC_GE:
-		eif_interp_lt (first, second);
-		first->it_char = EIF_TEST(!first->it_char);
+		eif_interp_lt (f, s);
+		f->it_char = EIF_TEST(!f->it_char);
 		break;
 
 	/* Greater than operation. */
 	case BC_GT:
-		eif_interp_gt (first, second);
+		eif_interp_gt (f, s);
 		break;
 
 	/* Equality operation. */
 	case BC_EQ:
-		eif_interp_eq (first, second);
+		eif_interp_eq (f, s);
 		break;
 
 	/* Different operation (not equal). */
 	case BC_NE:
-		eif_interp_eq (first, second);
-		first->it_char = EIF_TEST(!first->it_char);
+		eif_interp_eq (f, s);
+		f->it_char = EIF_TEST(!f->it_char);
 		break;
 
 	/* Minus operation. */
 	case BC_MINUS: {
-		uint32 sk_type = eif_expression_type (first->type & SK_HEAD, second->type & SK_HEAD);
-		switch(first->type & SK_HEAD) {
+		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
+		switch(f->type & SK_HEAD) {
 		case SK_INT8:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int8 = f->it_int8 - s->it_int8; break;
 			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 - s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 - s->it_int32; break;
@@ -3958,7 +3958,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT16:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int16 = f->it_int16 - (EIF_INTEGER_16) s->it_int8; break;
 			case SK_INT16: f->it_int16 = f->it_int16 - s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 - s->it_int32; break;
@@ -3969,7 +3969,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT32:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int32 = f->it_int32 - (EIF_INTEGER_32) s->it_int8; break;
 			case SK_INT16: f->it_int32 = f->it_int32 - (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 - s->it_int32; break;
@@ -3980,7 +3980,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT64:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int8; break;
 			case SK_INT16: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int16; break;
 			case SK_INT32: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int32; break;
@@ -3991,7 +3991,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_FLOAT:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_float = f->it_float - (EIF_REAL) s->it_int8; break;
 			case SK_INT16: f->it_float = f->it_float - (EIF_REAL) s->it_int16; break;
 			case SK_INT32: f->it_float = f->it_float - (EIF_REAL) s->it_int32; break;
@@ -4002,7 +4002,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_DOUBLE:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int8; break;
 			case SK_INT16: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int16; break;
 			case SK_INT32: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int32; break;
@@ -4014,17 +4014,17 @@ rt_private void diadic_op(int code)
 			break;
 		default: eif_panic(MTC botched);
 		}
-		first->type = sk_type;
+		f->type = sk_type;
 		}
 		break;
 
 
 	/* Plus operator. */
 	case BC_PLUS: {
-		uint32 sk_type = eif_expression_type (first->type & SK_HEAD, second->type & SK_HEAD);
-		switch(first->type & SK_HEAD) {
+		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
+		switch(f->type & SK_HEAD) {
 		case SK_INT8:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int8 = f->it_int8 + s->it_int8; break;
 			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 + s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 + s->it_int32; break;
@@ -4035,7 +4035,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT16:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int16 = f->it_int16 + (EIF_INTEGER_16) s->it_int8; break;
 			case SK_INT16: f->it_int16 = f->it_int16 + s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 + s->it_int32; break;
@@ -4046,7 +4046,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT32:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int32 = f->it_int32 + (EIF_INTEGER_32) s->it_int8; break;
 			case SK_INT16: f->it_int32 = f->it_int32 + (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 + s->it_int32; break;
@@ -4057,7 +4057,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT64:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int8; break;
 			case SK_INT16: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int16; break;
 			case SK_INT32: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int32; break;
@@ -4068,7 +4068,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_FLOAT:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_float = f->it_float + (EIF_REAL) s->it_int8; break;
 			case SK_INT16: f->it_float = f->it_float + (EIF_REAL) s->it_int16; break;
 			case SK_INT32: f->it_float = f->it_float + (EIF_REAL) s->it_int32; break;
@@ -4079,7 +4079,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_DOUBLE:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int8; break;
 			case SK_INT16: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int16; break;
 			case SK_INT32: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int32; break;
@@ -4091,15 +4091,15 @@ rt_private void diadic_op(int code)
 			break;
 		default: eif_panic(MTC botched);
 		}
-		first->type = sk_type;
+		f->type = sk_type;
 		}
 		break;
 
 	/* Power operator. */
 	case BC_POWER:
-		switch (first->type & SK_HEAD) {
+		switch (f->type & SK_HEAD) {
 			case SK_INT8:
-				switch (second->type & SK_HEAD) {
+				switch (s->type & SK_HEAD) {
 				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int8); break;
 				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int16); break;
 				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int32); break;
@@ -4110,7 +4110,7 @@ rt_private void diadic_op(int code)
 				}
 				break;
 			case SK_INT16:
-				switch (second->type & SK_HEAD) {
+				switch (s->type & SK_HEAD) {
 				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int8); break;
 				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int16); break;
 				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int32); break;
@@ -4121,7 +4121,7 @@ rt_private void diadic_op(int code)
 				}
 				break;
 			case SK_INT32:
-				switch (second->type & SK_HEAD) {
+				switch (s->type & SK_HEAD) {
 				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int8); break;
 				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int16); break;
 				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int32); break;
@@ -4132,7 +4132,7 @@ rt_private void diadic_op(int code)
 				}
 				break;
 			case SK_INT64:
-				switch (second->type & SK_HEAD) {
+				switch (s->type & SK_HEAD) {
 				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int8); break;
 				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int16); break;
 				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int32); break;
@@ -4143,7 +4143,7 @@ rt_private void diadic_op(int code)
 				}
 				break;
 			case SK_FLOAT:
-				switch (second->type & SK_HEAD) {
+				switch (s->type & SK_HEAD) {
 				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int8); break;
 				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int16); break;
 				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int32); break;
@@ -4154,7 +4154,7 @@ rt_private void diadic_op(int code)
 				}
 				break;
 			case SK_DOUBLE:
-				switch (second->type & SK_HEAD) {
+				switch (s->type & SK_HEAD) {
 				case SK_INT8: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int8); break;
 				case SK_INT16: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int16); break;
 				case SK_INT32: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int32); break;
@@ -4167,15 +4167,15 @@ rt_private void diadic_op(int code)
 		default:
 			eif_panic(MTC botched);
 		}
-		first->type = SK_DOUBLE;
+		f->type = SK_DOUBLE;
 		break;
 
 	/* Multiplication operator. */
 	case BC_STAR: {
-		uint32 sk_type = eif_expression_type (first->type & SK_HEAD, second->type & SK_HEAD);
-		switch(first->type & SK_HEAD) {
+		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
+		switch(f->type & SK_HEAD) {
 		case SK_INT8:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int8 = f->it_int8 * s->it_int8; break;
 			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 * s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 * s->it_int32; break;
@@ -4186,7 +4186,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT16:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int16 = f->it_int16 * (EIF_INTEGER_16) s->it_int8; break;
 			case SK_INT16: f->it_int16 = f->it_int16 * s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 * s->it_int32; break;
@@ -4197,7 +4197,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT32:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int32 = f->it_int32 * (EIF_INTEGER_32) s->it_int8; break;
 			case SK_INT16: f->it_int32 = f->it_int32 * (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 * s->it_int32; break;
@@ -4208,7 +4208,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT64:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int8; break;
 			case SK_INT16: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int16; break;
 			case SK_INT32: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int32; break;
@@ -4219,7 +4219,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_FLOAT:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_float = f->it_float * (EIF_REAL) s->it_int8; break;
 			case SK_INT16: f->it_float = f->it_float * (EIF_REAL) s->it_int16; break;
 			case SK_INT32: f->it_float = f->it_float * (EIF_REAL) s->it_int32; break;
@@ -4230,7 +4230,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_DOUBLE:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int8; break;
 			case SK_INT16: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int16; break;
 			case SK_INT32: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int32; break;
@@ -4242,16 +4242,16 @@ rt_private void diadic_op(int code)
 			break;
 		default: eif_panic(MTC botched);
 		}
-		first->type = sk_type;
+		f->type = sk_type;
 		}
 		break;
 
 	/* Real division operator. */
 	case BC_SLASH: {
-		uint32 sk_type = eif_expression_type (first->type & SK_HEAD, second->type & SK_HEAD);
-		switch(first->type & SK_HEAD) {
+		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
+		switch(f->type & SK_HEAD) {
 		case SK_INT8:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int8; break;
 			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int16; break;
 			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int32; break;
@@ -4262,7 +4262,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT16:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int8; break;
 			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int16; break;
 			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int32; break;
@@ -4273,7 +4273,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT32:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int8; break;
 			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int16; break;
 			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int32; break;
@@ -4284,7 +4284,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_INT64:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int8; break;
 			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int16; break;
 			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int32; break;
@@ -4295,7 +4295,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_FLOAT:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_float = f->it_float / (EIF_REAL) s->it_int8; break;
 			case SK_INT16: f->it_float = f->it_float / (EIF_REAL) s->it_int16; break;
 			case SK_INT32: f->it_float = f->it_float / (EIF_REAL) s->it_int32; break;
@@ -4306,7 +4306,7 @@ rt_private void diadic_op(int code)
 			}
 			break;
 		case SK_DOUBLE:
-			switch (second->type & SK_HEAD) {
+			switch (s->type & SK_HEAD) {
 			case SK_INT8: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int8; break;
 			case SK_INT16: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int16; break;
 			case SK_INT32: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int32; break;
@@ -4322,114 +4322,103 @@ rt_private void diadic_op(int code)
 		  		/* First type was before an integer that we divided with another
 				 * integer of a different size. In that case the return type is
 				 * always a DOUBLE. */
-			first->type = SK_DOUBLE;
+			f->type = SK_DOUBLE;
 		else
-			first->type = sk_type;
+			f->type = sk_type;
 		}
 		break;
 
 	/* Integer division operator. */
-	case BC_DIV:
-		switch(first->type & SK_HEAD) {
+	case BC_DIV: {
+		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
+		switch(f->type & SK_HEAD) {
 		case SK_INT8:
-			CHECK ("Second argument can only be INTEGER_8", (second->type & SK_HEAD) == SK_INT8)
-			first->it_int8 = (first->it_int8 / second->it_int8);
+			switch (s->type & SK_HEAD) {
+			case SK_INT8: f->it_int8 = f->it_int8 / s->it_int8; break;
+			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 / s->it_int16; break;
+			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 / s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 / s->it_int64; break;
+			default: eif_panic(MTC botched);
+			}
 			break;
 		case SK_INT16:
-			CHECK ("Second argument can only be an INTEGER_8 or INTEGER_16",
-				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16));
-					
-			switch (second->type & SK_HEAD) {
-			case SK_INT8:
-				first->it_int16 = (first->it_int16 / (EIF_INTEGER_16) second->it_int8); break;
-			case SK_INT16:
-				first->it_int16 = (first->it_int16 / second->it_int16); break;
+			switch (s->type & SK_HEAD) {
+			case SK_INT8: f->it_int16 = f->it_int16 / (EIF_INTEGER_16) s->it_int8; break;
+			case SK_INT16: f->it_int16 = f->it_int16 / s->it_int16; break;
+			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 / s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 / s->it_int64; break;
+			default: eif_panic(MTC botched);
 			}
 			break;
 		case SK_INT32:
-			CHECK ("Second argument can only be an INTEGER_8, INTEGER_16 or INTEGER_32",
-				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16) ||
-				((second->type & SK_HEAD) == SK_INT32));
-					
-			switch (second->type & SK_HEAD) {
-			case SK_INT8:
-				first->it_int32 = (first->it_int32 / (EIF_INTEGER_32) second->it_int8); break;
-			case SK_INT16:
-				first->it_int32 = (first->it_int32 / (EIF_INTEGER_32) second->it_int16); break;
-			case SK_INT32:
-				first->it_int32 = (first->it_int32 / second->it_int32); break;
+			switch (s->type & SK_HEAD) {
+			case SK_INT8: f->it_int32 = f->it_int32 / (EIF_INTEGER_32) s->it_int8; break;
+			case SK_INT16: f->it_int32 = f->it_int32 / (EIF_INTEGER_32) s->it_int16; break;
+			case SK_INT32: f->it_int32 = f->it_int32 / s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 / s->it_int64; break;
+			default: eif_panic(MTC botched);
 			}
 			break;
 		case SK_INT64:
-			CHECK ("Second argument can only be an INTEGER_8, INTEGER_16, INTEGER_32 or INTEGER_64",
-				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16) ||
-				((second->type & SK_HEAD) == SK_INT32) || ((second->type & SK_HEAD) == SK_INT64));
-					
-			switch (second->type & SK_HEAD) {
-			case SK_INT8:
-				first->it_int64 = (first->it_int64 / (EIF_INTEGER_64) second->it_int8); break;
-			case SK_INT16:
-				first->it_int64 = (first->it_int64 / (EIF_INTEGER_64) second->it_int16); break;
-			case SK_INT32:
-				first->it_int64 = (first->it_int64 / (EIF_INTEGER_64) second->it_int32); break;
-			case SK_INT64:
-				first->it_int64 = (first->it_int64 / second->it_int64); break;
+			switch (s->type & SK_HEAD) {
+			case SK_INT8: f->it_int64 = f->it_int64 / (EIF_INTEGER_64) s->it_int8; break;
+			case SK_INT16: f->it_int64 = f->it_int64 / (EIF_INTEGER_64) s->it_int16; break;
+			case SK_INT32: f->it_int64 = f->it_int64 / (EIF_INTEGER_64) s->it_int32; break;
+			case SK_INT64: f->it_int64 = f->it_int64 / s->it_int64; break;
+			default: eif_panic(MTC botched);
 			}
 			break;
 		default: eif_panic(MTC botched);
+		}
+		f->type = sk_type;
 		}
 		break;
 
 	/* Modulo operator. */
-	case BC_MOD:
-		switch(first->type & SK_HEAD) {
+	case BC_MOD: {
+		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
+		switch(f->type & SK_HEAD) {
 		case SK_INT8:
-			CHECK ("Second argument can only be INTEGER_8", (second->type & SK_HEAD) == SK_INT8)
-			first->it_int8 = (first->it_int8 % second->it_int8);
+			switch (s->type & SK_HEAD) {
+			case SK_INT8: f->it_int8 = f->it_int8 % s->it_int8; break;
+			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 % s->it_int16; break;
+			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 % s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 % s->it_int64; break;
+			default: eif_panic(MTC botched);
+			}
 			break;
 		case SK_INT16:
-			CHECK ("Second argument can only be an INTEGER_8 or INTEGER_16",
-				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16));
-					
-			switch (second->type & SK_HEAD) {
-			case SK_INT8:
-				first->it_int16 = (first->it_int16 % (EIF_INTEGER_16) second->it_int8); break;
-			case SK_INT16:
-				first->it_int16 = (first->it_int16 % second->it_int16); break;
+			switch (s->type & SK_HEAD) {
+			case SK_INT8: f->it_int16 = f->it_int16 % (EIF_INTEGER_16) s->it_int8; break;
+			case SK_INT16: f->it_int16 = f->it_int16 % s->it_int16; break;
+			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 % s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 % s->it_int64; break;
+			default: eif_panic(MTC botched);
 			}
 			break;
 		case SK_INT32:
-			CHECK ("Second argument can only be an INTEGER_8, INTEGER_16 or INTEGER_32",
-				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16) ||
-				((second->type & SK_HEAD) == SK_INT32));
-					
-			switch (second->type & SK_HEAD) {
-			case SK_INT8:
-				first->it_int32 = (first->it_int32 % (EIF_INTEGER_32) second->it_int8); break;
-			case SK_INT16:
-				first->it_int32 = (first->it_int32 % (EIF_INTEGER_32) second->it_int16); break;
-			case SK_INT32:
-				first->it_int32 = (first->it_int32 % second->it_int32); break;
+			switch (s->type & SK_HEAD) {
+			case SK_INT8: f->it_int32 = f->it_int32 % (EIF_INTEGER_32) s->it_int8; break;
+			case SK_INT16: f->it_int32 = f->it_int32 % (EIF_INTEGER_32) s->it_int16; break;
+			case SK_INT32: f->it_int32 = f->it_int32 % s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 % s->it_int64; break;
+			default: eif_panic(MTC botched);
 			}
 			break;
 		case SK_INT64:
-			CHECK ("Second argument can only be an INTEGER_8, INTEGER_16, INTEGER_32 or INTEGER_64",
-				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16) ||
-				((second->type & SK_HEAD) == SK_INT32) || ((second->type & SK_HEAD) == SK_INT64));
-					
-			switch (second->type & SK_HEAD) {
-			case SK_INT8:
-				first->it_int64 = (first->it_int64 % (EIF_INTEGER_64) second->it_int8); break;
-			case SK_INT16:
-				first->it_int64 = (first->it_int64 % (EIF_INTEGER_64) second->it_int16); break;
-			case SK_INT32:
-				first->it_int64 = (first->it_int64 % (EIF_INTEGER_64) second->it_int32); break;
-			case SK_INT64:
-				first->it_int64 = (first->it_int64 % second->it_int64); break;
+			switch (s->type & SK_HEAD) {
+			case SK_INT8: f->it_int64 = f->it_int64 % (EIF_INTEGER_64) s->it_int8; break;
+			case SK_INT16: f->it_int64 = f->it_int64 % (EIF_INTEGER_64) s->it_int16; break;
+			case SK_INT32: f->it_int64 = f->it_int64 % (EIF_INTEGER_64) s->it_int32; break;
+			case SK_INT64: f->it_int64 = f->it_int64 % s->it_int64; break;
+			default: eif_panic(MTC botched);
 			}
 			break;
 		default: eif_panic(MTC botched);
 		}
+		f->type = sk_type;
+		}
+
 		break;
 
 	default:

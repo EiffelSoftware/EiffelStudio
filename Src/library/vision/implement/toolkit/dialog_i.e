@@ -9,9 +9,6 @@ deferred class DIALOG_I
 inherit
 
 	WM_SHELL_I
-
-
-
 	
 feature 
 
@@ -70,7 +67,7 @@ feature
 	raise is
 			-- Raise the shell to the top of the stacking order.
 		deferred
-		end; -- raise
+		end;
 
 	set_cascade_grab is
 			-- Specifies that the shell would be popped up with cascade grab
@@ -78,23 +75,31 @@ feature
 		deferred
 		ensure
 			is_cascade_grab
-		end; -- set_cascade_grab
+		end;
 
 	set_exclusive_grab is
 			-- Specifies that the shell would be popped up with exclusive grab.
 		deferred
 		ensure
 			is_exclusive_grab
-		end; -- set_exclusive_grab
+		end;
 
 	set_no_grab is
 			-- Specifies that the shell would be popped up with no grab.
 		deferred
 		ensure
 			is_no_grab
-		end -- set_no_grab
+		end
 
 feature
+
+	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY) is
+			-- Set the dialog shell action to `cmd' with `arg'
+		require
+			action_exists: action /= Void
+			cmd_exists: cmd /= Void
+		deferred
+		end
 
 	dialog_command_target is
 			-- set the command target to the dialog_shell

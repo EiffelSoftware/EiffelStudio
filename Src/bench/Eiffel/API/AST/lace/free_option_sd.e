@@ -207,6 +207,7 @@ feature {NONE} -- Codes and names.
 			Result.force (multithreaded, "multithreaded")
 			Result.force (namespace, "namespace")
 			Result.force (override_cluster, "override_cluster")
+			Result.force (product, "product")
 			Result.force (profile, "profile")
 			Result.force (server_file_size, "server_file_size")
 			Result.force (shared_library_definition, "shared_library_definition")

@@ -29,7 +29,7 @@
 #include <io.h>
 #endif
 
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 #include "winsock.h"
 #endif
 
@@ -212,7 +212,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 		c = BASIC_STORE_3_2;
 
 	/* Write the kind of store */
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 	if (((fstoretype == 'F')
 		? write(fides, &c, sizeof(char))
 		: send (fides, &c, sizeof(char), 0)) < 0) {
@@ -1242,7 +1242,7 @@ void store_write()
 
 	int number_writen;
 
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 	if (fstoretype == 'F')
 		{
 		if ((write (fides, &send_size, sizeof (short))) < sizeof (short))
@@ -1256,7 +1256,7 @@ void store_write()
 		eio();
 #endif
 	while (number_left > 0) {
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 		if (fstoretype == 'F')
 			number_writen = write (fides, ptr, number_left);
 		else

@@ -23,7 +23,7 @@
 #include <sys/in.h>
 #endif
 #endif
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 #include "winsock.h"
 #endif
 #include "eiffel.h"
@@ -149,7 +149,7 @@ IDR *bu;
         short read_size, amount_left;
         register int part_read = 0, total_read = 0;
 
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 	if (r_fstoretype == 'F')
 		{
 		if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
@@ -171,7 +171,7 @@ IDR *bu;
 
 	amount_left = read_size;
 	while (total_read < read_size) {
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 		if (r_fstoretype == 'F')
 			{
 			if ((part_read = read (r_fides, ptr, amount_left)) < 0)
@@ -205,7 +205,7 @@ IDR *bu;
 
 	host_send = htons (send_size);
 
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 	if (fstoretype == 'F')
 		{
 		if ((write (fides, &host_send, sizeof (short))) < sizeof (short))
@@ -220,7 +220,7 @@ IDR *bu;
 #endif
 
 	while (send_size > 0) {
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 		if (fstoretype == 'F')
 			{
 			if ((number_writen = write (fides, ptr, (int) send_size)) <= 0)

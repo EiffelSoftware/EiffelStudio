@@ -36,7 +36,7 @@
 #include <strings.h>
 #endif
 
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 #include "winsock.h"
 #endif
 
@@ -140,7 +140,7 @@ EIF_CHARACTER file_storage_type;
 	r_fstoretype = file_storage_type;
 
 	/* Read the kind of stored hierachy */
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 	if (r_fstoretype == 'F')
 		{
 		if ((read (r_fides, &rt_type, (sizeof(char)))) < sizeof (char))
@@ -1414,7 +1414,7 @@ int size;
 	char *buf = object;
 
 	while (amount < size) {
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 		if (r_fstoretype == 'F')
 			i = read (r_fides, buf, size - amount);
 		else
@@ -1466,7 +1466,7 @@ public int old_retrieve_read ()
 {
 	char * ptr = general_buffer;
 
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 	if (r_fstoretype == 'F')
 		end_of_buffer = read (r_fides, ptr, buffer_size);
 	else
@@ -1488,7 +1488,7 @@ public int retrieve_read ()
 	int part_read = 0, total_read = 0;
 
 	end_of_buffer = 0;
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 	if (r_fstoretype == 'F')
 		{
 		if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
@@ -1503,7 +1503,7 @@ public int retrieve_read ()
 #endif
 
 	while (end_of_buffer < read_size) {
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 	if (r_fstoretype == 'F')
 		part_read = read (r_fides, ptr, read_size);
 	else

@@ -104,10 +104,10 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	cwin_create_pen (a_style, a_width: INTEGER; a_color: POINTER): POINTER is
+	cwin_create_pen (a_style, a_width: INTEGER; a_color: INTEGER): POINTER is
 			-- SDK CreatePen
 		external
-			"C [macro <wel.h>] (int, int, COLORREF): EIF_POINTER"
+			"C [macro <windows.h>] (int, int, COLORREF): HPEN"
 		alias
 			"CreatePen"
 		end
@@ -115,7 +115,7 @@ feature {NONE} -- Externals
 	cwin_create_pen_indirect (a_log_pen: POINTER): POINTER is
 			-- SDK CreatePenIndirect
 		external
-			"C [macro <wel.h>] (LOGPEN *): EIF_POINTER"
+			"C [macro <windows.h>] (LOGPEN *): HPEN"
 		alias
 			"CreatePenIndirect"
 		end

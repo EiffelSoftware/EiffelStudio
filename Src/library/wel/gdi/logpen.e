@@ -75,7 +75,7 @@ feature -- Access
 	color: WEL_COLOR_REF is
 			-- Pen color
 		do
-			!! Result.make_by_pointer (cwel_logpen_get_color (item))
+			!! Result.make_by_color (cwel_logpen_get_color (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -140,7 +140,7 @@ feature {NONE} -- Externals
 			"C [macro <logpen.h>]"
 		end
 
-	cwel_logpen_get_color (ptr: POINTER): POINTER is
+	cwel_logpen_get_color (ptr: POINTER): INTEGER is
 		external
 			"C [macro <logpen.h>]"
 		end
@@ -155,7 +155,7 @@ feature {NONE} -- Externals
 			"C [macro <logpen.h>]"
 		end
 
-	cwel_logpen_set_color (ptr: POINTER; value: POINTER) is
+	cwel_logpen_set_color (ptr: POINTER; value: INTEGER) is
 		external
 			"C [macro <logpen.h>]"
 		end
@@ -168,7 +168,7 @@ feature {NONE} -- Externals
 	cwin_get_object (hgdi_object: POINTER; buffer_size: INTEGER;
 			object: POINTER) is
 		external
-			"C [macro <wel.h>] (HGDIOBJ, int, LPVOID)"
+			"C [macro <windows.h>] (HGDIOBJ, int, LPVOID)"
 		alias
 			"GetObject"
 		end

@@ -16,7 +16,7 @@
 
 #define cwel_logpen_get_style(_ptr_) ((EIF_INTEGER) (((LOGPEN *) _ptr_)->lopnStyle))
 #define cwel_logpen_get_width(_ptr_) ((EIF_INTEGER) (((LOGPEN *) _ptr_)->lopnWidth.x))
-#define cwel_logpen_get_color(_ptr_) ((EIF_POINTER) (((LOGPEN *) _ptr_)->lopnColor))
+#define cwel_logpen_get_color(_ptr_) ((EIF_INTEGER) (((LOGPEN *) _ptr_)->lopnColor))
 
 #endif /* __WEL_LOGPEN__ */
 

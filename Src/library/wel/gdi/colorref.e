@@ -8,27 +8,17 @@ class
 	WEL_COLOR_REF
 
 inherit
-	WEL_ANY
-		export
-			{ANY} is_equal, copy, clone
-		redefine
-			exists,
-			is_equal
-		end
-
 	WEL_COLOR_CONSTANTS
 		export
 			{NONE} all
-			{ANY} valid_color_constant
-		undefine
-			is_equal
+			{ANY} is_equal, valid_color_constant
 		end
 
 creation
 	make,
 	make_rgb,
 	make_system,
-	make_by_pointer
+	make_by_color
 
 feature {NONE} -- Initialization
 
@@ -69,7 +59,23 @@ feature {NONE} -- Initialization
 			item := cwin_get_sys_color (index)
 		end
 
+	make_by_color (color: INTEGER) is
+			-- Set `item' with `color'.
+		do
+			item := color
+		end
+
+	make_by_pointer (color_pointer: POINTER) is
+			-- Set `item' with `color_pointer'.
+		obsolete
+			"Use `make_by_color' instead. No implemented here."
+		do
+		end
+
 feature -- Access
+
+	item: INTEGER
+			-- The Current color.
 
 	red: INTEGER is
 			-- Intensity value for the red component
@@ -139,70 +145,49 @@ feature -- Element change
 			blue_set: blue = a_blue
 		end
 
-feature -- Status report
-
-	exists: BOOLEAN is True
-			-- A color always exists.
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Is `Current' equal to `other'?
-		do
-			Result := item = other.item
-		end
-
-feature {NONE} -- Removal
-
-	destroy_item is
-			-- Nothing to destroy.
-		do
-		end
-
 feature {NONE} -- Externals
 
-	cwin_rgb (a_red, a_green, a_blue: INTEGER): POINTER is
+	cwin_rgb (a_red, a_green, a_blue: INTEGER): INTEGER is
 			-- SDK RGB
 		external
-			"C [macro <wel.h>] (BYTE, BYTE, BYTE): EIF_POINTER"
+			"C [macro <windows.h>] (BYTE, BYTE, BYTE): COLORREF"
 		alias
 			"RGB"
 		end
 
-	cwin_get_r_value (color: POINTER): INTEGER is
+	cwin_get_r_value (color: INTEGER): INTEGER is
 			-- SDK GetRValue
 		external
-			"C [macro <wel.h>] (COLORREF): EIF_INTEGER"
+			"C [macro <windows.h>] (DWORD): BYTE"
 		alias
 			"GetRValue"
 		end
 
-	cwin_get_g_value (color: POINTER): INTEGER is
+	cwin_get_g_value (color: INTEGER): INTEGER is
 			-- SDK GetGValue
 		external
-			"C [macro <wel.h>] (COLORREF): EIF_INTEGER"
+			"C [macro <windows.h>] (DWORD): BYTE"
 		alias
 			"GetGValue"
 		end
 
-	cwin_get_b_value (color: POINTER): INTEGER is
+	cwin_get_b_value (color: INTEGER): INTEGER is
 			-- SDK GetBValue
 		external
-			"C [macro <wel.h>] (COLORREF): EIF_INTEGER"
+			"C [macro <windows.h>] (DWORD): BYTE"
 		alias
 			"GetBValue"
 		end
 
-	cwin_get_sys_color (index: INTEGER): POINTER is
+	cwin_get_sys_color (index: INTEGER): INTEGER is
 			-- SDK GetSysColor
 		external
-			"C [macro <wel.h>] (int): EIF_POINTER"
+			"C [macro <windows.h>] (int): DWORD"
 		alias
 			"GetSysColor"
 		end
 
 invariant
-	exists: exists
 	valid_red_inf: red >= 0
 	valid_red_sup: red <= 255
 	valid_green_inf: green >= 0

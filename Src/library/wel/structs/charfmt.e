@@ -85,7 +85,7 @@ feature -- Access
 	text_color: WEL_COLOR_REF is
 			-- Text color
 		do
-			!! Result.make_by_pointer (
+			!! Result.make_by_color (
 				cwel_charformat_get_crtextcolor (item))
 		ensure
 			result_not_void: Result /= Void
@@ -366,7 +366,7 @@ feature {NONE} -- Externals
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_set_crtextcolor (ptr: POINTER; value: POINTER) is
+	cwel_charformat_set_crtextcolor (ptr: POINTER; value: INTEGER) is
 		external
 			"C [macro <charfmt.h>]"
 		end
@@ -406,7 +406,7 @@ feature {NONE} -- Externals
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_get_crtextcolor (ptr: POINTER): POINTER is
+	cwel_charformat_get_crtextcolor (ptr: POINTER): INTEGER is
 		external
 			"C [macro <charfmt.h>]"
 		end

@@ -97,7 +97,7 @@ feature -- Access
 		require
 			exits: exists
 		do
-			!! Result.make_by_pointer (cwel_choose_font_get_rgbcolors (item))
+			!! Result.make_by_color (cwel_choose_font_get_rgbcolors (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -253,7 +253,7 @@ feature {NONE} -- Externals
 			"C [macro <choosefo.h>]"
 		end
 
-	cwel_choose_font_set_rgbcolors (ptr: POINTER; value: POINTER) is
+	cwel_choose_font_set_rgbcolors (ptr: POINTER; value: INTEGER) is
 		external
 			"C [macro <choosefo.h>]"
 		end
@@ -273,7 +273,7 @@ feature {NONE} -- Externals
 			"C [macro <choosefo.h>]"
 		end
 
-	cwel_choose_font_get_rgbcolors (ptr: POINTER): POINTER is
+	cwel_choose_font_get_rgbcolors (ptr: POINTER): INTEGER is
 		external
 			"C [macro <choosefo.h>]"
 		end

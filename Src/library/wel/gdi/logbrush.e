@@ -64,7 +64,7 @@ feature -- Access
 	color: WEL_COLOR_REF is
 			-- Brush color
 		do
-			!! Result.make_by_pointer (cwel_logbrush_get_color (item))
+			!! Result.make_by_color (cwel_logbrush_get_color (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -122,38 +122,37 @@ feature {NONE} -- Externals
 
 	cwel_logbrush_get_style (ptr: POINTER): INTEGER is
 		external
-			"C [macro <logbrush.h>]"
+			"C [macro %"logbrush.h%"]"
 		end
 
-	cwel_logbrush_get_color (ptr: POINTER): POINTER is
+	cwel_logbrush_get_color (ptr: POINTER): INTEGER is
 		external
-			"C [macro <logbrush.h>]"
+			"C [macro %"logbrush.h%"]"
 		end
 
 	cwel_logbrush_get_hatch (ptr: POINTER): INTEGER is
 		external
-			"C [macro <logbrush.h>]"
+			"C [macro %"logbrush.h%"]"
 		end
 
 	cwel_logbrush_set_style (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <logbrush.h>]"
+			"C [macro %"logbrush.h%"]"
 		end
 
-	cwel_logbrush_set_color (ptr: POINTER; value: POINTER) is
+	cwel_logbrush_set_color (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <logbrush.h>]"
+			"C [macro %"logbrush.h%"]"
 		end
 
 	cwel_logbrush_set_hatch (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <logbrush.h>]"
+			"C [macro %"logbrush.h%"]"
 		end
 
-	cwin_get_object (hgdi_object: POINTER; buffer_size: INTEGER;
-			object: POINTER) is
+	cwin_get_object (hgdi_object: POINTER; buffer_size: INTEGER; object: POINTER) is
 		external
-			"C [macro <wel.h>] (HGDIOBJ, int, LPVOID)"
+			"C [macro <windows.h>] (HGDIOBJ, int, LPVOID)"
 		alias
 			"GetObject"
 		end

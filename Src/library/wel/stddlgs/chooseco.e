@@ -45,7 +45,7 @@ feature -- Access
 		require
 			selected: selected
 		do
-			!! Result.make_by_pointer (
+			!! Result.make_by_color (
 				cwel_choose_color_get_rgbresult (item))
 		ensure
 			result_not_void: Result /= Void
@@ -202,7 +202,7 @@ feature {NONE} -- Externals
 			"C [macro <chooseco.h>]"
 		end
 
-	cwel_choose_color_set_rgbresult (ptr: POINTER; value: POINTER) is
+	cwel_choose_color_set_rgbresult (ptr: POINTER; value: INTEGER) is
 		external
 			"C [macro <chooseco.h>]"
 		end
@@ -217,7 +217,7 @@ feature {NONE} -- Externals
 			"C [macro <chooseco.h>]"
 		end
 
-	cwel_choose_color_get_rgbresult (ptr: POINTER): POINTER is
+	cwel_choose_color_get_rgbresult (ptr: POINTER): INTEGER is
 		external
 			"C [macro <chooseco.h>]"
 		end

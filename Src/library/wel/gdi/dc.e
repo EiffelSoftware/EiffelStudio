@@ -150,7 +150,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make_by_pointer (cwin_get_bk_color (item))
+			!! Result.make_by_color (cwin_get_bk_color (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -160,7 +160,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make_by_pointer (cwin_get_text_color (item))
+			!! Result.make_by_color (cwin_get_text_color (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -188,7 +188,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make_by_pointer (cwin_get_pixel (item, x, y))
+			!! Result.make_by_color (cwin_get_pixel (item, x, y))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -642,8 +642,7 @@ feature -- Status setting
 			if pen_selected then
 				cwin_select_object (item, a_pen.item)
 			else
-				old_hpen := cwin_select_object_result (item,
-					a_pen.item)
+				old_hpen := cwin_select_object_result (item, a_pen.item)
 				check
 					old_hpen_not_null:
 						old_hpen /= default_pointer
@@ -665,8 +664,7 @@ feature -- Status setting
 			if brush_selected then
 				cwin_select_object (item, a_brush.item)
 			else
-				old_hbrush := cwin_select_object_result (item,
-					a_brush.item)
+				old_hbrush := cwin_select_object_result (item, a_brush.item)
 				check
 					old_hbrush_not_null:
 						old_hbrush /= default_pointer
@@ -1467,17 +1465,23 @@ feature {NONE} -- Implementation
 
 feature -- Obsolete
 
-	set_bk_color (color: WEL_COLOR_REF) is obsolete "Use ``set_background_color''"
+	set_bk_color (color: WEL_COLOR_REF) is
+		obsolete
+			"Use ``set_background_color''"
 		do
 			set_background_color (color)
 		end
 
-	poly_line (points: ARRAY [INTEGER]) is obsolete "Use ``polyline''"
+	poly_line (points: ARRAY [INTEGER]) is
+		obsolete
+			"Use ``polyline''"
 		do
 			polyline (points)
 		end
 
-	save (a_bitmap: WEL_BITMAP; file: FILE_NAME) is obsolete "Use ``save_bitmap''"
+	save (a_bitmap: WEL_BITMAP; file: FILE_NAME) is
+		obsolete
+			"Use ``save_bitmap''"
 		do
 			save_bitmap (a_bitmap, file)
 		end
@@ -1488,7 +1492,7 @@ feature {NONE} -- Externals
 			length: INTEGER) is
 			-- SDK TextOut
 		external
-			"C [macro <wel.h>] (HDC, int, int, LPCSTR, int)"
+			"C [macro <windows.h>] (HDC, int, int, LPCSTR, int)"
 		alias
 			"TextOut"
 		end
@@ -1498,7 +1502,7 @@ feature {NONE} -- Externals
 			tab_origin: INTEGER) is
 			-- SDK TabbedTextOut
 		external
-			"C [macro <wel.h>] (HDC, int, int, LPCTSTR, int, int, %
+			"C [macro <windows.h>] (HDC, int, int, LPCTSTR, int, int, %
 				%LPINT, int)"
 		alias
 			"TabbedTextOut"
@@ -1508,7 +1512,7 @@ feature {NONE} -- Externals
 			rect: POINTER; format: INTEGER) is
 			-- SDK DrawText
 		external
-			"C [macro <wel.h>] (HDC, LPCSTR, int, LPRECT, UINT)"
+			"C [macro <windows.h>] (HDC, LPCSTR, int, LPRECT, UINT)"
 		alias
 			"DrawText"
 		end
@@ -1516,23 +1520,23 @@ feature {NONE} -- Externals
 	cwin_draw_icon (hdc: POINTER; x, y: INTEGER; hicon: POINTER) is
 			-- SDK DrawIcon
 		external
-			"C [macro <wel.h>] (HDC, int, int, HICON)"
+			"C [macro <windows.h>] (HDC, int, int, HICON)"
 		alias
 			"DrawIcon"
 		end
 
-	cwin_set_pixel (hdc: POINTER; x, y: INTEGER; color: POINTER) is
+	cwin_set_pixel (hdc: POINTER; x, y: INTEGER; color: INTEGER) is
 			-- SDK SetPixel
 		external
-			"C [macro <wel.h>] (HDC, int, int, COLORREF)"
+			"C [macro <windows.h>] (HDC, int, int, COLORREF)"
 		alias
 			"SetPixel"
 		end
 
-	cwin_get_pixel (hdc: POINTER; x, y: INTEGER): POINTER is
+	cwin_get_pixel (hdc: POINTER; x, y: INTEGER): INTEGER is
 			-- SDK GetPixel
 		external
-			"C [macro <wel.h>] (HDC, int, int): EIF_POINTER"
+			"C [macro <windows.h>] (HDC, int, int): COLORREF"
 		alias
 			"GetPixel"
 		end
@@ -1540,7 +1544,7 @@ feature {NONE} -- Externals
 	cwin_move_to_ex (hdc: POINTER; x, y: INTEGER; point: POINTER) is
 			-- SDK MoveToEx
 		external
-			"C [macro <wel.h>] (HDC, int, int, LPPOINT)"
+			"C [macro <windows.h>] (HDC, int, int, LPPOINT)"
 		alias
 			"MoveToEx"
 		end
@@ -1548,7 +1552,7 @@ feature {NONE} -- Externals
 	cwin_line_to (hdc: POINTER; x, y: INTEGER) is
 			-- SDK LineTo
 		external
-			"C [macro <wel.h>] (HDC, int, int)"
+			"C [macro <windows.h>] (HDC, int, int)"
 		alias
 			"LineTo"
 		end
@@ -1556,7 +1560,7 @@ feature {NONE} -- Externals
 	cwin_polyline (hdc, pts: POINTER; num: INTEGER) is
 			-- SDK Polyline
 		external
-			"C [macro <wel.h>] (HDC, POINT *, int)"
+			"C [macro <windows.h>] (HDC, POINT *, int)"
 		alias
 			"Polyline"
 		end
@@ -1564,7 +1568,7 @@ feature {NONE} -- Externals
 	cwin_rectangle (hdc: POINTER; x1, y1, x2, y2: INTEGER) is
 			-- SDK Rectangle
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, int)"
+			"C [macro <windows.h>] (HDC, int, int, int, int)"
 		alias
 			"Rectangle"
 		end
@@ -1572,7 +1576,7 @@ feature {NONE} -- Externals
 	cwin_invert_rect (hdc: POINTER; rect: POINTER) is
 			-- SDK InvertRect
 		external
-			"C [macro <wel.h>] (HDC, RECT *)"
+			"C [macro <windows.h>] (HDC, RECT *)"
 		alias
 			"InvertRect"
 		end
@@ -1580,7 +1584,7 @@ feature {NONE} -- Externals
 	cwin_invert_rgn (hdc: POINTER; rgn: POINTER) is
 			-- SDK InvertRgn
 		external
-			"C [macro <wel.h>] (HDC, HRGN)"
+			"C [macro <windows.h>] (HDC, HRGN)"
 		alias
 			"InvertRgn"
 		end
@@ -1588,16 +1592,15 @@ feature {NONE} -- Externals
 	cwin_fill_rect (hdc, rect, hbrush: POINTER) is
 			-- SDK FillRect
 		external
-			"C [macro <wel.h>] (HDC, RECT *, HBRUSH)"
+			"C [macro <windows.h>] (HDC, RECT *, HBRUSH)"
 		alias
 			"FillRect"
 		end
 
-	cwin_ext_flood_fill (hdc: POINTER; x, y: INTEGER; color: POINTER;
-				type: INTEGER) is
+	cwin_ext_flood_fill (hdc: POINTER; x, y: INTEGER; color: INTEGER; type: INTEGER) is
 			-- SDK ExtFloodFill
 		external
-			"C [macro <wel.h>] (HDC, int, int, COLORREF, UINT)"
+			"C [macro <windows.h>] (HDC, int, int, COLORREF, UINT)"
 		alias
 			"ExtFloodFill"
 		end
@@ -1605,7 +1608,7 @@ feature {NONE} -- Externals
 	cwin_polygon (hdc, pts: POINTER; num: INTEGER) is
 			-- SDK Polygon
 		external
-			"C [macro <wel.h>] (HDC, POINT *, int)"
+			"C [macro <windows.h>] (HDC, POINT *, int)"
 		alias
 			"Polygon"
 		end
@@ -1613,7 +1616,7 @@ feature {NONE} -- Externals
 	cwin_poly_bezier (hdc, pts: POINTER; num: INTEGER) is
 			-- SDK PolyBezier
 		external
-			"C [macro <wel.h>] (HDC, POINT *, DWORD)"
+			"C [macro <windows.h>] (HDC, POINT *, DWORD)"
 		alias
 			"PolyBezier"
 		end
@@ -1621,7 +1624,7 @@ feature {NONE} -- Externals
 	cwin_poly_bezier_to (hdc, pts: POINTER; num: INTEGER) is
 			-- SDK PolyBezierTo
 		external
-			"C [macro <wel.h>] (HDC, POINT *, DWORD)"
+			"C [macro <windows.h>] (HDC, POINT *, DWORD)"
 		alias
 			"PolyBezierTo"
 		end
@@ -1629,7 +1632,7 @@ feature {NONE} -- Externals
 	cwin_ellipse (hdc: POINTER; x1, y1, x2, y2: INTEGER) is
 			-- SDK Ellipse
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, int)"
+			"C [macro <windows.h>] (HDC, int, int, int, int)"
 		alias
 			"Ellipse"
 		end
@@ -1638,7 +1641,7 @@ feature {NONE} -- Externals
 			x_end, y_end: INTEGER) is
 			-- SDK Arc
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, %
+			"C [macro <windows.h>] (HDC, int, int, int, %
 				%int, int, int, int, int)"
 		alias
 			"Arc"
@@ -1648,7 +1651,7 @@ feature {NONE} -- Externals
 			x_end, y_end: INTEGER) is
 			-- SDK Chord
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, %
+			"C [macro <windows.h>] (HDC, int, int, int, %
 				%int, int, int, int, int)"
 		alias
 			"Chord"
@@ -1658,7 +1661,7 @@ feature {NONE} -- Externals
 			x_end, y_end: INTEGER) is
 			-- SDK Pie
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, %
+			"C [macro <windows.h>] (HDC, int, int, int, %
 				%int, int, int, int, int)"
 		alias
 			"Pie"
@@ -1668,7 +1671,7 @@ feature {NONE} -- Externals
 			a_height: INTEGER) is
 			-- SDK RoundRect
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, int, int, int)"
+			"C [macro <windows.h>] (HDC, int, int, int, int, int, int)"
 		alias
 			"RoundRect"
 		end
@@ -1678,7 +1681,7 @@ feature {NONE} -- Externals
 			y_src, rop: INTEGER) is
 			-- SDK BitBlt
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, int, HDC, %
+			"C [macro <windows.h>] (HDC, int, int, int, int, HDC, %
 				%int, int, DWORD)"
 		alias
 			"BitBlt"
@@ -1689,7 +1692,7 @@ feature {NONE} -- Externals
 			lpbmi: POINTER; color_use, rop: INTEGER) is
 			-- SDK StretchDIBits
 		external
-			"C [macro <wel.h>] (HDC,int, int, int, int, int, int, %
+			"C [macro <windows.h>] (HDC,int, int, int, int, int, int, %
 				%int, int, void *, LPBITMAPINFO, UINT, DWORD)"
 		alias
 			"StretchDIBits"
@@ -1700,7 +1703,7 @@ feature {NONE} -- Externals
 			width_src, height_src, rop: INTEGER) is
 			-- SDK StretchBlt
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, int, HDC, %
+			"C [macro <windows.h>] (HDC, int, int, int, int, HDC, %
 				%int, int, int, int, DWORD)"
 		alias
 			"StretchBlt"
@@ -1709,7 +1712,7 @@ feature {NONE} -- Externals
 	cwin_set_stretch_blt_mode (hdc: POINTER; a_mode: INTEGER) is
 			-- SDK SetStretchBltMode
 		external
-			"C [macro <wel.h>] (HDC, int)"
+			"C [macro <windows.h>] (HDC, int)"
 		alias
 			"SetStretchBltMode"
 		end
@@ -1718,7 +1721,7 @@ feature {NONE} -- Externals
 			a_height: INTEGER; rop: INTEGER) is
 			-- SDK PatBlt
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, int, DWORD)"
+			"C [macro <windows.h>] (HDC, int, int, int, int, DWORD)"
 		alias
 			"PatBlt"
 		end
@@ -1726,7 +1729,7 @@ feature {NONE} -- Externals
 	cwin_realize_palette (hdc: POINTER) is
 			-- SDK RealizePalette
 		external
-			"C [macro <wel.h>] (HDC)"
+			"C [macro <windows.h>] (HDC)"
 		alias
 			"RealizePalette"
 		end
@@ -1734,7 +1737,7 @@ feature {NONE} -- Externals
 	cwin_select_palette (hdc, hgpal: POINTER; palback: BOOLEAN) is
 			-- SDK SelectPalette
 		external
-			"C [macro <wel.h>] (HDC, HPALETTE, BOOL)"
+			"C [macro <windows.h>] (HDC, HPALETTE, BOOL)"
 		alias
 			"SelectPalette"
 		end
@@ -1743,7 +1746,7 @@ feature {NONE} -- Externals
 			palback: BOOLEAN): POINTER is
 			-- SDK SelectPalette
 		external
-			"C [macro <wel.h>] (HDC, HPALETTE, BOOL): EIF_POINTER"
+			"C [macro <windows.h>] (HDC, HPALETTE, BOOL): EIF_POINTER"
 		alias
 			"SelectPalette"
 		end
@@ -1751,7 +1754,7 @@ feature {NONE} -- Externals
 	cwin_select_object_result (hdc, hgdi_obj: POINTER): POINTER is
 			-- SDK SelectObject
 		external
-			"C [macro <wel.h>] (HDC, HGDIOBJ): EIF_POINTER"
+			"C [macro <windows.h>] (HDC, HGDIOBJ): HGDIOBJ"
 		alias
 			"SelectObject"
 		end
@@ -1759,7 +1762,7 @@ feature {NONE} -- Externals
 	cwin_select_object (hdc, hgdi_obj: POINTER) is
 			-- SDK SelectObject
 		external
-			"C [macro <wel.h>] (HDC, HGDIOBJ)"
+			"C [macro <windows.h>] (HDC, HGDIOBJ)"
 		alias
 			"SelectObject"
 		end
@@ -1767,7 +1770,7 @@ feature {NONE} -- Externals
 	cwin_select_clip_rgn (hdc, hrgn: POINTER) is
 			-- SDK SelectClipRgn
 		external
-			"C [macro <wel.h>] (HDC, HRGN)"
+			"C [macro <windows.h>] (HDC, HRGN)"
 		alias
 			"SelectClipRgn"
 		end
@@ -1776,7 +1779,7 @@ feature {NONE} -- Externals
 			init_data: POINTER): POINTER is
 			-- SDK CreateDC
 		external
-			"C [macro <wel.h>] (LPCSTR, LPCSTR, LPCSTR, %
+			"C [macro <windows.h>] (LPCSTR, LPCSTR, LPCSTR, %
 				%void *): EIF_POINTER"
 		alias
 			"CreateDC"
@@ -1785,7 +1788,7 @@ feature {NONE} -- Externals
 	cwin_delete_dc (hdc: POINTER) is
 			-- SDK DeleteDC
 		external
-			"C [macro <wel.h>] (HDC)"
+			"C [macro <windows.h>] (HDC)"
 		alias
 			"DeleteDC"
 		end
@@ -1793,7 +1796,7 @@ feature {NONE} -- Externals
 	cwin_set_text_align (hdc: POINTER; an_alignment: INTEGER) is
 			-- SDK SetTextAlign
 		external
-			"C [macro <wel.h>] (HDC, UINT)"
+			"C [macro <windows.h>] (HDC, UINT)"
 		alias
 			"SetTextAlign"
 		end
@@ -1801,7 +1804,7 @@ feature {NONE} -- Externals
 	cwin_set_map_mode (hdc: POINTER; mode: INTEGER) is
 			-- SDK SetMapMode
 		external
-			"C [macro <wel.h>] (HDC, int)"
+			"C [macro <windows.h>] (HDC, int)"
 		alias
 			"SetMapMode"
 		end
@@ -1809,7 +1812,7 @@ feature {NONE} -- Externals
 	cwin_set_poly_fill_mode (hdc: POINTER; mode: INTEGER) is
 			-- SDK SetPolyFillMode
 		external
-			"C [macro <wel.h>] (HDC, int)"
+			"C [macro <windows.h>] (HDC, int)"
 		alias
 			"SetPolyFillMode"
 		end
@@ -1817,7 +1820,7 @@ feature {NONE} -- Externals
 	cwin_get_map_mode (hdc: POINTER): INTEGER is
 			-- SDK GetMapMode
 		external
-			"C [macro <wel.h>] (HDC): EIF_INTEGER"
+			"C [macro <windows.h>] (HDC): EIF_INTEGER"
 		alias
 			"GetMapMode"
 		end
@@ -1825,7 +1828,7 @@ feature {NONE} -- Externals
 	cwin_get_poly_fill_mode (hdc: POINTER): INTEGER is
 			-- SDK GetPolyFillMode
 		external
-			"C [macro <wel.h>] (HDC): EIF_INTEGER"
+			"C [macro <windows.h>] (HDC): EIF_INTEGER"
 		alias
 			"GetPolyFillMode"
 		end
@@ -1833,7 +1836,7 @@ feature {NONE} -- Externals
 	cwin_get_text_align (hdc: POINTER): INTEGER is
 			-- SDK GetTextAlign
 		external
-			"C [macro <wel.h>] (HDC): EIF_INTEGER"
+			"C [macro <windows.h>] (HDC): EIF_INTEGER"
 		alias
 			"GetTextAlign"
 		end
@@ -1841,7 +1844,7 @@ feature {NONE} -- Externals
 	cwin_get_stretch_blt_mode (hdc: POINTER): INTEGER is
 			-- SDK GetStretchBltMode
 		external
-			"C [macro <wel.h>] (HDC): EIF_INTEGER"
+			"C [macro <windows.h>] (HDC): EIF_INTEGER"
 		alias
 			"GetStretchBltMode"
 		end
@@ -1850,7 +1853,7 @@ feature {NONE} -- Externals
 			size: POINTER) is
 			-- SDK SetWindowExtEx
 		external
-			"C [macro <wel.h>] (HDC, int, int, LPSIZE)"
+			"C [macro <windows.h>] (HDC, int, int, LPSIZE)"
 		alias
 			"SetWindowExtEx"
 		end
@@ -1859,7 +1862,7 @@ feature {NONE} -- Externals
 			size: POINTER) is
 			-- SDK SetWindowOrgEx
 		external
-			"C [macro <wel.h>] (HDC, int, int, LPPOINT)"
+			"C [macro <windows.h>] (HDC, int, int, LPPOINT)"
 		alias
 			"SetWindowOrgEx"
 		end
@@ -1868,7 +1871,7 @@ feature {NONE} -- Externals
 			size: POINTER) is
 			-- SDK SetViewportExt
 		external
-			"C [macro <wel.h>] (HDC, int, int, LPSIZE)"
+			"C [macro <windows.h>] (HDC, int, int, LPSIZE)"
 		alias
 			"SetViewportExtEx"
 		end
@@ -1877,7 +1880,7 @@ feature {NONE} -- Externals
 			size: POINTER) is
 			-- SDK SetViewportOrgEx
 		external
-			"C [macro <wel.h>] (HDC, int, int, LPPOINT)"
+			"C [macro <windows.h>] (HDC, int, int, LPPOINT)"
 		alias
 			"SetViewportOrgEx"
 		end
@@ -1885,7 +1888,7 @@ feature {NONE} -- Externals
 	cwin_set_bk_mode (hdc: POINTER; mode: INTEGER) is
 			-- SDK SetBkMode
 		external
-			"C [macro <wel.h>] (HDC, int)"
+			"C [macro <windows.h>] (HDC, int)"
 		alias
 			"SetBkMode"
 		end
@@ -1893,39 +1896,39 @@ feature {NONE} -- Externals
 	cwin_get_bk_mode (hdc: POINTER): INTEGER is
 			-- SDK GetBkMode
 		external
-			"C [macro <wel.h>] (HDC): EIF_INTEGER"
+			"C [macro <windows.h>] (HDC): EIF_INTEGER"
 		alias
 			"GetBkMode"
 		end
 
-	cwin_set_bk_color (hdc, color: POINTER) is
+	cwin_set_bk_color (hdc: POINTER; color: INTEGER) is
 			-- SDK SetBkColor
 		external
-			"C [macro <wel.h>] (HDC, COLORREF)"
+			"C [macro <windows.h>] (HDC, COLORREF)"
 		alias
 			"SetBkColor"
 		end
 
-	cwin_get_bk_color (hdc: POINTER): POINTER is
+	cwin_get_bk_color (hdc: POINTER): INTEGER  is
 			-- SDK GetBkColor
 		external
-			"C [macro <wel.h>] (HDC): EIF_POINTER"
+			"C [macro <windows.h>] (HDC): COLORREF"
 		alias
 			"GetBkColor"
 		end
 
-	cwin_set_text_color (hdc, color: POINTER) is
+	cwin_set_text_color (hdc: POINTER; color: INTEGER) is
 			-- SDK SetBkColor
 		external
-			"C [macro <wel.h>] (HDC, COLORREF)"
+			"C [macro <windows.h>] (HDC, COLORREF)"
 		alias
 			"SetTextColor"
 		end
 
-	cwin_get_text_color (hdc: POINTER): POINTER is
+	cwin_get_text_color (hdc: POINTER): INTEGER is
 			-- SDK GetBkColor
 		external
-			"C [macro <wel.h>] (HDC): EIF_POINTER"
+			"C [macro <windows.h>] (HDC): COLORREF"
 		alias
 			"GetTextColor"
 		end
@@ -1933,7 +1936,7 @@ feature {NONE} -- Externals
 	cwin_set_rop2 (hdc: POINTER; mode: INTEGER) is
 			-- SDK SetROP2
 		external
-			"C [macro <wel.h>] (HDC, int)"
+			"C [macro <windows.h>] (HDC, int)"
 		alias
 			"SetROP2"
 		end
@@ -1941,7 +1944,7 @@ feature {NONE} -- Externals
 	cwin_get_rop2 (hdc: POINTER): INTEGER is
 			-- SDK GetROP2
 		external
-			"C [macro <wel.h>] (HDC): EIF_INTEGER"
+			"C [macro <windows.h>] (HDC): EIF_INTEGER"
 		alias
 			"GetROP2"
 		end
@@ -1950,7 +1953,7 @@ feature {NONE} -- Externals
 			si: POINTER) is
 			-- SDK GetTextExtentPoint
 		external
-			"C [macro <wel.h>] (HDC, LPCSTR, int, LPSIZE)"
+			"C [macro <windows.h>] (HDC, LPCSTR, int, LPSIZE)"
 		alias
 			"GetTextExtentPoint"
 		end
@@ -1959,7 +1962,7 @@ feature {NONE} -- Externals
 			len, tab_count: INTEGER; tabs: POINTER): INTEGER is
 			-- SDK GetTabbedTextExtent
 		external
-			"C [macro <wel.h>] (HDC, LPCSTR, int, int, %
+			"C [macro <windows.h>] (HDC, LPCSTR, int, int, %
 				%LPINT): EIF_INTEGER"
 		alias
 			"GetTabbedTextExtent"
@@ -1968,7 +1971,7 @@ feature {NONE} -- Externals
 	cwin_device_caps (hdc: POINTER; capability: INTEGER): INTEGER is
 			-- SDK GetDeviceCaps
 		external
-			"C [macro <wel.h>] (HDC, int): EIF_INTEGER"
+			"C [macro <windows.h>] (HDC, int): EIF_INTEGER"
 		alias
 			"GetDeviceCaps"
 		end
@@ -1976,7 +1979,7 @@ feature {NONE} -- Externals
 	cwin_get_window_org_ex (hdc, point: POINTER) is
 			-- SDK GetWindowOrgEx
 		external
-			"C [macro <wel.h>] (HDC, LPPOINT)"
+			"C [macro <windows.h>] (HDC, LPPOINT)"
 		alias
 			"GetWindowOrgEx"
 		end
@@ -1984,7 +1987,7 @@ feature {NONE} -- Externals
 	cwin_get_window_ext_ex (hdc, point: POINTER) is
 			-- SDK GetWindowExtEx
 		external
-			"C [macro <wel.h>] (HDC, LPSIZE)"
+			"C [macro <windows.h>] (HDC, LPSIZE)"
 		alias
 			"GetWindowExtEx"
 		end
@@ -1992,7 +1995,7 @@ feature {NONE} -- Externals
 	cwin_get_viewport_org_ex (hdc, point: POINTER) is
 			-- SDK GetViewportOrgEx
 		external
-			"C [macro <wel.h>] (HDC, LPPOINT)"
+			"C [macro <windows.h>] (HDC, LPPOINT)"
 		alias
 			"GetViewportOrgEx"
 		end
@@ -2000,7 +2003,7 @@ feature {NONE} -- Externals
 	cwin_get_viewport_ext_ex (hdc, point: POINTER) is
 			-- SDK GetViewportExtEx
 		external
-			"C [macro <wel.h>] (HDC, LPSIZE)"
+			"C [macro <windows.h>] (HDC, LPSIZE)"
 		alias
 			"GetViewportExtEx"
 		end
@@ -2008,7 +2011,7 @@ feature {NONE} -- Externals
 	cwin_get_current_position_ex (hdc, point: POINTER) is
 			-- SDK GetCurrentPositionEx
 		external
-			"C [macro <wel.h>] (HDC, POINT *)"
+			"C [macro <windows.h>] (HDC, POINT *)"
 		alias
 			"GetCurrentPositionEx"
 		end
@@ -2017,7 +2020,7 @@ feature {NONE} -- Externals
 				buffer: POINTER): INTEGER is
 			-- SDK GetTextFace
 		external
-			"C [macro <wel.h>] (HDC, int, LPSTR): EIF_INTEGER"
+			"C [macro <windows.h>] (HDC, int, LPSTR): EIF_INTEGER"
 		alias
 			"GetTextFace"
 		end
@@ -2026,7 +2029,7 @@ feature {NONE} -- Externals
 			bits, bi: POINTER; usage: INTEGER) is
 			-- SDK GetDIBits
 		external
-			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, %
+			"C [macro <windows.h>] (HDC, HBITMAP, UINT, UINT, %
 				%VOID *, BITMAPINFO *, UINT)"
 		alias
 			"GetDIBits"
@@ -2035,21 +2038,21 @@ feature {NONE} -- Externals
 	c_file_ps (file: POINTER; a_string: POINTER; length: INTEGER) is
 			-- Run-time function to print `a_string' to `file'.
 		external
-			"C"
+			"C(FILE *, char *, EIF_INTEGER) | %"eif_file.h%""
 		alias
 			"file_ps"
 		end
 
 	Opaque: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro <windows.h>]"
 		alias
 			"OPAQUE"
 		end
 
 	Transparent: INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro <windows.h>]"
 		alias
 			"TRANSPARENT"
 		end

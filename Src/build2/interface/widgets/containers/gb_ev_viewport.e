@@ -42,8 +42,6 @@ feature -- Access
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
-		local
-			label: EV_LABEL
 		do
 			Result := Precursor {GB_EV_ANY}
 			
@@ -63,8 +61,6 @@ feature {GB_XML_STORE} -- Output
 	
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
-		local
-			gauge: EV_GAUGE
 		do
 			add_element_containing_integer (element, x_offset_string, objects.first.x_offset)
 			add_element_containing_integer (element, y_offset_string, objects.first.y_offset)
@@ -81,11 +77,6 @@ feature {GB_XML_STORE} -- Output
 		
 	modify_from_xml (element: XML_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
-		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info: ELEMENT_INFORMATION
-			element_info2: ELEMENT_INFORMATION
-			interval: INTEGER_INTERVAL
 		do
 				-- We set up some deferred building now.
 			deferred_builder.defer_building (Current, element)
@@ -97,8 +88,6 @@ feature {GB_XML_STORE} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			element_info2: ELEMENT_INFORMATION
-			interval: INTEGER_INTERVAL
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (X_offset_string)
@@ -132,8 +121,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			-- in a compilable format.
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info, element_info2: ELEMENT_INFORMATION
-			lower, upper: STRING
+			element_info: ELEMENT_INFORMATION
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)

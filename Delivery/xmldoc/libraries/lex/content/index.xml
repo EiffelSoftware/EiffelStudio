@@ -596,9 +596,9 @@ BOOLEAN
 				</paragraph>
 				<paragraph>You may change this default behavior through a set of procedures introduced in class <link><url>../reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link> and hence available in its descendants <link><url>../reference/metalex_chart.xml</url><label>METALEX </label></link>and <link><url>../reference/scanning_chart.xml</url><label>SCANNING</label></link>.</paragraph>
 				<paragraph>To make subsequent regular expressions case-sensitive, call the procedure</paragraph>
-				<code_block>	<feature_name>ignore_case</feature_name></code_block>
-				<paragraph>To revert to the default mode where case is not significant, call the procedure</paragraph>
 				<code_block>	<feature_name>distinguish_case</feature_name></code_block>
+				<paragraph>To revert to the default mode where case is not significant, call the procedure</paragraph>
+				<code_block>	<feature_name>ignore_case</feature_name></code_block>
 				<paragraph>Each of these procedures remains in effect until the other one is called, so that you only need one call to define the desired behavior.</paragraph>
 				<paragraph>For keywords, the policy is less tolerant. A single rule is applied to the entire grammar: keywords are either all case-sensitive or all case-insensitive. To make all keywords case-sensitive, call</paragraph>
 				<code_block>	<feature_name>keywords_distinguish_case</feature_name></code_block>

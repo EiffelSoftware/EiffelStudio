@@ -27,6 +27,7 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
+	working_directory ("G:\work\examples\calculator\EIFGEN\W_code")
 	il_verifiable (yes)
 	msil_generation_type ("exe")
 	check_vape (yes)

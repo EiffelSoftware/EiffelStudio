@@ -158,7 +158,7 @@ feature -- Execution
 	translate is
 			-- create Makefile from Makefile.SH and options
 		do
-			translate_makefile (true)
+			translate_makefile (True)
 			translate_sub_makefiles
 		end
 
@@ -209,13 +209,13 @@ feature {NONE} -- Translation
 				translate_case
 				translate_case
 				translate_echo
-				translate_spit (true, Void)
+				translate_spit (True, Void)
 
 				if master then
 					translate_master
-					translate_spit (false, options.get_string ("no_subs", Void))
+					translate_spit (False, options.get_string ("no_subs", Void))
 				else
-					translate_spit (false, Void)
+					translate_spit (False, Void)
 				end
 			else
 				io.error.putstring ("WARNING: Makefile.SH is empty.%N")
@@ -251,7 +251,7 @@ feature {NONE} -- Translation
 
 					env.change_working_directory (dir)
 				
-					translate_makefile (false)
+					translate_makefile (False)
 
 					env.change_working_directory (options.get_string ("updir", ".."))
 
@@ -475,7 +475,7 @@ feature {NONE} -- Translation
 			lastline := clone (makefile_sh.laststring)
 
 			if lastline.count>8 and then lastline.substring (1, 9).is_equal (options.get_string ("externals_text", Void)) then
-				externals := true
+				externals := True
 			end
 
 			from
@@ -552,8 +552,6 @@ feature {NONE} -- Translation
 				end
 				appl.right_adjust
 
-				is_il_code := appl.is_equal ("$(IL_SYSTEM)")
-
 				if appl.count>4 then
 					extension := clone (appl)
 					extension.to_lower
@@ -564,7 +562,7 @@ feature {NONE} -- Translation
 				end
 
 				if appl.substring_index (options.get_string ("driver_text", Void),1) > 0 then
-					precompile := true
+					precompile := True
 					appl_exe := options.get_string ("driver_filename", Void)
 				else
 					appl_exe := clone (appl)
@@ -755,7 +753,7 @@ feature {NONE} -- Translation
 				dir.item (1) = 'E' or else dependent_directories.after
 			loop		
 				if not C_done and then dir.item (1) = 'C' then
-					C_done := true
+					C_done := True
 					makefile.putstring ("%N%N");
 					makefile.putstring (options.get_string ("c_objects_text", Void))
 				end
@@ -810,6 +808,8 @@ feature {NONE} -- Translation
 			-- Translate a line requiring substitution.
 		local
 			lastline: STRING
+			runtime: STRING
+			i, j: INTEGER
 		do
 			debug ("progress")
 				io.putstring ("%Tsubst%N")
@@ -832,6 +832,21 @@ feature {NONE} -- Translation
 
 				if lastline.substring (1,4).is_equal (options.get_string ("make_text", Void)) then
 					lastline := "MAKE = $make"
+				end
+
+				if lastline.substring (1, 12).is_equal ("EIFLIB = -L\") then
+						-- Using a shared library, we have to replace `lastline' for proper translation
+					create runtime.make (256)
+					runtime.append (lastline.substring (1, 9))
+					i := 13
+					j := lastline.substring_index ("-l", i)
+					runtime.append (lastline.substring (i, j - 2))
+					runtime.append ("$shared_prefix")
+					i := lastline.substring_index ("eiflib", j)
+					runtime.append (lastline.substring (j + 2, i + 5))
+					runtime.append ("$shared_rt_suffix")
+					runtime.append (lastline.substring (i + 7, lastline.count))
+					lastline := runtime
 				end
 			end
 
@@ -1401,7 +1416,10 @@ feature {NONE}	-- substitutions
 				io.putstring("%Tsubst_continuation%N")
 			end
 
-			if line.item (line.count) = '\' and then options.has ("continuation") then
+			if
+				not line.is_empty and then line.item (line.count) = '\' and then
+				options.has ("continuation")
+			then
 				line.remove (line.count)
 				line.append (options.get_string ("continuation", Void))
 			end
@@ -1641,7 +1659,7 @@ feature {NONE} -- Implementation
 				end
 
 				if precomp_lib_start > 0 then
-					uses_precompiled := true
+					uses_precompiled := True
 					Result.append (line.substring (1, precomp_lib_start - 2))
 					from
 					until
@@ -1654,7 +1672,7 @@ feature {NONE} -- Implementation
 					Result.append (directory_separator)
 					Result.append ("precomp.lib")
 				else
-					uses_precompiled := false
+					uses_precompiled := False
 				end
 			until
 				makefile_sh.end_of_file or else line.is_empty
@@ -1672,7 +1690,7 @@ feature {NONE} -- Implementation
 				
 				-- set concurrent if application uses concurrent Eiffel
 				if line.substring_index ("$concurrent_prefix", 1) > 0 then
-						concurrent := true
+						concurrent := True
 					end
 
 				if not line.is_empty then
@@ -1682,7 +1700,7 @@ feature {NONE} -- Implementation
 				end
 
 				if precomp_lib_start > 0 then
-					uses_precompiled := true
+					uses_precompiled := True
 					next_precomp_lib := line.substring (1, precomp_lib_start - 2) 
 					from
 					until
@@ -1714,11 +1732,11 @@ feature {NONE} -- Implementation
 				io.putstring("%Topen_files = ")
 			end
 
-			out_file := false
+			out_file := False
 
 			if not error then
 				!!makefile_sh.make_open_read ("Makefile.SH")
-				out_file := true
+				out_file := True
 				!!makefile.make_open_write ("Makefile")
 			end
 
@@ -1733,7 +1751,7 @@ feature {NONE} -- Implementation
 				io.error.putstring ("ERROR: Unable to open Makefile for output%N")
 			end
 
-			error := true
+			error := True
 			retry
 		end
 

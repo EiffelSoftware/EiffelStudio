@@ -178,6 +178,7 @@ feature -- Basic operations
 			body.append (Variantarg)
 			body.append (Space)
 			body.append (Asterisk)
+			body.append (Asterisk)
 			body.append (Close_parenthesis)
 			body.append (Co_task_mem_alloc)
 			body.append (Space_open_parenthesis)
@@ -186,6 +187,7 @@ feature -- Basic operations
 			body.append (Sizeof)
 			body.append (Space_open_parenthesis)
 			body.append (Variantarg)
+			body.append (Asterisk)
 			body.append (Close_parenthesis)
 			body.append (Close_parenthesis)
 			body.append (Semicolon)
@@ -237,12 +239,8 @@ feature -- Basic operations
 			body.append (Open_curly_brace)
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab_tab_tab)
-			
-			body.append ("VariantInit (&(tmp_value [rgdispidNamedArgs [i]]));")
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab_tab_tab)
-			
-			body.append ("memcpy (&(tmp_value [rgdispidNamedArgs [i]]), &(rgvarg [i]), sizeof (VARIANTARG));")
+						
+			body.append ("tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);")
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab_tab)
 			body.append (Close_curly_brace)
@@ -269,11 +267,8 @@ feature -- Basic operations
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab_tab)
 
-			body.append ("VariantInit (&(tmp_value [cArgs - i]));")
-			body.append (New_line_tab_tab_tab)
-			body.append (Tab_tab)
 			
-			body.append ("memcpy (&(tmp_value [cArgs - i]), &(rgvarg [i - 1]), sizeof (VARIANTARG));")
+			body.append ("tmp_value [cArgs - i] = &(rgvarg [i - 1]);")
 			
 			body.append (New_line_tab_tab_tab)
 			body.append (Tab)
@@ -311,77 +306,77 @@ feature -- Basic operations
 				then
 					release_interfaces.append (release_interface_pointer_pointer_code ("arg_" + counter.out))
 				end
-				if is_paramflag_fout (func_desc.arguments.item.flags) then
-					local_buffer.append ("VariantClear (&(" + Tmp_variable_name + "[" + counter.out + "]));")
-					local_buffer.append (New_line_tab_tab_tab)	
-					local_buffer.append (Tab)
-					
-					local_buffer.append (Tmp_variable_name)
-					local_buffer.append (Space)
-					local_buffer.append (Open_bracket)
-					local_buffer.append_integer (counter)
-					local_buffer.append (Close_bracket)
-					local_buffer.append (Dot)
-					local_buffer.append ("vt")
-					local_buffer.append (Space_equal_space)
-					local_buffer.append_integer (visitor.vt_type)
-					local_buffer.append (Semicolon)
-					local_buffer.append (New_line_tab_tab_tab)	
-					local_buffer.append (Tab)
-
-					if visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
-						local_buffer.append (Asterisk)
-						local_buffer.append (Open_parenthesis)
-					end
-					local_buffer.append (Tmp_variable_name)
-					local_buffer.append (Space)
-					local_buffer.append (Open_bracket)
-					local_buffer.append_integer (counter)
-					local_buffer.append (Close_bracket)
-					local_buffer.append (Dot)
-					local_buffer.append (vartype_namer.variant_field_name (visitor))
-					if visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
-						local_buffer.append (Close_parenthesis)
-					end
-					local_buffer.append (Space_equal_space)
-					if 
-						(visitor.is_interface_pointer_pointer or 
-						visitor.is_coclass_pointer_pointer or
-						visitor.is_interface_pointer or 
-						visitor.is_coclass_pointer) and
-						not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
-						visitor.c_type.substring_index (Idispatch_type, 1) > 0)
-					then
-						local_buffer.append ("static_cast<")
-						if is_unknown (visitor.vt_type) then
-							local_buffer.append (Iunknown)
-						else
-							local_buffer.append (Idispatch)
-						end
-						local_buffer.append (">(")
-					end
-					if 
-						visitor.is_interface_pointer_pointer or 
-						visitor.is_coclass_pointer_pointer 
-					then
-						local_buffer.append (Asterisk)
-					end
-					local_buffer.append ("arg_")
-					local_buffer.append_integer (counter)
-					if 
-						(visitor.is_interface_pointer_pointer or 
-						visitor.is_coclass_pointer_pointer or
-						visitor.is_interface_pointer or 
-						visitor.is_coclass_pointer) and
-						not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
-						visitor.c_type.substring_index (Idispatch_type, 1) > 0)
-					then
-						local_buffer.append (Close_parenthesis)
-					end
-					local_buffer.append (Semicolon)
-					local_buffer.append (New_line_tab_tab_tab)	
-					local_buffer.append (Tab)
-				end
+--				if is_paramflag_fout (func_desc.arguments.item.flags) then
+--					local_buffer.append ("VariantClear (&(" + Tmp_variable_name + "[" +-- counter.out + "]));")
+--					local_buffer.append (New_line_tab_tab_tab)	
+--					local_buffer.append (Tab)
+--					
+--					local_buffer.append (Tmp_variable_name)
+--					local_buffer.append (Space)
+--					local_buffer.append (Open_bracket)
+--					local_buffer.append_integer (counter)
+--					local_buffer.append (Close_bracket)
+--					local_buffer.append (Dot)
+--					local_buffer.append ("vt")
+--					local_buffer.append (Space_equal_space)
+--					local_buffer.append_integer (visitor.vt_type)
+--					local_buffer.append (Semicolon)
+--					local_buffer.append (New_line_tab_tab_tab)	
+--					local_buffer.append (Tab)
+--
+--					if visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
+--						local_buffer.append (Asterisk)
+--						local_buffer.append (Open_parenthesis)
+--					end
+--					local_buffer.append (Tmp_variable_name)
+--					local_buffer.append (Space)
+--					local_buffer.append (Open_bracket)
+--					local_buffer.append_integer (counter)
+--					local_buffer.append (Close_bracket)
+--					local_buffer.append (Dot)
+--					local_buffer.append (vartype_namer.variant_field_name (visitor))
+--					if visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
+--						local_buffer.append (Close_parenthesis)
+--					end
+--					local_buffer.append (Space_equal_space)
+--					if 
+--						(visitor.is_interface_pointer_pointer or 
+--						visitor.is_coclass_pointer_pointer or
+--						visitor.is_interface_pointer or 
+--						visitor.is_coclass_pointer) and
+--						not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+--						visitor.c_type.substring_index (Idispatch_type, 1) > 0)
+--					then
+--						local_buffer.append ("static_cast<")
+--						if is_unknown (visitor.vt_type) then
+--							local_buffer.append (Iunknown)
+--						else
+--							local_buffer.append (Idispatch)
+--						end
+--						local_buffer.append (">(")
+--					end
+--					if 
+--						visitor.is_interface_pointer_pointer or 
+--						visitor.is_coclass_pointer_pointer 
+--					then
+--						local_buffer.append (Asterisk)
+--					end
+--					local_buffer.append ("arg_")
+--					local_buffer.append_integer (counter)
+--					if 
+--						(visitor.is_interface_pointer_pointer or 
+--						visitor.is_coclass_pointer_pointer or
+--						visitor.is_interface_pointer or 
+--						visitor.is_coclass_pointer) and
+--						not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+--						visitor.c_type.substring_index (Idispatch_type, 1) > 0)
+--					then
+--						local_buffer.append (Close_parenthesis)
+--					end
+--					local_buffer.append (Semicolon)
+--					local_buffer.append (New_line_tab_tab_tab)	
+--					local_buffer.append (Tab)
+--				end
 
 				counter := counter + 1
 				func_desc.arguments.forth
@@ -570,109 +565,109 @@ feature -- Basic operations
 
 			if has_arguments  then
 				body.append (Tab)
-				body.append (If_keyword)
-				body.append (Space_open_parenthesis)
-				body.append ("cNamedArgs")
-				body.append (Space)
-				body.append (More)
-				body.append (Zero)
-				body.append (Close_parenthesis)
-
-				-- for (int i=0; i < 'dispparam'->cNamedArgs;i++)
-				body.append (New_line_tab_tab_tab)
-				body.append (Tab_tab)
-				
-				body.append (For)
-				body.append (Space_open_parenthesis)
-				body.append ("i = 0; i < ")
-				body.append ("cNamedArgs")
-				body.append (Semicolon)
-				body.append (Space)
-				body.append ("i++")
-				body.append (Close_parenthesis)
-
-				body.append (New_line_tab_tab_tab)
-				body.append (Tab_tab_tab)
-				body.append (Memcpy)
-				body.append (Space)
-				body.append (Open_parenthesis)
-				body.append (Ampersand)
-				body.append (Open_parenthesis)
-				body.append ("rgvarg")
-				body.append (Open_bracket)
-				body.append ("i")
-				body.append (Close_bracket)
-				body.append (Close_parenthesis)
-				body.append (Comma_space)
-				body.append (Ampersand)
-				body.append (Open_parenthesis)
-				body.append (Tmp_variable_name)
-				body.append (Space)
-				body.append (Open_bracket)
-				body.append ("rgdispidNamedArgs")
-				body.append (Space)
-				body.append (Open_bracket)
-				body.append ("i")
-				body.append (Close_bracket)
-				body.append (Close_bracket)
-				body.append (Close_parenthesis)
-				body.append (Comma_space)
-				body.append (Sizeof)
-				body.append (Space_open_parenthesis)
-				body.append ("VARIANTARG")
-				body.append (Close_parenthesis)
-				body.append (Close_parenthesis)
-				body.append (Semicolon)
-				body.append (New_line)
-				body.append (New_line_tab_tab_tab)
-				body.append (Tab)
-
-				-- for (int i='dispparam'->cArgs, counter = 0;i>'dispparam'->cNamedArgs;i--)
-				body.append (For)
-				body.append (Space_open_parenthesis)
-				body.append ("i = ")
-				body.append ("cArgs")
-				body.append (Semicolon)
-				body.append (Space)
-				body.append ("i > ")
-				body.append ("cNamedArgs")
-				body.append (Semicolon)
-				body.append (Space)
-				body.append ("i--")
-				body.append (Close_parenthesis)
-				body.append (New_line_tab_tab_tab)
-				body.append (Tab_tab)
-
-				body.append (Memcpy)
-				body.append (Space)
-				body.append (Open_parenthesis)
-				body.append (Ampersand)
-				body.append (Open_parenthesis)
-				body.append ("rgvarg")
-				body.append (Open_bracket)
-				body.append ("i - 1")
-				body.append (Close_bracket)
-				body.append (Close_parenthesis)
-				body.append (Comma_space)
-				body.append (Ampersand)
-				body.append (Open_parenthesis)
-				body.append (Tmp_variable_name)
-				body.append (Space)
-				body.append (Open_bracket)
-				body.append ("cArgs")
-				body.append (" - i")
-				body.append (Close_bracket)
-				body.append (Close_parenthesis)
-				body.append (Comma_space)
-				body.append (Sizeof)
-				body.append (Space_open_parenthesis)
-				body.append ("VARIANTARG")
-				body.append (Close_parenthesis)
-				body.append (Close_parenthesis)
-				body.append (Semicolon)
-				body.append (New_line)
-				body.append (New_line_tab_tab_tab)
-				body.append (Tab)
+--				body.append (If_keyword)
+--				body.append (Space_open_parenthesis)
+--				body.append ("cNamedArgs")
+--				body.append (Space)
+--				body.append (More)
+--				body.append (Zero)
+--				body.append (Close_parenthesis)
+--
+--				-- for (int i=0; i < 'dispparam'->cNamedArgs;i++)
+--				body.append (New_line_tab_tab_tab)
+--				body.append (Tab_tab)
+--				
+--				body.append (For)
+--				body.append (Space_open_parenthesis)
+--				body.append ("i = 0; i < ")
+--				body.append ("cNamedArgs")
+--				body.append (Semicolon)
+--				body.append (Space)
+--				body.append ("i++")
+--				body.append (Close_parenthesis)
+--
+--				body.append (New_line_tab_tab_tab)
+--				body.append (Tab_tab_tab)
+--				body.append (Memcpy)
+--				body.append (Space)
+--				body.append (Open_parenthesis)
+--				body.append (Ampersand)
+--				body.append (Open_parenthesis)
+--				body.append ("rgvarg")
+--				body.append (Open_bracket)
+--				body.append ("i")
+--				body.append (Close_bracket)
+--				body.append (Close_parenthesis)
+--				body.append (Comma_space)
+--				body.append (Ampersand)
+--				body.append (Open_parenthesis)
+--				body.append (Tmp_variable_name)
+--				body.append (Space)
+--				body.append (Open_bracket)
+--				body.append ("rgdispidNamedArgs")
+--				body.append (Space)
+--				body.append (Open_bracket)
+--				body.append ("i")
+--				body.append (Close_bracket)
+--				body.append (Close_bracket)
+--				body.append (Close_parenthesis)
+--				body.append (Comma_space)
+--				body.append (Sizeof)
+--				body.append (Space_open_parenthesis)
+--				body.append ("VARIANTARG")
+--				body.append (Close_parenthesis)
+--				body.append (Close_parenthesis)
+--				body.append (Semicolon)
+--				body.append (New_line)
+--				body.append (New_line_tab_tab_tab)
+--				body.append (Tab)
+--
+--				-- for (int i='dispparam'->cArgs, counter = 0;i>'dispparam'->cNamedArgs;i--)
+--				body.append (For)
+--				body.append (Space_open_parenthesis)
+--				body.append ("i = ")
+--				body.append ("cArgs")
+--				body.append (Semicolon)
+--				body.append (Space)
+--				body.append ("i > ")
+--				body.append ("cNamedArgs")
+--				body.append (Semicolon)
+--				body.append (Space)
+--				body.append ("i--")
+--				body.append (Close_parenthesis)
+--				body.append (New_line_tab_tab_tab)
+--				body.append (Tab_tab)
+--
+--				body.append (Memcpy)
+--				body.append (Space)
+--				body.append (Open_parenthesis)
+--				body.append (Ampersand)
+--				body.append (Open_parenthesis)
+--				body.append ("rgvarg")
+--				body.append (Open_bracket)
+--				body.append ("i - 1")
+--				body.append (Close_bracket)
+--				body.append (Close_parenthesis)
+--				body.append (Comma_space)
+--				body.append (Ampersand)
+--				body.append (Open_parenthesis)
+--				body.append (Tmp_variable_name)
+--				body.append (Space)
+--				body.append (Open_bracket)
+--				body.append ("cArgs")
+--				body.append (" - i")
+--				body.append (Close_bracket)
+--				body.append (Close_parenthesis)
+--				body.append (Comma_space)
+--				body.append (Sizeof)
+--				body.append (Space_open_parenthesis)
+--				body.append ("VARIANTARG")
+--				body.append (Close_parenthesis)
+--				body.append (Close_parenthesis)
+--				body.append (Semicolon)
+--				body.append (New_line)
+--				body.append (New_line_tab_tab_tab)
+--				body.append (Tab)
 
 				body.append (release_interfaces)
 

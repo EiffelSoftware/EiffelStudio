@@ -723,6 +723,7 @@ feature
 			-- (In case GC hooks are needed, we might need to refer to the
 			-- variable via the local l[] array.)
 		once
+				-- FIXME???? -- at least the comment part
 			!!Result;
 		end;
 

@@ -160,6 +160,16 @@ feature -- Basic operation
 			-- handle any events that may be in its queue.
 		deferred
 		end
+		
+	process_events_until_stopped is
+			-- Process all events until 'stop_processing' is called.
+		deferred
+		end
+		
+	stop_processing is
+			--  Exit `process_events_until_stopped'.
+		deferred
+		end
 
 	sleep (msec: INTEGER) is
 			-- Wait for `msec' milliseconds and return.
@@ -360,6 +370,9 @@ feature {NONE} -- Debug
 		end
 
 feature {NONE} -- Implementation
+
+	stop_processing_requested: BOOLEAN
+			-- Has 'stop_processing' been called?
 
 	clipboard_internal: EV_CLIPBOARD
 			-- Internal clipboard object.

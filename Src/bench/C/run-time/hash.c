@@ -60,7 +60,7 @@ rt_shared char **hash_search(struct hash *hp, register char *object)
 	register1 long pos;
 	register3 char *key;
 	register4 int inc;
-	register5 int code = ((unsigned int) object - 1);
+	register5 unsigned long code = ((unsigned long) object - 1);
 	register6 int hash_size = hp->h_size;
 
 	/* Initialization of the position */

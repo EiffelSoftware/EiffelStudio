@@ -70,7 +70,7 @@ rt_public int32 s_search(struct s_table *tbl, char *object)
 	 * position where to insert it.
 	 */
 
-	int key = ((int) object) - 1;					/* Key for `object' */
+	unsigned long key = ((unsigned long) object) - 1;	/* Key for `object' */
 	register1 uint32 position;
 	register2 uint32 increment;
 	register4 uint32 size = tbl->s_size;			/* Table size */

@@ -2288,7 +2288,7 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 		} else
 			sprintf(buf, "         (From %.15s)", Origin(eif_except.from));
 
-	sprintf(buffer, "<%08X> %-31.31s %-29.29s ",
+	sprintf(buffer, "<%08lX> %-31.31s %-29.29s ",
 		eif_except.obj_id, buf, exception_string(code));
 	append_trace(buffer);
 

@@ -1,22 +1,19 @@
 indexing
-
 	description: "[
 		Objects representing delayed calls to a procedure.
 		with some operands possibly still open.
 		]"
-
 	note: "[
 		Features are the same as those of ROUTINE,
 		with `apply' made effective, and no further
 		redefinition of `is_equal' and `copy'.
 		]"
-
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PROCEDURE [BASE_TYPE, OPEN_ARGS ->TUPLE]
+	PROCEDURE [BASE_TYPE, OPEN_ARGS ->TUPLE create make end]
 
 inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]
@@ -24,10 +21,9 @@ inherit
 feature -- Calls
 
 	apply is
-			-- Call procedure with `operands' as last set.
+			-- Call procedure with `args' as last set.
 		do
-			rout_set_cargs
-			rout_obj_call_procedure (rout_disp, rout_cargs)
+			rout_obj_call_procedure (rout_disp, $internal_operands)
 		end
 
 feature {NONE} -- Implementation
@@ -35,7 +31,9 @@ feature {NONE} -- Implementation
 	rout_obj_call_procedure (rout: POINTER; args: POINTER) is
 			-- Perform call to `rout' with `args'.
 		external
-			"C [macro %"eif_rout_obj.h%"]"
+			"C inline use %"eif_rout_obj.h%""
+		alias
+			"rout_obj_call_agent($rout, $args, $$_result_type)"
 		end
 
 indexing

@@ -1,24 +1,19 @@
 indexing
-
 	description: "[
 		Objects representing delayed calls to a function,
 		with some arguments possibly still open.
 		]"
-
 	note: "[
 		Features are the same as those of ROUTINE,
 		with `apply' made effective, and the addition
 		of `last_result' and `item'.
 		]"
-
 	status: "See notice at end of class"
-
 	date: "$Date$"
-
 	revision: "$Revision$"
 
 class
-	FUNCTION [BASE_TYPE, OPEN_ARGS -> TUPLE, RESULT_TYPE]
+	FUNCTION [BASE_TYPE, OPEN_ARGS -> TUPLE create make end, RESULT_TYPE]
 
 inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]
@@ -28,13 +23,8 @@ inherit
 
 feature -- Access
 	
-	last_result: RESULT_TYPE is
+	last_result: RESULT_TYPE
 			-- Result of last call, if any.
-		do
-			if result_array /= Void then
-				Result := result_array.item (1)
-			end
-		end
 
 	item (args: OPEN_ARGS): RESULT_TYPE is
 			-- Result of calling function with `args' as operands.
@@ -42,9 +32,12 @@ feature -- Access
 			valid_operands: valid_operands (args)
 			callable: callable
 		do
-			operands := args
-			apply
-			Result := last_result
+			set_operands (args)
+			Result := rout_obj_call_function (rout_disp, $internal_operands)
+			last_result := Result
+			if is_cleanup_needed then
+				remove_gc_reference
+			end
 		end
 
 feature -- Comparison
@@ -63,10 +56,7 @@ feature -- Duplication
 			-- Use same function as `other'.
 		do
 			Precursor (other)
-			if result_array = Void then
-				create result_array.make (1, 1)
-			end
-			result_array.put (other.last_result, 1)
+			last_result := other.last_result
 		end
 
 feature -- Basic operations
@@ -74,12 +64,7 @@ feature -- Basic operations
 	apply is
 			-- Call function with `operands' as last set.
 		do
-			if result_array = Void then
-				create result_array.make (1, 1)
-			end
-			rout_set_cargs
-			rout_obj_call_function ($result_array, 
-									rout_disp, rout_cargs)
+			last_result := rout_obj_call_function (rout_disp, $internal_operands)
 		end
 
 feature -- Obsolete
@@ -95,17 +80,14 @@ feature -- Obsolete
 			Result := item (args)
 		end
 
-
 feature {NONE} -- Implementation
 
-	result_array: ARRAY [RESULT_TYPE]
-			-- Array used to return result.
-
-	rout_obj_call_function (res, rout, args: POINTER) is
-			-- Perform call to `rout' on `cur' object with `args'
-			-- as operands and return `res'.
+	rout_obj_call_function (rout, args: POINTER): RESULT_TYPE is
+			-- Perform call to `rout' with `args' as operands.
 		external
-			"C | %"eif_rout_obj.h%""
+			"C inline use %"eif_rout_obj.h%""
+		alias
+			"rout_obj_call_agent($rout, $args, $$_result_type)"
 		end
 
 indexing

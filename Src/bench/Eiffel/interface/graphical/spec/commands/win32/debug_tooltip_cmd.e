@@ -7,7 +7,7 @@ indexing
 class
 	DEBUG_TOOLTIP_CMD
 
-creation
+create
 	make
 
 feature -- Initialization

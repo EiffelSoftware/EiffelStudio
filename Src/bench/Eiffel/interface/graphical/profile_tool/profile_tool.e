@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			command := a_command;
 			top_shell_make (Interface_names.n_X_resource_name, Project_tool.screen);
 			set_title (Interface_names.t_Profile_tool);
+			set_icon_name (Interface_names.t_Profile_tool);
 			!! quit_cmd.make (Current);
 			!! run_prof_query_cmd.make (Current);
 			set_delete_command (quit_cmd);

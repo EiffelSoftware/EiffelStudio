@@ -100,7 +100,7 @@ feature -- Basic Operations
 			l_able_to_run: BOOLEAN
 		do
 			if a_required_project then
-				if project_loaded and Eiffel_project /= Void then
+				if project_loaded and Eiffel_project.initialized then
 					l_able_to_run := True
 				else
 					test_failure_count := test_failure_count + 1
@@ -108,7 +108,7 @@ feature -- Basic Operations
 				end
 			else
 				if a_requires_ace then
-					if Eiffel_ace /= Void then
+					if Eiffel_project.initialized and Eiffel_ace /= Void then
 						l_able_to_run := True
 					else
 						test_failure_count := test_failure_count + 1

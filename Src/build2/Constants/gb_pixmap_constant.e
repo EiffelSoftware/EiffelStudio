@@ -121,8 +121,26 @@ feature -- Access
 		
 	value_as_string: STRING is
 			-- Value represented by `Current' as a STRING.
+			-- If not absolute, then `Result' is evaluated full path.
+		local
+			directory_constant: GB_DIRECTORY_CONSTANT
+			directory_value: STRING
 		do
-			Result := clone (value)
+			if is_absolute then
+				Result := clone (value)	
+			else
+				directory_constant ?= constants.all_constants.item (directory)
+				check
+					directory_constant_not_void: directory_constant /= Void
+				end
+				directory_value := directory_constant.value_as_string
+				if directory_value.item (directory_value.count).is_equal (Directory_seperator) then
+						-- Strip out any ending directory separators, as some platforms may include
+						-- these.
+					directory_value := directory_value.substring (1, directory_value.count - 1)
+				end
+				Result := directory_value + Directory_seperator.out + filename
+			end
 		end
 		
 	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is

@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 		do
 			is_sensitive := True
 			is_initialized := True
+			set_text ("")
 		end
 
 feature -- Access

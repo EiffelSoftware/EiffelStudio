@@ -85,9 +85,11 @@ feature -- Access
 		local
 			ct: CONSUMED_TYPE
 		do
-			ct := consumed_type (t)
-			if ct /= Void then
-				Result := ct.eiffel_name.twin
+			if is_type_in_cache (t) then
+				ct := consumed_type (t)
+				if ct /= Void then
+					Result := ct.eiffel_name.twin
+				end				
 			end
 		end	
 

@@ -444,7 +444,7 @@ feature -- Access
 			-- The identifier 'key' relative to the parent key must
 			-- have been opened with the KEY_QUERY_VALUE access.
 		require
-        	value_name_possible: value_name /= Void and then not value_name.is_empty
+        	value_name_possible: value_name /= Void
 			key_valid:valid_value_for_hkey(key)
 		local
 			a: ANY

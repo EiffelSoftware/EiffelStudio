@@ -26,8 +26,11 @@ feature {NONE} -- Initialization
 				-- used for appending `" : "'
 		do
 			Precursor (a_parent, a_resource)
-			set_minimum_height (130)
-			set_vertical_resize (False)
+--			set_minimum_height (130)
+			set_expand (true)
+				
+		-- expand devrait etre a false, mais cela produit
+		-- un bug d'affichage dans certaines conditions
 
 			s := clone (a_resource.visual_name)
 			s.append (" : ")

@@ -223,3 +223,15 @@ invariant
 	non_void_active_profile_change_actions: active_profile_change_actions /= Void
 
 end -- class WIZARD_PROFILE_MANAGER
+
+--+----------------------------------------------------------------
+--| EiffelCOM Wizard
+--| Copyright (C) 1999-2005 Eiffel Software. All rights reserved.
+--| Eiffel Software Confidential
+--| Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+----------------------------------------------------------------
+

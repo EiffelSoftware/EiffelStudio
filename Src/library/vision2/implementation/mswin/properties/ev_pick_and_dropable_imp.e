@@ -71,6 +71,8 @@ feature -- Status setting
 		end
 
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+			-- Process `a_button' to start/stop the drag/pick and
+			-- drop mechanism.
 		do
 			inspect
 				press_action
@@ -91,7 +93,8 @@ feature -- Status setting
 		end
 
 	check_drag_and_drop_release (a_x, a_y: INTEGER) is
-			-- If in drag and drop then end transport.
+			-- End transport if in drag and drop.
+			--| Releasing the left button ends drag and drop.
 		do
 			if mode_is_drag_and_drop and press_action =
 				Ev_pnd_end_transport then
@@ -100,6 +103,9 @@ feature -- Status setting
 		end
 
 	pnd_motion (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+			-- If in drag/pick and drop then update.
+			--| This is executed every time the pointer is moved over
+			--| `Current' while pick/drag and drop is in process.
 		do
 			inspect
 				motion_action
@@ -117,36 +123,43 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	start_transport (
-        a_x, a_y, a_button: INTEGER;
-        a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        a_screen_x, a_screen_y: INTEGER)
-	 is
+	start_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Initialize the pick and drop mechanism.
-	require else
-		not_already_transporting: not is_pnd_in_transport and
-			not is_dnd_in_transport 
-	local
+		require else
+			not_already_transporting: not is_pnd_in_transport and
+				not is_dnd_in_transport 
+		local
 			env: EV_ENVIRONMENT
-			curs_code: EV_CURSOR_CODE
 		do
 			if
 				mode_is_drag_and_drop and a_button = 1 or
 				mode_is_pick_and_drop and a_button = 3
+				-- Check that transport can be started.
+				--| Drag and drop is always started with the left button press.
+				--| Pick and drop is always started with the right button press.
 			then
-				print ("start transport%N")
 				interface.pointer_motion_actions.block
+					-- Block `pointer_motion_actions'.
+
 				create env
+					-- Create `env'
+					--| See description for EV_ENVIRONMENT.
 				if pebble_function /= Void then
 					pebble_function.call ([a_x, a_y])
 					pebble := pebble_function.last_result
+					-- Set the data to be transported.
 				end
 				env.application.pick_actions.call ([pebble])
+					-- Execute pick_actions for the application.
 				interface.pick_actions.call ([a_x, a_y])
-					if mode_is_pick_and_drop then
+					-- Execute pick_actions for `Current'.
+				if mode_is_pick_and_drop then
 					is_pnd_in_transport := True
+						-- Assign `True' to `is_pnd_in_transport'
 				else
 					is_dnd_in_transport := True
+						-- Assign `True' to `is_dnd_in_transport'
 				end
 				pointer_x := a_screen_x
 				pointer_y := a_screen_y
@@ -154,12 +167,14 @@ feature {EV_ANY_I} -- Implementation
 					pick_x := a_screen_x
 					pick_y := a_screen_y
 				end
-					set_capture_type (Capture_heavy)
+				set_capture_type (Capture_heavy)
+
 				enable_capture
-	
+					-- Start the capture.
 				press_action := Ev_pnd_end_transport
 				motion_action := Ev_pnd_execute
 				pnd_stored_cursor_imp := cursor_imp
+					-- Store the previous cursor of `Current'.
 			end
 		end
 
@@ -168,48 +183,57 @@ feature {EV_ANY_I} -- Implementation
 		local
 			env: EV_ENVIRONMENT
 			target: EV_PICK_AND_DROPABLE
-			list: EV_LIST
-			list_imp: EV_LIST_IMP
-			list_item: EV_LIST_ITEM_IMP
 			standard_cursor: EV_CURSOR
 			cursor_code: EV_CURSOR_CODE
 		do
-			print ("End transport%N")
 			release_action := Ev_pnd_disabled
 			motion_action := Ev_pnd_disabled
 			erase_rubber_band
+				-- Remove the line drawn from source position to
+				-- Pointer.
 
 			disable_capture
+				-- Remove the capture
 			set_capture_type (Capture_normal)
+				-- Return capture type to capture_normal.
+				--| normal capture only works on the current windows thread.
 
 			if
 				(a_button = 3 and is_pnd_in_transport) or
 				(a_button = 1 and is_dnd_in_transport)
+				-- Check that transport can be started.
+				--| Drag and drop is always ended with the left button release.
+				--| Pick and drop is always ended with the right button press.
 			then
 				target := pointed_target
+					-- Retrieve `target'.
 				if target /= Void then
 						target.drop_actions.call ([pebble])
+							-- If there is a target then execute the drop
+							-- actions for `target'.
 				end
 			end
 			enable_transport
+				-- Return state ready for next drag/pick and drop.
 			interface.pointer_motion_actions.resume
+				-- Resume `pointer_motion_actions'.
 			create env
 			env.application.drop_actions.call ([pebble])
+				-- Execute drop_actions for the application.
 			is_dnd_in_transport := False
 			is_pnd_in_transport := False
 			pick_x := 0
 			pick_y := 0
-			--|FIXME This has been added to stop violation of postcondition
-			--| 	last_pointed_target_is_void: last_pointed_target = Void
-			--|Is this correct?
 			last_pointed_target := Void
+				-- Assign `Void' to `last_pointer_target'.
 			if pnd_stored_cursor_imp /= Void then
 				set_pointer_style (pnd_stored_cursor_imp.interface)
-				-- Set the pointer style back to state before PND.
+				-- Restore the cursor style of `Current' if necessary.
 			else
 				create cursor_code
 				create standard_cursor.make_with_code (cursor_code.standard)
 				set_pointer_style (standard_cursor)
+				-- Restore the standard cursor style.
 			end
 			press_action := Ev_pnd_start_transport
 			if pebble_function /= Void then
@@ -511,8 +535,8 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.27  2000/04/27 16:33:47  rogers
---| Added check_drag_and_drop_release to end drag and drop if necessary.
+--| Revision 1.28  2000/04/27 17:21:36  rogers
+--| Comments and formatting.
 --|
 --| Revision 1.26  2000/04/14 23:27:10  rogers
 --| start transport sets capture type to Capture_heavy.

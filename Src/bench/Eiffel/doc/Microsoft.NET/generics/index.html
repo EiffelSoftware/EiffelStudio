@@ -1,0 +1,161 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Eiffel for .NET Implementation</title>
+<link rel="stylesheet" type="text/css" href="../default.css">
+</head>
+
+<body bgcolor="#FEFFE3">
+
+<h1>Generics</h1>
+<p>One of the issue of .NET is the lack of generics support. Our first 
+implementation of generics was based on generics as they were implemented in 
+version 4.2 and prior of the ISE Eiffel compiler. Now, we need to find a way to 
+represent the generic information for a given class. When this is done we can 
+implement generic conformance.</p>
+<h2>Keeping type information</h2>
+<p>To keep the type information, we need to add a new attribute to every Eiffel 
+objects. This attribute can be null in which case it is not a generic type, or 
+not null in which case it is either a TUPLE or a generic class. The type of this 
+attribute is an <span class="eclass">EIFFEL_DERIVATION</span>.</p>
+<p>We create a new type called <span class="eclass">EIFFEL_DERIVATION</span> in which there is:</p>
+<ul>
+  <li><span class="efeature">type</span>: an instance of a <span class="eclass">CONCRETE_TYPE</span>.</li>
+  <li><span class="efeature">nb_generics</span>: number of generic parameter, 0 otherwise.</li>
+  <li><span class="efeature">generics_type</span>: an array of <span class="eclass">CONCRETE_TYPE</span>, there is  <span class="efeature">nb_generics</span> 
+  element in this array, so that we know exactly what the generic derivation is.</li>
+</ul>
+<p>To create an instance of <span class="eclass">EIFFEL_DERIVATION</span>, we 
+need to know more about <span class="eclass">CONCRETE_TYPE</span>. Here is the 
+hierarchy:</p>
+<pre><span class="ekeyword">class
+</span>	<span class="eclass">TYPE</span>
+<span class="ekeyword">end</span>
+
+<span class="ekeyword">class
+	</span><span class="eclass">CONCRETE_TYPE</span>
+<span class="ekeyword">inherit
+</span>	<span class="eclass">TYPE</span>
+<span class="ekeyword">feature</span>
+	<span class="efeature">type</span>: <span class="eclass">SYSTEM_TYPE</span>
+			-- .NET Run-time type information.
+<span class="ekeyword">end</span>
+
+<span class="ekeyword">class
+	COMPUTED</span><span class="eclass">_TYPE</span>
+<span class="ekeyword">inherit
+</span>	<span class="eclass">CONCRETE_TYPE</span>
+<span class="ekeyword">feature</span>
+	<span class="efeature">derivation</span>: <span class="eclass">EIFFEL_DERIVATION</span>
+			-- Information about computed type.
+<span class="ekeyword">end</span></pre>
+<p>The <span class="eclass">CONCRETE_TYPE</span> stores the run-time information 
+about current Eiffel type with no generic derivations. It is used for external 
+classes or for Eiffel classes that are not generics. A <span class="eclass">COMPUTED_TYPE</span> 
+stores the information about a generic type and instances of <span class="eclass">CONCRETE_TYPE</span> 
+are computed during the execution.</p>
+<pre><span class="ekeyword">class</span><span class="eclass">
+</span>	<span class="eclass">FORMAL_TYPE</span>
+<span class="ekeyword">inherit</span><span class="eclass">
+</span>	<span class="eclass">TYPE</span>
+<span class="ekeyword">feature</span>
+	<span class="efeature">position</span>: <span class="eclass">INTEGER</span>
+			-- Generic parameter position.
+<span class="ekeyword">end</span>
+
+<span class="ekeyword">class
+</span>	<span class="eclass">ANCHORED_TYPE</span>
+<span class="ekeyword">inherit
+</span>	<span class="eclass">TYPE</span>
+<span class="ekeyword">end</span></pre>
+<p>
+<span class="eclass">FORMAL_TYPE </span>and	<span class="eclass">ANCHORED_TYPE </span>
+are just place holder to tell the run-time how to compute certain type.</p>
+<h2>Generating the type information</h2>
+<p>The best way to describe it is to do a small example. In our case, we will 
+try to create a LINKED_LIST [HASH_TABLE [INTEGER, STRING]]. In order to create 
+this type, we are going to create an array of	<span class="eclass">TYPE </span>
+that fully describes this type. We are using `create' to show that we have a 
+certain instance initialized in a certain way, most likely the implementation 
+will not create a new instance, but reuse the same instance for all compatible 
+type.</p>
+<p class="note"><b>example:<br>
+</b>LINKED_LIST [HASH_TABLE [INTEGER, STRING]] corresponds to the 
+LINKED_LIST_ANY type definition in .NET.<br>
+<span class="efeature"><br>
+types</span> = [create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
+(&quot;LINKED_LIST_ANY&quot;)),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType (&quot;HASH_TABLE_Int32_ANY&quot;)),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType (&quot;Int32&quot;)),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
+(&quot;STRING&quot;))]</p>
+<p>
+This approach of representing <span class="efeature">types</span> is directly 
+taken from our representation in the C code generation. Given this array, we are 
+going to compute an associated <span class="eclass">EIFFEL_DERIVATION </span>
+object that we will store after having created the a new instance of the class 
+LINKED_LIST [HASH_TABLE [INTEGER, STRING]].</p>
+<p>
+In this particular case, the <span class="eclass">EIFFEL_DERIVATION</span> instance 
+should look like:</p>
+<p class="note">
+<span class="efeature">type</span> = create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
+(&quot;LINKED_LIST_ANY&quot;))<br>
+<span class="efeature">nb_generics</span> = 1<br>
+<span class="efeature">generic_types</span> = [create {<span class="eclass">COMPUTED_TYPE</span>}.make (&quot;HASH_TABLE [INTEGER, STRING]&quot;)]</p>
+<p>
+For the type HASH_TABLE [INTEGER, STRING], the <span class="eclass">EIFFEL_DERIVATION</span> instance
+should look like:
+</p>
+<p class="note">
+<span class="efeature">type</span> = create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
+(&quot;HASH_TABLE_Int32_ANY&quot;))<br>
+<span class="efeature">nb_generics</span> = 2<br>
+<span class="efeature">generic_types</span> = [create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
+(&quot;Int32&quot;)),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+create {<span class="eclass">CONCRETE_TYPE</span>}.make (Type.GetType 
+(&quot;STRING&quot;))]</p>
+<p>
+The <span class="eclass">CONCRETE_TYPE </span>instance is created at run-time in 
+case you have a formal generic parameter in the type you create, or if what you 
+create depends on an anchored type definition.</p>
+<h2>
+Special case of SPECIAL/.NET arrays</h2>
+<p>
+On of the trickiest thing is to have generic information on the .NET array 
+types, since they are generic containers and therefore we cannot add some extra 
+information since their layout is controlled by the .NET runtime. So we will 
+introduce a type SPECIAL_XX where XX is one of the possible generic 
+derivation:</p>
+<ul>
+  <li>Boolean</li>
+  <li>Char</li>
+  <li>Int8</li>
+  <li>Int16</li>
+  <li>Int32</li>
+  <li>Int64</li>
+  <li>Single</li>
+  <li>Double</li>
+  <li>IntPtr</li>
+  <li>Object</li>
+</ul>
+<p>
+This type will contain the reference to the current .NET array and the reference 
+to its <span class="eclass">EIFFEL_DERIVATION</span> counterpart. So everywhere we 
+have a SPECIAL type we will generate the SPECIAL_XX type instead. The 
+performance lost is only in memory size.</p>
+<h2>Generic conformance</h2>
+<p>[Not completed yet]<br>
+Given all the above information, plus some more information about inheritance 
+tree, we will be able to compute the conformance between two eiffel types.</p>
+
+</body>
+
+</html>

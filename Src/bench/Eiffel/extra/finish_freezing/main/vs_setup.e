@@ -40,7 +40,7 @@ feature -- Initialization
 			if valid_vcvars then
 				create l_batch_file.make_open_write ("finish_freezing.bat")
 						-- Unset the INCLUDE, LIB and PATH.
-				l_batch_file.putstring ("echo off")
+				l_batch_file.putstring ("@echo off")
 				l_batch_file.new_line		
 				l_batch_file.putstring ("set INCLUDE=")
 				l_batch_file.new_line

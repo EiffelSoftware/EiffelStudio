@@ -229,18 +229,7 @@ feature {NONE} -- Implementation
 				loop
 					type_name := list.item
 					create dotnet_name.make_from_cil (type_name.internal_type.full_name)
-					simple_name := formatted_type_name (dotnet_name, 0)
-					from
-						used_names.search (simple_name)
-						i := 1
-					until
-						not used_names.found
-					loop
-						simple_name := formatted_type_name (dotnet_name, i)
-						i := i + 1
-						used_names.search (simple_name)
-					end
-					used_names.put (simple_name, simple_name)
+					simple_name := formatted_type_name (dotnet_name, used_names)
 					type_name.set_eiffel_name (simple_name)
 					list.forth
 				end

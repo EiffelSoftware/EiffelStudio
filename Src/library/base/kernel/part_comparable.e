@@ -15,25 +15,33 @@ feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
+		require
+			other_exists: other /= Void
 		deferred
 		end;
 
 	infix "<=" (other: like Current): BOOLEAN is
 			-- Is current object less than or equal to `other'?
+		require
+			other_exists: other /= Void
 		do
-			Result := (Current < other) or else equal (Current, other)
+			Result := (Current < other) or is_equal (other)
 		end;
 
 	infix ">" (other: like Current): BOOLEAN is
 			-- Is current object greater than `other'?
+		require
+			other_exists: other /= Void
 		do
 			Result := other < Current
 		end;
 
 	infix ">=" (other: like Current): BOOLEAN is
 			-- Is current object greater than or equal to `other'?
+		require
+			other_exists: other /= Void
 		do
-			Result := (other < Current) or else equal (Current, other)
+			Result := (other < Current) or is_equal (other)
 		end;
 
 end -- class PART_COMPARABLE

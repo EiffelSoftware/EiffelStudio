@@ -1,7 +1,12 @@
 indexing
 
 	description:
-		"Values that may be hashed into an integer index";
+		"Values that may be hashed into an integer index, %
+		%for use as keys in hash tables";
+
+	note: 
+		"In general, the default value of a type (e.g. 0 for integers, %
+		%void for references) may not be hashed."
 
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -18,19 +23,18 @@ feature -- Access
 			hashable: is_hashable
 		deferred
 		ensure
-			valid_hash_value: Result >= 0
+			good_hash_value: Result > 0
 		end;
 
 feature -- Status report
 
 	is_hashable: BOOLEAN is
 			-- May current object be hashed?
-			-- (Answer: if and only if it is not the default value of
-			-- its type)
+			-- (True if it is not its type's default.)
 		do
 			Result := (Current /= default)
 		ensure
-			Result = (Current /= default)
+			ok_if_not_default: Result implies (Current /= default)
 		end;
 
 end -- class HASHABLE

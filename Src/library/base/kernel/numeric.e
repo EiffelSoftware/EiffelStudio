@@ -3,59 +3,117 @@ indexing
 	description:
 		"Objects to which numerical operations are applicable";
 
+	note: "The model is that of a commutative ring."
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 deferred class
+
 	NUMERIC
 
-feature -- Basic operations
+feature -- Access
 
-	infix "+" (other: NUMERIC): NUMERIC is
-			-- Sum with `other'
+	one: like Current is
+			-- Neutral element for "*" and "/"
+		deferred
+		ensure
+			result_exists: Result /= Void
+		end;
+
+	zero: like Current is
+			-- Neutral element for "+" and "-"
+		deferred
+		ensure
+			result_exists: Result /= Void
+		end;
+
+feature -- Status report
+
+	divisible (other: like Current): BOOLEAN is
+			-- May current object be divided by `other'?
 		require
 			other_exists: other /= Void
 		deferred
 		end;
 
-	infix "-" (other: NUMERIC): NUMERIC is
+	exponentiable (other: NUMERIC): BOOLEAN is
+			-- May current object be elevated to the power `other'?
+		require
+			other_exists: other /= Void
+		deferred
+		end
+
+feature -- Basic operations
+
+	infix "+" (other: like Current): like Current is
+			-- Sum with `other' (commutative).
+		require
+			other_exists: other /= Void
+		deferred
+		ensure
+			result_exists: Result /= Void;
+			commutative: equal (Result, other + Current)
+		end;
+
+	infix "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		require
 			other_exists: other /= Void
 		deferred
+		ensure
+			result_exists: Result /= Void
 		end;
 
-	infix "*" (other: NUMERIC): NUMERIC is
+	infix "*" (other: like Current): like Current is
 			-- Product by `other'
 		require
 			other_exists: other /= Void
 		deferred
+		ensure
+			result_exists: Result /= Void
 		end;
 
-	infix "/" (other: NUMERIC): NUMERIC is
+	infix "/" (other: like Current): like Current is
 			-- Division by `other'
 		require
-			other_exists: other /= Void
+			other_exists: other /= Void;
+			good_divisor: divisible (other)
 		deferred
+		ensure
+			result_exists: Result /= Void
 		end;
 
 	infix "^" (other: NUMERIC): NUMERIC is
 			-- Current object to the power `other'
 		require
-			other_exists: other /= Void
+			other_exists: other /= Void;
+			good_exponent: exponentiable (other)
 		deferred
+		ensure
+			result_exists: Result /= Void
 		end;
 
-	prefix "+": NUMERIC is
+	prefix "+": like Current is
 			-- Unary plus
 		deferred
+		ensure
+			result_exists: Result /= Void
 		end;
 
-	prefix "-": NUMERIC is
+	prefix "-": like Current is
 			-- Unary minus
 		deferred
+		ensure
+			result_exists: Result /= Void
 		end;
+
+invariant
+
+	neutral_addition: equal (Current + zero, Current);
+	self_subtraction: equal (Current - Current, zero);
+	neutral_multiplication: equal (Current * one, Current);
+	self_division: divisible (Current) implies equal (Current / Current, one)
 
 end -- class NUMERIC
 

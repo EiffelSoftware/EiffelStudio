@@ -18,6 +18,11 @@ class STRING inherit
 		end;
 
 	RESIZABLE [CHARACTER]
+		rename
+			min as basic_min,
+			max as basic_max
+		export
+			{NONE} basic_min, basic_max
 		redefine
 			copy, is_equal, out,
 			consistent, setup,
@@ -46,9 +51,22 @@ creation
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (n: INTEGER) is
+			-- Allocate space for at least `n' characters.
+		require
+			non_negative_size: n >= 0
+		do
+			make_area (n)
+		ensure
+			empty_string: count = 0;
+			area_allocated: capacity >= n
+		end;
+
 feature -- Initialization
 
-	frozen make (n: INTEGER) is
+	remake (n: INTEGER) is
 			-- Allocate space for at least `n' characters.
 		require
 			non_negative_size: n >= 0
@@ -57,7 +75,18 @@ feature -- Initialization
 			count := 0
 		ensure
 			empty_string: count = 0;
-			area_allocated: capacity >= n;
+			area_allocated: capacity >= n
+		end;
+
+	make_from_string (s: STRING) is
+			-- Initialize from the characters of `s'.
+			-- (Useful in proper descendants of class STRING,
+			-- to initialize a string-like object from a manifest string.)
+		require
+			string_exists: s /= Void
+		do
+			area := s.area;
+			count := s.count
 		end;
 
 	adapt (s: STRING): like Current is
@@ -67,12 +96,12 @@ feature -- Initialization
 			!! Result.make (0);
 			Result.share (s)
 		end;
-
+			
 	from_c (c_string: POINTER) is
 			-- Reset contents of string from contents of `c_string',
 			-- a string created by some external C function.
 		require
-			c_string /= Void
+			c_string_exists: c_string /= Void
 		local
 			length: INTEGER
 		do
@@ -86,7 +115,7 @@ feature -- Initialization
 			-- Perform actions on a freshly created object so that
 			-- the contents of `other' can be safely copied onto it.
 		do
-			make (other.capacity)	
+			remake (other.capacity)	
 		end;
 
 feature -- Access
@@ -107,7 +136,7 @@ feature -- Access
 		end;
 
 	hash_code: INTEGER is
-			-- Hash code value.
+			-- Hash code value
 		do
 			Result := hashcode ($area, count)
 		end;
@@ -233,7 +262,7 @@ feature -- Comparison
 			end;
 		end;
 
-	infix "<" (other: STRING): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN is
 			-- Is string lexicographically lower than `other'?
 			-- (False if `other' is void)
 		local
@@ -265,7 +294,7 @@ feature -- Status report
 		end;
 
 	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' correctly bounded?
+			-- Is `i' within the bounds of the string?
 		do
 			Result := (i > 0) and (i <= count);
 		end;
@@ -299,7 +328,7 @@ feature -- Element change
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone'.)
 		do
-			make (other.capacity);
+			remake (other.capacity);
 			area.copy (other.area);
 			count := other.count
 		ensure then
@@ -308,7 +337,7 @@ feature -- Element change
 		end;
 
 
-	replace_substring (s: like Current; start_pos, end_pos:  INTEGER) is
+	replace_substring (s: like Current; start_pos, end_pos: INTEGER) is
 			-- Copy the characters of `s' to positions
 			-- `start_pos' .. `end_pos'.
 		require
@@ -329,7 +358,7 @@ feature -- Element change
 			str_replace ($area, $s_area, count, s.count, start_pos, end_pos);
 			count := new_size
 		ensure
-		   new_count: count = old count + s.count - end_pos + start_pos -1
+		   new_count: count = old count + s.count - end_pos + start_pos - 1
 		end;
 
 	replace_substring_all (original, new: like Current) is
@@ -384,7 +413,7 @@ feature -- Element change
 				count := n
 			end
 		ensure
-			new_count: count = min (n, old count)
+			new_count: count = n.min (old count)
 			-- first_kept: For every `i' in 1..`n', `item' (`i') = old `item' (`i')
 		end;
 
@@ -399,7 +428,7 @@ feature -- Element change
 				count := n
 			end
 		ensure
-			count = min (n, old count)
+			new_count: count = n.min (old count)
 		end;
 
 	left_adjust is
@@ -443,9 +472,6 @@ feature -- Element change
 
 	put (c: CHARACTER; i: INTEGER) is
 			-- Replace character at position `i' by `c'.
-		require else
-			index_small_enough: i <= count;
-			index_large_enough: i > 0
 		do
 			area.put (c, i - 1)
 		end;
@@ -501,6 +527,14 @@ feature -- Element change
 			-- appended: For every `i' in 1..`s'.`count', `item' (old `count'+`i') = `s'.`item' (`i')
 		end;
 
+	append_string (s: STRING) is
+			-- Append a copy of `s', if not void, at end.
+		do
+			if s /= Void then
+				append (s)
+			end
+		end;
+			
 	append_integer (i: INTEGER) is
 			-- Append the string representation of `i' at end.
 			--| Should use `sprintf'
@@ -649,7 +683,7 @@ feature -- Resizing
 	resize (newsize: INTEGER) is
 			-- Rearrange string so that it can accommodate
 			-- at least `newsize' characters.
-			-- Do not lose any previously entered characters.
+			-- Do not lose any previously entered character.
 		require
 			new_size_non_negative: newsize >= 0
 		do
@@ -801,15 +835,23 @@ feature -- Conversion
             Result := temp;
         end;
 
+	to_pointer: POINTER is
+			-- A pointer to a C form of current string.
+			-- Useful only for interfacing with C software.
+		do
+			if count = 0 or else item (count) /= '%U' then
+				extend ('%U');
+				count := count - 1;
+			end;
+			Result := conv_pp ($area)
+		end;
+
 	to_c: ANY is
 			-- An integer which a C function may cast into a pointer
 			-- to a `C' form of current string.
 			-- Useful only for interfacing with C software.
-		local
-			c: INTEGER
 		do
-			c := count;
-			if c = 0 or else item (c) /= '%U' then
+			if count = 0 or else item (count) /= '%U' then
 				extend ('%U');
 				count := count - 1;
 			end;
@@ -1148,6 +1190,12 @@ feature {STRING} -- Implementation
 			"C"
 		alias
 			"sprealloc"
+		end;
+
+	conv_pp (p: like area): POINTER is
+			-- Return its argument
+		external
+			"C"
 		end;
 
 invariant

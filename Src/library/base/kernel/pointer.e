@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"References to objects meant to be exchanged with non-Eiffel software";
+		"References to objects meant to be exchanged with non-Eiffel software.";
 
 	status: "See notice at end of class";
 	date: "$Date$";

@@ -34,13 +34,13 @@ feature -- Status report
 
 feature -- Output
 
-	putint (i: INTEGER) is
+	put_integer, putint (i: INTEGER) is
 			-- Write ASCII value of `i' at current position.
 		do
-			file_pi (file_pointer, i);
+			file_pi (file_pointer, i)
 		end;
 
-	putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN) is
 			-- Write ASCII value of `b' at current position.
 		local
 			ext_bool_str: ANY
@@ -51,42 +51,42 @@ feature -- Output
 			else
 				ext_bool_str := false_string.to_c;
 				file_ps (file_pointer, $ext_bool_str, false_string.count)
-			end;
+			end
 		end;
 
-	putreal (r: REAL) is
+	put_real, putreal (r: REAL) is
 			-- Write ASCII value of `r' at current position.
 		do
-			file_pr (file_pointer, r);
+			file_pr (file_pointer, r)
 		end;
 
-	putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE) is
 			-- Write ASCII value `d' at current position.
 		do
-			file_pd (file_pointer, d);
+			file_pd (file_pointer, d)
 		end;
 
 feature -- Input
 
-	readint is
+	read_integer, readint is
 			-- Read the ASCII representation of a new integer
-			-- from file. Make result available in `lastint'.
+			-- from file. Make result available in `last_integer'.
 		do
-			lastint := file_gi (file_pointer);
+			last_integer := file_gi (file_pointer)
 		end;
 
-	readreal is
+	read_real, readreal is
 			-- Read the ASCII representation of a new real
-			-- from file. Make result available in `lastreal'.
+			-- from file. Make result available in `last_real'.
 		do
-			lastreal := file_gr (file_pointer);
+			last_real := file_gr (file_pointer)
 		end;
 
-	readdouble is
+	read_double, readdouble is
 			-- Read the ASCII representation of a new double
-			-- from file. Make result available in `lastdouble'.
+			-- from file. Make result available in `last_double'.
 		do
-			lastdouble := file_gd (file_pointer);
+			last_double := file_gd (file_pointer)
 		end;
 
 feature {NONE} -- Implementation

@@ -20,16 +20,27 @@ feature -- Access
 			Result := c_generator ($Current);
 		end;
  
+feature -- Status report
+
 	conforms_to (other: like Current): BOOLEAN is
-			-- Is dynamic type of current object a descendant of
-			-- dynamic type of `other'?
+			-- Does type of current object conform to type
+			-- of `other' (as per Eiffel: The Language, chapter 13)?
 		require
 			other_not_void: other /= Void
 		do
 			Result := c_conforms_to ($other, $Current)
 		end;
 
-feature -- Status report
+	same_type (other: GENERAL): BOOLEAN is
+			-- Is type of current object identical to type of `other'?
+		require
+			other_not_void: other /= Void
+		do
+			Result := c_same_type ($other, $Current)
+		ensure
+			definition: Result = (conforms_to (other) and 
+										other.conforms_to (Current))
+		end;
 
 	consistent (other: like Current): BOOLEAN is
 			-- Is current object in a consistent state so that `other'
@@ -40,62 +51,78 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_equal, frozen standard_is_equal (other: like Current): BOOLEAN is
-			-- Is `other' attached to an object field-by-field identical
-			-- to current object?
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
 		require
-			other_not_void: other /= Void;
+			other_not_void: other /= Void
 		do
 			Result := c_standard_is_equal ($Current, $other)
+		ensure
+			symmetric: Result implies other.is_equal (Current);
+			consistent: standard_is_equal (other) implies Result
+		end;
+
+	frozen standard_is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object of the same type
+			-- as current object, and field-by-field identical to it?
+		require
+			other_not_void: other /= Void
+		do
+			Result := c_standard_is_equal ($Current, $other)
+		ensure
+			same_type: Result implies same_type (other);
+			symmetric: Result implies other.standard_is_equal (Current)
 		end;
 
 	frozen equal (some: GENERAL; other: like some): BOOLEAN is
 			-- Are `some' and `other' either both void or attached
-			-- to field-by-field identical objects?
-			--
-			-- For non-void arguments, `equal' calls `is_equal';
-			-- to change comparison criterion, redefine `is_equal'.
+			-- to objects considered equal?
 		do
 			Result := (some = Void and other = Void) or else
 						((some /= Void and other /= Void) and then
 						some.is_equal (other))
 		ensure
-			Result = ((some = Void and other = Void) or else
+			definition: Result = (some = Void and other = Void) or else
 						((some /= Void and other /= Void) and then
-						some.is_equal (other)))
+						some.is_equal (other))
 		end;
 
 	frozen standard_equal (some: GENERAL; other: like some): BOOLEAN is
 			-- Are `some' and `other' either both void or attached to
-			-- field-by-field identical objects?
+			-- field-by-field identical objects of the same type?
 			-- Always uses default object comparison criterion.
 		do
 			Result := (some = Void and other = Void) or else
 						((some /= Void and other /= Void) and then
 						some.standard_is_equal (other))
 		ensure
-			Result = ((some = Void and other = Void) or else
+			definition: Result = (some = Void and other = Void) or else
 						((some /= Void and other /= Void) and then
-						some.standard_is_equal (other)))
+						some.standard_is_equal (other))
 		end;
 
-	deep_equal (some: GENERAL; other: like some): BOOLEAN is
+	frozen deep_equal (some: GENERAL; other: like some): BOOLEAN is
 			-- Are `some' and `other' either both void
 			-- or attached to isomorphic object structures?
 		do
 			Result := (some = Void and then other = Void) or else
 						(some /= Void and then other /= Void and then
 						c_deep_equal ($some, $other))
+		ensure
+			shallow_implies_deep: standard_equal (some, other) implies Result;
+			same_type : Result implies some.same_type (other);
+			symmetric: Result implies deep_equal (other, some)
 		end;
 
 feature -- Duplication
 
 	copy (other: like Current) is
-			-- Copy the structure representing by `other' onto
-			-- that represented by current object.
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
 		require
 			other_not_void: other /= Void;
-			conformance: other.conforms_to (Current);
+			type_identity: same_type (other)
 		do
 			c_standard_copy ($other, $Current)
 		ensure
@@ -107,16 +134,16 @@ feature -- Duplication
 			-- of current object.
 		require
 			other_not_void: other /= Void;
-			conformance: other.conforms_to (Current);
+			type_identity: same_type (other)
 		do
 			c_standard_copy ($other, $Current)
 		ensure
-			is_equal: is_equal (other)
+			is_standard_equal: standard_is_equal (other)
 		end;
 
 	frozen clone (other: GENERAL): like other is
 			-- Void if `other' is void; otherwise new object
-			-- with contents copied from `other'.
+			-- equal to `other'
 			--			
 			-- For non-void `other', `clone' calls `copy';
 		 	-- to change copying/cloning semantics, redefine `copy'.
@@ -185,26 +212,25 @@ feature -- Duplication
 feature -- Output
 	
 	io: STD_FILES is
-			-- Object providing access to standard files
-			-- (input, output, error)
+			-- Handle to standard file setup
 		once
 			!! Result;
-			Result.set_output_default;
+			Result.set_output_default
 		end;
 
 	out, frozen tagged_out: STRING is
-			-- New string containing a terse, printable, field-by-field
-			-- representation of current object.
+			-- New string containing terse printable representation
+			-- of current object
 		do
-				Result := c_tagged_out (Current)
+			Result := c_tagged_out (Current)
 		end;
 
 	print (some: GENERAL) is
-			-- Write terse external representation of current object
+			-- Write terse external representation of `some'
 			-- on standard output.
 		do
 			if some /= Void then
-				io.putstring (some.out)
+				io.put_string (some.out)
 			end
 		end; 
 
@@ -216,15 +242,25 @@ feature -- Basic operations
 		end;
 
 	frozen default: like Current is
-			-- Default value of object's type.
+			-- Default value of object's type
 		do
 		end;
 
-	Void: NONE;
+	frozen default_pointer: POINTER is
+			-- Default value of type `POINTER'
+			-- (Avoid the need to write `p'.`default' for
+			-- some `p' of type `POINTER'.)
+		once
+		ensure
+			-- Result = Result.default
+		end;
+
+	frozen Void: NONE;
 			-- Void reference
 
-	die (code: INTEGER) is
-			-- Exit program with exit status `code'.
+	die (code: INTEGER) is obsolete "Use ``new_die'' from ``EXCEPTIONS''"
+			-- Terminate execution with exit status `code',
+			-- without triggering an exception.
 		external
 			"C"
 		alias
@@ -250,6 +286,15 @@ feature {NONE} -- Implementation
 			"C"
 		alias
 			"econfg"
+		end;
+
+	frozen c_same_type (obj1, obj2: GENERAL): BOOLEAN is
+			-- Are dynamic type of object attached to `obj1' and 
+			-- dynamic type of object attached to `obj2' the same?
+		external
+			"C"
+		alias
+			"estypeg"
 		end;
 
 	c_standard_is_equal (target, source: GENERAL): BOOLEAN is
@@ -302,6 +347,11 @@ feature {NONE} -- Implementation
 		external
 			"C"
 		end;
+
+invariant
+
+	reflexive_equality: standard_is_equal (Current);
+	reflexive_conformance: conforms_to (Current)
 
 end -- class GENERAL
 

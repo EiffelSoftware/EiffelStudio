@@ -20,6 +20,12 @@ feature -- Access
 	item: POINTER;
 			-- Pointer value
 
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := c_hashcode ($item)
+		end;
+
 feature -- Element change
 
 	set_item (p: POINTER) is
@@ -28,10 +34,19 @@ feature -- Element change
 			item := p
 		end
 
+feature -- Status report
+
+	is_hashable: BOOLEAN is
+			-- May current object be hashed?
+			-- (True if it is not its type's default.)
+		do
+			Result := item /= default_pointer
+		end;
+
 feature -- Output
 
 	out: STRING is
-			-- Printable representation
+			-- Printable representation of pointer value
 		do
 			Result := c_outp ($item)
 		end;
@@ -39,9 +54,17 @@ feature -- Output
 feature {NONE} -- Implementation
 
 	c_outp (p: POINTER): STRING is
-			-- Printable representation
+			-- Printable representation of pointer value
 		external
 			"C"
+		end;
+
+	c_hashcode (p: POINTER): INTEGER is
+			-- Hash code value of `p'
+		external
+			"C"
+		alias
+			"conv_pi"
 		end;
 
 end -- class POINTER_REF

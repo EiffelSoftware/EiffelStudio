@@ -93,8 +93,8 @@ feature -- Element change
 	independent_store (file: IO_MEDIUM) is
 			-- Produce on `file' an external representation of the
 			-- entire object structure reachable from current object.
-			-- Retrievable from other systems regardless of platform
-			-- (machine architecture).
+			-- Retrievable from other systems for the same or other
+			-- platform (machine architecture).
 		require
 			file_not_void: file /= Void;
 			file_exists: file.exists;

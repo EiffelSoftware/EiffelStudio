@@ -25,58 +25,58 @@ creation
 
 feature -- Output
 
-	putint (i: INTEGER) is
+	put_integer, putint (i: INTEGER) is
 			-- Write binary value of `i' at current position.
 		do
-			file_pib (file_pointer, i);
+			file_pib (file_pointer, i)
 		end;
 
-	putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN) is
 			-- Write binary value of `b' at current position.
 		local
 			ext_bool_str: ANY
 		do
 			if b then
-				putchar ('%/001/')	
+				put_character ('%/001/')	
 			else
-				putchar ('%U')
+				put_character ('%U')
 			end;
 		end;
 
-	putreal (r: REAL) is
+	put_real, putreal (r: REAL) is
 			-- Write binary value of `r' at current position.
 		do
-			file_prb (file_pointer, r);
+			file_prb (file_pointer, r)
 		end;
 
-	putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE) is
 			-- Write binary value `d' at current position.
 		do
-			file_pdb (file_pointer, d);
+			file_pdb (file_pointer, d)
 		end;
 
 feature -- Input
 
-	readint is
+	read_integer, readint is
 			-- Read the binary representation of a new integer
-			-- from file. Make result available in `lastint'.
+			-- from file. Make result available in `last_integer'.
 		do
-			lastint := file_gib (file_pointer);
+			last_integer := file_gib (file_pointer)
 		end;
 
 
-	readreal is
+	read_real, readreal is
 			-- Read the binary representation of a new real
-			-- from file. Make result available in `lastreal'.
+			-- from file. Make result available in `last_real'.
 		do
-			lastreal := file_grb (file_pointer);
+			last_real := file_grb (file_pointer)
 		end;
 
-	readdouble is
+	read_double, readdouble is
 			-- Read the binary representation of a new double
-			-- from file. Make result available in `lastdouble'.
+			-- from file. Make result available in `last_double'.
 		do
-			lastdouble := file_gdb (file_pointer);
+			last_double := file_gdb (file_pointer)
 		end;
 
 feature {NONE} -- Implementation

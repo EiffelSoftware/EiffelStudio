@@ -82,7 +82,7 @@ feature -- Status setting
 		end;
 	
 	collection_on is
-			-- Enable the garbage collector.
+			-- Enable garbage collection.
 		external
 			"C"
 		alias

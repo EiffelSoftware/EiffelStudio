@@ -54,6 +54,8 @@ feature -- Status report
 
 	developer_exception_name: STRING is
 			-- Name of last developer-raised exception
+		require
+			applicable: is_developer_exception
 		do
 			Result := original_tag_name
 		end;
@@ -173,6 +175,15 @@ feature -- Status setting
 				str := name.to_c
 			end;
 			eraise ($str, Developer_exception);
+		end;
+
+	new_die (code: INTEGER) is
+			-- Terminate execution with exit status `code',
+			-- without triggering an exception.
+		external
+			"C"
+		alias
+			"esdie"
 		end;
 
 	message_on_failure is

@@ -28,7 +28,7 @@ feature
 
 feature -- Access
 
-	dotnet_metamorphose_basic_to_ref (dmp: DUMP_VALUE): DUMP_VALUE is
+	dotnet_metamorphose_basic_to_reference_value (dmp: DUMP_VALUE): DUMP_VALUE is
 			-- Metamorphose basic type into corresponding _REF type
 		do
 		end
@@ -43,5 +43,11 @@ feature -- Access
 			is_dotnet: application.is_dotnet
 		do
 		end
+
+	icd_value_by_address (a_addr: STRING): ICOR_DEBUG_VALUE is
+		do
+		end
+
+	
 
 end -- class DBG_EVALUATOR

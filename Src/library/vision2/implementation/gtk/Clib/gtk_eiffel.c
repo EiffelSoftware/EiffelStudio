@@ -688,13 +688,15 @@ EIF_INTEGER c_gtk_widget_minimum_height (GtkObject *widget)
 
 /*********************************
  *
- * Function : `c_gtk_container_nb_children' (1)
- *  		  `c_gtk_container_ith_child'   (2)
- *  		  `c_gtk_container_has_child'	(3)
+ * Function : `c_gtk_container_nb_children' 	(1)
+ *  		  `c_gtk_container_ith_child'   	(2)
+ *  		  `c_gtk_container_has_child'		(3)
+ *  		  `c_gtk_container_set_bg_pixmap'	(4)
  *  		            
  * Note (1) : Return the number of children of a container.
  * 		(2)	: Return the i-th child of the container.
  * 		(3) : Tell if the given widget is a child of the container.
+ * 		(4) : Set the container background pixmap to the given one.
  * 
  * Author : Leila
  *
@@ -730,6 +732,22 @@ int c_gtk_container_has_child (GtkWidget *widget, GtkWidget *child)
 	{
 		return 1;
 	};
+}
+
+void c_gtk_container_set_bg_pixmap (GtkWidget *container, GtkWidget *pixmap)
+{
+  GtkStyle *widgetStyle;
+  int i;
+  
+  widgetStyle = gtk_style_copy (GTK_WIDGET (container)->style);
+  
+  for (i = 0; i < 5; i++)
+  {
+	widgetStyle->bg_pixmap[i] = GTK_PIXMAP (pixmap)->pixmap;
+  }
+ 
+  /* --- Set the style of the widget --- */
+  gtk_widget_set_style (GTK_WIDGET (container), widgetStyle);
 }
 
 /*********************************
@@ -1769,14 +1787,16 @@ EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar)
 }
 
 /*==============================================================================
- Fiel selection functions
+ File selection functions
 ==============================================================================*/
 
 /*********************************
  *
- * Function : `c_gtk_file_selection_get_file_name'			(1)
+ * Function : `c_gtk_file_selection_get_file_name'	(1)
+ * 			  `c_gtk_file_selection_get_dir_name'	(2)
  *
  * Note : (1) Value in the gtk_entry of the gtk_file_selection.
+ * 		  (2) Dir name of the gtk_file_selection.
  *
  * Author : Alex
  *
@@ -1789,6 +1809,82 @@ EIF_POINTER c_gtk_file_selection_get_file_name (GtkWidget *file_dialog)
   entry = (GtkEntry *)((GtkFileSelection *) file_dialog)->selection_entry;
   
   return (EIF_POINTER) gtk_entry_get_text (entry);
+}
+
+EIF_POINTER c_gtk_file_selection_get_dir_name (GtkWidget *file_dialog)
+{
+  GtkLabel *label;
+  char *value;
+  
+  label = (GtkLabel*) ((GtkFileSelection *) file_dialog)->selection_text;
+  
+  gtk_label_get (label, &value);
+  
+  value = value + 11;
+  
+  return (EIF_POINTER) value; 
+}
+/*==============================================================================
+ Color selection functions
+==============================================================================*/
+
+/*********************************
+ *
+ * Function : 'c_gtk_color_selection_dialog_new'	(1)
+ * 			  `c_gtk_color_selection_get_color'		(2)
+ * 			  `c_gtk_color_selection_set_color'		(3)
+ *
+ * Note : (1) Create a new color dialog with some options.
+ * 		  (2) Value of the chosen color.
+ * 		  (3) Set the color to the given value.
+ *
+ * Author : Alex
+ *
+ *********************************/
+
+EIF_POINTER c_gtk_color_selection_dialog_new (gchar* name)
+{
+  GtkWidget *color_dialog;
+	
+  color_dialog = gtk_color_selection_dialog_new(name);
+  gtk_color_selection_set_opacity (
+        GTK_COLOR_SELECTION (GTK_COLOR_SELECTION_DIALOG (color_dialog)->colorsel),
+		TRUE);
+
+  gtk_color_selection_set_update_policy(
+        GTK_COLOR_SELECTION (GTK_COLOR_SELECTION_DIALOG (color_dialog)->colorsel),
+		GTK_UPDATE_CONTINUOUS);
+
+ return (EIF_POINTER) color_dialog; 
+}
+
+void c_gtk_color_selection_get_color (GtkWidget *color_dialog, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
+{
+  GtkColorSelection *colorsel;
+  gdouble colors[4];
+	
+  colorsel = GTK_COLOR_SELECTION (((GtkColorSelectionDialog *) color_dialog)->colorsel);
+  gtk_color_selection_get_color (colorsel, colors);
+
+  *r = 255 * colors[0];
+  *g = 255 * colors[1];
+  *b = 255 * colors[2];
+}
+
+void c_gtk_color_selection_set_color (GtkWidget *color_dialog, EIF_INTEGER r, EIF_INTEGER g, EIF_INTEGER b)
+{
+  GtkColorSelection *colorsel;
+  gdouble colors[4];
+ 
+  colorsel = GTK_COLOR_SELECTION (((GtkColorSelectionDialog *) color_dialog)->colorsel);
+  gtk_color_selection_get_color(colorsel, colors);
+	
+/*  colors[0] = r / 255;
+  colors[1] = g / 255;
+  colors[2] = b / 255;
+  colors[3] = colorsel->use_opacity;
+  */
+  gtk_color_selection_set_color (colorsel, colors);
 }
 
 /*********************************

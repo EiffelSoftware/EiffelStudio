@@ -141,6 +141,9 @@ feature -- Basic operations
 				if builder_window.is_show_requested then
 					command_handler.show_hide_builder_window_command.execute
 				end
+					
+					-- Now empty `multiple_split_area'.
+				multiple_split_area.wipe_out
 				
 					-- Clear the objects. This will also reset the display and builder
 					-- windows from the titled window object which is the root of the

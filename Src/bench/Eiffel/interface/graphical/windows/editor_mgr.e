@@ -11,7 +11,7 @@ inherit
 
 	GRAPHICS;
 	WINDOWS;
-	INTERFACE_W;
+	EB_CONSTANTS;
 	RESOURCE_USER
 		redefine
 			update_boolean_resource,
@@ -20,11 +20,10 @@ inherit
 
 feature -- Initialization
 
-	make (a_screen: SCREEN; i: INTEGER) is
+	make (a_screen: SCREEN) is
 			-- Create a window manager. All editors will be create 
 			-- with `a_screen' as the parent.
 		do
-			free_list_max := i;
 			screen := a_screen;
 			!!active_editors.make;
 			!!free_list.make
@@ -105,6 +104,9 @@ feature -- Tabulations
 				tool := active_editors.item;
 				tool.set_tab_length_to_default;
 				tool.update_save_symbol;
+				if tool.text_window.is_graphical then	
+					tool.synchronize
+				end;
 				active_editors.forth
 			end
 		end;
@@ -167,8 +169,6 @@ feature {NONE} -- Properties
 
 	free_list: LINKED_LIST [like editor_type];
 			-- Editors that has been requested to be destroyed 
-
-	free_list_max: INTEGER;
 
 	screen: SCREEN;
 			-- Screen used for window creation
@@ -297,7 +297,7 @@ feature {WINDOW_MGR} -- Implementation
 			then
 				ed.close;
 				active_editors.remove;
-				if free_list.count >= free_list_max then
+				if free_list.count >= General_resources.window_free_list_number.actual_value then
 					ed.destroy
 				else
 					free_list.extend (ed)

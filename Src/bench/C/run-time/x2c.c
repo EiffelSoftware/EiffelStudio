@@ -11,6 +11,7 @@
 */
 
 #include "eif_config.h"
+#include "eif_portable.h"
 #include "x2c.h"
 #ifdef EIF_WINDOWS
 #define print_err_msg fprintf
@@ -36,6 +37,7 @@ extern long fltoff(char recursive_call);
 extern long ptroff(char recursive_call);
 extern long dbloff(char recursive_call);
 extern long objsiz(char recursive_call);
+extern long bitoff(char recursive_call);
 
 extern long refacs (char recursive_call);
 extern long chracs (char recursive_call);
@@ -85,6 +87,7 @@ struct parse {
 	{ "PTROFF", 5, ptroff },
 	{ "DBLOFF", 6, dbloff },
 	{ "OBJSIZ", 6, objsiz },
+	{ "BITOFF", 1, bitoff },
 };
 
 struct parse *locate(char *name);
@@ -374,6 +377,11 @@ long objsiz(char recursive_call)
 {
 	long to_add = dbloff(RECURSIVE) + nb_dbl * DBLSIZ;
 	return to_add + remainder(to_add);
+}
+
+long bitoff (char recursive_call)
+{
+	return BITOFF(first_argument);
 }
 
 long refacs (char recursive_call) 

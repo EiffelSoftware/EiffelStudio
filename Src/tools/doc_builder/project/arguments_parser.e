@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 					create l_code_dir_name.make_from_string (l_code_dir.name)
 					l_code_dir_name.extend (l_curr_dir)
 					l_code_dir_name.extend ("reference")
-					create l_sub_dir.make (clone (l_code_dir_name))
+					create l_sub_dir.make (l_code_dir_name.string.twin)
 					if l_sub_dir.exists then
 							-- We are in `project_root/libraries/library_name/reference', a code directory
 						Shared_constants.Application_constants.add_code_directory (l_sub_dir.name)

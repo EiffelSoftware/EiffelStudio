@@ -121,7 +121,7 @@ feature -- Window Properties
 
 	tool_name: STRING is
 		do
-			Result := l_Object
+			Result := l_Empty_object
 		end;
 
 	stone: OBJECT_STONE
@@ -342,20 +342,25 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! search_menu_entry.make (search_cmd, edit_menu);
 			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
 			!! change_font_cmd.make (text_window);
+			!! quit_cmd.make (text_window);
+			!! quit_button.make (quit_cmd, edit_bar);
 			if create_menus then
 				!! change_font_menu_entry.make (change_font_cmd, preference_menu);
 				!! change_font_cmd_holder.make_plain (change_font_cmd);
 				change_font_cmd_holder.set_menu_entry (change_font_menu_entry)
+
+				!! quit_menu_entry.make (quit_cmd, file_menu);
+				!! quit.make (quit_cmd, quit_button, quit_menu_entry)
+
+				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
+				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
+				exit_cmd_holder.set_menu_entry (exit_menu_entry)
 			else
 				!! change_font_cmd_holder.make_plain (change_font_cmd);
+
+				!! quit.make_plain (quit_cmd);
+				quit.set_button (quit_button)
 			end;
-			!! quit_cmd.make (text_window);
-			!! quit_button.make (quit_cmd, edit_bar);
-			!! quit_menu_entry.make (quit_cmd, file_menu);
-			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
-			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
-			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
-			exit_cmd_holder.set_menu_entry (exit_menu_entry);
 
 				-- Attachments are done here, because of speed.
 				-- I know it's not really maintainable.

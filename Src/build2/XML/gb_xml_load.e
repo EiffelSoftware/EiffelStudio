@@ -105,10 +105,27 @@ feature -- Basic operation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
+	rebuild_window (window_object: GB_TITLED_WINDOW_OBJECT; window: XML_ELEMENT) is
+			-- Rebuild properties of `window_object' from `window'.
+			-- Note that the handling of children, and other miscellaneous operations
+			-- must be handled externally. This will simply reset `window_object' from `window'.
+		do
+			internal_build_window (window, "", window_object)
+		end
+		
 	build_window (window: XML_ELEMENT; directory_name: STRING) is
+			-- Build a new window representing `window', represented in
+			-- directory `directory_name'. if `directory_name' is
+			-- empty, the window will be built into the root of the
+			-- window selector.
+		do
+			internal_build_window (window, directory_name, Void)
+		end
+
+	internal_build_window (window: XML_ELEMENT; directory_name: STRING; titled_window_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Build a window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
-			-- empty, the window will be built int the root of the
+			-- empty, the window will be built into the root of the
 			-- window selector.
 		local
 			current_element: XML_ELEMENT
@@ -117,9 +134,13 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			window_object: GB_TITLED_WINDOW_OBJECT
 			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-			window_object := object_handler.add_root_window
-			if not directory_name.is_empty then
-				Window_selector.directory_object_from_name (directory_name).add_selector_item (window_object.window_selector_item)
+			if titled_window_object = Void then
+					-- As `titled_window_object' = Void, it means that we are building a new object,
+					-- and hence we must create it accordingly.
+				window_object := object_handler.add_root_window
+				if not directory_name.is_empty then
+					Window_selector.directory_object_from_name (directory_name).add_selector_item (window_object.window_selector_item)
+				end
 			end
 				--| FIXME we must now look at the current type of `window'
 				--| which must be an EV_TITLED_WINDOW, and then add any attributes that
@@ -133,8 +154,11 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				if current_element /= Void then
 					current_name := current_element.name.to_utf8
 					if current_name.is_equal (Item_string) then
-						-- The element represents an item, so we must add new objects.
-						build_new_object (current_element, window_object)
+						if titled_window_object = Void then
+								-- As `titled_window_object' = Void it means we must rebuild all the children,
+								-- as we are not updating an existing object, and the children must be created.
+							build_new_object (current_element, window_object)
+						end
 					else
 							-- We must check for internal properties, else set the properties of the component
 						if current_name.is_equal (Internal_properties_string) then
@@ -214,7 +238,7 @@ feature {NONE} -- Implementation
 			current_name: STRING
 			display_object: GB_DISPLAY_OBJECT
 		do
-				from
+			from
 				element.start
 			until
 				element.off

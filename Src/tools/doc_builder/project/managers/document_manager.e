@@ -9,6 +9,8 @@ class
 inherit
 	SHARED_OBJECTS
 	
+--	OBSERVER
+	
 create
 	make
 
@@ -170,6 +172,7 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS} -- Document Manipulation
 		do
 			if not documents.has (a_doc.name) then
 				documents.extend (a_doc, a_doc.name)
+--				a_doc.attach (Current)
 			end			
 		end
 	
@@ -215,6 +218,13 @@ feature -- Status Setting
 				has_modified := True
 			end
 		end
+
+feature {NONE} -- Observer Pattern
+
+	update is
+			-- Update
+		do			
+		end		
 
 feature {NONE} -- Implementation
 

@@ -29,6 +29,7 @@ feature  -- Initialization
 			create selected_assemblies.make
 			retrieve_available_assemblies
 			remove_kernel_assembly
+			remove_system_assembly
 		end
 
 feature -- Setting
@@ -153,16 +154,46 @@ feature -- Access
 			non_void_assembly: an_assembly /= Void
 		local
 			an_info: ASSEMBLY_INFORMATION
+			an_assembly_name: STRING
+			an_assembly_version: STRING
+			an_assembly_culture: STRING
+			an_assembly_public_key: STRING
+			an_assembly_path: STRING
+			an_info_name: STRING
+			an_info_version: STRING
+			an_info_culture: STRING
+			an_info_public_key: STRING
+			an_info_path: STRING			
 		do
+			an_assembly_name := clone (an_assembly.name)
+			an_assembly_name.to_lower
+			an_assembly_version := clone (an_assembly.version)
+			an_assembly_version.to_lower
+			an_assembly_culture := clone (an_assembly.culture)
+			an_assembly_culture.to_lower
+			an_assembly_public_key := clone (an_assembly.public_key)
+			an_assembly_public_key.to_lower
+			an_assembly_path := clone (an_assembly.eiffel_cluster_path)
+			an_assembly_path.to_lower
 			from
 				a_list.start
 			until
 				a_list.after or Result
 			loop
 				an_info := a_list.item
-				Result := an_info.name.is_equal (an_assembly.name) and an_info.version.is_equal (an_assembly.version) and
-						an_info.culture.is_equal (an_assembly.culture) and an_info.public_key.is_equal (an_assembly.public_key) and
-						an_info.eiffel_cluster_path.is_equal (an_assembly.eiffel_cluster_path)
+				an_info_name := clone (an_info.name)
+				an_info_name.to_lower
+				an_info_version := clone (an_info.version)
+				an_info_version.to_lower
+				an_info_culture := clone (an_info.culture)
+				an_info_culture.to_lower
+				an_info_public_key := clone (an_info.public_key)
+				an_info_public_key.to_lower
+				an_info_path := clone (an_info.eiffel_cluster_path)
+				an_info_path.to_lower				
+				Result := an_info_name.is_equal (an_assembly_name) and an_info_version.is_equal (an_assembly_version) and
+						an_info_culture.is_equal (an_assembly_culture) and an_info_public_key.is_equal (an_assembly_public_key) and
+						an_info_path.is_equal (an_assembly_path)
 				a_list.forth
 			end
 		end
@@ -208,6 +239,31 @@ feature -- Basic operation
 				if available_assemblies.item.name.is_equal ("mscorlib") then
 					found := True
 					--selected_assemblies.extend (available_assemblies.item)
+					available_assemblies.remove
+				else
+					available_assemblies.forth
+				end
+			end	
+		end
+
+	remove_system_assembly is
+			-- Remove the assembly (System.dll) from the list of `available_assemblies'.
+		local
+			found: BOOLEAN
+			an_assembly_name: STRING
+		do
+			from
+				available_assemblies.start
+			until
+				found or available_assemblies.after
+			loop
+				an_assembly_name := clone (available_assemblies.item.name)
+				an_assembly_name.to_lower
+				if an_assembly_name.is_equal ("system") then
+					found := True
+					if not has_assembly (selected_assemblies, available_assemblies.item) then
+						selected_assemblies.extend (available_assemblies.item)
+					end
 					available_assemblies.remove
 				else
 					available_assemblies.forth
@@ -309,10 +365,10 @@ feature {NONE} -- Implementation
 	confirmation_dialog: EV_QUESTION_DIALOG
 			-- Confirmation dialog
 	
-	Confirmation_message: STRING is "[The Eiffel Assembly Cache is currently accessed by another process. Do you want to force access anyway?%N%N%
+	Confirmation_message: STRING is "The Eiffel Assembly Cache is currently accessed by another process. Do you want to force access anyway?%N%N%
 						%- Abort: To close this dialog without doing anything.%N%
 						%- Retry: To retry in case the other process has exited.%N%
-						%- Ignore: To ignore the access violation and force access to the Eiffel Assembly Cache.]"
+						%- Ignore: To ignore the access violation and force access to the Eiffel Assembly Cache."
 			-- Confirmation message
 		
 	on_retry is

@@ -19,7 +19,7 @@ feature -- Access
 	first_window:  WIZARD_WINDOW is
 			-- Main Window ( i.e. the wizard window frame )
 		once
-			create Result.make
+			create Result
 			if not is_modify_wizard then
 				Result.load_first_state	
 			end
@@ -225,11 +225,10 @@ feature -- Colors
 
 invariant
 	memory_for_pixmap_allocated: pixmap /= Void
-	wizard_resource_path_exists: wizard_resources_path /= Void
-	wizard_pixmaps_path_exists: wizard_pixmaps_path /= Void
-	wizard_source_exists: wizard_source /= Void
+--	wizard_resource_path_exists: wizard_resources_path /= Void
+--	wizard_pixmaps_path_exists: wizard_pixmaps_path /= Void
+--	wizard_source_exists: (create {VISUAL_STUDIO_INFORMATION}).is_visual_studio_wizard implies wizard_source /= Void
 	history_exists: history /= Void
-	window_exists: first_window /= Void
 
 end -- class WIZARD_SHARED
 

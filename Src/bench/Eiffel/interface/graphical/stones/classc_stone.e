@@ -139,7 +139,7 @@ feature -- Synchronization
 			new_cluster: CLUSTER_I
 		do
 			if e_class /= Void then
-				if Eiffel_system.class_of_id (e_class.id) = e_class then
+				if e_class.is_valid then
 					!CLASSC_STONE! Result.make (e_class)
 				else
 					new_cluster := Eiffel_universe.cluster_of_name 

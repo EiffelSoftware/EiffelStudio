@@ -53,7 +53,7 @@ feature -- Assembly information
 
 feature -- Assembly access
 
-	assembly_list: EB_ADD_REMOVE_LIST
+	assembly_list: EV_ADD_REMOVE_LIST
 			-- List of assembly used in Current project.
 			
 feature -- Store/Retrieve

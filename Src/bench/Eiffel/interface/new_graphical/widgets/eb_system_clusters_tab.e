@@ -91,15 +91,15 @@ feature -- Option access
 
 feature -- Visible access
 
-	visible_list: EB_ADD_REMOVE_LIST
+	visible_list: EV_ADD_REMOVE_LIST
 			-- List of visible classes.
 
 feature -- File access
 
-	exclude_list: EB_ADD_REMOVE_LIST
+	exclude_list: EV_ADD_REMOVE_LIST
 			-- List of exclude clauses
 			
-	include_list: EB_ADD_REMOVE_LIST
+	include_list: EV_ADD_REMOVE_LIST
 			-- List of incluide clauses
 			
 	use_field: EV_TEXT_FIELD

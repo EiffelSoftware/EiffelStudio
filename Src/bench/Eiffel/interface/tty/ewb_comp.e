@@ -213,7 +213,6 @@ feature -- Compilation
 
 	link_driver is
 		local
-			arg2: STRING;
 			uf: PLAIN_TEXT_FILE;
 			app_name: STRING
 			file_name: FILE_NAME;
@@ -225,9 +224,7 @@ feature -- Compilation
 				app_name.append (Executable_suffix);
 				file_name.set_file_name (app_name);
 
-				arg2 := file_name.path;
-
-				!!uf.make (arg2);
+				!!uf.make (file_name);
 				if not uf.exists then
 					eif_link_driver (Workbench_generation_path.to_c, System.system_name.to_c,
 						Prelink_command_name.to_c, Precompilation_driver.to_c);

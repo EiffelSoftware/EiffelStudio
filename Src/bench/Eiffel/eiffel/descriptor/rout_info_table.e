@@ -311,7 +311,7 @@ feature -- DLE
 			end;
 			Result.put ('%N', Result.count - 1);
 			Result.put ('}', Result.count);
-			Result.append (";%N%Nvoid dle_ecall()%N%
+			Result.append (";%N%Nvoid dle_ecall(void)%N%
 					%{%N%Teorg_table = Dforg_table;%N}%N")
 		end;
 

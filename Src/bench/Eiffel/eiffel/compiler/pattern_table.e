@@ -395,7 +395,7 @@ feature -- DLE
 
 			nb := c_pattern_id_counter.value;
 
-			Pattern_file.putstring ("void dle_epattern()");
+			Pattern_file.putstring ("void dle_epattern(void)");
 			Pattern_file.new_line;
 			Pattern_file.putchar ('{');
 			Pattern_file.new_line;
@@ -449,7 +449,7 @@ feature -- DLE
 			Pattern_file.new_line;
 			Pattern_file.new_line;
 
-			Pattern_file.putstring ("void free_epattern()");
+			Pattern_file.putstring ("void free_epattern(void)");
 			Pattern_file.new_line;
 			Pattern_file.putchar ('{');
 			Pattern_file.new_line;

@@ -68,7 +68,7 @@ feature -- Generation
 				Real_body_index_counter.generate_extern_offsets (f);
 				f.new_line;
 
-				f.generate_static_declaration ("void", "build_desc", <<>>);
+				f.generate_static_declaration ("void", "build_desc", <<"void">>);
 
 				f.putstring (precomp_C_string)
 			else
@@ -121,7 +121,7 @@ feature -- Generation
 			Result.append ("static struct desc_info desc");
 			Result.append ("[")
 			Result.append_integer (table_size)
-			Result.append ("];%N%Nstatic void build_desc () {%N")
+			Result.append ("];%N%Nstatic void build_desc (void) {%N")
 
 			if (invariant_entry = Void) then
 				Result.append ("%Tdesc[0].info = (uint16) ");
@@ -158,11 +158,11 @@ feature -- Generation
 			class_type_id := class_type.id;
 			init_name := class_type_id.init_name;
 
-			f.generate_extern_declaration ("void", init_name, <<>>);
+			f.generate_extern_declaration ("void", init_name, <<"void">>);
 
 			f.putstring ("void ");
 			f.putstring (init_name);
-			f.putstring ("()%N{%N");
+			f.putstring ("(void)%N{%N");
 			if Compilation_modes.is_precompiling then
 				f.putstring ("%Textern char desc_fill;%N");
 				f.putstring ("%Tif (desc_fill != 0)%N%T%Tbuild_desc();%N")

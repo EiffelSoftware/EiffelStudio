@@ -14,19 +14,19 @@ feature -- Access
 	hour: INTEGER is
 			-- Hour of the current time
 		do
-			Result := c_hour (compact_time)
+			Result := (compact_time & hour_mask) |>> hour_shift
 		end
 	
 	minute: INTEGER is
 			-- Minute of the current time
 		do
-			Result := c_minute (compact_time)
+			Result := (compact_time & minute_mask) |>> minute_shift
 		end
 	
 	second: INTEGER is
 			-- Second of the current time
 		do
-			Result := c_second (compact_time)
+			Result := compact_time & second_mask
 		end
 
 	fractional_second: DOUBLE 
@@ -63,10 +63,25 @@ feature -- Access
 
 feature -- Element change 
 
+	set_hour (h: INTEGER) is 
+			-- Set `hour' to `h'.
+		do 
+			compact_time := compact_time & hour_mask.bit_not
+			compact_time := compact_time | (h |<< hour_shift)
+		end
+
+	set_minute (m: INTEGER) is 
+			-- Set `minute' to `m'.
+		do 
+			compact_time := compact_time & minute_mask.bit_not
+			compact_time := compact_time | (m |<< minute_shift)
+		end
+
 	set_second (s: INTEGER) is 
 			-- Set `second' to `s'.
 		do 
-			c_set_second (s, $compact_time)
+			compact_time := compact_time & second_mask.bit_not
+			compact_time := compact_time | s
 		end
 
 	set_fine_second (s: DOUBLE) is 
@@ -85,49 +100,16 @@ feature -- Element change
 			fractional_second := f
 		end
 
-	set_minute (m: INTEGER) is 
-			-- Set `minute' to `m'.
-		do 
-			c_set_minute (m, $compact_time) 
-		end
+feature {NONE} -- Implementation
 
-	set_hour (h: INTEGER) is 
-			-- Set `hour' to `h'.
-		do 
-			c_set_hour (h, $compact_time)
-		end
-
-feature {NONE} -- Externals
-
-	c_hour (c_t: INTEGER): INTEGER is
-		external
-			"C"
-		end
-
-	c_minute (c_t: INTEGER): INTEGER is
-		external
-			"C"
-		end
-
-	c_second (c_t: INTEGER): INTEGER is
-		external
-			"C"
-		end
-
-	c_set_hour (h: INTEGER; c_t: POINTER) is
-		external
-			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
-		end
-
-	c_set_minute (h: INTEGER; c_t: POINTER) is
-		external
-			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
-		end
-
-	c_set_second (h: INTEGER;c_t: POINTER) is
-		external
-			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
-		end
+	hour_mask: INTEGER is 0x00FF0000
+	minute_mask: INTEGER is 0x0000FF00
+	second_mask: INTEGER is 0x000000FF
+			-- Mask used to extract/set `hour', `minute' and `second'.
+			
+	hour_shift: INTEGER is 16
+	minute_shift: INTEGER is 8
+			-- Shift needed to extract/set `hour' and `minute'.
 
 end -- class TIME_VALUE
 

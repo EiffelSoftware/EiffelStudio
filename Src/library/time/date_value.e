@@ -5,8 +5,9 @@ indexing
 	revision: "$Revision$"
 	access: date
 
-class DATE_VALUE inherit
+class DATE_VALUE
 
+inherit
 	DATE_MEASUREMENT
 		
 feature -- Access
@@ -14,19 +15,19 @@ feature -- Access
 	day: INTEGER is
 			-- Day of the current object
 		do
-			Result := c_day (compact_date)
+			Result := ((compact_date & day_mask) |>> day_shift) & 0x000000FF
 		end
 
 	month: INTEGER is
 			-- Month of the current object
 		do
-			Result := c_month (compact_date)
+			Result := (compact_date & month_mask) |>> month_shift
 		end
 
 	year: INTEGER is
 			-- Year of the current object 
 		do
-			Result := c_year (compact_date)
+			Result := compact_date & year_mask
 		end
 
 	compact_date: INTEGER
@@ -37,56 +38,34 @@ feature -- Element change
 	set_day (d: INTEGER) is
 			-- Set `day' to `d'.
 		do
-			c_set_day (d, $compact_date)
+			compact_date := compact_date & day_mask.bit_not
+			compact_date := compact_date | (d |<< day_shift)
 		end
 
-	
 	set_month (m: INTEGER) is
 			-- Set `month' to `m'.
 		do
-			c_set_month (m, $compact_date)
+			compact_date := compact_date & month_mask.bit_not
+			compact_date := compact_date | (m |<< month_shift)
 		end
 	
 	set_year (y: INTEGER) is
 			-- Set `year' to `y'.
 		do
-			c_set_year (y, $compact_date)
+			compact_date := compact_date & year_mask.bit_not
+			compact_date := compact_date | y
 		end
 
-feature {NONE} -- External
+feature {NONE} -- Implementation
 
-	c_day (c_d: INTEGER): INTEGER is
-		external
-			"C"
-		end
-
-	c_month (c_d: INTEGER): INTEGER is
-		external
-			"C"
-		end
-
-	c_year (c_d: INTEGER): INTEGER is
-		external
-			"C"
-		end
-
-	c_set_day (d: INTEGER; c_d: POINTER) is
-			-- Initialize the day in `compact_date'.
-		external
-			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
-		end
-
-	c_set_month (m: INTEGER; c_d: POINTER) is
-			-- Initialize the month in `compact_date'.
-		external
-			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
-		end
-
-	c_set_year (y: INTEGER; c_d: POINTER) is
-			-- Initialize the year in `compact_date'.
-		external
-			"C (EIF_INTEGER, EIF_INTEGER *) | %"datetime.h%" "
-		end
+	day_mask: INTEGER is 0xFF000000
+	month_mask: INTEGER is 0x00FF0000
+	year_mask: INTEGER is 0x0000FFFF
+			-- Mask used to extract/set `day', `month' and `year'.
+			
+	day_shift: INTEGER is 24
+	month_shift: INTEGER is 16
+			-- Shift needed to extract/set `day' and `month'.
 
 end -- class DATE_VALUE
 

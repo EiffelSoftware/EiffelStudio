@@ -22,7 +22,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef HAS_UTIME
+#ifdef I_UTIME
 #include <utime.h>
 #endif
 
@@ -525,14 +525,8 @@ FILE *f;
 {
 	/* Swallow next character if it is a new line */
 
-	int c;
-
-	errno = 0;
-	c = getc(f);
-	if (c == EOF && ferror(f))
-		eio();
-	if (c != '\n' && EOF == ungetc(c, f))
-		eio();
+		/* getc() cannot be used as it doesn't set the EOF flag */
+	fscanf (f, "\n");
 }
 			
 public void file_tnil(f)
@@ -1433,6 +1427,7 @@ char *path;
 				/* Check if a non writable file `path' exists */
 			if (file_exists(path)) {
 				file_stat(path, &buf);
+				if (buf.st_mode & S_IFDIR) return (EIF_BOOLEAN) '\0';   /* is a directory */
 				return (file_eaccess(&buf, 1)); /* Check for write permissions to re create it */
 			}
 

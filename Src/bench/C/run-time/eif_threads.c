@@ -410,7 +410,6 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 
 		eif_thr_context = routine_ctxt;
 		eif_thr_id = routine_ctxt->tid;	/* Initialize here the thread_id */
-		EIF_MUTEX_LOCK(eif_thr_context->children_mutex, "Locking GC mutex");
 		initsig();
 		initstk();
 		if (egc_prof_enabled)
@@ -429,7 +428,6 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 #ifdef WORKBENCH
 		xinitint();
 #endif
-		EIF_MUTEX_UNLOCK(eif_thr_context->children_mutex, "Unlocking GC mutex");
 
 			/* Call the `execute' routine of the thread */
 		(FUNCTION_CAST(void,(EIF_REFERENCE)) execute)(eif_access(routine_ctxt->current));
@@ -478,7 +476,7 @@ rt_public void eif_thr_exit(void)
 		/* Mark current thread so that it is not taken into account by GC
 		 * synchronization */
 #ifdef ISE_GC
-	rt_globals->gc_thread_status = EIF_THREAD_DYING;
+	gc_thread_status = EIF_THREAD_DYING;
 #endif
 
 	RT_GC_PROTECT(thread_object);
@@ -696,7 +694,7 @@ rt_private void eif_stack_free (void *stack){
 
 	for (c = st->st_hd; c != (struct stchunk *) 0; c = cn) {
 		cn = c->sk_next;
-		xfree ((EIF_REFERENCE) c);
+		eif_rt_xfree ((EIF_REFERENCE) c);
 	}
 
 	st->st_hd = NULL;
@@ -717,10 +715,10 @@ rt_public void eif_synchronize_for_gc ()
 		 * one performing the GC cycle, otherwise we could cause dead-lock.
 		 * This is needed when a GC cycle trigger calls to `dispose' routines.
 		 */
-	if (rt_globals->gc_thread_status != EIF_THREAD_GC_RUNNING) {
-		rt_globals->gc_thread_status = EIF_THREAD_SUSPENDED;
+	if (gc_thread_status != EIF_THREAD_GC_RUNNING) {
+		gc_thread_status = EIF_THREAD_SUSPENDED;
 		EIF_GC_MUTEX_LOCK;
-		rt_globals->gc_thread_status = EIF_THREAD_RUNNING;
+		gc_thread_status = EIF_THREAD_RUNNING;
 		EIF_GC_MUTEX_UNLOCK;
 	}
 }
@@ -729,14 +727,14 @@ rt_public void eif_enter_eiffel_code()
 	/* Synchronize current thread as we enter some Eiffel code */
 {
 	RT_GET_CONTEXT
-	rt_globals->gc_thread_status = EIF_THREAD_RUNNING;
+	gc_thread_status = EIF_THREAD_RUNNING;
 }
 
 rt_public void eif_exit_eiffel_code()
 	/* Synchronize current thread as we exit some Eiffel code */
 {
 	RT_GET_CONTEXT
-	rt_globals->gc_thread_status = EIF_THREAD_BLOCKED;
+	gc_thread_status = EIF_THREAD_BLOCKED;
 }
 
 #ifdef DEBUG
@@ -746,67 +744,83 @@ rt_private int counter = 0;
 rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 	/* Synchronize all threads under GC control */
 {
-	struct stack_list all_thread_list;
-	struct stack_list running_thread_list = {0, 0, { NULL }};
-	rt_global_context_t *thread_globals;
-	int status, i;
+	if (gc_thread_status != EIF_THREAD_GC_RUNNING) {
+		struct stack_list all_thread_list;
+		struct stack_list running_thread_list = {0, 0, { NULL }};
+		rt_global_context_t *thread_globals;
+		int status, i;
 
-		/* We are marking ourself to show that we are requesting a safe access
-		 * to GC data. */
-	rt_globals->gc_thread_status = EIF_THREAD_GC_REQUESTED;
-	EIF_GC_MUTEX_LOCK;
+			/* We are marking ourself to show that we are requesting a safe access
+			 * to GC data. */
+		gc_thread_status = EIF_THREAD_GC_REQUESTED;
+		EIF_GC_MUTEX_LOCK;
 #ifdef DEBUG
-	printf ("Starting Collection number %d ...", counter);
+		printf ("Starting Collection number %d ...", counter);
 #endif
-	eif_is_gc_collecting = 1;
-	rt_globals->gc_thread_status = EIF_THREAD_GC_RUNNING;
+		eif_is_gc_collecting = 1;
+		gc_thread_collection_count = 1;
+		gc_thread_status = EIF_THREAD_GC_RUNNING;
 
-		/* We have acquired the lock, now, process all running threads and wait until
-		 * they are all not marked `EIF_THREAD_RUNNING'. */
-	memcpy(&all_thread_list, &rt_globals_list, sizeof(struct stack_list));
-	all_thread_list.threads.data = eif_malloc (rt_globals_list.count * sizeof(void *));
-	memcpy(all_thread_list.threads.data, rt_globals_list.threads.data,
-		rt_globals_list.count * sizeof(void *));
+			/* We have acquired the lock, now, process all running threads and wait until
+			 * they are all not marked `EIF_THREAD_RUNNING'. */
+		memcpy(&all_thread_list, &rt_globals_list, sizeof(struct stack_list));
+		all_thread_list.threads.data = eif_malloc (rt_globals_list.count * sizeof(void *));
+		memcpy(all_thread_list.threads.data, rt_globals_list.threads.data,
+			rt_globals_list.count * sizeof(void *));
 
-	while (all_thread_list.count != 0) {
-		for (i = 0; i < all_thread_list.count; i++) {
-			thread_globals = (rt_global_context_t *) all_thread_list.threads.data[i];
-			if (thread_globals != rt_globals) {
-				status = thread_globals->gc_thread_status;
-				if (status == EIF_THREAD_RUNNING) {
-					load_stack_in_gc (&running_thread_list, thread_globals);
+		while (all_thread_list.count != 0) {
+			for (i = 0; i < all_thread_list.count; i++) {
+				thread_globals = (rt_global_context_t *) all_thread_list.threads.data[i];
+				if (thread_globals != rt_globals) {
+					status = thread_globals->gc_thread_status_cx;
+					if (status == EIF_THREAD_RUNNING) {
+						load_stack_in_gc (&running_thread_list, thread_globals);
+					}
 				}
 			}
-		}
-		eif_free (all_thread_list.threads.data);
-		memcpy(&all_thread_list, &running_thread_list, sizeof(struct stack_list));
-		memset(&running_thread_list, 0, sizeof(struct stack_list));
+			eif_free (all_thread_list.threads.data);
+			memcpy(&all_thread_list, &running_thread_list, sizeof(struct stack_list));
+			memset(&running_thread_list, 0, sizeof(struct stack_list));
 
-			/* For performance reasons on systems with a poor scheduling policy, 
-			 * we switch context to one of the remaining running thread. Not doing
-			 * so on a uniprocessor WinXP system, the execution was about 1000 times
-			 * slower than on a bi-processor WinXP system. */
-		EIF_THR_YIELD;
-	}
+				/* For performance reasons on systems with a poor scheduling policy, 
+				 * we switch context to one of the remaining running thread. Not doing
+				 * so on a uniprocessor WinXP system, the execution was about 1000 times
+				 * slower than on a bi-processor WinXP system. */
+			EIF_THR_YIELD;
+		}
 #ifdef DEBUG
-	printf ("Synchronized...");
+		printf ("Synchronized...");
 #endif
+	} else {
+			/* A recursive demand was made, we simply increment the blocking counter.
+			 * No synchronization is required as we are still under the protection
+			 * of `eif_gc_mutex'. */
+		gc_thread_collection_count++;	
+	}
 }
 
 rt_shared void eif_unsynchronize_gc (rt_global_context_t *rt_globals)
 	/* Free all threads under GC control from GC control */
 {
-		/* Here we have still the lock of `gc_mutex'. So it is safe to update
-		 * `eif_is_gc_collecting'. */
-	eif_is_gc_collecting = 0;
-
-		/* Let's mark ourself as a running thread. */
-	rt_globals->gc_thread_status = EIF_THREAD_RUNNING;
 #ifdef DEBUG
 	printf ("... finishing %d\n", counter);
 	counter++;
 #endif
-	EIF_GC_MUTEX_UNLOCK;
+	gc_thread_collection_count--;
+
+	if (gc_thread_collection_count == 0) {
+			/* Here we have still the lock of `gc_mutex'. So it is safe to update
+			 * `eif_is_gc_collecting'. */
+		eif_is_gc_collecting = 0;
+
+			/* Let's mark ourself as a running thread. */
+		gc_thread_status = EIF_THREAD_RUNNING;
+
+			/* Because recursive calls can be made to `eif_synchronize_gc' we
+			 * have to unlock the `eif_gc_mutex' mutex only at the last call
+			 * to `eif_unsynchronize_gc'. */
+		EIF_GC_MUTEX_UNLOCK;
+	}
 }
 #endif
 

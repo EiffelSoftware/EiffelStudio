@@ -3,7 +3,7 @@ class BIT_I
 inherit
 	BASIC_I
 		redefine
-			is_bit, same_as,
+			is_bit, is_external, same_as,
 			description, sk_value, hash_code,
 			is_pointer, 
 			metamorphose,
@@ -27,6 +27,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
+
+	is_external: BOOLEAN is False
+			-- BIT is not external even if it is a basic type.
 
 	tuple_code: INTEGER_8 is
 			-- Tuple code for class type

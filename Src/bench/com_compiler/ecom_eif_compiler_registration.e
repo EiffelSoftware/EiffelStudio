@@ -74,21 +74,6 @@ feature -- Access
 
 feature {NONE}  -- Implementation
 
-	Gacutil: STRING is "gacutil.exe"
-			-- Gacutil utility
-	
-	Gacutil_arguments: STRING is " -silent -nologo -if "
-			-- Gacutil arguments
-			
-	Ise_runtime: STRING is "ise_runtime.dll"
-			-- ISE managed runtime dll
-
-	Sdk_directory_key: STRING is "SDKPath"
-			-- SDK Path registry key name
-
-	Compiler_path: STRING is "Compiler\"
-			-- Path to eif_compiler.exe from root of installation
-
 	default_show_cmd: INTEGER
 			-- Default command used to show `main_window'.
 
@@ -106,18 +91,7 @@ feature {NONE}  -- Implementation
 
 	register_server is
 			-- Register Server
-		local
-			sdk_directory, gacutil_command, a_string, working_directory: STRING
 		do
-			sdk_directory := get (Sdk_directory_key)
-			gacutil_command := sdk_directory + "\Bin\" + Gacutil
-			if (create {RAW_FILE}.make (gacutil_command)).exists then
-				working_directory := current_working_directory
-				change_working_directory ((create {EIFFEL_ENV}).Eiffel_installation_dir_name + Compiler_path)
-				a_string := "%"" + gacutil_command + "%"" + Gacutil_arguments + Ise_runtime;
-				system (a_string)
-				change_working_directory (working_directory)
-			end
 			ccom_register_server
 		end
 

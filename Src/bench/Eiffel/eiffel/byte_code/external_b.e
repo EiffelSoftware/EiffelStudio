@@ -447,7 +447,7 @@ feature -- Byte code generation
 			-- Generate byte code for a call to an external. If not `flag',
 			-- generate an invariant check before the call.
 		local
-			nb_protections, i: INTEGER;
+			i: INTEGER;
 			param: EXPR_B;
 			has_hector: BOOLEAN;
 			parameter_b: PARAMETER_B;
@@ -482,13 +482,6 @@ feature -- Byte code generation
 				loop
 					param := parameters.item;
 					param.make_byte_code (ba);
-					if 	(not param.is_hector)
-						and then
-						context.real_type (param.type).c_type.is_pointer
-					then
-						ba.append (Bc_protect);
-						nb_protections := nb_protections + 1;
-					end;
 					parameters.forth;
 				end;
 			end;
@@ -522,11 +515,6 @@ feature -- Byte code generation
 
 			standard_make_code (ba, flag);
 
-				-- Generation hector realease if any
-			if nb_protections > 0 then
-				ba.append (Bc_release);
-				ba.append_short_integer (nb_protections);
-			end;
 			if nb_expr_address > 0 then
 				ba.append (Bc_pop)
 				ba.append_uint32_integer (nb_expr_address)

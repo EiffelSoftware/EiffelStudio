@@ -237,7 +237,7 @@ feature {NONE} -- Externals
 
 	c_size_of_paraformat: INTEGER is
 		external
-			"C [macro <richedit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"sizeof (PARAFORMAT2)"
 		end
@@ -245,210 +245,210 @@ feature {NONE} -- Externals
 	cwel_paraformat_set_weffects (ptr: POINTER; value: INTEGER) is
 			--
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, UINT)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, UINT)"
 		alias
 			"wEffects"
 		end
 		
 	cwel_paraformat_set_dyspacebefore (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, UINT)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, UINT)"
 		alias
 			"dySpaceBefore"
 		end
 		
 	cwel_paraformat_set_dyspaceafter (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, UINT)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, UINT)"
 		alias
 			"dySpaceAfter"
 		end
 		
 	cwel_paraformat_set_dylinespacing (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, UINT)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, UINT)"
 		alias
 			"dyLineSpacing"
 		end
 		
 	cwel_paraformat_set_sstyle (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, UINT)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, UINT)"
 		alias
 			"sStyle"
 		end
 	
 	cwel_paraformat_set_blinespacingrule (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, BYTE)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, BYTE)"
 		alias
 			"bLineSpacingRule"
 		end
 		
 	cwel_paraformat_set_boutlinelevel (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, BYTE)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, BYTE)"
 		alias
 			"bOutlineLevel"
 		end
 		
 	cwel_paraformat_set_wshadingweight (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, WORD)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, WORD)"
 		alias
 			"wShadingWeight"
 		end
 		
 	cwel_paraformat_set_wshadingstyle (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, WORD)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, WORD)"
 		alias
 			"wShadingStyle"
 		end
 		
 	cwel_paraformat_set_wnumberingstart (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, WORD)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, WORD)"
 		alias
 			"wNumberingStart"
 		end
 		
 	cwel_paraformat_set_wnumberingstyle (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, WORD)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, WORD)"
 		alias
 			"wNumberingStyle"
 		end
 		
 	cwel_paraformat_set_wnumberingtab (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, WORD)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, WORD)"
 		alias
 			"wNumberingTab"
 		end
 		
 	cwel_paraformat_set_wborderspace (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, WORD)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, WORD)"
 		alias
 			"wBorderSpace"
 		end
 		
 	cwel_paraformat_set_wborderwidth (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, WORD)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, WORD)"
 		alias
 			"wBorderWidth"
 		end
 		
 	cwel_paraformat_set_wborders (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2, WORD)"
+			"C [struct %"redit.h%"] (PARAFORMAT2, WORD)"
 		alias
 			"wBorders"
 		end
 
 	cwel_paraformat_get_wborders (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): WORD"
+			"C [struct %"redit.h%"] (PARAFORMAT2): WORD"
 		alias
 			"wBorders"
 		end
 
 	cwel_paraformat_get_wborderwidth (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): WORD"
+			"C [struct %"redit.h%"] (PARAFORMAT2): WORD"
 		alias
 			"wBorderWidth"
 		end
 
 	cwel_paraformat_get_wborderspace (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): WORD"
+			"C [struct %"redit.h%"] (PARAFORMAT2): WORD"
 		alias
 			"wBorderSpace"
 		end
 
 	cwel_paraformat_get_wnumberingtab (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): WORD"
+			"C [struct %"redit.h%"] (PARAFORMAT2): WORD"
 		alias
 			"wNumberingTab"
 		end
 
 	cwel_paraformat_get_wnumberingstyle (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): WORD"
+			"C [struct %"redit.h%"] (PARAFORMAT2): WORD"
 		alias
 			"wNumberingStyle"
 		end
 
 	cwel_paraformat_get_wnumberingstart (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): WORD"
+			"C [struct %"redit.h%"] (PARAFORMAT2): WORD"
 		alias
 			"wNumberingStart"
 		end
 
 	cwel_paraformat_get_wshadingstyle (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): WORD"
+			"C [struct %"redit.h%"] (PARAFORMAT2): WORD"
 		alias
 			"wShadingStyle"
 		end
 
 	cwel_paraformat_get_wshadingweight (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): WORD"
+			"C [struct %"redit.h%"] (PARAFORMAT2): WORD"
 		alias
 			"wShadingWeight"
 		end
 
 	cwel_paraformat_get_boutlinelevel (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): BYTE"
+			"C [struct %"redit.h%"] (PARAFORMAT2): BYTE"
 		alias
 			"bOutlineLevel"
 		end
 
 	cwel_paraformat_get_blinespacingrule (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): BYTE"
+			"C [struct %"redit.h%"] (PARAFORMAT2): BYTE"
 		alias
 			"bLineSpacingRule"
 		end
 
 	cwel_paraformat_get_sstyle (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): EIF_INTEGER"
+			"C [struct %"redit.h%"] (PARAFORMAT2): EIF_INTEGER"
 		alias
 			"sStyle"
 		end
 		
 	cwel_paraformat_get_dylinespacing (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): EIF_INTEGER"
+			"C [struct %"redit.h%"] (PARAFORMAT2): EIF_INTEGER"
 		alias
 			"dyLineSpacing"
 		end
 
 	cwel_paraformat_get_dyspaceafter (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): EIF_INTEGER"
+			"C [struct %"redit.h%"] (PARAFORMAT2): EIF_INTEGER"
 		alias
 			"dySpaceAfter"
 		end
 		
 	cwel_paraformat_get_dyspacebefore (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): EIF_INTEGER"
+			"C [struct %"redit.h%"] (PARAFORMAT2): EIF_INTEGER"
 		alias
 			"dySpaceBefore"
 		end
 
 	cwel_paraformat_get_weffects (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (PARAFORMAT2): EIF_INTEGER"
+			"C [struct %"redit.h%"] (PARAFORMAT2): EIF_INTEGER"
 		alias
 			"wEffects"
 		end

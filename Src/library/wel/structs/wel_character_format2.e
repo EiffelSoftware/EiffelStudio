@@ -108,77 +108,77 @@ feature {NONE} -- Externals
 
 	c_size_of_charformat: INTEGER is
 		external
-			"C [macro <richedit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"sizeof (CHARFORMAT2)"
 		end
 		
 	cwel_charformat_get_crbackcolor (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (CHARFORMAT2): EIF_INTEGER"
+			"C [struct %"redit.h%"] (CHARFORMAT2): EIF_INTEGER"
 		alias
 			"crBackColor"
 		end
 		
 	cwel_charformat_set_crbackcolor (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (CHARFORMAT2, EIF_INTEGER)"
+			"C [struct %"redit.h%"] (CHARFORMAT2, EIF_INTEGER)"
 		alias
 			"crBackColor"
 		end
 		
 	cwel_charformat_get_wweight (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (CHARFORMAT2): EIF_INTEGER"
+			"C [struct %"redit.h%"] (CHARFORMAT2): EIF_INTEGER"
 		alias
 			"wWeight"
 		end
 		
 	cwel_charformat_set_wweight (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (CHARFORMAT2, EIF_INTEGER)"
+			"C [struct %"redit.h%"] (CHARFORMAT2, EIF_INTEGER)"
 		alias
 			"wWeight"
 		end
 		
 	cwel_charformat_get_sspacing (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (CHARFORMAT2): EIF_INTEGER"
+			"C [struct %"redit.h%"] (CHARFORMAT2): EIF_INTEGER"
 		alias
 			"sSpacing"
 		end
 		
 	cwel_charformat_set_sspacing (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (CHARFORMAT2, EIF_INTEGER)"
+			"C [struct %"redit.h%"] (CHARFORMAT2, EIF_INTEGER)"
 		alias
 			"sSpacing"
 		end
 		
 	cwel_charformat_get_bunderlinetype (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (CHARFORMAT2): EIF_INTEGER"
+			"C [struct %"redit.h%"] (CHARFORMAT2): EIF_INTEGER"
 		alias
 			"bUnderlineType"
 		end
 		
 	cwel_charformat_set_bunderlinetype (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (CHARFORMAT2, EIF_INTEGER)"
+			"C [struct %"redit.h%"] (CHARFORMAT2, EIF_INTEGER)"
 		alias
 			"bUnderlineType"
 		end
 		
 	cwel_charformat_get_brevauthor (ptr: POINTER): INTEGER is
 		external
-			"C [struct <windows.h>] (CHARFORMAT2): EIF_INTEGER"
+			"C [struct %"redit.h%"] (CHARFORMAT2): EIF_INTEGER"
 		alias
 			"bRevAuthor"
 		end
 		
 	cwel_charformat_set_brevauthor (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <windows.h>] (CHARFORMAT2, EIF_INTEGER)"
+			"C [struct %"redit.h%"] (CHARFORMAT2, EIF_INTEGER)"
 		alias
 			"bRevAuthor"
 		end

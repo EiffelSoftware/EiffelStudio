@@ -11,6 +11,14 @@
 
 #ifndef _RICHEDIT_
 #	include <richedit.h>
+
+/* Following statement is needed because it is defined in the above Microsoft header files
+ * as being `wEffects'. However this is a breaking change in case you include `richedit.h'
+ * as well as other Microsoft header files that happen to use `wReserved'.
+ */
+#ifdef wReserved
+#undef wReserved
+#endif
 #endif
 
 #ifdef __cplusplus

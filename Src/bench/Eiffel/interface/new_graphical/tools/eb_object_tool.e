@@ -602,6 +602,8 @@ feature {NONE} -- Implementation
 					if
 						status.has_valid_call_stack
 						and then status.has_valid_current_eiffel_call_stack_element
+							--| FIXME jfiat [2005/01/27] : maybe in futur evolution, 
+							--| we'll display some external data...
 					then
 						build_stack_info (stack_objects_tree)
 						build_stack_objects (stack_objects_tree)

@@ -241,16 +241,35 @@ feature -- Access
 
     signature: STRING is
             -- Feature signature.
+            -- Do not use E_FEATURE as `name' might be different
         local
-            e_feature: E_FEATURE
-            type: TYPE_A
+            type: TYPE
+            args: FEAT_ARG
         do
-            e_feature := compiler_feature.api_feature (compiler_class.compiled_class.class_id)
-            Result := e_feature.feature_signature
-            type := e_feature.type          
+			create Result.make (50)
+			Result.append (name)
+			args := compiler_feature.arguments
+			if args /= Void then
+				Result.append (" (")
+				from
+					args.start
+				until
+					args.after
+				loop
+					Result.append (args.item_name (args.index))
+					Result.append (": ")
+					Result.append (args.item.dump)
+					args.forth
+					if not args.after then
+						Result.append ("; ")
+					end
+				end
+				Result.append (")")
+			end
+            type := compiler_feature.type          
             if type /= Void then
                 Result.append (": ")
-                Result.append (e_feature.type.dump)
+                Result.append (type.dump)
             end
         ensure then
             result_exists: Result /= void           
@@ -507,12 +526,16 @@ feature -- Basic Operations
         local
             start_position: INTEGER
             txt: STRING
+            e_feature: E_FEATURE
+            ast: FEATURE_AS
         do
             if file_path /= Void and line_number /= Void then
-                file_path.replace (compiler_feature.e_feature.written_class.file_name)
-                if compiler_feature.e_feature.ast /= Void then
+            	e_feature := compiler_feature.e_feature
+                file_path.replace (e_feature.written_class.file_name)
+                ast := e_feature.ast
+                if ast /= Void then
                     -- AST may be Void for inherited features.
-                    start_position := compiler_feature.e_feature.ast.start_position
+                    start_position := ast.start_position
                     txt := compiler_feature.written_class.lace_class.text.substring (1, start_position)
                     line_number.set_item (txt.occurrences ('%N'))                   
                 end

@@ -147,7 +147,7 @@ feature -- Output
 				print ("REFERENCE_VALUE.children%N")
 			end
 			create {DEBUGGED_OBJECT_CLASSIC} obj.make (address, min_slice, max_slice)
-			is_children_from_tuple := obj.is_tuple
+			is_already_sorted := obj.is_tuple or obj.is_special
 			Result := obj.attributes
 		end
 
@@ -156,8 +156,7 @@ feature -- Output
 		do
 			Result := children
 			if 
-				Result /= Void 
-				and then not is_children_from_tuple 
+				Result /= Void and then not is_already_sorted
 			then
 				sort_debug_values (Result)
 			end
@@ -165,9 +164,9 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	is_children_from_tuple: BOOLEAN
-			-- Does the children are attached to a Tuple ?
-			-- i.e: is Current a Tuple object ?
+	is_already_sorted: BOOLEAN
+			-- Does the children are attached to a Tuple or Special object?
+			-- i.e: is Current a Tuple or a Special object ?
 			--| Nota: may be used only after a call to `children'
 		
 	set_hector_addr is

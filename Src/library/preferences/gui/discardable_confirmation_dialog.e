@@ -113,7 +113,6 @@ feature {NONE} -- Initialization
 			Result.enable_homogeneous
 
 			ok_button := create_button (ok_button_label)
-			ok_button.select_actions.extend (agent save_check_state)
 			Result.extend (ok_button)
 			if buttons_count >= 3 then
 				no_button := create_button (no_button_label)
@@ -202,6 +201,7 @@ feature -- Status setting
 	destroy is
 			-- Destroy the dialog (update the preferences based on the check button first)
 		do
+			save_check_state
 			Precursor {EV_DIALOG}
 		end
 

@@ -259,28 +259,28 @@ feature {NONE} -- Externals
 
 	cwel_rect_set_left (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <rect.h>] (RECT, long)"
+			"C [struct <rect.h>] (RECT, LONG)"
 		alias
 			"left"
 		end
 
 	cwel_rect_set_top (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <rect.h>] (RECT, long)"
+			"C [struct <rect.h>] (RECT, LONG)"
 		alias
 			"top"
 		end
 
 	cwel_rect_set_right (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <rect.h>] (RECT, long)"
+			"C [struct <rect.h>] (RECT, LONG)"
 		alias
 			"right"
 		end
 
 	cwel_rect_set_bottom (ptr: POINTER; value: INTEGER) is
 		external
-			"C [struct <rect.h>] (RECT, long)"
+			"C [struct <rect.h>] (RECT, LONG)"
 		alias
 			"bottom"
 		end

@@ -109,7 +109,7 @@ feature -- Update
 			child_handle: POINTER
 			s: STRING
 			reg_resource: REGISTRY_RESOURCE
-			resource, res2: RESOURCE
+			resource: RESOURCE
 		do
 				--| We update `child_list'
 			from

@@ -420,6 +420,10 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 		// only now, after synchronized with debugger, otherwise we may missed one
 		DBGTRACE2("[eStudio::Eval] LastCallback = ", Callback_name(dbg_last_callback_id));
 		switch (dbg_last_callback_id) {
+			case CB_EXIT_PROCESS:
+				eval_callback_proceed = true;
+				DBGTRACE("[eStudio::Eval] ExitProcess Callback Occured !!!");
+				break;
 			case CB_EVAL_COMPLETE:
 			case CB_EVAL_EXCEPTION:
 				eval_callback_proceed = true;
@@ -455,7 +459,6 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 	CHECK (!eval_callback_proceed, "Ensure : Last callback should be about evaluating")
 	/*** End  ***/
 }
-
 
 /*
 ///////////////////////////////////////////////////////////

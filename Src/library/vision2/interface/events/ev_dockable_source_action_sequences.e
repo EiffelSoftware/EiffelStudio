@@ -26,6 +26,16 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
+		
+	dock_ended_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed after a dock completes from `Current'.
+			-- Either to a dockable target or a dockable dialog.
+		do
+			Result := implementation.dock_ended_actions
+		ensure
+			not_void: Result /= Void
+		end
+		
 	
 end -- class EV_DOCKABLE_SOURCE_ACTION_SEQUENCES
 

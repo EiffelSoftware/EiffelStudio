@@ -998,6 +998,7 @@ feature {NONE} -- Implementation
 			hb.disable_item_expand (okb)
 			hb.extend (cancelb)
 			hb.disable_item_expand (cancelb)
+			hb.extend (create {EV_CELL})
 			vb.extend (hb)
 			
 			dialog.extend (vb)

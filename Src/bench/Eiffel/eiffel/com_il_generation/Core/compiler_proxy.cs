@@ -69,7 +69,12 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 	}
 		
 	public string LastError() {
-		string error = core.LastError ();
+		string error;
+		if (core == null) {
+			error = "";
+		} else {
+			error = core.LastError ();
+		}
 		cleanup();
 		return error;
 	}
@@ -90,16 +95,24 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 	private COMPILER core;
 		// Delegation to COMPILER object.
 
-	public void SetConsoleApplication() {
-		core.SetConsoleApplication();
+	public void set_console_application() {
+		core.set_console_application();
 	}
 
-	public void SetWindowApplication() {
-		core.SetWindowApplication ();
+	public void set_window_application() {
+		core.set_window_application ();
 	}
 
-	public void SetDll() {
-		core.SetDll();
+	public void set_dll() {
+		core.set_dll();
+	}
+
+	public void set_version (int build, int major, int minor, int revision) {
+		core.set_version (build, major, minor, revision);
+	}
+
+	public void set_verifiability (bool v) {
+		core.set_verifiability (v);
 	}
 
 	public void AddAssemblyReference (string Name) {

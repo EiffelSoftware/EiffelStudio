@@ -33,9 +33,6 @@ feature {NONE} -- Initialization
 
 			-- Create the `box'.	
 			initialize
-
-			-- Create the label with text set to "".
-			create_text_label ("")
 		end
 	
 	make_with_index (par: EV_LIST; value: INTEGER) is
@@ -167,8 +164,7 @@ feature -- element change
 			a: ANY
 			combo_par: EV_COMBO_BOX_IMP
 		do
-			a := txt.to_c
-			gtk_label_set_text (label_widget, $a)
+			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 
 			-- the gtk part if the parent is a combo_box
 			combo_par ?= parent_imp

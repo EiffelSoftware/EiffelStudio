@@ -1541,7 +1541,11 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			l_object: GB_OBJECT
 			all_children: ARRAYED_LIST [GB_OBJECT]
 		do
-			if associated_top_level_object > 0 then
+				-- We check that `layout_item.data' is not void as this is used to signify the
+				-- fact that we are representing an instance of a top level widget. If we did not
+				-- check this, when importing, all objects that already existed and had an
+				-- `associated_top_level_object' would be processed again which crahsed EiffelBuild.
+			if associated_top_level_object > 0 and layout_item.data /= Void then
 					-- Retrieve the object which `Current' represents.
 				l_object := object_handler.object_from_id (associated_top_level_object)
 				check

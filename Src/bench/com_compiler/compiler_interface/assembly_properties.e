@@ -27,11 +27,12 @@ inherit
 			
 	
 create
-	make
+	make,
+	make_with_assembly_sd
 	
 feature {NONE} -- initalization
 
-	make (a_prefix, a_cluster_name, a_assembly_name, a_version, a_culture, a_public_key_token: STRING) is
+	make (a_cluster_name, a_assembly_name, a_prefix, a_version, a_culture, a_public_key_token: STRING) is
 			-- create a new instance 
 		local
 			asm_cluster_name: ID_SD
@@ -39,27 +40,33 @@ feature {NONE} -- initalization
 			asm_version: ID_SD
 			asm_culture: ID_SD
 			asm_public_key_token: ID_SD
+			asm_prefix: ID_SD
 		do
-			set_assembly_prefix(a_prefix)
+			asm_prefix := new_id_sd(a_prefix, false);
 			asm_cluster_name := new_id_sd(a_cluster_name, false)
 			asm_name := new_id_sd(a_assembly_name, true)
-			asm_version := new_id_sd(a_version, true)
-			asm_culture := new_id_sd(a_culture, true)
-			asm_public_key_token := new_id_sd(a_public_key_token, true)
 			
-			create assembly_sd.initialize (asm_cluster_name, asm_name, asm_version, asm_culture, asm_public_key_token)
+			if a_version /= Void and a_version.count > 0 then
+				asm_version := new_id_sd(a_version, true)
+			end
+			if a_culture /= Void and a_culture.count > 0 then
+				asm_culture := new_id_sd(a_culture, true)	
+			end
+			if a_public_key_token /= Void and a_public_key_token.count > 0 then
+				asm_public_key_token := new_id_sd(a_public_key_token, true)	
+			end
+			
+			create assembly_sd.initialize (asm_cluster_name, asm_name, asm_prefix, asm_version, asm_culture, asm_public_key_token)
 			set_assembly_type
 		end
 		
-	make_with_assembly_sd_and_ace_accesser (a_assembly: ASSEMBLY_SD; an_ace: ACE_FILE_ACCESSER) is
+	make_with_assembly_sd (a_assembly: ASSEMBLY_SD) is
 			-- Make with ASSEMBLY_SD and ACE_FILE_ACCESSER.
 		require
 			non_void_assembly: a_assembly /= Void
 		do
-			set_assembly_prefix("")
 			assembly_sd := a_assembly
 			set_assembly_type
-			ace := an_ace
 		ensure
 			non_void_assembly_sd: assembly_sd /= Void
 		end
@@ -97,15 +104,27 @@ feature -- Status setting
 
 	set_assembly_prefix (a_prefix: STRING) is
 			-- set the assembly prefix
+		local
+			asm_prefix: ID_SD
 		do
-			assembly_prefix := a_prefix.clone(a_prefix)
-			assembly_prefix.to_upper
+			asm_prefix := new_id_sd(a_prefix.clone(a_prefix), FALSE)
+			asm_prefix.to_upper
 		end
 		
 feature -- Access
 
-	assembly_prefix: STRING
+	assembly_prefix: STRING is
 			-- the prefix assigned to all classes in the system
+		local
+			a_prefix: ID_SD
+		do
+			a_prefix := assembly_sd.prefix_name
+			if a_prefix = Void then
+				Result := ""
+			else
+				Result := a_prefix
+			end
+		end
 		
 	assembly_cluster_name: STRING is
 			-- the cluster name for the assembly
@@ -140,9 +159,5 @@ feature -- Access
 	is_local: BOOLEAN
 	is_signed: BOOLEAN
 	assembly_sd: ASSEMBLY_SD	
-	
-feature {NONE} -- Access
-
-	ace: ACE_FILE_ACCESSER
 	
 end -- class ASSEMBLY_PROPERTIES

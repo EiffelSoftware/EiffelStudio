@@ -31,7 +31,7 @@ feature {NONE}
 			if Run_info.is_running then
 				debug_info.restore;
 				debug_window.clear_window;   
-				debug_window.put_string ("Application terminated%N");
+				debug_window.put_string ("System terminated%N");
 				debug_window.display;
 				run_info.set_is_running (false)
 			end;
@@ -70,7 +70,7 @@ feature {NONE}
 		end;
 
 	tool_resynchronization (argument: ANY) is
-			-- Resynchronize class and feature tools.
+			-- Resynchronize class, feature and system tools.
 		local
 			saved_msg, messages: STRING;
 		do
@@ -83,6 +83,10 @@ feature {NONE}
 			saved_msg.append (messages);
 			Window_manager.class_win_mgr.synchronize;
 			Window_manager.routine_win_mgr.synchronize;
+			if system_tool.realized and then system_tool.shown then
+				system_tool.set_default_format;
+				system_tool.synchronize
+			end;
 			messages.wipe_out;
 			messages.append (saved_msg)
 		end;

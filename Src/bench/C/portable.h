@@ -19,9 +19,11 @@
 #endif
 
 #ifdef EIF_WINDOWS
-#include "confmagc.h"
 #ifdef EIF_WIN32
+#include "confmagic.h"
 #include <stdlib.h>
+#else
+#include "confmagc.h"
 #endif
 #else
 #include "confmagic.h"

@@ -885,7 +885,7 @@ rt_public int16 *wtype_array(int16 *target)
 
 	cnt = 0;
 
-	/* Read entries upto and including the terminator `-1ï*/
+	/* Read entries upto and including the terminator `-1'*/
 	do
 	{
 		*(tp++) = last = (int16) wshort ();

@@ -9,7 +9,7 @@ class EWB_DOCUMENTATION
 
 inherit
 
-	EB_CONSTANTS;
+	TTY_CONSTANTS;
 	WINDOWS;
 	EWB_FILTER_SYSTEM
 		redefine
@@ -141,7 +141,7 @@ feature -- Execution
 			end;
 			cmd.set_error_window (Error_window);
 			cmd.set_feature_clause_order
-				(Class_tool_resources.feature_clause_order.actual_value);
+				(Class_resources.feature_clause_order.actual_value);
 			cmd.execute;
 		end;
 

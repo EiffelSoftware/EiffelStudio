@@ -292,6 +292,9 @@ feature -- Status setting
 				end
 				is_positioned := True
 			end
+			if blocking_window /= Void then
+				set_blocking_window (Void)
+			end
 		end
 		
 	is_positioned: BOOLEAN

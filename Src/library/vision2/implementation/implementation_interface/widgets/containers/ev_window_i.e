@@ -14,25 +14,23 @@ deferred class
 inherit
 	
 	EV_CONTAINER_I
-		rename
-			make as old_make
-		end
 	
 	
 feature {NONE} -- Initialization
 
-	make_top_level (interface: EV_WINDOW) is
-			-- Create a window. Window does not have any
-			-- parents
+	make (par: EV_WINDOW) is
+			-- Create a window with a parent. Current
+			-- window will be closed when the parent is
+			-- closed. The parent of window is a window 
+			-- (and not any EV_CONTAINER).
 		deferred
 		end
 
-	make (par: EV_WINDOW; interface: EV_WINDOW) is
-			-- Create a window. Window does not have any
-			-- parents
+	make_top_level is
+			-- Create a top level window (a Window 
+			-- without a parent).
 		deferred
 		end
-
 
 feature  -- Access
 
@@ -115,7 +113,29 @@ feature -- Element change
                         exists: not destroyed
                 deferred
 		end
-
+	
+	window_closed is
+			-- Called when the window is deleted (closed).
+                        -- If window is the main window of the
+                        -- application, this feature will exit
+                        -- application if `close_command' is not set).
+		local
+			a: EV_ARGUMENT1[EV_WINDOW_I]
+                do
+                        if close_command = Void then
+                                if application /= Void then
+					application.exit
+				end
+                        else
+				!!a.make (Current)
+                                close_command.execute (a)
+                        end
+                end
+        
+	set_close_command (c: EV_COMMAND) is
+                do
+                        close_command := c
+                end	
 feature -- Status report
 
         is_iconic_state: BOOLEAN is
@@ -141,7 +161,24 @@ feature -- Element change
                         -- Set `icon_name' to `new__name'.
                 deferred
                 end
+
+feature {EV_WINDOW, EV_APPLICATION} -- Implementation
 	
+	application: EV_APPLICATION
+			-- EiffelVision application associated to the
+			-- window.
+	
+	set_application (app: EV_APPLICATION) is
+			-- Associate the window with 'app'. Is this 
+			-- is done, exiting the window will exit the 
+			-- application, unless delete_command is set.
+		do
+			application := app
+		end	
+	
+feature -- {NONE} -- Implementation
+
+        close_command: EV_COMMAND	
 end
 
 --|----------------------------------------------------------------

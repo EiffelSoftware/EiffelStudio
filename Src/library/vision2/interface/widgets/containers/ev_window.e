@@ -25,19 +25,22 @@ creation
 feature {NONE} -- Initialization
 
     make (par: EV_WINDOW) is
-			-- Create a window. The parent of window is a window
+			-- Create a window with a parent. Current
+			-- window will be closed when the parent is
+			-- closed. The parent of window is a window 
+			-- (and not any EV_CONTAINER).
 		do
 			parent := par
-			!EV_WINDOW_IMP!implementation.make (par, Current)
+			!EV_WINDOW_IMP!implementation.make (par)
 		end
 	
     make_top_level is
-                        -- Create a top level window. Window does not have any
-                        -- parents
+			-- Create a top level window (a Window 
+			-- without a parent).
 		require
-			-- toolkit initialized
+			-- toolkit initialized XXX
 		do
-			!EV_WINDOW_IMP!implementation.make_top_level (Current)
+			!EV_WINDOW_IMP!implementation.make_top_level
 		end
 	
 		
@@ -175,34 +178,20 @@ feature -- Element change
                         implementation.set_icon_name (new_name)
                 end
 
-        delete_window_action is
+	window_closed is
                         -- Called when the window is deleted (closed).
-                        -- (Will exit application if `delete_command'
-                        -- is not set).
-		local
-			a: EV_ARGUMENT1[EV_WINDOW]
+                        -- If window is the main window of the
+                        -- application, this feature will exit
+                        -- application if `close_command' is not set).
                 do
-                        if delete_command = Void then
-                                if application /= Void then
-					application.exit
-				end
-                        else
-				!!a.make (Current)
-                                delete_command.execute (a)
-                        end
+			implementation.window_closed
                 end
 
-feature -- Removal
 
-        set_delete_command (c: EV_COMMAND) is
+        set_close_command (c: EV_COMMAND) is
                 do
-                        delete_command := c
+                        implementation.set_close_command (c)
                 end
-
-feature -- {NONE} -- Implementation
-
-        delete_command: EV_COMMAND
-
 
         implementation: EV_WINDOW_I
                         -- Implementation of window
@@ -218,7 +207,7 @@ feature {EV_APPLICATION} -- Implementation
 			-- is done, exiting the window will exit the 
 			-- application, unless delete_command is set.
 		do
-			application := app
+			implementation.set_application (app)
 		end
 		
 invariant

@@ -8,10 +8,7 @@ indexing
 deferred class CLASS_C_ROUTINES
 
 inherit
-	TOPOLOGICAL
-		rename
-			successors as descendants
-		end
+	PART_COMPARABLE
 
 	IDABLE
 

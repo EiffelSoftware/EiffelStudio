@@ -1,27 +1,21 @@
 system MEL
 
 root
-
 	ANY
 
 default
-
-	assertion (require);
-	precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/base")
+	assertion (require)
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
-
--- MEL
-	all mel:				"$EIFFEL5/library/mel/"
+	all mel: "$ISE_EIFFEL/library/mel/"
 
 external
- 
-	include_path:
-		"\$(EIFFEL5)/library/mel/Clib";
+ 	include_path:
+		"\$(ISE_EIFFEL)/library/mel/Clib";
  
 	object:
-		"$(EIFFEL5)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
-		"$(EIFFEL5)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+		"$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libMel.a",
+		"$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libXpm.a",
 		"-lXm -lXt -lX11"
- 
 end

@@ -1,18 +1,13 @@
 system EiffelParse
 
 root
-
 	ANY
 
 default
-
-	assertion (require);
-	precompiled ("$EIFFEL5/precomp/spec/$PLATFORM/lex")
+	assertion (require)
+	precompiled ("$ISE_EIFFEL/precomp/spec/$PLATFORM/lex")
 
 cluster
-
--- EiffelParse
-
-		parse:				"$EIFFEL5/library/parse";
+		parse: "$ISE_EIFFEL/library/parse"
 
 end

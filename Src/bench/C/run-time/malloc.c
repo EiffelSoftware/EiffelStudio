@@ -1035,7 +1035,7 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 
 		if (eif_max_mem > 0)
 			if (m_data.ml_total + asked > eif_max_mem) {
-				printf ("Too much!\n");
+				print_err_msg (stderr, "Cannot allocate memory: too much in comparison with maximum allowed!\n");
 				return (union overhead *) 0;
 			}
 		/* Now request for some more core, checking the return value

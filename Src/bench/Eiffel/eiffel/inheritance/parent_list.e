@@ -15,17 +15,16 @@ feature -- Merging parents
 			-- Check also the renaming clause of the parents
 		local
 			p: PARENT_C
-			sp_area: SPECIAL [PARENT_C]
+			l_area: SPECIAL [PARENT_C]
 			i, nb: INTEGER
 		do
 			from
-				sp_area := area
-				i := 0
+				l_area := area
 				nb := count
 			until
 				i = nb
 			loop
-				p := sp_area.item (i)
+				p := l_area.item (i)
 				inherit_table.merge (p)
 				p.check_validity1
 				i := i + 1
@@ -37,17 +36,16 @@ feature -- Validity
 	check_validity2 is
 			-- Check the redefine and select clause
 		local
-			sp_area: SPECIAL [PARENT_C]
+			l_area: SPECIAL [PARENT_C]
 			i, nb: INTEGER
 		do
 			from
-				sp_area := area
-				i := 0
+				l_area := area
 				nb := count
 			until
 				i = nb
 			loop
-				sp_area.item(i).check_validity2
+				l_area.item(i).check_validity2
 				i := i + 1
 			end
 		end
@@ -55,18 +53,17 @@ feature -- Validity
 	check_validity4 is
 			-- Check useless selection 
 		local
-			sp_area: SPECIAL [PARENT_C]
+			l_area: SPECIAL [PARENT_C]
 			i, nb: INTEGER
 			p: PARENT_C
 		do
 			from
-				sp_area := area
-				i := 0
+				l_area := area
 				nb := count
 			until
 				i = nb
 			loop
-				p := sp_area.item(i)
+				p := l_area.item(i)
 				if not (p.selecting = Void) then
 					p.check_validity4
 				end
@@ -79,17 +76,16 @@ feature -- Validity
 		require
 			good_argument: not (feature_name = Void)
 		local
-			sp_area: SPECIAL [PARENT_C]
+			l_area: SPECIAL [PARENT_C]
 			i, nb: INTEGER
 		do
 			from
-				sp_area := area
-				i := 0
+				l_area := area
 				nb := count
 			until
 				Result or else i = nb
 			loop
-				Result := sp_area.item(i).is_selecting (feature_name)
+				Result := l_area.item(i).is_selecting (feature_name)
 				i := i + 1
 			end
 		end

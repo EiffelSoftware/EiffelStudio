@@ -408,7 +408,10 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		do
-			console.writeline_string ("browse")
+			ask_for_folder
+			if last_folder /= Void then
+				console.writeline_string (last_folder)
+			end
 		end
 		
 feature {NONE} -- Implementation
@@ -425,6 +428,25 @@ feature {NONE} -- Implementation
 			external_name: "DelegateFactory"
 		end
 
+	last_folder: STRING
+			-- Last folder choosen by user.
+			-- Void if `ask_for_folder' has not been called.
+		indexing
+			external_name: "LastFolder"
+		end
+
+	ask_for_folder is
+			-- Ask user for a folder.
+		indexing
+			external_name: "AskForFolder"
+		local
+			browser: FOLDERDIALOG
+		do
+			create browser.make
+			browser.ask_for_folder
+			last_folder := browser.last_folder
+		end
+		
 	assembly_name_from_info: SYSTEM_REFLECTION_ASSEMBLYNAME is
 			-- Assembly name corresponding to `assembly_descriptor'.
 		require

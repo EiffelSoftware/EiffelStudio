@@ -70,7 +70,7 @@ long *lp;
 			*lp = (long) ntohl(value);
 			idrs->i_ptr += size;
 #if LNGSIZ > 4
-			if (*lp & Ox80000000) {
+			if (*lp & 0x80000000) {
 				*lp &= 0xffffffff7fffffff;				
 				*lp |= 0x8000000000000000;				
 			}

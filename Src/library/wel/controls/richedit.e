@@ -64,7 +64,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING;
+	make (a_parent: WEL_WINDOW; a_name: STRING;
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a rich edit control.
 		require
@@ -237,7 +237,7 @@ feature -- Status setting
 			cwin_send_message (item, Em_exsetsel, 0,
 				range.to_integer)
 			if scroll_caret_at_selection then
-				cwel_scroll_caret (item)
+				cwin_send_message (item, Em_scrollcaret, 0, 0)
 			end
 		end
 

@@ -21,15 +21,6 @@ inherit
 
 feature -- Status setting
 
-	connect_radio_grouping (a_tool_bar: EV_TOOL_BAR) is
-			-- Join radio grouping of `a_container' to Current.
-		require
-			a_tool_bar_not_void: a_tool_bar /= Void
-		deferred
-		end
-
-feature -- Status setting
-
 	set_default_options is
 			-- Initialize the options of the widget.
 		do
@@ -64,6 +55,9 @@ end -- class EV_TOOL_BAR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/11 23:30:07  king
+--| Removed connect_radio_grouping
+--|
 --| Revision 1.11  2000/04/04 17:05:08  rogers
 --| Added connect_radio_grouping.
 --|

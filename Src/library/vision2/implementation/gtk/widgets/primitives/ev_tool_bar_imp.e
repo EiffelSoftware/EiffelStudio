@@ -39,14 +39,6 @@ feature {NONE} -- Implementation
 			set_c_object (C.gtk_hbox_new (False, 0))
 		end
 
-feature -- Status setting
-
-	connect_radio_grouping (a_tool_bar: EV_TOOL_BAR) is
-			-- Join radio grouping of `a_container' to Current.
-		do
-			--| FIXME To be implemented
-		end
-
 feature -- Implementation
 
 	add_to_container (v: like item) is
@@ -109,6 +101,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/11 23:25:55  king
+--| Removed connect_radio_grouping
+--|
 --| Revision 1.16  2000/04/06 23:50:07  brendel
 --| Removed assignment to list_widget.
 --|

@@ -175,8 +175,6 @@ feature {NONE} -- Implementation
 		end
 
 	rgb_quad_size: INTEGER is
-		require
-			exists: exists
 		local
 			rgb: WEL_RGB_QUAD
 		once

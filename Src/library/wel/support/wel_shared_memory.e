@@ -80,30 +80,44 @@ feature {NONE} -- Externals
 
 	global_lock (a_handle: POINTER): POINTER is
 		external
-			"C | %"wel.h%""
+			"C [macro %"wel.h%"]"
 		alias
 			"GlobalLock"
 		end
 
 	global_unlock (a_handle: POINTER): BOOLEAN is
 		external
-			"C | %"wel.h%""
+			"C [macro %"wel.h%"]"
 		alias
 			"GlobalUnlock"
 		end
 
 	global_size (a_handle: POINTER): INTEGER is
 		external
-			"C | %"wel.h%""
+			"C [macro %"wel.h%"]"
 		alias
 			"GlobalSize"
 		end
 
 	global_free (a_handle: POINTER): POINTER is
 		external
-			"C | %"wel.h%""
+			"C [macro %"wel.h%"]"
 		alias
 			"GlobalFree"
+		end
+
+	global_alloc (flags, bytes: INTEGER): POINTER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"GlobalAlloc"
+		end
+
+	gmem_moveable: INTEGER is
+		external
+			"C [macro %"windows.h%"]"
+		alias
+			"GMEM_MOVEABLE"
 		end
 
 end -- class WEL_SHARED_MEMORY

@@ -1,6 +1,6 @@
 indexing
-	description: "Data panel used for capturing object tool parameters."
-	author: ""
+	description:
+		"Data panel used for capturing object tool parameters."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,16 +8,17 @@ class
 	EB_OBJECT_ENTRY_PANEL
 
 inherit
-	NEW_EB_CONSTANTS
+	EB_ENTRY_PANEL
+		redefine
+			make
+		end
+	EB_OBJECT_TOOL_DATA
 		rename
 			Object_resources as parameters
 		export
 			{NONE} all
 		end
-	EB_ENTRY_PANEL
-		redefine
-			make
-		end
+	NEW_EB_CONSTANTS
 
 creation
 	make
@@ -29,9 +30,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor (par, a_tool)
 
-			Create tool_width.make_with_resource (Current, parameters.tool_width)
-			Create tool_height.make_with_resource (Current, parameters.tool_height)
-			Create command_bar.make_with_resource (Current, parameters.command_bar)
+			create tool_width.make_with_resource (Current, parameters.tool_width)
+			create tool_height.make_with_resource (Current, parameters.tool_height)
+			create command_bar.make_with_resource (Current, parameters.command_bar)
 
 			resources.extend (tool_width)
 			resources.extend (tool_height)
@@ -43,8 +44,8 @@ feature -- Access
 	name: STRING is "Object tool preferences"
 			-- Current's name
 
-	symbol: PIXMAP is
-		once
+	symbol: EV_PIXMAP is
+		do
 			Result := Pixmaps.bm_Object
 		end
 	

@@ -1,6 +1,6 @@
 indexing
-	description: "Data panel used for capturing profiler parameters."
-	author: ""
+	description:
+		"Data panel used for capturing profiler parameters."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,16 +8,19 @@ class
 	EB_PROFILE_ENTRY_PANEL
 
 inherit
-	NEW_EB_CONSTANTS
+	EB_ENTRY_PANEL
+		redefine
+			make
+		end
+
+	EB_PROFILE_TOOL_DATA
 		rename
 			Profile_resources as parameters
 		export
 			{NONE} all
 		end
-	EB_ENTRY_PANEL
-		redefine
-			make
-		end
+
+	NEW_EB_CONSTANTS
 
 creation
 	make 
@@ -28,10 +31,10 @@ feature {NONE} -- Initialization
 		do
 			Precursor (par, a_tool)
 
-			Create tool_width.make_with_resource (Current, parameters.tool_width)
-			Create tool_height.make_with_resource (Current, parameters.tool_height)
-			Create query_tool_width.make_with_resource (Current, parameters.query_tool_width)
-			Create query_tool_height.make_with_resource (Current, parameters.query_tool_height)
+			create tool_width.make_with_resource (Current, parameters.tool_width)
+			create tool_height.make_with_resource (Current, parameters.tool_height)
+			create query_tool_width.make_with_resource (Current, parameters.query_tool_width)
+			create query_tool_height.make_with_resource (Current, parameters.query_tool_height)
 
 			resources.extend (tool_width)
 			resources.extend (tool_height)
@@ -44,8 +47,8 @@ feature -- Access
 	name: STRING is "Profile tool preferences"
 			-- Current's name
 
-	symbol: PIXMAP is
-		once
+	symbol: EV_PIXMAP is
+		do
 			Result := Pixmaps.bm_Profiler
 		end
 

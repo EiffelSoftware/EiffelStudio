@@ -19,14 +19,10 @@ feature -- Basic operations
 		require
 			valid_type_desc: a_type_desc /= Void
 			valid_type_desc_type: is_ptr (a_type_desc.var_type)
-		local
-			descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
 		do
 			type := a_type_desc.var_type
-			descriptor := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, 
+			pointed_data_type_descriptor := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, 
 						a_type_desc.type_desc, a_system_description)
-			pointed_data_type_descriptor := descriptor
-
 			create Result.make (Current)
 		ensure
 			valid_result: Result /= Void and then is_ptr (Result.type)

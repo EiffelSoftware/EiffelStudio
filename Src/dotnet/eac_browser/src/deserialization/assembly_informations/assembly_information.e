@@ -46,19 +46,25 @@ feature -- Initialization
 					print ("File has no content%N")
 				end
 				Member_parser_table.put (member_parser, an_assembly_name)
+				initialized := True
 			elseif not Member_parser_table.has (an_assembly_name) then
 				Member_parser_table.put (Void, an_assembly_name)
+				initialized := True
 			end
 		ensure
-			xml_file_path_set: xml_file_path = path_to_assembly (an_assembly_name)
+--			xml_file_path_set: xml_file_path = path_to_assembly (an_assembly_name)
 --			Member_parser_table_set: Member_parser_table.has (an_assembly_name)
 		rescue
+			initialized := False
 			retried := True
 			retry
 		end
 
 
 feature {NONE} -- Access
+	
+	initialized: BOOLEAN
+			-- Did Current initialize correctly?
 
 	member_parser_table: HASH_TABLE [MEMBER_XML_PARSER, STRING] is
 			-- Caching member_parser already calculated.
@@ -92,9 +98,8 @@ feature -- Basic Operations
 				member_parser := Member_parser_table.item (assembly_type_name)
 			end
 			if not xml_file_path.is_empty and member_parser /= Void then
-				
-			end
-			Result := find_member (a_full_dotnet_type, "")
+				Result := find_member (a_full_dotnet_type, "")
+			end	
 		end
 
 	find_feature (assembly_type_name: STRING; a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION is
@@ -109,14 +114,23 @@ feature -- Basic Operations
 			non_void_a_member_signature: a_member_signature /= Void
 			not_empty_a_member_signature: not a_member_signature.is_empty
 			valid_dotnet_signature: is_valid_dotnet_signature (a_member_signature)
+		local
+			retried: BOOLEAN
 		do
-			if not Member_parser_table.has (assembly_type_name) then
-				initialize (assembly_type_name)
-			else
-				xml_file_path := path_to_assembly (assembly_type_name)
-				member_parser := Member_parser_table.item (assembly_type_name)
+			if not retried then
+				if not Member_parser_table.has (assembly_type_name) then
+					initialize (assembly_type_name)
+				else
+					xml_file_path := path_to_assembly (assembly_type_name)
+					member_parser := Member_parser_table.item (assembly_type_name)
+				end
+				if initialized then
+					Result := find_member (a_full_dotnet_type, a_member_signature)
+				end
 			end
-			Result := find_member (a_full_dotnet_type, a_member_signature)
+		rescue
+			retried := True
+			retry
 		end
 
 	path_to_assembly (an_assembly_name: STRING): STRING is

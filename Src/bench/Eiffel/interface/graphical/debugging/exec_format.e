@@ -10,7 +10,7 @@ inherit
 		redefine
 			format, execute, text_window
 		end;
-	SHARED_DEBUG;
+	SHARED_APPLICATION_EXECUTION;
 	EXEC_MODES
 
 feature
@@ -43,7 +43,7 @@ feature
 
 	format (stone: STONE) is
 		do
-			Run_info.set_execution_mode (execution_mode)
+			Application.set_execution_mode (execution_mode)
 		end;
 
 	text_window: PROJECT_TEXT;

@@ -64,6 +64,8 @@ feature -- Access
 		local
 			horizontal_box: EV_HORIZONTAL_BOX
 			label: EV_LABEL
+			reset_pixmap: EV_PIXMAP
+			tool_bar: EV_TOOL_BAR
 		do
 			create Result
 			initialize_attribute_editor (Result)
@@ -78,6 +80,8 @@ feature -- Access
 				Result.disable_item_expand (is_show_requested_check_button)
 			end
 			
+			reset_pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_recycle_bin_color")
+			
 			create label.make_with_text (Gb_ev_widget_minimum_width)
 			Result.extend (label)
 			Result.disable_item_expand (label)
@@ -85,10 +89,14 @@ feature -- Access
 			horizontal_box.set_padding_width (object_editor_padding_width)
 			create minimum_width_entry.make (Current, horizontal_box, minimum_width_string, "", gb_ev_widget_minimum_width_tooltip,
 				agent set_minimum_width (?), agent valid_minimum_dimension (?))
-			create reset_width_button.make_with_text ("Reset")
+			create reset_width_button
+			create tool_bar
+			tool_bar.extend (reset_width_button)
+			reset_width_button.set_pixmap (reset_pixmap)
+			reset_width_button.set_tooltip (reset_minimum_width_tooltip)
 			reset_width_button.select_actions.extend (agent reset_width)
-			horizontal_box.extend (reset_width_button)
-			horizontal_box.disable_item_expand (reset_width_button)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
 			Result.extend (horizontal_box)
 			
 			create label.make_with_text (Gb_ev_widget_minimum_height)
@@ -98,10 +106,14 @@ feature -- Access
 			horizontal_box.set_padding_width (object_editor_padding_width)
 			create minimum_height_entry.make (Current, horizontal_box, minimum_height_string, "", gb_ev_widget_minimum_height_tooltip,
 				agent set_minimum_height (?), agent valid_minimum_dimension (?))
-			create reset_height_button.make_with_text ("Reset")
+			create reset_height_button
+			create tool_bar
+			tool_bar.extend (reset_height_button)
+			reset_height_button.set_pixmap (reset_pixmap)
+			reset_height_button.set_tooltip (reset_minimum_height_tooltip)
 			reset_height_button.select_actions.extend (agent reset_height)
-			horizontal_box.extend (reset_height_button)
-			horizontal_box.disable_item_expand (reset_height_button)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
 			Result.extend (horizontal_box)
 			
 			update_attribute_editor
@@ -249,7 +261,7 @@ feature {NONE} -- Implementation
 	
 	Is_show_requested_string: STRING is "Is_show_requested"
 
-	reset_width_button, reset_height_button: EV_BUTTON
+	reset_width_button, reset_height_button: EV_TOOL_BAR_BUTTON
 		-- Buttons that allow you to reset the minimum sizes on objects.
 		
 	is_show_requested_check_button: EV_CHECK_BUTTON

@@ -24,9 +24,15 @@ feature {NONE}
 feature 
 
 	make (a_name: STRING; a_parent: COMPOSITE; ed: CMD_EDITOR) is
+		local
+			scrolled_w_parent: SCROLLED_W
 		do
 			cmd_editor := ed;
 			box_create (a_name, a_parent)
+			scrolled_w_parent ?= a_parent
+			if scrolled_w_parent /= Void then
+				scrolled_w_parent.set_working_area (Current)
+			end
 		end;
 	
 feature {NONE}

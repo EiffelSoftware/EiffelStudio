@@ -1,4 +1,4 @@
-class ES3SH
+class FINISH_FREEZING
 
 creation
 	make
@@ -6,7 +6,6 @@ creation
 feature -- Initialization
 
 	make is
-			-- Create es3sh.
 		local
 			error: BOOLEAN -- did an error occur?
 			c_error: BOOLEAN -- did an error occur during C compilation?
@@ -57,4 +56,4 @@ feature -- Access
 			end
 		end
 
-end -- class ES3SH
+end -- class FINISH_FREEZING

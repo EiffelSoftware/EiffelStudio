@@ -36,18 +36,14 @@ feature -- Status setting
 	set_font (a_font: EV_FONT) is
 			-- Assign `a_font' to `font'.
 		local
-			a_style: POINTER
+			a_font_description: POINTER
 			font_imp: EV_FONT_IMP
-			font_ptr: POINTER
 		do
 			private_font := a_font.twin
 			font_imp ?= private_font.implementation
-			a_style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (fontable_widget))
-			font_ptr := feature {EV_GTK_EXTERNALS}.gdk_font_ref (font_imp.c_object)
-			font_imp.set_font_object (font_ptr)
-			feature {EV_GTK_EXTERNALS}.gtk_style_set_font (a_style, font_ptr)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_style (fontable_widget, a_style)
-			feature {EV_GTK_EXTERNALS}.gtk_style_unref (a_style)
+			a_font_description := font_imp.font_description
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_font (fontable_widget, a_font_description)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_free (a_font_description)
 		end
 
 feature {NONE} -- Implementation

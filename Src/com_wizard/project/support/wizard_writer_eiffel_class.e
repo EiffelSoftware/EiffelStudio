@@ -107,7 +107,11 @@ feature -- Access
 			loop
 				if features.has (an_integer) then
 					Result.append (Feature_keyword)
-					if an_integer = Implementation or an_integer = Externals then
+					if 
+						an_integer = Initialization or 
+						an_integer = Implementation or 
+						an_integer = Externals 
+					then
 						Result.append (Space)
 						Result.append (Open_curly_brace)
 						Result.append (None_keyword)

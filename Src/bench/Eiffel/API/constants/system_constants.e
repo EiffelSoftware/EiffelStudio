@@ -98,6 +98,8 @@ feature {NONE}
 	Esize: STRING is "esize"
 
 	Eskelet: STRING is "eskelet"
+	
+	Estructure: STRING is "estructure"
 
 	Evisib: STRING is "evisib"
 
@@ -169,7 +171,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			Result.append_character ('.')
 			Result.append_integer (Minor_version_number)
 			Result.append_character ('.')
-			Result.append_string ("0621")
+			Result.append_string ("0624")
 			Result.append_character (' ')
 			Result.append_string (version_type_name)
 		end

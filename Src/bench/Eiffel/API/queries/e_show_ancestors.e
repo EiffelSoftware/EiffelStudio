@@ -21,7 +21,7 @@ feature -- Execution
 	work is
 		do
 			create displayed.make;
-			current_class.append_signature (structured_text);
+			current_class.append_signature (structured_text, True);
 			structured_text.add_new_line;
 			rec_display (1, current_class, structured_text);
 			displayed := Void;
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 					loop
 						parent_class := parents.item.associated_class;
 						add_tabs (st, i);
-						parent_class.append_signature (st);
+						parent_class.append_signature (st, True);
 						if
 							already_processed (parents.item) and then
 							parent_class.class_id /= any_id

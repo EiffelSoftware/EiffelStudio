@@ -43,7 +43,7 @@ feature -- Output
 		do
 			print_error_message (st);
 			st.add_string ("Class: ");
-			class_c.append_signature (st);
+			class_c.append_signature (st, False);
 			st.add_new_line;
 			build_explain (st)
 		end;

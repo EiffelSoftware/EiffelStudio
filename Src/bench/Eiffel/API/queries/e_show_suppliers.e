@@ -25,7 +25,7 @@ feature -- Output
 			a_supplier: CLASS_C
 		do
 			structured_text.add_string ("Suppliers of class ");
-			current_class.append_signature (structured_text);
+			current_class.append_signature (structured_text, True);
 			structured_text.add_string (":");
 			structured_text.add_new_line;
 			structured_text.add_new_line;
@@ -38,7 +38,7 @@ feature -- Output
 				a_supplier := suppliers.item.compiled_class;
 				if (current_class /= a_supplier) then
 					structured_text.add_indent;
-					a_supplier.append_signature (structured_text);
+					a_supplier.append_signature (structured_text, True);
 					structured_text.add_new_line
 				end;
 				suppliers.forth

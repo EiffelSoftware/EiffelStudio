@@ -55,7 +55,7 @@ feature -- Output
 			st.add_string (feature_name);
 			st.add_new_line;
 			st.add_string ("In Select subclause for parent: ");
-			parent.append_signature (st);
+			parent.append_signature (st, False);
 			st.add_new_line;
 		end;
 

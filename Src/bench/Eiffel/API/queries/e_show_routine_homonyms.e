@@ -58,7 +58,7 @@ feature -- Execution
 							structured_text.add_new_line;
 							structured_text.add_indent;
 							structured_text.add_string ("From class ");
-							e_class.append_signature (structured_text);
+							e_class.append_signature (structured_text, True);
 							structured_text.add_new_line;
 						end
 					end;

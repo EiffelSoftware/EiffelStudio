@@ -84,7 +84,7 @@ feature -- Execution
 			loop
 				structured_text.add_string ("Class ");
 				e_class := classes.item;
-				e_class.append_signature (structured_text);
+				e_class.append_signature (structured_text, True);
 				structured_text.add_string (":");
 				structured_text.add_new_line;
 				structured_text.add_new_line;

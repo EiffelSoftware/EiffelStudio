@@ -44,9 +44,9 @@ feature -- Output
 				parent_class_set: parent_class /= Void
 			end
 			st.add_string ("Class ")
-			class_c.append_signature (st)
+			class_c.append_signature (st, False)
 			st.add_string (" inherit from frozen class ")
-			parent_class.append_signature (st)			
+			parent_class.append_signature (st, False)			
 			st.add_new_line
 		end
 

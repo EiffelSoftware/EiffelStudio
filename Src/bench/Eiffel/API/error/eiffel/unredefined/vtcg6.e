@@ -32,7 +32,7 @@ feature -- Output
 			st.add_string ("Error: feature `")
 			st.add_string (feature_name)
 			st.add_string ("' does not exist in class ")
-			constraint_class.append_signature (st)
+			constraint_class.append_signature (st, False)
 			st.add_new_line
 		end
 

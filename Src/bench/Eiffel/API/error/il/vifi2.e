@@ -45,7 +45,7 @@ feature -- Output
 				parent_classes_set: parent_classes /= Void
 			end
 			st.add_string ("Class ")
-			class_c.append_signature (st)
+			class_c.append_signature (st, False)
 			st.add_string (" inherit multiply from classes that cannot be multiply inherited:")
 			st.add_new_line
 			from
@@ -53,7 +53,7 @@ feature -- Output
 			until
 				parent_classes.after
 			loop
-				parent_classes.item.append_signature (st)
+				parent_classes.item.append_signature (st, False)
 				parent_classes.forth
 				if not parent_classes.after then
 					st.add_string (", ")

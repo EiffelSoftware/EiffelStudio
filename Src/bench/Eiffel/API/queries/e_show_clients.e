@@ -24,7 +24,7 @@ feature -- Execution
 			a_client: CLASS_C;
 		do
 			structured_text.add_string ("Clients of class ");
-			current_class.append_signature (structured_text);
+			current_class.append_signature (structured_text, True);
 			structured_text.add_string (":");
 			structured_text.add_new_line;
 			structured_text.add_new_line;
@@ -37,7 +37,7 @@ feature -- Execution
 				a_client := clients.item.compiled_class;
 				if (current_class /= a_client) then
 					structured_text.add_indent;
-					a_client.append_signature (structured_text);
+					a_client.append_signature (structured_text, True);
 					structured_text.add_new_line;
 				end;
 				clients.forth

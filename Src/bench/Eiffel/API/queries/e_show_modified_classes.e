@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 					a_classi := classes.item (sorted_class_names.item);
 					a_classe := a_classi.compiled_class;
 					if a_classe /= Void then
-						a_classe.append_signature (structured_text)
+						a_classe.append_signature (structured_text, True)
 					else
 						a_classi.append_name (structured_text);
 						structured_text.add_string ("  (not in system)")

@@ -214,7 +214,8 @@ feature -- IL code generation
 				il_generator.put_void
 			end
 
-			il_generator.generate_feature_access (l_decl_type, set_rout_disp_feat.origin_feature_id, True)
+			il_generator.generate_feature_access (l_decl_type, set_rout_disp_feat.origin_feature_id,
+				set_rout_disp_feat.argument_count, set_rout_disp_feat.has_return_value, True)
 		end
 
 feature -- Byte code generation

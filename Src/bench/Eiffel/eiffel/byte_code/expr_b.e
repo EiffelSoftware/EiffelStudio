@@ -99,7 +99,7 @@ feature -- Il code generation
 			
 			il_generator.generate_local (local_number)
 			il_generator.generate_feature_access (basic_i.associated_reference.type,
-				feat.feature_id, False)
+				feat.feature_id, feat.argument_count, feat.has_return_value, False)
 		end
 
 feature -- C generation

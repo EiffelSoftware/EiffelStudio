@@ -12,8 +12,13 @@ class
 inherit
 	WEL_TOOL_BAR
 		redefine
+			make,
 			default_style,
-			default_process_message
+			default_process_message,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up
 		end
 
 	WEL_COLOR_CONSTANTS
@@ -21,8 +26,25 @@ inherit
 			{NONE} all
 		end
 
+	EV_ITEM_EVENTS_CONSTANTS_IMP
+
 creation
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_parent: EV_TOOL_BAR_IMP; an_id: INTEGER) is
+			-- Create a toolbar with `a_parent' as parent and
+			-- `an_id' as id.
+		do
+			{WEL_TOOL_BAR} Precursor (a_parent, an_id)
+			ev_children := a_parent.ev_children
+		end
+
+feature -- Access
+
+	ev_children: HASH_TABLE [EV_TOOL_BAR_BUTTON_IMP, INTEGER]
+			-- The buttons of the tool-bar.
 
 feature -- Status report
 
@@ -49,10 +71,27 @@ feature -- Status report
 feature -- Basic operation
 
 	internal_index (command_id: INTEGER): INTEGER is
-				-- Retrieve the current index of the button with
-				-- `command_id' as id.
+			-- Retrieve the current index of the button with
+			-- `command_id' as id.
 		do
 			Result := cwin_send_message_result (item, Tb_commandtoindex, command_id, 0)
+		end
+
+	internal_propagate_event (event_id, x_pos, y_pos: INTEGER) is
+			-- Propagate the `event_id' to the good child.
+		local
+			index: INTEGER
+			point: WEL_POINT
+			button: WEL_TOOL_BAR_BUTTON
+		do
+			create point.make (x_pos, y_pos)
+--			index := cwin_send_message_result (item, Tb_hittest, 0, point.to_integer)
+			index := cwin_send_message_result (item, 1093, 0, point.to_integer)
+			create button.make
+			if index >= 0 then
+				cwin_send_message (item, Tb_getbutton, index, button.to_integer)
+				(ev_children @ button.command_id).execute_command (event_id, Void)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -99,6 +138,38 @@ feature {NONE} -- Implementation
 				dc.line (-1, 1, width, 1)
 			dc.release
 			disable_default_processing
+		end
+
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			internal_propagate_event (Cmd_item_button_one_press,
+				x_pos, y_pos)
+		end
+
+	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			internal_propagate_event (Cmd_item_button_three_press,
+				x_pos, y_pos)
+		end
+
+	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			internal_propagate_event (Cmd_item_button_one_release,
+				x_pos, y_pos)
+		end
+
+	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			internal_propagate_event (Cmd_item_button_three_release,
+				x_pos, y_pos)
 		end
 
 end -- class EV_INTERNAL_TOOL_BAR_IMP

@@ -32,11 +32,6 @@ cluster
 	            "table"; "desc"; "CVS"; 
 	       end
 
-	gel:                "$ISE_EIFFEL/library/gel"
-	       exclude
-	            "CVS"; "glib"; "gtk_gl"; 
-	       end
-
 	all vision2:            "$ISE_EIFFEL/library/vision2"
 	       exclude
 	           "mswin"; "EIFGEN"; "components"; "tmp"; "temp"; "test"; "release"; "obsolete"; "CVS"; 

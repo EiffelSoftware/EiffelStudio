@@ -403,7 +403,9 @@ feature -- Formatting
 		do
 			ctxt.put_front_text_item (ti_Before_class_declaration)
 			ctxt.prepare_class_text
+			ctxt.set_classes (ctxt.class_c, ctxt.class_c)
 			format_indexes (ctxt, top_indexes)
+			ctxt.set_classes (void, void)
 			format_header (ctxt)
 			if ctxt.is_clickable_format and obsolete_message /= Void then
 				ctxt.new_line

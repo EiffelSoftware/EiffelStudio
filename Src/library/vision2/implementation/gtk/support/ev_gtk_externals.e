@@ -526,6 +526,16 @@ feature {NONE} -- GTK C functions for tree
         external "C | %"gtk_eiffel.h%""
         end
 
+feature {NONE} -- GTK C functions for pixmaps
+
+	c_gtk_pixmap_width (pixmap: POINTER): INTEGER is
+        external "C | %"gtk_eiffel.h%""
+        end
+
+	c_gtk_pixmap_height (pixmap: POINTER): INTEGER is
+        external "C | %"gtk_eiffel.h%""
+        end
+
 feature {NONE} -- code in the glue library
 
 	c_gtk_toolbar_append_item (t: POINTER; text, tip, private_tip,

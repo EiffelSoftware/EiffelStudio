@@ -43,7 +43,12 @@
 			<item>
 				<bold>EV_ANY_HANDLER</bold> - This is the only class to which `default_create' from EV_ANY is supposed to be exported. However, paticular descendents were exporting `default_create' to ANY instead. This has now been fixed.
 			</item>
-			<item><bold>EV_MESSAGE_DIALOG</bold> - `make_with_text_and_actions' has now been added to the list of creation procedures.</item>
+			<item>
+				<bold>EV_MESSAGE_DIALOG</bold> - `make_with_text_and_actions' has now been added to the list of creation procedures.
+			</item>
+			<item>
+				<bold>EV_SCREEN</bold> - Added `horizontal_resolution' and `vertical_resolution' which return the number of pixels per inch.
+			</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>
@@ -86,8 +91,12 @@
 							<item>Corrected handling of selection for caret positions greater than 64,000 characters. The following features were broken when using caret positions greater than 64,000: `caret_position', `has_selection', `selection_start' and `selection_end'</item>
 						</list>
 					</item>
-					<item><bold>EV_SPIN_BUTTON</bold> - Corrected positioning in parent container. In many situations, the spin button mis-behaved and would be moved to the 0x0 pixel position in the parent.</item>
-					<item><bold>EV_LIST_ITEM</bold> - Setting a pixmap to an item that was already displayed in a list and had a text would cause the end of the text to be cut off. This is now fixed.</item>
+					<item>
+						<bold>EV_SPIN_BUTTON</bold> - Corrected positioning in parent container. In many situations, the spin button mis-behaved and would be moved to the 0x0 pixel position in the parent.
+					</item>
+					<item>
+						<bold>EV_LIST_ITEM</bold> - Setting a pixmap to an item that was already displayed in a list and had a text would cause the end of the text to be cut off. This is now fixed.
+					</item>
 				</list>
 			</item>
 			<item>

@@ -49,13 +49,12 @@ feature {NONE} -- Initialization
 			empty_list: ACTIVE_LIST [STRING]
 		do
 			default_create
-			create empty_list
 			implementation.set_values (
 				a_family,
 				a_weight,
 				a_shape,
 				a_height,
-				empty_list
+				preferred_families
 			)
 		ensure
 			a_family_set: family = a_family
@@ -322,7 +321,7 @@ feature -- Basic operations
 				other.weight,
 				other.shape,
 				other.height,
-				other.preferred_families
+				other.preferred_families.twin
 			)
 		end
 
@@ -354,12 +353,9 @@ invariant
 	family_valid: is_initialized implies valid_family (family)
 	weight_valid: is_initialized implies valid_weight (weight)
 	shape_valid: is_initialized implies valid_shape (shape)
-	height_bigger_than_zero: is_initialized implies height > 0
-	ascent_bigger_than_zero: is_initialized implies ascent > 0
-	descent_bigger_than_zero: is_initialized implies descent > 0
 	height_positive: is_initialized implies height > 0
-	ascent_positive: is_initialized implies ascent > 0
-	descent_positive: is_initialized implies descent > 0
+	ascent_not_negative: is_initialized implies ascent >= 0
+	descent_not_negative: is_initialized implies descent >= 0
 	width_of_empty_string_equals_zero: is_initialized implies string_width("") = 0
 	horizontal_resolution_non_negative: is_initialized implies horizontal_resolution >= 0
 	vertical_resolution_non_negative: is_initialized implies vertical_resolution >= 0

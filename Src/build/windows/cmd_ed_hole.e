@@ -1,13 +1,21 @@
-class CMD_ED_HOLE
+indexing
+	description: "Button used to raise a command tool %
+				% targeted on the command corresponding %
+				% to the dropped stone."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class 
+	
+	CMD_ED_HOLE
 
 inherit
 
 	EDIT_BUTTON
-        rename
-            make as parent_make
 		redefine
 			process_command, process_instance,
-			compatible
+			compatible, make
 		end;
 
 creation
@@ -17,7 +25,7 @@ feature {NONE}
 
     make (a_parent: COMPOSITE) is
         do
-            parent_make (a_parent)
+            Precursor (a_parent)
         end
 
 	symbol: PIXMAP is
@@ -54,10 +62,10 @@ feature {NONE}
 
 	create_empty_editor is
 		local
-			editor: CMD_EDITOR
+			tool: COMMAND_TOOL_TOP_SHELL
 		do
-			editor := window_mgr.cmd_editor;
-			window_mgr.display (editor)	
+			tool := window_mgr.command_tool
+			window_mgr.display (tool)	
 		end;
 
 end

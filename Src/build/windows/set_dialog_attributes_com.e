@@ -22,9 +22,9 @@ feature
 				fg_color /= Void or else
 				a_font /= Void
 			then
-				if bg_color /= Void then
-					dialog.set_background_color (bg_color)
-				end;
+--				if bg_color /= Void then
+--					dialog.set_background_color (bg_color)
+--				end;
 				if fg_color /= Void then
 					dialog.set_foreground_color (fg_color)
 				end;

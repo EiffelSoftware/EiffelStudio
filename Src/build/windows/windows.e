@@ -7,6 +7,8 @@ inherit
 			init_toolkit
 		end 
 
+	SHARED_EXEC_ENVIRONMENT
+
 feature {NONE}
 
 
@@ -20,68 +22,111 @@ feature {NONE}
 			Result := main_panel.base
 		end
 	
+--	main_panel: MAIN_PANEL is
+--		once
+--			!! Result.make (eb_screen)
+--		end
+
 	main_panel: MAIN_PANEL is
 		once
 			!! Result.make (eb_screen)
 		end
 
-	context_catalog: CONTEXT_CATALOG  is
+-- 	context_catalog: CONTEXT_CATALOG  is
+-- 		once
+-- 			!! Result.make
+-- 		end
+
+	context_catalog: CONTEXT_CATALOG is
 		once
-			!! Result.make
+--			Result := new_main_panel.context_catalog_widget
+			Result := main_panel.context_catalog_widget
 		end
+
+--	current_mode: CURRENT_MODE_DLG is
+--		once
+--			!! Result.make 
+--		end
+
+--	application_object_window: APPLICATION_OBJECT_WINDOW is
+--		once
+--			!! Result.make
+--		end
 
 feature {NONE} -- Initial windowing
 
-	 init_toolkit: OBSOLETE_MOTIF is
-                        -- The demo uses the
-                        -- Motif toolkit
-                once
-                        !!Result.make ("");
-                end;
+	init_toolkit: TOOLKIT_IMP is
+				-- The demo uses the
+				-- Motif toolkit
+		once
+			!!Result.make ("")
+		end
 
 	init_project is
+		local
+			open_cmd: OPEN_PROJECT
+			check_cmd: PERFORM_CHECKING_CMD
 		do
-			if (main_panel = Void) then end;
-			if (tree = Void) then end
-			if (context_catalog = Void) then end
-			if (command_catalog = Void) then end
-			if (history_window = Void) then end
-			if (app_editor = Void) then end
-			main_panel.realize;
+			main_panel.realize
+			main_panel.unset_project_initialized
+			!! check_cmd
+			check_cmd.execute
+--			if (tree = Void) then end
+--			if (context_catalog = Void) then end
+--			if (command_catalog = Void) then end
+--			if (history_window = Void) then end
+--			if (app_editor = Void) then end
+--			!! open_cmd
+--			open_cmd.execute (execution_environment.current_working_directory)
+
+--			if (current_mode = Void) then end
+--			if (application_object_window = Void) then end
 		end
 
 	display_init_windows is
 		do
-			if not tree.realized then
-				tree.realize
-			end;
-			if not context_catalog.realized then
-				context_catalog.realize
-			end
-		end;
+			main_panel.hide_command_editor
+--			if not tree.realized then
+--				tree.realize
+--			end
+--			if not context_catalog.realized then
+--				context_catalog.realize
+--			end
+--			main_panel.hide_command_catalog
+--			if not current_mode.realized then
+--				current_mode.realize
+--			end
+-- 			if not application_object_window.realized then
+-- 				application_object_window.realize
+--			end
+		end
 
 	clear_project is
 		do
-			context_catalog.clear;
-			command_catalog.clear;
-			window_mgr.clear_all_editors;
-			command_catalog.initialize_pages;		
-			app_editor.clear;
-			history_window.wipe_out;
-			main_panel.unset_project_initialized;
-			namer_window.close;
-		end;
+			context_catalog.clear
+			command_catalog.clear
+			window_mgr.clear_all_editors
+			command_catalog.initialize_pages		
+			app_editor.clear
+			history_window.wipe_out
+			main_panel.unset_project_initialized
+			namer_window.close
+		end
 
 	update_all_windows is
 		do
-		end;
+		end
 
 feature {NONE} -- Windows
 
-	command_catalog: CMD_CATALOG is
-		once
-			!! Result.make (eb_screen)
-		end	
+--	command_catalog: CMD_CATALOG is
+--		once
+--			!! Result.make (eb_screen)
+--		end	
+	command_catalog: COMMAND_CATALOG is
+		do
+			Result := main_panel.command_catalog_widget
+		end
 
 	app_editor: APP_EDITOR is
 		once
@@ -93,9 +138,15 @@ feature {NONE} -- Windows
 			!! Result.make (eb_screen)
 		end
 
+-- 	tree: CONTEXT_TREE is
+-- 		once
+-- 			!! Result.make (eb_screen)
+-- 		end
+
 	tree: CONTEXT_TREE is
 		once
-			!! Result.make (eb_screen)
+--			Result := new_main_panel.context_tree_widget
+			Result := main_panel.context_tree_widget
 		end
 
 	error_box: ERROR_BOX is
@@ -106,19 +157,19 @@ feature {NONE} -- Windows
 	namer_window: NAMER_WINDOW is
 		once
 			!! Result.make (Eb_screen)
-		end;
+		end
 
 	error_window: ERROR_BOX is
 			-- For the Error Handler (which
 			-- is also used for bench)
 		do
 			Result := error_box
-		end;
+		end
 
 	question_box: QUESTION_BOX is
 		once
 			!! Result
-		end;
+		end
 
 feature {NONE} -- Window Manager
 

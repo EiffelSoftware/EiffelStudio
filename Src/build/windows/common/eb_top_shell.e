@@ -25,6 +25,8 @@ inherit
 	CONSTANTS
 	TOOLTIP_INITIALIZER
 
+	UNDO_REDO_ACCELERATOR
+
 creation
 
 	make
@@ -39,6 +41,8 @@ feature -- Initialization
 		do
 			top_shell_make (a_name, a_screen)
 			tooltip_initialize (Current)
+			set_default_color
+			add_undo_redo_accelerator (Current)
 		end
 
 feature

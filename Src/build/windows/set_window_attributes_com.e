@@ -19,7 +19,7 @@ feature
 			term: TERMINAL_OUI
 			color_stone: COLOR_STONE
 		do
-			bg_color := Resources.background_color;
+--			bg_color := Resources.background_color;
 			fg_color := Resources.foreground_color;
 			a_font := Resources.default_font;
 			if bg_color /= Void or else 
@@ -35,14 +35,14 @@ feature
 				loop
 					widget := ch.item;
 					term ?= widget;
-					if bg_color /= Void then
-						color_stone ?= widget
+--					if bg_color /= Void then
+--						color_stone ?= widget
 						-- If the widget is of type COLOR_STONE, we
 						-- do not want to set the background color
-						if color_stone = Void then
-							widget.set_background_color (bg_color)
-						end
-					end;
+--						if color_stone = Void then
+--							widget.set_background_color (bg_color)
+--						end
+--					end;
 					if fg_color /= Void then
 						primitive ?= widget;
 						if primitive /= Void then

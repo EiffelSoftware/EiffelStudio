@@ -209,15 +209,15 @@ feature -- Start output features
 
 feature -- Output on per class
 
-	put_degree_6 (a_cluster: CLUSTER_SD; nbr_to_go: INTEGER) is
-			-- Put message to indicate that `a_cluster' is being
+	put_degree_6 (a_name: STRING; nbr_to_go: INTEGER) is
+			-- Put message to indicate that `a_name' is being
 			-- compiled during degree six' clusters to go. 
 		local
 			a_per: INTEGER
 		do
 			total_number := nbr_to_go + processed
 			a_per := percentage_calculation (nbr_to_go)
-			update_interface (a_cluster.cluster_name, nbr_to_go, a_per)
+			update_interface (a_name, nbr_to_go, a_per)
 			processed := processed + 1
 		end
 

@@ -72,8 +72,6 @@ feature {NONE} -- Initialization
 			!! changed_features.make (20);
 				-- Propagator set creation
 			!! propagators.make;
-				-- Unique counter creation
-			!! unique_counter;
 		end;
 
 feature -- Access
@@ -167,8 +165,8 @@ feature -- Access
 	feature_id_counter: COUNTER;
 			-- Counter of feature ids
 
-	unique_counter: COUNTER;
-			-- Counter for unique features
+	has_unique: BOOLEAN;
+			-- Does class have unique feature(s)?
 
 	changed_features: SEARCH_TABLE [STRING];
 			-- Names of the changed features
@@ -244,7 +242,7 @@ feature -- Access
 				copy_file.close;
 			end
 
-			unique_counter.reset;
+			has_unique := False;
 
 				-- Call Yacc
 			class_file_name := file_name;
@@ -273,6 +271,10 @@ feature -- Access
 			parent_list: EIFFEL_LIST_B [PARENT_AS_B];
 			invariant_info: READ_INFO;
 			old_syntactical_suppliers: like syntactical_suppliers;
+			unique_values: HASH_TABLE [INTEGER, STRING];
+				-- Stores the values of the unique attributes
+			unique_counter: COUNTER
+				-- Counter for unique features
 		do
 				-- Check suppliers of parsed class represented by `ast_b'.
 				-- Supplier classes not present already in the system
@@ -319,12 +321,16 @@ feature -- Access
 				-- `id' of CLASS_C and file ".TMP_AST".
 			ast_b.set_id (id);
 			Tmp_ast_server.put (ast_b);
-			if ast_context.has_unique then
-					-- Compute the values of the unique constants
-				class_info.set_unique_values (ast_context.unique_values);
-				ast_context.set_unique_values (Void);
-			end;
+			if has_unique then
+				!! unique_counter
+				!! unique_values.make (7)
 
+				ast.assign_unique_values (unique_counter, unique_values)
+
+					-- Compute the values of the unique constants
+				class_info.set_unique_values (unique_values);
+			end;
+ 
 				-- Save index left by the temporary ast server into the
 				-- class information.
 			class_info.set_index (clone (Tmp_ast_server.index));
@@ -2412,6 +2418,12 @@ feature -- Convenience features
 			-- Assign `b' to `changed4'.
 		do
 			changed4 := b;
+		end;
+
+	set_has_unique is
+			-- Set `has_unique' to True
+		do
+			has_unique := True;
 		end;
 
 	set_has_expanded is

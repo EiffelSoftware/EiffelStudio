@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 			create bmp.make_compatible (s_dc, 1, 1)
 			bitmap_dc.select_bitmap (bmp)
 			s_dc.release
+
 			{EV_DRAWING_AREA_IMP} Precursor
 		end
 
@@ -115,14 +116,25 @@ feature -- Status setting
 			bmp: WEL_BITMAP
 			s_dc: WEL_SCREEN_DC
 		do
-			bitmap_dc.unselect_bitmap
+				-- release the old bitmap
+			if bitmap_dc.bitmap_selected then
+				bitmap_dc.unselect_bitmap
+			end
 
+				-- create and assign a new bitmap
 			create s_dc
 			s_dc.get
 			create bitmap_dc.make_by_dc (s_dc)
 			create bmp.make_compatible (s_dc, w, h)
 			bitmap_dc.select_bitmap (bmp)
 			s_dc.release
+
+				-- Initialize the new device context
+			bitmap_dc.set_background_opaque
+			bitmap_dc.set_background_transparent
+			reset_pen
+			reset_brush
+		
 			Precursor (w, h)
 		end
 
@@ -170,9 +182,9 @@ feature -- Basic operation
 			check
 				a_file_not_void: file /= Void
 			end
-			!! dib.make_by_file (file)
+			create dib.make_by_file (file)
 			bitmap_dc.select_palette (dib.palette)
-			!! bmp.make_by_dib (bitmap_dc, dib, Dib_rgb_colors)
+			create bmp.make_by_dib (bitmap_dc, dib, Dib_rgb_colors)
 			bitmap_dc.select_bitmap (bmp)
 		end
 
@@ -406,6 +418,12 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/20 20:29:27  pichery
+--| created a factory that build WEL objects (pens & brushes). This factory
+--| keeps created objects into an hashtable in order to avoid multiple object
+--| creation for the same pen or brush.
+--| factory is here used to retrieve pens and brushes in drawing areas
+--|
 --| Revision 1.17  2000/02/19 06:57:54  manus
 --| fixed broken fixme
 --|

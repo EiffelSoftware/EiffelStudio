@@ -447,8 +447,15 @@ feature -- Status setting
 			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
 			a_column_count_positive: a_column_count >= 1
 		do
-			grid_columns.resize (a_column_count)
+			fixme ("Implement correct reducing of column count")
+			from
+			until
+				grid_columns.count = a_column_count
+			loop
+				add_column_at (grid_columns.count + 1, True)
+			end
 			recompute_horizontal_scroll_bar
+			redraw_client_area
 		ensure
 			column_count_set: column_count = a_column_count
 		end
@@ -459,8 +466,10 @@ feature -- Status setting
 			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
 			a_row_count_positive: a_row_count >= 1
 		do
+			fixme ("Implement correct reducing of row count")
 			enlarge_row_lists (a_row_count)
 			recompute_vertical_scroll_bar
+			redraw_client_area
 		ensure
 			row_count_set: row_count = a_row_count
 		end

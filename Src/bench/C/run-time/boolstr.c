@@ -80,9 +80,6 @@ rt_public char *bl_str_shiftr(char *a1, char *a2, int s, int n)
       
 {
 	/* Right shift `a1' by `n' positions */
-
-	int i;
-
 	if (n < s)
 		memcpy  (a2 + n * sizeof(char), a1, (s - n) * sizeof(char));
 	else

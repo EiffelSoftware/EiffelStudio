@@ -195,4 +195,14 @@ feature -- Tooltip style constants
 			"TTS_NOPREFIX"
 		end
 
+feature -- Tooltip Flag constants
+
+	Ttf_idishwnd: INTEGER is 1
+
+	Ttf_centertip: INTEGER is 2
+
+	Ttf_rtlreading: INTEGER is 4
+
+	Ttf_subclass: INTEGER is 16
+
 end -- class WEL_TOOLTIP_CONSTANTS

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// ISE.Compiler.h       : Interface definitions for COM Compiler
+// ISE_Compiler_GUID.h	: GUIDs for compiler interfaces/coclasses/enums etc...
 //
 // Last commit by       : $Author$
 // Date                 : $Date$
@@ -7,68 +7,68 @@
 //
 // Notes                : Interfaces, enums and structs relating to ENViSioN! 2.0
 
-#ifndef __ISE_COMPILER_H__
-#define __ISE_COMPILER_H__
-
 // =========================================================================
 //                                                              Library GUID
 
-#define UUID_LibEiffelCompiler                  e1ffe1c0-2c7d-4d1c-a98b-4599bdcdfa58
+#define UUID_LIBEIFFELCOMPILER                  E1FFE1C0-2C7D-4D1C-A98B-4599BDCDFA58
+#define MAJ_LIBEIFFELCOMPILER					2
+#define MIN_LIBEIFFELCOMPILER					0
+#define VER_LIBEIFFELCOMPILER					MAJ_LIBEIFFELCOMPILER.MIN_LIBEIFFELCOMPILER
 
 // =========================================================================
 //                                                           Proxy Stub GUID
 
-#define UUID_EiffelCompilerPS                   e1ffe10c-06f1-448e-a221-9c702b9df685 // This GUID has to be the same as last interface GUID in library declaration!!!
+#define UUID_EIFFELCOMPILERPS                   E1FFE10C-06F1-448E-A221-9C702B9DF685 // This GUID has to be the same as first interfaces IDL!!!
 
 // =========================================================================
 //                                                              CoClass GUID
 
-#define UUID_CEiffelProject                     e1ffe1bb-ba73-4d00-b0fe-352fc4127b9e
-#define UUID_CEiffelCompiler                    e1ffe1d7-9fde-4260-9055-9ab7e92122cd
-#define UUID_CEiffelCompletionInfo              e1ffe150-3e39-4a44-a034-38f8b422d8df
+#define UUID_CEIFFELCOMPILER                    E1FFE1D7-9FDE-4260-9055-9AB7E92122CD
+#define UUID_CEIFFELCOMPLETIONINFO				E1FFE150-3E39-4A44-A034-38F8B422D8DF
+#define UUID_CEIFFELPROJECT                     E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E
 
 // =========================================================================
 //                                                            Interface GUID
 
-#define UUID_IEiffelException                   e1ffe10c-06f1-448e-a221-9c702b9df685 // Last interface in library
-#define UUID_IEiffelProject                     e1ffe1ea-1aed-489b-9e8a-e35342582b2b
-#define UUID_IEiffelCompletionInfo              e1ffe139-edae-46b7-880b-27d68e7184fa
-#define UUID_IEiffelCompletionEntry             e1ffe15d-24b4-49a9-9cbc-6aff6aeb6de3
-#define UUID_IEiffelCompiler                    e1ffe11b-a2e4-4f29-8891-af2654b50b6b
-#define UUID_IEiffelCompilerEvents              e1ffe173-a00e-4bcf-9a7a-13d41e6359b4
-#define UUID_IEiffelSystemBrowser               e1ffe125-6f73-442c-9cae-1b981414050d
-#define UUID_IEiffelClusterDescriptor           e1ffe123-ceac-44b5-b525-61ed0cef0075
-#define UUID_IEiffelClassDescriptor             e1ffe1a8-26ca-44b5-9ee9-3a92bbbaebb0
-#define UUID_IEiffelFeatureDescriptor           e1ffe181-6a69-43d5-aa40-51eec3e2d19f
-#define UUID_IEiffelProjectProperties           e1ffe183-fd96-40ce-933e-5351e1b3e294
-#define UUID_IEiffelClusterProperties           e1ffe195-2e13-4fdf-b82a-09bfcb46beea
-#define UUID_IEiffelSystemExternals             e1ffe188-0ff6-407b-8956-fb416626b62a
-#define UUID_IEiffelSystemAssemblies            e1ffe1a0-b5f9-4110-a758-241a3bc95d52
-#define UUID_IEiffelAssemblyProperties          e1ffe1ff-7ec7-43a4-aef4-d963ec2f9641
-#define UUID_IEiffelSystemClusters              e1ffe15e-5467-4058-a999-1d35b905764e
-#define UUID_IEnumEiffelClass                   e1ffe17a-4c96-49d3-8236-85765e67c315
-#define UUID_IEnumCluster                       e1ffe1d5-c033-4f33-98a2-551d8451b8c4
-#define UUID_IEnumFeature                       e1ffe149-6c17-4be2-bd81-3d3540b738b1
-#define UUID_IEnumClusterProp                   e1ffe166-8a44-40e1-a090-3e5cc36ca72d
-#define UUID_IEiffelEnumString                  e1ffe11e-43e6-4654-a436-b5fa1997ea5b
-#define UUID_IEnumAssembly                      e1ffe1f4-b23b-45a9-b3b1-2e0e004ffb8d
-#define UUID_IEnumCompletionEntry               e1ffe1bd-9335-48d5-b75f-401f525afb76
-#define UUID_IEnumParameter                     e1ffe1fb-730c-498f-a168-418ee482a2d7
-#define UUID_IEiffelParameterDescriptor         e1ffe192-d5eb-434b-9d21-ec3e4ff0058f
-#define UUID_IEiffelHtmlDocumentationGenerator  e1ffe119-790f-48cb-8869-db06184f97b4
-#define UUID_IEiffelHtmlDocumentationEvents     e1ffe13e-ed26-4ded-aafb-21fa8b28e879
+#define UUID_IEIFFELEXCEPTION                   E1FFE10C-06F1-448E-A221-9C702B9DF685 // Last interface in library
+#define UUID_IEIFFELPROJECT                     E1FFE1EA-1AED-489B-9E8A-E35342582b2b
+#define UUID_IEIFFELCOMPLETIONINFO              E1FFE139-EDAE-46B7-880B-27D68E7184fa
+#define UUID_IEIFFELCOMPLETIONENTRY             E1FFE15D-24B4-49A9-9CBC-6AFF6AEb6de3
+#define UUID_IEIFFELCOMPILER                    E1FFE11B-A2E4-4F29-8891-AF2654B50b6b
+#define UUID_IEIFFELCOMPILEREVENTS              E1FFE173-A00E-4BCF-9A7A-13D41E6359b4
+#define UUID_IEIFFELSYSTEMBROWSER               E1FFE125-6F73-442C-9CAE-1B981414050d
+#define UUID_IEIFFELCLUSTERDESCRIPTOR           E1FFE123-CEAC-44B5-B525-61ED0CEf0075
+#define UUID_IEIFFELCLASSDESCRIPTOR             E1FFE1A8-26CA-44B5-9EE9-3A92BBBaebb0
+#define UUID_IEIFFELFEATUREDESCRIPTOR           E1FFE181-6A69-43D5-AA40-51EEC3E2d19f
+#define UUID_IEIFFELPROJECTPROPERTIES           E1FFE183-FD96-40CE-933E-5351E1B3E294
+#define UUID_IEIFFELCLUSTERPROPERTIES           E1FFE195-2E13-4FDF-B82A-09BFCB46beea
+#define UUID_IEIFFELSYSTEMEXTERNALS             E1FFE188-0FF6-407B-8956-FB416626b62a
+#define UUID_IEIFFELSYSTEMASSEMBLIES            E1FFE1A0-B5F9-4110-A758-241A3BC95d52
+#define UUID_IEIFFELASSEMBLYPROPERTIES          E1FFE1FF-7EC7-43A4-AEF4-D963EC2f9641
+#define UUID_IEIFFELSYSTEMCLUSTERS              E1FFE15E-5467-4058-A999-1D35B905764e
+#define UUID_IENUMEIFFELCLASS                   E1FFE17A-4C96-49D3-8236-85765E67c315
+#define UUID_IENUMCLUSTER                       E1FFE1D5-C033-4F33-98A2-551D8451b8c4
+#define UUID_IENUMFEATURE                       E1FFE149-6C17-4BE2-BD81-3D3540B738b1
+#define UUID_IENUMCLUSTERPROP                   E1FFE166-8A44-40E1-A090-3E5CC36ca72d
+#define UUID_IEIFFELENUMSTRING                  E1FFE11E-43E6-4654-A436-B5FA1997ea5b
+#define UUID_IENUMASSEMBLY                      E1FFE1F4-B23B-45A9-B3B1-2E0E004ffb8d
+#define UUID_IENUMCOMPLETIONENTRY               E1FFE1BD-9335-48D5-B75F-401F525afb76
+#define UUID_IENUMPARAMETER                     E1FFE1FB-730C-498F-A168-418EE482a2d7
+#define UUID_IEIFFELPARAMETERDESCRIPTOR         E1FFE192-D5EB-434B-9D21-EC3E4FF0058f
+#define UUID_IEIFFELHTMLDOCUMENTATIONGENERATOR  E1FFE119-790F-48CB-8869-DB06184f97b4
+#define UUID_IEIFFELHTMLDOCUMENTATIONEVENTS     E1FFE13E-ED26-4DED-AAFB-21FA8B28e879
 
 // =========================================================================
 //                                                                 Enum GUID
 
-#define UUID_EnumEIF_ENTITY_IMAGES                  e1ffe106-0f87-4022-8312-d39ba4f13400
-#define UUID_EnumEIF_FEATURE_TYPES                  e1ffe160-6829-444a-846b-da5b9787a1fd
-#define UUID_EnumEIF_EXCEPTIONS                     e1ffe1be-fbd7-45b9-bfdb-2ce98417d347
-#define UUID_EnumEIF_PROJECT_TYPES                  e1ffe1fb-dff4-46b6-aeec-de988135025b
-#define UUID_EnumEIF_ASSERTIONS                     e1ffe1a1-488d-410d-a920-db5a4921c1c1
-#define UUID_EnumEIF_CLUSTER_NAMESPACE_GENERATION   e1ffe108-5b25-4dbf-b02e-0a50107a99f9
-#define UUID_EnumEIF_COMPILATION_MODE               e1ffe10f-6fe8-445f-80dc-6fdf79e71356
-#define UUID_EnumEIF_COMPLETION_LOCATION            e1ffe12f-63e4-475f-89dc-6faf39e773f6
+#define UUID_ENUMEIF_ASSERTIONS                     E1FFE1A1-488D-410D-A920-DB5A4921C1C1
+#define UUID_ENUMEIF_CLUSTER_NAMESPACE_GENERATION   E1FFE108-5B25-4DBF-B02E-0A50107A99F9
+#define UUID_ENUMEIF_COMPILATION_MODE               E1FFE10F-6FE8-445F-80DC-6FDF79E71356
+#define UUID_ENUMEIF_COMPLETION_LOCATION            E1FFE12F-63E4-475F-89DC-6FAF39E773F6
+#define UUID_ENUMEIF_ENTITY_IMAGES                  E1FFE106-0F87-4022-8312-D39BA4F13400
+#define UUID_ENUMEIF_EXCEPTIONS                     E1FFE1BE-FBD7-45B9-BFDB-2CE98417D347
+#define UUID_ENUMEIF_FEATURE_TYPES                  E1FFE160-6829-444A-846B-DA5B9787A1FD
+#define UUID_ENUMEIF_PROJECT_TYPES                  E1FFE1FB-DFF4-46B6-AEEC-DE988135025B
 
 // =========================================================================
 //                                                                 Constants
@@ -453,10 +453,8 @@ enum
     DISPID_EiffelComCompiler_InnerException,
     DISPID_EiffelComCompiler_Message,
     DISPID_EiffelComCompiler_ExceptionCode
+
 };
-
-
-#endif
 
 //|--------------------------------------------------------------------
 //| Eiffel ENViSioN!: A Visual Studio .NET plugin from Eiffel Software.

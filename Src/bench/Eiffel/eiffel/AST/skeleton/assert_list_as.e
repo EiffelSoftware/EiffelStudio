@@ -7,6 +7,16 @@ inherit
 			fill_calls_list, replicate
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (a: like assertions) is
+			-- Create a new ASSERTION_LIST AST node.
+		do
+			assertions := a
+		ensure
+			assertions_set: assertions = a
+		end
+
 feature {NONE} -- Initialization
 
 	set is

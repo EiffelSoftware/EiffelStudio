@@ -17,6 +17,26 @@ inherit
 
 	SHARED_INSPECT
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (s: like switch; c: like case_list; e: like else_part; p, l: INTEGER) is
+			-- Create a new INSPECT AST node.
+		require
+			s_not_void: s /= Void
+		do
+			switch := s
+			case_list := c
+			else_part := e
+			start_position := p
+			line_number := l
+		ensure
+			switch_set: switch = s
+			case_list_set: case_list = c
+			else_part_set: else_part = e
+			start_position_set: start_position = p
+			line_number_set: line_number = l
+		end
+
 feature {NONE} -- Initialization
 
 	set is

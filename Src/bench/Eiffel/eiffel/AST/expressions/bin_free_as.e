@@ -7,8 +7,28 @@ class BIN_FREE_AS
 
 inherit
 	BINARY_AS
+		rename
+			initialize as initialize_binary_as
 		redefine
 			set, operator_is_keyword, is_equivalent
+		end
+
+feature {AST_FACTORY} -- Initialization
+
+	initialize (l: like left; op: like op_name; r: like right) is
+			-- Create a new BIN_FREE AST node.
+		require
+			l_not_void: l /= Void
+			op_not_void: op /= Void
+			r_not_void: r /= Void
+		do
+			left := l
+			op_name := op
+			right := r
+		ensure
+			left_set: left = l
+			op_name_set: op_name = op
+			right_set: right = r
 		end
 
 feature {NONE} -- Initialization

@@ -21,6 +21,20 @@ inherit
 
 	SHARED_INST_CONTEXT
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (n: like class_name; g: like generics) is
+			-- Create a new CLASS_TYPE AST node.
+		require
+			n_not_void: n /= Void
+		do
+			class_name := n
+			generics := g
+		ensure
+			class_name_set: class_name = n
+			generics_set: generics = g
+		end
+
 feature {NONE} -- Initialization
 
 	set is

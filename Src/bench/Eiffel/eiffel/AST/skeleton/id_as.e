@@ -26,6 +26,19 @@ inherit
 creation
 	make
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (s: STRING) is
+			-- Create a new ID AST node made up
+			-- of characters contained in `s'.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.empty
+		do
+			make (s.count)
+			append_string (s)
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -8,6 +8,8 @@ class FORMAL_DEC_AS
 
 inherit
 	FORMAL_AS
+		rename
+			initialize as initialize_formal_as
 		redefine
 			set, is_equivalent, format, simple_format
 		end
@@ -15,6 +17,25 @@ inherit
 	SHARED_SERVER
 		export
 			{NONE} all
+		end
+
+feature {AST_FACTORY} -- Initialization
+
+	initialize (n: like formal_name; c: like constraint;
+		cf: like creation_feature_list; p: INTEGER) is
+			-- Create a new FORMAL_DECLARATION AST node.
+		require
+			n_not_void: n /= Void
+		do
+			formal_name := n
+			constraint := c
+			creation_feature_list := cf
+			position := p
+		ensure
+			formal_name_set: formal_name = n
+			constraint_set: constraint = c
+			creation_feature_list_set: creation_feature_list = cf
+			position_set: position = p
 		end
 
 feature {NONE} -- Initialization

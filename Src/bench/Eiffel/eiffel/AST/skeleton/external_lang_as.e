@@ -10,6 +10,21 @@ inherit
 
 	COMPILER_EXPORTER
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (l: like language_name; s: INTEGER) is
+			-- Create a new EXTERNAL_LANGUAGE AST node.
+		require
+			l_not_void: l /= Void
+		do
+			language_name := l
+			start_position := s
+			parse
+		ensure
+			language_name_set: language_name = l
+			start_position_set: start_position = s
+		end
+
 feature {NONE} -- Initialization
 
 	set is

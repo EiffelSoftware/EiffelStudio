@@ -15,6 +15,24 @@ inherit
 			main_feature_format, format, is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (op: like fix_operator; b: BOOLEAN) is
+			-- Create a new INFIX AST node.
+		require
+			op_not_void: op /= Void
+		do
+			fix_operator := op
+				-- Note: the following line is not
+				-- necessary since this has already
+				-- been done by the scanner.
+			fix_operator.value.to_lower
+			is_frozen := b
+		ensure
+			fix_operator_set: fix_operator = op
+			is_frozen_set: is_frozen = b
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -12,10 +12,33 @@ inherit
 			is_equivalent
 		end
 
-feature {NONE} -- Initilization
+feature {AST_FACTORY} -- Initialization
+
+	initialize (t: like type; rn: like renaming; e: like exports;
+		u: like undefining; rd: like redefining; s: like selecting) is
+			-- Create a new PARENT AST node.
+		require
+			t_not_void: t /= Void
+		do
+			type := t
+			renaming := rn
+			exports := e
+			undefining := u
+			redefining := rd
+			selecting := s
+		ensure
+			type_set: type = t
+			renaming_set: renaming = rn
+			exports_set: exports = e
+			undefining_set: undefining = u
+			redefininig_set: redefining = rd
+			selecting_set: selecting = s
+		end
+
+feature {NONE} -- Initialization
 	
 	set is
-			-- Yacc initilization
+			-- Yacc initialization
 		do
 			type ?= yacc_arg (0)
 			renaming ?= yacc_arg (1)

@@ -12,6 +12,18 @@ inherit
 			fill_calls_list, replicate
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (e: like expr) is
+			-- Create a new UNARY AST node.
+		require
+			e_not_void: e /= Void
+		do
+			expr := e
+		ensure
+			expr_set: expr = e
+		end
+
 feature {NONE} -- Initialization
 
 	set is

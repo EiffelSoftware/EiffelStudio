@@ -10,8 +10,18 @@ class SEPARATE_TYPE_AS
 inherit
 	CLASS_TYPE_AS
 		redefine
+			initialize,
 			set, dump, simple_format,
 			actual_type, solved_type
+		end
+
+feature {AST_FACTORY} -- Initialization
+
+	initialize (n: like class_name; g: like generics) is
+			-- Create a new SEPARATE_CLASS_TYPE AST node.
+		do
+			Precursor (n, g)
+			record_separate
 		end
 
 feature {NONE} -- Initialization

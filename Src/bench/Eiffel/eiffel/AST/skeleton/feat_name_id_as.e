@@ -8,6 +8,20 @@ class FEAT_NAME_ID_AS
 inherit
 	FEATURE_NAME
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (f: like feature_name; b: BOOLEAN) is
+			-- Create a new FEAT_NAME_ID AST node.
+		require
+			f_not_void: f /= Void
+		do
+			feature_name := f
+			is_frozen := b
+		ensure
+			feature_name_set: feature_name = f
+			is_frozen_set: is_frozen = b
+		end
+
 feature {NONE} -- Initialization
 
 	set is

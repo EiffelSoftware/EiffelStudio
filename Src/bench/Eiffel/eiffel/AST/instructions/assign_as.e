@@ -11,6 +11,25 @@ inherit
 			byte_node, fill_calls_list, replicate
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (t: like target; s: like source; p, l: INTEGER) is
+			-- Create a new ASSIGN AST node.
+		require
+			t_not_void: t /= Void
+			s_not_void: s /= Void
+		do
+			target := t
+			source := s
+			start_position := p
+			line_number := l
+		ensure
+			target_set: target = t
+			source_set: source = s
+			start_position_set: start_position = p
+			line_number_set: line_number = l
+		end
+
 feature {NONE} -- Initialization
 
 	set is

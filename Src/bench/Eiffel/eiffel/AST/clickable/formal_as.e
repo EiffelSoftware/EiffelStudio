@@ -20,6 +20,16 @@ inherit
 			is_class, associated_eiffel_class
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (p: INTEGER) is
+			-- Create a new FORMAL AST node.
+		do
+			position := p
+		ensure
+			position_set: position = p
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -12,6 +12,14 @@ inherit
 			is_equivalent, byte_node
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize is
+			-- Create a new DEFERRED AST node.
+		do
+			-- Do nothing.
+		end
+
 feature {NONE} -- Initialization
 
 	set is

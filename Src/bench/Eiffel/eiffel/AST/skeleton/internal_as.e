@@ -14,6 +14,16 @@ inherit
 			number_of_stop_points, is_equivalent
 		end
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize (c: like compound) is
+			-- Create a new INTERNAL AST node.
+		do
+			compound := c
+		ensure
+			compound_set: compound = c
+		end
+
 feature {NONE} -- Initialization
 
 	set is

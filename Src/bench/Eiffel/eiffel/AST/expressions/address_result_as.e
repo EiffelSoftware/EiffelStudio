@@ -14,6 +14,14 @@ inherit
 
 	SHARED_TYPES
 
+feature {AST_FACTORY} -- Initialization
+
+	initialize is
+			-- Create a new ADDRESS_RESULT AST node.
+		do
+			-- Do nothing.
+		end
+
 feature {NONE} -- Initialization
 
 	set is

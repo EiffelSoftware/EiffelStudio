@@ -305,8 +305,9 @@ feature -- Event : command association
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
-			-- We pass -1 as the mouse button to have a different handling in c_gtk_signal_connetc_general'.
+			-- We pass -1 as the mouse button to have a different handling in 'c_gtk_signal_connect_general'.
 			add_command_with_event_data (widget, "select_row", cmd, arg, ev_data, -1, False)
+			add_command_with_event_data (widget, "unselect_row", cmd, arg, ev_data, -1, False)
 		end
 
 	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			font: EV_FONT
 			format: EV_CHARACTER_FORMAT
 			tab_positioner: EV_RICH_TEXT_TAB_POSITIONER
+			a_file_name: FILE_NAME
 		do
 				-- Initialize color display to black.
 			last_displayed_color := (create {EV_STOCK_COLORS}).red
@@ -84,11 +85,15 @@ feature {NONE} -- Initialization
 				counter := counter + 2 + (counter // 10)
 			end
 			
-				-- Add introductory text for example.
-			(create {DEFAULT_TEXT_INITIALIZER}).set_default_text (rich_text)
+				-- Load contents of `rich_text' from rich text file "Welcome.rtf"
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.extend ("Welcome.rtf")
+			rich_text.set_with_named_file (a_file_name)
 			
-				-- Add an example of every available font to `rich_text'.
+				-- Now we must add an example of every available font to `rich_text'.
 			format := rich_text.character_format (1)
+				-- Add an empty line.
+			rich_text.buffered_append ("%N%N", format)
 			from
 				font_selection.start
 			until
@@ -1224,11 +1229,14 @@ feature {NONE} -- To be removed
 		end
 		
 	get_file_name (file_operation: INTEGER) is
-			--
+			-- Retreieve file name for file operation type `file_operation' into
+			-- `current_file_name'. Set `file_dialog_cancelled' to hold whether the
+			-- dialog was cancelled or not.
 		require
 			opening_or_saving_file: file_operation = opening_file or file_operation = saving_file
 		local
 			file_dialog: EV_FILE_DIALOG
+			extension: STRING
 		do
 			if file_operation = saving_file then
 				create {EV_FILE_SAVE_DIALOG} file_dialog
@@ -1237,15 +1245,26 @@ feature {NONE} -- To be removed
 			end
 			file_dialog.filters.extend (["*.rtf", "Rtf Files (*.rtf)"])
 			file_dialog.show_modal_to_window (Current)
-			if file_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_open) or
-				file_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_save) then
-					
-				current_file_name := file_dialog.file_name
-				file_dialog_cancelled := False
-			else
+			if file_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel)  then
+			
 				file_dialog_cancelled := True
+			else	
+				current_file_name := file_dialog.file_name
+					-- We now add the ".rtf" extension if one has not been added.
+				if current_file_name.count > 4 then
+					extension := current_file_name.substring (current_file_name.count - 3, current_file_name.count)
+					extension.to_lower
+					if not extension.is_equal (".rtf") then
+						current_file_name.append (".rtf")
+					end
+				else
+						-- If the original filename had less than 4 characters
+						-- it is not possible for it to have an extension, so
+						-- we add one.
+					current_file_name.append (".rtf")
+				end
+				file_dialog_cancelled := False
 			end
-			print (file_dialog.selected_filter_index)
 		end
 		
 	opening_file: INTEGER is 1

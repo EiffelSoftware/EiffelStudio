@@ -55,7 +55,7 @@ feature -- Basic operations
 				a_device.item, options.item, a_printer.item,
 				Max_printer_name)
 			printer := a_printer.string
-			printer.head (nb)
+			printer.keep_head (nb)
 			if printer.is_equal (Options_const) then
 				-- There is no default printer connected.
 				-- Let's create empty strings.

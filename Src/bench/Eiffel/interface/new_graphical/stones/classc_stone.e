@@ -1,33 +1,25 @@
 indexing
-
 	description: 
-		"Stone representing an eiffel class.";
-	date: "$Date$";
+		"Stone representing an eiffel class."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class CLASSC_STONE
+class
+	CLASSC_STONE
 
 inherit
 
 	FILED_STONE
-		rename
-			is_valid as fs_valid
-		redefine
-			synchronized_stone, invalid_stone_message
-		end;
-	FILED_STONE
 		redefine
 			is_valid, synchronized_stone, invalid_stone_message
-		select
-			is_valid
-		end;
-	SHARED_EIFFEL_PROJECT;
+		end
+	SHARED_EIFFEL_PROJECT
 	HASHABLE_STONE
 		undefine
 			header
 		redefine
 			is_valid, synchronized_stone, invalid_stone_message
-		end;
+		end
 --	WINDOWS
 	
 	PLATFORM_CONSTANTS
@@ -43,11 +35,11 @@ feature {NONE} -- Initialization
 			-- OR KEEP A REFERENCE?
 		do
 			e_class := a_class
-		end;
+		end
 
 feature -- Properties
 
-	e_class: CLASS_C;
+	e_class: CLASS_C
 
 feature -- Access
 
@@ -56,34 +48,34 @@ feature -- Access
 			-- when widget at cursor position is compatible with Current stone
 --		do
 --			Result := Cursors.cur_Class
---		end;
+--		end
 
 --	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 --		do
 --			Result := Cursors.cur_X_Class
---		end;
+--		end
 
 	stone_signature: STRING is
 		do
 			Result := e_class.class_signature
-		end;
+		end
 
 	icon_name: STRING is
 		do
 			Result := clone (e_class.name)
-			Result.to_upper;
-		end;
+			Result.to_upper
+		end
 
 	header: STRING is
 			-- Display class name, class' cluster and class location in 
 			-- window title bar.
 		do
-			!!Result.make (20);
-			Result.append (stone_signature);
-			Result.append ("  in cluster ");
-			Result.append (e_class.cluster.cluster_name);
+			create Result.make (20)
+			Result.append (stone_signature)
+			Result.append ("  in cluster ")
+			Result.append (e_class.cluster.cluster_name)
 			if e_class.is_precompiled then
 				Result.append ("  (precompiled)")
 			else
@@ -92,27 +84,27 @@ feature -- Access
 				Result.append_character (Directory_separator)
 				Result.append (e_class.lace_class.base_name)
 			end
-		end;
+		end
 
 	stone_type: INTEGER is 
 		do 
 			Result := Class_type 
-		end;
+		end
 
 	stone_name: STRING is 
 		do 
 			Result := Interface_names.s_Class_stone
-		end;
+		end
  
 	click_list: CLICK_STONE_ARRAY is
 		local
 			c_list: CLICK_LIST
 		do
-			c_list := e_class.click_list;
+			c_list := e_class.click_list
 			if c_list /= Void then
-				!! Result.make (c_list, e_class)
+				create Result.make (c_list, e_class)
 			end
-		end;
+		end
  
 	file_name: STRING is
 			-- The one from CLASSC
@@ -120,11 +112,11 @@ feature -- Access
 			if e_class /= Void then
 				Result := e_class.file_name
 			end
-		end;
+		end
 
 	set_file_name (s: STRING) is 
 		do 	
-		end;
+		end
 
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?
@@ -137,14 +129,14 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			Result :=  fs_valid and then e_class /= Void
-		end;
+			Result :=  Precursor {FILED_STONE} and then e_class /= Void
+		end
 
 	invalid_stone_message: STRING is
 			-- Message displayed for an invalid_stone
 		do
 			Result := Warning_messages.w_Class_not_in_universe
-		end;
+		end
 
 feature -- Synchronization
 
@@ -160,7 +152,7 @@ feature -- Synchronization
 					!CLASSC_STONE! Result.make (e_class)
 				else
 					new_cluster := Eiffel_universe.cluster_of_name 
-							(e_class.cluster.cluster_name);
+							(e_class.cluster.cluster_name)
 					if 
 						new_cluster /= Void and then
 						new_cluster.classes.has_item (e_class.lace_class)
@@ -169,7 +161,7 @@ feature -- Synchronization
 					end
 				end
 			end
-		end;
+		end
 
 feature -- Hashable
 
@@ -177,7 +169,7 @@ feature -- Hashable
 			-- Hash code value
 		do
 			Result := e_class.name.hash_code
-		end;
+		end
 
 feature -- Update
 
@@ -189,6 +181,6 @@ feature -- Update
 --			else
 --				warner (hole.target.top).gotcha_call (invalid_stone_message)
 --			end	
---		end;
+--		end
 
 end -- class CLASSC_STONE

@@ -64,9 +64,7 @@ feature -- Basic operations
 			
 			create c_header_file_name.make (0)
 			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
-				c_header_file_name.append ("ecom_")
-				c_header_file_name.append (name)
-				c_header_file_name.append (".h")
+				c_header_file_name.append (clone (Alias_header_file_name))
 			end
 
 			type_desc := a_type_info.type_attr.type_alias

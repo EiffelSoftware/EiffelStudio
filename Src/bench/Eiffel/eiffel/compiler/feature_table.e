@@ -662,8 +662,9 @@ end
 				after
 			loop
 				feature_i := item_for_iteration
-				if feature_i.written_in = feat_tbl_id then
-						-- Feature written in the associated class
+				if feature_i.written_in = feat_tbl_id or else feature_i.has_anchored_or_formal_generic_type then
+						-- Feature is written in the associated class or is inherited, but has anchored or
+						-- formal generic type that might result in a new class type in the system.
 					feature_i.update_instantiator2 (a_class)
 				end
 				forth

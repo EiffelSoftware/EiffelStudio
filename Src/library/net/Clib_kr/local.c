@@ -299,7 +299,7 @@ EIF_POINTER name;
 EIF_INTEGER c_socket (add_f, typ, prot)
 EIF_INTEGER add_f, typ, prot;
 {
-	unsigned int result;
+	int result;
 
 	result = socket ((int) add_f, (int) typ, (int) prot);
 	if (result < 0)

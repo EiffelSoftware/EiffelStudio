@@ -21,7 +21,7 @@ feature -- Initialization
 	make (n, h: STRING; c: CHARACTER; s: EWB_MENU) is
 		do
 			name := n;
-			help_message := h;
+			int_help_message := h;
 			abbreviation := c;
 			sub_menu := s
 		end;
@@ -30,7 +30,10 @@ feature -- Properties
 
 	name: STRING;
 
-	help_message: STRING;
+	help_message: STRING is
+		do
+			Result := int_help_message;
+		end;
 
 	abbreviation: CHARACTER;
 
@@ -41,5 +44,9 @@ feature {NONE} -- Execution
 	execute is
 		do
 		end;
+
+feature {NONE} -- Attributes
+
+	int_help_message: STRING;
 
 end -- class EWB_STRING

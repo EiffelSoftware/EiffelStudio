@@ -45,7 +45,7 @@ extern EIF_TSD_TYPE eif_global_key;
 
 #define EIF_GET_CONTEXT \
 	eif_global_context_t *eif_globals;\
-	EIF_TSD_GET(eif_global_key,eif_globals,"Thread data not available"); \
+	EIF_TSD_GET((eif_global_context_t *),eif_global_key,eif_globals,"Thread data not available"); \
 	{
 #define EIF_END_GET_CONTEXT }
 

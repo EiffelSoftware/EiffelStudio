@@ -68,11 +68,15 @@ feature -- Status setting
 			-- Set the pixel-split_position of the left side of `sep'
 			-- with respect to `split_box'.
 		do
+			--| FIXME Should not set minimum size but resize and keep its
+			--| minimum size.
 			if a_split_position < first_cell.height then
 				first_cell.set_minimum_height (a_split_position)
-				second_cell.set_minimum_height (split_box.width - sep.height - a_split_position)
+				second_cell.set_minimum_height (split_box.height - sep.height
+					- a_split_position)
 			elseif a_split_position > first_cell.height then
-				second_cell.set_minimum_height (split_box.width - sep.height - a_split_position)
+				second_cell.set_minimum_height (split_box.height - sep.height
+					- a_split_position)
 				first_cell.set_minimum_height (a_split_position)
 			end
 		end
@@ -123,9 +127,14 @@ feature {NONE} -- Implementation
 
 	on_motion (a_x, a_y: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
 			-- Draw separator line.
+		local
+			new_pos: INTEGER
 		do
-			remove_line
-			draw_line (splitter_position_from_screen_y (scr_y))
+			new_pos := splitter_position_from_screen_y (scr_y)
+			if new_pos /= previous_split_position then
+				remove_line
+				draw_line (new_pos)
+			end
 		end
 
 	on_release (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
@@ -193,11 +202,15 @@ end -- class EV_VERTICAL_SPLIT_AREA
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/04 03:12:17  brendel
+--| Implemented moving of separator, but cannot be made smaller after that, so
+--| we need to find a solution.
+--|
 --| Revision 1.10  2000/03/04 00:10:18  brendel
 --| Implemented.
 --|

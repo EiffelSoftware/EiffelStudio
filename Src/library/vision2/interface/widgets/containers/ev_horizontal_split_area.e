@@ -27,6 +27,7 @@ feature -- Initialization
 			create {EV_VERTICAL_SEPARATOR} sep
 			Precursor
 			sep.pointer_button_press_actions.extend (~on_click)
+			previous_split_position := -1
 		end
 	
 feature -- Access
@@ -68,11 +69,11 @@ feature -- Status setting
 			-- with respect to `split_box'.
 		do
 			if a_split_position < first_cell.width then
-				first_cell.set_minimum_width (a_split_position)
-				second_cell.set_minimum_width (split_box.width - sep.width - a_split_position)
+				first_cell.set_minimum_witdth (a_split_position)
+				second_cell.set_minimum_witdth (split_box.width - sep.width - a_split_position)
 			elseif a_split_position > first_cell.width then
-				second_cell.set_minimum_width (split_box.width - sep.width - a_split_position)
-				first_cell.set_minimum_width (a_split_position)
+				second_cell.set_minimum_witdth (split_box.width - sep.width - a_split_position)
+				first_cell.set_minimum_witdth (a_split_position)
 			end
 		end
 
@@ -197,6 +198,10 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/04 03:12:16  brendel
+--| Implemented moving of separator, but cannot be made smaller after that, so
+--| we need to find a solution.
+--|
 --| Revision 1.12  2000/03/04 00:17:33  brendel
 --| Simplified implementation.
 --|

@@ -585,14 +585,9 @@ feature -- IL code generation
 
 			if is_attribute then
 				attr ?= Current
-					-- FIXME: Manu 10/24/2001. This could be improved.
-					-- I'm not even sure if we really need to look at the
-					-- feature table here.
-				feat_tbl := System.class_of_id (attr.written_in).feature_table
-				feat := feat_tbl.item_id (attr.attribute_name_id)
 				cl_type ?= attr.context_type
 				il_generator.generate_attribute_assignment (
-					il_generator.implemented_type (attr.written_in, cl_type), feat.feature_id)
+					il_generator.implemented_type (attr.written_in, cl_type), attr.attribute_id)
 			elseif is_local then
 				loc ?= Current
 				il_generator.generate_local_assignment (loc.position)

@@ -14,6 +14,18 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+
+	start_transport_filter (
+			a_type: INTEGER
+			a_x, a_y, a_button: INTEGER;
+			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+			a_screen_x, a_screen_y: INTEGER)
+		is
+			-- Initialize a pick and drop transport.
+		deferred
+		end
+
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
 	call_selection_action_sequences is

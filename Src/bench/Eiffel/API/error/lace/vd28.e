@@ -28,7 +28,7 @@ feature -- Output
 			st.add_new_line;
 		end;
 
-feature {CLUSTER_SD} -- Setting
+feature {CLUSTER_SD, UNIVERSE_I} -- Setting
 
 	set_second_cluster_name (s: STRING) is
 		do

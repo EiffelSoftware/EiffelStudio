@@ -18,14 +18,14 @@ create
 
 feature -- basic Operations
 
-	proceed_with_current_info is 
+	proceed_with_current_info is
 		do
 			Precursor
 			if Eiffel_platform /= Void and Eiffel_installation_dir_name /= Void then
 				proceed_with_new_state (create {WIZARD_FIRST_STATE}.make(wizard_information))
 			else
 				proceed_with_new_state (create {WIZARD_ERROR_ENV_VAR_STATE}.make(wizard_information))
-			end				
+			end
 		end
 
 	display_state_text is

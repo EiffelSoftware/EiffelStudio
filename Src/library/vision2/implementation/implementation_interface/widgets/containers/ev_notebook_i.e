@@ -20,6 +20,11 @@ inherit
 		end
 
 	EV_NOTEBOOK_ACTION_SEQUENCES_I
+	
+	EV_ITEM_PIXMAP_SCALER_I
+		redefine
+			interface
+		end
 
 feature {EV_NOTEBOOK} -- Access
 
@@ -30,6 +35,15 @@ feature {EV_NOTEBOOK} -- Access
 		deferred
 		ensure
 			not_void: Result /= Void
+		end
+		
+	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
+			-- Tab associated with `an_item'.
+		require
+			has_an_item: has (an_item)
+		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -49,6 +63,13 @@ feature -- Status report
 			-- One of `Tab_left', `Tab_right', `Tab_top' or `Tab_bottom'.
 			-- Default: `Tab_top'
 		deferred
+		end
+		
+	pointed_tab_index: INTEGER is
+			-- index of tab currently under mouse pointer, or 0 if none.
+		deferred
+		ensure
+			result_valid: result >= 0 and pointed_tab_index <= count
 		end
 
 feature {EV_NOTEBOOK} -- Status setting
@@ -72,7 +93,7 @@ feature {EV_NOTEBOOK} -- Status setting
 		ensure
 			item_selected: selected_item = an_item
 		end
-	
+		
 feature {EV_NOTEBOOK} -- Element change
 
 	set_item_text (an_item: like item; a_text: STRING) is
@@ -82,7 +103,7 @@ feature {EV_NOTEBOOK} -- Element change
 			a_text_not_void: a_text /= Void
 		deferred
 		end
-
+		
 feature {EV_NOTEBOOK, EV_NOTEBOOK_I} -- Implementation
 
 	interface: EV_NOTEBOOK

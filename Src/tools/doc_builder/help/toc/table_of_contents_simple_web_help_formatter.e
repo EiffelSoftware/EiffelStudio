@@ -39,14 +39,16 @@ feature -- Processing
 			l_url.prepend ("../")
 			
 				-- Add parent links
-			if a_node.has_parent then
-				Result.append ("<tr><td>&nbsp;You are in:<br><br></td></tr>")
-				Result.append (parent_hierarchy_text (a_node))
-				Result.append ("<tr><td>" + spacer_html (number_of_parents (a_node)))
+			Result.append ("<tr><td>&nbsp;You are in:<br><br></td></tr>")
+			Result.append (parent_hierarchy_text (a_node))						
+			Result.append ("<tr><td>" + spacer_html (number_of_parents (a_node)))
+			if a_node.title.is_equal ("table_of_contents") then
+				Result.append ("<a href=%"" + a_node.id.out + ".html" + "%"><img src=%"../folder_open.gif%" align=%"center%"></a>&nbsp;<a href=%"" + l_url + "%" target=%"content_frame%">Documentation</a>")			
+			else
 				Result.append ("<a href=%"" + a_node.id.out + ".html" + "%"><img src=%"../folder_open.gif%" align=%"center%"></a>&nbsp;<a href=%"" + l_url + "%" target=%"content_frame%">" + a_node.title + "</a>")			
-				Result.append ("<tr><td><br></td></tr>")
-				Result.append ("<tr><td>&nbsp;Topics:<br><br></td></tr>")
 			end
+			Result.append ("<tr><td><br></td></tr>")
+			Result.append ("<tr><td>&nbsp;Topics:<br><br></td></tr>")
 
 				-- Child links
 			if a_node.has_child then
@@ -89,8 +91,6 @@ feature {NONE} -- Implementation
 
 	parent_hierarchy_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
 			-- Hierarchy text
-		require
-			node_has_parent: a_node.has_parent
 		local
 			l_parent: like a_node
 			l_title,
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			l_parent := a_node.parent
 			
 				-- Process parents of parent
-			if l_parent.has_parent then
+			if l_parent /= Void and then l_parent.has_parent then
 				Result.append (parent_hierarchy_text (l_parent))
 			end
 			
@@ -109,13 +109,17 @@ feature {NONE} -- Implementation
 				-- Add spacers for tree effect
 			Result.append (spacer_html (number_of_parents (l_parent)))
 
-			l_url := friendly_node_url (l_parent)
+			if l_parent /= Void then
+				l_url := friendly_node_url (l_parent)				
+			end
 			if l_url /= Void then
 				l_url.prepend ("../")
 			
 					-- Add parent node
-				l_title := l_parent.title.twin
-				if not l_title.is_equal ("table_of_contents") then
+				if l_parent /= Void then
+					l_title := l_parent.title.twin					
+				end
+				if l_title /= Void and then not l_title.is_equal ("table_of_contents") then
 					Result.append ("<a href=%"" + l_parent.id.out + ".html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a><a href=%"" + l_url + "%" target=%"content_frame%">" + l_title + "</a>")
 				else
 					Result.append ("<a href=%"" + "0.html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a><a href=%"" + l_url + "%" target=%"content_frame%">Documentation Home</a>")
@@ -142,7 +146,7 @@ feature {NONE} -- Implementation
 	number_of_parents (a_node: TABLE_OF_CONTENTS_NODE): INTEGER is
 			-- Number of parents that `a_node' has
 		do
-			if a_node.has_parent then
+			if a_node /= Void and then a_node.has_parent then
 				Result := Result + 1
 				Result := Result + number_of_parents (a_node.parent)
 			end

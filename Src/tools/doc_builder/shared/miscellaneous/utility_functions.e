@@ -248,13 +248,15 @@ feature -- File
 			-- Short file/directory name (minus directory hierarchy) of `a_name'
 		require
 			name_not_void: a_name /= Void
+		local
+			l_name: STRING
 		do
-			if a_name.last_index_of ('\', a_name.count) > 0 then
-				Result := a_name.substring (a_name.last_index_of ('\', a_name.count) + 1, a_name.count)
-			elseif a_name.last_index_of ('/', a_name.count) > 0 then
-				Result := a_name.substring (a_name.last_index_of ('/', a_name.count) + 1, a_name.count)
+			l_name := a_name.twin
+			l_name.replace_substring_all ("\", "/")
+			if l_name.last_index_of ('/', a_name.count) > 0 then
+				Result := l_name.substring (l_name.last_index_of ('/', l_name.count) + 1, l_name.count)			
 			else
-				Result := a_name
+				Result := l_name
 			end
 		ensure
 			has_result: Result /= Void
@@ -264,37 +266,19 @@ feature -- File
 			-- The full directory path `a_path' WITHOUT the file name
 		require
 			path_not_void: a_path /= Void
+		local
+			l_path: STRING
 		do
-			if a_path.last_index_of ('\', a_path.count) > 0 then
-				Result := a_path.substring (1, a_path.last_index_of ('\', a_path.count) - 1)
-			elseif a_path.last_index_of ('/', a_path.count) > 0 then
-				Result := a_path.substring (1, a_path.last_index_of ('/', a_path.count) - 1)
+			l_path := a_path.twin
+			l_path.replace_substring_all ("\", "/")
+			if l_path.last_index_of ('/', l_path.count) > 0 then
+				Result := l_path.substring (1, l_path.last_index_of ('/', l_path.count) - 1)
 			else
-				Result := a_path	
+				Result := l_path	
 			end
 		ensure
 			has_result: Result /= Void
-		end		
-
-	create_file_plus_directories (a_file: STRING) is
-			-- Create a new empty file at location of `a_file'.  Create all directories
-			-- part of filename if they do not exist also.
-		require
-			file_not_void: a_file /= Void
-		local
-			l_dirs: like directory_array
-			l_cnt: INTEGER
-		do
-			l_dirs := directory_array (a_file)
-			from
-				l_cnt := 1
-			until
-				l_cnt > l_dirs.count
-			loop
-				--l_dirs.item (l_cnt)
-				l_cnt := l_cnt + 1
-			end
-		end		
+		end			
 
 	unique_name: STRING is
 			-- Unique name
@@ -464,35 +448,17 @@ feature -- Document
 			a_filename: STRING
 			l_link: DOCUMENT_LINK
 			l_consts: SHARED_OBJECTS
-			l_start, l_cnt: INTEGER
 		do
 			create l_consts					
 			if l_consts.Shared_document_manager.has_stylesheet then
 				a_filename := a_file.twin
 				l_name := l_consts.Shared_document_manager.stylesheet.name.twin
 					-- Create a project relative link to the stylesheet file
---				if (create {PLATFORM}).is_unix then							
---							-- Dirty hack for linux
---					l_start := l_name.substring_index (l_consts.shared_project.root_directory, 1)
---					l_name.remove_substring (l_start, l_start + l_consts.shared_project.root_directory.count)
---					l_start := a_filename.substring_index (l_consts.shared_project.root_directory, 1)
---					a_filename.remove_substring (l_start, l_start + l_consts.shared_project.root_directory.count)
---					from	
---						create Result.make_from_string (l_name)
---						l_cnt := a_filename.occurrences ('/')
---					until
---						l_cnt = 0
---					loop
---						Result.prepend ("../")
---						l_cnt := l_cnt - 1
---					end
---				else
-					create l_link.make (a_file, l_name)
-					if rel then
-						Result := l_link.relative_url
-					else
-						Result := l_link.absolute_url
---					end
+				create l_link.make (a_file, l_name)
+				if rel then
+					Result := l_link.relative_url
+				else
+					Result := l_link.absolute_url
 				end
 			end				
 		end	

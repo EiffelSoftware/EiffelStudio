@@ -42,9 +42,7 @@ feature -- Output
 			if drawing.is_drawable then
 				path.set_drawing_attributes (drawing);
 				drawing.set_foreground_color
-							(Resources.drawing_bg_color);
-				drawing.set_line_width (Resources.link_width);
-
+						(Resources.get_color("drawing_background_color"))				drawing.set_line_width (Resources.link_width);
 				!! algorithm
 				drawing.draw_polyline (algorithm.linked_list_to_array (points), false)
 			end

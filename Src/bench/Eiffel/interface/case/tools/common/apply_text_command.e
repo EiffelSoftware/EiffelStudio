@@ -43,22 +43,22 @@ feature -- Execution
 
 	execute (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		local
-			eiffel_parser: CLASS_PARSER
+		--	eiffel_parser: CLASS_PARSER
 
-			text_file: PLAIN_TEXT_FILE
+		--	text_file: PLAIN_TEXT_FILE
 		
 		do
-			if text_area /= Void then
-				text_area.set_editable (false)
+		--	if text_area /= Void then
+		--		text_area.set_editable (false)
 
-				!! eiffel_parser	
+		--		!! eiffel_parser	
 				--!! text_file.make_open_write ("code.tmp")		
 				--text_file.put_string (text_area.text)
 				--text_file.close
 
-				!! text_file.make ("/boston/kolli/CASE5/case_compilation/code.tmp")
-				eiffel_parser.parse (text_file)
-			end
+		--		!! text_file.make ("/boston/kolli/CASE5/case_compilation/code.tmp")
+		--		eiffel_parser.parse (text_file)
+		--	end
 		end
 
 feature -- Properties

@@ -1333,7 +1333,7 @@ end;
 	refresh_all is
 			-- Refresh the whole window.
 		do
-			set_background_color (resources.drawing_bg_color) ;
+			set_background_color	(Resources.get_color("drawing_background_color"))
 			clear;
 				-- It will be larger than the actual exposed area
 				-- of the workarea but it beats redrawing the whole

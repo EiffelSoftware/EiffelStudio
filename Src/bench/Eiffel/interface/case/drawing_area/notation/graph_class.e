@@ -44,51 +44,51 @@ feature {NONE} -- Initialization
 		do
 			data := a_class
 			observer_management.add_observer(data,Current)
-			data.set_color_name (resources.class_interior_color.name)
-			parent_group := graph_group;
+		--	data.set_color_name (resources.class_interior_color.name)
+			parent_group := graph_group
 		
 			!!ellipse.make
-			center := ellipse.origin;
-			parent_group.class_list.add_form (Current);
-			!!root_ellipse.make;
-			!!segment.make;
-			!!signs.make (1, 5);
+			center := ellipse.origin
+			parent_group.class_list.add_form (Current)
+			!!root_ellipse.make
+			!!segment.make
+			!!signs.make (1, 5)
 			from
 				i := 1
 			until
 				i > 5
 			loop
 				!!picture.make;
-				signs.put (picture, i);
-				picture.set_foreground_color (Resources.class_color);
+				signs.put (picture, i)
+				picture.set_foreground_color (Resources.get_color("class_color"))
 				i := i+1
 			end;
 			!!class_name.make
 			observer_management.add_observer(data,class_name)
 			class_name.set_text (data.name)
-			class_name.set_font (Resources.class_name_font);
-			!! generic_param.make;
-			build_generics_text;
-			generic_param.set_font (Resources.generic_font);
+			class_name.set_font (resources.get_font("class_name_font"))
+			!! generic_param.make
+			build_generics_text
+			generic_param.set_font (resources.get_font("generic_font"))
 
-			ellipse.path.set_foreground_color (Resources.class_color);
-			!! interior.make;
-			ellipse.set_interior (interior);
+			ellipse.path.set_foreground_color (Resources.get_color("class_color"))
+			!! interior.make
+			ellipse.set_interior (interior)
 
-			!!erase_ellipse.make;
-			erase_ellipse.path.set_foreground_color (Resources.drawing_bg_color);
-			erase_ellipse.set_interior (Resources.background_interior);
+			!!erase_ellipse.make
+			erase_ellipse.path.set_foreground_color(Resources.get_color("drawing_background_color"))
+			erase_ellipse.set_interior (interior)
 
 			!! rectangle.make
-			rectangle.set_interior (interior) -- ( bottom_right )
+			rectangle.set_interior (interior)
 			!! erase_rectangle.make
-			erase_rectangle.path.set_foreground_color ( Resources.drawing_bg_color)
-			erase_rectangle.set_interior ( Resources.background_interior )
+			erase_rectangle.path.set_foreground_color (Resources.get_color("drawing_background_color"))
+			erase_rectangle.set_interior(interior)
 
 			set_unselected_style
 			attach_workarea (graph_group.workarea)
-			build;
-			update_clip_area;
+			build
+			update_clip_area
 		ensure
 			data_set: data = a_class
 		end -- make
@@ -113,7 +113,7 @@ feature -- Graphical properties
 			-- Ellipse's closure
 		do
 			Result := erase_ellipse.closure
-		end -- closure
+		end
 
 	upper_left: EC_COORD_XY is
 			-- figure upper left point.
@@ -121,7 +121,7 @@ feature -- Graphical properties
 			!!Result;
 			Result.set (center.x - ellipse.radius1, center.y -
 				ellipse.radius2)
-		end; -- upper_left
+		end
 
 	bottom_right: EC_COORD_XY is
 			-- figure bottom right point.
@@ -129,7 +129,7 @@ feature -- Graphical properties
 			!!Result;
 			Result.set (center.x + ellipse.radius1, center.y +
 				ellipse.radius2)
-		end; -- bottom_right
+		end
 
 	origin: EC_COORD_XY is
 			-- Origin of the class.
@@ -146,7 +146,7 @@ feature -- Setting
 			attach_drawing (a_workarea)
 		ensure then
 			a_workarea = workarea
-		end; 
+		end
 
 feature -- Access
 
@@ -155,8 +155,8 @@ feature -- Access
 		local
 			p: EC_COORD_XY
 		do
-			!!p;
-			p.set (x_coord, y_coord);
+			!!p
+			p.set (x_coord, y_coord)
 			if ellipse.contains(p) then
 				Result := Current
 			end
@@ -167,9 +167,9 @@ feature -- Removal
 	destroy_without_clip_update is
 			-- Destroy this and all its links.
 		do
-			destroy_links_in (workarea.aggreg_list);
-			destroy_links_in (workarea.cli_sup_list);
-			destroy_links_in (workarea.inherit_list);
+			destroy_links_in (workarea.aggreg_list)
+			destroy_links_in (workarea.cli_sup_list)
+			destroy_links_in (workarea.inherit_list)
 			deselect_links
 		end; -- destroy
 
@@ -231,17 +231,18 @@ feature -- Output
 		local
 			ellipse_interior: EC_INTERIOR
 		do
-			ellipse_interior := ellipse.interior;
-			ellipse.set_interior (Void);
+			ellipse_interior := ellipse.interior
+			ellipse.set_interior (Void)
 			rectangle.set_interior ( Void )
 			if system.uml_layout then
-					rectangle.draw
+				rectangle.draw
 			else
 				ellipse.draw
 			end
 			rectangle.set_interior ( ellipse_interior )
 			ellipse.set_interior (ellipse_interior)
-		end; -- draw_border
+			erase_ellipse.set_interior(ellipse_interior) -- poil
+		end
 
 	erase_drawing is
 			-- Erase current figure
@@ -331,27 +332,27 @@ feature {NONE} -- Implementation properties
 	class_text_height: INTEGER is
 			-- Height of class text
 		do
-			Result := Resources.class_name_font.ascent
-				+ Resources.class_name_font.descent
+			Result := resources.get_font("class_name_font").ascent
+				+ resources.get_font("class_name_font").descent
 		end
 
 	class_text_width: INTEGER is
 			-- Width of class text
 		do
-			Result := Resources.class_name_font.string_width (class_name.text)
+			Result := resources.get_font("class_name_font").string_width (class_name.text)
 		end
 
 	generic_text_height: INTEGER is
 			-- Height of generic text
 		do
-			Result := Resources.generic_font.ascent
-				+ Resources.generic_font.descent
+			Result := resources.get_font("generic_font").ascent
+				+ resources.get_font("generic_font").descent
 		end
 
 	generic_text_width: INTEGER is
 			-- Width of generic text
 		do
-			Result := Resources.generic_font.string_width (generic_param.text)
+			Result := resources.get_font("generic_font").string_width (generic_param.text)
 		end
 
 feature {NONE} -- Implementation
@@ -424,7 +425,7 @@ feature {NONE} -- Implementation
 			ellipse.origin.set (local_x, local_y);
 			min_y := -class_text_height;
 			max_y := 0;
-			class_name.base_left.set_y (- Resources.class_name_font.descent);
+			class_name.base_left.set_y (- resources.get_font("class_name_font").descent)
 			total_symb_nb := 0;
 			set_symbol (data.is_deferred, star_position);
 			set_symbol (data.is_effective, plus_position);
@@ -442,7 +443,7 @@ feature {NONE} -- Implementation
 				max_y := max_y+Resources.class_generic_offset+
 					generic_text_height;
 				generic_param.base_left.set_y (max_y -
-					Resources.generic_font.descent)
+					resources.get_font("generic_font").descent)
 			end;
 			total_height := max_y-min_y;
 			y_offset := local_y-(min_y+max_y) // 2;
@@ -544,7 +545,7 @@ feature {NONE} -- Implementation
 			-- Recompute class's closure
 		do
 			erase_ellipse.recompute_closure
-		end -- recompute_closure
+		end
 
 	set_color is
 			-- Set color to class.
@@ -568,50 +569,47 @@ feature {NONE} -- Implementation
 			-- Set color for selected state.
 		local
 			i: INTEGER
+			col: EV_COLOR
 		do
-			ellipse.interior.set_foreground_color 
-						(Resources.selected_interior_color);
-			class_name.set_foreground_color
-						(Resources.selected_invert_color);
-			generic_param.set_foreground_color
-						(Resources.selected_invert_color);
-			segment.path.set_foreground_color
-						(Resources.selected_invert_color);
-			root_ellipse.path.set_foreground_color
-				(Resources.selected_invert_color);
+			col := resources.get_color("selected_interior_color")
+			ellipse.interior.set_foreground_color (col)
+			class_name.set_foreground_color(col)
+			generic_param.set_foreground_color(col)
+			segment.path.set_foreground_color(col)
+			root_ellipse.path.set_foreground_color(col)
 			from
 				i := 1
 			until
 				i > 5
 			loop
-				signs.item (i).set_foreground_color
-					(Resources.selected_invert_color);
-				signs.item (i).set_background_color
-					(Resources.selected_interior_color);
+				signs.item (i).set_foreground_color(col)
+				signs.item (i).set_background_color(col)
 				i := i+1
 			end
-		end; -- set_selected_style
+		end
 
 	set_unselected_style is
 			-- Set color for unselected state.
 		local
-			i: INTEGER;
+			i: INTEGER
+			col: EV_COLOR
 		do
-			set_color;
-			class_name.set_foreground_color (Resources.class_color);
-			generic_param.set_foreground_color (Resources.class_color);
-			segment.path.set_foreground_color (Resources.class_color);
-			root_ellipse.path.set_foreground_color (Resources.class_color);
+			set_color
+			col := Resources.get_color("class_color")
+			class_name.set_foreground_color (col)
+			generic_param.set_foreground_color (col)
+			segment.path.set_foreground_color (col)
+			root_ellipse.path.set_foreground_color (col)
 			from
 				i := 1
 			until
 				i > 5
 			loop
 				signs.item (i).set_foreground_color
-							(Resources.class_color);
+							(col)
 				i := i+1
 			end
-		end -- set_unselected_style
+		end
 
 feature {WORKAREA_MOVE_DATUM_COM} -- Implementation access
 

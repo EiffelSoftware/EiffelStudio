@@ -8,7 +8,7 @@ class RELATION_STONE
 
 inherit
 
-	STONE
+	EC_STONE
 
 creation
 

@@ -30,13 +30,13 @@ feature {NONE} -- Initialization
 			workarea := a_workarea;
 			data := a_cli_sup;
 			-- pascalf 
-			if data.color_name = Void then
-				if resources.link_color/= Void then
-					data.set_color_name (resources.link_color.name)
-				else
-					data.set_color_name (resources.agg_link_color.name)
-				end
-			end
+		--	if data.color_name = Void then
+		--		if resources.link_color/= Void then
+		--			data.set_color_name (resources.get_color("link_color"))
+		--		else
+		--			data.set_color_name (resources.get_color("link_aggreg"))
+		--		end
+		--	end
 			--
 			client := a_workarea.find_linkable (data.client);
 			supplier := a_workarea.find_linkable (data.supplier);

@@ -53,7 +53,7 @@ feature -- Update
 				path.set_drawing_attributes (drawing);
 				interior.set_drawing_attributes (drawing);
 				drawing.set_foreground_color
-							(Resources.drawing_bg_color);
+							(Resources.get_color("drawing_background_color"))
 				drawing.set_line_width (1);
 				drawing.fill_polygon (Current);
 				path.set_drawing_attributes (drawing);

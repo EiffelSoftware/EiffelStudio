@@ -115,7 +115,7 @@ feature -- Commands
 	add_selection_command (com: EV_COMMAND ) is
 			-- add a command to be executed when ENTER is pressed
 		do
-			combo.add_selection_command ( com, Void )			
+			combo.add_select_command ( com, Void )			
 		end
 
 	select_item (i:INTEGER) is

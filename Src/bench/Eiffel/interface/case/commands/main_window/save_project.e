@@ -57,8 +57,8 @@ feature -- Execution (work)
 			store: STORE
 		do
 			if system.project_initialized then
-				!! store.make (caller)
-				store.execute (Void, Void)
+			--	!! store.make (caller)
+			--	store.execute (Void, Void)
 			else
 				windows_manager.popup_message ("Mg","", caller)
 			end

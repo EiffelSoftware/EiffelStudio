@@ -9,10 +9,12 @@ class EC_INTERIOR
 
 inherit
 
-	EC_FILLABLE;
-	EC_LOGICAL;
-	--CHILD_CLIP;
-	EC_FOREGROUND;
+	EC_FILLABLE
+
+	EC_LOGICAL
+
+	EC_FOREGROUND
+
 	EC_BACKGROUND
 
 creation
@@ -24,9 +26,9 @@ feature -- Initialization
 	make is
 			-- Create an interior.
 		do
-			logical_function_mode := GXcopy;
+			logical_function_mode := GXcopy
 			!! foreground_color.make
-		end -- make
+		end
 
 feature {EC_FIGURE} -- Implementation
 
@@ -35,8 +37,8 @@ feature {EC_FIGURE} -- Implementation
 		require
 			drawing_exists: not (drawing = Void)
 		do
-			drawing.set_logical_mode (logical_function_mode);
-			--drawing.set_fill_style (fill_style);
+			drawing.set_logical_mode (logical_function_mode)
+			--drawing.set_fill_style (fill_style)
 			inspect
 				fill_style
 			when FillSolid then
@@ -44,14 +46,14 @@ feature {EC_FIGURE} -- Implementation
 			when FillTiled then
 				--drawing.set_tile (tile)
 			when FillStippled then
-				drawing.set_foreground_color (foreground_color);
+				drawing.set_foreground_color (foreground_color)
 			--	drawing.set_stipple (stipple)
 			when FillOpaqueStippled then
-				drawing.set_foreground_color (foreground_color);
-				drawing.set_background_color (background_color);
+				drawing.set_foreground_color (foreground_color)
+				drawing.set_background_color (background_color)
 			--	drawing.set_stipple (stipple)
 			end
-		end -- set_drawing_attributes
+		end
 
 invariant
 

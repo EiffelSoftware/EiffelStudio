@@ -10,7 +10,7 @@ class
 
 inherit
 
-	STONE
+	EC_STONE
 		redefine
 			destroy_data
 		end;

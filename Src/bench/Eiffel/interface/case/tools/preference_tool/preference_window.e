@@ -50,11 +50,11 @@ feature -- Initialization
 			
 			!! com.make(~left_select)
 			!! left_list.make(v1)
-			left_list.add_selection_command(com,Void)
+			left_list.add_select_command(com,Void)
 
 			!! com.make(~right_select)
 			!! right_list.make_with_text(v2,<<"Short Name","Litteral Value">>)
-			right_list.add_selection_command(com, Void)
+			right_list.add_select_command(com, Void)
 			right_list.set_single_selection
 
 			!! edit_box.make(v2)

@@ -9,11 +9,11 @@ class EC_BUTTON
 
 inherit
 
-	ACTIVE_PICT_COLOR_B
-		rename
+	--ACTIVE_PICT_COLOR_B
+	--	rename
 			--make as active_make,
-			make as pcb_make
-		end
+	--		make as pcb_make
+	--	end
 -- FIXME Pascal
 	--FOCUSABLE
 --
@@ -34,8 +34,8 @@ feature -- Initialization
 		do
 			command := a_com
 			initial_symbol := a_com.symbol 
-			pcb_make (a_parent)
-			set_pixmap (symbol)
+		--	pcb_make (a_parent)
+		--	set_pixmap (symbol)
 			--focus_string := a_name
 			--initialize_focus
 		ensure
@@ -57,8 +57,8 @@ feature -- Initialization
 		do
 			command := a_com
 			initial_symbol := a_sym
-			pcb_make (a_parent)
-			set_pixmap (symbol)
+		--	pcb_make (a_parent)
+		--	set_pixmap (symbol)
 			--focus_string := a_name
 			--initialize_focus
 		ensure

@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report    
 
-	compatible (st: STONE): BOOLEAN is
+	compatible (st: EC_STONE): BOOLEAN is
 			-- Is dropped stone compatible with Current command
 			-- associated hole?	
 		do
@@ -305,7 +305,7 @@ feature -- Execution
 			end	
 		end
 
-	process_any (s: STONE) is
+	process_any (s: EC_STONE) is
 			-- Process dropped stone `stone' and create an editor
 			-- if it is editable.
 		local

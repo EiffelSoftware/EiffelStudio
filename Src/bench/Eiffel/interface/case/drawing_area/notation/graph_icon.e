@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			!!title.make
 			observer_management.add_observer(data,title)
 			title.set_text (data.name);
-			title.set_font (Resources.cluster_name_font);
+			title.set_font (resources.get_font("cluster_name_font"))
 			!!cluster_title.make;
 			!! path.make;
 			path.set_line_width (2);
@@ -49,13 +49,13 @@ feature {NONE} -- Initialization
 			!!cluster.make;
 			cluster.set_path (path);
 			!!iconized_interior.make;
-			iconized_interior.set_foreground_color (Resources.cluster_iconized_color);
+			iconized_interior.set_foreground_color (Resources.get_color("cluster_iconized_color"))
 			cluster.set_interior (iconized_interior);
 			!!interior.make;
-			interior.set_foreground_color (Resources.drawing_bg_color);
+			interior.set_foreground_color(Resources.get_color("drawing_background_color"))
 			!!erase_rectangle.make;
 			erase_rectangle.path.set_foreground_color
-				(Resources.drawing_bg_color);
+				(Resources.get_color("drawing_background_color"))
 			erase_rectangle.set_interior (interior);
 			set_unselected_style;
 			attach_workarea (graph_group.workarea);
@@ -214,20 +214,18 @@ feature {NONE} -- Selection management
 	set_selected_style is
 			-- Set color for selected state.
 		do
-			cluster_title.interior.set_foreground_color
-						(Resources.selected_interior_color);
-			title.set_foreground_color (Resources.selected_invert_color)
-		end; -- set_selected_style
+			cluster_title.interior.set_foreground_color (Resources.get_color("selected_interior_color"))
+			title.set_foreground_color (Resources.get_color("selected_invert_color"))
+		end
 
 	set_unselected_style is
 			-- Set color for unselected state.
 		local
 			no_interior: EC_INTERIOR
 		do
-			cluster_title.interior.set_foreground_color
-								(Resources.cluster_title_interior_color);
+			cluster_title.interior.set_foreground_color	(Resources.get_color("cluster_title_interior_color"))
 			title.set_foreground_color (data.color)
-		end -- set_unselected_style
+		end 
 
 feature -- Removal
 
@@ -266,14 +264,14 @@ feature {NONE} -- Specifications
 	title_text_width: INTEGER is
 			-- Width of title
 		do
-			Result := Resources.cluster_name_font.string_width (title.text)
+			Result := resources.get_font("cluster_name_font").string_width (title.text)
 		end;
 
 	title_text_height: INTEGER is
 			-- Height of title
 		do
-			Result := Resources.cluster_name_font.ascent +
-				Resources.cluster_name_font.descent
+			Result := resources.get_font("cluster_name_font").ascent +
+				resources.get_font("cluster_name_font").descent
 		end 
 
 feature {NONE} -- Implementation access

@@ -9,7 +9,7 @@ class CLUSTER_STONE
 
 inherit
 
-	STONE;
+	EC_STONE;
 	NAMABLE;
 	ONCES
 

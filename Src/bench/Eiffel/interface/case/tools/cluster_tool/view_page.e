@@ -39,10 +39,10 @@ feature -- Initialization
 			!! ev_list.make(v1)
 			if mode=1 then
 				!! com.make(~change_view)
-				ev_list.add_selection_command(com, Void)
+				ev_list.add_select_command(com, Void)
 			elseif mode=3 then
 				!! com.make(~display_view)
-				ev_list.add_selection_command(com,Void)
+				ev_list.add_select_command(com,Void)
 			end
 		
 			if mode=2 then

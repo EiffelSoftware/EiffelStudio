@@ -24,10 +24,10 @@ inherit
 			execute as execute_licensed
 		end
 
-	LICENSED_COMMAND
-		redefine
-			execute_licensed
-		end
+	--LICENSED_COMMAND
+	--	redefine
+	--		execute_licensed
+	--	end
 
 feature -- Execution
 
@@ -39,11 +39,11 @@ feature -- Execution
 	execute_licensed (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Execute Current command, if the licence is available.
 		do
-			if license_checked then
+		--	if license_checked then
 				execute (args, data)
-			else
-				lost_license_warning
-			end
+		--	else
+		--		lost_license_warning
+		--	end
 		end
 
 feature -- Properties

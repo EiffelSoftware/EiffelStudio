@@ -69,23 +69,23 @@ feature {NONE} -- Initialization
 			cluster_title.set_path (cluster_path);
 			cluster_title.set_interior (interior);
 			title.set_text (data.name);
-			title.set_font (Resources.cluster_name_font);
+			title.set_font (resources.get_font("cluster_name_font"))
 			!!cluster.make;
 			cluster.set_path (cluster_path);
 			!!interior.make;
-			interior.set_foreground_color (Resources.drawing_bg_color);
+			interior.set_foreground_color (Resources.get_color("drawing_background_color"))
 			!!erase_rectangle.make;
 			erase_rectangle.path.set_foreground_color
-				(Resources.drawing_bg_color);
-			erase_rectangle.set_interior (interior);
+				(Resources.get_color("drawing_background_color"))
+			erase_rectangle.set_interior (interior)
 			!!erase_rectangle_title.make;
 			erase_rectangle_title.path.set_foreground_color
-				(Resources.drawing_bg_color);
-			erase_rectangle_title.set_interior (interior);
-			set_unselected_style;
-			attach_workarea (graph_group.workarea);
-			update_lists;
-			build;
+				(Resources.get_color("drawing_background_color"))
+			erase_rectangle_title.set_interior (interior)
+			set_unselected_style
+			attach_workarea (graph_group.workarea)
+			update_lists
+			build
 			set_color;
 			update_clip_area;
 		ensure
@@ -363,8 +363,8 @@ feature -- Output
 			-- Set color for selected state.
 		do
 			cluster_title.interior.set_foreground_color
-							(Resources.selected_interior_color);
-			title.set_foreground_color (Resources.selected_invert_color)
+							(Resources.get_color("selected_interior_color"))
+			title.set_foreground_color (Resources.get_color("selected_invert_color"))
 		end; 
 
 	set_unselected_style is
@@ -373,9 +373,9 @@ feature -- Output
 			no_interior: EC_INTERIOR
 		do
 			cluster_title.interior.set_foreground_color 
-							(Resources.cluster_title_interior_color);
+							(Resources.get_color("cluster_title_interior_color"))
 			title.set_foreground_color (data.color)
-		end;
+		end
 
 	invert_skeleton (painter: PATCH_PAINTER; relative_x, relative_y: INTEGER) is
 			-- Invert the cluster's skeleton.
@@ -575,14 +575,14 @@ feature {NONE} -- Implementation properties
 	title_text_width: INTEGER is
 			-- Width of cluster title
 		do
-			Result := Resources.cluster_name_font.string_width (title.text)
+			Result := Resources.get_font("cluster_name_font").string_width (title.text)
 		end
 
 	title_text_height: INTEGER is
 			-- Height of cluster title
 		do
-			Result := Resources.cluster_name_font.ascent +
-				Resources.cluster_name_font.descent
+			Result := resources.get_font("cluster_name_font").ascent +
+			resources.get_font("cluster_name_font").descent
 		end
 
 feature {NONE} -- Implementation Access

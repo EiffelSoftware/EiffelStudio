@@ -30,7 +30,7 @@ feature -- Execution
 	execute (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		local
 			pnd_data: EV_PND_EVENT_DATA
-			stone: STONE
+			stone: EC_STONE
 
 			namable_data: NAME_DATA
 

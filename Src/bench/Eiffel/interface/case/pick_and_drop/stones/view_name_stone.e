@@ -8,7 +8,7 @@ class VIEW_NAME_STONE
 
 inherit
 
-	STONE
+	EC_STONE
 		redefine
 			destroy_data
 		end;

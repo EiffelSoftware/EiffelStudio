@@ -89,7 +89,7 @@ feature -- Execution
 								(rel_x, rel_y);
 							if handle_at = 0 then
 							new_text := graph_relation.data.focus
-								stone := graph_figure.stone;
+								stone := graph_figure.stone
 							else
 								handle := graph_relation.handle_data (handle_at)
 								!! new_text.make (6);
@@ -108,17 +108,12 @@ feature -- Execution
 				end
 		end
 
-	work (arg: ANY) is
-			--| Current command should not popdown the error window,
-			--| hence the redefinition
-		do
-			--execute (arg, Void)
-		end
+	
 
 	feature -- Properties
 
 		graph_figure: GRAPH_FORM;
-		stone: STONE;
-
+	
+		stone: STONE
 
 end -- class WORKAREA_SHOW_FOCUS_COM

@@ -153,7 +153,7 @@ feature -- Output
 				draw
 				if not (interior = Void) then
 					interior.set_copy_mode
-				end;
+				end
 				path.set_copy_mode
 		end
 

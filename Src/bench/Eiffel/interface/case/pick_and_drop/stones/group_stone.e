@@ -10,7 +10,7 @@ class GROUP_STONE
 
 inherit
 
-	STONE
+	EC_STONE
 		rename
 			destroy_data as destroy_group
 		redefine
@@ -49,10 +49,10 @@ feature -- Properties
 	group_list: LINKED_LIST [GRAPH_FORM];
 			-- List of the grouped graphical objects
 
-	selected_stone: STONE;
+	selected_stone: EC_STONE;
 			-- Stone dragged
 
-	stones: LINKED_LIST [STONE] is
+	stones: LINKED_LIST [EC_STONE] is
 			-- Stones from the group_list
 		do
 			!! Result.make;

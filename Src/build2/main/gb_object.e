@@ -193,7 +193,9 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of sepecific attributes of `Current'
-			-- in `element'. For now, only a name needs to be stored.
+			-- in `element'.
+		require
+			element_not_void: element /= Void
 		do
 			add_element_containing_integer (element, Id_string, id)
 			if not name.is_empty then
@@ -204,7 +206,8 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 		
 	modify_from_xml (element: XML_ELEMENT) is
 			-- Update `Current' based on information held in `element'.
-			-- Currently, only the name needs to be stored.
+		require
+			element_not_void: element /= Void
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION

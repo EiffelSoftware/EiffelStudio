@@ -127,7 +127,7 @@ feature
 				if is_expanded then
 					a_clickable.put_string ("expanded ");
 				end;
-				base_class.append_name (a_clickable);
+				base_class.e_class.append_name (a_clickable);
 				a_clickable.put_string (" [");
 				i := 1;
 				count := meta_generic.count;

@@ -385,13 +385,13 @@ end
 			add_text_figure (fig, f_name)
 		end;
 
-	put_address (address: STRING; e_class: E_CLASS) is
-			-- Put `address' for `e_class'.
+	put_address (address: STRING; a_name: STRING; e_class: E_CLASS) is
+			-- Put `address' with `a_name' for `e_class'.
 		local
 			fig: OBJECT_TEXT_IMAGE;
 			stone: OBJECT_STONE
 		do
-			!! stone.make (address, e_class);
+			!! stone.make (address, a_name, e_class);
 			!! fig;
 			fig.set_stone (stone);
 			add_text_figure (fig, address)

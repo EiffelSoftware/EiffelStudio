@@ -245,7 +245,7 @@ feature -- IL code generation
 							-- a local variable.
 						context.add_local (return_type)
 						local_number := context.local_list.count
-						il_generator.put_local_info (return_type, "dummy_" + local_number.out)
+						il_generator.put_dummy_local_info (return_type, local_number)
 						il_generator.generate_local_assignment (local_number)
 						il_generator.generate_invariant_checking (cl_type)
 						il_generator.generate_local (local_number)

@@ -273,7 +273,7 @@ rt_public void memck(unsigned int max_dt)
 	}
 		
 	if (obj_use == (int *) 0) {
-		obj_use = (int *) xmalloc(scount * sizeof(int), C_T, GC_OFF);
+		obj_use = (int *) eif_rt_xmalloc(scount * sizeof(int), C_T, GC_OFF);
 		if (obj_use == (int *) 0) {
 			printf("memck: cannot build object table\n");
 			fflush(stdout);
@@ -631,7 +631,7 @@ rt_private void eif_memck(void)
 	char *arena;				/* Arena in chunk */
 
 	if (type_use == (uint32 *) 0) {
-		type_use = (uint32 *) xmalloc(scount * sizeof(uint32), C_T, GC_OFF);
+		type_use = (uint32 *) eif_rt_xmalloc(scount * sizeof(uint32), C_T, GC_OFF);
 		if (type_use == (uint32 *) 0) {
 			printf("memck: cannot build object table\n");
 			fflush(stdout);
@@ -825,31 +825,31 @@ rt_private void run_tests(void)
 	printf(">>> Mallocing 8 blocks (A B C D E F G H)\n");
 	for (i = 0; i < 8; i++) {
 		printf(">>> Mallocing block %c\n", 'A' + i);
-		p[i] = xmalloc(30000, C_T, GC_OFF);
+		p[i] = eif_rt_xmalloc(30000, C_T, GC_OFF);
 	}
 	mem_status();
 	printf(">>> Freeing 5 blocks (G, H, C, D, E)\n");
 	printf(">>> Freeing G\n");
-	xfree(p[6]);
+	eif_rt_xfree(p[6]);
 	printf(">>> Freeing H\n");
-	xfree(p[7]);
+	eif_rt_xfree(p[7]);
 	printf(">>> Freeing C\n");
-	xfree(p[2]);
+	eif_rt_xfree(p[2]);
 	printf(">>> Freeing D\n");
-	xfree(p[3]);
+	eif_rt_xfree(p[3]);
 	printf(">>> Freeing E\n");
-	xfree(p[4]);
+	eif_rt_xfree(p[4]);
 	mem_status();
 	printf(">>> Running full coalescing\n");
 	full_coalesc(C_T);
 	mem_status();
 	printf(">>> Freeing remaining blocks\n");
 	printf(">>> Freeing A\n");
-	xfree(p[0]);
+	eif_rt_xfree(p[0]);
 	printf(">>> Freeing B\n");
-	xfree(p[1]);
+	eif_rt_xfree(p[1]);
 	printf(">>> Freeing F\n");
-	xfree(p[5]);
+	eif_rt_xfree(p[5]);
 	mem_status();
 	printf(">>> Running full coalescing again\n");
 	full_coalesc(C_T);
@@ -880,7 +880,7 @@ rt_private char *vmalloc(unsigned int size)
 	char *result;
 	
 	printf(">>>> mallocing %d bytes\n", size);
-	result = xmalloc(size, C_T, GC_OFF);
+	result = eif_rt_xmalloc(size, C_T, GC_OFF);
 	if (result == (char *) 0)
 		printf(">>>> FAILED: malloc (%d bytes)\n", size);
 	mem_status();
@@ -893,7 +893,7 @@ rt_private void vfree(char *ptr)
 	union overhead *zone = ((union overhead *) ptr) - 1;
 
 	printf(">>>> freeing %d bytes\n", zone->ov_size & B_SIZE);
-	xfree(ptr);
+	eif_rt_xfree(ptr);
 	mem_status();
 }
 
@@ -902,7 +902,7 @@ rt_private char *vcalloc(unsigned int size)
 	char *result;
 
 	printf(">>>> callocing %d bytes\n", size);
-	result = xcalloc(size, 1);
+	result = eif_rt_xcalloc(size, 1);
 	if (result == (char *) 0)
 		printf(">>>> FAILED: calloc (%d bytes)\n", size);
 	mem_status();

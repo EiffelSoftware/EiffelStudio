@@ -28,7 +28,7 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
-/* These routines use malloc and free and not xcalloc, xfree because we
+/* These routines use malloc and free and not eif_rt_xcalloc, eif_rt_xfree because we
  * want to release the memory taken by the hash table after retrieving
  * the precompiled project (~400k) so that it will be reused by Eiffel
  * objects.
@@ -291,7 +291,7 @@ rt_public void ht_free(struct htable *ht)
 
 	eif_free(ht->h_values);
 	eif_free(ht->h_keys);
-	xfree((char *) ht);
+	eif_rt_xfree((char *) ht);
 }
 
 /*

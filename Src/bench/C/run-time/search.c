@@ -29,7 +29,7 @@ rt_public struct s_table *s_create(uint32 size)
 	struct s_table *result;
 
 	real_size = nprime((4 * size) / 3);
-	keys = (char **) xcalloc(real_size, sizeof(char *));
+	keys = (char **) eif_rt_xcalloc(real_size, sizeof(char *));
 	if (keys == (char **) 0)
 		enomem(MTC_NOARG);
 	result = (struct s_table *) cmalloc(sizeof(struct s_table));
@@ -102,9 +102,9 @@ rt_public void s_resize(register struct s_table *tbl)
 		if (one_key != (char *) 0)
 			s_put(new,one_key);
 	}
-	xfree((char *) (tbl->s_keys));			/* Free old keys */
+	eif_rt_xfree((char *) (tbl->s_keys));			/* Free old keys */
 	memcpy (tbl, new, sizeof(struct s_table));	/* Copy new descriptor */
-	xfree((char *) new);					/* Free temporary descriptor */
+	eif_rt_xfree((char *) new);					/* Free temporary descriptor */
 }
 
 /*

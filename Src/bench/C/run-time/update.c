@@ -173,7 +173,7 @@ rt_public void update(char ignore_updt)
 #endif
 		exit(1);
 	}
-	xfree (filename);
+	eif_rt_xfree (filename);
 	wread(&c, 1);				/* Is there something to update ? */
 	if (c == '\0') {
 		init_desc();

@@ -198,10 +198,10 @@ struct prof_info {
 				(struct prof_rusage *) cmalloc(sizeof(struct prof_rusage));\
 							}
 #define free_prof_info(x)	{\
-								xfree(x->this_total_time);\
-								xfree(x->all_total_time);\
-								xfree(x->descendent_time);\
-								xfree(x);\
+								eif_rt_xfree(x->this_total_time);\
+								eif_rt_xfree(x->all_total_time);\
+								eif_rt_xfree(x->descendent_time);\
+								eif_rt_xfree(x);\
 							}
 #define check_existance(x)	{\
 								if(!x || !(x->all_total_time) || !(x->this_total_time) || !(x->descendent_time)) {\
@@ -252,7 +252,7 @@ struct prof_info {
 								x = (struct prof_info *) cmalloc(sizeof(struct prof_info));\
 							}
 #define free_prof_info(x)	{\
-								xfree(x);\
+								eif_rt_xfree(x);\
 							}
 #define check_existance(x)	{\
 								if(!x) {\
@@ -369,10 +369,10 @@ struct prof_info {
 				(SYSTEMTIME *) cmalloc(sizeof(SYSTEMTIME));\
 							}
 #define free_prof_info(x)	{\
-								xfree(x->this_total_time);\
-								xfree(x->all_total_time);\
-								xfree(x->descendent_time);\
-								xfree(x);\
+								eif_rt_xfree(x->this_total_time);\
+								eif_rt_xfree(x->all_total_time);\
+								eif_rt_xfree(x->descendent_time);\
+								eif_rt_xfree(x);\
 							}
 #define check_existance(x)	{\
 								if(!x || !(x->all_total_time) || !(x->this_total_time) || !(x->descendent_time)) {\
@@ -719,7 +719,7 @@ void exitprf(void)
 #endif
 
 		fclose(prof_output);		/* Close the file */
-			/* No need to `xfree' the struct: is done by `ht_free()' */
+			/* No need to `eif_rt_xfree' the struct: is done by `ht_free()' */
 		ht_free(class_table);		/* Free memory */
 		prof_stack_free();			/* Deallocate stack */
 
@@ -980,8 +980,8 @@ void prof_stack_free(void)
 
 	if(egc_prof_enabled) {
 		EIF_GET_CONTEXT
-		xfree((char *)(prof_stack->st_cur));	/* Free memory used by chunk */
-		xfree((char *)prof_stack);			/* Free memory used by stack */
+		eif_rt_xfree((char *)(prof_stack->st_cur));	/* Free memory used by chunk */
+		eif_rt_xfree((char *)prof_stack);			/* Free memory used by stack */
 	}
 }
 

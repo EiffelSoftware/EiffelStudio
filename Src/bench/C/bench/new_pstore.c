@@ -96,7 +96,7 @@ rt_public EIF_REFERENCE partial_retrieve (EIF_INTEGER f_desc, long position, lon
 		esys ();
 
 		/* Create buffer */
-	buffer = (char *) xmalloc (length, C_T, GC_OFF);
+	buffer = (char *) eif_rt_xmalloc (length, C_T, GC_OFF);
 
 		/* Read full content of what needs to be read */
 	if (read (f_desc, buffer, length) <= 0)
@@ -111,7 +111,7 @@ rt_public EIF_REFERENCE partial_retrieve (EIF_INTEGER f_desc, long position, lon
 	result = retrieve_objects (nb_obj);
 
 		/* Free `buffer' */
-	xfree ((char *) buffer);
+	eif_rt_xfree ((char *) buffer);
 	buffer = NULL;
 
 	if (!gc_stopped)
@@ -140,7 +140,7 @@ rt_public EIF_REFERENCE retrieve_all(EIF_INTEGER f_desc, long position)
 		eio();
 
 		/* Create buffer */
-	buffer = (char *) xmalloc (length, C_T, GC_OFF);
+	buffer = (char *) eif_rt_xmalloc (length, C_T, GC_OFF);
 
 		/* Read full content of what needs to be read */
 	if (read (f_desc, buffer, length) <= 0)
@@ -159,7 +159,7 @@ rt_public EIF_REFERENCE retrieve_all(EIF_INTEGER f_desc, long position)
 	result = retrieve_objects (*(EIF_INTEGER *) buffer);
 
 		/* Free `buffer' */
-	xfree ((char *) buffer);
+	eif_rt_xfree ((char *) buffer);
 	buffer = NULL;
 
 	if (!gc_stopped)
@@ -179,7 +179,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 	char *tmp_buffer = buffer + sizeof(EIF_INTEGER);
 
 		/* Allocate array where all retrieved objects will be stored */
-	obj_array = (EIF_REFERENCE *) xmalloc (nb_obj * sizeof(EIF_REFERENCE), C_T, GC_OFF);
+	obj_array = (EIF_REFERENCE *) eif_rt_xmalloc (nb_obj * sizeof(EIF_REFERENCE), C_T, GC_OFF);
 
 		/* Get the lower bound of the `obj_array' array, by reading the ID of
 		 * the first object that we are reading.*/
@@ -484,8 +484,8 @@ rt_private char *buffer_write (char *tmp_buffer, void *data, int size)
 rt_private void hash_table_create (int size)
 	/* Create data structures used when storing Eiffel objects */
 {
-	buffer = (char *) xmalloc (MAX_BUFFER_SIZE, C_T, GC_OFF);
-	address_table = (struct store_htable *) xmalloc(sizeof(struct store_htable), C_T, GC_OFF);
+	buffer = (char *) eif_rt_xmalloc (MAX_BUFFER_SIZE, C_T, GC_OFF);
+	address_table = (struct store_htable *) eif_rt_xmalloc(sizeof(struct store_htable), C_T, GC_OFF);
 	if (address_table == (struct store_htable *) 0)
 		xraise(EN_MEM);
 	if (-1 == store_ht_create(address_table, size, sizeof(EIF_INTEGER)))
@@ -498,7 +498,7 @@ rt_private void hash_table_free ()
 {
 	store_ht_free (address_table);
 	address_table = NULL;
-	xfree ((char *) buffer);
+	eif_rt_xfree ((char *) buffer);
 	buffer = NULL;
 }
 

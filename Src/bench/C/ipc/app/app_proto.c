@@ -880,7 +880,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 			{
 				char *buf = b_out (o_ref);
 				twrite (buf, strlen(buf));
-				xfree(buf);
+				eif_rt_xfree(buf);
 			}
 			break;
 		case SK_EXP:
@@ -1048,7 +1048,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 						{
 							char *buf = b_out (*(EIF_REFERENCE *) o_ref);
 							twrite (buf, strlen(buf));
-							xfree(buf);
+							eif_rt_xfree(buf);
 						}
 						break;
 					}
@@ -1211,7 +1211,7 @@ rt_private void bit_inspect(EIF_OBJ object)
 {
 	char *buf = b_out(*(EIF_REFERENCE *) object);
 	twrite (buf, strlen(buf));
-	xfree(buf);
+	eif_rt_xfree(buf);
 }
 
 rt_private void string_inspect(EIF_OBJ object)

@@ -447,14 +447,14 @@ rt_public void rt_reset_store(void) {
 	buffer_size = old_store_buffer_size;
 
 	if (account != (char *) 0) {
-		xfree(account);
+		eif_rt_xfree(account);
 		account = (char *) 0;
 	}
 
 	free_sorted_attributes();
 
 	if (idr_temp_buf != (char *) 0) {
-		xfree(idr_temp_buf);
+		eif_rt_xfree(idr_temp_buf);
 		idr_temp_buf = (char *) 0;
 	}
 }
@@ -611,12 +611,12 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
-	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
+	idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
 
 	internal_store(object);
 
 	run_idr_destroy ();
-	xfree (idr_temp_buf);
+	eif_rt_xfree (idr_temp_buf);
 	idr_temp_buf = (char *)0;
 
 	rt_reset_store ();
@@ -659,12 +659,12 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
-	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
+	idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
 	
 	internal_store(object);
 
 	run_idr_destroy ();
-	xfree (idr_temp_buf);
+	eif_rt_xfree (idr_temp_buf);
 	idr_temp_buf = (char *)0;
 
 	*buffer = store_stream_buffer;
@@ -678,12 +678,12 @@ rt_public void independent_free_store (EIF_REFERENCE object)
 	RT_GET_CONTEXT
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
-	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
+	idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
 
 	internal_store(object);
 
 	run_idr_destroy ();
-	xfree (idr_temp_buf);
+	eif_rt_xfree (idr_temp_buf);
 	idr_temp_buf = (char *)0;
 }
 
@@ -718,7 +718,7 @@ rt_public void allocate_gen_buffer (void)
 {
 	RT_GET_CONTEXT
 	if (general_buffer == (char *) 0) {
-		general_buffer = (char *) xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
+		general_buffer = (char *) eif_rt_xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
 		if (general_buffer == (char *) 0)
 			eraise ("Out of memory for general_buffer creation", EN_PROG);
 	
@@ -729,7 +729,7 @@ rt_public void allocate_gen_buffer (void)
 				 * for every 8 bytes. */
 			size_t length = buffer_size * sizeof(char);
 			cmp_buffer_size = (length * 9) / 8 + 1 + EIF_CMPS_HEAD_SIZE;
-			cmps_general_buffer = (char *) xmalloc (cmp_buffer_size, C_T, GC_OFF);
+			cmps_general_buffer = (char *) eif_rt_xmalloc (cmp_buffer_size, C_T, GC_OFF);
 			if (cmps_general_buffer == (char *) 0)
 				eraise ("out of memory for cmps_general_buffer creation", EN_PROG);
 		}
@@ -748,7 +748,7 @@ rt_shared void internal_store(char *object)
 	char c;
 
 	if (accounting) {		/* Prepare character array */
-		account = (char *) xmalloc(scount * sizeof(char), C_T, GC_OFF);
+		account = (char *) eif_rt_xmalloc(scount * sizeof(char), C_T, GC_OFF);
 		if (account == (char *) 0)
 			xraise(EN_MEM);
 		memset (account, 0, scount * sizeof(char));
@@ -777,12 +777,12 @@ rt_shared void internal_store(char *object)
 			c = GENERAL_STORE_4_0;
 
 				/* Allocate the array to store the sorted attributes */
-			sorted_attributes = (unsigned int **) xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
+			sorted_attributes = (unsigned int **) eif_rt_xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsigned int *), sorted_attributes);
 #endif
 			if (sorted_attributes == (unsigned int **) 0){
-				xfree(account);
+				eif_rt_xfree(account);
 				xraise(EN_MEM);
 			}
 			memset (sorted_attributes, 0, scount * sizeof(unsigned int *));
@@ -798,10 +798,10 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	/* Write the kind of store */
 	if (char_write_func(&c, sizeof(char)) < 0){
 		if (accounting) {
-			xfree(account);
+			eif_rt_xfree(account);
 			if (c==GENERAL_STORE_4_0)
 					/* sorted_attributes is empty so a basic free is enough */
-				xfree((char *)sorted_attributes);
+				eif_rt_xfree((char *)sorted_attributes);
 				sorted_attributes = (unsigned int **) 0;
 			}
 		eise_io("Store: unable to write the kind of storable.");
@@ -820,7 +820,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 
 	if (accounting) {
 		make_header_func();			/* Make header */
-		xfree(account);			/* Free accouting character array */
+		eif_rt_xfree(account);			/* Free accouting character array */
 
 		account = (char *) 0;
 	}
@@ -1518,14 +1518,14 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		if (s_buffer) {
-			xfree(s_buffer);
+			eif_rt_xfree(s_buffer);
 		}
 		RTXSC;					/* Restore stack contexts */
 		rt_reset_store ();				/* Reset data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
-	s_buffer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
+	s_buffer = (char *) eif_rt_xmalloc (bsize * sizeof( char), C_T, GC_OFF);
 	/* Write maximum dynamic type */
 	if (0 > sprintf(s_buffer,"%d\n", scount)) {
 		eise_io("General store: unable to write number of different Eiffel types.");
@@ -1606,7 +1606,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 		}
 		buffer_write(s_buffer, (strlen (s_buffer)));
 	}
-	xfree (s_buffer);
+	eif_rt_xfree (s_buffer);
 	s_buffer = (char *) 0;
 	expop(&eif_stack);
 }
@@ -1635,7 +1635,7 @@ rt_public void sort_attributes(int dtype)
 printf ("attr_nb: %d class name: %s\n", attr_nb, class_info->cn_generator);
 printf ("Dtype: %d \n", dtype);
 #endif
-		s_attr = (unsigned int*) xmalloc (attr_nb * sizeof(unsigned int), C_T, GC_OFF);
+		s_attr = (unsigned int*) eif_rt_xmalloc (attr_nb * sizeof(unsigned int), C_T, GC_OFF);
 #ifdef DEBUG_GENERAL_STORE
 printf ("alloc s_attr (%d) %lx\n", dtype, s_attr);
 #endif
@@ -1670,7 +1670,7 @@ printf ("%d %d\n", attr_types[s_attr[j]], attr_types[s_attr[j+1]]);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Freeing s_attr %lx\n", s_attr);
 #endif
-			xfree((char *)s_attr);
+			eif_rt_xfree((char *)s_attr);
 			sorted_attributes[dtype] = (unsigned int*)0;
 			}
 		}
@@ -1695,14 +1695,14 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		if (s_buffer) {
-			xfree(s_buffer);
+			eif_rt_xfree(s_buffer);
 		}
 		RTXSC;					/* Restore stack contexts */
 		rt_reset_store ();				/* Clean data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
-	s_buffer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
+	s_buffer = (char *) eif_rt_xmalloc (bsize * sizeof( char), C_T, GC_OFF);
 	/* Write maximum dynamic type */
 	if (0 > sprintf(s_buffer,"%d\n", scount)) {
 		eise_io("Independent store: unable to write number of different Eiffel types.");
@@ -1800,7 +1800,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 		}
 		widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 	}
-	xfree (s_buffer);
+	eif_rt_xfree (s_buffer);
 	s_buffer = (char *) 0;
 	expop(&eif_stack);
 }
@@ -1974,12 +1974,12 @@ printf ("free_sorted_attributes %lx\n", sorted_attributes);
 #endif
 		for (i=0; i < scount; i++)
 			if ((s_attr = sorted_attributes[i])!= (unsigned int *) 0) {
-				xfree((char *) s_attr);
+				eif_rt_xfree((char *) s_attr);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Free s_attr (%d) %lx\n", i, s_attr);
 #endif
 			}
-		xfree((char *) sorted_attributes);
+		eif_rt_xfree((char *) sorted_attributes);
 		sorted_attributes = (unsigned int **)0;
 	}
 }

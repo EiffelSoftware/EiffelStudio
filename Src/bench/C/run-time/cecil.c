@@ -606,7 +606,7 @@ rt_public EIF_BIT eifbcln(EIF_BIT bit)
 	size = LNGSIZ + (bit->b_length / BITLONG +
 		(bit->b_length % BITLONG) ? 0 : 1) * LNGSIZ;
 
-	new_bit = (EIF_BIT) xmalloc(size, C_T, GC_OFF);
+	new_bit = (EIF_BIT) eif_rt_xmalloc(size, C_T, GC_OFF);
 	if (new_bit == (EIF_BIT) 0)
 		return (EIF_BIT) 0;			/* Could not allocate memory */
 

@@ -577,7 +577,7 @@ rt_public void create_desc(void)
 
 
 	/* Free temporary structure */
-	xfree((char *) bounds_tab);
+	eif_rt_xfree((char *) bounds_tab);
 
 	/* Actually fill the call structure */
 
@@ -593,7 +593,7 @@ rt_public void create_desc(void)
 	}
 
 	/* Free temporary structure */
-	xfree((char *) mdesc_tab);
+	eif_rt_xfree((char *) mdesc_tab);
 }
 
 /*

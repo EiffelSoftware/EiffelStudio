@@ -20,11 +20,6 @@
 extern "C" {
 #endif
 
-#define xcalloc		eif_rt_xcalloc
-#define xmalloc		eif_rt_xmalloc
-#define xfree		eif_rt_xfree
-#define split_block	eif_rt_split_block
-
 /*
  * Chunk's types and size.
  */
@@ -134,9 +129,9 @@ extern EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex;	/* GC mutex */
 
 #endif
 
-extern EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag);				/* Low level allocation routine */
-extern EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize);				/* Calloc */
-extern void xfree(register EIF_REFERENCE ptr);				/* Free */
+extern EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag);	/* Low level allocation routine */
+extern EIF_REFERENCE eif_rt_xcalloc(unsigned int nelem, unsigned int elsize);		/* Calloc */
+extern void eif_rt_xfree(register EIF_REFERENCE ptr);				/* Free */
 extern char *crealloc(char *ptr, unsigned int nbytes);			/* Reallocate a C object */
 extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned int nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
 
@@ -148,7 +143,7 @@ extern void xfreechunk(EIF_REFERENCE ptr);					/* Free memory chunks */
 /*
  * Shared routines
  */
-extern int split_block(register union overhead *selected, register uint32 nbytes);			/* Block spliting */
+extern int eif_rt_split_block(register union overhead *selected, register uint32 nbytes);			/* Block spliting */
 extern void lxtract(union overhead *next);				/* Extraction from free list */
 extern void rel_core(void);				/* Give memory back to kernel */
 extern int chunk_coalesc(struct chunk *c);			/* Coalescing to reduce fragmentation */

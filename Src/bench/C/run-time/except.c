@@ -2770,7 +2770,7 @@ rt_private void wipe_out(register struct stxchunk *chunk)
 		chunk != (struct stxchunk *) 0;
 		chunk = next, next = chunk ? chunk->sk_next : chunk
 	)
-		xfree((char *) chunk);
+		eif_rt_xfree((char *) chunk);
 }
 
 rt_public void expop(register1 struct xstack *stk)

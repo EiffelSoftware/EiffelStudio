@@ -865,7 +865,7 @@ rt_private void remove_breakpoint_in_table(int body_id, uint32 offset)
 			{
 			/* YEP ! it is */
 			curr_bpinfo->first_offset = curr_offset->next; /* remove the offset from the list */
-			xfree((char *)curr_offset);
+			eif_rt_xfree((char *)curr_offset);
 			}
 		else
 			{
@@ -876,7 +876,7 @@ rt_private void remove_breakpoint_in_table(int body_id, uint32 offset)
 				{
 				old_offset = curr_offset->next; /* that's the one we were looking for */
 				curr_offset->next = old_offset->next; /* remove the offset from the list */
-				xfree((char *)old_offset);
+				eif_rt_xfree((char *)old_offset);
 
 				/* reset the offset precalculation about this feature */
 				curr_bpinfo->last_offset_list = curr_bpinfo->first_offset;
@@ -896,7 +896,7 @@ rt_private void remove_breakpoint_in_table(int body_id, uint32 offset)
 			if (curr_bpinfo == d_globaldata.db_bpinfo[hash_code])
 				{
 				d_globaldata.db_bpinfo[hash_code] = curr_bpinfo->next;
-				xfree((char *)curr_bpinfo);
+				eif_rt_xfree((char *)curr_bpinfo);
 				}
 			else
 				{
@@ -904,7 +904,7 @@ rt_private void remove_breakpoint_in_table(int body_id, uint32 offset)
 				if (curr_bpinfo != NULL)
 					{
 					curr_bpinfo->next = old_bpinfo->next;
-					xfree((char *)old_bpinfo);
+					eif_rt_xfree((char *)old_bpinfo);
 					}
 				}
 			}
@@ -2076,7 +2076,7 @@ rt_public void c_wipe_out(register struct stochunk *chunk)
 		chunk != (struct stochunk *) 0;
 		chunk = next, next = chunk ? chunk->sk_next : chunk
 	)
-		xfree((char *) chunk);
+		eif_rt_xfree((char *) chunk);
 }
 
 /*

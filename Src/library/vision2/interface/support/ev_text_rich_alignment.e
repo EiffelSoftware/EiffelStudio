@@ -72,9 +72,12 @@ feature {EV_ANY_I} -- Implementation
 		-- Used internally to represent one of the three 
 		-- vertical alignment states.
 
-	top_alignment: INTEGER is 0 -- Default
+	top_alignment: INTEGER is 0
+		-- Constant representing top alignment.
 	middle_alignment: INTEGER is 1
+		-- Constant representing middle alignment.
 	bottom_alignment: INTEGER is 2
+		-- Constant representing bottom alignment
 
 invariant
 	vertical_alignment_code_within_range:  

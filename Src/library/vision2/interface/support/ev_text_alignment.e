@@ -80,9 +80,12 @@ feature {EV_ANY_I} -- Implementation
 	alignment_code: INTEGER
 		-- Used internally to represent one of the three alignment states.
 
-	left_alignment: INTEGER is 0 -- Default
+	left_alignment: INTEGER is 0
+		-- Constant representing left alignment.
 	center_alignment: INTEGER is 1
+		-- Constant representing center alignment.
 	right_alignment: INTEGER is 2
+		-- Constants representing right alignment.
 
 invariant
 	alignment_code_within_range: 

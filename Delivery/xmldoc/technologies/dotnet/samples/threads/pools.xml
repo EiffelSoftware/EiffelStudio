@@ -16,7 +16,27 @@
 		<heading>
 			<size>2</size>Compiling
 		</heading>
-		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<paragraph>To compile the example:
+			<list ordered="false">
+				<item>Launch EiffelStudio.</item>
+				<item>Select 
+					<bold>Use existing Ace (control file)</bold> and click 
+					<bold>OK</bold>
+				</item>
+				<item>Browse to 
+					<output output="envision">ENViSioN! root directory</output>
+					<output output="studio">Eiffel54</output>\examples\dotnet\threading\pools\.
+					<italic/>
+				</item>
+				<item>Choose
+					<italic/>.ace
+				</item>
+				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>
+		</paragraph>
 		<heading>
 			<size>2</size>Running
 		</heading>
@@ -34,7 +54,7 @@ Main thread: Waiting for asynchronous operation to complete.
 		<paragraph>This application shows how to use the thread 
 			<code>
 				<class_name>THREAD_POOL</class_name>
-			</code>. An asynchronous thread is launched ( 
+			</code>. An asynchronous thread is launched (
 			<code>
 				<keyword>feature</keyword>
 			</code> { 
@@ -43,16 +63,16 @@ Main thread: Waiting for asynchronous operation to complete.
 			</code>}. 
 			<code>
 				<feature_name>queue_user_work_item_wait_callback_object</feature_name>
-			</code>( 
+			</code>(
 			<code>
 				<keyword>create</keyword>
-			</code> { 
+			</code> {
 			<code>
 				<class_name>WAIT_CALLBACK</class_name>
 			</code>}. 
 			<code>
 				<feature_name>make</feature_name>
-			</code> ( 
+			</code> (
 			<code>
 				<keyword>Current</keyword>
 			</code>, $ 

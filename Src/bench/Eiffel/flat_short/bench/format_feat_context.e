@@ -51,11 +51,9 @@ feature -- Execution
 			c_comments: CLASS_COMMENTS;
 			source_feat: FEATURE_I;
 			target_feat: FEATURE_I;
-			f_table: FEATURE_TABLE
 		do
 			if not rescued then
-				f_table := class_c.feature_table;
-				target_feat := f_table.item (a_target_feat.name);
+				target_feat := a_target_feat.associated_feature_i;
 				execution_error := false;
 				Error_handler.wipe_out;
 				f_ast := target_feat.body;

@@ -25,6 +25,16 @@ inherit
 		
 	GB_CONSTANTS
 	
+	GB_SHARED_SYSTEM_STATUS
+		undefine
+			default_create, copy
+		end
+	
+	EIFFEL_ENV
+		undefine
+			copy, default_create
+		end
+	
 
 feature {NONE} -- Implementation
 
@@ -100,6 +110,15 @@ feature -- Basic operation
 			new_object: GB_OBJECT
 			widget: EV_WIDGET
 			an_item: EV_ITEM
+			tool_bar_item: EV_TOOL_BAR_ITEM
+			tool_bar: EV_TOOL_BAR
+			tree_item: EV_TREE_ITEM
+			tree: EV_TREE
+			list_item: EV_LIST_ITEM
+			list: EV_LIST
+			menu: EV_MENU
+			temp_menu: EV_MENU
+			label: EV_LABEL
 		do
 				-- Rest our previous widgets, as `component'
 				-- has now changed.
@@ -112,22 +131,67 @@ feature -- Basic operation
 				-- Display type
 			type_display.set_text ("Type : " + component.root_element_type)
 			lock_update
-				-- Remove any exisiting displayed component.
+				-- Remove any existing displayed component.
 			component_holder.wipe_out
 
-			new_object := component.object
-			widget ?= new_object.object
-			object_handler.recursive_do_all (new_object, agent force_object_to_component)
-			check
-				widget_not_void: widget /= Void
-			end
-			component_holder.extend (widget)
-			
-			if display_view then
-				display_widget := component_holder.item
+			new_object ?= component.object
+			an_item ?= new_object.object
+			if an_item /= Void then
+				display_button.disable_sensitive
+				builder_button.disable_sensitive
+				tool_bar_item ?= an_item
+				if tool_bar_item /= Void then
+					create tool_bar
+					component_holder.extend (tool_bar)
+					tool_bar.extend (tool_bar_item)	
+				end
+				tree_item ?= an_item
+				if tree_item /= Void then
+					create tree
+					component_holder.extend (tree)
+					tree.extend (tree_item)
+				end
+				list_item ?= an_item
+				if list_item /= Void then
+					create list
+					component_holder.extend (list)
+					list.extend (list_item)
+				end
+				menu ?= an_item
+				if menu /= Void then
+					create label.make_with_text ("Component is an EV_MENU. Click to display.")
+					component_holder.extend (label)
+						-- When we call `show' on a menu, the contents only are shown.
+						-- To combat this, the menu is added into a temporary menu item.
+						-- This ensures that the top level of the menu is actually shown.
+						-- This only needs to be done on Windows, as on Gtk, the top menu item
+						-- is actually shown.
+					if Eiffel_platform.is_equal ("windows") then
+						create temp_menu
+						temp_menu.extend (menu)
+						label.pointer_button_press_actions.force_extend (agent temp_menu.show)
+					else
+						label.pointer_button_press_actions.force_extend (agent menu.show)
+					end
+				end
 			else
-				builder_widget := component_holder.item
+				display_button.enable_sensitive
+				builder_button.enable_sensitive
+				new_object := component.object
+				widget ?= new_object.object
+				object_handler.recursive_do_all (new_object, agent force_object_to_component)
+				check
+					widget_not_void: widget /= Void
+				end
+				component_holder.extend (widget)
+				if display_view then
+					display_widget := component_holder.item
+				else
+					builder_widget := component_holder.item
+				end
 			end
+			system_status.disable_project_modified
+			update
 			unlock_update
 		end
 		

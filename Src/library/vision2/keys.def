@@ -21,34 +21,34 @@
 "7", 7, 7, C.Gdk_7_enum, 55
 "8", 8, 8, C.Gdk_8_enum, 56
 "9", 9, 9, C.Gdk_9_enum, 57
-numerical keypad "0", numpad0, NumPad 0, C.Gdk_kp_0_enum, Vk_numpad0
-numerical keypad "1", numpad1, NumPad 1, C.Gdk_kp_1_enum, Vk_numpad1
-numerical keypad "2", numpad2, NumPad 2, C.Gdk_kp_2_enum, Vk_numpad2
-numerical keypad "3", numpad3, NumPad 3, C.Gdk_kp_3_enum, Vk_numpad3
-numerical keypad "4", numpad4, NumPad 4, C.Gdk_kp_4_enum, Vk_numpad4
-numerical keypad "5", numpad5, NumPad 5, C.Gdk_kp_5_enum, Vk_numpad5
-numerical keypad "6", numpad6, NumPad 6, C.Gdk_kp_6_enum, Vk_numpad6
-numerical keypad "7", numpad7, NumPad 7, C.Gdk_kp_7_enum, Vk_numpad7
-numerical keypad "8", numpad8, NumPad 8, C.Gdk_kp_8_enum, Vk_numpad8
-numerical keypad "9", numpad9, NumPad 9, C.Gdk_kp_9_enum, Vk_numpad9
+numerical keypad "0", numpad_0, NumPad 0, C.Gdk_kp_0_enum, Vk_numpad0
+numerical keypad "1", numpad_1, NumPad 1, C.Gdk_kp_1_enum, Vk_numpad1
+numerical keypad "2", numpad_2, NumPad 2, C.Gdk_kp_2_enum, Vk_numpad2
+numerical keypad "3", numpad_3, NumPad 3, C.Gdk_kp_3_enum, Vk_numpad3
+numerical keypad "4", numpad_4, NumPad 4, C.Gdk_kp_4_enum, Vk_numpad4
+numerical keypad "5", numpad_5, NumPad 5, C.Gdk_kp_5_enum, Vk_numpad5
+numerical keypad "6", numpad_6, NumPad 6, C.Gdk_kp_6_enum, Vk_numpad6
+numerical keypad "7", numpad_7, NumPad 7, C.Gdk_kp_7_enum, Vk_numpad7
+numerical keypad "8", numpad_8, NumPad 8, C.Gdk_kp_8_enum, Vk_numpad8
+numerical keypad "9", numpad_9, NumPad 9, C.Gdk_kp_9_enum, Vk_numpad9
 numerical keypad "+", numpad_add, NumPad 0, C.Gdk_kp_add_enum, Vk_add
 numerical keypad "/", numpad_divide, NumPad /, C.Gdk_kp_divide_enum, Vk_divide
 numerical keypad "*", numpad_multiply, NumPad *, C.Gdk_kp_multiply_enum, Vk_multiply
 num lock, num_lock, NumLock, C.Gdk_num_lock_enum, Vk_numlock
 numerical keypad "-", numpad_subtract, NumPad -, C.Gdk_kp_subtract_enum, Vk_subtract
 numerical keypad ".", numpad_decimal, NumPad ., C.Gdk_kp_decimal_enum, Vk_decimal
-"F1", f1, F1, C.Gdk_f1_enum, Vk_f1
-"F2", f2, F2, C.Gdk_f2_enum, Vk_f2
-"F3", f3, F3, C.Gdk_f3_enum, Vk_f3
-"F4", f4, F4, C.Gdk_f4_enum, Vk_f4
-"F5", f5, F5, C.Gdk_f5_enum, Vk_f5
-"F6", f6, F6, C.Gdk_f6_enum, Vk_f6
-"F7", f7, F7, C.Gdk_f7_enum, Vk_f7
-"F8", f8, F8, C.Gdk_f8_enum, Vk_f8
-"F9", f9, F9, C.Gdk_f9_enum, Vk_f9
-"F10", f10, F10, C.Gdk_f10_enum, Vk_f10
-"F11", f11, F11, C.Gdk_f11_enum, Vk_f11
-"F12", f12, F12, C.Gdk_f12_enum, Vk_f12
+F1, f1, F1, C.Gdk_f1_enum, Vk_f1
+F2, f2, F2, C.Gdk_f2_enum, Vk_f2
+F3, f3, F3, C.Gdk_f3_enum, Vk_f3
+F4, f4, F4, C.Gdk_f4_enum, Vk_f4
+F5, f5, F5, C.Gdk_f5_enum, Vk_f5
+F6, f6, F6, C.Gdk_f6_enum, Vk_f6
+F7, f7, F7, C.Gdk_f7_enum, Vk_f7
+F8, f8, F8, C.Gdk_f8_enum, Vk_f8
+F9, f9, F9, C.Gdk_f9_enum, Vk_f9
+F10, f10, F10, C.Gdk_f10_enum, Vk_f10
+F11, f11, F11, C.Gdk_f11_enum, Vk_f11
+F12, f12, F12, C.Gdk_f12_enum, Vk_f12
 the spacebar, space, Space, C.Gdk_space_enum, Vk_space
 back space, back_space, BackSpace, C.Gdk_backspace_enum, Vk_back
 enter, enter, Enter, C.Gdk_return_enum, Vk_return
@@ -110,6 +110,10 @@ delete, delete, Delete, C.Gdk_kp_delete_enum, Vk_delete
 #-------------------------------------------------------------------------------
 #
 # $Log$
+# Revision 1.4  2000/03/17 16:38:09  brendel
+# numpad* -> numpad_*.
+# "F*" -> F*.
+#
 # Revision 1.3  2000/03/16 23:20:41  brendel
 # Fixed GDK key defs. Testing required.
 #

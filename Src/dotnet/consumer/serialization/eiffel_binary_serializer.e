@@ -17,20 +17,18 @@ feature -- Basic Operation
 		local
 			f: RAW_FILE
 			retried: BOOLEAN
+			l_bin_path: STRING
 		do
---			last_error := No_error
---			last_error_context := Void
 			if not retried then
-				path.remove_tail (4)
-				path.append (".bin")
-				create f.make_open_write (path)
+				l_bin_path := clone (path)
+				l_bin_path.remove_tail (4)
+				l_bin_path.append (".bin")
+				create f.make_open_write (l_bin_path)
 				f.independent_store (a)
 				f.close
 			end
 		rescue
 			retried := True
---			last_error := Generic_error
---			last_error_context := ""
 			if f /= Void then
 				f.close		
 			end

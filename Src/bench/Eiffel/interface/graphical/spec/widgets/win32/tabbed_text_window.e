@@ -1,6 +1,6 @@
 indexing
 
-	description:	
+	description:
 		"Text windows where tabulation characters are expanded %
 			%to `tablength' blank characters. Widget that is able %
 			%to edit text.";
@@ -28,10 +28,10 @@ inherit
 		end;
 
 	SCROLLED_TEXT_WINDOW
-		undefine 
+		undefine
 			make_word_wrapped, text_create,
 			consistent, create_ev_widget_ww, create_ev_widget,
-            copy, setup, set_tab_length
+	    copy, setup, set_tab_length
 		redefine
 			implementation
 		end
@@ -42,6 +42,6 @@ creation
 
 feature -- Access
 
-	implementation: TABBED_TEXT_I
+	implementation: TABBED_TEXT_IMP
 
 end -- class TABBED_TEXT_WINDOW

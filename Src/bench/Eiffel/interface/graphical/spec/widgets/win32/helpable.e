@@ -2,7 +2,7 @@ deferred class HELPABLE
 
 inherit
 
-	G_ANY; 
+	G_ANY;
 	EIFFEL_ENV;
 	WEL_HELP_CONSTANTS
 		rename
@@ -41,7 +41,7 @@ feature -- Update
 			wel_win: WEL_WINDOW
 		do
 			wel_win ?= associated_help_widget.implementation;
-			wel_win.win_help (bench_help_file_name, Help_context, help_index) 
+			wel_win.win_help (bench_help_file_name, Help_context, help_index)
 		end
 
 end -- class HELPABLE

@@ -9,7 +9,7 @@ indexing
 class SPLIT_WINDOW_I
 
 inherit
-	MANAGER_WINDOWS
+	MANAGER_IMP
 		rename
 			cursor as manager_cursor
 		redefine
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			exists: exists
 		do
 			bottom_child.set_x_y (0, bottom_split_position + split_width);
-			bottom_child.set_size (width, 
+			bottom_child.set_size (width,
 				(height - bottom_split_position - split_width).max
 				(bottom_child.implementation.minimal_height))
 		end
@@ -617,8 +617,8 @@ feature {NONE} -- Implementation
 	on_size (code, a_width, a_height: INTEGER) is
 			-- Respond to a resize message.
 		do
-			if 
-				not flag_set (code, Size_minimized) 	
+			if
+				not flag_set (code, Size_minimized)
 			then
 				if bottom_split_visible then
 					if bottom_split_position > a_height then
@@ -665,7 +665,7 @@ feature {NONE} -- Implementation
 			else
 				cursor := Void
 			end
-			if cursor /= Void and then code = Htclient then								
+			if cursor /= Void and then code = Htclient then
 				cursor.set
 				disable_default_processing
 			end
@@ -685,7 +685,7 @@ feature {NONE} -- Implementation
 
 	window_dc: WEL_WINDOW_DC
 			-- Cient dc of current window
-	
+
 	cursor: WEL_CURSOR
 			-- Current cursor
 

@@ -90,6 +90,9 @@ feature -- Element change
 		local
 			a: ANY
 		do
+			a_menu.set_shared
+			-- `a_menu' must be shared since Windows will
+			-- destroy it automatically with `Current'.
 			a := a_title.to_c
 			cwin_append_menu (item, Mf_popup,
 				a_menu.to_integer, $a)

@@ -140,7 +140,7 @@ feature -- Processing
 				ec_function_signature := a_type_visitor.ec_function_signature.twin
 				ec_function_return_type := c_type.twin
 
-			else
+			elseif a_type_visitor.ec_function_name /= Void then
 				ec_function_name := a_type_visitor.ec_function_name.twin
 			end
 

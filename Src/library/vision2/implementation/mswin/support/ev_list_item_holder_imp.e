@@ -10,9 +10,9 @@ deferred class
 
 inherit
 	EV_ITEM_HOLDER_IMP
-		redefine
-			on_draw
-		end
+--		redefine
+--			on_draw
+--		end
 
 feature -- Access
 
@@ -38,8 +38,7 @@ feature -- Element change
 	add_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Add `item_imp' to the list.
 		do
-			ev_children.extend (item_imp)
-			add_string (item_imp.text)
+			insert_item (item_imp, count + 1)
 		end
 
 	insert_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
@@ -47,7 +46,7 @@ feature -- Element change
 		do
 			ev_children.go_i_th (index - 1)
 			ev_children.put_right (item_imp)
-			insert_string_at (item_imp.text, index - 1)
+			graphical_insert_item (item_imp, index - 1)
 		end
 
 	move_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
@@ -77,7 +76,33 @@ feature -- Element change
 			ev_children.remove
 		end
 
+	clear_items is
+			-- Remove all the elements of the combo-box.
+		do
+			reset_content
+			clear_ev_children
+		end
+
 feature -- Basic operations
+
+	internal_copy_list is
+			-- Take an empty list and initialize all the children with
+			-- the contents of `ev_children'.
+		local
+			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+		do
+			if not ev_children.empty then
+				from
+					list := ev_children
+					list.start
+				until
+					list.after
+				loop
+					graphical_insert_item (list.item, list.index - 1)
+					list.forth
+				end
+			end
+		end
 
 	internal_select_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Make `item_imp' selected.
@@ -122,7 +147,7 @@ feature -- Basic operations
 		do
 			id := ev_children.index_of (item_imp, 1) - 1
 			delete_string (id)
-			insert_string_at (txt, id)
+			graphical_insert_item (item_imp, id)
 		end
 
 	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
@@ -143,24 +168,25 @@ feature {NONE} -- Implementation
 		local
 			id: INTEGER
 		do
-			id := count
-			id := struct.item_id
-			if (id /= -1) then
-				(ev_children @ (struct.item_id + 1)).on_draw (struct)
-			end
+--			id := count
+--			id := struct.item_id
+--			if (id /= -1) then
+--				(ev_children @ (struct.item_id + 1)).on_draw (struct)
+--			end
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Deferred features
 
-	add_string (str: STRING) is
-		deferred
-		end
-
-	insert_string_at (str: STRING; id: INTEGER) is
+	graphical_insert_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
+				-- Add the item to the graphical list.
 		deferred
 		end
 
 	delete_string (id: INTEGER) is
+		deferred
+		end
+
+	reset_content is
 		deferred
 		end
 
@@ -189,6 +215,10 @@ feature {EV_LIST_ITEM_IMP} -- Deferred features
 		end
 
 	count: INTEGER is
+		deferred
+		end
+
+	clear_ev_children is
 		deferred
 		end
 

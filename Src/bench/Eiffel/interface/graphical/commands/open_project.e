@@ -7,8 +7,7 @@ inherit
 
 	PROJECT_CONTEXT
 		redefine
-			init_project_directory,
-			init_precompilation_directory
+			init_project_directory
 		end;
 	SHARED_WORKBENCH;
 	ICONED_COMMAND
@@ -28,7 +27,6 @@ feature
 feature {NONE}
 
 	init_project_directory: PROJECT_DIR;
-	init_precompilation_directory: PROJECT_DIR;
 
 	work (argument: ANY) is
 			-- Popup and let the user choose what he wants.
@@ -81,36 +79,19 @@ feature
 			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
 			workbench_file: UNIX_FILE;
+			precomp_r: PRECOMP_R;
 		do
 			if not retried then
 				init_project_directory := project_dir;
-				if not project_dir.exists then
-					project_dir.create;	
-				end;
-				if project_dir.count < 3 then
+				if project_dir.is_new then
 						-- Create new project
 					if project_dir /= Project_directory then end;
 					Create_compilation_directory;
 					Create_generation_directory;
 
-					get_precompilation_directory;
-
-					if precompiled_project_name /= Void then
-						!! init_precompilation_directory.make 
-										(precompiled_project_name);
-						if Precompilation_directory /= Precompilation_directory then end;
-						!!workb;
-						!!workbench_file.make_open_read (Precompilation_file_name);
-						workb ?= workb.retrieved (workbench_file);
-						!! init_work.make (workb);
-						Workbench.init;	
-						System.server_controler.init;
-						System.set_precompilation (False);
-					else
-						!!workb;
-						!!init_work.make (workb);
-						workb.make;
-					end;
+					!!workb;
+					!!init_work.make (workb);
+					workb.make;
 				else
 						-- Retrieve existing project
 					if project_dir /= Project_directory then end;
@@ -123,11 +104,8 @@ feature
 					!!init_work.make (workb);
 					Workbench.init;
 					if System.uses_precompiled then
-						get_precompilation_directory;
-						if precompiled_project_name /= Void then
-							!! init_precompilation_directory.make (precompiled_project_name);
-							if Precompilation_directory /= Precompilation_directory then end;
-						end;
+						!!precomp_r;
+						precomp_r.set_precomp_dir;
 					end;
 					System.server_controler.init;
 				end;
@@ -142,37 +120,6 @@ feature
 		rescue
 			retried := True;
 			retry
-		end;
-
-	precompiled_project_name: STRING;
-
-	get_precompilation_directory is
-		local
-			f: UNIX_FILE;
-			fn: STRING;
-			i, j: INTEGER;
-		do
-			fn := Project_directory.name.duplicate;
-			from
-				i := 1
-			until
-				i > fn.count
-			loop
-				if (fn.item (i) = '/') then
-					j := i
-				end;
-				i := i + 1
-			end;
-			fn.replace_substring (".precomp", j+1,fn.count);
-			!!f.make (fn);
-			if f.exists and then f.is_readable then
-				f.open_read;
-				if not f.empty then
-					f.readline;
-					precompiled_project_name := f.laststring.duplicate;
-				end;
-				f.close
-			end;
 		end;
 
 	symbol: PIXMAP is

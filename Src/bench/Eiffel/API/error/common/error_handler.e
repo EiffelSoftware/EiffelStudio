@@ -209,7 +209,7 @@ feature -- Debug purpose
 				error_list.offright
 			loop
 				error_list.item.trace;
-				error_window.put_string ("------------------------------%N");
+				error_window.new_line;
 				error_list.forth;
 			end;
 		end;
@@ -222,7 +222,7 @@ feature -- Debug purpose
 				warning_list.offright
 			loop
 				warning_list.item.trace;
-				error_window.put_string ("------------------------------%N");
+				error_window.new_line;
 				warning_list.forth;
 			end;
 			warning_list.wipe_out;

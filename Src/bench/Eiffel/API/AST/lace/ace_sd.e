@@ -136,6 +136,41 @@ feature -- Lace compilation
 			process_options;
 		end;
 
+	precomp_project_name: STRING is
+		local
+			found: BOOLEAN;
+			d_option: D_OPTION_SD;
+			value: OPT_VAL_SD;
+			vd38: VD38
+		do
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after
+				loop
+					d_option := defaults.item;
+					if d_option.option.is_precompiled then
+						if found then
+							!!vd38;
+							Error_handler.insert_error (vd38);
+							Error_handler.raise_error;
+						else
+							found := True;
+							value := d_option.value;
+							if value.is_name then
+									-- If it is not a NAME_SD, the normal
+									-- adapt will trigger the error
+								Result := value.value;
+							end;
+						end;
+					end;
+					defaults.forth
+				end
+			end;
+			
+		end;
+
 	process_system_level_options is
 				-- Process the system level options
 		do
@@ -269,7 +304,10 @@ feature -- Lace compilation
 			-- Remove the classes from the clusters removed from the system
 		local
 			old_clusters: LINKED_LIST [CLUSTER_I];
-			cluster: CLUSTER_I;
+			old_cluster, cluster: CLUSTER_I;
+			vd28: VD28;
+			vdcn: VDCN;
+			cluster_of_name, cluster_of_path: CLUSTER_I;
 		do
 			from
 				old_clusters := Lace.old_universe.clusters;
@@ -277,9 +315,30 @@ feature -- Lace compilation
 			until
 				old_clusters.after
 			loop
-				cluster := old_clusters.item;
-				if not Universe.has_cluster_of_name (cluster.cluster_name) then
-					cluster.remove_cluster;
+				old_cluster := old_clusters.item;
+				if not Universe.has_cluster_of_name (old_cluster.cluster_name) then
+					if old_cluster.is_precompiled then
+						cluster_of_name := Universe.cluster_of_name (old_cluster.cluster_name);
+						cluster_of_path := Universe.cluster_of_path (old_cluster.path);
+						if cluster_of_path /= Void then
+							!!vd28;
+							vd28.set_cluster (cluster_of_path);
+							vd28.set_second_cluster_name (old_cluster.cluster_name);
+							Error_handler.insert_error (vd28);
+							Error_handler.raise_error;
+						elseif cluster_of_name /= Void then
+							!!vdcn;
+							vdcn.set_cluster (cluster_of_name);
+							Error_handler.insert_error (vdcn);
+							Error_handler.raise_error;
+						else
+							!!cluster.make (old_cluster.path);
+							cluster.copy_old_cluster (old_cluster);
+							Universe.insert_cluster (cluster);
+						end;
+					else
+						cluster.remove_cluster;
+					end;
 				end;
 				old_clusters.forth
 			end;

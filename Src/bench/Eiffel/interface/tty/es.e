@@ -111,7 +111,7 @@ feature -- Command line options
 				-- Default Ace and Project
 				-- Options
 			Ace_name := "Ace";
-			Project_name := "Project";
+			Project_name := ".";
 
 			from
 				current_option := 1

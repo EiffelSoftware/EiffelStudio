@@ -81,13 +81,6 @@ feature
 		require else
 			Tmp_body_server.has (old_value)
 		do
-io.putstring ("Change id from: ");
-io.putint (old_value);
-io.putstring (" to ");
-io.putint (new_value);
-io.putstring (" in");
-io.putstring (generator);
-io.new_line;
 			if has (old_value) then
 				server_change_id (new_value, old_value)
 			end;

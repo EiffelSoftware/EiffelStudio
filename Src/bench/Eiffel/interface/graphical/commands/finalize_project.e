@@ -123,16 +123,16 @@ feature {NONE}
         do
             !!cmd.make (50);
             cmd.append ("cd ");
-            cmd.append (Generation_path);
+            cmd.append (Final_generation_path);
             cmd.append ("; finish_freezing");
 
-            !!d.make (Generation_path);
+            !!d.make (Final_generation_path);
             if not d.has_entry ("finish_freezing") then
             !!  copy_cmd.make (50);
                 copy_cmd.append ("cp ");
                 copy_cmd.append (freeze_command_name);
                 copy_cmd.append (" ");
-                copy_cmd.append (Generation_path);
+                copy_cmd.append (Final_generation_path);
                 copy_cmd.append ("; ");
                 cmd.prepend (copy_cmd);
             end;

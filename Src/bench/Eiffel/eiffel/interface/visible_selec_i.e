@@ -19,7 +19,6 @@ inherit
 		end;
 	SHARED_AST_CONTEXT;
 	SHARED_SERVER;
-	SHARED_WORKBENCH;
 	SHARED_CECIL;
 	
 feature 

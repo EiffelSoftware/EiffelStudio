@@ -14,7 +14,7 @@
 #define __ECOM_E_IENUM_STATSTG_H_INC__
 
 #include <objidl.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 #include <malloc.h>
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
@@ -25,15 +25,15 @@ public:
 	E_IEnumSTATSTG (IEnumSTATSTG * p);
 	~E_IEnumSTATSTG();
 
-	STATSTG * ccom_next ();
+	STATSTG * ccom_next_item ();
 	void ccom_skip (ULONG n);
 	void ccom_reset();
 	IEnumSTATSTG * ccom_clone();
 	IEnumSTATSTG * ccom_item();
 private:
 	IEnumSTATSTG * pIEnum;
-	
-	
+
+
 };
 
 #endif // !__ECOM_E_IENUM_STATSTG_H_INC__

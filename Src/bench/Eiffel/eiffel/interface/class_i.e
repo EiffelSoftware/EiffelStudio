@@ -67,13 +67,6 @@ feature -- Access
 
 	base_name: STRING
 			-- Base file name of the class
-	
-	old_cluster_name: STRING
-			-- Cluster name to which a class in the override cluster used
-			-- to belong to.
-
-	old_base_name: like base_name
-			-- `base_name' of previous location of Current class.
 
 	is_read_only: BOOLEAN
 			-- Is class editable?
@@ -239,30 +232,6 @@ feature -- Status report
 			retry
 		end
 
-	class_name_changed: BOOLEAN is
-			-- Is stored `class_name' identical to one in associated class?
-		require
-			file_exists: exists
-		local
-			class_file: KL_BINARY_INPUT_FILE
-			new_class_name: STRING
-		do
-			create class_file.make (file_name)
-			class_file.open_read
-			if not class_file.is_open_read then
-				Classname_finder.parse (class_file)
-				new_class_name := Classname_finder.classname
-				class_file.close
-			end
-
-			if new_class_name /= Void then
-				new_class_name.to_lower
-				Result := not new_class_name.is_equal (name)
-			else
-				Result := True
-			end
-		end
-
 feature -- Access
 
 	is_external_class: BOOLEAN is
@@ -295,7 +264,7 @@ feature -- Access
 		end
 
 feature -- Setting
-
+		
 	set_name (s: like name) is
 			-- Assign `s' to `name'.
 		require
@@ -335,23 +304,6 @@ feature -- Setting
 			l_name: STRING
 		do
 			l_name := actual_namespace
-		end
-	
-	set_file_details (s: like name; b: like base_name) is 
-			-- Assign `s' to name, `b' to base_name, and
-			-- set date of insertion.
-		require
-			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
-			b_not_void: b /= Void
-			b_not_empty: not b.is_empty
-		do
-			set_name (s)
-			set_base_name (b)
-			set_date
-		ensure
-			name_set: name = s
-			base_name_set: base_name = b
 		end
 
 	set_read_only (v: BOOLEAN) is
@@ -447,39 +399,6 @@ feature {COMPILER_EXPORTER, EB_CLUSTERS} -- Setting
 			cluster := c
 		ensure
 			cluster_set: cluster = c
-		end
-
-	set_old_location_info (c: like cluster; n: like base_name) is
-			-- This applies for classes in override cluster and
-			-- set `c' to `old_cluster_name'
-		require
-			cluster_valid_non_void_assignment: c /= Void implies old_cluster_name = Void
-			cluster_valid_void_assignment: c = Void implies old_cluster_name /= Void
-			name_valid_non_void_assignment: n /= Void implies old_base_name = Void
-			name_valid_void_assignment: n = Void implies old_base_name /= Void
-		do
-			old_cluster_name := c.cluster_name
-			old_base_name := n
-		ensure
-			old_cluster_name_set: old_cluster_name = c.cluster_name
-			old_base_name_set: old_base_name = n
-		end
-
-	restore_class_i_information (a_new_cluster: like cluster) is
-			-- Restore CLASS_I object so that we can move it from its current
-			-- location to old one.
-		require
-			old_cluster_name_not_void: old_cluster_name /= Void
-			a_new_cluster_not_void: a_new_cluster /= Void
-			a_new_cluster_does_not_have_current: not a_new_cluster.classes.has (name)
-		do
-				-- Reset `override_cluster' info since it has been moved back to its previous
-				-- location.
-			base_name := old_base_name
-			old_base_name := Void
-			old_cluster_name := Void
-			set_cluster (a_new_cluster)
-			a_new_cluster.classes.put (Current, name)
 		end
 
 	reset_class_c_information (cl: CLASS_C) is
@@ -649,45 +568,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			end
 		end
 
-	copy_options (other: CLASS_I) is
-			-- Copy compilation options from `other' into Current.
-		require
-			good_argument: not (other = Void)
-		do
-			debug_level := other.debug_level
-			trace_level := other.trace_level
-			profile_level := other.profile_level
-			optimize_level := other.optimize_level
-			assertion_level := other.assertion_level
-			visible_level := other.visible_level
-			visible_name := other.visible_name
-		end
-
 feature {TEXT_FILTER} -- Document processing
-
-	document_file_name: FILE_NAME is
-			-- File name specified for the document
-			-- (.e is removed from end)
-		local
-			bname: STRING
-			d_name: DIRECTORY_NAME
-			i: INTEGER
-		do
-			d_name := cluster.document_path
-			if d_name /= Void then
-				create Result.make_from_string (d_name)
-				bname := clone (base_name)
-				i := bname.count
-				if 
-					i > 2 and then
-					bname.item (i - 1) = Dot and then
-					valid_class_file_extension (bname.item (i))
-				then
-					bname.keep_head (i - 2)
-				end
-				Result.set_file_name (bname)
-			end
-		end
 
 	document_file_relative_path (sep: CHARACTER): EB_FILE_NAME is
 			-- Generate the relative path of the file
@@ -700,10 +581,6 @@ feature {TEXT_FILTER} -- Document processing
 		ensure
 			Result_exists: Result /= Void
 		end
-
-feature {NONE} -- Document processing
-
-	No_word: STRING is "no"
 
 feature {NONE} -- Implementation
 

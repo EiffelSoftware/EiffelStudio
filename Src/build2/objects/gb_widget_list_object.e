@@ -32,41 +32,26 @@ feature -- Basic operation
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current' at position `position'.
 		local
+			dynamic_list: EV_DYNAMIC_LIST [EV_WIDGET]
 			widget: EV_WIDGET
-			box: EV_BOX
 		do
+			dynamic_list ?= object
 			widget ?= an_object.object
 			check
-				object_is_a_widget: widget /= Void
+				object_is_a_dynamic_list: dynamic_list /= Void
 			end
-			object.go_i_th (position)
-			object.put_left (widget)
-			if not an_object.expanded_in_box then
-					-- Update expanded state of `an_object'.
-				box ?= object
-				if box /= Void then
-					box.disable_item_expand (widget)
-				end
-			end
+			dynamic_list.go_i_th (position)
+			dynamic_list.put_left (widget)
 				-- Check we need to handle if display_object is a container.
 			widget ?= an_object.display_object
-			check
-				display_object_is_a_widget: widget /= Void
-			end
-			display_object.child.go_i_th (position)
-			display_object.child.put_left (widget)
-			if not an_object.expanded_in_box then
-					-- Update expanded state of `an_object'.
-				box ?= display_object.child
-				if box /= Void then
-					box.disable_item_expand (widget)
-				end
-			end
-			
+			dynamic_list ?= display_object.child
+			dynamic_list.go_i_th (position)
+			dynamic_list.put_left (widget)
 			if not layout_item.has (an_object.layout_item) then
 				layout_item.go_i_th (position)
 				layout_item.put_left (an_object.layout_item)			
 			end
+			add_child (an_object, position)
 		end
 
 end -- class GB_WIDGET_LIST_OBJECT

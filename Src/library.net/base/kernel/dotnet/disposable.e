@@ -19,4 +19,13 @@ feature -- Removal
 		deferred
 		end
 
+feature {NONE} -- Status report
+
+	is_in_final_collect: BOOLEAN is False
+			-- Is GC currently performing final collection
+			-- after execution of current program?
+			-- Safe to use in `dispose'.
+			-- On .NET there is no way to access this information
+			-- therefore it will always be False.
+	
 end

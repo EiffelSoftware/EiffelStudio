@@ -12,6 +12,8 @@ inherit
 		rename
 			count as columns,
 			set_count as set_columns
+		redefine
+			parent
 		end
 
 	EV_PND_SOURCE_I
@@ -20,10 +22,15 @@ inherit
 
 feature -- Access
 
-	parent_imp: EV_MULTI_COLUMN_LIST_IMP is
-			-- List implementation that contain this row
-		deferred
+	parent: EV_MULTI_COLUMN_LIST is
+			-- The parent of the Current widget
+			-- Can be void.
+		do
+			Result ?= {EV_COMPOSED_ITEM_I} Precursor
 		end
+
+	parent_imp: EV_MULTI_COLUMN_LIST_IMP
+			-- List implementation that contain this row
 
 feature -- Status report
 	

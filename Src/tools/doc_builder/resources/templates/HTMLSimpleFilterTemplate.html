@@ -1,3 +1,48 @@
+<script type="text/javascript">
+var tH = new Array();
+
+tH[tH.length] = {f:"index.html", s:"0.html"};
+[!TOCHash!]
+
+for (var i = 0; i < tH.length; i++) {
+    tH[tH[i].f] = tH[i];	    
+}
+
+function synchronize(aUrl)
+//Synchronize the TOC with the 'aUrl' displayed
+{	
+	alert ('synchronize called in ' + location.href);
+	tocName = getCookie ("tocName");
+	if (tocName == null)
+	{
+		alert ('tocName for content file not known');
+		tocName = top.content_frame.toc;
+	}
+	if (fileMatchesTocHash() || tocName == null)
+	{
+		alert ('tocName for content file is ' + tocName);
+		var subToc = parent.filter_frame.location.href.substring (0, parent.filter_frame.location.href.lastIndexOf ("/") + 1);							
+	}
+	else
+	{
+		var subToc = '../../' + tocName + '/';		
+	}
+	subToc += "sub_tocs/";
+	
+	alert (subToc + ':' + aUrl);
+	
+	if (tH[aUrl] != null)
+	{
+		subToc += tH[aUrl].s;
+		if (subToc != "")
+		{				
+			parent.toc_frame.location.href = subToc;
+		}
+	}
+}
+
+</script>
+
 <!-- Includes -->
 <script type="text/javascript" src="[!TOCScript!]"></script>
 
@@ -5,9 +50,12 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="[!TOCStyle!]">
 	</head>
-	<body>
+	<body onLoad="synchronize(top.content_frame.doc)">
 		<form name="theForm" method="post" action="/cgi-bin/htdig/htsearch" target="content_frame">
 			<table class="normal" cellpadding="5">
+					<tr>
+						<td class="heading_text" height="16"></td>							
+					</tr>
 					<tr>
 						<td class="heading_text">														
 							[!FilterHTML!]
@@ -17,7 +65,12 @@
 						<td class="heading_text">
 							[!FilterSearchHTML!]
 						</td>
-					</tr>					
+					</tr>
+					<table border="0" width="100%">
+						<tr>
+								<td height="15" align="right"><a href="javascript:synchronize(parent.content_frame.doc);"><img src="sync_button.gif" alt="Synchronize Contents"></a></td>
+						</tr>
+					</table>
 			</table>
 		</form>
 	</body>

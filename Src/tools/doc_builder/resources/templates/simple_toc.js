@@ -1,36 +1,45 @@
 function swapTOC (listItem)
-//Change tocs
+//Change product tocs
 {
 	if (top.toc_frame)
-	{
-		tocUrl = listItem.value + "?index=" + listItem.selectedIndex.toString();
-		top.toc_frame.location = tocUrl;		
-		if (listItem.value.search ('envision/HTML') > 1)
+	{	
+		var now = new Date();
+		var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);
+		if (listItem.value.search ('envision/sub_tocs') > 0)
 		{
-			top.content_frame.location = '../envision/index.html';
+			setCookie ('filterIndex', listItem.selectedIndex.toString(), expdate);
+			deleteCookie ('tocName');
+			setCookie ('tocName', 'envision', null);
+			loadContent ('../envision/HTMLSimpleFilterTemplate.html', top.filter_frame);
+			loadContent ('../envision/index.html', top.content_frame);									
 		}
-		else			
+		else
 		{
-			top.content_frame.location = '../eiffelstudio/index.html';
+			setCookie ('filterIndex', listItem.selectedIndex.toString(), expdate);
+			deleteCookie ('tocName');
+			setCookie ('tocName', 'eiffelstudio', null);
+			loadContent ('../eiffelstudio/HTMLSimpleFilterTemplate.html', top.filter_frame);
+			loadContent ('../eiffelstudio/index.html', top.content_frame);						
 		}
+		loadContent (listItem.value, top.toc_frame);
 	}
 }
 
-function changeSubTOC (subTOCUrl)
+function changeSubTOC (subTocUrl)
+//Change the toc displayed
 {	
-	top.toc_frame.location = subTOCUrl;
+	loadContent (subTocUrl, top.toc_frame);
 }
 
-function setCookie (name, value, expires) 
+function setCookie (name, value, expires)
 //Set a cookie
 {
 	if (!expires) 
   	{
-  		expires = new Date();
+		expires = new Date();
   	}
-  	document.cookie = name + '=' + escape(value) + '; expires=' + expires.toGMTString() + '; path=/';
+  	document.cookie = name + '=' + escape(value) + '; expires=' + expires.toGMTString() + '; path=/';  	
 }
-
 
 function getCookie(name) 
 //Return string containing value of specified cookie or null if cookie does not exist
@@ -52,74 +61,103 @@ function getCookie(name)
   	return unescape(dc.substring(begin + prefix.length, end));
 }
 
+function loadContent(aUrl, aFrame)
+//Load into `aFrame' page the file at location `aUrl'.
+{
+	aFrame.location.href = aUrl;
+}
+
+function deleteCookie(name)
+//Delete the cookie with `name'
+{
+	var date = new Date;
+	date.setFullYear(date.getFullYear( ) -10);			  
+	setCookie (name, '', date);
+}
+
 function pageLoad()
 //Page load function
-{	
-	if (top.filter_frame.document.theForm.filterMenu)
+{		
+	//Select the correct product toc in the list
+	if (top.filter_frame.document)
 	{
-		selectFilterNode();
+		if (top.filter_frame.document.theForm)
+		{
+			if (top.filter_frame.document.theForm.filterMenu != null)
+			{
+				selectFilterNode();
+			}	
+		}
 	}
-	loadCookie();
+	
+	//If there is redirect page then load this page into the content frame.  If the redirect page does not belong to the product toc currently in use then load the appropriate toc hash.  Once done remove the cookies to avoid future problems.
+	var redirectValue = getCookie ("redirecturl");
+	if (redirectValue)
+	{		
+		if (fileMatchesTocHash())
+		{
+			var fileLocation = '../' + redirectValue						
+		}
+		else		
+		{
+			if (getCookie ("tocName") != null)
+			{
+				var tocNameValue = getCookie ("tocName");
+				var fileLocation = '../../' + tocNameValue + '/' + redirectValue;
+				loadContent ('../../' + tocNameValue + '/HTMLSimpleFilterTemplate.html', top.filter_frame);
+			}			
+			
+		}		
+		loadContent(fileLocation, parent.content_frame);
+		
+		var removeCookie = getCookie ("delete");
+		if (removeCookie)
+		{					
+			deleteCookie("delete");
+		}
+	}	
+}
+
+function fileMatchesTocHash()
+//Determine if the file in the content frame belongs to the product toc currently loaded in the filter frame toc hash.
+{
+	var fileTocName = getCookie ("tocName");
+	if (fileTocName)
+	{
+		var filterToc = parent.filter_frame.location.href.substring (0, parent.filter_frame.location.href.lastIndexOf ("/"));	
+		var filterTocName = filterToc.substring (filterToc.lastIndexOf ("/") + 1, filterToc.length);		
+		if (filterTocName == fileTocName)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 
 function selectFilterNode()
 //Select appropriate filter node in combo box based on query string value
 //passed from previous page
-{
-
-	//keep everything after the '?'
-	query = document.location.toString()
-	query = query.substring ((query.indexOf('?')) + 1);
-
-	if (!query.length < 1)
+{	
+	var filterIndex = getCookie ("filterIndex");
+	if (filterIndex)
 	{
-		keypairs = new Object();
-		numKP = 1;
-
-		while (query.indexOf('&') > -1)
-		{
-			keypairs[numKP] = query.substring(0,query.indexOf('&'));
-			query = query.substring((query.indexOf('&')) + 1);
-			numKP++;
-		}
-
-		keypairs[numKP] = query;
-		// Store what's left in the query string as the final keypairs[] data.
-
-		for (i in keypairs)
-		{
-			keyName = keypairs[i].substring(0,keypairs[i].indexOf('='));
-			// Left of '=' is name.
-			keyValue = keypairs[i].substring((keypairs[i].indexOf('=')) + 1);
-			// Right of '=' is value.
-		}
-		if (keyName == "index")
-		{
-			keyValue = unescape(keyValue);
-			top.filter_frame.document.theForm.filterMenu.options [keyValue].selected = true;
-		}
+		top.filter_frame.document.theForm.filterMenu.options [filterIndex].selected = true;
+		deleteCookie ('filterIndex');
 	}
-}
-
-function loadCookie()
-//Load into the content page the file found in cookie.  Used for redirecting back to the required page
-//when a non-frames url is entered into the browser.  If there is no cookie just use the default.
-{
-
-	var cookieValue = getCookie ("redirecturl");
-	if (cookieValue)
-	{
-		parent.content_frame.location.href = cookieValue;
-	}
-
 }
 
 function documentLoaded (aUrl)
 //A new document was loaded in the content frame, so filter it based on filter, and sync the toc.
 {
-
 	//Synchronize the TOC
-	//synchronize (aUrl);
+	if (getCookie("redirecturl") != null)
+	{
+		deleteCookie("redirecturl");			
+		top.filter_frame.synchronize (aUrl);	
+	}
 
 	//Extract filter words from filter string
 	var widget = top.filter_frame.document.theForm.filterMenu;

@@ -8,9 +8,13 @@ mailto\:ise@eiffel.com:papers/net/control.html papers/net/working.html papers/ne
 ftp\://ftp.eiffel.com/pub/examples/cecil/cecil/c2array/array-opt:papers/cecil.html
 /forms/secure.html:eiffel/books.html
 http\://www.eiffel.com/doc/manuals/language/precursor/formal-old.html:eiffel/language/precursor_construct.html
+/doc/manuals/page.html:papers/c++.html
+pdf/eiffelcom.pdf:index.html release_notes.html
 /frames/new.html:papers/c++.html
 eiffel/manuals/net/introduction:eiffel/manuals/net/toc.html
 eiffel/manuals/net/fig_2.gif:eiffel/manuals/net/overview.html
+ftp\://ftp.eiffel.com/pub/examples/cecil/cecil.zip:papers/cecil.html
+icons/quick.gif:papers/net/control.html papers/net/working.html papers/net/bibliography.html eiffel/manuals/net/complex_example.html papers/net/toc.html papers/net/examples_introduction.html papers/net/predefined_level.html eiffel/manuals/net/clients_and_servers.html eiffel/manuals/net/control.html eiffel/manuals/net/introduction.html eiffel/manuals/net/working.html papers/net/index.html papers/net/datagram_sockets.html eiffel/manuals/net/bibliography.html eiffel/manuals/net/examples_introduction.html papers/net/overview.html eiffel/manuals/net/predefined_level.html papers/net/introduction.html eiffel/manuals/net/datagram_sockets.html papers/net/complex_example.html papers/net/clients_and_servers.html eiffel/manuals/net/overview.html eiffel/manuals/net/toc.html papers/net/execution.html
 /products/page.html:papers/c++.html
 ftp\://ftp.eiffel.com/examples/cecil:papers/cecil.html
 http\://www.awl-he.com/computing:eiffel/books.html
@@ -71,7 +75,3 @@ http\://eiffel.com/products/wel/page.html:papers/wel/index.html
 http\://eiffel.com/products/bench/page.html:papers/wel/index.html
 http\://www.eiffel.com/forms/interaction.html:papers/net/control.html papers/net/working.html papers/net/bibliography.html eiffel/manuals/net/complex_example.html papers/net/toc.html papers/net/examples_introduction.html papers/net/predefined_level.html eiffel/manuals/net/clients_and_servers.html eiffel/manuals/net/control.html eiffel/manuals/net/introduction.html eiffel/manuals/net/working.html papers/net/index.html papers/net/datagram_sockets.html eiffel/manuals/net/bibliography.html eiffel/manuals/net/examples_introduction.html papers/net/overview.html eiffel/manuals/net/predefined_level.html papers/net/introduction.html eiffel/manuals/net/datagram_sockets.html papers/net/complex_example.html papers/net/clients_and_servers.html eiffel/manuals/net/overview.html eiffel/manuals/net/toc.html papers/net/execution.html
 eiffel/manuals/net/fig_3.gif:eiffel/manuals/net/overview.html
-/doc/manuals/page.html:papers/c++.html
-pdf/eiffelcom.pdf:index.html release_notes.html
-ftp\://ftp.eiffel.com/pub/examples/cecil/cecil.zip:papers/cecil.html
-icons/quick.gif:papers/net/control.html papers/net/working.html papers/net/bibliography.html eiffel/manuals/net/complex_example.html papers/net/toc.html papers/net/examples_introduction.html papers/net/predefined_level.html eiffel/manuals/net/clients_and_servers.html eiffel/manuals/net/control.html eiffel/manuals/net/introduction.html eiffel/manuals/net/working.html papers/net/index.html papers/net/datagram_sockets.html eiffel/manuals/net/bibliography.html eiffel/manuals/net/examples_introduction.html papers/net/overview.html eiffel/manuals/net/predefined_level.html papers/net/introduction.html eiffel/manuals/net/datagram_sockets.html papers/net/complex_example.html papers/net/clients_and_servers.html eiffel/manuals/net/overview.html eiffel/manuals/net/toc.html papers/net/execution.html

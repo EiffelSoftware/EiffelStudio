@@ -91,13 +91,7 @@ feature
 	parent: CLASS_C is
 			-- Parent class
 		do
-			Result := System.class_of_id (parent_id);
-		end;
-
-	parent_id: INTEGER is
-			-- Parent class id
-		do
-			Result := parent_type.class_id
+			Result := parent_type.associated_class
 		end;
 
 	has_renamed (feature_name: STRING): BOOLEAN is

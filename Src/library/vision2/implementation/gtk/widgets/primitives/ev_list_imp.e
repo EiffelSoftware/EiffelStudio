@@ -155,20 +155,34 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Make `command' executed when an item is
 			-- selected.
 		do
-			add_command (list_widget, "selection_changed", cmd, arg, default_pointer)
+			add_command (list_widget, "select_child", cmd, arg, default_pointer)
+		end
+
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+			-- Make `command' executed when an item is
+			-- selected.
+		do
+			add_command (list_widget, "unselect_child", cmd, arg, default_pointer)
 		end
 
 feature -- Event -- removing command association
 
-	remove_selection_commands is	
+	remove_select_commands is	
 			-- Empty the list of commands to be executed
 			-- when the selection has changed.
 		do
-			remove_commands (list_widget, selection_changed_id)
+			remove_commands (list_widget, select_child_id)
+		end
+
+	remove_unselect_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		do
+			remove_commands (list_widget, unselect_child_id)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation

@@ -37,13 +37,13 @@ cluster
 external
 	include_path: "$(EIFFEL4)\library\store\dbms\rdbms\oracle\Clib",
 -- Insert here the path which contains the Oracle OCI
-				"$(ORACLE_HOME)\OCI80\include"
+				"$(ORACLE_HOME)\OCI\include"
 
 	object:
 		"$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\support.lib",
 		"$(EIFFEL4)\library\time\spec\$(COMPILER)\lib\datetime.lib",
 		"$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
 -- Insert here the file oci.lib
-		"$(ORACLE_HOME)\OCI80\lib\msvc\oci.lib"
+		"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib"
 
 end

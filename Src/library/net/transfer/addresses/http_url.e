@@ -27,8 +27,17 @@ feature -- Status report
 	Is_proxy_supported: BOOLEAN is True
 			-- Are proxy connections supported? (Answer: yes)
 
-	Has_username: BOOLEAN is False
-			-- Can address contain a username? (Answer: no)
+	Has_username: BOOLEAN is
+			-- Can address contain a username?
+		do
+			Result := username /= Void and then not username.is_empty
+		end
+
+	Has_password: BOOLEAN is
+			-- Can address contain a password?
+		do
+			Result := password /= Void and then not password.is_empty
+		end
 
 end -- class HTTP_URL
 

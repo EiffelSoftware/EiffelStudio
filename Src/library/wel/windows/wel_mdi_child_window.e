@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 				cwin_send_message_result (a_parent.client_window.item,
 				Wm_mdicreate, 0, cwel_pointer_to_integer (mdi_cs.item)))
 			if item /= default_pointer then
-				register_window (Current)
+				register_current_window
 				set_default_window_procedure
 			end
 		end

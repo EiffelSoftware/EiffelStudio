@@ -11,12 +11,12 @@ inherit
 
 	STRING_HDL
 		undefine
-			is_equal, copy, out, consistent, setup
+			is_equal, copy, out
 		end
 
 	EXT_INTERNAL
 		undefine
-			is_equal, copy, out, consistent, setup
+			is_equal, copy, out
 		end
 
 	STRING
@@ -34,7 +34,7 @@ inherit
 		rename
 			make as format_make
 		undefine
-			is_equal, copy, out, consistent, setup
+			is_equal, copy, out
 		end
 
 create -- Creation procedure

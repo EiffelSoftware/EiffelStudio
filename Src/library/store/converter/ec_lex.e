@@ -9,7 +9,7 @@ class EC_LEX inherit
 
 	EC_TYPES
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		end;
 
 	METALEX

@@ -105,8 +105,8 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	clear_selection is
-			-- Clear the selected rows or items if any
+	remove_selection is
+			-- Ensure that `selected_rows' and `selected_items' are empty.
 		local
 			sel_rows: like selected_rows
 			sel_items: like selected_items
@@ -266,7 +266,7 @@ feature -- Status setting
 			-- unselecting any previous rows.
 		do
 			to_implement ("EV_GRID_I.enable_single_row_selection")
-			clear_selection
+			remove_selection
 			single_item_selection_enabled := False
 			multiple_item_selection_enabled := False
 			multiple_row_selection_enabled := False
@@ -280,7 +280,7 @@ feature -- Status setting
 			-- Multiple rows may be selected.
 		do
 			to_implement ("EV_GRID_I.enable_multiple_row_selection")
-			clear_selection
+			remove_selection
 			single_item_selection_enabled := False
 			multiple_item_selection_enabled := False
 			multiple_row_selection_enabled := True
@@ -294,7 +294,7 @@ feature -- Status setting
 			-- unselecting any previous items.
 		do
 			to_implement ("EV_GRID_I.enable_single_item_selection")
-			clear_selection
+			remove_selection
 			single_item_selection_enabled := True
 			multiple_item_selection_enabled := False
 			multiple_row_selection_enabled := False
@@ -308,7 +308,7 @@ feature -- Status setting
 			-- Multiple items may be selected.
 		do
 			to_implement ("EV_GRID_I.enable_multiple_item_selection")
-			clear_selection
+			remove_selection
 			single_item_selection_enabled := False
 			multiple_item_selection_enabled := True
 			multiple_row_selection_enabled := False
@@ -1696,7 +1696,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 		do
 			if single_row_selection_enabled or multiple_row_selection_enabled then
 					-- Deselect existing rows and then remove from list
-				clear_selection			
+				remove_selection			
 			end
 			if a_row_i.is_selected then
 					-- Add to grid's selected rows
@@ -1713,7 +1713,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 		do
 			if single_item_selection_enabled or multiple_item_selection_enabled then
 					-- Deselect existing items and then remove from list
-				clear_selection			
+				remove_selection			
 			end
 			if a_item_i.is_selected then
 					-- Add to grid's selected rows

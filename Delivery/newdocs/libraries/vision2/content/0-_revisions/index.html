@@ -88,8 +88,12 @@
 						<b>EV_PASSWORD_FIELD</b>
 					- Implemented pick and drop.
 					<li>
-						<b>EV_TEXT</b>
-					- Implemented pick and drop.
+						<b>EV_TEXT</b><ul>
+					<li>Implemented pick and drop.</li>
+					<li>If not `is_editable' and a `background_color' had been set, it was only used on lines containing text. The `background_color' is now correctly displayed throughout the whole control when not `is_editable'.</li>
+					<li>Fixed `select_region' which was selecting an incorrect region starting on any line except the first, when the `text' spanned multiple lines. </li>
+					<li>Fixed `selection_start' and `selection_end' which were incorrect when the selection was not completely contained on the first line.</li>
+						</ul>
 					<li>
 						<b>EV_DRAWABLE</b>
 					- Fixed bug when you performed the following: drew a filled shape, called 
@@ -107,8 +111,6 @@
 						pixmap and background color simultaneously. Previously, the background color 
 						was never displayed, and either the pixmap or text would be displayed, not 
 						both.</li>
-					<li>
-						<b>EV_TEXT</b> - If not `is_editable' and a `background_color' had been set, it was only used on lines containing text. The `background_color' is now correctly displayed throughout the whole control when not `is_editable'.</li>
 					<li><b>EV_PRINT_DIALOG</b> - Fixed `set_from_page' and `set_to_page' which were previously not implemented.</li>
 					<li><b>EV_LIST</b><ul><li>Fixed a graphical glitch when using `wipe_out' when items were contained that required the horizontal scroll bar to be visible. The scroll bar was not hidden, even though there were no longer any items in the list.</li>
 					<li>Changing the selection behaviour between multiple and single selection would cause the scroll bars to become hidden, even if they were necessary. Changing this status will no longer hide the scroll bars if they are required.</li>

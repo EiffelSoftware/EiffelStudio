@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 
 	list_agent: FUNCTION [ANY, TUPLE [], like list]
 
-	list: DYNAMIC_LIST [G]
+	list: EV_DYNAMIC_LIST [G]
 			-- The list to perform the tests on.
 
 	similar_list: DYNAMIC_LIST [G]
@@ -711,6 +711,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/27 15:01:08  brendel
+--| Changed static type of list.
+--|
 --| Revision 1.27  2000/04/06 01:59:52  brendel
 --| Decreased test size to keep memory usage down.
 --|

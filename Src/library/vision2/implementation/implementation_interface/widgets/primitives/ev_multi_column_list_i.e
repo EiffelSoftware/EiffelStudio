@@ -18,6 +18,11 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_ITEM_PIXMAP_SCALER_I
+		redefine
+			interface
+		end
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_I
 
@@ -26,8 +31,7 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 				-- Set default width & height for the pixmaps
-			pixmaps_width := 16
-			pixmaps_height := 16
+			initialize_pixmaps
 
 			update_children_agent := agent update_children
 			create column_titles.make
@@ -116,12 +120,6 @@ feature -- Status report
 				create Result.make_with_left_alignment
 			end
 		end
-
-	pixmaps_width: INTEGER
-			-- Width of displayed pixmaps in the Multicolumn list.
-
-	pixmaps_height: INTEGER
-			-- Height of displayed pixmaps in the Multicolumn list.
 
 feature -- Status setting
 
@@ -218,16 +216,6 @@ feature -- Status setting
 		do
 			create an_alignment.make_with_right_alignment
 			set_column_alignment (an_alignment, a_column)
-		end
-
-	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
-			-- Set the size of displayed pixmaps in the Multicolumn list.
-		do
-			if pixmaps_width /= a_width or pixmaps_height /= a_height then
-				pixmaps_width := a_width
-				pixmaps_height := a_height
-				pixmaps_size_changed
-			end
 		end
 
 feature -- Element change
@@ -547,13 +535,6 @@ feature {EV_ANY_I} -- Implementation
 		require
 			a_row_positive: a_row > 0
 			a_row_not_greater_than_count: a_row <= count
-		do
-			-- Do nothing by default
-		end
-
-	pixmaps_size_changed is
-			-- The size of the displayed pixmaps has just
-			-- changed.
 		do
 			-- Do nothing by default
 		end

@@ -17,6 +17,11 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_ITEM_PIXMAP_SCALER_I
+		redefine
+			interface
+		end
 
 	EV_TREE_ACTION_SEQUENCES_I
 
@@ -26,8 +31,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 				-- Set default width & height for the pixmaps
-			pixmaps_width := 16
-			pixmaps_height := 16
+			initialize_pixmaps
 		end
 
 feature -- Access
@@ -49,35 +53,7 @@ feature -- Status report
 			-- Is at least one tree item selected?
 		deferred
 		end
-
-	pixmaps_width: INTEGER
-			-- Width of pixmaps displayed in `Current'.
-
-	pixmaps_height: INTEGER
-			-- Height of pixmaps displayed in `Current'.
-
-feature -- Status setting
-
-	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
-			-- Set the size of pixmaps displayed in `Current' to
-			-- `a_width', `a_height' in pixels.
-		do
-			if pixmaps_width /= a_width or pixmaps_height /= a_height then
-				pixmaps_width := a_width
-				pixmaps_height := a_height
-				pixmaps_size_changed
-			end
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	pixmaps_size_changed is
-			-- The size of the displayed pixmaps has just
-			-- changed.
-		do
-			--| Do nothing by default
-		end
-
+		
 feature {EV_ANY_I}
 
 	interface: EV_TREE

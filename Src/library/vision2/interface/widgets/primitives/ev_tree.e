@@ -131,6 +131,16 @@ feature -- Status setting
 			width_set: pixmaps_width = a_width
 			height_set: pixmaps_height = a_height
 		end
+		
+feature -- Basic operations
+
+		recursive_do_all (action: PROCEDURE [ANY, TUPLE [EV_TREE_NODE]]) is
+				-- Apply `action' to every item.
+				-- Semantics not guaranteed if `action' changes the structure;
+				-- in such a case, apply iterator to clone of structure instead.
+			do
+				implementation.recursive_do_all (action)
+			end
 
 feature {NONE} -- Contract support
 

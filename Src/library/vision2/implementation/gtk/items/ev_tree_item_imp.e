@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 	remove_item_from_position (a_position: INTEGER) is
 			-- Remove item at `a_position'
 		do	
-			Precursor (a_position)
+				Precursor (a_position)
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
@@ -286,6 +286,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/02/29 18:43:40  king
+--| Tidied up code
+--|
 --| Revision 1.40  2000/02/29 00:57:41  king
 --| Added fixme to set_selected
 --|

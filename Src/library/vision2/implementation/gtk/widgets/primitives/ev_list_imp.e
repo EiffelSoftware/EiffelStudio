@@ -80,33 +80,33 @@ feature -- Access
 			end
 		end
 
-	selected_items: LINKED_LIST [EV_TREE_ITEM] is
+	--selected_items: LINKED_LIST [EV_LIST_ITEM] is
 			-- Items which are currently selected.
-		local
-			list_pointer, item_pointer: POINTER
-			o: EV_ANY_IMP
-			a_counter: INTEGER
-			current_item: EV_TREE_ITEM
-		do
-			create Result.make
-			list_pointer := C.gtk_list_struct_selection (list_widget)
-			if list_pointer /= Default_pointer then
-				from
-					a_counter := 0
-				until
-					a_counter = C.g_list_length (list_pointer)
-				loop
-					item_pointer := C.g_list_nth_data (
-						list_pointer,
-						a_counter
-					)
-					o := eif_object_from_c (item_pointer)
-					current_item ?= o.interface
-					Result.extend (current_item)
-					a_counter := a_counter + 1
-				end
-			end	
-		end
+	--	local
+	--		list_pointer, item_pointer: POINTER
+	--		o: EV_ANY_IMP
+	--		a_counter: INTEGER
+	--		current_item: EV_LIST_ITEM
+	--	do
+	--		create Result.make
+	--		list_pointer := C.gtk_list_struct_selection (list_widget)
+	--		if list_pointer /= Default_pointer then
+	--			from
+	--				a_counter := 0
+	--			until
+	--				a_counter = C.g_list_length (list_pointer)
+	--			loop
+	--				item_pointer := C.g_list_nth_data (
+	--					list_pointer,
+	--					a_counter
+	--				)
+	--				o := eif_object_from_c (item_pointer)
+	--				current_item ?= o.interface
+	--				Result.extend (current_item)
+	--				a_counter := a_counter + 1
+	--			end
+	--		end	
+	--	end
 
 feature -- Status report
 
@@ -126,7 +126,7 @@ feature -- Status report
 			-- False otherwise
 		do
 			Result := C.c_gtk_list_selection_mode (list_widget) 
-					= C.GTK_MULTIPLE_SELECTION_ENUM
+					= C.GTK_SELECTION_MULTIPLE_ENUM
 		end
 
 feature -- Status setting
@@ -235,6 +235,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/02/29 18:43:41  king
+--| Tidied up code
+--|
 --| Revision 1.24  2000/02/29 00:00:23  king
 --| Added multiple item features
 --|

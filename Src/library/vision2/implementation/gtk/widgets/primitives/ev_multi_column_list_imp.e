@@ -13,11 +13,13 @@ class
 inherit
 	EV_MULTI_COLUMN_LIST_I
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_PRIMITIVE_IMP
 		redefine
+			initialize,
 			pebble_over_widget,
 			interface,
 			destroy,
@@ -68,11 +70,13 @@ feature {NONE} -- Initialization
 			C.gtk_widget_show (scroll_window)
 			C.gtk_container_add (c_object, scroll_window)
 			create ev_children.make (0)
-			set_rows_height (15)
+			set_row_height (15)
 		end
 
 	create_list (a_columns: INTEGER) is
 			-- Create the clist with `a_columns' columns.
+		require
+			a_columns_positive: a_columns > 0
 		local
 			i: INTEGER
 			col_titles: ARRAYED_LIST [STRING]
@@ -101,7 +105,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (list_widget, "click_column", ~column_click_callback)
 			
 			if row_height > 0 then
-				set_rows_height (row_height)		
+				set_row_height (row_height)		
 			end
 
 			C.gtk_widget_show (list_widget)
@@ -130,6 +134,13 @@ feature {NONE} -- Initialization
 				C.gtk_container_remove (scroll_window, old_list_widget)
 			end
 			C.gtk_container_add (scroll_window, list_widget)
+
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+			end
 		end
 
 	select_callback (int: TUPLE [INTEGER]) is
@@ -164,6 +175,12 @@ feature {NONE} -- Initialization
 		do
 			-- FIXME IEK Should include column number somewhere.
 			interface.column_click_actions.call ([])
+		end
+
+	initialize is
+		do
+			{EV_PRIMITIVE_IMP} Precursor
+			{EV_MULTI_COLUMN_LIST_I} Precursor
 		end	
 
 feature -- Access
@@ -288,26 +305,6 @@ feature -- Status report
 			end
 		end
 
-	column_width (a_column: INTEGER): INTEGER is
-			-- Width of column `column' in pixel.
-		do
-			Result := C.c_gtk_clist_column_width (list_widget, a_column - 1)
-		end
-
-	column_title (a_column: INTEGER): STRING is
-			-- Title of column `a_column'.
-		local
-			p: POINTER
-		do
-			p := C.gtk_clist_get_column_title (list_widget, a_column - 1)
-			if p /= Default_pointer then
-				create Result.make_from_c (p)
-				if Result.empty then
-					Result := Void
-				end
-			end
-		end
-
 feature -- Status setting
 
 	destroy is
@@ -350,11 +347,31 @@ feature -- Status setting
 			)	
 		end
 
-	set_column_alignment (type: INTEGER; column: INTEGER) is
-			-- Align the text of the column at left.
-
+	align_text_left (a_column: INTEGER) is
 		do
-			C.gtk_clist_set_column_justification (list_widget, column - 1, type)
+			C.gtk_clist_set_column_justification (
+				list_widget,
+				a_column - 1,
+				C.GTK_JUSTIFY_LEFT_ENUM
+			)
+		end
+
+	align_text_right (a_column: INTEGER) is
+		do
+			C.gtk_clist_set_column_justification (
+				list_widget,
+				a_column - 1,
+				C.GTK_JUSTIFY_RIGHT_ENUM
+			)
+		end
+
+	align_text_center (a_column: INTEGER) is
+		do
+			C.gtk_clist_set_column_justification (
+				list_widget,
+				a_column - 1,
+				C.GTK_JUSTIFY_CENTER_ENUM
+			)
 		end
 
 	select_item (an_index: INTEGER) is
@@ -379,15 +396,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_columns (i: INTEGER) is
-			-- Assign `i' to `columns'
-		do
-			-- Ask gtk needs the number of columns on tree creation,
-			-- We have to discard old mclist and create new one.
-			create_list (i)					
-		end
-
-	set_column_title (txt: STRING; column: INTEGER) is
+	column_title_changed (txt: STRING; column: INTEGER) is
 			-- Make `txt' the title of the column number
 			-- `number'.
 		local
@@ -397,14 +406,14 @@ feature -- Element change
 			C.gtk_clist_set_column_title (list_widget, column - 1, $a)
 		end
 
-	set_column_width (value: INTEGER; column: INTEGER) is
+	column_width_changed (value: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the column number
 			-- `column'.
 		do
 			C.gtk_clist_set_column_width (list_widget, column - 1, value)
 		end
 
-	set_rows_height (value: INTEGER) is
+	set_row_height (value: INTEGER) is
 			-- Make `value' the new height of all the rows.
 		do
 			if list_widget /= Default_pointer then
@@ -462,6 +471,27 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	set_text_on_position (a_row, a_column: INTEGER; a_text: STRING) is
+		local
+			a: ANY
+		do
+			a := a_text.to_c
+			C.c_gtk_clist_set_pixtext (
+				list_widget,
+				a_row - 1,
+				a_column - 1,
+				Default_pointer,
+				$a
+			)
+		end
+
+feature {NONE} -- Implementation
+
+	expand_columns_to (a_columns: INTEGER) is
+		do
+			create_list (a_columns)
+		end
+
 	scroll_window: POINTER
 		-- Pointer to the scrollable window tree is in.
 
@@ -474,7 +504,11 @@ feature {NONE} -- Implementation
 			a_curs: CURSOR
 		do
 			if list_widget = Default_pointer then
-				create_list (v.count)
+				if v.count > 0 then
+					create_list (v.count)
+				else
+					create_list (1)
+				end
 			end
 
 			item_imp ?= v.implementation
@@ -488,53 +522,10 @@ feature {NONE} -- Implementation
 			an_index := C.c_gtk_clist_append_row (list_widget)
 
 			-- add text in the gtk column list row:
-			row_update (v)
-		end
-
-	row_update (a_row: EV_MULTI_COLUMN_LIST_ROW) is
-		local
-			a_curs: CURSOR
-			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
-			a_counter: INTEGER
-		do
-			a_row_imp ?= a_row.implementation
-			if a_row.count > columns then
-				create_list (a_row.count)
-				full_list_update
-			else
-				a_curs := a_row.cursor
-				from
-					a_row.start
-				until
-					a_counter > columns
-				loop
-					if not a_row.after then
-						if a_row.item /= Void then
-							a_row_imp.set_cell_text (a_row.index, a_row.item)
-						else
-							a_row_imp.set_cell_text (a_row.index, "")
-						end
-						a_row.forth
-					end
 			
-					a_counter := a_counter + 1
-				end
-				a_row.go_to (a_curs)
+			if v.count <= columns then
 			end
 		end
-
-	full_list_update is
-			-- Update new list with previous items.
-		do
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				row_update (ev_children.item.interface)
-				ev_children.forth
-			end
-		end		
 
 	remove_item_from_position (a_position: INTEGER) is
 			-- Remove item from list at `a_position'.
@@ -634,6 +625,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/03/25 01:50:25  king
+--| Half implemented changes
+--|
 --| Revision 1.47  2000/03/24 01:50:20  king
 --| Changed rows_height -> row_height, optimized create_list
 --|

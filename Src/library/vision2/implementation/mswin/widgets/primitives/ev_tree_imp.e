@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
@@ -602,6 +603,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/02/19 07:49:45  oconnor
+--| unreleased
+--|
 --| Revision 1.35  2000/02/19 06:34:13  oconnor
 --| removed old command stuff
 --|

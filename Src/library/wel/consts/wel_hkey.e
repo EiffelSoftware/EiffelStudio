@@ -72,49 +72,49 @@ feature -- Status
 
 feature -- Access
 
-	Hkey_classes_root: POINTER is
+	frozen Hkey_classes_root: POINTER is
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CLASSES_ROOT"
 		end
 
-	Hkey_current_user: POINTER is
+	frozen Hkey_current_user: POINTER is
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CURRENT_USER"
 		end
 
-	Hkey_local_machine: POINTER is
+	frozen Hkey_local_machine: POINTER is
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_LOCAL_MACHINE"
 		end
 
-	Hkey_users: POINTER is
+	frozen Hkey_users: POINTER is
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_USERS"
 		end
 
-	Hkey_performance_data: POINTER is
+	frozen Hkey_performance_data: POINTER is
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_PERFORMANCE_DATA"
 		end
 
-	Hkey_current_config: POINTER is
+	frozen Hkey_current_config: POINTER is
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CURRENT_CONFIG"
 		end
 
-	Hkey_dyn_data: POINTER is
+	frozen Hkey_dyn_data: POINTER is
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias

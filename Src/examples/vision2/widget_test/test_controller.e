@@ -18,11 +18,6 @@ inherit
 			copy, default_create, is_equal
 		end
 		
-	INTERNAL
-		undefine
-			copy, default_create, is_equal
-		end
-		
 	INSTALLATION_LOCATOR
 		undefine
 			copy, default_create, is_equal
@@ -96,6 +91,8 @@ feature {GENERATION_DIALOG} -- Basic operations
 	generate_current_test (directory: DIRECTORY) is
 			-- Generate a stand alone test that may be compiled, based on
 			-- the selected test in `test_notebook'.
+		require
+			installation_corret: installation_location /= Void
 		do
 			Test_generator.generate_project (directory, selected_test_name,
 				test_widget_type.substring (4, test_widget_type.count))	
@@ -253,41 +250,46 @@ feature {NONE} -- Implementation
 			directory_string: STRING
 			filenames: ARRAYED_LIST [STRING]
 			current_file_name:  STRING
+			error_label: EV_LABEL
 		do
 			application.idle_actions.prune (application.idle_actions.first)
-			create directory_name.make_from_string (installation_location)
-			directory_name.extend ("tests")
-			directory_string := a_type.substring (4, a_type.count)
-			directory_string.to_lower
-			directory_name.extend (directory_string)
-			create directory.make_open_read (directory_name)
-			filenames := directory.linear_representation
-			from
-				filenames.start
-			until
-				filenames.off
-			loop
-				current_file_name := filenames.item
-					-- 5 is an arbitary value to ensure that we ignore "." and ".." files.
-					-- No valid test will have a name that is shorter than 5 characters.
-				if current_file_name.count > 5 then 
-					store_text (current_file_name, directory)
+			if installation_location /= Void then
+				create directory_name.make_from_string (installation_location)
+				directory_name.extend ("tests")
+				directory_string := a_type.substring (4, a_type.count)
+				directory_string.to_lower
+				directory_name.extend (directory_string)
+				create directory.make_open_read (directory_name)
+				filenames := directory.linear_representation
+				from
+					filenames.start
+				until
+					filenames.off
+				loop
+					current_file_name := filenames.item
+						-- 5 is an arbitary value to ensure that we ignore "." and ".." files.
+						-- No valid test will have a name that is shorter than 5 characters.
+					if current_file_name.count > 5 then 
+						store_text (current_file_name, directory)
+					end
+					filenames.forth
 				end
-				filenames.forth
-			end
-				-- Construct each test, and add to `test_notebook'.
-			build_tests
-			
-				-- Insert first entry in `class_texts' to `text_control'
-			if not class_names.is_empty then
-				class_names.start
-				class_text_output.set_text (class_texts.item (class_names.item))
-				--class_texts.start
-				--class_text_output.set_text (class_texts.item_for_iteration)
-				--class_texts.start
-				build_interface
+					-- Construct each test, and add to `test_notebook'.
+				build_tests
+				
+					-- Insert first entry in `class_texts' to `text_control'
+				if not class_names.is_empty then
+					class_names.start
+					class_text_output.set_text (class_texts.item (class_names.item))
+					build_interface
+				else
+					hide_interface
+				end
 			else
-				hide_interface
+				build_interface
+				create error_label.make_with_text ("Unable to locate the tests for " + test_widget_type + ".%N%N" + location_error_message)
+				test_notebook.extend (error_label)
+				test_notebook.set_item_text (error_label, "Error retrieving tests")
 			end
 		end
 		

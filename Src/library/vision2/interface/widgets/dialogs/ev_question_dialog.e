@@ -12,11 +12,29 @@ class
 inherit
 	EV_MESSAGE_DIALOG
 		redefine
-			implementation
+			implementation,
+			make_default,
+			make
 		end
 creation
 	make,
 	make_default
+
+feature {NONE} -- Initialization
+
+	make (par: EV_WINDOW) is
+			-- Create the dialog box.
+		do
+			!EV_QUESTION_DIALOG_IMP!implementation.make (par)
+			{EV_MESSAGE_DIALOG} Precursor (par)
+		end
+
+	make_default (par: EV_WINDOW; msg, dtitle: STRING) is
+			-- Create with default_options
+		do
+			!EV_QUESTION_DIALOG_IMP! implementation.make (par)
+			{EV_MESSAGE_DIALOG} Precursor (par, msg, dtitle)
+		end
 
 feature -- status settings
 

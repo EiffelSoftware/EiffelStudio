@@ -49,7 +49,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_working_dialog: WORKING_D) is
+	make (a_working_dialog: WORKING_D; oui_parent: COMPOSITE) is
 			-- Create a motif working dialog.
 		do
 			widget_index := widget_manager.last_inserted_position;

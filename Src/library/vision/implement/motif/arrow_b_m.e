@@ -43,7 +43,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_arrow_b: ARROW_B; man: BOOLEAN) is
+	make (an_arrow_b: ARROW_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif arrow button.
 		do
 			widget_index := widget_manager.last_inserted_position;

@@ -47,7 +47,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_error_dialog: ERROR_D) is
+	make (an_error_dialog: ERROR_D; oui_parent: COMPOSITE) is
 			-- Create a motif error dialog.
 		do
 			widget_index := widget_manager.last_inserted_position;

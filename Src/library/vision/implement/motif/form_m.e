@@ -49,7 +49,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_form: FORM; man: BOOLEAN) is
+	make (a_form: FORM; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif form.
 		do
 			widget_index := widget_manager.last_inserted_position;

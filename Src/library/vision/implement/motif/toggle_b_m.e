@@ -42,7 +42,7 @@ creation
 
 feature {NONE} -- Creation
 
-	make (a_toggle_b: TOGGLE_B; man: BOOLEAN) is
+	make (a_toggle_b: TOGGLE_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif toggle button.
 		do
 			widget_index := widget_manager.last_inserted_position;

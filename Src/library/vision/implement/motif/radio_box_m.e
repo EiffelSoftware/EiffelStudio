@@ -40,7 +40,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_radio_box: RADIO_BOX; man: BOOLEAN) is
+	make (a_radio_box: RADIO_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif radio_box.
 		local
 			ext_name: ANY

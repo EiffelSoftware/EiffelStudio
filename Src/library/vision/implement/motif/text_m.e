@@ -65,7 +65,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_text: TEXT; man: BOOLEAN) is
+	make (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif text.
 		do
 			widget_index := widget_manager.last_inserted_position;
@@ -75,10 +75,10 @@ feature {NONE} -- Initialization
 			a_text.set_font_imp (Current)
 		end;
 
-	make_word_wrapped (a_text: TEXT; man: BOOLEAN) is
+	make_word_wrapped (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif text enabling word wrap.
 		do
-			make (a_text, man);
+			make (a_text, man, oui_parent);
 			set_multi_line_mode;
 			set_word_wrap (True)
 		end;

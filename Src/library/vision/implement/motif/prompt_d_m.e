@@ -57,7 +57,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_prompt_dialog: PROMPT_D) is
+	make (a_prompt_dialog: PROMPT_D; oui_parent: COMPOSITE) is
 			-- Create a motif prompt dialog.
 		do
 			widget_index := widget_manager.last_inserted_position;

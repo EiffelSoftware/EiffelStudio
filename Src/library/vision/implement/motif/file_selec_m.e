@@ -48,7 +48,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_file_selection: FILE_SELEC; man: BOOLEAN) is
+	make (a_file_selection: FILE_SELEC; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif file selection.
 		do
 			widget_index := widget_manager.last_inserted_position;

@@ -47,7 +47,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_information_dialog: INFO_D) is
+	make (an_information_dialog: INFO_D; oui_parent: COMPOSITE) is
 			-- Create a motif information dialog.
 		do
 			widget_index := widget_manager.last_inserted_position;

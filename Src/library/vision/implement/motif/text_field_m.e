@@ -46,7 +46,7 @@ creation
 
 feature {NONE} -- Creation
 
-	make (a_text_field: TEXT_FIELD; man: BOOLEAN) is
+	make (a_text_field: TEXT_FIELD; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif text_field.
 		do
 			widget_index := widget_manager.last_inserted_position;

@@ -58,7 +58,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_message_dialog: MESSAGE_D) is
+	make (a_message_dialog: MESSAGE_D; oui_parent: COMPOSITE) is
 			-- Create a motif dialog message box.
 		do
 			widget_index := widget_manager.last_inserted_position;

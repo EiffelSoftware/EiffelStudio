@@ -38,7 +38,7 @@ creation
 
 feature {NONE} -- Creation
 
-	make (a_popup: POPUP) is
+	make (a_popup: POPUP; oui_parent: COMPOSITE) is
 			-- Create a motif popup menu.
 		do
 			widget_index := widget_manager.last_inserted_position;

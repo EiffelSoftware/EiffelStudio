@@ -44,7 +44,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_scrollbar: SCROLLBAR; man: BOOLEAN) is
+	make (a_scrollbar: SCROLLBAR; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif scrollbar.
 		do
 			widget_index := widget_manager.last_inserted_position;

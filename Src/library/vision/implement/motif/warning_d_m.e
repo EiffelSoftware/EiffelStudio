@@ -49,7 +49,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_warning_dialog: WARNING_D) is
+	make (a_warning_dialog: WARNING_D; oui_parent: COMPOSITE) is
 			-- Create a motif warning dialog.
 		do
 			widget_index := widget_manager.last_inserted_position;

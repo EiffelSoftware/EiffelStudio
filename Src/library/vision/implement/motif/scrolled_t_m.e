@@ -83,7 +83,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_scrolled_text: TEXT; man: BOOLEAN) is
+	make (a_scrolled_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif scrolled text.
 		do
 			widget_index := widget_manager.last_inserted_position;
@@ -94,7 +94,8 @@ feature {NONE} -- Initialization
 			set_multi_line_mode;
 		end;
 
-	make_word_wrapped (a_scrolled_text: TEXT; man: BOOLEAN) is
+	make_word_wrapped (a_scrolled_text: TEXT; man: BOOLEAN; oui_parent:
+COMPOSITE) is
 			-- Create a motif scrolled text enabling word wrap.
 		do
 			widget_index := widget_manager.last_inserted_position;

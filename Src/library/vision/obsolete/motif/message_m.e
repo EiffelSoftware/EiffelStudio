@@ -43,7 +43,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_message: MESSAGE; man: BOOLEAN) is
+	make (a_message: MESSAGE; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif message box.
 		do
 			widget_index := widget_manager.last_inserted_position;

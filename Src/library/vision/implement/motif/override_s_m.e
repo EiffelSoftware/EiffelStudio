@@ -35,7 +35,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_override_shell: OVERRIDE_S) is
+	make (an_override_shell: OVERRIDE_S; oui_parent: COMPOSITE) is
 			-- Create an override shell.
 		do
 			widget_index := widget_manager.last_inserted_position;

@@ -43,7 +43,8 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN) is
+	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN; oui_parent:
+COMPOSITE) is
 			-- Create a motif scrolled window.
 		do
 			widget_index := widget_manager.last_inserted_position;

@@ -238,10 +238,11 @@ feature {NONE} -- Code generation
 			from
 				i := index
 			until
-				not precondition_text.item (i).is_digit 
+				i > precondition_text.count or else
+				(not precondition_text.item (i).is_digit 
 				and not precondition_text.item (i).is_alpha
 			   	and not precondition_text.item (i).is_equal ('_')
-				or precondition_text.item (i).is_equal ('.')
+				or precondition_text.item (i).is_equal ('.'))
 			loop
 				Result.append_character (precondition_text.item (i))
 				i := i + 1

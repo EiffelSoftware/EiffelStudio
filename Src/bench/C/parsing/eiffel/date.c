@@ -15,6 +15,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef EIF_WIN32
+#define NOGDI
+#include <windows.h>
+#endif
+
 EIF_INTEGER eif_date(path)
 char *path;
 {
@@ -31,7 +36,7 @@ EIF_INTEGER date;
 {
 	/* Check to see if the directory `path' has changed after `date' */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return (EIF_BOOLEAN) 1;
 #else
 	static struct stat info;

@@ -31,16 +31,6 @@ feature -- Access
 	icor_debug_value_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
 		local
 			l_data: ICOR_DEBUG_VALUE
-			l_type: INTEGER
-			l_mp: MANAGED_POINTER
-
-			l_box: ICOR_DEBUG_BOX_VALUE
-			l_string: ICOR_DEBUG_STRING_VALUE
-			l_array: ICOR_DEBUG_ARRAY_VALUE
-			l_object: ICOR_DEBUG_OBJECT_VALUE
-			l_reference: ICOR_DEBUG_REFERENCE_VALUE
-
-			l_result: ANY
 		do
 			l_data := prepared_debug_value (a_data)
 			if last_strip_references_call_success /= 0 then
@@ -54,16 +44,6 @@ feature -- Access
 	icor_debug_value_to_integer (a_data: ICOR_DEBUG_VALUE): INTEGER is
 		local
 			l_data: ICOR_DEBUG_VALUE
-			l_type: INTEGER
-			l_mp: MANAGED_POINTER
-
-			l_box: ICOR_DEBUG_BOX_VALUE
-			l_string: ICOR_DEBUG_STRING_VALUE
-			l_array: ICOR_DEBUG_ARRAY_VALUE
-			l_object: ICOR_DEBUG_OBJECT_VALUE
-			l_reference: ICOR_DEBUG_REFERENCE_VALUE
-
-			l_result: ANY
 		do
 			l_data := prepared_debug_value (a_data)
 			Result := prepared_icor_debug_value_as_integer (l_data)
@@ -184,6 +164,16 @@ feature {NONE} -- preparing
 
 feature -- Dereferenced to Specialized Value
 
+	prepared_icor_debug_value_as_string (a_data: ICOR_DEBUG_VALUE): STRING is
+		local
+			l_string: ICOR_DEBUG_STRING_VALUE
+		do
+			l_string := a_data.query_interface_icor_debug_string_value
+			if a_data.last_call_succeed then
+				Result := get_string_value (l_string)
+			end
+		end
+
 	prepared_icor_debug_value_as_boolean (a_data: ICOR_DEBUG_VALUE): BOOLEAN is
 		local
 			l_mp: MANAGED_POINTER
@@ -245,7 +235,7 @@ feature -- Dereferenced to Specialized Value
 		local
 			l_type: INTEGER
 			l_data: ICOR_DEBUG_VALUE
-			l_box: ICOR_DEBUG_BOX_VALUE
+
 			l_string: ICOR_DEBUG_STRING_VALUE
 			l_array: ICOR_DEBUG_ARRAY_VALUE
 			l_object: ICOR_DEBUG_OBJECT_VALUE
@@ -377,12 +367,13 @@ feature -- Dereferenced to Value
 				when 
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_class,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_object,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_string,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_array,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_valuetype
 				then
 					Result := prepared_icor_debug_value_as_reference_to_string (l_icd)
+				when feature {MD_SIGNATURE_CONSTANTS}.element_type_string then
+					Result := prepared_icor_debug_value_as_string (l_icd)
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_typedbyref then
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_fnptr then
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_cmod_reqd then
@@ -490,9 +481,6 @@ feature {NONE} -- Implementation
 			Result := a_data
 		end
 
-
-
-
 	get_value_data_pointer (icdvalue: ICOR_DEBUG_VALUE): MANAGED_POINTER is
 		local
 			l_icd_with_value: ICOR_DEBUG_VALUE_WITH_VALUE
@@ -550,30 +538,31 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	string_value_from (a_data: ICOR_DEBUG_VALUE): STRING is
-		local
-			l_size, l_length: INTEGER
-			l_string: STRING
-			l_icor_heap: ICOR_DEBUG_HEAP_VALUE
-			l_icor_string: ICOR_DEBUG_STRING_VALUE
-			l_lastcall: INTEGER
-		do
-			l_icor_heap := a_data.query_interface_icor_debug_heap_value
-			if a_data.last_call_succeed then
-				l_icor_string := l_icor_heap.query_interface_icor_debug_string_value
-				l_lastcall := l_icor_heap.last_call_success
-			else
-				l_icor_string := a_data.query_interface_icor_debug_string_value
-				l_lastcall := a_data.last_call_success	
-			end
-			
-			if l_lastcall = 0 and then l_icor_string /= Void then
-				l_size := l_icor_string.get_size
-				l_length := l_icor_string.get_length
-				l_string := l_icor_string.get_string (l_length)
-				Result := l_string
-			end
-		end
+--	string_value_from (a_data: ICOR_DEBUG_VALUE): STRING is
+--		local
+--			l_size: INTEGER
+--			l_length: INTEGER
+--			l_string: STRING
+--			l_icor_heap: ICOR_DEBUG_HEAP_VALUE
+--			l_icor_string: ICOR_DEBUG_STRING_VALUE
+--			l_lastcall: INTEGER
+--		do
+--			l_icor_heap := a_data.query_interface_icor_debug_heap_value
+--			if a_data.last_call_succeed then
+--				l_icor_string := l_icor_heap.query_interface_icor_debug_string_value
+--				l_lastcall := l_icor_heap.last_call_success
+--			else
+--				l_icor_string := a_data.query_interface_icor_debug_string_value
+--				l_lastcall := a_data.last_call_success	
+--			end
+--			
+--			if l_lastcall = 0 and then l_icor_string /= Void then
+--				l_size := l_icor_string.get_size
+--				l_length := l_icor_string.get_length
+--				l_string := l_icor_string.get_string (l_length)
+--				Result := l_string
+--			end
+--		end
 
 end -- class EIFNET_DEBUG_VALUE_FORMATTER
 

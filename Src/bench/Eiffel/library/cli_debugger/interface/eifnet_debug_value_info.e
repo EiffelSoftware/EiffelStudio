@@ -49,7 +49,7 @@ feature {NONE} -- Initialisation
 				when
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_string
 				then
-					is_special_type := True
+					is_reference_type := True
 					is_string := (type = feature {MD_SIGNATURE_CONSTANTS}.element_type_string)
 				when
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray,
@@ -148,7 +148,11 @@ feature -- Queries
 	value_to_string: STRING is
 			-- 	
 		do
-			Result := Debug_value_formatter.prepared_icor_debug_value_to_string (prepared_icor_debug_value)
+			if is_string then
+				Result := Debug_value_formatter.prepared_icor_debug_value_as_string (prepared_icor_debug_value)
+			else
+				Result := Debug_value_formatter.prepared_icor_debug_value_to_string (prepared_icor_debug_value)
+			end
 		end
 		
 --	value_to_any: ANY is

@@ -108,7 +108,6 @@ feature -- Access
 			-- Original ICorDebugValue from Debugger
 			-- not dereferenced !
 			-- may be useful to ICorDebugEval::CallFunction ...
-
 	value: ICOR_DEBUG_VALUE
 			-- Value of object.
 

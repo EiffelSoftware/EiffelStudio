@@ -8,11 +8,15 @@ class
 	EIFNET_DEBUG_STRING_VALUE
 
 inherit
-	ABSTRACT_DEBUG_VALUE
+--	ABSTRACT_DEBUG_VALUE
+--		redefine
+--			address
+--		end
+	ABSTRACT_REFERENCE_VALUE
 		redefine
-			address
-		end
-
+			output_value, kind, expandable
+		end		
+		
 	COMPILER_EXPORTER
 		undefine
 			is_equal
@@ -44,21 +48,26 @@ create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	
 feature {NONE} -- Initialization
 
-	make (v: like value) is
+	make (a_prepared_value: like value; f: like icd_frame) is
 			-- 	Set `value' to `v'.
 		require
-			v_not_void: v /= Void
+			a_prepared_value_not_void: a_prepared_value /= Void
+			a_frame_not_void: f /= Void
 		do
 			set_default_name
-			value := v
-			create value_info.make (value)
+			value := a_prepared_value
+			icd_frame := f
 
-			is_null := value_info.is_null
+			create value_info.make (value)
+			is_external_type := True
+			string_value := value_info.value_to_string
+
+			is_null := (string_value = Void)
 			if not is_null then
 				address := value_info.address_as_hex_string
 			end
 		ensure
-			value_set: value = v
+			value_set: value = a_prepared_value
 		end
 
 --	make_attribute (attr_name: like name; a_class: like e_class; v: like value) is
@@ -77,20 +86,19 @@ feature {NONE} -- Initialization
 --			value_set: value = v
 --		end
 
-feature -- Properties
-
-	address: STRING
-
-	is_null: BOOLEAN
-
 feature -- Access
+
+	icd_frame: ICOR_DEBUG_FRAME
 
 	value: ICOR_DEBUG_VALUE
 			-- Value of object.
+			
+	icd_string: ICOR_DEBUG_STRING_VALUE
+			-- String value
 
 	value_info: EIFNET_DEBUG_VALUE_INFO
 			-- Value info of object.
-
+	
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.
 		once
@@ -101,32 +109,24 @@ feature -- Access
 
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
-		local
 		do
-			create Result.make_manifest_string (value_info.value_to_string, dynamic_class)
+			create Result.make_string_for_dotnet (
+					icd_frame, 
+					value, 
+					icd_string, 
+					address, 
+					string_value, 
+					dynamic_class, 
+					is_null
+				)
 		end
 
-feature -- Output
-
-	append_type_and_value (st: STRUCTURED_TEXT) is 
-		do 
-			st.add_string (type_and_value)
-		end;
-
-feature {ABSTRACT_DEBUG_VALUE} -- Output
-		
-	append_value (st: STRUCTURED_TEXT) is 
-			-- Append only the value of Current to `st'.
-		do 
-			st.add_string (output_value)
-		end;
-		
 feature {NONE} -- Output
 	
 	output_value: STRING is
 			-- A STRING representation of the value of `Current'.
 		do
-			Result := value_info.value_to_string
+			Result := string_value
 		end
 
 	type_and_value: STRING is
@@ -154,7 +154,7 @@ feature -- Output
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
-			Result := Immediate_value
+			Result := External_reference_value
 		end
 
 end -- class EIFNET_DEBUG_STRING_VALUE

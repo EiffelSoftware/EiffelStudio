@@ -90,7 +90,7 @@ feature -- Access
 				when
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_string
 				then
-					create {EIFNET_DEBUG_STRING_VALUE} Result.make (l_icd_prepared)
+					create {EIFNET_DEBUG_STRING_VALUE} Result.make (l_icd_prepared, icd_frame)
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray then
 					create {EIFNET_DEBUG_NATIVE_ARRAY_VALUE} Result.make (l_icd_prepared, icd_frame)
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_array then

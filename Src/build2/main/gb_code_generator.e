@@ -397,9 +397,9 @@ feature {NONE} -- Implementation
 						end
 							-- Add the appropriate objects to `objects'.
 						if current_type.is_equal (Ev_titled_window_string) then
-							add_set (gb_ev_any.generate_code (current_element, "", Void))
+							add_set (gb_ev_any.generate_code (current_element, "", current_type,  Void))
 						else
-							add_set (gb_ev_any.generate_code (current_element, current_iterative_name, child_names (current_iterative_name)))
+							add_set (gb_ev_any.generate_code (current_element, current_iterative_name, current_type, child_names (current_iterative_name)))
 						end
 						end
 					end

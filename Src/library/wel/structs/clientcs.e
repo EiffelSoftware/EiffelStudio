@@ -19,6 +19,8 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_window_menu: WEL_MENU; a_first_child: INTEGER) is
+			-- Make a client structure with `a_window_menu' and
+			-- `a_first_child'.
 		require
 			a_window_menu_not_void: a_window_menu /= Void
 			a_window_menu_exists: a_window_menu.exists
@@ -34,6 +36,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	window_menu: WEL_MENU is
+			-- MDI application's window menu
 		require
 			exists: exists
 		do
@@ -43,6 +46,8 @@ feature -- Access
 		end
 
 	first_child: INTEGER is
+			-- Child window identifier of the first MDI child
+			-- window created.
 		require
 			exists: exists
 		do
@@ -52,6 +57,7 @@ feature -- Access
 feature -- Element change
 
 	set_window_menu (a_window_menu: WEL_MENU) is
+			-- Set `window_menu' with `a_window_menu'.
 		require
 			exists: exists
 			a_window_menu_not_void: a_window_menu /= Void
@@ -63,6 +69,7 @@ feature -- Element change
 		end
 
 	set_first_child (a_first_child: INTEGER) is
+			-- Set `first_child' with `a_first_child'.
 		require
 			exists: exists
 		do

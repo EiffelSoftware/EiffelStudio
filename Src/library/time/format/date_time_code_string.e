@@ -198,6 +198,8 @@ feature -- Interface
 						end
 						pos1 := pos2 + 1
 						i := i + 2
+					else
+						Result := False
 					end
 				end
 			end

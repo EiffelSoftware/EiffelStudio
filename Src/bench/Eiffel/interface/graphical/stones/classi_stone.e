@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Stone representing an uncompiled eiffel class.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class CLASSI_STONE 
 
 inherit
@@ -6,25 +13,24 @@ inherit
 		rename
 			is_valid as fs_valid
 		redefine
-			synchronized_stone
+			synchronized_stone, invalid_stone_message
 		end;
-
 	FILED_STONE
 		redefine
-			is_valid, synchronized_stone
+			is_valid, synchronized_stone, invalid_stone_message
 		select
 			is_valid
 		end;
-
 	SHARED_EIFFEL_PROJECT;
-
-	INTERFACE_W
+	INTERFACE_W;
+	WARNING_MESSAGES;
+	WINDOWS
 
 creation
 
 	make
 	
-feature -- making
+feature {NONE} -- Initialization
 
 	make (aclassi: CLASS_I) is
 			-- Copy all information from argument
@@ -32,17 +38,24 @@ feature -- making
 		do
 			class_i := aclassi
 		end;
+
+feature -- Properites
  
 	class_i: CLASS_I;
+
+feature -- Access
 
 	file_name: STRING is
 		do
 			Result := class_i.file_name
 		end;
 
-	set_file_name (s: STRING) is do end;
- 
-feature -- dragging
+	stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with
+			-- Current stone during transport.
+		do
+			Result := cur_Class
+		end;
 
 	signature: STRING is
 			-- Name and indication that the class is not compiled
@@ -94,6 +107,12 @@ feature -- dragging
 			Result := fs_valid and then class_i /= Void
 		end;
 
+	invalid_stone_message: STRING is
+			-- Message displayed for an invalid_stone
+		do
+			Result := w_Class_not_in_universe
+		end;
+
 	synchronized_stone: STONE is
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore. It may also 
@@ -117,4 +136,20 @@ feature -- dragging
 			end
 		end;
 
-end
+feature -- Setting
+
+	set_file_name (s: STRING) is do end;
+ 
+feature -- Update
+
+	process (hole: HOLE) is
+			-- Process Current stone dropped in hole `hole'.
+		do
+			if is_valid then
+				hole.process_classi (Current)
+			else
+				warner (hole.target).gotcha_call (invalid_stone_message)
+			end
+		end;
+
+end -- class CLASSI_STONE

@@ -15,6 +15,20 @@ feature -- Access
 			Result := implementation.Color_dialog
 		end
 
+	Color_read_only: EV_COLOR is
+			-- Color usely used for the background of editable
+			-- when they are in read-only mode
+		do
+			Result := implementation.Color_read_only
+		end
+
+	Color_read_write: EV_COLOR is
+			-- Color usely used for the background of editable
+			-- when they are in read / write mode
+		do
+			Result := implementation.Color_read_write
+		end
+
 feature {NONE} -- Implementation
 
 	implementation: EV_DEFAULT_COLORS_IMP is

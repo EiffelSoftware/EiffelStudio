@@ -21,6 +21,20 @@ feature {NONE} -- Implementation
 		deferred
 		end
 		
+	initialize_agents is
+			-- Initialize `validate_agents' and `execution_agents' to
+			-- contain all agents required for modification of `Current.
+		deferred
+		end
+	
+	validate_agents: HASH_TABLE [FUNCTION [ANY, TUPLE, BOOLEAN], STRING]
+			-- Agents to query if a property modification is permitted, accessible
+			-- via their associated name.
+	
+	execution_agents: HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]
+			-- Agents to execute a property modification, accessible
+			-- via their associated name.
+		
 	disable_all_items (box: EV_BOX) is
 			-- Call `disable_item_expand' on all items in `b'.
 		require

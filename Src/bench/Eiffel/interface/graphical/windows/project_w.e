@@ -31,7 +31,12 @@ inherit
 	SET_WINDOW_ATTRIBUTES;
 	SHARED_APPLICATION_EXECUTION;
 	EXECUTION_ENVIRONMENT;
-	INTERFACE_W
+	INTERFACE_W;
+	EB_CONSTANTS;
+	RESOURCE_USER
+		redefine
+			update_integer_resource, update_boolean_resource
+		end;
 
 creation
 
@@ -45,6 +50,7 @@ feature -- Initialization
 			a_screen: SCREEN;
 			app_stopped_cmd: APPLICATION_STOPPED_CMD
 		do
+			Project_resources.add_user (Current);
 			a_screen := ebench_display;
 			base_make (tool_name, a_screen);
 			!! history.make;
@@ -71,6 +77,29 @@ feature -- Initialization
 			set_composite_attributes (Current);
 		end;
 
+feature -- Resource Update
+
+	update_boolean_resource (old_res, new: BOOLEAN_RESOURCE) is
+		do
+		end;
+
+	update_integer_resource (old_res, new: INTEGER_RESOURCE) is
+		local
+			pr: like Project_resources
+		do
+			pr := Project_resources
+			if new.actual_value >= 0 then
+				if old_res = pr.tool_width then
+					set_width (new.actual_value)
+				elseif old_res = pr.tool_height then
+					if shown_portions = 1 then
+						set_height (new.actual_value)
+					end
+				end;
+				old_res.update_with (new)
+			end
+		end
+
 feature -- Properties
 
 	split_window: SPLIT_WINDOW;
@@ -83,12 +112,6 @@ feature -- Properties
 	remapped: ANY is
 		once
 			!! Result
-		end;
-
-	global_form: FORM is
-			-- For representing Current
-		do
-			Result := std_form
 		end;
 
 	ebench_display: SCREEN is
@@ -114,6 +137,11 @@ feature -- Properties
 			Result := Void
 		end;
 
+	global_form: FORM is
+		do
+			Result := std_form
+		end
+
 feature -- Access
 
 	kept_objects: LINKED_SET [STRING] is
@@ -134,8 +162,8 @@ feature -- Window Settings
 		local
 			default_x, default_y: INTEGER
 		do
-			default_x := Resources.get_integer (r_Project_tool_x, 0);
-			default_y := Resources.get_integer (r_Project_tool_y, 0);
+			default_x := Project_resources.tool_x.actual_value;
+			default_y := Project_resources.tool_y.actual_value;
 			set_x_y (default_x, default_y)
 		end;
  
@@ -259,19 +287,19 @@ feature -- Window Forms
 	form_manager: FORM;
 			-- Manager of constraints on sub widgets
 
-	std_form: FORM;
+	std_form: SPLIT_WINDOW_CHILD;
 			-- Form on which the std protject tool is displayed
 
-	feature_form: FORM;
+	feature_form: SPLIT_WINDOW_CHILD;
 			-- Form on which the feature tool during debug will be shown
 
-	object_form: FORM;
+	object_form: SPLIT_WINDOW_CHILD;
 			-- Form on which the object tool during debug will be shown
 
-	classic_bar: FORM;
+	classic_bar: TOOLBAR;
 			-- Main menu bar
 
-	format_bar: FORM;
+	format_bar: TOOLBAR;
 			-- Format menu bar
 
 feature -- Execution Implementation
@@ -446,7 +474,14 @@ feature -- Graphical Interface
 			build_compile_menu;
 			build_format_bar;
 			exec_stop_frmt_holder.execute (Void);
-			attach_all;
+
+			if Project_resources.command_bar.actual_value = False then
+				classic_bar.remove
+			end;
+			if Project_resources.format_bar.actual_value = False then
+				format_bar.remove
+			end;
+			attach_all
 		end;
 
 	build_menu is
@@ -523,7 +558,7 @@ feature -- Graphical Interface
 			update_menu_entry: EB_MENU_ENTRY;
 		do
 			!! open_command.make (text_window);
-			!! classic_bar.make (new_name, std_form);
+			!! classic_bar.make (l_Command_bar_name, toolbar_parent, Current);
 			!! quit_cmd.make (text_window);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
 			!! quit_cmd_holder.make_plain (quit_cmd);
@@ -766,28 +801,17 @@ feature -- Graphical Interface
 
 	attach_all is
 			-- Adjust and attach main widgets together.
-		local
-			separator: SEPARATOR
 		do
 			std_form.attach_left (menu_bar, 0);
 			std_form.attach_right (menu_bar, 0);
 			std_form.attach_top (menu_bar, 0);
 
-			std_form.attach_left (classic_bar, 0);
-			std_form.attach_top_widget (menu_bar, classic_bar, 2);
-			std_form.attach_right (classic_bar, 0);
-
-			!! separator.make ("", std_form);
-			std_form.attach_top_widget (classic_bar, separator, 1);
-			std_form.attach_left (separator, 0);
-			std_form.attach_right (separator, 0);
-
-			std_form.attach_top_widget (separator, format_bar, 1);
-			std_form.attach_left (format_bar, 0);
-			std_form.attach_right (format_bar, 0);
+			std_form.attach_left (toolbar_parent, 0);
+			std_form.attach_top_widget (menu_bar, toolbar_parent, 2);
+			std_form.attach_right (toolbar_parent, 0);
 
 			std_form.attach_left (text_window.widget, 0);
-			std_form.attach_top_widget (format_bar, text_window.widget, 0);
+			std_form.attach_top_widget (toolbar_parent, text_window.widget, 0);
 			std_form.attach_right (text_window.widget, 0);
 			std_form.attach_bottom (text_window.widget, 0);
 
@@ -1084,6 +1108,9 @@ feature {NONE} -- Implementation
 
 feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 
+	feature_height: INTEGER; 
+			-- Height with which the feature portion is shown.
+
 	hide_feature_portion is
 			-- Hide the feature potion and hide the menu entries
 			-- regarding the feature tool.
@@ -1096,28 +1123,19 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			feature_form.unmanage;
 			feature_part.close_windows;
 
-			std_form.unmanage;
-			--form_manager.detach_bottom (std_form);
-			--form_manager.attach_bottom_position (std_form, new_pos)
-			if shown_portions = 2 then
-				object_form.unmanage;
-				--form_manager.detach_top (object_form);
-				--form_manager.detach_bottom (object_form);
-				--form_manager.attach_top_position (object_form, new_pos);
-				--form_manager.attach_bottom_position (object_form, new_pos + 3);
-				object_form.manage
-			else
+			if shown_portions /= 2 then
 				edit_menu.button.set_insensitive;
 				special_menu.button.set_insensitive
 			end;
-
-			std_form.manage;
 
 			edit_feature_menu.button.set_insensitive;
 			special_feature_menu.button.set_insensitive;
 			format_feature_menu.button.set_insensitive;
 
-			new_height := height - Resources.get_integer (r_Debugger_feature_height, 214);
+			new_height := height - feature_height;
+			if shown_portions = 2 then
+				new_height := new_height + Project_resources.bottom_offset.actual_value
+			end;
 			set_height (new_height)
 		end;
 
@@ -1126,8 +1144,8 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			-- regarding the feature tool.
 		local
 			new_height: INTEGER;
-			new_pos: INTEGER;
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			off: INTEGER
 		do
 			if feature_part = Void then
 				feature_form.unmanage;
@@ -1138,24 +1156,6 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			end;
 
 			shown_portions := shown_portions + 1;
-			new_pos := 6 // shown_portions;
-			std_form.unmanage;
-			--form_manager.detach_bottom (std_form);
-			--form_manager.detach_top (feature_form);
-			--form_manager.detach_bottom (feature_form);
-			--form_manager.attach_bottom_position (std_form, new_pos);
-			--form_manager.attach_top_position (feature_form, new_pos);
-			--form_manager.attach_bottom_position (feature_form, new_pos + new_pos);
-
-			if shown_portions = 3 then
-				object_form.unmanage;
-				--form_manager.detach_top (object_form);
-				--form_manager.attach_top_position (object_form, new_pos + new_pos);
-				object_form.manage;
-			end;
-
-			feature_form.manage;
-			std_form.manage;
 
 			edit_feature_menu.button.set_sensitive;
 			special_feature_menu.button.set_sensitive;
@@ -1165,11 +1165,25 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 				edit_menu.button.set_sensitive
 			end;
 
-			new_height := height + Resources.get_integer (r_Debugger_feature_height, 214);
+			std_form.set_min_height (std_form.height);
+			feature_height := Project_resources.debugger_feature_height.actual_value;
+			feature_form.set_min_height (feature_height);
+			feature_form.manage;
+
+			new_height := height + feature_height;
+			off := Project_resources.bottom_offset.actual_value;
+			if new_height > screen.height - off then
+				new_height := screen.height - off
+			end
+			feature_form.set_min_height (1);
+			std_form.set_min_height (1);
 			set_height (new_height)
 		end;
 
 feature {DISPLAY_OBJECT_PORTION} -- Implementation
+
+	object_height: INTEGER;
+			-- Height with which the object portion is shown
 
 	hide_object_portion is
 			-- Hide the object portion and the menu entries
@@ -1181,31 +1195,22 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			shown_portions := shown_portions - 1;
 			new_pos := 6 // shown_portions;
 
-			std_form.unmanage;
 			object_form.unmanage;
 			object_part.close_windows;
 
-			--form_manager.detach_bottom (std_form);
-			--form_manager.attach_bottom_position (std_form, new_pos)
-			if shown_portions = 2 then
-				feature_form.unmanage;
-				--form_manager.detach_top (feature_form);
-				--form_manager.detach_bottom (feature_form);
-				--form_manager.attach_top_position (feature_form, new_pos);
-				--form_manager.attach_bottom_position (feature_form, new_pos + 3);
-				feature_form.manage
-			else
+			if shown_portions /= 2 then
 				edit_menu.button.set_insensitive;
 				special_menu.button.set_insensitive;
 			end;
-
-			std_form.manage;
 
 			edit_object_menu.button.set_insensitive;
 			special_object_menu.button.set_insensitive;
 			format_object_menu.button.set_insensitive;
 
-			new_height := height - Resources.get_integer (r_Debugger_object_height, 214);
+			new_height := height - object_height;
+			if shown_portions = 2 then
+				new_height := new_height + Project_resources.bottom_offset.actual_value;
+			end;
 			set_height (new_height)
 		end;
 
@@ -1214,33 +1219,19 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			-- regarding the feature tool.
 		local
 			new_height: INTEGER;
-			new_pos: INTEGER
+			new_pos: INTEGER;
+			mp: MOUSE_PTR;
+			off: INTEGER
 		do
 			if object_part = Void then
+				!! mp.set_watch_cursor;
 				!! object_part.form_create (object_form);
-				build_object_menus
+				build_object_menus;
+				mp.restore
 			end;
 
 			shown_portions := shown_portions + 1;
 			new_pos := 6 // shown_portions;
-			object_form.manage;
-
-			--std_form.unmanage;
-
-			--form_manager.detach_bottom (std_form);
-			--form_manager.detach_top (object_form);
-			--form_manager.detach_bottom (object_form);
-			--form_manager.attach_bottom_position (std_form, new_pos);
-			--form_manager.attach_top_position (object_form, new_pos);
-			--form_manager.attach_bottom_position (object_form, new_pos + new_pos);
-
-			if shown_portions = 3 then
-				--form_manager.detach_top (feature_form);
-				--form_manager.attach_top_position (feature_form, new_pos + new_pos)
-			end;
-
-			--object_form.manage;
-			--std_form.manage;
 
 			edit_object_menu.button.set_sensitive;
 			special_object_menu.button.set_sensitive;
@@ -1250,9 +1241,24 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 				edit_menu.button.set_sensitive
 			end;
 
-			new_height := height + Resources.get_integer (r_Debugger_object_height, 214);
-			object_form.set_height (Resources.get_integer
-					(r_Debugger_object_height, 214));
+			std_form.set_min_height (std_form.height);
+			if feature_form.shown then
+				feature_form.set_min_height (feature_form.height)
+			end;
+			object_height := Project_resources.debugger_object_height.actual_value;
+			object_form.set_min_height (object_height);
+			object_form.manage;
+			new_height := height + object_height;
+			off := Project_resources.bottom_offset.actual_value;
+			if new_height > screen.height - off then
+				new_height := screen.height - off
+			end;
+
+			object_form.set_min_height (1);
+			if feature_form.shown then
+				feature_form.set_min_height (1)
+			end;
+			std_form.set_min_height (1);
 			set_height (new_height)
 		end;
 

@@ -166,6 +166,7 @@ feature -- Status setting
 				cwin_send_message (wel_item, Lb_setsel, 0, an_index - 1)
 			else
 				cwin_send_message (wel_item, Lb_setcursel, -1, 0)
+				on_lbn_selchange
 				last_selected_item := Void
 			end
 		end
@@ -177,6 +178,7 @@ feature -- Status setting
 				unselect_items (0, count - 1)
 			else
 				cwin_send_message (wel_item, Lb_setcursel, -1, 0)
+				on_lbn_selchange
 				last_selected_item := Void
 			end
 		end
@@ -235,7 +237,11 @@ feature {NONE} -- Implementation
 			-- Insert `item_imp' at the `an_index' position of the
 			-- graphical object.
 		do
-			insert_string_at (item_imp.text, an_index)
+			if item_imp.text = Void then
+				insert_string_at ("", an_index)
+			else
+				insert_string_at (item_imp.text, an_index)
+			end
 		end
 
 feature {NONE} -- Implementation : WEL features
@@ -264,7 +270,7 @@ feature {NONE} -- Implementation : WEL features
 		do
 			-- A local variable for speed
 			last := last_selected_item
-
+			
 			-- In multiple selection mode, no `last_selected_item'
 			-- has no use.
 			if multiple_selection_enabled then
@@ -275,6 +281,8 @@ feature {NONE} -- Implementation : WEL features
 					--| FIXME actual.execute_command (Cmd_item_activate, Void)
 					--| FIXME execute_command (Cmd_select, Void)
 				else
+					actual.interface.deselect_actions.call ([])
+					interface.deselect_actions.call ([caret_index + 1, actual.interface])
 					--| FIXME actual.execute_command (Cmd_item_deactivate, Void)
 					--| FIXME execute_command (Cmd_unselect, Void)
 				end
@@ -283,19 +291,28 @@ feature {NONE} -- Implementation : WEL features
 			else
 				if selected then
 					actual := ev_children @ (selected_index + 1)
+						-- Get the selected item.
 					if last /= Void and then last /= actual then
-						--| FIXME last.execute_command (Cmd_item_deactivate, Void)
-						--| FIXME execute_command (Cmd_unselect, Void)
+							-- If there was a previously selected item, different
+							-- from the item now selected then call the deselect events
+							-- on this previously selected item.
+						last.interface.deselect_actions.call ([])
+						interface.deselect_actions.call ([interface.index_of (last.interface, 1), last.interface])
 					end
-					last_selected_item := actual
-					--| FIXME actual.execute_command (Cmd_item_activate, Void)
-					if last /= Void and then last /= actual then
-						--| FIXME execute_command (Cmd_select, Void)
+					if last = Void or last /= actual then
+							-- If there is no previously selected child (Required for at
+							-- start when last and actual may be void, so => equal), or
+							-- the selected item is different from the previously selected
+							-- item then call the deselect events on the previously selected item.
+						interface.select_actions.call ([selected_index + 1, actual.interface])
+						actual.interface.select_actions.call ([])
 					end
+					last_selected_item := ev_children @ (selected_index + 1)
 				else
+						-- Call the deselect events on the previously selected item.
 					last_selected_item := Void
-					--| FIXME last.execute_command (Cmd_item_deactivate, Void)
-					--| FIXME execute_command (Cmd_unselect, Void)
+					last.interface.deselect_actions.call ([])
+					interface.deselect_actions.call ([interface.index_of (last.interface, 1), last.interface])
 				end
 			end
 		end
@@ -345,7 +362,6 @@ feature {NONE} -- Copy of WEL features
 				cwin_send_message (wel_item, Lb_setsel, 1, an_index)
 			else
 				cwin_send_message (wel_item, Lb_setcursel, an_index, 0)
-				last_selected_item := ev_children @ (an_index + 1)
 			end
 		end
 
@@ -500,6 +516,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/02/24 21:18:58  rogers
+--| Connected the select and de-select events to the list when in single selection mode. Multiple selection mode still needs connecting.
+--|
 --| Revision 1.37  2000/02/19 05:45:01  oconnor
 --| released
 --|

@@ -11,7 +11,7 @@ extern "C" {
 extern void com_initialize ();
 extern EIF_POINTER new_fusion_support ();
 extern EIF_POINTER new_cor_runtime_host (LPWSTR version, DWORD flags);
-extern EIF_POINTER new_ise_cache_manager ();
+extern EIF_POINTER new_cache_manager ();
 extern EIF_POINTER c_get_bstr (EIF_POINTER);
 extern void c_free_bstr (EIF_POINTER);
 extern EIF_POINTER new_md_dispenser ();

@@ -34,25 +34,8 @@ feature -- Basic operations
 		local
 			function_generator: WIZARD_CPP_CLIENT_FUNCTION_GENERATOR
 			disp_func_generator: WIZARD_CPP_DISPATCH_CLIENT_FUNCTION_GENERATOR
-			dual_func_generator: WIZARD_CPP_DUAL_CLIENT_FUNCTION_GENERATOR
 		do
-			if 
-				interface.dual 
-			then
-				create dual_func_generator
-				dual_func_generator.generate (component, interface.name, a_function)
-				cpp_class_writer.add_function (dual_func_generator.ccom_feature_writer, Public)
-				from
-					dual_func_generator.c_header_files.start
-				until
-					dual_func_generator.c_header_files.after
-				loop
-					if not cpp_class_writer.import_files.has (dual_func_generator.c_header_files.item) then
-						cpp_class_writer.add_import (dual_func_generator.c_header_files.item)
-					end
-					dual_func_generator.c_header_files.forth
-				end
-			elseif interface.dispinterface then
+			if interface.dispinterface then
 				create disp_func_generator
 				disp_func_generator.generate (component, interface.name, interface.guid.to_string, interface.lcid, a_function)
 				cpp_class_writer.add_function (disp_func_generator.ccom_feature_writer, Public)

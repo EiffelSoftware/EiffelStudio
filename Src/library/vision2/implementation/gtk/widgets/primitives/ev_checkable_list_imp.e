@@ -1,6 +1,5 @@
 indexing
 	description: "Eiffel Vision checkable list. Gtk implementation."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -16,7 +16,7 @@ class LINKED_LIST [G] inherit
 	DYNAMIC_LIST [G]
 		redefine
 			go_i_th, put_left, move, wipe_out,
-			isfirst, islast,  
+			isfirst, islast,
 			first, last, finish, merge_left, merge_right,
 			readable, start, before, after, off
 		end

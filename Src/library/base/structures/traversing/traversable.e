@@ -23,10 +23,10 @@ feature -- Access
 	item: G is
 			-- Item at current position
 		require
-			not_off: not off	
+			not_off: not off
 		deferred
 		end;
-	
+
 feature -- Status report
 
 	off: BOOLEAN is

@@ -18,7 +18,7 @@ deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
 		redefine
 			min, max
 		end;
-		
+
 	INDEXABLE [G, INTEGER]
 		rename
 			item as i_th,
@@ -27,7 +27,7 @@ deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
 		redefine
 			putt
 		end;
-	
+
 	LINEAR [G]
 
 feature -- Measurement
@@ -107,7 +107,7 @@ feature {NONE} -- Inapplicable
 
 	putt (v: like item) is
 		do
-		end;	
+		end;
 
 end -- class SORTED_STRUCT
 

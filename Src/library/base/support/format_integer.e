@@ -36,26 +36,26 @@ feature  -- Initialization
 feature -- Access
 
 	fill_character: CHARACTER
-			-- Padding character. 
-	
+			-- Padding character.
+
 	width: INTEGER
 			-- Width of the field.
 
 	separator: CHARACTER
 			-- Separator between 1000's of numbers.
-	
+
 	justification : INTEGER
-			-- Where in the field the format goes.	 
+			-- Where in the field the format goes.
 
 	trailing_sign: BOOLEAN
 			-- Is the sign at the end?
 
 	sign_format: INTEGER
-			-- How the sign is formatted. 
-	
-	sign_string : STRING 
-			-- Formatting details for the sign.  
-	
+			-- How the sign is formatted.
+
+	sign_string : STRING
+			-- Formatting details for the sign.
+
 	bracketted_negative: BOOLEAN
 			-- Enclose negative numbers in brackets?
 
@@ -65,7 +65,7 @@ feature -- Status report
 			-- Are numbers to be formatted centered?
 		do
 			Result := justification = Center_justification
-		ensure 
+		ensure
 			Result = (justification = Center_justification)
 		end
 
@@ -89,7 +89,7 @@ feature -- Status report
 			-- Are numbers to be formatted in smallest string possible
 		do
 			Result := justification = No_justification
-		ensure 
+		ensure
 			Result = (justification = No_justification)
 		end
 
@@ -264,7 +264,7 @@ feature -- Status setting
 		ensure
 			not_justified
 		end
-	
+
 	sign_leading is
 			-- Set the sign to lead
 		do
@@ -317,7 +317,7 @@ feature -- Status setting
 			-- Set sign for - and +.
 		do
 			sign_string := "- +"
-		ensure 
+		ensure
 			sign_string.is_equal ("- +")
 		end
 
@@ -396,7 +396,7 @@ feature -- Conversion
 			if i < 0 then
 				sign := -1
 				unsigned := -i
-			elseif i > 0 then 
+			elseif i > 0 then
 				sign := 1
 				unsigned := i
 			end
@@ -405,10 +405,10 @@ feature -- Conversion
 			else
 				Result := clone (unsigned.out)
 			end
-			if not ignore_sign or bracketted_negative then 
+			if not ignore_sign or bracketted_negative then
 				Result := process_sign (Result, sign)
 			end
-			if justification /= No_justification and then Result.count < width then	
+			if justification /= No_justification and then Result.count < width then
 				Result := justify (Result)
 			end
 		ensure
@@ -417,12 +417,12 @@ feature -- Conversion
 		end
 
 feature {NONE} -- Implementation
-	
+
 	No_justification: INTEGER is 0
 	Left_justification: INTEGER is 1
 	Center_justification: INTEGER is 2
 	Right_justification: INTEGER is 3
-	
+
 
 	Show_sign_value: INTEGER is 0
 	Ignore_sign_value: INTEGER is 1
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 		do
 			Result := s
 			if bracketted_negative and sn = -1 then
-				Result.precede ('(')	
+				Result.precede ('(')
 				Result.extend (')')
 			end
 			if  ((show_sign_negative or show_sign) and sn = -1) or else
@@ -483,7 +483,7 @@ feature {NONE} -- Implementation
 				else
 					Result.prepend (sstring)
 				end
-			end	
+			end
 		end
 
 	sign_size : INTEGER is
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 			i,t : INTEGER
 		do
 			Result := s
-			if not centered then			
+			if not centered then
 				-- be concerned about filling
 				!!l.make (width - s.count)
 				from
@@ -526,13 +526,13 @@ feature {NONE} -- Implementation
 					l.extend (fill_character)
 					i := i + 1
 				end
-				if left_justified then 
+				if left_justified then
 					Result.append (l)
 				else
 					Result.prepend (l)
 				end
 			else -- centered
-				-- add spaces both sides, more on left than right though 
+				-- add spaces both sides, more on left than right though
 				-- when there is a choice
 				t := (width - s.count) // 2
 				if 2 * t + s.count < width then

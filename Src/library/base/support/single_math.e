@@ -1,4 +1,4 @@
-indexing 
+indexing
 
 	description:
 		"Basic mathematical operations, single-precision. %
@@ -19,7 +19,7 @@ feature -- Access
 		do
 			Result := log (v)/ log (2.0)
 		end;
- 
+
 	cosine (v: REAL): REAL is
 			-- Trigonometric cosine of radian `v' approximated
 			-- in the range [-pi/4, +pi/4]
@@ -66,7 +66,7 @@ feature -- Access
 		do
 			Result := math_rsqrt (v)
 		end;
-	
+
 	log (v: REAL): REAL is
 			-- Natural logarithm of `v'
 		require
@@ -82,7 +82,7 @@ feature -- Access
 		do
 			Result := math_rlog10 (v)
 		end;
-	
+
 	floor (v: REAL): REAL is
 			-- Greatest integral value less than or equal to `v'
 		do
@@ -94,7 +94,7 @@ feature -- Access
 		do
 			Result := math_rceil (v)
 		end;
-	
+
 feature {NONE} -- Implementation
 
 	rabs (v: REAL): REAL is

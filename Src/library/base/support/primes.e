@@ -159,7 +159,7 @@ feature -- Access
 		end;
 
 feature -- Obsolete
-		
+
 	next_prime (n: INTEGER): INTEGER is
 			obsolete "Use `higher_prime' instead"
 		do

@@ -91,7 +91,7 @@ feature -- Element change
 			-- Make `other' a leaf.
 		require
 			not_child_off: not child_off;
-			other_exists: (other /= Void) 
+			other_exists: (other /= Void)
 		deferred
 		ensure
 			other_is_leaf: other.is_leaf
@@ -103,7 +103,7 @@ feature -- Element change
 			-- Make `other' a leaf.
 		require
 			not_child_off: not child_off;
-			other_exists: (other /= Void) 
+			other_exists: (other /= Void)
 		deferred
 		ensure
 			other_is_leaf: other.is_leaf
@@ -172,7 +172,7 @@ feature -- Conversion
 					child.fill_from_binary (current_node);
 					current_node := current_node.right_child
 				end
-			end	
+			end
 		end;
 
 feature -- Duplication

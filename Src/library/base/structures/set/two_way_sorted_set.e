@@ -2,7 +2,7 @@ indexing
 
 	description:
 		"Sets whose items may be compared according to a total order relation; %
-		%implemented as sorted two-way lists."; 
+		%implemented as sorted two-way lists.";
 
 	status: "See notice at end of class";
 	names: sorted_set, set, two_way_list;
@@ -49,7 +49,7 @@ creation
 	make
 
 feature -- Comparison
-	
+
 	disjoint (other: like Current): BOOLEAN is
 			-- Do current set and `other' have no
 			-- items in common?
@@ -74,7 +74,7 @@ feature -- Comparison
 						other.forth
 					end
 				end
-			end;	
+			end;
 		end;
 
 	is_subset (other: like Current): BOOLEAN is
@@ -94,10 +94,10 @@ feature -- Comparison
 					else
 						forth
 					end
-				end	
+				end
 			else
 				Result := empty
-			end	
+			end
 		end;
 
 feature -- Element change
@@ -131,7 +131,7 @@ feature -- Element change
 				end;
 				if not after then
 					if
-						(not mode and then item = other_item) 
+						(not mode and then item = other_item)
 					or else
 						(mode and then item.is_equal (other_item))
 					then
@@ -159,9 +159,9 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v : like item) is			
+	prune (v : like item) is
 		-- Remove `v' if present.
-		do	
+		do
 			start
 			stwl_prune (v)
 		end
@@ -242,7 +242,7 @@ feature -- Basic operations
 				start;
 				other.start
 			until
-				after or other.after	
+				after or other.after
 			loop
 				other_item := other.item;
 				if item < other_item then
@@ -254,7 +254,7 @@ feature -- Basic operations
 				other.forth
 			end
 		end;
-			
+
 	symdif (other: like Current) is
 			-- Remove all items also in `other', and add all items
 			-- of `other' not already present.

@@ -90,7 +90,7 @@ feature -- Cursor movement
 				end
 			end
 		end;
-		
+
 	back is
 			-- Move cursor to previous position, if any.
 		do
@@ -186,8 +186,8 @@ feature -- Element change
 				active := p
 			end;
 			count := count + 1
-	end;
-	
+		end;
+
 	put_left (v: like item) is
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
@@ -301,7 +301,7 @@ feature -- Removal
 				end;
 			elseif islast then
 				active := last_element.left;
-				last_element.forget_left;	
+				last_element.forget_left;
 				last_element := active;
 				after := true;
 			else

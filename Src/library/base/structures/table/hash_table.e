@@ -102,8 +102,8 @@ feature -- Access
 
 	key_at (n: INTEGER): H is
 			-- Key corresponding to entry `n'
-		do	
-			if n >=0 and n < keys.count then	
+		do
+			if n >=0 and n < keys.count then
 				Result := keys.item (n);
 			end;
 		end;
@@ -163,18 +163,18 @@ feature -- Measurement
 		end;
 
 feature -- Comparison
- 
+
 	is_equal (other: like Current): BOOLEAN is
 			-- Does table contain the same information as `other'?
 		do
-			Result := 
+			Result :=
 				equal (keys, other.keys) and
 				equal (content, other.content) and
 				equal (deleted_marks, other.deleted_marks)
 		end;
 
 feature -- Status report
- 
+
 	full: BOOLEAN is false;
 			-- Is structured filled to capacity? (Answer: no.)
 
@@ -212,7 +212,7 @@ feature -- Status report
 		end;
 
 	replaced: BOOLEAN is
-			-- Did last operation replace an item? 
+			-- Did last operation replace an item?
 		do
 			Result := (control = Changed_constant)
 		end;
@@ -300,7 +300,7 @@ feature -- Element change
 			else
 				control := Not_found_constant
 			end
-		ensure 
+		ensure
 			insertion_done: control = Changed_constant implies item (key) = new
 		end;
 
@@ -417,7 +417,7 @@ feature -- Conversion
 		end;
 
 feature -- Duplication
- 
+
 	copy (other: like Current) is
 			-- Re-initialize from `other'.
 		do
@@ -491,7 +491,7 @@ feature {NONE} -- Inapplicable
 		end;
 
 	extend (v: G) is
-			-- Insert a new occurrence of `v' 
+			-- Insert a new occurrence of `v'
 		do
 		end;
 

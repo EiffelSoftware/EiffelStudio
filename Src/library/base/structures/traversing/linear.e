@@ -13,13 +13,13 @@ indexing
 deferred class LINEAR [G] inherit
 
 	TRAVERSABLE [G]
-	
+
 feature -- Access
 
 	has (v: like item): BOOLEAN is
 			-- Does structure include an occurrence of `v'?
 			-- (Reference or object equality,
-			-- based on `object_comparison'.) 
+			-- based on `object_comparison'.)
 		do
 			start;
 			if not off then
@@ -32,16 +32,16 @@ feature -- Access
 			-- Index of `i'-th occurrence of `v'.
 			-- 0 if none.
 			-- (Reference or object equality,
-			-- based on `object_comparison'.) 
+			-- based on `object_comparison'.)
 		require
 			positive_occurrences: i > 0;
 		local
 			occur, pos: INTEGER;
-		do			
+		do
 			if object_comparison then
 				if v /= Void then
 					from
-						start; 
+						start;
 						pos := 1
 					until
 						off or else (occur = i)
@@ -77,7 +77,7 @@ feature -- Access
 			-- Move to first position (at or after current
 			-- position) where `item' and `v' are equal.
 			-- (Reference or object equality,
-			-- based on `object_comparison'.) 
+			-- based on `object_comparison'.)
 			-- If no such position ensure that `exhausted' will be true.
 		do
 			if object_comparison then
@@ -99,7 +99,7 @@ feature -- Access
 				loop
 					forth
 				end
-			end		
+			end
 		ensure
 			object_found: (not exhausted and then object_comparison and then v /= Void and then item /= Void)
 				 implies v.is_equal (item);
@@ -115,10 +115,10 @@ feature -- Access
 	occurrences (v: G): INTEGER is
 			-- Number of times `v' appears.
 			-- (Reference or object equality,
-			-- based on `object_comparison'.) 
+			-- based on `object_comparison'.)
 		do
 			from
-				start; 
+				start;
 				search (v)
 			until
 				exhausted
@@ -128,7 +128,7 @@ feature -- Access
 				search (v)
 			end;
 		end;
-	
+
 feature -- Status report
 
 	exhausted: BOOLEAN is
@@ -154,7 +154,7 @@ feature -- Cursor movement
 
 	finish is
 			-- Move to last position.
-		deferred			
+		deferred
 		end;
 
 	forth is

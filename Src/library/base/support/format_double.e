@@ -12,7 +12,7 @@ class FORMAT_DOUBLE
 
 inherit
 	FORMAT_INTEGER
-		rename 
+		rename
 			make as set_defaults,
 			separate as separate_integral,
 			formatted as fm_formatted
@@ -35,14 +35,14 @@ creation
 feature -- Initialization
 
 	make (w,d: INTEGER) is
-		require 
+		require
 			reasonable_field: w >= 1
 			reasonable_decimals: d <= w
 		do
 			set_defaults (w)
 			decimals := d
 			decimal := '.'
-		ensure 
+		ensure
 			blank_fill: fill_character = ' '
 			show_sign_negative: show_sign_negative
 			no_separator: no_separator
@@ -145,7 +145,7 @@ feature -- Status setting
 			zero_not_shown := false
 		ensure
 			not zero_not_shown
-		end 
+		end
 
 	hide_zero is
 			-- Show 0.5 as .5 .
@@ -192,10 +192,10 @@ feature -- Conversion
 			if decimals > 0 then
 				Result.append (fracs)
 			end
-			if not ignore_sign then 
+			if not ignore_sign then
 				Result := process_sign (Result, sign)
 			 end
-			if justification /= No_justification and then Result.count < width then	
+			if justification /= No_justification and then Result.count < width then
 				Result := justify (Result)
 			end
 		ensure

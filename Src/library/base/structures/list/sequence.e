@@ -41,7 +41,7 @@ feature -- Element change
 
 	force (v: like item) is
 			-- Add `v' to end.
-		require 
+		require
 			extendible: extendible
 		do
 			extend (v)

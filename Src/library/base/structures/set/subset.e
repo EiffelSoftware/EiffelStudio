@@ -93,7 +93,7 @@ feature -- Basic operations
 			set_exists: other /= Void
 			same_rule: object_comparison = other.object_comparison
 		deferred
-		ensure 
+		ensure
 			is_disjoint: disjoint (other)
 		end;
 

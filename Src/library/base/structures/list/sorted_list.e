@@ -27,7 +27,7 @@ feature -- Measurement
 			min_is_first: Result = first;
 			-- smallest: For every item `it' in list, `Result' <= `it'
 		end;
-			
+
 	max: like item is
 			-- Maximum item
 		require

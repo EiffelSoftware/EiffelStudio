@@ -69,7 +69,7 @@ class TWO_WAY_TREE [G] inherit
 			merge_right as twl_merge_right,
 			off as child_off,
 			prune as twl_prune,
-			put as child_put, 
+			put as child_put,
 			readable as child_readable,
 			remove as remove_child,
 			remove_left as remove_left_child,
@@ -79,12 +79,12 @@ class TWO_WAY_TREE [G] inherit
 			start as child_start,
 			writable as child_writable
 		export
-			{ANY} 
+			{ANY}
 				child;
 			{NONE}
 				twl_make, twl_has,
-				twl_fill, twl_duplicate,	
-				twl_full	
+				twl_fill, twl_duplicate,
+				twl_full
 		undefine
 			child_readable, is_leaf,
 			child_writable,
@@ -120,7 +120,7 @@ feature -- Access
 	last_child: like parent
 
 feature -- Element change
-	
+
 	put_child (n: like parent) is
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
@@ -176,7 +176,7 @@ feature -- Element change
 			n.attach_to_parent (Current);
 			arity := arity + 1
 		end;
-		
+
 	merge_tree_before (other: like first_child) is
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
@@ -215,7 +215,7 @@ feature -- Element change
 			end;
 			n.attach_to_parent (Void)
 		end;
-		
+
 feature {LINKED_TREE} -- Implementation
 
 

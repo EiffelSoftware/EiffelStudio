@@ -97,7 +97,7 @@ feature -- Access
 				Result := v = item or else subtree_has (v)
 			end
 		end;
-		
+
 	is_sibling (other: like parent): BOOLEAN is
 			-- Are current node and `other' siblings?
 		do
@@ -122,7 +122,7 @@ feature -- Measurement
 		end;
 
 feature -- Status report
-	
+
 	readable: BOOLEAN is true;
 
 	child_readable: BOOLEAN is
@@ -263,7 +263,7 @@ feature -- Element change
 				parent.prune (Current)
 			end
 		end;
-		
+
 	put, replace (v: like item) is
 			-- Replace element at cursor position by `v'.
 		require
@@ -272,7 +272,7 @@ feature -- Element change
 		ensure
 			item_inserted: item = v
 		end;
-			
+
 	child_put, child_replace (v: like item) is
 			-- Put `v' at current child position.
 		require
@@ -300,7 +300,7 @@ feature -- Element change
 		ensure
 			n_is_root: n.is_root
 		end;
-		
+
 	fill (other: TREE [G]) is
 			-- Fill with as many items of `other' as possible.
 			-- The representations of `other' and current node
@@ -309,7 +309,7 @@ feature -- Element change
 			replace (other.item);
 			fill_subtree (other)
 		end;
-	
+
 feature -- Conversion
 
 	linear_representation: LINEAR [G] is
@@ -326,7 +326,7 @@ feature -- Conversion
 
 	binary_representation: BINARY_TREE[G] is
 			-- Convert to binary tree representation:
-			-- first child becomes left child, 
+			-- first child becomes left child,
 			-- right sibling becomes right child.
 		local
 			current_sibling: BINARY_TREE [G];

@@ -78,9 +78,9 @@ feature -- Element change
 		end;
 feature -- Removal
 
-	prune (v : like item) is			
+	prune (v : like item) is
 		-- Remove `v' if present.
-		do	
+		do
 			start
 			ll_prune (v)
 		end

@@ -648,12 +648,8 @@ feature -- Basic Operations
 		require
 			non_void_property_descriptor: prop_desc /= Void
 		local
-			local_buffer: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			local_buffer := clone (prop_desc.name)
-			local_buffer.to_lower
-
 			create Result.make (1000)
 			Result.append (New_line_tab_tab_tab)
 
@@ -670,6 +666,10 @@ feature -- Basic Operations
 
 			visitor := prop_desc.data_type.visitor
 
+			Result.append ("VariantClear (pVarResult);")
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
+			
 			Result.append ("pVarResult")
 			Result.append (Struct_selection_operator)
 			Result.append ("vt")
@@ -679,21 +679,59 @@ feature -- Basic Operations
 			Result.append (New_line_tab_tab_tab)
 			Result.append (tab)
 
+			Result.append (visitor.c_type)
+			Result.append (Space)
+			Result.append (C_result)
+			if not visitor.is_structure then
+				Result.append (Space_equal_space)
+				Result.append (Zero)
+			end
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
+			
 			Result.append ("hr = ")
 			Result.append (Get_clause)
-			Result.append (local_buffer)
+			Result.append (prop_desc.name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Ampersand)
-			Result.append (Open_parenthesis)
-			Result.append ("pVarResult")
-			Result.append (Struct_selection_operator)
-			Result.append (vartype_namer.variant_field_name (visitor))
-			Result.append (Close_parenthesis)
+			Result.append (C_result)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab_tab_tab)
 			Result.append (tab)
+
 			Result.append (check_failer (True, excepinfo_setting, "DISP_E_EXCEPTION"))
+			Result.append (New_line_tab_tab_tab)
+			Result.append (tab)
+
+			if visitor.is_structure then
+				Result.append (memcpy)
+				Result.append (Space_open_parenthesis)
+				Result.append (Ampersand)
+				Result.append (Open_parenthesis)
+				Result.append ("pVarResult")
+				Result.append (Struct_selection_operator)
+				Result.append (vartype_namer.variant_field_name (visitor))
+				Result.append (Close_parenthesis)
+				Result.append (Comma_space)
+				Result.append (Ampersand)
+				Result.append (C_result)
+				Result.append (Comma_space)
+				Result.append (Sizeof)
+				Result.append (Space_open_parenthesis)
+				Result.append (visitor.c_type)
+				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
+			else
+				Result.append ("pVarResult")
+				Result.append (Struct_selection_operator)
+				Result.append (vartype_namer.variant_field_name (visitor))
+				Result.append (Space_equal_space)
+				Result.append (C_result)
+			end
+			Result.append (Semicolon)
+			
 			Result.append (New_line_tab_tab_tab)
 			Result.append (Close_curly_brace)
 			Result.append (New_line_tab_tab_tab)
@@ -729,7 +767,7 @@ feature -- Basic Operations
 				Result.append (get_argument_from_variant (prop_desc.data_type, "arg", "pDispParams->rgvarg [0]", 0, True))
 				Result.append ("hr = ")
 				Result.append (Set_clause)
-				Result.append (local_buffer)
+				Result.append (prop_desc.name)
 				Result.append (Space_open_parenthesis)
 				Result.append ("arg")
 				Result.append (Close_parenthesis)
@@ -779,10 +817,6 @@ feature -- Basic Operations
 		require
 			non_void_descriptor: func_desc /= Void
 		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
-			counter: INTEGER
-			local_buffer: STRING
-			dispatch: BOOLEAN
 			a_body_generator: WIZARD_DISPATCH_INVOKE_CASE_BODY_GENERATOR
 		do
 			create a_body_generator.make (func_desc)
@@ -870,8 +904,6 @@ feature -- Basic Operations
 			non_void_component: a_component /= Void
 			non_void_defualt_interface: default_dispinterface_name (a_component) /= Void
 		local
-			tmp_path: STRING
-			counter: INTEGER
 			type_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
 			type_lib := a_component.type_library_descriptor

@@ -736,6 +736,7 @@ feature -- Byte code computation
 			byte_context.set_byte_code (byte_code);
 
 			Byte_array.clear;
+			byte_code.set_real_body_id (dispatch.real_body_id);
 			byte_code.make_byte_code (Byte_array);
 			byte_context.clear_all;
 
@@ -1589,6 +1590,7 @@ feature -- C code generation
 
 					-- Generation of the C routine
 				byte_code.analyze;
+				byte_code.set_real_body_id (real_body_id);
 				byte_code.generate;
 				byte_context.clear_all;
 
@@ -1884,6 +1886,7 @@ feature -- Debugging
 
 			Byte_context.set_byte_code (bc);
 			Byte_array.clear;
+			bc.set_real_body_id (Result.real_body_id);
 			bc.make_byte_code (Byte_array);
 			Result.set_byte_code (Byte_array.character_array);
 			Result.set_breakable_points (Byte_context.breakable_points);
@@ -1892,6 +1895,30 @@ feature -- Debugging
 			Result.set_argument_count (bc.argument_count);
 			Byte_context.clear_all;
 			Context.clear2
+		end;
+
+	real_body_id: INTEGER is
+			-- Real body id at compilation time. This id might be
+			-- obsolete after supermelting this feature.
+			--| In the latter case, the new real body id is kept
+			--| in DEBUGGABLE objects.
+		require
+			is_debuggable: is_debuggable
+		local
+			du: DISPATCH_UNIT;
+			class_type: CLASS_TYPE;
+			old_cluster: CLUSTER_I
+		do
+			old_cluster := Inst_context.cluster;
+			Inst_context.set_cluster (written_class.cluster);
+			class_type := written_class.types.first;
+			!! du.make (class_type, Current);
+			Dispatch_table.put (du);
+				-- `put' has a side effect which `positions' last_unit;
+				-- `du' should aready be present in `Dispatch_table'.
+			du := Dispatch_table.last_unit;
+			Result := du.real_body_id;
+			Inst_context.set_cluster (old_cluster)
 		end;
 
 feature -- Didier stuff

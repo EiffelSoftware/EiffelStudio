@@ -10,10 +10,12 @@ inherit
 		undefine
 			twin
 		end;
+	
 	CLICKABLE
 		redefine
 			clear_window, display
 		end;
+
 	COMMAND_W
 		undefine
 			twin
@@ -202,7 +204,9 @@ feature
 
 	deselect_all is
 		do
-			clear_selection
+			if is_selection_active then
+				clear_selection
+			end
 		end;
 
 	clean is

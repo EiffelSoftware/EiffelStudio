@@ -84,6 +84,26 @@ feature -- Status setting
 			il_generation_set: il_generation = v
 		end
 		
+	set_msil_generation_type (s: STRING) is
+			-- Set `msil_generation_type' to `s'
+		require
+			non_void_s: s /= Void
+			valid_s: s.is_equal ("dll") or s.is_equal ("exe")
+		do
+			msil_generation_type := s
+		ensure
+			msil_generation_type_set: s.is_equal (msil_generation_type)
+		end
+		
+	set_is_precompile_finalized (v: BOOLEAN) is
+			-- Set `is_precompile_finalize' to `v'
+		do
+			is_precompile_finalized := v
+		ensure
+			is_precompile_finalized_set: is_precompile_finalized = v
+		end
+		
+		
 feature -- Access
 
 	dollar_name: STRING
@@ -128,11 +148,15 @@ feature -- Access
 			create Result.make (precomp_eif)
 		end
 
-	precomp_il_info_file: FILE_NAME is
+	precomp_il_info_file (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
 			-- File where the il debug info for the precompiled is stored
 		do
 			create Result.make_from_string (name);
-			Result.extend_from_array (<<Eiffelgen, W_code>>);
+			if a_use_optimized_precompile then
+				Result.extend_from_array (<<Eiffelgen, F_code>>)
+			else
+				Result.extend_from_array (<<Eiffelgen, W_code>>)
+			end
 			Result.set_file_name (Il_info_name)			
 			Result.add_extension (Il_info_extension)	
 		end
@@ -156,26 +180,49 @@ feature -- Access
 			Result.set_file_name (Platform_constants.Driver)
 		end
 
-	assembly_driver: FILE_NAME is
+	assembly_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
 			-- Full name of assembly driver.
 		do
 			create Result.make_from_string (name)
-			Result.extend_from_array (<<Eiffelgen, W_code>>)
+			if a_use_optimized_precompile then
+				Result.extend_from_array (<<Eiffelgen, F_code>>)
+			else
+				Result.extend_from_array (<<Eiffelgen, W_code>>)
+			end
 			Result.set_file_name (system_name)
-			Result.add_extension ("dll")
+			Result.add_extension (msil_generation_type)
 		ensure
-			assembly_driver_not_void: assembly_driver /= Void
+			assembly_driver_not_void: Result /= Void
 		end
 
-	assembly_helper_driver: FILE_NAME is
+	assembly_helper_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
 			-- Full name of assembly driver.
 		do
 			create Result.make_from_string (name)
-			Result.extend_from_array (<<Eiffelgen, W_code>>)
+			if a_use_optimized_precompile then
+				Result.extend_from_array (<<Eiffelgen, F_code>>)
+			else
+				Result.extend_from_array (<<Eiffelgen, W_code>>)
+			end
 			Result.set_file_name ("lib" + system_name)
 			Result.add_extension ("dll")
 		ensure
-			assembly_driver_not_void: assembly_driver /= Void
+			assembly_herlp_driver_not_void: Result /= Void
+		end
+	
+	assembly_debug_info (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
+			-- Full name of assembly pdb.
+		do
+			create Result.make_from_string (name)
+			if a_use_optimized_precompile then
+				Result.extend_from_array (<<Eiffelgen, F_code>>)
+			else
+				Result.extend_from_array (<<Eiffelgen, W_code>>)
+			end
+			Result.set_file_name (system_name)
+			Result.add_extension ("pdb")
+		ensure
+			assembly_debug_info_not_void: Result /= Void
 		end
 		
 	system_name: STRING
@@ -183,6 +230,12 @@ feature -- Access
 
 	il_generation: BOOLEAN
 			-- Is current project made for IL code generation?
+
+	msil_generation_type: STRING
+			-- Type of assembly to generate
+			
+	is_precompile_finalized: BOOLEAN
+			-- Is precompile finalized?
 
 feature -- Check
 
@@ -230,13 +283,13 @@ feature -- Check
 			check_file (<<Eiffelgen>>, Shared_precomp_eif);
 		end
 
-	check_optional is
+	check_optional (a_use_optimized_precompile: BOOLEAN) is
 			-- Check that `Current' is ready to be used for execution.
 		do
 				-- EIFGEN/W_code/driver and EIFGEN/W_code/preobj.o
 				-- should be present. If they are not, issue a warning.
 			if il_generation then
-				check_precompiled_optional (assembly_driver);
+				check_precompiled_optional (assembly_driver (a_use_optimized_precompile));
 			else
 				check_precompiled_optional (precompiled_driver);
 					-- FIXME: Manu 09/18/2002: we cannot use `precompiled_preobj'
@@ -365,7 +418,7 @@ feature {NONE} -- Implementation
 			vd43: VD43;
 			ok: BOOLEAN
 		do
-			if is_valid and not il_generation then
+			if is_valid then
 				create fn.make_from_string (rn)
 				create f.make (fn)
 				ok :=

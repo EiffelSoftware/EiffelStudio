@@ -94,11 +94,19 @@ cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libebench.a
 cp C/run-time/*.h $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
+cp C/run-time/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
-remtrace Recompile EiffelStudio
-cd $EXPORT_DIR
-untgz_ccode ec
-move ec $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+#Setting ISE_EIFFEL to new delivery location
+ISE_EIFFEL=$INSTALL_DIR
+
+remtrace "Put x2c in the new delivery"
+# It should already have been compiled by the configure of the run-time.
+cd $EXPORT_DIR/C/run-time
+if [ ! -f x2c ]; then
+	echo Could not finalize a new x2c
+	CANCEL
+fi
+move x2c $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
 remtrace Recompile quick_finalize
 cd $EXPORT_DIR
@@ -114,14 +122,10 @@ if [ ! -f estudio ]; then
 fi
 move estudio $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
-remtrace "Put x2c in the new delivery"
-# It should already have been compiled by the configure of the run-time.
-cd $EXPORT_DIR/C/run-time
-if [ ! -f x2c ]; then
-	echo Could not finalize a new x2c
-	CANCEL
-fi
-move x2c $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+remtrace Recompile EiffelStudio
+cd $EXPORT_DIR
+untgz_ccode ec
+move ec $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
 cd $EXPORT_DIR
 source compile_wizards

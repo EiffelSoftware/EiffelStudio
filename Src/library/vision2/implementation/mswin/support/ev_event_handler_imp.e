@@ -10,12 +10,12 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	initialize_list (count: INTEGER) is
+	initialize_list is
 			-- Create the `command_list' and the `arguments_list' with a length
-			-- of count.
+			-- of command_count.
 		do
-			!! command_list.make (1, count)
-			!! argument_list.make (1, count)
+			!! command_list.make (1, command_count)
+			!! argument_list.make (1, command_count)
 		end
 
 feature {NONE} -- Access
@@ -31,39 +31,46 @@ feature {NONE} -- Access
 
 feature {NONE} -- status setting
 
-	add_command (event_id: INTEGER; a_command: EV_COMMAND; arguments: EV_ARGUMENT) is
-			-- Add a command to a widget that means create an ev_wel_command
-			-- and put it to the wel_window of the widget.
-			-- For the meaning of the message, see wel_wm_message.
-			-- The argument can be `Void', in this case, there is 
-			-- no argument passed to the command.
+	add_command (event_id: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' and `arg' to the list corresonding to `event_id'
+			-- in the table of commands and arguments of the widget.
+			-- If the tables don't exist, it creates them.
 		require
-			valid_command: a_command /= Void
-			valid_id: event_id >= 1 and event_id <= command_list.count
-			valid_lists: command_list /= Void and argument_list /= Void
+			valid_command: cmd /= Void
+			valid_id: event_id >= 1 and event_id <= command_count
 		local
 			list_com: LINKED_LIST [EV_COMMAND]
 			list_arg: LINKED_LIST [EV_ARGUMENT]
 		do
+			-- First, we create the lists if they don't exists.
+			if command_list = Void then
+				initialize_list
+			end
+
+			-- Then, we create the list linked to the given
+			-- `event_id' if it doesn't exists already. 
 			if (command_list @ event_id) = Void then
 				!! list_com.make
 				!! list_arg.make
 				command_list.force (list_com, event_id)
 				argument_list.force (list_arg, event_id)
 			end
-			(command_list @ event_id).extend (a_command)
-			(argument_list @ event_id).extend (arguments)
+
+			-- Finally, we add the command and the argument
+			-- to the list.
+			(command_list @ event_id).extend (cmd)
+			(argument_list @ event_id).extend (arg)
 		end
 
-	remove_command (command_id: INTEGER) is
-			-- Remove the command associated with
-			-- 'command_id' from the list of actions for
-			-- this context. If there is no command
+	remove_command (event_id: INTEGER) is
+			-- Remove all the commands associated with
+			-- the event `event_id. If there is no command
 			-- associated with 'command_id', nothing
 			-- happens.
 		do	
-			check
-				not_yet_implemented: False
+			if (command_list @ event_id) /= Void then
+				command_list.force (Void, event_id)
+				argument_list.force (Void, event_id)
 			end
 		end
 
@@ -74,14 +81,12 @@ feature {NONE} -- Basic operation
 			-- Return `True' if the default processing is disabled,
 			-- False otherwise
 		require
-			valid_commands: command_list /= Void
-			valid_arguments: argument_list /= Void
-			valid_id: event_id >= 1 and event_id <= command_list.count
+			valid_id: event_id >= 1 and event_id <= command_count
 		local
 			com_list: LINKED_LIST [EV_COMMAND]
 			arg_list: LINKED_LIST [EV_ARGUMENT]
 		do
-			if (command_list @ event_id) /= Void then
+			if command_list /= Void and then (command_list @ event_id) /= Void then
 				com_list := (command_list @ event_id)
 				arg_list := (argument_list @ event_id)
 				from
@@ -95,6 +100,13 @@ feature {NONE} -- Basic operation
 					arg_list.forth
 				end
 			end
+		end
+
+feature {NONE} -- Deferred features
+
+	command_count: INTEGER is
+			-- Length of the array to store the commands and the arguments.
+		deferred
 		end
 
 end -- class EV_EVENT_HANDLER_IMP

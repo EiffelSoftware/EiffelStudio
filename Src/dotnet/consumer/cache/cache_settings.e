@@ -21,9 +21,13 @@ feature -- Access
 			-- State to indicate if cache should be conservative when creating paths
 			-- to cached contents
 			
-	cache_lock_id: SYSTEM_STRING is "{73C34FFF-4F38-4c28-8D61-1DD6F44D4E57}"
+	cache_lock_id: SYSTEM_STRING is
 			-- id used to lock cache.
-			-- Note: if `short_cache_name' and `cache_name' change this should
-			-- also change.
+			-- Note: This has to be unique per user since accessing a Mutex created by
+			-- a different user causes a security exception. This means that concurrent
+			-- cache access by different users is not supported.
+		once
+			Result := feature {SYSTEM_STRING}.concat (cache_name.to_cil,  feature {ENVIRONMENT}.user_name)
+		end
 
 end -- class CACHE_SETTINGS

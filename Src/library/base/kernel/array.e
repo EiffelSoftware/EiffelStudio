@@ -329,8 +329,8 @@ feature -- Resizing
 			lower := new_lower;
 			upper := new_upper
 		ensure
-			no_low_lost: lower = minindex.min (old lower);
-			no_high_lost: upper = maxindex.max (old upper)
+			no_low_lost: lower = minindex or else lower = old lower
+			no_high_lost: upper = maxindex or else upper = old upper
 		end;
 
 feature -- Conversion

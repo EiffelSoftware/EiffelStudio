@@ -8,22 +8,37 @@ class FLOAT_I
 inherit
 	BASIC_I
 		redefine
-			dump,
 			is_float,
 			is_numeric,
 			same_as, element_type, il_convert_from,
 			description, sk_value, generate_cecil_value, hash_code,
-			generate_byte_code_cast, generated_id, heaviest
+			generate_byte_code_cast, heaviest,
+			default_create, tuple_code
 		end
 
 	BYTE_CONST
 		export
 			{NONE} all
+		redefine
+			default_create
 		end
 
 	SHARED_IL_CODE_GENERATOR
 		export
 			{NONE} all
+		redefine
+			default_create
+		end
+
+create
+	default_create
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Initialize instance of FLOAT_I.
+		do
+			make (system.real_class.compiled_class.class_id)
 		end
 
 feature -- Access
@@ -38,12 +53,6 @@ feature -- Access
 			-- Hash code for current type
 		once
 			Result := Real_code
-		end
-
-	associated_reference: CLASS_TYPE is
-			-- Reference class associated with simple type
-		do
-			Result := system.real_ref_class.compiled_class.types.first
 		end
 
 	sk_value: INTEGER is
@@ -61,6 +70,12 @@ feature -- Access
 			-- Pointer element type
 		do
 			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_r4
+		end
+
+	tuple_code: INTEGER_8 is
+			-- Tuple code for class type
+		do
+			Result := feature {SHARED_GEN_CONF_LEVEL}.real_tuple_code
 		end
 
 	level: INTEGER is
@@ -106,12 +121,6 @@ feature -- Byte code generation
 
 feature -- C code generation
 
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
-		do
-			buffer.putstring ("EIF_REAL")
-		end
-
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate Cecil type value.
 		do
@@ -120,12 +129,6 @@ feature -- C code generation
 
 	c_string: STRING is "EIF_REAL"
 			-- String generated for the type.
-			
-	c_string_id: INTEGER is
-			-- String ID generated for Current
-		once
-			Result := Names_heap.eif_real_name_id
-		end
 		
 	union_tag: STRING is "farg"
 
@@ -140,14 +143,6 @@ feature -- C code generation
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			buffer.putstring ("SK_FLOAT")
-		end
-
-feature -- Generic conformance
-
-	generated_id (final_mode : BOOLEAN) : INTEGER is
-
-		do
-			Result := Real_type
 		end
 
 feature -- IL code generation

@@ -39,9 +39,9 @@ external
 				"$ISE_EIFFEL\library\time\Clib"
 
 	object:
-		"$(ISE_EIFFEL)\library\store\spec\$(ISE_COMPILER)\lib\support.lib",
-		"$(ISE_EIFFEL)\library\time\spec\$(ISE_COMPILER)\lib\datetime.lib",
-		"$(ISE_EIFFEL)\library\store\spec\$(ISE_COMPILER)\lib\oracle_store.lib",
+		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\support.lib",
+		"$(ISE_EIFFEL)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
+		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\oracle_store.lib",
 		"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib"
 
 end

@@ -42,8 +42,8 @@ external
 
 
 	object:
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/support.lib",
-		"$(ISE_EIFFEL)/library/time/spec/$(ISE_COMPILER)/lib/datetime.lib",
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/odbc_store.lib",
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/support.lib",
+		"$(ISE_EIFFEL)/library/time/spec/$(ISE_C_COMPILER)/lib/datetime.lib",
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/odbc_store.lib",
 		"odbc32.lib" -- Specify the correct path
 end

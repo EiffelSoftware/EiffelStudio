@@ -38,10 +38,13 @@ feature {NONE} -- Status report
 	is_ok: BOOLEAN is
 			-- Is last SQL statement ok ?
 		do
-			if handle.status.is_ok_mat /= Void then
-				Result := handle.status.is_ok_mat or handle.status.error_code = 0
-			else 
+			--if handle.status.is_ok_mat /= Void then
+			--	Result := handle.status.is_ok_mat or handle.status.error_code = 0
+			--else 
 				Result := handle.status.error_code = 0
+			--end
+			if not Result then
+				message_error := handle.status.error_message
 			end
 		end
 
@@ -56,7 +59,7 @@ feature {NONE} -- Status report
 			-- SQL error message prompted by database server
 		do
 			Result := handle.status.error_message
-			message_error:= Result
+		--	message_error:= Result
 		end
 	
 	warning_message: STRING is

@@ -85,13 +85,25 @@ feature -- Basic operations
 			else
 				if is_integer (obj) then
 					r_int ?= obj
-					str.append (r_int.out)
+					if r_int.item = db_default_null_value.value.truncated_to_integer then
+						str.append (Null_string)
+					else
+						str.append (r_int.out)
+					end
 				elseif is_double (obj) then
 					r_double ?= obj
-				str.append (r_double.out)
+					if r_int.item = db_default_null_value.value then
+						str.append (Null_string)
+					else
+						str.append (r_double.out)
+					end
 				elseif is_real (obj) then
 					r_real ?= obj
-					str.append (r_real.out)
+					if r_int.item = db_default_null_value.value.truncated_to_real then
+						str.append (Null_string)
+					else
+						str.append (r_real.out)
+					end
 				elseif is_character (obj) then
 					r_character ?= obj
 					str.extend ('%'')

@@ -1186,4 +1186,6 @@ feature {NONE} -- External features
 			"C"
 		end
 
+invariant
+		test_false : is_ok_mat = False
 end -- class ODBC

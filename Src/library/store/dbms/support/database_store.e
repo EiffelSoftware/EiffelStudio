@@ -124,9 +124,9 @@ feature -- Basic operations
 					if is_ok then
 						handle.status.set (db_spec.start_order (temp_descriptor))
 					end
-					if is_ok then
+				--	if is_ok then
 						handle.status.set (db_spec.terminate_order (temp_descriptor))
-					end
+				--	end
 				end
 			end
 
@@ -141,6 +141,12 @@ feature -- Basic operations
 			repository_exists: repository.exists
 		do
 			put (obj)
+		end
+
+	set_default_numeric_field_value ( value: DOUBLE) is
+			-- Set the value to represent a database null value.
+		do
+			db_default_null_value.set_value (value)
 		end
 
 feature {NONE} -- Status report

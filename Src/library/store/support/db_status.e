@@ -29,11 +29,11 @@ feature -- Status report
 			-- Is there any record matching the last
 			-- selection condition used ?
 
-	error_message: STRING is
+	error_message: STRING-- is
 			-- SQL error message prompted by database server
-		do
-			Result := implementation.error_message
-		end
+	--	do
+	--		Result := implementation.error_message
+	--	end
 
 	warning_message: STRING is
 			-- SQL warning message prompted by database server
@@ -63,6 +63,7 @@ feature -- Status setting
 		do
 			if error_code = 0 then
 				error_code := new_value
+				error_message := implementation.error_message
 			end
 		ensure
 			error_code_resetting: old error_code = 0 implies error_code = new_value

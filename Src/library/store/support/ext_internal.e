@@ -15,6 +15,8 @@ inherit
 
 	BASIC_ROUTINES
 
+	DB_DEFAULT_NULL_VALUE_SPEC
+
 feature -- Basic operations
 
 	field_copy (i: INTEGER; object, value: ANY): BOOLEAN is
@@ -151,11 +153,11 @@ feature -- Basic operations
 			Result := True
 
 			if ftype = Integer_type then
-				set_integer_field (i, object, 0)
+				set_integer_field (i, object, db_default_null_value.value.truncated_to_integer)
 			elseif ftype = Real_type then
-				set_real_field (i, object, 0.0)
+				set_real_field (i, object, db_default_null_value.value.truncated_to_real)
 			elseif ftype = Double_type then
-				set_double_field (i, object, 0.0)
+				set_double_field (i, object, db_default_null_value.value)
 			elseif ftype = Character_type then
 				set_character_field (i, object, ' ')
 			elseif ftype = Boolean_type then

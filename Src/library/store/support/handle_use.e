@@ -13,7 +13,7 @@ feature {NONE} -- Status report
 	handle: HANDLE is
 			-- Shared handle to switchable database implementations
 		once
-			!! Result
+			create Result
 		end
 
 end -- class HANDLE_USE

@@ -8,7 +8,7 @@ class
 
 feature -- Access
 	
-	Db_spec: G is
+	db_spec: G is
 			-- Handle to actual database
 		do
 			if db_spec_impl = Void then

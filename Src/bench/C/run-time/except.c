@@ -101,7 +101,7 @@ rt_public unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */ 
  * checking (e.g. disable it when already in assertion checking).
  */
 rt_public struct eif_exception exdata = {
-	1,				/* ex_val */
+	0,				/* ex_val */
 	0,				/* ex_nomem */
 	0,				/* ex_nsig */
 	0,				/* ex_level */

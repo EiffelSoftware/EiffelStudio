@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "File name factory."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,22 +76,14 @@ feature -- Basic operations
 	create_generated_mapper_file_name (a_writer: WIZARD_WRITER_CPP_CLASS) is
 			-- File name for generated Eiffel to C structure mapper
 		do
-			last_created_header_file_name:= clone (shared_wizard_environment.destination_folder)
+			transient_writer := a_writer
 			if shared_wizard_environment.client then
-				last_created_header_file_name.append (Client)
+				create_directory_prefix (Client)
 			else
-				last_created_header_file_name.append (Server)
+				create_directory_prefix (Server)
 			end
-			last_created_header_file_name.append_character (Directory_separator)
-			last_created_file_name := clone (last_created_header_file_name)
-			last_created_file_name.append (Clib)
-			last_created_header_file_name.append (Include)
-			last_created_header_file_name.append_character (Directory_separator)
-			last_created_file_name.append_character (Directory_separator)
-			last_created_header_file_name.append  (a_writer.name)
-			last_created_header_file_name.append (Header_file_extension)
-			last_created_file_name.append  (a_writer.name)
-			last_created_file_name.append (Cpp_file_extension)
+			process_c (True)
+			transient_writer := Void
 		end
 
 feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
@@ -135,13 +127,33 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 	process_coclass_eiffel_client is
 			-- Create filename for `a_generator'.
 		do
-			process_eiffel_client_component
+			create_directory_prefix (Client)
+			add_subdirectory (Component)
+			process_eiffel
+		end
+
+	process_impl_interface_eiffel_client is
+			-- Create filename for `a_generator'.
+		do
+			create_directory_prefix (Client)
+			add_subdirectory (Interface_proxy)
+			process_eiffel
 		end
 		
 	process_coclass_eiffel_server is
 			-- Create filename for `a_generator'.
 		do
-			process_eiffel_server_component
+			create_directory_prefix (Server)
+			add_subdirectory (Component)
+			process_eiffel
+		end
+
+	process_impl_interface_eiffel_server is
+			-- Create filename for `a_generator'.
+		do
+			create_directory_prefix (Server)
+			add_subdirectory (Interface_stub)
+			process_eiffel
 		end
 		
 	process_enum_c_client is
@@ -234,15 +246,28 @@ feature {NONE} -- Implementation
 			-- writer used to get filename.
 			-- Used during visitor callback.
 
+	create_directory_prefix (a_directory: STRING) is
+			-- Prepend `last_created_file_name' with path to `a_directory'.
+		do
+			last_created_file_name := clone (shared_wizard_environment.destination_folder)
+			last_created_file_name.append (a_directory)
+		end
+
+	add_subdirectory (a_subdirectory: STRING) is
+			-- Prepend `last_created_file_name' with path to `a_subdirectory'.
+		do
+			last_created_file_name.append_character (Directory_separator)
+			last_created_file_name.append (a_subdirectory)
+		end
+
 	process_c_common is
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		require
 			non_void_writer: transient_writer /= Void
 		do
-			last_created_file_name := clone (shared_wizard_environment.destination_folder)
-			last_created_file_name.append (Common)
-			process_c (False, False)
+			create_directory_prefix (Common)
+			process_c (False)
 		end
 
 	process_c_client  is
@@ -251,9 +276,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_writer: transient_writer /= Void
 		do
-			last_created_file_name := clone (shared_wizard_environment.destination_folder)
-			last_created_file_name.append (Client)
-			process_c (True, True)
+			create_directory_prefix (Client)
+			process_c (True)
 		end
 
 	process_c_server  is
@@ -262,9 +286,25 @@ feature {NONE} -- Implementation
 		require
 			non_void_writer: transient_writer /= Void
 		do
-			last_created_file_name := clone (shared_wizard_environment.destination_folder)
-			last_created_file_name.append (Server)
-			process_c (True, False)
+			create_directory_prefix (Server)
+			process_c (True)
+		end
+
+	process_eiffel is
+			-- Set `last_created_file_name' with file name for `a_generator'.
+			-- Set `last_created_header_file_name' with header file name for `a_generator'.
+		require
+			non_void_writer: transient_writer /= Void
+		local
+			an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS
+		do
+			last_created_file_name.append_character (Directory_separator)
+			an_eiffel_writer ?= transient_writer
+			check
+				non_void_eiffel_writer: an_eiffel_writer /= Void
+			end
+			last_created_file_name.append (an_eiffel_writer.class_name)
+			last_created_file_name.append (Eiffel_file_extension)
 		end
 
 	process_eiffel_interface is
@@ -275,17 +315,9 @@ feature {NONE} -- Implementation
 		local
 			an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS
 		do
-			last_created_file_name := clone (shared_wizard_environment.destination_folder)
-			last_created_file_name.append (Common)
-			last_created_file_name.append_character (Directory_separator)
-			last_created_file_name.append (Interfaces)
-			last_created_file_name.append_character (Directory_separator)
-			an_eiffel_writer ?= transient_writer
-			check
-				non_void_eiffel_writer: an_eiffel_writer /= Void
-			end
-			last_created_file_name.append (an_eiffel_writer.class_name)
-			last_created_file_name.append (Eiffel_file_extension)
+			create_directory_prefix (Common)
+			add_subdirectory (Interfaces)
+			process_eiffel
 		end
 
 	process_eiffel_structure is
@@ -296,42 +328,12 @@ feature {NONE} -- Implementation
 		local
 			an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS
 		do
-			last_created_file_name := clone (shared_wizard_environment.destination_folder)
-			last_created_file_name.append (Common)
-			last_created_file_name.append_character (Directory_separator)
-			last_created_file_name.append (Structures)
-			last_created_file_name.append_character (Directory_separator)
-			an_eiffel_writer ?= transient_writer
-			check
-				non_void_eiffel_writer: an_eiffel_writer /= Void
-			end
-			last_created_file_name.append (an_eiffel_writer.class_name)
-			last_created_file_name.append (Eiffel_file_extension)
+			create_directory_prefix (Common)
+			add_subdirectory (Structures)
+			process_eiffel
 		end
 
-	process_eiffel_client_component is
-			-- Set `last_created_file_name' with file name for `a_generator'.
-			-- Set `last_created_header_file_name' with header file name for `a_generator'.
-		require
-			non_void_writer: transient_writer /= Void
-		do
-			last_created_file_name := clone (shared_wizard_environment.destination_folder)
-			last_created_file_name.append (Client)
-			process_component
-		end
-
-	process_eiffel_server_component is
-			-- Set `last_created_file_name' with file name for `a_generator'.
-			-- Set `last_created_header_file_name' with header file name for `a_generator'.
-		require
-			non_void_writer: transient_writer /= Void
-		do
-			last_created_file_name := clone (shared_wizard_environment.destination_folder)
-			last_created_file_name.append (Server)
-			process_component
-		end
-
-	process_c (is_cpp: BOOLEAN; is_client: BOOLEAN) is
+	process_c (is_cpp: BOOLEAN) is
 			-- Set `last_created_file_name' with file name for `a_generator'.
 			-- Set `last_created_header_file_name' with header file name for `a_generator'.
 		local
@@ -345,26 +347,10 @@ feature {NONE} -- Implementation
 			check
 				non_void_c_writer: a_c_writer /= Void
 			end
-			last_created_file_name.append (header_to_c_file_name (a_c_writer.header_file_name, is_cpp, is_client))
+			last_created_file_name.append (header_to_c_file_name (a_c_writer.header_file_name, is_cpp))
 			last_created_header_file_name.append (Include)
 			last_created_header_file_name.append_character (Directory_separator)
 			last_created_header_file_name.append (a_c_writer.header_file_name)
-		end
-
-	process_component is
-			-- Set `last_created_file_name' with file name for `a_generator'.
-		local
-			an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS
-		do
-			last_created_file_name.append_character (Directory_separator)
-			last_created_file_name.append (Component)
-			last_created_file_name.append_character (Directory_separator)
-			an_eiffel_writer ?= transient_writer
-			check
-				non_void_eiffel_writer: an_eiffel_writer /= Void
-			end
-			last_created_file_name.append (an_eiffel_writer.class_name)
-			last_created_file_name.append (Eiffel_file_extension)
 		end
 
 	process_definition_file_writer is
@@ -374,8 +360,7 @@ feature {NONE} -- Implementation
 		local
 			a_definition_file_writer: WIZARD_WRITER_DEFINITION_FILE
 		do
-			last_created_file_name := clone (shared_wizard_environment.destination_folder)
-			last_created_file_name.append (Server)
+			create_directory_prefix (Server)
 			last_created_file_name.append_character (Directory_separator)
 			a_definition_file_writer ?= transient_writer
 			if a_definition_file_writer /= Void then
@@ -384,7 +369,7 @@ feature {NONE} -- Implementation
 			last_created_file_name.append (Definition_file_extension)
 		end
 
-	header_to_c_file_name (a_filename: STRING; is_cpp: BOOLEAN; is_client: BOOLEAN): STRING is
+	header_to_c_file_name (a_filename: STRING; is_cpp: BOOLEAN): STRING is
 			-- Map header file name into C file name
 		require
 			non_void_file_name: a_filename /= Void

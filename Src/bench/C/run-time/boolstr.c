@@ -12,6 +12,7 @@
 
 #include "config.h"
 #include "portable.h"
+#include "boolstr.h"
 
 #ifdef I_STRING
 #include <string.h>

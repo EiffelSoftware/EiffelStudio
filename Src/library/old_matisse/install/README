@@ -1,0 +1,20 @@
+
+EiffelStore
+-----------
+
+Installation 
+
+1. Set up following environment variables:
+
+	setenv EIFFELSTORE <EiffelStore_installation_directory>
+
+
+2. Installing C-libraries:
+
+   Start your databases kernels if needed (most of the C-libraries are based
+   on DBMS libraries, but some of them use a precompiler which needs to acces
+   the database kernel). Make sure you are logged as an Oracle user
+	as well. Then:
+
+	% cd $EIFFELSTORE
+	% install/make_Clib

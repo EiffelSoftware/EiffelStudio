@@ -35,7 +35,7 @@ inherit
 creation
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (minindex, maxindex: INTEGER) is
 			-- Set up interval to have bounds `minindex' and
@@ -56,6 +56,20 @@ feature -- Initialization
 					(upper = maxindex))
 			empty_if_not_in_order:
 				(minindex > maxindex) implies empty
+		end
+
+feature -- Initialization
+ 
+	adapt (other: INTEGER_INTERVAL) is
+			-- Reset to be the same interval as `other'.
+		require
+			other_not_void: other /= Void
+		do
+			lower := other.lower
+			upper := other.upper
+		ensure
+			same_lower: lower = other.lower
+			same_upper: upper = other.upper
 		end
 
 feature -- Access

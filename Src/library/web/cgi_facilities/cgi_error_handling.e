@@ -20,16 +20,18 @@ feature -- Basic Operations
 	handle_exception is
 			-- General exception hanlding.
 		do
-			set_error ("Internal error")
+			set_error ("Exception Handled by Eiffel Web")
 			raise_error
 		end
 
 	raise_error is
 			-- Display error message `msg' and exit.
 		do
-			response_header.generate_text_header
-			response_header.send_to_browser
-			output.put_string(error_message)
+			if error_handler_activated.item then
+				response_header.generate_text_header
+				response_header.send_to_browser
+				output.put_string(error_message)
+			end
 			die(0)
 		end
 
@@ -42,6 +44,14 @@ feature -- Basic Operations
 				error_message := msg
 				error_happened := True
 			end
+		end
+
+feature {CGI_INTERFACE} -- Access
+
+	error_handler_activated: BOOLEAN_REF is 
+			-- Will the exception track be sent to the browser ? 
+		once
+			Create Result
 		end
 
 feature {NONE} -- Implementation

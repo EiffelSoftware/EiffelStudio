@@ -31,29 +31,13 @@ feature -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				parse_input;
+				error_handler_activated.set_item(debug_mode)
+				parse_input
 				if not error_happened then
 					execute
 				else
 					raise_error
 				end;
-			else
-				handle_exception
-			end
-		rescue
-			retried := True;
-			retry
-		end
-
-	make_debug (args: ARRAY[STRING]) is
-			-- Set environment variables and proceed to regular execution.
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				set_environment;
-				parse_arguments (args);
-				make
 			else
 				handle_exception
 			end
@@ -73,7 +57,14 @@ feature -- Miscellanous
 			-- Set environment variable to user value.
 		do
 		end
-	
+
+feature {CGI_INTERFACE} -- Access	
+
+	debug_mode: BOOLEAN is 
+		-- Is Current application executed in debug mode?
+		deferred
+		end
+
 feature {CGI_FORMS}-- Access
 
 	form_data: HASH_TABLE[LINKED_LIST[STRING],STRING]

@@ -1,28 +1,21 @@
 indexing
+	description: "Objects that ..."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	IL_KEY_GENERATOR
 
 create
-	make
+	default_create
 	
 feature -- Initialization
 
-	make (a_filename: STRING) is
+	generate_key (a_filename: STRING) is
 			-- Generate a new key pair with 'a_filename' as filename
-		do
-			check
-				False
-			end
+		check
+			False
 		end
-		
-feature -- Access		
-		
-	public_key: POINTER
-		-- Pointer to public key
-		
-	key_size: INTEGER
-		-- Size of public key in bytes	
-
 
 end -- class IL_KEY_GENERATOR

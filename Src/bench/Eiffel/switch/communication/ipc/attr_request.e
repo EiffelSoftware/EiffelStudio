@@ -40,14 +40,19 @@ feature -- Properites
 	attributes: LINKED_LIST [ABSTRACT_DEBUG_VALUE];
 			-- Attributes of object being inspected (sorted by name)
 
+	object_type_id: INTEGER
+			-- Type ID of the inspected object.
+			-- 0 if the object is special.
+
 feature -- Update
 
 	send is
 			-- Send inpect request to application.
 		local
-			type_id, count: INTEGER
+			count: INTEGER
 			address: POINTER
 		do
+			object_type_id := 0
 			send_rqst_3 (Rqst_sp_lower, 0, 0, sp_lower)
 			send_rqst_3 (Rqst_sp_upper, 0, 0, sp_upper)
 			send_rqst_3 (request_code, In_h_addr, 0, hex_to_integer (object_address))
@@ -57,6 +62,7 @@ feature -- Update
 				io.error.putstring (object_address)
 				io.error.putstring (".%N")
 			end
+			object_type_id := to_integer (c_tread) + 1
 			if is_special then
 				debug ("DEBUG_RECV")
 					io.error.putstring ("Oh oooh. This is a special object...%N")
@@ -81,10 +87,9 @@ feature -- Update
 				end
 			else
 				create {SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]} attributes.make
-				type_id := to_integer (c_tread) + 1
 
-				if Eiffel_system.valid_dynamic_id (type_id) then
-					recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (type_id))
+				if Eiffel_system.valid_dynamic_id (object_type_id) then
+					recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (object_type_id))
 				else
 					recv_attributes (attributes, Void)
 				end;

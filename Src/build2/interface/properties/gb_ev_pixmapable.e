@@ -50,9 +50,9 @@ feature -- Access
 			create modify_button
 			modify_button.select_actions.extend (agent modify_pixmap)
 			modify_button.select_actions.extend (agent update_editors)
-			create location_field
-			horizontal_box.extend (location_field)
 			horizontal_box.extend (modify_button)
+			create filler_label
+			horizontal_box.extend (filler_label)
 			horizontal_box.disable_item_expand (modify_button)
 			frame_box.extend (horizontal_box)
 			create pixmap_container
@@ -69,10 +69,14 @@ feature -- Access
 		do
 			if first.pixmap /= Void then
 				add_pixmap_to_pixmap_container (first.pixmap)
-				modify_button.set_text ("Remove")
+				modify_button.set_text (Remove_string)
 			else
 				pixmap_container.wipe_out
-				modify_button.set_text ("Select")
+				modify_button.set_text (Select_string)
+					-- Remove tooltip from `filler_label',
+					-- no need to remove it from the pixmap
+					-- as the pixmap will no be no longer visible.
+				filler_label.remove_tooltip
 			end
 		end
 		
@@ -146,13 +150,17 @@ feature {NONE} -- Implementation
 					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
 					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (dialog.file_name))
 					add_pixmap_to_pixmap_container (new_pixmap)
-					modify_button.set_text ("Remove")
+					modify_button.set_text (Remove_string)
 				end
 			else
 				for_all_objects (agent {EV_PIXMAPABLE}.remove_pixmap)
 				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (""))
 				pixmap_container.wipe_out
 				modify_button.set_text ("Select")
+					-- Remove tooltip from `filler_label',
+					-- no need to remove it from the pixmap
+					-- as the pixmap will no be no longer visible.
+				filler_label.remove_tooltip
 			end	
 		end
 		
@@ -163,6 +171,10 @@ feature {NONE} -- Implementation
 			new_x, new_y: INTEGER
 			biggest_ratio: REAL
 		do
+			pixmap.set_tooltip (first.pixmap_path)
+				-- We also add a tooltip to the space to the right
+				-- of the buttom, through `filler_label'.
+			filler_label.set_tooltip (first.pixmap_path)
 			x_ratio := pixmap.width / minimum_width_of_object_editor
 			y_ratio := pixmap.height / minimum_width_of_object_editor
 			if x_ratio > 1 and y_ratio < 1 then 
@@ -191,14 +203,19 @@ feature {NONE} -- Implementation
 	pixmap_container: EV_CELL
 		-- Holds a representation of the loaded pixmap.
 		
-	location_field: EV_TEXT_FIELD
-		-- Holds path name of pixmap.
+	filler_label: EV_LABEL
 		
 	modify_button: EV_BUTTON
 		-- Is either "Select" or "Remove"
 		-- depending on current context.
 
 	pixmap_path_string: STRING is "Pixmap_path"
+	
+	Remove_string: STRING is "Remove"
+		-- String on `modify_button' when able to remove pixmap.
+		
+	Select_string: STRING is "Select"
+		-- String on `modify_button' ahen able to select pixmap.
 
 
 end -- class GB_EV_PIXMAPABLE

@@ -49,8 +49,6 @@ feature {NONE} -- Initialization
 			parent_set: parent = a_parent
 			id_set: id = an_id
 			position_equal_zero: position = 0
-			minimum_equal_zero: minimum = 0
-			maximum_equal_zero: maximum = 0
 			x_set: x = a_x
 			y_set: y = a_y
 			width_set: width = a_width
@@ -77,8 +75,6 @@ feature {NONE} -- Initialization
 			exists: exists
 			id_set: id = an_id
 			position_equal_zero: position = 0
-			minimum_equal_zero: minimum = 0
-			maximum_equal_zero: maximum = 0
 			x_set: x = a_x
 			y_set: y = a_y
 			width_set: width = a_width

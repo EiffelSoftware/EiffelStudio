@@ -1,65 +1,67 @@
-
--- Hole for the help window
+indexing
+	description: "Help hole for the help window."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class HELP_WINDOW_HOLE 
 
 inherit
-
 	HELP_HOLE
 		rename
 			make as button_make
 		redefine
-			process_any, create_empty_editor
+			create_empty_editor
 		end
 
 creation
-
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-	associated_window: HELP_WINDOW;
+	associated_window: HELP_WINDOW
 
-	make (hw: HELP_WINDOW; a_parent: COMPOSITE) is
+	make (hw: HELP_WINDOW; par: EV_CONTAINER) is
 		require
-			valid_hw: hw /= Void;
-			valid_a_parent: a_parent /= Void;
+			valid_hw: hw /= Void
+			valid_a_parent: par /= Void
+		local
+			cmd: EV_ROUTINE_COMMAND
 		do
-			associated_window := hw;
-			button_make (a_parent);
-		end;
+			associated_window := hw
+			button_make (par)
+			create cmd.make (hw~update_text)
+			add_default_pnd_command (cmd, Void)
+		end
 
 feature {NONE}
 
-	full_symbol: PIXMAP is
+	full_symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.full_help_pixmap
-		end;
+		end
 
-	process_any (dropped: STONE) is
-		do
-			associated_window.update_text (dropped.data);
-		end;
+feature {NONE} -- Command
 
 	create_empty_editor is
 		do
-		end;
+		end
 
 feature
 
 	set_empty_symbol is
 		do
-			if pixmap /= symbol then
-				set_symbol (symbol)
-			end
-		end;
+--			if pixmap /= symbol then
+--				set_symbol (symbol)
+--			end
+		end
 
 	set_full_symbol is
 		do
-			if pixmap /= full_symbol then
-				set_symbol (full_symbol)
-			end
-		end;
+--			if pixmap /= full_symbol then
+--				set_symbol (full_symbol)
+--			end
+		end
 
+end -- class HELP_WINDOW_HOLE
 
-end

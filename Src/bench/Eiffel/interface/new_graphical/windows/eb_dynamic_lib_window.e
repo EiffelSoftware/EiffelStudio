@@ -1025,7 +1025,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 				create {EV_FILE_SAVE_DIALOG} dd
 			end
 			dd.set_start_directory (Eiffel_project.name)
-			dd.set_filter ("*.def")
+			dd.filters.extend (["*.def", "Dynamic Library Definition (*.def)"])
 			dd.ok_actions.extend (agent file_was_chosen (dd))
 			dd.show_modal_to_window (window)
 		end

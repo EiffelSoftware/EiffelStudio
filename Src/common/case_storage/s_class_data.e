@@ -10,6 +10,9 @@ inherit
 		end;
 	S_CASE_INFO;
 	COMPARABLE
+		undefine
+			is_equal
+		end
 
 creation
 

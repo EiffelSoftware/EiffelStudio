@@ -31,8 +31,14 @@ feature {NONE} -- Initialization
 	set_default_minimum_size is
 			-- Called after creation. Set the current size and
 			-- notify the parent.
+		local
+			log_font: WEL_LOG_FONT
 		do
-			internal_set_minimum_size (30, wel_font.log_font.height.abs + 7)
+			log_font := wel_font.log_font
+			internal_set_minimum_size (
+				log_font.width.abs * 10, -- 10 characters wide
+				log_font.height.abs		 -- 1 character tall
+				)
 		end
 
 feature -- Status report
@@ -280,6 +286,9 @@ end -- class EV_TEXT_COMPONENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/27 23:04:25  pichery
+--| Added set_default_minimum_size
+--|
 --| Revision 1.29  2000/04/21 01:23:24  pichery
 --| Fixed bug (log_font.height can be negative !!!)
 --|

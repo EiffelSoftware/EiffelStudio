@@ -523,10 +523,18 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		end
 
 	set_default_minimum_size is
-			-- Initialize the size of the widget.
+			-- Called after creation. Set the current size and
+			-- notify the parent.
+		local
+			gui_font: WEL_DEFAULT_GUI_FONT
+			log_font: WEL_LOG_FONT
 		do
-			--|FIXME Is there better values we could use?
-			internal_set_minimum_size (32, 32)
+			create gui_font.make
+			log_font := wel_font.log_font
+			internal_set_minimum_size (
+				log_font.width.abs * 20 + 7, -- 20 characters wide
+				log_font.height.abs	* 5 + 7	 -- 5 characters tall
+				)
 		end
 
 feature {NONE} -- Implementation, Pixmap handling
@@ -975,6 +983,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.96  2000/04/27 23:03:44  pichery
+--| Added set_default_minimum_size
+--|
 --| Revision 1.95  2000/04/27 17:50:19  pichery
 --| - changed the type of `selected_items' from
 --|   LINKED_LIST to ARRAYED_LIST.

@@ -178,7 +178,7 @@ feature -- Element change
 	set_extended_height (value: INTEGER) is
 			-- Make `value' the new extended-height of the box.
 		do
-			move_and_resize (x, y, width, value, True)
+			resize (width, value)
 		end
 
 feature -- Basic operation

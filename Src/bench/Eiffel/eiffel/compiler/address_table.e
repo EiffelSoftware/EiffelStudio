@@ -300,9 +300,9 @@ feature {NONE} -- Generation
 			gen_file.putstring ("};%N%N")
 
 			if System.extendible then
-				gen_file.putstring ("fnptr **egc_address_table = Seif_address_table;%N%N")
+				gen_file.putstring ("fnptr **egc_address_table_init = Seif_address_table;%N%N")
 			elseif not System.is_dynamic then
-				gen_file.putstring ("fnptr **egc_address_table = feif_address_table;%N%N")
+				gen_file.putstring ("fnptr **egc_address_table_init = feif_address_table;%N%N")
 			end
 		end
 

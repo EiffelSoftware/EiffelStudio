@@ -169,7 +169,7 @@ feature -- Generation
 
 			f.putstring ("#include %"eif_project.h%"%N%
 						 %#include %"eif_macros.h%"%N%N")
-			f.putstring ("struct rout_info egc_forg_table[] = {%N")
+			f.putstring ("struct rout_info egc_forg_table_init[] = {%N")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
 			f.putstring ("%T{(int16) -1, (int16) -1},%N")

@@ -2780,7 +2780,7 @@ end
 				i := i + 1
 			end
 
-			Skeleton_file.putstring ("struct cnode egc_fsystem[] = {%N")
+			Skeleton_file.putstring ("struct cnode egc_fsystem_init[] = {%N")
 			from
 				i := 1
 			until
@@ -2817,7 +2817,7 @@ end
 
 			if not final_mode then
 					-- Generate the array of routine id arrays
-				Skeleton_file.putstring ("int32 *egc_fcall[] = {%N")
+				Skeleton_file.putstring ("int32 *egc_fcall_init[] = {%N")
 				from
 					i := 1
 					nb := cltype_array.upper
@@ -2841,7 +2841,7 @@ end
 				Skeleton_file.putstring ("};%N%N")
 					-- Generate the correspondances stable between original
 					-- dynamic types and new dynamic types
-				Skeleton_file.putstring ("int16 egc_fdtypes[] = {%N")
+				Skeleton_file.putstring ("int16 egc_fdtypes_init[] = {%N")
 				from
 					i := 1
 				until
@@ -3411,12 +3411,12 @@ feature -- Pattern table generation
 
 			Initialization_file.putstring ("%N}%N")
 
-			-- Generation of egc_einit() and egc_tabinit(). Only for workbench
+			-- Generation of egc_einit_init() and egc_tabinit_init(). Only for workbench
 			-- mode.
 
 			if not final_mode then
 					-- Prototypes
-				Initialization_file.generate_extern_declaration ("void", "egc_tabinit", <<>>)
+				Initialization_file.generate_extern_declaration ("void", "egc_tabinit_init", <<>>)
 				from
 					i := 1
 					nb := type_id_counter.value
@@ -3431,7 +3431,7 @@ feature -- Pattern table generation
 				end
 
 
-				Initialization_file.putstring ("%Nvoid egc_tabinit(void)%N{%N")
+				Initialization_file.putstring ("%Nvoid egc_tabinit_init(void)%N{%N")
 				from
 					i := 1
 					nb := type_id_counter.value
@@ -3452,7 +3452,7 @@ feature -- Pattern table generation
 				end
 				Initialization_file.putstring ("}%N%N")
 
-				Initialization_file.generate_function_signature ("void", "egc_einit", True, Initialization_file, <<"">>, <<"void">>)
+				Initialization_file.generate_function_signature ("void", "egc_einit_init", True, Initialization_file, <<"">>, <<"void">>)
 
 					-- Set C variable `scount'.
 				Initialization_file.putstring ("%Tscount = ")
@@ -3475,7 +3475,7 @@ feature -- Pattern table generation
 				Initialization_file.putstring (";%N}%N"); -- MT
 			end
 
-			-- Module initialization routine 'egc_system_mod_init'
+			-- Module initialization routine 'egc_system_mod_init_init'
 
 			-- Declarations
 
@@ -3501,7 +3501,7 @@ feature -- Pattern table generation
 
 			-- Module initialization
 			Initialization_file.generate_function_signature (
-				"void", "egc_system_mod_init", True, Initialization_file, <<"">>, <<"void">>
+				"void", "egc_system_mod_init_init", True, Initialization_file, <<"">>, <<"void">>
 															)
 			from
 				i := 1
@@ -3576,7 +3576,7 @@ feature --Workbench option file generation
 			end
 
 				-- Then option C array
-			Option_file.putstring ("struct eif_opt egc_foption[] = {%N")
+			Option_file.putstring ("struct eif_opt egc_foption_init[] = {%N")
 			from
 				i := 1
 				nb := Type_id_counter.value

@@ -768,8 +768,8 @@ feature -- Generation
 				Cecil_file.putstring ("#include %"eif_ececil.h%"%N")
 			end
 			Cecil_file.putstring ("#include %"eif_struct.h%"%N%N")
-			Cecil_file.putstring ("extern struct ctable egc_ce_type;%N")
-			Cecil_file.putstring ("extern struct ctable egc_ce_gtype;%N%N")
+			Cecil_file.putstring ("extern struct ctable egc_ce_type_init;%N")
+			Cecil_file.putstring ("extern struct ctable egc_ce_gtype_init;%N%N")
 			from classes.start until classes.after loop
 				class_array := classes.item_for_iteration
 				nb := class_counter.item (classes.key_for_iteration).count
@@ -844,9 +844,9 @@ end
 					i := i + 1
 				end
 			end
-			Cecil_file.putstring ("egc_ce_type = Dce_type;")
+			Cecil_file.putstring ("egc_ce_type_init = Dce_type;")
 			Cecil_file.new_line
-			Cecil_file.putstring ("egc_ce_gtype = Dce_gtype;")
+			Cecil_file.putstring ("egc_ce_gtype_init = Dce_gtype;")
 			Cecil_file.new_line
 			if final_mode then
 				Cecil_file.exdent
@@ -1322,14 +1322,14 @@ end
 				Plug_file.putint (dynamic_dtype - 1)
 				Plug_file.putchar (';')
 			else
-				Plug_file.putstring ("extern fnptr **egc_eif_address_table;%N%N")
+				Plug_file.putstring ("extern fnptr **egc_address_table_init;%N%N")
 				Plug_file.putstring ("extern fnptr *Deif_address_table[];%N%N")
 				Plug_file.putstring ("void dle_eplug(void)")
 				Plug_file.new_line
 				Plug_file.putchar ('{')
 				Plug_file.new_line
 				Plug_file.indent
-				Plug_file.putstring ("egc_address_table = Deif_address_table;")
+				Plug_file.putstring ("egc_address_table_init = Deif_address_table;")
 			end
 			Plug_file.new_line
 			Plug_file.exdent

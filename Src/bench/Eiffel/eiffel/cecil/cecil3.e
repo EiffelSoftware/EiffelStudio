@@ -99,7 +99,7 @@ feature
 			if System.is_dynamic then
 				Cecil_file.putstring ("struct ctable Dce_gtype = {(int32) ")
 			else
-				Cecil_file.putstring ("struct ctable egc_ce_gtype = {(int32) ")
+				Cecil_file.putstring ("struct ctable egc_ce_gtype_init = {(int32) ")
 			end
 			Cecil_file.putint (count)
 			Cecil_file.putstring (", sizeof(struct gt_info),")

@@ -208,7 +208,7 @@ feature -- Generation
 				generate_separate_pattern
 			end
 				-- Generate pattern table
-			Pattern_file.putstring ("struct p_interface egc_fpattern[] = {%N")
+			Pattern_file.putstring ("struct p_interface egc_fpattern_init[] = {%N")
 			from
 				i := 1
 				nb := c_pattern_id_counter.value

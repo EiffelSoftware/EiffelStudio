@@ -126,8 +126,8 @@ feature {NONE} -- Implementation
 			-- on the screen.
 		do
 			set_x_y (map_widget.real_x, map_widget.real_y);
-			os_popup;
-			popdown;
+			--os_popup; -- FIXME: bug in Vision????
+			--popdown;
 			if real_x + width > screen.width then
 				set_x (screen.width - width)
 			end;

@@ -68,6 +68,7 @@ feature {GB_TITLED_WINDOW_OBJECT, GB_WINDOW_SELECTOR} -- Initialization
 		do
 			default_create
 			set_object (an_object)
+			set_pebble_function (agent object.retrieve_pebble)
 			set_text (object.short_type)
 			expand_actions.extend (agent register_expand)
 			collapse_actions.extend (agent register_collapse)
@@ -84,7 +85,6 @@ feature {GB_TITLED_WINDOW_OBJECT, GB_WINDOW_SELECTOR} -- Initialization
 			Precursor {EV_TREE_ITEM}
 				-- Set the pebble function for
 				-- tansport.
-			set_pebble_function (agent retrieve_pebble)
 			select_actions.extend (agent update_docked_object_editor)
 		end
 		
@@ -173,24 +173,6 @@ feature {NONE} -- Implementation
 			-- Flag `obejct' as collapsed.
 		do
 			object.register_collapse
-		end
-
-	retrieve_pebble: ANY is
-			-- Retrieve pebble for transport.
-			-- A convenient was of setting up the drop
-			-- actions for GB_OBJECT.
-		do			
-			--| FIXME This is currently identical to version in 
-			--| GB_OBJECT
-				-- If the ctrl key is pressed, then we must
-				-- start a new object editor for `Current', instead
-				-- of beginning the pick and drop.
-			if application.ctrl_pressed then
-				new_object_editor (object)
-			else
-				type_selector.update_drop_actions_for_all_children (object)
-				Result := object
-			end
 		end
 		
 	update_docked_object_editor is

@@ -4,6 +4,7 @@
 
 #include "config.h"
 #include "size.h" /* for LNGSIZ */
+
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <winsock.h>
@@ -21,15 +22,18 @@
 #endif
 
 #include <sys/types.h>
-#ifndef EIF_WINDOWS
+
+#ifndef EIF_WIN32
 #include <sys/time.h>
 #endif
+
 #include <errno.h>
+
 #ifndef BSD
 #define BSD_COMP
 #endif
-#if defined EIF_WINDOWS
-#else
+
+#ifndef EIF_WIN32
 #include <sys/ioctl.h>
 #endif
 
@@ -62,8 +66,7 @@
 #include "bitmask.h"
 
 
-EIF_INTEGER c_syncpoll(fd)
-EIF_INTEGER fd;
+EIF_INTEGER c_syncpoll(EIF_INTEGER fd)
 	/*x Synchronously poll a socket without modifying buffer
 	    expecting 1 for something, 0 for eof, -1 for error */
 {
@@ -74,8 +77,7 @@ EIF_INTEGER fd;
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_select_poll(fd)
-EIF_INTEGER fd;
+EIF_INTEGER c_select_poll(EIF_INTEGER fd)
 	/*x Get read status for socket fd */
 {
 	fd_set fdmask;
@@ -92,8 +94,7 @@ EIF_INTEGER fd;
 	return (FD_ISSET(fd, &fdmask));
 }
 
-EIF_INTEGER c_is_blocking(fd)
-EIF_INTEGER fd;
+EIF_INTEGER c_is_blocking(EIF_INTEGER fd)
 	/*x attempt to get blocking status of socket */
 	/*x BIG BUG UNDER HP-UX !!! => couldn't get actual blocking status */
 {

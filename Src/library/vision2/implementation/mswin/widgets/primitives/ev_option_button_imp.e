@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 		do
 			{EV_BUTTON_IMP} Precursor
 			!! menu_container.make_track
+			extra_width := 40
 		end
 
 feature -- Status setting

@@ -103,7 +103,7 @@ end
 			-- Mark feature `feat' alive.
 		local
 			depend_list: FEATURE_DEPENDANCE;
-			static_dependances, original_dependances: CLASS_DEPENDANCE
+			original_dependances: CLASS_DEPENDANCE
 			just_born: BOOLEAN;
 			like_feature: LIKE_FEATURE;
 			like_Feat: FEATURE_I;
@@ -112,7 +112,6 @@ end
 			depend_feature, original_feature: FEATURE_I
 			-- DEBUG
 			a_class: CLASS_C
-			
 		do
 			just_born := not is_alive (body_id.id);
 				-- Mark feature alive
@@ -147,7 +146,6 @@ end
 				mark_alive (body_id.id);
 
 					-- Take care of dependances
-				static_dependances := Depend_server.item (actual_class_id)
 				original_dependances := Depend_server.item (written_class_id)
 				depend_list := original_dependances.item (body_id)
 				if depend_list /= Void then

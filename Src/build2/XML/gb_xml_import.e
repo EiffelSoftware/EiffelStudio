@@ -749,8 +749,6 @@ feature {NONE} -- Implementation
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			current_name: STRING
 			info: ELEMENT_INFORMATION
-			el: XM_ELEMENT
-			new_name: STRING
 		do
 			full_information := get_unique_full_info (element)
 			info := full_information @ Name_string

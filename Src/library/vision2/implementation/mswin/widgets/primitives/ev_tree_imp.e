@@ -258,9 +258,6 @@ feature {EV_TREE_ITEM_I} -- Implementation
 				general_insert_item (item_imp, default_pointer,
 					(ev_children @ (an_index - 1)).h_item, an_index)
 			end
-				-- We now add the child directly into ev_children.
-			ev_children.go_i_th (an_index - 1)
-			ev_children.put_right (item_imp)
 		end
 
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is
@@ -268,7 +265,6 @@ feature {EV_TREE_ITEM_I} -- Implementation
 		do
 			general_remove_item (item_imp)
 					-- Now explicitly remove the item from ev_children
-			ev_children.remove
 			invalidate
 		end
 
@@ -535,6 +531,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.64  2000/04/11 19:02:32  rogers
+--| Insert_item and remove_item no longer directly modify ev_children.
+--|
 --| Revision 1.63  2000/04/11 16:56:50  rogers
 --| Removed direct inheritance from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
 --|

@@ -9,7 +9,7 @@ class
 inherit
 	DOCUMENT_FILTER
 		rename
-			make as make_with_id
+			make as make_filter
 		redefine			
 			on_start_tag,
 			on_end_tag,
@@ -26,7 +26,7 @@ feature -- Creation
 	make is
 			-- Create
 		do
-			make
+			make_filter
 			create element_stack.make (2)
 			element_stack.compare_objects
 			create anchors.make (1)

@@ -62,7 +62,9 @@ feature -- Initialize
 			has_been_validated := False			
 			all_documents_read := False
 			files_changed := False
-			Application_window.document_selector.wipe_out
+			if shared_constants.application_constants.is_gui_mode then				
+				Application_window.document_selector.wipe_out
+			end
 		end
 
 feature -- Access

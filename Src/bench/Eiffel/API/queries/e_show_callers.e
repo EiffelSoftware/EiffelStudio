@@ -25,7 +25,7 @@ feature -- Execution
 			feat: E_FEATURE;
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_I];
 			list: SORTED_LIST [STRING];
-			table: EXTEND_TABLE [SORTED_LIST [STRING], INTEGER];
+			table: EXTEND_TABLE [SORTED_LIST [STRING], INTEGER]
 		do
 			clients := current_class.clients;
 			!! table.make (5);
@@ -51,8 +51,8 @@ feature -- Execution
 			loop
 				client := classes.item.compiled_eclass;	
 					-- Print out client name once.
-				client.append_name (output_window);
-				output_window.new_line;
+				client.append_name (structured_text);
+				structured_text.add_new_line;
 				list := table.item (client.id);
 				from
 					list.start
@@ -61,13 +61,13 @@ feature -- Execution
 				loop
 					cfeat := list.item;
 					feat := client.feature_with_name (cfeat);
-					output_window.put_char ('%T');
+					structured_text.add_char ('%T');
 					if feat = Void then
-						output_window.put_string ("invariant")
+						structured_text.add_string ("invariant")
 					else
-						feat.append_name (output_window, client)	
+						feat.append_name (structured_text, client)	
 					end;
-					output_window.new_line;
+					structured_text.add_new_line;
 					list.forth
 				end;
 				classes.forth

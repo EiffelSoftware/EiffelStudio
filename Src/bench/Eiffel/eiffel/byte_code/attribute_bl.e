@@ -204,11 +204,11 @@ end
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
 				table_name := Encoder.table_name (routine_id)
-				buf.putstring (" + (")
+				
+					-- Generate following dispatch:
+					-- table [Actual_offset - base_offset]
+				buf.putstring (" + ")
 				buf.putstring (table_name)
-				buf.putchar ('-')
-				buf.putint (array_index)
-				buf.putchar (')')
 				buf.putchar ('[')
 				if reg.is_current then
 					context.generate_current_dtype
@@ -217,7 +217,10 @@ end
 					reg.print_register
 					buf.putchar (')')
 				end
+				buf.putchar ('-')
+				buf.putint (array_index)
 				buf.putchar (']')
+				
 					-- Mark attribute offset table used.
 				Eiffel_table.mark_used (routine_id)
 					-- Remember external attribute offset declaration

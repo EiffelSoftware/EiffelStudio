@@ -417,12 +417,15 @@ feature
 				if array_index >= 0 then
 						-- Access to area is polymorphic
 					table_name := Encoder.table_name (rout_id)
-					buffer.putstring (" + (");
+
+						-- Generate following dispatch:
+						-- table [Actual_offset - base_offset]
+					buffer.putstring (" + ");
 					buffer.putstring (table_name);
-					buffer.putchar ('-');
+					buffer.putstring ("[Dtype(Current) - ");
 					buffer.putint (array_index);
-					buffer.putchar (')');
-					buffer.putstring ("[Dtype(Current)]");
+					buffer.putchar (']');
+						
 						-- Remember extern declaration
 					Extern_declarations.add_attribute_table (table_name);
 					   -- Mark attribute table used

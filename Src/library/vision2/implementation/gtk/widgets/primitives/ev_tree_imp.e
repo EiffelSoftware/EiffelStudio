@@ -33,7 +33,8 @@ inherit
 			start_transport_filter,
 			pre_pick_steps,
 			post_drop_steps,
-			call_pebble_function
+			call_pebble_function,
+			pointer_over_widget
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
@@ -83,9 +84,7 @@ feature {NONE} -- Initialization
 			
 			create ev_children.make (0)
 				-- Make initial hash table with room for 100 child pointers, may be increased later.
-				
-			
-				
+		
 			create tree_node_ptr_table.make (100)
 			C.gtk_clist_set_row_height (list_widget, 0)
 			create timer.make_with_interval (0)
@@ -144,16 +143,6 @@ feature {NONE} -- Initialization
 			--	Result := [gtk_marshal.gtk_value_pointer (args)]
 		end
 
-	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
-		local
-			temp_row_ptr: POINTER
-		do
-			temp_row_ptr := C.gtk_ctree_node_nth (list_widget, a_y // (row_height + 1))
-			if temp_row_ptr /= NULL then
-				Result := tree_node_ptr_table.item (temp_row_ptr)
-			end
-		end
-
 	button_press_switch (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
@@ -207,6 +196,33 @@ feature {NONE} -- Initialization
 			if a_row_imp /= Void then
 				if a_row_imp.pointer_motion_actions_internal /= Void then
 					a_row_imp.pointer_motion_actions_internal.call (t)
+				end
+			end
+		end
+		
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
+			-- Is mouse pointer hovering above list.
+		local
+			gdkwin_parent, gdkwin_parent_parent: POINTER
+			clist_parent: POINTER
+		do
+			if is_displayed then
+				gdkwin_parent := C.gdk_window_get_parent (a_gdkwin)
+				if gdkwin_parent /= NULL then
+					gdkwin_parent_parent := C.gdk_window_get_parent (gdkwin_parent)
+				end
+				clist_parent := C.gdk_window_get_parent (
+					C.gtk_clist_struct_clist_window (list_widget)
+				)
+				Result := gdkwin_parent = clist_parent or
+					gdkwin_parent_parent = clist_parent
+
+				if clist_parent = gdkwin_parent then
+					if row_from_y_coord (a_y) /= Void then
+						Result := False
+					end
 				end
 			end
 		end
@@ -400,7 +416,7 @@ feature -- Implementation
 				ev_children.start
 				i := 1
 			until
-				ev_children.after or else a_enable_flag
+				i > ev_children.count or else a_enable_flag
 			loop
 				ev_children.go_i_th (i)
 				a_enable_flag := ev_children.item.is_transport_enabled_iterator
@@ -583,7 +599,18 @@ feature -- Implementation
 
 			pnd_row_imp := Void
 		end
-
+		
+feature {EV_TREE_NODE_IMP}
+		
+	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
+		local
+			temp_row_ptr: POINTER
+		do
+			temp_row_ptr := C.gtk_ctree_node_nth (list_widget, a_y // (row_height + 1))
+			if temp_row_ptr /= NULL then
+				Result := tree_node_ptr_table.item (temp_row_ptr)
+			end
+		end
 
 feature {NONE} -- Implementation
 

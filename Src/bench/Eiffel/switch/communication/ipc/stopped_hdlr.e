@@ -170,7 +170,7 @@ feature {} -- parsing features
 		end;
 
 	index_of (c: CHARACTER; pos: INTEGER): INTEGER is
-			-- position of first occurence of c
+			-- position of first occurrence of c
 			-- after pos (included). 0 if none
 			--| should be in string
 		local

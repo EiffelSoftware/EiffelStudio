@@ -76,7 +76,7 @@ feature -- Access
 		do
 			Result := body_index * 100 + breakable_line_number
 				-- here we take the absolute value of the
-				-- result if  an overflow occured
+				-- result if  an overflow occurred
 			if Result<0 then
 				Result := - Result
 			end

@@ -135,6 +135,7 @@ feature {NONE} -- Implementation
 		do
 			top_level_window_imp.set_focus_widget (Void)
 			has_focus := False
+			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
 		end
 		
 	set_focus is
@@ -142,7 +143,6 @@ feature {NONE} -- Implementation
 		do
 			GTK_WIDGET_SET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
 			C.gtk_widget_grab_focus (c_object)
-			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
 		end
 
 	has_focus: BOOLEAN

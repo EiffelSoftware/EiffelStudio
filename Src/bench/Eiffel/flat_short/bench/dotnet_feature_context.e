@@ -232,7 +232,7 @@ feature -- Element change
 			-- Feature comments from XML
 		local
 			l_member_info: MEMBER_INFORMATION
-			l_parameter_information: LINKED_LIST [PARAMETER_INFORMATION]
+			l_parameter_information: ARRAYED_LIST [PARAMETER_INFORMATION]
 			l_parsed_arguments, l_namespace_name: STRING
 			l_constructor: CONSUMED_CONSTRUCTOR
 			l_summary, l_return_info: ARRAYED_LIST [STRING]

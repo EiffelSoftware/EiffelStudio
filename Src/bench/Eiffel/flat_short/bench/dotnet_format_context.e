@@ -28,7 +28,8 @@ feature -- Initialization
 			consumed_t := a_consumed
 			set_assembly_name
 			if not cached_xml.has (assembly_name) then
-				create assembly_info.make (dotnet_framework_path + assembly_name + ".xml")
+				create assembly_info.make
+				assembly_info.initialize (dotnet_framework_path + assembly_name + ".xml")
 				cached_xml.put (assembly_info, assembly_name)
 			else
 				assembly_info := cached_xml.item (assembly_name)

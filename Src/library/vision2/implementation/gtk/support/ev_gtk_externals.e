@@ -3,6 +3,29 @@ class
 		inherit
 			EV_GTK_DEPENDENT_EXTERNALS
 		end
+		
+feature -- MACROS
+
+	gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_SET_FLAGS"
+		end
+
+	gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_UNSET_FLAGS"
+		end
+
+	gtk_widget_no_window (a_wid: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_NO_WINDOW"
+		end
 
 feature -- Measurement
 

@@ -229,7 +229,10 @@ feature -- Access
 				loop
 					current_character := area.item (counter - 1)
 					if current_character = '%N' then
-						greatest_a := greatest_a.min (get_char_a_width (screen_dc, area.item (counter + 1).code))
+						if counter < count - 1 then
+								-- Ensure that we do not check a character if the string ends in '%N'.
+							greatest_a := greatest_a.min (get_char_a_width (screen_dc, area.item (counter + 1).code))
+						end
 						if counter < count then
 							current_c := get_char_c_width (screen_dc, area.item (counter - 1).code)
 						end

@@ -65,12 +65,28 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 		require	
 			non_void_error_displayer: error_displayer /= Void
 		do
+			if not warning_list.empty then
+				error_displayer.trace_warnings (Current)
+				warning_list.wipe_out
+			end
 			if not error_list.empty then
 				error_displayer.trace_errors (Current)
-				error_position := 0;
-				wipe_out
-			end;
-		end;
+				error_position := 0
+				error_list.wipe_out
+			end
+		end
+
+	trace_warnings is
+			-- Trace the output of the warnings if there are any.
+		require	
+			non_void_error_displayer: error_displayer /= Void
+		do
+			if not warning_list.empty then
+				error_displayer.trace_warnings (Current)
+			end
+
+			warning_list.wipe_out
+		end
 
 feature {COMPILER_EXPORTER} -- Error handling primitives
 
@@ -141,9 +157,6 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 		require	
 			non_void_error_displayer: error_displayer /= Void
 		do
-			if not warning_list.empty then
-				error_displayer.trace_warnings (Current);
-			end;
 			if not error_list.empty then
 				raise_error;
 			end;

@@ -6,7 +6,8 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node,
+			find_breakable
 		end
 
 feature -- Attributes
@@ -59,6 +60,18 @@ feature -- Type check, byte code and dead code removal
 					Result.set_keys (node_keys);
 				end;
 			end;
+		end;
+
+feature -- Debugger
+
+	find_breakable is
+			-- Record each instruction in the debug compound as being breakable,
+			-- as well as the end of the debug compound itself.
+		do
+ 			if compound /= Void then
+				compound.find_breakable;
+			end;
+ 			record_break_node;      -- Breakpoint also after end of debug.
 		end;
 
 end

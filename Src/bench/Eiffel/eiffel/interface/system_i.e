@@ -1408,11 +1408,36 @@ end
 			melted_file: RAW_FILE
 			file_name: FILE_NAME
 			name: STRING
+			precomp_makefile: PRECOMP_MAKER
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Updating system_name.eif%N")
 end
-			name := clone (system_name)
+			if empty then
+					-- We are generating an empty melted file, this means that
+					-- we froze our system.
+				name := clone (system_name)
+			else
+					-- Find the correct melted name when there is no freeze
+					--
+					-- When there is no precompiled library, we need to use the `system_name'.
+					-- When there is one, we need to check if a freeze occurred during
+					-- the life cycle of the project, this can be detected by checking the
+					-- type of `makefile_generator' which should be either WKBENCH_MAKER or
+					-- FINAL_MAKER.
+				precomp_makefile ?= makefile_generator
+				if precomp_makefile = Void then
+						-- We already froze our project, so we can keep `system_name'
+					name := clone (system_name)
+				else
+					check
+						Uses_precompiled_library: Workbench.precompiled_directories /= Void	
+						Not_multiple_precompiled: Workbench.precompiled_directories.count = 1
+					end
+					Workbench.precompiled_directories.start
+					name := clone (Workbench.precompiled_directories.item_for_iteration.system_name)
+				end	
+			end
 			name.append (".melted")
 			!! file_name.make_from_string (Workbench_generation_path)
 			file_name.set_file_name (name)

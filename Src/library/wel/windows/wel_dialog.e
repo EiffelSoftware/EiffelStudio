@@ -275,6 +275,13 @@ feature {WEL_CONTROL} -- Implementation
 
 feature {NONE} -- Externals
 
+	cwin_dialog_box_indirect (hinst, template, hwnd, dlgproc: POINTER): POINTER is
+		external
+			"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): EIF_POINTER"
+		alias
+			"DialogBoxIndirect"
+		end
+
 	cwin_get_dlg_item (hwnd: POINTER; an_id: INTEGER): POINTER is
 			-- SDK GetDlgItem
 		external

@@ -22,7 +22,8 @@ inherit
 			build,
 			add_child,
 			child_minheight_changed,
-			child_height_changed
+			child_height_changed,
+			on_first_display
 		end
 
 	EV_FONTABLE_IMP
@@ -190,6 +191,29 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	on_first_display is
+			-- Called by the top_level window.
+			-- Almost the same action than adjust_items.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
+		do
+			from
+				index := 0
+			until
+				index = count
+			loop
+				child_item := get_item (index)
+				child_imp ?= child_item.window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
+				child_imp.on_first_display
+				index := index + 1
+			end
+		end
+
 	adjust_items is
 			-- Adjust the size of the windows of the items
 			-- to the current size.
@@ -236,7 +260,7 @@ feature {NONE} -- Implementation
 	tab_height: INTEGER is
 			-- The height of the bar with the pages.
 		do
-			Result := 20 --client_rect.top - sheet_rect.top
+			Result := 25 --client_rect.top - sheet_rect.top
 		end
 
 	set_font (f: EV_FONT) is

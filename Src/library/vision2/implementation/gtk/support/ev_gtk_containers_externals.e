@@ -50,6 +50,11 @@ feature {NONE} -- GTK C functions for general containers
 			"C | %"gtk_eiffel.h%""
 		end
 
+	c_gtk_container_set_bg_pixmap (container: POINTER; pixmap: POINTER) is
+		external
+			"C (GtkWidget *, GtkWidget *) | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- GTK C functions for windows
 
 	c_gtk_window_maximum_height (window: POINTER): INTEGER is

@@ -132,13 +132,13 @@ editor,,,,,,,
 ,3,"Add ""Add setter feature""",Arnaud,EDT0005,,,
 ,2,Add an option to search outside the comments/indexing clauses,Xavier,EDT0006,,,
 ,3,"When a class that does not belong to the universe is typed, put it in red",Manus,EDT0006,,,
-,4,"Auto-complete when user presses ;,.) …, not only return",Xavier,EDT0008,,,
+,4,"Auto-complete when user presses ;,.) …, not only return",Xavier,EDT0008,Xavier,1,Done
 ,2,When the text in the editor shrinks horizontally the scroll bar should reflect the change,Julian,EDT0009,,,
 ,2,Add a reload command to discard all unsaved changes,Xavier,EDT0010,,,
 ,2,Use a different highlight for found/picked words and for the selection,Xavier,EDT0011,,,
 ,3,Shift F3 should be able to search the selection backwards for symmetry with F3,Raphael,EDT0012,,,
 ,3,Only display syntax errors once per class instead of once per editor,Julian,EDT0013,,,
-,5,Give a warning when loading a class that is already being edited elsewhere,Julian,EDT0014,,,
+,5,Give a warning when loading a class that is already being edited elsewhere,Julian,EDT0014,Xavier,1,
 ,5,Completion of features should show complete signature (i.e. return type too),Manus,EDT0015,Xavier,1,Done
 
 
@@ -206,7 +206,7 @@ Metrics,,,,
 Diagram,,,,
 ,3,Support UML,Xavier,DGM0001
 ,3,Merge the command history with the one of the editor,Xavier,DGM0002
-,2,Add an undo all item at the top of the history dialog to be able to undo all modifications,Xavier,DGM0003
+,2,Add an undo all item at the top of the history dialog to be able to undo all modifications,Xavier,DGM0003,,,
 ,2,Give a list of all removed classes to be able to show them again,Xavier,DGM0004,,,
 
 

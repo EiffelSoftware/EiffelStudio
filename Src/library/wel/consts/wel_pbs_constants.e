@@ -15,7 +15,7 @@ feature -- Access
 	Pbs_vertical: INTEGER is 4
 			-- Declared in Windows as PBS_VERTICAL
 
-end -- class WEL_PBM_CONSTANTS
+end -- class WEL_PBS_CONSTANTS
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

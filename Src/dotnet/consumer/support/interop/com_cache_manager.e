@@ -92,47 +92,16 @@ feature -- Basic Exportations
 		do				
 			l_impl ?= new_marshalled_cache_manager.unwrap
 			l_impl.consume_assembly (a_name, a_version, a_culture, a_key)
-
 			update_current (l_impl)
 		end
 		
 	consume_assembly_from_path (a_path: SYSTEM_STRING) is
 			-- Consume assembly located `a_path'
 		local
-			i, nb: INTEGER
 			l_impl: MARSHAL_CACHE_MANAGER
-			l_native_array: NATIVE_ARRAY [SYSTEM_STRING]
-			l_path: SYSTEM_STRING
-		do	
-			l_native_array := a_path.split ((<<';'>>).to_cil)
-			from
-				l_path := feature {PATH}.get_directory_name (l_native_array.item (0))
-				i := 1
-				nb := l_native_array.count - 1
-			until
-				i > nb
-			loop
-				l_path := feature {SYSTEM_STRING}.concat_string_string (
-					l_path, ";")
-				l_path := feature {SYSTEM_STRING}.concat_string_string (
-					l_path, feature {PATH}.get_directory_name (l_native_array.item (i)))
-				i := i + 1
-			end
-		
+		do			
 			l_impl ?= new_marshalled_cache_manager.unwrap
-			
-				-- consume assemblies
-			from
-				i := 0
-				nb := l_native_array.count - 1
-			until
-				i > nb
-			loop
-				l_impl.consume_assembly_from_path (l_native_array.item (i))
-				i := i + 1
-			end
-			
-			--l_resolver.dispose
+			l_impl.consume_assembly_from_path (a_path)
 			update_current (l_impl)
 		end
 		

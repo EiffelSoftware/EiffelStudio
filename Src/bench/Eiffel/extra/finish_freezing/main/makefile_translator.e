@@ -85,6 +85,11 @@ feature -- Initialization
 			env.system (quick_prg)
 		end
 
+feature -- Status report
+
+	has_makefile_sh: BOOLEAN
+			-- Did we find any Makefile.SH?
+
 feature -- Access
 
 	makefile_sh: PLAIN_TEXT_FILE	
@@ -182,9 +187,13 @@ feature {NONE} -- Translation
 			-- Read content of first Ace file
 		do
 			open_files
-			makefile_sh.readstream (makefile_sh.count)
-			is_il_code := makefile_sh.last_string.substring_index ("$(IL_SYSTEM)", 1) > 0
-			close_files
+			if has_makefile_sh then
+				makefile_sh.readstream (makefile_sh.count)
+				is_il_code := makefile_sh.last_string.substring_index ("$(IL_SYSTEM)", 1) > 0
+				close_files
+			else
+				is_il_code := True
+			end
 		end
 
 	translate_makefile  (master: BOOLEAN) is
@@ -201,30 +210,32 @@ feature {NONE} -- Translation
 
 			open_files
 
-			check
-				makefile_sh_exists: makefile_sh /= Void
-				makefile /= Void
-			end
-
-			if not makefile_sh.end_of_file then
-				read_next
-
-				translate_case
-				translate_case
-				translate_echo
-				translate_spit (True, Void)
-
-				if master then
-					translate_master
-					translate_spit (False, options.get_string ("no_subs", Void))
-				else
-					translate_spit (False, Void)
+			if has_makefile_sh then
+				check
+					makefile_sh_exists: makefile_sh /= Void
+					makefile /= Void
 				end
-			else
-				io.error.putstring ("WARNING: Makefile.SH is empty.%N")
-			end
 
-			close_files
+				if not makefile_sh.end_of_file then
+					read_next
+
+					translate_case
+					translate_case
+					translate_echo
+					translate_spit (True, Void)
+
+					if master then
+						translate_master
+						translate_spit (False, options.get_string ("no_subs", Void))
+					else
+						translate_spit (False, Void)
+					end
+				else
+					io.error.putstring ("WARNING: Makefile.SH is empty.%N")
+				end
+
+				close_files
+			end
 		end
 
 	translate_sub_makefiles is
@@ -1718,23 +1729,19 @@ feature {NONE} -- Implementation
 	open_files is
 			-- open the Makefile.SH and the Makefile to translate
 		local
-			out_file, error: BOOLEAN
+			out_file, retried: BOOLEAN
 		do
-			debug ("implementation")
-				io.putstring("%Topen_files = ")
-			end
-
-			out_file := False
-
-			if not error then
-				!!makefile_sh.make_open_read ("Makefile.SH")
+			if not retried then
+				out_file := False
+				create makefile_sh.make ("Makefile.SH")
+				if makefile_sh.exists then
+					makefile_sh.open_read
+					has_makefile_sh := True
+				end
 				out_file := True
-				!!makefile.make_open_write ("Makefile")
-			end
-
-			debug ("implementation")
-				io.putstring(makefile_sh.name)
-				io.new_line
+				create makefile.make_open_write ("Makefile")
+			else
+				has_makefile_sh := False
 			end
 		rescue
 			if not out_file then
@@ -1742,8 +1749,7 @@ feature {NONE} -- Implementation
 			else
 				io.error.putstring ("ERROR: Unable to open Makefile for output%N")
 			end
-
-			error := True
+			retried := True
 			retry
 		end
 

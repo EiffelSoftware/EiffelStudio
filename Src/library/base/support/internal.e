@@ -205,6 +205,8 @@ feature -- Access
 
 	is_special (object: ANY): BOOLEAN is
 			-- Is `object' a special object?
+			-- It only recognized a special object 
+			-- initialized within a TO_SPECIAL object.
 		require
 			object_not_void: object /= Void
 		do

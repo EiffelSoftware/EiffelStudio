@@ -181,6 +181,23 @@ feature -- Cursor movement
 
 feature -- Element change
 
+	append (s: SEQUENCE [G]) is
+			-- Append a copy of `s'. Do not move cursor.
+		require
+			sequence_not_void: s /= Void
+		do
+			from
+				s.start
+			until
+				s.after
+			loop
+				extend (s.item)
+				s.forth
+			end
+		ensure
+			count_increased: old count + s.count = count
+		end
+
 	extend (v: like item) is
 			-- Add `v' to end. Do not move cursor.
 		require

@@ -58,7 +58,7 @@ feature -- Lace recompilation
 			path := Environ.interpret (directory_name);
 			cluster_of_name := Universe.cluster_of_name (cluster_name);
 			cluster_of_path := Universe.cluster_of_path (path);
-			cluster := Lace.old_universe.cluster_of_path (path);
+			old_cluster := Lace.old_universe.cluster_of_path (path);
 			if cluster_of_path /= Void then
 				!!vd28;
 				vd28.set_cluster (cluster_of_path);
@@ -70,18 +70,19 @@ feature -- Lace recompilation
 				vdcn.set_cluster (cluster_of_name);
 				Error_handler.insert_error (vdcn);
 				Error_handler.raise_error;
-			elseif cluster = Void then
+			elseif old_cluster = Void then
 					-- New cluster
 				!!cluster.make (path);
 				Universe.insert_cluster (cluster);
 				fill_cluster := True;
-			elseif cluster.changed then
-				old_cluster := cluster;
+			elseif old_cluster.changed then
 				!!cluster.make (path);
 				cluster.set_old_cluster (old_cluster);
 				Universe.insert_cluster (cluster);
 				fill_cluster := True;
 			else
+				!!cluster.make (path);
+				cluster.copy_old_cluster (old_cluster);
 				Universe.insert_cluster (cluster);
 			end;
 			cluster.set_cluster_name (cluster_name);

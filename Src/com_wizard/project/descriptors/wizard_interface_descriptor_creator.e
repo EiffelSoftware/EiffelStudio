@@ -123,7 +123,6 @@ feature -- Basic operations
 			tmp_type_attr: ECOM_TYPE_ATTR
 			tmp_type_lib: ECOM_TYPE_LIB
 			tmp_guid: ECOM_GUID
-			a_handle: INTEGER
 		do
 			tmp_type_lib := a_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid	
@@ -140,6 +139,8 @@ feature -- Basic operations
 				name.append ("_")
 				name.append_integer (a_type_info.index_in_type_lib + 1)
 			end
+
+			namespace := namespace_name (type_library_descriptor.name)
 
 			if prefixed_libraries.has (tmp_guid) then
 				name.prepend (Underscore)
@@ -283,8 +284,7 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= void
 			have_inherited_interface: a_type_info.type_attr.count_implemented_types > 0
 		local
-			i, a_handle: INTEGER
-			tmp_documentation: ECOM_DOCUMENTATION
+			a_handle: INTEGER
 			tmp_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 			tmp_type_info: ECOM_TYPE_INFO
 			tmp_descriptor_index: INTEGER

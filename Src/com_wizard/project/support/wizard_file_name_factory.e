@@ -43,6 +43,16 @@ feature -- Basic operations
 			a_generator.create_file_name (Current)
 		end
 
+	create_registration_file_name (a_generator: WIZARD_REGISTRATION_GENERATOR; a_writer: WIZARD_WRITER) is
+			-- Create new file name according to `a_generator' and `a_writer'.
+		require
+			non_void_generator: a_generator /= Void
+			non_void_writer: a_writer /= Void
+		do
+			transient_writer := a_writer
+			a_generator.create_file_name (Current)
+		end
+
 	create_c_alias_file_name (a_writer: WIZARD_WRITER_C_FILE) is
 			-- Create new file name according to `a_writer'.
 		require
@@ -69,7 +79,7 @@ feature -- Basic operations
 			last_created_file_name.append (Cpp_file_extension)
 		end
 
-feature {WIZARD_TYPE_GENERATOR} -- Visitor
+feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 
 	process_alias_c_client is
 			-- Create filename for `a_generator'.

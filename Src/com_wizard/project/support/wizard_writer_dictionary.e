@@ -988,6 +988,7 @@ feature -- languages --13
 	Eiffel: STRING is "Eiffel"
 
 feature -- Eiffel keywords -- 14
+
 	Is_keyword: STRING is "is"
 
 	If_keyword: STRING is "if"

@@ -51,25 +51,25 @@ inherit
 feature -- Access
 
 	Idl_compilation_title: STRING is "IDL Compilation"
-			-- IDL compilation title
+			-- IDL compilation title.
 	
 	Iid_compilation_title: STRING is "C Compilation step 1"
-			-- Iid generated C file compilation title
+			-- Iid generated C file compilation title.
 	
 	Data_compilation_title: STRING is "C Compilation step 2"
-			-- Inprocess dll generated C file compilation title
+			-- Inprocess dll generated C file compilation title.
 	
 	Ps_compilation_title: STRING is "C Compilation step 3"
-			-- Proxy/stub generated C file compilation title
+			-- Proxy/stub generated C file compilation title.
 	
 	Link_title: STRING is "Creating Proxy Stub Dll"
-			-- Link title
+			-- Link title.
 
 	Analysis_title: STRING is "Analysing Type Library"
-			-- Analysis title
+			-- Analysis title.
 
 	Generation_title2: STRING is "Generating Code"
-			-- Generation title
+			-- Generation title.
 
 feature -- Basic Operations
 
@@ -147,6 +147,8 @@ feature {NONE} -- Implementation
 		local
 			i, a_range: INTEGER
 			Clib_folder_name: STRING
+			outproc_reg_gen: WIZARD_OUTPROC_EIFFEL_REGISTRATION_GENERATOR
+			c_reg_gen: WIZARD_C_REGISTRATION_CODE_GENERATOR
 		do
 			-- Initialization
 			message_output.add_title (Current, Analysis_title)
@@ -166,7 +168,8 @@ feature {NONE} -- Implementation
 				from
 					system_descriptor.start
 				until
-					system_descriptor.after
+					system_descriptor.after or
+					Shared_wizard_environment.abort
 				loop
 					if 
 						not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
@@ -181,7 +184,8 @@ feature {NONE} -- Implementation
 					progress_report.start
 					progress_report.set_title (Generation_title2)
 				until
-					system_descriptor.after
+					system_descriptor.after or
+					Shared_wizard_environment.abort
 				loop
 					if 
 						not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
@@ -189,7 +193,8 @@ feature {NONE} -- Implementation
 						from
 							i := 1
 						until
-							i > system_descriptor.library_descriptor_for_iteration.descriptors.count or Shared_wizard_environment.abort
+							i > system_descriptor.library_descriptor_for_iteration.descriptors.count or 
+							Shared_wizard_environment.abort
 						loop
 							if system_descriptor.library_descriptor_for_iteration.descriptors.item (i) /= Void then
 								if shared_wizard_environment.client then
@@ -216,7 +221,8 @@ feature {NONE} -- Implementation
 						system_descriptor.interfaces.start
 						a_range := 0
 					until
-						system_descriptor.interfaces.after
+						system_descriptor.interfaces.after or
+						Shared_wizard_environment.abort
 					loop
 						a_range := a_range + 1
 						system_descriptor.interfaces.forth
@@ -243,83 +249,105 @@ feature {NONE} -- Implementation
 						system_descriptor.interfaces.forth
 						progress_report.step
 					end
+				end
 
-					if Shared_wizard_environment.abort then
-						message_output.add_message (Current, Generation_Aborted)
-					else
-						
-						-- Generating extra files
-						if not shared_wizard_environment.abort then
-							progress_report.start
-							progress_report.set_title (Runtime_functions_generation)
-							progress_report.set_range (8)
-							Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
-							progress_report.step
-							Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-							progress_report.step
-							Generated_ce_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)	
-							progress_report.step
-							Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
-							progress_report.step
-							Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-							progress_report.step
-							Generated_ec_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-							progress_report.step
-							Shared_file_name_factory.create_c_alias_file_name (Alias_c_writer)
-							progress_report.step
-							Alias_c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-							progress_report.step
-							message_output.add_warning (Current, Generation_Successful)
+				-- Generating Registration code
+				if Shared_wizard_environment.abort then
+					message_output.add_message (Current, Generation_Aborted)
+				elseif shared_wizard_environment.server then
+					if shared_wizard_environment.out_of_process_server then
+						create outproc_reg_gen
+						outproc_reg_gen.generate
+					end
+					create c_reg_gen
+					c_reg_gen.generate
+
+--					from
+--						system_descriptor.coclasses.start
+--						progress_report.start
+--						progress_report.set_title (Registration_code_generation_title)
+--						progress_report.set_range (a_range)
+--					until
+--						system_descriptor.coclasses.after
+--						or Shared_wizard_environment.abort
+--					loop
+--						
+--						c_server_visitor.visit (system_descriptor.coclasses.item)
+--						eiffel_server_visitor.visit (system_descriptor.coclasses.item)
+--
+--						system_descriptor.coclasses.forth
+--						progress_report.step
+--					end
+				end
+
+				if Shared_wizard_environment.abort then
+					message_output.add_message (Current, Generation_Aborted)
+				else
+
+					-- Generating extra files
+					if not shared_wizard_environment.abort then
+						progress_report.start
+						progress_report.set_title (Runtime_functions_generation)
+						progress_report.set_range (8)
+						Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
+						progress_report.step
+						Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
+						progress_report.step
+						Generated_ce_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)	
+						progress_report.step
+						Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
+						progress_report.step
+						Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
+						progress_report.step
+						Generated_ec_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+						progress_report.step
+						Shared_file_name_factory.create_c_alias_file_name (Alias_c_writer)
+						progress_report.step
+						Alias_c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+						progress_report.step
+						message_output.add_warning (Current, Generation_Successful)
+					end
+
+					-- Compiling generated C code
+					if Shared_wizard_environment.compile_c then
+						message_output.add_title (Current, Compilation_title)
+						change_working_directory (shared_wizard_environment.destination_folder)
+						if shared_wizard_environment.client and not shared_wizard_environment.abort then
+							Clib_folder_name := clone (Client)
+							Clib_folder_name.append_character (Directory_separator)
+							Clib_folder_name.append (Clib)
+							progress_report.set_title (C_client_compilation_title)
+							compiler.compile_folder (Clib_folder_name)
+							compiler.link_all (Clib_folder_name, CLib_name)
 						end
-
-						-- Compiling generated C code
-						if Shared_wizard_environment.compile_c then
-							message_output.add_title (Current, Compilation_title)
-							change_working_directory (shared_wizard_environment.destination_folder)
-							if shared_wizard_environment.client and not shared_wizard_environment.abort then
-								Clib_folder_name := clone (Client)
-								Clib_folder_name.append_character (Directory_separator)
-								Clib_folder_name.append (Clib)
-								progress_report.set_title (C_client_compilation_title)
-								compiler.compile_folder (Clib_folder_name)
-								compiler.link_all (Clib_folder_name, CLib_name)
+						if shared_wizard_environment.server and not shared_wizard_environment.abort then
+							Clib_folder_name := clone (Server)
+							Clib_folder_name.append_character (Directory_separator)
+							Clib_folder_name.append (Clib)
+							progress_report.set_title (C_server_compilation_title)
+							compiler.compile_folder (Clib_folder_name)
+							compiler.link_all (Clib_folder_name, CLib_name)
+						end
+						if not shared_wizard_environment.abort then
+							Clib_folder_name := clone (Common)
+							Clib_folder_name.append_character (Directory_separator)
+							Clib_folder_name.append (Clib)
+							progress_report.set_title (C_common_compilation_title)
+							compiler.compile_folder (Clib_folder_name)
+							compiler.link_all (Clib_folder_name, CLib_name)
+						end
+						if not Shared_wizard_environment.abort and Shared_wizard_environment.compile_eiffel then
+							if Shared_wizard_environment.client then
+								progress_report.set_title (Eiffel_compilation_title)
+								compiler.compile_eiffel (Client)
 							end
-							if shared_wizard_environment.server and not shared_wizard_environment.abort then
-								Clib_folder_name := clone (Server)
-								Clib_folder_name.append_character (Directory_separator)
-								Clib_folder_name.append (Clib)
-								progress_report.set_title (C_server_compilation_title)
-								compiler.compile_folder (Clib_folder_name)
-								compiler.link_all (Clib_folder_name, CLib_name)
+							if not Shared_wizard_environment.abort and Shared_wizard_environment.server then
+								progress_report.set_title (Eiffel_compilation_title)
+								compiler.compile_eiffel (Server)
 							end
-							if not shared_wizard_environment.abort then
-								Clib_folder_name := clone (Common)
-								Clib_folder_name.append_character (Directory_separator)
-								Clib_folder_name.append (Clib)
-								progress_report.set_title (C_common_compilation_title)
-								compiler.compile_folder (Clib_folder_name)
-								compiler.link_all (Clib_folder_name, CLib_name)
-							end
-							message_output.set_forced_display
-							if not Shared_wizard_environment.abort and Shared_wizard_environment.compile_eiffel then
-								if Shared_wizard_environment.client then
-									progress_report.set_title (Eiffel_compilation_title)
-									compiler.compile_eiffel (Client)
-								end
-								if not Shared_wizard_environment.abort and Shared_wizard_environment.server then
-									progress_report.set_title (Eiffel_compilation_title)
-									compiler.compile_eiffel (Server)
-								end
-							end
-							message_output.set_normal_display
-							if not shared_wizard_environment.abort then
-								generate_user_ace_file
-								message_output.set_forced_display
-								message_output.add_message (Current, Compilation_Successful)
-								message_output.set_normal_display
-							else
-								finish
-							end
+						end
+						if not shared_wizard_environment.abort then		
+							message_output.add_message (Current, Compilation_Successful)
 						end
 					end
 				end
@@ -342,8 +370,6 @@ feature {NONE} -- Implementation
 				Shared_wizard_environment.return_code
 			when Standard_abort_value then
 				a_string := clone (Standard_failure_error_message)
-			when Eiffel_compilation_error then
-				a_string := clone (Eiffel_compilation_error_message)
 			else
 				a_string := clone (Failed_message)
 				a_string.append_integer (Shared_wizard_environment.return_code)
@@ -355,7 +381,7 @@ feature {NONE} -- Implementation
 		end
 
 	compiler: WIZARD_COMPILER is
-			-- IDL/C compiler
+			-- IDL/C compiler.
 		once
 			create Result.make (message_output)
 		end
@@ -462,40 +488,43 @@ feature {NONE} -- Implementation
 			-- Were directories correctly initialized?
 
 	Failed_message: STRING is "Failed with return code "
-			-- Failure message
+			-- Failure message.
 	
-	Standard_failure_error_message: STRING is "Generic failure"
-			-- Generic failure message
-	
-	Eiffel_compilation_error_message: STRING is "Eiffel Compilation Failed"
-			-- Eiffel compilation error message
+	Standard_failure_error_message: STRING is "Failed"
+			-- Generic failure message.
 
 	Generation_title: STRING is "Generating code"
-			-- Generation message
+			-- Generation message.
 	
 	Compilation_title: STRING is "Compiling generated code"
-			-- Compilation message
+			-- Compilation message.
 
 	C_client_compilation_title: STRING is "Compiling generated C client code"
-			-- C compilation message
+			-- C compilation message.
 
 	C_common_compilation_title: STRING is "Compiling generated C common code"
-			-- C compilation message
+			-- C compilation message.
 
 	C_server_compilation_title: STRING is "Compiling generated C server code"
-			-- C compilation message
+			-- C compilation message.
 
 	Interface_generation_title: STRING is "Generating implemented interfaces"
-			-- Interface generation message
+			-- Interface generation message.
+
+	Registration_code_generation_title: STRING is "Generating registration code"
+			-- Registration code generation message.
 
 	Runtime_functions_generation: STRING is "Generating Runtime functions"
-			-- Runtime functions generation
+			-- Runtime functions generation.
+
+--	Clib_name: STRING is "ecom"
+--			-- Libray file name.
 
 	Compilation_successful: STRING is "Compilation completed."
-			-- Compilation successful message
+			-- Compilation successful message.
 
 	Eiffel_compilation_title: STRING is "Compiling Eiffel code"
-			-- Eiffel compilation message
+			-- Eiffel compilation message.
 
 end -- class WIZARD_MANAGER
 

@@ -99,9 +99,8 @@ feature -- Processing
 				vt_type := binary_or (vt_unknown, vt_byref)
 			end
 
-			if a_type_visitor.is_basic_type then
+			if a_type_visitor.is_basic_type  then
 				need_generate_ce := False
-				is_basic_type := True
 				cecil_type := clone (a_type_visitor.cecil_type)
 				eiffel_type := clone (a_type_visitor.eiffel_type)
 				vt_type := a_type_visitor.vt_type
@@ -271,14 +270,7 @@ feature -- Processing
 			-- process enumeration
 		do
 			Precursor {WIZARD_TYPE_VISITOR} (enum_descriptor)
-			c_type := clone (Int)
-			cecil_type := clone (Eif_integer)
-			create c_post_type.make (100)
-			create c_header_file.make (100)
-			eiffel_type := clone (Integer_type)
-			vt_type := Vt_int
-
-			is_enumeration := True
+			enum_processing
 		end
 
 	process_record (record_descriptor: WIZARD_RECORD_DESCRIPTOR) is
@@ -330,7 +322,7 @@ feature -- Processing
 			then
 				is_structure := False
 				is_basic_type := True
-				vt_type := Vt_i4
+				vt_type := Vt_void
 				need_generate_ce := False
 				need_generate_ec := False
 				c_header_file := clone ("")
@@ -343,6 +335,19 @@ feature {NONE} -- Implementation
 
 	local_counter: INTEGER
 			-- Counter value
+
+	enum_processing is
+			-- Enumeration processing.
+		do
+			c_type := clone (Int)
+			cecil_type := clone (Eif_integer)
+			create c_post_type.make (100)
+			create c_header_file.make (100)
+			eiffel_type := clone (Integer_type)
+			vt_type := Vt_int
+
+			is_enumeration := True
+		end
 
 	ce_function_body_record (a_class_name, a_c_type: STRING): STRING is
 			-- ce function body for records

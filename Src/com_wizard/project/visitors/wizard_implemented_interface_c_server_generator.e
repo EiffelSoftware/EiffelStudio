@@ -52,7 +52,6 @@ feature -- Basic operations
 				dispatch_interface := True
 			end
 
---			cpp_class_writer.add_constructor (constructor (an_interface))
 			if dispatch_interface then
 				dispatch_interface_features (an_interface)
 			end

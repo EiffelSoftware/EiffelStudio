@@ -22,9 +22,7 @@ feature -- Basic operations
 		deferred
 		ensure
 			access_feature_exist: access_feature /= Void
-			external_access_feature_exist: external_access_feature /= Void
 			setting_feature_exist: not is_varflag_freadonly (a_descriptor.var_flags)  implies (setting_feature /= Void)
-			external_setting_feature_exist: not is_varflag_freadonly (a_descriptor.var_flags)  implies (external_setting_feature /= Void)
 		end
 
 

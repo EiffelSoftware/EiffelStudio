@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 			eiffel_names.put (Ecom_variant, Vt_variant)
 			eiffel_names.put (Ecom_currency, Vt_cy)
 			eiffel_names.put (Ecom_decimal, Vt_decimal)
-			eiffel_names.put (Ecom_automation_interface, Vt_dispatch)
+			eiffel_names.put (Ecom_interface, Vt_dispatch)
 			eiffel_names.put (Ecom_interface, Vt_unknown)
 			eiffel_names.put (String_type, Vt_bstr)
 			eiffel_names.put (String_type, Vt_lpstr)

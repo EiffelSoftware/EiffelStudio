@@ -170,7 +170,7 @@ feature -- Element change
 			source_gdkimage, source_mask_gdkimage, destination_mask_gdkimage, destination_gdkimage: POINTER
 			gdkpix, gdkmask: POINTER
 			pixgc, maskgc: POINTER
-			column_counter, row_counter, a_pixel: INTEGER
+			column_counter, row_counter: INTEGER
 			mapped_x, mapped_y, source_width, source_height: INTEGER
 			mapped_x_lookup, mapped_y_lookup: ARRAY [INTEGER]
 		do

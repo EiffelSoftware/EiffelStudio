@@ -16,7 +16,7 @@ inherit
 			selected_item as tree_selected_item
 		export
 			{NONE} all
-			{ANY} start, off, forth, item, extend, wipe_out
+			{ANY} start, off, forth, item, extend, wipe_out, is_empty
 		redefine
 			initialize
 		end

@@ -90,7 +90,7 @@ extern void st_truncate(register struct stack *stk);			/* Truncate stack if nece
 extern void st_wipe_out(register struct stchunk *chunk);			/* Remove unneeded chunk from stack */
 extern void eremb(char *obj);				/* Remembers old object */
 extern void erembq(char *obj);				/* Quick veersion (no GC call) of eremb */
-extern void onceset(register char **ptr);				/* Recording of once function result */
+extern char *onceset(register char **ptr);				/* Recording of once function result */
 extern int refers_new_object(register char *object);		/* Does an object refers to young ones ? */
 extern void gc_stop(void);				/* Stop the garbage collector */
 extern void gc_run(void);				/* Restart the garbage collector */

@@ -135,6 +135,7 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_horizontal_scrolling_per_item
+			
 		end
 		
 	is_vertical_scrolling_per_item: BOOLEAN is
@@ -146,6 +147,46 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_vertical_scrolling_per_item
+		end
+		
+	is_content_partially_dynamic: BOOLEAN is
+			-- Is the content of `Current' partially dynamic? If `True' then
+			-- whenever an item must be re-drawn and it is not already set within `Current',
+			-- then it is queried via `content_requested_actions'. The returned item is added
+			-- to `Current' so the query only occurs once.
+		require
+			not_destroyed: not is_destroyed
+		do
+			to_implement ("EV_GRID.is_content_partially_dynamic")
+		end
+		
+	is_content_completely_dynamic: BOOLEAN is
+			-- Is the content of `Current' completely dynamic? If `True' then
+			-- whenever an item must be re-drawn it is always queried via `content_requested_actions'
+			-- and not added to `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_content_completely_dynamic
+		end
+		
+	is_row_height_fixed: BOOLEAN is
+			-- Must all rows in `Current' have the same height?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_row_height_fixed
+		end
+		
+	row_height: INTEGER is
+			-- Height of all rows within `Current'.
+		require
+			not_destroyed: not is_destroyed
+			is_row_height_fixed: is_row_height_fixed
+		do
+			Result := implementation.row_height
+		ensure
+			result_non_negative: result >= 0
 		end
 
 feature -- Status setting
@@ -159,16 +200,6 @@ feature -- Status setting
 		ensure
 			tree_enabled: is_tree_enabled
 		end	
-
---	set_background_color (a_color: EV_COLOR) is
---			-- Set `a_color' to all cells of Current
---		require
---			a_color_not_void: a_color /= Void
---		do
---			to_implement ("EV_GRID.set_background_color")
---		ensure
---			--background_color_set: forall (item (i, j).background_color = a_color)
---		end
 		
 	show_column (a_column: INTEGER) is
 			-- Ensure column `a_column' is visible in `Current'.
@@ -349,7 +380,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.enable_horizontal_scrolling_per_item
+			implementation.disable_horizontal_scrolling_per_item
 		ensure
 			horizontal_scrolling_performed_per_pixel: not is_horizontal_scrolling_per_item
 		end
@@ -369,9 +400,96 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.enable_vertical_scrolling_per_item
+			implementation.disable_vertical_scrolling_per_item
 		ensure
 			vertical_scrolling_performed_per_pixel: not is_vertical_scrolling_per_item
+		end
+		
+	set_row_height (a_row_height: INTEGER) is
+			-- Set height of all rows within `Current' to `a_row_height
+			-- If not `is_row_height_fixed' then set the height individually per row instead.
+		require
+			not_destroyed: not is_destroyed
+			is_row_height_fixed: is_row_height_fixed
+			a_row_height_positive: a_row_height >= 1
+		do
+			implementation.set_row_height (a_row_height)
+		ensure
+			row_height_set: row_height = a_row_height
+		end
+		
+	enable_complete_dynamic_content is
+			-- Ensure contents of `Current' must be retrieved when required via
+			-- `content_requested_actions'. Contents are requested each time they
+			-- are displayed even if already contained in `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_complete_dynamic_content
+		ensure
+			content_completely_dynamic: is_content_completely_dynamic
+		end
+		
+	enable_partial_dynamic_content is
+			-- Ensure contents of `Current' must be retrieved when required via
+			-- `content_requested_actions' only if the item is not already set
+			-- in `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_partial_dynamic_content
+		ensure
+			content_partially_dynamic: is_content_partially_dynamic
+		end
+		
+	disable_dynamic_content is
+			-- Ensure contents of `Current' are not dynamic and are no longer retrieved as such.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_dynamic_content
+		ensure
+			content_not_dynamic: not is_content_completely_dynamic and not is_content_partially_dynamic
+		end
+		
+	enable_row_height_fixed is
+			-- Ensure all rows have the same height.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_row_height_fixed
+		end
+		
+	disable_row_height_fixed is
+			-- Permit rows to have varying heights.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_row_height_fixed
+		end
+		
+	set_column_count_to (a_column_count: INTEGER) is
+			-- Resize `Current' to have `a_column_count' columns.
+		require
+			not_destroyed: not is_destroyed
+			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
+			a_column_count_positive: a_column_count >= 1
+		do
+			implementation.set_column_count_to (a_column_count)
+		ensure
+			column_count_set: column_count = a_column_count
+		end
+		
+	set_row_count_to (a_row_count: INTEGER) is
+			-- Resize `Current' to have `a_row_count' columns.
+		require
+			not_destroyed: not is_destroyed
+			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
+			a_row_count_positive: a_row_count >= 1
+		do
+			implementation.set_row_count_to (a_row_count)
+		ensure
+			row_count_set: row_count = a_row_count
 		end
 
 feature -- Status report

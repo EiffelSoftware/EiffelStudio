@@ -270,6 +270,7 @@ feature {NONE} -- Initialization
 			if select_actions_internal /= Void then
 				select_actions_internal.call ([an_item.interface])
 			end
+			switch_to_browse_mode_if_necessary
 		end
 
 	deselect_callback (int: TUPLE [INTEGER]) is
@@ -441,15 +442,9 @@ feature -- Status report
 			end
 		end
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- True if the user can choose several items
 			-- False otherwise
-		do
-			if list_widget /= NULL then
-				Result := C.gtk_clist_struct_selection_mode (list_widget) 
-					= C.GTK_SELECTION_MULTIPLE_ENUM
-			end
-		end
 
 	title_shown: BOOLEAN is
 			-- True if the title row is shown.
@@ -488,9 +483,18 @@ feature -- Status setting
 			-- by clicking on several choices.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
-			C.gtk_clist_set_selection_mode (
-				list_widget, C.GTK_SELECTION_MULTIPLE_ENUM
-			)	
+			multiple_selection_enabled := True
+			if selection_mode_is_single then
+				C.gtk_clist_set_selection_mode (
+					list_widget,
+					C.GTK_SELECTION_MULTIPLE_ENUM
+				)
+			else
+				C.gtk_clist_set_selection_mode (
+					list_widget,
+					C.GTK_SELECTION_EXTENDED_ENUM
+				)
+			end
 		end
 
 	disable_multiple_selection is
@@ -498,21 +502,26 @@ feature -- Status setting
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
+			multiple_selection_enabled := False
+			selection_mode_is_single := True
+			C.gtk_clist_unselect_all (list_widget)
 			C.gtk_clist_set_selection_mode (
 				list_widget,
-				C.GTK_SELECTION_BROWSE_ENUM
-			)	
+				C.GTK_SELECTION_SINGLE_ENUM
+			)
 		end
 
 	select_item (an_index: INTEGER) is
 			-- Select an item at the one-based `index' of the list.
 		do
+			switch_to_browse_mode_if_necessary;
 			(ev_children @ an_index).enable_select
 		end
 
 	deselect_item (an_index: INTEGER) is
 			-- Unselect the item at the one-based `index'.
 		do
+			switch_to_single_mode_if_necessary;
 			(ev_children @ an_index).disable_select
 		end
 
@@ -520,6 +529,7 @@ feature -- Status setting
 			-- Clear the selection of the list.
 		do
 			if list_widget /= NULL then
+				switch_to_single_mode_if_necessary
 				C.gtk_clist_unselect_all (list_widget)
 			end
 		end
@@ -959,6 +969,63 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
+	selection_mode_is_single: BOOLEAN
+			-- Is selection mode set to SINGLE?
+	
+	switch_to_single_mode_if_necessary is
+			-- Change selection mode if the last selected
+			-- item is deselected.
+		local
+			sel_items: like selected_items
+		do
+				io.error.putstring ("->SINGLE%N")
+
+			if list_widget /= NULL and then not selection_mode_is_single then
+				if multiple_selection_enabled then
+					sel_items := selected_items
+					if 
+						sel_items = Void 
+							or else
+						selected_items.count <= 1
+					then
+						C.gtk_clist_set_selection_mode (
+							list_widget,
+							C.Gtk_selection_multiple_enum
+						)
+						selection_mode_is_single := True
+					end
+				else
+					C.gtk_clist_set_selection_mode (
+						list_widget,
+						C.Gtk_selection_single_enum
+					)
+					selection_mode_is_single := True
+				end
+			end
+		end
+		
+	switch_to_browse_mode_if_necessary is
+			-- Change selection mode to browse mode
+			-- if necessary.
+		do
+			if list_widget /= NULL and then selection_mode_is_single then
+				io.error.putstring ("->BROWSE%N")
+				if multiple_selection_enabled then
+					C.gtk_clist_set_selection_mode (
+						list_widget, 
+						C.Gtk_selection_extended_enum
+					)					
+				else
+					C.gtk_clist_set_selection_mode (
+						list_widget,
+						C.Gtk_selection_browse_enum
+					)
+				end
+				selection_mode_is_single := False
+			end
+		end
+
+
 	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Ensure `a_item' is visible on the screen.
 		do
@@ -1002,6 +1069,7 @@ feature {NONE} -- Implementation
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
+			clear_selection
 			item_imp := (ev_children @ (a_position))
 			item_imp.set_parent_imp (Void)
 			C.gtk_clist_remove (list_widget, a_position - 1)
@@ -1100,6 +1168,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.75  2001/07/09 18:32:19  etienne
+--| Improved selection management.
+--|
 --| Revision 1.74  2001/06/25 21:40:43  king
 --| Made compilable
 --|

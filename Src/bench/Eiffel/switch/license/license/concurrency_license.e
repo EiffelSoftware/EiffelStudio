@@ -17,6 +17,8 @@ feature
 
 	override_key_line: INTEGER is 18;
 
+	license_checksum: INTEGER is 100
+
 feature
 
 	make is

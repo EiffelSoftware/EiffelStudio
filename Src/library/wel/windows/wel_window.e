@@ -193,6 +193,9 @@ feature -- Status report
 				captured_window = Current
 		end
 
+	has_heavy_capture: BOOLEAN
+			-- Does this window have an heavy mouse capture?
+
 	has_vertical_scroll_bar: BOOLEAN is
 			-- Does this window have a vertical scroll bar?
 		require
@@ -563,12 +566,35 @@ feature -- Status setting
 			-- mouse input is directed to this window, regardless
 			-- of whether the cursor is over that window. Only
 			-- one window can have the mouse capture at a time.
+			--
+			-- Works only for windows in the same thread as your
+			-- application.
 		require
 			exists: exists
+			has_not_capture: not has_capture
+			has_not_heavy_capture: not has_heavy_capture
 		do
 			cwin_set_capture (item)
 		ensure
 			has_capture: has_capture
+		end
+
+	set_heavy_capture is
+			-- Set the mouse capture to the `Current' window.
+			-- Once the window has captured the mouse, all
+			-- mouse input is directed to this window, regardless
+			-- of whether the cursor is over that window. Only
+			-- one window can have the mouse capture at a time.
+			--
+			-- Works for ALL windows.
+		require
+			exists: exists
+			has_not_capture: not has_capture
+			has_not_heavy_capture: not has_heavy_capture
+		do
+			has_heavy_capture := cwel_hook_mouse (item)
+		ensure
+			has_heavy_capture: has_heavy_capture
 		end
 
 	release_capture is
@@ -576,10 +602,23 @@ feature -- Status setting
 			-- to `set_capture'.
 		require
 			exists: exists
+			has_capture: has_capture
 		do
 			cwin_release_capture
 		ensure
 			not_has_capture: not has_capture
+		end
+
+	release_heavy_capture is
+			-- Release the mouse capture after a call
+			-- to `set_heavy_capture'.
+		require
+			exists: exists
+			has_heavy_capture: has_heavy_capture
+		do
+			has_heavy_capture := not cwel_unhook_mouse
+		ensure
+			not_has_heavy_capture: not has_heavy_capture
 		end
 
 	set_style (a_style: INTEGER) is
@@ -712,7 +751,6 @@ feature -- Element change
 			-- `lock_window_update' , call 'unlock_window_update'.
 		require
 			exists: exists
---			no_window_is_locked: not has_system_window_locked
 		local
 			success : BOOLEAN
 		do
@@ -728,7 +766,6 @@ feature -- Element change
 			-- Unlock a locked window.	
 		require
 			exists: exists
---			window_locked: has_system_window_locked
 		local
 			success : BOOLEAN
 		do
@@ -1273,7 +1310,6 @@ feature -- Messages
 		do
 		end
 
--- feature {NONE} -- Implementation
 feature {WEL_WINDOW} -- Implementation
 
 	default_window_procedure: POINTER
@@ -1865,17 +1901,16 @@ feature {NONE} -- Externals
 			"LockWindowUpdate"
 		end
 
-feature {NONE} -- External
-
-	c_ev_hook_mouse(hwnd: POINTER) is
+	cwel_hook_mouse (hwnd: POINTER): BOOLEAN is
 		external
-			"C | %"mouse_hook.h%""
+			"C (HWND): EIF_BOOLEAN | %"wel_mousehook.h%""
 		end
 
-	c_ev_unhook_mouse is
+	cwel_unhook_mouse: BOOLEAN is
 		external
-			"C | %"mouse_hook.h%""
+			"C (): EIF_BOOLEAN | %"wel_mousehook.h%""
 		end
+
 
 end -- class WEL_WINDOW
 

@@ -27,41 +27,25 @@ HINSTANCE hDllInstance = 0;
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: cwel_unhook_mouse                                                   */
-/* ARGS:                                                                     */
 /*---------------------------------------------------------------------------*/
+/* Unhook mouse messages. Call this function when you do not want monitor    */
+/* mouse messages anymore.                                                   */
 /*                                                                           */
+/* Returns FALSE (0) when something wrong happened, TRUE (1) otherwise       */
 /*---------------------------------------------------------------------------*/
-void unhook_mouse()
+int unhook_mouse()
 	{
-//	FILE *pFile;
-//	pFile = fopen("c:\\hook.log","at");
-//	fprintf (pFile, "wel_hook.c - Entering unhook_mouse\n");
-//	fclose(pFile);
-
 	if (UnhookWindowsHookEx(hMouseHook)==0)
 		{
-		DWORD nErrorCode = GetLastError();
-		DWORD dwMousePos;
-
+		// DWORD nErrorCode = GetLastError();
 		// FIXME: Insert code here to deal with the error */
-		dwMousePos = MAKELONG(nErrorCode, nErrorCode);
-		//SendMessage(hHookWindow, WM_LBUTTONUP, 0, dwMousePos);
-
-		//pFile = fopen("c:\\hook.log","at");
-		//fprintf (pFile, "wel_hook.c - Error in UnhookWindowHookEx, error=\n",nErrorCode);
-		//fclose(pFile);
-		}
-	else
-		{
-		//SendMessage(hHookWindow, WM_LBUTTONDOWN, 0, 0);
-		//pFile = fopen("c:\\hook.log","at");
-		//fprintf (pFile, "wel_hook.c - UnhookWindowHookEx succeded\n");
-		//fclose(pFile);
+		return 0;
 		}
 
 	/* Unhook succeeded, we reset the hook handles */
 	hMouseHook = NULL;
 	hHookWindow = NULL;
+	return 1;
 	}
 
 /*---------------------------------------------------------------------------*/
@@ -85,16 +69,14 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 	DWORD dwMousePos;
 	MOUSEHOOKSTRUCT *pInfo = (MOUSEHOOKSTRUCT *) lParam;
 	LRESULT retValue = 0;
-//	FILE *pFile;
-//	pFile = fopen("c:\\hook.log","at");
-//	fprintf (pFile, "MOUSEPROC\n\thMouseHook=%u\n\thHookWindow=%u\n",hMouseHook, hHoohWindow);
-//	fclose(pFile);
+	RECT rect;
 
 	if (hMouseHook == NULL) 			// We do not know our hook handle
 		return 0;
 
-	if (hHookWindow==NULL)
-		UnhookWindowsHookEx(hMouseHook);
+	if (hHookWindow==NULL)					// Something wrong happened...
+		UnhookWindowsHookEx(hMouseHook);	// We don't have any window target
+											// So we stop the hook.
 
 	// I am a good citizen and I call the other hooks
 	retValue = CallNextHookEx(hMouseHook, nCode, wParam, lParam);
@@ -105,10 +87,16 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 		)
 		return 0;
 
+	//===================================
+	// We will handle this mouse message
+	//===================================
 
-	/* We should handle this mouse message */
-	dwMousePos = MAKELONG(pInfo->pt.x, pInfo->pt.y);
+	// Retrieve target window coordinates & compute the coordinates relative
+	// to the target window.
+	GetWindowRect(hHookWindow, &rect);
+	dwMousePos = MAKELONG(pInfo->pt.x - rect.left, pInfo->pt.y - rect.top);
 
+	// Transform & redirect the mouse message to the target window.
 	switch (Msg)
 		{
 		case WM_MOUSEMOVE:
@@ -121,57 +109,59 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 		case WM_LBUTTONDBLCLK:
 		case WM_MBUTTONDBLCLK:
 		case WM_RBUTTONDBLCLK:
+		case WM_NCHITTEST:
 			if (pInfo->hwnd != hHookWindow)
 				{
-				// The target window is the window that
+				// The current window is not the target
+				// window, so we prevent the system to
+				// pass the message to the current window
+				// (return 1), and we send an identical
+				// message to the target window.
+				SendMessage(hHookWindow, Msg, 0, dwMousePos);
+				return 1;
+				}
+			else
+				{
+				// The current window IS the window that
 				// has requested the hook, we do not
 				// want to duplicate the mouse message
-				SendMessage(hHookWindow, Msg, 0, dwMousePos);
+				// So we ignore this message & tell the system
+				// to pass it to the target window.
+				return 0;
 				}
-			//return 0;	/* To prevent the system from passing the message */
-						/* to the target window procedure. */
 			break;
 
 		case WM_NCMOUSEMOVE:
 			SendMessage(hHookWindow, WM_MOUSEMOVE, 0, dwMousePos);
-			break;
+			return 1;
 		case WM_NCLBUTTONDOWN:
 			SendMessage(hHookWindow, WM_LBUTTONDOWN, 0, dwMousePos);
-			break;
+			return 1;
 		case WM_NCMBUTTONDOWN:
 			SendMessage(hHookWindow, WM_MBUTTONDOWN, 0, dwMousePos);
-			break;
+			return 1;
 		case WM_NCRBUTTONDOWN:
 			SendMessage(hHookWindow, WM_RBUTTONDOWN, 0, dwMousePos);
-			break;
+			return 1;
 		case WM_NCLBUTTONUP:
 			SendMessage(hHookWindow, WM_LBUTTONUP, 0, dwMousePos);
-			break;
+			return 1;
 		case WM_NCMBUTTONUP:
 			SendMessage(hHookWindow, WM_MBUTTONUP, 0, dwMousePos);
-			break;
+			return 1;
 		case WM_NCRBUTTONUP:
 			SendMessage(hHookWindow, WM_RBUTTONUP, 0, dwMousePos);
-			break;
+			return 1;
 		case WM_NCLBUTTONDBLCLK:
 			SendMessage(hHookWindow, WM_LBUTTONDBLCLK, 0, dwMousePos);
-			break;
+			return 1;
 		case WM_NCMBUTTONDBLCLK:
 			SendMessage(hHookWindow, WM_MBUTTONDBLCLK, 0, dwMousePos);
-			break;
+			return 1;
 		case WM_NCRBUTTONDBLCLK:
 			SendMessage(hHookWindow, WM_RBUTTONDBLCLK, 0, dwMousePos);
-			break;
+			return 1;
 		}
-	
-//	if (Msg==WM_RBUTTONDBLCLK)
-//		{
-//		FILE *pFile;
-//		pFile = fopen("c:\\hook.log","at");
-//		fprintf (pFile, "wel_hook.c - going into unhook_mouse with DBLCLK\n");
-//		fclose(pFile);
-//		unhook_mouse();
-//		}
 	
 	// We dont care about this message...do nothing.
 	return 0;
@@ -181,14 +171,17 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 /* FUNC: cwel_hook_mouse                                                     */
 /* ARGS: hHookWindow: Handle of the window registering the hook.             */
 /*---------------------------------------------------------------------------*/
+/* Hok mouse messages. Call this function when you want to monitor all mouse */
+/* messages                                                                  */
 /*                                                                           */
+/* Returns FALSE (0) when something wrong happened, TRUE (1) otherwise       */
 /*---------------------------------------------------------------------------*/
-void hook_mouse(HWND hWnd)
+int hook_mouse(HWND hWnd)
 	{
 	if (hWnd==NULL)
-		return;	/* Invalid handle to a window, exit */
+		return 0;	// Invalid handle to a window, exit.
 
-	/* Hook the mouse messages */
+	// Hook the mouse messages
 	hMouseHook = SetWindowsHookEx (
  		WH_MOUSE,				// hook type
 		(HOOKPROC)MouseProc,	// hook procedure
@@ -196,11 +189,16 @@ void hook_mouse(HWND hWnd)
 		0						// thread identifier
 		);
 
-	/* Set the HookWindow if SetWindowsHookEx succeeded */
-	if (hMouseHook!=NULL)
-		hHookWindow = hWnd;
-	else
+	// Set the HookWindow if SetWindowsHookEx succeeded
+	if (hMouseHook == NULL)
+		{
 		hHookWindow = NULL;
+		return 0;
+		}
+	
+	// Everything went fine 
+	hHookWindow = hWnd;
+	return 1;
 	}
 
 /*---------------------------------------------------------------------------*/

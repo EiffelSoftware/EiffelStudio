@@ -15,9 +15,11 @@ inherit
 			{DOTNET_CLASS_AS} name_of_current_feature	
 		end
 		
-	IL_ENVIRONMENT
-		export
-			{NONE} all
+	EB_WINDOW_MANAGER
+		rename
+			make as win_manager_make
+		export 
+			{NONE} all 
 		end
 
 creation
@@ -25,8 +27,8 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_consumed_type: CONSUMED_TYPE; a_classi: CLASS_I) is
-			-- Initialize Current
+	make (a_consumed_type: CONSUMED_TYPE; a_classi: CLASS_I; a_flag: BOOLEAN) is
+			-- Initialize Current.  'a_flag' determines short or flat short.
 		require
 			consume_type_not_void: a_consumed_type /= Void
 			classi_not_void: a_classi /= Void
@@ -34,7 +36,7 @@ feature {NONE} -- Initialization
 			class_i ?= a_classi
 			class_c ?= a_classi.compiled_class
 			format_make (a_consumed_type)
-			create ast.make (a_consumed_type)
+			create ast.make (a_consumed_type, a_flag, class_c)
 			initialize
 		ensure
 			analyze_ancestors: not current_class_only
@@ -57,9 +59,9 @@ feature -- Execution
 				execution_error := False
 				class_name := clone (consumed_t.eiffel_name)
 				class_name.to_upper
-
-				if is_short then
-					ast.set_is_short
+				
+				if current_class_only then
+					ast.set_current_class_only (True)
 				end
 				
 				ast.format (Current)
@@ -75,21 +77,32 @@ feature -- Execution
 
 feature -- Element change
 
-	format_feature (a_dn_entity: CONSUMED_ENTITY) is
+	format_feature (a_ctxt: DOTNET_CLASS_CONTEXT; a_dn_entity: CONSUMED_ENTITY) is
 			-- Format feature found in 'dn_entity'
 		require
 			a_entity_not_void: a_dn_entity /= Void
 		local
 			ftxt: DOTNET_FEATURE_CONTEXT
+			l_feature: E_FEATURE
+			l_dev_win: EB_DEVELOPMENT_WINDOW
 		do
 			create ftxt.make_from_entity (a_dn_entity, consumed_t, class_i)
 			ftxt.prepare_for_feature (a_dn_entity)
-			if not (not is_flat_short and ftxt.is_inherited) then
-				if not ftxt.current_feature.is_property_or_event then
-					ftxt.put_normal_feature
-				else
-					-- FIXME: Neil 08/01/2002: Special case processing for events.
-					--ftxt.put_property_or_event_feature
+			if not (current_class_only and ftxt.is_inherited) then
+				ftxt.put_normal_feature
+				if ftxt.class_c /= Void then
+						-- Is compiled class so we can make feature clickable and scrollable.
+					l_dev_win := Window_manager.last_focused_development_window
+					if l_dev_win /= Void then
+						l_feature ?= ftxt.class_c.feature_table.item (ftxt.name_of_current_feature).api_feature (ftxt.class_c.class_id)			
+						if l_feature /= Void then
+							if l_dev_win.feature_positions.has (l_feature) then
+								l_dev_win.feature_positions.replace (a_ctxt.text.position, l_feature)
+							else
+								l_dev_win.feature_positions.put (a_ctxt.text.position, l_feature)
+							end
+						end
+					end
 				end
 				from
 					ftxt.text.start

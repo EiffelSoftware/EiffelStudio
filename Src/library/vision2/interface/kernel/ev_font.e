@@ -110,7 +110,7 @@ feature -- Access
 			bridge_ok: Result = implementation.height
 		end
 
-	preferred_families: ACTIVE_LIST [STRING] is
+	preferred_families: EV_ACTIVE_LIST [STRING] is
 			-- Preferred familys. The first one in the list
 			-- will be tried first. If it does not exists on
 			-- the system, the second will be tried, etc.

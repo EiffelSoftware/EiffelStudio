@@ -230,7 +230,6 @@ feature {NONE}-- Initialization
 			right_spacing_cell.set_minimum_height (310)
 			l_ev_notebook_1.set_item_text (event_output, "Output")
 			l_ev_notebook_1.set_item_text (l_ev_horizontal_box_3, "Events")
-			l_ev_horizontal_box_3.hide
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_vertical_box_4)
 			event_selector_list.set_minimum_width (150)
 			l_ev_vertical_box_4.set_padding_width (10)
@@ -241,9 +240,7 @@ feature {NONE}-- Initialization
 			select_all.set_tooltip ("Select all events")
 			clear_all.set_text ("Clear All")
 			clear_all.set_tooltip ("Clear all events")
-			main_notebook_tests.hide
 			test_class_display.disable_edit
-			flat_short_display_parent.hide
 			flat_short_display_parent.disable_item_expand (search_parent_box)
 			search_parent_box.disable_item_expand (l_ev_frame_2)
 			l_ev_frame_1.set_text ("Search")

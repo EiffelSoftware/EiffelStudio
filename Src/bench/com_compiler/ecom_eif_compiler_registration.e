@@ -11,8 +11,9 @@ inherit
 	ARGUMENTS
 
 	WEL_APPLICATION
+		rename
+			make as wel_make
 		redefine
-			make,
 			default_show_command
 		end
 
@@ -45,7 +46,7 @@ feature {NONE}  -- Initialization
 					default_show_cmd := Sw_hide
 				end
 				initialize_com
-				Precursor {WEL_APPLICATION}
+				wel_make
 				cleanup_com
 			end
 		end

@@ -1,4 +1,8 @@
--- Node for Eiffel feature name
+indexing
+
+	description: "Node for Eiffel feature name.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class FEAT_NAME_ID_AS
 
@@ -13,7 +17,7 @@ feature -- Attributes
 
 feature -- Conveniences
 
-	internal_name: ID_AS is
+	internal_name: like feature_name is
 			-- Internal name used by the compiler
 		do
 			Result := feature_name
@@ -56,4 +60,4 @@ feature -- Initialization
 		end;
 		
 
-end
+end -- class FEAT_NAME_ID_AS

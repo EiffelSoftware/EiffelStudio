@@ -1,0 +1,161 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.23">
+
+<TITLE>DB_ACTION Flat contracts</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Objects that redefine </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/action.html">ACTION</A><SPAN CLASS="estring"> to store Eiffel objects converted &nbsp;from database in a list."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">author</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"pascalf"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">product</SPAN><SPAN CLASS="esymbol">:</SPAN> eiffelstore<BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">database</SPAN><SPAN CLASS="esymbol">:</SPAN> all_bases<BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../libraries/store/reference/support/db_action.html">DB_ACTION</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_selection</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_selection">selection</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_selection</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">an_item</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_selection">selection</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_selection</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_item</SPAN><BR>
+
+</A><BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_item"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Current found item in </SPAN><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_selection">selection</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Must be a reference on </SPAN><SPAN CLASS="equoted">selection.object</SPAN><SPAN CLASS="ecomment">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> thus </SPAN><SPAN CLASS="equoted">selection.cursor_to_object</SPAN><SPAN CLASS="ecomment"> updates it.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_list"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_list">list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Result list.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_selection"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_selection">selection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/store/reference/interface/db_selection.html">DB_SELECTION</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Current selection.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_found"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/action.html#f_found">found</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there any exit condition found</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> while iterating on selection results in</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">load_result</SPAN><SPAN CLASS="ecomment"> of DB_SELECTION?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Default: do nothing)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/action.html">ACTION</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_start"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/action.html#f_start">start</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Execute something whenever</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> routine </SPAN><SPAN CLASS="equoted">load_result</SPAN><SPAN CLASS="ecomment"> of </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/interface/db_selection.html">DB_SELECTION</A><SPAN CLASS="ecomment"> is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> called with Current set as </SPAN><SPAN CLASS="equoted">stop_condition</SPAN><SPAN CLASS="ecomment">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> before iterating on query result.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Default: do nothing)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/action.html">ACTION</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_execute"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_execute">execute</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Update item with current</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> selected item in the container.</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Creation</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_selection</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_selection">selection</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_selection</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="elocal">an_item</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_selection">selection</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_selection</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_action.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_item</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>DB_ACTION<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

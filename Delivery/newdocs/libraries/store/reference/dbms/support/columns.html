@@ -1,0 +1,419 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.23">
+
+<TITLE>COLUMNS Flat contracts</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Description of a database table column"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A> <SPAN CLASS="ekeyword">create</SPAN> default_create <SPAN CLASS="ekeyword">end</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_db_spec"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/handle_spec.html#f_db_spec">db_spec</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Handle to actual database</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/handle_spec.html">HANDLE_SPEC</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/handle_spec.html">HANDLE_SPEC</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_buffer_length"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_buffer_length">buffer_length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Column length in bytes</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_length">data_length</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_length">length</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_column_id"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_column_id">column_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Column identification number (number of column in table)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_column_name"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_column_name">column_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Column name</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_column_nulls"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_column_nulls">column_nulls</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 'Y' if the column can contain null values, 'N' if the column can't contain null values</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_column_size"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_column_size">column_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> precision of the Column</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_precision">data_precision</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_precision">precision</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_column_typename"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_column_typename">column_typename</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_creation_date"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_creation_date">creation_date</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/time/reference/date_time.html">DATE_TIME</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table creation date</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_data_default"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_default">data_default</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default field value</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_data_length"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_length">data_length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Column length in bytes</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_length">length</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_buffer_length">buffer_length</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_data_precision"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_precision">data_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> precision of the Column</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_precision">precision</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_column_size">column_size</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_data_scale"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_scale">data_scale</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the scale of the column</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_scale">scale</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_decimal_digits">decimal_digits</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_data_type"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_type">data_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Data type of a column. Ingres has the following data type code(negative is for nullable field):</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> integer 	-30/30</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> float	-31/31</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> c		-32/32</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> text		-37/37</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> date		-3/3</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> money 	-5/5</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> char		-20/20</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> varchar	-21/21</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> table_key -12/12</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> object_key -11/11</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_decimal_digits"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_decimal_digits">decimal_digits</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the scale of the column</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_scale">data_scale</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_scale">scale</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_default_length"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_default_length">default_length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Length of default value for a column</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_density"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_density">density</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Oracle V7 add ons.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_duplicate"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_duplicate">duplicate</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duplicate copy of Current</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_eiffel_type"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_eiffel_type">eiffel_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Eiffel type code mapped to Ingres type </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_type">data_type</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_high_value"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_high_value">high_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Oracle V7 add ons.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_length"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_length">length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Column length in bytes</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_length">data_length</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_buffer_length">buffer_length</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_low_value"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_low_value">low_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Oracle V7 add ons.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_nullable"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_nullable">nullable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if the column can get NULL value</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_num_distinct"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_num_distinct">num_distinct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Oracle V7 add ons.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_num_prec_radix"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_num_prec_radix">num_prec_radix</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the radix of the Column</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_radix">radix</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_owner"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_owner">owner</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Owner id of table of name </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_name">table_name</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_owner">table_owner</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_schem">table_schem</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_owner_id"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_owner_id">owner_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Owner id of table of name </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_name">table_name</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_precision"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_precision">precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> precision of the Column</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_precision">data_precision</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_column_size">column_size</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_radix"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_radix">radix</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the radix of the Column</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_num_prec_radix">num_prec_radix</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_scale"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_scale">scale</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the scale of the column</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_data_scale">data_scale</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_decimal_digits">decimal_digits</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_status"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_status">status</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;Flag to check whether a column field can be null</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_table_cat"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_cat">table_cat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Qualifier of the table in which the column belongs</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_qualifier">table_qualifier</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_table_id"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_id">table_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table identification number</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_table_name"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_name">table_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table name</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_table_owner"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_owner">table_owner</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Owner id of table of name </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_name">table_name</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_owner">owner</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_schem">table_schem</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_table_qualifier"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_qualifier">table_qualifier</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Qualifier of the table in which the column belongs</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_cat">table_cat</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_table_schem"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_schem">table_schem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Owner id of table of name </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_name">table_name</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/columns.html">COLUMNS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_owner">owner</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_owner">table_owner</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_table_type"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_table_type">table_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table type</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_type_name"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_type_name">type_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> type name in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/rdbms/odbc/odbc.html">ODBC</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_all"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_set_all">set_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">col_id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">dat_type</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">dat_len</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">sca</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">rad</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">prec</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">nulable</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">def_len</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">num_dist</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">low_val</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">high_val</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">dens</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">own_id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">tb_id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">stat</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">dat_def</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">qualifier</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">own</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">tab_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">tab_type</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">col_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">col_nulls</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">col_typename</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">creat_date</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/time/reference/date_time.html">DATE_TIME</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set attributes with input parameter values.</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_clear_all"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/columns.html#f_clear_all">clear_all</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Reset all attributes to default values.</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_boolean_type_database"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/types.html#f_boolean_type_database">boolean_type_database</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Boolean type code in Ingres</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/types.html">TYPES</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_character_type_database"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/types.html#f_character_type_database">character_type_database</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Character type code in Ingres</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/types.html">TYPES</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_date_type_database"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/types.html#f_date_type_database">date_type_database</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Datetime type code in Ingres</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/types.html">TYPES</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_float_type_database"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/types.html#f_float_type_database">float_type_database</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Double type code in Ingres</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/types.html">TYPES</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_integer_type_database"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/types.html#f_integer_type_database">integer_type_database</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Integer type code in Ingres</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/types.html">TYPES</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_real_type_database"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/types.html#f_real_type_database">real_type_database</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Real type code in Ingres</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/types.html">TYPES</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_string_type_database"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/types.html#f_string_type_database">string_type_database</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> String type code in Ingres</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/types.html">TYPES</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>COLUMNS<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

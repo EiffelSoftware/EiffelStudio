@@ -1,0 +1,253 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.23">
+
+<TITLE>DB_CHANGE Flat contracts</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">access</SPAN><SPAN CLASS="esymbol">:</SPAN> change<SPAN CLASS="esymbol">,</SPAN> modify<SPAN CLASS="esymbol">,</SPAN> update<SPAN CLASS="esymbol">,</SPAN> insert<SPAN CLASS="esymbol">,</SPAN> delete<BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">product</SPAN><SPAN CLASS="esymbol">:</SPAN> eiffelstore<BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">database</SPAN><SPAN CLASS="esymbol">:</SPAN> all_bases<BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../libraries/store/reference/interface/db_change.html">DB_CHANGE</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_change.html#f_make">make</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create an interface object to change active base.</SPAN><BR>
+
+</A><BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_last_parsed_query"><A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_change.html#f_last_parsed_query">last_parsed_query</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last parsed SQL query</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN>  <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_connected"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_status_use.html#f_is_connected">is_connected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has connection to the database server succeeded?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/db_status_use.html">DB_STATUS_USE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_ok"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_status_use.html#f_is_ok">is_ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is last SQL statement ok ?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/db_status_use.html">DB_STATUS_USE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_mapped"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_is_mapped">is_mapped</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment"> mapped to an Eiffel entity?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">keys_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_last_query"><A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_expression.html#f_last_query">last_query</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/string.html">STRING</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last SQL statement used</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/interface/db_expression.html">DB_EXPRESSION</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mapped_value"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_mapped_value">mapped_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value mapped with </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">key_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">key_mapped</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_is_mapped">is_mapped</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN>  <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_trace"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_exec_use.html#f_set_trace">set_trace</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Trace queries sent to database server.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/db_exec_use.html">DB_EXEC_USE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/db_exec_use.html">DB_EXEC_USE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">trace_status</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_exec_use.html#f_is_tracing">is_tracing</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_clear_all"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_clear_all">clear_all</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove all mapped keys.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_map_name"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_set_map_name">set_map_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Store item </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> with key </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> can be </SPAN><SPAN CLASS="equoted">Void</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">key_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_key_in_table</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_is_mapped">is_mapped</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_ht">ht</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../libraries/base/reference/structures/table/hash_table.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_ht">ht</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../libraries/base/reference/structures/table/hash_table.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../../libraries/base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_query"><A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_expression.html#f_set_query">set_query</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">query</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_expression.html#f_last_query">last_query</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">query</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/interface/db_expression.html">DB_EXPRESSION</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/interface/db_expression.html">DB_EXPRESSION</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">query_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">query</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/interface/db_expression.html">DB_EXPRESSION</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">last_query_changed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_expression.html#f_last_query">last_query</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">query</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_unset_map_name"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_unset_map_name">unset_map_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove item associated with key </SPAN><SPAN CLASS="equoted">key</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">key_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">item_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_is_mapped">is_mapped</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/support/string_hdl.html">STRING_HDL</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_ht">ht</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../libraries/base/reference/structures/table/hash_table.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/string_hdl.html#f_ht">ht</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../libraries/base/reference/structures/table/hash_table.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../../libraries/base/reference/kernel/integer_ref.html#f__infix_minus">-</A> <SPAN CLASS="enumber">1</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_execute_query"><A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_change.html#f_execute_query">execute_query</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Execute </SPAN><A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_change.html#f_modify">modify</A><SPAN CLASS="ecomment"> with </SPAN><A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_expression.html#f_last_query">last_query</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/interface/db_expression.html">DB_EXPRESSION</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">last_query_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_expression.html#f_last_query">last_query</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_modify"><A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_change.html#f_modify">modify</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">request</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Execute </SPAN><SPAN CLASS="equoted">request</SPAN><SPAN CLASS="ecomment"> to modify persistent objects.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When using the DBMS layer the request must be</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> SQL-like compliant.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">connected</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_status_use.html#f_is_connected">is_connected</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">request_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">request</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/support/db_status_use.html#f_is_ok">is_ok</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">last_query_changed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/store/reference/interface/db_expression.html#f_last_query">last_query</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">request</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>DB_CHANGE<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

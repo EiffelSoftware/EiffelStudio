@@ -1,0 +1,149 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.23">
+
+<TITLE>DATABASE_TUPLE Flat contracts</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Implementation of </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/interface/db_tuple.html">DB_TUPLE</A><SPAN CLASS="estring">"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html">DATABASE_TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A> <SPAN CLASS="ekeyword">create</SPAN> default_create <SPAN CLASS="ekeyword">end</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_make">make</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create </SPAN><SPAN CLASS="equoted">implementation</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">data_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_data">data</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_make">make</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create </SPAN><SPAN CLASS="equoted">implementation</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">data_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_data">data</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_column_name"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_column_name">column_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">position</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Name of the </SPAN><SPAN CLASS="equoted">position</SPAN><SPAN CLASS="ecomment">-th column</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">resulting_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_data">data</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_data.html#f_column_name">column_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">position</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_count"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of items</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">resulting_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_data">data</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_data.html#f_count">count</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_data"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_data">data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database_data.html">DATABASE_DATA</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Associated data description</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_item"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value of </SPAN><SPAN CLASS="equoted">index</SPAN><SPAN CLASS="ecomment"> column in current row</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> pointed to by active database cursor</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_map_table"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_map_table">map_table</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Association table returning k-th field</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> position mapping i-th column value of current active tuple</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">resulting_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_data">data</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_data.html#f_map_table">map_table</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_fill_in"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_fill_in">fill_in</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">no_descriptor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill in current tuple with database cursor.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">data_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_data">data</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_update_map_table"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_update_map_table">update_map_table</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Update map table according to new </SPAN><SPAN CLASS="equoted">object</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">data_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_tuple.html#f_data">data</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>DATABASE_TUPLE<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

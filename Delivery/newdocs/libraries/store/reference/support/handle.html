@@ -1,0 +1,97 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.23">
+
+<TITLE>HANDLE Flat contracts</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">product</SPAN><SPAN CLASS="esymbol">:</SPAN> eiffelstore<BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">database</SPAN><SPAN CLASS="esymbol">:</SPAN> all_bases<BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../libraries/store/reference/support/handle.html">HANDLE</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_all_types"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/handle.html#f_all_types">all_types</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/store/reference/interface/db_all_types.html">DB_ALL_TYPES</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> All data types available in active database</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_database"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/handle.html#f_database">database</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/store/reference/dbms/support/db.html">DB</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Active database accessed through the handle</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_execution_type"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/handle.html#f_execution_type">execution_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/store/reference/support/db_exec.html">DB_EXEC</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Immediate or non-immediate execution</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_login"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/handle.html#f_login">login</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/store/reference/dbms/support/login.html">LOGIN</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Session login</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_process"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/handle.html#f_process">process</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/pointer_ref.html">POINTER_REF</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Communication channel with database server</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (single or multiple depending on RDBMS)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_status"><A CLASS="efeature" HREF="../../../../libraries/store/reference/support/handle.html#f_status">status</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../libraries/store/reference/support/db_status.html">DB_STATUS</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status of active database</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>HANDLE<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

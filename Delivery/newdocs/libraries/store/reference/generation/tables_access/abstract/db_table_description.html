@@ -1,0 +1,337 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.23">
+
+<TITLE>DB_TABLE_DESCRIPTION Flat contracts</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Description of a table."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">author</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Cedric Reduron"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html">DB_TABLE_DESCRIPTION</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_make">make</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enable to ensure unicity of object.</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_is_valid_code"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_tables_access_use.html#f_is_valid_code">is_valid_code</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment"> represents a database table?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_tables_access_use.html">DB_TABLES_ACCESS_USE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_tables_set"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_tables_access_use.html#f_tables_set">tables_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is abstract description of database tables</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> set?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_tables_access_use.html">DB_TABLES_ACCESS_USE</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_valid"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_valid">valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment"> a valid attribute code?</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_attribute"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_set_attribute">set_attribute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set attribute with </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">value</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">value</SPAN><SPAN CLASS="ecomment"> must be of type </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="ecomment">, </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="ecomment">, </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="ecomment">, </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="ecomment">,</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="ecomment"> or </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/time/reference/date_time.html">DATE_TIME</A><SPAN CLASS="ecomment">. References are made automatically from</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> expanded types.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_valid">valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_id"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_set_id">set_id</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set ID of table row to </SPAN><SPAN CLASS="equoted">value</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">value</SPAN><SPAN CLASS="ecomment"> must be of type </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="ecomment">, </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (reference created automatically) or </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/time/reference/date_time.html">DATE_TIME</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access (table description)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_attribute_code_list"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_attribute_code_list">attribute_code_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Feature code list.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_attribute_number"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_attribute_number">attribute_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of attributes in the table.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_boolean_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_boolean_type">Boolean_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_character_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_character_type">Character_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_date_time_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_date_time_type">Date_time_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">21</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_description_list"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_description_list">description_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Feature name list. Can be interpreted as a list</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> or a hash-table.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_double_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_double_type">Double_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_id_code"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_id_code">id_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table ID attribute code.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_id_name"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_id_name">id_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table ID attribute name.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_integer_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_integer_type">Integer_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_no_id"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_no_id">No_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Id_code</SPAN><SPAN CLASS="ecomment"> value when no ID exists or ID constraint is not</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> located to a single attribute.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_printable_type_table"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_printable_type_table">printable_type_table</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/table/hash_table.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default string associated to attributes possible</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> types.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_real_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_real_type">Real_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_string_type"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_string_type">String_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">20</SPAN></A><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_table_code"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_table_code">table_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Eiffel table code, matches IDs definition in LOG_TABLE.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_table_name"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_table_name">table_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Database table name.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_to_create_fkey_from_table"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_to_create_fkey_from_table">to_create_fkey_from_table</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/table/hash_table.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> List of associated necessary tables and the</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> linking foreign keys.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Creation on this table may imply creations on</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> associated necessary tables.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_to_delete_fkey_from_table"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_to_delete_fkey_from_table">to_delete_fkey_from_table</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/table/hash_table.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> List of tables depending on this one and their</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> foreign key for this table.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Deletion on this table may imply deletions on</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> depending tables.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_type_list"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_type_list">type_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Feature type list. Can be interpreted as a list</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> or a hash-table.</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access (table row values)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_attribute"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_attribute">attribute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value of attribute with </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_valid">valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_attribute_list"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_attribute_list">attribute_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table row attribute values.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_id"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_id">id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table row ID.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_mapped_list"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_mapped_list">mapped_list</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/function.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/tuple.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Feature list mapped with </SPAN><SPAN CLASS="equoted">action</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This can be useful to create tags or parameter names.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_printable_attribute"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_printable_attribute">printable_attribute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> String value of attribute with </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_valid">valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_printable_attribute_list"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_printable_attribute_list">printable_attribute_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table row attribute string values.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_printable_id"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_printable_id">printable_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> String value of table row ID.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_selected_attribute_list"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_selected_attribute_list">selected_attribute_list</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">list</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table row attribute values which codes are in </SPAN><SPAN CLASS="equoted">list</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">list</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_selected_printable_attribute_list"><A CLASS="efeature" HREF="../../../../../../libraries/store/reference/generation/tables_access/abstract/db_table_description.html#f_selected_printable_attribute_list">selected_printable_attribute_list</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">list</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Table row attribute values which codes are in </SPAN><SPAN CLASS="equoted">list</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">list</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>DB_TABLE_DESCRIPTION<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

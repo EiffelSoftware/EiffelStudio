@@ -1,0 +1,233 @@
+<HTML>
+	<HEAD>
+
+<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.23">
+
+<TITLE>DATABASE_PROC Flat contracts</TITLE>
+
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Implementation of </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/interface/db_proc.html">DB_PROC</A><SPAN CLASS="estring">"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html">DATABASE_PROC</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A> <SPAN CLASS="ekeyword">create</SPAN> default_create <SPAN CLASS="ekeyword">end</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_make">make</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the database has row numbers</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> initialize </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_row_number">row_number</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+</A><BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_make">make</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the database has row numbers</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> initialize </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_row_number">row_number</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_db_spec"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/handle_spec.html#f_db_spec">db_spec</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/database.html">DATABASE</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Handle to actual database</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/handle_spec.html">HANDLE_SPEC</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/dbms/support/handle_spec.html">HANDLE_SPEC</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_arguments_name"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_name">arguments_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Argument names of stored procedure</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_arguments_set"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_set">arguments_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Have arguments been set?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">arguments_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_name">arguments_name</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_type">arguments_type</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_arguments_type"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_type">arguments_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">]</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Argument types of stored procedure</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_exists"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does current procedure exist in server?</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_text"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_text">text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> SQL statement attached to stored procedure</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_change_name"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_change_name">change_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Change procedure name with </SPAN><SPAN CLASS="equoted">new_name</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">name_changed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_name">name</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">new_name</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_arguments"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_set_arguments">set_arguments</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_name">arguments_name</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">args_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_type">arguments_type</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_name">arguments_name</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_type">arguments_type</A><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of current as a variable list of argument</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> names and a variable list of argument</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> types, respectively.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">args_name_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">args_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">args_type_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">args_type</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_arguments_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_set">arguments_set</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_set">arguments_set</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">set_with_input_parameter1</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_name">arguments_name</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">args_name</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">set_with_input_parameter2</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_type">arguments_type</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">args_type</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_no_arguments"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_set_no_arguments">set_no_arguments</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No arguments for the current procedure.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">arguments_type_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_type">arguments_type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">arguments_name_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_name">arguments_name</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">no_arguments</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_arguments_set">arguments_set</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_drop"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_drop">drop</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Drop current procedure from server.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_execute"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_execute">execute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">destination</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/interface/db_expression.html">DB_EXPRESSION</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Execute current procedure with </SPAN><SPAN CLASS="equoted">destination</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> as a </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/interface/db_selection.html">DB_SELECTION</A><SPAN CLASS="ecomment"> or a </SPAN><A CLASS="eclass" HREF="../../../../../libraries/store/reference/interface/db_change.html">DB_CHANGE</A><SPAN CLASS="ecomment"> object mapping</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> entity values with procedure parameter names</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if any.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">argument_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">destination</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_execute_string"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_execute_string">execute_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">destination</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/store/reference/interface/db_expression.html">DB_EXPRESSION</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">sql</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Execute the procedure using the sql statement </SPAN><SPAN CLASS="equoted">sql</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_load"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_load">load</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make result of stored procedure execution available.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Activate current stored procedure from server</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> so that presence may be accurately tested using </SPAN><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_exists">exists</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_store"><A CLASS="efeature" HREF="../../../../../libraries/store/reference/dbms/support/database_proc.html#f_store">store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sql</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Store current procedure performing </SPAN><SPAN CLASS="equoted">sql</SPAN><SPAN CLASS="ecomment"> statement.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">argument_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sql</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>DATABASE_PROC<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

@@ -120,6 +120,9 @@ EIFFEL_SRC=$NEW_EIFFEL_SRC
 remtrace Check out the documentation
 cd $INSTALL_DIR
 exprt -r $DEFAULT_CVS_TAG -d docs Delivery/newdocs
+cd $INSTALL_DIR/docs
+fullrd PDF
+cd $INSTALL_DIR
 
 cd $INIT_DIR
 give_time_to organize the delivery and to start filling it

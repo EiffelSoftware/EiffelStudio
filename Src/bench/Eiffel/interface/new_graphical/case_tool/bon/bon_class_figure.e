@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			disable_scaling
 			
 			diagram_preferences.add_observer (Current)
-			retrive_preferences
+			retrieve_preferences
 			
 			is_default_background_color_used := True
 		end
@@ -524,8 +524,14 @@ feature {NONE} -- Implementation
 				icon_figures.scale (world.scale_factor)
 			end
 			if is_default_background_color_used then
-				if not model.is_compiled and then is_default_background_color_used then
-					background_color := bon_class_uncompiled_fill_color
+				if model.is_compiled then
+					if is_default_background_color_used then
+						background_color := bon_class_fill_color
+					end
+				else
+					if is_default_background_color_used then
+						background_color := bon_class_uncompiled_fill_color
+					end
 				end
 			 	set_ellipse_properties
 			end
@@ -809,14 +815,14 @@ feature {NONE} -- Implementation
 	preferences_changed is
 			-- User changed values of interest in preferences.
 		do
-			retrive_preferences			
+			retrieve_preferences			
 			set_ellipse_properties
 			set_class_name_properties
 			set_generics_properties
 			request_update
 		end
 	
-	retrive_preferences is
+	retrieve_preferences is
 			-- Retrive preferences from shared resources.
 		do
 			if model = Void or else model.is_compiled then

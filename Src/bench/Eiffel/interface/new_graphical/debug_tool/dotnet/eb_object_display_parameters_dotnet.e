@@ -33,14 +33,14 @@ feature {NONE} -- Debug Value
 
 feature -- Transformation
 
-	object_full_output: STRING is
+	object_type_and_value: STRING is
 			-- Full ouput representation for related object
 		local
 			abstract_value: ABSTRACT_DEBUG_VALUE
 		do
 			abstract_value := associated_debug_value
 			if abstract_value /= Void then
-				Result := abstract_value.dump_value.full_output
+				Result := abstract_value.dump_value.type_and_value
 			else
 				Result := ""
 			end
@@ -51,7 +51,8 @@ feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
 	refresh is
 			-- Reload attributes (useful if `Current' represents a special object)
 		local
-			list: LIST [ABSTRACT_DEBUG_VALUE]
+			list: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			dv: ABSTRACT_DEBUG_VALUE
 			conv_abs_spec: ABSTRACT_SPECIAL_VALUE
 			conv_nat_value: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
@@ -71,15 +72,16 @@ feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
 					conv_nat_value.items.wipe_out
 					conv_nat_value.fill_items (spec_lower, spec_higher)
 				end
-				list := dv.children
+				list := dv.sorted_children
 				if list /= Void and then not list.is_empty then
 					from
-						list.start
+						list_cursor := list.new_cursor
+						list_cursor.start
 					until
-						list.after
+						list_cursor.after
 					loop
-						attr_item.extend (debug_value_to_item (list.item))
-						list.forth
+						attr_item.extend (debug_value_to_item (list_cursor.item))
+						list_cursor.forth
 					end
 					conv_abs_spec ?= dv
 					if conv_abs_spec /= Void then
@@ -104,7 +106,8 @@ feature {NONE} -- Specific Implementation
 	load_attributes_under (parent: EV_TREE_NODE_LIST) is
 			-- Fill in `parent' with the associated attributes object.
 		local
-			list: LIST [ABSTRACT_DEBUG_VALUE]
+			list: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			dv: ABSTRACT_DEBUG_VALUE
 		do
 			debug ("debug_recv")
@@ -112,15 +115,16 @@ feature {NONE} -- Specific Implementation
 			end
 			dv ?= associated_debug_value
 			if dv /= Void then
-				list := dv.children
+				list := dv.sorted_children
 				if list /= Void then
 					from
-						list.start
+						list_cursor := list.new_cursor
+						list_cursor.start
 					until
-						list.after
+						list_cursor.after
 					loop
-						parent.extend (debug_value_to_item (list.item))
-						list.forth
+						parent.extend (debug_value_to_item (list_cursor.item))
+						list_cursor.forth
 					end					
 				end
 				parent.start

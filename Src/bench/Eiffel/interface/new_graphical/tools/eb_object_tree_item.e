@@ -153,25 +153,27 @@ feature {NONE} -- Filling Implementation
 			dv: ABSTRACT_DEBUG_VALUE
 			folder_item: EV_TREE_ITEM
 			new_item: EV_TREE_ITEM
-			list: LIST [ABSTRACT_DEBUG_VALUE]
+			list: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			flist: LIST [E_FEATURE]
 		do
 			a_item.expand_actions.wipe_out
 			dv ?= a_item.data
 			if dv /= Void then
-				list := dv.children
+				list := dv.sorted_children
 				if list /= Void and then not list.is_empty then
 					create folder_item.make_with_text (Interface_names.l_Object_attributes)
 					folder_item.set_pixmap (Pixmaps.Icon_attributes)
 					a_item.extend (folder_item)
 
 					from
-						list.start
+						list_cursor := list.new_cursor
+						list_cursor.start
 					until
-						list.after
+						list_cursor.after
 					loop
-						folder_item.extend (debug_value_to_tree_item (list.item))
-						list.forth
+						folder_item.extend (debug_value_to_tree_item (list_cursor.item))
+						list_cursor.forth
 					end
 					conv_abs_spec ?= dv
 					if conv_abs_spec /= Void then

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			address := addr;
 			is_null := (address = Void)
 			capacity := cap;
-			create items.make
+			create items.make (capacity)
 		end;
 
 feature -- Access
@@ -87,19 +87,21 @@ feature -- Access
 			-- Do not convert special characters to an Eiffel representation.
 		local
 			char_value: CHARACTER_VALUE
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			if items.count /= 0 then
 				char_value ?= items.first
 				if char_value /= Void then
 					create Result.make (items.count + 4)
 					from
-						items.start
+						l_cursor := items.new_cursor
+						l_cursor.start
 					until
-						items.after
+						l_cursor.after
 					loop
-						char_value ?= items.item
+						char_value ?= l_cursor.item
 						Result.append_character (char_value.value)
-						items.forth
+						l_cursor.forth
 					end;
 				end
 			end
@@ -149,6 +151,7 @@ feature {NONE} -- Output
 		local
 			is_special_of_char: BOOLEAN
 			char_value: CHARACTER_VALUE
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			st.add_string ("-- begin special object --");
 			st.add_new_line;
@@ -156,34 +159,35 @@ feature {NONE} -- Output
 				append_tabs (st, 1);
 				st.add_string ("... Items skipped ...");
 				st.add_new_line
-			end;
+			end
+			l_cursor := items.new_cursor
 			if items.count /= 0 then
-				items.start
-				char_value ?= items.item
+				l_cursor.start
+				char_value ?= l_cursor.item
 				is_special_of_char := char_value /= Void
 			end 
 			if not is_special_of_char then
 				from
-					items.start
+					l_cursor.start
 				until
-					items.after
+					l_cursor.after
 				loop
-					items.item.append_to (st, 1);
-					items.forth
+					l_cursor.item.append_to (st, 1);
+					l_cursor.forth
 				end;
 			else
 				st.add_string ("%"")
 				from
-					items.start
+					l_cursor.start
 				until
-					items.after
+					l_cursor.after
 				loop
-					char_value ?= items.item
+					char_value ?= l_cursor.item
 					check
 						valid_character_element: char_value /= Void
 					end
 					st.add_char (char_value.value)
-					items.forth
+					l_cursor.forth
 				end;
 				st.add_string ("%"%N")
 			end
@@ -198,7 +202,7 @@ feature {NONE} -- Output
 
 feature -- Output
 
-	children: LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
@@ -211,16 +215,19 @@ feature {NONE} -- Implementation
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
+		local
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			address := hector_addr (address);
 			is_null := (address = Void)
 			from
-				items.start
+				l_cursor := items.new_cursor
+				l_cursor.start
 			until
-				items.after
+				l_cursor.after
 			loop
-				items.item.set_hector_addr;
-				items.forth
+				l_cursor.item.set_hector_addr;
+				l_cursor.forth
 			end
 		end;
 

@@ -787,7 +787,8 @@ feature -- Function Evaluation
 		end
 
  	generating_type_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
- 				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE): STRING is
+ 				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE;
+ 				a_class_type: CLASS_TYPE; a_feat: FEATURE_I): STRING is
 			-- ANY.generating_)type: STRING evaluation result
 		local
 			l_icd: ICOR_DEBUG_VALUE		
@@ -810,7 +811,7 @@ feature -- Function Evaluation
 			l_icd_class := l_icd_object.get_class
 			l_icd_module := l_icd_class.get_module		
 			l_md_import := l_icd_module.interface_md_import
-			l_feature_token := l_md_import.find_method (l_icd_class.get_token, "generating_type")
+			l_feature_token := l_md_import.find_method (l_icd_class.get_token, a_feat.feature_name) -- resolved {ANY}.generating_type
 			-- FIXME JFIAT: check if we could be use directly feature_token (..)
 --			l_feature_token := feature_token (l_class_type, "generating_type")
 			

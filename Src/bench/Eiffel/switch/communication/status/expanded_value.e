@@ -38,13 +38,15 @@ feature {DEBUG_VALUE_EXPORTER}
 				e_class := a_class;
 				is_attribute := True;
 			end;
-			create attributes.make
+			create attributes.make (10)
 		end;
 
 feature -- Property
 
-	attributes: SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE];
+	attributes: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
 			-- Attributes of expanded object
+			--| FIXME JFIAT 2004/05/27 : used to be declared SORTED_TWO_WAY_LIST
+			--| should we change that back ?
 
 feature -- Output
 
@@ -52,6 +54,7 @@ feature -- Output
 			-- Append `Current' to `st' with `indent' tabs the left margin.
 		local
 			ec: CLASS_C;
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			append_tabs (st, indent);
 			st.add_feature_name (name, e_class)
@@ -64,12 +67,13 @@ feature -- Output
 				st.add_string ("-- begin sub-object --");
 				st.add_new_line;
 				from
-					attributes.start
+					l_cursor := attributes.new_cursor
+					l_cursor.start
 				until
-					attributes.after
+					l_cursor.after
 				loop
-					attributes.item.append_to (st, indent + 2);
-					attributes.forth
+					l_cursor.item.append_to (st, indent + 2);
+					l_cursor.forth
 				end;
 				append_tabs (st, indent + 1);
 				st.add_string ("-- end sub-object --");
@@ -97,19 +101,21 @@ feature {NONE} -- Output
 	append_value (st: STRUCTURED_TEXT) is
 			-- Append value of `Current' to `st' with `indent' tabs the left margin.
 		local
-			ec: CLASS_C;
+			ec: CLASS_C
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			ec := dynamic_class;
 			if ec /= Void then
 				st.add_string ("-- begin sub-object --");
 				st.add_new_line;
 				from
-					attributes.start
+					l_cursor := attributes.new_cursor
+					l_cursor.start
 				until
-					attributes.after
+					l_cursor.after
 				loop
-					attributes.item.append_to (st, 2);
-					attributes.forth
+					l_cursor.item.append_to (st, 2);
+					l_cursor.forth
 				end;
 				append_tabs (st, 1);
 				st.add_string ("-- end sub-object --");
@@ -149,7 +155,7 @@ feature -- Output
 						dynamic_class /= Void
 		end
 
-	children: LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
@@ -173,14 +179,17 @@ feature {NONE} -- Implementation
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
+		local
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			from
-				attributes.start
+				l_cursor := attributes.new_cursor
+				l_cursor.start
 			until
-				attributes.after
+				l_cursor.after
 			loop
-				attributes.item.set_hector_addr;
-				attributes.forth
+				l_cursor.item.set_hector_addr;
+				l_cursor.forth
 			end;
 		end;
 

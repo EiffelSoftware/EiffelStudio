@@ -6,6 +6,9 @@ indexing
 deferred class DEBUGGED_OBJECT
 
 inherit
+	
+	SHARED_ABSTRACT_DEBUG_VALUE_SORTER
+	
 	SHARED_APPLICATION_EXECUTION
 
 	SHARED_EIFFEL_PROJECT
@@ -16,7 +19,7 @@ inherit
 
 feature -- Properties
 
-	attributes: LIST [ABSTRACT_DEBUG_VALUE];
+	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE];
 			-- Attributes of object being inspected (sorted by name)
 
 	is_special: BOOLEAN;
@@ -41,21 +44,37 @@ feature -- Properties
 
 feature -- Query
 
+	sorted_attributes: like attributes is
+			-- Sort and return `attributes'.
+		do
+			Result := attributes
+			if
+				Result /= Void
+			then
+				sort_debug_values (Result)
+			end
+		end
+
 	attribute_by_name (n: STRING): ABSTRACT_DEBUG_VALUE is
 			-- Try to find an attribute named `n' in list `attributes'.
 		require
 			not_void: n /= Void
+		local
+			l_item: ABSTRACT_DEBUG_VALUE
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			if attributes /= Void then
 				from
-					attributes.start
+					l_cursor := attributes.new_cursor
+					l_cursor.start
 				until
-					attributes.after or Result /= Void
+					l_cursor.after or Result /= Void
 				loop
-					if attributes.item.name /= Void and then attributes.item.name.is_equal (n) then
-						Result := attributes.item
+					l_item := l_cursor.item
+					if l_item.name /= Void and then l_item.name.is_equal (n) then
+						Result := l_item
 					end
-					attributes.forth
+					l_cursor.forth
 				end
 			end
 		ensure

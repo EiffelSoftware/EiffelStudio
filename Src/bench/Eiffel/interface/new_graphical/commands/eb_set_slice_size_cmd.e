@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 					spec_dv ?= abs_spec_dv
 					if spec_dv /= Void then --| SPECIAL_VALUE						
 						create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_st_addr, slice_min, slice_max)
-						spec_dv.items.append (dobj.attributes)
+						spec_dv.items.append_last (dobj.attributes)
 					else
 						nat_arr_dv ?= abs_spec_dv
 						if nat_arr_dv /= Void then

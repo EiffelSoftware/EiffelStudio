@@ -295,7 +295,8 @@ feature -- Status report
 			is_reference: address /= Void
 		local
 			o: DEBUGGED_OBJECT
-			attribs: LIST [ABSTRACT_DEBUG_VALUE]
+			attribs: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			l_attribs_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			att: ABSTRACT_DEBUG_VALUE
 		do
 			if application.is_classic then			
@@ -309,15 +310,16 @@ feature -- Status report
 			attribs := o.attributes
 			if attribs /= Void then
 				from
-					attribs.start
+					l_attribs_cursor := attribs.new_cursor
+					l_attribs_cursor.start
 				until
-					attribs.after
+					l_attribs_cursor.after
 				loop
-					att := attribs.item
+					att := l_attribs_cursor.item
 					if att.name.is_equal ("item") then
 						Result := att.dump_value
 					end
-					attribs.forth
+					l_attribs_cursor.forth
 				end
 			end
 			if Result = Void then
@@ -458,7 +460,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		local
 			f: E_FEATURE
 			obj: DEBUGGED_OBJECT_CLASSIC
-			l_attributes: LIST [ABSTRACT_DEBUG_VALUE]
+			l_attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			l_attributes_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_attributes_item: ABSTRACT_DEBUG_VALUE
 			cv_spec: SPECIAL_VALUE
 			int_value: DEBUG_VALUE [INTEGER]
 			l_count: INTEGER
@@ -482,20 +486,22 @@ feature {DUMP_VALUE} -- string_representation Implementation
 				create obj.make (value_address, min, max)
 				l_attributes := obj.attributes
 				from
-					l_attributes.start
+					l_attributes_cursor := l_attributes.new_cursor
+					l_attributes_cursor.start
 				until
-					l_attributes.after
+					l_attributes_cursor.after
 				loop
-					cv_spec ?= l_attributes.item
+					l_attributes_item := l_attributes_cursor.item
+					cv_spec ?= l_attributes_item
 					if cv_spec /= Void and then cv_spec.name.is_equal (l_area_name) then
 						Result := cv_spec.raw_string_value
 					else
-						int_value ?= l_attributes.item					
+						int_value ?= l_attributes_item
 						if int_value /= Void and then int_value.name.is_equal (l_count_name) then
 							l_count := int_value.value
 						end
 					end
-					l_attributes.forth
+					l_attributes_cursor.forth
 				end
 					--| At the point `area' and `count' from STRING should have been found in
 					--| STRING object.
@@ -569,17 +575,18 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_final_result_value: DUMP_VALUE
 		do
 			if generating_type_evaluation_enabled then
+				l_feat := generating_type_feature_i (dynamic_class)
 				if application.is_dotnet then
 					if dynamic_class_type /= Void then
 						Result := Application.imp_dotnet.eifnet_debugger.generating_type_value_from_object_value (
 									value_frame_dotnet, 
 									value_dotnet,
 									value_object_dotnet,
-									dynamic_class_type
+									dynamic_class_type,
+									l_feat
 								)
 					end
 				else
-					l_feat := generating_type_feature_i (dynamic_class)
 					l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
 
 					if l_final_result_value /= Void and then not l_final_result_value.is_void then
@@ -680,27 +687,14 @@ feature -- Access
 
 	type_and_value: STRING is
 			-- String representation of the type and value of `Current'.
-			--| CLASS_NAME = `full_output'
-		local
-			l_generating_type_string: STRING
+			--| dynamic CLASS_NAME = `full_output'
 		do
 			create Result.make (100)
 
 			if is_void then
 				Result.append ("NONE = Void")
 			elseif dynamic_class /= Void then
-				if is_dotnet_value and then is_external_type then
-					l_generating_type_string := value_class_name				
-				elseif dynamic_class.is_true_external then
-					l_generating_type_string := dynamic_class.external_class_name
-				elseif dynamic_class.is_generic or dynamic_class.is_tuple then
-					l_generating_type_string := generating_type_evaluated_string
-				end
-				if l_generating_type_string	/= Void then
-					Result.append (l_generating_type_string)
-				else
-					Result.append (dynamic_class.name_in_upper)
-				end
+				Result.append (type_representation)
 				
 				if type = Type_object or type = Type_string_dotnet then
 					Result.append_character (' ')
@@ -713,39 +707,51 @@ feature -- Access
 				Result.append (full_output)
 			end
 		end
+
+	type_representation: STRING is
+			-- String representation of the type of `Current'.
+		require
+			dynamic_class /= Void
+		local
+			l_generating_type_string: STRING
+		do
+			if is_dotnet_value and then is_external_type then
+				l_generating_type_string := value_class_name				
+			elseif dynamic_class.is_true_external then
+				l_generating_type_string := dynamic_class.external_class_name
+			elseif dynamic_class.is_generic or dynamic_class.is_tuple then
+				l_generating_type_string := generating_type_evaluated_string
+			end
+			if l_generating_type_string	/= Void then
+				Result := l_generating_type_string
+			else
+				Result := dynamic_class.name_in_upper
+			end
+		end
 		
 	generating_type_representation: STRING is
 			-- {TYPE}.generating_type string representation
 		local
 			l_generating_type_string: STRING
-			retried: BOOLEAN
 		do
-			if not retried then
-				create Result.make (100)
-	
-				if is_void then
-					Result := "NONE"
-				elseif dynamic_class /= Void then
-					if dynamic_class.is_true_external then
-						l_generating_type_string := dynamic_class.external_class_name
-					elseif dynamic_class.is_generic or dynamic_class.is_tuple then
-						l_generating_type_string := generating_type_evaluated_string
-					end
-					if l_generating_type_string	/= Void then
-						Result := l_generating_type_string
-					else
-						Result := dynamic_class.name_in_upper
-					end
-				else		
-					Result := "ANY"
+			create Result.make (100)
+
+			if is_void then
+				Result := "NONE"
+			elseif dynamic_class /= Void then
+				if dynamic_class.is_true_external then
+					l_generating_type_string := dynamic_class.external_class_name
+				elseif dynamic_class.is_generic or dynamic_class.is_tuple then
+					l_generating_type_string := generating_type_evaluated_string
 				end
-			else
-				Result := ""
+				if l_generating_type_string	/= Void then
+					Result := l_generating_type_string
+				else
+					Result := dynamic_class.name_in_upper
+				end
+			else		
+				Result := "ANY"
 			end
-		rescue
-				-- just in case to avoid a stupid crash (we never know ..)
-			retried := True
-			retry
 		end		
 
 	output_value: STRING is

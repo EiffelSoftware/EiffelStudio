@@ -84,7 +84,7 @@ feature {NONE} -- Init
 
 feature {NONE} -- Special childrens
 
-	children_from_external_type: LIST [ABSTRACT_DEBUG_VALUE] is
+	children_from_external_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- Children list from a Reference which is an external type
 			-- (ie: a dotnet type, not pure Eiffel)
 		local
@@ -93,9 +93,10 @@ feature {NONE} -- Special childrens
 			l_class_token: INTEGER			
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_md_import: MD_IMPORT
-			l_tokens: ARRAYED_LIST [INTEGER]
+			l_tokens: DS_ARRAYED_LIST [INTEGER]
 			l_tokens_array: ARRAY [INTEGER]
 			
+			l_tokens_cursor: DS_LINEAR_CURSOR [INTEGER]
 			l_tokens_count: INTEGER
 			l_enum_hdl: INTEGER
 			
@@ -122,12 +123,12 @@ feature {NONE} -- Special childrens
 					l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, 10)
 					l_tokens_count := l_md_import.count_enum (l_enum_hdl)
 					if l_tokens_count > 0 then
-						create l_tokens.make (l_tokens_count)
-						l_tokens.fill (l_tokens_array)
+						create l_tokens.make_from_array (l_tokens_array)
 						if l_tokens_count > l_tokens_array.count then
 								-- We need to retrieve the rest of the data
 							l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, l_tokens_count - 10)
-							l_tokens.fill (l_tokens_array)
+--							l_tokens.fill (l_tokens_array)
+							l_tokens.extend_last (create {DS_ARRAYED_LIST [INTEGER]}.make_from_array (l_tokens_array))
 						end
 					end
 					l_md_import.close_enum (l_enum_hdl)
@@ -137,13 +138,14 @@ feature {NONE} -- Special childrens
 	
 					
 					if l_tokens /=  Void then
-						create {SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
+						create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_tokens.count)
 						from
-							l_tokens.start
+							l_tokens_cursor := l_tokens.new_cursor
+							l_tokens_cursor.start
 						until
-							l_tokens.after
+							l_tokens_cursor.after
 						loop
-							l_att_token := l_tokens.item
+							l_att_token := l_tokens_cursor.item
 							l_att_name := l_md_import.get_field_props (l_att_token)							
 							
 							l_att_icd_debug_value := l_object_value.get_field_value (l_icd_class, l_att_token)
@@ -151,10 +153,10 @@ feature {NONE} -- Special childrens
 								l_att_debug_value := debug_value_from_icdv (l_att_icd_debug_value)
 								if l_att_debug_value /= Void then
 									l_att_debug_value.set_name (l_att_name)
-									Result.extend (l_att_debug_value)
+									Result.put_last (l_att_debug_value)
 								end
 							end
-							l_tokens.forth
+							l_tokens_cursor.forth
 						end
 					end
 				end

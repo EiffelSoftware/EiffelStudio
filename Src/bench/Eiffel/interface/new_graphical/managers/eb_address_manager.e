@@ -153,6 +153,8 @@ feature {NONE} -- Initialization
 			feature_address.select_actions.extend (agent change_hist_to_feature)
 			feature_address.change_actions.extend (agent type_feature)
 			feature_address.focus_in_actions.extend (agent update_current_typed_class)
+
+			lost_focus_action_enabled := True
 		end
 
 feature -- Access
@@ -1260,7 +1262,9 @@ feature {NONE} -- open new class
 			if k /= Void then
 				if k.code = Key_csts.key_enter then
 					if must_show_choice and choice /= Void and then not choice.is_destroyed then
+						lost_focus_action_enabled := False
 						choice.show
+						lost_focus_action_enabled := True
 					end
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
@@ -1277,7 +1281,9 @@ feature {NONE} -- open new class
 			if k /= Void then
 				if k.code = Key_csts.key_enter then
 					if must_show_choice and choice /= Void and then not choice.is_destroyed then
+						lost_focus_action_enabled := False
 						choice.show
+						lost_focus_action_enabled := True
 					end
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
@@ -1294,7 +1300,9 @@ feature {NONE} -- open new class
 			if k /= Void then
 				if k.code = Key_csts.key_enter then
 					if must_show_choice and choice /= Void and then not choice.is_destroyed then
+						lost_focus_action_enabled := False
 						choice.show
+						lost_focus_action_enabled := True
 					end
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
@@ -1815,6 +1823,9 @@ feature {NONE} -- open new class
 
 feature {NONE} -- Implementation of the clickable labels for `header_info'
 
+	lost_focus_action_enabled: BOOLEAN
+			-- Should `one_lost_focus' do something?
+
 	cluster_label: EV_LABEL
 	class_label: EV_LABEL
 	feature_label: EV_LABEL
@@ -2085,11 +2096,12 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			for_context_tool: mode
 		do
 			if
+				lost_focus_action_enabled and then
 				not class_address.has_focus and then
 				not feature_address.has_focus and then
 				not cluster_address.has_focus and then
 				not address_dialog.has_focus and then
-				(choice /= Void and then not choice.is_show_requested)
+				(choice = Void or else (choice.is_destroyed or else not choice.is_show_requested))
 			then
 				address_dialog.hide
 			end

@@ -12,15 +12,34 @@ class
 	EV_TOOL_BAR_RADIO_BUTTON
 
 inherit
-	EV_TOOL_BAR_TOGGLE_BUTTON
+	EV_TOOL_BAR_SELECT_BUTTON
 		redefine
 			implementation,
-			create_implementation
+			create_implementation,
+			is_in_default_state
+		end
+
+	EV_RADIO_PEER
+		redefine
+			implementation,
+			is_in_default_state
 		end
 
 create
 	default_create,
 	make_with_text
+
+feature -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+			-- Radio buttons are selected by default.
+		do
+			--|FIXME
+			Result := True
+			--Result := {EV_RADIO_PEER} Precursor
+			--and then {EV_TOOL_BAR_TOGGLE_BUTTON} Precursor
+		end
 
 feature {EV_ANY_I, EV_RADIO}-- Implementation
 
@@ -58,6 +77,10 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/04 17:03:01  rogers
+--| Now inherits EV_TOOL_BAR_SELECT_BUTTON and EV_RADIO_PEER.
+--| Added is_in_default_state, which needs to be fixed.
+--|
 --| Revision 1.10  2000/03/24 03:10:22  oconnor
 --| formatting and comments
 --|

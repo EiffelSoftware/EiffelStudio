@@ -201,7 +201,7 @@ wkbench.lib: $(WOBJECTS)
 
 
 
-all:: wkbench.dll
+dll:: wkbench.dll
 
 DEF_FILE= "wkbench.def"
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
@@ -217,7 +217,7 @@ LINK32_OBJS= $(WOBJECTS)
     $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
 
-all:: finalized.dll
+dll:: finalized.dll
 
 DEF_FILE= "finalized.def"
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\

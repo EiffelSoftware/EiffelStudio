@@ -310,7 +310,9 @@ feature -- Status setting
 			-- Unmap the Window from the screen.
 		do
 			if is_show_requested then
-				Precursor		
+				disable_modal
+				set_blocking_window (Void)
+				Precursor {EV_CONTAINER_IMP}
 			end
 		end
 

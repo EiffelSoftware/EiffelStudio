@@ -52,6 +52,12 @@ feature
 			-- Do nothing
 		end;
 
+	is_bit: BOOLEAN is
+			-- Is the constant a bit constant ?
+		do
+			-- Do nothing
+		end;
+
 	generate (file: INDENT_FILE) is
 			-- Generate value in `file'.
 		require

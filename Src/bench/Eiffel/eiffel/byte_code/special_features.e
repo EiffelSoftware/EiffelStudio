@@ -643,16 +643,23 @@ feature {NONE} -- C code generation
 				end
 			when integer_type then
 				if is_signed_integer then
-					buffer.put_string (" RTMS_EX(%"INTEGER_")
+					buffer.put_string (" RTMS_EX(%"INTEGER")
+					inspect
+						integer_size
+					when 8 then buffer.put_string ("_8%", 9)")
+					when 16 then buffer.put_string ("_16%", 10)")
+					when 32 then buffer.put_string ("%", 7)")
+					when 64 then buffer.put_string ("_64%", 10)")
+					end
 				else
 					buffer.put_string (" RTMS_EX(%"NATURAL_")
-				end
-				inspect
-					integer_size
-				when 8 then buffer.put_string ("8%", 9)")
-				when 16 then buffer.put_string ("16%", 10)")
-				when 32 then buffer.put_string ("32%", 10)")
-				when 64 then buffer.put_string ("64%", 10)")
+					inspect
+						integer_size
+					when 8 then buffer.put_string ("8%", 9)")
+					when 16 then buffer.put_string ("16%", 10)")
+					when 32 then buffer.put_string ("32%", 10)")
+					when 64 then buffer.put_string ("64%", 10)")
+					end
 				end
 			when pointer_type then
 				buffer.put_string (" RTMS_EX(%"POINTER%", 7)")

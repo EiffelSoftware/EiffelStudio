@@ -86,19 +86,6 @@ feature -- Basic operation
 			c_sleep (msec)
 		end
 
-	do_once_on_idle (an_agent: PROCEDURE [ANY, TUPLE []]) is
-			-- On the next idle event, call `an_agent' once. If `an_agent' is
-			-- already queued to be executed next idle event, do nothing.
-			-- Compares by reference, so if you want one action to be executed
-			-- twice, you should recreate the agent.
-		obsolete
-			"Do not use this function. Just do it yourself."
-		do
-			if interface.once_idle_actions.has (an_agent) then
-				interface.once_idle_actions.extend (an_agent)
-			end
-		end
-
 feature -- Root window
 
 	main_window: EV_WINDOW_IMP is
@@ -246,10 +233,7 @@ feature {NONE} -- Message loop, we redefine it because the user
 						end
 					end
 				else
-					if not interface.once_idle_actions.empty then
-						interface.once_idle_actions.call ([])
-						interface.once_idle_actions.wipe_out
-					elseif not internal_idle_actions.empty then
+					if not internal_idle_actions.empty then
 						internal_idle_actions.call ([])
 					elseif not interface.idle_actions.empty then 
 						interface.idle_actions.call ([])
@@ -338,6 +322,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/23 19:03:52  brendel
+--| Removed once_idle_actions.
+--|
 --| Revision 1.24  2000/03/23 18:20:20  brendel
 --| Implemented once_idle_actions in new way.
 --|

@@ -500,6 +500,9 @@ feature {NONE} -- Convenience
 				
 					-- Else we procede normally
 				il_generator.mark_label (l_not_void_label)
+			else
+					-- Top element is not required so we can get rid of it.
+				il_generator.pop
 			end
 		end
 		

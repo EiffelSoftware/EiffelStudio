@@ -80,7 +80,7 @@ feature {NONE} -- initalization
 				is_signed := false
 				is_local := true
 			else
-				if (assembly_name.count > 5) then
+				if (assembly_name.count >= 4) then
 					assembly_name_copy := assembly_name.clone(assembly_name)
 					assembly_name_copy.to_lower
 					
@@ -95,6 +95,11 @@ feature {NONE} -- initalization
 							is_signed := true
 						end
 					end
+				else
+					-- you cannot have an assembly called .dll or .exe so if the assembly name is 4 chars or
+					-- less then the assembly has to be signed.
+					is_local := false
+					is_signed := true
 				end
 			end
 		end

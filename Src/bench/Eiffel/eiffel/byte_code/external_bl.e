@@ -286,6 +286,9 @@ feature
 		local
 			expr: EXPR_B;
 			i: INTEGER;
+			param_is_hector: BOOLEAN;
+			hector_b: HECTOR_B;
+			param_bl: PARAMETER_BL
 		do
 			if parameters /= Void then
 				from
@@ -298,13 +301,35 @@ feature
 				loop
 					expr ?= parameters.item;	-- Cannot fail
 						-- add cast before parameter
-					if has_arg_list
+					if expr.is_hector then
+						param_bl ?= expr;
+						hector_b ?= param_bl.expression;
+						if hector_b.expr.type.is_basic then
+							param_is_hector := True;
+							generated_file.putstring ("&(");
+						else
+							param_is_hector := False
+						end
+					else
+						param_is_hector := False
+					end;
+					if context.final_mode
+						and then has_arg_list
 						and then (special_id /= dll16_id) and (special_id /= dll32_id) then
 						generated_file.putchar ('(');
 						generated_file.putstring (arg_list.item (i));
 						generated_file.putstring (") ");
 					end;
-					expr.print_register;
+					if param_is_hector then
+						if hector_b.expr.is_attribute then
+							hector_b.expr.generate_access
+						else
+							expr.print_register;
+						end
+						generated_file.putchar (')');
+					else
+						expr.print_register;
+					end;
 					if not parameters.islast then
 						generated_file.putstring (gc_comma);
 					end;

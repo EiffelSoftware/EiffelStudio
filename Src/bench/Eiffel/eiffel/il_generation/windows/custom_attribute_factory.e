@@ -64,21 +64,17 @@ feature -- Settings
 				end
 			end
 			if l_attributes /= Void then
-				generate_custom_attributes (a_feature_token, il_generator.current_class_type,
-					l_attributes)
+				generate_custom_attributes (a_feature_token, l_attributes)
 			end
 		end
 
 feature {IL_CODE_GENERATOR} -- Generation
 
-	generate_custom_attributes (a_owner_token: INTEGER; class_type: CLASS_TYPE;
-			ca: BYTE_LIST [BYTE_NODE])
-		is
-			-- Generate custom attributes represented by `ca' in `class_type'
+	generate_custom_attributes (a_owner_token: INTEGER; ca: BYTE_LIST [BYTE_NODE]) is
+			-- Generate custom attributes represented by `ca'
 			-- using `a_owner_token' as target.
 		require
 			a_owner_token_valid: a_owner_token /= 0
-			class_type_not_void: class_type /= Void
 			has_custom_attributes: ca /= Void
 		local
 			ca_b: CUSTOM_ATTRIBUTE_B

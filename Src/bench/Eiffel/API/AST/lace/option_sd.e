@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Description for option supported by Eiffel compiler 3";
+		"Description for option supported by Eiffel compiler 4";
 	date: "$Date$";
 	revision: "$Revision $"
 

@@ -290,6 +290,6 @@ feature {EWB_GENERATE, GENERATE_PROFILE_INFO_CMD} -- Error handling
 
 	Invalid_profiler_type: INTEGER is unique
 		-- No profiler information file found in
-		-- $EIFFEL3/bench/profiler
+		-- $EIFFEL4/bench/profiler
 
 end -- class CONFIGURATION_LOADER

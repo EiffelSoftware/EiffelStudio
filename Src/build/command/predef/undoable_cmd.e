@@ -36,7 +36,7 @@ feature
 			!!Result.make;
 		end;
 
-	eiffel_inherit_text (rl: LINKED_LIST [STRING]): STRING is
+	eiffel_inherit_text: STRING is
 		local
 			temp: STRING;
 		do

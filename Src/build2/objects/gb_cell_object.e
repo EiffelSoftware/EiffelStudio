@@ -59,6 +59,7 @@ feature -- Basic operations
 			if not layout_item.has (an_object.layout_item) then
 				layout_item.extend (an_object.layout_item)
 			end
+			add_child (an_object, 1)
 		ensure then
 				-- If we are adding a menu bar, then the normal rule does not apply.
 			object_not_empty: not type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_MENU_BAR_OBJECT")) implies not object.is_empty

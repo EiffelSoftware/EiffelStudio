@@ -135,7 +135,6 @@ extern struct cnode *esystem;			/* Pointer to updated Eiffel system */
 extern int32 **ecall;					/* Updated pointer */
 extern struct rout_info *eorg_table;	/* Updated pointer */
 extern struct desc_info ***desc_tab;	/* Global descriptor table */
-								 		 * dynamic types (for re-freezing) */
 
 #define Routids(x)	ecall[x]	/* Routine id array */
 #endif

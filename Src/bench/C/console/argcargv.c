@@ -50,11 +50,7 @@ rt_public void get_argcargv (int *argc, char ***argv)
 
 rt_public void free_argv(char argc, char ***argv)
 {
-	int i;
-
-	for (i = 0; i < argc; i++) 
-		eif_free((*argv)[i]);
-
+	eif_free((*argv)[0]);
 	eif_free(*argv);
 	*argv = NULL;
 }

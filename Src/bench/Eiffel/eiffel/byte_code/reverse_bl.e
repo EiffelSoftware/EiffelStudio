@@ -94,7 +94,9 @@ feature
 		local
 			cl_type_i: CL_TYPE_I;
 			gen_type : GEN_TYPE_I
+			f: INDENT_FILE
 		do
+			f := generated_file
 			generate_line_info;
 				-- First pre-compute the source and put it in the register
 				-- so that we can use it inside macro (where the argument is
@@ -118,60 +120,59 @@ feature
 				and not register_for_metamorphosis
 			then
 				print_register;
-				generated_file.putstring (" = ");
+				f.putstring (" = ");
 				source.print_register;
-				generated_file.putchar (';');
-				generated_file.new_line;
+				f.putchar (';');
+				f.new_line;
 			end;
 				-- If last is in result, generate a return instruction.
 			if last_in_result then
 				context.byte_code.finish_compound;
 				if last_instruction then
-					generated_file.new_line;
+					f.new_line;
 				end;
-				generated_file.putstring ("return ");
+				f.putstring ("return ");
 			else
 					-- Perform aging tests when necessary
 				if how /= None_assignment and not target.is_predefined then
 				   source_print_register;
-					generated_file.putstring (" = RTRM(");
+					f.putstring (" = RTRM(");
 					source_print_register;
-					generated_file.putstring (gc_comma);
+					f.putstring (gc_comma);
 					context.Current_register.print_register_by_name;
-					generated_file.putchar (')');
-					generated_file.putchar (';');
-					generated_file.new_line;
+					f.putchar (')');
+					f.putchar (';');
+					f.new_line;
 				end;
 				target.print_register;
-				generated_file.putstring (" = ");
+				f.putstring (" = ");
 			end;
 			if how /= None_assignment then
-				generated_file.putstring ("RTRV(");
+				f.putstring ("RTRV(");
 -- FIXME!!!! use something similar to CREATE_INFO in CREATION_BL
 					-- It so happens that reverse assignments are only allowed
 					-- on reference types.
 
 				if gen_type = Void then
 					if context.final_mode then
-						generated_file.putint (cl_type_i.type_id - 1);
+						f.putint (cl_type_i.type_id - 1);
 					else
-						generated_file.putstring ("RTUD(");
-						generated_file.putstring
-							(cl_type_i.associated_class_type.id.generated_id);
-						generated_file.putchar (')');
+						f.putstring ("RTUD(");
+						cl_type_i.associated_class_type.id.generated_id (f)
+						f.putchar (')');
 					end;
 				else
-					generated_file.putstring ("typres");
+					f.putstring ("typres");
 				end;
 
-				generated_file.putstring (gc_comma);
+				f.putstring (gc_comma);
 				source_print_register;
-				generated_file.putchar (')');
+				f.putchar (')');
 			else
-				generated_file.putstring ("(char *) 0");
+				f.putstring ("(char *) 0");
 			end;
-			generated_file.putchar (';');
-			generated_file.new_line;
+			f.putchar (';');
+			f.new_line;
 
 			if gen_type /= Void then
 				-- We need to close the C block.

@@ -48,7 +48,7 @@ feature -- C code generation
 			else
 				if context.workbench_mode then
 					gen_file.putstring ("RTUD(");
-					gen_file.putstring (cl_type_i.associated_class_type.id.generated_id);
+					cl_type_i.associated_class_type.id.generated_id (gen_file)
 					gen_file.putchar (')');
 				else
 					gen_file.putint (cl_type_i.type_id - 1);
@@ -105,7 +105,7 @@ feature -- Generic conformance
 			else
 				if context.workbench_mode then
 					f.putstring ("RTUD(")
-					f.putstring (cl_type_i.associated_class_type.id.generated_id)
+					cl_type_i.associated_class_type.id.generated_id (f)
 					f.putchar (')')
 				else
 					f.putint (cl_type_i.type_id - 1);

@@ -10,7 +10,7 @@ inherit
 		end
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
-	SHARED_GENERATION_CONSTANTS;
+	SHARED_GENERATION
 	COMPILER_EXPORTER
 
 feature 
@@ -114,10 +114,10 @@ feature
 					context.current_type.base_class.is_precompiled
 				then
 					gen_file.putstring ("RTWPCT(");
-					gen_file.putstring (context.class_type.id.generated_id)
+					context.class_type.id.generated_id (gen_file)
 					gen_file.putstring (gc_comma)
 					rout_info := System.rout_info_table.item (rout_id);
-					gen_file.putstring (rout_info.origin.generated_id);
+					rout_info.origin.generated_id (gen_file)
 					gen_file.putstring (gc_comma);
 					gen_file.putint (rout_info.offset)
 				else
@@ -242,10 +242,10 @@ feature -- Genericity
 					context.current_type.base_class.is_precompiled
 				then
 					f.putstring ("RTWPCT(")
-					f.putstring (context.class_type.id.generated_id)
+					context.class_type.id.generated_id (f)
 					f.putstring (gc_comma)
 					rout_info := System.rout_info_table.item (rout_id)
-					f.putstring (rout_info.origin.generated_id)
+					rout_info.origin.generated_id (f)
 					f.putstring (gc_comma)
 					f.putint (rout_info.offset)
 				else

@@ -442,7 +442,7 @@ feature
 									f.putstring (" = RTLX(typres")
 								else
 									f.putstring (" = RTLX(RTUD(")
-									f.putstring (cl_type_i.associated_class_type.id.generated_id)
+									cl_type_i.associated_class_type.id.generated_id (f)
 									f.putchar (')')
 								end
 							else
@@ -507,7 +507,7 @@ feature
 							f.putstring (" = RTLX(typres")
 						else
 							f.putstring (" = RTLX(RTUD(")
-							f.putstring (cl_type_i.associated_class_type.id.generated_id)
+							cl_type_i.associated_class_type.id.generated_id (f)
 							f.putchar (')')
 						end
 					else
@@ -1119,7 +1119,7 @@ feature
 			f.putstring ("(%"")
 			f.putstring (feature_name)
 			f.putstring ("%", ")
-			f.putstring (feature_origin)
+			feature_origin (f)
 			f.putstring (gc_comma)
 			f.putstring (" dtype")
 			f.putstring (gc_rparan_comma)
@@ -1137,7 +1137,7 @@ feature
 			f.putstring ("(%"")
 			f.putstring (feature_name)
 			f.putstring ("%", ")
-			f.putstring (feature_origin)
+			feature_origin (f)
 			f.putstring (gc_comma)
 			context.Current_register.print_register_by_name
 			f.putstring (gc_rparan_comma)

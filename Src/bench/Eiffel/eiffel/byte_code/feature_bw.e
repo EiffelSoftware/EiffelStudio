@@ -93,7 +93,7 @@ feature
 				r_id := base_class.feature_table.item
 					(feature_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				f.putstring (rout_info.origin.generated_id);
+				rout_info.origin.generated_id (f);
 				f.putstring (gc_comma);
 				f.putint (rout_info.offset);
 			else
@@ -112,7 +112,7 @@ feature
 					-- Use dynamic type of parent instead 
 					-- of dynamic type of Current.
 					f.putstring ("RTUD(");
-					f.putstring (precursor_type.associated_class_type.id.generated_id);
+					precursor_type.associated_class_type.id.generated_id (f)
 					f.putchar (')');
 				else
 					context.generate_current_dtype;

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			cwel_set_enum_font_fam_procedure_address (font_enumerator_delegate)
 			font_enumerator_object := feature {GCHANDLE}.alloc (Current)
 			cwel_set_font_family_enumerator_object
-				(feature {GCHANDLE}.op_explicit_gchandle (font_enumerator_object))
+				(feature {GCHANDLE}.to_pointer (font_enumerator_object))
 
 			enumerate (dc, family)
 

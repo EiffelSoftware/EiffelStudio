@@ -1,8 +1,8 @@
 system
-	erp_web
+	STORE_WIZARD_ORACLE
 
 root
-	WIZARD_PROJECT_MANAGER: "make_and_launch"
+	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"
 
 default
 	assertion (no)
@@ -22,8 +22,8 @@ default
 
 cluster
 	
-	root_cluster: "d:\Eiffel_Projects\Wizards"
-	wizard(root_cluster): "$\estore\src"
+	root_cluster: "d:\Src\help\Wizards\estore1"
+	wizard(root_cluster): "$\src"
 
 
 		-- EiffelBase
@@ -54,13 +54,13 @@ cluster
 	estore_interface:	"$EIFFEL4\library\store\interface"
 	estore_db_support:	"$EIFFEL4\library\store\dbms\support"
 	estore_rdbms:		"$EIFFEL4\library\store\dbms\rdbms\oracle"
-	estore_odbc:		"$EIFFEL4\library\store\dbms\rdbms\odbc"
+--	estore_odbc:		"$EIFFEL4\library\store\dbms\rdbms\odbc"
 
 
 external
 	include_path:		
 						"$EIFFEL4\library\store\dbms\rdbms\oracle\Clib",
-						"$EIFFEL4\library\store\dbms\rdbms\odbc\Clib",
+--						"$EIFFEL4\library\store\dbms\rdbms\odbc\Clib",
 						"$EIFFEL4\library\new_wel\spec\windows\include",
 						"$(ORACLE_HOME)\OCI\include"
 
@@ -68,8 +68,8 @@ external
 						"$EIFFEL4\library\new_wel\spec\msc\lib\wel.lib",
 						"$EIFFEL4\library\time\clib\datetime.lib",
 						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
-						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc32.lib",
-						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc_store.lib",
+--						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc32.lib",
+--						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc_store.lib",
 						"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib"
 end
 

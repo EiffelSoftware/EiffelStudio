@@ -43,7 +43,7 @@ feature {ICOR_EXPORTER} -- Access
 		local
 			l_pos: INTEGER
 		do
-			Result := clone (get_name)
+			Result := get_name
 			l_pos := Result.last_index_of (Directory_separator, Result.count)
 			if l_pos >0 then
 				Result := Result.substring (l_pos + 1, Result.count)			

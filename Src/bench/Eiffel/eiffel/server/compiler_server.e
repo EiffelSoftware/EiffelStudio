@@ -1,6 +1,6 @@
 -- Offset table associated to a cache
 
-deferred class SERVER [T -> IDABLE]
+deferred class COMPILER_SERVER [T -> IDABLE, H -> COMPILER_ID]
 
 inherit
 
@@ -16,7 +16,7 @@ inherit
 		redefine
 			copy, is_equal
 		end;
-	EXTEND_TABLE [SERVER_INFO, INTEGER]
+	EXTEND_TABLE [SERVER_INFO, H]
 		rename
 			make as tbl_make,
 			position as tbl_position,
@@ -35,12 +35,19 @@ inherit
 
 feature
 
-	updated_id (i: INTEGER): INTEGER is
+	updated_id (i: H): H is
 		do
 			Result := i	
 		end;
 
-	ontable: O_N_TABLE is
+	id (t: T): H is
+			-- Id associated with `t'
+		require
+			t_not_void: t /= Void
+		deferred
+		end
+
+	ontable: O_N_TABLE [H] is
 			-- Mapping table between old id s and new ids.
 			-- Used by `change_id'
 			-- By default, this mechanism is disables, hence the
@@ -50,13 +57,13 @@ feature
 		do
 		end;
 
-	change_id (new_value, old_value: INTEGER) is
+	change_id (new_value, old_value: H) is
 		require
 			Has_old: has (old_value)
 		local
 			sf: SERVER_INFO;
 			temp: T;
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id (old_value);
 
@@ -70,17 +77,18 @@ feature
 			tbl_put (sf, new_value);
 		end;
 
-	current_id: INTEGER;
+	current_id: FILE_ID;
 			-- Current server file id used by primitive `put'.
 
-	file_ids: LINKED_SET [INTEGER];
+	file_ids: LINKED_SET [FILE_ID];
 			-- Set of server file ids under the control of the
 			-- current server
 
 	make is
 			-- Initialization
 		do
-			!!file_ids.make;
+			!! file_ids.make;
+			file_ids.compare_objects;
 			set_current_id;
 			tbl_make (Chunk);
 		end;
@@ -100,13 +108,13 @@ end;
 			file_ids.extend (current_id);
 		end;
 
-	put_precompiled (fid: INTEGER; item_id: INTEGER; sinf: SERVER_INFO) is
+	put_precompiled (fid: FILE_ID; item_id: H; sinf: SERVER_INFO) is
 		local
 			server_file: SERVER_FILE;
 			info: SERVER_INFO
 		do
 			file_ids.extend (fid);
-			force (sinf, updated_id(item_id));
+			force (sinf, updated_id (item_id));
 		end;
 
 	Size_limit: INTEGER is
@@ -122,21 +130,21 @@ end;
 		do
 debug ("SERVER")
 	io.putstring ("Putting element of id: ");
-	io.putint (t.id);
+	io.putstring (t.id.dump);
 	io.putstring ("(");
-	io.putint (updated_id (t.id));
+	io.putstring (updated_id (id (t)).dump);
 	io.putstring (") into");
 	io.putstring (generator);
 	io.new_line;
 end;
 				-- Update id of element
-			t.set_id (updated_id (t.id));
+			t.set_id (updated_id (id (t)));
 
 				-- Write item to disk right away.
 			write (t);
 		
 				-- Put `t' in cache if not full.
-			old_item := cache.item_id (t.id);
+			old_item := cache.item_id (id (t));
 			if old_item = Void then
 					-- No previous item of id `t.id'
 				if cache.full then
@@ -153,7 +161,8 @@ end;
 	write (t: T) is
 			-- Write item `t' on disk
 		local
-			id, position: INTEGER;
+			an_id: H;
+			position: INTEGER;
 			server_file, old_server_file: SERVER_FILE;
 			info, old_info: SERVER_INFO;
 		do
@@ -170,14 +179,14 @@ end;
 				Server_controler.open_file (server_file);
 			end;
 
-			id := t.id;
+			an_id := id (t);
 			init_file (server_file);
 			position := store_append
 				(server_file.descriptor, $t, $make_index, $Current);
 			!!info.make (position, server_file.id);
 			server_file.add_occurence;
 
-			old_info := tbl_item (id);
+			old_info := tbl_item (an_id);
 			if old_info /= Void then
 				old_server_file := Server_controler.file_of_id (old_info.id);
 				old_server_file.remove_occurence;
@@ -185,7 +194,7 @@ end;
 					file_ids.prune (old_server_file.id);
 				end;
 			end;
-			force (info, id);
+			force (info, an_id);
 		end;
 
 	init_file (server_file: SERVER_FILE) is
@@ -196,7 +205,7 @@ end;
 			c_sv_init (server_file.descriptor);
 		end;
 
-	remove (an_id: INTEGER) is
+	remove (an_id: H) is
 			-- Remove information of id `an_id'.
 			-- NO precondition, the feature will check if the
 			-- server has the element to remove.
@@ -205,7 +214,7 @@ end;
 		local
 			old_info: SERVER_INFO;
 			old_server_file: SERVER_FILE;
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id (an_id);
 			cache.remove_id (real_id);
@@ -220,21 +229,21 @@ end;
 			end;
 		end;
 
-	has (i: INTEGER): BOOLEAN is
+	has (i: H): BOOLEAN is
 			-- Does the server contain an element of
 			-- id `i'?
 		do
 			Result := tbl_has (updated_id(i))
 		end;
 
-	item (an_id: INTEGER): T is
+	item (an_id: H): T is
 			-- Object of id `an_id'.
 		require
 			an_id_in_table: has (an_id);
 		local
 			info: SERVER_INFO;
 			server_file: SERVER_FILE;
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id (an_id);
 			Result := cache.item_id (real_id);
@@ -257,14 +266,14 @@ end;
 			end;
 		end;
 
-	disk_item (an_id: INTEGER): T is
+	disk_item (an_id: H): T is
 			-- Object of id `an_id' on disk.
 		require
 			an_id_in_table: has (an_id);
 		local
 			info: SERVER_INFO;
 			server_file: SERVER_FILE;
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id (an_id);
 			info := tbl_item (real_id);
@@ -278,7 +287,7 @@ end;
 			Result.set_id (real_id);
 		end;
 
-	cache: CACHE [T] is
+	cache: CACHE [T, H] is
 			-- Cache disk
 		deferred
 		end;
@@ -315,15 +324,15 @@ end;
 			set_current_id;
 		end;
 
-	take_control (other: SERVER [T]) is
+	take_control (other: COMPILER_SERVER [T, H]) is
 			-- Take control of `other'.
 		require
 			good_argument: other /= Void
 		local
 			info, old_info: SERVER_INFO;
-			id: INTEGER;
-			other_file_ids: LINKED_SET [INTEGER];
-			other_cache: CACHE [T];
+			an_id: H;
+			other_file_ids: LINKED_SET [FILE_ID];
+			other_cache: CACHE [T, H];
 			old_server_file: SERVER_FILE;
 		do
 			flush;
@@ -334,8 +343,8 @@ end;
 				other.after
 			loop
 				info := other.item_for_iteration;
-				id := other.key_for_iteration;
-				old_info := tbl_item (id);
+				an_id := other.key_for_iteration;
+				old_info := tbl_item (an_id);
 				if old_info /= Void then
 					old_server_file := Server_controler.file_of_id
 																(old_info.id);
@@ -344,7 +353,7 @@ end;
 						file_ids.prune (old_server_file.id);
 					end;
 				end;
-				force (info, id);
+				force (info, an_id);
 				other.forth;
 			end;
 			other.clear_all;
@@ -365,10 +374,12 @@ end;
 			-- Purge useless datas from current server
 		local
 			new: like Current;
-			old_count, an_id, file_id: INTEGER;
+			old_count: INTEGER;
+			file_id: FILE_ID;
 			old_info: SERVER_INFO;
 			old_server_file: SERVER_FILE;
-			order: LINKED_LIST [INTEGER];
+			order: LINKED_LIST [FILE_ID];
+			an_id: H
 		do
 				-- Clean first
 			flush;
@@ -394,8 +405,8 @@ end;
 			loop
 				file_id := order.item;
 debug ("SERVER")
-	io.putstring ("File: E");
-	io.putint (file_id);
+	io.put_string ("File: ");
+	io.put_string (file_id.file_name);
 	io.new_line;
 end;
 				from
@@ -407,7 +418,7 @@ end;
 					old_server_file :=
 						Server_controler.file_of_id (old_info.id);
 					an_id := key_for_iteration;
-					if old_info.id = file_id then
+					if equal (old_info.id, file_id) then
 						if old_server_file.precompiled then
 							new.put_precompiled (file_id, an_id, old_info);
 						else
@@ -479,10 +490,10 @@ feature -- Comparison
 			-- Does server contain the same information as `other'?
 		do
 			Result :=
-				equal (keys, other.keys) and
+				deep_equal (keys, other.keys) and
 				deep_equal (content, other.content) and
 				equal (deleted_marks, other.deleted_marks) and
-				current_id = other.current_id and
+				equal (current_id, other.current_id) and
 				deep_equal (file_ids, other.file_ids)
 		end;
 
@@ -503,4 +514,4 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-end
+end -- class COMPILER_SERVER

@@ -63,16 +63,21 @@ feature {NONE} -- Implementation
 	comments_code: STRING is
 			-- Formatted Eiffel comments.
 		local
-			n: INTEGER
+			l_text: STRING
 		do
-			create Result.make (10)
-			from
-				n := 1
-			until
-				n > comment_field.line_count
-			loop
-				Result.append ("%T%T%T-- " + comment_field.line (n) + "%N")
-				n := n + 1
+			l_text := comment_field.text
+			if not l_text.is_empty then
+				create Result.make (7 + l_text.count)
+				Result.append_character ('%T')
+				Result.append_character ('%T')
+				Result.append_character ('%T')
+				Result.append_character ('-')
+				Result.append_character ('-')
+				Result.append_character (' ')
+				Result.append (l_text)
+				Result.append_character ('%N')
+			else
+				create Result.make_empty
 			end
 		end
 
@@ -94,7 +99,7 @@ feature {NONE} -- Implementation
 			disable_item_expand (hb)
 		end
 
-	add_indented (a_widget: EV_WIDGET; ind: INTEGER) is
+	add_indented (a_widget: EV_WIDGET; ind: INTEGER; enable_resizing: BOOLEAN) is
 			-- Add `a_widget' to `Current', indented.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -106,7 +111,9 @@ feature {NONE} -- Implementation
 			hb.disable_item_expand (tab)
 			hb.extend (a_widget)
 			extend (hb)
-			disable_item_expand (hb)
+			if not enable_resizing then
+				disable_item_expand (hb)
+			end
 		end
 
 	add_comment_field is
@@ -124,7 +131,6 @@ feature {NONE} -- Implementation
 			create comment_field
 			hb.extend (comment_field)
 			extend (hb)
-			disable_item_expand (hb)
 		end
 
 feature -- Adaptation
@@ -154,7 +160,7 @@ feature {EB_FEATURE_EDITOR, EB_FEATURE_COMPOSITION_WIZARD} -- Access
 
 	feature_name_field: EB_FEATURE_NAME_EDIT
 
-	comment_field: EB_FEATURE_LINE_EDIT
+	comment_field: EV_TEXT_FIELD
 
 feature {EV_ANY} -- Contract support
 

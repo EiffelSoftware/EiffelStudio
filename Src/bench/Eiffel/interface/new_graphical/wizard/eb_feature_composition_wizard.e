@@ -63,7 +63,8 @@ feature {NONE} -- Initialization
 			extend (vb)
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
-			set_maximum_height (height)
+			show_actions.extend (agent (feature_editor.feature_name_field).select_all)
+			show_actions.extend (agent (feature_editor.feature_name_field).set_focus)
 		end
 
 	set_default_editor is
@@ -200,7 +201,7 @@ feature {NONE} -- Implementation
 				create {EB_PROCEDURE_EDITOR} feature_editor
 				feature_editor.adapt (fe)
 				feature_editor_frame.replace (feature_editor)
-				set_maximum_height (height)
+				set_height (minimum_height)
 			end
 		end
 
@@ -214,7 +215,7 @@ feature {NONE} -- Implementation
 				create {EB_FUNCTION_EDITOR} feature_editor
 				feature_editor.adapt (fe)
 				feature_editor_frame.replace (feature_editor)
-				set_maximum_height (height)
+				set_height (minimum_height)
 			end
 		end
 
@@ -228,7 +229,7 @@ feature {NONE} -- Implementation
 				create {EB_ATTRIBUTE_EDITOR} feature_editor
 				feature_editor.adapt (fe)
 				feature_editor_frame.replace (feature_editor)
-				set_maximum_height (minimum_height)
+				set_height (minimum_height)
 			end
 		end
 

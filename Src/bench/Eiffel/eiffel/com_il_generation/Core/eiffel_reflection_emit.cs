@@ -1,3 +1,13 @@
+/*
+indexing
+	description: "Kernel of the Eiffel code generation using Reflection.Emit. In there
+		there are features used to describe the hierarchy and content of classes that
+		will be generated as well as features used to generate the actual IL code.
+	
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
 using System;
 using System.IO;
 using System.Reflection;
@@ -56,6 +66,8 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			
 			CAFactory = new CustomAttributesFactory();
 
+			is_verifiable_enabled = false;
+
 			// Initialize access to ISE Runtime Classes
 			PrepareISERuntime();
 		}
@@ -83,7 +95,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			Log ("StartModuleGeneration" + " (" + Name + ", " + Debug + ")");
 		#endif
 		try {
-			DebugMode = Debug;
+			is_debugging_enabled = Debug;
 			module = assembly.DefineDynamicModule (Name, Name, Debug);
 		}
 		catch (Exception error) {
@@ -158,7 +170,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			Classes [TypeID].SetIsArray(is_array);
 			if (is_array)
 				Classes [TypeID].SetArrayElementName (ElementTypeName);
-			if (DebugMode && !is_array)
+			if (is_debugging_enabled && !is_array)
 				Classes [TypeID].SetDocument (module.DefineDocument
 					(SourceFileName, new Guid ("6805C61E-8195-490c-87EE-A713301A670C"),
 					new Guid ("B68AF30E-9424-485f-8264-D4A726C162E7"),
@@ -208,7 +220,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			Log ("EndClass");
 		#endif
 		try {
-			#if (DEBUG)
+			#if DEBUG
 				Log ("Full Name: " +
 					 ((TypeBuilder)Classes [CurrentTypeID].Builder).FullName);
 				Log ("Base type: " +
@@ -233,7 +245,13 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 				Log ("Is public? : " +
 					((TypeBuilder)Classes [CurrentTypeID].Builder).IsPublic);
 			#endif
-			((TypeBuilder)Classes [CurrentTypeID].Builder).CreateType();
+			EiffelClass eiffel_class = Classes [CurrentTypeID];
+			((TypeBuilder) eiffel_class.Builder).CreateType();
+			if (eiffel_class.StaticFeatureIDTable != eiffel_class.FeatureIDTable) {
+				// We are current generating an implementation class, we can get rid
+				// of its FeatureIDTable
+				eiffel_class.SetFeatureIDTable (null);
+			}
 		}
 		catch (Exception error) {
 			LogError (error, "In class " +
@@ -246,17 +264,8 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		#if DEBUG
 			Log ("AddToParentsList" + " (" + TypeID + ")");
 		#endif
-		try
-		{
-			if
-				(!Classes [CurrentTypeID].IsInterface ||
-				Classes [TypeID].IsInterface)
-			{
-				Classes [CurrentTypeID].AddParent (TypeID);
-			}
-		}
-		catch (Exception error) {
-			LogError (error);
+		if (!Classes [CurrentTypeID].IsInterface || Classes [TypeID].IsInterface) {
+			Classes [CurrentTypeID].AddParent (TypeID);
 		}
 	}
 	
@@ -264,30 +273,16 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	public void AddInterface (int TypeID) {
 		#if DEBUG
 			Log ("AddToParentsList" + " (" + TypeID + ")");
-		try {
 		#endif
-			Classes [CurrentTypeID].AddParent (TypeID);
-		#if DEBUG
-		}
-		catch (Exception error) {
-			LogError (error);
-		}
-		#endif
+		Classes [CurrentTypeID].AddParent (TypeID);
 	}
 
 	// Add interface with id `TypeID' into list of parents of current type.
 	public void AddEiffelInterface (int TypeID) {
 		#if DEBUG
 			Log ("AddEiffelInterface" + " (" + TypeID + ")");
-		try {
 		#endif
-			Classes [CurrentTypeID].AddEiffelInterface (TypeID);
-		#if DEBUG
-		}
-		catch (Exception error) {
-			LogError (error);
-		}
-		#endif
+		Classes [CurrentTypeID].AddEiffelInterface (TypeID);
 	}
 
 	// Finish inheritance part description
@@ -296,19 +291,10 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		#if DEBUG
 			Log ("EndParentsList");
 		#endif
-		try {
-			if
-				(!Classes [CurrentTypeID].IsInterface &&
-				 Classes [CurrentTypeID].BaseType == NoValue)
-			{
-				Classes [CurrentTypeID].AddParent (AnyID);
-			}		
-			Classes [CurrentTypeID].CreateTypeBuilder();
-		}
-		catch (Exception error) {
-			LogError (error, "In class " + Classes [CurrentTypeID].Name +
-				" with parent " + Classes [CurrentTypeID].BaseType);
-		}
+		if (!Classes [CurrentTypeID].IsInterface && Classes [CurrentTypeID].BaseType == NoValue) {
+			Classes [CurrentTypeID].AddParent (AnyID);
+		}		
+		Classes [CurrentTypeID].CreateTypeBuilder();
 	}
 
 /* Features info */
@@ -324,7 +310,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			System.Collections.Hashtable CurrentFeatureIDTable;
 			CurrentFeatureIDTable = new System.Collections.Hashtable();
 			Classes [TypeID].SetFeatureIDTable (CurrentFeatureIDTable);
-			if (Classes [TypeID].IsFrozen) {
+			if (Classes [TypeID].IsFrozen || Classes [TypeID].IsInterface) {
 				Classes [TypeID].SetStaticFeatureIDTable (CurrentFeatureIDTable);
 			} else {
 				Classes [TypeID].SetStaticFeatureIDTable (new System.Collections.Hashtable());
@@ -426,37 +412,31 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	}
 
 	// Define system entry point (root feature of root class)
-	public void DefineEntryPoint (int TypeID, int FeatureID)
+	public void DefineEntryPoint (int CreationTypeID, int TypeID, int FeatureID)
 	{
-		TypeBuilder EntryType;
-		MethodBuilder EntryPoint;
-		ILGenerator Generator;
-		MethodBase RealEntryPoint;
-	
 		try
 		{
-			EntryType = module.DefineType (Classes [TypeID].Name + "_" +
-				EntryTypeName);
+			TypeBuilder EntryType;
+			MethodBuilder EntryPoint;
+			ILGenerator Generator;
+			EiffelMethod RealEntryPoint;
+	
+			EntryType = module.DefineType (Classes [TypeID].Name + EntryTypeName);
 			EntryPoint = EntryType.DefineMethod (EntryPointName,
 				MethodAttributes.Public | MethodAttributes.Static,
 				Type.GetType ("void"), Type.EmptyTypes);
 			Generator = EntryPoint.GetILGenerator();
 			RealEntryPoint = ((EiffelMethod) (Classes [TypeID].
-				FeatureIDTable [FeatureID])).Builder;
+				StaticFeatureIDTable [FeatureID]));
 			if (RealEntryPoint == null)
 				throw new ApplicationException ("DefineEntryPoint: Real entry point " + 
 					"not found (TypeID: " + TypeID + ", FeatureID: " + FeatureID + ")");
 
-			Generator.Emit ( OpCodes.Newobj, Classes [TypeID].DefaultConstructor);
-			if (RealEntryPoint is MethodInfo) {
-				if
-					(((EiffelMethod) (Classes [TypeID].
-					FeatureIDTable [FeatureID])).ParameterNames.Length > 0)
-				{
-					Generator.Emit (OpCodes.Ldarg_0);
-				}
-				Generator.Emit (OpCodes.Call, (MethodInfo) RealEntryPoint);
+			Generator.Emit ( OpCodes.Newobj, Classes [CreationTypeID].DefaultConstructor);
+			if (RealEntryPoint.argument_count > 1) {
+				Generator.Emit (OpCodes.Ldarg_0);
 			}
+			Generator.Emit (OpCodes.Call, (MethodInfo) RealEntryPoint.Builder);
 			Generator.Emit (OpCodes.Ret);
 			EntryType.CreateType();
 			assembly.SetEntryPoint (EntryPoint, ApplicationKind);
@@ -825,7 +805,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 					MethodIL.Emit (OpCodes.Stfld, DefinitionMethod.AttributeBuilder);
 				} else {
 					MethodIL = ((MethodBuilder) Method.Builder).GetILGenerator();
-					nb = DefinitionMethod.ParameterTypeIDs.Length + 1;
+					nb = DefinitionMethod.argument_count + 1;
 					if (DefinitionMethod.Is_C_External) {
 						for (i = 1; i < nb; i++)
 							GenerateArgument (i);
@@ -851,6 +831,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	public void GenerateMethodImpl (int FeatureID, int ParentTypeID, int ParentFeatureID) {
 		try {
 			EiffelMethod Method, ParentMethod;
+			int[] param_info = null, parent_param_info = null;
 			int i, nb;
 			bool same_type;
 
@@ -859,12 +840,14 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			ParentMethod = (EiffelMethod) Classes [ParentTypeID].
 				FeatureIDTable [ParentFeatureID];
 
-			if (ParentMethod != null) {
-			nb = ParentMethod.ParameterTypeIDs.Length;
-			same_type = Method.ReturnTypeID == ParentMethod.ReturnTypeID;
+		if (ParentMethod != null) {
+			param_info = Method.parameter_type_ids;
+			parent_param_info = ParentMethod.parameter_type_ids;
+			nb = Method.argument_count;
+			same_type = Object.Equals (Method.Builder.ReturnType, ParentMethod.Builder.ReturnType);
 			i = 0;
 			while (same_type && i < nb) {
-				same_type = (Method.ParameterTypeIDs [i] == ParentMethod.ParameterTypeIDs [i]);
+				same_type = (param_info [i] == parent_param_info [i]);
 				i++;
 			}
 
@@ -879,9 +862,10 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 						DefineMethodOverride (Method.SetterBuilder, ParentMethod.SetterBuilder);
 				}
 			} else {
-				Type[] ParameterTypes = new Type [ParentMethod.ParameterTypeIDs.Length ];
+				param_info = ParentMethod.parameter_type_ids;
+				Type[] ParameterTypes = new Type [param_info.Length ];
 				for (i = 0; i < nb; i++)
-					ParameterTypes [i] = Classes [ParentMethod.ParameterTypeIDs [i]].Builder;
+					ParameterTypes [i] = Classes [param_info [i]].Builder;
 
 				MethodBuilder Override = ((TypeBuilder) Classes [CurrentTypeID].Builder).
 					DefineMethod (OverridePrefix + ParentMethod.Name() + counter.ToString(),
@@ -935,9 +919,9 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 						DefineMethodOverride (Override, ParentMethod.SetterBuilder);
 				}
 			}
-			} else {
-				Console.WriteLine ("Bad MethodImpl");
-			}
+		} else {
+			Console.WriteLine ("Bad MethodImpl");
+		}
 		}
 		catch (Exception error) {
 			LogError (error, "In GenerateMethodImpl with FeatureID " + FeatureID);
@@ -967,8 +951,9 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			Labels = new System.Collections.ArrayList();
 			CurrentMethod = (EiffelMethod) Classes [CurrentTypeID].
 				FeatureIDTable [FeatureID];
-			MethodIL = ((MethodBuilder)CurrentMethod.ConstructorBuilder).GetILGenerator();
 			Locals = new System.Collections.ArrayList();
+			// To implement: 
+			// MethodIL = (???).GetILGenerator();
 		}
 		catch (Exception error) {
 			LogError (error, "In GenerateCreationFeatureIL with FeatureID " + FeatureID);
@@ -1052,7 +1037,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	public void PutResultInfo (int TypeID) {
 		try {
 			Result = MethodIL.DeclareLocal (Classes[ TypeID ].Builder);
-			if (DebugMode)
+			if (is_debugging_enabled)
 				Result.SetLocalSymInfo (ResultName);
 		}
 		catch (Exception error) {
@@ -1063,7 +1048,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	public void PutLocalInfo (int TypeID, string Name) {
 		try {
 			LocalBuilder NewLocal = MethodIL.DeclareLocal (Classes [TypeID].Builder);
-			if (DebugMode)
+			if (is_debugging_enabled)
 				NewLocal.SetLocalSymInfo (Name);
 			Locals.Add (NewLocal);
 		}
@@ -1569,13 +1554,11 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Put `i' on IL stack.
 	public void PutInteger8Constant (Int32 i) {
 		MethodIL.Emit (OpCodes.Ldc_I4, i);
-//		MethodIL.Emit (OpCodes.Conv_I1);
 	}
 
 	// Put `i' on IL stack.
 	public void PutInteger16Constant (Int32 i) {
 		MethodIL.Emit (OpCodes.Ldc_I4, i);
-//		MethodIL.Emit (OpCodes.Conv_I2);
 	}
 	
 	// Put `i' on IL stack.
@@ -1671,10 +1654,8 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 	// Generate `^' operator.
 	public void GeneratePower() {
-		if (SystemMath == null) {
-			SystemMath = Type.GetType ("System.Math");
-		}
 		if (PowerInfo == null) {
+			Type[] PowerArgumentsTypes;
 			Type Float64 = Type.GetType ("System.Double");
 			PowerArgumentsTypes = new Type[]{ Float64, Float64 };
 			PowerInfo = SystemMath.GetMethod ("Pow", PowerArgumentsTypes);
@@ -1684,9 +1665,6 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 	// Generate `min' operation on basic types.
 	public void GenerateMin (int TypeID) {
-		if (SystemMath == null) {
-			SystemMath = Type.GetType ("System.Math");
-		}
 		Type element_type = Classes [TypeID].Builder;
 		Type[] MinTypes = new Type [] {element_type, element_type};
 		
@@ -1695,9 +1673,6 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 	// Generate `max' operation on basic types.
 	public void GenerateMax (int TypeID) {
-		if (SystemMath == null) {
-			SystemMath = Type.GetType ("System.Math");
-		}
 		Type element_type = Classes [TypeID].Builder;
 		Type[] MaxTypes = new Type [] {element_type, element_type};
 		
@@ -1706,9 +1681,6 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 	// Generate `max' operation on basic types.
 	public void GenerateAbs (int TypeID) {
-		if (SystemMath == null) {
-			SystemMath = Type.GetType ("System.Math");
-		}
 		Type[] AbsTypes = new Type [] {Classes [TypeID].Builder};
 		
 		MethodIL.Emit (OpCodes.Call, SystemMath.GetMethod ("Abs", AbsTypes));
@@ -1861,11 +1833,9 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 /* Code generation switch between generation of interfaces and implementation */
 	public void SetForInterfaces () {
-//		Classes = ClassTable;
 	}
 
 	public void SetForImplementations () {
-//		Classes = ClassImpTable;
 	}
 
 	private void CleanUp () {
@@ -1879,17 +1849,8 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		Locals = null;
 		Result = null;
 		CAFactory = null;
+		FileName = null;
 	}
-
-//	private static EiffelClass[] ClassTable;
-//	private static EiffelClass[] ClassImpTable;
-
-	// Position of argument declared through `AddArgument'.
-	private static int arg_pos;
-
-	// Predefined class type ids
-	private static int AnyID, PointerID, Int32ID, BooleanID,
-		CharID, DoubleID, SingleID, ByteID, Int16ID, Int64ID, ExceptionID;
 
 /* Private */
 	
@@ -1911,9 +1872,6 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Labels used in current method
 	private System.Collections.ArrayList Labels;
 	
-	// Current mapped class
-	private int CurrentTypeID;
-	
 	// Currently build method
 	private EiffelMethod CurrentMethod;
 
@@ -1923,9 +1881,6 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Currently generated feature result
 	private LocalBuilder Result;
 	
-	// System.Math type for power operation
-	private Type SystemMath;
-	
 	// MethodInfo for Power of System.Math
 	private MethodInfo PowerInfo;
 	private MethodInfo MemberwiseCloneMethod;
@@ -1933,12 +1888,6 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// FileName for generated exe
 	private string FileName;
 	
-	// Signature of Power
-	private Type[] PowerArgumentsTypes;
-	
-	// Are we in debug mode?
-	private bool DebugMode;
-
 	// ISE Runtime class
 	private FieldInfo assertion_tag;
 	private FieldInfo in_assertion;
@@ -1948,12 +1897,22 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	private FieldInfo DoneBuilder;
 	private FieldInfo ResultBuilder;
 
-	// Key pair filename extension
-	private static string Key_filename_extension = ".snk";
-	
 	// Is generated application a console application, a window application or a dll?
 	private PEFileKinds ApplicationKind;
 
+	// Current mapped class
+	internal static int CurrentTypeID;
+
+	// Position of argument declared through `AddArgument'.
+	private static int arg_pos;
+
+	// Predefined class type ids
+	private static int AnyID, PointerID, Int32ID, BooleanID,
+		CharID, DoubleID, SingleID, ByteID, Int16ID, Int64ID, ExceptionID;
+
+	// Key pair filename extension
+	private static string Key_filename_extension = ".snk";
+	
 	// Initial values for IDs
 	internal static int NoValue = -1;
 
@@ -1963,6 +1922,9 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// System.Object Type
 	internal static Type ObjectType = Type.GetType( "System.Object" );
 
+	// System.Math type for power operation
+	private static Type SystemMath = Type.GetType ("System.Math");
+	
 	// Void Type
 	internal static Type VoidType = Type.GetType( "void" );
 
@@ -2062,7 +2024,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	}
 
 	// Name of type with entry point
-	internal static String EntryTypeName = "STARTUP";
+	internal static String EntryTypeName = "_STARTUP";
 
 	// Name of entry point
 	internal static String EntryPointName = "Main";
@@ -2098,4 +2060,8 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Name of DLL containing C externals.
 	public static string dll_name;
 	public static string dll_prefix;
+
+	// Status of code generation
+	internal static bool is_debugging_enabled = false;
+	internal static bool is_verifiable_enabled = false;
 }

@@ -83,8 +83,6 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
-		local
-			l_acc: EV_ACCELERATOR
 		do
 			set_slice_button.set_pixmap (icon_green_tick)
 			auto_set_slice_button.set_pixmap (icon_auto_slice_limits_color @ 1)

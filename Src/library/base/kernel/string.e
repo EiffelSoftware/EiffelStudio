@@ -178,8 +178,7 @@ feature -- Access
 			Result := str_search ($area, c, start, count)
 		ensure
 			correct_place: Result > 0 implies item (Result) = c
-			-- forall x : start..Result
-			--  item (x) /= c
+			-- forall x : start..Result, item (x) /= c
 		end;
 
 	substring_index (other: STRING; start: INTEGER): INTEGER is
@@ -196,7 +195,7 @@ feature -- Access
 			correct_place: Result > 0 implies
 				substring (Result, Result+other.count - 1).is_equal (other)
 			-- forall x : start..Result
-		 	--	not substring (x, x+other.count -1).is_equal (other)
+			--	not substring (x, x+other.count -1).is_equal (other)
 		end;
 
 	fuzzy_index (other: STRING; start: INTEGER; fuzz : INTEGER): INTEGER
@@ -280,7 +279,6 @@ feature -- Status report
 	extendible: BOOLEAN is true;
 			-- May new items be added? (Answer: yes.)
 
-
 	prunable: BOOLEAN is
 			-- May items be removed? (Answer: yes.)
 		do
@@ -319,9 +317,9 @@ feature -- Status report
 			s: STRING
 		do
 			s := clone (Current);
-			s.to_lower;
 			s.right_adjust;
 			s.left_adjust;
+			s.to_lower;
 			Result := s.is_equal (True_constant) or else s.is_equal (False_constant)
 		end;
 
@@ -347,7 +345,6 @@ feature -- Element change
 			is_substring: is_equal (t.substring (n1, n2))
 		end;
 
-
 	copy (other: like Current) is
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone'.)
@@ -359,7 +356,6 @@ feature -- Element change
 			new_result_count: count = other.count;
 			-- same_characters: For every `i' in 1..`count', `item' (`i') = `other'.`item' (`i')
 		end;
-
 
 	replace_substring (s: like Current; start_pos, end_pos: INTEGER) is
 			-- Copy the characters of `s' to positions
@@ -382,7 +378,7 @@ feature -- Element change
 			str_replace ($area, $s_area, count, s.count, start_pos, end_pos);
 			count := new_size
 		ensure
-		   new_count: count = old count + s.count - end_pos + start_pos - 1
+			new_count: count = old count + s.count - end_pos + start_pos - 1
 		end;
 
 	replace_substring_all (original, new: like Current) is
@@ -493,7 +489,6 @@ feature -- Element change
 			-- sharing: For every `i' in 1..`count', `Result'.`item' (`i') = `item' (`i')
 		end;
 
-
 	put (c: CHARACTER; i: INTEGER) is
 			-- Replace character at position `i' by `c'.
 		do
@@ -508,8 +503,8 @@ feature -- Element change
 			end;
 			str_cprepend ($area, c, count);
 			count := count + 1
- 		ensure
- 		  new_count: count = old count + 1;
+		ensure
+			new_count: count = old count + 1;
 		end;
 
 	prepend (s: STRING) is
@@ -527,8 +522,8 @@ feature -- Element change
 			s_area := s.area;
 			str_insert ($area, $s_area, count, s.count, 1);
 			count := new_size
- 		ensure
- 		  new_count: count = old count + s.count;
+		ensure
+			new_count: count = old count + s.count;
 		end;
 
 	prepend_boolean (b: BOOLEAN) is
@@ -584,7 +579,7 @@ feature -- Element change
 			s_area := s.area;
 			str_append ($area, $s_area, count, s.count);
 			count := new_size
- 		ensure then
+		ensure then
 			new_count: count = old count + s.count
 			-- appended: For every `i' in 1..`s'.`count', `item' (old `count'+`i') = `s'.`item' (`i')
 		end;
@@ -664,7 +659,7 @@ feature -- Removal
 		do
 			str_rmchar ($area, count, i);
 			count := count - 1;
- 		ensure
+		ensure
 			new_count: count = old count - 1;
 		end;
 
@@ -871,27 +866,29 @@ feature -- Conversion
 			s: STRING
 		do
 			s := clone (Current);
+			s.right_adjust;
+			s.left_adjust;
 			s.to_lower;
 			Result := s.is_equal (True_constant)
 		end;
 
 	linear_representation: LINEAR [CHARACTER] is
 			-- Representation as a linear structure
-        local
-            temp: ARRAYED_LIST [CHARACTER];
-            i: INTEGER;
-        do
-            !! temp.make (capacity);
-            from
-                i := 1;
-            until
-                i > count
-            loop
-                temp.extend (item (i));
-                i := i + 1;
-            end;
-            Result := temp;
-        end;
+		local
+			temp: ARRAYED_LIST [CHARACTER];
+			i: INTEGER;
+		do
+			!! temp.make (capacity);
+			from
+				i := 1;
+			until
+				i > count
+			loop
+				temp.extend (item (i));
+				i := i + 1;
+			end;
+			Result := temp;
+		end;
 
 	to_pointer: POINTER is
 			-- A pointer to a C form of current string.
@@ -974,7 +971,7 @@ feature -- Duplication
 		do
 			s := clone (Current)
 			grow (n * count)
-		    from
+			from
 				i := n
 			until
 				i = 1
@@ -1050,7 +1047,7 @@ feature {STRING} -- Implementation
 
 	str_search (c_str: POINTER; c: CHARACTER; i, len: INTEGER): INTEGER is
 			-- Index of first occurrence of `c' in `c_str',
-			-- equal or following  `i'-th position
+			-- equal or following `i'-th position
 			-- 0 if no occurrence
 		external
 			"C"

@@ -1322,11 +1322,15 @@ feature {NONE} -- Implementation
 						--| If we want to recompute the `expression_byte_node', 
 						--| we need to call `reset_expression_byte_nod' 
 
-						--| Prepare AST context
-					prepare_ast_context (context_feature, context_class, context_class_type)
-					
-						--| Compute and get `expression_byte_node'
-					internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)				
+					if context_class /= Void then
+							--| Prepare AST context
+						prepare_ast_context (context_feature, context_class, context_class_type)
+						
+							--| Compute and get `expression_byte_node'
+						internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)						
+					else
+						set_error_expression_and_tag ("Context corrupted or not found", Void)
+					end
 				end
 			else
 				set_error_expression ("Error during expression analyse")

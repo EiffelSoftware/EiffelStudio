@@ -315,6 +315,7 @@ feature {NONE} -- Implementation
 			status_bar: EV_FRAME
 		do
 			create Result
+			Result.set_title ("EV_FIXED child positioner")
 			create vertical_box
 			Result.extend (vertical_box)
 			create horizontal_box

@@ -22,7 +22,6 @@ inherit
 			interface,
 			destroy,
 			initialize,
-			visual_widget,
 			button_press_switch,
 			create_pointer_motion_actions,
 			set_to_drag_and_drop,
@@ -45,7 +44,6 @@ inherit
 			i_th,
 			add_to_container,
 			list_widget,
-			visual_widget,
 			count,
 			wipe_out,
 			append,
@@ -72,24 +70,18 @@ feature {NONE} -- Initialization
 			C.gtk_scrolled_window_set_placement (c_object, C.gtk_corner_top_left_enum)
 
 			list_widget := C.gtk_ctree_new (1, 0)
-			an_event_box := C.gtk_event_box_new
-			C.gtk_widget_show (an_event_box)
-			C.gtk_container_add (an_event_box, list_widget)
 			C.gtk_ctree_set_line_style (list_widget, C.GTK_CTREE_LINES_DOTTED_ENUM)
 			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_BROWSE_ENUM)
 			C.gtk_ctree_set_expander_style (list_widget, C.GTK_CTREE_EXPANDER_SQUARE_ENUM)
 			C.gtk_clist_set_shadow_type (list_widget, C.GTK_SHADOW_NONE_ENUM)
 			C.gtk_ctree_set_show_stub (list_widget, True)
-			C.gtk_scrolled_window_add_with_viewport (c_object, an_event_box)
+			C.gtk_container_add (c_object, list_widget)
 			C.gtk_widget_show (list_widget)
 			
 			create ev_children.make (0)
 				-- Make initial hash table with room for 100 child pointers, may be increased later.
 		
 			create tree_node_ptr_table.make (100)
-			C.gtk_clist_set_row_height (list_widget, 0)
-			create timer.make_with_interval (0)
-			timer.actions.extend (agent on_time_out)
 		end
 
 	initialize is
@@ -98,7 +90,7 @@ feature {NONE} -- Initialization
 			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_TREE_I} Precursor
-			real_signal_connect (visual_widget, "motion_notify_event", agent motion_handler, Default_translate)
+			real_signal_connect (c_object, "motion_notify_event", agent motion_handler, Default_translate)
 
 			real_signal_connect (
 				list_widget,
@@ -236,8 +228,6 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			-- Hash table linking tree node pointers to eiffel implementation objects.
 
 feature {NONE} -- Implementation
-
-	an_event_box: POINTER
 	
 	cached_width: INTEGER
 
@@ -255,7 +245,6 @@ feature {NONE} -- Implementation
 				a_tree_node_imp.expand_callback
 			end
 			--C.gtk_clist_thaw (list_widget)
-			timer.set_interval (1)
 		end
 
 	collapse_callback (a_tree_item: POINTER) is
@@ -269,7 +258,6 @@ feature {NONE} -- Implementation
 				a_tree_node_imp.collapse_callback
 			end
 			C.gtk_clist_thaw (list_widget)
-			timer.set_interval (1)
 		end
 		
 	selected_node: EV_TREE_NODE_IMP
@@ -306,21 +294,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
 
-	timer: EV_TIMEOUT
-	
-	on_time_out is
-		local
-			b_w: INTEGER
-		do
-			b_w := c.gtk_clist_columns_autosize (list_widget) + 20
-			if cached_width /= b_w then
-				C.gtk_widget_set_usize (an_event_box, b_w, -1)
-				cached_width := b_w
-			end
-			timer.set_interval (0)
-		end
 feature -- Status report
 
 	selected_item: EV_TREE_NODE is
@@ -549,10 +523,10 @@ feature -- Implementation
 		do
 			if pnd_row_imp /= Void then
 				if pnd_row_imp.mode_is_pick_and_drop then
-					signal_emit_stop (visual_widget, "button-press-event")
+					signal_emit_stop (c_object, "button-press-event")
 				end
 			elseif mode_is_pick_and_drop then
-					signal_emit_stop (visual_widget, "button-press-event")
+					signal_emit_stop (c_object, "button-press-event")
 			end
 			create env
 			app_imp ?= env.application.implementation
@@ -591,8 +565,12 @@ feature {EV_TREE_NODE_IMP}
 	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
 		local
 			temp_row_ptr: POINTER
+			ver_adj: POINTER
+			ver_offset: INTEGER
 		do
-			temp_row_ptr := C.gtk_ctree_node_nth (list_widget, a_y // (row_height + 1))
+			ver_adj := C.gtk_scrolled_window_get_vadjustment (c_object)
+			ver_offset := C.gtk_adjustment_struct_value (ver_adj).rounded
+			temp_row_ptr := C.gtk_ctree_node_nth (list_widget, (a_y + ver_offset) // (row_height + 1))
 			if temp_row_ptr /= NULL then
 				Result := tree_node_ptr_table.item (temp_row_ptr)
 			end
@@ -643,13 +621,7 @@ feature {NONE} -- Implementation
 
 	spacing: INTEGER is 3
 			-- Spacing between pixmap and text.
-
-	row_height: INTEGER is
-			-- 
-		do
-			Result := C.gtk_clist_struct_row_height (list_widget)
-		end
-
+			
 	previous_selected_item: EV_TREE_NODE
 			-- Item that was selected previously.
 
@@ -684,7 +656,6 @@ feature {NONE} -- Implementation
 			item_imp.check_branch_pixmaps
 			ev_children.force (item_imp)
 			update_pnd_status
-			timer.set_interval (1)
 		end
 
 	wipe_out is
@@ -736,7 +707,6 @@ feature {NONE} -- Implementation
 			child_array.remove
 
 			update_pnd_status
-			timer.set_interval (1)
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
@@ -758,6 +728,12 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_TREE_NODE_IMP} -- Implementation
+
+	row_height: INTEGER is
+			-- 
+		do
+			Result := C.gtk_clist_struct_row_height (list_widget)
+		end
 
 	insert_ctree_node (a_item_imp: EV_TREE_NODE_IMP; par_node, a_sibling: POINTER): POINTER is
 		local
@@ -781,11 +757,6 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
 			-- Container for all root tree items.
-
-	visual_widget: POINTER is
-		do
-			Result := list_widget
-		end
 
 	list_widget: POINTER
 			-- Pointer to the gtktree widget.

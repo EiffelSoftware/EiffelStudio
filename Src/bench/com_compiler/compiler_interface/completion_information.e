@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 		do
 			create locals.make (10)
 			create arguments.make (5)
+			set_standard_call
 		end
 
 feature -- Access
@@ -170,10 +171,14 @@ feature -- Access
 							ids.search (targets.first)
 							if ids.found then
 								target_type := ids.found_item
+								set_standard_call
 							else
 								feature_table.search (targets.first)
 								if feature_table.found then
+									set_standard_call
 									target_type := feature_table.found_item.type
+								else
+									target_type := type_of_target (targets.first, feature_table, ids)
 								end
 							end
 							if target_type /= Void and then not target_type.is_void then
@@ -233,6 +238,7 @@ feature {NONE} -- Implementation
 				if targets.is_empty then
 					Result := feature_table
 				else
+					set_standard_call -- Complete with all features
 					feature_table.search (targets.first)
 					if feature_table.found then
 						a_type := feature_table.found_item.type
@@ -295,10 +301,26 @@ feature {NONE} -- Implementation
 			non_void_class_i: class_i /= Void
 			valid_class_i: class_i.compiled
 		do
-			Result := not fi.is_infix and
-						not fi.is_prefix and
-						fi.feature_name_id /= (feature {PREDEFINED_NAMES}.Void_name_id) and
-						fi.is_exported_for (class_i.compiled_class)
+			if call_type = Standard_call or call_type = Precursor_call then
+				Result := not fi.is_infix and
+							not fi.is_prefix and
+							fi.feature_name_id /= (feature {PREDEFINED_NAMES}.Void_name_id) and
+							fi.is_exported_for (class_i.compiled_class)
+			elseif call_type = Static_call then
+				Result := not fi.is_infix and
+							not fi.is_prefix and
+							fi.has_static_access and
+							fi.is_exported_for (class_i.compiled_class)
+			elseif call_type = Creation_call then
+				Result := class_i.compiled_class.creators.has (fi.feature_name)
+			elseif call_type = Agent_call then
+				Result := not fi.is_infix and
+							not fi.is_prefix and
+							not fi.is_c_external and
+							not fi.is_attribute and
+							fi.feature_name_id /= (feature {PREDEFINED_NAMES}.Void_name_id) and
+							fi.is_exported_for (class_i.compiled_class)
+			end
 		end
 	
 	feature_variables (fi: FEATURE_I; feature_table: FEATURE_TABLE): HASH_TABLE [TYPE, STRING] is
@@ -360,13 +382,19 @@ feature {NONE} -- Implementation
 		
 	type_from_type_name (name: STRING): TYPE is
 			-- Instance of {TYPE} from type name
+		require
+			non_void_name: name /= Void
+			valid_name: not name.is_empty
 		local
 			retried: BOOLEAN
 		do
+			name.prune_all (' ')
 			if not retried then
 				Type_parser.parse_from_string ("toto " + name)
 				Result := Type_parser.type_node
 			end
+		ensure
+			spaces_removed: name.occurrences (' ') = 0
 		rescue
 			if not retried then
 				retried := True
@@ -374,6 +402,211 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	identifier_type (id: STRING; table: FEATURE_TABLE; ids: HASH_TABLE [TYPE, STRING]): TYPE is
+			-- Type of identifier `id' if defined in either `table' or `ids'
+		require
+			non_void_identifier: id /= Void
+			valid_identifier: not id.is_empty
+			non_void_table: table /= Void
+			non_void_ids: ids /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				id.item (i) /= ' ' or i > id.count
+			loop
+				i := i + 1
+			end
+			id.keep_tail (id.count - i + 1)
+			ids.search (id)
+			if ids.found then
+				Result := ids.found_item
+			else
+				table.search (id)
+				if table.found then
+					Result := table.found_item.type
+				end
+			end
+		ensure
+			leading_spaces_removed: id.item (1) /= ' '
+		end
+
+	type_of_target (target: STRING; table: FEATURE_TABLE; ids: HASH_TABLE [TYPE, STRING]): TYPE is
+			-- Type of expression `target'
+		require
+			non_void_target: target /= Void
+			valid_target: not target.is_empty
+		local
+			i: INTEGER
+			c: CHARACTER
+			type_name: STRING
+		do
+			target.to_lower
+			if target.substring (1, Agent_keyword_length).is_equal (Agent_keyword) then
+				-- Agent
+				set_agent_call
+				if target.count > Agent_keyword_length + 1 then -- Minimum agent construct is "agent?."
+					extract_type (target, Agent_keyword)
+					if type_extracted then
+						Result := extracted_type
+					else
+						c := target.item (1)
+						if c = '?' then
+							Result := class_i.compiled_class.actual_type
+						else
+							target.keep_head (target.count - 1) -- Remove trailing '.'
+							Result := identifier_type (target, table, ids)
+						end
+					end
+				end
+			elseif target.substring (1, Feature_keyword_length).is_equal (Feature_keyword) then
+				-- Static call
+				set_static_call
+				if target.count > Feature_keyword_length + 3 then -- Minimum static call construct is "feature{T}."
+					Result := type_from_type_name (target.substring (target.index_of ('{', 1) + 1, target.index_of ('}', 2) - 1))
+				end
+			elseif target.substring (1, Create_keyword_length).is_equal (Create_keyword) then
+				-- Creation call
+				set_creation_call
+				if target.count > Create_keyword_length + 2 then -- Minimum create construct is "create a."
+					extract_type (target, Create_keyword)
+					if type_extracted then
+						Result := extracted_type
+					else
+						target.keep_head (target.count - 1) -- Remove trailing '.'
+						Result := identifier_type (target, table, ids)						
+					end
+				end
+			elseif target.item (1) = '!' then
+				-- Creation call
+				set_creation_call
+				if target.substring (1, 2).is_equal ("!!") then
+					target.keep_tail (target.count - 2)
+					Result := identifier_type (target, table, ids)
+				else
+					Result := type_from_type_name (target.substring (2, target.index_of ('!', 2) - 1))
+				end
+			elseif target.substring (1, Precursor_keyword_length).is_equal (Precursor_keyword) then
+				-- Precursor call
+			elseif target.item (1).is_equal ('{') then
+				-- Precursor call
+			end
+		end
+	
+	extract_type (target, keyword: STRING) is
+			-- Extract type in `target' after `keyword' between curly braces if any.
+			-- Set `extracted_type' and `type_extracted' accordingly.
+		require
+			non_void_target: target /= Void
+			valid_target: not target.is_empty
+			non_void_keyword: keyword /= void
+			valid_keyword: not keyword.is_empty
+			starts_with_keyword: target.substring (1, keyword.count).is_equal (keyword)
+			well_formed: target.index_of ('{', 1) > 0 implies target.index_of ('}', 1) > 0
+			one_type_at_most: target.occurrences ('{') < 2
+		local
+			s: STRING
+			c: CHARACTER
+			i: INTEGER
+		do
+			target.keep_tail (target.count - keyword.count)
+			c := target.item (1)
+			if not c.is_alpha and not c.is_digit then
+				from
+					i := 1
+				until
+					target.item (i) /= ' ' or i > target.count
+				loop
+					i := i + 1							
+				end
+				c := target.item (1)
+				if c = '{' then
+					s := target.substring (2, target.index_of ('}', 3))
+					if not s.is_empty then
+						extracted_type := type_from_type_name (s)
+					end
+					target.keep_tail (target.count - target.index_of ('}', 1) - 1)
+				else
+					extracted_type := Void
+					type_extracted := False
+				end
+			end
+		ensure
+			keyword_removed: not target.substring (1, keyword.count).is_equal (keyword)
+			type_removed_if_extracted: target.occurrences ('{') = 0 and target.occurrences ('}') = 0
+			extracted_type_void_if_not_extracted: not type_extracted implies extracted_type = Void
+			extracted_type_not_void_if_extracted: type_extracted implies extracted_type /= Void
+		end
+	
+	type_extracted: BOOLEAN
+			-- Was last call to `extract_type' successful?
+	
+	extracted_type: TYPE
+			-- Type extracted from last call to `extract_type'
+
+	set_standard_call is
+			-- Analyzed target corresponds to a standard call
+		do
+			call_type := Standard_call
+		end
+	
+	set_agent_call is
+			-- Analyzed target corresponds to an agent call
+		do
+			call_type := Agent_call
+		end
+	
+	set_static_call is
+			-- Analyzed target corresponds to a static call
+		do
+			call_type := Static_call
+		end
+	
+	set_precursor_call is
+			-- Analyzed target corresponds to a Precursor call
+		do
+			call_type := Precursor_call
+		end
+	
+	set_creation_call is
+			-- Analyzed target corresponds to a creation call
+		do
+			call_type := Creation_call
+		end
+		
+	call_type: INTEGER
+			-- Analyzed target call type
+			--| Can be one of the following unique values
+	
+	Standard_call, Agent_call, Static_call, Creation_call, Precursor_call: INTEGER is unique
+			-- Possible values for `call_type'
+
+	Agent_keyword: STRING is "agent"
+			-- Eiffel agent keyword
+	
+	Agent_keyword_length: INTEGER is 5
+			-- Eiffel agent keyword character count
+	
+	Feature_keyword: STRING is "feature"
+			-- Eiffel feature keyword
+	
+	Feature_keyword_length: INTEGER is 7
+			-- Eiffel feature keyword character count
+	
+	Precursor_keyword: STRING is "precursor"
+			-- Eiffel precursor keyword
+	
+	Precursor_keyword_length: INTEGER is 9
+			-- Eiffel precursor keyword character count
+	
+	Create_keyword: STRING is "create"
+			-- Eiffel create keyword
+	
+	Create_keyword_length: INTEGER is 6
+			-- Eiffel create keyword character count
+	
 	class_i: CLASS_I
 			-- Class in which code is being completed
 
@@ -382,5 +615,8 @@ feature {NONE} -- Implementation
 
 invariant
 	valid_class_i: class_i /= Void implies class_i.compiled
+	valid_call_type: call_type = Standard_call or call_type = Static_call or
+						call_type = Creation_call or call_type = Precursor_call or
+						call_type = Agent_call
 
 end -- class COMPLETION_INFORMATION

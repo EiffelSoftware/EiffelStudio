@@ -25,7 +25,7 @@
 #include "rt_hash.h"
 #include "rt_retrieve.h"
 #include "idrf.h"
-#include "rt_traverse.h"
+#include "rt_constants.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -72,6 +72,7 @@ typedef struct tag_rt_globals
 		/* Synchronizations for GC*/
 	int volatile gc_thread_status_cx;
 	int gc_thread_collection_count_cx;
+	int thread_can_launch_gc_cx;		/* Can we launch additional GC cycle? */
 #endif
 
 		/* except.c */
@@ -189,14 +190,6 @@ typedef struct tag_rt_globals
 		/* string.c */
 	EIF_CHARACTER eif_string_buffer_cx [MAX_NUM_LEN + 1]; /* Where string is built. */
 
-		/* traverse.c */
-	struct mstack map_stack_cx;
-	EIF_INTEGER_32 obj_nb_cx;
-	EIF_REFERENCE referers_target_cx;
-	EIF_INTEGER instance_type_cx;
-	struct obj_array *found_collection_cx;
-	struct obj_array *marked_collection_cx;
-
 		/* hector.c */
 #ifdef ISE_GC
 	struct stack hec_saved_cx;			/* Indirection table "hector saved" */
@@ -219,6 +212,8 @@ typedef struct tag_rt_globals
 		/* memory.c */
 	EIF_INTEGER m_largest_cx;
 
+		/* file.c */
+	char file_type_cx [FILE_TYPE_MAX];
 
 } rt_global_context_t;
 
@@ -288,6 +283,7 @@ rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
 #define last_child			(rt_globals->last_child_cx)
 #define gc_thread_status	(rt_globals->gc_thread_status_cx)
 #define gc_thread_collection_count	(rt_globals->gc_thread_collection_count_cx)
+#define thread_can_launch_gc	(rt_globals->thread_can_launch_gc_cx)
 
 	/* except.c */
 #define eif_trace			(rt_globals->eif_trace_cx)	/* rt_public */
@@ -404,14 +400,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
 	/* string.c */
 #define eif_string_buffer	(rt_globals->eif_string_buffer_cx)	/* N/A */
 
-	/* traverse.c */
-#define map_stack			(rt_globals->map_stack_cx)
-#define obj_nb				(rt_globals->obj_nb_cx)
-#define referers_target		(rt_globals->referers_target_cx)
-#define instance_type		(rt_globals->instance_type_cx)
-#define found_collection	(rt_globals->found_collection_cx)
-#define marked_collection	(rt_globals->marked_collection_cx)
-
 #ifdef ISE_GC
 	/* hector.c */
 #define hec_saved			(rt_globals->hec_saved_cx)		/* rt_public */
@@ -427,6 +415,9 @@ rt_private rt_global_context_t * rt_thr_getspecific (EIF_TSD_TYPE global_key) {
 
 		/* memory.c */
 #define m_largest			(rt_globals->m_largest_cx)
+
+		/* file.c */
+#define file_type			(rt_globals->file_type_cx)
 
 RT_LNK EIF_TSD_TYPE rt_global_key;
 

@@ -14,13 +14,32 @@
 #define _rt_traverse_h_
 
 #include "eif_traverse.h"
+#include "rt_threads.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifdef EIF_THREADS
+extern EIF_LW_MUTEX_TYPE *eif_eo_store_mutex;
+#ifdef ISE_GC
+#define EIF_EO_STORE_LOCK \
+	thread_can_launch_gc = 0; \
+	EIF_LW_MUTEX_LOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.")
+#define EIF_EO_STORE_UNLOCK \
+	thread_can_launch_gc = 1; \
+	EIF_LW_MUTEX_UNLOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.");
+#else
+#define EIF_EO_STORE_LOCK	EIF_LW_MUTEX_LOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.")
+#define EIF_EO_STORE_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.");
+#endif
+#else
+#define EIF_EO_STORE_LOCK
+#define EIF_EO_STORE_UNLOCK
+#endif
+
 extern EIF_INTEGER_32 obj_nb;					/* Count of marked objects */
-extern void traversal(char *object, int p_accounting); /* Traversal of objects */
+extern void traversal(EIF_REFERENCE object, int p_accounting); /* Traversal of objects */
 
 /* Maping table handling */
 extern void map_start(void);			/* Reset LIFO stack into a FIFO one */
@@ -51,7 +70,6 @@ struct obj_array {
 	int capacity;			/* Capacity of `area' */
 	int index;				/* Cursor position */
 };
-
 
 #ifdef __cplusplus
 }

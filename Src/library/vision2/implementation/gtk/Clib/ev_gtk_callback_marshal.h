@@ -24,7 +24,7 @@ void c_ev_gtk_callback_marshal_destroy ();
 guint c_ev_gtk_callback_marshal_signal_connect
 	(GtkObject*, const gchar*, EIF_OBJECT);
 
-void c_ev_gtk_callback_marshal_signal_connect_true
+guint c_ev_gtk_callback_marshal_signal_connect_true
 	(GtkObject*, const gchar*, EIF_OBJECT);
 
 int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent);
@@ -50,6 +50,9 @@ int gtk_value_int (void*);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.6  2001/06/29 19:56:43  king
+// Updated signal connect true signature to return connect id
+//
 // Revision 1.5  2001/06/07 23:07:59  rogers
 // Merged DEVEL branch into Main trunc.
 //

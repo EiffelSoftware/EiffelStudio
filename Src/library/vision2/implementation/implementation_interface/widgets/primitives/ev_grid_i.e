@@ -234,35 +234,72 @@ feature -- Access
 			-- Are connectors between tree nodes shown in `Current'?
 			
 	virtual_x_position: INTEGER is
-			-- Horizontal offset of virtual area in pixels, relative to left edge of `Current'.
+			-- Horizontal offset of viewable area in relation to the left edge of
+			-- the virtual area in pixels.
 		do
-			Result := - viewport.x_offset
+			Result := internal_client_x
 		ensure
-			result_not_positive: Result <= 0
+			valid_result: Result >= 0 and Result <= virtual_width - viewable_width
 		end
 		
 	virtual_y_position: INTEGER is
-			-- Vertical offset of virtual area in pixels, relative to top edge of `Current'.
+			-- Vertical offset of viewable area in relation to the top edge of
+			-- the virtual area in pixels.
 		do
-			Result := - viewport.y_offset
+			Result := internal_client_y
 		ensure
-			result_not_positive: Result <= 0
+			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
 		end
 		
 	virtual_width: INTEGER is
 			-- Width of virtual area in pixels.
 		do
-			Result := total_header_width.max (width)
+			Result := total_header_width.max (viewable_width)
 		ensure
-			result_greater_or_equal_to_width: Result >= width
+			result_greater_or_equal_to_viewable_width: Result >= viewable_width
 		end
 		
 	virtual_height: INTEGER is
-			-- Hieght of virtual area in pixels.
+			-- Height of virtual area in pixels.
+		local
+			final_row_height: INTEGER
 		do
-			Result := total_row_height.max (height)
+			perform_vertical_computation
+			if is_vertical_scrolling_per_item then
+				if rows.is_empty then
+					Result := viewable_height
+				else
+					if is_row_height_fixed then
+						final_row_height := row_height
+					else
+						final_row_height := rows.i_th (rows.count).height
+					end
+					Result := total_row_height + viewable_height - final_row_height
+				end
+			else
+				Result := total_row_height
+			end
+			Result := Result.max (viewable_height)
 		ensure
-			result_greater_or_equal_to_height: Result >= height
+			result_greater_or_equal_to_viewable_height: Result >= viewable_height
+		end
+		
+	viewable_width: INTEGER is
+			-- Width of `Current' available to view displayed items. Does
+			-- not include width of any displayed scroll bars.
+		do
+			Result := viewport.width
+		ensure
+			viewable_width_valid: viewable_width >= 0 and viewable_width <= width
+		end
+		
+	viewable_height: INTEGER is
+			-- Height of `Current' available to view displayed items. Does
+			-- not include width of any displayed scroll bars and/or header if shown.
+		do
+			Result := viewport.height
+		ensure
+			viewable_height_valid: viewable_height >= 0 and viewable_height <= height
 		end
 
 feature -- Status setting
@@ -292,8 +329,7 @@ feature -- Status setting
 					-- The row offsets must always be computed when
 					-- in tree mode so when enabling it, recompute unless
 					-- there are no rows contained.
-				recompute_row_offsets (1)
-				redraw_client_area
+				set_vertical_computation_required
 			end
 		ensure
 			tree_enabled: is_tree_enabled
@@ -304,8 +340,7 @@ feature -- Status setting
 		do
 			is_tree_enabled := False
 			adjust_hidden_node_count (- hidden_node_count)
-			recompute_row_offsets (1)
-			recompute_vertical_scroll_bar
+			set_vertical_computation_required
 			redraw_client_area
 		ensure
 			tree_disabled: not is_tree_enabled
@@ -647,8 +682,7 @@ feature -- Status setting
 			-- Ensure all rows have the same height.
 		do
 			is_row_height_fixed := True
-			recompute_vertical_scroll_bar
-			recompute_row_offsets (1)
+			set_vertical_computation_required
 			redraw_client_area
 		end
 		
@@ -656,8 +690,7 @@ feature -- Status setting
 			-- Permit rows to have varying heights.
 		do
 			is_row_height_fixed := False
-			recompute_row_offsets (1)
-			recompute_vertical_scroll_bar
+			set_vertical_computation_required
 			redraw_client_area
 		end
 		
@@ -693,8 +726,7 @@ feature -- Status setting
 			a_row_count_positive: a_row_count >= 1
 		do
 			resize_row_lists (a_row_count)
-			recompute_row_offsets (1)
-			recompute_vertical_scroll_bar
+			set_vertical_computation_required
 			redraw_client_area
 		ensure
 			row_count_set: row_count = a_row_count
@@ -754,6 +786,51 @@ feature -- Status setting
 			redraw_client_area
 		ensure
 			tree_node_connectors_hidden: not are_tree_node_connectors_shown
+		end
+		
+	set_virtual_position (virtual_x, virtual_y: INTEGER) is
+			-- Move `Current' to virtual position `virtual_x', `virtual_y'.
+		require
+			virtual_x_valid: virtual_x >= 0 and virtual_x <= virtual_width - viewable_width
+			virtual_y_valid: virtual_y >= 0 and virtual_y <= virtual_height - viewable_height
+		local
+			row_index: INTEGER
+			visible_row_index: INTEGER
+			items: ARRAYED_LIST [INTEGER]
+		do
+			perform_vertical_computation
+			internal_set_virtual_y_position (virtual_y)
+			internal_set_virtual_x_position (virtual_x)
+			if is_vertical_scrolling_per_item then
+				vertical_scroll_bar.change_actions.block
+				items := drawer.items_spanning_vertical_span (viewport.y_offset, viewable_height)
+				if items.count > 0 then
+					row_index := items.first
+					if displayed_row_indexes = Void then
+						visible_row_index := row_index - 1
+					else
+						visible_row_index := displayed_row_indexes @ row_index
+					end
+					vertical_scroll_bar.set_value (visible_row_index)
+				else
+					vertical_scroll_bar.set_value (visible_row_count - 1)
+				end	
+				vertical_scroll_bar.change_actions.resume
+			else
+				vertical_scroll_bar.change_actions.block
+				vertical_scroll_bar.set_value (virtual_y)
+				vertical_scroll_bar.change_actions.resume
+			end
+			if is_horizontal_scrolling_per_item then
+				fixme ("Implement")
+			else
+				horizontal_scroll_bar.change_actions.block
+				horizontal_scroll_bar.set_value (virtual_x)
+				horizontal_scroll_bar.change_actions.resume
+			end
+			set_vertical_computation_required
+		ensure
+			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
 		end
 
 feature -- Status report
@@ -1086,6 +1163,35 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	physical_column_count: INTEGER
 		-- Number of physical columns stored in `row_list'
 		
+	vertical_computation_required: BOOLEAN
+		-- Do the row offsets and vertical scroll bar position need to
+		-- be re-computed before the next drawing cycle?
+		
+	set_vertical_computation_required is
+			-- Assign `True' to `vertical_computation_required'
+		do
+			vertical_computation_required := True
+		ensure
+			vertical_computation_required: vertical_computation_required
+		end
+		
+	perform_vertical_computation is
+			-- Re-compute vertical row offsets and other such values
+			-- required before drawing may be performed, only if required.
+		do
+			if vertical_computation_required then
+				vertical_computation_required := False
+				if row_count > 0 then
+						-- Do nothing if `Current' is empty.
+						
+					recompute_row_offsets (1)
+					recompute_vertical_scroll_bar
+				end
+			end
+		ensure
+			vertical_computation_not_required: not vertical_computation_required
+		end
+
 	recompute_row_offsets (an_index: INTEGER) is
 			-- Recompute contents of `row_offsets' from row index
 			-- `an_index' to `row_count'.
@@ -1097,6 +1203,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			current_item: EV_GRID_ROW_I
 			old_i: INTEGER
 			internal_index: INTEGER
+			visible_count: INTEGER
 		do
 			fixme ("[
 				We always recompute from the first item for now as otherwise we must ensure that we find the top level
@@ -1109,17 +1216,19 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					-- use `row_offsets' and we can perform a shortcut.
 				if row_offsets = Void then
 					create row_offsets.make
+					create displayed_row_indexes.make
 					row_offsets.extend (0)
 					rows.start
 				else
 					i := row_offsets @ (internal_index)
 					rows.go_i_th (internal_index)
+					displayed_row_indexes.go_i_th (internal_index)
 				end
 				
 				if row_offsets.count < rows.count + 1 then
 					row_offsets.resize (rows.count + 1)
+					displayed_row_indexes.resize (rows.count + 1)
 				end
-				
 				from
 				until
 					rows.off
@@ -1142,12 +1251,16 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 							row_offsets.put_i_th (old_i, j)
 							j := j + 1
 						end
+						displayed_row_indexes.put_i_th (visible_count, rows.index)
 						rows.go_i_th (k - 1)
 						i := old_i
 					else
 						row_offsets.put_i_th (i, rows.index + 1)
+						displayed_row_indexes.put_i_th (visible_count, rows.index)
 						rows.forth
+						visible_count := visible_count + 1
 					end
+					
 				end
 			else
 				row_offsets := Void
@@ -1185,6 +1298,8 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITE
 		-- Cumulative offset of each row in pixels.
 		-- For example, if there are 5 rows, each with a height of 16 pixels,
 		-- `row_offsets' contains 0, 16, 32, 48, 64, 80 (Note this is 6 items)
+		
+	displayed_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
 
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
@@ -1637,22 +1752,46 @@ feature {NONE} -- Drawing implementation
 			-- Respond to a change in value from `vertical_scroll_bar'.
 		require
 			a_value_non_negative: a_value >= 0
+		do
+			if is_vertical_scrolling_per_item then
+				if is_row_height_fixed then
+					internal_set_virtual_y_position (row_height * a_value)
+				else
+					internal_set_virtual_y_position (row_offsets.i_th (a_value + 1))
+				end
+			else
+				internal_set_virtual_y_position (a_value)
+			end
+		end
+		
+	horizontal_scroll_bar_changed (a_value: INTEGER) is
+			-- Respond to a change in value from `horizontal_scroll_bar'.
+		require
+			a_value_non_negative: a_value >= 0
+		do
+			if is_horizontal_scrolling_per_item then
+				internal_set_virtual_x_position (column_offsets.i_th (a_value + 1))
+			else
+				internal_set_virtual_x_position (a_value)
+			end
+		end
+		
+	internal_set_virtual_y_position (a_y_position: INTEGER) is
+			-- Set virtual y position of `Current' to `a_y_position'
+		require
+			a_y_position_non_negative: a_y_position >= 0
 		local
 			buffer_space: INTEGER
 			current_buffer_position: INTEGER
 		do
-			if is_vertical_scrolling_per_item then
-				if is_row_height_fixed then
-					internal_client_y := row_height * a_value
-				else
-					internal_client_y := row_offsets.i_th (a_value + 1)
-				end
-			else
-				internal_client_y := a_value
-			end
+			internal_client_y := a_y_position
+				-- Store the virtual client y position internally.
+
 			buffer_space := (buffered_drawable_size - viewport.height)
 			current_buffer_position := viewport.y_offset
-			
+
+				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
+				-- otherwise, simply move the position in `viewport'.
 			if (internal_client_y > last_vertical_scroll_bar_value) and ((internal_client_y - last_vertical_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
 				viewport.set_y_offset (0)
 				redraw_client_area
@@ -1663,26 +1802,28 @@ feature {NONE} -- Drawing implementation
 				viewport.set_y_offset (current_buffer_position + internal_client_y - last_vertical_scroll_bar_value)
 			end
 			
+				-- Store the last scrolled to position.
 			last_vertical_scroll_bar_value := internal_client_y
+		ensure
+			internal_position_set: internal_client_y = a_y_position
 		end
-
-	horizontal_scroll_bar_changed (a_value: INTEGER) is
-			-- Respond to a change in value from `horizontal_scroll_bar'.
+		
+	internal_set_virtual_x_position (a_x_position: INTEGER) is
+			-- Set virtual x position of `Current' to `a_x_position'
 		require
-			a_value_non_negative: a_value >= 0
+			a_x_position_non_negative: a_x_position >= 0
 		local
 			buffer_space: INTEGER
 			current_buffer_position: INTEGER
 		do
-			if is_horizontal_scrolling_per_item then
-				internal_client_x := column_offsets.i_th (a_value + 1)
-			else
-				internal_client_x := a_value
-			end
-			
+			internal_client_x := a_x_position
+				-- Store the virtual client x position internally.
+				
 			buffer_space := (buffered_drawable_size - internal_client_width)
 			current_buffer_position := viewport.x_offset
 			
+				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
+				-- otherwise, simply move the position in `viewport'.
 			if (internal_client_x > last_horizontal_scroll_bar_value) and ((internal_client_x - last_horizontal_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
 				viewport.set_x_offset (0)
 				redraw_client_area
@@ -1694,7 +1835,10 @@ feature {NONE} -- Drawing implementation
 			end
 			header_viewport.set_x_offset (internal_client_x)
 			
-			last_horizontal_scroll_bar_value := internal_client_x
+				-- Store the last scrolled to position.
+			last_horizontal_scroll_bar_value := internal_client_x	
+		ensure
+			internal_position_set: internal_client_x = a_x_position
 		end
 		
 	last_horizontal_scroll_bar_value: INTEGER
@@ -1924,8 +2068,7 @@ feature {NONE} -- Implementation
 				-- Set grid of `grid_row' to `Current'
 			row_i.set_parent_i (Current)
 
-			recompute_row_offsets (a_index)
-			recompute_vertical_scroll_bar
+			set_vertical_computation_required
 		end
 
 	update_grid_row_indices (a_index: INTEGER) is

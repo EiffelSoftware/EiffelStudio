@@ -404,7 +404,7 @@ feature -- Transformation
 				until
 					t = line.eol_token
 				loop
-					s.append (t.image)
+					last_image.append (t.image)
 					t := t.next
 				end
 			end
@@ -443,6 +443,10 @@ feature -- Transformation
 			end
 			update_current_char
 		end
+--| FIXME
+--| Christophe, 3 Fev 2000
+--| This feature will be moved to STRUCTURED_TEXT. it should set the string
+--| selected, with the cursor at the end of the selection.
 
 	delete_char is
 		local
@@ -541,12 +545,12 @@ feature -- Transformation
 				end
 			end	
 				--| Retrieving line after last position (given by `cline', `t', `pos').
-			if t /= Void and then t /= line.eol_token then
+			if t /= Void and then t /= cline.eol_token then
 				from
 					s.append (t.image.substring (pos, t.image.count))
 					t := t.next
 				until
-					t = line.eol_token
+					t = cline.eol_token
 				loop
 					s.append (t.image)
 					t := t.next

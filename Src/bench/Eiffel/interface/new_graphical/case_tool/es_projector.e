@@ -17,7 +17,8 @@ inherit
 			buffer_used,
 			change_area_position,
 			update_rectangle,
-			draw_figure_dot
+			draw_figure_dot,
+			full_project
 		end
 
 	ES_DIAGRAM_BUFFER_MANAGER
@@ -68,6 +69,15 @@ feature -- Element change
 		end
 
 feature -- Display updates
+
+	full_project is
+			-- Project entire area.
+		local
+			rectangle: EV_RECTANGLE
+		do
+			create rectangle.make (drawable_position.x, drawable_position.y, drawable.width, drawable.height)
+			project_rectangle (rectangle)
+		end
 
 	project_rectangle (u: EV_RECTANGLE) is
 			-- Project area under `u'.

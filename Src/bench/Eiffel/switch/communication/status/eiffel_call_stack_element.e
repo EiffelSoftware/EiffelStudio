@@ -80,7 +80,7 @@ feature -- Properties
 					)
 			then
 				create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
-				Result.extend (error_value ("Result", "unable to get the locals"))
+				Result.extend (error_value ("...", "unable to get the locals"))
 			end
 		ensure
 			non_void_implies_not_empty: Result /= Void implies not Result.is_empty
@@ -102,7 +102,7 @@ feature -- Properties
 					)
 			then
 				create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
-				Result.extend (error_value ("Result", "unable to get the arguments"))
+				Result.extend (error_value ("...", "unable to get the arguments"))
 			end			
 		ensure
 			non_void_implies_not_empty: Result /= Void implies not Result.is_empty

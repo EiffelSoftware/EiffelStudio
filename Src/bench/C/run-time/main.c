@@ -53,6 +53,7 @@
 #endif
 
 #include "eif_malloc.h"
+#include "eif_lmalloc.h"
 #include "eif_main.h"
 
 #define null (char *) 0					/* Null pointer */

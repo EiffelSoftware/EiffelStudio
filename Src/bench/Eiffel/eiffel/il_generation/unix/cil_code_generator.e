@@ -1465,6 +1465,16 @@ feature -- Line info
 		do
 		end
 
+
+	put_silent_line_info (n: INTEGER) is
+			-- Generate debug information at line `n'.			
+			-- But in case of dotnet debugger inside eStudio
+			-- ignore those 'dummy' nope.
+		require
+			valid_n: n > 0
+		do
+		end
+
 	put_debug_info (location: TOKEN_LOCATION) is
 			-- Generate debug information for `location' to enable to
 			-- find corresponding Eiffel class file in IL code.

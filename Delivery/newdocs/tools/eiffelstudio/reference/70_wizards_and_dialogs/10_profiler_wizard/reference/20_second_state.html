@@ -1,0 +1,59 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+
+<head>
+<title>Select the Compilation mode</title>
+<META NAME="MS-HKWD" CONTENT="Profiler wizard">
+<META NAME="MS-HKWD" CONTENT="First State">
+<META NAME="MS-HKWD" CONTENT="Compilation mode">
+<META NAME="MS-HKWD" CONTENT="Select the Compilation mode">
+<LINK REL=StyleSheet HREF="/default.css">
+</head>
+
+<body>
+<h1>Reuse or Generate an Execution Profile</h1>
+<p>The second screen of the wizard enables you to reuse a previously generated <i> Execution Profile</i> or
+to generate a new <i> Execution Profile</i> from a <i> Run-time information
+record</i>.
+</p>
+
+<p>The profiler wizard has detected that one or more <i> Execution Profiles</i> has
+already been generated for this system in this compilation mode. If you have
+executed your system after the generation of the existing profile, select <b>Generate
+a profile from Run-time information record</b> to create a new <i> Execution Profile</i>
+for the newly produced <i> Run-time information record</i>.</p>
+<p class="note">Note: If you choose <b>Generate
+a profile from Run-time information record</b> the generated <i> Execution Profile</i>
+will be written into <i>&lt;project_directory&gt;/EIFGEN/W_CODE/profinfo.pfi</i>
+if you have selected <b>Workbench mode</b> in the first step, or<i> </i><i>&lt;project_directory&gt;/EIFGEN/W_CODE/profinfo.pfi</i>
+if you have selected <b>Finalized mode</b>. If a file with the same name already
+exists its content will be destroyed and replaced.</p><br>
+<p>
+However if you have not executed your system since the generation of the last <i> 
+Execution Profile</i>, there is no need to generate a new <i> Execution Profile</i>. If you are in the latter case,
+select <b>Use existing profile</b> and choose the last <i> Execution Profile</i> you
+have generated.
+</p>
+<p class="tip">Tip: If you want to archive different <i> Execution Profiles</i> (to compare
+them for example), rename the <i> profinfo.pfi</i> file into a new name but keep the .pfi
+extension. The profiler wizard detects existing Execution Profile by checking
+this extension.</p>
+<br>
+<img src="/images/eiffelstudio/profiler_wizard_second_state.png">
+<br><br>
+<p>
+Clicking <b> Next</b> will lead you to the <a href="30_third_state.html"> Third state</a> if you have selected <b>Generate
+a profile from Run-time information record</b>. On the other hand if you have
+selected <b>Use existing profile</b> you will go to the <a href="40_final_state.html"> Final
+state</a>.
+</p>
+<br>
+<P CLASS="seealso">
+<B>See Also</B><br>
+<a href="..\00_introduction.html">How the Profiler wizard works</a><br>
+<a href="..\..\..\..\how_to_s\50_running_and_debugging\70_profiling.html">How to profile a system</a>
+</P>
+
+</body>
+
+</html>

@@ -238,7 +238,7 @@ feature -- Genericity
 						buffer.putstring ("-")
 						buffer.putint (table.min_type_id - 1)
 						buffer.putstring ("), ")
-						buffer.putstring (context.Current_register.register_name)
+						context.Current_register.print_register_by_name
 						buffer.putstring ("), ")
 
 							-- Side effect. This is not nice but
@@ -358,7 +358,7 @@ feature -- Genericity
 						buffer.putstring ("-")
 						buffer.putint (table.min_type_id - 1)
 						buffer.putstring ("), ")
-						buffer.putstring (context.Current_register.register_name)
+						context.Current_register.print_register_by_name
 						buffer.putstring (")")
 
 							-- Side effect. This is not nice but

@@ -11,6 +11,8 @@ deferred class
 	EV_ENTRY_I
 	
 inherit
+	EV_PRIMITIVE_I
+	
 	EV_BAR_ITEM_I
 	
 feature {NONE} -- Initialization

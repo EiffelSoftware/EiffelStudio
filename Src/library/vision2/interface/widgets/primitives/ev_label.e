@@ -12,16 +12,18 @@ class
 
 inherit
 
-	EV_BAR_ITEM
+	EV_PRIMITIVE
 		redefine
 			make, implementation
 		end
+	
+	EV_BAR_ITEM
 	
 	EV_TEXT_CONTAINER
 		redefine
-			make, implementation
+			implementation
 		end
-	
+		
 creation
 	
 	make

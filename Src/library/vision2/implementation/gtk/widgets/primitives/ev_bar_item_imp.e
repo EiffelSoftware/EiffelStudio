@@ -11,15 +11,6 @@ deferred class
 	
 	EV_BAR_ITEM_IMP
 	
-inherit
-	
-	EV_PRIMITIVE_IMP
-
-
-
-
-
-
 end
 
 --|----------------------------------------------------------------

@@ -13,6 +13,8 @@ class
 inherit
 	EV_ENTRY_I
 	
+	EV_PRIMITIVE_IMP
+	
 	EV_BAR_ITEM_IMP
 
 	

@@ -11,6 +11,8 @@ deferred class
 	EV_LABEL_I
 	
 inherit
+	EV_PRIMITIVE_I
+	
 	EV_BAR_ITEM_I
 	
 	EV_TEXT_CONTAINER_I

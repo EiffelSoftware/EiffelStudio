@@ -12,7 +12,6 @@ deferred class
 	EV_TEXT_CONTAINER_I
 
 inherit
-	EV_PRIMITIVE_I
 	
 	EV_FONTABLE_I
 feature -- Access

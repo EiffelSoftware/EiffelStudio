@@ -53,7 +53,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	implementation: EV_FONTABLE_I;
+	implementation: EV_FONTABLE_I
 			-- Implementation of widget
 
 feature {NONE} -- Implementation

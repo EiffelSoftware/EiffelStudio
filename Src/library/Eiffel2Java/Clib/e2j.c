@@ -1,7 +1,7 @@
 #include "jni.h"
 #include "eif_eiffel.h"
-#include "joce_debug.h"
 
+#define jprintf
 #define DEVELOPER_EXCEPTION 24
 
 char * my_thread_id () {

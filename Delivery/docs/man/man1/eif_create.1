@@ -1,0 +1,26 @@
+.TH CECIL 1  "November 10, 1999" "ISE" "CECIL Programmer's Manual"
+.SH NAME
+eif_create	\- create an Eiffel object
+.SH SYNOPSYS
+.nf
+\fB#include "eif_cecil.h"\fB
+.sp
+.BI "EIF_OBJECT eif_create (EIF_TYPE_ID " tid ");"
+.fi
+.SH DESCRIPTION
+The \fBeif_create()\fP function creates an Eiffel object, which type identifier
+is  \fItid\fP. 
+.SH RETURN VALUE
+It returns an Eiffel object, which is already protected. 
+.SH NOTES
+You cannot pass the return value to Eiffel routines as is: you must call 
+\fBeif_access()\fP to pass it to Eiffel routine.
+.br 
+To release the protection of an Eiffel object created with \fBeif_create()\fP, call
+\fBeif_wean()\fP. It will be collected during the next collection.
+.SH CONFORMANCE
+ISE Eiffel 4.1 and later.
+.SH SEE ALSO
+.BR eif_wean "(1) , "eif_type_id "(1)." 
+
+

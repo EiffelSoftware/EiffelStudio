@@ -204,9 +204,7 @@ feature -- Basic operations
 				else
 					sent_txt := text.image
 					sent_txt.prune_all ('%R')
-					if feature {PLATFORM_CONSTANTS}.is_windows then
-						sent_txt.replace_substring_all ("%N", "%R%N")
-					end
+					sent_txt.replace_substring_all ("%N", "%R%N")
 				end
 					-- Generate the file we put the text in.
 				create file_name.make_temporary_name

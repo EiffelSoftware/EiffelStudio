@@ -18,13 +18,17 @@ creation
 
 feature -- Creation
 
-	make (cn: STRING) is
+	make (cn, fn: STRING) is
 		do
 			class_name := cn;
 			class_name.to_lower;
+			filter_name := fn
 		end;
 
 	class_name: STRING;
+
+	filter_name: STRING;
+			-- Name of the filter to be used (if any)
 
 feature
 
@@ -32,6 +36,7 @@ feature
 		do
 			get_class_name;
 			class_name := last_input;
+			filter_name := Void;
 			check_arguments_and_execute;
 		end;
 
@@ -39,7 +44,8 @@ feature
 		local
 			class_c: CLASS_C;
 			ctxt: FORMAT_CONTEXT;
-			class_i: CLASS_I
+			class_i: CLASS_I;
+			text_filter: TEXT_FILTER
 		do
 			init_project;
 			if not (error_occurred or project_is_new) then
@@ -54,7 +60,13 @@ feature
 						else
 							!!ctxt.make (class_c);
 							ctxt.execute;
-							output_window.put_string (ctxt.text.image)
+							if filter_name /= Void then
+								!!text_filter.make (filter_name);
+								text_filter.process_text (ctxt.text);
+								output_window.put_string (text_filter.image)
+							else
+								output_window.put_string (ctxt.text.image)
+							end
 						end;
 					else
 						io.error.putstring (class_name);

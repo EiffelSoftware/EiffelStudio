@@ -97,7 +97,9 @@ feature -- Input/Output
 			add_usage_special_cmds;
 			io.putstring ("%
 				%-loop | -clients class | -suppliers class |%N%
-				%%T-flatshort [-troff] class | -flat class | -short [-troff] class |%N%
+				%%T-flatshort [-filter filtername] class |%N%
+				%%T-flat [-filter filtername] class |%N%
+				%%T-short [-filter filtername] class | -filter filtername class |%N%
 				%%T-descendants class | -ancestors class |%N%
 				%%T-aversions class feature | -dversions class feature |%N%
 				%%T-implementers class feature | -callers class feature |%N%
@@ -110,7 +112,7 @@ feature -- Input/Output
 
 	help_messages: EXTEND_TABLE [STRING, STRING] is
 		once
-			!!Result.make (21);
+			!!Result.make (22);
 			Result.put (ace_help, ace_cmd_name);
 			Result.put (ancestors_help, ancestors_cmd_name);
 			Result.put (aversions_help, aversions_cmd_name);
@@ -119,6 +121,7 @@ feature -- Input/Output
 			Result.put (descendants_help, descendants_cmd_name);
 			Result.put (dversions_help, dversions_cmd_name);
 			Result.put (file_help, file_cmd_name);
+			Result.put (filter_help, filter_cmd_name);
 			Result.put (flat_help, flat_cmd_name);
 			Result.put (flatshort_help, flatshort_cmd_name);
 			Result.put (help_help, help_cmd_name);
@@ -236,6 +239,7 @@ feature -- Command line options
 			cn, fn: STRING;
 			troffed: BOOLEAN;
 			current_class_only: BOOLEAN;
+			filter_name: STRING
 		do
 			option := argument (current_option);	
 
@@ -329,17 +333,25 @@ feature -- Command line options
 						if argument (current_option).is_equal ("-troff") then
 							troffed := True;
 							if current_option < argument_count then
-									current_option := current_option + 1;
+								current_option := current_option + 1;
 							else
 								option_error := True
 							end;
+						elseif argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								filter_name := argument (current_option)
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
 						end;
 						if not option_error then
 							if option.is_equal ("-short") then
 								current_class_only := True
 							end;
 							cn := argument (current_option);
-							!EWB_FS!command.make (cn, troffed, current_class_only)
+							!EWB_FS!command.make (cn, troffed, current_class_only, filter_name)
 						end
 					end;
 				else
@@ -351,8 +363,31 @@ feature -- Command line options
 						option_error := True
 					else
 						current_option := current_option + 1;
+						if argument (current_option).is_equal ("-filter") then
+							if current_option + 1 < argument_count then
+								current_option := current_option + 1;
+								filter_name := argument (current_option)
+								current_option := current_option + 1
+							else
+								option_error := True
+							end
+						end;
 						cn := argument (current_option);
-						!EWB_FLAT!command.make (cn)
+						!EWB_FLAT!command.make (cn, filter_name)
+					end;
+				else
+					option_error := True
+				end;
+			elseif option.is_equal ("-filter") then
+				if current_option + 1 < argument_count then
+					if command /= Void then
+						option_error := True
+					else
+						current_option := current_option + 1;
+						filter_name := argument (current_option)
+						current_option := current_option + 1;
+						cn := argument (current_option);
+						!EWB_FILTER!command.make (cn, filter_name)
 					end;
 				else
 					option_error := True

@@ -42,6 +42,8 @@ feature {NONE}
 
 	file_help: STRING is "save the output to a file";
 
+	filter_help: STRING is "show a filtered form (troff, ...) of the class text";
+
 	finalize_help: STRING is "finalize the system (discard assertions by default)";
 
 	flat_help: STRING is "show the flat form of a class";

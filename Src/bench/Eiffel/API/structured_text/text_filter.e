@@ -7,11 +7,12 @@ inherit
 
 	TEXT_FORMATTER
 		redefine
-			process_filter_item
+			process_filter_item, process_after_class,
+			process_text
 		end;
 
 	EIFFEL_ENV;
-	SHARED_FILTER
+	SHARED_TEXT_ITEMS
 
 creation
 
@@ -27,14 +28,7 @@ feature -- Initialization
 			full_pathname: STRING
 		do
 			!!format_table.make (50);
-			full_pathname := clone (Eiffel3_dir_name);
-			full_pathname.extend (Directory_separator);
-			full_pathname.append ("bench");
-			full_pathname.extend (Directory_separator);
-			full_pathname.append ("help");
-			full_pathname.extend (Directory_separator);
-			full_pathname.append ("filters");
-			full_pathname.extend (Directory_separator);
+			full_pathname := clone (filter_path);
 			full_pathname.append (filtername);
 			full_pathname.append (".fil");
 			read_formats (full_pathname);
@@ -54,7 +48,21 @@ feature -- Initialization
 
 	image: STRING;
 
+feature -- Text processing
+
+	process_text (text: STRUCTURED_TEXT) is
+		do
+			structured_text := text;
+			from text.start until text.after loop
+				process_item (text.item);
+				if not text.after then text.forth end
+			end
+		end;
+
 feature {NONE} -- Text processing
+
+	structured_text: STRUCTURED_TEXT;
+			-- Text being processed
 
 	process_basic_text (text: BASIC_TEXT) is
 			-- Check first if a format has been specified for `text'.
@@ -66,31 +74,21 @@ feature {NONE} -- Text processing
 				text_image := text.image;
 				text_image.to_lower;
 				if format_table.has (text_image) then
-					format := format_table.item (text.image);
-					image.append (format.item1);
-					if format.item2 /= Void then
-						image.append (text.image);
-						image.append (format.item2)
-					end
+					format := format_table.item (text.image)
 				elseif text.is_keyword and format_table.has (f_Keyword) then
-					format := format_table.item (f_Keyword);
-					image.append (format.item1);
-					image.append (text.image);
-					if format.item2 /= Void then
-						image.append (format.item2)
-					end
+					format := format_table.item (f_Keyword)
 				elseif text.is_special and format_table.has (f_Symbol) then
-					format := format_table.item (f_Symbol);
-					image.append (format.item1);
-					image.append (text.image);
-					if format.item2 /= Void then
-						image.append (format.item2)
-					end
-				else
-					image.append (text.image)
+					format := format_table.item (f_Symbol)
 				end
-			elseif text.is_comment then
-				image.append (text.image)
+			elseif text.is_comment and format_table.has (f_Comment) then
+				format := format_table.item (f_Comment)
+			end;
+			if format /= Void then
+				image.append (format.item1);
+				if format.item2 /= Void then
+					image.append (text.image);
+					image.append (format.item2)
+				end
 			else
 				image.append (text.image)
 			end
@@ -134,17 +132,46 @@ feature {NONE} -- Text processing
 			-- Mark appearing before or after major syntactic constructs.
 		local
 			construct: STRING;
-			format: CELL2 [STRING, STRING]
+			format: CELL2 [STRING, STRING];
+			filter_item: FILTER_ITEM;
+			found: BOOLEAN
 		do
 			construct := text.construct;
 			if format_table.has (construct) then
 				format := format_table.item (construct);
 				if text.is_before then
 					image.append (format.item1)
+					if format.item2 = Void then
+							-- The user wants to hide this construct.
+							-- Get rid of the text items until
+							-- the end mark of that construct.
+						from 
+						until 	
+							structured_text.after or found 
+						loop
+							structured_text.forth;
+							filter_item ?= structured_text.item;
+							found := filter_item /= Void and then
+										construct = filter_item.construct
+						end
+					end
 				elseif format.item2 /= Void then
 					image.append (format.item2)
 				end
 			end
+		end;
+
+	process_after_class (text: AFTER_CLASS) is
+		local
+			item: BASIC_TEXT
+		do
+			image.extend (' ');
+			process_basic_text (ti_Dashdash);
+			image.extend (' ');
+			!!item.make ("class ");
+			item.set_is_comment;
+			process_basic_text (item);
+			image.append (text.class_name)
 		end;
 
 feature {NONE} -- Formats
@@ -169,7 +196,7 @@ feature {NONE} -- Formats
 				from
 					line_nb := 1
 				until
-					end_of_file
+					filter_file.end_of_file
 				loop
 					from
 						in_construct := true;
@@ -193,7 +220,7 @@ feature {NONE} -- Formats
 								in_before := true;
 								!!before.make (5)
 							else
--- Warning: unexpected meta char `last_char_read'
+								syntax_error ("%"|%" expected");
 								read_error := true
 							end
 						elseif in_before then
@@ -203,14 +230,14 @@ feature {NONE} -- Formats
 								in_before := false;
 								!!after.make (5)
 							else
--- Warning: unexpected meta char `last_char_read'
+								syntax_error ("%"*%" expected");
 								read_error := true
 							end
 						else
 							if not is_last_meta then
 								after.extend (last_char_read)
 							else
--- Warning: unexpected meta char `last_char_read'
+								syntax_error ("End of line expected");
 								read_error := true
 							end
 						end;
@@ -232,12 +259,12 @@ debug ("FILTERS")
 	end;
 	io.error.new_line
 end
-						elseif construct.empty then
--- Warning: construct not specified
-						elseif before = Void then
--- Warning: appearance not specified
+						elseif construct.empty and before /= Void then
+							syntax_error ("Construct expected")
+						elseif not construct.empty and before = Void then
+							syntax_error ("Appearance expected")
 						end
-					elseif not filter_file.end_of_file then
+					else
 							-- Go to the beginning of the next line
 						read_error := false;
 						char_in_buffer := false;
@@ -247,7 +274,9 @@ end
 				end;
 				filter_file.close
 			else
--- Warning : cannot read file
+				io.error.putstring ("Warning: Cannot read filter ");
+				io.error.putstring (filename);
+				io.error.new_line
 			end
 		end;
 
@@ -257,16 +286,17 @@ end
 			-- read character in last_char_read.
 		do
 			is_last_meta := false;
-			if not end_of_file then
-				if not char_in_buffer then
-					filter_file.readchar
-				else
-					char_in_buffer := false
-				end;
+			if not char_in_buffer then
+				filter_file.readchar
+			else
+				char_in_buffer := false
+			end;
+			if not filter_file.end_of_file then
 				inspect filter_file.lastchar
 				when '%%' then
+					filter_file.readchar;
 					if filter_file.end_of_file then
--- Warning: new_line expected
+						syntax_error ("End of line expected");
 						read_error := true
 					else
 						inspect filter_file.lastchar
@@ -277,6 +307,7 @@ end
 						when '%N' then
 							line_nb := line_nb + 1;
 							from
+								filter_file.readchar
 							until
 								filter_file.end_of_file or else
 								(filter_file.lastchar /= ' ' and
@@ -286,9 +317,9 @@ end
 							end;
 							if 
 								filter_file.end_of_file or else
-								filter_file.lastchar /= '%'
+								filter_file.lastchar /= '%%'
 							then
--- Warning: '%' expected
+								syntax_error ("%"%%%" expected");
 								read_error := true;
 								if
 									not filter_file.end_of_file and then
@@ -311,14 +342,12 @@ end
 					is_last_meta := true;
 					line_nb := line_nb + 1
 				when '-' then
+					filter_file.readchar;
 					if not filter_file.end_of_file then
-						filter_file.readchar;
 						if filter_file.lastchar = '-' then
 								-- This is a comment. Skip the end of the line.
-							if not filter_file.end_of_file then
-								filter_file.readline;
-								line_nb := line_nb + 1
-							end;
+							filter_file.readline;
+							line_nb := line_nb + 1;
 							last_char_read := '%N';
 							is_last_meta := true
 						else
@@ -349,17 +378,35 @@ end
 	char_in_buffer: BOOLEAN;
 			-- Has `filter_file.lastchar' been used yet?
 
-	end_of_file: BOOLEAN is
-			-- Has the end of the filter file been reached?
-		do
-			Result := not char_in_buffer and filter_file.end_of_file
-		end;
-
 	is_last_meta: BOOLEAN;
 			-- Is last character read a meta character?
 
 	line_nb: INTEGER;
 			-- Number of the line currently parsed
+
+	syntax_error (message: STRING) is
+			-- Display a warning message.
+		require
+			message_not_void: message /= Void
+		do
+			io.error.putstring ("Warning: filter ");
+			io.error.putstring (filter_file.name);
+			io.error.putstring ("%N%TSyntax error, line ");
+			if last_char_read = '%N' then
+				io.error.putint (line_nb - 1);
+				io.error.putstring (" near ");
+				io.error.putstring ("End of line")
+			else
+				io.error.putint (line_nb);
+				io.error.putstring (" near ");
+				io.error.putchar ('%"');
+				io.error.putchar (last_char_read);
+				io.error.putchar ('%"')
+			end;
+			io.error.putstring (": ");
+			io.error.putstring (message);
+			io.error.new_line
+		end;
 
 invariant
 

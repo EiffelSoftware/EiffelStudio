@@ -41,6 +41,8 @@ feature {NONE}
 
 	file_cmd_name: STRING is "file"
 
+	filter_cmd_name: STRING is "filter";
+
 	finalize_cmd_name: STRING is "finalize"
 
 	flat_cmd_name: STRING is "flat"

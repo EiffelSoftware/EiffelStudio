@@ -37,6 +37,18 @@ feature -- Access
 		--| for this list, so that the user can check whether a specific
 		--| accelerator is already installed using `has'.
 
+	connect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Associate `an_accel' with this window.
+		do
+			implementation.connect_accelerator (an_accel)
+		end
+
+	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Remove `an_accel' from this window.
+		do
+			implementation.disconnect_accelerator (an_accel)
+		end
+
 	icon_name: STRING is
 			-- Alternative name, displayed when window is minimised.
 		do
@@ -171,9 +183,9 @@ feature {NONE} -- Implementation
 			Precursor
 			create accelerators
 			accelerators.compare_objects
-			accelerators.add_actions.extend (implementation~connect_accelerator)
+			accelerators.add_actions.extend (implementation~connect_accelerator (?))
 			accelerators.remove_actions.extend
-				(implementation~disconnect_accelerator)
+				(implementation~disconnect_accelerator (?))
 		end
 
 invariant
@@ -202,6 +214,10 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/21 02:25:27  brendel
+--| ACTIVE_LIST is not used anymore.
+--| Replaced by 2 features.
+--|
 --| Revision 1.10  2000/03/18 00:52:23  oconnor
 --| formatting, layout and comment tweaks
 --|

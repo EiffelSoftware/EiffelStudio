@@ -219,12 +219,10 @@ feature -- Access
 			non_void_local_assemblies: local_assemblies /= Void
 			not_empty_local_assemblies: not local_assemblies.is_empty
 		local
-			an_assembly_location: STRING
 			an_assembly_dependencies: LINKED_LIST [STRING]
 			a_dependency: STRING
 			a_key: STRING
 			an_item: STRING
-			i: INTEGER
 			a_name: STRING
 		once
 			from
@@ -630,8 +628,6 @@ feature {NONE} -- Implementation
 		
 	on_retry is
 			-- Retry assembly importation.
-		local
-			imported_assemblies: ECOM_ARRAY [STRING]
 		do
 			confirmation_dialog := Void
 			retrieve_available_assemblies 

@@ -102,7 +102,21 @@ rt_public Signal_t ehandlr(EIF_CONTEXT register int sig)
 	Signal_t (*handler)(int);			/* The Eiffel signal handler routine */
 
 #ifndef SIGNALS_KEPT
-	(void) signal(sig, ehandlr);	/* Restore catching if disarmed */
+	void (*old_handler)(int);
+
+	/* Assume disposition of signal is SIG_DFL.
+	   Reset disposition of signal to call
+	   ISE's interrupt handler */
+
+	old_handler = signal(sig, ehandlr);
+
+	if (old_handler != SIG_DFL) {
+		/* Oops - someone called `sigaction' to override
+		   ISE's handler.  Their handler is still
+		   the one to use, so restore it.
+		 */
+		signal(sig, old_handler);
+	}
 #endif
 
 	if (sig_ign[sig])				/* If signal is to be ignored */
@@ -167,7 +181,23 @@ rt_public Signal_t exfpe(int sig)
 #endif
 
 #ifndef SIGNALS_KEPT
-	(void) signal(sig, exfpe);	/* Restore catching if disarmed */
+	{
+		void (*old_handler)(int);
+
+		/* Assume disposition of signal is SIG_DFL.
+		   Reset disposition of signal to call
+		   ISE's interrupt handler */
+
+		old_handler = signal(sig, exfpe);
+
+		if (old_handler != SIG_DFL) {
+			/* Oops - someone called `sigaction' to override
+			   ISE's handler.  Their handler is still
+			   the one to use, so restore it.
+			 */
+			signal(sig, old_handler);
+		}
+	}
 #endif
 
 	if (sig_ign[sig])				/* If signal is to be ignored */

@@ -68,12 +68,12 @@ cluster
 			"CVS"; 
 		end
 
-	cache:		"E:\dotnet\consumer\cache"
+	cache:		"$EIFFEL_SRC\dotnet\consumer\cache"
 		exclude
 			"CVS"; 
 		end
 
-	all wel:		"E:\library\wel"
+	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
 			"CVS"; 
 		end
@@ -81,7 +81,7 @@ cluster
 external
 
 	include_path:
-		"E:\library\wel\spec\windows\include"
+		"\$(EIFFEL_SRC)\library\wel\spec\windows\include"
 
 	assembly:
 		"C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\system.dll",

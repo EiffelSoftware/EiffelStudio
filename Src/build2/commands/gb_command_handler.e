@@ -85,6 +85,12 @@ feature -- Access
 			Result.make
 		end
 		
+	show_hide_constants_dialog_command: GB_SHOW_HIDE_CONSTANTS_DIALOG_COMMAND is
+			-- Command representing display of constants dialog.
+		once
+			create Result.make
+		end
+		
 	redo_command: GB_REDO_COMMAND is
 			-- Command representing a redo.
 		once

@@ -72,7 +72,7 @@ feature -- Basic operations
 		do
 			create Result.make (1000)
 			Result.append (Tab)
-			Result.append ("IConnectionPointContainer * pcpc = 0;%N%T")
+			Result.append ("IConnectionPointContainer * pcpc = 0;%R%N%T")
 			Result.append (Hresult_variable)
 			Result.append (Tab)
 			
@@ -81,12 +81,12 @@ feature -- Basic operations
 			Result.append (Iunknown_variable_name)
 			Result.append (Struct_selection_operator)
 			Result.append (Query_interface)
-			Result.append ("(IID_IConnectionPointContainer, (void**)&pcpc);%N")
+			Result.append ("(IID_IConnectionPointContainer, (void**)&pcpc);%R%N")
 			
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line_tab)
 			
-			Result.append ("IConnectionPoint * pcp = 0;%N%T")
+			Result.append ("IConnectionPoint * pcp = 0;%R%N%T")
 			
 			Result.append ("IID temp_IID = ")
 			Result.append (a_interface.guid.to_definition_string)
@@ -94,7 +94,7 @@ feature -- Basic operations
 			Result.append (New_line_tab)
 			
 			Result.append (Hresult_variable_name)
-			Result.append (" = pcpc->FindConnectionPoint (temp_IID, &pcp);%N")
+			Result.append (" = pcpc->FindConnectionPoint (temp_IID, &pcp);%R%N")
 			
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line_tab)
@@ -102,12 +102,12 @@ feature -- Basic operations
 			Result.append (Hresult_variable_name)
 			Result.append (" = pcp->Advise ((IUnknown *)p_events, &")
 			Result.append (cookie_name (a_interface))
-			Result.append (");%N")
+			Result.append (");%R%N")
 			
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line_tab)
 			
-			Result.append ("pcp->Release ();%N%T")
+			Result.append ("pcp->Release ();%R%N%T")
 			Result.append ("pcpc->Release ();")
 		ensure
 			non_void_body: Result /= Void
@@ -142,7 +142,7 @@ feature -- Basic operations
 		do
 			create Result.make (1000)
 			Result.append (Tab)
-			Result.append ("IConnectionPointContainer * pcpc = 0;%N%T")
+			Result.append ("IConnectionPointContainer * pcpc = 0;%R%N%T")
 			Result.append (Hresult_variable)
 			Result.append (Tab)
 
@@ -151,12 +151,12 @@ feature -- Basic operations
 			Result.append (Iunknown_variable_name)
 			Result.append (Struct_selection_operator)
 			Result.append (Query_interface)
-			Result.append ("(IID_IConnectionPointContainer, (void**)&pcpc);%N")
+			Result.append ("(IID_IConnectionPointContainer, (void**)&pcpc);%R%N")
 
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line_tab)
 
-			Result.append ("IConnectionPoint * pcp = 0;%N%T")
+			Result.append ("IConnectionPoint * pcp = 0;%R%N%T")
 
 			Result.append ("IID temp_IID = ")
 			Result.append (a_interface.guid.to_definition_string)
@@ -164,7 +164,7 @@ feature -- Basic operations
 			Result.append (New_line_tab)
 
 			Result.append (Hresult_variable_name)
-			Result.append (" = pcpc->FindConnectionPoint (temp_IID, &pcp);%N")
+			Result.append (" = pcpc->FindConnectionPoint (temp_IID, &pcp);%R%N")
 
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line_tab)
@@ -172,12 +172,12 @@ feature -- Basic operations
 			Result.append (Hresult_variable_name)
 			Result.append (" = pcp->Unadvise (")
 			Result.append (cookie_name (a_interface))
-			Result.append (");%N")
+			Result.append (");%R%N")
 
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line_tab)
 
-			Result.append ("pcp->Release ();%N%T")
+			Result.append ("pcp->Release ();%R%N%T")
 			Result.append ("pcpc->Release ();")
 		ensure
 			non_void_body: Result /= Void

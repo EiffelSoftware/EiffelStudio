@@ -113,18 +113,18 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_signature ("IUnknown * a_pointer")
 			create l_body.make (1000)
-			l_body.append ("%THRESULT hr, hr2;%N")
+			l_body.append ("%THRESULT hr, hr2;%R%N")
 			l_body.append (co_initialize_ex_function)
 			l_body.append (examine_hresult ("hr"))
-			l_body.append ("%N%Thr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);%N")
+			l_body.append ("%R%N%Thr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);%R%N")
 			l_body.append (examine_hresult ("hr"))
-			l_body.append ("%N%N%Thr = a_pointer->QueryInterface(")
+			l_body.append ("%R%N%R%N%Thr = a_pointer->QueryInterface(")
 			l_body.append (iid_name (a_descriptor.interface_descriptor.name))
 			l_body.append (", (void **)&p_")
 			l_body.append (a_descriptor.interface_descriptor.name)
-			l_body.append (");%N")
+			l_body.append (");%R%N")
 			l_body.append (examine_hresult ("hr"))
-			l_body.append ("%N")
+			l_body.append ("%R%N")
 			l_body.append (excepinfo_initialization)			
 			Result.set_body (l_body)
 		ensure
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 
 			-- Release "excepinfo" if allocated
 			if dispatch_interface then
-				Result.append ("%N%TCoTaskMemFree ((void *)excepinfo);%N%T")
+				Result.append ("%R%N%TCoTaskMemFree ((void *)excepinfo);%R%N%T")
 			end
 
 			Result.append (release_interface (a_descriptor.interface_descriptor.name))

@@ -43,7 +43,7 @@ feature  -- Basic operations
 			create midl_coclass_creator.make
 			midl_coclass_creator.create_from_eiffel_class (e_class)
 
-			l_code := "import %"oaidl.idl%"%N%N"
+			l_code := "import %"oaidl.idl%"%R%N%R%N"
 
 
 			if midl_coclass_creator.succeed then

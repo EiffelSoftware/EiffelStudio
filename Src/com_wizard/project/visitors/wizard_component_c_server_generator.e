@@ -138,14 +138,12 @@ feature -- Basic Operations
 	constructor_from_object_body (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
 			-- Body of constructor from Eiffel object.
 		do
-			create Result.make (1000)
-			Result.append ("[
-	ref_count = 0;
-	eiffel_object = eif_adopt (eif_obj);
-	type_id = eif_type (eiffel_object);
-	]")
+			create Result.make (500)
+			Result.append ("%Tref_count = 0;%R%N%T")
+			Result.append ("eiffel_object = eif_adopt (eif_obj);%R%N%T")
+			Result.append ("type_id = eif_type (eiffel_object);")
 			if dispatch_interface then
-				Result.append ("%N%TpTypeInfo = 0;")
+				Result.append ("%R%N%TpTypeInfo = 0;")
 			end
 			Result.append (constructor_addition (a_component))
 		end
@@ -166,16 +164,13 @@ feature -- Basic Operations
 		do
 			create Result.make (1000)
 
-			Result.append ("[
-	ref_count = 0;
-	eiffel_object = eif_create (type_id);
-	EIF_PROCEDURE eiffel_procedure;
-	eiffel_procedure = eif_procedure ("make_from_pointer", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), (EIF_POINTER)this);
-	]")
+			Result.append ("%Tref_count = 0;%R%N%T")
+			Result.append ("eiffel_object = eif_create (type_id);%R%N%T")
+			Result.append ("EIF_PROCEDURE eiffel_procedure;%R%N%T")
+			Result.append ("eiffel_procedure = eif_procedure (%"make_from_pointer%", type_id);%R%N%R%N%T")
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), (EIF_POINTER)this);")
 			if dispatch_interface then
-				Result.append ("%N%TpTypeInfo = 0;")
+				Result.append ("%R%N%TpTypeInfo = 0;")
 			end
 			Result.append (constructor_addition (a_component))
 		ensure
@@ -193,7 +188,7 @@ feature -- Basic Operations
 		do
 			create Result.make (0)
 			if not environment.is_client and environment.is_out_of_process and not system_descriptor.coclasses.is_empty then
-				Result.append ("%TLockModule ();%N")
+				Result.append ("%TLockModule ();%R%N")
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -205,18 +200,13 @@ feature -- Basic Operations
 			l_body: STRING
 		do
 			create l_body.make (10000)
-
-			l_body.append ("[
-	EIF_PROCEDURE eiffel_procedure;
-	eiffel_procedure = eif_procedure ("set_item", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
-	eif_wean (eiffel_object);
-	]")
+			l_body.append ("%TEIF_PROCEDURE eiffel_procedure;%R%N%T")
+			l_body.append ("eiffel_procedure = eif_procedure (%"set_item%", type_id);%R%N%R%N%T")
+			l_body.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);%R%N%T")
+			l_body.append ("eif_wean (eiffel_object);")
 			if dispatch_interface then
-				l_body.append ("%N%Tif (pTypeInfo)%N%T%TpTypeInfo->Release ();")
+				l_body.append ("%R%N%Tif (pTypeInfo)%R%N%T%TpTypeInfo->Release ();")
 			end
-
 			l_body.append (destructor_addition (a_component))
 			cpp_class_writer.set_destructor (l_body)
 		end
@@ -226,9 +216,7 @@ feature -- Basic Operations
 		do
 			create Result.make (0)
 			if not environment.is_client and environment.is_out_of_process and not system_descriptor.coclasses.is_empty then
-				Result.append (tab)
-				Result.append ("UnlockModule ();")
-				Result.append (New_line)
+				Result.append ("%TUnlockModule ();%R%N")
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -244,27 +232,14 @@ feature -- Basic Operations
 		do
 			create func_writer.make
 
-			create l_body.make (1000)
-
-			l_body.append (tab)
-			l_body.append ("if ((itinfo != 0) || (pptinfo == NULL))%N%T%Treturn E_INVALIDARG;")
-			l_body.append (New_line_tab)
-
-			l_body.append ("*pptinfo = NULL;")
-			l_body.append (New_line)
-
+			create l_body.make (500)
+			l_body.append ("%Tif ((itinfo != 0) || (pptinfo == NULL))%R%N%T%Treturn E_INVALIDARG;%R%N%T")
+			l_body.append ("*pptinfo = NULL;%R%N")
 			l_body.append (check_type_info (a_component))
+			l_body.append ("(*pptinfo = pTypeInfo)->AddRef ();%R%N%T")
+			l_body.append ("return S_OK;")
 
-			l_body.append (Open_parenthesis)
-			l_body.append ("*pptinfo")
-			l_body.append (Space_equal_space)
-			l_body.append (Type_info_variable_name)
-			l_body.append (Close_parenthesis)
-			l_body.append (Add_reference_function)
-			l_body.append (New_line_tab)
-			l_body.append (Return_s_ok)
-
-			func_writer.set_name (Get_type_info)
+			func_writer.set_name ("GetTypeInfo")
 			func_writer.set_comment ("Get type info")
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature ("unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo")
@@ -288,24 +263,11 @@ feature -- Basic Operations
 			l_body: STRING
 		do
 			create func_writer.make
-
-			create l_body.make (10000)
-			l_body.append (Tab)
-			l_body.append ("if (pctinfo == NULL)")
-			l_body.append (New_line_tab_tab)
-			l_body.append (Return)
-			l_body.append (Space)
-			l_body.append ("E_NOTIMPL")
-			l_body.append (Semicolon)
-			l_body.append (New_line_tab)
-
-			l_body.append ("*pctinfo")
-			l_body.append (Space_equal_space)
-			l_body.append (One)
-			l_body.append (Semicolon)
-			l_body.append (New_line_tab)
-			l_body.append (Return_s_ok)
-
+			create l_body.make (200)
+			l_body.append ("%Tif (pctinfo == NULL)%R%N%T%T")
+			l_body.append ("return E_NOTIMPL;%R%N%T")
+			l_body.append ("*pctinfo = 1;%R%N%T")
+			l_body.append ("return S_OK;")
 			func_writer.set_name (Get_type_info_count)
 			func_writer.set_comment ("Get type info count")
 			func_writer.set_result_type (Std_method_imp)
@@ -332,20 +294,9 @@ feature -- Basic Operations
 			l_body: STRING
 		do
 			create func_writer.make
-
 			l_body := check_type_info (a_component)
-
-			l_body.append (Return)
-			l_body.append (Space)
-			l_body.append (Type_info_variable_name)
-			l_body.append (Struct_selection_operator)
-			l_body.append (Get_ids_of_names)
-			l_body.append (Space_open_parenthesis)
-			l_body.append ("rgszNames, cNames, rgdispid")
-			l_body.append (Close_parenthesis)
-			l_body.append (Semicolon)
-
-			func_writer.set_name (Get_ids_of_names)
+			l_body.append ("return pTypeInfo->GetIDsOfNames (rgszNames, cNames, rgdispid);")
+			func_writer.set_name ("GetIDsOfNames")
 			func_writer.set_comment ("IDs of function names 'rgszNames'")
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature ("REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid")
@@ -397,12 +348,12 @@ feature -- Basic Operations
 			body_code.append (New_line)
 			body_code.append (New_line_tab)
 			
-			body_code.append ("unsigned int uArgErr;%N%T")
-			body_code.append ("if (wFlags & ~(DISPATCH_METHOD | DISPATCH_PROPERTYGET | DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))%N%T%T")
-			body_code.append ("return ResultFromScode (E_INVALIDARG);%N%N%T")
+			body_code.append ("unsigned int uArgErr;%R%N%T")
+			body_code.append ("if (wFlags & ~(DISPATCH_METHOD | DISPATCH_PROPERTYGET | DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))%R%N%T%T")
+			body_code.append ("return ResultFromScode (E_INVALIDARG);%R%N%R%N%T")
 			
-			body_code.append ("if (puArgErr == NULL)%N%T%T")
-			body_code.append ("puArgErr = &uArgErr;%N%N%T")
+			body_code.append ("if (puArgErr == NULL)%R%N%T%T")
+			body_code.append ("puArgErr = &uArgErr;%R%N%R%N%T")
 
 			body_code.append ("VARIANTARG * rgvarg")
 			body_code.append (Space_equal_space)
@@ -444,16 +395,16 @@ feature -- Basic Operations
 			body_code.append (New_line)
 			body_code.append (New_line_tab)
 			
-			body_code.append ("if (pExcepInfo != NULL)%N%T{%N%T%T")
-			body_code.append ("pExcepInfo->wCode = 0;%N%T%T")
-			body_code.append ("pExcepInfo->wReserved = 0;%N%T%T")
-			body_code.append ("pExcepInfo->bstrSource = NULL;%N%T%T")
-			body_code.append ("pExcepInfo->bstrDescription = NULL;%N%T%T")
-			body_code.append ("pExcepInfo->bstrHelpFile = NULL;%N%T%T")
-			body_code.append ("pExcepInfo->dwHelpContext = 0;%N%T%T")
-			body_code.append ("pExcepInfo->pvReserved = NULL;%N%T%T")
-			body_code.append ("pExcepInfo->pfnDeferredFillIn = NULL;%N%T%T")
-			body_code.append ("pExcepInfo->scode = 0;%N%T}%N%T")
+			body_code.append ("if (pExcepInfo != NULL)%R%N%T{%R%N%T%T")
+			body_code.append ("pExcepInfo->wCode = 0;%R%N%T%T")
+			body_code.append ("pExcepInfo->wReserved = 0;%R%N%T%T")
+			body_code.append ("pExcepInfo->bstrSource = NULL;%R%N%T%T")
+			body_code.append ("pExcepInfo->bstrDescription = NULL;%R%N%T%T")
+			body_code.append ("pExcepInfo->bstrHelpFile = NULL;%R%N%T%T")
+			body_code.append ("pExcepInfo->dwHelpContext = 0;%R%N%T%T")
+			body_code.append ("pExcepInfo->pvReserved = NULL;%R%N%T%T")
+			body_code.append ("pExcepInfo->pfnDeferredFillIn = NULL;%R%N%T%T")
+			body_code.append ("pExcepInfo->scode = 0;%R%N%T}%R%N%T")
 			body_code.append (New_line_tab)
 
 			body_code.append (Switch)
@@ -589,22 +540,22 @@ feature -- Basic Operations
 		do
 			create Result.make (1000)
 			l_visitor := prop_desc.data_type.visitor
-			Result.append ("%N%T%T%Tif (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))%N%T%T%T{%N%T%T%T%T")
-			Result.append ("VariantClear (pVarResult);%N%T%T%T%TpVarResult->vt = ")
+			Result.append ("%R%N%T%T%Tif (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))%R%N%T%T%T{%R%N%T%T%T%T")
+			Result.append ("VariantClear (pVarResult);%R%N%T%T%T%TpVarResult->vt = ")
 			Result.append_integer (l_visitor.vt_type)
-			Result.append (";%N%T%T%T%T")
+			Result.append (";%R%N%T%T%T%T")
 			Result.append (l_visitor.c_type)
 			Result.append (" result")
 			if not l_visitor.is_structure then
 				Result.append (" = 0")
 			end
-			Result.append (";%N%T%T%T%T")
+			Result.append (";%R%N%T%T%T%T")
 			Result.append ("hr = get_")
 			Result.append (prop_desc.name)
-			Result.append (" (&result);%N%T%T%T%T")
+			Result.append (" (&result);%R%N%T%T%T%T")
 
 			Result.append (check_failer (0, excepinfo_setting, "DISP_E_EXCEPTION"))
-			Result.append ("%N%T%T%T%T")
+			Result.append ("%R%N%T%T%T%T")
 
 			if l_visitor.is_structure then
 				Result.append ("memcpy (&(pVarResult->")
@@ -617,18 +568,18 @@ feature -- Basic Operations
 				Result.append (vartype_namer.variant_field_name (l_visitor))
 				Result.append (" = result")
 			end
-			Result.append (";%N%T%T%T}%N%T%T%T")
+			Result.append (";%R%N%T%T%T}%R%N%T%T%T")
 
 			if not prop_desc.is_read_only then
-				Result.append ("if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))%N%T%T%T{%N%T%T%T%T")
+				Result.append ("if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))%R%N%T%T%T{%R%N%T%T%T%T")
 				l_visitor := prop_desc.data_type.visitor
-				Result.append (";%N%T%T%T%T")
+				Result.append (";%R%N%T%T%T%T")
 				Result.append (get_argument_from_variant (prop_desc.data_type, "arg", "(&(pDispParams->rgvarg [0]))", 0, 0))
 				Result.append ("hr = set_")
 				Result.append (prop_desc.name)
-				Result.append (" (arg);%N%T%T%T%T")
+				Result.append (" (arg);%R%N%T%T%T%T")
 				Result.append (check_failer (0, excepinfo_setting, "DISP_E_EXCEPTION"))
-				Result.append ("%N%T%T%T}")
+				Result.append ("%R%N%T%T%T}")
 			end
 		end
 
@@ -683,7 +634,7 @@ feature -- Basic Operations
 		require
 			non_void_body: a_case_body /= Void
 			non_empty_body: not a_case_body.is_empty 
-			valid_body_start: a_case_body.substring_index ("%N%T%T%T%<", 1) = 1 or a_case_body.substring_index ("%N%T%T%Tif", 1) = 1
+			valid_body_start: a_case_body.substring_index ("%R%N%T%T%T%<", 1) = 1 or a_case_body.substring_index ("%R%N%T%T%Tif", 1) = 1
 		do
 			create Result.make (1000)
 			Result.append (New_line_tab_tab)

@@ -58,8 +58,8 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	description_message: STRING is 
-		"Objects of this class set the registry keys necessary for COM to access the component%%%N%T%T%T%T  %
-		% %%and activate a new instance of the component whenever COM asks for if.%%%N%T%T%T%T  %
+		"Objects of this class set the registry keys necessary for COM to access the component%%%R%N%T%T%T%T  %
+		% %%and activate a new instance of the component whenever COM asks for if.%%%R%N%T%T%T%T  %
 		% %%User may inherit from this class and redifine `main_window'."
 
 	default_show_cmd: STRING is "default_show_cmd"

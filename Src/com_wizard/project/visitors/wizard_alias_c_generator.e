@@ -32,12 +32,12 @@ feature -- Access
 			create l_definition.make (100)
 			l_definition.append ("namespace ")
 			l_definition.append (alias_descriptor.namespace)
-			l_definition.append ("%N{%N%Ttypedef ")
+			l_definition.append ("%R%N{%R%N%Ttypedef ")
 			l_definition.append (l_visitor.c_type)
 			l_definition.append (" ")
 			l_definition.append (alias_descriptor.c_type_name)
 			l_definition.append (l_visitor.c_post_type)
-			l_definition.append (";%N}")
+			l_definition.append (";%R%N}")
 			c_writer.add_other (l_definition)
 			c_writer := Void
 		end

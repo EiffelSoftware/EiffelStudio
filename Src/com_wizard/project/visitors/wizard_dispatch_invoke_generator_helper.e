@@ -48,18 +48,18 @@ feature -- Access
 	excepinfo_setting: STRING is
 			-- Fills EXCEPINFO `bstrDescription' and `bstrSource'
 		do
-			Result := "if (pExcepInfo != NULL)%N%
-	%					{%N%
-	%						WCHAR * wide_string = 0;%N%
-	%						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));%N%
-	%						BSTR b_string = SysAllocString (wide_string);%N%
-	%						free (wide_string);%N%
-	%						pExcepInfo->bstrDescription = b_string;%N%
-	%						wide_string = ccom_create_from_string (%"" + environment.project_name + "%");%N%
-	%						b_string = SysAllocString (wide_string);%N%
-	%						free (wide_string);%N%
-	%						pExcepInfo->bstrSource = b_string;%N%
-	%						pExcepInfo->wCode = HRESULT_CODE (hr);%N%
+			Result := "if (pExcepInfo != NULL)%R%N%
+	%					{%R%N%
+	%						WCHAR * wide_string = 0;%R%N%
+	%						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));%R%N%
+	%						BSTR b_string = SysAllocString (wide_string);%R%N%
+	%						free (wide_string);%R%N%
+	%						pExcepInfo->bstrDescription = b_string;%R%N%
+	%						wide_string = ccom_create_from_string (%"" + environment.project_name + "%");%R%N%
+	%						b_string = SysAllocString (wide_string);%R%N%
+	%						free (wide_string);%R%N%
+	%						pExcepInfo->bstrSource = b_string;%R%N%
+	%						pExcepInfo->wCode = HRESULT_CODE (hr);%R%N%
 	%					}"
 		end
 			
@@ -157,7 +157,7 @@ feature -- Basic operations
 			Result.append (New_line_tab_tab_tab)
 			Result.append (Tab_tab)
 			if an_argument_count > 0 then
-				Result.append ("CoTaskMemFree (tmp_value);%N%T%T%T%T%T")
+				Result.append ("CoTaskMemFree (tmp_value);%R%N%T%T%T%T%T")
 			end
 			Result.append (an_additional_string)
 			Result.append (New_line_tab_tab_tab)
@@ -357,19 +357,19 @@ feature -- Basic operations
 			create Result.make (1000)
 
 			Result.append ("if (" + a_variant_name + 
-						"->vt != " + l_visitor.vt_type.out + ")%N%T%T%T%T{%N%T%T%T%T%T")
+						"->vt != " + l_visitor.vt_type.out + ")%R%N%T%T%T%T{%R%N%T%T%T%T%T")
 			
 			Result.append ("hr = VariantChangeType (" + 
 							a_variant_name +", " +
 							"" + a_variant_name + ", " +
 							"VARIANT_NOUSEROVERRIDE, " + 
-							l_visitor.vt_type.out + ");%N%T%T%T%T%T")
+							l_visitor.vt_type.out + ");%R%N%T%T%T%T%T")
 
 			Result.append (check_failer (an_argument_count, 
 							"*puArgErr = " + counter.out + ";", 
 							"DISP_E_TYPEMISMATCH"))
 
-			Result.append ("%N%T%T%T%T}")
+			Result.append ("%R%N%T%T%T%T}")
 			Result.append (New_line_tab_tab_tab)
 			Result.append (Tab)
 

@@ -53,7 +53,7 @@ feature -- Basic operations
 						l_item.left_adjust
 						l_item.right_adjust
 						l_comment.append (l_item)
-						l_comment.append ("%N")
+						l_comment.append ("%R%N")
 					end
 					inputs.forth
 					if not inputs.after then

@@ -39,21 +39,21 @@ feature -- Access
 
 	Partial_ace_file: STRING is
 			-- Ace file used to precompile generated Eiffel system
-		"root%N%
-		%	ANY%N%N%
-		%default%N%
-		%	assertion (all)%N%
-		%	multithreaded (no)%N%
-		%	console_application (no)%N%
-		%	dynamic_runtime (no)%N%
-		%	dead_code_removal (yes)%N%
-		%	profile (no)%N%
-		%	line_generation (no)%N%
-		%	debug  (no)%N%
-		%	array_optimization (no)%N%
-		%	inlining (no)%N%
-		%	inlining_size (%"4%")%N%  
-		%cluster%N%
+		"root%R%N%
+		%	ANY%R%N%R%N%
+		%default%R%N%
+		%	assertion (all)%R%N%
+		%	multithreaded (no)%R%N%
+		%	console_application (no)%R%N%
+		%	dynamic_runtime (no)%R%N%
+		%	dead_code_removal (yes)%R%N%
+		%	profile (no)%R%N%
+		%	line_generation (no)%R%N%
+		%	debug  (no)%R%N%
+		%	array_optimization (no)%R%N%
+		%	inlining (no)%R%N%
+		%	inlining_size (%"4%")%R%N%  
+		%cluster%R%N%
 		%	all client: %""
 
 	Partial_ace_file_addition: STRING is 	"	all server: %""
@@ -72,16 +72,16 @@ feature -- Access
 				Standard_clusters.forth
 			end
 			Result.append (
-					"external%N%
-					%	include_path:	%"$ISE_EIFFEL\library\wel\spec\windows\include%",%N%
-					%			%"$ISE_EIFFEL\library\com\spec\windows\include%",%N")
+					"external%R%N%
+					%	include_path:	%"$ISE_EIFFEL\library\wel\spec\windows\include%",%R%N%
+					%			%"$ISE_EIFFEL\library\com\spec\windows\include%",%R%N")
 		end
 
 	End_ace_file: STRING is
 			-- End of ace file used to precompile generated Eiffel system
-		"	object: 	%"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib%",%N%
-		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib%",%N%
-		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib%",%N"
+		"	object: 	%"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib%",%R%N%
+		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib%",%R%N%
+		%			%"$(ISE_EIFFEL)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib%",%R%N"
 
 
 	Visible: STRING is "visible"
@@ -124,7 +124,7 @@ feature -- Access
 					end
 					Result.append (l_cluster)
 
-					Result.append ("%N%T%T")
+					Result.append ("%R%N%T%T")
 					l_clusters.forth
 				end
 			end
@@ -150,61 +150,61 @@ feature -- Access
 		once
 			create {ARRAYED_LIST [STRING]} Result.make (4)
 			Result.extend (
-					"	-- BASE%N%
-					%	all base:						%"$ISE_EIFFEL\library\base%"%N%
-					%		exclude%N%
-					%			%"table_eiffel3%";%N%
-					%			%"desc%"%N%
-					%		visible%N%
-					%			INTEGER_REF;%N%
-					%			CHARACTER_REF;%N%
-					%			BOOLEAN_REF;%N%
-					%			REAL_REF;%N%
-					%			DOUBLE_REF;%N%
-					%			CELL;%N%
-					%			STRING;%N%
-					%			ARRAY;%N%
-					%		end;%N%N")
+					"	-- BASE%R%N%
+					%	all base:						%"$ISE_EIFFEL\library\base%"%R%N%
+					%		exclude%R%N%
+					%			%"table_eiffel3%";%R%N%
+					%			%"desc%"%R%N%
+					%		visible%R%N%
+					%			INTEGER_REF;%R%N%
+					%			CHARACTER_REF;%R%N%
+					%			BOOLEAN_REF;%R%N%
+					%			REAL_REF;%R%N%
+					%			DOUBLE_REF;%R%N%
+					%			CELL;%R%N%
+					%			STRING;%R%N%
+					%			ARRAY;%R%N%
+					%		end;%R%N%R%N")
 
 			Result.extend (
-					"	-- WEL%N%
-					%	all wel:						%"$ISE_EIFFEL\library\wel%"%N%N")
+					"	-- WEL%R%N%
+					%	all wel:						%"$ISE_EIFFEL\library\wel%"%R%N%R%N")
 
 			Result.extend (
-					"	-- TIME%N%
-					%	all time: 						%"$ISE_EIFFEL\library\time%"%N%
-					%		exclude%N%
-					%			%"french%";%N%
-					%			%"german%"%N%
-					%		visible%N%
-					%			DATE_TIME;%N%
-					%		end;%N%N")
+					"	-- TIME%R%N%
+					%	all time: 						%"$ISE_EIFFEL\library\time%"%R%N%
+					%		exclude%R%N%
+					%			%"french%";%R%N%
+					%			%"german%"%R%N%
+					%		visible%R%N%
+					%			DATE_TIME;%R%N%
+					%		end;%R%N%R%N")
 
 			Result.extend (
-					"	-- COM%N%
-					%	all ecom:						%"$ISE_EIFFEL\library\com%"%N%
-					%		visible%N%
-					%			ECOM_DECIMAL;%N%
-					%			ECOM_CURRENCY;%N%
-					%			ECOM_ARRAY;%N%
-					%			ECOM_VARIANT;%N%
-					%			ECOM_GUID;%N%
-					%			ECOM_EXCEP_INFO;%N%
-					%			ECOM_DISP_PARAMS;%N%
-					%			ECOM_STATSTG;%N%
-					%			ECOM_STREAM;%N%
-					%			ECOM_STORAGE;%N%
-					%			ECOM_ROOT_STORAGE;%N%
-					%			ECOM_ENUM_STATSTG;%N%
-					%			ECOM_HRESULT;%N%
-					%			ECOM_WIDE_STRING;%N%
-					%			ECOM_LARGE_INTEGER;%N%
-					%			ECOM_ULARGE_INTEGER;%N%
-					%			ECOM_UNKNOWN_INTERFACE;%N%
-					%			ECOM_AUTOMATION_INTERFACE;%N%
-					%			ECOM_STUB;%N%
-					%			ECOM_QUERIABLE;%N%
-					%		end;%N%N")
+					"	-- COM%R%N%
+					%	all ecom:						%"$ISE_EIFFEL\library\com%"%R%N%
+					%		visible%R%N%
+					%			ECOM_DECIMAL;%R%N%
+					%			ECOM_CURRENCY;%R%N%
+					%			ECOM_ARRAY;%R%N%
+					%			ECOM_VARIANT;%R%N%
+					%			ECOM_GUID;%R%N%
+					%			ECOM_EXCEP_INFO;%R%N%
+					%			ECOM_DISP_PARAMS;%R%N%
+					%			ECOM_STATSTG;%R%N%
+					%			ECOM_STREAM;%R%N%
+					%			ECOM_STORAGE;%R%N%
+					%			ECOM_ROOT_STORAGE;%R%N%
+					%			ECOM_ENUM_STATSTG;%R%N%
+					%			ECOM_HRESULT;%R%N%
+					%			ECOM_WIDE_STRING;%R%N%
+					%			ECOM_LARGE_INTEGER;%R%N%
+					%			ECOM_ULARGE_INTEGER;%R%N%
+					%			ECOM_UNKNOWN_INTERFACE;%R%N%
+					%			ECOM_AUTOMATION_INTERFACE;%R%N%
+					%			ECOM_STUB;%R%N%
+					%			ECOM_QUERIABLE;%R%N%
+					%		end;%R%N%R%N")
 
 		end
 
@@ -215,7 +215,7 @@ feature -- Access
 			-- Dll definition file for Ace file
 		do
 			create Result.make (1000)
-			Result.append ("default%N%Tshared_library_definition (%"")
+			Result.append ("default%R%N%Tshared_library_definition (%"")
 			Result.append (User_def_file_name)
 			Result.append ("%")")
 		end
@@ -344,15 +344,15 @@ feature -- Basic operations
 			l_path: LIST [STRING]
 		do
 			create Result.make (10000)
-			Result.append ("system%N%T%"")
+			Result.append ("system%R%N%T%"")
 			Result.append (environment.project_name)
 			if environment.is_client then
 				Result.append ("_client")
 			end
-			Result.append ("%"%N")
+			Result.append ("%"%R%N")
 			Result.append (Partial_ace_file)
 			Result.append (environment.destination_folder)
-			Result.append ("Client%"%N%T%Tvisible%N")
+			Result.append ("Client%"%R%N%T%Tvisible%R%N")
 
 			l_classes := system_descriptor.visible_classes_client
 			from
@@ -363,13 +363,13 @@ feature -- Basic operations
 				Result.append (l_classes.item.generated_code)
 				l_classes.forth
 			end
-			Result.append ("%N%T%Tend%N%Tall server: %"")
+			Result.append ("%R%N%T%Tend%R%N%Tall server: %"")
 			Result.append (environment.destination_folder)
-			Result.append ("Server%"%N%T%Tvisible%N%T%T%T")
+			Result.append ("Server%"%R%N%T%Tvisible%R%N%T%T%T")
 
 			if not environment.is_client and not system_descriptor.coclasses.is_empty then
 				Result.append (Registration_class_name)
-				Result.append (";%N")
+				Result.append (";%R%N")
 			end
 			
 			l_classes := system_descriptor.visible_classes_server
@@ -381,16 +381,16 @@ feature -- Basic operations
 				Result.append (l_classes.item.generated_code)
 				l_classes.forth
 			end
-			Result.append ("%N%T%Tend")
+			Result.append ("%R%N%T%Tend")
 
 			if environment.is_eiffel_interface then
-				Result.append ("%N%N%T")
+				Result.append ("%R%N%R%N%T")
 				Result.append (clusters_from_project)
 			end
 			
-			Result.append ("%N%N%Tall common:%T%T%T%T%T%T%"")
+			Result.append ("%R%N%R%N%Tall common:%T%T%T%T%T%T%"")
 			Result.append (environment.destination_folder)
-			Result.append ("Common%"%N%T%Tvisible%N%T%T%T")
+			Result.append ("Common%"%R%N%T%Tvisible%R%N%T%T%T")
 
 			l_classes := system_descriptor.visible_classes_common
 			from
@@ -401,7 +401,7 @@ feature -- Basic operations
 				Result.append (l_classes.item.generated_code)
 				l_classes.forth
 			end
-			Result.append ("%N%T%Tend%N%N%N")
+			Result.append ("%R%N%T%Tend%R%N%R%N%R%N")
 			Result.append (Partial_ace_file_part_two)
 			Result.append ("%T%T%T")
 
@@ -414,7 +414,7 @@ feature -- Basic operations
 				loop
 					if not l_path.item.is_empty then
 						Result.append (l_path.item)
-						Result.append ("%N%T%T%T")
+						Result.append ("%R%N%T%T%T")
 					end
 					l_path.forth
 				end
@@ -424,15 +424,15 @@ feature -- Basic operations
 			Result.append (environment.destination_folder)
 			Result.append ("Client")
 			Result.append_character (Directory_separator)
-			Result.append ("Include%",%N%T%T%T%"")
+			Result.append ("Include%",%R%N%T%T%T%"")
 			Result.append (environment.destination_folder)
 			Result.append ("Server")
 			Result.append_character (Directory_separator)
-			Result.append ("Include%",%N%T%T%T%"")
+			Result.append ("Include%",%R%N%T%T%T%"")
 			Result.append (environment.destination_folder)
 			Result.append ("Common")
 			Result.append_character (Directory_separator)
-			Result.append ("Include%";%N%N")
+			Result.append ("Include%";%R%N%R%N")
 			Result.append (End_ace_file)
 
 			if original_cluster_info /= Void then
@@ -443,13 +443,13 @@ feature -- Basic operations
 					l_path.after
 				loop
 					if not l_path.item.is_empty then
-						Result.append ("%N%T%T%T")
+						Result.append ("%R%N%T%T%T")
 						Result.append (l_path.item)
 					end
 					original_cluster_info.objects.forth
 				end
 			end
-			Result.append ("%N")
+			Result.append ("%R%N")
 		end
 
 	if_class_cluster_insert_visible (a_cluster: STRING) is
@@ -474,7 +474,7 @@ feature -- Basic operations
 							((a_cluster.item (l_class_index_after) = ' ') or 
 							(a_cluster.item (l_class_index_after) = ';') or
 							(a_cluster.item (l_class_index_after) = '%N'))) then
-						a_cluster.insert_string ("%N%T%T%T" + environment.eiffel_class_name+ ";",
+						a_cluster.insert_string ("%R%N%T%T%T" + environment.eiffel_class_name+ ";",
 							a_cluster.substring_index ("visible", 1) + 7)
 					end
 				else
@@ -483,8 +483,8 @@ feature -- Basic operations
 						a_cluster.keep_head (a_cluster.substring_index ("end", 1) - 1)
 					end
 					a_cluster.append (
-						"%N%T%Tvisible%N%
-						%%T%T%T" + environment.eiffel_class_name + ";%N%
+						"%R%N%T%Tvisible%R%N%
+						%%T%T%T" + environment.eiffel_class_name + ";%R%N%
 						%%T%Tend")
 				end
 			end

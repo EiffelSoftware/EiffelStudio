@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			create l_body.make (10000)
 			l_body.append ("%T%T%Tinitializer := ")
 			l_body.append (ccom_create_from_pointer_feature_name)
-			l_body.append ("(a_object)%N%T%T%Titem := ccom_item (initializer)")
+			l_body.append ("(a_object)%R%N%T%T%Titem := ccom_item (initializer)")
 			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void

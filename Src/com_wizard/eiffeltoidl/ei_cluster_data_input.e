@@ -100,10 +100,10 @@ feature {NONE} -- Implementation
 						clusters.extend (str_buffer)
 					end
 					str_buffer := a_raw_data.item.twin
-					str_buffer.append ("%N")
+					str_buffer.append ("%R%N")
 				elseif a_raw_data.item.substring_index ("--", 1) = 0 then
 					str_buffer.append (a_raw_data.item)
-					str_buffer.append ("%N")
+					str_buffer.append ("%R%N")
 				end
 				a_raw_data.forth
 			end

@@ -95,8 +95,8 @@ feature -- Status setting
 	save_attributes (project_settings: GB_PROJECT_SETTINGS) is
 			-- Save all attributes of `Current' into `project_settings'.
 		do
-			project_settings.set_main_window_class_name (main_window_class_name_field.text)
-			project_settings.set_application_class_name (application_class_name_field.text)
+			project_settings.set_main_window_class_name (main_window_class_name_field.text.as_upper)
+			project_settings.set_application_class_name (application_class_name_field.text.as_upper)
 			project_settings.set_project_name (project_name_field.text)
 			if project_radio_button.is_selected then
 				project_settings.enable_complete_project

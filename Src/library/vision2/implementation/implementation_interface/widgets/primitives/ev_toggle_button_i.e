@@ -46,8 +46,12 @@ feature -- Status setting
 
 feature -- Event - command association
 	
-	add_toggle_command ( command: EV_COMMAND; 
-			    arguments: EV_ARGUMENTS) is	
+	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+			-- Add 'cmd' to the list of commands to be executed
+			-- when the button is toggled.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end	
 	

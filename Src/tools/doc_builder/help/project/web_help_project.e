@@ -19,7 +19,8 @@ feature -- Commands
 	build_table_of_contents is
 			-- Build table of contents and write to file
 		do						
-			create_toc
+			create_toc_frame
+			create_filter_frame
 			create_resource_files
 		end
 
@@ -60,8 +61,8 @@ feature {NONE} -- File
 
 feature {NONE} -- Implementation	
 
-	create_toc is
-			-- Create left side navigation (toc, filter, etc)
+	create_toc_frame is
+			-- Create left side navigation (toc)
 		local
 			l_file,
 			l_dest_file: PLAIN_TEXT_FILE			
@@ -70,13 +71,15 @@ feature {NONE} -- Implementation
 			l_util: UTILITY_FUNCTIONS
 			l_dir: DIRECTORY
 		do				
+				-- Open TOC template and fill with project toc data
 			create l_util
 			create l_file.make_open_read_write (left_context_html_template_file_name.string)
 			l_file.readstream (l_file.count)
 			l_text := l_file.last_string.twin
-			replace_token (l_text, html_toc_token, full_toc_text)
-			replace_token (l_text, html_filter_token, full_filter_text)
+			replace_token (l_text, html_toc_token, full_toc_text)			
 			l_file.close
+			
+				-- Now create toc file based on toc data
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
 			if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
 				l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
@@ -87,12 +90,50 @@ feature {NONE} -- Implementation
 			if not l_dir.exists then
 				l_dir.create_dir
 			end
-			l_dir.delete_content
+			
+				-- And write to it and close			
 			l_filename.extend (l_util.short_name (left_context_html_template_file_name.string))
 			create l_dest_file.make_create_read_write (l_filename.string)
 			l_dest_file.put_string (l_text)
 			l_dest_file.close
 		end	
+
+	create_filter_frame is
+			-- Create left side navigation (filter)
+		local
+			l_file,
+			l_dest_file: PLAIN_TEXT_FILE			
+			l_text: STRING
+			l_filename: FILE_NAME
+			l_util: UTILITY_FUNCTIONS
+			l_dir: DIRECTORY
+		do				
+				-- Open TOC template and fill with project toc data
+			create l_util
+			create l_file.make_open_read_write (filter_html_template_file_name.string)
+			l_file.readstream (l_file.count)
+			l_text := l_file.last_string.twin
+			replace_token (l_text, html_filter_token, full_filter_text)			
+			l_file.close
+			
+				-- Now create toc file based on toc data
+			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
+			if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+				l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
+			else						
+				l_filename.extend (toc.name)	
+			end
+			create l_dir.make (l_filename.string)
+			if not l_dir.exists then
+				l_dir.create_dir
+			end
+			
+				-- And write to it and close
+			l_filename.extend (l_util.short_name (filter_html_template_file_name.string))
+			create l_dest_file.make_create_read_write (l_filename.string)
+			l_dest_file.put_string (l_text)
+			l_dest_file.close
+		end
 
 	create_resource_files is
 			-- Copy any resource files needed
@@ -101,10 +142,12 @@ feature {NONE} -- Implementation
 			l_src_file,
 			l_file: RAW_FILE
 			l_filename: FILE_NAME
-			l_icon_dir: STRING
+			l_icon_dir,
+			l_templates_dir: STRING
 		do			
 			create l_util
 			l_icon_dir := shared_constants.application_constants.icon_resources_directory
+			l_templates_dir := shared_constants.application_constants.templates_path
 			
 			from
 				resource_files.start
@@ -114,6 +157,12 @@ feature {NONE} -- Implementation
 				create l_filename.make_from_string (l_icon_dir)
 				l_filename.extend (resource_files.item)	
 				create l_file.make (l_filename)				
+				if not l_file.exists then					
+					create l_filename.make_from_string (l_templates_dir)
+					l_filename.extend (resource_files.item)
+					create l_file.make (l_filename)		
+				end
+				
 				if l_file.exists then
 					create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
 					if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
@@ -125,9 +174,12 @@ feature {NONE} -- Implementation
 					create l_src_file.make_create_read_write (l_filename.string)
 					l_src_file.close
 					l_util.copy_file (l_file, l_src_file)
-				end				
+				end
+				
 				resource_files.forth
 			end
+			
+			copy_root_resource_files
 		end		
 
 	full_filter_text: STRING is
@@ -143,7 +195,7 @@ feature {NONE} -- Implementation
 			create Result.make_empty
 			if shared_project.preferences.generate_dhtml_filter then
 				l_filters := shared_project.filter_manager.filters
-				Result.append ("<select name=%"filterMenu%" onChange=%"swapTOC (this.selectedIndex, this.form)%">")
+				Result.append ("<select name=%"filterMenu%" onChange=%"swapTOC (this)%">")
 				from
 					l_filters.start
 				until
@@ -241,7 +293,48 @@ feature {NONE} -- File
 			Result.extend ("icon_toc_folder_closed.gif")
 			Result.extend ("icon_toc_folder_open.gif")
 			Result.extend ("10x10spacer.png")
-			Result.extend ("icon_page_loading.gif")
+			Result.extend ("icon_page_loading.gif")		
 		end
+
+	root_resource_files: ARRAYED_LIST [STRING] is
+			-- List of resource file to copy with project
+		once	
+			create Result.make (6)
+			Result.extend ("toc.js")
+			Result.extend ("toc.css")
+		end
+
+	copy_root_resource_files is
+			-- Copy any resource files needed
+		local
+			l_util: UTILITY_FUNCTIONS
+			l_src_file,
+			l_file: RAW_FILE
+			l_filename: FILE_NAME
+			l_templates_dir: STRING
+		do		
+			create l_util
+			l_templates_dir := shared_constants.application_constants.templates_path
+			
+			from
+				root_resource_files.start
+			until
+				root_resource_files.after
+			loop
+				create l_filename.make_from_string (l_templates_dir)
+				l_filename.extend (root_resource_files.item)
+				create l_file.make (l_filename)						
+				
+				if l_file.exists then
+					create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)					
+					l_filename.extend (root_resource_files.item)
+					create l_src_file.make_create_read_write (l_filename.string)
+					l_src_file.close
+					l_util.copy_file (l_file, l_src_file)
+				end
+				
+				root_resource_files.forth
+			end
+		end	
 
 end -- class WEB_HELP_PROJECT

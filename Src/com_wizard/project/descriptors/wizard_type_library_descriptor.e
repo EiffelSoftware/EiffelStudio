@@ -203,7 +203,10 @@ feature -- Basic operations
 						create tmp_string.make (0)
 						tmp_string.append_integer (local_counter)
 						descriptors.item (i).eiffel_class_name.append (tmp_string)
-						descriptors.item (i).c_header_file_name.insert (tmp_string, descriptors.item (i).c_header_file_name.index_of ('.', 1))
+						if not (descriptors.item (i).type_kind = Tkind_alias) then
+							descriptors.item (i).c_header_file_name.insert 
+								(tmp_string, descriptors.item (i).c_header_file_name.index_of ('.', 1))
+						end
 						descriptors.item (i).c_type_name.append (tmp_string)
 						descriptors.item (i).name.append (tmp_string)
 					end

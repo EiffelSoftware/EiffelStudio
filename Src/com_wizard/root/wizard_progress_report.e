@@ -175,7 +175,7 @@ feature -- Basic Operations
 	update_progress_bar is
 			-- Update progress bar according to `range' and `progress'.
 		do
-			if range /= 0 then
+			if range /= 0 and progress_dialog.progress_bar.exists then
 				progress_dialog.progress_bar.set_position (((initial_range * progress) / range).rounded)
 			end
 		end

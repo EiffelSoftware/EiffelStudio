@@ -251,6 +251,7 @@ feature -- Status setting
 				{EV_CONTAINER_IMP} Precursor
 				if positioned_by_user then
 					app_implementation.process_events
+					C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
 					set_position (user_x_position, user_y_position)
 					--| This is a hack to make sure window is positioned correctly
 					positioned_by_user := False

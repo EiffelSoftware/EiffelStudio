@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 		do
 			--C.gtk_clist_freeze (list_widget)
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			if a_tree_node_imp /= Void and then a_tree_node_imp.expand_actions_internal /= Void then
+			if a_tree_node_imp /= Void then
 				a_tree_node_imp.expand_callback
 			end
 			--C.gtk_clist_thaw (list_widget)
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 		do
 			C.gtk_clist_freeze (list_widget)
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			if a_tree_node_imp /= Void and then a_tree_node_imp.collapse_actions_internal /= Void then
+			if a_tree_node_imp /= Void then
 				a_tree_node_imp.collapse_callback
 			end
 			C.gtk_clist_thaw (list_widget)
@@ -403,15 +403,6 @@ feature -- Implementation
 			a_enable_flag: BOOLEAN
 			i: INTEGER
 		do
---			from
---				ev_children.start
---			until
---				ev_children.after or else a_enable_flag
---			loop
---				a_enable_flag := ev_children.item.is_transport_enabled_iterator
---				ev_children.forth
---			end
-
 			from
 				ev_children.start
 				i := 1

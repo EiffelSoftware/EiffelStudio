@@ -438,6 +438,13 @@ feature {NONE} -- Registers
 						end
 					end;
 
+					if is_param_temporary_reg and p /= Void then
+							-- We only forbid inlining if basic types are not matching,
+							-- to force a C cast to be performed.
+						is_param_temporary_reg := not expr.type.is_basic or else
+							expr.type.same_as (p.attachment_type)
+					end
+
 					temporary_parameters.put (is_param_temporary_reg, i);
 
 					if is_param_temporary_reg then

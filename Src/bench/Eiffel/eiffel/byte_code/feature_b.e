@@ -40,7 +40,7 @@ feature
 		do
 			precursor_type := p_type
 		ensure
-			precursor_set : precursor_type = p_type
+			precursor_set: precursor_type = p_type
 		end
 		
 	set_parameters (p: like parameters) is
@@ -116,22 +116,11 @@ feature -- Context type
 			a_parent: NESTED_B;
 		do
 			if precursor_type = Void then
-				if parent = Void then
-					Result := context.current_type;
-				elseif is_message then
-					Result := parent.target.type;
-				else 
-					a_parent := parent.parent;
-					if a_parent = Void then
-						Result := context.current_type;
-					else
-						Result := a_parent.target.type;
-					end;
-				end;
+				Result := {CALL_ACCESS_B} Precursor
 			else
 				Result := precursor_type
+				Result := Context.real_type (Result);
 			end;
-			Result := Context.real_type (Result);
 		end;
 
 feature -- Byte code generation

@@ -7,47 +7,47 @@ deferred class MAKEFILE_GENERATOR
 
 inherit
 
-	SHARED_CODE_FILES;
-	SHARED_COUNTER;
-	SHARED_GENERATOR;
+	SHARED_CODE_FILES
+	SHARED_COUNTER
+	SHARED_GENERATOR
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
-		end;
+		end
 	COMPILER_EXPORTER
 
 feature -- Attributes
 
-	object_baskets: ARRAY [LINKED_LIST [STRING]];
+	object_baskets: ARRAY [LINKED_LIST [STRING]]
 			-- The entire set of class object files we have 
 			-- to make
 
-	descriptor_baskets: ARRAY [LINKED_LIST [STRING]];
+	descriptor_baskets: ARRAY [LINKED_LIST [STRING]]
 			-- The entire set of descriptor files we have
 			-- to make
 
-	feat_table_baskets: ARRAY [LINKED_LIST [STRING]];
+	feat_table_baskets: ARRAY [LINKED_LIST [STRING]]
 			-- The entire set of feature table files we have
 			-- to make
 
-	system_basket: LINKED_LIST [STRING];
+	system_basket: LINKED_LIST [STRING]
 			-- The entire set of system object files we have 
 			-- to make
 
-	cecil_rt_basket: LINKED_LIST [STRING];
+	cecil_rt_basket: LINKED_LIST [STRING]
 			-- Run-time object files to be put in the Cecil
 			-- archive
 
-	empty_class_types: SEARCH_TABLE [TYPE_ID];
+	empty_class_types: SEARCH_TABLE [TYPE_ID]
 			-- Set of all the class types that have no used
 			-- features (final mode), i.e. the C file would
 			-- be empty.
 
-	partial_system_objects: INTEGER;
+	partial_system_objects: INTEGER
 			-- Number of partial object files needed
 			-- for system object files
 
-	Packet_number: INTEGER is 100;
+	Packet_number: INTEGER is 100
 			-- Maximum number of files in a single linking phase
 
 feature -- Initialization
@@ -55,733 +55,737 @@ feature -- Initialization
 	make is
 			-- Creation
 		do
-			!!system_basket.make;
-			!!cecil_rt_basket.make;
+			!!system_basket.make
+			!!cecil_rt_basket.make
 			!!empty_class_types.make (50)
-		end;
+		end
 
 	init_objects_baskets is
 			-- Create objects baskets.
 		local
-			basket_nb, i: INTEGER;
+			basket_nb, i: INTEGER
 			basket: LINKED_LIST [STRING]
 		do
-			basket_nb := 1 + System.static_type_id_counter.current_count // Packet_number;
-			!!object_baskets.make (1, basket_nb);
+			basket_nb := 1 + System.static_type_id_counter.current_count // Packet_number
+			!!object_baskets.make (1, basket_nb)
 			from i := 1 until i > basket_nb loop
-				!!basket.make;
-				object_baskets.put (basket, i);
-				i := i + 1
-			end;
-			!!descriptor_baskets.make (1, basket_nb);
-			from i := 1 until i > basket_nb loop
-				!!basket.make;
-				descriptor_baskets.put (basket, i);
-				i := i + 1
-			end;
-			basket_nb := 1 + System.class_counter.current_count // Packet_number;
-			!!feat_table_baskets.make (1, basket_nb);
-			from i := 1 until i > basket_nb loop
-				!!basket.make;
-				feat_table_baskets.put (basket, i);
+				!!basket.make
+				object_baskets.put (basket, i)
 				i := i + 1
 			end
-		end;
+			!!descriptor_baskets.make (1, basket_nb)
+			from i := 1 until i > basket_nb loop
+				!!basket.make
+				descriptor_baskets.put (basket, i)
+				i := i + 1
+			end
+			basket_nb := 1 + System.class_counter.current_count // Packet_number
+			!!feat_table_baskets.make (1, basket_nb)
+			from i := 1 until i > basket_nb loop
+				!!basket.make
+				feat_table_baskets.put (basket, i)
+				i := i + 1
+			end
+		end
 
 	clear is
 			-- Forget the lists
 		do
-			object_baskets := Void;
-			descriptor_baskets := Void;
-			feat_table_baskets := Void;
-			system_basket := Void;
-			cecil_rt_basket := Void;
-			empty_class_types := Void;
-		end;
+			object_baskets := Void
+			descriptor_baskets := Void
+			feat_table_baskets := Void
+			system_basket := Void
+			cecil_rt_basket := Void
+			empty_class_types := Void
+		end
 
 feature
 
 	run_time: STRING is
 			-- Run time with which the application must be linked
 		deferred
-		end;
+		end
 
 	system_name: STRING is
 			-- Name of executable
 		do
 			Result := System.system_name
-		end;
+		end
 
 feature -- Object basket managment
 
 	add_specific_objects is
 			-- Add objects specific to Current compilation mode.
 		deferred
-		end;
+		end
 
 	add_eiffel_objects is
 			-- Insert objects files in basket.
 		deferred
-		end;
+		end
 
 	add_in_system_basket (base_name: STRING) is
 		local	
 			object_name: STRING
 		do
-			!!object_name.make (0);
-			object_name.append (base_name);
-			object_name.append (".o");
+			!!object_name.make (0)
+			object_name.append (base_name)
+			object_name.append (".o")
 			system_basket.extend (object_name)
-		end;
+		end
 
 	add_common_objects is
 			-- Add common objects file
 		do
-			add_in_system_basket (Econform);
-			add_in_system_basket (Eplug);
-			add_in_system_basket (Eskelet);
-			add_in_system_basket (Evisib);
-			add_in_system_basket (Ececil);
-			add_in_system_basket (Einit);
-		end;
+			add_in_system_basket (Econform)
+			add_in_system_basket (Eplug)
+			add_in_system_basket (Eskelet)
+			add_in_system_basket (Evisib)
+			add_in_system_basket (Ececil)
+			add_in_system_basket (Einit)
+		end
 
 	compute_partial_system_objects is
 			-- Compute number of partial system objects needed.
 		do
-			partial_system_objects := system_basket.count // Packet_number;
+			partial_system_objects := system_basket.count // Packet_number
 			if (system_basket.count \\ Packet_number) /= 0 then
-				partial_system_objects := partial_system_objects + 1;
+				partial_system_objects := partial_system_objects + 1
 			end
-		end;
+		end
 
 feature -- Cecil
 
 	add_cecil_objects is
 		deferred
-		end;
+		end
 
 	generate_cecil is
 		local
-			libname: STRING;
+			libname: STRING
 		do
-			!! libname.make (0);
-			libname.append ("lib");
-			libname.append (system_name);
-			libname.append (".a");
+			!! libname.make (0)
+			libname.append ("lib")
+			libname.append (system_name)
+			libname.append (".a")
 
 				-- Cecil run-time macro
-			generate_macro ("RCECIL", cecil_rt_basket);
+			generate_macro ("RCECIL", cecil_rt_basket)
 
 				-- Cecil library prodcution rule
-			Make_file.putstring ("cecil: ");
-			Make_file.putstring (libname);
-			Make_file.new_line;
-			Make_file.putstring (libname);
-			Make_file.putstring (": ");
-			generate_objects_macros;
-			Make_file.putchar (' ');
-			generate_system_objects_macros;
-			Make_file.putstring (" Makefile%N%T$(AR) x ");
-			Make_file.putstring ("$(EIFLIB)");
-			Make_file.new_line;
-			Make_file.putstring ("%T$(AR) cr ");
-			Make_file.putstring (libname);
-			Make_file.putchar (' ');
-			generate_objects_macros;
-			Make_file.putchar (' ');
-			generate_system_objects_macros;
-			Make_file.putchar (' ');
-			Make_file.putchar (continuation);
-			Make_file.new_line;
-			generate_other_objects;
-			Make_file.putstring ("%T%T$(RCECIL)");
-			Make_file.new_line;
-			Make_file.putstring ("%T$(RANLIB) ");
-			Make_file.putstring (libname);
-			Make_file.new_line;
-			Make_file.putstring ("%T$(RM) $(RCECIL) ");
-			generate_objects_macros;
-			Make_file.putchar (' ');
-			generate_system_objects_macros;
-			Make_file.new_line;
-			Make_file.new_line
-		end;
+			make_file.putstring ("cecil: ")
+			make_file.putstring (libname)
+			make_file.new_line
+			make_file.putstring (libname)
+			make_file.putstring (": ")
+			generate_objects_macros
+			make_file.putchar (' ')
+			generate_system_objects_macros
+			make_file.putstring (" Makefile%N%T$(AR) x ")
+			make_file.putstring ("$(EIFLIB)")
+			make_file.new_line
+			make_file.putstring ("%T$(AR) cr ")
+			make_file.putstring (libname)
+			make_file.putchar (' ')
+			generate_objects_macros
+			make_file.putchar (' ')
+			generate_system_objects_macros
+			make_file.putchar (' ')
+			make_file.putchar (continuation)
+			make_file.new_line
+			generate_other_objects
+			make_file.putstring ("%T%T$(RCECIL)")
+			make_file.new_line
+			make_file.putstring ("%T$(RANLIB) ")
+			make_file.putstring (libname)
+			make_file.new_line
+			make_file.putstring ("%T$(RM) $(RCECIL) ")
+			generate_objects_macros
+			make_file.putchar (' ')
+			generate_system_objects_macros
+			make_file.new_line
+			make_file.new_line
+		end
 
 feature -- Actual generation
 
-	make_file: INDENT_FILE is
-		do
-			Result := System.make_file;
-		end;
+	make_file: INDENT_FILE
+		-- File in which we are going to generate the Makefile.
 
 	generate is
 			-- Generate make files
 		do
-			init_objects_baskets;
+			init_objects_baskets
 				-- Insert all the class objects in the baskets.
-			add_eiffel_objects;
+			add_eiffel_objects
 				-- Add objects specific to Current compilation mode
-			add_specific_objects;
+			add_specific_objects
 				-- Add objects common to all compilation modes.
-			add_common_objects;
-			add_cecil_objects;
+			add_common_objects
+			add_cecil_objects
 
 				-- Compute number of partial system objects needed
 				-- and generate corresponding object lists.
-			compute_partial_system_objects;
+			compute_partial_system_objects
 
 				-- Generate makefile in subdirectories.
-			generate_sub_makefiles (Feature_table_suffix, feat_table_baskets);
-			generate_sub_makefiles (Descriptor_suffix, descriptor_baskets);
-			generate_sub_makefiles (Class_suffix, object_baskets);
-			generate_system_makefile;
+			generate_sub_makefiles (Feature_table_suffix, feat_table_baskets)
+			generate_sub_makefiles (Descriptor_suffix, descriptor_baskets)
+			generate_sub_makefiles (Class_suffix, object_baskets)
+			generate_system_makefile
 
-			System.set_make_file (make_f (system.in_final_mode));
-			Make_file.open_write;
+			make_file := make_f (system.in_final_mode)
+			make_file.open_write
 				-- Generate main /bin/sh preamble
-			generate_preamble;
+			generate_preamble
 				-- Customize main Makefile macros
-			generate_customization;
+			generate_customization
 				-- How to produce a .o from a .c file
-			generate_compilation_rule;
+			generate_compilation_rule
 
 				-- Generate subdir names
-			generate_subdir_names;
+			generate_subdir_names
 
 				-- Generate external objects
-			generate_externals;
+			generate_externals
 
 				-- Generate executable
-			generate_executable;
+			generate_executable
 
 				-- Generate Cecil rules
-			generate_cecil;
+			generate_cecil
 
 				-- Generate cleaning rules
-			generate_main_cleaning;
+			generate_main_cleaning
 
 				-- End production
-			generate_ending;
+			generate_ending
 
-			Make_file.close;
-			System.set_make_file (Void);
-			object_baskets := Void;
-			descriptor_baskets := Void;
-			feat_table_baskets := Void;
-			system_basket.wipe_out;
-			cecil_rt_basket.wipe_out;
-		end;
+			make_file.close
+			object_baskets := Void
+			descriptor_baskets := Void
+			feat_table_baskets := Void
+			system_basket.wipe_out
+			cecil_rt_basket.wipe_out
+		end
 
 feature -- Sub makefile generation
 
-	generate_sub_makefiles (sub_dir: STRING; 
-							baskets: ARRAY [LINKED_LIST [STRING]]) is
+	generate_sub_makefiles (sub_dir: STRING; baskets: ARRAY [LINKED_LIST [STRING]]) is
 				-- Generate makefile in subdirectories.
 		local
-			new_makefile, old_makefile: INDENT_FILE;
-			baskets_count, i: INTEGER;
-			f_name: FILE_NAME;
-			subdir_name: STRING;
+			new_makefile, old_makefile: INDENT_FILE
+			baskets_count, i: INTEGER
+			f_name: FILE_NAME
+			subdir_name: STRING
 			basket: LINKED_LIST [STRING]
 		do
-			old_makefile := System.make_file;
+			old_makefile := make_file
 			from
-				baskets_count := baskets.count;
+				baskets_count := baskets.count
 				i := 1
 			until
 				i > baskets_count
 			loop
-				basket := baskets.item (i);
+				basket := baskets.item (i)
 				if not basket.empty then
 					if system.in_final_mode then
 						!!f_name.make_from_string (Final_generation_path)
 					else
 						!!f_name.make_from_string (Workbench_generation_path)
-					end;
-					subdir_name := clone (sub_dir);
-					subdir_name.append_integer (i);
-					f_name.extend (subdir_name);
-					f_name.set_file_name (Makefile_SH);
-					!!new_makefile.make (f_name);
-					System.set_make_file (new_makefile);
-					Make_file.open_write;
+					end
+					subdir_name := clone (sub_dir)
+					subdir_name.append_integer (i)
+					f_name.extend (subdir_name)
+					f_name.set_file_name (Makefile_SH)
+					!! new_makefile.make (f_name)
+					make_file  := new_makefile
+					make_file.open_write
 						-- Generate main /bin/sh preamble
-					generate_sub_preamble;
+					generate_sub_preamble
 						-- Customize main Makefile macros
-					generate_customization;
+					generate_customization
 						-- How to produce a .o from a .c file
-					generate_compilation_rule;
+					generate_compilation_rule
 						-- Generate object list.
-					generate_macro ("OBJECTS", basket);
+					generate_macro ("OBJECTS", basket)
 						-- Generate partial object.
-					Make_file.putstring ("all: ")
-					Make_file.putstring (sub_dir);
-					Make_file.putstring ("obj")
-					Make_file.putint (i);
-					Make_file.putstring (".o");
-					Make_file.new_line;
-					Make_file.new_line;
-					generate_partial_objects_linking (sub_dir, i);
+					make_file.putstring ("all: ")
+					make_file.putstring (sub_dir)
+					make_file.putstring ("obj")
+					make_file.putint (i)
+					make_file.putstring (".o")
+					make_file.new_line
+					make_file.new_line
+					generate_partial_objects_linking (sub_dir, i)
 						-- Generate cleaning rules
-					generate_sub_cleaning;
+					generate_sub_cleaning
 						-- End production.
-					generate_ending;
-					Make_file.close;
-				end;
+					generate_ending
+					make_file.close
+				end
 				i := i + 1
-			end;
-			System.set_make_file (old_makefile)
-		end;
+			end
+			make_file := old_makefile
+		end
 
 	generate_system_makefile is
 			-- Create makefile to build system objects.
 		local
-			new_makefile, old_makefile: INDENT_FILE;
-			baskets_count, i, nb: INTEGER;
+			new_makefile, old_makefile: INDENT_FILE
+			baskets_count, i, nb: INTEGER
 			f_name: FILE_NAME
 			subdir_name: STRING
 		do
-			old_makefile := System.make_file;
+			old_makefile := make_file
 			if system.in_final_mode then
 				!!f_name.make_from_string (Final_generation_path)
 			else
 				!!f_name.make_from_string (Workbench_generation_path)
-			end;
-			subdir_name := clone (System_object_prefix);
-			subdir_name.append_integer (1);
-			f_name.extend (subdir_name);
-			f_name.set_file_name (Makefile_SH);
-			!!new_makefile.make (f_name);
-			System.set_make_file (new_makefile);
-			Make_file.open_write;
+			end
+			subdir_name := clone (System_object_prefix)
+			subdir_name.append_integer (1)
+			f_name.extend (subdir_name)
+			f_name.set_file_name (Makefile_SH)
+			!! new_makefile.make (f_name)
+			make_file := new_makefile
+			make_file.open_write
+
 				-- Generate main /bin/sh preamble
-			generate_sub_preamble;
+			generate_sub_preamble
+
 				-- Customize main Makefile macros
-			generate_customization;
+			generate_customization
+
 				-- How to produce a .o from a .c file
-			generate_compilation_rule;
+			generate_compilation_rule
+
 				-- Generate object list.
-			generate_system_objects_lists;
+			generate_system_objects_lists
+
 				-- Generate partial object.
-			Make_file.putstring ("all: emain.o")
+			make_file.putstring ("all: emain.o")
 			from i := 1 until i > partial_system_objects loop
-				Make_file.putchar (' ');
-				Make_file.putstring (System_object_prefix);
-				Make_file.putstring ("obj")
-				Make_file.putint (i);
-				Make_file.putstring (".o");
+				make_file.putchar (' ')
+				make_file.putstring (System_object_prefix)
+				make_file.putstring ("obj")
+				make_file.putint (i)
+				make_file.putstring (".o")
 				i := i + 1
-			end;
-			Make_file.new_line;
-			Make_file.new_line;
-			generate_partial_system_objects_linking;
+			end
+			make_file.new_line
+			make_file.new_line
+
+			generate_partial_system_objects_linking
+
 				-- Generate cleaning rules
-			generate_sub_cleaning;
+			generate_sub_cleaning
+
 				-- End production.
-			generate_ending;
-			Make_file.close;
-			System.set_make_file (old_makefile)
-		end;
+			generate_ending
+			make_file.close
+			make_file := old_makefile
+		end
 
 feature -- Generation, Header
 
 	generate_compilation_rule is
 			-- Generates the .c -> .o compilation rule
 		deferred
-		end;
+		end
 
 	generate_specific_defines is
 			-- Generate specific "-D" flags.
 			-- Do nothing by default.
 		do
-		end;
+		end
 
 	generate_preamble is
 			-- Generate leading part (directions to /bin/sh)
 		do
-			Make_file.putstring ("case $CONFIG in%N'')%N");
-			Make_file.putstring ("%
+			make_file.putstring ("case $CONFIG in%N'')%N")
+			make_file.putstring ("%
 				%%Tif test ! -f config.sh; then%N%
 				%%T%T(echo %"Can't find config.sh.%"; exit 1)%N%
 				%%Tfi 2>/dev/null%N%
 				%%T. ./config.sh%N%
 				%%T;;%N%
-				%esac%N");
-			Make_file.putstring ("%
+				%esac%N")
+			make_file.putstring ("%
 				%case %"$O%" in%N%
 				%*/*) cd `expr X$0 : 'X\(.*\)/'` ;;%N%
-				%esac%N");
-			Make_file.putstring ("%
+				%esac%N")
+			make_file.putstring ("%
 				%echo %"Extracting %".%"/Makefile%
 								% (with variable substitutions)%"%N%
-				%$spitshell >Makefile <<!GROK!THIS!%N");
-		end;
+				%$spitshell >Makefile <<!GROK!THIS!%N")
+		end
 
 	generate_sub_preamble is
 			-- Generate leading part (directions to /bin/sh)
 			-- for subdirectory Makefiles.
 		do
-			Make_file.putstring ("case $CONFIG in%N'')%N");
-			Make_file.putstring ("%
+			make_file.putstring ("case $CONFIG in%N'')%N")
+			make_file.putstring ("%
 				%%Tif test ! -f ../config.sh; then%N%
 				%%T%T(echo %"Can't find ../config.sh.%"; exit 1)%N%
 				%%Tfi 2>/dev/null%N%
 				%%T. ../config.sh%N%
 				%%T;;%N%
-				%esac%N");
-			Make_file.putstring ("%
+				%esac%N")
+			make_file.putstring ("%
 				%case %"$O%" in%N%
 				%*/*) cd `expr X$0 : 'X\(.*\)/'` ;;%N%
-				%esac%N");
-			Make_file.putstring ("%
+				%esac%N")
+			make_file.putstring ("%
 				%echo %"Extracting %".%"/Makefile%
 								% (with variable substitutions)%"%N%
-				%$spitshell >Makefile <<!GROK!THIS!%N");
-		end;
+				%$spitshell >Makefile <<!GROK!THIS!%N")
+		end
 
 	generate_customization is
 			-- Customize generic Makefile
 		do
-			generate_include_path;
-			Make_file.putstring ("%
+			generate_include_path
+			make_file.putstring ("%
 				%SHELL = /bin/sh%N%
 				%CC = $cc%N%
 				%CPP = $cpp%N")
 
 			if System.has_multithreaded then
-				Make_file.putstring ("CFLAGS = $optimize $mtccflags $large ");
+				make_file.putstring ("CFLAGS = $optimize $mtccflags $large ")
 			else
-				Make_file.putstring ("CFLAGS = $optimize $ccflags $large ");
+				make_file.putstring ("CFLAGS = $optimize $ccflags $large ")
 			end
 
 			if System.has_separate then
-				Make_file.putstring ("-DCONCURRENT_EIFFEL ");
-			end;
+				make_file.putstring ("-DCONCURRENT_EIFFEL ")
+			end
 
-			generate_specific_defines;
-			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
+			generate_specific_defines
+			make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
 
 			if System.has_multithreaded then
-				Make_file.putstring ("CPPFLAGS = $optimize $mtcppflags $large ");
+				make_file.putstring ("CPPFLAGS = $optimize $mtcppflags $large ")
 			else
-				Make_file.putstring ("CPPFLAGS = $optimize $cppflags $large ");
+				make_file.putstring ("CPPFLAGS = $optimize $cppflags $large ")
 			end
 
 			if System.has_separate then
-				Make_file.putstring ("-DCONCURRENT_EIFFEL ");
-			end;
+				make_file.putstring ("-DCONCURRENT_EIFFEL ")
+			end
 
-			generate_specific_defines;
-			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
+			generate_specific_defines
+			make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
 
 			if System.has_multithreaded then
-				Make_file.putstring ("LDFLAGS = $mtldflags%N%
+				make_file.putstring ("LDFLAGS = $mtldflags%N%
 									 %EIFLIB = ")
 			else
-				Make_file.putstring ("LDFLAGS = $ldflags%N%
+				make_file.putstring ("LDFLAGS = $ldflags%N%
 									 %EIFLIB = ")
 			end
 
-			Make_file.putstring (run_time);
+			make_file.putstring (run_time)
 
 			if System.has_multithreaded then
-				Make_file.putstring ("%NLIBS = $mtlibs")
+				make_file.putstring ("%NLIBS = $mtlibs")
 			else
-				Make_file.putstring ("%NLIBS = $libs")
+				make_file.putstring ("%NLIBS = $libs")
 			end
 
-			Make_file.putstring ("%NMAKE = make%N%
+			make_file.putstring ("%NMAKE = make%N%
 				%AR = $ar%N%
 				%LD = $ld%N%
 				%MKDEP = $mkdep %H$(DPFLAGS) --%N%
 				%MV = $mv%N%
 				%RANLIB = $ranlib%N%
 				%RM = $rm -f%N%
-				%RMDIR = $rmdir%N%N");
-			Make_file.putstring ("%
+				%RMDIR = $rmdir%N%N")
+			make_file.putstring ("%
 				%!GROK!THIS!%N%
-				%$spitshell >>Makefile <<'!NO!SUBS!'%N");
-		end;
+				%$spitshell >>Makefile <<'!NO!SUBS!'%N")
+		end
 
 feature -- Generation, Object list(s)
 
 	generate_system_objects_lists is
 			-- Generate the EOBJECTS/EOBJ1,EOBJ2,EOBJ3... macros in Makefile
 		local
-			i: INTEGER;
-			macro_name: STRING;
+			i: INTEGER
+			macro_name: STRING
 		do
 			from
-				i := 1;
+				i := 1
 			until
 				i > partial_system_objects
 			loop
-				!!macro_name.make (4);
-				macro_name.append ("EOBJ");
-				macro_name.append_integer (i);
-				generate_system_macro (macro_name);
-				i := i + 1;
-			end;
-		end;
+				!!macro_name.make (4)
+				macro_name.append ("EOBJ")
+				macro_name.append_integer (i)
+				generate_system_macro (macro_name)
+				i := i + 1
+			end
+		end
 
 	generate_system_macro (mname: STRING) is
 			-- Generate a bunch of objects to be put in macro `mname'
 			--| Remove elements from the `system_basket' during
 			--| generation
 		local
-			size: INTEGER;
-			file_name: STRING;
+			size: INTEGER
+			file_name: STRING
 			basket: LINKED_LIST [STRING]
 			i: INTEGER
 		do
-			basket := system_basket;
-			Make_file.putstring (mname);
-			Make_file.putstring (" = ");
+			basket := system_basket
+			make_file.putstring (mname)
+			make_file.putstring (" = ")
 			from
-				basket.start;
-				size := mname.count + 3;
+				basket.start
+				size := mname.count + 3
 			until
 				i = Packet_number or else basket.after
 			loop
-				file_name := basket.item;
-				size := size + file_name.count + 1;
+				file_name := basket.item
+				size := size + file_name.count + 1
 				if size > 78 then
-					Make_file.putchar (Continuation);
-					Make_file.new_line;
-					Make_file.putchar ('%T');
-					size := 8 + file_name.count + 1;
-					Make_file.putstring (file_name);
+					make_file.putchar (Continuation)
+					make_file.new_line
+					make_file.putchar ('%T')
+					size := 8 + file_name.count + 1
+					make_file.putstring (file_name)
 				else
-					Make_file.putstring (file_name);
-				end;
-				Make_file.putchar (' ');
-				i := i + 1;
+					make_file.putstring (file_name)
+				end
+				make_file.putchar (' ')
+				i := i + 1
 				basket.remove
-			end;
-			Make_file.new_line;
-			Make_file.new_line;
-		end;
+			end
+			make_file.new_line
+			make_file.new_line
+		end
 
 	generate_macro (mname: STRING; basket: LINKED_LIST [STRING]) is
 			-- Generate a bunch of objects to be put in macro `mname'
 		local
-			size: INTEGER;
-			file_name: STRING;
+			size: INTEGER
+			file_name: STRING
 		do
-			Make_file.putstring (mname);
-			Make_file.putstring (" = ");
+			make_file.putstring (mname)
+			make_file.putstring (" = ")
 			from
-				basket.start;
-				size := mname.count + 3;
+				basket.start
+				size := mname.count + 3
 			until
 				basket.after
 			loop
-				file_name := basket.item;
-				size := size + file_name.count + 1;
+				file_name := basket.item
+				size := size + file_name.count + 1
 				if size > 78 then
-					Make_file.putchar (Continuation);
-					Make_file.new_line;
-					Make_file.putchar ('%T');
-					size := 8 + file_name.count + 1;
-					Make_file.putstring (file_name);
+					make_file.putchar (Continuation)
+					make_file.new_line
+					make_file.putchar ('%T')
+					size := 8 + file_name.count + 1
+					make_file.putstring (file_name)
 				else
-					Make_file.putstring (file_name);
-				end;
-				Make_file.putchar (' ');
+					make_file.putstring (file_name)
+				end
+				make_file.putchar (' ')
 				basket.forth
-			end;
-			Make_file.new_line;
-			Make_file.new_line;
-		end;
+			end
+			make_file.new_line
+			make_file.new_line
+		end
 
 feature -- Generation, External archives and object files.
 
 	generate_externals is
 			-- Generate declaration fo the external variable
 		local
-			object_file_names: FIXED_LIST [STRING];
-			i, nb: INTEGER;
+			object_file_names: FIXED_LIST [STRING]
+			i, nb: INTEGER
 		do
-			object_file_names := System.object_file_names;
+			object_file_names := System.object_file_names
 			if object_file_names /= Void then
-				Make_file.putstring ("EXTERNALS = ");
+				make_file.putstring ("EXTERNALS = ")
 				from
-					i := 1;
-					nb := object_file_names.count;
+					i := 1
+					nb := object_file_names.count
 				until
 					i > nb
 				loop
-					Make_file.putchar (' ');
-					Make_file.putchar (Continuation);
-					Make_file.putstring ("%N%T");
-					Make_file.putstring (object_file_names.i_th (i));
+					make_file.putchar (' ')
+					make_file.putchar (Continuation)
+					make_file.putstring ("%N%T")
+					make_file.putstring (object_file_names.i_th (i))
 					i := i + 1
-				end;
-				Make_file.new_line;
-				Make_file.new_line;
+				end
+				make_file.new_line
+				make_file.new_line
 			end
-		end;
+		end
 
 	generate_include_path is
 			-- Generate declaration fo the include_paths
 		local
-			include_paths: FIXED_LIST [STRING];
-			i, nb: INTEGER;
+			include_paths: FIXED_LIST [STRING]
+			i, nb: INTEGER
 		do
-			include_paths := System.include_paths;
+			include_paths := System.include_paths
 			if include_paths /= Void then
-				Make_file.putstring ("INCLUDE_PATH = ");
+				make_file.putstring ("INCLUDE_PATH = ")
 				from
-					i := 1;
-					nb := include_paths.count;
+					i := 1
+					nb := include_paths.count
 				until
 					i > nb
 				loop
-					Make_file.putstring ("-I");
-					Make_file.putstring (include_paths.i_th (i));
+					make_file.putstring ("-I")
+					make_file.putstring (include_paths.i_th (i))
 					if i /= nb then
-						Make_file.putchar (' ');
+						make_file.putchar (' ')
 					end
 					i := i + 1
-				end;
-				Make_file.new_line;
+				end
+				make_file.new_line
 			end
-		end;
+		end
 
 	generate_makefile_names is
 		require
 			list_not_void: System.makefile_names /= Void
 		local
-			makefile_names: FIXED_LIST [STRING];
-			i, nb: INTEGER;
+			makefile_names: FIXED_LIST [STRING]
+			i, nb: INTEGER
 		do
-			makefile_names := System.makefile_names;
+			makefile_names := System.makefile_names
 			from
-				i := 1;
-				nb := makefile_names.count;
+				i := 1
+				nb := makefile_names.count
 			until
 				i > nb
 			loop
-				Make_file.putstring ("%T$(MAKE) -f ");
-				Make_file.putstring (makefile_names.i_th (i));
-				Make_file.new_line;
-				i := i + 1;
-			end;
-		end;
+				make_file.putstring ("%T$(MAKE) -f ")
+				make_file.putstring (makefile_names.i_th (i))
+				make_file.new_line
+				i := i + 1
+			end
+		end
 
 feature -- Generation (Linking rules)
 
 	generate_executable is
 			-- Generate rules to produce executable
 		do
-			Make_file.putstring ("all: ");
-			Make_file.putstring (system_name);
-			Make_file.new_line;
-			Make_file.new_line;
-			generate_partial_objects_dependencies;
-			generate_partial_system_objects_dependencies;
+			make_file.putstring ("all: ")
+			make_file.putstring (system_name)
+			make_file.new_line
+			make_file.new_line
+			generate_partial_objects_dependencies
+			generate_partial_system_objects_dependencies
 			generate_simple_executable
-		end;
+		end
 	
 
 	generate_simple_executable is
 			-- Generate rule to produce simple executable, linked in
 			-- with `run_time' archive.
 		do
-			Make_file.putstring (system_name);
-			Make_file.putstring (": ");
-			generate_objects_macros;
-			Make_file.putchar (' ');
-			generate_system_objects_macros;
-			Make_file.putchar (' ');
-			Make_file.putstring (System_object_prefix);
-			Make_file.putint (1);
-			Make_file.putstring ("/emain.o Makefile%N%T$(RM) ");
-			Make_file.putstring (system_name);
-			Make_file.new_line;
+			make_file.putstring (system_name)
+			make_file.putstring (": ")
+			generate_objects_macros
+			make_file.putchar (' ')
+			generate_system_objects_macros
+			make_file.putchar (' ')
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/emain.o Makefile%N%T$(RM) ")
+			make_file.putstring (system_name)
+			make_file.new_line
 			if System.makefile_names /= Void then
-				generate_makefile_names;
-			end;
-			Make_file.putstring ("%T$(C");
+				generate_makefile_names
+			end
+			make_file.putstring ("%T$(C")
 			if System.externals.has_cpp_externals then
-				Make_file.putstring ("PP")
+				make_file.putstring ("PP")
 			else
-				Make_file.putstring ("C")
+				make_file.putstring ("C")
 			end
-			Make_file.putstring (") -o ");
-			Make_file.putstring (system_name);
-			Make_file.putstring ("%
-				% $(C");
+			make_file.putstring (") -o ")
+			make_file.putstring (system_name)
+			make_file.putstring ("%
+				% $(C")
 			if System.externals.has_cpp_externals then
-				Make_file.putstring ("PP")
+				make_file.putstring ("PP")
 			end
-			Make_file.putstring ("FLAGS) $(LDFLAGS) ");
-			generate_objects_macros;
-			Make_file.putchar (' ');
-			generate_system_objects_macros;
-			Make_file.putchar (' ');
-			Make_file.putstring (System_object_prefix);
-			Make_file.putint (1);
-			Make_file.putstring ("/emain.o ");
-			Make_file.putchar (Continuation);
-			Make_file.new_line;
-			generate_other_objects;
-			Make_file.putstring ("%T%T");
+			make_file.putstring ("FLAGS) $(LDFLAGS) ")
+			generate_objects_macros
+			make_file.putchar (' ')
+			generate_system_objects_macros
+			make_file.putchar (' ')
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/emain.o ")
+			make_file.putchar (Continuation)
+			make_file.new_line
+			generate_other_objects
+			make_file.putstring ("%T%T")
 			if System.object_file_names /= Void then
-				Make_file.putstring ("$(EXTERNALS) ");
-			end;
-			Make_file.putstring ("$(EIFLIB)");
-			Make_file.putstring (" $(LIBS)%N");
+				make_file.putstring ("$(EXTERNALS) ")
+			end
+			make_file.putstring ("$(EIFLIB)")
+			make_file.putstring (" $(LIBS)%N")
 
-			generate_additional_rules;
-			Make_file.new_line;
-		end;
+			generate_additional_rules
+			make_file.new_line
+		end
 
 	generate_additional_rules is
 		do
-		end;
+		end
 
 	generate_other_objects is
 		do
-		end;
+		end
 
 	generate_system_objects_macros is
 			-- Generate the system object macros 
 			-- (dependencies for final executable).
 		local
-			i: INTEGER;
+			i: INTEGER
 		do
 			from
-				i := 1;
+				i := 1
 			until
 				i > partial_system_objects
 			loop
 				if i > 1 then
-					Make_file.putchar (' ')
-				end;
-				Make_file.putstring (System_object_prefix);
-				Make_file.putint (1);
-				Make_file.putchar ('/');
-				Make_file.putstring (System_object_prefix);
-				Make_file.putstring ("obj");
-				Make_file.putint (i);
-				Make_file.putstring (".o");
+					make_file.putchar (' ')
+				end
+				make_file.putstring (System_object_prefix)
+				make_file.putint (1)
+				make_file.putchar ('/')
+				make_file.putstring (System_object_prefix)
+				make_file.putstring ("obj")
+				make_file.putint (i)
+				make_file.putstring (".o")
 				i := i + 1
 			end
-		end;
+		end
 
 	generate_objects_macros is
 			-- Generate the object macros (dependencies for final executable)
 		do
 				-- Feature table object files.
-			generate_F_object_macros;
-			Make_file.putchar (' ');
+			generate_F_object_macros
+			make_file.putchar (' ')
 				-- Descriptor object files.
-			generate_D_object_macros;
-			Make_file.putchar (' ');
+			generate_D_object_macros
+			make_file.putchar (' ')
 				-- Class object files.
 			generate_C_object_macros
-		end;
+		end
 
 	generate_C_object_macros is
 			-- Generate the C object macros (dependencies for final executable)
@@ -804,32 +808,32 @@ feature -- Generation (Linking rules)
 	generate_basket_objects (baskets: ARRAY [LINKED_LIST [STRING]]; suffix: STRING) is
 			-- Generate the object macros in `baskets'.
 		require
-			baskets_not_void: baskets /= Void;
+			baskets_not_void: baskets /= Void
 			suffix_not_void: suffix /= Void
 		local
 			i, baskets_count: INTEGER
 			not_first: BOOLEAN
 		do
 			from
-				baskets_count := baskets.count;
+				baskets_count := baskets.count
 				i := 1
 			until
 				i > baskets_count
 			loop
 				if not baskets.item (i).empty then
 					if not_first then
-						Make_file.putchar (' ')
+						make_file.putchar (' ')
 					else
 						not_first := true
-					end;
-					Make_file.putstring (suffix);
-					Make_file.putint (i);
-					Make_file.putchar ('/');
-					Make_file.putstring (suffix);
-					Make_file.putstring ("obj");
-					Make_file.putint (i);
-					Make_file.putstring (".o");
-				end;
+					end
+					make_file.putstring (suffix)
+					make_file.putint (i)
+					make_file.putchar ('/')
+					make_file.putstring (suffix)
+					make_file.putstring ("obj")
+					make_file.putint (i)
+					make_file.putstring (".o")
+				end
 				i := i + 1
 			end
 		end
@@ -837,315 +841,326 @@ feature -- Generation (Linking rules)
 	generate_subdir_names is
 			-- Generate the subdirectories' names.
 		local
-			i, baskets_count: INTEGER;
+			i, baskets_count: INTEGER
 			not_first: BOOLEAN
 		do
-			Make_file.putstring ("SUBDIRS = ");
+			make_file.putstring ("SUBDIRS = ")
 
 				-- Feature table object files.
 			from
-				baskets_count := feat_table_baskets.count;
+				baskets_count := feat_table_baskets.count
 				i := 1
 			until
 				i > baskets_count
 			loop
 				if not feat_table_baskets.item (i).empty then
 					if not_first then
-						Make_file.putchar (' ')
+						make_file.putchar (' ')
 					else
 						not_first := true
-					end;
-					Make_file.putstring (Feature_table_suffix);
-					Make_file.putint (i);
-				end;
+					end
+					make_file.putstring (Feature_table_suffix)
+					make_file.putint (i)
+				end
 				i := i + 1
-			end;
+			end
 
 			if not_first then
-				Make_file.putchar (' ');
+				make_file.putchar (' ')
 				not_first := false
-			end;
+			end
 
 				-- Descriptor object files.
 			from
-				baskets_count := descriptor_baskets.count;
+				baskets_count := descriptor_baskets.count
 				i := 1
 			until
 				i > baskets_count
 			loop
 				if not descriptor_baskets.item (i).empty then
 					if not_first then
-						Make_file.putchar (' ')
+						make_file.putchar (' ')
 					else
 						not_first := true
-					end;
-					Make_file.putstring (Descriptor_suffix);
-					Make_file.putint (i);
-				end;
+					end
+					make_file.putstring (Descriptor_suffix)
+					make_file.putint (i)
+				end
 				i := i + 1
-			end;
+			end
 
 			if not_first then
-				Make_file.putchar (' ');
+				make_file.putchar (' ')
 				not_first := false
-			end;
+			end
 
 				-- Class object files.
 			from
-				baskets_count := object_baskets.count;
+				baskets_count := object_baskets.count
 				i := 1
 			until
 				i > baskets_count
 			loop
 				if not object_baskets.item (i).empty then
 					if not_first then
-						Make_file.putchar (' ')
+						make_file.putchar (' ')
 					else
 						not_first := true
-					end;
-					Make_file.putstring (Class_suffix);
-					Make_file.putint (i);
-				end;
+					end
+					make_file.putstring (Class_suffix)
+					make_file.putint (i)
+				end
 				i := i + 1
-			end;
+			end
 
-			Make_file.putchar (' ');
-			Make_file.putstring (System_object_prefix);
-			Make_file.putint (1);
+			make_file.putchar (' ')
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
 
-			Make_file.new_line;
-			Make_file.new_line
-		end;
+			make_file.new_line
+			make_file.new_line
+		end
 
 	generate_partial_objects_linking (suffix: STRING; index: INTEGER) is
 			-- Generate rules to produce partial linking and the
 			-- final executable linked in with `run_time'.
 		do
-			Make_file.putstring (suffix);
-			Make_file.putstring ("obj");
-			Make_file.putint (index);
-			Make_file.putstring (".o: $(OBJECTS) Makefile");
-			Make_file.new_line;
+			make_file.putstring (suffix)
+			make_file.putstring ("obj")
+			make_file.putint (index)
+			make_file.putstring (".o: $(OBJECTS) Makefile")
+			make_file.new_line
 				-- The following is not portable (if people want to use
 				-- their own linker).
 				-- FIXME
-			Make_file.putstring ("%T$(LD) $(LDFLAGS) -r -o ");
-			Make_file.putstring (suffix);
-			Make_file.putstring ("obj");
-			Make_file.putint (index);
-			Make_file.putstring (".o $(OBJECTS)");
+			make_file.putstring ("%T$(LD) $(LDFLAGS) -r -o ")
+			make_file.putstring (suffix)
+			make_file.putstring ("obj")
+			make_file.putint (index)
+			make_file.putstring (".o $(OBJECTS)")
 
 			if remove_after_partial then
-				Make_file.putstring ("%N%T$(RM) $(OBJECTS)");
-			end;
+				make_file.putstring ("%N%T$(RM) $(OBJECTS)")
+			end
 
-			Make_file.new_line;
-			Make_file.new_line;
-		end;
+			make_file.new_line
+			make_file.new_line
+		end
 
 	generate_partial_system_objects_linking is
 			-- Generate rules to produce partial linking and the
 			-- final executable linked in with `run_time'.
 		local
-			i: INTEGER;
+			i: INTEGER
 		do
 			from
-				i := 1;
+				i := 1
 			until
 				i > partial_system_objects
 			loop
-				Make_file.putstring (System_object_prefix);
-				Make_file.putstring ("obj")
-				Make_file.putint (i);
-				Make_file.putstring (".o: $(EOBJ")
-				Make_file.putint (i);
-				Make_file.putstring (") Makefile");
-				Make_file.new_line;
+				make_file.putstring (System_object_prefix)
+				make_file.putstring ("obj")
+				make_file.putint (i)
+				make_file.putstring (".o: $(EOBJ")
+				make_file.putint (i)
+				make_file.putstring (") Makefile")
+				make_file.new_line
 					-- The following is not portable (if people want to use
 					-- their own linker).
 					-- FIXME
-				Make_file.putstring ("%T$(LD) $(LDFLAGS) -r -o ");
-				Make_file.putstring (System_object_prefix);
-				Make_file.putstring ("obj");
-				Make_file.putint (i);
-				Make_file.putstring (".o $(EOBJ")
-				Make_file.putint (i);
-				Make_file.putchar (')');
+				make_file.putstring ("%T$(LD) $(LDFLAGS) -r -o ")
+				make_file.putstring (System_object_prefix)
+				make_file.putstring ("obj")
+				make_file.putint (i)
+				make_file.putstring (".o $(EOBJ")
+				make_file.putint (i)
+				make_file.putchar (')')
 
 				if remove_after_partial then
-					Make_file.putstring ("%N%T$(RM) $(EOBJ");
-					Make_file.putint (i);
-					Make_file.putchar (')');
-				end;
+					make_file.putstring ("%N%T$(RM) $(EOBJ")
+					make_file.putint (i)
+					make_file.putchar (')')
+				end
 
-				Make_file.new_line;
-				Make_file.new_line;
+				make_file.new_line
+				make_file.new_line
 				i := i + 1
 			end
-		end;
+		end
 
 	generate_partial_system_objects_dependencies is
 			-- Depencies to update partial system objects in subdirectories.
 		local
 			i, nb: INTEGER
+			emain_file: STRING
 		do
-			Make_file.putstring (System_object_prefix);
-			Make_file.putint (1);
-			Make_file.putchar ('/');
-			Make_file.putstring ("emain.o: Makefile%N%T cd ");
-			Make_file.putstring (System_object_prefix);
-			Make_file.putint (1);
-			Make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
-			Make_file.putstring ("$(MAKE) emain.o%N%N")
+			if not System.has_separate then
+				emain_file := "emain.template"
+			else
+				emain_file := "emain.separate_template"
+			end
+
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/emain.o: Makefile $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring (emain_file)
+			make_file.putstring ("%N%T cp $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring (emain_file)
+			make_file.putstring ("%N%T cd ")
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
+			make_file.putstring ("$(MAKE) emain.o%N%N")
+
 			from i := 1 until i > partial_system_objects loop
-				Make_file.putstring (System_object_prefix);
-				Make_file.putint (1);
-				Make_file.putchar ('/');
-				Make_file.putstring (System_object_prefix);
-				Make_file.putstring ("obj");
-				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%Tcd ");
-				Make_file.putstring (System_object_prefix);
-				Make_file.putint (1);
-				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE) ")
-				Make_file.putstring (System_object_prefix);
-				Make_file.putstring ("obj");
-				Make_file.putint (i);
-				Make_file.putstring (".o%N%N");
+				make_file.putstring (System_object_prefix)
+				make_file.putint (1)
+				make_file.putchar ('/')
+				make_file.putstring (System_object_prefix)
+				make_file.putstring ("obj")
+				make_file.putint (i)
+				make_file.putstring (".o: Makefile%N%Tcd ")
+				make_file.putstring (System_object_prefix)
+				make_file.putint (1)
+				make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE) ")
+				make_file.putstring (System_object_prefix)
+				make_file.putstring ("obj")
+				make_file.putint (i)
+				make_file.putstring (".o%N%N")
 				i := i + 1
 			end
-		end;
+		end
 
 	generate_partial_objects_dependencies is
 			-- Depencies to update partial objects in subdirectories.
 		local
-			i, baskets_count: INTEGER;
+			i, baskets_count: INTEGER
 		do
 				-- Feature table object files.
 			from
-				baskets_count := feat_table_baskets.count;
+				baskets_count := feat_table_baskets.count
 				i := 1
 			until
 				i > baskets_count
 			loop
 				if not feat_table_baskets.item (i).empty then
-					Make_file.putstring (Feature_table_suffix);
-					Make_file.putint (i);
-					Make_file.putchar ('/');
-					Make_file.putstring (Feature_table_suffix);
-					Make_file.putstring ("obj");
-					Make_file.putint (i);
-					Make_file.putstring (".o: Makefile%N%Tcd ");
-					Make_file.putstring (Feature_table_suffix);
-					Make_file.putint (i);
-					Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
-					Make_file.new_line;
-					Make_file.new_line;
-				end;
+					make_file.putstring (Feature_table_suffix)
+					make_file.putint (i)
+					make_file.putchar ('/')
+					make_file.putstring (Feature_table_suffix)
+					make_file.putstring ("obj")
+					make_file.putint (i)
+					make_file.putstring (".o: Makefile%N%Tcd ")
+					make_file.putstring (Feature_table_suffix)
+					make_file.putint (i)
+					make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)")
+					make_file.new_line
+					make_file.new_line
+				end
 				i := i + 1
-			end;
+			end
 				-- Descriptor object files.
 			from
-				baskets_count := descriptor_baskets.count;
+				baskets_count := descriptor_baskets.count
 				i := 1
 			until
 				i > baskets_count
 			loop
 				if not descriptor_baskets.item (i).empty then
-					Make_file.putstring (Descriptor_suffix);
-					Make_file.putint (i);
-					Make_file.putchar ('/');
-					Make_file.putstring (Descriptor_suffix);
-					Make_file.putstring ("obj");
-					Make_file.putint (i);
-					Make_file.putstring (".o: Makefile%N%Tcd ");
-					Make_file.putstring (Descriptor_suffix);
-					Make_file.putint (i);
-					Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
-					Make_file.new_line;
-					Make_file.new_line;
-				end;
+					make_file.putstring (Descriptor_suffix)
+					make_file.putint (i)
+					make_file.putchar ('/')
+					make_file.putstring (Descriptor_suffix)
+					make_file.putstring ("obj")
+					make_file.putint (i)
+					make_file.putstring (".o: Makefile%N%Tcd ")
+					make_file.putstring (Descriptor_suffix)
+					make_file.putint (i)
+					make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)")
+					make_file.new_line
+					make_file.new_line
+				end
 				i := i + 1
-			end;
+			end
 				-- Class object files.
 			from
-				baskets_count := object_baskets.count;
+				baskets_count := object_baskets.count
 				i := 1
 			until
 				i > baskets_count
 			loop
 				if not object_baskets.item (i).empty then
-					Make_file.putstring (Class_suffix);
-					Make_file.putint (i);
-					Make_file.putchar ('/');
-					Make_file.putstring (Class_suffix);
-					Make_file.putstring ("obj");
-					Make_file.putint (i);
-					Make_file.putstring (".o: Makefile%N%Tcd ");
-					Make_file.putstring (Class_suffix);
-					Make_file.putint (i);
-					Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
-					Make_file.new_line;
-					Make_file.new_line;
-				end;
+					make_file.putstring (Class_suffix)
+					make_file.putint (i)
+					make_file.putchar ('/')
+					make_file.putstring (Class_suffix)
+					make_file.putstring ("obj")
+					make_file.putint (i)
+					make_file.putstring (".o: Makefile%N%Tcd ")
+					make_file.putstring (Class_suffix)
+					make_file.putint (i)
+					make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)")
+					make_file.new_line
+					make_file.new_line
+				end
 				i := i + 1
 			end
-		end;
+		end
 
 	remove_after_partial: BOOLEAN is
 			-- Should the individual objects be removed
 			-- after a partial linking?
 		do
-		end;
+		end
 
 feature -- Cleaning rules
 
 	generate_main_cleaning is
 			-- Generate "make clean" and "make clobber" in the main Makefile.
 		do
-			Make_file.putstring ("clean: sub_clean local_clean%N");
-			Make_file.putstring ("clobber: sub_clobber local_clobber%N%N");
-			Make_file.putstring ("local_clean::%N");
-			Make_file.putstring ("%T$(RM) core *.o%N%N");
-			Make_file.putstring ("local_clobber:: local_clean%N%T");
-			Make_file.putstring ("$(RM) Makefile config.sh finish_freezing%N");
-			Make_file.putstring ("%Nsub_clean::%N");
-			Make_file.putstring ("%Tfor i in $(SUBDIRS); \%N");
-			Make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i");
-			Make_file.putchar ('/');
-			Make_file.putstring ("Makefile ]; then \%N%T%T%T");
-			Make_file.putstring ("(cd $$i ; $(MAKE) clean); \");
-			Make_file.putstring ("%N%T%Tfi; \%N%Tdone%N%N");
-			Make_file.putstring ("sub_clobber::%N");
-			Make_file.putstring ("%Tfor i in $(SUBDIRS); \%N");
-			Make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i");
-			Make_file.putchar ('/');
-			Make_file.putstring ("Makefile ]; then \%N%T%T%T");
-			Make_file.putstring ("(cd $$i ; $(MAKE) clobber); \");
-			Make_file.putstring ("%N%T%Tfi; \%N%Tdone%N%N")
-		end;
+			make_file.putstring ("clean: sub_clean local_clean%N")
+			make_file.putstring ("clobber: sub_clobber local_clobber%N%N")
+			make_file.putstring ("local_clean::%N")
+			make_file.putstring ("%T$(RM) core *.o%N%N")
+			make_file.putstring ("local_clobber:: local_clean%N%T")
+			make_file.putstring ("$(RM) Makefile config.sh finish_freezing%N")
+			make_file.putstring ("%Nsub_clean::%N")
+			make_file.putstring ("%Tfor i in $(SUBDIRS); \%N")
+			make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i")
+			make_file.putchar ('/')
+			make_file.putstring ("Makefile ]; then \%N%T%T%T")
+			make_file.putstring ("(cd $$i ; $(MAKE) clean); \")
+			make_file.putstring ("%N%T%Tfi; \%N%Tdone%N%N")
+			make_file.putstring ("sub_clobber::%N")
+			make_file.putstring ("%Tfor i in $(SUBDIRS); \%N")
+			make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i")
+			make_file.putchar ('/')
+			make_file.putstring ("Makefile ]; then \%N%T%T%T")
+			make_file.putstring ("(cd $$i ; $(MAKE) clobber); \")
+			make_file.putstring ("%N%T%Tfi; \%N%Tdone%N%N")
+		end
 
 	generate_sub_cleaning is
 			-- Generate "make clean" and "make clobber" in the sub directories.
 		do
-			Make_file.putstring ("clean: local_clean%N");
-			Make_file.putstring ("clobber: local_clobber%N%N");
-			Make_file.putstring ("local_clean::%N");
-			Make_file.putstring ("%T$(RM) core *.o%N%N");
-			Make_file.putstring ("local_clobber:: local_clean%N");
-			Make_file.putstring ("%T$(RM) Makefile%N%N");
-		end;
+			make_file.putstring ("clean: local_clean%N")
+			make_file.putstring ("clobber: local_clobber%N%N")
+			make_file.putstring ("local_clean::%N")
+			make_file.putstring ("%T$(RM) core *.o%N%N")
+			make_file.putstring ("local_clobber:: local_clean%N")
+			make_file.putstring ("%T$(RM) Makefile%N%N")
+		end
 
 feature -- Generation, Tail
 			
 	generate_ending is
 			-- Ends Makefile wrapping scheme
 		do
-			Make_file.putstring ("%
+			make_file.putstring ("%
 				%!NO!SUBS!%N%
 				%chmod 644 Makefile%N%
-				%$eunicefix Makefile%N");
-		end;
+				%$eunicefix Makefile%N")
+		end
 
 feature -- Removal of empty classes
 
@@ -1153,8 +1168,8 @@ feature -- Removal of empty classes
 			-- add `a_class_type' to the set of class types that
 			-- are not generated
 		do
-			empty_class_types.put (a_class_type);
-		end;
+			empty_class_types.put (a_class_type)
+		end
 
 feature -- DLE
 
@@ -1163,9 +1178,9 @@ feature -- DLE
 			-- needs to be regenerated (they are containing removed
 			-- features which are used by the dynamic system)
 		require
-			dynamic_system: System.is_dynamic;
+			dynamic_system: System.is_dynamic
 			final_mode: System.in_final_mode
 		do
-		end;
+		end
 
 end

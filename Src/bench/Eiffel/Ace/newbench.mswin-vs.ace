@@ -18,7 +18,7 @@ default
 	console_application (no)
 	array_optimization (no)
 	dead_code_removal (yes)
-	exception_trace (no)
+	exception_trace (yes)
 	inlining (yes)
 	inlining_size ("0")
 

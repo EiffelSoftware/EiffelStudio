@@ -177,7 +177,7 @@ feature -- Access
 			create old_name.make_from_string (name)
 			old_name.set_subdirectory (Eiffelgen)
 
-			new_name ?= clone (old_name)
+			new_name ?= old_name.twin
 			new_name.append ("-old")
 
 				--| Change the name of the directory

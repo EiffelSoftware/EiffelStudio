@@ -159,13 +159,13 @@ feature {NONE} -- Implementation
 					start_line_pos := file.position
 					l_line_number := l_line_number + 1
 					file.readline
-					current_line := clone (file.laststring)
+					current_line := file.laststring.twin
 				end
 				if file.position > error_position then
 						-- It was found
 					if not file.end_of_file then
 						file.readline
-						next_line := clone (file.laststring)
+						next_line := file.laststring.twin
 					end
 				else
 					l_line_number := 0

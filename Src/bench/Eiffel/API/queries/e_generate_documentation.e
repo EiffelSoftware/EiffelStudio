@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			if ext = Void then
 				ext := "txt"
 			end;
-			f_name := clone (file_name);
+			f_name := file_name.twin
 			f_name.add_extension (ext)
 			create file_window.make (f_name);
 			file_window.open_file;

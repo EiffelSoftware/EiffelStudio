@@ -98,7 +98,7 @@ feature {NONE} -- Output
 	output_value: STRING is
 			-- Return a string representing `Current'.
 		do
-			Result := clone (value)
+			Result := value.twin
 		end
 
 	type_and_value: STRING is

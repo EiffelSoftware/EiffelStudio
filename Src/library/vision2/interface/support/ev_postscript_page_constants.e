@@ -11,47 +11,10 @@ class
 
 feature -- Constants
 
-	Comm10Envelope: INTEGER is unique
-	C5Envelope: INTEGER is unique
-	DLEnvelope: INTEGER is unique
-	Folio: INTEGER is unique
-	Executive: INTEGER is unique
-	Letter: INTEGER is unique
-	Legal: INTEGER is unique
-	Ledger: INTEGER is unique
-	Tabloid: INTEGER is unique
-
-	A0: INTEGER is unique
-	A1: INTEGER is unique
-	A2: INTEGER is unique
-	A3: INTEGER is unique
-	A4: INTEGER is unique
-	A5: INTEGER is unique
-	A6: INTEGER is unique
-	A7: INTEGER is unique
-	A8: INTEGER is unique
-	A9: INTEGER is unique
-
-	B0: INTEGER is unique
-	B1: INTEGER is unique
-	B2: INTEGER is unique
-	B3: INTEGER is unique
-	B4: INTEGER is unique
-	B5: INTEGER is unique
-	B6: INTEGER is unique
-	B7: INTEGER is unique
-	B8: INTEGER is unique
-	B9: INTEGER is unique
-	B10: INTEGER is unique
-
-feature -- Contract support
-
-	valid_page_size (a_size: INTEGER): BOOLEAN is
-			-- Is `a_size' a valid page value.
-		do
-			Result := a_size >= Comm10Envelope and
-			a_size <= B10
-		end
+	Comm10Envelope, DLEnvelope, Folio, Executive, Letter, Legal, Ledger, Tabloid,
+	A0, A1, A2, A3, A4, A5, A6, A7, A8, A9,
+	B0, B1, B2, B3, B4, B5, B6, B7, B8, B9, B10: INTEGER is unique
+		-- Valid page constants.
 
 feature -- Status report
 
@@ -327,6 +290,15 @@ feature -- Status report
 					Result := 127
 				end	
 			end
+		end
+
+feature -- Contract support
+
+	valid_page_size (a_size: INTEGER): BOOLEAN is
+			-- Is `a_size' a valid page value?
+		do
+			Result := a_size >= Comm10Envelope and
+			a_size <= B10
 		end
 
 end -- class EV_POSTSCRIPT_PAGE_CONSTANTS

@@ -51,8 +51,8 @@ feature {NONE}  -- File
 			template_file.extend ("HelpProjectTemplate.hwproj")
 			create template.make (template_file)
 			template.add_symbol ("project_name", name)
-			template.add_symbol ("files", retrieve_files (False, True, toc))
-			template.add_symbol ("directories", retrieve_files (True, True, toc))
+			template.add_symbol ("files", retrieve_files (False, True))
+			template.add_symbol ("directories", retrieve_files (True, True))
 			template.save_file (project_file_name)
 			create project_file.make (template.template_filename)
 		end
@@ -66,7 +66,7 @@ feature {NONE}  -- File
 			create template_file.make_from_string (Shared_constants.Application_constants.templates_path)
 			template_file.extend ("HelpFilesTemplate.HxF")
 			create template.make (template_file)
-			template.add_symbol ("files", retrieve_files (False, False, toc))
+			template.add_symbol ("files", retrieve_files (False, False))
 			template.save_file (Help_directory.out + "\" + name + ".HxF")
 			create files_file.make (template.template_filename)
 		end
@@ -110,28 +110,28 @@ feature -- Commands
 
 feature {NONE} -- Project
 
-	retrieve_files (get_dirs, tags: BOOLEAN; a_toc: like toc): STRING is
+	retrieve_files (get_dirs, tags: BOOLEAN): STRING is
 			-- Retrieve the project files string or directories string if `get_dirs'
 		local
-			l_help_topic: XML_TABLE_OF_CONTENTS_NODE
-			l_help_topics: HASH_TABLE [XML_TABLE_OF_CONTENTS_NODE, INTEGER]
+			l_help_topic: TABLE_OF_CONTENTS_NODE
+			l_help_topics: ARRAYED_LIST [TABLE_OF_CONTENTS_NODE]
 			l_title, l_url: STRING
 			l_util: UTILITY_FUNCTIONS
 		do		
 			create l_util
 			create Result.make_empty
 			from
-				l_help_topics := toc.nodes
+				l_help_topics := toc.nodes (True)
 				l_help_topics.start
 			until
 				l_help_topics.after
 			loop
 				l_help_topics.forth
-				l_help_topic :=  l_help_topics.item_for_iteration
-				l_url := l_help_topic.attribute_by_name (Url_string).value
-				l_title := l_help_topic.attribute_by_name (Title_string).value
+				l_help_topic :=  l_help_topics.item
+				l_url := l_help_topic.url
+				l_title := l_help_topic.title
 				if get_dirs then
-					if l_help_topic.is_directory then
+					if l_help_topic.url_is_directory then
 						Result.append ("<Dir ")
 						if l_url /= Void then
 							l_url := l_util.toc_friendly_url (l_url)
@@ -234,8 +234,7 @@ feature {NONE} -- Implementation
 		local
 			l_formatter: TABLE_OF_CONTENTS_MSHELP_FORMATTER
 		do
-			create l_formatter.make
-			toc.process (l_formatter)
+			create l_formatter.make (toc)
 			Result := l_formatter.mshelp_text
 		end		
 

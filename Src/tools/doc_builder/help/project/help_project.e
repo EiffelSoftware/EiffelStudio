@@ -13,7 +13,7 @@ inherit
 
 feature -- Initialization
 
-	make (a_loc: DIRECTORY; a_name: STRING; a_toc: XML_TABLE_OF_CONTENTS) is
+	make (a_loc: DIRECTORY; a_name: STRING; a_toc: TABLE_OF_CONTENTS) is
 			-- Create new help project in location `a_loc' with name `a_name'.
 			-- Build `table_of_contents' from contents of `a_toc'.
 		require
@@ -51,7 +51,7 @@ feature -- Access
 	location: DIRECTORY
 			-- Help Project location once compiled
 	
-	toc: XML_TABLE_OF_CONTENTS
+	toc: TABLE_OF_CONTENTS
 	
 	title: STRING
 			-- Help Project Title

@@ -21,17 +21,14 @@ inherit
 			initialize,
 			interface,
 			make,
-			visual_widget,
 			create_focus_in_actions,
-			create_focus_out_actions,
-			has_focus
+			create_focus_out_actions
 		end
 
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
 		redefine
 			interface,
 			list_widget,
-			visual_widget,
 			add_to_container,
 			remove_i_th
 		end
@@ -86,34 +83,14 @@ feature {NONE} -- Initialization
 				~select_callback,
 				Void
 			)
-			temp_sig_id := c_signal_connect (
-					list_widget,
-					eiffel_to_c ("leave-notify-event"),
-					~set_is_out (True)
-			)
-			temp_sig_id := c_signal_connect (
-					list_widget,
-					eiffel_to_c ("enter-notify-event"),
-					~set_is_out (False)
-			)
-			temp_sig_id := c_signal_connect (
-					visual_widget,
-					eiffel_to_c ("focus-in-event"),
-					~attain_focus
-			)
-			temp_sig_id := c_signal_connect (
-					visual_widget,
-					eiffel_to_c ("focus-out-event"),
-					~lose_focus
+			gtk_widget_set_flags (
+				visual_widget,
+				C.GTK_CAN_FOCUS_ENUM
 			)
 			temp_sig_id := c_signal_connect (
 					visual_widget,
 					eiffel_to_c ("button-press-event"),
 					~on_list_clicked
-			)
-			gtk_widget_set_flags (
-				visual_widget,
-				C.GTK_CAN_FOCUS_ENUM
 			)
 			selection_mode_is_single := True
 		end
@@ -194,12 +171,6 @@ feature -- Status report
 			end
 		end
 		
-	has_focus: BOOLEAN is
-			-- Does the list have the focus?
-		do
-			Result := internal_has_focus
-		end
-
 feature -- Status setting
 
 	select_item (an_index: INTEGER) is
@@ -233,12 +204,6 @@ feature {EV_APPLICATION_IMP} -- Implementation
 		end
 		
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
-
-	visual_widget: POINTER is
-			-- Pointer to the gtk event box that list is in.
-		do
-			Result := list_widget
-		end
 
 	previous_selected_item_imp: EV_LIST_ITEM_IMP
 			-- Item that was selected previously.
@@ -350,11 +315,6 @@ feature {NONE} -- Implementation
 				eiffel_to_c ("button-press-event"),
 				~on_item_clicked
 				)
-			temp_sig_id := c_signal_connect (
-				v_imp.c_object,
-				eiffel_to_c ("focus-out-event"),
-				~lose_focus
-				)
 			real_signal_connect (
 				v_imp.c_object,
 				"key-press-event",
@@ -404,41 +364,6 @@ feature {NONE} -- Implementation
 			end
 			list_has_been_clicked := False
 		end
-
-	attain_focus is
-			-- The list has just grabbed the focus.
-		do
-			if not internal_has_focus then
-				internal_has_focus := True
-				top_level_window_imp.set_focus_widget (Current)
-				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call ([])				
-				end
-			end
-		end
-
-	lose_focus is
-			-- The list has just lost the focus.
-		do
-				-- This routine is called when an item loses the focus too.
-				-- The follwing test prevent call to `focus_out_actions' when
-				-- the user has only changed the selected item.
-			if not has_capture
-					and then
-				(is_out or else not button_is_pressed)
-					and then
-				not list_has_been_clicked
-					and then
-				not arrow_used
-			then
-				internal_has_focus := False
-				top_level_window_imp.set_focus_widget (Void)
-				if not has_focus and focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call ([])
-				end
-			end
-			arrow_used := False
-		end
 		
 	create_focus_in_actions: EV_FOCUS_ACTION_SEQUENCE is
 			-- 	
@@ -479,44 +404,14 @@ feature {NONE} -- Implementation
 			index = old index
 		end
 
-	button_is_pressed:BOOLEAN is
-			-- Is one of the mouse buttons pressed?
-		local
-			temp_mask, temp_x, temp_y: INTEGER
-			button_pressed_mask: INTEGER
-			temp_ptr: POINTER
-		do
-			temp_ptr := C.gdk_window_get_pointer (
-								default_pointer,
-								$temp_x,
-								$temp_y,
-								$temp_mask
-							)
-			button_pressed_mask := C.gdk_button1_mask_enum 
-						+ C.gdk_button2_mask_enum
-						+ C.gdk_button3_mask_enum
-			Result := (temp_mask.bit_and (button_pressed_mask)).to_boolean
-		end	
-		
-	is_out: BOOLEAN
-		-- Is the mouse pointer over the list?
-		
-	set_is_out (a_value: BOOLEAN) is
-			-- Assign `a_value' to `is_out'.
-		do
-			is_out := a_value
-		end
-		
-	internal_has_focus: BOOLEAN
-		
-	list_has_been_clicked: BOOLEAN
-		-- Are we between "item_clicked" and "list_clicked" event.
-		
 	arrow_used: BOOLEAN
 		-- Has the user just used up or down arrows
 		-- to change the focused item?
 		
 	selection_mode_is_single:BOOLEAN
+
+	list_has_been_clicked: BOOLEAN
+		-- Are we between "item_clicked" and "list_clicked" event.
 	
 end -- class EV_LIST_ITEM_LIST_IMP
 
@@ -541,6 +436,9 @@ end -- class EV_LIST_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/15 17:42:26  etienne
+--| Fixed problem with focus_in/out_actions in combo boxes.
+--|
 --| Revision 1.6  2001/06/13 16:44:13  etienne
 --| Cosmetics.
 --|

@@ -81,8 +81,17 @@ feature {NONE} -- Initialization
 			C.gtk_combo_disable_activate (container_widget)
 			C.gtk_combo_set_use_arrows_always (container_widget, 1)
 		--	gtk_widget_set_flags (c_object, C.GTK_CAN_FOCUS_ENUM)
-			real_signal_connect (entry_widget, "key_press_event", ~on_key_event, ~key_event_translate)
-			real_signal_connect (entry_widget, "key_release_event", ~on_key_event, ~key_event_translate)
+			real_signal_connect (
+					entry_widget,
+					"key_press_event",
+					~on_key_event,
+					~key_event_translate
+				)
+			real_signal_connect (
+					entry_widget,
+					"key_release_event",
+					~on_key_event,
+					~key_event_translate)
 			
 			create timer.make_with_interval (0)
 			timer.actions.extend (~launch_select_actions)
@@ -106,9 +115,8 @@ feature {NONE} -- Initialization
 				C.GTK_SELECTION_SINGLE_ENUM
 			)
 			selection_mode_is_single := True
-			temp_sig_id := c_signal_connect (visual_widget, eiffel_to_c ("focus-in-event"), agent attain_focus)
-			temp_sig_id := c_signal_connect (visual_widget, eiffel_to_c ("focus-out-event"), agent lose_focus)
-
+			temp_sig_id := c_signal_connect (entry_widget, eiffel_to_c ("focus-in-event"), agent attain_focus)
+			temp_sig_id := c_signal_connect (entry_widget, eiffel_to_c ("focus-out-event"), agent lose_focus)
 		end
 
 	avoid_callback: BOOLEAN
@@ -204,6 +212,27 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	attain_focus is
+			-- The list has just grabbed the focus.
+		do
+			top_level_window_imp.set_focus_widget (Current)
+			if focus_in_actions_internal /= Void then
+				focus_in_actions_internal.call ([])				
+			end
+		end
+
+	lose_focus is
+			-- The list has just lost the focus.
+		do
+				-- This routine is called when an item loses the focus too.
+				-- The follwing test prevent call to `focus_out_actions' when
+				-- the user has only changed the selected item.
+			top_level_window_imp.set_focus_widget (Void)
+			if focus_out_actions_internal /= Void then
+				focus_out_actions_internal.call ([])
+			end
+		end
+
 	add_to_container (v: like item) is
 			-- Add `v' to container.
 		local
@@ -222,6 +251,15 @@ feature {NONE} -- Implementation
 				eiffel_to_c ("button-press-event"),
 				~on_item_clicked
 				)
+			real_signal_connect (
+				imp.c_object,
+				"key-press-event",
+				~on_key_pressed,
+				~key_event_translate
+			)
+			if count = 1 then
+				imp.enable_select
+			end
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -329,6 +367,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2001/06/15 17:42:26  etienne
+--| Fixed problem with focus_in/out_actions in combo boxes.
+--|
 --| Revision 1.38  2001/06/13 16:35:57  etienne
 --| Improved item selection in combo boxes and lists.
 --|

@@ -21,7 +21,9 @@ inherit
 			visual_widget,
 			initialize,
 			switch_to_single_mode_if_necessary,
-			switch_to_browse_mode_if_necessary
+			switch_to_browse_mode_if_necessary,
+			has_focus,
+			add_to_container
 		end	
 create
 	make
@@ -36,10 +38,37 @@ feature -- Initialize
 
 	initialize is
 			-- Initialize the list.
+		local
+			temp_sig_id: INTEGER
 		do
-			Precursor
+			{EV_LIST_ITEM_LIST_IMP} Precursor
+			temp_sig_id := c_signal_connect (
+					list_widget,
+					eiffel_to_c ("leave-notify-event"),
+					~set_is_out (True)
+			)
+			temp_sig_id := c_signal_connect (
+					list_widget,
+					eiffel_to_c ("enter-notify-event"),
+					~set_is_out (False)
+			)
+			temp_sig_id := c_signal_connect (
+					visual_widget,
+					eiffel_to_c ("focus-in-event"),
+					~attain_focus
+			)
+			temp_sig_id := c_signal_connect (
+					visual_widget,
+					eiffel_to_c ("focus-out-event"),
+					~lose_focus
+			)
 			disable_multiple_selection
 		end
+		
+feature -- Status Report
+
+		has_focus: BOOLEAN
+			-- Does the list have the focus?
 
 feature -- Status setting
 
@@ -142,6 +171,86 @@ feature {NONE} -- Implementation
 				selection_mode_is_single := False
 			end
 		end
+
+	add_to_container (v: like item) is
+			-- Add `v' to end of list.
+			-- (from EV_ITEM_LIST_IMP)
+			-- (export status {NONE})
+		local
+			v_imp: EV_ITEM_IMP
+			temp_sig_id: INTEGER
+		do
+			Precursor {EV_LIST_ITEM_LIST_IMP} (v)
+			v_imp ?= v.implementation
+			temp_sig_id := c_signal_connect (
+				v_imp.c_object,
+				eiffel_to_c ("focus-out-event"),
+				~lose_focus
+				)
+		end
+		
+	attain_focus is
+			-- The list has just grabbed the focus.
+		do
+			if not has_focus then
+				has_focus := True
+				top_level_window_imp.set_focus_widget (Current)
+				if focus_in_actions_internal /= Void then
+					focus_in_actions_internal.call ([])				
+				end
+			end
+		end
+
+	lose_focus is
+			-- The list has just lost the focus.
+		do
+				-- This routine is called when an item loses the focus too.
+				-- The follwing test prevent call to `focus_out_actions' when
+				-- the user has only changed the selected item.
+			if not has_capture
+					and then
+				(is_out or else not button_is_pressed)
+					and then
+				not list_has_been_clicked
+					and then
+				not arrow_used
+			then
+				has_focus := False
+				top_level_window_imp.set_focus_widget (Void)
+				if not has_focus and focus_out_actions_internal /= Void then
+					focus_out_actions_internal.call ([])
+				end
+			end
+			arrow_used := False
+		end
+
+	is_out: BOOLEAN
+		-- Is the mouse pointer over the list?
+		
+	set_is_out (a_value: BOOLEAN) is
+			-- Assign `a_value' to `is_out'.
+		do
+			is_out := a_value
+		end
+		
+	button_is_pressed:BOOLEAN is
+			-- Is one of the mouse buttons pressed?
+		local
+			temp_mask, temp_x, temp_y: INTEGER
+			button_pressed_mask: INTEGER
+			temp_ptr: POINTER
+		do
+			temp_ptr := C.gdk_window_get_pointer (
+								default_pointer,
+								$temp_x,
+								$temp_y,
+								$temp_mask
+							)
+			button_pressed_mask := C.gdk_button1_mask_enum 
+						+ C.gdk_button2_mask_enum
+						+ C.gdk_button3_mask_enum
+			Result := (temp_mask.bit_and (button_pressed_mask)).to_boolean
+		end	
 		
 end -- class EV_LIST_IMP
 
@@ -166,6 +275,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2001/06/15 17:42:26  etienne
+--| Fixed problem with focus_in/out_actions in combo boxes.
+--|
 --| Revision 1.47  2001/06/13 16:40:16  etienne
 --| Cosmetics.
 --|

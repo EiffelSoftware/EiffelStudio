@@ -8,17 +8,16 @@ indexing
 class SHOW_BREAKPOINTS
 
 inherit
-
 	FORMATTER
 		rename
 			execute as old_execute, 
 			format as old_format
 		redefine
-			dark_symbol, display_temp_header
+			display_temp_header
 		end;
 	FORMATTER
 		redefine
-			dark_symbol, format, display_temp_header, execute
+			format, display_temp_header, execute
 		select
 			format, execute
 		end;
@@ -38,11 +37,9 @@ feature -- Initialization
 		do
 			init (a_tool);
 			if tool = Project_tool then
-				do_flat := 
-					Project_resources.debugger_do_flat_in_breakpoints.actual_value
+				do_flat := Project_resources.debugger_do_flat_in_breakpoints.actual_value
 			else
-				do_flat := 
-					Feature_resources.do_flat_in_breakpoints.actual_value
+				do_flat := Feature_resources.do_flat_in_breakpoints.actual_value
 			end
 		end; 
 
@@ -136,12 +133,6 @@ feature -- Properties
 		once
 			Result := Pixmaps.bm_Breakpoint
 		end; -- symbol
-
-	dark_symbol: PIXMAP is
-			-- Dark version of `symbol'.
-		once
-			Result := Pixmaps.bm_Dark_breakpoint
-		end;
 
 feature -- Status setting
 

@@ -14,9 +14,6 @@ class
 inherit
 
 	EXEC_FORMAT
-		redefine
-			dark_symbol
-		end
 
 creation
 
@@ -28,12 +25,6 @@ feature -- Properties
 			-- Pixmap for the button.
 		once
 			Result := Pixmaps.bm_Exec_last
-		end;
-
-	dark_symbol: PIXMAP is
-			-- Dark version of `symbol'.
-		once
-			Result := Pixmaps.bm_Dark_exec_last
 		end;
 
 feature {NONE} -- Attributes

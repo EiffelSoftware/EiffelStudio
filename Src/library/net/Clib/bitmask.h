@@ -16,7 +16,9 @@
 #ifdef I_LIMITS
 #include <limits.h>			/* For WORD_BIT */
 #endif
+#ifndef EIF_WIN32
 #include <sys/param.h>		/* For NOFILE */
+#endif
 
 #include "portable.h"
 

@@ -8,23 +8,15 @@ class
 	EB_EDITOR_DATA
 
 inherit
-	SHARED_RESOURCES
+	EDITOR_DATA
 		redefine
-			default_create
-		end
-
-	EV_FONT_CONSTANTS
-		redefine
-			default_create
-		end
-		
-	OBSERVER
-		redefine
-			default_create
+			make,
+			initialize_preferences,
+			update
 		end
 
 	EB_SHARED_MANAGERS
-		redefine
+		undefine
 			default_create
 		end
 
@@ -35,538 +27,573 @@ inherit
 			default_create
 		end
 
-feature {NONE} -- Initialization
+create
+	make
 
-	default_create is
-		local
-			rmanager: RESOURCE_OBSERVATION_MANAGER
-			id: STRING
-			keyword_name: STRING
-			i: INTEGER
-			count: INTEGER
+feature {EB_PREFERENCES} -- Initialization
+
+	make (a_preferences: PREFERENCES) is
+			-- Create
 		do
-			create rmanager
-			rmanager.add_observer ("normal_text_color", Current)
-			rmanager.add_observer ("normal_background_color", Current)
-			rmanager.add_observer ("selection_text_color", Current)
-			rmanager.add_observer ("selection_background_color", Current)
-			rmanager.add_observer ("string_text_color", Current)
-			rmanager.add_observer ("string_background_color", Current)
-			rmanager.add_observer ("keyword_text_color", Current)
-			rmanager.add_observer ("keyword_background_color", Current)
-			rmanager.add_observer ("spaces_background_color", Current)
-			rmanager.add_observer ("spaces_text_color", Current)
-			rmanager.add_observer ("comments_text_color", Current)
-			rmanager.add_observer ("comments_background_color", Current)
-			rmanager.add_observer ("number_text_color", Current)
-			rmanager.add_observer ("number_background_color", Current)
-			rmanager.add_observer ("operator_text_color", Current)
-			rmanager.add_observer ("operator_background_color", Current)
-			rmanager.add_observer ("breakpoint_background_color", Current)
-			rmanager.add_observer ("assertion_tag_text_color", Current)
-			rmanager.add_observer ("assertion_tag_background_color", Current)
-			rmanager.add_observer ("indexing_tag_text_color", Current)
-			rmanager.add_observer ("indexing_tag_background_color", Current)
-			rmanager.add_observer ("reserved_text_color", Current)
-			rmanager.add_observer ("reserved_background_color", Current)
-			rmanager.add_observer ("generic_text_color", Current)
-			rmanager.add_observer ("generic_background_color", Current)
-			rmanager.add_observer ("local_text_color", Current)
-			rmanager.add_observer ("local_background_color", Current)
-			rmanager.add_observer ("class_text_color", Current)
-			rmanager.add_observer ("class_background_color", Current)
-			rmanager.add_observer ("feature_text_color", Current)
-			rmanager.add_observer ("feature_background_color", Current)
-			rmanager.add_observer ("cluster_text_color", Current)
-			rmanager.add_observer ("cluster_background_color", Current)
-			rmanager.add_observer ("error_text_color", Current)
-			rmanager.add_observer ("error_background_color", Current)
-			rmanager.add_observer ("object_text_color", Current)
-			rmanager.add_observer ("object_background_color", Current)
+			Precursor {EDITOR_DATA} (a_preferences)
+		end	
+		
+feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
+		
+	breakpoint_background_color: EV_COLOR is
+			-- Background color used to display breakpoints		
+		do
+			Result := breakpoint_background_color_preference.value
+		end
 
-			rmanager.add_observer ("underscore_is_separator", Current)
-			rmanager.add_observer ("once_and_constant_in_upper", Current)
-			rmanager.add_observer ("smart_indent", Current)
-			rmanager.add_observer ("automatic_update", Current)
-			rmanager.add_observer ("autocomplete_brackets_and_parenthesis", Current)
-			rmanager.add_observer ("autocomplete_quotes", Current)
-			rmanager.add_observer ("call_complete_with_any_features", Current)
-			rmanager.add_observer ("syntax_autocomplete", Current)
-			rmanager.add_observer ("quadruple_click", Current)
-			rmanager.add_observer ("tab_for_indentation", Current)
-			rmanager.add_observer ("mouse_wheel_scroll_full_page", Current)
-			rmanager.add_observer ("mouse_wheel_scroll_size", Current)
-			load_preferences
-			from
-				completed_keywords.start
-			until
-				completed_keywords.after
-			loop
-				keyword_name := completed_keywords.item
-				if keyword_name.has (' ') then
-					keyword_name := keyword_name.twin
-					keyword_name.replace_substring_all (" ", "_")
-				end
-				id := "autocomplete_" + keyword_name
-				rmanager.add_observer (id, Current)
-				id := "use_default_" + keyword_name
-				rmanager.add_observer (id, Current)
-				id := "custom_" + keyword_name + "_space"
-				rmanager.add_observer (id, Current)
-				id := "custom_" + keyword_name + "_return"
-				rmanager.add_observer (id, Current)
-				id := "custom_" + keyword_name + "_space_later"
-				rmanager.add_observer (id, Current)
-				id := "custom_" + keyword_name + "_return_later"
-				rmanager.add_observer (id, Current)
-				completed_keywords.forth
-			end
-			count := customizable_shortcuts.count
-			from
-				i := 1
-			until
-				i > count
-			loop
-				keyword_name := customizable_shortcuts.item (i)
-				id := keyword_name + "_shortcut_key"
-				rmanager.add_observer (id, Current)
-				id := keyword_name + "_shortcut_ctrl"
-				rmanager.add_observer (id, Current)
-				id := keyword_name + "_shortcut_alt"
-				rmanager.add_observer (id, Current)
-				id := keyword_name + "_shortcut_shift"
-				rmanager.add_observer (id, Current)
-				i := i + 1
-			end
+	assertion_tag_text_color: EV_COLOR is
+		do
+			Result := assertion_tag_text_color_preference.value
 		end
 		
-feature {TEXT}-- Resources
+	assertion_tag_background_color: EV_COLOR is
+		do
+			Result := assertion_tag_background_color_preference.value
+		end
+		
+	indexing_tag_text_color: EV_COLOR is
+		do
+			Result := indexing_tag_text_color_preference.value
+		end		
+		
+	indexing_tag_background_color: EV_COLOR is
+		do
+			Result := indexing_tag_background_color_preference.value
+		end
+		
+	reserved_text_color: EV_COLOR is
+		do
+			Result := reserved_text_color_preference.value
+		end
+		
+	reserved_background_color: EV_COLOR is
+		do
+			Result := reserved_background_color_preference.value
+		end
+		
+	generic_text_color: EV_COLOR is
+		do
+			Result := generic_text_color_preference.value
+		end
+		
+	generic_background_color: EV_COLOR is
+		do
+			Result := generic_background_color_preference.value
+		end
+		
+	local_text_color: EV_COLOR is
+		do
+			Result := local_text_color_preference.value
+		end
+		
+	local_background_color: EV_COLOR is
+		do
+			Result := local_background_color_preference.value
+		end
+		
+	class_text_color: EV_COLOR is
+		do
+			Result := class_text_color_preference.value
+		end
+	
+	class_background_color: EV_COLOR is
+		do
+			Result := class_background_color_preference.value
+		end
+		
+	feature_text_color: EV_COLOR is
+		do
+			Result := feature_text_color_preference.value
+		end 
+	
+	feature_background_color: EV_COLOR is
+		do
+			Result := feature_background_color_preference.value
+		end
+		
+	cluster_text_color: EV_COLOR is
+		do
+			Result := cluster_text_color_preference.value
+		end 
+	
+	cluster_background_color: EV_COLOR is
+		do
+			Result := cluster_background_color_preference.value
+		end
+		
+	error_text_color: EV_COLOR is
+		do
+			Result := error_text_color_preference.value
+		end 
+	
+	error_background_color: EV_COLOR is
+		do
+			Result := error_background_color_preference.value
+		end
+		
+	object_text_color: EV_COLOR is
+		do
+			Result := object_text_color_preference.value
+		end
+	
+	object_background_color: EV_COLOR is
+		do
+			Result := object_background_color_preference.value
+		end
 
-	tabulation_spaces: INTEGER
-			-- number of spaces characters in a tabulation.
+	once_and_constant_in_upper: BOOLEAN is
+			-- Is first letter of once or constant in upper case?
+		do
+			Result := once_and_constant_in_upper_preference.value
+		end		
 
-feature
+	underscore_is_separator: BOOLEAN is
+			-- Should '_' be considered a word separator (used for word by word
+			-- moves and selection)
+		do
+			Result := underscore_is_separator_preference.value
+		end
 
-	smart_identation: BOOLEAN
-			-- Is smart identation enabled?
+	autocomplete_brackets_and_parenthesis: BOOLEAN is
+			-- Should we close the brackets and parenthesis automatically?
+		do
+			Result := autocomplete_brackets_and_parenthesis_preference.value
+		end
 
-		--| Font color Preferences
+	autocomplete_quotes: BOOLEAN is
+			-- Should we close the quotes automatically?
+		do
+			Result := autocomplete_quotes_preference.value
+		end
 
-	normal_text_color: EV_COLOR
-			-- Color used to display normal text
+	show_any_features: BOOLEAN is
+			-- Should autocomplete show features inherited from any ?
+		do
+			Result := show_any_features_preference.value
+		end
 
-	normal_background_color: EV_COLOR
-			-- Background color used to display normal text
+	auto_auto_complete: BOOLEAN is
+			-- Should completion window show automatically after valid '.' calls?
+		do
+			Result := auto_auto_complete_preference.value
+		end
 
-	selection_text_color: EV_COLOR
-			-- Color used to display selected text
+	filter_completion_list: BOOLEAN is
+			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
+			-- the list will always contain possible completion options and closest match will be selected during typing.
+		do
+			Result := filter_completion_list_preference.value
+		end
+			
+	show_completion_signature: BOOLEAN is
+			-- Should feature signature be shown in completion list?
+		do
+			Result := show_completion_signature_preference.value
+		end
+	
+	show_completion_type: BOOLEAN is
+			-- Should feature type be shown in completion list?
+		do
+			Result := show_completion_type_preference.value
+		end
 
-	selection_background_color: EV_COLOR
-			-- Background color used to display selected text
+	syntax_complete_enabled: BOOLEAN is
+			-- should main keywords be completed ?
+		do
+			Result := syntax_complete_enabled_preference.value
+		end
 
-	string_text_color: EV_COLOR
-			-- Color used to display strings
+	quadruple_click_enabled: BOOLEAN is
+			-- is quadruple click (select all) enabled ?
+		do
+			Result := quadruple_click_enabled_preference.value
+		end
 
-	string_background_color: EV_COLOR
-			-- Background color used to display strings
+	customized_string_1: STRING is
+			-- strings defined by the user.
+		do
+			Result := customized_string_1_preference.value
+		end			
+	
+	customized_string_2: STRING is
+			-- strings defined by the user.
+		do
+			Result := customized_string_2_preference.value
+		end			
+		
+	customized_string_3: STRING is
+			-- strings defined by the user.
+		do
+			Result := customized_string_3_preference.value
+		end			
+	
+	left_side: BOOLEAN
+	
+	maximized: BOOLEAN
+	
+feature {NONE} -- Preference
+		
+	breakpoint_background_color_preference: COLOR_PREFERENCE
+			-- Background color used to display breakpoints		
 
-	keyword_text_color: EV_COLOR
-			-- Color used to display keywords
+	assertion_tag_text_color_preference: COLOR_PREFERENCE
+	assertion_tag_background_color_preference: COLOR_PREFERENCE
+	indexing_tag_text_color_preference: COLOR_PREFERENCE
+	indexing_tag_background_color_preference: COLOR_PREFERENCE
+	reserved_text_color_preference: COLOR_PREFERENCE
+	reserved_background_color_preference: COLOR_PREFERENCE
+	generic_text_color_preference: COLOR_PREFERENCE
+	generic_background_color_preference: COLOR_PREFERENCE
+	local_text_color_preference: COLOR_PREFERENCE
+	local_background_color_preference: COLOR_PREFERENCE
+	class_text_color_preference: COLOR_PREFERENCE
+	class_background_color_preference: COLOR_PREFERENCE
+	feature_text_color_preference: COLOR_PREFERENCE
+	feature_background_color_preference: COLOR_PREFERENCE
+	cluster_text_color_preference: COLOR_PREFERENCE
+	cluster_background_color_preference: COLOR_PREFERENCE
+	error_text_color_preference: COLOR_PREFERENCE
+	error_background_color_preference: COLOR_PREFERENCE
+	object_text_color_preference: COLOR_PREFERENCE
+	object_background_color_preference: COLOR_PREFERENCE
 
-	keyword_background_color: EV_COLOR
-			-- Background color used to display keywords
-
-	spaces_text_color: EV_COLOR
-			-- Color used to display spaces
-
-	spaces_background_color: EV_COLOR
-			-- Background color used to display spaces
-
-	comments_text_color: EV_COLOR
-			-- Color used to display comments
-
-	comments_background_color: EV_COLOR
-			-- Background color used to display comments
-
-	number_text_color: EV_COLOR
-			-- Color used to display numbers
-
-	number_background_color: EV_COLOR
-			-- Background color used to display numbers
-
-	operator_text_color: EV_COLOR
-			-- Color used to display operator
-
-	operator_background_color: EV_COLOR
-			-- Background color used to display operator
-
-	breakpoint_background_color: EV_COLOR
-			-- Background color used to display breakpoints
-
-	assertion_tag_text_color: EV_COLOR
-	assertion_tag_background_color: EV_COLOR
-	indexing_tag_text_color: EV_COLOR
-	indexing_tag_background_color: EV_COLOR
-	reserved_text_color: EV_COLOR
-	reserved_background_color: EV_COLOR
-	generic_text_color: EV_COLOR
-	generic_background_color: EV_COLOR
-	local_text_color: EV_COLOR
-	local_background_color: EV_COLOR
-
-	class_text_color, class_background_color: EV_COLOR
-	feature_text_color, feature_background_color: EV_COLOR
-	cluster_text_color, cluster_background_color: EV_COLOR
-	error_text_color, error_background_color: EV_COLOR
-	object_text_color, object_background_color: EV_COLOR
-
-	font, keyword_font: EDITOR_FONT
-			-- Current text font and keyword font.
-
-	once_and_constant_in_upper: BOOLEAN
+	once_and_constant_in_upper_preference: BOOLEAN_PREFERENCE
 			-- Is first letter of once or constant in upper case?
 
-	automatic_update: BOOLEAN
-			-- if the text has been emodified by an external editor, should we
-			-- reload the file automatically if no change has been made here ? 
-
-	underscore_is_separator: BOOLEAN
+	underscore_is_separator_preference: BOOLEAN_PREFERENCE
 			-- Should '_' be considered a word separator (used for word by word
 			-- moves and selection)
 
-	autocomplete_brackets_and_parenthesis: BOOLEAN
+	autocomplete_brackets_and_parenthesis_preference: BOOLEAN_PREFERENCE
 			-- Should we close the brackets and parenthesis automatically?
 
-	autocomplete_quotes: BOOLEAN
+	autocomplete_quotes_preference: BOOLEAN_PREFERENCE
 			-- Should we close the quotes automatically?
 
-	show_any_features: BOOLEAN
+	show_any_features_preference: BOOLEAN_PREFERENCE
 			-- Should autocomplete show features inherited from any ?
 
-	syntax_complete_enabled: BOOLEAN
+	auto_auto_complete_preference: BOOLEAN_PREFERENCE
+			-- Should completion window show automatically after valid '.' calls?
+
+	filter_completion_list_preference: BOOLEAN_PREFERENCE
+			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
+			-- the list will always contain possible completion options and closest match will be selected during typing.
+			
+	show_completion_signature_preference: BOOLEAN_PREFERENCE
+			-- Should feature signature be shown in completion list?
+	
+	show_completion_type_preference: BOOLEAN_PREFERENCE
+			-- Should feature type be shown in completion list?
+
+	syntax_complete_enabled_preference: BOOLEAN_PREFERENCE
 			-- should main keywords be completed ?
 
-	quadruple_click_enabled: BOOLEAN
+	quadruple_click_enabled_preference: BOOLEAN_PREFERENCE
 			-- is quadruple click (select all) enabled ?
 			
-	use_tab_for_indentation: BOOLEAN
-			-- use tabulations (not spaces) for auto-indenting ?
+	customized_string_1_preference: STRING_PREFERENCE
+	customized_string_2_preference: STRING_PREFERENCE
+	customized_string_3_preference: STRING_PREFERENCE
+			-- strings defined by the user.			
+	
+feature {NONE} -- Preference Strings
 
-	customized_strings: ARRAY [STRING]
+	assertion_tag_text_color_string: STRING is "editor.eiffel.assertion_tag_text_color" 
+	assertion_tag_background_color_string: STRING is "editor.eiffel.assertion_tag_background_color" 
+	indexing_tag_text_color_string: STRING is "editor.eiffel.indexing_tag_text_color" 
+	indexing_tag_background_color_string: STRING is "editor.eiffel.indexing_tag_background_color" 
+	reserved_text_color_string: STRING is "editor.eiffel.reserved_text_color" 
+	reserved_background_color_string: STRING is "editor.eiffel.reserved_background_color" 
+	generic_text_color_string: STRING is "editor.eiffel.generic_text_color" 
+	generic_background_color_string: STRING is "editor.eiffel.generic_background_color" 
+	local_text_color_string: STRING is "editor.eiffel.local_text_color"
+	local_background_color_string: STRING is "editor.eiffel.local_background_color" 
+	class_text_color_string: STRING is "editor.eiffel.class_text_color"
+	class_background_color_string: STRING is "editor.eiffel.class_background_color" 
+	feature_text_color_string: STRING is "editor.eiffel.feature_text_color"
+	feature_background_color_string: STRING is "editor.eiffel.feature_background_color" 
+	cluster_text_color_string :STRING is "editor.eiffel.cluster_text_color"
+	cluster_background_color_string: STRING is "editor.eiffel.cluster_background_color" 
+	error_text_color_string : STRING is "editor.eiffel.error_text_color"
+	error_background_color_string: STRING is "editor.eiffel.error_background_color" 
+	object_text_color_string: STRING is "editor.eiffel.object_text_color"
+	object_background_color_string: STRING is "editor.eiffel.object_background_color" 
+	breakpoint_background_color_string: STRING is "editor.eiffel.breakpoint_background_color"
+
+	once_and_constant_in_upper_string: STRING is "editor.eiffel.once_and_constant_in_upper" 
+			-- Is first letter of once or constant in upper case?
+
+	underscore_is_separator_string: STRING is "editor.eiffel.underscore_is_separator" 
+			-- Should '_' be considered a word separator (used for word by word
+			-- moves and selection)
+
+	autocomplete_brackets_and_parenthesis_string: STRING is "editor.eiffel.autocomplete_brackets_and_parenthesis" 
+			-- Should we close the brackets and parenthesis automatically?
+
+	autocomplete_quotes_string: STRING is "editor.eiffel.autocomplete_quotes" 
+			-- Should we close the quotes automatically?
+
+	show_any_features_string: STRING is "editor.eiffel.show_any_features" 
+			-- Should autocomplete show features inherited from any ?
+
+	auto_auto_complete_string: STRING is "editor.eiffel.auto_auto_complete" 
+			-- Should completion window show automatically after valid '.' calls?
+
+	filter_completion_list_string: STRING is "editor.eiffel.filter_completion_list" 
+			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
+			-- the list will always contain possible completion options and closest match will be selected during typing.
+			
+	show_completion_signature_string: STRING is "editor.eiffel.show_completion_signature" 
+			-- Should feature signature be shown in completion list?
+	
+	show_completion_type_string: STRING is "editor.eiffel.show_completion_type" 
+			-- Should feature type be shown in completion list?
+
+	syntax_complete_enabled_string: STRING is "editor.eiffel.syntax_complete_enabled" 
+			-- should main keywords be completed ?
+
+	quadruple_click_enabled_string: STRING is "editor.eiffel.quadruple_click_enabled" 
+			-- is quadruple click (select all) enabled ?
+			
+	customized_string_1_string: STRING is "editor.eiffel.customized_string_1"
+	customized_string_2_string: STRING is "editor.eiffel.customized_string_2"
+	customized_string_3_string: STRING is "editor.eiffel.customized_string_3"
 			-- strings defined by the user.
-			
-	mouse_wheel_scroll_full_page: BOOLEAN
-			-- Should a mouse wheel scroll event scroll full page?
-			
-	mouse_wheel_scroll_size: INTEGER
-			-- Number of lines to scroll when a mouse wheel scroll event is received.
-			-- Overriden by `mouse_wheel_scroll_full_page'.
-
-feature -- Syntax Completion Customization
-
-	completed_keywords: ARRAYED_LIST [STRING] is
-			-- list of completed keywords
-		local
-			a: ARRAY [STRING]
-		once
-			create Result.make (35)
-			a := <<
-				"indexing", "class", "inherit", "creation", "feature", 
-				"is", "require", "require else", "local", "do", "once", "deferred", "external", "rescue", "ensure", "ensure then", "alias",
-				"if", "then", "elseif", "else", "inspect", "when", "from", "variant", "until", "loop", "debug", "check", 
-				"rename", "redefine", "undefine", "select", "export",
-				"precursor", "create", "obsolete", "invariant", "end"
-				>>
-			Result.fill (a)
-			Result.compare_objects
-		end
-
-	complete_keywords: ARRAY [BOOLEAN]
-			-- should the corresponding keyword in `completed_keywords' be completed ?
-
-	insert_after_keyword: ARRAY [ARRAY[STRING]]
-			-- strings to be inserted after keywords
-
-
-feature -- Keybord shortcuts Customization
-
-	customizable_shortcuts: ARRAY [STRING] is
-			-- list of customizable shortcuts
-		once
-			Result := <<"autocomplete", "class_autocomplete", "show_search_panel", "show_search_and_replace_panel", "search_selection", "search_last", "search_backward",
-			"customized_insertion_1", "customized_insertion_2", "customized_insertion_3">>
-		end
-
-	default_key_codes: ARRAY [INTEGER] is
-			-- default key codes
-		once
-			Result := <<Key_space, Key_space, Key_f, Key_h, Key_F3, Key_F3, Key_F3, Key_F2, Key_F2, Key_F2>>
-		end
-
-	default_ctrl_alt_shift: ARRAY [ARRAY [BOOLEAN]] is
-			-- default ctrl/alt/shift status associated with actions above
-		once
-			Result := << 	<<True, False, False>>,
-					<<True, False, True>>,
-					<<True, False, False>>,
-					<<True, False, False>>,
-					<<False, False, False>>,
-					<<False, False, False>>,
-					<<False, False, True>>,
-					<<False, False, False>>,
-					<<True, False, False>>,
-					<<False, False, True>>	>>
-		end
-
-	key_codes_for_actions: ARRAYED_LIST [INTEGER]
-			-- array of key codes associated with actions : for keybord shortcut customization
-
-	ctrl_alt_shift_for_actions: ARRAY [ARRAY [BOOLEAN]]
-			-- array of flags (ctrled / alted / shifted key or not ?) associated with actions : for keybord shortcut customization
-
-	shorcut_name_for_action (action_number: INTEGER):STRING is
-			-- description shortcut corresponding to `action_number'-th action
-		local
-			meta: ARRAY [BOOLEAN]
-		do
-			Result := key_strings.item (key_codes_for_actions.i_th(action_number)).twin
-			Result.put (Result.item(1).upper, 1)
-			meta := ctrl_alt_shift_for_actions.item (action_number)
-			if meta.item (3) then
-				Result.prepend ("Shift+")
-			end
-			if meta.item (2) then
-				Result.prepend ("Alt+")
-			end
-			if meta.item (1) then
-				Result.prepend ("Ctrl+")
-			end
-		end
-
-feature -- Element Change (General preferences)
-
-	enable_smart_ident is
-			-- Set `smart_identation' to True.
-		do
-			smart_identation := True
-		ensure
-			smart_identation_set: smart_identation
-		end
-
-	disable_smart_ident is
-			-- Set `smart_identation' to False.
-		do
-			smart_identation := False
-		ensure
-			smart_identation_set: not smart_identation
-		end
 
 feature -- Update
 
 	update is
 			-- The preferences have changed.
 		do
-			update_preferences
-			Window_manager.quick_refresh_all
+			window_manager.quick_refresh_all
 		end
 
-	load_preferences is
-			-- Default Initialisations
+feature {NONE} -- Initialization
+		
+	initialize_preferences is
+			-- Initialize preference values.
 		local
-			df: EV_FONT
-		do
-			tabulation_spaces := integer_resource_value ("tab_step", 4)
-			create df.make_with_values ({EV_FONT_CONSTANTS}.Family_screen, {EV_FONT_CONSTANTS}.Weight_regular, {EV_FONT_CONSTANTS}.Shape_regular, 12)
-			df.preferred_families.extend ("verdana")
-			df.preferred_families.extend ("arial")
-			df.preferred_families.extend ("helvetica")
-			create font.make_with_font (font_resource_value ("editor_font", df))
-			create keyword_font.make_with_font (font_resource_value ("keyword_font", df))
-			update_preferences
-		end
-
-	update_preferences is
-			-- Update preferences that may be updated.
-		local
-			cr: COLOR_RESOURCE
-		do
-			normal_text_color := color_resource_value ("normal_text_color", 0, 0, 0)
-			normal_background_color := color_resource_value ("normal_background_color", 255, 255, 255)
-			selection_text_color := color_resource_value ("selection_text_color", 255, 255, 128)
-			selection_background_color := color_resource_value ("selection_background_color", 0, 0, 128)
-
-			string_text_color := color_resource_value ("string_text_color", 255, 255, 128)
-			cr ?= resources.item ("string_background_color")
-			if cr /= Void then
-				cr.allow_void
-				string_background_color := color_resource_value ("string_background_color", 255, 255, 255)
-			else
-				string_background_color := Void
-			end
-
-			keyword_text_color := color_resource_value ("keyword_text_color", 0, 153, 255)
-			cr ?= resources.item ("keyword_background_color")
-			if cr /= Void then
-				cr.allow_void
-				keyword_background_color := color_resource_value ("keyword_background_color", 255, 255, 255)
-			else
-				keyword_background_color := Void
-			end
-
-			spaces_text_color := color_resource_value ("spaces_text_color", 128, 128, 128)
-			cr ?= resources.item ("spaces_background_color")
-			if cr /= Void then
-				cr.allow_void
-				spaces_background_color := color_resource_value ("spaces_background_color", 255, 255, 255)
-			else
-				spaces_background_color := Void
-			end
-
-			comments_text_color := color_resource_value ("comments_text_color", 204, 102, 255)
-			cr ?= resources.item ("comments_background_color")
-			if cr /= Void then
-				cr.allow_void
-				comments_background_color := color_resource_value ("comments_background_color", 255, 255, 255)
-			else
-				comments_background_color := Void
-			end
-
-			number_text_color := color_resource_value ("number_text_color", 153, 255, 153)
-			cr ?= resources.item ("number_background_color")
-			if cr /= Void then
-				cr.allow_void
-				number_background_color := color_resource_value ("number_background_color", 255, 255, 255)
-			else
-				number_background_color := Void
-			end
-
-			operator_text_color := color_resource_value ("operator_text_color", 0, 153, 255)
-			cr ?= resources.item ("operator_background_color")
-			if cr /= Void then
-				cr.allow_void
-				operator_background_color := color_resource_value ("operator_background_color", 255, 255, 255)
-			else
-				operator_background_color := Void
-			end
-
-			cr ?= resources.item ("breakpoint_background_color")
-			if cr /= Void then
-				cr.allow_void
-				breakpoint_background_color := color_resource_value ("breakpoint_background_color", 255, 255, 255)
-			else
-				breakpoint_background_color := Void
-			end
-
-			assertion_tag_text_color := color_resource_value ("assertion_tag_text_color", 0, 0, 0)
-			cr ?= resources.item ("assertion_tag_background_color")
-			if cr /= Void then
-				cr.allow_void
-				assertion_tag_background_color := color_resource_value ("assertion_tag_background_color", 255, 255, 255)
-			else
-				assertion_tag_background_color := Void
-			end
-
-			indexing_tag_text_color := color_resource_value ("indexing_tag_text_color", 0, 0, 0)
-			cr ?= resources.item ("indexing_tag_background_color")
-			if cr /= Void then
-				cr.allow_void
-				indexing_tag_background_color := color_resource_value ("indexing_tag_background_color", 255, 255, 255)
-			else
-				indexing_tag_background_color := Void
-			end
-
-			reserved_text_color := color_resource_value ("reserved_text_color", 0, 0, 0)
-			cr ?= resources.item ("reserved_background_color")
-			if cr /= Void then
-				cr.allow_void
-				reserved_background_color := color_resource_value ("reserved_background_color", 255, 255, 255)
-			else
-				reserved_background_color := Void
-			end
-
-			generic_text_color := color_resource_value ("generic_text_color", 0, 0, 0)
-			cr ?= resources.item ("generic_background_color")
-			if cr /= Void then
-				cr.allow_void
-				generic_background_color := color_resource_value ("generic_background_color", 255, 255, 255)
-			else
-				generic_background_color := Void
-			end
-
-			local_text_color := color_resource_value ("local_text_color", 0, 0, 0)
-			cr ?= resources.item ("local_background_color")
-			if cr /= Void then
-				cr.allow_void
-				local_background_color := color_resource_value ("local_background_color", 255, 255, 255)
-			else
-				local_background_color := Void
-			end
-
-			class_text_color := color_resource_value ("class_text_color", 0, 0, 0)
-			cr ?= resources.item ("class_background_color")
-			if cr /= Void then
-				cr.allow_void
-				class_background_color := color_resource_value ("class_background_color", 255, 255, 255)
-			else
-				class_background_color := Void
-			end
-
-			feature_text_color := color_resource_value ("feature_text_color", 0, 0, 0)
-			cr ?= resources.item ("feature_background_color")
-			if cr /= Void then
-				cr.allow_void
-				feature_background_color := color_resource_value ("feature_background_color", 255, 255, 255)
-			else
-				feature_background_color := Void
-			end
-
-			cluster_text_color := color_resource_value ("cluster_text_color", 0, 0, 0)
-			cr ?= resources.item ("cluster_background_color")
-			if cr /= Void then
-				cr.allow_void
-				cluster_background_color := color_resource_value ("cluster_background_color", 255, 255, 255)
-			else
-				cluster_background_color := Void
-			end
-
-			error_text_color := color_resource_value ("error_text_color", 0, 0, 0)
-			cr ?= resources.item ("error_background_color")
-			if cr /= Void then
-				cr.allow_void
-				error_background_color := color_resource_value ("error_background_color", 255, 255, 255)
-			else
-				error_background_color := Void
-			end
-
-			object_text_color := color_resource_value ("object_text_color", 0, 0, 0)
-			cr ?= resources.item ("object_background_color")
-			if cr /= Void then
-				cr.allow_void
-				object_background_color := color_resource_value ("object_background_color", 255, 255, 255)
-			else
-				object_background_color := Void
-			end
-
-			smart_identation := boolean_resource_value ("smart_indent", True)
-			automatic_update := boolean_resource_value ("automatic_update", True)
-			underscore_is_separator := boolean_resource_value ("underscore_is_separator", False)
-			once_and_constant_in_upper := boolean_resource_value ("once_and_constant_in_upper", False)
-			autocomplete_brackets_and_parenthesis := boolean_resource_value ("autocomplete_brackets_and_parenthesis", False)
-			autocomplete_quotes := boolean_resource_value ("autocomplete_quotes", False)
-			show_any_features := boolean_resource_value ("call_complete_with_any_features", False)
-			syntax_complete_enabled := boolean_resource_value ("syntax_autocomplete", True)
-			quadruple_click_enabled := boolean_resource_value ("quadruple_click", True)
-			use_tab_for_indentation := boolean_resource_value ("tab_for_indentation", True)
-			mouse_wheel_scroll_full_page := boolean_resource_value ("mouse_wheel_scroll_full_page", False)
-			mouse_wheel_scroll_size := integer_resource_value ("mouse_wheel_scroll_size", 3)
+			l_manager: EB_PREFERENCE_MANAGER	
+		do		
+			Precursor {EDITOR_DATA}
+			create l_manager.make (preferences, "editor.eiffel")	
+				
+				-- Colors
+			breakpoint_background_color_preference := l_manager.new_color_resource_value (l_manager, breakpoint_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			assertion_tag_text_color_preference := l_manager.new_color_resource_value (l_manager, assertion_tag_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			assertion_tag_background_color_preference := l_manager.new_color_resource_value (l_manager, assertion_tag_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			indexing_tag_text_color_preference := l_manager.new_color_resource_value (l_manager, indexing_tag_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			indexing_tag_background_color_preference := l_manager.new_color_resource_value (l_manager, indexing_tag_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			reserved_text_color_preference := l_manager.new_color_resource_value (l_manager, reserved_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			reserved_background_color_preference := l_manager.new_color_resource_value (l_manager, reserved_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			generic_text_color_preference := l_manager.new_color_resource_value (l_manager, generic_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			generic_background_color_preference := l_manager.new_color_resource_value (l_manager, generic_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			local_text_color_preference := l_manager.new_color_resource_value (l_manager, local_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			local_background_color_preference := l_manager.new_color_resource_value (l_manager, local_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			class_text_color_preference := l_manager.new_color_resource_value (l_manager, class_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			class_background_color_preference := l_manager.new_color_resource_value (l_manager, class_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			feature_text_color_preference := l_manager.new_color_resource_value (l_manager, feature_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			feature_background_color_preference := l_manager.new_color_resource_value (l_manager, feature_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			cluster_text_color_preference := l_manager.new_color_resource_value (l_manager, cluster_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			cluster_background_color_preference := l_manager.new_color_resource_value (l_manager, cluster_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			error_text_color_preference := l_manager.new_color_resource_value (l_manager, error_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			error_background_color_preference := l_manager.new_color_resource_value (l_manager, error_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			object_text_color_preference := l_manager.new_color_resource_value (l_manager, object_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			object_background_color_preference := l_manager.new_color_resource_value (l_manager, object_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			
-			create customized_strings.make (1, 3)
-			customized_strings.put (string_resource_value ("customized_string_1", ""), 1)
-			customized_strings.put (string_resource_value ("customized_string_2", ""), 2)
-			customized_strings.put (string_resource_value ("customized_string_3", ""), 3)
+				-- Booleans			
+			underscore_is_separator_preference := l_manager.new_boolean_resource_value (l_manager, underscore_is_separator_string, False)
+			once_and_constant_in_upper_preference := l_manager.new_boolean_resource_value (l_manager, once_and_constant_in_upper_string, False)
+			autocomplete_brackets_and_parenthesis_preference := l_manager.new_boolean_resource_value (l_manager, autocomplete_brackets_and_parenthesis_string, False)
+			autocomplete_quotes_preference := l_manager.new_boolean_resource_value (l_manager, autocomplete_quotes_string, False)
+			show_any_features_preference := l_manager.new_boolean_resource_value (l_manager, show_any_features_string, False)
+			syntax_complete_enabled_preference := l_manager.new_boolean_resource_value (l_manager, syntax_complete_enabled_string, True)
+			quadruple_click_enabled_preference := l_manager.new_boolean_resource_value (l_manager, quadruple_click_enabled_string, True)
+			auto_auto_complete_preference := l_manager.new_boolean_resource_value (l_manager, auto_auto_complete_string, True)
+			filter_completion_list_preference := l_manager.new_boolean_resource_value (l_manager, filter_completion_list_string, True)
+			show_completion_signature_preference := l_manager.new_boolean_resource_value (l_manager, show_completion_signature_string, True)
+			show_completion_type_preference := l_manager.new_boolean_resource_value (l_manager, show_completion_type_string, True)
+			customized_string_1_preference := l_manager.new_string_resource_value (l_manager, customized_string_1_string, "")
+			customized_strings.extend (customized_string_1_preference)
+			customized_string_2_preference := l_manager.new_string_resource_value (l_manager, customized_string_2_string, "")
+			customized_strings.extend (customized_string_2_preference)
+			customized_string_3_preference := l_manager.new_string_resource_value (l_manager, customized_string_3_string, "")
+			customized_strings.extend (customized_string_3_preference)
+			
+			keyword_font_preference.change_actions.extend (agent update)
+			normal_text_color_preference.change_actions.extend (agent update)
+			normal_background_color_preference.change_actions.extend (agent update)
+			selection_text_color_preference.change_actions.extend (agent update)
+			selection_background_color_preference.change_actions.extend (agent update)
+			string_text_color_preference.change_actions.extend (agent update)
+			string_background_color_preference.change_actions.extend (agent update)
+			keyword_text_color_preference.change_actions.extend (agent update)
+			keyword_background_color_preference.change_actions.extend (agent update)
+			spaces_text_color_preference.change_actions.extend (agent update)
+			spaces_background_color_preference.change_actions.extend (agent update)
+			comments_text_color_preference.change_actions.extend (agent update)
+			comments_background_color_preference.change_actions.extend (agent update)
+			number_text_color_preference.change_actions.extend (agent update)
+			number_background_color_preference.change_actions.extend (agent update)
+			operator_text_color_preference.change_actions.extend (agent update)
+			operator_background_color_preference.change_actions.extend (agent update)
+			breakpoint_background_color_preference.change_actions.extend (agent update)
+			assertion_tag_text_color_preference.change_actions.extend (agent update)
+			assertion_tag_background_color_preference.change_actions.extend (agent update)
+			indexing_tag_text_color_preference.change_actions.extend (agent update)
+			indexing_tag_background_color_preference.change_actions.extend (agent update)
+			reserved_text_color_preference.change_actions.extend (agent update)
+			reserved_background_color_preference.change_actions.extend (agent update)
+			generic_text_color_preference.change_actions.extend (agent update)
+			generic_background_color_preference.change_actions.extend (agent update)
+			local_text_color_preference.change_actions.extend (agent update)
+			local_background_color_preference.change_actions.extend (agent update)
+			class_text_color_preference.change_actions.extend (agent update)
+			class_background_color_preference.change_actions.extend (agent update)
+			feature_text_color_preference.change_actions.extend (agent update)
+			feature_background_color_preference.change_actions.extend (agent update)
+			cluster_text_color_preference.change_actions.extend (agent update)
+			cluster_background_color_preference.change_actions.extend (agent update)
+			error_text_color_preference.change_actions.extend (agent update)
+			error_background_color_preference.change_actions.extend (agent update)
+			object_text_color_preference.change_actions.extend (agent update)
+			object_background_color_preference.change_actions.extend (agent update)			
+			smart_identation_preference.change_actions.extend (agent update)
+			underscore_is_separator_preference.change_actions.extend (agent update)
+			once_and_constant_in_upper_preference.change_actions.extend (agent update)
+			autocomplete_brackets_and_parenthesis_preference.change_actions.extend (agent update)
+			autocomplete_quotes_preference.change_actions.extend (agent update)
+			show_any_features_preference.change_actions.extend (agent update)
+			syntax_complete_enabled_preference.change_actions.extend (agent update)
+			quadruple_click_enabled_preference.change_actions.extend (agent update)
+			auto_auto_complete_preference.change_actions.extend (agent update)
+			filter_completion_list_preference.change_actions.extend (agent update)
+			show_completion_signature_preference.change_actions.extend (agent update)
+			show_completion_type_preference.change_actions.extend (agent update)
+			customized_string_1_preference.change_actions.extend (agent update)
+			customized_string_2_preference.change_actions.extend (agent update)
+			customized_string_3_preference.change_actions.extend (agent update)
+			normal_text_color_preference.change_actions.extend (agent update)			
+			
+			initialize_autocomplete_prefs
+			initialize_shortcuts_prefs
+		end
 
-			build_autocomplete_prefs
-			build_shortcuts_prefs
+	initialize_autocomplete_prefs is
+		local
+			i: INTEGER
+			cnt: INTEGER
+			id: STRING
+			insert: ARRAY [STRING]
+			keyword_name: STRING
+			l_manager: EB_PREFERENCE_MANAGER
+			l_b_pref: BOOLEAN_PREFERENCE
+			l_s_pref: STRING_PREFERENCE
+		do
+			create l_manager.make (preferences, "editor.eiffel.autocomplete")
+			cnt := completed_keywords.count
+			create complete_keywords.make (1, cnt)
+			create insert_after_keyword.make (1, cnt)
+			from
+				i := 1
+			until
+				i > cnt
+			loop
+				keyword_name := completed_keywords.i_th (i)
+				if keyword_name.has (' ') then
+					keyword_name := keyword_name.twin
+					keyword_name.replace_substring_all (" ", "_")
+				end
+				id := "editor.eiffel.autocomplete.autocomplete_" + keyword_name
+				l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
+				l_b_pref.change_actions.extend (agent update)
+				complete_keywords.put (l_b_pref.value, i)
+				id := "editor.eiffel.autocomplete.use_default_" + keyword_name
+				if l_b_pref.value then
+					insert_after_keyword.put (default_insert @ i, i)
+
+					create insert.make (1, 4)
+					id := "editor.eiffel.autocomplete.custom_" + keyword_name + "_space"
+					l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
+					l_s_pref.change_actions.extend (agent update)
+					insert.put (l_s_pref.value, 1)
+					id := "editor.eiffel.autocomplete.custom_" + keyword_name + "_return"
+					l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
+					l_s_pref.change_actions.extend (agent update)
+					insert.put (l_s_pref.value, 2)
+					id := "editor.eiffel.autocomplete.custom_" + keyword_name + "_space_later"
+					l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
+					l_s_pref.change_actions.extend (agent update)
+					insert.put (l_s_pref.value, 3)
+					id := "editor.eiffel.autocomplete.custom_" + keyword_name + "_return_later"
+					l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
+					l_s_pref.change_actions.extend (agent update)
+					insert.put (l_s_pref.value, 4)
+					insert_after_keyword.put (insert, i)
+				end
+				i := i + 1
+			end
+		end	
+
+	initialize_shortcuts_prefs is
+		local
+			i: INTEGER
+			count: INTEGER
+			action_name: STRING
+			default_meta, meta: ARRAY [BOOLEAN]
+			id: STRING
+			key_code: INTEGER
+			l_s_pref: STRING_PREFERENCE
+			l_b_pref: BOOLEAN_PREFERENCE
+			l_manager: EB_PREFERENCE_MANAGER
+		do
+			create l_manager.make (preferences, "editor.eiffel.keyboard_shortcuts")
+			count := customizable_shortcuts.count
+			create key_codes_for_actions.make (count)
+			create ctrl_alt_shift_for_actions.make (1, count)
+			from
+				i := 1
+			until
+				i > count
+			loop
+				default_meta := default_ctrl_alt_shift.item (i)
+				action_name := customizable_shortcuts.item (i)
+
+				id := "editor.eiffel.keyboard_shortcuts." + action_name + "_shortcut_key"
+				l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
+				l_s_pref.change_actions.extend (agent update)
+				key_code := key_with_name (l_s_pref.value)
+
+				if key_code >= Key_strings.lower then
+					create meta.make (1, 3)
+					key_codes_for_actions.extend (key_code)
+					id := "editor.eiffel.keyboard_shortcuts." + action_name + "_shortcut_ctrl"
+					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
+					l_b_pref.change_actions.extend (agent update)
+					meta.put (l_b_pref.value, 1)
+					id := "editor.eiffel.keyboard_shortcuts." +action_name + "_shortcut_alt"
+					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
+					l_b_pref.change_actions.extend (agent update)
+					meta.put (l_b_pref.value, 2)
+					id := "editor.eiffel.keyboard_shortcuts." + action_name + "_shortcut_shift"
+					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
+					l_b_pref.change_actions.extend (agent update)
+					meta.put (l_b_pref.value, 3)
+				else
+					key_codes_for_actions.extend (default_key_codes @ i)
+					meta := default_meta
+				end
+
+				ctrl_alt_shift_for_actions.put (meta, i)
+
+				i := i + 1
+			end
 		end
 
 feature {NONE} -- Build preferences for autocomplete
@@ -663,91 +690,6 @@ feature {NONE} -- Build preferences for autocomplete
 				>>
 		end
 
-	build_autocomplete_prefs is
-		local
-			i: INTEGER
-			cnt: INTEGER
-			id: STRING
-			insert: ARRAY [STRING]
-			keyword_name: STRING
-		do
-			cnt := completed_keywords.count
-			create complete_keywords.make (1, cnt)
-			create insert_after_keyword.make (1, cnt)
-			from
-				i := 1
-			until
-				i > cnt
-			loop
-				keyword_name := completed_keywords.i_th (i)
-				if keyword_name.has (' ') then
-					keyword_name := keyword_name.twin
-					keyword_name.replace_substring_all (" ", "_")
-				end
-				id := "autocomplete_" + keyword_name
-				complete_keywords.put (boolean_resource_value(id, True), i)
-				id := "use_default_" + keyword_name
-				if boolean_resource_value(id, True) then
-					insert_after_keyword.put (default_insert @ i, i)
-				else
-					create insert.make (1, 4)
-					id := "custom_" + keyword_name + "_space"
-					insert.put (string_resource_value(id, ""), 1)
-					id := "custom_" + keyword_name + "_return"
-					insert.put (string_resource_value(id, ""), 2)
-					id := "custom_" + keyword_name + "_space_later"
-					insert.put (string_resource_value(id, ""), 3)
-					id := "custom_" + keyword_name + "_return_later"
-					insert.put (string_resource_value(id, ""), 4)
-					insert_after_keyword.put (insert, i)
-				end
-				i := i + 1
-			end
-		end	
-
-	build_shortcuts_prefs is
-		local
-			i: INTEGER
-			count: INTEGER
-			action_name: STRING
-			default_meta, meta: ARRAY [BOOLEAN]
-			id: STRING
-			key_code: INTEGER
-		do
-			count := customizable_shortcuts.count
-			create key_codes_for_actions.make (count)
-			create ctrl_alt_shift_for_actions.make (1, count)
-			from
-				i := 1
-			until
-				i > count
-			loop
-				default_meta := default_ctrl_alt_shift.item (i)
-				action_name := customizable_shortcuts.item (i)
-
-				id := action_name + "_shortcut_key"
-				key_code := key_with_name (string_resource_value(id, ""))
-
-				if key_code >= Key_strings.lower then 
-					create meta.make (1, 3)
-					key_codes_for_actions.extend (key_code)
-					id := action_name + "_shortcut_ctrl"
-					meta.put (boolean_resource_value(id, default_meta @ 1), 1)
-					id := action_name + "_shortcut_alt"
-					meta.put (boolean_resource_value(id, default_meta @ 2), 2)
-					id := action_name + "_shortcut_shift"
-					meta.put (boolean_resource_value(id, default_meta @ 3), 3)
-				else
-					key_codes_for_actions.extend (default_key_codes @ i)
-					meta := default_meta
-				end
-
-				ctrl_alt_shift_for_actions.put (meta, i)
-
-				i := i + 1
-			end
-		end
-
 	key_with_name (name: STRING): INTEGER is
 			-- key code corresponding to `name'
 		require
@@ -777,10 +719,162 @@ feature {NONE} -- Build preferences for autocomplete
 				end
 			end
 		end
-invariant
+		
+feature -- Syntax Completion Customization
 
-	consistent_shortcut_arrays:	customizable_shortcuts.count = key_codes_for_actions.count
-						and
-					customizable_shortcuts.count = ctrl_alt_shift_for_actions.count
+	completed_keywords: ARRAYED_LIST [STRING] is
+			-- list of completed keywords
+		local
+			a: ARRAY [STRING]
+		once
+			create Result.make (35)
+			a := <<
+				"indexing", "class", "inherit", "creation", "feature", 
+				"is", "require", "require else", "local", "do", "once", "deferred", "external", "rescue", "ensure", "ensure then", "alias",
+				"if", "then", "elseif", "else", "inspect", "when", "from", "variant", "until", "loop", "debug", "check", 
+				"rename", "redefine", "undefine", "select", "export",
+				"precursor", "create", "obsolete", "invariant", "end"
+				>>
+			Result.fill (a)
+			Result.compare_objects
+		end
+
+	complete_keywords: ARRAY [BOOLEAN]
+			-- should the corresponding keyword in `completed_keywords' be completed ?
+
+	insert_after_keyword: ARRAY [ARRAY[STRING]]
+			-- strings to be inserted after keywords
+
+feature -- Keybord shortcuts Customization
+
+	customized_strings: ARRAYED_LIST [STRING_PREFERENCE] is
+			-- 
+		once
+			create Result.make (3)
+		end		
+
+	customizable_shortcuts: ARRAY [STRING] is
+			-- list of customizable shortcuts
+		once
+			Result := 
+					<<
+				"autocomplete", 
+				"class_autocomplete", 
+				"show_search_panel", 
+				"show_search_and_replace_panel", 
+				"search_selection", 
+				"search_last", 
+				"search_backward", 
+				"show_goto_dialog",
+				"customized_insertion_1", 
+				"customized_insertion_2", 
+				"customized_insertion_3"
+					>>
+		end
+
+	default_key_codes: ARRAY [INTEGER] is
+			-- default key codes
+		once
+			Result := <<Key_space, Key_space, Key_f, Key_h, Key_F3, Key_F3, Key_F3, key_g, Key_F2, Key_F2, Key_F2>>
+		end
+
+	default_ctrl_alt_shift: ARRAY [ARRAY [BOOLEAN]] is
+			-- default ctrl/alt/shift status associated with actions above
+		once
+			Result := << 	<<True, False, False>>,
+					<<True, False, True>>,
+					<<True, False, False>>,
+					<<True, False, False>>,
+					<<False, False, False>>,
+					<<False, False, False>>,
+					<<False, False, True>>,
+					<<True, False, False>>,
+					<<False, False, False>>,
+					<<True, False, False>>,
+					<<False, False, True>>	>>
+		end
+
+	key_codes_for_actions: ARRAYED_LIST [INTEGER]
+			-- array of key codes associated with actions : for keybord shortcut customization
+
+	ctrl_alt_shift_for_actions: ARRAY [ARRAY [BOOLEAN]]
+			-- array of flags (ctrled / alted / shifted key or not ?) associated with actions : for keybord shortcut customization
+
+	shortcut_name_for_action (action_number: INTEGER):STRING is
+			-- description shortcut corresponding to `action_number'-th action
+		local
+			meta: ARRAY [BOOLEAN]
+		do
+			Result := key_strings.item (key_codes_for_actions.i_th(action_number)).twin
+			Result.put (Result.item(1).upper, 1)
+			meta := ctrl_alt_shift_for_actions.item (action_number)
+			if meta.item (3) then
+				Result.prepend ("Shift+")
+			end
+			if meta.item (2) then
+				Result.prepend ("Alt+")
+			end
+			if meta.item (1) then
+				Result.prepend ("Ctrl+")
+			end
+		end
+		
+invariant
+	consistent_shortcut_arrays:	customizable_shortcuts.count = key_codes_for_actions.count and customizable_shortcuts.count = ctrl_alt_shift_for_actions.count
+	preferences_not_void: preferences /= Void
+	keyword_font_preference_not_void: keyword_font_preference /= Void
+	smart_identation_preference_not_void: smart_identation_preference /= Void
+	normal_text_color_preference_not_void: normal_text_color_preference /= Void
+	normal_background_color_preference_not_void: normal_background_color_preference /= Void
+	selection_text_color_preference_not_void: selection_text_color_preference /= Void
+	selection_background_color_preference_not_void: selection_background_color_preference /= Void
+	string_text_color_preference_not_void: string_text_color_preference /= Void
+	string_background_color_preference_not_void: string_background_color_preference /= Void
+	keyword_text_color_preference_not_void: keyword_text_color_preference /= Void
+	keyword_background_color_preference_not_void: keyword_background_color_preference /= Void
+	spaces_text_color_preference_not_void: spaces_text_color_preference /= Void
+	spaces_background_color_preference_not_void: spaces_background_color_preference /= Void
+	comments_text_color_preference_not_void: comments_text_color_preference /= Void
+	comments_background_color_preference_not_void: comments_background_color_preference /= Void
+	number_text_color_preference_not_void: number_text_color_preference /= Void
+	number_background_color_preference_not_void: number_background_color_preference /= Void
+	operator_text_color_preference_not_void: operator_text_color_preference /= Void
+	operator_background_color_preference_not_void: operator_background_color_preference /= Void
+	breakpoint_background_color_preference_not_void: breakpoint_background_color_preference /= Void
+	assertion_tag_text_color_preference_not_void: assertion_tag_text_color_preference /= Void
+	assertion_tag_background_color_preference_not_void: assertion_tag_background_color_preference /= Void
+	indexing_tag_text_color_preference_not_void: indexing_tag_text_color_preference /= Void
+	indexing_tag_background_color_preference_not_void: indexing_tag_background_color_preference /= Void
+	reserved_text_color_preference_not_void: reserved_text_color_preference /= Void
+	reserved_background_color_preference_not_void: reserved_background_color_preference /= Void
+	generic_text_color_preference_not_void: generic_text_color_preference /= Void
+	generic_background_color_preference_not_void: generic_background_color_preference /= Void
+	local_text_color_preference_not_void: local_text_color_preference /= Void
+	local_background_color_preference_not_void: local_background_color_preference /= Void
+	class_text_color_preference_not_void: class_text_color_preference /= Void
+	class_background_color_preference_not_void: class_background_color_preference /= Void
+	feature_text_color_preference_not_void: feature_text_color_preference /= Void
+	feature_background_color_preference_not_void: feature_background_color_preference /= Void
+	cluster_text_color_preference_not_void: cluster_text_color_preference /= Void
+	cluster_background_color_preference_not_void: cluster_background_color_preference /= Void
+	error_text_color_preference_not_void: error_text_color_preference /= Void
+	error_background_color_preference_not_void: error_background_color_preference /= Void
+	object_text_color_preference_not_void: object_text_color_preference /= Void
+	object_background_color_preference_not_void: object_background_color_preference /= Void
+	once_and_constant_in_upper_preference_not_void: once_and_constant_in_upper_preference /= Void
+	underscore_is_separator_preference_not_void: underscore_is_separator_preference /= Void
+	autocomplete_brackets_and_parenthesis_preference_not_void: autocomplete_brackets_and_parenthesis_preference /= Void
+	autocomplete_quotes_preference_not_void: autocomplete_quotes_preference /= Void
+	show_any_features_preference_not_void: show_any_features_preference /= Void
+	auto_auto_complete_preference_not_void: auto_auto_complete_preference /= Void
+	filter_completion_list_preference_not_void: filter_completion_list_preference /= Void
+	show_completion_signature_preference_not_void: show_completion_signature_preference /= Void
+	show_completion_type_preference_not_void: show_completion_type_preference /= Void
+	syntax_complete_enabled_preference_not_void: syntax_complete_enabled_preference /= Void
+	quadruple_click_enabled_preference_not_void: quadruple_click_enabled_preference /= Void
+	customized_string_1_preference_not_void: customized_string_1_preference /= Void
+	customized_string_2_preference_not_void: customized_string_2_preference /= Void
+	customized_string_3_preference_not_void: customized_string_3_preference /= Void
+
 
 end -- class EB_EDITOR_DATA

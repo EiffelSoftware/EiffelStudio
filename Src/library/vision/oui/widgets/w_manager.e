@@ -26,14 +26,6 @@ inherit
 			consistent 
 		end;
 
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, setup,
-			consistent 
-		end;
-
 	ARRAY [WIDGET]
 		rename
 			make as array_make,
@@ -42,7 +34,7 @@ inherit
 			item as i_th
 		export
 			{NONE} all;
-			{ANY} has, i_th, valid_index
+			{ANY} has, i_th, valid_index, area
 		end
 
 creation
@@ -58,6 +50,12 @@ feature -- Creation
 		end;
 
 feature -- List
+
+	count: INTEGER;
+			-- Number of widgets in Current
+
+	last_inserted_position: INTEGER;
+			-- Index position of last widget inserted into Current
 
 	forth is
 			-- Move cursor forward one position.
@@ -76,7 +74,7 @@ feature -- List
 		do
 			Result := area.item (index - 1)
 		ensure
-			Result /= Void
+			valid_result: Result /= Void
 		end;
 
 	start is
@@ -111,7 +109,9 @@ feature -- Widget
 								implies (a_parent /= Void);
 			has_parent: (a_parent /= Void) implies has (a_parent);
 		local
-			insert_position, i: INTEGER
+			insert_position, i: INTEGER;
+			widget_area: like area;
+			moved_widget: WIDGET;
 		do
 			if widget.depth = 0 then
 				if count >= array_count then
@@ -119,23 +119,36 @@ feature -- Widget
 				end;
 				area.put (widget, count);
 				count := count + 1;
+				last_inserted_position := count;
 			else
-				insert_position := index_of (a_parent) + 1;
+				insert_position := a_parent.implementation.widget_index;
+				if insert_position = 0 then
+					insert_position := index_of (a_parent) + 1;
+				end;
+				check
+					valid_widget: insert_position = index_of (widget) + 1
+				end;
 				if count + 1 > array_count then
 						-- Resize Current if necessary
 					resize (1, array_count + Chunk)
 				end;
+				widget_area := area;
 				from
 						-- Shift widgets by one for widget insertion
 					i := count - 1
 				until
 					i < insert_position
 				loop
-					area.put (area.item (i), i + 1);
+					moved_widget := widget_area.item (i);
+					widget_area.put (moved_widget, i + 1);
+					if moved_widget.implementation /= Void then
+						moved_widget.implementation.set_widget_index (i + 2);
+					end;
 					i := i - 1
 				end;
 				count := count + 1;
-				area.put (widget, insert_position);
+				widget_area.put (widget, insert_position);
+				last_inserted_position := insert_position + 1;
 			end;
 		ensure
 			valid_count: count <= array_count;
@@ -148,15 +161,17 @@ feature -- Widget
 		require
 			widget_i_exists: widget_i /= Void;
 		local
+			widget_area: like area;
 			i: INTEGER;
 			widget: WIDGET
 		do
+			widget_area := area;
 		   	from
 				i := 1
 			until
 				Result /= Void
 			loop
-				widget := area.item (i - 1);
+				widget := widget_area.item (i - 1);
 				if widget.implementation = widget_i then
 					Result := widget
 				end;
@@ -173,16 +188,18 @@ feature -- Widget
 		require
 			widget_exists: widget /= Void
 		local
+			widget_area: like area;
 			i: INTEGER;
-			parent_widget: WIDGET
+			parent_widget: WIDGET;
 		do
 			if widget.depth > 0 then
+				widget_area := area;
 				from
 					i := index_of (widget) - 1
 				until
 					Result /= Void
 				loop
-					parent_widget := area.item (i);
+					parent_widget := widget_area.item (i);
 					if parent_widget.depth+1 = widget.depth then
 						Result := parent_widget
 					end;
@@ -197,43 +214,80 @@ feature -- Widget
 	destroy (widget: WIDGET) is
 			-- Destroy `widget', i.e. destroy the screen object
 			-- and remove it from the list of managed widgets.
-			-- Also destroy children (recursively).
+			-- Also destroy children (iteratively).
 		require
-			Valid_widget: widget /= Void
+			valid_widget: widget /= Void;
+			not_destroyed: not widget.destroyed
 		local
-			position: INTEGER;
+			widget_area: like area;
+			widget_depth, position: INTEGER;
 			nbr_to_remove: INTEGER
 			w_position: INTEGER;
-			moved_widget: WIDGET
+			wid: WIDGET;
+			stop: BOOLEAN;
+			list: LINKED_LIST [WIDGET]
 		do
+			widget_area := area;
+			!! list.make;
+			list.put_front (widget)
 			from
 					-- Calculate the number of widgets
 					-- to be removed from list.
-				w_position := index_of (widget);
+				w_position := widget.implementation.widget_index;
+				if w_position = 0 then
+					w_position := index_of (widget);
+				else
+					w_position := w_position - 1;
+					check
+						valid_widget: w_position = index_of (widget)
+					end;
+				end;
 				position := w_position + 1;
-				nbr_to_remove := 1
+				nbr_to_remove := 1;
+				widget_depth := widget.depth;
 			until
-				(position = count) or else 
-					 (area.item (position).depth <= widget.depth)
+				stop or else (position = count) 
 			loop
-				position := position + 1;
-				nbr_to_remove := nbr_to_remove + 1
+				wid := widget_area.item (position);
+				if wid.depth <= widget_depth then
+					stop := True
+				else
+						-- Remove the widget's implementation
+					list.put_front (wid);
+					check
+						wid_not_destroyed: not wid.destroyed
+					end;
+					position := position + 1;
+					nbr_to_remove := nbr_to_remove + 1
+				end
 			end;
+				-- Correctly destroy the widget's implementation
+			widget.implementation.destroy (list);
+				-- Remove the widget's implementation
+			from
+				list.start
+			until
+				list.after
+			loop
+				list.item.remove_implementation;
+				list.forth
+			end
 					-- Remove widget(s) from Current.
 			count := count - nbr_to_remove;
 			from
 			until
-				w_position >= count
+				w_position >= count 
 			loop
-				moved_widget := area.item (w_position + nbr_to_remove);
-				area.put (moved_widget, w_position);
+				wid := widget_area.item (w_position + nbr_to_remove);
+				widget_area.put (wid, w_position);
 				w_position := w_position + 1;
+				wid.implementation.set_widget_index (w_position);
 			end;
 			from
 			until
 				nbr_to_remove = 0
 			loop
-				area.put (Void, nbr_to_remove + count - 1);
+				widget_area.put (Void, nbr_to_remove + count - 1);
 				nbr_to_remove := nbr_to_remove - 1
 			end;
 		end;
@@ -254,13 +308,15 @@ feature -- Widget
 		local
 			i: INTEGER;
 			widget: WIDGET;
-		do
+			widget_area: like area;
+		do	
+			widget_area := area;
 			from
 				i := 0
 			until
-				Result /= Void or else i >= count
+				Result /= Void
 			loop
-				widget := area.item (i);
+				widget := widget_area.item (i);
 				if 	
 					widget.implementation.screen_object = screen_object 
 				then
@@ -275,11 +331,13 @@ feature -- Widget
 	show_tree (a_file: PLAIN_TEXT_FILE) is
 			-- Print a textual representation of the widgets tree on `a_file'.
 		require
-			a_file_exists: not (a_file = Void);
+			a_file_exists: a_file /= Void;
 			a_file_opened_for_writing: a_file.is_open_write
 		local
-			i, j: INTEGER
+			i, j: INTEGER;
+			b_routines: BASIC_ROUTINES
 		do
+			!! b_routines;
 			from
 				i := 1
 			until
@@ -291,7 +349,7 @@ feature -- Widget
 					until
 						j = 0
 					loop
-						a_file.putchar (charconv (Tabulation));
+						a_file.putchar (b_routines.charconv (Tabulation));
 						j := j-1
 					end;
 					if (i_th (i).identifier = Void) then
@@ -310,15 +368,17 @@ feature -- Widget
 		require
 			widget_exists: widget /= Void
 		local
+			widget_area: like area;
 			i: INTEGER;
-			top_widget: WIDGET
+			top_widget: WIDGET;
 		do
+			widget_area := area;
 			from
 				i := index_of (widget);
 			until
 				Result /= Void
 			loop
-				top_widget := area.item (i);
+				top_widget := widget_area.item (i);
 				if top_widget.depth = 0 then
 					Result ?= top_widget
 				end;
@@ -336,13 +396,76 @@ feature -- Widget
 	index: INTEGER;
 			-- Current cursor index
 
+feature -- Using widget_index information
+
+	widget_at (i: INTEGER): WIDGET is
+			-- Widget at index position `i'.
+		require
+			valid_index: valid_index (i);
+		do
+			Result := area.item (i - 1)
+		ensure
+			valid_result: Result /= Void
+		end;
+
+	screen_i_using_index (widget_index: INTEGER): SCREEN_I is
+			-- Top shell or base of the widget
+		require
+			valid_index: valid_index (widget_index);
+		local
+			widget_area: like area;
+			i: INTEGER;
+			top_widget: WIDGET;
+		do
+			widget_area := area;
+			from
+				i := widget_index - 1;
+			until
+				Result /= Void
+			loop
+				top_widget := widget_area.item (i);
+				if top_widget.depth = 0 then
+					Result := top_widget.screen.implementation
+				end;
+				i := i - 1
+			end;
+		ensure
+			valid_result: Result /= Void
+		end;
+
+	parent_using_index (widget: WIDGET; w_index: INTEGER): WIDGET is
+			-- Parent of `widget'. Start at `w_index'.
+		require
+			widget_exists: widget /= Void;
+			valid_widget_index: valid_index (w_index)
+		local
+			widget_area: like area;
+			i: INTEGER;
+			parent_widget: WIDGET;
+		do
+			if widget.depth > 0 then
+				widget_area := area;
+				from
+					i := w_index - 2
+				until
+					Result /= Void
+				loop
+					parent_widget := widget_area.item (i);
+					if parent_widget.depth+1 = widget.depth then
+						Result := parent_widget
+					end;
+					i := i - 1
+				end;
+			end;
+		ensure
+			is_root: (Result = Void) implies (widget.depth = 0);
+			is_child: (Result /= Void) implies (Result.depth+1 = widget.depth)
+		end;
+
 feature {NONE}
 
 	Chunk: INTEGER is 50;
 			-- Array chunk
-
-	count: INTEGER;
-			-- Index of last entry
 
 	empty: BOOLEAN is
 			-- Is the list empty ?
@@ -353,12 +476,16 @@ feature {NONE}
 	index_of (widget: WIDGET): INTEGER is
 			-- Index of `widget' in list
 		require
-			widget_exists: widget /= Void
+			widget_exists: widget /= Void;
+		local
+			widget_area: like area;
+			widget_index: INTEGER
 		do
+			widget_area := area;
 			from
 				Result := 0
 			until
-				widget.same (area.item (Result))
+				widget.same (widget_area.item (Result))
 			loop
 				Result := Result + 1
 			end;
@@ -366,10 +493,10 @@ feature {NONE}
 			Widget_found: widget.same (area.item (Result))
 		end;
 
+
 invariant
 
 	Count_equal_or_less_list_count: count <= array_count;
-	Offright_is_empty_or_beyo: after = (empty or (index = count + 1));
 	Non_negative_count: count >= 0;
 	Non_negative_position: index >= 0;
 	Stay_on: index <= count+1;

@@ -224,7 +224,7 @@ feature -- Contract support
 			-- Are all radio buttons in this container connected?
 		local
 			l: LINEAR [EV_WIDGET]
-			peer: EV_RADIO_PEER
+			peer: EV_RADIO_BUTTON
 			peers: LINKED_LIST [EV_RADIO_PEER]
 		do
 			l := linear_representation
@@ -288,6 +288,10 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/29 20:02:07  brendel
+--| Contract support feature now searches only for radio-button instead of
+--| radio-peers.
+--|
 --| Revision 1.19  2000/02/28 16:36:48  brendel
 --| Changed like Current to EV_CONTAINER in `merge_radio_button_groups'.
 --|

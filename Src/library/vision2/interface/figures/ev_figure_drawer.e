@@ -193,7 +193,8 @@ feature -- Figure drawing
 				if line.is_start_arrow then
 					p := line.start_arrow
 					p.i_th_point (2).set_angle (
-						line.start_angle)
+					Pi - line.start_angle
+					)
 					d.fill_polygon (p.point_array)
 					s := line.start_draw_point
 				else
@@ -202,7 +203,8 @@ feature -- Figure drawing
 				if line.is_end_arrow then
 					p := line.end_arrow
 					p.i_th_point (2).set_angle (
-						line.end_angle)
+						Pi - line.end_angle
+					)
 					d.fill_polygon (p.point_array)
 					t := line.end_draw_point
 				else

@@ -24,10 +24,10 @@ feature {NONE} -- Initialization
 			csf: CLIENT_SUPPLIER_FIGURE
 			m: LINK_MIDPOINT
 		do
-			create vertices.make
+			create vertices.make (2)
 			vertices.extend (start_point)
 			vertices.extend (end_point)
-			create lines.make
+			create lines.make (1)
 			line := create_line
 			create m
 			m.set (Current, line, Void)
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			if csf /= Void and then csf.is_aggregate then
 				line.enable_cut_figure
 			end
-			create midpoints.make
+			create midpoints.make (1)
 		end
 
 feature -- Access
@@ -61,18 +61,18 @@ feature -- Access
 		deferred
 		end
 
-	lines: LINKED_LIST [BON_LINE]
+	lines: ARRAYED_LIST [BON_LINE]
 			-- Link between `client' and `supplier'.
 			-- Side structure to the effective group the lines
 			-- will be in but we need a guaranteed sequential
 			-- order in the lines in order. Groups may be implemented
 			-- as just sets of figures, without order.
 
-	vertices: LINKED_LIST [EV_RELATIVE_POINT]
+	vertices: ARRAYED_LIST [EV_RELATIVE_POINT]
 			-- Start, end and midpoints.
 			-- [`start_point', ..., `end_point']
 
-	midpoints: LINKED_LIST [LINK_MIDPOINT]
+	midpoints: ARRAYED_LIST [LINK_MIDPOINT]
 			-- All midpoints created by user.
 
 	real_pebble: ANY is
@@ -455,40 +455,16 @@ feature {CONTEXT_DIAGRAM} -- Status setting
 
 	set_right_angle is
 			-- Make `Current' use right angles.
-		local
-			d: CONTEXT_DIAGRAM
-			current_points: LINKED_LIST [LINK_MIDPOINT]
 		do
-			d ?= source.world
-			create current_points.make
-			from
-				midpoints.start
-			until
-				midpoints.after
-			loop
-				current_points.put_front (midpoints.item)
-				midpoints.forth
-			end
-			unset_do_stack.put (current_points)
-	
+			unset_do_stack.put (clone (midpoints))
 			apply_right_angles
-			
-			create current_points.make
-			from
-				midpoints.start
-			until
-				midpoints.after
-			loop
-				current_points.put_front (midpoints.item)
-				midpoints.forth
-			end
-			reset_do_stack.put (current_points)			
+			reset_do_stack.put (clone (midpoints))			
 		end
 		
 	unset_right_angle is
 			-- Undo `set_right_angle'.
 		local
-			retrieved_points: LINKED_LIST [LINK_MIDPOINT]
+			retrieved_points: ARRAYED_LIST [LINK_MIDPOINT]
 		do
 			check
 				stacks_not_empty: source /= target implies (not unset_do_stack.is_empty)
@@ -513,7 +489,7 @@ feature {CONTEXT_DIAGRAM} -- Status setting
 	reset_right_angle is
 			-- Redo `set_right_angle'.
 		local
-			retrieved_points: LINKED_LIST [LINK_MIDPOINT]
+			retrieved_points: ARRAYED_LIST [LINK_MIDPOINT]
 		do
 			check
 				stacks_not_empty: source /= target implies (not reset_do_stack.is_empty)
@@ -778,19 +754,22 @@ feature {EB_LINK_TOOL_COMMAND, EB_DELETE_DIAGRAM_ITEM_COMMAND} -- Implementation
 			update_origin
 		end
 		
-	retrieve_midpoints (retrieved_midpoints: LINKED_LIST [LINK_MIDPOINT]) is
+	retrieve_midpoints (retrieved_midpoints: like midpoints) is
 			-- Add lines corresponding to the points in `retrieved_midpoints'.
 		local
 			mp: LINK_MIDPOINT
+			i: INTEGER
 		do
 			from
 				retrieved_midpoints.start
+				i := 1
 			until	
 				retrieved_midpoints.after
 			loop
 				mp := retrieved_midpoints.item
-				put_midpoint (mp, 1)
+				put_midpoint (mp, i)
 				retrieved_midpoints.forth
+				i := i + 1
 			end
 			update
 			update_origin
@@ -806,7 +785,7 @@ feature {LINK_MIDPOINT} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	reset_do_stack, reset_undo_stack, unset_do_stack, unset_undo_stack: LINKED_STACK [LINKED_LIST [LINK_MIDPOINT]]
+	reset_do_stack, reset_undo_stack, unset_do_stack, unset_undo_stack: LINKED_STACK [ARRAYED_LIST [LINK_MIDPOINT]]
 			-- Stacks used by `unset_right_angles' and `reset_right_angles' to store midpoints.
 
 	on_click (x, y, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER; line: EV_FIGURE_LINE) is

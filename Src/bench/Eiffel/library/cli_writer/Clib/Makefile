@@ -9,7 +9,7 @@
 
 CFLAGS = -nologo -Ox -W4 -I$(ISE_EIFFEL)\studio\spec\windows\include
 
-OPT_CFLAGS = -MT
+OPT_CFLAGS =
 #OPT_CFLAGS = -MT -DASSERTIONS 
 #OPT_CFLAGS = -MT -DASSERTIONS -DDBGTRACE_ENABLED
 #OPT_CFLAGS = 
@@ -22,17 +22,17 @@ OPT_CFLAGS = -MT
 
 all:: cli_writer cli_debugger
 cli_writer: cli_writer.lib
-cli_debugger: cli_debugger.lib 
+cli_debugger: cli_debugger.lib
 
-cli_writer.obj: cli_writer.cpp ise_cache_manager.idl cli_writer.h
+cli_writer.obj: cli_writer.cpp ise_cache_manager.idl cli_writer.h Makefile
 	midl -notlb -header ise_cache_manager.h -iid ise_cache_manager.c ise_cache_manager.idl
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_writer.cpp
 
-cli_debugger.obj: cli_debugger.cpp  cli_debugger.h
+cli_debugger.obj: cli_debugger.cpp  cli_debugger.h Makefile
 	midl -notlb -header cordebug.h cordebug.idl
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_debugger.cpp 
 
-cli_debugger_callback.obj:  cli_debugger_callback.cpp cli_debugger_callback.h
+cli_debugger_callback.obj:  cli_debugger_callback.cpp cli_debugger_callback.h Makefile
 	midl -notlb -header cordebug.h cordebug.idl
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_debugger_callback.cpp
 

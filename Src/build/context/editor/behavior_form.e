@@ -69,7 +69,7 @@ feature -- Interface
 		local
 			behavior: BEHAVIOR;
 			previous_behavior: BEHAVIOR;
-			current_state: STATE;
+			current_state: BUILD_STATE;
 		do
 			current_state := behavior_editor.current_state;
 			if (current_state = Void) then
@@ -89,7 +89,7 @@ feature -- Interface
 			behavior_editor.set_current_state (current_state);
 		end;
 
-	update_state_name (state: STATE) is
+	update_state_name (state: BUILD_STATE) is
 			-- Update the state name if current_state
 			-- is `state'.
 		do

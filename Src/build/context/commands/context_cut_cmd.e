@@ -57,14 +57,12 @@ feature
 	work (argument: CONTEXT) is
 			-- Do not record into history
 		local
-			state: STATE;
+			state: BUILD_STATE;
 			func_cut: FUNC_CUT
 		do
 			context := argument;
 			parent ?= context.parent;
-			if (context.parent = Void) or else 
-				not context.is_in_a_group 
-			then
+			if context.parent = Void or else not context.is_in_a_group then
 					-- a group can be destroyed but not its content
 				!!context_list.make;
 				!!set_parent_contexts.make;

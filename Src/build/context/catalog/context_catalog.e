@@ -365,7 +365,7 @@ feature {NONE}
 
 feature -- Context_editor list
 
-	update_state_name_in_behavior_page (state: STATE) is
+	update_state_name_in_behavior_page (state: BUILD_STATE) is
 			-- Update the state name in behavior page
 			-- that displays `state'.
 		local

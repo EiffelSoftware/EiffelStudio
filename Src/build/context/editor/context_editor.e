@@ -285,7 +285,7 @@ feature -- Reseting
 			end
 		end
 
-	update_state_name_in_behavior_page (s: STATE) is
+	update_state_name_in_behavior_page (s: BUILD_STATE) is
 			-- Update the state name in behavior page
 			-- that displays `state'.
 		do

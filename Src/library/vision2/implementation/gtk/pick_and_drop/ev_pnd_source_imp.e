@@ -129,7 +129,7 @@ feature -- Implementation
 				end
 				signal_connect ("motion-notify-event", ~add_grab_cb)
 				grab_callback_connection_id := last_signal_connection_id
-				create curs_code.make
+				create curs_code
 				if accept_cursor = Void then
 					create accept_cursor.make_with_code (curs_code.standard)
 				end
@@ -465,6 +465,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/15 22:45:37  king
+--| Updated due to interface change in cursor_code
+--|
 --| Revision 1.13  2000/03/10 01:24:08  king
 --| Indented start_transport_filter
 --|

@@ -2505,7 +2505,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 			if (info == NULL) {
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
 			}
-			new_dtype = info->dynamic_types[0];
+			new_dtype = info->dynamic_type;
 		}
 		if (EIF_Size(new_dtype) != size) {
 			eraise(vis_name, EN_RETR);		/* No good size */
@@ -2655,7 +2655,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 			if (info == NULL) {
 				eraise(vis_name, EN_RETR);	/* Cannot find class */
 			}
-			new_dtype = info->dynamic_types[0];
+			new_dtype = info->dynamic_type;
 		}
 
 								/* retrieve the number of attributes
@@ -3232,7 +3232,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 			if (info == NULL)
 				new_dtype = -1;		/* Cannot find class name */
 			else
-				new_dtype = info->dynamic_types[0];
+				new_dtype = info->dynamic_type;
 #ifdef RECOVERABLE_DEBUG
 			if (new_dtype == -1)
 				printf ("Type %d {%s} not in system ***\n", dtype, vis_name);
@@ -3470,7 +3470,7 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 				(*unresolved)++;
 			}
 		} else {
-			conv->new_type = ginfo->dynamic_types[0];
+			conv->new_type = ginfo->dynamic_type;
 			result = 1;
 		}
 	}

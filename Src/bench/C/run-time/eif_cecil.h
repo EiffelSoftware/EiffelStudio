@@ -217,10 +217,9 @@ struct ctable {
  */
 struct cecil_info {
 	int nb_param;			/* Number of generic parameters, 0 if none*/
-	int32 *patterns;		/* Generic parameters patterns, if generics,
-							   otherwise the SK_xx value. */
-	int16 *dynamic_types;	/* Type ID associated with each meta-type if generics,
-							   otherwise the dynamic type. */
+	int16 dynamic_type;		/* Dynamic type when no generics. */
+	int32 *patterns;		/* Generic parameters patterns, if generics, otherwise NULL. */
+	int16 *dynamic_types;	/* Dynamic type for each meta-type, if generics, otherwise NULL. */
 };
 
 /*

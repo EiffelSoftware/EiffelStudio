@@ -638,20 +638,14 @@ rt_private void cecil_updt(void)
 		for (i = 0; i < count; type_val++, i++) {
 			nb_generics = wshort();				/* Number of generic parameters */
 			type_val->nb_param = nb_generics;
-			nb_types = wshort();				/* Number of class types */
-			if (nb_types == 0) {
-					/* Found a non-entry, i.e. which has no key
-					 * associated with it. */
+			if (nb_generics == 0) {
+				type_val->dynamic_type = wshort();
 				type_val->patterns = NULL;
 				type_val->dynamic_types = NULL;
 			} else {
-				if (nb_generics == 0) {
-						/* For a non-generic class, there is only one item to read. */
-					CHECK("valid nb_types", nb_types == 1);
-					n = nb_types;
-				} else {
-					n = nb_generics * nb_types;
-				}
+				type_val->dynamic_type = wshort();
+				nb_types = wshort();
+				n = nb_generics * nb_types;
 				SAFE_ALLOC(patterns, int32, n + 1);
 				wread((char *) patterns, n * sizeof(int32));	/* Read meta type desc */
 				patterns[n] = SK_INVALID;

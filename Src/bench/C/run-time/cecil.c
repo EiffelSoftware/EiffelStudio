@@ -196,7 +196,7 @@ rt_public EIF_TYPE_ID eifcid(char *class)
 		return EIF_NO_TYPE;
 	} else {
 			/* The associated type ID */
-		return value->dynamic_types[0];
+		return value->dynamic_type;
 	}
 }
 

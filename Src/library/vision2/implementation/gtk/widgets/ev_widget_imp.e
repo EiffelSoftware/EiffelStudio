@@ -654,7 +654,7 @@ feature -- Postconditions
 				(not shown and then (x = - 1 and y = - 1))
 		end
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature {EV_ANY_I} -- Implementation
 	
 	widget: POINTER
                         -- pointer to the C structure representing this widget

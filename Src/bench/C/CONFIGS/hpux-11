@@ -30,7 +30,7 @@ ldflags=''
 ldsharedflags='-b -o'
 mtldsharedflags='-b -o'
 
-optimize='-03'
+optimize='-O3'
 wkoptimize=''
 
 start_test='if [ ! -f finished ] ; then'

@@ -1,0 +1,47 @@
+system
+	"AssemblyManager"
+
+root
+	ASSEMBLY_VIEWER (root_cluster): "make"
+
+default
+	assertion (all)
+	line_generation (yes)
+	il_generation ("exe")
+
+cluster	
+	root_cluster: "F:\assembly_manager"
+	
+	all generated: "F:\reflection_interface\generated"
+
+	--eiffel_components: "F:\reflection_interface\generated\eiffel_components_generated"
+--
+	--eiffel_cache_generated: "F:\reflection_interface\generated\eiffel_assembly_cache_generated"
+	--	
+	--emitter_generated: "F:\reflection_interface\generated\emitter_generated"
+	--
+	--support_generated: "F:\reflection_interface\generated\support_generated"
+	--
+	--reflection_interface_generated: "F:\reflection_interface\generated\reflection_interface_generated"
+	
+	all dot_net_base: "$EIFFEL\library\base.net"
+		exclude
+			"system_design"; "system_web"; "system_web_services";
+		end
+
+external
+	assembly: 	
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.Drawing.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\SYSTEM.WINDOWS.FORMS.DLL",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\Accessibility.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.Data.dll",
+			"F:\reflection_interface\generated\reflection_interface_generated\ISE.Reflection.ReflectionInterface.dll",
+			"F:\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
+	 		"F:\reflection_interface\generated\emitter_generated\NewEmitterMain.exe",
+	 		"F:\reflection_interface\generated\eiffel_assembly_cache_generated\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
+	 		"F:\reflection_interface\generated\support_generated\ISE.Reflection.Support.dll",
+	 		"F:\reflection_interface\generated\code_generator_generated\ISE.Reflection.CodeGenerator.dll"
+
+end

@@ -14,6 +14,38 @@ inherit
 
 	EV_PIXMAPABLE_I
 
+feature {NONE} -- Initialization
+
+	make is
+			-- Create the widget with `par' as parent.
+		deferred
+		end
+
+	make_with_text (txt: STRING) is
+			-- Create an item with `par' as parent and `txt'
+			-- as text.
+		require
+			valid_text: txt /= Void
+		deferred
+		end
+
+	make_with_pixmap (pix: EV_PIXMAP) is
+			-- Create an item with `par' as parent and `pix'
+			-- as pixmap.
+		require
+			valid_pixmap: is_valid (pix)
+		deferred
+		end
+
+	make_with_all (txt: STRING; pix: EV_PIXMAP) is
+			-- Create an item with `par' as parent, `txt' as text
+			-- and `pix' as pixmap.
+		require
+			valid_text: txt /= Void
+			valid_pixmap: is_valid (pix)
+		deferred
+		end
+
 feature -- Access
 
 	text: STRING is
@@ -41,19 +73,6 @@ feature -- Element change
 		ensure
 			text_set: text.is_equal (txt)
 		end
-
-feature -- Status settings
-
--- XX to implement
---	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void.
---		require
---			exists: not destroyed
---		deferred
---		ensure
---			parent_set: parent = par
---		end
 
 feature -- Event : command association
 

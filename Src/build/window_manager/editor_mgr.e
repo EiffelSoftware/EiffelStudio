@@ -126,16 +126,13 @@ feature
 		end;
 
 	show_editors is
-		local
-			ed: like editor_type
 		do
 			from
 				active_editors.start
 			until
 				active_editors.after
 			loop
-				ed := active_editors.item;
-				ed.show;
+				active_editors.item.show;
 				active_editors.forth
 			end
 		end;

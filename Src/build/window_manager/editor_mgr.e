@@ -3,7 +3,7 @@ class EDITOR_MGR
 	
 feature {NONE}
 
-	editor_type: TOP_SHELL;
+	editor_type: EB_TOP_SHELL;
 
 feature 
 
@@ -39,7 +39,8 @@ feature
 			-- Creates a new editor or retrieves a previously destroyed
 			-- (i.e. hidden) editor. 
 		local
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			new_x, new_y: INTEGER
 		do
 			if
 				not free_list.empty
@@ -51,13 +52,27 @@ feature
 				!!mp;
 				mp.set_watch_shape;
 				!!Result.make (identifier, screen);
-				Result.set_x_y (screen.x, screen.y);
+				new_x := screen.x;
+				new_y := screen.y;
+				if new_x + Result.width > screen.width then
+					new_x := screen.width - Result.width
+				end;
+				if new_x < 0 then
+					new_x := 0
+				end;
+				if new_y + Result.height > screen.height then
+					new_y := screen.height - Result.height
+				end;
+				if new_y < 0 then
+					new_y := 0
+				end;
+				Result.set_x_y (new_x, new_y);
 				mp.restore;
 			end;
 			active_editors.extend (Result);
 		end;
 
-	has (ed: TOP_SHELL): BOOLEAN is
+	has (ed: EB_TOP_SHELL): BOOLEAN is
 		do
 			Result := active_editors.has (ed)
 		end;
@@ -80,6 +95,7 @@ feature
 				if free_list.count >= free_list_max then
 					ed.destroy
 				else
+					ed.set_geometry;
 					free_list.extend (ed)
 				end
 			end
@@ -120,7 +136,6 @@ feature
 			loop
 				ed := active_editors.item;
 				ed.show;
-				ed.set_x_y (ed.x, ed.y);
 				active_editors.forth
 			end
 		end;

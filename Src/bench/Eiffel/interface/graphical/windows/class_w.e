@@ -18,7 +18,8 @@ inherit
 			attach_all as default_attach_all,
 			build_edit_bar as old_build_edit_bar,
 			reset as old_reset, 
-			execute as old_execute
+			execute as old_execute,
+			close_windows as old_close_windows
 		redefine
 			text_window, build_format_bar, hole,
 			tool_name, open_command, save_command,
@@ -33,9 +34,11 @@ inherit
 			save_as_command, quit_command, editable,
 			build_edit_bar, create_edit_buttons, reset,
 			set_default_position, make, execute,
-			set_default_size, build_widgets, attach_all
+			set_default_size, build_widgets, attach_all,
+			close_windows
 		select
-			build_edit_bar, reset, make, execute, attach_all
+			build_edit_bar, reset, make, execute, attach_all,
+			close_windows
 		end
 
 creation
@@ -67,6 +70,14 @@ feature
 		do
 			old_reset;
 			change_class_command.clear
+		end;
+
+	close_windows is
+		do
+			old_close_windows;
+			if change_class_command.choice.is_popped_up then
+				change_class_command.choice.popdown
+			end
 		end;
 
 	save_new_class (c_name: STRING; f_name: STRING) is

@@ -105,14 +105,14 @@ $(LIBDIR)/$(LIBNAME): .FORCE
 	cd $(LIBDIR); $(MAKE) $(LIBNAME)
 	@echo "Continuing in $(CURRENT)..."
 
-ebench: $(LIBDIR)/$(LIBNAME)
+estudio: $(LIBDIR)/$(LIBNAME)
 
 $(LIBIDR)/$(LIBIDRNAME): .FORCE
 	@echo "Checking "$(LIBIDRNAME)" in "$(LIBIDR)"..."
 	cd $(LIBIDR); $(MAKE) $(LIBIDRNAME)
 	@echo "Continuing in $(CURRENT)..."
 
-ebench: $(LIBIDR)/$(LIBIDRNAME)
+estudio: $(LIBIDR)/$(LIBIDRNAME)
 
 depend:: ../../mkdep
 
@@ -128,12 +128,12 @@ depend::
 	cp Makefile.new Makefile
 	$(RM) Makefile.new
 
-all:: ebench
+all:: estudio
 
 local_realclean::
-	$(RM) ebench
+	$(RM) estudio
 
-ebench: $(OBJ)
+estudio: $(OBJ)
 	$(RM) $@
 	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
 	$(CC) -o $@ $(OBJ) $(JLDFLAGS) $(LIBS)

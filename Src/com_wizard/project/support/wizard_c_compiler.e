@@ -61,7 +61,7 @@ feature -- Basic Operations
 			a_directory: DIRECTORY
 			a_file_list: LIST [STRING]
 			a_file: RAW_FILE
-			a_file_name, a_working_directory: STRING
+			a_working_directory, a_string: STRING
 		do
 			a_working_directory := clone (current_working_directory)
 			create a_directory.make_open_read (a_folder_name)
@@ -75,9 +75,14 @@ feature -- Basic Operations
 				a_file_list.after or Shared_wizard_environment.abort
 			loop
 				if is_c_file (a_file_list.item) then
-					compile_file (a_file_list.item)
+					generate_make_file (C_compiler_standard_command_line (a_file_list.item), Temporary_input_file_name)
+					a_string := clone (C_compiler)
+					a_string.append (Space)
+					a_string.append (last_make_command)
+					launch (a_string, current_working_directory)
+					check_return_code
 				end
-					progress_report.step
+				progress_report.step
 				a_file_list.forth
 			end
 			change_working_directory (a_working_directory)
@@ -186,8 +191,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	C_compiler_command_line (file_name: STRING): STRING is
-			-- Cl command line
+	C_compiler_command_line (a_file_name: STRING): STRING is
+			-- Cl command line used to compile Proxy Stub
 		do
 			Result := clone (Common_c_compiler_options)
 			if Shared_wizard_environment.output_level = message_output.Output_none then
@@ -195,7 +200,16 @@ feature {NONE} -- Implementation
 			end
 			Result.append (clone (current_working_directory))
 			Result.append_character (Directory_separator)
-			Result.append (file_name)
+			Result.append (a_file_name)
+		end
+
+	C_compiler_standard_command_line (a_file_name: STRING): STRING is
+			-- Standard Cl commmand line used to compile generated code
+		do
+			Result := clone (Common_standard_c_compiler_options)
+			Result.append (clone (current_working_directory))
+			Result.append_character (Directory_separator)
+			Result.append (a_file_name)
 		end
 
 end -- class WIZARD_C_COMPILER

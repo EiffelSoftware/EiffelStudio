@@ -65,6 +65,11 @@ inherit
 			{NONE} all
 		end
 		
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+	
 feature {NONE} -- Initialization
 
 	make is
@@ -3900,6 +3905,26 @@ feature -- Unary operator generation
 
 feature -- Basic feature
 
+	generate_is_digit is
+			-- Generate `is_digit' on CHARACTER.
+		local
+			l_min_token: INTEGER
+			l_sig: like method_sig
+		do
+			l_sig := method_sig
+			l_sig.reset
+
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_parameter_count (1)
+			set_method_return_type (l_sig, Boolean_c_type)
+			set_signature_type (l_sig, Char_c_type)
+
+			uni_string.set_string ("IsDigit")
+			l_min_token := md_emit.define_member_ref (uni_string, char_type_token, l_sig)
+
+			method_body.put_call (feature {MD_OPCODES}.Call, l_min_token, 1, True)
+		end
+
 	generate_min (type: TYPE_I) is
 			-- Generate `min' on basic types.
 		require
@@ -4444,6 +4469,9 @@ feature {NONE} -- Once per modules being generated.
 	math_type_token: INTEGER
 			-- Token for `System.Math' type in `mscorlib'.
 
+	char_type_token: INTEGER
+			-- Token for `System.Char' type in `mscorlib'.
+
 	system_exception_token: INTEGER
 			-- Token for `System.Exception' type in `mscorlib'.
 
@@ -4550,6 +4578,8 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make ("System.Object"), mscorlib_token)
 			math_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Math"), mscorlib_token)
+			char_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.Char"), mscorlib_token)
 			system_exception_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Exception"), mscorlib_token)
 			l_cls_compliant_token := md_emit.define_type_ref (

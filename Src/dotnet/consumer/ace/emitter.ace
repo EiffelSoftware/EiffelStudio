@@ -37,7 +37,9 @@ cluster
 		exclude
 			"CVS"; "EIFGEN"; 
 		visible
-			ISE_COM_CACHE_MANAGER
+			COM_ISE_CACHE_MANAGER
+			end
+			COM_ASSEMBLY_INFORMATION
 			end
 		end
 

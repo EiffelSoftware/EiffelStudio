@@ -39,12 +39,12 @@
 /*---  In multi-threaded environment  ---*/
 /*---------------------------------------*/
 
-rt_public void eif_thr_panic(EIF_REFERENCE);
+rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(void);
 rt_public unsigned int eif_thr_is_initialized(void);
-rt_public void eif_thr_create(EIF_REFERENCE, EIF_POINTER);
-rt_public void eif_thr_create_with_args(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER,
+rt_public void eif_thr_create(EIF_OBJECT, EIF_POINTER);
+rt_public void eif_thr_create_with_args(EIF_OBJECT, EIF_POINTER, EIF_INTEGER,
 										EIF_INTEGER, EIF_BOOLEAN);
 rt_public void eif_thr_exit(void);
 
@@ -344,7 +344,7 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 }
 
 
-rt_public void eif_thr_create (EIF_REFERENCE thr_root_obj, EIF_POINTER init_func)
+rt_public void eif_thr_create (EIF_OBJECT thr_root_obj, EIF_POINTER init_func)
 {
 	/*
 	 * Creates a new Eiffel thread. This function is only called from
@@ -370,7 +370,7 @@ rt_public void eif_thr_create (EIF_REFERENCE thr_root_obj, EIF_POINTER init_func
 }
 
 
-rt_public void eif_thr_create_with_args (EIF_REFERENCE thr_root_obj, 
+rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj, 
 										 EIF_POINTER init_func,
 										 EIF_INTEGER priority,
 										 EIF_INTEGER policy,
@@ -390,7 +390,7 @@ rt_public void eif_thr_create_with_args (EIF_REFERENCE thr_root_obj,
 	routine_ctxt = (start_routine_ctxt_t *)eif_malloc(sizeof(start_routine_ctxt_t));
 	if (!routine_ctxt)
 		eif_thr_panic("No more memory to launch new thread\n");
-	routine_ctxt->current = eif_protect (thr_root_obj);
+	routine_ctxt->current = eif_adopt (thr_root_obj);
 	routine_ctxt->routine = init_func;
 	routine_ctxt->tid = tid;
 	routine_ctxt->addr_n_children = &n_children;

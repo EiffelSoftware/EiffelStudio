@@ -510,5 +510,7 @@ feature -- Warning Dialogs
 	Unix_unsupported_pixmap_type: STRING is "File type not supported. PNG and XPM file types supported."
 	
 	Matching_class_and_application_names_warning: STRING is "Application and class names conflict."
+	
+	Invalid_bpr_file: STRING is "The .BPR file you are attempting to load was created with the beta version of EiffelBuild.%NThe information stored in the project settings are incompatible with this version of Build.%NClick 'Continue' if you wish to load the project, with default Build settings."
 
 end -- class GB_CONSTANTS

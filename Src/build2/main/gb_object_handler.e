@@ -1142,6 +1142,10 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 					-- We do this after we generate using `output_attributes' as some widget types may
 					-- need the object contained within `objects'
 				objects.prune_all (an_object)
+					-- Call `delete' as the object must be deleted before being re-created. This performs
+					-- any necessary processing on `an_object', ensuring that the state of the system
+					-- is ok post re-creation.
+				an_object.delete
 					
 				new_object := load.retrieve_new_object (element, parent_object, original_position)
 					-- construct `new_object' from `element.

@@ -220,6 +220,8 @@ feature -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			explorer_bar_item.recycle
+			exception.remove_text
+			exception.remove_tooltip
 		end
 
 feature {NONE} -- Implementation
@@ -315,7 +317,7 @@ feature {NONE} -- Implementation
 					stop_cause.set_text (Interface_names.l_Unknown_status)
 					m.append (Interface_names.l_Unknown_status)
 				end
-				Debugger_manager.debugging_window.status_bar.display_message (m)
+				Debugger_manager.debugging_window.status_bar.display_message ( first_line_of (m) )
 			end
 		end
 
@@ -326,7 +328,29 @@ feature {NONE} -- Implementation
 		do
 			m := exception_text
 			exception.set_text (m)
+--| FIXME jfiat [2004/03/19] : new feature
+--| We'll enable this once, we have an exception window to display the full message
+--			exception.set_text (first_line_of (m))
 			exception.set_tooltip (m)
+		end
+		
+	first_line_of (m: STRING): STRING is
+			-- keep the first line of the exception message
+			-- the rest can be seen by double clicking on the widget
+		local
+			pos: INTEGER
+		do
+			Result := m
+			pos := Result.index_of ('%N', 1)
+			if pos > 0 then 
+				Result := Result.substring (1, pos -1)
+			end
+			pos := Result.index_of ('%R', 1)
+			if pos > 0 then 
+				Result := Result.substring (1, pos -1)
+			end
+		ensure
+			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))			
 		end
 
 	exception_text: STRING is
@@ -350,8 +374,11 @@ feature {NONE} -- Implementation
 			end
 			Result.append (" Tag: ")
 			Result.append (Application.status.exception_tag)
-		ensure
-			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))
+
+-- FIXME JFIAT: 2003/03/12 : what for this limitation ?
+-- need to check if there is any reason for that ...
+--		ensure
+--			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))
 		end
 
 	on_element_drop (st: CALL_STACK_STONE) is

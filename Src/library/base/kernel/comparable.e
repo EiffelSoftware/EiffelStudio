@@ -51,7 +51,7 @@ feature -- Comparison
 		do
 			Result := (other < Current)
  		ensure then
-			definition: Result = (other <= Current)
+			definition: Result = (other < Current)
 		end;
 
 	is_equal (other: like Current): BOOLEAN is

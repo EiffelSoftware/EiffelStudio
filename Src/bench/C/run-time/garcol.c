@@ -124,8 +124,6 @@ public struct stack once_set = {			/* Once functions */
 	(char **) 0,			/* st_end */
 };
 
-private char *OLD_IC;
-
 /* Array used to store the number of objects used, indexed by object's age.
  * This is used when computing the demographic feedback-mediated tenuring
  * threshold for the next step (generation collcetion). The size_table array
@@ -2492,12 +2490,11 @@ char *root;
 	 * The function returns the address of the (possibly moved) object.
 	 */
 
-	union overhead *zone,*z2;		/* Malloc info zone fields */
+	union overhead *zone;		/* Malloc info zone fields */
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
 	uint32 size;				/* Size of items (for array of expanded) */
 	char **object;				/* Sub-objects scanned */
-struct cnode *sk;
 
 	/* If 'root' is a void reference, return immediately */
 	if (root == (char *) 0)
@@ -2555,8 +2552,6 @@ struct cnode *sk;
 	 * The new objects outside the scavenge zone carry the EO_NEW mark.
 	 */
 	if (!(flags & EO_OLD) || (flags & EO_EXP)) {
-sk = &System (zone->ov_flags & EO_TYPE);
-		z2 = zone;
 		root = gscavenge(root);			/* Generation scavenging */
 		zone = HEADER(root);			/* Update zone */
 		flags = zone->ov_flags;			/* And Eiffel flags */
@@ -2865,7 +2860,7 @@ private void update_moved_set()
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
 				addr = *obj;					/* Get stack item value */
 				if ((char *) 0 == addr)			/* Freed object? */
-				continue;						/* Skip free objects */
+					continue;					/* Skip free objects */
 				zone = HEADER(addr);			/* Referenced object */
 				if (zone->ov_size & B_FWD) {		/* Object forwarded? */
 					zone = HEADER(zone->ov_fwd);	/* Look at fwd object */
@@ -3235,9 +3230,11 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 	char gc_status;					/* Saved GC status */
 	register2 uint32 dtype;			/* Dynamic type of object */
 
+/*
 	if (!(zone->ov_size & B_BUSY)) 	/* Object freed ? */
 		return;						/* Yes, then return -- NEED TO CHECK WITH
 									 * RAM - DINOV */
+*/
 
 	dtype = Dtype((zone + 1)); 
 

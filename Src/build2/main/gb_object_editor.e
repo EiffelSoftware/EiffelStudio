@@ -528,6 +528,14 @@ feature {NONE} -- Implementation
 			label.align_text_left
 			attribute_editor_box.extend (label)
 			attribute_editor_box.disable_item_expand (label)
+			
+			if system_status.is_in_debug_mode then
+					-- provide additional information when in debug mode.
+				create label
+				label.set_text (object.id.out)
+				attribute_editor_box.extend (label)
+				label.pointer_double_press_actions.force_extend (agent show_id_dialog)
+			end
 	
 			create label.make_with_text ("Name:")
 			label.align_text_left
@@ -900,6 +908,40 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 			container_object ?= object
 			if container_object /= Void then
 				replace_object_editor_item ("EV_CONTAINER")
+			end
+		end
+		
+feature {NONE} -- Debug information
+
+	show_id_dialog is
+			-- Show a dialog permitting enty of a particular object id to be viewed.
+		local
+			dialog: EV_DIALOG
+			text_field: EV_TEXT_FIELD
+		do
+			create dialog
+			create text_field
+			dialog.extend (text_field)
+			text_field.return_actions.extend (agent highlight_object (text_field))
+			text_field.return_actions.extend (agent dialog.hide)
+			dialog.show_modal_to_window (parent_window (Current))
+		end
+		
+		
+	highlight_object (text_field: EV_TEXT_FIELD) is
+			-- Ensure `an_object' is highlighted object in `Current'.
+			-- Only if `an_object' is contained in the structure of `Current', and
+			-- is not a titled window.
+		local
+			an_object: GB_OBJECT
+		do
+			if text_field.text.is_integer then
+				an_object := object_handler.objects.item (text_field.text.to_integer)
+				if an_object /= Void then
+					an_object.top_level_parent_object.window_selector_item.enable_select
+					an_object.layout_item.enable_select
+					an_object.layout_item.parent_tree.ensure_item_visible (an_object.layout_item)
+				end
 			end
 		end
 

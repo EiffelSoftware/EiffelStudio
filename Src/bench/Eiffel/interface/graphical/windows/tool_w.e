@@ -138,6 +138,9 @@ feature -- Window Properties
 	toolbar_parent: ROW_COLUMN;
 			-- Toolbar parent
 
+	edit_bar, format_bar: TOOLBAR;
+			-- Main and format button bars
+
 	target: WIDGET is
 			-- Target of the hole is the text window.
 		do
@@ -505,6 +508,28 @@ feature -- Update
 			synchronize
 		end;
 
+	set_text_from_file (f: PLAIN_TEXT_FILE) is
+			-- Display content of file `f' and its name as the title
+			-- of the ancestor tool. 
+		require
+			file_no_void: f /= Void
+			valid_file: f.exists and then f.is_readable and then f.is_plain
+		do
+			f.open_read;
+			f.readstream (f.count);
+			f.close;
+			text_window.clear_window;
+			set_editable_text;
+			show_editable_text;
+			text_window.set_text (f.laststring);
+			set_mode_for_editing
+			text_window.set_changed (True);
+			update_save_symbol;
+			set_default_format;
+		ensure
+			up_to_date: text_window.changed
+		end;
+
 	show_file (f: PLAIN_TEXT_FILE) is
 			-- Display content of file `f' and its name as the title
 			-- of the ancestor tool. Forget about clicking and stones.
@@ -654,14 +679,22 @@ feature {NONE} -- Implementation
 			Result := Configure_resources.get_boolean (r_Graphics_disabled, False) 
 		end;
 
-	create_toolbar_parent (a_parent: COMPOSITE) is
+	create_toolbar (a_parent: COMPOSITE) is
 			-- Create a toolbar_parent with parent `a_parent'.
+		local
+			sep: THREE_D_SEPARATOR;
 		do
 			!! toolbar_parent.make (new_name, a_parent);
+			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			toolbar_parent.set_column_layout;
 			toolbar_parent.set_free_size;	
 			toolbar_parent.set_margin_height (0);
-			toolbar_parent.set_spacing (0);
+			toolbar_parent.set_spacing (1);
+			!! edit_bar.make (Interface_names.n_Command_bar_name, 
+				toolbar_parent);
+			!! sep.make (Interface_names.t_Empty, toolbar_parent);
+			!! format_bar.make (Interface_names.n_Format_bar_name, 
+				toolbar_parent);
 		end;
 
 feature {PROJECT_W} -- Implementation

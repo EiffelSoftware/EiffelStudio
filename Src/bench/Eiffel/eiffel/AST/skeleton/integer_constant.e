@@ -342,17 +342,17 @@ feature {NONE} -- Translation
 				when 'a' then
 					last_integer := last_integer | (10 |<< (i * 4))
 				when 'b' then
-					last_integer := last_integer + (11 |<< (i * 4))
+					last_integer := last_integer | (11 |<< (i * 4))
 				when 'c' then
-					last_integer := last_integer + (12 |<< (i * 4))
+					last_integer := last_integer | (12 |<< (i * 4))
 				when 'd' then
-					last_integer := last_integer + (13 |<< (i * 4))
+					last_integer := last_integer | (13 |<< (i * 4))
 				when 'e' then
-					last_integer := last_integer + (14 |<< (i * 4))
+					last_integer := last_integer | (14 |<< (i * 4))
 				when 'f' then
-					last_integer := last_integer + (15 |<< (i * 4))
+					last_integer := last_integer | (15 |<< (i * 4))
 				else
-					last_integer := last_integer + ((val.code - 48) |<< (i * 4))
+					last_integer := last_integer | ((val.code - 48) |<< (i * 4))
 				end
 				i := i + 1
 			end
@@ -372,17 +372,17 @@ feature {NONE} -- Translation
 					when 'a' then
 						last_integer := last_integer | (10 |<< (i * 4))
 					when 'b' then
-						last_integer := last_integer + (11 |<< (i * 4))
+						last_integer := last_integer | (11 |<< (i * 4))
 					when 'c' then
-						last_integer := last_integer + (12 |<< (i * 4))
+						last_integer := last_integer | (12 |<< (i * 4))
 					when 'd' then
-						last_integer := last_integer + (13 |<< (i * 4))
+						last_integer := last_integer | (13 |<< (i * 4))
 					when 'e' then
-						last_integer := last_integer + (14 |<< (i * 4))
+						last_integer := last_integer | (14 |<< (i * 4))
 					when 'f' then
-						last_integer := last_integer + (15 |<< (i * 4))
+						last_integer := last_integer | (15 |<< (i * 4))
 					else
-						last_integer := last_integer + ((val.code - 48) |<< (i * 4))
+						last_integer := last_integer | ((val.code - 48) |<< (i * 4))
 					end
 					i := i + 1
 				end

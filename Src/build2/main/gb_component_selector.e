@@ -135,6 +135,7 @@ feature -- Basic operation
 			vaid_component_name: component_name /= Void and not component_name.is_empty
 		local
 			found: BOOLEAN
+			component: GB_COMPONENT
 		do
 			xml_handler.remove_component (component_name)
 				-- We must now remove the child of `Current' representing
@@ -153,6 +154,10 @@ feature -- Basic operation
 				if not found then
 					forth
 				end
+			end
+			component := component_viewer.component
+			if component /= Void and then component.name.is_equal (component_name) then
+				Component_viewer.clear
 			end
 			check
 				component_matched_correctly: found

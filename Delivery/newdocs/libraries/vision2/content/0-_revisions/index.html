@@ -47,6 +47,7 @@
 				</ul>
 				<li><B>EV_FONT</B> - Fixed bug when using `preferred_families' after creating a font via `make_with_values'. The family that was specified was previously ignored.</li>
 				<li><B>EV_SCROLL_BAR</B> - Fixed handling of scroll bars with upper values greater than 32,000. Previously, dragging the bar of a scroll bar past this limit, corrupted the position of the bar and the `value'.</li>
+				<li><b>EV_TEXT</B> - Corrected `last_position_from_line_number' which was returning an incorrect position when there were multiple lines of text contained, and you queried the final line.</li>
 			</UL>
 				<b>Gtk</b>
 				<UL>

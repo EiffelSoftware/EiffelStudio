@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			-- indicates the scrollbar or trackbar
 			-- control activated.
 		local
-			scale_data: SCALE_DATA
+			scale_data: CONTEXT_DATA
 		do
 			if not is_output_only then
 				if is_maximum_right_bottom then
@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 						position := a_position
 					elseif scroll_code = Sb_thumbtrack then
 						position := a_position
-						!! scale_data.make (widget_oui, position)
+						!! scale_data.make (widget_oui)
 						move_actions.execute (Current, scale_data)
 					end
 					bar.set_position (position)
@@ -402,13 +402,13 @@ feature {NONE} -- Implementation
 						position := maximum - a_position
 					elseif scroll_code = Sb_thumbtrack then
 						position := maximum - a_position
-						!! scale_data.make (widget_oui, position)
+						!! scale_data.make (widget_oui)
 						move_actions.execute (Current, scale_data)
 					end
 					bar.set_position (maximum - position)
 				end
 				update_value_static
-				!! scale_data.make (widget_oui, position)
+				!! scale_data.make (widget_oui)
 				value_changed_actions.execute (Current, scale_data)
 			end
 		end

@@ -63,7 +63,7 @@ feature -- Store/Retrieve
 					create l_defaults.make (1)
 					root_ast.set_defaults (l_defaults)
 				end
-				if not md_cache_path.is_empty then
+				if not md_cache_path.text.is_empty then
 					l_defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.metadata_cache_path, md_cache_path.text, False))
 				end
 					

@@ -40,6 +40,11 @@ feature -- Access
 			-- Preferred font height measured in screen pixels.
 		deferred
 		end
+		
+	height_in_points: INTEGER is
+			-- Preferred font height in pixels.
+		deferred
+		end
 
 	preferred_families: EV_ACTIVE_LIST [STRING]
 			-- Preferred user fonts.
@@ -77,7 +82,7 @@ feature -- Element change
 			set_shape (a_shape)
 			set_height (a_height)
 		end
-
+		
 	set_family (a_family: INTEGER) is
 			-- Set `a_family' as preferred font category.
 		require
@@ -112,6 +117,15 @@ feature -- Element change
 		deferred
 		ensure
 			height_assigned: height = a_height
+		end
+		
+	set_height_in_points (a_height: INTEGER) is
+			-- Set `a_height_in_points' to `a_height'.
+		require
+			a_height_bigger_than_zero: a_height > 0
+		deferred
+		ensure
+			height_assigned: height_in_points = a_height
 		end
 
 feature -- Status report
@@ -211,6 +225,23 @@ feature -- Status report
 				cur_height := cur_height + l_height
 			end
 			Result := [cur_width, cur_height, 0, 0]
+		end
+		
+feature {EV_FONT, EV_ANY_I} -- Implementation
+		
+	copy_font (other: like interface) is
+			-- Update `Current' with all attributes of `other'.
+		require
+			other_not_void: other /= Void
+			type_identity: same_type (other)
+		do
+			set_values (
+				other.family,
+				other.weight,
+				other.shape,
+				other.height,
+				other.preferred_families.twin
+			)
 		end
 
 feature {EV_ANY_I} -- Implementation

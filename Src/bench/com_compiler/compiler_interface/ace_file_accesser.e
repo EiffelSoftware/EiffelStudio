@@ -101,6 +101,7 @@ feature{NONE} -- Access
 		end
 		
 feature -- Access
+
 	ace_file_name: STRING 
 			-- Name of ace file
 
@@ -129,6 +130,26 @@ feature -- Access
 				Result := root_ast.root.creation_procedure_name
 			end
 		end
+		
+	dot_net_naming_convention: BOOLEAN is
+			-- .NET naming convention
+		do
+			Result := boolean_default(feature {FREE_OPTION_SD}.Dotnet_naming_convention)
+		end
+		
+	use_cluster_name_as_namespace: BOOLEAN is
+			-- should cluster name be used as namespace name?
+		do
+			Result := boolean_default (feature {FREE_OPTION_SD}.Use_cluster_name_as_namespace)
+		end
+		
+	use_all_cluster_name_as_namespace: BOOLEAN is
+			-- should full cluster name be used as namespace name?
+		do
+			Result := boolean_default (feature {FREE_OPTION_SD}.Use_all_cluster_name_as_namespace)
+		end
+		
+		
 
 	require_evaluated: BOOLEAN is
 			-- Are preconditions evaluated?
@@ -520,6 +541,12 @@ feature -- Element change
 			end
 
 		end
+		
+	set_dot_net_naming_convention (a_use_convention: BOOLEAN) is
+			-- .NET naming convention
+		do
+			set_boolean_default (feature {FREE_OPTION_SD}.Dotnet_naming_convention, a_use_convention)
+		end
 
 	set_assertions (evaluate_require, evaluate_ensure, evaluate_check, evaluate_loop, evaluate_invariant: BOOLEAN) is
 			-- Change assertion settings.
@@ -650,6 +677,19 @@ feature -- Element change
 		do
 			set_string_default(feature {FREE_OPTION_SD}.Namespace, namespace)
 		end
+		
+	set_use_cluster_name_as_namespace (a_new_value: BOOLEAN) is
+			-- set use_cluster_name_as_namespace with `a_new_value'
+		do
+			set_boolean_default (feature {FREE_OPTION_SD}.Use_cluster_name_as_namespace, a_new_value)
+		end
+
+	set_use_all_cluster_name_as_namespace (a_new_value: BOOLEAN) is
+			-- set use_all_cluster_name_as_namespace with `a_new_value'
+		do
+			set_boolean_default (feature {FREE_OPTION_SD}.Use_all_cluster_name_as_namespace, a_new_value)
+		end
+		
 		
 	set_working_directory (directory: STRING) is
 			-- Set the system's working directory

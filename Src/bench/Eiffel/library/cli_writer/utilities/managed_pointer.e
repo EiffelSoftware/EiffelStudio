@@ -58,8 +58,16 @@ feature -- Access
 			
 	count: INTEGER
 			-- Number of elements that Current can hold.
-		
+
 feature -- Format independant
+
+	read_integer_8 (pos: INTEGER): INTEGER_8 is
+			-- Read INTEGER_8 at position `pos'.
+		require
+			valid_pos: pos <= count
+		do
+			($Result).memory_copy (item + pos, 1)
+		end
 
 	put_integer_8 (i: INTEGER_8; pos: INTEGER) is
 			-- Insert `i' at position `pos'.

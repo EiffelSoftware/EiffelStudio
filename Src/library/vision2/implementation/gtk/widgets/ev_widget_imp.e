@@ -93,8 +93,8 @@ feature {NONE} -- Initialization
 			end
 	
 			on_key_event_intermediary_agent := agent gtk_marshal.on_key_event_intermediary (c_object, ?, ?, ?)
-			real_signal_connect (visual_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
-			real_signal_connect (visual_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			real_signal_connect (c_object, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			real_signal_connect (c_object, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 				--| "button-press-event" is a special case, see below.
 				
 			connect_button_press_switch_agent := agent gtk_marshal.connect_button_press_switch_intermediary (c_object)
@@ -300,7 +300,7 @@ feature -- Status report
 			Result := has_struct_flag (C.GTK_HAS_GRAB_ENUM)
 			check
 				Result = (((
-					(C.gtk_object_struct_flags (visual_widget)
+					(C.gtk_object_struct_flags (c_object)
 					// C.GTK_HAS_GRAB_ENUM) \\ 2)
 				) = 1)
 			end
@@ -344,9 +344,9 @@ feature -- Status setting
 		local
 			i: INTEGER
 		do
-			C.gtk_grab_add (visual_widget)
+			C.gtk_grab_add (c_object)
 			i := C.gdk_pointer_grab (
-				C.gtk_widget_struct_window (visual_widget),
+				C.gtk_widget_struct_window (c_object),
 				1, -- gint owner_events
 				C.GDK_BUTTON_RELEASE_MASK_ENUM +
 				C.GDK_BUTTON_PRESS_MASK_ENUM +
@@ -362,7 +362,7 @@ feature -- Status setting
 			-- Ungrab all the mouse and keyboard events.
 			--| Used by pick and drop.
 		do
-			C.gtk_grab_remove (visual_widget)
+			C.gtk_grab_remove (c_object)
 			C.gdk_pointer_ungrab (
 				0 -- guint32 time
 			) 

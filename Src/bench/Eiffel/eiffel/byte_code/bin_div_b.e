@@ -1,3 +1,8 @@
+indexing
+	description: "integer // operator"
+	date: "$date: $"
+	revision: "$revision: $"
+
 class BIN_DIV_B 
 
 inherit
@@ -8,24 +13,27 @@ inherit
 			il_div as il_operator_constant
 		redefine
 			generate_operator, is_simple,
-			generate_simple, is_built_in,
-			is_reverted
+			generate_simple, is_built_in
 		end
 	
 feature -- Status report
-
-	is_reverted: BOOLEAN is true
-			-- Has result of expression to be converted back to original type of expression
-			-- so that result does not depend on implicit conversion performed by an underlying
-			-- platform to a type with higher precision?
-
-feature 
 
 	is_simple: BOOLEAN is
 			-- Operation is usually simple (C can compact it in affectations)
 		do
 			Result := is_built_in
 		end
+
+	is_built_in: BOOLEAN is
+			-- Is the current binary operator a built-in one?
+		local
+			l_type: TYPE_I
+		do
+			l_type := context.real_type (left.type)
+			Result := l_type.is_integer or l_type.is_natural
+		end
+
+feature -- C code generation
 
 	generate_operator is
 			-- Generate the operator
@@ -37,12 +45,6 @@ feature
 			-- Generate a simple assignment operation
 		do
 			buffer.put_string (" /= ")
-		end
-
-	is_built_in: BOOLEAN is
-			-- Is the current binary operator a built-in one?
-		do
-			Result := context.real_type (left.type).is_long
 		end
 
 end

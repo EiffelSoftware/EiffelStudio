@@ -15,7 +15,7 @@ deferred class
 
 --|FIXME Provide access to modifier key state (Shift, Alt, Meta ect).
 
---|FIXME Add mechanism for dealing with fiel/pipe/socket events.
+--|FIXME Add mechanism for dealing with file/pipe/socket events.
 
 inherit
 	EV_ANY
@@ -204,6 +204,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/27 19:10:10  oconnor
+--| spelink mistak
+--|
 --| Revision 1.21  2000/03/27 19:06:14  oconnor
 --| added fixme
 --|

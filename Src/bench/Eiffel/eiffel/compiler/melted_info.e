@@ -18,11 +18,6 @@ inherit
 			is_equal
 		end
 
-	SHARED_EXTERNALS
-		undefine
-			is_equal
-		end
-
 	COMPILER_EXPORTER
 		undefine
 			is_equal
@@ -94,9 +89,6 @@ feature {NONE} -- Implementation
 			-- Execution unit for Current. 
 		require
 			class_type_not_void: class_type /= Void
-		local
-			external_unit: EXT_EXECUTION_UNIT
-			info: EXTERNAL_INFO
 		do
 				-- Evaluation of execution unit
 			Result := internal_execution_unit (class_type)
@@ -106,19 +98,6 @@ feature {NONE} -- Implementation
 
 				-- Get the updated EXECUTION_UNIT
 			Result := Execution_table.last_unit
-
-				-- Update the external table
-			if Result.is_external then
-				external_unit ?= Result
-				check
-					not System.il_generation implies Externals.has (external_unit.external_name_id)
-				end
-				info := Externals.item (external_unit.external_name_id)
-				if info /= Void then
-						-- Not Void means it is a C externals.
-					info.set_execution_unit (external_unit)
-				end
-			end
 		end
 
 	internal_execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT is

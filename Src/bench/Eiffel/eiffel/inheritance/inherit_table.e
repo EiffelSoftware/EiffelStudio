@@ -904,7 +904,9 @@ end;
 			elseif Result.is_external then
 					-- Track new externals introduced in the class
 				external_i ?= Result;
-				new_externals.put_front (external_i.external_name);
+				if not external_i.encapsulated then
+					new_externals.put_front (external_i.external_name);
+				end;
 			end;
 
 			read_info := class_info.index.item (yacc_feature.id);
@@ -1619,7 +1621,9 @@ end;
 			if feat.is_external then
 					-- Track new externals introduced in the class
 				external_i ?= feat;
-				new_externals.put_front (external_i.external_name);
+				if not external_i.encapsulated then
+					new_externals.put_front (external_i.external_name);
+				end;
 			end;
  
 				-- Look for a previous definition of the feature

@@ -219,7 +219,12 @@ debug ("ACTIVITY")
 	io.error.putstring (old_feature_i.feature_name);
 	io.error.new_line;
 end;
-						pass_control.remove_external (external_i.external_name);
+							-- If the external is encapsulated then it was not added to
+							-- the list of new externals in inherit_table. Same thing
+							-- if it has to be removed
+						if not external_i.encapsulated then
+							pass_control.remove_external (external_i.external_name);
+						end;
 					end;
 					if 	new_feature_i = Void
 						or else

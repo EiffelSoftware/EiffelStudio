@@ -151,6 +151,7 @@ feature
 			rout_table: ROUT_TABLE;
 			entry: POLY_TABLE [ENTRY];
 			internal_name, table_name: STRING;
+			i: INTEGER;
 		do
 			entry := Eiffel_table.item_id (rout_id);
 			if entry.is_polymorphic (typ.type_id) then
@@ -187,15 +188,35 @@ feature
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired.
 				if encapsulated then
-					rout_table ?= entry;
-					internal_name := clone (rout_table.feature_name (typ.type_id));
+						-- Let's see if there's some include file to add to the .h file
+						-- for the final mode only.
+						-- We don't need to test if an include file is already in the
+						-- shared_include_set of the current class because this
+						-- shared set is a set and every item appears only once
+					if context.final_mode and (is_special_ext or has_include_list) then
+						if is_special_ext then
+							shared_include_set.extend (special_file_name);
+						end;
+						if has_include_list then
+							from
+								i := include_list.lower
+							until
+								i > include_list.upper
+							loop
+								shared_include_set.extend (include_list.item (i));
+								i := i + 1;
+							end;
+						end;
+					end;
+					internal_name := external_name;
+					generated_file.putstring (internal_name);
 				else
 					internal_name := external_name;
-				end;
-				generated_file.putstring (internal_name);
-					-- Remember external routine declaration
-				Extern_declarations.add_routine
+					generated_file.putstring (internal_name);
+						-- Remember external routine declaration
+					Extern_declarations.add_routine
 						(real_type (type).c_type, internal_name);
+				end;
 			end;
 		end;
 		
@@ -203,19 +224,30 @@ feature
 			-- Generate the parameters list for C function call
 		local
 			expr: EXPR_B;
+			i: INTEGER;
 		do
 			if parameters /= Void then
 				from
 					parameters.start;
+					if has_arg_list then
+						i := arg_list.lower;
+					end;
 				until
 					parameters.after
 				loop
 					expr ?= parameters.item;	-- Cannot fail
+						-- add cast before parameter
+					if has_signature then
+						generated_file.putchar ('(');
+						generated_file.putstring (arg_list.item (i));
+						generated_file.putstring (") ");
+					end;
 					expr.print_register;
 					if not parameters.islast then
 						generated_file.putstring (", ");
 					end;
 					parameters.forth;
+					i := i + 1;
 				end;
 			end;
 		end;
@@ -266,6 +298,11 @@ feature
 			encapsulated := e.encapsulated;
 			feature_id := e.feature_id;
 			feature_name := e.feature_name;
+			special_type := e.special_type;
+			special_file_name := e.special_file_name;
+			include_list := e.include_list;
+			arg_list := e.arg_list;
+			return_type := e.return_type;
 			if parameters /= Void then
 				from parameters.start;
 				until parameters.after

@@ -13,31 +13,46 @@ feature -- Attributes
 	ext_language_name: STRING;
 			-- Name of external language
 
-	has_macro: BOOLEAN;
+	is_special: BOOLEAN is
 			-- Does the external declaration include a macro ("macro", "dll16", "dll32") ?
+		do
+			Result := special_file_name /= Void;
+		end;
 
-	has_signature: BOOLEAN;
+	has_signature: BOOLEAN is
 			-- Does the external declaration include a signature ?
+		do
+			Result := has_arg_list or else has_return_type;
+		end;
 
-	has_argument_list: BOOLEAN;
+	has_arg_list: BOOLEAN is
 			-- Does the signature include arguments ?
+		do
+			Result := (arg_list /= Void) and then (arg_list.count > 0);
+		end;
 
-	has_result_type: BOOLEAN;
+	has_return_type: BOOLEAN is
 			-- Does the signature include a result type ?
+		do
+			Result := return_type /= Void;
+		end;
 
-	has_include_list: BOOLEAN;
+	has_include_list: BOOLEAN is
 			-- Does the external declaration include a list of include files ?
+		do
+			Result := (include_list /= Void) and then (include_list.count > 0);
+		end;
 
-	macro_type: STRING;
+	special_type: STRING;
 			-- Type of macro 
 
-	macro_file_name: STRING;
+	special_file_name: STRING;
 			-- File name including the macro definition
 
 	arg_list: ARRAY[STRING];
 			-- List of arguments for the signature
 
-	result_type: STRING;
+	return_type: STRING;
 			-- Result type of signature
 
 	include_list: ARRAY[STRING];
@@ -132,36 +147,34 @@ feature -- Parsing
 						segment.right_adjust;
 						place := segment.index_of (' ',1);
 						if place > 0 then	-- place = 0 or place >=2; can't be 1
-							macro_type := segment.substring (1,place - 1);
+							special_type := segment.substring (1,place - 1);
 							-- add dll16 and dll32 later
-							if macro_type.is_equal ("macro") then
-								macro_file_name := segment.substring (place + 1, segment.count);
-								macro_file_name.left_adjust;
+							if special_type.is_equal ("macro") then
+								special_file_name := segment.substring (place + 1, segment.count);
+								special_file_name.left_adjust;
 								inspect
-									macro_file_name.item (1)
+									special_file_name.item (1)
 								when '<' then
-									i := macro_file_name.index_of ('>',1);
+									i := special_file_name.index_of ('>',1);
 								when '%"' then
-									i := macro_file_name.index_of ('%"',2);
+									i := special_file_name.index_of ('%"',2);
 								else
 									-- if no spaces then OK
-									i := macro_file_name.count - macro_file_name.index_of (' ',1);
-									macro_file_name.precede ('%"');
-									macro_file_name.append_character ('%"');
+									i := special_file_name.count - special_file_name.index_of (' ',1);
+									special_file_name.precede ('%"');
+									special_file_name.append_character ('%"');
 								end;
-								if i = macro_file_name.count then
-									has_macro := True
-								else
-									loc_begin := source.substring_index (macro_file_name, 1);
-									loc_end := loc_begin + macro_file_name.count - 1;
+								if not (i = special_file_name.count) then
+									loc_begin := source.substring_index (special_file_name, 1);
+									loc_end := loc_begin + special_file_name.count - 1;
 									-- file name including macro is not valid (> or %" missing)
 									raise_external_error ("Illegal file name for macro specification%N%
 															%(a %" or > may be missing)%N",loc_begin,loc_end);
 								end;
 							else
-								loc_begin := source.substring_index (macro_type, 1);
-								loc_end := loc_begin + macro_type.count - 1;
-								-- macro_type is not "macro"
+								loc_begin := source.substring_index (special_type, 1);
+								loc_end := loc_begin + special_type.count - 1;
+								-- special_type is not "macro"
 								raise_external_error ("Illegal type declaration for external file%N%
 														%(type must be one of: macro, dll16, dll32%N",loc_begin,loc_end);
 							end;
@@ -206,7 +219,7 @@ loc_end);
 						segment.left_adjust;
 						segment.right_adjust;
 						from
-							!!arg_list.make (1,1);
+							!!arg_list.make (1,0);
 							i := 1;
 							stop := False;
 						until
@@ -240,8 +253,6 @@ loc_end);
 									argument := clone (segment);
 									arg_list.force (argument,i);
                                    	segment.wipe_out;
-	                                   has_signature := True;
-	                                   has_argument_list := True;
 								else	-- place = 1 i.e. "(,"
 									loc_begin := source.substring_index (segment, 1);
 									loc_end := loc_begin;
@@ -284,9 +295,7 @@ loc_end);
 					segment.left_adjust;
 					segment.right_adjust;
 					if segment.count /= 0 then
-						result_type := segment;
-						has_signature := True;
-						has_result_type := True;
+						return_type := segment;
 					else
 						-- nothing after ':'
 						raise_external_error ("Missing return type afer colon in signature declaration%N%
@@ -300,7 +309,7 @@ loc_begin, loc_end);
 						segment := image.substring (2, image.count);
 						segment.left_adjust;
 						from
-							!!include_list.make (1,1);
+							!!include_list.make (1,0);
 							i := 1;
 							stop := False;
 						until
@@ -317,7 +326,6 @@ loc_begin, loc_end);
 									segment.tail (segment.count - place);
 									segment.left_adjust;
 									include_list.force (inc_file,i);
-									has_include_list := True;
 									i := i + 1;
 								else
 									loc_begin := source.substring_index (segment,1);
@@ -334,7 +342,6 @@ loc_begin, loc_end);
 									segment.tail (segment.count - place);
 									segment.left_adjust;
 									include_list.force (inc_file,i);
-									has_include_list := True;
 									i := i + 1;
 								else
 									loc_begin := source.substring_index (segment, 1);
@@ -346,7 +353,6 @@ loc_begin, loc_end);
 							else
 								-- blank can't be at the beginning
 								place := segment.index_of (' ',1);
-								has_include_list := True;
 								if place > 1 then
 									inc_file := segment.substring (1, place - 1);
 									segment.tail (segment.count - place);
@@ -412,19 +418,19 @@ end; -- debug
 				io.putstring (ext_language_name);
 				io.putstring ("|");
 				io.new_line;
-				if has_macro then
+				if is_special then
 					io.putstring ("Macro: ");
-					io.putstring (macro_type);
+					io.putstring (special_type);
 					io.new_line;
 					io.putstring ("Macro file: ");
-					io.putstring (macro_file_name);
+					io.putstring (special_file_name);
 					io.new_line;
 				else
 					io.putstring ("No macro%N");
 				end;
 				if has_signature then
 					io.putstring ("Signature:%N");
-					if has_argument_list then
+					if has_arg_list then
 						io.putstring("    Arguments:%N");
 						from
 							k := arg_list.lower
@@ -441,10 +447,10 @@ end; -- debug
 					else
 						io.putstring ("    No arguments%N");
 					end;
-					if has_result_type then
+					if has_return_type then
 						io.putstring ("    Result type: ");
 						io.putstring ("|");
-						io.putstring (result_type);
+						io.putstring (return_type);
 						io.putstring ("|");
 						io.new_line;
 					else

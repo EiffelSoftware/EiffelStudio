@@ -100,6 +100,7 @@ feature -- New feature description
 			rvi: REAL_VALUE_I;
 			fvi: FLOAT_VALUE_I;
 			cvi: VALUE_I;
+			ext_lang: EXTERNAL_LANG_AS;
 		do
 			if content = Void then
 					-- It is an attribute
@@ -154,15 +155,23 @@ feature -- New feature description
 						-- External procedure
 					!!extern_proc;
 					external_body ?= routine.routine_body;
+					ext_lang := external_body.language_name;
 					extern_proc.set_alias_name (external_body.external_name);
-					extern_proc.set_external_characteristics (external_body);
+					extern_proc.set_special_type (ext_lang.special_type);
+					extern_proc.set_special_file_name (ext_lang.special_file_name);
+					extern_proc.set_arg_list (ext_lang.arg_list);
+					extern_proc.set_return_type (ext_lang.return_type);
+					extern_proc.set_include_list (ext_lang.include_list);
 
 -- Assertions and Rescue compound are not supported in
 -- externals.
 --					extern_proc.set_encapsulated
 --						(content.has_assertion or else content.has_rescue);
 
-					extern_proc.set_c_type (external_body.type_string);
+						-- if there's a macro or a signature then encapsulate
+					extern_proc.set_encapsulated
+						(external_body.language_name.is_special
+						or else external_body.language_name.has_signature);
 					proc := extern_proc;
 				else
 					!DYN_PROC_I!proc;
@@ -195,16 +204,24 @@ feature -- New feature description
 						-- External function
 					!!extern_func;
 					external_body ?= routine.routine_body;
+					ext_lang := external_body.language_name;
 					extern_func.set_alias_name (external_body.external_name);
-					extern_func.set_external_characteristics (external_body);
+					extern_func.set_special_type (ext_lang.special_type);
+					extern_func.set_special_file_name (ext_lang.special_file_name);
+					extern_func.set_arg_list (ext_lang.arg_list);
+					extern_func.set_return_type (ext_lang.return_type);
+					extern_func.set_include_list (ext_lang.include_list);
 
 -- Assertions and Rescue compound are not supported in
 -- externals.
 --					extern_func.set_encapsulated
 --						(content.has_assertion or else content.has_rescue);
 
+						-- if there's a macro or a signature then encapsulate
+					extern_func.set_encapsulated
+						(external_body.language_name.is_special
+						or else external_body.language_name.has_signature);
 					extern_func.set_type (type);
-					extern_func.set_c_type (external_body.type_string);
 					func := extern_func;
 				else
 					!!dyn_func;

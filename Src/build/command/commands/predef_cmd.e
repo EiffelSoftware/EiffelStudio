@@ -6,18 +6,18 @@ inherit
 
 	CMD;
 	SHARED_STORAGE_INFO;
-	PREDEF_CMD_IDENTIFIERS
+	PREDEF_CMD_IDENTIFIERS;
+	ERROR_POPUPER
 	
 feature 
 
 	make is
 		do
-			predefined_command_table.put (Current, identifier)
+			predefined_command_table.put (Current, - identifier)
 		end;
 
 	label: STRING is
-		do
-			Result := eiffel_type
+		deferred
 		end;
 
 	symbol: PIXMAP is
@@ -39,13 +39,23 @@ feature
 			!! full_path.make_from_string (Environment.predefined_commands_directory);
 				fn := clone (eiffel_type);
 				fn.to_lower;
-			full_path.extend (fn);
+			full_path.set_file_name (fn);
 			full_path.add_extension ("e");
 			!! f.make (full_path);
-			f.open_read;
-			f.readstream (f.count);
-			Result := f.laststring;
-			f.close;
+			if f.exists and then f.is_readable then
+				f.open_read;
+				f.readstream (f.count);
+				Result := f.laststring;
+				f.close;
+			else
+				Error_box.popup (Current, Messages.Cannot_read_file_er,
+					full_path);		
+				Result := "";
+			end
+		rescue
+			if not (f = Void or else f.is_closed) then
+				f.close
+			end;
 		end;
 
 	remove_class is do end;

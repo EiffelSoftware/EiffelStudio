@@ -33,17 +33,17 @@ feature -- basic Operations
 			Create new_project_b.make_with_text("Generate as a new Project")
 			Create example_b.make_with_text("Generate example")
 			Create current_project_b.make_with_text("Integrate within existing Project")
-			if state_information.generate_facade then
+			if wizard_information.generate_facade then
 				generate_facade_b.enable_select
 			else
 				generate_facade_b.disable_select
 			end
-			if state_information.new_project then
+			if wizard_information.new_project then
 				new_project_b.enable_select
 			else
 				current_project_b.enable_select
 			end
-			if state_information.example then
+			if wizard_information.example then
 				example_b.enable_select
 			else
 				example_b.disable_select
@@ -67,13 +67,13 @@ feature -- basic Operations
 			-- Process user entries
 		do 
 			precursor
-			proceed_with_new_state(Create {DB_GENERATION_LOCATION}.make(state_information))
+			proceed_with_new_state(Create {DB_GENERATION_LOCATION}.make(wizard_information))
 		end
 
 	update_state_information is
 			-- Check user entries
 		do
-			state_information.set_generation_type(generate_facade_b.is_selected,
+			wizard_information.set_generation_type(generate_facade_b.is_selected,
 							new_project_b.is_selected)
 			precursor
 		end

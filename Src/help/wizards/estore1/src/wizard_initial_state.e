@@ -30,19 +30,20 @@ feature -- basic Operations
 		local
 			h1: EV_HORIZONTAL_BOX
 		do 
+
 			Create h1
 			Create oracle_b.make_with_text("Oracle")
 			Create odbc_b.make_with_text("ODBC")
 			odbc_b.press_actions.extend(~set_handle_insensitive(FALSE))
-			if not state_information.is_oracle then
+			if not wizard_information.is_oracle then
 				odbc_b.enable_select 
 			else
 				oracle_b.enable_select
 			end
 			oracle_b.press_actions.extend(~set_handle_insensitive(TRUE))
-			Create db_name.make("Data Source Name",state_information.data_source,10,20,Current)
-			Create username.make("username",state_information.username,10,20,Current)
-			Create password.make("Password",state_information.password,10,20,Current)
+			Create db_name.make("Data Source Name",wizard_information.data_source,10,20,Current)
+			Create username.make("username",wizard_information.username,10,20,Current)
+			Create password.make("Password",wizard_information.password,10,20,Current)
 			
 			main_box.extend(Create {EV_HORIZONTAL_BOX})
 			main_box.extend(h1)
@@ -90,12 +91,9 @@ feature -- basic Operations
 				db_manager.log_and_connect (username.text,password.text,db_name.text)
 			end
 			if not b and then db_manager.connected then
-				proceed_with_new_state(Create {DB_GENERATION}.make(state_information))
+				proceed_with_new_state(Create {DB_GENERATION}.make(wizard_information))
 			else
-				Create message.make_with_text("Connection Failed")
-				entries_checked := FALSE
-				entries_changed := TRUE
-				message.show_modal
+				proceed_with_new_state(Create {WIZARD_NOT_CONNECTED_STATE}.make(wizard_information))
 			end
 		rescue
 			b := TRUE
@@ -105,7 +103,7 @@ feature -- basic Operations
 	update_state_information is
 			-- Check user entries
 		do
-			state_information.set_database_info(username.text,
+			wizard_information.set_database_info(username.text,
 				password.text,db_name.text,oracle_b.is_selected)
 			precursor			
 		end

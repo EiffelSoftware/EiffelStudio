@@ -11,8 +11,7 @@ class
 inherit
 	WIZARD_STATE_WINDOW
 		redefine
-			proceed_with_current_info,
-			make
+			proceed_with_current_info
 		end
 
 creation
@@ -20,12 +19,12 @@ creation
 
 feature -- Initialization
 
-	make (an_info: like state_information) is
-			-- Initialize with 'an_info'
-		do
-			is_final_state := TRUE
-			precursor(an_info)
-		end
+--	make (an_info: like wizard_information) is
+--			-- Initialize with 'an_info'
+--		do
+--			is_final_state := TRUE
+--			precursor(an_info)
+--		end
 
 feature -- basic Operations
 
@@ -41,6 +40,11 @@ feature -- basic Operations
 		local
 			h1: EV_HORIZONTAL_BOX
 		do
+				-- Change button role when final state
+			first_window.set_final_state
+--			first_window.next_b.hide
+--			first_window.cancel_b.set_text("Exit")
+
 			Create progress 
 			progress.set_minimum_height(20)
 			progress.set_minimum_width(100)
@@ -56,13 +60,13 @@ feature -- basic Operations
 		local
 			li: LINKED_LIST[CLASS_NAME]
 		do
-			li := state_information.table_list
+			li := wizard_information.table_list
 			total := li.count
-			if state_information.generate_facade then
+			if wizard_information.generate_facade then
 				total := total + 6
 			end
-			if state_information.example then
-				total := total + 1
+			if wizard_information.example then
+				total := total + 2
 			end
 			Create repositories.make
 			from
@@ -76,10 +80,10 @@ feature -- basic Operations
 				li.forth
 			end
 			generate_ace_file
-			if state_information.generate_facade then
+			if wizard_information.generate_facade then
 				generate_basic_facade
 			end
-			if state_information.example then
+			if wizard_information.example then
 				generate_example
 			end
 			progress_text.set_text(" ")
@@ -109,7 +113,7 @@ feature -- Processing
 			Create rep.make(s)
 			rep.load
 			repositories.extend(rep)
-			Create f_name.make_from_string(state_information.location)
+			Create f_name.make_from_string(wizard_information.location)
 			s1 := clone(s)
 			s1.to_lower
 			f_name.extend(s1)
@@ -135,7 +139,7 @@ feature -- Processing
 			s,s2,repository_name: STRING
 		do
 			notify_user("generating Class REPOSITORIES ...")
-			Create f_name.make_from_string(state_information.location)
+			Create f_name.make_from_string(wizard_information.location)
 			f_name.extend("repositories")
 			f_name.add_extension("e")
 			s := "indexing%N%Tdescription:%"Module which contains all the repositories information%""
@@ -177,7 +181,7 @@ feature -- Processing
 			copy_class("db_shared")
 			notify_user("Importing db_action_dyn ...")
 			copy_class("db_action_dyn")
-			if state_information.example then
+			if wizard_information.example then
 				copy_class("estore_example")
 				copy_class("estore_root")
 			end
@@ -197,13 +201,13 @@ feature -- Processing
 			fi.read_stream(fi.count)
 			s := fi.last_string
 			new_s := clone (s)
-			if state_information.is_oracle then
+			if wizard_information.is_oracle then
 				new_s.replace_substring_all("<FL_HANDLE>", "ORACLE")
 			else
 				new_s.replace_substring_all("<FL_HANDLE>", "ODBC")
 			end
 			fi.close
-			Create f_name.make_from_string(state_information.location)
+			Create f_name.make_from_string(wizard_information.location)
 			f_name.extend("database_manager")
 			f_name.add_extension("e")
 			Create fi.make_open_write(f_name)
@@ -229,7 +233,7 @@ feature -- Processing
 			fi.read_stream(fi.count)
 			s := fi.last_string
 			fi.close
-			Create f_name.make_from_string(state_information.location)
+			Create f_name.make_from_string(wizard_information.location)
 			f_name.extend(name)
 			f_name.add_extension("e")
 			Create fi.make_open_write(f_name)
@@ -256,7 +260,7 @@ feature -- Processing
 			new_s := clone (s)
 			new_s.replace_substring_all("<FL_PATH>", path_root_class)
 			fi.close
-			Create f_name.make_from_string(state_information.location)
+			Create f_name.make_from_string(wizard_information.location)
 			f_name.extend(name)
 			f_name.add_extension("Ace")
 			Create fi.make_open_write(f_name)
@@ -271,10 +275,10 @@ feature -- Processing
 			fi: PLAIN_TEXT_FILE
 		do
 			notify_user("Generating Ace File...")
-			if state_information.is_oracle then
-				copy_ace("Ace_mswin_oracle", state_information.location)
+			if wizard_information.is_oracle then
+				copy_ace("Ace_mswin_oracle", wizard_information.location)
 			else
-				copy_ace("Ace_mswin_odbc", state_information.location)
+				copy_ace("Ace_mswin_odbc", wizard_information.location)
 			end
 		end
 
@@ -290,7 +294,7 @@ feature -- Processing
 			notify_user("Generating Example...")
 			Create example_generator.make(repositories)
 			s := example_generator.result_string
-			Create f1.make_from_string(state_information.location)
+			Create f1.make_from_string(wizard_information.location)
 			f_name := clone(f1)
 			f_name.extend("estore_example")
 			f_name.add_extension("e")
@@ -299,7 +303,7 @@ feature -- Processing
 			fi.close
 			
 			notify_user("Generating Root Class...")
-			Create f1.make_from_string(state_information.location)
+			Create f1.make_from_string(wizard_information.location)
 			f_name := clone(f1)
 			f_name.extend("estore_root")
 			f_name.add_extension("e")
@@ -308,9 +312,9 @@ feature -- Processing
 			s := fi.last_string
 			fi.close
 			Create root_generator.make(example_generator,s,
-					state_information.username,
-					state_information.password,
-					state_information.data_source)
+					wizard_information.username,
+					wizard_information.password,
+					wizard_information.data_source)
 			s := root_generator.result_string
 			Create fi.make_open_write(f_name)
 			fi.put_string(s)

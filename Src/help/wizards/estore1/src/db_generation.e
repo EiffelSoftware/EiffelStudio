@@ -35,7 +35,7 @@ feature -- basic Operations
 		do 
 			Create generate_all_tables.make_with_text("Generate All tables/views")
 			Create generate_specific_tables.make_with_text("Generate Specific tables/views")
-			if state_information.generate_every_table then
+			if wizard_information.generate_every_table then
 				generate_all_tables.enable_select
 			else
 				generate_specific_tables.enable_select
@@ -54,9 +54,9 @@ feature -- basic Operations
 		do
 			precursor
 			if generate_all_tables.is_selected then
-				proceed_with_new_state(Create {DB_GENERATION_TYPE}.make(state_information))
+				proceed_with_new_state(Create {DB_GENERATION_TYPE}.make(wizard_information))
 			else
-				proceed_with_new_state(Create {DB_TABLE_SELECTION}.make(state_information))
+				proceed_with_new_state(Create {DB_TABLE_SELECTION}.make(wizard_information))
 			end
 		end
 
@@ -73,8 +73,8 @@ feature -- basic Operations
 			else
 				Create table_list.make
 			end
-			state_information.set_generate_all_table(generate_all_tables.is_selected)
-			state_information.set_table_list(table_list)
+			wizard_information.set_generate_all_table(generate_all_tables.is_selected)
+			wizard_information.set_table_list(table_list)
 			precursor
 		end
 

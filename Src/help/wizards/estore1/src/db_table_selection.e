@@ -69,24 +69,24 @@ feature -- basic Operations
 			it: EV_LIST_ITEM
 		do
 			from
-				state_information.table_list.start
+				wizard_information.table_list.start
 			until
-				state_information.table_list.after
+				wizard_information.table_list.after
 			loop
-				Create it.make_with_text(state_information.table_list.item.table_name)
-				it.set_data(state_information.table_list.item)
+				Create it.make_with_text(wizard_information.table_list.item.table_name)
+				it.set_data(wizard_information.table_list.item)
 				selected_items.extend(it)				
-				state_information.table_list.forth
+				wizard_information.table_list.forth
 			end
 		end
 
-	unselect_item(i: INTEGER;it: EV_LIST_ITEM) is
+	unselect_item(it: EV_LIST_ITEM) is
 		do
 			selected_items.prune(it)
 			unselected_items.extend(it)
 		end
 
-	select_item(i: INTEGER;it: EV_LIST_ITEM) is
+	select_item(it: EV_LIST_ITEM) is
 		do
 			unselected_items.prune(it)
 			selected_items.extend(it)
@@ -96,7 +96,7 @@ feature -- basic Operations
 			-- Process user entries
 		do 
 			precursor
-			proceed_with_new_state(Create {DB_GENERATION_TYPE}.make(state_information))
+			proceed_with_new_state(Create {DB_GENERATION_TYPE}.make(wizard_information))
 		end
 
 	update_state_information is
@@ -115,7 +115,7 @@ feature -- basic Operations
 				li.extend(cl_name)
 				selected_items.forth
 			end
-			state_information.set_table_list(li)
+			wizard_information.set_table_list(li)
 			precursor
 		end
 

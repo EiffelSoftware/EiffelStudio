@@ -86,7 +86,7 @@ feature -- Basic operation
 feature -- Root window
 
 	main_window: EV_WINDOW_IMP is
-			-- Current main window of the application
+			-- Current main window of the application.
 		once
 			Result ?= root_windows.first.implementation
 		end
@@ -269,7 +269,7 @@ feature {NONE} -- Inapplicable
 feature {NONE} -- Externals
 
 	c_sleep (v: INTEGER) is
-			-- Sleep for `v' milliseconds
+			-- Sleep for `v' milliseconds.
 		external
 			"C | <winbase.h>"
 		alias
@@ -277,7 +277,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_post_quit_message (exit_code: INTEGER) is
-			-- SDK PostQuitMessage
+			-- SDK PostQuitMessage.
 		external
 			"C [macro <wel.h>] (int)"
 		alias
@@ -286,7 +286,7 @@ feature {NONE} -- Externals
 
 end -- class EV_APPLICATION_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -300,13 +300,16 @@ end -- class EV_APPLICATION_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/04/24 17:43:19  rogers
+--| Comments, formatting.
+--|
 --| Revision 1.33  2000/04/20 18:26:54  brendel
 --| Cleanup.
 --| Application quits when every window is destroyed.
@@ -362,7 +365,10 @@ end -- class EV_APPLICATION_IMP
 --| Added `once_idle_actions', called and cleared on idle.
 --|
 --| Revision 1.20  2000/02/29 19:21:27  rogers
---| Launch now sets the root_window to the main_window. Set root_window now sets the application main_window. Remove window has been altered, see diffs, and destroy now sets destroy just called to True and is_destroyed to True.
+--| Launch now sets the root_window to the main_window.
+--| Set root_window now sets the application main_window.
+--| Remove window has been altered, see diffs, and destroy now sets
+--|destroy just called to True and is_destroyed to True.
 --|
 --| Revision 1.18  2000/02/19 05:44:59  oconnor
 --| released

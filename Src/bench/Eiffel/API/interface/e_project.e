@@ -481,9 +481,9 @@ feature -- Update
 		do
 			is_compiling_ref.set_item (True)
 			Workbench.recompile
-			Comp_system.prepare_before_saving (True)
 
 			if successful then
+				Comp_system.prepare_before_saving (True)
 				if not (Compilation_modes.is_quick_melt and then not freezing_occurred) then
 					save_project
 				end

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			implementation.iterate
 		end
 
-feature	-- Access
+feature -- Access
 	
 	first_window: EV_UNTITLED_WINDOW is
 			-- Must be defined as a once funtion to create

@@ -24,6 +24,11 @@ feature {NONE}
 			Result := pixmap_file_content ("class.bm");
 		end;
 
+	bm_Class_dot: PIXMAP is
+		do
+			Result := pixmap_file_content ("class_dot.bm");
+		end;
+
 	bm_Class_icon: PIXMAP is
 		do
 			Result := pixmap_file_content ("class_icon.bm");
@@ -214,6 +219,11 @@ feature {NONE}
 			Result := pixmap_file_content ("explain.bm");
 		end;
 
+	bm_Explain_dot: PIXMAP is
+		do
+			Result := pixmap_file_content ("explain_dot.bm");
+		end;
+
 	bm_Explain_icon: PIXMAP is
 		do
 			Result := pixmap_file_content ("expl_icon.bm");
@@ -259,6 +269,11 @@ feature {NONE}
 			Result := pixmap_file_content ("object.bm");
 		end;
 
+	bm_Object_dot: PIXMAP is
+		do
+			Result := pixmap_file_content ("object_dot.bm");
+		end;
+
 	bm_Object_icon: PIXMAP is
 		do
 			Result := pixmap_file_content ("obj_icon.bm");
@@ -302,6 +317,11 @@ feature {NONE}
 	bm_Routine: PIXMAP is
 		do
 			Result := pixmap_file_content ("routine.bm");
+		end;
+
+	bm_Routine_dot: PIXMAP is
+		do
+			Result := pixmap_file_content ("rout_dot.bm");
 		end;
 
 	bm_Routine_icon: PIXMAP is
@@ -389,6 +409,11 @@ feature {NONE}
 			Result := pixmap_file_content ("showcustom.bm");
 		end;
 
+	bm_Showcustom_dot: PIXMAP is
+		do
+			Result := pixmap_file_content ("scust_dot.bm");
+		end;
+
 	bm_Showdeferreds: PIXMAP is
 		do
 			Result := pixmap_file_content ("showdeferreds.bm");
@@ -454,6 +479,11 @@ feature {NONE}
 			Result := pixmap_file_content ("system.bm");
 		end;
 
+	bm_System_dot: PIXMAP is
+		do
+			Result := pixmap_file_content ("system_dot.bm");
+		end;
+
 	bm_System_icon: PIXMAP is
 		do
 			Result := pixmap_file_content ("system_icon.bm");
@@ -509,7 +539,7 @@ feature {NONE}
 			full_path.append (fn);
 			!!Result.make;
 			Result.read_from_file (full_path);
-			if not Result.is_valid then
+			if not Result.last_operation_correct then
 				io.error.putstring ("Warning: cannot read pixmap file ");
 				io.error.putstring (full_path);
 				io.error.new_line;

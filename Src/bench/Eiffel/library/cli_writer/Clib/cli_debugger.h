@@ -18,6 +18,7 @@ extern EIF_BOOLEAN dbg_is_synchronizing();
 extern void dbg_init_synchro();
 extern void dbg_notify_from_estudio(char*);
 extern void dbg_terminate_synchro ();
+extern void dbg_disable_next_estudio_notification();
 
 extern void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINTER estudio_cb_event);
 

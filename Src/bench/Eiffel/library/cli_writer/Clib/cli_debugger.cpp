@@ -114,17 +114,22 @@ rt_private BOOL dbg_start_timer_requested;
 #define LOCKED_DBG_START_TIMER_REQUEST LOCKED_SET_VALUE(dbg_start_timer_requested, true)
 #define LOCKED_DBG_START_TIMER_RESET LOCKED_SET_VALUE(dbg_start_timer_requested, false)
 
-rt_private bool dbg_estudio_notification_processing;
+rt_private BOOL dbg_estudio_notification_enabled;
+#define ESTUDIO_NOTIFICATION_ENABLED LOCKED_VALUE(dbg_estudio_notification_enabled)
+#define ENABLE_ESTUDIO_NOTIFICATION LOCKED_SET_VALUE(dbg_estudio_notification_enabled, true)
+#define DISABLE_ESTUDIO_NOTIFICATION LOCKED_SET_VALUE(dbg_estudio_notification_enabled, false)
+
+rt_private BOOL dbg_estudio_notification_processing;
 #define INSIDE_ESTUDIO_NOTIFICATION LOCKED_VALUE(dbg_estudio_notification_processing)
 #define OUTSIDE_ESTUDIO_NOTIFICATION !INSIDE_ESTUDIO_NOTIFICATION
 #define LOCKED_ES_NOTIFICATION_START LOCKED_SET_VALUE(dbg_estudio_notification_processing, true)
 #define LOCKED_ES_NOTIFICATION_STOP LOCKED_SET_VALUE(dbg_estudio_notification_processing, false)
 
-rt_private bool dbg_estudio_evaluation_processing;
+rt_private BOOL dbg_estudio_evaluation_processing;
 #define LOCKED_ES_EVALUATION_START LOCKED_SET_VALUE(dbg_estudio_evaluation_processing, true)
 #define LOCKED_ES_EVALUATION_STOP LOCKED_SET_VALUE(dbg_estudio_evaluation_processing, false)
 
-rt_private bool dbg_callback_processing;
+rt_private BOOL dbg_callback_processing;
 #define LOCKED_CALLBACK_PROCESSING LOCKED_VALUE(dbg_callback_processing)
 #define LOCKED_CALLBACK_START LOCKED_SET_VALUE(dbg_callback_processing, true)
 #define LOCKED_CALLBACK_STOP LOCKED_SET_VALUE(dbg_callback_processing, false)
@@ -150,6 +155,7 @@ rt_private void reset_variables() {
 	LOCKED_DBG_KEEP_SYNCHRO;
 	LOCKED_DBG_EXIT_PROCESS_RESET;
 	LOCKED_ES_NOTIFICATION_STOP;
+	ENABLE_ESTUDIO_NOTIFICATION;
 }
 
 #define INSIDE_ESTUDIO_THREAD (estudio_thread_id == GetCurrentThreadId())
@@ -347,7 +353,7 @@ rt_private void dbg_suspend_estudio_thread () {
 rt_private void dbg_resume_estudio_thread () {
 	DWORD result;
 	result = ResumeThread (estudio_thread_handle);
-	ENSURE(result == 1, "Error during dbg_resume_estudio_thread");
+	ENSURE((result != (DWORD) -1), "Error during dbg_resume_estudio_thread");
 }
 #define DBG_INIT_CRITICAL_SECTION	dbg_init_critical_section ()
 #define DBG_INIT_ESTUDIO_THREAD_HANDLE dbg_init_estudio_thread_handle ()
@@ -391,6 +397,13 @@ rt_public void dbg_terminate_synchro () {
 	/* Release dbg in case dbg is waiting and stucked */
 	LOCKED_DBG_STATE_SET_VALUE (2); 
 	DBGTRACE("[Synchro|ES] Terminate Synchro: done");
+}
+rt_public void dbg_disable_next_estudio_notification () {
+	/* Do not process next eStudio notification */
+	DBGTRACE("[Synchro|ES] Skip next notification: start");
+	REQUIRE (LOCKED_DBG_TIMER_IS_NOT_SET, "timer not zero")
+	DISABLE_ESTUDIO_NOTIFICATION;
+	DBGTRACE("[Synchro|ES] Skip next notification: done");
 }
 
 rt_public void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINTER estudio_cb_event) {
@@ -509,12 +522,19 @@ rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, 
 		dbg_stop_timer ();
 		DBGTRACE("[ES] will give hand to dbg and SUSPEND itself");
 //<2>---< give hand to dbg >-------------------------------------//
+		ENABLE_ESTUDIO_NOTIFICATION;
 		LOCKED_DBG_STATE_INCREMENT;
 		DBG_SUSPEND_ESTUDIO_THREAD;
 //<4>------------------------------------------------------------//
-		DBGTRACE("[Synchro|ES] Notify EC : START");
-		DBG_NOTIFY_ESTUDIO;
-		DBGTRACE("[Synchro|ES] Notify EC : END");
+		if (ESTUDIO_NOTIFICATION_ENABLED) {
+			DBGTRACE("[Synchro|ES] Notify EC : START");
+			DBG_NOTIFY_ESTUDIO;
+			DBGTRACE("[Synchro|ES] Notify EC : END");
+#ifdef DBGTRACE_ENABLED
+		} else {
+			DBGTRACE("[Synchro|ES] Notify EC : Skipped");
+#endif
+		}
 
 		if (LOCKED_DBG_STATE_IS_EQUAL (4)) {
 			DBGTRACE("[ES] exit timer action and unlock dbg ");
@@ -656,8 +676,8 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 	REQUIRE(!LOCKED_CALLBACK_PROCESSING, "No other callback processing")
 	LOCKED_DBG_CB_ID_SET_VALUE (callback_id);
-	LOCKED_CALLBACK_START;
 	DBGTRACE2("[CB] ENTER CALLBACK = ", LOCKED_DBG_CB_NAME);
+	LOCKED_CALLBACK_START;
 	/* It is not possible to have 2 callbacks at the same time, 
 	 * since it is supposed to be in the same thread ...  */
 #ifdef DBGTRACE_ENABLED

@@ -182,20 +182,43 @@ feature -- Status report
 			Result := string_width ("W")
 		end
 
-	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
-			-- `Result' is [width, height] in pixels of `a_string' in the
+	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- `Result' is [width, height, left_offset, right_offset] in pixels of `a_string' in the
 			-- current font, taking into account line breaks ('%N').
 		local
 			a_cs: EV_GTK_C_STRING
-			a_pango_layout: POINTER
-			a_width, a_height: INTEGER
+			a_pango_layout, ink_rect, log_rect: POINTER
+			log_x, log_y, log_width, log_height, ink_x, ink_y,  ink_width, ink_height, a_width, a_height, left_off, right_off: INTEGER
 		do
 			create a_cs.make (a_string)
 			a_pango_layout := App_implementation.pango_layout
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, -1)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (a_pango_layout, $a_width, $a_height)
-			Result := [a_width, a_height]
+			
+			ink_rect := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
+			log_rect := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_extents (a_pango_layout, ink_rect, log_rect)
+			
+			log_x := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_x (log_rect)
+			log_y := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_y (log_rect)
+			log_width := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (log_rect)
+			log_height := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_height (log_rect)
+			
+			ink_x := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_x (ink_rect)
+			ink_y := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_y (ink_rect)
+			ink_width := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (ink_rect)
+			ink_height := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_height (ink_rect)
+			
+			a_width := log_width
+			a_height := log_height
+			
+			if ink_width > 0 then
+				left_off := ink_x
+				right_off := ink_width - log_width
+			end
+			Result := [a_width.max (1), a_height.max (1), left_off, right_off]
+			ink_rect.memory_free
+			log_rect.memory_free
 		end
 
 	string_width (a_string: STRING): INTEGER is
@@ -281,7 +304,7 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 	pango_height: INTEGER is
 			-- Font height in Pango Units
 		do
-			Result := height * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+			Result := app_implementation.point_value_from_pixel_value (height) * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
 		end
 
 	pango_style: INTEGER is

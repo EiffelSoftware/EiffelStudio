@@ -33,6 +33,7 @@ cluster
 		yacc:				"$BENCH/Eiffel/yacc";
 		const:				"$BENCH/Eiffel/const";
 		error:				"$BENCH/Eiffel/error";
+		struct_text:		"$BENCH/Eiffel/structured_text";
 
 	-- Lace compilation:
 

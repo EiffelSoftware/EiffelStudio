@@ -164,8 +164,11 @@ feature -- Access
 			-- Dynamic type of `object'
 		require
 			object_not_void: object /= Void
+		local
+			l_obj: SYSTEM_OBJECT
 		do
-			Result := get_type_index (object.get_type)
+			l_obj := object
+			Result := get_type_index (l_obj.get_type)
 		end
 
 	generic_dynamic_type (object: ANY; i: INTEGER): INTEGER is

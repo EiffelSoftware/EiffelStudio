@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <signal.h>
 
+#include "eif_project.h"
 #include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
@@ -52,7 +53,6 @@
 
 #include "eif_malloc.h"
 #include "eif_main.h"
-#include "eif_project.h"					/* for einit() */
 
 #define null (char *) 0					/* Null pointer */
 
@@ -128,7 +128,7 @@ rt_public void once_init (void)
 
 	EIF_once_count = EIF_bonce_count;
 
-	system_mod_init ();
+	egc_system_mod_init ();
 
 	/* Allocate room for once values */
 
@@ -242,13 +242,13 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 #ifdef WORKBENCH
 	xinitint();							/* Interpreter initialization */
-	dispatch = fdispatch;				/* Initialize run-time table pointers */
-	esystem = fsystem;
-	ecall = fcall;
-	eoption = foption;
-	co_table = fco_table;
-	eorg_table = forg_table;
-	pattern = fpattern;
+	dispatch = egc_fdispatch;				/* Initialize run-time table pointers */
+	esystem = egc_fsystem;
+	ecall = egc_fcall;
+	eoption = egc_foption;
+	co_table = egc_fco_table;
+	eorg_table = egc_forg_table;
+	pattern = egc_fpattern;
 
 	/* Initialize dynamically computed variables (i.e. system dependent) like
 	 * 'zeroc' which is the melting temperature -- the last body id in the
@@ -257,7 +257,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	 * by the workbench (via winit).
 	 */
 
-	einit();							/* Various static initializations */
+	egc_einit();							/* Various static initializations */
 	fcount = scount;
 
 	{
@@ -295,8 +295,8 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	 * Initialize the finalized system with the static data structures.
 	 * These may be updated later on by loading DLE system.
 	 */
-	esystem = fsystem;
-	co_table = fco_table;
+	esystem = egc_fsystem;
+	co_table = egc_fco_table;
 	nbref = fnbref;
 	esize = fsize;
 

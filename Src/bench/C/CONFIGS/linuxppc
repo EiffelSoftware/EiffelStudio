@@ -14,7 +14,8 @@ mtccflags='-pipe -DEIF_THREADS -DEIF_LINUXTHREADS'
 mtlibs='-lm -lpthread'
 mtsharedlibs='-lm -lpthread'
 
-optimize='-Wall -O3'
+warning_level='-Wall'
+optimize='-O3'
 wkoptimize='-O'
 
 start_test='if [ ! -f finished ] ; then'

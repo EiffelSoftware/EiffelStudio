@@ -13,6 +13,7 @@ mtccflags='-DEIF_THREADS -DEIF_POSIX_THREADS'
 mtlibs='-lm -lcompat -lpthread'
 mtsharedlibs='-lm -lcompat -lpthread'
 
+warning_level='-Wall'
 optimize='-O2 -m486'
 wkoptimize='-O'
 

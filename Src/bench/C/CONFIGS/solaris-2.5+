@@ -37,7 +37,8 @@ eiflib='finalized'
 wkeiflib='wkbench'
 suffix='.a'
 
-optimize='-Wall -O3'
+warning_level='-Wall'
+optimize='-O3'
 wkoptimize=''
 
 start_test='if [ ! -f finished ] ; then'

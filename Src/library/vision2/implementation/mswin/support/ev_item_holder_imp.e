@@ -1,5 +1,6 @@
 indexing
-	description: "EiffelVision item container. This class%
+	description:
+			" EiffelVision item container. This class%
 			% has been created to centralise the%
 			% implementation of several features for%
 			% EV_LIST_IMP and EV_MENU_ITEM_HOLDER"

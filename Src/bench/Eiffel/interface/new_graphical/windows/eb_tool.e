@@ -2,7 +2,7 @@ indexing
 	description:
 		"EiffelBench tool. Ancestor of all tools in the workbench, %
 		%providing dragging capabilities (transport). A tool is %
-		%composed of a panel and a tool bar"
+		%composed of a container and manager"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,8 +10,6 @@ deferred class
 	EB_TOOL 
 
 inherit
---	HELPABLE
-
 	SHARED_CONFIGURE_RESOURCES
 
 	SHARED_PLATFORM_CONSTANTS
@@ -25,8 +23,9 @@ inherit
 feature {NONE} -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
-			-- creates a new tool.
-			-- To insure atomicity of make, and avoid some problems during linking with manager,
+			-- Create a new tool with `man' as manager.
+			-- To ensure atomicity of make, and avoid some
+			-- problems during linking with manager,
 			-- this function does not call build_interface.
 		require
 			man_exists: man /= Void
@@ -43,7 +42,7 @@ feature {NONE} -- Initialization
 		end
 
 	init_commands is
-			-- initializes commands
+			-- Initialize commands.
 		do
 			create close_cmd.make (Current)
 			create exit_app_cmd
@@ -52,91 +51,56 @@ feature {NONE} -- Initialization
 feature {EB_TOOL_MANAGER} -- Initialization
 
 	build_interface is
-			-- build all the tool's widgets
+			-- Build all the tool's widgets.
 		deferred
 		ensure
-			contains_something: not container.destroyed
+			exists: not destroyed
 		end
 
 feature -- Tool Properties
 
 	parent: EV_CONTAINER
-			-- parent of Current.
+			-- Parent of Current
 
 	parent_window: EV_WINDOW
-			-- window where Current is.
+			-- Window where Current is
 
-	tool_name: STRING is 
-			-- Name given to the tool (its title, mostly)
+	default_name: STRING is 
+			-- Default name given to Current.
+			-- It is meant to be a constant.
 		deferred
+		ensure
+			valid_result: Result /= Void and then not Result.empty
 		end
-
---	save_cmd_holder: TWO_STATE_CMD_HOLDER is
-			-- The command to save the contents of Current.
---		do
---		end
-
-	menu_bar: EV_STATIC_MENU_BAR
-			-- Menu bar
-
---	edit_bar, format_bar: TOOLBAR
-			-- Main and format button bars
-			-- not implemented yet
 
 --	hole_button: EB_BUTTON_HOLE
 			-- Button to represent Current's default hole.
 			-- not implemented yet
 
---	icon_id: INTEGER is
---			-- Icon id for window (for windows)
---		do
---		end
-
-feature -- Access
-
---	resources: EB_PARAMETERS is
-			-- Resources for current tool
---		deferred
---		end
-
---	help_index: INTEGER is
---			-- Index of help file nmae
---		do
---		end
-
---	help_file_name: FILE_NAME is
---			-- Help file name
---		do
---		end
-
---	associated_help_widget: EV_CONTAINER is
---			-- Associated parent widget for help window
---		do
---			Result := parent
---		end
-
 feature -- Status report
 
 	title: STRING is
-			-- The title of the tool.
+			-- Title of the tool
 		do
 			Result := manager.tool_title (Current)
 		end
 
 	icon_name: STRING is
-			-- The title of the tool.
+			-- Name of the tool in minimized state
 		do
 			Result := manager.tool_icon_name (Current)
 		end
 
 	destroyed: BOOLEAN is
-			-- is Current destroyed?
+			-- Is Current destroyed?
 		do
 			Result := (container = Void) or else container.destroyed
 		end
 
 	shown: BOOLEAN is
 			-- Is Current shown on the screen?
+		require
+			exists: not destroyed
 		do
 			Result := container.shown
 		end
@@ -144,8 +108,13 @@ feature -- Status report
 
 feature -- Status setting
 
+	-- These features call the manager,
+	-- who decides the way they are executed.
+
 	show is
-			-- makes tool visible
+			-- Make tool visible.
+		require
+			exists: not destroyed
 		do
 			manager.show_tool (Current)
 		ensure
@@ -153,6 +122,9 @@ feature -- Status setting
 		end
 
 	raise is
+			-- Raise tool in front, bringing it into focus.
+		require
+			exists: not destroyed
 		do
 			manager.raise_tool (Current)
 		ensure
@@ -160,7 +132,9 @@ feature -- Status setting
 		end
 
 	hide is
-			-- hides tool
+			-- Hide tool.
+		require
+			exists: not destroyed
 		do
 			manager.hide_tool (Current)
 		ensure
@@ -168,7 +142,9 @@ feature -- Status setting
 		end
 
 	destroy is
-			-- Destroys tool
+			-- Destroy tool.
+		require
+			exists: not destroyed
 		do
 			manager.destroy_tool (Current)
 		ensure
@@ -178,7 +154,7 @@ feature -- Status setting
 	set_title (s: STRING) is
 			-- Set parent title to `s'.
 		require
-			s_non_void: s /= void
+			s_valid: s /= Void and then not s.empty
 		do
 			manager.set_tool_title (Current, s)
 		ensure
@@ -187,9 +163,9 @@ feature -- Status setting
 
 	set_icon_name (s: STRING) is
 			-- Set icon name to `s'.
-			-- icon name is shown just below the icon.
+			-- Icon name is shown just below the icon.
 		require
-			s_non_void: s /= void
+			s_valid: s /= Void and then not s.empty
 		do
 			manager.set_tool_icon_name (Current, s)
 		ensure
@@ -198,25 +174,34 @@ feature -- Status setting
 
 feature -- Resize
 
-	set_size (min_x, min_y: INTEGER) is
+	set_size (new_width, new_height: INTEGER) is
+			-- Resize tool to dimensions `new_width' and `new_height'.
+		require
+			exists: not destroyed
 		do
-			manager.set_tool_size (Current, min_x, min_y)
+			manager.set_tool_size (Current, new_width, new_height)
 		end
 
 	set_width (new_width: INTEGER) is
+			-- Set tool width to `new_width'.
+		require
+			exists: not destroyed
 		do
 			manager.set_tool_width (Current, new_width)
 		end
 
 	set_height (new_height: INTEGER) is
+			-- Set tool height to `new_height'.
+		require
+			exists: not destroyed
 		do
 			manager.set_tool_height (Current, new_height)
 		end
 
 feature {EB_TOOL_MANAGER} -- Widget Implementation
 
-	-- tool display utilities.
-	-- these features can only be used by a tool manager
+	-- Tool display utilities.
+	-- These features can only be used by a tool manager
 
 	show_imp is
 			-- Show Current on the screen.
@@ -227,7 +212,7 @@ feature {EB_TOOL_MANAGER} -- Widget Implementation
 		end
 
 	hide_imp is
-			-- Show Current on the screen.
+			-- Hide Current.
 		do
 			container.hide
 		ensure
@@ -247,7 +232,7 @@ feature {EB_TOOL_MANAGER} -- Widget Implementation
 feature {NONE} -- Implementation
 
 	manager: EB_TOOL_MANAGER
-			-- object containing Current
+			-- Object containing Current
 
 	container: EV_CONTAINER is
 			-- Form representing Current
@@ -256,6 +241,7 @@ feature {NONE} -- Implementation
 		end
 
 	raise_grabbed_popup is
+			-- Raise tool
 		obsolete
 			"Use `raise' instead"
 		do
@@ -265,7 +251,10 @@ feature {NONE} -- Implementation
 feature {EB_TOOL_MANAGER} -- Commands
 
 	close_cmd: EB_CLOSE_TOOL_CMD
+		-- Command to close Current
+
 	exit_app_cmd: EB_EXIT_APPLICATION_CMD
+		-- Command to exit application.
 
 invariant
 	tool_has_manager: manager /= Void

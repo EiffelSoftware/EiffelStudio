@@ -85,6 +85,7 @@ extern "C" {
 #define EIF_COND_INIT(cond, msg)
 #define EIF_COND_CREATE(cond, msg)
 #define EIF_COND_WAIT(cond, mutex, msg)
+#define EIF_COND_WAIT_WITH_TIMEOUT(cond, mutex, timeout, msg)
 #define EIF_COND_BROADCAST(cond, msg)
 #define EIF_COND_SIGNAL(cond, msg)
 #define EIF_COND_DESTROY(cond, msg)
@@ -97,6 +98,11 @@ extern "C" {
     if (pthread_cond_init (pcond, NULL)) eraise (msg, EN_EXT)
 #define EIF_COND_WAIT(pcond, pmutex, msg) \
     if (pthread_cond_wait (pcond, pmutex)) eraise (msg, EN_EXT)
+#define EIF_COND_WAIT_WITH_TIMEOUT(pcond, pmutex, timeout, msg) \
+	struct timespec tspec; \
+	tspec.tv_sec = time(NULL) + a_timeout; \
+	tspec.tv_nsec = 0; \
+    if (pthread_cond_timedwait (pcond, pmutex, &tspec)) eraise (msg, EN_EXT)
 #define EIF_COND_BROADCAST(pcond, msg) \
     if (pthread_cond_broadcast (pcond)) eraise (msg, EN_EXT)
 #define EIF_COND_SIGNAL(pcond, msg) \
@@ -386,12 +392,13 @@ extern "C" {
 
 /* Tuning for condition variables */
 #ifndef EIF_NO_CONDVAR
-#define pthread_condattr_t      condattr_t
-#define pthread_cond_destroy    cond_destroy
-#define pthread_cond_init(a,b)  cond_init(a,USYNC_THREAD,b)
-#define pthread_cond_wait       cond_wait
-#define pthread_cond_signal     cond_signal
-#define pthread_cond_broadcast  cond_broadcast
+#define pthread_condattr_t      		condattr_t
+#define pthread_cond_destroy    		cond_destroy
+#define pthread_cond_init(a,b)  		cond_init(a,USYNC_THREAD,b)
+#define pthread_cond_wait       		cond_wait
+#define pthread_cond_timedwait  		cond_timedwait
+#define pthread_cond_signal     		cond_signal
+#define pthread_cond_broadcast  		cond_broadcast
 #endif  /* EIF_NO_CONDVAR */
 
 /* Thread attributes initialization macros */

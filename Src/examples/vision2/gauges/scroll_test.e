@@ -18,6 +18,7 @@ feature -- Initialization
 	bar: EV_MENU_BAR
 	file_menu, edit_menu, help_menu: EV_MENU
 	new_menu, save_menu, i1, i2, i3, i4: EV_MENU
+	exit_menu: EV_MENU_ITEM
 
 	prepare is
 		do
@@ -29,15 +30,17 @@ feature -- Initialization
 
 			create new_menu.make_with_text ("New")
 			file_menu.extend (new_menu)
-			file_menu.extend (create {EV_CHECK_MENU_ITEM}.make_with_text ("Open"))
+			file_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Open"))
 			--new_menu.extend (file_menu)
 
 			create save_menu.make_with_text ("Save")
 			file_menu.extend (save_menu)
-			save_menu.extend (create {EV_MENU}.make_with_text ("Really"))
-			save_menu.extend (create {EV_MENU}.make_with_text ("Nah"))
+			save_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Really"))
+			save_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Nah"))
 
-			file_menu.extend (create {EV_MENU}.make_with_text ("Exit"))
+			create exit_menu.make_with_text ("Exit")
+			file_menu.extend (exit_menu)
+			exit_menu.press_actions.extend (~on_exit)
 
 			create edit_menu.make_with_text ("Edit-a-bit-too-longggg")
 			bar.extend (edit_menu)
@@ -57,6 +60,11 @@ feature -- Initialization
 		--	save_menu.go_i_th (1)
 		--	save_menu.remove
 		--	save_menu.remove
+		end
+
+	on_exit is
+		do
+			first_window.destroy
 		end
 
 	first_window: EV_TITLED_WINDOW is

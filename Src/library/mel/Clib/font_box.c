@@ -25,7 +25,7 @@
 #include <Xm/Text.h>
 #include <Xm/SeparatoGP.h>
 #include <Xm/Frame.h>
-#include "macros.h"
+#include "eif_macros.h"
 
 #define AttachTop(wgt,off) XtVaSetValues((wgt),XmNtopAttachment,XmATTACH_FORM,XmNtopOffset,(off),NULL)
 #define AttachLeft(wgt,off) XtVaSetValues((wgt),XmNleftAttachment,XmATTACH_FORM,XmNleftOffset,(off),NULL)

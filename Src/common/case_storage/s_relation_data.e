@@ -32,8 +32,8 @@ feature -- Setting
 			links_set: f_rom = f and then t_o = t
 		end;
 
-	set_generics (gg : LINKED_LIST [ S_GENERIC_DATA ] ) is
-		-- Set the list of generics ...
+	set_generics (gg: LINKED_LIST [S_GENERIC_DATA]) is
+			-- Set the list of generics ...
 		require 
 			gg /= Void
 		do

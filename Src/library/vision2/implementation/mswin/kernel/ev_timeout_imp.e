@@ -74,8 +74,8 @@ feature -- Status setting
 			-- Destroy actual object.
 		do
 			internal_timeout.remove_timeout (id)
-			command := Void
-			argument := Void
+		--|FIXME	command := Void
+		--|FIXME	argument := Void
 		end
 
 feature -- Element change
@@ -127,6 +127,9 @@ end -- class EV_TIMEOUT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/19 07:34:49  oconnor
+--| removed old commandstuff
+--|
 --| Revision 1.6  2000/02/19 07:03:52  oconnor
 --| removed command
 --|

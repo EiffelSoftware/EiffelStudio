@@ -202,7 +202,7 @@ feature -- Warning messages
 
 	w_Class_not_in_universe: STRING is "Class is not in the universe"
 
-	w_Clear_breakpoints: STRING is "Do you wish to clear the stop points?"
+	w_Clear_breakpoints: STRING is "Forget all stop points?"
 
 	w_Default_ace_file_not_exist (f_name: STRING): STRING is
 			-- Error message when the Ace file does not exist.

@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			a_file_name.to_lower
 			if not retried then
 				create a_file.make (a_file_name)
-				if a_file.exists then
+				if a_file.exists and is_overwritable (a_file_name) then
 					a_string := clone (message_output.File_already_exists)
 					a_string.append (Colon)
 					a_string.append (Space)
@@ -129,6 +129,16 @@ feature {NONE} -- Implementation
 				Result.head (an_index)
 			end
 			Result.append (Backup_file_extension)
+		end
+
+	is_overwritable (a_file_name: STRING): BOOLEAN is
+			-- Should file `a_file_name' be overwritten?
+		local
+			lower_case_implemented_coclass_extension: STRING
+		do
+			lower_case_implemented_coclass_extension := clone (implemented_coclass_extension)
+			lower_case_implemented_coclass_extension.to_lower
+			Result := not a_file_name.substring (a_file_name.count - implemented_coclass_extension.count - 1, a_file_name.count - 2).is_equal (lower_case_implemented_coclass_extension)
 		end
 
 end -- class WIZARD_WRITER

@@ -2,13 +2,13 @@ class
 	CACHE_HISTORY [G]
 
 inherit
-	ARRAY [G]
-		rename
-			count as count_array,
-			make as make_array
-		redefine 
-			wipe_out, clear_all
-		end
+		ARRAY[G]
+			rename
+				count as count_array,
+				make as make_array,
+				wipe_out as array_wipe_out,
+				clear_all as array_clear_all
+			end
 
 creation
 	make
@@ -67,6 +67,8 @@ feature
 
 	add (e: G) is
 			-- Add a new element in the history
+		require
+			non_void_arguement:	e /= Void
 		local
 			new_one: INTEGER
 		do
@@ -95,6 +97,8 @@ feature
 				to_remove := item (new_one)
 				put (e, new_one)
 			end
+		ensure
+			
 		end
 			
 	make_younger (i: INTEGER) is
@@ -156,10 +160,22 @@ feature
 		end
 
 	wipe_out, clear_all is
+		local
+			int_array: ARRAY [INTEGER]
+			i: INTEGER
 		do
 			count := 0
 			younger := -1
 			older := -1
+			from
+				int_array := free_cells
+			until
+					i = size
+			loop
+					int_array.put (i, i)
+					i := i + 1
+			end
+			to_remove := Void
 		end	
 		
 	set_item (e: G; i: INTEGER) is
@@ -168,6 +184,10 @@ feature
 			put (e, i)
 		end			
 
+invariant
+	older_good: older >= -1 and older <= size
+	younger_good: younger >= -1 and younger <= size
+	count_good: count >= 0 and count <= size
 end
 
 

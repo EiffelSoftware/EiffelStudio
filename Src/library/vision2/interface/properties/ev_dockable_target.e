@@ -1,5 +1,11 @@
 indexing
-	description: "Objects that ..."
+	description: "[
+		Objects that allow dockable sources to be inserted as part of the
+		dockable mechanism. Use `enable_docking' to permit sources to be dropped,
+		and `veto_dock_function' to restrict which sources will be accepted. If a source
+		is rejected by the veto function, then the parent structure will be explored until
+		there are no more parents, or the source being transported is accepted.
+		]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,8 +48,10 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.is_docking_enabled
 		end
+		
+feature -- Status setting
 
-	enable_docking is
+	enable_docking is 
 			-- Ensure `is_docking_enabled' is True.
 		require
 			not_destroyed: not is_destroyed
@@ -78,8 +86,5 @@ feature -- Access
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_DOCKABLE_TARGET_I
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end -- class EV_DOCKABLE_TARGET

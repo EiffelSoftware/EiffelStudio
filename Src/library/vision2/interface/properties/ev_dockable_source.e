@@ -1,6 +1,9 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "[
+		Objects that represent the source of a dockable transport. The dockable
+		mechanism allows a component to be dragged by the user to an EV_DOCKABLE_TARGET
+		that has been enabled to receive transport.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +24,8 @@ inherit
 feature -- Status report
 
 	is_dockable: BOOLEAN is		
-			-- Is `Current' dockable
+			-- Is `Current' dockable?
+			-- If `True', then may be dragged. 
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -36,7 +40,6 @@ feature -- Status report
 			-- If `Void', `Current' is dragged.
 		require
 			not_destroyed: not is_destroyed
-			-- has current
 		do
 			Result := implementation.real_source
 		end
@@ -93,7 +96,7 @@ feature -- Status setting
 		do
 			implementation.remove_real_source
 		ensure
-			no_parent_container: real_source = Void
+			real_source_void: real_source = Void
 		end
 		
 	enable_external_docking is
@@ -151,8 +154,5 @@ feature -- Contract support
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_DOCKABLE_SOURCE_I
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end -- class EV_DOCKABLE_

@@ -56,7 +56,7 @@ interface,,,,,,,
 ,2,"Display a real splash screen at start-up, both on Windows and Unix",Xavier,INT0051
 ,1,Let the user create a class outside existing clusters?,Julian,INT0052
 ,3,Use `append' on Vision2 lists and trees instead of `extend' to help GTK optimize things,Ian,INT0053
-
+,4,Enable user to define their own command. Where the command should contain the name of the command to launch and where with some place holders filled by EiffelStudio (such as $target and others…),Paul Crismer,INT0054
 
 
 

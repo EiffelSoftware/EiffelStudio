@@ -118,7 +118,7 @@ feature -- Access
 				Result := Ev_drawing_mode_copy
 			elseif wel_drawing_mode = R2_xorpen then
 				Result := Ev_drawing_mode_xor
-			elseif wel_drawing_mode = R2_notcopypen then
+			elseif wel_drawing_mode = R2_not then
 				Result := Ev_drawing_mode_invert
 			elseif wel_drawing_mode = R2_maskpen then
 				Result := Ev_drawing_mode_and
@@ -201,7 +201,7 @@ feature -- Element change
 			when Ev_drawing_mode_xor then
 				wel_drawing_mode := R2_xorpen
 			when Ev_drawing_mode_invert then
-				wel_drawing_mode := R2_notcopypen
+				wel_drawing_mode := R2_not
 			when Ev_drawing_mode_and then
 				wel_drawing_mode := R2_maskpen
 			when Ev_drawing_mode_or then
@@ -756,6 +756,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/14 19:41:20  brendel
+--| Replaced R2_notcopypen with R2_not.
+--|
 --| Revision 1.21  2000/02/24 05:05:19  pichery
 --| Efficiency improvement. `set_font' do not copy the content of the font
 --| passed in parameter anymore. Now we do a direct assignment.

@@ -14,9 +14,7 @@ feature -- High level
 		local
 			l_result: INTEGER
 		once
---			l_result := com_initialize
---			l_result := com_initialize_multithreaded
-			l_result := com_initialize_apartmentthreaded
+			l_result := com_initialize_multithreaded
 			check
 				call_succeed: l_result = com_S_OK or else l_result = com_S_FALSE
 			end

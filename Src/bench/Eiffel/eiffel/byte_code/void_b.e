@@ -24,8 +24,11 @@ feature -- Access
 
 feature -- Status report
 
-	is_simple_expr, is_predefined: BOOLEAN is True
-			-- Void value is a simple expression and is predefined
+	is_simple_expr: BOOLEAN is True
+			-- Void is a simple expression
+			
+	is_predefined: BOOLEAN is False
+			-- Void is not predefined
 
 	used (r: REGISTRABLE): BOOLEAN is
 			-- Is register `r' used in local or forthcomming dot calls ?

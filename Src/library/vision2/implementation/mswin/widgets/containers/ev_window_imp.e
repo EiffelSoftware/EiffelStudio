@@ -868,12 +868,21 @@ feature {EV_ANY_I} -- Implementation
 			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 			an_item_imp: EV_ITEM_IMP
 			sensitive: EV_SENSITIVE
+			combo_field: EV_INTERNAL_COMBO_FIELD_IMP
 		do	
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
 			wel_window := wel_point.window_at
 			if wel_window /= Void then
 				widget_imp ?= wel_window
+				if widget_imp = Void then
+					-- We must now check for an internal combo field, and 
+					-- use its parent as the widget.
+					combo_field ?= wel_window
+					if combo_field /= Void then
+						widget_imp := combo_field.parent
+					end
+				end
 				if widget_imp /= Void then
 						--| We only need to perform further processing if the pointer
 						--| button matches the type of transport of `widget_imp'.

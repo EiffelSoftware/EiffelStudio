@@ -1,6 +1,12 @@
 #ifndef _rt_gen_types_h_
 #define _rt_gen_types_h_
 
+#include "eif_eiffel.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*------------------------------------------------------------------*/
 /* Constant values for special type                                 */
 /* You must also update SHARED_GEN_CONF_LEVEL after adding          */
@@ -54,6 +60,12 @@
 
 /*------------------------------------------------------------------*/
 
+extern char *eif_typename (int16);
+extern int  eif_typename_len (int16);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

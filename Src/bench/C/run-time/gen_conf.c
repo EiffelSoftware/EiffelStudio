@@ -313,8 +313,6 @@ rt_public int eifthd_gen_conf (int16, int16);
 #endif
 /*------------------------------------------------------------------*/
 
-rt_private char *eif_typename (int16);
-rt_private int  eif_typename_len (int16);
 rt_private void eif_create_typename (int16, char*);
 rt_private EIF_GEN_DER *eif_new_gen_der(long, int16*, int16, char, char, int16);
 rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16, int16);
@@ -2567,7 +2565,7 @@ rt_private void eif_expand_tables(int new_size)
 /* ATTENTION: kill the previous 'attention' comment.                */
 /*------------------------------------------------------------------*/
 
-rt_private char *eif_typename (int16 dftype)
+rt_shared char *eif_typename (int16 dftype)
 {
 	/* Not MT-safe. */
 	EIF_GEN_DER *gdp;
@@ -2760,7 +2758,7 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 /* dftype : full type id; RTUD(yes)                                 */
 /*------------------------------------------------------------------*/
 
-rt_private int eif_typename_len (int16 dftype)
+rt_shared int eif_typename_len (int16 dftype)
 {
 	EIF_GEN_DER *gdp;
 	int16       *gp, i, len, dtype;

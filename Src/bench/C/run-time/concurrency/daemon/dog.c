@@ -14,7 +14,7 @@ EIF_INTEGER  child;
 int wait_sig_from_child = 0;
 char has_got_a_chd_signal = 0;
 
-main()
+main(int argc, char ** argv, char ** envp)
 {
 	int csock;
 	char execfile[MAX_EXEC_FILE_LEN+1];
@@ -87,7 +87,10 @@ main()
 	setbuf(stdout,0);
 	setbuf(stderr,0);
 */
-	myportnum = SCOOP_DOG_PORT;
+	if (argc > 1)
+		myportnum = atoi(argv[1]);
+	else
+		myportnum = SCOOP_DOG_PORT;
 
 	/* Create socket from which to receive requests */
 	sock=socket(AF_INET,SOCK_STREAM,0);
@@ -463,7 +466,7 @@ printf("user=<%s>, Dir=<%s>, cmdline=<%s> cmdlinelen=%d\n", usrname, execdir, cm
 			}
 
 			int_val = c_get_host_name(hostname, HOSTNAME_LEN); 
-			sprintf(message, "Detected Crash Happened Here: \n    on host <%s> \nError Message:\n    DAEMON can't create separate object from class <%s>(Error No: %d)\nby executing file: <%s> in directory: <%s>.\n    Please check the configure file on the host to make sure that\nthe executable file exists in the directory.", hostname, descriptor[index][4], errno, execfile, execdir);
+			sprintf(message, "Detected Crash Happened Here: \n    on host <%s> \nError Message:\n    DAEMON can't create separate object from class <%s>(Error No: %d)\nby executing file: <%s> in directory: <%s>.\n    Please check the configure file on the host to make sure that the executable\nfile exists in the directory and can be executed on the host.", hostname, descriptor[index][4], errno, execfile, execdir);
 			p_len  = strlen(message);
 			p_type = STRING_TYPE;
 			if (dog_send_data(csock, &p_type, message, &p_len)) {
@@ -542,7 +545,7 @@ errno = 0;
 			j = dog_send_command(csock, REPORT_ERROR, 1);
 
 			int_val = c_get_host_name(hostname, HOSTNAME_LEN); 
-			sprintf(message, "Detected Crash Happened Here: \n    on host <%s> \nError Message:\n    DAEMON can't create separate object from class <%s>(Error No: %d)\nby executing file: <%s> in directory: <%s>.\n    Please check the configure file on the host to make sure that\nthe executable file exists in the directory.", hostname, descriptor[index][4], errno, execfile, execdir);
+			sprintf(message, "Detected Crash Happened Here: \n    on host <%s> \nError Message:\n    DAEMON can't create separate object from class <%s>(Error No: %d)\nby executing file: <%s> in directory: <%s>.\n    Please check the configure file on the host to make sure that the executable\nfile exists in the directory and can be executed on the host.", hostname, descriptor[index][4], errno, execfile, execdir);
 			p_len  = strlen(message);
 			p_type = STRING_TYPE;
 			j = dog_send_data(csock, &p_type, message, &p_len);

@@ -1627,8 +1627,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 	class_mapping: ARRAY [INTEGER]
 			-- Array of type token indexed by their `type_id'.
 
-
-	class_type_token (a_type_id: INTEGER): INTEGER is
+	actual_class_type_token (a_type_id: INTEGER): INTEGER is
 			-- Given `a_type_id' returns its associated metadata token.
 		require
 			valid_type_id: a_type_id > 0
@@ -1636,6 +1635,22 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			check
 				not_implemented: False
 			end
+		ensure
+			class_token_valid: Result /= 0
+		end
+
+	mapped_class_type_token (a_type_id: INTEGER): INTEGER is
+			-- Given `a_type_id' returns its associated metadata token
+			-- to be used in signatures and code generation token where
+			-- ANY needs to be mapped into System.Object.
+		require
+			valid_type_id: a_type_id > 0
+		do
+			check
+				not_implemented: False
+			end
+		ensure
+			class_token_valid: Result /= 0
 		end
 
 	signatures (a_type_id, a_feature_id: INTEGER): ARRAY [INTEGER] is

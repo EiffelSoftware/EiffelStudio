@@ -67,6 +67,9 @@ feature -- Access
 	eiffel_names: LIST [STRING]
 			-- List of Eiffel names in system.
 
+	name: STRING 
+			-- System name.
+
 feature -- Basic operations
 
 	generate (a_type_library_file_name: STRING) is
@@ -80,6 +83,7 @@ feature -- Basic operations
 		do
 			create a_type_lib.make_from_name (a_type_library_file_name)
 			create a_type_library_descriptor.make (a_type_lib)
+			name := clone (a_type_library_descriptor.name)
 			add_library_descriptor (a_type_library_descriptor)
 			a_type_library_descriptor.generate
 

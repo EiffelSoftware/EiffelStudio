@@ -12,6 +12,8 @@ feature -- Basic operations
 	list_from_single_spaced_values (string: STRING): ARRAYED_LIST [INTEGER] is
 			-- `Result' is all values contained in `string' which is of the form "1 101 150 35".
 			-- `string' must be single spaced.
+		require
+			string_not_void: string /= Void
 		local
 			last_space, counter: INTEGER
 		do
@@ -33,10 +35,14 @@ feature -- Basic operations
 				end
 				counter := counter + 1
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	single_spaced_values_from_list (list: ARRAYED_LIST [INTEGER]): STRING is
 			-- `Result' is single spaced string representation of `list'.
+		require
+			list_not_void: list /= Void
 		local
 			counter: INTEGER
 		do
@@ -52,6 +58,8 @@ feature -- Basic operations
 				end
 				counter := counter + 1
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	remove_leading_and_trailing_spaces (string: STRING): STRING is
@@ -92,7 +100,8 @@ feature -- Basic operations
 				counter := counter + 1
 			end
 		ensure
-			Adjusted_size_correct: Result.count = string.count + string.occurrences ('%%') + string.occurrences ('"') + string.occurrences ('%N')
+			result_not_void: Result /= Void
+			adjusted_size_correct: Result.count = string.count + string.occurrences ('%%') + string.occurrences ('"') + string.occurrences ('%N')
 		end
 		
 	directory_of_file (file_name: STRING): STRING is
@@ -112,24 +121,18 @@ feature -- Basic operations
 		require
 			object_not_void: an_object /= Void
 		local
-			displayed_name: STRING
+			l_type: STRING
 		do
-			if an_object.output_name.is_empty and an_object.name.is_empty then
-				Result := an_object.type.substring (4, an_object.type.count)
+			l_type := an_object.actual_type
+			if an_object.output_name.is_empty then
+				Result := l_type 
 			else		
-					-- Decide which name to use. If the output name is not
-					-- equal to the actual name, then use the output name.
-				if not an_object.output_name.as_lower.is_equal (an_object.name.as_lower) then
-					displayed_name := an_object.output_name
-				else
-					displayed_name := an_object.name
-				end
-				Result := displayed_name + ": " + an_object.type.substring (4, an_object.type.count)
+				Result := an_object.output_name + ": " + l_type
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	replace_final_class_name_comment (class_text, old_name, new_name: STRING) is
 			-- Replace instance of `old_name' with `new_name' when located in `clas_text'
 			-- after the final "end".

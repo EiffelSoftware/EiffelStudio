@@ -78,14 +78,44 @@ feature -- Default values
 
 feature -- Generation constants
 
-	template_file_name: FILE_NAME is
+	window_template_file_name: FILE_NAME is
 			-- `Result' is location of build template file,
 			-- including the name.
 		do
 			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)		
 			Result.extend ("build")
 			Result.extend ("templates")
-			Result.extend ("build_template.e")
+			Result.extend ("build_class_template.e")
+		end
+		
+	application_template_file_name: FILE_NAME is
+			-- `Result' is location of build application template file,
+			-- including the name.
+		do
+			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)		
+			Result.extend ("build")
+			Result.extend ("templates")
+			Result.extend ("build_application_template.e")
+		end
+		
+	windows_ace_file_name: FILE_NAME is
+			-- `Result' is location of windows ace file template.
+		do
+			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)		
+			Result.extend ("build")
+			Result.extend ("templates")
+			Result.extend ("windows")
+			Result.extend ("ace_template.ace")
+		end
+		
+	unix_ace_file_name: FILE_NAME is
+			-- `Result' is location of windows ace file template.
+		do
+			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)		
+			Result.extend ("build")
+			Result.extend ("templates")
+			Result.extend ("unix")
+			Result.extend ("ace_template.ace")
 		end
 		
 	class_name_tag: STRING is
@@ -117,11 +147,27 @@ feature -- Generation constants
 		end
 		
 	local_tag: STRING is
-			-- `Result' is tag used in tamplates
+			-- `Result' is tag used in templates
 			-- for local definitions.
 		once
 			Result := "<LOCAL>"
 		end
+		
+	main_window_tag: STRING is
+			-- `Result' is tag used in templates
+			-- for the main window declaration.
+		once
+			Result := "<MAIN_WINDOW>"
+		end
+		
+	project_location_tag: STRING is
+			-- `Result' is tag used in ace templates
+			-- for the project location.
+		once
+			Result := "<PROJECT_LOCATION>"
+		end
+		
+		
 		
 	indent: STRING is
 			-- String representing standard indent
@@ -134,6 +180,9 @@ feature -- Generation constants
 			-- generated local variables are of the form
 			-- `Result' + short type + number.
 			-- i.e. l_button1
+			
+	Generation_directory: STRING is "Generated"
+		-- Directory name to hold the generated files.
 		
 		
 feature -- XML saving

@@ -21,20 +21,18 @@ inherit
 			implementation
 		end
 
-feature -- Status report
-
-	parent: EV_MENU_ITEM_LIST is
-			-- Container of `Current'.
-		deferred
-		end
-		
 feature -- Contract support
 
 	is_parent_recursive (a_list: EV_MENU_ITEM_LIST): BOOLEAN is
 			-- Is `Current' present in `a_list' hierarchy?
+		local
+			menu_item_list_parent: EV_MENU_ITEM_LIST
 		do
-			Result := a_list = parent or else
-				(parent /= Void and then parent.is_parent_recursive (a_list))
+			menu_item_list_parent ?= parent
+			if menu_item_list_parent /= Void then
+				Result := a_list = parent or else
+					(parent /= Void and then menu_item_list_parent.is_parent_recursive (a_list))
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

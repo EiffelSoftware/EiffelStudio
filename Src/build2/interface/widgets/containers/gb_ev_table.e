@@ -52,6 +52,7 @@ feature {GB_XML_STORE} -- Output
 			an_object: GB_OBJECT
 			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			current_table_widget: EV_WIDGET
+			children: ARRAYED_LIST [GB_OBJECT]
 		do			
 			if first.columns /= 1 or uses_constant (Columns_string) then
 				add_integer_element (element, columns_string, first.columns)	
@@ -70,25 +71,23 @@ feature {GB_XML_STORE} -- Output
 				add_integer_element (element, border_width_string, first.border_width)
 			end
 
-			an_object := object_handler.object_from_display_widget (first)
-			layout_item := an_object.layout_item
+			children := object.children
 			
 			temp_column_positions_string := ""
 			temp_row_positions_string := ""
 			temp_widths_string := ""
 			temp_heights_string := ""
 			from
-				layout_item.start
+				children.start
 			until
-				layout_item.off
+				children.off
 			loop
-				current_layout_item ?= layout_item.item
-				current_table_widget ?= current_layout_item.object.object
-				temp_column_positions_string := temp_column_positions_string + add_leading_zeros (first.item_column_position (current_table_widget).out)--item_list.item).out)
+				current_table_widget ?= children.item.object
+				temp_column_positions_string := temp_column_positions_string + add_leading_zeros (first.item_column_position (current_table_widget).out)
 				temp_row_positions_string := temp_row_positions_string + add_leading_zeros (first.item_row_position (current_table_widget).out)
 				temp_widths_string := temp_widths_string + add_leading_zeros (first.item_column_span (current_table_widget).out)
 				temp_heights_string := temp_heights_string + add_leading_zeros (first.item_row_span (current_table_widget).out)
-				layout_item.forth
+				children.forth
 			end
 			if not temp_column_positions_string.is_empty then
 				add_element_containing_string (element, column_positions_string, temp_column_positions_string)

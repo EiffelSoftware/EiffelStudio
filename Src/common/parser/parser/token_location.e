@@ -49,7 +49,8 @@ feature -- Setting
 		ensure
 			start_position_set: start_position = old end_position
 			end_position_set: end_position = old end_position + c
-			start_column_position_set: start_column_position = old start_column_position + c
+			start_column_position_set: start_column_position = old end_column_position
+			end_column_position_set: end_column_position = old end_column_position + c
 		end
 
 	reset_column_positions is

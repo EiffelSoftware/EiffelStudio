@@ -17,30 +17,35 @@ inherit
 
 feature {EXTERNAL_FACTORY} -- Initialization
 
-	initialize (id: ID_AS; is_struct, is_pointer, is_byref, is_enum: BOOLEAN) is
+	initialize (id: ID_AS; is_struct: BOOLEAN; nb_pointer: INTEGER; is_byref, is_enum: BOOLEAN) is
 			-- Create EXTERNAL_TYPE_AS node
 		require
 			id_not_void: id /= Void
 		local
-			l: INTEGER
+			l, i: INTEGER
 			value: STRING
 		do
 			l := id.count
 			if is_struct then
 				l := l + struct_text_length
 			end
-			if is_pointer then
-					-- `1' is `star_text' length
-				l := l + 1
-			end
+
+			l := l + nb_pointer
 
 			create value.make (l)
 			if is_struct then
 				value.append (struct_text)
 			end
 			value.append (id)
-			if is_pointer then
-				value.append_character (star_text)
+			if nb_pointer > 0 then
+				from
+					i := 1
+				until
+					i > nb_pointer
+				loop
+					value.append_character (star_text)
+					i := i + 1				
+				end
 			end
 
 			if is_byref then

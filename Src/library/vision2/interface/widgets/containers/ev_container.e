@@ -192,7 +192,7 @@ feature -- Element change
 			v_parent_void: v.parent = Void
 			v_not_current: v /= Current
 			v_not_parent_of_current: not is_parent_recursive (v)
-			v_not_window: not v.conforms_to (create {EV_WINDOW})
+			v_containable: may_contain (v)
 		do
 			implementation.extend (v)
 		ensure
@@ -208,7 +208,7 @@ feature -- Element change
 			v_parent_void: v.parent = Void
 			v_not_current: v /= Current
 			v_not_parent_of_current: not is_parent_recursive (v)
-			v_not_window: not v.conforms_to (create {EV_WINDOW})
+			v_containable: may_contain (v)
 		do
 			implementation.replace (v)
 		ensure
@@ -338,6 +338,17 @@ feature -- Contract support
 		do
 			Result := a_widget = parent or else
 				(parent /= Void and then parent.is_parent_recursive (a_widget))
+		end
+		
+	may_contain (v: EV_WIDGET): BOOLEAN is
+			-- May `v' be inserted in `Current'.
+			-- Instances of EV_WINDOW may not be inserted
+			-- in a container even though they are widgets.
+		local
+			l_window: EV_WINDOW
+		do
+			l_window ?= v
+			Result := l_window = Void
 		end
 
 feature {EV_ANY_I} -- Implementation

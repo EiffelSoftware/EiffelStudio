@@ -88,7 +88,7 @@ feature -- Query
 						if shared_constants.application_constants.allowed_file_types.has (l_file_type) then
 							l_file_pixmap := shared_constants.application_constants.file_type_icons.item (l_file_type)	
 							create file_node.make_with_text (root_dir.lastentry)
-							file_node.pointer_double_press_actions.force_extend (agent Shared_document_manager.load_document_from_file (file.name))
+							file_node.pointer_button_press_actions.extend (agent on_button_pressed (?,?,?,?,?,?,?,?, file.name))
 							file_node.set_pixmap (l_file_pixmap)
 							file_node.set_pebble (file.name)
 							Result.extend (file_node)	
@@ -100,6 +100,14 @@ feature -- Query
 		end		
 
 feature {NONE} -- Implementation
+
+	on_button_pressed (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; name: STRING) is
+			-- Button pressed
+		do
+			if a_button = 1 then				
+				Shared_document_manager.load_document_from_file (name)	
+			end
+		end		
 
 	internal_tree: EV_TREE
 			-- Internal widget

@@ -9,9 +9,11 @@ deferred class
 inherit
 	OLE_CONTROL_PROXY
 
+	EXTERNAL_CONTROLERS
+	
 feature -- Basic Operations
 
-	create_control (lp_trics_data: STRING; h_wnd: POINTER; p_stream: ISTREAM_INTERFACE) is
+	create_control (lp_trics_data: STRING; h_wnd: POINTER; p_stream: ECOM_STREAM) is
 			-- No description available.
 			-- `lp_trics_data' [in].  
 			-- `h_wnd' [in].  
@@ -23,7 +25,7 @@ feature -- Basic Operations
 			create_control_ex (lp_trics_data, h_wnd, p_stream, ppunk, Void, Void)
 		end
 
-	create_control_ex (lp_trics_data: STRING; h_wnd: POINTER; p_stream: ISTREAM_INTERFACE; ppunk: CELL [ECOM_INTERFACE]; riid_advise: ECOM_GUID; punk_advise: ECOM_INTERFACE) is
+	create_control_ex (lp_trics_data: STRING; h_wnd: POINTER; p_stream: ECOM_STREAM; ppunk: CELL [ECOM_INTERFACE]; riid_advise: ECOM_GUID; punk_advise: ECOM_INTERFACE) is
 			-- No description available.
 			-- `lp_trics_data' [in].  
 			-- `h_wnd' [in].  
@@ -55,14 +57,21 @@ feature -- Basic Operations
 			-- No description available.
 			-- `p_disp' [in].  
 		do
-			-- Put Implementation here.
+			external_dispatch := p_disp
 		end
 
 	set_external_uihandler (p_disp: IDOC_HOST_UIHANDLER_DISPATCH_INTERFACE) is
 			-- No description available.
 			-- `p_disp' [in].  
+		local
+			retried: BOOLEAN
 		do
-			-- Put Implementation here.
+			if not retried then
+				create external_ui_handler.make_from_other (p_disp)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 

@@ -33,7 +33,7 @@ mtdes.lib: $(MT_OBJECTS)
 	del *.obj
 
 MTdes.obj: des.c
-	$(CC) -FoMTdes.obj $(MTCFLAGS) -c $?
+	$(CC) -Fo$@ $(MTCFLAGS) -c $?
 
 MTdesop.obj: desop.c
-	$(CC) -FoMTdesop.obj $(MTCFLAGS) -c $?
+	$(CC) -FoT$@ $(MTCFLAGS) -c $?

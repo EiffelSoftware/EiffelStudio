@@ -282,7 +282,8 @@ feature {NONE} -- Implementation
 					display_exception
 				when Pg_new_breakpoint then
 					stop_cause.set_text (Interface_names.l_New_breakpoint)
-					display_exception
+				when Pg_step then
+					stop_cause.set_text (Interface_names.l_Stepped)
 				else
 					stop_cause.set_text (Interface_names.l_Unknown_status)
 				end

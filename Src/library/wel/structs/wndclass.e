@@ -357,7 +357,7 @@ feature -- Element change
 
 feature -- Status report
 
-	is_registered: BOOLEAN is
+	registered: BOOLEAN is
 			-- Is the class registered?
 		require
 			exists: exists
@@ -437,19 +437,19 @@ feature -- Basic operations
 			-- Register the window class.
 		require
 			exists: exists
-			not_registered: not is_registered
+			not_registered: not registered
 		do
 			cwin_register_class (item)
 		ensure
-			is_registered: is_registered
+			registered: registered
 		end
 
 	unregister is
 			-- Unregister the window class.
+			-- All windows using this class must be destroyed.
 		require
 			exists: exists
-			is_registered: is_registered
-			-- All windows using this class must be destroyed
+			registered: registered
 		local
 			a: ANY
 		do
@@ -457,7 +457,7 @@ feature -- Basic operations
 			cwin_unregister_class ($a,
 				main_args.current_instance.item)
 		ensure
-			no_registered: not is_registered
+			no_registered: not registered
 		end
 
 feature {WEL_STRUCTURE} -- Measurement
@@ -481,6 +481,14 @@ feature {NONE} -- Implementation
 			!! Result
 		ensure
 			result_not_void: Result /= Void
+		end
+
+feature -- Obsolete
+
+	is_registered: BOOLEAN is obsolete "Use ``registered''"
+			-- Is the class registered?
+		do
+			Result := registered
 		end
 
 feature {NONE} -- Externals
@@ -611,7 +619,7 @@ feature {NONE} -- Externals
 	cwin_get_class_info (hinstance, cls_name, ptr: POINTER): BOOLEAN is
 			-- SDK GetClassInfo
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR,%
+			"C [macro <wel.h>] (HINSTANCE, LPCSTR, %
 				%WNDCLASS *): EIF_BOOLEAN"
 		alias
 			"GetClassInfo"

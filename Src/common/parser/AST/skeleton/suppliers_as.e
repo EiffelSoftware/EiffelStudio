@@ -37,11 +37,26 @@ feature {AST_EIFFEL} -- Output
 		do
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		local
+			o_supplier_ids: like supplier_ids
+		do
+			o_supplier_ids := other.supplier_ids
+			if supplier_ids.count = o_supplier_ids.count then
+					-- Same count and subset means equal
+				Result := supplier_ids.is_subset (o_supplier_ids)
+			end
+		end
+
 feature {NONE}
 
 	make is
 		do
 			!!supplier_ids.make;
+			supplier_ids.compare_objects
 		end;
 
 	insert_supplier_id (id: ID_AS) is

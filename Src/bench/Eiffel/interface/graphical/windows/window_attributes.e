@@ -6,10 +6,7 @@ indexing
 class WINDOW_ATTRIBUTES
 
 inherit
-	
 	EB_CONSTANTS
-
-	WEL_COLOR_CONSTANTS
 
 feature -- Setting
 

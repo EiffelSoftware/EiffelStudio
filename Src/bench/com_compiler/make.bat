@@ -33,6 +33,8 @@ copy to_replace\*.e .\
 
 copy to_replace\*.cpp Clib
 
+copy to_replace\*.h Clib
+
 cd Clib
 call make_msc.bat
 

@@ -19,9 +19,11 @@ feature -- Basic operations
 
 	execute is
 			-- Display information about `Current'.
+		local
+			dialog: EB_CREATE_CLASS_DIALOG
 		do
-			create explain_dialog.make_with_text (Interface_names.e_Diagram_create_class)
-			explain_dialog.show_modal_to_window (tool.development_window.window)
+			create dialog.make_default (tool.development_window)
+			dialog.call ("New_class")
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is

@@ -35,9 +35,9 @@ feature -- Access
 				end
 				a_coclass.interface_descriptors.forth
 			end
-			if Result.dual then
-				Result := Result.dispinterface_descriptor
-			end
+	--		if Result.dual then
+	--			Result := Result.dispinterface_descriptor
+	--		end
 		end
 
 feature -- Basic operations

@@ -699,12 +699,21 @@ feature {NONE} -- Implementation
 		end
 		
 	get_unique_pixmap_name (a_file_name: STRING): STRING is
-			--
+			-- `Result' is a name based on `a_file_name' but guaranteed to be unique.
+		local
+			l_array: ARRAYED_LIST [STRING]
 		do
-			Result := pixmap_file_title_to_constant_name (a_file_name)
-			Result := unique_name (Reserved_words, Result)
-			Result := unique_name (Object_handler.all_object_and_event_names, Result)
-			Result := unique_name (Constants.all_constant_names, Result)
+			--|FIXME temporary 
+--			Result := pixmap_file_title_to_constant_name (a_file_name)
+--			create l_array.make (1000)
+--			l_array := clone (Object_handler.all_object_and_event_names)
+--			l_array.finish
+--			l_array.merge_right (Constants.all_constant_names)
+--			l_array.finish
+--			l_array.merge_right (Reserved_words.linear_representation)
+--			l_array.finish
+--			l_array.merge_right (Build_reserved_words.linear_representation)
+--			Result := unique_name (l_array, Result)
 		end
 	
 	new_pixmap: EV_PIXMAP

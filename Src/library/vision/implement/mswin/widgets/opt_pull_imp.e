@@ -78,7 +78,11 @@ feature -- Initialization
 			!! private_attributes
 			parent ?= oui_parent.implementation
 			managed := man
-			!! option_button.make ("dummy", oui_parent)
+			if man then
+				!! option_button.make ("dummy", oui_parent)
+			else
+				!! option_button.make_unmanaged ("dummy", oui_parent)
+			end
 			opt_b_windows ?= option_button.implementation
 			opt_b_windows.set_option_pull (Current)
 		end

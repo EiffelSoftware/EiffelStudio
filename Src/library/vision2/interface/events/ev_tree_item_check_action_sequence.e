@@ -8,7 +8,7 @@ class
 	EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 	
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [EV_TREE_ITEM]]
+	EV_ACTION_SEQUENCE [TUPLE [EV_TREE_NODE]]
 
 -- EV_ACTION_SEQUENCE [TUPLE [a_list_item: EV_TREE_ITEM]]
 	-- (ETL3 TUPLE with named parameters)
@@ -24,7 +24,7 @@ feature -- Access
 			extend (agent wrapper (?, action))
 		end
 
-	wrapper (a_tree_item: EV_TREE_ITEM; action: PROCEDURE [ANY, TUPLE]) is
+	wrapper (a_tree_item: EV_TREE_NODE; action: PROCEDURE [ANY, TUPLE]) is
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

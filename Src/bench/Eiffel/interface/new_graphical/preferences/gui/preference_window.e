@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			-- Initialize
 		local
 			main_box: EV_VERTICAL_BOX
-			split: EB_HORIZONTAL_SPLIT_AREA
+			split: FLAT_HORIZONTAL_SPLIT_AREA
 			hsep: EV_HORIZONTAL_SEPARATOR
 			buttons_box: like build_buttons_box
 		do

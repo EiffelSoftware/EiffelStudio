@@ -95,11 +95,7 @@ feature {NONE} -- Implementation
 								window_object_not_void: window_object /= Void
 							end
 							window_object.modify_from_xml (current_element)
-						else
-							-- We must now set the properties of window.
-							-- First generate the name of the class to build.
-					--	a_class_name := "GB_" + current_element.name.to_utf8
-						
+						else						
 							-- Create the class.
 						gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
 						
@@ -152,17 +148,6 @@ feature {NONE} -- Implementation
 					io.putstring (current_name + "%N")
 					if current_name.is_equal (Item_string) then
 						-- The element represents an item, so we must add new objects.
-					
-					
-											
-						layout_constructor_item ?= layout_constructor.first
-						check
-							layout_item_not_void: layout_constructor_item /= Void
-						end
-						window_object ?= layout_constructor_item.object
-						check
-							window_object_not_void: window_object /= Void
-						end
 						build_new_object (current_element, new_object)
 					else
 						-- We must check for internal properties, else set the properties of the component
@@ -267,4 +252,5 @@ feature {NONE} -- Implementation
 	--|FIXME I think this should be a constant.
 	type_string: UCSTRING
 		-- Constant used for matching type identifier.
+
 end -- class GB_XML_LOAD

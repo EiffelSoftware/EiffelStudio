@@ -3160,7 +3160,7 @@ feature -- Dispose routine
 	memory_descendants: LINKED_LIST [CLASS_C] is
 			-- Memory descendants.
 		once
-			!!Result.make
+			!! Result.make
 			if memory_class /= Void then
 				formulate_mem_descendants (memory_class, Result)
 			end
@@ -3180,6 +3180,7 @@ feature -- Dispose routine
 			loop
 				d := descendants.item
 				desc.extend (d)
+				desc.forth
 				formulate_mem_descendants (d, desc)
 				descendants.forth
 			end

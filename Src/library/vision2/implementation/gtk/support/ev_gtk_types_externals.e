@@ -24,6 +24,14 @@ feature {NONE} -- GTK macros for casting types
 			"GTK_MISC"
 		end
 	
+	gtk_is_widget (widget: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_BOOLEAN"
+		alias
+			"GTK_IS_WIDGET"
+		end
+			
+
 feature {NONE} -- Primitives
 
 	gtk_editable (widget: POINTER): POINTER is

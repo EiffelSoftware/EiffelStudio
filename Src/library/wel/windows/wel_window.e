@@ -1870,14 +1870,6 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Externals
 
-	is_window (hwnd: POINTER): BOOLEAN is
-			-- Does `hwnd' point to a valid Window?
-		external
-			"C [macro <windows.h>] (HWND): EIF_BOOLEAN"
-		alias
-			"IsWindow"
-		end
-
 	cwin_create_window_ex (a_ex_stlyle: INTEGER; a_class_name,
 				a_name: POINTER; a_style, a_x, a_y, a_w,
 				a_h: INTEGER; a_parent_hwnd: POINTER;

@@ -24,12 +24,15 @@ feature {NONE} -- Initialization
 			-- is faster.
 		do
 			{EV_COMBO_BOX} Precursor (par)
+--			set_editable (False)
 
 			!! item1.make_with_text (Current, "Item 1")
 			!! item2.make (Current)
 			item2.set_text ("Item 2")
 			item2.set_selected (True)
 			!! item3.make_with_text (Current, "Item 3")
+			set_text ("Please select an item")
+			select_all
 		end
 
 feature -- Access

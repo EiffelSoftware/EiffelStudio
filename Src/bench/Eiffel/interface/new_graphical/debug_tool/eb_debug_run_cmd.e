@@ -447,9 +447,7 @@ end
 				if Application.is_running then
 					output_text.add_string ("System is running")
 					output_text.add_new_line
-					if debugger_manager /= Void then
-						debugger_manager.on_application_launched
-					end
+					debugger_manager.on_application_launched
 				else
 						-- Something went wrong
 					if Eiffel_system.system.il_generation then						

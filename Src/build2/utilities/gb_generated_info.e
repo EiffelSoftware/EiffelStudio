@@ -76,7 +76,6 @@ feature -- Access
 		once
 			create Result.make (40)
 		end
-		
 
 	fonts_set: STRING is
 			-- Have one or more fonts been set
@@ -93,7 +92,11 @@ feature -- Access
 		end
 		
 	is_root_object: BOOLEAN
-		-- Is object root of  agenerated window?
+		-- Is object root of a generated window?
+		
+	associated_root_object_id: INTEGER
+		-- If the object represented by `Current' is an instance of a top level
+		-- object, this is the `id' of the actual object.
 	
 	id: INTEGER
 		-- Id of associated with object.
@@ -151,7 +154,12 @@ feature -- Status setting
 			is_root_object := True
 		end
 		
-		
+	set_associated_root_object_id (an_id: INTEGER) is
+			-- Assign `an_id' to `associated_root_object_id'.
+		do
+			associated_root_object_id := an_id
+		end
+
 	enable_generated_name is
 			-- Assign `True' to `generated_name'.
 		do

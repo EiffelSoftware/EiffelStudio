@@ -198,7 +198,6 @@ feature {NONE} -- Implementation
 			l_member_reference: CODE_MEMBER_REFERENCE
 			l_argument: CODE_PARAMETER_DECLARATION_EXPRESSION
 			i, l_count: INTEGER
-			l_override: BOOLEAN
 		do
 			l_members := a_declaration.members
 			if l_members /= Void then
@@ -210,19 +209,8 @@ feature {NONE} -- Implementation
 					l_member := l_members.item (i)
 					l_method ?= l_member
 					if l_method /= Void then
-						l_override := l_method.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override
-						create l_member_reference.make (l_method.name, a_type, l_override)
+						create l_member_reference.make (l_method.name, a_type, l_method.attributes & feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override = feature {SYSTEM_DLL_MEMBER_ATTRIBUTES}.Override)
 						a_type.add_member (l_member_reference)
-						if not l_override and l_member_reference.hierarchy_has_name (l_member_reference.eiffel_name)  then
-								-- Method is not a redefinition but has same name as parent i.e. it's a 'newslot' so we need to rename
-								-- the parent method into a unique name that won't be used anywhere (no need for feature IDs as the code
-								-- will never refer to the renamed version since it's hidden in .NET)
-							Resolver.search (a_type)
-							check
-								was_found: Resolver.found
-							end
-							Resolver.found_type.add_rename_clause (l_member_reference.parent_type_with_homonym, l_member_reference, l_member_reference.unique_name)
-						end
 					else
 						l_property ?= l_member
 						if l_property /= Void then

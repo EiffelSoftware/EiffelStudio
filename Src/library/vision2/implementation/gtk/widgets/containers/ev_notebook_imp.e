@@ -191,48 +191,6 @@ feature -- Element change
 				eiffel_to_c (a_text)
 			)
 		end
-	
--- FIXME reimplement if needed. sam
---	set_background_color (color: EV_COLOR) is
---			-- Make `color' the new `background_color'.
---			-- Redefine because EV_NOTEBOOK are made of GtkNotebook
---			-- and GtkLabel.
---		local
---			list: LINKED_LIST [POINTER]
---		do
---			{EV_CONTAINER_IMP} Precursor (color)
---
---			list := labels_list
---			from
---				list.start
---			until
---				list.after
---			loop
-----C.c_gtk_widget_set_bg_color (list.item, color.red, color.green, color.blue)
---				list.forth
---			end
---		end
-
--- FIXME reimplement if needed. sam
---	set_foreground_color (color: EV_COLOR) is
---			-- Make `color' the new `foreground_color'
---			-- Redefine because EV_NOTEBOOK are made of GtkNotebook
---			-- and GtkLabel.
---		local
---			list: LINKED_LIST [POINTER]
---		do
---			{EV_CONTAINER_IMP} Precursor (color)
---
---			list := labels_list
---			from
---				list.start
---			until
---				list.after
---			loop
-----C.c_gtk_widget_set_fg_color (list.item, color.red, color.green, color.blue)
---				list.forth
---			end
---		end
 
 feature {EV_ANY_I} -- Implementation
 

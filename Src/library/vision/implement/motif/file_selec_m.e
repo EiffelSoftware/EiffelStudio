@@ -44,9 +44,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_file_selection: FILE_SELEC) is
+	make (a_file_selection: FILE_SELEC; man: BOOLEAN) is
 			-- Create a motif file selection.
 		local
 			ext_name: ANY
@@ -54,7 +54,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_file_selection.identifier.to_c;
 			screen_object := create_file_selection ($ext_name,
-				parent_screen_object (a_file_selection, widget_index));
+				parent_screen_object (a_file_selection, widget_index),
+				man);
 		end;
 
 feature {NONE}
@@ -492,7 +493,8 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_file_selection (s_name: ANY; scr_obj: POINTER): POINTER is
+	create_file_selection (s_name: ANY; scr_obj: POINTER;
+				man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

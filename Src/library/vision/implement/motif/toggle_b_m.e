@@ -40,9 +40,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_toggle_b: TOGGLE_B) is
+	make (a_toggle_b: TOGGLE_B; man: BOOLEAN) is
 			-- Create a motif toggle button.
 		local
 			ext_name: ANY
@@ -50,7 +50,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_toggle_b.identifier.to_c;
 			screen_object := create_toggle_b ($ext_name,
-				parent_screen_object (a_toggle_b, widget_index));
+				parent_screen_object (a_toggle_b, widget_index),
+				man);
 			a_toggle_b.set_font_imp (Current)
 		end;
 
@@ -211,7 +212,8 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_toggle_b (t_name: ANY; scr_obj: POINTER): POINTER is
+	create_toggle_b (t_name: ANY; scr_obj: POINTER; 
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

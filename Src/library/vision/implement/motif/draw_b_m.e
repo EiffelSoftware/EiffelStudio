@@ -34,9 +34,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_draw_b: DRAW_B) is
+	make (a_draw_b: DRAW_B; man: BOOLEAN) is
 			-- Create a motif draw button.
 		local
 			ext_name: ANY
@@ -44,7 +44,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_draw_b.identifier.to_c;
 			screen_object := create_draw_b ($ext_name,
-							parent_screen_object (a_draw_b, widget_index));
+						parent_screen_object (a_draw_b, widget_index),
+						man);
 			display_pointer := xt_display (screen_object);
 			create_gc
 		end;
@@ -87,7 +88,8 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_draw_b (d_name: ANY; scr_obj: POINTER): POINTER is
+	create_draw_b (d_name: ANY; scr_obj: POINTER;
+					man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

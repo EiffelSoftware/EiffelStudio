@@ -27,9 +27,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_form: FORM) is
+	make (a_form: FORM; man: BOOLEAN) is
 			-- Create a motif form.
 		local
 			ext_name_form: ANY
@@ -37,7 +37,8 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name_form := a_form.identifier.to_c;
 			screen_object := create_form ($ext_name_form,
-					parent_screen_object (a_form, widget_index));
+					parent_screen_object (a_form, widget_index),
+					man);
 		end
 
 feature 
@@ -329,7 +330,8 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_form (f_name: ANY; scr_obj: POINTER): POINTER is
+	create_form (f_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

@@ -169,8 +169,8 @@ feature -- Project initialization
 
 			create e_displayer.make (Error_window)
 			Eiffel_project.set_error_displayer (e_displayer)
-			Application.set_interrupt_number (Debug_resources.interrupt_every_n_instructions.actual_value)
-			if not Project_resources.graphical_output_disabled.actual_value then
+			Application.set_interrupt_number (interrupt_every_n_instructions)
+			if not graphical_output_disabled then
 				create g_degree_output.make (Project_tool.parent_window)
 				Project_tool.set_progress_dialog (g_degree_output)
 			end

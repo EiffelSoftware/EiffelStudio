@@ -31,7 +31,7 @@ feature -- Properties
 	command_shell_name: STRING is
 			-- Name of the command to execute in the shell window.
 		do
-			Result := General_resources.shell_command.value
+			Result := general_shell_command
 		end
 
 --	symbol: EV_PIXMAP is 

@@ -94,7 +94,7 @@ feature
 			modified_class, position_saved: BOOLEAN;
 			last_cursor_position, last_top_position: INTEGER;
 			retried: BOOLEAN;
-			same_stone: BOOLEAN
+			same_stone, error: BOOLEAN
 		do
 			if not retried then
 				classc_stone ?= stone;
@@ -125,9 +125,11 @@ feature
 							filed_stone ?= stone;
 							if filed_stone /= Void then
 								if filed_stone.file_name /= Void then
+									error := true;
 									warner (text_window).gotcha_call 	
 									(w_Cannot_read_file (filed_stone.file_name))
 								else
+									error := true;
 									warner (text_window).gotcha_call 
 										(w_No_associated_file)
 								end;
@@ -142,11 +144,12 @@ feature
 						text_window.put_string (stone_text);
 						if stone.clickable then
 							if modified_class then
-								if not do_format then
+								if not error and not do_format then
 										-- Do not display the warning message
 										-- if the format has been changed
 										-- internally (resynchronization, ...)
 									class_name := classc_stone.class_c.class_name;
+									error := true;
 									warner (text_window).gotcha_call 
 										(w_Class_modified (class_name))
 								end

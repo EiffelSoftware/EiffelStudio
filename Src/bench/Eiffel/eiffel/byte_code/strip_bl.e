@@ -43,7 +43,7 @@ feature
 			generated_file.putstring ("{");
 			generated_file.new_line;
 			generated_file.indent;
-			generated_file.putstring ("char *items[");
+			generated_file.putstring ("static char *items[");
 			generated_file.putstring ("] = { ");
 			generate_attribute_names_list;
 			generated_file.putstring (" };");

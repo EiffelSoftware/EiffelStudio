@@ -110,16 +110,35 @@ feature
 
 	generate is
 			-- Genrate the creation
+		local
+			target_type: TYPE_I;
+			is_expanded: BOOLEAN;
 		do
+			target_type := Context.real_type (target.type);
 			if target.is_result and last_in_result then
 					-- This is the generation of a last !!Result with a
 					-- possible creation routine attached to it.
 					-- NB: there is no need to call `generate_assignment' as
 					-- the assignment is implicitely done by the "return".
 				if call /= Void then
-					generate_register_assignment;
-					generate_creation;
-					call.generate;
+					if target_type.is_basic then
+						generate_register_assignment;
+						target_type.c_type.generate_cast (generated_file);
+						generated_file.putstring ("0;");
+						generated_file.new_line;
+					elseif target_type.is_expanded then
+						generated_file.putstring ("RTXA(");
+						generated_file.putstring ("RTLN(");
+						info.generate;
+						generated_file.putstring ("), ");
+						print_register;
+						generated_file.putstring (");");
+						generated_file.new_line;
+					else
+						generate_register_assignment;
+						generate_creation;
+						call.generate;
+					end;
 				end;
 				context.byte_code.finish_compound;
 				check
@@ -143,25 +162,54 @@ feature
 					generate_creation;
 				end;
 			else
-				generate_register_assignment;
-				generate_creation;
-				if call /= Void then
-					call.generate_creation_call;
-				end;
-					-- We had to get a regiser because RTAR evaluates its
-					-- arguments more than once.
-				if not target.is_predefined then
-						-- Target is an attribute then
-					generated_file.putstring ("RTAR(");
-					print_register;
-					generated_file.putstring (", ");
-					context.Current_register.print_register_by_name;
-					generated_file.putchar (')');
-					generated_file.putchar (';');
+				if not target_type.is_basic then
+					is_expanded := target_type.is_expanded;
+					if not is_expanded then
+						generate_register_assignment;
+						generate_creation;
+					elseif target.is_predefined then
+						-- For expanded copy value.
+						generated_file.putstring ("RTXA(");
+						generated_file.putstring ("RTLN(");
+						info.generate;
+						generated_file.putstring ("), ");
+						print_register;
+						generated_file.putstring (");");
+						generated_file.new_line;
+					else
+						-- We had to get a regiser because RTAR evaluates its
+						-- arguments more than once.
+						-- We create the expanded and assign it to the
+						-- register.
+						print_register;
+						generated_file.putstring (" = RTLN(");
+						info.generate;
+						generated_file.putstring (");");
+						generated_file.new_line;
+					end;
+					if call /= Void then
+						call.generate_creation_call;
+					end;
+						-- We had to get a regiser because RTAR evaluates its
+						-- arguments more than once.
+					if not target.is_predefined then
+							-- Target is an attribute then
+						generated_file.putstring ("RTAR(");
+						print_register;
+						generated_file.putstring (", ");
+						context.Current_register.print_register_by_name;
+						generated_file.putchar (')');
+						generated_file.putchar (';');
+						generated_file.new_line;
+					end;
+					generate_assignment (is_expanded);
+				else
+					generate_register_assignment;
+					target_type.c_type.generate_cast (generated_file);
+					generated_file.putstring ("0;");
 					generated_file.new_line;
 				end;
-				generate_assignment;
-			end;
+			end
 		end;
 
 	generate_register_assignment is
@@ -180,14 +228,22 @@ feature
 			generated_file.new_line;
 		end;
 
-	generate_assignment is
+	generate_assignment (is_expanded: BOOLEAN) is
 			-- Generate the assignment in the target, in case we had to get
 			-- a temporary register.
 		do
 			if register /= target then
-				target.print_register;
-				generated_file.putstring (" = ");
-				print_register;
+				if not is_expanded then
+					target.print_register;
+					generated_file.putstring (" = ");
+					print_register;
+				else
+					generated_file.putstring ("RTXA(");
+					print_register;
+					generated_file.putstring (", ");
+					target.print_register;
+					generated_file.putchar (')');
+				end;
 				generated_file.putchar (';');
 				generated_file.new_line;
 			end;

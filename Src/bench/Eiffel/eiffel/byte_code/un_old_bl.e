@@ -8,7 +8,8 @@ inherit
 		redefine
 			register, set_register,
 			analyze, generate, unanalyze,
-			print_register, free_register
+			print_register, free_register,
+			initialize
 		end;
 	
 feature 
@@ -35,9 +36,12 @@ feature
 
 	initialize is
 			-- Initialize the value of the old variable.
+		local
+			target_type: TYPE_I
 		do
 			expr.generate;
-			if not type.is_basic then
+			target_type := Context.real_type (type);
+			if not target_type.is_basic then
 				register.print_register;
 				generated_file.putstring (" = ");
 				generated_file.putstring ("RTCL(");

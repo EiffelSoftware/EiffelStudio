@@ -132,7 +132,6 @@ feature -- Graphical Interface
 			!! file_menu.make ("File", menu_bar);
 			!! edit_menu.make ("Edit", menu_bar);
 			!! special_menu.make ("Special", menu_bar);
-			!! preference_menu.make ("Preference", menu_bar);
 			!! window_menu.make ("Windows", menu_bar);
 			!! help_menu.make ("Help", menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
@@ -145,7 +144,7 @@ feature -- Graphical Interface
 			showtext_cmd: SHOW_TEXT;
 			showtext_button: FORMAT_BUTTON
 		do
-			!! showtext_cmd.make (text_window);
+			!! showtext_cmd.make (Current);
 			!! showtext_button.make (showtext_cmd, format_bar);
 			!! showtext_frmt_holder.make_plain (showtext_cmd);
 			showtext_frmt_holder.set_button (showtext_button);

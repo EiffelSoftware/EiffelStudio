@@ -63,16 +63,16 @@ feature
 			f.set_code_id (code_id);
 		end;
 
-    is_code_replicated: BOOLEAN;
-            -- Is Current feature code replicated
+	is_code_replicated: BOOLEAN;
+		-- Is Current feature code replicated
  
-    is_replicated: BOOLEAN is True;
-            -- Is Current feature conceptually replicated (True)
+	is_replicated: BOOLEAN is True;
+		-- Is Current feature conceptually replicated (True)
  
-    set_is_code_replicated is  
-            -- Set `is_code_replicated' to True. 
+	set_is_code_replicated is  
+		-- Set `is_code_replicated' to True. 
 		do
 			is_code_replicated := True;
-		end;
+		end
  
 end

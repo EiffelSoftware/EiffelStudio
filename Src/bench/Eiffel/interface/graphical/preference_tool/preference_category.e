@@ -9,7 +9,10 @@ deferred class PREFERENCE_CATEGORY
 
 inherit
 	ROW_COLUMN;
-	COMMAND
+	PREFERENCE_COMMAND
+		rename
+			make as init_tool
+		end
 
 feature -- Access
 
@@ -41,21 +44,6 @@ feature -- Properties
 			-- Category Current is about
 		deferred
 		end;
-
-	name: STRING is
-			-- Current's name
-		deferred
-		end;
-
-	symbol: PIXMAP is
-			-- Current's symbol for being unselected
-		deferred
-		end;
-
-	dark_symbol: PIXMAP is
-			-- Current's symbol for being selected
-		deferred
-		end
 
 feature -- User Interface
 
@@ -140,9 +128,6 @@ feature {NONE} -- Properties
 
 	holder: CATEGORY_HOLDER
 			-- Holder for the visual aspects
-
-	tool: PREFERENCE_TOOL
-			-- Tool to redirect the command execution to
 
 feature {NONE} -- Execution
 

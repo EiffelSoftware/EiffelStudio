@@ -583,8 +583,7 @@ feature -- Element change
 				(used_slot_count = old used_slot_count) or
 				(used_slot_count = old used_slot_count + 1) or
 				(used_slot_count = count)
-			found_item_is_old_item: found_item = old (item (key))
-					-- (In both `found' and `not_found' cases)
+			found_item_is_old_item: found implies (found_item = old (item (key)))
 			default_value_if_not_found:
 				not_found implies (found_item = computed_default_value) 
 					-- The reverse is not true, as we can always insert

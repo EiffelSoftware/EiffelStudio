@@ -44,7 +44,7 @@ feature -- Initialization
 			day_large_enough: d >= 1;
 			day_small_enough: d <= days_in_i_th_month (m, y)
 			year_small_enough: y <= 65535;
-			year_positive: y>0
+			year_positive: y >= 0
 		do
 			compact_date := c_make_date (d, m, y)
 		ensure
@@ -61,7 +61,7 @@ feature -- Initialization
 			day_large_enough: d >= 1;
 			day_small_enough: d <= days_in_i_th_month (m, y)
 			year_small_enough: y <= 65535;
-			year_positive: y>0
+			year_positive: y >= 0
 		do
 			make (y, m, d)
 		ensure
@@ -78,7 +78,7 @@ feature -- Initialization
 			day_large_enough: d >= 1;
 			day_small_enough: d <= days_in_i_th_month (m, y)
 			year_small_enough: y <= 65535;
-			year_positive: y>0
+			year_positive: y >= 0
 		do
 			make (y, m, d)
 		ensure
@@ -636,7 +636,7 @@ invariant
 	month_large_enough: month >= 1;
 	month_small_enough: month <= Months_in_year;
 	year_small_enough: year <= 65535;
-	year_positive: year >0
+	year_positive: year >= 0
 
 end -- class DATE
 

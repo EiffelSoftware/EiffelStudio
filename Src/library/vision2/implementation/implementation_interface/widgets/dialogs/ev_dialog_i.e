@@ -26,7 +26,8 @@ feature -- Status Report
 	
 	default_push_button: EV_BUTTON is
 			-- Default pushed button. This is the button that
-			-- is pushed if the user press the enter key.
+			-- is pushed if the user press the enter key unless
+			-- a push button is currently focused.
 		do
 			Result := internal_default_push_button
 		end
@@ -39,6 +40,18 @@ feature -- Status Report
 			-- icon is disabled.
 		do
 			Result := internal_default_cancel_button
+		end
+		
+	current_push_button: EV_BUTTON is
+			-- Currently focused push button.
+			-- This is the button that is pushed when the user
+			-- press the enter key when a push button is focused.
+		do
+			if internal_current_push_button /= Void then
+				Result := internal_current_push_button
+			else
+				Result := default_push_button
+			end
 		end
 
 feature -- Status Setting
@@ -154,22 +167,27 @@ feature {EV_DIALOG} -- Implementation
 						default_cancel_button.select_actions.call ([])
 					end
 	
-				elseif a_key_code = Key_constants.Key_enter and then 
-					default_push_button /= Void then
-					if default_push_button.is_sensitive then
-							-- Enter key pressed and `default_push_button' is
+				elseif a_key_code = Key_constants.Key_enter and then
+					current_push_button /= Void then
+					if current_push_button.is_sensitive then
+							-- Enter key pressed and `current_push_button' is
 							-- sensitive so simulate a press.
-						default_push_button.select_actions.call ([])
+						current_push_button.select_actions.call ([])
 					end
 				end
 			end
 		end
 
-feature {EV_DIALOG, EV_DIALOG_I} -- Implementation
+feature {EV_DIALOG, EV_DIALOG_I, EV_WIDGET_I} -- Implementation
 
 	internal_default_push_button: EV_BUTTON
 			-- Default pushed button. This is the button that
-			-- is pushed if the user pushes the enter key.
+			-- is pushed if the user pushes the enter key and
+			-- if the widget that has the focus is not a push
+			-- button.
+			-- If the focused widget is a push button (it can
+			-- be the default_push_button) it is pushed when
+			-- the user presses the enter key.
 
 	internal_default_cancel_button: EV_BUTTON
 			-- The default cancel button is the button pushed 
@@ -178,6 +196,22 @@ feature {EV_DIALOG, EV_DIALOG_I} -- Implementation
 			--
 			-- If there is no default cancel button, the close
 			-- icon is disabled.
+			
+	internal_current_push_button: EV_BUTTON
+			-- Current button pushed when the user press the enter
+			-- key in the dialog.
+			-- Void if none.
+			
+feature {EV_WIDGET_I} -- Implementation
+
+	set_current_push_button (a_button: EV_BUTTON) is
+			-- Set the push button to be `a_button'. `a_button' can
+			-- be Void if there are no more current push button
+		do
+			internal_current_push_button := a_button
+		ensure
+			current_push_button_set: internal_current_push_button = a_button
+		end
 		
 feature -- Implementation
 
@@ -208,6 +242,12 @@ end -- class EV_DIALOG_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2001/06/29 21:54:41  pichery
+--| - Changed the behavior of the `default_push_button', we now use
+--|   `current_push_button': the currently focused push button.
+--| - The redrawing of the button with bold border is now done in vision2
+--|   rather than by Windows itself.
+--|
 --| Revision 1.13  2001/06/07 23:08:10  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

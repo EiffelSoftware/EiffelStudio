@@ -851,12 +851,13 @@ feature {NONE} -- Implementation, focus event
 			if top_level_titled_window /= Void then
 				application_imp.set_window_with_focus (top_level_titled_window)
 			end
+			update_current_push_button
 			focus_on_widget.put (Current)
 			if focus_in_actions_internal /= Void then
 				focus_in_actions_internal.call ([])
 			end
 		end
-
+		
 	on_kill_focus is
 			-- Called when a `Wm_killfocus' message is recieved.
 		do
@@ -869,6 +870,29 @@ feature {NONE} -- Implementation, focus event
 			-- Called when window loses focus via alt-tab
 		do
 			on_kill_focus
+		end
+
+	update_current_push_button is
+			-- Update the current push button
+			--
+			-- Current is NOT a push button so we set the current push button
+			-- to be the default push button.
+			-- This feature is redefined in EV_BUTTON_IMP.
+		local
+			top_level_dialog_imp: EV_DIALOG_I
+		do
+			top_level_dialog_imp ?= application_imp.window_with_focus
+			if top_level_dialog_imp /= Void then
+				top_level_dialog_imp.set_current_push_button (top_level_dialog_imp.internal_default_push_button)
+			end
+		end
+
+feature {EV_ANY_I} -- Implementation, push button
+
+	redraw_current_push_button (focused_button: EV_BUTTON) is
+			-- Put a bold border on the current push button and
+			-- remove any bold border to the other buttons.
+		do
 		end
 
 feature {NONE} -- Implementation, cursor of the widget
@@ -1073,6 +1097,12 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.82  2001/06/29 21:54:41  pichery
+--| - Changed the behavior of the `default_push_button', we now use
+--|   `current_push_button': the currently focused push button.
+--| - The redrawing of the button with bold border is now done in vision2
+--|   rather than by Windows itself.
+--|
 --| Revision 1.81  2001/06/14 18:26:16  rogers
 --| Renamed EV_COORDINATES to EV_COORDINATE.
 --|

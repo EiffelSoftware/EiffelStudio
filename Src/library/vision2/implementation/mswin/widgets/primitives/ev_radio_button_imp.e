@@ -17,10 +17,13 @@ inherit
 		undefine
 			default_style,
 			on_key_down,
-			on_bn_clicked
+			on_bn_clicked,
+			process_message
 		redefine
 			interface,
-			initialize
+			initialize,
+			update_current_push_button,
+			redraw_current_push_button
 		select
 			wel_make
 		end
@@ -154,6 +157,28 @@ feature {NONE} -- Implementation
 			Result := Ws_visible + Ws_child + Ws_tabstop + Bs_radiobutton
 		end
 
+feature {NONE} -- Implementation, focus event
+
+	update_current_push_button is
+			-- Update the current push button
+			--
+			-- Current is NOT a push button so we set the current push button
+			-- to be the default push button.
+		local
+			top_level_dialog_imp: EV_DIALOG_I
+		do
+			top_level_dialog_imp ?= application_imp.window_with_focus
+			if top_level_dialog_imp /= Void then
+				top_level_dialog_imp.set_current_push_button (top_level_dialog_imp.internal_default_push_button)
+			end
+		end
+
+	redraw_current_push_button (focused_button: EV_BUTTON) is
+			-- Put a bold border on the current push button and
+			-- remove any bold border to the other buttons.
+		do
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_BUTTON
@@ -181,6 +206,12 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2001/06/29 21:54:41  pichery
+--| - Changed the behavior of the `default_push_button', we now use
+--|   `current_push_button': the currently focused push button.
+--| - The redrawing of the button with bold border is now done in vision2
+--|   rather than by Windows itself.
+--|
 --| Revision 1.36  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

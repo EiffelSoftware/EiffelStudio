@@ -17,9 +17,12 @@ inherit
 		undefine
 			wel_make,
 			make_by_id,
-			default_style
+			default_style,
+			process_message
 		redefine
-			interface, wel_parent
+			interface, wel_parent,
+			redraw_current_push_button,
+			update_current_push_button
 		end
 
 	WEL_SELECTABLE_BUTTON
@@ -107,6 +110,28 @@ feature -- Status setting
 			select_actions.call ([])
 		end
 
+feature {NONE} -- Implementation, focus event
+
+	update_current_push_button is
+			-- Update the current push button
+			--
+			-- Current is NOT a push button so we set the current push button
+			-- to be the default push button.
+		local
+			top_level_dialog_imp: EV_DIALOG_I
+		do
+			top_level_dialog_imp ?= application_imp.window_with_focus
+			if top_level_dialog_imp /= Void then
+				top_level_dialog_imp.set_current_push_button (top_level_dialog_imp.internal_default_push_button)
+			end
+		end
+
+	redraw_current_push_button (focused_button: EV_BUTTON) is
+			-- Put a bold border on the current push button and
+			-- remove any bold border to the other buttons.
+		do
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOGGLE_BUTTON
@@ -134,6 +159,12 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2001/06/29 21:54:41  pichery
+--| - Changed the behavior of the `default_push_button', we now use
+--|   `current_push_button': the currently focused push button.
+--| - The redrawing of the button with bold border is now done in vision2
+--|   rather than by Windows itself.
+--|
 --| Revision 1.31  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

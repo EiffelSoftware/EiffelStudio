@@ -15,7 +15,8 @@ inherit
 			lock_update,
 			unlock_update
 		redefine
-			interface
+			interface,
+			set_current_push_button
 		end
 
 	EV_TITLED_WINDOW_IMP
@@ -501,50 +502,25 @@ feature {NONE} -- Implementation
 				if focus_on_widget.item /= Void then
 					focus_on_widget.item.process_standard_key_press (Vk_escape)	
 				end
-				call_default_button_action (False)
-				
+			
 				-- Enter has been pressed in `Current', so we 
 				-- call the `select_actions' of the default_push_button.
 				-- See "Dialog Box Keyboard Interface" in MSDN.
 			elseif wparam = bn_clicked or (wparam = idok and lparam = 0) then
-				if focus_on_widget.item /= Void and then
-					focus_on_widget.item.interface /= interface.default_push_button
-				then
-					focus_on_widget.item.process_standard_key_press (Vk_return)
+				if focus_on_widget.item /= Void then
 						-- We must now call the `return_actions' on the text_field.
 					text_field_imp ?= focus_on_widget.item
 					if text_field_imp /= Void then
 						text_field_imp.return_actions.call ([])
 					end
+					
+					focus_on_widget.item.process_standard_key_press (Vk_return)
 				end
-				call_default_button_action (True)
 			else
 				Precursor {EV_TITLED_WINDOW_IMP} (wparam, lparam)
 			end
 		end
 		
-	call_default_button_action (use_push_button: BOOLEAN) is
-			-- Call the action for the default push button if `a_push_button' is
-			-- set, for the default cancel button otherwise.
-		local
-			button_actions: EV_NOTIFY_ACTION_SEQUENCE
-			button: EV_BUTTON
-		do
-			if not interface.is_destroyed then
-				if use_push_button then
-					button := interface.default_push_button
-				else
-					button := interface.default_cancel_button
-				end
-				if button /= Void and then button.is_sensitive and then button.is_displayed then
-					button_actions := button.select_actions
-					if button_actions /= Void then
-						button_actions.call ([])
-					end
-				end
-			end
-		end
-
 	process_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: INTEGER): INTEGER is
 			-- Process all message plus `WM_INITDIALOG'.
 		do
@@ -577,6 +553,21 @@ feature {NONE} -- Implementation
 			destroy_item
 		end
 
+feature {EV_WIDGET_I} -- Implementation
+
+	set_current_push_button (a_button: EV_BUTTON) is
+			-- Set the push button to be `a_button'. `a_button' can
+			-- be Void if there are no more current push button
+		local
+			widget_imp: EV_WIDGET_IMP
+		do
+			Precursor {EV_DIALOG_I} (a_button)
+			if item /= Void then
+				widget_imp ?= item.implementation
+				widget_imp.redraw_current_push_button (a_button)
+			end
+		end
+		
 end -- class EV_DIALOG_IMP_COMMON
 
 --!-----------------------------------------------------------------------------

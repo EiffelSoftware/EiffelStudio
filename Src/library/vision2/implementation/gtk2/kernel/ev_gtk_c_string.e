@@ -87,7 +87,8 @@ feature -- Access
 		do
 			str_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_from_utf8 (item, -1, $bytes_read, $bytes_written, $gerror)
 			if str_ptr /= default_pointer then
-				create Result.make_from_c (str_ptr)				
+				create Result.make_from_c (str_ptr)
+				feature {EV_GTK_EXTERNALS}.g_free (str_ptr)
 			else
 				-- Sometimes the UTF8 string cannot be translated
 				create Result.make_from_c (item)

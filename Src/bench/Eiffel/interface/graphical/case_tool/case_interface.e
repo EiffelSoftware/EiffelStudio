@@ -107,7 +107,8 @@ feature
 			scroll_list2.add_default_action (a_command1, Void )
 
 			!BROWSE_COM!a_command2.make ( Current )
-			browsw_b.add_activate_action ( browse, Void )
+			browsw_b.add_activate_action ( a_command2, Void )
+
 			! EXIT_REVERSE ! a_command2.make ( Current)
 			exit_b.add_activate_action (a_command2, Void )
 			! GENERATE_ALL_REVERSE ! a_command2.make ( Current )

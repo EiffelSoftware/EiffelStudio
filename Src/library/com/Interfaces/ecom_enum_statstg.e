@@ -35,7 +35,7 @@ feature -- Access
 			-- Change position in enumeration.
 		require
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		local
 			local_statstg: ECOM_STATSTG
 		do

@@ -375,20 +375,23 @@ feature {NONE} -- Implementation
 	set_name_label_text (a_text: STRING) is
 			-- Set `name_label'.`text' to `a_text'.
 		local
-			l_features: LIST [E_FEATURE]
-			l_item: E_FEATURE
+			l_features: LIST [FEATURE_AS]
+			l_item: FEATURE_AS
+			e_feature: E_FEATURE
 		do
 			name_label.set_text (a_text)
-			l_features := model.e_features
+			l_features := model.features
 			if l_features.is_empty then
 				name_label.remove_pebble
 			else
 				l_item := l_features.first
 				
-				if l_item.name.is_equal (model.features.first.feature_name) then
-					name_label.set_pebble (create {FEATURE_STONE}.make (l_item))
+				e_feature := e_feature_from_abstract (l_item)
+				
+				if e_feature /= Void then
+					name_label.set_pebble (create {FEATURE_STONE}.make (e_feature))
 				else
-					name_label.remove_pebble
+					name_label.set_pebble (create {CLASSI_STONE}.make (model.client.class_i))
 				end
 			end
 		end

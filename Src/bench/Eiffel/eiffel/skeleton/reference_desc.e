@@ -29,11 +29,11 @@ feature
 			Result := Reference_level;
 		end;
 
-	generate_code (file: INDENT_FILE) is
+	generate_code (buffer: GENERATION_BUFFER) is
 			-- Generate type code for current attribute description in
-			-- file `file'.
+			-- `buffer'.
 		do
-			file.putstring ("SK_REF");
+			buffer.putstring ("SK_REF");
 		end;
 
 	sk_value: INTEGER is

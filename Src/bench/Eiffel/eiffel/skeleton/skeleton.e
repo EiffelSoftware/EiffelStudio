@@ -15,6 +15,7 @@ inherit
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
 	COMPILER_EXPORTER
+	SHARED_GENERATION
 
 creation
 	make
@@ -142,38 +143,37 @@ feature
 			end;
 		end;
 
-	generate_size (file: INDENT_FILE) is
-			-- Generate the size of current skeleton in file `file'.
+	generate_size (buffer: GENERATION_BUFFER) is
+			-- Generate the size of current skeleton in `buffer'.
 		require
-			good_argument: file /= Void;
-			is_open: file.is_open_write or file.is_open_append;
+			good_argument: buffer /= Void;
 		local
 			expanded_desc: EXPANDED_DESC;
 			bit_desc: BITS_DESC;
 			expanded_skeleton: SKELETON;
 		do
-			file.putstring ("@OBJSIZ(");
-			file.putint (nb_reference + nb_expanded);
-			file.putchar (',');
-			file.putint (nb_character);
-			file.putchar (',');
-			file.putint (nb_integer);
-			file.putchar (',');
-			file.putint (nb_real);
-			file.putchar (',');
-			file.putint (nb_pointer);
-			file.putchar (',');
-			file.putint (nb_double);
-			file.putchar (')');
+			buffer.putstring ("@OBJSIZ(");
+			buffer.putint (nb_reference + nb_expanded);
+			buffer.putchar (',');
+			buffer.putint (nb_character);
+			buffer.putchar (',');
+			buffer.putint (nb_integer);
+			buffer.putchar (',');
+			buffer.putint (nb_real);
+			buffer.putchar (',');
+			buffer.putint (nb_pointer);
+			buffer.putchar (',');
+			buffer.putint (nb_double);
+			buffer.putchar (')');
 			go_bits;
 			from
 			until
 				after or else item.level /= Bits_level
 			loop
 				bit_desc ?= item;
-				file.putstring ("+OVERHEAD+BITOFF(");
-				file.putint (bit_desc.value);
-				file.putchar (')');
+				buffer.putstring ("+OVERHEAD+BITOFF(");
+				buffer.putint (bit_desc.value);
+				buffer.putchar (')');
 				forth;
 			end;
 			go_expanded;
@@ -183,16 +183,16 @@ feature
 			loop
 				expanded_desc ?= item;
 				expanded_skeleton := expanded_desc.class_type.skeleton;
-				file.putstring ("+OVERHEAD+");
-				expanded_skeleton.generate_size (file);
+				buffer.putstring ("+OVERHEAD+");
+				expanded_skeleton.generate_size (buffer);
 				forth;
 			end;
 		end;
 
-	generate_workbench_size (file: INDENT_FILE) is
+	generate_workbench_size (buffer: GENERATION_BUFFER) is
 			-- Generate size of the skeleton in workbench mode.
 		do
-			file.putint (workbench_size);
+			buffer.putint (workbench_size);
 		end;
 
 	workbench_size: INTEGER is
@@ -230,36 +230,33 @@ feature
 			end;
 		end;
 
-	generate_offset (file: INDENT_FILE; feature_id: INTEGER; is_in_attr_table: BOOLEAN) is
+	generate_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER; is_in_attr_table: BOOLEAN) is
 			-- Generate offset for attribute of feature id `feature_id'
-			-- in file `file'.
+			-- in `buffer'.
 		require
 			has_feature_id: has_feature_id (feature_id);
-			good_argument: file /= Void;
-			good_context: file.is_open_write or else file.is_open_append;
+			good_argument: buffer /= Void;
 		do
 			search_feature_id (feature_id);
-			generate (file, is_in_attr_table);
+			generate (buffer, is_in_attr_table);
 		end;
 
-	generate_workbench_offset (file: INDENT_FILE; feature_id: INTEGER) is
+	generate_workbench_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER) is
 			-- Generate offset for attribute of feature id `feature_id'
-			-- in file `file' in workbench mode only.
+			-- in `buffer' in workbench mode only.
 		require
 			has_feature_id: has_feature_id (feature_id);
-			good_argument: file /= Void;
-			good_context: file.is_open_write or else file.is_open_append;
+			good_argument: buffer /= Void;
 		do
 			search_feature_id (feature_id);
-			file.putint (workbench_offset);
+			buffer.putint (workbench_offset);
 		end;
 
-	generate (file: INDENT_FILE; is_in_attr_table: BOOLEAN) is
+	generate (buffer: GENERATION_BUFFER; is_in_attr_table: BOOLEAN) is
 			-- Generate offset of the attribute at the current position
 		require
 			not_off: not off;
-			good_argument: file /= Void;
-			good_context: file.is_open_write or else file.is_open_append;
+			good_argument: buffer /= Void;
 		local
 			nb_ref, nb_int, nb_char, nb_flt, nb_dbl, nb_ptr: INTEGER;
 			pos, level: INTEGER;
@@ -274,77 +271,77 @@ feature
 			when Reference_level then
 				value := index - 1
 				if value /= 0 then
-					file.putstring (" + @REFACS(");
-					file.putint (value);
-					file.putchar (')');
+					buffer.putstring (" + @REFACS(");
+					buffer.putint (value);
+					buffer.putchar (')');
 				elseif is_in_attr_table then
-					file.putchar ('0')
+					buffer.putchar ('0')
 				end
 			when Character_level, Boolean_level then
 				nb_ref := nb_reference;
-				file.putstring ("+ @CHROFF(");
-				file.putint (nb_ref + nb_expanded);
-				file.putchar (',');
-				file.putint (index - nb_ref - 1)
-				file.putchar (')');
+				buffer.putstring ("+ @CHROFF(");
+				buffer.putint (nb_ref + nb_expanded);
+				buffer.putchar (',');
+				buffer.putint (index - nb_ref - 1)
+				buffer.putchar (')');
 			when Integer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				file.putstring ("+ @LNGOFF(");
-				file.putint (nb_ref + nb_expanded);
-				file.putchar (',');
-				file.putint (nb_character);
-				file.putchar (',');
-				file.putint (index - nb_ref - nb_char - 1)
-				file.putchar (')');
+				buffer.putstring ("+ @LNGOFF(");
+				buffer.putint (nb_ref + nb_expanded);
+				buffer.putchar (',');
+				buffer.putint (nb_character);
+				buffer.putchar (',');
+				buffer.putint (index - nb_ref - nb_char - 1)
+				buffer.putchar (')');
 			when Real_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int := nb_integer;
-				file.putstring ("+ @FLTOFF(");
-				file.putint (nb_ref + nb_expanded);
-				file.putchar (',');
-				file.putint (nb_char);
-				file.putchar (',');
-				file.putint (nb_int);
-				file.putchar (',');
-				file.putint (index - nb_ref - nb_char - nb_int - 1)
-				file.putchar (')');
+				buffer.putstring ("+ @FLTOFF(");
+				buffer.putint (nb_ref + nb_expanded);
+				buffer.putchar (',');
+				buffer.putint (nb_char);
+				buffer.putchar (',');
+				buffer.putint (nb_int);
+				buffer.putchar (',');
+				buffer.putint (index - nb_ref - nb_char - nb_int - 1)
+				buffer.putchar (')');
 			when Pointer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int := nb_integer;
 				nb_flt := nb_real;
-				file.putstring ("+ @PTROFF(");
-				file.putint (nb_ref + nb_expanded);
-				file.putchar (',');
-				file.putint (nb_char);
-				file.putchar (',');
-				file.putint (nb_int);
-				file.putchar (',');
-				file.putint (nb_flt);
-				file.putchar (',');
-				file.putint (index - nb_ref - nb_char - nb_int - nb_flt - 1)
-				file.putchar (')');
+				buffer.putstring ("+ @PTROFF(");
+				buffer.putint (nb_ref + nb_expanded);
+				buffer.putchar (',');
+				buffer.putint (nb_char);
+				buffer.putchar (',');
+				buffer.putint (nb_int);
+				buffer.putchar (',');
+				buffer.putint (nb_flt);
+				buffer.putchar (',');
+				buffer.putint (index - nb_ref - nb_char - nb_int - nb_flt - 1)
+				buffer.putchar (')');
 			when Double_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int := nb_integer;
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
-				file.putstring ("+ @DBLOFF(");
-				file.putint (nb_ref + nb_expanded);
-				file.putchar (',');
-				file.putint (nb_char);
-				file.putchar (',');
-				file.putint (nb_int);
-				file.putchar (',');
-				file.putint (nb_flt);
-				file.putchar (',');
-				file.putint (nb_ptr);
-				file.putchar (',');
-				file.putint (index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr - 1)
-				file.putchar (')');
+				buffer.putstring ("+ @DBLOFF(");
+				buffer.putint (nb_ref + nb_expanded);
+				buffer.putchar (',');
+				buffer.putint (nb_char);
+				buffer.putchar (',');
+				buffer.putint (nb_int);
+				buffer.putchar (',');
+				buffer.putint (nb_flt);
+				buffer.putchar (',');
+				buffer.putint (nb_ptr);
+				buffer.putchar (',');
+				buffer.putint (index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr - 1)
+				buffer.putchar (')');
 			else
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -352,19 +349,19 @@ feature
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
 				nb_dbl := nb_double;
-				file.putstring ("+ @OBJSIZ(");
-				file.putint (nb_ref + nb_expanded);
-				file.putchar (',');
-				file.putint (nb_char);
-				file.putchar (',');
-				file.putint (nb_int);
-				file.putchar (',');
-				file.putint (nb_flt);
-				file.putchar (',');
-				file.putint (nb_ptr);
-				file.putchar (',');
-				file.putint (nb_dbl);
-				file.putchar (')');
+				buffer.putstring ("+ @OBJSIZ(");
+				buffer.putint (nb_ref + nb_expanded);
+				buffer.putchar (',');
+				buffer.putint (nb_char);
+				buffer.putchar (',');
+				buffer.putint (nb_int);
+				buffer.putchar (',');
+				buffer.putint (nb_flt);
+				buffer.putchar (',');
+				buffer.putint (nb_ptr);
+				buffer.putchar (',');
+				buffer.putint (nb_dbl);
+				buffer.putchar (')');
 				if level = Bits_level then
 					from
 						pos := index;
@@ -372,13 +369,13 @@ feature
 					until
 						index >= pos
 					loop
-						file.putstring ("+OVERHEAD+BITOFF(");
+						buffer.putstring ("+OVERHEAD+BITOFF(");
 						bit_desc ?= item;
-						file.putint (bit_desc.value);
-						file.putchar (')');
+						buffer.putint (bit_desc.value);
+						buffer.putchar (')');
 						forth;
 					end;
-					file.putstring ("+OVERHEAD");
+					buffer.putstring ("+OVERHEAD");
 				else
 					from
 						pos := index;
@@ -386,10 +383,10 @@ feature
 					until
 						after or else item.level /= Bits_level
 					loop
-						file.putstring ("+OVERHEAD+BITOFF(");
+						buffer.putstring ("+OVERHEAD+BITOFF(");
 						bit_desc ?= item;
-						file.putint (bit_desc.value);
-						file.putchar (')');
+						buffer.putint (bit_desc.value);
+						buffer.putchar (')');
 						forth;
 					end;
 					from
@@ -397,12 +394,12 @@ feature
 					until
 						index >= pos
 					loop
-						file.putstring ("+OVERHEAD+");
+						buffer.putstring ("+OVERHEAD+");
 						expanded_desc ?= item;
-						expanded_desc.class_type.skeleton.generate_size (file);
+						expanded_desc.class_type.skeleton.generate_size (buffer);
 						forth
 					end;
-					file.putstring ("+OVERHEAD");
+					buffer.putstring ("+OVERHEAD");
 				end;
 			end;
 		end;
@@ -585,65 +582,65 @@ feature
 			ba.append_integer (workbench_offset);
 		end;
 
-	Skeleton_file: INDENT_FILE is
-		do
-			Result := System.Skeleton_file
-		end;
-
 	generate_name_array is
 			-- Generate static C array of attributes names in the
 			-- skeleton file.
 		require
-			Skeleton_file.is_open_write;
 			not empty;
+		local
+			buffer: GENERATION_BUFFER
 		do
-			Skeleton_file.putchar ('{');
-			Skeleton_file.new_line;
+			buffer := generation_buffer
+			buffer.putchar ('{');
+			buffer.new_line;
 			from
 				start
 			until
 				after
 			loop
-				Skeleton_file.putchar ('"');
-				Skeleton_file.putstring (item.attribute_name);
-				Skeleton_file.putstring ("%",%N");
+				buffer.putchar ('"');
+				buffer.putstring (item.attribute_name);
+				buffer.putstring ("%",%N");
 				forth;
 			end;
-			Skeleton_file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
 	generate_type_array is
 			-- Generate static C array of attributes type codes in the
 			-- skeleton file.
 		require
-			Skeleton_file.is_open_write;
 			not empty;
+		local
+			buffer: GENERATION_BUFFER
 		do
-			Skeleton_file.putchar ('{');
-			Skeleton_file.new_line;
+			buffer := generation_buffer
+			buffer.putchar ('{');
+			buffer.new_line;
 			from
 				start
 			until
 				after
 			loop
-				item.generate_code (Skeleton_file);
-				Skeleton_file.putstring (",%N");
+				item.generate_code (buffer);
+				buffer.putstring (",%N");
 				forth;
 			end;
-			Skeleton_file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
 	generate_offset_array is
 			-- Generate static C array of attributes offset table pointers.
 		require
-			Skeleton_file.is_open_write;
 			not empty;
 		local
+			buffer: GENERATION_BUFFER
 			rout_id: ROUTINE_ID;
 			tbl: POLY_TABLE [ENTRY];
 		do
-			Skeleton_file.putchar ('{');
-			Skeleton_file.new_line;
+			buffer := generation_buffer
+			buffer.putchar ('{');
+			buffer.new_line;
 			from
 				start;
 			until
@@ -652,13 +649,13 @@ feature
 				rout_id := item.rout_id;
 				tbl := Eiffel_table.poly_table (rout_id);
 					-- Generate a special prefix when dealing with DLE.
-				Skeleton_file.putstring (rout_id.table_name);
-				Skeleton_file.putstring (" - ");
-				Skeleton_file.putint (tbl.min_type_id - 1);
-				Skeleton_file.putstring (",%N");
+				buffer.putstring (rout_id.table_name);
+				buffer.putstring (" - ");
+				buffer.putint (tbl.min_type_id - 1);
+				buffer.putstring (",%N");
 				forth;
 			end;
-			Skeleton_file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
 	make_extern_declarations is
@@ -682,21 +679,23 @@ feature
 	generate_rout_id_array is
 			-- Generate static C array of attributes routine ids
 		require
-			Skeleton_file.is_open_write;
 			not empty;
+		local
+			buffer: GENERATION_BUFFER
 		do
-			Skeleton_file.putchar ('{');
-			Skeleton_file.new_line;
+			buffer := generation_buffer
+			buffer.putchar ('{');
+			buffer.new_line;
 			from
 				start;
 			until
 				after
 			loop
-				Skeleton_file.putint (item.rout_id.id);
-				Skeleton_file.putstring (",%N");
+				buffer.putint (item.rout_id.id);
+				buffer.putstring (",%N");
 				forth;
 			end;
-			Skeleton_file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
 feature {NONE} -- Externals

@@ -114,11 +114,11 @@ feature
 			-- Do nothing
 		end;
 
-	generate_code (file: INDENT_FILE) is
+	generate_code (buffer: GENERATION_BUFFER) is
 			-- Generate type code for current attribute description in
 			-- file `file'.
 		require
-			file.is_open_write;
+			buffer /= Void;
 		deferred
 		end;
 

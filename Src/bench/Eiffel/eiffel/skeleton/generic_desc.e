@@ -61,7 +61,7 @@ feature
 			Result := Formal_level;
 		end;
 
-	generate_code (file: INDENT_FILE) is
+	generate_code (buffer: GENERATION_BUFFER) is
 			-- Useless
 		do
 		end;

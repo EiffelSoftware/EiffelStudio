@@ -35,14 +35,15 @@ inherit
 			destroy as wel_destroy,
 			width as wel_width,
 			height as wel_height,
-			text as wel_text,
 			item as wel_item,
 			enabled as is_sensitive,
 			x as x_position,
 			y as y_position,
 			move_and_resize as wel_move_and_resize,
 			move as wel_move,
-			resize as wel_resize
+			resize as wel_resize,
+			text as wel_text,
+			set_text as wel_set_text
 		undefine
 			window_process_message,
 			remove_command,
@@ -62,7 +63,7 @@ inherit
 			on_set_cursor,
 			on_bn_clicked,
 			on_size,
-			set_text,
+			wel_set_text,
 			show,
 			hide
 		end	
@@ -115,6 +116,9 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.26  2000/03/22 22:57:10  brendel
 --| Fixed comma's.
 --|
@@ -136,7 +140,8 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --| to WEL, but it is unclear what exactly has to be done.
 --|
 --| Revision 1.22  2000/03/07 17:39:03  rogers
---| Undefined on_size from WEL_SELECTABLE_BUTTON as this is now inherited from EV_BUTTON_IMP.
+--| Undefined on_size from WEL_SELECTABLE_BUTTON as this is now inherited from
+--| EV_BUTTON_IMP.
 --|
 --| Revision 1.21  2000/03/07 01:17:44  brendel
 --| Added undefine of wel_make and make_by_id.
@@ -149,7 +154,8 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --| Now uses WEL_SELECTABLE_BUTTON instead of calling win32 directly.
 --|
 --| Revision 1.18  2000/02/23 20:22:57  rogers
---| Improved comments. Removed old command association. Removed on_bn_clicked, as ancestor version
+--| Improved comments. Removed old command association. Removed on_bn_clicked,
+--| as ancestor version
 --| is now used. Added interface.
 --|
 --| Revision 1.17  2000/02/19 06:34:13  oconnor
@@ -172,7 +178,8 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --| Commented out old command execution.
 --|
 --| Revision 1.14.4.2  2000/01/10 19:03:36  rogers
---| Changed to comply with major Vision2 changes. see diff for redefinitions. make_with_text is removed.
+--| Changed to comply with major Vision2 changes. see diff for redefinitions.
+--| make_with_text is removed.
 --| All references to item are replaced with wel_item.
 --|
 --| Revision 1.14.4.1  1999/11/24 17:30:35  oconnor

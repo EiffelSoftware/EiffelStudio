@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			width := 50
-			text := ""
+			real_text := ""
 		end
 
 	initialize is
@@ -44,7 +44,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING
+	wel_text: STRING is
+		do
+			Result := clone (real_text)
+		end
+
+	real_text: STRING
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -92,10 +97,10 @@ feature -- Status setting
 			end
 		end
 
-	set_text (txt: STRING) is
+	wel_set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
-			text := clone (txt)
+			real_text := clone (txt)
 			if parent_imp /= Void then
 				parent_imp.internal_set_text (Current, txt)
 			end
@@ -177,6 +182,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.17  2000/03/27 21:52:46  pichery
 --| implemented new deferred features from EV_PICK_AND_DROPPABLE_IMP
 --| `set_heavy_capture' and `release_heavy_capture'.

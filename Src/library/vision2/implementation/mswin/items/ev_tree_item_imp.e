@@ -24,7 +24,6 @@ inherit
 			set_pointer_style
 		redefine
 			parent_imp,
-			set_text,
 			destroy,
 			interface,
 			pnd_press,
@@ -42,11 +41,12 @@ inherit
 	WEL_TREE_VIEW_ITEM
 		rename
 			text as wel_text,
+			set_text as wel_set_text,
 			make as wel_make,
 			children as children_nb,
 			item as wel_item
 		redefine
-			set_text
+			wel_set_text
 		end
 
 	WEL_TVIS_CONSTANTS
@@ -307,9 +307,6 @@ feature -- Access
 	parent_imp: EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
 			-- Parent implementation
 
-	text: STRING
-			-- Item text.
-
 	top_parent_imp: EV_TREE_IMP is
 			-- Implementation of `parent_tree'.
 		do
@@ -398,16 +395,13 @@ feature -- Status setting
  
 feature -- Element change
 
-	set_text (txt: STRING) is
+	wel_set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		local
 			tree: EV_TREE_IMP
 		do
-			-- First we set localy the text
 			set_mask (Tvif_text)
-			text := clone (txt)
 			Precursor (txt)
-			-- Then, we update the graphical tree.
 			tree := top_parent_imp
 			if tree /= Void then
 				tree.notify_item_info (Current)
@@ -556,6 +550,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.46  2000/03/27 23:11:25  rogers
 --| Formatting.
 --|
@@ -631,7 +628,8 @@ end -- class EV_TREE_ITEM_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.24.6.2  1999/12/17 17:29:52  rogers
---| Altered to fit in with the review branch. Make takes an interface. Now inherits from EV_PICK_AND_dROPABLE_IMP.
+--| Altered to fit in with the review branch. Make takes an interface. Now
+--| inherits from EV_PICK_AND_dROPABLE_IMP.
 --|
 --| Revision 1.24.6.1  1999/11/24 17:30:17  oconnor
 --| merged with DEVEL branch

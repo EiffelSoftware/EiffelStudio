@@ -51,13 +51,12 @@ inherit
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
-			text as wel_text,
 			make as ev_wel_control_container_make
 		redefine
 			on_paint,
 			top_level_window_imp,
 			wel_move_and_resize,
-			set_text
+			wel_set_text
 		end
 
 creation
@@ -110,15 +109,6 @@ feature -- Access
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains the current widget.
 
-	text: STRING is
-			-- Frame caption.
-		do	
-			Result := wel_text
-			if Result.empty then
-				Result := Void
-			end
-		end
-
 feature -- Status setting
 
 	set_default_minimum_size is
@@ -135,7 +125,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_text (txt: STRING) is
+	wel_set_text (txt: STRING) is
 			-- Set the window text
 		do
 			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (txt)
@@ -309,6 +299,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.24  2000/03/21 23:39:00  brendel
 --| Modified inheritance clause in compliance with EV_SIZEABLE_IMP.
 --|

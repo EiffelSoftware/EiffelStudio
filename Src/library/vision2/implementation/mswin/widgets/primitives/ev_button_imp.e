@@ -77,12 +77,13 @@ inherit
 			enabled as is_sensitive,
 			width as wel_width,
 			height as wel_height,
-			text as wel_text,
 			x as x_position,
 			y as y_position,
 			move as wel_move,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			move_and_resize as wel_move_and_resize,
+			text as wel_text,
+			set_text as wel_set_text
 		undefine
 			window_process_message,
 			remove_command,
@@ -106,7 +107,7 @@ inherit
 		redefine
 			default_style,
 			on_bn_clicked,
-			set_text
+			wel_set_text
 		end
 
 creation
@@ -142,15 +143,6 @@ feature -- Access
 			--|---------------------------------------------------------------
 		do
 			Result := wel_window_parent
-		end
-
-	text: STRING is
-			-- Return text of button, Void if button has no text.
-		do
-			Result := wel_text
-			if Result.count = 0  then
-				Result := Void
-			end
 		end
 
 	extra_width: INTEGER
@@ -221,7 +213,7 @@ feature -- Element change
 			set_default_minimum_size
 		end
 
-	set_text (txt: STRING) is
+	wel_set_text (txt: STRING) is
 			-- Set the button `text' to `txt'
 		do
 			{WEL_BITMAP_BUTTON} Precursor (txt)
@@ -253,7 +245,8 @@ feature {NONE} -- WEL Implementation
 			-- Button re-sized.
 		do
 			Precursor (size_type, a_width, a_height)
-			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
+			interface.resize_actions.call ([screen_x, screen_y, a_width,
+				a_height])
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -324,6 +317,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.43  2000/03/23 18:20:53  brendel
 --| replaced obsolete call.
 --|
@@ -340,7 +336,8 @@ end -- class EV_BUTTON_IMP
 --| Before, both were available.
 --|
 --| Revision 1.41  2000/03/07 17:41:21  rogers
---| Redefined on_size from WEL_BITMAP_BUTTON so the re-size actions can be called.
+--| Redefined on_size from WEL_BITMAP_BUTTON so the re-size actions can be
+--| called.
 --|
 --| Revision 1.40  2000/03/03 00:55:56  brendel
 --| Changed `text' to `safe_text'.
@@ -364,7 +361,8 @@ end -- class EV_BUTTON_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.35.10.10  2000/01/19 23:54:49  rogers
---| renamed interface inherited from EV_FONTABLE_IMP as ev_fontable_interface, and selected interface from EV_BUTTON_I.
+--| renamed interface inherited from EV_FONTABLE_IMP as ev_fontable_interface,
+--| and selected interface from EV_BUTTON_I.
 --|
 --| Revision 1.35.10.9  2000/01/19 21:46:09  king
 --| Tidied up comments, removed untabbed spacing
@@ -382,13 +380,16 @@ end -- class EV_BUTTON_IMP
 --| Commented out pixmap-size related functions.
 --|
 --| Revision 1.35.10.4  1999/12/22 18:56:41  rogers
---| pixmap_size_ok has been removed, maximium_pixmap_width and maximum_pixmap_height have been implemented. unset_pixmap has been renamed to remove_pixmap.
+--| pixmap_size_ok has been removed, maximium_pixmap_width and
+--| maximum_pixmap_height have been implemented. unset_pixmap has been renamed
+--| to remove_pixmap.
 --|
 --| Revision 1.35.10.3  1999/12/22 17:51:56  rogers
 --| Removed the old command call when a button is clicked.
 --|
 --| Revision 1.35.10.2  1999/12/17 00:43:04  rogers
---| Altered to fit in with the review branch. Some redefinitions required, make now takes an interface.
+--| Altered to fit in with the review branch. Some redefinitions required,
+--| make now takes an interface.
 --|
 --| Revision 1.35.10.1  1999/11/24 17:30:31  oconnor
 --| merged with DEVEL branch

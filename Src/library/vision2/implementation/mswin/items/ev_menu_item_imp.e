@@ -18,7 +18,9 @@ inherit
 		undefine
 			parent
 		redefine
-			interface
+			interface,
+			set_text,
+			text
 		end
 
 	EV_ID_IMP
@@ -36,6 +38,7 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
+			-- Initialize `is_sensitive' True.
 		do
 			is_sensitive := True
 			is_initialized := True
@@ -43,8 +46,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING
-			-- Caption of the menu item.
+	text: STRING is
+			-- Text displayed in label.
+		do
+			Result := clone (wel_text)
+		end 
+
+feature -- Element change
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			wel_set_text (a_text)
+		end
 
 feature -- Status report
 
@@ -85,16 +99,23 @@ feature -- Element change
 			end
 		end
 
-	set_text (txt: STRING) is
-			-- Set `text' to `txt'.
+feature {NONE} -- Implementation
+
+	wel_text: STRING
+			-- Caption of the menu item.
+			--| For the specification given in the note of EV_MENU_ITEM,
+			--| we do not have to take any special action.
+			--| Does not return internal toolkit string because it is possible
+			--| to set the string without parent.
+
+	wel_set_text (a_text: STRING) is
+			-- Set `text' to `a_txt'. See `wel_text'.
 		do
-			text := clone (txt)
+			wel_text := clone (a_text)
 			if has_parent then
-				parent_imp.modify_string (text, id)
+				parent_imp.modify_string (a_text, id)
 			end
 		end
-
-feature {NONE} -- Implementation
 
 	parent_imp: EV_MENU_ITEM_LIST_IMP
 			-- The menu or menu-bar this item is in.
@@ -114,21 +135,21 @@ feature {NONE} -- Implementation
 				      parent_imp.item_exists (id)
 		end
 
-	--|FIXME implement as now pick and dropable
+feature {NONE} -- Inapplicable
 
 	set_capture is
-			-- Grap user input
+			-- Grab user input.
 		do
 			check
-				to_be_implemented: FALSE
+				inapplicable: False
 			end
 		end
 
 	release_capture is
-			-- Release user input
+			-- Release grab.
 		do
 			check
-				to_be_implemented: FALSE
+				inapplicable: False
 			end
 		end
 
@@ -136,7 +157,7 @@ feature {NONE} -- Implementation
 			-- Grap user input
 		do
 			check
-				to_be_implemented: FALSE
+				inapplicable: False
 			end
 		end
 
@@ -144,7 +165,7 @@ feature {NONE} -- Implementation
 			-- Release user input
 		do
 			check
-				to_be_implemented: FALSE
+				inapplicable: False
 			end
 		end
 
@@ -185,6 +206,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.32  2000/03/27 21:52:46  pichery
 --| implemented new deferred features from EV_PICK_AND_DROPPABLE_IMP
 --| `set_heavy_capture' and `release_heavy_capture'.

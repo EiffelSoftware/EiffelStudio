@@ -27,7 +27,9 @@ inherit
 			move as wel_move,
 			move_and_resize as wel_move_and_resize,
 			x as x_position,
-			y as y_position
+			y as y_position,
+			text as wel_text,
+			set_text as wel_set_text
 		undefine
 			window_process_message,
 			set_width,
@@ -193,6 +195,9 @@ end -- class EV_WEL_CONTROL_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/28 00:17:00  brendel
+--| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.19  2000/03/21 23:39:01  brendel
 --| Modified inheritance clause in compliance with EV_SIZEABLE_IMP.
 --|

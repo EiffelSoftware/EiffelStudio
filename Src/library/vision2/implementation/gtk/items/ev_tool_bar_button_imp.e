@@ -59,6 +59,8 @@ feature {NONE} -- Initialization
 			-- to `destroy' event.
 		do
 			{EV_BUTTON_IMP} Precursor
+			set_minimum_height(20)
+			set_minimum_width(20)
 
 			initialize_object_handling
 		end
@@ -79,9 +81,7 @@ feature -- Access
 			Result := parent_imp.ev_children.index_of (Current, 1)
 		end
 
-
 	parent_imp: EV_TOOL_BAR_IMP
-
 
 feature -- Element Change
 
@@ -105,7 +105,7 @@ feature -- Element Change
 
 	create_pixmap_place (pix_imp: EV_PIXMAP_IMP) is
 		do
-			-- Redfinition needed to align pixmap in centre of button.
+			-- Redefinition needed to align pixmap in centre of button.
 			{EV_BUTTON_IMP} Precursor (pix_imp)
 			if pixmap_widget /= default_pointer then
 				gtk_misc_set_alignment (gtk_misc (pixmap_widget), 0.5, 0)

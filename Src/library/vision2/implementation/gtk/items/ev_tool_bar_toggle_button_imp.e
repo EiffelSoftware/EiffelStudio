@@ -32,7 +32,6 @@ feature -- Initialization
 		do
 			widget := gtk_toggle_button_new
 			gtk_object_ref (widget)
-		
 			-- Create the box (for caption and pixmap)
 			initialize
 		end

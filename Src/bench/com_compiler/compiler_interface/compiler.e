@@ -10,32 +10,19 @@ inherit
 	CEIFFEL_COMPILER_COCLASS_IMP
 		redefine
 			make,
-			is_successful,
 			compile,
-			finalize,
-			precompile,
 			compile_to_pipe,
-			finalize_to_pipe,
-			precompile_to_pipe,
 			freezing_occurred,
 			compiler_version,
-			generate_msil_keyfile,
+			generate_msil_key_file_name,
 			Freeze_command_name,
 			freeze_command_arguments,
 			remove_file_locks,
 			has_signable_generation,
 			expand_path,
-			is_output_piped,
-			output_pipe_name,
-			set_output_pipe_name,
-			compile_to_pipe_user_precondition,
-			finalize_to_pipe_user_precondition,
-			precompile_to_pipe_user_precondition,
-			generate_msil_keyfile_user_precondition,
-			expand_path_user_precondition,
-			set_output_pipe_name_user_precondition,
 			can_run,
-			set_display_warnings
+			set_display_warnings,
+			was_compilation_successful
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -71,7 +58,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize structure.
 		do
-			is_successful := False
+			was_compilation_successful := False
 			create last_error_message.make_from_string ("System has not been compiled")
 			display_warnings := True
 			set_compiler (Current)
@@ -79,7 +66,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_successful: BOOLEAN
+	was_compilation_successful: BOOLEAN
 			-- Was last compilation successful?
 
 	last_error_message: STRING
@@ -199,28 +186,46 @@ feature -- Basic Operations
 			Result := checker.can_run or checker.is_licensed
 		end
 		
-	compile is
+	compile (mode: INTEGER) is
 			-- Compile.
 		local
 			rescued: BOOLEAN
 		do
-			is_successful := False
+			was_compilation_successful := False
 			if not rescued then
 				if not Eiffel_project.is_compiling then
 					if is_output_piped then
+						-- compile to named pipe
 						set_piped_output (output_pipe_name)
 						event_begin_compile
-						Eiffel_project.melt
-						close_output_pipe
 					else
+						-- Compile to standard output
 						set_default_output
 						event_begin_compile
+					end
+					
+					-- perform compilation defined by `mode'
+					inspect mode
+					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_workbench then
 						Eiffel_project.melt
+					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_finalize then
+						Eiffel_project.finalize (False)
+					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_precompile then
+						Eiffel_project.precompile (True)
+					else
+						-- invalid arg
+						(create {ECOM_EXCEPTION}).trigger (feature {ECOM_EXCEPTION_CODES}.e_invalidarg)
 					end
+					
+					-- close output pipe for piped output
+					if is_output_piped then
+						close_output_pipe
+					end
+					
 					if Eiffel_project.successful then
-						is_successful := True
+						was_compilation_successful := True
 					end
-					event_end_compile (is_successful)
+					event_end_compile (was_compilation_successful)
 				end
 			else
 				output_error
@@ -233,11 +238,11 @@ feature -- Basic Operations
 			retry
 		end
 		
-	compile_to_pipe is
+	compile_to_pipe (mode: INTEGER; pipe_name: STRING) is
 			-- compile to pipe - returns pipe name
 		require else
-			non_void_output_pipe_name: output_pipe_name /= Void
-			valid_output_pipe_name: not output_pipe_name.is_empty
+			non_void_output_pipe_name: pipe_name /= Void
+			valid_output_pipe_name: not pipe_name.is_empty
 		do
 			output_pipe_name := Eiffel_ace.file_name
 			is_output_piped := True
@@ -246,99 +251,7 @@ feature -- Basic Operations
 			output_is_piped: is_output_piped
 		end
 		
-	finalize is
-			-- Finalize
-		local
-			rescued: BOOLEAN
-		do
-			is_successful := False
-			if not rescued then
-				if not Eiffel_project.is_compiling then
-					if is_output_piped then
-						set_piped_output (output_pipe_name)
-						event_begin_compile
-						Eiffel_project.finalize (False)
-						close_output_pipe
-					else
-						set_default_output
-						event_begin_compile
-						Eiffel_project.finalize (False)
-					end
-					if Eiffel_project.successful then
-						is_successful := True
-					end
-					event_end_compile (is_successful)
-				end
-			else
-				output_error
-				event_end_compile (False)
-			end
-		rescue
-			last_exception := exception_trace
-			close_output_pipe
-			rescued := True
-			retry
-		end
-		
-	finalize_to_pipe is
-			-- finalize to pipe - returns pipe name
-		require else
-			non_void_output_pipe_name: output_pipe_name /= Void
-			valid_output_pipe_name: not output_pipe_name.is_empty
-		do
-			is_output_piped := True
-			main_window.process_finalize
-		ensure then
-			output_is_piped: is_output_piped
-		end
-	
-	precompile is
-			-- Precompile
-		local
-			rescued: BOOLEAN
-		do
-			is_successful := False
-			if not rescued then
-				if not Eiffel_project.is_compiling then
-					if is_output_piped then
-						set_piped_output (output_pipe_name)
-						event_begin_compile
-						Eiffel_project.precompile (True)
-						close_output_pipe
-					else
-						set_default_output
-						event_begin_compile
-						Eiffel_project.precompile (True)
-					end
-					if Eiffel_project.successful then
-						is_successful := True
-					end
-					event_end_compile (is_successful)
-				end
-			else
-				output_error
-				event_end_compile (False)
-			end
-		rescue
-			close_output_pipe
-			last_exception := exception_trace
-			rescued := True
-			retry
-		end
-		
-	precompile_to_pipe is
-			-- precompile to pipe - returns pipe name
-		require else
-			non_void_output_pipe_name: output_pipe_name /= Void
-			valid_output_pipe_name: not output_pipe_name.is_empty
-		do
-			is_output_piped := True
-			main_window.process_precompile
-		ensure then
-			output_is_piped: is_output_piped
-		end
-		
-	generate_msil_keyfile (filename: STRING) is
+	generate_msil_key_file_name (filename: STRING) is
 			-- Generate an MSIL cryptographic key file
 		require else
 			filename_exists: filename /= Void
@@ -425,44 +338,6 @@ feature {PROJECT_MANAGER, COMPILER_TESTER} -- Element Change
 			--create compiler_degree_output
 		end
 		
-feature -- User Preconditions
-
-	expand_path_user_precondition (a_path: STRING): BOOLEAN is
-			-- expand_path precondition
-		do
-			Result := False
-		end
-		
-	generate_msil_keyfile_user_precondition (filename: STRING): BOOLEAN is
-			-- generate_msil_keyfile precondition
-		do
-			Result := False
-		end
-		
-	set_output_pipe_name_user_precondition (return_value: STRING): BOOLEAN is
-			-- set_output_pipe_name precondition
-		do
-			Result := False
-		end
-		
-	compile_to_pipe_user_precondition: BOOLEAN is
-			-- compile_to_pipe precondition
-		do
-			Result := False
-		end
-		
-	finalize_to_pipe_user_precondition: BOOLEAN is
-			-- finalize_to_pipe precondition
-		do
-			Result := False
-		end
-	
-	precompile_to_pipe_user_precondition: BOOLEAN is
-			-- precompile_to_pipe precondition
-		do
-			Result := False
-		end
-		
 feature {NONE} -- Implementation
 
 	set_piped_output (a_pipe_name: STRING) is
@@ -514,7 +389,7 @@ feature {NONE} -- Implementation
 	output_error is
 			-- Report error back to VS.
 		require
-			failed: not is_successful
+			failed: not was_compilation_successful
 		do
 			if last_exception /= Void then
 				event_output_string (last_exception)
@@ -529,23 +404,6 @@ feature {NONE} -- Implementation
 			-- pipe to send output to
 			
 	display_warnings: BOOLEAN
-			-- should warnings be displayed?
-		
-	-- TEMP
-	output_info is
-			-- output test information
-		local
-			file: PLAIN_TEXT_FILE
-		do
-			create file.make_open_write ("c:\compilation.txt")
-			file.put_string ("EIFGEN:")
-			file.put_string (Eiffelgen)
-			file.put_string ("%NPath:")
-			file.put_string (Eiffel_project.Compilation_path.string)
-			file.put_string ("%NPath2:")
-			file.put_string (Eiffel_system.Compilation_path.string)
-			file.close
-		end
-		
+			-- should warnings be displayed?		
 				
 end -- class COMPILER

@@ -247,7 +247,6 @@ feature
 			vbox, wbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
 			l: EV_LABEL
-			c: CURSOR
 		do
 			create Result
 			create vbox
@@ -336,6 +335,7 @@ feature
 			Result.extend (create {EV_TEXT}.make_for_test)
 			Result.extend (create {EV_PASSWORD_FIELD}.make_for_test)
 			Result.extend (create {EV_COMBO_BOX}.make_for_test)
+			Result.extend (create {EV_STATUS_BAR}.make_for_test)
 		end
 
 	windows: LINKED_LIST [EV_WINDOW] is
@@ -387,13 +387,12 @@ feature
 			Result.extend (create {EV_LIST_ITEM})
 			Result.extend (create {EV_MENU_ITEM})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			Result.extend (create {EV_STATUS_BAR_ITEM})
 			Result.extend (create {EV_TOOL_BAR_BUTTON})
 --FIXME			Result.extend (create {EV_TOOL_BAR_SEPARATOR})
 			Result.extend (create {EV_TOOL_BAR_TOGGLE_BUTTON})
 			Result.extend (create {EV_TOOL_BAR_RADIO_BUTTON})
 			Result.extend (create {EV_TOOL_BAR_RADIO_BUTTON})
---FXIME			Result.extend (create {EV_ACCELERATOR})
+--|FIXME			Result.extend (create {EV_ACCELERATOR})
 			Result.extend (create {EV_COLOR})
 			Result.extend (create {EV_COORDINATES})
 			Result.extend (create {EV_CURSOR})
@@ -408,7 +407,6 @@ feature
 			Result.extend (create {EV_MENU})
 			Result.extend (create {EV_MENU_BAR})
 			Result.extend (create {EV_SCREEN})
-			Result.extend (create {EV_STATUS_BAR})
 		end
 
 --|	features: LINKED_LIST [EV_PROCEDURE_WIDGET [ANY, TUPLE]] is
@@ -509,6 +507,10 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/04/28 22:23:28  brendel
+--| Status bar is now a widget.
+--| There is no status bar item anymore.
+--|
 --| Revision 1.39  2000/04/27 22:00:40  brendel
 --| Arc and polyline are now made for test, too.
 --|

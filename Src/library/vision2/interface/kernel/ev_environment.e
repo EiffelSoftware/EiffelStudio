@@ -50,6 +50,13 @@ feature -- Access
 		do
 			Result := implementation.mouse_wheel_scroll_lines
 		end
+		
+	has_printer: BOOLEAN is
+			-- Is a default printer available?
+			-- `Result' is `True' if at least one printer is installed.
+		do
+			Result := implementation.has_printer
+		end
 
 feature {NONE} -- Contract support
 

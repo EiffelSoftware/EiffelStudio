@@ -53,6 +53,7 @@ feature -- Basic Operations
 			message_and_title_box.disable_item_expand (title)
 			message_and_title_box.extend (message)
 			message_and_title_box.extend (choice_box)
+			message_and_title_box.disable_item_expand (choice_box)
 
 			local_pixmap := pixmap.ev_clone
 			local_pixmap.set_minimum_height (dialog_unit_to_pixels(312))

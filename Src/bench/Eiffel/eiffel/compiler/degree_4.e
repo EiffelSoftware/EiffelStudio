@@ -58,7 +58,6 @@ feature -- Processing
 			i, nb, j: INTEGER
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
-			mem: MEMORY
 		do
 			Degree_output.put_start_degree (Degree_number, count)
 			classes := System.classes.sorted_classes
@@ -84,16 +83,10 @@ feature -- Processing
 			Error_handler.checksum
 
 			nb := 0
-			create mem
 			from i := 1 until nb = count loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
 					if not a_class.degree_4_processed then
-
-						if (j \\ 1000) = 0 then
-							mem.full_collect
-							mem.full_coalesce
-						end
 						j := j + 1
 
 						Degree_output.put_degree_4 (a_class, count - nb)

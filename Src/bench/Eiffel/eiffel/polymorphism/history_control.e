@@ -126,13 +126,10 @@ feature -- Settings
 		local
 			new_set, server_set: POLY_TABLE [ENTRY]
 			id: INTEGER
-			mem: MEMORY
 		do
 debug ("TRANSFER")
 			io.error.putstring("in transfer...%N")
 end
-			create mem
-
 			from
 				new_units.start
 			until
@@ -167,8 +164,6 @@ debug ("TRANSFER")
 end
 			new_units.clear_all
 			count := 0
-			mem.full_collect
-			mem.full_coalesce
 		ensure
 			count = 0
 			new_units.is_empty

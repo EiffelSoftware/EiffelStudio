@@ -1552,7 +1552,6 @@ end
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			a_class: CLASS_C
-			mem: MEMORY
 		do
 				-- Reinitialization of control flags of the topological
 				-- sort.
@@ -1590,11 +1589,6 @@ end
 			M_rout_id_server.take_control (Tmp_m_rout_id_server)
 			M_desc_server.take_control (Tmp_m_desc_server)
 			Class_comments_server.take_control (Tmp_class_comments_server)
-
-				-- Clean Memory
-			create mem
-			mem.full_collect
-			mem.full_coalesce
 		end
 
 feature -- IL code generation
@@ -1864,7 +1858,6 @@ feature -- Final mode generation
 			old_exception_stack_managed: BOOLEAN
 			old_inlining_on, old_array_optimization_on: BOOLEAN
 			deg_output: DEGREE_OUTPUT
-			mem: MEMORY
 			retried: BOOLEAN
 		do
 			if not retried and is_finalization_needed then
@@ -1904,11 +1897,6 @@ feature -- Final mode generation
 		
 					process_degree_minus_2
 					
-						-- Clean Memory
-					create mem
-					mem.full_collect
-					mem.full_coalesce
-		
 						-- Dead code removal
 					if not remover_off then
 						deg_output := Degree_output

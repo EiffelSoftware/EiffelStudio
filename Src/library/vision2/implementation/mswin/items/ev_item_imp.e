@@ -54,6 +54,20 @@ feature -- Status setting
 		do
 		end
 
+	set_pointer_style (c: EV_CURSOR) is
+		do
+			check
+				to_be_implemented: FALSE	
+			end
+		end
+
+	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+		do
+			check
+				to_be_implemented: FALSE	
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	invalidate is
@@ -84,6 +98,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/17 23:31:22  rogers
+--| Added set_pointer_style and cursor_on_widget, both with to_be_implemented_checks.
+--|
 --| Revision 1.13  2000/02/29 22:38:25  rogers
 --| Removed redundent code from destroy, and added destroy_just_called := True and is_destroyed := True into destroy.
 --|

@@ -135,8 +135,14 @@ extern EIF_BOOLEAN file_creatable();
 extern EIF_INTEGER file_fd();
 extern char *file_owner();
 extern char *file_group();
+
+#ifdef EIF_WIN_31
+	/* The following routines are already defined with the correct prototype */
+#else
+	/* FIXME: include the correct header files!!! */
 extern int rename();
 extern int rmdir();
+#end
 
 extern EIF_BOOLEAN eif_group_in_list();
 #endif

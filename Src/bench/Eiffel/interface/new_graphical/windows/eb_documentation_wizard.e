@@ -563,7 +563,7 @@ feature {NONE} -- Implementation
 			ie.include_list.wipe_out
 			cl := Eiffel_universe.clusters
 			from cl.start until cl.after loop
-				cl_name := clone (cl.item.cluster_name)
+				cl_name := cl.item.cluster_name.twin
 				create li.make_with_text (cl_name)
 				li.set_data (cl.item)
 				if old_exclude.has (cl_name) then
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 				from i.start until i.after loop
 					t := i.item.tag
 					if t /= Void and then not l.has (t) then
-						l.extend (clone (t))
+						l.extend (t.twin)
 					end
 					i.forth
 				end

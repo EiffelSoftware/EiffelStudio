@@ -118,7 +118,7 @@ feature -- Actions
 			cmd_exec: COMMAND_EXECUTOR	
 			cmd_string: STRING
 		do
-			cmd_string := clone (general_shell_command)
+			cmd_string := general_shell_command.twin
 			if not cmd_string.is_empty then
 				cmd_string.replace_substring_all ("$target", Eiffel_ace.Lace.file_name)
 				cmd_string.replace_substring_all ("$line", "1")

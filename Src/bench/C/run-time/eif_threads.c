@@ -917,7 +917,10 @@ rt_public void eif_thr_join_all(void)
 	 * first thread, so we can implement a simpler join_all mechanism 
 	 */
 
+	EIF_ENTER_C;
 	EIF_THR_JOIN_ALL;
+	RTGC;
+	EIF_EXIT_C;
 }
 #else
 rt_public void eif_thr_join_all(void)
@@ -943,6 +946,8 @@ rt_public void eif_thr_join_all(void)
 	/* If no thread has been launched, the mutex isn't initialized */
 	if (!eif_children_mutex) return;
 
+	EIF_ENTER_C;
+
 #ifdef EIF_NO_CONDVAR
 	EIF_THR_YIELD;
 	while (!end) {
@@ -961,6 +966,9 @@ rt_public void eif_thr_join_all(void)
 		EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
 	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
 #endif
+	
+	RTGC;
+	EIF_EXIT_C;
 }
 #endif
 

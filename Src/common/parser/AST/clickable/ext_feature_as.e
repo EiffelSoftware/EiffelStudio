@@ -3,7 +3,8 @@ indexing
 	description: 
 		"Extended AST representation of an Eiffel feature. %
 		%Keeps the comments as an attribute, instead of %
-		%retrieving them each time";
+		%retrieving them each time. Also keeps position %
+		%information.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -16,7 +17,7 @@ inherit
 			simple_format
 		end
 
-feature -- Access
+feature -- Properties
 
 	comments: EIFFEL_COMMENTS
 			-- Comments attached to the feature, if any.
@@ -41,6 +42,7 @@ feature {COMPILER_EXPORTER, AST_EIFFEL} -- Output
 			cont: CONTENT_AS;
 			is_const_or_att: BOOLEAN	
 		do
+			start_position := ctxt.text.position
 			c := comments
 			ctxt.set_feature_comments (c);
 			if feature_names /= Void then
@@ -62,6 +64,7 @@ feature {COMPILER_EXPORTER, AST_EIFFEL} -- Output
 			else
 				ctxt.new_line;
 			end;
+			end_position := ctxt.text.position
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

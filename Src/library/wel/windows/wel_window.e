@@ -925,6 +925,21 @@ feature -- Basic operations
 				Swp_noactivate)
 		end
 
+	bring_to_top is
+			-- Bring this window to the top of the Z order. 
+			-- 
+			-- Note: 
+			--  * If the window is a top-level window, it is activated. 
+			--  * If the window is a child window, the top-level parent window 
+			--    associated with the child window is activated.
+		require
+			exists: exists
+		local
+			success: BOOLEAN
+		do
+			success := cwin_bring_window_to_top (item)
+		end
+
 	insert_after (a_window: WEL_WINDOW) is
 			-- Insert the current window after `a_window'.
 		require
@@ -2138,6 +2153,13 @@ feature {NONE} -- Externals
 			"PostMessage"
 		end
 
+	cwin_bring_window_to_top (hwnd: POINTER): BOOLEAN is
+			-- SDK BringWindowToTop, Return True is case of Success
+		external
+			"C [macro %"wel.h%"] (HWND): BOOL"
+		alias
+			"BringWindowToTop"
+		end
 
 	cwin_move_window (hwnd: POINTER; a_x, a_y, a_w, a_h: INTEGER;
 				repaint: BOOLEAN) is

@@ -17,6 +17,8 @@ inherit
 	EV_TEXT_AREA_IMP
 		rename
 			wel_make as multiple_line_edit_make
+		export
+			{NONE} add_change_command, remove_change_commands
 		undefine
 			text,
 			set_text,
@@ -64,7 +66,8 @@ inherit
 			on_kill_focus,
 			on_key_up,
 			wel_background_color,
-			wel_foreground_color
+			wel_foreground_color,
+			on_en_change
 		end
 
 creation

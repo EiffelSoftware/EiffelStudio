@@ -183,8 +183,14 @@ feature
 				internal_name, True, Byte_context.header_buffer,
 				<<"Current">>, <<"EIF_REFERENCE">>)
 			buffer.indent
-			buffer.putstring ("return *")
-			result_type.c_type.generate_access_cast (buffer)
+			if not result_type.is_expanded and then not result_type.is_bit then
+				buffer.putstring ("return *")
+				result_type.c_type.generate_access_cast (buffer)
+			else
+					-- We do not need to generate a cast since what we are computed is
+					-- already good.
+				buffer.putstring ("return ")
+			end
 			buffer.putstring ("(Current")
 			rout_id := rout_id_set.first
 			if byte_context.final_mode then

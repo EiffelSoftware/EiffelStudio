@@ -9,8 +9,6 @@ inherit
 			help_message as run_help,
 			abbreviation as run_abb
 		end;
-	MEMORY;
-
 	EXECUTION_ENVIRONMENT
 		rename
 			system as exec_env_system
@@ -46,10 +44,8 @@ feature
 				io.putstring ("--> Arguments: ");
 				wait_for_return;
 				appl_name.append (io.laststring);
-				collection_off;
 				put (Workbench_generation_path, "MELT_PATH");
 				exec_env_system (appl_name);
-				collection_on;
 			end
 		end;
 

@@ -84,7 +84,7 @@ feature
 			until
 				i > upper
 			loop
-				ba.append_int32_integer (item (i).sk_value);
+				ba.append_int32_integer (item (i).cecil_value);
 				i := i + 1
 			end
 		end;

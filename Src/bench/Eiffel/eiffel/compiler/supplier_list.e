@@ -160,6 +160,8 @@ end;
 			go_i_th (pos);
 		end;
 
+feature
+
 	is_ok (l: SORTED_SET [DEPEND_UNIT]): BOOLEAN is
 			-- Is the supplier list consistant regarding to `l'.
 		require

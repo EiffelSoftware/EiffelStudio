@@ -64,6 +64,8 @@ feature {NONE}
 
 	F_code: STRING is "F_code"
 
+	Finish_freezing_script: STRING is "finish_freezing"
+
 	Feature_table_suffix: STRING is "F"
 
 	Makefile_SH: STRING is "Makefile.SH"

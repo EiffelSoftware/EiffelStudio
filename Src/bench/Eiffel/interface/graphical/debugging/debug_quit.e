@@ -8,7 +8,7 @@ inherit
 
 creation
 
-	make
+	make, do_nothing
 
 feature 
 
@@ -16,6 +16,12 @@ feature
 		do
 			init (c, a_text_window);
 			!!request.make (Rqst_quit)
+		end;
+
+	exit_now is
+		do
+			!!request.make (Rqst_quit)
+			work (void);
 		end;
 	
 feature {NONE}

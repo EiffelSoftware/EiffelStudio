@@ -87,6 +87,9 @@ feature -- Licence managment
 
 	try_reconnect: BOOLEAN is
 		do
+			if licence.registered then
+				licence.unregister;
+			end;
 			licence.register;
 			if licence.registered then
 				licence.open_licence;

@@ -101,6 +101,11 @@ feature
 			Result := Sk_ref;
 		end;
 
+	cecil_value: INTEGER is
+		do
+			Result := Sk_dtype;
+		end;
+
 	generate_union (file: UNIX_FILE) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `file'.

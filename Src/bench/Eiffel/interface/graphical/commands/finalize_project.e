@@ -35,6 +35,7 @@ feature {NONE}
 			temp: STRING;
         do
 			debug_info.wipe_out;
+			quit_cmd.exit_now;
 			if project_tool.initialized then
 				error_window.clear_window;
 				if Lace.file_name /= Void then
@@ -182,10 +183,11 @@ feature {NONE}
             !!cmd.make (50);
             cmd.append ("cd ");
             cmd.append (Final_generation_path);
-            cmd.append ("; finish_freezing");
+            cmd.append ("; ");
+			cmd.append (Finish_freezing_script);
 
             !!d.make (Final_generation_path);
-            if not d.has_entry ("finish_freezing") then
+            if not d.has_entry (Finish_freezing_script) then
             !!  copy_cmd.make (50);
                 copy_cmd.append ("cp ");
                 copy_cmd.append (freeze_command_name);

@@ -37,6 +37,7 @@ feature
 			vd21: VD21;
 			vd22: VD22;
 			ptr: POINTER;
+			gc_on: BOOLEAN;
 		do
 			!!file.make (file_name);
 			if not file.is_readable then
@@ -51,20 +52,25 @@ feature
 					Error_handler.insert_error (vd22);
 				else
 						-- Disable garbage collector before parsing
+					gc_on := collecting;
 					collection_off;
 
 					ptr := file.file_pointer;
 					ast := lp_file ($ptr, $file_name);
 
-						-- Enable garbage clooector after parsing
-					collection_on;
+						-- Enable garbage collector after parsing
+					if gc_on then
+						collection_on;
+					end;
 
 					file.close;
 				end;
 			end;
 		rescue
 			if Rescue_status.is_error_exception then
-				collection_on;
+				if gc_on then
+					collection_on;
+				end;
 					-- Close file in case of syntax error in lace file
 				if file /= Void then
 					file.close;
@@ -79,11 +85,21 @@ feature
 			parsable: to_parse /= Void
 		local
 			ptr: ANY;
+			gc_on: BOOLEAN
 		do
 			ptr := to_parse.to_c;
+			gc_on := collecting;
 			collection_off;
 			ast := lp_string ($ptr, file_name);
-			collection_on;
+			if gc_on then
+				collection_on;
+			end;
+		rescue
+			if Rescue_status.is_error_exception then
+				if gc_on then
+					collection_on;
+				end;
+			end;
 		end;
 
 feature {NONE} -- Externals

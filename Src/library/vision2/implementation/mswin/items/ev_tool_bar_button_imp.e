@@ -12,19 +12,18 @@ class
 
 inherit
 	EV_TOOL_BAR_BUTTON_I
-		select
+		redefine
 			parent_imp
 		end
 
 	EV_SIMPLE_ITEM_IMP
-		rename
-			parent_imp as old_parent_imp
 		undefine
 			pixmap_size_ok,
 			parent
 		redefine
 			set_text,
-			set_pixmap
+			set_pixmap,
+			parent_imp
 		end
 
 	EV_ID_IMP
@@ -49,6 +48,9 @@ feature {NONE} -- Initialization
 			id := new_id
 			set_text (txt)
 		end
+
+	parent_imp: EV_TOOL_BAR_IMP
+		-- The parent of `Current'.
 
 feature -- Access
 

@@ -11,20 +11,17 @@ class
 
 inherit
 	EV_MENU_ITEM_I
-		select
+		redefine
 			parent_imp
 		end
 		
 	EV_SIMPLE_ITEM_IMP
-		rename
-			parent_imp as old_simple_parent_imp
 		undefine
 			pixmap_size_ok,
 			parent
 		redefine
-			set_text
-		--select
-		--	old_simple_parent_imp
+			set_text,
+			parent_imp
 		end
 
 	EV_MENU_ITEM_HOLDER_IMP
@@ -59,6 +56,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	parent_imp: EV_MENU_ITEM_HOLDER_IMP
 
 	index: INTEGER is
 			-- Index of the current item.

@@ -11,21 +11,25 @@ class
 
 inherit
 	EV_CHECK_MENU_ITEM_I
-		select
+		redefine
 			parent_imp
 		end
 
 	EV_MENU_ITEM_IMP
-		rename
-			parent_imp as old_menu_parent_imp
 		redefine
 			on_activate,
 			is_selected,
-			set_selected
+			set_selected,
+			parent_imp
 		end
 	
 creation
 	make
+
+feature --  Access
+
+	parent_imp: EV_MENU_IMP
+		-- Parent of `Current'.
 
 feature -- Status report
 	

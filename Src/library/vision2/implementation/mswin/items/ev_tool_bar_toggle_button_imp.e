@@ -10,20 +10,24 @@ class
 
 inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON_I
-		select
+		redefine
 			parent_imp
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
-		rename 
-			parent_imp as old_button_parent_imp
 		redefine
 			type,
-			on_activate
+			on_activate,
+			parent_imp
 		end
 
 creation
 	make
+
+feature --  Access
+	
+	parent_imp: EV_TOOL_BAR_IMP
+		-- The implementation of the parent.
 
 feature -- Status report
 
@@ -63,6 +67,21 @@ feature -- Event : command association
 			add_command (Cmd_item_deactivate, cmd, arg)		
 		end
 
+	--add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	--		-- Add `cmd' to the list of commands to be executed
+	--		-- when the item is unselected.
+	--	do
+	--		add_command (Cmd_item_activate, cmd, arg)
+	--	end
+
+	add_toggled_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is toggled.
+		do
+		--	add_command (Cmd_item_toggle, cmd, arg)
+		end
+	
+
 feature -- Event -- removing command association
 
 	remove_unselect_commands is
@@ -70,6 +89,20 @@ feature -- Event -- removing command association
 			-- the item is unselected.
 		do
 			remove_command (Cmd_item_deactivate)		
+		end
+
+	--remove_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	--		-- Add `cmd' to the list of commands to be executed
+	--		-- when the item is unselected.
+	--	do
+	--		remove_command (Cmd_item_activate, cmd, arg)
+	--	end
+
+	remove_toggled_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is toggled.
+		do
+		--	remove_command (Cmd_item_toggle)
 		end
 
 feature {EV_TOOL_BAR_IMP} -- Implementation

@@ -6,26 +6,31 @@ class
 	EB_FEATURE_TOOL
 
 inherit
-	EB_MULTIFORMAT_EDIT_TOOL
+	EB_EDIT_TOOL
 		rename
-			edit_bar as feature_toolbar
+			toolbar as feature_toolbar
 --			Routine_type as stone_type
 		redefine
--- hole,
- empty_tool_name,
--- close_windows,
+--			hole,
+			empty_tool_name,
+--			close_windows,
 			init_commands,
 			reset,
 			stone, set_stone, synchronize,
--- process_feature,
+--			process_feature,
 --			process_class, process_breakable, compatible,
---			update_boolean_resource, create_toolbar, build_toolbar_menu,
-			set_mode_for_editing, parse_file, raise,
-			history_window_title, has_editable_text,
-			format_list, build_edit_bar,
-			build_special_menu
+--			update_boolean_resource, build_toolbar_menu,
+			set_mode_for_editing,
+--			history_window_title,
+			has_editable_text,
+			format_list, build_toolbar,
+			build_special_menu,
+			parse_file
 		end
+
 	EB_FEATURE_TOOL_DATA
+
+	EB_SHARED_INTERFACE_TOOLS
 
 creation
 	make
@@ -50,16 +55,19 @@ feature {NONE} -- Initialization
 --			set_composite_attributes (edit_m)
 --			set_composite_attributes (format_m)
 --			set_composite_attributes (special_m)
---  			init_text_window
+--  			init_text_area
 --		end
 
 	init_formatters is
+			-- Create the list of formats,
+			-- initialize default format values.
 		do
 			create format_list.make (Current)
 			set_last_format (format_list.default_format)
 		end
 
 	init_commands is
+			-- Initialize commands.
 		do
 			Precursor
 			create shell_cmd.make (Current)
@@ -73,20 +81,24 @@ feature {NONE} -- Initialization
 feature -- Update Resources
 
 	register is
+			-- Ask the resource manager to notify Current (i.e. to call `update') each
+			-- time one of the resources he needs has changed.
+			-- Is called by `make'.
 		do
 			register_to ("feature_tool_command_bar")
 			register_to ("feature_tool_format_bar")
 		end
 
 	update is
+			-- Update Current with the registred resources.
 		do
 			if feature_tool_command_bar then
 				feature_toolbar.show
 			else
 				feature_toolbar.hide
 			end
-			if edit_bar_menu_item /= Void then
-				edit_bar_menu_item.set_selected (feature_tool_command_bar)
+			if toolbar_menu_item /= Void then
+				toolbar_menu_item.set_selected (feature_tool_command_bar)
 			end
 			if feature_tool_format_bar then
 				format_bar.show
@@ -99,19 +111,22 @@ feature -- Update Resources
 		end
 
 	unregister is
+			-- Ask the resource manager not to notify Current anymore
+			-- when a resource has changed.
+			-- Is called by `destroy'.
 		do
 			unregister_to ("feature_tool_command_bar")
 			unregister_to ("feature_tool_format_bar")
 		end
 
-	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
-			-- Update `old_res' with the value of `new_res',
-			-- if the value of `new_res' is applicable.
-			-- Also update the interface.
-		local
+--	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
+--			-- Update `old_res' with the value of `new_res',
+--			-- if the value of `new_res' is applicable.
+--			-- Also update the interface.
+--		local
 --			rout_cli_cmd: SHOW_ROUTCLIENTS
 --			stop_cmd: SHOW_BREAKPOINTS
-		do
+--		do
 -- 			if old_res = resources.show_all_callers then
 --				rout_cli_cmd ?= showroutclients_frmt_holder.associated_command
 --				rout_cli_cmd.set_show_all_callers (new_res.actual_value)
@@ -135,31 +150,26 @@ feature -- Update Resources
 --					end
 --				end
 --			end
-		end
+--		end
 
 feature -- Window Properties
 
 	stone: FEATURE_STONE
 			-- Stone in tool
 
-	history_window_title: STRING is
-			-- Title of the history window
-		do
-			Result := Interface_names.t_Select_feature
-		end
+--	history_window_title: STRING is
+--			-- Title of the history window
+--		do
+--			Result := Interface_names.t_Select_feature
+--		end
 
 	format_bar_is_used: BOOLEAN is True
+			-- Do the tool need an effective format_bar?
+			-- (a: Yes)
 
 	has_editable_text: BOOLEAN is True
+			-- Does Current tool have an editable text area?
 
---	help_index: INTEGER is 3
-
---	icon_id: INTEGER is
---			-- Icon id of Current window (only for windows)
---		do
---			Result := Interface_names.i_Feature_id
---		end
- 
 feature -- Resetting
 
 	reset is
@@ -189,9 +199,8 @@ feature -- Access
 
 feature -- Update
 
-	parse_file: BOOLEAN is
+	parse_file is
 			-- Parse the file if possible.
-			-- (By default, do nothing).
 		local
 			syn_error: SYNTAX_ERROR
 			e_class: CLASS_C
@@ -210,23 +219,24 @@ feature -- Update
 					txt.extend (')')
 				end
 					-- syntax error occurred
-				text_window.highlight_selected (syn_error.start_position,
+				text_area.highlight_selected (syn_error.start_position,
 									syn_error.end_position)
-				text_window.set_position (syn_error.start_position)
+				text_area.set_position (syn_error.start_position)
 				e_class.clear_syntax_error
 				create wd.make_default (parent, Interface_names.t_Warning, txt)
 			else
-				text_window.update_clickable_from_stone (stone)
-				Result := true
+				text_area.update_clickable_from_stone (stone)
+--				Result := true
 			end
 		end
 
 	set_mode_for_editing is
 			-- Set the text mode not to be editable.
-			-- do not ask me why
+			-- Do not ask me why
 			-- OK, if you insist: text is never editable in a feature tool
+			-- BTW, it may change in a near future.
 		do
-			text_window.set_editable (False)
+			text_area.set_editable (False)
 		end
  
 	close_windows is
@@ -243,7 +253,7 @@ feature -- Update
 			positive_index: index >= 1
 		do
 			if in_debug_format then
-				text_window.highlight_breakable (stone.e_feature, index)
+				text_area.highlight_breakable (stone.e_feature, index)
 			end
 		end
 
@@ -261,27 +271,27 @@ feature -- Update
 			 	(feat = Void or else 
 				feat.body_id.is_equal (stone.e_feature.body_id))
 			then
-				cur := text_window.position
+				cur := text_area.position
 				f := format_list.stop_points_format
 				old_do_format := f.do_format
 				f.set_do_format (true)
 --				f.execute (stone)
 				f.set_do_format (old_do_format)
-				text_window.go_to (cur)
+				text_area.go_to (cur)
 			end
 		end
 
 	set_debug_format is 
 			-- Set the current format to be in `debug_format'.		
 		do
-			text_window.set_editable (False)
+			text_area.set_editable (False)
 			set_last_format (format_list.stop_points_format)
 			synchronize
 		ensure
 			set: format_list.stop_points_format = last_format
 		end
 
-	show_stoppoint (f: E_FEATURE index: INTEGER) is
+	show_stoppoint (f: E_FEATURE; index: INTEGER) is
 			-- If stone feature is equal to feature `f' and if in debug
 			-- mode then redisplay the sign of the `index'-th breakable point.
 			-- Otherwize, update the title of feature tool (to print `stop').
@@ -294,7 +304,7 @@ feature -- Update
 				f.body_id.is_equal (stone.e_feature.body_id)
 			then
 				if in_debug_format then
-					text_window.redisplay_breakable_mark (stone.e_feature, index)
+					text_area.redisplay_breakable_mark (stone.e_feature, index)
 				elseif last_format = format_list.text_format then
 					-- Update the title bar of the feature tool.
 					-- "(stop)" if the feature has a stop point set.
@@ -304,12 +314,6 @@ feature -- Update
 		end
 
 feature -- Status setting
-
-	raise is
-		do
-			Precursor
---			feature_text_field.set_focus
-		end
 
 	set_stone (s: like stone) is
 			-- Update stone from `s'.
@@ -335,69 +339,71 @@ feature -- Stone updating
 			update_feature_toolbar
 		end
 
---	process_breakable (a_stone: BREAKABLE_STONE) is
---		do
---			Project_tool.process_breakable (a_stone)
---		end
+	process_breakable (a_stone: BREAKABLE_STONE) is
+			-- Process the breakpoint stone `a_stone'.
+		do
+			Project_tool.process_breakable (a_stone)
+		end
 
---	process_class (a_stone: CLASSC_STONE) is
---		local
---			c: CLASS_C
---			ris: ROUT_ID_SET
---			i: INTEGER
---			rout_id: ROUTINE_ID
---			fi: E_FEATURE
---			fs: FEATURE_STONE
---			text: STRUCTURED_TEXT
---			s: STRING
---		do
---			if stone /= Void then
---				ris := stone.e_feature.rout_id_set
---				c := a_stone.e_class
---				from
---					i := 1
---				until
---					i > ris.count
---				loop
---					rout_id := ris.item (i)
---					fi := c.feature_with_rout_id (rout_id)
---					if (fi /= Void) then
---						i := ris.count
---					end
---					i := i + 1
---				end
---				if (fi /= Void) then
---					!! fs.make (fi)
---					process_feature (fs)
---				else
---					error_window.clear_window
---					!! text.make
---					text.add_string ("No version of feature ")
---					text.add_feature (stone.e_feature, stone.e_feature.name)
---					text.add_new_line
---					text.add_string ("   for class ")
---					s := c.name_in_upper
---					text.add_classi (c.lace_class, s)
---					error_window.process_text (text)
---					error_window.display
---					project_tool.raise
---				end
---			end
---		end
+	process_class (a_stone: CLASSC_STONE) is
+			-- Process class stone `a_stone' (compiled class, of course).
+		local
+			c: CLASS_C
+			ris: ROUT_ID_SET
+			i: INTEGER
+			rout_id: ROUTINE_ID
+			fi: E_FEATURE
+			fs: FEATURE_STONE
+			text: STRUCTURED_TEXT
+			s: STRING
+		do
+			if stone /= Void then
+				ris := stone.e_feature.rout_id_set
+				c := a_stone.e_class
+				from
+					i := 1
+				until
+					i > ris.count
+				loop
+					rout_id := ris.item (i)
+					fi := c.feature_with_rout_id (rout_id)
+					if (fi /= Void) then
+						i := ris.count
+					end
+					i := i + 1
+				end
+				if (fi /= Void) then
+					create fs.make (fi)
+					process_feature (fs)
+				else
+					error_window.clear_window
+					create text.make
+					text.add_string ("No version of feature ")
+					text.add_feature (stone.e_feature, stone.e_feature.name)
+					text.add_new_line
+					text.add_string ("   for class ")
+					s := c.name_in_upper
+					text.add_classi (c.lace_class, s)
+					error_window.process_text (text)
+					error_window.display
+					project_tool.raise
+				end
+			end
+		end
 	
 feature -- Graphical Interface
 
 	synchronize is
 			-- Synchronize clickable elements with text, if possible.
 		do
---			synchronise_stone
---			if stone = Void then
---				-- class_hole.set_empty_symbol
---				class_text_field.set_text("")
---				feature_text_field.set_text("")
---			else
---				update_feature_toolbar
---			end
+			synchronise_stone
+			if stone = Void then
+				-- class_hole.set_empty_symbol
+				class_text_field.set_text("")
+				feature_text_field.set_text("")
+			else
+				update_feature_toolbar
+			end
 		end
 
 	update_feature_toolbar is
@@ -429,6 +435,7 @@ feature {EB_FORMATTED_TEXT} -- Forms And Holes
 feature -- Formats
 
 	format_list: EB_FEATURE_FORMATTER_LIST
+		-- List of formats available in the tool
 
 feature -- Commands
 
@@ -453,7 +460,7 @@ feature {NONE} -- Implementation Window Settings
 	resize_action is
 			-- If the window is moved or resized, raise
 			-- popups with an exclusive grab.
-			-- Move also the choice window and update the text field.
+			-- Move also the choice dialog and update the text field.
 		do
 --			raise
 --			class_text_field.update_text
@@ -464,51 +471,7 @@ feature {NONE} -- Implementation Window Settings
 
 feature {NONE} -- Implementation Graphical Interface
 
-	create_toolbar (a_parent: EV_CONTAINER) is
-		local
---			sep: THREE_D_SEPARATOR
-		do
---			!! toolbar_parent.make (new_name, a_parent)
---			if not is_in_project_tool then
---				!! sep.make (Interface_names.t_Empty, toolbar_parent)
---			end
---			toolbar_parent.set_column_layout
---			toolbar_parent.set_free_size	
---			toolbar_parent.set_margin_height (0)
---			toolbar_parent.set_spacing (1)
---			!! feature_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
---			if not Platform_constants.is_windows or else has_double_line_toolbar then
---				!! sep.make (Interface_names.t_Empty, toolbar_parent)
---			end
---			if Platform_constants.is_windows then
---	 			feature_toolbar.set_height (23)
---			end
---			if has_double_line_toolbar then
---				!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent)
---				if not Platform_constants.is_windows then
---					!! sep.make (Interface_names.t_Empty, toolbar_parent)
---				else
---					format_bar.set_height (23)
---				end
---			end
-		end
-
-	build_toolbar_menu is
-			-- Build the toolbar menu under the special sub menu.
-		local
---			sep: SEPARATOR
---			toolbar_t: EV_CHECK_MENU_ITEM
-		do
---			create sep.make (Interface_names.t_Empty, special_menu)
---			create toolbar_t.make (feature_toolbar.identifier, special_menu)
---			feature_toolbar.set_state (toolbar_t)
---			if has_double_line_toolbar then
---				create toolbar_t.make (format_bar.identifier, special_menu)
---				format_bar.set_state (toolbar_t)
---			end
-		end
-
-	build_edit_bar (a_toolbar: EV_BOX) is
+	build_toolbar (tb: EV_BOX) is
 			-- Build feature toolbar
 		local
 --			new_class_button: EB_CREATE_CLASS_CMD
@@ -532,38 +495,38 @@ feature {NONE} -- Implementation Graphical Interface
 --				-- Do we have a close button to create?
 --
 --				-- First we create the needed objects.
---			!! hole.make (Current)
-			create b.make (a_toolbar)
+--			create hole.make (Current)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Routine_dot)
 --			b.add_click_command (hole_holder)
 
---			!! class_hole.make (Current)
-			create b.make (a_toolbar)
+--			create class_hole.make (Current)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Class_dot)
 --			b.add_click_command (class_hole_holder)
 --			class_hole_holder.set_button (class_hole_button)
 
---			!! stop_hole.make (Current)
---			!! stop_hole_button.make (stop_hole, current_bar)
---			!! stop_hole_holder.make_plain (stop_hole)
+--			create stop_hole.make (Current)
+--			create stop_hole_button.make (stop_hole, current_bar)
+--			create stop_hole_holder.make_plain (stop_hole)
 --			stop_hole_holder.set_button (stop_hole_button)
 
-			create b.make (a_toolbar)
+			create b.make (tb)
 --			shell_button.add_third_button_action
 			b.set_pixmap (Pixmaps.bm_Shell)
 			b.add_click_command (shell_cmd, Void)
 
 --			build_edit_menu (current_bar)
 
-			create sep.make (a_toolbar)
+			create sep.make (tb)
 
---			!! current_target_cmd.make (Current)
---			!! sep.make (new_name, special_menu)
---			!! current_target_menu_entry.make (current_target_cmd, special_menu)
---			!! current_target_cmd_holder.make_plain (current_target_cmd)
+--			create current_target_cmd.make (Current)
+--			create sep.make (new_name, special_menu)
+--			create current_target_menu_entry.make (current_target_cmd, special_menu)
+--			create current_target_cmd_holder.make_plain (current_target_cmd)
 --			current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
 --
---			!! sep1.make (Interface_names.t_empty, current_bar)
+--			create sep1.make (Interface_names.t_empty, current_bar)
 --			sep1.set_horizontal (False)
 --			sep1.set_height (20)
 --
@@ -571,14 +534,14 @@ feature {NONE} -- Implementation Graphical Interface
 --			search_button := search_cmd_holder.associated_button 
 
 			
---			!! history_list_cmd.make (Current)
+--			create history_list_cmd.make (Current)
 
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Previous_target)
 			b.add_click_command (previous_target_cmd, Void)
 --			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
 
-			create b.make (a_toolbar)
+			create b.make (tb)
 			b.set_pixmap (Pixmaps.bm_Next_target)
 			b.add_click_command (next_target_cmd, Void)
 --			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button)
@@ -589,7 +552,7 @@ feature {NONE} -- Implementation Graphical Interface
 			create class_text_field.make_with_tool (feature_toolbar, Current)
 
 				if close_button_in_every_tool then
-					create b.make (a_toolbar)
+					create b.make (tb)
 					b.set_pixmap (Pixmaps.bm_Quit)
 					b.add_click_command (close_cmd, Void)
 				end
@@ -598,6 +561,7 @@ feature {NONE} -- Implementation Graphical Interface
 feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+			-- Fill `a_menu' with "special menu" entries
 		local
 			i: EV_MENU_ITEM
 		do
@@ -625,6 +589,7 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 feature {EB_FORMATTED_TEXT} -- Properties
 
 	empty_tool_name: STRING is
+			-- Name given to Current when it is empty.
 		do
 			Result := Interface_names.t_Empty_routine
 		end

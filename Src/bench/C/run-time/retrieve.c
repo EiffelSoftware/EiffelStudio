@@ -292,14 +292,14 @@ rt_public int retrieve_read_with_compression (void);
 
 #ifndef EIF_THREADS
 /*
-doc:	<attribute name="retrieve_read_func" return_type="int (*)(void)" export="private">
+doc:	<attribute name="retrieve_read_func" return_type="int (*)(void)" export="shared">
 doc:		<summary>High level function to read storable file. It uses `char_read_func' to actually read bytes of the file.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private int (*retrieve_read_func)(void) = retrieve_read_with_compression;
+rt_shared int (*retrieve_read_func)(void) = retrieve_read_with_compression;
 
 /*
 doc:	<attribute name="char_read_func" return_type="int (*)(char *buf, int n)" export="shared">

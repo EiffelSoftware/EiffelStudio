@@ -512,7 +512,7 @@ rt_private void interpret(int flag, int where)
 	long volatile rtype;					/* Result type */
 	void * volatile PResult = NULL;			/* Result address for once */
 	int32 volatile rout_id;					/* Routine id */
-	int32 volatile body_id = -1;			/* Body id of routine */
+	BODY_INDEX volatile body_id = 0;		/* Body id of routine */
 	int volatile current_trace_level;		/* Saved call level for trace, only needed when routine is retried */
 	char ** volatile saved_prof_top;		/* Saved top of `prof_stack' */
 	long volatile once_key;			/* Index in once table */
@@ -560,7 +560,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_START\n");
 #endif
 		rout_id = (int32) get_long();	/* Get the routine id */
-		body_id = (uint32) get_long();	/* Get the body id */
+		body_id = (BODY_INDEX) get_long();	/* Get the body id */
 		rtype = get_long();				/* Get the result type */
 		argnum = get_short();			/* Get the argument number */
 	
@@ -3735,7 +3735,7 @@ rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk 
 
 	/* Invariant check */
 	{
-		uint16 body_id;
+		BODY_INDEX body_id;
 		struct item *last;
 
 		CBodyId(body_id,INVARIANT_ID,dtype);	
@@ -4911,7 +4911,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 	EIF_GET_CONTEXT
 	RTED;
 	int				saved_debug_mode = debug_mode;
-	uint16 			body_id = 0;		/* Value of selected body ID */
+	BODY_INDEX		body_id = 0;		/* Value of selected body ID */
 	unsigned long 	stagval = tagval;	/* Save tag value */
 	unsigned char *	OLD_IC = NULL;		/* IC back-up */
 	unsigned char	sync_needed = 0;	/* A priori, no need for sync_registers */
@@ -5014,7 +5014,7 @@ rt_private int icall(int fid, int stype, int ptype)
 
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	uint16 body_id;					/* Value of selected body ID */
+	BODY_INDEX body_id;					/* Value of selected body ID */
 	unsigned long stagval = tagval;	/* Save tag value */
 	unsigned char *OLD_IC;					/* IC back-up */
 	int result = 0;					/* A priori, no need for sync_registers */
@@ -5070,7 +5070,7 @@ rt_private int ipcall(int32 origin, int32 offset, int ptype)
 
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	uint16 body_id;					/* Value of selected body ID */
+	BODY_INDEX body_id;					/* Value of selected body ID */
 	unsigned long stagval = tagval;	/* Save tag value */
 	unsigned char *OLD_IC;					/* IC back-up */
 	int result = 0;					/* A priori, no need for sync_registers */

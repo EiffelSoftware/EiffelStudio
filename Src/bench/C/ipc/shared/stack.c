@@ -59,7 +59,7 @@ rt_public void 			send_stack(eif_stream s, uint32 elem_nb);					/* Dump the appl
 rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, 
                                      uint32 loc_number, struct item *new_value); /* modify a local value */
 rt_public void			send_stack_variables(eif_stream s, int where);	/* Dump the locals and arguments of a feature */
-rt_public void 			send_once_result(eif_stream s, uint32 body_id, int arg_num); /* dump the results of onces feature */
+rt_public void 			send_once_result(eif_stream s, BODY_INDEX body_id, int arg_num); /* dump the results of onces feature */
 
 /* extern Routines used */
 extern struct item 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to the item at position `n' down the stack */
@@ -444,7 +444,7 @@ rt_private struct dump *variable_item(int variable_type, int n, uint32 start)
  * Ask the debugger for the result of already called once function        *
  * and send the result back to EiffelStudio                                *
  **************************************************************************/
-rt_public void send_once_result(eif_stream s, uint32 body_id, int arg_num)
+rt_public void send_once_result(eif_stream s, BODY_INDEX body_id, int arg_num)
 	{
 	uint32 type;
 	struct item *ip;					/* Partial item pointer */

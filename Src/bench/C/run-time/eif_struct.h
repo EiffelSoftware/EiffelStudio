@@ -135,7 +135,7 @@ RT_LNK int scount;				/* Numner of dynamic types */
 
 #ifdef WORKBENCH
 struct desc_info {						/* Descriptor information */
-	uint16 info;						/* Body index or attribute offset */
+	BODY_INDEX info;					/* Body index or attribute offset */
 	int16 type;							/* Feature type */
 	int16 *gen_type;					/* Generics, if any */
 };
@@ -146,8 +146,8 @@ struct rout_info {						/* Routine information */
 };
 #endif
 
-/* Invalid body id used to mark empty invariants (= max uint16) */
-#define INVALID_ID 0xFFFF
+/* Invalid body id used to mark empty invariants (= max uint32) */
+#define INVALID_ID 0xFFFFFFFF
 
 /* Array of class node (indexed by dynamic type). It is statically allocated
  * in production mode and dynamically in workbench mode.

@@ -47,14 +47,14 @@ RT_LNK struct dbinfo d_data;	/* Global debugger information */
 #define DLM_DEPTH		0x3FFFFFFF /* mask the low 30 bits */
 
 /*
- * List of body_ids (uint32)
+ * List of body_ids
  */
 
 struct idlchunk {
 	struct idlchunk *idl_next;	/* Next chunk in list */
 	struct idlchunk *idl_prev;	/* Previous chunk in list */
-	uint32 *idl_arena;			/* Arena where objects are stored */
-	uint32 *idl_end;			/* Pointer to first element beyond the chunk */
+	BODY_INDEX *idl_arena;			/* Arena where objects are stored */
+	BODY_INDEX *idl_end;			/* Pointer to first element beyond the chunk */
 };
 
 /*
@@ -73,14 +73,14 @@ struct where {					/* Where the program stopped */
 /* Context set up */
 extern void dstart(void);					/* Beginning of melted feature execution */
 extern void dexset(struct ex_vect *exvect);	/* Associate context with Eiffel call stack */
-extern void drun(int body_id);				/* Starting execution of debugged feature */
+extern void drun(BODY_INDEX body_id);				/* Starting execution of debugged feature */
 extern void dostk(void);					/* Set operational stack context */
 
 /* execution with breakpoints control */
 RT_LNK void dstop(struct ex_vect *exvect, uint32 offset);	/* Breakable point reached */
 RT_LNK void dstop_nested(struct ex_vect *exvect, uint32 offset);	/* Breakable point reached (nested call) */
 extern void dsync(void);									/* (Re)synchronize d_data cached information */
-extern void dsetbreak(int body_id, uint32 offset, int what);/* Set/remove breakpoint in feature */
+extern void dsetbreak(BODY_INDEX body_id, uint32 offset, int what);/* Set/remove breakpoint in feature */
 extern void dstatus(int dx);								/* Update execution status (RESUME request) */
 
 /* Debugging stack handling */
@@ -94,14 +94,14 @@ extern void dmove(int offset);							/* Move active routine cursor */
 extern rt_shared void dbreak(EIF_CONTEXT int why);		/* Program execution stopped */
 
 /* Once list handling */
-RT_LNK uint32 *onceadd(uint32 id);		/* Add once body_id to list */	
-RT_LNK uint32 *onceitem(register uint32 id);		/* Item with body_id in list */
+RT_LNK BODY_INDEX *onceadd(BODY_INDEX id);		/* Add once body_id to list */	
+RT_LNK BODY_INDEX *onceitem(register BODY_INDEX id);		/* Item with body_id in list */
 
 /* Once result evaluation */
-extern struct item *docall(EIF_CONTEXT register uint32 body_id, register int arg_num);	/* Evaluate result of already called once func*/ /* %%ss mt !last caller */
+extern struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num);	/* Evaluate result of already called once func*/
 
 /* Downloading byte code from compiler */
-extern void drecord_bc(uint16 body_idx, uint16 body_id, unsigned char *addr);		/* Record new byte code in run-time tables */
+extern void drecord_bc(BODY_INDEX body_idx, BODY_INDEX body_id, unsigned char *addr);		/* Record new byte code in run-time tables */
 
 /* Computing position within program */
 extern void ewhere(struct where *where);

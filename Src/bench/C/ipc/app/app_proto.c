@@ -602,11 +602,11 @@ rt_private void once_inspect(int s, Opaque *what)
 	 * its result may be ask by ewb.
 	 */
 
-	uint32 body_id = (uint32) what->op_third;	/* Body_id of once routine */
+	BODY_INDEX body_id = (BODY_INDEX) what->op_third;	/* Body_id of once routine */
 
 	switch (what->op_first) {		/* First value describes request */
 	case OUT_CALLED:				/* Has once routine already been called? */
-		if (onceitem(body_id) != (uint32 *)0)	/* body_id found in once list*/
+		if (onceitem(body_id) != (BODY_INDEX *)0)	/* body_id found in once list*/
 			twrite("true", 4);
 		else
 			twrite("false", 5);
@@ -752,7 +752,7 @@ rt_private void load_bc(int slots, int amount)
 #ifdef USE_ADD_LOG
 		add_log(9, "tread bytecode");
 #endif
-		drecord_bc((uint16) arg_1, (uint16) arg_2, bc);	/* Place byte code in run-time tables*/
+		drecord_bc((BODY_INDEX) arg_1, (BODY_INDEX) arg_2, bc);	/* Place byte code in run-time tables*/
 #ifdef USE_ADD_LOG
 		add_log(9, "recorded bc");
 #endif
@@ -775,7 +775,7 @@ rt_private void load_bc(int slots, int amount)
 			send_ack(s, AK_ERROR);		/* Notify failure */
 			return;						/* And abort downloading */
 		}
-		drecord_bc((uint16) arg_1, (uint16) arg_2, bc);	/* Place byte code in run-time tables*/
+		drecord_bc((BODY_INDEX) arg_1, (BODY_INDEX) arg_2, bc);	/* Place byte code in run-time tables*/
 		send_ack(s, AK_OK);				/* Byte code loaded successfully */
 #endif
 	}

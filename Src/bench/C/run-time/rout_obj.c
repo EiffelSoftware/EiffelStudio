@@ -164,7 +164,7 @@ rt_public void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_
 
 #ifdef WORKBENCH
 
-rt_public void rout_obj_call_procedure_dynamic (EIF_INTEGER_32 body_id, EIF_ARG_UNION* args, EIF_REFERENCE types)
+rt_public void rout_obj_call_procedure_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* args, EIF_REFERENCE types)
 {
 	EIF_GET_CONTEXT
 	void* body_addr;
@@ -248,7 +248,7 @@ rt_public void rout_obj_call_procedure_dynamic (EIF_INTEGER_32 body_id, EIF_ARG_
 	}
 }
 
-rt_public void rout_obj_call_function_dynamic (EIF_INTEGER_32 body_id, EIF_ARG_UNION* args, EIF_REFERENCE types, EIF_REFERENCE res)
+rt_public void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* args, EIF_REFERENCE types, EIF_REFERENCE res)
 {
 	EIF_GET_CONTEXT
 	void* body_addr;

@@ -109,8 +109,8 @@ void separate_call() {
 	int dyn_type;
 	int32 *feature_ptr;
 	int32 rout_id;
-	uint16 body_index;
-	uint32 body_id;
+	BODY_INDEX body_index;
+	BODY_INDEX body_id;
 	int type; 		/* the type of the attribute if its is */
 	long offset;	/* the offset of the attribute in the object(if it is) */
 

@@ -1,9 +1,9 @@
 <document output="studio" title="Database Connection">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<list ordered="true">
 			<item>To connect to your database, you have to create a 
-				<bold>handle</bold>: this handle actually link the interface classes with corresponding implementation classes mapped to your DBMS. This handle is implemented by the DATABASE_APPL class:
+				<bold>handle</bold>: this handle actually links the interface classes with corresponding implementation classes mapped to your DBMS. This handle is implemented by the DATABASE_APPL class:
 <code_block>
 	<feature_name>database_appl</feature_name><symbol>:</symbol> <class_name>DATABASE_APPL</class_name> <symbol>[</symbol><class_name>ODBC</class_name><symbol>]</symbol>
 		<comment>-- Database handle.</comment>
@@ -11,9 +11,9 @@
 	<keyword>create</keyword> <feature_name>database_appl</feature_name>.<feature_name>login</feature_name> <symbol>(</symbol><local_variable>a_name</local_variable>, <local_variable>a_psswd</local_variable><symbol>)</symbol>
 	<feature_name>database_appl</feature_name>.<feature_name>set_base</feature_name>
 </code_block>
-				<line_break/>
+				<line_break></line_break>
 				<note>
-					<bold>Note</bold>: Notice the call of set_base that enables to link EiffelStore interface to this specific handle.
+					<bold>Note</bold>: Calling set_base links the EiffelStore interface to this specific handle.
 				</note>
 				<tip>
 					<bold>Tip</bold>: You can manage handles to many databases: as an instance of <code><class_name>DATABASE_APPL</class_name></code> stands for a specific database handle, you only have to create one instance of <code><class_name>DATABASE_APPL</class_name></code> for every DBMS handle you wish to create. Do not forget to call set_base to activate appropriate handle.
@@ -41,16 +41,16 @@
 		</list>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break/>
+			<line_break></line_break>
 			<link>
 				<url>../80_database_control/index.xml</url>
 				<label>Database control and error handling</label>
 			</link>
-			<line_break/>
+			<line_break></line_break>
 			<link>
 				<url>../../20_implementation_layer/index.xml</url>
 				<label>Implementation</label>
 			</link>
-			<line_break/>
+			<line_break></line_break>
 		</seealso>
 	</paragraph></document>

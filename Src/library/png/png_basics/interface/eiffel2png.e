@@ -20,7 +20,7 @@ inherit
 
 	SINGLE_MATH
 
-creation
+create
 	make, make_from_file
 
 feature -- Initialization

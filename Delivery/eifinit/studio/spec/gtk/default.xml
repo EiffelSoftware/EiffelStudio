@@ -35,6 +35,7 @@
 			<TEXT DESCRIPTION="Indexing items that need not be included in formatted texts">excluded_indexing_items<LIST_STRING>revision;date;status</LIST_STRING></TEXT>
 			<TEXT DESCRIPTION="Class format that is selected by default">default_class_formatter_index<INTEGER>5</INTEGER></TEXT>
 			<TEXT DESCRIPTION="Feature format that is selected by default">default_feature_formatter_index<INTEGER>2</INTEGER></TEXT>			
+			<TEXT DESCRIPTION="Receiver of control-right-click (among editor, context, new_editor, new_context, new_window and external)">ctrl_right_click_receiver<STRING>new_window</STRING></TEXT>
 			<TEXT>formatters_history_size<INTEGER>60</INTEGER></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Editor" ICON="icon_preferences_folder">
@@ -553,6 +554,7 @@
 			<TEXT DESCRIPTION="Display dialog when an application is running and a compilation is launched">stop_execution_when_compiling<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog before killing a debugged application">confirm_kill<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog when editing the same class in two development windows">already_editing_class<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display dialog while running an external command">executing_command<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">
@@ -581,6 +583,16 @@
 			<TEXT>right_debug_layout<LIST_STRING>minimized;visible;visible;171;218</LIST_STRING></TEXT>
 			<TEXT>left_debug_layout<LIST_STRING>closed;closed;closed;closed;closed;visible;38;286</LIST_STRING></TEXT>
 			<TEXT>search_tool__show_options<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>external_command_0<STRING></STRING></TEXT>
+			<TEXT>external_command_1<STRING></STRING></TEXT>
+			<TEXT>external_command_2<STRING></STRING></TEXT>
+			<TEXT>external_command_3<STRING></STRING></TEXT>
+			<TEXT>external_command_4<STRING></STRING></TEXT>
+			<TEXT>external_command_5<STRING></STRING></TEXT>
+			<TEXT>external_command_6<STRING></STRING></TEXT>
+			<TEXT>external_command_7<STRING></STRING></TEXT>
+			<TEXT>external_command_8<STRING></STRING></TEXT>
+			<TEXT>external_command_9<STRING></STRING></TEXT>
 
 			<TEXT>development_window__general_toolbar_layout<LIST_STRING>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST_STRING></TEXT>
 			<TEXT>debugger__project_toolbar_layout<LIST_STRING>System_tool__visible;Melt_project__visible;Quick_compile__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST_STRING></TEXT>

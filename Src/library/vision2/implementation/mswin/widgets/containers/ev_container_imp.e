@@ -21,8 +21,6 @@ inherit
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
-		undefine
-			initialize
 		redefine
 			interface
 		end
@@ -461,6 +459,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/14 20:09:08  brendel
+--| Rearranged initialization
+--|
 --| Revision 1.42  2000/03/14 03:02:55  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

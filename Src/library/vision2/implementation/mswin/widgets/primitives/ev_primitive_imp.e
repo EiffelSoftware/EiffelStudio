@@ -24,8 +24,6 @@ inherit
 		end
 
 	EV_SIZEABLE_PRIMITIVE_IMP
-		undefine
-			initialize
 		redefine
 			interface
 		end
@@ -189,6 +187,9 @@ end -- class EV_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/14 20:09:08  brendel
+--| Rearranged initialization
+--|
 --| Revision 1.23  2000/03/14 03:02:56  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

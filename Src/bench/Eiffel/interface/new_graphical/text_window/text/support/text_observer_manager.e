@@ -101,12 +101,12 @@ feature -- Operations
 		do
 			from 
 				edition_observer_list.start
-				found := false
+				found := False
 			until
 				edition_observer_list.after or found
 			loop
  				if edition_observer_list.item = a_text_observer then
-					found := true
+					found := True
 					edition_observer_list.remove
 				else
 					edition_observer_list.forth
@@ -114,12 +114,12 @@ feature -- Operations
 			end
 			from 
 				selection_observer_list.start
-				found := false
+				found := False
 			until
 				selection_observer_list.after or found
 			loop
  				if selection_observer_list.item = a_text_observer then
-					found := true
+					found := True
 					selection_observer_list.remove
 				else
 					selection_observer_list.forth
@@ -127,12 +127,12 @@ feature -- Operations
 			end
 			from 
 				lines_observer_list.start
-				found := false
+				found := False
 			until
 				lines_observer_list.after or found
 			loop
  				if lines_observer_list.item = a_text_observer then
-					found := true
+					found := True
 					lines_observer_list.remove
 				else
 					lines_observer_list.forth
@@ -150,16 +150,13 @@ feature {NONE} -- Updates
 		local
 			tmp_is_notifying: BOOLEAN
 			index: INTEGER
+			l_cur: CURSOR
 		do
 			tmp_is_notifying := is_notifying
 			is_notifying := True
 			changed := True
 			if not edition_observer_list.is_empty then
-				if edition_observer_list.after then
-					index := -1
-				else
-					index := edition_observer_list.index
-				end
+				l_cur := edition_observer_list.cursor
 				from 
 					edition_observer_list.start
 				until
@@ -168,12 +165,10 @@ feature {NONE} -- Updates
 					edition_observer_list.item.on_text_edited (directly_edited)
 					edition_observer_list.forth
 				end
-				if index /= -1 then
-					check
-						index_is_valid: edition_observer_list.valid_index (index)
-					end
-					edition_observer_list.go_i_th (index)
+				check
+					cursor_is_valid: edition_observer_list.valid_cursor (l_cur)
 				end
+				edition_observer_list.go_to (l_cur)
 			end
 			is_notifying := tmp_is_notifying
 		end
@@ -182,9 +177,12 @@ feature {NONE} -- Updates
 			-- Notify observers that `reset' was called on the text.
 		require
 			not_in_loop: not is_notifying
+		local
+			l_cur: CURSOR
 		do
 			is_notifying := True
 			changed := False
+			l_cur := edition_observer_list.cursor
 			from 
 				edition_observer_list.start
 			until
@@ -193,19 +191,20 @@ feature {NONE} -- Updates
 				edition_observer_list.item.on_text_reset
 				edition_observer_list.forth
 			end
+			edition_observer_list.go_to (l_cur)
 			is_notifying := False
 		end
 
 	on_cursor_moved is
 			-- Notify observers that the current cursor has moved.
 		local
-			cur: CURSOR
+			l_cur: CURSOR
 			old_not: BOOLEAN
 		do
 			old_not := is_notifying
 			is_notifying := True
+			l_cur := cursor_observer_list.cursor
 			from
-				cur := cursor_observer_list.cursor
 				cursor_observer_list.start
 			until
 				cursor_observer_list.after
@@ -213,7 +212,7 @@ feature {NONE} -- Updates
 				cursor_observer_list.item.on_cursor_moved
 				cursor_observer_list.forth
 			end
-			cursor_observer_list.go_to (cur)
+			cursor_observer_list.go_to (l_cur)
 			is_notifying := old_not
 		end
 
@@ -222,9 +221,12 @@ feature {NONE} -- Updates
 			-- was saved for the last time.
 		require
 			not_in_loop: not is_notifying
+		local
+			l_cur: CURSOR
 		do
 			is_notifying := True
 			changed := False
+			l_cur := edition_observer_list.cursor
 			from 
 				edition_observer_list.start
 			until
@@ -233,6 +235,7 @@ feature {NONE} -- Updates
 				edition_observer_list.item.on_text_back_to_its_last_saved_state
 				edition_observer_list.forth
 			end
+			edition_observer_list.go_to (l_cur)
 			is_notifying := False
 		end
 
@@ -240,8 +243,11 @@ feature {NONE} -- Updates
 			-- Notify observers that a new text has just been loaded.
 		require
 			not_in_loop: not is_notifying
+		local
+			l_cur: CURSOR
 		do
 			is_notifying := True
+			l_cur := edition_observer_list.cursor
 			from 
 				edition_observer_list.start
 			until
@@ -250,6 +256,7 @@ feature {NONE} -- Updates
 				edition_observer_list.item.on_text_loaded
 				edition_observer_list.forth
 			end
+			edition_observer_list.go_to (l_cur)
 			is_notifying := False
 		end
 

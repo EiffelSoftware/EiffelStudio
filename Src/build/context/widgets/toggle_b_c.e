@@ -31,7 +31,7 @@ feature
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
 			!!widget.make_unmanaged (entity_name, a_parent);
-			widget.forbid_recompute_size
+			disable_resize_policy (True);
 			set_left_alignment (False);
 		end;
 

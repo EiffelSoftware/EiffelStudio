@@ -64,7 +64,7 @@ rt_public Malloc_t eif_malloc (register unsigned int nbytes)
 
 	return (Malloc_t) malloc (nbytes);
 
-#elif EIF_WIN32 || defined EIF_VMS
+#elif defined EIF_WIN32 || defined EIF_VMS
 /* For Windows and VMS platforms we use malloc() implemented in the C-library */
 	return malloc (nbytes);
 

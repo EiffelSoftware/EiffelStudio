@@ -221,6 +221,7 @@ feature {NONE} -- Implementation
 				if not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and 
 					Constants.matching_directory_constant_name (file_path) = Void then
 					create warning_dialog
+					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.show_modal_to_window (Current)
 					if not warning_dialog.cancelled then
 						added_directory_name := warning_dialog.directory_name
@@ -295,6 +296,7 @@ feature {NONE} -- Implementation
 										-- If an absolute constant already exists, warn for duplication
 									create confirmation_dialog.make_initialized (2, show_repeated_absolute_constant_warning, "An absolute pixmap constant named %"" +
 										constant_matching_absolute + "%" already references this image file.%NAre you sure you wish to add another?", "Do not show this dialog again, and always add.")
+									confirmation_dialog.set_icon_pixmap (Icon_build_window @ 1)
 									confirmation_dialog.set_ok_action (agent add_absolute_constant)
 									confirmation_dialog.show_modal_to_window (Current)
 								else
@@ -307,6 +309,7 @@ feature {NONE} -- Implementation
 									-- If constant is relative, and a name has not been entered for a directory, and the add directory has
 									-- not already been shown, then retrieve a name for the directroy, and add both,
 								create warning_dialog
+								warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 								warning_dialog.show_modal_to_window (Current)
 								if not warning_dialog.cancelled then
 									added_directory_name := warning_dialog.directory_name
@@ -582,6 +585,7 @@ feature {NONE} -- Implementation
 					pixmap_list.i_th (1).enable_select
 				elseif not dialog.file_name.is_empty then
 					create error_dialog
+					error_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					error_dialog.set_text (invalid_type_warning)
 					error_dialog.show_modal_to_window (Current)
 				end
@@ -614,6 +618,7 @@ feature {NONE} -- Implementation
 			warning_dialog: EV_WARNING_DIALOG
 		do
 			create warning_dialog.make_with_text ("Unable to load selected image, as it appears to be invalid.%N%NPlease select a valid image file.")
+			warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 			warning_dialog.show_modal_to_window (Current)
 		end
 		

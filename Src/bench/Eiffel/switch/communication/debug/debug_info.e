@@ -397,7 +397,7 @@ feature -- changing breakpoints for a feature
 		do
 			error_in_bkpts := False
 
-			create bp.make (f, 1 + f.number_of_precondition_slots)
+			create bp.make (f, 1 + f.number_of_all_precondition_slots)
 			if not bp.is_corrupted then
 				breakpoints.add_breakpoint (bp)
 			else

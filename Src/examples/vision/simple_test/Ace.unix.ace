@@ -24,14 +24,14 @@ cluster
 
 -- EiffelBase:
 
-   all base: 		"$ISE_EIFFEL\library\base"
+   all base: 		"$ISE_EIFFEL/library/base"
 		exclude
 			"table_eiffel3";
 			"desc"
 		end	
 
 -- MEL
-   all  mel:                            "$ISE_EIFFEL/library/mel/";
+   all  mel:                            "$ISE_EIFFEL/library/mel";
                   
                         
 -- EiffelVision

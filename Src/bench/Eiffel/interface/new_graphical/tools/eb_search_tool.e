@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 				textable.set_text (a_stone.stone_signature)
 			end
 		ensure
-			text_set: textable.text.is_equal (a_stone.stone_signature)
+			text_set: a_stone /= Void implies textable.text.is_equal (a_stone.stone_signature)
 		end
 
 end -- class EB_SEARCH_TOOL

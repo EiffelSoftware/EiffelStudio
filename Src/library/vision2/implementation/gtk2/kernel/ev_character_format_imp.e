@@ -95,7 +95,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 	new_text_tag: POINTER is
 			-- Create a new text tag based on state of `Current'
 		local
-			propname, propvalue: EV_GTK_C_UTF8_STRING
+			propname: EV_GTK_C_UTF8_STRING
 			color_struct: POINTER
 			tempbool: BOOLEAN
 			font_desc: POINTER

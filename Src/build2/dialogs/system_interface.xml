@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?><application xsi="http://www.w3.org/1999/XMLSchema-instance">
 <item type="Constants"><Constant ><type >STRING</type>
-		<Name >close_text</Name>
-		<Value >Close</Value>
+		<Name >new_button_text</Name>
+		<Value >New...</Value>
+		</Constant>
+	<Constant ><type >DIRECTORY</type>
+		<Name >png_location</Name>
+		<Value >D:\Eiffel54\build\bitmaps\png</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
-		<Name >negative</Name>
-		<Value >-100</Value>
-		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >cancel_button_text</Name>
-		<Value >Cancel</Value>
-		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >constants_dialog_title</Name>
-		<Value >Constants</Value>
+		<Name >default_button_width</Name>
+		<Value >80</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >remove_button_text</Name>
@@ -23,9 +19,39 @@
 		<Name >new_button_add_text</Name>
 		<Value >Add</Value>
 		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >no_directory_dialog</Name>
+		<Value >No Matching DIRECTORY Constant</Value>
+		</Constant>
 	<Constant ><type >INTEGER</type>
-		<Name >large_padding</Name>
-		<Value >12</Value>
+		<Name >medium_padding</Name>
+		<Value >8</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >modify_button_text</Name>
+		<Value >Modify</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >modify_pixmap_dialog_title</Name>
+		<Value >Modify Pixmap</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >constants_dialog_title</Name>
+		<Value >Constants</Value>
+		</Constant>
+	<Constant ><type >PIXMAP</type>
+		<Name >icon_component_viewer_color_png</Name>
+		<Value >D:\Eiffel54\build\bitmaps\png\icon_component_viewer_color.png</Value>
+		<is_absolute >False</is_absolute>
+		<Directory >png_location</Directory>
+		<Filename >icon_component_viewer_color.png</Filename>
+		</Constant>
+	<Constant ><type >PIXMAP</type>
+		<Name >lightbulb_png</Name>
+		<Value >D:\Eiffel54\build\bitmaps\png\lightbulb.png</Value>
+		<is_absolute >False</is_absolute>
+		<Directory >png_location</Directory>
+		<Filename >lightbulb.png</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >tip_of_day_dialog_title</Name>
@@ -38,55 +64,33 @@
 		<Directory >png_location</Directory>
 		<Filename >icon_component_build_view_color.png</Filename>
 		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >modify_pixmap_dialog_title</Name>
-		<Value >Modify Pixmap</Value>
-		</Constant>
 	<Constant ><type >INTEGER</type>
-		<Name >default_button_width</Name>
-		<Value >80</Value>
-		</Constant>
-	<Constant ><type >INTEGER</type>
-		<Name >small_padding</Name>
-		<Value >4</Value>
-		</Constant>
-	<Constant ><type >DIRECTORY</type>
-		<Name >png_location</Name>
-		<Value >D:\Eiffel54\build\bitmaps\png</Value>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >lightbulb_png</Name>
-		<Value >D:\Eiffel54\build\bitmaps\png\lightbulb.png</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >png_location</Directory>
-		<Filename >lightbulb.png</Filename>
+		<Name >negative</Name>
+		<Value >-100</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >system_window_title</Name>
 		<Value >Project Configuration</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
-		<Name >ok_button_text</Name>
-		<Value >OK</Value>
+		<Name >import_project_title</Name>
+		<Value >Import Completion Status</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
-		<Name >pixmap_settings_dialog_title</Name>
-		<Value >Pixmap Selection</Value>
+		<Name >close_text</Name>
+		<Value >Close</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >ok_button_text</Name>
+		<Value >OK</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >large_spacing_width</Name>
 		<Value >12</Value>
 		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >icon_component_viewer_color_png</Name>
-		<Value >D:\Eiffel54\build\bitmaps\png\icon_component_viewer_color.png</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >png_location</Directory>
-		<Filename >icon_component_viewer_color.png</Filename>
-		</Constant>
 	<Constant ><type >STRING</type>
-		<Name >no_directory_dialog</Name>
-		<Value >No Matching DIRECTORY Constant</Value>
+		<Name >next_tip_text</Name>
+		<Value >Next tip</Value>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_component_display_view_color_png</Name>
@@ -96,20 +100,20 @@
 		<Filename >icon_component_display_view_color.png</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
-		<Name >modify_button_text</Name>
-		<Value >Modify</Value>
+		<Name >cancel_button_text</Name>
+		<Value >Cancel</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
-		<Name >next_tip_text</Name>
-		<Value >Next tip</Value>
+		<Name >pixmap_settings_dialog_title</Name>
+		<Value >Pixmap Selection</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
-		<Name >medium_padding</Name>
-		<Value >8</Value>
+		<Name >small_padding</Name>
+		<Value >4</Value>
 		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >new_button_text</Name>
-		<Value >New...</Value>
+	<Constant ><type >INTEGER</type>
+		<Name >large_padding</Name>
+		<Value >12</Value>
 		</Constant>
 	</item>
 <item type="Directory"><Internal_properties ><name >constants_dialog</name>
@@ -3086,6 +3090,105 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 				<EV_WIDGET />
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
+				</item>
+			</item>
+		</item>
+	</item>
+<item type="Directory"><Internal_properties ><name >import_dialog</name>
+		</Internal_properties>
+	<item type="EV_DIALOG"><Internal_properties ><id >231</id>
+			<name >gb_import_dialog</name>
+			<Expanded >1</Expanded>
+			</Internal_properties>
+		<EV_COLORIZABLE />
+		<EV_SENSITIVE />
+		<EV_WIDGET ><Minimum_width >320</Minimum_width>
+			<Minimum_height >240</Minimum_height>
+			</EV_WIDGET>
+		<EV_WINDOW ><Title ><Constant >import_project_title</Constant>
+				</Title>
+			</EV_WINDOW>
+		<EV_PIXMAPABLE />
+		<EV_CONTAINER />
+		<item type="EV_VERTICAL_BOX"><Internal_properties ><id >232</id>
+				<Expanded >1</Expanded>
+				</Internal_properties>
+			<EV_COLORIZABLE />
+			<EV_SENSITIVE />
+			<EV_WIDGET />
+			<EV_BOX ><Padding ><Constant >large_padding</Constant>
+					</Padding>
+				<Border ><Constant >large_padding</Constant>
+					</Border>
+				<Is_item_expanded >010</Is_item_expanded>
+				</EV_BOX>
+			<EV_PIXMAPABLE />
+			<EV_CONTAINER />
+			<item type="EV_LABEL"><Internal_properties ><id >233</id>
+					<name >prompt_label</name>
+					<Expanded >0</Expanded>
+					</Internal_properties>
+				<EV_COLORIZABLE />
+				<EV_FONTABLE />
+				<EV_SENSITIVE />
+				<EV_TEXTABLE ><Text ><![CDATA[The following naming conflicts were resolved:]]></Text>
+					</EV_TEXTABLE>
+				<EV_TOOLTIPABLE />
+				<EV_WIDGET />
+				<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
+					</EV_TEXT_ALIGNABLE>
+				</item>
+			<item type="EV_TEXT"><Internal_properties ><id >234</id>
+					<name >change_list</name>
+					<Expanded >0</Expanded>
+					</Internal_properties>
+				<EV_COLORIZABLE />
+				<EV_FONTABLE />
+				<EV_SENSITIVE />
+				<EV_TEXTABLE />
+				<EV_TOOLTIPABLE />
+				<EV_WIDGET />
+				<EV_TEXT_COMPONENT ><Is_editable >False</Is_editable>
+					</EV_TEXT_COMPONENT>
+				</item>
+			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >235</id>
+					<Expanded >1</Expanded>
+					</Internal_properties>
+				<EV_COLORIZABLE />
+				<EV_SENSITIVE />
+				<EV_WIDGET />
+				<EV_BOX ><Is_item_expanded >10</Is_item_expanded>
+					</EV_BOX>
+				<EV_PIXMAPABLE />
+				<EV_CONTAINER />
+				<item type="EV_CELL"><Internal_properties ><id >236</id>
+						<Expanded >0</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_SENSITIVE />
+					<EV_WIDGET />
+					<EV_PIXMAPABLE />
+					<EV_CONTAINER />
+					</item>
+				<item type="EV_BUTTON"><Internal_properties ><id >237</id>
+						<name >ok_button</name>
+						<Expanded >0</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_FONTABLE />
+					<EV_SENSITIVE />
+					<EV_TEXTABLE ><Text ><Constant >ok_button_text</Constant>
+							</Text>
+						</EV_TEXTABLE>
+					<EV_TOOLTIPABLE />
+					<EV_WIDGET ><Minimum_width ><Constant >default_button_width</Constant>
+							</Minimum_width>
+						</EV_WIDGET>
+					<EV_TEXT_ALIGNABLE />
+					<EV_PIXMAPABLE />
+					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES ok_pressed</Event>
+						</Events>
+					</item>
 				</item>
 			</item>
 		</item>

@@ -34,6 +34,7 @@ feature -- Initialization
 		do
 			argument1 := arg1;
 			!!file_box.make ("File Box", argument1.top);
+			file_box.set_save_file;
 			!!error_box.make ("Alert", argument1.top);
 			error_box.hide_help_button;
 			error_box.hide_cancel_button;

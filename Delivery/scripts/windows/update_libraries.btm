@@ -37,6 +37,16 @@ remtrace vision2
 exprt -r %DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
 remtrace wizard
 exprt -r %DEFAULT_CVS_TAG -d wizard "Src/library/wizard"
+remtrace Dotnet libraries
+safe_md %EIFFEL_SRC\library.net
+cdd %EIFFEL_SRC\library.net
+remtrace base.net
+exprt -r %DEFAULT_CVS_TAG -d base "Src/library.net/base"
+remtrace wel.net
+exprt -r %DEFAULT_CVS_TAG -d wel "Src/library.net/wel"
+remtrace vision2.net
+exprt -r %DEFAULT_CVS_TAG -d vision2 "Src/library.net/vision2"
+
 cd %EIFFEL_SRC
 remtrace Compile the Eiffel libraries C code
 remtrace com
@@ -53,9 +63,6 @@ cd %EIFFEL_SRC\library\exml\compiler_specific\ise\clib
 default_make
 remtrace net
 cd %EIFFEL_SRC\library\net\Clib
-default_make
-remtrace time
-cd %EIFFEL_SRC\library\time\Clib
 default_make
 remtrace wel
 cd %EIFFEL_SRC\library\wel\clib

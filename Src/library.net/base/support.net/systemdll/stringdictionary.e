@@ -1,7 +1,7 @@
 indexing
 	generator: "Eiffel Emitter 2.8b2"
 	external_name: "System.Collections.Specialized.StringDictionary"
-	assembly: "System", "1.0.3200.0", "neutral", "b77a5c561934e089"
+	assembly: "System", "1.0.3300.0", "neutral", "b77a5c561934e089"
 
 external class
 	STRINGDICTIONARY

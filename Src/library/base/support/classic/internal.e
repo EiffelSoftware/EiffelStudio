@@ -140,6 +140,28 @@ feature -- Access
 		do
 			Result := object.generator
 		end
+		
+	class_name_of_type (type_id: INTEGER): STRING is
+			-- Name of class associated with dynamic type `type_id'.
+		do
+			Result := feature {ISE_RUNTIME}.c_generator_of_type (type_id)
+		end
+
+	type_name (object: ANY): STRING is
+			-- Name of `object''s generating type (type of which `object'
+			-- is a direct instance).
+		require
+			object_not_void: object /= Void
+		do
+			Result := object.generating_type
+		end
+
+	type_name_of_type (type_id: INTEGER): STRING is
+			-- Name of `type_id''s generating type (type of which `type_id'
+			-- is a direct instance).
+		do
+			Result := feature {ISE_RUNTIME}.c_generating_type_of_type (type_id)
+		end
 
 	dynamic_type (object: ANY): INTEGER is
 			-- Dynamic type of `object'
@@ -220,6 +242,15 @@ feature -- Access
 			Result := c_field_type_of_type (i - 1, type_id)
 		end
 
+	field_static_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
+			-- Static type of declared `i'-th field of dynamic type `type_id'
+		require
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count_of_type (type_id)
+		do
+			Result := c_field_static_type_of_type (i - 1, type_id)
+		end
+		
 	expanded_field_type (i: INTEGER; object: ANY): STRING is
 			-- Class name associated with the `i'-th
 			-- expanded field of `object'
@@ -523,11 +554,19 @@ feature {NONE} -- Implementation
 		end
 
 	c_field_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
-			-- Type of `i'-th field of dynamic type `type_id'
+			-- Abstract type of `i'-th field of dynamic type `type_id'
 		external
 			"C signature (long, EIF_INTEGER): EIF_INTEGER use %"eif_internal.h%""
 		alias
 			"ei_field_type_of_type"
+		end
+
+	c_field_static_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
+			-- Static type of `i'-th field of dynamic type `type_id'
+		external
+			"C signature (long, EIF_INTEGER): EIF_INTEGER use %"eif_internal.h%""
+		alias
+			"ei_field_static_type_of_type"
 		end
 
 	c_expanded_type (i: INTEGER; object: POINTER): STRING is

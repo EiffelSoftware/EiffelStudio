@@ -169,7 +169,9 @@ feature {NONE} -- Implementation
 					system_descriptor.after
 				loop
 					if 
-						not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
+						-- For now, the wizard will generate everything so that generated files that include
+						-- header files from the standard type libraries still compile.
+						True -- not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
 					then
 						a_range := a_range + system_descriptor.library_descriptor_for_iteration.descriptors.count
 					end
@@ -184,7 +186,9 @@ feature {NONE} -- Implementation
 					system_descriptor.after
 				loop
 					if 
-						not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
+						-- For now, the wizard will generate everything so that generated files that include
+						-- header files from the standard type libraries still compile.
+						True -- not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
 					then
 						from
 							i := 1
@@ -300,6 +304,7 @@ feature {NONE} -- Implementation
 								compiler.compile_folder (Clib_folder_name)
 								compiler.link_all (Clib_folder_name, CLib_name)
 							end
+							message_output.set_forced_display
 							if not Shared_wizard_environment.abort and Shared_wizard_environment.compile_eiffel then
 								if Shared_wizard_environment.client then
 									progress_report.set_title (Eiffel_compilation_title)
@@ -310,8 +315,14 @@ feature {NONE} -- Implementation
 									compiler.compile_eiffel (Server)
 								end
 							end
-							if not shared_wizard_environment.abort then		
+							message_output.set_normal_display
+							if not shared_wizard_environment.abort then
+								generate_user_ace_file
+								message_output.set_forced_display
 								message_output.add_message (Current, Compilation_Successful)
+								message_output.set_normal_display
+							else
+								finish
 							end
 						end
 					end
@@ -330,6 +341,8 @@ feature {NONE} -- Implementation
 				Shared_wizard_environment.return_code
 			when Standard_abort_value then
 				a_string := clone (Standard_failure_error_message)
+			when Eiffel_compilation_error then
+				a_string := clone (Eiffel_compilation_error_message)
 			else
 				a_string := clone (Failed_message)
 				a_string.append_integer (Shared_wizard_environment.return_code)
@@ -450,8 +463,11 @@ feature {NONE} -- Implementation
 	Failed_message: STRING is "Failed with return code "
 			-- Failure message
 	
-	Standard_failure_error_message: STRING is "Failed"
+	Standard_failure_error_message: STRING is "Generic failure"
 			-- Generic failure message
+	
+	Eiffel_compilation_error_message: STRING is "Eiffel Compilation Failed"
+			-- Eiffel compilation error message
 
 	Generation_title: STRING is "Generating code"
 			-- Generation message
@@ -473,9 +489,6 @@ feature {NONE} -- Implementation
 
 	Runtime_functions_generation: STRING is "Generating Runtime functions"
 			-- Runtime functions generation
-
-	Clib_name: STRING is "ecom"
-			-- Libray file name
 
 	Compilation_successful: STRING is "Compilation completed."
 			-- Compilation successful message

@@ -57,13 +57,6 @@ cluster
 			"desc"; "table_eiffel3"; "CVS"; 
 		end
 
-	all gel:		"$EIFFEL_SRC/library/gel"
-		exclude
-			"CVS"; 
-		default
-			assertion(ensure)
-		end
-
 	all vision2:		"$EIFFEL_SRC/library/vision2"
 		exclude
 			"mswin"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
@@ -86,18 +79,10 @@ cluster
 	all helpers (root_cluster): "$/linux_helpers"
 
 external
-
 	include_path:
-		"\$(EIFFEL_SRC)/library/event/Clib",
-		"\$(EIFFEL_SRC)/library/vision2/spec/include",
-		"\$(EIFFEL_SRC)/C_library/libpng",
-		"\$(EIFFEL_SRC)/C_library/zlib",
-		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
-
+			"\$(EIFFEL_SRC)/library/event/Clib",
+			"\$(EIFFEL_SRC)/library/vision2/spec/include",
+			"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `$EIFFEL_SRC/library/vision2/implementation/gtk/Clib/vision2-gtk-config --devel --include_path`"
 	object:
-		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
-		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
-		"$(EIFFEL_SRC)/C_library/libpng/libpng.a",
-		"$(EIFFEL_SRC)/C_library/zlib/libz.a",
-		"-L/usr/X11R6/lib -lXtst"
+			"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o `$EIFFEL_SRC/library/vision2/implementation/gtk/Clib/vision2-gtk-config --devel --object`"
 end

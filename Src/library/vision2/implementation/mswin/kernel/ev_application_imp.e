@@ -552,7 +552,11 @@ feature {NONE} -- Implementation
 			--  Exit `process_events_until_stopped'.
 		do
 			stop_processing_requested := True
-			cwin_post_message (default_pointer, stop_processing_requested_msg, 0, 0)
+			if application_main_window /= Void then
+				cwin_post_message (application_main_window.item, stop_processing_requested_msg, 0, 0)
+			else
+				cwin_post_message (default_pointer, stop_processing_requested_msg, 0, 0)
+			end
 		end
 		
 	stop_processing_requested_msg: INTEGER

@@ -125,8 +125,6 @@ feature -- Type check, byte code and dead code removal
 	byte_node: UNARY_B is
 			-- Associated byte code
 		do
-		ensure then
-			False
 		end;
 
 	format (ctxt: FORMAT_CONTEXT) is

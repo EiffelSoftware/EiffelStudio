@@ -97,6 +97,7 @@ feature {NONE} -- Initialization
 			preferences_initialized: BOOLEAN
 			environment_dialog: INVALID_ENVIRONMENT_DIALOG
 		do
+			default_create
 				-- Ensure that the preferences are initialized correctly.
 			if command_line.argument_array.count = 4 or command_line.argument_array.count = 7 then
 				system_status.enable_wizard_system
@@ -113,7 +114,6 @@ feature {NONE} -- Initialization
 							-- If `argument_array' has one element,
 							-- then no argument was specified, only the
 							-- name of the executable.
-						default_create
 						build_non_once_windows
 						xml_handler.load_components
 						main_window.build_interface
@@ -129,7 +129,6 @@ feature {NONE} -- Initialization
 						project_settings.load (command_line.argument_array @ 1, file_handler)
 							-- Question `project_settings' to see how to open the file.
 						if project_settings.is_stand_alone_project then
-							default_create
 							build_non_once_windows
 							xml_handler.load_components
 							main_window.build_interface
@@ -142,7 +141,6 @@ feature {NONE} -- Initialization
 				else
 						-- The necessary environment variables are not present, so
 						-- display a warning dialog instead of launching EiffelBuild.
-					default_create
 					create environment_dialog
 					environment_dialog.warning_label.set_text ("EiffelBuild was unable to launch for the following reasons: %N%N" + environment_variables_warning + "%N%NPlease check your installation.")
 					environment_dialog.show

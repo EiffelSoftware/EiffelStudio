@@ -19,10 +19,17 @@ feature -- Initialization
 
 	make (host:STRING; user: STRING) is
 			-- Create an smtp protocol with 'host, 'user' and default port.
+		require
+			host_not_void: host /= Void
+			user_not_void: user /= Void
 		do
 			hostname:= host
 			username:= user
 			port:= default_port
+		ensure
+			hostname_set: hostname = host
+			username_set: username = user
+			port_set: port = default_port
 		end
 
 feature -- Access
@@ -39,12 +46,16 @@ feature -- Setting
 			-- Set pipelining.
 		do
 			pipelining:= True
+		ensure
+			pipelining_set: pipelining
 		end
 
 	disable_pipelining is
 			-- Unset pipelining.
 		do
 			pipelining:= False
+		ensure
+			pipelining_set: not pipelining
 		end
 
 feature -- Access EMAIL_PROTOCOL
@@ -138,9 +149,9 @@ feature {NONE} -- Basic operations
 		end
 
 	send_command (s: STRING; expected_code: INTEGER) is
-			-- send a string 's' to the server and result the code response.
-		local
-			response: STRING
+			-- Send a string 's' to the server and result the code response.
+		require
+			s_not_void: s /= Void
 		do
 			socket.put_string (s + "%R%N")
 			decode
@@ -217,8 +228,9 @@ feature {NONE} -- Basic operations
 			-- Add new header line 'sub_header_key',
 			-- A distinction is done in case the mail is bcc or not.
 		require
-			key_exists: memory_resource.headers.has (sub_header_key)
 			sub_header_exists: sub_header /= Void
+			sub_header_key_not_void: sub_header_key /= Void
+			key_exists: memory_resource.headers.has (sub_header_key)
 		local
 			a_header: HEADER
 		do

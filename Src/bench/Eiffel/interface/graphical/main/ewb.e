@@ -19,7 +19,7 @@ feature
 	make is
 			-- Create and map the first window: the system window.
 		do
-			if argument_count = 1 and then
+			if argument_count = 2 and then
 				argument (1).is_equal ("-bench")
 			then
 				set_batch_mode (False);

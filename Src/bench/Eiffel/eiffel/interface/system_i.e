@@ -2110,8 +2110,8 @@ else
 	if final_mode then
 		Skeleton_file.putstring ("{ 0, %"INVALID_TYPE%", (char**)0, 0,0,0,0}");
 	else
-		Skeleton_file.putstring ("{ 0, %"INVALID_TYPE%", (char**)0, 0,0,0,0,%N");
-		Skeleton_file.putstring ("'\0', '\0', 0, 0 , \0, 0 , {0,0,0,0}}");
+		Skeleton_file.putstring ("{ 0, %"INVALID_TYPE%", (char**)0, 0,0,0,0,0,%N");
+		Skeleton_file.putstring ("'\0', '\0', 0, 0 , '\0', 0 , {0,0,0,0}}");
 	end;
 end;
 				Skeleton_file.putstring (",%N");

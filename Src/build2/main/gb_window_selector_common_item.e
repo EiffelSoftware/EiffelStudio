@@ -197,8 +197,7 @@ feature -- Status setting
 				children.back
 			end
 			children.put_right (new_item)
-			tree_item.go_i_th (children.index)
-			tree_item.put_right (new_item.tree_item)
+			add_to_tree_node_alphabetically (tree_item, new_item.tree_item)
 			new_item.set_parent (Current)
 			window_selector.item_added_to_directory (Current, new_item)
 		end

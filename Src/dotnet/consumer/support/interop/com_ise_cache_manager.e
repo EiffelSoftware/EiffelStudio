@@ -53,6 +53,26 @@ feature -- Basic Oprtations
 			current_initialized: is_initialized
 		end
 
+	initialize_with_path (a_path: SYSTEM_STRING) is
+			-- initialize object with path to specific EAC and initializes it if not already done.
+		require
+			not_already_initialized: not is_initialized
+			non_void_path: a_path /= Void
+			valid_path: a_path.length > 0
+			path_exists: (create {DIRECTORY}.make (create {STRING}.make_from_cil (a_path))).exists
+		local
+			cr: CACHE_READER
+		do
+			create impl.make_with_path (create {STRING}.make_from_cil (a_path))
+			create cr
+			if not cr.is_initialized then
+				(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make, cr.absolute_info_path)
+			end
+			is_initialized := True
+		ensure
+			current_initialized: is_initialized
+		end
+
 	start_assembly_enumeration is
 			-- Notify that we are about to receive an iteration of assembly path.
 		require

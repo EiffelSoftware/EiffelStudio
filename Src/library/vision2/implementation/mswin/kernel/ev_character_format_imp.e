@@ -214,6 +214,7 @@ feature -- Status setting
 		do
 			color_imp ?= a_color.implementation
 			wel_set_background_color (color_imp)
+			bcolor_set := True
 		end
 		
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is

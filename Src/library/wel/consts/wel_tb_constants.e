@@ -33,7 +33,7 @@ feature -- Access
 	Tb_changebitmap: INTEGER is 1067
 			-- Changes the bitmap for a button in a toolbar. 
 
-	Tb_checkbutton: INTEGER is 1024
+	Tb_checkbutton: INTEGER is 1026
 			-- Checks or unchecks a given button in a toolbar. 
 
 	Tb_commandtoindex: INTEGER is 1049

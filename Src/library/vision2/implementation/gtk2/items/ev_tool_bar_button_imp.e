@@ -75,6 +75,8 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
 			
 			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_label_widget (visual_widget, text_label)
+				-- Add padding for text label
+			feature {EV_GTK_EXTERNALS}.gtk_misc_set_padding (text_label, 2, 0)
 			Precursor {EV_ITEM_IMP}
 			initialize_events
 

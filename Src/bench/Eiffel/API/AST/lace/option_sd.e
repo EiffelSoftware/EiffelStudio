@@ -8,7 +8,8 @@ deferred class OPTION_SD
 inherit
 	AST_LACE
 		rename
-			adapt as ast_adapt
+			adapt as ast_adapt,
+			adapt_defaults as ast_adatp_defaults
 		end;
 
 feature {LACE_AST_FACTORY} -- Initialization
@@ -130,6 +131,17 @@ feature {COMPILER_EXPORTER} -- Update
 			-- is in `list'.
 		deferred
 		end;
+
+	adapt_defaults (value: OPT_VAL_SD;
+			classes: HASH_TABLE [CLASS_I, STRING];
+			list: LACE_LIST [ID_SD])
+		is
+			-- If `list' is Void, adapt Ace default Current option to `classes'.
+			-- Otherwise, only adapt Current option to classes whose name
+			-- is in `list'.
+		do
+			adapt (value, classes, list)
+		end
 
 	error (option_value: OPT_VAL_SD) is
 		local

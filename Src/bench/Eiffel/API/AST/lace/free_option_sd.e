@@ -12,7 +12,7 @@ inherit
 		redefine
 			process_system_level_options, is_system_level,
 			is_system_level_only, is_free_option, duplicate,
-			is_valid
+			is_valid, adapt_defaults
 		end
 
 	SHARED_RESCUE_STATUS
@@ -197,13 +197,10 @@ feature {COMPILER_EXPORTER}
 			classes:HASH_TABLE [CLASS_I, STRING]
 			list: LACE_LIST [ID_SD])
 		is
-			-- Adapt should not process the system level options
+			-- Adapt current option to `classes' or `list'.
 		local
 			l_option_sd: OPTION_SD
 		do
-			check
-				not_system_level: not is_system_level
-			end
 			inspect code
 			when document then
 				create {DOCUMENT_SD} l_option_sd
@@ -219,6 +216,29 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
+	adapt_defaults (value: OPT_VAL_SD
+			classes:HASH_TABLE [CLASS_I, STRING]
+			list: LACE_LIST [ID_SD])
+		is
+			-- Adapt inherited system default option to `classes' or `list'.
+			-- Almost similar to `adapt', but in current case, `namespace'
+			-- specification is not handled as it has a different meaning.
+		local
+			l_option_sd: OPTION_SD
+		do
+			inspect code
+			when document then
+				create {DOCUMENT_SD} l_option_sd
+			when profile then
+				create {PROFILE_SD} l_option_sd
+			else
+			end
+			
+			if l_option_sd /= Void then
+				l_option_sd.adapt (value, classes, list)
+			end
+		end
+		
 	process_system_level_options (value: OPT_VAL_SD) is
 		local
 			error_found: BOOLEAN

@@ -16,7 +16,14 @@ inherit
 feature {COMPILER_EXPORTER}
 
 	adapt is
+			-- Process options to cluster.
 		do
+		end
+
+	adapt_defaults is
+			-- Process Ace default options to cluster level.
+		do
+			adapt
 		end
 
 feature -- Duplication

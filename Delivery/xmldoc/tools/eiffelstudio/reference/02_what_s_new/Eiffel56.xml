@@ -47,37 +47,37 @@
 		</list>
 		<heading><size>3</size>EiffelBase</heading>
 		<list ordered="false">
-			<item><code><class_name>ARRAY</class_name></code>:
+			<item><class_name>ARRAY</class_name>:
 				<list ordered="false">
-					<item>Changed signature of <code><feature_name>subarray</feature_name></code> to match ELKS specification. It now returns an <code><class_name>ARRAY [G]</class_name></code> instead of <code><keyword>like Current</keyword></code>.</item>
-					<item>Fixed <code><feature_name>has</feature_name></code> to return <code><keyword>True</keyword></code> when searching for <code><keyword>Void</keyword></code> when comparing objects in an array containing a <code><keyword>Void</keyword></code> element.</item>
-					<item>Fixed issue on .NET with <code><feature_name>clone</feature_name></code>/<code><feature_name>copy</feature_name></code> which were not really duplicating the internal of the array, and therefore enabling aliasing of its content by more than one array.</item>
+					<item>Changed signature of <feature_name>subarray</feature_name> to match ELKS specification. It now returns an <class_name>ARRAY [G]</class_name> instead of <code><keyword>like Current</keyword></code>.</item>
+					<item>Fixed <feature_name>has</feature_name> to return <code><keyword>True</keyword></code> when searching for <code><keyword>Void</keyword></code> when comparing objects in an array containing a <code><keyword>Void</keyword></code> element.</item>
+					<item>Fixed issue on .NET with <feature_name>clone</feature_name>/<feature_name>copy</feature_name> which were not really duplicating the internal of the array, and therefore enabling aliasing of its content by more than one array.</item>
 				</list>
 			</item>
-			<item><code><class_name>STRING</class_name></code>:
+			<item><class_name>STRING</class_name>:
 				<list ordered="false">
-					<item>Changed signature of <code><feature_name>infix "+"</feature_name></code> to match ELKS specification. It now returns <code><keyword>like Current</keyword></code> instead of <code><class_name>STRING</class_name></code>.</item>
-					<item>Added implementation query <code><feature_name>new_string</feature_name></code>. Descendants of <code><class_name>STRING</class_name></code> may need to update their inheritance clause.</item>
+					<item>Changed signature of <feature_name>infix "+"</feature_name> to match ELKS specification. It now returns <code><keyword>like Current</keyword></code> instead of <class_name>STRING</class_name>.</item>
+					<item>Added implementation query <feature_name>new_string</feature_name>. Descendants of <class_name>STRING</class_name> may need to update their inheritance clause.</item>
 				</list>
 			</item>
-			<item><code><class_name>ARRAYED_LIST</class_name></code>:
+			<item><class_name>ARRAYED_LIST</class_name>:
 				<list ordered="false">
-					<item>Removed <code><feature_name>array_valid_index</feature_name></code> from <code><class_name>ARRAYED_LIST</class_name></code>. Descendants of <code><class_name>ARRAYED_LIST</class_name></code> may need to update their inheritance clause. This fixes ability to use <code><feature_name>put_i_th</feature_name></code> with indexes that may violate the invariant of <code><class_name>ARRAYED_LIST</class_name></code>, for example the code below should trigger a precondition and not violate the invariant of <code><class_name>ARRAYED_LIST</class_name></code>:
+					<item>Removed <feature_name>array_valid_index</feature_name> from <class_name>ARRAYED_LIST</class_name>. Descendants of <class_name>ARRAYED_LIST</class_name> may need to update their inheritance clause. This fixes ability to use <feature_name>put_i_th</feature_name> with indexes that may violate the invariant of <class_name>ARRAYED_LIST</class_name>, for example the code below should trigger a precondition and not violate the invariant of <class_name>ARRAYED_LIST</class_name>:
 <code_block>list: <class_name>ARRAYED_LIST</class_name> [<class_name>INTEGER</class_name>]
 
 <keyword>create</keyword> list.<feature_name>make</feature_name> (5)
 list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
-					<item>Added implementation query <code><feature_name>new_filled_list</feature_name></code> in <code><class_name>ARRAYED_LIST</class_name></code>. Descendants of <code><class_name>ARRAYED_LIST</class_name></code> may need to update their inheritance clause.</item>
+					<item>Added implementation query <feature_name>new_filled_list</feature_name> in <class_name>ARRAYED_LIST</class_name>. Descendants of <class_name>ARRAYED_LIST</class_name> may need to update their inheritance clause.</item>
 				</list>
 			</item>
-			<item>Added <code><feature_name>merge</feature_name></code> to <code><class_name>HASH_TABLE</class_name></code>.</item>
-			<item>Made implementations of <code><feature_name>cursor</feature_name></code> in descendants of <code><class_name>CURSOR_STRUCTURE</class_name></code> return a precise <code><class_name>CURSOR</class_name></code> type.</item>
-			<item>Reduced feature exportation of routines also used as creation procedures of <code><class_name>CURSOR</class_name></code> descendants to <code><class_name>NONE</class_name></code>.</item>
-			<item>Removed <code><feature_name>make_sublist</feature_name></code> from <code><class_name>TWO_WAY_LIST</class_name></code> public creation procedures.</item>
-			<item>Made <code><feature_name>file_prunable</feature_name></code> from <code><class_name>FILE</class_name></code> obsolete. Use <code><feature_name>prunable</feature_name></code> instead.</item>
-			<item>Implemented features <code><feature_name>collect</feature_name></code> and <code><feature_name>full_collect</feature_name></code> of class <code><class_name>MEMORY</class_name> for .NET.</code></item>
-			<item>Changed type of feature <code><feature_name>sign</feature_name></code> in classes <code><class_name>INTEGER_8</class_name></code> and <code><class_name>INTEGER_16</class_name></code> to <code><class_name>INTEGER_8</class_name></code> and <code><class_name>INTEGER_16</class_name></code> respectively.</item>
-			<item>Added a subcluster <code><cluster_name>refactoring</cluster_name></code> with classes that can be helpful for performing code refactoring.</item>
+			<item>Added <feature_name>merge</feature_name> to <class_name>HASH_TABLE</class_name>.</item>
+			<item>Made implementations of <feature_name>cursor</feature_name> in descendants of <class_name>CURSOR_STRUCTURE</class_name> return a precise <class_name>CURSOR</class_name> type.</item>
+			<item>Reduced feature exportation of routines also used as creation procedures of <class_name>CURSOR</class_name> descendants to <class_name>NONE</class_name></item>
+			<item>Removed <feature_name>make_sublist</feature_name> from <class_name>TWO_WAY_LIST</class_name> public creation procedures.</item>
+			<item>Made <feature_name>file_prunable</feature_name> from <class_name>FILE</class_name> obsolete. Use <feature_name>prunable</feature_name> instead.</item>
+			<item>Implemented features <feature_name>collect</feature_name> and <feature_name>full_collect</feature_name> of class <class_name>MEMORY</class_name> for .NET.</item>
+			<item>Changed type of feature <feature_name>sign</feature_name> in classes <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> to <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> respectively.</item>
+			<item>Added a subcluster <cluster_name>refactoring</cluster_name> with classes that can be helpful for performing code refactoring.</item>
 		</list>
 		<heading><size>3</size>EiffelNet</heading>
 		<list ordered="false">

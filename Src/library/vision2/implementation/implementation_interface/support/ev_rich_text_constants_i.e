@@ -56,7 +56,34 @@ feature -- Access
 		-- String denoting font size in RTF.
 		
 	space_string: STRING is " "
-		-- String denoting emprty space.
+		-- String denoting empty space.
+		
+	new_paragraph: STRING is "\pard"
+		-- String denoting start of standard paragraph.
+		
+	paragraph_left_aligned: STRING is "\ql"
+		-- String denoting start of left aligned paragraph.
+		
+	paragraph_center_aligned: STRING is "\qc"
+		-- String denoting start of center aligned paragraph.
+		
+	paragraph_right_aligned: STRING is "\qr"
+		-- String denoting start of right aligned paragraph.
+		
+	paragraph_justified: STRING is "\qj"
+		-- String denoting start of justified paragraph.
+		
+	paragraph_left_indent: STRING is "\li"
+		-- String denoting left indent of paragraph.
+		
+	paragraph_right_indent: STRING is "\ri"
+		-- String denoting right indent of paragraph.
+		
+	paragraph_space_before: STRING is "\sb"
+		-- String denoting space before paragraph.
+		
+	paragraph_space_after: STRING is "\sa"
+		-- String denoting space after paragraph.
 		
 	rtf_newline: STRING is "\par%N"
 		-- String denoting RTF newline.

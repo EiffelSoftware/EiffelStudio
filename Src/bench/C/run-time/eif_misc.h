@@ -88,8 +88,6 @@ RT_LNK EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j, EI
 /* DLL declarations */
 RT_LNK HMODULE eif_load_dll(char *module_name);
 RT_LNK void eif_free_dlls(void);
-
-extern char **_argv;
 #endif
 
 #ifdef __cplusplus

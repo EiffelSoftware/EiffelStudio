@@ -11,7 +11,8 @@ inherit
 	GB_VERTICAL_SPLIT_AREA
 		rename
 			extend as cell_extend,
-			count as cell_count
+			count as cell_count,
+			linear_representation as old_linear_representation
 		export
 			{NONE} all
 		redefine
@@ -27,7 +28,7 @@ feature {NONE} -- Initialization
 			counter: INTEGER
 		do
 			Precursor {GB_VERTICAL_SPLIT_AREA}
-			create all_widgets.make (4)
+			create linear_representation.make (4)
 			create all_holders.make (4)
 			create all_split_areas.make (4)
 			create stored_splitter_widths.make (4)
@@ -41,7 +42,7 @@ feature -- Access
 	count: INTEGER is
 			-- Number of widgets in `Current'.
 		do
-			Result := all_widgets.count
+			Result := linear_representation.count
 		ensure
 			result_valid: Result >= 0
 		end
@@ -50,7 +51,7 @@ feature -- Access
 		-- Does the top widget displayed in `Current' resize vertically as `Current' is resized?
 		-- If False, the bottom widget will be resized vertically insead.
 	
-	all_widgets: ARRAYED_LIST [EV_WIDGET]
+	linear_representation: ARRAYED_LIST [EV_WIDGET]
 		-- All widgets held in `Current'
 
 feature -- Status setting
@@ -79,7 +80,7 @@ feature -- Status setting
 			-- Display a close button for `widget'.
 		require
 			widget_not_void: widget /= Void
-			all_widgets.has (widget)
+			linear_representation.has (widget)
 		local
 			holder: GB_TOOL_HOLDER
 		do
@@ -91,7 +92,7 @@ feature -- Status setting
 			-- Hide the close button for `widget'.
 		require
 			widget_not_void: widget /= Void
-			all_widgets.has (widget)
+			linear_representation.has (widget)
 		local
 			holder: GB_TOOL_HOLDER
 		do
@@ -125,27 +126,31 @@ feature -- Status setting
 		end
 
 	extend (widget: EV_WIDGET; name: STRING) is
-			--
+			-- Add `widget' to end.
 		do
 			insert_widget (widget, name, count + 1)
+		ensure
+			has_widget: linear_representation.has (widget)
 		end
-		
 
 	insert_widget (widget: EV_WIDGET; name: STRING; position: INTEGER) is
 			-- Insert `widget' into `Current' at position `position'.
 		require
 			widget_not_void: widget /= Void
 			position_valid: position >= 1 and position <= count + 1
-			not_contained: not all_widgets.has (widget)
+			not_contained: not linear_representation.has (widget)
 			name_not_void: name /= Void
 		local
 			holder: GB_TOOL_HOLDER
+			all_splitters: ARRAYED_LIST [INTEGER]
+			split_area: EV_SPLIT_AREA
 		do
 			create holder.make_with_tool (widget, name, Current)
-			all_widgets.go_i_th (position)
-			all_widgets.put_left (widget)
+			linear_representation.go_i_th (position)
+			linear_representation.put_left (widget)
 			all_holders.go_i_th (position)
 			all_holders.put_left (holder)
+			holder.update_position_in_parent
 				-- If there is a tool maximized in `Current', then
 				-- add `widget' accordingly.
 			if maximized_tool /= Void then
@@ -159,17 +164,19 @@ feature -- Status setting
 					minimized_states.put_left (False)
 				end
 			end
+			store_positions
 			rebuild
+			restore_stored_positions
 		ensure
-			container: all_widgets.has (widget)
-			count_increased: all_widgets.count = old all_widgets.count + 1
+			container: linear_representation.has (widget)
+			count_increased: linear_representation.count = old linear_representation.count + 1
 		end
 		
 	remove (a_widget: EV_WIDGET) is
 			-- Remove `a_widget' from `Current'
 		require
 			a_widget_not_void: a_widget /= Void
-			contained: all_widgets.has (a_widget)
+			contained: linear_representation.has (a_widget)
 		local
 			holder: GB_TOOL_HOLDER
 		do
@@ -183,11 +190,11 @@ feature -- Status setting
 				-- Must also unparent the holder, which must be
 				-- parented for it to be contained in `Current'.
 			holder.parent.prune_all (holder)
-			all_widgets.prune_all (a_widget)
+			linear_representation.prune_all (a_widget)
 			rebuild
 		ensure
-			remove: not all_widgets.has (a_widget)
-			count_decreased: all_widgets.count = old all_widgets.count - 1
+			remove: not linear_representation.has (a_widget)
+			count_decreased: linear_representation.count = old linear_representation.count - 1
 		end
 		
 		
@@ -200,9 +207,14 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			holder_not_void: a_holder /= Void
 			contained: all_holders.has (a_holder)
 		do
-			all_widgets.prune_all (all_widgets.i_th (all_holders.index_of (a_holder, 1)))
+			store_positions
+			stored_splitter_widths.go_i_th (all_holders.index_of (a_holder, 1))
+			stored_splitter_widths.remove
+
+			linear_representation.prune_all (linear_representation.i_th (all_holders.index_of (a_holder, 1)))
 			all_holders.prune_all (a_holder)
 			rebuild
+			restore_stored_positions
 		ensure
 			removed: not all_holders.has (a_holder)
 		end
@@ -430,6 +442,8 @@ feature {GB_TOOL_HOLDER} -- Implementation
 	stored_splitter_widths: ARRAYED_LIST [INTEGER]
 	
 	minimized_states: ARRAYED_LIST [BOOLEAN]
+	
+	heights: ARRAYED_LIST [INTEGER]
 	
 	maximized_tool: GB_TOOL_HOLDER
 		
@@ -859,15 +873,15 @@ feature {GB_TOOL_HOLDER} -- Implementation
 			-- `Result' is tool holder containing `a_widget'.
 		require
 			a_widget_not_void: a_widget /= Void
-			all_widgets.has (a_widget)
+			linear_representation.has (a_widget)
 		do
-			Result := all_holders.i_th (all_widgets.index_of (a_widget, 1))
+			Result := all_holders.i_th (linear_representation.index_of (a_widget, 1))
 		ensure
 			result_not_void: Result /= Void
 		end
 
 invariant
-	all_widgets_not_void: all_widgets /= Void
+	linear_representation_not_void: linear_representation /= Void
 	all_holders_not_void: all_holders /= Void
 	all_split_areas_not_void: all_split_areas /= Void
 	stored_splitter_widths_not_void: stored_splitter_widths /= Void

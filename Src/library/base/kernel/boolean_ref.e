@@ -51,7 +51,6 @@ feature -- Basic operations
 		do
 			Result := item and other.item
 		ensure
-			result_exists: Result /= Void;
 			de_morgan: Result = not (not Current or not other);
 			commutative: Result = (other and Current);
 			consistent_with_semi_strict: Result implies (Current and then other)
@@ -64,7 +63,6 @@ feature -- Basic operations
 		do
 			Result := item and then other.item
 		ensure
-			result_exists: Result /= Void;
 			de_morgan: Result = not (not Current or else not other)
 		end;
 
@@ -93,7 +91,6 @@ feature -- Basic operations
 		do
 			Result := item or other.item
 		ensure
-			result_exists: Result /= Void;
 			de_morgan: Result = not (not Current and not other);
 			commutative: Result = (other or Current);
 			consistent_with_semi_strict: Result implies (Current or else other)
@@ -106,7 +103,6 @@ feature -- Basic operations
 		do
 			Result := item or else other.item
 		ensure
-			result_exists: Result /= Void;
 			de_morgan: Result = not (not Current and then not other)
 		end;
 

@@ -188,11 +188,11 @@ cluster
 				end
 			html_doc_generator
 				end
-			ieiffel_htmldoc_generator_impl_stub
+			ieiffel_htmldoc_events_impl_stub
 				end
-			ieiffel_htmldoc_generator_impl_proxy
+			ieiffel_htmldoc_events_impl_proxy
 				end
-			ieiffel_htmldoc_generator_impl_interface
+			ieiffel_htmldoc_events_interface
 				end
 			variable_descriptor
 				end

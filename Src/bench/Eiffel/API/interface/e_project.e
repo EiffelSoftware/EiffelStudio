@@ -1,23 +1,26 @@
 indexing
-
-	description: 
-		"Representation of an Eiffel Project.";
+	description: "Representation of an Eiffel Project.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class E_PROJECT
 
 inherit
+	EIFFEL_ENV
 
-	EIFFEL_ENV;
-	BENCH_COMMAND_EXECUTOR;
-	PROJECT_CONTEXT;
+	BENCH_COMMAND_EXECUTOR
+
+	PROJECT_CONTEXT
+
 	SHARED_WORKBENCH
 		rename
 			system as comp_system
-		end;
-	SHARED_RESCUE_STATUS;
-	SHARED_ERROR_HANDLER;
+		end
+
+	SHARED_RESCUE_STATUS
+
+	SHARED_ERROR_HANDLER
+
 	SHARED_APPLICATION_EXECUTION
 
 feature -- Initialization
@@ -28,42 +31,42 @@ feature -- Initialization
 			-- (If a read-write error occured you must exit from
 			-- application.).
 		require
-			not_initialized: not initialized;
-			is_new: project_dir.is_new;
-			is_readable: project_dir.is_readable;
-			is_writable: project_dir.is_writable;
-			is_executable: project_dir.is_executable;
-			--is_creatable: project_dir.is_creatable;
+			not_initialized: not initialized
+			is_new: project_dir.is_new
+			is_readable: project_dir.is_readable
+			is_writable: project_dir.is_writable
+			is_executable: project_dir.is_executable
+			--is_creatable: project_dir.is_creatable
 			prev_read_write_error: not read_write_error
 		local
-			workb: WORKBENCH_I;
-			init_work: INIT_WORKBENCH;
+			workb: WORKBENCH_I
+			init_work: INIT_WORKBENCH
 		do
-			Project_directory.make_from_string (project_dir.name);
-			Create_compilation_directory;
-			Create_generation_directory;
-			!! workb;
-			!! init_work.make (workb);
-			workb.make;
-			Workbench.init;
-			set_is_initialized;
+			Project_directory.make_from_string (project_dir.name)
+			Create_compilation_directory
+			Create_generation_directory
+			!! workb
+			!! init_work.make (workb)
+			workb.make
+			Workbench.init
+			set_is_initialized
 			if Platform_constants.is_windows then
 				Execution_environment.change_working_directory (project_dir.name)
-			end;
+			end
 		ensure
 			initialized: initialized
-		end;
+		end
 
 	retrieve (project_dir: PROJECT_DIRECTORY) is
 			-- Retrieve an existing Eiffel Project from `file.
 			-- (If a read-write error occured you must exit from
 			-- application).
 		require
-			non_void_project_dir: project_dir /= Void;
-			project_dir_exists: project_dir.exists;
-			file_readable: project_dir.is_readable;
-			not_initialized: not initialized;
-			project_eif_ok: project_dir.valid_project_eif;
+			non_void_project_dir: project_dir /= Void
+			project_dir_exists: project_dir.exists
+			file_readable: project_dir.is_readable
+			not_initialized: not initialized
+			project_eif_ok: project_dir.valid_project_eif
 			prev_read_write_error: not read_write_error
 		local
 			init_work: INIT_WORKBENCH;
@@ -458,22 +461,26 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
-			is_compiling_ref.set_item (True);
-			Workbench.recompile;
+			is_compiling_ref.set_item (True)
+			Workbench.recompile
+--			Comp_system.purge
+
 			if successful then
-				save_project;
+				save_project
 				if Comp_system.is_dynamic then
 					dle_link_system
-				end;
+				end
+
 				if not freezing_occurred then
 					link_driver
-				end;
+				end
+
 				if Application.has_debugging_information then
-					Application.resynchronize_breakpoints;
-					Degree_output.put_resynchronizing_breakpoints_message;
-				end;
-			end;
-			is_compiling_ref.set_item (False);
+					Application.resynchronize_breakpoints
+					Degree_output.put_resynchronizing_breakpoints_message
+				end
+			end
+			is_compiling_ref.set_item (False)
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
@@ -583,23 +590,22 @@ feature -- Update
 			able_to_compile: able_to_compile;
 			project_is_new: is_new
 		do
-			Compilation_modes.set_is_precompiling (True);	
-			Compilation_modes.set_is_freezing (True);	
-			Workbench.recompile;
+			Compilation_modes.set_is_precompiling (True)
+			Compilation_modes.set_is_freezing (True)
+			Workbench.recompile
+--			Comp_system.purge
 			if successful then
-				Comp_system.set_licensed_precompilation (licensed);
-				Comp_system.save_precompilation_info;
-				save_project;
+				Comp_system.set_licensed_precompilation (licensed)
+				Comp_system.save_precompilation_info
+				save_project
 				if not save_error then
 					save_precomp (licensed)
 				end
 			end;
 		ensure
-			was_saved: successful and then not
-				error_occurred implies was_saved
-			error_implies: error_occurred implies save_error;
-			successful_implies_freezing_occurred: 
-					successful implies freezing_occurred 
+			was_saved: successful and then not error_occurred implies was_saved
+			error_implies: error_occurred implies save_error
+			successful_implies_freezing_occurred: successful implies freezing_occurred 
 		end;
 
 feature -- Output
@@ -611,51 +617,51 @@ feature -- Output
 			initialized: initialized;
 			compilation_successful: successful;
 		local
-			retried: BOOLEAN;
-			file: RAW_FILE;
+			retried: BOOLEAN
+			file: RAW_FILE
 			tfile: PLAIN_TEXT_FILE
 		do
 			if not retried then
-				error_status_mode.put (Ok_status);
-				!! tfile.make (Project_txt_name);
-				tfile.open_write;
-				tfile.putstring ("-- System name is ");
-				tfile.putstring (System.name);
-				tfile.new_line;
-				tfile.putstring (version_number_tag);
-				tfile.putstring (": %"");
-				tfile.putstring (version_number);
-				tfile.putchar ('"');
-				tfile.new_line;
-				tfile.putstring (storable_version_number_tag);
-				tfile.putstring (": %"");
-				tfile.putstring (storable_version_number);
-				tfile.putchar ('"');
-				tfile.new_line;
-				tfile.putstring (precompilation_id_tag);
-				tfile.putstring (": %"");
-				tfile.putint (Comp_system.compilation_id);
-				tfile.putchar ('"');
-				tfile.new_line;
-				tfile.close;
-				!! file.make (Project_file_name);
-				Comp_system.server_controler.wipe_out;
-				file.open_write;
-				saved_workbench := workbench;
-				file.basic_store (Current);
-				file.close;
+				error_status_mode.put (Ok_status)
+				!! tfile.make (Project_txt_name)
+				tfile.open_write
+				tfile.putstring ("-- System name is ")
+				tfile.putstring (System.name)
+				tfile.new_line
+				tfile.putstring (version_number_tag)
+				tfile.putstring (": %"")
+				tfile.putstring (version_number)
+				tfile.putchar ('"')
+				tfile.new_line
+				tfile.putstring (storable_version_number_tag)
+				tfile.putstring (": %"")
+				tfile.putstring (storable_version_number)
+				tfile.putchar ('"')
+				tfile.new_line
+				tfile.putstring (precompilation_id_tag)
+				tfile.putstring (": %"")
+				tfile.putint (Comp_system.compilation_id)
+				tfile.putchar ('"')
+				tfile.new_line
+				tfile.close
+				!! file.make (Project_file_name)
+				Comp_system.server_controler.wipe_out
+				file.open_write
+				saved_workbench := workbench
+				file.basic_store (Current)
+				file.close
 			else
 				if file /= Void and then not file.is_closed then
 					file.close
 				end;
-				retried := False;
-				set_error_status (Save_error_status);
+				retried := False
+				set_error_status (Save_error_status)
 			end;
 			saved_workbench := Void
 		ensure
 			error_implies: error_occurred implies save_error
 		rescue
-			retried := True;
+			retried := True
 			retry
 		end;
 

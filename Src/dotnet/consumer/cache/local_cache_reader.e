@@ -10,6 +10,7 @@ inherit
 	CACHE_READER
 		redefine
 			absolute_assembly_path_from_consumed_assembly,
+			absolute_assembly_path,
 			consumed_type
 		end
 		
@@ -27,7 +28,7 @@ feature {NONE}
 			a_op_env: OPERATING_ENVIRONMENT
 		do
 			create a_op_env
-			local_cache_path := a_path
+			local_cache_path := a_path.clone (a_path)
 			clr_version := a_clr_version
 			-- Add trailing directory separator if needed.
 			if not (local_cache_path.item (local_cache_path.count) = a_op_env.Directory_separator) then
@@ -44,6 +45,30 @@ feature {NONE}
 			a_dir: DIRECTORY
 		do
 			relative_path := relative_assembly_path_from_consumed_assembly (ca)
+			create Result.make (local_cache_path.count + relative_path.count)
+			Result.append (local_cache_path)
+			Result.append (relative_path)
+
+			-- Check if path in local cache exists, if not then it must be in EAC
+			create a_dir.make (Result)
+			if not a_dir.exists then
+				create Result.make (Eiffel_path.count + Eac_path.count + clr_version.count + 1 + relative_path.count)
+				Result.append (Eiffel_path)
+				Result.append (Eac_path)
+				Result.append (clr_version)
+				Result.append_character ('\')
+				Result.append (relative_path)
+			end
+		end
+
+	absolute_assembly_path (name: ASSEMBLY_NAME): STRING is
+			-- Absolute path to folder containing `name' types.
+			-- Always return a value even if `name' in not in EAC
+		local
+			relative_path: STRING
+			a_dir: DIRECTORY
+		do
+			relative_path := relative_assembly_path (name)
 			create Result.make (local_cache_path.count + relative_path.count)
 			Result.append (local_cache_path)
 			Result.append (relative_path)
@@ -127,6 +152,16 @@ feature {NONE}
 		once
 			create Result.make (5)
 			Result.compare_objects
+		end
+
+feature -- Access
+
+	local_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY] is
+			-- Assemblies in local EAC
+		do
+			if is_initialized then
+				Result := local_info.assemblies			
+			end
 		end
 
 feature -- Conversion

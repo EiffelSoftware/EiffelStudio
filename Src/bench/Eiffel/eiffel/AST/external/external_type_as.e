@@ -54,6 +54,8 @@ feature {EXTERNAL_FACTORY} -- Initialization
 
 			Names_heap.put (value)
 			value_id := Names_heap.found_item
+		ensure
+			value_id_set: value_id > 0
 		end
 
 feature -- Access

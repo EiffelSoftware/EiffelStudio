@@ -147,4 +147,10 @@ feature
 			file.putint (size);
 		end;
 
+	type_a: BITS_A is
+		do
+			!!Result
+			Result.set_base_type (size)
+		end
+
 end

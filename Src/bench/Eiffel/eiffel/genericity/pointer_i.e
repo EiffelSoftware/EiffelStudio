@@ -106,4 +106,9 @@ feature
 			file.putstring ("SK_POINTER");
 		end;
 
+	type_a: POINTER_A is
+		do
+			!!Result
+		end
+
 end

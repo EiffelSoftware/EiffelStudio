@@ -168,6 +168,10 @@ feature
 
 feature -- Array optimization
 
+	type_a: TYPE_A is
+		deferred
+		end
+
 	conforms_to_array: BOOLEAN is
 		do
 		end;

@@ -123,4 +123,9 @@ feature
 			file.putstring ("SK_REF");
 		end;
 
+	type_a: NONE_A is
+		do
+			!!Result
+		end
+
 end

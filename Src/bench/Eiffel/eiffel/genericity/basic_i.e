@@ -5,6 +5,8 @@ inherit
 	CL_TYPE_I
 		rename
 			is_void as cl_type_is_void
+		undefine
+			type_a
 		redefine
 			is_basic, is_reference, c_type, base_class, is_valid,
 			cecil_value

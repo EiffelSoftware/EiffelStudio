@@ -124,4 +124,9 @@ feature
 			file.putstring ("SK_DOUBLE");
 		end;
 
+	type_a: DOUBLE_A is
+		do
+			!!Result
+		end
+
 end

@@ -12,7 +12,8 @@ inherit
 			has_formal,
 			instantiation_in,
 			dump,
-			append_clickable_signature
+			append_clickable_signature,
+			type_a
 		end;
 
 feature
@@ -139,5 +140,25 @@ feature
 			end;
 			a_clickable.put_char (']');
 		end;
+
+	type_a: GEN_TYPE_A is
+		local
+			i: INTEGER
+			array: ARRAY [TYPE_A]
+		do
+			!!Result
+			Result.set_base_type (base_id);
+			Result.set_is_expanded (is_expanded);
+			from
+				i := meta_generic.count
+				!!array.make (1, i)
+				Result.set_generics (array)
+			until
+				i = 0
+			loop
+				array.put (meta_generic.item (i).type_a, i)
+				i := i - 1
+			end
+		end
 
 end

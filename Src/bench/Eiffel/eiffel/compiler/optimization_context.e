@@ -19,9 +19,16 @@ feature
 
 	generated_array_desc: like array_desc
 
+	generated_offsets: like array_desc
+
 	set_generated_array_desc (g: like array_desc) is
 		do
 			generated_array_desc := g
+		end;
+
+	set_generated_offsets (g: like array_desc) is
+		do
+			generated_offsets := g
 		end;
 
 end

@@ -92,4 +92,10 @@ feature
 			False
 		end;
 
+	type_a: FORMAL_A is
+		do
+			!!Result
+			Result.set_base_type (position)
+		end
+
 end

@@ -119,4 +119,10 @@ feature
 		ensure then
 			False
 		end;
+
+	type_a: TYPE_A is
+		do
+			!VOID_A!Result
+		end
+
 end

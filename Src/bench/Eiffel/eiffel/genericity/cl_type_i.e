@@ -221,4 +221,13 @@ feature {NONE} -- Array optimization
 			Result := System.array_class.compiled_class
 		end;
 
+feature
+
+	type_a: CL_TYPE_A is
+		do
+			!!Result
+			Result.set_is_expanded (is_expanded);
+			Result.set_base_type (base_id)
+		end
+
 end

@@ -124,4 +124,8 @@ feature
 			file.putstring ("SK_REF");
 		end;
 
+	type_a: TYPE_A is
+		do
+		end
+
 end

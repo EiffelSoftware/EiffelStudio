@@ -25,8 +25,6 @@ inherit
 			set_values
 		end
 
-	EV_C_UTIL
-
 create
 	make
 
@@ -183,7 +181,7 @@ feature -- Status report
 			Result := substring_dash (full_name, Ev_gdk_font_string_index_spacing).is_equal ("p")
 		end
  
-feature {EV_FONT_IMP} -- Implementation
+feature {NONE} -- Implementation
 
 	preloaded: HASH_TABLE [EV_GDK_FONT, STRING] is
 			-- Previously cached font structures.
@@ -211,8 +209,12 @@ feature {EV_FONT_IMP} -- Implementation
 					exp_name := match_name (a_try_string)
 					if exp_name /= Void and then not exp_name.is_empty then
 						create Result.make (exp_name)
-						preloaded.put (Result, a_try_string)
-						name := a_try_face
+						if Result.c_object /= default_pointer then
+							preloaded.put (Result, a_try_string)
+							name := a_try_face						
+						else
+							fonts_not_found.extend (a_try_string)
+						end
 					else
 							fonts_not_found.extend (a_try_string)
 					end
@@ -277,14 +279,15 @@ feature {EV_FONT_IMP} -- Implementation
 				i := i + 1
 			end
 
-			if temp_font = Void then
-				name := ""
-				io.put_string ("Error: no fonts installed%N")
+			if temp_font.c_object = default_pointer then
+				-- The font cannot be found so we do nothing and stick with the last found font.
+				--name := ""
+				--full_name := ""
 				--| FIXME Raise exception?
+			else
+				c_object := temp_font.c_object
+				full_name := temp_font.full_name
 			end
-
-			full_name := temp_font.full_name
-			c_object := temp_font.c_object
 		end
 
 	match_name (pattern: STRING): STRING is
@@ -573,7 +576,7 @@ feature -- Obsolete
 		end
 
 invariant
-	c_object_not_null: is_initialized implies c_object /= NULL
+	c_object_not_null: is_initialized implies c_object /= default_pointer
 	full_name_not_void: is_initialized implies full_name /= Void
 	
 end -- class EV_FONT_IMP

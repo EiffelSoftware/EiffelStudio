@@ -166,7 +166,7 @@ feature -- Access
 			test_string := test_string.concat_string_string_string (test_string, As_keyword, Space)
 			as_index := a_text.indexof_string_int32 (test_string, 0)
 			if as_index > 0 then
-				Result := a_text.substring (as_index + test_string.length + 1)
+				Result := a_text.substring (as_index + test_string.length)
 			end
 		ensure
 			source_built: Result /= Void

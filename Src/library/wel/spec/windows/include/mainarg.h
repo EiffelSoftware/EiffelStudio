@@ -10,7 +10,7 @@
 #include <wel.h>
 #endif
 
-#include "eif_econsole.h"
+#include "eif_main.h"
 
 #ifdef __cplusplus
 extern "C" {

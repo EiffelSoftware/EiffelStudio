@@ -311,7 +311,6 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			directory_not_void: a_directory /= Void
 			has_directory: has (a_directory)
 		local
-			warning_dialog: EV_WARNING_DIALOG
 			confirmation_dialog: EV_CONFIRMATION_DIALOG
 			perform_delete: BOOLEAN
 			window_item: GB_WINDOW_SELECTOR_ITEM
@@ -319,8 +318,8 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			directory_of_root_window: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			original_root_index, new_root_index: INTEGER
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
-			directory: DIRECTORY
 			temp_file_name: FILE_NAME
+			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
 		do
 			perform_delete := True
 			all_objects := objects
@@ -368,25 +367,19 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 				from
 					a_directory.start
 				until
-					a_directory.off
+					a_directory.after
 				loop
 					window_item ?= a_directory.item
 					check
 						item_was_window: window_item /= Void
 					end
-						-- Now remove the window from the directory. As directories are
-						-- not part of the history, we must remove it before creating the command,
-						-- as otherwise the command will fail when attempting to retore the window
-						-- to the directory. It will simply be replaced at the root.
-					unparent_tree_node (window_item)
+						-- Now remove the window from the directory.
 					Command_handler.Delete_object_command.delete_object (window_item.object)
-				
 				end
-					-- Now actually remove the directory from the disk.
-				create temp_file_name.make_from_string (generated_path.string)
-				temp_file_name.extend (a_directory.text)	
-				create directory.make (temp_file_name)
-				delete_directory_and_content (directory)
+				
+				create command_delete_directory.make (a_directory.text)
+				command_delete_directory.execute
+				
 				
 				unparent_tree_node (a_directory)
 					-- Update project so it may be saved.
@@ -528,6 +521,24 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			has_selected_item: selected_item /= Void
 		end
 
+feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
+		
+	add_named_directory (directory_name: STRING) is
+			-- Add a new directory named `directory_name' to `Current'.
+		require
+			name_valid: directory_name /= Void and not directory_name.is_empty
+		local
+			layout_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+		do
+			create layout_item.make_with_name (directory_name)
+			extend (layout_item)
+				-- Update project so it may be saved.
+			system_status.enable_project_modified
+			command_handler.update
+		ensure
+			count_increaed: count = old count + 1
+		end
+
 feature {NONE} -- Implementation
 
 	change_root_window_to (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
@@ -568,16 +579,11 @@ feature {NONE} -- Implementation
 			-- from the name as entered by the user.
 		local
 			dialog: GB_COMPONENT_NAMER_DIALOG
-			layout_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			create dialog.make_with_names_and_prompts (directory_names, "directory", "New directory namer", " is an invalid directory name. Please ensure that it is valid and is not already in use.")
 			dialog.show_modal_to_window (parent_window (current))
 			if not dialog.name.is_empty then
-				create layout_item.make_with_name (dialog.name)
-				extend (layout_item)
-					-- Update project so it may be saved.
-				system_status.enable_project_modified
-				command_handler.update
+				add_named_directory (dialog.name)
 			end
 		end
 

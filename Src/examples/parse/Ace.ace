@@ -2,29 +2,28 @@ system
 	process
 
 root
-	process (ROOT_CLUSTER): "make"
+	PROCESS (root_cluster): "make"
 
 default
 	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster 
-
-	ROOT_CLUSTER: 		"$ISE_EIFFEL/examples/parse";
-				-- If you intend to modify any of the examples,
-				-- copy all the files of $ISE_EIFFEL/examples/parse
-				-- into one of your directories, and replace
-				-- $ISE_EIFFEL/examples/parse by the name of that directory
-				-- on the above line.
+	root_cluster: 		"$ISE_EIFFEL/examples/parse"
+		-- If you intend to modify any of the examples,
+		-- copy all the files of $ISE_EIFFEL/examples/parse
+		-- into one of your directories, and replace
+		-- $ISE_EIFFEL/examples/parse by the name of that directory
+		-- on the above line.
 
 		-- EiffelLex 
-	lex:				"$ISE_EIFFEL/library/lex";
+	lex:			"$ISE_EIFFEL/library/lex"
 
 		-- EiffelParse
-	parse:				"$ISE_EIFFEL/library/parse";
+	parse:			"$ISE_EIFFEL/library/parse"
 
 		-- EiffelBase
 	all base: 		"$ISE_EIFFEL/library/base"
 		exclude
-			"desc";"table_eiffel3"
+			"desc"; "table_eiffel3"
 		end
 end

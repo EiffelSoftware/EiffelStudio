@@ -96,18 +96,18 @@ feature -- Access
 			if press_action = Ev_pnd_start_transport then
 				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x,
 					a_screen_y)
-				list_imp.set_source_true
-				list_imp.set_pnd_child_source (Current)
-				list_imp.set_t_item_true
+				list_imp.set_parent_source_true
+				list_imp.set_item_source (Current)
+				list_imp.set_item_source_true
 			elseif press_action = Ev_pnd_end_transport then
 				end_transport (a_x, a_y, a_button)
-				list_imp.set_source_false
-				list_imp.set_pnd_child_source (Void)
-				list_imp.set_t_item_false
+				list_imp.set_parent_source_false
+				list_imp.set_item_source (Void)
+				list_imp.set_item_source_false
 			else
-				list_imp.set_source_false
-				list_imp.set_pnd_child_source (Void)
-				list_imp.set_t_item_false
+				list_imp.set_parent_source_false
+				list_imp.set_item_source (Void)
+				list_imp.set_item_source_false
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
@@ -259,6 +259,12 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/03/30 19:51:35  rogers
+--| Changed all instances of:
+--| 	set_source_true -> set_parent_source_true
+--| 	set_pnd_child_source -> set_item_source
+--| 	set_t_item_true -> set_item_source_true
+--|
 --| Revision 1.44  2000/03/30 17:46:30  brendel
 --| Changed type of parent_imp to EV_LIST_ITEM_LIST_IMP.
 --| `relative_y' now uses `displayed_index'.

@@ -102,18 +102,18 @@ feature -- {EV_TREE_IMP}
 			if press_action = Ev_pnd_start_transport then
 				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, 
 				a_screen_y)
-				tree_imp.set_source_true
-				tree_imp.set_pnd_child_source (Current)
-				tree_imp.set_t_item_true
+				tree_imp.set_parent_source_true
+				tree_imp.set_item_source (Current)
+				tree_imp.set_item_source_true
 			elseif press_action = Ev_pnd_end_transport then
 				end_transport (a_x, a_y, a_button)
-				tree_imp.set_source_false
-				tree_imp.set_pnd_child_source (Void)
-				tree_imp.set_t_item_false
+				tree_imp.set_parent_source_false
+				tree_imp.set_item_source (Void)
+				tree_imp.set_item_source_false
 			else
-				tree_imp.set_source_false
-				tree_imp.set_pnd_child_source (Void)
-				tree_imp.set_t_item_false
+				tree_imp.set_parent_source_false
+				tree_imp.set_item_source (Void)
+				tree_imp.set_item_source_false
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
@@ -602,6 +602,12 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/03/30 19:51:58  rogers
+--| Changed all instances of:
+--| 	set_source_true -> set_parent_source_true
+--| 	set_pnd_child_source -> set_item_source
+--| 	set_t_item_true -> set_item_source_true
+--|
 --| Revision 1.54  2000/03/30 18:31:58  rogers
 --| Improved comments, added pre-conditions, added invariant
 --|

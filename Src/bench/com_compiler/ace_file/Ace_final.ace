@@ -329,6 +329,8 @@ cluster
       "cache.e"
     end
 
+	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
+
 external
 
   include_path:

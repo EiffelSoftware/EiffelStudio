@@ -190,7 +190,6 @@ rt_public int gc_ran = 0;				/* Has the GC been running */ /* %%zmt */
 #if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
 #else	/* %%ss added */
 rt_public int r_fides;	/* moved here from retrieve.c */ /* %%zmt */
-rt_public char r_fstoretype;	/* moved here from retrieve.c */ /* %%zmt %/
 	/* Was getting a link warning that it couldn't find this symbol.
 	 * Under vms the linker won't include the symbol if at least one
 	 * routine from the module isn't used.

@@ -30,17 +30,22 @@ feature -- Status Report
 	{
 		String Result;
 		Object [] l_ca;
+		Type l_type;
 		EIFFEL_CLASS_NAME_ATTRIBUTE l_class_name;
 
-		l_ca = Type.GetTypeFromHandle (type).GetCustomAttributes
-			(typeof (EIFFEL_CLASS_NAME_ATTRIBUTE), false);
+		l_type = Type.GetTypeFromHandle (type);
+		l_ca = l_type.GetCustomAttributes (typeof (EIFFEL_CLASS_NAME_ATTRIBUTE), false);
 
 		#if ASSERTIONS
-			ASSERTIONS.CHECK ("There should be only one element in `l_ca'", l_ca.Length == 1);
+			ASSERTIONS.CHECK ("`l_ca' should not be Void", l_ca != null);
 		#endif
 
-		l_class_name = (EIFFEL_CLASS_NAME_ATTRIBUTE) l_ca [0];
-		Result = l_class_name.class_name;
+		if (l_ca.Length == 1) {
+			l_class_name = (EIFFEL_CLASS_NAME_ATTRIBUTE) l_ca [0];
+			Result = l_class_name.class_name;
+		} else {
+			Result = l_type.Name;
+		}
 
 		return Result;
 	}

@@ -285,7 +285,11 @@ feature {NONE} -- Code generation
 				Result.append (")")
 			end
 			if check_precondition then
-				Result.append ("%T%T%Tend")
+				Result.append ("%N%T%T%Telse%N%T%T%T%Tdisplay_error_message (%"")
+				Result.append ("Incorrect `")
+				Result.append (application_routine.routine_name)
+				Result.append ("' field.%", Void)")
+				Result.append ("%N%T%T%Tend")
 			end
 			Result.append ("%N%T%Tend%N%N")
 		end

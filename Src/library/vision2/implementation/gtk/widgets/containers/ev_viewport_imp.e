@@ -13,7 +13,9 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			interface
+			interface,
+			set_item_width,
+			set_item_height
 		end
 		
 	EV_CELL_IMP
@@ -177,6 +179,18 @@ feature -- Element change
 		do
 			internal_set_item_size (a_width, a_height)
 		end
+		
+	set_item_width (a_width: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+		do
+			internal_set_item_size (a_width, -1)
+		end
+		
+	set_item_height (a_height: INTEGER) is
+			-- Set `a_widget.height' to `a_height'.
+		do
+			internal_set_item_size (-1, a_height)
+		end
 
 feature {NONE} -- Implementation
 
@@ -184,7 +198,6 @@ feature {NONE} -- Implementation
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
-			w_imp: EV_WIDGET_IMP
 			temp_width, temp_height: INTEGER
 		do
 			if a_width > 0 then
@@ -198,20 +211,15 @@ feature {NONE} -- Implementation
 			else
 				temp_height := -1
 			end
-			w_imp ?= item.implementation
-			w_imp.store_minimum_size
-			--| FIXME IEK This needs to be thought out some more.
-			--feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, temp_width, temp_height)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, -1, -1)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, temp_width, temp_height)
 		end
 
 	on_removed_item (an_item: EV_WIDGET) is
 			-- Reset minimum size.
-		local
-			item_imp: EV_WIDGET_IMP
 		do
 			Precursor (an_item)
-			item_imp ?= an_item.implementation
-			item_imp.reset_minimum_size
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, -1, -1)
 			set_x_offset (0)
 			set_y_offset (0)
 		end

@@ -1,7 +1,7 @@
 indexing
-	description: "Actual type for integer type."
+	description: "Actual type for NONE."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	NONE_A

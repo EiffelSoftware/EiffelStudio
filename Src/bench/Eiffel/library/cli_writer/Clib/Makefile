@@ -9,8 +9,6 @@ CFLAGS = -nologo -Ox -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELES
 	$(CC) $(CFLAGS) -c $<
 
 all:: cli_writer.lib
-	del *.lib
-	del *.obj
 
 cli_writer.obj: cli_writer.cpp ise_cache_manager.idl
 	midl -notlb -header ise_cache_manager.h -iid ise_cache_manager.c ise_cache_manager.idl
@@ -25,7 +23,4 @@ cli_writer.lib: $(OBJ)
 	if not exist ..\spec\msc mkdir ..\spec\msc
 	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
 	copy $@ ..\spec\msc\lib
-	del *.lib
-	del *.obj
-
 

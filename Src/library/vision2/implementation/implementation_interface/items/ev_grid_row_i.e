@@ -135,6 +135,7 @@ feature -- Access
 			until
 				i > count
 			loop
+					-- If `is_selected' then we need to make sure there are no Void items contained within `Current'
 				a_item := parent_grid_i.item_internal (index, i, create_if_void)
 				if a_item /= Void and then a_item.is_selected then
 					Result.extend (a_item.interface)

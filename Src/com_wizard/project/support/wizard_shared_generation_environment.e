@@ -125,6 +125,15 @@ feature -- Access
 	Iunknown_guid_string: STRING is "{00000000-0000-0000-C000-000000000046}"
 			-- IUnknown IID
 
+	Idispatch_guid: ECOM_GUID is
+			-- IDispatch IID
+		once
+			create Result.make_from_string (clone (Idispatch_guid_string))
+		end
+
+	Idispatch_guid_string: STRING is "{00020400-0000-0000-C000-000000000046}"
+			-- IDispatch IID
+
 	vartype_namer: WIZARD_VARTYPE_NAMER is
 			-- Vartype to string mapper
 		once

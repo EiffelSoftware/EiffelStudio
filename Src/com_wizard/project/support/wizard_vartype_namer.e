@@ -182,31 +182,37 @@ feature -- Access
 			valid_name: not Result.empty
 		end
 
-	variant_field_name (a_var_type: INTEGER): STRING is
+	variant_field_name (a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Name VARIANT field for constant `a_var_type'
 		require
-			valid_var_type: valid_var_type (a_var_type)
+			valid_visitor: a_visitor /= Void
 		local
 			a_type: INTEGER
 			tmp_string: STRING
 		do
-			if is_array (a_var_type) then
-				if is_byref (a_var_type) then
+			a_type := a_visitor.vt_type
+			if is_array (a_type) then
+				if is_byref (a_type) then
 					a_type := binary_or (Vt_byref, Vt_array)
 				else
 					a_type := Vt_array
 				end
-			else
-				a_type := a_var_type
 			end
 
 			Result := clone (variant_field_names.item (a_type))
+
 			if (Result = Void or else Result.empty) then
-				tmp_string := c_name (a_var_type)
-				tmp_string.append (Space)
-				tmp_string.append (Not_variant_type)
-				add_warning (Current, tmp_string)
-				create Result.make (0)
+				if a_visitor.is_interface_pointer then
+					Result := clone (Variant_punkval)
+				elseif  a_visitor.is_interface_pointer_pointer then
+					Result := clone (Variant_ppunkval)
+				else
+					tmp_string := clone (a_visitor.c_type)
+					tmp_string.append (Space)
+					tmp_string.append (Not_variant_type)
+					add_warning (Current, tmp_string)
+					create Result.make (0)
+				end
 			end
 		end
 

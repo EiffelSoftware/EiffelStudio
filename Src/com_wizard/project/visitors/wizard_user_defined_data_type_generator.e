@@ -118,13 +118,57 @@ feature -- Processing
 	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
 			-- process coclass
 		do
-			add_warning (Current, not_supported_data_type)
+			c_type := clone (coclass_descriptor.name)
+			create c_post_type.make (0)
+			c_header_file := clone (coclass_descriptor.c_header_file_name)
+			eiffel_type := clone (coclass_descriptor.eiffel_class_name)
+
+			is_coclass := True
+
+			need_generate_ce := True
+			need_generate_ec := True
+
+			create ce_function_name.make (0)
+			ce_function_name.append ("ccom_ce_interface_")
+			ce_function_name.append (eiffel_type)
+			ce_function_name.append_integer (local_counter)
+
+			create ce_function_signature.make (0)
+			ce_function_signature.append (c_type)
+			ce_function_signature.append (" * a_interface")
+
+			create ce_function_body.make (0)
+			ce_function_body.append (ce_function_body_interface (eiffel_type))
+
+			create ce_function_return_type.make (0)
+			ce_function_return_type.append (Eif_reference)
+
+			create ec_function_name.make (0)
+			ec_function_name.append ("ccom_ec_interface_")
+			ec_function_name.append (eiffel_type)
+			ec_function_name.append_integer (local_counter)
+
+			create ec_function_return_type.make (0)
+			ec_function_return_type.append (c_type)
+
+			create ec_function_signature.make (0)
+			ec_function_signature.append (Eif_reference)
+			ec_function_signature.append (Space)
+			ec_function_signature.append (Eif_ref_variable)
+
+			ec_function_body := ec_function_body_wrapper (eiffel_type, c_type)
+
 		end
 
 	process_implemented_interface (interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- process interface
 		do
-			add_warning (Current, not_supported_data_type)
+			c_type := clone (interface_descriptor.c_type_name)
+			create c_post_type.make (0)
+			c_header_file := clone (interface_descriptor.c_header_file_name)
+			eiffel_type := clone (interface_descriptor.eiffel_class_name)
+			create ce_function_name.make (0)
+			create ec_function_name.make (0)
 		end
 
 	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -180,6 +224,7 @@ feature -- Processing
 			create c_post_type.make (0)
 			create c_header_file.make (0)
 			eiffel_type := clone (enum_descriptor.eiffel_class_name)
+			vt_type := Vt_int
 
 			is_enumeration := True
 		end

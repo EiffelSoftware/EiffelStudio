@@ -108,6 +108,40 @@ feature -- Basic operations
 				can_free := True
 				writable := False
 
+			elseif pointed_visitor.is_coclass then
+				is_coclass_pointer := True
+				eiffel_type := clone (pointed_visitor.eiffel_type)
+
+				ce_function_name.append ("ccom_ce_pointed_coclass_")
+				ce_function_name.append_integer (local_counter)
+
+				ec_function_name.append ("ccom_ec_pointed_coclass_")
+				ec_function_name.append_integer (local_counter)
+
+
+				need_generate_ce := True
+				need_generate_ec := True
+
+				create ce_function_signature.make (0)
+				ce_function_signature.append (c_type)
+				ce_function_signature.append (Space)
+				ce_function_signature.append ("a_interface_pointer")
+
+				ce_function_body := ce_function_body_interface (eiffel_type)
+				ce_function_return_type := clone (Eif_reference)
+
+				create ec_function_signature.make (0)
+				ec_function_signature.append (Eif_reference)
+				ec_function_signature.append (Space)
+				ec_function_signature.append ("eif_ref")
+
+				ec_function_return_type := clone (c_type)
+
+				ec_function_body := ec_function_wrapper (eiffel_type, c_type)
+
+				can_free := True
+				writable := False
+
 			elseif pointed_visitor.is_basic_type or pointed_visitor.vt_type = Vt_bool  
 			then
 				is_basic_type_ref := True
@@ -178,6 +212,10 @@ feature -- Basic operations
 				ce_function_name.append ("ccom_ce_pointed_long")
 
 			else
+				if pointed_visitor.is_interface_pointer then
+					is_interface_pointer_pointer := True
+				end
+
 				create eiffel_type.make (0)
 				eiffel_type.append ("CELL")
 				eiffel_type.append (Space)
@@ -831,8 +869,6 @@ feature {NONE} -- Implementation
 			valid_result: not Result.empty
 		end
 
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class WIZARD_POINTED_DATA_TYPE_GENERATOR
 

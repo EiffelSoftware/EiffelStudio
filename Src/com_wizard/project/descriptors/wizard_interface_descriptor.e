@@ -141,7 +141,46 @@ feature -- Access
 
 	feature_c_names: LINKED_LIST [STRING]
 			-- List of feature C names.
-			
+	
+
+feature -- Status Report
+
+	has_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
+			-- Does interface have `a_function'?
+		require
+			non_void_function: a_function /= Void
+		do
+			if inherited_interface /= Void then
+				Result := inherited_interface.has_function (a_function)
+			end
+			from
+				functions.start
+			until
+				functions.after or Result
+			loop
+				Result := a_function.is_equal_function (functions.item)
+				functions.forth
+			end
+		end	
+
+	has_property (a_property: WIZARD_PROPERTY_DESCRIPTOR): BOOLEAN is
+			-- Does interface have `a_property?
+		require
+			non_void_property: a_property /= Void
+		do
+			if inherited_interface /= Void then
+				Result := inherited_interface.has_property (a_property)
+			end
+			from
+				properties.start
+			until
+				properties.after or Result
+			loop
+				Result := a_property.is_equal_property (properties.item)
+				properties.forth
+			end
+		end	
+
 feature -- Basic operations
 
 	disambiguate_eiffel_names is
@@ -150,8 +189,10 @@ feature -- Basic operations
 			tmp_string: STRING
 		do
 			if feature_eiffel_names.empty then
-				if inherited_interface /= Void and
-					not inherited_interface.guid.is_equal (Iunknown_guid)
+				if 
+					inherited_interface /= Void and
+					not inherited_interface.guid.is_equal (Iunknown_guid) and
+					not inherited_interface.guid.is_equal (Idispatch_guid)
 				then
 					inherited_interface.disambiguate_eiffel_names
 					feature_eiffel_names.append (inherited_interface.feature_eiffel_names)
@@ -202,8 +243,10 @@ feature -- Basic operations
 		local
 			tmp_name: STRING
 		do
-			if inherited_interface /= Void and
-				not inherited_interface.guid.is_equal (Iunknown_guid)
+			if 
+				inherited_interface /= Void and
+				not inherited_interface.guid.is_equal (Iunknown_guid) and
+				not inherited_interface.guid.is_equal (Idispatch_guid)
 			then
 				inherited_interface.disambiguate_c_names (a_coclass_descriptor)
 				feature_c_names.append (inherited_interface.feature_c_names)

@@ -342,19 +342,19 @@ feature {NONE} -- Implementation
 					add_warning (Current, Invalid_use_of_enumeration)
 				else
 					if visitor.is_basic_type_ref then
-						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
+						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
 						Result.append (Comma_space)
 						Result.append (name)
 						Result.append (Close_parenthesis)
 						Result.append (Semicolon)
 					elseif is_boolean (type) then
-						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
+						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
 						Result.append (Comma_space)
 						Result.append (name)
 						Result.append (Close_parenthesis)
 						Result.append (Semicolon)
 					else
-						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (type)))
+						Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
 						Result.append (Comma_space)
 						Result.append (name)
 						Result.append (Close_parenthesis)
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 				tmp_string := clone (Tmp_clause)
 				tmp_string.append (name)
 
-				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (type), tmp_string, visitor))	
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_string, visitor))	
 			end
 
 		end
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 
 			if visitor.is_basic_type or visitor.is_enumeration then
 				tmp_value := clone (name)
-				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (type), tmp_value, visitor))
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
 
 			elseif is_boolean (type) then
 
@@ -457,7 +457,7 @@ feature {NONE} -- Implementation
 				tmp_value.append (name)
 				tmp_value.append (Close_parenthesis)
 
-				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (type), tmp_value, visitor))
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
 				
 			elseif visitor.is_basic_type_ref then
 
@@ -486,11 +486,11 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 				Result.append (New_line_tab)
-				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (type), tmp_value, visitor))
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
 
 			elseif visitor.is_array_basic_type or visitor.is_structure_pointer then
 				Result.append (New_line_tab)
-				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (type), name, visitor))
+				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), name, visitor))
 
 			else
 				if is_byref (type) then
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 					tmp_value.append (Close_parenthesis)
 				end
 
-				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (type), tmp_value, visitor))
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
 			end
 		end
 		

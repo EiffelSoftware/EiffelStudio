@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (New_line_tab)
 			tmp_body.append ("arg.")
 
-			tmp_body.append (vartype_namer.variant_field_name (type))
+			tmp_body.append (vartype_namer.variant_field_name (visitor))
 
 			tmp_body.append (Space_equal_space)
 			tmp_body.append (Tmp_variable_name)

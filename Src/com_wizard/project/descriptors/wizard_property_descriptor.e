@@ -79,6 +79,19 @@ feature -- Access
 			Result.append (Close_parenthesis)
 		end
 
+feature -- Status Report
+
+	is_equal_property (other: WIZARD_PROPERTY_DESCRIPTOR): BOOLEAN is
+			--
+		require
+			non_void_other: other /= Void
+		do
+			Result := name.is_equal (other.name) and 
+				data_type.is_equal_data_type (other.data_type)
+		ensure
+			symmetric: Result implies other.is_equal_property (Current)
+		end
+
 feature -- Basic operations
 
 	add_coclass_eiffel_name (an_eiffel_name, a_coclass_name: STRING) is

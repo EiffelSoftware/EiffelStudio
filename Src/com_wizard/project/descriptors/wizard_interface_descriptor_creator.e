@@ -86,22 +86,21 @@ feature -- Basic operations
 				vtbl_size := tmp_type_attr.vtbl_size
 				flags := tmp_type_attr.flags
 
-				create feature_names.make
-				create_function_descriptors (a_type_info)
-				create_property_descriptors (a_type_info)
 				if a_type_info.type_attr.count_implemented_types > 0 then
 					create_inherited_interface (a_type_info)
 				end
+
+				create feature_names.make
+				create_function_descriptors (a_type_info)
+				create_property_descriptors (a_type_info)
 				create Result.make (Current)
 			end
 		ensure then
 			valid_guid: guid /= Void
 			valid_functions: a_type_info.type_attr.count_func > 0 implies
-					functions /= Void and then 
-					functions.count = a_type_info.type_attr.count_func
+					functions /= Void 
 			valid_properties: a_type_info.type_attr.count_variables > 0 implies
-					properties /= Void and then 
-					properties.count = a_type_info.type_attr.count_variables
+					properties /= Void 
 			valid_interface: a_type_info.type_attr.count_implemented_types > 0 implies
 						inherited_interface /= Void 
 		end
@@ -145,17 +144,18 @@ feature -- Basic operations
 				a_func_desc := a_type_info.func_desc (i)
 				create function_descriptor_factory
 				a_function_descriptor := function_descriptor_factory.create_descriptor (a_type_info, a_func_desc)
-				if feature_names.has (a_function_descriptor.name) then
-					a_function_descriptor.name.append_integer (counter)
+				if inherited_interface = Void or else not inherited_interface.has_function (a_function_descriptor) then
+					if feature_names.has (a_function_descriptor.name) then
+						a_function_descriptor.name.append_integer (counter)
+					end
+					feature_names.extend (a_function_descriptor.name)
+					functions.force (a_function_descriptor)
 				end
-				feature_names.extend (a_function_descriptor.name)
-				functions.force (a_function_descriptor)
 				i := i + 1
 			end
 		ensure
 			valid_functions: a_type_info.type_attr.count_func > 0 implies
-					functions /= Void and then 
-					functions.count = a_type_info.type_attr.count_func
+					functions /= Void 
 		end
 
 
@@ -179,17 +179,18 @@ feature -- Basic operations
 			loop
 				create property_descriptor_factory
 				a_property_descriptor := property_descriptor_factory.create_descriptor (a_type_info, i)
-				if feature_names.has (a_property_descriptor.name) then
-					a_property_descriptor.name.append_integer (counter)
+				if inherited_interface = Void or else not inherited_interface.has_property (a_property_descriptor) then
+					if feature_names.has (a_property_descriptor.name) then
+						a_property_descriptor.name.append_integer (counter)
+					end
+					feature_names.extend (a_property_descriptor.name)
+					properties.force (a_property_descriptor)
 				end
-				feature_names.extend (a_property_descriptor.name)
-				properties.force (a_property_descriptor)
 				i := i + 1
 			end
 		ensure
 			valid_properties: a_type_info.type_attr.count_variables > 0 implies
-					properties /= Void and then 
-					properties.count = a_type_info.type_attr.count_variables
+					properties /= Void 
 		end
 
 	create_inherited_interface (a_type_info: ECOM_TYPE_INFO) is

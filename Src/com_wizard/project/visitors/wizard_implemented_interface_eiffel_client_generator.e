@@ -30,6 +30,7 @@ feature -- Basic operations
 			-- Generate 
 		local
 			a_class_name: STRING
+			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
 		do
 			create eiffel_writer.make
 
@@ -41,7 +42,10 @@ feature -- Basic operations
 			eiffel_writer.set_class_name (a_class_name)
 			eiffel_writer.set_description (a_descriptor.description)
 
-			generate_functions_and_properties (a_descriptor.interface_descriptor, a_descriptor, eiffel_writer)
+			create inherit_clause.make
+			inherit_clause.set_name (a_descriptor.interface_descriptor.eiffel_class_name)
+			generate_functions_and_properties (a_descriptor.interface_descriptor, a_descriptor, eiffel_writer, inherit_clause)
+			eiffel_writer.add_inherit_clause (inherit_clause)
 
 			set_default_ancestors (eiffel_writer)
 			add_creation

@@ -75,12 +75,13 @@ feature -- Basic operations
 					a_desc.functions.forth
 				end
 			end
-
-			if a_desc.inherited_interface /= Void and then not
-					a_desc.inherited_interface.c_type_name.is_equal (Iunknown_type) and then
-					not a_desc.inherited_interface.c_type_name.is_equal (Idispatch_type) then
+			if 
+				a_desc.inherited_interface /= Void and then not
+				a_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
+				not a_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
+			then
 				generate_functions_and_properties (a_desc.inherited_interface)
-			end		
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -9,15 +9,22 @@ class
 
 inherit
 	WIZARD_DESCRIPTOR
+		redefine
+			is_equal
+		end
 
 	WIZARD_WRITER_DICTIONARY
 		export
 			{NONE} all
+		redefine
+			is_equal
 		end
 
 	ECOM_PARAM_FLAGS
 		export
 			{WIZARD_PARAMETER_DESCRIPTOR_FACTORY} all
+		redefine
+			is_equal
 		end
 
 creation
@@ -69,6 +76,14 @@ feature -- Access
 		ensure then
 			non_void_description: Result /= Void
 			valid_description: not Result.empty
+		end
+
+feature -- Status report
+
+	is_equal (other: WIZARD_PARAM_DESCRIPTOR): BOOLEAN is
+			-- Is `other' same parameter?
+		do
+			Result := type.is_equal_data_type (other.type)
 		end
 
 feature {WIZARD_PARAMETER_DESCRIPTOR_FACTORY}-- Basic operations

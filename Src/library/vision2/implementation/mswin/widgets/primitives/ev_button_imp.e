@@ -21,7 +21,10 @@ inherit
    
 	EV_TEXTABLE_IMP
 		redefine
-			set_default_minimum_size
+			set_default_minimum_size,
+			set_center_alignment,
+			set_left_alignment,
+			set_right_alignment
 		end
 
 	EV_PIXMAPABLE_IMP
@@ -135,6 +138,26 @@ feature -- Status setting
 			if parent_imp /= Void then
 				notify_change (1 + 2)
 			end
+		end
+
+	set_left_alignment is
+			-- Set the text of the button to left alignment.
+		do
+			set_style (default_style + Bs_left)
+			invalidate
+		end
+
+	set_right_alignment is
+			-- Set the text of the button to right alignment.
+		do
+			set_style(default_style + Bs_right)
+			invalidate
+		end
+	set_center_alignment is
+			-- Set the text of the button to center alignment.
+		do
+			set_style(default_style + Bs_center)
+			invalidate
 		end
 
 feature -- Element change

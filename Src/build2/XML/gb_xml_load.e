@@ -38,7 +38,6 @@ feature -- Basic operation
 		do
 				-- Do initialization necessary
 			parser := create_tree_parser
-			create type_string.make_from_string ("type")
 		
 				-- Hide `display_window' and `builder_window' if
 				-- shown. We store whether they are shown or not.
@@ -268,10 +267,5 @@ feature {NONE} -- Implementation
 		
 	document: XML_DOCUMENT
 		-- XML document generated from created window.
-	
-	
-	--|FIXME I think this should be a constant.
-	type_string: UCSTRING
-		-- Constant used for matching type identifier.
 
 end -- class GB_XML_LOAD

@@ -649,8 +649,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			cell: EV_CELL
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			counter: INTEGER
-		do
+		do		
 			index_of_tool := index_of_holder (a_holder)
+			
 			from
 				counter := 1
 			until
@@ -804,7 +805,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			loop
 				if all_holders.item /= tool_holder then
 					all_holders.item.silent_remove_minimized
-					all_holders.item.enable_minimize_button
+					if not external_representation.has (all_holders.item.tool) then
+						all_holders.item.enable_minimize_button
+					end
 					all_holders.item.tool.show
 				else
 					all_holders.item.enable_minimize_button

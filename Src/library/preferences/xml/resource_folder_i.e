@@ -264,16 +264,14 @@ feature {NONE} -- Implementation
 		do
 			create resource_name.make (20)
 			att_table := el.attributes
+			resource_description := Void
 			if att_table.has ("DESCRIPTION") then
 				att := att_table.item ("DESCRIPTION")
 				if att /= Void then
 					resource_description := att.value
-				else
-					resource_description := Void
 				end
-			else
-				resource_description := Void
 			end
+			effect_is_delayed := False
 			if att_table.has ("IMMEDIATE_EFFECT") then
 				att := att_table.item ("IMMEDIATE_EFFECT")
 				if att /= Void then

@@ -36,6 +36,7 @@ feature -- Access
 			counter: INTEGER
 			first_item, second_item: EV_WIDGET
 			children: ARRAYED_LIST [GB_OBJECT]
+			current_child: GB_OBJECT
 		do
 			create check_buttons.make (0)
 			create Result
@@ -72,9 +73,17 @@ feature -- Access
 				create check_button.make_with_text (class_name (first_item))
 				check_button.set_pebble_function (agent retrieve_pebble (first_item))
 				check_buttons.force (check_button)
-				check_button.select_actions.extend (agent update_widget_expanded (check_button, first_item, children.i_th (counter)))
+				
+					-- Special handling for the Vision2 tour, as `object.children' is always Void,
+					-- and therefore nothing must be performed.
+				if children = Void then
+					current_child := Void
+				else
+					current_child := children.i_th (counter)
+				end
+				check_button.select_actions.extend (agent update_widget_expanded (check_button, first_item, current_child))
 				if second_item /= Void then
-					check_button.select_actions.extend (agent update_widget_expanded (check_button, second_item, children.i_th (counter)))
+					check_button.select_actions.extend (agent update_widget_expanded (check_button, second_item, current_child))
 				end
 				check_button.select_actions.extend (agent update_editors)
 				Result.extend (check_button)
@@ -138,7 +147,8 @@ feature {NONE} -- Implementation
 		require
 			check_button_not_void: check_button /= Void
 			widget_not_void: w /= Void
-			child_object_not_void: child_object /= Void
+			--child_object_not_void: child_object /= Void
+			-- `child_object' may be `Void' if `Current' is executed in the Vision2 tour.
 		local
 			box_parent: EV_BOX
 		do
@@ -149,10 +159,14 @@ feature {NONE} -- Implementation
 
 			if check_button.is_selected then
 				box_parent.enable_item_expand (w)
-				child_object.enable_expanded_in_box
+				if child_object /= Void then
+					child_object.enable_expanded_in_box	
+				end
 			else
 				box_parent.disable_item_expand (w)
-				child_object.disable_expanded_in_box
+				if child_object /= Void then
+					child_object.disable_expanded_in_box
+				end
 			end
 			
 			enable_project_modified

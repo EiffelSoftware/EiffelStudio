@@ -39,7 +39,7 @@ feature -- Access
 			-- Built-in
 		end
 
-	index_of (v: T; start_position: INTEGER): INTEGER is
+	frozen index_of (v: T; start_position: INTEGER): INTEGER is
 			-- Index of first occurrence of item identical to `v'.
 			-- -1 if none.
 		require
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count, capacity: INTEGER is
+	frozen count, frozen capacity: INTEGER is
 			-- Count of the special area
 		do
 			Result := sp_count ($Current)
@@ -72,7 +72,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	all_default (upper: INTEGER): BOOLEAN is
+	frozen all_default (upper: INTEGER): BOOLEAN is
 			-- Are all items between index `0' and `upper'
 			-- set to default values?
 		require
@@ -94,7 +94,7 @@ feature -- Status report
 			valid_on_empty_area: upper = -1 implies Result
 		end
 
-	same_items (other: like Current; upper: INTEGER): BOOLEAN is
+	frozen same_items (other: like Current; upper: INTEGER): BOOLEAN is
 			-- Do all items between index `0' and `upper' have
 			-- same value?
 		require
@@ -117,7 +117,7 @@ feature -- Status report
 			valid_on_empty_area: upper = -1 implies Result
 		end
 	
-	valid_index (i: INTEGER): BOOLEAN is
+	frozen valid_index (i: INTEGER): BOOLEAN is
 			-- Is `i' within the bounds of Current?
 		do
 			Result := (0 <= i) and then (i < count)
@@ -137,7 +137,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	resized_area (n: INTEGER): like Current is
+	frozen resized_area (n: INTEGER): like Current is
 			-- Create a copy of Current with a count of `n'.
 		require
 			valid_new_count: n > count
@@ -164,10 +164,22 @@ feature -- Resizing
 			Result_different_from_current: Result /= Current
 			new_count: Result.count = n
 		end
+	
+	frozen aliased_resized_area (n: INTEGER): like Current is
+			-- Try to resize `Current' with a count of `n', if not
+			-- possible a new copy.
+		require
+			valid_new_count: n > count
+		do
+			Result := sparycpy ($Current, n, 0, count)
+		ensure
+			Result_not_void: Result /= Void
+			new_count: Result.count = n
+		end
 		
 feature -- Removal
 
-	clear_all is
+	frozen clear_all is
 			-- Reset all items to default values.
 		do
 			spclearall ($Current)
@@ -175,16 +187,26 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	sp_count (sp_obj: POINTER): INTEGER is
+	frozen sp_count (sp_obj: POINTER): INTEGER is
 			-- Count of the special object
 		external
 			"C | %"eif_plug.h%""
 		end
 
-	spclearall (p: POINTER) is
+	frozen spclearall (p: POINTER) is
 			-- Reset all items to default value.
 		external
 			"C | %"eif_copy.h%""
+		end
+
+	frozen sparycpy (old_area: POINTER; newsize, s, n: INTEGER): SPECIAL [T] is
+			-- New area of size `newsize' containing `n' items
+			-- from `oldarea'.
+			-- Old items are at position `s' in new area.
+		external
+			"C | %"eif_misc.h%""
+		alias
+			"arycpy"
 		end
 
 indexing

@@ -24,7 +24,7 @@ create
 %start		External_declaration
 
 %token	TE_COLON, TE_LPARAN, TE_RPARAN, TE_COMMA
-%token	TE_ADDRESS, TE_STAR, TE_LT, TE_GT, TE_DQUOTE
+%token	TE_ADDRESS, TE_BLOCKING, TE_STAR, TE_LT, TE_GT, TE_DQUOTE
 %token	TE_ACCESS, TE_C_LANGUAGE, TE_CPP_LANGUAGE, TE_INLINE
 %token	TE_DELETE, TE_DLL_LANGUAGE, TE_DLLWIN_LANGUAGE, TE_ENUM
 %token	TE_GET_PROPERTY, TE_IL_LANGUAGE, TE_MACRO, TE_FIELD
@@ -43,6 +43,7 @@ create
 %type <INTEGER>					Pointer_opt	DLL_index
 %type <USE_LIST_AS>				Use_opt, Use, Use_list
 %type <INTEGER>					Il_language
+%type <BOOLEAN>					Blocking_opt
 
 %type <EIFFEL_LIST [EXTERNAL_TYPE_AS]>		Arguments_opt Arguments Arguments_list_opt Arguments_list
 
@@ -53,25 +54,39 @@ create
 
 
 External_declaration:
-		TE_C_LANGUAGE C_specification
+		TE_C_LANGUAGE Blocking_opt C_specification
+			{
+				root_node := $3
+				root_node.set_is_blocking_call ($2)
+			}
+	|	TE_CPP_LANGUAGE Blocking_opt CPP_specification
+			{
+				root_node := $3
+				root_node.set_is_blocking_call ($2)
+			}
+	|	Blocking_opt DLL_specification
 			{
 				root_node := $2
+				root_node.set_is_blocking_call ($1)
 			}
-	|	TE_CPP_LANGUAGE CPP_specification
+	|	Blocking_opt DLLwin_specification
 			{
 				root_node := $2
-			}
-	|	DLL_specification
-			{
-				root_node := $1
-			}
-	|	DLLwin_specification
-			{
-				root_node := $1
+				root_node.set_is_blocking_call ($1)
 			}
 	|	IL_specification
 			{
 				root_node := $1
+			}
+	;
+
+Blocking_opt: -- Empty
+			{
+				$$ := False
+			}
+	|	TE_BLOCKING
+			{
+				$$ := True
 			}
 	;
 

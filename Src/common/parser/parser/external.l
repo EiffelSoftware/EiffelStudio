@@ -80,6 +80,10 @@ N		[0-9]
 				current_position.go_to (6)
 				last_token := TE_ACCESS
 			}
+[bB][lL][oO][cC][kK][iI][nN][gG]	{
+				current_position.go_to (8)
+				last_token := TE_BLOCKING
+			}
 [cC]		{
 				current_position.go_to (1)
 				last_token := TE_C_LANGUAGE

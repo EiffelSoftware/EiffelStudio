@@ -48,11 +48,6 @@ feature -- Access
 			modified_resources.extend (a_modified_resource)
 		end;
 
-	linear_representation: LINKED_LIST [RESOURCE] is
-			-- All resources within Current
-		deferred
-		end
-
 feature -- Update
 
 	update is
@@ -72,6 +67,14 @@ feature -- Update
 					users.forth
 				end;
 				modified_resources.forth
+			end
+			from
+				users.start
+			until
+				users.after
+			loop
+				users.item.finish_update;
+				users.forth
 			end
 		end
 

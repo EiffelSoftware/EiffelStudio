@@ -50,9 +50,7 @@ create
 %token		TE_PREFIX TE_REDEFINE TE_RENAME TE_REQUIRE TE_RESCUE
 %token		TE_RESULT TE_RETRY TE_SELECT TE_SEPARATE TE_THEN TE_UNDEFINE
 %token		TE_UNIQUE TE_UNTIL TE_VARIANT TE_WHEN TE_QUESTION TE_CURLYTILDE
-%token		TE_BOOLEAN_ID TE_CHARACTER_ID TE_DOUBLE_ID TE_INTEGER_ID
-%token		TE_INTEGER_8_ID TE_INTEGER_16_ID TE_INTEGER_64_ID TE_WIDE_CHAR_ID
-%token		TE_NONE_ID TE_POINTER_ID TE_REAL_ID TE_EMPTY_STRING
+%token		TE_EMPTY_STRING
 %token		TE_VERBATIM_STRING TE_EMPTY_VERBATIM_STRING
 
 %token		TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
@@ -148,17 +146,13 @@ create
 %type <EIFFEL_LIST [RENAME_AS]>			Rename Rename_list
 %type <EIFFEL_LIST [STRING_AS]>			Debug_keys Debug_key_list
 %type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list Invariant
-%type <EIFFEL_LIST [TYPE]>				Generics_opt Type_list
+%type <EIFFEL_LIST [TYPE]>				Generics Generics_opt Type_list
 %type <EIFFEL_LIST [TYPE_DEC_AS]>		Formal_arguments Entity_declaration_list_opt
 										Entity_declaration_list Local_declarations
 										Local_entity_declaration_list_opt
 										Local_entity_declaration_list
 
-%type <PAIR [ID_AS, CLICK_AST]>			Clickable_identifier Clickable_id Clickable_boolean
-										Clickable_character Clickable_double Clickable_integer
-										Clickable_integer_8 Clickable_integer_16
-										Clickable_integer_64 Clickable_wide_char
-										Clickable_none Clickable_pointer Clickable_real
+%type <PAIR [ID_AS, CLICK_AST]>			Clickable_identifier Clickable_id
 
 %type <PAIR [FEATURE_NAME, CLICK_AST]>					Infix Prefix Feature_name New_feature
 %type <PAIR [STRING_AS, CLICK_AST]>						Infix_operator Prefix_operator
@@ -167,7 +161,7 @@ create
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 198
+%expect 98
 
 %%
 
@@ -246,76 +240,10 @@ Class_end: TE_END
 
 Clickable_identifier: Clickable_id
 			{ $$ := $1 }
-	|	Clickable_boolean
-			{ $$ := $1 }
-	|	Clickable_wide_char
-			{ $$ := $1 }
-	|	Clickable_character
-			{ $$ := $1 }
-	|	Clickable_double
-			{ $$ := $1 }
-	|	Clickable_integer_8
-			{ $$ := $1 }
-	|	Clickable_integer_16
-			{ $$ := $1 }
-	|	Clickable_integer
-			{ $$ := $1 }
-	|	Clickable_integer_64
-			{ $$ := $1 }
-	|	Clickable_none
-			{ $$ := $1 }
-	|	Clickable_pointer
-			{ $$ := $1 }
-	|	Clickable_real
-			{ $$ := $1 }
 	;
 
 Clickable_id: TE_ID
 			{ $$ := new_clickable_id (create {ID_AS}.initialize (token_buffer)) }
-	;
-
-Clickable_boolean: TE_BOOLEAN_ID
-			{ $$ := new_clickable_id (new_boolean_id_as) }
-	;
-
-Clickable_character: TE_CHARACTER_ID
-			{ $$ := new_clickable_id (new_character_id_as (False)) }
-	;
-
-Clickable_wide_char: TE_WIDE_CHAR_ID
-			{ $$ := new_clickable_id (new_character_id_as (True)) }
-	;
-
-Clickable_double: TE_DOUBLE_ID
-			{ $$ := new_clickable_id (new_double_id_as) }
-	;
-
-Clickable_integer_8: TE_INTEGER_8_ID
-			{ $$ := new_clickable_id (new_integer_id_as (8)) }
-	;
-
-Clickable_integer_16: TE_INTEGER_16_ID
-			{ $$ := new_clickable_id (new_integer_id_as (16)) }
-	;
-
-Clickable_integer: TE_INTEGER_ID
-			{ $$ := new_clickable_id (new_integer_id_as (32)) }
-	;
-
-Clickable_integer_64: TE_INTEGER_64_ID
-			{ $$ := new_clickable_id (new_integer_id_as (64)) }
-	;
-
-Clickable_none: TE_NONE_ID
-			{ $$ := new_clickable_id (new_none_id_as) }
-	;
-
-Clickable_pointer: TE_POINTER_ID
-			{ $$ := new_clickable_id (new_pointer_id_as) }
-	;
-
-Clickable_real: TE_REAL_ID
-			{ $$ := new_clickable_id (new_real_id_as) }
 	;
 
 -- Indexing
@@ -1127,33 +1055,17 @@ Non_class_type: TE_EXPANDED Clickable_identifier Generics_opt
 
 Class_type: Clickable_id Generics_opt
 			{ $$ := new_class_type ($1, $2) }
-	|	Clickable_boolean Generics_opt
-			{ $$ := new_boolean_type ($1.second, $2 /= Void) }
-	|	Clickable_character Generics_opt
-			{ $$ := new_character_type ($1.second, $2 /= Void, False) }
-	|	Clickable_wide_char Generics_opt
-			{ $$ := new_character_type ($1.second, $2 /= Void, True) }
-	|	Clickable_double Generics_opt
-			{ $$ := new_double_type ($1.second, $2 /= Void) }
-	|	Clickable_integer_8 Generics_opt
-			{ $$ := new_integer_type ($1.second, $2 /= Void, 8) }
-	|	Clickable_integer_16 Generics_opt
-			{ $$ := new_integer_type ($1.second, $2 /= Void, 16) }
-	|	Clickable_integer Generics_opt
-			{ $$ := new_integer_type ($1.second, $2 /= Void, 32) }
-	|	Clickable_integer_64 Generics_opt
-			{ $$ := new_integer_type ($1.second, $2 /= Void, 64) }
-	|	Clickable_none Generics_opt
-			{ $$ := new_none_type ($1.second, $2 /= Void) }
-	|	Clickable_pointer Generics_opt
-			{ $$ := new_pointer_type ($1.second, $2 /= Void) }
-	|	Clickable_real Generics_opt
-			{ $$ := new_real_type ($1.second, $2 /= Void) }
 	;
 
 Generics_opt: -- Empty
 			-- { $$ := Void }
 	|	TE_LSQURE TE_RSQURE
+			-- { $$ := Void }
+	|	TE_LSQURE Type_list TE_RSQURE
+			{ $$ := $2 }
+	;
+
+Generics:	TE_LSQURE TE_RSQURE
 			-- { $$ := Void }
 	|	TE_LSQURE Type_list TE_RSQURE
 			{ $$ := $2 }
@@ -1613,10 +1525,28 @@ Delayed_actual_list: Delayed_actual
 
 Delayed_actual: TE_QUESTION
 			{ $$ := new_operand_as (Void, Void, Void) }
+-- Manu: 05/02/2003: Should be just the below expression, but to resolve conflicts we have to
+-- expand it using its definition
+--	|	TE_LCURLY Type TE_RCURLY
+--			{ $$ := new_operand_as ($2, Void, Void) }
+	|	TE_LCURLY Clickable_id TE_RCURLY
+			{ $$ := new_operand_as (new_class_type ($2, Void), Void, Void) }
+	|	TE_LCURLY Clickable_id Generics TE_RCURLY
+			{ $$ := new_operand_as (new_class_type ($2, $3), Void, Void) }
+	|	TE_LCURLY TE_EXPANDED Clickable_identifier Generics_opt TE_RCURLY
+			{ $$ := new_operand_as (new_expanded_type ($3, $4), Void, Void) }
+	|	TE_LCURLY TE_SEPARATE Clickable_identifier Generics_opt TE_RCURLY
+			{ $$ := new_operand_as (new_separate_type ($3, $4), Void, Void) }
+	|	TE_LCURLY TE_BIT Integer_constant TE_RCURLY
+			{ $$ := new_operand_as (new_bits_as ($3), Void, Void) }
+	|	TE_LCURLY TE_BIT Identifier TE_RCURLY
+			{ $$ := new_operand_as (new_bits_symbol_as ($3), Void, Void) }
+	|	TE_LCURLY TE_LIKE Identifier TE_RCURLY
+			{ $$ := new_operand_as (new_like_id_as ($3), Void, Void) }
+	|	TE_LCURLY TE_LIKE TE_CURRENT TE_RCURLY
+			{ $$ := new_operand_as (new_like_current_as, Void, Void) }
 	|	Expression
 			{ $$ := new_operand_as (Void, Void, $1) }
-	|	TE_LCURLY Type TE_RCURLY
-			{ $$ := new_operand_as ($2, Void, Void) }
 	;
 
 Creation: Position TE_BANG Creation_type TE_BANG Creation_target Creation_call
@@ -1833,28 +1763,6 @@ A_precursor: TE_PRECURSOR Parameters
 			{ $$ := new_precursor ($3, $8, $6) }
 	|	TE_LCURLY Clickable_id TE_RCURLY Position TE_PRECURSOR Parameters
 			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_boolean TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_character TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_wide_char TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_double TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_integer_8 TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_integer_16 TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_integer TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_integer_64 TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_none TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_pointer TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
-	|	TE_LCURLY Clickable_real TE_RCURLY Position TE_PRECURSOR Parameters
-			{ $$ := new_precursor ($2, $6, $4) }
 	;
 
 Call_on_static: A_static_call TE_DOT Remote_call
@@ -1949,28 +1857,6 @@ Expression_list: Expression
 
 Identifier: TE_ID
 			{ create $$.initialize (token_buffer) }
-	|	TE_BOOLEAN_ID
-			{ $$ := new_boolean_id_as }
-	|	TE_CHARACTER_ID
-			{ $$ := new_character_id_as (False) }
-	|	TE_WIDE_CHAR_ID
-			{ $$ := new_character_id_as (True) }
-	|	TE_DOUBLE_ID
-			{ $$ := new_double_id_as }
-	|	TE_INTEGER_8_ID
-			{ $$ := new_integer_id_as (8) }
-	|	TE_INTEGER_16_ID
-			{ $$ := new_integer_id_as (16) }
-	|	TE_INTEGER_ID
-			{ $$ := new_integer_id_as (32) }
-	|	TE_INTEGER_64_ID
-			{ $$ := new_integer_id_as (64) }
-	|	TE_NONE_ID
-			{ $$ := new_none_id_as }
-	|	TE_POINTER_ID
-			{ $$ := new_pointer_id_as }
-	|	TE_REAL_ID
-			{ $$ := new_real_id_as }
 	;
 
 Manifest_constant: Boolean_constant

@@ -1,6 +1,6 @@
 indexing
 	description: "Class which describes the features for one resource."
-	author: "pascalf"
+	author: "Pascal Freund and Christophe Bonnard"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +13,7 @@ creation
 feature -- Initialization
 	
 	make (root_resource: XML_ELEMENT) is
-			-- initialization
+			-- initialization from `root_resource'
 		require
 			not_void: root_resource /= Void
 		local
@@ -132,7 +132,7 @@ feature -- Implementation
 		-- Name for the outside world of Current.
 
 invariant
-	XML_RESOURCE_not_void: name /= Void and value /= Void
+	XML_RESOURCE_exists: name /= Void and value /= Void
 	XML_RESOURCE_consistency: not name.empty
 
 end -- class XML_RESOURCE

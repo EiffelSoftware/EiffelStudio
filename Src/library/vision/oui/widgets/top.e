@@ -78,12 +78,9 @@ feature
 			-- Called when 'top' is destroyed.
 			-- (Will exit application if
 			-- `delete_command' is not set).
-		local
-			quit_app_com: QUIT_NOW_COM;
 		do
 			if delete_command = Void then
-				!! quit_app_com;
-				quit_app_com.execute (Void);
+				toolkit.exit
 			else
 				delete_command.execute (Void);
 			end;

@@ -3,7 +3,7 @@ indexing
 	note		: "Initial version automatically generated"
 
 class
-	EIFFEL_STUD_TO_ENVISION
+	ES_TO_ENVISION
 
 creation
 	make

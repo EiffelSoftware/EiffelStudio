@@ -1,250 +1,368 @@
 indexing
-	description: 
-		"MEL Font Box widget.";
-	status: "See notice at end of class.";
+
+	description:
+		"MEL Implementation of a font box.";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
+class 
 	MEL_FONT_BOX
 
 inherit
 
+	MEMORY
+		export
+			{NONE} all
+		redefine
+			dispose
+		end;
+
 	MEL_FORM
 		redefine
-			set_default
-		end
+			make, set_background, set_background_color,
+			set_foreground, set_foreground_color
+		end;
 
 creation
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+			-- Create a motif bulletin board.
+		local
+			widget_name: ANY
+		do
+			parent := a_parent;
+			widget_name := a_name.to_c;
+			handle := font_box_create ($widget_name, 
+						a_parent.screen_object, False);
+			screen_object := font_box_form (handle)
+			Mel_widgets.add (Current);
+			!! button_form.make_from_existing (xt_parent 
+					(font_box_ok_button (handle)), Current);
+			set_default;
+			if do_manage then
+				manage
+			end
+		end;
+
 feature -- Access
 
-	select_form, buttons_form: MEL_FORM;
-	text: MEL_TEXT;
-	non_stand_list: MEL_SCROLLED_LIST;
-	stand_frame: MEL_FRAME;
-	stand_column: MEL_ROW_COLUMN;
-	ok_b, apply_b, cancel_b, stand_font_b, non_stand_font_b: MEL_PUSH_BUTTON_GADGET;
-	switch_menu_button, family_menu_button, weight_menu_button, slant_menu_button, 
-	width_menu_button, point_menu_button, resolution_menu_button: MEL_OPTION_MENU;
-	switch_menu, family_menu, weight_menu, slant_menu, width_menu, point_menu,
-	resolution_menu : MEL_PULLDOWN_MENU;
+	ok_b: MEL_PUSH_BUTTON_GADGET is
+			-- Ok button
+		local
+			w: POINTER
+		do
+			w := font_box_ok_button (handle);
+			Result ?= Mel_widgets.item (w);
+			if Result = Void then
+				!! Result.make_from_existing (w, button_form)
+			end
+		end; 
+
+	apply_b: MEL_PUSH_BUTTON_GADGET is
+			-- Apply button
+		local
+			w: POINTER
+		do
+			w := font_box_apply_button (handle);
+			Result ?= Mel_widgets.item (w);
+			if Result = Void then
+				!! Result.make_from_existing (w, button_form)
+			end
+		end;
+
+	cancel_b: MEL_PUSH_BUTTON_GADGET is
+			-- Cancel button
+		local
+			w: POINTER
+		do
+			w := font_box_cancel_button (handle);
+			Result ?= Mel_widgets.item (w);
+			if Result = Void then
+				!! Result.make_from_existing (w, button_form)
+			end
+		end;
+
+	handle: POINTER;
+			-- Pointer to the font_box_data structure
+
+feature -- Status report
+
+	current_font_name: STRING is
+			-- Font name currently selected by the user
+		do
+			!! Result.make (0);
+			Result.from_c (font_box_current_font (handle));
+		ensure
+			has_result: Result /= Void
+		end;
 
 feature -- Status setting
 
-	hide_ok_button is
-			-- Hide the OK button.
+	set_font_name (a_font: STRING) is
+			-- Edit `a_font'.
 		require
-			ok_button_displayed: ok_b.is_managed
+			valid_font: a_font /= Void 
+		local
+			ext_name: ANY
 		do
-			ok_b.unmanage;
-			adjust_buttons
-		ensure
-			ok_button_hidden: not ok_b.is_managed
+			ext_name := a_font.to_c;
+			font_box_set_font ($ext_name, handle)
 		end;
 
-	show_ok_button is
-			-- Show the OK button.
+	set_button_font (a_font: MEL_FONT_LIST) is
+			-- Set the font of the buttons to `a_font'.
 		require
-			ok_button_hidden: not ok_b.is_managed
+			valid_font: a_font /= Void and then a_font.is_valid
 		do
-			ok_b.manage;
-			adjust_buttons
-		ensure
-			ok_button_displayed: ok_b.is_managed
+			fb_set_button_font (handle, a_font.handle)
 		end;
 
-	hide_apply_button is
-			-- Hide the apply button.
+	set_scroll_list_font (a_font: MEL_FONT_LIST) is
+			-- Set the font of the scroll list to `a_font'.
 		require
-			apply_button_displayed: apply_b.is_managed
+			valid_font: a_font /= Void and then a_font.is_valid
 		do
-			apply_b.unmanage;
-			adjust_buttons
-		ensure
-			apply_button_hidden: not apply_b.is_managed
+			fb_set_text_font (handle, a_font.handle)
 		end;
+
+	set_foreground, set_foreground_color (a_color: MEL_PIXEL) is
+			-- Set `foreground' and `foreground_color' to `a_color'.
+		local
+			list: like descendents;
+			color_id: POINTER
+		do
+			list :=descendents;
+			set_xt_pixel (screen_object, XmNforeground, a_color);
+			from
+				list.start
+			until
+				list.after
+			loop
+				set_xt_pixel (list.item, XmNforeground, a_color);
+				list.forth
+			end;
+			fb_set_button_fg_color (handle, a_color.identifier)	
+		end;
+
+	set_background, set_background_color (a_color: MEL_PIXEL) is
+			-- Set `background' and `background_color' to `a_color'.
+		local
+			list: like descendents;
+			color_id: POINTER
+		do
+			color_id := a_color.identifier;
+			set_xt_pixel (screen_object, XmNbackground, a_color);
+			list :=descendents;
+			from
+				list.start
+			until
+				list.after
+			loop
+				xm_change_color (list.item, color_id);
+				list.forth
+			end;
+			fb_set_button_bg_color (handle, color_id)	
+		end;
+
+feature  -- Element change
+
+	add_apply_callback (a_command: MEL_CALLBACK; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- apply button is activated.
+		do
+			apply_b.add_activate_callback (a_command, argument)
+		end;
+
+	add_cancel_callback (a_command: MEL_CALLBACK; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- cancel button is activated.
+		do
+			cancel_b.add_activate_callback (a_command, argument)
+		end;
+
+	add_ok_callback (a_command: MEL_CALLBACK; argument: ANY) is
+			-- Add `a_command' to the list of action to execute when
+			-- ok button is activated.
+		do
+			ok_b.add_activate_callback (a_command, argument)
+		end;
+
+feature -- Display
 
 	show_apply_button is
-			-- Show the apply button.
-		require
-			apply_button_hidden: not apply_b.is_managed
+			-- Make apply button visible.
 		do
-			apply_b.manage;
-			adjust_buttons
-		ensure
-			apply_button_displayed: apply_b.is_managed
-		end;
-
-	hide_cancel_button is
-			-- Hide the cancel button.
-		require
-			cancel_button_displayed: cancel_b.is_managed
-		do
-			cancel_b.unmanage;
-			adjust_buttons
-		ensure
-			cancel_button_hidden: not cancel_b.is_managed
+			font_box_show_apply (handle)
 		end;
 
 	show_cancel_button is
-			-- Show the cancel button.
-		require
-			cancel_button_hidden: not cancel_b.is_managed
+			-- Make cancel button visible.
 		do
-			cancel_b.manage;
-			adjust_buttons
-		ensure
-			cancel_button_displayed: cancel_b.is_managed
+			font_box_show_cancel (handle)
 		end;
 
-feature {NONE} -- Implementation
-
-	set_widget_default is
-			-- Create the Font Box.
+	show_ok_button is
+			-- Make ok button visible.
 		do
-			add_select_form;
-			!! text.make ("text", Current, True);
-			add_buttons_form;
-			attach_select_form;
-			text.set_multi_line_edit;
-			set_top_offset (text, 10);
-			attach_top_to_widget (text, select_form);
-			set_bottom_offset (text, 10);
-			attach_bottom_to_widget (text, buttons_form);
-			set_left_offset (text, 10);
-			attach_left_to_form (text);
-			set_right_offset (text, 10);
-			attach_right_to_form (text);
-			attach_buttons_forms;
+			font_box_show_ok (handle)
+		end
+
+	hide_apply_button is
+			-- Make apply button invisible.
+		do
+			font_box_hide_apply (handle)
 		end;
 
-	add_select_form is
-			-- Create the select form.
+	hide_cancel_button is
+			-- Make cancel button invisible.
 		do
-			!! select_form.make ("selectForm", Current, False);
-			!! switch_menu_button.make ("switchMenuButton", select_form, False);
-			!! switch_menu.make ("switchMenu", select_form, False);
-			!! stand_font_b.make ("standFont", switch_menu, False);
-			stand_font_b.set_text_as_string ("Standard fonts");
-			stand_font_b.manage;
-			!! non_stand_font_b.make ("nonStandFont", switch_menu, False);
-			non_stand_font_b.set_text_as_string ("Non standard fonts");
-			non_stand_font_b.manage;
-			switch_menu_button.set_sub_menu (switch_menu);
-			switch_menu_button.manage;
-			select_form.set_top_offset (switch_menu_button, 0);
-			select_form.attach_top_to_form (switch_menu_button);
-			select_form.set_left_offset (switch_menu_button, 0);
-			select_form.attach_left_to_form (switch_menu_button);
-			-- !! non_stand_list.make_variable ("nonStandList", select_form, False);
-			-- select_form.set_left_offset (non_stand_list, 0);
-			-- select_form.attach_left_to_form (non_stand_list);
-			-- select_form.set_right_offset (non_stand_list, 0);
-			-- select_form.attach_right_to_form (non_stand_list);
-			-- select_form.set_bottom_offset (non_stand_list, 0);
-			-- select_form.attach_bottom_to_form (non_stand_list);
-			!! stand_frame.make ("standFrame", select_form, True);
-			select_form.set_left_offset (stand_frame, 0);
-			select_form.attach_left_to_form (stand_frame);
-			select_form.set_right_offset (stand_frame, 0);
-			select_form.attach_right_to_form (stand_frame);
-			select_form.set_bottom_offset (stand_frame, 0);
-			select_form.attach_bottom_to_form (stand_frame);
-			!! stand_column.make ("standColumn", stand_frame, False);
-			!! family_menu_button.make ("familyMenuButton", stand_column, True);
-			!! weight_menu_button.make ("weightMenuButton", stand_column, True);
-			!! slant_menu_button.make ("slantMenuButton", stand_column, True);
-			!! width_menu_button.make ("widthMenuButton", stand_column, True);
-			!! point_menu_button.make ("pointMenuButton", stand_column, True);
-			!! resolution_menu_button.make ("resolutionMenuButton", stand_column, True);
-			-- select_form.set_top_offset (non_stand_list, 5);
-			-- select_form.attach_top_to_widget (non_stand_list, switch_menu_button);
-			select_form.set_top_offset (stand_frame, 5);
-			select_form.attach_top_to_widget (stand_frame, switch_menu_button);
-			stand_column.manage;
-			-- stand_frame.manage;
-			select_form.manage
+			font_box_hide_cancel (handle)
 		end;
 
-	add_buttons_form is
-			-- Create the buttons form.
+	hide_ok_button is
+			-- Make ok button invisible.
 		do
-			!! buttons_form.make ("buttonsForm", Current, False);
-			!! ok_b.make ("OK", buttons_form, True);
-			!! apply_b.make ("Apply", buttons_form, True);
-			!! cancel_b.make ("Cancel", buttons_form, True);
-			adjust_buttons
+			font_box_hide_ok (handle)
 		end;
 
-	adjust_buttons is
-			-- Adjust the buttons of the buttons_form.
-		local
-			i: INTEGER;
+feature -- Removal
+
+	remove_apply_callback (a_command: MEL_CALLBACK; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- apply button is activated.
 		do
-			if (ok_b.is_managed) then
-				i := i + 1
-			end;
-			if (apply_b.is_managed) then
-				i := i + 1
-			end;
-			if (cancel_b.is_managed) then
-				i := i + 1
-			end;
-			i := 2 * i - 1;
-			buttons_form.unmanage;
-			buttons_form.set_fraction_base (i);
-			if (ok_b.is_managed) then
-				buttons_form.set_top_offset (ok_b, 0);
-		   		buttons_form.attach_top_to_form (ok_b);
-				buttons_form.set_bottom_offset (ok_b, 0);
-				buttons_form.attach_bottom_to_form (ok_b);
-				buttons_form.attach_left_to_position (ok_b, 0);
-				buttons_form.attach_right_to_position (ok_b, 1)
-			end;
-			if (apply_b.is_managed) then
-				buttons_form.set_top_offset (apply_b, 0);
-				buttons_form.attach_top_to_form (apply_b);
-				buttons_form.set_bottom_offset (apply_b, 0);
-				buttons_form.attach_bottom_to_form (apply_b);
-				buttons_form.attach_left_to_position (apply_b, i - 3);
-				buttons_form.attach_right_to_position (apply_b, i - 2)
-			end;
-			if (cancel_b.is_managed) then
-				buttons_form.set_top_offset (cancel_b, 0);
-				buttons_form.attach_top_to_form (cancel_b);
-				buttons_form.set_bottom_offset (cancel_b, 0);
-				buttons_form.attach_bottom_to_form (cancel_b);
-				buttons_form.attach_left_to_position (cancel_b, i - 1);
-				buttons_form.attach_right_to_position (cancel_b, i)
-			end;
-			buttons_form.manage
+			apply_b.remove_activate_callback (a_command, argument)
 		end;
 
-	attach_select_form is
-			-- Set the attachments for the select form.
+	remove_cancel_callback (a_command: MEL_CALLBACK; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- cancel button is activated.
 		do
-			set_top_offset (select_form, 10);
-			attach_top_to_form (select_form);
-			set_left_offset (select_form, 10);
-			attach_left_to_form (select_form);
-			set_right_offset (select_form, 10);
-			attach_right_to_form (select_form)
+			cancel_b.remove_activate_callback (a_command, argument)
 		end;
 
-	attach_buttons_forms is
-			-- Set the attachments for the buttons form.
+	remove_ok_callback (a_command: MEL_CALLBACK; argument: ANY) is
+			-- Remove `a_command' from the list of action to execute when
+			-- ok button is activated.
 		do
-			set_bottom_offset (buttons_form, 10);
-			attach_bottom_to_form (buttons_form);
-			set_left_offset (buttons_form, 10);
-			attach_left_to_form (buttons_form);
-			set_right_offset (buttons_form, 10);
-			attach_right_to_form (buttons_form)
+			ok_b.remove_activate_callback (a_command, argument)
 		end;
 
-end -- class MEL_FONT_BOX
+	dispose is
+			-- Dispose the associated C structure.
+		do
+			free_data (handle);
+			handle := default_pointer
+		ensure then
+			handle_free: handle = default_pointer
+		end;
+
+	button_form: MEL_FORM;
+			-- Form for the buttons
+	
+feature {NONE} -- External features
+
+	fb_set_button_fg_color (value: POINTER; pix: POINTER) is
+		external
+			"C"
+		end;
+
+	fb_set_button_bg_color (value: POINTER; pix: POINTER) is
+		external
+			"C"
+		end;
+
+	fb_set_button_font (value: POINTER; pix: POINTER) is
+		external
+			"C"
+		end;
+
+	fb_set_text_font (value: POINTER; pix: POINTER) is
+		external
+			"C"
+		end;
+
+	font_box_set_font (resource: POINTER; value: POINTER) is
+		external
+			"C"
+		end;
+
+	font_box_apply_button (value: POINTER): POINTER is
+		external
+			"C"
+		end;
+
+	font_box_show_ok (value: POINTER) is
+		external
+			"C"
+		end;
+
+	font_box_show_cancel (value: POINTER) is
+		external
+			"C"
+		end;
+
+	font_box_show_apply (value: POINTER) is
+		external
+			"C"
+		end;
+
+	font_box_hide_ok (value: POINTER) is
+		external
+			"C"
+		end;
+
+	font_box_hide_cancel (value: POINTER) is
+		external
+			"C"
+		end;
+
+	font_box_hide_apply (value: POINTER) is
+		external
+			"C"
+		end;
+
+	font_box_current_font (value: POINTER): POINTER is
+		external
+			"C"
+		end;
+
+	font_box_ok_button (value: POINTER): POINTER is
+		external
+			"C"
+		end;
+
+	font_box_cancel_button (value: POINTER): POINTER is
+		external
+			"C"
+		end;
+
+	font_box_create (b_name, scr_obj: POINTER; is_dial: BOOLEAN): POINTER is
+		external
+			"C"
+		end;
+
+	font_box_form (value: POINTER): POINTER is
+		external
+			"C"
+		end;
+
+	free_data (p: POINTER) is
+		external
+			"C"
+		alias
+			"xfree"
+		end
+
+invariant
+
+	buttons_not_void: cancel_b /= Void and then ok_b /= Void and then apply_b /= Void
+
+end -- class FONT_BOX_DIALOG
 
 --|-----------------------------------------------------------------------
 --| Motif Eiffel Library: library of reusable components for ISE Eiffel 3.

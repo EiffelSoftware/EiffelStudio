@@ -14,6 +14,10 @@
 #ifndef _eif_constants_h_
 #define _eif_constants_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <signal.h>
 
 	/*------------*/
@@ -81,5 +85,8 @@ age */
 
 #define SIGSTACK	200		/* Size of FIFO stack for signal buffering */
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _eif_constants_h_ */

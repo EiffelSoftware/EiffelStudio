@@ -14,6 +14,10 @@
 #ifndef _eif_globals_h_
 #define _eif_globals_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "portable.h"
 #include "eif_constants.h"
 #include "eif_types.h"
@@ -356,5 +360,9 @@ extern char r_fstoretype;		/* File storage type use for retrieve */
 
 
 #endif	/* EIF_THREADS */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _eif_globals_h_ */

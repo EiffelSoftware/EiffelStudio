@@ -79,6 +79,85 @@ int length;
 
 	return length;		/* New string length */
 }
+/*
+ * Justifying strings
+ */
+
+public void str_ljustify(str, length, capacity)
+register1 char *str;
+int length, capacity;
+{
+	/* Remove all leading white spaces from `str'.
+	 * Pad the right side with spaces.
+	 */
+
+	register2 int i;
+	register3 char *s = str;
+
+	/* Find first non-space character starting from leftmost end */
+	for (i = 0; i < length; i++, s++)
+		if (!isspace(*s))
+			break;
+	
+	length -= i;		/* Remove space characters from length */
+
+	/* Shift remaining of string to the left */
+	for (s = str, str += i, i = 0;  i < length; i++)
+		*s++ = *str++;
+
+	for (;i < capacity; i++)
+		*s++ = ' ';
+}
+
+public void str_rjustify(str, length, capacity)
+register1 char *str;
+int length, capacity;
+{
+	/* Remove all trailing white spaces from `str'.
+	 * Pad the left side with spaces.
+	 */
+
+	register2 int i;
+	register3 char *s;
+	register4 char *r;
+
+	for (s = str+length-1, i = length; i > 0; i--, s--)
+		if (!isspace(*s))
+			break;
+	for (r = str+capacity-1; i > 0; i--)
+		*r-- = *s--;
+	for (;r >= str;)
+		*r-- = ' ';
+}
+
+public void str_cjustify(str, length, capacity)
+register1 char *str;
+int length, capacity;
+{
+	/* Remove all leading and trailing white spaces from `str'.
+	 * Pad both sides with spaces.
+	 */
+
+	register2 int i;
+	register3 char *s;
+	register4 char *r;
+	register5 int offset;
+
+	/* Set the right hand end to spaces */
+	str_ljustify (str_length, capacity);
+	/* Find first non space on right */
+	for (r = str + capacity -1, i = capacity; i > 0; i --, r--)
+		if (!isspace (r*))
+			break;
+	/* Offset calculation */
+	offset = (capacity - i) // 2
+	for (s = str + offset; i > offset; i --)
+		s*-- = r*--;
+    for (i > 0; i --)
+		s*-- = ' ';	
+
+}
+
 
 public int str_right(str, length)
 register1 char *str;
@@ -226,6 +305,19 @@ int n;
 
     for (i = 0; i < n; i++)
         *str++ = ' ';
+}
+
+public void str_fill(str, n, c)
+char *str;
+int n;
+char c;
+{
+	/* Fill 'str' with 'n'  `c' */
+
+	int i;
+
+    for (i = 0; i < n; i++)
+        *str++ = c;
 }
 
 public void str_tail(str, n, l)

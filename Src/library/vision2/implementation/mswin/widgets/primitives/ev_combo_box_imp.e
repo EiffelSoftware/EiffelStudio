@@ -646,12 +646,14 @@ feature {NONE} -- Implementation
 		do
 			Result := flag_set (style, Cbs_dropdownlist)
 		end
-
+		
 	internal_copy_list is
 			-- Take an empty list and initialize all the children with
 			-- the contents of `ev_children'.
 		local
 			original_index: INTEGER
+			current_item: EV_LIST_ITEM_IMP
+			image_list_set: BOOLEAN
 		do
 			original_index := ev_children.index
 			from
@@ -660,6 +662,14 @@ feature {NONE} -- Implementation
 				ev_children.after
 			loop
 				add_string (ev_children.item.wel_text)
+				current_item := ev_children.item
+				if current_item.has_pixmap then
+					if not image_list_set then
+						set_image_list (image_list)
+						image_list_set := True
+					end
+					set_pixmap_of_child (current_item, current_item.index, current_item.image_index)
+				end
 				ev_children.forth
 			end
 			ev_children.go_i_th (original_index)
@@ -682,7 +692,6 @@ feature {NONE} -- Implementation
 				select_item (1)
 			end
  		end
-
 
 	refresh_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Refresh current so that it take into account 
@@ -941,7 +950,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
-feature {EV_LIST_I} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COMBO_BOX
 

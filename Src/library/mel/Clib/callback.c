@@ -264,7 +264,7 @@ XtPointer value;
 unsigned long *length;
 int *format;
 {
-	if ((*value == NULL) && (*length == 0)) 
+	if ((value == NULL) && (*length == 0)) 
 		return; /* Return immediately if there is no value. */
 
 	(e_handle_requestor_callback) (

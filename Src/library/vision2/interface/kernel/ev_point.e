@@ -1,22 +1,20 @@
 indexing
-
 	description: "EiffelVision coordinate pair (x, y)";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-
-	EV_COORD
+	EV_POINT
 	
 inherit
-	GENERAL
+	ANY
 		rename
-			do_nothing as make_empty
+			do_nothing as make
 		end
 				
 creation
-	make_empty,
+	make,
 	set
 	
 feature -- Access
@@ -51,7 +49,7 @@ feature -- Debug
 		end
 	
 
-end -- class EV_COORD
+end -- class EV_POINT
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

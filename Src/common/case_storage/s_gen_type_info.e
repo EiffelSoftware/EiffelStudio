@@ -13,8 +13,7 @@ inherit
 		end
 
 creation
-
-	make
+	make, make_for_bench
 
 feature -- Properties
 

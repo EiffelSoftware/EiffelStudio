@@ -69,7 +69,7 @@ feature
 			-- Print register holding the source
 		do
 			if not (register_propagated and source.is_simple_expr)
-				and not register_for_metamorphosis
+				and register_for_metamorphosis
 			then
 				print_register;
 			else

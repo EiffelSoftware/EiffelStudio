@@ -12,7 +12,8 @@ inherit
 	SHARED_EIFFEL_PROJECT;
 	HOLE_COMMAND
 		redefine 
-			compatible, process_feature, process_class
+			compatible, process_feature, process_class,
+			process_class_syntax
 		end;
 
 	SYSTEM_CONSTANTS
@@ -77,6 +78,22 @@ feature -- Update
 			cmd_string := clone (command_shell_name);
 			if not cmd_string.empty then
 				replace_target(cmd_string, cs.file_name)
+				cmd_string.replace_substring_all ("$line", "1")
+				!! req;
+				req.execute (cmd_string);
+			end
+		end
+
+	process_class_syntax (syn: CL_SYNTAX_STONE) is
+			-- Process class syntax stone.
+			-- (from HOLE)
+		local
+			req: EXTERNAL_COMMAND_EXECUTOR;
+			cmd_string: STRING
+		do
+			cmd_string := clone (command_shell_name)
+			if not cmd_string.empty then
+				replace_target(cmd_string, syn.file_name)
 				cmd_string.replace_substring_all ("$line", "1")
 				!! req;
 				req.execute (cmd_string);

@@ -9,6 +9,7 @@ inherit
 			need_enlarging, enlarged,
 			make_byte_code, is_unsafe,
 			optimized_byte_node,
+			assigns_to,
 			calls_special_features, size,
 			inlined_byte_code, pre_inlined_code
 		end
@@ -83,6 +84,11 @@ end;
 		end;
 
 feature -- Array optimization
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result := target.assigns_to (i)
+		end
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN is
 		do

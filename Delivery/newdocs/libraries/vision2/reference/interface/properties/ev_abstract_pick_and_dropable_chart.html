@@ -1,0 +1,55 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_ABSTRACT_PICK_AND_DROPABLE Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable_chart.html">EV_ABSTRACT_PICK_AND_DROPABLE</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../../libraries/vision2/reference/interface/properties/index.html">vision2.interface.properties</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
+		<SPAN CLASS="estring">"Abstract interface for all pick and dropable classes.</SPAN>
+		<SPAN CLASS="estring">Descendants include: widgets, items and figures."</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"pick and drop, figure, widget, item"</SPAN>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified_chart.html">IDENTIFIED</A>
+
+<SPAN CLASS="ekeyword">Action sequences</SPAN>
+	<SPAN TITLE="`conforming_pick_actions' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_conforming_pick_actions">conforming_pick_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_notify_action_sequence_chart.html">EV_NOTIFY_ACTION_SEQUENCE</A></SPAN>
+	<SPAN TITLE="`drop_actions' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_drop_actions">drop_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pnd_action_sequence_chart.html">EV_PND_ACTION_SEQUENCE</A></SPAN>
+	<SPAN TITLE="`pick_actions' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pick_actions">pick_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pnd_start_action_sequence_chart.html">EV_PND_START_ACTION_SEQUENCE</A></SPAN>
+	<SPAN TITLE="`pointer_motion_actions' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pointer_motion_actions">pointer_motion_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pointer_motion_action_sequence_chart.html">EV_POINTER_MOTION_ACTION_SEQUENCE</A></SPAN>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`accept_cursor' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_accept_cursor">accept_cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_cursor_chart.html">EV_CURSOR</A></SPAN>
+	<SPAN TITLE="`deny_cursor' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_deny_cursor">deny_cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_cursor_chart.html">EV_CURSOR</A></SPAN>
+	<SPAN TITLE="`id_object' was declared in IDENTIFIED"><A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_id_object">id_object</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/support/identified_chart.html">IDENTIFIED</A></SPAN>
+	<SPAN TITLE="`is_equal' was declared in IDENTIFIED"><A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable_chart.html">EV_ABSTRACT_PICK_AND_DROPABLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`object_id' was declared in IDENTIFIED"><A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_object_id">object_id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`pebble' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`pebble_function' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble_function">pebble_function</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/function_chart.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`target_name' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_target_name">target_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`copy' was declared in IDENTIFIED"><A CLASS="efeature" HREF="../../../../../libraries/base/reference/support/identified.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable_chart.html">EV_ABSTRACT_PICK_AND_DROPABLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove_pebble' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_remove_pebble">remove_pebble</A></SPAN>
+	<SPAN TITLE="`set_accept_cursor' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_accept_cursor">set_accept_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_cursor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_cursor_chart.html">EV_CURSOR</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_deny_cursor' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_deny_cursor">set_deny_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_cursor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_cursor_chart.html">EV_CURSOR</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_pebble' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_pebble">set_pebble</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pebble</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_pebble">pebble</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_pebble_function' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_pebble_function">set_pebble_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_function</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/function_chart.html">FUNCTION</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_target_name' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_abstract_pick_and_dropable.html#f_set_target_name">set_target_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+
+</PRE>
+
+</BODY>
+
+</HTML>

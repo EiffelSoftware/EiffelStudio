@@ -1,0 +1,56 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_DYNAMIC_LIST_CURSOR Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Cursor for Eiffel Vision dynamic lists."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"container, list, cursor"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html">EV_DYNAMIC_LIST_CURSOR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">current_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">before_state</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">after_state</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create a cursor pointing to </SPAN><SPAN CLASS="equoted">current_item</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> When </SPAN><SPAN CLASS="equoted">current_item</SPAN><SPAN CLASS="ecomment"> Void, must be before or after.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">item_void_equals_before_or_after</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">current_item</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">before_state</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_or">or</A> <SPAN CLASS="elocal">after_state</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">item_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">current_item</SPAN>
+			<SPAN CLASS="etag">after_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_after">after</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">after_state</SPAN>
+			<SPAN CLASS="etag">before_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_before">before</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">before_state</SPAN>
+</A>
+	<A NAME="f_make_with_item"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_make_with_item">make_with_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create a cursor pointing to </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">an_item_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">an_item</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">item_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_item</SPAN>
+			<SPAN CLASS="etag">not_after</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_after">after</A>
+			<SPAN CLASS="etag">not_before</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_before">before</A>
+</A>
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">item_void_equals_before_or_after</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_before">before</A> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_or">or</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_dynamic_list_cursor.html#f_after">after</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">,</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_DYNAMIC_LIST_CURSOR</PRE>
+
+</BODY>
+
+</HTML>
+

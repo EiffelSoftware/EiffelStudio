@@ -1,0 +1,90 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_DRAWABLE_CONSTANTS Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Constants for use by and with </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_drawable.html">EV_DRAWABLE</A><SPAN CLASS="estring">."</SPAN>
+	<SPAN CLASS="eitag">note</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"With every drawing mode constant, a truth table is given.S means the source. This is the color of the pixel that is aboutto be applied. T means target. This is the color of the pixel thatis currently on the place where the new pixel is about to be set."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"figures, primitives, drawing, line, point, ellipse"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_drawable_constants.html">EV_DRAWABLE_CONSTANTS</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Constants</SPAN>
+
+	<A NAME="f_drawing_mode_and"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_drawable_constants.html#f_drawing_mode_and">Drawing_mode_and</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Drawing mode where bitwise AND is performed when a</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> pixel is drawn.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> T\S | 0 | 1 |</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> -------------</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;0 | 0 | 0 |</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> -------------</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;1 | 0 | 1 |</SPAN>
+
+	<A NAME="f_drawing_mode_copy"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_drawable_constants.html#f_drawing_mode_copy">Drawing_mode_copy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Normal drawing mode.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> T\S | 0 | 1 |</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> -------------</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;0 | 0 | 1 |</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> -------------</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;1 | 0 | 1 |</SPAN>
+
+	<A NAME="f_drawing_mode_invert"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_drawable_constants.html#f_drawing_mode_invert">Drawing_mode_invert</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Drawing mode where bits are inverted before drawn.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> T\S | 0 | 1 |</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> -------------</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;0 | 1 | 0 |</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> -------------</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;1 | 1 | 0 |</SPAN>
+
+	<A NAME="f_drawing_mode_or"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_drawable_constants.html#f_drawing_mode_or">Drawing_mode_or</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Drawing mode where bitwise OR is performed when a</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> pixel is drawn.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> T\S | 0 | 1 |</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> -------------</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;0 | 0 | 1 |</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> -------------</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;1 | 1 | 1 |</SPAN>
+
+	<A NAME="f_drawing_mode_xor"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_drawable_constants.html#f_drawing_mode_xor">Drawing_mode_xor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Drawing mode where bitwise XOR is performed when a</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> pixel is drawn.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> T\S | 0 | 1 |</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> -------------</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;0 | 0 | 1 |</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> -------------</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;1 | 1 | 0 |</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Contract support</SPAN>
+
+	<A NAME="f_valid_drawing_mode"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_drawable_constants.html#f_valid_drawing_mode">valid_drawing_mode</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_mode</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">a_mode</SPAN><SPAN CLASS="ecomment"> a valid drawing mode?</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_DRAWABLE_CONSTANTS</PRE>
+
+</BODY>
+
+</HTML>
+

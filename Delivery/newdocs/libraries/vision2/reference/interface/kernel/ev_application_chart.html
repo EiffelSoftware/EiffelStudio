@@ -1,0 +1,74 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_APPLICATION Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../../libraries/vision2/reference/interface/kernel/index.html">vision2.interface.kernel</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
+		<SPAN CLASS="estring">"Eiffel Vision Application.</SPAN>
+		<SPAN CLASS="estring">To start an Eiffel Vision application: create exactly oneEV_APPLICATION object and call `</SPAN><SPAN CLASS="equoted">launch</SPAN><SPAN CLASS="estring">' after setting up initialwindow(s)"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"application, accelerator, event loop"</SPAN>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any_chart.html">EV_ANY</A>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_application_action_sequences_chart.html">EV_APPLICATION_ACTION_SEQUENCES</A>
+
+<SPAN CLASS="ekeyword">Action sequences</SPAN>
+	<SPAN TITLE="`drop_actions' was declared in EV_APPLICATION_ACTION_SEQUENCES"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/events/ev_application_action_sequences.html#f_drop_actions">drop_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pnd_action_sequence_chart.html">EV_PND_ACTION_SEQUENCE</A></SPAN>
+	<SPAN TITLE="`idle_actions' was declared in EV_APPLICATION_ACTION_SEQUENCES"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/events/ev_application_action_sequences.html#f_idle_actions">idle_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_notify_action_sequence_chart.html">EV_NOTIFY_ACTION_SEQUENCE</A></SPAN>
+	<SPAN TITLE="`pick_actions' was declared in EV_APPLICATION_ACTION_SEQUENCES"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/events/ev_application_action_sequences.html#f_pick_actions">pick_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_pnd_action_sequence_chart.html">EV_PND_ACTION_SEQUENCE</A></SPAN>
+	<SPAN TITLE="`post_launch_actions' was declared in EV_APPLICATION_ACTION_SEQUENCES"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/events/ev_application_action_sequences.html#f_post_launch_actions">post_launch_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_notify_action_sequence_chart.html">EV_NOTIFY_ACTION_SEQUENCE</A></SPAN>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`alt_pressed' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_alt_pressed">alt_pressed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`clipboard' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_clipboard">clipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_clipboard_chart.html">EV_CLIPBOARD</A></SPAN>
+	<SPAN TITLE="`contextual_help_accelerator' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_contextual_help_accelerator">contextual_help_accelerator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html">EV_ACCELERATOR</A></SPAN>
+	<SPAN TITLE="`ctrl_pressed' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_ctrl_pressed">ctrl_pressed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`data' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`default_tooltip_delay' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_default_tooltip_delay">Default_tooltip_delay</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`focused_widget' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_focused_widget">focused_widget</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/ev_widget_chart.html">EV_WIDGET</A></SPAN>
+	<SPAN TITLE="`help_accelerator' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_help_accelerator">help_accelerator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html">EV_ACCELERATOR</A></SPAN>
+	<SPAN TITLE="`help_engine' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_help_engine">help_engine</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_help_engine_chart.html">EV_HELP_ENGINE</A></SPAN>
+	<SPAN TITLE="`is_destroyed' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_launched' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_is_launched">is_launched</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`locked_window' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_locked_window">locked_window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/containers/ev_window_chart.html">EV_WINDOW</A></SPAN>
+	<SPAN TITLE="`shift_pressed' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_shift_pressed">shift_pressed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`tooltip_delay' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_tooltip_delay">tooltip_delay</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`windows' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_windows">windows</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/structures/traversing/linear_chart.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/containers/ev_window_chart.html">EV_WINDOW</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`copy' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application_chart.html">EV_APPLICATION</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`default_create' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_default_create">default_create</A></SPAN>
+	<SPAN TITLE="`destroy' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_destroy">destroy</A></SPAN>
+	<SPAN TITLE="`display_help_for_widget' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_display_help_for_widget">display_help_for_widget</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_widget</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/ev_widget_chart.html">EV_WIDGET</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`do_once_on_idle' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_do_once_on_idle">do_once_on_idle</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_action</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`enable_contextual_help' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_enable_contextual_help">enable_contextual_help</A></SPAN>
+	<SPAN TITLE="`launch' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_launch">launch</A></SPAN>
+	<SPAN TITLE="`process_events' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_process_events">process_events</A></SPAN>
+	<SPAN TITLE="`set_contextual_help_accelerator' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_set_contextual_help_accelerator">set_contextual_help_accelerator</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_accelerator</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html">EV_ACCELERATOR</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_data' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_set_data">set_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_help_accelerator' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_set_help_accelerator">set_help_accelerator</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_accelerator</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html">EV_ACCELERATOR</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_help_engine' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_set_help_engine">set_help_engine</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_engine</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_help_engine_chart.html">EV_HELP_ENGINE</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_tooltip_delay' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_set_tooltip_delay">set_tooltip_delay</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_delay</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`sleep' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_application.html#f_sleep">sleep</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">msec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+
+<SPAN CLASS="ekeyword">Constraints</SPAN>
+	<SPAN CLASS="etag">tooltip delay not negative</SPAN>
+	<SPAN CLASS="etag">windows not void</SPAN>
+
+</PRE>
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,236 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_PIXMAP_PROJECTOR Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Projectors that make representations of `</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html#f_world">world</A><SPAN CLASS="estring">' on </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/primitives/ev_pixmap.html">EV_PIXMAP</A><SPAN CLASS="estring">."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"figures, project, pointer, drawing, points"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_pixmap_projector.html">EV_PIXMAP_PROJECTOR</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_pixmap_projector.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_world</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_world.html">EV_FIGURE_WORLD</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_pixmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/primitives/ev_pixmap.html">EV_PIXMAP</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create with </SPAN><SPAN CLASS="equoted">a_world</SPAN><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">a_pixmap</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_world_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_world</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">a_pixmap_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_pixmap</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_make_with_buffer"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_pixmap_projector.html#f_make_with_buffer">make_with_buffer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_world</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_world.html">EV_FIGURE_WORLD</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_buffer</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_pixmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/primitives/ev_pixmap.html">EV_PIXMAP</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create with </SPAN><SPAN CLASS="equoted">a_world</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">a_pixmap</SPAN><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">a_buffer</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_world_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_world</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">a_pixmap_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_pixmap</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">a_buffer_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_buffer</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_area"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_area">area</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_drawable.html">EV_DRAWABLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Area associated with </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_pixmap_projector.html#f_widget">widget</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Void</SPAN><SPAN CLASS="ecomment"> if no buffer is used.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_area_x"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_area_x">area_x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Coordinates of top-left corner of displayed part of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_drawable">drawable</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (0, 0) when no buffer is used.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_area_y">area_y</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_area_y"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_area_y">area_y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Coordinates of top-left corner of displayed part of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_drawable">drawable</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (0, 0) when no buffer is used.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_area_x">area_x</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_drawable"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_drawable">drawable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_drawable.html">EV_DRAWABLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Drawable surface (screen, drawing area or pixmap).</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_world"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html#f_world">world</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_world.html">EV_FIGURE_WORLD</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Figure-world that will be projected.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html">EV_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_buffer_used"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_buffer_used">buffer_used</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_drawable">drawable</A><SPAN CLASS="ecomment"> only a buffer area for </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_area">area</A><SPAN CLASS="ecomment">?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_set_world"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html#f_set_world">set_world</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_world</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_world.html">EV_FIGURE_WORLD</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html#f_world">world</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_world</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html">EV_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html">EV_PROJECTOR</A>
+			<SPAN CLASS="etag">a_world_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_world</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html">EV_PROJECTOR</A>
+			<SPAN CLASS="etag">world_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html#f_world">world</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_world</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_change_area_position"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_change_area_position">change_area_position</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_area">area</A><SPAN CLASS="ecomment"> has moved to (</SPAN><SPAN CLASS="equoted">a_x</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">a_y</SPAN><SPAN CLASS="ecomment">) of </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_drawable">drawable</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A>
+			<SPAN CLASS="etag">valid_position</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_x</SPAN> <A CLASS="esymbol" HREF="../../../../../libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="elocal">a_y</SPAN> <A CLASS="esymbol" HREF="../../../../../libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN>
+
+	<A NAME="f_clear_device"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_clear_device">clear_device</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Erase entire canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_full_project"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_full_project">full_project</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Project entire area.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_is_projecting"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projection_routines.html#f_is_projecting">is_projecting</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is a project currently being performed?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Then, do not start a new one.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projection_routines.html">EV_PROJECTION_ROUTINES</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_project"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_project">project</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make a standard projection of world on device.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_register_figure"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projection_routines.html#f_register_figure">register_figure</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_figure</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure.html">EV_FIGURE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_routine</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/procedure.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/tuple.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure.html">EV_FIGURE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_routine</SPAN><SPAN CLASS="ecomment"> for drawing of </SPAN><SPAN CLASS="equoted">a_figure</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projection_routines.html">EV_PROJECTION_ROUTINES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_update_rectangle"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_update_rectangle">update_rectangle</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">u</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_rectangle.html">EV_RECTANGLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Flush </SPAN><SPAN CLASS="equoted">u</SPAN><SPAN CLASS="ecomment"> on </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_area">area</A><SPAN CLASS="ecomment"> at (</SPAN><SPAN CLASS="equoted">a_x</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">a_y</SPAN><SPAN CLASS="ecomment">).</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html">EV_WIDGET_PROJECTOR</A>
+			<SPAN CLASS="etag">buffer_used</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_widget_projector.html#f_buffer_used">buffer_used</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
+
+	<A NAME="f_default_colors"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projection_routines.html#f_default_colors">default_colors</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_stock_colors.html">EV_STOCK_COLORS</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Once access to </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_stock_colors.html">EV_STOCK_COLORS</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projection_routines.html">EV_PROJECTION_ROUTINES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic Operations</SPAN>
+
+	<A NAME="f_draw_grid"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_grid">draw_grid</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw grid on canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">world.point</SPAN><SPAN CLASS="ecomment"> is the origin of the grid.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element Change</SPAN>
+
+	<A NAME="f_set_drawable"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_set_drawable">set_drawable</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_drawable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/properties/ev_drawable.html">EV_DRAWABLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_drawable">drawable</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_drawable</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A>
+			<SPAN CLASS="etag">a_drawable_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_drawable</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A>
+			<SPAN CLASS="etag">assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_drawable">drawable</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_drawable</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Figure drawing</SPAN>
+
+	<A NAME="f_draw_figure_arc"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_arc">draw_figure_arc</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">arc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_arc.html">EV_FIGURE_ARC</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">arc</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">arc_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">arc</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_dot"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_dot">draw_figure_dot</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dot</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_dot.html">EV_FIGURE_DOT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">dot</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">dot_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">dot</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_ellipse"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_ellipse">draw_figure_ellipse</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">ellipse</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_ellipse.html">EV_FIGURE_ELLIPSE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">ellipse</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">ellipse_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">ellipse</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_equilateral"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_equilateral">draw_figure_equilateral</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">eql</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_equilateral.html">EV_FIGURE_EQUILATERAL</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">eql</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">eql_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">eql</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_line"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_line">draw_figure_line</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">line</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_line.html">EV_FIGURE_LINE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">line</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">line_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">line</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_picture"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_picture">draw_figure_picture</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">picture</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_picture.html">EV_FIGURE_PICTURE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">picture</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">picture_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">picture</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_pie_slice"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_pie_slice">draw_figure_pie_slice</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">slice</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_pie_slice.html">EV_FIGURE_PIE_SLICE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">slice</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">slice_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">slice</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_polygon"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_polygon">draw_figure_polygon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">polygon</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_polygon.html">EV_FIGURE_POLYGON</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">polygon</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">polygon_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">polygon</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_polyline"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_polyline">draw_figure_polyline</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">line</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_polyline.html">EV_FIGURE_POLYLINE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">polyline</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">line_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">line</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_rectangle"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_rectangle">draw_figure_rectangle</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">rectangle</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_rectangle.html">EV_FIGURE_RECTANGLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">rectangle</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">rectangle_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">rectangle</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_rounded_rectangle"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_rounded_rectangle">draw_figure_rounded_rectangle</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_rounded_rectangle.html">EV_FIGURE_ROUNDED_RECTANGLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">f_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">f</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_star"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_star">draw_figure_star</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">star</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_star.html">EV_FIGURE_STAR</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">star</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">star_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">star</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_draw_figure_text"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_draw_figure_text">draw_figure_text</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">text_figure</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_text.html">EV_FIGURE_TEXT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Draw standard representation of </SPAN><SPAN CLASS="equoted">text_figure</SPAN><SPAN CLASS="ecomment"> to canvas.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawing_routines.html">EV_FIGURE_DRAWING_ROUTINES</A>
+			<SPAN CLASS="etag">text_figure_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">text_figure</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html">EV_PROJECTOR</A>
+	<SPAN CLASS="etag">world_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_projector.html#f_world">world</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html">EV_FIGURE_DRAWER</A>
+	<SPAN CLASS="etag">drawable_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_figure_drawer.html#f_drawable">drawable</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_PIXMAP_PROJECTOR</PRE>
+
+</BODY>
+
+</HTML>
+

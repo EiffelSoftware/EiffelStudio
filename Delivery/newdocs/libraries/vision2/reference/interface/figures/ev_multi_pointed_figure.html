@@ -1,0 +1,73 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_MULTI_POINTED_FIGURE Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Figures consisting of zero or more points."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notive at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"figure, points"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html">EV_MULTI_POINTED_FIGURE</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_i_th_point"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_i_th_point">i_th_point</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment">-th point of </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">i_within_bounds</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="../../../../../libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_and_then">and then</A> <SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="../../../../../libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_point_count">point_count</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">correct_entry</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_points">points</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/array.html#f_item">i_th</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_point_count"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_point_count">point_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Dynamic number of points in </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">correct</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_points">points</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">implies</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_points">points</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/structures/list/arrayed_list.html#f_count">count</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_extend_point"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_extend_point">extend_point</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_point</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">a_point</SPAN><SPAN CLASS="ecomment"> to end of </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_point_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_point</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">incremented</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_points">points</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/structures/list/arrayed_list.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_points">points</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/structures/list/arrayed_list.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../../../libraries/base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="etag">assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_points">points</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/array.html#f_item">i_th</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_points">points</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/structures/list/arrayed_list.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_point</SPAN>
+</A>
+	<A NAME="f_set_i_th_point"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_set_i_th_point">set_i_th_point</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_point</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_relative_point.html">EV_RELATIVE_POINT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_point</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment">-th point.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">i_within_bounds</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="../../../../../libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_and_then">and then</A> <SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="../../../../../libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_point_count">point_count</A>
+			<SPAN CLASS="etag">a_point_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_point</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_points">points</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/array.html#f_item">i_th</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_point</SPAN>
+</A>
+	<A NAME="f_set_point_count"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_set_point_count">set_point_count</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_count</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_point_count">point_count</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_count_non_negative</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_count</SPAN> <A CLASS="esymbol" HREF="../../../../../libraries/base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">point_count_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_multi_pointed_figure.html#f_point_count">point_count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_count</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_MULTI_POINTED_FIGURE</PRE>
+
+</BODY>
+
+</HTML>
+

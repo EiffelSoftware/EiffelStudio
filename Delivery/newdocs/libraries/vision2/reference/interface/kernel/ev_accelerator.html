@@ -1,0 +1,218 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_ACCELERATOR Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A keyboard accelerator defines `</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_actions">actions</A><SPAN CLASS="estring">' to be performed when a`</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_key">key</A><SPAN CLASS="estring">' is pressed. See `{</SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/containers/ev_titled_window.html">EV_TITLED_WINDOW</A><SPAN CLASS="estring">}.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/widgets/containers/ev_titled_window.html#f_accelerators">accelerators</A><SPAN CLASS="estring">'"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"accelerator, keyboard, key, shortcut, hotkey"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html">EV_ACCELERATOR</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_default_create"><SPAN CLASS="ekeyword">frozen</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_default_create">default_create</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Standard creation procedure.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A>
+			<SPAN CLASS="etag">is_coupled</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_implementation">implementation</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">is_initialized</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_initialized">is_initialized</A>
+			<SPAN CLASS="etag">default_create_called_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_default_create_called">default_create_called</A>
+			<SPAN CLASS="etag">is_in_default_state</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_in_default_state">is_in_default_state</A>
+</A>
+	<A NAME="f_make_with_key_combination"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_make_with_key_combination">make_with_key_combination</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html">EV_KEY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">require_control</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">require_alt</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">require_shift</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create with </SPAN><SPAN CLASS="equoted">a_key</SPAN><SPAN CLASS="ecomment"> and modifiers.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_key_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_alt_required"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_alt_required">alt_required</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Must the alt key be pressed to trigger </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_actions">actions</A><SPAN CLASS="ecomment">?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">bridge_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_implementation">implementation</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/implementation/implementation_interface/kernel/ev_accelerator_i.html#f_alt_required">alt_required</A>
+</A>
+	<A NAME="f_control_required"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_control_required">control_required</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Must the control key be pressed to trigger </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_actions">actions</A><SPAN CLASS="ecomment">?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">bridge_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_implementation">implementation</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/implementation/implementation_interface/kernel/ev_accelerator_i.html#f_control_required">control_required</A>
+</A>
+	<A NAME="f_data"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Arbitrary user data may be stored here.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_key"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_key">key</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html">EV_KEY</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Key that will trigger </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_actions">actions</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">bridge_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_implementation">implementation</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/implementation/implementation_interface/kernel/ev_accelerator_i.html#f_key">key</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_parented"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_parented">parented</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> have a parent?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> is parented if it has been placed in the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> accelerator list of a window.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> key combination of </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> can not be modified if True.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+</A>
+	<A NAME="f_shift_required"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_shift_required">shift_required</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Must the shift key be pressed to trigger </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_actions">actions</A><SPAN CLASS="ecomment">?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">bridge_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_implementation">implementation</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/implementation/implementation_interface/kernel/ev_accelerator_i.html#f_shift_required">shift_required</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_is_equal"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> have the same key combination as </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment">?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="etag">other_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="etag">symmetric</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">consistent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN>
+</A>
+	<A NAME="f_out"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_out">out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> String representation of key combination.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_disable_alt_required"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_disable_alt_required">disable_alt_required</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_alt_required">alt_required</A><SPAN CLASS="ecomment"> False.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+			<SPAN CLASS="etag">not_parented</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_parented">parented</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_alt_required</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_alt_required">alt_required</A>
+</A>
+	<A NAME="f_disable_control_required"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_disable_control_required">disable_control_required</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_control_required">control_required</A><SPAN CLASS="ecomment"> False.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+			<SPAN CLASS="etag">not_parented</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_parented">parented</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_control_required</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_control_required">control_required</A>
+</A>
+	<A NAME="f_disable_shift_required"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_disable_shift_required">disable_shift_required</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_shift_required">shift_required</A><SPAN CLASS="ecomment"> False.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+			<SPAN CLASS="etag">not_parented</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_parented">parented</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_shift_required</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_shift_required">shift_required</A>
+</A>
+	<A NAME="f_enable_alt_required"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_enable_alt_required">enable_alt_required</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_alt_required">alt_required</A><SPAN CLASS="ecomment"> True.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+			<SPAN CLASS="etag">not_parented</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_parented">parented</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">alt_required</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_alt_required">alt_required</A>
+</A>
+	<A NAME="f_enable_control_required"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_enable_control_required">enable_control_required</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_control_required">control_required</A><SPAN CLASS="ecomment"> True.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+			<SPAN CLASS="etag">not_parented</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_parented">parented</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">control_required</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_control_required">control_required</A>
+</A>
+	<A NAME="f_enable_shift_required"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_enable_shift_required">enable_shift_required</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_shift_required">shift_required</A><SPAN CLASS="ecomment"> True.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+			<SPAN CLASS="etag">not_parented</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_parented">parented</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">shift_required</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_shift_required">shift_required</A>
+</A>
+	<A NAME="f_set_key"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_set_key">set_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_key.html">EV_KEY</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">a_key</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_key">key</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+			<SPAN CLASS="etag">a_key_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_key</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">not_parented</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_parented">parented</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">a_key_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_key">key</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_key</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_set_data"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_set_data">set_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Assign </SPAN><SPAN CLASS="equoted">some_data</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A>
+			<SPAN CLASS="etag">data_assigned</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">some_data</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duplication</SPAN>
+
+	<A NAME="f_copy"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Update current object using fields of object attached</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">, so as to yield equal objects.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="etag">other_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">type_identity</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_same_type">same_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="etag">is_equal</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Command</SPAN>
+
+	<A NAME="f_destroy"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_destroy">destroy</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Destroy underlying native toolkit object.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Render </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> unusable.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A>
+			<SPAN CLASS="etag">is_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Events</SPAN>
+
+	<A NAME="f_actions"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_actions">actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_notify_action_sequence.html">EV_NOTIFY_ACTION_SEQUENCE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed when key combination is recieved by the window within which</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> is parented.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">not_destroyed</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../../libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status Report</SPAN>
+
+	<A NAME="f_is_destroyed"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> no longer usable?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A>
+			<SPAN CLASS="etag">bridge_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_implementation">implementation</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/implementation/implementation_interface/kernel/ev_any_i.html#f_is_destroyed">is_destroyed</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">key_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_key">key</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html">EV_ANY</A>
+	<SPAN CLASS="etag">is_initialized</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_initialized">is_initialized</A>
+	<SPAN CLASS="etag">is_coupled</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_implementation">implementation</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_accelerator.html#f_implementation">implementation</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/implementation/implementation_interface/kernel/ev_accelerator_i.html#f_interface">interface</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+	<SPAN CLASS="etag">default_create_called</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_default_create_called">default_create_called</A>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_ACCELERATOR</PRE>
+
+</BODY>
+
+</HTML>
+

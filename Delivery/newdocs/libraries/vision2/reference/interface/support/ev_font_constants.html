@@ -1,0 +1,69 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_FONT_CONSTANTS Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Facilities used by and for ues with </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_font.html">EV_FONT</A><SPAN CLASS="estring">."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"character, face, size, family, weight, shape, bold, italic"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html">EV_FONT_CONSTANTS</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Constants</SPAN>
+
+	<A NAME="f_family_modern"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_family_modern">Family_modern</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
+
+	<A NAME="f_family_roman"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_family_roman">Family_roman</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+
+	<A NAME="f_family_sans"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_family_sans">Family_sans</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+
+	<A NAME="f_family_screen"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_family_screen">Family_screen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+
+	<A NAME="f_family_typewriter"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_family_typewriter">Family_typewriter</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+
+	<A NAME="f_shape_italic"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_shape_italic">Shape_italic</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">11</SPAN></A>
+
+	<A NAME="f_shape_regular"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_shape_regular">Shape_regular</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">10</SPAN></A>
+
+	<A NAME="f_weight_black"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_weight_black">Weight_black</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">9</SPAN></A>
+
+	<A NAME="f_weight_bold"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_weight_bold">Weight_bold</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+
+	<A NAME="f_weight_regular"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_weight_regular">Weight_regular</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">7</SPAN></A>
+
+	<A NAME="f_weight_thin"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_weight_thin">Weight_thin</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Contract support</SPAN>
+
+	<A NAME="f_valid_family"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_valid_family">valid_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">a_family</SPAN><SPAN CLASS="ecomment"> a valid family value.</SPAN>
+</A>
+	<A NAME="f_valid_shape"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_valid_shape">valid_shape</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_shape</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">a_shape</SPAN><SPAN CLASS="ecomment"> a valid shape value.</SPAN>
+</A>
+	<A NAME="f_valid_weight"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_font_constants.html#f_valid_weight">valid_weight</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_weight</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">a_weight</SPAN><SPAN CLASS="ecomment"> a valid weight value.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_FONT_CONSTANTS</PRE>
+
+</BODY>
+
+</HTML>
+

@@ -1,0 +1,60 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_ARROWED_FIGURE Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Figure that is can have an arrowhead at its start or endpoint."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"figure, line, arrow"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html">EV_ARROWED_FIGURE</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_arrow_size"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_arrow_size">Arrow_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">10</SPAN></A>
+
+	<A NAME="f_is_end_arrow"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_is_end_arrow">is_end_arrow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does </SPAN><SPAN CLASS="equoted">point_b</SPAN><SPAN CLASS="ecomment"> have an arrow?</SPAN>
+</A>
+	<A NAME="f_is_start_arrow"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_is_start_arrow">is_start_arrow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does </SPAN><SPAN CLASS="equoted">point_a</SPAN><SPAN CLASS="ecomment"> have an arrow?</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_disable_end_arrow"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_disable_end_arrow">disable_end_arrow</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_is_end_arrow">is_end_arrow</A><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">False</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_disable_start_arrow"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_disable_start_arrow">disable_start_arrow</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_is_start_arrow">is_start_arrow</A><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">False</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_enable_end_arrow"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_enable_end_arrow">enable_end_arrow</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_is_end_arrow">is_end_arrow</A><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">True</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_enable_start_arrow"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_enable_start_arrow">enable_start_arrow</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_is_start_arrow">is_start_arrow</A><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">True</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_line_width"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/figures/ev_arrowed_figure.html#f_line_width">line_width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_ARROWED_FIGURE</PRE>
+
+</BODY>
+
+</HTML>
+

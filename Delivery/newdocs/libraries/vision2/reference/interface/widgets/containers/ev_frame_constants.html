@@ -1,0 +1,53 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+		
+<TITLE>EV_FRAME_CONSTANTS Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Constants for use by and with </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/vision2/reference/interface/widgets/containers/ev_frame.html">EV_FRAME</A><SPAN CLASS="estring">."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"frame, bevel, outline, raised, lowered"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../../../libraries/vision2/reference/interface/widgets/containers/ev_frame_constants.html">EV_FRAME_CONSTANTS</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Constants</SPAN>
+
+	<A NAME="f_ev_frame_etched_in"><A CLASS="efeature" HREF="../../../../../../libraries/vision2/reference/interface/widgets/containers/ev_frame_constants.html#f_ev_frame_etched_in">Ev_frame_etched_in</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">unique</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sunken groove.</SPAN>
+
+	<A NAME="f_ev_frame_etched_out"><A CLASS="efeature" HREF="../../../../../../libraries/vision2/reference/interface/widgets/containers/ev_frame_constants.html#f_ev_frame_etched_out">Ev_frame_etched_out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">unique</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Raised ridge.</SPAN>
+
+	<A NAME="f_ev_frame_lowered"><A CLASS="efeature" HREF="../../../../../../libraries/vision2/reference/interface/widgets/containers/ev_frame_constants.html#f_ev_frame_lowered">Ev_frame_lowered</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">unique</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Inward bevel.</SPAN>
+
+	<A NAME="f_ev_frame_raised"><A CLASS="efeature" HREF="../../../../../../libraries/vision2/reference/interface/widgets/containers/ev_frame_constants.html#f_ev_frame_raised">Ev_frame_raised</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">unique</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Outward bevel.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Contract support</SPAN>
+
+	<A NAME="f_valid_frame_border"><A CLASS="efeature" HREF="../../../../../../libraries/vision2/reference/interface/widgets/containers/ev_frame_constants.html#f_valid_frame_border">valid_frame_border</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">a_code</SPAN><SPAN CLASS="ecomment"> a valid code ?</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../../../libraries/base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../../libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>EV_FRAME_CONSTANTS</PRE>
+
+</BODY>
+
+</HTML>
+

@@ -298,6 +298,8 @@ feature -- Status setting
 			i: INTEGER
 			rl, rr: ARRAY_RESOURCE
 		do
+			debugging_window.window.lock_update
+
 			normal_left_layout := debugging_window.left_panel.save_to_resource
 			normal_right_layout := debugging_window.right_panel.save_to_resource
 			normal_splitter_position := debugging_window.panel.split_position
@@ -404,6 +406,8 @@ feature -- Status setting
 			end
 			
 			raised := True
+			
+			debugging_window.window.unlock_update
 		ensure
 			raised
 		end
@@ -416,6 +420,8 @@ feature -- Status setting
 			i: INTEGER
 			split: EV_SPLIT_AREA
 		do
+			debugging_window.window.lock_update
+
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
@@ -476,6 +482,8 @@ feature -- Status setting
 			debug ("DEBUGGER_INTERFACE")
 				io.putstring ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
+
+			debugging_window.window.unlock_update
 		ensure
 			not raised
 		end

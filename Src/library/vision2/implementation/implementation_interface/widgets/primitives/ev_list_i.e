@@ -50,30 +50,7 @@ feature -- Access
 			-- should use `selected_item' rather than 
 			-- `selected_items' for a single selection list
 		require
-		local
-			litem: EV_LIST_ITEM
-			list: ARRAYED_LIST [EV_LIST_ITEM]
-		do
-			--|FIXME re-implement this feature
-			create Result.make
-			--if multiple_selection_enabled then
-			--	from
-			--		list := ev_children
-			--		list.start
-			--	until
-			--		list.after
-			--	loop
-			--		if list.item.is_selected then
-			--			litem ?= (list.item.interface)
-			--			if litem /= Void then 
-			--				Result.extend (litem)
-			--			end
-			--		end
-			--		list.forth
-			--	end
-			--else
-			--	Result.extend (selected_item)
-			--end
+		deferred
 		end
 
 feature -- Status report
@@ -156,6 +133,9 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/02/29 00:02:22  king
+--| Made selected items deferred
+--|
 --| Revision 1.36  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

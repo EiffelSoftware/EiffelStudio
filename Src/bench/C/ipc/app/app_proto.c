@@ -183,9 +183,9 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled */
 #ifdef EIF_WIN32
-		dynamic_evaluation(sp, arg_1, arg_2, arg_3, 0);
+		dynamic_evaluation(sp, arg_1, arg_2, arg_3 & 1, arg_3 >> 1);
 #else
-		dynamic_evaluation(writefd (sp), arg_1, arg_2, arg_3, 0);
+		dynamic_evaluation(writefd (sp), arg_1, arg_2, arg_3 & 1, arg_3 >> 1);
 #endif
 		break;
 	case MODIFY_LOCAL:				/* modify the value of a local variable, an argument or the result */

@@ -278,7 +278,7 @@ feature {NONE} -- IL code generation
 				-- we need to perform a dynamic dispatch when we handle an Eiffel class.
 			l_dotnet_label := il_generator.create_label
 			l_end_label := il_generator.create_label
-			il_generator.generate_is_instance_of (any_type)
+			il_generator.generate_is_true_instance_of (any_type)
 			il_generator.duplicate_top
 			il_generator.branch_on_false (l_dotnet_label)
 			generate_il_normal_call (written_type, True)
@@ -358,7 +358,7 @@ feature {NONE} -- IL code generation
 			generate_call_on_void_target (target_type, True)
 			
 			l_io_label := il_generator.create_label
-			il_generator.generate_is_instance_of (any_type)
+			il_generator.generate_is_true_instance_of (any_type)
 			il_generator.duplicate_top
 			il_generator.branch_on_true (l_io_label)
 			il_generator.pop;
@@ -379,7 +379,7 @@ feature {NONE} -- IL code generation
 			generate_call_on_void_target (target_type, True)
 			
 			l_oe_label := il_generator.create_label
-			il_generator.generate_is_instance_of (any_type)
+			il_generator.generate_is_true_instance_of (any_type)
 			il_generator.duplicate_top
 			il_generator.branch_on_true (l_oe_label)
 			il_generator.pop;
@@ -408,7 +408,7 @@ feature {NONE} -- IL code generation
 					-- a dynamic dispatch when we handle an Eiffel class.
 				l_out_label := il_generator.create_label
 				l_end_label := il_generator.create_label
-				il_generator.generate_is_instance_of (any_type)
+				il_generator.generate_is_true_instance_of (any_type)
 				il_generator.duplicate_top
 				il_generator.branch_on_false (l_out_label)
 				generate_il_normal_call (written_type, True)

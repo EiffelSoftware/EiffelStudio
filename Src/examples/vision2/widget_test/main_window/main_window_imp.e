@@ -200,6 +200,7 @@ feature {NONE}-- Initialization
 			documentation_button.disable_sensitive
 			documentation_button.set_text ("Documentation")
 			documentation_button.set_tooltip ("Display flatshort of currently selected widget class")
+			widget_selector_parent.set_minimum_width (150)
 			main_box.disable_item_expand (l_label_1)
 			l_label_1.align_text_left
 			main_notebook.set_item_text (main_notebook_properties_item, "Properties")

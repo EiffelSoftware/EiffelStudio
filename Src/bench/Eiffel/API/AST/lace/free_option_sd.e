@@ -49,7 +49,7 @@ feature {NONE}
 
 	dead_code, exception_stack_managed, collect, precompilation,
 	code_replication, fail_on_rescue, check_vape,
-	array_optimization: INTEGER is UNIQUE;
+	array_optimization, inlining: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
@@ -57,6 +57,7 @@ feature {NONE}
 			!!Result.make (6);
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (array_optimization, "array_optimization");
+			Result.force (inlining, "inlining");
 			Result.force (check_vape, "check_vape");
 			Result.force (collect, "collect");
 			Result.force (exception_stack_managed, "exception_stack_managed");
@@ -103,6 +104,16 @@ feature
 					System.set_array_optimization_on (False)
 				elseif value.is_yes then
 					System.set_array_optimization_on (True)
+				else
+					error_found := True;
+				end;
+			when inlining then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
+					System.set_inlining_on (False)
+				elseif value.is_yes then
+					System.set_inlining_on (True)
 				else
 					error_found := True;
 				end;

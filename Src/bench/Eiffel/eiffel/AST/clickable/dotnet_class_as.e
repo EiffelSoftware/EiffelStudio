@@ -448,7 +448,7 @@ feature {NONE} -- Formatting
 				a_ctxt.class_i.compiled_class.generics /= Void
 			then
 				generics := a_ctxt.class_i.compiled_class.generics
-				generics.simple_format (a_ctxt)
+				a_ctxt.format_ast (generics)
 			end
 		end
 

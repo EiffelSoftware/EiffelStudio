@@ -8,8 +8,6 @@ class
 	EXTERNAL_TYPE_AS
 
 inherit
-	AST_EIFFEL
-	
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all

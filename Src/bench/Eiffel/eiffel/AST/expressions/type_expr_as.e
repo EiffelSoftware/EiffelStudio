@@ -28,11 +28,11 @@ inherit
 		end
 
 create
-	make
+	initialize
 	
 feature {NONE} -- Initialize
 
-	make (t: like type) is
+	initialize (t: like type) is
 			-- New instance of TYPE_EXPR_AS initialized with `t'.
 		require
 			t_not_void: t /= Void
@@ -52,9 +52,22 @@ feature -- Visitor
 	process (v: AST_VISITOR) is
 			-- 
 		do
-			
 		end
 		
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := type.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := type.end_location
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -78,6 +91,7 @@ feature -- Type checking
 				l_vtug := l_type.error_generics
 				l_vtug.set_class (context.current_class)
 				l_vtug.set_feature (context.current_feature)
+				l_vtug.set_location (type.start_location)
 				error_handler.insert_error (l_vtug)
 			else
 				l_type.reset_constraint_error_list
@@ -87,6 +101,7 @@ feature -- Type checking
 					l_vtcg3.set_class (context.current_class)
 					l_vtcg3.set_feature (context.current_feature)
 					l_vtcg3.set_error_list (l_type.constraint_error_list)
+					l_vtcg3.set_location (type.start_location)
 					error_handler.insert_error (l_vtcg3)
 				end
 			end
@@ -113,16 +128,6 @@ feature -- Code generation
 			create {TYPE_EXPR_B} Result.make (l_type_type)
 		end
 
-feature {AST_EIFFEL, COMPILER_EXPORTER} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconsitute text according to context.
-		do
-			ctxt.put_text_item (ti_l_curly)
-			type.format (ctxt)
-			ctxt.put_text_item (ti_r_curly)
-		end
-		
 invariant
 	type_not_void: type /= Void
 

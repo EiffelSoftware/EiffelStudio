@@ -12,6 +12,9 @@ inherit
 			is_else
 		end
 
+create
+	initialize
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is

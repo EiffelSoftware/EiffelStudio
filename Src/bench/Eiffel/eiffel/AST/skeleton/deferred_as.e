@@ -12,13 +12,10 @@ inherit
 			is_equivalent, byte_node
 		end
 
-feature {AST_FACTORY} -- Initialization
+	LEAF_AS
 
-	initialize is
-			-- Create a new DEFERRED AST node.
-		do
-			-- Do nothing.
-		end
+create
+	make_with_location
 
 feature -- Visitor
 
@@ -61,14 +58,5 @@ feature -- byte code
 		do
 			create Result
 		end
-
-feature {AST_EIFFEL} -- Output
-
-    simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-        do
-            ctxt.put_text_item (ti_Deferred_keyword)
-			ctxt.put_new_line
-        end
 
 end -- class DEFERRED_AS

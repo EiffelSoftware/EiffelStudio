@@ -8,17 +8,13 @@ class
 
 inherit
 	EIFFEL_LIST [INDEX_AS]
-		export
-			{INDEXING_CLAUSE_AS} all
-			{ANY} is_empty, extendible
 		redefine
-			process,
-			make, extend
+			process, make
 		end
 
 create
 	make
-
+	
 create {INDEXING_CLAUSE_AS}
 	make_filled
 
@@ -207,13 +203,14 @@ feature -- Access
 
 feature -- Element change
 
-	extend (v: like item) is
+	update_lookup (v: like item) is
 			-- Add `v' to end.
 			-- Do not move cursor.
+		require
+			v_not_void: v /= Void
 		local
 			l_index: like item
 		do
-			Precursor {EIFFEL_LIST} (v)
 			if v.tag /= Void then
 				lookup_table.search (v.tag)
 				if lookup_table.found then
@@ -221,14 +218,14 @@ feature -- Element change
 					l_index := lookup_table.found_item
 					l_index.index_list.append (v.index_list)
 				else
-					create l_index.initialize (v.tag, v.index_list.twin, v.location.twin)
+					create l_index.initialize (v.tag, v.index_list.twin)
 					lookup_table.put (l_index, l_index.tag)
 				end
 				if obsolete_tags.has (v.tag) then
 					Error_handler.insert_warning (
 						create {OBSOLETE_INDEXING_TAG}.make (
 							System.current_class, v.tag,
-							obsolete_tags.item (v.tag), v.location))
+							obsolete_tags.item (v.tag), v.start_location))
 				end
 			end
 		end

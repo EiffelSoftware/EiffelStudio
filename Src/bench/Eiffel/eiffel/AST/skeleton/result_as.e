@@ -11,18 +11,15 @@ inherit
 	ACCESS_AS
 		redefine
 			type_check, byte_node,
-			is_equivalent, format
+			is_equivalent
 		end
+		
+	LEAF_AS
 
 	SHARED_TYPES
 
-feature {AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new RESULT AST node.
-		do
-			-- Do nothing.
-		end
+create
+	make_with_location
 
 feature -- Visitor
 
@@ -35,6 +32,11 @@ feature -- Visitor
 feature -- Properties
 
 	access_name: STRING is "Result"
+
+	parameters: EIFFEL_LIST [EXPR_AS] is
+			-- No parameters for Result
+		do
+		end
 
 feature -- Comparison
 
@@ -64,6 +66,7 @@ feature -- Type check, byte code and dead code removal
 			if error_found then
 				create vrle3
 				context.init_error (vrle3)
+				vrle3.set_location (start_location)
 				Error_handler.insert_error (vrle3)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -72,6 +75,7 @@ feature -- Type check, byte code and dead code removal
 						-- Result entity in precondition
 					create veen2a
 					context.init_error (veen2a)
+					veen2a.set_location (start_location)
 					Error_handler.insert_error (veen2a)
 				end
 
@@ -91,22 +95,6 @@ feature -- Type check, byte code and dead code removal
 			access_line := context.access_line
 			Result ?= access_line.access
 			access_line.forth
-		end
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.prepare_for_result
-			ctxt.put_text_item (ti_Result)
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.prepare_for_result
-			ctxt.put_text_item (ti_Result)
 		end
 
 end -- class RESULT_AS

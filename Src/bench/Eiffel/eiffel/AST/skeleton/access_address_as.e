@@ -8,8 +8,7 @@ class ACCESS_ADDRESS_AS
 inherit
 	ACCESS_ID_AS
 		redefine
-			process,
-			feature_access_type, format, simple_format
+			process, feature_access_type
 		end
 
 	SHARED_TYPES
@@ -62,12 +61,14 @@ feature -- Type check
 			if not valid_feature (a_feature) then
 				create veen
 				context.init_error (veen)
+				veen.set_location (feature_name)
 				veen.set_identifier (feature_name)
 				Error_handler.insert_error (veen)
 			else
 				if a_feature.is_constant then
 					create vzaa1
 					context.init_error (vzaa1)
+					vzaa1.set_location (feature_name)
 					vzaa1.set_address_name (feature_name)
 					Error_handler.insert_error (vzaa1)
 				else
@@ -90,32 +91,6 @@ feature -- Type check
 				end
 			end
 			Error_handler.checksum
-		end
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin
-			ctxt.new_expression
-			ctxt.prepare_for_feature (feature_name, Void)
-			ctxt.put_text_item_without_tabs (ti_dollar)
-			ctxt.put_current_feature
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-feature {NONE} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.new_expression
-			ctxt.prepare_for_feature (feature_name, Void)
-			ctxt.put_text_item_without_tabs (ti_dollar)
-			ctxt.put_current_feature
 		end
 
 end -- class ACCESS_ADDRESS_AS

@@ -11,14 +11,17 @@ class INTERVAL_AS
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent, byte_node, type_check
+			is_equivalent, byte_node, type_check, start_location, end_location
 		end
 
 	SHARED_INSPECT
 
 	SHARED_TYPES
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (l: like lower; u: like upper) is
 			-- Create a new INTERVAL AST node.
@@ -48,6 +51,24 @@ feature -- Attributes
 	upper: ATOMIC_AS
 			-- Upper bound
 			-- Void if constant rather than interval
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := lower.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if upper /= Void then
+				Result := upper.end_location
+			else
+				Result := lower.end_location
+			end
+		end
 			
 feature -- Comparison
 
@@ -77,11 +98,13 @@ feature -- Type check and byte code
 					create vomb2
 					context.init_error (vomb2)
 					vomb2.set_type (Inspect_control.type)
+					vomb2.set_location (id_as)
 					Error_handler.insert_error (vomb2)
 				elseif not context.current_class.feature_table.has (id_as) then
 					create veen
 					context.init_error (veen)
 					veen.set_identifier (id_as)
+					veen.set_location (id_as)
 					Error_handler.insert_error (veen)
 				end
 			else
@@ -95,6 +118,7 @@ feature -- Type check and byte code
 						context.init_error (vomb6)
 						vomb6.set_unique_feature (static.associated_feature)
 						vomb6.set_written_class (static.associated_class)
+						vomb6.set_location (static.start_location)
 						Error_handler.insert_error (vomb6)
 					else
 							-- Since we do not need the CONSTANT_B object,
@@ -126,6 +150,7 @@ feature -- Type check and byte code
 				create vomb2
 				context.init_error (vomb2)
 				vomb2.set_type (Inspect_control.type)
+				vomb2.set_location (start_location)
 				Error_handler.insert_error (vomb2)
 			end
 		end
@@ -158,32 +183,23 @@ feature -- Access
 						and then (upper = Void or else upper.is_valid_inspect_value (type))
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.format_ast (lower)
-			if upper /= Void then
-				ctxt.put_text_item_without_tabs (ti_Dotdot)
-				ctxt.format_ast (upper)
-			end
-		end
-
 feature {INTERVAL_AS} -- Replication
 
 	set_lower (l: like lower) is
 			-- Set `lower' to `l'.
+		require
+			l_not_void: l /= Void
 		do
 			lower := l
 		end
 
 	set_upper (u: like upper) is
 			-- Set `upper' to `u'.
-		require
-			valid_arg: u /= Void
 		do
 			upper := u
 		end
+
+invariant
+	lower_not_void: lower /= Void
 
 end -- class INTERVAL_AS

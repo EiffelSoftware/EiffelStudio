@@ -9,7 +9,7 @@ class INVARIANT_AS
 inherit
 	AST_EIFFEL
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node
 		end
 
 	IDABLE
@@ -18,7 +18,10 @@ inherit
 			set_id as set_class_id
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (a: like assertion_list; oms_count: like once_manifest_string_count) is
 			-- Create a new INVARIANT AST node.
@@ -47,6 +50,28 @@ feature -- Attribute
 
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if assertion_list /= Void then
+				Result := assertion_list.start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if assertion_list /= Void then
+				Result := assertion_list.end_location
+			else
+				Result := null_location
+			end
+		end
 
 feature -- Comparison
 
@@ -85,98 +110,6 @@ feature -- Type check and byte code
 			end
 		end
 	
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.continue_on_failure
-			ctxt.set_new_line_between_tokens
-			if assertion_list /= Void then
-				format_assertions (ctxt)
-			end
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-	format_assertions (ctxt: FORMAT_CONTEXT) is
-		local
-			i, l_count: INTEGER
-			not_first: BOOLEAN
-		do
-			from
-				ctxt.begin
-				i := 1
-				l_count := assertion_list.count
-			until
-				i > l_count
-			loop
-				ctxt.begin
-				if not_first then
-					ctxt.put_separator
-				end
-				ctxt.new_expression
-				assertion_list.i_th (i).format(ctxt)
-				if ctxt.last_was_printed then
-					not_first := True
-					ctxt.commit
-				else
-					ctxt.rollback
-				end
-				i := i + 1
-			end
-			if not_first then
-				ctxt.exdent
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_Invariant_keyword)
-			ctxt.indent
-			ctxt.put_new_line
-			ctxt.set_new_line_between_tokens
-			if assertion_list /= Void then
-				simple_format_assertions (ctxt)
-				ctxt.put_new_line
-				ctxt.put_new_line
-			end
-			ctxt.exdent
-		end
-
-	simple_format_assertions (ctxt: FORMAT_CONTEXT) is
-			-- Format assertions of this invariant.
-		local
-			i, l_count: INTEGER
-			not_first: BOOLEAN
-		do
-			ctxt.begin
-			from
-				i := 1
-				l_count := assertion_list.count
-			until
-				i > l_count
-			loop
-				if not_first then
-					ctxt.put_separator
-				end
-				ctxt.new_expression
-				assertion_list.i_th(i).simple_format(ctxt)
-				not_first := True
-				i := i + 1
-			end
-			ctxt.commit
-		end
-
 feature {COMPILER_EXPORTER}
 
 	set_assertion_list (a: like assertion_list) is

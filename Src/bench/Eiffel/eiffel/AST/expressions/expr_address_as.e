@@ -11,12 +11,15 @@ class
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node
 		end
 
 	SHARED_TYPES
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (e: like expr) is
 			-- Create a new EXPR_ADDRESS AST node.
@@ -25,7 +28,8 @@ feature {AST_FACTORY} -- Initialization
 		do
 			expr := e
 			if not is_allowed then
-				Error_handler.make_syntax_error
+				error_handler.insert_error (create {SYNTAX_ERROR}.init)
+				error_handler.raise_error
 			end
 		ensure
 			expr_set: expr = e
@@ -43,6 +47,20 @@ feature -- Properties
 
 	expr: EXPR_AS
 			-- Expression to address
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := expr.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := expr.end_location
+		end
 
 feature -- Comparison
 
@@ -69,29 +87,6 @@ feature -- Type check, byte code and dead code removal
 			Result.set_expr (expr.byte_node)
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin
-			simple_format (ctxt)
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_Dollar)
-			ctxt.put_text_item_without_tabs (ti_L_parenthesis)
-			ctxt.format_ast (expr)
-			ctxt.put_text_item_without_tabs (ti_R_parenthesis)
-		end
-
 feature {NONE} -- Implementation
 
 	is_allowed: BOOLEAN is
@@ -99,5 +94,8 @@ feature {NONE} -- Implementation
 		do
 			Result := System.address_expression_allowed
 		end
+		
+invariant
+	expr_not_void: expr /= Void
 
 end -- class EXPR_ADDRESS_AS

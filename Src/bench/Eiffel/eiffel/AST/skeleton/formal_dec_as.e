@@ -11,16 +11,23 @@ inherit
 		rename
 			initialize as initialize_formal_as
 		redefine
-			process,
-			is_equivalent, format, simple_format
+			process, is_equivalent
 		end
 
 	SHARED_SERVER
 		export
 			{NONE} all
 		end
+		
+	SHARED_TEXT_ITEMS
+		export
+			{NONE} all
+		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (f: FORMAL_AS; c: like constraint; cf: like creation_feature_list) is
 			-- Create a new FORMAL_DECLARATION AST node.
@@ -220,7 +227,6 @@ feature -- creation feature check
 			associated_class: CLASS_C
 			class_i: CLASS_I
 			cluster: CLUSTER_I
-			matched: BOOLEAN
 			feature_name: STRING
 			feat_table: FEATURE_TABLE
 			class_type: CLASS_TYPE_AS
@@ -250,28 +256,25 @@ feature -- creation feature check
 					creation_feature_list.start
 					associated_class := class_i.compiled_class	
 					feat_table := associated_class.feature_table
-					matched := True
 				until
-					not matched or else creation_feature_list.after	
+					creation_feature_list.after	
 				loop
 					feature_name := creation_feature_list.item.internal_name
 					feat_table.search (feature_name)
-					if feat_table.found then
-						matched := is_valid_creation_routine (feat_table.found_item)
-					else
-						matched := False
+					if
+						not feat_table.found or else
+						not is_valid_creation_routine (feat_table.found_item)
+					then
+							-- The feature listed in the creation constraint have not been
+							-- declared in the constraint class.
+						create vtcg6
+						vtcg6.set_class (current_class)
+						vtcg6.set_constraint_class (associated_class)
+						vtcg6.set_feature_name (feature_name)
+						vtcg6.set_location (creation_feature_list.item.start_location)
+						Error_handler.insert_error (vtcg6)
 					end
 					creation_feature_list.forth
-				end
-
-				if not matched then
-						-- The feature listed in the creation constraint have not been
-						-- declared in the constraint class.
-					create vtcg6
-					vtcg6.set_class (current_class)
-					vtcg6.set_constraint_class (associated_class)
-					vtcg6.set_feature_name (feature_name)
-					Error_handler.insert_error (vtcg6)
 				end
 			end
 		end
@@ -355,107 +358,6 @@ feature -- Output
 					end
 					st.add_space
 					st.add (ti_End_keyword)
-				end
-			end
-		end
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			s: STRING
-			feature_name: FEAT_NAME_ID_AS
-			l_a: LOCAL_FEAT_ADAPTATION
-			new_type: TYPE_A
-		do
-			l_a := ctxt.local_adapt
-			if l_a /= Void then
-				new_type := l_a.adapted_type (Current)
-			end
-
-			if new_type = Void then
-				if is_reference then
-					ctxt.put_text_item (ti_reference_keyword)
-					ctxt.put_space
-				elseif is_expanded then
-					ctxt.put_text_item (ti_expanded_keyword)
-					ctxt.put_space
-				end
-				s := name.as_upper
-				ctxt.put_text_item (create {GENERIC_TEXT}.make (s))
-				if has_constraint then
-					ctxt.put_space
-					ctxt.put_text_item_without_tabs (ti_Constraint)
-					ctxt.put_space
-					constraint.format (ctxt)
-					if has_creation_constraint then
-						from
-							creation_feature_list.start
-							ctxt.put_space
-							ctxt.put_text_item (ti_Create_keyword)
-							ctxt.put_space
-							feature_name ?= creation_feature_list.item
-							ctxt.put_string (feature_name.feature_name)
-							creation_feature_list.forth
-						until
-							creation_feature_list.after
-						loop
-							ctxt.put_text_item (ti_Comma)
-							ctxt.put_space
-							feature_name ?= creation_feature_list.item
-							ctxt.put_string (feature_name.feature_name)
-							creation_feature_list.forth
-						end
-						ctxt.put_space
-						ctxt.put_text_item (ti_End_keyword)
-					end
-				end
-			else
-				new_type.format (ctxt)
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			s: STRING
-			feature_name: FEAT_NAME_ID_AS
-		do
-			if is_reference then
-				ctxt.put_text_item (ti_reference_keyword)
-				ctxt.put_space
-			elseif is_expanded then
-				ctxt.put_text_item (ti_expanded_keyword)
-				ctxt.put_space
-			end
-			s := name.as_upper
-			ctxt.put_string (s)
-			if has_constraint then
-				ctxt.put_space
-				ctxt.put_text_item_without_tabs (ti_Constraint)
-				ctxt.put_space
-				constraint.simple_format (ctxt)
-				if has_creation_constraint then
-					from
-						creation_feature_list.start
-						ctxt.put_space
-						ctxt.put_text_item (ti_Create_keyword)
-						ctxt.put_space
-						feature_name ?= creation_feature_list.item
-						ctxt.put_string (feature_name.feature_name)
-						creation_feature_list.forth
-					until
-						creation_feature_list.after
-					loop
-						ctxt.put_text_item (ti_Comma)
-						ctxt.put_space
-						feature_name ?= creation_feature_list.item
-						ctxt.put_string (feature_name.feature_name)
-						creation_feature_list.forth
-					end
-					ctxt.put_space
-					ctxt.put_text_item (ti_End_keyword)
 				end
 			end
 		end

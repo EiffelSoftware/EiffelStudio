@@ -1,7 +1,7 @@
 class ARRAY_AS
 
 inherit
-	ATOMIC_AS
+	EXPR_AS
 		redefine
 			type_check, byte_node, is_equivalent
 		end
@@ -11,7 +11,10 @@ inherit
 			{NONE} all
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (exp: like expressions) is
 			-- Create a new Manifest ARRAY AST node.
@@ -35,6 +38,20 @@ feature -- Attributes
 
 	expressions: EIFFEL_LIST [EXPR_AS]
 			-- Expression list symbolizing the manifest array
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := expressions.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := expressions.end_location
+		end
 
 feature -- Comparison
 
@@ -168,16 +185,6 @@ feature -- Type check, byte code, dead code removal and formatter
 
 feature {AST_EIFFEL} -- Output
 
-	simple_format (ctxt : FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_l_array)
-			ctxt.set_separator (ti_comma)
-			ctxt.set_space_between_tokens
-			ctxt.format_ast (expressions)
-			ctxt.put_text_item_without_tabs (ti_r_array)
-		end
-
 	string_value: STRING is ""
 
 feature {ARRAY_AS}	-- Replication
@@ -193,5 +200,8 @@ feature {NONE} -- Implementation
 
 	expression_types: ARRAY [TYPE_A]
 			-- Type of expressions
+
+invariant
+	expressions_not_void: expressions /= Void
 
 end -- class ARRAY_AS

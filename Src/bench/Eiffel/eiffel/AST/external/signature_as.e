@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (args: EIFFEL_LIST [EXTERNAL_TYPE_AS]; ret: EXTERNAL_TYPE_AS) is
+	initialize (args: like arguments; ret: EXTERNAL_TYPE_AS) is
 			-- Create SIGNATURE_AS node
 		do
 			arguments := args
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	arguments: EIFFEL_LIST [EXTERNAL_TYPE_AS]
+	arguments: ARRAYED_LIST [EXTERNAL_TYPE_AS]
 			-- Arguments of external.
 
 	return_type: EXTERNAL_TYPE_AS

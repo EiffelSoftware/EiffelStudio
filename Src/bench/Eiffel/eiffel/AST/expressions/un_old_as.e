@@ -8,20 +8,14 @@ class UN_OLD_AS
 inherit
 	UNARY_AS
 		redefine
-			simple_format,
-			type_check, byte_node, format,
+			type_check, byte_node,
 			prefix_feature_name
 		end
 
 	SHARED_TYPES
 
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			--v.process_un_old_as (Current)
-		end
+create
+	initialize
 
 feature -- Properties
 
@@ -31,6 +25,14 @@ feature -- Properties
 		end
 
 	operator_name: STRING is "old"
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_un_old_as (Current)
+		end
 
 feature -- Type check, byte code and dead code removal
 
@@ -46,6 +48,7 @@ feature -- Type check, byte code and dead code removal
 					-- postcondition
 				create vaol1
 				context.init_error (vaol1)
+				vaol1.set_location (expr.start_location)
 				Error_handler.insert_error (vaol1)
 				Error_handler.raise_error
 			end
@@ -71,6 +74,7 @@ feature -- Type check, byte code and dead code removal
 					-- Not an expression
 				create vaol2
 				context.init_error (vaol2)
+				vaol2.set_location (expr.end_location)
 				Error_handler.insert_error (vaol2)
 			end
 		end
@@ -84,30 +88,6 @@ feature -- Type check, byte code and dead code removal
 			old_expr := expr.byte_node
 			Result.set_expr (old_expr)
 			Result.add_old_expression
-		end
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text
-		do
-			ctxt.begin
-			ctxt.put_text_item (ti_Old_keyword)
-			ctxt.put_space
-			expr.format (ctxt)
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text
-		do
-			ctxt.put_text_item (ti_Old_keyword)
-			ctxt.put_space
-			expr.simple_format (ctxt)
 		end
 
 feature {NONE} -- Implementation

@@ -4,16 +4,16 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class ASSERT_LIST_AS
+deferred class ASSERT_LIST_AS
 
 inherit
 	AST_EIFFEL
 		redefine
-			type_check, byte_node, format,
+			type_check, byte_node,
 			number_of_breakpoint_slots
 		end
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (a: like assertions) is
 			-- Create a new ASSERTION_LIST AST node.
@@ -21,14 +21,6 @@ feature {AST_FACTORY} -- Initialization
 			assertions := a
 		ensure
 			assertions_set: assertions = a
-		end
-
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_assert_list_as (Current)
 		end
 
 feature -- Access
@@ -45,6 +37,28 @@ feature -- Attributes
 
 	assertions: EIFFEL_LIST [TAGGED_AS]
 			-- Assertion list
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if assertions /= Void then
+				Result := assertions.start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if assertions /= Void then
+				Result := assertions.end_location
+			else
+				Result := null_location
+			end
+		end
 
 feature -- Comparison
 
@@ -91,145 +105,6 @@ feature -- Type check, byte code, dead code removal and formatter
 			if assertions /= Void then
 				Result := assertions.byte_node
 			end
-		end
-
-feature -- Format
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text
-		do
-			internal_format (ctxt, False)
-		end
-
-	format_without_breakable_marks (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text without creating the breakable marks
-		do
-			internal_format (ctxt, True)
-		end
-
-	format_assertions (ctxt: FORMAT_CONTEXT; hide_breakable_marks: BOOLEAN) is
-		local
-			i, l_count: INTEGER
-			not_first: BOOLEAN
-		do
-			from
-				ctxt.begin
-				i := 1
-				l_count := assertions.count
-			until
-				i > l_count 
-			loop
-				if not_first then
-					ctxt.put_separator
-				end
-				ctxt.begin
-				ctxt.new_expression
-				if hide_breakable_marks then
-					assertions.i_th(i).format_without_breakable_marks (ctxt)
-				else
-					assertions.i_th(i).format (ctxt)
-				end
-				if ctxt.last_was_printed then
-					not_first := True
-					ctxt.commit
-				else
-					ctxt.rollback
-				end
-				i := i + 1
-			end
-			if not_first then
-				ctxt.exdent
-				ctxt.put_new_line
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-feature {NONE} -- Format
-
-	internal_format (ctxt: FORMAT_CONTEXT; hide_breakable_marks: BOOLEAN) is
-			-- Reconstitute text
-		local
-			source_cl, target_cl: CLASS_C
-		do
-			if assertions /= Void then
-				ctxt.begin
-				put_clause_keywords (ctxt)
-				source_cl := ctxt.global_adapt.source_enclosing_class
-				target_cl := ctxt.global_adapt.target_enclosing_class
-				if source_cl /= target_cl then
-					ctxt.put_space
-					ctxt.put_text_item (ti_Dashdash)
-					ctxt.put_space
-					ctxt.put_comment_text ("from ")
-					ctxt.put_classi (source_cl.lace_class)
-				end
-				ctxt.indent
-				ctxt.put_new_line
-				ctxt.set_new_line_between_tokens
-				ctxt.continue_on_failure
-				format_assertions (ctxt, hide_breakable_marks)
-				ctxt.exdent
-				if ctxt.last_was_printed then
-					ctxt.set_first_assertion (false)
-					ctxt.commit
-				else
-					ctxt.rollback
-				end
-			end
-		end
-
-feature {NONE} -- Implementation
-	
-	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
-			-- Append the assertion keywords ("require", "require else",
-			-- "ensure", "ensure then" or "invariant").
-		do
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text
-		do
-			if assertions /= Void then
-				put_clause_keywords (ctxt)
-				ctxt.put_new_line
-				ctxt.set_new_line_between_tokens
-				ctxt.indent
-				simple_format_assertions (ctxt)
-				ctxt.exdent
-			end
-		end
-
-	simple_format_assertions (ctxt: FORMAT_CONTEXT) is
-			-- Format assertions.
-		local
-			i, l_count: INTEGER
-			not_first: BOOLEAN
-		do
-			ctxt.begin
-			from
-				i := 1
-				l_count := assertions.count
-			until
-				i > l_count
-			loop
-				if not_first then
-					ctxt.put_separator
-				end
-				ctxt.new_expression
-				ctxt.begin
-				assertions.i_th (i).simple_format(ctxt)
-				ctxt.commit
-				not_first := True
-				i := i + 1
-			end
-			if l_count > 0 then
-				ctxt.put_new_line
-			end
-			ctxt.commit
 		end
 
 feature {ASSERT_LIST_AS, REQUIRE_MERGER, ENSURE_MERGER} -- Replication

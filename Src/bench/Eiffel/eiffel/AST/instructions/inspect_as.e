@@ -14,26 +14,26 @@ inherit
 
 	SHARED_INSPECT
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (s: like switch; c: like case_list; e: like else_part; l, el: like location) is
+feature {NONE} -- Initialization
+
+	initialize (s: like switch; c: like case_list; e: like else_part; el: like end_keyword) is
 			-- Create a new INSPECT AST node.
 		require
 			s_not_void: s /= Void
-			l_not_void: l /= Void
 			el_not_void: el /= Void
 		do
 			switch := s
 			case_list := c
 			else_part := e
-			location := l.twin
-			end_location := el.twin
+			end_keyword := el
 		ensure
 			switch_set: switch = s
 			case_list_set: case_list = c
 			else_part_set: else_part = e
-			location_set: location.is_equal (l)
-			end_location_set: end_location.is_equal (el)
+			end_keyword_set: end_keyword = el
 		end
 
 feature -- Visitor
@@ -55,8 +55,22 @@ feature -- Attributes
 	else_part: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Else part
 
-	end_location: like location
+	end_keyword: LOCATION_AS
 			-- Line number where `end' keyword is located
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := switch.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := end_keyword
+		end
 
 feature -- Access
 
@@ -109,6 +123,7 @@ feature -- Type check, byte code and dead code removal
 				create vomb1
 				context.init_error (vomb1)
 				vomb1.set_type (current_item)
+				vomb1.set_location (switch.end_location)
 				Error_handler.insert_error (vomb1)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -151,60 +166,12 @@ feature -- Type check, byte code and dead code removal
 			if else_part /= Void then
 				Result.set_else_part (else_part.byte_node)
 			end
-			Result.set_line_number (line_number)
-			Result.set_end_location (end_location)
+			Result.set_line_number (switch.start_location.line)
+			Result.set_end_location (end_keyword)
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_breakable
-			ctxt.put_text_item (ti_Inspect_keyword)
-			ctxt.put_space
-			ctxt.indent
-			ctxt.format_ast (switch)
-			ctxt.exdent
-			ctxt.put_new_line
-			if case_list /= Void then
-				ctxt.set_separator (ti_Empty)
-				ctxt.set_no_new_line_between_tokens
-				case_list.format (ctxt)
-			end
-			if else_part /= Void then
-				ctxt.put_text_item (ti_Else_keyword)
-				ctxt.indent
-				ctxt.put_new_line
-				ctxt.set_separator (Void)
-				ctxt.set_new_line_between_tokens
-				ctxt.format_ast (else_part)
-				ctxt.put_new_line
-				ctxt.exdent
-			end
-			ctxt.put_text_item (ti_End_keyword)
-		end
-
-feature {INSPECT_AS} -- Replication
-
-	set_switch (s: like switch) is
-			-- Set `switch' to `s'.
-		require
-			valid_arg: s /= Void
-		do
-			switch := s
-		end
-
-	set_case_list (c: like case_list) is
-			-- Set `case_list' to `c'.
-		do
-			case_list := c
-		end
-
-	set_else_part (e: like else_part) is
-			-- Set `else_part' to `e'.
-		do
-			else_part := e
-		end
+invariant
+	switch_not_void: switch /= Void
+	end_keyword_not_void: end_keyword /= Void	
 
 end -- class INSPECT_AS

@@ -14,7 +14,7 @@ inherit
 create
 	initialize
 	
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (c: like creation_expr; t: like tuple) is
 			-- Create a new UNIQUE AST node.
@@ -43,6 +43,24 @@ feature -- Access
 			
 	tuple: TUPLE_AS
 			-- Tuple for addition custom attribute settings.
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := creation_expr.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if tuple /= Void then
+				Result := tuple.end_location
+			else
+				Result := creation_expr.end_location
+			end
+		end
 
 feature -- Comparison
 
@@ -90,14 +108,6 @@ feature -- Output
 
 	string_value: STRING is ""
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			creation_expr.simple_format (ctxt)
-		end
-
 feature {NONE} -- Type checking
 
 	check_tuple_validity is
@@ -112,7 +122,6 @@ feature {NONE} -- Type checking
 		local
 			vica: VICA
 			l_sub: TUPLE_AS
-			l_val: VALUE_AS
 			l_name: STRING_AS
 			l_value: EXPR_AS
 			l_has_syntax_error, l_has_semantic_error: BOOLEAN
@@ -133,28 +142,25 @@ feature {NONE} -- Type checking
 			until
 				tuple.expressions.after
 			loop
-				l_val ?= tuple.expressions.item
-				l_has_syntax_error := l_val = Void
+				l_sub ?= tuple.expressions.item
+				l_has_syntax_error := l_sub = Void or else l_sub.expressions.count /= 2
 				if not l_has_syntax_error then
-					l_sub ?= l_val.terminal
-					l_has_syntax_error := l_sub = Void or else l_sub.expressions.count /= 2
+					l_name ?= l_sub.expressions.i_th (1)
+					l_has_syntax_error := l_name = Void
 					if not l_has_syntax_error then
-						l_val ?= l_sub.expressions.i_th (1)
-						l_has_syntax_error := l_val = Void
-						if not l_has_syntax_error then
-							l_name ?= l_val.terminal
-							l_value := l_sub.expressions.i_th (2)
-							l_has_syntax_error := l_name = Void
-						end
+						l_value := l_sub.expressions.i_th (2)
+						l_has_syntax_error := l_name = Void
 					end
+				end
+				if l_has_syntax_error then
+					create vica.make (context.current_class, l_creation_type)
+					vica.set_location (tuple.expressions.item.start_location)
+					Error_handler.insert_error (vica)
 				end
 				tuple.expressions.forth
 			end
 			
-			if l_has_syntax_error then
-				create vica.make (Context.current_class, l_creation_type)
-				Error_handler.insert_error (vica)
-			else
+			if not l_has_syntax_error then
 					-- Let's do the semantic analyzis of ["my_attribute", my_value]
 					-- It consists to make sure that `my_attribute' is a feature of `type' created
 					-- by Current and type of this feature matches type of `my_value'.
@@ -164,18 +170,17 @@ feature {NONE} -- Type checking
 				until
 					tuple.expressions.after
 				loop
-					l_val ?= tuple.expressions.item
-					l_sub ?= l_val.terminal
-					l_val ?= l_sub.expressions.i_th (1)
-					l_name ?= l_val.terminal
+					l_sub ?= tuple.expressions.item
+					l_name ?= l_sub.expressions.i_th (1)
 					l_value := l_sub.expressions.i_th (2)
 					l_feat := l_creation_type.associated_class.feature_table.item
 						(l_name.value.as_lower)
 					l_has_semantic_error := l_feat = Void
 					if not l_has_semantic_error then
-						if not valid_feature (l_feat) then
+						if not valid_feature (l_feat, l_name) then
 							create vica.make (Context.current_class, l_creation_type)
 							vica.set_feature (l_feat)
+							vica.set_location (l_value.start_location)
 							Error_handler.insert_error (vica)
 						else
 							Context.tuple_line.go_i_th (i)
@@ -187,15 +192,19 @@ feature {NONE} -- Type checking
 								vjar.set_source_type (Context.tuple_line.item.generics.item (2))
 								vjar.set_target_type (l_feat.type.actual_type)
 								vjar.set_target_name (l_name.value)
+								vjar.set_location (l_value.start_location)
 								Error_handler.insert_error (vjar)
+
 								create vica.make (Context.current_class, l_creation_type)
 								vica.set_feature (l_feat)
+								vica.set_location (l_value.start_location)
 								Error_handler.insert_error (vica)
 							end
 						end
 					else
 						create vica.make (Context.current_class, l_creation_type)
 						vica.set_feature_name (l_name.value)
+						vica.set_location (l_value.start_location)
 						Error_handler.insert_error (vica)
 					end
 					tuple.expressions.forth
@@ -204,16 +213,18 @@ feature {NONE} -- Type checking
 
 				if l_has_semantic_error and vica = Void then
 					create vica.make (Context.current_class, l_creation_type)
+					vica.set_location (tuple.start_location)
 					Error_handler.insert_error (vica)
 				end
 			end
 			Context.tuple_line.go_i_th (l_cursor)
 		end
 
-	valid_feature (a_feat: FEATURE_I): BOOLEAN is
+	valid_feature (a_feat: FEATURE_I; a_name: STRING_AS): BOOLEAN is
 			-- Is `a_feat' valid to be used as a named argument in custom attribute?
 		require
 			a_feat_not_void: a_feat /= Void
+			a_name_not_void: a_name /= Void
 		local
 			vuex: VUEX
 			l_ext_class: EXTERNAL_CLASS_C
@@ -234,6 +245,7 @@ feature {NONE} -- Type checking
 				context.init_error (vuex)
 				vuex.set_static_class (System.any_class.compiled_class)
 				vuex.set_exported_feature (a_feat)
+				vuex.set_location (a_name)
 				Error_handler.insert_error (vuex)
 			end
 		end

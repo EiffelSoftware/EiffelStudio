@@ -16,6 +16,9 @@ inherit
 			is_export_valid
 		end
 
+create
+	initialize
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is

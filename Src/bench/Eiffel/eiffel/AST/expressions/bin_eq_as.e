@@ -16,6 +16,9 @@ inherit
 
 	PREFIX_INFIX_NAMES
 
+create
+	initialize
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -74,6 +77,7 @@ feature -- Type check, byte code and dead code removal
 						context.init_error (vweq)
 						vweq.set_left_type (left_type)
 						vweq.set_right_type (right_type)
+						vweq.set_location (operator_location)
 						Error_handler.insert_error (vweq)
 					end
 				end

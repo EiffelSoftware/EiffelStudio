@@ -16,39 +16,29 @@ inherit
 	SHARED_TYPES
 	SHARED_EVALUATOR
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (t: like target; f: like feature_name; o: like operands; has_target: BOOLEAN) is
 			-- Create a new ROUTINE_CREATION AST node.
+			-- When `t' is Void it means it is a question mark.
 		require
 			f_not_void: f /= Void
-		local
-			access_id_as: ACCESS_ID_AS
 		do
 			target := t
 			feature_name := f
 			operands := o
 			if target /= Void then
 				if target.target /= Void then
-						-- Target is an entity
-					create access_id_as
-					access_id_as.set_feature_name (target.target)
-					target_ast := access_id_as
-				else
-					if target.expression /= Void then
-							-- Target is an expression
-						target_ast := target.expression
-					else
-						if target.class_type = Void then
-							if target.is_result then
-									-- Target is Result
-								create {RESULT_AS} target_ast
-							else
-									-- Target is Current
-								create {CURRENT_AS} target_ast
-							end
-						end
-					end
+					target_ast := target.target
+				elseif target.expression /= Void then
+						-- Target is an expression
+					target_ast := target.expression
+				elseif target.class_type = Void then
+						-- Target is simply Current but not mentioned (thus 0 for length)
+					create {CURRENT_AS} target_ast.make_with_location (f.line, f.column, f.position, 0)
 				end
 			end
 
@@ -96,6 +86,24 @@ feature -- Attributes
 	type : GEN_TYPE_A
 			-- Type of routine object.
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if target /= Void then
+				Result := target.start_location
+			else
+				Result := feature_name.start_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := call_ast.end_location
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -127,53 +135,42 @@ feature -- Type check, byte code and dead code removal
 			context.begin_expression
 
 			if target = Void then
-				-- Open target; feature comes from
-				-- current class
+					-- Open target; feature comes from
+					-- current class
 				target_type := context.actual_class_type
 				a_class := context.current_class
-			else
-				if target.target /= Void then
+			elseif target.target /= Void then
 					-- Target is an entity
-					target_ast.type_check
-					target_type ?= context.item
+				target_ast.type_check
+				target_type ?= context.item
 
-					if target_type /= Void then
-						a_class := target_type.associated_class
-					end
-				else
-					if target.expression /= Void then
-						-- Target is an expression
-						target_ast.type_check
-						target_type ?= context.item
-						if target_type /= Void then
-							a_class := target_type.associated_class
-							context.pop (1)
-							context.replace (target_type)
-						end
-					else
-						if target.class_type /= Void then
-								-- Target is {TYPE}
-							target_type ?= target.type_a
-								-- A void target_type means that it is `NONE'
-								-- and we do not accept this.
-							if target_type /= Void then
-								a_class := target_type.associated_class
-								context.replace (target_type)
-							end
-						else
-							target_ast.type_check
-							if target.is_result then
-									-- Target is Result
-								target_type ?= context.feature_type
-								a_class := target_type.associated_class
-							else
-									-- Target is Current
-								target_type := context.actual_class_type
-								a_class := context.current_class
-							end
-						end
-					end
+				if target_type /= Void then
+					a_class := target_type.associated_class
 				end
+			elseif target.expression /= Void then
+					-- Target is an expression
+				target_ast.type_check
+				target_type ?= context.item
+				if target_type /= Void then
+					a_class := target_type.associated_class
+					context.pop (1)
+					context.replace (target_type)
+				end
+			elseif target.class_type /= Void then
+					-- Target is {TYPE}
+				target_type ?= target.type_a
+					-- A void target_type means that it is `NONE'
+					-- and we do not accept this.
+				if target_type /= Void then
+					a_class := target_type.associated_class
+					context.replace (target_type)
+				end
+			else
+					-- Closed Current target; feature comes from
+					-- current class
+				target_ast.type_check
+				target_type := context.actual_class_type
+				a_class := context.current_class
 			end
 
 			if target_type = Void or else target_type.is_basic then
@@ -185,6 +182,11 @@ feature -- Type check, byte code and dead code removal
 				context.init_error (not_supported)
 				not_supported.set_message ("Type of target in a delayed %
 					%call may not be a basic type or NONE.")
+				if target /= Void then
+					not_supported.set_location (target.start_location)
+				else
+					not_supported.set_location (feature_name)
+				end
 				Error_handler.insert_error (not_supported)
 				Error_handler.raise_error
 			end
@@ -209,6 +211,7 @@ feature -- Type check, byte code and dead code removal
 				not_supported.set_message ("Agent creation on `" + feature_name + "' is%
 					% not supported because it is either an attribute, a constant or%
 					% an external feature")
+				not_supported.set_location (feature_name)
 				Error_handler.insert_error (not_supported)
 			else
 					-- Dependance
@@ -329,87 +332,6 @@ feature -- Type check, byte code and dead code removal
 				-- Initialize ROUTINE_CREATION_B instance
 			Result.init (target_type.type_i, a_class.class_id, a_feature,
 						 type.type_i, tuple_b, open_b)
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			dummy_call: ACCESS_FEAT_AS
-			dummy_name: ID_AS
-		do
-			ctxt.put_text_item (ti_Agent_keyword)
-			ctxt.put_space
-			if target /= Void then
-				if
-					target.class_type /= Void or
-					target.expression /= Void or
-					target.target /= Void or
-					target.is_result
-				then
-					if target_ast /= Void then
-							-- A closed operand for target.
-						ctxt.format_ast (target_ast)
-					else
-						ctxt.put_text_item (ti_L_curly)
-						ctxt.format_ast (target.class_type)
-						ctxt.set_type_creation (target.class_type)
-
-							--| We have to create a dummy call because the current formating
-							--| algorithm which makes the assumption that a feature call is
-							--| either on Current or on something else (see CREATION_EXPR_AS).
-						create dummy_call
-						create dummy_name.initialize (ti_R_curly.image)
-						dummy_call.set_feature_name (dummy_name)
-						ctxt.format_ast (dummy_call)
-					end
-					ctxt.need_dot
-				else
-					-- No operand for target.
-				end
-			else
-					-- An open operand for target.
-				ctxt.put_text_item (Ti_question)
-				ctxt.need_dot
-			end
-
-				-- Display routine used by the Agent.
-			ctxt.format_ast (call_ast)
-
-			ctxt.set_type_creation (Void)
-		end
-
-feature {ROUTINE_CREATION_AS} -- Replication
-
-	set_target (t : like target) is
-			-- Set `target' to `t'.
-		do
-			target := t
-		end
-
-	set_target_ast (t : like target_ast) is
-			-- Set `target_ast' to `t'.
-		do
-			target_ast := t
-		end
-
-	set_feature_name (f : like feature_name) is
-			-- Set `feature_name' to `f'.
-		do
-			feature_name := f
-		end
-
-	set_operands (o : like operands) is
-			-- Set `operands' to `o'.
-		do
-			operands := o
-		end
-
-	set_call_ast (c : like call_ast) is
-			-- Set `call_ast' to `c'.
-		do
-			call_ast := c
 		end
 
 feature {NONE} -- Type
@@ -634,6 +556,10 @@ feature {NONE} -- Type
 
 			Result := type_a.type_i
 		end
+
+invariant
+	feature_name_not_void: feature_name /= Void
+	call_ast_not_void: call_ast /= Void
 
 end -- class ROUTINE_CREATION_AS
 

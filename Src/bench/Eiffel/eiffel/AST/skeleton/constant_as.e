@@ -15,11 +15,11 @@ inherit
 		end
 
 create
-	make
+	initialize
 
 feature {NONE} -- Initialization
 
-	make (v: like value) is
+	initialize (v: like value) is
 			-- Create a new CONSTANT AST node.
 		require
 			v_not_void: v /= Void
@@ -39,8 +39,22 @@ feature -- Visitor
 
 feature -- Attributes
 
-	value: VALUE_AS
+	value: ATOMIC_AS
 			-- Constant value
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := value.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := value.end_location
+		end
 
 feature -- Properties
 
@@ -50,7 +64,7 @@ feature -- Properties
 	is_unique: BOOLEAN is
 			-- Is the content a unique ?
 		do
-			Result := value.terminal.is_unique
+			Result := value.is_unique
 		end
 
 feature -- Comparison
@@ -102,17 +116,6 @@ feature -- Conveniences
 		do
 		ensure then
 			False
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_space
-			ctxt.put_text_item_without_tabs (ti_Is_keyword)
-			ctxt.put_space
-			ctxt.format_ast (value)
 		end
 
 feature {CONSTANT_AS} -- Replication

@@ -26,6 +26,9 @@ inherit
 			access_type
 		end
 
+create
+	initialize
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -101,6 +104,7 @@ feature
 						create veen2B
 						context.init_error (veen2B)
 						veen2B.set_identifier (feature_name)
+						veen2B.set_location (feature_name)
 						Error_handler.insert_error (veen2B)
 					end
 				else
@@ -116,6 +120,7 @@ feature
 					vuar1.set_local_name (feature_name)
 				end
 				context.init_error (vuar1)
+				vuar1.set_location (feature_name)
 				Error_handler.insert_error (vuar1)
 			end
 		end

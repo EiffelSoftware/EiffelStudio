@@ -13,14 +13,24 @@ inherit
 			is_valid_inspect_value
 		end
 
+	LEAF_AS
+
 	CHARACTER_ROUTINES
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (c: CHARACTER) is
+feature {NONE} -- Initialization
+
+	initialize (c: CHARACTER; l, co, p: INTEGER) is
 			-- Create a new CHARACTER AST node.
+		require
+			l_non_negative: l >= 0
+			co_non_negative: co >= 0
+			p_non_negative: p >= 0
 		do
 			value := c
+			set_position (l, co, p, 1)
 		ensure
 			value_set: value = c
 		end
@@ -88,20 +98,6 @@ feature -- Output
 			Result := char_text (value)
 			Result.precede ('%'')
 			Result.extend ('%'')
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt : FORMAT_CONTEXT) is
-			-- Reconstiture text.
-		do
-			--| VB 05/23/2000 Removed in favor of literal char symbol.
-			--|ctxt.put_text_item_without_tabs (ti_Quote)
-			--|ctxt.put_string (char_text (value))
-			--|ctxt.put_text_item_without_tabs (ti_Quote)
-			ctxt.put_text_item (
-				create {CHARACTER_TEXT}.make (string_value)
-			)
 		end
 
 end -- class CHAR_AS

@@ -9,11 +9,13 @@ class
 inherit
 	BIN_EQ_AS
 		redefine
-			process,
-			op_name, byte_anchor
+			op_name, byte_anchor, process
 		end
 
 	PREFIX_INFIX_NAMES
+
+create
+	initialize
 
 feature -- Visitor
 

@@ -8,12 +8,13 @@ deferred class BINARY_AS
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node,
+			start_location, end_location
 		end
 
 	SHARED_ARG_TYPES
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (l: like left; r: like right) is
 			-- Create a new BINARY AST node.
@@ -35,6 +36,27 @@ feature -- Attributes
 
 	right: EXPR_AS
 			-- Right opernad
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := left.start_location
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := right.end_location
+		end
+		
+	operator_location: LOCATION_AS is
+			-- Location of operator
+		do
+			fixme ("This is not precise enough, we ought to have the precise location.")
+			Result := left.end_location
+		end
 
 feature -- Properties
 
@@ -186,6 +208,7 @@ feature -- Type check, byte code and dead code removal
 			if left_constrained.is_none then
 				create vuex.make_for_none (infix_function_name)
 				context.init_error (vuex)
+				vuex.set_location (operator_location)
 				Error_handler.insert_error (vuex)
 				Error_handler.raise_error
 			end
@@ -211,6 +234,7 @@ feature -- Type check, byte code and dead code removal
 
 			if last_infix = Void then
 					-- Raise error here
+				l_error.set_location (operator_location)
 				Error_handler.insert_error (l_error)
 				Error_handler.raise_error
 			else
@@ -311,35 +335,6 @@ feature -- Type check, byte code and dead code removal
 		deferred
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin
-			left.format (ctxt)
-			if not ctxt.last_was_printed then
-				ctxt.rollback
-			else
-				ctxt.need_dot
-				ctxt.prepare_for_infix (operator_name, op_name, right)
-				ctxt.put_current_feature
-				if not ctxt.last_was_printed then
-					ctxt.rollback
-				else
-					ctxt.commit
-				end
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			left.simple_format (ctxt)
-			ctxt.prepare_for_infix (operator_name, op_name, right)
-			ctxt.put_infix_feature
-		end
-
 feature {BINARY_AS}	-- Replication
 
 	attachment: TYPE_A
@@ -350,6 +345,10 @@ feature {NONE} -- Implementation: convertibility
 	parameters_convert_info: ARRAY [CONVERSION_INFO]
 			-- For each parameters that need a conversion call, we store info used in `byte_node'
 			-- to generate conversion call.
+
+invariant
+	left_not_void: left /= Void
+	right_not_void: right /= Void
 
 end -- class BINARY_AS
 

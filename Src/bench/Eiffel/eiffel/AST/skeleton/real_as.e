@@ -11,8 +11,8 @@ inherit
 		redefine
 			type_check, byte_node, value_i, is_equivalent
 		end
-
-	REFACTORING_HELPER
+		
+	LEAF_AS
 
 create
 	make
@@ -87,18 +87,6 @@ feature -- Type check and byte code
 		end
 
 feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if constant_type /= Void then
-				ctxt.put_text_item (ti_l_curly)
-				constant_type.format (ctxt)
-				ctxt.put_text_item (ti_r_curly)
-				ctxt.put_space
-			end
-			ctxt.put_text_item (create {NUMBER_TEXT}.make (string_value))
-		end
 
 	string_value: STRING is
 		do

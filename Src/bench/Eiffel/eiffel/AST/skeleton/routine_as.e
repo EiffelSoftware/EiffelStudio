@@ -13,8 +13,7 @@ inherit
 			has_rescue, has_precondition, has_postcondition,
 			check_local_names, 
 			type_check, byte_node,
-			local_table, format,
-			local_table_for_format, create_default_rescue, is_empty,
+			local_table, local_table_for_format, create_default_rescue, is_empty,
 			number_of_precondition_slots,
 			number_of_postcondition_slots,
 			number_of_breakpoint_slots
@@ -29,16 +28,19 @@ inherit
 			{NONE} all
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (o: like obsolete_message; pr: like precondition;
 		l: like locals; b: like routine_body; po: like postcondition;
-		r: like rescue_clause; p: INTEGER; end_pos: like location;
+		r: like rescue_clause; p: INTEGER; ek: like end_keyword;
 		oms_count: like once_manifest_string_count) is
 			-- Create a new ROUTINE AST node.
 		require
 			b_not_void: b /= Void
-			end_pos_not_void: end_pos /= Void
+			ek_not_void: ek /= Void
 			valid_oms_count: oms_count >= 0
 		do
 			obsolete_message := o
@@ -48,7 +50,7 @@ feature {AST_FACTORY} -- Initialization
 			postcondition := po
 			rescue_clause := r
 			body_start_position := p
-			end_location := end_pos.twin
+			end_keyword := ek
 			once_manifest_string_count := oms_count
 		ensure
 			obsolete_message_set: obsolete_message = o
@@ -58,7 +60,7 @@ feature {AST_FACTORY} -- Initialization
 			postcondition_set: postcondition = po
 			rescue_clause_set: rescue_clause = r
 			body_start_position_set: body_start_position = p
-			body_end_location_set: end_location.is_equal (end_pos)
+			end_keyword_set: end_keyword = ek
 			once_manifest_string_count_set: once_manifest_string_count = oms_count
 		end
 
@@ -75,9 +77,6 @@ feature -- Attributes
 	body_start_position: INTEGER
 			-- Position at the start of the main body (after the comments)
 			
-	end_location: like location
-			-- Line number where `end' keyword is located
-
 	obsolete_message: STRING_AS
 			-- Obsolete clause message
 			-- (Void if was not present)
@@ -100,6 +99,34 @@ feature -- Attributes
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings in precondition,
 			-- body, postcondition and rescue clause
+
+	end_keyword: LOCATION_AS
+			-- Location for `end' keyword
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if obsolete_message /= Void then
+				Result := obsolete_message.start_location
+			elseif precondition /= Void then
+				Result := precondition.start_location
+			elseif locals /= Void then
+				Result := locals.start_location
+			else
+				Result := routine_body.start_location
+				if Result.is_null then
+					Result := end_keyword
+				end
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := end_keyword
+		end
 
 feature -- Properties
 
@@ -259,11 +286,9 @@ feature -- default rescue
 		do
 			if rescue_clause = Void and then
 			   not (routine_body.is_deferred or routine_body.is_external) then
-				create def_resc_id.make (1)
-				def_resc_id.load (def_resc_name)
-				create def_resc_call
-				def_resc_call.set_feature_name (def_resc_id)
-				create def_resc_instr.initialize (def_resc_call, end_location)
+				create def_resc_id.initialize (def_resc_name)
+				create def_resc_call.initialize (def_resc_id, Void)
+				create def_resc_instr.initialize (def_resc_call)
 				create rescue_clause.make (1)
 				rescue_clause.extend (def_resc_instr)
 			end
@@ -276,8 +301,6 @@ feature -- Type check, byte code and dead code removal
 		local
 			vxrc: VXRC
 		do
-			error_handler.set_error_position (body_start_position)
-
 				-- Check local variables
 			if locals /= Void then
 				check_locals
@@ -314,6 +337,7 @@ feature -- Type check, byte code and dead code removal
 					create vxrc
 					context.init_error (vxrc)
 					vxrc.set_deferred (routine_body.is_deferred)
+					vxrc.set_location (rescue_clause.start_location)
 					Error_handler.insert_error (vxrc)
 				else
 						 -- Set mark of context
@@ -348,7 +372,7 @@ feature -- Type check, byte code and dead code removal
 				Result.set_rescue_clause (rescue_clause.byte_node)
 			end
 			
-			Result.set_start_line_number (Context.current_feature.body.location.line_number)
+			Result.set_start_line_number (Context.current_feature.body.start_location.line)
 			Result.set_end_location (end_location)
 
 			Result.set_once_manifest_string_count (once_manifest_string_count)
@@ -382,6 +406,7 @@ feature -- Type check, byte code and dead code removal
 							create vrle1
 							context.init_error (vrle1)
 							vrle1.set_local_name (local_name_id)
+							vrle1.set_location (locals.item.start_location)
 							Error_handler.insert_error (vrle1)
 						end
 						id_list.forth
@@ -423,11 +448,10 @@ feature -- Type check, byte code and dead code removal
 		do
 			context_class := context.current_class
 			if (is_deferred or is_external) then
-					-- No need to set `error_position' from `Error_handler' since
-					-- it is already set by caller of `check_locals'.
 				create vrrr2
 				context.init_error (vrrr2)
 				vrrr2.set_is_deferred (is_deferred)
+				vrrr2.set_location (locals.start_location)
 				Error_handler.insert_error (vrrr2)
 			elseif not locals.is_empty then
 				from
@@ -454,10 +478,6 @@ feature -- Type check, byte code and dead code removal
 								-- exception
 							solved_type_exists: solved_type /= Void
 						end
-
-							-- Set position correctly in case there is a validity error.
-						Error_handler.set_error_position (locals.item.start_position)
-	
 						id_list.start
 					until
 						id_list.after
@@ -470,6 +490,7 @@ feature -- Type check, byte code and dead code removal
 							create vrle2
 							context.init_error (vrle2)
 							vrle2.set_local_name (local_name_id)
+							vrle2.set_location (locals.item.start_location)
 							Error_handler.insert_error (vrle2)
 						elseif
 							context.feature_table.has_id (local_name_id)
@@ -479,6 +500,7 @@ feature -- Type check, byte code and dead code removal
 							create vrle1
 							context.init_error (vrle1)
 							vrle1.set_local_name (local_name_id)
+							vrle1.set_location (locals.item.start_location)
 							Error_handler.insert_error (vrle1)
 						end
 							-- Build the local table in the context
@@ -490,11 +512,13 @@ feature -- Type check, byte code and dead code removal
 								create vtec1
 								context.init_error (vtec1)
 								vtec1.set_entity_name (local_name)
+								vtec1.set_location (local_type.start_location)
 								Error_handler.insert_error (vtec1)
 							elseif not solved_type.valid_expanded_creation (context_class) then
 								create vtec2
 								context.init_error (vtec2)
 								vtec2.set_entity_name (local_name)
+								vtec2.set_location (local_type.start_location)
 								Error_handler.insert_error (vtec2)
 							end
 						end
@@ -504,6 +528,7 @@ feature -- Type check, byte code and dead code removal
 							vtug.set_class (context_class)
 							vtug.set_feature (curr_feat)
 							vtug.set_entity_name (local_name)
+							vtug.set_location (local_type.start_location)
 							Error_handler.insert_error (vtug)
 								-- Cannot go on here
 							Error_handler.raise_error
@@ -517,6 +542,7 @@ feature -- Type check, byte code and dead code removal
 							vtcg3.set_feature (curr_feat)
 							vtcg3.set_entity_name (local_name)
 							vtcg3.set_error_list (solved_type.constraint_error_list)
+							vtcg3.set_location (local_type.start_location)
 							Error_handler.insert_error (vtcg3)
 						end
 	
@@ -527,6 +553,7 @@ feature -- Type check, byte code and dead code removal
 							create vreg
 							vreg.set_entity_name (local_name)
 							context.init_error (vreg)
+							vreg.set_location (locals.item.start_location)
 							Error_handler.insert_error (vreg)
 						else
 							context_locals.put (local_info, local_name)
@@ -693,186 +720,8 @@ feature -- Format Context
 			end
 		end
 
-feature -- Context format
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Format routine ast to `ctxt'.
-		local
-			chained_assert: CHAINED_ASSERTIONS
-			comments: EIFFEL_COMMENTS
-		do
-			if ctxt.is_feature_short then
-				ctxt.put_new_line
-			else
-				ctxt.put_space
-				ctxt.put_text_item_without_tabs (ti_Is_keyword)
-				ctxt.put_new_line
-				if obsolete_message /= Void then
-					ctxt.indent
-					ctxt.put_text_item (ti_Obsolete_keyword)
-					ctxt.put_space
-					obsolete_message.format (ctxt)
-					ctxt.put_new_line
-					ctxt.exdent
-				end
-			end
-			ctxt.indent
-			ctxt.indent
-			comments := ctxt.feature_comments
-			if comments /= Void then
-				ctxt.put_comments (comments)
-			end
-			ctxt.put_origin_comment
-			ctxt.exdent
-			ctxt.set_first_assertion (true)
-			chained_assert := ctxt.chained_assertion
-			if chained_assert /= Void then
-				chained_assert.format_precondition (ctxt)
-			elseif precondition /= Void then
-				ctxt.set_in_assertion
-				precondition.format (ctxt)
-				ctxt.set_not_in_assertion
-			end
-			if not ctxt.is_feature_short then
-				if locals /= Void then
-					ctxt.put_text_item (ti_Local_keyword)
-					ctxt.set_separator (Void)
-					ctxt.indent
-					ctxt.set_new_line_between_tokens
-					ctxt.put_new_line
-					locals.format (ctxt)
-					ctxt.put_new_line
-					ctxt.exdent
-				end
-				if routine_body /= Void then
-					routine_body.format (ctxt)
-				end
-			end
-			ctxt.set_first_assertion (true)
-			if chained_assert /= Void then
-				chained_assert.format_postcondition (ctxt)
-			elseif postcondition /= Void then
-				ctxt.set_in_assertion
-				postcondition.format (ctxt)
-				ctxt.set_not_in_assertion
-			end
-			if not ctxt.is_feature_short then
-				if rescue_clause /= Void then
-					ctxt.put_text_item (ti_Rescue_keyword)
-					ctxt.indent
-					ctxt.put_new_line
-					ctxt.set_separator (Void)
-					ctxt.set_new_line_between_tokens
-					rescue_clause.format (ctxt)
-					ctxt.exdent
-					ctxt.put_new_line
-				end
-				if
-					not is_deferred and
-					not is_external
-				then
-						-- Put the final breakable mark (the one before the final end).
-					ctxt.put_breakable
-				end
-				ctxt.put_text_item (ti_End_keyword)
-			end
-			ctxt.exdent
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			comments: EIFFEL_COMMENTS
-		do
-			ctxt.put_space
-			ctxt.put_text_item_without_tabs (ti_Is_keyword)
-			ctxt.put_new_line
-
-			if obsolete_message /= Void then
-				ctxt.indent
-				ctxt.put_text_item (ti_Obsolete_keyword)
-				ctxt.put_space
-				obsolete_message.simple_format (ctxt)
-				ctxt.put_new_line
-				ctxt.exdent
-			end
-
-			comments := ctxt.feature_comments
-			if comments /= Void then
-				ctxt.indent
-				ctxt.indent
-				ctxt.put_comments (comments)
-				ctxt.exdent
-				ctxt.exdent
-			end
-
-			ctxt.indent
-			if precondition /= Void then
-				precondition.simple_format (ctxt)
-			end
-			if locals /= Void then
-				ctxt.put_text_item (ti_Local_keyword)
-				ctxt.set_separator (ti_Empty)
-				ctxt.indent
-				ctxt.set_new_line_between_tokens
-				ctxt.put_new_line
-				locals.simple_format (ctxt)
-				ctxt.put_new_line
-				ctxt.exdent
-			end
-			if routine_body /= Void then
-				routine_body.simple_format (ctxt)
-			end
-			if postcondition /= Void then
-				postcondition.simple_format (ctxt)
-			end
-			if rescue_clause /= Void then
-				ctxt.put_text_item (ti_Rescue_keyword)
-				ctxt.indent
-				ctxt.put_new_line
-				rescue_clause.simple_format (ctxt)
-				ctxt.put_new_line
-				ctxt.exdent
-				ctxt.put_breakable
-			end
-			ctxt.put_text_item (ti_End_keyword)
-			ctxt.exdent
-		end
-
-feature	{ROUTINE_AS, FEATURE_AS, ROUTINE_MERGER, USER_CMD, CMD} -- Replication and for flattening of a routine
-
-	set_precondition (p: like precondition) is
-		do
-			precondition := p
-		end
-
-	set_locals (l: like locals) is
-		do
-			locals := l
-		end
-
-	set_routine_body (r: like routine_body) is
-		require
-			valid_arg: r /= Void
-		do
-			routine_body := r
-		end
-
-	set_postcondition (p: like postcondition) is
-		do
-			postcondition := p
-		end
-
-	set_rescue_clause (r: like rescue_clause) is
-		do	
-			rescue_clause := r
-		end
-
-	set_obsolete_message (m: like obsolete_message) is
-		do	
-			obsolete_message := m
-		end
+invariant
+	routine_body_not_void: routine_body /= Void
+	end_keyword_not_void: end_keyword /= Void
 
 end -- class ROUTINE_AS

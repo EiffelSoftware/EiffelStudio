@@ -12,21 +12,21 @@ inherit
 			byte_node, number_of_breakpoint_slots
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (c: like check_list; l, e: like location) is
+feature {NONE} -- Initialization
+
+	initialize (c: like check_list; e: like end_keyword) is
 			-- Create a new CHECK AST node.
 		require
-			l_not_void: l /= Void
 			e_not_void: e /= Void
 		do
 			check_list := c
-			location := l.twin
-			end_location := e.twin
+			end_keyword := e
 		ensure
 			check_list_set: check_list = c
-			location_set: location.is_equal (l)
-			end_location_set: end_location.is_equal (e)
+			end_keyword_set: end_keyword = e
 		end
 
 feature -- Visitor
@@ -42,9 +42,27 @@ feature -- Attributes
 	check_list: EIFFEL_LIST [TAGGED_AS]
 			-- List of tagged boolean expression
 
-	end_location: like location
+	end_keyword: LOCATION_AS
 			-- Line number where `end' keyword is located
 			
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if check_list /= Void then
+				Result := check_list.start_location
+			else
+				Result := end_keyword
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := end_keyword
+		end
+
 feature -- Access
 
 	number_of_breakpoint_slots: INTEGER is
@@ -81,33 +99,12 @@ feature -- Type check, byte code and dead code removal
 			create Result
 			if check_list /= Void then
 				Result.set_check_list (check_list.byte_node)
+				Result.set_line_number (check_list.start_location.line)
 			end
-			Result.set_line_number (line_number)
-			Result.set_end_location (end_location)
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute Text
-		do
-			ctxt.put_text_item (ti_check_keyword)
-			if check_list /= Void then
-				ctxt.indent
-				ctxt.put_new_line
-				ctxt.set_new_line_between_tokens
-				ctxt.format_ast (check_list)
-				ctxt.exdent
-			end
-			ctxt.put_new_line
-			ctxt.put_text_item (ti_end_keyword)
+			Result.set_end_location (end_keyword)
 		end
 			
-feature {CHECK_AS} -- Replication
-	
-	set_check_list (c: like check_list) is
-		do
-			check_list := c
-		end
+invariant
+	end_keyword_not_void: end_keyword /= Void
 
 end -- class CHECK_AS

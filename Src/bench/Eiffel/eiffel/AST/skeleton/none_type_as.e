@@ -7,9 +7,9 @@ class NONE_TYPE_AS
 
 inherit
 	BASIC_TYPE
-		redefine
-			format
-		end
+
+create
+	initialize
 
 feature -- Visitor
 
@@ -17,6 +17,20 @@ feature -- Visitor
 			-- process current element.
 		do
 			v.process_none_type_as (Current)
+		end
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := null_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := null_location
 		end
 
 feature
@@ -32,12 +46,6 @@ feature
 			-- Actual integer type
 		once
 			create Result
-		end
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text
-		do
-			ctxt.put_string ("NONE")
 		end
 
 	dump: STRING is "NONE"

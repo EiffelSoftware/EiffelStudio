@@ -11,7 +11,10 @@ inherit
 			byte_node, type_check, value_i, is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (b: ID_AS) is
 			-- Create a new BIT_CONSTANT AST node with
@@ -36,6 +39,20 @@ feature -- Attributes
 
 	value: ID_AS
 			-- Bit value (sequence of 0 and 1)
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := value.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := value.end_location
+		end
 
 feature -- Comparison
 
@@ -80,12 +97,7 @@ feature -- Output
 			Result.append (value)
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-		do
-			ctxt.put_string (value)
-			ctxt.put_string ("B")
-		end
+invariant
+	value_not_void: value /= Void
 
 end -- class BIT_CONST_AS

@@ -3,8 +3,10 @@ class EXTERNAL_LANG_AS
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent, location
+			is_equivalent
 		end
+		
+	LEAF_AS
 
 	EXTERNAL_CONSTANTS
 
@@ -20,18 +22,15 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (l: like language_name; s: like location) is
+	initialize (l: like language_name) is
 			-- Create a new EXTERNAL_LANGUAGE AST node.
 		require
 			l_not_void: l /= Void
-			s_not_void: s /= Void
 		do
 			language_name := l
-			location := s.twin
 			parse
 		ensure
 			language_name_set: language_name = l
-			location_set: location.is_equal (s)
 		end
 
 feature -- Visitor
@@ -50,9 +49,6 @@ feature -- Attributes
 
 	extension: EXTERNAL_EXTENSION_AS
 			-- Parsed external extension
-
-	location: TOKEN_LOCATION
-			-- Location of Current.
 
 feature -- Comparison
 
@@ -75,13 +71,6 @@ feature -- Properties
 			extension_i_not_void: Result /= Void
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-		do
-			ctxt.format_ast (language_name)
-		end
-
 feature {NONE} -- Implementation
 
 	parse is
@@ -91,7 +80,7 @@ feature {NONE} -- Implementation
 			is_yacc_parsing_successful: BOOLEAN
 		do
 			parser := External_parser
-			parser.parse_external (Eiffel_parser.current_position.start_position,
+			parser.parse_external (Eiffel_parser.line,
 									Eiffel_parser.filename, language_name.value)
 			extension := parser.root_node
 			is_yacc_parsing_successful := not parser.has_error and then extension /= Void
@@ -169,15 +158,14 @@ feature {NONE} -- Implementation
 					debug
 						io.error.put_string ("Void%N")
 					end
-					raise_external_error ("Unrecognized external language", 1, 1)
+					raise_external_error ("Unrecognized external language", 1)
 				else
 					debug
 						io.error.put_string (ext_language_name)
 						io.error.put_new_line
 					end
 					pos := source.substring_index (ext_language_name,1)
-					raise_external_error ("Unrecognized external language",
-						pos, pos + ext_language_name.count - 1)
+					raise_external_error ("Unrecognized external language", pos)
 				end
 			else
 					-- cleaning string for next operation
@@ -189,9 +177,9 @@ feature {NONE} -- Implementation
 					start_special_part := source.index_of ('[', 1)
 					end_special_part := source.index_of (']', 1)
 					if end_special_part = 0 then
-						raise_external_error ("Missing closing bracket ']'", start_special_part, source.count)
+						raise_external_error ("Missing closing bracket ']'", start_special_part)
 					elseif end_special_part = start_special_part + 1 then
-						raise_external_error ("Empty brackets" , start_special_part, end_special_part)
+						raise_external_error ("Empty brackets" , start_special_part)
 					else
 						special_part := source.substring (start_special_part + 1, end_special_part - 1)
 						special_part.right_adjust
@@ -217,8 +205,7 @@ feature {NONE} -- Implementation
 						if pos = 0 then
 								-- Only one word in brackets
 							raise_external_error ("Only one word between brackets",
-								source.index_of ('[', 1) + 1,
-								source.index_of (']', 1) - 1)
+								source.index_of ('[', 1) + 1)
 						else
 								-- Is it a C++ external?
 							is_cpp_extension := ext_language_name.is_equal ("C++")
@@ -286,7 +273,7 @@ feature {NONE} -- Implementation
 					pos := image.index_of (')',2)
 					if pos = 0 then
 						raise_external_error ("Missing closing parenthesis ) in signature clause",
-							source.index_of ('(', 1), source.count)
+							source.index_of ('(', 1))
 					else
 						signature_part := image.substring (1, pos)
 
@@ -319,7 +306,7 @@ feature {NONE} -- Implementation
 				if signature_part /= Void or else image.count /= 0 then
 					if extension = Void then
 						if ext_language_name.is_equal ("C++") then
-							raise_external_error ("Missing special part", 1, 1)
+							raise_external_error ("Missing special part", 1)
 						else
 							create {C_EXTENSION_AS} extension
 						end
@@ -347,12 +334,12 @@ feature {NONE} -- Implementation
 							io.error.put_string (image)
 						end
 						raise_external_error ("Extra text at end of external language specification",
-							source.substring_index (image,1), source.count)
+							source.substring_index (image,1))
 					end
 				end
 
 				if extension = Void and ext_language_name.is_equal ("C++") then
-					raise_external_error ("Missing special part", 1, 1)
+					raise_external_error ("Missing special part", 1)
 				end
 
 				if extension /= Void then
@@ -373,23 +360,20 @@ feature {NONE} -- Implementation
 				-- as new external syntax is not clearly specified.
 			if False and then System.has_syntax_warning then
 				create l_warning.make (
-					eiffel_parser.current_position.start_position,
-					eiffel_parser.current_position.end_position,
-					eiffel_parser.filename, 0, "Use new external syntax instead.")
+					eiffel_parser.line,
+					eiffel_parser.column,
+					eiffel_parser.filename, "Use new external syntax instead.")
 				Error_handler.insert_warning (l_warning)
 			end
 		end
 
-	raise_external_error (msg: STRING; start_p: INTEGER; end_p: INTEGER) is
+	raise_external_error (msg: STRING; start_p: INTEGER) is
 			-- Raises error occurred while parsing
 		local
 			ext_error: EXTERNAL_SYNTAX_ERROR
-			line_start: INTEGER
 		do
 			create ext_error.init
-			line_start := ext_error.start_position
-			ext_error.set_start_position (line_start + start_p)
-			ext_error.set_end_position (line_start + end_p)
+			ext_error.set_column (start_p)
 			ext_error.set_external_error_message (msg)
 			Error_handler.insert_error (ext_error)
 			Error_handler.raise_error
@@ -397,7 +381,6 @@ feature {NONE} -- Implementation
 
 invariant
 	language_name_not_void: language_name /= Void
-	location_not_void: location /= Void
 	extension_not_void: extension /= Void
 
 end -- class EXTERNAL_LANG_AS

@@ -6,6 +6,11 @@ indexing
 class ID_AS
 
 inherit
+	LEAF_AS
+		undefine
+			copy, out, is_equal
+		end
+
 	ATOMIC_AS
 		undefine
 			copy, out, is_equal
@@ -27,7 +32,7 @@ inherit
 create
 	make, initialize
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (s: STRING) is
 			-- Create a new ID AST node made up
@@ -39,7 +44,7 @@ feature {AST_FACTORY} -- Initialization
 			l_int: INTEGER
 		do
 			make (s.count)
-			append_string (s)
+			append (s)
 				-- Force computation of `hash_code' so that it gets stored in AST.
 			l_int := hash_code
 		end
@@ -108,25 +113,7 @@ feature {COMPILER_EXPORTER} -- Multi-branch instruction processing
 			end
 		end
 
-feature {COMPILER_EXPORTER, FEAT_NAME_ID_AS} -- Conveniences
-
-	load (s: STRING) is
-		local
-			l_int: INTEGER
-		do
-			wipe_out
-			append (s)
-				-- Force computation of `hash_code' so that it gets stored in AST.
-			l_int := hash_code
-		end
-
 feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_string (Current)
-		end
 
 	string_value: STRING is
 		do

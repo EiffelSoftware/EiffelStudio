@@ -11,12 +11,14 @@ inherit
 			number_of_breakpoint_slots, byte_node
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (k: like keys; c: like compound; l, e: like location) is
+feature {NONE} -- Initialization
+
+	initialize (k: like keys; c: like compound; e: like end_keyword) is
 			-- Create a new DEBUG AST node.
 		require
-			l_not_void: l /= Void
 			e_not_void: e /= Void
 		local
 			str: STRING
@@ -37,13 +39,11 @@ feature {AST_FACTORY} -- Initialization
 			end
 
 			compound := c
-			location := l.twin
-			end_location := e.twin
+			end_keyword := e
 		ensure
 			keys_set: keys = k
 			compound_set: compound = c
-			location_set: location.is_equal (l)
-			end_location_set: end_location.is_equal (e)
+			end_keyword_set: end_keyword = e
 		end
 
 feature -- Visitor
@@ -62,8 +62,28 @@ feature -- Attributes
 	keys: EIFFEL_LIST [STRING_AS]
 			-- Debug keys
 
-	end_location: like location
+	end_keyword: LOCATION_AS
 			-- Line number where `end' keyword is located
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if keys /= Void then
+				Result := keys.start_location
+			elseif compound /= Void then
+				Result := compound.start_location
+			else
+				Result := end_keyword
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := end_keyword
+		end
 
 feature -- Access
 
@@ -115,42 +135,12 @@ feature -- Type check, byte code and dead code removal
 					end
 					Result.set_keys (node_keys)
 				end
+				Result.set_line_number (compound.start_location.line)
 			end
-			Result.set_line_number (line_number)
-			Result.set_end_location (end_location)
+			Result.set_end_location (end_keyword)
 		end
 
-feature {AST_EIFFEL} -- Output
+invariant
+	end_keyword_not_void: end_keyword /= Void
 
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_Debug_keyword)
-			ctxt.put_space
-			if keys /= Void and then not keys.is_empty then
-				ctxt.put_text_item_without_tabs (ti_L_parenthesis)
-				ctxt.set_separator (ti_Comma)
-				ctxt.set_no_new_line_between_tokens
-				ctxt.format_ast (keys)
-				ctxt.put_text_item_without_tabs (ti_R_parenthesis)
-			end
-			if compound /= Void then
-				ctxt.indent
-				ctxt.put_new_line
-				ctxt.set_separator (Void)
-				ctxt.set_new_line_between_tokens
-				ctxt.format_ast (compound)
-				ctxt.exdent
-			end
-			ctxt.put_new_line
-			ctxt.put_text_item (ti_End_keyword)
-		end
-
-feature {DEBUG_AS} -- Replication
-
-	set_compound (c: like compound) is
-		do
-			compound := c
-		end
-			
 end -- class DEBUG_AS

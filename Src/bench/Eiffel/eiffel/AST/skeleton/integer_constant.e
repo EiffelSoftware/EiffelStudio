@@ -40,6 +40,11 @@ inherit
 			is_equivalent,
 			type_check, byte_node, value_i, valid_type, inspect_value
 		end
+		
+	LEAF_AS
+		rename
+			context as ast_context
+		end
 
 	VALUE_I
 		redefine
@@ -54,8 +59,6 @@ inherit
 			size as byte_size
 		export
 			{NONE} byte_real_type, byte_generate, byte_size
-		undefine
-			line_number
 		redefine
 			print_register, make_byte_code,
 			is_simple_expr, is_predefined, generate_il,
@@ -63,8 +66,6 @@ inherit
 			evaluate
 		end;
 	
-	REFACTORING_HELPER
-
 create
 	make_with_value, make_from_string, make_from_hexa_string
 
@@ -118,7 +119,7 @@ feature {NONE} -- Initialization
 			valid_sign: ("%U+-").has (sign)
 			s_not_void: s /= Void
 			s_long_enough: s.count >= 3
-			s_has_hexadecimal_prefix: s.substring_index ("0x", 1) = 1
+			s_has_hexadecimal_prefix: s.as_lower.substring_index ("0x", 1) = 1
 			s_has_hexadecimal_suffix: -- for all i in [3..s.count] ("0123456789ABCDEFabcdef").has (s.item (i))
 		do
 			constant_type := a_type
@@ -448,8 +449,6 @@ feature -- Settings
 			-- Extract size information of `t' and assign it to Current.
 			-- It will discard existing information, because it might be
 			-- possible that we entered an INTEGER_8 constant value.
-		local
-			mask: like default_type
 		do
 			constant_type := t
 			adjust_type
@@ -474,20 +473,6 @@ feature -- Output
 			when natural_64_mask then Result := natural_64_value.out
 			end
 		end	
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if constant_type /= Void then
-				ctxt.put_text_item (ti_l_curly)
-				constant_type.format (ctxt)
-				ctxt.put_text_item (ti_r_curly)
-				ctxt.put_space
-			end
-			ctxt.put_text_item (create {NUMBER_TEXT}.make (string_value))
-		end
 
 feature -- Generation
 
@@ -789,8 +774,6 @@ feature {NONE} -- Translation
 			area: SPECIAL [CHARACTER]
 			val: CHARACTER
 			last_nat_64: NATURAL_64
-			type_a: TYPE_A
-			mask: like default_type
 		do
 			is_initialized := True
 			j := s.count - 1
@@ -857,8 +840,6 @@ feature {NONE} -- Translation
 			area: SPECIAL [CHARACTER]
 			i, nb: INTEGER
 			last_nat_64: NATURAL_64
-			type_a: TYPE_A
-			mask: like default_type
 		do
 			is_initialized := True
 

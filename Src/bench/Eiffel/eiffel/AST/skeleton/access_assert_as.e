@@ -15,6 +15,9 @@ inherit
 			access_type, is_argument
 		end
 
+create
+	initialize
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -59,6 +62,7 @@ feature -- Access
 					create vuar1
 					context.init_error (vuar1)
 					vuar1.set_arg_name (feature_name)
+					vuar1.set_location (feature_name)
 					Error_handler.insert_error (vuar1)
 				end
 				create argument_b
@@ -72,6 +76,7 @@ feature -- Access
 					create veen2b
 					context.init_error (veen2b)
 					veen2b.set_identifier (feature_name)
+					veen2b.set_location (feature_name)
 					Error_handler.insert_error (veen2b)
 				else
 						-- Look for a feature

@@ -7,11 +7,11 @@ class FEATURE_LIST_AS
 
 inherit
 	FEATURE_SET_AS
-		redefine
-			format
-		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (f: like features) is
 			-- Create a new FEATURE_LIST AST node.
@@ -35,6 +35,20 @@ feature -- Attributes
 
 	features: EIFFEL_LIST [FEATURE_NAME]
 			-- List of feature names
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := features.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := features.end_location
+		end
 
 feature -- Comparison
 
@@ -65,30 +79,14 @@ feature -- Export status computing
 					vlel3.set_class (System.current_class)
 					vlel3.set_parent (parent.parent)
 					vlel3.set_feature_name (feature_name)
+					vlel3.set_location (features.item.start_location)
 					Error_handler.insert_error (vlel3)
 				end
 				features.forth
 			end
 		end
-	
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-			--| what if multiple names in ancestors?
-		do
-			ctxt.set_separator (ti_Comma)
-			ctxt.set_space_between_tokens
-			ctxt.continue_on_failure
-			features.format (ctxt)
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.set_separator (ti_Comma)
-			ctxt.set_space_between_tokens
-			features.simple_format (ctxt)
-		end
+		
+invariant
+	features_not_void: features /= Void
 			
 end -- class FEATURE_LIST_AS

@@ -7,10 +7,7 @@ indexing
 deferred class ATOMIC_AS
 
 inherit
-	AST_EIFFEL
-		redefine
-			byte_node
-		end
+	EXPR_AS
 
 	SHARED_TYPES
 

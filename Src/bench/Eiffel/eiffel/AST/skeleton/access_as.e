@@ -18,6 +18,11 @@ feature -- Properties
 	access_name: STRING is
 		deferred
 		end
+		
+	parameters: EIFFEL_LIST [EXPR_AS] is
+			-- List of parameters if any
+		deferred
+		end
 
 feature
 
@@ -55,6 +60,7 @@ feature -- Error reporting
 			l_vuar2.set_argument_name (a_feature.arguments.item_name (a_pos))
 			l_vuar2.set_actual_type (a_actual_type)
 			l_vuar2.set_formal_type (a_formal_type)
+			l_vuar2.set_location (parameters.i_th (a_pos).start_location)
 			Error_handler.insert_error (l_vuar2)
 		end
 

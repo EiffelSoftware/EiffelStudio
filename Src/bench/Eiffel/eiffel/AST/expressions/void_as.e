@@ -12,11 +12,16 @@ inherit
 			type_check
 		end
 		
+	LEAF_AS
+		
 	SHARED_TYPES
 		export
 			{NONE} all
 		end
-	
+
+create
+	make_with_location
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -47,14 +52,6 @@ feature -- Visitor
 			-- Process Void element.
 		do
 			v.process_void_as (Current)
-		end
-
-feature {AST_EIFFEL, COMPILER_EXPORTER} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconsitute text according to context.
-		do
-			ctxt.put_text_item (ti_void)
 		end
 
 end -- class VOID_AS

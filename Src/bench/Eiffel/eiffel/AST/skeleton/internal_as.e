@@ -23,18 +23,32 @@ feature {AST_FACTORY} -- Initialization
 			compound_set: compound = c
 		end
 
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_internal_as (Current)
-		end
-
 feature -- Attributes
 
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if compound /= Void then
+				Result := compound.start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if compound /= Void then
+				Result := compound.end_location
+			else
+				Result := null_location
+			end
+		end
 
 feature -- test for empty body
 
@@ -111,72 +125,11 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (begin_keyword)
-			ctxt.put_new_line
-			if compound /= Void then
-				ctxt.indent
-				format_compound (ctxt)
-				ctxt.put_new_line
-				ctxt.exdent
-			end
-		end
-
-	format_compound (ctxt : FORMAT_CONTEXT) is
-			-- Special formatting for compounds.
-			-- A semicolon is needed at the end of a line when current line
-			-- ends with a call with no arguments and the next line starts
-			-- with an opening parenthesis. Example:
-			--		do_nothing;
-			--		(create {BOOLEAN_REF}).do_nothing
-		local
-			lc: like compound
-			semicolon_candidate: BOOLEAN
-		do
-			lc := compound
-			ctxt.begin
-			from lc.start until lc.after loop
-
-				ctxt.new_expression
-				ctxt.begin
-				lc.item.simple_format (ctxt)
-				ctxt.commit
-
-				semicolon_candidate := True
-					--| FIXME Not always True of course, but
-					--| a simplification of the problem:
-					--| Semicolons are always added when next line starts
-					--| with opening parenthesis.
-
-				lc.forth
-				if not lc.after then
-					if semicolon_candidate and then lc.item.starts_with_parenthesis then
-						ctxt.put_text_item (ti_Semi_colon)
-						debug ("DOCUMENTATION")
-							io.put_string ("Semicolon was needed.%N")
-						end
-					end
-					ctxt.put_new_line
-				end
-			end
-			ctxt.commit
-		end
-
 feature {INTERNAL_AS, CMD, USER_CMD, INTERNAL_MERGER} -- Replication
 	
 	set_compound (c: like compound) is
 		do
 			compound := c
 		end;	
-
-feature {NONE} -- Formatter
-	
-	begin_keyword: TEXT_ITEM is 
-		deferred
-		end
 	
 end -- class INTERNAL_AS

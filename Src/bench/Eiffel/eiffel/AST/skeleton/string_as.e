@@ -12,16 +12,25 @@ inherit
 			type_check, byte_node, value_i, is_equivalent
 		end
 	
+	LEAF_AS
+	
 	CHARACTER_ROUTINES
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (s: STRING) is
+feature {NONE} -- Initialization
+
+	initialize (s: STRING; l, c, p: INTEGER) is
 			-- Create a new STRING AST node.
 		require
 			s_not_void: s /= Void
+			l_non_negative: l >= 0
+			c_non_negative: c >= 0
+			p_non_negative: p >= 0
 		do
 			value := s
+			set_position (l, c, p, s.count)
 		ensure
 			value_set: value = s
 		end
@@ -104,18 +113,6 @@ feature -- Output
 			Result.extend ('"')
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if is_once_string then
-				ctxt.put_text_item (ti_once_keyword)
-				ctxt.put_space
-			end
-			ctxt.put_string_item (string_value)
-		end
-
 feature {DOCUMENTATION_ROUTINES} -- Output
 
 	append_nice_multilined (s: STRING; st: STRUCTURED_TEXT; ind: INTEGER) is
@@ -163,5 +160,8 @@ feature {INFIX_PREFIX_AS, DOCUMENTATION_ROUTINES} -- Status setting
 		end
 
 	carriage_return_char: CHARACTER is '%N'
+
+invariant
+	value_not_void: value /= Void
 
 end -- class STRING_AS

@@ -18,7 +18,10 @@ inherit
 			{NONE} all
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (l: like language_name; a: STRING_AS) is
 			-- Create a new EXTERNAL AST node.
@@ -51,6 +54,20 @@ feature -- Attributes
 	alias_name_id: INTEGER
 			-- Alias name ID in NAMES_HEAP.
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := language_name.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := language_name.end_location
+		end
+
 feature -- Properties
 
 	is_external: BOOLEAN is True
@@ -70,7 +87,6 @@ feature -- Conveniences
 	type_check is
 			-- Type checking
 		do
-			Error_handler.set_error_position (language_name.start_position)
 			language_name.extension.type_check (Current)
 		end
 
@@ -93,25 +109,7 @@ feature -- Byte code
 			end
 		end
 
-feature {AST_EIFFEL, FEATURE_I} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text
-		do
-			ctxt.put_text_item (ti_External_keyword)
-			ctxt.indent
-			ctxt.put_new_line
-			ctxt.format_ast (language_name.language_name)
-			ctxt.exdent
-			ctxt.put_new_line
-			if alias_name_id > 0 then
-				ctxt.put_text_item (ti_Alias_keyword)
-				ctxt.indent
-				ctxt.put_new_line
-				ctxt.put_quoted_string_item (Names_heap.item (alias_name_id))
-				ctxt.put_new_line
-				ctxt.exdent
-			end
-		end
+invariant
+	language_name_not_void: language_name /= Void
 
 end -- class EXTERNAL_AS

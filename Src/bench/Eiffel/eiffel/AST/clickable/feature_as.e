@@ -10,7 +10,7 @@ inherit
 	AST_EIFFEL
 		redefine
 			type_check, byte_node,
-			format, number_of_breakpoint_slots, location
+			number_of_breakpoint_slots
 		end
 
 	COMPARABLE
@@ -33,9 +33,12 @@ inherit
 
 	REFACTORING_HELPER
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (f: like feature_names; b: like body; i: like indexes; l, s, e: INTEGER) is
+feature {NONE} -- Initialization
+
+	initialize (f: like feature_names; b: like body; i: like indexes) is
 			-- Create a new FEATURE AST node.
 		require
 			f_not_void: f /= Void
@@ -53,17 +56,10 @@ feature {AST_FACTORY} -- Initialization
 				end
 				System.current_class.set_has_unique
 			end
-			create location.reset
-			location.set_line_number (l)
-			location.set_start_position (s)
-			location.set_end_position (e)
-			set_start_position
-			set_end_position
 		ensure
 			feature_names_set: feature_names = f
 			body_set: body = b
 			indexes_set: indexes = i
-			location_not_void: location /= Void
 		end
 
 feature -- Visitor
@@ -74,33 +70,10 @@ feature -- Visitor
 			v.process_feature_as (Current)
 		end
 
-feature {NONE} -- Initialization
- 
-	set_start_position is
-		require
-			location_not_void: location /= Void
-		do
-			--| No need to test whether feature_names is empty, because the class is
-			--| FEATURE_AS and there is allwas at least one feature name
-			location.set_start_position (location.start_position - feature_names.first.offset)
-		end
-
-	set_end_position is
-		require
-			location_not_void: location /= Void
-		do
-			--| No need to test whether feature_names is empty, because the class is
-			--| FEATURE_AS and there is allwas at least one feature name
-			location.set_end_position (location.end_position + feature_names.first.end_offset)
-		end
-
 feature -- Access
 
 	feature_names: EIFFEL_LIST [FEATURE_NAME]
 			-- Names of feature
-
-	location: TOKEN_LOCATION
-			-- Location of current feature.
 
 	body: BODY_AS
 			-- Feature body: this attribute will be compared during
@@ -120,6 +93,23 @@ feature -- Access
 		do
 			if indexes /= Void then
 				Result := indexes.external_name
+			end
+		end
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := feature_names.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := body.end_location
+			if Result.is_null then
+				Result := feature_names.end_location
 			end
 		end
 		
@@ -163,6 +153,19 @@ feature -- Setting
 			-- Set `id' to `i'.
 		do
 			id := i
+		end
+
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_feature_names (f: like feature_names) is
+			-- Set `feature_names' to `f'
+		require
+			f_not_void: f /= Void
+			f_not_empty: not f.is_empty
+		do
+			feature_names := f
+		ensure
+			feature_names_set: feature_names = f
 		end
 
 feature -- Comparison
@@ -438,134 +441,6 @@ feature -- Stoning
 			Result := feature_names.first.internal_name
 		end
 
-feature -- Debugger
- 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			comments: EIFFEL_COMMENTS
-			cont: CONTENT_AS
-			is_const_or_att: BOOLEAN
-			feature_dec: FEATURE_DEC_ITEM
-		do
-			ctxt.begin
-			ctxt.put_new_line
-			ctxt.set_separator (ti_Comma)
-			ctxt.set_space_between_tokens
-			ctxt.abort_on_failure
-			create feature_dec.make (feature_names.first.associated_feature_name)
-			feature_dec.set_before
-			ctxt.put_text_item (feature_dec)
-			if ctxt.has_feature_i then
-					--| Should only be one feature name
-				feature_names.first.main_feature_format (ctxt)
-			else
-				feature_names.format (ctxt)
-			end
-			if not ctxt.last_was_printed then
-				ctxt.rollback
-			else
-				body.format (ctxt)
-				create feature_dec.make (feature_names.first.associated_feature_name)
-				feature_dec.set_after
-				ctxt.put_text_item_without_tabs (feature_dec)
-				if not ctxt.is_feature_short then
-					ctxt.put_new_line
-				end
-					-- Print comment if the content of the body is
-					-- an attribute or a constant.
-				cont := body.content
-				is_const_or_att := cont = Void or else cont.is_constant
-				if is_const_or_att then
-					ctxt.indent
-					ctxt.indent
-					if ctxt.is_feature_short then
-						ctxt.put_new_line
-					end
-					comments := ctxt.feature_comments
-					if comments /= Void then
-						ctxt.put_comments (comments)
-					end
-					ctxt.put_origin_comment
-					ctxt.exdent
-					ctxt.exdent
-				end
-				ctxt.commit
-			end
-		end
-
-feature {COMPILER_EXPORTER} -- Setting
-
-	set_feature_names (f: like feature_names) is
-			-- Set `feature_names' to `f'
-		do
-			feature_names := f
-		end
-
-	set_body (b: like body) is
-			-- Set `body' to `b'
-		do
-			body := b
-		end;				
-
-	update_positions (sp: like start_position; ep: like end_position) is
-			-- Set `start_position' to `sp' and `end_position' to `ep'
-		require
-			location_not_void: location /= Void
-		do
-			location.set_start_position (sp)
-			location.set_end_position (ep)
-		ensure
-			start_position_set: start_position = sp
-			end_position_set: end_position = ep
-		end
-
-	update_positions_with_offset (offset: INTEGER) is
-			-- Add `offset' to `start_position' and `end_position'
-			-- reflect the fact that current feature is not at the 
-			-- same position in the source file.
-			--| `offset' may be positive as well as negative.
-		require
-			location_not_void: location /= Void
-		do
-			location.set_start_position (start_position + offset)
-			location.set_end_position (end_position + offset)
-		ensure
-			start_position_set: start_position = old start_position + offset
-			end_position_set: end_position = old end_position + offset
-		end
-
-feature {COMPILER_EXPORTER, AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			c: EIFFEL_COMMENTS
-			cont: CONTENT_AS
-			is_const_or_att: BOOLEAN	
-		do
-			c := ctxt.eiffel_file.current_feature_comments
-			ctxt.set_feature_comments (c)
-			if feature_names /= Void then
-				ctxt.set_separator (ti_Comma)
-				ctxt.set_space_between_tokens
-				feature_names.simple_format (ctxt)
-			end
-			body.simple_format (ctxt)
-			cont := body.content
-			is_const_or_att := cont = Void or else cont.is_constant
-			if is_const_or_att and then c /= Void then
-				ctxt.put_new_line
-				ctxt.indent
-				ctxt.indent
-				ctxt.put_comments (c)
-				ctxt.exdent
-				ctxt.exdent
-			else
-				ctxt.put_new_line
-			end
-		end
-
 feature {COMPILER_EXPORTER} -- Initialization
 
 	trace is
@@ -580,6 +455,9 @@ feature {COMPILER_EXPORTER} -- Initialization
 		end
 
 invariant
+	feature_names_not_void: feature_names /= Void
+	feature_names_not_empty: not feature_names.is_empty
+	body_not_void: body /= Void
 	can_have_indexing_clause: indexes /= Void implies feature_names.count = 1
 
 end -- class FEATURE_AS

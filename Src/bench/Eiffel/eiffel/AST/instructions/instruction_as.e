@@ -11,14 +11,10 @@ inherit
 			byte_node
 		redefine
 			number_of_breakpoint_slots, 
-			location,
 			type_check
 		end
 
 feature -- Access
-
-	location: TOKEN_LOCATION
-			-- Location of Current.
 
 	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST
@@ -36,7 +32,6 @@ feature -- Update
 	type_check is
 			-- Record the current position and type check the AST node.
 		do
-			Error_handler.set_error_position (start_position)
 			perform_type_check
 		end
 
@@ -45,7 +40,7 @@ feature -- Update
 		deferred
 		end
 
-feature {INTERNAL_AS} -- Status report
+feature {INTERNAL_AS, AST_FORMATTER_VISITOR} -- Status report
 
 	starts_with_parenthesis: BOOLEAN is
 			-- Is the first format item a "(".

@@ -1,0 +1,53 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Controls</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Controls">
+	</HEAD>
+
+	<BODY>
+		<H1>Controls Sample</H1>
+		<CENTER><IMG SRC="controls.png" ALT="controls" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\controls\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		<P>After launching the program, an empty window will be displayed. There are numerous menus in the window, each relating to a different type of
+		<A HREF="/libraries/wel/content/controls/index.html">control</A>. Each menu has "Create" and "Delete" along with a other options specific to each control. By selecting these
+		menu options, controls will be created and modified as demonstrated in the above illustration.
+		</P>
+
+		<H2>Under the Hood</H2>
+	
+		<P>Each menu is an instance of <A CLASS="eclass" HREF="/libraries/wel/content/support/wel_menu_chart.html">WEL_MENU</A> and on_menu_command has been redefined in <A CLASS="eclass" HREF="/libraries/wel/samples/samples/root_cluster/main_window_chart.html">MAIN_WINDOW</A> to
+		perform the appropriate actions.<P>
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/samples/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/samples/root_cluster/controls_demo_chart.html">CONTROLS</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/samples/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+			</UL>
+		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/content/controls/list_view.html">WEL_LIST_VIEW</A>
+			<BR><A HREF="/libraries/wel/content/controls/combo_box.html">WEL_COMBO_BOX</A>
+			<BR><A HREF="/libraries/wel/content/controls/push_button.html">WEL_PUSH_BUTTON</A>
+			<BR><A HREF="/libraries/wel/content/controls/edit.html">WEL_EDIT</A>
+			<BR><A HREF="/libraries/wel/content/controls/radio_button.html">WEL_RADIO_BUTTON</A>
+			<BR><A HREF="/libraries/wel/content/controls/check_button.html">WEL_CHECK_BUTTON</A>
+			<BR><A HREF="/libraries/wel/content/controls/multiple_line_edit.html">WEL_MULTIPLE_LINE_EDIT</A>
+			<BR><A HREF="/libraries/wel/content/controls/scroll_bar.html">WEL_SCROLL_BAR</A>
+		</P>
+	</BODY>
+</HTML>

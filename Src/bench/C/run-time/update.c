@@ -69,18 +69,26 @@ char ignore_updt;
 	}
 
 /* TEMPORARY */
+#ifdef __WATCOMC__
+#define UPDTLEN 10
+#define UPDT_NAME "\\melted.eif"
+#else
+#define UPDTLEN 5
+#define UPDT_NAME "/.UPDT"
+#endif
+
 meltpath = getenv ("MELT_PATH");
 if (meltpath) 
-	filename = (char *)cmalloc (strlen (meltpath) + 7);
+	filename = (char *)cmalloc (strlen (meltpath) + UPDTLEN + 2);
 else
-	filename = (char *)cmalloc (8);
+	filename = (char *)cmalloc (UPDTLEN + 3);
 if (filename == (char *)0){
 	enomem();	
 	exit (0);	
 }
 if (meltpath) strcpy (filename, meltpath);
 else strcpy (filename, ".");
-strcat(filename, "/.UPDT");
+strcat(filename, UPDT_NAME);
 
 #ifdef DEBUG
 	dprintf(1)("Frozen level = %d\n", zeroc);
@@ -177,7 +185,7 @@ if (body_id >= 0)
 		if (bcode == (char *) 0)
 			enomem();
 		/* Read the byte code */
-		wread(bcode, bsize * sizeof(char));
+		wread(bcode, (int)(bsize * sizeof(char)));
 if (body_id >= 0)
 		melt[body_id] = bcode;
 
@@ -443,7 +451,7 @@ private void routid_updt()
 		wread(&has_cecil, 1);		/* Cecil ? */
 		if (has_cecil) {
 			size = wlong();		/* Hash table size */
-			names = names_updt(size);
+			names = names_updt((short) size);
 			feature_ids = (uint32 *) cmalloc(size * sizeof(uint32));
 			if (feature_ids == (uint32 *) 0)
 				enomem();

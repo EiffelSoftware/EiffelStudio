@@ -14,6 +14,7 @@
 #include "config.h"
 #include "portable.h"
 #include <sys/types.h>
+#include <unistd.h>
 #include "dir.h"
 #include "plug.h"
 
@@ -120,5 +121,20 @@ DIR *dirp;
 #else
 	return makestr(dp->d_name, strlen(dp->d_name));
 #endif
+}
+
+public EIF_OBJ dir_current()
+{
+	/* Return the Eiffel string corresponding to the current working
+	 * directory.  Note this always returns a new string.
+	 */
+
+	char *cwd;
+	char *cwd_string;
+
+	cwd = getcwd(NULL, 0);
+	cwd_string = makestr(cwd, strlen (cwd));
+	free (cwd);
+	return ((EIF_OBJ)cwd_string);
 }
 

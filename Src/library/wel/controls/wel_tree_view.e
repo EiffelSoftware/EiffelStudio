@@ -40,6 +40,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_TVIF_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_by_id
@@ -165,7 +170,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_beginlabeledit (info: WEL_NM_TREE_VIEW) is
+	on_tvn_beginlabeledit (info: WEL_TREE_VIEW_ITEM) is
 			-- A label editing for an item has started.
 		require
 			exists: exists
@@ -187,8 +192,16 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_endlabeledit (info: WEL_NM_TREE_VIEW) is
+	on_tvn_endlabeledit (info: WEL_TREE_VIEW_ITEM) is
 			-- A label editing for an item has ended.
+		require
+			exists: exists
+		do
+		end
+
+	on_tvn_getdispinfo (info: WEL_TREE_VIEW_ITEM) is
+			-- The parent window must provide information needed
+			-- to display or sort an item.
 		require
 			exists: exists
 		do
@@ -210,7 +223,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_keydown (info: WEL_NM_TREE_VIEW) is
+	on_tvn_keydown (virtual_key: INTEGER) is
 			-- The user pressed a key and the tree-view control 
 			-- has the input focus.
 		require
@@ -233,38 +246,76 @@ feature -- Notifications
 		do
 		end
 
+	on_tvn_setdispinfo (info: WEL_TREE_VIEW_ITEM) is
+			-- The parent window must update the informations
+			-- it maintains about an item.
+		require
+			exists: exists
+		do
+		end
+
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 	process_notification_info (notification_info: WEL_NMHDR) is
 			-- Process a `notification_code' sent by Windows
 			-- through the Wm_notify message
 		local
-			tree_info: WEL_NM_TREE_VIEW
+			nm_info: WEL_NM_TREE_VIEW
+			disp_info: WEL_TV_DISPINFO
+			keydown_info: WEL_TV_KEYDOWN
 			code: INTEGER
 		do
-			!! tree_info.make_by_nmhdr (notification_info)
 			code := notification_info.code 
 			if code = Tvn_begindrag then
-				on_tvn_begindrag (tree_info)
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tvn_begindrag (nm_info)
 			elseif code = Tvn_beginlabeledit then
-				on_tvn_beginlabeledit (tree_info)
+				!! disp_info.make_by_nmhdr (notification_info)
+				on_tvn_beginlabeledit (disp_info.tree_item)
 			elseif code = Tvn_beginrdrag then
-				on_tvn_beginrdrag (tree_info)
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tvn_beginrdrag (nm_info)
 			elseif code = Tvn_deleteitem then
-				on_tvn_deleteitem (tree_info)
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tvn_deleteitem (nm_info)
 			elseif code = Tvn_endlabeledit then
-				on_tvn_endlabeledit (tree_info)
+				!! disp_info.make_by_nmhdr (notification_info)
+				on_tvn_endlabeledit (disp_info.tree_item)
+			elseif code = Tvn_getdispinfo then
+				!! disp_info.make_by_nmhdr (notification_info)
+				on_tvn_getdispinfo (disp_info.tree_item)
 			elseif code = Tvn_itemexpanded then
-				on_tvn_itemexpanded (tree_info)
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tvn_itemexpanded (nm_info)
 			elseif code = Tvn_itemexpanding then
-				on_tvn_itemexpanding (tree_info)
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tvn_itemexpanding (nm_info)
 			elseif code = Tvn_keydown then
-				on_tvn_keydown (tree_info)
+				!! keydown_info.make_by_nmhdr (notification_info)
+				on_tvn_keydown (keydown_info.virtual_key)
 			elseif code = Tvn_selchanged then
-				on_tvn_selchanged (tree_info)
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tvn_selchanged (nm_info)
 			elseif code = Tvn_selchanging then
-				on_tvn_selchanging (tree_info)
+				!! nm_info.make_by_nmhdr (notification_info)
+				on_tvn_selchanging (nm_info)
+			elseif code = Tvn_setdispinfo then
+				!! disp_info.make_by_nmhdr (notification_info)
+				on_tvn_setdispinfo (disp_info.tree_item)
 			end
+		end
+
+feature {WEL_NM_TREE_VIEW} -- Implementation
+
+	get_item_with_data (an_item: WEL_TREE_VIEW_ITEM): WEL_TREE_VIEW_ITEM is
+			-- Get an item and return the same item with all the
+			-- data valid
+		do
+			an_item.set_mask (Tvif_text + Tvif_state + Tvif_param)
+			an_item.set_text ("")
+			an_item.set_cchtextmax (30)
+			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
+			Result := an_item
 		end
 
 feature {NONE} -- Implementation

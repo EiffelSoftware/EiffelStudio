@@ -39,6 +39,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make,
@@ -108,7 +113,7 @@ feature -- Actions
 			file_dialog: EV_FILE_OPEN_DIALOG
 		do
 			create file_dialog
-			file_dialog.filters.extend (["*.ace", "Ace Files (*.ace)"])
+			set_dialog_filters_and_add_all (file_dialog, <<ace_files_filter>>)
 			file_dialog.open_actions.extend (agent retrieve_ace_file (file_dialog))
 			file_dialog.show_modal_to_window (window)
 		end

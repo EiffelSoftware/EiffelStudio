@@ -47,8 +47,10 @@ feature
 					project_eif.close;
 					-- Check that it is a precompiled cluster
 	
-					sys := project.saved_workbench.system;
-					if (project /= Void) and then sys.is_precompiled then
+					if project /= Void then
+						sys := project.saved_workbench.system
+					end
+					if sys /= Void and then sys.is_precompiled then
 						Universe.copy (project.saved_workbench.universe);
 						Workbench.set_system (sys);
 		

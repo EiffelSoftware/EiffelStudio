@@ -4,66 +4,34 @@ indexing
 	Date: "$Date$"
 	Revision: "$Revision$"
 
-class BEHAVIOR_FORM 
+class BEHAVIOR_FORM
 
 inherit
-
-
 	EDITOR_FORM
 		redefine
-			show
+			initialize, show
 		end
 
 	WINDOWS
-		select
-			init_toolkit
-		end
 
 creation
-
 	make
-    
-feature -- Interface
 
-	make_visible (a_parent: COMPOSITE) is
+feature {NONE} -- Initialization
+
+	initialize (par: EV_CONTAINER) is
 		do
-			initialize (Widget_names.behavior_form_name, a_parent)
-			!! event_catalog.make (Widget_names.event_catalog_name, Current)
-			!! behavior_editor.make (Widget_names.behaviour_editor_name, Current)
-			
-			set_size (300, 350)
-			forbid_recompute_size
-			set_fraction_base(10)
-			attach_top (event_catalog, 0)
-			attach_left (event_catalog, 0)
-			attach_right (event_catalog, 0)
-			attach_bottom_position (event_catalog, 3)
-			attach_top_position (behavior_editor.form, 3)
-			attach_left (behavior_editor.form, 0)
-			attach_right (behavior_editor.form, 0)
-			attach_bottom (behavior_editor.form, 0)
-			show_current
+			Precursor (par)
+			create event_catalog.make (Current)
+			create behavior_editor.make (Current)
 		end
 
-	update_translation_page is
-		do
-			if event_catalog.translation_page_shown then
-				event_catalog.update_translations
-			end
-		end
+feature -- Access
 
 	clear_editor is
 			-- Reset the edited_function of Current. 
 		do
 			behavior_editor.clear
-		end
-
-	unregister_holes is
-		do
-			if is_initialized then
-				event_catalog.unregister_holes
-				behavior_editor.unregister_holes
-			end
 		end
 
 	reset_editor is
@@ -80,7 +48,7 @@ feature -- Interface
 			if not current_state.after then
 				behavior := current_state.output.data
 			else
-				!! behavior.make
+				create behavior.make
 				behavior.set_internal_name ("")
 				behavior.set_context (context)
 				current_state.add (context, behavior)
@@ -99,21 +67,11 @@ feature -- Interface
 			end
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	event_catalog: EVENT_CATALOG
 
 	behavior_editor: BEHAVIOR_EDITOR
-
-	form_number: INTEGER is
-		do
-			Result := Context_const.behavior_form_nbr
-		end
-
-	format_number: INTEGER is
-		do
-			Result := Context_const.behaviour_format_nbr
-		end
 
 	reset is
 		do
@@ -132,4 +90,5 @@ feature {NONE}
 			-- Do nothing
 		end
 
-end
+end -- class BEHAVIOR_FORM
+

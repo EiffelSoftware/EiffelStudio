@@ -4,77 +4,97 @@ indexing
 	Date: "$Date$"
 	Revision: "$Revision$"
 
-class TEXT_FIELD_FORM 
+class TEXT_FIELD_FORM
 
 inherit
-
 	EDITOR_FORM
 		redefine
-			context
+			initialize, context
 		end
 
 creation
-
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
+
+	initialize (par: EV_CONTAINER) is
+		local
+			cmd: CONTEXT_CMD
+			arg: EV_ARGUMENT1 [CONTEXT_EDITOR]
+		do
+			Precursor (par)
+			set_spacing (5)
+			create arg.make (editor)
+
+			create default_text.make_with_label (Current,
+										Widget_names.text_field_text_name)
+			create {SET_DEFAULT_TEXT_CMD} cmd
+			default_text.add_return_command (cmd, arg)
+
+			create passwd_character.make_with_label (Current,
+										Widget_names.passwd_character_name)
+			passwd_character.set_maximum_text_length (1)
+			create {PASSWD_FIELD_CMD} cmd
+			passwd_character.add_return_command (cmd, arg)
+
+			create maximum_size.make_with_label (Current,
+										Widget_names.maximum_size_name)
+			create {TEXT_MAX_CMD} cmd
+			maximum_size.add_return_command (cmd, arg)
+
+			create read_only.make_with_text (Current,
+										Widget_names.read_only_name)
+			create {TEXT_READ_CMD} cmd
+			read_only.add_toggle_command (cmd, arg)
+		end
+
+feature {NONE} -- GUI attributes
+
+	default_text, passwd_character: EB_TEXT_FIELD
 
 	maximum_size: INTEGER_TEXT_FIELD
 
+	read_only: EV_CHECK_BUTTON
+
 	context: TEXT_FIELD_C is
 		do
-			Result ?= editor.edited_context
+			Result ?= Precursor
 		end
 
-	form_number: INTEGER is
-		do
-			Result := Context_const.text_field_att_form_nbr
-		end
-
-	format_number: INTEGER is
-		do
-			Result := Context_const.attribute_format_nbr
-		end
-
-	text_field_cmd: TEXT_F_CMD is
-		once
-			!! Result
-		end
-
-feature
-
-	make_visible (a_parent: COMPOSITE) is
-		local
-			size_l: LABEL
-		do
-			initialize (Widget_names.text_field_form_name, a_parent)
-
-			!! maximum_size.make (Widget_names.maximum_size_name, 
-					Current, Text_field_cmd, editor)
-			!! size_l.make (Widget_names.maximum_size_name, Current)
-			maximum_size.set_width (50)
-
-			attach_left (size_l, 10)
-			attach_right_widget (maximum_size, size_l, 5)
-			attach_right (maximum_size, 10)
-
-			attach_top (size_l, 15)
-			attach_top (maximum_size, 10)
---			attach_bottom (maximum_size, 0)
---			attach_bottom (size_l, 0)
-			show_current
-		end
+feature -- Access
 
 	reset is
 			-- reset the content of the form
+		local
+			passwd_f: PASSWORD_FIELD_C
 		do
-			maximum_size.set_int_value (context.maximum_size)
+			default_text.set_text (context.default_text)
+			passwd_f ?= context
+			if passwd_f /= Void then
+				passwd_character.set_text (passwd_f.character.out)
+				passwd_character.show
+			else
+				passwd_character.hide
+			end
+			maximum_size.set_int_value (context.maximum_text_length)
+			read_only.set_state (not context.is_editable)
 		end
 
 	apply is
 			-- update the context according to the content of the form
+		local
+			passwd_f: PASSWORD_FIELD_C
 		do
-			context.set_maximum_size (maximum_size.int_value)
+			context.set_default_text (default_text.text)
+			context.set_text (default_text.text)
+			if passwd_character.shown then
+				passwd_f ?= context
+				if passwd_f /= Void then
+					passwd_f.set_character (passwd_character.text.item (1))
+				end
+			end
+			context.set_maximum_text_length (maximum_size.int_value)
 		end
 
-end
+end -- class TEXT_FIELD_FORM
+

@@ -1,25 +1,29 @@
 indexing
-	description: "Smart text field (with a label before)."
-	Id: "$Id$"
-	Date: "$Date$"
-	Revision: "$Revision$"
+	description: "Smart item field (with a label before).%
+				% List with only one item, looking like a text field."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
-class EB_TEXT_FIELD
+class
+	EB_ITEM_FIELD
 
 inherit
-	EV_TEXT_FIELD
+	EV_LIST
 
 creation
 	make_with_label
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make_with_label (par: EV_CONTAINER; txt: STRING) is
-			-- Create the text field with the text `txt' before.
+			-- Create the item field with the text `txt' before.
+
 		local
 			hbox: EV_HORIZONTAL_BOX
 		do
 			create hbox.make (par)
+			hbox.set_minimum_height (23) --XX size of one item
 			hbox.set_expand (False)
 			create label.make_with_text (hbox, txt)
 			label.set_expand (False)
@@ -29,7 +33,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	label: EV_LABEL
-			-- Label of the text field
+			-- Label of the item field
 
 	set_label (txt: STRING) is
 			-- Set the text of the `label'.
@@ -37,5 +41,5 @@ feature -- Access
 			label.set_text (txt)
 		end
 
-end -- class EB_TEXT_FIELD
+end -- class EB_ITEM_FIELD
 

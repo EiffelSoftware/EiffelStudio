@@ -3191,7 +3191,7 @@ rt_private struct chunk *find_std_chunk(register struct chunk *start)
 		 * since we do not want to deal with those spoilt chunks more than once.
 		 */
 		if (spoilt_tbl != (struct s_table *) 0)
-			if (S_FOUND == s_search(spoilt_tbl, (char *) (start + 1)))
+			if (EIF_SEARCH_FOUND == s_search(spoilt_tbl, (char *) (start + 1)))
 				continue;
 
 		/* Skip the active 'to' space, if any: we must not have 'from' and

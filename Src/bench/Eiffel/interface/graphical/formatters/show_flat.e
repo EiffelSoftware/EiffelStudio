@@ -9,7 +9,7 @@ inherit
 		rename
 			filter_context as flat_context
 		redefine
-			dark_symbol, display_temp_header
+			dark_symbol, display_temp_header, post_fix
 		end;
 	SHARED_SERVER;
 	SHARED_FORMAT_TABLES
@@ -55,4 +55,6 @@ feature {NONE}
 			text_window.display_header ("Exploring ancestors to produce flat form...")
 		end;
 	
+	post_fix: STRING is "fla";
+
 end

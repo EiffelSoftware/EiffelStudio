@@ -6,7 +6,7 @@ inherit
 
 	FORMATTER
 		redefine
-			dark_symbol, display_temp_header
+			dark_symbol, display_temp_header, post_fix
 		end
 
 creation
@@ -50,5 +50,7 @@ feature {NONE}
 		do
 			text_window.display_header ("Searching for once routines...")
 		end;
+
+	post_fix: STRING is "onc";
 
 end

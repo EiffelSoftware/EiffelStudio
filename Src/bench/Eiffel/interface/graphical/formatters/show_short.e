@@ -8,7 +8,7 @@ inherit
 		rename
 			filter_context as short_context
 		redefine
-			dark_symbol, display_temp_header
+			dark_symbol, display_temp_header, post_fix
 		end;
 	SHARED_FORMAT_TABLES
 
@@ -50,5 +50,7 @@ feature {NONE}
 		do
 			text_window.display_header ("Producing short form...")
 		end;
+
+	post_fix: STRING is "sho";
 
 end

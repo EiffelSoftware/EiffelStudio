@@ -1347,7 +1347,11 @@ char *path;
 	char *ptr;
 
 	strcpy (temp, path);
+#ifdef __WINDOWS_386__
+	ptr = rindex(temp, '\\');
+#else
 	ptr = rindex(temp, '/');
+#endif
 	if (ptr != (char *) 0)
 		*ptr = '\0';
 	else

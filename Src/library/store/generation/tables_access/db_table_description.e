@@ -45,6 +45,27 @@ feature -- Access
 		deferred
 		end
 
+	type_list: ARRAYED_LIST [INTEGER] is
+			-- Feature type list. Can be interpreted as a list
+			-- or a hash-table.
+		deferred
+		end
+
+	printable_type_table: HASH_TABLE [STRING, INTEGER] is
+			-- Default string associated to attributes possible
+			-- types.
+		once
+				-- Number of possible types.
+			create Result.make (7)
+			Result.extend ("character", Character_type)
+			Result.extend ("boolean", Boolean_type)
+			Result.extend ("integer", Integer_type)
+			Result.extend ("real", Real_type)
+			Result.extend ("double", Double_type)
+			Result.extend ("string", String_type)
+			Result.extend ("date_time", Date_time_type)
+		end
+
 	to_delete_fkey_from_table: HASH_TABLE [INTEGER, INTEGER] is
 			-- List of tables depending on this one and their
 			-- foreign key for this table.
@@ -101,6 +122,20 @@ feature -- Access
 	No_id: INTEGER is 0
 			-- `Id_code' value when no ID exists or ID constraint is not
 			-- located to a single attribute.
+
+	Character_type: INTEGER is 2;
+
+	Boolean_type: INTEGER is 3;
+
+	Integer_type: INTEGER is 4;
+
+	Real_type: INTEGER is 5;
+
+	Double_type: INTEGER is 6;
+
+	String_type: INTEGER is 20;
+	
+	Date_time_type: INTEGER is 21;
 
 	new_parameter_list: ARRAYED_LIST [STRING] is
 			-- Feature parameter name list: a parameter name
@@ -277,3 +312,4 @@ feature {NONE} -- Implementation
 			-- Backup of new_parameter_list.
 
 end -- class DB_TABLE_DESCRIPTION
+

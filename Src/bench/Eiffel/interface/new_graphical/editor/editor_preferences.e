@@ -73,17 +73,11 @@ feature -- Access
 	normal_background_color: EV_COLOR
 		-- Background color used to display normal text
 
-	normal_background_brush: WEL_BRUSH
-		-- Background brush corresponding to `normal_brackground_color'
-
 	selected_text_color: EV_COLOR
 		-- Color used to display selected text
 
 	selected_background_color: EV_COLOR
 		-- Background color used to display selected text
-
-	selected_background_brush: WEL_BRUSH
-		-- Backgroun brush corresponding to `selected_brackground_color'
 
 	string_text_color: EV_COLOR
 		-- Color used to display strings

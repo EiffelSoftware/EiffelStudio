@@ -82,7 +82,6 @@ feature {NONE} -- Implementation
 			the_text			: STRING
 			local_width			: INTEGER
 			symbol_position		: INTEGER
-			wel_rect			: WEL_RECT
 			view_tabulation_symbol: BOOLEAN
 			i					: INTEGER
 			local_position		: INTEGER

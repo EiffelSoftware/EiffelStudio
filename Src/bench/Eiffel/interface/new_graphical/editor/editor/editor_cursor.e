@@ -18,13 +18,6 @@ inherit
 			is_equal
 		end
 
-	WEL_SB_CONSTANTS
-		export
-			{NONE} all
-		redefine
-			is_equal
-		end
-
 create
 	make_from_absolute_pos, make_from_relative_pos, make_from_character_pos
 

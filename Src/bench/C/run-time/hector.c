@@ -270,6 +270,36 @@ EIF_OBJ address;
 	}
 }
 
+public char *spfreeze(object)
+char *object;		/* Physical address */
+{
+	/* Given an special object, we want to release it from GC control and 
+	 * prevent it from moving in memory. This is dangerous as we will have
+	 * to be sure that the object will not be reallocated (through array
+	 * resizing). Otherwise sprealloc() might move that object anyway
+	 * and will clear the B_C bit used to mark frozen objects.
+	 * The object should also be kept alive during the time it is frozen.
+	 * Beside that, the frozen object will not spoil the scavenge zones
+	 * because special objects are allocated outside of them.
+	 */
+
+	union overhead *zone;			/* Malloc information zone */
+
+	zone = HEADER(object);			/* Point to object's header */
+	zone->ov_size |= B_C;			/* Make it be a C block */
+	return object;					/* Object's location did not change */
+}
+
+public void spufreeze(object)
+char *object;		/* Physical address */
+{
+	/* We want to put back under GC control a frozen object previously
+	 * obtain through spfreeze(). The B_C bit on the object is cleared.
+	 */
+
+	HEADER(object)->ov_size &= ~B_C;	/* Back to the Eiffel world */
+}
+
 /*
  * Stack handling
  */

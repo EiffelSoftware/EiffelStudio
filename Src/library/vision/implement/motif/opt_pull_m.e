@@ -61,7 +61,7 @@ feature -- Creation
 			pulldown_identifier := clone (a_pulldown.identifier);
 			pulldown_identifier.append ("_pull");
 			parent ?= widget_manager.parent_using_index (a_pulldown, 
-							widget_index);
+							widget_index - 1);
 			check
 				intern: parent /= Void
 			end;

@@ -918,10 +918,6 @@ feature -- Memory management
 			end
 			update_scroll_agent := Void
 			
-			if text_displayed /= Void then
-				text_displayed.recycle
-				text_displayed := Void
-			end
 			if widget /= Void then
 				widget.wipe_out
 				widget := Void
@@ -944,6 +940,10 @@ feature -- Memory management
 			end
 			if update_scroll_agent /= Void then
 				update_scroll_agent := Void
+			end
+			if text_displayed /= Void then
+				text_displayed.recycle
+				text_displayed := Void
 			end
 		end
 

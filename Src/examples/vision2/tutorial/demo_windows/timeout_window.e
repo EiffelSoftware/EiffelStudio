@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			label.set_vertical_resize (False)
 			label.set_horizontal_resize (False)
 			label.set_center_alignment
+			label.set_minimum_width (100)
 			font := label.font
 			font.set_height (30)
 			label.set_font (font)

@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			rotate_timer: EV_TIMEOUT
 		do
 			Precursor
+			set_minimum_size (300, 100)
 			from start until after loop
 		--		set_item_position (item, index * 20, index * 10)
 				set_item_size (item, 50, 20)
@@ -80,8 +81,8 @@ feature {NONE} -- Initialization
 		do
 			from start until after loop
 				set_item_position (item,
-					(sine (t.count / 50 * 2 * Pi) * 30 + 30 + index * 20).rounded,
-					(cosine (t.count / 50 * 2 * Pi) * 30 + 30 + index * 10).rounded)
+					(sine ((t.count + (index * 10)) / 50 * 2 * Pi) * 30 + 30 + index * 20).rounded,
+					(cosine ((t.count + (index * 10)) / 50 * 2 * Pi) * 30 + 30).rounded)
 				forth
 			end
 		end
@@ -188,6 +189,9 @@ end -- class EV_FIXED
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/05/02 17:18:50  brendel
+--| Widgets do not move together.
+--|
 --| Revision 1.13  2000/05/02 16:14:54  brendel
 --| Temporary enhancement of make_for_test.
 --|

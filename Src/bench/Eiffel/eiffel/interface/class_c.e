@@ -388,19 +388,18 @@ feature -- Action
 			parser: like eiffel_parser
 			file: KL_BINARY_INPUT_FILE
 			f_name: FILE_NAME
-			class_file_name: STRING
 			vd21: VD21
 		do
-			class_file_name := file_name
-			create file.make (class_file_name)
+			create file.make (file_name)
+			file.open_read
 
 				-- Check if the file to parse is readable
-			if not file.exists or else not file.is_readable then
+			if not file.is_open_read then
 					-- Need to check for existance for the quick melt operation
 					-- since it doesn't remove unused classes.
 				create vd21
 				vd21.set_cluster (cluster)
-				vd21.set_file_name (class_file_name)
+				vd21.set_file_name (file_name)
 				Error_handler.insert_error (vd21)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -410,40 +409,32 @@ feature -- Action
 				check
 					False
 				end
+			else
+					-- Save the source class in a Backup directory
+				if save_copy and Workbench.automatic_backup then
+					create f_name.make_from_string (cluster.backup_directory)
+					f_name.extend (lace_class.name)
+					f_name.add_extension ("e")
+					file.copy_file (f_name)
+				end
+
+				has_unique := False
+
+					-- Call Eiffel parser
+				parser := Eiffel_parser
+				parser.set_has_syntax_warning (System.has_syntax_warning)
+				parser.parse (file)
+				Result := parser.root_node
+
+				file.close
+				Error_handler.checksum
 			end
-			check
-				file.is_readable
-			end
-
-				-- Save the source class in a Backup directory
-			if save_copy and Workbench.automatic_backup then
-				create f_name.make_from_string (cluster.backup_directory)
-				f_name.extend (lace_class.name)
-				f_name.add_extension ("e")
-				file.copy_file (f_name)
-			end
-
-			has_unique := False
-
-			file.open_read
-			check
-				file.is_open_read
-			end
-
-				-- Call Eiffel parser
-			parser := Eiffel_parser
-			parser.set_has_syntax_warning (System.has_syntax_warning)
-			parser.parse (file)
-			Result := parser.root_node
-
-			file.close
-			Error_handler.checksum
 		ensure
 			build_ast_not_void: Result /= Void
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Error happened
-				if not (file = Void or else file.is_closed) then
+				if file /= Void and then not file.is_closed then
 					file.close
 				end
 			end

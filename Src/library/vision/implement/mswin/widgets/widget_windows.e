@@ -331,16 +331,20 @@ feature -- Status setting
 		do
 			private_background_color := a_color;
 			if exists then
-				cw ?= a_color.implementation
-				check
-					cw_not_void: cw /= Void
-				end
 				ww ?= Current
-				!! client_dc.make (ww)
-				client_dc.get
-				client_dc.set_background_color (cw)
-				client_dc.release
-				invalidate
+				if ww /= Void then
+					cw ?= a_color.implementation
+					check
+						cw_not_void: cw /= Void
+					end
+					!! client_dc.make (ww)
+					client_dc.get
+					if client_dc.exists then
+						client_dc.set_background_color (cw)
+						client_dc.release
+					end;
+					invalidate
+				end
 			end
 		end;
 

@@ -28,8 +28,10 @@ feature -- Contract support
 	valid_frame_border (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' a valid code ?
 		do
-			Result := a_code >= Ev_frame_lowered and then
-				a_code <= Ev_frame_etched_out
+			Result := a_code = Ev_frame_lowered or
+				a_code = Ev_frame_raised or
+				a_code = Ev_frame_etched_in or
+				a_code = Ev_frame_etched_out
 		end
 
 end -- class EV_FRAME_CONSTANTS

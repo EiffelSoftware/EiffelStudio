@@ -193,7 +193,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 				link_to_object (an_object)
 			end
 			
-		update_linked_names is
+	update_linked_names is
 			-- For all items in `merged_list', update
 			-- their texts to reflect the current state of
 			-- associated object names.

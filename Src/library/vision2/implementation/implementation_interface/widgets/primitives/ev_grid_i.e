@@ -99,8 +99,21 @@ feature -- Access
 
 	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
 			-- All columns selected in `Current'.
+		local
+			temp_columns: like columns
 		do
-			create Result.make (0)
+			from
+				create Result.make (0)
+				temp_columns := columns
+				temp_columns.start
+			until
+				temp_columns.after
+			loop
+				if temp_columns.item.is_selected then
+					Result.extend (temp_columns.item.interface)
+				end
+				temp_columns.forth
+			end
 			to_implement ("EV_GRID_I:selected_columns")
 		ensure
 			result_not_void: Result /= Void
@@ -109,7 +122,7 @@ feature -- Access
 	selected_rows: ARRAYED_LIST [EV_GRID_ROW] is
 			-- All rows selected in `Current'.
 		do
-			Result := internal_selected_rows
+			Result := internal_selected_rows.twin
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -133,7 +146,7 @@ feature -- Access
 					i := i + 1
 				end
 			else
-				Result := internal_selected_items
+				Result := internal_selected_items.twin
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -148,7 +161,7 @@ feature -- Access
 			fixme ("Implement EV_GRID_I.clear_selection")
 
 			if single_item_selection_enabled or else multiple_item_selection_enabled then
-					sel_items := selected_items
+					sel_items := internal_selected_items
 					from
 						sel_items.start
 					until
@@ -158,7 +171,7 @@ feature -- Access
 						sel_items.remove
 					end				
 			end
-			sel_rows := selected_rows
+			sel_rows := internal_selected_rows
 			from
 				sel_rows.start
 			until
@@ -307,13 +320,34 @@ feature -- Status setting
 	enable_single_row_selection is
 			-- Set user selection mode so that clicking an item selects the whole row,
 			-- unselecting any previous rows.
+		local
+			a_row: EV_GRID_ROW_I
+			sel_rows: like selected_rows
+			a_item: EV_GRID_ITEM
+			sel_items: like selected_items
 		do
-			to_implement ("EV_GRID_I.enable_single_row_selection")
+			if multiple_row_selection_enabled or single_row_selection_enabled then
+				sel_rows := selected_rows
+				if not sel_rows.is_empty then
+					a_row := selected_rows.first.implementation
+				end
+			else
+				sel_items := selected_items
+				if not sel_items.is_empty then
+					a_item := sel_items.first
+				end
+			end
 			remove_selection
 			single_item_selection_enabled := False
 			multiple_item_selection_enabled := False
 			multiple_row_selection_enabled := False
 			single_row_selection_enabled := True
+			
+			if a_row /= Void then
+				a_row.enable_select
+			elseif a_item /= Void then
+				a_item.enable_select
+			end
 		ensure
 			single_row_selection_enabled: single_row_selection_enabled
 		end
@@ -321,13 +355,25 @@ feature -- Status setting
 	enable_multiple_row_selection is
 			-- Set user selection mode so that clicking an item selects the whole row.
 			-- Multiple rows may be selected.
+		local
+			sel_items: like selected_items
 		do
-			to_implement ("EV_GRID_I.enable_multiple_row_selection")
+			sel_items := selected_items
 			remove_selection
 			single_item_selection_enabled := False
 			multiple_item_selection_enabled := False
 			multiple_row_selection_enabled := True
 			single_row_selection_enabled := False
+			from
+				sel_items.start
+			until
+				sel_items.after
+			loop
+				if not sel_items.item.row.is_selected then
+					sel_items.item.row.enable_select
+				end
+				sel_items.forth
+			end
 		ensure
 			multiple_row_selection_enabled: multiple_row_selection_enabled
 		end
@@ -335,13 +381,20 @@ feature -- Status setting
 	enable_single_item_selection is
 			-- Set user selection mode so that clicking an item selects the item,
 			-- unselecting any previous items.
+		local
+			sel_items: like selected_items
 		do
-			to_implement ("EV_GRID_I.enable_single_item_selection")
+				-- Store the existing selected items if any so that the selection state may be partially restored
+			sel_items := selected_items
 			remove_selection
 			single_item_selection_enabled := True
 			multiple_item_selection_enabled := False
 			multiple_row_selection_enabled := False
 			single_row_selection_enabled := False
+			
+			if not sel_items.is_empty then
+				sel_items.first.enable_select
+			end
 		ensure
 			single_item_selection_enabled: single_item_selection_enabled
 		end
@@ -349,13 +402,23 @@ feature -- Status setting
 	enable_multiple_item_selection is
 			-- Set user selection mode so that clicking an item selects the item.
 			-- Multiple items may be selected.
+		local
+			sel_items: like selected_items
 		do
-			to_implement ("EV_GRID_I.enable_multiple_item_selection")
+			sel_items := selected_items
 			remove_selection
 			single_item_selection_enabled := False
 			multiple_item_selection_enabled := True
 			multiple_row_selection_enabled := False
 			single_row_selection_enabled := False
+			from
+				sel_items.start
+			until
+				sel_items.after
+			loop
+				sel_items.item.enable_select
+				sel_items.forth
+			end
 		ensure
 			multiple_item_selection_enabled: multiple_item_selection_enabled
 		end

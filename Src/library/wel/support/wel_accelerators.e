@@ -38,6 +38,22 @@ feature {NONE} -- Externals
 		alias
 			"LoadAccelerators"
 		end
+		
+	cwin_destroy_accelerator_table (p: POINTER) is
+			-- SDK DestroyAcceleratorTable
+		external
+			"C [macro <wel.h>] (HACCEL)"
+		alias
+			"DestroyAcceleratorTable"
+		end
+
+	cwin_create_accelerator_table (p: POINTER; entries: INTEGER): POINTER is
+			-- SDK CreateAcceleratorTable
+		external
+			"C [macro <wel.h>] (LPACCEL, int): EIF_POINTER"
+		alias
+			"CreateAcceleratorTable"
+		end		
 
 end -- class WEL_ACCELERATORS
 

@@ -93,9 +93,7 @@ feature -- Command
 			-- Destroy underlying native toolkit object.
 			-- Render `Current' unusable.
 		do
-			if not is_destroyed then
-				implementation.destroy
-			end
+				implementation.safe_destroy
 		ensure
 			is_destroyed: is_destroyed
 		end

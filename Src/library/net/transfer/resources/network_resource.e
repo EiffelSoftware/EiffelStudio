@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 	writable_cached: BOOLEAN
 			-- Has a value für `is_writable' been cached?
 
-	check_socket (s: SOCKET; transfer_mode: INTEGER) is
+	check_socket (s: NETWORK_SOCKET; transfer_mode: INTEGER) is
 			-- Check, if it is possible to read from/write to `s' (depending on
 			-- `transfer_mode' within `timeout' seconds. If not, set an error.
 		require

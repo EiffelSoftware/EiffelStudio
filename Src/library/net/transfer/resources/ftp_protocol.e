@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 	last_reply: STRING
 			-- Last received server reply
 			
-	send (s: SOCKET; str: STRING) is
+	send (s: NETWORK_SOCKET; str: STRING) is
 			-- Send string `str' to socket `s'.
 		require
 			socket_exists: s /= Void
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 			receive (s)
 		end
 
-	receive (s: SOCKET) is
+	receive (s: NETWORK_SOCKET) is
 			-- Receive line.
 		require
 			socket_exists: s /= Void

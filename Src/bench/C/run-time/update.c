@@ -620,45 +620,47 @@ rt_private void cecil_updt(void)
 {
 	/* Update high-level cecil structure. */
 
-	short count, i, nb_generics, nb_types;
+	short count, i, j, nb_generics, nb_types;
 	long n;
-	uint32 *type_val;
-	struct gt_info *gtype_val;
-	int32 *gt_gen;
-	int16 *gt_type;
-	struct ctable *ce_nogeneric = &egc_ce_type;
-	struct ctable *ce_generic = &egc_ce_gtype;
+	struct cecil_info *type_val;
+	int32 *patterns;
+	int16 *dynamic_types;
+	struct ctable *ce_table = &egc_ce_type;
 
-	/* First, non-generic class table */
-	count = wshort();					/* Table size */
-	ce_nogeneric->h_size = count;
-	ce_nogeneric->h_sval = sizeof(uint32);
-	ce_nogeneric->h_keys = names_updt(count);
-	SAFE_ALLOC(type_val, uint32, count);
-	wread((char *) type_val, count * sizeof(uint32));
-	ce_nogeneric->h_values = (char *) type_val;
-
-	/* Seocnd, generic class table */
-	count = wshort();					/* Table size */
-	ce_generic->h_size = count;
-	ce_generic->h_sval = sizeof(struct gt_info);
-	ce_generic->h_keys = names_updt(count);
-	SAFE_ALLOC(gtype_val, struct gt_info, count);
-	ce_generic->h_values = (char *) gtype_val;
-	for (i=0; i<count; gtype_val++,i++) {
-		nb_generics = wshort();				/* Number of generic parameters */
-		if (nb_generics == 0)
-			continue;
-		gtype_val->gt_param = nb_generics;
-		nb_types = wshort();				/* Number of class types */
-		n = nb_generics * nb_types;
-		SAFE_ALLOC(gt_gen, int32, n + 1);
-		wread((char *) gt_gen, n * sizeof(int32));	/* Read meta type desc */
-		gt_gen[n] = SK_INVALID;
-		gtype_val->gt_gen = gt_gen;
-		SAFE_ALLOC(gt_type, int16, nb_types);
-		wread((char *) gt_type, nb_types * sizeof(int16));
-		gtype_val->gt_type = gt_type;
+		/* We first initialize `egc_ce_type' and then we do `egc_ce_exp_type'. */
+	for (j = 0; j < 2; j++, ce_table = &egc_ce_exp_type) {
+		count = wshort();					/* Table size */
+		ce_table->h_size = count;
+		ce_table->h_sval = sizeof(struct cecil_info);
+		ce_table->h_keys = names_updt(count);
+		SAFE_ALLOC(type_val, struct cecil_info, count);
+		ce_table->h_values = (char *) type_val;
+		for (i = 0; i < count; type_val++, i++) {
+			nb_generics = wshort();				/* Number of generic parameters */
+			type_val->nb_param = nb_generics;
+			nb_types = wshort();				/* Number of class types */
+			if (nb_types == 0) {
+					/* Found a non-entry, i.e. which has no key
+					 * associated with it. */
+				type_val->patterns = NULL;
+				type_val->dynamic_types = NULL;
+			} else {
+				if (nb_generics == 0) {
+						/* For a non-generic class, there is only one item to read. */
+					CHECK("valid nb_types", nb_types == 1);
+					n = nb_types;
+				} else {
+					n = nb_generics * nb_types;
+				}
+				SAFE_ALLOC(patterns, int32, n + 1);
+				wread((char *) patterns, n * sizeof(int32));	/* Read meta type desc */
+				patterns[n] = SK_INVALID;
+				type_val->patterns = patterns;
+				SAFE_ALLOC(dynamic_types, int16, nb_types);
+				wread((char *) dynamic_types, nb_types * sizeof(int16));
+				type_val->dynamic_types = dynamic_types;
+			}
+		}
 	}
 }
 

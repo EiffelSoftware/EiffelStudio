@@ -1529,6 +1529,29 @@ feature -- Menu Building
 		do
 			create tools_menu.make_with_text (Interface_names.m_Tools)
 
+				-- New Cluster command.
+			command_menu_item := new_cluster_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			tools_menu.extend (command_menu_item)
+
+				-- New Class command.
+			command_menu_item := new_class_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			tools_menu.extend (command_menu_item)
+
+				-- New Feature command.
+			command_menu_item := new_feature_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			tools_menu.extend (command_menu_item)
+
+				-- Delete class/cluster command.
+			command_menu_item := delete_class_cluster_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			tools_menu.extend (command_menu_item)
+
+				-- Separator --------------------------------------
+			tools_menu.extend (create {EV_MENU_SEPARATOR})
+
 
 			if has_metrics then
 					-- Metric tool
@@ -1578,29 +1601,6 @@ feature -- Menu Building
 			end
 
 				-- Separator -------------------------------------------------
-			tools_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- New Cluster command.
-			command_menu_item := new_cluster_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-				-- New Class command.
-			command_menu_item := new_class_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-				-- New Feature command.
-			command_menu_item := new_feature_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-				-- Delete class/cluster command.
-			command_menu_item := delete_class_cluster_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-				-- Separator --------------------------------------
 			tools_menu.extend (create {EV_MENU_SEPARATOR})
 
 					-- Preferences

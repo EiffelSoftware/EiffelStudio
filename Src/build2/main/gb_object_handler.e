@@ -564,6 +564,63 @@ feature -- Basic operation
 			window_selector.wipe_out
 		end
 		
+	string_used_globally_as_object_or_feature_name (a_string: STRING): BOOLEAN is
+			-- Is `a_string' used anywhere in the system as feature name or object_name?
+		local
+			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
+		do
+			from
+				objects.start
+			until
+				objects.off or Result
+			loop
+				if objects.item.name.as_lower.is_equal (a_string) then
+					Result := True
+				end
+				object_events := objects.item.events
+				from
+					object_events.start
+				until
+					object_events.off
+				loop
+					if a_string.is_equal (object_events.item.feature_name.as_lower) then
+						Result := True
+					end
+					object_events.forth
+				end
+				objects.forth
+			end
+		end
+		
+	all_object_and_event_names: ARRAYED_LIST [STRING] is
+			-- `Result' is all object and event names in system.
+		local
+			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
+		do
+			create Result.make (objects.count)
+			from
+				objects.start
+			until
+				objects.off
+			loop
+				if not objects.item.name.is_empty then
+					Result.extend (objects.item.name)
+				end
+				object_events := objects.item.events
+				from
+					object_events.start
+				until
+					object_events.off
+				loop
+					Result.extend (object_events.item.feature_name.as_lower)
+					object_events.forth
+				end
+				objects.forth
+			end
+		ensure
+			Result /= Void
+		end
+
 	string_is_object_name (object_name: STRING; an_object: GB_OBJECT; compare_original_object: BOOLEAN): BOOLEAN is
 			-- Is `object_name' a valid named for `an_object', or does it clash
 			-- with an existing name in the scope of `an_object'. For example, objects in
@@ -639,7 +696,7 @@ feature -- Basic operation
 		
 	check_feature_name (object_name: STRING; original_object, an_object: GB_OBJECT) is
 			-- Is `object_name' a valid feature name for `original_object', in the context
-			-- of `an_object'? Result mat be queried from `string_is_feature_name_result'.
+			-- of `an_object'? Result may be queried from `string_is_feature_name_result'.
 		local
 			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 			name_lower: STRING

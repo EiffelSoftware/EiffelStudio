@@ -446,6 +446,7 @@ feature {GB_INTEGER_INPUT_FIELD, GB_STRING_INPUT_FIELD, GB_EV_ANY, GB_EV_EDITOR_
 
 	add_constant_context (context: GB_CONSTANT_CONTEXT) is
 			-- Add `context' to `constants'.
+			-- Overwrites an existing context for the same attribute if any.
 		require
 			context_not_void: context /= Void
 			context_object_is_current: context.object = Current

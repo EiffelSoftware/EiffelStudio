@@ -56,8 +56,29 @@
         
         
         <ul>
+          <li>Fixed semantic of object creations to strictly follow definition 
+          given in &quot;Eiffel: The Language&quot;. Namely, if you have x of 
+          type <span class="eclass">X</span>:<br>
+<pre><span class="ekeyword">create</span> x.<span class="efeature">make</span>	is equivalent to	x := <span class="ekeyword">create</span> {<span class="eclass">X</span>}.<span class="efeature">make</span></pre>          It implies 
+          some bug fixes which might break existing code. For example:<pre>x: <span class="eclass">X</span> <span class="ekeyword">is</span>
+	<span class="ekeyword">once</span>
+			<span class="ecomment">-- If </span><span class="efeature">make</span><span class="ecomment"> calls back to x then it used to return</span>
+			<span class="ecomment">-- a non-Void value for x, where it should have been Void.</span>
+		<span class="ekeyword">create</span> Result.<span class="efeature">make</span>
+	<span class="ekeyword">end</span>
+
+x: <span class="eclass">X</span>
+	<span class="ecomment">-- If </span><span class="efeature">make </span><span class="ecomment">accesses back the x attribute then it used to return</span>
+	<span class="ecomment">-- new value of x rather than the old value.</span>
+<span class="ekeyword">create</span> x.<span class="efeature">make</span></pre>
+          Or in melted code only the following code now works 
+          properly, i.e.  <span class="efeature">make</span> gets the old value of x, not the new one<br>
+<pre><span class="ekeyword">create</span> x.<span class="efeature">make</span> (x)</pre>
+          </li>
           <li>Fixed issue in storable mechanism when retrieving expanded 
           objects.</li>
+          <li>Fixed issue with independent_store where storing arrays of objects 
+          whose count was greater than 65536 will cause a memory corruption.</li>
           <li>Fixed incorrect C code generation in final mode when creating an 
           <span class="eclass">ARRAY</span> of expanded type.</li>
           <li>Fixed incorrect C code generation in final mode when creating a 
@@ -145,6 +166,35 @@
 			Result := <span class="efeature">value</span> = 1
 		<span class="ekeyword">end</span>
 </pre></li>
+          <li>Fixed crash of compiler at degree 4 while trying to compile this incorrect 
+          class:<br>
+<pre><span class="ekeyword">class</span> <span class="eclass">CRASH</span>
+
+<span class="ekeyword">inherit</span>
+	<span class="eclass">CHAIN</span>	<span class="ecomment">-- Missing generic parameter</span>
+
+<span class="ekeyword">create</span>
+	<span class="efeature">make</span>
+
+<span class="ekeyword">feature</span> -- Initialization
+
+	<span class="efeature">make</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">index</span>: <span class="eclass">INTEGER</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">duplicate</span> (n: <span class="eclass">INTEGER</span>): <span class="ekeyword">like Current is</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span>
+
+<span class="ekeyword">end</span></pre>
+</li>
+          <li>Fixed .NET verification issue where sometimes you could get the 
+          following message when checking an Eiffel assembly against peverify: 
+          [IL]: Error: Unverifiable PE Header/native stub.</li>
           <li>&nbsp;</li>
 </ul>
         

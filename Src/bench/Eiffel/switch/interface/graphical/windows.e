@@ -201,12 +201,21 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-    init_windowing is
-            -- Initialize the windowing environment.
-        do
-            if project_tool = Void then end;
-            project_tool.popup_file_selection;
-			mode.put (False)
-        end
+	init_windowing is
+			-- Initialize the windowing environment.
+		do
+				--| First we put bench mode, for
+				--| `popup_file_selection' uses 
+				--| `error_window'.
+				--| If we don't put bench mode here,
+				--| `error_window' will assume batch
+				--| mode and thus it will initialize
+				--| `error_window' as a TERM_WINDOW.
+				--| Also note that `error_window' is a
+				--| once-function!!
+			mode.put (False);
+			if project_tool = Void then end;
+			project_tool.popup_file_selection
+		end
 
 end -- class WINDOWS

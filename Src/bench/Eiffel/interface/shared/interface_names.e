@@ -92,8 +92,12 @@ feature -- Icon ids for Windows
 	i_Explain_id: INTEGER is 4;
 	i_Class_id: INTEGER is 5;
 	i_System_id: INTEGER is 6;
+	i_Dll_id: INTEGER is 7;
 
 feature -- Accelerator, focus label and menu name
+
+	f_About: STRING is					"About ISE EiffelBench";
+	m_About: STRING is					"&About ISE EiffelBench";
 
 	m_Apply: STRING is					"&Apply"
 	f_Case_storage: STRING is			"Reverse engineer (case)";
@@ -105,9 +109,9 @@ feature -- Accelerator, focus label and menu name
 	f_Copy: STRING is					"Copy";
 	m_Windows_copy: STRING is			"&Copy%TCtrl+C";
 	m_Unix_copy: STRING is				"&Copy%TCtrl+Insert";
-	a_Current: STRING is				"Ctrl<Key>u";
+	a_Current: STRING is				"Ctrl<Key>l";
 	f_Current: STRING is				"Current";
-	m_Current: STRING is				"C&urrent%TCtrl+U";
+	m_Current: STRING is				"C&urrent%TCtrl+L";
 	f_Cut: STRING is					"Cut";
 	m_Windows_cut: STRING is			"&Cut%TCtrl+X";
 	m_Unix_cut: STRING is				"&Cut%TShift+Delete";
@@ -138,10 +142,10 @@ feature -- Accelerator, focus label and menu name
 
 	f_new_project: STRING is			"New Project..."
 	m_new_project: STRING is			"&New Project...%TCtrl+N"
-	a_new_project: STRING is			"Ctrl<Key>N"
+	a_new_project: STRING is			"Ctrl<Key>n"
 	f_Open_project: STRING is			"Open Project..."
 	m_Open_project: STRING is			"&Open Project...%TCtrl+O"
-	a_Open_project: STRING is			"Ctrl<Key>O"
+	a_Open_project: STRING is			"Ctrl<Key>o"
 	m_Recent_project: STRING is			"&Recent Projects"
 	f_Exit_project: STRING is			"Exit"
 	m_Exit_project: STRING is			"E&xit"
@@ -165,9 +169,9 @@ feature -- Accelerator, focus label and menu name
 	m_short_doc: STRING is				"&Short";
 	f_Show_cluster_heir_list: STRING is	"Show cluster hierarchy";
 	m_Show_cluster_heir_list: STRING is	"Cluster &hierarchy";
-	a_Freeze: STRING is					"Ctrl<Key>n";
+	a_Freeze: STRING is					"Ctrl Shift<Key>f";
 	f_Freeze: STRING is					"Freeze...";
-	m_Freeze: STRING is					"&Freeze...%TCtrl+N";
+	m_Freeze: STRING is					"&Freeze...%TCtrl+Shift+F";
 	f_Generate: STRING is				"Generate";
 	m_Generate: STRING is				"&Generate";
 	f_Help: STRING is					"Help";
@@ -176,11 +180,11 @@ feature -- Accelerator, focus label and menu name
 	m_Hide_feature: STRING is			"Hide &feature";
 	f_Hide_object: STRING is			"Hide object";
 	m_Hide_object: STRING is			"Hide &object";
-	a_List_targets: STRING is			"Ctrl<Key>l";
 	f_List_targets: STRING is			"List targets";
 	m_List_targets: STRING is			"&List targets%TCtrl+L";
 	f_New_class: STRING is				"New class tool";
 	m_New_class: STRING is				"New &class tool";
+	m_New_dll: STRING is				"New &dll tool";
 	f_New_explain: STRING is			"New explain tool";
 	m_New_explain: STRING is			"New &explain tool";
 	f_New_object: STRING is				"New object tool";
@@ -189,6 +193,7 @@ feature -- Accelerator, focus label and menu name
 	m_New_routine: STRING is			"New &feature tool";
 	f_Next_target: STRING is			"Next";
 	m_Next_target: STRING is			"N&ext";
+	a_Next_target: STRING is			"Alt<key>Right";
 	f_Non_clickable_showstops: STRING is "Non clickable stop points";
 	m_Non_clickable_showstops: STRING is "&Non clickable stop points";
 	m_Ok: STRING is						"&Ok";
@@ -198,9 +203,9 @@ feature -- Accelerator, focus label and menu name
 	f_Paste: STRING is					"Paste";
 	m_Windows_paste: STRING is			"&Paste%TCtrl+V";
 	m_Unix_Paste: STRING is				"&Paste%TShift+Insert";
-	a_Precompile: STRING is				"Ctrl<Key>P";
+	a_Precompile: STRING is				"Ctrl Shift<Key>P";
 	f_Precompile: STRING is				"&Precompile...";
-	m_Precompile: STRING is				"Precompile...%TCtrl+P";
+	m_Precompile: STRING is				"Precompile...%TCtrl+Shift+P";
 	f_Print: STRING is					"Print...";
 	m_Print: STRING is					"&Print";
 	f_Preferences: STRING is			"Preferences";
@@ -209,13 +214,14 @@ feature -- Accelerator, focus label and menu name
 	m_Profile_tool: STRING is			"Pro&file tool";
 	f_Previous_target: STRING is		"Previous";
 	m_Previous_target: STRING is		"&Previous";
-	a_Quick_update: STRING is			"Ctrl<Key>q";
+	a_Previous_target: STRING is		"Alt<key>Left";
+	a_Quick_update: STRING is			"Ctrl Shift<Key>q";
 	f_Quick_update: STRING is			"Quick melt";
-	m_Quick_update: STRING is			"&Quick Melt%TCtrl+Q";
+	m_Quick_update: STRING is			"&Quick Melt%TCtrl+Shift+Q";
 	f_Raise_all_tools: STRING is		"Raise all tools";
 	m_Raise_all_tools: STRING is		"&Raise all tools";
 	f_Raise_project: STRING is			"Raise project tool";
-	m_Raise_project: STRING is			"&Raise project tool%TAlt+R";
+	m_Raise_project: STRING is			"&Raise project tool%TAlt+P";
 	a_Raise_project: STRING is			"Alt<Key>P";
 	f_Run_finalized: STRING is			"Run finalized system";
 	m_Run_finalized: STRING is			"&Run finalized system";
@@ -254,7 +260,6 @@ feature -- Accelerator, focus label and menu name
 	m_Showflat: STRING is				"&Flat";
 	f_Showfs: STRING is					"Flat/short";
 	m_Showfs: STRING is					"Flat/s&hort";
-	a_Showfuture: STRING is				"versions";
 	f_Showfuture: STRING is				"Descendant versions";
 	m_Showfuture: STRING is				"&Descendant versions";
 	f_Showhistory: STRING is			"Implementers";
@@ -294,9 +299,9 @@ feature -- Accelerator, focus label and menu name
 	m_Stoppable: STRING is				"&Stoppable";
 	f_System: STRING is					"System";
 	m_System: STRING is					"&System tool";
-	a_Update: STRING is					"Ctrl<Key>m";
+	a_Update: STRING is					"Ctrl Shift<Key>m";
 	f_Update: STRING is					"Melt";
-	m_Update: STRING is					"&Melt%TCtrl+M";
+	m_Update: STRING is					"&Melt%TCtrl+Shift+M";
 	f_Up_stack: STRING is				"Go up one level";
 	m_Up_stack: STRING is				"Go &up one level";
 	m_Validate: STRING is				"&Validate";
@@ -306,6 +311,7 @@ feature -- Menu mnenomics
 
 	m_Category: STRING is				"&Category";
 	m_Class_tools: STRING is			"&Class tools";
+	m_Dll_tools: STRING is				"&Dll tools";
 	m_Commands: STRING is				"&Commands";
 	m_Compile: STRING is				"&Compile";
 	m_C_Compilation: STRING is			"C Com&pilation";
@@ -355,6 +361,7 @@ feature -- Widget names
 feature -- Stone names
 
 	s_Class_stone: STRING is			"Class";
+	s_Dll_stone: STRING is				"Reload_Dll";
 	s_Explain_stone: STRING is			"Explanation";
 	s_Object_stone: STRING is			"Object";
 	s_Routine_stone: STRING is			"Feature";
@@ -427,6 +434,8 @@ feature -- Title part
 	t_Select_a_directory: STRING is		"Select a directory";
 	t_Shell_w: STRING is				"Shell command";
 	t_Short_form_of: STRING is			"Short form of class ";
+	t_Specify_ace: STRING is			"Specify ace";
+	t_Specify_dll: STRING is			"Specify eiffel_def file";
 	t_Stoppoints_of: STRING is			"Stop points of ";
 	t_Slice_w: STRING is				"Special object slice";
 	t_Statistics_of: STRING is			"Statistics of system ";

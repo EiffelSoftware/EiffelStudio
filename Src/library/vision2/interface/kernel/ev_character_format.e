@@ -164,6 +164,7 @@ feature -- Element change
 			effect_not_void: an_effect /= Void
 		do
 			implementation.set_effects (an_effect)
+			changed := True
 		ensure
 			effects_set: effects.is_equal (an_effect)
 		end
@@ -186,6 +187,7 @@ feature -- Element change
 			Result.append (font.name)
 			Result.append (font.height.out)
 			Result.append (font.weight.out)
+			Result.append (font.shape.out)
 			Result.append (color.red_8_bit.out)
 			Result.append (color.green_8_bit.out)
 			Result.append (color.blue_8_bit.out)

@@ -67,6 +67,7 @@ feature -- Initialization
 				end
 
 				set_text (private_text)
+
 				if maximum_size > 0 then
 					set_maximum_size (maximum_size)
 				end

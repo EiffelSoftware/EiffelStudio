@@ -12,7 +12,6 @@ inherit
 
 	TEXT_WINDOWS
 		redefine
-			horizontal_position,
 			make,
 			realize,
 			set_single_line_mode,
@@ -45,7 +44,7 @@ feature -- Initialization
 			is_horizontal_scrollbar := True
 			is_vertical_scrollbar := True
 			parent ?= oui_parent.implementation
-			!! private_text.make (0)
+			private_text := ""
 			managed := man
 			a_scrolled_text.set_font_imp (Current)
 			set_maximum_size (131072)	-- 131072 = 128 * 1024
@@ -61,45 +60,57 @@ feature -- Initialization
 				if width = 0 then
 					set_width (200)
 				end
+
 				if height = 0  then 
 					fw ?= font.implementation
 					set_height (fw.string_height (Current, "I") * 7 // 4 + 2)
  				end
+
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
 				set_control_options
 				enable_standard_notifications
+
 				if private_background_color /= Void then
 					set_background_color (private_background_color)
 				end
+
 				if private_font /= Void then
 					set_font (private_font)
 				end
+
 				set_text (private_text)
+
 				if maximum_size > 0 then
 					set_maximum_size (maximum_size)
 				end
+
 				set_cursor_position (private_cursor_position)
 				if margin_width + margin_height > 0 then
 					set_margins (margin_width, margin_height)
 				end
+
 				if is_horizontal_scrollbar then
 					show_horizontal_scrollbar
 				end
+
 				if is_multi_line_mode then
 					if is_vertical_scrollbar then
 						show_vertical_scrollbar
 					end
 				end
+
 				if not managed then
 					wel_hide
 				elseif parent.shown then
 					shown := true
 				end
+
 				if is_multi_line_mode then
 					set_top_character_position (private_top_character_position)
 				end
+
 				if private_is_read_only then
 					set_read_only
 				end
@@ -107,12 +118,6 @@ feature -- Initialization
 		end
 
 feature -- Status report
-
-	horizontal_position: INTEGER is
-			-- Position (in pixels) of horizontal scrollbar
-		do
-			Result :=  cwin_get_scroll_pos (wel_item, Sb_horz)
-		end
 
 	is_horizontal_scrollbar: BOOLEAN
 			-- Is horizontal scrollbar visible ?
@@ -204,8 +209,8 @@ feature {NONE} -- Implementation
 		local
 			options: INTEGER
 		do
-			options := Eco_autovscroll + Eco_nohidesel + 
-					Eco_selectionbar + eco_savesel
+			options := Eco_autovscroll + Eco_nohidesel + eco_savesel
+-- Eco_selectionbar 
 			if not is_word_wrap_mode then
 				options := options + Eco_autohscroll
 			end
@@ -215,31 +220,20 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style for creation.
 		do
-			Result := Ws_child + Ws_visible + Ws_border +
-				Es_disablenoscroll + Es_multiline + Es_left +
-				Es_autovscroll
+			Result := {TEXT_WINDOWS} precursor - Ws_hscroll - Ws_vscroll
+
 			if is_read_only then
 				Result := Result + Es_readonly
 			end
+
 			if is_horizontal_scrollbar then
 				Result := Result + Ws_hscroll
 			end
+
 			if is_vertical_scrollbar then
 				Result := Result + Ws_vscroll
 			end
-			if not is_word_wrap_mode then
-				Result := Result + Es_autohscroll
-			end
 		end
-
-	cwin_get_scroll_pos (hwnd: POINTER; flag: INTEGER): INTEGER is
-			-- SDK GetScrollPos
-		external
-			"C [macro <wel.h>] (HWND, int): EIF_INTEGER"
-		alias
-			"GetScrollPos"
-		end
-
 
 end -- SCROLLED_TEXT_WINDOWS
 

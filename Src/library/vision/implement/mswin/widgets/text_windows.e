@@ -59,6 +59,7 @@ inherit
 			release_capture as wel_release_capture,
 			parent as wel_parent,
 			text as wel_text,
+			count as wel_count,
 			set_background_color as wel_set_background_color,
 			text_length as wel_text_length,
 			set_text as wel_set_text,
@@ -88,7 +89,9 @@ inherit
 		redefine
 			default_style,
 			on_en_change,
-			on_char
+			on_char,
+			hide_selection,
+			show_selection
 		end
 
 	SIZEABLE_WINDOWS
@@ -225,10 +228,39 @@ feature -- Status report
 			end
 		end
 
+	end_of_selection: INTEGER is
+			-- Position of the end of the current selection highlightened
+		do
+			if exists then
+				Result := selection_end
+			else
+				Result := private_end_selection
+			end
+		end
+
+	is_selection_visible: BOOLEAN
+			-- Is the selection visible?
+
+	hide_selection is
+		do
+			{WEL_RICH_EDIT} precursor
+			is_selection_visible := False
+		end
+
+	show_selection is
+		do
+			{WEL_RICH_EDIT} precursor
+			is_selection_visible := True
+		end
+
 	count: INTEGER is
 			-- Number of characters in current text area
 		do
-			Result := text.count
+			if exists then
+				Result := wel_count
+			else
+				Result := private_text.count
+			end
 		end
 
 	cursor_position: INTEGER is
@@ -240,21 +272,6 @@ feature -- Status report
 			else
 				Result := private_cursor_position
 			end
-		end
-
-	end_of_selection: INTEGER is
-			-- Position of the end of the current selection highlightened
-		do
-			if exists then
-				Result := selection_end
-			else
-				Result := private_end_selection
-			end
-		end
-
-	horizontal_position: INTEGER is
-			-- Offset in pixels of horizontal scrollbar
-		do
 		end
 
 	is_any_resizable: BOOLEAN is
@@ -307,7 +324,6 @@ feature -- Status report
 			-- Value of current text field
 		local
 			ext_text: ANY
-			size: INTEGER
 		do
 			if exists then
 				Result := wel_text
@@ -419,7 +435,7 @@ feature -- Status setting
 	unrealize is
 			-- Unrealize current widget
 		do
-			private_text := text
+			update_private_text (text)
 			wel_destroy
 		end
 
@@ -590,27 +606,30 @@ feature -- Status setting
 					-- beginning in order to make visible the beginning of
 					-- the selection for the user
 
-					--| If the text can fit in the window, it will be fit by
-					--| using a scrolling of the selection
-					--| If the text is bigger than the window, the beginning
-					--| of the text will be on the first line of the window
-					--| only if the beginning of the text is not already in
-					--| the first quarter of the window
-				previous_y_coord := y_coordinate (first)
-
 				wel_set_selection (last, first)
-				size := y_coordinate (last) - y_coordinate (first)
 
-				if
-					previous_y_coord >= height or else
-					size > height and then
-					y_coordinate (first) > 1 * height // 4
-				then
-					set_top_character_position (first)
-				elseif size < height and then y_coordinate (last) > height then
-					last_line_position := character_index_from_position (0, height)
-					number_line_to_scroll := line_from_char(last) - line_from_char (last_line_position - 1)
-					scroll (0, number_line_to_scroll.min (line_from_char (first) - first_visible_line))
+				if is_selection_visible then
+						--| If we need to show the selection we will try to show
+						--| it in the best way
+						--| If the text can fit in the window, it will be fit by
+						--| using a scrolling of the selection
+						--| If the text is bigger than the window, the beginning
+						--| of the text will be on the first line of the window
+						--| only if the beginning of the text is not already in
+						--| the first quarter of the window
+					size := y_coordinate (last) - y_coordinate (first)
+	
+					if
+						y_coordinate (first) >= height or else
+						size > height and then
+						y_coordinate (first) > 1 * height // 4
+					then
+						set_top_character_position (first)
+					elseif size < height and then y_coordinate (last) > height then
+						last_line_position := character_index_from_position (0, height)
+						number_line_to_scroll := line_from_char(last) - line_from_char (last_line_position - 1)
+						scroll (0, number_line_to_scroll.min (line_from_char (first) - first_visible_line))
+					end
 				end
 			end
 		end
@@ -620,7 +639,7 @@ feature -- Status setting
 		do
 			update_private_text (a_text)
 			if exists then
-				wel_set_text (clone (a_text))
+				wel_set_text (a_text)
 			end
 		end
 
@@ -729,16 +748,7 @@ feature -- Element change
 
 	replace (from_position, to_position: INTEGER; s: STRING) is
                         -- Replace text from `from_position' to `to_position' by `s'.
-		local
-			a_text: STRING
 		do
-			a_text := clone (text)
-			if from_position = to_position then
-				a_text.insert (s, from_position + 1)
-			else
-				a_text.replace_substring (s, from_position + 1, to_position)
-			end
-			update_private_text (a_text)
 			if exists then
 				if has_selection then
 					unselect
@@ -751,6 +761,7 @@ feature -- Element change
 					replace_selection (s)
 				end
 			end
+--			update_private_text (a_text)
 		end
 
 feature -- Removal
@@ -817,9 +828,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style for window control;
 		do
-			Result := Ws_child + Ws_visible + Ws_border
-				   + Es_nohidesel + Es_left
-				   + Es_multiline + Es_autovscroll
+			Result := {WEL_RICH_EDIT} precursor + Es_left + Es_autovscroll
 			if not is_word_wrap_mode then
 				Result := Result + Es_autohscroll
 			end
@@ -828,7 +837,7 @@ feature {NONE} -- Implementation
 	update_private_text (a_text: STRING) is
 			-- Update the private text and rebuild the
 		do
-			private_text := clone (a_text)
+			private_text := a_text
 		end
 
 	private_top_character_position: INTEGER

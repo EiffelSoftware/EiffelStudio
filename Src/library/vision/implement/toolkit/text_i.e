@@ -25,6 +25,33 @@ feature -- Access
 			result_small_enough: Result < count
 		end;
 
+	end_of_selection: INTEGER is
+			-- Position of the end of the current selection highlightened
+		require
+			selection_active: is_selection_active;
+			realized: realized
+		deferred
+		ensure
+			result_large_enough: Result > 0;
+			result_small_enough: Result <= count
+		end;
+
+	show_selection is
+		require
+			realized: realized
+		deferred
+		ensure
+			show_selection: is_selection_visible = True
+		end
+
+	hide_selection is
+		require
+			realized: realized
+		deferred
+		ensure
+			hide_selection: is_selection_visible = False
+		end
+
 	cursor_position: INTEGER is
 			-- Current position of the text cursor (it indicates the position
 			-- where the next character pressed by the user will be inserted)
@@ -32,6 +59,16 @@ feature -- Access
 		ensure
 			result_large_enough: Result >= 0;
 			result_small_enough: Result <= count
+		end;
+
+	character_position (x_pos, y_pos: INTEGER): INTEGER is
+			-- Character position at cursor position `x' and `y'
+		deferred
+		end;
+
+	top_character_position: INTEGER is
+			-- Character position of first character displayed
+		deferred
 		end;
 
 	rows: INTEGER is
@@ -58,27 +95,6 @@ feature -- Access
 			-- Y coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		deferred
-		end;
-
-	character_position (x_pos, y_pos: INTEGER): INTEGER is
-			-- Character position at cursor position `x' and `y'
-		deferred
-		end;
-
-	top_character_position: INTEGER is
-			-- Character position of first character displayed
-		deferred
-		end;
-
-	end_of_selection: INTEGER is
-			-- Position of the end of the current selection highlightened
-		require
-			selection_active: is_selection_active;
-			realized: realized
-		deferred
-		ensure
-			result_large_enough: Result > 0;
-			result_small_enough: Result <= count
 		end;
 
 	margin_height: INTEGER is
@@ -119,6 +135,13 @@ feature -- Status report
 
 	is_selection_active: BOOLEAN is
 			-- Is there a selection currently active ?
+		require
+			realized: realized
+		deferred
+		end;
+
+	is_selection_visible: BOOLEAN is
+			-- Will the selection be visible ?
 		require
 			realized: realized
 		deferred
@@ -240,6 +263,15 @@ feature -- Status setting
 			-- Set current text to be editable.
 		deferred
 		end;
+
+feature -- Basic functions
+
+	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+			-- Search for the string `text_to_find' in the TEXT
+		require
+			text_to_find_not_void: text_to_find /= Void
+		deferred
+		end
 
 feature -- Element change
 

@@ -66,8 +66,11 @@ feature
 	assertion_level: ASSERTION_I;
 			-- Assertion checking level
 
-	trace_level: TRACE_I;
+	trace_level: OPTION_I;
 			-- Tracing level
+
+	profile_level: OPTION_I;
+			-- Profile level
 
 	optimize_level: OPTIMIZE_I;
 			-- Optimization level
@@ -103,7 +106,8 @@ debug
 	io.error.new_line;
 end;
 			assertion_level := Default_level;
-			trace_level := No_trace;
+			trace_level := No_option;
+			profile_level := No_option;
 			optimize_level := No_optimize;
 			debug_level := No_debug;
 			visible_level := Visible_default;
@@ -248,10 +252,16 @@ debug
 end;
 		end;
 
-	set_trace_level (t: TRACE_I) is
+	set_trace_level (t: like trace_level) is
 			-- Assign `t' to `trace_level'.
 		do
 			trace_level := t;
+		end;
+
+	set_profile_level (t: like profile_level) is
+			-- Assign `t' to `trace_level'.
+		do
+			profile_level := t;
 		end;
 
 	set_hide_level (b: BOOLEAN) is
@@ -344,6 +354,7 @@ end;
 		do
 			debug_level := other.debug_level;
 			trace_level := other.trace_level;
+			profile_level := other.profile_level;
 			optimize_level := other.optimize_level;
 			assertion_level := other.assertion_level;
 			visible_level := other.visible_level;

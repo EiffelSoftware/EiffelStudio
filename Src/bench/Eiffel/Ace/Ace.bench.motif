@@ -121,8 +121,8 @@ external
 		"$(BENCH)/C/parsing/shared/libparsing.a";
 		"$(BENCH)/C/clicking/shared/archix.o";
 		"$(BENCH)/C/clicking/motif/libclick.a";
-		"$(BENCH)/library/vision/implement/motif/Clib/motif_Clib.a";
-		"$(BENCH)/library/vision/implement/X/Clib/Xt.a";
+		"$(BENCH)/Eiffel/library/vision/implement/motif/Clib/motif_Clib.a";
+		"$(BENCH)/Eiffel/library/vision/implement/X/Clib/Xt.a";
 		"$(BENCH)/C/ipc/ewb/libewb.a";
 		"$(BENCH)/C/ipc/shared/libipc.a";
 		"$(BENCH)/C/idrs/libidr.a";

@@ -26,13 +26,13 @@ feature -- Initialization
 		require
 			filtername_not_void: filtername /= Void
 		local
-			full_pathname: STRING
+			full_pathname: FILE_NAME
 		do
 			!!format_table.make (50);
 			!!escape_characters.make (5);
-			full_pathname := clone (filter_path);
-			full_pathname.append (filtername);
-			full_pathname.append (".fil");
+			!!full_pathname.make_from_string (filter_path);
+			full_pathname.extend (filtername);
+			full_pathname.add_extension ("fil");
 			read_formats (full_pathname);
 			!!image.make (2000)
 		end;

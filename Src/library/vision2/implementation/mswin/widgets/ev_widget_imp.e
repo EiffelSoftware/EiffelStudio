@@ -39,7 +39,12 @@ feature -- Status report
 feature -- Status setting
 
 	destroy is
+			-- Destroy the widget, but set the parent sensitive
+			-- in case it was set insensitive by the child.
 		do
+			if parent_imp /= Void then
+				parent_imp.set_insensitive (False)
+			end
 			wel_window.destroy
 		end
 	
@@ -122,51 +127,27 @@ feature -- Measurement
 	
 feature -- Resizing
 
-	parent_ask_resize (new_width, new_height: INTEGER) is
-			-- When the parent asks the resize, it's not 
-			-- necessary to send him back the information
-		do
-			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
-		end
-
-
 	set_size (new_width:INTEGER; new_height: INTEGER) is
 			-- Resize the widget and notify the parent of 
 			-- the resize which must be bigger than the
 			-- minimal size or nothing happens
-		local
-			temp_width, temp_height: INTEGER
 		do
-			temp_width := minimum_width.max(new_width)
-			temp_height := minimum_height.max (new_height)
-			wel_window.resize (temp_width, temp_height)
-			if parent_imp /= Void then
-				parent_imp.child_has_resized (temp_width, temp_height, Current)
-			end
+			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
+			notify_size_to_parent
 		end
 
 	
 	set_width (new_width :INTEGER) is
-		local
-			temp_width: INTEGER
 		do
-			temp_width := minimum_width.max(new_width)
-			wel_window.set_width (temp_width)
-			if parent_imp /= Void then
-				parent_imp.child_has_resized (temp_width, height, Current)
-			end
+			wel_window.set_width (minimum_width.max(new_width))
+			notify_size_to_parent
 		end
 
 		
 	set_height (new_height: INTEGER) is
-		local
-			temp_height: INTEGER
 		do
-			temp_height := minimum_height.max(new_height)
-			wel_window.set_height (temp_height)
-			if parent_imp /= Void then
-				parent_imp.child_has_resized (width, temp_height, Current)
-			end
+ 			wel_window.set_height (minimum_height.max(new_height))
+			notify_size_to_parent
 		end
 	
 	set_maximum_height (max_height: INTEGER) is
@@ -203,15 +184,6 @@ feature -- Resizing
 			end
 
 		end
-
-	set_minimum_size (min_width, min_height: INTEGER) is
-			-- set `minimum_width' to `min_width'
-			-- set `minimum_height' to `min_height'
-		do
-			set_minimum_width (min_width)
-			set_minimum_height (min_height)
-		end
-
 
 	set_x (new_x: INTEGER) is
 		do
@@ -379,6 +351,8 @@ feature -- Event - command association
 			-- For the meaning of the message, see wel_wm_message.
 			-- The argument can be `Void', in this case, there is 
 			-- no argument passed to the command.
+		require
+			command_not_void: command /= Void
 		local
 			com: EV_COMMAND
 			adapted_command: EV_WEL_COMMAND
@@ -397,7 +371,16 @@ feature -- Event - command association
 	last_command_id: INTEGER
 			-- Id of the last command added by feature
 			-- 'add_command'
-	
+
+feature {EV_WIDGET_IMP} -- Implementation
+
+	test_and_set_parent (par: EV_CONTAINER) is
+			-- Set the parent to `par.implementation'.
+		do
+			parent_imp ?= par.implementation
+		ensure
+			valid_container: parent_imp /= Void
+		end
 
 feature {EV_CONTAINER_IMP} -- Implementation
 	
@@ -406,8 +389,37 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			parent_imp := p
 		end
 
+	set_minimum_size (min_width, min_height: INTEGER) is
+			-- set `minimum_width' to `min_width'
+			-- set `minimum_height' to `min_height'
+		do
+			set_minimum_width (min_width)
+			set_minimum_height (min_height)
+		end
+
+	set_move_and_size (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Move and resize the widget. Only the parent can call this feature
+			-- because it doesn't notify the parent of the change.
+		do
+			wel_window.move_and_resize (a_x, a_y, minimum_width.max(a_width), minimum_height.max (a_height), True)
+		end
+
+	parent_ask_resize (new_width, new_height: INTEGER) is
+			-- When the parent asks the resize, it's not 
+			-- necessary to send him back the information
+		do
+			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
+		end
+
 feature {NONE} -- Implementation
 	
+	notify_size_to_parent is
+		do
+			if parent_imp /= Void then
+				parent_imp.child_has_resized (width, height, Current)
+			end
+		end
+
 	parent_imp: EV_CONTAINER_IMP
 			-- Container parent of this widget
 	

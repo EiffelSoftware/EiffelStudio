@@ -14,11 +14,13 @@ feature
 
 			!!processed_features.make (1, System.body_id_counter.value)
 			!!to_be_inlined.make (1, System.body_id_counter.value)
+
+			min_inlining_threshold := System.inlining_size
 		end
 
 feature {NONE}
 
-	min_inlining_threshold: INTEGER is 4
+	min_inlining_threshold: INTEGER
 			-- Byte code smaller than `min_inlining_threshold' will be inlined
 			-- even if they are called several times
 
@@ -29,7 +31,7 @@ feature {NONE}
 
 	to_be_inlined: ARRAY [BOOLEAN];
 
-feature -- Curretn inlined feature
+feature -- Current inlined feature
 
 	set_inlined_feature (bc: INLINED_FEAT_B) is
 		do

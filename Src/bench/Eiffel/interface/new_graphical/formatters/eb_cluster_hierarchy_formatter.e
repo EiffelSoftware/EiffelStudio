@@ -18,11 +18,11 @@ creation
 	
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---			-- Pixmap for the button.
---		once 
---			Result := Pixmaps.bm_Showcluster_hier_list 
---		end
+	symbol: EV_PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := Pixmaps.bm_Showcluster_hier_list 
+		end
  
 feature {NONE} -- Properties
 

@@ -17,10 +17,10 @@ creation
 
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showdeferreds 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showdeferreds 
+		end
  
 feature {NONE} -- Properties
 

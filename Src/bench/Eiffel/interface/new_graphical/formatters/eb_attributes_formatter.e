@@ -17,11 +17,11 @@ creation
 	
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---			-- Pixmap for the button.
---		once 
---			Result := Pixmaps.bm_Showattributes 
---		end
+	symbol: EV_PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := Pixmaps.bm_Showattributes 
+		end
  
 feature {NONE} -- Properties
 

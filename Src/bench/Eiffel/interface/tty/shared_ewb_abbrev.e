@@ -31,6 +31,8 @@ feature
 
 	Clusters_abb: CHARACTER is 'c';
 
+	Cluster_hierarchy_abb: CHARACTER is 'h';
+
 	Convert_profile_abb: CHARACTER is 'c';
 
 	Defaults_abb: CHARACTER is 'e';
@@ -139,12 +141,12 @@ feature
 
 	Yank_abb: CHARACTER is 'y';
 
-	flat_doc_abb: CHARACTER is 'f';
+	Flat_doc_abb: CHARACTER is 'f';
 
-	flat_short_doc_abb: CHARACTER is 'i';
+	Flat_short_doc_abb: CHARACTER is 'i';
 
-	short_doc_abb: CHARACTER is 's';
+	Short_doc_abb: CHARACTER is 's';
 
-	text_doc_abb: CHARACTER is 't';
+	Text_doc_abb: CHARACTER is 't';
 
 end -- class SHARED_EWB_ABBREV

@@ -10,13 +10,11 @@ RM = del
 OBJECTS = lace_y.obj keyword.obj lac_err.obj lace_c.obj lace_l.obj eif_l.obj
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 all:: lace.lib
 
 lace.lib: $(OBJECTS)
-	$(RM) $@
 	$link_line
 
 lace_y.c: lace_y.cwn

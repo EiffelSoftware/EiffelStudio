@@ -35,11 +35,9 @@ OBJECTS = \
 	idrm_dstry.obj
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 all:: idr.lib
 
 idr.lib: $(OBJECTS)
-	$(RM) $@
 	$link_line

@@ -26,13 +26,11 @@ OBJECTS = \
 	env.obj
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 all:: ebench.exe
 
 $microsoft-ebench.exe: $(LIBS) ebench.lmk
-	$(RM) $@
 	link $(LDFLAGS) $(LIBS) -OUT:$@ @ebench.lmk
 
 ebench.res: ebench.rc
@@ -44,7 +42,6 @@ ebench.lmk: $(OBJECTS) ebench.res
 	echo GDI32.LIB ADVAPI32.LIB USER32.LIB ebench.res >> ebench.lmk
 
 $borland-ebench.exe: $(LIBS) ebench.lbk
-	$(RM) $@
 	tlink32 @ebench.lbk
 
 ebench.lbk: $(OBJECTS)
@@ -55,7 +52,6 @@ ebench.lbk: $(OBJECTS)
 	echo $(TOP)\idrs\idr.lbb,,ebench.res >> ebench.lbk
 
 $watcom-ebench.exe: $(LIBS) ebench.lwk
-	$(RM) $@
 	wlink @ebench.lwk
 	wrc /fe=ebench.exe ebench
 

@@ -9,11 +9,9 @@ RM = del
 OBJECTS = argcargv.obj econsole.obj $(TOP)\ipc\shared\shword.obj
 
 .c.obj:
-	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
 all:: econsole.lib
 
 econsole.lib: $(OBJECTS)
-	$(RM) $@
 	$link_line

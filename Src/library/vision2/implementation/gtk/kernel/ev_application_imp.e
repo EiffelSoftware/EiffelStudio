@@ -136,6 +136,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 		local
 			cur: CURSOR
 			imp: EV_PICK_AND_DROPABLE_IMP
+			row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			trg: EV_PICK_AND_DROPABLE
 		do
 			--| FIXME use this implementation instead!:
@@ -152,10 +153,15 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					pnd_targets.prune_all (pnd_targets.item)
 				else
 					imp ?= trg.implementation
-					check
-						imp_not_void: imp /= Void
-					end
-					if imp.pebble_over_widget (a_gdk_window, a_x, a_y) then
+					if imp = Void then
+						row_imp ?= trg.implementation
+						check
+							imp_not_void: row_imp /= Void
+						end
+						if row_imp.pebble_over_widget (a_gdk_window, a_x, a_y) then
+							Result := trg
+						end
+					elseif imp.pebble_over_widget (a_gdk_window, a_x, a_y) then
 						Result := trg
 					end				
 				end
@@ -184,13 +190,14 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					if
 						trg.drop_actions.accepts_pebble (a_pebble)
 					then
-						imp ?= trg.implementation
-						check
-							imp_not_void: imp /= Void
-						end
-						C.gtk_widget_set_state
-							(imp.c_object, C.Gtk_state_prelight_enum)
-						C.gtk_widget_draw (imp.c_object, Default_pointer)
+						--| FIXME IEK No current prelight support for mcl rows.
+						--imp ?= trg.implementation
+						--check
+						--	imp_not_void: imp /= Void
+						--end
+						--C.gtk_widget_set_state
+						--	(imp.c_object, C.Gtk_state_prelight_enum)
+						--C.gtk_widget_draw (imp.c_object, Default_pointer)
 					end
 					pnd_targets.forth
 				end
@@ -219,13 +226,14 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					if
 						trg.drop_actions.accepts_pebble (a_pebble)
 					then
-						imp ?= trg.implementation
-						check
-							imp_not_void: imp /= Void
-						end
-						C.gtk_widget_set_state
-							(imp.c_object, C.Gtk_state_normal_enum)
-						C.gtk_widget_draw (imp.c_object, Default_pointer)
+						--| FIXME IEK Mclist rows are not widgets.
+						--imp ?= trg.implementation
+						--check
+						--	imp_not_void: imp /= Void
+						--end
+						--C.gtk_widget_set_state
+						--	(imp.c_object, C.Gtk_state_normal_enum)
+						--C.gtk_widget_draw (imp.c_object, Default_pointer)
 					end
 					pnd_targets.forth
 				end
@@ -351,6 +359,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/30 19:32:36  king
+--| Temporarily removed prelight support from PND as mcl row is not a widget
+--|
 --| Revision 1.20  2000/03/24 02:21:14  oconnor
 --| rewrote idle handling using new kamikaze agents
 --|

@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 	implementation: EV_SELECT_BUTTON_I
 			-- Responsible for interaction with the native graphics toolkit.
 
-end -- class EV_STATE_BUTTON
+end -- class EV_SELECT_BUTTON
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -64,6 +64,9 @@ end -- class EV_STATE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/04/05 17:10:09  king
+--| EV_STATE_BUTTON footnote -> EV_SELECT_BUTTON
+--|
 --| Revision 1.3  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

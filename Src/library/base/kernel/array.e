@@ -292,7 +292,7 @@ feature  {NONE} -- Initialization
 	allocate_space (minindex, maxindex: INTEGER) is
 			-- Allocate memory and initialize indexes.
 		require
-			valid_indices: maxindex >= minindex - 1
+			valid_indices: maxindex >= minindex
 		do
 			lower := minindex;
 			upper := maxindex;

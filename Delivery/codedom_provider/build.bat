@@ -48,25 +48,16 @@ ECHO Building codedom
 CALL build_codedom.bat
 IF "%CODEDOM_BUILT%"=="" GOTO END
 
-ECHO Building silent_launcher
+ECHO Building installer
 CD checkout\tools\silent_launcher
 IF EXIST EIFGEN rd /q /s EIFGEN
-IF EXIST silent_launcher.epr del silent_launcher.epr
+IF EXIST installer.epr del installer.epr
 SET ISE_CFLAGS=-D WINVER=0x500
-ec -finalize -c_compile -ace silent_launcher.ace
-IF NOT EXIST EIFGEN\F_Code\silent_launcher.exe ECHO Build failed, could not find EIFGEN\F_Code\silent_launcher.exe!!
-IF NOT EXIST EIFGEN\F_Code\silent_launcher.exe GOTO END
-COPY EIFGEN\F_Code\silent_launcher.exe ..\..\..\delivery
+ec -finalize -c_compile -ace ace.codedom.ace
+IF NOT EXIST EIFGEN\F_Code\installer.exe ECHO Build failed, could not find EIFGEN\F_Code\installer.exe!!
+IF NOT EXIST EIFGEN\F_Code\installer.exe GOTO END
+COPY EIFGEN\F_Code\installer.exe ..\..\..\delivery
 
-ECHO Building installer_launcher
-CD ..\installer_launcher
-IF EXIST EIFGEN rd /q /s EIFGEN
-IF EXIST installer_launcher.epr del installer_launcher.epr
-SET ISE_CFLAGS=
-ec -finalize -c_compile -ace ace.ace
-IF NOT EXIST EIFGEN\F_Code\installer_launcher.exe ECHO Build failed, could not find EIFGEN\F_Code\installer_launcher.exe!!
-IF NOT EXIST EIFGEN\F_Code\installer_launcher.exe GOTO END
-COPY EIFGEN\F_Code\installer_launcher.exe ..\..\..\delivery
 CD ..\..\..
 :END
 ECHO Done.

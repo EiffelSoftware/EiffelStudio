@@ -336,7 +336,7 @@ feature -- Interaction with .Net Debugger
 		end
 
 	do_stop is
-			-- Stop the process (on a step complete or breakpoint for instance)
+			-- (Async) Stop the process (on a step complete or breakpoint for instance)
 		require
 			controller_exists: icor_debug_controller /= Void
 		local
@@ -346,6 +346,9 @@ feature -- Interaction with .Net Debugger
 			if exit_process_occurred or else l_controller = Void then
 				on_exit_process
 			else
+				debug ("debugger_eifnet_data")
+					print ("Last control mode = " + eifnet_debugger_info.last_control_mode_as_string + "%N")
+				end
 				l_controller.stop (infinite_time)
 				last_dbg_call_success := l_controller.last_call_success
 				debug ("debugger_eifnet_data")
@@ -354,7 +357,7 @@ feature -- Interaction with .Net Debugger
 				waiting_debugger_callback ("stop")
 			end
 		end
-
+		
 	do_continue is
 		local
 			l_controller: ICOR_DEBUG_CONTROLLER		

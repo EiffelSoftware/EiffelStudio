@@ -81,11 +81,17 @@ feature -- Type check, byte code and dead code removal
 
 	byte_node: INSPECT_B is
 			-- Associated byte code
+		local
+			tmp: BYTE_LIST [BYTE_NODE]
 		do
 			!!Result;
 			Result.set_switch (switch.byte_node);
 			if case_list /= Void then
-				Result.set_case_list (case_list.byte_node);
+				tmp := case_list.byte_node;
+				tmp := tmp.remove_voids;
+				if tmp /= Void then
+					Result.set_case_list (tmp);
+				end;
 			end;
 			if else_part /= Void then
 				Result.set_else_part (else_part.byte_node);
@@ -112,7 +118,7 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_keyword ("inspect");
+			ctxt.put_keyword ("inspect ");
 			ctxt.indent_one_more;
 			switch.format (ctxt);
 			ctxt.indent_one_less;
@@ -127,6 +133,7 @@ feature -- Formatter
 			if else_part /= void then
 				ctxt.put_keyword("else");
 				ctxt.indent_one_more;
+				ctxt.next_line;
 				ctxt.separator_is_special;
 				ctxt.set_separator(";");
 				ctxt.new_line_between_tokens;

@@ -51,7 +51,7 @@ feature
 			feature_as: FEATURE_AS;
 			new_name: FEATURE_NAME
 		do
-			!!adapter.make (a,d, False);
+			!!adapter.make (a,d);
 			adapter.set_context_features (old_feat, new_feat);
 			adapter.set_source_class (a);
 			adapter.set_target_class (d);

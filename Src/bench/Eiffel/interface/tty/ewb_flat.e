@@ -43,7 +43,8 @@ feature
 						io.error.putstring (class_name);
 						io.error.putstring (" is not in the system%N");
 					else
-						!!ctxt.make (class_c, False);
+						!!ctxt.make (class_c);
+						ctxt.execute;
 						io.putstring (ctxt.text.image)
 					end;
 				end;

@@ -179,16 +179,30 @@ feature -- formatter
 
 	format (ctxt: FORMAT_CONTEXT) is
 		local
-			temp: STRING
+			temp: STRING;
+			cluster: CLUSTER_I;
+			client_classc: CLASS_C;
+			client_classi: CLASS_I;
 		do
+			cluster := System.class_of_id (written_in).cluster;
 			from
 				clients.start	
 			until
 				clients.after
 			loop
 				temp := clients.item.duplicate;
-				temp.to_upper;
-				ctxt.put_string (temp);
+				client_classi := Universe.class_named (temp, cluster);
+				if client_classi /= Void then
+					client_classc := client_classi.compiled_class;
+					if client_classc /= Void then
+						ctxt.put_class_name (client_classc)
+					else
+						ctxt.put_classi_name (client_classi)
+					end
+				else
+					temp.to_upper;
+					ctxt.put_string (temp);
+				end
 				clients.forth;
 				if not clients.after then
 					ctxt.put_string (", ");

@@ -177,6 +177,12 @@ feature
 			-- Do nothing
 		end;
 
+	is_like_argument: BOOLEAN is
+			-- Is the current type a like argument?
+		do
+			-- Do nothing
+		end;
+
 	is_multi_type: BOOLEAN is
 			-- Is the current type a manifexst array
 		do

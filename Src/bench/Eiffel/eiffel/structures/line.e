@@ -93,5 +93,10 @@ feature
 			cursor := 0;
 			clear_all;
 		end;
+
+	go_i_th (i: INTEGER) is
+		do
+			cursor := i
+		end;
 			
 end

@@ -117,4 +117,14 @@ feature -- Formatting
 			ctxt.put_current_feature;
 		end;
 
+	main_feature_format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			if is_frozen then
+				ctxt.put_keyword ("frozen ");
+			end;
+			ctxt.prepare_for_main_feature;
+			ctxt.put_current_feature;
+	   end;
+
 end

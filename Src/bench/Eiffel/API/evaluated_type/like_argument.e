@@ -10,7 +10,8 @@ inherit
 			set_base_type as set_position
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
-			is_basic, instantiated_in, same_as, conformance_type, meta_type
+			is_basic, instantiated_in, same_as, conformance_type, meta_type,
+			is_like_argument
 		end;
 	SHARED_LIKE_CONTROLER;
 	SHARED_ARG_TYPES;
@@ -35,6 +36,12 @@ feature -- Primitives
 			-- Assign `a' to `actual_type'.
 		do
 			actual_type := a;
+		end;
+
+	is_like_argument: BOOLEAN is
+			-- Is Current a like argument? (True)
+		do
+			Result := True;
 		end;
 
 	is_like: BOOLEAN is

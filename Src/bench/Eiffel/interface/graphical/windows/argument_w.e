@@ -58,9 +58,6 @@ feature
 			Result.append (System.system_name);
 			Result.append (" ");
 			Result.append (argument_list);	
-io.error.putstring ("application is: ");
-io.error.putstring (Result);
-io.error.new_line;
 		end;
 
 	

@@ -158,7 +158,7 @@ feature -- formatting
 			end;
 			ctxt.put_keyword ("class");
 			ctxt.put_string (" ");
-			if ctxt.no_internals then
+			if ctxt.is_short then
 				ctxt.put_keyword ("interface");
 				ctxt.put_string (" ");
 			end;

@@ -33,7 +33,10 @@ feature {NONE}
 		local
 			ctxt: FORMAT_CONTEXT;
 		do
-			!!ctxt.make (c.class_c, true);
+			!!ctxt.make (c.class_c);
+			ctxt.set_in_bench_mode;
+			ctxt.set_is_short;
+			ctxt.execute;
 			text_window.process_text (ctxt.text);	
 		end
 

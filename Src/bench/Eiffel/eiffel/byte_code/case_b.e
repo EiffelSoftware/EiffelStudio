@@ -12,7 +12,8 @@ inherit
 feature 
 
 	interval: BYTE_LIST [BYTE_NODE];
-			-- Case interval {list of INTERVAL_B}
+			-- Case interval {list of INTERVAL_B}: can be Void
+			-- in situations such as 5..3
 
 	compound: BYTE_LIST [BYTE_NODE];
 			-- Associated compound {list of INSTR_B}: can be Void
@@ -50,10 +51,15 @@ feature
 	generate is
 			-- Generate C code in `generated_file'.
 		do
+			interval.generate;
 			if compound /= Void then
-				interval.generate;
 				generated_file.indent;
 				compound.generate;
+				generated_file.putstring ("break;");
+				generated_file.new_line;
+				generated_file.exdent;
+			else
+				generated_file.indent;
 				generated_file.putstring ("break;");
 				generated_file.new_line;
 				generated_file.exdent;

@@ -75,4 +75,44 @@ feature
 			end;
 		end;
 
+feature -- Convenience
+
+	remove_voids: like Current is
+		local
+			nbr_void: INTEGER;
+		do
+			from
+				start
+			until
+				after
+			loop
+				if (item = Void) then
+					nbr_void := nbr_void + 1
+				end;
+				forth
+			end;
+			if (nbr_void < count) then
+				--| Not all elements are void
+				if nbr_void > 0 then
+					--| Remove the void elements
+					from
+						!!Result.make (count - nbr_void);
+						Result.start;
+						start;
+					until
+						after
+					loop
+						if (item /= Void) then
+							Result.replace (item);
+							Result.forth;
+						end;
+						forth
+					end;
+				else
+					--| There are no void elements
+					Result := Current
+				end;
+			end
+		end;
+
 end

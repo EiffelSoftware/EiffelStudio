@@ -141,6 +141,10 @@ feature {NONE}
 				format_bar.attach_top (showfuture_command, 0);
 				format_bar.attach_left_widget (showpast_command, showfuture_command, 0);
 
+			!!showflat_command.make (format_bar, text_window);
+				format_bar.attach_top (showflat_command, 0);
+				format_bar.attach_left_widget (showfuture_command, showflat_command, 0);
+
 			!!shell_command.make (format_bar, text_window);
 				format_bar.attach_top (shell_command, 0);
 				format_bar.attach_right (shell_command, 0);
@@ -189,6 +193,7 @@ feature {NONE}
 	debug_showbreak: DEBUG_SHOWBREAK;
 	showpast_command: SHOW_PAST;
 	showfuture_command: SHOW_FUTURE;
+	showflat_command: SHOW_ROUT_FLAT;
 	shell_command: SHELL_COMMAND;
 
 end

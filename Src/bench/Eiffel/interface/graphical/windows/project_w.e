@@ -141,10 +141,12 @@ feature -- rest
 			explain_hole: EXPLAIN_HOLE;
 			shell_hole: SHELL_HOLE;
 			dummy_rc: ROW_COLUMN;
+			change_font_command: CHANGE_FONT;	
 		do
 			!!open_command.make (text_window);
 			!!classic_bar.make (new_name, form_manager);
 				!!quit_command.make (classic_bar, text_window);
+				!!change_font_command.make (classic_bar, text_window);
 				!!type_teller.make (new_name, classic_bar);
 					type_teller.set_center_alignment;
 				!!explain_hole.make (classic_bar, Current);
@@ -154,6 +156,7 @@ feature -- rest
 				!!object_hole.make (classic_bar, Current);
 				--!!shell_hole.make (classic_bar, Current);
 					classic_bar.attach_top (quit_command, 0);
+					classic_bar.attach_top (change_font_command, 0);
 					classic_bar.attach_top (type_teller, 0);
 					classic_bar.attach_top (explain_hole, 0);
 					classic_bar.attach_top (system_hole, 0);
@@ -167,7 +170,8 @@ feature -- rest
 					classic_bar.attach_left_widget (routine_hole, object_hole, 0);
 					classic_bar.attach_left_widget (object_hole, type_teller,
 0);
-					classic_bar.attach_right_widget (quit_command, type_teller, 0);
+					classic_bar.attach_right_widget (change_font_command, type_teller, 0);
+					classic_bar.attach_right_widget (quit_command, change_font_command, 0);
 					classic_bar.attach_right (quit_command, 23);
 					classic_bar.attach_bottom (type_teller, 0);
 					--classic_bar.attach_right_widget (shell_hole, object_hole, 0);

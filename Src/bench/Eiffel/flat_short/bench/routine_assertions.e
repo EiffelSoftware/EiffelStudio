@@ -1,9 +1,8 @@
 class ROUTINE_ASSERTIONS
 
 creation
-	make
+	make, make_for_feature
 	
-
 feature
 
 	make (ast: FEATURE_FSAS) is
@@ -11,6 +10,18 @@ feature
 			precondition := ast.precondition;
 			postcondition := ast.postcondition;
 			origin := ast.adapter.old_feature;
+		end;
+
+	make_for_feature (feat: FEATURE_I; ast: FEATURE_AS) is
+		local
+			rout_as: ROUTINE_AS
+		do
+			rout_as ?= ast.body.content;
+			if rout_as /= Void then
+				precondition := rout_as.precondition;
+				postcondition := rout_as.postcondition;
+			end;
+			origin := feat;
 		end;
 
 

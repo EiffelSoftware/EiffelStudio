@@ -26,11 +26,11 @@ feature {NONE}
 
 	display_info (i: INTEGER; f: FEATURE_STONE) is
 		local
-			ctxt: ROUTINE_CONTEXT;
+			--ctxt: ROUTINE_CONTEXT;
 		do
 			debug_info.add_feature (f.feature_i);
-			!!ctxt.make (f.feature_i);
-			text_window.process_text (ctxt.text)
+			--!!ctxt.make (f.feature_i);
+			--text_window.process_text (ctxt.text)
 		end;	
 
 

@@ -1355,6 +1355,8 @@ feature -- Undefinition
 			Result.set_is_ensure_then (is_ensure_then);
 			Result.set_export_status (export_status);
 			Result.set_body_index (body_index);
+			Result.set_has_postcondition (has_postcondition);
+			Result.set_has_precondition (has_precondition);
 		ensure
 			Result_exists: Result /= Void;
 			Result_is_deferred: Result.is_deferred;

@@ -631,6 +631,24 @@ file.putstring ("' */");
 			end;
 		end;
 
+	replicated_features: EXTEND_TABLE [FEATURE_I, INTEGER] is
+		do
+			!!Result.make (10);
+			from
+				start
+			until
+				after
+			loop
+				if item_for_iteration.is_replicated and then
+					not item_for_iteration.is_selected then
+					Result.put (item_for_iteration,
+								item_for_iteration.body_index)
+				end;
+				forth
+			end
+		end
+
+
 	trace is
 			-- Debug purpose
 		do

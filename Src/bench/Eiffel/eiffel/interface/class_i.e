@@ -141,15 +141,6 @@ feature
 			str := file_name.to_c;
 			new_date := eif_date ($str);
 			Result := new_date /= date;
-io.error.putstring ("CLASS_I ");
-io.error.putstring (base_name);
-io.error.putstring (" date: ");
-io.error.putint (date);
-io.error.putstring (" new_date: ");
-io.error.putint (new_date);
-io.error.new_line;
-io.error.putbool (Result);
-io.error.new_line;
 		end;
 
 feature -- Drag and drop

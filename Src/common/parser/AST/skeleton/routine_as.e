@@ -509,7 +509,7 @@ feature	-- Replication
 			end;
 		end;
 
-feature	{ROUTINE_AS}	-- Replication
+feature	{ROUTINE_AS, FEATURE_AS}  -- Replication and for flattening of a routine
 
 	set_precondition (p: like precondition) is
 		do
@@ -536,6 +536,11 @@ feature	{ROUTINE_AS}	-- Replication
 	set_rescue_clause (r: like rescue_clause) is
 		do	
 			rescue_clause := r
+		end;
+
+	set_obsolete_message (m: like obsolete_message) is
+		do	
+			obsolete_message := m
 		end;
 
 end

@@ -26,7 +26,7 @@
 				<b>EV_TITLED_WINDOW</b>
 				<ul class="square">
 					<li>
-					You may now only call `maximize' and `minimize' if `is_show_requested'.
+					 You may now only call `maximize' and `minimize' if `is_show_requested'.
 					<li>
 						When minimized, `is_displayed' now returns False.</li>
 				</ul>
@@ -34,9 +34,11 @@
 				<B>EV_BUTTON</B>
 			now inherits EV_FONTABLE, allowing you to modify the font displayed.
 			<li>
-				<B>EV_DYNAMIC_LIST_ITEM</B> -- Corrected `off' which was using the version 
+				<B>EV_DYNAMIC_LIST_ITEM</B> - Corrected `off' which was using the version 
 				inherited from EV_TREE_NODE when it should have been using the version from 
 				EV_TREE_NODE_LIST instead.</li>
+			<li><B>EV_RECTANGLE</B> - Added precondition to `intersects' which stops a Void rectangle being passed as an argument.</li>
+			<li><B>EV_TOOL_BAR_SEPARATOR</B> - Now export many inherited features to {ANY} instead of {NONE}, including `parent'.</li>
 		</ul>
 		<p><b>Bug fixes</b></p>
 		<ul>
@@ -46,6 +48,12 @@
 					<li>
 						<b>EV_WIDGET</b> - `pointer_style' now correctly returns the Ibeam cursor for 
 						textable widgets.</li>
+					<li><B>EV_FIGURE_RECTANGLE</B>
+						<ul class="square">
+							<li>Corrected `bounding_box' which was previously computed incorrectly when the rectangle was rotated.</li>
+							<li>Fixed `width' and `height' which were always returning one less pixel than they should have.</li>
+						</ul>
+					</li>
 				</ul>
 			<li>
 				<b>Windows</b>

@@ -25,6 +25,10 @@ extern "C" {
 #include "rt_main.h"
 #include "eif_memory.h"
 
+#ifdef BOEHM_GC
+#include "rt_boehm.h"
+#endif
+
 /* Global variable to find out if we are performing the final collect */
 rt_public EIF_BOOLEAN eif_is_in_final_collect = EIF_FALSE;
 
@@ -37,6 +41,7 @@ rt_public void mem_free(EIF_REFERENCE object)
 	 * other object still references it--RAM.
 	 */
 	union overhead *zone = HEADER(object);
+#ifdef ISE_GC
 	uint32 flags = zone->ov_flags;
 	unsigned int nbytes = EIF_Size(Dtype(object));
 
@@ -49,6 +54,11 @@ rt_public void mem_free(EIF_REFERENCE object)
 
 	eiffel_usage -= (nbytes + OVERHEAD);
 	if (eiffel_usage < 0) eiffel_usage = 0;
+#else
+#ifdef BOEHM_GC
+	GC_free(zone);
+#endif
+#endif
 }
 
 /*
@@ -61,12 +71,14 @@ rt_public void mem_speed(void)
 	 * to that the user cares more about raw speed than memory consumption.
 	 */
 
+#ifdef ISE_GC
 	if (cc_for_speed)			/* Already compiled for speed */
 		return;					/* Nothing to be done */
 
 	cc_for_speed = 1;			/* We are compiled for speed from now on */
 	if (gen_scavenge & GS_OFF)	/* Generation scavenging turned off? */
 		gen_scavenge = GS_SET;	/* Allow malloc to try again */
+#endif
 }
 
 rt_public void mem_slow(void)
@@ -77,12 +89,14 @@ rt_public void mem_slow(void)
 	 * we continue to use it.
 	 */
 
+#ifdef ISE_GC
 	if (!cc_for_speed)			/* Already compiled for memory */
 		return;					/* Nothing to be done */
 
 	cc_for_speed = 0;			/* We are compiled for speed from now on */
 	if (gen_scavenge == GS_SET)	/* Scavenging still waiting to be activated */
 		gen_scavenge = GS_OFF;	/* Turn it off */
+#endif
 }
 
 rt_public void mem_tiny(void)
@@ -91,6 +105,7 @@ rt_public void mem_tiny(void)
 	 * have been allocated.
 	 */
 
+#ifdef ISE_GC
 	if (gen_scavenge & GS_ON)	/* Generation scavenging turned on */
 		sc_stop();				/* Free 'to' and explode 'from' space */
 
@@ -100,17 +115,23 @@ rt_public void mem_tiny(void)
 	if (gen_scavenge != GS_OFF)
 		eif_panic("memory flags corrupted");
 #endif
+#endif
 }
 
 /*
  * Memory coalescing.
  */
+#ifdef ISE_GC
 rt_private int m_largest = 0;		/* Size of the largest coalesced block */ /* %%ss mt */
+#endif
 
 rt_public EIF_INTEGER mem_largest(void)
 {
-
+#ifdef ISE_GC
 	return (EIF_INTEGER) m_largest;			/* Return size of the largest block */
+#else
+	return 0;
+#endif
 }
 
 rt_public void mem_coalesc(void)
@@ -123,7 +144,9 @@ rt_public void mem_coalesc(void)
 	 * attribute on the Eiffel side).
 	 */
 
+#ifdef ISE_GC
 	m_largest = full_coalesc(ALL_T);
+#endif
 }
 
 /*
@@ -138,28 +161,43 @@ rt_public void mem_coalesc(void)
 
 rt_public long mem_tget(void)
 {
+#ifdef ISE_GC
 	return th_alloc;			/* Current allocation threshold */
+#else
+	return 0;
+#endif
 }
 
 rt_public void mem_tset(long int value)
 {
+#ifdef ISE_GC
 	th_alloc = value;			/* Set new allocation threshold */
+#endif
 }
 
 rt_public long mem_pget(void)
 {
+#ifdef ISE_GC
 	return plsc_per;			/* Current full collection period */
+#else
+	return 0;
+#endif
 }
 
 rt_public void mem_pset(long int value)
 {
+#ifdef ISE_GC
 	plsc_per = value;			/* Set new full collection period */
+#endif
 }
 
 /*
  * Memory usage.
  */
+#ifdef ISE_GC
 rt_private struct emallinfo mem_stats; /* %%ss mt */
+#endif
+
 rt_public void mem_stat(long int type)
 {
 	/* Initialize the mem statistics buffer, which will be used by the mem_info
@@ -169,15 +207,18 @@ rt_public void mem_stat(long int type)
 	 * suddenly be changed by a call to the GC)--RAM.
 	 */
 	
+#ifdef ISE_GC
 	struct emallinfo *sm = meminfo(type);	/* Get structure by type */
 
 	memcpy (&mem_stats, sm, sizeof(struct emallinfo));
+#endif
 }
 
 rt_public long mem_info(long int field)
 {
 	/* Extracts values from the emallinfo structure */
 
+#ifdef ISE_GC
 	switch (field) {
 	case 0:
 		return mem_stats.ml_chunk;
@@ -192,17 +233,24 @@ rt_public long mem_info(long int field)
 	}
 	/* NOTREACHED */
 	return 0;
+#else
+	return 0;
+#endif
 }
 
 /*
  * GC statistics.
  */
+#ifdef ISE_GC
 rt_private struct gacstat gc_stats;
 rt_private long gc_count;
+#endif
 
 rt_public void gc_mon(char flag)
 {
+#ifdef ISE_GC
 	gc_monitor = (int) flag;	/* Turn GC statistics on/off */
+#endif
 }
 
 rt_public void gc_stat(long int type)
@@ -214,6 +262,7 @@ rt_public void gc_stat(long int type)
 	 * suddenly be changed by a call to the GC)--RAM.
 	 */
 	
+#ifdef ISE_GC
 	struct gacstat *gs = &g_stat[type];	/* Get structure by type */
 
 	memcpy (&gc_stats, gs, sizeof(struct gacstat));
@@ -222,12 +271,14 @@ rt_public void gc_stat(long int type)
 		gc_count = g_data.nb_full;
 	else
 		gc_count = g_data.nb_partial;
+#endif
 }
 
 rt_public long gc_info(long int field)
 {
 	/* Extracts values from the gacstat structure */
 
+#ifdef ISE_GC
 	switch (field) {
 	case 0:
 		return gc_count;
@@ -250,12 +301,16 @@ rt_public long gc_info(long int field)
 	}
 	/* NOTREACHED */
 	return 0;
+#else
+	return 0;
+#endif
 }
 
 rt_public double gc_infod(long int field)
 {
 	/* Extracts values from the gacstat structure */
 
+#ifdef ISE_GC
 	switch (field) {
 	case 8:
 		return gc_stats.cpu_time;
@@ -278,6 +333,9 @@ rt_public double gc_infod(long int field)
 	}
 	/* NOTREACHED */
 	return 0;
+#else
+	return 0;
+#endif
 }
 
 /*
@@ -286,14 +344,24 @@ rt_public double gc_infod(long int field)
 
 rt_public char gc_ison(void)
 {
+#ifdef ISE_GC
 	return (char) (g_data.status & GC_STOP ? '\0' : '\01');
+#else
+#ifdef BOEHM_GC
+	return EIF_TEST(GC_dont_gc != 0);
+#else
+	return '\0';
+#endif
+#endif
 }
 
 rt_public void eif_set_coalesce_period (EIF_INTEGER p)
 {
+#ifdef ISE_GC
 	REQUIRE ("p positive", p >= 0);
 	clsc_per = p;
 	ENSURE ("clsc_per set", clsc_per == p);
+#endif
 }
 
 rt_public void eif_set_max_mem (EIF_INTEGER lim)
@@ -302,7 +370,9 @@ rt_public void eif_set_max_mem (EIF_INTEGER lim)
 	 * Set the maximum amount of memory the run-time can allocate.
 	 */
 
+#ifdef ISE_GC
 	eif_max_mem = (int) lim;
+#endif
 }
 
 rt_public EIF_INTEGER eif_get_max_mem (void)
@@ -311,7 +381,11 @@ rt_public EIF_INTEGER eif_get_max_mem (void)
 	 * Return the maximum amount of memory the run-time can allocate.
 	 */
 
+#ifdef ISE_GC
 	return (EIF_INTEGER) eif_max_mem;
+#else
+	return 0;
+#endif
 }	/* eif_max_mem () */
 
 rt_public EIF_INTEGER eif_tenure (void)	
@@ -320,7 +394,11 @@ rt_public EIF_INTEGER eif_tenure (void)
 
 	/* Not in per thread basis. */
 
-	return	eif_tenure_max;
+#ifdef ISE_GC
+	return eif_tenure_max;
+#else
+	return 0;
+#endif
 }	/* eif_tenure () */
 
 rt_public EIF_INTEGER eif_generation_object_limit (void)
@@ -331,7 +409,11 @@ rt_public EIF_INTEGER eif_generation_object_limit (void)
 
 	/* Not in per thread basis. */
 
+#ifdef ISE_GC
 	return (EIF_INTEGER) eif_gs_limit;
+#else
+	return 0;
+#endif
 }	/* eif_generation_object_limit () */
 
 rt_public EIF_INTEGER eif_scavenge_zone_size (void)
@@ -340,14 +422,20 @@ rt_public EIF_INTEGER eif_scavenge_zone_size (void)
 
 	/* Not in per thread basis. */
 
+#ifdef ISE_GC
 	return (EIF_INTEGER) eif_scavenge_size;
+#else
+	return 0;
+#endif
 }	/* eif_scavenge_zone_size () */
 
 rt_public EIF_INTEGER eif_coalesce_period (void) 
 {
-	int ret;	/* Return value. */
-	ret = clsc_per;	
-	return (EIF_INTEGER) ret;
+#ifdef ISE_GC
+	return (EIF_INTEGER) clsc_per;	
+#else
+	return 0;
+#endif
 }	/* eif_coalesce_period () */	
 
 rt_public EIF_INTEGER eif_get_chunk_size (void)
@@ -356,7 +444,11 @@ rt_public EIF_INTEGER eif_get_chunk_size (void)
 	 * Return chunk size.
 	 */
 
+#ifdef ISE_GC
 	return (EIF_INTEGER) eif_chunk_size;
+#else
+	return 0;
+#endif
 }	/* eif_get_chunk_size () */
 
 #ifdef __cplusplus

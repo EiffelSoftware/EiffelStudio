@@ -45,7 +45,7 @@ shared_prefix: "$(ISE_C_COMPILER)/dll_"
 mt_prefix: "mt"
 eiflib: "finalized"
 wkeiflib: "wkbench"
-suffix: ".o"
+suffix: ".a"
 shared_suffix: ".so"
 
 -- libraries

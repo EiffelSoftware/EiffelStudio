@@ -34,9 +34,13 @@ feature {NONE} -- Execution
 			cmd := associated_cmd;
 			cmd.set_structured_text (st);
 			cmd.execute;
-			!! filter.make (filter_name);
-			filter.process_text (cmd.structured_text);
-			output_window.put_string (filter.image);
+			if filter_name /= Void and then not filter_name.empty then
+				!! filter.make (filter_name);
+				filter.process_text (st);
+				output_window.put_string (filter.image);
+			else
+				output_window.put_string (st.image);
+			end;
 			output_window.new_line;
 		end;
 

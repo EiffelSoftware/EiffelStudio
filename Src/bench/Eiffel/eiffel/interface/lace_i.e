@@ -433,10 +433,8 @@ feature -- Status setting
 					create precomp_r
 					precomp_r.retrieve_precompiled (precompiled_project)
 				else
-					create sys
-					Workbench.set_system (sys)
+					create sys.make
 					Eiffel_project.init_system
-					sys.make
 				end
 				not_first_parsing := True
 			end

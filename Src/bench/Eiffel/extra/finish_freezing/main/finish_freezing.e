@@ -3,6 +3,13 @@ class FINISH_FREEZING
 inherit
 	ARGUMENTS
 
+	EXECUTION_ENVIRONMENT
+		rename
+			command_line as non_used_command_line
+		export
+			{NONE} non_used_command_line
+		end
+
 creation
 	make
 
@@ -15,7 +22,14 @@ feature -- Initialization
 			platform: STRING -- the platform we are on
 			make_util: STRING -- the C make utility for this platform
 			status_box: STATUS_BOX -- the status box displayed at the end of execution
+			location: STRING
+			location_index: INTEGER
 		do
+			location_index := index_of_word_option ("location")
+			if location_index /= 0 and then argument_count >= location_index + 1 then
+				location := argument (location_index + 1)
+				change_working_directory (location)				
+			end
 			if not retried then
 				set_option_sign ('-')
 				!!translator.make

@@ -128,14 +128,15 @@ feature -- Access
 
 	classes_with_name (class_name: STRING): LIST [CLASS_I] is
 			-- Classes with name `class_name' found in the Universe
+		require
+			class_name_not_void: class_name /= Void
 		local
 			cur: CURSOR
 			cname: STRING
 			classes: HASH_TABLE [CLASS_I, STRING]
 		do
 			create {ARRAYED_LIST [CLASS_I]} Result.make (2)
-			cname := clone (class_name)
-			cname.to_lower
+			cname := class_name.as_lower
 			buffered_classes.search (cname)
 			if not buffered_classes.found then
 				cur := clusters.cursor
@@ -158,6 +159,38 @@ feature -- Access
 			else
 				Result.extend (buffered_classes.found_item)
 			end
+		ensure
+			classes_with_name_not_void: Result /= Void
+		end
+
+	overriden_classes_with_name (class_name: STRING): LIST [CLASS_I] is
+			-- Classes with name `class_name' found in the Universe of classes
+			-- which have been overriden.
+		require
+			class_name_not_void: class_name /= Void
+		local
+			cur: CURSOR
+			cname: STRING
+			classes: HASH_TABLE [CLASS_I, STRING]
+		do
+			create {ARRAYED_LIST [CLASS_I]} Result.make (2)
+			cname := class_name.as_lower
+			cur := clusters.cursor
+			from
+				clusters.start
+			until
+				clusters.after
+			loop
+				classes := clusters.item.overriden_classes
+				if classes.has (cname) then
+					Result.extend (classes.found_item)
+					Result.forth
+				end
+				clusters.forth
+			end
+			clusters.go_to (cur)
+		ensure
+			classes_with_name_not_void: Result /= Void
 		end
 
 	compiled_classes_with_name (class_name: STRING): LIST [CLASS_I] is
@@ -188,10 +221,12 @@ feature -- Access
 			rename_clause: RENAME_I
 			renamings: HASH_TABLE [STRING, STRING]
 			old_cursor: CURSOR
+			l_ignore: LINKED_LIST [CLUSTER_I]
 		do
+			l_ignore := a_cluster.ignore
 			if
 				has_override_cluster and then
-				not a_cluster.ignored (override_cluster)
+				(l_ignore = Void or else not l_ignore.has (override_cluster))
 			then
 				real_name := class_name
 				rename_clause := a_cluster.rename_clause_for (override_cluster)
@@ -218,7 +253,7 @@ feature -- Access
 						clusters.after or else Result /= Void
 					loop
 						l_cluster := clusters.item
-						if not a_cluster.ignored (l_cluster) then
+						if l_ignore = Void or else not l_ignore.has (l_cluster) then
 							real_name := class_name
 							rename_clause := a_cluster.rename_clause_for (l_cluster)
 							if rename_clause /= Void then
@@ -719,8 +754,10 @@ feature {COMPILER_EXPORTER} -- Implementation
 			vscn: VSCN
 			new_class, override_class, precompiled_class: CLASS_I
 			error_list: LINKED_LIST [VSCN]
+			l_ignore: LINKED_LIST [CLUSTER_I]
 		do
 			last_class := Void
+			l_ignore := a_cluster.ignore
 
 			from
 				clusters.start
@@ -728,7 +765,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				clusters.after
 			loop
 				l_cluster := clusters.item
-				if not a_cluster.ignored (l_cluster) then
+				if l_ignore = Void or else not l_ignore.has (l_cluster) then
 					real_name := class_name
 					rename_clause := a_cluster.rename_clause_for (l_cluster)
 					if rename_clause /= Void then

@@ -1,10 +1,6 @@
 #include "eif_setup.h"
 #include "eif_eiffel.h"
 
-#ifdef EIF_WIN32
-#include "eif_econsole.h"
-#endif
-
 int main(int argc,char **argv,char **envp);
 void eiff_call (char *class_name, char *proc_name, EIF_OBJECT target);
 void eiff_call_1_arg (char *class_name, char *proc_name, EIF_OBJECT target, EIF_OBJECT arg);

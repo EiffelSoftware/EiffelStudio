@@ -209,6 +209,7 @@ TMP_EIFFEL_SRC=""
 
 fullrd $NEW_EIFFEL_SRC
 fullrd $INSTALL_DIR
+fullrd $DOCUMENT_DIR/xmldoc
 
 # Finish
 remtrace final time:

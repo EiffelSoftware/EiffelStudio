@@ -184,13 +184,6 @@ feature -- Access
 			"EM_SCROLL"
 		end
 
-	Em_scrollcaret: INTEGER is
-		external
-			"C [macro <redit.h>]"
-		alias
-			"EM_SCROLLCARET"
-		end
-
 	Em_canpaste: INTEGER is
 		external
 			"C [macro <redit.h>]"

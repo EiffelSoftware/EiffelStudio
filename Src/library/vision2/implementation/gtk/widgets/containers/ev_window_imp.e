@@ -51,8 +51,6 @@ feature {NONE} -- Accelerators
 		do
 			acc_imp ?= an_accel.implementation
 			acc_imp.set_accel_group (accel_group)
-			io.put_string ("Accelerator " + acc_imp.name +
-				" added to window: " + title + ".%N")
 		end
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
@@ -62,8 +60,6 @@ feature {NONE} -- Accelerators
 		do
 			acc_imp ?= an_accel.implementation
 			acc_imp.set_accel_group (Default_pointer)
-			io.put_string ("Accelerator " + acc_imp.name +
-				" removed from window: " + title + ".%N")
 		end
 
 feature -- Access
@@ -272,6 +268,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/22 23:54:00  brendel
+--| Removed io.put_string.
+--|
 --| Revision 1.42  2000/03/08 20:29:02  brendel
 --| Replaced `width' with `height'.
 --|

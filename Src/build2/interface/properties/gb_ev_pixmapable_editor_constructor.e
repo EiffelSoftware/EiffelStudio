@@ -29,11 +29,31 @@ feature -- Access
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
+		local
+			list_item: EV_LIST_ITEM
+			constant_context: GB_CONSTANT_CONTEXT
 		do
-			if object.constants.item (type + Pixmap_path_string) /= Void then
+			constant_context := object.constants.item (type + Pixmap_path_string)
+			if constant_context /= Void then
+				constants_button.select_actions.block
 				constants_button.enable_select
+				constants_button.select_actions.resume
+				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
+				check
+					list_item_not_void: list_item /= Void
+				end
+				list_item.select_actions.block
+				list_item.enable_select
+				list_item.select_actions.resume
+				if last_selected_constant = Void then
+					last_selected_constant := constant_context.constant
+				end
 				switch_constants_mode	
-			else			
+			else
+				constants_button.select_actions.block
+				constants_button.disable_select
+				switch_constants_mode
+				constants_button.select_actions.resume
 				if first.pixmap /= Void then
 					add_pixmap_to_pixmap_container (first.pixmap)
 					modify_button.set_text (Remove_button_text)

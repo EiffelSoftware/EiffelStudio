@@ -292,9 +292,9 @@ feature {NONE} -- Implementation
 				end
 				c.forth
 			end
-			w := private_attributes.width
-			h := private_attributes.height
-			if w < maxxw + shell_width and then h < maxyh + shell_height then
+			w := width
+			h := height
+			if w < maxxw and then h < maxyh then
 				set_size (maxxw, maxyh)
 			else
 				if w < maxxw then

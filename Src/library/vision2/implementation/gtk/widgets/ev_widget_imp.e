@@ -60,15 +60,15 @@ feature {NONE} -- Initialization
 	Gdk_events_mask: INTEGER is
 			-- Mask of all the gdk events the gdkwindow shall receive.
 		once
-			Result := feature {EV_GTK_EXTERNALS}.GDK_EXPOSURE_MASK_ENUM +
-			feature {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM +
-			feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM +
-			feature {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM +
-			feature {EV_GTK_EXTERNALS}.GDK_KEY_PRESS_MASK_ENUM +
-			feature {EV_GTK_EXTERNALS}.GDK_KEY_RELEASE_MASK_ENUM +
-			feature {EV_GTK_EXTERNALS}.GDK_ENTER_NOTIFY_MASK_ENUM +
-			feature {EV_GTK_EXTERNALS}.GDK_LEAVE_NOTIFY_MASK_ENUM +
-			feature {EV_GTK_EXTERNALS}.GDK_FOCUS_CHANGE_MASK_ENUM +
+			Result := feature {EV_GTK_EXTERNALS}.GDK_EXPOSURE_MASK_ENUM |
+			feature {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM |
+			feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM |
+			feature {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM |
+			feature {EV_GTK_EXTERNALS}.GDK_KEY_PRESS_MASK_ENUM |
+			feature {EV_GTK_EXTERNALS}.GDK_KEY_RELEASE_MASK_ENUM |
+			feature {EV_GTK_EXTERNALS}.GDK_ENTER_NOTIFY_MASK_ENUM |
+			feature {EV_GTK_EXTERNALS}.GDK_LEAVE_NOTIFY_MASK_ENUM |
+			feature {EV_GTK_EXTERNALS}.GDK_FOCUS_CHANGE_MASK_ENUM |
 			feature {EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
 		end
 
@@ -76,10 +76,10 @@ feature {NONE} -- Initialization
 			-- Initialize the gtk events received by `Current'
 		do
 			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (c_object) then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (c_object, Gdk_events_mask)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (c_object, Gdk_events_mask)
 			end
 			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) and then c_object /= visual_widget then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, Gdk_events_mask)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (visual_widget, Gdk_events_mask)
 			end
 		end
 
@@ -91,15 +91,18 @@ feature {NONE} -- Initialization
 			connect_button_press_switch_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE[]]
 			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 		do
-			if feature {EV_GTK_EXTERNALS}.gtk_is_widget (c_object) and not feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
+			initialize_events
+			if not feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			else
+				feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 			end
 			
 				-- Reset the initial internal sizes, once set they should not be reset to -1
 			internal_minimum_width := -1
 			internal_minimum_height := -1
 			
-			initialize_events	
+				
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
 			if feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then

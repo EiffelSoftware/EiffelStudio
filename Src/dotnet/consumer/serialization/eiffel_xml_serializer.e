@@ -44,13 +44,22 @@ feature -- Basic Operations
 		local
 			f: STREAM_WRITER
 			retried: BOOLEAN
+			l_so: SYSTEM_OBJECT
+			l_ver: STRING
 		do
 			last_error := No_error
 			last_error_context := Void
 			if not retried then
+				l_so := Current
+				l_ver := l_so.get_type.assembly.get_name.version.to_string	
 				create f.make_from_path (path.to_cil)
-				f.write_string (Xml_header)
-				internal_serialize (Root_reference, a, 0, f)
+				f.write_string (xml_header)
+				f.write_string (open_xmls_field)
+				f.write_string (l_ver)
+				f.write_string (end_element)
+				f.write_string (new_line)
+				internal_serialize (root_reference, a, 1, f)
+				f.write_string (close_xmls_field)
 				f.close
 			end
 		rescue
@@ -69,7 +78,6 @@ feature {NONE} -- Implementation
 			-- Serialize object field `parent_field' with value `obj' into file `f'.
 			-- XML is written after `tab_count' tabs.
 		require
-			non_void_object: obj /= Void
 			valid_tab_count: tab_count >= 0
 			non_void_file: f /= Void
 			non_void_parent_field: parent_field /= Void
@@ -195,6 +203,10 @@ feature {NONE} -- Implementation
 				f.write_string (Equal_quote)
 				f.write_integer (count)
 				f.write_string (Quote_space)
+				f.write_string (Compare_objects_xml_attribute)
+				f.write_string (Equal_quote)
+				f.write_boolean (integer_array.object_comparison)
+				f.write_string (Quote_space)
 				f.write_string (Type_xml_attribute)
 				f.write_string (Equal_quote)
 				f.write_string (Integer_node)
@@ -217,6 +229,10 @@ feature {NONE} -- Implementation
 					f.write_string (Array_count_xml_attribute)
 					f.write_string (Equal_quote)
 					f.write_integer (count)
+					f.write_string (Quote_space)
+					f.write_string (Compare_objects_xml_attribute)
+					f.write_string (Equal_quote)
+					f.write_boolean (real_array.object_comparison)
 					f.write_string (Quote_space)
 					f.write_string (Type_xml_attribute)
 					f.write_string (Equal_quote)
@@ -241,6 +257,10 @@ feature {NONE} -- Implementation
 						f.write_string (Equal_quote)
 						f.write_integer (count)
 						f.write_string (Quote_space)
+						f.write_string (Compare_objects_xml_attribute)
+						f.write_string (Equal_quote)
+						f.write_boolean (double_array.object_comparison)
+						f.write_string (Quote_space)
 						f.write_string (Type_xml_attribute)
 						f.write_string (Equal_quote)
 						f.write_string (Double_node)
@@ -263,6 +283,10 @@ feature {NONE} -- Implementation
 							f.write_string (Array_count_xml_attribute)
 							f.write_string (Equal_quote)
 							f.write_integer (count)
+							f.write_string (Quote_space)
+							f.write_string (Compare_objects_xml_attribute)
+							f.write_string (Equal_quote)
+							f.write_boolean (character_array.object_comparison)
 							f.write_string (Quote_space)
 							f.write_string (Type_xml_attribute)
 							f.write_string (Equal_quote)
@@ -287,6 +311,10 @@ feature {NONE} -- Implementation
 								f.write_string (Equal_quote)
 								f.write_integer (count)
 								f.write_string (Quote_space)
+								f.write_string (Compare_objects_xml_attribute)
+								f.write_string (Equal_quote)
+								f.write_boolean (boolean_array.object_comparison)
+								f.write_string (Quote_space)
 								f.write_string (Type_xml_attribute)
 								f.write_string (Equal_quote)
 								f.write_string (Boolean_node)
@@ -309,6 +337,10 @@ feature {NONE} -- Implementation
 									f.write_string (Array_count_xml_attribute)
 									f.write_string (Equal_quote)
 									f.write_integer (count)
+									f.write_string (Quote_space)
+									f.write_string (Compare_objects_xml_attribute)
+									f.write_string (Equal_quote)
+									f.write_boolean (pointer_array.object_comparison)
 									f.write_string (Quote_space)
 									f.write_string (Type_xml_attribute)
 									f.write_string (Equal_quote)
@@ -344,6 +376,10 @@ feature {NONE} -- Implementation
 									f.write_string (Array_count_xml_attribute)
 									f.write_string (Equal_quote)
 									f.write_integer (count)
+									f.write_string (Quote_space)
+									f.write_string (Compare_objects_xml_attribute)
+									f.write_string (Equal_quote)
+									f.write_boolean (ar.object_comparison)
 									f.write_string (Quote_space)
 									f.write_string (Type_xml_attribute)
 									f.write_string (Equal_quote)

@@ -10,7 +10,9 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
-			new_menu_item
+			new_menu_item,
+			tooltext,
+			is_tooltext_important
 		end
 
 	EB_SHARED_GRAPHICAL_COMMANDS
@@ -465,10 +467,22 @@ end
 
 feature {NONE} -- Implementation / Attributes
 
+	tooltext: STRING is
+			-- Toolbar button text for the command
+		do
+			Result := Interface_names.b_Launch
+		end
+
 	tooltip: STRING is
 			-- Tooltip for the command.
 		do
 			Result := Interface_names.f_Debug_run
+		end
+
+	is_tooltext_important: BOOLEAN is
+			-- Is the tooltext important shown when view is 'Selective Text'
+		do
+			Result := True
 		end
 
 	description: STRING is

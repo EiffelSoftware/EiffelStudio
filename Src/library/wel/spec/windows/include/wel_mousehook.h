@@ -4,8 +4,16 @@
 /* Used to monitor mouse messages for the pick and drop mechanism under      */
 /* Windows                                                                   */
 /*****************************************************************************/
+
+#ifndef _wel_mousehook_h_
+#define _wel_mousehook_h_
+
 #include "eif_eiffel.h"
 #include <windows.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: cwel_get_hook_window                                                */
@@ -33,3 +41,9 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd);
 /* Return TRUE if everything went fine, FALSE otherwise.                     */
 /*---------------------------------------------------------------------------*/
 EIF_BOOLEAN cwel_unhook_mouse();
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _wel_mousehook_h_ */

@@ -17,7 +17,7 @@ inherit
 
 feature -- Implementation
 
-	initialize_transport (args: EV_ARGUMENT2 [INTEGER, EV_COMMAND]; data: EV_EVENT_DATA) is
+	initialize_transport (args: EV_ARGUMENT3 [INTEGER, EV_POINT, EV_COMMAND]; data: EV_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
 		local
 			transporter: EV_PND_TRANSPORTER_IMP
@@ -27,22 +27,22 @@ feature -- Implementation
 			mouse_button := args.first
 			if transportable then
 				!! transporter
-				transporter.transport (Current)
+				transporter.transport (Current, args.second)
 				!! arg1.make (2, Current, mouse_button)
 				!! arg2.make (3, Current, mouse_button) 
 				inspect mouse_button
 				when 1 then
-					remove_single_command (Cmd_button_one_press, args.second)
+					remove_single_command (Cmd_button_one_press, args.third)
 					add_command (Cmd_button_one_press, transporter, arg1)
 					add_command (Cmd_button_two_release, transporter, arg2)
 					add_command (Cmd_button_three_release, transporter, arg2)
 				when 2 then
-					remove_single_command (Cmd_button_two_press, args.second)
+					remove_single_command (Cmd_button_two_press, args.third)
 					add_command (Cmd_button_two_press, transporter, arg1)
 					add_command (Cmd_button_one_release, transporter, arg2)
 					add_command (Cmd_button_three_release, transporter, arg2)
 				when 3 then
-					remove_single_command (Cmd_button_three_press, args.second)
+					remove_single_command (Cmd_button_three_press, args.third)
 					add_command (Cmd_button_three_press, transporter, arg1)
 					add_command (Cmd_button_one_release, transporter, arg2)
 					add_command (Cmd_button_two_release, transporter, arg2)

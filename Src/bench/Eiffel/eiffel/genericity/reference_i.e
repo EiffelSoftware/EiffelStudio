@@ -44,7 +44,7 @@ feature
 	il_type_name: STRING is
 			-- Name of current class type.
 		do
-			Result := "System.Object"
+			Result := "ANY"
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is

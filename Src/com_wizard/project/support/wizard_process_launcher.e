@@ -28,6 +28,8 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_EXECUTION_ENVIRONMENT
+
 creation
 	make
 	
@@ -120,11 +122,11 @@ feature -- Basic Operations
 			if not Shared_wizard_environment.abort then
 				an_integer := cwin_wait_for_single_object (process_info.process_handle, cwin_infinite)
 				check
-					valid_external_call: an_integer = cwin_wait_object_0
+					valid_external_call_1: an_integer = cwin_wait_object_0
 				end
 				a_boolean := cwin_exit_code_process (process_info.process_handle, $a_last_process_result)
 				check
-					valid_external_call: a_boolean
+					valid_external_call_2: a_boolean
 				end
 			end
 			cwin_close_handle (process_info.process_handle)
@@ -170,8 +172,15 @@ feature {NONE} -- Implementation
 	process_info: WEL_PROCESS_INFO
 			-- Process information
 
-	Console_spawn_application: STRING is "conspawn.exe"
+	Console_spawn_application: STRING is 
 			-- Console spawn application name
+		once
+			create Result.make (50)
+			Result.append ("%"")
+			Result.append (execution_environment.get ("EIFFEL4"))
+			Result.append ( "\wizards\com\conspawn.exe")
+			Result.append ("%"")			
+		end
 
 	Block_size: INTEGER is 255
 			-- Read block size

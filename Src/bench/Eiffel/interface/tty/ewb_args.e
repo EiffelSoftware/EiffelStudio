@@ -1,3 +1,9 @@
+indexing
+
+	description: 
+		"Records arguments for application execution.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_ARGS
 
@@ -9,13 +15,13 @@ inherit
 			help_message as arguments_help,
 			abbreviation as arguments_abb
 		redefine
-			loop_execute
+			loop_action
 		end
 
-feature
+feature {NONE} -- Execution
 
-	loop_execute is
-			-- Execute the generated application
+	loop_action is
+			-- Execute Current batch command
 		local
 			args, new_args, cmd: STRING;
 		do
@@ -30,7 +36,7 @@ feature
 			end;
 				-- Get the arguments
 			io.putstring ("--> Arguments: ");
-			wait_for_return;
+			command_line_io.wait_for_return;
 			new_args := clone (io.laststring);
 			if new_args.empty then
 				if not args.empty then
@@ -50,8 +56,8 @@ feature
 		end;
 
 	execute is
-			-- This command is available only for the `loop' mode
+			-- This command is available only for the `loop' mode.
 		do
 		end;
 
-end
+end -- class EWB_ARGS

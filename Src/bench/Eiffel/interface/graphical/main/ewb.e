@@ -1,4 +1,9 @@
--- Root class of the Eiffelbench system.
+indexing
+
+	description: 
+		"Abstract root class for gui eiffelbench class.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class EWB
 
@@ -16,19 +21,7 @@ inherit
 	SHARED_RESOURCES;
 	SHARED_BATCH_COMPILER
 
-feature -- Licence managment
-
-	init_licence: BOOLEAN is
-		do
-			licence.get_registration_info;
-			licence.set_version (3);
-			licence.set_application_name ("eiffelbench");
-			Result := licence.connected
-		end;
-
-feature 
-
-	retried: BOOLEAN;
+feature -- Initialization
 
 	make is
 			-- Create and map the first window: the system window.
@@ -93,7 +86,22 @@ feature
 			end;
 		end;
 
-feature {NONE}
+feature -- Properties
+
+	retried: BOOLEAN;
+			-- For rescues
+
+feature -- Access
+
+	init_licence: BOOLEAN is
+		do
+			licence.get_registration_info;
+			licence.set_version (3);
+			licence.set_application_name ("eiffelbench");
+			Result := licence.connected
+		end;
+
+feature {NONE} -- Implementation
 
 	init_windowing is
 			-- Initialize the windowing environment.
@@ -103,4 +111,4 @@ feature {NONE}
 			project_tool.popup_file_selection;
 		end
  
-end
+end -- class EWB

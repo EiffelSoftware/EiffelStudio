@@ -1,25 +1,36 @@
--- Starts the C compilation in W_code or F_code
+indexing
+
+	description: 
+		"Starts the C compilation in W_code or F_code.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class EWB_C_CODE
 
 inherit
+	PROJECT_CONTEXT;
 	EWB_CMD
 		redefine
-			loop_execute
+			loop_action
 		end;
 	EIFFEL_ENV
 
-feature
+feature {NONE} -- Implementation
 
 	execute is
+			-- Do nothing.
 		do
 		end;
 
 	c_code_directory: STRING is
+			-- C code directory to commence C compilation.
 		deferred
+		ensure
+			non_void_result: Result /= Void
 		end;
 
-	loop_execute is
+	loop_action is
+			-- Execute Current batch command.
 		do
 			if Project_read_only.item then
 				io.error.put_string ("Read-only project: cannot compile.%N")
@@ -35,5 +46,4 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-end
-
+end -- class EWB_C_CODE

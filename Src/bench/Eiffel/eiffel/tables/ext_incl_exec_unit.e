@@ -5,6 +5,7 @@ inherit
 		redefine
 			generate_declaration, make
 		end
+
 	SHARED_EXEC_TABLE
 		undefine
 			is_equal
@@ -21,8 +22,7 @@ feature
 	make (cl_type: CLASS_TYPE; f: EXTERNAL_I) is
 			-- Initialization
 		do
-			basic_make (cl_type, f);
-			external_name := f.external_name;
+			{EXT_EXECUTION_UNIT} Precursor (cl_type, f);
 			include_list := deep_clone (f.include_list)
 		end
 

@@ -40,6 +40,7 @@ extern "C" {
 #define INDEPENDENT_STORE_3_2 '\04'
 #define INDEPENDENT_STORE_4_0 '\10' /* Octal values */
 #define INDEPENDENT_STORE_4_3 '\11' /* Octal values */
+#define INDEPENDENT_STORE_4_4 '\12' /* Octal values */
 
 /*
  * Utilities

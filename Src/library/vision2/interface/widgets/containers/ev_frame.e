@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			default_create
 			{EV_TEXTABLE} Precursor
 			extend (create {EV_LABEL})
-			item.set_foreground_color (create {EV_COLOR}.make_with_rgb (
+			item.set_background_color (create {EV_COLOR}.make_with_rgb (
 				1.0, 0.0, 0.0))
 			create style_timer.make_with_interval (5000)
 			style_timer.actions.extend (~cycle_style)
@@ -142,6 +142,9 @@ end -- class EV_FRAME
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/28 22:27:24  brendel
+--| fore -> back.
+--|
 --| Revision 1.16  2000/04/28 22:14:04  brendel
 --| Changed timer interval and label color.
 --|

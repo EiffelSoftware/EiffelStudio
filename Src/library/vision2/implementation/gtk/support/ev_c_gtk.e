@@ -9,6 +9,13 @@ class
 
 feature -- Externals
 
+	c_match_font_name (pattern: POINTER): POINTER is
+			-- Match to first in list or return NULL.
+			-- `pattern' and `Result': char *
+		external
+			" C | %"gtk_eiffel.h%""
+		end
+
 	gdk_display: POINTER is
 			-- Display * Result
 		external
@@ -55,13 +62,6 @@ feature -- Externals
 		end
 
 feature {NONE} -- Externals
-
-	c_match_font_name (pattern: POINTER): POINTER is
-			-- Match to first in list or return NULL.
-			-- `pattern' and `Result': char *
-		external
-			" C | %"gtk_eiffel.h%""
-		end
 
 	c_gtk_init_toolkit is 
 			-- Parsed as:

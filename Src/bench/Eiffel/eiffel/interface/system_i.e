@@ -3815,9 +3815,6 @@ feature -- Main file generation
 			-- Module initialization routine 'system_mod_init'
 
 			-- Declarations
-
-
-
 			from
 				i  := 1;
 				nb := type_id_counter.value
@@ -3826,7 +3823,7 @@ feature -- Main file generation
 			loop
 				cl_type := class_types.item (i);
 
-				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.id) then
+				if (cl_type /= Void) and then (not final_mode or not makefile_generator.empty_class_types.has (cl_type.id)) then
 					Initialization_file.generate_extern_declaration (
 									"void", cl_type.id.module_init_name, <<"void">>
 																	)
@@ -3834,9 +3831,7 @@ feature -- Main file generation
 				i := i + 1
 			end
 
-
-
-			-- Module initialization
+			-- Project Module initialization
 			Initialization_file.generate_function_signature (
 				"void", "system_mod_init", True, Initialization_file, <<"">>, <<"void">>
 															);
@@ -3848,7 +3843,7 @@ feature -- Main file generation
 			loop
 				cl_type := class_types.item (i);
 
-				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.id) then
+				if (cl_type /= Void)  and then (not final_mode or not makefile_generator.empty_class_types.has (cl_type.id)) then
 					Initialization_file.putstring ("%T");
 					Initialization_file.putstring (cl_type.id.module_init_name);
 					Initialization_file.putstring ("();%N")

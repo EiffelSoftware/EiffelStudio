@@ -422,9 +422,8 @@ feature -- Removal
 		require
 			valid_key: valid_key (key)
 		local
-			iter_pos, increment, hash_code, table_size: INTEGER;
 			dkey: like dead_key;
-			old_item, dead_item: G
+			dead_item: G
 		do
 			internal_search (key);
 			if control = Found_constant then

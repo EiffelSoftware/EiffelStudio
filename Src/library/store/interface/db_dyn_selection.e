@@ -69,7 +69,7 @@ feature -- Element change
 		end
 
 	bind_parameter is 
-			-- Bind of the prarameters of the sql statement 
+			-- Bind of the parameters of the sql statement 
 		require
 			prepared_statement: is_prepared
 		do

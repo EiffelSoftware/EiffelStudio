@@ -84,6 +84,11 @@ feature -- Access
 			Result := pixmap_file_content ("dbreakpt");
 		end;
 
+	bm_Dark_class: PIXMAP is
+		once
+			Result := pixmap_file_content ("dclass")
+		end;
+
 	bm_Dark_clickable: PIXMAP is
 		once
 			Result := pixmap_file_content ("dclckabl");
@@ -107,6 +112,26 @@ feature -- Access
 	bm_Dark_exec_stop: PIXMAP is
 		once
 			Result := pixmap_file_content ("dexecsto");
+		end;
+
+	dm_Dark_explain: PIXMAP is
+		once
+			Result := pixmap_file_content ("dexplain");
+		end;
+
+	bm_Dark_object: PIXMAP is
+		once
+			Result := pixmap_file_content ("dobject");
+		end;
+
+	bm_Dark_project: PIXMAP is
+		once
+			Result := pixmap_file_content ("dproject");
+		end;
+
+	bm_Dark_routine: PIXMAP is
+		once
+			Result := pixmap_file_content ("droutine");
 		end;
 
 	bm_Dark_save: PIXMAP is
@@ -234,6 +259,11 @@ feature -- Access
 			Result := pixmap_file_content ("dstext");
 		end;
 
+	bm_Dark_system: PIXMAP is
+		once
+			Result := pixmap_file_content ("dsystem");
+		end;
+
 	bm_Debug_quit: PIXMAP is
 		once
 			Result := pixmap_file_content ("dbgquit");
@@ -337,6 +367,11 @@ feature -- Access
 	bm_Open: PIXMAP is
 		once
 			Result := pixmap_file_content ("open");
+		end;
+
+	bm_Preference_project: PIXMAP is
+		once
+			Result := pixmap_file_content ("project");
 		end;
 
 	bm_Previous_target: PIXMAP is

@@ -96,6 +96,9 @@ feature {NONE} -- implementation
 								-- Created from radio menu item
 								sep_imp.set_radio_group (radio_imp.radio_group)
 								radio_imp.enable_select
+							else
+								radio_imp.set_radio_group (sep_imp.radio_group)
+								C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 							end
 						else
 							-- It is above any separator.
@@ -132,7 +135,7 @@ feature {NONE} -- implementation
 		do
 			an_item_imp.set_parent_imp (Current)
 			C.gtk_menu_append (list_widget, an_item_imp.c_object)
-			C.gtk_menu_reorder_child (list_widget, an_item_imp.c_object, pos)
+			C.gtk_menu_reorder_child (list_widget, an_item_imp.c_object, pos - 1)
 		end
 
 	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP is
@@ -162,8 +165,6 @@ feature {NONE} -- implementation
 			interface.go_to (cur)
 		end
 				
-		
-
 	is_menu_separator_imp (an_item_imp: EV_ITEM_I): BOOLEAN is
 		local
 			sep_imp: EV_MENU_SEPARATOR_IMP
@@ -218,8 +219,8 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.13  2000/04/25 23:50:34  king
---| Corrected separator_imp_by_index
+--| Revision 1.14  2000/04/26 16:37:26  king
+--| Corrected reordering external call
 --|
 --| Revision 1.12  2000/04/25 22:51:11  king
 --| Corrected radio selection

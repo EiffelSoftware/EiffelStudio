@@ -188,7 +188,14 @@ feature -- Exceptions
 	{
 		throw e;
 	}
-	 
+
+	public static void generate_call_on_void_target_exception ()
+		// Throw System.NullReferenceException to simulate a call on void target exception
+		// when first argument of static routine of ANY is Void.
+	{
+		throw new System.NullReferenceException ();
+	}
+
 /*
 feature {NONE} -- Implementation
 */
@@ -222,51 +229,124 @@ feature {NONE} -- Implementations: Assertions
 		// Is `global_assertion_level' set?
 
 /*
-feature -- Status report
+feature -- Redirection to feature of ANY class
 */
+	public static bool conforms_to (Object obj1, Object obj2)
+		// Does dynamic type of object attached to `obj1' conform to
+		// dynamic type of object attached to `obj2'?
+	{
+		return ANY.conforms_to (obj1, obj2);
+	}
+
+	public static void copy (object Current, object other)
+		// Update current object using fields of object attached
+		// to `other', so as to yield equal objects.
+	{
+		ANY.copy (Current, other);
+	}
+
+	public static void deep_copy (object Current, object other)
+		// Effect equivalent to that of:
+		//		`copy' (`other' . `deep_twin')
+	{
+		ANY.deep_copy (Current, other);
+	}
+
+	public static bool deep_equal (object Current, object some, object other)
+		// Are `some' and `other' either both void
+		// or attached to isomorphic object structures?
+	{
+		return ANY.deep_equal (Current, some, other);
+	}
+
+	public static object deep_twin (object Current)
+		// New object structure recursively duplicated from Current.
+	{
+		return ANY.deep_twin (Current);
+	}
+
+	public static bool equal (object Current, object some, object other)
+		// Are `some' and `other' either both void or attached
+		// to objects considered equal?
+	{
+		return ANY.equal (Current, some, other);
+	}
+
 	public static String generator (object o)
 		// Generator class name of `o'.
 	{
-		if (o == null) return "NONE";
-
-		String Result;
-		EIFFEL_TYPE_INFO l_object = o as EIFFEL_TYPE_INFO;
-
-		if (l_object != null) {
-				// This is a generated Eiffel type, we extract
-				// stored type.
-			Result = l_object.____class_name ();
-		} else {
-			Result = o.GetType().Name;
-		}
-		return Result;
+		return ANY.generator (o);
 	}
 
 	public static String generating_type (object o)
 		// Generating type name of `o'.
 	{
-		if (o == null) return "NONE";
-
-		EIFFEL_DERIVATION der;
-		EIFFEL_TYPE_INFO info = o as EIFFEL_TYPE_INFO;
-		String Result;
-
-		if (info != null) {
-				// This is a generated Eiffel type.
-			der = info.____type ();
-			if (der == null) {
-					// Not a generic class, we extract stored name.
-				Result = info.____class_name ();
-			} else {
-				Result = der.type_name ();
-			}
-		} else {
-			Result = o.GetType().Name;
-		}
-
-		return Result;
+		return ANY.generating_type (o);
 	}
 
+	public static bool is_equal (object Current, object other)
+		// Is `other' attached to an object considered
+		// equal to current object?
+	{
+		return ANY.is_equal (Current, other);
+	}
+
+	public static String @out (object o)
+		// `out' of `o'
+	{
+		return ANY.@out (o);
+	}
+
+	public static bool same_type (object Current, object other)
+		// Is type of current object identical to type of `other'?
+	{
+		return ANY.same_type (Current, other);
+	}
+
+	public static void standard_copy (object Current, object other)
+		// Update current object using fields of object attached
+		// to `other', so as to yield equal objects.
+	{
+		ANY.standard_copy (Current, other);
+	}
+
+	public static bool standard_equal (object Current, object some, object other)
+		// Are `some' and `other' either both void or attached to
+		// field-by-field identical objects of the same type?
+		// Always uses default object comparison criterion.
+	{
+		return ANY.standard_equal (Current, some, other);
+	}
+
+	public static bool standard_is_equal (object Current, object other)
+		// Is `other' attached to an object of the same type
+		// as current object, and field-by-field identical to it?
+	{
+		return ANY.standard_is_equal (Current, other);
+	}
+
+	public static object standard_twin (object Current)
+		// New object field-by-field identical to `other'.
+		// Always uses default copying semantics.
+	{
+		return ANY.standard_twin (Current);
+	}
+
+	public static String tagged_out (object o)
+		// `out' of `o'
+	{
+		return ANY.tagged_out (o);
+	}
+
+	public static object twin (object Current)
+		// New object equal to `Current'
+		// `twin' calls `copy'; to change copying/twining semantics, redefine `copy'.
+	{
+		return ANY.twin (Current);
+	}
+/*
+feature -- Status report
+*/
 	public static int generic_parameter_count (object o)
 		// Number of generic Parameter if any.
 	{
@@ -409,84 +489,6 @@ feature -- Hash code
 	}
 
 /*
-feature -- Conformance
-*/
-
-	public static Boolean conforms_to (Object obj1, Object obj2)
-		// Does dynamic type of object attached to `obj1' conform to
-		// dynamic type of object attached to `obj2'?
-		// Only called for Eiffel object.
-	{
-		return GENERIC_CONFORMANCE.conforms_to (obj1, obj2);
-	}
-
-/*
-feature -- Equality
-*/
-	public static Boolean standard_equal (object target, object source) 
-		// Is `target' equal to `source'?
-		// Simple Object comparison attribute by attribute.
-	{
-		FieldInfo [] attributes;
-		Boolean Result = false;
-		Object l_attr;
-
-#if ASSERTIONS
-		ASSERTIONS.REQUIRE ("target_not_void", target != null);
-		ASSERTIONS.REQUIRE ("source_not_void", source != null);
-#endif
-
-		if (target.GetType ().Equals (source.GetType ())) {
-			attributes = source.GetType().GetFields (
-				BindingFlags.Instance | BindingFlags.Public |
-				BindingFlags.NonPublic);
-
-			foreach (FieldInfo attribute in attributes) {
-				l_attr = attribute.GetValue (source);
-				if (l_attr is ValueType) {
-					Result = Equals (l_attr, attribute.GetValue (target));
-				} else {
-					Result = l_attr == attribute.GetValue (target);
-				}
-				if (!Result) {
-						// Force exit from loop as objects are not identical.
-					return Result;
-				}
-			}
-		}
-		return Result;
-	}
-
-
-	public static Boolean deep_equal (object o1, object o2) 
-		// Is `o1' recursively equal to `o2'?
-	{
-		Hashtable traversed_objects;
-		Boolean Result;
-
-		
-		if (o1 == o2) {
-			Result = true;
-		} else if (o1 == null) {
-			Result = o2 == null;
-		} else {
-				// `traversed_objects' is a correspondance between processed
-				// objects reachable from `obj' and newly created one that
-				// are reachable from `target'.
-			traversed_objects = new Hashtable (100);
-			
-				// Add `o2' and associates it with `o1' to
-				// resolve future references to `o2' into `o1'.
-			traversed_objects.Add (o2, o1);
-
-				// Performs deep traversal.
-			Result = internal_deep_equal (o1, o2, traversed_objects);
-		}
-
-		return Result;
-	}
-
-/*
 feature -- Type creation
 */
 
@@ -533,21 +535,6 @@ feature -- Duplication
 		return target;
 	}
 
-	public static void standard_copy (object target, object source)
-		// Copy `source' onto `target'.
-		// `target' and `source' are assumed to be non Void and of the same type.
-	{
-		FieldInfo [] attributes;
-
-		attributes = source.GetType().GetFields (
-			BindingFlags.Instance | BindingFlags.Public |
-			BindingFlags.NonPublic);
-
-		foreach (FieldInfo attribute in attributes) {
-			attribute.SetValue (target, attribute.GetValue (source));
-		}
-	}
-
 	public static object standard_clone (object obj)
 		//
 	{
@@ -555,120 +542,6 @@ feature -- Duplication
 		ASSERTIONS.REQUIRE ("Valid type", obj is EIFFEL_TYPE_INFO);
 #endif
 		return GENERIC_CONFORMANCE.create_like_object ((EIFFEL_TYPE_INFO) obj);
-	}
-
-/*
-feature {NONE} -- Implementation
-*/
-
-	private static Boolean internal_deep_equal (Object target, Object source, Hashtable traversed_objects)
-		// Is `source' recursively equal to `target'?
-		// WARNING: It uses `return' in the middle of the loop to exit.
-	{
-		FieldInfo [] attributes;
-		Object target_attribute, source_attribute;
-		Array target_array, source_array;
-		int i;
-		Boolean Result = true;
-
-		if (target.GetType ().Equals (source.GetType ())) {
-			if (source is Array) {
-				source_array = (Array) source;
-				target_array = (Array) target;
-
-				if 
-					((source_array.Rank == 1) && 
-					(source_array.Rank == target_array.Rank) &&
-					(source_array.GetLowerBound (0) == target_array.GetLowerBound (0)) &&
-					(source_array.GetUpperBound (0) == target_array.GetUpperBound (0)))
-				{
-					for
-						(i = source_array.GetLowerBound (0);
-						i > source_array.GetUpperBound (0);
-						i++)
-					{
-						source_attribute = source_array.GetValue (i);
-						target_attribute = target_array.GetValue (i);
-
-						Result = sub_internal_deep_equal (
-							source_attribute, target_attribute, traversed_objects);
-
-						if (!Result) {
-								// Force exit from loop as objects are not identical.
-							return Result;
-						}
-					}
-				} else {
-					Result = source_array.Equals (target_array);
-				}
-			} else if (source is EIFFEL_TYPE_INFO) {
-				attributes = source.GetType().GetFields (
-					BindingFlags.Instance | BindingFlags.Public |
-					BindingFlags.NonPublic);
-
-				foreach (FieldInfo attribute in attributes) {
-					source_attribute = attribute.GetValue (source);
-					target_attribute = attribute.GetValue (target);
-
-					Result = sub_internal_deep_equal (
-						source_attribute, target_attribute, traversed_objects);
-
-					if (!Result) {
-							// Force exit from loop as objects are not identical.
-						return Result;
-					}
-				}
-			} else {
-					// Bug in `System.Text.StringBuilder' with `Equals' which is
-					// not redefined properly.
-					// FIXME: Manu 12/22/2003: Maybe we should perform a recursion
-					// on .NET object too, not just on Eiffel objects.
-				if (source is StringBuilder) {
-					Result = ((StringBuilder) source).Equals ((StringBuilder) target);
-				} else {
-					Result = source.Equals (target);
-				}
-			}
-		} else {
-			Result = false;
-		}
-		return Result;
-	}
-
-	private static Boolean sub_internal_deep_equal (
-		Object source_attribute,
-		Object target_attribute,
-		Hashtable traversed_objects
-	)
-		// Compare `source_attribute' and `target_attribute' and 
-		// performs or not a recursion to compare them recursively.
-		// True if they match recursively, False otherwise.
-	{
-		Boolean Result;
-
-		if (source_attribute == null) {
-			Result = target_attribute == null;
-		} else {
-			if (target_attribute == null) {
-				Result = false;
-			} else {
-				if (traversed_objects.Contains (source_attribute)) {
-					if (source_attribute.GetType().IsValueType) {
-						Result = 
-							target_attribute.Equals (source_attribute);
-					} else {
-						Result =
-							target_attribute == traversed_objects [source_attribute];
-					}
-				} else {
-					traversed_objects.Add (source_attribute, target_attribute);
-					Result = internal_deep_equal (target_attribute,
-						source_attribute, traversed_objects);
-				}
-			}
-		}
-
-		return Result;
 	}
 
 	private static void internal_deep_clone (Object target, Object source, Hashtable traversed_objects)

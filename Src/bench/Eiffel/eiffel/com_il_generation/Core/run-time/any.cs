@@ -1,0 +1,682 @@
+/*
+indexing
+	description: "Set of features from ANY applied to non-Eiffel object. Needed to enable generic container of .NET types."
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+	
+using System;
+using System.Collections;
+using System.Text;
+using System.Reflection;
+using ISE.Runtime.CA;
+
+namespace ISE.Runtime {
+
+public class ANY {
+
+/*
+feature -- Access
+*/
+
+	public static string generator (object Current)
+		// Name of Current object's generating class
+		// (base class of the type of which it is a direct instance)
+	{
+		string Result = null;
+		EIFFEL_TYPE_INFO l_current = Current as EIFFEL_TYPE_INFO;
+
+		if (Current == null) {
+			generate_call_on_void_target_exception();
+		} else if (l_current != null) {
+				// This is a generated Eiffel type, we extract
+				// stored type.
+			Result = l_current.____class_name ();
+		} else {
+			Result = Current.GetType().Name;
+		}
+		return Result;
+	}
+
+	public static string generating_type (object Current) 
+		// Name of Current object's generating type
+		// (type of which it is a direct instance)
+	{
+		string Result = null;
+		EIFFEL_DERIVATION der;
+		EIFFEL_TYPE_INFO l_current = Current as EIFFEL_TYPE_INFO;
+
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else if (l_current != null) {
+			der = l_current.____type ();
+			if (der == null) {
+					// Not a generic class, we extract stored name.
+				Result = l_current.____class_name ();
+			} else {
+				Result = der.type_name ();
+			}
+		} else {
+ 			Result = Current.GetType().FullName;
+		}
+		return Result;
+	}
+
+/*
+feature -- Status report
+*/
+
+	public static bool conforms_to (object Current, object other)
+		// Does type of current object conform to type
+		// of `other' (as per Eiffel: The Language, chapter 13)?
+	{
+		bool Result = false;
+		EIFFEL_DERIVATION der1, der2;
+		EIFFEL_TYPE_INFO current_info = Current as EIFFEL_TYPE_INFO;
+		EIFFEL_TYPE_INFO other_info = other as EIFFEL_TYPE_INFO;
+
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE ("other_not_void", other != null);
+		#endif
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			if (other_info == null) {
+					// `other' is not an Eiffel object, we simply check for .NET conformance
+				Result = other.GetType ().IsAssignableFrom (Current.GetType ());
+			} else if (current_info == null) {
+					// `other' is an Eiffel object, but not `Current', therefore there is
+					// no conformance. We do nothing since `Result' is already initialized to
+					// false.
+			} else {
+				der1 = current_info.____type ();
+				der2 = other_info.____type ();
+				if (der2 == null) {
+						// Parent type represented by the `other' instance
+						// is not generic, therefore `Current' should directly
+						// conform to the parent type.
+					Result = interface_type (other_info).IsAssignableFrom (Current.GetType ());
+				} else if (der1 == null) {
+						// Parent is generic, but not type represented by
+						// `Current', so let's first check if it simply
+						// conforms without looking at the generic parameter.
+					Result = interface_type (other_info).IsAssignableFrom (Current.GetType ());
+					if (Result) {
+							// It does conform, so now we have to go through
+							// the parents to make sure it has the same generic
+							// derivation.
+					}
+				} else {
+						// Both types are generic. We first check if they
+						// simply conforms.
+					Result = interface_type (other_info).IsAssignableFrom (Current.GetType ());
+					if (Result) {
+							// It does conform, so now we have to go through
+							// the parents to make sure it has the same generic
+							// derivation.
+					}
+				}
+			}
+		}
+		return Result;
+	}
+
+	public static bool same_type (object Current, object other)
+		// Is type of current object identical to type of `other'?
+	{
+		bool Result = false;
+		int i, nb;
+		EIFFEL_DERIVATION der_current, der_other;
+		EIFFEL_TYPE_INFO l_current;
+
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE ("other_not_void", other != null);
+		#endif
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			Result = Current.GetType () == other.GetType ();
+			if (Result) {
+				l_current = Current as EIFFEL_TYPE_INFO;
+				if (l_current != null) {
+						// We perform generic conformance in case it is needed.
+					der_current = l_current.____type();
+					if (der_current != null) {
+						der_other =  ((EIFFEL_TYPE_INFO) other).____type();
+						#if ASSERTIONS
+							ASSERTIONS.CHECK ("has_derivation", der_other != null);
+							ASSERTIONS.CHECK ("Same base type", der_current.type.Equals (der_other.type));
+						#endif
+						Result = (der_current.nb_generics == der_other.nb_generics);
+						if (Result) {
+							for (i = 0, nb = der_current.nb_generics - 1; (i < nb) && Result; i++) {
+								Result = (der_current.generics_type [i]).Equals (der_other.generics_type [i]);
+							}
+						}
+					}
+				}
+			}
+		}
+#if ASSERTIONS
+		ASSERTIONS.ENSURE ("definition", Result == (conforms_to (Current, other) &&
+				conforms_to (other, Current)));
+#endif
+		return Result;
+	}
+
+/*
+feature -- Comparison
+*/
+
+	public static bool is_equal (object Current, object other)
+		// Is `other' attached to an object considered
+		// equal to current object?
+	{
+		bool Result = false;
+		EIFFEL_TYPE_INFO l_current = Current as EIFFEL_TYPE_INFO;
+
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE ("other_not_void", other != null);
+		#endif
+
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else if (l_current != null) {
+			Result = l_current.____is_equal (other);
+		} else {
+			Result = Current.Equals (other);
+		}
+		return Result;
+	}
+
+	public static bool standard_is_equal (object Current, object other)
+		// Is `other' attached to an object of the same type
+		// as current object, and field-by-field identical to it?
+	{
+		bool Result = false;
+		FieldInfo [] l_attributes;
+		object l_attr;
+
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE ("other_not_void", other != null);
+		#endif
+	
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			Result = (Current == other);
+			if ((!Result) && (Current.GetType ().Equals (other.GetType ()))) {
+				l_attributes = other.GetType().GetFields (
+					BindingFlags.Instance | BindingFlags.Public |
+					BindingFlags.NonPublic);
+
+				foreach (FieldInfo attribute in l_attributes) {
+					l_attr = attribute.GetValue (other);
+					if (l_attr is ValueType) {
+						Result = Equals (l_attr, attribute.GetValue (Current));
+					} else {
+						Result = l_attr == attribute.GetValue (Current);
+					}
+					if (!Result) {
+							// Force exit from loop as objects are not identical.
+						return Result;
+					}
+				}
+			}
+		}
+		return Result;
+	}
+
+	public static bool equal (object Current, object some, object other)
+		// Are `some' and `other' either both void or attached
+		// to objects considered equal?
+	{
+		bool Result = false;
+	
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			if (some == null) {
+				Result = (other == null);
+			} else {
+				Result = (other != null) && is_equal (some, other);
+			}
+		}
+		return Result;
+	}
+
+	public static bool standard_equal (object Current, object some, object other)
+		// Are `some' and `other' either both void or attached to
+		// field-by-field identical objects of the same type?
+		// Always uses default object comparison criterion.
+	{
+		bool Result = false;
+	
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			if (some == null) {
+				Result = (other == null);
+			} else {
+				Result = (other != null) && standard_is_equal (some, other);
+			}
+		}
+		return Result;
+	}
+
+	public static bool deep_equal (object Current, object some, object other)
+		// Are `some' and `other' either both void
+		// or attached to isomorphic object structures?
+	{
+		bool Result = false;
+		Hashtable traversed_objects;
+	
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			if (some == null) {
+				Result = (other == null);
+			} else {
+				Result = (other != null);
+				if (Result) {
+						// `traversed_objects' is a correspondance between processed
+						// objects reachable from `obj' and newly created one that
+						// are reachable from `target'.
+					traversed_objects = new Hashtable (100);
+					
+						// Add `other' and associates it with `some' to
+						// resolve future references to `other' into `some'.
+					traversed_objects.Add (other, some);
+
+						// Performs deep traversal.
+					Result = internal_deep_equal (some, other, traversed_objects);
+				}
+			}
+		}
+		return Result;
+	}
+
+/*
+feature -- Duplication
+*/
+	public static object twin (object Current)
+		// New object equal to `Current'
+		// `twin' calls `copy'; to change copying/twining semantics, redefine `copy'.
+	{
+		object Result = null;
+		bool l_check_assert;
+
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			l_check_assert = RUN_TIME.check_assert (false);
+			Result = GENERIC_CONFORMANCE.create_like_object (Current);
+			copy (Result, Current);
+			l_check_assert = RUN_TIME.check_assert (l_check_assert);
+		}
+		return Result;
+	}
+	
+	public static void copy (object Current, object other)
+		// Update current object using fields of object attached
+		// to `other', so as to yield equal objects.
+	{
+		EIFFEL_TYPE_INFO l_current = Current as EIFFEL_TYPE_INFO;
+
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE ("other_not_void", other != null);
+			ASSERTIONS.REQUIRE ("same_type", same_type (Current, other));
+		#endif
+
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			if (l_current != null) {
+				l_current.____copy (other);
+			} else {
+				internal_standard_copy (Current, other);
+			}
+		}
+		#if ASSERTIONS
+			ASSERTIONS.ENSURE ("is_equal", is_equal (Current, other));
+		#endif
+	}
+
+	public static void standard_copy (object Current, object other)
+		// Update current object using fields of object attached
+		// to `other', so as to yield equal objects.
+	{
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE ("other_not_void", other != null);
+			ASSERTIONS.REQUIRE ("same_type", same_type (Current, other));
+		#endif
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			internal_standard_copy (Current, other);
+		}
+		#if ASSERTIONS
+			ASSERTIONS.ENSURE ("is_equal", standard_is_equal (Current, other));
+		#endif
+	}
+
+	public static object clone (object Current, object other)
+		// Void if `other' is void; otherwise new object
+		// equal to `other'
+		//
+		// For non-void `other', `clone' calls `copy';
+		// to change copying/cloning semantics, redefine `copy'.
+	{
+		object Result = null;
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			if (other != null) {
+				Result = twin (other);
+			}
+		}
+		#if ASSERTIONS
+			ASSERTIONS.ENSURE ("equal", equal (Current, Result, other));
+		#endif
+
+		return Result;
+	}
+
+	public static object standard_clone (object Current, object other)
+		// Void if `other' is void; otherwise new object
+		// field-by-field identical to `other'.
+		// Always uses default copying semantics.
+	{
+		object Result = null;
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			if (other != null) {
+				Result = standard_twin (other);
+			}
+		}
+		#if ASSERTIONS
+			ASSERTIONS.ENSURE ("standard_equal", standard_equal (Current, Result, other));
+		#endif
+
+		return Result;
+	}
+
+	public static object standard_twin (object Current)
+		// New object field-by-field identical to `other'.
+		// Always uses default copying semantics.
+	{
+		object Result = null;
+		bool l_check_assert;
+		EIFFEL_TYPE_INFO l_current = Current as EIFFEL_TYPE_INFO;
+
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			if (l_current != null) {
+					// For Eiffel object we can use our efficient implementation
+					// which is using `MemberwiseClone'.
+				Result = l_current.____standard_twin ();
+			} else {
+					// For .NET object, we have to do it the slow way, allocate
+					// a new object, and then copy field by field.
+				l_check_assert = RUN_TIME.check_assert (false);
+				Result = GENERIC_CONFORMANCE.create_like_object (Current);
+				internal_standard_copy (Result, Current);
+				l_check_assert = RUN_TIME.check_assert (l_check_assert);
+			}
+		}
+
+		#if ASSERTIONS
+			ASSERTIONS.ENSURE ("standard_twin_not_void", Result != null);
+			ASSERTIONS.ENSURE ("standard_equal", standard_equal (Current, Result, Current));
+		#endif
+
+		return Result;
+	}
+		
+	public static object deep_twin (object Current)
+		// New object structure recursively duplicated from Current.
+	{
+		object Result = null;
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			Result = RUN_TIME.deep_clone (Current);
+		}
+		#if ASSERTIONS
+			ASSERTIONS.ENSURE ("deep_equal", deep_equal (Current, Result, Current));
+		#endif
+
+		return Result;
+	}
+
+	public static object deep_clone (object Current, object other)
+		// Void if `other' is void: otherwise, new object structure
+		// recursively duplicated from the one attached to `other'
+	{
+		object Result = null;
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else if (other != null) {
+			Result = deep_twin (other);
+		}
+
+		#if ASSERTIONS
+			ASSERTIONS.ENSURE ("deep_equal", deep_equal (Current, other, Result));
+		#endif
+
+		return Result;
+	}
+
+	public static void deep_copy (object Current, object other)
+		// Effect equivalent to that of:
+		//		`copy' (`other' . `deep_twin')
+	{
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE ("other_not_void", other != null);
+		#endif
+
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			copy (Current, deep_twin (other));
+		}
+
+		#if ASSERTIONS
+			ASSERTIONS.ENSURE ("deep_equal", deep_equal (Current, Current, other));
+		#endif
+	}
+/*
+feature -- Output
+*/
+
+	public static string @out (object Current)
+		// New string containing terse printable representation
+		// of current object
+	{
+		string Result = null;
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			Result = generating_type (Current);
+		}
+		return Result;
+	}
+
+	public static string tagged_out (object Current)
+		// New string containing terse printable representation
+		// of current object
+	{
+		string Result = null;
+		if (Current == null) {
+			generate_call_on_void_target_exception ();
+		} else {
+			Result = generating_type (Current);
+		}
+		return Result;
+	}
+
+/*
+feature {NONE} -- Implementation
+*/
+	private static void generate_call_on_void_target_exception ()
+		// Throw System.NullReferenceException to simulate a call on void target exception
+		// when first argument of static routine of ANY is Void.
+	{
+		throw new System.NullReferenceException ();
+	}
+
+	private static System.Type interface_type (EIFFEL_TYPE_INFO obj)
+		// Given an Eiffel object `obj' retrieves its associated interface type.
+		// Used for conformance because the .NET routine `GetType()' will always return
+		// the implementation type and it cannot be used for conformance because two implementation
+		// classes do not conform even if their interfaces do.
+	{
+		INTERFACE_TYPE_ATTRIBUTE type_attr;
+		type_attr = (INTERFACE_TYPE_ATTRIBUTE)
+			obj.GetType().GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false) [0];
+		return type_attr.class_type;
+	}
+
+/*
+feature {NONE} -- Implementation: standard_copy
+*/
+	private static void internal_standard_copy (object target, object source)
+		// Copy `source' onto `target'.
+		// `target' and `source' are assumed to be non Void and of the same type.
+	{
+		FieldInfo [] attributes;
+
+		attributes = source.GetType().GetFields (
+			BindingFlags.Instance | BindingFlags.Public |
+			BindingFlags.NonPublic);
+
+		foreach (FieldInfo attribute in attributes) {
+			attribute.SetValue (target, attribute.GetValue (source));
+		}
+	}
+
+
+/*
+feature {NONE} -- Implementation: Deep equality
+*/
+
+	private static bool internal_deep_equal (
+		object target,
+		object source,
+		Hashtable traversed_objects
+	)
+		// Is `source' recursively equal to `target'?
+		// WARNING: It uses `return' in the middle of the loop to exit.
+	{
+		FieldInfo [] attributes;
+		object target_attribute, source_attribute;
+		Array target_array, source_array;
+		int i;
+		bool Result = true;
+
+		if (target.GetType ().Equals (source.GetType ())) {
+			if (source is Array) {
+				source_array = (Array) source;
+				target_array = (Array) target;
+
+				if 
+					((source_array.Rank == 1) && 
+					(source_array.Rank == target_array.Rank) &&
+					(source_array.GetLowerBound (0) == target_array.GetLowerBound (0)) &&
+					(source_array.GetUpperBound (0) == target_array.GetUpperBound (0)))
+				{
+					for
+						(i = source_array.GetLowerBound (0);
+						i > source_array.GetUpperBound (0);
+						i++)
+					{
+						source_attribute = source_array.GetValue (i);
+						target_attribute = target_array.GetValue (i);
+
+						Result = sub_internal_deep_equal (
+							source_attribute, target_attribute, traversed_objects);
+
+						if (!Result) {
+								// Force exit from loop as objects are not identical.
+							return Result;
+						}
+					}
+				} else {
+					Result = source_array.Equals (target_array);
+				}
+			} else if (source is EIFFEL_TYPE_INFO) {
+				attributes = source.GetType().GetFields (
+					BindingFlags.Instance | BindingFlags.Public |
+					BindingFlags.NonPublic);
+
+				foreach (FieldInfo attribute in attributes) {
+					source_attribute = attribute.GetValue (source);
+					target_attribute = attribute.GetValue (target);
+
+					Result = sub_internal_deep_equal (
+						source_attribute, target_attribute, traversed_objects);
+
+					if (!Result) {
+							// Force exit from loop as objects are not identical.
+						return Result;
+					}
+				}
+			} else {
+					// Bug in `System.Text.StringBuilder' with `Equals' which is
+					// not redefined properly.
+					// FIXME: Manu 12/22/2003: Maybe we should perform a recursion
+					// on .NET object too, not just on Eiffel objects.
+				if (source is StringBuilder) {
+					Result = ((StringBuilder) source).Equals ((StringBuilder) target);
+				} else {
+					Result = source.Equals (target);
+				}
+			}
+		} else {
+			Result = false;
+		}
+		return Result;
+	}
+
+	private static bool sub_internal_deep_equal (
+		object source_attribute,
+		object target_attribute,
+		Hashtable traversed_objects
+	)
+		// Compare `source_attribute' and `target_attribute' and 
+		// performs or not a recursion to compare them recursively.
+		// True if they match recursively, False otherwise.
+	{
+		bool Result;
+
+		if (source_attribute == null) {
+			Result = target_attribute == null;
+		} else {
+			if (target_attribute == null) {
+				Result = false;
+			} else {
+				if (traversed_objects.Contains (source_attribute)) {
+					if (source_attribute.GetType().IsValueType) {
+						Result = 
+							target_attribute.Equals (source_attribute);
+					} else {
+						Result =
+							target_attribute == traversed_objects [source_attribute];
+					}
+				} else {
+					traversed_objects.Add (source_attribute, target_attribute);
+					Result = internal_deep_equal (target_attribute,
+						source_attribute, traversed_objects);
+				}
+			}
+		}
+
+		return Result;
+	}
+
+}
+
+}
+

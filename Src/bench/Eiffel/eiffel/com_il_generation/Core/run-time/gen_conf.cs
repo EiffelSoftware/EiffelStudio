@@ -88,6 +88,29 @@ public class GENERIC_CONFORMANCE {
 		return Result;
 	}
 
+	public static object create_like_object (object an_obj)
+		// Given an Eiffel object `an_obj' create a new one of same type.
+	{
+		EIFFEL_DERIVATION der;
+		object Result;
+		EIFFEL_TYPE_INFO l_obj_info;
+
+			// Create a new instance of the same type of `an_obj'
+			// Note: We use the `Activator' class because it is much faster than
+			// creating an instance by getting the associated `ConstructorInfo'.
+		Result = Activator.CreateInstance (an_obj.GetType ());
+
+		l_obj_info = an_obj as EIFFEL_TYPE_INFO;
+		if (l_obj_info != null) {
+				// If it is a generic type, we also need to set its type.
+			der = l_obj_info.____type ();
+			if (der != null) {
+				((EIFFEL_TYPE_INFO) Result).____set_type (der);
+			}
+		}
+		return Result;
+	}
+
 	public static TYPE load_type_of_object (EIFFEL_TYPE_INFO an_obj)
 		// Given an Eiffel object `an_obj' extract its type information.
 	{
@@ -108,44 +131,6 @@ public class GENERIC_CONFORMANCE {
 		}
 		return Result;
 
-	}
-
-	public static Boolean conforms_to (Object obj1, Object obj2)
-		// Does dynamic type of object attached to `obj1' conform to
-		// dynamic type of object attached to `obj2'?
-		// Only called for Eiffel object.
-	{
-		Boolean Result;
-		EIFFEL_TYPE_INFO t, s;
-		EIFFEL_DERIVATION der1, der2;
-		t = (EIFFEL_TYPE_INFO) obj1;
-		s = (EIFFEL_TYPE_INFO) obj2;
-
-		der1 = t.____type ();
-		der2 = s.____type ();
-		if (der2 == null) {
-				// Parent type represented by the `obj2' instance
-				// is not generic, therefore `obj1' should directly
-				// conform to the parent type.
-			Result = obj1.GetType ().IsInstanceOfType (obj2);
-		} else if (der1 == null) {
-				// Parent is generic, but not type represented by
-				// `obj1', so let's first check if it simply
-				// conforms without looking at the generic parameter.
-			Result = obj1.GetType ().IsInstanceOfType (obj2);
-			if (Result) {
-					// It does conform, so now we have to go through
-					// the parents to make sure it has the same generic
-					// derivation.
-			}
-		} else {
-				// Both types are generic. We first check if they
-				// simply conforms.
-			Result = obj1.GetType ().IsInstanceOfType (obj2);
-			if (Result) {
-			}
-		}
-		return Result;
 	}
 }
 

@@ -11,7 +11,105 @@
 
 <body>
 
-<p><img border="0" src="../../../../images/eiffelstudio/project_settings/advanced_tab.png" width="605" height="506"></p>
+<h1 align="left">Advanced</h1>
+
+<p align="left">&nbsp;</p>
+
+<p align="left">Here you can select the most advanced options of your project.
+Here is how it looks for the calculator example:</p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/advanced_tab.png" width="605" height="506"></p>
+
+<p align="center">&nbsp;</p>
+<h2>Global Setting</h2>
+<p>As you might have notice, the project settings is a simple facade to the Ace
+file. Every modification that will be done in this window will be saved in the
+Ace file of your project. Since it is just a facade, it does not provide all the
+<a href="../30_compiler/50_technology/20_lace_syntax.html">available options in
+the Ace file</a>, but just the most commonly.</p>
+<p>If you want to edit the current settings, simply click on the Edit button. It
+will edit your Ace file in the <a href="../85_preferences/20_preferences_reference/10_global_preferences.html">external
+editor</a> you have selected in the preferences. Once you are done editing be
+sure to exit the project settings window by clicking on the Cancel button,
+otherwise the current settings will override the one you just modify in the
+external editor.</p>
+<p>If you decide to change your Ace file, simply click on the `Load from...'
+button, a standard open file selection dialog will popup and you can choose a
+new Ace file. If the Ace file is invalid, the following dialog will appear and
+the Ace file change will not be taken into account. If the Ace file is valid,
+the project settings tab will be updated with the new values extracted from the
+Ace file.</p>
+<p>If you want to redo your Ace file, you can click on the Reset button. This
+will clear all settings to their default values and delete the list of included
+clusters. No warning is displayed so make sure you know all the consequences of
+doing so.</p>
+<p>&nbsp;</p>
+<h2>Standard options</h2>
+<p>For a project using the standard C compilation generation, here is what you
+can select:</p>
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/advanced_tab_standard_options.png" width="475" height="221"></p>
+<p>&nbsp;</p>
+<ul>
+  <li>console application:
+            has no effects on Unix and it was made for Windows users. It enables
+            Windows users to choose between creating a console application or a
+            GUI application (in which case a console will be created if needed,
+            instead of using the console the program was launched from).</li>
+  <li>Enforce VAPE validity constraint: enables
+            you to disable type checking for <b>VAPE</b> errors in preconditions,
+            which correspond to insufficiently exported features used in
+            preconditions (ETL 2nd edition page 122).</li>
+  <li>Dynamic runtime:
+            enables the use of a shared library version of the runtime on both
+            Windows (DLL) and Unix platforms (.so) that supports shared libraries.</li>
+  <li>Multithreaded runtime:
+            enables the generation of a multithreaded application. This option
+            cannot be changed during the development of your project and has to
+            be set correctly at the first compilation of your system.</li>
+  <li>Address expression:
+            enables you to pass `<b>$(s.to_c)</b>' to a feature instead of
+            declaring `a' of type <b>ANY</b>, and then assigning `<b>s.to_c</b>'
+            to `a' and passing `<b>$a</b>'. Turn this option on only if you have
+            advanced knowledge of the garbage collector insides, since using
+            this syntax illegally can lead to bugs very hard to trace.</li>
+  <li>Shared library definition: enables you to specify `file_name.def'
+            as file where the Eiffel compiler will look when trying to generate
+            the exported function of the shared library you are developing. To
+            have more information concerning definition files, see the
+            <A HREF="../30_compiler/40_advanced_topics/20_dynamic_library_generation/00_introduction.html">Dynamic library builder reference</A>.</li>
+</ul>
+<p>For a dotnet system, only the first two are available, and thus you get:</p>
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/advanced_tab_standard_options_dotnet.png" width="475" height="222"></p>
+<p>&nbsp;</p>
+<h2>Finalization options</h2>
+
+<p>This is only active for project using the standard C compilation generation.
+Here is what you can select:</p>
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/advanced_tab_finalization_options.png" width="471" height="147"></p>
+<ul>
+  <li>array optimization:
+            enables array optimization which increases performance of array
+            computation in loops. It is enabled only if arrays are used as local
+            variables or arguments of an Eiffel feature.</li>
+  <li>dead code removal: enables you to not generate the
+            C code for Eiffel routines that are not called in your code, and
+            thus reducing the size of the generated application.</li>
+  <li>exception trace: enables you to see a complete
+            exception trace when your finalized application is crashing. Because
+            it is adding some code to remember where the application was during
+            the crash it can slow down the performance of your application by a
+            factor of 5% to 30% depending of your platform.</li>
+  <li>inlining: enables inlining on Eiffel features that can be
+            inlined, i.e. whose size is less or equal to the specified size in
+    the combo box. The size value given in parameter corresponds to the
+            number of instructions as the Eiffel compiler sees them (for example
+            a := b.f corresponds to 2 instructions for the Eiffel compiler). The ISE Eiffel inlining is very
+            powerful since it can inline a function in all your Eiffel code,
+            without scope limitation as in C or C++ compilers.</li>
+</ul>
+<p>&nbsp;</p>
 
 </body>
 

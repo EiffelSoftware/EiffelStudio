@@ -15,21 +15,21 @@
 
 <p>&nbsp;</p>
 
-<p>This is how you specify to the compiler where to look for compiling your
-classes. A cluster has a name and a path associated with it. Each cluster name
+<p>This is where you specify the directories where to look for classes when compiling your
+system. A cluster has a name and a path associated with it. Each cluster name
 in the system must be unique and only one cluster can reference a path, i.e. two
 clusters with different names cannot refer to the same path.</p>
 
-<p>In this tab, you will have on the left hand side of the window a tree
-representation of the clusters list. Indeed you can specify a cluster being a
-child of an existing one. On the right hand side you can specify the cluster
-properties.</p>
+<p>Here is how the clusters tab looks like for the calculator example:</p>
+
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/clusters_tab.png" width="605" height="506"></p>
 
 <p>&nbsp;</p>
 
-<p>Here is how the clusters tab looks like for the calculator example:</p>
-
-<p><img border="0" src="../../../../images/eiffelstudio/project_settings/clusters_tab.png" width="605" height="506"></p>
+<p>In this tab, you will have on the left hand side of the window a tree
+representation of the clusters list. The tree representation enables you to see a cluster being a
+child of an existing one. On the right hand side you can specify the cluster
+properties.</p>
 
 <p>&nbsp;</p>
 <h2>Cluster properties</h2>
@@ -53,6 +53,50 @@ such a library. You should use `all' for your own libraries.</p>
 <h3>Cluster options</h3>
 <p>This is where you can override some options that have been set for your
 system in either the General tab or the Debug Tab.</p>
+
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/clusters_options_tab.png" width="286" height="307"></p>
+
+<p>You can choose to specify for the current selected cluster:</p>
+
+<ul>
+  <li>a different assertion levels</li>
+  <li>to disable or enable the trace</li>
+  <li>to enable or disable the profiler</li>
+</ul>
+<p>If you choose to override all options, here is how it will look like:</p>
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/clusters_options_tab_active.png" width="284" height="308"></p>
+
+<p>&nbsp;</p>
+
+<h3>Visible Classes</h3>
+
+<p>When you need to compile a project that will be used for a CECIL or an
+EiffelCOM application you need to mark some classes visible. You can do it using
+the visible classes tab:</p>
+
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/clusters_visible_tab.png" width="284" height="306"></p>
+
+<p>To add a class, simply enter its name and click on Add. This will only work
+for classes that are in the selected cluster. If you put an invalid class name
+an error will be raised during the compilation of your system.</p>
+<p>If you made an error simply select the class from the list, modify it in the
+`Entry' field and then click on Apply. The correct name will now appear in the
+list.</p>
+<p>To remove a class from the list, simply select it and click on Remove.</p>
+<p>&nbsp;</p>
+<h3>Exclude/Include</h3>
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/clusters_exclude_include_tab.png" width="285" height="307"></p>
+<p>The exclude part is to exclude certain directories or file names during the
+class lookup performed by the compiler. For example, if you are using CVS as a
+source control, you will notice that a CVS directory is created in each of your
+directory. So adding CVS in the exclude will speed-up the compiler since it
+won't have to look inside the CVS directory.</p>
+<p>&nbsp;</p>
+<p>The include part is useful when you have some Eiffel classes that does not
+follow the standard Eiffel file name pattern, i.e. &quot;class_name.e&quot;. To
+make sure the compile will find those classes, you have to include the file name
+of the every Eiffel classes that do not follow the standard naming pattern for
+Eiffel file name.</p>
 
 </body>
 

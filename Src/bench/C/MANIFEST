@@ -358,3 +358,4 @@ run-time/wbench.c
 run-time/eif_wbench.h
 run-time/x2c.c
 eif_confmagic.h                  Magic symbol remapping
+bench/Makefile.SH

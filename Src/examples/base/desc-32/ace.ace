@@ -1,0 +1,34 @@
+system
+	test
+
+root
+	test (ROOT_CLUSTER): "make"
+
+default
+	assertion (no);
+--	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
+
+cluster
+	ROOT_CLUSTER: "$EIFFEL4\examples\base\desc-32";
+
+	desc: "$EIFFEL4\library\base\desc\general";
+	desc32: "$EIFFEL4\library\base\desc\spec\win32";
+
+		-- EiffelBase:
+	base:				"$EIFFEL4\library\base"
+	structures(base):		"$\structures"
+
+	kernel(base):		"$\kernel"
+	support(base):		"$\support"
+	access(structures):	"$\access"
+	cursors(structures):	"$\cursors"
+	dispenser(structures):	"$\dispenser"
+	list(structures):		"$\list"
+	set(structures):		"$\set"
+	sort(structures):		"$\sort"
+	storage(structures):	"$\storage"
+	table(structures):		"$\table_eiffel3"
+	traversing(structures):	"$\traversing"
+	tree(structures):		"$\tree"
+
+end

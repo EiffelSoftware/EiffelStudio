@@ -30,13 +30,6 @@ inherit
 			interface
 		end
 
-	WEL_LIST_VIEW_ITEM
-		rename
-			make as wel_make,
-			text as wel_text,
-			set_text as wel_set_text
-		end
-
 	WEL_LVM_CONSTANTS
 		export
 			{NONE} all
@@ -45,19 +38,34 @@ inherit
 create
 	make
 
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create the widget with `par' as parent.
 		do
-			wel_make
 			base_make (an_interface)
+			create internal_text.make (0)
 		end
 
 	initialize is
 			-- Initialize the item.
 		do
 			is_initialized := True
+		end
+
+feature -- Access
+
+	wel_set_text (a_string: STRING) is
+			-- Set the text of the item to `a_string'
+		do
+			internal_text := clone (a_string)	
+		end
+	
+	wel_text: STRING is
+			-- Text of the item
+		do
+			Result := clone (internal_text)
 		end
 
 feature -- Status report
@@ -184,6 +192,11 @@ feature {EV_LIST_IMP, EV_COMBO_BOX_IMP} -- Implementation.
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	internal_text: STRING
+			-- Text of this item.
+
 feature {EV_LIST_IMP} -- Implementation
 
 	set_capture is
@@ -237,6 +250,10 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/04/20 19:00:18  brendel
+--| Redefined wel_text and wel_set_text.
+--| Initialized internal_text to "".
+--|
 --| Revision 1.49  2000/04/20 01:01:56  pichery
 --| - internal_select -> internal_select_item
 --| - internal_deselect -> internal_deselect_item

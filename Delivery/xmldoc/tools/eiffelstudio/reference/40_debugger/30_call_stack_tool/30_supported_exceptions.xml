@@ -5,10 +5,10 @@
 			<link>
 				<url>10_call_stack_tool.xml</url>
 				<label>call stack tool</label>
-			</link>. When they are raised, a tag may be there to give more information, if necessary. All these exceptions are declared in EXCEPT_CONST.
+			</link>. When they are raised, a tag may be there to give more information, if necessary. All these exceptions are declared in <code><class_name>EXCEPT_CONST</class_name></code>.
 		</paragraph>
 		<paragraph>
-			<bold>Feature call on Void target</bold>: An attempt was made to calla feature on an object that is Void. The tag indicates the name of the feature of the feature that could not be called. For instance if the code line is a.b.c and the tag is "c" then a.b was Void.
+			<bold>Feature call on Void target</bold>: An attempt was made to calla feature on an object that is Void. The tag indicates the name of the feature of the feature that could not be called. For instance if the code line is <code><feature_name>a.b.c</feature_name></code> and the tag is "c" then <code><feature_name>a.b</feature_name></code> was Void.
 		</paragraph>
 		<paragraph>
 			<bold>No more memory</bold>: A memory allocation failed.
@@ -44,7 +44,7 @@
 			<bold>Retrieval error</bold>: A file could not be retrieved. This maybe caused by an invalid header, or more generally by a corrupted data file.
 		</paragraph>
 		<paragraph>
-			<bold>Developer exception</bold>: Developer exceptions can be raised by calling {EXCEPTIONS}.raise. They can indicate any kind of internal error.
+			<bold>Developer exception</bold>: Developer exceptions can be raised by calling {<code><class_name>EXCEPTIONS</class_name></code>}.<code><feature_name>raise</feature_name></code>. They can indicate any kind of internal error.
 		</paragraph>
 		<paragraph>
 			<bold>Operating system signal</bold>: The program received a signal from the operating system.

@@ -147,7 +147,6 @@ feature -- Access
 		require
 			is_dotnet: application.is_dotnet
 		local
-			l_d_value: EIFNET_ABSTRACT_DEBUG_VALUE
 			l_icdv_obj: ICOR_DEBUG_VALUE
 			l_icd_function: ICOR_DEBUG_FUNCTION
 			l_result: ICOR_DEBUG_VALUE

@@ -35,7 +35,6 @@ feature -- Access
 			dv /= Void
 		local
 			l_address: STRING
-			l_ddv: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
 			l_address := dv.address
 			if l_address /= Void then

@@ -231,13 +231,13 @@ feature -- Implementation
 					motion_notify_connection_id := last_signal_connection_id
 					signal_connect (
 						"enter_notify_event",
-						agent signal_emit_stop (visual_widget, "enter_notify_event"),
+						agent signal_emit_stop (c_object, "enter_notify_event"),
 						default_translate
 					)
 					enter_notify_connection_id := last_signal_connection_id
 					signal_connect (
 						"leave_notify_event",
-						agent signal_emit_stop (visual_widget, "leave_notify_event"),
+						agent signal_emit_stop (c_object, "leave_notify_event"),
 						default_translate
 					)
 					leave_notify_connection_id := last_signal_connection_id
@@ -249,7 +249,7 @@ feature -- Implementation
 							mode_is_drag_and_drop implies
 							button_release_connection_id > 0
 					end
-					signal_emit_stop (visual_widget, "button-press-event")
+					signal_emit_stop (c_object, "button-press-event")
 
 				elseif ready_for_pnd_menu (a_button) then
 					app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
@@ -381,7 +381,7 @@ feature -- Implementation
 			-- Steps to perform once an attempted drop has happened.
 		do
 			if mode_is_pick_and_drop then
-				signal_emit_stop (visual_widget, "button-press-event")
+				signal_emit_stop (c_object, "button-press-event")
 			end
 			app_implementation.on_drop (pebble)
 			x_origin := 0
@@ -483,8 +483,9 @@ feature -- Implementation
 				elseif gdkwin = last_gdkwin then
 					if pointer_over_widget (gdkwin, x, y) then
 						Result := interface
+					else
+						Result := app_implementation.pnd_target_from_gdk_window (gdkwin, x, y)
 					end
-					--	if not then Result := Void
 				else	
 					Result := app_implementation.pnd_target_from_gdk_window (gdkwin, x, y)
 				end			

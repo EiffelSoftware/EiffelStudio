@@ -16,7 +16,8 @@ inherit
 
 	EV_WINDOW
 		redefine
-			make, implementation
+			make,
+			implementation
 		end
 
 creation
@@ -30,8 +31,8 @@ feature {NONE} -- Initialization
 		do
 			!EV_DIALOG_IMP!implementation.make (par)
 			implementation.set_interface (Current)
-			implementation.initialize_colors
 			implementation.build
+			implementation.plateform_build (par.implementation)
 		end
 
 feature -- Access

@@ -219,7 +219,8 @@ static  char    *basic_op_names [] = {
 "BC_GENERATOR" ,
 "BC_OFFSET" ,
 "BC_ZERO" ,
-"BC_ONE"
+"BC_ONE",
+"BC_THREE_WAY_COMPARISON"
 };
 
 static  char    *bit_op_names [] = {

@@ -52,6 +52,8 @@ inherit
 			table_size as wel_table_size,
 			style as wel_style
 		undefine
+			on_size,
+			on_move,
 			on_right_button_up,
 			on_left_button_down,
 			on_left_button_up,

@@ -321,7 +321,6 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			window_item: GB_WINDOW_SELECTOR_ITEM
 			all_objects: ARRAYED_LIST [GB_OBJECT]
 			directory_of_root_window: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
 			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
 		do
 			perform_delete := True
@@ -489,7 +488,6 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			directory_object: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			file_name, interface_file_name, implementation_file_name: FILE_NAME
 			l_eiffel_parser: EIFFEL_PARSER
-			l_class_to_parse: STRING
 			l_class_as: CLASS_AS
 			l_visitor: NAME_CHANGE_VISITOR
 			file: RAW_FILE

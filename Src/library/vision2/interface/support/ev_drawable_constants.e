@@ -16,8 +16,6 @@ class
 
 feature -- Constants
 
-	--| FIXME Remove all the old Ev_ prefixed constants
-
 	Drawing_mode_copy: INTEGER is 0
 			-- Normal drawing mode.
 			--

@@ -23,13 +23,12 @@
 extern "C" {
 #endif
  
-#define SOLVED 		1		/* Flag for solved reference in a rt_struct struture */
-#define UNSOLVED	0		/* ........ an unsolved ............................ */
-
 /* Internal representation of the different kinds of storage */
 #define BASIC_STORE '\0'
 #define GENERAL_STORE '\01'
 #define INDEPENDENT_STORE '\02'
+/* TODO: Should this be used instead of INDEPENDENT_STORE? */
+#define RECOVERABLE_STORE '\03'
 
 /* Setting of `eif_discard_pointer_values' */
 #define eif_set_discard_pointer_values(v)	eif_discard_pointer_values = (EIF_BOOLEAN) (v)
@@ -39,20 +38,27 @@ extern "C" {
  * description of it, i.e the key in the hash table where the parent 
  * object is plus the offset where the unsolved reference is.
  */
+typedef enum {RTU_KEYED, RTU_INDIRECTION} rt_unsolved_t;
 struct rt_cell {
 	struct rt_cell *next;
 	long offset;
-	unsigned long key;
+	rt_unsolved_t status;
+	union {
+		unsigned long key;		/* key of SOLVED record when `status' == RTU_KEYED */
+		EIF_OBJECT rtu_obj;		/* hector reference when `status' == RTU_INDIRECTION */
+	} u;
 };
 
 /*
  * Item structure of the hash table used for solving ahead references
  */	
+typedef enum {UNSOLVED, SOLVED, DROPPED} rt_status_t;
 struct rt_struct {
-	int rt_status;					/* Is the reference solved or not ? */
+	rt_status_t rt_status;			/* Is the reference solved or not ? */
 	union {
-		EIF_OBJECT rtu_obj;			/* Solved hector reference */
-		struct rt_cell  *rtu_cell;	/* Unsolved references descriptions */
+		EIF_OBJECT rtu_obj;			/* status=SOLVED:   Hector reference */
+		struct rt_cell  *rtu_cell;	/* status=UNSOLVED: Detail about location to change */
+		int16 old_type;				/* status=DROPPED:  Type not in current system */
 	} rtu_data; 
 };
 

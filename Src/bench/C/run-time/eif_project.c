@@ -24,6 +24,7 @@ extern "C" {
 	void (*egc_strset)(EIF_REFERENCE, EIF_INTEGER); 
 	void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);	
 	void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE); 
+	void (*egc_correct_mismatch)(EIF_REFERENCE); 
 
 	int egc_str_dtype;
 	int egc_arr_dtype;

@@ -41,6 +41,8 @@ extern "C" {
 #define INDEPENDENT_STORE_4_3	0x09
 #define INDEPENDENT_STORE_4_4	0x0A
 #define INDEPENDENT_STORE_5_0	0x0B
+/* TODO: Should this be called INDEPENDENT_STORE_5_3? */
+#define RECOVERABLE_STORE_5_3	0x0C
 
 /* Setting of `eif_is_new_independent_format' */
 #define eif_set_new_independent_format(v)	eif_is_new_independent_format = (EIF_BOOLEAN) (v)

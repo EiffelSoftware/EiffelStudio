@@ -27,12 +27,34 @@
 #include "eif_main.h"
 #include "rt_compress.h"
 #include "eif_lmalloc.h"
+#include "rt_gen_types.h"
 #include "x2c.h"	/* For macro LNGPAD */
 #ifdef VXWORKS
 #include <unistd.h>	/* For write () */
 #endif
 #include "rt_assert.h"
 
+/* Sections of code enclosed with #ifdef RECOVERABLE_SCAFFOLDING should be
+ * able to be removed, once we are satisfied that the original independent
+ * store and retrieve are no longer necessary.
+ */
+#define RECOVERABLE_SCAFFOLDING
+#ifdef RECOVERABLE_SCAFFOLDING
+#ifdef DARREN		/* for doing in-editor compilation for errors */
+# define RECOVERABLE_DEBUG
+# undef RTXD
+# define RTXD ;
+# undef RTXSC
+# define RTXSC ;
+# define lint
+#endif
+#endif
+#ifdef RECOVERABLE_DEBUG
+rt_private long object_count;
+#ifdef PRINT_OBJECT
+extern void print_object (EIF_REFERENCE object);
+#endif
+#endif
 
 #ifdef EIF_WIN32
 #include <io.h>
@@ -70,7 +92,10 @@ rt_private void st_store(char *object);				/* Second pass of the store */
 rt_public void ist_write(char *object);
 rt_public void gst_write(char *object);
 rt_public void make_header(void);				/* Make header */
+rt_public void rmake_header(void);
+#ifdef RECOVERABLE_SCAFFOLDING
 rt_public void imake_header(void);				/* Make header */
+#endif
 rt_private void object_write (char *object);
 rt_private void gen_object_write (char *object);
 rt_private void st_write_cid (uint32);
@@ -291,6 +316,14 @@ rt_public EIF_INTEGER stream_eestore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 	return stream_buffer_size;
 }
 
+#ifdef RECOVERABLE_SCAFFOLDING
+rt_private EIF_BOOLEAN eif_is_new_recoverable_format = EIF_TRUE;
+rt_public void eif_set_new_recoverable_format (EIF_BOOLEAN state)
+{
+	eif_is_new_recoverable_format = state;
+}
+#endif
+
 /* Independent store */
 /* Use file decscriptor so sockets and files can be used for storage
  * Store object hierarchy of root `object' and produce a header
@@ -300,6 +333,18 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 	EIF_GET_CONTEXT
 	s_fides = (int) file_desc;
 
+#ifdef RECOVERABLE_SCAFFOLDING
+  if (eif_is_new_recoverable_format) {
+#endif
+	rt_init_store (
+		(void (*)(void)) 0,
+		char_write,
+		idr_flush,
+		ist_write,
+		rmake_header,
+		RECOVER_ACCOUNT);
+#ifdef RECOVERABLE_SCAFFOLDING
+  } else {
 	rt_init_store (
 		(void (*)(void)) 0,
 		char_write,
@@ -307,6 +352,8 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 		ist_write,
 		imake_header,
 		INDEPEND_ACCOUNT);
+  }
+#endif
 
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
@@ -323,6 +370,24 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 
 rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_REFERENCE object, EIF_INTEGER *real_size)
 {
+#ifdef RECOVERABLE_SCAFFOLDING
+  if (eif_is_new_recoverable_format) {
+#ifdef RECOVERABLE_DEBUG
+	printf ("Storing in new recoverable format\n");
+#endif
+#endif
+	rt_init_store (
+		(void (*)(void)) 0,
+		stream_write,
+		idr_flush,
+		ist_write,
+		rmake_header,
+		RECOVER_ACCOUNT);
+#ifdef RECOVERABLE_SCAFFOLDING
+  } else {
+#ifdef RECOVERABLE_DEBUG
+	printf ("Storing in old independent format\n");
+#endif
 	rt_init_store (
 		(void (*)(void)) 0,
 		stream_write,
@@ -330,6 +395,8 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 		ist_write,
 		imake_header,
 		INDEPEND_ACCOUNT);
+  }
+#endif
 
 	stream_buffer = *buffer;
 	stream_buffer_size = size;
@@ -428,12 +495,24 @@ rt_shared void internal_store(char *object)
 			xraise(EN_MEM);
 		memset (account, 0, scount * sizeof(char));
 		if (accounting == INDEPEND_ACCOUNT) {
+#ifdef RECOVERABLE_DEBUG
+			printf ("Storing in old independent format\n");
+#endif
 			if (eif_is_new_independent_format) {
 				c = INDEPENDENT_STORE_5_0;
 				rt_kind_version = INDEPENDENT_STORE_5_0;
 			} else {
 				c = INDEPENDENT_STORE_4_4;
 				rt_kind_version = INDEPENDENT_STORE_4_4;
+			}
+		}
+		else if (accounting == RECOVER_ACCOUNT) {
+#ifdef RECOVERABLE_DEBUG
+			printf ("Storing in new recoverable format\n");
+#endif
+			if (eif_is_new_recoverable_format) {
+				c = RECOVERABLE_STORE_5_3;
+				rt_kind_version = RECOVERABLE_STORE_5_3;
 			}
 		}
 		else {
@@ -453,6 +532,11 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	} else
 		c = BASIC_STORE_4_0;
 
+#ifdef PRINT_OBJECT
+	printf ("Stored object:\n");
+	print_object (object);
+#endif
+
 	/* Write the kind of store */
 	if (char_write_func(&c, sizeof(char)) < 0){
 		if (accounting) {
@@ -470,6 +554,9 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 #endif
 
 	/* Do the traversal: mark and count the objects to store */
+#ifdef RECOVERABLE_DEBUG
+	printf ("-- Accounting objects:\n");
+#endif
 	obj_nb = 0;
 	traversal(object,accounting);
 
@@ -482,6 +569,13 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	/* Write the count of stored objects */
 	if (accounting == INDEPEND_ACCOUNT)
 		widr_multi_int32 (&obj_nb, 1);
+	else if (accounting == RECOVER_ACCOUNT) {
+		widr_multi_int32 (&obj_nb, 1);
+#ifdef RECOVERABLE_DEBUG
+		printf ("-- Storing %ld objects\n", (long) obj_nb);
+		object_count = 0;
+#endif
+	}
 	else
 		buffer_write((char *)(&obj_nb), sizeof(long));
 
@@ -494,6 +588,9 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	flush_buffer_func();	/* flush the buffer */
 #if DEBUG & 3
 	printf ("\n");
+#endif
+#ifdef RECOVERABLE_DEBUG
+	fflush (stdout);
 #endif
 }
 
@@ -673,6 +770,10 @@ rt_public void ist_write(char *object)
 	register2 union overhead *zone;
 	uint32 flags, fflags;
 	/* register1 uint32 nb_char;*/ /* %%ss removed unused */
+
+#ifdef RECOVERABLE_DEBUG
+	printf ("%2ld: %s [%p]\n", ++object_count, eif_typename (Dftype (object)), object);
+#endif
 
 	zone = HEADER(object);
 	fflags = zone->ov_flags;
@@ -1374,6 +1475,7 @@ printf ("Freeing s_attr %lx\n", s_attr);
 		}
 }
 
+#ifdef RECOVERABLE_SCAFFOLDING
 rt_public void imake_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
@@ -1494,6 +1596,157 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	}
 	xfree (s_buffer);
 	s_buffer = (char *) 0;
+	expop(&eif_stack);
+}
+#endif
+
+rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
+{
+	char *name = System (dtype).cn_names[attrib_index];
+	int16 name_length = strlen (name);
+	int16 *gtypes = System (dtype).cn_gtypes[attrib_index] + 1;
+	int16 num_gtypes;
+	int16 i;
+	unsigned char basic_type;
+
+	for (num_gtypes=0; gtypes[num_gtypes] != TERMINATOR; num_gtypes++)
+		; /* count types */
+
+#ifdef RECOVERABLE_DEBUG
+	printf ("        %s:", name);
+#endif
+	/* Write name information: "name_length name" */
+	widr_multi_int16 (&name_length, 1);
+	widr_multi_char ((EIF_CHARACTER *) name, strlen (name));
+	basic_type = (System(dtype).cn_types[attrib_index] & SK_HEAD) >> 24;
+	widr_multi_char (&basic_type, 1);
+
+	/* Write type information: "num_gtypes attribute_type {gen_types}*" */
+	widr_multi_int16 (&num_gtypes, 1);
+//	widr_multi_int16 (gtypes, num_gtypes);
+	for (i=0; i<num_gtypes; i++) {
+		int16 gtype = gtypes[i];
+#ifdef RECOVERABLE_DEBUG
+		rt_shared char *name_of_attribute_type (int16 type);
+		printf ("%s%s", i==0 ? " " : i==1 ? " [" : ", ", name_of_attribute_type (gtype));
+#endif
+		if (gtype >= 0)
+			gtype = RTUD (gtype);
+		else if (gtype <= EXPANDED_LEVEL)
+			gtype = EXPANDED_LEVEL - RTUD (EXPANDED_LEVEL - gtype);
+		widr_multi_int16 (&gtype, 1);
+	}
+#ifdef RECOVERABLE_DEBUG
+	printf ("%s\n", num_gtypes > 1 ? "]" : "");
+#endif
+}
+
+rt_private void widr_type_attributes (int16 dtype)
+{
+	int16 num_attrib = (int16) System(dtype).cn_nbattr;
+	int16 i;
+#ifdef RECOVERABLE_DEBUG
+	printf ("    %d attribute%s\n", num_attrib, num_attrib != 1 ? "s" : "");
+#endif
+	widr_multi_int16 (&num_attrib, 1);
+	for (i=0; i<num_attrib; i++)
+		widr_type_attribute (dtype, i);
+}
+
+rt_private void widr_type_generics (int16 dtype)
+{
+	/* Write generic information: "nb_generics {meta_type}*"
+	 */
+	struct gt_info *info = (struct gt_info*)
+			ct_value (&egc_ce_gtype, System (dtype).cn_generator);
+	if (info == NULL) {
+		/* Non-generic case */
+		int16 zero = 0;
+		widr_multi_int16 (&zero, 1);
+	}
+	else {
+		/* Generic case */
+		int16 *gt_type = info->gt_type;
+		int32 *gt_gen;
+		int16 nb_gen = info->gt_param;
+		uint32 i;
+
+		widr_multi_int16 (&nb_gen, 1);
+		for (i=0; (unsigned int) gt_type[i] != SK_INVALID; i++) {
+			if ((gt_type[i] & SK_DTYPE) == dtype)
+				break;
+		}
+		CHECK ("Generic type found", (gt_type[i] & SK_DTYPE) == dtype);
+		gt_gen = info->gt_gen + (i * nb_gen);
+#ifdef RECOVERABLE_DEBUG
+		{
+		rt_shared void print_generic_names (struct gt_info *info, int type);
+		printf (" ");
+		print_generic_names (info, info->gt_type[i]);
+		}
+#endif
+		widr_multi_int32 (gt_gen, nb_gen);
+	}
+}
+
+rt_private void widr_type (int16 dtype)
+{
+	char *class_name = System (dtype).cn_generator;
+	int16 name_length = strlen (class_name);
+
+#ifdef RECOVERABLE_DEBUG
+	printf ("Type %d %s", dtype, class_name);
+#endif
+	/* Write type information: "name_length name dynamic_type" */
+	widr_multi_int16 (&name_length, 1);
+	widr_multi_char ((EIF_CHARACTER *) class_name, strlen (class_name));
+	widr_multi_int16 (&dtype, 1);
+
+	widr_type_generics (dtype);
+#ifdef RECOVERABLE_DEBUG
+	printf ("\n");
+#endif
+	widr_type_attributes (dtype);
+}
+
+rt_public void rmake_header(EIF_CONTEXT_NOARG)
+{
+	/* Generate header for stored hiearchy retrivable by other systems. */
+	EIF_GET_CONTEXT
+	int16 ohead = OVERHEAD;
+	int16 max_types = scount;
+	int16 type_count;
+	int16 i;
+	jmp_buf exenv;
+	RTXD;
+
+	excatch(&exenv);	/* Record pseudo execution vector */
+	if (setjmp(exenv)) {
+		RTXSC;					/* Restore stack contexts */
+		rt_reset_store ();				/* Clean data structure */
+		ereturn(MTC_NOARG);				/* Propagate exception */
+	}
+
+	/* count number of types actually present in objects to be stored */
+	for (type_count=0, i=0; i<scount; i++)
+		if (account[i])
+			type_count++;
+
+#ifdef RECOVERABLE_DEBUG
+	printf ("-- Storing header\n");
+	printf ("Overhead: %u bytes\n", ohead);
+	printf ("Number of dynamic types: %u\n", max_types);
+	printf ("Recorded types: %u\n", type_count);
+#endif
+	/* Write file-level information: "overhead_size max_types type_count" */
+	widr_multi_int16 (&ohead, 1);
+	widr_multi_int16 (&max_types, 1);
+	widr_multi_int16 (&type_count, 1);
+
+	for (i=0; i<scount; i++) {
+		if (account[i])
+			widr_type (i);
+	}
 	expop(&eif_stack);
 }
 

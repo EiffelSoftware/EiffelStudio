@@ -57,8 +57,8 @@ feature -- Removable
 		local
 			command: CUT_OBSERVER_CMD
 		do
-			!! command.make (associated_editor.command_instance)
-			command.execute (data)
+			!! command.make (associated_editor.command_instance, data)
+			command.execute (Void)
 		end
 
 feature -- Stone features

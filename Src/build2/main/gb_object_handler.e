@@ -49,6 +49,8 @@ feature -- Basic operation
 			menu_bar_object: GB_MENU_BAR_OBJECT
 			menu_object: GB_MENU_OBJECT
 			all_editors_local: ARRAYED_LIST [GB_OBJECT_EDITOR]
+			tree_object: GB_TREE_OBJECT
+			tree_item_object: GB_TREE_ITEM_OBJECT
 		do
 				-- When we change the type of an object, we keep the
 				-- original layout_item. This is why the layout item
@@ -74,9 +76,12 @@ feature -- Basic operation
 			combo_box_object ?= container
 			menu_bar_object ?= container
 			menu_object ?= container
+			tree_object ?= container
+			tree_item_object ?= container
 			check
 				unsupported_item_type: container_object /= Void or cell_object /= Void or tool_bar_object /= Void
 				or list_object /= Void or combo_box_object /= Void or menu_bar_object /= Void or menu_object /= Void
+				or tree_object /= Void or tree_item_object /= Void
 			end
 			if container_object /= Void then
 				container_object.add_child_object (new_object, position)
@@ -109,6 +114,14 @@ feature -- Basic operation
 			
 			if menu_object /= Void then
 				menu_object.add_child_object (new_object, position)
+			end
+			
+			if tree_object /= Void then
+				tree_object.add_child_object (new_object, position)
+			end
+			
+			if tree_item_object /= Void then
+				tree_item_object.add_child_object (new_object, position)
 			end
 			
 				-- If we are moving an object within objects, then it will already
@@ -342,6 +355,8 @@ feature -- Basic operation
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 			menu_object: GB_MENU_OBJECT
 			menu_item_object: GB_MENU_ITEM_OBJECT
+			tree_item_object: GB_TREE_ITEM_OBJECT
+			tree_object: GB_TREE_OBJECT
 			current_type: INTEGER
 			text: STRING
 		do
@@ -379,7 +394,10 @@ feature -- Basic operation
 					Result := list_object
 				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_COMBO_BOX")) then
 					create combo_box_object.make_with_type (text)
-					Result := combo_box_object	
+					Result := combo_box_object
+				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_TREE")) then
+					create tree_object.make_with_type (text)
+					Result := tree_object
 				else
 					create primitive_object.make_with_type (text)
 					Result ?= primitive_object
@@ -400,6 +418,9 @@ feature -- Basic operation
 				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_LIST_ITEM")) then
 					create list_item_object.make_with_type (text)
 					Result ?= list_item_object
+				elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_TREE_ITEM")) then
+					create tree_item_object.make_with_type (text)
+					Result ?= tree_item_object					
 				else
 					check
 						invalid_type_conformance: False

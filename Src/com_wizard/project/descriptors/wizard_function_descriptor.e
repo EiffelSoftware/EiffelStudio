@@ -62,6 +62,7 @@ feature -- Initialization
 		do
 			a_creator.initialize_descriptor (Current)
 			create coclass_eiffel_names.make (5)
+			arguments.compare_objects
 		ensure
 			valid_name: name /= Void and then name.count /= 0
 			valid_arguments: arguments /= Void and then arguments.count = argument_count
@@ -142,6 +143,33 @@ feature -- Access
 			end
 			Result.append (Colon)
 			Result.append (return_type.name)
+		end
+
+feature -- Status report
+
+	is_equal_function (other: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
+			-- Is `other' same function?
+		require
+			non_void_other: other /= Void
+		do
+			Result := (name.is_equal (other.name) and then
+					(argument_count = other.argument_count) and 
+					return_type.is_equal_data_type (other.return_type))
+			if Result then
+				from
+					arguments.start
+					other.arguments.start
+				until
+					arguments.after or 
+					not Result
+				loop
+					Result := Result and equal (arguments.item, other.arguments.item)
+					arguments.forth
+					other.arguments.forth
+				end
+			end
+		ensure
+			symmeteric: Result implies other.is_equal_function (Current)
 		end
 
 feature -- Basic operations
@@ -275,7 +303,7 @@ feature -- Comparison
 		do
 			Result := vtbl_offset < other.vtbl_offset
 		end;
-
+			
 end -- class WIZARD_FUNCTION_DESCRIPTOR
 
 --|----------------------------------------------------------------

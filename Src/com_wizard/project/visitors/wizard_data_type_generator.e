@@ -95,6 +95,15 @@ feature -- Access
 	is_interface_pointer: BOOLEAN
 			-- Is type interface pointer?
 
+	is_interface_pointer_pointer: BOOLEAN
+			-- Is type pointer to interface pointer?
+
+	is_coclass: BOOLEAN
+			-- Is type coclass?
+
+	is_coclass_pointer: BOOLEAN
+			-- Is type coclass pointer?
+
 	is_enumeration: BOOLEAN
 			-- Is type enumeration?
 
@@ -152,6 +161,9 @@ feature -- Basic operations
 			a_visitor.set_basic_type_ref (is_basic_type_ref)
 			a_visitor.set_interface (is_interface)
 			a_visitor.set_interface_pointer (is_interface_pointer)
+			a_visitor.set_interface_pointer_pointer (is_interface_pointer_pointer)
+			a_visitor.set_coclass (is_coclass)
+			a_visitor.set_coclass_pointer (is_coclass_pointer)
 			a_visitor.set_structure (is_structure)
 			a_visitor.set_structure_pointer (is_structure_pointer)
 			a_visitor.set_enumeration (is_enumeration)
@@ -184,34 +196,44 @@ feature {NONE} -- Implementation
 invariant
 
 	basic_type: is_basic_type implies (not is_array_basic_type and not is_interface and not is_interface_pointer
-							and not is_structure and not is_structure_pointer)
+							and not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer
+							and not is_structure and not is_structure_pointer and not is_enumeration)
 
 	array_basic_type: is_array_basic_type implies (not is_basic_type and not is_interface and not is_interface_pointer
-							and not is_structure and not is_structure_pointer)
+							and not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer
+							and not is_structure and not is_structure_pointer and not is_enumeration)
 
 	structure: is_structure implies (not is_basic_type and not is_array_basic_type and 
-							not is_interface and not is_interface_pointer and not is_structure_pointer)
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+							not is_interface and not is_interface_pointer and not is_structure_pointer and not is_enumeration)
 
 	structure_pointer: is_structure_pointer implies (not is_basic_type and not is_array_basic_type and 
-							not is_interface and not is_interface_pointer and not is_structure)
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+							not is_interface and not is_interface_pointer and not is_structure and not is_enumeration)
 
 	interface: is_interface implies (not is_basic_type and not is_array_basic_type and 
-							not is_structure and not is_structure_pointer and not is_interface_pointer)
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+							not is_structure and not is_structure_pointer and not is_interface_pointer and not is_enumeration)
 
 	interface_pointer: is_interface_pointer implies (not is_basic_type and not is_array_basic_type and 
-							not is_structure and not is_structure_pointer and not is_interface)
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer  and 
+							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
 
+	interface_pointer_pointer: is_interface_pointer_pointer implies (not is_basic_type and not is_array_basic_type and 
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer and 
+							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
+
+	coclass: is_coclass implies (not is_basic_type and not is_array_basic_type and 
+							not is_interface and not is_coclass_pointer and not is_interface_pointer_pointer and 
+							not is_structure and not is_structure_pointer and not is_interface_pointer and not is_enumeration)
+
+	coclass_pointer: is_coclass_pointer implies (not is_basic_type and not is_array_basic_type and 
+							not is_coclass and not is_interface_pointer and not is_interface_pointer_pointer and 
+							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
+							
 	enumeration: is_enumeration implies (not is_basic_type and not is_basic_type_ref and not is_array_basic_type and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
 							not is_structure and not is_structure_pointer and not is_interface and not is_interface_pointer)
-
-	need_generate_ce: need_generate_ce implies (ce_function_body /= Void and then not ce_function_body.empty)
-						and (ce_function_return_type /= Void and then not ce_function_return_type.empty)
-						and (ce_function_signature /= Void and then not ce_function_signature.empty)
-
-	need_generate_ec: need_generate_ec implies (ec_function_body /= Void and then not ec_function_body.empty)
-						and (ec_function_return_type /= Void and then not ec_function_return_type.empty)
-						and (ec_function_signature /= Void and then not ec_function_signature.empty)
-
 
 end -- class WIZARD_DATA_TYPE_GENERATOR
 

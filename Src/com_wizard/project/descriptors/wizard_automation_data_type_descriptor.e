@@ -21,6 +21,12 @@ feature -- Status report
 			other_automation ?= other
 			if other_automation /= Void then
 				Result := (type = other_automation.type)
+				if 
+					((type = Vt_void) or (type = Vt_hresult)) and
+					((other.type = Vt_void) or (other.type = Vt_hresult))
+				then
+					Result := True
+				end
 			end
 		end
 

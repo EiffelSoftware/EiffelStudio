@@ -25,54 +25,32 @@ feature -- Basic operations
 			-- Create 'Result' according to type
 		local
 			var_type: INTEGER
+			automation_creator: WIZARD_AUTOMATION_DATA_TYPE_CREATOR 
+			pointed_creator: WIZARD_POINTED_DATA_TYPE_CREATOR 
+			safearray_creator: WIZARD_SAFEARRAY_DATA_TYPE_CREATOR 
+			array_creator: WIZARD_ARRAY_DATA_TYPE_CREATOR 
+			user_defined_creator: WIZARD_USER_DEFINED_DATA_TYPE_CREATOR 
 		do
 			var_type := a_type_desc.var_type
 			if is_user_defined (var_type) then
+				create user_defined_creator
 				Result := user_defined_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
 			elseif is_carray (var_type) then
+				create array_creator
 				Result := array_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
 			elseif is_ptr (var_type) then
+				create pointed_creator
 				Result := pointed_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
 			elseif is_safearray (var_type) then
+				create safearray_creator
 				Result := safearray_creator.create_descriptor (a_type_info, a_type_desc, a_system_description)
 			else
+				create automation_creator
 				Result := automation_creator.create_descriptor (a_type_desc)
 			end
 			if is_unknown (var_type) then
 				a_system_description.set_iunknown
 			end
-		end
-
-feature -- Implementation
-
-	automation_creator: WIZARD_AUTOMATION_DATA_TYPE_CREATOR is
-			-- WIZARD_AUTOMATION_DATA_TYPE_DESCRIPTOR creator
-		once
-			create Result
-		end
-
-	pointed_creator: WIZARD_POINTED_DATA_TYPE_CREATOR is
-			-- WIZARD_POINTED_DATA_TYPE_DESCRIPTOR creator
-		once
-			create Result
-		end
-
-	safearray_creator: WIZARD_SAFEARRAY_DATA_TYPE_CREATOR is
-			-- WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR creator
-		once
-			create Result
-		end
-
-	array_creator: WIZARD_ARRAY_DATA_TYPE_CREATOR is
-			-- WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR creator
-		once
-			create Result
-		end
-
-	user_defined_creator: WIZARD_USER_DEFINED_DATA_TYPE_CREATOR is
-			-- WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR creator
-		once
-			create Result
 		end
 
 end -- class WIZARD_DATA_TYPE_DESCRIPTOR_FACTORY

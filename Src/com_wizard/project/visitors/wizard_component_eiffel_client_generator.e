@@ -18,16 +18,14 @@ feature -- Basic operations
 
 	generate_functions_and_properties (a_interface_desc: WIZARD_INTERFACE_DESCRIPTOR;
 				a_component: WIZARD_COMPONENT_DESCRIPTOR;
-				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS;
+				inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
 			-- Generate functions and properties of 'a_interface_desc'
 		local
 			function_generator: WIZARD_EIFFEL_CLIENT_FUNCTION_GENERATOR
 			property_generator: WIZARD_EIFFEL_CLIENT_PROPERTY_GENERATOR
-			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
 			tmp_original_name, tmp_changed_name: STRING
 		do
-			create inherit_clause.make
-			inherit_clause.set_name (a_interface_desc.eiffel_class_name)
 
 			if not a_interface_desc.properties.empty then
 				from
@@ -89,7 +87,14 @@ feature -- Basic operations
 					a_interface_desc.functions.forth
 				end
 			end
-			an_eiffel_writer.add_inherit_clause (inherit_clause)
+			if 
+				a_interface_desc.inherited_interface /= Void and then not
+				a_interface_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
+				not a_interface_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
+			then
+				generate_functions_and_properties (a_interface_desc.inherited_interface, a_component, an_eiffel_writer, inherit_clause)
+			end
+
 		end
 
 feature {NONE} -- Implementation

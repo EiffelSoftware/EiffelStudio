@@ -43,7 +43,8 @@ feature {NONE} -- Implementation
 
 	generate_functions_and_properties (descriptor: WIZARD_INTERFACE_DESCRIPTOR;
 				a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
-				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS;
+				inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
 			-- Generate functions and properties
 		require
 			non_void_descriptor: descriptor /= Void
@@ -58,6 +59,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_list: coclass_descriptor.interface_descriptors /= Void
 			not_empty: not coclass_descriptor.interface_descriptors.empty
+		local
+			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
 		do
 			from
 				coclass_descriptor.interface_descriptors.start
@@ -70,9 +73,12 @@ feature {NONE} -- Implementation
 				then
 					dispatch_interface := True
 				end
+				create inherit_clause.make
+				inherit_clause.set_name (coclass_descriptor.interface_descriptors.item.eiffel_class_name)
 
 				generate_functions_and_properties (coclass_descriptor.interface_descriptors.item, 
-						coclass_descriptor, eiffel_writer)
+						coclass_descriptor, eiffel_writer, inherit_clause)
+				eiffel_writer.add_inherit_clause (inherit_clause)
 
 				coclass_descriptor.interface_descriptors.forth
 			end

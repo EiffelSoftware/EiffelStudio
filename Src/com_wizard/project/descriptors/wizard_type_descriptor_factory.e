@@ -23,6 +23,12 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= Void
 		local
 			type: INTEGER
+			Alias_creator: WIZARD_ALIAS_DESCRIPTOR_CREATOR 
+			Enum_creator: WIZARD_ENUM_DESCRIPTOR_CREATOR 
+			Record_creator: WIZARD_RECORD_DESCRIPTOR_CREATOR 
+			Interface_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR 
+			Coclass_creator: WIZARD_COCLASS_DESCRIPTOR_CREATOR 
+			Union_creator: WIZARD_UNION_DESCRIPTOR_CREATOR 
 		do
 			type := a_type_info.type_attr.type_kind
 			if type = Tkind_enum then
@@ -58,42 +64,8 @@ feature -- Basic operations
 			end
 			if Result /= Void then
 				add_message (Current, Result.creation_message)
-			else
-				--
 			end
 		end	
-
-feature {NONE} -- Implementation
-
-	Alias_creator: WIZARD_ALIAS_DESCRIPTOR_CREATOR 
---		once
---			create Result
---		end
-
-	Enum_creator: WIZARD_ENUM_DESCRIPTOR_CREATOR 
---		once
---			create Result
---		end
-
-	Record_creator: WIZARD_RECORD_DESCRIPTOR_CREATOR 
---		once
---			create Result
---		end
-
-	Interface_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR 
---		once
---			create Result
---		end
-
-	Coclass_creator: WIZARD_COCLASS_DESCRIPTOR_CREATOR 
---		once
---			create Result
---		end
-
-	Union_creator: WIZARD_UNION_DESCRIPTOR_CREATOR 
---		once
---			create Result
---		end
 
 end -- class WIZARD_TYPE_DESCRIPTOR_FACTORY
 

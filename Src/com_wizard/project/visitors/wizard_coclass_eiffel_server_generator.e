@@ -336,15 +336,13 @@ feature {NONE} -- Implementation
 
 	generate_functions_and_properties (a_desc: WIZARD_INTERFACE_DESCRIPTOR;
 				a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
-				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS;
+				inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
 			-- Process functions and properties
 		local
 			prop_generator: WIZARD_EIFFEL_SERVER_PROPERTY_GENERATOR
 			func_generator: WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR
-			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
 		do
-			create inherit_clause.make
-			inherit_clause.set_name (a_desc.eiffel_class_name)
 			if not a_desc.functions.empty then
 				from
 					a_desc.functions.start
@@ -396,12 +394,13 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			if a_desc.inherited_interface /= Void and not
-					a_desc.inherited_interface.c_type_name.is_equal (Iunknown_type) and then
-					not a_desc.inherited_interface.c_type_name.is_equal (Idispatch_type) then
-				generate_functions_and_properties (a_desc.inherited_interface, a_component_descriptor, an_eiffel_writer)
+			if 
+				a_desc.inherited_interface /= Void and not
+				a_desc.inherited_interface.guid.is_equal (Iunknown_guid) and then
+				not a_desc.inherited_interface.guid.is_equal (Idispatch_guid) 
+			then
+				generate_functions_and_properties (a_desc.inherited_interface, a_component_descriptor, an_eiffel_writer, inherit_clause)
 			end		
-			an_eiffel_writer.add_inherit_clause (inherit_clause)
 		end
 
 	add_creation is

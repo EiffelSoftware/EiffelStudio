@@ -84,14 +84,14 @@ feature {NONE} -- External features
 
 	xm_intern_atom (display_ptr, str: POINTER; b: BOOLEAN): POINTER is
 		external
-			 "C (Display *, String, Boolean): EIF_POINTER | <Xm/AtomMgr.h>"
+			 "C [macro <Xm/AtomMgr.h>] (Display *, String, Boolean): EIF_POINTER"
 		alias
 			"XmInternAtom"
 		end;
 
 	xm_get_atom_name (display_ptr, id: POINTER): POINTER is
 		external
-			 "C (Display *, Atom): EIF_POINTER | <Xm/AtomMgr.h>"
+			 "C [macro <Xm/AtomMgr.h>] (Display *, Atom): EIF_POINTER"
 		alias
 			"XmGetAtomName"
 		end;
@@ -105,14 +105,14 @@ feature {NONE} -- External features
 
 	XA_PRIMARY: POINTER is
 		external
-			"C [macro <X11/Xatom.h>]: EIF_POINTER"
+			"C [macro <X11/Xatom.h>]: EIF_POINTER | <X11/X.h>"
 		alias
 			"XA_PRIMARY"
 		end;
 
 	XA_STRING: POINTER is
 		external
-			"C [macro <X11/Xatom.h>]: EIF_POINTER"
+			"C [macro <X11/Xatom.h>]: EIF_POINTER | <X11/X.h>"
 		alias
 			"XA_STRING"
 		end;

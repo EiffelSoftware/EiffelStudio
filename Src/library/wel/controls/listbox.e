@@ -404,7 +404,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	consistent_selection: exists and then selected implies count > 0
+	consistent_count: exists and then selected implies count > 0
 
 end -- class WEL_LIST_BOX
 

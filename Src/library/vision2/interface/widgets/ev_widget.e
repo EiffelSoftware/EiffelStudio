@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_WIDGET
 
 inherit
@@ -19,21 +19,19 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the widget with `par' as parent.
-		require
-			valid_parent: is_valid (par)
 		deferred
 		end
 
 	widget_make (par: EV_CONTAINER) is
 			-- This is a general initialization for 
-			-- widgets and has to be called by all the 
-			-- widgets with parents.
-		require
-			valid_parent: is_valid (par)
+			-- widgets. It has to be called by all the 
+			-- widgets.
 		do
-			managed := par.manager
-			implementation.set_interface (Current)
-			implementation.widget_make (par)
+			implementation.widget_make (Current)
+			if par /= Void then
+				managed := par.manager
+				implementation.set_parent (par)
+			end
 		ensure
  			exists: not destroyed
 		end
@@ -132,17 +130,6 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		require
-			exists: not destroyed
-		do
-			implementation.set_parent (par)
-		ensure
-			parent_set: parent = par
-		end
-
 	hide is
 		 	-- Make widget invisible on the screen.
 		require
@@ -155,12 +142,14 @@ feature -- Status setting
 
 	show is
 		 	-- Make widget visible on the screen. (default)
+			-- Do nothing if the widget has no parent.
 		require
 			exists: not destroyed
+			has_parent: parent /= Void
 		do
 			implementation.show
 		ensure
-			shown: shown
+			shown: (parent /= Void) implies shown
 		end
 
 	set_focus is
@@ -171,21 +160,61 @@ feature -- Status setting
 			implementation.set_focus
 		end
 
+--	set_sensitive is
+			-- Set current widget in sensitive mode.
+			-- This means that any events with an
+			-- event type of KeyPress, KeyRelease,
+			-- ButtonPress, ButtonRelease, MotionNotify,
+			-- EnterNotify, LeaveNotify, FocusIn or
+			-- FocusOut will not dispatched to current
+			-- widget and to all its children.
+--		require
+--			exists: not destroyed
+--		do
+--			implementation.set_insensitive (False)
+--		ensure
+--			insensitive = False
+--		end
+
 	set_insensitive (flag: BOOLEAN) is
-			-- Set current widget in insensitive mode if
-			-- `flag'. This means that any events with an
+			-- Set current widget in insensitive mode.
+			-- This means that any events with an
 			-- event type of KeyPress, KeyRelease,
 			-- ButtonPress, ButtonRelease, MotionNotify,
 			-- EnterNotify, LeaveNotify, FocusIn or
 			-- FocusOut will not be dispatched to current
-			-- widget and to all its children.  Set it to
-			-- sensitive mode otherwise.
+			-- widget and to all its children.
 		require
 			exists: not destroyed
 		do
 			implementation.set_insensitive (flag)
 		ensure
-			flag = insensitive	
+			insensitive	= flag
+		end
+
+	set_default_options is
+			-- Initialize the options of the widget.
+		require
+			exists: not destroyed
+		do
+			implementation.set_default_options
+		end
+
+	set_default_colors is
+			-- Initialize the colors of the widget
+		require
+			exists: not destroyed
+		do
+			implementation.set_default_colors
+		end
+
+	set_default_minimum_size is
+			-- Initialize the size of the widget.
+			-- Redefine by some widgets.
+		require
+			exists: not destroyed
+		do
+			implementation.set_default_minimum_size
 		end
 
 	set_expand (flag: BOOLEAN) is
@@ -214,6 +243,19 @@ feature -- Status setting
 			implementation.set_vertical_resize (flag)
 		ensure
 			vertical_resize_set: vertical_resizable = flag
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		require
+			exists: not destroyed
+		do
+			implementation.set_parent (par)
+		ensure
+			parent_set: parent = par
 		end
 
 	set_background_color (color: EV_COLOR) is
@@ -376,18 +418,6 @@ feature -- Resizing
 			minimum_height_set: implementation.minimum_height_set (value)
 		end
 
-	set_x (value: INTEGER) is
-			-- Put at horizontal position `value' relative
-			-- to parent.
-		require
-			exists: not destroyed
-			Unmanaged: not managed
-		do
-			implementation.set_x (value)
-		ensure
-			x_set: implementation.x_set (value)
-		end
-
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
 			-- Put at horizontal position `new_x' and at
 			-- vertical position `new_y' relative to parent.
@@ -398,6 +428,18 @@ feature -- Resizing
 			implementation.set_x_y (new_x, new_y)
 		ensure
 			x_y_set: implementation.position_set (new_x, new_y)
+		end
+
+	set_x (value: INTEGER) is
+			-- Put at horizontal position `value' relative
+			-- to parent.
+		require
+			exists: not destroyed
+			Unmanaged: not managed
+		do
+			implementation.set_x (value)
+		ensure
+			x_set: implementation.x_set (value)
 		end
 
 	set_y (value: INTEGER) is

@@ -162,6 +162,11 @@ feature -- Access
 			end
 			window_oids.go_to (cur)
 		end
+		
+	key_constants: EV_KEY_CONSTANTS is
+		once
+			create Result	
+		end
 
 feature -- Basic operation
 
@@ -403,7 +408,7 @@ feature -- Implementation
 			temp_ptr := C.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
 			Result := temp_mask
 		end
-
+		
 feature -- External implementation
 
 	c_ev_gtk_callback_marshal_init (
@@ -498,6 +503,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2001/06/29 20:03:49  king
+--| Added key_constants function
+--|
 --| Revision 1.36  2001/06/21 22:32:00  king
 --| Added version externals
 --|

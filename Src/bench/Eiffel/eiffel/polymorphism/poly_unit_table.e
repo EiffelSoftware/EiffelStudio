@@ -24,44 +24,6 @@ feature
 			rout_id := i
 		end;
 
-	remove_unit_of_id (i: CLASS_ID) is
-			-- Remove polymorhic unit of id `i'.
-		local
-			item_id: CLASS_ID;
-			stop: BOOLEAN;
-		do
-			from
-				start
-			until
-				after or else stop
-			loop
-				item_id := item.id;
-				if item_id.is_equal (i) then
-					remove;
-					stop := True;
-				elseif item_id > i then
-					stop := True;
-				else
-					forth
-				end;
-			end;
-		end;
-
-	substract (other: like Current) is
-			-- Substract `other' from Current.
-		require
-			good_argument: other /= Void
-		do
-			from
-				other.start
-			until
-				other.after
-			loop
-				remove_unit_of_id (other.item.id);
-				other.forth;
-			end;
-		end;
-
 	poly_table: POLY_TABLE [ENTRY] is
 			-- Polymorphic table to generate in final mode
 		local

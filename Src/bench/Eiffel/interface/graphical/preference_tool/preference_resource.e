@@ -57,7 +57,7 @@ feature {PREFERENCE_CATEGORY} -- Access
 		deferred
 		end;
 
-	modified_resource: MODIFIED_RESOURCE is
+	modified_resource: CELL2 [RESOURCE, RESOURCE] is
 			-- Modified resource
 		require
 			is_changed: is_changed

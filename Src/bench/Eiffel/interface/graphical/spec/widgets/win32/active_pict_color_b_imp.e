@@ -16,6 +16,8 @@ inherit
 			total_offset
 		end
 
+	ACTIVE_PICT_COLOR_B_I
+
 creation
 	make
 
@@ -28,12 +30,27 @@ feature
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 		do
-			draw_unselected (a_dc)
-			if mouse_in then
-				draw_unselected_border (a_dc)
+			if active then
+				draw_unselected (a_dc)
+				if mouse_in then
+					draw_unselected_border (a_dc)
+				else
+					draw_unselected_no_border (a_dc)
+				end
 			else
-				draw_unselected_no_border (a_dc)
+				{PICT_COLOR_B_IMP} Precursor (a_dc)
 			end
+		end
+
+feature -- Update
+
+	set_active (flag: BOOLEAN) is
+			-- Set `active' to `flag'.
+			--| True means that the button will react to the mouse_enter
+			--| and mouse_leave events. False means it will behave like
+			--| a PICT_COLOR_B.
+		do
+			active := flag
 		end
 
 feature {NONE}
@@ -41,18 +58,22 @@ feature {NONE}
 	on_mouse_enter is
 		do
 			{PICT_COLOR_B_IMP} Precursor
-			mouse_in := True
-			if exists then
-				invalidate
+			if active then
+				mouse_in := True
+				if exists then
+					invalidate
+				end
 			end
 		end
 
 	on_mouse_leave is
 		do
 			{PICT_COLOR_B_IMP} Precursor
-			mouse_in := False
-			if exists then
-				invalidate
+			if active then
+				mouse_in := False
+				if exists then
+					invalidate
+				end
 			end
 		end
 
@@ -99,21 +120,29 @@ feature {NONE}
 			pen: WEL_PEN
 			color: WEL_COLOR_REF
 		do
-			!! color.make_system (color_btnshadow)
-			!! pen.make (ps_solid, 1, color)
-			a_dc.select_pen (pen)
-			a_dc.line (0, 0, width, 0);
-			a_dc.line (0, 0, 0, height);
-			!! color.make_system (color_btnhighlight)
-			!! pen.make (ps_solid, 1, color);
-			a_dc.select_pen (pen);
-			a_dc.line (width - 1, 1, width - 1, height);
-			a_dc.line (1, height - 1, width, height - 1)
+			if not active then
+				{PICT_COLOR_B_IMP} Precursor (a_dc)
+			else
+				!! color.make_system (color_btnshadow)
+				!! pen.make (ps_solid, 1, color)
+				a_dc.select_pen (pen)
+				a_dc.line (0, 0, width, 0);
+				a_dc.line (0, 0, 0, height);
+				!! color.make_system (color_btnhighlight)
+				!! pen.make (ps_solid, 1, color);
+				a_dc.select_pen (pen);
+				a_dc.line (width - 1, 1, width - 1, height);
+				a_dc.line (1, height - 1, width, height - 1)
+			end
 		end
 
 feature {NONE} -- Attributes
 
 	mouse_in: BOOLEAN
 			-- Is the cursor inside the button?
+
+	active: BOOLEAN
+			-- Is the button an active one (ACTIVE_PICT_COLOR_B) or
+			-- is it not (PICT_COLOR_B)
 
 end -- class ACTIVE_PICT_COLOR_B_IMP

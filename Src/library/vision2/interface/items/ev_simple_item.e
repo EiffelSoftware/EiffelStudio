@@ -9,11 +9,9 @@ indexing
 	revision: "$Revision$"
 
 deferred class 
-
 	EV_ITEM
 
 inherit
-
 	EV_TEXT_CONTAINER
 		rename
 			make as wrong_make,
@@ -27,7 +25,7 @@ feature -- Status report
 	destroyed: BOOLEAN is
 			-- Is current object destroyed
 		do
-			Result := implementation.destroyed
+			Result := (implementation = Void)
 		end
 
 feature -- Status setting
@@ -39,6 +37,17 @@ feature -- Status setting
 		ensure
 			destroyed: destroyed
 		end
+
+--	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void.
+--		require
+--			exists: not destroyed
+--		do
+--			implementation.set_parent (par)
+--		ensure
+--			parent_set: parent = par
+--		end
 
 feature -- Event : command association
 

@@ -53,6 +53,7 @@ feature -- Access
 			label: EV_LABEL
 			second: like ev_type
 			check_button: EV_CHECK_BUTTON
+			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			create check_buttons.make (0)
 			Result := Precursor {GB_EV_ANY}
@@ -80,6 +81,18 @@ feature -- Access
 				first.off or second.off
 			loop
 				create check_button.make_with_text (class_name (first.item))
+					-- This next section is messy, but is the easiest way to
+					-- retrieve the object associated with each label.
+					-- This allows us to set the pebble for each label.
+				layout_item ?= parent_editor.object.layout_item
+				check
+					layout_item_not_void: layout_item /= Void
+				end
+				layout_item ?= layout_item.i_th (first.index)
+				check
+					layout_item_not_void: layout_item /= Void
+				end
+				check_button.set_pebble (layout_item.object)
 				check_buttons.force (check_button)
 				check_button.select_actions.extend (agent update_widget_expanded (check_button, first.item))
 				check_button.select_actions.extend (agent update_widget_expanded (check_button, second.item))

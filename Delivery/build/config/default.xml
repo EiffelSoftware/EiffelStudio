@@ -36,5 +36,10 @@
 			<TEXT>tools_on_top<BOOLEAN>True</BOOLEAN></TEXT>
 			
 	</TOPIC>
+	<TOPIC TOPIC_ID="Code_generation" ICON="icon_preferences_folder">
+	<HEAD>Code Generation</HEAD>
+		<TEXT DESCRIPTION="Generate empty directories to disk">generate_empty_directories<BOOLEAN>False</BOOLEAN></TEXT>
+	</TOPIC>
+		
 </TOPIC>
 </EIFFEL_DOCUMENT>

@@ -12,8 +12,8 @@ inherit
 
 	EV_SIMPLE_ITEM_IMP
 		redefine
-			create_text_label,
-			has_parent
+			has_parent,
+			set_text
 		end
 
 creation
@@ -27,22 +27,17 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a list item with an empty name.
 		do
+			-- Create the gtk object.
 			widget := gtk_list_item_new
-			gtk_object_ref (widget)		
-			box := gtk_hbox_new (False, 0)
-			gtk_widget_show (box)
-			gtk_container_add (GTK_CONTAINER (widget), box)
+			gtk_object_ref (widget)
+
+			-- Create the `box'.	
+			initialize
+
+			-- Create the label with text set to "".
+			create_text_label ("")
 		end
 	
-	make_with_text (txt: STRING) is
-			-- Create a list item with `txt' as label.
-		local
-			a: ANY
-		do
-			make
-			create_text_label (txt)
-		end
-
 	make_with_index (par: EV_LIST; value: INTEGER) is
 			-- Create an item with `par' as parent and `value'
 			-- as index.
@@ -111,17 +106,6 @@ feature -- Status setting
 		do
 		end
 
-	create_text_label (txt: STRING) is
-		local
-                        a: ANY
-		do
-			a := txt.to_c
-			
-			set_label_widget (gtk_label_new ($a))
-			gtk_widget_show (label_widget)
-			gtk_box_pack_start (GTK_BOX (box), label_widget, False, True, 0)
-		end			
-
 feature -- element change
 
 	set_parent (par: EV_LIST) is
@@ -141,6 +125,22 @@ feature -- element change
 				parent_imp.add_item (Current)
 				show
 				gtk_object_unref (widget)
+			end
+		end
+	
+	set_text (txt: STRING) is
+			-- Set current button text to `txt'.
+		local
+			a: ANY
+			combo_par: EV_COMBO_BOX_IMP
+		do
+			a := txt.to_c
+			gtk_label_set_text (label_widget, $a)
+
+			-- the gtk part if the parent is a combo_box
+			combo_par ?= parent_imp
+			if (combo_par /= Void) then
+				gtk_combo_set_item_string (parent_imp.widget, widget, $a)
 			end
 		end
 

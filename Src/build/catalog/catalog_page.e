@@ -13,6 +13,8 @@ inherit
 			{CAT_COM_IS,CATALOG, CMD_CAT_BUTTON} 
 			hide, show, shown, manage, unmanage, 
 			managed, associated_catalog
+--		redefine
+--			make_visible, make_unmanaged
 		end
 	
 feature {CATALOG}
@@ -31,15 +33,31 @@ feature {CATALOG}
 		end
 
 	make_visible (a_parent: COMPOSITE) is
+		local
+			bg_color: COLOR
 		do
-			box_make_visible (Widget_names.row_column, a_parent)
+--			box_make_visible (Widget_names.row_column, a_parent)
+			make_box (Widget_names.row_column, a_parent)
+			!! bg_color.make
+			bg_color.set_rgb (background_color.red - 65 * 256, background_color.green - 65 * 256, background_color.blue - 65 * 256)	
+			set_background_color (bg_color)
+			make_box_visible
+			set_spacing (3)
 			set_column_layout
 		end
 
 	make_unmanaged (a_parent: COMPOSITE) is
+		local
+			bg_color: COLOR
 		do
 			after := False
-			box_make_unman (Widget_names.row_column, a_parent)
+--			box_make_unman (Widget_names.row_column, a_parent)
+			make_box_unmanaged (Widget_names.row_column, a_parent)
+			!! bg_color.make
+			bg_color.set_rgb (background_color.red - 65 * 256, background_color.green - 65 * 256, background_color.blue - 65 * 256)	
+			set_background_color (bg_color)
+			make_box_visible
+			set_spacing (3)
 			set_column_layout
 		end
 

@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 		do
 			Precursor {EV_WINDOW_IMP} (a_key, a_key_string, a_key_press)
-			if a_key /= Void and then a_key.code = a_key.key_escape and then not a_key_press then
+			if a_key /= Void and then a_key.code = app_implementation.Key_constants.key_escape and then not a_key_press then
 				on_ok
 			end				
 		end
@@ -191,6 +191,9 @@ end -- class EV_STANDARD_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2001/06/29 23:00:49  king
+--| Accounted for info hide in ev_key
+--|
 --| Revision 1.15  2001/06/29 22:26:47  king
 --| Added user_clicked_ok functionality
 --|

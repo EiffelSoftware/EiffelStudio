@@ -263,6 +263,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			pt, win_pt: WEL_POINT
 			env: EV_ENVIRONMENT
+			l_win: WEL_WINDOW
 		do
 			if
 				(mode_is_drag_and_drop and a_button = 1) or
@@ -309,7 +310,18 @@ feature {EV_ANY_I} -- Implementation
 				if pebble_positioning_enabled then
 					create pt.make (pick_x, pick_y)
 					create win_pt.make (a_screen_x, a_screen_y)
-					pt.client_to_screen (win_pt.window_at)
+						-- Do we really need `window_at', isn't Current the
+						-- window we should use to do the computation?
+					l_win := win_pt.window_at
+					if l_win /= Void then
+						pt.client_to_screen (l_win)
+					else
+						l_win ?= Current
+						check
+							l_win_not_void: l_win /= Void
+						end
+						pt.client_to_screen (l_win)
+					end
 					internal_pick_x := pt.x
 					internal_pick_y := pt.y
 				else

@@ -54,7 +54,7 @@ feature -- Access
 			-- Currently selected item in a single
 			-- selection mode.
 		require
-			single_selection: not is_multiple_selection
+			single_selection: not multiple_selection_enabled
 		do
 			Result := implementation.selected_item
 		end
@@ -79,12 +79,12 @@ feature -- Status report
 			Result := implementation.selected
 		end
 
-	is_multiple_selection: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN is
 			-- True if the user can choose several items
 			-- False otherwise
 		require
 		do
-			Result := implementation.is_multiple_selection
+			Result := implementation.multiple_selection_enabled
 		end
 	
 	title_shown: BOOLEAN is
@@ -138,6 +138,7 @@ feature -- Status setting
 
 	disable_multiple_selection is
 			-- Allow only one item to be selected.
+
 		do
 			implementation.disable_multiple_selection
 		end
@@ -294,8 +295,16 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/03/02 22:07:03  king
+--| Made cvs log to be 80 cols or less
+--|
 --| Revision 1.33  2000/03/02 18:45:54  rogers
---| Minor comment change. Previous revision comment should have read : renamed set_multiple_selection -> enable_multiple_selection, set_single_selection -> disable_multiple_selection, set_left_alignment -> align_text_left, set_right_alignment to align_text_right, set_cent_alignment -> align_text_right.
+--| Minor comment change. Previous revision comment should have read :
+--| renamed set_multiple_selection -> enable_multiple_selection,
+--| set_single_selection -> disable_multiple_selection,
+--| set_left_alignment -> align_text_left,
+--| set_right_alignment to align_text_right,
+--| set_cent_alignment -> align_text_right.
 --|
 --| Revision 1.31  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
@@ -335,7 +344,8 @@ end -- class EV_MULTI_COLUMN_LIST
 --| added --| FIXME Not for release
 --|
 --| Revision 1.23.6.3  1999/12/17 19:36:51  rogers
---| redefined implementation to be a a more refined type. Changed index wherever it appeared as a parameter.
+--| redefined implementation to be a a more refined type. Changed index
+--| wherever it appeared as a parameter.
 --|
 --| Revision 1.23.6.2  1999/12/01 19:10:02  rogers
 --| Changed inheritance structure from EV_ITEM_HOLDER to EV_ITEM_LIST

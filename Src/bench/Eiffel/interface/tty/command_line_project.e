@@ -9,27 +9,30 @@ indexing
 class COMMAND_LINE_PROJECT 
 
 inherit
+	SHARED_EIFFEL_PROJECT
 
-	SHARED_ERROR_BEHAVIOR;
-	SHARED_EIFFEL_PROJECT;
-	PROJECT_CONTEXT;
-	WINDOWS;
+	PROJECT_CONTEXT
+
+	WINDOWS
+
 	SHARED_BENCH_LICENSES
 		rename
 			class_name as except_class_name
 		end;
 
+	SHARED_EXEC_ENVIRONMENT
+
 	EB_CONSTANTS
 
 feature -- Properties
 
-	project_name: STRING;
-			-- Name of the project directory. 
-			-- ("" by default)
+	project_file_name: STRING;
+			-- Name of the project file. 
+			-- Not required when creating a project.
 
-	precompiled_project_name: STRING;
-			-- Name of precompiled project directory
-			-- if any.
+	project_path_name: STRING;
+			-- Path where to look for the EIFGEN directory and the
+			-- project file.
 
 	Ace_name: STRING;
 			-- Name of the Ace file.
@@ -45,119 +48,149 @@ feature -- Properties
 	retried: BOOLEAN;
 			-- For rescues
 
+	project_dir: PROJECT_DIRECTORY
+		-- Location of the project directory.	
+
+	project_file: PROJECT_EIFFEL_FILE
+			-- Location of the file where all the information 
+			-- about the current project are saved.
+
 feature -- Update
 
-	init_project is
-			-- Initialize the project, i.e.
+	init_project (file_name: STRING) is
+			-- Initialize the project, with the `file_name' project file
+			--| At this stage, `Project_directory_name' and `file_name' have
+			--| been set.
 		local
-			project_dir: PROJECT_DIRECTORY;
-			project_eif_file: RAW_FILE;
-			temp: STRING;
-			fn: FILE_NAME;
 			e_displayer: DEFAULT_ERROR_DISPLAYER
 		do
-			error_occurred := False;
-
-				-- Project directory
-			!! project_dir.make (project_name);
-			Project_directory.set_directory (project_name)
-
-			if not project_dir.base_exists then
-				temp := Warning_messages.w_Directory_not_exist (project_dir.name)
-				error_occurred := True;
-			elseif project_dir.is_new then
-				project_is_new := True
-				if not project_dir.has_base_full_access then
-					temp := Warning_messages.w_Cannot_create_project_directory (project_dir.name)
-					error_occurred := True;
-				else
-						-- Create a new project.
-					Eiffel_project.make (project_dir);
-				end
-			elseif not project_dir.exists then
-				temp := Warning_messages.w_Project_directory_not_exist (project_dir.name)
-				error_occurred := True
-			else
-				project_eif_file := project_dir.project_eif_file;
-				if not project_eif_file.is_readable then
-					temp := Warning_messages.w_Not_readable (project_eif_file.name);
-					error_occurred := True
-				elseif not project_eif_file.is_plain then
-					temp := Warning_messages.w_Not_a_file (project_eif_file.name);
-					error_occurred := True
-				elseif project_dir.is_readable and then not project_dir.is_writable then
-					temp := "No write permissions on project"
-					error_occurred := True
-				end
-			end;
-
-			if error_occurred then
-				io.error.putstring (temp);
-				io.error.new_line;
-			end;
-
+				--| Initialization of the display
 			!! e_displayer.make (Error_window);
 			Eiffel_project.set_error_displayer (e_displayer)
-		end;
+
+				-- If `file_name' is Void it means the user did not specify
+				-- his project file, so he wants to create a new project.
+				--| Even if it was not the case, before overwritting, we will
+				--| make sure that there is no EIFGEN directory in the specified
+				--| directory.
+			if file_name /= Void then
+				open_project_file (file_name)
+			else
+				create_project (Project_directory_name)
+			end
+		end
+
+feature -- Project Initialization
+
+	create_project (dir: STRING) is
+			-- Create an Eiffel Project.
+		local
+			p: PROJECT_EIFFEL_FILE
+		do
+			!! project_dir.make (dir, p);
+			if project_path_name /= Void then
+				Project_directory_name.set_directory (project_path_name)
+			end
+			project_is_new := True
+		end
+
+	open_project_file (file_name: STRING) is
+			-- Initialize project as a new one or retrieving
+			-- existing data in the valid directory `project_dir'.
+		require
+			project_directory_exist: project_dir /= Void
+		local
+			dir_name: STRING
+			new_file_name: STRING
+			msg: STRING
+		do
+			if project_path_name /= Void then
+					-- `project_path_name' has been specified, so `file_name'
+					-- should not contain any absolute path.
+					--| We raise an error if it is the case.
+					--| If not, we append the `file_name' to `project_path_name', we
+					--| add a `Directory_separator' if it is needed.
+				if file_name.index_of (Directory_separator, 1) /= 0 then
+					error_occurred := True
+					msg := "You cannot specifiy a project name which contains a directory separator%N"
+					msg.append ("when you are specifying a project path.")
+				else
+					Project_directory_name.set_directory (project_path_name)
+					new_file_name := clone (project_path_name)
+					if new_file_name.item (new_file_name.count) /= Directory_separator then
+						new_file_name.append_character (Directory_separator)
+					end
+					new_file_name.append (file_name)
+				end
+			else
+					-- No project path has been specified, so `file_name' can either contain
+					-- a file name or a path name.
+					--| If it is a relative path name, we prepend `Current_working_directory' to it.
+					--| Otherwise, we extract the `Project_directory_name' from the path.
+				if file_name.index_of (Directory_separator, 1) /= 0 then
+					dir_name := file_name.substring (1, file_name.last_index_of
+								(directory_separator, file_name.count) - 1)
+					Project_directory_name.set_directory (dir_name)
+					new_file_name := file_name
+				else
+					dir_name := Execution_environment.current_working_directory
+					Project_directory_name.set_directory (dir_name)
+					new_file_name := clone (dir_name)
+					if new_file_name.item (new_file_name.count) /= Directory_separator then
+						new_file_name.append_character (Directory_separator)
+					end
+					new_file_name.append (file_name)
+				end
+			end
+
+			if not error_occurred then
+					--| Retrieve existing project
+				!! project_file.make (new_file_name)
+				!! project_dir.make (dir_name, project_file)
+			end
+		end
+
+feature -- Project retrieval
 
 	retrieve_project is
-			-- Retrieve existing project.
+			-- Retrieve a project from the disk.
 		require
-			valid_project_name: project_name /= Void and then 
-							not project_name.empty
+			project_directory_exists: project_dir /= Void
 		local
-			temp: STRING;
-			project_dir: PROJECT_DIRECTORY;
-		do
-			!! project_dir.make (project_name);
-			Eiffel_project.retrieve (project_dir);
+			msg: STRING
+			title: STRING
+			old_title: STRING
+		do	
+			io.error.putstring ("Retrieving project...%N")
+			Eiffel_project.make (project_dir)
+
+				-- Retrieve the project
+			Eiffel_project.retrieve
+
 			if Eiffel_project.retrieval_error then
-				!! temp.make (0);
-				if Eiffel_project.is_corrupted then
-					temp.append ("Project in: ");
-					temp.append (Project_directory);
-					temp.append ("%Nis corrupted. ");
-				elseif Eiffel_project.retrieval_interrupted then
-					temp.append ("Retrieving project in: ");
-					temp.append (Project_directory);
-					temp.append ("%Nwas interrupted. ");
-				else 
-					if Eiffel_project.incompatible_version_number.empty then
-						temp.append ("File `project.txt' does not exist in project directory:%N")
-						temp.append (Project_directory);
-						temp.append ("%NThis file must exist. ");
-					else
-						temp.append ("Incompatible_version for project: ")
-						temp.append (Project_directory);
-						temp.append ("%NEiffelBench version is: ");
-						temp.append (version_number);
-						temp.append ("%NProject was compiled with version: ");
-						temp.append (Eiffel_project.incompatible_version_number)
-						temp.append ("%N")
+				if Eiffel_project.is_incompatible then
+					msg := Warning_messages.w_Project_incompatible 
+						(project_dir.name, 
+						version_number, 
+						Eiffel_project.incompatible_version_number)
+				else
+					if Eiffel_project.is_corrupted then
+						msg := Warning_messages.w_Project_corrupted (project_dir.name)
+					elseif Eiffel_project.retrieval_interrupted then
+						msg := Warning_messages.w_Project_interrupted (project_dir.name)
 					end
 				end
-				temp.append ("Cannot continue");
-				io.error.putstring (temp);
-				io.error.new_line;
-				error_occurred := True
+			elseif Eiffel_project.incomplete_project then
+				msg := Warning_messages.w_Project_directory_not_exist (project_file.name, project_dir.name)
 			elseif Eiffel_project.read_write_error then
-				io.error.put_string ("Project is not readable; check permissions.%N");
-				error_occurred := true
-			elseif Eiffel_project.is_read_only then
-				io.error.put_string ("No write permissions on project.%N%
-							%Project opened in read-only mode.%N")
+				msg := Warning_messages.w_Cannot_open_project
 			end
-			if Ace_name /= Void then
-				if Eiffel_project.ace.valid_file_name (Ace_name) then
-					Eiffel_project.ace.set_file_name (Ace_name)
-				else
-					io.error.putstring ("Ace file `");
-					io.error.putstring (Ace_name);
-					io.error.putstring ("' does not exist.%N")
-					error_occurred := True
-				end
+
+			if msg /= Void then
+				io.error.putstring (msg)
+				error_occurred := True
 			end
-		end;
+		end
 
 	make_new_project (is_loop: BOOLEAN) is
 			-- Initialize project as a new one.
@@ -165,25 +198,26 @@ feature -- Update
 			New_project: project_is_new
 		local
 			file: PLAIN_TEXT_FILE
+			path: FILE_NAME
 		do
 			if is_loop then
 				if Ace_name /= Void then
 					check_ace_file (Ace_name);
 				end; 
 			elseif Ace_name = Void then
-				!!file.make ("Ace.ace")
+				!! path.make_from_string (Execution_environment.current_working_directory)
+				path.set_file_name ("Ace.ace")	
+				!!file.make (path)
 				if file.exists then
-					Ace_name := "Ace.ace"
+					Ace_name := path
 				else
-					!!file.make ("Ace");
-					if file.exists then
-						Ace_name := "Ace"
-					else
-						Ace_name := "Ace.ace"
-					end
+					!! path.make_from_string (Execution_environment.current_working_directory)
+					path.set_file_name ("Ace")	
+					Ace_name := path
 				end
 				check_ace_file (Ace_name);
 			end;
+			Eiffel_project.make_new (project_dir)
 			Eiffel_ace.set_file_name (Ace_name);
 		end
 

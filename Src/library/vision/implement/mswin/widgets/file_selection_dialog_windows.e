@@ -56,6 +56,10 @@ feature -- Initialization
 			-- Realize current widget 
 		do
 			realized := true
+				-- set initial focus
+			if initial_focus /= void then
+				initial_focus.wel_set_focus
+			end
 		end
 
 feature -- Access

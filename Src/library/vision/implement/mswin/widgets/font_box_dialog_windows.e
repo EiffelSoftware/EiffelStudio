@@ -94,6 +94,10 @@ feature -- Status setting
 			-- Realize current widget.
 		do
 			realized := True
+				-- set initial focus
+			if initial_focus /= void then
+				initial_focus.wel_set_focus
+			end			
 		end
 
 	dialog_realize is

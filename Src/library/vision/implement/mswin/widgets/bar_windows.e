@@ -111,6 +111,10 @@ feature -- Initialization
 			realize_children
 			associated_shell.associate_bar (Current)
 			parent.child_has_resized
+ 				-- set initial focus
+			if initial_focus /= void then
+				initial_focus.wel_set_focus
+			end
 		end
 
 	unrealize is

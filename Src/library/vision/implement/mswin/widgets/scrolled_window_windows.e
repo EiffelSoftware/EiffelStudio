@@ -126,6 +126,10 @@ feature -- Initialization
 			--	resize_for_working_area
 				update_scrolling
 			end
+				-- set initial focus
+			if initial_focus /= void then
+				initial_focus.wel_set_focus
+			end			
 		end
 
 feature -- Access
@@ -219,7 +223,7 @@ feature {NONE} -- Implementation
 		end
 
 	resize_for_working_area is
-			-- Set size to workign area
+			-- Set size to working area
 		do
 			if working_area.realized then
 				if exists then

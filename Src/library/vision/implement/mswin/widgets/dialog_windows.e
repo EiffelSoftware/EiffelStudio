@@ -9,7 +9,8 @@ class
 inherit 
 	WM_SHELL_WINDOWS
 		rename
-			destroy as wm_shell_destroy
+			destroy as wm_shell_destroy,
+			realize as wm_shell_realize
 		redefine
 			width,
 			height,
@@ -28,10 +29,12 @@ inherit
 			destroy,
 			default_style,
 			class_name,
+			realize,
 			unrealize,
 			set_default_position
 		select
-			destroy
+			destroy,
+			realize
 		end
 
 	DIALOG_I
@@ -123,7 +126,16 @@ feature -- Status setting
 				end
 			end
 		end
-
+		
+	realize is
+		do
+			wm_shell_realize
+				-- set initial focus
+			if initial_focus /= void then
+				initial_focus.wel_set_focus
+			end
+		end
+		
 	unrealize is
 		do
 			if insensitive_list /= Void then

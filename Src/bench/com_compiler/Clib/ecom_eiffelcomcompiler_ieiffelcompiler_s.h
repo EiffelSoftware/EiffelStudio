@@ -40,123 +40,81 @@ public:
 	~IEiffelCompiler () {};
 
 	/*-----------------------------------------------------------
-	Compile.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP compile( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Finalize.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP finalize( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Precompile.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP precompile( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Compile with piped output.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP compile_to_pipe( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Finalize with piped output.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP finalize_to_pipe( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Precompile with piped output.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP precompile_to_pipe( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Was last compilation successful?
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_successful(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Did last compile warrant a call to finish_freezing?
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP freezing_occurred(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Compiler version.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP compiler_version(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Takes a path and expands it using the env vars.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP expand_path(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Generate a cyrptographic key filename.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP generate_msil_keyfile(  /* [in] */ BSTR filename ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Eiffel Freeze command name
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP freeze_command_name(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Eiffel Freeze command arguments
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP freeze_command_arguments(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP CompilerVersion(  /* [out, retval] */ BSTR * pbstr_version ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Is the compiler a trial version.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP has_signable_generation(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Remove file locks
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP remove_file_locks( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Output pipe's name
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP output_pipe_name(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Set output pipe's name
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_output_pipe_name(  /* [in] */ BSTR return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Is compiler output sent to pipe `output_pipe_name'
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_output_piped(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP HasSignableGeneration(  /* [out, retval] */ VARIANT_BOOL * pvb_signable ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Can product be run? (i.e. is it activated or was run less than 10 times)
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP can_run(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP CanRun(  /* [out, retval] */ VARIANT_BOOL * pvb_can_run ) = 0;
 
 
 	/*-----------------------------------------------------------
-	Set state indicating if compiler warnings should be displayed
+	Compile.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_display_warnings(  /* [in] */ VARIANT_BOOL vb_show ) = 0;
+	virtual STDMETHODIMP Compile(  /* [in] */ long mode ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Compile to an already established named pipe.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP CompileToPipe(  /* [in] */ long mode, /* [in] */ BSTR bstr_pipe_name ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Was last compilation successful?
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP WasCompilationSuccessful(  /* [out, retval] */ VARIANT_BOOL * pvb_success ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Did last compile warrant a call to finish_freezing?
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP FreezingOccurred(  /* [out, retval] */ VARIANT_BOOL * pvb_did_freeze ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Eiffel Freeze command name
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP FreezeCommandName(  /* [out, retval] */ BSTR * pbstr_cmd_name ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Eiffel Freeze command arguments
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP FreezeCommandArguments(  /* [out, retval] */ BSTR * pbstr_cmd_args ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Remove file locks
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP RemoveFileLocks( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Should warning events be raised when compilation raises a warning?
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_DisplayWarnings(  /* [in] */ VARIANT_BOOL arg_1 ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Takes a path and expands it using the env vars.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP ExpandPath(  /* [in] */ BSTR bstr_path, /* [out, retval] */ BSTR * pbstr_full_path ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Generate a cyrptographic key filename.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP GenerateMsilKeyFileName(  /* [in] */ BSTR bstr_file_name ) = 0;
 
 
 

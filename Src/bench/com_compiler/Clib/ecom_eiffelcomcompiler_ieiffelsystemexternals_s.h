@@ -60,57 +60,57 @@ public:
 	~IEiffelSystemExternals () {};
 
 	/*-----------------------------------------------------------
-	Save changes.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Store( void ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Add a include path to the project.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_include_path(  /* [in] */ BSTR include_path ) = 0;
+	virtual STDMETHODIMP AddIncludePath(  /* [in] */ BSTR bstr_path ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Remove a include path from the project.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP remove_include_path(  /* [in] */ BSTR include_path ) = 0;
+	virtual STDMETHODIMP RemoveIncludePath(  /* [in] */ BSTR bstr_path ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Replace an include path in the project.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP replace_include_path(  /* [in] */ BSTR new_include_path, /* [in] */ BSTR old_include_path ) = 0;
+	virtual STDMETHODIMP ReplaceIncludePath(  /* [in] */ BSTR bstr_path, /* [in] */ BSTR bstr_old_path ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Include paths.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP include_paths(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumIncludePaths * * return_value ) = 0;
+	virtual STDMETHODIMP IncludePaths(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumIncludePaths * * pp_ienum_include_paths ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Add a object file to the project.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_object_file(  /* [in] */ BSTR object_file ) = 0;
+	virtual STDMETHODIMP AddObjectFile(  /* [in] */ BSTR bstr_file_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Remove a object file from the project.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP remove_object_file(  /* [in] */ BSTR object_file ) = 0;
+	virtual STDMETHODIMP RemoveObjectFile(  /* [in] */ BSTR bstr_file_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Replace an object file in the project.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP replace_object_file(  /* [in] */ BSTR new_include_path, /* [in] */ BSTR old_object_file ) = 0;
+	virtual STDMETHODIMP ReplaceObjectFile(  /* [in] */ BSTR bstr_file_name, /* [in] */ BSTR bstr_old_file_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Object files.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP object_files(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumObjectFiles * * return_value ) = 0;
+	virtual STDMETHODIMP ObjectFiles(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumObjectFiles * * pp_ienum_object_files ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Save changes.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP Store( void ) = 0;
 
 
 

@@ -35,7 +35,7 @@ ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::~IEiffelProjectPrope
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::system_name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::SystemName(  /* [out, retval] */ BSTR * pbstr_name )
 
 /*-----------------------------------------------------------
 	System name.
@@ -54,18 +54,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::system_
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_system_name(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_SystemName(  /* [in] */ BSTR pbstr_name )
 
 /*-----------------------------------------------------------
 	System name.
@@ -73,25 +73,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_sys
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_name = NULL;
+	if (pbstr_name != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_name = eif_protect (rt_ce.ccom_ce_bstr (pbstr_name));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_system_name", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_name != NULL) ? eif_access (tmp_pbstr_name) : NULL));
+	if (tmp_pbstr_name != NULL)
+		eif_wean (tmp_pbstr_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::root_class_name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::RootClassName(  /* [out, retval] */ BSTR * pbstr_class_name )
 
 /*-----------------------------------------------------------
 	Root class name.
@@ -110,18 +110,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::root_cl
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_class_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_class_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_root_class_name(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_RootClassName(  /* [in] */ BSTR pbstr_class_name )
 
 /*-----------------------------------------------------------
 	Root class name.
@@ -129,25 +129,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_roo
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_class_name = NULL;
+	if (pbstr_class_name != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_class_name = eif_protect (rt_ce.ccom_ce_bstr (pbstr_class_name));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_root_class_name", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_class_name != NULL) ? eif_access (tmp_pbstr_class_name) : NULL));
+	if (tmp_pbstr_class_name != NULL)
+		eif_wean (tmp_pbstr_class_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::creation_routine(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::CreationRoutine(  /* [out, retval] */ BSTR * pbstr_routine_name )
 
 /*-----------------------------------------------------------
 	Creation routine name.
@@ -166,18 +166,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::creatio
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_routine_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_routine_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_creation_routine(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_CreationRoutine(  /* [in] */ BSTR pbstr_routine_name )
 
 /*-----------------------------------------------------------
 	Creation routine name.
@@ -185,25 +185,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_cre
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_routine_name = NULL;
+	if (pbstr_routine_name != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_routine_name = eif_protect (rt_ce.ccom_ce_bstr (pbstr_routine_name));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_creation_routine", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_routine_name != NULL) ? eif_access (tmp_pbstr_routine_name) : NULL));
+	if (tmp_pbstr_routine_name != NULL)
+		eif_wean (tmp_pbstr_routine_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::namespace_generation(  /* [out, retval] */ long * penu_cluster_namespace_generation )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::NamespaceGeneration(  /* [out, retval] */ long * penum_cluster_namespace_generation )
 
 /*-----------------------------------------------------------
 	Namespace generation for cluster
@@ -219,14 +219,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::namespa
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "namespace_generation", EIF_INTEGER);
-	*penu_cluster_namespace_generation = (long)tmp_value;
+	*penum_cluster_namespace_generation = (long)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_namespace_generation(  /* [in] */ long penu_cluster_namespace_generation )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_NamespaceGeneration(  /* [in] */ long penum_cluster_namespace_generation )
 
 /*-----------------------------------------------------------
 	Namespace generation for cluster
@@ -234,19 +234,19 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_nam
 {
 	ECATCH;
 
-	EIF_INTEGER tmp_penu_cluster_namespace_generation = (EIF_INTEGER)penu_cluster_namespace_generation;
+	EIF_INTEGER tmp_penum_cluster_namespace_generation = (EIF_INTEGER)penum_cluster_namespace_generation;
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_namespace_generation", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_penu_cluster_namespace_generation);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_penum_cluster_namespace_generation);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::default_namespace(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::DefaultNamespace(  /* [out, retval] */ BSTR * pbstr_namespace )
 
 /*-----------------------------------------------------------
 	Default namespace.
@@ -265,18 +265,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::default
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_namespace = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_namespace = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_default_namespace(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_DefaultNamespace(  /* [in] */ BSTR pbstr_namespace )
 
 /*-----------------------------------------------------------
 	Default namespace.
@@ -284,25 +284,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_def
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_namespace = NULL;
+	if (pbstr_namespace != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_namespace = eif_protect (rt_ce.ccom_ce_bstr (pbstr_namespace));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_default_namespace", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_namespace != NULL) ? eif_access (tmp_pbstr_namespace) : NULL));
+	if (tmp_pbstr_namespace != NULL)
+		eif_wean (tmp_pbstr_namespace);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::project_type(  /* [out, retval] */ long * penum_project_type )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::ProjectType(  /* [out, retval] */ long * penum_project_type )
 
 /*-----------------------------------------------------------
 	Project type
@@ -325,7 +325,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::project
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_project_type(  /* [in] */ long penum_project_type )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_ProjectType(  /* [in] */ long penum_project_type )
 
 /*-----------------------------------------------------------
 	Project type
@@ -345,7 +345,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_pro
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::dot_net_naming_convention(  /* [out, retval] */ VARIANT_BOOL * pvb_naming_convention )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::DotNetNamingConvention(  /* [out, retval] */ VARIANT_BOOL * pvb_naming_convention )
 
 /*-----------------------------------------------------------
 	.NET Naming convention
@@ -368,7 +368,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::dot_net
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_dot_net_naming_convention(  /* [in] */ VARIANT_BOOL pvb_naming_convention )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_DotNetNamingConvention(  /* [in] */ VARIANT_BOOL pvb_naming_convention )
 
 /*-----------------------------------------------------------
 	.NET Naming convention
@@ -388,7 +388,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_dot
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::generate_debug_info(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::GenerateDebugInfo(  /* [out, retval] */ VARIANT_BOOL * pvb_generate )
 
 /*-----------------------------------------------------------
 	Generate debug info?
@@ -404,14 +404,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::generat
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "generate_debug_info", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_generate = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_generate_debug_info(  /* [in] */ VARIANT_BOOL return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_GenerateDebugInfo(  /* [in] */ VARIANT_BOOL pvb_generate )
 
 /*-----------------------------------------------------------
 	Generate debug info?
@@ -419,19 +419,19 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_gen
 {
 	ECATCH;
 
-	EIF_BOOLEAN tmp_return_value = rt_ce.ccom_ce_boolean (return_value);
+	EIF_BOOLEAN tmp_pvb_generate = rt_ce.ccom_ce_boolean (pvb_generate);
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_generate_debug_info", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN))eiffel_procedure) (eif_access (eiffel_object), (EIF_BOOLEAN)tmp_pvb_generate);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::precompiled_library(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::PrecompiledLibrary(  /* [out, retval] */ BSTR * pbstr_path )
 
 /*-----------------------------------------------------------
 	Precompiled file.
@@ -450,18 +450,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::precomp
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_path = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_path = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_precompiled_library(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_PrecompiledLibrary(  /* [in] */ BSTR pbstr_path )
 
 /*-----------------------------------------------------------
 	Precompiled file.
@@ -469,25 +469,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_pre
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_path = NULL;
+	if (pbstr_path != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_path = eif_protect (rt_ce.ccom_ce_bstr (pbstr_path));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_precompiled_library", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_path != NULL) ? eif_access (tmp_pbstr_path) : NULL));
+	if (tmp_pbstr_path != NULL)
+		eif_wean (tmp_pbstr_path);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::assertions(  /* [out, retval] */ ULONG * p_assertions )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Assertions(  /* [out, retval] */ ULONG * pul_assertions )
 
 /*-----------------------------------------------------------
 	Project assertions
@@ -503,14 +503,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::asserti
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "assertions", EIF_INTEGER);
-	*p_assertions = (ULONG)tmp_value;
+	*pul_assertions = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_assertions(  /* [in] */ ULONG p_assertions )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_Assertions(  /* [in] */ ULONG pul_assertions )
 
 /*-----------------------------------------------------------
 	Project assertions
@@ -518,19 +518,19 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_ass
 {
 	ECATCH;
 
-	EIF_INTEGER tmp_p_assertions = (EIF_INTEGER)p_assertions;
+	EIF_INTEGER tmp_pul_assertions = (EIF_INTEGER)pul_assertions;
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_assertions", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_p_assertions);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_pul_assertions);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemClusters * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemClusters * * pp_ieiffel_system_clusters )
 
 /*-----------------------------------------------------------
 	Project Clusters.
@@ -549,18 +549,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::cluster
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_164 (eif_access (tmp_object));
+		*pp_ieiffel_system_clusters = grt_ec_ISE.ccom_ec_pointed_interface_163 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ieiffel_system_clusters = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::externals(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemExternals * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Externals(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemExternals * * pp_ieiffel_system_externals )
 
 /*-----------------------------------------------------------
 	Externals.
@@ -579,18 +579,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::externa
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_167 (eif_access (tmp_object));
+		*pp_ieiffel_system_externals = grt_ec_ISE.ccom_ec_pointed_interface_166 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ieiffel_system_externals = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemAssemblies * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemAssemblies * * pp_ieiffel_system_assemblies )
 
 /*-----------------------------------------------------------
 	Assemblies.
@@ -609,18 +609,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::assembl
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_170 (eif_access (tmp_object));
+		*pp_ieiffel_system_assemblies = grt_ec_ISE.ccom_ec_pointed_interface_169 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ieiffel_system_assemblies = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::title(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Title(  /* [out, retval] */ BSTR * pbstr_title )
 
 /*-----------------------------------------------------------
 	Project title.
@@ -639,18 +639,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::title( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_title = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_title = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_title(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_Title(  /* [in] */ BSTR pbstr_title )
 
 /*-----------------------------------------------------------
 	Project title.
@@ -658,25 +658,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_tit
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_title = NULL;
+	if (pbstr_title != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_title = eif_protect (rt_ce.ccom_ce_bstr (pbstr_title));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_title", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_title != NULL) ? eif_access (tmp_pbstr_title) : NULL));
+	if (tmp_pbstr_title != NULL)
+		eif_wean (tmp_pbstr_title);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::description(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Description(  /* [out, retval] */ BSTR * pbstr_description )
 
 /*-----------------------------------------------------------
 	Project description.
@@ -695,18 +695,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::descrip
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_description = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_description = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_description(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_Description(  /* [in] */ BSTR pbstr_description )
 
 /*-----------------------------------------------------------
 	Project description.
@@ -714,25 +714,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_des
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_description = NULL;
+	if (pbstr_description != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_description = eif_protect (rt_ce.ccom_ce_bstr (pbstr_description));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_description", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_description != NULL) ? eif_access (tmp_pbstr_description) : NULL));
+	if (tmp_pbstr_description != NULL)
+		eif_wean (tmp_pbstr_description);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::company(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Company(  /* [out, retval] */ BSTR * pbstr_company )
 
 /*-----------------------------------------------------------
 	Project company.
@@ -751,18 +751,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::company
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_company = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_company = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_company(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_Company(  /* [in] */ BSTR pbstr_company )
 
 /*-----------------------------------------------------------
 	Project company.
@@ -770,25 +770,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_com
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_company = NULL;
+	if (pbstr_company != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_company = eif_protect (rt_ce.ccom_ce_bstr (pbstr_company));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_company", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_company != NULL) ? eif_access (tmp_pbstr_company) : NULL));
+	if (tmp_pbstr_company != NULL)
+		eif_wean (tmp_pbstr_company);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::product(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Product(  /* [out, retval] */ BSTR * ppbstr_product )
 
 /*-----------------------------------------------------------
 	Product.
@@ -807,18 +807,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::product
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*ppbstr_product = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*ppbstr_product = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_product(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_Product(  /* [in] */ BSTR ppbstr_product )
 
 /*-----------------------------------------------------------
 	Product.
@@ -826,25 +826,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_pro
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_ppbstr_product = NULL;
+	if (ppbstr_product != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_ppbstr_product = eif_protect (rt_ce.ccom_ce_bstr (ppbstr_product));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_product", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_ppbstr_product != NULL) ? eif_access (tmp_ppbstr_product) : NULL));
+	if (tmp_ppbstr_product != NULL)
+		eif_wean (tmp_ppbstr_product);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::version(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Version(  /* [out, retval] */ BSTR * pbstr_version )
 
 /*-----------------------------------------------------------
 	Project version.
@@ -863,18 +863,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::version
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_version = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_version = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_version(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_Version(  /* [in] */ BSTR pbstr_version )
 
 /*-----------------------------------------------------------
 	Project version.
@@ -882,25 +882,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_ver
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_version = NULL;
+	if (pbstr_version != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_version = eif_protect (rt_ce.ccom_ce_bstr (pbstr_version));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_version", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_version != NULL) ? eif_access (tmp_pbstr_version) : NULL));
+	if (tmp_pbstr_version != NULL)
+		eif_wean (tmp_pbstr_version);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::trademark(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Trademark(  /* [out, retval] */ BSTR * pbstr_trademark )
 
 /*-----------------------------------------------------------
 	Project trademark.
@@ -919,18 +919,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::tradema
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_trademark = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_trademark = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_trademark(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_Trademark(  /* [in] */ BSTR pbstr_trademark )
 
 /*-----------------------------------------------------------
 	Project trademark.
@@ -938,25 +938,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_tra
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_trademark = NULL;
+	if (pbstr_trademark != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_trademark = eif_protect (rt_ce.ccom_ce_bstr (pbstr_trademark));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_trademark", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_trademark != NULL) ? eif_access (tmp_pbstr_trademark) : NULL));
+	if (tmp_pbstr_trademark != NULL)
+		eif_wean (tmp_pbstr_trademark);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::copyright(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Copyright(  /* [out, retval] */ BSTR * pbstr_copyright )
 
 /*-----------------------------------------------------------
 	Project copyright.
@@ -975,18 +975,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::copyrig
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_copyright = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_copyright = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_copyright(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_Copyright(  /* [in] */ BSTR pbstr_copyright )
 
 /*-----------------------------------------------------------
 	Project copyright.
@@ -994,25 +994,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_cop
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_copyright = NULL;
+	if (pbstr_copyright != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_copyright = eif_protect (rt_ce.ccom_ce_bstr (pbstr_copyright));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_copyright", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_copyright != NULL) ? eif_access (tmp_pbstr_copyright) : NULL));
+	if (tmp_pbstr_copyright != NULL)
+		eif_wean (tmp_pbstr_copyright);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::culture(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Culture(  /* [out, retval] */ BSTR * pbstr_cultre )
 
 /*-----------------------------------------------------------
 	Asembly culture.
@@ -1031,18 +1031,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::culture
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_cultre = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_cultre = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_culture(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_Culture(  /* [in] */ BSTR pbstr_cultre )
 
 /*-----------------------------------------------------------
 	Asembly culture.
@@ -1050,25 +1050,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_cul
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_cultre = NULL;
+	if (pbstr_cultre != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_cultre = eif_protect (rt_ce.ccom_ce_bstr (pbstr_cultre));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_culture", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_cultre != NULL) ? eif_access (tmp_pbstr_cultre) : NULL));
+	if (tmp_pbstr_cultre != NULL)
+		eif_wean (tmp_pbstr_cultre);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::key_file_name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::KeyFileName(  /* [out, retval] */ BSTR * pbstr_file_name )
 
 /*-----------------------------------------------------------
 	Asembly signing key file name.
@@ -1087,18 +1087,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::key_fil
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_file_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_file_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_key_file_name(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_KeyFileName(  /* [in] */ BSTR pbstr_file_name )
 
 /*-----------------------------------------------------------
 	Asembly signing key file name.
@@ -1106,25 +1106,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_key
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_file_name = NULL;
+	if (pbstr_file_name != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_file_name = eif_protect (rt_ce.ccom_ce_bstr (pbstr_file_name));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("set_key_file_name", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_file_name != NULL) ? eif_access (tmp_pbstr_file_name) : NULL));
+	if (tmp_pbstr_file_name != NULL)
+		eif_wean (tmp_pbstr_file_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::working_directory(  /* [out, retval] */ BSTR * pbstr_working_directory )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::WorkingDirectory(  /* [out, retval] */ BSTR * pbstr_working_directory )
 
 /*-----------------------------------------------------------
 	Project working directory
@@ -1154,7 +1154,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::working
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_working_directory(  /* [in] */ BSTR pbstr_working_directory )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::set_WorkingDirectory(  /* [in] */ BSTR pbstr_working_directory )
 
 /*-----------------------------------------------------------
 	Project working directory
@@ -1332,7 +1332,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				long result = 0;
 				
-				hr = project_type (&result);
+				hr = ProjectType (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1393,7 +1393,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				long arg_0 = (long)tmp_value [0]->lVal;
 				
-				hr = set_project_type ( arg_0);
+				hr = set_ProjectType ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1425,7 +1425,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = dot_net_naming_convention (&result);
+				hr = DotNetNamingConvention (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1486,7 +1486,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
 				
-				hr = set_dot_net_naming_convention ( arg_0);
+				hr = set_DotNetNamingConvention ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1518,7 +1518,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				VARIANT_BOOL result = 0;
 				
-				hr = generate_debug_info (&result);
+				hr = GenerateDebugInfo (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1579,7 +1579,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				VARIANT_BOOL arg_0 = (VARIANT_BOOL)tmp_value [0]->boolVal;
 				
-				hr = set_generate_debug_info ( arg_0);
+				hr = set_GenerateDebugInfo ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1611,7 +1611,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = precompiled_library (&result);
+				hr = PrecompiledLibrary (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1672,7 +1672,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_precompiled_library ( arg_0);
+				hr = set_PrecompiledLibrary ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1704,7 +1704,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				ULONG result = 0;
 				
-				hr = assertions (&result);
+				hr = Assertions (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1765,7 +1765,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				ULONG arg_0 = (ULONG)tmp_value [0]->ulVal;
 				
-				hr = set_assertions ( arg_0);
+				hr = set_Assertions ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -1797,7 +1797,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				ecom_EiffelComCompiler::IEiffelSystemClusters * result = 0;
 				
-				hr = clusters (&result);
+				hr = Clusters (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1834,7 +1834,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				ecom_EiffelComCompiler::IEiffelSystemExternals * result = 0;
 				
-				hr = externals (&result);
+				hr = Externals (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1871,7 +1871,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				ecom_EiffelComCompiler::IEiffelSystemAssemblies * result = 0;
 				
-				hr = assemblies (&result);
+				hr = Assemblies (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1908,7 +1908,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = title (&result);
+				hr = Title (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1969,7 +1969,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_title ( arg_0);
+				hr = set_Title ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2001,7 +2001,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = description (&result);
+				hr = Description (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2062,7 +2062,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_description ( arg_0);
+				hr = set_Description ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2094,7 +2094,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = company (&result);
+				hr = Company (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2155,7 +2155,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_company ( arg_0);
+				hr = set_Company ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2187,7 +2187,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = product (&result);
+				hr = Product (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2248,7 +2248,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_product ( arg_0);
+				hr = set_Product ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2280,7 +2280,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = version (&result);
+				hr = Version (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2341,7 +2341,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_version ( arg_0);
+				hr = set_Version ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2373,7 +2373,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = trademark (&result);
+				hr = Trademark (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2434,7 +2434,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_trademark ( arg_0);
+				hr = set_Trademark ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2466,7 +2466,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = copyright (&result);
+				hr = Copyright (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2527,7 +2527,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_copyright ( arg_0);
+				hr = set_Copyright ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2559,7 +2559,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = culture (&result);
+				hr = Culture (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2620,7 +2620,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_culture ( arg_0);
+				hr = set_Culture ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2652,7 +2652,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = key_file_name (&result);
+				hr = KeyFileName (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2713,7 +2713,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_key_file_name ( arg_0);
+				hr = set_KeyFileName ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2745,7 +2745,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = working_directory (&result);
+				hr = WorkingDirectory (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2806,7 +2806,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_working_directory ( arg_0);
+				hr = set_WorkingDirectory ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2838,7 +2838,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = system_name (&result);
+				hr = SystemName (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2899,7 +2899,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_system_name ( arg_0);
+				hr = set_SystemName ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -2931,7 +2931,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = root_class_name (&result);
+				hr = RootClassName (&result);
 				
 				if (FAILED (hr))
 				{
@@ -2992,7 +2992,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_root_class_name ( arg_0);
+				hr = set_RootClassName ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -3024,7 +3024,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = creation_routine (&result);
+				hr = CreationRoutine (&result);
 				
 				if (FAILED (hr))
 				{
@@ -3085,7 +3085,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_creation_routine ( arg_0);
+				hr = set_CreationRoutine ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -3117,7 +3117,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				long result = 0;
 				
-				hr = namespace_generation (&result);
+				hr = NamespaceGeneration (&result);
 				
 				if (FAILED (hr))
 				{
@@ -3178,7 +3178,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				long arg_0 = (long)tmp_value [0]->lVal;
 				
-				hr = set_namespace_generation ( arg_0);
+				hr = set_NamespaceGeneration ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -3210,7 +3210,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 
 				BSTR result = 0;
 				
-				hr = default_namespace (&result);
+				hr = DefaultNamespace (&result);
 				
 				if (FAILED (hr))
 				{
@@ -3271,7 +3271,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelProjectProperties_impl_stub::Invoke(
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_default_namespace ( arg_0);
+				hr = set_DefaultNamespace ( arg_0);
 				
 				if (FAILED (hr))
 				{

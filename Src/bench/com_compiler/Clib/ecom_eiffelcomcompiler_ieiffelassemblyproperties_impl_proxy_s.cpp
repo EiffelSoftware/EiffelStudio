@@ -92,7 +92,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_assembly_name(  )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_name(  )
 
 /*-----------------------------------------------------------
 	Assembly name.
@@ -111,7 +111,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelAssemblyProperties->assembly_name( &ret_value);
+	hr = p_IEiffelAssemblyProperties->Name( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -126,7 +126,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_assembly_version(  )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_version(  )
 
 /*-----------------------------------------------------------
 	Assembly version.
@@ -145,7 +145,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelAssemblyProperties->assembly_version( &ret_value);
+	hr = p_IEiffelAssemblyProperties->Version( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -160,7 +160,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_assembly_culture(  )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_culture(  )
 
 /*-----------------------------------------------------------
 	Assembly culture.
@@ -179,7 +179,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelAssemblyProperties->assembly_culture( &ret_value);
+	hr = p_IEiffelAssemblyProperties->Culture( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -194,7 +194,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_assembly_public_key_token(  )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_public_key_token(  )
 
 /*-----------------------------------------------------------
 	Assembly public key token
@@ -213,7 +213,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelAssemblyProperties->assembly_public_key_token( &ret_value);
+	hr = p_IEiffelAssemblyProperties->PublicKeyToken( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -247,7 +247,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_i
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelAssemblyProperties->is_local( &ret_value);
+	hr = p_IEiffelAssemblyProperties->IsLocal( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -261,7 +261,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_i
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_assembly_cluster_name(  )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_cluster_name(  )
 
 /*-----------------------------------------------------------
 	Assembly cluster name.
@@ -280,7 +280,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelAssemblyProperties->assembly_cluster_name( &ret_value);
+	hr = p_IEiffelAssemblyProperties->ClusterName( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -295,7 +295,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_assembly_prefix(  )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_prefix1(  )
 
 /*-----------------------------------------------------------
 	Prefix.
@@ -314,7 +314,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelAssemblyProperties->assembly_prefix( &ret_value);
+	hr = p_IEiffelAssemblyProperties->Prefix( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -329,7 +329,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_set_assembly_prefix(  /* [in] */ EIF_OBJECT return_value )
+void ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_set_prefix(  /* [in] */ EIF_OBJECT pbstr_prefix )
 
 /*-----------------------------------------------------------
 	Prefix.
@@ -346,10 +346,10 @@ void ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_set_asse
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_return_value = 0;
-	tmp_return_value = (BSTR)rt_ec.ccom_ec_bstr (eif_access (return_value));
+	BSTR tmp_pbstr_prefix = 0;
+	tmp_pbstr_prefix = (BSTR)rt_ec.ccom_ec_bstr (eif_access (pbstr_prefix));
 	
-	hr = p_IEiffelAssemblyProperties->set_assembly_prefix(tmp_return_value);
+	hr = p_IEiffelAssemblyProperties->set_Prefix(tmp_pbstr_prefix);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -357,7 +357,7 @@ void ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_set_asse
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_return_value);
+	rt_ce.free_memory_bstr (tmp_pbstr_prefix);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -381,7 +381,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_i
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelAssemblyProperties->is_prefix_read_only( &ret_value);
+	hr = p_IEiffelAssemblyProperties->IsPrefixReadOnly( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

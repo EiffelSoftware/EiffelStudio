@@ -48,123 +48,81 @@ public:
 	virtual ~CEiffelCompiler ();
 
 	/*-----------------------------------------------------------
-	Compile.
-	-----------------------------------------------------------*/
-	STDMETHODIMP compile( void );
-
-
-	/*-----------------------------------------------------------
-	Finalize.
-	-----------------------------------------------------------*/
-	STDMETHODIMP finalize( void );
-
-
-	/*-----------------------------------------------------------
-	Precompile.
-	-----------------------------------------------------------*/
-	STDMETHODIMP precompile( void );
-
-
-	/*-----------------------------------------------------------
-	Compile with piped output.
-	-----------------------------------------------------------*/
-	STDMETHODIMP compile_to_pipe( void );
-
-
-	/*-----------------------------------------------------------
-	Finalize with piped output.
-	-----------------------------------------------------------*/
-	STDMETHODIMP finalize_to_pipe( void );
-
-
-	/*-----------------------------------------------------------
-	Precompile with piped output.
-	-----------------------------------------------------------*/
-	STDMETHODIMP precompile_to_pipe( void );
-
-
-	/*-----------------------------------------------------------
-	Was last compilation successful?
-	-----------------------------------------------------------*/
-	STDMETHODIMP is_successful(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Did last compile warrant a call to finish_freezing?
-	-----------------------------------------------------------*/
-	STDMETHODIMP freezing_occurred(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
 	Compiler version.
 	-----------------------------------------------------------*/
-	STDMETHODIMP compiler_version(  /* [out, retval] */ BSTR * return_value );
-
-
-	/*-----------------------------------------------------------
-	Takes a path and expands it using the env vars.
-	-----------------------------------------------------------*/
-	STDMETHODIMP expand_path(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value );
-
-
-	/*-----------------------------------------------------------
-	Generate a cyrptographic key filename.
-	-----------------------------------------------------------*/
-	STDMETHODIMP generate_msil_keyfile(  /* [in] */ BSTR filename );
-
-
-	/*-----------------------------------------------------------
-	Eiffel Freeze command name
-	-----------------------------------------------------------*/
-	STDMETHODIMP freeze_command_name(  /* [out, retval] */ BSTR * return_value );
-
-
-	/*-----------------------------------------------------------
-	Eiffel Freeze command arguments
-	-----------------------------------------------------------*/
-	STDMETHODIMP freeze_command_arguments(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP CompilerVersion(  /* [out, retval] */ BSTR * pbstr_version );
 
 
 	/*-----------------------------------------------------------
 	Is the compiler a trial version.
 	-----------------------------------------------------------*/
-	STDMETHODIMP has_signable_generation(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Remove file locks
-	-----------------------------------------------------------*/
-	STDMETHODIMP remove_file_locks( void );
-
-
-	/*-----------------------------------------------------------
-	Output pipe's name
-	-----------------------------------------------------------*/
-	STDMETHODIMP output_pipe_name(  /* [out, retval] */ BSTR * return_value );
-
-
-	/*-----------------------------------------------------------
-	Set output pipe's name
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_output_pipe_name(  /* [in] */ BSTR return_value );
-
-
-	/*-----------------------------------------------------------
-	Is compiler output sent to pipe `output_pipe_name'
-	-----------------------------------------------------------*/
-	STDMETHODIMP is_output_piped(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP HasSignableGeneration(  /* [out, retval] */ VARIANT_BOOL * pvb_signable );
 
 
 	/*-----------------------------------------------------------
 	Can product be run? (i.e. is it activated or was run less than 10 times)
 	-----------------------------------------------------------*/
-	STDMETHODIMP can_run(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP CanRun(  /* [out, retval] */ VARIANT_BOOL * pvb_can_run );
 
 
 	/*-----------------------------------------------------------
-	Set state indicating if compiler warnings should be displayed
+	Compile.
 	-----------------------------------------------------------*/
-	STDMETHODIMP set_display_warnings(  /* [in] */ VARIANT_BOOL vb_show );
+	STDMETHODIMP Compile(  /* [in] */ long mode );
+
+
+	/*-----------------------------------------------------------
+	Compile to an already established named pipe.
+	-----------------------------------------------------------*/
+	STDMETHODIMP CompileToPipe(  /* [in] */ long mode, /* [in] */ BSTR bstr_pipe_name );
+
+
+	/*-----------------------------------------------------------
+	Was last compilation successful?
+	-----------------------------------------------------------*/
+	STDMETHODIMP WasCompilationSuccessful(  /* [out, retval] */ VARIANT_BOOL * pvb_success );
+
+
+	/*-----------------------------------------------------------
+	Did last compile warrant a call to finish_freezing?
+	-----------------------------------------------------------*/
+	STDMETHODIMP FreezingOccurred(  /* [out, retval] */ VARIANT_BOOL * pvb_did_freeze );
+
+
+	/*-----------------------------------------------------------
+	Eiffel Freeze command name
+	-----------------------------------------------------------*/
+	STDMETHODIMP FreezeCommandName(  /* [out, retval] */ BSTR * pbstr_cmd_name );
+
+
+	/*-----------------------------------------------------------
+	Eiffel Freeze command arguments
+	-----------------------------------------------------------*/
+	STDMETHODIMP FreezeCommandArguments(  /* [out, retval] */ BSTR * pbstr_cmd_args );
+
+
+	/*-----------------------------------------------------------
+	Remove file locks
+	-----------------------------------------------------------*/
+	STDMETHODIMP RemoveFileLocks( void );
+
+
+	/*-----------------------------------------------------------
+	Should warning events be raised when compilation raises a warning?
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_DisplayWarnings(  /* [in] */ VARIANT_BOOL arg_1 );
+
+
+	/*-----------------------------------------------------------
+	Takes a path and expands it using the env vars.
+	-----------------------------------------------------------*/
+	STDMETHODIMP ExpandPath(  /* [in] */ BSTR bstr_path, /* [out, retval] */ BSTR * pbstr_full_path );
+
+
+	/*-----------------------------------------------------------
+	Generate a cyrptographic key filename.
+	-----------------------------------------------------------*/
+	STDMETHODIMP GenerateMsilKeyFileName(  /* [in] */ BSTR bstr_file_name );
 
 
 	/*-----------------------------------------------------------

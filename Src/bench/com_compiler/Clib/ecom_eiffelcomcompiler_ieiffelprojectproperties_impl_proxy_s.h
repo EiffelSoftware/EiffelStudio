@@ -75,7 +75,7 @@ public:
 	/*-----------------------------------------------------------
 	System name.
 	-----------------------------------------------------------*/
-	void ccom_set_system_name(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_system_name(  /* [in] */ EIF_OBJECT pbstr_name );
 
 
 	/*-----------------------------------------------------------
@@ -87,7 +87,7 @@ public:
 	/*-----------------------------------------------------------
 	Root class name.
 	-----------------------------------------------------------*/
-	void ccom_set_root_class_name(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_root_class_name(  /* [in] */ EIF_OBJECT pbstr_class_name );
 
 
 	/*-----------------------------------------------------------
@@ -99,7 +99,7 @@ public:
 	/*-----------------------------------------------------------
 	Creation routine name.
 	-----------------------------------------------------------*/
-	void ccom_set_creation_routine(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_creation_routine(  /* [in] */ EIF_OBJECT pbstr_routine_name );
 
 
 	/*-----------------------------------------------------------
@@ -111,7 +111,7 @@ public:
 	/*-----------------------------------------------------------
 	Namespace generation for cluster
 	-----------------------------------------------------------*/
-	void ccom_set_namespace_generation(  /* [in] */ EIF_INTEGER penu_cluster_namespace_generation );
+	void ccom_set_namespace_generation(  /* [in] */ EIF_INTEGER penum_cluster_namespace_generation );
 
 
 	/*-----------------------------------------------------------
@@ -123,7 +123,7 @@ public:
 	/*-----------------------------------------------------------
 	Default namespace.
 	-----------------------------------------------------------*/
-	void ccom_set_default_namespace(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_default_namespace(  /* [in] */ EIF_OBJECT pbstr_namespace );
 
 
 	/*-----------------------------------------------------------
@@ -159,7 +159,7 @@ public:
 	/*-----------------------------------------------------------
 	Generate debug info?
 	-----------------------------------------------------------*/
-	void ccom_set_generate_debug_info(  /* [in] */ EIF_BOOLEAN return_value );
+	void ccom_set_generate_debug_info(  /* [in] */ EIF_BOOLEAN pvb_generate );
 
 
 	/*-----------------------------------------------------------
@@ -171,7 +171,7 @@ public:
 	/*-----------------------------------------------------------
 	Precompiled file.
 	-----------------------------------------------------------*/
-	void ccom_set_precompiled_library(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_precompiled_library(  /* [in] */ EIF_OBJECT pbstr_path );
 
 
 	/*-----------------------------------------------------------
@@ -183,7 +183,7 @@ public:
 	/*-----------------------------------------------------------
 	Project assertions
 	-----------------------------------------------------------*/
-	void ccom_set_assertions(  /* [in] */ EIF_INTEGER p_assertions );
+	void ccom_set_assertions(  /* [in] */ EIF_INTEGER pul_assertions );
 
 
 	/*-----------------------------------------------------------
@@ -213,7 +213,7 @@ public:
 	/*-----------------------------------------------------------
 	Project title.
 	-----------------------------------------------------------*/
-	void ccom_set_title(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_title(  /* [in] */ EIF_OBJECT pbstr_title );
 
 
 	/*-----------------------------------------------------------
@@ -225,7 +225,7 @@ public:
 	/*-----------------------------------------------------------
 	Project description.
 	-----------------------------------------------------------*/
-	void ccom_set_description(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_description(  /* [in] */ EIF_OBJECT pbstr_description );
 
 
 	/*-----------------------------------------------------------
@@ -237,7 +237,7 @@ public:
 	/*-----------------------------------------------------------
 	Project company.
 	-----------------------------------------------------------*/
-	void ccom_set_company(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_company(  /* [in] */ EIF_OBJECT pbstr_company );
 
 
 	/*-----------------------------------------------------------
@@ -249,7 +249,7 @@ public:
 	/*-----------------------------------------------------------
 	Product.
 	-----------------------------------------------------------*/
-	void ccom_set_product(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_product(  /* [in] */ EIF_OBJECT ppbstr_product );
 
 
 	/*-----------------------------------------------------------
@@ -261,7 +261,7 @@ public:
 	/*-----------------------------------------------------------
 	Project version.
 	-----------------------------------------------------------*/
-	void ccom_set_version(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_version(  /* [in] */ EIF_OBJECT pbstr_version );
 
 
 	/*-----------------------------------------------------------
@@ -273,7 +273,7 @@ public:
 	/*-----------------------------------------------------------
 	Project trademark.
 	-----------------------------------------------------------*/
-	void ccom_set_trademark(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_trademark(  /* [in] */ EIF_OBJECT pbstr_trademark );
 
 
 	/*-----------------------------------------------------------
@@ -285,7 +285,7 @@ public:
 	/*-----------------------------------------------------------
 	Project copyright.
 	-----------------------------------------------------------*/
-	void ccom_set_copyright(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_copyright(  /* [in] */ EIF_OBJECT pbstr_copyright );
 
 
 	/*-----------------------------------------------------------
@@ -297,7 +297,7 @@ public:
 	/*-----------------------------------------------------------
 	Asembly culture.
 	-----------------------------------------------------------*/
-	void ccom_set_culture(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_culture(  /* [in] */ EIF_OBJECT pbstr_cultre );
 
 
 	/*-----------------------------------------------------------
@@ -309,7 +309,7 @@ public:
 	/*-----------------------------------------------------------
 	Asembly signing key file name.
 	-----------------------------------------------------------*/
-	void ccom_set_key_file_name(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_key_file_name(  /* [in] */ EIF_OBJECT pbstr_file_name );
 
 
 	/*-----------------------------------------------------------

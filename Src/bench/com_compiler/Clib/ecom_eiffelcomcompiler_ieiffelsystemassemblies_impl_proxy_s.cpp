@@ -92,7 +92,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy::ccom_l
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy::ccom_wipe_out()
+void ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy::ccom_flush_assemblies()
 
 /*-----------------------------------------------------------
 	Wipe out current list of assemblies
@@ -109,7 +109,7 @@ void ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy::ccom_wipe_out()
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	hr = p_IEiffelSystemAssemblies->wipe_out ();
+	hr = p_IEiffelSystemAssemblies->FlushAssemblies ();
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -119,7 +119,7 @@ void ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy::ccom_wipe_out()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy::ccom_add_assembly(  /* [in] */ EIF_OBJECT a_prefix,  /* [in] */ EIF_OBJECT a_cluster_name,  /* [in] */ EIF_OBJECT a_path,  /* [in] */ EIF_BOOLEAN a_copy )
+void ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy::ccom_add_assembly(  /* [in] */ EIF_OBJECT bstr_prefix,  /* [in] */ EIF_OBJECT bstr_cluster_name,  /* [in] */ EIF_OBJECT bstr_file_name,  /* [in] */ EIF_BOOLEAN vb_copy_locally )
 
 /*-----------------------------------------------------------
 	Add an assembly to the project.
@@ -136,16 +136,16 @@ void ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy::ccom_add_assemb
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_a_prefix = 0;
-	tmp_a_prefix = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_prefix));
-	BSTR tmp_a_cluster_name = 0;
-	tmp_a_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_cluster_name));
-	BSTR tmp_a_path = 0;
-	tmp_a_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_path));
-	VARIANT_BOOL tmp_a_copy = 0;
-	tmp_a_copy = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (a_copy);
+	BSTR tmp_bstr_prefix = 0;
+	tmp_bstr_prefix = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_prefix));
+	BSTR tmp_bstr_cluster_name = 0;
+	tmp_bstr_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_cluster_name));
+	BSTR tmp_bstr_file_name = 0;
+	tmp_bstr_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_file_name));
+	VARIANT_BOOL tmp_vb_copy_locally = 0;
+	tmp_vb_copy_locally = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (vb_copy_locally);
 	
-	hr = p_IEiffelSystemAssemblies->add_assembly(tmp_a_prefix,tmp_a_cluster_name,tmp_a_path,tmp_a_copy);
+	hr = p_IEiffelSystemAssemblies->AddAssembly(tmp_bstr_prefix,tmp_bstr_cluster_name,tmp_bstr_file_name,tmp_vb_copy_locally);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -153,9 +153,9 @@ void ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy::ccom_add_assemb
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_a_prefix);
-rt_ce.free_memory_bstr (tmp_a_cluster_name);
-rt_ce.free_memory_bstr (tmp_a_path);
+	rt_ce.free_memory_bstr (tmp_bstr_prefix);
+rt_ce.free_memory_bstr (tmp_bstr_cluster_name);
+rt_ce.free_memory_bstr (tmp_bstr_file_name);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -179,7 +179,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy::ccom_l
 	};
 	ecom_EiffelComCompiler::IEiffelException * ret_value = 0;
 	
-	hr = p_IEiffelSystemAssemblies->last_exception( &ret_value);
+	hr = p_IEiffelSystemAssemblies->LastException( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

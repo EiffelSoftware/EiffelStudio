@@ -112,85 +112,85 @@ public:
 	/*-----------------------------------------------------------
 	List of classes in system.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP system_classes(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_classes ) = 0;
+	virtual STDMETHODIMP SystemClasses(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of classes in system.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP class_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP ClassCount(  /* [out, retval] */ ULONG * pul_class_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of system's clusters.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP system_clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * some_clusters ) = 0;
+	virtual STDMETHODIMP SystemClusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * pp_ienum_cluster ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of system's external clusters.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP external_clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * some_clusters ) = 0;
+	virtual STDMETHODIMP ExternalClusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * pp_ienum_cluster ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Returns all of the assemblies in an enumerator
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumAssembly * * return_value ) = 0;
+	virtual STDMETHODIMP Assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumAssembly * * pp_ienum_assembly ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP ClusterCount(  /* [out, retval] */ ULONG * pul_cluster_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP root_cluster(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * return_value ) = 0;
+	virtual STDMETHODIMP RootCluster(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * pp_ieiffel_cluster_descriptor ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Cluster descriptor.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_descriptor(  /* [in] */ BSTR cluster_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * return_value ) = 0;
+	virtual STDMETHODIMP ClusterDescriptor(  /* [in] */ BSTR bstr_class_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * pp_ieiffel_cluster_descriptor ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Class descriptor.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP class_descriptor(  /* [in] */ BSTR class_name1, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClassDescriptor * * return_value ) = 0;
+	virtual STDMETHODIMP ClassDescriptor(  /* [in] */ BSTR bstr_cluster_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClassDescriptor * * pp_ieiffel_class_descriptor ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Feature descriptor.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP feature_descriptor(  /* [in] */ BSTR class_name1, /* [in] */ BSTR feature_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * return_value ) = 0;
+	virtual STDMETHODIMP FeatureDescriptor(  /* [in] */ BSTR bstr_class_name, /* [in] */ BSTR bstr_feature_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * pp_ieiffel_feature_descriptor ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_classes ) = 0;
+	virtual STDMETHODIMP SearchClasses(  /* [in] */ BSTR bstr_search_str, /* [in] */ VARIANT_BOOL vb_is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Search feature with names matching `a_string'.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP search_features(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features ) = 0;
+	virtual STDMETHODIMP SearchFeatures(  /* [in] */ BSTR bstr_search_str, /* [in] */ VARIANT_BOOL vb_is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Retrieve description from dotnet type
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP description_from_dotnet_type(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP DescriptionFromDotnetType(  /* [in] */ BSTR bstr_assembly_name, /* [in] */ BSTR bstr_full_dotnet_name, /* [out, retval] */ BSTR * pbstr_description ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Retrieve description from dotnet feature
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP description_from_dotnet_feature(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [in] */ BSTR a_feature_signature, /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP DescriptionFromDotnetFeature(  /* [in] */ BSTR bstr_assembly_name, /* [in] */ BSTR bstr_full_dotnet_name, /* [in] */ BSTR bstr_feature_signature, /* [out, retval] */ BSTR * pbstr_description ) = 0;
 
 
 

@@ -43,13 +43,13 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP Next(  /* [out] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * rgelt, /* [out] */ ULONG * pcelt_fetched );
+	STDMETHODIMP Next(  /* [out] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * pp_ieiffel_cluster_descriptor, /* [out] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP Skip(  /* [in] */ ULONG celt );
+	STDMETHODIMP Skip(  /* [in] */ ULONG ul_count );
 
 
 	/*-----------------------------------------------------------
@@ -61,19 +61,19 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumCluster * * ppenum );
+	STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumCluster * * pp_ienum_cluster );
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP ith_item(  /* [in] */ ULONG an_index, /* [out] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * rgelt );
+	STDMETHODIMP IthItem(  /* [in] */ ULONG ul_index, /* [out] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * pp_ieiffel_cluster_descriptor );
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP Count(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------

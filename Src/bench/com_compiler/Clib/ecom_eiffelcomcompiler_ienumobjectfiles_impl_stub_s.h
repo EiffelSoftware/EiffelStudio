@@ -43,13 +43,13 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP Next(  /* [out] */ BSTR * rgelt, /* [out] */ ULONG * pcelt_fetched );
+	STDMETHODIMP Next(  /* [out] */ BSTR * pbstr_object_file, /* [out] */ ULONG * pul_fetched );
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP Skip(  /* [in] */ ULONG celt );
+	STDMETHODIMP Skip(  /* [in] */ ULONG ul_count );
 
 
 	/*-----------------------------------------------------------
@@ -61,19 +61,19 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumObjectFiles * * ppenum );
+	STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumObjectFiles * * pp_ienum_object_files );
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP ith_item(  /* [in] */ ULONG an_index, /* [out] */ BSTR * rgelt );
+	STDMETHODIMP IthItem(  /* [in] */ ULONG ul_index, /* [out] */ BSTR * pbstr_object_file );
 
 
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP Count(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------

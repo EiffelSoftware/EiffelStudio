@@ -35,7 +35,7 @@ ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::~IEiffelSystemBrowser_im
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::system_classes(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_classes )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::SystemClasses(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class )
 
 /*-----------------------------------------------------------
 	List of classes in system.
@@ -54,18 +54,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::system_clas
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_classes = grt_ec_ISE.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
+		*pp_ienum_eiffel_class = grt_ec_ISE.ccom_ec_pointed_interface_38 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_classes = NULL;
+		*pp_ienum_eiffel_class = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::class_count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::ClassCount(  /* [out, retval] */ ULONG * pul_class_count )
 
 /*-----------------------------------------------------------
 	Number of classes in system.
@@ -81,14 +81,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::class_count
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "class_count", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+	*pul_class_count = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::system_clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * some_clusters )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::SystemClusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * pp_ienum_cluster )
 
 /*-----------------------------------------------------------
 	List of system's clusters.
@@ -107,18 +107,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::system_clus
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clusters = grt_ec_ISE.ccom_ec_pointed_interface_43 (eif_access (tmp_object));
+		*pp_ienum_cluster = grt_ec_ISE.ccom_ec_pointed_interface_42 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_clusters = NULL;
+		*pp_ienum_cluster = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::external_clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * some_clusters )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::ExternalClusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * pp_ienum_cluster )
 
 /*-----------------------------------------------------------
 	List of system's external clusters.
@@ -137,18 +137,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::external_cl
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clusters = grt_ec_ISE.ccom_ec_pointed_interface_43 (eif_access (tmp_object));
+		*pp_ienum_cluster = grt_ec_ISE.ccom_ec_pointed_interface_42 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_clusters = NULL;
+		*pp_ienum_cluster = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumAssembly * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::Assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumAssembly * * pp_ienum_assembly )
 
 /*-----------------------------------------------------------
 	Returns all of the assemblies in an enumerator
@@ -167,18 +167,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::assemblies(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_46 (eif_access (tmp_object));
+		*pp_ienum_assembly = grt_ec_ISE.ccom_ec_pointed_interface_45 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ienum_assembly = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::cluster_count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::ClusterCount(  /* [out, retval] */ ULONG * pul_cluster_count )
 
 /*-----------------------------------------------------------
 	Number of top-level clusters in system.
@@ -194,14 +194,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::cluster_cou
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "cluster_count", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+	*pul_cluster_count = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::root_cluster(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::RootCluster(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * pp_ieiffel_cluster_descriptor )
 
 /*-----------------------------------------------------------
 	Number of top-level clusters in system.
@@ -220,18 +220,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::root_cluste
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_50 (eif_access (tmp_object));
+		*pp_ieiffel_cluster_descriptor = grt_ec_ISE.ccom_ec_pointed_interface_49 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ieiffel_cluster_descriptor = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::cluster_descriptor(  /* [in] */ BSTR cluster_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::ClusterDescriptor(  /* [in] */ BSTR bstr_class_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * pp_ieiffel_cluster_descriptor )
 
 /*-----------------------------------------------------------
 	Cluster descriptor.
@@ -239,36 +239,36 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::cluster_des
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_cluster_name = NULL;
-	if (cluster_name != NULL)
+	EIF_OBJECT tmp_bstr_class_name = NULL;
+	if (bstr_class_name != NULL)
 	{
-		tmp_cluster_name = eif_protect (rt_ce.ccom_ce_bstr (cluster_name));
+		tmp_bstr_class_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_class_name));
 	}
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
 	eiffel_function = eif_reference_function ("cluster_descriptor", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_cluster_name != NULL) ? eif_access (tmp_cluster_name) : NULL));
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_bstr_class_name != NULL) ? eif_access (tmp_bstr_class_name) : NULL));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "cluster_descriptor", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_50 (eif_access (tmp_object));
+		*pp_ieiffel_cluster_descriptor = grt_ec_ISE.ccom_ec_pointed_interface_49 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
-	if (tmp_cluster_name != NULL)
-		eif_wean (tmp_cluster_name);
+		*pp_ieiffel_cluster_descriptor = NULL;
+	if (tmp_bstr_class_name != NULL)
+		eif_wean (tmp_bstr_class_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::class_descriptor(  /* [in] */ BSTR class_name1, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClassDescriptor * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::ClassDescriptor(  /* [in] */ BSTR bstr_cluster_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClassDescriptor * * pp_ieiffel_class_descriptor )
 
 /*-----------------------------------------------------------
 	Class descriptor.
@@ -276,36 +276,36 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::class_descr
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_class_name1 = NULL;
-	if (class_name1 != NULL)
+	EIF_OBJECT tmp_bstr_cluster_name = NULL;
+	if (bstr_cluster_name != NULL)
 	{
-		tmp_class_name1 = eif_protect (rt_ce.ccom_ce_bstr (class_name1));
+		tmp_bstr_cluster_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_cluster_name));
 	}
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
 	eiffel_function = eif_reference_function ("class_descriptor", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_class_name1 != NULL) ? eif_access (tmp_class_name1) : NULL));
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_bstr_cluster_name != NULL) ? eif_access (tmp_bstr_cluster_name) : NULL));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "class_descriptor", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_53 (eif_access (tmp_object));
+		*pp_ieiffel_class_descriptor = grt_ec_ISE.ccom_ec_pointed_interface_52 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
-	if (tmp_class_name1 != NULL)
-		eif_wean (tmp_class_name1);
+		*pp_ieiffel_class_descriptor = NULL;
+	if (tmp_bstr_cluster_name != NULL)
+		eif_wean (tmp_bstr_cluster_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::feature_descriptor(  /* [in] */ BSTR class_name1, /* [in] */ BSTR feature_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::FeatureDescriptor(  /* [in] */ BSTR bstr_class_name, /* [in] */ BSTR bstr_feature_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * pp_ieiffel_feature_descriptor )
 
 /*-----------------------------------------------------------
 	Feature descriptor.
@@ -313,43 +313,43 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::feature_des
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_class_name1 = NULL;
-	if (class_name1 != NULL)
+	EIF_OBJECT tmp_bstr_class_name = NULL;
+	if (bstr_class_name != NULL)
 	{
-		tmp_class_name1 = eif_protect (rt_ce.ccom_ce_bstr (class_name1));
+		tmp_bstr_class_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_class_name));
 	}
-	EIF_OBJECT tmp_feature_name = NULL;
-	if (feature_name != NULL)
+	EIF_OBJECT tmp_bstr_feature_name = NULL;
+	if (bstr_feature_name != NULL)
 	{
-		tmp_feature_name = eif_protect (rt_ce.ccom_ce_bstr (feature_name));
+		tmp_bstr_feature_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_feature_name));
 	}
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
 	eiffel_function = eif_reference_function ("feature_descriptor", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_class_name1 != NULL) ? eif_access (tmp_class_name1) : NULL), ((tmp_feature_name != NULL) ? eif_access (tmp_feature_name) : NULL));
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_bstr_class_name != NULL) ? eif_access (tmp_bstr_class_name) : NULL), ((tmp_bstr_feature_name != NULL) ? eif_access (tmp_bstr_feature_name) : NULL));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "feature_descriptor", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_56 (eif_access (tmp_object));
+		*pp_ieiffel_feature_descriptor = grt_ec_ISE.ccom_ec_pointed_interface_55 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
-	if (tmp_class_name1 != NULL)
-		eif_wean (tmp_class_name1);
-	if (tmp_feature_name != NULL)
-		eif_wean (tmp_feature_name);
+		*pp_ieiffel_feature_descriptor = NULL;
+	if (tmp_bstr_class_name != NULL)
+		eif_wean (tmp_bstr_class_name);
+	if (tmp_bstr_feature_name != NULL)
+		eif_wean (tmp_bstr_feature_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_classes )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::SearchClasses(  /* [in] */ BSTR bstr_search_str, /* [in] */ VARIANT_BOOL vb_is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class )
 
 /*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
@@ -357,37 +357,37 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::search_clas
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_a_string = NULL;
-	if (a_string != NULL)
+	EIF_OBJECT tmp_bstr_search_str = NULL;
+	if (bstr_search_str != NULL)
 	{
-		tmp_a_string = eif_protect (rt_ce.ccom_ce_bstr (a_string));
+		tmp_bstr_search_str = eif_protect (rt_ce.ccom_ce_bstr (bstr_search_str));
 	}
-	EIF_BOOLEAN tmp_is_substring = rt_ce.ccom_ce_boolean (is_substring);
+	EIF_BOOLEAN tmp_vb_is_substring = rt_ce.ccom_ce_boolean (vb_is_substring);
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
 	eiffel_function = eif_reference_function ("search_classes", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_BOOLEAN))eiffel_function) (eif_access (eiffel_object), ((tmp_a_string != NULL) ? eif_access (tmp_a_string) : NULL), (EIF_BOOLEAN)tmp_is_substring);
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_BOOLEAN))eiffel_function) (eif_access (eiffel_object), ((tmp_bstr_search_str != NULL) ? eif_access (tmp_bstr_search_str) : NULL), (EIF_BOOLEAN)tmp_vb_is_substring);
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "search_classes", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_classes = grt_ec_ISE.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
+		*pp_ienum_eiffel_class = grt_ec_ISE.ccom_ec_pointed_interface_38 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_classes = NULL;
-	if (tmp_a_string != NULL)
-		eif_wean (tmp_a_string);
+		*pp_ienum_eiffel_class = NULL;
+	if (tmp_bstr_search_str != NULL)
+		eif_wean (tmp_bstr_search_str);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::search_features(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::SearchFeatures(  /* [in] */ BSTR bstr_search_str, /* [in] */ VARIANT_BOOL vb_is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature )
 
 /*-----------------------------------------------------------
 	Search feature with names matching `a_string'.
@@ -395,37 +395,37 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::search_feat
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_a_string = NULL;
-	if (a_string != NULL)
+	EIF_OBJECT tmp_bstr_search_str = NULL;
+	if (bstr_search_str != NULL)
 	{
-		tmp_a_string = eif_protect (rt_ce.ccom_ce_bstr (a_string));
+		tmp_bstr_search_str = eif_protect (rt_ce.ccom_ce_bstr (bstr_search_str));
 	}
-	EIF_BOOLEAN tmp_is_substring = rt_ce.ccom_ce_boolean (is_substring);
+	EIF_BOOLEAN tmp_vb_is_substring = rt_ce.ccom_ce_boolean (vb_is_substring);
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
 	eiffel_function = eif_reference_function ("search_features", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_BOOLEAN))eiffel_function) (eif_access (eiffel_object), ((tmp_a_string != NULL) ? eif_access (tmp_a_string) : NULL), (EIF_BOOLEAN)tmp_is_substring);
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_BOOLEAN))eiffel_function) (eif_access (eiffel_object), ((tmp_bstr_search_str != NULL) ? eif_access (tmp_bstr_search_str) : NULL), (EIF_BOOLEAN)tmp_vb_is_substring);
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "search_features", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
+		*pp_ienum_feature = grt_ec_ISE.ccom_ec_pointed_interface_58 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_features = NULL;
-	if (tmp_a_string != NULL)
-		eif_wean (tmp_a_string);
+		*pp_ienum_feature = NULL;
+	if (tmp_bstr_search_str != NULL)
+		eif_wean (tmp_bstr_search_str);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::description_from_dotnet_type(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::DescriptionFromDotnetType(  /* [in] */ BSTR bstr_assembly_name, /* [in] */ BSTR bstr_full_dotnet_name, /* [out, retval] */ BSTR * pbstr_description )
 
 /*-----------------------------------------------------------
 	Retrieve description from dotnet type
@@ -433,43 +433,43 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::description
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_a_assembly_name = NULL;
-	if (a_assembly_name != NULL)
+	EIF_OBJECT tmp_bstr_assembly_name = NULL;
+	if (bstr_assembly_name != NULL)
 	{
-		tmp_a_assembly_name = eif_protect (rt_ce.ccom_ce_bstr (a_assembly_name));
+		tmp_bstr_assembly_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_assembly_name));
 	}
-	EIF_OBJECT tmp_a_full_dotnet_type = NULL;
-	if (a_full_dotnet_type != NULL)
+	EIF_OBJECT tmp_bstr_full_dotnet_name = NULL;
+	if (bstr_full_dotnet_name != NULL)
 	{
-		tmp_a_full_dotnet_type = eif_protect (rt_ce.ccom_ce_bstr (a_full_dotnet_type));
+		tmp_bstr_full_dotnet_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_full_dotnet_name));
 	}
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
 	eiffel_function = eif_reference_function ("description_from_dotnet_type", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_assembly_name != NULL) ? eif_access (tmp_a_assembly_name) : NULL), ((tmp_a_full_dotnet_type != NULL) ? eif_access (tmp_a_full_dotnet_type) : NULL));
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_bstr_assembly_name != NULL) ? eif_access (tmp_bstr_assembly_name) : NULL), ((tmp_bstr_full_dotnet_name != NULL) ? eif_access (tmp_bstr_full_dotnet_name) : NULL));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "description_from_dotnet_type", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_description = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
-	if (tmp_a_assembly_name != NULL)
-		eif_wean (tmp_a_assembly_name);
-	if (tmp_a_full_dotnet_type != NULL)
-		eif_wean (tmp_a_full_dotnet_type);
+		*pbstr_description = NULL;
+	if (tmp_bstr_assembly_name != NULL)
+		eif_wean (tmp_bstr_assembly_name);
+	if (tmp_bstr_full_dotnet_name != NULL)
+		eif_wean (tmp_bstr_full_dotnet_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::description_from_dotnet_feature(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [in] */ BSTR a_feature_signature, /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::DescriptionFromDotnetFeature(  /* [in] */ BSTR bstr_assembly_name, /* [in] */ BSTR bstr_full_dotnet_name, /* [in] */ BSTR bstr_feature_signature, /* [out, retval] */ BSTR * pbstr_description )
 
 /*-----------------------------------------------------------
 	Retrieve description from dotnet feature
@@ -477,43 +477,43 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_stub::description
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_a_assembly_name = NULL;
-	if (a_assembly_name != NULL)
+	EIF_OBJECT tmp_bstr_assembly_name = NULL;
+	if (bstr_assembly_name != NULL)
 	{
-		tmp_a_assembly_name = eif_protect (rt_ce.ccom_ce_bstr (a_assembly_name));
+		tmp_bstr_assembly_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_assembly_name));
 	}
-	EIF_OBJECT tmp_a_full_dotnet_type = NULL;
-	if (a_full_dotnet_type != NULL)
+	EIF_OBJECT tmp_bstr_full_dotnet_name = NULL;
+	if (bstr_full_dotnet_name != NULL)
 	{
-		tmp_a_full_dotnet_type = eif_protect (rt_ce.ccom_ce_bstr (a_full_dotnet_type));
+		tmp_bstr_full_dotnet_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_full_dotnet_name));
 	}
-	EIF_OBJECT tmp_a_feature_signature = NULL;
-	if (a_feature_signature != NULL)
+	EIF_OBJECT tmp_bstr_feature_signature = NULL;
+	if (bstr_feature_signature != NULL)
 	{
-		tmp_a_feature_signature = eif_protect (rt_ce.ccom_ce_bstr (a_feature_signature));
+		tmp_bstr_feature_signature = eif_protect (rt_ce.ccom_ce_bstr (bstr_feature_signature));
 	}
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
 	eiffel_function = eif_reference_function ("description_from_dotnet_feature", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_assembly_name != NULL) ? eif_access (tmp_a_assembly_name) : NULL), ((tmp_a_full_dotnet_type != NULL) ? eif_access (tmp_a_full_dotnet_type) : NULL), ((tmp_a_feature_signature != NULL) ? eif_access (tmp_a_feature_signature) : NULL));
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_bstr_assembly_name != NULL) ? eif_access (tmp_bstr_assembly_name) : NULL), ((tmp_bstr_full_dotnet_name != NULL) ? eif_access (tmp_bstr_full_dotnet_name) : NULL), ((tmp_bstr_feature_signature != NULL) ? eif_access (tmp_bstr_feature_signature) : NULL));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "description_from_dotnet_feature", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_description = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
-	if (tmp_a_assembly_name != NULL)
-		eif_wean (tmp_a_assembly_name);
-	if (tmp_a_full_dotnet_type != NULL)
-		eif_wean (tmp_a_full_dotnet_type);
-	if (tmp_a_feature_signature != NULL)
-		eif_wean (tmp_a_feature_signature);
+		*pbstr_description = NULL;
+	if (tmp_bstr_assembly_name != NULL)
+		eif_wean (tmp_bstr_assembly_name);
+	if (tmp_bstr_full_dotnet_name != NULL)
+		eif_wean (tmp_bstr_full_dotnet_name);
+	if (tmp_bstr_feature_signature != NULL)
+		eif_wean (tmp_bstr_feature_signature);
 	
 	END_ECATCH;
 	return S_OK;

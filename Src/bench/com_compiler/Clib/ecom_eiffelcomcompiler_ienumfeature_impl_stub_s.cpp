@@ -35,7 +35,7 @@ ecom_EiffelComCompiler::IEnumFeature_impl_stub::~IEnumFeature_impl_stub()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::Next(  /* [out] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * rgelt, /* [out] */ ULONG * pcelt_fetched )
+STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::Next(  /* [out] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * pp_ieiffel_feature_descriptor, /* [out] */ ULONG * pul_fetched )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -43,35 +43,35 @@ STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::Next(  /* [out] */ 
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_rgelt = NULL;
-	if (rgelt != NULL)
+	EIF_OBJECT tmp_pp_ieiffel_feature_descriptor = NULL;
+	if (pp_ieiffel_feature_descriptor != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_57 (rgelt, NULL));
-		if (*rgelt != NULL)
-			(*rgelt)->AddRef ();
+		tmp_pp_ieiffel_feature_descriptor = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_56 (pp_ieiffel_feature_descriptor, NULL));
+		if (*pp_ieiffel_feature_descriptor != NULL)
+			(*pp_ieiffel_feature_descriptor)->AddRef ();
 	}
-	EIF_OBJECT tmp_pcelt_fetched = NULL;
-	if (pcelt_fetched != NULL)
+	EIF_OBJECT tmp_pul_fetched = NULL;
+	if (pul_fetched != NULL)
 	{
-		tmp_pcelt_fetched = eif_protect (rt_ce.ccom_ce_pointed_unsigned_long (pcelt_fetched, NULL));
+		tmp_pul_fetched = eif_protect (rt_ce.ccom_ce_pointed_unsigned_long (pul_fetched, NULL));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("next", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_rgelt != NULL) ? eif_access (tmp_rgelt) : NULL), ((tmp_pcelt_fetched != NULL) ? eif_access (tmp_pcelt_fetched) : NULL));
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pp_ieiffel_feature_descriptor != NULL) ? eif_access (tmp_pp_ieiffel_feature_descriptor) : NULL), ((tmp_pul_fetched != NULL) ? eif_access (tmp_pul_fetched) : NULL));
 	
-	if (*rgelt != NULL)
-		(*rgelt)->Release ();
-	grt_ec_ISE.ccom_ec_pointed_cell_57 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
-	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pcelt_fetched != NULL) ? eif_wean (tmp_pcelt_fetched) : NULL), pcelt_fetched);
+	if (*pp_ieiffel_feature_descriptor != NULL)
+		(*pp_ieiffel_feature_descriptor)->Release ();
+	grt_ec_ISE.ccom_ec_pointed_cell_56 (((tmp_pp_ieiffel_feature_descriptor != NULL) ? eif_wean (tmp_pp_ieiffel_feature_descriptor) : NULL), pp_ieiffel_feature_descriptor);
+	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pul_fetched != NULL) ? eif_wean (tmp_pul_fetched) : NULL), pul_fetched);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::Skip(  /* [in] */ ULONG celt )
+STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::Skip(  /* [in] */ ULONG ul_count )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -79,12 +79,12 @@ STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::Skip(  /* [in] */ U
 {
 	ECATCH;
 
-	EIF_INTEGER tmp_celt = (EIF_INTEGER)celt;
+	EIF_INTEGER tmp_ul_count = (EIF_INTEGER)ul_count;
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("skip", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_celt);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_ul_count);
 	
 	END_ECATCH;
 	return S_OK;
@@ -108,7 +108,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumFeature * * ppenum )
+STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -116,29 +116,29 @@ STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::Clone(  /* [out] */
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_ppenum = NULL;
-	if (ppenum != NULL)
+	EIF_OBJECT tmp_pp_ienum_feature = NULL;
+	if (pp_ienum_feature != NULL)
 	{
-		tmp_ppenum = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_60 (ppenum, NULL));
-		if (*ppenum != NULL)
-			(*ppenum)->AddRef ();
+		tmp_pp_ienum_feature = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_59 (pp_ienum_feature, NULL));
+		if (*pp_ienum_feature != NULL)
+			(*pp_ienum_feature)->AddRef ();
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("clone1", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_ppenum != NULL) ? eif_access (tmp_ppenum) : NULL));
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pp_ienum_feature != NULL) ? eif_access (tmp_pp_ienum_feature) : NULL));
 	
-	if (*ppenum != NULL)
-		(*ppenum)->Release ();
-	grt_ec_ISE.ccom_ec_pointed_cell_60 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
+	if (*pp_ienum_feature != NULL)
+		(*pp_ienum_feature)->Release ();
+	grt_ec_ISE.ccom_ec_pointed_cell_59 (((tmp_pp_ienum_feature != NULL) ? eif_wean (tmp_pp_ienum_feature) : NULL), pp_ienum_feature);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::ith_item(  /* [in] */ ULONG an_index, /* [out] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * rgelt )
+STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::IthItem(  /* [in] */ ULONG ul_index, /* [out] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * pp_ieiffel_feature_descriptor )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -146,30 +146,30 @@ STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::ith_item(  /* [in] 
 {
 	ECATCH;
 
-	EIF_INTEGER tmp_an_index = (EIF_INTEGER)an_index;
-	EIF_OBJECT tmp_rgelt = NULL;
-	if (rgelt != NULL)
+	EIF_INTEGER tmp_ul_index = (EIF_INTEGER)ul_index;
+	EIF_OBJECT tmp_pp_ieiffel_feature_descriptor = NULL;
+	if (pp_ieiffel_feature_descriptor != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_57 (rgelt, NULL));
-		if (*rgelt != NULL)
-			(*rgelt)->AddRef ();
+		tmp_pp_ieiffel_feature_descriptor = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_56 (pp_ieiffel_feature_descriptor, NULL));
+		if (*pp_ieiffel_feature_descriptor != NULL)
+			(*pp_ieiffel_feature_descriptor)->AddRef ();
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("ith_item", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_an_index, ((tmp_rgelt != NULL) ? eif_access (tmp_rgelt) : NULL));
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_ul_index, ((tmp_pp_ieiffel_feature_descriptor != NULL) ? eif_access (tmp_pp_ieiffel_feature_descriptor) : NULL));
 	
-	if (*rgelt != NULL)
-		(*rgelt)->Release ();
-	grt_ec_ISE.ccom_ec_pointed_cell_57 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	if (*pp_ieiffel_feature_descriptor != NULL)
+		(*pp_ieiffel_feature_descriptor)->Release ();
+	grt_ec_ISE.ccom_ec_pointed_cell_56 (((tmp_pp_ieiffel_feature_descriptor != NULL) ? eif_wean (tmp_pp_ieiffel_feature_descriptor) : NULL), pp_ieiffel_feature_descriptor);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::Count(  /* [out, retval] */ ULONG * ul_count )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -185,7 +185,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEnumFeature_impl_stub::count(  /* [out, re
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "count", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+	*ul_count = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;

@@ -66,7 +66,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_proxy::cco
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelParameterDescriptor->name( &ret_value);
+	hr = p_IEiffelParameterDescriptor->Name( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -100,7 +100,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelParameterDescriptor_impl_proxy::cco
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelParameterDescriptor->display( &ret_value);
+	hr = p_IEiffelParameterDescriptor->Display( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

@@ -43,13 +43,13 @@ public:
 	/*-----------------------------------------------------------
 	Parameter name
 	-----------------------------------------------------------*/
-	STDMETHODIMP name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Name(  /* [out, retval] */ BSTR * pbstr_name );
 
 
 	/*-----------------------------------------------------------
 	Parameter display
 	-----------------------------------------------------------*/
-	STDMETHODIMP display(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Display(  /* [out, retval] */ BSTR * pbstr_display );
 
 
 	/*-----------------------------------------------------------

@@ -52,19 +52,19 @@ public:
 	/*-----------------------------------------------------------
 	Get inner exception
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP inner_exception(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * a_result ) = 0;
+	virtual STDMETHODIMP InnerException(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * pp_ieiffel_exception ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Get exception message
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP message(  /* [out, retval] */ BSTR * a_result ) = 0;
+	virtual STDMETHODIMP Message(  /* [out, retval] */ BSTR * pbstr_message ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Retrieve exception type
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP exception_code(  /* [out, retval] */ long * a_result ) = 0;
+	virtual STDMETHODIMP ExceptionCode(  /* [out, retval] */ long * p_eif_exceptions ) = 0;
 
 
 

@@ -50,7 +50,7 @@ ecom_EiffelComCompiler::CEiffelProject::~CEiffelProject()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::retrieve_eiffel_project(  /* [in] */ BSTR a_project_file_name )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::RetrieveEiffelProject(  /* [in] */ BSTR bstr_project_file_name )
 
 /*-----------------------------------------------------------
 	Retrieve Eiffel Project
@@ -58,58 +58,112 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::retrieve_eiffel_project(  /
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_a_project_file_name = NULL;
-	if (a_project_file_name != NULL)
+	EIF_OBJECT tmp_bstr_project_file_name = NULL;
+	if (bstr_project_file_name != NULL)
 	{
-		tmp_a_project_file_name = eif_protect (rt_ce.ccom_ce_bstr (a_project_file_name));
+		tmp_bstr_project_file_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_project_file_name));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("retrieve_eiffel_project", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_a_project_file_name != NULL) ? eif_access (tmp_a_project_file_name) : NULL));
-	if (tmp_a_project_file_name != NULL)
-		eif_wean (tmp_a_project_file_name);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_project_file_name != NULL) ? eif_access (tmp_bstr_project_file_name) : NULL));
+	if (tmp_bstr_project_file_name != NULL)
+		eif_wean (tmp_bstr_project_file_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::create_eiffel_project(  /* [in] */ BSTR a_ace_file_name, /* [in] */ BSTR a_project_directory_path )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::CreateEiffelProject(  /* [in] */ BSTR bstr_ace_file_name, /* [in] */ BSTR bstr_project_directory )
 
 /*-----------------------------------------------------------
-	Create new Eiffel project.
+	Create new Eiffel project from an existing ace file.
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_a_ace_file_name = NULL;
-	if (a_ace_file_name != NULL)
+	EIF_OBJECT tmp_bstr_ace_file_name = NULL;
+	if (bstr_ace_file_name != NULL)
 	{
-		tmp_a_ace_file_name = eif_protect (rt_ce.ccom_ce_bstr (a_ace_file_name));
+		tmp_bstr_ace_file_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_ace_file_name));
 	}
-	EIF_OBJECT tmp_a_project_directory_path = NULL;
-	if (a_project_directory_path != NULL)
+	EIF_OBJECT tmp_bstr_project_directory = NULL;
+	if (bstr_project_directory != NULL)
 	{
-		tmp_a_project_directory_path = eif_protect (rt_ce.ccom_ce_bstr (a_project_directory_path));
+		tmp_bstr_project_directory = eif_protect (rt_ce.ccom_ce_bstr (bstr_project_directory));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("create_eiffel_project", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_a_ace_file_name != NULL) ? eif_access (tmp_a_ace_file_name) : NULL), ((tmp_a_project_directory_path != NULL) ? eif_access (tmp_a_project_directory_path) : NULL));
-	if (tmp_a_ace_file_name != NULL)
-		eif_wean (tmp_a_ace_file_name);
-	if (tmp_a_project_directory_path != NULL)
-		eif_wean (tmp_a_project_directory_path);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_ace_file_name != NULL) ? eif_access (tmp_bstr_ace_file_name) : NULL), ((tmp_bstr_project_directory != NULL) ? eif_access (tmp_bstr_project_directory) : NULL));
+	if (tmp_bstr_ace_file_name != NULL)
+		eif_wean (tmp_bstr_ace_file_name);
+	if (tmp_bstr_project_directory != NULL)
+		eif_wean (tmp_bstr_project_directory);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::project_file_name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::GenerateNewEiffelProject(  /* [in] */ BSTR bstr_project_name, /* [in] */ BSTR bstr_ace_file_name, /* [in] */ BSTR bstr_root_class_name, /* [in] */ BSTR bstr_creation_routine, /* [in] */ BSTR bstr_project_directory )
+
+/*-----------------------------------------------------------
+	Create new Eiffel project from scratch.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_bstr_project_name = NULL;
+	if (bstr_project_name != NULL)
+	{
+		tmp_bstr_project_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_project_name));
+	}
+	EIF_OBJECT tmp_bstr_ace_file_name = NULL;
+	if (bstr_ace_file_name != NULL)
+	{
+		tmp_bstr_ace_file_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_ace_file_name));
+	}
+	EIF_OBJECT tmp_bstr_root_class_name = NULL;
+	if (bstr_root_class_name != NULL)
+	{
+		tmp_bstr_root_class_name = eif_protect (rt_ce.ccom_ce_bstr (bstr_root_class_name));
+	}
+	EIF_OBJECT tmp_bstr_creation_routine = NULL;
+	if (bstr_creation_routine != NULL)
+	{
+		tmp_bstr_creation_routine = eif_protect (rt_ce.ccom_ce_bstr (bstr_creation_routine));
+	}
+	EIF_OBJECT tmp_bstr_project_directory = NULL;
+	if (bstr_project_directory != NULL)
+	{
+		tmp_bstr_project_directory = eif_protect (rt_ce.ccom_ce_bstr (bstr_project_directory));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("generate_new_eiffel_project", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_project_name != NULL) ? eif_access (tmp_bstr_project_name) : NULL), ((tmp_bstr_ace_file_name != NULL) ? eif_access (tmp_bstr_ace_file_name) : NULL), ((tmp_bstr_root_class_name != NULL) ? eif_access (tmp_bstr_root_class_name) : NULL), ((tmp_bstr_creation_routine != NULL) ? eif_access (tmp_bstr_creation_routine) : NULL), ((tmp_bstr_project_directory != NULL) ? eif_access (tmp_bstr_project_directory) : NULL));
+	if (tmp_bstr_project_name != NULL)
+		eif_wean (tmp_bstr_project_name);
+	if (tmp_bstr_ace_file_name != NULL)
+		eif_wean (tmp_bstr_ace_file_name);
+	if (tmp_bstr_root_class_name != NULL)
+		eif_wean (tmp_bstr_root_class_name);
+	if (tmp_bstr_creation_routine != NULL)
+		eif_wean (tmp_bstr_creation_routine);
+	if (tmp_bstr_project_directory != NULL)
+		eif_wean (tmp_bstr_project_directory);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::ProjectFileName(  /* [out, retval] */ BSTR * pbstr_project_file_name )
 
 /*-----------------------------------------------------------
 	Full path to .epr file.
@@ -128,18 +182,18 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::project_file_name(  /* [out
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_project_file_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_project_file_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::ace_file_name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::AceFileName(  /* [out, retval] */ BSTR * pbstr_ace_file_name )
 
 /*-----------------------------------------------------------
 	Full path to Ace file.
@@ -158,18 +212,18 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::ace_file_name(  /* [out, re
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_ace_file_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_ace_file_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::project_directory(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::ProjectDirectory(  /* [out, retval] */ BSTR * pbstr_project_directory )
 
 /*-----------------------------------------------------------
 	Project directory.
@@ -188,18 +242,18 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::project_directory(  /* [out
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_project_directory = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_project_directory = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::valid_project(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::IsValidProject(  /* [out, retval] */ VARIANT_BOOL * pvb_valid )
 
 /*-----------------------------------------------------------
 	Is project valid?
@@ -209,20 +263,20 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::valid_project(  /* [out, re
 
 	
 	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("valid_project", type_id);
+	eiffel_function = eif_boolean_function ("is_valid_project", type_id);
 	EIF_BOOLEAN tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "valid_project", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+		tmp_value = eif_field (eif_access (eiffel_object), "is_valid_project", EIF_BOOLEAN);
+	*pvb_valid = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::last_exception(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * a_result )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::LastException(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * pp_ieiffel_exception )
 
 /*-----------------------------------------------------------
 	Last exception raised
@@ -241,18 +295,18 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::last_exception(  /* [out, r
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*a_result = grt_ec_ISE.ccom_ec_pointed_interface_6 (eif_access (tmp_object));
+		*pp_ieiffel_exception = grt_ec_ISE.ccom_ec_pointed_interface_6 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*a_result = NULL;
+		*pp_ieiffel_exception = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::compiler(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompiler * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::Compiler(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompiler * * pp_ieiffel_compiler )
 
 /*-----------------------------------------------------------
 	Compiler.
@@ -271,18 +325,18 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::compiler(  /* [out, retval]
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_9 (eif_access (tmp_object));
+		*pp_ieiffel_compiler = grt_ec_ISE.ccom_ec_pointed_interface_9 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ieiffel_compiler = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::is_compiled(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::IsCompiled(  /* [out, retval] */ VARIANT_BOOL * pvb_compiled )
 
 /*-----------------------------------------------------------
 	Has system been compiled?
@@ -298,14 +352,14 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::is_compiled(  /* [out, retv
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_compiled", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_compiled = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::project_has_updated(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::ProjectHasUpdated(  /* [out, retval] */ VARIANT_BOOL * pvb_updated )
 
 /*-----------------------------------------------------------
 	Has the project updated since last compilation?
@@ -321,14 +375,14 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::project_has_updated(  /* [o
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "project_has_updated", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_updated = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::system_browser(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemBrowser * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::SystemBrowser(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelSystemBrowser * * pp_eiffel_system_browser )
 
 /*-----------------------------------------------------------
 	System Browser.
@@ -347,18 +401,18 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::system_browser(  /* [out, r
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_14 (eif_access (tmp_object));
+		*pp_eiffel_system_browser = grt_ec_ISE.ccom_ec_pointed_interface_14 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_eiffel_system_browser = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::project_properties(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelProjectProperties * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::ProjectProperties(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelProjectProperties * * pp_ieiffel_project_properties )
 
 /*-----------------------------------------------------------
 	Project Properties.
@@ -377,18 +431,18 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::project_properties(  /* [ou
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_17 (eif_access (tmp_object));
+		*pp_ieiffel_project_properties = grt_ec_ISE.ccom_ec_pointed_interface_17 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ieiffel_project_properties = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::completion_information(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompletionInfo * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::CompletionInformation(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelCompletionInfo * * pp_ieiffel_completion_info )
 
 /*-----------------------------------------------------------
 	Completion information
@@ -407,18 +461,18 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::completion_information(  /*
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_20 (eif_access (tmp_object));
+		*pp_ieiffel_completion_info = grt_ec_ISE.ccom_ec_pointed_interface_20 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ieiffel_completion_info = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::html_doc_generator(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::HtmlDocumentationGenerator(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelHtmlDocumentationGenerator * * pp_ieiffel_html_documentation_generator )
 
 /*-----------------------------------------------------------
 	Help documentation generator
@@ -428,20 +482,20 @@ STDMETHODIMP ecom_EiffelComCompiler::CEiffelProject::html_doc_generator(  /* [ou
 
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("html_doc_generator", type_id);
+	eiffel_function = eif_reference_function ("html_documentation_generator", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "html_doc_generator", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "html_documentation_generator", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_23 (eif_access (tmp_object));
+		*pp_ieiffel_html_documentation_generator = grt_ec_ISE.ccom_ec_pointed_interface_23 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pp_ieiffel_html_documentation_generator = NULL;
 	
 	END_ECATCH;
 	return S_OK;

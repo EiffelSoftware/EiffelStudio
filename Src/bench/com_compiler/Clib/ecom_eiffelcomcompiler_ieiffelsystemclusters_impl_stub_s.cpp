@@ -54,7 +54,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::GetCluster
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*pp_ienum_cluster_prop = grt_ec_ISE.ccom_ec_pointed_interface_183 (eif_access (tmp_object));
+		*pp_ienum_cluster_prop = grt_ec_ISE.ccom_ec_pointed_interface_182 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -84,7 +84,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::GetAllClus
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*pp_ienum_cluster_prop = grt_ec_ISE.ccom_ec_pointed_interface_183 (eif_access (tmp_object));
+		*pp_ienum_cluster_prop = grt_ec_ISE.ccom_ec_pointed_interface_182 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -156,7 +156,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::GetCluster
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*pp_ieiffel_cluster_properties = grt_ec_ISE.ccom_ec_pointed_interface_187 (eif_access (tmp_object));
+		*pp_ieiffel_cluster_properties = grt_ec_ISE.ccom_ec_pointed_interface_186 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -189,7 +189,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::GetCluster
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*pp_ieiffel_cluster_properties = grt_ec_ISE.ccom_ec_pointed_interface_187 (eif_access (tmp_object));
+		*pp_ieiffel_cluster_properties = grt_ec_ISE.ccom_ec_pointed_interface_186 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

@@ -35,7 +35,7 @@ ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::~IEiffelAssemblyPro
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assembly_name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Name(  /* [out, retval] */ BSTR * pbstr_name )
 
 /*-----------------------------------------------------------
 	Assembly name.
@@ -45,27 +45,27 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assemb
 
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("assembly_name", type_id);
+	eiffel_function = eif_reference_function ("name", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "assembly_name", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "name", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assembly_version(  /* [out, retval] */ BSTR * path )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Version(  /* [out, retval] */ BSTR * pbstr_version )
 
 /*-----------------------------------------------------------
 	Assembly version.
@@ -75,27 +75,27 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assemb
 
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("assembly_version", type_id);
+	eiffel_function = eif_reference_function ("version", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "assembly_version", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "version", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*path = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_version = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*path = NULL;
+		*pbstr_version = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assembly_culture(  /* [out, retval] */ BSTR * path )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Culture(  /* [out, retval] */ BSTR * pbstr_version )
 
 /*-----------------------------------------------------------
 	Assembly culture.
@@ -105,27 +105,27 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assemb
 
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("assembly_culture", type_id);
+	eiffel_function = eif_reference_function ("culture", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "assembly_culture", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "culture", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*path = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_version = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*path = NULL;
+		*pbstr_version = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assembly_public_key_token(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::PublicKeyToken(  /* [out, retval] */ BSTR * pvb_public_key_token )
 
 /*-----------------------------------------------------------
 	Assembly public key token
@@ -135,27 +135,27 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assemb
 
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("assembly_public_key_token", type_id);
+	eiffel_function = eif_reference_function ("public_key_token", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "assembly_public_key_token", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "public_key_token", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pvb_public_key_token = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pvb_public_key_token = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::is_local(  /* [out, retval] */ VARIANT_BOOL * a_bool )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::IsLocal(  /* [out, retval] */ VARIANT_BOOL * pvb_is_local )
 
 /*-----------------------------------------------------------
 	Is the assembly local
@@ -171,14 +171,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::is_loc
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_local", EIF_BOOLEAN);
-	*a_bool = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_is_local = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assembly_cluster_name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::ClusterName(  /* [out, retval] */ BSTR * pbstr_cluster_name )
 
 /*-----------------------------------------------------------
 	Assembly cluster name.
@@ -188,27 +188,27 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assemb
 
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("assembly_cluster_name", type_id);
+	eiffel_function = eif_reference_function ("cluster_name", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "assembly_cluster_name", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "cluster_name", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_cluster_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_cluster_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assembly_prefix(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Prefix(  /* [out, retval] */ BSTR * pbstr_prefix )
 
 /*-----------------------------------------------------------
 	Prefix.
@@ -218,27 +218,27 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::assemb
 
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("assembly_prefix", type_id);
+	eiffel_function = eif_reference_function ("prefix1", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "assembly_prefix", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "prefix1", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_prefix = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_prefix = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::set_assembly_prefix(  /* [in] */ BSTR return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::set_Prefix(  /* [in] */ BSTR pbstr_prefix )
 
 /*-----------------------------------------------------------
 	Prefix.
@@ -246,25 +246,25 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::set_as
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
+	EIF_OBJECT tmp_pbstr_prefix = NULL;
+	if (pbstr_prefix != NULL)
 	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+		tmp_pbstr_prefix = eif_protect (rt_ce.ccom_ce_bstr (pbstr_prefix));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_assembly_prefix", type_id);
+	eiffel_procedure = eif_procedure ("set_prefix", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_prefix != NULL) ? eif_access (tmp_pbstr_prefix) : NULL));
+	if (tmp_pbstr_prefix != NULL)
+		eif_wean (tmp_pbstr_prefix);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::is_prefix_read_only(  /* [out, retval] */ VARIANT_BOOL * a_is_prefix_read_only )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::IsPrefixReadOnly(  /* [out, retval] */ VARIANT_BOOL * pvb_read_only )
 
 /*-----------------------------------------------------------
 	Is assembly prefix read only.
@@ -280,7 +280,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::is_pre
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_prefix_read_only", EIF_BOOLEAN);
-	*a_is_prefix_read_only = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_read_only = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
@@ -393,7 +393,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 
 				VARIANT_BOOL result = 0;
 				
-				hr = is_prefix_read_only (&result);
+				hr = IsPrefixReadOnly (&result);
 				
 				if (FAILED (hr))
 				{
@@ -430,7 +430,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 
 				BSTR result = 0;
 				
-				hr = assembly_public_key_token (&result);
+				hr = PublicKeyToken (&result);
 				
 				if (FAILED (hr))
 				{
@@ -467,7 +467,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 
 				VARIANT_BOOL result = 0;
 				
-				hr = is_local (&result);
+				hr = IsLocal (&result);
 				
 				if (FAILED (hr))
 				{
@@ -504,7 +504,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 
 				BSTR result = 0;
 				
-				hr = assembly_cluster_name (&result);
+				hr = ClusterName (&result);
 				
 				if (FAILED (hr))
 				{
@@ -541,7 +541,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 
 				BSTR result = 0;
 				
-				hr = assembly_prefix (&result);
+				hr = Prefix (&result);
 				
 				if (FAILED (hr))
 				{
@@ -602,7 +602,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 				}
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				
-				hr = set_assembly_prefix ( arg_0);
+				hr = set_Prefix ( arg_0);
 				
 				if (FAILED (hr))
 				{
@@ -634,7 +634,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 
 				BSTR result = 0;
 				
-				hr = assembly_name (&result);
+				hr = Name (&result);
 				
 				if (FAILED (hr))
 				{
@@ -671,7 +671,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 
 				BSTR result = 0;
 				
-				hr = assembly_version (&result);
+				hr = Version (&result);
 				
 				if (FAILED (hr))
 				{
@@ -708,7 +708,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 
 				BSTR result = 0;
 				
-				hr = assembly_culture (&result);
+				hr = Culture (&result);
 				
 				if (FAILED (hr))
 				{

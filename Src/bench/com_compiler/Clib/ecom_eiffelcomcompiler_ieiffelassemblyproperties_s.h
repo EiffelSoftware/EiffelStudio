@@ -42,55 +42,55 @@ public:
 	/*-----------------------------------------------------------
 	Assembly name.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assembly_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP Name(  /* [out, retval] */ BSTR * pbstr_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Assembly version.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assembly_version(  /* [out, retval] */ BSTR * path ) = 0;
+	virtual STDMETHODIMP Version(  /* [out, retval] */ BSTR * pbstr_version ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Assembly culture.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assembly_culture(  /* [out, retval] */ BSTR * path ) = 0;
+	virtual STDMETHODIMP Culture(  /* [out, retval] */ BSTR * pbstr_version ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Assembly public key token
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assembly_public_key_token(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP PublicKeyToken(  /* [out, retval] */ BSTR * pvb_public_key_token ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Is the assembly local
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_local(  /* [out, retval] */ VARIANT_BOOL * a_bool ) = 0;
+	virtual STDMETHODIMP IsLocal(  /* [out, retval] */ VARIANT_BOOL * pvb_is_local ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Assembly cluster name.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assembly_cluster_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP ClusterName(  /* [out, retval] */ BSTR * pbstr_cluster_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Prefix.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP assembly_prefix(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP Prefix(  /* [out, retval] */ BSTR * pbstr_prefix ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Prefix.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_assembly_prefix(  /* [in] */ BSTR return_value ) = 0;
+	virtual STDMETHODIMP set_Prefix(  /* [in] */ BSTR pbstr_prefix ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Is assembly prefix read only.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_prefix_read_only(  /* [out, retval] */ VARIANT_BOOL * a_is_prefix_read_only ) = 0;
+	virtual STDMETHODIMP IsPrefixReadOnly(  /* [out, retval] */ VARIANT_BOOL * pvb_read_only ) = 0;
 
 
 

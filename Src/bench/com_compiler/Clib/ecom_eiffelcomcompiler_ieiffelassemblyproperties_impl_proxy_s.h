@@ -63,25 +63,25 @@ public:
 	/*-----------------------------------------------------------
 	Assembly name.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_name(  );
+	EIF_REFERENCE ccom_name(  );
 
 
 	/*-----------------------------------------------------------
 	Assembly version.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_version(  );
+	EIF_REFERENCE ccom_version(  );
 
 
 	/*-----------------------------------------------------------
 	Assembly culture.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_culture(  );
+	EIF_REFERENCE ccom_culture(  );
 
 
 	/*-----------------------------------------------------------
 	Assembly public key token
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_public_key_token(  );
+	EIF_REFERENCE ccom_public_key_token(  );
 
 
 	/*-----------------------------------------------------------
@@ -93,19 +93,19 @@ public:
 	/*-----------------------------------------------------------
 	Assembly cluster name.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_cluster_name(  );
+	EIF_REFERENCE ccom_cluster_name(  );
 
 
 	/*-----------------------------------------------------------
 	Prefix.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_prefix(  );
+	EIF_REFERENCE ccom_prefix1(  );
 
 
 	/*-----------------------------------------------------------
 	Prefix.
 	-----------------------------------------------------------*/
-	void ccom_set_assembly_prefix(  /* [in] */ EIF_OBJECT return_value );
+	void ccom_set_prefix(  /* [in] */ EIF_OBJECT pbstr_prefix );
 
 
 	/*-----------------------------------------------------------

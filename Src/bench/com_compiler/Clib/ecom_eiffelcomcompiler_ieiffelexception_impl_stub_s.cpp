@@ -35,7 +35,7 @@ ecom_EiffelComCompiler::IEiffelException_impl_stub::~IEiffelException_impl_stub(
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelException_impl_stub::inner_exception(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * a_result )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelException_impl_stub::InnerException(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelException * * pp_ieiffel_exception )
 
 /*-----------------------------------------------------------
 	Get inner exception
@@ -54,18 +54,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelException_impl_stub::inner_exception
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*a_result = grt_ec_ISE.ccom_ec_pointed_interface_6 (eif_access (tmp_object));
+		*pp_ieiffel_exception = grt_ec_ISE.ccom_ec_pointed_interface_6 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*a_result = NULL;
+		*pp_ieiffel_exception = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelException_impl_stub::message(  /* [out, retval] */ BSTR * a_result )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelException_impl_stub::Message(  /* [out, retval] */ BSTR * pbstr_message )
 
 /*-----------------------------------------------------------
 	Get exception message
@@ -84,18 +84,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelException_impl_stub::message(  /* [o
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*a_result = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_message = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*a_result = NULL;
+		*pbstr_message = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelException_impl_stub::exception_code(  /* [out, retval] */ long * a_result )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelException_impl_stub::ExceptionCode(  /* [out, retval] */ long * p_eif_exceptions )
 
 /*-----------------------------------------------------------
 	Retrieve exception type
@@ -111,7 +111,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelException_impl_stub::exception_code(
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "exception_code", EIF_INTEGER);
-	*a_result = (long)tmp_value;
+	*p_eif_exceptions = (long)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;

@@ -62,163 +62,163 @@ public:
 	/*-----------------------------------------------------------
 	Class name.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP name(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP Name(  /* [out, retval] */ BSTR * pbstr_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Class description.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP description(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP Description(  /* [out, retval] */ BSTR * pbstr_description ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Class external name.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP external_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP ExternalName(  /* [out, retval] */ BSTR * pbstr_external_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Class Tool Tip.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP tool_tip(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP ToolTip(  /* [out, retval] */ BSTR * pbstr_tool_tip ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Is class in system?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_in_system(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP IsInSystem(  /* [out, retval] */ VARIANT_BOOL * pvb_in_system ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of names of class features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP feature_names(  /* [out, retval] */ SAFEARRAY *  * names ) = 0;
+	virtual STDMETHODIMP FeatureNames(  /* [out, retval] */ SAFEARRAY *  * psabstr_feature_names ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of class features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP features(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features ) = 0;
+	virtual STDMETHODIMP Features(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of class features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP feature_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP FeatureCount(  /* [out, retval] */ ULONG * pul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of class features including ancestor features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP flat_features(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features ) = 0;
+	virtual STDMETHODIMP FlatFeatures(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of flat class features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP flat_feature_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP FlatFeatureCount(  /* [out, retval] */ ULONG * pul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of class inherited features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP inherited_features(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features ) = 0;
+	virtual STDMETHODIMP InheritedFeatures(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of inherited features.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP inherited_feature_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP InheritedFeatureCount(  /* [out, retval] */ ULONG * pul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of class creation routines.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP creation_routines(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features ) = 0;
+	virtual STDMETHODIMP CreationRoutines(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of creation routines.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP creation_routine_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP CreationRoutineCount(  /* [out, retval] */ ULONG * pul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of class clients.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP clients(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_clients ) = 0;
+	virtual STDMETHODIMP Clients(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of class clients.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP client_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP ClientCount(  /* [out, retval] */ ULONG * pul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of class suppliers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP suppliers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_suppliers ) = 0;
+	virtual STDMETHODIMP Suppliers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of class suppliers.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP supplier_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP SupplierCount(  /* [out, retval] */ ULONG * pul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of direct ancestors of class.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ancestors(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_ancestors ) = 0;
+	virtual STDMETHODIMP Ancestors(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of direct ancestors.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ancestor_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP AncestorCount(  /* [out, retval] */ ULONG * pul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of direct descendants of class.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP descendants(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_descendants ) = 0;
+	virtual STDMETHODIMP Descendants(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of direct descendants.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP descendant_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP DescendantCount(  /* [out, retval] */ ULONG * pul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Full path to file.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP class_path(  /* [out, retval] */ BSTR * path ) = 0;
+	virtual STDMETHODIMP ClassPath(  /* [out, retval] */ BSTR * pbstr_path ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Is class deferred?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_deferred(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP IsDeferred(  /* [out, retval] */ VARIANT_BOOL * pvb_defferred ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Is class external?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_external(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP IsExternal(  /* [out, retval] */ VARIANT_BOOL * pvb_external ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Is class generic?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_generic(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP IsGeneric(  /* [out, retval] */ VARIANT_BOOL * pvb_generic ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Is class part of a library?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_library(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP IsLibrary(  /* [out, retval] */ VARIANT_BOOL * pvb_library ) = 0;
 
 
 

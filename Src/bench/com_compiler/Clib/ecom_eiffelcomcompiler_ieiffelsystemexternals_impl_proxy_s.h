@@ -65,27 +65,21 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Save changes.
-	-----------------------------------------------------------*/
-	void ccom_store();
-
-
-	/*-----------------------------------------------------------
 	Add a include path to the project.
 	-----------------------------------------------------------*/
-	void ccom_add_include_path(  /* [in] */ EIF_OBJECT include_path );
+	void ccom_add_include_path(  /* [in] */ EIF_OBJECT bstr_path );
 
 
 	/*-----------------------------------------------------------
 	Remove a include path from the project.
 	-----------------------------------------------------------*/
-	void ccom_remove_include_path(  /* [in] */ EIF_OBJECT include_path );
+	void ccom_remove_include_path(  /* [in] */ EIF_OBJECT bstr_path );
 
 
 	/*-----------------------------------------------------------
 	Replace an include path in the project.
 	-----------------------------------------------------------*/
-	void ccom_replace_include_path(  /* [in] */ EIF_OBJECT new_include_path,  /* [in] */ EIF_OBJECT old_include_path );
+	void ccom_replace_include_path(  /* [in] */ EIF_OBJECT bstr_path,  /* [in] */ EIF_OBJECT bstr_old_path );
 
 
 	/*-----------------------------------------------------------
@@ -97,25 +91,31 @@ public:
 	/*-----------------------------------------------------------
 	Add a object file to the project.
 	-----------------------------------------------------------*/
-	void ccom_add_object_file(  /* [in] */ EIF_OBJECT object_file );
+	void ccom_add_object_file(  /* [in] */ EIF_OBJECT bstr_file_name );
 
 
 	/*-----------------------------------------------------------
 	Remove a object file from the project.
 	-----------------------------------------------------------*/
-	void ccom_remove_object_file(  /* [in] */ EIF_OBJECT object_file );
+	void ccom_remove_object_file(  /* [in] */ EIF_OBJECT bstr_file_name );
 
 
 	/*-----------------------------------------------------------
 	Replace an object file in the project.
 	-----------------------------------------------------------*/
-	void ccom_replace_object_file(  /* [in] */ EIF_OBJECT new_include_path,  /* [in] */ EIF_OBJECT old_object_file );
+	void ccom_replace_object_file(  /* [in] */ EIF_OBJECT bstr_file_name,  /* [in] */ EIF_OBJECT bstr_old_file_name );
 
 
 	/*-----------------------------------------------------------
 	Object files.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_object_files(  );
+
+
+	/*-----------------------------------------------------------
+	Save changes.
+	-----------------------------------------------------------*/
+	void ccom_store();
 
 
 	/*-----------------------------------------------------------

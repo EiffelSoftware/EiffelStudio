@@ -43,163 +43,163 @@ public:
 	/*-----------------------------------------------------------
 	Class name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Name(  /* [out, retval] */ BSTR * pbstr_name );
 
 
 	/*-----------------------------------------------------------
 	Class description.
 	-----------------------------------------------------------*/
-	STDMETHODIMP description(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Description(  /* [out, retval] */ BSTR * pbstr_description );
 
 
 	/*-----------------------------------------------------------
 	Class external name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP external_name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP ExternalName(  /* [out, retval] */ BSTR * pbstr_external_name );
 
 
 	/*-----------------------------------------------------------
 	Class Tool Tip.
 	-----------------------------------------------------------*/
-	STDMETHODIMP tool_tip(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP ToolTip(  /* [out, retval] */ BSTR * pbstr_tool_tip );
 
 
 	/*-----------------------------------------------------------
 	Is class in system?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_in_system(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsInSystem(  /* [out, retval] */ VARIANT_BOOL * pvb_in_system );
 
 
 	/*-----------------------------------------------------------
 	List of names of class features.
 	-----------------------------------------------------------*/
-	STDMETHODIMP feature_names(  /* [out, retval] */ SAFEARRAY *  * names );
+	STDMETHODIMP FeatureNames(  /* [out, retval] */ SAFEARRAY *  * psabstr_feature_names );
 
 
 	/*-----------------------------------------------------------
 	List of class features.
 	-----------------------------------------------------------*/
-	STDMETHODIMP features(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features );
+	STDMETHODIMP Features(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Number of class features.
 	-----------------------------------------------------------*/
-	STDMETHODIMP feature_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP FeatureCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of class features including ancestor features.
 	-----------------------------------------------------------*/
-	STDMETHODIMP flat_features(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features );
+	STDMETHODIMP FlatFeatures(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Number of flat class features.
 	-----------------------------------------------------------*/
-	STDMETHODIMP flat_feature_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP FlatFeatureCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of class inherited features.
 	-----------------------------------------------------------*/
-	STDMETHODIMP inherited_features(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features );
+	STDMETHODIMP InheritedFeatures(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Number of inherited features.
 	-----------------------------------------------------------*/
-	STDMETHODIMP inherited_feature_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP InheritedFeatureCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of class creation routines.
 	-----------------------------------------------------------*/
-	STDMETHODIMP creation_routines(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features );
+	STDMETHODIMP CreationRoutines(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Number of creation routines.
 	-----------------------------------------------------------*/
-	STDMETHODIMP creation_routine_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP CreationRoutineCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of class clients.
 	-----------------------------------------------------------*/
-	STDMETHODIMP clients(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_clients );
+	STDMETHODIMP Clients(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class );
 
 
 	/*-----------------------------------------------------------
 	Number of class clients.
 	-----------------------------------------------------------*/
-	STDMETHODIMP client_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP ClientCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of class suppliers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP suppliers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_suppliers );
+	STDMETHODIMP Suppliers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class );
 
 
 	/*-----------------------------------------------------------
 	Number of class suppliers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP supplier_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP SupplierCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of direct ancestors of class.
 	-----------------------------------------------------------*/
-	STDMETHODIMP ancestors(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_ancestors );
+	STDMETHODIMP Ancestors(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class );
 
 
 	/*-----------------------------------------------------------
 	Number of direct ancestors.
 	-----------------------------------------------------------*/
-	STDMETHODIMP ancestor_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP AncestorCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of direct descendants of class.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendants(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_descendants );
+	STDMETHODIMP Descendants(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class );
 
 
 	/*-----------------------------------------------------------
 	Number of direct descendants.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendant_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP DescendantCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	Full path to file.
 	-----------------------------------------------------------*/
-	STDMETHODIMP class_path(  /* [out, retval] */ BSTR * path );
+	STDMETHODIMP ClassPath(  /* [out, retval] */ BSTR * pbstr_path );
 
 
 	/*-----------------------------------------------------------
 	Is class deferred?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_deferred(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsDeferred(  /* [out, retval] */ VARIANT_BOOL * pvb_defferred );
 
 
 	/*-----------------------------------------------------------
 	Is class external?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_external(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsExternal(  /* [out, retval] */ VARIANT_BOOL * pvb_external );
 
 
 	/*-----------------------------------------------------------
 	Is class generic?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_generic(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsGeneric(  /* [out, retval] */ VARIANT_BOOL * pvb_generic );
 
 
 	/*-----------------------------------------------------------
 	Is class part of a library?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_library(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsLibrary(  /* [out, retval] */ VARIANT_BOOL * pvb_library );
 
 
 	/*-----------------------------------------------------------

@@ -65,13 +65,13 @@ public:
 	/*-----------------------------------------------------------
 	Wipe out current list of assemblies
 	-----------------------------------------------------------*/
-	void ccom_wipe_out();
+	void ccom_flush_assemblies();
 
 
 	/*-----------------------------------------------------------
 	Add an assembly to the project.
 	-----------------------------------------------------------*/
-	void ccom_add_assembly(  /* [in] */ EIF_OBJECT a_prefix,  /* [in] */ EIF_OBJECT a_cluster_name,  /* [in] */ EIF_OBJECT a_path,  /* [in] */ EIF_BOOLEAN a_copy );
+	void ccom_add_assembly(  /* [in] */ EIF_OBJECT bstr_prefix,  /* [in] */ EIF_OBJECT bstr_cluster_name,  /* [in] */ EIF_OBJECT bstr_file_name,  /* [in] */ EIF_BOOLEAN vb_copy_locally );
 
 
 	/*-----------------------------------------------------------

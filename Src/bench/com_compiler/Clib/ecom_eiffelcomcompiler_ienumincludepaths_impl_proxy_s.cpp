@@ -47,7 +47,7 @@ ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::~IEnumIncludePaths_impl_pr
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_next(  /* [out] */ EIF_OBJECT rgelt,  /* [out] */ EIF_OBJECT pcelt_fetched )
+void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_next(  /* [out] */ EIF_OBJECT pbstr_include_path,  /* [out] */ EIF_OBJECT pul_fetched )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -64,28 +64,28 @@ void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_next(  /* [out] 
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR * tmp_rgelt = 0;
-	tmp_rgelt = (BSTR *)grt_ec_ISE.ccom_ec_pointed_cell_224 (eif_access (rgelt), NULL);
-	ULONG * tmp_pcelt_fetched = 0;
-	tmp_pcelt_fetched = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pcelt_fetched), NULL);
+	BSTR * tmp_pbstr_include_path = 0;
+	tmp_pbstr_include_path = (BSTR *)grt_ec_ISE.ccom_ec_pointed_cell_223 (eif_access (pbstr_include_path), NULL);
+	ULONG * tmp_pul_fetched = 0;
+	tmp_pul_fetched = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pul_fetched), NULL);
 	
-	hr = p_IEnumIncludePaths->Next(tmp_rgelt,tmp_pcelt_fetched);
+	hr = p_IEnumIncludePaths->Next(tmp_pbstr_include_path,tmp_pul_fetched);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_224 ((BSTR *)tmp_rgelt, rgelt);
-	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pcelt_fetched, pcelt_fetched);
+	grt_ce_ISE.ccom_ce_pointed_cell_223 ((BSTR *)tmp_pbstr_include_path, pbstr_include_path);
+	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pul_fetched, pul_fetched);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_224 (tmp_rgelt);
-grt_ce_ISE.ccom_free_memory_pointed_225 (tmp_pcelt_fetched);
+	grt_ce_ISE.ccom_free_memory_pointed_223 (tmp_pbstr_include_path);
+grt_ce_ISE.ccom_free_memory_pointed_224 (tmp_pul_fetched);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_skip(  /* [in] */ EIF_INTEGER celt )
+void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_skip(  /* [in] */ EIF_INTEGER ul_count )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -102,10 +102,10 @@ void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_skip(  /* [in] *
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ULONG tmp_celt = 0;
-	tmp_celt = (ULONG)celt;
+	ULONG tmp_ul_count = 0;
+	tmp_ul_count = (ULONG)ul_count;
 	
-	hr = p_IEnumIncludePaths->Skip(tmp_celt);
+	hr = p_IEnumIncludePaths->Skip(tmp_ul_count);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -144,7 +144,7 @@ void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_reset()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_clone1(  /* [out] */ EIF_OBJECT ppenum )
+void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_clone1(  /* [out] */ EIF_OBJECT pp_ienum_include_paths )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -161,24 +161,24 @@ void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_clone1(  /* [out
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ecom_EiffelComCompiler::IEnumIncludePaths * * tmp_ppenum = 0;
-	tmp_ppenum = (ecom_EiffelComCompiler::IEnumIncludePaths * *)grt_ec_ISE.ccom_ec_pointed_cell_220 (eif_access (ppenum), NULL);
+	ecom_EiffelComCompiler::IEnumIncludePaths * * tmp_pp_ienum_include_paths = 0;
+	tmp_pp_ienum_include_paths = (ecom_EiffelComCompiler::IEnumIncludePaths * *)grt_ec_ISE.ccom_ec_pointed_cell_219 (eif_access (pp_ienum_include_paths), NULL);
 	
-	hr = p_IEnumIncludePaths->Clone(tmp_ppenum);
+	hr = p_IEnumIncludePaths->Clone(tmp_pp_ienum_include_paths);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_220 ((ecom_EiffelComCompiler::IEnumIncludePaths * *)tmp_ppenum, ppenum);
+	grt_ce_ISE.ccom_ce_pointed_cell_219 ((ecom_EiffelComCompiler::IEnumIncludePaths * *)tmp_pp_ienum_include_paths, pp_ienum_include_paths);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_220 (tmp_ppenum);
+	grt_ce_ISE.ccom_free_memory_pointed_219 (tmp_pp_ienum_include_paths);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_ith_item(  /* [in] */ EIF_INTEGER an_index,  /* [out] */ EIF_OBJECT rgelt )
+void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_ith_item(  /* [in] */ EIF_INTEGER ul_index,  /* [out] */ EIF_OBJECT pbstr_include_path )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -195,21 +195,21 @@ void ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_ith_item(  /* [i
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ULONG tmp_an_index = 0;
-	tmp_an_index = (ULONG)an_index;
-	BSTR * tmp_rgelt = 0;
-	tmp_rgelt = (BSTR *)grt_ec_ISE.ccom_ec_pointed_cell_226 (eif_access (rgelt), NULL);
+	ULONG tmp_ul_index = 0;
+	tmp_ul_index = (ULONG)ul_index;
+	BSTR * tmp_pbstr_include_path = 0;
+	tmp_pbstr_include_path = (BSTR *)grt_ec_ISE.ccom_ec_pointed_cell_225 (eif_access (pbstr_include_path), NULL);
 	
-	hr = p_IEnumIncludePaths->ith_item(tmp_an_index,tmp_rgelt);
+	hr = p_IEnumIncludePaths->IthItem(tmp_ul_index,tmp_pbstr_include_path);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_226 ((BSTR *)tmp_rgelt, rgelt);
+	grt_ce_ISE.ccom_ce_pointed_cell_225 ((BSTR *)tmp_pbstr_include_path, pbstr_include_path);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_226 (tmp_rgelt);
+	grt_ce_ISE.ccom_free_memory_pointed_225 (tmp_pbstr_include_path);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -233,7 +233,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEnumIncludePaths_impl_proxy::ccom_count(  )
 	};
 	ULONG ret_value = 0;
 	
-	hr = p_IEnumIncludePaths->count( &ret_value);
+	hr = p_IEnumIncludePaths->Count( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

@@ -66,7 +66,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelException_impl_proxy::ccom_inner_ex
 	};
 	ecom_EiffelComCompiler::IEiffelException * ret_value = 0;
 	
-	hr = p_IEiffelException->inner_exception( &ret_value);
+	hr = p_IEiffelException->InnerException( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -99,7 +99,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelException_impl_proxy::ccom_message(
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelException->message( &ret_value);
+	hr = p_IEiffelException->Message( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -133,7 +133,7 @@ EIF_INTEGER ecom_EiffelComCompiler::IEiffelException_impl_proxy::ccom_exception_
 	};
 	long ret_value = 0;
 	
-	hr = p_IEiffelException->exception_code( &ret_value);
+	hr = p_IEiffelException->ExceptionCode( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

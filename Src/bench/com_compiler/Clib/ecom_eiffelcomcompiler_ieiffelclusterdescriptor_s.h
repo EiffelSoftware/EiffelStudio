@@ -62,67 +62,67 @@ public:
 	/*-----------------------------------------------------------
 	Cluster name.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP name(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP Name(  /* [out, retval] */ BSTR * pbstr_name ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Cluster description.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP description(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP Description(  /* [out, retval] */ BSTR * pbstr_description ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Cluster Tool Tip.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP tool_tip(  /* [out, retval] */ BSTR * return_value ) = 0;
+	virtual STDMETHODIMP ToolTip(  /* [out, retval] */ BSTR * pbstr_tool_top ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of classes in cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP classes(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_classes ) = 0;
+	virtual STDMETHODIMP Classes(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of classes in cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP class_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP ClassCount(  /* [out, retval] */ ULONG * pul_class_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	List of subclusters in cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * some_clusters ) = 0;
+	virtual STDMETHODIMP Clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * pp_ienum_cluster ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Number of subclusters in cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value ) = 0;
+	virtual STDMETHODIMP ClusterCount(  /* [out, retval] */ ULONG * pul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Full path to cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_path(  /* [out, retval] */ BSTR * path ) = 0;
+	virtual STDMETHODIMP ClusterPath(  /* [out, retval] */ BSTR * pbstr_path ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Relative path to cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP relative_path(  /* [out, retval] */ BSTR * path ) = 0;
+	virtual STDMETHODIMP RelativePath(  /* [out, retval] */ BSTR * pbstr_path ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should this cluster classes take priority over other classes with same name?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_override_cluster(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+	virtual STDMETHODIMP IsOverrideCluster(  /* [out, retval] */ VARIANT_BOOL * pvb_override ) = 0;
 
 
 	/*-----------------------------------------------------------
 	Should this cluster be treated as library?
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP is_library(  /* [out, retval] */ VARIANT_BOOL * path ) = 0;
+	virtual STDMETHODIMP IsLibrary(  /* [out, retval] */ VARIANT_BOOL * pvb_library ) = 0;
 
 
 

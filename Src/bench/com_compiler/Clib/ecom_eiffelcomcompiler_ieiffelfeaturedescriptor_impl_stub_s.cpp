@@ -35,7 +35,7 @@ ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::~IEiffelFeatureDescr
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::Name(  /* [out, retval] */ BSTR * pbstr_name )
 
 /*-----------------------------------------------------------
 	Feature name.
@@ -54,18 +54,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::name(  
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::external_name(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::ExternalName(  /* [out, retval] */ BSTR * pbstr_external_name )
 
 /*-----------------------------------------------------------
 	Feature external name.
@@ -84,18 +84,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::externa
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_external_name = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_external_name = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::written_class(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::WrittenClass(  /* [out, retval] */ BSTR * pbstr_class )
 
 /*-----------------------------------------------------------
 	Name of class where feature is written in.
@@ -114,18 +114,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::written
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_class = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_class = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::evaluated_class(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::EvaluatedClass(  /* [out, retval] */ BSTR * pbstr_class )
 
 /*-----------------------------------------------------------
 	Name of class where feature was evaluated in.
@@ -144,18 +144,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::evaluat
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_class = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_class = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::signature(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::Signature(  /* [out, retval] */ BSTR * pbstr_signature )
 
 /*-----------------------------------------------------------
 	Feature signature.
@@ -174,18 +174,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::signatu
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_signature = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_signature = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::description(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::Description(  /* [out, retval] */ BSTR * pbstr_description )
 
 /*-----------------------------------------------------------
 	Feature description.
@@ -204,18 +204,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::descrip
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_description = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_description = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::parameters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumParameter * * params )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::Parameters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumParameter * * pp_ienum_parameter )
 
 /*-----------------------------------------------------------
 	Feature parameters.
@@ -234,18 +234,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::paramet
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*params = grt_ec_ISE.ccom_ec_pointed_interface_94 (eif_access (tmp_object));
+		*pp_ienum_parameter = grt_ec_ISE.ccom_ec_pointed_interface_93 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*params = NULL;
+		*pp_ienum_parameter = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::return_type(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::ReturnType(  /* [out, retval] */ BSTR * pbstr_return_type )
 
 /*-----------------------------------------------------------
 	Feature return type.
@@ -264,18 +264,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::return_
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		*pbstr_return_type = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*return_value = NULL;
+		*pbstr_return_type = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::feature_location(  /* [out] */ BSTR * file_path, /* [out] */ ULONG * line_number )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::FeatureLocation(  /* [out] */ BSTR * pbstr_path, /* [out] */ ULONG * pul_line )
 
 /*-----------------------------------------------------------
 	Feature location, full path to file and line number
@@ -283,33 +283,33 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::feature
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_file_path = NULL;
-	if (file_path != NULL)
+	EIF_OBJECT tmp_pbstr_path = NULL;
+	if (pbstr_path != NULL)
 	{
-		tmp_file_path = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_97 (file_path, NULL));
+		tmp_pbstr_path = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_96 (pbstr_path, NULL));
 	}
-	EIF_OBJECT tmp_line_number = NULL;
-	if (line_number != NULL)
+	EIF_OBJECT tmp_pul_line = NULL;
+	if (pul_line != NULL)
 	{
-		tmp_line_number = eif_protect (rt_ce.ccom_ce_pointed_unsigned_long (line_number, NULL));
+		tmp_pul_line = eif_protect (rt_ce.ccom_ce_pointed_unsigned_long (pul_line, NULL));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
 	eiffel_procedure = eif_procedure ("feature_location", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_file_path != NULL) ? eif_access (tmp_file_path) : NULL), ((tmp_line_number != NULL) ? eif_access (tmp_line_number) : NULL));
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pbstr_path != NULL) ? eif_access (tmp_pbstr_path) : NULL), ((tmp_pul_line != NULL) ? eif_access (tmp_pul_line) : NULL));
 	
-	if (*file_path != NULL)
-		rt_ce.free_memory_bstr (*file_path);
-	grt_ec_ISE.ccom_ec_pointed_cell_97 (((tmp_file_path != NULL) ? eif_wean (tmp_file_path) : NULL), file_path);
-	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_line_number != NULL) ? eif_wean (tmp_line_number) : NULL), line_number);
+	if (*pbstr_path != NULL)
+		rt_ce.free_memory_bstr (*pbstr_path);
+	grt_ec_ISE.ccom_ec_pointed_cell_96 (((tmp_pbstr_path != NULL) ? eif_wean (tmp_pbstr_path) : NULL), pbstr_path);
+	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pul_line != NULL) ? eif_wean (tmp_pul_line) : NULL), pul_line);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::all_callers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_callers )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::AllCallers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature )
 
 /*-----------------------------------------------------------
 	List of all feature callers, including callers of ancestor and descendant versions.
@@ -328,18 +328,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::all_cal
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_callers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
+		*pp_ienum_feature = grt_ec_ISE.ccom_ec_pointed_interface_58 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_callers = NULL;
+		*pp_ienum_feature = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::all_callers_count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::AllCallersCount(  /* [out, retval] */ ULONG * pul_count )
 
 /*-----------------------------------------------------------
 	Number of all callers.
@@ -355,14 +355,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::all_cal
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "all_callers_count", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+	*pul_count = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::local_callers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_callers )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::LocalCallers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature )
 
 /*-----------------------------------------------------------
 	List of feature callers.
@@ -381,18 +381,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::local_c
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_callers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
+		*pp_ienum_feature = grt_ec_ISE.ccom_ec_pointed_interface_58 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_callers = NULL;
+		*pp_ienum_feature = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::local_callers_count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::LocalCallersCount(  /* [out, retval] */ ULONG * pul_count )
 
 /*-----------------------------------------------------------
 	Number of local callers.
@@ -408,14 +408,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::local_c
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "local_callers_count", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+	*pul_count = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::descendant_callers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_callers )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::DescendantCallers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature )
 
 /*-----------------------------------------------------------
 	List of feature callers, including callers of descendant versions.
@@ -434,18 +434,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::descend
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_callers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
+		*pp_ienum_feature = grt_ec_ISE.ccom_ec_pointed_interface_58 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_callers = NULL;
+		*pp_ienum_feature = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::descendant_callers_count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::DescendantCallersCount(  /* [out, retval] */ ULONG * pul_count )
 
 /*-----------------------------------------------------------
 	Number of descendant callers.
@@ -461,14 +461,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::descend
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "descendant_callers_count", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+	*pul_count = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::implementers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_implementers )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::Implementers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature )
 
 /*-----------------------------------------------------------
 	List of implementers.
@@ -487,18 +487,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::impleme
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_implementers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
+		*pp_ienum_feature = grt_ec_ISE.ccom_ec_pointed_interface_58 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_implementers = NULL;
+		*pp_ienum_feature = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::implementer_count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::ImplementersCount(  /* [out, retval] */ ULONG * pul_count )
 
 /*-----------------------------------------------------------
 	Number of feature implementers.
@@ -508,20 +508,20 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::impleme
 
 	
 	EIF_INTEGER_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_integer_function ("implementer_count", type_id);
+	eiffel_function = eif_integer_function ("implementers_count", type_id);
 	EIF_INTEGER tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "implementer_count", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+		tmp_value = eif_field (eif_access (eiffel_object), "implementers_count", EIF_INTEGER);
+	*pul_count = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::ancestor_versions(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_implementers )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::AncestorVersions(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature )
 
 /*-----------------------------------------------------------
 	List of ancestor versions.
@@ -540,18 +540,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::ancesto
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_implementers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
+		*pp_ienum_feature = grt_ec_ISE.ccom_ec_pointed_interface_58 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_implementers = NULL;
+		*pp_ienum_feature = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::ancestor_version_count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::AncestorVersionsCount(  /* [out, retval] */ ULONG * pul_count )
 
 /*-----------------------------------------------------------
 	Number of ancestor versions.
@@ -561,20 +561,20 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::ancesto
 
 	
 	EIF_INTEGER_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_integer_function ("ancestor_version_count", type_id);
+	eiffel_function = eif_integer_function ("ancestor_versions_count", type_id);
 	EIF_INTEGER tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "ancestor_version_count", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+		tmp_value = eif_field (eif_access (eiffel_object), "ancestor_versions_count", EIF_INTEGER);
+	*pul_count = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::descendant_versions(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_implementers )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::DescendantVersions(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature )
 
 /*-----------------------------------------------------------
 	List of descendant versions.
@@ -593,18 +593,18 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::descend
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_implementers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
+		*pp_ienum_feature = grt_ec_ISE.ccom_ec_pointed_interface_58 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
-		*some_implementers = NULL;
+		*pp_ienum_feature = NULL;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::descendant_version_count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::DescendantVersionsCount(  /* [out, retval] */ ULONG * pul_count )
 
 /*-----------------------------------------------------------
 	Number of descendant versions.
@@ -614,20 +614,20 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::descend
 
 	
 	EIF_INTEGER_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_integer_function ("descendant_version_count", type_id);
+	eiffel_function = eif_integer_function ("descendant_versions_count", type_id);
 	EIF_INTEGER tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "descendant_version_count", EIF_INTEGER);
-	*return_value = (ULONG)tmp_value;
+		tmp_value = eif_field (eif_access (eiffel_object), "descendant_versions_count", EIF_INTEGER);
+	*pul_count = (ULONG)tmp_value;
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::exported_to_all(  /* [out, retval] */ VARIANT_BOOL * names )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::ExportedToAll(  /* [out, retval] */ VARIANT_BOOL * pvb_exported )
 
 /*-----------------------------------------------------------
 	Is feature exported to all classes?
@@ -643,14 +643,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::exporte
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "exported_to_all", EIF_BOOLEAN);
-	*names = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_exported = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_once(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsOnce(  /* [out, retval] */ VARIANT_BOOL * pvb_once )
 
 /*-----------------------------------------------------------
 	Is once feature?
@@ -666,14 +666,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_once
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_once", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_once = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_external(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsExternal(  /* [out, retval] */ VARIANT_BOOL * pvb_external )
 
 /*-----------------------------------------------------------
 	Is external feature?
@@ -689,14 +689,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_exte
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_external", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_external = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_deferred(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsDeferred(  /* [out, retval] */ VARIANT_BOOL * pvb_deferred )
 
 /*-----------------------------------------------------------
 	Is deferred feature?
@@ -712,14 +712,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_defe
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_deferred", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_deferred = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_constant(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsConstant(  /* [out, retval] */ VARIANT_BOOL * pvb_constant )
 
 /*-----------------------------------------------------------
 	Is constant?
@@ -735,14 +735,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_cons
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_constant", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_constant = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_frozen(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsFrozen(  /* [out, retval] */ VARIANT_BOOL * pvb_froze )
 
 /*-----------------------------------------------------------
 	is frozen feature?
@@ -758,14 +758,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_froz
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_frozen", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_froze = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_infix(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsInfix(  /* [out, retval] */ VARIANT_BOOL * pvb_infix )
 
 /*-----------------------------------------------------------
 	Is infix?
@@ -781,14 +781,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_infi
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_infix", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_infix = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_prefix(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsPrefix(  /* [out, retval] */ VARIANT_BOOL * pvb_prefix )
 
 /*-----------------------------------------------------------
 	Is prefix?
@@ -804,14 +804,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_pref
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_prefix", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_prefix = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_attribute(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsAttribute(  /* [out, retval] */ VARIANT_BOOL * pvb_attribute )
 
 /*-----------------------------------------------------------
 	Is attribute?
@@ -827,14 +827,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_attr
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_attribute", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_attribute = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_procedure(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsProcedure(  /* [out, retval] */ VARIANT_BOOL * pvb_procedure )
 
 /*-----------------------------------------------------------
 	Is procedure?
@@ -850,14 +850,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_proc
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_procedure", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_procedure = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_function(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsFunction(  /* [out, retval] */ VARIANT_BOOL * pvb_function )
 
 /*-----------------------------------------------------------
 	Is function?
@@ -873,14 +873,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_func
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_function", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_function = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_unique(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsUnique(  /* [out, retval] */ VARIANT_BOOL * pvb_unique )
 
 /*-----------------------------------------------------------
 	Is unique?
@@ -896,14 +896,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_uniq
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_unique", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_unique = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_obsolete(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::IsObsolete(  /* [out, retval] */ VARIANT_BOOL * pvb_obsolete )
 
 /*-----------------------------------------------------------
 	Is obsolete feature?
@@ -919,14 +919,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::is_obso
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "is_obsolete", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_obsolete = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::has_precondition(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::HasPrecondition(  /* [out, retval] */ VARIANT_BOOL * pvb_precondition )
 
 /*-----------------------------------------------------------
 	Does feature have precondition?
@@ -942,14 +942,14 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::has_pre
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "has_precondition", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_precondition = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::has_postcondition(  /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::HasPostcondition(  /* [out, retval] */ VARIANT_BOOL * pvb_postcondition )
 
 /*-----------------------------------------------------------
 	Does feature have postcondition?
@@ -965,7 +965,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelFeatureDescriptor_impl_stub::has_pos
 		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "has_postcondition", EIF_BOOLEAN);
-	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	*pvb_postcondition = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;

@@ -43,85 +43,85 @@ public:
 	/*-----------------------------------------------------------
 	List of classes in system.
 	-----------------------------------------------------------*/
-	STDMETHODIMP system_classes(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_classes );
+	STDMETHODIMP SystemClasses(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class );
 
 
 	/*-----------------------------------------------------------
 	Number of classes in system.
 	-----------------------------------------------------------*/
-	STDMETHODIMP class_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP ClassCount(  /* [out, retval] */ ULONG * pul_class_count );
 
 
 	/*-----------------------------------------------------------
 	List of system's clusters.
 	-----------------------------------------------------------*/
-	STDMETHODIMP system_clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * some_clusters );
+	STDMETHODIMP SystemClusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * pp_ienum_cluster );
 
 
 	/*-----------------------------------------------------------
 	List of system's external clusters.
 	-----------------------------------------------------------*/
-	STDMETHODIMP external_clusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * some_clusters );
+	STDMETHODIMP ExternalClusters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumCluster * * pp_ienum_cluster );
 
 
 	/*-----------------------------------------------------------
 	Returns all of the assemblies in an enumerator
 	-----------------------------------------------------------*/
-	STDMETHODIMP assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumAssembly * * return_value );
+	STDMETHODIMP Assemblies(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumAssembly * * pp_ienum_assembly );
 
 
 	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
-	STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP ClusterCount(  /* [out, retval] */ ULONG * pul_cluster_count );
 
 
 	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
-	STDMETHODIMP root_cluster(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * return_value );
+	STDMETHODIMP RootCluster(  /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * pp_ieiffel_cluster_descriptor );
 
 
 	/*-----------------------------------------------------------
 	Cluster descriptor.
 	-----------------------------------------------------------*/
-	STDMETHODIMP cluster_descriptor(  /* [in] */ BSTR cluster_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * return_value );
+	STDMETHODIMP ClusterDescriptor(  /* [in] */ BSTR bstr_class_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClusterDescriptor * * pp_ieiffel_cluster_descriptor );
 
 
 	/*-----------------------------------------------------------
 	Class descriptor.
 	-----------------------------------------------------------*/
-	STDMETHODIMP class_descriptor(  /* [in] */ BSTR class_name1, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClassDescriptor * * return_value );
+	STDMETHODIMP ClassDescriptor(  /* [in] */ BSTR bstr_cluster_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelClassDescriptor * * pp_ieiffel_class_descriptor );
 
 
 	/*-----------------------------------------------------------
 	Feature descriptor.
 	-----------------------------------------------------------*/
-	STDMETHODIMP feature_descriptor(  /* [in] */ BSTR class_name1, /* [in] */ BSTR feature_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * return_value );
+	STDMETHODIMP FeatureDescriptor(  /* [in] */ BSTR bstr_class_name, /* [in] */ BSTR bstr_feature_name, /* [out, retval] */ ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * pp_ieiffel_feature_descriptor );
 
 
 	/*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
 	-----------------------------------------------------------*/
-	STDMETHODIMP search_classes(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * some_classes );
+	STDMETHODIMP SearchClasses(  /* [in] */ BSTR bstr_search_str, /* [in] */ VARIANT_BOOL vb_is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumEiffelClass * * pp_ienum_eiffel_class );
 
 
 	/*-----------------------------------------------------------
 	Search feature with names matching `a_string'.
 	-----------------------------------------------------------*/
-	STDMETHODIMP search_features(  /* [in] */ BSTR a_string, /* [in] */ VARIANT_BOOL is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_features );
+	STDMETHODIMP SearchFeatures(  /* [in] */ BSTR bstr_search_str, /* [in] */ VARIANT_BOOL vb_is_substring, /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Retrieve description from dotnet type
 	-----------------------------------------------------------*/
-	STDMETHODIMP description_from_dotnet_type(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP DescriptionFromDotnetType(  /* [in] */ BSTR bstr_assembly_name, /* [in] */ BSTR bstr_full_dotnet_name, /* [out, retval] */ BSTR * pbstr_description );
 
 
 	/*-----------------------------------------------------------
 	Retrieve description from dotnet feature
 	-----------------------------------------------------------*/
-	STDMETHODIMP description_from_dotnet_feature(  /* [in] */ BSTR a_assembly_name, /* [in] */ BSTR a_full_dotnet_type, /* [in] */ BSTR a_feature_signature, /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP DescriptionFromDotnetFeature(  /* [in] */ BSTR bstr_assembly_name, /* [in] */ BSTR bstr_full_dotnet_name, /* [in] */ BSTR bstr_feature_signature, /* [out, retval] */ BSTR * pbstr_description );
 
 
 	/*-----------------------------------------------------------

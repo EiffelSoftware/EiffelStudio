@@ -95,43 +95,43 @@ public:
 	/*-----------------------------------------------------------
 	Cluster descriptor.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_cluster_descriptor(  /* [in] */ EIF_OBJECT cluster_name );
+	EIF_REFERENCE ccom_cluster_descriptor(  /* [in] */ EIF_OBJECT bstr_class_name );
 
 
 	/*-----------------------------------------------------------
 	Class descriptor.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_class_descriptor(  /* [in] */ EIF_OBJECT class_name1 );
+	EIF_REFERENCE ccom_class_descriptor(  /* [in] */ EIF_OBJECT bstr_cluster_name );
 
 
 	/*-----------------------------------------------------------
 	Feature descriptor.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_feature_descriptor(  /* [in] */ EIF_OBJECT class_name1,  /* [in] */ EIF_OBJECT feature_name );
+	EIF_REFERENCE ccom_feature_descriptor(  /* [in] */ EIF_OBJECT bstr_class_name,  /* [in] */ EIF_OBJECT bstr_feature_name );
 
 
 	/*-----------------------------------------------------------
 	Search classes with names matching `a_string'.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_search_classes(  /* [in] */ EIF_OBJECT a_string,  /* [in] */ EIF_BOOLEAN is_substring );
+	EIF_REFERENCE ccom_search_classes(  /* [in] */ EIF_OBJECT bstr_search_str,  /* [in] */ EIF_BOOLEAN vb_is_substring );
 
 
 	/*-----------------------------------------------------------
 	Search feature with names matching `a_string'.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_search_features(  /* [in] */ EIF_OBJECT a_string,  /* [in] */ EIF_BOOLEAN is_substring );
+	EIF_REFERENCE ccom_search_features(  /* [in] */ EIF_OBJECT bstr_search_str,  /* [in] */ EIF_BOOLEAN vb_is_substring );
 
 
 	/*-----------------------------------------------------------
 	Retrieve description from dotnet type
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_description_from_dotnet_type(  /* [in] */ EIF_OBJECT a_assembly_name,  /* [in] */ EIF_OBJECT a_full_dotnet_type );
+	EIF_REFERENCE ccom_description_from_dotnet_type(  /* [in] */ EIF_OBJECT bstr_assembly_name,  /* [in] */ EIF_OBJECT bstr_full_dotnet_name );
 
 
 	/*-----------------------------------------------------------
 	Retrieve description from dotnet feature
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_description_from_dotnet_feature(  /* [in] */ EIF_OBJECT a_assembly_name,  /* [in] */ EIF_OBJECT a_full_dotnet_type,  /* [in] */ EIF_OBJECT a_feature_signature );
+	EIF_REFERENCE ccom_description_from_dotnet_feature(  /* [in] */ EIF_OBJECT bstr_assembly_name,  /* [in] */ EIF_OBJECT bstr_full_dotnet_name,  /* [in] */ EIF_OBJECT bstr_feature_signature );
 
 
 	/*-----------------------------------------------------------

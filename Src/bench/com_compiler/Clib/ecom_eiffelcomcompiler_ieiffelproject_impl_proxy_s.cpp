@@ -47,7 +47,7 @@ ecom_EiffelComCompiler::IEiffelProject_impl_proxy::~IEiffelProject_impl_proxy()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_retrieve_eiffel_project(  /* [in] */ EIF_OBJECT a_project_file_name )
+void ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_retrieve_eiffel_project(  /* [in] */ EIF_OBJECT bstr_project_file_name )
 
 /*-----------------------------------------------------------
 	Retrieve Eiffel Project
@@ -64,10 +64,10 @@ void ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_retrieve_eiffel_pro
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_a_project_file_name = 0;
-	tmp_a_project_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_project_file_name));
+	BSTR tmp_bstr_project_file_name = 0;
+	tmp_bstr_project_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_project_file_name));
 	
-	hr = p_IEiffelProject->retrieve_eiffel_project(tmp_a_project_file_name);
+	hr = p_IEiffelProject->RetrieveEiffelProject(tmp_bstr_project_file_name);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -75,15 +75,15 @@ void ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_retrieve_eiffel_pro
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_a_project_file_name);
+	rt_ce.free_memory_bstr (tmp_bstr_project_file_name);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_create_eiffel_project(  /* [in] */ EIF_OBJECT a_ace_file_name,  /* [in] */ EIF_OBJECT a_project_directory_path )
+void ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_create_eiffel_project(  /* [in] */ EIF_OBJECT bstr_ace_file_name,  /* [in] */ EIF_OBJECT bstr_project_directory )
 
 /*-----------------------------------------------------------
-	Create new Eiffel project.
+	Create new Eiffel project from an existing ace file.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -97,12 +97,12 @@ void ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_create_eiffel_proje
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_a_ace_file_name = 0;
-	tmp_a_ace_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_ace_file_name));
-	BSTR tmp_a_project_directory_path = 0;
-	tmp_a_project_directory_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_project_directory_path));
+	BSTR tmp_bstr_ace_file_name = 0;
+	tmp_bstr_ace_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_ace_file_name));
+	BSTR tmp_bstr_project_directory = 0;
+	tmp_bstr_project_directory = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_project_directory));
 	
-	hr = p_IEiffelProject->create_eiffel_project(tmp_a_ace_file_name,tmp_a_project_directory_path);
+	hr = p_IEiffelProject->CreateEiffelProject(tmp_bstr_ace_file_name,tmp_bstr_project_directory);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -110,8 +110,53 @@ void ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_create_eiffel_proje
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_a_ace_file_name);
-rt_ce.free_memory_bstr (tmp_a_project_directory_path);
+	rt_ce.free_memory_bstr (tmp_bstr_ace_file_name);
+rt_ce.free_memory_bstr (tmp_bstr_project_directory);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_generate_new_eiffel_project(  /* [in] */ EIF_OBJECT bstr_project_name,  /* [in] */ EIF_OBJECT bstr_ace_file_name,  /* [in] */ EIF_OBJECT bstr_root_class_name,  /* [in] */ EIF_OBJECT bstr_creation_routine,  /* [in] */ EIF_OBJECT bstr_project_directory )
+
+/*-----------------------------------------------------------
+	Create new Eiffel project from scratch.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelProject == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelProject_, (void **)&p_IEiffelProject);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_bstr_project_name = 0;
+	tmp_bstr_project_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_project_name));
+	BSTR tmp_bstr_ace_file_name = 0;
+	tmp_bstr_ace_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_ace_file_name));
+	BSTR tmp_bstr_root_class_name = 0;
+	tmp_bstr_root_class_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_root_class_name));
+	BSTR tmp_bstr_creation_routine = 0;
+	tmp_bstr_creation_routine = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_creation_routine));
+	BSTR tmp_bstr_project_directory = 0;
+	tmp_bstr_project_directory = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_project_directory));
+	
+	hr = p_IEiffelProject->GenerateNewEiffelProject(tmp_bstr_project_name,tmp_bstr_ace_file_name,tmp_bstr_root_class_name,tmp_bstr_creation_routine,tmp_bstr_project_directory);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_bstr_project_name);
+rt_ce.free_memory_bstr (tmp_bstr_ace_file_name);
+rt_ce.free_memory_bstr (tmp_bstr_root_class_name);
+rt_ce.free_memory_bstr (tmp_bstr_creation_routine);
+rt_ce.free_memory_bstr (tmp_bstr_project_directory);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -135,7 +180,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_project_fi
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelProject->project_file_name( &ret_value);
+	hr = p_IEiffelProject->ProjectFileName( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -169,7 +214,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_ace_file_n
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelProject->ace_file_name( &ret_value);
+	hr = p_IEiffelProject->AceFileName( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -203,7 +248,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_project_di
 	};
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelProject->project_directory( &ret_value);
+	hr = p_IEiffelProject->ProjectDirectory( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -218,7 +263,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_project_di
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_valid_project(  )
+EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_is_valid_project(  )
 
 /*-----------------------------------------------------------
 	Is project valid?
@@ -237,7 +282,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_valid_projec
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelProject->valid_project( &ret_value);
+	hr = p_IEiffelProject->IsValidProject( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -270,7 +315,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_last_excep
 	};
 	ecom_EiffelComCompiler::IEiffelException * ret_value = 0;
 	
-	hr = p_IEiffelProject->last_exception( &ret_value);
+	hr = p_IEiffelProject->LastException( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -303,7 +348,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_compiler( 
 	};
 	ecom_EiffelComCompiler::IEiffelCompiler * ret_value = 0;
 	
-	hr = p_IEiffelProject->compiler( &ret_value);
+	hr = p_IEiffelProject->Compiler( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -336,7 +381,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_is_compiled(
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelProject->is_compiled( &ret_value);
+	hr = p_IEiffelProject->IsCompiled( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -369,7 +414,7 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_project_has_
 	};
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelProject->project_has_updated( &ret_value);
+	hr = p_IEiffelProject->ProjectHasUpdated( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -402,7 +447,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_system_bro
 	};
 	ecom_EiffelComCompiler::IEiffelSystemBrowser * ret_value = 0;
 	
-	hr = p_IEiffelProject->system_browser( &ret_value);
+	hr = p_IEiffelProject->SystemBrowser( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -435,7 +480,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_project_pr
 	};
 	ecom_EiffelComCompiler::IEiffelProjectProperties * ret_value = 0;
 	
-	hr = p_IEiffelProject->project_properties( &ret_value);
+	hr = p_IEiffelProject->ProjectProperties( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -468,7 +513,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_completion
 	};
 	ecom_EiffelComCompiler::IEiffelCompletionInfo * ret_value = 0;
 	
-	hr = p_IEiffelProject->completion_information( &ret_value);
+	hr = p_IEiffelProject->CompletionInformation( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -482,7 +527,7 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_completion
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_html_doc_generator(  )
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_html_documentation_generator(  )
 
 /*-----------------------------------------------------------
 	Help documentation generator
@@ -499,9 +544,9 @@ EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProject_impl_proxy::ccom_html_doc_g
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * ret_value = 0;
+	ecom_EiffelComCompiler::IEiffelHtmlDocumentationGenerator * ret_value = 0;
 	
-	hr = p_IEiffelProject->html_doc_generator( &ret_value);
+	hr = p_IEiffelProject->HtmlDocumentationGenerator( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

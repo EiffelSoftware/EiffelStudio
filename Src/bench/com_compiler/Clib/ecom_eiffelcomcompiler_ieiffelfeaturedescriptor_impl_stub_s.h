@@ -43,217 +43,217 @@ public:
 	/*-----------------------------------------------------------
 	Feature name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Name(  /* [out, retval] */ BSTR * pbstr_name );
 
 
 	/*-----------------------------------------------------------
 	Feature external name.
 	-----------------------------------------------------------*/
-	STDMETHODIMP external_name(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP ExternalName(  /* [out, retval] */ BSTR * pbstr_external_name );
 
 
 	/*-----------------------------------------------------------
 	Name of class where feature is written in.
 	-----------------------------------------------------------*/
-	STDMETHODIMP written_class(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP WrittenClass(  /* [out, retval] */ BSTR * pbstr_class );
 
 
 	/*-----------------------------------------------------------
 	Name of class where feature was evaluated in.
 	-----------------------------------------------------------*/
-	STDMETHODIMP evaluated_class(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP EvaluatedClass(  /* [out, retval] */ BSTR * pbstr_class );
 
 
 	/*-----------------------------------------------------------
 	Feature signature.
 	-----------------------------------------------------------*/
-	STDMETHODIMP signature(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Signature(  /* [out, retval] */ BSTR * pbstr_signature );
 
 
 	/*-----------------------------------------------------------
 	Feature description.
 	-----------------------------------------------------------*/
-	STDMETHODIMP description(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP Description(  /* [out, retval] */ BSTR * pbstr_description );
 
 
 	/*-----------------------------------------------------------
 	Feature parameters.
 	-----------------------------------------------------------*/
-	STDMETHODIMP parameters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumParameter * * params );
+	STDMETHODIMP Parameters(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumParameter * * pp_ienum_parameter );
 
 
 	/*-----------------------------------------------------------
 	Feature return type.
 	-----------------------------------------------------------*/
-	STDMETHODIMP return_type(  /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP ReturnType(  /* [out, retval] */ BSTR * pbstr_return_type );
 
 
 	/*-----------------------------------------------------------
 	Feature location, full path to file and line number
 	-----------------------------------------------------------*/
-	STDMETHODIMP feature_location(  /* [out] */ BSTR * file_path, /* [out] */ ULONG * line_number );
+	STDMETHODIMP FeatureLocation(  /* [out] */ BSTR * pbstr_path, /* [out] */ ULONG * pul_line );
 
 
 	/*-----------------------------------------------------------
 	List of all feature callers, including callers of ancestor and descendant versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP all_callers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_callers );
+	STDMETHODIMP AllCallers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Number of all callers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP all_callers_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP AllCallersCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of feature callers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP local_callers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_callers );
+	STDMETHODIMP LocalCallers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Number of local callers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP local_callers_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP LocalCallersCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of feature callers, including callers of descendant versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendant_callers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_callers );
+	STDMETHODIMP DescendantCallers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Number of descendant callers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendant_callers_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP DescendantCallersCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of implementers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP implementers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_implementers );
+	STDMETHODIMP Implementers(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Number of feature implementers.
 	-----------------------------------------------------------*/
-	STDMETHODIMP implementer_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP ImplementersCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of ancestor versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP ancestor_versions(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_implementers );
+	STDMETHODIMP AncestorVersions(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Number of ancestor versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP ancestor_version_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP AncestorVersionsCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	List of descendant versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendant_versions(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * some_implementers );
+	STDMETHODIMP DescendantVersions(  /* [out, retval] */ ecom_EiffelComCompiler::IEnumFeature * * pp_ienum_feature );
 
 
 	/*-----------------------------------------------------------
 	Number of descendant versions.
 	-----------------------------------------------------------*/
-	STDMETHODIMP descendant_version_count(  /* [out, retval] */ ULONG * return_value );
+	STDMETHODIMP DescendantVersionsCount(  /* [out, retval] */ ULONG * pul_count );
 
 
 	/*-----------------------------------------------------------
 	Is feature exported to all classes?
 	-----------------------------------------------------------*/
-	STDMETHODIMP exported_to_all(  /* [out, retval] */ VARIANT_BOOL * names );
+	STDMETHODIMP ExportedToAll(  /* [out, retval] */ VARIANT_BOOL * pvb_exported );
 
 
 	/*-----------------------------------------------------------
 	Is once feature?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_once(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsOnce(  /* [out, retval] */ VARIANT_BOOL * pvb_once );
 
 
 	/*-----------------------------------------------------------
 	Is external feature?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_external(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsExternal(  /* [out, retval] */ VARIANT_BOOL * pvb_external );
 
 
 	/*-----------------------------------------------------------
 	Is deferred feature?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_deferred(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsDeferred(  /* [out, retval] */ VARIANT_BOOL * pvb_deferred );
 
 
 	/*-----------------------------------------------------------
 	Is constant?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_constant(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsConstant(  /* [out, retval] */ VARIANT_BOOL * pvb_constant );
 
 
 	/*-----------------------------------------------------------
 	is frozen feature?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_frozen(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsFrozen(  /* [out, retval] */ VARIANT_BOOL * pvb_froze );
 
 
 	/*-----------------------------------------------------------
 	Is infix?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_infix(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsInfix(  /* [out, retval] */ VARIANT_BOOL * pvb_infix );
 
 
 	/*-----------------------------------------------------------
 	Is prefix?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_prefix(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsPrefix(  /* [out, retval] */ VARIANT_BOOL * pvb_prefix );
 
 
 	/*-----------------------------------------------------------
 	Is attribute?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_attribute(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsAttribute(  /* [out, retval] */ VARIANT_BOOL * pvb_attribute );
 
 
 	/*-----------------------------------------------------------
 	Is procedure?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_procedure(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsProcedure(  /* [out, retval] */ VARIANT_BOOL * pvb_procedure );
 
 
 	/*-----------------------------------------------------------
 	Is function?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_function(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsFunction(  /* [out, retval] */ VARIANT_BOOL * pvb_function );
 
 
 	/*-----------------------------------------------------------
 	Is unique?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_unique(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsUnique(  /* [out, retval] */ VARIANT_BOOL * pvb_unique );
 
 
 	/*-----------------------------------------------------------
 	Is obsolete feature?
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_obsolete(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP IsObsolete(  /* [out, retval] */ VARIANT_BOOL * pvb_obsolete );
 
 
 	/*-----------------------------------------------------------
 	Does feature have precondition?
 	-----------------------------------------------------------*/
-	STDMETHODIMP has_precondition(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP HasPrecondition(  /* [out, retval] */ VARIANT_BOOL * pvb_precondition );
 
 
 	/*-----------------------------------------------------------
 	Does feature have postcondition?
 	-----------------------------------------------------------*/
-	STDMETHODIMP has_postcondition(  /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP HasPostcondition(  /* [out, retval] */ VARIANT_BOOL * pvb_postcondition );
 
 
 	/*-----------------------------------------------------------

@@ -129,33 +129,6 @@ feature -- Event handling
 	deselect_actions: EV_ITEM_SELECT_ACTION_SEQUENCE
 			-- Actions to be performed when an item is deselected.
 
-feature {NONE}-- Assertion
-
-	lists_equal (list1, list2: LINKED_LIST [EV_LIST_ITEM]): BOOLEAN is
-			-- Are elements in `list1' equal to those in `list2'.
-		require
-			list1_not_void: list1 /= Void
-			list2_not_void: list2 /= Void
-		do
-			if list1.count = list1.count and then list1.count > 0 then
-				from
-					list1.start
-					list2.start
-					Result := True
-				until
-					list1.off
-				loop
-					if list1.item /= list2.item then
-						Result := False
-					end
-					list1.forth
-					list2.forth
-				end
-				list1.start
-				list2.start
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -213,6 +186,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/01 23:44:14  king
+--| Moved lists_equal in to item_list
+--|
 --| Revision 1.35  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -64,7 +64,7 @@ feature -- Access
 		do
 			if keywords_case_sensitive then
 				if keyword_h_table.has (word) then
-					Result := keyword_h_table.position
+					Result := word.hash_code
 				else
 					Result := -1
 				end
@@ -72,7 +72,7 @@ feature -- Access
 				lower_word := clone (word);
 				lower_word.to_lower;
 				if keyword_h_table.has (lower_word) then
-					Result := keyword_h_table.position
+					Result := lower_word.hash_code
 				else
 					Result := -1
 				end
@@ -107,17 +107,29 @@ feature -- Access
 
 	keyword_string (n: INTEGER): STRING is
 			-- Keyword corresponding to keyword code `n'
+		local
+			finished: BOOLEAN
 		do
-			Result := keyword_h_table.key_at (n)
+			from
+				keyword_h_table.start
+			until
+				finished or keyword_h_table.after
+			loop
+				finished := n = keyword_h_table.key_for_iteration.hash_code
+				if finished then
+					Result := keyword_h_table.key_for_iteration
+				end
+				keyword_h_table.forth
+			end
+		ensure
+			keyword_found: Result /= Void
 		end;
-
 
 	token_type: INTEGER;
 			-- Type of last token read
 
 	No_token: INTEGER is 0;
 			-- Token type for no token recognized.
-
 
 	other_possible_tokens: ARRAY [INTEGER];
 			-- Other candidate types for last recognized token

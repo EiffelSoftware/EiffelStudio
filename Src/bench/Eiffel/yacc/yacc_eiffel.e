@@ -1,3 +1,11 @@
+indexing
+
+	description: 
+		"Yacc to Eiffel interface for AST structures %
+		%specically for bench.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class YACC_EIFFEL
 
 inherit

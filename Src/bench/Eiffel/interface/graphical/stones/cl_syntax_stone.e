@@ -15,8 +15,7 @@ inherit
 		redefine
 			stone_type, stone_name, stone_cursor,
 			process, x_stone_cursor
-		end;
-	INTERFACE_W
+		end
 
 creation
 

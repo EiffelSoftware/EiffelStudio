@@ -61,7 +61,6 @@ feature -- Update
 		do
 			if is_valid then
 				hole.process_feature_error (Current)
-print ("processing feature%N")
 			else
 				warner (hole.target.top).gotcha_call (invalid_stone_message)
 			end

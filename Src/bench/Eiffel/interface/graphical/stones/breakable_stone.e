@@ -13,8 +13,7 @@ inherit
 		redefine
 			header
 		end;
-	SHARED_DEBUG;
-	INTERFACE_W
+	SHARED_DEBUG
 
 creation
 

@@ -13,10 +13,7 @@ inherit
 		redefine
 			is_valid, synchronized_stone, same_as, history_name
 		end;
-
-	SHARED_APPLICATION_EXECUTION;
-
-	INTERFACE_W
+	SHARED_APPLICATION_EXECUTION
 	
 creation
 

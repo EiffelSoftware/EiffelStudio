@@ -57,8 +57,7 @@ feature
 
 feature {NONE}
 
-	update_assert_set (features: LINKED_LIST [FEATURE_I]; new_feat: FEATURE_I)
-is
+	update_assert_set (features: LINKED_LIST [FEATURE_I]; new_feat: FEATURE_I) is
 			-- Update assert_id_set of `new_feat' from `features'.
 		require
 			valid_features: features /= Void;

@@ -66,10 +66,10 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	ev_children: ARRAYED_LIST [EV_ITEM_IMP] is
-			-- List used to store the items.
-		deferred
-		end
+	--ev_children: ARRAYED_LIST [EV_ITEM_IMP] is
+	--		-- List used to store the items.
+	--	deferred
+	--	end
 
 end -- class EV_ARRAYED_LIST_ITEM_HOLDER_IMP
 
@@ -94,6 +94,12 @@ end -- class EV_ARRAYED_LIST_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/05 21:16:11  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.5.4.1  2000/04/03 18:16:37  brendel
+--| Removed deferred redeclaration of ev_children.
+--|
 --| Revision 1.5  2000/02/19 05:45:00  oconnor
 --| released
 --|

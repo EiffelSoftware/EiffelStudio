@@ -15,277 +15,28 @@ inherit
 		end
 
 	EV_CONTAINER_IMP
+		undefine
+			replace
 		redefine
 			interface,
-			replace,
-			extend
+			initialize
 		end
 
-feature -- Access
+	EV_DYNAMIC_LIST_IMP [EV_WIDGET]
+		redefine
+			interface
+		end
 
-	item: EV_WIDGET is
-			-- Current item.
-		local
-			child: POINTER
-			imp: EV_ANY_IMP
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Set `list_widget' to `c_object'.
 		do
-			if index > 0 and then index <= count then
-				child := C.g_list_nth_data (
-					C.gtk_container_children (c_object),
-					index - 1
-				)
-				check
-					child_not_void: child /= Default_pointer
-				end
-				imp := eif_object_from_c (child)
-				check
-					imp_not_void: imp /= Void
-						-- C object should have Eiffel object.
-				end
-				Result ?= imp.interface
-				check
-					Result_not_void: Result /= Void
-				end
-			end
+			Precursor
+			list_widget := c_object
 		end
 
-	index: INTEGER
-			-- Index of current position.
-
-	cursor: CURSOR is
-			-- Current cursor position.
-		do
-			create {EV_WIDGET_LIST_CURSOR} Result.make (index)
-		end
-	
-feature -- Measurement
-
-	count: INTEGER is
-			-- Number of items.
-		do
-			if c_object /= Default_pointer then
-					--| called by invariant: empty_constraint
-				Result := C.g_list_length (C.gtk_container_children (c_object))
-			end
-		end
-
-feature -- Status report
-
-	valid_cursor (a_cursor: CURSOR): BOOLEAN is
-			-- Can the cursor be moved to position `p'?
-		local
-			wl_cursor: EV_WIDGET_LIST_CURSOR
-		do
-			wl_cursor ?= a_cursor;
-			check
-				wl_cursor_not_void: wl_cursor /= Void
-			end
-			Result := wl_cursor /= Void and then
-				(wl_cursor.index >= 0 and wl_cursor.index <= count + 1)
-		end
-
-feature -- Cursor movement
-
-	back is
-			-- Move to previous item.
-		do
-			index := index - 1
-		end
-
-	forth is
-			-- Move cursor to next position.
-		do
-			index := index + 1
-		end
-
-	go_to (p: CURSOR) is
-			-- Move cursor to position `p'.
-		local
-			wl_c: EV_WIDGET_LIST_CURSOR
-		do
-			wl_c ?= p;
-			check
-				wl_c /= Void
-			end
-			index := wl_c.index
-		end
-
-	move (i: INTEGER) is
-			-- Move cursor `i' positions.
-		do
-			index := index + i
-			if (index > count + 1) then
-				index := count + 1
-			elseif (index < 0) then
-				index := 0
-			end
-		end
-
-feature -- Element change
-
-	extend (v: like item) is
-			-- If add `v' to end.
-			-- Do not move cursor.
-		local
-			imp: EV_WIDGET_IMP
-		do
-			if index > count then
-				index := index + 1
-			end
-			if v.parent /= Void then
-				v.parent.prune (v)
-			end
-			imp ?= v.implementation
-			check
-				imp_not_void: imp /= Void
-			end
-			C.gtk_container_add (c_object, imp.c_object)
-			new_item_actions.call ([v])
-		end
-
-	replace (v: like item) is
-			-- Replace current item by `v'.
-		local
-			imp: EV_WIDGET_IMP
-		do
-			if v.parent /= Void then
-				v.parent.prune (v)
-			end
-			imp ?= v.implementation
-			check
-				imp_not_void: imp /= Void
-			end
-			remove
-			C.gtk_container_add (c_object, imp.c_object)
-			gtk_reorder_child (c_object, imp.c_object, index - 1)
-			new_item_actions.call ([v])
-		end
-
-	put_front (v: like item) is
-			-- Add `v' to beginning.
-			-- Do not move cursor.
-		local
-			imp: EV_WIDGET_IMP
-		do
-			if v.parent /= Void then
-				v.parent.prune (v)
-			end
-			imp ?= v.implementation
-			check
-				imp_not_void: imp /= Void
-			end
-			if index /= 0 then
-				index := index + 1
-			end
-			C.gtk_container_add (c_object, imp.c_object)
-			gtk_reorder_child (c_object, imp.c_object, 0)
-			new_item_actions.call ([v])
-		end
-
-	put_right (v: like item) is
-			-- Add `v' to the right of cursor position.
-			-- Do not move cursor.
-		local
-			imp: EV_WIDGET_IMP
-		do
-			if v.parent /= Void then
-				v.parent.prune (v)
-			end
-			imp ?= v.implementation
-			check
-				imp_not_void: imp /= Void
-			end
-			C.gtk_container_add (c_object, imp.c_object)
-			gtk_reorder_child (c_object, imp.c_object, index)
-			new_item_actions.call ([v])
-		end
-
-feature -- Removal
-
-	prune (v: like item) is
-			-- Remove `v' if present.
-		local
-			imp: EV_WIDGET_IMP
-			pos: INTEGER
-		do
-			pos := interface.index_of (v, 1)
-			if pos > 0 then
-				remove_item_actions.call ([v])
-				imp ?= v.implementation
-				check
-					imp_not_void: imp /= Void
-				end
-				C.gtk_container_remove (c_object, imp.c_object)
-				if index > pos then
-					index := index - 1
-				end
-			end
-		end
-
-	remove is
-			-- Remove current item.
-			-- Move cursor to right neighbor
-			-- (or `after' if no right neighbor).
-		local
-			p: POINTER
-			w: EV_WIDGET
-			w_imp: EV_WIDGET_IMP
-		do
-			p := C.g_list_nth_data (
-			C.gtk_container_children (c_object), index - 1)
-			w_imp ?= eif_object_from_c (p)
-			check
-				w_imp_not_void: w_imp /= Void
-			end
-			w := w_imp.interface
-			remove_item_actions.call ([w])
-			C.gtk_container_remove (c_object, p)
-		end
-
-	remove_left is
-			-- Remove item to the left of cursor position.
-			-- Do not move cursor.
-		local
-			p: POINTER
-			w: EV_WIDGET
-			w_imp: EV_WIDGET_IMP
-		do
-			p := C.g_list_nth_data (
-				C.gtk_container_children (c_object), index - 2)
-			w_imp ?= eif_object_from_c (p)
-			check
-				w_imp_not_void: w_imp /= Void
-			end
-			w := w_imp.interface
-			remove_item_actions.call ([w])
-			C.gtk_container_remove (c_object, p)
-			index := index - 1
-		end
-
-	remove_right is
-			-- Remove item to the right of cursor position.
-			-- Do not move cursor.
-		local
-			p: POINTER
-			w: EV_WIDGET
-			w_imp: EV_WIDGET_IMP
-		do
-			p := C.g_list_nth_data (C.gtk_container_children (c_object), index)
-			w_imp ?= eif_object_from_c (p)
-			check
-				w_imp_not_void: w_imp /= Void
-			end
-			w := w_imp.interface
-			remove_item_actions.call ([w])
-			C.gtk_container_remove (c_object, p)
-		end
-
-feature {EV_ANY_I} -- implementation
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
-		deferred
-		end
+feature {NONE} -- Implementation
 
 	interface: EV_WIDGET_LIST
 			-- Provides a common user interface to platform dependent
@@ -314,6 +65,15 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/05 21:16:09  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.13.2.2  2000/04/04 23:45:03  brendel
+--| Added initialize that sets list_widget to c_object.
+--|
+--| Revision 1.13.2.1  2000/04/04 16:23:40  brendel
+--| Now inherits from EV_DYNAMIC_LIST_IMP.
+--|
 --| Revision 1.13  2000/03/20 18:15:12  brendel
 --| Fixed bug in `item'.
 --|

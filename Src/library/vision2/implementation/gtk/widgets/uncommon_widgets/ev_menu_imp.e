@@ -15,18 +15,33 @@ inherit
 
 	EV_MENU_ITEM_IMP
 		undefine
+			parent,
 			show
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_MENU_ITEM_LIST_IMP
+		rename
+			list_widget as menu_widget
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	initialize is
+		do
+			menu_widget := C.gtk_menu_new
+			C.gtk_menu_item_set_submenu (c_object, menu_widget)
+			C.gtk_widget_show (menu_widget)
+			Precursor
+		end
 
 feature -- Basic operations
 
@@ -48,22 +63,6 @@ feature -- Basic operations
 				to_be_implemented: False
 			end
 		end
-
-feature {EV_WINDOW_IMP} -- Implementation
-
-	list_widget: POINTER is
-			-- Widget manipulated by list operations.
-			-- This is the GtkMenu.
-		do
-			if menu_widget = Default_pointer then
-				menu_widget := C.gtk_menu_new
-				C.gtk_menu_item_set_submenu (c_object, menu_widget)
-				C.gtk_widget_show (menu_widget)
-			end
-			Result := menu_widget
-		end
-
-	menu_widget: POINTER
 
 feature {EV_ANY_I} -- Implementation
 
@@ -92,6 +91,16 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/05 21:16:10  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.27.2.2  2000/04/05 00:01:41  brendel
+--| removed menu_widget.
+--| list_widget is now initialized at creation time.
+--|
+--| Revision 1.27.2.1  2000/04/04 16:27:33  brendel
+--| Undefined parent.
+--|
 --| Revision 1.27  2000/03/23 02:29:13  brendel
 --| Implemented `show'.
 --|

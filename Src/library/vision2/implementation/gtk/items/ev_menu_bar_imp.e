@@ -15,8 +15,7 @@ inherit
 
 	EV_MENU_ITEM_LIST_IMP
 		redefine
-			interface,
-			list_widget
+			interface
 		end
 	
 create
@@ -34,14 +33,6 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			is_initialized := True
-		end
-
-feature {EV_WINDOW_IMP} -- Implementation
-
-	list_widget: POINTER is
-			-- Widget manipulated by list operations.
-		do
-			Result := c_object
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -71,6 +62,12 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/05 21:16:10  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.6.4.1  2000/04/04 23:49:17  brendel
+--| *** empty log message ***
+--|
 --| Revision 1.6  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

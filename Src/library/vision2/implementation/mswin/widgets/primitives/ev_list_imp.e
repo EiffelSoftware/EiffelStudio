@@ -65,7 +65,8 @@ inherit
 			unselect as ss_unselect,
 			selected as ss_selected,
 			selected_item as ss_selected_item,
-			default_style as ss_default_style
+			default_style as ss_default_style,
+			count as wel_count
 		undefine
 			window_process_message,
 			remove_command,
@@ -131,7 +132,8 @@ inherit
 			selected_items as ms_selected_items,
 			selected_strings as ms_selected_strings,
 			caret_index as ms_caret_index,
-			default_style as ms_default_style
+			default_style as ms_default_style,
+			count as wel_count
 		undefine
 			window_process_message,
 			remove_command,
@@ -177,7 +179,7 @@ feature {NONE} -- Initialization
 			internal_window_make (default_parent, Void,
 				default_style, 0, 0, 0, 0, 0, Default_pointer)
 			id := 0
-			!! ev_children.make (2)
+			create ev_children.make (2)
 		end	
 
 	initialize is
@@ -200,8 +202,6 @@ feature -- Access
 		do
 			Result := wel_window_parent
 		end
-
-feature -- Status report
 
 	multiple_selection_enabled: BOOLEAN
 			-- Can more than one item be selected?
@@ -588,6 +588,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2000/04/05 21:16:12  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.61  2000/04/05 20:06:57  rogers
 --| Added temporary compiler bug fix.
 --|
@@ -609,6 +612,12 @@ end -- class EV_LIST_IMP
 --| Now inherits from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
 --| Removed features and attributes associated with source of PND as
 --| these are now inherited, and fixed references to these.
+--|
+--| Revision 1.56.2.2  2000/04/05 19:57:16  brendel
+--| Added compiler hack. See code.
+--|
+--| Revision 1.56.2.1  2000/04/03 18:24:40  brendel
+--| Renamed count as wel_count.
 --|
 --| Revision 1.56  2000/03/30 17:43:56  brendel
 --| Moved common features with EV_COMBO_BOX up to EV_LIST_ITEM_LIST_IMP.

@@ -126,6 +126,15 @@ feature -- Event handling
 	collapse_actions: EV_NOTIFY_ACTION_SEQUENCE
 		-- Actions to be performed when collapsed.
 
+feature -- Contract support
+
+	is_parent_recursive (a_list: like Current): BOOLEAN is
+			-- Is `a_widget' `parent' or recursively `parent' of `parent'.
+		do
+			Result := a_list = parent or else
+				(parent /= Void and then parent.is_parent_recursive (a_list))
+		end
+
 feature {EV_ANY_I}-- Implementation
 
 	implementation: EV_TREE_ITEM_I
@@ -173,8 +182,14 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/04/05 21:16:13  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.40  2000/04/04 21:37:52  oconnor
 --| comments
+--|
+--| Revision 1.39.2.1  2000/04/03 18:09:05  brendel
+--| Added is_parent_recursive.
 --|
 --| Revision 1.39  2000/03/24 03:10:22  oconnor
 --| formatting and comments

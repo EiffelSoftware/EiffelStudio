@@ -1,7 +1,6 @@
 indexing
 	description:
 		"Eiffel Vision item list. GTK+ implementation."
-	keywords: item
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,253 +10,102 @@ deferred class
 	EV_ITEM_LIST_IMP [G -> EV_ITEM]
 
 inherit
-	EV_ANY_IMP
-		redefine
-			interface
-		end
-
 	EV_ITEM_LIST_I [G]
 		redefine
 			interface
 		end
 
-feature -- Access
+	EV_ANY_IMP
+		redefine
+			interface
+		end
 
-	index: INTEGER
-			-- Index of current position.
+	EV_DYNAMIC_LIST_IMP [G]
+		redefine
+			interface,
+			remove_i_th,
+			insert_i_th
+		end
 
-	item: G is
-			-- Item at current position.
+feature {NONE} -- Implementation
+
+	--| FIXME VB: I would like to have all EV_ITEM_LIST_IMP
+	--| objects to only use insert_i_th and remove_i_th.
+	--| gtk_reorder_child may only call once C function.
+	--| add_to_container will be removed.
+	--| When that is done remove insert_i_th and remove_i_th.
+
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
 		local
-			item_imp: EV_ITEM_IMP
-			aa: ASSIGN_ATTEMPT [G]
+			imp: EV_ANY_I
 		do
-			item_imp ?= eif_object_from_c (
-				C.g_list_nth_data (
-					C.gtk_container_children (list_widget),
-					index - 1
-				)
-			)
-			if item_imp /= Void then
-				create aa
-				Result := aa.attempt (item_imp.interface)
+			add_to_container (v)
+			if i <= count then
+				reorder_child (v, i)
 			end
+
+		--	imp ?= v.implementation
+		--	check
+		--		imp_not_void: imp /= Void
+		--	end
+		--	new_item_actions.call ([v])
 		end
 
-	cursor: CURSOR is
-			-- Current cursor position
-		do
-			create {EV_WIDGET_LIST_CURSOR} Result.make (index)
-		end
-
-feature -- Measurment
-
-	count: INTEGER is
-			-- Number of items
-		do
-			if not is_destroyed then
-					--| called by invariant: empty_constraint
-				Result := C.g_list_length (C.gtk_container_children (list_widget))
-			end
-		end
-
-feature -- Status report
-
-        valid_cursor (a_cursor: CURSOR): BOOLEAN is
-			-- Can the cursor be moved to position `p'?
+	remove_i_th (i: INTEGER) is
+			-- Remove item at `i'-th position.
 		local
-			wl_cursor: EV_WIDGET_LIST_CURSOR
+			p: POINTER
+			w_imp: EV_WIDGET_IMP
 		do
-			wl_cursor ?= a_cursor;
-			Result := wl_cursor /= Void and then
-				(wl_cursor.index >= 0 and wl_cursor.index <= count + 1)
+			p := C.g_list_nth_data (
+				C.gtk_container_children (list_widget),
+				i - 1)
+
+		--	w_imp ?= eif_object_from_c (p)
+		--	check
+		--		w_imp_not_void: w_imp /= Void
+		--	end
+		--	remove_item_actions.call ([w_imp])
+
+			C.gtk_widget_ref (p)
+			C.gtk_container_remove (list_widget, p)
+			C.gtk_widget_unref (p)
 		end
 
-feature -- Cursor movement
+feature {NONE} -- Implementation
 
-	back is
-			-- Move to previous item.
-		do
-			index := index - 1
+	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
+			-- Move `a_child' to `a_position' in `a_container'.
+			--| Do nothing more than calling gtk-reorder.
+		deferred
 		end
 
-	forth is
-			-- Move cursor to next position.
-		do
-			index := index + 1
-		end
-
-	go_to (p: CURSOR) is
-			-- Move cursor to position `p'.
-		local
-			wl_c: EV_WIDGET_LIST_CURSOR
-		do
-			wl_c ?= p;
-			check
-				wl_c /= Void
-			end
-			index := wl_c.index
-		end
-
-	move (i: INTEGER) is
-			-- Move cursor `i' positions.
-		do
-			index := index + i
-			if (index > count + 1) then
-				index := count + 1
-			elseif (index < 0) then
-				index := 0
-			end
-		end
-
-feature -- Element change
-
-	extend (v: like item) is
-			-- If add `v' to end.
-			-- Do not move cursor.
-		do
-			if index > count then
-				index := index + 1
-			end
-			if v.parent /= Void then
-				v.parent.prune (v)
-			end
-			add_to_container (v)
-		end
-
-	replace (v: like item) is
-			-- Replace current item by `v'.
-		do
-			if v.parent /= Void then
-				v.parent.prune (v)
-			end
-			remove
-			add_to_container (v)
-			reorder_child (v, index)
-		end
-
-	put_front (v: like item) is
-			-- Add `v' to beginning.
-			-- Do not move cursor.
-		do
-			if v.parent /= Void then
-				v.parent.prune (v)
-			end
-			if index /= 0 then
-				index := index + 1
-			end			
-			add_to_container (v)
-			reorder_child (v, 1)
-		end
-
-	put_right (v: like item) is
-			-- Add `v' to the right of cursor position.
-			-- Do not move cursor.
-		do
-			if v.parent /= Void then
-				v.parent.prune (v)
-			end
-			add_to_container (v)
-			reorder_child (v, index + 1)
-		end
-
-feature -- Removal
-
-	prune (v: like item) is
-			-- Remove `v' if present.
-		local
-			a_position: INTEGER
-		do
-			a_position := interface.index_of (v, 1)
-			if a_position > 0 then
-				remove_item_from_position (a_position)
-				if index > a_position then
-					index := index - 1
-				end
-			end
-		end
-
-	remove is
-			-- Remove current item.
-			-- Move cursor to right neighbor
-			-- (or `after' if no right neighbor).
-		do
-			remove_item_from_position (index)
-		end
-
-	remove_left is
-			-- Remove item to the left of cursor position.
-		do
-			remove_item_from_position (index - 1)
-			index := index - 1
-		end
-
-
-	remove_right is
-			-- Remove item to the right of cursor position.
-			-- Do not move cursor.
-		do
-			remove_item_from_position (index + 1)
-		end
-
-feature -- Implementation
+feature {NONE} -- Obsolete
 
 	add_to_container (v: like item) is
-			-- Add `v' to container.
+			-- Add `v' to end of list.
+			--| FIXME VB Will be obsolete
 		local
-			imp: EV_WIDGET_IMP
-		do	
-			imp ?= v.implementation
-			C.gtk_container_add (list_widget, imp.c_object)
-		end
-
-	remove_item_from_position (a_position: INTEGER) is
-			-- Remove item at `a_position'.
-		require
-			a_position_valid: a_position > 0
-		local
-			item_pointer: POINTER
-		do	
-			item_pointer := C.g_list_nth_data (
-						C.gtk_container_children (list_widget),
-						a_position - 1
-					)
-			C.gtk_widget_ref (item_pointer)
-			C.gtk_container_remove (list_widget, item_pointer)
-			C.gtk_widget_unref (item_pointer)
+			v_imp: EV_ITEM_IMP
+		do
+			v_imp ?= v.implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
+			C.gtk_container_add (list_widget, v_imp.c_object)
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
-			-- Move `v' to one-based `a_position' in container.
-		require
-			valid_position: a_position >= 1
+			-- Move `v' to `a_position'.
 		local
-			imp: EV_WIDGET_IMP
+			v_imp: EV_ITEM_IMP
 		do
-			imp ?= v.implementation
-			gtk_reorder_child (list_widget, imp.c_object, a_position - 1)
-		end
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to zero-based `a_position' in `a_container'.
-		require
-			valid_position: a_position >= 0
-		deferred
-		end
-
-	list_widget: POINTER is
-		deferred
-		end
-
-	item_from_c_object (a_c_object: POINTER): G is
-			-- Item at current position.
-		local
-			item_imp: EV_ITEM_IMP
-		do
-			item_imp ?= eif_object_from_c (a_c_object)
-			if item_imp /= Void then
-				Result := (create {ASSIGN_ATTEMPT [G]}).attempt (item_imp.interface)
+			v_imp ?= v.implementation
+			check
+				v_imp_not_void: v_imp /= Void
 			end
+			gtk_reorder_child (list_widget, v_imp.c_object, a_position - 1)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -289,6 +137,22 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/05 21:16:09  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.21.2.3  2000/04/05 19:01:35  brendel
+--| Clarified implementation.
+--|
+--| Revision 1.21.2.2  2000/04/04 23:44:11  brendel
+--| Now tries to match implementation to EV_ANY_I, since EV_MULTI_COLUMN_LIST
+--| _ROW does not inherit from EV_ANY_IMP.
+--|
+--| Revision 1.21.2.1  2000/04/04 16:17:58  brendel
+--| Redefined `remove_i_th' and `insert_i_th' to use `add_to_container' and
+--| `reorder_child'. This is because of the fact that a lot of classes rely on
+--| these features. These features will be removed so we have to modify those
+--| classes.
+--|
 --| Revision 1.21  2000/03/16 22:16:45  king
 --| Fixed prune, now passes all regression tests
 --|

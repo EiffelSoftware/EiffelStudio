@@ -4,6 +4,8 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class 
 	EV_LIST_IMP
@@ -24,10 +26,9 @@ inherit
 			make
 		end
 
-	EV_LIST_ITEM_HOLDER_IMP
+	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
 		redefine
-			interface,
-			list_widget
+			interface
 		end
 	
 create
@@ -223,12 +224,6 @@ feature {EV_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 			C.gtk_list_insert_items (a_container, item_pointer, a_position)
 		end
 
-	list_widget: POINTER
-			-- Pointer to the gtk_list because the vision `EV_LIST'
-			-- is made of a gtk_scrolled_window (pointed by `c_object')
-			-- and a gtk_list (pointed by `list_widget').
-			-- Exported to EV_LIST_ITEM_IMP. 
-
 	interface: EV_LIST
 
 invariant
@@ -257,11 +252,18 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/04/05 21:16:10  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.37  2000/04/04 20:54:08  oconnor
 --| updated signal connection for new marshaling scheme
 --|
 --| Revision 1.36  2000/03/31 19:11:25  king
 --| Accounted for rename of pebble_over_widget
+--|
+--| Revision 1.35.2.1  2000/04/04 23:46:23  brendel
+--| removed list_widget.
+--| Changed EV_LIST_ITEM_HOLDER to EV_ITEM_LIST [EV_LIST_ITEM].
 --|
 --| Revision 1.35  2000/03/23 19:19:01  king
 --| Updated for signature change of pebble_over_widget

@@ -1,24 +1,111 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"EiffelVision widget list, mswin implementation."
+		"Eiffel Vision dynamic list. Mswindows implementation."
+	note:
+		"G_IMP denotes the storage type of ev_children."
 	status: "See notice at end of class"
-	id: "$Id:"
-	date: "$Date:"
-	revision: "$Revision:"
-
-deferred class
-	EV_DYNAMIC_LIST_IMP
+	date: "$Date$"
+	revision: "$Revision$"
+	
+deferred class 
+	EV_DYNAMIC_LIST_IMP [G -> EV_ANY, G_IMP -> EV_ANY_I]
 
 inherit
-	EV_DYNAMIC_LIST_I
-		redefine
-			interface
+	EV_DYNAMIC_LIST_I [G]
+
+feature -- Access
+
+	i_th (i: INTEGER): G is
+			-- Item at `i'-th position.
+		do
+			Result := imp_to_int (ev_children.i_th (i))
+		end
+
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number of items.
+		do
+			Result := ev_children.count
+		end
+
+feature {NONE} -- Implementation
+
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
+		do
+			ev_children.go_i_th (i)
+			ev_children.put_left (int_to_imp (v))
+		end
+
+	remove_i_th (i: INTEGER) is
+			-- Remove item at `i'-th position.
+		do
+			ev_children.go_i_th (i)
+			ev_children.remove
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_DYNAMIC_LIST
+	ev_children: ARRAYED_LIST [G_IMP] is
+			-- Internal list of children.
+		deferred
+		end
+
+	int_to_imp (int: G): G_IMP is
+			-- `implementation' of `int'.
+		require
+			int_not_void: int /= Void
+		do
+			if g_imp_converter = Void then
+				create g_imp_converter
+			end
+			Result := g_imp_converter.attempt (int.implementation)
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	g_imp_converter: ASSIGN_ATTEMPT [G_IMP]
 
 end -- class EV_DYNAMIC_LIST_IMP
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.3  2000/04/05 21:16:11  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.2.4.3  2000/04/05 19:51:28  brendel
+--| Now uses g_imp_converter to cast without checking.
+--|
+--| Revision 1.2.4.2  2000/04/03 18:18:23  brendel
+--| Added second generic parameter for storage type in ev_children.
+--| Added features imp_to_int and int_to_imp. To be implemented.
+--|
+--| Revision 1.2.4.1  2000/04/01 00:43:58  brendel
+--| Revised.
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

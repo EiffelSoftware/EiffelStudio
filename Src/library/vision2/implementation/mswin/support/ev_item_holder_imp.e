@@ -16,7 +16,15 @@ inherit
 	EV_ITEM_LIST_I [G]
 		redefine
 			initialize,
-			item
+			interface
+		end
+
+	EV_DYNAMIC_LIST_IMP [G, EV_ITEM_IMP]
+		redefine
+			interface,
+			item,
+			insert_i_th,
+			remove_i_th
 		end
 
 feature {NONE} -- Initialization
@@ -24,237 +32,59 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			create new_item_actions.make ("new item", <<"item">>)
-			new_item_actions.extend (~item_parented)
 			create remove_item_actions.make ("remove item", <<"item">>)
-			remove_item_actions.extend (~item_orphaned)
 			is_initialized := True
-		end
-
-feature -- Access
-
-	item: G is
-			-- Item pointed to by `index'.
-		local
-			p_imp: EV_ITEM_IMP
-			aa: ASSIGN_ATTEMPT [G]
-		do
-			p_imp := ev_children.item
-			if p_imp /= Void then
-				create aa
-				Result := aa.attempt (p_imp.interface)
-			end
-		end
-
-	cursor: CURSOR is
-		local
-			temp_cursor: ARRAYED_LIST_CURSOR
-		do	
-			Result := ev_children.cursor
-		end
-
-	index: INTEGER is
-		do
-			Result := ev_children.index
-		end
-
-feature {EV_ANY_I} -- implementation
-
-	item_parented (i: EV_ITEM) is
-			-- Called every time an item is added to the container.
-		require
-			i_not_void: i /= Void
-		local
-			i_imp: EV_ITEM_IMP
-		do
-			i_imp ?= i.implementation
-			i_imp.on_parented
-		end
-
-	item_orphaned (i: EV_ITEM) is
-			-- Called every time an item is removed from the container.
-		require
-			i_not_void: i /= Void
-		local
-			i_imp: EV_ITEM_IMP
-		do
-			i_imp ?= i.implementation
-			i_imp.on_orphaned
-		end
-
-	insert_item (item_imp: ev_item_imp; pos: INTEGER) is
-		deferred
-		ensure
-			item_on_pos_is_item_imp: ev_children.i_th (pos).is_equal (item_imp)
-		end
-
-	remove_item (item_imp: ev_item_imp) is
-		deferred
-		end
-
-	forth is
-		do
-			ev_children.forth
-		end
-
-	back is
-		do
-			ev_children.back
-		end
-
-	extend (v: like item) is
-			-- If `v' not already in list add to end.
-			-- Do not move cursor.
-		local
-			old_index: INTEGER
-		do
-			old_index := index
-			item_to_imp (v).set_parent (interface)
-			insert_item (item_to_imp (v), count + 1)
-			ev_children.go_i_th (old_index)
-			new_item_actions.call ([v])
-		end
-
-	remove_left is
-			-- Remove item to the left of cursor position.
-			-- Do not move cursor.
-		local
-			old_index: INTEGER
-				-- `Index' value at entry.
-		do
-			old_index := index
-			back
-			remove
-			ev_children.go_i_th (old_index - 1)
-		end
-
-	remove_right is
-			-- Remove item the the right of cursor position.
-			-- Do not move cursor.
-		local
-			old_index: INTEGER
-				-- `Index' value at entry.
-		do
-			old_index := index
-			forth
-			remove
-			ev_children.go_i_th (old_index)
-		end
-
-	remove is
-			-- Remove current item.
-			-- Move cursor to right neighbor
-			-- (or `after' if no right neighbor).
-		local
-			item_imp: EV_ITEM_IMP
-		do
-			remove_item_actions.call ([item])
-			item_imp := item_to_imp (item)
-			check
-				item_implementation_not_void: item_imp /= Void
-			end
-			remove_item (item_imp)
-			item_imp.set_parent (Void)
-		end
-	
-	prune (v: like item) is
-			-- Remove `v' if present.
-		local
-			w: EV_ITEM_IMP
-			original_index: INTEGER
-		do
-			w ?= item_to_imp (v)
-			original_index := index
-			from
-				ev_children.start
-			until
-				ev_children.after or else ev_children.item = w
-			loop
-				ev_children.forth
-			end
-			if not ev_children.after then
-				remove
-			end		
-			ev_children.go_i_th (original_index)
-		end
-
-
-	put_right (v: like item) is
-			-- Add `v' to the right of cursor position.
-			-- Do not move cursor.
-		do
-			item_to_imp (v).set_parent (interface)
-			insert_item (item_to_imp (v), index + 1)
-			new_item_actions.call ([v])
-		end
-		
-	put_front (v: like item) is
-			-- Add `v' to front.
-			-- Do not move cursor.
-		local
-			original_index: INTEGER
-		do
-			original_index := index
-			item_to_imp (v).set_parent (interface)
-			insert_item (item_to_imp (v), 1)
-			if original_index > 0 then	
-				ev_children.go_i_th (original_index + 1)
-			else
-				ev_children.go_i_th (0)
-			end
-			new_item_actions.call ([v])
-		end
-
-	replace (v: like item) is
-			-- Replace current item by `v'.
-			-- Do not move cursor
-		do
-			remove
-			if index > 1 then
-				item_to_imp (v).set_parent (interface)
-				insert_item (item_to_imp (v), index)
-				move (1)
-			else
-				put_front (v)
-				move (-1)
-			end
-			new_item_actions.call ([v])
-		end
-
-	move (i: INTEGER) is
-			-- Move cursor `i' positions.
-		do
-			ev_children.move (i)
-		end
-
-	go_to (c: CURSOR) is
-			-- Move cursor to position `c'
-		do
-			ev_children.go_to (c)
-		end
-
-	valid_cursor (c: CURSOR):BOOLEAN is
-			-- Can the cursor be moved to position `c'.
-		do
-			Result := ev_children.valid_cursor (c)
-		end
-
-	ev_children:ARRAYED_LIST [EV_ITEM_IMP] is
-		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	item_to_imp (an_item: EV_ITEM): EV_ITEM_IMP is
-			-- Get implementation from `an_item'.
-		require	
-			an_item_not_void: an_item /= Void
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
+		local
+			v_imp: EV_ITEM_IMP
 		do
-			Result ?= an_item.implementation
+			v_imp ?= v.implementation
 			check
-				has_implementation: Result /= Void
+				v_imp_not_void: v /= Void
 			end
-		ensure
-			result_not_void: Result /= Void
+			Precursor (v, i)
+			v_imp.set_parent (interface)
+			insert_item (v_imp, i)
+			v_imp.on_parented
+			new_item_actions.call ([v_imp.interface])
+		end
+
+	remove_i_th (i: INTEGER) is
+			-- Remove item at `i'-th position.
+		local
+			v_imp: EV_ITEM_IMP
+		do
+			v_imp ?= i_th (i).implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
+			v_imp.on_orphaned
+			remove_item_actions.call ([v_imp.interface])
+			remove_item (v_imp)
+			v_imp.set_parent (Void)
+			Precursor (i)
+		end
+
+feature {EV_ANY_I} -- implementation
+
+	insert_item (v_imp: EV_ITEM_IMP; pos: INTEGER) is
+			-- Graphically insert `v_imp' on `pos'.
+		require
+			v_imp_not_void: v_imp /= Void
+			pos_within_bounds: pos > 0 and pos <= count + 1
+		deferred
+		end
+
+	remove_item (v_imp: EV_ITEM_IMP) is
+			-- Graphically remove `v_imp'.
+		require
+			v_imp_not_void: v_imp /= Void
+		deferred
 		end
 
 feature -- Event handling
@@ -265,36 +95,49 @@ feature -- Event handling
 	remove_item_actions: ACTION_SEQUENCE [TUPLE [EV_ITEM]]
 			-- Actions to be performed before an item is removed.
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_ITEM_LIST [G]
+
 invariant
 	new_item_actions_not_void: is_useable implies new_item_actions /= Void
 	remove_item_actions_not_void: is_useable implies remove_item_actions /= Void
 
 end -- class EV_ITEM_LIST_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
-
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|---------------------------------------------------------------- 
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/05 21:16:11  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.26  2000/03/30 19:53:31  rogers
 --| Comments and removed unecessary FIXME.
+--|
+--| Revision 1.25.2.2  2000/04/05 19:52:23  brendel
+--| Improved implementation.
+--|
+--| Revision 1.25.2.1  2000/04/03 18:21:07  brendel
+--| Removed features implemented by EV_DYNAMIC_LIST_IMP.
+--| Formatted for 80 columns.
 --|
 --| Revision 1.25  2000/03/30 17:47:12  brendel
 --| Changed export status.
@@ -303,13 +146,17 @@ end -- class EV_ITEM_LIST_IMP
 --| Removed call to remove_item_actions from prune.
 --|
 --| Revision 1.23  2000/03/24 19:20:25  rogers
---| Added initialize, item_parented item_orphaned, new_item_actions and remove_item_actions.Set up addition and removal so new_item_actions or remove_item_actions are called appropriately.
+--| Added initialize, item_parented item_orphaned, new_item_actions and
+--| remove_item_actions.Set up addition and removal so new_item_actions or
+--| remove_item_actions are called appropriately.
 --|
 --| Revision 1.22  2000/03/24 17:31:38  brendel
 --| Improved comment. Removed unused local variables.
 --|
 --| Revision 1.21  2000/02/24 21:32:00  rogers
---| Fixed bug in put_front which would cause the cursor to point to the first item, after the insertion, if the original position was off at the start, i.e. index 0.
+--| Fixed bug in put_front which would cause the cursor to point to the first
+--| item, after the insertion, if the original position was off at the start,
+--| i.e. index 0.
 --|
 --| Revision 1.20  2000/02/24 01:30:05  brendel
 --| Switched 2 statemnts in `remove'.
@@ -343,16 +190,20 @@ end -- class EV_ITEM_LIST_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.16.6.5  2000/01/24 21:30:03  rogers
---| When replacing an item, the new item has the parent set accordingly, before calling insert item.
+--| When replacing an item, the new item has the parent set accordingly,
+--| before calling insert item.
 --|
 --| Revision 1.16.6.4  2000/01/19 20:17:18  rogers
---| This class has been changed to EV_ITEM_LIST_IMP. Added Item, added insert_item and remove item as deferred. Each descendent will only need these features for this class to work.
+--| This class has been changed to EV_ITEM_LIST_IMP. Added Item, added
+--| insert_item and remove item as deferred. Each descendent will only need
+--| these features for this class to work.
 --|
 --| Revision 1.16.6.3  2000/01/18 01:26:31  king
 --| Commented out implementation to get it to compile.
 --|
 --| Revision 1.16.6.2  1999/12/17 17:07:14  rogers
---| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP. ev_item_holder_imp.e
+--| Altered to fit in with the review branch. Now inherits EV_ITEM_LIST_IMP.
+--| ev_item_holder_imp.e
 --|
 --| Revision 1.16.6.1  1999/11/24 17:30:21  oconnor
 --| merged with DEVEL branch
@@ -364,3 +215,4 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --| End of CVS log
 --|-----------------------------------------------------------------------------
+

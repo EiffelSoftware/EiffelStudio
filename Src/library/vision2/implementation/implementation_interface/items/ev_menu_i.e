@@ -10,12 +10,23 @@ deferred class
 inherit
 	EV_MENU_ITEM_I
 		redefine
-			interface
+			interface,
+			parent
 		end
 
 	EV_MENU_ITEM_LIST_I
 		redefine
 			interface
+		end
+
+feature -- Access
+
+	parent: EV_MENU_ITEM_LIST is
+			-- Item list containing `Current'.
+		do
+			if parent_imp /= Void then
+				Result ?= parent_imp.interface
+			end
 		end
 
 feature -- Basic operations
@@ -58,6 +69,13 @@ end -- class EV_MENU_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/05 21:16:10  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.21.2.1  2000/04/03 18:07:18  brendel
+--| Redefined parent because it is now needed for the precondition on
+--| all add-features.
+--|
 --| Revision 1.21  2000/03/22 23:52:22  brendel
 --| Fixed feature clause name.
 --|

@@ -4,7 +4,6 @@ indexing
 	description: 
 		"EiffelVision combo box, gtk implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -34,7 +33,7 @@ inherit
 			enable_multiple_selection
 		redefine
 			select_callback,
-			remove_item_from_position,
+			remove_i_th,
 			gtk_reorder_child,
 			initialize,
 			make,
@@ -170,7 +169,7 @@ feature {NONE} -- Implementation
 			imp.set_parent_imp (Current)
 		end
 
-	remove_item_from_position (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER) is
 			-- Remove item at position `a_position'.
 		local
 			imp: EV_LIST_ITEM_IMP
@@ -220,11 +219,17 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/05 21:16:10  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.30  2000/04/04 20:54:08  oconnor
 --| updated signal connection for new marshaling scheme
 --|
 --| Revision 1.29  2000/03/31 19:10:57  king
 --| Accounted for rename of pebble_over_widget
+--|
+--| Revision 1.28.2.1  2000/04/04 16:24:52  brendel
+--| remove_item_from_position -> remove_i_th.
 --|
 --| Revision 1.28  2000/03/22 22:01:30  king
 --| Undefined pebble_over_widget from text_field

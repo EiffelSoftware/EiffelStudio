@@ -59,7 +59,7 @@ inherit
 	WEL_FLAT_TOOL_BAR
 		rename
 			make as wel_make,
-			button_count as count,
+--| FIXME			button_count as count,
 			insert_button as wel_insert_button,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
@@ -118,6 +118,7 @@ feature {NONE} -- Initialization
 			-- Create the tool-bar.
 		do
 			base_make (an_interface)
+			create ev_children.make (2)
 		end
 
 	initialize is
@@ -131,7 +132,6 @@ feature {NONE} -- Initialization
 			create radio_group.make
 			new_item_actions.extend (~add_radio_button)
 			remove_item_actions.extend (~remove_radio_button)
-			create ev_children.make (2)
 		end
 
 feature -- Access
@@ -268,8 +268,8 @@ feature -- Element change
 			-- Finally, we insert the button
 			wel_insert_button (an_index - 1, but)
 			--children.put (button, button.id)
-			ev_children.go_i_th (an_index - 1)
-			ev_children.put_right (button)
+	--		ev_children.go_i_th (an_index - 1)
+	--		ev_children.put_right (button)
 
 			-- We notify the change to integrate them if necessary
 			notify_change (2 + 1)
@@ -282,8 +282,8 @@ feature -- Element change
 		do
 			id1 := ev_children.index_of (button, 1)
 			delete_button (internal_get_index (button))
-			ev_children.go_i_th (id1)
-			ev_children.remove
+		--	ev_children.go_i_th (id1)
+		--	ev_children.remove
 			notify_change (2 + 1)
 		end
 
@@ -735,6 +735,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/04/05 21:16:12  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.43  2000/04/05 19:32:47  rogers
 --| In internal_propagate_event, we now check the left button was
 --| pressed before calling update_radio_states on the radio_button.
@@ -766,6 +769,12 @@ end -- class EV_TOOL_BAR_IMP
 --| Revision 1.36  2000/03/31 17:46:06  rogers
 --| Now inherits EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP. Removed
 --| on_*****_button_down. Added internal_propagate_pointer_press.
+--|
+--| Revision 1.35.2.2  2000/04/05 19:54:02  brendel
+--| Removed calls to ev_children by graphical insert/remove features.
+--|
+--| Revision 1.35.2.1  2000/04/03 18:25:35  brendel
+--| Count is now implemented in EV_DYNAMIC_LIST_IMP.
 --|
 --| Revision 1.35  2000/03/29 06:58:06  pichery
 --| Modification of the add of a pixmap in a button.

@@ -92,6 +92,7 @@ feature -- Initialization
 			!! drawing_dc
 			set_line_width (1);
 			!! gc_fg_color.make_system (color_windowtext)
+			!! gc_bg_color.make_system (color_window)
 			line_style := ps_solid
 		end
 

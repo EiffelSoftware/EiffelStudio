@@ -15,9 +15,7 @@ deferred class
 inherit
 	EV_DIALOG_IMP
 		rename
-			make as old_make,
-			interface as old_interface,
-			set_interface as old_set_interface
+			make as old_make
 		end
 
 end -- class EV_STANDARD_DIALOG_IMP

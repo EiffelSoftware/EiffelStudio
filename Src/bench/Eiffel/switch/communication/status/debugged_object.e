@@ -39,6 +39,29 @@ feature -- Properties
 	class_type: CLASS_TYPE
 			-- Dynamic type of `Current', one per generic implementation.
 
+feature -- Query
+
+	attribute_by_name (n: STRING): ABSTRACT_DEBUG_VALUE is
+			-- Try to find an attribute named `n' in list `attributes'.
+		require
+			not_void: n /= Void
+		do
+			if attributes /= Void then
+				from
+					attributes.start
+				until
+					attributes.after or Result /= Void
+				loop
+					if attributes.item.name /= Void and then attributes.item.name.is_equal (n) then
+						Result := attributes.item
+					end
+					attributes.forth
+				end
+			end
+		ensure
+			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
+		end
+		
 invariant
 
 	non_void_attributes: attributes /= Void;

@@ -46,7 +46,12 @@
 #define dprintf(n)		if (DEBUG & (n)) printf
 #define flush			fflush(stdout)
 
+/*#undef HAS_SMART_MMAP	/* Undefine to use Purify */
+/*#undef HAS_SMART_SBRK	/* Undefine to use Purify */
+/*#undef HAS_SBRK			/* Undefine to use Purify */
+
 /*#define MEMCHK		/* Define for memory checker */
+/*#define EMCHK		/* Define for calls to memck */
 /*#define MEMPANIC		/* Panic if memck reports a trouble */
 /*#define DEBUG 63		/* Activate debugging code */
 

@@ -44,8 +44,8 @@ feature -- Access
 		-- Name of property class referencing `constant'.
 		
 	attribute: STRING
-		-- Name of attribute class referncing `constant'.
-
+		-- Name of attribute class referencing `constant'.
+		
 feature -- Measurement
 
 	is_equal (other: GB_CONSTANT_CONTEXT): BOOLEAN is

@@ -151,7 +151,7 @@ feature {NONE}
 
 	text_help: STRING is "show the text of a class";
 
-	Total_sec_help: STRING is " output of time spent in both the function and a descendents";
+	Total_sec_help: STRING is " output of time spent in both the function and its descendents";
 
 	yank_help: STRING is "yank (save) output of last command to a file";
 

@@ -75,7 +75,7 @@ feature
 			rout_table: ROUT_TABLE;
 		do
 			if context.workbench_mode then
-				generated_file.putstring ("RTWPP(");
+				generated_file.putstring ("(EIF_POINTER) RTWPP(");
 				generated_file.putstring
 					(context.current_type.associated_class_type.id.generated_id);
 				generated_file.putstring (gc_comma);
@@ -89,15 +89,16 @@ feature
 					generated_file.putstring ("(char *(*)()) 0");
 				else
 						-- Mark table used
-                    Eiffel_table.mark_used (rout_id);
+					Eiffel_table.mark_used (rout_id);
 
 					table_name := clone (dle_prefix);
-					table_name.append (context.current_type.associated_class_type.id.address_table_name (feature_id))
+					table_name.append (context.current_type.
+						associated_class_type.id.address_table_name (feature_id))
 
-                    generated_file.putstring (table_name);
+					generated_file.putstring (table_name);
 
-                        -- Remember extern declarations
-                    Extern_declarations.add_routine (type, table_name);
+						-- Remember extern declarations
+					Extern_declarations.add_routine (type, table_name);
 				end;
 			end;
 		end;

@@ -92,7 +92,7 @@ feature -- Access
 		do
 			ct := consumed_type (t)
 			if ct /= Void then
-				Result := clone (ct.eiffel_name)
+				create Result.make_from_string (ct.eiffel_name)
 			end
 		end	
 

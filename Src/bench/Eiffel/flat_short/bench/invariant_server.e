@@ -24,9 +24,6 @@ feature
 					after
 				loop
 					ctxt.begin;
-					if is_not_first then
-						ctxt.put_special (";")
-					end;
 					ctxt.next_line;
 					item.format (ctxt);
 					if ctxt.last_was_printed then

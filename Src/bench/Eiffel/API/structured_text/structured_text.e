@@ -54,6 +54,9 @@ feature
 			if not cursor_out then -- cursor no more in list
 								-- no easy way to test. use the exception	
 				go_to (pos);
+				if not after then
+					forth
+				end;
 				if before then
 					wipe_out
 				elseif not after then

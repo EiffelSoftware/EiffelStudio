@@ -190,7 +190,7 @@ feature -- Element change
 			internal_background_color := a_color.twin
 		end
 		
-feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
+feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 
 	enable_select_internal is
 			-- Set up internal data to signify `Current' has been selected
@@ -212,7 +212,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			internal_is_selected := False
 		end
 
-feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
+feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 
 	internal_is_selected: BOOLEAN
 		-- Has `enable_select' been called on `Current'

@@ -126,26 +126,12 @@ feature -- Setting
 								is_redefined = is_r
 		end;
 
-	set_is_constant is
-			-- Set `is_constant' to `True'.
-		do
-		ensure
-			is_constant: is_constant
-		end;
-
 	set_is_deferred is
 			-- Set is_deferred to `True'.
 		do
 			is_deferred := True
 		ensure
 			is_deferred: is_deferred
-		end;
-
-	set_is_once is
-			-- Set `is_once' to `True'.
-		do
-		ensure
-			is_once: is_once
 		end;
 
 	set_is_redefined is

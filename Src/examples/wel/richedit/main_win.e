@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			when Cmd_print then
 				print_dialog.activate (Current)
 				if print_dialog.selected then
-					rich_edit.print_all (print_dialog.dc, file_name)
+					rich_edit.print_all (print_dialog.dc, "Rich edit example")
 				end
 			when Cmd_bold then
 				create char_format.make

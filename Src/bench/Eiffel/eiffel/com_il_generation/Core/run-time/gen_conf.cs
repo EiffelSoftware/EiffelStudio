@@ -50,7 +50,7 @@ public class GENERIC_CONFORMANCE {
 		}
 	}
 
-	public static EIFFEL_TYPE_INFO create_formal_generic (
+	public static EIFFEL_TYPE_INFO create_type (
 		TYPE a_type,
 		EIFFEL_TYPE_INFO a_current
 	)

@@ -21,10 +21,15 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		local
 			cmd: EV_ROUTINE_COMMAND
+			type: EV_PND_TYPE
 		do
 			make_with_text (par, txt)
 			!! cmd.make (~activate)
-			add_activate_command (cmd, Void)
+			add_select_command (cmd, Void)
+			activate_pick_and_drop (Void, Void)
+			create type.make
+			set_data_type (type)
+			set_transported_data ("Bonjour")
 		end
 
 	create_demo is
@@ -67,9 +72,12 @@ feature -- Access
 	demo_window: EV_WIDGET
 		-- Demo window associated to the item
 
+	control_window: CONTROL_WINDOW
+		-- Window to control the options of the widgets.
+
 feature {DEMO_ITEM} -- Execution commands
 
-	activate (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
 			-- When we select the item, we launch the
 			-- window and the options. The previous demo
 			-- get a Void parent
@@ -88,7 +96,7 @@ feature {DEMO_ITEM} -- Execution commands
 			end
 			current_demo.put (demo_window)
 		end
-
+ 
 end -- class DEMO_ITEM
 
 --|----------------------------------------------------------------

@@ -35,7 +35,7 @@ feature -- Access
 
 feature {DEMO_ITEM} -- Execution commands
 
-	activate (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	activate (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
 			-- When we select the item, we launch the
 			-- window and the options. The previous demo
 			-- get a Void parent

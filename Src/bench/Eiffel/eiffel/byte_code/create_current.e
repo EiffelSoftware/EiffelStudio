@@ -1,57 +1,56 @@
--- Creation of a like Current.
+indexing
+	description: "Creation of a like Current."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class CREATE_CURRENT 
+class
+	CREATE_CURRENT 
 
 inherit
-
 	CREATE_INFO
 		redefine
 			generate_cid, make_gen_type_byte_code,
 			generate_reverse, generate_cid_array,
 			generate_cid_init
 		end
+
 	SHARED_GENERATION
+		export
+			{NONE} all
+		end
 
 	SHARED_GEN_CONF_LEVEL
+		export
+			{NONE} all
+		end
 
-feature 
+feature -- C code generation
 
 	analyze is
 			-- Mark we need the dynamic type of current
 		do
-			context.mark_current_used;
-			context.add_dt_current;
-		end;
+			context.mark_current_used
+			context.add_dt_current
+		end
 
 	generate is
 			-- Generate creation type id (dynamic type) of current	
 		local
-			buffer: GENERATION_BUFFER;
+			buffer: GENERATION_BUFFER
 		do
-			buffer := context.buffer;
+			buffer := context.buffer
 			buffer.putstring ("Dftype(")
 			context.Current_register.print_register
 			buffer.putchar (')')
-		end;
+		end
 
 feature -- Il code generation
 
 	generate_il is
 			-- Generate byte code for like Current creation type.
-		local
-			gen_type_i: GEN_TYPE_I
 		do
-			il_generator.create_like_current_object
-
-				-- FIXME: Manu 1/8/2002: setting of generic info
-				-- should be done on the real type of like Current
-				-- and not the one in which it is performed.
-			gen_type_i ?= context.current_type
-			if gen_type_i /= void then
-				il_generator.duplicate_top
-				gen_type_i.generate_gen_type_il (il_generator, True)
-				il_generator.assign_computed_type
-			end			
+			il_generator.generate_current
+			il_generator.create_like_object
 		end
 
 feature -- Byte code generation
@@ -59,8 +58,8 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a like Current creation type.
 		do
-			ba.append (Bc_ccur);
-		end;
+			ba.append (Bc_ccur)
+		end
 
 feature -- Generic conformance
 
@@ -117,7 +116,7 @@ feature -- Generic conformance
 			-- None.
 			-- If Current is generic it already
 			-- carries all the info in it's header.
-		end;
+		end
 
 feature -- Assignment attempt
 
@@ -133,7 +132,8 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring (generator);
-			io.error.new_line;
+			io.error.putstring (generator)
+			io.error.new_line
 		end
-end
+
+end -- class CREATE_CURRENT

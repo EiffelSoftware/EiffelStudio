@@ -108,7 +108,7 @@ feature -- Constants
 	to_string_name_id: INTEGER is 98
 	to_cil_name_id: INTEGER is 99
 	is_digit_name_id: INTEGER is 100
-	correct_mismatch_name_id: INTEGER is 101
+	internal_correct_mismatch_name_id: INTEGER is 101
 	
 			-- Predefined name IDs constants
 

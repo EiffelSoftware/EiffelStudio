@@ -476,7 +476,7 @@ feature -- Plug and Makefile file
 				-- Make ANY declaration
 			any_cl := system.any_class.compiled_class
 			correct_mismatch_feat :=
-				any_cl.feature_table.item_id (Names_heap.correct_mismatch_name_id)
+				any_cl.feature_table.item_id (Names_heap.internal_correct_mismatch_name_id)
 			correct_mismatch_name := clone (Encoder.feature_name (any_cl.types.first.static_type_id,
 				correct_mismatch_feat.body_index))
 			buffer.putstring ("extern void ")

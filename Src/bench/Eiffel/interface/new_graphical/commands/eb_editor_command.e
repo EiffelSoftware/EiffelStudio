@@ -7,15 +7,14 @@ deferred class
 	EB_EDITOR_COMMAND
 
 inherit
-	EB_TOOL_COMMAND
+	EB_TEXT_TOOL_CMD
 		redefine
 			tool
 		end
 
 feature -- Properties
 
-	tool: EB_EDITOR
+	tool: EB_EDIT_TOOL
 			-- The tool
-
 
 end -- class EB_EDITOR_COMMAND

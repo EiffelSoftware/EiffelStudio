@@ -614,10 +614,6 @@ feature -- Byte code generation
 			target_type := Context.real_type (type)
 			if target_type.is_none then
 				ba.append (Bc_none_assign)
-			elseif target_type.is_true_expanded then
-					-- Target is expanded: copy with possible exeception
-				ba.append (expanded_assign_code)
-				assignment := True
 			elseif target_type.is_bit then
 				ba.append (bit_assign_code);	
 				assignment := True
@@ -635,6 +631,10 @@ feature -- Byte code generation
 					ba.append (assign_code)
 					assignment := True
 				end
+			elseif target_type.is_expanded then
+					-- Target is expanded: copy with possible exeception
+				ba.append (expanded_assign_code)
+				assignment := True
 			else
 					-- Target is a reference
 				if source_type.is_basic then

@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
+			is_sensitive := True
 			is_initialized := True
 		end
 
@@ -47,23 +48,29 @@ feature -- Access
 
 feature -- Status report
 
-	is_sensitive: BOOLEAN is
-		do
-			Result := parent_imp.item_enabled (id)
-		end
+	is_sensitive: BOOLEAN
+			-- Can this item be clicked on?
+			--| is not a function because we do not want to block the user from
+			--| setting the sensitive state while unparented.
 
 feature -- Status setting
 
 	enable_sensitive is
    			-- Set current item sensitive.
 		do
-			parent_imp.enable_item (id)
+			is_sensitive := True
+			if has_parent then
+				parent_imp.enable_item (id)
+			end
    		end
 
 	disable_sensitive is
    			-- Set current item insensitive.
 		do
-			parent_imp.disable_item (id)
+			is_sensitive := False
+			if has_parent then
+				parent_imp.disable_item (id)
+			end
    		end
 
 feature -- Element change
@@ -82,12 +89,15 @@ feature -- Element change
 			-- Set `text' to `txt'.
 		do
 			text := clone (txt)
-			--| FIXME Change text.
+			if has_parent then
+				parent_imp.modify_string (text, id)
+			end
 		end
 
 feature {NONE} -- Implementation
 
 	parent_imp: EV_MENU_ITEM_LIST_IMP
+			-- The menu or menu-bar this item is in.
 
 	parent: EV_MENU_ITEM_LIST is
 			-- Item list containing `Current'.
@@ -97,14 +107,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	has_parent: BOOLEAN is
+			-- Is this menu item in a menu?
+		do
+			Result := parent_imp /= Void and then parent_imp.item_exists (id)
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	on_activate is
+			-- `Current' has been clicked on.
 		do
 			interface.press_actions.call ([])
 		end
 
 	interface: EV_MENU_ITEM
+
+invariant
+	has_parent_implies_consistent_sensitive_state:
+		has_parent implies is_sensitive = parent_imp.item_enabled (id)
 
 end -- class EV_MENU_ITEM_IMP
 
@@ -129,6 +150,10 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/02/25 20:28:49  brendel
+--| Added function has_parent. Calls with target parent_imp are now protected
+--| using this conditional.
+--|
 --| Revision 1.29  2000/02/24 01:44:43  brendel
 --| Fixed parenting.
 --|

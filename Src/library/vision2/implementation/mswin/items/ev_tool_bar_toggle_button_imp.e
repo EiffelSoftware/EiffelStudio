@@ -17,13 +17,14 @@ inherit
 			interface
 		end
 
-	EV_TOOL_BAR_BUTTON_IMP
+	EV_TOOL_BAR_SELECT_BUTTON_IMP
 		rename
 			interface as ev_tool_bar_button_imp_interface
 		redefine
 			type,
 			on_activate,
-			parent_imp
+			parent_imp,
+			on_parented
 		end
 
 creation
@@ -44,32 +45,22 @@ feature -- Status report
 			Result := 2
 		end
 
-	is_selected: BOOLEAN is
-			-- Is the current button selected?
-		do
-			Result := parent_imp.button_checked (id)
-		end
+	checked: BOOLEAN
+		-- Is `Current' checked?
 
 feature -- Status setting
-
-	enable_select is
-		do
-			parent_imp.check_button (id)
-		end
 
 	disable_select is
 		do
 			parent_imp.uncheck_button (id)
 		end
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the current button if `flag', deselect it
-			-- otherwise.
+	set_checked is
+			-- Select the current button.
 		do
-			if flag then
+			checked := True
+			if parent_imp /= Void then
 				parent_imp.check_button (id)
-			else
-				parent_imp.uncheck_button (id)
 			end
 		end
 
@@ -108,6 +99,15 @@ feature -- Event -- removing command association
 
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
+	on_parented is
+		require else
+			has_parent: parent_imp /= Void
+		do
+			if checked = True then
+				parent_imp.check_button (id)
+			end
+		end
+
 	on_activate is
 			-- Is called by the menu when the item is activated.
 		do
@@ -142,6 +142,10 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/04 17:16:48  rogers
+--| Now inherits EV_TOOL_BAR_SELECT_BUTTON_IMP. Removed is_selected
+--| and set_selected. Implemented on_parented and set_checked.
+--|
 --| Revision 1.9  2000/02/19 06:34:12  oconnor
 --| removed old command stuff
 --|

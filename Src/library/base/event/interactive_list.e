@@ -24,7 +24,9 @@ inherit
 			remove_right,
 			replace,
 			remove,
-			extend
+			put_i_th,
+			append,
+			make_from_array
 		end
 
 feature {NONE} -- Initialization
@@ -34,6 +36,22 @@ feature {NONE} -- Initialization
 		do
 			make (4)
 		end
+		
+	make_from_array (a: ARRAY [G]) is
+			-- Create list from array `a'.
+		local
+			l_index: INTEGER
+		do
+			make (a.count)
+			from
+				l_index := a.lower
+			until
+				l_index > a.upper
+			loop
+				extend (a.item (l_index))
+				l_index := l_index + 1
+			end
+		end 
 
 feature -- Miscellaneous
 
@@ -86,14 +104,23 @@ feature -- Element Change
 			added_item (v, 1)
 		end
 
-	extend (v: like item) is
-			-- Add `v' to end.
-			-- Do not move cursor.
+	append (s: SEQUENCE [G]) is
+			-- Append a copy of `s'.
+		local
+			i: INTEGER
 		do
-			in_operation := True
-			Precursor {ARRAYED_LIST} (v)
-			in_operation := False
-			added_item (v, count)
+			i := count + 1	
+			set_count (count + s.count)
+			resize (lower, lower + count)
+			from
+				s.start
+			until
+				s.after
+			loop
+				put_i_th (s.item, i)
+				i := i + 1
+				s.forth
+			end
 		end
 
 	put_left (v: like item) is
@@ -116,6 +143,21 @@ feature -- Element Change
 			in_operation := False
 
 			added_item (v, index + 1)
+		end
+		
+	put_i_th (v: like i_th; i: INTEGER) is
+			-- Replace `i'-th entry, if in index interval, by `v'.
+		local
+			original_item: G
+		do
+			original_item := i_th (i)
+			in_operation := True
+			Precursor {ARRAYED_LIST} (v, i)
+			in_operation := False
+			if original_item /= Void then
+				removed_item (original_item, i)
+			end
+			added_item (v, i)
 		end
 
 	replace (v: like item) is

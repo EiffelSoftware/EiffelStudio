@@ -218,20 +218,29 @@ feature -- Status report
 
 	is_access_readable: BOOLEAN is
 			-- Is file readable by real UID?
+		local
+			ext_name: ANY
 		do
-			Result := file_access (file_name, 3);
+			ext_name := file_name.to_c
+			Result := file_access ($ext_name, 3);
 		end;
 
 	is_access_writable: BOOLEAN is
 			-- Is file writable by real UID?
+		local
+			ext_name: ANY
 		do
-			Result := file_access (file_name, 2);
+			ext_name := file_name.to_c
+			Result := file_access (ext_name, 2);
 		end;
 
 	is_access_executable: BOOLEAN is
 			-- Is file executable by real UID?
+		local
+			ext_name: ANY
 		do
-			Result := file_access (file_name, 1);
+			ext_name := file_name.to_c
+			Result := file_access (ext_name, 1);
 		end;
 
 feature -- Element change

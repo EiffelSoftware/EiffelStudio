@@ -27,23 +27,39 @@ feature -- Attribute
 
 feature -- Code generation
 
-	generated_eiffel_text (formal_arg_name, actual_arg_name: STRING): STRING is
-			-- Generate eiffel text:
+	generated_text_for_command (formal_arg_name, actual_arg_name: STRING): STRING is
+			-- Generate eiffel text for a command.
 			-- * changing formal arguments into actual ones
 			-- * adding before queries the word `target'
 			-- * changing `Current' into `target'
 			-- * changing `implies' into a corresponding 
 			-- * leaving `Void' as it is
-			--   boolean expression.
 		require
 			valid_formal_argument: formal_arg_name /= Void and then not formal_arg_name.empty
 			valid_actual_argument: actual_arg_name /= Void and then not actual_arg_name.empty
-			
-		local
-			i: INTEGER
 		do
 			formal_argument := formal_arg_name
 			actual_argument := actual_arg_name
+			generate_for_routine := False
+			!! Result.make (0)
+			Result.append ("(")
+			Result.append (generate_eiffel_text (precondition))
+			Result.append (")")
+		end
+	
+	generated_text_for_routine (formal_args: ARRAYED_LIST [STRING]): STRING is
+			-- Generate eiffel text for a command.
+			-- * changing formal arguments into actual ones
+			-- * adding before queries the word `target'
+			-- * changing `Current' into `target'
+			-- * changing `implies' into a corresponding 
+			-- * leaving `Void' as it is
+		require
+			arguments_not_void: formal_args /= Void
+		do
+			formal_arguments := formal_args
+			formal_arguments.compare_objects
+			generate_for_routine := True
 			!! Result.make (0)
 			Result.append ("(")
 			Result.append (generate_eiffel_text (precondition))
@@ -57,6 +73,9 @@ feature {NONE} -- Code generation
 
 	actual_argument: STRING
 			-- Actual argument name
+
+	formal_arguments: ARRAYED_LIST [STRING]
+			-- List of formal argument names
 
 	generate_eiffel_text (precondition_text: STRING): STRING is
 			-- Select what kind of expression `precondition_text' is.
@@ -141,7 +160,7 @@ feature {NONE} -- Code generation
 			-- expression (no operators).
 		local
 			temp_word: STRING
-			i: INTEGER
+			i, j: INTEGER
 		do
 			!! Result.make (0)
 			from
@@ -159,8 +178,16 @@ feature {NONE} -- Code generation
 						or temp_word.is_equal ("current") 
 					then
 						Result.append ("target")
-					elseif temp_word.is_equal (formal_argument) then
+					elseif not generate_for_routine 
+						and then temp_word.is_equal (formal_argument) 
+					then
 						Result.append (actual_argument)
+					elseif generate_for_routine 
+						and then formal_arguments.has (temp_word) 
+					then
+						j := formal_arguments.index_of (temp_word, 1)
+						Result.append ("app_argument")
+						Result.append_integer (j)
 					elseif temp_word.is_boolean
 						or temp_word.is_double
 						or temp_word.is_integer
@@ -248,4 +275,9 @@ feature {NONE} -- Boolean operators
 	and_then_index: INTEGER is unique
 			-- Index for operator `and then'
 
+feature {NONE} -- Attributes
+
+	generate_for_routine: BOOLEAN
+			-- Is the precondition test generated for a routine?
+			
 end -- class APPLICATION_PRECONDITION

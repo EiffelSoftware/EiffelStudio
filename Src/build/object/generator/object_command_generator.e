@@ -34,6 +34,7 @@ feature -- Initialization
 			!! routine_list.make ("", top_form)
 			!! generate_button.make ("Generate", top_form)
 			!! separator.make ("", top_form)
+			!! precondition_toggle_b.make ("Precondition test")
 			set_values
 			attach_all
 			set_callbacks
@@ -53,15 +54,17 @@ feature -- Initialization
 	attach_all is
 			-- Perform attachments.
 		do
-			top_form.attach_top (routine_list, 0)
-			top_form.attach_left (routine_list, 0)
-			top_form.attach_right (routine_list, 0)
-			top_form.attach_top_widget (routine_list, separator, 5)
+			top_form.attach_bottom (generate_button, 0)
+			top_form.attach_bottom (precondition_toggle_b, 0)
+			top_form.attach_left (precondition_toggle_b, 5)
+			top_form.attach_right (generate_button, 0)
+			top_form.attach_bottom_widget (generate_button, separator, 0)
 			top_form.attach_left (separator, 0)
 			top_form.attach_right (separator, 0)
-			top_form.attach_top_widget (separator, generate_button, 3)
-			top_form.attach_left (generate_button, 0)
-			top_form.attach_bottom (generate_button, 0)			
+			top_form.attach_bottom_widget (separator, routine_list, 0)
+			top_form.attach_left (routine_list, 0)
+			top_form.attach_right (routine_list, 0)
+			top_form.attach_top (routine_list, 0)
 		end
 
 	set_callbacks is
@@ -71,7 +74,7 @@ feature -- Initialization
 			generate_cmd: GENERATE_OBJECT_COMMAND_CMD
 		do
 			!! generate_cmd
-			generate_button.add_activate_action (generate_cmd, Void)
+			generate_button.add_activate_action (generate_cmd, precondition_toggle_b)
 			!! del_com.make (Current)
 			set_delete_command (del_com)
 		end
@@ -91,6 +94,9 @@ feature -- GUI attributes
 
 	routine_list: SCROLLABLE_LIST
 			-- List of avaible routines
+
+	precondition_toggle_b: TOGGLE_B
+			-- Precondition tes toggle button
 
 feature -- Closeable
 

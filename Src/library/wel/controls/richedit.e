@@ -462,8 +462,7 @@ feature -- Basic operations
 			stream_not_void: stream /= Void
 		do
 			stream.init_action
-			cwin_send_message (item, Em_streamin, format,
-				stream.to_integer)
+			cwin_send_message (item, Em_streamin, format, stream.to_integer)
 			stream.finish_action
 		end
 
@@ -477,8 +476,7 @@ feature -- Basic operations
 			stream_not_void: stream /= Void
 		do
 			stream.init_action
-			cwin_send_message (item, Em_streamout, format,
-				stream.to_integer)
+			cwin_send_message (item, Em_streamout, format, stream.to_integer)
 			stream.finish_action
 		end
 

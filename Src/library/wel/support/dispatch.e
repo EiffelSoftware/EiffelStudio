@@ -61,16 +61,13 @@ feature {NONE} -- Implementation
 					window_exists: window.exists
 				end
 				previous_state := window.default_processing_enabled
-				Result := window.process_message (hwnd, msg,
-					wparam, lparam)
+				Result := window.process_message (hwnd, msg, wparam, lparam)
 				if window.default_processing_enabled then
-					Result := window.call_default_window_procedure (msg,
-						wparam, lparam)
+					Result := window.call_default_window_procedure (msg, wparam, lparam)
 				end
 				window.set_default_processing (previous_state)
 			else
-				Result := cwin_def_window_proc (hwnd, msg,
-					wparam, lparam)
+				Result := cwin_def_window_proc (hwnd, msg, wparam, lparam)
 			end
 		end
 
@@ -132,7 +129,7 @@ feature {NONE} -- Externals
 	ceif_adopt (object: ANY): POINTER is
 			-- Eiffel macro to adopt an object
 		external
-			"C [macro <eiffel.h>] (EIF_OBJ): EIF_POINTER"
+			"C [macro <eif_eiffel.h>] (EIF_OBJ): EIF_POINTER"
 		alias
 			"eif_adopt"
 		end
@@ -140,7 +137,7 @@ feature {NONE} -- Externals
 	ceif_wean (object: ANY) is
 			-- Eiffel macro to wean an object
 		external
-			"C [macro <eiffel.h>] (EIF_OBJ)"
+			"C [macro <eif_eiffel.h>] (EIF_OBJ)"
 		alias
 			"eif_wean"
 		end

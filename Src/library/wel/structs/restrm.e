@@ -182,7 +182,7 @@ feature {NONE} -- Externals
 	ceif_adopt (object: ANY): POINTER is
 			-- Eiffel macro to adopt an object
 		external
-			"C [macro <eiffel.h>] (EIF_OBJ): EIF_POINTER"
+			"C [macro <eif_eiffel.h>] (EIF_OBJ): EIF_POINTER"
 		alias
 			"eif_adopt"
 		end
@@ -190,7 +190,7 @@ feature {NONE} -- Externals
 	ceif_wean (object: ANY) is
 			-- Eiffel macro to wean an object
 		external
-			"C [macro <eiffel.h>] (EIF_OBJ)"
+			"C [macro <eif_eiffel.h>] (EIF_OBJ)"
 		alias
 			"eif_wean"
 		end

@@ -1,6 +1,6 @@
 class INVALID feature
 
-	attribute: INTEGER;
+	attribute_value: INTEGER;
 
 	display is
 			-- Attempt (in an invalid way) to call a procedure of

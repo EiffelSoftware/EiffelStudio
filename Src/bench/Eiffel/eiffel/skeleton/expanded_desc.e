@@ -18,12 +18,14 @@ inherit
 feature 
 
 	class_type: CLASS_TYPE;
-			-- Class type of the exapnded attribute
+			-- Class type of the expanded attribute
 
 	set_class_type (i: CLASS_TYPE) is
 			-- Assign `i' to `class_type'.
 		do
 			class_type := i;
+		ensure
+			set: class_type = i
 		end;
 
 	type_id: INTEGER is
@@ -51,16 +53,16 @@ feature
 			Result := Expanded_level;
 		end;
 
-    same_as (other: ATTR_DESC): BOOLEAN is
-            -- Is `other' equal to Current ?
-        local
-            other_exp: EXPANDED_DESC;
-        do
-            if basic_same_as (other) then
-                other_exp ?= other;
-                Result := other_exp.type_id = type_id
-            end;
-        end;
+	same_as (other: ATTR_DESC): BOOLEAN is
+			-- Is `other' equal to Current ?
+		local
+			other_exp: EXPANDED_DESC;
+		do
+			if basic_same_as (other) then
+				other_exp ?= other;
+				Result := other_exp.type_id = type_id
+			end;
+		end;
 
 	sk_value: INTEGER is
 			-- Sk value

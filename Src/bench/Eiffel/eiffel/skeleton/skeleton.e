@@ -417,8 +417,8 @@ feature
 						after or else item.level /= Bits_level
 					loop
 						file.putstring ("+OVERHEAD+BITOFF(");
-		   				bit_desc ?= item;
-		   				file.putint (bit_desc.value);
+						bit_desc ?= item;
+						file.putint (bit_desc.value);
 						file.putchar (')');
 						forth;
 					end;
@@ -520,7 +520,7 @@ feature
 					until
 						after or else item.level /= Bits_level
 					loop
-		   				bit_desc ?= item;
+						bit_desc ?= item;
 						Result := Result + ovhsiz + bitoff(bit_desc.value);
 						forth;
 					end;
@@ -580,7 +580,11 @@ feature
 			until
 				after
 			loop
-				ba.append_uint32_integer (item.sk_value);
+				if System.java_generation then
+					ba.append_uint32_integer (item.real_sk_value)
+				else
+					ba.append_uint32_integer (item.sk_value)
+				end
 				forth
 			end;
 		end;
@@ -689,23 +693,23 @@ feature
 		end;
 
 	make_extern_declarations is
-            -- Prepare extern declarations for final mode
-            -- generation
-        local
-            rout_id: ROUTINE_ID;
-        do
-            from
-                start
-            until
-                after
-            loop
-                rout_id := item.rout_id;
-                Extern_declarations.add_skeleton_attribute_table
-								(rout_id.table_name);
-				Eiffel_table.mark_used (rout_id);
-                forth
-            end;
-        end;
+		-- Prepare extern declarations for final mode
+		-- generation
+	local
+		rout_id: ROUTINE_ID;
+	do
+		from
+			start
+		until
+			after
+		loop
+			rout_id := item.rout_id;
+			Extern_declarations.add_skeleton_attribute_table
+				(rout_id.table_name);
+			Eiffel_table.mark_used (rout_id);
+			forth
+		end;
+	end;
 
 	generate_rout_id_array is
 			-- Generate static C array of attributes routine ids

@@ -10,7 +10,7 @@ inherit
 		redefine
 			dark_symbol, text_window, display_temp_header
 		end;
-	SHARED_DEBUG
+	SHARED_APPLICATION_EXECUTION
 
 creation
 
@@ -44,31 +44,32 @@ feature {NONE}
 
 	display_info (object: OBJECT_STONE) is
 		local
-			attr_request: ATTR_REQUEST;
+			obj: DEBUGGED_OBJECT;
 			attributes: LIST [DEBUG_VALUE];
 			type_name: STRING;
 			is_special: BOOLEAN;
 			dynamic_class: E_CLASS;
+			status: APPLICATION_STATUS;
+			stone: CLASSC_STONE
 		do
-			if not Run_info.is_running then
+			status := Application.status;
+			if status = Void then
 				warner (text_window).gotcha_call (w_System_not_running)
-			elseif not Run_info.is_stopped then
+			elseif not status.is_stopped then
 				warner (text_window).gotcha_call (w_System_not_stopped)
 			else
-				!! attr_request.make (object.object_address);
-				attr_request.set_sp_bounds (text_window.sp_lower, text_window.sp_upper);
-				attr_request.send;
-				attributes := attr_request.attributes;
-				is_special := attr_request.is_special;
-				if is_special then
-					text_window.set_sp_capacity (attr_request.capacity)
-				end;
+				!! obj.make (object.object_address,
+					text_window.sp_lower, text_window.sp_upper);
+				attributes := obj.attributes;
+				is_special := obj.is_special;
+				text_window.set_sp_capacity (obj.max_capacity);
 				dynamic_class := object.dynamic_class;
 				type_name := clone (dynamic_class.name);
 				type_name.to_upper;
-				text_window.put_clickable_string (dynamic_class.stone, type_name);
+				!! stone.make (dynamic_class);
+				text_window.put_stone (stone, type_name);
 				text_window.put_string (" [");
-				text_window.put_clickable_string (object, object.object_address);
+				text_window.put_stone (object, object.object_address);
 				text_window.put_char (']');
 				text_window.new_line;
 				text_window.new_line;
@@ -89,7 +90,7 @@ feature {NONE}
 				end;
 				if 
 					is_special and then (attributes.empty or else 
-					attributes.last.name.to_integer < attr_request.capacity - 1)
+					attributes.last.name.to_integer < obj.capacity - 1)
 				then
 					text_window.put_string ("%T... More items ...");
 					text_window.new_line

@@ -66,24 +66,11 @@ feature
 			actual_class_type: CL_TYPE_A;
 			good_constant_type: BOOLEAN;
 			vqmc: VQMC;
+--			vqmc: VQMC;
 			vqmc2: VQMC2;
 		do
 			old_check_types (feat_tbl);
 			actual_type := type.actual_type;
-			if not actual_type.is_basic then
-				actual_class_type ?= actual_type;
-				if actual_class_type /= Void then
-					good_constant_type := 	actual_class_type.base_type
-											=
-											System.string_id;
-				end;
-				if not good_constant_type then
-					!!vqmc;
-					vqmc.set_class_id (written_in);
-					vqmc.set_feature_name (feature_name);
-					Error_handler.insert_error (vqmc);
-				end;
-			end;
 			if not value.valid_type (actual_type) then
 				!!vqmc2;
 				vqmc2.set_class_id (written_in);
@@ -135,7 +122,7 @@ feature -- C code generation
 				file.new_line;
 				file.indent;
 					-- If constant is a string, it is the semantic of a once
-				if value.is_string then
+				if is_once then
 					file.putstring ("static int done = 0;");
 					file.putstring ("static char *Result;");
 					file.new_line;
@@ -246,7 +233,7 @@ feature -- Byte code generation
 	is_once: BOOLEAN is
 			-- is the constant (implemented like) a once function ?
 		do
-			Result := not type.actual_type.is_basic;
+			Result := value.is_string or value.is_bit
 		end;
 
 	replicated: FEATURE_I is

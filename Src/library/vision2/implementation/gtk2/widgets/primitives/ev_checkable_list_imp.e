@@ -137,6 +137,9 @@ feature -- Status setting
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, True)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, item_imp.list_iter.item, boolean_tree_model_column, a_gvalue)
 			a_gvalue.memory_free
+			if check_actions_internal /= Void then
+				check_actions_internal.call ([list_item])
+			end
 		end
 
 	uncheck_item (list_item: EV_LIST_ITEM) is
@@ -152,6 +155,9 @@ feature -- Status setting
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, False)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, item_imp.list_iter.item, boolean_tree_model_column, a_gvalue)
 			a_gvalue.memory_free
+			if uncheck_actions_internal /= Void then
+				uncheck_actions_internal.call ([list_item])
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -8,8 +8,8 @@ VUPR
             2. If the Parent_qualification part is present, its
             Class_name is the name of a parent P of C.
 
-            3. The declaration of `r' in C is the redefinition of a
-            routine that has exactly one effective version in the set
-            of Parent types of C, restricted if case 2 applies to
-            those having P as their Class_name.
+            3. The declaration of `r' in C is the redefinition of a 
+            routine that has exactly one version inherited by C as
+            effective in the set of Parent types of C, restricted
+            if case 2 applies to those having P as their Class_name.
 

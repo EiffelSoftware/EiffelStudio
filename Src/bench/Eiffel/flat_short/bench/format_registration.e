@@ -509,30 +509,28 @@ end;
 				ancestors.after
 			loop
 				current_class := ancestors.item
-				if current_class /= System.any_class.compiled_class and not current_class.is_external then
-					if not current_class.is_true_external then
-						class_id := current_class.class_id
-						if Tmp_feat_tbl_server.has (class_id) then
-							current_feature_table := Tmp_feat_tbl_server.item (class_id)
-						elseif Feat_tbl_server.server_has (class_id) then
-							current_feature_table := Feat_tbl_server.server_item (class_id)
-						else
-							create current_feature_table.make (0)
-							current_feature_table.init_origin_table
-						end
-
-						System.set_current_class (current_class)
-
-						debug ("FLAT_SHORT")
-							io.error.putstring ("%TParsing & Registering class: ")
-							io.error.putstring (current_class.name)
-							io.error.new_line
-						end
-
-						current_ast := current_class_ast
-						register_current_ast
-
+				if not current_class.is_true_external then
+					class_id := current_class.class_id
+					if Tmp_feat_tbl_server.has (class_id) then
+						current_feature_table := Tmp_feat_tbl_server.item (class_id)
+					elseif Feat_tbl_server.server_has (class_id) then
+						current_feature_table := Feat_tbl_server.server_item (class_id)
+					else
+						create current_feature_table.make (0)
+						current_feature_table.init_origin_table
 					end
+	
+					System.set_current_class (current_class)
+	
+					debug ("FLAT_SHORT")
+						io.error.putstring ("%TParsing & Registering class: ")
+						io.error.putstring (current_class.name)
+						io.error.new_line
+					end
+	
+					current_ast := current_class_ast
+					register_current_ast
+					
 				end
 				ancestors.forth
 			end

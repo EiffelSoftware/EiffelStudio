@@ -90,7 +90,29 @@ feature -- Enumerating collections
 				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
+		
+	enum_interface_impls (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_size: INTEGER): ARRAY [INTEGER] is
+			-- Enumerates all interfaces implemented by the specified TypeDef.  
+			-- Tokens will be returned in the order the interfaces were specified 
+			-- (through DefineTypeDef or SetTypeDefProps).
+			-- [See GetInterfaceImplProps for more detail of how this method works]
+		local
+			l_md_size: INTEGER
+			l_mp_tokens: MANAGED_POINTER
+			l_count: INTEGER
+		do
+			l_md_size := sizeof_mdInterfaceImpl
+			create l_mp_tokens.make (a_size * l_md_size)
 
+			last_call_success := cpp_enum_members (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_size, $l_count)
+			if 
+				(last_call_success = 0 or last_call_success = 1 )
+				and then l_count > 0 
+			then
+				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
+			end
+		end
+		
 	enum_members (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all members (fields and methods, but not properties or events)
 			-- defined by the class specified by cl.  
@@ -235,6 +257,14 @@ feature -- Obtaining Properties of a Specified Object
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		end
 		
+	get_interface_impl_props (a_interface_impl: INTEGER): INTEGER is
+			-- Gets the information stored in metadata for a specified interface implementation
+		local
+			l_interf_tok: INTEGER
+		do
+			last_call_success := cpp_get_interface_impl_props (item, a_interface_impl, $Result, $l_interf_tok)
+		end
+		
 	get_member_props (a_tok: INTEGER): STRING is
 			-- 
 		local
@@ -346,6 +376,16 @@ feature {NONE} -- Implementation Enum...
 			"EnumTypeDefs"
 		end	
 
+	frozen cpp_enum_interface_impls (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; r_tokens: POINTER; a_tokens_size: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
+		external
+			"[
+				C++ IMetaDataImport signature(HCORENUM*, mdTypeDef, mdInterfaceImpl*, ULONG, ULONG*): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"EnumInterfaceImpls"
+		end	
+
 	frozen cpp_enum_members (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; r_tokens: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
@@ -448,6 +488,18 @@ feature {NONE} -- Implementation Obtaining information
 		alias
 			"GetTypeDefProps"
 		end	
+	
+	frozen cpp_get_interface_impl_props (obj: POINTER; a_inter_impl: INTEGER; r_class_token: TYPED_POINTER [INTEGER]; 
+										r_interface_token: TYPED_POINTER [INTEGER]
+										): INTEGER is
+		external
+			"[
+				C++ IMetaDataImport signature(mdInterfaceImpl, mdTypeDef*, mdToken*): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"GetInterfaceImplProps"
+		end			
 
 	frozen cpp_get_member_props (obj: POINTER; 
 				a_member_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER]; 
@@ -566,6 +618,14 @@ feature {NONE} -- Implementation
 		alias
 			"sizeof(mdParamDef)"
 		end
+
+	sizeof_mdInterfaceImpl: INTEGER is
+			-- Number of bytes in a value of type `mdInterfaceImpl'
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"sizeof(mdInterfaceImpl)"
+		end		
 
 	array_of_integer_from (a_mp: MANAGED_POINTER; a_elt_size: INTEGER; a_count: INTEGER): ARRAY [INTEGER] is
 			-- ARRAY [INTEGER] filled with `a_count' elements from the MANAGED_POINTER `a_mp' with element of size `a_elt_size'.

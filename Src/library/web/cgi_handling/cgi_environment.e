@@ -15,9 +15,6 @@ inherit
 	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
-		redefine
-			eif_getenv,
-			eif_putenv
 		end
 
 feature -- Not request-specific environment variables
@@ -198,24 +195,6 @@ feature {NONE} -- Implementation
 				Result := ""
 			end
 		end
-
-	eif_getenv (s : POINTER): POINTER is
-			-- Value of environment variable `s',
-			-- even on Windows.
-		external
-			"C (char *): char * | <stdlib.h>"
-		alias
-			"getenv"
-		end;
-
-	eif_putenv (v, k: POINTER): INTEGER is
-			-- Safe eiffel putenv using environment variables,
-			-- even on Windows.
-		external
-			"C | %"eif_misc.h%""
-		alias
-			"eif_safe_putenv"
-		end;
 
 end -- class CGI_ENVIRONMENT
 

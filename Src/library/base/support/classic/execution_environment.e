@@ -95,11 +95,17 @@ feature -- Status setting
 			value_exists: value /= Void
 			not_value_has_null_character: not value.has ('%U')
 		local
-			v_to_c, k_to_c: ANY
+			l_env: STRING
+			l_c_env: C_STRING
 		do
-			v_to_c := value.to_c
-			k_to_c := key.to_c
-			return_code := eif_putenv ($v_to_c, $k_to_c)
+			create l_env.make (value.count + key.count + 1)
+			l_env.append (key)
+			l_env.append_character ('=')
+			l_env.append (value)
+			create l_c_env.make (l_env)
+			
+			environ.force (l_c_env, key)
+			return_code := eif_putenv (l_c_env.item)
 		ensure
 			variable_set: (return_code = 0) implies (value.is_equal (get (key)))
 		end
@@ -137,6 +143,17 @@ feature -- Status setting
 			asynchronous_system_call ($ext)
 		end
 
+feature {NONE} -- Implementation
+
+	environ: HASH_TABLE [C_STRING, STRING] is
+			-- Environment variable memory set by current execution,
+			-- indexed by environment variable name. Needed otherwise
+			-- we would corrupt memory after freeing memory used by
+			-- C_STRING instance since not referenced anywhere else.
+		once
+			create Result.make (10)
+		end
+
 feature {NONE} -- External
 
 	eif_getenv (s: POINTER): POINTER is
@@ -145,10 +162,12 @@ feature {NONE} -- External
 			"C | %"eif_misc.h%""
 		end
 
-	eif_putenv (v, k: POINTER): INTEGER is
-			-- Set `s' in the environment.
+	eif_putenv (v: POINTER): INTEGER is
+			-- Set `v' in environment.
 		external
-			"C | %"eif_misc.h%""
+			"C use <stdlib.h>"
+		alias
+			"putenv"
 		end
 
 	eif_chdir (s: ANY): INTEGER is

@@ -73,7 +73,7 @@ extern "C" {
  * --    Extern declarations    --
  * ------------------------------- */
 
-extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
+extern void egc_init_plug ();		/* Defined in E1/eplug.c, and
 									 * called in the CECIL macros. */
 /* -------------------------------
  * --    Primary definitions    --
@@ -116,8 +116,7 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 #endif	/* !_CRAY */
 
 #define EIF_RT_BASIC_CLEANUP \
-	reclaim(); \
-}
+	reclaim();
 
 
 #ifdef EIF_THREADS
@@ -165,7 +164,6 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 
 #define EIF_DISPOSE_ALL \
 	EIF_RT_BASIC_CLEANUP \
-	EIF_TSD_DESTROY(eif_global_key,"Couldn't destroy context key"); \
 }
 
 
@@ -188,7 +186,8 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 	Oops, trying to use multithreading facilities without proper flags
 
 #define EIF_DISPOSE_ALL \
-	EIF_RT_BASIC_CLEANUP
+	EIF_RT_BASIC_CLEANUP \
+}
 
 #ifdef __cplusplus
 }

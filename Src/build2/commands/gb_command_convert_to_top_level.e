@@ -74,7 +74,6 @@ feature -- Basic Operation
 			child_object := Object_handler.deep_object_from_id (child_id)
 
 			new_object := Object_handler.deep_object_from_id (child_id).new_top_level_representation
-			new_object.set_name (name)
 			new_object_id := new_object.id
 			
 			create window_selector_item.make_with_object (new_object)
@@ -131,7 +130,8 @@ feature -- Basic Operation
 				all_children_old.forth
 			end
 
-			window_selector.extend (new_object.window_selector_item)
+			new_object.set_name (name)
+			window_selector.add_alphabetically (new_object.window_selector_item)
 			
 			rebuild_associated_editors (child_object.object)
 

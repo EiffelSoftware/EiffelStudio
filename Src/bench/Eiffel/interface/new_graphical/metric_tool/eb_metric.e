@@ -51,14 +51,8 @@ feature -- Comparison
 			-- Is current metric less than `other' in the sense of alphabetic order?
 		require else
 			valid_object_comparison: other /= Void
-		local
-			current_name, other_name: STRING
 		do
-			current_name := clone (name)
-			other_name := clone (other.name)
-			current_name.to_lower
-			other_name.to_lower
-			Result := current_name < other_name
+			Result := name.as_lower < other.name.as_lower
 		end
 
 feature -- Application to scope

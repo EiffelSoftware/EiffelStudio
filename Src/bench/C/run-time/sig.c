@@ -797,9 +797,17 @@ long sig;
 {
 	/* Catch signal `sig'.
 	 * Check that the signal is defined
-     */
+	 */
 
 	if (!(esigdefined(sig) == (char) 1))
+		return;
+
+	/* We may not change the status of SIGPROF because it is possible
+	 * that we do (run-time) external profiling. Changing the catch
+	 * status of this signal means that profiling stops.
+	 */
+
+	if (sig == SIGPROF)
 		return;
 
 	sig_ign[sig] = 0;
@@ -849,6 +857,14 @@ long sig;
      */
 
 	if (!(esigdefined(sig) == (char) 1))
+		return;
+
+	/* We may not change the status of SIGPROF because it is possible
+	 * that we do (run-time) external profiling. Changing the catch
+	 * status of this signal means that profiling stops.
+	 */
+
+	if (sig == SIGPROF)
 		return;
 
 	sig_ign[sig] = 1;
@@ -927,7 +943,8 @@ void esigresall()
 
 	int sig;
 	for (sig = 1; sig < NSIG; sig++)
-		sig_ign[sig] = osig_ign[sig];
+		if (sig != SIGPROF)
+			sig_ign[sig] = osig_ign[sig];
 	
 #ifdef SIGTTIN
 	(void) signal(SIGTTIN, SIG_IGN);/* Ignore background input signal */
@@ -955,6 +972,14 @@ long sig;
 {
 	/* Reset signal `sig' to its default handling */
 	if (!(esigdefined(sig) == (char) 1))
+		return;
+
+	/* We may not change the status of SIGPROF because it is possible
+	 * that we do (run-time) external profiling. Changing the catch
+	 * status of this signal means that profiling stops.
+	 */
+
+	if (sig == SIGPROF)
 		return;
 
 	sig_ign[sig] = osig_ign[sig];

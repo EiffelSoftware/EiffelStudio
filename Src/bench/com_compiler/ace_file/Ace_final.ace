@@ -1,5 +1,5 @@
 system
-	"ISE.Compiler.exe"
+	"ISE.Compiler"
 
 root
 	ECOM_ISE_REGISTRATION: make
@@ -99,7 +99,7 @@ cluster
 				end
 			ieiffel_cluster_properties_impl_proxy
 				end
-			ecom_eif_compiler_registration
+			ecom_ise_registration
 				end
 			ceiffel_project_coclass_imp
 				end

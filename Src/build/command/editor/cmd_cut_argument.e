@@ -245,7 +245,8 @@ feature {NONE} -- Features of QUEST_POPUPER
 
 	popuper_parent: COMPOSITE is
 		do
-			Result := edited_command.command_editor
+			Result := associated_command_tool
+--			Result := edited_command.command_editor
 		end 
 
 	page: COMMAND_PAGE is

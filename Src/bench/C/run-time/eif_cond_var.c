@@ -103,6 +103,60 @@ int pthread_cond_wait (pthread_cond_t *cv, pthread_mutex_t external_mutex)
   return 0; 
 }
 
+int pthread_cond_timedwait (pthread_cond_t *cv, pthread_mutex_t external_mutex, int timeout)
+{
+  /* It's ok to increment the number   */
+  /* of waiters since <external_mutex> */
+  /* must be locked by the caller.     */
+  cv->waiters_++;
+  int result = 0;
+  int bTimedOut = 0;
+
+#if defined (SIGNAL_OBJECT_AND_WAIT) /* NT 4.0 only */
+  /* This call will automatically release     */
+  /* the mutex and wait on the semaphore      */
+  /* until cond_signal() or cond_broadcast()  */
+  /* are called by another thread.            */
+  bTimedOut = SignalObjectAndWait (external_mutex,
+                         cv->sema_,
+                         timeout, FALSE);
+#else /* NT 3.51 or Win95 */
+  /* Keep the lock held just long enough to        */
+  /* increment the count of waiters by one.        */
+  /* We can't keep it held across the call         */
+  /* to WaitForSingleObject() since that will      */
+  /* deadlock other calls to pthread_cond_signal() */
+  /* and pthread_cond_broadcast().                 */
+  ReleaseMutex (external_mutex);  
+
+  /* Wait to be awakened by a pthread_cond_signal() or */
+  /* pthread_cond_broadcast().                         */
+  bTimedOut = WaitForSingleObject (cv->sema_, timeout);
+
+#endif /* SIGNAL_OBJECT_AND_WAIT */
+  
+
+  /* Reacquire lock to avoid race conditions.*/
+  EnterCriticalSection (&cv->waiters_lock_);
+
+  /* We're no longer waiting...*/
+  cv->waiters_--;
+
+  /* If we're the last waiter thread            */
+  /* during this particular broadcast then      */
+  /* let all the other threads proceed.         */
+  if (cv->was_broadcast_ && cv->waiters_ == 0)  
+    SetEvent (cv->waiters_done_); 
+  
+  LeaveCriticalSection (&cv->waiters_lock_);
+
+  /* Always regain the external mutex since that's */
+  /* the guarantee that we give to our callers.    */
+
+  WaitForSingleObject (external_mutex, INFINITE); 
+
+  return bTimedOut;
+}
 
 int pthread_cond_signal (pthread_cond_t *cv)
 {

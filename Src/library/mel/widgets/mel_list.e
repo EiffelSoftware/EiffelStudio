@@ -205,7 +205,7 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_int (screen_object, XmNselectedItemcount)
+			Result := get_xt_int (screen_object, XmNselectedItemCount)
 		ensure
 			selected_item_count_large_enough: Result >= 0
 		end;

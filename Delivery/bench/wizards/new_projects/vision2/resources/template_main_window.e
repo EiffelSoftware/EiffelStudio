@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	Window_title: STRING is "my_project"
+	Window_title: STRING is "<FL_PROJECT_NAME>"
 			-- Title of the window.
 
 	Window_width: INTEGER is 400

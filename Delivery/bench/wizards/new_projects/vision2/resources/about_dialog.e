@@ -131,7 +131,7 @@ feature {NONE} -- Implementation / Constants
 			-- Default title for the dialog window.
 
 	Default_message: STRING is
-		"YourCompany (R) MyProject%N%
+		"YourCompany (R) <FL_PROJECT_NAME>%N%
 		%Version 1.0%N%
 		%%N%
 		%Copyright (C) 2000 YourCompany"

@@ -58,14 +58,17 @@ feature
 			temp: STRING
 		do
 				-- Verbose
-			io.error.putstring ("Degree 4: class ");
+			io.putstring ("Degree 4: class ");
 				temp := associated_class.class_name.duplicate;
 				temp.to_upper;
-			io.error.putstring (temp);
-			io.error.new_line;
+			io.putstring (temp);
+			io.new_line;
 
 			if	
-				(associated_class.changed or else associated_class.changed2)
+				((associated_class.changed and then
+					not associated_class.pass2_done)
+			or else
+				associated_class.changed2)
 			then
 					-- Analysis of inheritance for a class
 				analyzer.pass2 (Current, supplier_status_modified);
@@ -174,10 +177,16 @@ feature -- Propagation of second pass
 					(descendant, assert_prop_list.duplicate (assert_prop_list.count));
 				end;
 
--- The next two lines should NOT be here
+-- FIXME
+-- The next line should NOT be here
 -- Check the histroy in integrator. Xavier
 
+-- Insertion in pass4_controler is needed
+
 				pass3_controler.insert_new_class (descendant);
+
+					-- Insert in pass4_controler so that the skeletons of all
+					-- the descendants are updated
 				pass4_controler.insert_new_class (descendant);
 
 				local_cursor := local_cursor.right

@@ -84,7 +84,7 @@ feature {NONE}
 			inh_assert: INH_ASSERT_INFO;
 			i, nb: INTEGER;
 			ancestor_feature: FEATURE_I;
-			ancestor_class: CLASS_C;
+			written_class, ancestor_class: CLASS_C;
 		do
 			f := traversal_unit.a_feature;
 			static_class := traversal_unit.static_class;
@@ -99,31 +99,33 @@ feature {NONE}
 					-- leads to NO routine table.
 			end;
 
--- FIXME
---			if f.assert_id_set /= Void then
---				-- The routine has chained assertions.
---				-- mark all the previous definitions with assertions
---				-- as used.
---				from
---					assert_id_set := f.assert_id_set;
---					i := 1;
---					nb := assert_id_set.count
---				until
---					i > nb
---				loop
---					inh_assert := assert_id_set.item (i);
---					if inh_assert.has_assertion then
---						ancestor_class := System.class_of_id (inh_assert.written_in);
---						ancestor_feature := ancestor_class.feature_table.feature_of_rout_id
---														(f.rout_id_set);
---						mark_and_record (ancestor_feature, ancestor_class);
---					end;
---					i := i + 1;
---				end;
---			end;
+
+			if f.assert_id_set /= Void then
+				-- The routine has chained assertions.
+				-- mark all the previous definitions with assertions
+				-- as used.
+				from
+					assert_id_set := f.assert_id_set;
+					i := 1;
+					nb := assert_id_set.count
+				until
+					i > nb
+				loop
+					inh_assert := assert_id_set.item (i);
+					if inh_assert.has_assertion then
+						ancestor_class := System.class_of_id (inh_assert.written_in);
+						ancestor_feature := ancestor_class.feature_table.feature_of_rout_id
+														(f.rout_id_set);
+						mark_and_record (ancestor_feature, ancestor_class);
+					end;
+					i := i + 1;
+				end;
+			end;
+
 			if Tmp_poly_server.has (rout_id_val) then
 					-- If routine id available: this is not a deferred feature
 					-- without any implementation
+				written_class := f.written_class;
 				table ?= Tmp_poly_server.item (rout_id_val);
 				check
 					table_exists: table /= Void;
@@ -135,7 +137,7 @@ feature {NONE}
 					c = Void
 				loop
 					unit := c.item;
-					if System.class_of_id (unit.id).conform_to (static_class) then
+					if System.class_of_id (unit.id).conform_to (written_class) then
 						other_body_id := body_table.item (unit.body_index);
 						if used_table.item (other_body_id) = False then
 							descendant_class := System.class_of_id (unit.id);

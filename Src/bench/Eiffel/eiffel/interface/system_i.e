@@ -3225,7 +3225,7 @@ feature -- Conveniences
 
 	reset_system_level_options is
 		do
-			remover_off := True;
+			remover_off := False;
 			code_replication_off := True;
 			exception_stack_managed := False; 
 		end;

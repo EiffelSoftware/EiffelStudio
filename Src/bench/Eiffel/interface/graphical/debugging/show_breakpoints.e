@@ -36,12 +36,12 @@ feature {NONE}
 
 	command_name: STRING is
 		do
-			Result := "Show breakpoints";
+			Result := "Show stop points";
 		end;
 
 	title_part: STRING is
 		do
-			Result := "Breakpoints of ";
+			Result := "Stop points of ";
 		end
 	
 

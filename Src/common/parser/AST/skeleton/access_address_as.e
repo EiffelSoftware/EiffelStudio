@@ -33,6 +33,8 @@ feature -- Type check
 			a_feature: FEATURE_I;
 			access_b: ACCESS_B;
 			depend_unit: DEPEND_UNIT;
+			veen: VEEN;
+			vzaa1: VZAA1
 		do
 			last_type := context.item;
 			last_constrained := context.last_constrained_type;
@@ -41,13 +43,23 @@ feature -- Type check
 
 			a_feature := last_class.feature_table.item (feature_name);
 
-			if a_feature /= Void then
+			if (a_feature = Void) then
+				!!veen;
+				context.init_error (veen);
+				veen.set_identifier (feature_name);
+				Error_handler.insert_error (veen);
+			elseif (a_feature.is_constant) then
+				!!vzaa1;
+				context.init_error (vzaa1);
+				vzaa1.set_address_name (feature_name);
+				Error_handler.insert_error (vzaa1);
+			else
 				if a_feature.is_attribute then
 					Result ?= a_feature.type;
 					Result := Result.conformance_type;
 					Result := Result.instantiation_in
 										(last_type, last_id).actual_type;
-			   else
+				else
 					Result := Pointer_type;
 				end;
 
@@ -59,6 +71,7 @@ feature -- Type check
 				access_b := a_feature.access (Result.type_i);
 				context.access_line.insert (access_b);
 			end;
+			Error_handler.checksum
 		end;
 
 	

@@ -162,7 +162,7 @@ feature
 			generate_locals;
 				-- If necessary, generate the once stuff (i.e. checks for
 				-- the internal done flag). That way we do not enter the body
-				-- of the once it it has already been done. Pre-conditions,
+				-- of the once it it has already been done. Preconditions,
 				-- if any, are only tested on the very first call.
 			generate_once;
 				-- Before entering in the code generate GC hooks, i.e. pass

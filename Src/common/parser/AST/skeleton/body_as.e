@@ -229,6 +229,8 @@ feature -- New feature description
 						-- The two objects are of the same type.
 						-- There is no global typing problem.
 					Result := content.is_body_equiv (other.content)
+				else
+					Result := False
 				end;
 			end;
 		end;

@@ -31,7 +31,6 @@ feature -- Type check, byte code and dead code removal
 			-- Type check an address access
 		local
 			internal_name: ID_AS;
-			vzaa1: VZAA1;
 			access_address: ACCESS_ADDRESS_AS;
 			hector_type: HECTOR_A;
 			id_type: TYPE_A;
@@ -43,15 +42,6 @@ feature -- Type check, byte code and dead code removal
 
 			!!access_address.make (internal_name);
 			id_type := access_address.access_type;
-
-			if id_type = Void then
-				!!vzaa1;
-				context.init_error (vzaa1);
-				vzaa1.set_address_name (internal_name);
-				Error_handler.insert_error (vzaa1);
-					-- Cannot go on here...
-				Error_handler.raise_error;
-			end;
 
 			if not context.access_line.access.is_feature then
 				!!hector_type.make (id_type);

@@ -218,7 +218,7 @@ feature -- Display
 			debug_window.put_string ("%TReason: ");
 			inspect Run_info.reason
 			when Pg_break then
-				debug_window.put_string ("Breakpoint reached%N")
+				debug_window.put_string ("Stop point reached%N")
 			when Pg_raise then
 				debug_window.put_string ("Explicit exception pending%N");
 				display_exception

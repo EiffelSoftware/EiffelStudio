@@ -170,13 +170,15 @@ feature -- Input/Output
 		end;
 
 	confirmed: BOOLEAN is
+			--|Note: Currently no command necessitates confirmation
 		do
-			io.error.putstring ("Do you wish to ");
-			io.error.putstring (name);
-			io.error.putstring (" the system [y/n]? ");
-			io.readchar;
-			io.next_line;	
-			Result := ((io.lastchar = 'Y') or (io.lastchar = 'y'))
+--			io.error.putstring ("Do you wish to ");
+--			io.error.putstring (name);
+--			io.error.putstring (" the system [y/n]? ");
+--			io.readchar;
+--			io.next_line;	
+--			Result := ((io.lastchar = 'Y') or (io.lastchar = 'y'))
+			Result := True
 		end;
 
 	print_header is

@@ -58,6 +58,7 @@ feature -- Execution
 		do
 			structured_text.add (ti_Before_class_declaration);
 			work;
+			structured_text.finish;
 			structured_text.add (ti_After_class_declaration);
 		end;
 

@@ -279,9 +279,20 @@ feature -- Externals
 			"C signature (GtkClipboard*): gboolean use <gtk/gtk.h>"
 		end
 		
+	gtk_text_buffer_cut_clipboard (a_text_buffer: POINTER; a_clipboard: POINTER; default_editable: BOOLEAN) is
+		external
+			"C signature (GtkTextBuffer*, GtkClipboard*, gboolean) use <gtk/gtk.h>"
+		end
 		
+	gtk_text_buffer_copy_clipboard (a_text_buffer: POINTER; a_clipboard: POINTER) is
+		external
+			"C signature (GtkTextBuffer*, GtkClipboard*) use <gtk/gtk.h>"
+		end
 		
-		
+	gtk_text_buffer_paste_clipboard (a_text_buffer: POINTER; a_clipboard: POINTER; a_text_iter: POINTER; default_editable: BOOLEAN) is
+		external
+			"C signature (GtkTextBuffer*, GtkClipboard*,GtkTextIter*, gboolean) use <gtk/gtk.h>"
+		end
 
 end
 

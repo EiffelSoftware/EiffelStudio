@@ -604,6 +604,7 @@ feature -- Class info
 			-- Following calls to current will only be `generate_class_mappings'.
 		do
 			create class_mapping.make (0, class_count)
+			create factory_class_mapping.make (0, class_count)
 			create single_parent_mapping.make (0, class_count)
 			create external_class_mapping.make (class_count)
 			create external_token_mapping.make (class_count)
@@ -1791,11 +1792,156 @@ feature -- Custom attribute
 
 feature -- IL Generation
 
+	generate_creation_procedures (class_c: CLASS_C; class_type: CLASS_TYPE) is
+			-- Generate IL code for creation procedures in `class_c'.
+		require
+			class_c_not_void: class_c /= Void
+			eiffel_class: not class_c.is_external
+			class_type_not_void: class_type /= Void
+		local
+			create_name: STRING
+			l_attributes: INTEGER
+			l_creators: HASH_TABLE [EXPORT_I, STRING]
+			l_feat_tbl: FEATURE_TABLE
+			l_feat: FEATURE_I
+			l_type_token: INTEGER
+			l_is_generic: BOOLEAN
+		do
+			l_creators := class_c.creators
+
+				-- Let's define factory class if needed, i.e.:
+				-- 1 - class is not deferred
+				-- 2 - class has exported creation procedure
+				-- 3 - class has automatic `default_create' procedure
+			if not class_c.is_deferred and (l_creators = Void or else not l_creators.is_empty) then
+				l_is_generic := class_c.is_generic
+				create_name := class_type.full_il_create_type_name
+				l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
+					feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
+					feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
+					feature {MD_TYPE_ATTRIBUTES}.Is_class
+				uni_string.set_string (create_name)
+				l_type_token := md_emit.define_type (uni_string, l_attributes,
+					object_type_token, Void)
+				factory_class_mapping.put (l_type_token, class_type.implementation_id)
+
+				current_class_token := l_type_token
+				current_class_type := class_type
+
+				if l_creators = Void then
+					l_feat := class_c.default_create_feature
+					generate_creation_procedure (class_c, class_type, l_feat, l_is_generic)
+				else
+					from
+						l_creators.start
+						l_feat_tbl := class_c.feature_table
+					until
+						l_creators.after
+					loop
+						l_feat := l_feat_tbl.item (l_creators.key_for_iteration)
+						generate_creation_procedure (class_c, class_type, l_feat, l_is_generic)
+						l_creators.forth
+					end
+				end
+			end
+		end
+
+	generate_creation_procedure (class_c: CLASS_C; class_type: CLASS_TYPE; feat: FEATURE_I; is_generic: BOOLEAN) is
+			-- Generate IL code for creation procedures in `class_c'.
+		require
+			class_c_not_void: class_c /= Void
+			eiffel_class: not class_c.is_external
+			class_type_not_void: class_type /= Void
+			feat_not_void: feat /= Void
+			feat_not_attribute: not feat.is_attribute
+			feat_not_function: not feat.is_function
+			feat_not_deferred: not feat.is_deferred
+			feat_not_constant: not feat.is_constant
+			feat_not_type_feature: not feat.is_type_feature
+		local
+			l_meth_sig: like method_sig
+			l_name: STRING
+			l_feat_arg: FEAT_ARG
+			l_type_i: TYPE_I
+			l_meth_token, l_eiffel_meth_token, l_meth_attr: INTEGER
+			i, nb: INTEGER
+		do
+			if feat.feature_name_id /= Names_heap.void_name_id then
+				nb := feat.argument_count
+				l_meth_sig := method_sig
+				l_meth_sig.reset
+				l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+				if is_generic then
+					l_meth_sig.set_parameter_count (nb + 1)
+				else
+					l_meth_sig.set_parameter_count (nb)
+				end
+				set_method_return_type (l_meth_sig, current_class_type.type)
+
+				if nb > 0 then
+					from
+						l_feat_arg := feat.arguments
+						l_feat_arg.start
+					until
+						l_feat_arg.after
+					loop
+						l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
+						set_signature_type (l_meth_sig, l_type_i)
+						l_feat_arg.forth
+					end
+				end
+				if is_generic then
+					l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+						ise_eiffel_derivation_type_token)
+				end
+
+				l_name := il_casing.pascal_casing (feat.feature_name,
+					feature {IL_CASING_CONVERSION}.lower_case)
+
+				uni_string.set_string (l_name)
+
+				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
+					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+					feature {MD_METHOD_ATTRIBUTES}.Static
+
+					-- Normal method
+				l_meth_token := md_emit.define_method (uni_string, current_class_token,
+					l_meth_attr, l_meth_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+
+				l_eiffel_meth_token := feature_token (
+					implemented_type (feat.origin_class_id, current_class_type.type).static_type_id,
+					feat.origin_feature_id)
+
+				start_new_body (l_meth_token)
+				create_object (current_class_type.implementation_id)
+				if is_generic then
+					duplicate_top
+					generate_argument (nb)
+					method_body.put_call (feature {MD_OPCODES}.callvirt,
+						ise_set_type_token, 1, False)
+				end
+				duplicate_top
+				if nb > 0 then
+					from
+					until
+						i >= nb
+					loop
+						generate_argument (i)
+						i := i + 1
+					end
+				end
+				method_body.put_call (feature {MD_OPCODES}.callvirt, l_eiffel_meth_token, nb, False)
+				method_body.put_opcode (feature {MD_OPCODES}.ret)
+				method_writer.write_current_body					
+			end
+		end
+
 	generate_il_implementation (class_c: CLASS_C; class_type: CLASS_TYPE) is
 			-- Generate IL code for feature in `class_c'.
 		require
 			class_c_not_void: class_c /= Void
 			eiffel_class: not class_c.is_external
+			class_type_not_void: class_type /= Void
 		deferred
 		end
 
@@ -4328,6 +4474,10 @@ feature {NONE} -- Once per modules being generated.
 			-- Token for `ISE.RUNTIME.assertion_tag' static field that holds
 			-- message for exception being thrown.
 
+	ise_set_type_token: INTEGER
+			-- Token for `ISE.Runtime.EIFFEL_TYPE_INFO.____set_type' feature that
+			-- assign type information of a class.
+
 	ise_invariant_token: INTEGER
 			-- Token for `ISE.Runtime.EIFFEL_TYPE_INFO._invariant' feature that
 			-- checks a class invariant.
@@ -4513,7 +4663,7 @@ feature {NONE} -- Once per modules being generated.
 				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
 
 			ise_runtime_token := md_emit.define_assembly_ref (
-				create {UNI_STRING}.make ("ise_runtime"), l_ass_info, l_pub_key)
+				create {UNI_STRING}.make ("ISE.Runtime"), l_ass_info, l_pub_key)
 
 				-- Define `ise_last_exception_token'.
 			l_excep_man_token := md_emit.define_type_ref (
@@ -4569,6 +4719,19 @@ feature {NONE} -- Once per modules being generated.
 			ise_generic_conformance_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (Generic_conformance_class_name), ise_runtime_token)
 
+				-- Define `ise_set_type_token'.
+			l_meth_sig := method_sig
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, 
+				ise_eiffel_derivation_type_token)
+
+			ise_set_type_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("____set_type"),
+				ise_eiffel_type_info_type_token, l_meth_sig)
+
 				-- Define `ise_invariant_token'.
 			ise_invariant_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("_invariant"),
@@ -4576,7 +4739,6 @@ feature {NONE} -- Once per modules being generated.
 
 				-- Define constructor of custom attribute class that keeps Eiffel
 				-- name classes in their Eiffel formatting.
-			l_meth_sig := method_sig
 			l_meth_sig.reset
 			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (1)
@@ -4595,6 +4757,10 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 
 	external_token_mapping: HASH_TABLE [INTEGER, STRING]
 			-- Quickly find a type token given its external name.
+
+	factory_class_mapping: ARRAY [INTEGER]
+			-- Array of type token of factory class needed to create Eiffel class
+			-- instances; indexed by their `type_id'.
 
 	class_mapping: ARRAY [INTEGER]
 			-- Array of type token indexed by their `type_id'.
@@ -5099,7 +5265,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 					if l_name.is_equal ("mscorlib") then
 						internal_assemblies.put (mscorlib_token, a_class_type.implementation_id)
 						defined_assemblies.put (mscorlib_token, l_name)
-					elseif l_name.is_equal ("ise_runtime") then
+					elseif l_name.is_equal ("ISE.Runtime") then
 						internal_assemblies.put (ise_runtime_token, a_class_type.implementation_id)
 						defined_assemblies.put (ise_runtime_token, l_name)
 					else

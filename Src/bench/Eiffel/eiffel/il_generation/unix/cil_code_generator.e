@@ -438,6 +438,15 @@ feature -- Class info
 
 feature -- Features info
 
+	generate_creation_procedures (class_c: CLASS_C; class_type: CLASS_TYPE) is
+			-- Generate IL code for creation procedures in `class_c'.
+		require
+			class_c_not_void: class_c /= Void
+			eiffel_class: not class_c.is_external
+			class_type_not_void: class_type /= Void
+		do
+		end
+
 	generate_il_features_description (class_c: CLASS_C; class_type: CLASS_TYPE) is
 			-- Generate features description of `class_type'.
 		require

@@ -37,8 +37,7 @@ inherit
 	RESOURCE_USER
 		redefine
 			update_integer_resource
-		end;
-	INTERFACE_W
+		end
 
 creation
 
@@ -50,7 +49,7 @@ feature -- Initialization
 			-- Initialze Current
 		do
 			twl_make;
-			System_resources.add_user (Current)
+			General_resources.add_user (Current)
 		end
 
 feature -- Resource Update
@@ -60,7 +59,7 @@ feature -- Resource Update
 			-- `new_res' is applicable.
 			-- Also, update the interface.
 		do
-			if old_res = System_resources.history_size then
+			if old_res = General_resources.history_size then
 				if new_res.actual_value >= 1 and new_res.actual_value <= 100 then
 					old_res.update_with (new_res);
 					rearrange_history
@@ -104,7 +103,7 @@ feature {NONE} -- Measurement
 	capacity: INTEGER is
 			-- Maximum number of items
 		do
-			Result := System_resources.history_size.actual_value;
+			Result := General_resources.history_size.actual_value;
 			if Result < 1 or Result > 100 then
 					-- Just in case the user specified some weird values.
 				Result := 10

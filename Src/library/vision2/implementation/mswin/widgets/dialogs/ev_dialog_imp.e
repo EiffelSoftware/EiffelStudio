@@ -53,7 +53,6 @@ feature {NONE} -- Initialization
 			other_imp_not_void: other_imp /= Void
 		local
 			app_imp: EV_APPLICATION_IMP
-			a_menu_bar: EV_MENU_BAR
 		do
 			apply_center_dialog := False
 

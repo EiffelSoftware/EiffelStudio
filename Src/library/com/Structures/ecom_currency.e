@@ -160,7 +160,7 @@ feature -- Basic operations
 			-- Multiply by `an_integer'
 		do
 			create Result.make
-				ccom_currency_multiply_by_4bytes_integer (item, an_integer, Result.item)
+			ccom_currency_multiply_by_4bytes_integer (item, an_integer, Result.item)
 		ensure
 			valid_result: Result /= Void
 		end
@@ -183,101 +183,85 @@ feature -- Basic operations
 feature {NONE} -- Externals
 
 	ccom_currency_value_zero (a_ptr: POINTER) is
---		external
---			"C (EIF_POINTER)|%"E_Currency.h%""
-		do
+		external
+			"C (CY *)|%"E_Currency.h%""
 		end
 
 	ccom_currency_value_one (a_ptr: POINTER) is
-	--	external
-	--		"C (EIF_POINTER)|%"E_Currency.h%""
-		do
+		external
+			"C (CY *)|%"E_Currency.h%""
 		end
 
 	ccom_currency_round (a_ptr: POINTER; a_value: INTEGER; b_ptr:POINTER) is
-	--	external
-	--		"C [macro %"E_Currency.h%"](EIF_POINTER, EIF_INTEGER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *, EIF_INTEGER, CY*)"
 		end
 		
 	ccom_currency_negative (a_ptr, b_ptr: POINTER) is
-	--	external
-	--		"C [macro %"E_Currency.h%"](EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *, CY *)"
 		end
 
 	ccom_currency_integer (a_ptr, b_ptr: POINTER) is
-	--	external
-	--		"C [macro %"E_Currency.h%"](EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *, CY *)"
 		end
 
 	ccom_currency_fix (a_ptr, b_ptr: POINTER) is
-	--	external
-	--		"C [macro %"E_Currency.h%"](EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *, CY *)"
 		end
 
 	ccom_currency_absolute (a_ptr, b_ptr: POINTER) is
-	--	external
-	--		"C [macro %"E_Currency.h%"](EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *, CY *)"
 		end
 
 	ccom_currency_set_high_bits (a_ptr:POINTER; i: INTEGER) is
-	--	external
-	--		"C [macro %"E_Currency.h%"](EIF_POINTER, EIF_INTEGER)"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *, unsigned long)"
 		end
 
 	ccom_currency_set_low_bits (a_ptr:POINTER; i: INTEGER) is
-	--	external
-	--		"C [macro %"E_Currency.h%"](EIF_POINTER, EIF_INTEGER)"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *, long)"
 		end
 
 	ccom_currency_high_bits (a_ptr:POINTER): INTEGER is
-	--	external
-	--		"C [macro %"E_Currency.h%"]"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *): EIF_INTEGER"
 		end
 
 	ccom_currency_low_bits (a_ptr:POINTER): INTEGER is
-	--	external
-	--		"C [macro %"E_Currency.h%"]"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *): EIF_INTEGER"
 		end
 
 	c_size_of_currency: INTEGER is
-	--	external 
-	--		"C [macro <wtypes.h>]"
-	--	alias
-	--		"sizeof(CY)"
-		do
+		external 
+			"C [macro <wtypes.h>]"
+		alias
+			"sizeof(CY)"
 		end
 
 	ccom_currency_add (ptr_1, ptr_2, ptr_3: POINTER) is
-	--	external
-	--		"C [macro %"E_Currency.h%"](EIF_POINTER, EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *, CY *, CY *)"
 		end
 
 	ccom_currency_multiply (ptr_1, ptr_2, ptr_3: POINTER) is
-	--	external
-	--		"C [macro %"E_Currency.h%"](EIF_POINTER, EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *, CY *, CY *)"
 		end
 	
 	ccom_currency_multiply_by_4bytes_integer (ptr_1:POINTER; ptr_2: INTEGER; ptr_3: POINTER) is
-	--	external
-	--		"C [macro %"E_Currency.h%"](EIF_POINTER, EIF_INTEGER, EIF_POINTER)"
-		do
+		external
+			"C [macro %"E_Currency.h%"](CY *, long, CY *)"
 		end
 
 	ccom_currency_subtract (ptr_1, ptr_2, ptr_3: POINTER) is
-	--	external
-	--		"c [macro %"E_Currency.h%"] (EIF_POINTER, EIF_POINTER, EIF_POINTER)"
-		do
+		external
+			"c [macro %"E_Currency.h%"] (CY *, CY *, CY *)"
 		end
 
 end -- class ECOM_CURRENCY

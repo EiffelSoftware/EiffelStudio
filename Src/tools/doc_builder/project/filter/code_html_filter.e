@@ -60,10 +60,14 @@ feature -- Generation
 					Result := xml_reader.output_string
 				end
 				a_file.close
+			else
+				create Result.make_empty
 			end
+		ensure
+			generate_html_not_void: Result /= Void
 		rescue
 			retried := True
-			retry		
+			retry
 		end
 
 feature {NONE} -- Access
@@ -127,7 +131,7 @@ feature {NONE} -- Commands
 								l_dir_name.extend (l_title)
 								l_dir_name.add_extension ("html")
 								create l_target_file.make_create_read_write (l_dir_name.string)
-								l_text := clone (template_text (code_template_file_name))
+								l_text := template_text (code_template_file_name).twin
 								l_html := generated_html (l_file)
 								replace_token (l_text, Html_content_token, l_html)
 								l_stylesheet := stylesheet_path (l_file.name, True)	

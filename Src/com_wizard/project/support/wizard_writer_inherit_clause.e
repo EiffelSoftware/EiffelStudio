@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 		do
 			create {LINKED_LIST [STRING]} sources.make
 			create {LINKED_LIST [STRING]} destinations.make
-			create exports.make (10)
+			create {LINKED_LIST [WIZARD_WRITER_EXPORT_DIRECTIVE]}exports.make
 			create {LINKED_LIST [STRING]} undefines.make
 			create {LINKED_LIST [STRING]} redefines.make
 			create {LINKED_LIST [STRING]} selects.make
@@ -73,20 +73,21 @@ feature -- Access
 					loop
 						Result.append (New_line_tab_tab_tab)
 						Result.append (Open_curly_brace)
-						Result.append (exports.key_for_iteration)
+						Result.append (exports.item.to_class)
 						Result.append (Close_curly_brace)
 						Result.append (Space)
 						from
-							exports.item_for_iteration.start
-							Result.append (exports.item_for_iteration.item)
-							exports.item_for_iteration.forth
+							exports.item.features.start
+							Result.append (exports.item.features.item)
+							exports.item.features.forth
 						until
-							exports.item_for_iteration.after
+							exports.item.features.after
 						loop
-							Result.append (Colon)
-							Result.append (Space)
-							Result.append (exports.item_for_iteration.item)
-							exports.item_for_iteration.forth
+							Result.append (Comma)
+							Result.append (New_line_tab_tab_tab)
+							Result.append (tab)
+							Result.append (exports.item.features.item)
+							exports.item.features.forth
 						end
 						Result.append (Semicolon)
 						exports.forth
@@ -104,7 +105,7 @@ feature -- Access
 						undefines.after
 					loop
 						Result.append (Comma)
-						Result.append (Space)
+						Result.append (New_line_tab_tab_tab)
 						Result.append (undefines.item)
 						undefines.forth
 					end
@@ -121,7 +122,7 @@ feature -- Access
 						redefines.after
 					loop
 						Result.append (Comma)
-						Result.append (Space)
+						Result.append (New_line_tab_tab_tab)
 						Result.append (redefines.item)
 						redefines.forth
 					end
@@ -138,7 +139,7 @@ feature -- Access
 						selects.after
 					loop
 						Result.append (Comma)
-						Result.append (Space)
+						Result.append (New_line_tab_tab_tab)
 						Result.append (selects.item)
 						selects.forth
 					end
@@ -163,7 +164,7 @@ feature -- Access
 	destinations: LIST [STRING]
 			-- Rename clause destinations
 
-	exports: HASH_TABLE [LIST [STRING], STRING]
+	exports: LIST [WIZARD_WRITER_EXPORT_DIRECTIVE]
 			-- Export clause
 
 	undefines: LIST [STRING]
@@ -218,14 +219,11 @@ feature -- Element Change
 			valid_features: not features.empty
 			non_void_class: a_class /= Void
 			valid_class: not a_class.empty
+		local
+			export_directive: WIZARD_WRITER_EXPORT_DIRECTIVE
 		do
-			if exports.has (a_class) then
-				exports.item (a_class).append (features)
-			else
-				exports.put (features, a_class)
-			end
-		ensure
-			added: exports.has (a_class) and then exports.item (a_class) = (features)
+			create export_directive.make (features, a_class)
+			exports.extend (export_directive)
 		end
 	
 	add_undefine (a_feature: STRING) is

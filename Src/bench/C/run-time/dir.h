@@ -14,12 +14,12 @@
 #define _dir_h_
 #include "macros.h"
 
-#ifdef I_DIRENT
-#ifdef __WATCOMC__
-#include <direct.h>
+#ifdef I_DIRECT
+#include <direct.h>				/* Pseudo symbol for Watcom C */
+#define DIRENTRY struct dirent
 #else
+#ifdef I_DIRENT
 #include <dirent.h>
-#endif
 #define DIRENTRY struct dirent
 #else
 #ifdef I_SYS_DIR
@@ -31,6 +31,7 @@
 #define DIRENTRY struct direct
 #else
 	Sorry! You have to find a directory package...
+#endif
 #endif
 #endif
 #endif

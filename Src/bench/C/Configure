@@ -20,7 +20,7 @@
 
 # $Id$
 #
-# Generated on Fri Feb 11 16:08:55 PST 1994 [metaconfig 3.0 PL22]
+# Generated on Mon Feb 14 16:30:29 PST 1994 [metaconfig 3.0 PL22]
 
 cat >/tmp/c1$$ <<EOF
 ARGGGHHHH!!!!!
@@ -207,6 +207,7 @@ d_getopt=''
 d_getpagsz=''
 pagesize=''
 d_keepsig=''
+d_link=''
 d_lstat=''
 d_mkdir=''
 d_open3=''
@@ -230,6 +231,11 @@ d_socket=''
 d_sockpair=''
 sockethdr=''
 socketlib=''
+d_chown=''
+d_geteuid=''
+d_getgrgid=''
+d_getpwuid=''
+d_rewinddir=''
 d_index=''
 d_strchr=''
 d_strctcpy=''
@@ -249,12 +255,21 @@ doublesize=''
 floatsize=''
 h_fcntl=''
 h_sysfile=''
+i_direct=''
 d_dirnamlen=''
 i_dirent=''
 i_fcntl=''
+i_grp=''
 i_limits=''
 i_niin=''
 i_sysin=''
+d_pwage=''
+d_pwchange=''
+d_pwclass=''
+d_pwcomment=''
+d_pwexpire=''
+d_pwquota=''
+i_pwd=''
 i_stdarg=''
 i_string=''
 strings=''
@@ -2737,6 +2752,22 @@ $rm -f set set.c
 set bzero d_bzero
 eval $inlibc
 
+: see if rewinddir exists
+set rewinddir d_rewinddir
+eval $inlibc
+: see if chown exists
+set chown d_chown
+eval $inlibc
+: see if getpwuid exists
+set getpwuid d_getpwuid
+eval $inlibc
+: see if getgrgid exists
+set getgrgid d_getgrgid
+eval $inlibc
+: see if geteuid exists
+set geteuid d_geteuid
+eval $inlibc
+
 : see if this is a dirent system
 echo " "
 if xinc=`./findhdr dirent.h`; $test "$xinc"; then
@@ -3287,6 +3318,10 @@ set d_keepsig
 eval $setvar
 $rm -f try*
 
+: see if link exists
+set link d_link
+eval $inlibc
+
 : see if lstat exists
 set lstat d_lstat
 eval $inlibc
@@ -3427,6 +3462,10 @@ eval $inlibc
 
 : see if getrusage exists
 set getrusage d_rusage
+eval $inlibc
+
+: see if sbrk exists
+set sbrk d_sbrk
 eval $inlibc
 
 : see if sys_siglist[] exist
@@ -4748,10 +4787,6 @@ $awk "BEGIN { for (i=1; i<=$registers; i++) printf \"reg%d=register\n\", i}" \
 . ./.foo
 $rm -f .foo
 
-: see if sbrk exists
-set sbrk d_sbrk
-eval $inlibc
-
 : see if sbrk can release core to the kernel
 echo " "
 case "$d_sbrk" in
@@ -5086,6 +5121,10 @@ do set $yyy; var=$2; eval "was=\$$2";
 	set $yyy; shift; shift; yyy=$@;
 done'
 
+: see if this is a direct system
+set direct.h i_direct
+eval $inhdr
+
 : see if this is a sys/file.h system
 val=''
 set sys/file.h val
@@ -5139,6 +5178,10 @@ esac
 set i_fcntl
 eval $setvar
 
+: see if this is an grp system
+set grp.h i_grp
+eval $inhdr
+
 : see if this is a limits.h system
 set limits.h i_limits
 eval $inhdr
@@ -5146,6 +5189,55 @@ eval $inhdr
 : see if this is a netinet/in.h or sys/in.h system
 set netinet/in.h i_niin sys/in.h i_sysin
 eval $inhdr
+
+: see if this is a pwd system
+echo " "
+xxx=`./findhdr pwd.h`
+if $test "$xxx"; then
+	i_pwd="$define"
+	echo "<pwd.h> found." >&4
+	$cppstdin $cppflags < $xxx >$$.h
+	if $contains 'pw_quota' $$.h >/dev/null 2>&1; then
+		d_pwquota="$define"
+	else
+		d_pwquota="$undef"
+	fi
+	if $contains 'pw_age' $$.h >/dev/null 2>&1; then
+		d_pwage="$define"
+	else
+		d_pwage="$undef"
+	fi
+	if $contains 'pw_change' $$.h >/dev/null 2>&1; then
+		d_pwchange="$define"
+	else
+		d_pwchange="$undef"
+	fi
+	if $contains 'pw_class' $$.h >/dev/null 2>&1; then
+		d_pwclass="$define"
+	else
+		d_pwclass="$undef"
+	fi
+	if $contains 'pw_expire' $$.h >/dev/null 2>&1; then
+		d_pwexpire="$define"
+	else
+		d_pwexpire="$undef"
+	fi
+	if $contains 'pw_comment' $$.h >/dev/null 2>&1; then
+		d_pwcomment="$define"
+	else
+		d_pwcomment="$undef"
+	fi
+	$rm -f $$.h
+else
+	i_pwd="$undef"
+	d_pwquota="$undef"
+	d_pwage="$undef"
+	d_pwchange="$undef"
+	d_pwclass="$undef"
+	d_pwexpire="$undef"
+	d_pwcomment="$undef"
+	echo "<pwd.h> NOT found." >&4
+fi
 
 : see if stdarg is available
 set stdarg.h i_stdarg
@@ -5533,6 +5625,7 @@ d_getopt='$d_getopt'
 d_getpagsz='$d_getpagsz'
 pagesize='$pagesize'
 d_keepsig='$d_keepsig'
+d_link='$d_link'
 d_lstat='$d_lstat'
 d_mkdir='$d_mkdir'
 d_open3='$d_open3'
@@ -5556,6 +5649,11 @@ d_socket='$d_socket'
 d_sockpair='$d_sockpair'
 sockethdr='$sockethdr'
 socketlib='$socketlib'
+d_chown='$d_chown'
+d_geteuid='$d_geteuid'
+d_getgrgid='$d_getgrgid'
+d_getpwuid='$d_getpwuid'
+d_rewinddir='$d_rewinddir'
 d_index='$d_index'
 d_strchr='$d_strchr'
 d_strctcpy='$d_strctcpy'
@@ -5575,12 +5673,21 @@ doublesize='$doublesize'
 floatsize='$floatsize'
 h_fcntl='$h_fcntl'
 h_sysfile='$h_sysfile'
+i_direct='$i_direct'
 d_dirnamlen='$d_dirnamlen'
 i_dirent='$i_dirent'
 i_fcntl='$i_fcntl'
+i_grp='$i_grp'
 i_limits='$i_limits'
 i_niin='$i_niin'
 i_sysin='$i_sysin'
+d_pwage='$d_pwage'
+d_pwchange='$d_pwchange'
+d_pwclass='$d_pwclass'
+d_pwcomment='$d_pwcomment'
+d_pwexpire='$d_pwexpire'
+d_pwquota='$d_pwquota'
+i_pwd='$i_pwd'
 i_stdarg='$i_stdarg'
 i_string='$i_string'
 strings='$strings'

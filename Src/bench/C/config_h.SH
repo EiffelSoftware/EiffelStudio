@@ -178,6 +178,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$d_keepsig SIGNALS_KEPT	/**/
 
+/* HAS_LINK:
+ *	This symbol, if defined, indicates that the link routine is
+ *	available to create hard links.
+ */
+#$d_link HAS_LINK	/**/
+
 /* HAS_LSTAT:
  *	This symbol, if defined, indicates that the lstat routine is
  *	available to do file stats on symbolic links.
@@ -225,6 +231,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	Inclusion of <sys/resource.h> and <sys/time.h> may be necessary.
  */
 #$d_rusage HAS_GETRUSAGE		/**/
+
+/* HAS_SBRK:
+ *	This symbol, if defined, indicates that the sbrk system call is
+ *	available to add/relase core. Always true on Unix.
+ */
+#$d_sbrk HAS_SBRK	/**/
 
 /* USE_BSDPGRP:
  *	This symbol, if defined, indicates that the BSD notion of process
@@ -371,6 +383,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$i_fcntl I_FCNTL	/**/
 
+/* I_GRP:
+ *	This symbol, if defined, indicates to the C program that it should
+ *	include <grp.h>.
+ */
+#$i_grp I_GRP		/**/
+
 /* I_LIMITS:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <limits.h> to get definition of symbols like WORD_BIT or
@@ -388,6 +406,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$i_niin I_NETINET_IN	/**/
 #$i_sysin I_SYS_IN		/**/
+
+/* I_PWD:
+ *	This symbol, if defined, indicates to the C program that it should
+ *	include <pwd.h>.
+ */
+#$i_pwd I_PWD		/**/
 
 /* I_STDARG:
  *	This symbol, if defined, indicates that <stdarg.h> exists and should
@@ -595,6 +619,43 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$add_log USE_ADD_LOG		/* Allow logging */
 #define LOGGING_LEVEL	9	/* Logging level */
+
+/* HAS_REWINDDIR:
+ *	This symbol, if defined, indicates that the rewinddir system call is
+ *	available
+ */
+/* HAS_CHOWN:
+ *	This symbol, if defined, indicates that the chown system call is
+ *	available
+ */
+/* HAS_GETPWUID:
+ *	This symbol, if defined, indicates that the getpwuid system call is
+ *	available
+ */
+/* HAS_GETGRGID:
+ *	This symbol, if defined, indicates that the getgrgid system call is
+ *	available
+ */
+/* HAS_GETEUID:
+ *	This symbol, if defined, indicates that the geteuid system call is
+ *	available
+ */
+#$d_rewinddir HAS_REWINDDIR	/**/
+
+#$d_chown HAS_CHOWN	/**/
+
+#$d_getpwuid HAS_GETPWUID	/**/
+
+#$d_getgrgid HAS_GETGRGID	/**/
+
+#$d_geteuid HAS_GETEUID	/**/
+
+/* I_DIRECT:
+ *	This symbol, if defined, indicates to the C program that it should
+ *	include <direct.h>.
+ * This is a pseudo unit for the Watcom C compiler (DOS)
+ */
+#$i_direct I_DIRECT		/**/
 
 /* I_TMVAL_SYS_SELECT:
  *	This symbol, if defined, indicates to the C program that it should

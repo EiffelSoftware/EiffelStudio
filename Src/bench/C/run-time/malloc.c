@@ -173,9 +173,6 @@ extern char *to_chunk();				/* Base address of partial 'to' chunk */
 extern void erembq();					/* Quick insertion in moved set */
 
 extern struct stack moved_set;			/* Describes the new generation */
-#ifndef __WATCOMC__
-extern int errno;						/* System calls error report */
-#endif
 extern int cc_for_speed;				/* Optimized for speed or for memory */
 extern struct chunk *last_from;			/* Last 'from' chunk used by plsc() */
 extern struct sc_zone ps_from;			/* Partial scavenging 'from' zone */
@@ -861,10 +858,10 @@ int type;
 		 * from sbrk(). Every failure is handled as a "no more memory"
 		 * condition.
 		 */
-#ifdef __WATCOMC__
-		oldbrk = (union overhead *) malloc(asked);
-#else
+#ifdef HAS_SBRK
 		oldbrk = (union overhead *) sbrk(asked);
+#else
+		oldbrk = (union overhead *) malloc(asked);
 #endif
 
 #ifdef DEBUG
@@ -1044,7 +1041,7 @@ private int free_last_chunk()
 	 * was not correctly determined by Configure--RAM.
 	 */
 
-#ifndef __WATCOMC__
+#ifdef HAS_SBRK
 	brk = sbrk(0);						/* Fetch current break value */
 	if (brk != last_addr) {				/* There *is* something */
 		SIGRESUME;						/* End of critical section */
@@ -1085,12 +1082,7 @@ private int free_last_chunk()
 	 * negative value, bringing the memory used by the chunk back to the kernel.
 	 */
 
-#ifdef __WATCOMC__
-    free (last_chk);
-    if (i != -1)
-       connect_free_list (arena, i);
-    SIGRESUME;
-#else
+#ifdef HAS_SBRK
 	status = (int) sbrk(-nbytes);		/* Shrink process's data segment */
 	if (status == -1) {					/* System call failed */
 		if (i != -1)						/* Was removed from free list */
@@ -1098,6 +1090,11 @@ private int free_last_chunk()
 		SIGRESUME;							/* End of critical section */
 		return -1;							/* Propagate failure */
 	}
+#else
+    free (last_chk);
+    if (i != -1)
+       connect_free_list (arena, i);
+    SIGRESUME;
 #endif
 
 #ifdef DEBUG

@@ -397,6 +397,7 @@ feature {NONE} -- Implementation
 			c: CLASS_C
 			dc, oc: CLASS_C
 			l_tooltip: STRING
+			l_nb_stack_out: STRING
 		do
 			create Result
 			c := elem.dynamic_class
@@ -423,7 +424,8 @@ feature {NONE} -- Implementation
 					Result.extend (Interface_names.l_Same_class_name)
 				end
 
-				Result.set_tooltip (elem.level_in_stack.out + ": " + l_tooltip)
+				l_nb_stack_out := Application.status.where.count.out
+				Result.set_tooltip ((elem.level_in_stack).out + "/" + l_nb_stack_out + ": " + l_tooltip)
 
 				Result.set_pebble_function (agent pebble_from_x_y (?, ?, level))
 				Result.set_accept_cursor (Cursors.cur_Setstop)

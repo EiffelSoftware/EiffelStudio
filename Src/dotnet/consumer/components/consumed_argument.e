@@ -17,11 +17,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dn, en: STRING; ct: CONSUMED_REFERENCED_TYPE; a_o: BOOLEAN) is
+	make (dn, en: STRING; ct: CONSUMED_REFERENCED_TYPE) is
 			-- Set `dotnet_name' with `dn'.
 			-- Set `eiffel_name' with `en'.
 			-- Set `type' with `ct'.
-			-- Set `is_out' with `a_o'.
 		require
 			non_void_dotnet_name: dn /= Void
 			valid_dotnet_name: not dn.is_empty
@@ -32,12 +31,10 @@ feature {NONE} -- Initialization
 			d := dn
 			e := en
 			t := ct
-			o := a_o
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
 			type_set: type = ct
-			is_out_set: is_out = a_o
 		end
 		
 feature -- Access
@@ -60,12 +57,6 @@ feature -- Access
 			Result := t
 		end
 
-	is_out: BOOLEAN is
-			-- Out argument?
-		do
-			Result := o
-		end
-
 feature {NONE} -- Access
 
 	d: like dotnet_name
@@ -76,9 +67,6 @@ feature {NONE} -- Access
 			
 	t: like type
 			-- Internal data storage for `type'.
-			
-	o: like is_out
-			-- Internal data storage for `is_out'.
 
 feature {CONSUMED_ARGUMENT, OVERLOAD_SOLVER} -- Comparison
 

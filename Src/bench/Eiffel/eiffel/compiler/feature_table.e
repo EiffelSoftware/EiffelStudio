@@ -81,7 +81,13 @@ create
 feature -- Access
 
 	origin_table: SELECT_TABLE
-			-- Table of the features sorted by origin
+			-- Table of features sorted by origin
+
+	overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
+			-- Hash_table of overloaded features. It is Void by default in a non external class.
+			-- The key corresponds to overloaded feature name id, and for each entry it gives a
+			-- list of associated resolved feature name id. (e.g. for `put' you will possibly
+			-- find `put_integer', `put_double',...)
 
 	associated_class: CLASS_C is
 			-- Associated class
@@ -105,6 +111,29 @@ feature -- Access: compatibility
 			if id > 0 then
 				Result := item_id (id)
 			end
+		end
+		
+	overloaded_items (s: STRING): LIST [FEATURE_I] is
+			-- List of features matching overloaded name `s'.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
+			has_overloaded_s: has_overloaded (s)
+		local
+			l_names: ARRAYED_LIST [INTEGER]
+		do
+			l_names := overloaded_names.item (Names_heap.id_of (s))
+			create {ARRAYED_LIST [FEATURE_I]} Result.make (l_names.count)
+			from
+				l_names.start
+			until
+				l_names.after
+			loop
+				Result.extend (item_id (l_names.item))
+				l_names.forth
+			end
+		ensure
+			overloaded_items_not_void: Result /= Void
 		end
 
 	has (s: STRING): BOOLEAN is
@@ -139,12 +168,37 @@ feature -- Access: compatibility
 			end
 		end
 
+feature -- Status report
+
+	has_overloaded (a_feature_name: STRING): BOOLEAN is
+			-- Does Current have `a_feature_name' has being an overloaded routine?
+		local
+			l_id: INTEGER
+		do
+			if associated_class.is_true_external and overloaded_names /= Void then
+				l_id := Names_heap.id_of (a_feature_name)
+				if l_id > 0 then
+					Result := overloaded_names.has (l_id)
+				end
+			end
+		end
+
 feature -- Settings
 
 	set_origin_table (t: like origin_table) is
 			-- Assign `t' to `origin_table'.
 		do
 			origin_table := t
+		ensure
+			origin_table_set: origin_table = t
+		end
+		
+	set_overloaded_names (o: like overloaded_names) is
+			-- Assign `o' to `overloaded_names'.
+		do
+			overloaded_names := o
+		ensure
+			overloaded_names_set: overloaded_names = o
 		end
 
 feature -- Comparison

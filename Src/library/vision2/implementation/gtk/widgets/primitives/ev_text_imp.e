@@ -165,24 +165,12 @@ feature -- Status report
 			pos : INTEGER
 			count: INTEGER
 			start: INTEGER
+			a_text: STRING
 		do
-			if (i = line_count) then
-				Result := text.count
+			if valid_line_index (i + 1) then
+				Result := first_position_from_line_number (i + 1) - 1
 			else
-				from
-					count := 1
-					pos := 1
-					start := 1
-				until
-					count = i + 1
-				loop
-					-- Look for the (i + 1)th `Return' in the string.
-					-- Return is symbolized by '%N'
-					pos := text.index_of ('%N', start)
-					count := count + 1
-					start := pos + 1
-				end
-				Result := pos
+				Result := text.count
 			end
 		end
 
@@ -202,13 +190,22 @@ feature -- Status setting
 			gtk_text_set_point (entry_widget, pos - 1)
 			feature {EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
-	
-	insert_text (txt: STRING) is
+		
+	insert_text_at_position (txt: STRING; a_position: INTEGER) is
 		local
 			a_cs: C_STRING
+			temp_caret_pos: INTEGER
 		do
+			temp_caret_pos := caret_position
+			gtk_text_set_point (entry_widget, a_position - 1)
 			create a_cs.make (txt)
 			gtk_text_insert (entry_widget, NULL, NULL, NULL, a_cs.item, -1)
+			internal_set_caret_position (temp_caret_pos)
+		end
+	
+	insert_text (txt: STRING) is
+		do
+			insert_text_at_position (txt, caret_position)
 		end
 	
 	set_text (txt: STRING) is
@@ -219,24 +216,14 @@ feature -- Status setting
 	
 	append_text (txt: STRING) is
 			-- Append `txt' to `text'.
-		local
-			temp_caret_pos: INTEGER
 		do
-			temp_caret_pos := caret_position
-			gtk_text_set_point (entry_widget, text_length)
-			insert_text (txt)
-			internal_set_caret_position (temp_caret_pos)
+			insert_text_at_position (txt, text_length + 1)
 		end
 	
 	prepend_text (txt: STRING) is
 			-- Prepend 'txt' to `text'.
-		local
-			temp_caret_pos: INTEGER
 		do
-			temp_caret_pos := caret_position
-			gtk_text_set_point (entry_widget, 0)
-			insert_text (txt)
-			internal_set_caret_position (temp_caret_pos)
+			insert_text_at_position (txt, 1)
 		end
 	
 	delete_text (start, finish: INTEGER) is

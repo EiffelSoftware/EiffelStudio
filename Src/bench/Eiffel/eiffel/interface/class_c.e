@@ -2461,10 +2461,13 @@ feature -- Parent checking
 		local
 			vtug: VTUG
 			vtcg4: VTCG4
-			il_inherit_error: VIFI
+			vifi1: VIFI1
+			vifi2: VIFI2
 			parent_actual_type: CL_TYPE_A
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
+			l_parent_class: CLASS_C
+			l_single_classes: LINKED_LIST [CLASS_C]
 		do
 			from
 				l_area := parents.area
@@ -2473,39 +2476,67 @@ feature -- Parent checking
 				i = nb
 			loop
 				parent_actual_type := l_area.item (i)
+				l_parent_class := parent_actual_type.associated_class
+
+				if
+					(l_parent_class.is_external and then not l_parent_class.is_interface) or
+					l_parent_class.is_single
+				then
+					if l_single_classes = Void then
+						create l_single_classes.make
+					end
+					l_single_classes.extend (l_parent_class)
+					l_single_classes.finish
+				end
+
 				if not parent_actual_type.good_generics then
 						-- Wrong number of geneneric parameters in parent
 					vtug := parent_actual_type.error_generics
 					vtug.set_class (Current)
 					Error_handler.insert_error (vtug)
-						-- Cannot go on ...
-					Error_handler.raise_error
-				end
-
-				if parent_actual_type.generics /= Void then
-						-- Check constrained genericity validity rule
-					parent_actual_type.reset_constraint_error_list
-					parent_actual_type.check_constraints (Current)
-					if not parent_actual_type.constraint_error_list.is_empty then
-						!!vtcg4
-						vtcg4.set_class (Current)
-						vtcg4.set_error_list (parent_actual_type.constraint_error_list)
-						vtcg4.set_parent_type (parent_actual_type)
-						Error_handler.insert_error (vtcg4)
+				else
+					if parent_actual_type.generics /= Void then
+							-- Check constrained genericity validity rule
+						parent_actual_type.reset_constraint_error_list
+						parent_actual_type.check_constraints (Current)
+						if not parent_actual_type.constraint_error_list.is_empty then
+							!!vtcg4
+							vtcg4.set_class (Current)
+							vtcg4.set_error_list (parent_actual_type.constraint_error_list)
+							vtcg4.set_parent_type (parent_actual_type)
+							Error_handler.insert_error (vtcg4)
+						end
 					end
 				end
 
-				if parent_actual_type.associated_class.is_frozen then
+				if l_parent_class.is_frozen then
 						-- Error which occurs only during IL generation.
 					check
 						il_generation: System.il_generation
 					end
-					create il_inherit_error.make (Current)
-					il_inherit_error.set_parent_class (parent_actual_type.associated_class)
-					Error_handler.insert_error (il_inherit_error)
+					create vifi1.make (Current)
+					vifi1.set_parent_class (l_parent_class)
+					Error_handler.insert_error (vifi1)
 				end
 				i := i + 1
 			end
+
+			if l_single_classes /= Void and then l_single_classes.count > 1 then
+					-- Error we are trying to do multiple inheritance of classes
+					-- that inherit from external classes or that are external classes.
+					-- Error which occurs only during IL generation.
+				check
+					il_generation: System.il_generation
+				end
+				create vifi2.make (Current)
+				vifi2.set_parent_classes (l_single_classes)
+				Error_handler.insert_error (vifi2)
+			end
+
+				-- Only classes that explicitely inherit from an external class only once
+				-- are marked `single. ANY is not.
+			set_is_single (l_single_classes /= Void and then l_single_classes.count = 1
+				and then not is_class_any)
 		end
 
 feature -- Supplier checking
@@ -2912,6 +2943,14 @@ feature -- Convenience features
 			visible_table_size := i
 		ensure
 			visible_table_size_set: visible_table_size = i
+		end
+
+	set_is_single (v: BOOLEAN) is
+			-- Set `is_single' with `v'
+		do
+			is_single := v
+		ensure
+			is_single_set: is_single = v
 		end
 
 	add_descendant (c: CLASS_C) is
@@ -3507,6 +3546,9 @@ feature -- Properties
 	is_deferred: BOOLEAN
 			-- Is class deferred ?
 
+	is_interface: BOOLEAN
+			-- Is class an interface for IL code generation?
+
 	is_expanded: BOOLEAN
 			-- Is class expanded?
 
@@ -3521,6 +3563,9 @@ feature -- Properties
 
 	is_separate: BOOLEAN
 			-- Is the class separate ?
+
+	is_single: BOOLEAN
+			-- Is class generated as a single entity in IL code generation.
 
 	is_frozen: BOOLEAN
 			-- Is class frozen, ie we cannot inherit from it?

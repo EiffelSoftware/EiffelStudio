@@ -89,14 +89,9 @@ feature -- Status report
 			"gc_ison"
 		end
 
-	largest_coalesced_block: INTEGER is
+	largest_coalesced_block: INTEGER
 			-- Size of largest coalesced block since last call to
 			-- `largest_coalesced'; 0 if none.
-		external
-			"C | %"eif_memory.h%""
-		alias
-			"mem_largest"
-		end
 
 	max_mem: INTEGER is
 			-- Maximum amount of bytes the run-time can allocate.
@@ -315,10 +310,8 @@ feature -- Removal
 			-- Coalesce the whole memory: merge adjacent free
 			-- blocks to reduce fragmentation. Useful, when
 			-- a lot of memory is allocated with garbage collector off.
-		external
-			"C | %"eif_memory.h%""
-		alias
-			"mem_coalesc"
+		do
+			largest_coalesced_block := c_mem_coalesc
 		end
 
 	collect is
@@ -355,6 +348,13 @@ feature {NONE} -- Implementation
 	find_instance_of (dtype, result_type: INTEGER): SPECIAL [ANY] is
 		external
 			"C signature (EIF_INTEGER, EIF_INTEGER): EIF_REFERENCE use %"eif_traverse.h%""
+		end
+
+	c_mem_coalesc: INTEGER is
+		external
+			"C use %"eif_memory.h%""
+		alias
+			"mem_coalesc"
 		end
 
 indexing

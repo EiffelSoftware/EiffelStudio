@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- SCROLLED_W_M: implementation of scrolled window.
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -21,7 +16,25 @@ inherit
 			{NONE} all
 		end;
 
-	MANAGER_M;
+
+	SCROLLED_W_R_M
+		export
+			{NONE} all
+		end;
+
+	MANAGER_M
+		rename
+			set_foreground as man_set_foreground,
+			set_background_color as man_set_background_color
+		end;
+
+	MANAGER_M
+		redefine
+			set_foreground, set_background_color
+		select
+			set_foreground, set_background_color
+		end;
+
 
 	    SCROLLED_W_I
         export
@@ -61,6 +74,65 @@ feature
 			working_area = a_widget
 		end;
 
+	set_background_color (a_color: COLOR) is
+			-- Set background_color to `a_color'.
+		local
+			pixmap_implementation: PIXMAP_X;
+			color_implementation: COLOR_X;
+			ext_name: ANY
+		do
+			if not (background_pixmap = Void) then
+				pixmap_implementation ?= background_pixmap.implementation;
+				pixmap_implementation.remove_object (Current);
+				background_pixmap := Void
+			end;
+			if not (background_color = Void) then
+				color_implementation ?= background_color.implementation;
+				color_implementation.remove_object (Current)
+			end;
+			bg_color := a_color;
+			color_implementation ?= background_color.implementation;
+			color_implementation.put_object (Current);
+			ext_name := Mbackground.to_c;
+			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
+			c_set_color (vertical_widget, color_implementation.pixel (screen), $ext_name);
+			c_set_color (horizontal_widget, color_implementation.pixel (screen), $ext_name);
+		end;
+
+	set_foreground (a_color:  COLOR) is
+			-- Set `foreground' to `a_color'.
+		local
+			color_implementation: COLOR_X;
+			ext_name: ANY
+		do
+			if not (foreground = Void) then
+				color_implementation ?= foreground.implementation;
+				color_implementation.remove_object (Current)
+			end;
+			foreground := a_color;
+			color_implementation ?= a_color.implementation;
+			color_implementation.put_object (Current);
+			ext_name := Mforeground.to_c;
+			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
+			c_set_color (vertical_widget, color_implementation.pixel (screen), $ext_name);
+			c_set_color (horizontal_widget, color_implementation.pixel (screen), $ext_name);
+		end;
+
+
+
+feature {NONE}
+
+	vertical_widget: POINTER is
+		do
+			Result := xt_widget (screen_object, MverticalScrollBar);
+		end;
+
+	horizontal_widget: POINTER is
+		do
+			Result := xt_widget (screen_object, MhorizontalScrollBar);
+		end;
+
+
 feature {NONE} -- External features
 
     create_scrolled_w (sw_name: ANY; scr_obj: POINTER): POINTER is
@@ -70,3 +142,17 @@ feature {NONE} -- External features
 
 end
 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -19,6 +19,14 @@ feature {NONE}
 
 feature 
 
+
+	eiffel_type: STRING is
+		do
+			!!Result.make (0);
+			Result.append ("color");
+		end;
+
+
 	copy_attribute (new_context: CONTEXT) is
 		local
 			color_name: STRING;

@@ -15,15 +15,13 @@ inherit
 		export
 			{NONE} all;
 			{ANY} has, clear_all
-		select
-			twin
 		end;
 
 	APP_SHARED
-		rename
-			twin as app_share_twin
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 
@@ -40,21 +38,24 @@ feature
 		local
 			pre_fix: STRING;
 			full_name: STRING;
+			con_group: GROUP_C;
 		do
 			!!Result.make (0);
 			Result.append ("%N%Tset_");
 			if not c.is_root then
-				full_name := c.full_name;
-				full_name.remove_all_occurrences ('.');
+				con_group ?= c.parent;
+				if con_group = Void then
+					full_name := clone (c.entity_name);
+					full_name.append ("_");
+				else
+					full_name := c.group_name;
+				end;
 				Result.append (full_name);
-				Result.append ("_");
+				pre_fix := c.full_name;
+			else
+				pre_fix := ""
 			end; 
 			Result.append ("callbacks is%N");
-			if c.is_root then
-				pre_fix := ""
-			else
-				pre_fix := c.full_name
-			end;
 			if has (c) then			
 				Result.append (item (c).eiffel_text (pre_fix));
 			end;

@@ -1,9 +1,6 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+
+indexing
+	copyright: "See notice at end of class";
 
 class SCROLL_ITEM_L
 
@@ -25,11 +22,11 @@ feature
 			from
 				start
 			until
-				offright or else item.name_item.is_equal(a_name)
+				after or else item.name_item.is_equal(a_name)
 			loop
 				forth
 			end;
-			if not offright then
+			if not after then
 				remove 
 			end;
 		end;
@@ -39,7 +36,7 @@ feature
 			from
 				start
 			until
-				offright or else (item.token_item = a_token)
+				after or else (item.token_item = a_token)
 			loop
 				forth
 			end;
@@ -75,11 +72,11 @@ feature
 			from
 				start
 			until
-				offright or else item.name_item.is_equal (a_name)
+				after or else item.name_item.is_equal (a_name)
 			loop
 				forth
 			end;
-			if not offright then
+			if not after then
 				Result := item.token_item;
 			end;
 		end;
@@ -89,7 +86,7 @@ feature
 			from
 				start
 			until
-				offright or else (item.token_item = a_token)
+				after or else (item.token_item = a_token)
 			loop
 				forth
 			end;
@@ -99,3 +96,17 @@ feature
 		end;
 
 end 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

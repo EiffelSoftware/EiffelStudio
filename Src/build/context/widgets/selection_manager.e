@@ -63,7 +63,7 @@ feature
 			from
 				group.start
 			until
-				group.offright
+				group.after
 			loop
 				group.item.set_grouped (false);
 				group.forth
@@ -278,7 +278,7 @@ feature {NONE}
 					group_modified := True;
 					group.start;
 					context.set_grouped (False);
-					group.search_same (context);
+					group.search (context);
 					group.remove;
 				elseif group.empty or else group.first.parent = context.parent then
 					group_modified := True;
@@ -315,7 +315,7 @@ feature {NONE}
 					end;
 					if is_a_group then
 						a_list.forth;
-						if a_list.offright then
+						if a_list.after then
 							child := Void
 						else
 							child := a_list.item;
@@ -422,7 +422,7 @@ feature {NONE}
 				from
 					group.start
 				until
-					group.offright
+					group.after
 				loop
 					group.item.set_x_y (group.item.x+d_x, group.item.y+d_y);
 					context_catalog.update_editors (group.item, geometry_form_number);
@@ -608,7 +608,7 @@ feature {NONE}
 				from
 					group.start
 				until
-					group.offright
+					group.after
 				loop
 					a_context := group.item;
 					draw_rectangle (a_context.real_x+(a_context.width // 2)+d_x, a_context.real_y+(a_context.height // 2)+d_y, a_context.width, a_context.height, 0.0);

@@ -1,11 +1,8 @@
---|---------------------------------------------------------------
---| Copyright (C) Interactive Software Engineering, Inc.        --
---|  270 Storke Road, Suite 7 Goleta, California 93117          --
---|                      (805) 685-1006                         --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- CIRCLE: Description of circle.
+
+indexing
+	copyright: "See notice at end of class"
 
 class CIRCLE
 
@@ -13,25 +10,32 @@ inherit
 
     	CLOSED_FIG
         	redefine
-			contains
-		end;
+				contains, conf_recompute
+			end;
 
     	ANGLE_ROUT
+			export
+				{NONE} all
+			end
 
 creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make is
 			-- Create a circle.
         	do
+					init_fig (Void);
             		!! center;
-            		radius := 0
+					!! path.make ;
+					!! interior.make ;
+					interior.set_no_op_mode;
+					radius := 1;
         	end;
 
-feature
+feature -- Access
 
     	center: COORD_XY_FIG;
             		-- Center of the circle.
@@ -45,32 +49,7 @@ feature
             		Result := distance <= radius
         	end;
 
-    	draw is
-            		-- Draw the circle.
-        	do
-            		if drawing.is_drawable then
-                		if not (interior = Void) then
-                    			interior.set_drawing_attributes (drawing);
-                    			drawing.fill_arc (center, radius, radius, 0, 360, 0, 0)
-               			end;
-                		if not (path = Void) then
-                    			path.set_drawing_attributes (drawing);
-                    			drawing.draw_arc (center, radius, radius, 0, 360, 0,
-								-1)
-                		end
-            		end
-        	end;
-
-    	is_surimposable (other: like Current): BOOLEAN is
-            		-- Is the current circle surimposable to `other' ?
-            		--| not finished
-        	require else
-            		other_exists: not (other = Void)
-        	do
-            		Result := center.is_surimposable (other.center) and (radius = other.radius)
-        	end;
-
-    	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG is
             		-- Origin of circle
         	do
             		inspect
@@ -86,12 +65,15 @@ feature
             		-- Radius of the circle who contains all the point of the
 			-- polygon
 
-    	set_center (a_point: like center) is
+feature -- Modification & Insertion
+
+	set_center (a_point: like center) is
             		-- Set `center' to `a_point'.
         	require
             		a_point_exits: not (a_point = Void)
         	do
-            		center := a_point
+            		center := a_point;
+					set_conf_modified
         	ensure
             		center = a_point
         	end;
@@ -99,7 +81,7 @@ feature
     	set_origin_to_center is
             		-- Set origin to `center'.
         	do
-            		origin_user_type := 2
+            		origin_user_type := 2;
         	ensure then
             		origin.is_surimposable (center)
         	end;
@@ -109,7 +91,8 @@ feature
         	require
             		size_positive: new_radius > 0
         	do
-            		radius := new_radius
+            		radius := new_radius;
+					set_conf_modified
         	ensure
             		radius = new_radius
         	end;
@@ -118,7 +101,8 @@ feature
             		-- Rotate figure by `a' relative to (`px', `py').
             		-- Angle `a' is measured in degrees.
         	do
-            		center.xyrotate (a, px, py)
+            		center.xyrotate (a, px, py);		
+					set_conf_modified
         	end;
 
     	xyscale (f: REAL; px,py: INTEGER) is
@@ -127,14 +111,57 @@ feature
             		scale_factor_positive: f > 0.0
         	do
             		radius := real_to_integer (f*radius);
-            		center.xyscale (f, px, py)
+            		center.xyscale (f, px, py);
+					set_conf_modified
         	end;
 
     	xytranslate (vx, vy: INTEGER) is
             		-- Translate by `vx' horizontally and `vy' vertically.
         	do
-            		center.xytranslate (vx, vy)
+            		center.xytranslate (vx, vy);
+					set_conf_modified
         	end;
+
+feature -- Output
+
+    	draw is
+            		-- Draw the circle.
+        	do
+            		if drawing.is_drawable then
+                		if not (interior = Void) then
+                    			interior.set_drawing_attributes (drawing);
+                    			drawing.fill_arc (center, radius, radius, 0, 360, 0, 0)
+               			end;
+                		if not (path = Void) then
+                    			path.set_drawing_attributes (drawing);
+                    			drawing.draw_arc (center, radius, radius, 0, 360, 0, -1)
+                		end
+            		end
+        	end;
+
+
+feature -- Status report
+
+    	is_surimposable (other: like Current): BOOLEAN is
+            		-- Is the current circle surimposable to `other' ?
+            		--| not finished
+        	require else
+            		other_exists: not (other = Void)
+        	do
+            		Result := center.is_surimposable (other.center) and (radius = other.radius)
+        	end;
+
+feature {CONFIGURE_NOTIFY} -- Updating
+
+	conf_recompute  is
+		local
+			diameter: INTEGER;
+		do
+			diameter := radius + radius;
+			surround_box.set (center.x-radius , center.y-radius , diameter, diameter);
+			unset_conf_modified
+		end;
+
 
 invariant
 
@@ -142,4 +169,18 @@ invariant
     	radius >= 0;
     	not (center = Void)
 
-end
+end -- class CIRCLE
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

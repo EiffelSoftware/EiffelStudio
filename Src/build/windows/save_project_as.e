@@ -9,6 +9,8 @@ inherit
 			{ANY} execute
 		undefine
 			continue_after_popdown
+		redefine
+			make_backup
 		end;
 
 creation
@@ -30,7 +32,14 @@ feature {NONE}
 
 	continue_after_popdown (box: ERROR_BOX; ok: BOOLEAN) is
 		do
-			caller.continue_after_error
-		end
+			if box = error_box then
+				caller.continue_after_error;
+			end;
+		end;
+
+	make_backup is
+		do
+		end;
+
 
 end

@@ -50,7 +50,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			stone
+			stone, compatible
 		end;
 
 	ERROR_POPUPER
@@ -118,6 +118,12 @@ feature
 feature {NONE}
 
 	stone: CONTEXT_STONE;
+
+	compatible (s: CONTEXT_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 	
 	execute (argument: ANY) is
 		do
@@ -142,7 +148,6 @@ feature {NONE}
 		local 	
 			instantiate_cmd: INSTANTIATE_CMD
 		do
-			io.putstring ("in argument instance icon%N");
 			if (original_stone.eiffel_type.is_equal (stone.eiffel_type)) then
 				!!instantiate_cmd.make (original_stone);
 				instantiate_cmd.execute (stone.original_stone);

@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- MENU_M: implementation of menu
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -36,15 +31,16 @@ feature
 			not_title_void: not (a_title = Void)
 		local
 			label_identifier: STRING;
-			ext_name_title, ext_name: ANY
+			ext_name_title, ext_name: ANY;
+			null_label: POINTER;
 		do
-			if title_label /= Void then	
+			if title_label /= null_label then
 				ext_name := MlabelString.to_c;
 				ext_name_title := a_title.to_c;
 				to_left_xm_string (title_label, $ext_name_title,
 							$ext_name)
 			else
-				label_identifier := abstract_menu.identifier.duplicate;
+				label_identifier := clone (abstract_menu.identifier);
 				label_identifier.append ("Title");
 				ext_name_title := a_title.to_c;
 				ext_name := label_identifier.to_c;
@@ -55,28 +51,32 @@ feature
 
 	remove_title is
 			-- Remove current menu title if any.
+		local
+			null_label: POINTER;
 		do
-			if title_label /= Void then
+			if title_label /= null_label then
 				xt_destroy_widget (title_label);
-				title_label := Void 
+				title_label := null_label;
 			end
 		end;
 
 	title: STRING is
 			-- Title of current menu
 		local
-			ext_name: ANY
+			ext_name: ANY;
+			null_label: POINTER;
 		do
-			if title_label /= Void then
+			if title_label /= null_label then
 				ext_name := MlabelString.to_c;
-				Result := from_xm_string (title_label, $ext_name)
+				Result := from_xm_string (title_label, $ext_name);
 			end
 		end;
 
 	
 feature {NONE}
 
-	title_label: POINTER
+	title_label: POINTER;
+
 
 feature {NONE} -- External features
 
@@ -97,3 +97,17 @@ feature {NONE} -- External features
 
 end
 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

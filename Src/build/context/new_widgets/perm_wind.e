@@ -14,7 +14,9 @@ inherit
 			width, height, set_size,
 			set_width, set_height,
 			real_x, real_y,
-			realize, set_managed
+			realize, set_managed,
+			unrealize, realized,
+			manage, unmanage
 		end
 
 
@@ -97,6 +99,18 @@ feature
 			Result := top_shell.managed
 		end;
 
+
+	unmanage is
+		do
+			top_shell.unmanage;
+		end;
+
+	manage is
+		do
+			top_shell.manage;
+		end;
+
+
 	x: INTEGER is
 		do
 			Result := top_shell.x
@@ -162,5 +176,15 @@ feature
 			top_shell.realize
 		end;
 
+
+	unrealize is
+		do
+			top_shell.unrealize
+		end;
+
+	realized: BOOLEAN is
+		do
+			Result := top_shell.realized
+		end;
 end
 

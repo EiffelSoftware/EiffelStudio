@@ -9,7 +9,7 @@ inherit
 		end;
 	ICON_HOLE
 		redefine
-			stone
+			stone, compatible
 		end
 
 
@@ -34,6 +34,12 @@ feature
 		end;
 
 	stone: CONTEXT_STONE;
+
+	compatible (s: CONTEXT_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 	
 feature {NONE}

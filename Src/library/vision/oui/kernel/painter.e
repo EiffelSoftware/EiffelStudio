@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- PAINTER: Set of routines for drawing.
 
@@ -31,7 +25,7 @@ feature
 	set_font (a_font: FONT) is
 			-- Set the font used to draw texts.
 		require
-			drawing_set: not (drawing_i = Void);
+			drawing_set: valid_drawing;
 			a_font_exists: not (a_font = Void)
 		do
 			drawing_i.set_drawing_font (a_font)
@@ -69,17 +63,22 @@ feature {NONE}
 	is_drawable: BOOLEAN is
 			-- Can we draw on the window ?
 		require
-			drawing_set: not (drawing_i = Void)
+			drawing_set: valid_drawing;
 		do
 			Result := drawing_i.is_drawable
 		end;
 
 feature 
 
+	valid_drawing: BOOLEAN is
+		do
+			Result := drawing_i /= Void;
+		end;
+
 	set_foreground (color: COLOR) is
 			-- Set the color to use for the foreground.
 		require
-			drawing_set: not (drawing_i = Void);
+			drawing_set: valid_drawing;
             color_exists: not (color = Void)
 		do
 			drawing_i.set_foreground_gc_color (color)
@@ -88,7 +87,7 @@ feature
 	draw_point (x, y: INTEGER) is
 			-- Draw a point at (`x', `y').
 		require
-			drawing_set: not (drawing_i = Void)
+			drawing_set: valid_drawing;
 		do
 			drawing_i.draw_point (coord_xy (x, y))
 		end;
@@ -97,7 +96,7 @@ feature
 			-- Draw a rectangle whose center is at (`x', `y'),
 			-- whose size is (`width', `height').
 		require
-			drawing_set: not (drawing_i = Void);
+			drawing_set: valid_drawing;
 			width_positive: width >= 0;
             height_positive: height >= 0;
             orientation_positive: orientation >= 0;
@@ -110,7 +109,7 @@ feature
             -- Fill a rectangle whose center is at (`x', `y'),
             -- whose size is (`width', `height').
         require
-            drawing_set: not (drawing_i = Void);
+            drawing_set: valid_drawing;
             width_positive: width >= 0;
             height_positive: height >= 0;
             orientation_positive: orientation >= 0;
@@ -122,7 +121,7 @@ feature
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw a segment between (`x1', `y1') and (`x2', `y2').
 		require
-			drawing_set: not (drawing_i = Void)
+			drawing_set: valid_drawing;
 		do
 			drawing_i.draw_segment (coord_xy (x1, y1), coord_xy (x2, y2))
 		end;
@@ -151,7 +150,7 @@ feature
 		require
 			a_mode >= 0;
 			a_mode <= 15;
-			drawing_set: not (drawing_i = Void)
+			drawing_set: valid_drawing;
 		do
 			drawing_i.set_logical_mode (a_mode)
 		end;
@@ -163,9 +162,23 @@ feature {NONE}
 		require
 			a_mode >= 0;
 			a_mode <= 1;
-			drawing_set: not (drawing_i = Void)
+			drawing_set: valid_drawing;
 		do
 			drawing_i.set_subwindow_mode (a_mode)
 		end
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

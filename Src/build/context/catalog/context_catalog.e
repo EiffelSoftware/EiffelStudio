@@ -12,6 +12,8 @@ inherit
 			{ANY} show, hide, shown
 		undefine
 			init_toolkit
+		redefine
+			delete_window_action
 		end;
 	WINDOWS;
 	CONTEXT_NAMES;
@@ -62,8 +64,8 @@ feature
 			edit_hole: CON_CAT_ED_H
 		do
 			top_shell_create (C_ontextcatalog, eb_screen);
-            set_size (240, 260);
-            !!top_form.make (F_orm, Current);
+			set_size (240, 260);
+			!!top_form.make (F_orm, Current);
 			!!window_page;
 			!!primitive_page;
 			!!menu_page;
@@ -90,23 +92,25 @@ feature
 
 			!!page_label.make (L_abel, top_form);
 			page_label.set_left_alignment;
+		
+		
 			!!focus_label.make (L_abel, top_form);
 			page_label.set_text (primitive_page.page_name);
 
 			top_form.attach_top (window_page.button, 10);
-			top_form.attach_left (window_page.button, 10);
-			top_form.attach_left_widget (window_page.button, primitive_page.button, 10);
+			top_form.attach_right (group_page.button, 10);
+			top_form.attach_right_widget (group_page.button, set_page.button, 10);
 			top_form.attach_top (primitive_page.button, 10);
-			top_form.attach_left_widget (primitive_page.button, scroll_page.button, 10);
+			top_form.attach_right_widget (set_page.button, menu_page.button, 10);
 			top_form.attach_top (scroll_page.button, 10);
-			top_form.attach_left_widget (scroll_page.button, menu_page.button, 10);
+			top_form.attach_right_widget (menu_page.button, scroll_page.button, 10);
 			top_form.attach_top (menu_page.button, 10);
-			top_form.attach_left_widget (menu_page.button, set_page.button, 10);
+			top_form.attach_right_widget (scroll_page.button, primitive_page.button, 10);
 			top_form.attach_top (set_page.button, 10);
-			top_form.attach_left_widget (set_page.button, group_page.button, 10);
+			top_form.attach_right_widget (primitive_page.button, window_page.button, 10);
 			top_form.attach_top (group_page.button, 10);
 			top_form.attach_top (edit_hole, 10);
-			top_form.attach_right (edit_hole, 10);
+			top_form.attach_left (edit_hole, 10);
 
 			top_form.attach_top (first_separator, 40);
 			top_form.attach_right (first_separator, 10);
@@ -125,9 +129,15 @@ feature
 
 			bottom_form := window_page;
 			page_label.set_text ("dummy initial value");
+			focus_label.unmanage;
 			focus_label.set_text ("dummy initial value");
+			focus_label.manage;
 		end;
 
+	delete_window_action is
+		do
+			iterate;
+		end;
 	
 feature {NONE}
 
@@ -137,6 +147,7 @@ feature {NONE}
 			if argument /= bottom_form then
 				bottom_form.hide;
 				bottom_form := argument;
+	
 				page_label.set_text (bottom_form.page_name);
 				bottom_form.show
 			end
@@ -219,7 +230,7 @@ feature
 		do
 			context_group_types.finish;
 			context_group_types.add_right (a_context_group);
-			group_page.icon_box.add (a_context_group);
+			group_page.icon_box.extend (a_context_group);
 		end;
 
 	update_groups is
@@ -238,10 +249,10 @@ feature
 	remove_group_type (a_context_type: CONTEXT_GROUP_TYPE) is
 		do
 			group_list.start;
-			group_list.search_same (a_context_type.group);
+			group_list.search (a_context_type.group);
 			group_list.remove;
 			context_group_types.start;
-			context_group_types.search_same (a_context_type);
+			context_group_types.search (a_context_type);
 			context_group_types.remove;
 			update_groups;
 		end;

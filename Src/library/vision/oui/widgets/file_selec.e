@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- 
 
@@ -76,7 +70,7 @@ feature
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= a_name.duplicate;
+			identifier:= clone (a_name);
 			implementation:= toolkit.file_selec (Current);
 			set_default
 		ensure
@@ -144,6 +138,11 @@ feature
 			-- Make ok button invisible.
 		do
 			implementation.hide_ok_button
+		end;
+
+	set_file_sel_mask (choice: INTEGER) is
+		do
+			implementation.set_file_sel_mask (choice);
 		end;
 
 	
@@ -284,6 +283,46 @@ feature
 			-- Make ok button visible.
 		do
 			implementation.show_ok_button
-		end
+		end;
+
+	hide_file_selection_list is
+		do
+			implementation.hide_file_selection_list;
+		end;
+
+	show_file_selection_list is
+		do
+			implementation.show_file_selection_list;
+		end;
+
+
+	hide_file_selection_label is
+		do
+			implementation.hide_file_selection_label;
+		end;
+
+	show_file_selection_label is
+		do
+			implementation.show_file_selection_label;
+		end;
+
+	set_file_list_width (new_width: INTEGER) is
+		do
+			implementation.set_file_list_width (new_width);
+		end;
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -37,27 +37,30 @@ feature
 	set_symbol (s: PIXMAP) is
 			-- Set icon symbol.
 		require
-			valid_argument: s /= Void
+			valid_argument: s /= Void and s.is_valid;
+		local
+			was_managed: BOOLEAN;
 		do
 			symbol := s;
-			if widget_created and s.is_valid then
+			if widget_created then
 				button.unmanage;
 				button.set_pixmap (s);
-				button.manage
+				button.manage;
 			end;
 		end;
 
 	set_label (s: STRING) is
 			-- Set icon label.
+		require
+			not_void: s /= Void;
+		local
+			was_managed: BOOLEAN;
 		do
-			label := s;
-			if widget_created and not (s = Void) then
+			label := clone (s);
+			if widget_created then
 				icon_label.unmanage;
-				icon_label.set_text (s);
-				if not s.empty then
-					icon_label.manage;
-					icon_label.set_y (init_y)
-				end;
+				icon_label.set_text (label);
+				icon_label.manage;
 			end;
 		end;
 
@@ -108,7 +111,6 @@ feature
 				bulletin_create ("FOO", a_parent);
 				set_managed (False);
 				!!button.make ("adf", Current);
-				button.unmanage;
 				button.set_x_y (1, 1);
 				if 
 					symbol /= Void and
@@ -119,22 +121,17 @@ feature
 				!!icon_label.make ("label", Current);
 				icon_label.set_left_alignment;
 				icon_label.allow_recompute_size;
-				icon_label.unmanage;
-				if not (label = Void) then
-					icon_label.set_y (init_y);
+				icon_label.set_y (init_y);
+				if not (label = Void) and not label.empty then
 					icon_label.set_text (label);
+				else
+					icon_label.set_text ("");
+					icon_label.unmanage;
 				end;
 	
 					-- *******************
 					-- Perform attachments
 					-- *******************
-	
-				if (label = Void) or else label.empty then
-					icon_label.unmanage;
-				else
-					icon_label.manage;
-				end;
-				button.manage;
 			end;
 			set_managed (True)
 		end;
@@ -157,7 +154,7 @@ feature {NONE}
 			temp1: ANY
 		do
 			temp := "borderWidth";
-			temp := temp.duplicate;
+			temp := clone (temp);
 			temp1 := temp.to_c;
 			selected := True;
 			if widget_created then
@@ -176,7 +173,7 @@ feature
 			temp1: ANY
 		do
 			temp := "borderWidth";
-			temp := temp.duplicate;
+			temp := clone (temp);
 			selected := False;	
 			if widget_created then
 				temp1 := temp.to_c;
@@ -199,7 +196,7 @@ feature
 			temp1: ANY
 		do
 			temp := "borderWidth";
-			temp := temp.duplicate;
+			temp := clone (temp);
 			temp1 := temp.to_c;
 			if selected and b then
 				set_dimension (implementation.screen_object, 1, $temp1)
@@ -207,10 +204,22 @@ feature
 				set_dimension (implementation.screen_object, 0, $temp1)
 			end;
 			if b then 
-				manage
+				manage;
+				if icon_label /= Void and not icon_label.text.empty then
+					icon_label.manage;
+				end;
+				if widget_created then
+					button.manage;
+				end;
 			else
-				unmanage
-			end
+				unmanage;
+				if widget_created and button.managed then
+					button.unmanage;
+				end;
+				if icon_label /= Void and icon_label.managed then
+					icon_label.unmanage;
+				end;
+			end;
 		end;
 
 feature {NONE} -- External features

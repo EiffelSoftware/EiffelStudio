@@ -26,6 +26,9 @@ feature
 		local
 			temp: STRING
 		do
+			if not text.empty then
+				set_text ("");
+			end;
 			!!temp.make (0);
 			temp.append_integer (value);
 			set_text (temp)

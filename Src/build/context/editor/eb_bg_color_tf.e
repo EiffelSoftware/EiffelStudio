@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			stone
+			stone, compatible
 		end;
 
 creation
@@ -45,6 +45,12 @@ feature
 feature {NONE}
 
 	stone: EB_COLOR;
+	
+	compatible (s: EB_COLOR): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 	target: WIDGET is
 		do

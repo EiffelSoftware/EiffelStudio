@@ -1,12 +1,7 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -29,20 +24,24 @@ creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
-	make is
+	make  is
 			-- Create a text.
 		do
-			text.make (1);
-			font.make;
+			init_fig (Void);
+			!!text.make (1);
+			!!font.make;
+			!! top_left;
 			font.set_name ("fixed");
-			top_left;
-			foreground_color.Create;
-			background_color.Create
+			ascent := 1;
+			descent := 1;
+			string_width := 1;
+			!!foreground_color.make;
+			!!background_color.make;
 		end;
 
-feature
+feature -- Output
 
 	select_figure is
 			-- select the text image
@@ -57,7 +56,7 @@ feature
 	deselect is
 			-- deselect the text image
 		do
-			select_text_image
+-- FIX ME			select_text_image
 		end;
 
 	draw is
@@ -79,5 +78,18 @@ invariant
 	not (foreground_color = Void);
 	not (background_color = Void)
 
-end
+end -- class TEXT_IMAGE
 
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

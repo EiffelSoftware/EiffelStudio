@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- General definitions for drawable elements.
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -90,12 +85,11 @@ feature
 			radius2 >= 0;
 			angle1 >= 0;
 			angle2 >= 0;
-			angle1+angle2 <= 23040;
+			angle1+angle2 <= 360;
 			orientation >= 0;
 			orientation < 360;
 			arc_style >= -1;
 			arc_style <= 1
-		
 		local
 			x0, y0, x1, y1: INTEGER
 		do
@@ -108,7 +102,7 @@ feature
 					join_lines (center, x0, y0, x1, y1, arc_style)
 				end;
 				x_draw_arc (display_pointer, window_object, graphic_context, center.x-radius1, center.y-radius1, 2*radius1, 2*radius1, angle_x (angle1+orientation), angle_x (angle2))
-				elseif orientation = 0.0 then
+			elseif orientation = 0.0 then
 				if arc_style /= -1 then
 					x0 := real_to_integer (center.x+radius1*d_cos (angle1));
 					y0 := real_to_integer (center.y-radius2*d_sin (angle1));
@@ -117,33 +111,6 @@ feature
 					join_lines (center, x0, y0, x1, y1, arc_style)
 				end;
 				x_draw_arc (display_pointer, window_object, graphic_context, center.x-radius1, center.y-radius2, 2*radius1, 2*radius2, angle_x (angle1), angle_x (angle2))
-				elseif orientation = 90.0 then
-				if arc_style /= -1 then
-					x0 := real_to_integer (center.x+radius1*d_sin (angle1));
-					y0 := real_to_integer (center.y+radius2*d_cos (angle1));
-					x1 := real_to_integer (center.x+radius1*d_sin (angle1+angle2));
-					y1 := real_to_integer (center.y+radius2*d_cos (angle1+angle2));
-					join_lines (center, x0, y0, x1, y1, arc_style)
-				end;
-				x_draw_arc (display_pointer, window_object, graphic_context, center.x-radius2, center.y-radius1, 2*radius2, 2*radius1, angle_x (angle1-270.0), angle_x (angle2))
-				elseif orientation = 180.0 then
-				if arc_style /= -1 then
-					x0 := real_to_integer (center.x-radius1*d_cos (angle1));
-					y0 := real_to_integer (center.y+radius2*d_sin (angle1));
-					x1 := real_to_integer (center.x-radius1*d_cos (angle1+angle2));
-					y1 := real_to_integer (center.y+radius2*d_sin (angle1+angle2));
-					join_lines (center, x0, y0, x1, y1, arc_style)
-				end;
-				x_draw_arc (display_pointer, window_object, graphic_context, center.x-radius1, center.y-radius2, 2*radius1, 2*radius2, angle_x (angle1-180.0), angle_x (angle2))
-				elseif orientation = 270.0 then
-				if arc_style /= -1 then
-					x0 := real_to_integer (center.x-radius1*d_sin (angle1));
-					y0 := real_to_integer (center.y-radius2*d_cos (angle1));
-					x1 := real_to_integer (center.x-radius1*d_sin (angle1+angle2));
-					y1 := real_to_integer (center.y-radius2*d_cos (angle1+angle2));
-					join_lines (center, x0, y0, x1, y1, arc_style)
-				end;
-				x_draw_arc (display_pointer, window_object, graphic_context, center.x-radius2, center.y-radius1, 2*radius2, 2*radius1, angle_x (angle1-90.0), angle_x (angle2))
 			else
 				c_draw_arc (display_pointer, window_object, graphic_context, center.x, center.y, radius1, radius2, angle_x (angle1), angle_x (angle2), angle_x (orientation), arc_style)
 			end
@@ -202,7 +169,8 @@ feature
 		
 		local
 			array_points: POINTER;
-			points_count: INTEGER
+			points_count: INTEGER;
+			keep_cursor: CURSOR;
 		do
 			if is_closed and ((points.first.x /= points.last.x) or (points.first.x /= points.last.y)) then
 				points_count := points.count+1
@@ -210,19 +178,19 @@ feature
 				points_count := points.count
 			end;
 			array_points := c_create_points (points_count);
-			points.mark;
+			keep_cursor := points.cursor;
 			from
 				points.start
 			until
 				points.off
 			loop
-				c_put_point (array_points, points.position-1, points.item.x, points.item.y);
+				c_put_point (array_points, points.index-1, points.item.x, points.item.y);
 				points.forth
 			end;
 			if points_count = points.count+1 then
 				c_put_point (array_points, points_count-1, points.first.x, points.first.y)
 			end;
-			points.return;
+			points.go_to (keep_cursor);
 			x_draw_lines (display_pointer, window_object, graphic_context, array_points, points_count, CoordModeOrigin);
 			c_free_points (array_points)
 		end; 
@@ -283,7 +251,7 @@ feature {NONE}
 			radius2 >= 0;
 			angle1 >= 0;
 			angle2 >= 0;
-			angle1+angle2 <= 23040;
+			angle1+angle2 <= 360;
 			orientation >= 0;
 			orientation < 360;
 			arc_style >= 0;
@@ -293,18 +261,9 @@ feature {NONE}
 			if radius1 = radius2 then
 				set_arc_style (arc_style);
 				x_fill_arc (display_pointer, window_object, graphic_context, center.x-radius1, center.y-radius1, 2*radius1, 2*radius1, angle_x (angle1+orientation), angle_x (angle2))
-				elseif orientation = 0.0 then
+			elseif orientation = 0.0 then
 				set_arc_style (arc_style);
 				x_fill_arc (display_pointer, window_object, graphic_context, center.x-radius1, center.y-radius2, 2*radius1, 2*radius2, angle_x (angle1), angle_x (angle2))
-				elseif orientation = 90.0 then
-				set_arc_style (arc_style);
-				x_fill_arc (display_pointer, window_object, graphic_context, center.x-radius2, center.y-radius1, 2*radius2, 2*radius1, angle_x (angle1-270.0), angle_x (angle2))
-				elseif orientation = 180.0 then
-				set_arc_style (arc_style);
-				x_fill_arc (display_pointer, window_object, graphic_context, center.x-radius1, center.y-radius2, 2*radius1, 2*radius2, angle_x (angle1-180.0), angle_x (angle2))
-				elseif orientation = 270.0 then
-				set_arc_style (arc_style);
-				x_fill_arc (display_pointer, window_object, graphic_context, center.x-radius2, center.y-radius1, 2*radius2, 2*radius1, angle_x (angle1-90.0), angle_x (angle2))
 			else
 				c_fill_arc (display_pointer, window_object, graphic_context, center.x, center.y, radius1, radius2, angle_x (angle1), angle_x (angle2), angle_x (orientation), arc_style)
 			end
@@ -314,26 +273,27 @@ feature {NONE}
 feature 
 
 	fill_polygon (points: LIST [COORD_XY]) is
-			-- Fill a polygon.
+			 -- Fill a polygon.
 		require
 			points_exists: not (points = Void);
 			list_with_two_points_at_least: points.count >= 3;
 			list_not_too_large: points.count <= max_count_for_draw_polyline
 		
 		local
-			array_points: POINTER
+			array_points: POINTER;
+			keep_cursor: CURSOR;
 		do
 			array_points := c_create_points (points.count);
-			points.mark;
+			keep_cursor := points.cursor;
 			from
 				points.start
 			until
 				points.off
 			loop
-				c_put_point (array_points, points.position-1, points.item.x, points.item.y);
+				c_put_point (array_points, points.index-1, points.item.x, points.item.y);
 				points.forth
 			end;
-			points.return;
+			points.go_to (keep_cursor);
 			x_fill_polygon (display_pointer, window_object, graphic_context, array_points, points.count, Complex, CoordModeOrigin);
 			c_free_points (array_points)
 		end;
@@ -615,3 +575,18 @@ feature {NONE} -- External features
 		end;
 
 end
+
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

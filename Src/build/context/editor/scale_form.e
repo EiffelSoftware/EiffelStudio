@@ -52,16 +52,16 @@ feature
 
 			!!text.make (T_extfield, Current, scale_text_cmd, a_parent);
 			!!granularity.make (T_extfield, Current, scale_gran_cmd, a_parent);
-			!!minimum.make (T_extfield, Current, scale_min_cmd, a_parent);
 			!!maximum.make (T_extfield, Current, scale_max_cmd, a_parent);
+			!!minimum.make (T_extfield, Current, scale_min_cmd, a_parent);
 			!!is_value_shown.make (S_how_value, Current, scale_show_cmd, a_parent);
 			!!is_output_only.make (O_utput_only, Current, scale_output_cmd, a_parent);
 			!!is_maximum_right_bottom.make (M_aximum_right_bottom, Current, scale_max_right_cmd, a_parent);
 			!!is_vertical.make (V_ertical, Current, scale_dir_cmd, a_parent);
 
 			granularity.set_width (50);
-			minimum.set_width (50);
 			maximum.set_width (50);
+			minimum.set_width (50);
 
 			!!text_l.make (T_ext_label, Current);
 			!!granularity_l.make (G_ranularity, Current);
@@ -109,8 +109,8 @@ feature {NONE}
 			-- reset the content of the form
 		do
 			is_vertical.set_state (context.is_vertical);
-			--is_maximum_right_bottom.set_state (context.is_maximum_right_bottom);
-			--is_value_shown.set_state (context.is_value_shown);
+			is_maximum_right_bottom.set_state (context.is_maximum_right_bottom);
+			is_value_shown.set_state (context.is_value_shown);
 			is_output_only.set_state (context.is_output_only);
 			if not (context.text = Void) then
 				text.set_text (context.text);
@@ -131,15 +131,15 @@ feature
 			if context.is_vertical /= is_vertical.state then
 				context.set_vertical (is_vertical.state);
 			end;
-			--if context.is_maximum_right_bottom /= is_maximum_right_bottom.state then
-				--context.set_maximum_right_bottom (is_maximum_right_bottom.state);
-			--end;
-			--if context.is_value_shown /= is_value_shown.state then
-				--context.show_value (is_value_shown.state);
-			--end;
-			--if context.is_output_only /= is_output_only.state then
-				--context.set_output_only (is_output_only.state);
-			--end;
+			if context.is_maximum_right_bottom /= is_maximum_right_bottom.state then
+				context.set_maximum_right_bottom (is_maximum_right_bottom.state);
+			end;
+			if context.is_value_shown /= is_value_shown.state then
+				context.show_value (is_value_shown.state);
+			end;
+			if context.is_output_only /= is_output_only.state then
+				context.set_output_only (is_output_only.state);
+			end;
 			if not equal (text.text, context.text) then
 				context.set_text (text.text);
 			end;

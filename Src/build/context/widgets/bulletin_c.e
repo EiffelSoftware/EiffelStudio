@@ -14,7 +14,7 @@ inherit
 	COMPOSITE_C
 		redefine
 			widget, stored_node, is_bulletin,
-			original_stone
+			original_stone, full_name
 		
 		end
 
@@ -60,6 +60,12 @@ feature {NONE}
 feature 
 
 	eiffel_type: STRING is "EB_BULLETIN";
+
+	full_name: STRING is
+			-- full name of the context i.e. with root, group, ...
+		do
+			Result := intermediate_name;
+		end;
 
 	is_bulletin: BOOLEAN is
 		do

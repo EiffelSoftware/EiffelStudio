@@ -15,7 +15,7 @@ feature {NONE}
 
 	Template_directory: STRING is
 		once
-			Result := Generated_directory.duplicate;
+			Result := clone (Generated_directory);
 			Result.append ("/.templates");
 		end;
 
@@ -24,7 +24,7 @@ feature
 
 	set_document_name (s: STRING) is
 		do
-			document_name := s.duplicate;
+			document_name := clone (s);
 			document_name.to_lower
 		end;
 
@@ -38,7 +38,7 @@ feature
 
 	set_directory_name (s: STRING) is
 		do
-			directory_name := s.duplicate
+			directory_name := clone(s);
 		end;
 
 	
@@ -59,23 +59,23 @@ feature
 			unix_command: STRING;
 			temp: ANY
 		do
-			template_file_name := Template_directory.duplicate;
+			template_file_name := clone (Template_directory);
 			template_file_name.append ("/");
 			template_file_name.append (document_name);
 
-			class_file_name := directory_name.duplicate;
+			class_file_name := clone (directory_name);
 			class_file_name.append ("/");
 			class_file_name.append (document_name);
 			class_file_name.append (".e");
 
-			new_template_file_name := template_file_name.duplicate;
+			new_template_file_name := clone (template_file_name);
 			new_template_file_name.append (".n");
 			!!file.make_open_write (new_template_file_name);
 			file.putstring (s);
 			file.close;
 
 			!!unix_command.make (0);
-			unix_command.append (EiffelBuild_directory);
+			unix_command.append (EiffelBuild_bin);
 			unix_command.append ("/bin/merge1 ");
 			unix_command.append (class_file_name);
 			unix_command.append (" ");

@@ -33,7 +33,7 @@ feature {NONE}
 	command_work is
 		do
 			edited_command.save_old_template;
-			list.add (element);
+			list.extend (element);
 			edited_command.update_text;
 		end; 
 

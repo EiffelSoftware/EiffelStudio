@@ -37,6 +37,8 @@ feature
 			!!radio_box.make (R_adio_box, Current);
 			!!left_alignment.make (L_eft_alignment, radio_box, label_alignment_cmd, a_parent);
 			!!center_alignment.make (C_enter_alignment, radio_box, label_alignment_cmd, a_parent);
+			left_alignment.arm;
+			radio_box.set_always_one (True);
 
 			attach_left (label, 10);
 			attach_right (text, 10);

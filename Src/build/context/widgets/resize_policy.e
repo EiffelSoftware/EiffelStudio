@@ -58,31 +58,59 @@ feature
 		end;
 
 	follow_x (flag: BOOLEAN) is
+		local
+			drawing_context: DR_AREA_C;
 		do
+			drawing_context ?= context;
 			follow_x_modified := True;
 			x_fixed := not flag;
-			bulletin.follow_x (widget, flag);
+			if drawing_context /= Void then
+				bulletin.follow_x (widget.parent, flag);
+			else
+				bulletin.follow_x (widget, flag);
+			end;
 		end;
 
 	follow_y (flag: BOOLEAN) is
+		local
+			drawing_context: DR_AREA_C;
 		do
+			drawing_context ?= context;
 			follow_y_modified := True;
 			y_fixed := not flag;
-			bulletin.follow_y (widget, flag);
+			if drawing_context /= Void then
+				bulletin.follow_y (widget.parent, flag);
+			else
+				bulletin.follow_y (widget, flag);
+			end;
 		end;
 
 	width_resizeable (flag: BOOLEAN) is
+		local
+			drawing_context: DR_AREA_C;
 		do
+			drawing_context ?= context;
 			resize_width_modified := True;
 			is_width_resizeable := flag;
-			bulletin.width_resizeable (widget, flag);
+			if drawing_context /= Void then
+				bulletin.width_resizeable (widget.parent, flag);
+			else
+				bulletin.width_resizeable (widget, flag);
+			end;
 		end;
 
 	height_resizeable (flag: BOOLEAN) is
+		local
+			drawing_context: DR_AREA_C;
 		do
+			drawing_context ?= context;
 			resize_height_modified := True;
 			is_height_resizeable := flag;
-			bulletin.height_resizeable (widget, flag);
+			if drawing_context /= Void then
+				bulletin.height_resizeable (widget.parent, flag);
+			else
+				bulletin.height_resizeable (widget, flag);
+			end;
 		end;
 
 	
@@ -133,13 +161,19 @@ feature
 feature {NONE}
 
 	attach_widget (bulletin_name, function_name: STRING): STRING is
+		local
+			drawa: DR_AREA_C;
 		do
+			drawa ?= context;
 			!!Result.make (0);
 			Result.append ("%T%T%T");
 			Result.append (bulletin_name);
 			Result.append (function_name);
 			Result.append (" (");
 			Result.append (context.full_name);
+			if drawa /= Void then
+				Result.append (".parent");
+			end;
 			Result.append (", True);%N");
 		end;
 

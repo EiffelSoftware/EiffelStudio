@@ -212,7 +212,7 @@ feature -- Input and Output stones
 		require
 			Not_off: not off
 		do 
-			Result := input_list.item.original_stone
+			Result := input_list.item.original_stone;
 		end;
 
 	output: like output_stone is 
@@ -326,8 +326,8 @@ feature -- List operations
 		require
 			Consistency: not has_input (i)
 		do
-			input_list.add (i);
-			output_list.add (o);
+			input_list.extend (i);
+			output_list.extend (o);
 		end;
 
 	add_right (i: like input_stone; o: like output_stone) is

@@ -55,14 +55,14 @@ feature {NONE}
 			loop
 				cmd_list := user_cmds.item;
 				!!nl.make;
-				stored_data.add (nl);
+				stored_data.extend (nl);
 				from
 					cmd_list.start
 				until
-					cmd_list.offright
+					cmd_list.after
 				loop
 					!!s.make (cmd_list.item);
-					nl.add (s);
+					nl.extend (s);
 					cmd_list.forth
 				end;
 				user_cmds.forth
@@ -89,7 +89,7 @@ feature
 			loop
 				sc_list := stored_data.item;
 				!!cmd_list.make;
-				retrieved_data.add (cmd_list);
+				retrieved_data.extend (cmd_list);
 				from
 					sc_list.start
 				until
@@ -98,7 +98,7 @@ feature
 					sc := sc_list.item;
 					cmd := sc.command;
 					command_table.put (cmd, sc.identifier);
-					cmd_list.put_right (cmd);
+					cmd_list.add_right (cmd);
 					cmd_list.forth;
 					sc_list.forth
 				end;

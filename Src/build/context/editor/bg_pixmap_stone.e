@@ -19,6 +19,14 @@ feature {NONE}
 
 feature 
 
+
+	eiffel_type: STRING is
+		do
+			!!Result.make (0);
+			Result.append ("pixmap");
+		end;
+
+
 	copy_attribute (new_context: CONTEXT) is
 		local
 			pixmap_name: STRING;

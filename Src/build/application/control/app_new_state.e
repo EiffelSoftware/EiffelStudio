@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			stone
+			stone, compatible
 		end;
 	ICON
 		rename
@@ -74,6 +74,12 @@ feature
 feature {NONE}
 
 	stone: STATE_STONE;
+
+	compatible (s: STATE_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 	
 	process_stone is
 			-- Create a editor for the stone dropped

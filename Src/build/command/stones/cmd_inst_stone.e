@@ -85,11 +85,11 @@ feature
 						Result.append ("Void")	
 					end;
 					arguments.forth;
-					if not arguments.offright then
+					if not arguments.after then
 						Result.append (", ");
 					end
 				end;	
-				arguments.go (old_pos);
+				arguments.go_i_th (old_pos);
 				Result.append (")");
 			end
 		end;

@@ -1,11 +1,8 @@
---|---------------------------------------------------------------
---| Copyright (C) Interactive Software Engineering, Inc.        --
---|  270 Storke Road, Suite 7 Goleta, California 93117          --
---|                      (805) 685-1006                         --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- SQUARE: Description of a square.
+
+indexing
+	copyright: "See notice at end of class"
 
 class SQUARE 
 
@@ -23,15 +20,21 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
-	make is
+	make  is
 			-- Create a square.
 		do
+			init_fig (Void);
 			!! center;
+			!! path.make ;
+			!! interior.make ;
+			interior.set_no_op_mode;
 			number_of_sides := 4;
-			radius := 0
-		end; -- Create
+			radius := 0;
+		end;
+
+feature -- Access 
 
 	contains (p: COORD_XY_FIG): BOOLEAN is 
 			-- Is 'p' in the current square? 
@@ -39,12 +42,10 @@ feature
 			orientation_is_zero: orientation = 0.0
 		local 
 			x0, y0, x1, y1, pointX, pointY: INTEGER;
-			convert: BASIC_ROUTINES;
 			converted: INTEGER
 		do 
 			pointX := p.x; pointY := p.y; 
-			!! convert;
-			converted := convert.real_to_integer (size_of_side/2);
+			converted := real_to_integer (size_of_side/2);
 			x0 := center.x - converted; 
 			y0 := center.y - converted; 
 			x1 := x0 + size_of_side; 
@@ -54,10 +55,20 @@ feature
 				and p.y >= y0 and p.y <= y1);
 		end;
 
+feature -- Modification & Insertion
+
+set_number_of_sides (new_number_of_sides: like number_of_sides) is
+			-- Set `number_of_sides' to `new_number_of_sides'.
+		require else
+			can_change_on_square: false
+		do
+		end;
+
+
+feature -- Output
+
 	draw is
 			-- Draw the square.
-		local
-			polygon: POLYGON
 		do
 			if drawing.is_drawable then
 				if not (interior = Void) then
@@ -71,6 +82,8 @@ feature
 			end
 		end;
 
+feature -- Status report
+
 	is_surimposable (other: like Current): BOOLEAN is
 			-- Is the current square surimposable to `other' ?
 			--| not finished
@@ -80,15 +93,22 @@ feature
 			Result := center.is_surimposable (other.center) and (radius = other.radius) and (orientation = other.orientation)
 		end;
 
-	set_number_of_sides (new_number_of_sides: like number_of_sides) is
-			-- Set `number_of_sides' to `new_number_of_sides'.
-		require else
-			can_change_on_square: false
-		do
-		end;
-
 invariant
 
 	number_of_sides = 4
 
-end
+end -- class SQUARE
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

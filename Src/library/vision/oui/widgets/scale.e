@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---|	 Copyright (C) Interactive Software Engineering, Inc.		--
---|		270 Storke Road, Suite 7 Goleta, California 93117		--
---|									 (805) 685-1006				--	
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Elongated rectangular region similar to a scrollbar with
 -- a slider that indicates an analog value.
@@ -25,7 +19,7 @@ inherit
 	PRIMITIVE
 		redefine
 			implementation, is_fontable
-		end
+		end;
 
 creation
 
@@ -42,7 +36,7 @@ feature -- Creation
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := a_name.duplicate;
+			identifier := clone (a_name);
 			implementation := toolkit.scale (Current);
 			set_default
 		ensure
@@ -109,7 +103,7 @@ feature -- Slider setup (max, min, granularity ...)
 		do
 			Result := implementation.maximum
 		ensure
-			maximum_greater_than_minimum: Result > minimum
+			maximum_greater_than_minimum: Result >= minimum
 		end;
 
 	minimum: INTEGER is
@@ -117,7 +111,7 @@ feature -- Slider setup (max, min, granularity ...)
 		do
 			Result := implementation.minimum
 		ensure
-			minimum_smaller_than_maximum: Result < maximum
+			minimum_smaller_than_maximum: Result <= maximum
 		end;
 
 	set_granularity (new_granularity: INTEGER) is
@@ -137,9 +131,13 @@ feature -- Slider setup (max, min, granularity ...)
 		require
 			maximum_greater_than_minimum: new_maximum > minimum
 		do
+			if value > new_maximum then
+				set_value (new_maximum);
+			end;
 			implementation.set_maximum (new_maximum)
 		ensure
-			maximum = new_maximum
+			maximum = new_maximum;
+			value <= maximum;
 		end;
 
 	set_minimum (new_minimum: INTEGER) is
@@ -147,9 +145,13 @@ feature -- Slider setup (max, min, granularity ...)
 		require
 			minimum_smaller_than_maximum: new_minimum < maximum
 		do
+			if value < new_minimum then
+				set_value (new_minimum);
+			end;
 			implementation.set_minimum (new_minimum)
 		ensure
-			minimum = new_minimum
+			minimum = new_minimum;
+			value >= minimum;
 		end;
 
 feature -- Slider Value
@@ -215,7 +217,7 @@ feature -- Text
 		require
 			not_text_void: not (a_text = Void)
 		do
-			implementation.set_text (a_text)
+			implementation.set_text (a_text);
 		ensure
 			text.is_equal (a_text)
 		end; 
@@ -225,6 +227,7 @@ feature -- Text
 		do
 			Result := implementation.text
 		end;
+
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
@@ -250,14 +253,43 @@ feature {NONE}
 			not is_horizontal;
 		end;
 
-feature -- obsolete
+feature 
  
  
-    is_maximum_right_bottom: BOOLEAN is do end;
-    set_maximum_right_bottom (flag: BOOLEAN) is do end;
-    show_value (flag: BOOLEAN) is do end;
-    is_value_shown: BOOLEAN is do end;
+    is_maximum_right_bottom: BOOLEAN is 
+		do 
+			Result := implementation.is_maximum_right_bottom;
+		end;
+
+    set_maximum_right_bottom (flag: BOOLEAN) is 
+		do 
+			implementation.set_maximum_right_bottom (flag);
+		end;
+
+    show_value (flag: BOOLEAN) is 
+		do 
+			implementation.show_value (flag);
+		end;
+
+    is_value_shown: BOOLEAN is 
+		do 
+			Result := implementation.is_value_shown;
+		end;
  
 
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

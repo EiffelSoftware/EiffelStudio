@@ -15,7 +15,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			stone
+			stone, compatible
 		end;
 	REMOVABLE
 		export
@@ -62,6 +62,12 @@ feature
 feature {NONE}
 
 	stone: like Current;
+
+	compatible (s: like Current): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 feature 
 

@@ -60,9 +60,9 @@ feature {CATALOG}
 	make_visible (a_name: STRING; a_parent: COMPOSITE) is
 		do
 			make_page_visible (a_name, a_parent);
-			add (expose_ev);
-			add (input_ev);
-			add (resize_ev);
+			extend (expose_ev);
+			extend (input_ev);
+			extend (resize_ev);
 		end
 
 end -- class TEXT_EVENTS   

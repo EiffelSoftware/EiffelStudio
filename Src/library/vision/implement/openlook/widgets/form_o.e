@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- FORM_O: implementation of form.
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -33,14 +28,14 @@ inherit
 			set_managed as bulletin_set_managed
 		undefine
 			make
-		select
-			hide, show, set_managed
 		end;
 
 	BULLETIN_O
 		undefine
 			make
 		redefine
+			hide, show, set_managed
+		select
 			hide, show, set_managed
 		end;
 
@@ -81,7 +76,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_form (bottom_offset, bottom_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -98,7 +93,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_position (a_position, bottom_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -117,7 +112,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_widget (a_widget, bottom_offset, bottom_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -135,7 +130,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_form (left_offset, left_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -152,7 +147,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_position (a_position, left_side);
 			if realized then 
 				update_attach_modif
@@ -171,7 +166,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_widget (a_widget, left_offset, left_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -189,7 +184,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_form (right_offset, right_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -206,7 +201,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_position (a_position, right_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -225,7 +220,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_widget (a_widget, right_offset, right_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -243,7 +238,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_form (top_offset, top_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -260,7 +255,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_position (a_position, top_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -279,7 +274,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.find (a_child);
+			child_attachments := form_child_list.find (a_child);
 			child_attachments.attach_widget (a_widget, top_offset, top_side);
 			if realized and then shown then 
 				update_attach_modif
@@ -290,7 +285,7 @@ feature
 
 feature {NONE}
 
-	child_list: FORM_CHILD_L;
+	form_child_list: FORM_CHILD_L;
 	
 feature 
 
@@ -301,7 +296,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.search (a_child);
+			child_attachments := form_child_list.search (a_child);
 			if not (child_attachments = Void) then
 				child_attachments.detach (right_side);
 			end;
@@ -319,7 +314,7 @@ feature
 		local
 			child_attachments: FORM_CHILD;
 		do
-			child_attachments := child_list.search (a_child);
+			child_attachments := form_child_list.search (a_child);
 			if not (child_attachments = Void) then
 				child_attachments.detach (left_side);
 			end;
@@ -337,7 +332,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.search (a_child);
+			child_attachments := form_child_list.search (a_child);
 			if not (child_attachments = Void) then
 				child_attachments.detach (bottom_side);
 			end;
@@ -355,7 +350,7 @@ feature
 		local
 			child_attachments: FORM_CHILD
 		do
-			child_attachments := child_list.search (a_child);
+			child_attachments := form_child_list.search (a_child);
 			if not (child_attachments = Void) then
 				child_attachments.detach (top_side);
 			end;
@@ -399,7 +394,7 @@ feature {NONE}
                       	arg: ANY
  		do
 			fraction_base := 1;
-			!!child_list.make;
+			!!form_child_list.make;
             !!arg;
             !!resize_actions.make (screen_object, a_form);
             resize_actions.add (Current, arg);
@@ -530,9 +525,9 @@ feature
 				from
 					list.start
 				variant
-					list.count - list.position + 1
+					list.count - list.index + 1
 				until
-					list.offright
+					list.after
 				loop
 					attachments := list.item;
 					if attachments.is_widget (left_side) then
@@ -609,23 +604,23 @@ feature
 			width_aux := width;
 			height_aux := height;
 			from
-				child_list.start
+				form_child_list.start
 			variant
-				child_list.count - child_list.position + 1
+				form_child_list.count - form_child_list.index + 1
 			until
-				child_list.offright
+				form_child_list.after
 			loop
-				child_attachments := child_list.item;
+				child_attachments := form_child_list.item;
 				if not child_attachments.update_form_position (width_aux, 
 										height_aux,
 										fraction_base) then
 					if (attach_widget_list = Void) then
 						!!attach_widget_list.make
 					end;
-					attach_widget_list.put_right (child_attachments.widgets_only);
+					attach_widget_list.add_right (child_attachments.widgets_only);
 				end;
 				update_child_if_form (child_attachments.widget);
-				child_list.forth
+				form_child_list.forth
 			end;
 			restore_size;
 			Result := attach_widget_list
@@ -653,6 +648,7 @@ feature
 			width_aux := width;
 			height_aux := height;
 		end;
+
 
 feature {NONE} -- External features
 
@@ -682,3 +678,17 @@ feature {NONE} -- External features
 		end; 
 
 end 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

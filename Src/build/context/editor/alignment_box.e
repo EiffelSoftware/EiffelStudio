@@ -42,9 +42,9 @@ feature
 	remove_icon (i: ALIGNMENT_ICON) is
 		do
 			icons.start;
-			icons.search_same (i);
-			if not icons.offright then
-				go (icons.position);
+			icons.search (i);
+			if not icons.after then
+				go_i_th (icons.index);
 				remove
 			end
 		end;

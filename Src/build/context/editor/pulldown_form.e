@@ -30,6 +30,8 @@ feature {NONE}
 	text: EB_TEXT_FIELD;
 
 	
+	forbid_recomp: EB_TOGGLE_B;
+
 feature 
 
 	make (a_parent: CONTEXT_EDITOR) is
@@ -47,6 +49,7 @@ feature
 			!!label_text.make (B_utton_text, Current);
 			!!label.make (T_itle, Current);
 			!!text.make (T_extfield, Current, pulldown_cmd, a_parent);
+			!!forbid_recomp.make (F_orbid_auto_recomp_size, Current, pulldown_resize_cmd, a_parent);
 			create_buttons;
 
 			attach_left (label_text, 10);
@@ -61,7 +64,8 @@ feature
 			attach_top_widget (text, label, 15);
 			attach_top_widget (title, add_button, 10);
 			attach_top_widget (add_button, add_submenu, 10);
-			detach_top (add_submenu);
+			attach_top_widget (add_submenu, forbid_recomp, 10);
+			detach_top (forbid_recomp);
 		end;
 
 	
@@ -77,6 +81,7 @@ feature {NONE}
 			else
 				text.set_text ("")
 			end;
+			forbid_recomp.set_state (context.resize_policy_disabled);
 		end;
 
 	
@@ -88,6 +93,10 @@ feature
 			if not text.text.is_equal (context.text) then
 				context.set_text (text.text);
 			end;
+			if forbid_recomp.state /= context.resize_policy_disabled then
+				context.disable_resize_policy (forbid_recomp.state);
+			end;
+
 		end;
 
 end

@@ -44,6 +44,7 @@ feature
 	execute (argument: STRING) is
 		local
 			dir: FILE_NAME;
+			bpdir: FILE_NAME;
 			msg: STRING;
 			restore_interface_name: FILE_NAME;
 			storage_interface_name: FILE_NAME;
@@ -52,7 +53,7 @@ feature
 		do
 			Project_directory.wipe_out;
 			Project_directory.append (argument);	
-			Project_directory.remove_all_occurrences (' ');
+			Project_directory.prune_all (' ');
 			char := Project_directory.item (Project_directory.count);
 			if char = '/' then
 				Project_directory.remove (Project_directory.count)
@@ -63,20 +64,28 @@ feature
 				!!restore_interface_name.make (0);
 				restore_interface_name.from_string (Restore_directory);
 				restore_interface_name.append ("/interface");
-				!!storage_interface_name.make (0);
-				storage_interface_name.from_string (Storage_directory);
-				storage_interface_name.append ("/interface");
-				if 
-					restore_interface_name.exists and then
-					restore_interface_name.date >= storage_interface_name.date 
-				then
-					!!msg.make (0);
-					msg.append ("Project saved from system crash. %N");
-					msg.append ("Do you wish to retrieve backup files?");
-					question_box.popup (Current, msg);
+				!!bpdir.make(0);
+				bpdir.from_string (Storage_directory);
+				if bpdir.exists then
+					!!storage_interface_name.make (0);
+					storage_interface_name.from_string (Storage_directory);
+					storage_interface_name.append ("/interface");
+					if 
+						restore_interface_name.exists and then
+						restore_interface_name.date >= storage_interface_name.date 
+					then
+						!!msg.make (0);
+						msg.append ("Project saved from system crash. %N");
+						msg.append ("Do you wish to retrieve backup files?");
+						question_box.popup (Current, msg);
+					else
+						retrieve_project (Storage_directory);
+					end;
 				else
-					retrieve_project (Storage_directory);
-				end
+					!!msg.make (0);
+					msg.append ("Project directory not an Eiffel build project. %N");
+					handle_error (msg);
+				end;
 			else
 				create_initial_directories
 			end
@@ -161,7 +170,7 @@ feature {NONE}
 			else
 				rescued := False;
 				!!msg.make (0);
-				msg.append ("Cannot retrieve application from directory%N");
+				msg.append ("Cannot retrieve application from directory %N");
 				msg.append (dir);	
 				handle_error (msg)
 			end;

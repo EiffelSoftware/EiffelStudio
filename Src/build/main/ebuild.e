@@ -21,25 +21,32 @@ creation
 feature 
 
 	make is
-		local
-			init: INIT_CHECK
 		do
 			!!init;
 			init.perform_initial_check;
 			if init.error then
 				io.error.putstring ("EiffelBuild stopped%N");
+				if init.licence.registered then
+					init.licence.unregister;
+				end;
 				exit
 			else
 				init_windowing;
 				init_project;
 				read_command_line;
-				iterate
+				iterate;
+				init.licence.unregister;				
 			end;
 		rescue
+			if init.licence.registered then
+				init.licence.unregister;
+			end;
 			save_rescue
 		end;
 	
 feature {NONE}
+
+	init: INIT_CHECK;
 	
 	read_command_line is
 		local
@@ -52,6 +59,7 @@ feature {NONE}
 		end;
 
 	retried: BOOLEAN;
+	temp:INTEGER;
 
 	save_rescue is
 		do

@@ -102,7 +102,9 @@ feature
 				!!a_pixmap.make;
 				a_pixmap.read_from_file (a_name);
 				if a_pixmap.is_valid then
+					widget.set_managed (False);
 					widget.set_pixmap (a_pixmap);
+					widget.set_managed (True);
 					pixmap_name_modified := True;
 				end;
 			end
@@ -146,7 +148,7 @@ feature {CONTEXT}
 		do
 			Result := old_eiffel_color (context_name);
 			if pixmap_name_modified then
-				Result.append ("\t\t\t!!a_pixmap.make;\n\t\t\ta_pixmap.read_from_file (%"");
+				Result.append ("%T%T%T!!a_pixmap.make;%N%T%T%Ta_pixmap.read_from_file (%"");
 				Result.append (pixmap_name);
 				Result.append ("%");%N%T%T%T");
 				Result.append (context_name);

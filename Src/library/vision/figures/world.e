@@ -1,171 +1,189 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                      (805) 685-1006                                --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- WORLD: Manager of figures.
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class WORLD 
 
 inherit
-
-	LINKED_LIST [FIGURE]
+	
+	COMPOSITE_FIG	
 		rename
-			add as list_add,
-			add_left as list_add_left,
-			add_right as list_add_right,
-			duplicate as list_duplicate,
-			merge_left as list_merge_left,
-			merge_right as list_merge_right,
-			put as list_put,
-			put_i_th as list_put_i_th,
-			put_left as list_put_left,
-			put_right as list_put_right,
-            make as linked_list_make
+			composite_mark as world_mark,
+			composite_return as world_return
+		undefine
+			is_equal,
+			copy,
+			consistent,
+			setup
+		redefine
+			set_origin,
+			set_no_origin,
+			clip_draw
 		end;
 
-	LINKED_LIST [FIGURE]
+
+	FIXED_LIST [LINKED_LIST[FIGURE]]
 		rename
-            make as linked_list_make
-		redefine
-			put_right, 
-			put_left, 
-			put_i_th, 
-			put, 
-			merge_right, 
-			merge_left, 
-			duplicate, 
-			add_right, 
-			add_left,
-			add
-		select
-			put_right, 
-			put_left, 
-			put_i_th, 
-			put, 
-			merge_right, 
-			merge_left, 
-			duplicate, 
-			add_right, 
-			add_left,
-			add
-		end
+            make as al_make,
+			put as al_put,
+			item as al_item,
+			start as al_start,
+			finish as al_finish,
+			forth as al_forth,
+			remove as al_remove,
+			has as al_has,
+			search as al_search,
+			capacity as al_capacity,
+			count as al_count,
+			extend as al_add,
+			append as al_append,
+			replace as al_replace,
+			wipe_out as al_wipe_out 
+		export 	
+			{WORLD} all;
+			{ANY} off, after, before
+		end;
 
 creation
 
-	make
+	make, make_with_plane
 
-feature 
 
-	add (v: like first) is
-			-- Append `v' to list.
-		do
-			v.attach_drawing_imp (drawing);
-			list_add (v)
-		end;
-
-	add_left (v: like first) is
-			-- Put item `v' to the left of cursor position.
-			-- Do not move cursor.
-			-- Synonym for `put_left'.
-		do
-			v.attach_drawing_imp (drawing);
-			list_add_left (v)
-		end;
-
-	add_right (v: like first) is
-			-- Put item `v' to the right of cursor position.
-			-- Do not move cursor.
-			-- Synonym for `put_right'.
-		do
-			v.attach_drawing_imp (drawing);
-			list_add_right (v)
-		end;
-
-	attach_drawing (a_drawing: DRAWING) is
-			-- Attach a drawing to the figure.
-		do
-			drawing := a_drawing.implementation;
-			mark;
-			from
-				start
-			until
-				off
-			loop
-				item.attach_drawing_imp (drawing);
-				forth
-			end;
-			return
-		end;
-
-feature {WORLD}
-
-	attach_drawing_imp (a_drawing: DRAWING_I) is
-			-- Attach a drawing to the figure.
-			-- (use directly a DRAWING_I, private use only)
-		do
-			drawing := a_drawing
-		end;
-
-feature 
+feature -- Initialization
 
 	make is
 			-- Create a world
+		local
+			ll: LINKED_LIST [FIGURE];
 		do
-			linked_list_make;
-			!! origin
+			if max_plane <= 0 then
+				max_plane := Default_max_plane;
+			end;
+			al_make (max_plane);
+				-- 0 <= plane < Max_plane
+			from
+				al_start
+			until
+				off
+			loop
+				!! ll.make;
+				al_put (ll);
+				al_forth
+			end;
+			start;
+			notify_make;
+			!! changes_box.make;
+			!! surround_box.make;
+			!! origin;
+			set_conf_receive;
+			set_conf_not_notify;
+			conf_notified := Current;
 		ensure
 			empty
 		end;
 
-	draw is
-			-- Draw the figure in `drawing'.
-		require
-			a_drawing_attached: not (drawing = Void)
+	make_with_plane (plane_number: INTEGER) is
 		do
-			if drawing.is_drawable then
-				mark;
-				from
-					start
-				until
-					off
-				loop
-					item.draw;
-					forth
-				end;
-				return
+			max_plane := plane_number;
+			make
+		end;
+
+	
+
+feature -- Access
+
+	item: FIGURE is
+		do
+			Result := al_item.item
+		end;
+
+	has (f: FIGURE): BOOLEAN is
+				-- Does `Currnt` include `f`
+		do
+			Result := i_th (f.plane + 1). has (f)
+		end;
+
+	search (f: FIGURE) is
+				-- Move to first position where f and item are identical
+				-- according to '=' rule
+		do
+			i_th (f.plane+1).search (f);
+			if i_th (f.plane+1).off then
+				index := max_plane
 			end
 		end;
 
-feature {NONE}
-
-	drawing: DRAWING_I;
-			-- Drawing in which the figure will be drawn
-
-feature 
-
-	duplicate (n: INTEGER): like Current is
-			-- Copy of the sub-list beginning at cursor position
-			-- and comprising min (`n', count-position+1) items
-		require else
-			not_off: not off;
-			valid_sublist: n >= 0
+	search_equal (f: FIGURE) is
+				-- Move to first position where f and item are identical
+				-- according to `equal' rule
 		do
-			Result := list_duplicate (n);
-			Result.attach_drawing_imp (drawing);
-			Result.set_origin (origin)
+			i_th (f.plane+1).compare_objects;
+			i_th (f.plane+1).search (f);
+			i_th (f.plane+1).compare_references;
+			if i_th (f.plane+1).off then
+				index := max_plane 
+			end
 		end;
 
-	merge_left (other: like Current) is
-			-- Merge `other' into the current list before
-			-- cursor position.
+	origin: COORD_XY_FIG;
+			-- Origin of the world
+
+feature -- Measurement
+
+	count: INTEGER is
+				-- Number of item in `Current'
+		do
+			world_mark;
+			from
+				al_start
+			until
+				off
+			loop
+				Result := Result + al_item.count;
+				al_forth
+			end;
+			world_return
+		end;
+
+
+feature -- Modification & Insertion
+
+	set_origin (p: like origin) is
+			-- Set `origin' to `p'.
+		require else
+			p_exists: not (p = Void)
+		do
+			origin := p
+		ensure then
+			origin = p
+		end;
+
+	add (v: FIGURE) is
+			-- Append `v' 
+		do
+			v.set_conf_not_notify;
+			v.attach_drawing_imp_with_parent (Current, drawing);
+			if i_th (v.plane+1).before then
+				if i_th (v.plane+1).empty then
+					i_th (v.plane+1).forth
+				else
+					i_th (v.plane+1).start
+				end
+			end;
+			i_th (v.plane+1).add_left (v);
+			v.set_conf_notify;
+			v.conf_recompute;
+			set_conf_modified_with (v.surround_box);
+		end;
+
+
+ 	merge (other: like Current) is
+			-- Merge `other' 
 			-- Do not move cursor.
 			-- Empty other.
 		do
@@ -174,228 +192,213 @@ feature
 			until
 				other.off
 			loop
-				other.attach_drawing_imp (drawing);
+				other.item.attach_drawing_imp_with_parent ( Current, drawing);
 				other.forth
 			end;
-			list_merge_left (other)
-		end;
-
-	merge_right (other: like Current) is
-			-- Merge `other' into the current list after
-			-- cursor position.
-			-- Do not move cursor.
-			-- Empties other.
-		do
 			from
-				other.start
+				world_mark;
+				al_start;
+				other.al_start
 			until
-				other.off
+				off
 			loop
-				other.attach_drawing_imp (drawing);
-				other.forth
+				al_item.merge_left (other.al_item);
+				al_forth;
+				other.al_forth
 			end;
-			list_merge_right (other)
+			world_return;
+			set_conf_modified_with (other.surround_box)
 		end;
 
-	origin: COORD_XY_FIG;
-			-- Origin of the world
-
-	put (v: like first) is
+	put (v: FIGURE) is
 			-- Put item `v' at cursor position.
-		require else
-			not_off: not off
 		do
-			v.attach_drawing_imp (drawing);
-			list_put (v)
+			set_conf_modified_with (item.surround_box);
+			v.attach_drawing_imp_with_parent ( Current, drawing);
+			al_item.put (v);
+			set_conf_modified_with (v.surround_box)
 		end;
 
-	put_i_th (v: like first; i: INTEGER) is
-			-- Put item `v' at `i'-th position.
+
+feature -- Removal
+
+	remove (fig: FIGURE) is
+			-- remove `fig`
 		do
-			v.attach_drawing_imp (drawing);
-			list_put_i_th (v, i)
+			world_mark;
+			start;
+			search (fig);
+			if not off then 
+				i_th (fig.plane + 1).remove 
+			end;
+			world_return;
+			set_conf_modified_with (fig.surround_box)
 		end;
 
-	put_left (v: like first) is
-			-- Put item `v' to the left of cursor position.
-			-- Do not move cursor.
+	wipe_out is
+			-- remove all figures
 		do
-			v.attach_drawing_imp (drawing);
-			list_put_left (v)
-		end;
-
-	put_right (v: like first) is
-			-- Put item `v' to the right of cursor position.
-			-- Do not move cursor.
-		do
-			v.attach_drawing_imp (drawing);
-			list_put_right (v);
-		end;
-
-	rotate (a: REAL; p: like origin) is
-			-- Rotate figure by `a' relative to `p'.
-			-- Angle `a' is measured in degrees.
-		require
-			a_smaller_than_360: a < 360;
-			a_positive: a >= 0.0;
-			point_exists: not (p = Void)
-		do
-			mark;
 			from
-				start
+				al_start
 			until
 				off
 			loop
-				item.rotate (a, p);
-				forth
+				al_item.wipe_out;
+				al_forth
 			end;
-			return
+			surround_box.wipe_out;
+			changes_box.wipe_out;
+			set_conf_modified
 		end;
 
-	scale (f: REAL; p: like origin) is
-			-- Scale figure by `f' relative to `p'.
-		require
-			scale_factor_positive: f > 0.0;
-			point_exists: not (p = Void)
+feature -- Cursor movement 
+
+	start is
+			-- Move to first position
 		do
-			mark;
 			from
-				start
+				al_start
 			until
-				off
+				off or else (not al_item.empty)
 			loop
-				item.scale (f, p);
-				forth
+				al_forth
 			end;
-			return
+			if not off then
+				al_item.start
+			end
 		end;
 
-	self_rotate (a: REAL) is
-			-- Rotate figure by `a' relative to `origin'.
-			-- Angle is measured in degrees.
-		require
-			a_smaller_than_360: a < 360;
-			a_positive: a >= 0.0;
-			origin_exists: not (origin = Void)
+	finish is
+			-- Move to last position
 		do
-			mark;
-			from
-				start
-			until
-				off
-			loop
-				item.rotate (a, origin);
-				forth
-			end;
-			return
+			al_finish;
+			al_item.finish;
+			if al_item.empty then
+				al_forth
+			end
 		end;
 
-	self_scale (f: REAL) is
-			-- Scale figure by `f' relative to `origin'.
-		require
-			scale_factor_positive: f > 0.0;
-			origin_exists: not (origin = Void)
+	forth is
+			-- Move to next position
 		do
-			mark;
-			from
-				start
-			until
-				off
-			loop
-				item.scale (f, origin);
-				forth
-			end;
-			return
+			al_item.forth;
+			if al_item.after then
+				from
+					al_forth
+				until
+					off or else (not al_item.empty) 
+				loop
+					al_forth
+				end;
+				if not off then
+					al_item.start
+				end
+			end	
 		end;
 
-feature {NONE}
+feature -- Output
+
+	clip_draw (clip: CLIP) is
+		local
+			box: CLOSURE;
+			new_clip: CLIP;
+			first_drawn_plane: INTEGER;
+		do
+			!! box.make;
+			box.merge_clip (clip);
+			new_clip := clip;
+			if conf_receive then
+				if conf_modified then
+					!! box.make;
+					box.merge_clip (new_clip);
+					box.merge (changes_box);
+					new_clip := box.as_clip;
+					conf_recompute;
+					changes_box.wipe_out
+				end
+			else
+				conf_recompute
+			end;
+			!! box.make;
+			box.merge_clip (new_clip);
+			if drawing.is_drawable and surround_box.override (new_clip) then
+				world_mark;
+				from
+					start;
+					first_drawn_plane := -1
+				until
+					off or first_drawn_plane >= 0
+				loop
+					if item.surround_box.override (new_clip) then
+						first_drawn_plane := index;
+						item.clip_draw (new_clip)
+					end;
+					forth
+				end;
+				from
+				until
+					off
+				loop
+					if index > first_drawn_plane or else 
+						item.surround_box.override (new_clip) then
+						item.clip_draw (new_clip)
+					end;
+					forth
+				end;
+				world_return
+			end
+		end;
+
+feature {WORLD} -- Access
+
+	mark_index: INTEGER;
+			-- position in array sequence
+
+	linked_list_cursor: CURSOR ;
+
+feature {WORLD} -- Modification & Insertion
 
 	set_no_origin is
 			-- Erase definition of `origin'.
 		do
 			origin := Void
-		ensure
+		ensure then
 			(origin = Void)
 		end;
 
-feature 
+feature {WORLD} -- Cursor
 
-	set_origin (p: like origin) is
-			-- Set `origin' to `p'.
-		require
-			p_exists: not (p = Void)
+	world_mark is
 		do
-			origin := p
-		ensure
-			origin = p
+			mark_index := index;
+			if not off then
+				linked_list_cursor := al_item.cursor
+			end
 		end;
 
-	translate (v: VECTOR) is
-			-- Translate current figure by `v'.
-		require
-			vector_exists: not (v = Void)
+	world_return is
 		do
-			mark;
-			from
-				start
-			until
-				off
-			loop
-				item.translate (v);
-				forth
-			end;
-			return
+			index := mark_index;
+			if not off then
+				al_item.go_to (linked_list_cursor)
+			end
 		end;
 
-	xyrotate (a: REAL; px, py: INTEGER) is
-			-- Rotate figure by `a' relative to (`px', `py').
-			-- Angle `a' is measured in degrees.
-		require
-			a_smaller_than_360: a < 360;
-			a_positive: a >= 0.0
-		do
-			mark;
-			from
-				start
-			until
-				off
-			loop
-				item.xyrotate (a, px, py);
-				forth
-			end;
-			return
-		end;
+invariant
 
-	xyscale (f: REAL; px,py: INTEGER) is
-			-- Scale figure by `f' relative to (`px', `py').
-		require
-			scale_factor_positive: f > 0.0
-		do
-			mark;
-			from
-				start
-			until
-				off
-			loop
-				item.xyscale (f, px, py);
-				forth
-			end;
-			return
-		end;
 
-	xytranslate (vx, vy: INTEGER) is
-			-- Translate by `vx' horizontally and `vy' vertically.
-		do
-			mark;
-			from
-				start
-			until
-				off
-			loop
-				item.xytranslate (vx, vy);
-				forth
-			end;
-			return
-		end;
+end --  class WORLD
 
-end
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

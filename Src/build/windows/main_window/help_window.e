@@ -30,6 +30,8 @@ feature
 	text: SCROLLED_T;
 
 	make (a_name: STRING; a_screen: SCREEN) is
+		local
+			contin_command: ITER_COMMAND;
 		do
 			top_shell_create (a_name, a_screen);
 			!!form.make (F_orm, Current);
@@ -53,6 +55,8 @@ feature
 			form1.attach_right (close_b, 2);
 			form1.attach_bottom (close_b, 2);
 			text.enable_word_wrap;
+			!!contin_command;
+			set_delete_command (contin_command);
 		end;
 
 end

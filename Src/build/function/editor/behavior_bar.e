@@ -54,7 +54,7 @@ feature
 			attach_left_widget (label, state_hole, 0);
 			attach_left_widget (state_hole, label1, 0);
 			attach_right (label1, 0);
-			label.set_text ("behavior for state:");
+			label.set_text (Behaviour_state_label);
 		end;
 
 	set_function (b: BEHAVIOR) is

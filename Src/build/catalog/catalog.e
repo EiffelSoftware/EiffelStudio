@@ -60,7 +60,7 @@ feature
 		require
 			not_void_page: not (page = Void);
 		do
-			pages.add (page);
+			pages.extend (page);
 		ensure
 			page_has_been_added: pages.has (page)
 		end; -- add_page
@@ -94,9 +94,9 @@ feature
 			loop
 				page := pages.item;
 				if page.is_optional then
-					opt_pages.add (page);
+					opt_pages.extend (page);
 				else
-					fix_pages.add (page);
+					fix_pages.extend (page);
 				end;
 				pages.forth;
 			end;
@@ -112,10 +112,10 @@ feature
 				if
 					first_time	
 				then
-					button_form.attach_left (page.button, 10);
-					first_time := FALSE
+					add_first_button (page.button, 10);
+					first_time := False;
 				else
-					button_form.attach_left_widget (previous_button, page.button, 10);
+					add_other_buttons (previous_button, page.button, 10);
 				end;
 				previous_button := page.button;
 				fix_pages.forth
@@ -129,15 +129,26 @@ feature
 				page.make_button_visible (button_form);
 				page.add_button_callback;
 				if first_time then
-					button_form.attach_left (page.button, 10);
+					add_first_button (page.button, 10);
+					first_time := False;
 				else
-					button_form.attach_left_widget (previous_button, page.button, 10);
+					add_other_buttons (previous_button, page.button, 10);
 				end;
 				opt_pages.forth
 			end;
 			current_page.make_visible (I_con_box1, page_form);
 			page_sw.set_working_area (current_page);
 		end; -- update_interface 
+
+	add_first_button (b: ICON; i: INTEGER) is 
+		do
+			button_form.attach_left (b, i);
+		end;
+
+	add_other_buttons (pb, b: ICON; i: INTEGER) is
+		do
+			button_form.attach_left_widget (pb, b, i);
+		end;
 
 	set_initial_page (page: CAT_PAGE [T]) is
 			-- Set current_page to `page', update the drawing_sw
@@ -182,7 +193,9 @@ feature {NONE}
 					current_page.hide;
 					current_page := page;
 					update_type_label;
-					page_sw.set_working_area (current_page)	
+					page_sw.unmanage;
+					page_sw.set_working_area (current_page);
+					page_sw.manage;	
 				end
 			end
 		end; -- execute

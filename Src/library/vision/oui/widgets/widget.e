@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	  --
---|	270 Storke Road, Suite 7 Goleta, California 93117		--
---|				   (805) 685-1006							--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Most general notion of "widget"
 -- (i.e. user interface object).
@@ -63,6 +57,30 @@ feature -- Callbacks (adding)
 		do
 			implementation.add_button_release_action (number, a_command, argument)
 		end; 
+
+	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+		-- Add `a_command' to the list of actions to be executed
+		-- when the `number'-th mouse button is clicked
+		-- `argument' will be passed to `a_command' whenever it is
+		-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.add_button_click_action (number, a_command, argument)
+		end;
+
+	set_multi_click_time (time: INTEGER) is
+		-- Set time granted for clicking
+		do
+			implementation.set_multi_click_time (time)
+		end;
+
+	get_multi_click_time: INTEGER is
+		-- Get time granted for clicking
+		do
+			Result := implementation.get_multi_click_time
+		end;
+
 
 	add_destroy_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of actions to be executed 
@@ -185,6 +203,17 @@ feature -- Callbacks (removing)
 		do
 			implementation.remove_button_release_action (number, a_command, argument)
 		end; 
+
+	remove_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of actions to be executed when the
+			-- `number'-th mouse button is clicked.
+			-- Do nothing if the pair (`a_command', `argument') had not
+			-- been specified previously.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_button_click_action (number, a_command, argument)
+		end;
 
 	remove_destroy_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of actions to be executed when
@@ -633,3 +662,17 @@ invariant
 	Positive_depth: depth >= 0
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

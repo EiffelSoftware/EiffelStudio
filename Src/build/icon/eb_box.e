@@ -12,7 +12,7 @@ inherit
 		end;
 	EB_LINKED_LIST [T]
 		rename
-			add as list_add,
+			extend as list_extend,
 			add_right as list_add_right,
 			remove as list_remove,
 			wipe_out as list_wipe_out,
@@ -26,13 +26,13 @@ inherit
 		rename
 			make as linked_list_make
 		undefine
-			add_right, add
+			add_right, extend
 		redefine
 			go_i_th, put, wipe_out, 
 			remove, merge, set
 		select
 			go_i_th, put, wipe_out, remove,
-			add_right, add
+			add_right, extend
 		end
 	
 feature -- List operations
@@ -82,6 +82,7 @@ feature -- List operations
 			list_put (v.original_stone);
 			icons.item.set_original_stone (item)
 		end; -- put
+
 
 	remove is
 			-- Remove item at cursor position and move cursor
@@ -243,7 +244,7 @@ feature {NONE}
 				new_icon.set_label ("dummy");
 				new_icon.make_visible (Current);
 				new_icon.set_managed (False);
-				icons.add (new_icon);
+				icons.extend (new_icon);
 				i := i + 1
 			end;
 		end; 
@@ -320,4 +321,4 @@ feature
 	invariant
 		not_void_icons: not (icons = Void)
 
-end -- class BOX
+end -- class EB_BOX

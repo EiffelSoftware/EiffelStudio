@@ -78,7 +78,7 @@ feature
 
 	set_text (s: STRING) is
 		do
-			text := s.duplicate;	
+			text := clone (s);	
 			context_catalog.update_translation_page;
 		end;
 
@@ -99,7 +99,7 @@ feature
 
 	set_internal_name (s: STRING) is
 		do
-			internal_name := s.duplicate
+			internal_name := clone(s);
 		end;
 
 	generate_internal_name is

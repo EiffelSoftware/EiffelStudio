@@ -9,15 +9,13 @@ inherit
 			key_for_iteration as current_event
 		export
 			{NONE} all
-		select
-			twin
 		end;
 
 	COM_NAMER
-		rename
-			twin as com_namer_twin
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 
@@ -48,7 +46,7 @@ feature {NONE}
 			from
 				start
 			until
-				offright
+				over
 			loop
 				Result.append (item (current_event).eiffel_declaration);
 				forth
@@ -69,7 +67,7 @@ feature {NONE}
 			from
 				start
 			until
-				offright
+				over
 			loop
 				Result.append (item (current_event).eiffel_association);
 				Result.append ("%T%T%T");

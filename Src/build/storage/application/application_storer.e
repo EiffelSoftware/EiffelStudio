@@ -79,7 +79,7 @@ feature
 					io.putstring ("Does not know how to store black boxes yet%N");
 				end;
 				!!s_circle.make (app_circle);
-				stored_circles.add (s_circle);
+				stored_circles.extend (s_circle);
 				app_figures.forth
 			end;
 			!!stored_lines.make;
@@ -90,7 +90,7 @@ feature
 				app_lines.after
 			loop
 				!!s_line.make (app_lines.line);
-				stored_lines.add (s_line);
+				stored_lines.extend (s_line);
 				app_lines.forth
 			end;
 			store_by_name (file_name);
@@ -113,7 +113,7 @@ feature {NONE}
 			from
 				graph.start
 			until
-				graph.offright	
+				graph.over	
 			loop
 				s ?= graph.key_for_iteration;
 				subtab := graph.item_for_iteration;
@@ -122,7 +122,7 @@ feature {NONE}
 				from
 					subtab.start
 				until
-					subtab.offright
+					subtab.over
 				loop
 					g := subtab.item_for_iteration;
 					if (g = Void) then
@@ -189,7 +189,7 @@ feature
 			from
 				stored_graph.start
 			until
-				stored_graph.offright
+				stored_graph.over
 			loop
 				subtab := stored_graph.item_for_iteration;
 				!!new_table.make (subtab.count);
@@ -197,7 +197,7 @@ feature
 				from
 					subtab.start
 				until
-					subtab.offright
+					subtab.over
 				loop
 					subtab_item := subtab.item_for_iteration;
 					if (subtab_item = Return_transition) then

@@ -23,6 +23,8 @@ feature {NONE}
 
 	worked_on: STRING is
 		do
-		end
+		end;
+
+	old_text: STRING;
 
 end

@@ -68,7 +68,7 @@ feature
 			-- Create a context of the same type
 		do
 			Result := button_create_context (a_parent);
-			if (widget = Void) then
+			if (widget = Void) and Result /= Void then
 				Result.set_direction (direction)
 			end;
 		end;

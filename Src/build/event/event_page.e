@@ -27,7 +27,6 @@ inherit
 
 	FOCUSABLE
 		rename
-			focus_source as button,
 			focus_string as page_name
 		end
 
@@ -51,6 +50,11 @@ feature {NONE}
 	focus_label: LABEL is
 		do
 			Result := associated_catalog.focus_label;
+		end;
+
+	focus_source: WIDGET is
+		do
+			Result := button.source_button;
 		end;
 
 	

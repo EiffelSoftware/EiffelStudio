@@ -14,7 +14,7 @@ feature {NONE}
 
 	trans_work is
 		do
-			translation_list.add (translation);
+			translation_list.extend (translation);
 			context_catalog.update_translation_page
 		end;
 

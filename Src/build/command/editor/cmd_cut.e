@@ -29,7 +29,7 @@ feature
 			if
 				index = 1 and list.empty
 			then
-				list.add (element)
+				list.extend (element)
 			else
 				list.go_i_th (index - 1);
 				list.add_right (element);

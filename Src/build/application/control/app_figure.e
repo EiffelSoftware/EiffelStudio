@@ -68,7 +68,7 @@ feature
 			-- Set the foreground color of interior and text_image 
 			-- to white and draw itself.
 		require else
-			not (inner_figure = Void)
+			valid_inner;
 		local
 			temp_int: INTERIOR
 		do
@@ -157,6 +157,11 @@ feature
 			text_image.xyscale (f, px, py);
 		end;
 
+	valid_inner: BOOLEAN is
+		do
+			result := inner_figure /= Void;
+		end;
+
 feature {NONE}
 
 	is_surimposable (other: like Current): BOOLEAN is
@@ -214,7 +219,7 @@ feature {NONE}
 			-- Set the foreground color of the interior
 			-- and text_image to black and then draw itself.
 		require else
-			inner_figure /= Void
+			valid_inner;
 		local
 			temp_int: INTERIOR
 		do

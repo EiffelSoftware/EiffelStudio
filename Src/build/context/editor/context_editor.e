@@ -9,20 +9,24 @@ inherit
 	TOP_SHELL
 		rename
 			make as shell_make,
-			realize as shell_realize
+			realize as shell_realize,
+			show as shell_show
 		export
 			{NONE} all;
 			{ANY} hide, raise
 		undefine
 			init_toolkit
+		redefine
+			delete_window_action
 		end;
 	TOP_SHELL
 		undefine
 			init_toolkit
 		redefine
-			realize, make
+			realize, make, show,
+			delete_window_action
 		select
-			realize, make
+			realize, make, show
 		end;
 	WINDOWS
 
@@ -32,7 +36,9 @@ creation
 	
 feature {NONE}
 
-	icon: CON_EDIT_STONE;
+	--icon: CON_EDIT_STONE;
+
+	context_hole: CON_EDIT_HOLE;
 	
 feature 
 
@@ -50,6 +56,11 @@ feature {NONE}
 
 	
 feature 
+	delete_window_action is
+		do
+			close;
+			iterate;
+		end;
 
 	top_form: FORM;
 
@@ -102,7 +113,6 @@ feature
 			drawing_box_form: DRAWING_BOX_FORM;
 			bull_resize_form: BULL_RESIZE_FORM;
 			grid_form: GRID_FORM;
-			context_hole: CON_EDIT_HOLE
 		do
 			!!form_list.make (1, form_number);
 
@@ -115,8 +125,6 @@ feature
 			!!first_separator.make (S_eparator, top_form);
 			first_separator.set_single_line;
 			first_separator.set_horizontal (True);
-			!!icon;
-			icon.make_visible (top_form);
 			!!menu_button.make (G_eometry_form_name, Current);
 			!!second_separator.make (S_eparator, top_form);
 			second_separator.set_single_line;
@@ -129,11 +137,9 @@ feature
 			top_form.attach_top (close_button, 10);
 
 			top_form.attach_top (context_hole, 10);
-			top_form.attach_top (icon, 10);
 
 			top_form.attach_right (close_button, 10);
 			top_form.attach_left (context_hole, 10);
-			top_form.attach_left_widget (context_hole, icon, 10);
 
 			top_form.attach_top (first_separator, 60);
 			top_form.attach_left (first_separator, 10);
@@ -178,10 +184,14 @@ feature
 		do
 			shell_realize;
 			menu_button.option_button.hide;
-			if icon.original_stone = Void then
-				icon.hide
-			end
 		end;
+
+	show is
+		do
+			shell_show;
+			menu_button.option_button.show;
+		end;
+
 
 	attach_attributes_form (a_form: EDITOR_FORM) is
 		do
@@ -199,70 +209,90 @@ feature
 			current_form_found: BOOLEAN;
 			context_form_found: BOOLEAN;
 			i: INTEGER;
+			other_editor: like Current;
+			old_edited_context: CONTEXT;
 		do
-			if new_context /= edited_context then
-				edited_context := new_context;
-				icon.set_context (edited_context);
-				option_list := edited_context.option_list;
-				menu_button.option_button.set_managed (False);
-				menu_button.update (option_list);
-				if edited_context.is_bulletin then
-					menu_button.add_button (alignment_form_number);
-					menu_button.add_button (grid_form_number);
-				end;
-				if not (edited_context.resize_policy = Void) then
-					menu_button.add_button (bulletin_resize_form_number);
-				end;
-				menu_button.add_button (color_form_number);
-				if edited_context.is_fontable then
-					menu_button.add_button (font_form_number);
-				end;
-				menu_button.add_button (behavior_form_number);
-				if edited_context.editor_form = 0 then
-					edited_context.set_editor_form (option_list.item (1));
-				end;
+			if new_context.editor_form /= Void then
+				other_editor :=	context_catalog.editor (new_context, new_context.editor_form);
+			end;
+			if other_editor = Void then
+				if new_context /= edited_context then
+					old_edited_context := edited_context;
+					edited_context := new_context;
+					context_hole.set_context (edited_context);
+					option_list := edited_context.option_list;
+					menu_button.set_managed (False);
+					menu_button.update (option_list);
+					if edited_context.is_bulletin then
+						menu_button.add_button (alignment_form_number);
+						menu_button.add_button (grid_form_number);
+					end;
+					if not (edited_context.resize_policy = Void) then
+						menu_button.add_button (bulletin_resize_form_number);
+					end;
+					menu_button.add_button (color_form_number);
+					if edited_context.is_fontable then
+						menu_button.add_button (font_form_number);
+					end;
+					menu_button.add_button (behavior_form_number);
+					menu_button.set_managed (True);
+					if edited_context.editor_form = 0 then
+						edited_context.set_editor_form (option_list.item (1));
+					end;
 					-- Test if the current form is defined for the context
 					-- ie is not a special form not valid for the new context
-				from
-					i := 1
-				until
-					i > option_list.count or 
-					(option_list.item (i) = -1) or
-					current_form_found
+					from
+						i := 1
+					until
+						i > option_list.count or 
+						(option_list.item (i) = -1) or
+						current_form_found
 					loop
-					if option_list.item (i) = edited_context.editor_form then	
-						context_form_found := True;
-					end;
+						if option_list.item (i) = edited_context.editor_form then	
+							context_form_found := True;
+						end;
 						if option_list.item (i) = current_form_number then	
-						current_form_found := True;
-					end;
+							current_form_found := True;
+						end;
 						i := i + 1;
+					end;
+					list := menu_button.additionnal_list;
+					from
+						list.start
+					until
+						list.after or current_form_found
+					loop
+						if list.item = edited_context.editor_form then	
+							context_form_found := True;
+			
+						end;
+						if list.item = current_form_number then	
+							current_form_found := True;
+						end;
+						list.forth
+					end;
+					if current_form_found then
+						edited_context.set_editor_form (current_form_number);
+						set_form (edited_context.editor_form);
+					elseif not context_form_found then
+						other_editor :=	context_catalog.editor (new_context, 1);
+						if other_editor = Void then
+							edited_context.set_editor_form (edited_context.option_list.item (1));
+							set_form (edited_context.editor_form);
+						else
+							other_editor.raise;
+							set_edited_context (old_edited_context);
+						end;
+					else
+						set_form (edited_context.editor_form);
+					end;
 				end;
-				list := menu_button.additionnal_list;
-				from
-					list.start
-				until
-					list.offright or current_form_found
-				loop
-					if list.item = edited_context.editor_form then	
-						context_form_found := True;
-					end;
-					if list.item = current_form_number then	
-						current_form_found := True;
-					end;
-					list.forth
-				end;
-				if current_form_found then
-					edited_context.set_editor_form (current_form_number)
-				elseif not context_form_found then
-					edited_context.set_editor_form (edited_context.option_list.item (1))
-					end;
-				menu_button.option_button.set_managed (True);
-				set_form (edited_context.editor_form);
+			else
+				other_editor.raise
 			end;
 		end;
 	
-	update_form (a_form_number: INTEGER) is\
+	update_form (a_form_number: INTEGER) is
 			-- Update the form according to `a_form_number'.
 		local
 			other_editor: like Current
@@ -285,7 +315,6 @@ feature
 		do
 			current_form_number := a_form_number;
 			edited_context.set_editor_form (a_form_number);
-			menu_button.option_button.set_managed (False);
 			menu_button.set_form (edited_context.editor_form);
 			new_form := form_list.item (edited_context.editor_form);
 			if not new_form.is_initialized then
@@ -298,12 +327,18 @@ feature
 			end;
 			if not (current_form = Void) then
 				current_form.hide;
+				current_form.set_managed (False);
 			end;
 			current_form := new_form;
 			current_form.reset_form;
+			if not menu_button.shown then
+				menu_button.show;
+			end;
+			if not menu_button.managed then
+				menu_button.set_managed (True);
+			end;
 			current_form.show;
-			menu_button.option_button.show;
-			menu_button.option_button.set_managed (True);
+			current_form.set_managed (True);
 		end;
 
 	behavior_form_shown: BOOLEAN is
@@ -342,13 +377,15 @@ feature -- Reseting
 				current_form.hide;
 				current_form := Void;
 				current_form_number := 0;
-				icon.reset;
+				--icon.reset;
+				context_hole.reset;
 			end;
 		end;
 
 	update_icon_name is
 		do
-			icon.update_name
+			--icon.update_name;
+			context_hole.update_name;
 		end;
 
 

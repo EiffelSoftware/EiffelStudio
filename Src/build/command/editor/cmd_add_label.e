@@ -12,8 +12,8 @@ inherit
 	CMD_ADD
 		redefine
 			element
-		
-		end
+		end;
+
 	
 feature {NONE}
 

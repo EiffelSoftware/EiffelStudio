@@ -28,7 +28,8 @@ inherit
 			make as elmt_hole_make
 		redefine
 			stone, associated_function,
-			associated_symbol, associated_label
+			associated_symbol, associated_label,
+			compatible
 		end
 
 creation
@@ -43,8 +44,13 @@ feature
 		end;
 
 	stone: EVENT_STONE;
-
 	
+	compatible (s: EVENT_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
+
 feature {NONE}
 
 	associated_function: BEHAVIOR_EDITOR;

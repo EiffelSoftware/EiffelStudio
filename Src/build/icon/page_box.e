@@ -6,13 +6,13 @@ inherit
 	EB_BOX [T] 
 		rename 
 			remove as box_remove
-		export
-			{ANY} icons
 		redefine
 			merge_icons
 		end;
 
 	EB_BOX [T]
+		export
+			{ANY} icons, after
 		redefine
 			remove, merge_icons
 		select
@@ -58,14 +58,14 @@ feature
 			end
 		end;
 
-	add (elt: like item) is
+	extend (elt: like item) is
 			-- Append `elt' to end of function_box.
 		local
 			temp_page: INTEGER
 		do
 			page_changed := False;
 			temp_page := page_number;
-			list_add (elt);
+			list_extend (elt);
 			finish;
 			icons.go_i_th (relative_position);
 			icons.item.set_original_stone (elt);
@@ -108,7 +108,9 @@ feature
 			then
 				go_i_th ((page_number * page_size) + 1);
 				page_changed := True;
-				display_page
+				parent.unmanage;
+				display_page;
+				parent.manage;
 			end
 		end;
 
@@ -121,7 +123,9 @@ feature
 			then
 				go_i_th ((page_number - 2) * page_size + 1);
 				page_changed := True;
-				display_page 
+				parent.unmanage;
+				display_page;
+				parent.manage;
 			end
 		end;
 
@@ -180,11 +184,16 @@ feature
 			end
 		end; -- remove
 
+	icons_after: BOOLEAN is
+		do
+			Result := icons.after
+		end;
+
 	update_page is
 			-- Update the page from position and
 			-- display from icons.position.
 		require
-			positions_not_offright: (not icons.after)
+			positions_not_offright: (not icons_after)
 						and  (not after)
 		local
 			old_pos: INTEGER;

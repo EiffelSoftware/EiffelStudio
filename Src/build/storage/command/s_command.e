@@ -44,7 +44,7 @@ feature
 				args.after
 			loop
 				!!arg.make (args.item);	
-				arguments.add (arg);
+				arguments.extend (arg);
 				args.forth
 			end;
 			labs := c.labels;
@@ -54,7 +54,7 @@ feature
 			until
 				labs.after
 			loop
-				labels.add (labs.item.label);
+				labels.extend (labs.item.label);
 				labs.forth
 			end;
 		end;
@@ -85,7 +85,7 @@ feature
 				arguments.after	
 			loop
 				arg := arguments.item.argument;
-				args.add (arg);
+				args.extend (arg);
 				arguments.forth
 			end;
 			from
@@ -95,7 +95,7 @@ feature
 				labels.after
 			loop
 				!!lab.make (labels.item);
-				labs.add (lab);
+				labs.extend (lab);
 				labels.forth
 			end;
 			if for_import.value then

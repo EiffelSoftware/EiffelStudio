@@ -39,25 +39,28 @@ feature
 			Result := - undoable_cmd_id
 		end;
 
-	eiffel_type: STRING is "Undoable";
+	eiffel_type: STRING is "Undoable_cmd";
 
 	make is
 		do
-			set_symbol (Command_pixmap);
+			set_symbol (Command_o_pixmap);
 			set_label (eiffel_type);
 			predefined_command_table.put (Current, identifier * -1)
 		end;
 
 	arguments: EB_LINKED_LIST [ARG] is do !!Result.make end;
 
-	labels: EB_LINKED_LIST [CMD_LABEL] is do !!Result.make end;
+	labels: EB_LINKED_LIST [CMD_LABEL] is
+		do 
+			!!Result.make;
+		end;
 
-	eiffel_inherit_text: STRING is
+	eiffel_inherit_text (rl: LINKED_LIST [STRING]): STRING is
 		local
 			temp: STRING;
 		do
 			!!Result.make (0);
-				temp := eiffel_type.duplicate;
+				temp := clone (eiffel_type);
 				temp.to_upper;
 			Result.append (temp);
 		end;
@@ -69,6 +72,7 @@ feature
 			!!Result.make (0);
 			Result.append ("%Texecute is%N%T%Tdo%N%T%Tend; -- execute%N%N");
 			Result.append ("%Tundo is%N%T%Tdo%N%T%Tend; -- undo%N%N");
+			Result.append ("%Tredo is%N%T%Tdo%N%T%Tend; -- redo%N%N");
 		end;
 
 	eiffel_creation_text (l: LINKED_LIST [STRING]): STRING is do !!Result.make (0) end;

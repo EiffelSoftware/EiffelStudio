@@ -27,9 +27,9 @@ feature
 			fn, full_path: STRING;	
 			f: UNIX_FILE
 		do
-			full_path := Commands_directory.duplicate;
+			full_path := clone (Commands_directory);
 			full_path.append ("/");
-				fn := eiffel_type.duplicate;
+				fn := clone (eiffel_type);
 				fn.to_lower;
 				fn.append (".e");
 			full_path.append (fn);

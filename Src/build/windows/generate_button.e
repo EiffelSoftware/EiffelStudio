@@ -3,7 +3,7 @@ class GENERATE_BUTTON
 
 inherit
 
-	COMMAND;
+	LICENCE_COMMAND;
 	FOCUSABLE;
 	EB_PICT_B
 		export
@@ -49,7 +49,7 @@ feature
 	
 feature {NONE}
 
-	execute (argument: ANY) is
+	work (argument: ANY) is
 		local
 			cmd: GENERATE;
 		do
@@ -58,5 +58,10 @@ feature {NONE}
 				cmd.execute (argument);
 			end;
 		end;
+	
+	continue_after_popdown (box: MESSAGE_D; ok: BOOLEAN) is
+		do
+		end;
+
 
 end

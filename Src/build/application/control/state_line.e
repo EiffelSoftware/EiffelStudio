@@ -31,6 +31,7 @@ inherit
 			{NONE} all
 		end;
 			
+
 creation
 
 	make
@@ -114,6 +115,17 @@ feature
 			end;
 			set_from_points (point1, point2);
 		end; -- calculate
+
+	display_point (point: COORD_XY_FIG; s: STRING) is
+		do
+			io.putstring (s);
+			io.putstring (" : ");
+			io.putint(point.x);
+			io.putstring (" : ");
+			io.putint (point.y);
+			io.new_line;
+
+		end;
 
 	set_elements (s: like source; d: like destination) is
 			-- Set source to `s' and destination to `d'.
@@ -226,7 +238,7 @@ feature {NONE} -- Stone
 		do
 		end;
 
-feature {NONE}
+feature 
 
 	selection_square: SQUARE;
 			-- The selection square

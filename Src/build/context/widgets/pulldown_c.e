@@ -11,7 +11,7 @@ inherit
 			reset_modified_flags as menu_reset_modified_flags,
 			context_initialization as old_context_initialization
 		redefine
-			set_visual_name, option_list, widget	
+			set_visual_name, option_list, widget
 		end;
 
 	MENU_C
@@ -19,11 +19,10 @@ inherit
 			set_visual_name, context_initialization, copy_attributes, 
 			undo_cut, cut, option_list, widget, reset_modified_flags
 		select
-			cut, undo_cut, copy_attributes, context_initialization,
+			cut, undo_cut, copy_attributes, context_initialization, 
 			reset_modified_flags
-		end
-
-
+		end;
+	
 
 	
 feature 
@@ -48,12 +47,12 @@ feature
 		end;
 
 	set_text (a_string: STRING) is
-        do
-            text_modified := True;
-            widget.set_text (a_string);
-            visual_name := a_string.duplicate;
-            update_tree_element
-        end;
+		do
+			text_modified := True;
+			widget.set_text (a_string);
+			visual_name := clone (a_string);
+			update_tree_element
+		end;
 
 	text: STRING is
 		do
@@ -105,6 +104,56 @@ feature
 		do
 			old_undo_cut;
 			widget.button.set_managed (True);
+		end;
+
+	forbid_recompute_size is
+		deferred
+		end;
+
+
+	allow_recompute_size is
+		deferred
+		end;
+
+
+	widget_set_center_alignment is
+		deferred
+		end;
+
+	widget_set_left_alignment is
+		deferred
+		end;
+
+	resize_policy_disabled: BOOLEAN;
+
+	resize_policy_disabled_modified: BOOLEAN;
+
+	disable_resize_policy (flag: BOOLEAN) is
+		do
+			resize_policy_disabled_modified := True;
+			resize_policy_disabled := flag;
+			if flag then
+				forbid_recompute_size;
+					-- the current size must be saved
+				size_modified := True;
+			else
+				allow_recompute_size
+			end;
+		end;
+
+	left_alignment: BOOLEAN;
+
+	left_alignment_modified: BOOLEAN;
+
+	set_left_alignment (flag: BOOLEAN) is
+		do
+			left_alignment_modified := True;
+			left_alignment := flag;
+			if flag then
+				widget_set_left_alignment
+			else
+				widget_set_center_alignment
+			end
 		end;
 
 end

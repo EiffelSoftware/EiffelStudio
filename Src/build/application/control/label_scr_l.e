@@ -84,9 +84,9 @@ feature
 		require else
 			not_void_l: not (l = Void)
 		do
-			l.start;
-			label_names := l.duplicate (l.count);	
-			list_merge_right (l);
+				l.start;
+				label_names := l.duplicate (l.count);	
+				list_merge_right (l);
 		end;
 
 feature {NONE}

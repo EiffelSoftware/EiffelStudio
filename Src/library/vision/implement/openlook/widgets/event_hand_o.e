@@ -1,12 +1,7 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                      (805) 685-1006                         --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -17,8 +12,7 @@ inherit
 	LINKED_LIST [COMMAND_EXEC]
 		rename
 			make as linked_list_make,
-			remove as list_remove,
-			add as list_add
+			remove as list_remove
 		export
 			{NONE} all
 		end;
@@ -106,7 +100,9 @@ feature
 		do
 			!!command_info.make (a_command, argument);
 			start;
-			search_equal (command_info);
+			compare_objects;
+			search (command_info);
+			compare_references;
 			if not off then
 				list_remove;
 				is_removed := true
@@ -122,3 +118,17 @@ feature {NONE} -- External features
 
 end
 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

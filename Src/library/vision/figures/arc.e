@@ -1,12 +1,7 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 indexing
 
+	copyright: "See notice at end of class";
     date: "$Date$";
     revision: "$Revision$"
 
@@ -14,7 +9,10 @@ class ARC
 
 inherit
 
-    	OPEN_FIG;
+    	OPEN_FIG
+			redefine
+				conf_recompute
+			end;
 
     	PATH
 			rename
@@ -24,22 +22,27 @@ inherit
     	ENDED;
 
     	ANGLE_ROUT
+			export
+				{NONE} all
+			end;
 
 creation
 
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make is
 			-- Create current arc.
         	do
-            		path_make;
-            		!! center;
-            		angle2 := 360
-        	end;
+				init_fig (Void);
+            	path_make ;
+            	!! center;
+				angle1 := 0;
+				angle2 := 360;
+       		end;
 
-feature
+feature -- Access
 
     	angle1: REAL;
             	-- Angle which specifies start position of
@@ -53,24 +56,7 @@ feature
     	center: COORD_XY_FIG;
             		-- Center of the arc
 
-    	draw is
-            		-- draw the arc.
-        	do
-            		if drawing.is_drawable then
-                		drawing.set_cap_style (cap_style);
-                		set_drawing_attributes (drawing);
-                		drawing.draw_arc (center, radius1, radius2, angle1, angle2,
-						orientation, -1)
-            		end
-        	end;
-
-    	is_surimposable (other: like Current): BOOLEAN is
-            		-- Is `other' surimposable to current arc ?
-            		--| not done
-        	do
-        	end;
-
-    	orientation: REAL;
+	orientation: REAL;
             	-- Angle which specifies the position of the first ray
             	-- (length `radius1') relative to the three-o'clock position
             	-- from the center
@@ -93,24 +79,28 @@ feature
     	radius2: INTEGER;
             	-- Second radius of the arc
 
-    	set_angle1 (an_angle: like angle1) is
+feature -- Modification & Insertion
+
+	set_angle1 (an_angle: like angle1) is
             		-- Set angle1 to `an_angle'._
         	require
             		angle1_smaller_than_360: an_angle < 360;
             		angle1_positive: an_angle >= 0
         	do
-            		angle1 := an_angle
+            		angle1 := an_angle;
+			set_conf_modified
         	ensure
             		angle1 = an_angle
         	end;
 
-    	set_angle2 (an_angle: like angle2) is
+	set_angle2 (an_angle: like angle2) is
             		-- Set angle2 to `an_angle'.
         	require
             		angle2_smaller_than_360: an_angle <= 360;
             		angle2_positive: an_angle >= 0
         	do
-            		angle2 := an_angle
+            		angle2 := an_angle;
+					set_conf_modified
         	ensure
             		angle2 = an_angle
         	end;
@@ -120,7 +110,8 @@ feature
         	require
             		a_center_exists: not (a_center = Void)
         	do
-            		center := a_center
+            		center := a_center;			
+					set_conf_modified
         	ensure
             		center = a_center
         	end;
@@ -131,7 +122,8 @@ feature
             		orientation_smaller_than_360: an_orientation < 360;
             		orientation_positive: an_orientation >= 0
         	do
-            		orientation := an_orientation
+            		orientation := an_orientation;
+					set_conf_modified
         	ensure
             		orientation = an_orientation
         	end;
@@ -139,7 +131,7 @@ feature
     	set_origin_to_center is
             		-- Set origin to `center'.
         	do
-            		origin_user_type := 2
+            		origin_user_type := 2;
         	ensure
             		origin.is_surimposable (center)
         	end;
@@ -149,7 +141,8 @@ feature
         	require
             		a_radius_positive: a_radius >= 0
         	do
-            		radius1 := a_radius
+            		radius1 := a_radius;
+					set_conf_modified
         	ensure
             		radius1 = a_radius
         	end;
@@ -159,7 +152,8 @@ feature
         	require
             		a_radius_positive: a_radius >= 0
         	do
-            		radius2 := a_radius
+            		radius2 := a_radius;
+					set_conf_modified
         	ensure
             		radius2 = a_radius
         	end;
@@ -172,7 +166,8 @@ feature
             		a_positive: a >= 0
         	do
             		center.xyrotate (a, px, py);
-            		orientation := mod360 (orientation+a)
+            		orientation := mod360 (orientation+a);
+					set_conf_modified
         	end;
 
     	xyscale (f: REAL; px, py: INTEGER) is
@@ -182,14 +177,58 @@ feature
         	do
             		center.xyscale (f, px, py);
             		radius1 := real_to_integer (radius1*f);
-            		radius2 := real_to_integer (radius2*f)
+            		radius2 := real_to_integer (radius2*f);
+					set_conf_modified
         	end;
 
     	xytranslate (vx, vy: INTEGER) is
             		-- Translate by `vx' horizontally and `vy' vertically.
         	do
-            		center.xytranslate (vx, vy)
+            		center.xytranslate (vx, vy);
+					set_conf_modified
         	end;
+
+feature -- Output
+
+    	draw is
+            		-- draw the arc.
+        	do
+            		if drawing.is_drawable then
+                		drawing.set_cap_style (cap_style);
+                		set_drawing_attributes (drawing);
+                		drawing.draw_arc (center, radius1, radius2, angle1, angle2,
+						orientation, -1)
+            		end
+        	end;
+
+	
+
+feature -- Status report
+
+    	is_surimposable (other: like Current): BOOLEAN is
+            		-- Is `other' surimposable to current arc ?
+            		--| not done
+        	do
+        	end;
+
+feature {CONFIGURE_NOTIFY} -- Updating
+
+	conf_recompute is
+		local
+			diameter: INTEGER;
+			radius: INTEGER;
+		do
+			if radius1 > radius2 then
+				radius := radius1;	
+			else
+				radius := radius2;
+			end;
+			diameter := radius + radius;
+			surround_box.set (center.x - radius, center.y - radius, diameter, diameter);
+			unset_conf_modified
+		end;
+
+
 
 invariant
 
@@ -204,4 +243,18 @@ invariant
     	angle2 <= 360;
     	angle2 >= 0
 
-end
+end -- class ARC
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

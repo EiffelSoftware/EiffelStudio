@@ -24,11 +24,23 @@ feature
 feature {NONE}
 
 	create_context (a_context: CONTEXT; a_parent: COMPOSITE_C) is
+		local
+			con_group: GROUP_C;
 		do
 			a_context.set_internal_name (internal_name);
 			a_context.set_parent (a_parent);
 			a_context.set_retrieved_node (Current);
-			context_table.put (a_context, identifier);
+			if context_table.has (identifier) then
+				a_context.set_next_identifier;
+				if for_save.value then
+					identifier_changed_table.put (a_context.identifier, a_context.full_name);
+				elseif for_import.value then
+					identifier_changed_table.put (a_context.identifier, full_name);
+				end;
+			else
+				a_context.set_identifier (identifier);
+			end;
+			context_table.put (a_context, a_context.identifier);
 		end;
 
 	
@@ -53,7 +65,14 @@ feature {NONE}
 	
 feature 
 
+	full_name: STRING;
+
 	arity: INTEGER;
+	
+	set_name_change (n: STRING) is
+		do
+			name_changed_table. put (n, full_name);
+		end;
 
 	
 feature {NONE}
@@ -121,6 +140,11 @@ feature {NONE}
 			internal_name := node.entity_name;
 			visual_name := node.visual_name;
 			identifier := node.identifier;
+			--if context_table.has (identifier) then
+				--full_name := context_table.item (identifier).full_name;
+			--else
+				full_name := node.full_name;
+			--end;
 			arity := node.arity;
 			x := node.x;
 			y := node.y;

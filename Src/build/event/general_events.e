@@ -67,12 +67,12 @@ feature {NONE}
 
 	append_general_events is
 		do
-			add (widget_destroy);
-			add (mouse_enter);
-			add (key_press);
-			add (key_release);
-			add (mouse_leave);
-			add (pointer_motion);
+			extend (widget_destroy);
+			extend (mouse_enter);
+			extend (key_press);
+			extend (key_release);
+			extend (mouse_leave);
+			extend (pointer_motion);
 		end;
 	
 feature {CATALOG}

@@ -1,20 +1,130 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                      (805) 685-1006                                --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- LOGICAL: Logical functions.
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class LOGICAL 
 
-feature {NONE}
+
+feature -- Modification & Insertion 
+
+	set_and_inverted_mode is
+			-- Set drawing logical function to
+			-- (NOT source) AND destination.
+		do
+			logical_function_mode := GXandInverted;
+		end;
+
+	set_and_mode is
+			-- Set drawing logical function to
+			-- source AND destination
+		do
+			logical_function_mode := GXand;
+		end;
+
+	set_and_reverse_mode is
+			-- Set drawing logical function to
+			-- source AND (NOT destination)
+		do
+			logical_function_mode := GXandReverse;
+		end;
+
+	set_clear_mode is
+			-- Set drawing logical function to
+			-- 0.
+		do
+			logical_function_mode := GXclear;
+		end;
+
+	set_copy_inverted_mode is
+			-- Set drawing logical function to
+			-- (NOT source).
+		do
+			logical_function_mode := GXcopyInverted;
+		end;
+
+	set_copy_mode is
+			-- Set drawing logical function to
+			-- source.
+		do
+			logical_function_mode := GXcopy;
+		end;
+
+	set_equiv_mode is
+			-- Set drawing logical function to
+			-- (NOT source) XOR destination.
+		do
+			logical_function_mode := GXequiv;
+		end;
+
+	set_invert_mode is
+			-- Set drawing logical function to
+			-- (NOT destination).
+		do
+			logical_function_mode := GXinvert;
+		end;
+
+	set_nand_mode is
+			-- Set drawing logical function to
+			-- (NOT source) OR (NOT destination).
+		do
+			logical_function_mode := GXnand;
+		end;
+
+	set_no_op_mode is
+			-- Set drawing logical function to
+			-- destination.
+		do
+			logical_function_mode := GXnoop;
+		end;
+
+	set_nor_mode is
+			-- Set drawing logical function to
+			-- (NOT source) AND (NOT destination).
+		do
+			logical_function_mode := GXnor;
+		end;
+
+	set_one_mode is
+			-- Set drawing logical function to
+			-- 1.
+		do
+			logical_function_mode := GXset;
+		end;
+
+	set_or_inverted_mode is
+			-- Set drawing logical function to
+			-- (NOT source) OR destination.
+		do
+			logical_function_mode := GXorInverted;
+		end;
+
+	set_or_mode is
+			-- Set drawing logical function to
+			-- source OR destination.
+		do
+			logical_function_mode := GXor;
+		end;
+
+	set_or_reverse_mode is
+			-- Set drawing logical function to
+			-- source OR (NOT destination).
+		do
+			logical_function_mode := GXorReverse;
+		end;
+
+	set_xor_mode is
+			-- Set drawing logical function to
+			-- source XOR destination.
+		do
+			logical_function_mode := GXxor;
+		end;
+
+feature {NONE} -- Access
 
 	GXand: INTEGER is 1;
 			-- X code to define logical function
@@ -82,118 +192,18 @@ feature {NONE}
 	logical_function_mode: INTEGER;
 			-- Logical function to be used in Graphic Context.
 
-feature 
+end -- class LOGICAL
 
-	set_and_inverted_mode is
-			-- Set drawing logical function to
-			-- (NOT source) AND destination.
-		do
-			logical_function_mode := GXandInverted
-		end;
 
-	set_and_mode is
-			-- Set drawing logical function to
-			-- source AND destination
-		do
-			logical_function_mode := GXand
-		end;
-
-	set_and_reverse_mode is
-			-- Set drawing logical function to
-			-- source AND (NOT destination)
-		do
-			logical_function_mode := GXandReverse
-		end;
-
-	set_clear_mode is
-			-- Set drawing logical function to
-			-- 0.
-		do
-			logical_function_mode := GXclear
-		end;
-
-	set_copy_inverted_mode is
-			-- Set drawing logical function to
-			-- (NOT source).
-		do
-			logical_function_mode := GXcopyInverted
-		end;
-
-	set_copy_mode is
-			-- Set drawing logical function to
-			-- source.
-		do
-			logical_function_mode := GXcopy
-		end;
-
-	set_equiv_mode is
-			-- Set drawing logical function to
-			-- (NOT source) XOR destination.
-		do
-			logical_function_mode := GXequiv
-		end;
-
-	set_invert_mode is
-			-- Set drawing logical function to
-			-- (NOT destination).
-		do
-			logical_function_mode := GXinvert
-		end;
-
-	set_nand_mode is
-			-- Set drawing logical function to
-			-- (NOT source) OR (NOT destination).
-		do
-			logical_function_mode := GXnand
-		end;
-
-	set_no_op_mode is
-			-- Set drawing logical function to
-			-- destination.
-		do
-			logical_function_mode := GXnoop
-		end;
-
-	set_nor_mode is
-			-- Set drawing logical function to
-			-- (NOT source) AND (NOT destination).
-		do
-			logical_function_mode := GXnor
-		end;
-
-	set_one_mode is
-			-- Set drawing logical function to
-			-- 1.
-		do
-			logical_function_mode := GXset
-		end;
-
-	set_or_inverted_mode is
-			-- Set drawing logical function to
-			-- (NOT source) OR destination.
-		do
-			logical_function_mode := GXorInverted
-		end;
-
-	set_or_mode is
-			-- Set drawing logical function to
-			-- source OR destination.
-		do
-			logical_function_mode := GXor
-		end;
-
-	set_or_reverse_mode is
-			-- Set drawing logical function to
-			-- source OR (NOT destination).
-		do
-			logical_function_mode := GXorReverse
-		end;
-
-	set_xor_mode is
-			-- Set drawing logical function to
-			-- source XOR destination.
-		do
-			logical_function_mode := GXxor
-		end;
-
-end
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

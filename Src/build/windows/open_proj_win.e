@@ -23,12 +23,17 @@ feature
 			cmd: OPEN_PROJECT
 		do
 			if main_panel.project_initialized then
-                context_catalog.clear;
-                command_catalog.clear;
-                app_editor.clear;
+				context_catalog.clear;
+				command_catalog.clear;
+				command_catalog.initial_pages;
+				app_editor.clear;
 			end;
 			!!cmd;
-			cmd.execute (selected_file);
+			if selected_file.empty then
+				cmd.execute (directory);
+			else
+				cmd.execute (selected_file);
+			end;
 		end;
 
 end	

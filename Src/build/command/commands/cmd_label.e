@@ -79,5 +79,14 @@ feature
 		do
 			Result := not (parent_type = Void)
 		end;
+
+	inh_renamed: BOOLEAN;
+
+	set_renamed  is
+		require
+			must_be_inherited: inherited;
+		do
+			inh_renamed := True;
+		end;
  
 end

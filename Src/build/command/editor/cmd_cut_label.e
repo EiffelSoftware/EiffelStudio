@@ -12,7 +12,7 @@ inherit
 
 	CMD_CUT
 		redefine
-			element
+			element, undo
 		end
 	
 feature {NONE}
@@ -24,4 +24,24 @@ feature {NONE}
 			Result := edited_command.labels
 		end;
 
+
+	undo is
+		do
+			edited_command.save_old_template;
+			if
+				index = 1 and list.empty
+			then
+				list.extend (element)
+			else
+				if edited_command.label_exist (element.label) then
+					list.go_i_th (index - 1);
+					list.add_right (element);
+					edited_command.refresh_parent;
+				else
+					list.go_i_th (index - 1);
+					list.add_right (element);
+				end;
+			end;
+			edited_command.update_text
+		end; -- undo
 end

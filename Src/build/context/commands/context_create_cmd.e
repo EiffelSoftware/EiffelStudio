@@ -74,7 +74,7 @@ feature {NONE}
 					context.set_grouped (False);
 					group := context.group;
 					group.start;
-					group.search_same (context);
+					group.search (context);
 					group.remove;
 				end;
 				a_parent := context.parent;

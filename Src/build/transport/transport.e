@@ -3,7 +3,7 @@ class TRANSPORT
 
 inherit
 
-	COMMAND;
+	LICENCE_COMMAND;
 
 	WINDOWS
 		export
@@ -12,12 +12,16 @@ inherit
 	
 feature 
 
-	execute (argument: STONE) is
+	work (argument: STONE) is
 		do
 			if argument.transportable then
 				argument.update_before_transport;
 				main_panel.base.transport (argument)
 			end
+		end;
+
+	continue_after_popdown (box: MESSAGE_D; ok: BOOLEAN) is
+		do 
 		end;
 
 end

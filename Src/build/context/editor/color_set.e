@@ -37,7 +37,7 @@ feature {NONE}
 			temp: STRING;
 			top_widget, left_widget: EB_COLOR;
 		do
-			temp := EiffelBuild_directory.duplicate;
+			temp := clone (EiffelBuild_directory);
 			temp.append ("/Bitmaps/color_names");
 			!!file_name.make (0);
 			file_name.from_string (temp);

@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- General class which manipulates X Graphic Context.
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -35,6 +30,7 @@ feature
 			void_pointer: POINTER
 		do
 			graphic_context := x_create_gc (display_pointer, root_window_object, 0, void_pointer);
+			set_gc_values;
 		end;
 
 	destroy_gc is
@@ -67,7 +63,6 @@ feature
 		do
 			Result := (window_object /= void_pointer)
 		end;
-
 	
 feature {NONE}
 
@@ -100,7 +95,9 @@ feature
 			arc_style <= 1
 		
 		do
-			x_set_arc_mode (display_pointer, graphic_context, arc_style)
+			if arc_style /= gc_arc_style then
+				x_set_arc_mode (display_pointer, graphic_context, arc_style);
+			end;
 		end;
 
 	set_cap_style (cap_style: INTEGER) is
@@ -110,7 +107,9 @@ feature
 			cap_style <= 3
 		
 		do
-			c_set_cap_style (display_pointer, graphic_context, cap_style)
+			if cap_style /= gc_cap_style then
+				c_set_cap_style (display_pointer, graphic_context, cap_style);
+			end;
 		end; 
 
 	set_clip (a_clip: CLIP) is
@@ -140,7 +139,7 @@ feature
 			until
 				a_dash.off
 			loop
-				an_array_of_char.append_character (charconv (a_dash.item));
+				an_array_of_char.extend (charconv (a_dash.item));
 				a_dash.forth
 			end;
 			ext_name := an_array_of_char.to_c;
@@ -152,7 +151,9 @@ feature
 			-- Set the style of fill.
 		
 		do
-			x_set_fill_style (display_pointer, graphic_context, a_fill_style)
+			if a_fill_style /= gc_fill_style then
+				x_set_fill_style (display_pointer, graphic_context, a_fill_style);
+			end;
 		end;
 
 	
@@ -181,7 +182,9 @@ feature
 			join_style <= 2
 		
 		do
-			c_set_join_style (display_pointer, graphic_context, join_style)
+			if join_style /= gc_join_style then
+				c_set_join_style (display_pointer, graphic_context, join_style);
+			end;
 		end;
 
 	set_line_style (line_style: INTEGER) is
@@ -191,7 +194,9 @@ feature
 			line_style <= 2
 		
 		do
-			c_set_line_style (display_pointer, graphic_context, line_style);
+			if line_style /= gc_line_style then
+				c_set_line_style (display_pointer, graphic_context, line_style);
+			end;
 		end;
 	
 feature {NONE}
@@ -202,7 +207,9 @@ feature {NONE}
 			width_large_enough: new_width >= 0
 		
 		do
-			c_set_line_width (display_pointer, graphic_context, new_width)
+			if new_width /= gc_line_width then
+				c_set_line_width (display_pointer, graphic_context, new_width);
+			end;
 		end;
 	
 feature 
@@ -214,7 +221,9 @@ feature
 			a_mode <= 15
 		
 		do
-			x_set_function (display_pointer, graphic_context, a_mode)
+			if a_mode /= gc_logical_mode then
+				x_set_function (display_pointer, graphic_context, a_mode);
+			end;
 		end; 
 
 	set_no_clip is
@@ -262,6 +271,35 @@ feature
 					graphic_context, 
 					a_tile_implementation.resource_pixmap (screen))
 		end;
+
+feature {NONE} -- Access
+
+	set_gc_values is
+		do
+			gc_arc_style 		:= -1;
+			gc_cap_style 		:= -1;
+			gc_fill_style 		:= -1;
+			gc_join_style 		:= -1;
+			gc_line_style 		:= -1;
+			gc_line_width 		:= -1;
+			gc_logical_mode 	:= -1;
+		end;
+
+    gc_arc_style: INTEGER;
+
+	gc_cap_style: INTEGER;
+
+	gc_fill_style: INTEGER;
+
+	gc_join_style: INTEGER;
+
+	gc_line_style: INTEGER;
+
+	gc_line_width: INTEGER;
+
+	gc_logical_mode: INTEGER;
+
+	
 
 feature {NONE}
 
@@ -364,3 +402,17 @@ feature {NONE} -- External features
 		end;
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

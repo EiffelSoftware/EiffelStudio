@@ -72,7 +72,7 @@ feature
 				!!Result.make (identifier, screen);
 				mp.restore;
 			end;
-			active_editors.add (Result);
+			active_editors.extend (Result);
 		end;
 
 	has (ed: TOP_SHELL): BOOLEAN is
@@ -102,7 +102,7 @@ feature
 				if free_list.count > 5 then
 					ed.destroy
 				else
-					free_list.add (ed)
+					free_list.extend (ed)
 				end
 			end
 		end;
@@ -129,11 +129,6 @@ feature
 				active_editors.after
 			loop
 				ed := active_editors.item;
-				io.putstring ("in EDITOR_MGR--- x: ");
-				io.putint (ed.x);
-				io.putstring ("y: ");
-				io.putint (ed.y);
-				io.new_line;
 				ed.show;
 				ed.set_x_y (ed.x, ed.y);
 				active_editors.forth

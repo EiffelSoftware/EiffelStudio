@@ -124,7 +124,7 @@ feature
 	set_text (s: STRING) is
 		do
 			text_modified := True;
-			visual_name := s.duplicate;
+			visual_name := clone (s);
 			widget_set_text (label);
 			update_tree_element
 		end

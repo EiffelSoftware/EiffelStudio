@@ -20,11 +20,11 @@ inherit
 				draw, found, off, remove, empty, 
 				has, remove_selected, after, forth, 
 				start, find, previous_point, 
-				remove_all_occurrences, figure, 
+				prune_all, figure, 
 				disable_drawing, enable_drawing,
 				search, wipe_out
 		redefine
-			execute, select_figure
+			execute
 		select
 			set_state_stone, set_stone, release_action,
 			move_action, previous_point, figure

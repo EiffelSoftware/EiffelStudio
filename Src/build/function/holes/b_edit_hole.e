@@ -10,7 +10,8 @@ inherit
 			identifier as oui_identifier,
 			make_visible as make_icon_visible
 		redefine
-			process_stone, function_editor, stone
+			process_stone, function_editor, stone,
+			compatible
 		end;
 
 	FUNC_EDIT_HOLE
@@ -19,7 +20,8 @@ inherit
 			button as source,
 			identifier as oui_identifier
 		redefine
-			process_stone, function_editor, make_visible, stone
+			process_stone, function_editor, make_visible, stone,
+			compatible
 		select
 			make_visible
 		end;
@@ -45,6 +47,12 @@ feature {NONE}
 	stone: BEHAVIOR_STONE;
 
 	function_editor: BEHAVIOR_EDITOR;
+
+	compatible (s: BEHAVIOR_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 
 	
 feature 

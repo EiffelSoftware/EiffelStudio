@@ -1,14 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                      (805) 685-1006                                --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- GEOMETRIC_OP: Figures implementation for X.
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -19,9 +14,14 @@ inherit
 	BASIC_ROUTINES
 		export
 			{NONE} all
-		end
+		end 
 
-feature 
+feature -- Access
+
+	origin: COORD_XY_FIG is
+			-- Origin of figure (used by `self_rotate' and `self_scale')
+		deferred
+		end;
 
 	contains (p: COORD_XY_FIG):BOOLEAN is
 			-- Is `p' in Current ?
@@ -30,25 +30,9 @@ feature
 			Result := false;
 		end;
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the figure surimposable to `other' ?
-		deferred
-		end;
+	
 
-	origin: COORD_XY_FIG is
-			-- Origin of figure (used by `self_rotate' and `self_scale')
-		deferred
-		end;
-
-feature {NONE}
-
-	origin_user: like origin;
-			-- User definition of `origin' when `origin_user_type' is 1
-
-	origin_user_type: INTEGER;
-			-- Type of origin typed by the user
-
-feature 
+feature -- Modification & Insertion
 
 	rotate (a: REAL; p: like origin) is
 			-- Rotate figure by `a' relative to `p'.
@@ -130,9 +114,42 @@ feature
 		deferred
 		end;
 
+feature -- Status report
+
+	is_surimposable (other: like Current): BOOLEAN is
+			-- Is the figure surimposable to `other' ?
+		deferred
+		end;
+
+
+
+
+feature {NONE} -- Access
+
+	origin_user: like origin;
+			-- User definition of `origin' when `origin_user_type' is 1
+
+	origin_user_type: INTEGER;
+			-- Type of origin typed by the user
+
+
 invariant
 
 	origin_user_type >= 0;
 	(origin_user_type = 1) implies (not (origin_user = Void))
 
-end
+end -- GEOMETRIC_OP
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Graphic history based on a linear list of undoable commands, represented on
 -- screen with a popup containing a scroll list to show the previous commands
@@ -23,13 +17,13 @@ inherit
 	LINKED_LIST [UNDOABLE]
 		rename
 			make as linked_list_make,
-			go as list_go,
+			go_i_th as list_go_i_th,
 			back as list_back,
 			forth as list_forth,
 			wipe_out as list_wipe_out
 		export
 			{NONE} all;
-			{ANY} offleft, isfirst, islast, count, position, first, last, i_th
+			{ANY} before, isfirst, islast, count, index, first, last, i_th
 		end
 
 creation
@@ -61,7 +55,7 @@ feature
 	back is
 			-- Move cursor backward one position.
 		require
-			not_offleft: position > 0
+			not_offleft: index > 0
 		do
 			item.undo;
 			list_back;
@@ -80,7 +74,7 @@ feature
 	forth is
 			-- Move cursor forward one position.
 		require
-			not_empty_nor_islast: count > 0 and then position < count
+			not_empty_nor_islast: count > 0 and then index < count
 		do
 			list_forth;
 			item.redo;
@@ -93,28 +87,28 @@ feature
 				history_windows.forth
 			end
 		ensure
-			(position >= 1) and (position <= count)
+			(index >= 1) and (index <= count)
 		end;
 
-	go (i: INTEGER) is
+	go_i_th (i: INTEGER) is
 			-- Move cursor to position `i'.
 		require
 			index_large_enough: i >= 0;
 			index_small_enough: i <= count;
 			not_zero_unless_empty: not empty or i = 0
 		do
-			if i > position then
+			if i > index then
 				from
 				until
-					i = position
+					i = index
 				loop
 					list_forth;
 					item.redo
 				end
-				elseif i < position then
+				elseif i < index then
 				from
 				until
-					i = position
+					i = index
 				loop
 					item.undo;
 					list_back
@@ -125,11 +119,11 @@ feature
 			until
 				history_windows.off
 			loop
-				history_windows.item.go (i);
+				history_windows.item.go_i_th (i);
 				history_windows.forth
 			end
 		ensure
-			position = i
+			index = i
 		end;
 
 feature {NONE}
@@ -180,7 +174,7 @@ feature {HISTORY_L_W}
 		require
 			not (history_window = Void)
 		do
-			history_windows.remove_all_occurrences (history_window)
+			-- not currently implemented
 		end;
 
 feature 
@@ -201,6 +195,20 @@ feature
 
 invariant
 
-	not_offright_unless_empty: (not empty) implies (not offright)
+	not_offright_unless_empty: (not empty) implies (not after)
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -124,7 +124,7 @@ feature {NONE}
 			!!scale_c;
 			!!scale.make (scale_c.eiffel_type, Current);
 			scale.show_value (true);
-			scale.set_size (40, 80);
+			scale.set_size (15, 80);
 			!!scale_type.make (S_cale_name, scale_c);
 			scale_type.initialize_callbacks (scale);
 

@@ -7,12 +7,12 @@ inherit
 		rename
 			create_context as old_create_context
 		redefine
-			is_group_composite, set_size		
+			is_group_composite, set_size, full_name	
 		end;
 
 	COMPOSITE_C
 		redefine
-			create_context, is_group_composite, set_size
+			create_context, is_group_composite, set_size, full_name
 		select
 			create_context
 		end
@@ -21,6 +21,13 @@ inherit
 
 	
 feature 
+
+
+	full_name: STRING is
+			-- full name of the context i.e. with root, group, ...
+		do
+			Result := intermediate_name;
+		end;
 
 	is_group_composite: BOOLEAN is
 		do

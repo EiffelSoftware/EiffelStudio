@@ -11,15 +11,15 @@ inherit
 feature 
 
 	help_text: STRING is
-        local
-            full_path: FILE_NAME;
-            help_file: UNIX_FILE;
+		local
+			full_path: FILE_NAME;
+			help_file: UNIX_FILE;
 			temp: STRING;
         do
             !!full_path.make (0);
             full_path.append (EiffelBuild_directory);
             full_path.append ("/help/");
-			temp := help_file_name.duplicate;
+			temp := clone (help_file_name);
 			temp.to_lower;
             full_path.append (temp);
             if
@@ -29,7 +29,7 @@ feature
                 help_file.open_read;
                 from
                     help_file.readstream (256);
-                    Result := help_file.laststring.duplicate
+                    Result := clone (help_file.laststring)
                 until
                     help_file.end_of_file
                 loop

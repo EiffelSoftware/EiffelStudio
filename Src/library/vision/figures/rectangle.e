@@ -1,17 +1,17 @@
---|---------------------------------------------------------------
---| Copyright (C) Interactive Software Engineering, Inc.        --
---|  270 Storke Road, Suite 7 Goleta, California 93117          --
---|                      (805) 685-1006                         --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- RECTANGLE: Description of a rectangle.
+
+indexing
+	copyright: "See notice at end of class"
 
 class RECTANGLE 
 
 inherit
 
-	CLOSED_FIG;
+	CLOSED_FIG
+		redefine
+			conf_recompute
+		end;
 
 	JOINABLE;
 
@@ -22,9 +22,39 @@ inherit
 
 creation
 
-	make
+	make, make_from_closure
 
-feature 
+feature -- Initialization
+
+	make is
+			-- Create a rectangle.
+		do
+			init_fig (Void);
+			!! upper_left;
+			!! path.make ;
+			!! interior.make ;
+			interior.set_no_op_mode;
+			width := 1;
+			height := 1;
+			orientation := 0;
+		end; 
+
+	make_from_closure (cl: CLOSURE) is
+			-- Create a rectangle containing `cl`
+		local
+			w,h : INTEGER;
+		do
+			make ;
+			if not cl.empty then
+				upper_left := deep_clone (cl.up_left);
+				w := cl.down_right.x - cl.up_left.x;
+				h := cl.down_right.y - cl.up_left.y;
+				width := w;
+				height := h
+			end
+		end;
+
+feature -- Access 
 
 	center: COORD_XY_FIG is
 			-- Center of the rectangle.
@@ -40,47 +70,14 @@ feature
 			Result.set (upper_left.x+real_to_integer (half_width*v_cos+half_height*v_sin), upper_left.y-real_to_integer (half_width*v_sin-half_height*v_cos))
 		end;
 
-	make is
-			-- Create a rectangle.
-		do
-			!! upper_left;
-			width := 1;
-			height := 1
-		end; 
-
-	draw is
-			-- Draw the rectangle.
-		do
-			if drawing.is_drawable then
-				drawing.set_join_style (join_style);
-				if not (interior = Void) then
-					interior.set_drawing_attributes (drawing);
-					drawing.fill_rectangle (center, width, height, orientation)
-				end;
-				if not (path = Void) then
-					path.set_drawing_attributes (drawing);
-					drawing.draw_rectangle (center, width, height, orientation)
-				end
-			end
-		end;
-
 	height: INTEGER;
 			-- Height of rectangle
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the current rectangle surimposable to `other' ?
-		require else
-			other_exists: not (other = Void)
-		do
-			Result := upper_left.is_surimposable (other.upper_left) and (width = other.width) and (height = other.height)
-		end; 
+	upper_left: COORD_XY_FIG;
+			-- Upper left coin of the rectangle
 
-feature {NONE}
-
-	orientation: REAL;
-			-- Orientation in degree of the rectangle
-
-feature 
+	width: INTEGER;
+			-- Width of rectangle
 
 	origin: COORD_XY_FIG is
 			-- Origin of rectangle
@@ -97,35 +94,36 @@ feature
 			end
 		end;
 
+feature -- Modification & Insertion 
+
+	
 	set_height (new_height: like height) is
 			-- Set `height' to `new_height'.
 		require
 			new_height_positive: new_height >= 0
 		do
-			height := new_height
+			height := new_height;
+			set_conf_modified
 		ensure
 			height = new_height
 		end;
 
-feature {NONE}
-
 	set_orientation (new_orientation: like orientation) is
 			-- Set `orientation' to `new_orientation'.
 		require
-			orientation_positive: orientation >= 0;
-			orientation_smaller_than_360: orientation < 360
+			orientation_positive: new_orientation >= 0;
+			orientation_smaller_than_360: new_orientation < 360
 		do
-			orientation := new_orientation
+			orientation := new_orientation;
+			set_conf_modified
 		ensure
 			orientation = new_orientation
 		end;
 
-feature 
-
 	set_origin_to_center is
 			-- Set origin to `center'.
 		do
-			origin_user_type := 3
+			origin_user_type := 3;
 		ensure then
 			origin.is_surimposable (center)
 		end;
@@ -133,7 +131,7 @@ feature
 	set_origin_to_upper_left is
 			-- Set origin to upper left coiner.
 		do
-			origin_user_type := 2
+			origin_user_type := 2;
 		ensure
 			origin.is_surimposable (upper_left)
 		end;
@@ -143,7 +141,8 @@ feature
 		require
 			a_point_exists: not (a_point = Void)
 		do
-			upper_left := a_point
+			upper_left := a_point;
+			set_conf_modified
 		ensure
 			upper_left = a_point
 		end;
@@ -153,16 +152,12 @@ feature
 		require
 			new_width_positive: new_width >= 0
 		do
-			width := new_width
+			width := new_width;
+			set_conf_modified
 		ensure
 			width = new_width
 		end;
 
-	upper_left: COORD_XY_FIG;
-			-- Upper left coin of the rectangle
-
-	width: INTEGER;
-			-- Width of rectangle
 
 	xyrotate (a: REAL; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
@@ -178,7 +173,8 @@ feature
 			if orientation < 0 then
 				orientation := orientation+360
 			end;
-			upper_left.xyrotate (a, px, py)
+			upper_left.xyrotate (a, px, py);
+			set_conf_modified
 		end;
 
 	xyscale (f: REAL; px,py: INTEGER) is
@@ -188,14 +184,73 @@ feature
 		do
 			width := real_to_integer (f*width);
 			height := real_to_integer (f*height);
-			upper_left.xyscale (f, px, py)
+			upper_left.xyscale (f, px, py);
+			set_conf_modified
 		end;
 
 	xytranslate (vx, vy: INTEGER) is
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
-			upper_left.xytranslate (vx, vy)
+			upper_left.xytranslate (vx, vy);
+			set_conf_modified
 		end 
+
+feature -- Output
+
+		draw is
+			-- Draw the rectangle.
+		do
+			if drawing.is_drawable then
+				drawing.set_join_style (join_style);
+				if not (interior = Void) then
+					interior.set_drawing_attributes (drawing);
+					drawing.fill_rectangle (center, width, height, orientation)
+				end;
+				if not (path = Void) then
+					path.set_drawing_attributes (drawing);
+					drawing.draw_rectangle (center, width, height, orientation)
+				end
+			end
+		end;
+
+feature -- Status report
+	
+	is_surimposable (other: like Current): BOOLEAN is
+			-- Is the current rectangle surimposable to `other' ?
+		require else
+			other_exists: not (other = Void)
+		do
+			Result := upper_left.is_surimposable (other.upper_left) and (width = other.width) and (height = other.height)
+		end;
+
+feature {CONFIGURE_NOTIFY} -- Updating
+
+	conf_recompute is
+		local
+			v_max, v_maxdiv2: INTEGER;
+			cent: COORD_XY_FIG;
+		do
+			cent := center;
+			if height > width then
+				v_max := height;
+			else
+				v_max := width;
+			end;
+			v_max := v_max * 1415 // 1000;
+			v_maxdiv2 := v_max // 2;
+			surround_box. set (cent.x-v_maxdiv2, cent.y-v_maxdiv2 , v_max, v_max);
+			unset_conf_modified
+		end
+
+
+ 
+
+feature {NONE} -- Access
+
+	orientation: REAL;
+			-- Orientation in degree of the rectangle
+
+
 
 invariant
 
@@ -206,4 +261,18 @@ invariant
 	height >= 0;
 	not (upper_left = Void)
 
-end 
+end -- class RECTANGLE
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -98,8 +98,18 @@ feature -- Drawing area
 			circle.set_center (point);
 			circle.set_double_thickness;
 			set_initial_state_circle (circle);
-			display_states
+			display_states;
 		end; -- Create
+
+	set_default_selected is
+		do
+			figures.start;
+			if not figures.after then
+				set_selected (figures.figure);
+				display_states;
+				display_transitions;
+			end;
+		end;
 
 	set_selected (a_circle: STATE_CIRCLE) is
 			-- Deselect selected_figure and then set `a_figure' 
@@ -160,9 +170,11 @@ feature -- Drawing area
 		local
 			transition_graph: APP_GRAPH;
 		do
-			--initial_state_cirlce.set_standard_thickness;
+			if initial_state_circle /= Void then
+				initial_state_circle.set_standard_thickness;
+			end;
 			initial_state_circle := a_circle;
-			--initial_state_cirlce.set_double_thickness;
+			initial_state_circle.set_double_thickness;
 			transition_graph := transitions.graph;
 			transition_graph.set_initial_state (initial_state_circle.original_stone)
 		end; 
@@ -203,7 +215,8 @@ feature -- Drawing area
 				old_selected := state_list.selected_circle;
 				set_selected (figures.figure);
 				if selected_figure /= old_selected then
-					display_states
+					display_states;
+					display_transitions;
 				end
 			end
 		end;
@@ -247,7 +260,9 @@ feature -- State and transition list
 			-- Display transitions in the transition_list for the 
 			-- selected_state in alphabetical order.
 		do
-			transition_list.wipe_out;
+			if not transition_list.empty then
+				transition_list.wipe_out;
+			end;
 			current_label := Void;
 			transition_list.merge_right (curr_trans);
 		end;
@@ -257,7 +272,9 @@ feature -- State and transition list
 		local
 			position: INTEGER
 		do
-			state_list.wipe_out;
+			if not state_list.empty then
+				state_list.wipe_out;
+			end;
 			state_list.merge_right (states);
 			highlight_state;
 		end;
@@ -277,7 +294,6 @@ feature {NONE} -- State and transition list
 			else
 				state_list.deselect_item
 			end;
-			display_transitions;
 		end; -- highlight_state
 
 	popup_labels_window (l: STATE_LINE) is
@@ -335,7 +351,7 @@ feature {NONE}
 				if
 					not (circle = Void)
 				then	
-					Result.add (circle.text)
+					Result.extend (circle.text)
 				end;
 				figures.forth
 			end
@@ -368,6 +384,8 @@ feature
 
 	make (a_screen: SCREEN) is
 			-- Create app_editor interface 
+		local
+			contin_command: ITER_COMMAND;
 		do
 				-- **************
 				-- Create widgets
@@ -440,6 +458,9 @@ feature
 			drawing_area.set_action ("Ctrl<Btn1Down>", Current, ctrl_select_action);
 			state_list.add_selection_action (Current, set_state_action);
 			transition_list.add_selection_action (Current, set_label_action);
+			
+			!!contin_command;
+			set_delete_command (contin_command);
 		end; 
 
 	execute (argument: ANY) is
@@ -460,7 +481,8 @@ feature
 				if not figures.after then	
 					set_selected (figures.figure);
 					display_states;
-					draw_figures
+					draw_figures;
+					display_transitions;
 				end;
 			elseif
 				argument = set_state_action
@@ -471,6 +493,7 @@ feature
 					state_list.start;
 					state_list.search_equal (selected_figure.text);
 					state_list.select_item;
+					display_transitions;
 				else
 					select_state (state_list.selected_item)
 				end;

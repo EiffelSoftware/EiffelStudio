@@ -31,7 +31,7 @@ feature {NONE}
 			if 
 				namable.visual_name /= Void 
 			then	
-				old_visual_name := namable.visual_name.duplicate;
+				old_visual_name := clone (namable.visual_name);
 			end;
 		end;
 	

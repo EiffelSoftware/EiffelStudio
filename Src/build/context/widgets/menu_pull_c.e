@@ -13,22 +13,25 @@ inherit
 
 	PULLDOWN_C
 		rename
-			create_context as old_create_context,
-			cut as pulldown_cut,
-			undo_cut as pulldown_undo_cut
+			create_context as old_create_context
+			--, cut as pulldown_cut,
+			--undo_cut as pulldown_undo_cut
 		redefine
 			reset_widget_callbacks, remove_widget_callbacks, 
-			add_widget_callbacks, stored_node,
+			add_widget_callbacks, stored_node, initialize_transport,
 			is_selectionnable, widget
 		end;
 
 	PULLDOWN_C
 		redefine
 			reset_widget_callbacks, remove_widget_callbacks, 
-			add_widget_callbacks, undo_cut, cut, stored_node, create_context, 
+			add_widget_callbacks, initialize_transport, 
+--			 undo_cut, cut, 
+			stored_node, create_context,
 			is_selectionnable, widget
 		select
-			create_context, cut, undo_cut
+			create_context
+--			, cut, undo_cut
 		end
 
 
@@ -44,11 +47,32 @@ feature
 	
 feature {NONE}
 
-	add_widget_callbacks is do end;
+	add_widget_callbacks is
+		do 
+			add_common_callbacks (widget.button);
+			initialize_transport;
+			if (parent = Void) or else not parent.is_group_composite then
+				widget.button.add_enter_action (eb_selection_mgr, parent);
+			end;
+		end;
 	
-	remove_widget_callbacks is do end;
+	initialize_transport is
+		do
+			widget.button.add_button_press_action (2, show_command, Current);
+			widget.button.add_button_release_action (2, show_command, Nothing);
+			widget.button.add_button_press_action (3, transport_command, Current);
+		end;
 
-	reset_widget_callbacks is do end;
+	remove_widget_callbacks is 
+		do 
+			widget.button.remove_button_press_action (2, show_command, Current);
+			widget.button.remove_button_release_action (2, show_command, Nothing);
+			widget.button.remove_button_press_action (3, transport_command, Current);
+		end;
+
+	reset_widget_callbacks is 
+		do 
+		end;
 
 	
 feature 
@@ -105,17 +129,38 @@ feature {NONE}
 	
 feature 
 
-	cut is
+
+
+	forbid_recompute_size is
 		do
-			pulldown_cut;
-			shake_parent (parent);
 		end;
 
-	undo_cut is
+
+	allow_recompute_size is
 		do
-			pulldown_undo_cut;
-			shake_parent (parent);
 		end;
+
+
+	widget_set_center_alignment is
+		do
+		end;
+
+	widget_set_left_alignment is
+		do
+		end;
+
+  -- cut features superceded
+	--cut is
+	--	do
+	--		pulldown_cut;
+	--		--shake_parent (parent.parent);
+	--	end;
+
+	--undo_cut is
+	--	do
+	--		pulldown_undo_cut;
+	--		--shake_parent (parent.parent);
+	--	end;
 
 -- ****************
 -- Storage features

@@ -1,6 +1,10 @@
 
 class WINDOW_MGR 
 
+inherit
+	
+	WIDGET_NAMES;
+
 creation
 
 	make
@@ -26,10 +30,10 @@ feature
 			-- using `a_screen' as the parent. Allow `i' amount for
 			-- the free list.
 		do
-			!!state_editors_list.make ("State Editor", a_screen, i);
-			!!context_editors_list.make ("Context Editor", a_screen, i);
-			!!cmd_editors_list.make ("Command Type Editor", a_screen, i);
-			!!cmd_inst_editors_list.make ("Command Instance Editor", a_screen, i);
+			!!state_editors_list.make (S_tatetool, a_screen, i);
+			!!context_editors_list.make (C_ontexttool, a_screen, i);
+			!!cmd_editors_list.make (C_ommandtypetool, a_screen, i);
+			!!cmd_inst_editors_list.make (C_mdinstancetool, a_screen, i);
 		end;
 
 	cmd_editors: LINKED_LIST [CMD_EDITOR] is
@@ -83,11 +87,11 @@ feature
 	display (ed: TOP_SHELL) is
 			-- Display `ed' (or raise `ed' if already
 			-- displayed).
-		require
-			ed_exits_in_manager: state_editors_list.has (ed) 
-										or context_editors_list.has (ed)
-										or cmd_inst_editors_list.has (ed)
-										or cmd_editors_list.has (ed)
+--		require
+--			ed_exits_in_manager: state_editors_list.has (ed) 
+--										or context_editors_list.has (ed)
+--										or cmd_inst_editors_list.has (ed)
+--										or cmd_editors_list.has (ed)
 		do
 			if
 				ed.realized

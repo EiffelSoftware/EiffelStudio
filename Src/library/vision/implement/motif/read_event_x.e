@@ -1,13 +1,8 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	  --
---|	270 Storke Road, Suite 7 Goleta, California 93117		--
---|					  (805) 685-1006							--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -74,7 +69,8 @@ feature {NONE}
 							c_event_x_pointer, 
 							c_event_y_pointer, 
 							c_event_button, 
-							buttons_state)
+							buttons_state,
+							modifiers_state)
 		end;
 
 	button_release_data (widget_oui: WIDGET): BUTREL_DATA is
@@ -86,7 +82,51 @@ feature {NONE}
 								c_event_x_pointer, 
 								c_event_y_pointer, 
 								c_event_button, 
-								buttons_state)
+								buttons_state,
+								modifiers_state)
+		end;
+
+	clik_time: INTEGER;
+			-- last button press
+
+	click_threshold: INTEGER_REF is
+			-- time granted for clicking
+		once
+			!! Result;
+			Result.set_item (200)
+		end;
+
+	set_click_threshold (time: INTEGER) is
+			-- time is in millisecond, default is 200 ms
+		do
+			click_threshold.set_item (time)
+		end;
+
+	get_time: INTEGER is
+			-- time the event occured
+		do
+			Result :=  c_event_time
+		end;
+
+	get_multi_click_time: INTEGER is
+		do
+			Result := click_threshold.item
+		end;
+
+	set_multi_click_time (time: INTEGER) is
+		do
+			set_click_threshold (time)
+		end;
+
+	button_click_data (widget_oui: WIDGET): BUTCLICK_DATA is
+			-- Create a context for `ButtonClick' event.
+		do
+			!!Result.make (widget_oui, c_event_x_relative,
+					c_event_y_relative,
+					c_event_x_pointer,
+					c_event_y_pointer,
+					c_event_button,
+					buttons_state)
 		end;
 
 	circulate_notify_data (widget_oui: WIDGET): CIRCNOT_DATA is
@@ -149,9 +189,14 @@ feature
 			inspect
 				get_event_type
 			when ButtonPress then
+				clik_time := get_time;		
 				Result := button_press_data (widget_oui)
 			when ButtonRelease then
-				Result := button_release_data (widget_oui)
+				if (get_time - clik_time < click_threshold.item) then
+					Result := button_click_data (widget_oui)
+				else	
+					Result := button_release_data (widget_oui)
+				end
 			when CirculateNotify then
 				Result := circulate_notify_data (widget_oui)
 			when CirculateRequest then
@@ -314,12 +359,6 @@ feature {NONE}
 	motion_notify_data (widget_oui: WIDGET): MOTNOT_DATA is
 			--
 		do
-			!! Result.make (widget_oui,
-					c_event_x_relative,
-					c_event_y_relative,
-					c_event_x_pointer,
-					c_event_y_pointer,
-					buttons_state)
 		end;
 
 	no_expose_data (widget_oui: WIDGET): NOEXP_DATA is
@@ -368,6 +407,21 @@ feature {NONE}
 		end
 
 feature {NONE} -- External features
+
+	c_event_time: INTEGER is
+		external
+			"C"
+		end;
+
+	c_get_multi_click_time (display :POINTER): INTEGER is
+		external
+			"C"
+		end;
+
+	c_set_multi_click_time (display: POINTER; time: INTEGER) is
+		external
+			"C"
+		end;
 
 	c_event_button_state (num: INTEGER): BOOLEAN is
 		external
@@ -485,3 +539,17 @@ feature {NONE} -- External features
 		end; 
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

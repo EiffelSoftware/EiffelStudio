@@ -10,7 +10,7 @@ inherit
 		end;	
 	WINDOWS;
 	PIXMAPS;
-	COMMAND
+	LICENCE_COMMAND;
 
 creation
 
@@ -45,7 +45,7 @@ feature {NONE} -- Focusable
 feature {NONE} -- Execute
 
 
-	execute (argument: ANY) is
+	work (argument: ANY) is
 		local
 			pw: SAVE_AS_PROJ_WIN	
 		do
@@ -53,6 +53,10 @@ feature {NONE} -- Execute
 				!!pw.make ("Save project as...", main_panel.base);
 				pw.popup
 			end
+		end;
+
+	continue_after_popdown (box: MESSAGE_D; ok: BOOLEAN) is
+		do
 		end;
 
 end

@@ -170,6 +170,12 @@ feature {NONE}
 			Result := symbol_file_content ("state.symb")
 		end;
 
+	State_d_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("state.icon")
+		end;
+
+
 	Command_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("command.symb")
@@ -180,10 +186,27 @@ feature {NONE}
 			Result := symbol_file_content ("command_instance.symb")
 		end;
 
+	Command_o_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("command.icon")
+		end;
+
+
+	Command_i_icon_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("command_instance.icon")
+		end;
+
 	Create_command_instance_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("create_instance.symb")
 		end;
+
+	Create_command_instance_b_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("create_instance.icon")
+		end;
+
 
 	Context_pixmap: PIXMAP is
 		once

@@ -8,7 +8,7 @@ inherit
 		undefine
 			make
 		redefine
-			set_context_attributes, context
+			set_context_attributes, context, set_attributes
 		end
 
 
@@ -25,6 +25,7 @@ feature
 			if node.title_modified then
 				title := node.title
 			end;
+			parent_name := clone (node.popup_parent.entity_name);
 			resize_policy_disabled := node.resize_policy_disabled;
 			resize_policy_modified := node.resize_policy_modified;
 		end;
@@ -37,7 +38,7 @@ feature
 			create_context (Result, void_composite_c);
 		end;
 
-	set_context_attributes (a_context: PERM_WIND_C) is
+	set_context_attributes (a_context: TEMP_WIND_C) is
 		do
 			if not (title = Void) then
 				a_context.set_title (title)
@@ -49,6 +50,43 @@ feature
 		end;
 
 	
+	set_attributes (c: CONTEXT) is
+		local
+			twc: TEMP_WIND_C;
+		do
+			twc ?= c;
+			if not (visual_name = Void) then
+				c.set_visual_name (visual_name);
+			end;
+			if size_modified then
+				c.set_size (width, height);
+			end;
+			if bg_color_modified then
+				c.set_bg_color_name (bg_color_name);
+			end;
+			if bg_pixmap_modified then
+				c.set_bg_pixmap_name (bg_pixmap_name);
+			end;
+			if fg_color_modified then
+				c.set_fg_color_name (fg_color_name);
+			end;
+			if font_name_modified then
+				c.set_font_named (font_name);
+			end;
+			if not (resize_policy = Void) then
+				c.set_resize_policy (resize_policy.resize_policy (c))
+			end;
+			if twc /= Void then
+				twc.popup;
+			end;
+			if position_modified then
+				c.set_x_y (x, y);
+			end;
+		end;
+
+
+	parent_name: STRING;
+
 feature {NONE}
 
 	title: STRING;

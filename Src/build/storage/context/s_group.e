@@ -120,15 +120,15 @@ feature {NONE}
 				i > subtree.count or found
 			loop
 				s_context :=  subtree.item (i);
-				if s_context.internal_name.is_equal (a_context.entity_name) then
+				if s_context.full_name.is_equal (a_context.full_name) then
 					found := True
 				else
 					i := i + 1
 				end;
 			end;
-if not found then
-	io.putstring ("Problem in group retrieve%N%N");
-end;
+			if not found then
+				io.putstring ("Problem in group retrieve set attrib%N%N");
+			else
 			s_context.set_context_attributes (a_context);
 			from
 				a_context.child_start
@@ -137,6 +137,7 @@ end;
 			loop
 				retrieve_attributes (a_context.child);
 				a_context.child_forth;
+			end;
 			end;
 		end;
 

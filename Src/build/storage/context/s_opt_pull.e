@@ -34,13 +34,15 @@ feature
 
 	set_context_attributes (a_context: OPT_PULL_C) is
 		do
+			if not (text = Void) then
+				a_context.set_text (text);
+			end;
 			if not (title = Void) then
 				a_context.set_title (title)
 			end;
-			if not (text = Void) then
-				a_context.set_text (text)
-			end;
+			a_context.forbid_recompute_size;
 			set_attributes (a_context);
+			a_context.allow_recompute_size;
 		end;
 
 	

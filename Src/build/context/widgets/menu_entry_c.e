@@ -15,13 +15,14 @@ inherit
 		rename
 			create_context as button_create_context
 		redefine
-			add_widget_callbacks,
+			add_widget_callbacks, remove_widget_callbacks,
+			initialize_transport,
 			stored_node, option_list, is_selectionnable, widget
 		end;
 
 	BUTTON_C
 		redefine
-			add_widget_callbacks,
+			add_widget_callbacks, remove_widget_callbacks, initialize_transport,
 			stored_node, option_list, is_selectionnable, create_context, widget
 		select
 			create_context
@@ -37,7 +38,23 @@ feature
 	
 feature {NONE}
 
-	add_widget_callbacks is do end;
+	add_widget_callbacks is
+		do 
+			initialize_transport;
+		end;
+
+
+	initialize_transport is
+		do
+			widget.add_button_press_action (2, show_command, Current);
+			widget.add_button_release_action (2, show_command, Nothing);
+		end;
+
+	remove_widget_callbacks is
+		do
+			widget.remove_button_press_action (2, show_command, Current);
+			widget.remove_button_release_action (2, show_command, Nothing);
+		end;
 
 	editor_form_cell: CELL [INTEGER] is
         once
@@ -87,6 +104,8 @@ feature
 			!!Result.make (1, 1);
 			Result.put (label_text_form_number, 1);
 		end;
+
+
 
 -- ****************
 -- Storage features

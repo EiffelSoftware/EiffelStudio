@@ -42,9 +42,11 @@ feature
 			until
 				translation_list.after
 			loop
-				list_add (translation_list.item);
+				list_extend (translation_list.item);
 				translation_list.forth;
 			end;
+			parent.unmanage;
+			check_number_of_icons;
 			if not empty then
 				go_i_th (1);
 				from
@@ -64,7 +66,7 @@ feature
 					forth
 				end;
 			else
-				icons.go (1)
+				icons.go_i_th (1)
 			end;
 			if not icons.after then
 				from
@@ -76,6 +78,7 @@ feature
 					icons.forth
 				end;
 			end;
+			parent.manage;
 		end;
 
 	

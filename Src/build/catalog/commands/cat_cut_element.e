@@ -29,12 +29,12 @@ feature
 				position = 1 and
 				page.empty 
 			then
-				page.add (element)
+				page.extend (element)
 			else
 				if
 					page.count <= (position - 1)
 				then
-					page.add (element)
+					page.extend (element)
 				else
 					page.go_i_th (position -1);
 					page.add_right (element)

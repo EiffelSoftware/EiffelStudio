@@ -39,7 +39,7 @@ feature
 		require
 			not_a_void_string: not (a_seed = Void)
 		do
-			seed := a_seed.duplicate;
+			seed := clone (a_seed);
 			value := seed;
 			!!integer_generator;
 			if namer_values.has (a_seed) then

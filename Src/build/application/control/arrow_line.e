@@ -18,12 +18,12 @@ inherit
 			{NONE} all
 		end;
 	SEGMENT
-		undefine
-			make
+		rename
+			make as segment_make
 		redefine
 			set_line_width, attach_drawing_imp, draw, attach_drawing
 		select
-			set_line_width, attach_drawing_imp, draw, attach_drawing, make
+			set_line_width, attach_drawing_imp, draw, attach_drawing
 		end
 
 creation
@@ -55,7 +55,7 @@ feature {NONE}
 			from
 				arrow_head.start
 			until
-				arrow_head.offright
+				arrow_head.after
 			loop
 				arrow_head.item.attach_drawing (a_drawing);
 				arrow_head.forth
@@ -69,7 +69,7 @@ feature {NONE}
 			from
 				arrow_head.start
 			until
-				arrow_head.offright
+				arrow_head.after
 			loop
 				arrow_head.item.attach_drawing_imp (a_drawing_imp);
 				arrow_head.forth
@@ -85,7 +85,7 @@ feature {NONE}
 			from
 				arrow_head.start
 			until
-				arrow_head.offright
+				arrow_head.after
 			loop
 				!!a_segment.make;
 				a_segment.set_line_width (arrow_head_line_w);	
@@ -162,7 +162,7 @@ feature {NONE}
 			from
 				arrow_head.start
 			until
-				arrow_head.offright
+				arrow_head.after
 			loop
 				arrow_head.item.set_line_width (i);
 				arrow_head.forth
@@ -176,7 +176,7 @@ feature {NONE}
 			from
 				arrow_head.start
 			until	
-				arrow_head.offright
+				arrow_head.after
 			loop
 				arrow_head.item.draw;
 				arrow_head.forth

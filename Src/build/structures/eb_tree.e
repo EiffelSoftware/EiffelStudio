@@ -165,12 +165,13 @@ feature -- Implementation
 		do
 			if (child_position = 0) then
 				first_child := first_child.right_sibling;
-				arity := arity - 1
+				arity := arity - 1;
 			elseif not child_islast then
 				child.set_right_sibling (child.right_sibling.right_sibling);
-				arity := arity - 1
+				arity := arity - 1;
 			end;
 		end;
+
 	forget_right is
 		do
 			right_sibling := Void

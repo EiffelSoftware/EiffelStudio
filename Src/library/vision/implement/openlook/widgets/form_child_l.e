@@ -1,9 +1,6 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+
+indexing
+	copyright: "See notice at end of class";
 
 class FORM_CHILD_L
 
@@ -35,18 +32,18 @@ feature
 		local
 			init_position: INTEGER;
 		do	
-			init_position := position;
+			init_position := index;
 			from
 				start
 			variant
 				count - position + 1
 			until
-				offright
+				after
 				or else (item.widget = a_child)
 			loop
 				forth
 			end;
-			if not offright then
+			if not after then
 				Result := item
 			end;
 			go (init_position);
@@ -59,7 +56,7 @@ feature
 		local
 			init_position: INTEGER;
 		do
-			init_position := position;
+			init_position := index;
 			Result := search (a_child);
 			if (Result = Void) then
 				!!Result.make (a_child);
@@ -72,3 +69,17 @@ feature
 		end; 
 
 end 
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

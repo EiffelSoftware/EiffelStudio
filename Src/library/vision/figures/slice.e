@@ -1,19 +1,16 @@
---|---------------------------------------------------------------
---| Copyright (C) Interactive Software Engineering, Inc.        --
---|  270 Storke Road, Suite 7 Goleta, California 93117          --
---|                      (805) 685-1006                         --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- SLICE: Description of slice.
+
+indexing
+	copyright: "See notice at end of class"
 
 class SLICE 
 
 inherit
 
 	ELLIPSE
-		undefine
-			make
+		rename 	
+			make as ell_make
 		redefine
 			draw, is_surimposable
 		end;
@@ -29,7 +26,17 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
+
+	make is
+			-- Create a slice.
+		do
+			ell_make ;
+			angle1 := 0;
+			angle2 := 360;
+		end;
+
+feature -- Access 
 
 	angle1: REAL;
 			-- Angle which specifies start position of
@@ -40,14 +47,36 @@ feature
 			-- current arc relative to the start of
 			-- current arc
 
-	make is
-			-- Create a slice.
+feature -- Modification & Insertion
+
+	set_angle1 (an_angle: like angle1) is
+			-- Set angle1 to `an_angle'._
+		require
+			angle1_smaller_than_360: an_angle < 360;
+			angle1_positive: an_angle >= 0
 		do
-			!! center.make;
-			angle2 := 360
+			angle1 := an_angle;
+			set_conf_modified
+		ensure
+			angle1 = an_angle
 		end;
 
-	draw is
+	set_angle2 (an_angle: like angle2) is
+			-- Set angle2 to `an_angle'.
+		require
+			angle2_smaller_than_360: an_angle <= 360;
+			angle2_positive: an_angle >= 0
+		do
+			angle2 := an_angle;
+			set_conf_modified
+		ensure
+			angle2 = an_angle
+		end;
+
+
+feature -- Output
+
+		draw is
 			-- Draw the slice.
 		do
 			if drawing.is_drawable then
@@ -62,6 +91,8 @@ feature
 			end
 		end;
 
+feature -- Status report
+
 	is_surimposable (other: like Current): BOOLEAN is
 			-- Is the current slice surimposable to `other' ?
 			--| not finished
@@ -71,33 +102,27 @@ feature
 			Result := center.is_surimposable (other.center) and (radius1 = other.radius1) and (radius2 = other.radius2) and (orientation = other.orientation) and (angle1 = other.angle1) and (angle2 = other.angle2)
 		end;
 
-	set_angle1 (an_angle: like angle1) is
-			-- Set angle1 to `an_angle'._
-		require
-			angle1_smaller_than_360: an_angle < 360;
-			angle1_positive: an_angle >= 0
-		do
-			angle1 := an_angle
-		ensure
-			angle1 = an_angle
-		end;
-
-	set_angle2 (an_angle: like angle2) is
-			-- Set angle2 to `an_angle'.
-		require
-			angle2_smaller_than_360: an_angle <= 360;
-			angle2_positive: an_angle >= 0
-		do
-			angle2 := an_angle
-		ensure
-			angle2 = an_angle
-		end;
 
 invariant
 
 	angle1 < 360;
 	angle1 >= 0;
 	angle2 <= 360;
-	angle2 >= 0
+	angle2 >= 0;
+	angle2 /= angle1
 
-end
+end -- class SLICE
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

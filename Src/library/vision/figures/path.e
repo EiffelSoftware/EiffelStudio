@@ -1,11 +1,8 @@
---|---------------------------------------------------------------
---| Copyright (C) Interactive Software Engineering, Inc.        --
---|  270 Storke Road, Suite 7 Goleta, California 93117          --
---|                      (805) 685-1006                         --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- PATH: Description of a path.
+
+indexing
+	copyright: "See notice at end of class"
 
 class PATH 
 
@@ -23,13 +20,13 @@ inherit
 
 	BACKGROUND;
 
-	LINE_WIDTH
+	LINE_WIDTH;
 
 creation
 
 	make
 
-feature 
+feature -- Initialization 
 
 	make is
 			-- Create a path
@@ -38,10 +35,10 @@ feature
 			dash_pattern.add_right (4);
 			dash_pattern.add_right (4);
 			logical_function_mode := GXcopy;
-			!! foreground_color.make
+			!! foreground_color.make;
 		end;
 
-feature {FIGURE}
+feature {FIGURE} -- Modification & Insertion
 
 	set_drawing_attributes (drawing: DRAWING_I) is
 			-- Set the attributes to `a_drawing'.
@@ -59,8 +56,8 @@ feature {FIGURE}
 				drawing.set_foreground_gc_color (foreground_color)
 			end;
 			if line_style /= LineSolid then
-				drawing.set_dash_pattern (dash_pattern)
-			end;
+					drawing.set_dash_pattern (dash_pattern)
+					end;
 			if fill_style = FillOpaqueStippled then
 				drawing.set_background_gc_color (background_color)
 				elseif fill_style /= FillTiled then
@@ -82,4 +79,18 @@ invariant
 	(fill_style = FillTiled) implies (not (tile = Void));
 	((fill_style = FillStippled) or (fill_style = FillOpaqueStippled)) implies (not (stipple = Void))
 
-end
+end -- class PATH
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

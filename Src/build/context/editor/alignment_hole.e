@@ -9,7 +9,7 @@ inherit
 		end;
 	ICON_HOLE
 		redefine
-			stone
+			stone, compatible
 		end
 
 
@@ -35,6 +35,11 @@ feature
 
 	stone: CONTEXT_STONE;
 
+	compatible (s: CONTEXT_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
 	
 feature {NONE}
 
@@ -49,7 +54,7 @@ feature {NONE}
 					list := stone.original_stone.group;
 					list.start;
 				until
-					list.offright
+					list.after
 				loop
 					if is_context_valid (list.item) then
 						alignment_form.add_item (list.item)

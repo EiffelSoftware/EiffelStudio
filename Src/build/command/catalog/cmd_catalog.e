@@ -11,7 +11,7 @@ inherit
 		undefine
 			init_toolkit
 		redefine
-			realize, 
+			realize, add_first_button, add_other_buttons,
 			hide, show, shown, current_page
 		end;
 	PIXMAPS
@@ -39,7 +39,7 @@ feature
 			loop
 				pages.item.wipe_out;
 				pages.forth
-			end
+			end;
 		end;
 
 	user_commands: LINKED_LIST [LINKED_LIST [USER_CMD]] is
@@ -55,7 +55,7 @@ feature
 				pages.after
 			loop
 				!!nl.make;
-				Result.add (nl);
+				Result.extend (nl);
 				from
 					p := pages.item;
 					p.start
@@ -67,7 +67,7 @@ feature
 						if uc.edited then
 							uc.save_text
 						end;
-						nl.add (uc);
+						nl.extend (uc);
 					end;
 					p.forth
 				end;	
@@ -84,7 +84,7 @@ feature
 				l.start;
 				pages.start
 			until
-				l.offright
+				l.after
 			loop
 				cl := l.item;
 				from
@@ -93,10 +93,24 @@ feature
 					cl.after
 				loop
 					p := pages.item;
-					p.add (cl.item);
+					p.extend (cl.item);
 					cl.forth
 				end;
 				l.forth;
+				pages.forth
+			end;	
+		end;
+
+	initial_pages is
+		do
+			from
+				pages.start
+			until
+				pages.after
+			loop
+				if pages.item.empty then
+					pages.item.initial_cmd;
+				end;
 				pages.forth
 			end;	
 		end;
@@ -125,7 +139,7 @@ feature
 		local
 			add_command: CAT_ADD_COMMAND
 		do
-			p.add (c);
+			p.extend (c);
 			!!add_command;
 			add_command.execute (p);
 		end;
@@ -157,8 +171,12 @@ feature {NONE}
 feature 
 
 	make (a_name: STRING; a_screen: SCREEN) is
+		local
+			continue_command: ITER_COMMAND;
 		do
 			!!shell.make (a_name, a_screen);
+			!!continue_command;
+			shell.set_delete_command (continue_command);
 			catalog_make ("Command Catalog", shell);
 		end;
 
@@ -167,7 +185,7 @@ feature
 		local
 			type_button: CMD_CAT_ED_H;
 			create_inst_b: CMD_CAT_CREATE_INST_H;
-			inst_button: CMD_INST_CAT_ED_H;
+			--inst_button: CMD_INST_CAT_ED_H;
 			separator, separator1: SEPARATOR;
 		do
 			!!button_form.make (F_orm1, Current);
@@ -179,14 +197,14 @@ feature
 			!!page_form.make (F_orm2, page_sw);
 			!!type_button.make ("Create/edit type"); 	
 			!!create_inst_b.make ("Create instance");
-			!!inst_button.make ("Edit instance");
+			--!!inst_button.make ("Edit instance");
 			type_button.make_visible (button_form);
 			create_inst_b.make_visible (button_form);
-			inst_button.make_visible (button_form);
-			button_form.attach_right (type_button, 5);
-			button_form.attach_right_widget (type_button, create_inst_b, 0);
-			button_form.attach_right_widget (create_inst_b, inst_button, 0);
-			button_form.detach_left (inst_button);
+			--inst_button.make_visible (button_form);
+			button_form.attach_left (type_button, 5);
+			button_form.attach_left_widget (type_button, create_inst_b, 0);
+			--button_form.attach_right_widget (create_inst_b, inst_button, 0);
+			button_form.detach_right (create_inst_b);
 			attach_left (button_form, 10);
 			attach_right (button_form, 10);
 			attach_top (button_form, 10);
@@ -211,6 +229,17 @@ feature
 			update_interface;
 		end;
 
+	add_first_button (b: ICON; i: INTEGER) is 
+		do
+			button_form.attach_right (b, i);
+		end;
+
+	add_other_buttons (pb, b: ICON; i: INTEGER) is
+		do
+			button_form.attach_right_widget (pb, b, i);
+		end;
+
+
 	
 feature {NONE}
 
@@ -224,15 +253,15 @@ feature {NONE}
 			!!user_defined_commands1.make ("User1", User_defined_pixmap, Current);
 			!!user_defined_commands2.make ("User2", User_defined_pixmap, Current);
 			!!user_defined_commands3.make ("User3", User_defined_pixmap, Current);
-			!!command_templates.make ("Templates", Command_pixmap, Current);
+			!!command_templates.make ("Templates", Command_o_pixmap, Current);
 			!!window_commands.make ("Window", Windows_pixmap, Current);
 			!!file_commands.make ("File", File_pixmap, Current);
-			add_page (user_defined_commands1);
-			add_page (user_defined_commands2);
-			add_page (user_defined_commands3);
 			add_page (command_templates);
 			add_page (window_commands);
 			add_page (file_commands);
+			add_page (user_defined_commands3);
+			add_page (user_defined_commands2);
+			add_page (user_defined_commands1);
 			set_initial_page (user_defined_commands1);
 		end; --create_command_pages
 
@@ -284,7 +313,7 @@ feature {NONE}
 				p := pages.item;
 				p.start;
 				p.search (c);
-				if not p.offright then		
+				if not p.after then		
 					p.redisplay_current;
 					finished := True
 				else

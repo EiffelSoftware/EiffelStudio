@@ -70,12 +70,12 @@ feature
 			if new_type /= button_type then
 				button_type := new_type;
 				wipe_out;
-				add (but_arm_ev);
-				add (but_rel_ev);
+				extend (but_arm_ev);
+				extend (but_rel_ev);
 				if (toggle_b_c = Void) then
-					add (but_act_ev);
+					extend (but_act_ev);
 				else
-					add (value_changed_ev);
+					extend (value_changed_ev);
 				end;
 			end;
 		end;

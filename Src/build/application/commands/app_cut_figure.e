@@ -178,6 +178,7 @@ feature {NONE}
 		do
 			app_editor.display_states;
 			app_editor.draw_figures;
+			app_editor.display_transitions;
 		end; 
 
 	worked_on: STRING is

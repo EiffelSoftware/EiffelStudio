@@ -1,11 +1,8 @@
---|---------------------------------------------------------------
---| Copyright (C) Interactive Software Engineering, Inc.        --
---|  270 Storke Road, Suite 7 Goleta, California 93117          --
---|                      (805) 685-1006                         --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- SEGMENT: Description of segements (implementation for X).
+
+indexing
+	copyright: "See notice at end of class"
 
 class SEGMENT 
 
@@ -24,38 +21,81 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make is
 			-- Create current segment.
 		do
-			line_make;
+			init_fig (Void);
+			line_make ;
 			!! p1;
-			!! p2
+			!! p2;
+			p2.set_x (1);
 		end;
 
-   	contains (p: COORD_XY_FIG): BOOLEAN is
-         -- Is `p' on segment?
-      require else
-         point_exists: not (p = Void)
-      local
-         t, rsq, dx, dy, dpx, dpy: REAL;
-      do
-		
-         if p1.x /= p2.x or p1.y /= p2.y then
-                dx  := p2.x - p1.x;
-                dy  := p2.y - p1.y;
-                dpx := p1.x - p.x;
-                dpy := p1.y - p.y;
-                t   := - (dpx*dx + dpy*dy) / (dx*dx + dy*dy);
-                dpx := dpx + t*dx;
-                dpy := dpy + t*dy;
-                rsq := dpx*dpx + dpy*dpy;
-                Result := rsq <= line_width*line_width/4.0
-         else
-             Result := p.x = p1.x and p.y = p1.y
-         end
-      end;
+feature -- Access
+
+	contains (p: COORD_XY_FIG): BOOLEAN is
+			-- Is `p' on segment?
+		require else
+			point_exists: not (p = Void)
+		local
+			t, rsq, dx, dy, dpx, dpy: REAL;
+		do
+			if p1.x /= p2.x or p1.y /= p2.y then
+				dx  := p2.x - p1.x;
+				dy  := p2.y - p1.y;
+				dpx := p1.x - p.x;
+				dpy := p1.y - p.y;
+				t   := - (dpx*dx + dpy*dy) / (dx*dx + dy*dy);
+				dpx := dpx + t*dx;
+				dpy := dpy + t*dy;
+				rsq := dpx*dpx + dpy*dpy;
+				Result := rsq <= line_width*line_width/4.0
+			else
+				Result := p.x = p1.x and p.y = p1.y
+			end
+		end;
+
+feature -- Modification & Insertion
+
+	set (o1, o2: like p1) is
+			-- Set the two end points of the line.
+		require else
+			o1_exists: not (o1 = Void);
+			o2_exists: not (o2 = Void)
+		do
+			p1 := o1;
+			p2 := o2;
+			set_conf_modified
+		ensure then
+			p1 = o1;
+			p2 = o2
+		end;
+
+	set_p1 (p: like p1) is
+			-- Set the first point.
+		require else
+			p_exists: not (p = Void)
+		do
+			p1 := p;
+			set_conf_modified
+		ensure then
+			p1 = p
+		end;
+
+	set_p2 (p: like p2) is
+			-- Set the second point.
+		require else
+			p_exists: not (p = Void)
+		do
+			p2 := p;
+			set_conf_modified
+		ensure then
+			p2 = p
+		end;
+
+feature -- Output
 
 	draw is
 			-- Draw the segment.
@@ -68,6 +108,8 @@ feature
 				drawing.draw_segment (p1, p2)
 			end
 		end;
+
+feature -- Status report
 
 	is_null: BOOLEAN is
 			-- Is the segment null ?
@@ -83,37 +125,20 @@ feature
 			Result := (p1.is_surimposable (other.p1) and p2.is_surimposable (other.p2)) or else (p1.is_surimposable (other.p2) and p2.is_surimposable (other.p1))
 		end;
 
-	set (o1, o2: like p1) is
-			-- Set the two end points of the line.
-		require else
-			o1_exists: not (o1 = Void);
-			o2_exists: not (o2 = Void)
-		do
-			p1 := o1;
-			p2 := o2
-		ensure then
-			p1 = o1;
-			p2 = o2
-		end;
 
-	set_p1 (p: like p1) is
-			-- Set the first point.
-		require else
-			p_exists: not (p = Void)
-		do
-			p1 := p
-		ensure then
-			p1 = p
-		end;
 
-	set_p2 (p: like p2) is
-			-- Set the second point.
-		require else
-			p_exists: not (p = Void)
-		do
-			p2 := p
-		ensure then
-			p2 = p
-		end;
+end -- class SEGMENT
 
-end
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

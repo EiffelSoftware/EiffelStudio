@@ -11,6 +11,7 @@ inherit
 		end;
 
 	CMD_SET_CMD_TYPE
+		
 	
 feature {NONE}
 

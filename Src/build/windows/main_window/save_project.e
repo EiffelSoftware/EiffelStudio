@@ -7,9 +7,12 @@ inherit
 		export
 			{NONE} all
 		end;
-	COMMAND
+	LICENCE_COMMAND
 		export
-			{NONE} all
+			{NONE} all;
+			{ANY} execute
+		redefine
+			licence_checked
 		end;
 	UNIX_ENV
 		export
@@ -25,8 +28,10 @@ feature
 		-- of the Current command)
 
 	rescued: BOOLEAN;
+	
+	licence_lost: BOOLEAN;
 
-	execute (argument: ANY) is
+	work (argument: ANY) is
 		local
 			storer: STORER;	
 			mp: MOUSE_PTR;
@@ -58,6 +63,29 @@ feature
 			retry
 		end;
 
+	licence_checked: BOOLEAN is
+		local
+			msg: STRING;
+		do
+			licence.alive;
+			if licence.is_alive then
+				licence_lost := False;
+				Result := True;
+			else
+				if licence_lost then
+					Result := False;
+				else
+					licence_lost := True;
+					Result := True;
+					!!msg.make (0);
+					msg.append ("You have lost your license.%N");
+					msg.append ("This is the last save until you obtain you license back.");
+					warning_box.popup (Current, msg);
+				end;
+			end;
+		end;
+
+
 	Backup_directory: STRING is
 		do
 			!!Result.make (0);
@@ -84,11 +112,11 @@ feature
 			!!file_name.make (0);
 			file_name.append (Storage_directory);
 			file_name.append (name);
-			!!source.make_open_read (file_name.duplicate);
+			!!source.make_open_read (clone (file_name));
 			file_name.wipe_out;
 			file_name.append (Backup_directory);
 			file_name.append (name);
-			!!destination.make (file_name.duplicate);
+			!!destination.make (clone (file_name));
 			destination.wipe_out;
 			source.close;
 			destination.append (source);

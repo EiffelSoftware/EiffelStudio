@@ -5,23 +5,26 @@ inherit
 
 	TOP_SHELL
 		rename
-			make as top_shell_create,
-			realize as shell_realize
+			make as top_shell_create
 		undefine
 			init_toolkit
+		redefine
+			delete_window_action
 		end;
 	TOP_SHELL
 		undefine
 			init_toolkit
 		redefine
-			realize, make
+			make, delete_window_action
 		select
-			realize, make
+			make
 		end;
+
 	WIDGET_NAMES
 		export
 			{NONE} all
 		end;
+
 	WINDOWS	
 
 creation
@@ -42,7 +45,7 @@ feature
 		do
 			save_previous_instance;
 			arguments.wipe_out;
-			instance_stone.reset;
+			instance_hole.reset;
 		end;
 
 	close is
@@ -50,7 +53,13 @@ feature
 		do
 			clear;
 			window_mgr.close (Current)
-		end
+		end;
+
+	delete_window_action is
+		do
+			close;
+			iterate;
+		end;
 	
 feature {NONE}
 
@@ -64,6 +73,10 @@ feature {NONE}
 		end;
 	
 feature 
+	set_instance_stone is
+		do
+			instance_hole.set_instance (command_instance);
+		end;
 
 	set_instance (c: CMD_INSTANCE) is
 			-- Set command_instance to `c' and update
@@ -77,7 +90,7 @@ feature
 			arguments.set (command_instance.arguments);
 			command_instance.set_arguments (arguments);	
 			command_instance.set_editor (Current);
-			instance_stone.set_instance (command_instance);
+			instance_hole.set_instance (command_instance);
 		end;
 
 	update is
@@ -95,9 +108,6 @@ feature {NONE}
 
 	arguments: ARG_INST_BOX;
 			-- Arguments of command_instance
-	instance_stone: INST_EDIT_STONE;
-			-- Stone representing currently edited
-			-- command_instance
 	command_hole: CMD_INST_TYPE_H;
 			-- Hole used to accept command types
 	instance_hole: INST_EDIT_HOLE;
@@ -128,21 +138,16 @@ feature
 			!!argument_sw.make (S_croll2, form);
 			!!arguments.make (I_con_box1, argument_sw);
 			!!separator.make (S_eparator, form);
-			!!instance_stone.make (Current);
-			instance_stone.make_visible (form);
 				-- *******************
 				-- Perform attachments 
 				-- *******************
 			form.attach_top (instance_hole, 10);
-			form.attach_top (instance_stone, 10);
 			form.attach_top (command_hole, 10);
 			form.attach_top (close_b, 10);
-			form.attach_top (separator, 75);
 			form.attach_left (separator, 10);
 			form.attach_right (separator, 10);
-			form.attach_left (instance_hole, 10);
-			form.attach_left_widget (instance_hole, instance_stone, 10);
-			form.attach_left_widget (instance_hole, command_hole, 120);
+			form.attach_left (command_hole, 10);
+			form.attach_left_widget (command_hole, instance_hole, 10);
 			form.attach_top_widget (separator, argument_sw, 5);
 			form.attach_right (close_b, 10);
 			form.attach_top (separator, 60);
@@ -158,12 +163,5 @@ feature
 			separator.set_horizontal (True);
 		end;
 
-	realize is
-		do
-			shell_realize;
-			if instance_stone = Void then
-				instance_stone.hide;
-			end
-		end;
 
 end

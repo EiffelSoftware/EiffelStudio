@@ -53,7 +53,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			stone
+			stone, compatible
 		end;
 	REMOVABLE;
 
@@ -90,8 +90,8 @@ feature
 			-- Remove 'elt' from the tree
 		do
 			start;
-			search_same (elt);
-			if not offright then
+			search (elt);
+			if not after then
 				remove;
 			end;
 		end;
@@ -154,6 +154,8 @@ feature {NONE}
 feature 
 
 	make (a_screen: SCREEN) is
+		local
+			contin_command: ITER_COMMAND;
 		do
 			!!top_shell.make (C_ontexttree, a_screen);
 			!!scrolled_w.make (S_crolledwindow, top_shell);
@@ -176,7 +178,10 @@ feature
 			set_action ("<Key>Down", Current, Eighth);
 
 			!!positions.make;
-			register
+			register;
+
+			!!contin_command;
+			top_shell.set_delete_command (contin_command);
 		end;
 
 	
@@ -295,7 +300,7 @@ feature {NONE}
 					a_group := a_context.group;
 					if a_context.grouped then
 						a_group.start;
-						a_group.search_same (a_context);
+						a_group.search (a_context);
 						a_group.remove;
 						a_context.set_grouped (False);
 					elseif a_group.empty or else a_context.parent = a_group.first.parent then
@@ -324,7 +329,7 @@ feature {NONE}
 							from
 								a_group.start
 							until
-								a_group.offright
+								a_group.after
 							loop
 								a_group.item.set_x_y (a_group.item.x+d_x, a_group.item.y+d_y);
 								a_group.forth;
@@ -381,6 +386,12 @@ feature {NONE}
 
 	stone: TYPE_STONE;
 
+	compatible (s: TYPE_STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
+		end;
+
 	process_stone is
 		-- Process stone in current hole
 		local
@@ -391,6 +402,8 @@ feature {NONE}
 			attrib_stone: ATTRIB_STONE;
 			window_c: WINDOW_C;
 			new_context: CONTEXT;
+			temp_w_context: TEMP_WIND_C;
+			perm_w_context: PERM_WIND_C;
 		do
 			group_stone ?= stone;
 			if not (group_stone = Void) then
@@ -404,12 +417,43 @@ feature {NONE}
 			end;
 			if  
 				not (context_type = Void) and then
-				(context_type.equivalent (context_catalog.perm_wind_type) or
-				context_type.equivalent (context_catalog.temp_wind_type))
-			then
-				new_context := context_type.create_context (a_composite_c);
+				context_type.equivalent (context_catalog.perm_wind_type) then
+					new_context := context_type.create_context (a_composite_c);
+			elseif  
+				not (context_type = Void) and then
+				context_type.equivalent (context_catalog.temp_wind_type) then
+					find;
+					if found then
+						perm_w_context ?= element.original_stone.root;
+						if perm_w_context /= Void then		
+							new_context := context_type.create_context (perm_w_context);
+						else
+							temp_w_context ?= element.original_stone.root;
+							perm_w_context ?= temp_w_context.popup_parent;
+							if perm_w_context /= Void then	
+								new_context := context_type.create_context (perm_w_context);
+							end;
+						end;
+					end;
 			elseif not (window_c = Void) then
-				new_context := window_c.create_context (a_composite_c);
+				temp_w_context ?= window_c;
+				if temp_w_context /= Void then
+					find;
+					if found then
+						perm_w_context ?= element.original_stone.root;
+						if perm_w_context /= Void then			
+							new_context := window_c.create_context (perm_w_context);
+						else
+							temp_w_context ?= element.original_stone.root;
+							perm_w_context ?= temp_w_context.popup_parent;
+							if perm_w_context /= Void then	
+								new_context := window_c.create_context (perm_w_context);
+							end;
+						end;
+					end;
+				else
+					new_context := window_c.create_context (a_composite_c);
+				end;
 			else
 				find;
 				if found then
@@ -428,11 +472,23 @@ feature {NONE}
 			end;
 			if not (new_context = Void) then
 				if (a_composite_c = Void) then
-					new_context.set_position (0, 0);
+					perm_w_context ?= new_context;
+					temp_w_context ?= new_context;
+					if perm_w_context /= Void then
+						new_context.set_position (10, 300);
+					elseif temp_w_context /= Void then
+						--temp_w_context.popup;
+						temp_w_context.set_position (150, 300);
+					else
+						new_context.set_position (0, 0);
+					end;
 				else
 					new_context.set_position (a_composite_c.real_x, a_composite_c.real_y);
 				end;
 				new_context.realize;
+				if temp_w_context /= Void then
+					temp_w_context.popup;
+				end;
 				display (new_context);
 			end;
 		end;

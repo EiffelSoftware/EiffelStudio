@@ -19,10 +19,15 @@ feature
 		require
 			valid_argument: dropped /= Void
 		do
-			stone ?= dropped;
-			if stone /= Void then
+			if compatible (dropped) then
 				process_stone;
 			end;
+		end;
+
+	compatible (s: STONE): BOOLEAN is
+		do
+			stone ?= s;
+			Result := stone /= Void;
 		end;
 	
 	target: WIDGET is

@@ -1,15 +1,10 @@
---|---------------------------------------------------------------
---|	Copyright (C) Interactive Software Engineering, Inc.		--
---|	 270 Storke Road, Suite 7 Goleta, California 93117		  --
---|						 (805) 685-1006									 --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Closed figures (e.g. circles, polygons)
 -- Such figures may be filled with a fill pattern.
 
 indexing
 
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -19,8 +14,8 @@ inherit
 
 	FIGURE
 
-feature 
-
+feature -- Access 
+	
 	center: COORD_XY_FIG is
 			-- Center of the closed figure
 		deferred
@@ -34,6 +29,8 @@ feature
 			-- Type of path
 			-- Void if the path of the figure shouldn't be drawn
 
+feature -- Modification & Insertion
+
 	set_origin_to_center is
 			-- Set origin to `center'
 		deferred
@@ -42,7 +39,7 @@ feature
 	set_interior (an_interior: INTERIOR) is
 			-- Set `interior' to `an_interior'.
 		do
-			interior := an_interior
+			interior := an_interior;
 		ensure
 			interior = an_interior
 		end;
@@ -50,9 +47,23 @@ feature
 	set_path (a_path: PATH) is
 			-- Set `path' to `a_path'.
 		do
-			path := a_path
+			path := a_path;
 		ensure
 			path = a_path
 		end
 
-end
+end -- class CLOSED_FIG
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -1864,7 +1864,7 @@ feature {NONE} -- Implementation
 		do
 			row_i := (create {EV_GRID_ROW}).implementation
 			
-			create a_row_data.make (1)
+			create a_row_data.make (0)
 			if a_index > row_count then
 				if replace_existing_item then
 						-- We are inserting at a certain value so we resize to one less

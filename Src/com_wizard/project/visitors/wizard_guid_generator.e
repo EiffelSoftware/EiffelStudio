@@ -27,7 +27,9 @@ feature -- Basic operations
 			Result.append (a_name)
 			if 
 				not a_name.is_equal ("IDispatch") and
-				not a_name.is_equal ("IUnknown")
+				not a_name.is_equal ("IUnknown") and
+				not a_name.is_equal ("IConnectionPointContainer") and
+				not a_name.is_equal ("IConnectionPoint")
 			then
 				Result.append ("_")
 			end

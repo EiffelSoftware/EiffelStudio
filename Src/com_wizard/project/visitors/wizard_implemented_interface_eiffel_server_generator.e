@@ -43,7 +43,12 @@ feature -- Basic operations
 			create inherit_clause.make
 			inherit_clause.set_name (an_interface.interface_descriptor.eiffel_class_name)
 
-			create interface_generator.make (an_interface, an_interface.interface_descriptor, eiffel_writer, inherit_clause)
+			if an_interface.source then
+				create {WIZARD_COMPONENT_INTERFACE_SOURCE_EIFFEL_SERVER_GENERATOR}
+					interface_generator.make (an_interface, an_interface.interface_descriptor, eiffel_writer, inherit_clause)
+			else 
+				create interface_generator.make (an_interface, an_interface.interface_descriptor, eiffel_writer, inherit_clause)
+			end
 			interface_generator.generate_functions_and_properties (an_interface.interface_descriptor)
 			eiffel_writer.add_inherit_clause (inherit_clause)
 			set_default_ancestors (eiffel_writer)

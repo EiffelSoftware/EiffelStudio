@@ -557,6 +557,7 @@ feature -- Generation
 			a_class: CLASS_C
 			has_attribute, final_mode: BOOLEAN
 			types: TYPE_LIST
+			Skeleton_file: INDENT_FILE
 		do
 			nb := Type_id_counter.value
 			final_mode := in_final_mode
@@ -689,7 +690,7 @@ feature -- Generation
 				cl_type := class_types.item (i)
 				if cl_type /= Void and then cl_type.is_dynamic then
 					Skeleton_file.new_line
-					cl_type.generate_dle_skeleton
+					cl_type.generate_dle_skeleton (skeleton_file)
 				end
 				i := i + 1
 			end
@@ -743,7 +744,6 @@ feature -- Generation
 
 				-- Close skeleton file
 			Skeleton_file.close
-			Skeleton_file := Void
 		end
 
 	generate_cecil is

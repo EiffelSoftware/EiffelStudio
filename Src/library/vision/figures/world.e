@@ -30,6 +30,7 @@ inherit
 	FIXED_LIST [LINKED_LIST[FIGURE]]
 		rename
 			make as al_make,
+			make_filled as al_make_filled,
 			put as al_put,
 			item as al_item,
 			start as al_start,
@@ -63,7 +64,7 @@ feature -- Initialization
 			if max_plane <= 0 then
 				max_plane := Default_max_plane;
 			end;
-			al_make (max_plane);
+			al_make_filled (max_plane);
 				-- 0 <= plane < Max_plane
 			from
 				al_start

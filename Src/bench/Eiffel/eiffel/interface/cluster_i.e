@@ -6,6 +6,7 @@ inherit
 
 	SHARED_ERROR_HANDLER;
 	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT;
 	SHARED_ENV;
 	SHARED_RESCUE_STATUS;
 	PROJECT_CONTEXT;
@@ -297,18 +298,10 @@ debug ("REMOVE_CLASS")
 end;
 				Result.fill (ex_l, inc_l);
 			else
+				Degree_output.skip_degree_6;
 				!! Result.make_from_old_cluster (Current)
 				Universe.insert_cluster (Result);
 			end;
-		end;
-
-	display_degree_6 is
-			-- Verbose
-		do
-				-- Verbose
-			io.error.putstring ("Degree 6: cluster ");
-			io.error.putstring (cluster_name);
-			io.error.new_line;
 		end;
 
 	fill (ex_l, inc_l: LACE_LIST [FILE_NAME_SD]) is
@@ -343,7 +336,8 @@ end;				-- Check if the path is valid
 				Error_handler.insert_error (vd01);
 				Error_handler.raise_error;
 			end;
-			display_degree_6;
+
+			Degree_output.put_degree_6 (Current)
 
 				-- Process the include and exclude lists
 			if ex_l /= Void then

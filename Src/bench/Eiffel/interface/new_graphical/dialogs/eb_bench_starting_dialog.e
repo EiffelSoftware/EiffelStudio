@@ -232,8 +232,8 @@ feature {NONE} -- Initialization
 		local
 			hb: EV_HORIZONTAL_BOX
 		do
-				-- Connect the radio button with `on_ok' via the wrapper `on_double_click_radio_button'
-			a_radio_button.pointer_double_press_actions.extend (agent on_double_click_radio_button)
+				-- Connect the radio button with `on_ok' via the wrapper `on_double_click'
+			a_radio_button.pointer_double_press_actions.extend (agent on_double_click)
 	
 			create hb
 			hb.set_padding (Layout_constants.Small_padding_size)
@@ -324,7 +324,6 @@ feature {NONE} -- Execution
 			-- Ok button has been pressed
 		do
 			ok_selected := True
-			hide
 
 				-- Create a new project using an ISE Wizard
 			if wizard_rb.is_selected then
@@ -346,29 +345,18 @@ feature {NONE} -- Execution
 				window_manager.last_focused_development_window.Melt_project_cmd.execute
 			end
 
-			if not is_destroyed then
-				show_modal_to_window (parent_window)
-			end
 			update_preferences
 		end
 
-	on_double_click_radio_button (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
+	on_double_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
 					a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
 					a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- A radio button has been double clicked
 		do
 				-- Execute the selected radio button
-			on_ok
-		end
-
-	on_double_click_project_list,
-	on_double_click_wizard_list (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
-					a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
-					a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- The `wizards_list' or the `projects_list' has been double clicked
-		do
-				-- Execute the selected wizard or project
-			on_ok
+			if a_button = 1 then
+				on_ok
+			end
 		end
 
 	create_new_project_using_ace_file is
@@ -409,6 +397,7 @@ feature {NONE} -- Execution
 			create_project_dialog: EB_CREATE_PROJECT_DIALOG
 		do
 			create create_project_dialog.make_blank (parent_window)
+			hide
 			create_project_dialog.show_modal_to_parent
 
 				-- Destroy the current dialog if `create_project_dialog'
@@ -416,6 +405,8 @@ feature {NONE} -- Execution
 			if create_project_dialog.success then
 				destroy
 				compile_project := create_project_dialog.compile_project
+			else
+				show_modal_to_window (parent_window)
 			end
 		end
 
@@ -455,12 +446,15 @@ feature {NONE} -- Execution
 			li := compiled_projects_list.selected_item
 			if li /= Void then
 				create open_project_cmd.make_with_parent (parent_window)
+				hide
 				set_pointer_style (Pixmaps.Wait_cursor)
 				open_project_cmd.execute_with_file (li.text)
 				set_pointer_style (Pixmaps.standard_cursor)
 
 				if Eiffel_project.initialized then
 					destroy
+				else
+					show_modal_to_window (parent_window)
 				end
 			else
 				create wd.make_with_text (Warning_messages.w_Select_project_to_load)
@@ -475,8 +469,6 @@ feature {NONE} -- Execution
 		local
 			open_project_cmd: EB_OPEN_PROJECT_COMMAND
 		do
-			hide
-
 			create open_project_cmd.make_with_parent (Current)
 			open_project_cmd.execute
 
@@ -530,7 +522,7 @@ feature {NONE} -- Implementation
 			wizards_list.set_minimum_height (layout_constants.dialog_unit_to_pixels (80))
 
 				-- Connect the list with `on_ok' via the wrapper `on_double_click_wizard_list'
-			wizards_list.pointer_double_press_actions.extend (agent on_double_click_wizard_list)
+			wizards_list.pointer_double_press_actions.extend (agent on_double_click)
 
 			if not retried then
 				load_available_wizards
@@ -575,8 +567,8 @@ feature {NONE} -- Implementation
 				end
 			end
 
-				-- Connect the list with `on_ok' via the wrapper `on_double_click_project_list'
-			compiled_projects_list.pointer_double_press_actions.extend (agent on_double_click_project_list)
+				-- Connect the list with `on_ok' via the wrapper `on_double_click'
+			compiled_projects_list.pointer_double_press_actions.extend (agent on_double_click)
 		ensure
 			compiled_projects_list_created: compiled_projects_list /= Void
 		rescue

@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 					-- then no argument was specified, only the
 					-- name of the executable.
 				default_create
+				build_non_once_windows
 				xml_handler.load_components
 				main_window.build_interface
 				main_window.show
@@ -92,6 +93,7 @@ feature {NONE} -- Initialization
 					-- Question `project_settings' to see how to open the file.
 				if project_settings.is_stand_alone_project then
 					default_create
+					build_non_once_windows
 					xml_handler.load_components
 					main_window.build_interface
 					main_window.show
@@ -156,4 +158,12 @@ feature {NONE} -- Implementation
 			command_handler.Open_project_command.execute_with_name (f)			
 		end
 		
+	build_non_once_windows is
+			-- Create windows that must be explicitly created before use
+			-- i.e. non once features.
+		do
+			set_display_window (create {GB_DISPLAY_WINDOW})
+			set_builder_window (create {GB_BUILDER_WINDOW})
+		end
+
 end

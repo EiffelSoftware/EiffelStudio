@@ -2864,6 +2864,7 @@ feature -- Supplier checking
 						error := False
 					when 1 then
 						arg_type ?= creation_proc.arguments.first
+						arg_type := arg_type.instantiation_in (actual_type, class_id).actual_type
 						error := not arg_type.is_deep_equal (Array_of_string)
 					else
 						error := True

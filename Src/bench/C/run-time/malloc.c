@@ -941,7 +941,7 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 doc:	<routine name="sprealloc" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Reallocate a special object `ptr' so that it can hold at least `nbitems'.</summary>
 doc:		<param name="ptr" type="EIF_REFERENCE">Special object which will be reallocated.</param>
-doc:		<param name="nbitems" type="long int">New number of items wanted.</param>
+doc:		<param name="nbitems" type="unsigned int">New number of items wanted.</param>
 doc:		<return>A newly allocated special object if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
 doc:		<thread_safety>Safe</thread_safety>
@@ -949,14 +949,14 @@ doc:		<synchronization>None required, it is done by the features we are calling.
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
+rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 {
 	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc information zone */
 	EIF_REFERENCE ref, object;
-	EIF_INTEGER count, elem_size;
-	int old_size, new_size;					/* New and old size of special object. */
-	int old_real_size, new_real_size;		/* Size occupied by items of special */
+	unsigned int count, elem_size;
+	unsigned int old_size, new_size;					/* New and old size of special object. */
+	unsigned int old_real_size, new_real_size;		/* Size occupied by items of special */
 #ifdef ISE_GC
 	EIF_BOOLEAN need_update = EIF_FALSE;	/* Do we need to remember content of special? */
 #endif

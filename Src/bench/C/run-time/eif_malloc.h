@@ -74,9 +74,7 @@ RT_LNK EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lowe
 RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */
 						/* Set the string header. */
 RT_LNK EIF_REFERENCE cmalloc(unsigned int nbytes);				/* Allocate a C object */
-RT_LNK EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems);			/* Reallocate an Eiffel special object */
-RT_LNK EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems);			/* Reallocate an Eiffel special object */
-
+RT_LNK EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems);			/* Reallocate an Eiffel special object */
 
 #ifdef __cplusplus
 }

@@ -1,10 +1,10 @@
 AR = lib
 CC = cl
 CTAGS = ctags
-CFLAGS = -Ox -W3 -nologo  -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+CFLAGS = -Ox -W3 -nologo  -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
 MAKE = nmake
 RANLIB = echo
-RM = del
+RM = -del
 MV = copy
 
 all:: clean support.lib

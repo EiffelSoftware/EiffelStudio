@@ -384,13 +384,36 @@ int where;		/* Invariant is being checked before or after compound? */
 			body_id = dispatch[body_index];
 			if (body_id < zeroc) { 		/* Frozen invariant */
 				((void (*)()) frozen[body_id])(obj, where);
-			} else {					/* Melted invariant */
+			} else 
+#ifndef DLE
+				/* Melted invariant */
+			{					
 				last = iget();
 				last->type = SK_REF;
 				last->it_ref = obj;
 				IC = melt[body_id];
 				xiinv(IC, where);
 			}
+#else
+			if (body_id < dle_level) {
+					/* Static melted invariant */
+				last = iget();
+				last->type = SK_REF;
+				last->it_ref = obj;
+				IC = melt[body_id];
+				xiinv(IC, where);
+			} else if (body_id < dle_zeroc) {
+					/* Dynamic frozen invariant */
+				((void (*)()) dle_frozen[body_id])(obj, where);
+			} else {
+					/* Dynamic melted invariant */
+				last = iget();
+				last->type = SK_REF;
+				last->it_ref = obj;
+				IC = dle_melt[body_id];
+				xiinv(IC, where);
+			}
+#endif
 		}
 	}
 #endif

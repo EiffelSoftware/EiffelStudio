@@ -48,25 +48,31 @@ public int cc_for_speed = 1;			/* Fast memory allocation */
 
 public char *ename;						/* Eiffel program's name */
 public int scount;						/* Number of dynamic types */
-public int ccount;						/* Number of classes */
-public int fcount;						/* Number of frozen dynamic types */
 
 public int in_assertion = 0;			/* Is an assertion being evaluated ? */
 #ifdef WORKBENCH
+public int ccount;						/* Number of classes */
+public int fcount;						/* Number of frozen dynamic types */
 public struct cnode *esystem;			/* Updated Eiffel system */
 public struct conform **co_table;		/* Updated Eiffel conformance table */
 public int32 **ecall;					/* Routine id arrays */
 public struct rout_info *eorg_table;	/* Routine origin/offset table */
-public long dcount;						/* Count of `fdispatch' */
+public long dcount;						/* Count of `dispatch' */
 public uint32 *dispatch;				/* Update dispatch table */
 public uint32 zeroc;					/* Frozen level */
 public char **melt;						/* Byte code array */
 public int *mpatidtab;					/* Table of pattern id's indexed by body id's */
 public struct eif_opt *eoption;			/* Option table */
+public struct interface *pattern;		/* Pattern table */
 extern void winit();					/* Workbench debugger initialization */
 extern void einit();					/* System-dependent initializations */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #else
+public struct cnode *esystem;			/* Eiffel system (updated by DLE) */
+public struct conform **co_table;		/* Eiffel conformance table (updated DLE) */
+public long *esize;						/* Size of objects (updated by DLE) */
+public long *nbref;						/* Gives # of references (updated by DLE) */
+
 /*#define exvec() exft()					/* No stack dump in final mode */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
@@ -173,6 +179,7 @@ char **envp;
 	eoption = foption;
 	co_table = fco_table;
 	eorg_table = forg_table;
+	pattern = fpattern;
 
 	/* Initialize dynamically computed variables (i.e. system dependent) like
 	 * 'zeroc' which is the melting temperature -- the last body id in the
@@ -217,6 +224,18 @@ char **envp;
 #ifndef NOHOOK
 	winit();							/* Did we start under ewb control? */
 #endif
+
+#else
+
+	/*
+	 * Initialize the finalized system with the static data structures.
+	 * These may be updated later on by loading DLE system.
+	 */
+	esystem = fsystem;
+	co_table = fco_table;
+	nbref = fnbref;
+	esize = fsize;
+
 #endif
 
 #ifdef EIF_WIN_31

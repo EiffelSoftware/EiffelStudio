@@ -93,11 +93,7 @@ struct conform {
 	char *co_tab;		/* Conformance table (mapped on eight bits packs) */
 };
 
-#ifdef TEST
-int scount = 100;
-#else
-extern int scount;				/* Number of dynamic types */
-#endif
+extern int scount;				/* Numner of dynamic types */
 
 #ifdef WORKBENCH
 struct desc_info {						/* Descriptor information */
@@ -115,7 +111,8 @@ struct rout_info {						/* Routine information */
  * in production mode and dynamically in workbench mode.
  */
 #ifndef WORKBENCH
-extern struct cnode esystem[];	/* Describes a full Eiffel system */
+extern struct cnode *esystem;	/* Describes a full Eiffel system (with DLE) */
+extern struct cnode fsystem[];	/* Describes the full static Eiffel system */
 #else
 extern struct cnode fsystem[];			/* Describes the full frozen Eiffel system */
 extern struct cnode *esystem;			/* Pointer to updated Eiffel system */
@@ -143,7 +140,8 @@ extern int nstcall;
 extern struct conform **co_table;
 extern struct conform *fco_table[];
 #else
-extern struct conform *co_table[];
+extern struct conform **co_table;
+extern struct conform *fco_table[];
 #endif
 
 typedef char *(*fnptr)();       /* The function pointer type */
@@ -163,10 +161,10 @@ struct interface {
 	fnptr toi;			/* Pattern from C code to interpreter */
 };
 
-extern int scount;				/* Number of dynamic types */
 extern int ccount;				/* Number of classes */
-extern long dcount;				/* Size of `fdispatch' */
+extern long dcount;				/* Size of `dispatch' */
 extern long melt_count;			/* Size of `melt' table */
+extern long dle_melt_count;		/* Size of `dle_melt' table */
 
 /*
  * Dispatch table: array of body ids indexed by body indexes
@@ -179,14 +177,22 @@ extern uint32 *dispatch;		/* Updated dispatch table */
  */
 extern fnptr frozen[];			/* C routine array (frozen routines) */
 extern char **melt;				/* Byte code array of melted eiffel features */
+extern fnptr *dle_frozen;		/* DLE C routine array (frozen routines) */
+extern char **dle_melt;			/* Byte code array of DLE melted features */
 extern uint32 zeroc;			/* Frozen level */
+extern uint32 dle_level;		/* DLE level */
+extern uint32 dle_zeroc;		/* DLE frozen level */
+
 extern int *mpatidtab;			/* Table of pattern id's indexed by body id's */
 extern int fpatidtab[];			/* Table of pattern id's indexed by body id's */
+extern int *dle_mpatidtab;		/* Table of pattern id's indexed by body id's */
+extern int *dle_fpatidtab;		/* Table of pattern id's indexed by body id's */
 
 /*
  * Pattern table for interface between C code and the interpreter
  */
-extern struct interface pattern[];
+extern struct interface *pattern;
+extern struct interface fpattern[];
 
 #endif
 #endif

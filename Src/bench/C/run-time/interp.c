@@ -2067,29 +2067,6 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
-	 * Hector protection of an address
-	 */
-	case BC_PROTECT:
-#ifdef DEBUG
-		dprintf(2)("BC_PROTECT\n");
-#endif
-		last = otop();
-		last->type = SK_POINTER;	/* So the EIF_OBJECT will be ignored by GC */
-		last->it_ref = (EIF_REFERENCE) RTHP(last->it_ref);
-		break;
-
-	/* 
-	 * Hector address release
-	 */
-	case BC_RELEASE:
-#ifdef DEBUG
-		dprintf(2)("BC_RELEASE\n");
-#endif
-		code = get_short();
-		RTHF(code);
-		break;
-
-	/*
 	 * Access to Current.
 	 */
 	case BC_CURRENT:

@@ -532,6 +532,7 @@ feature -- Menu mnenomics
 	m_Create_new_cluster: STRING is		"New c&luster..."
 	m_Create_new_class: STRING is		"&New class..."
 	m_Create_new_feature: STRING is		"New fea&ture..."
+	m_Showhide_signature: STRING is		"Show/hide signature"
 	m_C_Compilation: STRING is			"C Com&pilation"
 	m_Debug: STRING is					"&Debug"
 	m_Disable_this_bkpt: STRING is		"&Disable this breakpoint"

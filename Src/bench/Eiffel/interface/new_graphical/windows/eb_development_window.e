@@ -293,6 +293,9 @@ feature {NONE} -- Initialization
 
 			create new_feature_cmd.make (Current)
 			toolbarable_commands.extend (new_feature_cmd)
+			
+			create toggle_feature_signature_cmd.make (Current)
+			toolbarable_commands.extend (toggle_feature_signature_cmd)			
 
 			create toggle_stone_cmd.make (Current)
 			toolbarable_commands.extend (toggle_stone_cmd)
@@ -325,6 +328,7 @@ feature {NONE} -- Initialization
 			window.focus_in_actions.extend(agent on_focus)
 
 			new_feature_cmd.disable_sensitive
+			toggle_feature_signature_cmd.disable_sensitive
 
 			create editors.make (5)
 		end
@@ -1585,6 +1589,11 @@ feature -- Menu Building
 			command_menu_item := new_feature_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			tools_menu.extend (command_menu_item)
+			
+				-- Toggle feature signature command.
+			command_menu_item := toggle_feature_signature_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			tools_menu.extend (command_menu_item)						
 
 				-- Delete class/cluster command.
 			command_menu_item := delete_class_cluster_cmd.new_menu_item
@@ -2406,6 +2415,8 @@ feature {NONE} -- Implementation
 				cluster_st ?= a_stone
 				
 				new_feature_cmd.disable_sensitive
+				toggle_feature_signature_cmd.disable_sensitive
+				
 					-- We update the state of the `Add to Favorites' command.
 				if new_class_stone /= Void then
 					favorites_menu.first.enable_sensitive
@@ -2507,6 +2518,8 @@ feature {NONE} -- Implementation
 							Eiffel_project.Workbench.last_reached_degree <= 2
 						then
 							new_feature_cmd.enable_sensitive
+							toggle_feature_signature_cmd.enable_sensitive
+							toggle_feature_signature_cmd.reset_signature_status
 						end
 
 						--address_manager.enable_formatters
@@ -3153,6 +3166,9 @@ feature {EB_TOOL} -- Implementation / Commands
 
 	new_feature_cmd: EB_NEW_FEATURE_COMMAND
 			-- Command to execute the feature wizard.
+			
+	toggle_feature_signature_cmd: EB_TOGGLE_FEATURE_SIGNATURE_COMMAND
+			-- Show/Hide signature of feature node in eb_feature_tool
 
 	toggle_stone_cmd: EB_UNIFY_STONE_CMD
 			-- Command to toggle between the stone management modes.

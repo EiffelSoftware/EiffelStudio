@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 		do
 			create mini_toolbar
 			mini_toolbar.extend (development_window.new_feature_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (development_window.toggle_feature_signature_cmd.new_mini_toolbar_item)			
 
 			create explorer_bar_item.make_with_mini_toolbar (
 				explorer_bar, widget, title, True, mini_toolbar

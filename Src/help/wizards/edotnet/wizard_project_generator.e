@@ -85,18 +85,10 @@ feature -- Basic Operations
 
 				-- Generation
 			if not root_class_name_lowercase.is_equal (None_class) then
-				if wizard_information.is_most_recent_clr_version then
-					from_template_to_project (wizard_resources_path, ace_template_filename_recent_clr, project_location, project_name_lowercase + Ace_extension, map_list)
-				else					
-					from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Ace_extension, map_list)
-				end
+				from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Ace_extension, map_list)
 				from_template_to_project (wizard_resources_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
 			else
-				if wizard_information.is_most_recent_clr_version then
-					from_template_to_project (wizard_resources_path, ace_template_with_root_class_none_filename_recent_clr, project_location, project_name_lowercase + Ace_extension, map_list)
-				else
-					from_template_to_project (wizard_resources_path, Ace_template_with_root_class_none_filename, project_location, project_name_lowercase + Ace_extension, map_list)
-				end
+				from_template_to_project (wizard_resources_path, Ace_template_with_root_class_none_filename, project_location, project_name_lowercase + Ace_extension, map_list)
 			end
 		end
 

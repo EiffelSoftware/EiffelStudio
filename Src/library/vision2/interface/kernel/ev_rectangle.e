@@ -53,7 +53,7 @@ feature -- Access
 		end
 		
 	top: INTEGER is
-			-- Horiaontal position of right side
+			-- Vertical position of top.
 		do
 			Result := y
 		end

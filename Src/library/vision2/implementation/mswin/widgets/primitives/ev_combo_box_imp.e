@@ -20,6 +20,7 @@ inherit
 
 	EV_TEXT_COMPONENT_IMP
 		redefine
+			set_minimum_width_in_characters,
 			set_default_minimum_size,
 			move_and_resize,
 			set_editable
@@ -78,7 +79,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a combo-box.
 		do
-			internal_window_make (default_parent.item, void, default_style + Cbs_dropdown,
+			internal_window_make (default_parent.item, Void, default_style + Cbs_dropdown,
 				0, 0, 0, 90, 0, default_pointer)
  			id := 0
 			!! ev_children.make (2)
@@ -451,6 +452,15 @@ feature {NONE} -- WEL implementation
 			-- external feature.
 		do
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
+
+feature -- Temp
+
+	set_minimum_width_in_characters (nb: INTEGER) is
+			-- Make `nb' characters visible on one line.
+			-- We add nine for the borders.
+		do
+			set_minimum_width (nb * 6 + 9)
 		end
 
 end -- class EV_COMBO_BOX_IMP

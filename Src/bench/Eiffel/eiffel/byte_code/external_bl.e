@@ -202,6 +202,14 @@ feature
 					-- so the name can be hardwired.
 				if encapsulated then
 						-- Generate the right name to call the external
+					if is_boolean then
+						buf.putstring ("EIF_TEST(")
+					else
+						if extension.has_return_type then
+							type_c.generate_cast (buf)
+						end
+					end
+
 					if extension.is_dll then
 							-- In the case of a dll, the encapsulation will be called (encoded name)
 						rout_table ?= Eiffel_table.poly_table (routine_id)
@@ -223,17 +231,8 @@ feature
 						buf.putchar ('(')
 						type_c.generate_function_cast (buf, local_argument_types)
 						buf.putstring (internal_name)
-						if not is_boolean then
-							buf.putchar (')')
-						end
+						buf.putchar (')')
 					else
-						if is_boolean then
-							buf.putstring ("EIF_TEST(");
-						else
-							if extension.has_return_type then
-								type_c.generate_cast (buf);
-							end
-						end;
 						extension.generate_header_files
 
 							-- In the case of a signature or a macro, the call will be direct

@@ -52,7 +52,6 @@ feature {NONE} -- Initialization
 			exit_menu_item.select_actions.extend 			(agent close_application)
 			
 					-- Edit Menu
-			menu_uppercase_tags.select_actions.extend 		(agent toggle_format_options)
 			cut_menu_item.select_actions.extend				(agent Shared_document_editor.cut_text)
 			copy_menu_item.select_actions.extend 			(agent Shared_document_editor.copy_text)
 			paste_menu_item.select_actions.extend 			(agent Shared_document_editor.paste_text)
@@ -98,6 +97,7 @@ feature {NONE} -- Initialization
 			toolbar_validate.select_actions.extend 			(agent Shared_document_editor.validate_document)
 			toolbar_link_check.select_actions.extend		(agent shared_document_editor.validate_document_links)
 			toolbar_properties.select_actions.extend 		(agent open_document_properties_dialog)
+			toolbar_highlight_toggle.select_actions.extend 	(agent update_highlighting)
 			output_combo.select_actions.extend 				(agent update_output_filter)
 											
 					-- TOC Widget Events
@@ -230,6 +230,7 @@ feature -- Interface Events
 				
 						-- Filtering
 				output_combo.enable_sensitive
+				toolbar_highlight_toggle.enable_sensitive
 			else
 						-- Save
 				toggle_sensitivity (toolbar_save, False)
@@ -251,6 +252,7 @@ feature -- Interface Events
 				
 						-- Filtering
 				output_combo.disable_sensitive
+				toolbar_highlight_toggle.disable_sensitive
 			end					
 		end
 		
@@ -327,29 +329,6 @@ feature -- Interface Events
 				end
 			end
 		end		
-		
-	toggle_format_options is
-			-- Toggle document format menu options
-		local
-			l_doc: DOCUMENT
-		do
-			if Shared_document_editor.has_open_document then			
-				l_doc := Shared_document_editor.current_document
-				if menu_uppercase_tags.is_sensitive then
-					Shared_constants.Application_constants.set_tags_uppercase (menu_uppercase_tags.is_selected)
-					if l_doc.is_valid_xml then
-						Shared_document_editor.format_tags
-						update_status_report (False, "")
-					else
-						report_label.set_foreground_color (Shared_constants.Application_constants.error_color)
-					end		
-				else
-					Shared_constants.Application_constants.set_tags_uppercase (False)
-				end		
-			else
-				update_status_report (True, "No document loaded")
-			end
-		end
 
 feature -- GUI Updating
 	
@@ -418,16 +397,40 @@ feature -- GUI Updating
 	update_output_filter is
 			-- Update the output filter type
 		local
-			l_filter: DOCUMENT_FILTER
+			l_filter: OUTPUT_FILTER
 			l_curr_doc: DOCUMENT
 		do
-			l_filter := Shared_project.filter_manager.filter_by_description (output_combo.selected_item.text)			
+			l_filter ?= Shared_project.filter_manager.filter_by_description (output_combo.selected_item.text)
+			if l_filter.highlighting_enabled then
+				toolbar_highlight_toggle.enable_select
+			else
+				toolbar_highlight_toggle.disable_select
+			end
 			shared_project.filter_manager.set_filter (l_filter)
 			l_curr_doc := shared_document_editor.current_document
 			if l_curr_doc /= Void then				
 				shared_web_browser.set_document (l_curr_doc)
+				if l_filter.highlighting_enabled then
+					l_curr_doc.widget.internal_edit_widget.highlight					
+				end
 			end
 		end
+		
+	update_highlighting is
+			-- Update highlighting info
+		local
+			l_filter: OUTPUT_FILTER
+			l_document_widget: DOCUMENT_TEXT_WIDGET
+		do			
+			l_filter ?= shared_project.filter_manager.filter_by_description (output_combo.selected_item.text)
+			l_filter.enable_highlighting (toolbar_highlight_toggle.is_selected)
+			if shared_document_editor.has_open_document then
+				l_document_widget := shared_document_editor.current_document.widget.internal_edit_widget
+				if l_document_widget /= Void then					
+					l_document_widget.highlight
+				end
+			end
+		end		
 
 	update_output_combo is
 			-- Update the output combo box
@@ -447,7 +450,8 @@ feature -- GUI Updating
 					output_combo.extend (l_list_item)
 					l_filters.forth
 				end
-			end	
+			end
+			update_output_filter
 		end
 
 feature -- Status Setting

@@ -14,6 +14,12 @@ inherit
 				document_toc
 		end
 
+	OBSERVER
+		undefine
+			default_create,
+			copy
+		end
+
 	SHARED_OBJECTS
 		undefine
 			default_create,
@@ -33,67 +39,94 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			create render_factory
+			create internal_selector_widgets.make (4)
 			shared_document_editor.initialize (document_editor, Current)
 			
-				-- Menu Events
-			new_xml_menu_item.select_actions.extend 		(agent open_template_dialog)
-			open_xml_menu_item.select_actions.extend 		(agent Shared_document_editor.open_document)
-			open_docs_xml_menu_item.select_actions.extend 	(agent Shared_project.open_from_existing_project)
-			save_xml_menu_item.select_actions.extend 		(agent Shared_document_editor.save_document)
+					-- File Menu
+			new_menu_item.select_actions.extend 			(agent open_template_dialog)
+			open_menu_item.select_actions.extend 			(agent Shared_document_manager.open_document)
+			open_project_menu_item.select_actions.extend 	(agent Shared_project.open)
+			save_menu_item.select_actions.extend 			(agent Shared_document_editor.save_document)
 			close_menu_item.select_actions.extend 			(agent Shared_document_editor.close_document)
+			
+					-- Edit Menu
 			menu_uppercase_tags.select_actions.extend 		(agent toggle_format_options)
 			cut_menu_item.select_actions.extend				(agent Shared_document_editor.cut_text)
 			copy_menu_item.select_actions.extend 			(agent Shared_document_editor.copy_text)
 			paste_menu_item.select_actions.extend 			(agent Shared_document_editor.paste_text)
-			settings_menu_item.select_actions.extend 		(agent open_settings_dialog)
-			gen_menu_item.select_actions.extend 			(agent open_generation_dialog)
 			search_menu_item.select_actions.extend 			(agent Shared_document_editor.open_search_dialog)
 			parser_menu_item.select_actions.extend 			(agent open_expression_dialog)
+			
+					-- View Menu
+			element_selector_menu.set_data (element_area)
+			element_selector_menu.select_actions.extend 			(agent toggle_view (element_selector_menu))
+			types_selector_menu.set_data (type_area)
+			types_selector_menu.select_actions.extend 				(agent toggle_view (types_selector_menu))
+			doc_selector_menu.set_data (documentation_area)
+			doc_selector_menu.select_actions.extend 				(agent toggle_view (doc_selector_menu))
+			attribute_selector_menu.set_data (attribute_list_tool)
+			attribute_selector_menu.select_actions.extend 			(agent toggle_view (attribute_selector_menu))
+			sub_element_menu.set_data (sub_element_tool)
+			sub_element_menu.select_actions.extend 					(agent toggle_view (sub_element_menu))
+					
+					-- Project Menu
+			settings_menu_item.select_actions.extend 		(agent open_settings_dialog)
+			
+					-- Tools Menu
+			gen_menu_item.select_actions.extend 			(agent open_generation_dialog)
 			validator_menu_item.select_actions.extend 		(agent open_validator_tool)
 			expression_menu_item.select_actions.extend 		(agent open_expression_dialog)
-			
-				-- Toolbar Events
+		
+					-- Toolbar Events
 			toolbar_cut.select_actions.extend 				(agent Shared_document_editor.cut_text)
 			toolbar_copy.select_actions.extend 				(agent Shared_document_editor.copy_text)
 			toolbar_paste.select_actions.extend 			(agent Shared_document_editor.paste_text)			
 			toolbar_xml_format.select_actions.extend		(agent Shared_document_editor.pretty_print_text)
-			toolbar_new.select_actions.extend 				(agent Shared_document_editor.open_new_document)
-			toolbar_open.select_actions.extend 				(agent Shared_document_editor.open_document)
+			toolbar_new.select_actions.extend 				(agent Shared_document_manager.create_document)
+			toolbar_open.select_actions.extend 				(agent Shared_document_manager.open_document)
 			toolbar_save.select_actions.extend 				(agent Shared_document_editor.save_document)
 			toolbar_validate.select_actions.extend 			(agent Shared_document_editor.validate_document)
-			toolbar_studio.select_actions.extend 			(agent Shared_document_manager.transform_studio_output)
-			toolbar_envision.select_actions.extend 			(agent Shared_document_manager.transform_envision_output)
 			toolbar_properties.select_actions.extend 		(agent open_document_properties_dialog)
+			toolbar_studio.select_actions.extend 			(agent update_output_filter)
+			toolbar_envision.select_actions.extend 			(agent update_output_filter)
+			toolbar_web.select_actions.extend 				(agent update_output_filter)
+			
+					-- TOC Widget Events
+			toc_new_button.select_actions.extend 			(agent open_new_toc_dialog)
+			toc_open_button.select_actions.extend 			(agent Shared_toc_manager.open_toc)
+			toc_save_button.select_actions.extend 			(agent Shared_toc_manager.save_toc)
+			toc_menu_button.select_actions.extend 			(agent show_loaded_tocs)
+			toc_properties_button.select_actions.extend 	(agent open_toc_properties_dialog)
+			toc_new_heading.select_actions.extend 			(agent Shared_toc_manager.new_node (True))
+			toc_new_page.select_actions.extend 				(agent Shared_toc_manager.new_node (False))
+			toc_remove_topic.select_actions.extend 			(agent Shared_toc_manager.remove_node)
 				
-				-- Misc Interface Events
+					-- Misc Interface Events
 			editor_close.select_actions.extend	 			(agent Shared_document_editor.close_document)
 			document_editor.selection_actions.extend 		(agent Shared_document_editor.document_changed)
-			studio_toc_radio.select_actions.extend 			(agent update_output_filter)
-			envision_toc_radio.select_actions.extend 		(agent update_output_filter)
+			attribute_list_close.select_actions.extend 		(agent attribute_selector_menu.disable_select)
+			attribute_list_close.select_actions.extend 		(agent show_hide_widget (attribute_list_tool, False))
+			sub_element_close.select_actions.extend 		(agent sub_element_menu.disable_select)
+			sub_element_close.select_actions.extend 		(agent show_hide_widget (sub_element_tool, False))
+			node_properties_close.select_actions.extend 	(agent show_hide_widget (node_properties_tool, False))
+			
 
 				-- Initial setup
-			internal_element_selector := element_area
-			internal_type_selector := type_area
-			attribute_list.hide
-			update_status_report (True, "No document loaded")
-			
---			browser_container.extend (Shared_web_browser)
---			Shared_web_browser.show
-			
+			update_status_report (True, "No document loaded")			
 			set_root_window (Current)
 			initialize_path_constants
 			initialize_temp_directory
-			Shared_constants.Application_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.All_filter)
-			
-			close_request_actions.extend (agent (create {EV_APPLICATION}).destroy)
+			should_update := True
+			update			
+			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 		end
 
 	initialize_path_constants is
-			-- Initialize constnats
+			-- Initialize constants
 		local
-			tmp_var: DIRECTORY_NAME
+--			tmp_var: DIRECTORY_NAME
 		do
-			tmp_var := Shared_constants.Application_constants.Resources_directory
+--			tmp_var := Shared_constants.Application_constants.Resources_directory
 		end	
 		
 	initialize_temp_directory is
@@ -104,11 +137,30 @@ feature {NONE} -- Initialization
 		local
 			l_dir: DIRECTORY
 		do
+					-- Main temporary directory
 			create l_dir.make (Shared_constants.Application_constants.Temporary_directory)
 			if l_dir.exists then
 				l_dir.recursive_delete
 			end
 			l_dir.create_dir
+			
+					-- Temporary directory for Help projects
+			create l_dir.make (Shared_constants.Application_constants.Temporary_help_directory)
+			if not l_dir.exists then
+				l_dir.create_dir
+			end		
+			
+					-- 	Temporary directory for HTML
+			create l_dir.make (Shared_constants.Application_constants.Temporary_html_directory)
+			if not l_dir.exists then
+				l_dir.create_dir
+			end
+			
+					-- Temporary directory for XML
+			create l_dir.make (Shared_constants.Application_constants.Temporary_xml_directory)
+			if not l_dir.exists then
+				l_dir.create_dir
+			end
 		end	
 
 feature -- Commands
@@ -127,180 +179,178 @@ feature -- Commands
 
 feature -- Interface Events	
 		
-	hide_sub_element_tool is
-			-- Hide the Sub-element tool
+	show_hide_widget (a_widget: EV_WIDGET; show_flag: BOOLEAN) is	
+			-- Show or hide widget according to `show_flag'
+		local
+			l_text: STRING
+			l_list: ARRAYED_LIST [STRING]
+			done: BOOLEAN
+			l_widget: EV_WIDGET
 		do
-			sub_element_tool.hide	
-		end
-		
-	hide_browser_tool is
-			-- Hide the Web browser tool
-		do
-			sub_element_tool.hide	
-		end
-		
-	hide_main_tool is
-			-- Hide the  tool
-		do
-			sub_element_tool.hide	
-		end
-		
-	toggle_types_view is
-			-- Toggle Schema types view
-		do
-			if selector.has (internal_type_selector) then
-				selector.prune (internal_type_selector)
-				if selector.is_empty then
-					selector_container.hide
-					attribute_selector_menu.disable_select
-				end
-				types_selector_menu.disable_select
+			if show_flag then
+				if internal_selector_widgets.has_item (a_widget) then
+					selector.extend (a_widget)
+					create l_list.make_from_array (internal_selector_widgets.current_keys)
+					from
+						l_list.start
+					until
+						l_list.after or done
+					loop
+						l_text := l_list.item
+						l_widget := internal_selector_widgets.item (l_text)
+						done := l_widget = a_widget
+						l_list.forth
+					end
+					selector.set_item_text (a_widget, l_text)
+				else
+					a_widget.show
+				end				
 			else
-				if not selector_container.is_displayed then
-					selector_container.show
-				end
-				selector.put_front (internal_type_selector)
-				selector.set_item_text (internal_type_selector, "Types")
-				selector.select_item (internal_type_selector)
-				types_selector_menu.enable_select
+				if selector.has (a_widget) then
+					if not internal_selector_widgets.has_item (a_widget) then
+						internal_selector_widgets.extend (a_widget, selector.item_text (a_widget))
+					end				
+					selector.prune (a_widget)
+				else
+					a_widget.hide
+				end				
 			end
+		end
+		
+	toggle_view (a_item: EV_CHECK_MENU_ITEM) is
+			-- Toggle view
+		local
+			l_data: EV_WIDGET
+		do
+			l_data ?= a_item.data
+			show_hide_widget (l_data, a_item.is_selected)
 		end	
 
-	toggle_elements_view is
-			-- Toggle Schema elements view
+	update_toolbar is
+			-- Update the toolbar
+		local			
+			l_curr_doc: DOCUMENT
+			l_curr_widget: EV_TEXT
 		do
-			if selector.has (internal_element_selector) then
-				selector.prune (internal_element_selector)
-				if selector.is_empty then
-					selector_container.hide
-					attribute_selector_menu.disable_select
-				end
-				element_selector_menu.disable_select
+			if Shared_document_editor.has_open_document then
+				l_curr_doc := Shared_document_editor.current_document
+				l_curr_widget := Shared_document_editor.current_widget.internal_edit_widget
+				
+						-- Save
+				toggle_sensitivity (toolbar_save, l_curr_doc.is_modified)
+				
+						-- Document
+				toggle_sensitivity (toolbar_copy, l_curr_widget.has_selection)
+				toggle_sensitivity (toolbar_cut, l_curr_widget.has_selection)
+				toggle_sensitivity (toolbar_paste, Shared_document_editor.clipboard_empty)					
+				toggle_sensitivity (toolbar_xml_format, True)
+				toggle_sensitivity (editor_close, True)
+				
+						-- Validation and properties
+				if Shared_document_manager.has_schema then
+					toggle_sensitivity (toolbar_validate, True)
+					toggle_sensitivity (toolbar_properties, True)
+				end					
+				
+						-- Filtering
+				toggle_sensitivity (toolbar_studio, True)
+				toggle_sensitivity (toolbar_envision, True)
+				toggle_sensitivity (toolbar_web, True)
 			else
-				if not selector_container.is_displayed then
-					selector_container.show
-				end
-				selector.put_front (internal_element_selector)
-				selector.set_item_text (internal_element_selector, "Elements")
-				selector.select_item (internal_element_selector)
-				element_selector_menu.enable_select
-			end
-		end	
+						-- Save
+				toggle_sensitivity (toolbar_save, False)
+				
+						-- Document
+				toggle_sensitivity (toolbar_copy, False)
+				toggle_sensitivity (toolbar_cut, False)
+				toggle_sensitivity (toolbar_paste, False)					
+				toggle_sensitivity (toolbar_xml_format, False)
+				toggle_sensitivity (editor_close, False)
+				
+						-- Validation
+				toggle_sensitivity (toolbar_validate, False)
+				
+						-- Properties
+				toggle_sensitivity (toolbar_properties, False)
+				
+						-- Filtering
+				toggle_sensitivity (toolbar_studio, False)
+				toggle_sensitivity (toolbar_envision, False)
+				toggle_sensitivity (toolbar_web, False)
+			end					
+		end
 		
-	toggle_attribute_view is
-			-- Toggle Schema type/element attribute display list
+	update_menus is
+			-- Update the menus
+		local
+			l_curr_doc: DOCUMENT
+			l_curr_widget: EV_TEXT
 		do
-			if selector_container.is_displayed then
-				if attribute_list.is_displayed then
-					attribute_list.hide
-				else
-					attribute_list.show
-				end
+			if Shared_document_editor.has_open_document then
+				l_curr_doc := Shared_document_editor.current_document
+				l_curr_widget := Shared_document_editor.current_widget.internal_edit_widget
+				
+						-- File Menu
+				toggle_sensitivity (save_menu_item, l_curr_doc.is_modified)
+				toggle_sensitivity (close_menu_item, True)
+				
+						-- Edit Menu
+				toggle_sensitivity (document_menu, True)
+				toggle_sensitivity (copy_menu_item, l_curr_widget.has_selection)
+				toggle_sensitivity (cut_menu_item, l_curr_widget.has_selection)
+				toggle_sensitivity (paste_menu_item, Shared_document_editor.clipboard_empty)										
 			else
-				attribute_selector_menu.disable_sensitive
+						-- File menu
+				toggle_sensitivity (save_menu_item , False)
+				toggle_sensitivity (close_menu_item, False)
+				
+						-- Edit Menu
+				toggle_sensitivity (document_menu, False)
 			end
-		end
-		
-	toggle_editor_view is
-			-- Show/hide document editor
-		do
-			if editor_tool.is_displayed then
-				editor_tool.hide
-				doc_selector_menu_item.disable_select
+			if Shared_project.is_valid then
+				toggle_sensitivity (document_menu, True)
+				toggle_sensitivity (project_menu, True)
+				toggle_sensitivity (tool_menu, True)
 			else
-				editor_tool.show
-				doc_selector_menu_item.enable_select
+				toggle_sensitivity (document_menu, False)
+				toggle_sensitivity (project_menu, False)
+				toggle_sensitivity (tool_menu, False)
 			end
 		end
-	
-	toggle_output_view is
-			-- Show/hide browser output
+		
+	update_toc_toolbar is
+			-- Update TOC toolbar
 		do
-			if browser_tool.is_displayed then
-				browser_tool.hide
-				output_selector_menu_item.disable_select
+			if Shared_toc_manager.loaded_toc = Void then
+				toggle_sensitivity (toc_save_button, False)
+				toggle_sensitivity (toc_properties_button, False)
+				toggle_sensitivity (toc_new_heading, False)
+				toggle_sensitivity (toc_new_page, False)
+				toggle_sensitivity (toc_remove_topic, False)
+				toggle_sensitivity (toc_menu_button, False)
 			else
-				browser_tool.show
-				output_selector_menu_item.enable_select
+				toggle_sensitivity (toc_save_button, True)
+				toggle_sensitivity (toc_properties_button, True)
+				toggle_sensitivity (toc_new_heading, True)
+				toggle_sensitivity (toc_new_page, True)
+				toggle_sensitivity (toc_remove_topic, True)
+				toggle_sensitivity (toc_menu_button, True)
 			end
-		end	
-	
-	toggle_sub_element_view is
-			-- Show/hide sub elements list
-		do
-			if sub_element_tool.is_displayed then
-				sub_element_tool.hide
-				sub_element_menu_item.disable_select
-			else
-				sub_element_tool.show
-				sub_element_menu_item.enable_select
-			end
-		end	
-	
-	toggle_document_close (on: BOOLEAN) is
-			-- Toggle document close button
-		do
-			toggle_sensitivity (on, editor_close)
-		end
-	
-	toggle_save (on: BOOLEAN) is
-			-- Toggle Save
-		do
-			toggle_sensitivity (on, toolbar_save)
-			toggle_sensitivity (on, save_xml_menu_item)
-		end
-		
-	toggle_paste (on: BOOLEAN) is
-			-- Toggle paste
-		do
-			toggle_sensitivity (on, toolbar_paste)
-			toggle_sensitivity (on, paste_menu_item)
-		end
-	
-	toggle_copy (on: BOOLEAN) is
-			-- Toggle Copy
-		do
-			toggle_sensitivity (on, toolbar_copy)
-			toggle_sensitivity (on, copy_menu_item)
-		end
-		
-	toggle_cut (on: BOOLEAN) is
-			-- Toggle Cut
-		do
-			toggle_sensitivity (on, toolbar_cut)
-			toggle_sensitivity (on, cut_menu_item)
-		end
-		
-	toggle_xml_format_button (on: BOOLEAN) is
-			-- Toggle button used for document schema validation
-		do
-			toggle_sensitivity (on, toolbar_xml_format)
-		end	
-		
-	toggle_properties_button (on: BOOLEAN) is
-			-- Toggle button used for document properties dialog
-		do
-			toggle_sensitivity (on, toolbar_properties)
-		end		
-		
-	toggle_transform_buttons (on: BOOLEAN) is
-			-- Toggle `toolbar_envision' and `toolbar_studio'
-		do
-			toggle_sensitivity (on, toolbar_envision)
-			toggle_sensitivity (on, toolbar_studio)
 		end		
 		
 	toggle_format_options is
 			-- Toggle document format menu options
+		local
+			l_doc: DOCUMENT
 		do
-			if Shared_document_manager.current_document /= Void then			
+			if Shared_document_editor.has_open_document then			
+				l_doc := Shared_document_editor.current_document
 				if menu_uppercase_tags.is_sensitive then
 					Shared_constants.Application_constants.set_tags_uppercase (menu_uppercase_tags.is_selected)
-					if Shared_document_manager.current_document.is_valid_xml then
+					if l_doc.is_valid_xml then
 						Shared_document_editor.format_tags
 						update_status_report (False, "")
 					else
-						Shared_document_manager.current_document.xml_validator.error_report.show
 						report_label.set_foreground_color (Shared_constants.Application_constants.error_color)
 					end		
 				else
@@ -310,48 +360,30 @@ feature -- Interface Events
 				update_status_report (True, "No document loaded")
 			end
 		end
-	
-	toggle_validate_button is
-			-- Toggle button used for document schema validation
-		do
-			if 
-				Shared_document_manager.current_document /= Void and then
-				Shared_document_manager.schema /= Void
-			then
-				toolbar_validate.enable_sensitive
-			else
-				toolbar_validate.disable_sensitive
-			end
-		end		
 
 feature -- GUI Updating
 	
 	update is
-			-- Update full interface
+			-- Update interface
 		do
-				
+			update_toolbar
+			update_menus
+			update_toc_toolbar
 		end		
 	
-	update_document_editor is
-			-- Update GUI element display in the document editor
-		do
-			if Shared_document_editor.is_empty then
-				toggle_sensitivity (False, editor_close)
-				update_status_report (False, "")
-				update_status_line (1)
-			else
-				toggle_sensitivity (True, editor_close)
-			end
-		end
-	
-	update_sub_element_list (list: SORTED_TWO_WAY_LIST [STRING]) is
-			-- Update the sub-element list display to reflect `list'
+	update_sub_element_list (a_el_name: STRING; list: SORTED_TWO_WAY_LIST [STRING]) is
+			-- Update the sub-element list display to reflect `listrequire
+		require
+			name_not_void: a_el_name /= Void
+			name_not_empty: not a_el_name.is_empty
 		local
 			l_row: EV_LIST_ITEM
 			schema_element: DOCUMENT_SCHEMA_ELEMENT
 			children: LINKED_LIST [DOCUMENT_SCHEMA_ELEMENT]
 			l_sorted_list: SORTED_TWO_WAY_LIST [STRING]
 		do
+			sub_elements_list.wipe_out
+			title_label.set_text (" Sub Elements <" + a_el_name + ">")
 			if list /= Void then
 				if sub_elements_list.is_displayed then
 					sub_elements_list.wipe_out
@@ -365,12 +397,8 @@ feature -- GUI Updating
 						sub_elements_list.extend (l_row)
 						list.forth
 					end
-				end
-			end
-			if sub_elements_list.is_empty then
-				create l_row.make_with_text ("Element has no sub elements")
-				sub_elements_list.extend (l_row)
-			end
+				end	
+			end			
 		end
 	
 	update_status_report (is_error: BOOLEAN; message: STRING) is
@@ -378,7 +406,7 @@ feature -- GUI Updating
 		require
 			message_not_void: message /= Void
 		do
-			if Shared_document_manager.current_document /= Void then
+			if Shared_document_editor.has_open_document then
 				report_label.set_text (message)
 				report_label.set_tooltip (message)
 				if is_error then
@@ -387,7 +415,6 @@ feature -- GUI Updating
 					report_label.set_foreground_color (Shared_constants.Application_constants.No_error_color)
 				end
 			end
-			toggle_validate_button
 		end			
 		
 	update_status_line (a_line_no: INTEGER) is
@@ -399,63 +426,58 @@ feature -- GUI Updating
 		end		
 
 	update_output_filter is
-			-- Update the output filter display information
+			-- Update the output filter type
+		local
+			l_name: STRING
+			l_filters: ARRAYED_LIST [DOCUMENT_FILTER]
 		do
-			if studio_toc_radio.is_selected then
-				Shared_constants.Application_constants.set_output_filter 
-					(feature {APPLICATION_CONSTANTS}.Studio_filter)
-				if internal_studio_toc /= Void then
-					Shared_project.set_toc (internal_studio_toc)
-					set_document_toc (internal_studio_toc)
-				else
-					Shared_project.build_toc	
-				end				
-			elseif envision_toc_radio.is_selected then			
-				Shared_constants.Application_constants.set_output_filter 
-					(feature {APPLICATION_CONSTANTS}.Envision_filter)				
-				if internal_envision_toc /= Void then
-					Shared_project.set_toc (internal_envision_toc)
-					set_document_toc (internal_envision_toc)
-				else
-					Shared_project.build_toc	
-				end	
+			if toolbar_studio.is_selected then
+				l_name := "EiffelStudio"
+			elseif toolbar_envision.is_selected then
+				l_name := "ENViSioN!"
+			elseif toolbar_web.is_selected then
+				l_name := "Web"
+			end
+			l_filters := Shared_project.filter_manager.filters
+			from
+				l_filters.start
+			until
+				l_filters.after
+			loop
+				if l_filters.item.description.is_equal (l_name) then
+					Shared_project.filter_manager.set_filter (l_filters.item)
+				end
+				l_filters.forth
 			end
 		end
 
 feature -- Status Setting
 
-	set_document_toc (a_toc: DOCUMENT_TOC) is
+	set_toc_widget (a_toc: TABLE_OF_CONTENTS_WIDGET) is
 			-- Set the TOC widget
 		require
 			toc_not_void: a_toc /= Void
-		local
-			l_frame: EV_FRAME
 		do
-			toc_area.go_i_th (1)
-			toc_area.replace (a_toc)
+			if a_toc.is_empty then
+				a_toc.extend (create {EV_TREE_ITEM}.make_with_text ("Empty TOC"))
+			end
 			toc_area.go_i_th (2)
-			l_frame ?= toc_area.item
-			if l_frame /= Void then
-				toc_area.replace (l_frame)
-				toc_area.disable_item_expand (l_frame)
-			end
-			if Shared_constants.Application_constants.is_studio then
-				internal_studio_toc := a_toc
-			elseif Shared_constants.Application_constants.is_envision then
-				internal_envision_toc := a_toc
-			end
+			toc_area.replace (a_toc)
+		end
+
+	set_toc_node_widget (a_widget: EV_WIDGET) is
+			-- Set widget for TOC node properties information
+		require
+			widget_not_void: a_widget /= Void
+		do
+			node_properties_area.go_i_th (2)
+			node_properties_area.replace (a_widget)
 		end		
-
-feature {FINAL_DIALOG} -- Implementation
-
-	internal_studio_toc, 
-	internal_envision_toc: DOCUMENT_TOC
-			-- Internal TOC trees
 
 feature {NONE} -- Implementation
 		
-	toggle_sensitivity (on: BOOLEAN; sensitive_item: EV_SENSITIVE)	is
-			-- Toggle `button' to `on'
+	toggle_sensitivity (sensitive_item: EV_SENSITIVE; on: BOOLEAN)	is
+			-- Toggle `sensitive_item' to `on'
 		require
 			item_valid: sensitive_item /= Void
 		do
@@ -469,13 +491,35 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
-	render_factory: SCHEMA_RENDERING_FACTORY
-			-- Factory for rendering schema views
-
-	internal_element_selector,
-	internal_type_selector: EV_WIDGET
-			-- Internal widgets for memory persistence when removed from interface view
+	
+	show_loaded_tocs is
+			-- Show a menu of all loaded tocs
+		local
+			l_menu: EV_MENU
+			l_menu_item: EV_CHECK_MENU_ITEM
+			l_tocs: ARRAY [STRING]
+			l_toc_name, l_curr_toc: STRING
+			l_cnt: INTEGER
+		do
+			create l_menu
+			l_tocs := Shared_toc_manager.displayed_tocs_list
+			l_curr_toc := Shared_toc_manager.loaded_toc.filename
+			from
+				l_cnt := 1
+			until
+				l_cnt > l_tocs.count
+			loop
+				l_toc_name := l_tocs.item (l_cnt)				
+				create l_menu_item.make_with_text (l_toc_name)
+				if l_toc_name.is_equal (l_curr_toc) then
+					l_menu_item.enable_select
+				end
+				l_menu_item.select_actions.extend (agent Shared_toc_manager.load_toc (l_toc_name))
+				l_menu.extend (l_menu_item)
+				l_cnt := l_cnt + 1
+			end
+			l_menu.show_at (toc_menu_button, 0, 0)
+		end	
 		
 	connect_item_actions (a_item: EV_TREE_NODE) is
 			-- 
@@ -486,9 +530,16 @@ feature {NONE} -- Implementation
 			if element /= Void then
 				a_item.select_actions.extend (agent render_factory.attribute_list_render (element, attribute_list))
 				a_item.set_tooltip (element.annotation)
-				a_item.set_pebble (element.xml)
 			end
 		end			
+
+	render_factory: SCHEMA_RENDERING_FACTORY
+			-- Factory for rendering schema views
+
+	internal_selector_widgets: HASH_TABLE [EV_WIDGET, STRING]
+			-- Internal widgets for memory persistence when removed from interface view selector
+
+feature {NONE} -- Dialog
 
 	open_template_dialog is
 			-- Template dialog for new projects
@@ -516,14 +567,39 @@ feature {NONE} -- Implementation
 
 	open_document_properties_dialog is
 			-- Properties dialog for currently loaded document
+		local
+			l_doc: DOCUMENT
 		do
-			Shared_document_manager.current_document.properties.show_modal_to_window (Current)
+			if Shared_document_manager.has_schema then
+				l_doc := Shared_document_editor.current_document
+				if l_doc.is_valid_to_schema then
+					l_doc.properties.show_modal_to_window (Current)
+				else
+					l_doc.error_report.show
+				end
+			end					
 		end
 		
 	open_validator_tool is
 			-- Properties dialog for currently loaded document
 		do
 			Shared_dialogs.validator_tool.show_modal_to_window (Current)
+		end
+
+	open_new_toc_dialog is
+			-- Open dialog for new TOC creation
+		do
+			if Shared_project.is_valid then
+				Shared_dialogs.new_toc_dialog.show_modal_to_window (Current)
+			else
+				Shared_toc_manager.new_toc	
+			end			
+		end
+
+	open_toc_properties_dialog is
+			-- Open dialog for TOC properties
+		do
+			Shared_dialogs.toc_dialog.show_modal_to_window (Current)
 		end
 
 end -- class MAIN_WINDOW

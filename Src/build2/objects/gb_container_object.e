@@ -36,11 +36,6 @@ feature -- Basic operation
 			-- This is redefined in descendents as insertion at position `position'
 			-- is different for each type of container.
 		require
-			correct_type: type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_PRIMITIVE_OBJECT")) or
-				type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_CELL_OBJECT")) or
-				type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_CONTAINER_OBJECT"))
-				-- Special case for a split area, as when inserting before an item, we may need to move the item to the second
-				-- position. This means the item will now be empty and the position will be count + 2
 			position_valid: not type_conforms_to (dynamic_type (Current), dynamic_type_from_string ("GB_SPLIT_AREA_OBJECT")) implies position >=1 and position <= object.count + 1
 		do
 		ensure

@@ -224,7 +224,7 @@ feature -- Output
 			external_s: ANY;
 		do
 			if s.count /= 0 then
-				external_s := s.to_c;
+				external_s := s.area;
 				console_ps (file_pointer, $external_s, s.count)
 			end
 		end;

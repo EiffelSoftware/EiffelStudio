@@ -68,7 +68,7 @@ feature -- Basic operations
 				cecil_type.append ("EIF_INTEGER")
 				is_basic_type := True
 
-			elseif a_type = Vt_void then
+			elseif a_type = Vt_void or a_type = Vt_empty then
 				is_basic_type := True
 
 			elseif a_type = Vt_r4 then

@@ -31,20 +31,53 @@ inherit
 
 creation
 
-	make
+	make, make_with_positions
 
-feature -- making
+feature -- Initialization
 
-	make (a_featurei: FEATURE_I; a_class: CLASS_C; s, e: INTEGER) is
+	make (a_featurei: FEATURE_I; a_class: CLASS_C) is
 		do
 			feature_i := a_featurei;
-			start_position := s;
-			end_position := e;
+			private_start_position := -1;
+			private_end_position := -1;
 			class_c := a_class
 		end;
+
+	make_with_positions (a_featurei: FEATURE_I; 
+			a_class: CLASS_C; s, e: INTEGER) is
+		do
+			feature_i := a_featurei;
+			private_start_position := s;
+			private_end_position := e;
+			class_c := a_class
+		end;
+
+feature -- Properties
  
 	feature_i: FEATURE_I;
 	class_c: CLASS_C;
+
+	start_position: INTEGER is
+			-- Start position of the feature in
+			-- the origin file
+		do
+			Result := private_start_position;
+			if Result = -1 then
+				initialize_positions;
+				Result := private_start_position
+			end;
+		end;
+
+	end_position: INTEGER is
+			-- End position of the feature in
+			-- the origin file
+		do
+			Result := private_end_position;
+			if Result = -1 then
+				initialize_positions;
+				Result := private_end_position
+			end;
+		end;
 
 	icon_name: STRING is
 		require else
@@ -171,23 +204,11 @@ feature -- dragging
 			file.close;
 		end;
 
-	start_position, end_position: INTEGER;
-            -- Start and end of the text of the feature in origin file
-			-- (in fact, to get origin text...)
-
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
 			Result := fs_valid and then class_c /= Void 
 						and then feature_i /= Void
-		end;
-
-	set_positions (s, e: INTEGER) is
-			-- Assign `s' to start_position.
-			-- Assign `e' to end_position.
-		do
-			start_position := s;
-			end_position := e
 		end;
 
 	synchronized_stone: FEATURE_STONE is
@@ -213,6 +234,28 @@ feature -- Hashable
 			-- Hash code value
 		do
 			Result := class_c.class_name.hash_code
+		end;
+
+feature {NONE} -- Implementation
+
+	private_start_position: INTEGER;
+			-- Start position for feature
+
+	private_end_position: INTEGER;
+			-- End position for feature
+
+	initialize_positions is
+		local
+			body_as: FEATURE_AS
+		do
+			if feature_i.body_index > 0 then
+				body_as := feature_i.body
+				private_start_position := body_as.start_position
+				private_end_position := body_as.end_position
+			else
+				private_start_position := 0
+				private_end_position := 0
+			end	
 		end;
 
 end

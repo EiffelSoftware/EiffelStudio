@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 	is_final: BOOLEAN
 			-- Is it the final state?
 
-feature {WIZARD_STATE_WINDOW} -- Basic Operations	
+feature {WIZARD_STATE_WINDOW, WIZARD_STATE_MANAGER} -- Basic Operations	
 
 	set_final_state (text: STRING) is
 			-- Current state is final, hence a special process.
@@ -193,6 +193,31 @@ feature {WIZARD_STATE_WINDOW} -- Basic Operations
 		do
 			previous_b.disable_sensitive
 		end
+		
+	disable_cancel_button is
+			-- Disable the cancel button
+		do
+			cancel_b.disable_sensitive
+		end
+		
+	enable_next_button is
+			-- Ensable the Next/Finish button
+		do
+			next_b.enable_sensitive
+		end
+
+	enable_back_button is
+			-- Enable the Next/Finish button
+		do
+			previous_b.enable_sensitive
+		end
+		
+	enable_cancel_button is
+			-- Enable the cancel button
+		do
+			cancel_b.enable_sensitive
+		end
+
 
 feature -- Basic Operations
 

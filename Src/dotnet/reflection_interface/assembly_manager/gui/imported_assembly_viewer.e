@@ -1021,41 +1021,55 @@ feature {NONE} -- Implementation
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 			diagnostics: SYSTEM_DIAGNOSTICS_PROCESS
 			process: SYSTEM_DIAGNOSTICS_PROCESS
+			error_name: STRING
+			reflection_interface_errors: ISE_REFLECTION_REFLECTIONINTERFACEERRORMESSAGES
 		do
 			if not retried then
 				imported_assemblies := reflection_interface.assemblies
-				if imported_assemblies = Void or else imported_assemblies.get_count = 0 then
-					returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.No_assembly_in_the_EAC, dictionary.Error_caption, message_box_buttons.OK, message_box_icon.Error)
-					process := diagnostics.get_current_process
-					if process /= Void then
-						process.kill
-					end
-				else
-					if reflection_interface.get_last_error /= Void then 
-						error_code := reflection_interface.get_last_error.get_code
-						if error_code = reflection_interface.Has_write_lock_code or error_code = reflection_interface.Has_read_lock_code then
-							returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Access_violation_error, dictionary.Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
-							if returned_value = returned_value.Retry_ then
-								imported_assemblies := reflection_interface.assemblies
-								sort_assemblies
-							elseif returned_value = returned_value.Ignore then
-								create reflection_support.make_reflectionsupport
-								reflection_support.make
-								reflection_support.clean_assemblies
-								imported_assemblies := reflection_interface.assemblies
-								sort_assemblies
-							else
-								close
+				if reflection_interface.get_last_error /= Void then 
+					error_code := reflection_interface.get_last_error.get_code
+					if error_code = reflection_interface.Has_write_lock_code or error_code = reflection_interface.Has_read_lock_code then
+						returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Access_violation_error, dictionary.Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
+						if returned_value = returned_value.Retry_ then
+							imported_assemblies := reflection_interface.assemblies
+							sort_assemblies
+						elseif returned_value = returned_value.Ignore then
+							create reflection_support.make_reflectionsupport
+							reflection_support.make
+							reflection_support.clean_assemblies
+							imported_assemblies := reflection_interface.assemblies
+							sort_assemblies
+						else
+							close
+							process := diagnostics.get_current_process
+							if process /= Void then
+								process.kill
+							end
+						end
+					else
+						error_name := reflection_interface.get_last_error.get_name	
+						create reflection_interface_errors.make_reflectioninterfaceerrormessages
+						if error_name /= Void and then error_name.equals_string (reflection_interface_errors.Registry_key_not_registered) then
+							returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface_errors.Registry_key_not_registered_message, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+							if returned_value = returned_value.ok then
 								process := diagnostics.get_current_process
 								if process /= Void then
 									process.kill
-								end
+								end							
 							end
 						else
-							sort_assemblies
+							if imported_assemblies = Void or else imported_assemblies.get_count = 0 then
+								returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.No_assembly_in_the_EAC, dictionary.Error_caption, message_box_buttons.OK, message_box_icon.Error)
+								if returned_value = returned_value.ok then
+									process := diagnostics.get_current_process
+									if process /= Void then
+										process.kill
+									end							
+								end
+							else
+								sort_assemblies
+							end
 						end
-					else
-						sort_assemblies
 					end
 				end
 			else					
@@ -1081,8 +1095,20 @@ feature {NONE} -- Implementation
 							end
 						end
 					else
-						if imported_assemblies /= Void and then imported_assemblies.get_count > 0 then
-							sort_assemblies
+						error_name := reflection_interface.get_last_error.get_name	
+						create reflection_interface_errors.make_reflectioninterfaceerrormessages
+						if error_name /= Void and then error_name.equals_string (reflection_interface_errors.Registry_key_not_registered) then
+							returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (reflection_interface_errors.Registry_key_not_registered_message, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+						else
+							if imported_assemblies /= Void and then imported_assemblies.get_count > 0 then
+								sort_assemblies
+							else
+								close
+								process := diagnostics.get_current_process
+								if process /= Void then
+									process.kill
+								end							
+							end
 						end
 					end
 				end

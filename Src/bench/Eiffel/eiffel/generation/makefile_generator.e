@@ -342,6 +342,48 @@ feature -- Actual generation
 			cecil_rt_basket.wipe_out
 		end
 
+	generate_il is
+			-- Generate make files
+		local
+			basket: LINKED_LIST [STRING]
+		do
+			create system_baskets.make (1, 0)
+			create object_baskets.make (1, 1)
+			create basket.make
+			basket.extend (System.system_name + ".o")
+			object_baskets.put (basket, 1)
+
+			make_file := make_f (system.in_final_mode)
+
+			make_file.open_write
+				-- Generate main /bin/sh preamble
+			generate_preamble
+				-- Customize main Makefile macros
+			generate_customization
+				-- How to produce a .o from a .c file
+			generate_compilation_rule
+
+				-- Generate subdir names
+			generate_subdir_names
+
+				-- Generate external objects
+			generate_externals
+
+				-- Generate executable
+			generate_il_dll
+
+				-- Generate cleaning rules
+			generate_main_cleaning
+
+				-- End production
+			generate_ending
+
+			make_file.close
+			object_baskets := Void
+			system_baskets := Void
+			cecil_rt_basket.wipe_out
+		end
+
 feature -- Sub makefile generation
 
 	generate_sub_makefiles (sub_dir: CHARACTER; baskets: ARRAY [LINKED_LIST [STRING]]) is
@@ -474,6 +516,10 @@ feature -- Generation, Header
 				make_file.putstring ("CFLAGS = $wkoptimize ")
 			end
 
+			if System.il_generation then
+				make_file.putstring ("$il_flags ")
+			end
+
 			if System.has_multithreaded then
 				make_file.putstring ("$mtccflags $large ")
 			else
@@ -574,6 +620,12 @@ feature -- Generation, Header
 			make_file.putstring ("SYSTEM_IN_DYNAMIC_LIB = ")
 			make_file.putstring (system_name)
 			make_file.putstring ("$shared_suffix %N")
+
+			if System.il_generation then
+				make_file.putstring ("IL_SYSTEM = lib")
+				make_file.putstring (system_name)
+				make_file.putstring ("$shared_suffix %N")
+			end
 
 			make_file.putstring ("%
 				%!GROK!THIS!%N%
@@ -691,6 +743,27 @@ feature -- Generation, External archives and object files.
 		end
 
 feature -- Generation (Linking rules)
+
+	generate_il_dll is
+			-- Generate rules to produce DLL for IL code generation.
+		do
+			make_file.putstring ("all: $(IL_SYSTEM)")
+			make_file.new_line
+
+			make_file.putstring ("OBJECTS= ")
+			make_file.putstring (system_name)
+			make_file.putstring (".obj")
+			make_file.new_line
+			
+				-- Continue the declaration for the IL_SYSTEM
+			make_file.putstring ("%NIL_SYSTEM_OBJ = $(OBJECTS) $(EXTERNALS)")
+			make_file.putstring ("%NDYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS) -out:$(IL_SYSTEM)%N");
+			make_file.putstring ("$(IL_SYSTEM): $(IL_SYSTEM_OBJ) %N")
+			make_file.putstring ("%T$(RM) $(IL_SYSTEM) %N")
+			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(IL_SYSTEM_OBJ) $(SHAREDLIBS) %N")
+			make_file.putstring ("%Techo Success > completed.eif")
+			make_file.new_line
+		end
 
 	generate_executable is
 			-- Generate rules to produce executable

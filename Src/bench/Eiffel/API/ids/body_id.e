@@ -34,7 +34,7 @@ feature {COMPILER_EXPORTER} -- Access
 			buff: STRING
 		do
 			Result := clone (prefix_name (type_id))
-			buff := Buffer;
+			buff := E_buffer;
 			eif000 ($buff, type_id.internal_id, internal_id);
 			Result.append (buff)
 		end

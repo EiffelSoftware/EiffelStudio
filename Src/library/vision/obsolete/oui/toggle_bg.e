@@ -44,11 +44,17 @@ feature {NONE} -- Creation
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a toggle button gadget with `a_name' as label;
 			-- 'a_parent' as parent and call `set_default'.
+		local
+			ot: OBSOLETE_TOOLKIT
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.toggle_bg (Current, man, a_parent);
+			ot ?= toolkit;
+			check
+				obsolete_toolkit_instantiated: ot /= Void
+			end;
+			implementation:= ot.toggle_bg (Current, man, a_parent);
 			set_default
 		end; 
 

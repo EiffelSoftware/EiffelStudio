@@ -169,7 +169,7 @@ feature -- C special code generation
 				generate_zero (buffer, type_of (basic_type))
 			when one_type then
 				generate_one (buffer, type_of (basic_type))
-			when memory_move, memory_copy, memory_set then
+			when memory_move, memory_copy, memory_set, memory_alloc, memory_free then
 				check pointer_type: type_of (basic_type) = pointer_type end
 				generate_memory_routine (buffer, function_type, target, parameters)
 			end
@@ -216,6 +216,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (memory_copy, feature {PREDEFINED_NAMES}.memory_copy_name_id)
 			Result.put (memory_move, feature {PREDEFINED_NAMES}.memory_move_name_id)
 			Result.put (memory_set, feature {PREDEFINED_NAMES}.memory_set_name_id)
+			Result.put (memory_alloc, feature {PREDEFINED_NAMES}.memory_alloc_name_id)
+			Result.put (memory_free, feature {PREDEFINED_NAMES}.memory_free_name_id)
 			Result.put (set_bit_with_mask_type, feature {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
@@ -288,7 +290,9 @@ feature {NONE} -- Fast access to feature name
 	to_integer_16_type: INTEGER is 25
 	to_integer_64_type: INTEGER is 26
 	set_bit_with_mask_type: INTEGER is 27
-	max_type_id: INTEGER is 27
+	memory_alloc: INTEGER is 28
+	memory_free: INTEGER is 29
+	max_type_id: INTEGER is 29
 
 feature {NONE} -- Byte code generation
 
@@ -600,29 +604,58 @@ feature {NONE} -- C code generation
 		require
 			buffer_not_void: buffer /= Void
 			target_not_void: target /= Void
-			parameters_not_void: parameters /= Void
+			valid_paramaters: f_type /= memory_free implies parameters /= Void
 			valid_function_type:
 				f_type = memory_move or f_type = memory_copy or
-				f_type = memory_set
-			valid_parameters: parameters.count = 2
+				f_type = memory_set or f_type = memory_free or
+				f_type = memory_alloc
 		do
 			shared_include_queue.put (feature {PREDEFINED_NAMES}.string_header_name_id)
-			if f_type = memory_move then
+
+			inspect
+				f_type
+			when memory_move then
 				buffer.putstring ("memmove((void *)")
-			elseif f_type = memory_copy then
+			when memory_copy then
 				buffer.putstring ("memcpy((void *)")
-			else
+			when memory_set then
 				buffer.putstring ("memset((void *)")
+			when memory_alloc then
+				buffer.putstring ("malloc((size_t)")
+			when memory_free then
+				buffer.putstring ("free(")
 			end
-			target.print_register
-			if f_type /= memory_set then
-				buffer.putstring (", (const void *) ")
-			else
+			
+			if f_type /= memory_alloc then
+				target.print_register
+			end
+			
+			inspect
+				f_type
+			when memory_free, memory_alloc then
+			when memory_set then
 				buffer.putstring (", (int) ")
+			else
+				buffer.putstring (", (const void *) ")
 			end
-			parameters.i_th (1).print_register
-			buffer.putstring (", (size_t) ")
-			parameters.i_th (2).print_register
+
+			inspect
+				f_type
+			when memory_move, memory_set, memory_copy then
+				check
+					valid_parameters: parameters.count = 2
+				end
+				parameters.i_th (1).print_register
+				buffer.putstring (", (size_t) ")
+				parameters.i_th (2).print_register
+			when memory_alloc then
+				check
+					valid_paramters: parameters.count = 1
+				end
+				parameters.i_th (1).print_register
+			else
+			end
+
 			buffer.putstring (")")
 		end
 

@@ -1,0 +1,220 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+Wizard_Initial_Dialog DIALOG DISCARDABLE  0, 0, 187, 274
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "EiffelCOM Wizard"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Next >>",IDOK,115,247,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,22,247,50,14
+    GROUPBOX        "Location",Location_Static,115,85,65,65
+    CONTROL         "",Wizard_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,5,10,100,145
+    EDITTEXT        Definition_File_Edit,5,185,175,15,ES_AUTOHSCROLL
+    LTEXT           "Definition File",IDL_Static,5,175,100,10
+    PUSHBUTTON      "Browse",Browse_Button,130,170,50,14
+    EDITTEXT        Generate_Edit,5,225,175,15,ES_AUTOHSCROLL
+    LTEXT           "Destination Folder",Generate_Static,5,215,100,10
+    PUSHBUTTON      "Browse",Browse2_Button,130,210,50,14
+    CONTROL         "In Process",In_Process_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,120,100,55,15
+    CONTROL         "Local",Local_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,120,115,55,15
+    CONTROL         "Remote",Remote_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,120,130,55,15
+    PUSHBUTTON      "Help",Help_Button,130,10,50,14
+    GROUPBOX        "Generate",Generate_Code_Static,115,31,65,49
+    CONTROL         "Client",Client_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,119,43,55,16
+    CONTROL         "Server",Server_Check,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,119,58,55,16
+END
+
+Wizard_IDL_Dialog DIALOG DISCARDABLE  0, 0, 187, 274
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "EiffelCOM Wizard"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Next >>",IDOK,115,247,50,14
+    PUSHBUTTON      "<< Back",IDCANCEL,22,247,50,14
+    CONTROL         "",Wizard_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,5,10,100,145
+    PUSHBUTTON      "Help",Help_Button,130,10,50,14
+    GROUPBOX        "Marshaling",Marshaling2_Static,102,170,78,49,WS_GROUP
+    CONTROL         "Universal",Universal2_Radio,"Button",BS_AUTORADIOBUTTON,
+                    105,185,54,10
+    CONTROL         "Standard",Standard2_Radio,"Button",BS_AUTORADIOBUTTON,
+                    105,198,54,10
+    GROUPBOX        "Server Type",Type2_Static,7,170,78,49,WS_GROUP
+    CONTROL         "Automation",Automation2_Radio,"Button",
+                    BS_AUTORADIOBUTTON,10,185,54,10
+    CONTROL         "Virtual Table",Virtual_Table2_Radio,"Button",
+                    BS_AUTORADIOBUTTON,10,198,54,10
+END
+
+Wizard_PS_Dialog DIALOG DISCARDABLE  0, 0, 187, 274
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "EiffelCOM Wizard"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Next >>",IDOK,115,247,50,14
+    PUSHBUTTON      "<< Back",IDCANCEL,22,247,50,14
+    GROUPBOX        "Marshaling",Marshaling_Static,115,109,65,47
+    CONTROL         "",Wizard_Bitmap,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,5,10,100,145
+    EDITTEXT        Proxy_Stub_File_Edit,5,185,175,15,ES_AUTOHSCROLL | 
+                    WS_DISABLED
+    LTEXT           "Proxy/Stub",Proxy_Stub_Static,5,175,100,10
+    PUSHBUTTON      "Browse",Browse_Button,130,170,50,14,WS_DISABLED
+    PUSHBUTTON      "Help",Help_Button,130,10,50,14
+    CONTROL         "Universal",Universal_Radio,"Button",BS_AUTORADIOBUTTON,
+                    117,124,55,10
+    CONTROL         "Standard",Standard_Radio,"Button",BS_AUTORADIOBUTTON,
+                    117,138,55,10
+END
+
+Wizard_Final_Dialog DIALOG DISCARDABLE  0, 0, 187, 97
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "EiffelCOM Wizard"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Generate",IDOK,115,60,50,14
+    PUSHBUTTON      "<< Back",IDCANCEL,23,61,50,14
+    CTEXT           "The Wizard is now going to generate the files.",
+                    Generate_Static,14,7,159,11
+    CTEXT           "The file ""generated.txt"" will contain a summary of all the generated files.",
+                    Generate2_Static,18,25,151,26
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    Wizard_Initial_Dialog, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 267
+    END
+
+    Wizard_IDL_Dialog, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 267
+    END
+
+    Wizard_PS_Dialog, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 267
+    END
+
+    Wizard_Final_Dialog, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 90
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+Toolbar_Bitmap          BITMAP  DISCARDABLE     "toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    New_String              "New Project"
+    Open_String             "Open Project"
+    Save_String             "Save Project"
+    Clear_Output_String     "Clear Output"
+    Launch_String           "Launch Wizard"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

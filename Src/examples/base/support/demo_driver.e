@@ -7,7 +7,7 @@ indexing
 
 class DEMO_DRIVER
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -18,10 +18,10 @@ feature -- Initialization
 			countables: COUNTABLES
 		do
 			io.putstring ("Formatting demonstration%N%N");
-			!!formatting.make;
+			create formatting.make;
 			io.putstring ("%NPress <Return> to start Countables demonstration%N");
 			io.readline;
-			!!countables.make;
+			create countables.make;
 		end
 
 end -- class DEMO_DRIVER

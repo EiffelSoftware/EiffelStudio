@@ -168,7 +168,7 @@ feature
 			generate_pattern;
 
 				-- Generate pattern table
-			Pattern_file.putstring ("struct interface fpattern[] = {%N")
+			Pattern_file.putstring ("struct p_interface fpattern[] = {%N")
 			from
 				i := 1;
 				nb := c_pattern_id_counter.value;
@@ -242,16 +242,16 @@ feature -- DLE
 			Pattern_file.new_line;
 			if has_dle_patterns then
 				Pattern_file.indent;
-				Pattern_file.putstring ("struct interface *interf;");
+				Pattern_file.putstring ("struct p_interface *interf;");
 				Pattern_file.new_line;
 				Pattern_file.new_line;
 				Pattern_file.putstring 
-						("pattern = (struct interface *)cmalloc(");
+						("pattern = (struct p_interface *)cmalloc(");
 				Pattern_file.putint (nb);
-				Pattern_file.putstring (" * sizeof(struct interface));");
+				Pattern_file.putstring (" * sizeof(struct p_interface));");
 				Pattern_file.new_line;
 				Pattern_file.putstring 
-						("if (pattern == (struct interface *) 0)");
+						("if (pattern == (struct p_interface *) 0)");
 				Pattern_file.new_line;
 				Pattern_file.indent;
 				Pattern_file.putstring ("enomem();");
@@ -259,7 +259,7 @@ feature -- DLE
 				Pattern_file.exdent;
 				Pattern_file.putstring ("bcopy(fpattern, pattern, ");
 				Pattern_file.putint (dle_level);
-				Pattern_file.putstring (" * sizeof(struct interface));");
+				Pattern_file.putstring (" * sizeof(struct p_interface));");
 				Pattern_file.new_line;
 				Pattern_file.new_line;
 

@@ -100,7 +100,7 @@ feature -- Status setting
 	set_pick_and_drop_mode is
 			-- Set transport mechanism to pick and drop,
 		do
-			mode_is_drag_and_drop := False
+			user_interface_mode := pick_and_drop_mode
 		ensure
 			mode_is_pick_and_drop: mode_is_pick_and_drop
 		end
@@ -108,9 +108,17 @@ feature -- Status setting
 	set_drag_and_drop_mode is
 			-- Set transport mechanism to drag and drop,
 		do
-			mode_is_drag_and_drop := True
+			user_interface_mode := drag_and_drop_mode
 		ensure
 			mode_is_drag_and_drop: mode_is_drag_and_drop
+		end
+
+	set_target_menu_mode is
+			-- Set transport mechanism to target_menu.
+		do
+			user_interface_mode := target_menu_mode
+		ensure
+			mode_is_target_menu: mode_is_target_menu
 		end
 
 	set_accept_cursor (a_cursor: EV_CURSOR) is
@@ -135,13 +143,29 @@ feature -- Status report
 	mode_is_pick_and_drop: BOOLEAN is
 			-- Is the transport mechanism pick and drop?
 		do
-			Result := not mode_is_drag_and_drop
+			Result := user_interface_mode = pick_and_drop_mode
 		end
 
-	mode_is_drag_and_drop: BOOLEAN
+	mode_is_drag_and_drop: BOOLEAN is
 			-- Is the transport mechanism drag and drop?
+		do
+			Result := user_interface_mode = drag_and_drop_mode
+		end
+
+	mode_is_target_menu: BOOLEAN is
+			-- Is the transport mechanism target menu?
+		do
+			Result := user_interface_mode = target_menu_mode
+		end
 
 feature {EV_ANY_I} -- Implementation
+
+	user_interface_mode: INTEGER
+			-- Transport user interface mode.
+	
+	pick_and_drop_mode: INTEGER is 0
+	drag_and_drop_mode: INTEGER is 1
+	target_menu_mode: INTEGER is 2
 
 	start_transport (
         a_x, a_y, a_button: INTEGER;
@@ -177,9 +201,7 @@ feature {EV_ANY_I} -- Implementation
 		-- To be displayed when the screen pointer is not over a valid target.
 
 	default_accept_cursor: EV_CURSOR is
-			-- Default accept cursor used when there is no accept cursor set by user.
-			-- To be displayed when the screen pointer is over a target that accepts
-			-- `pebble' during pick and drop.
+			-- Used in lieu of a user defined `accept_cursor'.
 		local
 			cursor_code: EV_CURSOR_CODE
 		once
@@ -188,9 +210,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	default_deny_cursor: EV_CURSOR is
-			-- Default deny cursor used when there is no deny cursor set by user.
-			-- Deny cursor set by user.
-			-- To be displayed when the screen pointer is not over a valid target.
+			-- Used in lieu of a user defined `deny_cursor'.
 		local
 			cursor_code: EV_CURSOR_CODE
 		once
@@ -296,7 +316,9 @@ feature {EV_ANY_I} -- Implementation
 
 invariant
 	user_interface_modes_mutually_exclusive:
-		mode_is_pick_and_drop /= mode_is_drag_and_drop
+		mode_is_pick_and_drop.to_integer +
+		mode_is_drag_and_drop.to_integer +
+		mode_is_target_menu.to_integer = 1
 	is_transport_enabled_implies_pebble_not_void:
 		is_transport_enabled implies pebble /= Void or pebble_function /= Void
 	pebble_function_takes_two_integer_open_operands:
@@ -325,6 +347,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/25 00:56:46  oconnor
+--| added right click context menu UI for PND.
+--|
 --| Revision 1.23  2000/04/12 01:22:19  pichery
 --| cosmetics
 --|
@@ -409,7 +434,6 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|
 --| Revision 1.13.2.2  1999/11/02 17:20:05  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

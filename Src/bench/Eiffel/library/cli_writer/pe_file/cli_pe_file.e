@@ -222,10 +222,11 @@ feature {NONE} -- Saving
 				optional_header.size + text_section_header.size +
 				reloc_section_header.size
 			
-			import_table_padding := pad_up (iat.size + cli_header.size + code_size + meta_data_size, 16) - 
-				(iat.size + cli_header.size + code_size + meta_data_size)
-			text_size := iat.size + cli_header.size + code_size + meta_data_size + import_table_padding +
-				import_table.size + entry_data.size
+			import_table_padding := pad_up (iat.size + cli_header.size + code_size +
+				meta_data_size, 16) - (iat.size + cli_header.size + code_size + meta_data_size)
+
+			text_size := iat.size + cli_header.size + code_size + meta_data_size +
+				import_table_padding + import_table.size + entry_data.size
 				
 			reloc_size := reloc_section.size
 			
@@ -253,8 +254,8 @@ feature {NONE} -- Saving
 			optional_header.set_code_size (text_size_on_disk)
 			optional_header.set_reloc_size (reloc_size_on_disk)
 			optional_header.set_entry_point_rva (text_rva + iat.size +
-				cli_header.size + code_size + meta_data_size + import_table_padding + import_table.size +
-				entry_data.start_position)
+				cli_header.size + code_size + meta_data_size + import_table_padding +
+				import_table.size + entry_data.start_position)
 			optional_header.set_base_of_code (text_rva)
 			optional_header.set_base_of_reloc (reloc_rva)
 			optional_header.set_image_size (reloc_rva + pad_up (reloc_size, Section_alignment))

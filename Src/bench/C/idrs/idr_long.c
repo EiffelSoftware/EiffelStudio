@@ -19,8 +19,11 @@
 */
 
 #include "idr.h"
-#include "networku.h"
 #include "eif_size.h"
+
+#ifdef EIF_WIN32
+#include "networku.h"
+#endif
 
 rt_public bool_t idr_long(IDR *idrs, long int *lp)
 {

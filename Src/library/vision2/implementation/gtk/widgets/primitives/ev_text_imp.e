@@ -102,12 +102,6 @@ feature -- Status report
 			Result := C.gtk_text_get_point (c_object) + 1
 		end
 
-	line_count: INTEGER is
-			-- Number of lines in widget.
-		do
-			Result := text.occurrences ('%N') + 1
-		end 
-
 	first_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the first character on the `i'-th line.
 		local

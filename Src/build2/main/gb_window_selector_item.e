@@ -8,6 +8,11 @@ class
 	
 inherit
 	EV_TREE_ITEM
+	
+	GB_SHARED_OBJECT_EDITORS
+		undefine
+			copy, default_create, is_equal
+		end
 
 create
 	make_with_object
@@ -34,13 +39,18 @@ feature {NONE} -- Initialization
 			set_pixmap (pixmaps.pixmap_by_name (object.type.as_lower))
 			
 				-- Set a pebble for transport
-			set_pebble (object)
+			set_pebble_function (agent retrieve_pebble)
 				
 				-- Make `Current' available from `an_object'.
 			an_object.set_window_selector_item (Current)
 		ensure
 			object_set: object = an_object
 		end
+		
+feature -- Access
+
+	object: GB_TITLED_WINDOW_OBJECT
+		-- Object referenced by `Current'.
 		
 feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
 
@@ -63,10 +73,22 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
 		ensure
 			parent_void: parent = Void
 		end
+		
+feature {NONE} -- Implementation
 
-feature -- Access
-
-	object: GB_TITLED_WINDOW_OBJECT
-		-- Object referenced by `Current'.
+	retrieve_pebble: ANY is
+			-- Retrieve pebble for transport.
+			-- A convenient was of setting up the drop
+			-- actions for GB_OBJECT.
+		do			
+				-- If the ctrl key is pressed, then we must
+				-- start a new object editor for `Current', instead
+				-- of beginning the pick and drop.
+			if application.ctrl_pressed then
+				new_object_editor (object)
+			else
+				Result := object
+			end
+		end
 
 end -- class GB_WINDOW_SELECTOR_ITEM

@@ -22,16 +22,19 @@ feature {NONE} -- Initialization
 			location := ""
 			project_name := "sample"
 			create table_list.make (10)
-			is_oracle := False
+			dbms_code := 1
 			compile_project := True
 			precompiled_base := False
 			vision_example := True
+			generate_every_table := True
 		end
 
 feature {WIZARD_STATE_WINDOW} -- Settings
 
-	set_database_info (s1, s2, s3: STRING; oracle_selected: BOOLEAN) is
+	set_database_info (s1, s2, s3: STRING; dbms_selected: INTEGER) is
 			-- Set the database information.
+		require
+			--
 		do
 			if s1 /= Void then
 				username := s1
@@ -48,7 +51,7 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 			else
 				data_source := ""
 			end
-			is_oracle := oracle_selected
+			dbms_code := dbms_selected
 		end
 
 	set_generation_type (b: BOOLEAN) is
@@ -109,7 +112,8 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 
 feature -- Access
 
-	is_oracle: BOOLEAN
+	dbms_code: INTEGER
+			-- Selected DBMS code. Use through WIZARD_PROJECT_SHARED.
 
 	location: STRING
 		-- Generation location.

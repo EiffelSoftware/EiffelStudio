@@ -18,7 +18,8 @@ inherit
 			client_height,
 			child_minwidth_changed,
 			child_minheight_changed,
-			set_default_minimum_size
+			set_default_minimum_size,
+			update_display
 		end
 
 	EV_FONTABLE_IMP
@@ -122,6 +123,14 @@ feature {NONE} -- Implementation for automatic size compute.
 			if child /= Void then
 				child.set_move_and_size (box_width, box_text_height + box_width, 
 										client_width, client_height)
+			end
+		end
+
+	update_display is
+			-- Feature that update the actual container.
+		do
+			if child /= Void then
+				child.set_move_and_size (box_width, box_text_height + box_width, client_width, client_height)
 			end
 		end
 

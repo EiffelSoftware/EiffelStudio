@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			create last_error_message.make_from_string ("No project loaded")
 			create {COMPILER} compiler.make
 			create {SYSTEM_BROWSER} system_browser.make
+			create {COMPLETION_INFORMATION} completion_information.make
 			create eifgen_init.make
 				--| FIXME do not forget to call `dispose' one day !
 		end
@@ -40,6 +41,9 @@ feature -- Access
 		
 	system_browser: IEIFFEL_SYSTEM_BROWSER_INTERFACE
 			-- System Browser.
+
+	completion_information: IEIFFEL_COMPLETION_INFO_INTERFACE
+			-- Completion information
 		
 	valid_project: BOOLEAN is
 			-- Is project valid?

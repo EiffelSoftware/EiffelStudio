@@ -58,8 +58,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		require
 			a_window_imp_not_void: a_window_imp /= Void
 		local
-			a_cs, a_accel: EV_GTK_C_STRING
-			accel_key, accel_mods: INTEGER
+			a_cs: EV_GTK_C_STRING
 			a_keymap_array: POINTER
 			n_keys: INTEGER
 			a_success: BOOLEAN

@@ -94,7 +94,7 @@ extern uint32 *onceitem(register uint32 id);		/* Item with body_id in list */
 extern struct item *docall(EIF_CONTEXT register uint32 body_id, register int arg_num);	/* Evaluate result of already called once func*/ /* %%ss mt !last caller */
 
 /* Downloading byte code from compiler */
-extern int dmake_room(int new);		/* Pre-extend melting table */
+extern int dmake_room(int new_entries_number);		/* Pre-extend melting table */
 extern void drecord_bc(int body_idx, int body_id, char *addr);		/* Record new byte code in run-time tables */
 
 /* Macro used to get a calling context on top of the stack */

@@ -301,6 +301,8 @@ feature {GB_OBJECT_HANDLER} -- Status setting
 			command_handler.update
 		end
 		
+feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
+
 	assign_id is
 			-- Assign a new `id' to `Current'.
 		require

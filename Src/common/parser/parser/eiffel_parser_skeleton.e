@@ -261,7 +261,7 @@ feature {NONE} -- Actions
 	new_class_description (n: PAIR [ID_AS, CLICK_AST]; n2: STRING_AS;
 		is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 		first_ind, last_ind: INDEXING_CLAUSE_AS; g: EIFFEL_LIST [FORMAL_DEC_AS];
-		p: EIFFEL_LIST [PARENT_AS]; c: EIFFEL_LIST [CREATE_AS];
+		p: EIFFEL_LIST [PARENT_AS]; c: EIFFEL_LIST [CREATE_AS]; co: EIFFEL_LIST [CONVERT_FEAT_AS];
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
 		s: SUPPLIERS_AS; o: STRING_AS; cl: CLICK_LIST): CLASS_AS is
 			-- New CLASS AST node;
@@ -283,7 +283,8 @@ feature {NONE} -- Actions
 					ext_name := n2.value
 				end
 			end
-			Result := new_class_as (n.first, ext_name, is_d, is_e, is_s, is_fc, is_ex, first_ind, last_ind, g, p, c, f, inv, s, o, cl)
+			Result := new_class_as (n.first, ext_name, is_d, is_e, is_s, is_fc, is_ex, first_ind,
+				last_ind, g, p, c, co, f, inv, s, o, cl)
 			n.second.set_node (Result)
 		ensure
 			class_description_not_void: Result /= Void
@@ -300,6 +301,7 @@ feature {NONE} -- Actions
 			generics_set: Result.generics = g
 			parents_set: Result.parents = p
 			creators_set: Result.creators = c
+			convertors_set: Result.convertors = co
 			features_set: Result.features = f
 			empty_invariant_part: Result.invariant_part = Void implies inv = Void or else inv.assertion_list = Void
 			invariant_part_set: Result.invariant_part /= Void implies Result.invariant_part = inv
@@ -1082,6 +1084,7 @@ feature {NONE} -- Constants
 	Initial_choices_size: INTEGER is 2
 	Initial_class_list_size: INTEGER is 4
 	Initial_compound_size: INTEGER is 25
+	Initial_convert_list_size: INTEGER is 2
 	Initial_creation_clause_list_size: INTEGER is 2
 	Initial_debug_key_list_size: INTEGER is 2
 	Initial_elseif_list_size: INTEGER is 5

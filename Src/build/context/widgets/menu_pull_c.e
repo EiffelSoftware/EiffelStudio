@@ -11,7 +11,7 @@ inherit
 		redefine
 			stored_node, is_selectionable, widget,
 			add_widget_callbacks, is_valid_parent,
-			is_able_to_be_grouped, add_to_option_list,
+			is_able_to_be_grouped, 
 			is_movable, remove_widget_callbacks
 		end;
 	PULLDOWN_C
@@ -19,7 +19,7 @@ inherit
 			stored_node, create_context, full_name,
 			is_selectionable, widget, add_widget_callbacks,
 			is_valid_parent, is_able_to_be_grouped,
-			add_to_option_list, is_movable, remove_widget_callbacks
+			is_movable, remove_widget_callbacks
 		select
 			create_context, full_name
 		end;
@@ -51,20 +51,20 @@ feature
 			end;
 		end;
 
-    remove_widget_callbacks is
-            -- Remove callbacks.
-            -- (Need to only remove callbacks part of a list
-            -- since set_action will overwrite previous callbacks).
+	remove_widget_callbacks is
+			-- Remove callbacks.
+			-- (Need to only remove callbacks part of a list
+			-- since set_action will overwrite previous callbacks).
 		local
 			ms_win: STRING
-        do
+		do
 			ms_win := "MS_WINDOW";
 			if not ms_win.is_equal (toolkit.name) then
-            	widget.button.remove_pointer_motion_action (Eb_selection_mgr,
-                    first_arg)
-            	widget.button.remove_enter_action (Eb_selection_mgr, parent);
+				widget.button.remove_pointer_motion_action (Eb_selection_mgr,
+					first_arg)
+				widget.button.remove_enter_action (Eb_selection_mgr, parent);
 			end
-        end;
+		end;
 
 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do
@@ -144,6 +144,7 @@ feature
 			menu_c ?= a_parent;
 			if menu_c /= Void then
 				Result := old_create_context (menu_c);
+				Result.widget.manage;
 				shake_parent (menu_c);
 			end;
 		end;
@@ -154,6 +155,7 @@ feature {NONE}
 	shake_parent (a_parent: CONTEXT) is
 		do
 			a_parent.set_x_y (a_parent.x, a_parent.y);
+			a_parent.set_size (a_parent.width, a_parent.width);
 		end;
 
 	

@@ -33,4 +33,3 @@ extern int rqstcnt;		/* Request count (number of requests sent) */
 #define APP_JOBSTATUS 1
 
 #endif
-

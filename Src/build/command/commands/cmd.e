@@ -112,6 +112,7 @@ feature -- Editable
 			command_tools: LINKED_LIST [COMMAND_TOOL]
 			ed: COMMAND_TOOL		
 			cmd_tool: COMMAND_TOOL
+			observers: LINKED_LIST [CMD_INSTANCE]		
 		do
 			!! Result.make
 			from
@@ -133,10 +134,24 @@ feature -- Editable
 							until
 								b.after 
 							loop
-								if (b.output.associated_command = Current) then
-									if not Result.has (b.output) then
-										Result.extend (b.output)
-									end
+								if b.output.associated_command = Current
+										and then not Result.has (b.output)
+								then
+									Result.extend (b.output)
+								elseif b.output.has_observer then
+									observers := b.output.observers
+									from
+										observers.start
+									until
+										observers.after
+									loop
+										if observers.item.associated_command = Current
+											and then not Result.has (observers.item)
+										then
+											Result.extend (observers.item)
+										end
+										observers.forth
+									end				
 								end
 								b.forth
 							end
@@ -193,10 +208,10 @@ feature -- Editable
 				end
 				tool_list.forth
 			end
-			a_tool := main_panel.command_tool
-			if  a_tool.command_instance /= Void and then a_tool.edited_command = Current then
-				Result.extend (a_tool)
-			end
+-- 			a_tool := main_panel.command_tool
+-- 			if  a_tool.command_instance /= Void and then a_tool.edited_command = Current then
+-- 				Result.extend (a_tool)
+-- 			end
 		end
 
 	instance_counter: INT_GENERATOR

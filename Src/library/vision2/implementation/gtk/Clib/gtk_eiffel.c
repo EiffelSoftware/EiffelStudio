@@ -20,6 +20,7 @@
 ==============================================================================*/
 
 rt_public void c_gtk_widget_set_bg_color (GtkWidget * widget, int r, int g, int b);
+rt_public EIF_POINTER c_gtk_widget_top_window (GtkWidget *);
 
 /*********************************
  *
@@ -541,6 +542,97 @@ void c_gtk_signal_disconnect (GtkObject *widget,
     gtk_signal_disconnect_by_data (widget, (gpointer)&cbd);
 }
 
+ /*********************************
+ *
+ * Function `c_gtk_object_class_user_signal_new'
+ *
+ * Note :  Register a new signal for the given widget.
+ * 
+ * Author: Alex.
+ *
+ *********************************/
+
+EIF_INTEGER c_gtk_object_class_user_signal_new (GtkObject *object, const gchar *signal_name)
+{
+  guint i;
+  GQuark quark;
+  gchar *name;
+  
+  /* Create a new signal for the given GtkObject
+   * 
+   * argument 	3: specify that the signal can be emitted by the user.
+   * 			4: specify the marshaler, in this case the callback has no parameter.
+   * 			5: no return value for the callback.
+   * 			6: no more following argument for function 'gtk_object_class_user_signal_new'.
+   */
+  name = g_strdup (signal_name);
+  quark = gtk_signal_lookup (name, object->klass->type);
+  /* We test if there is already a signal with this name. If so, we do not do anything.*/
+  
+  if (!quark)
+  {
+    i = gtk_object_class_user_signal_new  (object->klass,
+					   signal_name,
+					   GTK_RUN_ACTION,
+					   gtk_marshal_NONE__NONE,
+					   GTK_TYPE_NONE, 0);
+  }
+  else
+		i = 1;
+		/* We just give a positive value to ensure that everything went ok 
+		 * (even if we did not add the signal as it already exists.
+		 */
+  
+  return i;
+}		
+
+ /*********************************
+ *
+ * Function `c_gtk_widget_add_accelerator'
+ *
+ * Note :  Add an accelerator to the widget with the given name.
+ * 
+ * Author: Alex.
+ *
+ *********************************/
+
+void c_gtk_widget_add_accelerator (GtkWidget *widget, const gchar *signal_name,guint keycode, gboolean shift_mask, gboolean control_mask, gboolean alt_mask)
+{
+  GtkAccelGroup *accel_group;
+  GtkWindow *window;
+  guint mask;
+
+  window = GTK_WINDOW (c_gtk_widget_top_window (widget));
+  if (window)
+  {
+    accel_group = gtk_accel_group_new ();
+    gtk_window_add_accel_group(GTK_WINDOW (window), accel_group);
+  }
+  else	
+  {
+	  printf ("Error in creating the accelerator group.");
+  }
+  
+  /* Determine the mask. */
+  mask = 0;
+  if (shift_mask)
+  {
+	  mask = mask | GDK_SHIFT_MASK;
+  }
+  if (control_mask)
+  {
+	  mask = mask | GDK_CONTROL_MASK;
+  }
+  if (alt_mask)
+  {
+	  /* No mask for alt yet.
+	   * mask = mask | GDK_;
+	   */
+  }
+
+  gtk_widget_add_accelerator(GTK_WIDGET (widget), signal_name, accel_group, keycode, mask, 0);
+}
+
 /*********************************
  *
  * Function `c_gtk_event_keys_state'
@@ -672,6 +764,35 @@ EIF_BOOLEAN c_gtk_widget_displayed (GtkWidget *wid)
 	bool = 0;	
   
   return (EIF_BOOLEAN) bool;
+}
+
+/*********************************
+ *
+ * Function `c_gtk_widget_top_window'
+ *
+ * Note : GtkWindow of the given widget.
+ *
+ * Author : Alex
+ *
+ *********************************/
+
+EIF_POINTER c_gtk_widget_top_window (GtkWidget *wid) 
+{
+  GtkWindow *top_window = (GtkWindow *) 0;
+	
+  while (top_window == NULL)
+  {
+	if (GTK_IS_WINDOW (wid->parent))
+	{
+	  if ((GTK_WINDOW (wid->parent)->type == GTK_WINDOW_TOPLEVEL))
+	  {
+	    top_window = GTK_WINDOW (wid->parent);
+  	  }
+	}
+	else
+	  wid = wid->parent; 
+  }
+  return (EIF_POINTER) wid->parent;
 }
 
 /*********************************
@@ -1149,13 +1270,19 @@ EIF_BOOLEAN c_gtk_toggle_button_active (GtkWidget *button)
 
 /*********************************
  *
- * Function : `c_gtk_option_button_selected_menu_item' (1)
- *			  `c_gtk_option_button_index_of_menu_item' (2)
+ * Function : `c_gtk_option_button_selected_menu_item'	(1)
+ *			  `c_gtk_option_button_index_of_menu_item'	(2)
+ *			  `c_gtk_option_button_set_fg_color'		(3)
+ *			  `c_gtk_option_button_set_bg_color'		(4)
  *			  
  * Note : (1) Current selected menu item
  *		  (2) Give the position of the menu_item in the menu
  *		  		inside the option button. The position is needed by 
  *		  		`gtk_option_menu_set_history'.
+ *		  (3) Set the foreground colors of the option menu. We need a specific
+ *		  		function because we have to set the color for the GtkOptionMenu's child too.
+ *		  (4) Set the background colors of the option menu. We need a specific
+ *		  		function because we have to set the color for the GtkOptionMenu's child too.
  * 
  *********************************/
 
@@ -1177,6 +1304,20 @@ EIF_INTEGER c_gtk_option_button_index_of_menu_item (GtkWidget *option_menu, GtkW
 	pos = g_list_index (GTK_MENU_SHELL (menu)->children, (gpointer) menu_item);
 
    	return pos;
+}
+
+void c_gtk_option_button_set_fg_color (GtkOptionMenu *option, gint r, gint g, gint b)
+{
+	c_gtk_widget_set_fg_color ((GtkWidget *) option, r, g, b);
+	if (((GtkBin *) option)->child != NULL)
+		c_gtk_widget_set_fg_color ((GtkWidget *) ((GtkBin *) option)->child, r, g, b);	
+}
+
+void c_gtk_option_button_set_bg_color (GtkOptionMenu *option, gint r, gint g, gint b)
+{
+	c_gtk_widget_set_bg_color ((GtkWidget *) option, r, g, b);
+	if (((GtkBin *) option)->child != NULL)
+		c_gtk_widget_set_bg_color ((GtkWidget *) ((GtkBin *) option)->child, r, g, b);	
 }
 
 /*********************************
@@ -1523,7 +1664,9 @@ guint c_gtk_clist_selection_length (GtkWidget* list)
  *  		  `c_gtk_clist_get_fg_color	(3)
  *  		  `c_gtk_clist_get_bg_color	(4)
  *  		  `c_gtk_clist_set_pixtext	(5)
- *  		  `c_gtk_clist_unset_pixmap	(5)
+ *  		  `c_gtk_clist_unset_pixmap	(6)
+ *  		  `c_gtk_clist_title_shown	(7)
+ *  		  `c_gtk_clist_column_width	(8)
  *  		            
  * Note (1) : Sets the foreground color of the given row.
  * 		(2) : Sets the background color of the given row.
@@ -1531,6 +1674,8 @@ guint c_gtk_clist_selection_length (GtkWidget* list)
  * 		(4) : Gets the background color of the given row.
  * 		(5) : Sets the pixmap and the text of the given row and column.
  * 		(6) : Unsets the pixmap of the given row and column.
+ * 		(7) : Are the titles of the columns shown?
+ * 		(8) : width of the given column.
  * 
  * Author : Alex
  *
@@ -1633,6 +1778,23 @@ void c_gtk_clist_unset_pixmap (GtkWidget* clist, int row, int column)
 	gdk_bitmap_unref (GTK_CELL_PIXTEXT (clist_row->cell[column])->mask);
    
   clist_row->cell[column].type = GTK_CELL_TEXT;
+}
+
+EIF_BOOLEAN c_gtk_clist_title_shown (GtkCList *clist)
+{
+	return (EIF_BOOLEAN) GTK_CLIST_SHOW_TITLES (clist);
+}
+
+EIF_INTEGER c_gtk_clist_column_width (GtkCList *clist, gint column)
+{
+  GtkCListColumn *columns;
+	
+  columns = GTK_CLIST (clist)->column;
+
+  /* Point to the 'column'th column */
+  columns = columns + column;
+
+  return (EIF_INTEGER) columns->width;
 }
 
 /*********************************
@@ -2750,23 +2912,40 @@ void SetBackgroundStyleRecursively (GtkWidget *widget, gpointer data)
 //    }
 }
 
-void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
+void c_gtk_widget_set_bg_color (GtkWidget* widget, int nr, int ng, int nb)
 {
-  GtkStyle* style;
+  GtkStyle* widgetStyle;
+  int or, og, ob; // old colors
+  int i;
 
-  r *= 257; g *= 257; b *= 257;
+  nr *= 257; ng *= 257; nb *= 257;
   
-  /* We just need a style structure to store the rgb values. */
-
   //  style = gtk_widget_get_style(GTK_WIDGET(widget));
-  style = gtk_style_copy(GTK_WIDGET(widget)->style);
+  widgetStyle = gtk_style_copy(GTK_WIDGET(widget)->style);
 
-  style->bg[GTK_STATE_NORMAL].red = r;
-  style->bg[GTK_STATE_NORMAL].green = g;
-  style->bg[GTK_STATE_NORMAL].blue = b;
-	  
-  //	gtk_widget_set_style(GTK_WIDGET(widget), style);
-  SetBackgroundStyleRecursively(widget, (gpointer) style);
+  /* The old color the background was. */
+  or = widgetStyle->bg[GTK_STATE_NORMAL].red;
+  og = widgetStyle->bg[GTK_STATE_NORMAL].green;
+  ob = widgetStyle->bg[GTK_STATE_NORMAL].blue;
+		
+  if(or != nr || og != ng || ob != nb)
+  {
+    for (i = 0; i < 5; i++)
+	{
+	  /* We do not change the color when GTK_STATE_SELECTED
+	   * because of EV_TEXT_AREA */
+	  if (i != 3)
+	  {
+		widgetStyle->bg[i].red = nr;
+	  	widgetStyle->bg[i].green = ng;
+		widgetStyle->bg[i].blue = nb;
+	  }
+	}
+
+    /* --- Set the style of the widget --- */
+    gtk_widget_set_style (widget, widgetStyle);
+  }
+
 }
 
 void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *g, EIF_INTEGER *b)
@@ -2782,22 +2961,39 @@ void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *
 }
 
 
-void c_gtk_widget_set_fg_color (GtkWidget* widget, int r, int g, int b)
+void c_gtk_widget_set_fg_color (GtkWidget* widget, int nr, int ng, int nb)
 {
-  GtkStyle* style;
+  GtkStyle* widgetStyle;
+  int or, og, ob; // old colors
+  int i;
 
-  r *= 257; g *= 257; b *= 257;
+  nr *= 257; ng *= 257; nb *= 257;
   
-  /* We just need a style structure to store the rgb values. */
-  //style = gtk_widget_get_style(GTK_WIDGET(widget));
-  style = gtk_style_copy(GTK_WIDGET(widget)->style);
+  //  style = gtk_widget_get_style(GTK_WIDGET(widget));
+  widgetStyle = gtk_style_copy(GTK_WIDGET(widget)->style);
 
-  style->fg[GTK_STATE_NORMAL].red = r;
-  style->fg[GTK_STATE_NORMAL].green = g;
-  style->fg[GTK_STATE_NORMAL].blue = b;
-	  
-//  	gtk_widget_set_style(GTK_WIDGET(widget), style);
-  SetForegroundStyleRecursively(widget, (gpointer) style);
+  /* The old color the foreground was. */
+  or = widgetStyle->fg[GTK_STATE_NORMAL].red;
+  og = widgetStyle->fg[GTK_STATE_NORMAL].green;
+  ob = widgetStyle->fg[GTK_STATE_NORMAL].blue;
+		
+  if(or != nr || og != ng || ob != nb)
+  {
+    for (i = 0; i < 5; i++)
+	{
+	  /* We do not change the color when GTK_STATE_SELECTED
+	   * because of EV_TEXT_AREA */
+	  if (i != 3)
+	  {
+		widgetStyle->fg[i].red = nr;
+	  	widgetStyle->fg[i].green = ng;
+		widgetStyle->fg[i].blue = nb;
+	  }
+	}
+
+    /* --- Set the style of the widget --- */
+    gtk_widget_set_style (widget, widgetStyle);
+  }
 }
 
 

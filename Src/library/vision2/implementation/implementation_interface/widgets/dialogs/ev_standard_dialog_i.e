@@ -30,6 +30,13 @@ feature -- Status setting
 		deferred
 		end
 
+	hide is
+			-- Hide the window.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature -- Element change
 
 	set_parent (par: EV_CONTAINER) is

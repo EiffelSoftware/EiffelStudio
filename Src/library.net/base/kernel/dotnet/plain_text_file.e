@@ -15,7 +15,7 @@ inherit
 			index as position
 		redefine
 			is_plain_text, put_string, putstring,
-			read_character, readchar
+			read_character, readchar, read_stream, readstream
 		end
 
 create
@@ -42,7 +42,7 @@ feature -- Output
 		do
 			if s.count /= 0 then
 				writer.write_string (s.to_cil.replace_string_string (eiffel_newline,
-					writer.new_line))
+					dotnet_newline))
 			end
 		end
 
@@ -71,6 +71,27 @@ feature -- Output
 		end
 
 feature -- Input
+
+	read_stream (nb_char: INTEGER) is
+			-- Read a string of at most `nb_char' bound characters
+			-- or until end of file.
+			-- Make result available in `last_string'.
+		local
+			l_str: STRING
+		do
+			Precursor {FILE} (nb_char)
+			l_str := last_string
+			create last_string.make_from_cil (
+				l_str.to_cil.replace_string_string (dotnet_newline, eiffel_newline))
+		end
+		
+	readstream (nb_char: INTEGER) is
+			-- Read a string of at most `nb_char' bound characters
+			-- or until end of file.
+			-- Make result available in `last_string'.
+		do
+			read_stream (nb_char)
+		end
 
 	read_integer, readint is
 			-- Read the ASCII representation of a new integer
@@ -312,6 +333,9 @@ feature {NONE} -- Implementation
 
 	eiffel_newline: SYSTEM_STRING is "%N"
 			-- Representation of Eiffel `%N' character as a SYSTEM_STRING.
+			
+	dotnet_newline: SYSTEM_STRING is "%R%N"
+			-- Representation of a .NET newline as a SYSTEM_STRING.
 
 invariant
 

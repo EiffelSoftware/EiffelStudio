@@ -86,10 +86,11 @@ PATH=.$p_$PATH
 export PATH
 
 : Sanity checks
-if test ! -t 0; then
-	echo "Say 'sh $me', not 'sh <$me'"
-	exit 1
-fi
+#No need for this as the user will know not to do that
+#if test ! -t 0; then
+#	echo "Say 'sh $me', not 'sh <$me'"
+#	exit 1
+#fi
 
 : On HP-UX, large Configure scripts may exercise a bug in /bin/sh
 if test -f /hp-ux -a -f /bin/ksh; then

@@ -39,7 +39,7 @@ feature -- Basic Operations
 				if not cr.is_initialized then
 					cr.initialize
 				end
-				l_directory_name := cr.absolute_assembly_path_from_location (create {STRING}.make_from_cil (assembly.location))
+				l_directory_name := cr.absolute_assembly_path_from_location (assembly.location)
 				create dir.make (l_directory_name.to_cil)
 				check
 					non_void_assembly_directory: dir /= Void
@@ -69,8 +69,8 @@ feature -- Basic Operations
 						l_directory_name.remove_head (l_directory_name.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, l_directory_name.count))
 		 				info.add_assembly ( create {CONSUMED_ASSEMBLY_INFO}.make (
 													Consumed_assembly_factory.consumed_assembly_from_name (assembly.get_name),
-													create {STRING}.make_from_cil (assembly.location),
-													l_directory_name, assembly.get_name.flags.value_)
+													assembly.location,
+													l_directory_name, assembly.get_name.flags.to_integer)
 											)
 						update_info (info)
 					else

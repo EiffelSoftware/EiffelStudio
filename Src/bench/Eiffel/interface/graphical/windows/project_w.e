@@ -80,7 +80,7 @@ feature
 			forbid_resize;
 			build_widgets;
 			set_title (l_New_project);
-			set_x_y (0,0);
+			set_x_y (screen.x, screen.y);
 			realize;
 			transporter_init;
 			if bm_Project_icon.is_valid then
@@ -130,6 +130,9 @@ feature
 	classic_bar: FORM;
 			-- Main menu bar
 
+	format_bar: FORM;
+			-- Format menu bar
+
 feature -- xterminal
 
 	text_window: PROJECT_TEXT;
@@ -145,9 +148,6 @@ feature -- xterminal
 				end;
 				if initialized then
 					raise
-					if warner.is_popped_up then
-						warner.raise
-					end
 				end
 			elseif arg = popdown then
 				window_manager.hide_all_editors;
@@ -198,6 +198,8 @@ feature -- rest
 			build_text;
 			build_top;
 			build_icing;
+			build_format_bar;
+			exec_stop.format (Void);
 			attach_all
 		end; -- build
 
@@ -259,13 +261,43 @@ feature -- rest
 			text_window.set_size (200, 100);
 		end;
 
+	build_format_bar is
+			-- Build formatting buttons in `format_bar'.
+		do
+			!! format_bar.make (new_name, form_manager);
+			!! exec_stop.make (format_bar, text_window);
+			format_bar.attach_top (exec_stop, 0);
+			!! exec_step.make (format_bar, text_window);
+			format_bar.attach_top (exec_step, 0);
+			format_bar.attach_left_widget (exec_stop, exec_step, 0);
+			!! exec_last.make (format_bar, text_window);
+			format_bar.attach_top (exec_last, 0);
+			format_bar.attach_left_widget (exec_step, exec_last, 0);
+			!! exec_nostop.make (format_bar, text_window);
+			format_bar.attach_top (exec_nostop, 0);
+			format_bar.attach_left_widget (exec_last, exec_nostop, 0);
+		end;
+
+	exec_nostop: EXEC_NOSTOP;
+			-- Set execution format so that no stop points will be taken 
+			-- into account
+	exec_stop: EXEC_STOP;
+			-- Set execution format so that user-defined stop points will 
+			-- be taken into account
+	exec_step: EXEC_STEP;
+			-- Set execution format so that each breakable points of the 
+			-- current routine will be taken into account
+	exec_last: EXEC_LAST;
+			-- Set execution format so that only the last breakable point 
+			-- of the current routine will be taken into account
+
 	open_command: OPEN_PROJECT;
 	quit_command: QUIT_PROJECT;
 
 	update_command: UPDATE_PROJECT;
 --	run_command: RUN;
 	debug_run_command: DEBUG_RUN;
-	debug_step_command: DEBUG_STEP;
+	debug_status_command: DEBUG_STATUS;
 	debug_quit_command: DEBUG_QUIT;
 	special_command: SPECIAL_COMMAND;
 	freeze_command: FREEZE_PROJECT;
@@ -280,7 +312,7 @@ feature -- rest
 				!!update_command.make (icing, text_window);
 --				!!run_command.make (icing, text_window);
 				!!debug_run_command.make (icing, text_window);
-				!!debug_step_command.make (icing, text_window);
+				!!debug_status_command.make (icing, text_window);
 				!!debug_quit_command.make (icing, text_window);
 				!!special_command.make (icing, text_window);
 				!!freeze_command.make (icing, text_window);
@@ -288,8 +320,8 @@ feature -- rest
 			icing.attach_top (update_command, 0);
 --			icing.attach_top_widget (update_command, run_command, 0);
 			icing.attach_top_widget (update_command, debug_run_command, 0);
-			icing.attach_top_widget (debug_run_command, debug_step_command, 0);
-			icing.attach_top_widget (debug_step_command, debug_quit_command, 0);
+			icing.attach_top_widget (debug_run_command, debug_status_command, 0);
+			icing.attach_top_widget (debug_status_command, debug_quit_command, 0);
 			icing.attach_top_widget (debug_quit_command, special_command, 0);
 			icing.attach_bottom_widget (freeze_command, special_command, 0);
 			icing.attach_bottom_widget (finalize_command, freeze_command, 0);
@@ -320,11 +352,15 @@ feature -- rest
 				-- (xterminal will resize when window grows)
 		--	form_manager.attach_bottom (xterminal, 5);
 
-			form_manager.attach_bottom (text_window, 5);
+			form_manager.attach_bottom_widget (format_bar, text_window, 0);
 
 			form_manager.attach_top (icing, 0);
 			form_manager.attach_right (icing, 0);
 			form_manager.attach_bottom (icing, 0)
+
+			form_manager.attach_left (format_bar, 0);
+			form_manager.attach_right_widget (icing, format_bar, 0);
+			form_manager.attach_bottom (format_bar, 0)
 		end;
 
 	initialized: BOOLEAN;

@@ -30,6 +30,7 @@ remtrace vision
 exprt -r $DEFAULT_CVS_TAG -d vision Src/library/vision
 remtrace vision2
 exprt -r $DEFAULT_CVS_TAG -d vision2 Src/library/vision2
+fullrd vision2/implementation/mswin
 remtrace web
 exprt -r $DEFAULT_CVS_TAG -d web Src/library/web
 

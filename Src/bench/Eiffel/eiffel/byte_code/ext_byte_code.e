@@ -113,7 +113,6 @@ feature -- C code generation
 			l_ret_type: TYPE_I
 			internal_name: STRING
 			buf: GENERATION_BUFFER
-			l_is_once: BOOLEAN
 		do
 			buf := buffer
 			l_ret_type := result_type
@@ -170,9 +169,9 @@ feature -- C code generation
 			l_ext.generate_body (Current, l_result)
 			
 			if l_ext.is_blocking_call then
-				buf.putstring ("RTGC;")
-				buf.new_line
 				buf.putstring ("EIF_EXIT_C;")
+				buf.new_line
+				buf.putstring ("RTGC;")
 				buf.new_line
 			end
 		end

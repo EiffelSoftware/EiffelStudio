@@ -42,10 +42,11 @@ AR = $ar rc
 LD=$ld
 CC = $cc
 CTAGS = ctags
-JCFLAGS = \$(CFLAGS) $optimize $sharedccflags $ccflags $large
+JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
+JMTCFLAGS = \$(CFLAGS) $optimize $mtccflags $large
 JLDFLAGS = \$(LDFLAGS) $optimize $ldflags
-SHAREDEIFLIB = $prefix$eiflib$sharedsuffix$sharedlibversion
-SHAREDWKEIFLIB = $prefix$wkeiflib$sharedsuffix$sharedlibversion
+SHAREDEIFLIB = $prefix$eiflib$sharedsuffix
+SHAREDWKEIFLIB = $prefix$wkeiflib$sharedsuffix
 LDSHAREDFLAGS = $ldsharedflags
 L = $manext
 LIBS = $libs
@@ -64,7 +65,7 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 SOURCES =  compress.c console.c option.c \$(LSRC) x2c.c debug.c interp.c option.c update.c wbench.c main.c
-OBJECTS =  \$(LOBJ) \$(WOBJ) \$(WOBJ) \$(EOBJ) \$(EOBJ) x2c.o debug.o interp.o option.o update.o wbench.o main.o
+OBJECTS =  \$(LOBJ) \$(WOBJ) \(MT_WOBJ) \$(MT_LOBJ) \$(EOBJ)  x2c.o 
 LSCRIPTS =  eif_size.h
 
 ########################################################################
@@ -94,6 +95,7 @@ CFLAGS = -I$(TOP) -I. -I../ipc/app
 DPFLAGS = -I$(TOP) -I. -I../ipc/app
 
 NETWORK_OBJ = ../ipc/app/network.o
+MTNETWORK_OBJ = ../ipc/app/MTnetwork.o
 
 LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
@@ -109,6 +111,8 @@ OTHER = main.c except.c
 WADD = debug.c interp.c update.c wbench.c
 
 NETWORK = network.o
+
+MTNETWORK = MTnetwork.o
 
 WSRC = \
 	compress.c \
@@ -207,6 +211,56 @@ ESRC = \
 	wgen_conf.c \
 	wrout_obj.c
 
+
+MT_LOBJ = \
+	MTeif_once.o \
+	MTcompress.o \
+	MTconsole.o \
+	MToption.o \
+	MTmath.o \
+	MTmalloc.o \
+	MTgarcol.o \
+	MTlocal.o \
+	MTstore.o \
+	MTretrieve.o \
+	MThash.o \
+	MTtraverse.o \
+	MThashin.o \
+	MTtools.o \
+	MTinternal.o \
+	MTplug.o \
+	MTcopy.o \
+	MTequal.o \
+	MTlmalloc.o \
+	MTout.o \
+	MTtimer.o \
+	MTurgent.o \
+	MTsig.o \
+	MThector.o \
+	MTcecil.o \
+	MTbits.o \
+	MTfile.o \
+	MTdir.o \
+	MTstring.o \
+	MTmisc.o \
+	MTpattern.o \
+	MTerror.o \
+	MTumain.o \
+	MTmemory.o \
+	MTargv.o \
+	MTboolstr.o \
+	MTsearch.o \
+	MTrun_idr.o \
+	MTpath_name.o \
+	MTdle.o \
+	MTobject_id.o \
+	MTeif_threads.o \
+	MTmain.o \
+	MTexcept.o \
+	MTeif_project.o \
+	MTeif_rw_lock.o \
+	MTgen_conf.o \
+	MTrout_obj.o
 
 LOBJ = \
 	eif_once.o \
@@ -313,6 +367,61 @@ WOBJ = \
 	wgen_conf.o \
 	wrout_obj.o
 
+MT_WOBJ = \
+	$(MTNETWORK) \
+	MTeif_once.o \
+	MTcompress.o \
+	MTconsole.o \
+	MTwoption.o \
+	MTwmath.o \
+	MTwmalloc.o \
+	MTwgarcol.o \
+	MTwlocal.o \
+	MTwstore.o \
+	MTwretrieve.o \
+	MTwhash.o \
+	MTwtraverse.o \
+	MTwhashin.o \
+	MTwtools.o \
+	MTwinternal.o \
+	MTwplug.o \
+	MTwcopy.o \
+	MTwequal.o \
+	MTwlmalloc.o \
+	MTwout.o \
+	MTwtimer.o \
+	MTwurgent.o \
+	MTwsig.o \
+	MTwhector.o \
+	MTwcecil.o \
+	MTwbits.o \
+	MTwfile.o \
+	MTwdir.o \
+	MTwstring.o \
+	MTwmisc.o \
+	MTwpattern.o \
+	MTwerror.o \
+	MTwumain.o \
+	MTwmemory.o \
+	MTwargv.o \
+	MTwboolstr.o \
+	MTwsearch.o \
+	MTwrun_idr.o \
+	MTwpath_name.o \
+	MTwdle.o \
+	MTwobject_id.o \
+	MTweif_threads.o \
+	MTwmain.o \
+	MTwexcept.o \
+	MTdebug.o \
+	MTinterp.o \
+	MTupdate.o \
+	MTwbench.o \
+	MTweif_project.o \
+	MTeif_rw_lock.o \
+	MTwgen_conf.o \
+	MTwrout_obj.o
+
 EOBJ = \
 	woption.o \
 	eif_once.o \
@@ -393,29 +502,64 @@ install.man:: size_h.man
 deinstall.man::
 	$(RM) $(MANSRC)/eif_size.h.$(L)
 
+#MT
+
+all:: libmtwkbench.so 
+
+local_realclean::
+	$(RM) libmtwkbench.so 
+
+libmtwkbench.so: $(MT_WOBJ)
+	$(RM) $@
+	$(CC) $(LDSHAREDFLAGS) -o $@ $(MT_WOBJ)
+
+all:: libmtfinalized.so 
+
+local_realclean::
+	$(RM) libmtfinalized.so	
+
+libmtfinalized.so: $(MT_LOBJ)
+	$(RM) $@
+	$(CC) $(LDSHAREDFLAGS) -o $@ $(MT_LOBJ)
+	
+all:: libmtfinalized.a
+
+local_realclean::
+	$(RM) libmtfinalized.a
+
+libmtfinalized.a: $(MT_LOBJ)
+	$(RM) $@
+	$(AR) $@ $(MT_LOBJ)
+	$(RANLIB) $@
+
+all:: libmtwkbench.a
+
+local_realclean::
+	$(RM) libmtwkbench.a
+
+libmtwkbench.a: $(MT_WOBJ)
+	$(RM) $@
+	$(AR) $@ $(MT_WOBJ)
+	$(RANLIB) $@
+
+#MT
 all:: libwkbench.so 
 
 local_realclean::
-	$(RM) $(SHAREDWKEIFLIB) 
 	$(RM) libwkbench.so 
 
 libwkbench.so: $(WOBJ)
 	$(RM) $@
-	$(RM) $(SHAREDWKEIFLIB)
-	$(CC) $(LDSHAREDFLAGS) -o $(SHAREDWKEIFLIB) $(WOBJ)
-	$(LN) $(SHAREDWKEIFLIB) $@
+	$(CC) $(LDSHAREDFLAGS) -o $@ $(WOBJ)
 
 all:: libfinalized.so 
 
 local_realclean::
-	$(RM) $(SHAREDEIFLIB)
 	$(RM) libfinalized.so	
 
 libfinalized.so: $(LOBJ)
 	$(RM) $@
-	$(RM) $(SHAREDEIFLIB)
-	$(CC) $(LDSHAREDFLAGS) -o $(SHAREDEIFLIB) $(LOBJ)
-	$(LN) $(SHAREDEIFLIB) $@
+	$(CC) $(LDSHAREDFLAGS) -o $@ $(LOBJ)
 	
 all:: libfinalized.a
 
@@ -944,16 +1088,995 @@ update.o: update.c
 wbench.o: wbench.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 
+#MT L
+
+MTmath.c: math.c
+	$(RM) MTmath.c
+	$(LN) math.c MTmath.c
+remove::
+	$(RM) MTmath.c
+
+MTmalloc.c: malloc.c
+	$(RM) MTmalloc.c
+	$(LN) malloc.c MTmalloc.c
+remove::
+	$(RM) MTmalloc.c
+
+MTgarcol.c: garcol.c
+	$(RM) MTgarcol.c
+	$(LN) garcol.c MTgarcol.c
+remove::
+	$(RM) MTgarcol.c
+
+MTlocal.c: local.c
+	$(RM) MTlocal.c
+	$(LN) local.c MTlocal.c
+remove::
+	$(RM) MTlocal.c
+
+MTstore.c: store.c
+	$(RM) MTstore.c
+	$(LN) store.c MTstore.c
+remove::
+	$(RM) MTstore.c
+
+MTretrieve.c: retrieve.c
+	$(RM) MTretrieve.c
+	$(LN) retrieve.c MTretrieve.c
+remove::
+	$(RM) MTretrieve.c
+
+MThash.c: hash.c
+	$(RM) MThash.c
+	$(LN) hash.c MThash.c
+remove::
+	$(RM) MThash.c
+
+MTtraverse.c: traverse.c
+	$(RM) MTtraverse.c
+	$(LN) traverse.c MTtraverse.c
+remove::
+	$(RM) MTtraverse.c
+
+MThashin.c: hashin.c
+	$(RM) MThashin.c
+	$(LN) hashin.c MThashin.c
+remove::
+	$(RM) MThashin.c
+
+MTtools.c: tools.c
+	$(RM) MTtools.c
+	$(LN) tools.c MTtools.c
+remove::
+	$(RM) MTtools.c
+
+MTinternal.c: internal.c
+	$(RM) MTinternal.c
+	$(LN) internal.c MTinternal.c
+remove::
+	$(RM) MTinternal.c
+
+MTplug.c: plug.c
+	$(RM) MTplug.c
+	$(LN) plug.c MTplug.c
+remove::
+	$(RM) MTplug.c
+
+MTcopy.c: copy.c
+	$(RM) MTcopy.c
+	$(LN) copy.c MTcopy.c
+remove::
+	$(RM) MTcopy.c
+
+MTequal.c: equal.c
+	$(RM) MTequal.c
+	$(LN) equal.c MTequal.c
+remove::
+	$(RM) MTequal.c
+
+MTlmalloc.c: lmalloc.c
+	$(RM) MTlmalloc.c
+	$(LN) lmalloc.c MTlmalloc.c
+remove::
+	$(RM) MTlmalloc.c
+
+MTout.c: out.c
+	$(RM) MTout.c
+	$(LN) out.c MTout.c
+remove::
+	$(RM) MTout.c
+
+MTtimer.c: timer.c
+	$(RM) MTtimer.c
+	$(LN) timer.c MTtimer.c
+remove::
+	$(RM) MTtimer.c
+
+MTurgent.c: urgent.c
+	$(RM) MTurgent.c
+	$(LN) urgent.c MTurgent.c
+remove::
+	$(RM) MTurgent.c
+
+MTsig.c: sig.c
+	$(RM) MTsig.c
+	$(LN) sig.c MTsig.c
+remove::
+	$(RM) MTsig.c
+
+MThector.c: hector.c
+	$(RM) MThector.c
+	$(LN) hector.c MThector.c
+remove::
+	$(RM) MThector.c
+
+MTcecil.c: cecil.c
+	$(RM) MTcecil.c
+	$(LN) cecil.c MTcecil.c
+remove::
+	$(RM) MTcecil.c
+
+MTbits.c: bits.c
+	$(RM) MTbits.c
+	$(LN) bits.c MTbits.c
+remove::
+	$(RM) MTbits.c
+
+MTfile.c: file.c
+	$(RM) MTfile.c
+	$(LN) file.c MTfile.c
+remove::
+	$(RM) MTfile.c
+
+MTdir.c: dir.c
+	$(RM) MTdir.c
+	$(LN) dir.c MTdir.c
+remove::
+	$(RM) MTdir.c
+
+MTstring.c: string.c
+	$(RM) MTstring.c
+	$(LN) string.c MTstring.c
+remove::
+	$(RM) MTstring.c
+
+MTmisc.c: misc.c
+	$(RM) MTmisc.c
+	$(LN) misc.c MTmisc.c
+remove::
+	$(RM) MTmisc.c
+
+MTpattern.c: pattern.c
+	$(RM) MTpattern.c
+	$(LN) pattern.c MTpattern.c
+remove::
+	$(RM) MTpattern.c
+
+MTerror.c: error.c
+	$(RM) MTerror.c
+	$(LN) error.c MTerror.c
+remove::
+	$(RM) MTerror.c
+
+MTumain.c: umain.c
+	$(RM) MTumain.c
+	$(LN) umain.c MTumain.c
+remove::
+	$(RM) MTumain.c
+
+MTmemory.c: memory.c
+	$(RM) MTmemory.c
+	$(LN) memory.c MTmemory.c
+remove::
+	$(RM) MTmemory.c
+
+MTargv.c: argv.c
+	$(RM) MTargv.c
+	$(LN) argv.c MTargv.c
+remove::
+	$(RM) MTargv.c
+
+MTboolstr.c: boolstr.c
+	$(RM) MTboolstr.c
+	$(LN) boolstr.c MTboolstr.c
+remove::
+	$(RM) MTboolstr.c
+
+MTsearch.c: search.c
+	$(RM) MTsearch.c
+	$(LN) search.c MTsearch.c
+remove::
+	$(RM) MTsearch.c
+
+MTrun_idr.c: run_idr.c
+	$(RM) MTrun_idr.c
+	$(LN) run_idr.c MTrun_idr.c
+remove::
+	$(RM) MTrun_idr.c
+
+MTpath_name.c: path_name.c
+	$(RM) MTpath_name.c
+	$(LN) path_name.c MTpath_name.c
+remove::
+	$(RM) MTpath_name.c
+
+MTdle.c: dle.c
+	$(RM) MTdle.c
+	$(LN) dle.c MTdle.c
+remove::
+	$(RM) MTdle.c
+
+MTobject_id.c: object_id.c
+	$(RM) MTobject_id.c
+	$(LN) object_id.c MTobject_id.c
+remove::
+	$(RM) MTobject_id.c
+
+MTeif_once.c: eif_once.c
+	$(RM) MTeif_once.c
+	$(LN) eif_once.c MTeif_once.c
+remove::
+	$(RM) MTeif_once.c
+
+MTeif_rw_lock.c: eif_rw_lock.c
+	$(RM) MTeif_rw_lock.c
+	$(LN) eif_rw_lock.c MTeif_rw_lock.c
+remove::
+	$(RM) MTeif_rw_lock.c
+
+MTeif_threads.c: eif_threads.c
+	$(RM) MTeif_threads.c
+	$(LN) eif_threads.c MTeif_threads.c
+remove::
+	$(RM) MTeif_threads.c
+
+MTgen_conf.c: gen_conf.c
+	$(RM) MTgen_conf.c
+	$(LN) gen_conf.c MTgen_conf.c
+remove::
+	$(RM) MTgen_conf.c
+
+MTrout_obj.c: rout_obj.c
+	$(RM) MTrout_obj.c
+	$(LN) rout_obj.c MTrout_obj.c
+remove::
+	$(RM) MTrout_obj.c
+
+MTmain.c: main.c
+	$(RM) MTmain.c
+	$(LN) main.c MTmain.c
+remove::
+	$(RM) MTmain.c
+
+MTexcept.c: except.c
+	$(RM) MTexcept.c
+	$(LN) except.c MTexcept.c
+remove::
+	$(RM) MTexcept.c
+
+MToption.c: option.c
+	$(RM) MToption.c
+	$(LN) option.c MToption.c
+remove::
+	$(RM) MToption.c
+
+MTeif_project.c: eif_project.c
+	$(RM) MTeif_project.c
+	$(LN) eif_project.c MTeif_project.c
+remove::
+	$(RM) MTeif_project.c
+
+MTeif_project.o: MTeif_project.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MToption.o: MToption.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTmath.o: MTmath.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTmalloc.o: MTmalloc.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTgarcol.o: MTgarcol.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTlocal.o: MTlocal.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTstore.o: MTstore.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTretrieve.o: MTretrieve.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MThash.o: MThash.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTtraverse.o: MTtraverse.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MThashin.o: MThashin.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTtools.o: MTtools.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTinternal.o: MTinternal.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTplug.o: MTplug.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTcopy.o: MTcopy.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTequal.o: MTequal.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTlmalloc.o: MTlmalloc.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTout.o: MTout.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTtimer.o: MTtimer.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTurgent.o: MTurgent.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTsig.o: MTsig.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MThector.o: MThector.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTcecil.o: MTcecil.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTbits.o: MTbits.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTfile.o: MTfile.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTdir.o: MTdir.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTstring.o: MTstring.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTmisc.o: MTmisc.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTpattern.o: MTpattern.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTerror.o: MTerror.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTumain.o: MTumain.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTmemory.o: MTmemory.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTargv.o: MTargv.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTboolstr.o: MTboolstr.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTsearch.o: MTsearch.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTrun_idr.o: MTrun_idr.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTpath_name.o: MTpath_name.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTdle.o: MTdle.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTobject_id.o: MTobject_id.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTeif_rw_lock.o: MTeif_rw_lock.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTeif_threads.o: MTeif_threads.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTeif_once.o: MTeif_once.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTgen_conf.o: MTgen_conf.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTrout_obj.o: MTrout_obj.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTmain.o: MTmain.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTexcept.o: MTexcept.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+
+#MT
+
+
+MTcompress.c: compress.c
+	$(RM) MTcompress.c
+	$(LN) compress.c MTcompress.c
+remove::
+	$(RM) MTcompress.c
+
+
+MTwmath.c: math.c
+	$(RM) MTwmath.c
+	$(LN) math.c MTwmath.c
+remove::
+	$(RM) MTwmath.c
+
+MTwmalloc.c: malloc.c
+	$(RM) MTwmalloc.c
+	$(LN) malloc.c MTwmalloc.c
+remove::
+	$(RM) MTwmalloc.c
+
+MTwgarcol.c: garcol.c
+	$(RM) MTwgarcol.c
+	$(LN) garcol.c MTwgarcol.c
+remove::
+	$(RM) MTwgarcol.c
+
+MTwlocal.c: local.c
+	$(RM) MTwlocal.c
+	$(LN) local.c MTwlocal.c
+remove::
+	$(RM) MTwlocal.c
+
+MTwstore.c: store.c
+	$(RM) MTwstore.c
+	$(LN) store.c MTwstore.c
+remove::
+	$(RM) MTwstore.c
+
+MTwretrieve.c: retrieve.c
+	$(RM) MTwretrieve.c
+	$(LN) retrieve.c MTwretrieve.c
+remove::
+	$(RM) MTwretrieve.c
+
+MTwhash.c: hash.c
+	$(RM) MTwhash.c
+	$(LN) hash.c MTwhash.c
+remove::
+	$(RM) MTwhash.c
+
+MTwtraverse.c: traverse.c
+	$(RM) MTwtraverse.c
+	$(LN) traverse.c MTwtraverse.c
+remove::
+	$(RM) MTwtraverse.c
+
+MTwhashin.c: hashin.c
+	$(RM) MTwhashin.c
+	$(LN) hashin.c MTwhashin.c
+remove::
+	$(RM) MTwhashin.c
+
+MTwtools.c: tools.c
+	$(RM) MTwtools.c
+	$(LN) tools.c MTwtools.c
+remove::
+	$(RM) MTwtools.c
+
+MTwinternal.c: internal.c
+	$(RM) MTwinternal.c
+	$(LN) internal.c MTwinternal.c
+remove::
+	$(RM) MTwinternal.c
+
+MTwplug.c: plug.c
+	$(RM) MTwplug.c
+	$(LN) plug.c MTwplug.c
+remove::
+	$(RM) MTwplug.c
+
+MTwcopy.c: copy.c
+	$(RM) MTwcopy.c
+	$(LN) copy.c MTwcopy.c
+remove::
+	$(RM) MTwcopy.c
+
+MTwequal.c: equal.c
+	$(RM) MTwequal.c
+	$(LN) equal.c MTwequal.c
+remove::
+	$(RM) MTwequal.c
+
+MTwlmalloc.c: lmalloc.c
+	$(RM) MTwlmalloc.c
+	$(LN) lmalloc.c MTwlmalloc.c
+remove::
+	$(RM) MTwlmalloc.c
+
+MTwout.c: out.c
+	$(RM) MTwout.c
+	$(LN) out.c MTwout.c
+remove::
+	$(RM) MTwout.c
+
+MTwtimer.c: timer.c
+	$(RM) MTwtimer.c
+	$(LN) timer.c MTwtimer.c
+remove::
+	$(RM) MTwtimer.c
+
+MTwurgent.c: urgent.c
+	$(RM) MTwurgent.c
+	$(LN) urgent.c MTwurgent.c
+remove::
+	$(RM) MTwurgent.c
+
+MTwsig.c: sig.c
+	$(RM) MTwsig.c
+	$(LN) sig.c MTwsig.c
+remove::
+	$(RM) MTwsig.c
+
+MTwhector.c: hector.c
+	$(RM) MTwhector.c
+	$(LN) hector.c MTwhector.c
+remove::
+	$(RM) MTwhector.c
+
+MTwcecil.c: cecil.c
+	$(RM) MTwcecil.c
+	$(LN) cecil.c MTwcecil.c
+remove::
+	$(RM) MTwcecil.c
+
+MTwbits.c: bits.c
+	$(RM) MTwbits.c
+	$(LN) bits.c MTwbits.c
+remove::
+	$(RM) MTwbits.c
+
+MTwfile.c: file.c
+	$(RM) MTwfile.c
+	$(LN) file.c MTwfile.c
+remove::
+	$(RM) MTwfile.c
+
+MTwdir.c: dir.c
+	$(RM) MTwdir.c
+	$(LN) dir.c MTwdir.c
+remove::
+	$(RM) MTwdir.c
+
+MTwstring.c: string.c
+	$(RM) MTwstring.c
+	$(LN) string.c MTwstring.c
+remove::
+	$(RM) MTwstring.c
+
+MTwmisc.c: misc.c
+	$(RM) MTwmisc.c
+	$(LN) misc.c MTwmisc.c
+remove::
+	$(RM) MTwmisc.c
+
+MTwpattern.c: pattern.c
+	$(RM) MTwpattern.c
+	$(LN) pattern.c MTwpattern.c
+remove::
+	$(RM) MTwpattern.c
+
+MTwerror.c: error.c
+	$(RM) MTwerror.c
+	$(LN) error.c MTwerror.c
+remove::
+	$(RM) MTwerror.c
+
+MTwumain.c: umain.c
+	$(RM) MTwumain.c
+	$(LN) umain.c MTwumain.c
+remove::
+	$(RM) MTwumain.c
+
+MTwmemory.c: memory.c
+	$(RM) MTwmemory.c
+	$(LN) memory.c MTwmemory.c
+remove::
+	$(RM) MTwmemory.c
+
+MTwargv.c: argv.c
+	$(RM) MTwargv.c
+	$(LN) argv.c MTwargv.c
+remove::
+	$(RM) MTwargv.c
+
+MTwboolstr.c: boolstr.c
+	$(RM) MTwboolstr.c
+	$(LN) boolstr.c MTwboolstr.c
+remove::
+	$(RM) MTwboolstr.c
+
+MTwsearch.c: search.c
+	$(RM) MTwsearch.c
+	$(LN) search.c MTwsearch.c
+remove::
+	$(RM) MTwsearch.c
+
+MTwrun_idr.c: run_idr.c
+	$(RM) MTwrun_idr.c
+	$(LN) run_idr.c MTwrun_idr.c
+remove::
+	$(RM) MTwrun_idr.c
+
+MTwpath_name.c: path_name.c
+	$(RM) MTwpath_name.c
+	$(LN) path_name.c MTwpath_name.c
+remove::
+	$(RM) MTwpath_name.c
+
+MTwdle.c: dle.c
+	$(RM) MTwdle.c
+	$(LN) dle.c MTwdle.c
+remove::
+	$(RM) MTwdle.c
+
+MTwobject_id.c: object_id.c
+	$(RM) MTwobject_id.c
+	$(LN) object_id.c MTwobject_id.c
+remove::
+	$(RM) MTwobject_id.c
+
+MTweif_threads.c: eif_threads.c
+	$(RM) MTweif_threads.c
+	$(LN) eif_threads.c MTweif_threads.c
+remove::
+	$(RM) MTweif_threads.c
+
+MTwgen_conf.c: gen_conf.c
+	$(RM) MTwgen_conf.c
+	$(LN) gen_conf.c MTwgen_conf.c
+remove::
+	$(RM) MTwgen_conf.c
+
+MTwrout_obj.c: rout_obj.c
+	$(RM) MTwrout_obj.c
+	$(LN) rout_obj.c MTwrout_obj.c
+remove::
+	$(RM) MTwrout_obj.c
+
+MTwmain.c: main.c
+	$(RM) MTwmain.c
+	$(LN) main.c MTwmain.c
+remove::
+	$(RM) MTwmain.c
+
+MTwexcept.c: except.c
+	$(RM) MTwexcept.c
+	$(LN) except.c MTwexcept.c
+remove::
+	$(RM) MTwexcept.c
+
+MTconsole.c: console.c
+	$(RM) MTconsole.c
+	$(LN) console.c MTconsole.c
+remove::
+	$(RM) MTconsole.c
+
+MTwoption.c: option.c
+	$(RM) MTwoption.c
+	$(LN) option.c MTwoption.c
+remove::
+	$(RM) MTwoption.c
+
+MTweif_project.c: eif_project.c
+	$(RM) MTweif_project.c
+	$(LN) eif_project.c MTweif_project.c
+remove::
+	$(RM) MTweif_project.c
+
+MTdebug.c: debug.c
+	$(RM) MTdebug.c
+	$(LN) debug.c MTdebug.c
+remove::
+	$(RM) MTdebug.c
+
+MTinterp.c: interp.c
+	$(RM) MTinterp.c
+	$(LN) interp.c MTinterp.c
+remove::
+	$(RM) MTinterp.c
+
+MTupdate.c: update.c
+	$(RM) MTupdate.c
+	$(LN) update.c MTupdate.c
+remove::
+	$(RM) MTupdate.c
+
+MTwbench.c: wbench.c
+	$(RM) MTwbench.c
+	$(LN) wbench.c MTwbench.c
+remove::
+	$(RM) MTwbench.c
+
+MTweif_project.o: MTweif_project.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTconsole.o: MTconsole.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwoption.o: MTwoption.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTcompress.o: MTcompress.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwmath.o: MTwmath.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwmalloc.o: MTwmalloc.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwgarcol.o: MTwgarcol.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwlocal.o: MTwlocal.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwstore.o: MTwstore.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwretrieve.o: MTwretrieve.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwhash.o: MTwhash.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwtraverse.o: MTwtraverse.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwhashin.o: MTwhashin.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwtools.o: MTwtools.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwinternal.o: MTwinternal.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwplug.o: MTwplug.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwcopy.o: MTwcopy.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwequal.o: MTwequal.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwlmalloc.o: MTwlmalloc.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwout.o: MTwout.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwtimer.o: MTwtimer.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwurgent.o: MTwurgent.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwsig.o: MTwsig.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwhector.o: MTwhector.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwcecil.o: MTwcecil.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwbits.o: MTwbits.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwfile.o: MTwfile.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwdir.o: MTwdir.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwstring.o: MTwstring.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwmisc.o: MTwmisc.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwpattern.o: MTwpattern.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwerror.o: MTwerror.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwumain.o: MTwumain.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwmemory.o: MTwmemory.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwargv.o: MTwargv.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwboolstr.o: MTwboolstr.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwsearch.o: MTwsearch.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwrun_idr.o: MTwrun_idr.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwpath_name.o: MTwpath_name.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwdle.o: MTwdle.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwobject_id.o: MTwobject_id.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTweif_threads.o: MTweif_threads.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwgen_conf.o: MTwgen_conf.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwrout_obj.o: MTwrout_obj.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwmain.o: MTwmain.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+MTwexcept.o: MTwexcept.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+
+MTdebug.o: MTdebug.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+
+MTinterp.o: MTinterp.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+
+MTupdate.o: MTupdate.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+
+MTwbench.o: MTwbench.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $*.c
+
+
 
 local_clean:: remove
+#MT END
 
 shared: sharedfinal sharedwork
+mtshared: mtsharedfinal mtsharedwork
 sharedfinal: libfinalized.so
+mtsharedfinal: libmtfinalized.so
 sharedwork: libwkbench.so
+mtsharedwork: libmtwkbench.so
 
 static: final work
 final: libfinalized.a
+mtfinal: libmtfinalized.a
 work: libwkbench.a
+mtwork: libmtwkbench.a
+mt: mtwork mtfinal
+
+
+link: 
+	$(LN) ../config.sh .
+	$(LN) ../eif_portable.h .
+	$(LN) ../eif_config.h .
+	$(LN) ../eif_confmagic.h .
 
 .FORCE:
 
@@ -967,6 +2090,19 @@ network.o: ../ipc/app/network.o
 network.o:
 	$(RM) network.o
 	$(LN) $(NETWORK_OBJ) $@
+
+.FORCE:
+
+../ipc/app/MTnetwork.o: .FORCE
+	@echo "Checking "MTnetwork.o" in "../ipc/app"..."
+	cd ../ipc/app; $(MAKE) MTnetwork.o
+	@echo "Continuing in $(CURRENT)..."
+
+MTnetwork.o: ../ipc/app/MTnetwork.o
+
+MTnetwork.o:
+	$(RM) MTnetwork.o
+	$(LN) $(MTNETWORK_OBJ) $@
 
 bmain.c: main.c
 	$(RM) bmain.c

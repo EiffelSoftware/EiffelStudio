@@ -138,7 +138,7 @@ feature {NONE} -- GUI
 			l_manager := Shared_toc_manager
 			from				
 				toc_combo.wipe_out
-				l_tocs := l_manager.displayed_tocs_list
+				l_tocs := l_manager.displayed_tocs
 				l_cnt := 1
 			until
 				l_cnt > l_tocs.count

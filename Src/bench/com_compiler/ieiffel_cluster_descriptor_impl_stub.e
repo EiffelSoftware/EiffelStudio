@@ -78,12 +78,6 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	is_recursive: BOOLEAN is
-			-- Should subclusters be included recursively?
-		do
-			-- Put Implementation here.
-		end
-
 feature -- Basic Operations
 
 	create_item is

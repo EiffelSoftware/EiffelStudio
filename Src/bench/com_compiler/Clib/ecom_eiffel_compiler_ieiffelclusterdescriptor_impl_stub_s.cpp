@@ -332,29 +332,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::is_librar
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::is_recursive(  /* [out, retval] */ VARIANT_BOOL * path )
-
-/*-----------------------------------------------------------
-	Should subclusters be included recursively?
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("is_recursive", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "is_recursive", EIF_BOOLEAN);
-	*path = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEiffelClusterDescriptor_impl_stub::Release()
 
 /*-----------------------------------------------------------

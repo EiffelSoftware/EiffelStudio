@@ -260,9 +260,6 @@ interface IEiffelClusterDescriptor: IUnknown
 
   [helpstring ("Should this cluster be treated as library?")]
   HRESULT is_library ([out, retval] VARIANT_BOOL * path);
-  
-  [helpstring ("Should subclusters be included recursively?")]
-  HRESULT is_recursive ([out, retval] VARIANT_BOOL * path);
 };
 //---------------------------------------------------------------------
 

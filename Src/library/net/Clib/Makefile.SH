@@ -51,8 +51,6 @@ OBJS = \
 	network.o \
 	network_r.o
 
-local_clean:: remove
-
 local_realclean::
 	$(RM) libnet.a
 

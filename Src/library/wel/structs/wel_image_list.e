@@ -209,6 +209,7 @@ feature -- Basic operations
 			exists: exists
 		do
 			create Result.make_by_pointer (cwel_imagelist_get_icon (item, index, flags))
+			Result.set_unshared
 		end
 		
 

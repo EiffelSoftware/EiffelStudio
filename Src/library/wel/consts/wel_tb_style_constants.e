@@ -46,6 +46,35 @@ feature -- Access
 			"TBSTYLE_WRAPABLE"
 		end
 
+	Tbstyle_flat: INTEGER is
+			-- Creates a transparent toolbar with flat buttons.
+			-- The apparence of the button change when the user
+			-- move the mouse on the button.
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TBSTYLE_FLAT"
+		end
+
+	Tbstyle_list: INTEGER is
+			-- Places button text to the right of button bitmaps.
+			-- To avoid repainting problems, this style should be
+			-- set before the toolbar control becomes visible.
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TBSTYLE_LIST"
+		end
+
+	Tbstyle_customerase: INTEGER is
+			-- Generates NM_CUSTOMDRAW notification messages when
+			-- it processes WM_ERASEBKGND.
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TBSTYLE_CUSTOMERASE"
+		end
+
 -- A button in a toolbar can have a combination of the following styles.
 
 	Tbstyle_button: INTEGER is
@@ -93,6 +122,16 @@ feature -- Access
 			"C [macro %"cctrl.h%"]"
 		alias
 			"TBSTYLE_SEP"
+		end
+
+	Tbstyle_dropdown: INTEGER is
+			-- Creates a drop-down list button. If the toolbar has
+			-- the TBSTYLE_EX_DRAWDDARROWS extended style, an arrow
+			-- will be displayed next to the button.
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TBSTYLE_DROPDOWN"
 		end
 
 end -- class WEL_TB_STYLE_CONSTANTS

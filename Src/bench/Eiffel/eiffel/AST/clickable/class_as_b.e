@@ -23,9 +23,7 @@ inherit
 
 	IDABLE;
 
-	SHARED_INST_CONTEXT;
-
-	CLICKER;
+	SHARED_INST_CONTEXT
 
 feature -- Attributes
 

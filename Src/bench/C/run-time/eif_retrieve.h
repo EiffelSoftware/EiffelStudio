@@ -67,7 +67,7 @@ RT_LNK char *portable_retrieve(int (*char_read_function)(char *, int));
 /*
  * Utilities
  */
-/* extern int r_fides; 	        /* File descriptor use for retrieve */ /* %%zs removed and inluded eif_globals.h */
+/* extern int r_fides; 	  */      /* File descriptor use for retrieve */ /* %%zs removed and inluded eif_globals.h */
 extern char *rt_make(void);			/* Retrieve object graph */
 extern char *rt_nmake(EIF_CONTEXT long int objectCount);		/* Retrieve `n' objects */
 extern struct htable *rt_table;	/* Table used for solving references */

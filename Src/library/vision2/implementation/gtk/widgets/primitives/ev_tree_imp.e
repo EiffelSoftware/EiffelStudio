@@ -573,9 +573,7 @@ feature {NONE} -- Implementation
 		do
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
-			C.gtk_clist_freeze (list_widget)
 			item_imp.set_item_and_children (NULL)
-			C.gtk_clist_thaw (list_widget)
 			item_imp.insert_pixmap
 			ev_children.force (item_imp)
 			update_pnd_status
@@ -711,6 +709,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2001/06/15 19:30:52  king
+--| Removed unnecessary freezing and thawing
+--|
 --| Revision 1.44  2001/06/07 23:08:07  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

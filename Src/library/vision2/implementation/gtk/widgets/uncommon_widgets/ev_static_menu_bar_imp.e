@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			name: ANY
 			item: POINTER
 		do
-			name ?= menu_imp.name.to_c
+			name := menu_imp.name.to_c
 			item := gtk_menu_item_new_with_label ($name)
 			gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu_imp.widget)
 			gtk_menu_bar_append (GTK_MENU_BAR (widget), item)

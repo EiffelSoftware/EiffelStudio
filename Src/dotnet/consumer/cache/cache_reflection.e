@@ -14,7 +14,7 @@ inherit
 		end
 
 create {EMITTER}
-	make
+	default_create
 
 feature -- Redefined
 

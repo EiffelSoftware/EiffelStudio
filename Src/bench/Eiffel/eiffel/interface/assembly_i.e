@@ -27,6 +27,7 @@ inherit
 
 create
 	make_from_ast,
+	make_from_consumed_assembly,
 	make_from_precompiled_cluster
 	
 feature {NONE} -- Initialization
@@ -93,6 +94,65 @@ feature {NONE} -- Initialization
 			public_key_token: not is_local implies public_key_token = a.public_key_token
 		end
 
+	make_from_consumed_assembly (l_ass: CONSUMED_ASSEMBLY) is
+			-- Create Current from data in `l_ass'.
+		local
+			l_assembly_directory: STRING
+			l_assembly_location: PATH_NAME
+			l_env: EIFFEL_ENV
+		do
+				-- Initialize assembly info.
+			cluster_name := l_ass.out
+			assembly_info_make (l_ass.name)
+			if l_ass.version /= Void and l_ass.culture /= Void and l_ass.key /= Void then
+				set_version (l_ass.version)
+				set_culture (l_ass.culture)
+				set_public_key_token (l_ass.key)
+			else
+				is_local := True
+				initialize_from_local_assembly (l_ass.name)
+			end
+
+			prefix_name := clone (l_ass.name) + "_"
+			prefix_name.replace_substring_all (".", "_")
+			prefix_name := prefix_name.as_lower
+
+			is_library := True
+			is_recursive := True
+			hide_implementation := True
+			
+				-- Initialize location of XML files representing classes
+				-- of current assembly.
+			create l_env
+			l_assembly_directory := build_assembly_path (assembly_name, version, culture,
+				public_key_token)
+				
+			if is_local then
+					-- Look in EIFGEN/Assemblies.
+				l_assembly_location := clone (Local_assembly_path)
+			else
+					-- Look in EAC.
+				l_assembly_location := clone (l_env.Assemblies_path)
+			end
+			l_assembly_location.extend (l_assembly_directory)
+			create path.make_from_string (l_assembly_location)
+			
+			consume_assemblies
+
+				-- Necessary initialization to preserve inherited invariants.
+			dollar_path := path
+			create renamings.make
+			create ignore.make
+			create sub_clusters.make (0)
+			create classes.make (0)
+		ensure
+			cluster_name_set: cluster_name /= Void
+			assembly_name_set: not is_local implies (assembly_name = l_ass.name)
+			version_set: not is_local implies version = l_ass.version
+			culture: not is_local implies culture = l_ass.culture
+			public_key_token: not is_local implies public_key_token = l_ass.key
+		end
+		
 feature -- Comparison
 
 	same_assembly_as (other: like Current): BOOLEAN is
@@ -160,7 +220,7 @@ feature -- Initialization
 			l_reader: EIFFEL_XML_DESERIALIZER
 			l_env: EIFFEL_ENV
 			l_assembly_location: PATH_NAME
-			l_mapping: FILE_NAME
+			l_types_file, l_reference_file: FILE_NAME
 			l_location: FILE_NAME
 			
 			l_types: CONSUMED_ASSEMBLY_TYPES
@@ -171,27 +231,38 @@ feature -- Initialization
 			i, nb: INTEGER
 			
 			l_class_name, l_external_name: STRING
-			
-			l_vd60: VD60
+
+			vd60: VD60
 		do
 			create l_reader
 			create l_env
 			
 				-- We first read all XML files to ensure that they all exist, otherwise
 				-- we raise an error.
-			create l_mapping.make_from_string (clone (path))
-			l_mapping.set_file_name (type_list_file_name)
-			l_types ?= l_reader.new_object_from_file (l_mapping)
+			create l_types_file.make_from_string (clone (path))
+			l_types_file.set_file_name (type_list_file_name)
+			l_types ?= l_reader.new_object_from_file (l_types_file)
 
-			create l_mapping.make_from_string (clone (path))
-			l_mapping.set_file_name (referenced_assemblies_file_name)
-			l_referenced_assemblies ?= l_reader.new_object_from_file (l_mapping)
+			create l_reference_file.make_from_string (clone (path))
+			l_reference_file.set_file_name (referenced_assemblies_file_name)
+			l_referenced_assemblies ?= l_reader.new_object_from_file (l_reference_file)
 
 			if l_types = Void or l_referenced_assemblies = Void then
 					-- Raise an error and stop processing as we cannot continue
 					-- with missing information.
-				Error_handler.insert_error (create {VD61}.make (Current))	
-				Error_handler.raise_error
+				if is_local then
+					Error_handler.insert_error (create {VD61}.make (Current))	
+					Error_handler.raise_error
+				else
+						-- Let's try to import it and see if it works this time
+					initialize_from_gac_assembly
+					l_types ?= l_reader.new_object_from_file (l_types_file)
+					l_referenced_assemblies ?= l_reader.new_object_from_file (l_reference_file)
+					if l_types = Void or l_referenced_assemblies = Void then
+						Error_handler.insert_error (create {VD61}.make (Current))	
+						Error_handler.raise_error
+					end
+				end
 			end
 			
 			from
@@ -249,11 +320,19 @@ feature -- Initialization
 						l_cons_assembly.culture, l_cons_assembly.key))
 					l_assembly ?= Universe.cluster_of_path (l_assembly_location)
 					if l_assembly = Void then
-						create l_vd60.make (Current, l_cons_assembly)
-						Error_handler.insert_error (l_vd60)
-					else
-						referenced_assemblies.put (l_assembly, i)
+						l_assembly ?= Lace.old_universe.cluster_of_path (l_assembly_location)
+						if l_assembly = Void then
+							create l_assembly.make_from_consumed_assembly (l_cons_assembly)
+							Eiffel_system.add_sub_cluster (l_assembly)
+							Universe.insert_cluster (l_assembly)
+							l_assembly.import_data
+							universe.add_new_assembly_in_ace (l_assembly)
+						else
+							Eiffel_system.add_sub_cluster (l_assembly)
+							Universe.insert_cluster (l_assembly)
+						end
 					end
+					referenced_assemblies.put (l_assembly, i)
 				else
 					referenced_assemblies.put (l_assembly, i)
 				end
@@ -283,6 +362,24 @@ feature {NONE} -- Implementation
 						l_emitter.consume_local_assembly (assembly_path, Local_assembly_path)
 					end
 				end
+			end
+		end
+
+	initialize_from_gac_assembly is
+			-- Try to generate associated XML file of current assembly.
+		require
+			is_local: is_local
+		local
+			l_vd64: VD64
+			l_emitter: IL_EMITTER
+		do
+			create l_emitter.make
+			if not l_emitter.exists then
+					-- IL_EMITTER component could not be loaded.
+				create l_vd64
+				Error_handler.insert_error (l_vd64)
+			else
+				l_emitter.consume_gac_assembly (assembly_name, version, culture, public_key_token)
 			end
 		end
 		

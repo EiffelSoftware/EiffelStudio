@@ -10,12 +10,12 @@ deferred class
 
 inherit
 	EV_PRIMITIVE_I
-		rename
-			interface as primitive_interface
+		redefine
+			interface
 		end
 
 	EV_ITEM_LIST_I [EV_MULTI_COLUMN_LIST_ROW]
-		select
+		redefine
 			interface
 		end
 
@@ -135,10 +135,8 @@ feature -- Status setting
 		end
 
 	hide_title_row is
-			-- Hide row displaying column titles.
+			-- Hide the row of the titles.
 		deferred
-		ensure
-			not_title_shown: not title_shown
 		end
 
 	align_text_left (a_column: INTEGER) is
@@ -286,6 +284,26 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
+	expand_columns_to (a_columns: INTEGER) is
+			-- Expand the number of columns in the list to `a_columns'.
+		require
+			expandable: a_columns > a_columns
+		deferred
+		--local
+		--	a_iterations, a_counter: INTEGER
+		--do
+		--	a_iterations := a_columns - columns
+		--		-- Number of iterations to perform.
+		--	from
+		--		a_counter := 1
+		--	until
+		--		a_counter > a_iterations
+		--	loop
+		--		add_column
+		--		a_counter := a_counter + 1
+		--	end
+		end
+			
 	update_children is
 			-- Update all children with `update_needed' True.
 			--| We are on an idle action now. At least one item has marked
@@ -294,6 +312,17 @@ feature {EV_ANY_I} -- Implementation
 			cur: INTEGER
 		do
 			cur := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				if ev_children.item.interface.count > columns then
+					expand_columns_to (ev_children.item.interface.count)
+				end
+				ev_children.forth
+			end
+
 			from
 				ev_children.start
 			until
@@ -310,8 +339,9 @@ feature {EV_ANY_I} -- Implementation
 	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
 			-- Update `child'.
 		require
-			child_not_void: child /= Void
+			child_exists: child /= Void
 			child_dirty: child.update_needed
+			room_for_child: child.interface.count <= columns
 		local
 			cur: CURSOR
 			txt: STRING
@@ -328,9 +358,6 @@ feature {EV_ANY_I} -- Implementation
 				if txt = Void then
 					txt := ""
 				end
-				if list.index > columns then
-					add_column
-				end
 				set_text_on_position (list.index, a_row, txt)
 				list.forth
 			end
@@ -338,13 +365,6 @@ feature {EV_ANY_I} -- Implementation
 			child.update_performed
 		ensure
 			child_updated: not child.update_needed
-		end
-
-	add_column is
-			-- Append new column at end.
-		deferred
-		ensure
-			column_count_increased: columns = old columns + 1
 		end
 
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
@@ -375,6 +395,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+
 	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE []]
 			-- Agent object for `update_children'.
 
@@ -383,6 +404,11 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_ITEM_LIST_IMP} -- Implementation
 	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 			-- We have to store the children because
 			-- neither gtk nor windows does it.
+
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_MULTI_COLUMN_LIST
 
 	column_titles: LINKED_LIST [STRING]
 			-- All column titles set using `set_column_titles' and
@@ -421,6 +447,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/25 01:49:07  king
+--| Added expand_columns_to
+--|
 --| Revision 1.37  2000/03/25 01:13:58  brendel
 --| Revised. Formatting.
 --| Implemented platform independently: set_column_*.

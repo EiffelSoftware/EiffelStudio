@@ -221,6 +221,14 @@ feature -- Status setting
 			(managed_formatters @ real_index).execute
 		end
 
+	set_focus is
+			-- Give the focus to `Current'.
+		require
+			focusable: widget.is_displayed and widget.is_sensitive
+		do
+			shared_editor.set_focus
+		end
+
 feature -- Memory management
 
 	recycle is

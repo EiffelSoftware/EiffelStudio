@@ -220,6 +220,14 @@ feature -- Implementation
 			development_window.metric_menu.disable_sensitive
 		end
 
+	set_focus is
+			-- Give the focus to the metrics.
+		require
+			focusable: widget.is_displayed and widget.is_sensitive
+		do
+			name.set_focus
+		end
+
 feature -- Access
 
 	development_window: EB_DEVELOPMENT_WINDOW

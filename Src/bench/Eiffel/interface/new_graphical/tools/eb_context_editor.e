@@ -544,6 +544,14 @@ feature -- Status setting
 			end
 		end
 
+	set_focus is
+			-- Give the focus to the drawing_area.
+		require
+			focusable: widget.is_displayed and widget.is_sensitive
+		do
+			area.set_focus
+		end
+
 feature -- Memory management
 
 	recycle is

@@ -108,6 +108,14 @@ feature -- Status setting
 			visible := False
 		end
 
+	set_focus is
+			-- Give the focus to the editor.
+		require
+			focusable: widget.is_displayed and widget.is_sensitive
+		do
+			text_area.set_focus
+		end
+
 feature -- Access
 
 	widget: EV_WIDGET is

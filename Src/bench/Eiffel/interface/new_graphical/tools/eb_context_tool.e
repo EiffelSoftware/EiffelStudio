@@ -263,6 +263,25 @@ feature -- Status setting
 			metrics.widget.disable_sensitive
 		end
 
+	set_focus is
+			-- Give the focus to the currently selected item in the notebook.
+		local
+			sit: EV_WIDGET
+		do
+			sit := notebook.selected_item
+			if sit = output_view.widget then
+				output_view.set_focus
+			elseif sit = editor.widget then
+				editor.set_focus
+			elseif sit = class_view.widget then
+				class_view.set_focus
+			elseif sit = feature_view.widget then
+				feature_view.set_focus
+			elseif sit = metrics.widget then
+				metrics.set_focus
+			end
+		end
+
 feature -- Status report
 
 	is_diagram_selected: BOOLEAN
@@ -305,6 +324,7 @@ feature -- Stone management
 					set_stone (st)
 				end
 			end
+			set_focus
 		end
 
 	stone: STONE
@@ -312,6 +332,8 @@ feature -- Stone management
 
 	set_stone (a_stone: STONE) is
 			-- Assign `a_stone' as new stone.
+		local
+			fw: EV_WIDGET
 		do
 			history_manager.extend (a_stone)
 			debugger_manager.set_stone (a_stone)
@@ -342,7 +364,7 @@ feature -- Stone management
 					end
 				end
 			end
-			set_stone (a_stone)
+			launch_stone (a_stone)
 		end
 
 feature {NONE} -- Implementation

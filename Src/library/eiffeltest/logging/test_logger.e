@@ -46,6 +46,14 @@ feature -- Output
 		deferred
 		end
 	 
+	put_container_results (t: TEST_CONTAINER) is
+			-- Output statistic information about tests contained in `t'.
+		require
+			container_exists: t /= Void
+			writable: is_log_writable
+		deferred
+		end
+	 
 	put_failure_information (t: SINGLE_TEST; run: INTEGER) is
 			-- Output failure information of `run' for `t'.
 		require

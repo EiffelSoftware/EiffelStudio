@@ -51,7 +51,7 @@ inherit
 			{NONE} all
 		end
 		
-	GB_SHARED_SYSTEM_STATUS
+	GB_RECENT_PROJECTS
 		export
 			{NONE} all
 			{ANY} system_status
@@ -121,12 +121,15 @@ feature -- Basic operation
 				-- wizard, we need to keep their desired layout.
 			show_actions.extend_kamikaze (agent initialize_split_areas)
 			
+				-- Register an event that clips recent projects with the preferences.
+				-- This permits the update of paticular properties in the system after a preferences
+				-- value has changed.
+			Preferences.register_preference_window_post_display_event (agent clip_recent_projects)
+			
 				-- When an attempt to close `Current' is made, call `close_requested'.
 			close_request_actions.extend (agent close_requested)
 		end
-		
-		
-		
+
 	generate_interface (vb: EV_VERTICAL_BOX) is
 			-- Build interface of `Current' into `vb'.
 			-- This is used in Wizard mode.
@@ -165,6 +168,10 @@ feature -- Basic operation
 			vertical_box.remove
 			vertical_box.put_left (tool_holder)
 			build_menu
+			
+				-- Ensure `recent_projects_menu' is sensitive.
+			recent_projects_menu.disable_sensitive
+			
 				-- This causes a postcondition to fail in EV_SPLIT_AREA.
 				-- However, it needs to be executed here so that it is not
 				-- visible. The problem is, that while the window is still
@@ -227,12 +234,49 @@ feature -- Basic operation
 				-- change at the moment is in conjunction with the
 				-- tools being displayed. This may have to change later.
 			build_menu
+				-- Ensure that the recent projects menu is now sensitive
+			recent_projects_menu.enable_sensitive
+
 			unlock_update
 		ensure
 			has_item: item /= Void
 		end
-
+		
+	update_recent_projects is
+			-- Update contents of `recent_projects_menu' with all recent projects.
+		local
+			recent_projects: ARRAY [STRING]
+			recent_project_item: EV_MENU_ITEM
+			counter: INTEGER
+		do
+				-- Clear any existing items.
+			recent_projects_menu.wipe_out
+				-- Now make menu entries for the recent projects.
+			recent_projects := preferences.array_resource_value (preferences.recent_projects_string, create {ARRAY [STRING]}.make (1, 1))
+			from
+				counter := 1
+			until
+				counter > recent_projects.count
+			loop
+				create recent_project_item.make_with_text (recent_projects.item (counter))
+				recent_project_item.select_actions.extend (agent open_named_project (
+					recent_project_item.text  + operating_environment.Directory_separator.out + "build_project.bpr"))
+				recent_projects_menu.extend (recent_project_item)
+				counter := counter + 1
+			end
+		end
+		
 feature {NONE} -- Implementation
+
+	open_named_project (project_name: STRING) is
+			-- Open project named `project_name', which must include full path.
+		require
+			project_name_not_void: project_name /= Void
+		do
+			command_handler.Open_project_command.execute_with_name (project_name)
+		ensure
+			project_open: System_status.project_open
+		end
 	
 	initialize_split_areas is
 			-- Set splitters to default positions.
@@ -258,8 +302,13 @@ feature {NONE} -- Implementation
 				-- Initialize the file menu.
 			create file_menu.make_with_text (Gb_file_menu_text)
 			create menu_separator
-			file_menu.extend (command_handler.open_project_command.new_menu_item)
 			file_menu.extend (command_handler.new_project_command.new_menu_item)
+			file_menu.extend (command_handler.open_project_command.new_menu_item)
+			
+			create recent_projects_menu.make_with_text ("Recent Projects")
+			update_recent_projects
+			file_menu.extend (recent_projects_menu)
+			file_menu.extend (create {EV_MENU_SEPARATOR})
 			file_menu.extend (command_handler.save_command.new_menu_item)
 			file_menu.extend (command_handler.close_project_command.new_menu_item)
 			file_menu.extend (menu_separator)
@@ -311,8 +360,7 @@ feature {NONE} -- Implementation
 				
 				-- Assign `True' to `menus_initialized'.
 			menus_initialized := True
-		end
-		
+		end	
 
 	build_menu is
 			-- Generate menu for `Current'.
@@ -795,6 +843,8 @@ feature {NONE} -- Implementation
 			end
 			if must_exit then
 				if System_status.project_open then
+					add_project_to_recent_projects
+					update_recent_projects
 						-- Now store to preferences, but only if the project is open.
 						-- If it is closed, these preferences will have already been saved
 						-- at the point the project was closed, as they are subsequently hidden.
@@ -831,6 +881,9 @@ feature {NONE} -- Implementation
 		
 	file_menu, project_menu, view_menu, help_menu: EV_MENU
 		-- Top level menus used in `Current'.
+		
+	recent_projects_menu: EV_MENU
+		-- Menu for recent project entries.
 		
 	menus_initialized: BOOLEAN
 		-- Has `initialize_menus' been called?

@@ -244,7 +244,8 @@ feature {NONE} -- Implementation
 			types: LINEAR [RESOURCE_TYPE]
 		do
 			if reg_k.type = reg_k.Reg_dword then
-				Result := (structure.registered_types @ structure.Integer_type_index).load_resource (k_name, reg_k.value)
+				Result := (structure.registered_types @ structure.Integer_type_index).
+					load_resource (k_name, reg_k.dword_value.out)
 			else
 				if k_name.count > 7 then
 					sprefix := k_name.substring (1, 6)

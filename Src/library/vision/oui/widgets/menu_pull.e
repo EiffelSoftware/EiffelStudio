@@ -13,7 +13,7 @@ inherit
 
 	PULLDOWN
 		redefine
-			parent, implementation, real_x, real_y
+			parent, implementation
 		end;
 
 creation
@@ -81,16 +81,6 @@ feature -- Menu
         do
             Result ?= widget_manager.parent (Current)
         end;
-
-	real_x: INTEGER is
-		do
-			Result := parent.real_x + x;
-		end;
-
-	real_y: INTEGER is
-		do
-			Result := parent.real_y + y;
-		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

@@ -16,8 +16,23 @@ Feature -- Status report
 	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
 			-- If `data' contained in a tree item at any level then
 			-- assign this item to `Result'.
-		require
-		deferred
+		local
+			temp_cursor: CURSOR
+		do
+			from
+				interface.start
+				temp_cursor := cursor
+			until
+				interface.after or Result /= Void
+			loop
+				if equal (data, item.data) then
+					Result := item
+				else
+					Result := item.find_item_recursively_by_data (data)
+				end
+				interface.forth
+			end
+			go_to (temp_cursor)
 		end
 
 end -- class EV_TREE_ITEM_HOLDER_I
@@ -43,6 +58,9 @@ end -- class EV_TREE_ITEM_HOLDER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/07 01:31:13  king
+--| Implemented find_recursive feature
+--|
 --| Revision 1.13  2000/03/07 00:28:36  rogers
 --| Removed --FIXME Not for release.
 --|

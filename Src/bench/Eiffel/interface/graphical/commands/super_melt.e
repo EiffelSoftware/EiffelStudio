@@ -1,24 +1,22 @@
 indexing
-
-	description: 
-		"Command that super melts a class or a routine.";
+	description: "Command that super melts a class or a routine.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class SUPER_MELT
 
 inherit
+	EB_CONSTANTS
 
-	EB_CONSTANTS;
 	TOOL_COMMAND
 		rename
 			init as make
-		end;
+		end
+
 	SHARED_APPLICATION_EXECUTION
 
 creation
-	make,
-	do_nothing
+	make, do_nothing
 
 feature -- Access
 

@@ -187,6 +187,18 @@ feature -- Status setting
 			eraise ($str, Developer_exception)
 		end
 
+	raise_retrieval_exception (name: STRING) is
+			-- Raise a retrieval exception of name `name'.
+		local
+			str: ANY
+		do
+			if name /= Void then
+				str := name.to_c
+			end
+			exclear
+			eraise ($str, Retrieve_exception)
+		end
+
 	die (code: INTEGER) is
 			-- Terminate execution with exit status `code',
 			-- without triggering an exception.

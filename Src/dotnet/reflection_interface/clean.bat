@@ -98,3 +98,5 @@ echo Deleting `ISE.AssemblyManager.exe' ...
 cd ace_file
 del *.epr
 rd /q /s EIFGEN
+cd ..
+cd ..

@@ -13,24 +13,24 @@ feature {NONE}
 			-- Main and unique control window
 		once
 			!! Result.make_empty
-		end;
+		end
 
 	Focus_label: FOCUS_LABEL_I is
 			-- Focus label
 		once
 			!FOCUS_LABEL! Result.initialize (Project_tool)
-		end;
+		end
 
 	Transporter: TRANSPORTER is
 		once
 			!! Result.make (project_tool)
-		end;
+		end
 
 	System_tool: SYSTEM_W is
 			-- Unique assembly tool
 		once
 			!! Result.make
-		end;
+		end
 
 	name_chooser (popup_parent: COMPOSITE): NAME_CHOOSER_W is
 			-- File selection window
@@ -46,13 +46,13 @@ feature {NONE}
 			last_name_chooser_cell.put (Result)
 		ensure
 			last_name_chooser_set: equal (last_name_chooser, Result)
-		end;
+		end
 
 	last_name_chooser: NAME_CHOOSER_W is
 			-- Last name chooser created
 		do
 			Result := last_name_chooser_cell.item
-		end;
+		end
 
 	warner (popup_parent: COMPOSITE): WARNER_W is
 			-- Warning window associated with `window'

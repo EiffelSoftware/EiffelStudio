@@ -51,6 +51,13 @@ feature -- Bridge to Debugger
 		do
 		end
 
+	exception_handled: BOOLEAN is
+			-- Last Exception is handled ?
+			-- if True => first chance
+			-- if False => The execution will terminate after.
+		do
+		end
+
 	exception_details: TUPLE [STRING, STRING] is
 			-- class details , module details
 		do

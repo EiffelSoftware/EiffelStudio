@@ -362,8 +362,8 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
 			if (temp_col.item) <= column_count and column_widths /= Void then
 				temp_wid ?= int.item (2)
 				update_column_width (temp_wid.item, temp_col.item)
-				if column_resize_actions_internal /= Void then
-					column_resize_actions_internal.call ([temp_col.item])
+				if column_resized_actions_internal /= Void then
+					column_resized_actions_internal.call ([temp_col.item])
 				end
 			end
 		end

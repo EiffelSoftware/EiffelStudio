@@ -311,28 +311,6 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
---	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
---		do
---			inspect
---				press_action
---			when
---				Ev_pnd_start_transport
---			then
---					start_transport (a_x, a_y, a_button, 0, 0, 0.5,
---						a_screen_x, a_screen_y)
---					set_source_true
---			when
---				Ev_pnd_end_transport
---			then
---				end_transport (a_x, a_y, a_button)
---				set_source_false
---			else
---				check
---					disabled: press_action = Ev_pnd_disabled
---				end
---			end
---		end
-
 feature {EV_ANY_I} -- WEL Implementation
 
 	image_list: WEL_IMAGE_LIST
@@ -606,10 +584,8 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.58  2000/03/30 19:56:03  rogers
---| Now inherits from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
---| Removed features and attributes associated with source of PND as
---| these are now inherited, and fixed references to these.
+--| Revision 1.59  2000/03/30 19:59:13  rogers
+--| Removed commented pnd_press.
 --|
 --| Revision 1.57  2000/03/28 01:33:32  rogers
 --| Formatting.

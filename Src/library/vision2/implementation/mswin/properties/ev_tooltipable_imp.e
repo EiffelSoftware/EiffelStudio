@@ -58,8 +58,8 @@ feature -- Element change
 
 					-- Set the inital time delay for the tooltip.
 				internal_tooltip.set_initial_delay_time (app_imp.tooltip_delay)
-				
-				app_imp.all_tooltips.extend (internal_tooltip)
+
+				app_imp.all_tooltips.extend (internal_tooltip.item)
 			else
 				if internal_tooltip_string /= Void and then not internal_tooltip_string.is_empty then
 						-- If `tooltip' is not `Void' then there should always
@@ -72,7 +72,7 @@ feature -- Element change
 						-- EV_APPLICATION_IMP.
 					create envir
 					app_imp ?= envir.application.implementation
-					app_imp.all_tooltips.prune (internal_tooltip)
+					app_imp.all_tooltips.prune (internal_tooltip.item)
 			
 						-- Destroy `internal_tooltip'.
 					internal_tooltip.destroy

@@ -5,10 +5,8 @@ indexing
 	revision: "$Revision$"
 	access: date, time
 
-class
-	TIME
+class TIME inherit
 
-inherit
 	ABSOLUTE
 		undefine
 			out

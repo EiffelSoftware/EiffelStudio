@@ -34,7 +34,8 @@ inherit
 			set_with_xml_element as polyline_label_set_with_xml_element,
 			recycle as polyline_label_recycle
 		redefine
-			on_label_move
+			on_label_move,
+			set_label_group_position_on_line
 		end
 		
 	BON_FIGURE
@@ -94,6 +95,8 @@ feature {NONE} -- Initialization
 			
 			diagram_preferences.add_observer (Current)
 			retrieve_preferences
+			
+			name_label.set_point_position (label_group.point_x + label_rectangle_border, label_group.point_y + label_rectangle_border)		
 			
 			is_shown := True
 		end
@@ -367,9 +370,9 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 				end
 				
 				if is_label_shown then
-					label_rectangle.set_point_a_position (name_label.point_x - label_rectangle_border, name_label.point_y - label_rectangle_border)
-					label_rectangle.set_point_b_position (name_label.point_x + name_label.width + label_rectangle_border,
-														  name_label.point_y + name_label.height + label_rectangle_border)
+					label_rectangle.set_point_a_position (label_group.point_x, label_group.point_y)
+					label_rectangle.set_point_b_position (label_group.point_x + name_label.width + 2*label_rectangle_border,
+														  label_group.point_y + name_label.height + 2*label_rectangle_border)
 														  
 					if is_high_quality then
 						update_label
@@ -544,6 +547,33 @@ feature {NONE} -- Implementation
 			request_update
 		end
 		
+	set_label_group_position_on_line (new_x, new_y: DOUBLE; p, q: EV_COORDINATE) is
+			--
+		local
+			px, py, qx, qy: INTEGER
+			w: INTEGER
+			lx, ly: INTEGER
+			lgw, lgh: INTEGER
+			bbox: EV_RECTANGLE
+		do
+			Precursor {EG_POLYLINE_LABEL} (new_x, new_y, p, q)
+			px := p.x
+			qx := q.x
+			py := p.y
+			qy := q.y
+			if px = qx then
+				if px <= polyline_points.item (2).x then
+					-- Left line
+					label_group.set_point_position (label_group.point_x + 3, label_group.point_y)
+				end
+			else
+				if py <= polyline_points.item (2).y then
+					-- top line
+					label_group.set_point_position (label_group.point_x, label_group.point_y + 2)
+				end
+			end
+		end
+		
 	set_name_label_text (a_text: STRING) is
 			-- Set `name_label'.`text' to `a_text'.
 		local
@@ -630,7 +660,7 @@ feature {NONE} -- Implementation
 				is_high_quality := an_is_high_quality
 				if is_high_quality then
 					prune_all (name_label)
-					name_label.set_point_position (label_group.point_x, label_group.point_y)
+					name_label.set_point_position (label_group.point_x + label_rectangle_border, label_group.point_y + label_rectangle_border)
 					name_label.pointer_double_press_actions.prune_all (agent on_label_double_press)
 					label_group.extend (name_label)
 					put_front (label_move_handle)

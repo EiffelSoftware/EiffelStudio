@@ -55,12 +55,17 @@ feature {MT_CLASS} -- Schema initialization
 		do
 			set_field_index (a_field_index)
 			database := a_db
-			container_type := get_container_type
+			container_type := get_container_type (sample_obj)
 		end
 
-	get_container_type: STRING is
+	get_container_type (object: MT_STORABLE): STRING is
+		local
+			n: STRING
 		do
-			Result := container_class_for_relationship (name)
+			n := clone (object.mt_generator.name)
+			n.append ("__")
+			n.append (name)
+			Result := container_class_for_relationship (n)
 		end
 
 feature {MT_CLASS, MATISSE, MT_RS_CONTAINABLE} -- Successors loading

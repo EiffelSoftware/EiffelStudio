@@ -1867,8 +1867,73 @@ feature -- Locking
 			end
 		end
 
+feature -- Clone
+
+	copy_object (object: MT_STORABLE): MT_STORABLE is
+			-- Create a new transient object copying `object'
+		do
+			Result := deep_clone (object)
+			clear_oids (Result)
+		end
+
 feature {NONE} -- Implementation
 
+	clear_oids (object: MT_STORABLE) is
+			-- Make `object' transient,
+		local
+			relationships: ARRAY [MT_RELATIONSHIP]
+			s_rel: MT_SINGLE_RELATIONSHIP
+			m_rel: MT_MULTI_RELATIONSHIP
+			i: INTEGER
+			its_class: MT_CLASS
+			a_storable: MT_STORABLE
+			linear_collection: MT_LINEAR_COLLECTION [MT_STORABLE]
+			linear_rep: LINEAR [MT_STORABLE]
+			rs_containable: MT_RS_CONTAINABLE
+		do
+			if object.oid /= 0 then
+				its_class := mt_class_from_object (object)
+				its_class.init_properties (object)
+				relationships := its_class.relationships
+				from 
+					i :=  relationships.lower
+				until 
+					i > relationships.upper
+				loop
+					s_rel ?= relationships.item (i)
+					m_rel ?= relationships.item (i)
+					if s_rel /= Void then
+						a_storable ?= field (s_rel.eif_field_index, object)
+						if a_storable /= Void then
+							clear_oids (a_storable)
+						else
+							a_storable := s_rel.first_successor (object)
+							if a_storable /= Void then
+								clear_oids (a_storable)
+							end
+						end
+					elseif m_rel /= Void then
+						linear_collection ?= field (m_rel.eif_field_index, object)
+						if linear_collection /= Void then
+							rs_containable ?= linear_collection
+							rs_containable.load_successors
+							linear_rep := linear_collection.linear_representation
+							from 
+								linear_rep.start
+							until 
+								linear_rep.off
+							loop
+								clear_oids (linear_rep.item)
+								linear_rep.forth
+							end
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	
 	oids_of_all_classes: ARRAY [INTEGER] is
 		local
 			i: INTEGER
@@ -1901,6 +1966,8 @@ feature {NONE} -- Implementation
 			if an_obj.is_obsolete then
 				clear_all_properties (an_obj, its_class)
 				an_obj.become_up_to_date
+				an_obj.relationships_unloaded
+				an_obj.attributes_unloaded
 			end
 		end
 		

@@ -101,7 +101,7 @@ feature -- Status report
 			Result := selection_stream = Void or else exhausted
 		end
 
-	exhausted: BOOLEAN is
+	exhausted, after: BOOLEAN is
 			-- This function tests whether or not the end of the cursor
 			-- has been reached.
 		require

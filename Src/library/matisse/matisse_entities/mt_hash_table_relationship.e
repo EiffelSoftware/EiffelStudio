@@ -18,7 +18,7 @@ creation
 
 feature
 
-	get_container_type: STRING is
+	get_container_type (object: MT_STORABLE): STRING is
 		do
 			Result := "MT_HASH_TABLE"
 		end

@@ -1060,9 +1060,6 @@ feature -- Element Change
 			a_real: REAL
 		do
 			a_real := real_field (eif_field_index, an_object)
-			print ("comment in class MT_ATTRIBUTE, set_real%N")
-			print ("real field name = ")
-			print (field_name (eif_field_index, an_object))
 			c_set_value_real (an_object.oid, oid, Mt_Float, a_real, 0)
 		end
 	

@@ -364,6 +364,7 @@ feature -- Closeable
 			else
 				show
 			end
+			raise
 			edited_class ?= application_class
 			check
 				edited_class_not_void: edited_class /= Void

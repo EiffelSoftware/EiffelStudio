@@ -32,10 +32,12 @@ feature -- Basic Operations
 						if Result.item (Result.count) = '&' then
 							Result.keep_head (Result.count - 1)
 						end
+						Result.replace_substring_all (".", "_")
+						Result.replace_substring_all ("___", "_")
+						Result.replace_substring_all ("__", "_")
 						if Result.item (1) = '_' then
 							Result.prepend_character ('X')
 						end
-						Result.replace_substring_all (".", "_")
 						Result := generic_format (Result)
 						Result.to_upper
 					end
@@ -45,6 +47,29 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 	
+	format_feature_name (name: STRING): STRING is
+			-- Format `name' to Eiffel conventions
+		require
+			non_void_name: name /= Void
+		local
+			container, nested: STRING
+			i: INTEGER
+		do
+			Result := clone (name)
+			if Result.item (Result.count) = '&' then
+				Result.keep_head (Result.count - 1)
+			end
+			Result.replace_substring_all (".", "_")
+			Result.replace_substring_all ("___", "_")
+			Result.replace_substring_all ("__", "_")
+			if Result.item (1) = '_' then
+				Result.prepend_character ('x')
+			end
+			Result := generic_format (Result)
+		ensure
+			non_void_result: Result /= Void
+		end	
+
 	format_variable_name (name: STRING): STRING is
 			-- Format `name' to Eiffel conventions
 		require
@@ -55,7 +80,7 @@ feature -- Basic Operations
 			container, nested : STRING
 		do
 				-- resolve conflict names	
-			l_name := name
+			l_name := clone (name)
 			l_name.to_lower
 			variable_mapping_table.search (l_name)
 			if variable_mapping_table.found then
@@ -75,12 +100,12 @@ feature -- Basic Operations
 					if Result.item (Result.count) = '&' then
 						Result.keep_head (Result.count - 1)
 					end
-					if Result.item (1) = '_' then
-						Result.prepend_character ('a')
-					end
 					Result.replace_substring_all (".", "_")
 					Result.replace_substring_all ("___", "_")
 					Result.replace_substring_all ("__", "_")
+					if Result.item (1) = '_' then
+						Result.prepend_character ('a')
+					end
 					Result := generic_format (Result)
 				end
 			end

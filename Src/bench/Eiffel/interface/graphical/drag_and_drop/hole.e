@@ -21,6 +21,7 @@ feature {NONE}
 			ic_init (a_composite, a_tool.text_window);
 			tool := a_tool;
 			!!transporter_arg;
+--			add_button_click_action (3, Current, transporter_arg)
 			add_button_press_action (3, Current, transporter_arg)
 		ensure
 			parent = a_composite

@@ -25,7 +25,7 @@ feature -- Creation
 
 feature
 
-	name: STRING is "compute the dependancies";
+	name: STRING is "compute the dependents";
 
 	execute is
 		local
@@ -39,8 +39,20 @@ feature
 						-- Get the class
 						-- Note: class name amiguities are not resolved.
 					class_c := Universe.unique_class (class_name).compiled_class;
-					f := class_c.feature_table.item (feature_name);
-					display_depend (error_window, class_c, f);
+					if class_c = Void then
+						io.error.putstring (class_name);
+						io.error.putstring (" is not in the system%N");
+					else
+						f := class_c.feature_table.item (feature_name);
+						if f = Void then
+							io.error.putstring (feature_name);
+							io.error.putstring (" is not a feature of ");
+							io.error.putstring (class_name);
+							io.error.new_line
+						else
+							display_depend (error_window, class_c, f);
+						end;
+					end;
 				end;
 			end;
 		end;
@@ -56,7 +68,7 @@ feature
 			dep := Depend_server.item (class_c.id);
 			fdep := dep.item (f.feature_name);
 
-			display.put_string ("Dependancies:%N");
+			display.put_string ("Dependents:%N");
 			from
 				fdep.start
 			until

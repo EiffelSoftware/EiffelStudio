@@ -188,11 +188,23 @@ feature -- Display
 					ft := c.feature_table;
 					fi := ft.origin_table.item (rid);
 
-					fi.append_clickable_name (debug_window, c);
+					if fi /= Void then
+						fi.append_clickable_name (debug_window, c);
+					else
+						debug_window.put_string ("Void")
+					end;
 					debug_window.put_string (" (");
-					ofi.append_clickable_name (debug_window, oc);
+					if ofi /= Void then
+						ofi.append_clickable_name (debug_window, oc);
+					else
+						debug_window.put_string ("Void")
+					end;
 					debug_window.put_string (" from ");
-					oc.append_clickable_name (debug_window);
+					if oc /= Void then
+						oc.append_clickable_name (debug_window);
+					else
+						debug_window.put_string ("Void")
+					end;
 					debug_window.put_string (")");
 				else
 					Run_info.feature_i.append_clickable_name (debug_window, c);

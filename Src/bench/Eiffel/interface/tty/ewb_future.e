@@ -38,8 +38,20 @@ feature
 				retrieve_project;
 				if not error_occurred then
 					class_c := Universe.unique_class (class_name).compiled_class;
-					feature_i := class_c.feature_table.item (feature_name);
-					display_hist (error_window, feature_i, class_c);
+					if class_c = Void then
+						io.error.putstring (class_name);
+						io.error.putstring (" is not in the system%N");
+					else
+						feature_i := class_c.feature_table.item (feature_name);
+						if feature_i = Void then
+							io.error.putstring (feature_name);
+							io.error.putstring (" is not a feature of ");
+							io.error.putstring (class_name);
+							io.error.new_line
+						else
+							display_hist (error_window, feature_i, class_c);
+						end;
+					end;
 				end;
 			end;
 		end;

@@ -143,9 +143,6 @@ feature
 				body_id);
 
 				-- Generate function name
-io.error.putstring ("generating ");
-io.error.putstring (feature_name);
-io.error.new_line;
 			generated_file.putstring (internal_name);
 			generated_file.putchar ('(');
 			generate_arguments;

@@ -6,7 +6,8 @@ inherit
 
 	DEBUG_EXT;
 	IPC_SHARED;
-	SHARED_DEBUG	
+	SHARED_DEBUG;
+	SHARED_WORKBENCH
 
 creation
 

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that hold shared infomration required for transports."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,6 +49,12 @@ feature -- Access
 		
 	drag_and_drop_starting_movement: INTEGER is 3
 		-- Pointer movement in pixels required to start a drag and drop.
+		
+	original_x, original_y: INTEGER
+	original_x_tilt, original_y_tilt, original_pressure: DOUBLE
+		-- Hold the values passed to start transport so when a transport
+		-- actually starts, with real_start_transport,these can be passed
+		-- as arguments.
 
 feature -- Measurement
 
@@ -137,8 +143,17 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Im
 
 	cursor_pixmap: EV_CURSOR
 			-- Cursor used on the widget.
+			
+feature -- Public constants
 
-invariant
-	invariant_clause: True -- Your invariant here
+	Capture_heavy: INTEGER is 1
+			-- The mouse [has been/should be] captured through
+			-- a call to `set_heavy_capture'
+
+	Capture_normal: INTEGER is 0
+			-- The mouse [has been/should be] captured through
+			-- a call to `set_capture'
+			--
+			-- Default value.
 
 end -- class EV_SHARED_TRANSPORT_IMP

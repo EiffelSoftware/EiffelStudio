@@ -20,6 +20,7 @@ feature -- Basic Operations
 	check_activation is
 			-- Free version, can always run.
 		do
+			check_license
 		end
 
 	check_activation_while_running (a_next_action: PROCEDURE [ANY, TUPLE]) is
@@ -29,6 +30,7 @@ feature -- Basic Operations
 			-- Set `can_run' to `True' if product can
 			-- be started, `False' otherwise.
 		do
+			check_license
 			a_next_action.call ([])
 		end
 

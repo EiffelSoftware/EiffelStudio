@@ -95,14 +95,31 @@ feature -- Execution
 			filter: TEXT_FILTER;
 			class_formatter: CLASS_TEXT_FORMATTER;
 			file_name: FILE_NAME;
-			file_window: FILE_WINDOW;
 			d_name: DIRECTORY_NAME;
 			dir: DIRECTORY;
-			image, ext: STRING;
-			d_output: DEGREE_OUTPUT
+			d_output: DEGREE_OUTPUT;
+			type: STRING;
+			st, text_st: STRUCTURED_TEXT
 		do
 			clusters := Eiffel_universe.clusters;
 			if not clusters.empty then
+				error_window.clear_window;
+				if filter_name /= Void and then not filter_name.empty then
+					!! filter.make (filter_name);
+				end;
+				file_name := Eiffel_system.document_file_name;
+				if file_name /= Void then
+					d_name := Eiffel_system.document_path;
+					if d_name /= Void then
+						!! dir.make (d_name);
+						if not dir.exists then
+							dir.create
+						end
+					end;
+					!! st.make;
+					Eiffel_universe.generate_cluster_list (st);
+					generate_output (filter, file_name, st)
+				end;
 				!! list.make;
 				from 
 					clusters.start 
@@ -117,7 +134,13 @@ feature -- Execution
 						if d_name /= Void then
 							!! dir.make (d_name);
 							if not dir.exists then
-								dir.create
+								dir.create;
+							end;
+							file_name := a_cluster.document_file_name;
+							if file_name /= Void then
+								!! st.make;
+								a_cluster.generate_class_list (st);
+								generate_output (filter, file_name, st)
 							end
 						end;
 						classes := a_cluster.classes;
@@ -140,63 +163,52 @@ feature -- Execution
 				inspect
 					format_type
 				when flat_type then
+					type := "flat"
 				when flat_short_type then
-					class_formatter.set_is_short
+					class_formatter.set_is_short;
+					type := "flat/short"
 				when text_type then
 					class_formatter.set_order_same_as_text;
 					class_formatter.set_one_class_only
+					type := "text"
 				when short_type then
 					class_formatter.set_is_short;
 					class_formatter.set_one_class_only
+					type := "short"
 				end
-				if filter_name /= Void and then not filter_name.empty then
-					!! filter.make (filter_name);
-				end;
 				if not list.empty then
 					d_output := Degree_output;
-					d_output.put_start_documentation (list.count);
-					error_window.clear_window;
+					d_output.put_start_documentation (list.count, type);
 					from 
 						list.start 
 					until 
 						list.after 
 					loop
 						a_class := list.item;
-						d_output.put_class_document_message (a_class);
 						file_name := a_class.lace_class.document_file_name;
-						if file_name /= Void then
-							if filter /= Void then
-								ext := filter.file_suffix
+						if file_name = Void then
+							d_output.skip_entity
+						else
+							d_output.put_class_document_message (a_class);
+							!! st.make;
+							if do_parents then	
+								append_parents (st, a_class)
 							end;
-							if ext = Void then	
-								ext := "txt"
+							class_formatter.format (a_class);
+							text_st := class_formatter.text;
+							from
+								st.finish
+							until	
+								st.before
+							loop
+								text_st.put_front (st.item);
+								st.back
 							end;
-							file_name.add_extension (ext)
-							!! file_window.make (file_name);
-							file_window.open_file;
-							if not file_window.exists then
-								error_window.put_string ("Cannot create file: ");
-								error_window.put_string (file_name);
-								error_window.new_line;
-							else
-								if do_parents then	
-									append_parents (file_window, filter, a_class)
-								end
-							-- FIXME **** testing class_formatter.format (a_class);
-								if filter /= Void then
-									filter.process_text (class_formatter.text)
-									image := filter.image;
-									filter.wipe_out_image
-								else
-									--image := class_formatter.text.image;
-									image := "" -- testing
-								end;
-								file_window.put_string (image);
-							end;
-							file_window.close
+							generate_output (filter, file_name, text_st)
 						end;
 						list.forth
 					end;
+					d_output.finish_degree_output
 				end;
 				error_window.display;
 			end
@@ -212,19 +224,18 @@ feature {NONE} -- Implementation
 
 	flat_short_type, short_type, flat_type, text_type: INTEGER is unique
 
-    error_window: OUTPUT_WINDOW;
-            -- Output window used to display erros during the
-            -- execution of Current
+	error_window: OUTPUT_WINDOW;
+			-- Output window used to display erros during the
+			-- execution of Current
 
-	append_parents (file_window: FILE_WINDOW; filter: TEXT_FILTER; e_class: E_CLASS) is
-			-- Append parents to `file_window' for `e_class'.
+	append_parents (st: STRUCTURED_TEXT; e_class: E_CLASS) is
+			-- Append parents to `st' for `e_class'.
 		require
-			valid_args: file_window /= Void and then e_class /= Void
+			valid_args: st /= Void and then e_class /= Void
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
 			processed: LINKED_LIST [E_CLASS];
 			c: E_CLASS;
-			st: STRUCTURED_TEXT
 		do
 			!! processed.make;
 			processed.put_front (Eiffel_system.any_class.compiled_eclass)
@@ -243,7 +254,6 @@ feature {NONE} -- Implementation
 			processed.start; -- Remove class any
 			processed.remove;
 			if not processed.empty then
-				!! st.make;
 				if processed.count = 1 then
 					st.add_string ("Ancestor:")
 				else
@@ -262,12 +272,45 @@ feature {NONE} -- Implementation
 					processed.forth
 				end;
 				st.add_new_line;
-				if filter = Void then
-					file_window.put_string (st.image)
-				else
-					filter.process_text (st);
-				end
 			end
 		end;
+
+	generate_output (filter: TEXT_FILTER; file_name: FILE_NAME; st: STRUCTURED_TEXT) is
+			-- Generate output with `filter' to file `file_name'
+		require
+			valid_f_name: file_name /= Void;
+			valid_st: st /= Void
+		local
+			file_window: FILE_WINDOW;
+			image, ext: STRING;
+			f_name: FILE_NAME
+		do
+			if filter /= Void then
+				filter.set_file_name (file_name);
+				ext := filter.file_suffix
+			end;
+			if ext = Void then
+				ext := "txt"
+			end;
+			f_name := clone (file_name);
+			f_name.add_extension (ext)
+			!! file_window.make (f_name);
+			file_window.open_file;
+			if not file_window.exists then
+				error_window.put_string ("Cannot create file: ");
+				error_window.put_string (f_name);
+				error_window.new_line;
+			else
+				if filter /= Void then
+					filter.process_text (st)
+					image := filter.image;
+					filter.wipe_out_image
+				else
+					image := st.image;
+				end;
+				file_window.put_string (image);
+				file_window.close
+			end;
+		end
 
 end -- class E_GENERATE_DOCUMENTATION

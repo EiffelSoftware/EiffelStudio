@@ -1014,18 +1014,44 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 
 /*********************************
  *
- * Function : `c_gtk_list_item_select'   (2)
- *            `c_gtk_list_item_unselect' (3)
- *            `c_gtk_list_rows           (4)
- *            `c_gtk_list_selection_mode (5)
- *            `c_gtk_list_selected_item  (6)
+ * Function : `c_gtk_pixmap_set_from_pixmap'
+ *            
+ * Note     : Change the pixmap's gdkPixmap to new gdkPixmap
+ * 
+ * Author : Alex
+ *
+ *********************************/
+
+void c_gtk_pixmap_set_from_pixmap	 (GtkWidget  *pixmapDest, GtkWidget *pixmapSource)
+{
+  GdkPixmap *image;
+  GdkBitmap *mask;
+
+  /* Prepare the bitmap and the mask */
+  mask = ((GtkPixmap *) pixmapSource)->mask;
+  image = ((GtkPixmap *) pixmapSource)->pixmap;
+ 
+  /* Set the bitmap */
+  gtk_pixmap_set ((GtkPixmap *) pixmapDest, image, mask);
+}
+
+/*********************************
+ *
+ * Function : `c_gtk_list_item_select'   	(1)
+ *            `c_gtk_list_item_unselect' 	(2)
+ *            `c_gtk_list_item_is_selected' (3)
+ *            `c_gtk_list_rows'           	(4)
+ *            `c_gtk_list_selection_mode' 	(5)
+ *            `c_gtk_list_selected_item'  	(6)
+ *            `c_gtk_list_insert_item'	 	(7)
  *            
  * Note (2,3) : Two routines to select or unselect an item, because the gtk
  *              functions seems to have a bug.
  * Note (4)   : Give the number of rows of a list.
  * Note (6)   : Index of the most recently selected item. (-1 if none selected)
+ * Note (7)   : Insert the item at the given index.
  * 
- * Author : Leila
+ * Author : Leila, Alex
  *
  *********************************/
 
@@ -1042,6 +1068,21 @@ void c_gtk_list_item_unselect (GtkWidget *item)
   if (GTK_IS_LIST (GTK_WIDGET (item)->parent))
     gtk_list_unselect_child (GTK_LIST (GTK_WIDGET (item)->parent),
                            GTK_WIDGET (item));
+}
+
+EIF_BOOLEAN c_gtk_list_item_is_selected (GtkWidget *list, GtkWidget *item)
+{
+	GList *selected_items;
+
+	selected_items = GTK_LIST (list)->selection;
+	
+	while (selected_items) 
+	{
+	  if (item == GTK_WIDGET (selected_items->data))
+		return TRUE;
+	  selected_items = selected_items->next;
+	}
+	return FALSE;
 }
 
 guint c_gtk_list_rows (GtkWidget *list)
@@ -1061,7 +1102,32 @@ guint c_gtk_list_selected (GtkWidget *list)
 
 gint c_gtk_list_selected_item (GtkWidget *list)
 {
-	return gtk_list_child_position (GTK_LIST(list), GTK_LIST(list)->selection->data);
+	if ((GTK_LIST (list)->selection) != NULL) 
+	{
+	  return gtk_list_child_position (GTK_LIST(list), GTK_LIST(list)->selection->data);
+
+	}
+	return -1;
+}
+
+void c_gtk_list_insert_item (GtkWidget *list, GtkWidget *item, gint position)
+{
+  GList *item_list;
+ 
+  item_list = (GList *) malloc (sizeof (GList *));
+  
+  item_list->data = item;
+  gtk_list_insert_items ((GtkList *)list, item_list, position);
+}
+
+void c_gtk_list_remove_item (GtkWidget *list, GtkWidget *item)
+{
+  GList *item_list;
+ 
+  item_list = (GList *) malloc (sizeof (GList *));
+  
+  item_list->data = item;
+  gtk_list_remove_items ((GtkList *)list, item_list);
 }
 
 /*********************************
@@ -1433,83 +1499,90 @@ void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 
 /*********************************
  *
- * Function : `c_gtk_statusbar_item_set_pixmap'		(1)
- *			  `c_gtk_statusbar_item_unset_pixmap'	(2)
+ * Function : `c_gtk_statusbar_item_create_pixmap_place'	(1)
+ *			  `c_gtk_statusbar_item_unset_pixmap'			(3)
  *			  	
- * Note : (1) Sets the pixmap of the status bar item.
- *		  (2) Unsets the pixmap of the status bar item.	
+ * Note : (1) The equivalent of `create_pixmap_place' in EV_PIXMAPABLE
+ * 				to create the place in the box, where the pixmap will be placed.
+ * 				Return the value of the pixmap pointer.
+ *		  (3) Unsets the pixmap of the status bar item.	Remove the GtkPixmap
+ *		  		the status bar, which will be destroyed (no more ref).
  * 
  * Author : Alex
  *
  *********************************/
 
-void c_gtk_statusbar_item_set_pixmap (GtkWidget *statusbar, GtkWidget *pixmap)
+EIF_POINTER c_gtk_statusbar_item_create_pixmap_place (GtkWidget *statusbar)
 {
-	GtkWidget *statusbar_frame;
-	GtkWidget *statusbar_label;
-	GtkWidget *hbox;
-	
-	statusbar_frame = GTK_STATUSBAR (statusbar)->frame;
-	statusbar_label = GTK_STATUSBAR (statusbar)->label;
+  GtkWidget *pixmap;
 
-	/* Test if the box to put the pixmap and the label has
-	 * already been created by us, previously.
-	 * If the parent of the label is the original frame, then no
-	 * otherwise it is the box.
-	 */
-	hbox = GTK_WIDGET (statusbar_label)->parent;
-	if ( !GTK_IS_BOX (hbox))
-	{
-	  /** If we are in here, this means the box has not been created yet. **/
+  GtkWidget *statusbar_frame;
+  GtkWidget *statusbar_label;
+  GtkWidget *hbox;
+  
+  statusbar_frame = GTK_STATUSBAR (statusbar)->frame;
+  statusbar_label = GTK_STATUSBAR (statusbar)->label;
+  /* the status bar label is never NULL, by gtk-construction. */
+	
+  /* Test if the box to put the pixmap and the label has
+   * already been created by us, previously.
+   * If the parent of the label is the original frame, then no,
+   * otherwise it is the box.
+   */
+  hbox = GTK_WIDGET (statusbar_label)->parent;
+	
+  if ( !GTK_IS_BOX (hbox))
+  {
+    /** If we are in here, this means the box has not been created yet. **/
 		
-	  /* First remove the label from the frame.
-	   * We reference the label otherwise
-	   * it will be destroyed when removed.
-	   */
-	  gtk_object_ref (GTK_OBJECT (statusbar_label));
- 	  gtk_container_remove (GTK_CONTAINER (statusbar_frame), statusbar_label);
+	/* First remove the label from the frame.
+	 * We reference the label otherwise
+	 * it will be destroyed when removed.
+	 */
+	gtk_object_ref (GTK_OBJECT (statusbar_label));
+ 	gtk_container_remove (GTK_CONTAINER (statusbar_frame), statusbar_label);
 
-	  /* 
-	   * Create a gtk_hbox where we will put the pixmap and the label
-	   * and add to the frame.
-	   */	
-	  hbox = gtk_hbox_new (FALSE, 0);
-	  gtk_container_add (GTK_CONTAINER (statusbar_frame), hbox);
+	/* 
+	 * Create a gtk_hbox where we will put the pixmap and the label
+	 * and add to the frame.
+	 */	
+	hbox = gtk_hbox_new (FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (statusbar_frame), hbox);
 
-	  /* Put the pixmap and the label in the box */
-	  gtk_box_pack_start (GTK_BOX (hbox), pixmap, FALSE, FALSE, 0);
-	  gtk_box_pack_start (GTK_BOX (hbox), statusbar_label, FALSE, FALSE, 0);
+	/* show the box */
+	gtk_widget_show (hbox);
+  }
+  else
+  {
+	/** If we are here, this means we have already created the box **/
 
-	  /* Unreference the label which has one reference more now
-	   * Thet we hwve added it to the box.
-	   */
-	  gtk_object_unref (GTK_OBJECT (statusbar_label));
-	
-	  /* Show the box  and the pixmap */
-   	  gtk_widget_show (hbox);
-	  gtk_widget_show (pixmap);
+	/* Put the pixmap in the box.
+	 * First we take the label off to have the pixmap on the left
+	 * and the  label on the right.
+	 */
+	gtk_object_ref (GTK_OBJECT (statusbar_label));
+	gtk_container_remove (GTK_CONTAINER (hbox), statusbar_label);	
+  }
 
-	}
-	else
-	{
-	  /** If we are here, this means we have already created the box **/
+  /* create the pixmap that we will put in the box */
+  pixmap = c_gtk_pixmap_create_empty (hbox);
+			
+  /* Put the pixmap and the label in the box */
+  gtk_box_pack_start (GTK_BOX (hbox), pixmap, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), statusbar_label, FALSE, FALSE, 0);
 
-	  /* Put the pixmap in the box.
-	   * First we take the label off to have the pixmap on the left
-	   * and the  label on the right.
-	   */
-	  gtk_object_ref (GTK_OBJECT (statusbar_label));
-	  gtk_container_remove (GTK_CONTAINER (hbox), statusbar_label);
-	  
-	  gtk_box_pack_start (GTK_BOX (hbox), pixmap, FALSE, FALSE, 0);
-	  gtk_box_pack_start (GTK_BOX (hbox), statusbar_label, FALSE, FALSE, 0);
+  /* show the pixmap */
+  gtk_widget_show (pixmap);
 
-	  gtk_object_unref (GTK_OBJECT (statusbar_label));
-
-	  /* Remove the reference because there is one extra reference */
-	  gtk_object_unref (GTK_OBJECT (pixmap));
-	}
+  /* Unreference the label which has one reference more now
+   * That we have added it to the box.
+   */
+  gtk_object_unref (GTK_OBJECT (statusbar_label));
+  
+  /* Return the value of the pixmap pointer */
+  return (EIF_POINTER) pixmap;
 }
+
 void c_gtk_statusbar_item_unset_pixmap (GtkWidget *statusbar, GtkWidget *pixmap)
 {
 	GtkWidget *hbox;
@@ -1520,22 +1593,19 @@ void c_gtk_statusbar_item_unset_pixmap (GtkWidget *statusbar, GtkWidget *pixmap)
 	/* Pointer to the hbox where the pixmap and the label are */
 	hbox = GTK_WIDGET (GTK_STATUSBAR (statusbar)->label)->parent;
 
-	/* We have to reference the pixmap if we don't want to destroy it
-	 * when removed from the hbox.
-	 */
-	gtk_object_ref (GTK_OBJECT (pixmap));
-
 	/* Remove the pixmap from the box */
 	gtk_container_remove (GTK_CONTAINER (hbox), pixmap);
 }
 
 /*********************************
  *
- * Function : `c_gtk_pixmap_width'	(1)
- * 			  `c_gtk_pixmap_height'	(2)
+ * Function : `c_gtk_pixmap_width'		(1)
+ * 			  `c_gtk_pixmap_height'		(2)
+ * 			  `c_gtk_pixmap_gdk_unref'	(3)
  *
  * Note : (1) Pixmap width.
  * 		  (2) Pixmap height.
+ * 		  (3) Unref the gdk pixmap and the gdk bitmap (mask) to destroy them.
  *
  * Author : Alex
  *
@@ -1559,6 +1629,20 @@ EIF_INTEGER c_gtk_pixmap_height (GtkWidget *pixmap)
 	  gdk_window_get_size (GTK_PIXMAP (pixmap)->pixmap, &width, &height);
 	  
 	  return (EIF_INTEGER) height;
+}
+
+void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap)
+{
+  GdkPixmap *gdkPixmap;
+  GdkBitmap *mask;
+
+  gdkPixmap = ((GtkPixmap *) pixmap)->pixmap;
+  mask = ((GtkPixmap *) pixmap)->mask;
+
+  /* Unref */
+  gdk_pixmap_unref (gdkPixmap);
+  if (mask != NULL)
+	gdk_bitmap_unref (mask); 
 }
 
 /*********************************
@@ -1614,43 +1698,74 @@ void c_gtk_style_default_fg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* 
 		*r /= 257; *g /= 257; *b /= 257;
 }
 
+/*********************************
+ *
+ * Function : `SetStyleRecursively'			(1)
+ * 			  `c_gtk_widget_set_fg_color'	(2)
+ * 			  `c_gtk_widget_set_bg_color'	(3)
+ *
+ * Note : (1) This function is a function needed by
+ * 				- `c_gtk_widget_set_bg_color'
+ * 				- `c_gtk_widget_set_fg_color' only.
+ * 		  		It enable to set the requested style to all children
+ * 		  	 	when the widget is a container
+ *		  (2) Sets the foreground color of the widgets and its children.
+ *		  (3) Sets the background color of the widgets and its children.
+ *
+ * Author : Alex
+ *
+ *********************************/
+
+void SetStyleRecursively (GtkWidget *widget, gpointer data)
+{
+    GtkStyle *style;
+
+    /* --- Get the style --- */
+    style = (GtkStyle *) data;
+
+    /* --- Set the style of the widget --- */
+    gtk_widget_set_style (widget, style);
+
+    /* --- If it may have children widgets --- */
+    if (GTK_IS_CONTAINER (widget)) {
+
+        /* --- Set all the children's styles too. --- */
+        gtk_container_foreach (GTK_CONTAINER (widget), 
+                           SetStyleRecursively, style);
+    }
+}
+
 void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
 {
-		GtkStyle* style;
-		int or, og, ob;
-//int i;
-		style = gtk_widget_get_style(GTK_WIDGET(widget));
-		r *= 257; g *= 257; b *= 257;
-/*		
-		or = style->base[GTK_STATE_NORMAL].red;
-		og = style->base[GTK_STATE_NORMAL].green;
-		ob = style->base[GTK_STATE_NORMAL].blue;
-*/
+  GtkStyle* style;
+  int or, og, ob;
+  int i;
 
-		or = style->bg[GTK_STATE_NORMAL].red;
-		og = style->bg[GTK_STATE_NORMAL].green;
-		ob = style->bg[GTK_STATE_NORMAL].blue;
+  style = gtk_widget_get_style(GTK_WIDGET(widget));
+  r *= 257; g *= 257; b *= 257;
+
+  or = style->bg[GTK_STATE_NORMAL].red;
+  og = style->bg[GTK_STATE_NORMAL].green;
+  ob = style->bg[GTK_STATE_NORMAL].blue;
 		
-		if(or != r || og != g || ob != b)
-		{
-			style = gtk_style_copy (style);
-/*
- * 			style->base[GTK_STATE_NORMAL].red = r;
-			style->base[GTK_STATE_NORMAL].green = g;
-			style->base[GTK_STATE_NORMAL].blue = b;
-			gtk_widget_set_style(GTK_WIDGET(widget), style);
-*/
-//			for (i = 0; i < 5; i++)
-//			{
-				style->bg[GTK_STATE_NORMAL].red = r;
-				style->bg[GTK_STATE_NORMAL].green = g;
-				style->bg[GTK_STATE_NORMAL].blue = b;
-				style->base[GTK_STATE_NORMAL].red = r;
-				style->base[GTK_STATE_NORMAL].green = g;
-				style->base[GTK_STATE_NORMAL].blue = b;
-//			}
-			gtk_widget_set_style(GTK_WIDGET(widget), style);
-		}
+  if(or != r || og != g || ob != b)
+  {
+  	style = gtk_style_copy (style);
+	for (i = 0; i < 5; i++)
+	{
+	  /* We do not change the color when GTK_STATE_SELECTED
+	   * because of EV_TEXT_AREA */
+	  if (i != 3)
+	  {
+	    style->bg[i].red = r;
+	    style->bg[i].green = g;
+	    style->bg[i].blue = b;	
+	  }
+	}
+//	gtk_widget_set_style(GTK_WIDGET(widget), style);	
+	SetStyleRecursively(widget, (gpointer) style);
+	
+  }
 		
 }
 
@@ -1658,11 +1773,7 @@ void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *
 {
 		GtkStyle* style;
 		style = GTK_WIDGET(widget)->style;
-/*
-		*r = style->base[GTK_STATE_NORMAL].red;
-		*g = style->base[GTK_STATE_NORMAL].green;
-		*b = style->base[GTK_STATE_NORMAL].blue;
-*/
+		
 		*r = style->bg[GTK_STATE_NORMAL].red;
 		*g = style->bg[GTK_STATE_NORMAL].green;
 		*b = style->bg[GTK_STATE_NORMAL].blue;
@@ -1670,40 +1781,37 @@ void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *
 		*r /= 257; *g /= 257; *b /= 257;
 }
 
+
 void c_gtk_widget_set_fg_color (GtkWidget* widget, int r, int g, int b)
 {
-		GtkStyle* style;
-		int or, og, ob;
-//int i;
+  GtkStyle* style;
+  int or, og, ob;
+  int i;
 
-		style = gtk_widget_get_style(GTK_WIDGET(widget));
+  style = gtk_widget_get_style(GTK_WIDGET(widget));
 
-		r *= 257; g *= 257; b *= 257;
+  r *= 257; g *= 257; b *= 257;
 		
-  		or = style->text[GTK_STATE_NORMAL].red;
-		og = style->text[GTK_STATE_NORMAL].green;
-		ob = style->text[GTK_STATE_NORMAL].blue;
+  or = style->fg[GTK_STATE_NORMAL].red;
+  og = style->fg[GTK_STATE_NORMAL].green;
+  ob = style->fg[GTK_STATE_NORMAL].blue;
 		
-		if(or != r || og != g || ob != b) {
-/*
- * 			style = gtk_style_copy (style);
-			style->text[GTK_STATE_NORMAL].red = r;
-			style->text[GTK_STATE_NORMAL].green = g;
-			style->text[GTK_STATE_NORMAL].blue = b;
-			gtk_widget_set_style(GTK_WIDGET(widget), style);
-*/
-  			style = gtk_style_copy (style);
-//    for (i = 0; i < 5; i++) {
-			style->fg[GTK_STATE_NORMAL].red = r;
-			style->fg[GTK_STATE_NORMAL].green = g;
-			style->fg[GTK_STATE_NORMAL].blue = b;
-			style->text[GTK_STATE_NORMAL].red = r;
-			style->text[GTK_STATE_NORMAL].green = g;
-			style->text[GTK_STATE_NORMAL].blue = b;
-//	}	
-			gtk_widget_set_style(GTK_WIDGET(widget), style);
-			}
+  if(or != r || og != g || ob != b) {
+    for (i = 0; i < 5; i++)
+	{
+	  style->fg[i].red = r;
+	  style->fg[i].green = g;
+	  style->fg[i].blue = b;
+	  style->text[i].red = r;
+	  style->text[i].green = g;
+	  style->text[i].blue = b;  
+	}
+	
+	//gtk_widget_set_style(GTK_WIDGET(widget), style);
+	SetStyleRecursively(widget, (gpointer) style);
+  }
 }
+
 
 void c_gtk_widget_get_color_info (GtkWidget* widget,
 	EIF_INTEGER *fgr,

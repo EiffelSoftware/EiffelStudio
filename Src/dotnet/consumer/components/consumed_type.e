@@ -70,12 +70,6 @@ feature -- Access
 	fields: ARRAY [CONSUMED_FIELD]
 			-- Class fields
 
-	procedures: ARRAY [CONSUMED_PROCEDURE]
-			-- Class procedures
-
-	functions: ARRAY [CONSUMED_FUNCTION]
-			-- Class functions
-
 	interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
 			-- Implemented interfaces
 	
@@ -84,6 +78,123 @@ feature -- Access
 	
 	events: ARRAY [CONSUMED_EVENT]
 			-- Events
+
+	procedures: ARRAY [CONSUMED_PROCEDURE] is
+			-- Class procedures
+		local
+			i, nb_prop_event_proc: INTEGER
+			tmp: ARRAY [CONSUMED_PROCEDURE]
+			l_event: CONSUMED_EVENT
+		do
+			create tmp.make (0, properties.count + events.count * 3)
+			from
+				i := 0
+			until
+				i = properties.count
+			loop
+				if properties.item (i).setter /= Void then
+					tmp.put (properties.item (i).setter, i)
+				end
+				i := i + 1
+			end
+			from
+				nb_prop_event_proc := i
+				i := 0
+			until
+				i = events.count
+			loop
+				l_event := events.item (i)
+				if l_event.raiser /= Void then
+					tmp.put (l_event.raiser, nb_prop_event_proc)
+					nb_prop_event_proc := nb_prop_event_proc + 1
+				end
+				if l_event.remover /= Void then
+					tmp.put (l_event.remover, nb_prop_event_proc)
+					nb_prop_event_proc := nb_prop_event_proc + 1
+				end
+				if l_event.adder /= Void then
+					tmp.put (l_event.adder, nb_prop_event_proc)
+					nb_prop_event_proc := nb_prop_event_proc + 1
+				end
+				i := i + 1
+			end
+			
+			create Result.make (0, procedures.count + nb_prop_event_proc+1)
+			from
+				i := 0
+			until
+				i = procedures.count
+			loop
+				Result.put (procedures.item (i), i)
+				i := i + 1
+			end
+			from
+				nb_prop_event_proc := i
+				i := 0
+			until
+				i = tmp.count
+			loop
+				Result.put (tmp.item (i), nb_prop_event_proc)
+				i := i + 1
+				nb_prop_event_proc := nb_prop_event_proc + 1
+			end
+		ensure
+			non_void_result: Result /= Void
+		end
+
+	functions: ARRAY [CONSUMED_FUNCTION] is
+			-- Class functions
+		local
+			i, j: INTEGER
+			tmp: ARRAY [CONSUMED_FUNCTION]
+			l_event: CONSUMED_EVENT
+		do
+			create tmp.make (0, properties.count)
+			from
+				i := 0
+			until
+				i = properties.count
+			loop
+				if properties.item (i).getter /= Void then
+					tmp.put (properties.item (i).getter, i)
+				end
+				i := i + 1
+			end
+			
+			create Result.make (0, functions.count + i+1)
+			from
+				i := 0
+			until
+				i = functions.count
+			loop
+				Result.put (functions.item (i), i)
+				i := i + 1
+			end
+			from
+				j := i
+				i := 0
+			until
+				i = tmp.count
+			loop
+				Result.put (tmp.item (i), j)
+				i := i + 1
+				j := j + 1
+			end
+		ensure
+			non_void_result: Result /= Void
+		end
+
+
+feature {NONE} -- Internal vales
+
+	internal_procedures: ARRAY [CONSUMED_PROCEDURE]
+			-- Class procedures
+
+	internal_functions: ARRAY [CONSUMED_FUNCTION]
+			-- Class functions
+
+
+feature -- Status Setting
 
 	is_interface: BOOLEAN is
 			-- Is .NET type an interface?
@@ -132,9 +243,9 @@ feature {TYPE_CONSUMER} -- Element settings
 		require
 			non_void_procedures: meth /= Void
 		do
-			procedures := meth
+			internal_procedures := meth
 		ensure
-			procedures_set: procedures = meth
+			internal_procedures_set: internal_procedures = meth
 		end
 	
 	set_functions (func: like functions) is
@@ -142,9 +253,9 @@ feature {TYPE_CONSUMER} -- Element settings
 		require
 			non_void_functions: func /= Void
 		do
-			functions := func
+			internal_functions := func
 		ensure
-			functions_set: functions = func
+			internal_functions_set: internal_functions = func
 		end
 	
 	set_constructors (cons: like constructors) is
@@ -208,6 +319,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			procedures_not_void: procedures /= Void
 		do
 			Result := consumed_type_entities (True)
+			Result.compare_objects
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -261,7 +373,7 @@ feature {NONE} -- Internal
 		do
 			create Result.make (0)
 			Result.fill (fields)
-			
+
 			-- Filter out PROPERTY and EVENT Eiffelized entities.
 			-- Only add members declared in this type.
 

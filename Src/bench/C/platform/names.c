@@ -61,17 +61,6 @@ public EIF_REFERENCE eif_preobj ()
 #endif
 }
 
-public EIF_REFERENCE eif_descobj ()
-{
-#if defined EIF_WINDOWS || defined EIF_OS2
-	return RTMS ("descobj.obj");
-#elif defined __VMS
-	return RTMS ("descobj.olb");
-#else
-	return RTMS ("descobj.o");
-#endif
-}
-
 public EIF_REFERENCE eif_copy_cmd ()
 {
 #ifdef EIF_WINDOWS

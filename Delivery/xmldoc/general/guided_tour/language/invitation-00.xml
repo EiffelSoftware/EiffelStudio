@@ -1,5 +1,5 @@
 <document title="Invitation to Eiffel" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>Interactive Software Engineering
@@ -11,19 +11,17 @@
 				<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
 			</link>
 		</paragraph>
-		<note>This document is available both locally, as part of the  Eiffel Software  Eiffel delivery, and on the 
-			<link>
-				<url>http://docs.eiffel.com/general/guided_tour/language/invitation-00.xml</url>
-				<label>http://docs.eiffel.com</label>
-			</link> Web site.  
-			<output output="studio">See the 
+		<output output="studio">
+			<note>
+				This is <bold>not</bold> an introduction to the EiffelStudio development environment.
+				See the
 				<link>
 					<url>../index.xml</url>
-					<label>list of introductory documents</label>
-				</link>. This is 
-				<bold>not</bold> an introduction to the EiffelStudio development environment. Follow the preceding link for a Guided Tour of EiffelStudio.  You will also find there a detailed Eiffel Tutorial.
-			</output>
-		</note>
+					<label> list of introductory documents </label>
+				</link>
+				for a Guided Tour of EiffelStudio and a detailed Eiffel Tutorial.
+			</note>
+		</output>
 		<heading>
 			<size>2</size>
 			<content>

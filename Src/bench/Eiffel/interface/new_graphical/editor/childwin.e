@@ -7,7 +7,7 @@ inherit
 			make as mdi_child_window_make
 		redefine
 			on_paint, on_size, class_icon, default_style,
-			on_vertical_scroll
+			on_vertical_scroll, on_key_down
 		end
 
 	APPLICATION_IDS
@@ -26,6 +26,11 @@ inherit
 		end
 
 	WEL_SB_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_VK_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -58,11 +63,10 @@ feature -- Initialization
 				dc.get
 				dc.select_font(current_font)
 				space_size := dc.string_size(" ")
-				tabulation_width := space_size.width * Number_of_space_in_tabulation
 				line_increment := space_size.height + 1
 				dc.unselect_font
 				dc.release
-				
+
 				first_line_displayed := 1
 
 					-- Initialisation done.
@@ -88,6 +92,9 @@ feature -- Initialization
 
 				-- Setup the scroll bars.
 			set_vertical_range(1,vertical_range_max)
+
+				-- Create the cursor
+			create cursor.make_from_absolute_pos(0,1,text_displayed)
 		end
 
 	read_and_analyse_file (a_name: STRING) is
@@ -121,15 +128,7 @@ feature -- Basic operations
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Paint the bitmap
-		local
-			copy_x, copy_y: INTEGER
-			copy_width, copy_height: INTEGER
 		do
-			copy_x := invalid_rect.x
-			copy_y := invalid_rect.y
-			copy_width := invalid_rect.width
-			copy_height := invalid_rect.height
-
 			update_buffered_screen(paint_dc, invalid_rect.top, invalid_rect.bottom)
 		end
 
@@ -195,6 +194,21 @@ feature -- Basic operations
 			end
 		end
 
+	on_key_down(virtual_key: INTEGER; key_data: INTEGER) is
+			-- Process Wm_keydown message corresponding to the
+			-- key `virtual_key' and the associated data `key_data'.
+		do
+			if virtual_key = Vk_left and then cursor /= Void then
+				cursor.go_left_char
+			elseif  virtual_key = Vk_right and then cursor /= Void then
+				cursor.go_right_char
+			else
+				-- Key not handled, do nothing
+			end
+		end
+
+feature {NONE} -- Display functions
+	
 	update_buffered_screen (dc: WEL_DC; top: INTEGER; bottom: INTEGER) is
 			-- Update the device context `dc'. Redraw the text.
 		local
@@ -216,9 +230,9 @@ feature -- Basic operations
 					text_displayed.after
 				loop
 					display_line (0,(curr_line - first_line_displayed)*line_increment,text_displayed.current_line, dc)
-					--if curr_line = cursor.y_in_lines then
-					--	dc.text_out(cursor.x_in_pixels, (curr_line - first_line_displayed)*line_increment, "#")
-					--end
+					if curr_line = cursor.y_in_lines then
+						dc.text_out(cursor.x_in_pixels, (curr_line - first_line_displayed)*line_increment, "#")
+					end
 					curr_line := curr_line + 1
 					text_displayed.forth
 				end
@@ -270,14 +284,8 @@ feature {NONE} -- Constants & Text Attributes
 		-- Height in pixel of the margin on the top
 		-- of the screen.
 
-	tabulation_width: INTEGER
-		-- Width in pixel of a tabulation.
-
 	line_increment: INTEGER
 		-- Height in pixel of a line + an interline.
-
-	Number_of_space_in_tabulation: INTEGER is 4
-		-- Number of spaces in a tabulation.
 
 feature {NONE} -- Implementation
 

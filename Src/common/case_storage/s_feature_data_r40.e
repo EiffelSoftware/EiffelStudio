@@ -77,6 +77,16 @@ feature -- Setting
 			status := s
 		end
 
+    set_is_constant is
+        do
+            status := status_handler.set_is_constant (status)
+        end
+
+    set_is_once is
+        do
+            status := status_handler.set_is_once (status)
+        end
+
 feature {FEATURE_DATA} -- Implementation
 
 	status_handler: FEATURE_STATUS_HANDLER is

@@ -40,12 +40,13 @@ feature -- Access
 			-- from `first'.
 		do
 			if first.is_show_requested and not is_show_requested_check_button.is_selected then
+				is_show_requested_check_button.select_actions.block
 				is_show_requested_check_button.enable_select
+				is_show_requested_check_button.select_actions.block
 			end
 			
 			minimum_width_entry.update_constant_display (first.minimum_width.out)
 			if first.minimum_width_set_by_user then
-				
 				reset_width_button.enable_sensitive
 			else
 				reset_width_button.disable_sensitive
@@ -73,6 +74,7 @@ feature -- Access
 			is_show_requested_check_button.select_actions.extend (agent toggle_visibility)
 			is_show_requested_check_button.select_actions.extend (agent update_editors)
 			if not is_instance_of (first, dynamic_type_from_string ("EV_WINDOW")) then
+					-- Only show the show requested control if we are not a window.
 				Result.extend (is_show_requested_check_button)
 				Result.disable_item_expand (is_show_requested_check_button)
 			end
@@ -148,16 +150,30 @@ feature {NONE} -- Implementation
 				-- Although the editor will be rebuilt, doing this gives the
 				-- impression of instant feedback, even if there is a small delay
 				-- before rebuilding.
-			first.reset_minimum_width
-				-- Reset the minimum width on `first'
 			original_id := Object_handler.object_from_display_widget (first).id
 				-- Store the original id so that we can restore the object afterwards.
-			Object_handler.reset_object (object)
-				-- Reset the object referenced by `Current'
+			actual_reset_width (object)
+			for_all_instance_referers (object, agent actual_reset_width)
+				
 			parent_editor.set_object (object_handler.object_from_id (original_id))
 				-- Update `parent_editor' to reflect the change.
 		end
 		
+	actual_reset_width (an_object: GB_OBJECT) is
+			-- Reset `minimum_width' of `object' of `an_object'.
+		require
+			object_not_void: an_object /= Void
+		local
+			widget: EV_WIDGET
+		do
+			widget ?= an_object.object
+			check
+				object_was_widget: widget /= Void
+			end
+			widget.reset_minimum_width
+			Object_handler.reset_object (an_object)
+		end
+
 	reset_height is
 			-- Reset minimum width of object referenced by `Current'.
 		local
@@ -174,14 +190,31 @@ feature {NONE} -- Implementation
 				-- Although the editor will be rebuilt, doing this gives the
 				-- impression of instant feedback, even if there is a small delay
 				-- before rebuilding.
-			first.reset_minimum_height
-				-- Reset the minimum height on `first'
+		
+		
 			original_id := Object_handler.object_from_display_widget (first).id
 				-- Store the original id so that we can restore the object afterwards.
-			Object_handler.reset_object (object)
+	
+			actual_reset_height (object)
+			for_all_instance_referers (object, agent actual_reset_height)
 				-- Reset the object referenced by `Current'
 			parent_editor.set_object (object_handler.object_from_id (original_id))
 				-- Update `parent_editor' to reflect the change.
+		end
+
+	actual_reset_height (an_object: GB_OBJECT) is
+			-- Reset `minimum_height' of `object' of `an_object'.
+		require
+			object_not_void: an_object /= Void
+		local
+			widget: EV_WIDGET
+		do
+			widget ?= an_object.object
+			check
+				object_was_widget: widget /= Void
+			end
+			widget.reset_minimum_height
+			Object_handler.reset_object (an_object)
 		end
 
 	minimum_width_entry, minimum_height_entry: GB_INTEGER_INPUT_FIELD

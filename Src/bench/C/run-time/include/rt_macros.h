@@ -39,8 +39,10 @@ extern "C" {
 /* Macro used to get info about SPECIAL objects. */
 /* RT_SPECIAL_INFO, RT_SPECIAL_INFO_WITH_ZONE returns pointer to where `count' and `element_size'
  *    of a special objects is stored.
- * RT_SPECIAL_COUNT, RT_SPECIAL_COUNT_WITH_ZONE returns `count' of special objects.
- * RT_SPECIAL_ELEM_SIZE, RT_SPECIAL_ELEM_SIZE_WITH_ZONE returns `element_size' of items in special objects.
+ * RT_SPECIAL_COUNT, RT_SPECIAL_COUNT_WITH_ZONE, RT_SPECIAL_COUNT_WITH_INFO returns `count'
+ *    of special objects.
+ * RT_SPECIAL_ELEM_SIZE, RT_SPECIAL_ELEM_SIZE_WITH_ZONE, RT_SPECIAL_ELEM_SIZE_WITH_INFO returns
+ *    `element_size' of items in special objects.
  */
 #define RT_SPECIAL_INFO(spec) \
 	((spec) + (HEADER(spec)->ov_size & B_SIZE) - LNGPAD_2)
@@ -51,11 +53,15 @@ extern "C" {
 	(*(EIF_INTEGER *) RT_SPECIAL_INFO(spec))
 #define RT_SPECIAL_COUNT_WITH_ZONE(spec,zone) \
 	(*(EIF_INTEGER *) RT_SPECIAL_INFO_WITH_ZONE(spec,zone))
+#define RT_SPECIAL_COUNT_WITH_INFO(offset) \
+	(*(EIF_INTEGER *) offset)
 
 #define RT_SPECIAL_ELEM_SIZE(spec) \
 	(*(EIF_INTEGER *) (RT_SPECIAL_INFO(spec) + sizeof(EIF_INTEGER))
 #define RT_SPECIAL_ELEM_SIZE_WITH_ZONE(spec,zone) \
 	(*(EIF_INTEGER *) RT_SPECIAL_INFO_WITH_ZONE(spec,zone) + sizeof(EIF_INTEGER))
+#define RT_SPECIAL_ELEM_SIZE_WITH_INFO(offset) \
+	(*(EIF_INTEGER *) (offset + sizeof(EIF_INTEGER)))
 
 
 /* Macro used to protect concurrent running of GC. */

@@ -171,8 +171,8 @@
 		</paragraph>
 		<code_block>
 {
-    GuardDog aGuardDog = Create.GuardDog.Make(); //Create an instance
-    aGuardDog.RollOver();                        // Apply a feature
+	<class_name>GuardDog</class_name> <feature_name>aGuardDog</feature_name> = <feature_name>Create.GuardDog.Make</feature_name>();	<comment>//Create an instance</comment>
+	<feature_name>aGuardDog.RollOver</feature_name>();	<comment>// Apply a feature</comment>
 }
 </code_block>
 		<paragraph>This object creation model accounts for some of the differences between constructors in .NET and creation procedures in Eiffel. These differences will be discussed in more detail in 
@@ -187,12 +187,12 @@
 			</code> might use the following code to create and use an instance.
 		</paragraph>
 		<code_block>
-local
-    a_guard_dog: GUARD_DOG   -- Declare an entity of the type
-do
-    create a_guard_dog.make  -- Create and instance and attach to entity
-    a_guard_dog.roll_over    -- Apply a feature
-end
+	<keyword>local</keyword>
+		<feature_name>a_guard_dog</feature_name><symbol>:</symbol> <class_name>GUARD_DOG</class_name>	<comment>-- Declare an entity of the type</comment>
+	<keyword>do</keyword>
+		<keyword>create</keyword> <feature_name>a_guard_dog</feature_name>.<feature_name>make</feature_name>	<comment>-- Create an instance and attach to entity</comment>
+		<feature_name>a_guard_dog</feature_name>.<feature_name>roll_over</feature_name>	<comment>-- Apply a feature</comment>
+	<keyword>end</keyword>
 </code_block>
 		<paragraph>You may have noticed in these examples that even though the type 
 			<code>

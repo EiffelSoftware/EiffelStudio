@@ -94,12 +94,6 @@ feature {NONE} -- Initialization
 				agent on_list_clicked,
 				Default_translate
 			)
-			real_signal_connect (
-					visual_widget,
-					"button-press-event",
-					agent Gtk_marshal.on_combo_box_button_release (c_object),
-					Default_translate
-			)
 		end
 
 	select_callback (n_args: INTEGER; args: POINTER) is

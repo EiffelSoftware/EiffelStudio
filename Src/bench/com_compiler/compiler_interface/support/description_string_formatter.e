@@ -12,8 +12,7 @@ inherit
 			make,
 			put_comment,
 			put_indent,
-			put_keyword,
-			process_indentation
+			put_keyword
 		end
 
 create
@@ -40,7 +39,7 @@ feature -- Output
 					l_str.prune_all_leading (' ')
 					put_string (l_str)
 				elseif first_comment then
-					put_new_line
+					put_string ("%N%T%T%T")
 					first_comment := False	
 				end
 			else
@@ -62,14 +61,6 @@ feature -- Output
 				comments_ended := True
 			end
 			put_string (str)
-		end
-
-	process_indentation (text: INDENT_TEXT) is
-			-- Process indentation `t'.
-		do
-			if comments_ended then
-				put_string (text.image)	
-			end		
 		end
 
 feature {NONE} -- Implementation			

@@ -12,10 +12,6 @@ inherit
 
 	EV_PND_TARGET_I
 
-feature -- Temp
-
-
-
 feature {NONE} -- Initialization
 
 	make is

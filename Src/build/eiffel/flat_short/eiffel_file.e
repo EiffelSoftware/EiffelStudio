@@ -128,6 +128,7 @@ debug ("FS_COMMENT")
 	io.error.putstring ("in go after for pos: ");
 	io.error.putint (pos);
 	io.error.new_line;
+	trace
 end;
 			from
 				lines.start;
@@ -159,6 +160,7 @@ debug ("FS_COMMENT")
 	io.error.putstring ("in go before for pos: ");
 	io.error.putint (pos);
 	io.error.new_line;
+	trace
 end;
 			from
 				lines.finish;

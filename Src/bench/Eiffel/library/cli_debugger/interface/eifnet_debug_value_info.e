@@ -34,7 +34,9 @@ create
 feature {NONE} -- Initialisation
 
 	make (a_referenced_value: ICOR_DEBUG_VALUE) is
-			-- Initialize `Current'
+			-- Initialize `Current' with the referenced value
+			-- this referenced is the value we got directly from the dotnet debugger
+			-- with no processing on it.
 		require
 			argument_not_void: a_referenced_value /= Void
 		do
@@ -44,7 +46,8 @@ feature {NONE} -- Initialisation
 		end
 
 	make_from_prepared_value (a_referenced_value: ICOR_DEBUG_VALUE; a_prepared_value: ICOR_DEBUG_VALUE) is
-			-- Initialize `Current'
+			-- Initialize `Current' from a prepared value
+			-- a prepared value is an dereferenced, and unboxed dotnet value
 		require
 			argument_not_void: a_referenced_value /= Void and then a_prepared_value /= Void
 		do
@@ -89,7 +92,7 @@ feature {NONE} -- Internal Initialisation
 					is_reference_type := False
 				end
 				
-				if interface_debug_reference_value /= Void then
+				if is_reference_type and then interface_debug_reference_value /= Void then
 					is_null := interface_debug_reference_value.is_null
 				end
 
@@ -110,12 +113,13 @@ feature -- Access
 feature -- Queries
 
 	address_as_hex_string: STRING is
+			-- hexadecimal representation for `address'
 		do
 			Result := "0x" + address.to_integer.to_hex_string
 		end
 
 	value_to_string: STRING is
-			-- 	
+			-- String output for the Current value
 		do
 			if is_string_type then
 				Result := Edv_formatter.prepared_icor_debug_value_as_string (icd_prepared_value)
@@ -127,37 +131,45 @@ feature -- Queries
 feature -- Nature Reference
 
 	is_null: BOOLEAN
+			-- Is this object representing a NULL value ?
 
 	has_object_interface: BOOLEAN
+			-- In ICorDebugObjectValue interface supported ?
 
 	is_array_type: BOOLEAN
+			-- Is this object a ARRAY type value ?
 
 	is_reference_type: BOOLEAN
+			-- Is this object a reference type value ?
 
 	is_basic_type: BOOLEAN
-
---	is_special_type: BOOLEAN
+			-- Is this object a basic type value ?
 
 	is_class: BOOLEAN
+			-- Is this object a class type value ?
 
 	is_object: BOOLEAN
+			-- Is this object an object type value ?
 
 	is_valuetype: BOOLEAN
+			-- Is this object a valuetype value ?
 
 	is_byref: BOOLEAN
+			-- Is this object a byref value ?
 
 	is_string_type: BOOLEAN
-
+			-- Is this object a String type value ?
 
 feature -- Queries
 
 	eifnet_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE is
+			-- Debug value corresponding to dotnet debug value
 		do
 			Result := debug_value_from_prepared_icdv (icd_referenced_value, icd_prepared_value)
 		end
 		
 	value_class_type: CLASS_TYPE is
-			-- 
+			-- CLASS_TYPE related to this Current value
 		require
 			has_object_interface: has_object_interface	
 			value_module_file_name_valid: value_module_file_name /= Void
@@ -169,7 +181,7 @@ feature -- Queries
 				else
 					once_value_class_type := eifnet_debug_value.dynamic_class.types.first 
 --FIXME jfiat [02/01/2004]
--- 
+--  in case of generic ?
 				end	
 			end
 			Result := once_value_class_type
@@ -178,6 +190,7 @@ feature -- Queries
 feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 
 	value_class_token: INTEGER is
+			-- Dotnet class token for this ICorDebugObjectValue value
 		require
 			has_object_interface
 		do
@@ -185,6 +198,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		end
 
 	value_class_name: STRING is
+			-- class name for this ICorDebugObjectValue value
 		require
 			has_object_interface
 		do
@@ -196,6 +210,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		end		
 
 	value_module_file_name: STRING is
+			-- module filename for this ICorDebugObjectValue value
 		require
 			has_object_interface
 		do
@@ -203,6 +218,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		end
 		
 	value_icd_module: ICOR_DEBUG_MODULE is
+			-- ICorDebugModule for this ICorDebugObjectValue value
 		require
 			has_object_interface
 		do
@@ -212,7 +228,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 feature -- Interface queries for feature
 
 	feature_token_for_feature_name (a_feat_name: STRING): INTEGER is
-			-- feature token
+			-- feature token for feature named by `a_feat_name'
 		local
 			l_class_type: CLASS_TYPE
 			l_feat_i: FEATURE_I
@@ -225,7 +241,7 @@ feature -- Interface queries for feature
 		end
 		
 	feature_token_for_feature (a_feat_i: FEATURE_I): INTEGER is
-			-- feature token
+			-- feature token for `a_feat_i'
 		do
 			Result := il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat_i, value_class_type)
 		end	
@@ -233,6 +249,7 @@ feature -- Interface queries for feature
 feature -- Interface Access
 
 	interface_debug_object_value: like once_interface_debug_object_value is
+			-- ICorDebugObjectValue interface
 		require
 			valid_object_type: is_reference_type or else is_class or else is_object or else is_valuetype
 		do
@@ -244,6 +261,7 @@ feature -- Interface Access
 		end
 		
 	interface_debug_reference_value: like once_interface_debug_reference_value is
+			-- ICorDebugReferenceValue interface
 		require
 			is_reference_type 
 		do
@@ -255,6 +273,7 @@ feature -- Interface Access
 		end
 
 	interface_debug_array_value: like once_interface_debug_array_value is
+			-- ICorDebugArrayValue interface
 		require
 			is_array_type 
 		do
@@ -266,6 +285,7 @@ feature -- Interface Access
 		end
 
 	interface_debug_string_value: like once_interface_debug_string_value is
+			-- ICorDebugStringValue interface
 		require
 			is_string_type 
 		do
@@ -279,14 +299,19 @@ feature -- Interface Access
 feature {NONE} -- Implementation		
 
 	once_value_class_type: CLASS_TYPE
+			-- Once per instance for `value_class_type'
 		
 	once_interface_debug_object_value: ICOR_DEBUG_OBJECT_VALUE
+			-- Once per instance for `interface_debug_object_value'
 
 	once_interface_debug_reference_value: ICOR_DEBUG_REFERENCE_VALUE
+			-- Once per instance for `interface_debug_reference_value'
 
 	once_interface_debug_array_value: ICOR_DEBUG_ARRAY_VALUE
+			-- Once per instance for `interface_debug_array_value'
 
 	once_interface_debug_string_value: ICOR_DEBUG_STRING_VALUE
+			-- Once per instance for `interface_debug_string_value'
 
 	icd_referenced_value: ICOR_DEBUG_VALUE
 			-- Object encapsulated by Current
@@ -295,6 +320,7 @@ feature {NONE} -- Implementation
 			-- prepared Object encapsulated by Current
 
 	error_occured: BOOLEAN
+			-- Did an error occured ?
 
 invariant
 

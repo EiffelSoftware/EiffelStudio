@@ -1,5 +1,7 @@
 indexing
-	-- Code code_generator for statements
+	description: "Code generator for exception statements"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ECDP_EXCEPTION_STATEMENT_FACTORY
@@ -7,26 +9,7 @@ class
 inherit
 	ECDP_STATEMENT_FACTORY
 
-create
-	make
-
 feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
-
---	generate_throw_exception_statement (a_source: ECDP_CODE_DOM_THROW_EXCEPTION_STATEMENT) is
---			-- | Create instance of `EG_THROW_EXCEPTION_STATEMENT'.
---			-- | Set `last_statement'.
---			-- | Call `private_generate_throw_exception_statement'.
---			-- | NOT SUPPORTED YET !!
---
---			-- Generate Eiffel code from `a_source'."
---			-- GenerateThrowExceptionStatement"
---		require
---			non_void_source: a_source /= Void
---		do
---		ensure
---			non_void_last_statement: last_statement /= Void
---			throw_exception_statement_ready: last_statement.ready
---		end
 
 	generate_try_catch_finally_statement (a_source: SYSTEM_DLL_CODE_TRY_CATCH_FINALLY_STATEMENT) is
 			-- | Create instance of `EG_TRY_CATCH_FINALLY_STATEMENT'.
@@ -48,19 +31,6 @@ feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 		end
 		
 feature {NONE} -- Implementation
-
---	private_generate_throw_exception_statement (a_source: ECDP_CODE_DOM_THROW_EXCEPTION_STATEMENT) is
---			-- | NOT SUPPORTED YET !!
---
---			-- Generate Eiffel code from `a_source'."
---			-- PrivateGenerateThrowExceptionStatement"
---		require
---			non_void_source: a_source /= Void
---			non_void_last_statement: last_statement /= Void
---		do
---		ensure
---			throw_exception_statement_ready: last_statement.ready
---		end	
 		
 	initialize_try_catch_finally_statement (a_source: SYSTEM_DLL_CODE_TRY_CATCH_FINALLY_STATEMENT; a_try_catch_statement: ECDP_TRY_CATCH_FINALLY_STATEMENT) is
 			-- | Call `generate_try_statements' if any.
@@ -172,34 +142,11 @@ feature {NONE} -- Implementation
 			loop
 				a_catch_clauses_statement := catch_clauses_statements.item (i)
 				if a_catch_clauses_statement /= Void then
-				--	generate_catch_clause (a_catch_clauses_statement, a_try_catch_statement)
 					generate_catch_statements (a_catch_clauses_statement, a_try_catch_statement)
 				end
 				i := i + 1
 			end
 		end
-
---	generate_catch_clause (a_source: SYSTEM_DLL_CODE_CATCH_CLAUSE; a_try_catch_statement: ECDP_TRY_CATCH_FINALLY_STATEMENT) is
---			-- | Set `exception_type' by using `eg_generated_types' if already built, else build `EG_TYPE'.
---			-- | Call `generate_catch_statements' if any.
---
---			-- Generate catch clause from `a_source'.
---		require
---			non_void_source: a_source /= Void
---			non_void_try_catch_statement: a_try_catch_statement /= Void
---		local
---			a_catch_clause: ECDP_CATCH_CLAUSE
---			a_catch_clause_name: STRING
---		do
---			create a_catch_clause.make
---			create a_catch_clause_name.make_from_cil (a_source.base_type)
---			add_external_type_to_eg_types (a_catch_clause_name)
---			a_catch_clause.set_exception_type (a_catch_clause_name.hash_code)
---			generate_catch_statements (a_source, a_catch_clause, a_try_catch_statement)
---		ensure
-----			no_catch_statement_implies_catch_statements_generated: a_source.statements.count = 0 implies catch_statements_generated
-----			catch_clause_generated: catch_clause_generated
---		end
 		
 	generate_catch_statements (a_source: SYSTEM_DLL_CODE_CATCH_CLAUSE; a_try_catch_statement: ECDP_TRY_CATCH_FINALLY_STATEMENT) is
 			-- | Call in loop `generate_statement_from_dom'.
@@ -230,3 +177,14 @@ feature {NONE} -- Implementation
 		end	
 		
 end -- class ECDP_EXCEPTION_STATEMENT_FACTORY
+
+--+--------------------------------------------------------------------
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
+--| Eiffel Software Confidential
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------

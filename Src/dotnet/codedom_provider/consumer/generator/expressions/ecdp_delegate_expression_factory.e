@@ -9,9 +9,6 @@ class
 inherit
 	ECDP_EXPRESSION_FACTORY
 
-create
-	make	
-
 feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_delegate_create_expression (a_source: SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION) is
@@ -121,7 +118,6 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			l_arguments: SYSTEM_DLL_CODE_EXPRESSION_COLLECTION
-			an_argument: SYSTEM_DLL_CODE_EXPRESSION
 		do
 			l_arguments := a_source.parameters
 			if l_arguments /= Void then

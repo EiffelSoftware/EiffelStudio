@@ -9,9 +9,6 @@ class
 inherit
 	ECDP_EXPRESSION_FACTORY
 
-create
-	make
-
 feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_routine_invoke_expression (a_source: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION) is

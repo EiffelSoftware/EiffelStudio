@@ -1,5 +1,7 @@
 indexing
-	-- Code code_generator for compile units and namespaces
+	description: "Code generator for compile units and namespaces"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ECDP_EIFFEL_FACTORY
@@ -9,8 +11,10 @@ inherit
 
 	ECDP_CODE_DOM_PATH
 
-create
-	make			
+	ECDP_SHARED_DATA
+		export
+			{NONE} all
+		end
 
 feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 
@@ -43,12 +47,9 @@ feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 			non_void_source: a_source /= Void
 		local
 			a_snippet_compile_unit: ECDP_SNIPPET_COMPILE_UNIT
-			value: STRING
 		do
 			create a_snippet_compile_unit.make
-			create value.make_from_cil (a_source.value)
-			initialize_referenced_assemblies (a_source)
-			a_snippet_compile_unit.set_value (value)
+			a_snippet_compile_unit.set_value (a_source.value)
 			set_last_compile_unit (a_snippet_compile_unit)
 		ensure
 			non_void_compile_unit: last_compile_unit /= Void
@@ -93,88 +94,41 @@ feature {NONE} -- Implementation
 			not_empty_namespaces_list: a_source.namespaces.count > 0
 			non_void_compil_unit: a_compile_unit /= Void
 		local
-			i, j: INTEGER
-			l_generated_type_name: STRING
-			namespaces: SYSTEM_DLL_CODE_NAMESPACE_COLLECTION
-			a_namespace: SYSTEM_DLL_CODE_NAMESPACE
-			a_generated_type: SYSTEM_DLL_CODE_TYPE_DECLARATION
+			i, j, l_count: INTEGER
+			l_namespaces: SYSTEM_DLL_CODE_NAMESPACE_COLLECTION
+			l_namespace: SYSTEM_DLL_CODE_NAMESPACE
+			l_types: SYSTEM_DLL_CODE_TYPE_DECLARATION_COLLECTION
 		do	
-			initialize_referenced_assemblies (a_source)
-			Eiffel_types.clear_all_local_variables
+			Resolver.clear_all_local_variables
 
-			namespaces := a_source.namespaces
-			from
-			until
-				namespaces = Void or else
-				i = namespaces.count
-			loop
-				a_namespace := namespaces.item (i)
+			l_namespaces := a_source.namespaces
+			if l_namespaces /= Void then
 				from
-					j := 0
 				until
-					a_namespace.types = Void or else j = a_namespace.types.count
+					i = l_namespaces.count
 				loop
-					a_generated_type := a_namespace.types.item (j)
-					create l_generated_type_name.make_from_cil (a_generated_type.name)
-					eiffel_types.add_generated_type (l_generated_type_name)
-					
-					j := j + 1
+					l_namespace := l_namespaces.item (i)
+					from
+						j := 0
+						l_types := l_namespace.types
+						l_count := l_types.count
+					until
+						j = l_count
+					loop
+						Resolver.add_generated_type (l_types.item (j).name)
+						j := j + 1
+					end
+					code_dom_generator.generate_namespace_from_dom (l_namespace)
+					a_compile_unit.namespaces.extend (last_namespace)
+					i := i + 1
 				end
-				
-				code_dom_generator.generate_namespace_from_dom (a_namespace)
-				a_compile_unit.namespaces.extend (last_namespace)
-				i := i + 1
+			else
+				(create {ECDP_EVENT_MANAGER}).raise_event (feature {ECDP_EVENTS_IDS}.Missing_namespaces, [])
 			end
-
 			if a_source.user_data.contains (From_eiffel_code_key) then
 				a_compile_unit.set_from_eiffel (True)
 			end
 		end	
-
-	initialize_referenced_assemblies (a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT) is
-			-- Add all assemblies contained in `a_compile_unit' in `assemblies'.
-			-- Consume Assemblies in Eiffel GAC (local or global) if not present
-			-- FIXME Raphael: This shouldn't be here because it's VS specific
-		require
-			non_void_a_compile_unit: a_compile_unit /= Void
-		local
---			i: INTEGER
---			l_assembly: ASSEMBLY
---			l_referenced_assemblies: LINKED_LIST [ECDP_REFERENCED_ASSEMBLY]
---			vs_references: VS_REFERENCES
---			vs_reference: VS_REFERENCE
-		do
-				-- Create our list of referenced assemblies, resorting to compile unit if we have no project references to inspect
---			create l_referenced_assemblies.make
---			if vs_project /= Void then
---				vs_references := vs_project.references
---				from
---					i := 1
---				until
---					i > vs_references.count
---				loop
---					vs_reference := vs_references.item (i)				
---					l_assembly := load_assembly (vs_reference.path)
---					if l_assembly /= Void then
---						l_referenced_assemblies.extend (create {ECDP_REFERENCED_ASSEMBLY}.make (l_assembly))
---					end
---					i := i + 1
---				end				
---			else
---				from
---					i := 0
---				until
---					i = a_compile_unit.referenced_assemblies.count				
---				loop
---					l_assembly := load_assembly (a_compile_unit.referenced_assemblies.item (i))
---					if l_assembly /= Void then
---						l_referenced_assemblies.extend (create {ECDP_REFERENCED_ASSEMBLY}.make (l_assembly))
---					end
---					i := i + 1
---				end
---			end
---			Eiffel_types.initialize_emitter_from_referenced_assemblies (l_referenced_assemblies)
-		end
 
 	initialize_namespace (a_source: SYSTEM_DLL_CODE_NAMESPACE; a_namespace: ECDP_NAMESPACE) is
 			-- | Call in loop `generate_type_from_dom'.
@@ -185,26 +139,29 @@ feature {NONE} -- Implementation
 			non_void__namespace: a_namespace /= Void
 			not_empty_types_list: a_source.types.count > 0
 		local
-			types: SYSTEM_DLL_CODE_TYPE_DECLARATION_COLLECTION
-			i: INTEGER
-			a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION
+			i, l_count: INTEGER
+			l_types: SYSTEM_DLL_CODE_TYPE_DECLARATION_COLLECTION
+			l_type: SYSTEM_DLL_CODE_TYPE_DECLARATION
 		do
-			a_namespace.set_name (create {STRING}.make_from_cil (a_source.name))
-			
-			types := a_source.types
-			from
-			until
-				types = Void or else
-				i = types.count
-			loop
-				a_type := types.item (i)
-				code_dom_generator.generate_type_from_dom (a_type)
-				a_namespace.types.extend (last_type)
-				i := i + 1
-			end
-
-			if a_source.user_data.contains (From_eiffel_code_key) then
-				a_namespace.set_from_eiffel (True)
+			a_namespace.set_name (a_source.name)
+			l_types := a_source.types
+			if l_types /= Void then
+				from
+					l_count := l_types.count
+				until
+					i = l_count
+				loop
+					l_type := l_types.item (i)
+					code_dom_generator.generate_type_from_dom (l_type)
+					a_namespace.types.extend (last_type)
+					i := i + 1
+				end
+	
+				if a_source.user_data.contains (From_eiffel_code_key) then
+					a_namespace.set_from_eiffel (True)
+				end
+			else
+				(create {ECDP_EVENT_MANAGER}).raise_event (feature {ECDP_EVENTS_IDS}.Missing_types, [a_namespace.name])
 			end
 		end
 	

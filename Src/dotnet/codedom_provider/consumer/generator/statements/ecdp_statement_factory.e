@@ -1,14 +1,13 @@
 indexing
-	-- Code code_generator for statements
+	description: "Code generator for statements"
+	date: "$Date$"
+	revision: "$Revision$"
 	
 class
 	ECDP_STATEMENT_FACTORY
 
 inherit
 	ECDP_FACTORY
-
-create
-	make	
 
 feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 
@@ -429,8 +428,8 @@ feature {NONE} -- Implementation
 				a_variable_declaration.set_is_array_element (True)
 			end
 			create variable_type.make_from_cil (a_source.type.base_type)
-			if not eiffel_types.is_generated_type (variable_type) then
-				eiffel_types.add_external_type (variable_type)
+			if not Resolver.is_generated_type (variable_type) then
+				Resolver.add_external_type (variable_type)
 			end
 			a_variable_declaration.set_dotnet_type (variable_type)
 			
@@ -495,3 +494,14 @@ feature {NONE} -- Implementation
 		
 		
 end -- class ECDP_STATEMENT_FACTORY
+
+--+--------------------------------------------------------------------
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
+--| Eiffel Software Confidential
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------

@@ -120,10 +120,24 @@ feature -- Contract Support
 			-- Certain characters are not permissible and this is dependent
 			-- on the current platform. The following characters are not permitted,
 			-- and this list may not be exhaustive:
-			-- Windows - " * / : < > ? \ |
+			-- Windows - " * < > ? |
 			-- Linux - & *
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.valid_file_name (a_name)
+		end
+		
+	valid_file_title (a_title: STRING): BOOLEAN is
+			-- Is `a_title' a valid file title on the current platform?
+			-- The following characters are not permitted,
+			-- and this list may not be exhaustive:
+			-- Windows - " * / : < > ? \ |
+			-- Linux - & *
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.valid_file_title (a_title)
 		end
 
 feature {EV_ANY_I} -- implementation
@@ -137,6 +151,7 @@ invariant
 	file_name_not_void_implies_path_and_title_not_void: file_name /= Void
 		implies (file_title /= Void and then file_path /= Void)
 	valid_file_name: file_name /= Void implies valid_file_name (file_name)
+	valid_file_title: file_title /= Void implies valid_file_title (file_title)
 
 end -- class EV_FILE_DIALOG
 

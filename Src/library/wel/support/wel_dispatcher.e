@@ -131,7 +131,6 @@ feature {NONE} -- Implementation
 				window := windows.item (hwnd)
 				if window /= Void then
 					window.increment_level
---					window.reset_window_processing
 					last_result := window.process_message (hwnd, msg, wparam, lparam)
 					if window.has_return_value then
 						Result := window.message_return_value

@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	OPERATING_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Codedom_installation_path: STRING is
@@ -36,6 +41,9 @@ feature -- Access
 						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_installation_directory, [])
 					else
 						Result := l_path
+						if Result.count > 1 and then Result.item (Result.count) = Directory_separator then
+							Result.keep_head (Result.count - 1)
+						end
 					end
 				end
 			end
@@ -43,31 +51,12 @@ feature -- Access
 			no_ending_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
 
-	Eiffel_compiler_path: STRING is
-			-- Path to access eiffel compiler.
-		once
-			if Codedom_installation_path /= Void then
-				create Result.make_from_string (Codedom_installation_path)
-				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-				Result.append ("studio")
-				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-				Result.append ("spec")
-				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-				Result.append ("windows")
-				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-				Result.append ("bin")
-				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-			end
-		ensure
-			ends_with_directory_separator: Result /= Void implies Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
-		end
-
 	Default_metadata_cache_path: STRING is
 			-- Path to access eiffel compiler.
 		once
 			if Codedom_installation_path /= Void then
 				create Result.make_from_string (Codedom_installation_path)
-				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+				Result.append_character (Directory_separator)
 				Result.append ("assemblies")
 			end
 		ensure
@@ -84,7 +73,7 @@ feature -- Access
 			if l_install_dir /= Void then
 				create l_dir.make (l_install_dir)
 				if l_dir.exists then
-					create l_dir.make (l_install_dir + (create {OPERATING_ENVIRONMENT}).Directory_separator.out + "Configs")
+					create l_dir.make (l_install_dir + Directory_separator.out + "Configs")
 					if not l_dir.exists then
 						l_dir.create_dir
 					end
@@ -100,8 +89,8 @@ feature -- Access
 		once
 			Result := Default_configs_directory
 			if Result /= Void then
-				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-				Result.append ("_default.config")
+				Result.append_character (Directory_separator)
+				Result.append ("default.ecd")
 			end
 		end
 		

@@ -43,13 +43,22 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
+	enable_select is
+			-- Select Current.
 		require
 			has_parent: parent_imp /= Void
 		deferred
 		ensure
-			state_set: is_selected = flag
+			selected: is_selected
+		end
+
+	disable_select is
+			-- Deselect Current.
+		require
+			has_parent: parent_imp /= Void
+		deferred
+		ensure
+			not_selected: not is_selected
 		end
 
 	toggle is
@@ -57,7 +66,11 @@ feature -- Status setting
 		require
 			has_parent: parent_imp /= Void
 		do
-			set_selected (not is_selected)
+			if is_selected then
+				disable_select
+			else
+				enable_select
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -87,6 +100,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/03 00:03:26  rogers
+--| Split set_selected into enable_select and disable_select.
+--|
 --| Revision 1.29  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

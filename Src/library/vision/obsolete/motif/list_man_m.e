@@ -57,7 +57,7 @@ feature
 			extended_actions.add (a_command, argument)
 		end; -- add_extended_action
 
-	add_left (an_item: STRING) is
+	put_left (an_item: STRING) is
 			-- Put `an_item' to the left of cursor position.
 			-- Do not move cursor.
 		require else
@@ -86,7 +86,7 @@ feature
 			multiple_actions.add (a_command, argument)
 		end; -- add_multiple_action
 
-	add_right (an_item: STRING) is
+	put_right (an_item: STRING) is
 			-- Put `an_item' to the right of cursor position.
 			-- Do not move cursor.
 		require else
@@ -570,7 +570,7 @@ feature
 --			not empty implies index = old index
 		end;
 
-	remove_all_occurrences (an_item: STRING) is
+	prune_all (an_item: STRING) is
 			-- Remove all items `an_item' from list.
 			-- Put cursor after.
 		local

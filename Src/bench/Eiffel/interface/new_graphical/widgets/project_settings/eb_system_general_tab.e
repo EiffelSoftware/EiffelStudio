@@ -183,9 +183,7 @@ feature {NONE} -- Filling
 
 				-- Retrieve existing precompiled libraries from installation
 				-- directory.
-			precompiled_combo.enable_sensitive
 			initialize_precompiled
-			use_optimized_precompile_check.disable_sensitive
 
 				-- Retrieve default options.
 			defaults := root_ast.defaults
@@ -201,9 +199,18 @@ feature {NONE} -- Filling
 							-- Find a precompiled option, there should be only one.
 						tmpstr := precomp_opt.value.value
 						if not tmpstr.is_empty then
+								-- FIXME: Manu: 06/10/2004: we should check that the precompiled
+								-- library, if already in the list computed in `initialize_precompiled',
+								-- should not be added, but we should only select it.
 							precompiled_combo.put_front (
 								create {EV_LIST_ITEM}.make_with_text (precomp_opt.value.value))
-							set_selected (precompiled_combo.first, True)
+							if precompiled_combo.is_sensitive then
+								enable_select (precompiled_combo.first)
+							else
+								precompiled_combo.enable_sensitive
+								enable_select (precompiled_combo.first)
+								precompiled_combo.disable_sensitive
+							end
 							precompiled_combo.set_text (precomp_opt.value.value)
 							is_item_removable := True
 						end
@@ -222,7 +229,6 @@ feature {NONE} -- Filling
 
 			precompiled_combo.put_front (
 				create {EV_LIST_ITEM}.make_with_text ("None"))
-
 			if not precomp_text_set then
 				precompiled_combo.set_text ("None")
 			end
@@ -268,6 +274,11 @@ feature {NONE} -- Filling
 				free_option ?= opt
 				if free_option.code = feature {FREE_OPTION_SD}.msil_generation then
 					if val.is_yes and Platform_constants.is_windows then
+							-- FIXME: Manu: 06/10/2004, there is a bug when you first load the
+							-- project settings on an already compiled MSIL project because the
+							-- following call to `enable_select' will enable all `msil_widgets'
+							-- including `use_optimized_precompiled_check' which should not
+							-- enabled after the first compilation.
 						if generation_combo.is_sensitive then
 							enable_select (generation_combo.i_th (msil_code))
 						else
@@ -278,7 +289,7 @@ feature {NONE} -- Filling
 					end
 					is_item_removable := True
 				elseif free_option.code = feature {FREE_OPTION_SD}.msil_use_optimized_precompile then
-					if val.is_yes and platform_constants.is_windows then
+					if val.is_yes then
 						if use_optimized_precompile_check.is_sensitive then
 							enable_select (use_optimized_precompile_check)
 						else
@@ -556,7 +567,6 @@ feature {NONE} -- Initialization
 			create dotnet_file.make (dotnet_name)
 			if not dotnet_file.exists then
 				generation_combo.disable_sensitive
-				use_optimized_precompile_check.disable_sensitive
 			end
 
 			hbox.extend (generation_combo)
@@ -616,11 +626,10 @@ feature {NONE} -- Initialization
 			hbox.extend (precompiled_combo)
 			vbox.extend (hbox)
 			vbox.disable_item_expand (hbox)
-			if platform_constants.is_windows then
-				use_optimized_precompile_check := new_check_button (vbox, "Use optimized precompiled library", False)			
-				vbox.disable_item_expand (use_optimized_precompile_check)
-				msil_specific_widgets.extend (use_optimized_precompile_check)
-			end
+			use_optimized_precompile_check := new_check_button (vbox, "Use optimized precompiled library", False)			
+			vbox.disable_item_expand (use_optimized_precompile_check)
+			msil_specific_widgets.extend (use_optimized_precompile_check)
+			widgets_set_before_has_compilation_started.extend (use_optimized_precompile_check)
 
 			Result.extend (vbox)
 		ensure
@@ -633,8 +642,6 @@ feature {NONE} -- Standard precompiled libraries
 	initialize_precompiled is
 			-- Initialize `precompiled_combo' with currently available precompiled
 			-- libraries.
-		require
-			combo_is_sensitive: precompiled_combo.is_sensitive
 		local
 			l: like available_precompiled
 		do

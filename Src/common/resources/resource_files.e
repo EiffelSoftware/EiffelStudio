@@ -58,25 +58,79 @@ feature -- File names
 	user_general: FILE_NAME is
 			-- General user level resource specification file
 			-- $HOME/eifinit/application_name/general
+		local
+			directory: DIRECTORY
+			msg: STRING;
+			wd: WARNING_D;
+			file: PLAIN_TEXT_FILE
 		do
 			if Home /= Void then
 				!! Result.make_from_string (Home);
-				Result.extend (Eifinit);
-				Result.extend (application_name);
-				Result.set_file_name (General);
+				!! directory.make (Result)
+				if directory.is_writable then
+					Result.extend (Eifinit);	
+					!! directory.make (Result)
+					if not directory.exists then
+						directory.create_dir
+					end
+					Result.extend (application_name);
+					!! directory.make (Result)
+					if not directory.exists then
+						directory.create_dir
+					end
+					Result.set_file_name (General);
+					!! file.make (Result)
+					if not file.exists then
+						file.create_read_write
+						file.close
+					end	
+				else
+					Result.extend (Eifinit);
+					Result.extend (application_name);
+					Result.set_file_name (General);
+				end
 			end
 		end;
 
 	user_specific: FILE_NAME is
 			-- Platform specific user level resource specification file
 			-- $HOME/eifinit/application_name/spec/$PLATFORM
+		local
+			directory: DIRECTORY
+			msg: STRING;
+			wd: WARNING_D;
+			file: PLAIN_TEXT_FILE
 		do
 			if Home /= Void and Platform /= Void then
 				!! Result.make_from_string (Home);
-				Result.extend (Eifinit);
-				Result.extend (application_name);
-				Result.extend (Spec);
-				Result.set_file_name (Platform);
+				!! directory.make (Result)
+				if directory.is_writable then
+					Result.extend (Eifinit);
+					!! directory.make (Result)
+					if not directory.exists then
+						directory.create_dir
+					end
+					Result.extend (application_name);				!! directory.make (Result)
+					if not directory.exists then
+						directory.create_dir
+					end
+					Result.extend (Spec);			
+					!! directory.make (Result)
+					if not directory.exists then
+						directory.create_dir
+					end
+					Result.set_file_name (Platform);
+					!! file.make (Result)
+					if not file.exists then
+						file.create_read_write
+						file.close
+					end	
+				else
+					Result.extend (Eifinit);
+					Result.extend (application_name);
+					Result.extend (Spec);
+					Result.set_file_name (Platform);			
+				end
 			end
 		end;
 

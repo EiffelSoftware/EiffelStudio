@@ -27,11 +27,11 @@ feature {NONE} -- Initialization
 			-- Create a menu widget with `par' as parent window.
 		do
 			wel_make
-			!! ev_children.make
 			parent_imp ?= par.implementation
 			check
 				parent_imp /= Void
 			end
+			ev_children := parent_imp.menu_items
 			parent_imp.set_menu (Current)
 		end	
 

@@ -615,88 +615,88 @@ feature {NONE} -- Implementation
 		%	-- COM%N%
 		%	all ecom:						%"$EIFFEL4\library\com%"%N%
 		%		visible%N%
-		%			ECOM_CURRENCY;%N%
+		%			ECOM_CURRENCY%N%
 		%				export%N%
 		%					%"make%",%N%
 		%					%"make_by_pointer%"%N%
 		%				end;%N%
-		%			ECOM_DECIMAL;%N%
+		%			ECOM_DECIMAL%N%
 		%				export%N%
 		%					%"make%",%N%
 		%					%"make_by_pointer%"%N%
 		%				end;%N%
-		%			ECOM_ARRAY;%N%
+		%			ECOM_ARRAY%N%
 		%				export%N%
 		%					%"make%",%N%
 		%					%"make_from_array%"%N%
 		%				end;%N%
-		%			ECOM_VARIANT;%N%
+		%			ECOM_VARIANT%N%
 		%				export%N%
 		%					%"make%",%N%
 		%					%"make_by_pointer%"%N%
 		%				end;%N%
-		%			ECOM_GUID;%N%
+		%			ECOM_GUID%N%
 		%				export%N%
 		%					%"make%",%N%
 		%					%"make_by_pointer%"%N%
 		%				end;%N%
-		%			ECOM_EXCEP_INFO;%N%
+		%			ECOM_EXCEP_INFO%N%
 		%				export%N%
 		%					%"make%",%N%
 		%					%"make_by_pointer%"%N%
 		%				end;%N%
-		%			ECOM_DISP_PARAMS;%N%
+		%			ECOM_DISP_PARAMS%N%
 		%				export%N%
 		%					%"make%",%N%
 		%					%"make_by_pointer%"%N%
 		%				end;%N%
-		%			ECOM_STATSTG;%N%
+		%			ECOM_STATSTG%N%
 		%				export%N%
 		%					%"make_from_pointer%"%N%
 		%				end;%N%
-		%			ECOM_STREAM;%N%
+		%			ECOM_STREAM%N%
 		%				export%N%
 		%					%"make_from_pointer%"%N%
 		%				end;%N%
-		%			ECOM_STORAGE;%N%
+		%			ECOM_STORAGE%N%
 		%				export%N%
 		%					%"make_from_pointer%"%N%
 		%				end;%N%
-		%			ECOM_ROOT_STORAGE;%N%
+		%			ECOM_ROOT_STORAGE%N%
 		%				export%N%
 		%					%"make_from_pointer%"%N%
 		%				end;%N%
-		%			ECOM_ENUM_STATSTG;%N%
+		%			ECOM_ENUM_STATSTG%N%
 		%				export%N%
 		%					%"make_from_pointer%"%N%
 		%				end;%N%
-		%			ECOM_HRESULT;%N%
+		%			ECOM_HRESULT%N%
 		%				export%N%
 		%					%"make%",%N%
 		%					%"make_from_integer%"%N%
 		%				end;%N%
-		%			ECOM_WIDE_STRING;%N%
+		%			ECOM_WIDE_STRING%N%
 		%				export%N%
 		%					%"make_from_string%",%N%
 		%					%"make_from_pointer%"%N%
 		%				end;%N%
-		%			ECOM_LARGE_INTEGER;%N%
+		%			ECOM_LARGE_INTEGER%N%
 		%				export%N%
 		%					%"make%",%N%
 		%					%"make_from_integer%",%N%
 		%					%"make_by_pointer%"%N%
 		%				end;%N%
-		%			ECOM_ULARGE_INTEGER;%N%
+		%			ECOM_ULARGE_INTEGER%N%
 		%				export%N%
 		%					%"make%",%N%
 		%					%"make_from_integer%",%N%
 		%					%"make_by_pointer%"%N%
 		%				end;%N%
-		%			ECOM_UNKNOWN_INTERFACE;%N%
+		%			ECOM_UNKNOWN_INTERFACE%N%
 		%				export%N%
 		%					%"make_from_pointer%"%N%
 		%				end;%N%
-		%			ECOM_AUTOMATION_INTERFACE;%N%
+		%			ECOM_AUTOMATION_INTERFACE%N%
 		%				export%N%
 		%					%"make_from_pointer%"%N%
 		%				end;%N%

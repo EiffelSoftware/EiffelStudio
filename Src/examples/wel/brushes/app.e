@@ -26,6 +26,7 @@ feature
 				main_window.rectangle_demo.draw
 			end
 			if main_window.three_d_demo /= Void and then
+					main_window.three_d_demo.exists and then
 					main_window.three_d_demo.ready then
 				main_window.three_d_demo.go
 			end

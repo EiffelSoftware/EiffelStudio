@@ -85,6 +85,7 @@ feature {NONE} -- Initialization
 					if gdk_event /= default_pointer then
 						--print ("Gdk event type = " + feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event).out + "%N")
 						feature {EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+						feature {EV_GTK_EXTERNALS}.gdk_event_free (gdk_event)
 					else
 						main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (False)
 					end
@@ -218,7 +219,6 @@ feature -- Basic operation
 			main_not_running: INTEGER
 		do
 				-- We do not want nested loops of process events.
-			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_process_all_updates
 			if not processing_events then
 				from
 					processing_events := True

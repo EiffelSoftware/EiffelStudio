@@ -45,7 +45,7 @@ feature -- Search
 				pattern_index := 0
 			until
 				pattern_index >= pattern_count or else
-				i >= difference and then pattern_index = 0
+				i > difference and then pattern_index = 0
 			loop
 				if text_area.item (i) /= pattern_area.item (pattern_index) then
 debug("KMP")

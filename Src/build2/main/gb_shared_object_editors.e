@@ -63,9 +63,17 @@ feature {NONE} -- Implementation
 				local_item := local_all_editors.item
 					-- We must only update the other editors referencing `vision2_object', not `calling_object_editor'.
 					-- If `local_item' `object' is `Void' then the editor is empty, so there is nothing to do.
-				if local_item /= calling_object_editor and then local_item.object /= Void and then local_item.object.object = vision2_object then
+				if local_item /= calling_object_editor and then local_item.object /= Void and then local_item.object.object = vision2_object and not
+					property_type.is_equal (Ev_widget_string) then
+						-- We ignore when `Ev_widget_string' as we update them all below.
 					local_item.replace_object_editor_item (property_type)
 				end
+					-- We must now update the minimum size displayed in all object editors, as a change to ny properties
+					-- may have adjusted the minimum size of an object. We perform this on all object editors, as if one holds
+					-- a container, then its minimum size will be affected by its children. We are not smart enough to determine
+					-- exactly which ones must be updated, and it is also a quick process.
+				local_item.replace_object_editor_item (Ev_widget_string)
+
 				local_all_editors.forth
 			end
 		end

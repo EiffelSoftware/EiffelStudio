@@ -75,9 +75,9 @@ feature {NONE} -- Initialization
 
 			list_widget := feature {EV_GTK_EXTERNALS}.gtk_ctree_new (1, 0)
 			
-			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_line_style (list_widget, feature {EV_GTK_EXTERNALS}.GTK_CTREE_LINES_DOTTED_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_line_style (list_widget, GTK_CTREE_LINES_DOTTED_ENUM)
 			feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.GTK_SELECTION_BROWSE_ENUM)
-			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_expander_style (list_widget, feature {EV_GTK_EXTERNALS}.GTK_CTREE_EXPANDER_SQUARE_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_expander_style (list_widget, GTK_CTREE_EXPANDER_SQUARE_ENUM)
 			--feature {EV_GTK_EXTERNALS}.gtk_clist_set_shadow_type (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_show_stub (list_widget, True)
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_indent (list_widget, 17)
@@ -789,6 +789,22 @@ feature {NONE} -- Implementation
 		do
 			--| FIXME IEK Add pixmap scaling code with gtk+ 2
 			--| For now, do nothing.
+		end
+
+feature {NONE} -- Externals
+
+	frozen gtk_ctree_lines_dotted_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_CTREE_LINES_DOTTED"
+		end
+
+	frozen gtk_ctree_expander_square_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_CTREE_EXPANDER_SQUARE"
 		end
 			
 feature {EV_ANY_I} -- Implementation

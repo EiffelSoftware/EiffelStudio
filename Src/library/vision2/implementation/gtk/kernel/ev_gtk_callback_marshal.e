@@ -20,11 +20,6 @@ inherit
 		undefine
 			default_create
 		end
-		
-	EV_GTK_ENUMS
-		undefine
-			default_create
-		end
 
 	EV_INTERMEDIARY_ROUTINES
 		undefine
@@ -61,13 +56,14 @@ feature {EV_ANY_IMP} -- Access
 			gdk_event: POINTER
 		do
 			-- integer_pointer_tuple has been already correctly set by `marshal'.
-
-			t := translate.item (integer_pointer_tuple)
-
-			if t /= empty_tuple then
+			gdk_event := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
+			if gdk_event /= default_pointer and then feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
+				-- Do nothing as we do not want 3 button presses processed
+			else
+				t := translate.item (integer_pointer_tuple)
 				if
 					--| FIXME IEK This needs to be optimized.
-					t /= Void and then internal.type_conforms_to (
+					t /= empty_tuple and then internal.type_conforms_to (
 						internal.dynamic_type (an_agent),
 						f_of_tuple_type_id
 					)
@@ -77,14 +73,6 @@ feature {EV_ANY_IMP} -- Access
 					an_agent.call (tuple_tuple)
 				else	
 					an_agent.call (t)
-				end
-			else
-				gdk_event := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
-				if 
-					gdk_event = default_pointer or else
-					feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) /= feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM
-				then
-					print ("FIXME " + an_agent.generating_type + " in " + generating_type + " not called%N")
 				end
 			end
 		end
@@ -130,16 +118,15 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 		local
 			gdk_event: POINTER
 			p: POINTER
-			keyval: INTEGER
+			event_type, keyval: INTEGER
 			key: EV_KEY
 		do
 			gdk_event := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 			Result := empty_tuple
 			if feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) < 100000 then
-			inspect
-				feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
-			when
-				Gdk_motion_notify_enum
+			event_type := feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
+
+			if event_type = feature {EV_GTK_ENUMS}.Gdk_motion_notify_enum
 			then
 				set_motion_tuple (
 					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
@@ -151,22 +138,29 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				)
 				Result := motion_tuple
-			when
-				Gdk_nothing_enum,
-				Gdk_delete_enum,
-				Gdk_destroy_enum,
-				Gdk_focus_change_enum,
-				Gdk_map_enum,
-				Gdk_unmap_enum,
-				Gdk_enter_notify_enum,
-				Gdk_leave_notify_enum,
-				Gdk_proximity_in_enum,
-				Gdk_proximity_out_enum
-			then
-				Result := Void  -- This used to be empty_tuple but now 'call' can take Void values.
+			elseif event_type = feature {EV_GTK_ENUMS}.Gdk_configure_enum then
+				set_dimension_tuple (
+					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_event),
+					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_event),
+					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_event),
+					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_event)
+				)
+				Result := dimension_tuple	
+--			when
+--				Gdk_nothing_enum,
+--				Gdk_delete_enum,
+--				Gdk_destroy_enum,
+--				Gdk_focus_change_enum,
+--				Gdk_map_enum,
+--				Gdk_unmap_enum,
+--				Gdk_enter_notify_enum,
+--				Gdk_leave_notify_enum,
+--				Gdk_proximity_in_enum,
+--				Gdk_proximity_out_enum
+--			then
+--				Result := Void  -- This used to be empty_tuple but now 'call' can take Void values.
 
-			when
-				Gdk_expose_enum
+			elseif event_type = feature {EV_GTK_ENUMS}.Gdk_expose_enum
 			then
 				p := feature {EV_GTK_EXTERNALS}.gdk_event_expose_struct_area (gdk_event)
 				set_dimension_tuple (
@@ -176,56 +170,40 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 					feature {EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (p)
 				)
 				Result := dimension_tuple
-			when
-				Gdk_button_press_enum,
-				Gdk_2button_press_enum,
-				Gdk_3button_press_enum
+			elseif (event_type = feature {EV_GTK_ENUMS}.Gdk_button_press_enum or else event_type = feature {EV_GTK_ENUMS}.Gdk_2button_press_enum or else event_type = feature {EV_GTK_ENUMS}.Gdk_3button_press_enum)
 			then
 				Result := [
 					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_type (gdk_event),
 					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
 					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
 					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event),
-					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_xtilt (gdk_event),
-					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_ytilt (gdk_event),
-					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_pressure (gdk_event),
+					0.5,
+					0.5,
+					0.5,
 					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
 					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				]
 
-			when
-				Gdk_button_release_enum
+			elseif event_type = feature {EV_GTK_ENUMS}.Gdk_button_release_enum
 			then
 					-- gdk_event type GdkEventButton
 				Result := [
 					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
 					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
 					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event),
-					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_xtilt (gdk_event),
-					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_ytilt (gdk_event),
-					0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_pressure (gdk_event),
+					0.5,
+					0.5,
+					0.5,
 					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
 					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				]
-			when
-				Gdk_key_press_enum,
-				Gdk_key_release_enum
+			elseif (event_type = feature {EV_GTK_ENUMS}.Gdk_key_press_enum or else event_type = feature {EV_GTK_ENUMS}.Gdk_key_release_enum)
 			then
 				keyval := feature {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (gdk_event)
 				if valid_gtk_code (keyval) then
 					create key.make_with_code (key_code_from_gtk (keyval))
 				end
 				Result := [key]
-			when
-				Gdk_configure_enum
-			then
-				set_dimension_tuple (
-					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_event),
-					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_event),
-					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_event),
-					feature {EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_event)
-				)
-				Result := dimension_tuple
 			end
 			end
 		end
@@ -290,7 +268,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 		local
 			gtkarg2: POINTER
 		do
-			gtkarg2 := gtk_args_array_i_th (args, 1)
+			gtkarg2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (args, 1)
 			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args) + 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
 			-- Column is zero based in gtk.
 		end
@@ -345,7 +323,7 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 		local
 			gtkarg2: POINTER
 		do
-			gtkarg2 := gtk_args_array_i_th (args, 1)
+			gtkarg2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (args, 1)
 			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
 		end
 		
@@ -406,16 +384,6 @@ feature {NONE} -- Externals
 		end
 
 feature {EV_ANY_IMP} -- Externals
-
-	frozen gtk_args_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
-			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
-			--	return (GtkArg*)(args_array + index);
-			-- }
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"(GtkArg*) ((GtkArg**) $args_array + (int) $an_index )"
-		end
 		
 	frozen set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
 		c_object_dispose_address: POINTER) is

@@ -27,10 +27,17 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			Precursor
-			feature {EV_GTK_EXTERNALS}.gtk_progress_bar_set_orientation (gtk_progress_bar, feature {EV_GTK_EXTERNALS}.gtk_progress_left_to_right_enum)
+			feature {EV_GTK_EXTERNALS}.gtk_progress_bar_set_orientation (gtk_progress_bar, gtk_progress_left_to_right_enum)
 		end
 			
 feature {EV_ANY_I} -- Implementation
+
+	gtk_progress_left_to_right_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_PROGRESS_LEFT_TO_RIGHT"
+		end
 
 	interface: EV_HORIZONTAL_PROGRESS_BAR
 

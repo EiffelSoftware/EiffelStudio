@@ -133,7 +133,29 @@ feature {EV_ANY_I} -- Implementation
 
 	pointer_enter_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_enter_actions'.
+			
+feature -- Event handling
 
+	mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Actions to be performed when mouse wheel is rotated.
+		do
+			if mouse_wheel_actions_internal = Void then
+				mouse_wheel_actions_internal := create_mouse_wheel_actions
+			end
+			Result := mouse_wheel_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+		
+feature {EV_ANY_I} -- Implementation
+
+	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Create a mouse_wheel action sequence.
+		deferred
+		end
+
+	mouse_wheel_actions_internal: EV_INTEGER_ACTION_SEQUENCE
+			-- Implementation of once per object `mouse_wheel_actions'.
 
 feature -- Event handling
 

@@ -54,7 +54,10 @@ feature -- Access
 			a_local_folder := clone (Shared_wizard_environment.destination_folder)
 			a_local_folder.append (a_folder)
 			-- The ".epr" file is in the Eifgen folder for a precompiled system
-			if a_folder.is_equal (Client) then
+			if 
+				a_folder.is_equal (Client) or
+				component_empty (a_folder)
+			then
 				a_local_folder.append_character (Directory_separator)
 				a_local_folder.append (Eifgen)
 			end
@@ -164,6 +167,24 @@ feature -- Basic Operations
 			shared_wizard_environment.set_proxy_stub_file_name (proxy_stub_file_name)
 		end
 
+	component_empty (a_folder: STRING): BOOLEAN is
+			-- Check whether Component directory is empty.
+		require
+			non_void_folder: a_folder /= Void
+			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
+		local
+			a_local_folder: STRING
+			a_directory: DIRECTORY
+		do
+			a_local_folder := clone (a_folder)
+			a_local_folder.append_character (Directory_separator)
+			a_local_folder.append ("Component")
+			create a_directory.make (a_local_folder)
+			if a_directory.exists then
+				Result := a_directory.empty
+			end
+		end
+		
 	compile_eiffel (a_folder: STRING) is
 			-- Compile Eiffel code in `a_folder'.
 		require
@@ -176,7 +197,6 @@ feature -- Basic Operations
 			a_directory: DIRECTORY
 			a_local_folder: STRING
 			a_project_file, a_dest_file: STRING
-			component_empty: BOOLEAN
 		do
 			-- Delete EIFGEN directory if exists.
 			a_local_folder := clone (a_folder)
@@ -187,20 +207,11 @@ feature -- Basic Operations
 				a_directory.recursive_delete
 			end
 
-			-- Check whether Component directory empty
-			a_local_folder := clone (a_folder)
-			a_local_folder.append_character (Directory_separator)
-			a_local_folder.append ("Component")
-			create a_directory.make (a_local_folder)
-			if a_directory.exists then
-				component_empty := a_directory.empty
-			end
-
 			displayed := displayed_while_running
 			set_displayed_while_running (True)
 			if 
 				a_folder.is_equal (Client) or
-				component_empty
+				component_empty (a_folder)
 			then
 				launch (precompile_command, a_folder)
 			else

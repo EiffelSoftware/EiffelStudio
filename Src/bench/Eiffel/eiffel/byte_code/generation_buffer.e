@@ -302,7 +302,11 @@ feature {GENERATION_BUFFER} -- prototype code generation
 			end
 
 			append (type)
-			append_character (' ')
+			if is_il_generation then
+				append (" __stdcall ")
+			else
+				append_character (' ')
+			end
 			append (f_name)
 			append_character ('(')
 			from
@@ -363,7 +367,11 @@ feature -- prototype code generation
 				append ("RT_IL ")
 			end
 			append (type)
-			append_character (' ')
+			if is_il_generation then
+				append (" __stdcall ")
+			else
+				append_character (' ')
+			end
 			append (f_name)
 			append (" (")
 

@@ -27,15 +27,15 @@ feature
 			is_directory := True
 		end;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
 			if is_directory then
-				ow.put_string ("Directory: ")
+				st.add_string ("Directory: ")
 			else
-				ow.put_string ("File: ")
+				st.add_string ("File: ")
 			end
-			ow.put_string (path);
-			ow.new_line
+			st.add_string (path);
+			st.add_new_line
 		end;
 
 end

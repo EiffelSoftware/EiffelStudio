@@ -22,11 +22,15 @@ feature {NONE}
 
 	execute is
 		local
-			cmd: like associated_cmd
+			cmd: like associated_cmd;
+			st: STRUCTURED_TEXT
 		do
+			!! st.make;
 			cmd := clone (associated_cmd);
-			cmd.set_output_window (output_window);
-			cmd.execute
+			cmd.set_structured_text (st);
+			cmd.execute;
+			output_window.put_string (st.image);
+			output_window.new_line;
 		end;
 
 end -- class EWB_SYSTEM

@@ -46,15 +46,10 @@ feature -- Properties
 	operator_name: STRING is
 		deferred
 		end
-	
-	operator_is_special: BOOLEAN is
+		
+	is_minus: BOOLEAN is
+			-- Is Current prefix "-"?
 		do
-			Result := True
-		end
-	
-	operator_is_keyword: BOOLEAN is 
-		do
-			Result := False
 		end
 
 feature -- Comparison
@@ -77,6 +72,8 @@ feature -- Type check, byte code and dead code removal
 			vwoe: VWOE
 			vuex: VUEX
 			vape: VAPE
+			l_manifest: MANIFEST_INTEGER_A
+			l_value: VALUE_AS
 		do
 				-- Check operand
 			expr.type_check
@@ -91,8 +88,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 			last_class := last_constrained.associated_class
-			prefix_feature := last_class.feature_table.item
-														(prefix_feature_name)
+			prefix_feature := last_class.feature_table.item (prefix_feature_name)
 
 			if prefix_feature = Void then
 					-- Error: not prefixed function found
@@ -136,17 +132,37 @@ feature -- Type check, byte code and dead code removal
 				-- Update the type stack; instantiate the result of the
 				-- refixed feature
 			prefix_feature_type ?= prefix_feature.type
-			if 	last_constrained.is_bits
-				and then
-				prefix_feature_type.is_like_current
-			then
+			if last_constrained.is_bits and then prefix_feature_type.is_like_current then
 					-- For feature prefix "not" of symbolic class BIT_REF.
 				prefix_feature_type := last_constrained
 			else
-				-- Usual case
-				prefix_feature_type := prefix_feature_type.conformance_type
-				prefix_feature_type := prefix_feature_type.instantiation_in
-								(context.item, last_class.class_id).actual_type
+				if is_minus then
+						-- Let's say if it is a special case the negation of a positive
+						-- value in which case we maintain the type of the expression.
+						-- E.g. -127 is of type INTEGER_8, not of type INTEGER
+						--      -128 is of type INTEGER_16, since 128 is an INTEGER_16
+						--      -511 is of type INTEGER_16, not of type INTEGER
+						--
+						-- FIXME: Manu 02/06/2004: we do not attempt here to ensure
+						-- that `-128' is of type INTEGER_8. We will have to wait for ETL3
+						-- to tell us what we need to do. The current behavior preserve
+						-- compatibility with older version of Eiffel (5.4 and earlier).
+					l_manifest ?= last_constrained
+					l_value ?= expr
+					if l_value /= Void and l_manifest /= Void then
+						prefix_feature_type := last_constrained
+					else
+							-- Usual case
+						prefix_feature_type := prefix_feature_type.conformance_type
+						prefix_feature_type := prefix_feature_type.instantiation_in
+										(context.item, last_class.class_id).actual_type
+					end
+				else
+						-- Usual case
+					prefix_feature_type := prefix_feature_type.conformance_type
+					prefix_feature_type := prefix_feature_type.instantiation_in
+									(context.item, last_class.class_id).actual_type
+				end
 			end
 
 			context.replace (prefix_feature_type)

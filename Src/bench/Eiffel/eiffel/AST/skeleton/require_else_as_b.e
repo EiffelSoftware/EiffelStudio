@@ -4,19 +4,20 @@ inherit
 
 	REQUIRE_ELSE_AS
 		undefine
-			clause_name, put_clause_keywords,
-			reset, format_assertions
-		select
+			reset
+		redefine
 			assertions
 		end;
 
 	REQUIRE_AS_B
-		rename
-			assertions as old_else_assertions
 		undefine
 			is_else
+		redefine
+			assertions
 		end
 
-feature
+feature -- Properties
+
+	assertions: EIFFEL_LIST_B [TAGGED_AS_B]
 
 end -- class REQUIRE_ELSE_AS_B

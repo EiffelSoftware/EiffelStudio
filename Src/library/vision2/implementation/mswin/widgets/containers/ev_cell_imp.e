@@ -87,7 +87,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	interface: EV_CONTAINER
+	interface: EV_CELL
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 

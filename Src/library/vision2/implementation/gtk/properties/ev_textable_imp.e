@@ -15,7 +15,9 @@ inherit
 	
 	EV_FONTABLE_IMP
 	
+	EV_GTK_CONTAINERS_EXTERNALS
 	EV_GTK_EXTERNALS
+	EV_GTK_TYPES_EXTERNALS
 	
 feature {NONE} -- Initialization
 	

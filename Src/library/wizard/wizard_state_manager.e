@@ -17,10 +17,14 @@ feature {WIZARD_WINDOW} -- Basic Operations
 		require
 			possible: history.count > 1 and then not history.isfirst
 		do
+			first_window.lock_update
+
 			history.back
 			history.item.clean_screen
 			history.item.display_pixmap
 			history.item.display
+
+			first_window.unlock_update
 		ensure
 			moved_back: history.index = old history.index - 1
 		end
@@ -28,6 +32,8 @@ feature {WIZARD_WINDOW} -- Basic Operations
 	next is
 			-- Go to the next step.
 		do
+			first_window.lock_update
+
 			if history.item.entries_changed and not history.islast then
 				from
 				until
@@ -49,6 +55,10 @@ feature {WIZARD_WINDOW} -- Basic Operations
 				history.item.display
 			else
 				history.item.proceed_with_current_info
+			end
+
+			if not first_window.is_destroyed then
+				first_window.unlock_update
 			end
 		ensure
 			moved_forth: not history.item.is_final_state implies history.index = old history.index + 1
@@ -88,8 +98,8 @@ feature {NONE} -- Internal Operations
 			user_entries_checked: history.count>0 implies history.item.entries_checked
 			window_exists: a_window /= Void
 		do
-			history.extend(a_window)
-			history.go_i_th(history.count)
+			history.extend (a_window)
+			history.go_i_th (history.count)
 			a_window.clean_screen
 			a_window.display_pixmap
 			a_window.display

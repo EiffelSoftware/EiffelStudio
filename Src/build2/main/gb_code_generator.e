@@ -23,6 +23,8 @@ inherit
 	INTERNAL
 	
 	EIFFEL_ENV
+	
+	GB_FILE_CONSTANTS
 
 feature -- Basic operation
 

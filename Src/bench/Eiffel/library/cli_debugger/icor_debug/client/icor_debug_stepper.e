@@ -41,7 +41,7 @@ feature {ICOR_EXPORTER} -- Access
 	step (a_b_step_in: BOOLEAN) is
 		do
 			debug ("debugger_eifnet_data")
-				print ("[enter] ICOR_DEBUG_STEPPER.Step ("+a_b_step_in.out+") %N")
+				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.Step ("+a_b_step_in.out+") %N")
 			end
 			last_call_success := cpp_step (item, a_b_step_in.to_integer)
 		ensure
@@ -51,7 +51,7 @@ feature {ICOR_EXPORTER} -- Access
 	step_out is
 		do
 			debug ("debugger_eifnet_data")
-				print ("[enter] ICOR_DEBUG_STEPPER.StepOut %N")
+				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.StepOut %N")
 			end
 			
 			last_call_success := cpp_step_out (item)
@@ -70,7 +70,7 @@ feature {ICOR_EXPORTER} -- Access
 			l_size: INTEGER
 		do
 			debug ("debugger_eifnet_data")
-				print ("[enter] ICOR_DEBUG_STEPPER.StepRange ("+a_b_step_in.out+") %N")
+				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.StepRange ("+a_b_step_in.out+") %N")
 			end
 			
 			--| create table of 'a_ranges.count' struct COR_DEBUG_STEP_RANGE |--

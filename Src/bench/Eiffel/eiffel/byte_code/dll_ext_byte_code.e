@@ -262,6 +262,7 @@ feature {NONE} -- Internal generation
 			if arguments /= Void then
 				generate_arguments_with_cast
 			end
+			buf.putchar (';');
 			buf.new_line
 			if not result_type.is_void then
 				buf.putstring ("return ")

@@ -65,15 +65,22 @@ feature -- Status setting
 			se_nw_label, strong_slope: BOOLEAN
 			final_line_segment: BON_LINE
 		do
-			p1 := vertices.i_th (vertices.count - 1)
-			p2 := end_point
-			angle := line_angle (p2.x_abs, p2.y_abs, p1.x_abs, p1.y_abs)
-			supplier.update_edge_point (lines.last.point_b, angle)
-
 			p1 := vertices.i_th (2)
 			p2 := start_point
 			angle := line_angle (p2.x_abs, p2.y_abs, p1.x_abs, p1.y_abs)
 			client.update_edge_point (lines.first.point_a, angle)
+
+			if vertices.count = 2 then
+					-- There is a simple relation between the two angles, let's take
+					-- it to save some CPU time.
+				angle := pi + angle
+			else
+					-- We need to recompute the angle
+				p1 := vertices.i_th (vertices.count - 1)
+				p2 := end_point
+				angle := line_angle (p2.x_abs, p2.y_abs, p1.x_abs, p1.y_abs)
+			end
+			supplier.update_edge_point (lines.last.point_b, angle)
 
 			if not is_reflexive then
 				if lines.count < line_labelled then

@@ -3238,24 +3238,22 @@ feature -- Actual class type
 
 feature {CLASS_TYPE_AS} -- Actual class type
 
-	partial_actual_type (gen: ARRAY [TYPE_A]; is_ref, is_exp, is_sep: BOOLEAN): CL_TYPE_A is
+	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp, is_sep: BOOLEAN): CL_TYPE_A is
 			-- Actual type of `current depending on the context in which it is declared
 			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
-			-- be a generic class. Or it could be a reference even though it is an
-			-- expanded class. It simplifies creation of `CL_TYPE_A' instances in
+			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
 			-- CLASS_TYPE_AS when trying to resolve types, by using dynamic binding
 			-- rather than if statements.
 		require
-			is_ref_set: is_ref implies (not is_exp and not is_sep)
-			is_exp_set: is_exp implies (not is_ref and not is_sep)
-			is_sep_set: is_sep implies (not is_ref and not is_exp)
+			is_exp_set: is_exp implies (not is_sep)
+			is_sep_set: is_sep implies (not is_exp)
 		do
 			if gen /= Void then
 				create {GEN_TYPE_A} Result.make (class_id, gen)
 			else
 				create Result.make (class_id)
 			end
-			Result.set_is_expanded (is_exp or (not is_ref and is_expanded))
+			Result.set_is_expanded (is_exp or is_expanded)
 		ensure
 			actual_type_not_void: Result /= Void
 		end

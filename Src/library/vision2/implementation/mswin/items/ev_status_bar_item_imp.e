@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
+			is_initialized := True
 		end
 
 feature -- Access
@@ -182,6 +183,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/29 20:35:20  brendel
+--| Added is_initialized := True.
+--|
 --| Revision 1.18  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|

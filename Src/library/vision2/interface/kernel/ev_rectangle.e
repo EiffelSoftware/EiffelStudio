@@ -138,6 +138,8 @@ feature -- Status report
 
 	intersects (other: like Current): BOOLEAN is
 			-- Does `other' at least partially overlap `Current'?
+		require
+			other_not_void: other /= Void
 		local
 			y_test: BOOLEAN
 		do

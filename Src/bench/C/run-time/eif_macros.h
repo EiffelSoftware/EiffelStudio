@@ -333,7 +333,137 @@ RT_LNK int fcount;
 #define RTOC_GLOBAL(x)	globalonceset((EIF_REFERENCE) &x);
 #define RTOVP(n,c,a)	if (!(CAT2(n,_done))) { c a; } else { (void) a; }
 #define RTOVF(n,c,a)	(CAT2(n,_done) ? ((void) a, CAT2(n,_result)) : c a)
-		
+
+#ifdef EIF_THREADS
+
+/* Service macros for process-relative once routines:
+ * RTOPL - lock a mutex of a once routine
+ * RTOPLT - try to lock a mutex of a once routine
+ * RTOPLU - unlock a mutex of a once routine
+ * RTOPMBW - write memory barrier when available
+ * RTOPW - let thread that started once evaluation to complete
+ * RTOPLP - once prologue that is executed with locked mutex
+ * RTOPLE - once epilogue that is executed with locked mutex
+ *
+ * Main macros for process-relative once routines:
+ * RTOPD - declaration of local variables for a process-relative once routine
+ * RTOPP - prologue for a process-relative once routine
+ * RTOPE - epilogue for a process-relative once routine */
+
+#ifdef EIF_HAS_MEMORY_BARRIER
+#	define RTOPMBW EIF_MEMORY_WRITE_BARRIER
+#else
+#	define RTOPMBW
+#endif
+
+#define RTOPL(mutex)                                                         \
+	EIF_ENTER_C;                                                         \
+	eif_thr_mutex_lock (mutex);                                          \
+	EIF_EXIT_C;                                                          \
+	RTGC
+
+#define RTOPLT(mutex)                                                        \
+	eif_thr_mutex_trylock (mutex)
+
+#define RTOPLU(mutex)                                                        \
+	eif_thr_mutex_unlock (mutex)
+
+#define RTOPW(mutex, thread_id)                                              \
+		/* Once routine evaluation has been started.         */      \
+		/* To wait until evaluation is completed,            */      \
+		/* it's enough to lock and unlock a mutex,           */      \
+		/* then the mutex should be recursive.               */      \
+		/* Recursive mutexes are not in POSIX standard,      */      \
+		/* so they should be emulated by checking thread id. */      \
+		/* Check what thread performs evaluation.            */      \
+	if (thread_id != eif_thr_thread_id()) {                              \
+			/* Evaluation is performed by a different thread. */ \
+			/* Wait until it completes evaluation.            */ \
+		RTOPL (mutex);                                               \
+		RTOPLU (mutex);                                              \
+	}
+
+#define RTOPLP(thread_id, started)                                           \
+		/* Check if some thread started evaluation earlier. */       \
+		/* If yes, evaluation is completed.                 */       \
+	if (!started) {                                                      \
+			/* Evaluation has not been started yet.   */         \
+			/* Record thread id and start evaluation. */         \
+		thread_id = eif_thr_thread_id();                             \
+		started = EIF_TRUE;
+
+#define RTOPLE(completed)                                                    \
+			/* Evaluation is completed.                  */      \
+			/* Clear field that holds locking thread id. */      \
+		thread_id = NULL;                                            \
+			/* Ensure memory is flushed (if required). */        \
+		RTOPMBW;                                                     \
+			/* Mark evaluation as completed. */                  \
+		completed = EIF_TRUE;                                        \
+	}
+
+#define RTOPD                                                                \
+	static volatile EIF_BOOLEAN started = 0;                             \
+	static volatile EIF_BOOLEAN completed = 0;                           \
+	static volatile EIF_POINTER thread_id = NULL;
+
+#ifdef EIF_HAS_MEMORY_BARRIER
+
+#	define RTOPP(mutex)                                                              \
+		EIF_MEMORY_READ_BARRIER;                                                 \
+		if (!completed) {                                                        \
+				/* Once evaluation is not completed yet.           */    \
+				/* Check whether once evaluation has been started. */    \
+			if (started) {                                                   \
+					/* Evaluation has been started. */               \
+					/* Let it to complete.          */               \
+				RTOPW(mutex, thread_id);                                 \
+			}                                                                \
+			else {                                                           \
+					/* Current thread has not started evaluation. */ \
+					/* It's safe to lock a mutex.                 */ \
+				RTOPL (mutex);                                           \
+					/* Use thread-safe prologue. */                  \
+				RTOPLP (thread_id, started);
+
+#	define RTOPE(mutex)                                                              \
+					/* Use thread-safe epilogue. */                  \
+				RTOPLE (completed);                                      \
+					/* Unlock mutex. */                              \
+				RTOPLU (mutex);                                          \
+			}                                                                \
+		}
+
+#else /* !defined(EIF_HAS_MEMORY_BARRIER) */
+
+#	define RTOPP(mutex)                                                              \
+			/* Try to lock a mutex. */                                       \
+		if (RTOPLT (mutex)) {                                                    \
+				/* Mutex has been locked.                       */       \
+				/* Check if once evaluation has been completed. */       \
+			if (!completed) {                                                \
+					/* Evaluation is not completed. */               \
+					/* Use thread-safe prologue.    */               \
+				RTOPLP (thread_id, started);
+
+#	define RTOPE(mutex)                                                              \
+					/* Use thread-safe epilogue. */                  \
+				RTOPLE (completed);                                      \
+			}                                                                \
+					/* Unlock mutex. */                              \
+			RTOPLU (mutex);                                                  \
+		}                                                                        \
+		else {                                                                   \
+				/* Mutex cannot be locked.      */                       \
+				/* Evaluation has been started. */                       \
+				/* Let it to complete.          */                       \
+			RTOPW (mutex, thread_id);                                        \
+		}
+
+#endif /* EIF_HAS_MEMORY_BARRIER */
+
+#endif /* EIF_THREADS */
+
 
 /* Macro used for object information:
  * Dtype:		Dynamic type of object. The name is not RTDT for historical reasons.

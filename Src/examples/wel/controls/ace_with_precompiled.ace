@@ -2,7 +2,7 @@ system
 	controls_demo
 
 root 
-	PRECOMP_CONTROLS_DEMO (root_cluster): "make"
+	CONTROLS_DEMO (root_cluster): "make"
 
 default
 	assertion (all)

@@ -2,7 +2,7 @@ system
 	header_ctrl_demo
 	
 root 
-	PRECOMP_HEADER_CTRL_DEMO (root_cluster): "make"
+	HEADER_CTRL_DEMO (root_cluster): "make"
 
 default
 	assertion (all)

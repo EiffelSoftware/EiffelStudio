@@ -9,6 +9,24 @@ default
 	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 cluster 
-	root_cluster:	"$ISE_EIFFEL\examples\wel\tutorial\step4"
+	root_cluster:	"."
+
+		-- EiffelBase
+	all base: 		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"
+			"desc"
+		end
+
+		-- WEL
+	all wel: 		"$ISE_EIFFEL\library\wel"
+		exclude
+			"spec"
+			"clib"
+		end
+
+external
+	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end -- tutorial_step4

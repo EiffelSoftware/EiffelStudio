@@ -32,17 +32,15 @@ OBJECT = fext.o
 $spitshell >>Makefile <<'!NO!SUBS!'
 
 
-all: prepare $(OBJECT) compile_eiffel mklink 
+all: prepare $(OBJECT) compile_eiffel
 
 prepare:
 	sed -e s/"fext.obj"/"fext.o"/ Ace.ace > tmp
 	$(RM) Ace.ace
 	$(MV) tmp Ace.ace
 
-compile_eiffel:
+compile_eiffel: prepare $(OBJECT)
 	$(EC) -freeze -c_compile
-
-mklink:
 	$(LN) EIFGEN/W_code/cecil.melted .
 	$(LN) EIFGEN/W_code/cecil .
 

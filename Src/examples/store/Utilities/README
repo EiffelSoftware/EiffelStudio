@@ -2,4 +2,4 @@
 Classes describing Eiffel objects to be used in various 
 EiffelStore examples. BOOK, BOOK2, COUNTRY, HUMAN
 
-Handles to be linked with generic examples (Oracle, Sybase)
+Handles to be linked with generic examples (Oracle, Sybase, Ingres, ODBC)

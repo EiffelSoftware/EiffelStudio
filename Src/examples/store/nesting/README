@@ -2,3 +2,5 @@
 
 This example illustrates how to customize actions
 when retrieved selection results.
+
+For ODBC, we have a better example in ..\nesting2.

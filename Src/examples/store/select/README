@@ -10,3 +10,12 @@ With Oracle:
 With Sybase:
 
 	ln data.sql.sybase data.sql
+
+With Ingres:
+
+	ln data.sql.ingres data.sql
+
+With ODBC:
+
+	ln data.sql.odbc data.sql
+

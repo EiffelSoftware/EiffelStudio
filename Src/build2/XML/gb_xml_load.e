@@ -29,6 +29,8 @@ inherit
 		end
 		
 	GB_SHARED_DEFERRED_BUILDER
+	
+	GB_SHARED_STATUS_BAR
 
 feature -- Basic operation
 
@@ -38,6 +40,7 @@ feature -- Basic operation
 			display_window_shown: BOOLEAN
 			builder_window_shown: BOOLEAN
 		do
+			initialize_load_output
 				-- Do initialization necessary
 			parser := create_tree_parser
 		
@@ -72,8 +75,10 @@ feature -- Basic operation
 				-- system should know that it has not been modifified
 				-- by the user.
 			system_status.disable_project_modified
+			
+			remove_load_output
 		end
-		
+
 feature {NONE} -- Implementation
 
 	build_window (window: XML_ELEMENT) is
@@ -169,6 +174,7 @@ feature {NONE} -- Implementation
 			until
 				element.off
 			loop
+				Application.process_events
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name.to_utf8
@@ -308,7 +314,43 @@ feature {NONE} -- Implementation
 			parser.parse_from_string (buffer)
 			parser.set_end_of_document
 		end
+		
+	initialize_load_output is
+			-- Create `load_timer' and associate an
+			-- action with it.
+		do
+			create load_timer.make_with_interval (250)
+			load_timer.actions.extend (agent update_status_bar)
+		 	set_status_text ("Loading    -")
+		end
+		
+	update_status_bar is
+			-- Refresh message displayed on status bar, to show
+			-- that processing is still occurring.
+		local
+			last_character: CHARACTER
+		do
+			last_character := status_text.item (status_text.count)
+			if last_character = '-' then
+				set_status_text (status_text.substring (1, status_text.count - 2) + "\")
+			elseif last_character.is_equal ('\') then
+				set_status_text (status_text.substring (1, status_text.count - 1) + "|")
+			elseif last_character.is_equal ('|') then
+				set_status_text (status_text.substring (1, status_text.count - 1) + "/")
+			elseif last_character.is_equal ('/') then
+				set_status_text (status_text.substring (1, status_text.count - 1) + "--")
+			end
+		end
+		
+	remove_load_output is
+			--  Destroy `load_timer' and display a final
+			-- timed message on the status bar.
+		do
+			load_timer.destroy
+			set_timed_status_text ("Load successful")			
+		end
 
+	load_timer: EV_TIMEOUT
 
 	parser: XML_TREE_PARSER
 		-- XML tree parser.

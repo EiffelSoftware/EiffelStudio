@@ -638,7 +638,7 @@ rt_public EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr)
+rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr)
 {
 	/* Copy elements of `source' within bounds `start'..`end'
 	 * to `target' starting at index `index'.
@@ -681,7 +681,7 @@ rt_public void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER st
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 }
 
-rt_public void spclearall (EIF_POINTER spobj)
+rt_public void spclearall (EIF_REFERENCE spobj)
 {
 	/* Reset all elements of `spobj' to default value. Call
 	 * creation procedure of expanded objects if `spobj' is

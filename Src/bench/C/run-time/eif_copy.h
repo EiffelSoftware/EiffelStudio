@@ -30,8 +30,8 @@ extern void xcopy(EIF_REFERENCE source, EIF_REFERENCE target);			/* Expanded cop
 RT_LNK void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE target);			/* Standard copy of a normal Eiffel object */
 RT_LNK void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE target);			/* Standard copy of a special object */
 RT_LNK EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b);
-RT_LNK void spsubcopy(EIF_POINTER source, EIF_POINTER target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr);		/* Copy special objects' slices */
-RT_LNK void spclearall(EIF_POINTER spobj);		/* Reset special object's items to default */
+RT_LNK void spsubcopy(EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr);		/* Copy special objects' slices */
+RT_LNK void spclearall(EIF_REFERENCE spobj);		/* Reset special object's items to default */
 
 #ifdef HAS_SAFE_BCOPY
 #define safe_bcopy(s,d,l) bcopy((s),(d),(l))

@@ -5,7 +5,6 @@ inherit
 
 	RQST_HANDLER;
 	SHARED_DEBUG;
-	WINDOWS
 
 creation
 
@@ -21,11 +20,12 @@ feature
 		end;
 	
 	execute is
-			-- Announce in error window that the job was finished.
+			-- Restore the debug information when
+			-- a failure occurs.
 		do
-		--	error_window.clear_window;
-		--	error_window.put_string ("Failure%N");
-		--	error_window.display;
+debug ("DEBUGGER")
+	io.error.putstring ("Failure happened%N")
+end
 			debug_info.restore
 		end
 

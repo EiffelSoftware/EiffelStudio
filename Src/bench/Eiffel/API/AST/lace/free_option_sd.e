@@ -48,7 +48,7 @@ feature {COMPILER_EXPORTER}
 			if valid_options.has (option_name) then
 				inspect valid_options.item (option_name)
 				when extending, extendible then
-					!! dle_license.make (Eiffel3_dir_name);
+					!! dle_license.make;
 					if dle_license.dle_registered then
 						Result := true
 					end

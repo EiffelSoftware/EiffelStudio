@@ -151,6 +151,7 @@ private void clean_up();			/* After collection, time to clean up */
 /* Stack markers */
 private void mark_simple_stack();	/* Marks a collector's stack */
 private void mark_stack();			/* Marks a collector's stack */
+private void update_object_id_stack(); /* Update the object id stack */
 
 /* Storage compation reclaimer */
 public void plsc();					/* Storage compaction reclaimer entry */
@@ -210,20 +211,30 @@ extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
 extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
 extern struct stack hec_stack;		/* The hector stack (objects seen from C) */
 extern struct stack hec_saved;		/* The hector stack (objects kept by C) */
+extern struct stack object_id_stack;/* The object id stack (objects seen by object_id/id_object) */
 #ifndef TEST
 extern int cc_for_speed;			/* Priority to speed or memory? */
 #else
 private int cc_for_speed = 1;			/* Priority to speed or memory? */
 #endif
 
+private void mark_ex_stack();		/* Marks the exception stacks */
+
 #ifdef WORKBENCH
 private void mark_op_stack();		/* Marks operational stack */
-private void mark_ex_stack();		/* Marks the exception stacks */
 
 extern struct opstack op_stack;		/* Operational stack */
 #define DISP(x,y) call_disp(x,y)
+
 #else
+/* Do the exception stack need to be traversed to update references to
+ * moving objects (i.e. set to False if no assertion and exception_trace(yes)
+ * is not used in the Ace file
+ */
+extern EIF_BOOLEAN exception_stack_managed;	/* Is the stack managed (always True in workbench mode) */
+
 #define DISP(x,y) (Dispose(x))(y)
+
 #endif
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
@@ -699,6 +710,11 @@ private void full_mark()
 	mark_simple_stack(&hec_stack, recursive_mark, moving);
 	mark_simple_stack(&hec_saved, recursive_mark, moving);
 
+	/* The object id stacks record the objects referenced by an identifier. Those objects
+	 * are not necessarily alive. Thus only an update after a move is needed.
+	 */
+	if (moving) update_object_id_stack();
+
 #ifdef WORKBENCH
 	/* The operational stack of the interpreter holds some references which
 	 * must be marked and/or updated.
@@ -710,6 +726,15 @@ private void full_mark()
 	 */
 	mark_ex_stack(&eif_stack, recursive_mark, moving);
 	mark_ex_stack(&eif_trace, recursive_mark, moving);
+
+#else
+	if (exception_stack_managed) {
+		/* The exception stacks are scanned. It is more to update the references on
+		 * objects than to ensure these objects are indeed alive...
+		 */
+		mark_ex_stack(&eif_stack, recursive_mark, moving);
+		mark_ex_stack(&eif_trace, recursive_mark, moving);
+	}
 #endif
 }
 
@@ -777,6 +802,79 @@ register6 int move;					/* Are the objects expected to move? */
 #ifdef DEBUG
 		roots = saved_roots; object = saved_object;
 		dprintf(2)("mark_simple_stack: after GC: %d objects in %s chunk\n",
+			roots, done ? "last" : "current");
+		if (DEBUG & 2 && debug_ok(2)) {
+			int i; char **obj = object;
+			for (i = 0; i < roots; i++, obj++)
+				printf("    %d: 0x%lx\n", i, *obj);
+		}
+		flush;
+#endif
+	}
+}
+
+private void update_object_id_stack()
+{
+	/* Loop over the specified stack to update the objects after a move.
+	 * Stack holds direct references to objects.
+	 * No marking is done, just the update, i.e. the objects are not roots
+	 * for the GC.
+	 */
+
+	register4 struct stack *stk = &object_id_stack;
+
+	register1 char **object;		/* For looping over subsidiary roots */
+	register2 int roots;			/* Number of roots in each chunk */
+	register3 struct stchunk *s;	/* To walk through each stack's chunk */
+	int done = 0;					/* Top of stack not reached yet */
+
+#ifdef DEBUG
+	int saved_roots; char **saved_object;
+	dprintf(1)("mark_object_id_stack\n");
+	flush;
+#endif
+
+	if (stk->st_top == (char **) 0)	/* Stack is not created yet */
+		return;
+
+	for (s = stk->st_hd; s && !done; s = s->sk_next) {
+		object = s->sk_arena;					/* Start of stack */
+		if (s != stk->st_cur)					/* Before current pos? */
+			roots = s->sk_end - object;			/* The whole chunk */
+		else {
+			roots = stk->st_top - object;		/* Stop at the top */
+			done = 1;							/* Reached end of stack */
+		}
+
+#ifdef DEBUG
+		dprintf(2)("mark_object_id_stack: %d objects in %s chunk\n",
+			roots, done ? "last" : "current");
+		saved_roots = roots; saved_object = object;
+		if (DEBUG & 2 && debug_ok(2)) {
+			int i; char **obj = object;
+			for (i = 0; i < roots; i++, obj++)
+				printf("    %d: 0x%lx\n", i, *obj);
+		}
+		flush;
+#endif
+
+		for (; roots > 0; roots--, object++)
+			{
+			register char* root;
+			register union overhead *zone;
+
+			root = *object;
+			if (root != (char *)0){
+				zone = HEADER(root);
+					/* If the object has moved, update the stack */
+				if (zone->ov_size & B_FWD)
+					*object = zone->ov_fwd;
+				}
+			}
+
+#ifdef DEBUG
+		roots = saved_roots; object = saved_object;
+		dprintf(2)("mark_object_id_stack: after GC: %d objects in %s chunk\n",
 			roots, done ? "last" : "current");
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; char **obj = object;
@@ -1047,6 +1145,8 @@ register5 int move;					/* Are the objects expected to move? */
 
 	}
 }
+#endif
+/* End of workbench-specific marking functions */
 
 private void mark_ex_stack(stk, marker, move)
 register5 struct xstack *stk;		/* The stack which is to be marked */
@@ -1109,8 +1209,6 @@ register6 int move;					/* Are the objects expected to move? */
 			}
 	}
 }
-#endif
-/* End of workbench-specific marking functions */
 
 private char *recursive_mark(root)
 char *root;
@@ -1414,6 +1512,17 @@ private void full_sweep()
 			gfree(zone);		/* Object is freed */
 		}
 	}
+
+/* FIXME !!!!!!!!!! */
+/* FIXME !!!!!!!!!! */
+/* FIXME !!!!!!!!!! */
+/* FIXME !!!!!!!!!! */
+
+	/* The Hector stack has to be traversed to call `dispose' on protected objects */
+
+	/* Standard dispose traversal checks for Eiffel objects, frozen obj are marked as C obj thus ignored. The other stacks are referencing "moving" objects so there's no problem */
+
+	/* Xavier */
 }
 
 private void full_update()
@@ -2486,6 +2595,11 @@ private void mark_new_generation()
 	mark_simple_stack(&hec_stack, generation_mark, moving);
 	mark_simple_stack(&hec_saved, generation_mark, moving);
 
+	/* The object id stacks record the objects referenced by an identifier. Those objects
+	 * are not necessarily alive. Thus only an update after a move is needed.
+	 */
+	if (moving) update_object_id_stack();
+
 #ifdef WORKBENCH
 	/* The operational stack of the interpreter holds some references which
 	 * must be marked and/or updated.
@@ -2497,6 +2611,14 @@ private void mark_new_generation()
 	 */
 	mark_ex_stack(&eif_stack, generation_mark, moving);
 	mark_ex_stack(&eif_trace, generation_mark, moving);
+#else
+	if (exception_stack_managed) {
+		/* The exception stacks are scanned. It is more to update the references on
+		 * objects than to ensure these objects are indeed alive...
+		 */
+		mark_ex_stack(&eif_stack, generation_mark, moving);
+		mark_ex_stack(&eif_trace, generation_mark, moving);
+	}
 #endif
 }
 
@@ -3257,6 +3379,14 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 		if (Disp_rout(dtype)) { 
 			gc_status = g_data.status;			/* Save GC status */
 			g_data.status |= GC_STOP;			/* Stop GC */
+/* FIXME */
+/* FIXME */
+/* FIXME */
+/* FIXME */
+/* FIXME */
+/* We should disable invariants but not postconditions (see `dispose' from IDENTIFIED
+ * Xavier
+ */
 			saved_in_assertion = in_assertion;	/* Save in_assertion */
 			in_assertion = ~0;					/* Turn off assertion checking */
 			DISP(dtype,(char *) (zone + 1));	/* Call 'dispose' */

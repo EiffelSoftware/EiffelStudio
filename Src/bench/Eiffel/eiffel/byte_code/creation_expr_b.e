@@ -153,7 +153,6 @@ feature -- Generation
 				context.set_current_type (target_type)
 
 				if call /= Void then
-					call.set_type (target_type)
 					call.set_info (info)
 					call.generate
 				else

@@ -513,7 +513,7 @@ feature {NONE} -- Implementation
 				x := new_position - x + 1
 					
 					-- Display caret position in status bar.
-				caret_position_label.set_text (x.out + " " + y.out + new_position.out)
+				caret_position_label.set_text (x.out + " " + y.out +  " " + new_position.out)
 				
 					-- Update display corresponding to character formatting at
 					-- new caret position.
@@ -761,7 +761,7 @@ feature {NONE} -- Implementation
 						-- Now handle information regarding paragraphs.
 					paragraph := rich_text.selected_paragraph_format
 					paragraph_formatting := rich_text.paragraph_format_range_information (rich_text.selection_start,
-						rich_text.selection_end)
+						rich_text.selection_end + 1)
 
 					if paragraph_formatting.alignment then
 						if paragraph.is_left_aligned then

@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 		do
 			widget := c_gtk_toolbar_new_horizontal
 			gtk_object_ref (widget)
-			
+			gtk_toolbar_set_tooltips (widget, FALSE)
 			-- Create the child list
 			create ev_children.make (0)
 		end
@@ -36,11 +36,17 @@ feature {NONE} -- Implementation
 	make_with_size (w, h: INTEGER) is
 			-- Create the tool-bar with `par' as parent.
 		do
-			check
-				To_be_implemented: False
-			end
-		end
+			widget := c_gtk_toolbar_new_horizontal
+			gtk_object_ref (widget)
+			gtk_toolbar_set_tooltips (widget, False)
 
+			-- Create the child list
+			create ev_children.make (0)
+
+			-- Set the width and height
+			button_width := w
+			button_height := h
+		end
 
 feature -- Element change
 
@@ -49,48 +55,78 @@ feature -- Element change
 		do
 			-- clear_ev_children
 			-- clear contained gtk objects
-			check
-				To_be_implemented: False
-			end
+		
+			c_gtk_container_remove_all_children(widget)
+			clear_ev_children		
 		end
 
 feature -- Implementation
 
-	add_item (item_imp: EV_TOOL_BAR_BUTTON_IMP) is
-			-- Add `item' to the list
-		local
-			text, privtxt: ANY
-			tsttxt: STRING
-		do
-			ev_children.extend (item_imp)
-			create tsttxt.make (0)
-			tsttxt := "IK TEST"
-			text := tsttxt.to_c
-			privtxt := tsttxt.to_c
-			
-			gtk_toolbar_append_widget (widget, item_imp.widget, $text, $privtxt)
-		end
+	button_width, button_height: INTEGER
+		-- User set default button dimensions.
 
-	gtk_toolbar_append_widget (tb, but,txt, privtxt: POINTER) is
-		external
-			"C (GtkTooltips *, GtkButton*, const char *, const char *) | <gtk/gtk.h>"
-		end
-
-	insert_item (item_imp: EV_TOOL_BAR_BUTTON_IMP) is
-			-- insert `item_imp' at position
+	resize_button (item_imp: EV_TOOL_BAR_BUTTON_IMP) is
+		-- Set the button dimensions to that set by user.
 		do
-			Check
-				To_be_implemented: False
+			if button_width > 0 then
+				item_imp.set_minimum_width(button_width)
+				item_imp.set_minimum_height(button_height)
 			end
 		end
 
-	remove_item (item_imp: EV_TOOL_BAR_BUTTON_IMP) is
-			-- remove `item_imp' from toolbar
+	add_item (item_imp: EV_TOOL_BAR_BUTTON_IMP) is
+			-- Add `item' to the list.
+		local
+			dummy: ANY
+			dummy_string: STRING
+			position: INTEGER
 		do
-			ev_children.prune_all (item_imp)
-			-- remove from gtk toolbar
+			ev_children.extend (item_imp)
+			position := ev_children.count
+
+			create dummy_string.make (0)
+			dummy_string := ""
+			dummy := dummy_string.to_c
+
+			resize_button (item_imp)
+			gtk_toolbar_insert_widget (widget, item_imp.widget, $dummy, $dummy, position)
 		end
 
+	insert_item (item_imp: EV_TOOL_BAR_BUTTON_IMP; pos: INTEGER) is
+			-- insert `item_imp' at position pos.
+		local
+			dummy: ANY
+			dummy_string: STRING
+		do     
+			-- if child is already present then remove from tool bar
+			if ev_children.has (item_imp) then
+				gtk_object_ref (item_imp.widget)
+				ev_children.prune_all (item_imp)
+				gtk_container_remove (widget, item_imp.widget)
+			end
+
+			-- Set button to user-defined size (if set)
+			resize_button (item_imp)
+
+			-- Insert value in to children list
+			ev_children.go_i_th (pos - 1)
+			ev_children.put_right (item_imp)
+			
+			-- Create redundant string used to fill signature
+			create dummy_string.make (0)
+			dummy_string := ""
+			dummy := dummy_string.to_c
+						
+			gtk_toolbar_insert_widget (widget, item_imp.widget, $dummy, $dummy, pos - 1)
+			gtk_object_unref (item_imp.widget)
+		end
+
+	remove_item (item_imp: EV_TOOL_BAR_BUTTON_IMP) is
+			-- remove `item_imp' from toolbar.
+		do
+			ev_children.prune_all (item_imp)
+			gtk_container_remove (widget, item_imp.widget)
+		end
 
 feature -- Implementation
  

@@ -39,7 +39,7 @@ feature -- Access
 			end
 		end
 		
-	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
+	parent_imp: EV_ITEM_LIST_I [EV_ITEM] is
 			-- Parent implementation of `Current'.
 		deferred
 		end

@@ -16,9 +16,6 @@ inherit
 		end
 
 	WEL_COLOR_CONTROL
-		export
-			{NONE} foreground_color
-		end
 
 creation
 	make_vertical,
@@ -188,8 +185,8 @@ feature -- Basic operations
 feature {NONE} -- Inapplicable
 
 	foreground_color: WEL_COLOR_REF is
-			-- foreground color has no effect here, we define one because
-			-- it can't be void.
+			-- Foreground color has no effect with SCROLL_BAR.
+			-- Cannot be Void.
 		do
 			!! Result.make_system (Color_windowtext)
 		end

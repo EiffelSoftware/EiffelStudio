@@ -12,6 +12,8 @@ class
 	CGI_ENVIRONMENT
 
 inherit
+	ANY
+
 	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all

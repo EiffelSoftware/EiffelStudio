@@ -35,6 +35,9 @@ create -- Creation procedure
 
 	make
 
+create {DATABASE_STORE}
+	string_make, scan_make
+
 feature -- Initialization
 
 	make (size: INTEGER) is

@@ -7,12 +7,12 @@ class
 	DB [reference G -> DATABASE create default_create end]
 
 inherit
+	ANY
 
 	DB_CONSTANT
 		export
 			{NONE} all
 		end
-	
 
 feature -- Status report
 

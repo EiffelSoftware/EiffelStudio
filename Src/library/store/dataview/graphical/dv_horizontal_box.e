@@ -36,7 +36,7 @@ feature -- Basic operations
 			disable_item_expand (sep)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
  	
 	implementation: EV_HORIZONTAL_BOX_I;
 			-- Responsible for interaction with the native graphics toolkit.

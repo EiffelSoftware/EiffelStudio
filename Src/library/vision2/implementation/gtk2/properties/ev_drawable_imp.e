@@ -189,27 +189,28 @@ feature -- Element change
 
 	set_background_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `background_color'.
+		local
+			color_struct: POINTER
 		do
-			internal_background_color := a_color.twin
+			internal_background_color := a_color
+			color_struct := App_implementation.reusable_color_struct
+			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
+			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
+			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `foreground_color'
 		local
 			color_struct: POINTER
-			tempbool: BOOLEAN
 		do
-			internal_foreground_color := a_color.twin
-			color_struct := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+			internal_foreground_color := a_color
+			color_struct := App_implementation.reusable_color_struct
 			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
 			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
 			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-			tempbool := feature {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color (system_colormap, color_struct, False, True)
-			check
-				color_has_been_allocated: tempbool
-			end
-			feature {EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, color_struct)
-			color_struct.memory_free
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_rgb_fg_color (gc, color_struct)
 		end
 
 	set_line_width (a_width: INTEGER) is
@@ -345,17 +346,20 @@ feature -- Drawing operations
 	draw_text_internal (x, y: INTEGER; a_text: STRING; draw_from_baseline: BOOLEAN) is
 			-- Draw `a_text' at (`x', `y') using `font'.
 		local
-			a_cs: EV_GTK_C_STRING
+			--a_cs: EV_GTK_C_STRING
 			a_pango_layout, a_pango_iter: POINTER
 			a_baseline: INTEGER
 			a_y: INTEGER
+			temp_any: ANY
 		do
 			if drawable /= default_pointer then
 				--create a_cs.make (a_text)
-				a_cs := a_text
+				--a_cs := a_text
+				
 					-- Replace when we have UTF16 support
 				a_pango_layout := App_implementation.pango_layout
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, -1)
+				temp_any ?= a_text.to_c
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, $temp_any, -1)
 				if internal_font_imp /= Void then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end

@@ -1342,7 +1342,7 @@ end:
 				/* Bit metamorhose is a clone */
 				new_obj = b_clone(last->it_bit);
 				last = iget();
-				last->type = SK_BIT;
+				last->type = SK_REF;
 				last->it_bit = new_obj;
 			}
 			if (tagval != stagval)				/* If G.C calls melted dispose */
@@ -1762,7 +1762,6 @@ end:
 			epush (&loc_stack, &new_obj);   /* Protect new_obj */
 			((void (*)()) RTWF(stype, feat_id, dtype))
 									(new_obj, 1L, nbr_of_items);
-			epop (&loc_stack, 1);
 
 			IC = OLD_IC;
 			if (tagval != stagval)
@@ -1782,7 +1781,7 @@ end:
 						break;
 					case SK_BIT:
 						*(char **) sp_area = it->it_bit;
-						sp_area += LENGTH(it->it_bit); 
+						sp_area += BITOFF(LENGTH(it->it_bit)); 
 						break;
 					case SK_EXP:
 						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));
@@ -1812,39 +1811,46 @@ end:
 						panic(botched);
 				}
 			}
+			epop (&loc_stack, 1);			/* Release protection of `new_obj' */
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = new_obj;
 			break;
 		}
 
+
 	/*
-	 * Old expression.
+	 * Retrieve old expression from local register.
+	 */
+	case BC_RETRIEVE_OLD:
+#ifdef DEBUG
+		dprintf(2)("BC_RETRIEVE_OLD\n");
+#endif
+		code = get_short();             /* Get number (from 1 to locnum) */
+		last = iget();
+		bcopy(loc(code), last, ITEM_SZ);
+		break;
+
+	/*
+	 * Place Old expression value into local register.
 	 */
 	case BC_OLD:
 #ifdef DEBUG
 		dprintf(2)("BC_OLD\n");
 #endif
-		{	char *ref;
-				
-			if (!(~in_assertion & WASC(icur_dtype) & CK_ENSURE)) /* No postcondition check? */
-				opop();					/* Item is poped here because 
-										 * byte code for old is generated
-										 * at the start of the routine
-										 */
-			else
-				{									
-				last = otop();
-				ref = last->it_ref;
-				switch (last->type & SK_HEAD) {	
-					case SK_EXP:
-					case SK_REF:
-						last->it_ref = RTCL(ref); 	/* Clone ref */
-						break;
-				}
+		last = opop();
+		if (~in_assertion & WASC(icur_dtype) & CK_ENSURE) {
+											/* Only clone if checking postcondition */
+			switch (last->type & SK_HEAD) {	
+				case SK_EXP:
+				case SK_REF:
+					last->it_ref = rtclone(last->it_ref); 	/* Clone ref */
+					break;
 			}
-		break;
+        	code = get_short();     /* Get the local number (from 1 to locnum) */
+        	bcopy(last, loc(code), ITEM_SZ);
 		}
+		break;
 
 	/*
 	 * Add attribute name to be stripped. 
@@ -3982,7 +3988,10 @@ char *start;
 					fprintf(fd, "0x%X %s\n", IC, "SK_REF");
 					IC += sizeof(char *);
 					break;
-				case SK_BIT:	/* FIXME */break;
+				case SK_BIT:	
+					fprintf(fd, "0x%X %s\n", IC, "SK_BIT");
+					IC += sizeof(char *);
+					break;
 				case SK_EXP:
 					fprintf(fd, "0x%X %s\n", IC, "SK_EXP");
 					IC += sizeof(char *);
@@ -4438,10 +4447,17 @@ char *start;
 		break;
 
 	/* 
-	 * Old expression 
+	 * Retrieve Old expression from local register
+	 */
+	case BC_RETRIEVE_OLD:
+		fprintf(fd, "0x%X %s local #: %d\n", IC - 1, "BC_RETRIEVE_OLD", get_short());
+		break;
+	
+	/* 
+	 * Save Old expression into local register
 	 */
 	case BC_OLD:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_OLD");
+		fprintf(fd, "0x%X %s local #: %d\n", IC - 1, "BC_OLD", get_short());
 		break;
 	
 	/* 

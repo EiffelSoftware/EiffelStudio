@@ -120,7 +120,9 @@ feature {NONE} -- Implementation
 feature {EV_WIDGET_IMP} -- Implementation
 
 	child_packing_changed (the_child: EV_WIDGET_IMP) is
+			-- changed the settings of his child `the_child'
 		do
+			c_gtk_box_set_child_options (widget, the_child.widget, the_child.expandable, False)
 		end
 
 --	child_expand_changed (the_child: EV_WIDGET_IMP) is

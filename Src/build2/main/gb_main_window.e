@@ -21,6 +21,8 @@ inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			default_create, copy, is_equal
 		end
 		
 	GB_SHARED_TOOLS
@@ -33,6 +35,8 @@ inherit
 	GB_SHARED_OBJECT_EDITORS
 		export
 			{NONE} all
+		undefine
+			default_create, copy, is_equal
 		end
 	
 	GB_SHARED_XML_HANDLER
@@ -467,7 +471,7 @@ feature {NONE} -- Implementation
 		
 
 	tool_bar: EV_TOOL_BAR is
-			-- Tool bar of `Current'
+			-- Tool bar of `Current'.
 		local
 			separator: EV_TOOL_BAR_SEPARATOR
 		once
@@ -498,6 +502,9 @@ feature {NONE} -- Implementation
 			Result.extend (command_handler.show_hide_builder_window_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.show_hide_display_window_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.show_hide_component_viewer_command.new_toolbar_item (True, False))
+			Result.extend (command_handler.show_hide_constants_dialog_command.new_toolbar_item (True, False))
+		ensure
+			Result_not_void: Result /= Void
 		end
 		
 	show_about_dialog is

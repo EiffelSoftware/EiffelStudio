@@ -79,7 +79,12 @@ feature
 			page: CAT_PAGE [T]
 			opt_pages: LINKED_LIST [CAT_PAGE [T]]
 			fix_pages: LINKED_LIST [CAT_PAGE [T]]
+			bg_color: COLOR
 		do
+			!! bg_color.make
+			bg_color.set_rgb (background_color.red - 65 * 256, background_color.green - 65 * 256, background_color.blue - 65 * 256)	
+			page_sw.set_background_color (bg_color)
+
 			if (current_page = Void) then
 				set_initial_page (pages.first)
 			end

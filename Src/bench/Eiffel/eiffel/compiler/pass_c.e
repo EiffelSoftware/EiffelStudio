@@ -2,6 +2,10 @@
 
 deferred class PASS_C
 
+inherit
+
+	COMPILER_EXPORTER
+
 feature
 
 	associated_class: CLASS_C;

@@ -17,11 +17,12 @@
 doc:<file name="sig.c" header="eif_sig.h" version="$Id$" summary="Signal handling and filtering">
 */
 
-#if defined USE_BSD_SIGNALS || defined EIF_SGI
-#	define _BSD_SIGNALS /* For sgi */
+#include "eif_portable.h"
+
+#ifdef USE_BSD_SIGNALS
+#define _BSD_SIGNALS /* Needed on some platform to get `sigsetmask' (e.g. sgi) */
 #endif
 
-#include "eif_portable.h"
 #include "rt_except.h"
 #include "rt_constants.h"
 #include "rt_sig.h"

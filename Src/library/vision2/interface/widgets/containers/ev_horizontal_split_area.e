@@ -58,7 +58,7 @@ feature -- Access
 			else
 				sec_item_min_width := 1
 			end
-			Result := (split_box.width - sep.width - sec_item_min_width)
+			Result := split_box.width - sep.width - sec_item_min_width
 		end
 
 feature -- Status setting
@@ -94,14 +94,17 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	separator_in_motion: BOOLEAN
-		-- Is the separator currently being dragged.
-
-	line_drawn: BOOLEAN
-		-- Has the separator line been drawn on screen.
-
 	x_offset: INTEGER
 		-- X offset of the initial click on the separator.
+
+	previous_split_position: INTEGER
+		-- Previous split_position
+
+	x_origin: INTEGER
+		-- Horizontal screen offset of first cell.
+
+	y_origin: INTEGER
+		-- Vertical screen offset of first cell.
 
 	on_click (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
 			-- Start of the drag.
@@ -113,83 +116,64 @@ feature {NONE} -- Implementation
 				sep.enable_capture
 				sep.pointer_motion_actions.extend (~on_motion)
 				sep.pointer_button_release_actions.extend (~on_release)
-				previous_split_position := -1
+				draw_line (first_cell.width + a_x)
 			end
 		end
 
 	on_motion (a_x, a_y: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
 			-- Draw separator line.
-		local
-			current_split_position: INTEGER
 		do
-			current_split_position := scr_x - x_origin
-			if current_split_position < minimum_split_position then
-				current_split_position := minimum_split_position
-			elseif current_split_position > maximum_split_position then
-				current_split_position := maximum_split_position
-			end
-			if previous_split_position >= 0 then
-				scr.draw_segment (previous_split_position, y_origin,
-					previous_split_position, y_origin + sep.height)
-			end
-			scr.draw_segment (current_split_position + x_origin, y_origin,
-				current_split_position + x_origin, y_origin + sep.height)
-			previous_split_position := current_split_position + x_origin
+			remove_line
+			draw_line (splitter_position_from_screen_x (scr_x))
 		end
-
-	previous_split_position: INTEGER
-		-- Previous split_position
-
-	x_origin: INTEGER
-		-- Horizontal screen offset of first cell.
-		-- Used for speed optimization of motion routine.
-
-	y_origin: INTEGER
-		-- Vertical screen offset of first cell.
-		-- Used for speed optimization of motion routine.
 
 	on_release (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
 			-- End of the drag.
-		local
-			current_split_position: INTEGER
 		do
-			current_split_position := scr_x - x_origin
-			if current_split_position < minimum_split_position then
-				current_split_position := minimum_split_position
-			elseif current_split_position > maximum_split_position then
-				current_split_position := maximum_split_position
-			end
-			if previous_split_position >= 0 then
-				scr.draw_segment (previous_split_position, y_origin,
-					previous_split_position, y_origin + sep.height)
-			end
-			set_split_position (current_split_position)
+			remove_line
+			set_split_position (splitter_position_from_screen_x (scr_x))
 			sep.disable_capture
 			sep.pointer_motion_actions.wipe_out
 			sep.pointer_button_release_actions.wipe_out
 		end
 
-	valid_split_position (wid: INTEGER): INTEGER is
-			-- Valid split_position of `sep' from `wid'.
-		require
-			first_item_not_void: first /= Void
-		local
-			sec_item_min_width: INTEGER
+	splitter_position_from_screen_x (a_x: INTEGER): INTEGER is
+			-- Return splitter position given screen `a_x'.
 		do
-			Result := wid + first.width
-
-			if second /= Void then
-				sec_item_min_width := second.minimum_width
-			end
-
-			if Result < first.minimum_width then
-				Result := first.minimum_width
-			elseif Result > (split_box.width -
-					sep.width - sec_item_min_width) then
-				Result := (split_box.width - sep.width - sec_item_min_width)
+			Result := a_x - x_origin
+			if Result < minimum_split_position then
+				Result := minimum_split_position
+			elseif Result > maximum_split_position then
+				Result := maximum_split_position
 			end
 		end
-			
+
+	remove_line is
+			-- Remove previously drawn line by redrawing it over the old one.
+		do
+			if previous_split_position >= 0 then
+				scr.draw_segment (
+					previous_split_position + x_origin + x_offset,
+					y_origin,
+					previous_split_position + x_origin + x_offset,
+					y_origin + sep.height
+				)
+				previous_split_position := -1
+			end
+		end
+
+	draw_line (a_position: INTEGER) is
+			-- Draw line on `a_position'.
+		do
+			scr.draw_segment (
+				a_position + x_origin + x_offset,
+				y_origin,
+				a_position + x_origin + x_offset,
+				y_origin + sep.height
+			)
+			previous_split_position := a_position
+		end
+		
 end -- class EV_HORIZONTAL_SPLIT_AREA_I
 
 --!-----------------------------------------------------------------------------
@@ -213,6 +197,9 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/04 00:17:33  brendel
+--| Simplified implementation.
+--|
 --| Revision 1.11  2000/03/03 23:13:21  brendel
 --| Fixed bug in moving of separator.
 --|

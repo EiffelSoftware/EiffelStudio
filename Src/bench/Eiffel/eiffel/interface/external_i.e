@@ -114,19 +114,20 @@ feature -- Routines for externals
 
 feature -- Incrementality
 
-	equiv (other: FEATURE_I): BOOLEAN is
+	freezing_equiv (other: FEATURE_I): BOOLEAN is
+			-- is `Current' equivalent to `other' as far as freezing is concerned?
 		local
 			other_ext: EXTERNAL_I
 		do
-			Result := procedure_equiv (other);
-			if Result then
-				other_ext ?= other; -- Cannot fail
+			other_ext ?= other
+			if other_ext /= Void then
 				if include_list /= Void then
 					Result := include_list.equiv (other_ext.include_list)
 				else
 					Result := other_ext.include_list = Void
 				end;
 				Result := Result and then
+					same_signature (other) and then
 					equal (alias_name, other_ext.alias_name) and then
 					encapsulated = other_ext.encapsulated
 				if Result and then encapsulated then
@@ -142,6 +143,13 @@ feature -- Incrementality
 						special_id = other_ext.special_id
 				end
 			end
+		end
+
+	equiv (other: FEATURE_I): BOOLEAN is
+		local
+			other_ext: EXTERNAL_I
+		do
+			Result := procedure_equiv (other) and then freezing_equiv (other)
 		end
 
 feature 
@@ -268,12 +276,12 @@ feature
 			Result := unselect;
 		end;
 
-	generate (class__type: CLASS_TYPE; file: INDENT_FILE) is
-				-- Generate feature written in `class__type' in `file'.
+	generate (class_type: CLASS_TYPE; file: INDENT_FILE) is
+				-- Generate feature written in `class_type' in `file'.
 		require else
 			valid_file: file /= Void;
 			file_open_for_writing: file.is_open_write or file.is_open_append;
-			written_in_type: class__type.associated_class.id = generation_class_id;
+			written_in_type: class_type.associated_class.id = generation_class_id;
 			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;
@@ -291,6 +299,8 @@ feature
 				byte_code.set_real_body_id (real_body_id);
 				byte_code.generate;
 				byte_context.clear_all;
+			else
+				add_in_log (class_type, external_name)
 			end;
 		end;
 

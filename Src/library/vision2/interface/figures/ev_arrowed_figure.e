@@ -80,12 +80,10 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 		do
 			s := Arrow_size + line_width
 			if end_arrow /= Void then
-				end_draw_point.set_x (line_width)
 				end_arrow.i_th_point (1).set_position (-s, -s // 2)
 				end_arrow.i_th_point (3).set_position (-s, s // 2)
 			end
 			if start_arrow /= Void then
-				start_draw_point.set_x (-line_width)
 				start_arrow.i_th_point (1).set_position (-s, -s // 2)
 				start_arrow.i_th_point (3).set_position (-s, s // 2)
 			end
@@ -99,8 +97,6 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 			start_arrow.i_th_point (2).set_origin (start_point)
 			start_arrow.i_th_point (1).set_origin (start_arrow.i_th_point (2))
 			start_arrow.i_th_point (3).set_origin (start_arrow.i_th_point (2))
-			create start_draw_point
-			start_draw_point.set_origin (start_arrow.i_th_point (2))
 			update_arrows
 		end
 
@@ -112,8 +108,6 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 			end_arrow.i_th_point (2).set_origin (end_point)
 			end_arrow.i_th_point (1).set_origin (end_arrow.i_th_point (2))
 			end_arrow.i_th_point (3).set_origin (end_arrow.i_th_point (2))
-			create end_draw_point
-			end_draw_point.set_origin (end_arrow.i_th_point (2))
 			update_arrows
 		end
 
@@ -150,12 +144,6 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 			Result := Pi - line_angle (start_point.x_abs, start_point.y_abs,
 				end_point.x_abs, end_point.y_abs)
 		end
-
-	end_draw_point: EV_RELATIVE_POINT
-			-- Actual ending point of drawn line when arrow is visible.
-
-	start_draw_point: EV_RELATIVE_POINT
-			-- Actual starting point of drawn line when arrow is visible.
 
 end -- class EV_ARROWED_FIGURE
 

@@ -18,7 +18,8 @@
 		<HEAD>Tools</HEAD>
 		<TOPIC TOPIC_ID="Browsing_tools" ICON="icon_preferences_folder">
 			<HEAD>Browsing tools</HEAD>
-			<TEXT DESCRIPTION="Maximum number of items displayed in the history combo boxes">history_size<INTEGER>10</INTEGER></TEXT>
+			<TEXT DESCRIPTION="Maximum number of items displayed in the address combo boxes">history_size<INTEGER>10</INTEGER></TEXT>
+			<TEXT DESCRIPTION="Allow class name completion in the address combo box">class_completion<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time">development_window__left_panel_use_explorer_style<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Automatically expand the feature tree">expand_feature_tree<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>

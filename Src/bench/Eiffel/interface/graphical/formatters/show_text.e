@@ -174,8 +174,12 @@ feature
 			end
 		rescue
 			if not Rescue_status.fail_on_rescue then
-				retried := true;
-				retry
+				if original_exception = Io_exception then
+						-- We probably don't have the read permissions
+						-- on the server files.
+					retried := true;
+					retry
+				end
 			end
 		end;
 

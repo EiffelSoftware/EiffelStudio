@@ -9,7 +9,12 @@ inherit
 			execute
 		end;
 	SHARED_WORKBENCH;
-	SHARED_RESCUE_STATUS
+	SHARED_RESCUE_STATUS;
+	EXCEPTIONS
+		rename
+			raise as excep_raise,
+			class_name as excep_class_name
+		end
 	
 feature 
 
@@ -116,8 +121,12 @@ feature
 			end
 		rescue
 			if not Rescue_status.fail_on_rescue then
-				retried := true;
-				retry
+				if original_exception = Io_exception then
+						-- We probably don't have the read permissions
+						-- on the server files.
+					retried := true;
+					retry
+				end
 			end
 		end;
 

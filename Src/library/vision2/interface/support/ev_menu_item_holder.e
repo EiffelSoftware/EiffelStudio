@@ -11,14 +11,6 @@ deferred class
 
 	EV_MENU_ITEM_CONTAINER
 
-feature -- Element change
-
-	add_item (an_item: EV_MENU_ITEM) is
-			-- Add an item in the container.
-		do
-			implementation.add_item (an_item)
-		end
-
 feature -- Implementation
 
 	implementation: EV_MENU_ITEM_CONTAINER_I

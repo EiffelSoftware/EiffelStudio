@@ -20,13 +20,7 @@ feature -- Comparison
 	infix "<" (other: CHAR_VAL_B): BOOLEAN is
 			-- Is `other' greater than Current?
 		do
-			Result := generation_value < other.generation_value
-		end
-
-	is_next (other: like Current): BOOLEAN is
-			-- Is `other' next to Current?
-		do
-			Result := other.generation_value = generation_value + 1
+			Result := value < other.value
 		end
 
 feature -- Measurement
@@ -34,17 +28,9 @@ feature -- Measurement
 	distance (other: like Current): DOUBLE is
 			-- Distance between `other' and Current
 		do
-			Result := (other.generation_value |-| generation_value).abs
+			Result := (other.value |-| value).abs
 		end
 		
-feature -- Evaluation
-
-	inspect_interval (upper: like Current): CHAR_INTER_B is
-			-- Interval with lower set to `Current' and upper set to `upper'
-		do
-			create Result.make (Current, upper)
-		end
-
 feature -- Error reporting
 
 	display (st: STRUCTURED_TEXT) is
@@ -63,7 +49,7 @@ feature -- Iteration
 			i: INTEGER
 		do
 			from
-				i := other.generation_value |-| generation_value + 1
+				i := other.value |-| value + 1
 				if not is_included then
 					i := i - 1
 				end
@@ -85,7 +71,7 @@ feature --- Byte code generation
 			-- interval
 		do
 			ba.append (Bc_char)
-			ba.append (generation_value)
+			ba.append (value)
 		end
 
 feature -- IL code generation
@@ -95,7 +81,7 @@ feature -- IL code generation
 			-- Assume that current value is included in lower interval if `is_included' is true.
 		do
 			instruction.generate_il_load_value
-			il_generator.put_character_constant (generation_value)
+			il_load_value
 			if is_included then
 				il_generator.branch_on_condition ({MD_OPCODES}.bgt_un, label)
 			else
@@ -108,9 +94,9 @@ feature -- IL code generation
 			-- next value if `is_included' is false from top of IL stack.
 			-- Ensure that resulting value on the stack is UInt32.
 		local
-			i: like generation_value
+			i: like value
 		do
-			i := generation_value
+			i := value
 			if not is_included then
 				i := i + 1
 			end
@@ -118,6 +104,39 @@ feature -- IL code generation
 				il_generator.put_character_constant (i)
 				il_generator.generate_binary_operator ({IL_CONST}.il_minus)
 			end
+		end
+
+feature {TYPED_INTERVAL_B} -- IL code generation
+
+	il_load_value is
+			-- Load value to IL stack.
+		do
+			il_generator.put_character_constant (value)
+		end
+
+	il_load_difference (other: like Current) is
+			-- Load a difference between current and `other' to IL stack.
+		do
+			il_generator.put_integer_32_constant (value |-| other.value)
+		end
+
+feature {NONE} -- Implementation: C generation
+
+	generate_value (v: like value) is
+			-- Generate single value `v'.
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			buf.put_string ("(EIF_CHARACTER) '")
+			buf.escape_char (v)
+			buf.put_character ('%'')
+		end
+
+	next_value (v: like value): like value is
+			-- Value after given value `v'
+		do
+			Result := v + 1
 		end
 
 end

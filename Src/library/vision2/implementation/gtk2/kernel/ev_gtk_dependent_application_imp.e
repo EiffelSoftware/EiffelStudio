@@ -354,11 +354,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"[
-			{
-				(EIF_POINTER) *((gchar**) $a_gchar_array + (int) ($an_index - 1));
-			}
-			]"
+			"(EIF_POINTER) *((gchar**) $a_gchar_array + (int) ($an_index - 1))"
 		end
 
 end -- class EV_GTK_DEPENDENT_APPLICATION_IMP

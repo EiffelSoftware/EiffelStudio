@@ -9,8 +9,8 @@ indexing
 class OBSOLETE_MS_WINDOWS
 
 inherit
+	TOOLKIT_IMP
 
-	MS_WINDOWS;
 	OBSOLETE_TOOLKIT
 	
 creation

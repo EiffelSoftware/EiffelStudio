@@ -138,6 +138,11 @@ feature -- Element change
 		deferred
 		end
 
+	add_item (item: EV_LIST_ITEM_IMP) is
+			-- Add `item' to the list
+		deferred
+		end
+
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
@@ -156,13 +161,6 @@ feature -- Event -- removing command association
 			-- when the selection has changed.
 		require
 			exists: not destroyed
-		deferred
-		end
-
-feature {EV_LIST_ITEM} -- Implementation
-
-	add_item (item: EV_LIST_ITEM) is
-			-- Add `item' to the list
 		deferred
 		end
 

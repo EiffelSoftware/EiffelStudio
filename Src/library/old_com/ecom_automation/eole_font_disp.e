@@ -14,6 +14,7 @@ inherit
 			create_ole_interface_ptr as dispatch_create_ole_interface_ptr
 		redefine
 			interface_identifier,
+			interface_identifier_list,
 			on_invoke
 		end
 		
@@ -38,6 +39,13 @@ feature -- Access
 			-- Interface identifier
 		once
 			Result := Iid_font_disp
+		end
+
+	interface_identifier_list: LINKED_LIST [STRING] is
+			-- List of supported interfaces
+		once
+			Result := precursor
+			Result.extend (interface_identifier)
 		end
 
 	font: EOLE_FONT is

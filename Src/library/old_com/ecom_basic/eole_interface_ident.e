@@ -306,6 +306,9 @@ feature -- Access
 	Iid_enum_connections: STRING is "{B196B287-BAB4-101A-B69C-00AA00341D07}"
 			-- Enumerate current connections for connectable object.
 
+	Iid_enum_string: STRING is "{00000101-0000-0000-C000-000000000046}"
+			-- Enumerate strings.
+
 	Iid_font: STRING is "{BEF6E002-A874-101A-8BBA-00AA00300CAB}"
 			-- Wrapper around Windows font object.
 

@@ -11,7 +11,8 @@ class
 inherit
 	EOLE_UNKNOWN
 		redefine
-			interface_identifier
+			interface_identifier,
+			interface_identifier_list
 		end
 
 creation
@@ -24,7 +25,14 @@ feature -- Access
 		once
 			Result := Iid_enum_unknown
 		end
-		
+
+	interface_identifier_list: LINKED_LIST [STRING] is
+			-- List of supported interfaces
+		once
+			Result := precursor
+			Result.extend (interface_identifier)
+		end
+
 feature -- Message Transmission
 
 

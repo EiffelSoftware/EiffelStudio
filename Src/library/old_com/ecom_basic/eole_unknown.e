@@ -104,6 +104,13 @@ feature -- Access
 			Result := Iid_unknown
 		end
 
+	interface_identifier_list: LINKED_LIST [STRING] is
+			-- List of supported interfaces
+		once
+			!! Result.make
+			Result.extend (interface_identifier)
+		end
+
 	is_initializable_from_eiffel: BOOLEAN is
 			-- Does interface support Callbacks?
 		once
@@ -133,6 +140,7 @@ feature -- Message Transmission
 	query_interface (interface_ident: STRING): POINTER is
 			-- Query `iid' interface.
 			-- Return Void if fails.
+			-- Not meant to be redefined; redefine `on_query_interface' instead.
 		require
 			valid_interface_identifier: interface_ident /= Void
 		local
@@ -166,14 +174,21 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 
 	on_query_interface (iid: STRING): POINTER is
 			-- Query `iid' interface.
-			-- Return Void if interface is not supported.
+			-- Return `default_pointer' if interface is not supported.
+			-- Redefine in descendant if needed.
 		do
-			if iid.is_equal (interface_identifier) or iid.is_equal (Iid_unknown) then
-				add_ref
-				Result := ole_interface_ptr
-				set_last_hresult (S_ok)
-			else
-				set_last_hresult (E_nointerface)
+			set_last_hresult (E_nointerface)
+			from
+				interface_identifier_list.start
+			until
+				interface_identifier_list.after or Result /= default_pointer
+			loop
+				if iid.is_equal (interface_identifier_list.item) then
+					add_ref
+					Result := ole_interface_ptr
+					set_last_hresult (S_ok)
+				end
+				interface_identifier_list.forth
 			end
 		end
 

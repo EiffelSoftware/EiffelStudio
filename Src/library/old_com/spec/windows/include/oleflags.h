@@ -20,7 +20,7 @@
 #ifndef __FLAGS_H_INC__
 #define __FLAGS_H_INC__
 
-#define c_and(int1, int2) ((int)int1 && (int)int2)
+#define c_and(int1, int2) ((int)int1 & (int)int2)
 
 #endif
 /////// END OF FILE /////////////////////////////////////////////////////////

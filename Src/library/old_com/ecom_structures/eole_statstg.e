@@ -63,7 +63,7 @@ feature -- Element Change
 			element_size_set: element_size = element_siz
 		end
 
-	set_modification_time (mtime: EOLE_FILETIME) is
+	set_modification_time (mtime: EOLE_FILE_TIME) is
 			-- Set time of last modification of storage element with `mtime'.
 		require
 			valid_c_structure: ole_ptr /= default_pointer
@@ -73,7 +73,7 @@ feature -- Element Change
 			modification_time_set: modification_time.is_equal (mtime)
 		end
 
-	set_creation_time (ctime: EOLE_FILETIME) is
+	set_creation_time (ctime: EOLE_FILE_TIME) is
 			-- Set time of creation of storage element with `ctime'.
 		require
 			valid_c_structure: ole_ptr /= default_pointer
@@ -83,7 +83,7 @@ feature -- Element Change
 			creation_time_set: creation_time.is_equal (ctime)
 		end
 
-	set_access_time (atime: EOLE_FILETIME) is
+	set_access_time (atime: EOLE_FILE_TIME) is
 			-- Set time of last access to storage element with `atime'.
 		require
 			valid_c_structure: ole_ptr /= default_pointer
@@ -172,14 +172,14 @@ feature -- Access
 			Result := ole2_statstg_get_element_size (ole_ptr)
 		end
 
-	modification_time: EOLE_FILETIME is
+	modification_time: EOLE_FILE_TIME is
 			-- Storage element last modification time
 		do
 			!! Result
 			Result.attach (ole2_statstg_get_modification_time (ole_ptr))
 		end
 
-	creation_time: EOLE_FILETIME is
+	creation_time: EOLE_FILE_TIME is
 			-- Storage element creation time
 		require
 			valid_c_structure: ole_ptr /= default_pointer
@@ -188,7 +188,7 @@ feature -- Access
 			Result.attach (ole2_statstg_get_creation_time (ole_ptr))
 		end
 
-	access_time: EOLE_FILETIME is
+	access_time: EOLE_FILE_TIME is
 			-- Storage element last access time
 		require
 			valid_c_structure: ole_ptr /= default_pointer

@@ -11,7 +11,8 @@ class
 inherit
 	EOLE_UNKNOWN
 		redefine
-			interface_identifier
+			interface_identifier,
+			interface_identifier_list
 		end
 
 	EOLE_METHOD_FLAGS
@@ -25,6 +26,13 @@ feature -- Access
 			-- Unique interface identifier
 		once
 			Result := Iid_dispatch
+		end
+
+	interface_identifier_list: LINKED_LIST [STRING] is
+			-- List of supported interfaces
+		once
+			Result := precursor
+			Result.extend (interface_identifier)
 		end
 
 feature -- Message Transmission
@@ -93,8 +101,14 @@ feature -- Message Transmission
 			-- Not meant to be redefined; redefine `on_get_type_info' instead.
 		require
 			valid_interface: is_valid_interface
+		local
+			type_info_ptr: POINTER
 		do
-			Result := ole2_dispatch_get_type_info (ole_interface_ptr)
+			type_info_ptr := ole2_dispatch_get_type_info (ole_interface_ptr)
+			if type_info_ptr /= default_pointer then
+				!! Result.make
+				Result.attach_ole_interface_ptr (type_info_ptr)
+			end
 		end
 
 	get_type_info_count: INTEGER is
@@ -129,7 +143,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			set_last_hresult (E_notimpl)
 		end
 
-	on_get_type_info: EOLE_TYPE_INFO is
+	on_get_type_info: POINTER is
 			-- Type information
 			-- By default: set status code with `Eole_e_notimpl'.
 			-- Redefine in descendant if needed.
@@ -183,7 +197,7 @@ feature {NONE} -- Externals
 			"eole2_auto_get_name_id"
 		end
 
-	ole2_dispatch_get_type_info (this: POINTER): EOLE_TYPE_INFO is
+	ole2_dispatch_get_type_info (this: POINTER): POINTER is
 		external
 			"C"
 		alias

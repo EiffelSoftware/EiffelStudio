@@ -14,6 +14,7 @@ inherit
 			{NONE}	create_ole_interface_ptr
 		redefine
 			interface_identifier,
+			interface_identifier_list,
 			is_initializable_from_eiffel
 		end
 
@@ -32,6 +33,13 @@ feature -- Access
 			-- Interface identifier
 		once
 			Result := Iid_storage
+		end
+
+	interface_identifier_list: LINKED_LIST [STRING] is
+			-- List of supported interfaces
+		once
+			Result := precursor
+			Result.extend (interface_identifier)
 		end
 
 	is_initializable_from_eiffel: BOOLEAN is

@@ -51,8 +51,7 @@ feature -- Access
 		do
 			Result := c_and (Impltypeflag_fdefault + Impltypeflag_fsource
 						+ Impltypeflag_frestricted + Impltypeflag_fdefaultvtable, flag)
-						= Impltypeflag_fdefault + Impltypeflag_fsource
-						+ Impltypeflag_frestricted + Impltypeflag_fdefaultvtable
+						= flag
 		end
 		
 end -- class EOLE_IMPLTYPEFLAGS

@@ -2076,7 +2076,7 @@ feature {NONE} -- Implementation
 				loop
 					finished := True
 					if not a_class.syntactical_suppliers.after then
-						supplier := a_class.syntactical_suppliers.item.supplier
+						supplier := a_class.syntactical_suppliers.item
 						related_classes.extend (supplier)
 						supplier.suppliers.remove_class (a_class)
 						a_class.syntactical_suppliers.forth

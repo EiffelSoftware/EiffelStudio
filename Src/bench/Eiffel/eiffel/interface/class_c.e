@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 				-- Creation of a conformance table
 			create conformance_table.make (0)
 				-- Creation of the syntactical supplier list
-			create syntactical_suppliers.make
+			create syntactical_suppliers.make (5)
 				-- Creation of the syntactical client list
 			create syntactical_clients.make (10)
 				-- Filter list creation
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	syntactical_suppliers: LINKED_LIST [SUPPLIER_CLASS]
+	syntactical_suppliers: ARRAYED_LIST [CLASS_C]
 			-- Syntactical suppliers of the class
 			--| Useful for time-stamp
 
@@ -482,7 +482,7 @@ feature -- Action
 				-- Empty syntactical supplier list from compilation
 				-- to another one after duplicating it.
 			old_syntactical_suppliers := syntactical_suppliers
-			!! syntactical_suppliers.make
+			create syntactical_suppliers.make (old_syntactical_suppliers.count)
 			supplier_list := ast_b.suppliers.supplier_ids
 			if not supplier_list.is_empty then
 				check_suppliers (supplier_list)
@@ -2189,7 +2189,7 @@ feature
 			until
 				old_syntactical_suppliers.off
 			loop
-				a_class := old_syntactical_suppliers.item.supplier
+				a_class := old_syntactical_suppliers.item
 				if a_class /= Current then
 					supplier_clients := a_class.syntactical_clients
 					supplier_clients.start
@@ -2207,7 +2207,7 @@ feature
 			until
 				syntactical_suppliers.off
 			loop
-				a_class := syntactical_suppliers.item.supplier
+				a_class := syntactical_suppliers.item
 				if a_class /= Current then
 					supplier_clients := a_class.syntactical_clients
 					supplier_clients.extend (Current)
@@ -2284,7 +2284,7 @@ feature
 				until
 					syntactical_suppliers.after
 				loop
-					syntactical_suppliers.item.supplier.mark_class (marked_classes)
+					syntactical_suppliers.item.mark_class (marked_classes)
 					syntactical_suppliers.forth
 				end
 			end
@@ -2527,7 +2527,7 @@ feature -- Supplier checking
 			until
 				syntactical_suppliers.after or else recompile
 			loop
-				a_class := syntactical_suppliers.item.supplier
+				a_class := syntactical_suppliers.item
 				Universe.compute_last_class (a_class.name, cluster)
 				if Universe.last_class /= a_class.lace_class then
 						-- one of the suppliers has changed (different CLASS_I)
@@ -2588,7 +2588,6 @@ feature -- Supplier checking
 		local
 			supplier_class: CLASS_I
 			vtct: VTCT
-			supplier: SUPPLIER_CLASS
 			comp_class: CLASS_C
 		do
 				-- 1.	Check if the supplier class is in the universe
@@ -2618,12 +2617,10 @@ feature -- Supplier checking
 				end
 				comp_class := supplier_class.compiled_class
 				if comp_class /= Current then
-					!!supplier.make (comp_class, cl_name)
 					syntactical_suppliers.start
-					syntactical_suppliers.compare_objects
-					syntactical_suppliers.search (supplier)
+					syntactical_suppliers.search (comp_class)
 					if syntactical_suppliers.after then
-						syntactical_suppliers.put_front (supplier)
+						syntactical_suppliers.extend (comp_class)
 					end
 				end
 			else

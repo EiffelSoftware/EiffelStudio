@@ -16,7 +16,10 @@
 #include "eif_memory.h"
 #include "eif_hashinin.h"
 #include "rt_error.h"
-#include <assert.h>
+#include "rt_assert.h"
+#include "rt_malloc.h"
+#include "rt_except.h"
+#include "rt_gen_conf.h"
 
 #ifdef EIF_WIN32
 #include <io.h>
@@ -38,7 +41,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count);
 rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj);
 rt_private int st_write_cid (char **tmp_buffer, uint32 dftype);	/* Store generic info */
 rt_private char *rt_read_cid (char *tmp_buffer, uint32 *crflags, uint32 *nflags, uint32 oflags);
-rt_private void traversal (EIF_REFERENCE object);	/* Object traversal */
+rt_private void new_traversal (EIF_REFERENCE object);	/* Object traversal */
 
 rt_private struct store_htable *address_table;	/* HASH_TABLE [INTEGER, ADDRESS] */
 rt_private int max_object_id;	/* Current maximum allowed object id */
@@ -203,7 +206,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 			tmp_buffer = buffer_read (tmp_buffer, &nb_bytes, sizeof(EIF_INTEGER));
 
 				/* Create SPECIAL */
-			o_ref = spmalloc (nb_bytes);
+			o_ref = spmalloc (nb_bytes, EIF_FALSE);
 
 				/* Set generic types and flags */
 			HEADER(o_ref)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
@@ -221,7 +224,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 			/* Store `o_ref' at `object_id' pos in `obj_array' */
 		obj_array [object_id - min_object_id] = o_ref;
 			/* Make sure that the retrieved `object_id' is valid. */
-		assert ((object_id - min_object_id) < nb_obj);
+		CHECK("valid object_id",  ((object_id - min_object_id) < nb_obj));
 	}
 
 		/* Now, all objects have been retrieved, we do need to update
@@ -245,7 +248,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 					o_field = (EIF_REFERENCE *) (o_ref + j * sizeof(EIF_REFERENCE));
 						/* Make sure that the reference points on a valid
 						 * object, i.e. which has a valid `object_id'. */
-					assert ((((EIF_INTEGER) *o_field) - min_object_id) < nb_obj);
+					CHECK("Valid object", ((((EIF_INTEGER) *o_field) - min_object_id) < nb_obj));
 					if (*o_field != NULL) {
 						*o_field = obj_array [((EIF_INTEGER) (*o_field)) - min_object_id];
 						RTAS_OPT (*o_field, j, o_ref);
@@ -259,7 +262,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 				o_field = (EIF_REFERENCE *) (o_ref + j * sizeof(EIF_REFERENCE));
 					/* Make sure that the reference points on a valid
 					 * object, i.e. which has a valid `object_id'. */
-				assert ((((EIF_INTEGER) *o_field) - min_object_id) < nb_obj);
+				CHECK("valid object", ((((EIF_INTEGER) *o_field) - min_object_id) < nb_obj));
 				if (*o_field != NULL) {
 					*o_field = obj_array [((EIF_INTEGER) (*o_field)) - min_object_id];
 					RTAS(*o_field, o_ref);
@@ -283,7 +286,7 @@ rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 		/* Do the complete traversals of objects that needs to be stored */
 		/* Number of objects is stored in global variables `obj_nb'      */
 	obj_nb = 0;
-	traversal (object);
+	new_traversal (object);
 
 	need_index = nid;
 	make_index = mid;
@@ -300,7 +303,7 @@ rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 	current_buffer_pos += 2*sizeof(EIF_INTEGER);
 
 	nb_stored_object = store_object (object, 0);
-	assert (obj_nb == nb_stored_object);	/* Check that all objects have been stored */
+	CHECK("Stored all objects", (obj_nb == nb_stored_object));	/* Check that all objects have been stored */
 
 	if (!gc_stopped)
 		gc_run();
@@ -337,7 +340,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 		/* Get object information */
 	fflags = zone->ov_flags;
 	flags = Mapped_flags(fflags);
-	assert (!((flags & EO_EXP) != (uint32) 0));	/* Check that `object' is not expanded */
+	CHECK("Not expanded", (!((flags & EO_EXP) != (uint32) 0)));	/* Check that `object' is not expanded */
 
 		/* One more stored object */
 	object_count++;
@@ -369,7 +372,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 			real_count = (object_size - LNGPAD_2)/sizeof(EIF_REFERENCE) - count;
 
 				/* We do not handle special which contains expanded types */
-			assert (!(flags & EO_COMP));
+			CHECK("Not composite", (!(flags & EO_COMP)));
 
 			for (ref = object;
 				 count > 0;
@@ -548,7 +551,7 @@ rt_private int st_write_cid (char **tmp_buffer, uint32 dftype)
 	return (int) (*tmp_buffer - tmp);
 }
 
-rt_private void traversal (EIF_REFERENCE object)
+rt_private void new_traversal (EIF_REFERENCE object)
 	/* Set all objects referenced from `object' with `EO_STORE' flags
 	 * and returns the number of objects that has been encountered. */
 {
@@ -570,7 +573,7 @@ rt_private void traversal (EIF_REFERENCE object)
 		CHECK("Not tuple", !(flags & EO_TUPLE));
 		if (!(flags & EO_REF))	/* Object does not have any references. */
 			return;
-		assert (!(flags & EO_COMP));	/* We do not handle SPECIAL of expanded objects. */
+		CHECK("Not composite", (!(flags & EO_COMP)));	/* We do not handle SPECIAL of expanded objects. */
 
 		count = *(EIF_INTEGER *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 	} else {
@@ -581,6 +584,6 @@ rt_private void traversal (EIF_REFERENCE object)
 	for (i = 0; i < count; i++) {
 		o_ref = *((EIF_REFERENCE *) object + i);
 		if (o_ref != NULL)
-			traversal (o_ref);
+			new_traversal (o_ref);
 	}
 }

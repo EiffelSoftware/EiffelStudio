@@ -148,9 +148,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_10.extend (okay_button)
 			l_ev_horizontal_box_10.extend (cancel_button)
 			
-			set_minimum_width (dialog_width)
-			set_minimum_height (dialog_tall_height)
-			set_title ("Document Settings")
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_1)
@@ -251,6 +248,9 @@ feature {NONE}-- Initialization
 			okay_button.set_minimum_width (80)
 			cancel_button.set_text ("Cancel")
 			cancel_button.set_minimum_width (80)
+			set_minimum_width (dialog_width)
+			set_minimum_height (dialog_tall_height)
+			set_title ("Document Settings")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -262,24 +262,28 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, 
-	l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7: EV_VERTICAL_BOX
-	l_ev_notebook_1: EV_NOTEBOOK
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, 
-	l_ev_horizontal_box_5, l_ev_horizontal_box_6, toc_12_title_box, toc_12_location_box, 
-	toc_12_pseudo_box, l_ev_horizontal_box_7, toc_20_title_box, toc_20_location_box, 
-	toc_20_pseudo_box, l_ev_horizontal_box_8, l_ev_horizontal_box_9, l_ev_horizontal_box_10: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, location_label, l_ev_label_3, l_ev_label_4, l_ev_label_5, 
-	l_ev_label_6, l_ev_label_7, l_ev_label_8, l_ev_label_9, l_ev_label_10, l_ev_label_11, 
-	l_ev_label_12: EV_LABEL
-	name_text, toc_title_text, toc_12_title_text, toc_12_location_text, toc_12_pseudo_text, 
-	toc_20_title_text, toc_20_location_text, toc_20_pseudo_text: EV_TEXT_FIELD
-	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
-	l_ev_frame_1, l_ev_frame_2: EV_FRAME
 	override_12_check, override_20_check: EV_CHECK_BUTTON
-	output_combo: EV_COMBO_BOX
+	l_ev_notebook_1: EV_NOTEBOOK
+	l_ev_horizontal_separator_1,
+	l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3,
+	l_ev_vertical_box_4, l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5,
+	l_ev_horizontal_box_6, toc_12_title_box, toc_12_location_box, toc_12_pseudo_box,
+	l_ev_horizontal_box_7, toc_20_title_box, toc_20_location_box, toc_20_pseudo_box,
+	l_ev_horizontal_box_8, l_ev_horizontal_box_9, l_ev_horizontal_box_10: EV_HORIZONTAL_BOX
+	l_ev_label_1,
+	l_ev_label_2, location_label, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6,
+	l_ev_label_7, l_ev_label_8, l_ev_label_9, l_ev_label_10, l_ev_label_11, l_ev_label_12: EV_LABEL
+	apply_button,
+	okay_button, cancel_button: EV_BUTTON
+	l_ev_frame_1, l_ev_frame_2: EV_FRAME
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
-	apply_button, okay_button, cancel_button: EV_BUTTON
+	output_combo: EV_COMBO_BOX
+	name_text,
+	toc_title_text, toc_12_title_text, toc_12_location_text, toc_12_pseudo_text, toc_20_title_text,
+	toc_20_location_text, toc_20_pseudo_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
@@ -290,11 +294,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class DOCUMENT_PROPERTIES_DIALOG_IMP

@@ -64,9 +64,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.extend (ok_button)
 			l_ev_horizontal_box_2.extend (cancel_button)
 			
-			set_minimum_width (dialog_width)
-			set_minimum_height (dialog_height)
-			set_title ("Templates")
 			l_ev_vertical_box_1.set_minimum_width (350)
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (2)
@@ -137,6 +134,9 @@ feature {NONE}-- Initialization
 			ok_button.set_minimum_width (button_width)
 			cancel_button.set_text (button_cancel_text)
 			cancel_button.set_minimum_width (button_width)
+			set_minimum_width (dialog_width)
+			set_minimum_height (dialog_height)
+			set_title ("Templates")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -148,14 +148,16 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_frame_1: EV_FRAME
 	l_ev_fixed_1: EV_FIXED
 	sample, empty_file, project: EV_PIXMAP
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	empty_label, sample_label, project_label, template_description: EV_LABEL
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	ok_button,
+	cancel_button: EV_BUTTON
+	l_ev_frame_1: EV_FRAME
 	l_ev_cell_1: EV_CELL
-	ok_button, cancel_button: EV_BUTTON
 
 feature {NONE} -- Implementation
 
@@ -166,11 +168,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class TEMPLATE_DIALOG_IMP

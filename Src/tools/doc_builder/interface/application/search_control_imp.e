@@ -40,15 +40,15 @@ feature {NONE}-- Initialization
 			extend (search_text)
 			extend (search_button)
 			
+			l_ev_label_1.set_text ("Find: ")
+			search_text.set_minimum_width (100)
+			search_button.set_text ("Find")
+			search_button.set_minimum_width (button_width)
 			set_padding_width (box_padding_width)
 			set_border_width (box_border_width)
 			disable_item_expand (l_ev_label_1)
 			disable_item_expand (search_text)
 			disable_item_expand (search_button)
-			l_ev_label_1.set_text ("Find: ")
-			search_text.set_minimum_width (100)
-			search_button.set_text ("Find")
-			search_button.set_minimum_width (button_width)
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -60,8 +60,8 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_label_1: EV_LABEL
 	search_text: EV_TEXT_FIELD
+	l_ev_label_1: EV_LABEL
 	search_button: EV_BUTTON
 
 feature {NONE} -- Implementation
@@ -73,11 +73,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class SEARCH_CONTROL_IMP

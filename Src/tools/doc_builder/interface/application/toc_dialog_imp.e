@@ -108,9 +108,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_13.extend (okay_button)
 			l_ev_horizontal_box_13.extend (cancel_button)
 			
-			set_maximum_width (dialog_wide_width)
-			set_maximum_height (dialog_tall_height)
-			set_title ("Table of Contents Sorter")
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_13)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.set_padding_width (5)
@@ -179,6 +176,9 @@ feature {NONE}-- Initialization
 			okay_button.set_minimum_width (80)
 			cancel_button.set_text ("Cancel")
 			cancel_button.set_minimum_width (80)
+			set_maximum_width (dialog_wide_width)
+			set_maximum_height (dialog_tall_height)
+			set_title ("Table of Contents Sorter")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -190,20 +190,24 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	button_frame: EV_FRAME
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, 
-	l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, 
-	l_ev_horizontal_box_9, l_ev_horizontal_box_10, l_ev_horizontal_box_11, l_ev_horizontal_box_12, 
-	l_ev_horizontal_box_13: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
-	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
-	description_text, index_filename_text: EV_TEXT_FIELD
-	index_root_check, include_empty_dirs_check, include_no_index_check, include_skipped_sub_dirs_check, 
+	index_root_check, include_empty_dirs_check, include_no_index_check, include_skipped_sub_dirs_check,
 	order_alphabetical_check: EV_CHECK_BUTTON
-	filter_combo: EV_COMBO_BOX
+	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
+	l_ev_vertical_box_1,
+	l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
+	l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6,
+	l_ev_horizontal_box_7, l_ev_horizontal_box_8, l_ev_horizontal_box_9, l_ev_horizontal_box_10,
+	l_ev_horizontal_box_11, l_ev_horizontal_box_12, l_ev_horizontal_box_13: EV_HORIZONTAL_BOX
+	l_ev_label_1,
+	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
+	okay_button,
+	cancel_button: EV_BUTTON
+	button_frame: EV_FRAME
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
-	okay_button, cancel_button: EV_BUTTON
+	filter_combo: EV_COMBO_BOX
+	description_text,
+	index_filename_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
@@ -214,11 +218,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class TOC_DIALOG_IMP

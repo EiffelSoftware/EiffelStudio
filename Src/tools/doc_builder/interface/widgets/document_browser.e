@@ -61,8 +61,6 @@ feature {NONE} -- Initialization
 			browser_box.extend (browser_container)
 			
 					-- Events
---			create events.make (internal_browser)			
---			back_button.select_actions.extend (agent build_composite_document)	
 			refresh_button.select_actions.extend (agent refresh)
 			
 			update

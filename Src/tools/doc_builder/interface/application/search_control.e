@@ -42,29 +42,28 @@ feature {NONE} -- Implementation
 		local
 			l_pos, 
 			l_line: INTEGER
-			l_text: TEXT
+			l_text: SELECTABLE_TEXT
 		do
 			if not panel.text.is_empty and then not search_text.text.is_empty then
 				l_text := panel.text_displayed
-				l_text.search_string (search_text.text)
+				l_text.search_string_from_cursor (search_text.text)
 				if l_text.successful_search then
-						--Highlight found text	
-					l_pos := l_text.found_string_character_position	
+						-- Highlight found text	
+					l_pos := l_text.found_string_total_character_position	
 					l_line := l_text.found_string_line
-					--panel.
 					panel.select_region (l_pos, l_pos + search_text.text.count)
 				end
 			end			
 		end		
-
-	start_position: INTEGER is
-			-- Position from which to start search
-		do
---			Result := panel.cur caret_position
---			if Result = 0 then
---				Result := 1
---			end
-		end
+--
+--	start_position: INTEGER is
+--			-- Position from which to start search
+--		do
+----			Result := panel.cur caret_position
+----			if Result = 0 then
+----				Result := 1
+----			end
+--		end
 
 end -- class SEARCH_CONTROL
 

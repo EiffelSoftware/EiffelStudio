@@ -54,9 +54,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (add_button)
 			l_ev_horizontal_box_1.extend (dummy_cancel_button)
 			
-			set_minimum_width (dialog_width)
-			set_minimum_height (dialog_short_height)
-			set_title ("Shortcut Configuration")
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_separator_1)
@@ -73,6 +70,9 @@ feature {NONE}-- Initialization
 			add_button.set_text ("Add")
 			dummy_cancel_button.set_minimum_width (0)
 			dummy_cancel_button.set_minimum_height (0)
+			set_minimum_width (dialog_width)
+			set_minimum_height (dialog_short_height)
+			set_title ("Shortcut Configuration")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -84,14 +84,15 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	accelerator_list: EV_MULTI_COLUMN_LIST
 	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+	accelerator_list: EV_MULTI_COLUMN_LIST
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2: EV_LABEL
+	l_ev_label_1,
+	l_ev_label_2: EV_LABEL
+	add_button, dummy_cancel_button: EV_BUTTON
 	keys_combo: EV_COMBO_BOX
 	tag_text_field: EV_TEXT_FIELD
-	add_button, dummy_cancel_button: EV_BUTTON
 
 feature {NONE} -- Implementation
 
@@ -102,11 +103,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class SHORTCUTS_DIALOG_IMP

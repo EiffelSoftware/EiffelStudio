@@ -48,9 +48,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (l_ev_cell_2)
 			l_ev_horizontal_box_1.extend (ok)
 			
-			set_minimum_width (dialog_width)
-			set_minimum_height (dialog_height)
-			set_title ("Error Report Dialog")
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_1)
@@ -63,6 +60,9 @@ feature {NONE}-- Initialization
 			error_count.align_text_left
 			ok.set_text (button_ok_text)
 			ok.set_minimum_width (button_width)
+			set_minimum_width (dialog_width)
+			set_minimum_height (dialog_height)
+			set_title ("Error Report Dialog")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -75,10 +75,11 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	l_ev_vertical_box_1, error_container: EV_VERTICAL_BOX
-	l_ev_cell_1, l_ev_cell_2: EV_CELL
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	error_count: EV_LABEL
 	ok: EV_BUTTON
+	l_ev_cell_1,
+	l_ev_cell_2: EV_CELL
 
 feature {NONE} -- Implementation
 
@@ -89,11 +90,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class ERROR_DIALOG_IMP

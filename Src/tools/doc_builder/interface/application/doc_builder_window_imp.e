@@ -50,6 +50,7 @@ feature {NONE}-- Initialization
 			create parser_menu_item
 			create l_ev_menu_separator_5
 			create search_menu_item
+			create preferences_menu_item
 			create view_menu
 			create element_selector_menu
 			create types_selector_menu
@@ -198,6 +199,7 @@ feature {NONE}-- Initialization
 			document_menu.extend (parser_menu_item)
 			document_menu.extend (l_ev_menu_separator_5)
 			document_menu.extend (search_menu_item)
+			document_menu.extend (preferences_menu_item)
 			l_ev_menu_bar_1.extend (view_menu)
 			view_menu.extend (element_selector_menu)
 			view_menu.extend (types_selector_menu)
@@ -326,9 +328,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_9.extend (cursor_line_pos)
 			l_ev_vertical_split_area_4.extend (browser_container)
 			
-			set_minimum_width (1024)
-			set_minimum_height (768)
-			set_title ("Document Builder")
 			file_menu.set_text ("File")
 			new_menu_item.set_text ("New..")
 			open_menu_item.disable_sensitive
@@ -351,6 +350,7 @@ feature {NONE}-- Initialization
 			paste_menu_item.set_text ("Paste")
 			parser_menu_item.set_text ("Parser...")
 			search_menu_item.set_text ("Search...")
+			preferences_menu_item.set_text ("Preferences...")
 			view_menu.set_text ("View")
 			element_selector_menu.enable_select
 			element_selector_menu.set_text ("Schema elements")
@@ -532,13 +532,13 @@ feature {NONE}-- Initialization
 			l_ev_frame_6.set_style (1)
 			l_ev_frame_7.set_minimum_width (200)
 			l_ev_frame_7.set_style (1)
-			line_number.set_text (" Ln: ")
 			line_number.set_minimum_width (30)
-			cursor_text_position.set_text (" Pos: ")
 			cursor_text_position.set_minimum_width (30)
-			cursor_line_pos.set_text (" Byte: ")
 			cursor_line_pos.set_minimum_width (30)
 			cursor_line_pos.set_minimum_height (13)
+			set_minimum_width (1024)
+			set_minimum_height (768)
+			set_title ("Document Builder")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -550,46 +550,54 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_menu_bar_1: EV_MENU_BAR
-	file_menu, document_menu, view_menu, project_menu, tool_menu, help_menu: EV_MENU
-	new_menu_item, open_menu_item, open_project_menu_item, close_file_menu_item, save_menu_item, 
-	exit_menu_item, cut_menu_item, copy_menu_item, paste_menu_item, parser_menu_item, 
-	search_menu_item, settings_menu_item, validator_menu_item, gen_menu_item, expression_menu_item, 
-	character_menu_item, shortcuts_menu_item, help_menu_item: EV_MENU_ITEM
-	l_ev_menu_separator_1, l_ev_menu_separator_2, l_ev_menu_separator_3, l_ev_menu_separator_4, 
-	l_ev_menu_separator_5: EV_MENU_SEPARATOR
-	element_selector_menu, types_selector_menu, doc_selector_menu, attribute_selector_menu, 
-	sub_element_menu: EV_CHECK_MENU_ITEM
-	l_ev_vertical_box_1, l_ev_vertical_box_2, documentation_area, toc_container, l_ev_vertical_box_3, 
-	toc_vertical_toolbar, node_properties_area, element_area, l_ev_vertical_box_4, 
-	type_area, l_ev_vertical_box_5, l_ev_vertical_box_6, document_area, editor_container, 
-	browser_container: EV_VERTICAL_BOX
-	l_ev_frame_1, left_tool, main_tool, l_ev_frame_2, node_properties_tool, l_ev_frame_3, 
-	attribute_list_tool, l_ev_frame_4, sub_element_tool, l_ev_frame_5, editor_tool, 
-	l_ev_frame_6, l_ev_frame_7: EV_FRAME
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, toc_area, toc_status_bar, l_ev_horizontal_box_3, 
-	l_ev_horizontal_box_4, l_ev_horizontal_box_5, document_status_bar, search_control_container, 
-	l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
-	main_toolbar, l_ev_tool_bar_5, l_ev_tool_bar_6, l_ev_tool_bar_7, l_ev_tool_bar_8: EV_TOOL_BAR
-	toolbar_new, toolbar_open, toolbar_save, toolbar_cut, toolbar_copy, toolbar_paste, 
-	toolbar_xml_format, toolbar_code_format, toolbar_validate, toolbar_properties, 
-	toolbar_link_check, main_close, node_properties_close, attribute_list_close, sub_element_close: EV_TOOL_BAR_BUTTON
-	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3, 
-	l_ev_tool_bar_separator_4: EV_TOOL_BAR_SEPARATOR
-	l_ev_label_1, l_ev_label_2, toc_status_report_label, l_ev_label_3, l_ev_label_4, 
-	title_label, report_label, line_number, cursor_text_position, cursor_line_pos: EV_LABEL
-	output_combo: EV_COMBO_BOX
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, 
-	l_ev_cell_7, l_ev_cell_8, l_ev_cell_9, l_ev_cell_10, l_ev_cell_11, l_ev_cell_12: EV_CELL
-	l_ev_vertical_split_area_1, l_ev_vertical_split_area_2, l_ev_vertical_split_area_3, 
-	element_split_area, l_ev_vertical_split_area_4: EV_VERTICAL_SPLIT_AREA
-	l_ev_horizontal_split_area_1: EV_HORIZONTAL_SPLIT_AREA
-	selector: EV_NOTEBOOK
-	document_selector, document_toc, element_selector, type_selector: EV_TREE
-	toc_new_button, toc_open_button, toc_save_button, toc_new_heading, toc_new_page, 
-	toc_remove_topic, toc_list_button, toc_merge_button, toc_sort_button: EV_BUTTON
 	node_properties_list, attribute_list: EV_MULTI_COLUMN_LIST
+	new_menu_item, open_menu_item, open_project_menu_item,
+	close_file_menu_item, save_menu_item, exit_menu_item, cut_menu_item, copy_menu_item,
+	paste_menu_item, parser_menu_item, search_menu_item, preferences_menu_item, settings_menu_item,
+	validator_menu_item, gen_menu_item, expression_menu_item, character_menu_item, shortcuts_menu_item,
+	help_menu_item: EV_MENU_ITEM
+	toolbar_new, toolbar_open, toolbar_save, toolbar_cut, toolbar_copy,
+	toolbar_paste, toolbar_xml_format, toolbar_code_format, toolbar_validate, toolbar_properties,
+	toolbar_link_check, main_close, node_properties_close, attribute_list_close, sub_element_close: EV_TOOL_BAR_BUTTON
+	element_selector_menu,
+	types_selector_menu, doc_selector_menu, attribute_selector_menu, sub_element_menu: EV_CHECK_MENU_ITEM
+	document_selector,
+	document_toc, element_selector, type_selector: EV_TREE
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3,
+	l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, l_ev_cell_7, l_ev_cell_8, l_ev_cell_9, l_ev_cell_10,
+	l_ev_cell_11, l_ev_cell_12: EV_CELL
+	l_ev_horizontal_split_area_1: EV_HORIZONTAL_SPLIT_AREA
+	l_ev_vertical_split_area_1,
+	l_ev_vertical_split_area_2, l_ev_vertical_split_area_3, element_split_area, l_ev_vertical_split_area_4: EV_VERTICAL_SPLIT_AREA
+	file_menu,
+	document_menu, view_menu, project_menu, tool_menu, help_menu: EV_MENU
+	l_ev_menu_bar_1: EV_MENU_BAR
+	l_ev_vertical_box_1,
+	l_ev_vertical_box_2, documentation_area, toc_container, l_ev_vertical_box_3, toc_vertical_toolbar,
+	node_properties_area, element_area, l_ev_vertical_box_4, type_area, l_ev_vertical_box_5,
+	l_ev_vertical_box_6, document_area, editor_container, browser_container: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2, toc_area, toc_status_bar, l_ev_horizontal_box_3, l_ev_horizontal_box_4,
+	l_ev_horizontal_box_5, document_status_bar, search_control_container, l_ev_horizontal_box_6,
+	l_ev_horizontal_box_7, l_ev_horizontal_box_8, l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
+	toc_new_button,
+	toc_open_button, toc_save_button, toc_new_heading, toc_new_page, toc_remove_topic,
+	toc_list_button, toc_merge_button, toc_sort_button: EV_BUTTON
+	l_ev_label_1, l_ev_label_2, toc_status_report_label,
+	l_ev_label_3, l_ev_label_4, title_label, report_label, line_number, cursor_text_position,
+	cursor_line_pos: EV_LABEL
+	l_ev_menu_separator_1, l_ev_menu_separator_2, l_ev_menu_separator_3,
+	l_ev_menu_separator_4, l_ev_menu_separator_5: EV_MENU_SEPARATOR
+	l_ev_frame_1, left_tool, main_tool,
+	l_ev_frame_2, node_properties_tool, l_ev_frame_3, attribute_list_tool, l_ev_frame_4,
+	sub_element_tool, l_ev_frame_5, editor_tool, l_ev_frame_6, l_ev_frame_7: EV_FRAME
+	l_ev_tool_bar_separator_1,
+	l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3, l_ev_tool_bar_separator_4: EV_TOOL_BAR_SEPARATOR
+	output_combo: EV_COMBO_BOX
+	main_toolbar,
+	l_ev_tool_bar_5, l_ev_tool_bar_6, l_ev_tool_bar_7, l_ev_tool_bar_8: EV_TOOL_BAR
 	sub_elements_list: EV_LIST
+	selector: EV_NOTEBOOK
 
 feature {NONE} -- Implementation
 
@@ -600,11 +608,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class DOC_BUILDER_WINDOW_IMP

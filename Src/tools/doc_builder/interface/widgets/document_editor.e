@@ -10,7 +10,8 @@ class
 inherit
 	EDITABLE_TEXT_PANEL		
 		redefine
-			on_mouse_button_up 
+			on_mouse_button_up,
+			handle_extended_ctrled_key
 		end
 	
 	SHARED_OBJECTS
@@ -36,62 +37,39 @@ feature -- Initialization
 			-- 
 		do
 			default_create
-			register_document ("e", eiffel_class)
 			register_document ("xml", xml_class)
 			register_document ("java", java_class)
 			create header.make_with_panel (Current)
+			header.selection_actions.extend (agent on_document_change (?))
 			editor_area.pointer_button_release_actions.force_extend (agent pointer_released)
 			editor_area.pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))		
 			editor_area.drop_actions.extend (agent pebble_dropped)
-			add_observers
 		end
 		
-	add_observers is
-			-- 
+	update_observers is
+			-- Update observers of text editing
 		do
 			add_edition_observer (shared_web_browser)
 			add_edition_observer (application_window)			
 		end
+		
+	handle_extended_ctrled_key (ev_key: EV_KEY) is
+ 			-- Process the push on Ctrl + an extended key.
+		do
+			inspect
+				ev_key.code
+				
+			when Key_s then
+					-- Ctrl-S (cut)
+				save_document
 
-	initialize_accelerators is
-			-- Initialize the accelerators for the system
-		local
-			key: EV_KEY
-			key_constants: EV_KEY_CONSTANTS
-			accelerator: EV_ACCELERATOR
-		once
-			create key_constants			
-			
---				-- Ctrl-A
---			create key.make_with_code (key_constants.Key_a)
---			create accelerator.make_with_key_combination (key, True, False, False)
---			accelerator.actions.extend (agent select_all)
---			Application_window.accelerators.extend (accelerator)
-
---				-- Ctrl-C
---			create key.make_with_code (key_constants.Key_c)
---			create accelerator.make_with_key_combination (key, True, False, False)
---			accelerator.actions.extend (agent copy_text)
---			Application_window.accelerators.extend (accelerator)
-			
---				-- Ctrl-X
---			create key.make_with_code (key_constants.Key_x)
---			create accelerator.make_with_key_combination (key, True, False, False)
---			accelerator.actions.extend (agent cut_text)
---			Application_window.accelerators.extend (accelerator)			
-			
-				-- Ctrl-F
-			create key.make_with_code (key_constants.Key_f)
-			create accelerator.make_with_key_combination (key, True, False, False)
-			accelerator.actions.extend (agent open_search_dialog)
-			Application_window.accelerators.extend (accelerator)
-			
-				-- Ctrl-S
-			create key.make_with_code (key_constants.Key_s)
-			create accelerator.make_with_key_combination (key, True, False, False)
-			accelerator.actions.extend (agent save_document)
-			Application_window.accelerators.extend (accelerator)
-		end	
+			when Key_f then
+					-- Ctrl-C (copy)
+				open_search_dialog
+			else
+				Precursor (ev_key)
+			end			
+		end
 		
 	initialize_editor_context is
 			-- Here initialize editor contextual settings.  For example, set location of cursor
@@ -134,6 +112,12 @@ feature -- Editing
 			end
 		end			
 
+	reference_window: EV_WINDOW is
+			-- 
+		once
+			Result := application_window
+		end		
+
 feature -- Query
 
 	has_open_document: BOOLEAN is
@@ -154,7 +138,8 @@ feature -- Commands
 			create l_widget.make (a_doc.name)
 			header.open_document (l_widget)
 			a_doc.set_widget (l_widget)
-			documents.put (a_doc, header.index)			
+			documents.put (a_doc, header.index)
+			on_document_change (header)
 		end	
 
 	save_document is
@@ -358,24 +343,32 @@ feature {NONE} -- Implementation
 	xml_class: DOCUMENT_CLASS is
 			--
 			-- (export status {NONE})
+		local
+			l_file_name: FILE_NAME
 		once
-			create Result.make ("xml", "xml", "C:\MyProjects\Eiffel\editor\text_window\text\lexer\syntax_definitions\xml.syn")
+			create l_file_name.make_from_string (shared_constants.application_constants.syntax_files_directory)
+			l_file_name.extend ("xml.syn")
+			create Result.make ("xml", "xml", l_file_name.string)
 		end
 
 	java_class: DOCUMENT_CLASS is
 			--
 			-- (export status {NONE})
+		local
+			l_file_name: FILE_NAME
 		once
-			create Result.make ("java", "java", "C:\MyProjects\Eiffel\editor\text_window\text\lexer\syntax_definitions\java.syn")
+			create l_file_name.make_from_string (shared_constants.application_constants.syntax_files_directory)
+			l_file_name.extend ("java.syn")
+			create Result.make ("java", "java", l_file_name.string)
 		end
 
-	eiffel_class: DOCUMENT_CLASS is
-			--
-			-- (export status {NONE})
-		once
-			create Result.make ("eiffel", "e", Void)
-			Result.set_scanner (create {EDITOR_EIFFEL_SCANNER}.make)
-		end
+--	eiffel_class: DOCUMENT_CLASS is
+--			--
+--			-- (export status {NONE})
+--		once
+--			create Result.make ("eiffel", "e", Void)
+--			Result.set_scanner (create {EDITOR_EIFFEL_SCANNER}.make)
+--		end
 
 feature {NONE} -- Events
 	
@@ -546,6 +539,15 @@ feature {NONE} -- Events
 				end
 				text_displayed.insert_string (l_url)
 				select_region (l_start_pos, l_end_pos)
+			end
+		end		
+
+	on_document_change (a_header: TEXT_PANEL_HEADER) is
+			-- Document was changed
+		do		
+			update_observers
+			if current_document /= Void then
+				shared_web_browser.set_document (current_document)		
 			end
 		end		
 

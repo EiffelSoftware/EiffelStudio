@@ -140,10 +140,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_14.extend (okay_button)
 			l_ev_horizontal_box_14.extend (cancel_button)
 			
-			set_minimum_width (dialog_wide_width)
-			set_minimum_height (dialog_tall_height)
-			disable_user_resize
-			set_title ("Parser Tool")
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_13)
@@ -247,6 +243,10 @@ feature {NONE}-- Initialization
 			okay_button.set_minimum_width (button_width)
 			cancel_button.set_text (button_cancel_text)
 			cancel_button.set_minimum_width (button_width)
+			set_minimum_width (dialog_wide_width)
+			set_minimum_height (dialog_tall_height)
+			disable_user_resize
+			set_title ("Parser Tool")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -258,23 +258,27 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2, xml_widget_box, l_ev_vertical_box_3: EV_VERTICAL_BOX
-	notebook: EV_NOTEBOOK
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, 
-	l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, 
-	l_ev_horizontal_box_9, l_ev_horizontal_box_10, l_ev_horizontal_box_11, l_ev_horizontal_box_12, 
-	l_ev_horizontal_box_13, l_ev_horizontal_box_14: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, 
-	l_ev_label_7, l_ev_label_8: EV_LABEL
-	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2, l_ev_horizontal_separator_3, 
-	l_ev_horizontal_separator_4, l_ev_horizontal_separator_5: EV_HORIZONTAL_SEPARATOR
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5: EV_CELL
-	expression_list: EV_MULTI_COLUMN_LIST
-	expression_browse_button, save_expressions_button, expression_button, apply_button, 
-	okay_button, cancel_button: EV_BUTTON
-	expression_text, replacement_text, xml_name_text, xml_expr_text: EV_TEXT_FIELD
-	xml_structure_list: EV_TREE
 	xml_name_check, xml_expr_check, all_open_radio, all_project_radio: EV_CHECK_BUTTON
+	notebook: EV_NOTEBOOK
+	xml_structure_list: EV_TREE
+	l_ev_horizontal_separator_1,
+	l_ev_horizontal_separator_2, l_ev_horizontal_separator_3, l_ev_horizontal_separator_4,
+	l_ev_horizontal_separator_5: EV_HORIZONTAL_SEPARATOR
+	expression_list: EV_MULTI_COLUMN_LIST
+	l_ev_vertical_box_1, l_ev_vertical_box_2,
+	xml_widget_box, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
+	l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6,
+	l_ev_horizontal_box_7, l_ev_horizontal_box_8, l_ev_horizontal_box_9, l_ev_horizontal_box_10,
+	l_ev_horizontal_box_11, l_ev_horizontal_box_12, l_ev_horizontal_box_13, l_ev_horizontal_box_14: EV_HORIZONTAL_BOX
+	l_ev_label_1,
+	l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, l_ev_label_7,
+	l_ev_label_8: EV_LABEL
+	expression_browse_button, save_expressions_button, expression_button,
+	apply_button, okay_button, cancel_button: EV_BUTTON
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3,
+	l_ev_cell_4, l_ev_cell_5: EV_CELL
+	expression_text, replacement_text, xml_name_text, xml_expr_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
@@ -285,11 +289,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class EXPRESSION_DIALOG_IMP

@@ -48,12 +48,6 @@ feature {NONE}-- Initialization
 			cancel_button.extend (l_ev_vertical_box_3)
 			l_ev_vertical_box_3.extend (status_label)
 			
-			set_minimum_width (dialog_width)
-			set_minimum_height (dialog_short_height)
-			disable_user_resize
-			set_maximum_width (dialog_width)
-			set_maximum_height (dialog_tall_height)
-			set_title ("Progress")
 			cancel_button.set_padding_width (5)
 			cancel_button.set_border_width (2)
 			cancel_button.disable_item_expand (l_ev_vertical_box_1)
@@ -72,6 +66,12 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_3.set_border_width (inner_border_width)
 			l_ev_vertical_box_3.disable_item_expand (status_label)
 			status_label.align_text_left
+			set_minimum_width (dialog_width)
+			set_minimum_height (dialog_short_height)
+			disable_user_resize
+			set_maximum_width (dialog_width)
+			set_maximum_height (dialog_tall_height)
+			set_title ("Progress")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -83,9 +83,10 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	cancel_button, l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
 	progress_bar: EV_HORIZONTAL_PROGRESS_BAR
-	heading_label, status_label: EV_LABEL
+	cancel_button, l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	heading_label,
+	status_label: EV_LABEL
 
 feature {NONE} -- Implementation
 
@@ -96,11 +97,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class PROGRESS_DIALOG_IMP

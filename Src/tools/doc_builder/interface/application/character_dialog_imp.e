@@ -46,9 +46,6 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_2.extend (html_character_list)
 			l_ev_vertical_box_2.extend (dummy_cancel_button)
 			
-			set_minimum_width (300)
-			set_minimum_height (dialog_medium_height)
-			set_title ("Special Characters")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_1, "XML Characters")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_2, "HTML Characters")
 			l_ev_vertical_box_1.set_padding_width (5)
@@ -57,6 +54,9 @@ feature {NONE}-- Initialization
 			dummy_cancel_button.set_text ("Cancel")
 			dummy_cancel_button.set_minimum_width (0)
 			dummy_cancel_button.set_minimum_height (0)
+			set_minimum_width (300)
+			set_minimum_height (dialog_medium_height)
+			set_title ("Special Characters")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -69,8 +69,8 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	l_ev_notebook_1: EV_NOTEBOOK
-	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
 	xml_character_list, html_character_list: EV_MULTI_COLUMN_LIST
+	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
 	dummy_cancel_button: EV_BUTTON
 
 feature {NONE} -- Implementation
@@ -82,11 +82,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-		
+	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
 	
 end -- class CHARACTER_DIALOG_IMP

@@ -13,8 +13,6 @@ remtrace encryption
 exprt -r %DEFAULT_CVS_TAG -d encryption "Src/library/encryption"
 remtrace event
 exprt -r %DEFAULT_CVS_TAG -d event "Src/library/event"
-remtrace exml
-exprt -r %DEFAULT_CVS_TAG -d exml "Src/library/exml"
 remtrace gobo
 copy %INSTALL_DIR\free_add_ons\gobo\gobo_win.tgz .
 tar xvfz gobo_win.tgz
@@ -39,6 +37,8 @@ remtrace wel
 exprt -r %DEFAULT_CVS_TAG -d wel "Src/library/wel"
 remtrace vision2
 exprt -r %DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
+fullrd vision2\implementation\gtk
+fullrd vision2\implementation\gtk2
 remtrace wizard
 exprt -r %DEFAULT_CVS_TAG -d wizard "Src/library/wizard"
 remtrace Dotnet libraries
@@ -61,9 +61,6 @@ cd %EIFFEL_SRC\library\com\Clib_runtime
 default_make
 remtrace encryption
 cd %EIFFEL_SRC\library\encryption\Clib
-default_make
-remtrace exml
-cd %EIFFEL_SRC\library\exml\compiler_specific\ise\clib
 default_make
 remtrace net
 cd %EIFFEL_SRC\library\net\Clib

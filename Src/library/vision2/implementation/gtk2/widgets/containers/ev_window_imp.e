@@ -35,15 +35,12 @@ inherit
 			initialize,
 			make,
 			on_key_event,
-			width,
-			height,
 			on_size_allocate,
 			show,
 			hide,
 			internal_set_minimum_size,
 			on_widget_mapped,
-			destroy,
-			is_parentable
+			destroy
 		end
 
 	EV_GTK_WINDOW_IMP

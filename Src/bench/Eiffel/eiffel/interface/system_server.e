@@ -113,11 +113,6 @@ feature -- Access
 			-- Server for compiled classes
 			--| Reminder: This is not a real server
 	
-	unref_classes: ARRAYED_LIST [CLASS_I]
-			-- Place holder to keep a class alive even though class
-			-- is not directly referenced by System. Class has
-			-- been added by one of the compiler tool provider.
-
 	server_controler: SERVER_CONTROL;
 			-- Controler of servers
 
@@ -162,6 +157,13 @@ feature -- Access
 
 	class_comments_server: CLASS_COMMENTS_SERVER;
 			-- Server for class comments 
+
+feature {NONE} -- Private access
+
+	unref_classes: ARRAYED_LIST [CLASS_I]
+			-- Place holder to keep a class alive although class
+			-- is not directly referenced by System. Classes have
+			-- been added by one of the compiler tool provider.
 
 invariant
 	classes_not_void: classes /= Void

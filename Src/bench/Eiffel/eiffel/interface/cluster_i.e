@@ -785,6 +785,30 @@ end;
 			end
 		end
 
+	force_compilation_on_class_from_file (file_name: STRING) is
+			-- Insert class written in `file_name' into current
+			-- cluster and make sure it will be compiled.
+		local
+			class_path: FILE_NAME
+			class_name: STRING
+			class_i: CLASS_I
+		do
+			create class_path.make_from_string (path)
+			class_path.set_file_name (file_name)
+			class_name := read_class_name_in_file (class_path)
+			check
+				class_name_not_void: class_name /= Void
+				class_does_not_exist: classes.item (class_name) = Void
+			end
+			insert_class_from_file (file_name)
+			class_i := classes.item (class_name)
+			check
+				class_i_not_void: class_i /= Void
+			end
+				-- Insert class to current project
+			System.add_unref_class (class_i)
+		end
+
 	insert_class_from_file (file_name: STRING) is
 		local
 			class_path: FILE_NAME;

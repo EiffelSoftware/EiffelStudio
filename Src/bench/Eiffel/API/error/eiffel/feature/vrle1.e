@@ -41,7 +41,7 @@ feature -- Output
 feature {COMPILER_EXPORTER}
 
 	set_local_name (s_id: INTEGER) is
-			-- Assign `s_id' to `local_name'.
+			-- Assign name extracted from name ID `s_id' to `local_name'.
 		require
 			valid_s_id: s_id >= 1
 		do

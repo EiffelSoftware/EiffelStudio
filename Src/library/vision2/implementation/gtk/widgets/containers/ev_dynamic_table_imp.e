@@ -34,9 +34,12 @@ feature -- Element change
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite. Several children
 			-- possible.
+		local
+			wid: EV_WIDGET
 		do
 			{EV_TABLE_IMP} Precursor (child_imp)
-			set_child_position (child_imp.interface, row_index, column_index, row_index + 1, column_index + 1)
+			wid ?= child_imp.interface
+			set_child_position (wid, row_index, column_index, row_index + 1, column_index + 1)
 			if is_row_layout then
 				if column_index + 1 >= finite_dimension then
 					row_index := row_index + 1

@@ -338,7 +338,11 @@ rt_public  EIF_INTEGER file_size (FILE *fp)
 	 * to a distant machine. Xavier
 	 */
 	current_pos = file_tell(fp);
+#ifdef EIF_WINDOWS
+	if (0 != fflush (fp))   	/* Without a flush the information */
+#else
 	if (0 != fsync (fd))   	/* Without a flush the information */
+#endif
 		esys();						/* is not up to date, but it _may_ */
 									/* cause file pointer movement!    */
 	file_go(fp, current_pos);

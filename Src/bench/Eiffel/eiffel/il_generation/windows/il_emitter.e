@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			create l_path.make ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
 			implementation := (create {EMITTER_FACTORY}).new_emitter (runtime_version)
 			if implementation /= Void then
-				implementation.initialize_with_path (l_path)
+				implementation.initialize_with_path (l_path, create {UNI_STRING}.make (runtime_version))
 			end
 		end
 

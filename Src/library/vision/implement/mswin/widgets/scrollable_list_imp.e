@@ -58,6 +58,8 @@ inherit
 			parent as wel_parent,
 			y as wel_y,
 			x as wel_x,
+			background_color as wel_background_color,
+			foreground_color as wel_foreground_color,
 			move as wel_move,
 			set_capture as wel_set_capture,
 			release_capture as wel_release_capture,
@@ -733,7 +735,6 @@ feature {NONE} -- Implementation
 		local
 			a_font_windows: FONT_IMP
 		do
-
 			if realized then
 				if fixed_size_flag then
 					a_font_windows ?= font.implementation
@@ -750,9 +751,11 @@ feature {NONE} -- Implementation
 				end
 			end
 			-- Change the selection, if added element affected it
-			if multiple_selection and then
-			   not private_selected_positions.empty and then pos < private_selected_positions.first or else
-			   not multiple_selection and then pos < private_selected_position then
+			if
+				multiple_selection and then
+				not private_selected_positions.empty and then pos < private_selected_positions.first or else
+				not multiple_selection and then pos < private_selected_position
+			then
 				update_private_selection
 			end
 		end
@@ -768,7 +771,7 @@ feature {NONE} -- Implementation
 			wel_delete_string (pos)
 			if realized then
 				a_font_windows ?= font.implementation
-   				if fixed_size_flag then
+				if fixed_size_flag then
 					if private_scroll_width > wel_width then
 						if not (a_font_windows.string_width (Current, s) < private_scroll_width) then
 							a_width := longest_string_width
@@ -788,7 +791,6 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-
 		end
 
 	longest_string_width: INTEGER is

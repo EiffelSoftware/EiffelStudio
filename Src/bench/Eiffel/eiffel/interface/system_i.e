@@ -2821,7 +2821,8 @@ end
 			buffer.clear_all
 
 			buffer.putstring ("#include %"eif_project.h%"%N%
-									 %#include %"eif_struct.h%"%N")
+								%#include %"eif_struct.h%"%N%
+								%#include %"eif_malloc.h%"%N")
 
 			if not final_mode then
 					-- Hash table extern declaration in workbench mode

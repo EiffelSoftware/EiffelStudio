@@ -31,7 +31,6 @@ inherit
 			set_width,
 			set_height,
 			remove_command,
---			destroy,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -51,12 +50,12 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize the container by creating ev_children
 		do 
-			!! ev_children.make
+			!! ev_children.make (2)
 		end
 
 feature {NONE} -- Access
 	
-	ev_children: LINKED_LIST [EV_WIDGET_IMP]
+	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			-- List of the children of the box
 
 feature -- Implementation
@@ -81,7 +80,7 @@ feature -- Implementation
 					ev_children.forth
 				end
 			end
-			Precursor (flag)
+			{EV_CONTAINER_IMP} Precursor (flag)
 		end
 
 feature {NONE} -- Implementation : WEL features
@@ -97,8 +96,10 @@ feature {NONE} -- Implementation : WEL features
 			-- requested by the WM_ERASEBKGND windows message.
 			-- By default there is no background
 		do
-			!! Result.make_solid (background_color)
-			disable_default_processing
+			if background_color /= Void then
+				!! Result.make_solid (background_color)
+				disable_default_processing
+			end
 		end
 
 end -- class EV_INVISIBLE_CONTAINER_IMP

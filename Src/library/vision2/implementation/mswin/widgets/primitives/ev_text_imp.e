@@ -48,7 +48,8 @@ inherit
 			wel_foreground_color
 		redefine
 			default_style,
-			default_ex_style
+			default_ex_style,
+			on_en_change
 		end
 
 creation
@@ -67,16 +68,6 @@ feature -- Initialization
 			-- Create a text area with `txt' as label.
 		do
 			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
-		end
-
-feature -- Status setting
-
-	set_maximum_line_length (lenght: INTEGER) is
-			-- Maximum number of charachters on line
-		do
-			check
-				not_yet_implemented: False
-			end
 		end
 
 feature -- Basic operation
@@ -114,7 +105,7 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- WEL Implementation
  
 	default_style: INTEGER is
 			-- Default style used to create the control
@@ -130,6 +121,14 @@ feature {NONE} -- Implementation
 			-- Default style used to create the control
 		do
 			Result := Ws_ex_clientedge
+		end
+
+
+	on_en_change is
+			-- The user has taken an action
+			-- that may have altered the text.
+		do
+			execute_command (Cmd_change, Void)
 		end
 
 end -- class EV_TEXT_AREA_IMP

@@ -38,8 +38,8 @@ feature -- Basic Operation
 			h1.extend (browse_b)
 			choice_box.extend(Create {EV_HORIZONTAL_BOX})	
 
-			h1.disable_child_expand(browse_b)
-			choice_box.disable_child_expand(h1)
+			h1.disable_item_expand(browse_b)
+			choice_box.disable_item_expand(h1)
 
 			set_updatable_entries(<<browse_b.press_actions, location.change_actions>>)
 		end

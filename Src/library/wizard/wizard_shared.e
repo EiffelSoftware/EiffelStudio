@@ -63,4 +63,19 @@ feature -- Access
 			Result := wizard_source +"\resources"
 		end
 
+	pixmap: EV_PIXMAP is
+			-- Pixmap on which can be displayed a picture which 
+			-- goes with the state.
+		once
+			Create Result
+		end
+
+invariant
+	memory_for_pixmap_allocated: pixmap /= Void
+	wizard_resource_path_exists: wizard_resources_path /= Void
+	wizard_bmp_path_exists: wizard_bmp_path /= Void
+	wizard_source_exists: wizard_source /= Void
+	history_exists: history /= Void
+	window_exists: first_window /= Void
+	window_content_exists: main_box /= Void
 end -- class WIZARD_SHARED

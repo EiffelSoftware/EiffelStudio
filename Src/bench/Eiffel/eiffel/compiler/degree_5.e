@@ -42,7 +42,7 @@ feature -- Processing
 	execute is
 			-- Process all classes.
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			classes: ARRAY [CLASS_C]
 			class_counter: CLASS_COUNTER
 			a_class: CLASS_C
@@ -70,6 +70,24 @@ feature -- Processing
 					end
 					i := i + 1
 				end
+			end
+				-- Initialize `parents' for all recompiled classes.
+			from
+				i := classes.lower
+				nb := classes.upper
+			until
+				i > nb
+			loop
+				a_class := classes.item (i)
+				if a_class /= Void and a_class.parents = Void then
+					System.set_current_class (a_class)
+					Error_handler.mark
+					a_class.fill_parents (class_info_server.item (a_class.class_id))
+					if Error_handler.new_error then
+						insert_class (a_class)
+					end
+				end
+				i := i + 1
 			end
 			System.set_current_class (Void)
 			Degree_output.put_end_degree

@@ -23,7 +23,8 @@ inherit
 		select
 			reset_modified_flags, copy_attributes,
 			initialize_transport
-		end
+		end;
+	COMMAND
 
 feature 
 
@@ -40,11 +41,31 @@ feature
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
 			!! widget.make_unmanaged (entity_name, a_parent);
-			set_size (80, 80);
-			set_drawing_area_size (1000, 1000);
+			!! horizontal_line.make;
+			horizontal_line.set_line_width (2);
+			!! vertical_line.make;
+			vertical_line.set_line_width (2);
+			widget.add_expose_action (Current, Void);
+			horizontal_line.attach_drawing (widget);
+			vertical_line.attach_drawing (widget);
+			if retrieved_node = Void then
+				set_size (80, 80);
+				set_drawing_area_size (1000, 1000);
+			end
 		end;
 
 	widget: DRAWING_BOX;
+
+	vertical_line, horizontal_line: SEGMENT;
+			-- Lines to indicate outer edge of drawing area
+
+	execute (arg: ANY) is
+			-- Redraw drawing area.
+		do
+			widget.clear;
+			horizontal_line.draw;
+			vertical_line.draw;
+		end;
 	
 feature {NONE}
 
@@ -133,9 +154,27 @@ feature
 	drawing_area_size_modified: BOOLEAN;
 
 	set_drawing_area_size (new_w, new_h: INTEGER) is
+		local
+			p1, p2: COORD_XY_FIG
 		do
 			drawing_area_size_modified := True;
 			widget.set_drawing_area_size (new_w, new_h)
+
+			!! p1;
+			!! p2;
+			p1.set_x (widget.drawing_area_width - 1);
+            p1.set_y (0);
+			p2.set_x (widget.drawing_area_width - 1);
+            p2.set_y (widget.drawing_area_height - 1);
+			vertical_line.set (p1, p2);
+			
+			!! p1;
+			!! p2;
+			p1.set_x (0);
+			p1.set_y (widget.drawing_area_height - 1);
+			p2.set_x (widget.drawing_area_width - 1);
+			p2.set_y (widget.drawing_area_height - 1);
+			horizontal_line.set (p1, p2);
 		end;
 
 	reset_modified_flags is

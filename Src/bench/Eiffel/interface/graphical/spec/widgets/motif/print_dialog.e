@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			-- Print a file name.
 		local
 			cmd_string: STRING;
-			shell_request: EXTERNAL_COMMAND_EXECUTOR;
+			shell_request: EXECUTION_ENVIRONMENT;
 			new_text: STRING;
 			filterable_format: FILTERABLE;
 			file: PLAIN_TEXT_FILE
@@ -185,8 +185,8 @@ feature {NONE} -- Implementation
 			if new_text /= Void then
 				save_to_file (new_text, file_name);
 				if not print_to_file_t.state then
-					!! shell_request;
-					shell_request.execute (cmd_string)
+					!! shell_request
+					shell_request.system (cmd_string)
 					if delete_after then
 						!! file.make (file_name)
 						file.delete

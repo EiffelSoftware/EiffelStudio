@@ -138,7 +138,7 @@ feature -- Output
 					i := i + 1;
 					c := a_line.item (i);
 					if c = '%T' then
-						st.add_string ("	")
+						st.add_indent
 					else
 						st.add_char (c)
 					end;
@@ -161,7 +161,7 @@ feature -- Output
 				i := i + 1;
 				c := a_line.item (i);
 				if c = '%T' then
-					st.add_string ("	");
+					st.add_indent
 					if i <= pos then
 						nb_tab := nb_tab + 1;
 					end;

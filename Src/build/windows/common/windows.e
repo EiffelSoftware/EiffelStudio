@@ -83,6 +83,13 @@ feature {NONE} -- Windows
 			!!Result.make (main_panel.base)
 		end
 
+	error_window: ERROR_BOX is
+			-- For the Error Handler (which
+			-- is also used for bench)
+		do
+			Result := error_box
+		end;
+
 	question_box: QUESTION_BOX is
 		once
 			!!Result.make (main_panel.base)

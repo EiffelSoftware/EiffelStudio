@@ -167,6 +167,8 @@ end;
 		require
 			good_argument: f /= Void;
 			is_closed: not f.is_open
+		local
+			opened_file: SERVER_FILE
 		do
 			f.open;
 			force (f)

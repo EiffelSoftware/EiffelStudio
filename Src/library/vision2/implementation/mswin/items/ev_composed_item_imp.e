@@ -95,6 +95,22 @@ feature -- Access
 
 feature -- Element change
 
+
+		set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				parent_imp.add_item (Current)
+			end
+		end
+
+
 	set_count (value: INTEGER) is
 			-- Make `value' the new count.
 			-- When there is a parent, the item has the

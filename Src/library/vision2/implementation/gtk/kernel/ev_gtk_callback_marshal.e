@@ -157,9 +157,9 @@ feature {EV_ANY_IMP} -- Access
 				set_motion_tuple (
 					local_C.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
 					local_C.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
-					local_C.gdk_event_motion_struct_xtilt (gdk_event),
-					local_C.gdk_event_motion_struct_ytilt (gdk_event),
-					local_C.gdk_event_motion_struct_pressure (gdk_event),
+					0.5,--local_C.gdk_event_motion_struct_xtilt (gdk_event),
+					0.5,--local_C.gdk_event_motion_struct_ytilt (gdk_event),
+					0.5,--local_C.gdk_event_motion_struct_pressure (gdk_event),
 					local_C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
 					local_C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				)
@@ -198,9 +198,9 @@ feature {EV_ANY_IMP} -- Access
 					local_C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
 					local_C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
 					local_C.gdk_event_button_struct_button (gdk_event),
-					local_C.gdk_event_button_struct_xtilt (gdk_event),
-					local_C.gdk_event_button_struct_ytilt (gdk_event),
-					local_C.gdk_event_button_struct_pressure (gdk_event),
+					0.5,--local_C.gdk_event_button_struct_xtilt (gdk_event),
+					0.5,--local_C.gdk_event_button_struct_ytilt (gdk_event),
+					0.5,--local_C.gdk_event_button_struct_pressure (gdk_event),
 					local_C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
 					local_C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				]
@@ -213,9 +213,9 @@ feature {EV_ANY_IMP} -- Access
 					local_C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
 					local_C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
 					local_C.gdk_event_button_struct_button (gdk_event),
-					local_C.gdk_event_button_struct_xtilt (gdk_event),
-					local_C.gdk_event_button_struct_ytilt (gdk_event),
-					local_C.gdk_event_button_struct_pressure (gdk_event),
+					0.5,--local_C.gdk_event_button_struct_xtilt (gdk_event),
+					0.5,--local_C.gdk_event_button_struct_ytilt (gdk_event),
+					0.5,--local_C.gdk_event_button_struct_pressure (gdk_event),
 					local_C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
 					local_C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				]
@@ -289,16 +289,6 @@ feature {EV_ANY_IMP} -- Access
 		end
 
 feature {EV_ANY_IMP} -- Agent implementation routines
-
-	signal_disconnect_agent_routine (a_c_object: POINTER; a_connection_id: INTEGER; signal_ids_list: ARRAYED_LIST [INTEGER]) is
-			-- Disconnect signal connection with `a_connection_id'.
-			-- Used to avoid reference on widget implementation object.
-		require
-			a_connection_id_positive: a_connection_id > 0
-		do
-			C.gtk_signal_disconnect (a_c_object, a_connection_id)
-			signal_ids_list.prune_all (a_connection_id)
-		end
 		
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
 			-- Tuple containing integer value from first of `args'.
@@ -315,38 +305,6 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			gtkarg2 := gtk_args_array_i_th (args, 1)
 			Result := [gtk_value_int (args) + 1, gtk_value_int (gtkarg2)]
 			-- Column is zero based in gtk.
-		end
-	
-	agent_from_action_sequence (a_action_seq: ACTION_SEQUENCE [TUPLE]): PROCEDURE [ANY, TUPLE] is
-			-- 
-		do
-			Result := agent a_action_seq.call (?)
-		end
-
-	kamikaze_agent (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
-		target: PROCEDURE [ANY, TUPLE]):
-		PROCEDURE [ANY, TUPLE []] is
-			-- Agent to remove `target' and itself form `an_action_sequence'.
-		local
-			kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE[]]]
-		do
-			create kamikaze_cell.put (Void)
-			Result := agent do_kamikaze (
-				an_action_sequence,
-				target,
-				kamikaze_cell
-			)
-			kamikaze_cell.put (Result)
-		end
-	
-	do_kamikaze (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
-		target: PROCEDURE [ANY, TUPLE];
-		kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE]]) is
-			-- Remove `target' and agent for self (from `kamikaze_cell') from
-			-- `an_action_sequence'.
-		do
-			an_action_sequence.prune_all (target)
-			an_action_sequence.prune_all (kamikaze_cell.item)
 		end
 		
 	is_destroyed: BOOLEAN			
@@ -409,12 +367,7 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 		once
 			Result := [[]]
 		end
-		
-	tuple: TUPLE is
-		once
-			Result := []
-		end
-		
+
 	pointer_tuple: TUPLE [POINTER] is
 			-- 
 		once

@@ -19,7 +19,6 @@ feature {NONE} -- Initialization
 			project_path := Void			
 			modules_debugger_info := Void
 			class_types_debugger_info := Void
-			entry_point_token := 0
 		end
 
 feature -- Data
@@ -31,8 +30,6 @@ feature -- Data
 	modules_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_MODULE, STRING]
 
 	class_types_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_CLASS_TYPE, INTEGER]
-
-	entry_point_token: INTEGER
 
 feature -- Change
 
@@ -62,13 +59,6 @@ feature -- Change
 		require
 		do
 			class_types_debugger_info := val
-		end
-
-	set_entry_point_token (val: like entry_point_token) is
-			-- Change value
-		require
-		do
-			entry_point_token := val
 		end
 
 end

@@ -630,15 +630,6 @@ feature {NONE} -- Stepping
 			end
 		end		
 
-feature {NONE} -- Entry Point
-
-	is_entry_point (f: E_FEATURE): BOOLEAN is
-			-- Is the entry point of the system ?
-		do
-			Result := (f.name).is_equal (Eiffel_system.System.creation_name)
-					and then f.written_class.is_equal (Eiffel_system.System.root_class.compiled_class)
-		end
-
 feature -- Breakpoints controller
 
 	send_breakpoints is
@@ -727,7 +718,6 @@ feature -- BreakPoints
 			l_class_c: CLASS_C
 			l_class_token: INTEGER
 			
-			l_is_entry_point: BOOLEAN
 			l_class_type_list: TYPE_LIST
 			l_class_type: CLASS_TYPE			
 		do
@@ -739,7 +729,6 @@ feature -- BreakPoints
 			end
 			
 			l_class_c := f.written_class			
-			l_is_entry_point := is_entry_point (f)
 
 				--| loop on the different derivation of a generic class
 			l_class_type_list := l_class_c.types
@@ -766,12 +755,6 @@ feature -- BreakPoints
 					loop
 						l_il_offset := l_il_offset_list.item
 						eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (bp, l_module_name, l_class_token, l_feature_token, l_il_offset)
-	
-						if l_is_entry_point and then Il_debug_info_recorder.entry_point_token /= l_feature_token then
-							eifnet_debugger.Eifnet_debugger_info.request_breakpoint_add (bp,
-									l_module_name, l_class_token, Il_debug_info_recorder.entry_point_token , l_il_offset
-								)
-						end
 						l_il_offset_list.forth
 					end		
 				else
@@ -787,20 +770,14 @@ feature -- BreakPoints
 		local
 			f: E_FEATURE
 			i: INTEGER
-
 			l_feature_token: INTEGER
 			l_il_offset_list: LIST [INTEGER]
 			l_il_offset: INTEGER
-			
 			l_module_name: STRING
 			l_class_c: CLASS_C
 			l_class_token: INTEGER
-			
-			l_is_entry_point: BOOLEAN
-			
 			l_class_type_list: TYPE_LIST
 			l_class_type: CLASS_TYPE
-		
 		do
 			f := bp.routine
 			i := bp.breakable_line_number
@@ -810,8 +787,6 @@ feature -- BreakPoints
 			end
 			
 			l_class_c := f.written_class			
-
-			l_is_entry_point := is_entry_point (f)
 
 			--| loop on the different derivation of a generic class	
 			l_class_type_list := l_class_c.types
@@ -834,12 +809,6 @@ feature -- BreakPoints
 					loop
 						l_il_offset := l_il_offset_list.item
 						eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (bp, l_module_name, l_class_token, l_feature_token, l_il_offset)
-	
-						if l_is_entry_point and then Il_debug_info_recorder.entry_point_token /= l_feature_token then
-							eifnet_debugger.Eifnet_debugger_info.request_breakpoint_remove (bp, 
-									l_module_name, l_class_token, Il_debug_info_recorder.entry_point_token , l_il_offset
-								)
-						end
 						l_il_offset_list.forth
 					end
 				else

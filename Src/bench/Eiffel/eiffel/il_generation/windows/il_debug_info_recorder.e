@@ -5,7 +5,6 @@ indexing
 			- class token
 			- feature token
 			- module filename
-			- entry_point token
 			- once `_done' and `_result' token
 			- line debug info
 	]"
@@ -55,7 +54,6 @@ feature {NONE} -- Initialization
 		do
 			create dbg_info_modules.make (50)
 			create dbg_info_class_types.make (100)
-			entry_point_token := 0
 			create internal_requested_class_tokens.make (10)
 			reset_debugging_live_data
 		end
@@ -65,7 +63,6 @@ feature {NONE} -- Initialization
 		do
 			dbg_info_modules.wipe_out
 			dbg_info_class_types.wipe_out
-			entry_point_token := 0
 			internal_reset
 		end
 
@@ -359,10 +356,6 @@ feature -- Queries : dotnet data from estudio data
 		ensure
 			class_token_positive: Result > 0
 		end
-
-	entry_point_token: INTEGER
-			-- Token of the system entry point feature
-			-- Useful for stepping at the beginning of the execution
 
 	feature_token_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): INTEGER is
 			-- Feature token identified for `a_feat'
@@ -704,17 +697,6 @@ feature {IL_CODE_GENERATOR} -- line debug recording
 
 feature {IL_CODE_GENERATOR} -- Token recording
 
-	record_entry_point_token (a_module: STRING; a_class_token, a_feature_token: INTEGER) is
-			-- Record the entry_point_token of the system.
-		do
-			if is_debug_info_enabled then
-				debug ("debugger_il_info_trace")
-					print ("EntryPointToken_Recorded " + a_feature_token.to_hex_string + "%N")
-				end
-				entry_point_token := a_feature_token
-			end
-		end
-
 	record_once_info (a_class_type: CLASS_TYPE; a_feature: FEATURE_I; a_once_name: STRING; a_once_done_token, a_once_result_token: INTEGER;) is
 			--  Record `_done' and `_result' tokens for once `a_once_name' from `a_class_type'.
 		local
@@ -752,13 +734,6 @@ feature {IL_CODE_GENERATOR} -- Token recording
 				else -- not is_attribute
 					if not in_interface and is_static then
 						process_il_feature_info_recording (a_module, a_class_type, a_feat, a_class_token, a_feature_token)
-						if is_entry_point (a_feat) then
-							record_entry_point_token (
-									direct_module_key (a_module.module_file_name)
-									, a_class_token
-									, a_feature_token
-								)
-						end
 					else
 						do_nothing
 					end
@@ -1096,7 +1071,6 @@ feature {NONE}-- Implementation for save and load task
 				l_object_to_save.set_project_path (direct_module_key (l_project_path))
 				l_object_to_save.set_modules_debugger_info (dbg_info_modules)
 				l_object_to_save.set_class_types_debugger_info (dbg_info_class_types)
-				l_object_to_save.set_entry_point_token (entry_point_token)
 
 				save_storable_data (l_object_to_save, a_filename_to_save)
 			end
@@ -1185,7 +1159,6 @@ feature {NONE}-- Implementation for save and load task
 			l_dbg_info_modules: like dbg_info_modules
 			l_patched_dbg_info_modules: like dbg_info_modules
 			l_dbg_info_class_types: like dbg_info_class_types
-			l_entry_point_token: like entry_point_token
 			l_il_info_file: RAW_FILE
 
 			l_current_project_path: STRING
@@ -1210,7 +1183,6 @@ feature {NONE}-- Implementation for save and load task
 						l_dbg_info_project_path	:= l_retrieved_object.project_path
 						l_dbg_info_modules      := l_retrieved_object.modules_debugger_info
 						l_dbg_info_class_types  := l_retrieved_object.class_types_debugger_info
-						l_entry_point_token     := l_retrieved_object.entry_point_token
 
 						if not is_from_precompiled then
 								--| when we load the project, by default we load as workbench
@@ -1281,7 +1253,6 @@ feature {NONE}-- Implementation for save and load task
 							end
 
 							dbg_info_modules.merge (l_dbg_info_modules)
-							entry_point_token := l_entry_point_token
 						else
 								--| Update and Merge data
 								--| regarding about module name

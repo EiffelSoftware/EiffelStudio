@@ -73,6 +73,8 @@ feature -- Access
 
 	ascii_char: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
+		require
+			valid_character_code: is_valid_character_code
 		do
 			Result := c_ascii_char (item) 
 		end
@@ -148,6 +150,14 @@ feature -- Status report
 			-- (True if it is not its type's default.)
 		do
 			Result := item /= 0
+		end
+
+	is_valid_character_code: BOOLEAN is
+			-- Does current object represent a character?
+		local
+			ch: CHARACTER
+		do
+			Result := item >= ch.Min_value and item <= ch.Max_value
 		end
 
 feature -- Basic operations
@@ -326,6 +336,8 @@ feature -- Conversion
 
 	to_character: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
+		require
+			valid_character: is_valid_character_code
 		do
 			Result := c_ascii_char (item) 
 		end

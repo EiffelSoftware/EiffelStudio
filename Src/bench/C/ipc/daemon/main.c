@@ -386,25 +386,6 @@ char szAppName [] = "ebench";		/* Window class name for temporary ebench window 
 HANDLE hInst;				/* Application main instance			 */
 HWND hwnd;				/* Handle of temporary ebench window 	*/
 
-char slogan1 [] = "Inquire about our hands-on Eiffel sessions in Santa Barbara\nthe ideal way to learn from the experts.\n<info@eiffel.com>, 805-685-1006.";
-char slogan2 [] = "\"Object-Oriented Software Construction\": the definitive\nreference on object technology. Order from your\nbookstore or directly from ISE for immediate delivery";
-char slogan3 [] = "SPECIAL MAINTENANCE DEAL covering all releases for one year.\nGet the new, exciting Eiffel developments as\nthey come out. <info@eiffel.com>, 805-685-1006.";
-char slogan4 [] = "For the latest on ISE Eiffel, Eiffel projects, on-line\ndocumentation, new products: come back often to\nhttp://www.eiffel.com - 4-star McKinley award-winning site.";
-char slogan5 [] = "Windows Tech Journal about ISE Eiffel, December 1996:\n\"Eiffel may be the most thoroughly object-oriented\nlanguage that's commercially available\".";
-char slogan6 [] = "Object Magazine, Editor's Choice, December 96: ISE Eiffel.\n\"My favorite testing tool is the Eiffel language. Eiffel\nprevents bugs by facilitation good software engineering.\"";
-char slogan7 [] = "Windows Tech Journal on ISE Eiffel, December 96:\"Tired of\ndevelopment environments that only pretend to be O-O?\nISE Eiffel will have you marching to a different drummmer\"";
-char slogan8 [] = "GUI building: are you aware of the Eiffel Resource Bench?\nFREE for a limited time only with purchase of\nISE Eiffel 4. <info@eiffel.com>, 805-685-1006.";
-char slogan9 [] = "Tell us about your project! Let us study with you how\nISE Eiffel 4 can help you gain the competitive edge.\nWrite to <info@eiffel.com>.";
-char slogan10 [] = "Do you know about Eiffel on other platforms? The most\nportable environment in the industry also runs on\nUnix, Linux, OpenVMS, and more.";
-char slogan11 [] = "How to build quality reusable component libraries?\nRead the definitive reference:\"Reusable Software\",\nPrentice Hall. See http://www.eiffel.com/doc/books/reusable.html";
-char slogan12 [] = "Does your manager understand objects? Be kind: get him\nor her a copy of \"Object Success: A Manager's Guide to Object Technologie\"\nSee http://www.eiffel.com/doc/books/success.html";
-char slogan13 [] = "Addison-Wesley has a whole book series devoted to\nEiffel:\"Eiffel in Practice\".\n See http://www.awl.com/cp/eiffel.html";
-char slogan14 [] = "Interested in the CORBA-Eiffel interface?\n Contact ISE <info@eiffel.com> for pricing.";
-char slogan15 [] = "Lots of Eiffel books are available.\n See http://www.eiffel.com/doc/documentation.html.";
-char slogan16 [] = "Eiffel spells reuse!\nThe Eiffel Shelf wants your libraries.";
-char slogan17 [] = "High-level consulting: have\nISE's world-class experts review your architecture.";
-char slogan18 [] = "Get published! Many magazines are eager to publish Eiffel\nexperience reports. Contact ISE and we'll help you\nsubmit your article to the right publication";
-
 /*----------------------------------------------------------------*/
 /* Display a splash window while loading ise4.exe */
 /*----------------------------------------------------------------*/
@@ -488,7 +469,6 @@ void display_splash()
 
 	int i,lines,random;
 	size_t j;
-	CHAR *slogan;
 	CHAR st[100];
 	SIZE size;
 
@@ -505,73 +485,6 @@ void display_splash()
     SelectPalette (dc, palette, 1);
     RealizePalette (dc);
     BitBlt (dc, sr.left, sr.top, bm.bmWidth, bm.bmHeight, MemDC, 0, 0, SRCCOPY);
-
-    SelectObject (dc, GetStockObject (SYSTEM_FIXED_FONT));
-    memset (st, 0, sizeof (st));
-    i=0;
-    j=0;
-    lines=0;
-    random = GetTickCount () % 19;
-    switch (random)
-    {
-	case 0: slogan = slogan1;
-		break;
-	case 1: slogan = slogan2;
-		break;
-	case 2: slogan = slogan3;
-		break;
-	case 3: slogan = slogan4;
-		break;
-	case 4: slogan = slogan5;
-		break;
-	case 5: slogan = slogan6;
-		break;
-	case 6: slogan = slogan7;
-		break;
-	case 7: slogan = slogan8;
-		break;
-	case 8: slogan = slogan9;
-		break;
-	case 9: slogan = slogan10;
-		break;
-	case 10: slogan = slogan11;
-		break;
-	case 11: slogan = slogan11;
-		break;
-	case 12: slogan = slogan12;
-		break;
-	case 13: slogan = slogan13;
-		break;
-	case 14: slogan = slogan14;
-		break;
-	case 15: slogan = slogan15;
-		break;
-	case 16: slogan = slogan16;
-		break;
-	case 17: slogan = slogan17;
-		break;
-	case 18: slogan = slogan18;
-		break;
-    }
-
-    while (j<strlen(slogan))
-    {
-		st [i++] = slogan[j++];
-		if (slogan[j]=='\n')
-		{
-			GetTextExtentPoint32 (dc, st, strlen (st), &size);
-			TextOut (dc, sr.left + 5 + ((600 - size.cx) / 2),
-				370 + sr.top + lines * 20, st, strlen (st));
-			memset (st, 0, sizeof (st));
-			i=0;
-			lines++;
-			j++;
-		}
-    }
-	GetTextExtentPoint32 (dc, st, strlen (st), &size);
-
-	TextOut (dc, sr.left + 5 + ((600 - size.cx) / 2), 370 + sr.top + lines * 20, st, strlen (st));
-
     DeleteObject (SelectObject (MemDC, OldBitmap));
     DeleteDC (MemDC);
     DeleteDC (dc);

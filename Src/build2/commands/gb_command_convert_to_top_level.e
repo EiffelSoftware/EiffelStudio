@@ -83,12 +83,12 @@ feature -- Basic Operation
 			child_object.remove_client_representation_recursively
 
 			new_object := Object_handler.deep_object_from_id (child_id).new_top_level_representation
-			new_object_id := new_object.id
 			
 				-- Now perform processing to ensure that each time `execute' is called we end up with
 				-- a structure containing objects with identical ids. See comment for `original_ids'.
 			if not executed_once then
 					-- As this is the first time, record all ids in the structure.
+				new_object_id := new_object.id
 				create all_children.make (50)
 				new_object.all_children_recursive (all_children)
 				create original_ids.make (50)
@@ -108,6 +108,7 @@ feature -- Basic Operation
 				check
 					counts_consistent: all_children.count + 1 = original_ids.count
 				end
+				object_handler.objects.remove (new_object.id)
 				new_object.set_id (original_ids.i_th (1))
 				object_handler.objects.put (new_object, new_object.id)
 				from
@@ -115,6 +116,7 @@ feature -- Basic Operation
 				until
 					all_children.off
 				loop
+					object_handler.objects.remove (all_children.item.id)
 					all_children.item.set_id (original_ids.i_th (all_children.index + 1))
 					object_handler.objects.put (all_children.item, all_children.item.id)
 					all_children.forth

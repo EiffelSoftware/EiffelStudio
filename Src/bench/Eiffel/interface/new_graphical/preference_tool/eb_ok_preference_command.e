@@ -1,11 +1,11 @@
 indexing
-
 	description:
 		"Command to apply and save changes in the resources."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EB_OK_PREFERENCE_COMMAND
+class
+	EB_OK_PREFERENCE_COMMAND
 
 inherit
 	EB_PREFERENCE_COMMAND
@@ -15,7 +15,7 @@ creation
 
 feature {NONE} -- Useless
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			check
 				do_not_call: false

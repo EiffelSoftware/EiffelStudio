@@ -519,6 +519,8 @@ feature {CASE_CLASS_INFO} -- Case storage output
 		local
 			g_l: FIXED_LIST [S_GENERIC_DATA]
 			i_l: FIXED_LIST [S_TAG_DATA]
+			c_l: LINKED_LIST [STRING]
+			f_l: EIFFEL_LIST [FEATURE_NAME]
 			s_chart: S_CLASS_CHART
 			gen: FORMAL_DEC_AS
 			gen_name: STRING
@@ -570,6 +572,26 @@ feature {CASE_CLASS_INFO} -- Case storage output
 					generics.forth
 				end
 				Result.set_generics (g_l)
+			end
+			if creators /= Void then
+				from
+					!! c_l.make
+					creators.start
+				until
+					creators.after
+				loop
+					from
+						f_l := creators.item.feature_list
+						f_l.start
+					until
+						f_l.after
+					loop
+						c_l.extend (f_l.item.visual_name)
+						f_l.forth
+					end
+					creators.forth
+				end
+				Result.set_creation_features (c_l)
 			end
 		end
 

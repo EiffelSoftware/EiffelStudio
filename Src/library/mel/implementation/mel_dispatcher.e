@@ -282,27 +282,24 @@ feature {NONE} -- External features passed out to C
 		end;
 
 	frozen handle_translation (a_screen_object: POINTER; 
-				a_translation_id: POINTER; 
+				a_translation: STRING; 
 				event_ptr: POINTER) is
 			-- Handle the Xt event that was specified in `set_translation'.
 			-- Call the callbacks of the MEL widget that has `a_screen_object'
 			-- and create the MEL_CALLBACK_STRUCT object associated to the event.
 		require
 			valid_a_screen_object: a_screen_object /= default_pointer;
-			translation_id_not_null: a_translation_id /= default_pointer;
+			translation_not_void: a_translation /= Void;
 			a_callback_struct_ptr: event_ptr /= default_pointer;
 			widget_exists: Mel_widgets.has (a_screen_object);
 		local
 			a_callback_struct: MEL_CALLBACK_STRUCT;
 			a_widget: MEL_OBJECT;
-			a_key: MEL_CALLBACK_KEY;
+			a_key: MEL_TRANSLATION;
 			str: STRING
 		do
-			!! str.make (0);
-			str.from_c (a_translation_id); -- Callback receives C string
-										   -- representation of integer.
 			a_widget := Mel_widgets.item (a_screen_object);
-			!! a_key.make_translation (str.to_integer);
+			!! a_key.make_no_adopted (a_translation);
 			!! a_callback_struct.make (a_widget, event_ptr);
 			a_widget.execute_callback (a_key, a_callback_struct)
 		end;

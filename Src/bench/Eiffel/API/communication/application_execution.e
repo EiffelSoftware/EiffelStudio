@@ -308,8 +308,27 @@ feature -- Removal
 			-- Save the information if we want to restore it
 			-- after the compilation (do not save the information
 			-- if there are compilation errors).
+		local
+			list: LINKED_LIST [E_FEATURE]
 		do
-			debug_info.wipe_out;
+			if is_running then
+					-- Need to individually remove the breakpoints
+					-- since the sent_bp must be updated to
+					-- not stop.
+				!! list.make;
+				list.append (debugged_routines);
+				list.append (removed_routines);
+				from
+					list.start
+				until
+					list.after
+				loop
+					remove_feature (list.item);
+					list.forth
+				end
+			else
+				debug_info.wipe_out;
+			end;
 		ensure
 			empty_removed_routines: removed_routines.empty;
 			empty_debugged_routines: debugged_routines.empty;

@@ -41,6 +41,8 @@ feature -- Basic operations
 			result_type_visitor.visit (a_descriptor.return_type)
 			if result_type_visitor.is_basic_type then
 				ccom_feature_writer.set_result_type (result_type_visitor.cecil_type)
+			elseif is_boolean (result_type_visitor.vt_type) then
+				ccom_feature_writer.set_result_type (Eif_boolean)
 			else
 				ccom_feature_writer.set_result_type (Eif_reference)
 			end
@@ -139,6 +141,9 @@ feature {NONE} -- Implementation
 						tmp_string.append (End_comment_paramflag)
 						if visitor.is_basic_type then
 							tmp_string.append (visitor.cecil_type)
+
+						elseif is_boolean (visitor.vt_type) then
+							tmp_string.append (Eif_boolean)
 
 						elseif 
 							visitor.is_interface_pointer or 
@@ -365,6 +370,20 @@ feature {NONE} -- Implementation
 			end
 			Result.append (Space_open_parenthesis)
 
+			if is_unsigned_int (type) or is_unsigned_long (type) then
+				Result.append (Open_parenthesis)
+				Result.append ("long *")
+				Result.append (Close_parenthesis)
+			elseif is_unsigned_short (type) then
+				Result.append (Open_parenthesis)
+				Result.append ("short *")
+				Result.append (Close_parenthesis)	
+			elseif is_character (type) then
+				Result.append (Open_parenthesis)
+				Result.append (Eif_character)
+				Result.append (Asterisk)
+				Result.append (Close_parenthesis)			
+			end
 
 			Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
 			Result.append (Comma_space)
@@ -406,6 +425,9 @@ feature {NONE} -- Implementation
 				Result.append (Tmp_clause)
 				Result.append (name)
 				Result.append (Space_equal_space)
+				Result.append (Open_parenthesis)
+				Result.append (visitor.c_type)
+				Result.append (Close_parenthesis)
 
 				if 
 					visitor.is_array_basic_type or 
@@ -468,7 +490,7 @@ feature {NONE} -- Implementation
 				tmp_value := clone (Open_parenthesis)
 				tmp_value.append (visitor.c_type)
 				tmp_value.append (Close_parenthesis)
-				tmp_value.append (Ce_mapper)
+				tmp_value.append (Ec_mapper)
 				tmp_value.append (Dot)
 				tmp_value.append (visitor.ec_function_name)
 				tmp_value.append (Space_open_parenthesis)

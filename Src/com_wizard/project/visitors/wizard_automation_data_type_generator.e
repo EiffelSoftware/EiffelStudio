@@ -99,7 +99,7 @@ feature -- Basic operations
 
 			elseif is_currency (a_type) then
 				ce_function_name.append ("ccom_ce_currency")
-				ec_function_name.append ("ccom_ec_cyrrency")
+				ec_function_name.append ("ccom_ec_currency")
 				is_structure := True
 
 			elseif is_decimal (a_type) then

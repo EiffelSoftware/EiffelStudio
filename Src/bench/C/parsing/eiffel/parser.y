@@ -1150,6 +1150,11 @@ Actual_parameter:			Expression
 								yyerrok;
 								$$ = create_node1(ADDRESS_AS,click_list_elem($<value>2));
 								}
+	|						TE_ADDRESS TE_LPARAN Expression TE_RPARAN
+								{
+								yyerrok;
+								$$ = create_node1(EXPR_ADDRESS_AS,$3);
+								}
 	|						TE_ADDRESS TE_CURRENT
 								{yyerrok;$$ = create_node(ADDRESS_CURRENT_AS);}
 	|						TE_ADDRESS TE_RESULT

@@ -317,12 +317,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			if Compilation_modes.is_precompiling then
 				update_document_path
 			end
-			
-			if System.il_generation and then System.clr_runtime_version = Void then
-					-- Check that runtime version has been set, if not, we set it to
-					-- default version.
-				System.set_clr_runtime_version ((create {IL_ENVIRONMENT}).default_version)
-			end
 		end;
 
 	process_external_clause is
@@ -791,7 +785,10 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					defaults.after
 				loop
 					free_option_sd ?= defaults.item.option
-					if free_option_sd /= Void and then free_option_sd.code = feature {FREE_OPTION_SD}.Msil_clr_version then
+					if
+						free_option_sd /= Void and then
+						free_option_sd.code = feature {FREE_OPTION_SD}.Msil_clr_version
+					then
 						l_val := defaults.item.value
 						if
 							l_has_value or else not l_val.is_name or else
@@ -805,6 +802,9 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					end
 					defaults.forth
 				end
+			end
+			if system.clr_runtime_version = Void then
+				system.set_clr_runtime_version ((create {IL_ENVIRONMENT}).default_version)
 			end
 		end
 

@@ -35,7 +35,12 @@ feature -- Basic operations
 			if func_desc.return_type /= Void then
 				create visitor
 				visitor.visit (func_desc.return_type)
-				ccom_feature_writer.set_result_type (visitor.c_type)
+
+				if visitor.c_type.is_equal (Hresult) then
+					ccom_feature_writer.set_result_type (Std_method_imp)
+				else
+					ccom_feature_writer.set_result_type (visitor.c_type)
+				end
 			end
 
 			-- Set signature.

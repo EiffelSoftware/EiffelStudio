@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 				constructor_body.append (Interface_variable_prepend)
 				constructor_body.append (coclass_descriptor.interface_descriptors.item.name)
 				constructor_body.append (Space_equal_space)
-				constructor_body.append (NULL)
+				constructor_body.append (Zero)
 				constructor_body.append (Semicolon)
 				constructor_body.append (New_line)
 				coclass_descriptor.interface_descriptors.forth
@@ -318,27 +318,11 @@ feature {NONE} -- Implementation
 				coclass_descriptor.interface_descriptors.off
 			loop
 				constructor_body.append (New_line_tab)
-				constructor_body.append (Hresult_variable_name)
-				constructor_body.append (Space_equal_space)
-				constructor_body.append (A_pointer)
-				constructor_body.append (Struct_selection_operator)
-				constructor_body.append (Query_interface)
-				constructor_body.append (Open_parenthesis)
-				constructor_body.append ("IID_")
-				constructor_body.append (coclass_descriptor.interface_descriptors.item.name)
-				constructor_body.append (Comma_space)
-				constructor_body.append (Open_parenthesis)
-				constructor_body.append (C_void_pointer)
-				constructor_body.append (Asterisk)
-				constructor_body.append (Close_parenthesis)
-				constructor_body.append (Ampersand)
 				constructor_body.append (Interface_variable_prepend)
 				constructor_body.append (coclass_descriptor.interface_descriptors.item.name)
-				constructor_body.append (Close_parenthesis)
+				constructor_body.append (Space_equal_space)
+				constructor_body.append (Zero)
 				constructor_body.append (Semicolon)
-				constructor_body.append (New_line)
-				constructor_body.append (examine_hresult (Hresult_variable_name))
-				constructor_body.append (New_line)
 
 				coclass_descriptor.interface_descriptors.forth
 			end

@@ -148,7 +148,8 @@ feature -- Code generation
 		do
 			buffer.putstring (external_name)
 			if has_standard_prototype then
-				Extern_declarations.add_routine (ret_type, external_name);
+				Extern_declarations.add_routine_with_signature (ret_type,
+								external_name, argument_types);
 			end
 		end
 

@@ -866,7 +866,7 @@ feature -- Environment
 		
 	library_path: STRING is 
 		once
-			Result := ise_eiffel.clone (ise_eiffel)
+			Result := clone (ise_eiffel)
 			Result.append ("\library")
 		ensure
 			non_void_result: Result /= Void
@@ -875,7 +875,7 @@ feature -- Environment
 	
 	library_dotnet_path: STRING is
 		once
-			Result := ise_eiffel.clone (ise_eiffel)
+			Result := clone (ise_eiffel)
 			Result.append ("\library.net")
 		ensure
 			non_void_result: Result /= Void

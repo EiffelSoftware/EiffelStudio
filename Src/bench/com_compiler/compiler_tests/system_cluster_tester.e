@@ -209,7 +209,7 @@ feature {NONE} -- Agent Handlers
 			end
 			put_string ("%N  Choose cluster name: ")
 			read_line
-			l_old_cluster_name := last_string.clone (last_string)
+			l_old_cluster_name := clone (last_string)
 			put_string ("%N  Change cluster name to: ")
 			read_line
 			change_cluster_name (last_string, l_old_cluster_name)

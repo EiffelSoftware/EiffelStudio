@@ -112,7 +112,7 @@ feature -- Access
         do
             cluster ?= clusters_table.item (cluster_name)
             if cluster /= Void then
-                Result := cluster_name.clone(cluster_name)
+                Result := clone(cluster_name)
                 if cluster.has_parent then
                     Result.prepend_character('.')
                     Result.prepend(get_cluster_full_name(cluster.parent_name))

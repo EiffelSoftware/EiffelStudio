@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 		require
 			non_void_title: a_title /= Void
 		do
-			title := a_title.clone (a_title)
+			title := clone (a_title)
 			create items.make
 		ensure
 			title_set: title.is_equal (a_title)
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			l_spc_index: INTEGER
 			l_temp_selection: STRING
 		do
-			l_temp_selection := a_selection.clone (a_selection)
+			l_temp_selection := clone (a_selection)
 			l_temp_selection.prune_all_leading (' ')
 			l_temp_selection.prune_all_trailing (' ')
 			l_spc_index := a_selection.index_of (' ', 1)
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			l_pos: INTEGER
 			l_arg: STRING
 		do
-			l_temp_args := a_arg_string.clone (a_arg_string)
+			l_temp_args := clone (a_arg_string)
 			l_temp_args.prune_all_leading (' ')
 			l_temp_args.prune_all_trailing (' ')
 			

@@ -48,7 +48,7 @@ feature -- Access
 			-- last string entered by user
 		do
 			if last_string_internal.item /= Void then
-				Result := last_string_internal.item.clone (last_string_internal.item)				
+				Result := clone (last_string_internal.item)				
 			end
 		end
 		
@@ -358,7 +358,7 @@ feature -- Input
 			l_last_string: STRING
 		do
 			io.read_line
-			l_last_string := io.last_string.clone (io.last_string)
+			l_last_string := clone (io.last_string)
 			l_last_string.to_lower
 			if l_last_string.is_equal ("true") then
 				last_boolean_internal := True
@@ -376,7 +376,7 @@ feature -- Input
 			l_last_string: STRING
 		do
 			io.read_line
-			l_last_string := io.last_string.clone (io.last_string)
+			l_last_string := clone (io.last_string)
 			l_last_string.to_lower
 			if l_last_string.is_equal ("void") then
 				last_string_internal.put (Void)
@@ -399,7 +399,7 @@ feature -- Input
 				args.remove
 			else
 				io.read_line
-				l_last_string := io.last_string.clone (io.last_string)
+				l_last_string := clone (io.last_string)
 				l_last_string.to_lower
 				if l_last_string.is_equal ("void") then
 					last_string_internal.put (Void)

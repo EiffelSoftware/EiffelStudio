@@ -268,54 +268,6 @@ feature -- Event handling
 			refresh
 		end
 		
---	on_class_name_leave_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
---		indexing
---			description: "Action launched when a text box is entered"
---			external_name: "OnClassNameLeaveEventHandler"
---		require
---			non_void_sender: sender /= Void
---			non_void_arguments: arguments /= Void
---		local
---			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
---			a_font: SYSTEM_DRAWING_FONT
---		do
---			text_box ?= sender
---			if text_box /= Void and then text_box.text /= Void then
---				if type_modifications.old_name /= Void and then not type_modifications.old_name.to_lower.equals_string (text_box.text.to_lower) then
---					type_modifications.set_new_name (text_box.text)
---					if text_box.text.get_length > 0 then
---						create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
---						text_box.set_width (text_box_width_from_text (text_box.text, a_font))
---					end
---				end
---			end
---		end
---
---	on_class_name_enter (sender: ANY; arguments: SYSTEM_WINDOWS_FORMS_KEYEVENTARGS) is
---		indexing
---			description: "Action launched when user presses `Enter' in the class name text box"
---			external_name: "OnClassNameEnter"
---		require
---			non_void_sender: sender /= Void
---			non_void_arguments: arguments /= Void
---		local
---			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
---			a_font: SYSTEM_DRAWING_FONT
---		do
---			if arguments.keycode = dictionary.Enter_key then
---				text_box ?= sender
---				if text_box /= Void and then text_box.text /= Void then
---					if type_modifications.old_name /= Void and then not type_modifications.old_name.to_lower.equals_string (text_box.text.to_lower) then
---						type_modifications.set_new_name (text_box.text)				
---						if text_box.text.get_length > 0 then
---							create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
---							text_box.set_width (text_box_width_from_text (text_box.text, a_font))
---						end
---					end
---				end
---			end
---		end
---	
 	on_click_action (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 		indexing
 			description: "Action launched when a text box is entered"
@@ -491,10 +443,6 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 		local
 			message_box: MESSAGE_BOX
-			--assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
-			--assembly: SYSTEM_REFLECTION_ASSEMBLY
-			--conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
-			--emitter: NEWEIFFELCLASSGENERATOR
 			assembly_filename: STRING
 			code_generator_from_xml: ISE_REFLECTION_EIFFELCODEGENERATORFROMXML
 			support: ISE_REFLECTION_REFLECTIONSUPPORT
@@ -516,11 +464,6 @@ feature -- Event handling
 					wait_cursor := cursors.get_Wait_Cursor
 					message_box.set_cursor (wait_cursor)
 					message_box.refresh
-					--create conversion_support.make_conversionsupport
-					--assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
-					--assembly := assembly.load (assembly_name)
-					--create emitter.make_neweiffelclassgenerator
-					--emitter.generateeiffelclassesfromxml (assembly)
 					create support.make_reflectionsupport
 					support.make
 					assembly_filename := support.Xml_assembly_filename (assembly_descriptor)
@@ -625,7 +568,13 @@ feature {NONE} -- Implementation
 			description: "Text boxes for feature arguments"
 			external_name: "FeatureArgumentsBoxes"
 		end
-		
+
+	generic_type_names: ARRAY [ANY]
+		indexing
+			description: "Generic type names of current Eiffel class"
+			external_name: "GenericTypeNames"
+		end
+	
 	build_class_contract_form (an_eiffel_class: like eiffel_class) is
 		indexing
 			description: "Build editable contract form of `an_eiffel_class'."
@@ -645,11 +594,12 @@ feature {NONE} -- Implementation
 			an_enum_type: STRING
 			border_style: SYSTEM_WINDOWS_FORMS_BORDERSTYLE
 			new_label_width: INTEGER
-			--on_class_name_enter_event_handler_delegate: SYSTEM_EVENTHANDLER
-			--on_class_name_leave_event_handler_delegate: SYSTEM_EVENTHANDLER
-			--class_name_width: INTEGER
-			--a_font: SYSTEM_DRAWING_FONT
-			--on_class_name_enter_delegate: SYSTEM_WINDOWS_FORMS_KEYEVENTHANDLER
+			constraints: ARRAY [ANY]
+			a_constraint: STRING
+			class_name: STRING
+			i: INTEGER
+			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
+			a_generic_type_name: STRING
 		do
 			create panel.make_panel
 			a_position.set_x (0)
@@ -718,18 +668,40 @@ feature {NONE} -- Implementation
 			end
 			panel_height := panel_height + dictionary.Label_height
 			create class_name_text_box.make_textbox
-			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
-			--class_name_width := text_box_width_from_text (an_eiffel_class.eiffelname.toupper, a_font)
-			--set_text_box_properties (class_name_text_box, an_eiffel_class.eiffelname.toupper, 3 * dictionary.Margin, panel_height, class_name_width, dictionary.Class_color)
-			create_label (an_eiffel_class.get_eiffel_name.to_upper, 3 * dictionary.Margin, panel_height, dictionary.Class_color, False)
-			
-			--create on_class_name_enter_event_handler_delegate.make_eventhandler (Current, $on_enter_event_handler)
-			--class_name_text_box.add_gotfocus (on_class_name_enter_event_handler_delegate)
-			--create on_class_name_leave_event_handler_delegate.make_eventhandler (Current, $on_class_name_leave_event_handler)
-			--class_name_text_box.add_lostfocus (on_class_name_leave_event_handler_delegate)
-			--create on_class_name_enter_delegate.make_keyeventhandler (Current, $on_class_name_enter)
-			--class_name_text_box.add_keydown (on_class_name_enter_delegate)
-			
+
+			class_name := an_eiffel_class.get_eiffel_name.to_upper
+			if an_eiffel_class.get_is_generic then
+				class_name := class_name.concat_string_string_string (class_name, dictionary.Space, eiffel_dictionary.Opening_square_bracket)
+				constraints := an_eiffel_class.get_constraints
+				create support.make_codegenerationsupport
+				support.make
+				support.compute_generic_names (constraints.count)
+				check
+					non_void_generic_type_names: support.get_generic_type_names /= Void
+				end
+				generic_type_names := support.get_generic_type_names
+				from
+				until
+					i = generic_type_names.count
+				loop
+					a_constraint ?= constraints.item (i)
+					if a_constraint /= Void then
+						a_generic_type_name ?= generic_type_names.item (i)
+						if a_generic_type_name /= Void and then a_generic_type_name.get_length > 0 then
+							class_name := class_name.concat_string_string_string_string (class_name, a_generic_type_name, dictionary.Space, "->")
+							class_name := class_name.concat_string_string_string (class_name, dictionary.Space, a_constraint)
+							if i < generic_type_names.count - 1 then
+								class_name := class_name.concat_string_string_string (class_name, eiffel_dictionary.Comma, dictionary.Space)
+							end
+						end
+					end
+					i := i + 1
+				end
+				class_name := class_name.concat_string_string_string (class_name, dictionary.Space, eiffel_dictionary.Closing_square_bracket)
+			end
+
+			create_label (class_name, 3 * dictionary.Margin, panel_height, dictionary.Class_color, False)
+						
 			panel_height := panel_height + dictionary.Label_height
 			
 				-- inherit
@@ -751,7 +723,7 @@ feature {NONE} -- Implementation
 			end_class := end_class.concat_string_string_string_string (end_class, eiffel_dictionary.Space, eiffel_dictionary.Dashes, eiffel_dictionary.Space)
 			end_class := end_class.concat_string_string (end_class, eiffel_dictionary.Class_keyword)
 			create_label (end_class, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-			create_label (an_eiffel_class.get_eiffel_name.to_upper, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
+			create_label (class_name.to_upper, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
 			end_class_name_label := created_label
 		end
 	
@@ -1318,10 +1290,14 @@ feature {NONE} -- Implementation
 			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
 			an_argument: ISE_REFLECTION_INAMEDSIGNATURETYPE
+			formal_argument: ISE_REFLECTION_FORMALNAMEDSIGNATURETYPE
+			generic_parameter_index: INTEGER
 			argument_name: STRING
 			argument_type: STRING
 			argument_name_width: INTEGER
 			argument_type_width: INTEGER
+			formal_return_type: ISE_REFLECTION_FORMALSIGNATURETYPE
+			return_type_name: STRING
 			new_label_width: INTEGER
 			a_font: SYSTEM_DRAWING_FONT
 			an_array: ARRAY [ANY]
@@ -1404,7 +1380,17 @@ feature {NONE} -- Implementation
 					an_argument ?= arguments.get_Item (i)
 					if an_argument /= Void then						
 						argument_name := an_argument.eiffel_name
-						argument_type := an_argument.type_eiffel_name
+						formal_argument ?= arguments.get_item (i)
+						if formal_argument /= Void and then generic_type_names /= Void then
+							generic_parameter_index := formal_argument.get_generic_parameter_index
+							if generic_parameter_index < generic_type_names.count then
+								argument_type ?= generic_type_names.item (generic_parameter_index)
+							else
+								argument_type := an_argument.type_eiffel_name
+							end
+						else
+							argument_type := an_argument.type_eiffel_name
+						end
 					end
 					if a_feature.get_is_creation_routine then
 						create_label (argument_name, new_label_width, panel_height, dictionary.Feature_color, False)
@@ -1442,9 +1428,20 @@ feature {NONE} -- Implementation
 		
 				-- feature return type
 			if a_feature.get_Is_Method and then a_feature.get_Return_Type /= Void and then a_feature.get_return_type.type_eiffel_name /= Void and then a_feature.get_return_type.type_eiffel_name.get_length > 0 then
+				formal_return_type ?= a_feature.get_return_type
+				if formal_return_type /= Void and then generic_type_names /= Void then
+					generic_parameter_index := formal_return_type.get_generic_parameter_index
+					if generic_parameter_index < generic_type_names.count then
+						return_type_name ?= generic_type_names.item (generic_parameter_index)
+					else
+						return_type_name := a_feature.get_return_type.type_eiffel_name
+					end				
+				else
+					return_type_name := a_feature.get_return_type.type_eiffel_name
+				end
 				create_label (eiffel_dictionary.Colon, new_label_width, panel_height, dictionary.Text_color, False)
 				new_label_width := new_label_width + label_width 
-				create_label (a_feature.get_return_type.type_eiffel_name, new_label_width, panel_height, dictionary.Class_color, False)
+				create_label (return_type_name, new_label_width, panel_height, dictionary.Class_color, False)
 			end
 			if a_feature.get_Is_Field and not a_feature.get_Eiffel_Name.Starts_With (eiffel_dictionary.Property_set_prefix) then
 				create_label (eiffel_dictionary.Colon, new_label_width, panel_height, dictionary.Text_color, False)

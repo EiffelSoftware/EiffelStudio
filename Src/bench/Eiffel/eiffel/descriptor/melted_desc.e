@@ -1,8 +1,11 @@
--- Melted class descriptors. 
--- A melted descriptor contains the byte code for all the class types associated 
--- with a given class.
+indexing
+	description: "Melted class descriptors. A melted descriptor contains the byte code%
+		%for all the class types associated with a given class."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class MELTED_DESC 
+class
+	MELTED_DESC 
 
 inherit
 	CHARACTER_ARRAY
@@ -16,4 +19,4 @@ inherit
 creation
 	make
 
-end
+end -- class MELTED_DESC

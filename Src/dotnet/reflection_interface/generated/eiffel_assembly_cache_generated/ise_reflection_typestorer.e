@@ -134,11 +134,11 @@ feature -- Access
 
 feature -- Basic Operations
 
-	commit is
+	generate_xml_alias_element is
 		external
 			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
 		alias
-			"Commit"
+			"GenerateXmlAliasElement"
 		end
 
 	generate_xml_element_from_list (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
@@ -190,11 +190,11 @@ feature -- Basic Operations
 			"GenerateXmlInheritElement"
 		end
 
-	generate_xml_element_from_inheritance_clauses (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
+	commit is
 		external
-			"IL signature (System.String, System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
+			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
 		alias
-			"GenerateXmlElementFromInheritanceClauses"
+			"Commit"
 		end
 
 	support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
@@ -218,18 +218,18 @@ feature -- Basic Operations
 			"AddType"
 		end
 
+	generate_xml_element_from_inheritance_clauses (xml_element: STRING; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
+		external
+			"IL signature (System.String, System.Collections.ArrayList): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlElementFromInheritanceClauses"
+		end
+
 	make_type_storer (a_folder_name: STRING) is
 		external
 			"IL signature (System.String): System.Void use ISE.Reflection.TypeStorer"
 		alias
 			"MakeTypeStorer"
-		end
-
-	generate_xml_alias_element is
-		external
-			"IL signature (): System.Void use ISE.Reflection.TypeStorer"
-		alias
-			"GenerateXmlAliasElement"
 		end
 
 	generate_xml_class_body is

@@ -27,11 +27,11 @@ feature -- Access
 			"_internal_ExportationList"
 		end
 
-	get_feature_names: SYSTEM_COLLECTIONS_ARRAYLIST is
+	get_all_features_exported: BOOLEAN is
 		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ExportClause"
+			"IL signature (): System.Boolean use ISE.Reflection.ExportClause"
 		alias
-			"get_FeatureNames"
+			"get_AllFeaturesExported"
 		end
 
 	get_exportation_list: SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -55,11 +55,11 @@ feature -- Access
 			"_internal_AllFeaturesExported"
 		end
 
-	get_all_features_exported: BOOLEAN is
+	get_feature_names: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL signature (): System.Boolean use ISE.Reflection.ExportClause"
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ExportClause"
 		alias
-			"get_AllFeaturesExported"
+			"get_FeatureNames"
 		end
 
 feature -- Basic Operations
@@ -85,6 +85,13 @@ feature -- Basic Operations
 			"SetExportationList"
 		end
 
+	empty_string: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ExportClause"
+		alias
+			"EmptyString"
+		end
+
 	make_void is
 		external
 			"IL signature (): System.Void use ISE.Reflection.ExportClause"
@@ -92,11 +99,11 @@ feature -- Basic Operations
 			"Make"
 		end
 
-	empty_string: STRING is
+	all_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ExportClause"
 		alias
-			"EmptyString"
+			"AllKeyword"
 		end
 
 	frozen a_invariant (current_object: ISE_REFLECTION_EXPORTCLAUSE) is
@@ -181,13 +188,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.ExportClause"
 		alias
 			"Comma"
-		end
-
-	all_keyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ExportClause"
-		alias
-			"AllKeyword"
 		end
 
 end -- class ISE_REFLECTION_EXPORTCLAUSE

@@ -99,18 +99,18 @@ feature -- Basic Operations
 			"MakeEiffelCodeGenerator"
 		end
 
+	intern_generate_class_features (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
+		external
+			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.EiffelCodeGenerator"
+		alias
+			"InternGenerateClassFeatures"
+		end
+
 	generate_inheritance_clauses (clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
 		external
 			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.EiffelCodeGenerator"
 		alias
 			"GenerateInheritanceClauses"
-		end
-
-	make_from_info (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
-		external
-			"IL signature (ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.EiffelCodeGenerator"
-		alias
-			"MakeFromInfo"
 		end
 
 	built_in_comment: STRING is
@@ -134,6 +134,13 @@ feature -- Basic Operations
 			"InternGenerateEiffelClass"
 		end
 
+	has_any_rename: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.EiffelCodeGenerator"
+		alias
+			"HasAnyRename"
+		end
+
 	has_any_undefine: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use ISE.Reflection.EiffelCodeGenerator"
@@ -141,11 +148,11 @@ feature -- Basic Operations
 			"HasAnyUndefine"
 		end
 
-	has_any_rename: BOOLEAN is
+	make_from_info (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is
 		external
-			"IL signature (): System.Boolean use ISE.Reflection.EiffelCodeGenerator"
+			"IL signature (ISE.Reflection.EiffelAssembly): System.Void use ISE.Reflection.EiffelCodeGenerator"
 		alias
-			"HasAnyRename"
+			"MakeFromInfo"
 		end
 
 	generate_eiffel_class_from_path (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS; a_path: STRING) is
@@ -167,13 +174,6 @@ feature -- Basic Operations
 			"IL signature (ISE.Reflection.EiffelFeature): System.String use ISE.Reflection.EiffelCodeGenerator"
 		alias
 			"FeatureSignature"
-		end
-
-	intern_generate_class_features (a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
-		external
-			"IL signature (System.Collections.ArrayList): System.Void use ISE.Reflection.EiffelCodeGenerator"
-		alias
-			"InternGenerateClassFeatures"
 		end
 
 	is_special_class: BOOLEAN is

@@ -92,11 +92,11 @@ feature -- Compilation
 			until
 				exit
 			loop
-				io.putstring ("Specify the Ace file (`Ace' is the default): %N%
+				io.putstring ("Specify the Ace file: %N%
 								%C: Cancel%N%
 								%S: Specify file name%N%
-								%T: Copy template%N%N");
-                                --%D or <enter>: Default file name%N");
+								%T: Copy template%N%N%
+								%Option: ");
 				io.readline;
 				cmd := io.laststring;
 				exit := True;
@@ -113,13 +113,15 @@ feature -- Compilation
 					option
 				when 'c' then
 				when 's' then
-					io.putstring ("File name: ");
+					io.putstring ("File name (`Ace' is the default): ");
 					io.readline;
 					file_name := io.laststring;
 					if not file_name.empty then
 						Lace.set_file_name (file_name.duplicate);
-						check_ace_file
+					else
+						Lace.set_file_name ("Ace");
 					end;
+					check_ace_file
 				when 't' then
 					io.putstring ("File name: ");
 					io.readline;

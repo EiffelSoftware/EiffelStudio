@@ -139,13 +139,13 @@ feature -- Status report
 			from
 				!! Result.make (0, selected_count - 1)
 				result_count := 0
-				index := -1
+				index := cwin_send_message_result (item, Lvm_getnextitem, - 1, Lvni_selected)
 			until
-				index >= count
+				index = -1
 			loop
+				Result.put (index, result_count)
 				index := cwin_send_message_result (item, Lvm_getnextitem,
 							index, Lvni_selected)
-				Result.put (index, result_count)
 				result_count := result_count + 1
 			end
 		ensure

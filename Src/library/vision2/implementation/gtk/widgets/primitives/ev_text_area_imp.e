@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
@@ -297,6 +296,9 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/13 23:06:46  brendel
+--| Unreleased.
+--|
 --| Revision 1.20  2000/03/08 21:40:06  king
 --| Added entry_widget pointer to be compatible with new text_component imp
 --|

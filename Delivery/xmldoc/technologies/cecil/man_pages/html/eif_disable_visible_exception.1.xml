@@ -1,7 +1,5 @@
 <document title="Reference for `eif_disable_visible_exception'" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Reference for `eif_disable_visible_exception'
@@ -32,5 +30,4 @@
 		<bold>eif_attribute</bold>(1) , 
 		<bold>eif_procedure</bold>(1),
 		<bold>eif_reference_function</bold>(1).  Markup created by  1. 0, November 15, 1999. 
-	</paragraph>
-</document>
+	</paragraph></document>

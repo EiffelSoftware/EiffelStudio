@@ -1,7 +1,5 @@
 <document title="Reference for `attribute_exists'" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
 			<size>1</size>Reference for `attribute_exists'
@@ -40,5 +38,4 @@
 		</heading>
 		<bold>eif_attribute</bold> (1). 
 		<bold></bold> Markup created by  1. 0, November 15, 1999. 
-	</paragraph>
-</document>
+	</paragraph></document>

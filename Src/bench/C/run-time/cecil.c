@@ -333,7 +333,19 @@ EIF_TYPE_ID cid;
 		/* Frozen feature */
 		return frozen[body_id];
 	else
+#ifndef DLE
 		xraise(EN_DOL);
+#else
+	if (body_id < dle_level)
+			/* Static melted routine */
+		xraise(EN_DOL);
+	else if (body_id < dle_zeroc)
+			/* Dynamic frozen feature */
+		return dle_frozen[body_id];
+	else
+			/* Dynamic melted routine */
+		xraise(EN_DOL);
+#endif
 #endif
 }
 

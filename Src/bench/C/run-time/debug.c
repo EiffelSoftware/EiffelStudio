@@ -959,21 +959,73 @@ char *addr;			/* Address where byte code is stored */
 	if (old_body_id < zeroc) {			/* The routine was frozen */
 		mpatidtab[body_id] = 			/* Get the pattern id from the */
 			fpatidtab[old_body_id];		/* frozen table of pattern ids */
-	}
-	else {								/* The routine was already melted */
-		mpatidtab[body_id] = 			/* Get the pattern id from the */
-			mpatidtab[old_body_id];		/* melted table of pattern ids */
-	}
+		melt[body_id] = addr;			/* And record new byte code */
+
 #ifdef DEBUG
 	dprintf(4)("mpatidtab[%d] = %d\n", body_id - zeroc, mpatidtab[body_id]);
+	dprintf(4)("melt [%d] = 0x%lx\n", body_id - zeroc, addr);
+#endif
+
+	} else
+
+#ifndef DLE
+
+	{
+			/* We don't need to get the pattern id since the
+			 * `old_body_id' and `body_id' should be equal.
+			 */
+		melt[body_id] = addr;			/* And record new byte code */
+
+#ifdef DEBUG
+	dprintf(4)("mpatidtab[%d] = %d\n", body_id - zeroc, mpatidtab[body_id]);
+	dprintf(4)("melt [%d] = 0x%lx\n", body_id - zeroc, addr);
+#endif
+
+	}
+
+#else
+
+	if (old_body_id < dle_level) {
+			/* The old routine was melted.
+			 * We don't need to get the pattern id since the
+			 * `old_body_id' and `body_id' should be equal.
+			 */
+		melt[body_id] = addr;			/* And record new byte code */
+
+#ifdef DEBUG
+	dprintf(4)("mpatidtab[%d] = %d\n", body_id - zeroc, mpatidtab[body_id]);
+	dprintf(4)("melt [%d] = 0x%lx\n", body_id - zeroc, addr);
+#endif
+
+	} else if (old_body_id < dle_zeroc) {
+			/* The old routine was frozen */
+		dle_mpatidtab[body_id] = 			/* Get the pattern id from the */
+			dle_fpatidtab[old_body_id];		/* frozen table of pattern ids */
+		dle_melt[body_id] = addr;			/* And record new byte code */
+
+#ifdef DEBUG
+	dprintf(4)("dle_mpatidtab[%d] = %d\n", 
+			body_id - dle_zeroc, dle_mpatidtab[body_id]);
+	dprintf(4)("dle_melt [%d] = 0x%lx\n", body_id - dle_zeroc, addr);
+#endif
+
+	} else {
+			/* The old routine was melted.
+			 * We don't need to get the pattern id since the
+			 * `old_body_id' and `body_id' should be equal.
+			 */
+		dle_melt[body_id] = addr;			/* And record new byte code */
+
+#ifdef DEBUG
+	dprintf(4)("dle_mpatidtab[%d] = %d\n", 
+			body_id - dle_zeroc, dle_mpatidtab[body_id]);
+	dprintf(4)("dle_melt [%d] = 0x%lx\n", body_id - dle_zeroc, addr);
+#endif
+	}
+
 #endif
 
 	dispatch[body_idx] = body_id;		/* Set-up indirection table */
-	melt[body_id] = addr;				/* And record new byte code */
-
-#ifdef DEBUG
-	dprintf(4)("melt [%d] = 0x%lx\n", body_id - zeroc, addr);
-#endif
 
 }
 
@@ -1130,7 +1182,20 @@ register2 int arg_num;			/* Number of arguments */
 		pid = (uint32) FPatId(body_id);
 		(pattern[pid].toc)(frozen[body_id], 0);		/* Call pattern */
 	} else
+#ifndef DLE
 		xinterp(melt[body_id]);
+#else
+	if (body_id < dle_level)
+			/* Static melted level */
+		xinterp(melt[body_id]);
+	else if (body_id < dle_zeroc) {
+			/* Dynamic frozen level */
+		pid = (uint32) DLEFPatId(body_id);
+		(pattern[pid].toc)(dle_frozen[body_id], 0);		/* Call pattern */
+	} else
+			/* Dynamic melted level */
+		xinterp(dle_melt[body_id]);
+#endif
 	IC = old_IC;				/* Restore IC back-up */
 
 	return opop();				/* Return the result of the once function */

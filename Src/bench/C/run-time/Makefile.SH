@@ -92,7 +92,7 @@ LSRC = math.c malloc.c garcol.c local.c except.c store.c retrieve.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-	console.c run_idr.c path_name.c object_id.c
+	console.c run_idr.c path_name.c dle.c object_id.c
 
 OTHER = main.c
 
@@ -139,6 +139,7 @@ WSRC = \
 	wmain.c \
 	wrun_idr.c \
 	wpath_name.c \
+	wdle.c \
 	wobject_id.c
 
 ESRC = \
@@ -180,6 +181,7 @@ ESRC = \
 	bmain.c \
 	wrun_idr.c \
 	wpath_name.c \
+	wdle.c \
 	wobject_id.c
 
 LOBJ = \
@@ -221,6 +223,7 @@ LOBJ = \
 	main.o \
 	run_idr.o \
 	path_name.o \
+	dle.o \
 	object_id.o
 
 WOBJ = \
@@ -268,6 +271,7 @@ WOBJ = \
 	wbench.o \
 	wrun_idr.o \
 	wpath_name.o \
+	wdle.o \
 	wobject_id.o
 
 EOBJ = \
@@ -314,6 +318,7 @@ EOBJ = \
 	wbench.o \
 	wrun_idr.o \
 	wpath_name.o \
+	wdle.o \
 	wobject_id.o
 
 all:: size.h
@@ -572,6 +577,12 @@ wpath_name.c: path_name.c
 remove::
 	$(RM) wpath_name.c
 
+wdle.c: dle.c
+	$(RM) wdle.c
+	$(LN) dle.c wdle.c
+remove::
+	$(RM) wdle.c
+
 wobject_id.c: object_id.c
 	$(RM) wobject_id.c
 	$(LN) object_id.c wobject_id.c
@@ -746,6 +757,10 @@ wfile.o: wfile.c
 	$(RM) $*.c
 
 wpath_name.o: wpath_name.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+wdle.o: wdle.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 	$(RM) $*.c
 

@@ -16,6 +16,13 @@ doc:<file name="eif_type_id.c" version="$Id$" summary="Computation of dynamic ty
 #include <string.h>
 
 
+/* Structure */
+struct type_array_element {
+	char *type_name;
+	int is_expanded;
+	int is_reference;
+};
+
 /* Prototypes */
 rt_private int is_good (char c);
 rt_private int is_type_separator (char c);
@@ -26,12 +33,6 @@ rt_private int32 sk_type (int32 cecil_id);
 rt_private EIF_TYPE_ID compute_eif_type_id (int n, struct type_array_element *type_array);
 rt_private void eif_type_id_ex (int *error, struct cecil_info *type, int gen_number,
 		struct type_array_element *type_array, int16* typearr, int pos, int length);
-
-struct type_array_element {
-	char *type_name;
-	int is_expanded;
-	int is_reference;
-};
 
 /*------------------------------------------------------------------*/
 /* Compute the dynamic type corresponding to the C string type      */

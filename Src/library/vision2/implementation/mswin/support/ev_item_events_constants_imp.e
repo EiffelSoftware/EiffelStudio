@@ -17,9 +17,12 @@ feature -- General events for items
 	Cmd_item_deactivate: INTEGER is 2
 			-- The item has been deselected
 
+	Cmd_item_toggle: INTEGER is 3
+			-- The item has been toggled.		
+
 feature -- Event for list item
 
-	Cmd_item_dblclk: INTEGER is 3
+	Cmd_item_dblclk: INTEGER is 4
 			-- The user dblclk on the item
 
 feature -- Event for tree item

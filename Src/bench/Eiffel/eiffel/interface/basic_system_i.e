@@ -98,6 +98,9 @@ feature -- Access
 
 	function_class: CLASS_I
 			-- Class FUNCTION
+			
+	typed_pointer_class: CLASS_I
+			-- Class TYPED_POINTER
 
 	ancestor_class_to_all_classes_id: INTEGER is
 		do
@@ -331,6 +334,7 @@ feature -- Access
 		end
 
 feature -- Settings
+
 	set_any_class (c: CLASS_I) is
 			-- Assign `c' to `any_class'.
 		require
@@ -482,6 +486,16 @@ feature -- Settings
 			native_array_class := c
 		ensure
 			native_array_class_set: native_array_class = c
+		end
+
+	set_typed_pointer_class (c: CLASS_I) is
+			-- Assign `c' to `typed_pointer_class'.
+		require
+			c_not_void: c /= Void
+		do
+			typed_pointer_class := c
+		ensure
+			typed_pointer_class_set: typed_pointer_class = c
 		end
 
 	set_bit_class (c: CLASS_I) is

@@ -3224,6 +3224,7 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 	 */
 
 	char gc_status;					/* Saved GC status */
+	char saved_in_assertion;		/* Saved in_assertion value */
 	register2 uint32 dtype;			/* Dynamic type of object */
 
 /*
@@ -3241,10 +3242,13 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 									   then call the dispose routine */
 		dtype = Dtype((zone + 1)); 
 		if (Disp_rout(dtype)) { 
-			gc_status = g_data.status;		/* Save GC status */
-			g_data.status |= GC_STOP;		/* Stop GC */
-			DISP(dtype,(char *) (zone + 1));/* Call 'dispose' */
-			g_data.status = gc_status;		/* Restore previous GC status */
+			gc_status = g_data.status;			/* Save GC status */
+			g_data.status |= GC_STOP;			/* Stop GC */
+			saved_in_assertion = in_assertion;	/* Save in_assertion */
+			in_assertion = ~0;					/* Turn off assertion checking */
+			DISP(dtype,(char *) (zone + 1));	/* Call 'dispose' */
+			in_assertion = saved_in_assertion;	/* Set in_assertion back */
+			g_data.status = gc_status;			/* Restore previous GC status */
 		}
 	}
 

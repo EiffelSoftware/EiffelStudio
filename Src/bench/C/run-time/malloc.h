@@ -39,7 +39,7 @@ struct chunk {
 	int32 ck_length;		/* Length of block (w/o size of this struct) */
 							/* int's are split around the chunk pointers */
 							/*to provide correct padding for 64 bit machines*/
-#if ALIGNBYTES > 8
+#if MEM_ALIGNBYTES > 8
 	double ck_padding;		/* Alignment restrictions */
 #endif
 };
@@ -89,7 +89,7 @@ union overhead {
 		} ovu;
 		uint32 ovs_size;				/* Size of block, plus flags */
 	} ov_head;
-#if ALIGNBYTES > 8
+#if MEM_ALIGNBYTES > 8
 	double ov_padding;					/* Alignment restrictions */
 #endif
 };

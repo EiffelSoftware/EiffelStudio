@@ -66,7 +66,8 @@ OBJECTS =  \$(OBJS) \$(WOBJS) lexic.o parser.o
 
 .l.c:
 	\$(LEX) \$(JLFLAGS) \$<
-	\$(MV) lex.yy.c \$@
+	\$(SED) -e 's/^# define YYLMAX [0-9][0-9]*/# define YYLMAX BUFSIZ/g' < lex.yy.c > \$@
+	\$(RM) lex.yy.c
 
 .y.c:
 	\$(YACC) \$(JYFLAGS) \$<

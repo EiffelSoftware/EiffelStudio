@@ -1,9 +1,5 @@
-?MAKE:d_rewinddir d_chown d_getpwuid d_getgrgid d_geteuid: Inlibc
+?MAKE:d_chown d_getpwuid d_getgrgid d_geteuid: Inlibc
 ?MAKE:	-pick add $@ %<
-?S:d_rewinddir:
-?S:	This variable conditionally defines HAS_REWINDDIR if rewinddir() is
-?S:	available
-?S:.
 ?S:d_chown:
 ?S:	This variable conditionally defines HAS_CHOWN if chown() is
 ?S:	available
@@ -20,10 +16,6 @@
 ?S:	This variable conditionally defines HAS_GETEUID if geteuid() is
 ?S:	available
 ?S:.
-?C:HAS_REWINDDIR:
-?C:	This symbol, if defined, indicates that the rewinddir system call is
-?C:	available
-?C:.
 ?C:HAS_CHOWN:
 ?C:	This symbol, if defined, indicates that the chown system call is
 ?C:	available
@@ -40,8 +32,6 @@
 ?C:	This symbol, if defined, indicates that the geteuid system call is
 ?C:	available
 ?C:.
-?H:#$d_rewinddir HAS_REWINDDIR	/**/
-?H:.
 ?H:#$d_chown HAS_CHOWN	/**/
 ?H:.
 ?H:#$d_getpwuid HAS_GETPWUID	/**/
@@ -50,9 +40,6 @@
 ?H:.
 ?H:#$d_geteuid HAS_GETEUID	/**/
 ?H:.
-: see if rewinddir exists
-set rewinddir d_rewinddir
-eval $inlibc
 : see if chown exists
 set chown d_chown
 eval $inlibc

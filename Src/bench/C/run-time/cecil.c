@@ -90,9 +90,11 @@ EIF_TYPE_ID id;
 	return (EIF_TYPE_ID) ((uint32) id & SK_EXP);	/* Force the expanded bit */
 }
 
-/* VARARGS2 */
+#ifdef I_STDARG
+public EIF_TYPE_ID eifgid(char *class_name, ...)
+#else
 public EIF_TYPE_ID eifgid(va_alist)
-va_dcl		/* Variable number of arguments (no ; needed) */
+#endif
 {
 	/* Return class ID of a generic class. The first argument is the class
 	 * ID of the base type, followed by the class IDs of the formal generic
@@ -110,8 +112,13 @@ va_dcl		/* Variable number of arguments (no ; needed) */
 	int matched;				/* Did the inspected type matched our entry? */
 	int i;
 
-	va_start(ap);				/* Start processing of argument list */
-	class = va_arg(ap, char *);	/* The first argument is a class name */
+#ifndef I_STDARG
+	va_start (ap);
+	class = va_arg(ap, char *);
+#else
+	va_start (ap, class_name);
+	class = class_name;	/* The first argument is a class name */
+#endif
 
 #ifdef DEBUG
 	printf ("eifgid: computing EIF_TYPE_ID of %s\n", class);

@@ -1412,6 +1412,10 @@ public void esfail()
 	 */
 	fflush(stdout);
 
+	/* Display exception stack only if print_history_table is true */
+	if (!print_history_table)
+		return;
+
 	/* Signals failure. If the out of memory flags are set, mention it */
 	fputc('\n', stderr);
 	fprintf(stderr, "%s: system execution failed.\n", ename);

@@ -1,6 +1,7 @@
 Configure                    Portability tool
 Jmakefile
 Makefile.SH
+dummy_symbols.c
 U/
 U/End.U
 U/Myinit.U
@@ -305,6 +306,9 @@ parsing/shared/typenode.h
 parsing/shared/yacc.c
 parsing/shared/yacc.h
 parsing/shared/yacc_err.c
+platform/Jmakefile
+platform/Makefile.SH
+platform/names.c
 portable.h
 run-time/
 run-time/Jmakefile

@@ -29,15 +29,8 @@
 #include "interp.h"
 #include "select.h"
 #include "hector.h"
-#include "out.h"
-#include "plug.h"
-#include "eiffel.h"
-#include "struct.h"
-#include "macros.h"	 /* For macro LNGPAD */
-#include "hashin.h"
-#include "sig.h"
-#include "string.h"
 #include "bits.h"
+#include "eiffel.h"
 
 public int rqstcnt = 0;				/* Request count */
 private char gc_stopped;

@@ -3993,6 +3993,7 @@ char *start;
 	register1 int code;
 	register3 long offset;
 	register4 char *string;
+	uint32 body_id;
 	int has_rescue = 0;
 	int i;
 
@@ -4024,6 +4025,10 @@ char *start;
 		if (*IC++) {				/* If it is a once */
 			fprintf(fd, "0x%lX %s\n", IC - 1, "once flag");
 			fprintf(fd, "0x%lX %s\n", IC++, "once done");
+
+			body_id = (uint32) get_long();  /* Get the body id */
+			fprintf(fd, "0x%lX %s 0x%lx\n", IC - sizeof(long), "Body id", body_id);
+
 			if ((offset & SK_HEAD) != SK_VOID) {
 				switch (offset & SK_HEAD) {
 				case SK_BOOL:

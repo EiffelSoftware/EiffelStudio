@@ -355,6 +355,7 @@ feature -- Access
 			Result.force (clone (tenure_routine), clone (tenure_routine))
 			Result.force ("f", "f")
 			Result.force (clone (exists_routine), clone (exists_routine))
+			Result.force ("class_name", "class_name")
 		end
 
 	c_keywords: HASH_TABLE [STRING, STRING] is

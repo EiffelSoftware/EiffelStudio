@@ -80,7 +80,8 @@ feature -- Type check
 					end
 
 						-- Dependance
-					create depend_unit.make (last_id, a_feature)
+					create depend_unit.make_with_level (last_id, a_feature,
+						context.depend_unit_level)
 					context.supplier_ids.extend (depend_unit)
 
 						-- Access managment

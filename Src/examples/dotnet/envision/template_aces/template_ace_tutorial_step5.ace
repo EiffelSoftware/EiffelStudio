@@ -18,19 +18,48 @@ default
 	dotnet_naming_convention (yes)
 
 cluster 
-	root_cluster:	"$ISE_EIFFEL\..\samples\wel\tutorial\step5"
+	root_cluster:	"$ISE_EIFFEL\..\samples\wel\step5"
 
-	all base:		"$ISE_EIFFEL\library\base"
+
+	library base:		"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; 
 		end
 
-	all base_net:		"$ISE_EIFFEL\library.net\base"
+	library base_net:		"$ISE_EIFFEL\library.net\base"
 
-	all wel: 		"$ISE_EIFFEL\library\wel"
+	library wel:		"$ISE_EIFFEL\library\wel"
 		exclude
-			"spec"
-			"clib"
+			"spec"; "clib"; "wel_dispatcher.e"; "wel_string.e"; "wel_main_arguments.e"; "wel_identified.e"; "wel_object_id_manager.e"; "wel_font_family_enumerator.e"; "wel_blocking_dispatcher.e"; "wel_dispatcher_delegate.e"; 
+		end
+
+	library wel_net:		"$ISE_EIFFEL\library.net\wel"
+	
+assembly
+	mscorlib:	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+
+	system_:	"System","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			"SYSTEM_DLL_"
+		end
+
+	system_xml:	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			"XML_"
+		end
+
+	system_drawing:	"System.Drawing","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			"DRAWING_"
+		end
+
+	accessibility:	"Accessibility","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+
+	system_runtime_serialization_formatters_soap:	"System.Runtime.Serialization.Formatters.Soap","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+
+	system_windows_forms:	"System.Windows.Forms","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			"WINFORMS_"
 		end
 
 external

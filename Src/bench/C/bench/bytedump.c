@@ -695,28 +695,21 @@ static  void    print_instructions ()
 			case  BC_CREATE :
 				/* Kind of creation */
 
+					/* Do we need to duplicate top object? */
 				cval = bchar ();
 
-				fprintf (ofp,"<%d> ", (int) cval);
+				if (cval == (char) 1) {
+					fprintf (ofp," dup_top_object ");
+				}
+
+					/* Type of creation */
+				cval = bchar ();
 
 				switch (cval)
 				{
-					case BC_BIT:
-						/* creation of a bit type */
-						fprintf (ofp, " (BC_BIT) %ld", blong());
-						break;
 					case  BC_CTYPE :
 						/* creation type */
 						fprintf (ofp, " (BC_CTYPE) ");
-						print_ctype (bshort ());
-/*GENERIC CONFORMANCE*/
-						print_cid ();
-						break;
-					case BC_CREATE_EXP:
-						/* Hardcoded creation expression type */
-						fprintf (ofp, " (BC_CREATE_EXP) ");
-						(void) bshort ();
-						/* creation type */
 						print_ctype (bshort ());
 /*GENERIC CONFORMANCE*/
 						print_cid ();

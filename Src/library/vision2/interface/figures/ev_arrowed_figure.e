@@ -134,15 +134,15 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 	start_angle: DOUBLE is
 			-- Angle that line begins on relative to world.
 		do
-			Result := 2 * Pi - line_angle (start_point.x_abs, start_point.y_abs,
-				end_point.x_abs, end_point.y_abs)
+			Result := modulo (Pi + line_angle (start_point.x_abs, start_point.y_abs,
+				end_point.x_abs, end_point.y_abs), 2 * Pi)
 		end
 
 	end_angle: DOUBLE is
 			-- Angle that line ends on relative to world.
 		do
-			Result := Pi - line_angle (start_point.x_abs, start_point.y_abs,
-				end_point.x_abs, end_point.y_abs)
+			Result := modulo (line_angle (start_point.x_abs, start_point.y_abs,
+				end_point.x_abs, end_point.y_abs), 2 * Pi)
 		end
 
 end -- class EV_ARROWED_FIGURE

@@ -20,28 +20,35 @@ inherit
 		end
 
 creation
+	make,
 	make_with_text
 
 feature {NONE} -- Initialization
-	
+
+	make (par: EV_MENU_CONTAINER) is
+			-- Create an empty menu.
+		do
+			make_with_text (par, "")
+		end
+
 	make_with_text (par: EV_MENU_CONTAINER; label: STRING) is
-			-- Create the control window and the menu inside. 
-		local
-			par_imp: EV_MENU_CONTAINER_IMP
+			-- Create an empty menu with `label' as label. 
 		do
 			wel_make
-			par_imp ?= par.implementation
+			parent ?= par.implementation
 			check
-				valid_container: par_imp /= Void
+				valid_container: parent /= Void
 			end
-			ev_children := par_imp.ev_children
+			ev_children := parent.ev_children
 			set_text (label)
 		end	
 
-feature -- Status report
+feature -- Access
 
 	text: STRING
 		-- Label of the current menu
+
+feature -- Status report
 
 	destroyed: BOOLEAN is
 			-- Is Current object destroyed?  
@@ -53,18 +60,28 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text (str:STRING) is
-			-- Set `text' to `str'
-		do
-			text := str
-		end
-
 	destroy is
 			-- Destroy actual object.
 		do
 			check
 				not_yet_implemented: False
 			end
+		end
+
+feature -- Element change
+
+	set_text (str:STRING) is
+			-- Set `text' to `str'
+		do
+			text := str
+		end
+
+feature -- Event association
+
+	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
+			-- `sitem' has been selected'
+		do
+			parent.on_selection_changed (sitem)
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
@@ -74,6 +91,9 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 		do
 			Result := Current
 		end
+
+	parent: EV_MENU_CONTAINER_IMP
+			-- EV parent of the current menu
 
 end -- class EV_MENU_IMP
 

@@ -10,7 +10,7 @@ inherit
 		redefine
 			is_real_32,
 			is_numeric,
-			same_as, element_type, il_convert_from,
+			same_as, element_type,
 			description, sk_value, hash_code,
 			heaviest, default_create, tuple_code
 		end
@@ -136,16 +136,6 @@ feature -- C code generation
 			buffer.put_string ("SK_REAL32")
 		end
 
-feature -- IL code generation
-
-	il_convert_from (source: TYPE_I) is
-			-- Generate convertion from Current to `source' if needed.
-		do
-			if not source.is_real_32 then
-				il_generator.convert_to (Current)
-			end
-		end
-		
 feature
 
 	make_default_byte_code (ba: BYTE_ARRAY) is

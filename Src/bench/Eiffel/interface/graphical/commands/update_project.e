@@ -35,7 +35,8 @@ feature {NONE}
 				debug_window.clear_window;   
 				debug_window.put_string ("System terminated%N");
 				debug_window.display;
-				run_info.set_is_running (false)
+				run_info.set_is_running (false);
+				quit_cmd.recv_dead
 			end
 		end;
 

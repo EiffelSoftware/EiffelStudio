@@ -219,11 +219,15 @@ feature  -- Element change
 		end;
 
 	put_i_th (v: like item; i: INTEGER) is
-			-- Put v at i-th position.
-		-- REMPLACEMENT OU PAS ?
+			-- Replace `i'-th item, if in index interval, by `v'.
+			-- Do not move cursor.
+		local
+			pos: CURSOR
 		do
-			ll_put_i_th (v, i);
-			private_add (v.value, i)
+			pos := cursor
+			go_i_th (i)
+			replace (v)
+			go_to (pos)
 		end;
 
 	put_left (v: like item) is

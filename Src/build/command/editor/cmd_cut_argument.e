@@ -239,14 +239,13 @@ feature {NONE} -- Features of QUEST_POPUPER
 	popuper_parent: COMPOSITE is
 		do
 			Result := associated_command_tool
---			Result := edited_command.command_editor
 		end 
 
 	page: COMMAND_PAGE is
 			-- Page of the command catalog where the newly created
 			-- commands are added.
 		do
-			Result := command_catalog.user_defined_commands1
+			Result := command_catalog.current_page
 		end
 
 feature -- Attributes

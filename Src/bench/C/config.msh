@@ -23,8 +23,8 @@ output_libraries='standard mtstandard'
 #
 # Standard runtime with Boehm GC:
 #--------------------------------
-#ccflags='-W3 $debug -nologo -DNO_ISE_GC -DBOEHM_GC'
-#mtccflags='-W3 $debug -nologo -MT -DEIF_THREADS -DNO_ISE_GC -DBOEHM_GC'
+#ccflags='-W3 $debug -nologo -DNO_ISE_GC -DBOEHM_GC -DGC_DLL'
+#mtccflags='-W3 $debug -nologo -MT -DEIF_THREADS -DNO_ISE_GC -DBOEHM_GC -DGC_DLL'
 #output_libraries='standard mtstandard'
 #
 #-- DLL:

@@ -198,7 +198,7 @@ end;
 		end;
 
 	init_file (server_file: SERVER_FILE) is
-			-- Init server fileerver_file' before writing in it.
+			-- Init server file `server_file' before writing in it.
 		require
 			good_argument: server_file /= Void
 		do

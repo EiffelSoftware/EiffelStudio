@@ -9,6 +9,13 @@ class
 inherit
 	EV_VERTICAL_BOX
 	
+	OBSERVER
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+	
 create
 	make
 
@@ -26,5 +33,10 @@ feature -- Statuse Setting
 			-- Set `document'		
 		do			
 		end
+		
+	update is
+			-- Update
+		do			
+		end		
 
 end -- class DOCUMENT_BROWSER

@@ -15,6 +15,11 @@ inherit
 		undefine
 			copy, default_create, is_equal
 		end
+		
+	SHARED_TEST_CONTROLLER
+		undefine
+			copy, default_create, is_equal
+		end	
 
 feature {NONE} -- Initialization
 
@@ -27,7 +32,7 @@ feature {NONE} -- Initialization
 		local
 			type_selector: GB_TYPE_SELECTOR
 			editor: GB_OBJECT_EDITOR
-			controller: TEST_CONTROLLER
+			--controller: TEST_CONTROLLER
 			event_selector: EVENT_SELECTOR
 			documentation_display: DOCUMENTATION_DISPLAY
 		do
@@ -44,8 +49,9 @@ feature {NONE} -- Initialization
 			widget_selector_parent.extend (type_selector)
 			
 				-- Create the test controller.
-			create controller.make_with_text_control (test_class_display, generation_button)
-			controller_parent.extend (controller)
+			--create controller
+			test_controller.set_class_output (test_class_display)
+			controller_parent.extend (test_controller)
 			
 				-- Create the documentation display
 			create documentation_display.make_with_text (flat_short_display)
@@ -70,6 +76,12 @@ feature {NONE} -- Initialization
 			tests_button.select_actions.extend (agent update_tool_bar_radio_buttons (tests_button))			
 			documentation_button.select_actions.extend (agent update_tool_bar_radio_buttons (documentation_button))
 			main_notebook.selection_actions.extend (agent update_buttons)
+			
+				-- Initialize button pixmaps.
+			initialize_pixmaps
+			
+				-- Connect events to `generation_button'
+			generate_button.select_actions.extend (agent perform_generation)
 			
 			setup_initial_screen
 		end
@@ -232,5 +244,36 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	initialize_pixmaps is
+			-- Assign pixmaps to buttons as necessary.
+		local
+			pixmap: EV_PIXMAP
+		do
+			create pixmap
+			pixmap.set_with_named_file ("D:\work\widget_test\bitmaps\ico\properties.ico")
+			properties_button.set_pixmap (pixmap)
+			
+			create pixmap
+			pixmap.set_with_named_file ("D:\work\widget_test\bitmaps\ico\testing.ico")
+			tests_button.set_pixmap (pixmap)
+
+			create pixmap
+			pixmap.set_with_named_file ("D:\work\widget_test\bitmaps\ico\documentation.ico")
+			documentation_button.set_pixmap (pixmap)
+--			tests_button.enable_sensitive
+--			documentation_button.enable_sensitive
+		end
+		
+	perform_generation is
+			--
+		local
+			generation_dialog: GENERATION_DIALOG
+		do
+			create generation_dialog
+			generation_dialog.set_message ("You have selected to generate the " + Test_controller.selected_test_name + "%NThe following files will be generated:%Ntest_application.e%Nace.Windows.ace%N" + Test_controller.selected_test_name + ".e%N%NPlease specify a directory and then click %"Ok%" to generate the project:")	
+			generation_dialog.show_modal_to_window (Current)
+		end
+		
+	
 end -- class MAIN_WINDOW
 

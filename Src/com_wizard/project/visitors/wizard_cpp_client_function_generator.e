@@ -324,16 +324,6 @@ feature {NONE} -- Implementation
 				Result.append (name)
 				Result.append (Close_parenthesis)
 
-				if visitor.is_array_type then
-					array_data_type ?= data_type
-					if array_data_type /= Void then
-						Result.append (Comma_space)
-						Result.append_integer (array_data_type.dimension_count)
-					else
-						add_warning (Current, "Warning!! Can not find array dimension")
-					end
-				end
-
 				if visitor.writable then
 					Result.append (Comma_space)
 					Result.append (Null)
@@ -420,15 +410,6 @@ feature {NONE} -- Implementation
 				Result.append (name)
 				Result.append (Close_parenthesis)
 
-				if visitor.is_array_type then
-					array_data_type ?= argument_type
-					if array_data_type /= Void then
-						Result.append (Comma_space)
-						Result.append_integer (array_data_type.dimension_count)
-					else
-						add_warning (Current, "Warning!! Can not find array dimension")
-					end
-				end
 
 				if visitor.writable then
 					Result.append (Comma_space)

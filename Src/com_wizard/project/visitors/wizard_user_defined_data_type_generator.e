@@ -249,6 +249,7 @@ feature -- Processing
 
 			create ce_function_signature.make (0)
 			ce_function_signature.append (c_type)
+			ce_function_signature.append (Space)
 			ce_function_signature.append ("a_record")
 
 			create ce_function_body.make (0)

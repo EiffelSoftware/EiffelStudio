@@ -22,6 +22,14 @@ deferred class TEST_CONTAINER inherit
 			set_standard_output
 		end
 
+	TEST_STATISTICS
+		rename
+			count as test_count, passed_tests as contained_passed_tests,
+			failed_tests as contained_failed_tests,
+			pass_percentage as contained_pass_percentage,
+			fail_percentage as contained_fail_percentage
+		end
+
 feature -- Measurement
 
 	run_count: INTEGER is
@@ -50,6 +58,20 @@ feature -- Measurement
 			select_test (old_idx)
 		ensure
 			index_unchanged: index = old index
+		end
+
+	 contained_passed_tests: INTEGER is
+	 		-- Number of contained passed tests
+		do
+			calculate_results
+			Result := passed_count
+		end
+
+	 contained_failed_tests: INTEGER is
+	 		-- Number of contained failed tests
+		do
+			calculate_results
+			Result := failed_count
 		end
 
 feature -- Status report
@@ -256,6 +278,47 @@ feature -- Output
 			select_test (old_test)
 		end
 	 
+feature {NONE} -- Implementation
+
+	cached: BOOLEAN
+			-- Is a pass/fail result cached?
+
+	passed_count: INTEGER
+			-- Cached number of passed tests
+
+	failed_count: INTEGER
+			-- Cached number of failed tests
+
+	calculate_results is
+			-- Calculate number of passed and failed tests.
+		local
+			old_idx: INTEGER
+			i: INTEGER
+		do
+			if not cached then
+				old_idx := index
+				from i := 1 until i > test_count loop
+					select_test (i)
+					if selected_test.all_tests_passed then
+						passed_count := passed_count + 1
+					else
+						failed_count := failed_count + 1
+					end
+					i := i + 1
+				end
+				cached := True
+				select_test (old_idx)
+			end
+		ensure
+			cached: cached
+			index_unchanged: index = old index
+		end
+		
+invariant
+
+	count_constraint: cached implies
+			test_count = contained_passed_tests + contained_failed_tests
+
 end -- class TEST_CONTAINER
 
 --|----------------------------------------------------------------

@@ -317,6 +317,7 @@ feature -- Output
 			-- Output test summary to `f'.
 		do
 			f.put_summary (Current)
+			f.put_container_results (Current)
 			Precursor (f)
 		end
 	 

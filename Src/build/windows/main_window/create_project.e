@@ -27,16 +27,26 @@ feature
 			proj_dir.wipe_out;
 			proj_dir.append (argument);	
 			proj_dir.prune_all (' ');
-			char := proj_dir.item (proj_dir.count);
-			if char = Environment.directory_separator then
-				proj_dir.remove (proj_dir.count)
-			end;	
-			!!dir.make (proj_dir);
-			if dir.exists then
-				question_box.popup (Current, Messages.override_qu, 
-						proj_dir)
+			if proj_dir.empty then
+				error_box.popup (Current, Messages.empty_project_name_er, 
+						Void)
 			else
-				create_initial_directories
+				char := proj_dir.item (proj_dir.count);
+				if char = Environment.directory_separator then
+					proj_dir.remove (proj_dir.count)
+				end;	
+				if proj_dir.empty then
+					error_box.popup (Current, Messages.empty_project_name_er, 
+						Void)
+				else
+					!!dir.make (proj_dir);
+					if dir.exists then
+						question_box.popup (Current, Messages.override_qu, 
+								proj_dir)
+					else
+						create_initial_directories
+					end
+				end
 			end
 		end;
 

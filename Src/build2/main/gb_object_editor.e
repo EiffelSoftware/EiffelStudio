@@ -143,7 +143,7 @@ feature -- Status setting
 			-- so this section of code was added as a temporary fix.
 			if object /= Void then
 				if object.name /= object.edited_name then
-					if object_handler.named_object_exists (object.edited_name, object) then
+					if object_handler.name_in_use (object.edited_name, object) then
 						object.cancel_edited_name
 						update_editors_for_name_change (object.object, Current)
 					else
@@ -245,7 +245,7 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 			name_field.change_actions.block
 				-- If the name exists, we must restore the name of `object' to
 				-- the name before the name change began.
-			if object_handler.named_object_exists (name_field.text, object) then
+			if object_handler.name_in_use (name_field.text, object) then
 				object.cancel_edited_name
 				check
 					object_names_now_equal: object.edited_name.is_equal (object.name)
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 		do
 			if valid_class_name (name_field.text) or name_field.text.is_empty then
 				object.set_edited_name (name_field.text)
-				if object_handler.named_object_exists (name_field.text, object) then
+				if object_handler.name_in_use (name_field.text, object) then
 					name_field.set_foreground_color ((create {EV_STOCK_COLORS}).red)
 				else
 					name_field.set_foreground_color ((create {EV_STOCK_COLORS}).black)
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 			command_name_change: GB_COMMAND_NAME_CHANGE
 		do
 			name_field.focus_out_actions.block
-			if not name_field.text.is_empty and then object_handler.named_object_exists (name_field.text, object) then
+			if not name_field.text.is_empty and then object_handler.name_in_use (name_field.text, object) then
 				previous_caret_position := name_field.caret_position
 				create my_dialog.make_with_text (Duplicate_name_warning_part1 + name_field.text + Duplicate_name_warning_part2)
 				my_dialog.show_modal_to_window (parent_window (Current))

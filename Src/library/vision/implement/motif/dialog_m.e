@@ -224,8 +224,15 @@ feature -- Status setting
 			dialog_shell.set_title (a_title)
 		end;
 
+	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY) is
+			-- Set the dialog shell action to `cmd' with `arg'
+		do -- FIXME
+		end
+
 	dialog_command_target is
 			-- Set the main object to the dialog shell.
+		obsolete
+			"Use `set_parent_action' instead"
 		do
 			screen_object := dialog_shell.screen_object
 		ensure then
@@ -234,6 +241,8 @@ feature -- Status setting
 
 	widget_command_target is
 			-- Set the main object to the dialog.
+		obsolete
+			"Not necessary when using `set_parent_action'."
 		do
 			screen_object := action_target;
 		ensure then

@@ -88,11 +88,6 @@ feature
 			until
 				changed_classes.empty
 			loop
-debug ("COUNT")
-	io.error.putstring ("[");
-	io.error.putint (changed_classes.count);
-	io.error.putstring ("] ");
-end;
 				pass2_c := changed_classes.first;
 				current_class := pass2_c.associated_class;
 				System.set_current_class (current_class)

@@ -119,14 +119,16 @@ feature -- Status setting
 			parent_imp := Void	
 		end
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
+	enable_select is
+			-- Select the row in the list.
 		do
-			if flag then
-				C.gtk_clist_select_row (parent_imp.list_widget, index - 1, 0)
-			else
-				C.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
-			end
+			C.gtk_clist_select_row (parent_imp.list_widget, index - 1, 0)
+		end
+
+	disable_select is
+			-- Deselect the row from the list.
+		do
+			C.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
 		end
 
 	set_columns (value: INTEGER) is
@@ -319,6 +321,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/03 00:12:53  king
+--| Changed set_selected to enable/disable_select
+--|
 --| Revision 1.31  2000/03/02 21:56:35  king
 --| Removed redundant command association commands
 --|

@@ -26,6 +26,7 @@ extern void dinterrupt(void);
 extern void dserver(void);
 extern void eif_alloc_init();
 extern char *ename;				/* Name of the Eiffel program running */
+extern int eif_no_reclaim;		/* Call reclaim ion termination? */
 extern int cc_for_speed;		/* Optimized for speed or for memory */
 RT_LNK int scount;				/* Maximum dtype */
 extern char *starting_working_directory;

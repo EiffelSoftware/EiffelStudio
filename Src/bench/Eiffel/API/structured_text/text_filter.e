@@ -667,7 +667,7 @@ feature {NONE} -- Text processing
 			feat_suffix: STRING
 		do
 			written_class := f.written_class
-			real_feature := f.ancestor_version (written_class)
+			real_feature := written_class.feature_with_body_index (f.body_index)
 			if feature_redirect /= Void then
 				feat_suffix := feature_redirect + "." + file_suffix
 			else

@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				
-				if l_next_char /= Void and then l_next_char /= '.' then
+				if l_next_char /= '.' then
 					l_slash_index := l_name.index_of ('/', l_start_pos)
 					if l_slash_index > 0 then
 						l_name.insert_string ("/reference", l_slash_index)

@@ -404,6 +404,7 @@ feature -- Query
 			Result := l_xm_doc /= Void	
 			if not Result then
 				create l_error.make_with_line_information (error_description, error_line, error_column)
+				l_error.set_action (agent (shared_error_reporter.actions).highlight_text_in_editor (error_line, error_column))
 				shared_error_reporter.set_error (l_error)
 			end
 		end		

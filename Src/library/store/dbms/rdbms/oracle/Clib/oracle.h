@@ -128,7 +128,7 @@ static CONST text  *oci_func_tab[] =  {(text *) "not used",
 #define NO_MORE_DESCRIPTOR    			(-1)
 void * ora_safe_alloc (void *ptr);
 void change_to_low(char *buf);
-int c_ora_make (int m_size);
+void c_ora_make (int m_size);
 int ora_new_descriptor(void);
 int ora_first_descriptor_available (void);
 int ora_available_descriptor (void);

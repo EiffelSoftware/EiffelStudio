@@ -160,11 +160,12 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 
 feature {GB_CODE_GENERATOR} -- Status setting
 
-	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
 			-- `a_name' is the attribute name of the object that will represent `Current' in the generated code.
+			-- `a_type' is a STRING representation of the type of `a_name', e.g. "EV_BUTTON".
 			-- `children_names' is a list of all the childrens attribute names.'
 		deferred
 		end

@@ -1865,6 +1865,7 @@ feature -- Final mode generation
 			if not retried and is_finalization_needed then
 					-- Set the generation mode in final mode
 				byte_context.set_final_mode
+				keep_assertions := keep_assert and then lace.has_assertions
 		
 				if il_generation then
 					generate_il
@@ -1876,8 +1877,6 @@ feature -- Final mode generation
 						-- Initialize `TMP_POLY_SERVER' and `TMP_OPT_BYTE_SERVER'
 					Tmp_poly_server.make
 					Tmp_opt_byte_server.make
-		
-					keep_assertions := keep_assert and then Lace.has_assertions
 		
 						-- Save the value of `remover_off'
 						-- and `exception_stack_managed'

@@ -87,6 +87,7 @@ feature -- Basic operations
 			if child /= Void then
 				child.on_first_display
 			end
+			parent_ask_resize (child_cell.width, child_cell.height)
 			already_displayed := True
 		end
 

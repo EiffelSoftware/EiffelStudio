@@ -170,6 +170,9 @@ feature {NONE} -- Basic operation
 							end
 							litem.set_move_and_size (mark, bwidth, localint, cheight)
 							mark := mark + space + localint
+						elseif lchild.index = next_non_expandable then
+							expandable.forth
+							next_non_expandable := expandable.item
 						end
 
 					lchild.forth

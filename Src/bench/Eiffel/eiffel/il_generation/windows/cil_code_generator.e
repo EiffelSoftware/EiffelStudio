@@ -2370,7 +2370,7 @@ feature -- Features info
 
 	generate_implementation_type_features (feats: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; class_id: INTEGER) is
 			-- Generate all TYPE_FEATURE_I that must be generated in
-			-- interface corresponding to class ID `class_id'.
+			-- implementation corresponding to class ID `class_id'.
 		require
 			feats_not_void: feats /= Void
 		local
@@ -2382,9 +2382,7 @@ feature -- Features info
 				feats.after
 			loop
 				l_type_feature := feats.item_for_iteration
-				if l_type_feature.origin_class_id = class_id then
-					generate_feature (l_type_feature, False, False, False)
-				end
+				generate_feature (l_type_feature, False, False, False)
 				feats.forth
 			end
 		end

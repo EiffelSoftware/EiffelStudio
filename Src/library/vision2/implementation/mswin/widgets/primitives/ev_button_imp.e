@@ -4,14 +4,14 @@ indexing
 		% Mswindows implementation."
 	status: "See notice at end of class"
 --| FIXME
-note:
+	note:
 	"On windows, you can only display a text or a pixmap.%N%
 	%if you set both the pixmap and the text, only the%N%
 	%pixmap will be displayed. On gtk, everything works%N%
 	%like it is suppose to be, you have both text and%N%
 	%pixmap visible."
-	date: "$$"
-	revision: "$$"
+	date: "$date: $"
+	revision: "$Revision$"
 
 class
 	EV_BUTTON_IMP
@@ -235,6 +235,12 @@ feature -- Status setting
 			invalidate
 		end
 
+	enable_can_default is
+			--| Implementation only needed for GTK
+		do
+			--| Do nothing as this is the default on Win32.
+		end
+
 feature -- Element change
 
 	set_pixmap (pix: EV_PIXMAP) is
@@ -366,6 +372,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/06/09 01:32:52  manus
+--| Merged version 1.35.8.6 from DEVEL branch to trunc
+--|
 --| Revision 1.51  2000/06/07 17:28:01  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

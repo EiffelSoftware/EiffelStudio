@@ -429,6 +429,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	do_all_internal (an_agent: PROCEDURE [ANY, TUPLE [G]]; a_tree_node: ARRAYED_TREE [G]) is
+			-- Apply action to every child.
+		require
+			non_void_agent: an_agent /= Void
+			non_void_tree_node: a_tree_node /= Void
+		do
+			an_agent.call ([a_tree_node.item])
+			from
+				a_tree_node.child_start
+			until
+				a_tree_node.child_off
+			loop
+				do_all_internal (an_agent, a_tree_node.child)
+				a_tree_node.child_forth
+			end
+		end
+
 feature -- Access
 
 	child: like parent is
@@ -539,6 +556,25 @@ feature -- Access
 	wipe_out is
 		do
 			arrayed_list.wipe_out
+		end
+
+	move (i: INTEGER) is
+			-- Move child
+		obsolete
+			"Use feature `child_move' instead"
+		do
+			child_move (i)
+		end
+
+	child_move (i: INTEGER) is
+		do
+			arrayed_list.move (i)
+		end
+
+	do_all (an_agent: PROCEDURE [ANY, TUPLE [G]]) is
+			-- Apply `an_agent' to every child nodes in the tree.
+		do
+			do_all_internal (an_agent, Current)
 		end
 
 feature {NONE} -- private access arrayed_list

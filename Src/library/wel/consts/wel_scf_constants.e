@@ -8,28 +8,13 @@ class
 
 feature -- Access
 
-	Scf_all: INTEGER is
-			-- Apply format to all text.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"SCF_ALL"
-		end
-
-	Scf_selection: INTEGER is
+	Scf_selection: INTEGER is 1
 			-- Apply format to selection only.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"SCF_SELECTION"
-		end
 
-	Scf_word: INTEGER is
+	Scf_word: INTEGER is 2
 			-- Apply format to word only.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"SCF_WORD"
-		end
+
+	Scf_all: INTEGER is 4
+			-- Apply format to all text.
 
 end -- class WEL_SFC_CONSTANTS

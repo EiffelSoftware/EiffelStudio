@@ -9,26 +9,11 @@ class
 
 feature -- Access
 
-	Device_fonttype: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DEVICE_FONTTYPE"
-		end
+	Raster_fonttype: INTEGER is 1
 
-	Raster_fonttype: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"RASTER_FONTTYPE"
-		end
+	Device_fonttype: INTEGER is 2
 
-	Truetype_fonttype: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"TRUETYPE_FONTTYPE"
-		end
+	Truetype_fonttype: INTEGER is 4
 
 feature -- Status report
 

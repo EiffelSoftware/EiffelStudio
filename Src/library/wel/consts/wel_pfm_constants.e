@@ -10,62 +10,27 @@ class
 
 feature -- Access
 
-	Pfm_startindent: INTEGER is
+	Pfm_startindent: INTEGER is 1
 			-- The dxStartIndent member is valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFM_STARTINDENT"
-		end
 
-	Pfm_rightindent: INTEGER is
+	Pfm_rightindent: INTEGER is 2
 			-- The dxRightIndent member is valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFM_RIGHTINDENT"
-		end
 
-	Pfm_offset: INTEGER is
+	Pfm_offset: INTEGER is 4
 			-- The dxStartIndent member is valid and specifies
 			-- a relative value.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFM_OFFSET"
-		end
 
-	Pfm_alignment: INTEGER is
+	Pfm_alignment: INTEGER is 8
 			-- The wAlignment member is valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFM_ALIGNMENT"
-		end
 
-	Pfm_tabstops: INTEGER is
+	Pfm_tabstops: INTEGER is 16
 			-- The cTabStobs and rgxTabStops members are valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFM_TABSTOPS"
-		end
 
-	Pfm_numbering: INTEGER is
+	Pfm_numbering: INTEGER is 32
 			-- The wNumbering member is valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFM_NUMBERING"
-		end
 
-	Pfm_offsetindent: INTEGER is
+	Pfm_offsetindent: INTEGER is 2147483648
 			-- The dxOffset member is valid.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"PFM_OFFSETINDENT"
-		end
 
 end -- class WEL_PFM_CONSTANTS
 

@@ -9,69 +9,23 @@ class
 
 feature -- Access
 
-	En_setfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_SETFOCUS"
-		end
+	En_setfocus: INTEGER is 256
 
-	En_killfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_KILLFOCUS"
-		end
+	En_killfocus: INTEGER is 512
 
-	En_change: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_CHANGE"
-		end
+	En_change: INTEGER is 768
 
-	En_update: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_UPDATE"
-		end
+	En_update: INTEGER is 1024
 
-	En_errspace: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_ERRSPACE"
-		end
+	En_errspace: INTEGER is 1280
 
-	En_maxtext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_MAXTEXT"
-		end
+	En_maxtext: INTEGER is 1281
 
-	En_hscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_HSCROLL"
-		end
+	En_hscroll: INTEGER is 1537
 
-	En_vscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"EN_VSCROLL"
-		end
+	En_vscroll: INTEGER is 1538
 
-
-	En_msgfilter: INTEGER is
-		external
-			"C [macro %"richedit.h%"]"
-		alias
-			"EN_MSGFILTER"
-		end
+	En_msgfilter: INTEGER is 1792
 	
 end -- class WEL_EN_CONSTANTS
 

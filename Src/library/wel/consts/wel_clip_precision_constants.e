@@ -9,33 +9,13 @@ class
 
 feature -- Access
 
-	Clip_default_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CLIP_DEFAULT_PRECIS"
-		end
+	Clip_default_precis: INTEGER is 0
 
-	Clip_character_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CLIP_CHARACTER_PRECIS"
-		end
+	Clip_character_precis: INTEGER is 1
 
-	Clip_stroke_precis: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CLIP_STROKE_PRECIS"
-		end
+	Clip_stroke_precis: INTEGER is 2
 
-	Clip_mask: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CLIP_MASK"
-		end
+	Clip_mask: INTEGER is 15
 
 	Clip_lh_angles: INTEGER is
 		external

@@ -10,89 +10,29 @@ class
 
 feature -- Access
 
-	Enm_none: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_NONE"
-		end
+	Enm_none: INTEGER is 0
 
-	Enm_change: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_CHANGE"
-		end
+	Enm_change: INTEGER is 1
 
-	Enm_update: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_UPDATE"
-		end
+	Enm_update: INTEGER is 2
 
-	Enm_scroll: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_SCROLL"
-		end
+	Enm_scroll: INTEGER is 4
 
-	Enm_keyevents: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_KEYEVENTS"
-		end
+	Enm_keyevents: INTEGER is 65536
 
-	Enm_mouseevents: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_MOUSEEVENTS"
-		end
+	Enm_mouseevents: INTEGER is 131072
 
-	Enm_requestresize: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_REQUESTRESIZE"
-		end
+	Enm_requestresize: INTEGER is 262144
 
-	Enm_selchange: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_SELCHANGE"
-		end
+	Enm_selchange: INTEGER is 524288
 
-	Enm_dropfiles: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_DROPFILES"
-		end
+	Enm_dropfiles: INTEGER is 1048576
 
-	Enm_protected: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_PROTECTED"
-		end
+	Enm_protected: INTEGER is 2097152
 
-	Enm_correcttext: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_CORRECTTEXT"
-		end
+	Enm_correcttext: INTEGER is 4194304
 
-	Enm_imechange: INTEGER is
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ENM_IMECHANGE"
-		end
+	Enm_imechange: INTEGER is 8388608
 
 end -- class WEL_ENM_CONSTANTS
 

@@ -99,12 +99,7 @@ feature -- Access
  			"LANG_DUTCH"
 		end
 
- 	Lang_english: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_ENGLISH"
-		end
+ 	Lang_english: INTEGER is 9
 
   	Lang_estonian: INTEGER is
   		external
@@ -639,12 +634,7 @@ feature -- Access
 			"SUBLANG_SPANISH_DOMINICAN_REPUBLIC"
 		end 
 			 
-	Sublang_english_us: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_US"
-		end
+	Sublang_english_us: INTEGER is 1
 		
 	Sublang_spanish_venezuela: INTEGER is
 		external

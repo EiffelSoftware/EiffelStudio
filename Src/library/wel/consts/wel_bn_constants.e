@@ -9,61 +9,21 @@ class
 
 feature -- Access
 
-	Bn_clicked: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BN_CLICKED"
-		end
+	Bn_clicked: INTEGER is 0
 
-	Bn_paint: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BN_PAINT"
-		end
+	Bn_paint: INTEGER is 1
 
-	Bn_hilite: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BN_HILITE"
-		end
+	Bn_hilite: INTEGER is 2
 
-	Bn_unhilite: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BN_UNHILITE"
-		end
+	Bn_unhilite: INTEGER is 3
 
-	Bn_disable: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BN_DISABLE"
-		end
+	Bn_disable: INTEGER is 4
 
-	Bn_doubleclicked: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BN_DOUBLECLICKED"
-		end
+	Bn_doubleclicked: INTEGER is 5
 
-	Bn_killfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BN_KILLFOCUS"
-		end
+	Bn_killfocus: INTEGER is 7
 
-	Bn_setfocus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BN_SETFOCUS"
-		end
+	Bn_setfocus: INTEGER is 6
 
 end -- class WEL_BN_CONSTANTS
 

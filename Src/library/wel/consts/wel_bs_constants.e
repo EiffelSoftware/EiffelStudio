@@ -9,189 +9,58 @@ class
 
 feature -- Access
 
-	Bs_pushbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_PUSHBUTTON"
-		end
+	Bs_pushbutton: INTEGER is 0
 
-	Bs_defpushbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_DEFPUSHBUTTON"
-		end
+	Bs_defpushbutton: INTEGER is 1
 
-	Bs_checkbox: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_CHECKBOX"
-		end
+	Bs_checkbox: INTEGER is 2
 
-	Bs_autocheckbox: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_AUTOCHECKBOX"
-		end
+	Bs_autocheckbox: INTEGER is 3
 
-	Bs_radiobutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_RADIOBUTTON"
-		end
+	Bs_radiobutton: INTEGER is 4
 
-	Bs_3state: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_3STATE"
-		end
+	Bs_3state: INTEGER is 5
 
-	Bs_auto3state: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_AUTO3STATE"
-		end
+	Bs_auto3state: INTEGER is 6
 
-	Bs_groupbox: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_GROUPBOX"
-		end
+	Bs_groupbox: INTEGER is 7
 
-	Bs_userbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_USERBUTTON"
-		end
+	Bs_userbutton: INTEGER is 8
 
-	Bs_autoradiobutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_AUTORADIOBUTTON"
-		end
+	Bs_autoradiobutton: INTEGER is 9
 
-	Bs_ownerdraw: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_OWNERDRAW"
-		end
+	Bs_ownerdraw: INTEGER is 11
 
-	Bs_lefttext: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_LEFTTEXT"
-		end
+	Bs_lefttext: INTEGER is 32
 
-	Bs_text: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_TEXT"
-		end
+	Bs_text: INTEGER is 0
 
-	Bs_icon: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_ICON"
-		end
+	Bs_icon: INTEGER is 64
 
-	Bs_bitmap: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_BITMAP"
-		end
+	Bs_bitmap: INTEGER is 128
 
-	Bs_left: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_LEFT"
-		end
+	Bs_left: INTEGER is 256
 
-	Bs_right: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_RIGHT"
-		end
+	Bs_right: INTEGER is 512
 
-	Bs_center: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_CENTER"
-		end
+	Bs_center: INTEGER is 768
 
-	Bs_top: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_TOP"
-		end
+	Bs_top: INTEGER is 1024
 
-	Bs_bottom: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_BOTTOM"
-		end
+	Bs_bottom: INTEGER is 2048
 
-	Bs_vcenter: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_VCENTER"
-		end
+	Bs_vcenter: INTEGER is 3072
 
+	Bs_pushlike: INTEGER is 4096
 
-	Bs_pushlike: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_PUSHLIKE"
-		end
+	Bs_multiline: INTEGER is 8192
 
-	Bs_multiline: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_MULTILINE"
-		end
+	Bs_notify: INTEGER is 16384
 
-	Bs_notify: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_NOTIFY"
-		end
+	Bs_flat: INTEGER is 32768
 
-	Bs_flat: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_FLAT"
-		end
-
-	Bs_rightbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_RIGHTBUTTON"
-		end
-
+	Bs_rightbutton: INTEGER is 32
+			-- Same as `Bs_lefttext'.
 
 end -- class WEL_BS_CONSTANTS
 

@@ -9,54 +9,36 @@ class
 
 feature -- Access
 
-	Bs_solid: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_SOLID"
-		end
+	Bs_solid: INTEGER is 0
+			-- Solid brush.
 
-	Bs_null: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_NULL"
-		end
+	Bs_null: INTEGER is 1
+			-- Same as `Bs_hollow'.
 
-	Bs_hollow: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_HOLLOW"
-		end
+	Bs_hollow: INTEGER is 1
+			-- Hollow brush.
 
-	Bs_hatched: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_HATCHED"
-		end
+	Bs_hatched: INTEGER is 2
+			-- Hatched brush.
 
-	Bs_pattern: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_PATTERN"
-		end
+	Bs_pattern: INTEGER is 3
+			-- Pattern brush defined by a memory bitmap.
 
-	Bs_indexed: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_INDEXED"
-		end
+	Bs_indexed: INTEGER is 4
 
-	Bs_dibpattern: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"BS_DIBPATTERN"
-		end
+	Bs_dibpattern: INTEGER is 5
+			-- A pattern brush defined by a device-independent
+			-- bitmap (DIB) specification.
+
+	Bs_dibpatternpt: INTEGER is 6
+			-- A pattern brush defined by a device-independent
+			-- bitmap (DIB) specification
+
+	Bs_pattern8x8: INTEGER is 7
+			-- Same as `Bs_pattern'.
+
+	Bs_dibpattern8x8: INTEGER is 8
+			-- Same as `Bs_dibpattern'.
 
 end -- class WEL_BRUSH_STYLE_CONSTANTS
 

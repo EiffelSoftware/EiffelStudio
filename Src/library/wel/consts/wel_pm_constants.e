@@ -9,26 +9,11 @@ class
 
 feature -- Access
 
-	Pm_noremove: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PM_NOREMOVE"
-		end
+	Pm_noremove: INTEGER is 0
 
-	Pm_remove: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PM_REMOVE"
-		end
+	Pm_remove: INTEGER is 1
 
-	Pm_noyield: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PM_NOYIELD"
-		end
+	Pm_noyield: INTEGER is 2
 
 end -- class WEL_PM_CONSTANTS
 

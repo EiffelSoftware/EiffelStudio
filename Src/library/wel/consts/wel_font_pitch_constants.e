@@ -9,26 +9,11 @@ class
 
 feature -- Access
 
-	Default_pitch: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"DEFAULT_PITCH"
-		end
+	Default_pitch: INTEGER is 0
 
-	Fixed_pitch: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"FIXED_PITCH"
-		end
+	Fixed_pitch: INTEGER is 1
 
-	Variable_pitch: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"VARIABLE_PITCH"
-		end
+	Variable_pitch: INTEGER is 2
 
 end -- class WEL_FONT_PITCH_CONSTANTS
 

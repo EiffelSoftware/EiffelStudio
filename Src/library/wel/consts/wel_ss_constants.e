@@ -9,117 +9,41 @@ class
 
 feature -- Access
 
-	Ss_left: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_LEFT"
-		end
+	Ss_left: INTEGER is 0
 
-	Ss_center: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_CENTER"
-		end
+	Ss_center: INTEGER is 1
 
-	Ss_notify: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_NOTIFY"
-		end
+	Ss_right: INTEGER is 2
 
-	Ss_right: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_RIGHT"
-		end
+	Ss_icon: INTEGER is 3
 
-	Ss_icon: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_ICON"
-		end
+	Ss_blackrect: INTEGER is 4
 
-	Ss_blackrect: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_BLACKRECT"
-		end
+	Ss_grayrect: INTEGER is 5
 
-	Ss_grayrect: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_GRAYRECT"
-		end
+	Ss_whiterect: INTEGER is 6
 
-	Ss_whiterect: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_WHITERECT"
-		end
+	Ss_blackframe: INTEGER is 7
 
-	Ss_blackframe: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_BLACKFRAME"
-		end
+	Ss_grayframe: INTEGER is 8
 
-	Ss_grayframe: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_GRAYFRAME"
-		end
+	Ss_whiteframe: INTEGER is 9
 
-	Ss_whiteframe: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_WHITEFRAME"
-		end
+	Ss_useritem: INTEGER is 10
 
-	Ss_simple: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_SIMPLE"
-		end
+	Ss_simple: INTEGER is 11
 
-	Ss_leftnowordwrap: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_LEFTNOWORDWRAP"
-		end
+	Ss_leftnowordwrap: INTEGER is 12
 
-	Ss_noprefix: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_NOPREFIX"
-		end
+	Ss_ownerdraw: INTEGER is 13
+	
+	Ss_bitmap: INTEGER is 14
 
-	Ss_bitmap: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_BITMAP"
-		end
+	Ss_noprefix: INTEGER is 128
 
-	Ss_center_image: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SS_CENTERIMAGE"
-		end
+	Ss_center_image: INTEGER is 512
+
+	Ss_notify: INTEGER is 256
 
 end -- class WEL_SS_CONSTANTS
 

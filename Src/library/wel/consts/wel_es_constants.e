@@ -9,96 +9,31 @@ class
 
 feature -- Access
 
-	Es_left: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_LEFT"
-		end
+	Es_left: INTEGER is 0
 
-	Es_center: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_CENTER"
-		end
+	Es_center: INTEGER is 1
 
-	Es_right: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_RIGHT"
-		end
+	Es_right: INTEGER is 2
 
-	Es_multiline: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_MULTILINE"
-		end
+	Es_multiline: INTEGER is 4
 
-	Es_uppercase: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_UPPERCASE"
-		end
+	Es_uppercase: INTEGER is 8
 
-	Es_lowercase: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_LOWERCASE"
-		end
+	Es_lowercase: INTEGER is 16
 
-	Es_password: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_PASSWORD"
-		end
+	Es_password: INTEGER is 32
 
-	Es_autovscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_AUTOVSCROLL"
-		end
+	Es_autovscroll: INTEGER is 64
 
-	Es_autohscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_AUTOHSCROLL"
-		end
+	Es_autohscroll: INTEGER is 128
 
-	Es_nohidesel: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_NOHIDESEL"
-		end
+	Es_nohidesel: INTEGER is 256
 
-	Es_oemconvert: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_OEMCONVERT"
-		end
+	Es_oemconvert: INTEGER is 1024
 
-	Es_readonly: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_READONLY"
-		end
+	Es_readonly: INTEGER is 2048
 
-	Es_wantreturn: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ES_WANTRETURN"
-		end
+	Es_wantreturn: INTEGER is 4096
 
 end -- class WEL_ES_CONSTANTS
 

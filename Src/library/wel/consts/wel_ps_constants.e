@@ -9,54 +9,19 @@ class
 
 feature -- Access
 
-	Ps_solid: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PS_SOLID"
-		end
+	Ps_solid: INTEGER is 0
 
-	Ps_dash: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PS_DASH"
-		end
+	Ps_dash: INTEGER is 1
 
-	Ps_dot: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PS_DOT"
-		end
+	Ps_dot: INTEGER is 2
 
-	Ps_dashdot: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PS_DASHDOT"
-		end
+	Ps_dashdot: INTEGER is 3
 
-	Ps_dashdotdot: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PS_DASHDOTDOT"
-		end
+	Ps_dashdotdot: INTEGER is 4
 
-	Ps_null: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PS_NULL"
-		end
+	Ps_null: INTEGER is 5
 
-	Ps_insideframe: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"PS_INSIDEFRAME"
-		end
+	Ps_insideframe: INTEGER is 6
 
 feature -- Status report
 

@@ -9,75 +9,25 @@ class
 
 feature -- Access
 
-	Gwl_exstyle: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"GWL_EXSTYLE"
-		end
+	Gwl_exstyle: INTEGER is -20
 
-	Gwl_style: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"GWL_STYLE"
-		end
+	Gwl_style: INTEGER is -16
 
-	Gwl_wndproc: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"GWL_WNDPROC"
-		end
+	Gwl_wndproc: INTEGER is -4
 
-	Gwl_hinstance: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"GWL_HINSTANCE"
-		end
+	Gwl_hinstance: INTEGER is -6
 
-	Gwl_hwndparent: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"GWL_HWNDPARENT"
-		end
+	Gwl_hwndparent: INTEGER is -8
 
-	Gwl_id: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"GWL_ID"
-		end
+	Gwl_id: INTEGER is -12
 
-	Gwl_userdata: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"GWL_USERDATA"
-		end
+	Gwl_userdata: INTEGER is -21
 
-	Dwl_dlgproc: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DWL_DLGPROC"
-		end
+	Dwl_dlgproc: INTEGER is 4
 
-	Dwl_msgresult: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DWL_MSGRESULT"
-		end
+	Dwl_msgresult: INTEGER is 0
 
-	Dwl_user: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"DWL_USER"
-		end
+	Dwl_user: INTEGER is 8
 
 end -- class WEL_GWL_CONSTANTS
 

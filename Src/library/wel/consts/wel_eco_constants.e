@@ -9,113 +9,48 @@ class
 
 feature -- Access
 
-	Eco_autowordselection: INTEGER is
+	Eco_autowordselection: INTEGER is 1
 			-- Automatic selection of word on doubleclick.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECO_AUTOWORDSELECTION"
-		end
 
-	Eco_autovscroll: INTEGER is
+	Eco_autovscroll: INTEGER is 64
 			-- Same as ES_AUTOVSCROLL style.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECO_AUTOVSCROLL"
-		end
 
-	Eco_autohscroll: INTEGER is
+	Eco_autohscroll: INTEGER is 128
 			-- Same as ES_AUTOHSCROLL style.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECO_AUTOHSCROLL"
-		end
 
-	Eco_nohidesel: INTEGER is
+	Eco_nohidesel: INTEGER is 256
 			-- Same as ES_NOHIDESEL style.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECO_NOHIDESEL"
-		end
 
-	Eco_readonly: INTEGER is
+	Eco_readonly: INTEGER is 2048
 			-- Same as ES_READONLY style.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECO_READONLY"
-		end
 
-	Eco_wantreturn: INTEGER is
+	Eco_wantreturn: INTEGER is 4096
 			-- Same as ES_WANTRETURN style.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECO_WANTRETURN"
-		end
 
-	Eco_savesel: INTEGER is
+	Eco_savesel: INTEGER is 32768
 			-- Same as ES_SAVESEL style.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECO_SAVESEL"
-		end
 
-	Eco_selectionbar: INTEGER is
+	Eco_selectionbar: INTEGER is 16777216
 			-- Same as ES_SELECTIONBAR style.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECO_SELECTIONBAR"
-		end
 
-	Eco_vertical: INTEGER is
+	Eco_vertical: INTEGER is 4194304
 			-- Same as ES_VERTICAL style. Available in
 			-- Asian-language versions only.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECO_VERTICAL"
-		end
 
-	Ecoop_set: INTEGER is
+	Ecoop_set: INTEGER is 1
 			-- Set the options to those specified by fOptions.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECOOP_SET"
-		end
 
-	Ecoop_or: INTEGER is
+	Ecoop_or: INTEGER is 2
 			-- Combine the specified options with the current
 			-- options.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECOOP_OR"
-		end
 
-	Ecoop_and: INTEGER is
+	Ecoop_and: INTEGER is 3
 			-- Retain only those current options that are also
 			-- specified by fOptions.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECOOP_AND"
-		end
 
-	Ecoop_xor: INTEGER is
+	Ecoop_xor: INTEGER is 4
 			-- Retain only those current options that are not
 			-- specified by fOptions.
-		external
-			"C [macro %"redit.h%"]"
-		alias
-			"ECOOP_XOR"
-		end
 
 end -- class WEL_ECO_CONSTANTS
 

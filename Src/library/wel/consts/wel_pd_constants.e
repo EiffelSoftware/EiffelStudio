@@ -9,159 +9,49 @@ class
 
 feature -- Access
 
-	Pd_allpages: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_ALLPAGES"
-		end
+	Pd_allpages: INTEGER is 0
 
-	Pd_selection: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_SELECTION"
-		end
+	Pd_selection: INTEGER is 1
 
-	Pd_pagenums: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_PAGENUMS"
-		end
+	Pd_pagenums: INTEGER is 2
 
-	Pd_noselection: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_NOSELECTION"
-		end
+	Pd_noselection: INTEGER is 4
 
-	Pd_nopagenums: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_NOPAGENUMS"
-		end
+	Pd_nopagenums: INTEGER is 8
 
-	Pd_collate: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_COLLATE"
-		end
+	Pd_collate: INTEGER is 16
 
-	Pd_printtofile: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_PRINTTOFILE"
-		end
+	Pd_printtofile: INTEGER is 32
 
-	Pd_printsetup: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_PRINTSETUP"
-		end
+	Pd_printsetup: INTEGER is 64
 
-	Pd_nowarning: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_NOWARNING"
-		end
+	Pd_nowarning: INTEGER is 128
 
-	Pd_returndc: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_RETURNDC"
-		end
+	Pd_returndc: INTEGER is 256
 
-	Pd_returnic: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_RETURNIC"
-		end
+	Pd_returnic: INTEGER is 512
 
-	Pd_returndefault: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_RETURNDEFAULT"
-		end
+	Pd_returndefault: INTEGER is 1024
 
-	Pd_showhelp: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_SHOWHELP"
-		end
+	Pd_showhelp: INTEGER is 2048
 
-	Pd_enableprinthook: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_ENABLEPRINTHOOK"
-		end
+	Pd_enableprinthook: INTEGER is 4096
 
-	Pd_enablesetuphook: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_ENABLESETUPHOOK"
-		end
+	Pd_enablesetuphook: INTEGER is 8192
 
-	Pd_enableprinttemplate: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_ENABLEPRINTTEMPLATE"
-		end
+	Pd_enableprinttemplate: INTEGER is 16384
 
-	Pd_enablesetuptemplate: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_ENABLESETUPTEMPLATE"
-		end
+	Pd_enablesetuptemplate: INTEGER is 32768
 
-	Pd_enableprinttemplatehandle: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_ENABLEPRINTTEMPLATEHANDLE"
-		end
+	Pd_enableprinttemplatehandle: INTEGER is 65536
 
-	Pd_enablesetuptemplatehandle: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_ENABLESETUPTEMPLATEHANDLE"
-		end
+	Pd_enablesetuptemplatehandle: INTEGER is 131072
 
-	Pd_usedevmodecopies: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_USEDEVMODECOPIES"
-		end
+	Pd_usedevmodecopies: INTEGER is 262144
 
-	Pd_disableprinttofile: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_DISABLEPRINTTOFILE"
-		end
+	Pd_disableprinttofile: INTEGER is 524288
 
-	Pd_hideprinttofile: INTEGER is
-		external
-			"C [macro %"cdlg.h%"]"
-		alias
-			"PD_HIDEPRINTTOFILE"
-		end
+	Pd_hideprinttofile: INTEGER is 1048576
 
 end -- class WEL_PD_CONSTANTS
 

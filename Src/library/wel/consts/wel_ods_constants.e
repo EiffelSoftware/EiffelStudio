@@ -9,54 +9,19 @@ class
 
 feature -- Access
 
-	Ods_selected: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ODS_SELECTED"
-		end
+	Ods_selected: INTEGER is 1
 
-	Ods_grayed: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ODS_GRAYED"
-		end
+	Ods_grayed: INTEGER is 2
 
-	Ods_disabled: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ODS_DISABLED"
-		end
+	Ods_disabled: INTEGER is 4
 
-	Ods_checked: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ODS_CHECKED"
-		end
+	Ods_checked: INTEGER is 8
 
-	Ods_focus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ODS_FOCUS"
-		end
+	Ods_focus: INTEGER is 16
 
-	Ods_default: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ODS_DEFAULT"
-		end
+	Ods_default: INTEGER is 20
 
-	Ods_comboboxedit: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"ODS_COMBOBOXEDIT"
-		end
+	Ods_comboboxedit: INTEGER is 4096
 
 end -- class WEL_ODS_CONSTANTS
 

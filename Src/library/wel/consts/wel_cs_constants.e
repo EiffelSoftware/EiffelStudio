@@ -9,98 +9,35 @@ class
 
 feature -- Access
 
-	Cs_vredraw: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_VREDRAW"
-		end
+	Cs_vredraw: INTEGER is 1
 
-	Cs_hredraw: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_HREDRAW"
-		end
+	Cs_hredraw: INTEGER is 2
 
-	Cs_owndc: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_OWNDC"
-		end
+	Cs_dblclks: INTEGER is 8
 
-	Cs_classdc: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_CLASSDC"
-		end
+	Cs_owndc: INTEGER is 32
 
-	Cs_parentdc: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_PARENTDC"
-		end
+	Cs_classdc: INTEGER is 64
 
-	Cs_savebits: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_SAVEBITS"
-		end
+	Cs_parentdc: INTEGER is 128
 
-	Cs_dblclks: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_DBLCLKS"
-		end
+	Cs_noclose: INTEGER is 512
 
-	Cs_bytealignclient: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_BYTEALIGNCLIENT"
-		end
+	Cs_savebits: INTEGER is 2048
 
-	Cs_bytealignwindow: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_BYTEALIGNWINDOW"
-		end
+	Cs_bytealignclient: INTEGER is 4096
 
-	Cs_noclose: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_NOCLOSE"
-		end
+	Cs_bytealignwindow: INTEGER is 8192
 
-	Cs_globalclass: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CS_GLOBALCLASS"
-		end
+	Cs_globalclass: INTEGER is 16384
 
-	Cs_nokeycvt: INTEGER is
-		obsolete
-			"Not defined any more for some %
-			%C compilers, returns old defined value"
-		do
-			Result := 256
-		end
+	Cs_nokeycvt: INTEGER is 256
+			-- Not defined any more for some 
+			-- C compilers, returns old defined value
 	
-	Cs_keycvtwindow: INTEGER is
-		obsolete
-			"Not defined any more for some %
-			%C compilers, returns old defined value"
-		do
-			Result := 4
-		end
+	Cs_keycvtwindow: INTEGER is 4
+			-- Not defined any more for some 
+			-- C compilers, returns old defined value
 
 end -- class WEL_CS_CONSTANTS
 

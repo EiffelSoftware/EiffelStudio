@@ -9,61 +9,26 @@ class
 
 feature -- Access
 
-	Idok: INTEGER is
+	Idok: INTEGER is 1
 			-- OK button was selected.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"IDOK"
-		end
 
-	Idcancel: INTEGER is
+	Idcancel: INTEGER is 2
 			-- Cancel button was selected.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"IDCANCEL"
-		end
 
-	Idabort: INTEGER is
+	Idabort: INTEGER is 3
 			-- Abort button was selected.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"IDABORT"
-		end
 
-	Idretry: INTEGER is
+	Idretry: INTEGER is 4
 			-- Retry button was selected.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"IDRETRY"
-		end
 
-	Idignore: INTEGER is
+	Idignore: INTEGER is 5
 			-- Ignore button was selected.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"IDIGNORE"
-		end
 
-	Idyes: INTEGER is
+	Idyes: INTEGER is 6
 			-- Yes button was selected.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"IDYES"
-		end
 
-	Idno: INTEGER is
+	Idno: INTEGER is 7
 			-- No button was selected.
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"IDNO"
-		end
 
 end -- class WEL_ID_CONSTANTS
 

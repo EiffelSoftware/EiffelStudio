@@ -99,11 +99,11 @@ feature -- Output
 					syntax_error ?= error_list.item
 					feature_error ?= error_list.item
 					eiffel_error ?= error_list.item
-					error ?= error_list.item
+					error := error_list.item
 					
 					if error /= Void then
 						create st.make
-						error_list.item.trace (st)
+						error.trace (st)
 						error_string := st.image
 					end
 					if eiffel_error /= Void then

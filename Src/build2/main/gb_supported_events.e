@@ -9,7 +9,7 @@ class
 	
 feature -- Access
 	
-	action_sequences: ARRAYED_LIST [STRING] is
+	action_sequences_list: ARRAYED_LIST [STRING] is
 			-- All action sequence classes in Vision2.
 			-- All action sequences in interface are inherited through
 			-- these classes.
@@ -39,6 +39,11 @@ feature -- Access
 			Result.extend ("EV_WINDOW_ACTION_SEQUENCES")
 		ensure
 			Result_ok: Result /= Void and Result.count = 22	
+		end
+		
+	action_sequence_list: ARRAYED_LIST [STRING] is
+		once
+			
 		end
 		
 
@@ -71,6 +76,18 @@ feature {NONE} -- Implementation
 			gb_ev_tree_action_sequences: GB_EV_TREE_ACTION_SEQUENCES
 			gb_ev_tree_node_action_sequences: GB_EV_TREE_NODE_ACTION_SEQUENCES
 			gb_ev_window_action_sequences: GB_EV_WINDOW_ACTION_SEQUENCES
+			
+			gb_ev_column_action_sequence: GB_EV_COLUMN_ACTION_SEQUENCE
+			gb_ev_geometry_action_sequence: GB_EV_GEOMETRY_ACTION_SEQUENCE
+			gb_ev_key_action_sequence: GB_EV_KEY_ACTION_SEQUENCE
+			gb_ev_key_string_action_sequence: GB_EV_KEY_STRING_ACTION_SEQUENCE
+			gb_ev_menu_item_select_action_sequence: GB_EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
+			gb_ev_pointer_button_action_sequence: GB_EV_POINTER_BUTTON_ACTION_SEQUENCE
+			gb_ev_pointer_motion_action_sequence: GB_EV_POINTER_MOTION_ACTION_SEQUENCE
+			gb_ev_new_item_action_sequence: GB_EV_NEW_ITEM_ACTION_SEQUENCE
+			gb_ev_multi_column_list_row_select_action_sequence: GB_EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
+			gb_ev_notify_action_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
+			gb_ev_value_change_action_sequence: GB_EV_VALUE_CHANGE_ACTION_SEQUENCE
 		do		
 		end
 		

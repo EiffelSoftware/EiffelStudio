@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that represent a BON view for an EIFFEL_CLASS"
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,6 +32,13 @@ inherit
 		undefine
 			default_create
 		end
+		
+	OBSERVER
+		rename
+			update as preferences_changed
+		undefine
+			default_create
+		end
 	
 create
 	default_create,
@@ -44,20 +51,11 @@ feature {NONE} -- Initialization
 		local
 			anchor_pix: EV_MODEL_PICTURE
 			circl: EV_MODEL_ELLIPSE
+			
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}
 			prune_all (name_label)
-			
-			background_color := bon_class_fill_color
-			foreground_color := bon_class_line_color
-			line_width := bon_class_line_width
-			
-			id_generics_font := bon_generics_font
-			generics_color := bon_generics_color
-			
-			id_class_name_font := bon_class_name_font
-			class_name_color := bon_class_name_color
-			
+
 			real_ellipse_border_horizontal := 10
 			real_ellipse_border_vertical := 10
 			
@@ -84,12 +82,13 @@ feature {NONE} -- Initialization
 			
 			create generics_label
 			extend (generics_label)
-
-			set_ellipse_properties
 			
 			is_high_quality := True
 			disable_rotating
 			disable_scaling
+			
+			diagram_preferences.add_observer (Current)
+			retrive_preferences
 			
 			is_default_background_color_used := True
 		end
@@ -102,6 +101,7 @@ feature {NONE} -- Initialization
 			default_create
 			model := a_model
 			initialize
+			
 
 			set_bon_icons			
 			model.properties_changed_actions.extend (agent set_bon_icons)
@@ -157,30 +157,12 @@ feature -- Access
 			
 	background_color: EV_COLOR
 			-- Background color for the ellipse.
-			
-	foreground_color: EV_COLOR
-			-- Foreground color for the ellipse.
-			
-	line_width: INTEGER
-			-- Line width of the ellipse.
-			
-	generics_font: EV_FONT is
-			-- Font for generics parameter.
-		do
-			Result := id_generics_font.font
-		end
-			
-	generics_color: EV_COLOR
-			-- Color for generics parameter.
-			
-	class_name_font: EV_FONT is
-			-- Font for the class name.
-		do
-			Result := id_class_name_font.font
-		end
-			
+
 	class_name_color: EV_COLOR
 			-- Color for the class name.
+			
+	generics_color: EV_COLOR
+			-- Color for generics.
 			
 	debug_output: STRING is
 			-- String that should be displayed in debugger to represent `Current'.
@@ -228,12 +210,14 @@ feature -- Access
 				set_class_name_color (xml_routines.xml_color (node, "CLASS_NAME_COLOR"))
 			else
 				if is_high_quality then
-					ellipse.set_background_color (bon_class_fill_color)
+					if background_color /= Void then
+						ellipse.set_background_color (background_color)
+					end
 				else
 					ellipse.set_background_color (low_quality_fill_color)
 				end
-				set_generics_color (bon_generics_color)
-				set_class_name_color (bon_class_name_color)
+				set_generics_properties
+				set_class_name_properties
 				is_default_background_color_used := True
 			end
 			if xml_routines.xml_boolean (node, "IS_NEEDED_ON_DIAGRAM") then
@@ -288,6 +272,7 @@ feature -- Element change
 			Precursor {EIFFEL_CLASS_FIGURE}			
 			model.properties_changed_actions.prune_all (agent set_bon_icons)
 			model.generics_changed_actions.prune_all (agent set_generics)
+			diagram_preferences.remove_observer (Current)
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -299,62 +284,6 @@ feature -- Element change
 		ensure
 			set: background_color = a_color
 		end
-
--- if you uncomment this, store the colors in xml.
---
---	set_foreground_color (a_color: EV_COLOR) is
---			-- Set `foreground_color' to `a_color'.
---		require
---			a_color_not_void: a_color /= Void
---		do
---			foreground_color := a_color
---			set_ellipse_properties
---		ensure
---			set: foreground_color = a_color
---		end
-		
---	set_line_width (a_width: INTEGER) is
---			-- Set `line_width' to `a_width'.
---		require
---			a_width_greater_equal_zero: a_width >= 0
---		do
---			line_width := a_width
---			set_ellipse_properties
---		ensure
---			set: line_width = a_width
---		end
---
---	set_generics_font (a_font: EV_FONT) is
---			-- Set `generics_font' to `a_font'.
---		require
---			a_font_not_void: a_font /= Void
---		local
---			txt: EV_MODEL_TEXT
---		do
---			generics_font := a_font
---			from
---				generics_label.start
---			until
---				generics_label.after
---			loop
---				txt ?= generics_label.item
---				set_generics_properties (txt)
---				generics_label.forth
---			end
---		ensure
---			set: generics_font = a_font
---		end
---
---	set_class_name_font (a_font: EV_FONT) is
---			-- Set `class_name_font' to `a_font'.
---		require
---			a_font_not_void: a_font /= Void
---		do
---			class_name_font := a_font
---			set_class_name_properties
---		ensure
---			set: class_name_font = a_font
---		end
 		
 	set_generics_color (a_color: EV_COLOR) is
 			-- Set `generics_color' to `a_color'.
@@ -370,7 +299,7 @@ feature -- Element change
 				generics_label.after
 			loop
 				txt ?= generics_label.item
-				txt.set_foreground_color (generics_color)
+				txt.set_foreground_color (a_color)
 				generics_label.forth
 			end
 		ensure
@@ -498,19 +427,15 @@ feature {EIFFEL_PROJECTOR} -- Ellipse
 
 feature {NONE} -- Implementation
 
-	id_class_name_font: EV_IDENTIFIED_FONT
-	
-	id_generics_font: EV_IDENTIFIED_FONT
-
 	set_is_selected (an_is_selected: like is_selected) is
 			-- Set `is_selected' to `an_is_selected'.
 		do
 			if is_selected /= an_is_selected then
 				is_selected := an_is_selected
 				if is_selected then
-					ellipse.set_line_width (line_width * 2)
+					ellipse.set_line_width (bon_class_line_width * 2)
 				else
-					ellipse.set_line_width (line_width)
+					ellipse.set_line_width (bon_class_line_width)
 				end
 			end
 		end
@@ -573,17 +498,17 @@ feature {NONE} -- Implementation
 			end
 			if model.is_effective then
 				create icon.make_with_identified_pixmap (bon_effective_icon)
-				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)--icon.height // 2)
+				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
 				icon_figures.extend (icon)
 			end
 			if model.is_persistent then
 				create icon.make_with_identified_pixmap (bon_persistent_icon)
-				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)--icon.height // 2)
+				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
 				icon_figures.extend (icon)
 			end
 			if model.is_interfaced then
 				create icon.make_with_identified_pixmap (bon_interfaced_icon)
-				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)--icon.height // 2)
+				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
 				icon_figures.extend (icon)
 			end
 			from
@@ -597,6 +522,12 @@ feature {NONE} -- Implementation
 			end
 			if world /= Void then
 				icon_figures.scale (world.scale_factor)
+			end
+			if is_default_background_color_used then
+				if not model.is_compiled and then is_default_background_color_used then
+					background_color := bon_class_uncompiled_fill_color
+				end
+			 	set_ellipse_properties
 			end
 			update_information_positions
 			request_update
@@ -633,6 +564,9 @@ feature {NONE} -- Implementation
 					end
 					create part_text.make_with_text (s)
 					assign_class_name_properties_to_text (part_text)
+					if world /= Void then
+						part_text.scale (world.scale_factor)
+					end
 					part_text.set_point_position (0, name_labels.bounding_box.height)
 					part_text.set_x (0)
 					name_labels.extend (part_text)
@@ -646,6 +580,9 @@ feature {NONE} -- Implementation
 			else
 				create part_text.make_with_text (a_text)
 				assign_class_name_properties_to_text (part_text)
+				if world /= Void then
+					part_text.scale (world.scale_factor)
+				end
 				part_text.set_x (0)
 				name_labels.extend (part_text)
 			end
@@ -695,20 +632,29 @@ feature {NONE} -- Implementation
 							end
 						end
 						create part_text.make_with_text (s)
-						set_generics_properties (part_text)
+						assign_generics_properties_to_text (part_text)
+						if world /= Void then
+							part_text.scale (world.scale_factor)
+						end
 						part_text.set_point_position (0, generics_label.bounding_box.height)
 						part_text.set_x (0)
 						generics_label.extend (part_text)
 					end
 					s := rest			
 					create part_text.make_with_text (s)
-					set_generics_properties (part_text)
+					assign_generics_properties_to_text (part_text)
+					if world /= Void then
+						part_text.scale (world.scale_factor)
+					end
 					part_text.set_point_position (0, generics_label.bounding_box.height)
 					part_text.set_x (0)
 					generics_label.extend (part_text)
 				else
 					create part_text.make_with_text (a_text)
-					set_generics_properties (part_text)
+					assign_generics_properties_to_text (part_text)
+					if world /= Void then
+						part_text.scale (world.scale_factor)
+					end
 					part_text.set_x (0)
 					generics_label.extend (part_text)
 				end
@@ -767,33 +713,50 @@ feature {NONE} -- Implementation
 		require
 			ellipse_not_void: ellipse /= Void
 		do
-			if background_color = Void then
-				ellipse.remove_background_color
+			if not is_high_quality and then is_default_background_color_used then
+				ellipse.set_background_color (low_quality_fill_color)
 			else
-				ellipse.set_background_color (background_color)
+				if background_color = Void then
+					ellipse.remove_background_color
+				else
+					ellipse.set_background_color (background_color)
+				end
 			end
-			ellipse.set_foreground_color (foreground_color)
+			ellipse.set_foreground_color (bon_class_line_color)
 			if is_selected = True then
-				ellipse.set_line_width (line_width * 2)
+				ellipse.set_line_width (bon_class_line_width * 2)
 			else
-				ellipse.set_line_width (line_width)
+				ellipse.set_line_width (bon_class_line_width)
 			end
 		end
 		
-	set_generics_properties (a_text: EV_MODEL_TEXT) is
+	set_generics_properties is
+			-- Set properties of `generics_label' according to generics properties.
+		local
+			txt: EV_MODEL_TEXT
+		do
+			from
+				generics_label.start
+			until
+				generics_label.after
+			loop
+				txt ?= generics_label.item
+				assign_generics_properties_to_text (txt)
+				generics_label.forth
+			end
+		end
+
+	assign_generics_properties_to_text (a_text: EV_MODEL_TEXT) is
 			-- Set propertis of `a_text' according to generics properties.
 		require
 			a_text /= Void
 		do
-			a_text.set_identified_font (id_generics_font)
+			a_text.set_identified_font (bon_generics_font)
 			a_text.set_foreground_color (generics_color)
-			if world /= Void then
-				a_text.scale (world.scale_factor)
-			end
 		end
 		
 	set_class_name_properties is
-			-- Set the properties of `name_labels' accoring to name properties.
+			-- Set properties of `name_labels' according to name properties.
 		local
 			txt: EV_MODEL_TEXT
 		do
@@ -813,11 +776,8 @@ feature {NONE} -- Implementation
 		require
 			a_text /= Void
 		do
-			a_text.set_identified_font (id_class_name_font)
+			a_text.set_identified_font (bon_class_name_font)
 			a_text.set_foreground_color (class_name_color)
-			if world /= Void then
-				a_text.scale (world.scale_factor)
-			end
 		end
 		
 	low_quality_fill_color: EV_COLOR is
@@ -838,9 +798,7 @@ feature {NONE} -- Implementation
 					icon_figures.show
 					generics_label.show
 				else
-					if is_default_background_color_used then
-						ellipse.set_background_color (low_quality_fill_color)
-					end
+					set_ellipse_properties
 					icon_figures.hide
 					generics_label.hide
 				end
@@ -848,11 +806,35 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	preferences_changed is
+			-- User changed values of interest in preferences.
+		do
+			retrive_preferences			
+			set_ellipse_properties
+			set_class_name_properties
+			set_generics_properties
+			request_update
+		end
+	
+	retrive_preferences is
+			-- Retrive preferences from shared resources.
+		do
+			if model = Void or else model.is_compiled then
+				background_color := bon_class_fill_color
+			else
+				background_color := bon_class_uncompiled_fill_color
+			end
+			generics_color := bon_generics_color
+			class_name_color := bon_class_name_color
+
+			set_ellipse_properties
+			set_class_name_properties
+			set_generics_properties
+			request_update
+		end
+
 invariant
-	foreground_color_not_void: foreground_color /= Void
-	generics_font_not_void: generics_font /= Void
 	generics_color_not_void: generics_color /= Void
-	class_name_font_not_void: class_name_font /= Void
 	class_name_color_not_void: class_name_color /= Void
 	ellipse_not_void: ellipse /= Void
 	icon_figures_not_void: icon_figures /= Void

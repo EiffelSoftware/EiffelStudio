@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that is a view for an EIFFEL_INHERITANCE_LINK"
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,7 +15,8 @@ inherit
 			set_line_width,
 			xml_element,
 			xml_node_name,
-			set_with_xml_element
+			set_with_xml_element,
+			recycle
 		end
 		
 	BON_FIGURE
@@ -23,6 +24,12 @@ inherit
 			default_create
 		end
 
+	OBSERVER
+		rename
+			update as preferences_changed
+		undefine
+			default_create
+		end
 create
 	make_with_model,
 	default_create
@@ -36,8 +43,11 @@ feature {NONE} -- Initialization
 			model := a_model
 			is_high_quality := True
 			initialize
-			set_line_width (bon_inheritance_line_width)
-			set_foreground_color (bon_inheritance_color)
+
+			diagram_preferences.add_observer (Current)
+			
+			retrive_preferences
+			
 			real_arrow_head_size := 10
 			request_update
 		end
@@ -84,6 +94,13 @@ feature -- Element change
 		do
 			Precursor {EIFFEL_INHERITANCE_FIGURE} (a_line_width)
 			real_line_width := a_line_width
+		end
+		
+	recycle is
+			-- Free `Current's resources.
+		do
+			Precursor {EIFFEL_INHERITANCE_FIGURE}
+			diagram_preferences.remove_observer (Current)
 		end
 		
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
@@ -194,6 +211,19 @@ feature {NONE} -- Implementation
 					low_quality_line.set_arrow_size (real_arrow_head_size.rounded.max (1))
 				end
 			end
+		end
+		
+	preferences_changed is
+			-- User changed preferences.
+		do
+			retrive_preferences
+		end
+		
+	retrive_preferences is
+			-- Retrive preferences from shared resources.
+		do
+			set_line_width (bon_inheritance_line_width)
+			set_foreground_color (bon_inheritance_color)
 		end
 
 end -- class BON_INHERITANCE_FIGURE

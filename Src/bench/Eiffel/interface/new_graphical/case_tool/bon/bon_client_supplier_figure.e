@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that is a BON view for an EIFFEL_CLIENT_SUPPLIER_LINK"
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -49,6 +49,13 @@ inherit
 			default_create
 		end
 		
+	OBSERVER
+		rename
+			update as retrieve_preferences
+		undefine
+			default_create
+		end
+		
 create
 	make_with_model,
 	default_create
@@ -61,29 +68,22 @@ feature {NONE} -- Initialization
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
 			default_create_label
 			is_high_quality := True
+			
 
-			id_label_font := bon_client_label_font
-			label_color := bon_client_label_color
-			
-			create aggregate_figure
-			
-			name_label.set_identified_font (id_label_font)
-			name_label.set_foreground_color (label_color)
-
-			set_foreground_color (bon_client_color)
-			set_line_width (bon_client_line_width)
-			
 			label_group.extend (name_label)
 			extend (label_move_handle)
-	
+
+			create aggregate_figure
 			extend (aggregate_figure)
 			aggregate_figure.set_line_width (2)
-			aggregate_figure.set_foreground_color (foreground_color)
 			
 			real_arrow_head_size := 10.0
 			real_reflexive_radius := reflexive_radius
 			
 			label_move_handle.set_pointer_style (default_pixmaps.sizeall_cursor)
+			
+			diagram_preferences.add_observer (Current)
+			retrieve_preferences
 			
 			is_label_shown := True
 		end
@@ -118,15 +118,6 @@ feature -- Status report
 
 feature -- Access
 
-	label_color: EV_COLOR
-			-- Feature name color.
-
-	label_font: EV_FONT is
-			-- Font used for the feature name.
-		do
-			Result := id_label_font.font
-		end
-			
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
 		local
@@ -200,6 +191,7 @@ feature -- Element change
 			label_group.pointer_double_press_actions.prune_all (agent on_label_group_double_clicked)
 			model.is_aggregated_changed.prune_all (agent on_is_aggregated_change)
 			polyline_lable_recycle
+			diagram_preferences.remove_observer (Current)
 		end
 
 	hide_label is
@@ -246,30 +238,7 @@ feature -- Element change
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_color)
 			aggregate_figure.set_foreground_color (a_color)
 		end
---
---	set_label_color (a_label_color: like label_color) is
---			-- Set `label_color' to `a_label_color'.
---		require
---			a_label_color_not_void: a_label_color /= Void
---		do
---			label_color := a_label_color
---			name_label.set_foreground_color (label_color)
---		ensure
---			label_color_assigned: label_color = a_label_color
---		end
---
---	set_label_font (a_label_font: like label_font) is
---			-- Set `label_font' to `a_label_font'.
---		require
---			a_label_font_not_void: a_label_font /= Void
---		do
---			label_font := a_label_font
---			name_label.set_font (label_font)
---			request_update
---		ensure
---			label_font_assigned: label_font = a_label_font
---		end
-		
+
 	add_point_between (i, j: INTEGER) is
 			-- Add a point between `i'-th and `j'-th point.
 		do
@@ -376,8 +345,6 @@ feature {EV_MODEL_GROUP} -- Transformation
 		end
 	
 feature {NONE} -- Implementation
-
-	id_label_font: EV_IDENTIFIED_FONT
 
 	real_reflexive_radius: REAL
 			-- Real distance of the line from the linkable border if `is_reflexive'.
@@ -655,8 +622,8 @@ feature {NONE} -- Implementation
 						str.replace_substring_all (": ...", "")
 					end
 					create txt.make_with_text (str)
-					txt.set_identified_font (id_label_font)
-					txt.set_foreground_color (label_color)
+					txt.set_identified_font (bon_client_label_font)
+					txt.set_foreground_color (bon_client_label_color)
 					if world /= Void then
 						txt.scale (world.scale_factor)
 					end
@@ -765,10 +732,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	retrieve_preferences is
+			-- Retrieve preferences from shared resources.
+		local
+			txt: EV_MODEL_TEXT
+		do
+			from
+				label_group.start
+			until
+				label_group.after
+			loop
+				txt ?= label_group.item
+				if txt /= Void then
+					txt.set_identified_font (bon_client_label_font)
+					txt.set_foreground_color (bon_client_label_color)
+				end
+				label_group.forth
+			end
+			name_label.set_identified_font (bon_client_label_font)
+			name_label.set_foreground_color (bon_client_label_color)
+			set_foreground_color (bon_client_color)
+			set_line_width (bon_client_line_width)
+		end
+
 invariant
-	label_font_not_void: label_font /= Void
-	label_color_not_void: label_color /= Void
-	foreground_color_not_void: foreground_color /= Void
 	aggregate_figure_not_void: aggregate_figure /= Void
 
 end -- class BON_CLIENT_SUPPLIER_FIGURE

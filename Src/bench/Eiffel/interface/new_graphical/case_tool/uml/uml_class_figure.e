@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that is a UML view for an Eiffel class."
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,6 +30,13 @@ inherit
 		undefine
 			default_create
 		end
+		
+	OBSERVER
+		rename
+			update as retrieve_preferences
+		undefine
+			default_create
+		end
 	
 create
 	make_with_model
@@ -41,9 +48,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}
 			create rectangle
-			rectangle.set_background_color (uml_class_fill_color)
-			rectangle.set_line_width (uml_class_line_width)
-			rectangle.set_foreground_color (uml_class_line_color)
 			extend (rectangle)
 			create queries_line
 			extend (queries_line)
@@ -57,14 +61,15 @@ feature {NONE} -- Initialization
 			
 				create name_group
 				name_group.extend (name_label)
-				name_label.set_font (uml_class_name_font)
-				name_label.set_foreground_color (uml_class_name_color)
 				
 			names.extend (name_group)
 			extend (names)
 			real_border := 10
 			disable_scaling
 			disable_rotating
+			
+			diagram_preferences.add_observer (Current)
+			retrieve_preferences
 		end
 		
 	initialize is
@@ -426,10 +431,14 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 					commands.forth
 				end
 			end
+			names.hide
 			min_size := minimum_size
+			names.show
 			names.set_x (min_size.left + min_size.width // 2)
 			request_update
-			world.apply_right_angles
+			if world.is_right_angles then
+				world.apply_right_angles
+			end
 		end
 		
 	has_section (fsv: FEATURE_SECTION_VIEW): BOOLEAN is
@@ -749,7 +758,7 @@ feature {NONE} -- Implementation
 					name_group.prune_all (generics)
 				end
 				create generics.make_with_text (a_text)
-				generics.set_font (uml_generics_font)
+				generics.set_identified_font (uml_generics_font)
 				generics.set_foreground_color (uml_generics_color)
 				if world /= Void and then world.scale_factor /= 1.0 then
 					generics.scale (world.scale_factor)
@@ -767,7 +776,7 @@ feature {NONE} -- Implementation
 			prop_text: STRING
 		do
 			if model.is_deferred then
-				name_label.set_font (uml_class_deferred_font)
+				name_label.set_identified_font (uml_class_deferred_font)
 			end
 			if model.is_root_class then
 				if root_text = Void then
@@ -830,7 +839,7 @@ feature {NONE} -- Implementation
 	set_properties_text_properties (a_text: EV_MODEL_TEXT) is
 			-- Set properties of `a_text'
 		do
-			a_text.set_font (uml_class_properties_font)	
+			a_text.set_identified_font (uml_class_properties_font)	
 			a_text.set_foreground_color (uml_class_properties_color)
 			if world /= Void and then world.scale_factor /= 1.0 then
 				a_text.scale (world.scale_factor)
@@ -874,6 +883,33 @@ feature {NONE} -- Implementation
 				if not commands.is_show_requested then
 					commands.show
 				end
+			end
+			request_update
+		end
+		
+	retrieve_preferences is
+			-- Retrieve properties from preference.
+		do	
+			if uml_class_fill_color /= Void then
+				rectangle.set_background_color (uml_class_fill_color)
+			else
+				rectangle.remove_background_color
+			end
+			rectangle.set_line_width (uml_class_line_width)
+			rectangle.set_foreground_color (uml_class_line_color)
+			if model /= Void and then model.is_deferred then
+				name_label.set_identified_font (uml_class_deferred_font)
+			else
+				name_label.set_identified_font (uml_class_name_font)
+			end
+			name_label.set_foreground_color (uml_class_name_color)
+			if generics /= Void then
+				generics.set_identified_font (uml_generics_font)
+				generics.set_foreground_color (uml_generics_color)
+			end
+			if properties_text /= Void then
+				properties_text.set_identified_font (uml_class_properties_font)
+				properties_text.set_foreground_color (uml_class_properties_color)
 			end
 			request_update
 		end

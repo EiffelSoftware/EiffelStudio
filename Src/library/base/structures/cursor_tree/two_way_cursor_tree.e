@@ -16,12 +16,12 @@ class TWO_WAY_CURSOR_TREE [G] inherit
 	RECURSIVE_CURSOR_TREE [G]
 		redefine
 			put_right,
-			active, cursor_anchor
+			active, cursor_anchor, is_leaf
 		end
 
 creation
 
-	make
+	make, make_root
 
 feature -- Initialization
 
@@ -37,12 +37,26 @@ feature -- Initialization
 			is_empty: empty
 		end;
 
+	make_root (v: G) is
+			-- Create a tree with `v' as root.
+		do
+			make;
+			put_root (v)
+		end;
+
 feature -- Status report
 
 	full: BOOLEAN is false;
 			-- Is tree filled to capacity? (Answer: no.)
 
 	prunable: BOOLEAN is true;
+
+	is_leaf: BOOLEAN is
+		do
+			if not off then
+				Result := not below and then active.arity = 0
+			end
+		end
 
 feature -- Element change
 
@@ -53,7 +67,7 @@ feature -- Element change
 				active.child_put_right (v);
 				active.child_forth;
 				active_parent := active;
-				active := active.child;
+				active := active_parent.child;
 				below := false
 			elseif before then
 				active_parent.child_put_left (v);
@@ -63,6 +77,28 @@ feature -- Element change
 				active_parent.child_put_right (v)
 			end
 		end;
+
+	put_root (v: G) is
+			-- Put `v' as root of an empty tree.
+		require
+			is_empty: empty
+		do
+			above_node.child_put_right (v);
+			active_parent := above_node;
+			active := active_parent.child
+		ensure
+			is_root: is_root;
+			count = 1
+		end;
+
+	put_child (v: G) is
+			-- Put `v' as child of a leaf.
+		require
+			is_leaf: is_leaf
+		do
+			down (0)
+			put_right (v)
+		end
 
 feature {LINKED_CURSOR_TREE} -- Implementation
 

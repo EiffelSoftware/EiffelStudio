@@ -104,6 +104,7 @@ d_bsdjmp='define'
 #Check value for next 1
 d_bsdsig='undef'
 d_keepsig='define'
+d_sigaltstack='define'
 d_siglist='define'
 d_sigsetmk='define'
 d_sigvec='define'

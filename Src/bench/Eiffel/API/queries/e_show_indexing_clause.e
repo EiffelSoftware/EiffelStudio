@@ -59,7 +59,7 @@ feature -- Execution
 			end;
 			sorted_class_names.sort;
 			structured_text.add_string ("Cluster: ");
-			structured_text.add_string (cluster.cluster_name);
+			structured_text.add_cluster (cluster, cluster.cluster_name);
 			if cluster.is_precompiled then
 				structured_text.add_string (" (Precompiled)")
 			end;

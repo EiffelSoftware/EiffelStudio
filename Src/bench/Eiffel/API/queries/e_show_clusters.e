@@ -51,7 +51,9 @@ feature -- Execution
 				structured_text.add_string ("root: ");
 				Eiffel_system.root_class.compiled_eclass.append_signature (structured_text);
 				structured_text.add_string (" (cluster: ");
-				structured_text.add_string (Eiffel_system.root_cluster.cluster_name);
+				structured_text.add_cluster (
+					Eiffel_system.root_cluster,
+					Eiffel_system.root_cluster.cluster_name);
 				structured_text.add_string (")");
 				structured_text.add_new_line;
 				structured_text.add_new_line;
@@ -100,7 +102,7 @@ feature -- Execution
 			classes := cluster.classes;
 
 			structured_text.add_string ("Cluster: ");
-			structured_text.add_string (cluster.cluster_name);
+			structured_text.add_cluster (cluster, cluster.cluster_name);
 			if cluster.is_precompiled then
 				structured_text.add_string (" (Precompiled, ")
 			else

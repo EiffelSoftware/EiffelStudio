@@ -29,6 +29,12 @@ feature
 			work (kill_it);
 		end;
 	
+	recv_dead is
+			-- Wait for the application to be killed.
+		do
+			if request.recv_dead then end
+		end;
+
 feature {NONE}
 
 	work (argument: ANY) is

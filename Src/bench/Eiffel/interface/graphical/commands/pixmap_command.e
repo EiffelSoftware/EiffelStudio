@@ -63,6 +63,7 @@ feature -- Licence managment
 
 	lost_licence_warning is
 		do
+			warner.set_window (text_window);
 			warner.custom_call (Current, "%
 						%You have lost your licence!%N%
 						%(You can still save your changes%N%

@@ -27,6 +27,7 @@ feature {NONE}
 			else
 				-- First click on open
 				if text_window.changed then
+					warner.set_window (text_window);
 					warner.call (Current, l_File_changed)
 				else
 					window_manager.close (text_window.tool);

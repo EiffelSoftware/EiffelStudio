@@ -56,6 +56,7 @@ feature {NONE}
 				elseif argument = void then
 					-- No Help
 				else
+					name_chooser.set_window (text_window);
 					name_chooser.call (Current)
 				end
 			elseif argument = warner then
@@ -140,6 +141,7 @@ feature
 					project_tool.set_title (project_dir.name);
 					project_tool.set_initialized
 				else	
+					warner.set_window (text_window);
 					warner.custom_call (Current, temp, " Ok ", Void, Void);
 				end
 			else
@@ -149,6 +151,7 @@ feature
 					temp.append (project_dir.name);	
 					temp.append ("%NCannot be retrieved. Check permissions");
 					temp.append ("%Nand please try again");
+				warner.set_window (text_window);
 				warner.custom_call (Current, temp, " Ok ", Void, Void)
 			end
 		rescue
@@ -201,6 +204,7 @@ feature
 					temp.append ("Project in: ");
 					temp.append (project_dir.name);	
 					temp.append ("%Nis corrupted. Cannot continue");
+				warner.set_window (text_window);
 				warner.custom_call (Current, temp, "Exit now", Void, Void)
 			end
 		rescue

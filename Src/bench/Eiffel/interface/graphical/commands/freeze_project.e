@@ -24,6 +24,7 @@ feature {NONE}
 				(argument = text_window) or else  
 				(argument = Current)
 			then
+				warner.set_window (text_window);
 				warner.custom_call (Current, 
 							"Freezing implies some C compilation%N%
 							%and linking. Do you want to do it now?",

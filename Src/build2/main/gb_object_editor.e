@@ -62,14 +62,12 @@ feature -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		local
-			
 			tool_bar: EV_TOOL_BAR
 			separator: EV_HORIZONTAL_SEPARATOR
-			vertical_box1: EV_VERTICAL_BOX
+			vertical_box1: EV_VERTICAL_BOX			
 		do
 			Precursor {EV_VERTICAL_BOX}
 			create vertical_box1
-			extend (vertical_box1)
 			create tool_bar
 			vertical_box1.extend (tool_bar)
 			vertical_box1.disable_item_expand (tool_bar)
@@ -78,14 +76,40 @@ feature -- Initialization
 			vertical_box1.extend (separator)
 			vertical_box1.disable_item_expand (separator)
 			create attribute_editor_box
-			vertical_box1.extend (attribute_editor_box)
-			vertical_box1.disable_item_expand (attribute_editor_box)
+			create scrollable_holder
+			create viewport
+			viewport.set_minimum_width (Minimum_width_of_object_editor)
+			create scrollable_holder
+			vertical_box1.extend (scrollable_holder)
+			create v_box
+			create scroll_bar
+			v_box.set_minimum_width (Minimum_width_of_object_editor)
+			vertical_box1.set_minimum_width (Minimum_width_of_object_editor + scroll_bar.width)
+			scrollable_holder.extend (viewport)
+			viewport.extend (v_box)
+			v_box.extend (attribute_editor_box)
+			v_box.disable_item_expand (attribute_editor_box)
+			v_box.resize_actions.force_extend (agent update_scroll_bar)
+			viewport.resize_actions.force_extend (agent update_scroll_bar)
+			scroll_bar.change_actions.extend (agent scroll_bar_changed)
+			scroll_bar.hide
+			scrollable_holder.extend (scroll_bar)
+			scrollable_holder.disable_item_expand (scroll_bar)
+			extend (vertical_box1)
+			vertical_box1.set_minimum_height (100)
+			
 			create item_parent
-			vertical_box1.extend (item_parent)
-			vertical_box1.disable_item_expand (item_parent)
-			set_minimum_width (Minimum_width_of_object_editor)
+			v_box.extend (item_parent)
+			v_box.disable_item_expand (item_parent)
 			is_initialized := True
 		end
+		
+--	build_box is
+--			--
+--		do
+--			
+--		end
+		
 		
 	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
 		do
@@ -148,6 +172,8 @@ feature -- Status setting
 			set_title_from_name
 
 			construct_editor
+			
+			update_scroll_bar
 		ensure
 			an_object_set: object = an_object
 		end
@@ -157,6 +183,7 @@ feature -- Status setting
 			-- Assign `Void' to `object'.
 		local
 			current_parent_window: EV_WINDOW
+			locked_in_here: BOOLEAN
 		do
 			current_parent_window := parent_window (Current)
 			if name_field /= Void then
@@ -164,12 +191,13 @@ feature -- Status setting
 				name_field.focus_out_actions.block			
 			end
 			object := Void
-			if current_parent_window /= Void then
+			if current_parent_window /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+				locked_in_here := True
 				current_parent_window.lock_update
 			end
 			item_parent.wipe_out
 			attribute_editor_box.wipe_out
-			if current_parent_window /= Void then
+			if current_parent_window /= Void and locked_in_here then
 				current_parent_window.unlock_update
 			end
 			if name_field /= Void then
@@ -468,6 +496,57 @@ feature {NONE} -- Implementation
 			caret_position_set: name_field.caret_position = caret_position
 			focus_set: name_field.has_focus
 		end
+		
+	update_scroll_bar is
+			--
+		local
+			interval: INTEGER_INTERVAL
+		do
+					io.putstring ("Viewport height : " + viewport.height.out + "%N")
+				io.putstring ("v_box.height : " + v_box.height.out + "%N")
+				io.putstring ("v_box.minimum_height : " + v_box.minimum_height.out + "%N")
+			if viewport.height < v_box.minimum_height then --v_box.height then
+				if not scroll_bar.is_show_requested then
+				
+					viewport.resize_actions.pause
+					v_box.resize_actions.pause
+					v_box.wipe_out
+					viewport.prune_all (v_box)
+					create v_box
+					viewport.extend (v_box)
+					v_box.extend (attribute_editor_box)
+					v_box.disable_item_expand (attribute_editor_box)
+					v_box.extend (item_parent)
+					v_box.disable_item_expand (item_parent)
+				
+					v_box.set_minimum_width (Minimum_width_of_object_editor)
+					viewport.set_minimum_width (Minimum_width_of_object_editor)
+					v_box.resize_actions.force_extend (agent update_scroll_bar)
+					viewport.resize_actions.resume
+					scroll_bar.show	
+				end
+			else
+				scroll_bar.hide
+				scroll_bar_changed (0)
+				v_box.set_minimum_width (Minimum_width_of_object_editor + scroll_bar.width)
+				viewport.set_minimum_width (Minimum_width_of_object_editor + scroll_bar.width)
+			end
+			if scroll_bar.is_show_requested then
+				create interval.make (0, v_box.minimum_height - viewport.height)
+				if viewport.height > 0 then
+					scroll_bar.set_leap (viewport.height)
+				end
+				scroll_bar.value_range.adapt (interval)
+				scroll_bar_changed (scroll_bar.value)
+			end
+		end
+		
+	scroll_bar_changed (value: INTEGER) is
+			--
+		do
+			viewport.set_y_offset (value)
+		end
+		
 
 	item_parent: EV_VERTICAL_BOX
 		-- An EV_VERTICAL_BOX to hold all GB_OBJECT_EDITOR_ITEM.
@@ -477,6 +556,17 @@ feature {NONE} -- Implementation
 		
 	attribute_editor_box: EV_VERTICAL_BOX
 		-- All attribute editors are placed in here.
+
+	scrollable_holder: EV_HORIZONTAL_BOX
+		-- Holds the viewport and a scrollbar.
+		
+	scroll_bar: EV_VERTICAL_SCROLL_BAR
+		-- Scroll bar to control the positioning of the object editor.
+		
+	viewport: EV_VIEWPORT
+		-- Viewport containg the attribute editors.
+	
+	v_box: EV_VERTICAL_BOX
 	
 feature {GB_ACCESSIBLE_OBJECT_EDITOR} -- Implementation
 

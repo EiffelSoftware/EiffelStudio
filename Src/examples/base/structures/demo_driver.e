@@ -231,9 +231,6 @@ feature -- Routines
 	get_string (what_is_it: STRING): STRING is
 			-- Get a user string input for stdin. 
 			-- 'what_is_it' is the name of the requested value. 
-		local
-			char: CHARACTER
-			length: INTEGER
 		do
 			putstring("Please enter parameter %'") 
 			putstring(what_is_it) 

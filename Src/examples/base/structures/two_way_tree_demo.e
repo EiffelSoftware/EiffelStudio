@@ -229,7 +229,7 @@ feature -- Routines
 				else
 					active.remove_child
 					if active.child_after and not
-								active.empty then
+								active.is_empty then
 						active.child_back
 					end
 				end

@@ -127,7 +127,7 @@ feature -- Routines
 			elseif new_command = empty then
 				set1 := get_set 
 				if set1 /= Void then
-					driver.putbool (set1.empty)
+					driver.putbool (set1.is_empty)
 				end
 			elseif new_command = item_count then
 				set1 := get_set 

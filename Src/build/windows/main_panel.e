@@ -8,7 +8,7 @@ inherit
 	CLOSEABLE
 	QUEST_POPUPER	
 		redefine
-			continue_after_popdown
+			continue_after_question_popdown
 		end;
 	SHARED_CONTEXT;
 	LICENCE_COMMAND
@@ -57,7 +57,7 @@ feature
 feature {NONE}
 
 	row_column1, row_column2: ROW_COLUMN;
-	form, form1, form2, form3: FORM
+	form, top_form, commands_form, visibility_form: FORM
 	
 feature 
 
@@ -114,82 +114,82 @@ feature
 			vseparator.set_horizontal (False)
 
 			-- icon form
-			!! form1.make (Widget_names.form1, form)
-			!! focus_label.make (form1)
-			!! quit_b.make (Current, form1, focus_label)
-			!! con_b.make (form1, focus_label)
-			!! cmd_b.make (form1, focus_label)
-			!! cmdi_b.make (form1, focus_label)
-			!! state_b.make (form1, focus_label)
-			!! cut_b.make (form1, focus_label)
-			!! namer_b.make (form1, focus_label)
-			!! help_b.make (form1, focus_label)
-			!! separator.make (Widget_names.separator, form1)
-			!! save_b.make (form1)
-			!! save_as_b.make (form1)	
-			!! load_proj_b.make (form1)
-			!! create_proj_b.make (form1)
+			!! top_form.make (Widget_names.form1, form)
+			!! focus_label.make (top_form)
+			!! quit_b.make (Current, top_form, focus_label)
+			!! con_b.make (top_form, focus_label)
+			!! cmd_b.make (top_form, focus_label)
+			!! cmdi_b.make (top_form, focus_label)
+			!! state_b.make (top_form, focus_label)
+			!! cut_b.make (top_form, focus_label)
+			!! namer_b.make (top_form, focus_label)
+			!! help_b.make (top_form, focus_label)
+			!! separator.make (Widget_names.separator, top_form)
+			!! save_b.make (top_form)
+			!! save_as_b.make (top_form)	
+			!! load_proj_b.make (top_form)
+			!! create_proj_b.make (top_form)
 			Resources.check_fonts (base)
 			separator.set_horizontal (True)
-			form1.attach_top (state_b, 0)
-			form1.attach_top (quit_b, 0)
-			form1.attach_top (focus_label, 0)
-			form1.attach_top (con_b, 0)
-			form1.attach_top (cmd_b, 0)
-			form1.attach_top (cmdi_b, 0)
-			form1.attach_top (cut_b, 0)
-			form1.attach_top (namer_b, 0)
-			form1.attach_top (help_b, 0)
-			form1.attach_top (create_proj_b, 0)
-			form1.attach_top (load_proj_b, 0)
-			form1.attach_top (save_b, 0)
-			form1.attach_top (save_as_b, 0)
-			form1.attach_left (con_b, 0)
-			form1.attach_left_widget (con_b, cmd_b, 0)
-			form1.attach_left_widget (cmd_b, cmdi_b, 0)
-			form1.attach_left_widget (cmdi_b, state_b, 0)
-			form1.attach_left_widget (state_b, help_b, 0)
-			form1.attach_left_widget (help_b, namer_b, 0)
-			form1.attach_left_widget (namer_b, cut_b, 0)
-			form1.attach_left_widget (cut_b, focus_label, 0)
-			form1.attach_right_widget (create_proj_b, focus_label, 0)
-			form1.attach_right_widget (load_proj_b, create_proj_b, 0)
-			form1.attach_right_widget (save_b, load_proj_b, 0)
-			form1.attach_right_widget (save_as_b, save_b, 0)
-			form1.attach_right_widget (quit_b, save_as_b, 0)
-			form1.attach_right (quit_b, 0)
-			form1.attach_bottom_widget (separator, focus_label, 0)
-			form1.attach_bottom_widget (separator, quit_b, 0)
-			form1.attach_bottom_widget (separator, state_b, 0)
-			form1.attach_bottom_widget (separator, con_b, 0)
-			form1.attach_bottom_widget (separator, cmd_b, 0)
-			form1.attach_bottom_widget (separator, cmdi_b, 0)
-			form1.attach_bottom_widget (separator, cut_b, 0)
-			form1.attach_bottom_widget (separator, namer_b, 0)
-			form1.attach_bottom_widget (separator, help_b, 0)
-			form1.attach_bottom_widget (separator, create_proj_b, 0)
-			form1.attach_bottom_widget (separator, load_proj_b, 0)
-			form1.attach_bottom_widget (separator, save_b, 0)
-			form1.attach_bottom_widget (separator, save_as_b, 0)
-			form1.attach_bottom (separator, 0)
-			form1.attach_left (separator, 0)
-			form1.attach_right (separator, 0)
+			top_form.attach_top (state_b, 0)
+			top_form.attach_top (quit_b, 0)
+			top_form.attach_top (focus_label, 0)
+			top_form.attach_top (con_b, 0)
+			top_form.attach_top (cmd_b, 0)
+			top_form.attach_top (cmdi_b, 0)
+			top_form.attach_top (cut_b, 0)
+			top_form.attach_top (namer_b, 0)
+			top_form.attach_top (help_b, 0)
+			top_form.attach_top (create_proj_b, 0)
+			top_form.attach_top (load_proj_b, 0)
+			top_form.attach_top (save_b, 0)
+			top_form.attach_top (save_as_b, 0)
+			top_form.attach_left (con_b, 0)
+			top_form.attach_left_widget (con_b, cmd_b, 0)
+			top_form.attach_left_widget (cmd_b, cmdi_b, 0)
+			top_form.attach_left_widget (cmdi_b, state_b, 0)
+			top_form.attach_left_widget (state_b, help_b, 0)
+			top_form.attach_left_widget (help_b, namer_b, 0)
+			top_form.attach_left_widget (namer_b, cut_b, 0)
+			top_form.attach_left_widget (cut_b, focus_label, 0)
+			top_form.attach_right_widget (create_proj_b, focus_label, 0)
+			top_form.attach_right_widget (load_proj_b, create_proj_b, 0)
+			top_form.attach_right_widget (save_b, load_proj_b, 0)
+			top_form.attach_right_widget (save_as_b, save_b, 0)
+			top_form.attach_right_widget (quit_b, save_as_b, 0)
+			top_form.attach_right (quit_b, 0)
+			top_form.attach_bottom_widget (separator, focus_label, 0)
+			top_form.attach_bottom_widget (separator, quit_b, 0)
+			top_form.attach_bottom_widget (separator, state_b, 0)
+			top_form.attach_bottom_widget (separator, con_b, 0)
+			top_form.attach_bottom_widget (separator, cmd_b, 0)
+			top_form.attach_bottom_widget (separator, cmdi_b, 0)
+			top_form.attach_bottom_widget (separator, cut_b, 0)
+			top_form.attach_bottom_widget (separator, namer_b, 0)
+			top_form.attach_bottom_widget (separator, help_b, 0)
+			top_form.attach_bottom_widget (separator, create_proj_b, 0)
+			top_form.attach_bottom_widget (separator, load_proj_b, 0)
+			top_form.attach_bottom_widget (separator, save_b, 0)
+			top_form.attach_bottom_widget (separator, save_as_b, 0)
+			top_form.attach_bottom (separator, 0)
+			top_form.attach_left (separator, 0)
+			top_form.attach_right (separator, 0)
 
-			!!form2.make (Widget_names.form2, form)
-			!!generate_b.make (form2)
-			!!import_b.make (form2)
-			form2.attach_top (generate_b, 10)
-			form2.attach_right (generate_b, 0)
-			form2.attach_right (import_b, 0)
-			form2.attach_left (generate_b, 0)
-			form2.attach_left (import_b, 0)
-			form2.attach_top_widget (generate_b, import_b, 0)
+			!!commands_form.make (Widget_names.form2, form)
+			!!generate_b.make (commands_form)
+			!!import_b.make (commands_form)
+			commands_form.attach_top (generate_b, 10)
+			commands_form.attach_right (generate_b, 0)
+			commands_form.attach_right (import_b, 0)
+			commands_form.attach_left (generate_b, 0)
+			commands_form.attach_left (import_b, 0)
+			commands_form.attach_top_widget (generate_b, import_b, 0)
 
 			-- visibility form
-			!!form3.make (Widget_names.form3, form)
-			!!row_column1.make (Widget_names.row_column, form3);
-			!!row_column2.make (Widget_names.row_column1, form3);
-			!!visibility_label.make (Widget_names.visibility_label, form3)
+			!!visibility_form.make (Widget_names.form3, form)
+			!!row_column1.make (Widget_names.row_column, visibility_form);
+			!!row_column2.make (Widget_names.row_column1, visibility_form);
+			!!visibility_label.make (Widget_names.visibility_label, visibility_form)
 			!!cont_cat_t.make (Widget_names.context_catalog, row_column1)
 			!!cont_tree_t.make (Widget_names.context_tree, row_column1)
 			!!history_t.make (Widget_names.history_window, row_column1)
@@ -199,31 +199,31 @@ feature
 			!!interface_t.make (Widget_names.interface_label, row_column2)
 			!!interface_only_t.make (Widget_names.interface_only_label, row_column2)
 
-			form3.set_fraction_base (2);
-			form3.attach_left (visibility_label, 0);
-			form3.attach_right (visibility_label, 0);
-			form3.attach_top_widget (visibility_label, row_column1, 0);
-			form3.attach_top_widget (visibility_label, row_column2, 0);
-			form3.attach_right_position (row_column1, 1);
-			form3.attach_left_position (row_column2, 1);
-			form3.attach_left (row_column1, 0);
-			form3.attach_right (row_column2, 0);
-			form3.attach_bottom (row_column1, 0);
-			form3.attach_bottom (row_column2, 0);
+			visibility_form.set_fraction_base (2);
+			visibility_form.attach_left (visibility_label, 0);
+			visibility_form.attach_right (visibility_label, 0);
+			visibility_form.attach_top_widget (visibility_label, row_column1, 0);
+			visibility_form.attach_top_widget (visibility_label, row_column2, 0);
+			visibility_form.attach_right_position (row_column1, 1);
+			visibility_form.attach_left_position (row_column2, 1);
+			visibility_form.attach_left (row_column1, 0);
+			visibility_form.attach_right (row_column2, 0);
+			visibility_form.attach_bottom (row_column1, 0);
+			visibility_form.attach_bottom (row_column2, 0);
 			-- interform attachment
-			form.attach_top_widget (form1, vseparator, 0)
+			form.attach_top_widget (top_form, vseparator, 0)
 			form.attach_bottom (vseparator, 0)
-			form.attach_top_widget (form1, form2, 2)
-			form.attach_right (form2, 2)
-			form.attach_bottom (form2, 2)
-			form.attach_left (form1, 0)
-			form.attach_top (form1, 0)
-			form.attach_right (form1, 0)
-			form.attach_top_widget (form1, form3, 2)
-			form.attach_left (form3, 2)
-			form.attach_right_widget (vseparator, form3, 2)
-			form.attach_right_widget (form2, vseparator, 2)
-			form.attach_bottom (form3, 2)
+			form.attach_top_widget (top_form, commands_form, 2)
+			form.attach_right (commands_form, 2)
+			form.attach_bottom (commands_form, 2)
+			form.attach_left (top_form, 0)
+			form.attach_top (top_form, 0)
+			form.attach_right (top_form, 0)
+			form.attach_top_widget (top_form, visibility_form, 2)
+			form.attach_left (visibility_form, 2)
+			form.attach_right_widget (vseparator, visibility_form, 2)
+			form.attach_right_widget (commands_form, vseparator, 2)
+			form.attach_bottom (visibility_form, 2)
 
 				-- default state for buttons
 			cont_cat_t.set_toggle_on; 
@@ -256,7 +256,7 @@ feature -- Closing Current
 			end;
 		end;
 
-	continue_after_popdown (box: QUESTION_BOX; yes: BOOLEAN) is
+	continue_after_question_popdown (yes: BOOLEAN) is
 		local
 			save_proj: SAVE_PROJECT;
 			quit_app_com: QUIT_NOW_COM
@@ -276,6 +276,11 @@ feature -- Closing Current
 				end;
 			end
 		end;
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := base
+		end
 
 feature -- Popup and popdown actions
 

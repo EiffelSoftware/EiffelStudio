@@ -463,7 +463,7 @@ feature -- Processing
 			create f1.make_from_string (wizard_resources_path)
 			f_name := clone (f1)
 			f_name.extend (name)
-			f_name.add_extension ("Ace")
+			f_name.add_extension ("ace")
 			create fi.make_open_read (f_name)
 			fi.read_stream(fi.count)
 			s := fi.last_string
@@ -494,9 +494,9 @@ feature -- Processing
 				-- Switch the Ace file depending on the example to generate.
 			if wizard_information.vision_example then
 				if wizard_information.is_oracle then
-					copy_ace ("Ace_mswin_vision_oracle", wizard_information.location)
+					copy_ace ("ace_mswin_vision_oracle", wizard_information.location)
 				else
-					copy_ace ("Ace_mswin_vision_odbc", wizard_information.location)
+					copy_ace ("ace_mswin_vision_odbc", wizard_information.location)
 				end
  			else
 				if wizard_information.is_oracle then

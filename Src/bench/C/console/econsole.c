@@ -17,10 +17,10 @@
 #include <windows.h>
 #include <commdlg.h>
 #define EIF_WIN32							/* Used to trick eif_err_msg.h */
-#include "argcargv.h"
+#include "eif_argcargv.h"
 #include "..\run-time\eif_error.h"		/* Needs relative path here... */
 #include "eif_err_msg.h"
-#include "econsole.h"
+#include "eif_econsole.h"
 
 #define BUFFER_SIZE 128
 #define BUFFER_LINES 8192
@@ -113,7 +113,7 @@ EIF_INTEGER eif_console_readint()
 		;
 	}
 
-	if (0 >= sscanf (eif_console_buffer, "%i", &lastint))
+	if (0 >= sscanf (eif_console_buffer, "%ld", &lastint))
 		eio();
 
 	return lastint;
@@ -336,7 +336,7 @@ void eif_console_putint (long l)
 	if (!eif_console_allocated)
 		eif_make_console();
 
-	t = sprintf (transfer_buffer, "%i", l);
+	t = sprintf (transfer_buffer, "%ld", l);
 	if (windowed_application)
 		eif_PutWindowedOutput (transfer_buffer, t);
 	else

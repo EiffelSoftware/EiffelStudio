@@ -4438,9 +4438,9 @@ rt_private char *gscavenge(char *root)
 
 	age = flags & EO_AGE;			/* Fetch object's age */
 	age += AGE_ONE;					/* Make a wish, it's your birthday */
-	age &= EO_AGE;					/* Overflow -> age = 0 */
-	if (age == 0)					/* Object over reached maximum age */
-		age = EO_AGE;				/* Reset to maximum age */
+/*	age &= EO_AGE;					/* Overflow -> age = 0 */
+/*	if (age == 0)					/* Object over reached maximum age */
+/*		age = EO_AGE;				/* Reset to maximum age */
 
 	if (age >= (tenure << AGE_OFFSET)) {	/* Object is to be tenured */
 

@@ -290,15 +290,17 @@ feature -- Clearing operations
 		local
 			tmp_fg_color: EV_COLOR
 		do
-			create tmp_fg_color
-			tmp_fg_color.copy (foreground_color)
-			set_foreground_color (background_color)
-			C.gdk_draw_rectangle (drawable, gc, 1,
-				x,
-				y,
-				a_width,
-				a_height)
-			set_foreground_color (tmp_fg_color)
+			if drawable /= NULL then
+				create tmp_fg_color
+				tmp_fg_color.copy (foreground_color)
+				set_foreground_color (background_color)
+				C.gdk_draw_rectangle (drawable, gc, 1,
+					x,
+					y,
+					a_width,
+					a_height)
+				set_foreground_color (tmp_fg_color)
+			end
 		end
 
 feature -- Drawing operations

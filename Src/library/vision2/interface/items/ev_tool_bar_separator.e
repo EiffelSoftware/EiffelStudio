@@ -1,8 +1,8 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"A separator for the tool-bars."
+		"Scored line separator for use in EV_TOOL_BAR."
 	status: "See notice at end of class."
+	keywords: "separator, tool, bar, line, devide"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,12 +21,12 @@ create
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_SEPARATOR_I
-			-- Platform dependent access
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE}
 
 	create_implementation is
-			-- Create implementation of tool bar separator.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TOOL_BAR_SEPARATOR_IMP} implementation.make (Current)
 		end
@@ -54,6 +54,9 @@ end -- class EV_TOOL_BAR_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/24 03:10:22  oconnor
+--| formatting and comments
+--|
 --| Revision 1.8  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -89,7 +92,6 @@ end -- class EV_TOOL_BAR_SEPARATOR
 --|
 --| Revision 1.5.2.2  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

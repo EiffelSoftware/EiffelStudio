@@ -1,8 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		" EiffelVision Toolbar button, a specific button that goes%
-		% in a tool-bar."
+		"Base class for items for use with EV_TOOL_BAR"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,8 +17,7 @@ inherit
 feature -- Access
 
 	parent: EV_TOOL_BAR is
-			-- The parent of the Current widget
-			-- Can be void.
+			-- Contains `Current'.
 		do
 			Result ?= {EV_ITEM} Precursor
 		end
@@ -48,6 +45,9 @@ end -- class EV_TOOL_BAR_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/03/24 03:10:22  oconnor
+--| formatting and comments
+--|
 --| Revision 1.3  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|
@@ -70,10 +70,14 @@ end -- class EV_TOOL_BAR_BUTTON
 --| Removed redundant features, changed set_sensitive to enable and disable
 --|
 --| Revision 1.7.4.3  2000/01/20 16:55:55  rogers
---| Implemented create_implementation, added some comments and created both pick_actions and drop_Actions in create_action_sequences.
+--| Implemented create_implementation, added some comments and created both
+--| pick_actions and drop_Actions in create_action_sequences.
 --|
 --| Revision 1.7.4.2  1999/12/17 21:11:02  rogers
---| Now inherits EV_PICK_AND_DROPABLE instead of EV_PND_SOURCE and EV_PND_TARGET. Make procedures have been removed, ready for re-implementation. The addition and removal of commands have been commented, ready for re-implementation.
+--| Now inherits EV_PICK_AND_DROPABLE instead of EV_PND_SOURCE and
+--| EV_PND_TARGET. Make procedures have been removed, ready for
+--| re-implementation. The addition and removal of commands have been commented,
+--| ready for re-implementation.
 --|
 --| Revision 1.7.4.1  1999/11/24 17:30:43  oconnor
 --| merged with DEVEL branch
@@ -83,7 +87,6 @@ end -- class EV_TOOL_BAR_BUTTON
 --|
 --| Revision 1.6.2.2  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

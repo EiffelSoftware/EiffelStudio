@@ -1,6 +1,8 @@
 indexing	
 	description:
-		"Eiffel Vision radio menu item."
+		"Menu item with state displayed as a circular check box.%N%
+		%`is_selected' is mutualy exclusive with respect to other radio menu%
+		%items between separators in a menu."
 	status: "See notice at end of class"
 	keywords: "radio, item, menu, check, select, unselect"
 	date: "$Date$"
@@ -27,9 +29,15 @@ create
 	default_create,
 	make_with_text
 
+feature {NONE} -- Implementation
+
+	implementation: EV_RADIO_MENU_ITEM_I
+		-- Responsible for interaction with the native graphics toolkit.
+
 feature {NONE} -- Initialization
 
 	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_RADIO_MENU_ITEM_IMP} implementation.make (Current)
 		end
@@ -43,11 +51,6 @@ feature -- Contract support
 			Result := {EV_SELECT_MENU_ITEM} Precursor
 				and then {EV_RADIO_PEER} Precursor
 		end
-
-feature {NONE} -- Implementation
-
-	implementation: EV_RADIO_MENU_ITEM_I
-			-- Platform dependent access.
 
 end -- class EV_RADIO_MENU_ITEM
 
@@ -72,6 +75,9 @@ end -- class EV_RADIO_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/24 03:10:22  oconnor
+--| formatting and comments
+--|
 --| Revision 1.16  2000/02/29 18:09:07  oconnor
 --| reformatted indexing cluase
 --|

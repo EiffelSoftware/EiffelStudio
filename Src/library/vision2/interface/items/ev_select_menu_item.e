@@ -1,7 +1,6 @@
 indexing	
 	description:
-		"Eiffel Vision select menu item. Ancestor for EV_CHECK_MENU_ITEM %N%
-		%and EV_RADIO_MENU_ITEM."
+		"Base class for menu items that have two states (See `is_selected')"
 	status: "See notice at end of class"
 	keywords: "menu, item, check, select"
 	date: "$Date$"
@@ -29,7 +28,7 @@ feature -- Status report
 feature -- Status setting
 
 	enable_select is
-			-- Select this menu item.
+			-- Set `is_selected' `True'.
 		do
 			implementation.enable_select
 		ensure
@@ -39,7 +38,7 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	implementation: EV_SELECT_MENU_ITEM_I
-			-- Platform dependent access.
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_SELECT_MENU_ITEM
 
@@ -64,9 +63,11 @@ end -- class EV_SELECT_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/03/24 03:10:22  oconnor
+--| formatting and comments
+--|
 --| Revision 1.1  2000/02/24 20:29:09  brendel
 --| Initial revision. Needed for rearranged radio-item inheritance structure.
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

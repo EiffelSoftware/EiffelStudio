@@ -1,11 +1,11 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
+--| FIXME Needs a name change, simple means, well, not very much at all.
 indexing	
 	description: 
-		"EiffelVision item. Top class of menu_item, list_item%
-		% and tree_item. This item isn't a widget, because most%
-		% of the features of the widgets are inapplicable  here."
+		"Base class for items that are EV_TEXTABLE, EV_PIXMAPABLEa and%
+		%EV_PICK_AND_DROPABLE"
 	status: "See notice at end of class"
-	id: "$$"
+	--| FIXME needs keywords.
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,18 +35,19 @@ inherit
 			implementation
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_SIMPLE_ITEM_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 feature {NONE} -- Implementation
 
 	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_ITEM} Precursor
 			{EV_PICK_AND_DROPABLE} Precursor
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_SIMPLE_ITEM_I
-			-- Platform dependent access.
 
 end -- class EV_ITEM
 
@@ -71,6 +72,9 @@ end -- class EV_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/24 03:10:22  oconnor
+--| formatting and comments
+--|
 --| Revision 1.22  2000/03/09 21:39:14  king
 --| Added inheritance from PND
 --|

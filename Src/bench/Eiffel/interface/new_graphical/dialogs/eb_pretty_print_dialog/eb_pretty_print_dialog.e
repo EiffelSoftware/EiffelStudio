@@ -95,12 +95,6 @@ feature {NONE} -- Initialization
 			editor.drop_actions.extend (agent on_stone_dropped)
 			editor.drop_actions.set_veto_pebble_function (agent is_stone_valid)			
 			
-			
---			create l_acc.make_with_key_combination (
---				create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_escape),
---				False, False, False)	
---			l_acc.actions.extend (agent word_wrap_toggled)
-			
 			lower_slice_field.set_text (slice_min.out)
 			upper_slice_field.set_text (slice_max.out)			
 		end
@@ -190,10 +184,6 @@ feature -- Status setting
 			
 			parent.tool.debugger_manager.keep_object (st.object_address)
 			retrieve_dump_value
-			
---			slice_cmd.enable_sensitive
---			auto_set_slice_button.disable_sensitive
---			slice_button.enable_sensitive
 			refresh
 		end
 		

@@ -420,7 +420,7 @@ feature -- Element change
                 l_require := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_require) /= 0
                 l_ensure := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_ensure) /= 0
                 l_check := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_check) /= 0
-                l_invariant := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_loop) /= 0
+                l_invariant := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_invariant) /= 0
                 l_loop := a_assertions.bit_and (feature {ECOM_EIF_ASSERTIONS_ENUM}.eif_assertions_loop) /= 0    
             end
 

@@ -42,6 +42,11 @@ feature {NONE} -- Invariant
 	parent_of_items_is_current: BOOLEAN is
 		do
 			Result := True
+			if item /= Void then
+				if item.parent /= real_parent then
+					Result := False
+				end
+			end
 		end
 
 end -- class EV_AGGREGATE_CELL

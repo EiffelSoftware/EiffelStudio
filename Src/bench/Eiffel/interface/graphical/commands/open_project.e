@@ -77,7 +77,8 @@ feature
 			workbench_file: RAW_FILE;
 			ok: BOOLEAN;
 			temp: STRING;
-			fn: FILE_NAME
+			fn: FILE_NAME;
+			title: STRING
 		do
 			if not retried then
 				ok := True;
@@ -109,6 +110,10 @@ feature
 						!!workb;
 						!!init_work.make (workb);
 						workb.make;
+						title := clone (l_New_project);
+						title.append (": ");
+						title.append (project_dir.name);
+						project_tool.set_title (title);
 					end
 				else
 						-- Retrieve existing project
@@ -119,12 +124,18 @@ feature
 						temp := w_Not_a_file (workbench_file.name);
 						ok := False
 					else
+						restore_cursors;
+						project_tool.set_title ("Retrieving project...");
+						set_global_cursor (watch_cursor);
 						retrieve_project (project_dir, workbench_file);
+						title := clone (l_Project);
+						title.append (": ");
+						title.append (project_dir.name);
+						project_tool.set_title (title);
 					end;
 				end;
 		
 				if ok then
-					project_tool.set_title (project_dir.name);
 					project_tool.set_initialized
 				else	
 					warner (text_window).custom_call (Current, temp, 

@@ -53,7 +53,8 @@ feature {NONE}
 	compile (argument: ANY) is
 		local
 			rescued: BOOLEAN;
-			temp: STRING
+			temp: STRING;
+			title: STRING
 		do
 			if not rescued then
 				reset_debugger;
@@ -62,9 +63,15 @@ feature {NONE}
 				project_tool.set_changed (true);
 				Workbench.recompile;
 				if Workbench.successfull then
+						-- Save information for DLE.
+					System.save_static_info;
 					freezing_actions;
 					project_tool.set_changed (false);
 					project_tool.set_icon_name (System.system_name);
+					title := clone (l_Project);
+					title.append (": ");
+					title.append (Project_directory.name);
+					project_tool.set_title (title);
 					system.server_controler.wipe_out; -- ???
 					save_failed := False;
 					save_workbench_file;

@@ -8,7 +8,7 @@ inherit
 
 	FORMATTER
 		redefine
-			dark_symbol
+			dark_symbol, text_window
 		end;
 	SHARED_DEBUG
 
@@ -23,6 +23,8 @@ feature
 			init (c, a_text_window);
 			indent := 2
 		end;
+
+	text_window: OBJECT_TEXT;
 
 	symbol: PIXMAP is 
 		once 
@@ -47,7 +49,8 @@ feature {NONE}
 		local
 			attr_request: ATTR_REQUEST;
 			attributes: LIST [ATTRIBUTE];
-			type_name: STRING
+			type_name: STRING;
+			is_special: BOOLEAN
 		do
 			if not Run_info.is_running then
 				warner.set_window (text_window);
@@ -57,7 +60,13 @@ feature {NONE}
 				warner.gotcha_call (w_System_not_stopped)
 			else
 				!! attr_request.make (object.object_address);
+				attr_request.set_sp_bounds (text_window.sp_lower, text_window.sp_upper);
 				attr_request.send;
+				attributes := attr_request.attributes;
+				is_special := attr_request.is_special;
+				if is_special then
+					text_window.set_sp_capacity (attr_request.capacity)
+				end;
 				dynamic_class := object.dynamic_class;
 				type_name := clone (dynamic_class.class_name);
 				type_name.to_upper;
@@ -67,7 +76,13 @@ feature {NONE}
 				text_window.put_char (']');
 				text_window.new_line;
 				text_window.new_line;
-				attributes := attr_request.attributes;
+				if 
+					is_special and then (attributes.empty or else 
+					attributes.first.name.to_integer > 0) 
+				then
+					text_window.put_string ("  ... Items skipped ...");
+					text_window.new_line
+				end;
 				from
 					attributes.start
 				until
@@ -75,6 +90,13 @@ feature {NONE}
 				loop
 					attributes.item.append_attribute (text_window, 1);
 					attributes.forth
+				end;
+				if 
+					is_special and then (attributes.empty or else 
+					attributes.last.name.to_integer < attr_request.capacity - 1)
+				then
+					text_window.put_string ("  ... More items ...");
+					text_window.new_line
 				end
 			end
 		end;

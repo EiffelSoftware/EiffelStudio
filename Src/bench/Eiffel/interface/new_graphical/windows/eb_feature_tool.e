@@ -57,6 +57,9 @@ feature {NONE} -- Initialization
 --			set_composite_attributes (special_m)
 --  			init_text_area
 --		end
+--| FIXME
+--| Christophe, 1 nov 1999
+--| This feature was made obsolete by the tool-manager mechanism
 
 	init_formatters is
 			-- Create the list of formats,
@@ -151,6 +154,10 @@ feature -- Update Resources
 --				end
 --			end
 --		end
+--| FIXME
+--| Christophe, 1 nov 1999
+--| This feature was made obsolete by the new preference tool.
+--| Still kept to check if nothing a has been forgotten in `update'.
 
 feature -- Window Properties
 
@@ -170,13 +177,17 @@ feature -- Window Properties
 	has_editable_text: BOOLEAN is True
 			-- Does Current tool have an editable text area?
 
+	show_callers_menu_item:  EV_CHECK_MENU_ITEM
+			-- Menu entry allowing to set if the "show callers"
+			-- format will display all callers or only static callers
+
 feature -- Resetting
 
 	reset is
 			-- Reset the window contents
 		do
 			Precursor
-			-- class_hole.set_empty_symbol
+--			class_hole.set_empty_symbol
 			class_text_field.set_text("")
 			feature_text_field.set_text("")
 		end
@@ -198,6 +209,20 @@ feature -- Access
 		end
 
 feature -- Update
+
+	show_callers_menu_update (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Action performed when user presses
+			-- the "Show callers" menu
+		require
+			menu_item_exists: format_bar_menu_item /= Void
+		do
+			format_list.show_callers_format.set_show_all_callers
+				(show_callers_menu_item.is_selected)
+		ensure
+			format_and_entry_consistent: 
+				format_list.show_callers_format.to_show_all_callers
+					= show_callers_menu_item.is_selected
+		end
 
 	parse_file is
 			-- Parse the file if possible.
@@ -318,7 +343,10 @@ feature -- Status setting
 	set_stone (s: like stone) is
 			-- Update stone from `s'.
 		do
-			stone := s
+			if not s.same_as (stone) then
+				Precursor (s)
+				synchronize
+			end
 --			if s = Void then
 --				set_icon_name (tool_name)
 --			else
@@ -334,7 +362,7 @@ feature -- Stone updating
 	process_feature (a_stone: FEATURE_STONE) is
 			-- Process the feature stone `a_stone'. 
 		do
-			last_format.format (a_stone)
+			set_stone (a_stone)
 			add_to_history (a_stone)
 			update_feature_toolbar
 		end
@@ -564,6 +592,7 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 			-- Fill `a_menu' with "special menu" entries
 		local
 			i: EV_MENU_ITEM
+			cmd: EV_ROUTINE_COMMAND
 		do
 			create i.make_with_text (a_menu, Interface_names.m_Shell)
 			i.add_select_command (shell_cmd, Void)
@@ -573,6 +602,10 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 			create i.make_with_text (a_menu, Interface_names.m_Stoppable)
 			i.add_select_command (super_melt_cmd, Void)
+
+			create show_callers_menu_item.make_with_text (a_menu, Interface_names.m_Stoppable)
+			create cmd.make (~show_callers_menu_update)
+			show_callers_menu_item.add_select_command (cmd, Void)
 
 			create i.make_with_text (a_menu, Interface_names.m_Current)
 			i.add_select_command (current_target_cmd, Void)

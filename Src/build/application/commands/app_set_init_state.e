@@ -1,58 +1,75 @@
+indexing
+	description: "Undoable command to set the initial state of the Application."
+	Id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class APP_SET_INIT_STATE 
+class APP_SET_INIT_STATE
 
 inherit
+	APP_COMMAND
 
-	APP_COMMAND; 
-	SHARED_APPLICATION;
+	SHARED_APPLICATION
 
-feature 
+feature -- Access
 
-	undo is 
+	undo is
 		do 
-			application_editor.set_initial_state (old_init_state);
-			perform_update_display;
-		end; -- undo
+			application_editor.set_initial_state (old_init_state)
+			perform_update_display
+		end
 
-feature {NONE}
-
-	old_init_state: BUILD_STATE;
-
-	init_state: BUILD_STATE;
-
-	c_name: STRING is
+	execute (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+			-- Update the initial state of the application editor
+			-- with data droppped.
+		local
+			circle: STATE_CIRCLE
+			st: BUILD_STATE
 		do
-			Result := Command_names.app_set_initial_state_cmd_name
-		end;
-
-	work (a_state: BUILD_STATE) is
-		do
-			init_state := a_state;
-			old_init_state := application_editor.initial_state_circle.data;
-			if not (init_state = old_init_state) then
-				do_specific_work;
-				update_history
+			circle ?= ev_data.data
+			if circle /= Void then
+				init_state := circle.data
+			else
+				init_state ?= ev_data.data
 			end
-		end; 
+			old_init_state := application_editor.initial_state_circle.data
+			if init_state /= old_init_state then
+				do_specific_work
+			else
+				failed := True
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	old_init_state: BUILD_STATE
+
+	init_state: BUILD_STATE
 
 	do_specific_work is
 			-- Set the initial_circle.
 		do
-			application_editor.set_initial_state (init_state);
+			application_editor.set_initial_state (init_state)
 			perform_update_display
-		end;
+		end
 
 	update_display is
 		do
 			application_editor.draw_figures
-		end;
+		end
 
-	worked_on: STRING is
+	name: STRING is
 		do
-			!!Result.make (0);
-			if init_state /= Void then
-				Result.append (init_state.label);
-			end
-		end;
+			Result := Command_names.app_set_initial_state_cmd_name
+		end
 
-end
+	comment: STRING is
+		do
+			create Result.make (0)
+			if init_state /= Void then
+				Result.append (init_state.label)
+			end
+		end
+
+end -- class APP_SET_INIT_STATE
+

@@ -1,90 +1,55 @@
+indexing
+	description: "Application editor undoable commands."
+	date: "$Date$"
+	id: "$Id$"
+	revision: "$Revision$"
 
 deferred class APP_COMMAND 
 
 inherit
-
-	EB_UNDOABLE
-		redefine
-			is_template, update_history, execute
-		end;
+	EB_UNDOABLE_COMMAND
 	
-feature 
-
-	is_template: BOOLEAN is True;
-
-	execute (argument: ANY) is
-		do
-			work (argument)
-		end;
-
-	name: STRING is
-		do
-			!!Result.make (0);
-			Result.append (c_name);
-			if worked_on /= Void then
-				Result.append (" (");
-				Result.append (worked_on);
-				Result.append (")");
-			end;
-		end;
+feature -- Access
 
 	redo is
 			-- Redo a command
 		do
 			do_specific_work
-		end; -- redo
+		end
 
 	set_for_macro is
 		do
-			for_macro := True
-		end; -- set_for_macro
+			failed := True
+		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
-	for_macro: BOOLEAN;
-
-	worked_on: STRING is
-			-- What the command changed
-		deferred
-		end; 
-
-	c_name: STRING is
-			-- Name of the command
-		deferred
-		end;
-
-	failed: BOOLEAN;
+	failed: BOOLEAN
 
 	application_editor: APP_EDITOR is
 			-- Associated application editor
 		do
 			Result := app_editor
-		end;
+		end
 
 	do_specific_work is
 			-- Do work more specific for the command executed.
 		deferred
-		end;
+		end
 
 	perform_update_display is
 			-- Update the display if the command is not
 			-- a macro
 		do
-			if not for_macro then
+			if not failed then
 				update_display
 			end
-		end;
+		end
 
 	update_display is
 			-- Updates the display of the application_editor. 
 		deferred
-		end;
+		end
 
-	update_history is
-		do
-			if not for_macro then
-				history.record (Current)
-			end
-		end;
+end -- class APP_COMMAND
 
-end 

@@ -36,7 +36,7 @@ feature
 				system_name.append (Executable_suffix);
 				!!f_name.make_from_string (Workbench_generation_path);
 				f_name.set_file_name (system_name);
-				appl_name := f_name.path
+				appl_name := f_name
 			end;
 			!!f.make (appl_name);
 			if not f.exists then
@@ -47,7 +47,7 @@ feature
 				if not melt_only then
 					!!f_name.make_from_string (Workbench_generation_path);
 					f_name.set_file_name (Makefile_SH);
-					!!make_f.make (f_name.path);
+					!!make_f.make (f_name);
 					if make_f.exists and then make_f.date > f.date then
 						io.putstring (Makefile_SH);
 						io.putstring (" is more recent than the system%N");

@@ -85,7 +85,7 @@ if not initialized.item then
 				!! fn.make_from_string (project_dir.name);
 				fn.extend (Eiffelgen);
 				fn.set_file_name (Dot_workbench);
-				!!workbench_file.make (fn.path);
+				!!workbench_file.make (fn);
 
 					-- Is the project new?
 				project_is_new := project_dir.is_new or else

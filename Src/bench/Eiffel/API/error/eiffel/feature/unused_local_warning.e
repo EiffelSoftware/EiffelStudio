@@ -78,7 +78,7 @@ feature {COMPILER_EXPORTER}
 	set_associated_local (s_id: INTEGER) is
 			-- Set `associated_local' to `s'
 		require
-			valid_s_id: s_id >= 0
+			valid_s_id: s_id >= 1
 		do
 			associated_local := Names_heap.item (s_id)
 		end

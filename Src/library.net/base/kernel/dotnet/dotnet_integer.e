@@ -1,5 +1,5 @@
 indexing
-	description: "Set of static routines belonging to System.Char"
+	description: "Set of static routines belonging to System.Int32"
 	date: "$Date$"
 	revision: "$Revision$"
 

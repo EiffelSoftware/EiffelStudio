@@ -41,7 +41,7 @@ EIF_POINTER cwin_get_function_address(
 	FreeLibrary(hModule);
 	
 	/* Return the retrieved address (it can be NULL if GetProcAddress returned so) */
-	return (EIF_POINTER)pFunctionAddress;
+	return (EIF_POINTER)(pFunctionAddress);
 	}
 
 /*---------------------------------------------------------------------------*/

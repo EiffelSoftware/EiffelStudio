@@ -4,7 +4,6 @@
  * Functions used by the class WEL_REGISTRY.
  *
  */
-
 #ifndef __WEL_REGISTRY__
 #	include "registry.h"
 #endif
@@ -18,13 +17,14 @@
 
 
 EIF_POINTER cwin_reg_create_key(
-		EIF_POINTER parent_key,
-        	EIF_POINTER keyName,
-        	EIF_INTEGER access_mode )
-{
+	EIF_POINTER parent_key,
+	EIF_POINTER keyName,
+	EIF_INTEGER access_mode
+)
+	{
 	// Declarations
-    	HKEY phkResult;
-    	LONG result;
+   	HKEY phkResult;
+   	LONG result;
 	LPDWORD lpdwDisposition;
 	
 	// Allocations
@@ -32,21 +32,22 @@ EIF_POINTER cwin_reg_create_key(
 
 	// Routine Body
 	result = RegCreateKeyEx(
-            	(HKEY) parent_key ,		// handle of an open key
-            	(LPCTSTR)keyName,		// address of subkey name
-            	0,											// reserved
-            	REG_NONE,									// address of class string
-		REG_OPTION_NON_VOLATILE,	// special options flag
-		(REGSAM)access_mode,		// desired security access
-		NULL,				// address of key security structure
-            	&phkResult,                     // address of buffer for opened handle
-		lpdwDisposition );		// address of disposition value buffer
+		(HKEY) parent_key,		// handle of an open key
+		(LPCTSTR)keyName,		// address of subkey name
+		0,						// reserved
+		REG_NONE,				// address of class string
+		REG_OPTION_NON_VOLATILE,// special options flag
+		(REGSAM)access_mode,	// desired security access
+		NULL,					// address of key security structure
+		&phkResult,				// address of buffer for opened handle
+		lpdwDisposition			// address of disposition value buffer
+	);
 
 	// Result
-    	if( result = ERROR_SUCCESS )
+   	if (result == ERROR_SUCCESS)
 		return (EIF_POINTER) phkResult;
-        return NULL;
-}
+	return NULL;
+	}
 
 //////////////////////////////////////////////////////////////
 //  Opening of a key. This function returns the reference to
@@ -55,12 +56,10 @@ EIF_POINTER cwin_reg_create_key(
 EIF_POINTER cwin_reg_open_key(
         EIF_POINTER parent_key,
         EIF_POINTER keyName,
-        EIF_INTEGER access_mode )
-{
+        EIF_INTEGER access_mode)
+	{
     HKEY key;
     LONG result;
-	LPSECURITY_ATTRIBUTES lpSecurityAttributes;
-	LPDWORD lpdwDisposition;
 	
     result = RegOpenKeyEx(
             (HKEY)parent_key ,
@@ -71,7 +70,7 @@ EIF_POINTER cwin_reg_open_key(
     if( result == ERROR_SUCCESS )
 	    return (EIF_POINTER)key;
 	return NULL;
-}
+	}
 
 //////////////////////////////////////////////////////////////
 //  Deletion of a key.
@@ -79,8 +78,8 @@ EIF_POINTER cwin_reg_open_key(
 
 EIF_BOOLEAN cwin_reg_delete_key(
 		EIF_POINTER parent_key,
-		EIF_POINTER keyName )
-{
+		EIF_POINTER keyName)
+	{
 	LONG result;
 
 	result = RegDeleteKey (
@@ -89,7 +88,7 @@ EIF_BOOLEAN cwin_reg_delete_key(
 	if (result == ERROR_SUCCESS)
 		return EIF_TRUE;
 	return EIF_FALSE;
-}
+	}
 
 //////////////////////////////////////////////////////////////
 //
@@ -97,22 +96,20 @@ EIF_BOOLEAN cwin_reg_delete_key(
 //
 
 void cwin_reg_set_key_value(
-        EIF_POINTER key,
-        EIF_POINTER keyname,
-        EIF_POINTER keyvalue )
-{
-    HKEY key_result;
-    LONG result;
-
-
-    result = RegSetValueEx(
-            (HKEY)key ,
-            (char *)keyname,
-            0,
-            ((REG_VALUE *)keyvalue)->type,
-			((REG_VALUE *)keyvalue)->data,
-            ((REG_VALUE *)keyvalue)->length );
-}
+	EIF_POINTER key,
+	EIF_POINTER keyname,
+	EIF_POINTER keyvalue
+)
+	{
+    RegSetValueEx(
+		(HKEY)key ,
+		(char *)keyname,
+		0,
+		((REG_VALUE *)keyvalue)->type,
+		((REG_VALUE *)keyvalue)->data,
+		((REG_VALUE *)keyvalue)->length
+	);
+	}
 
 //////////////////////////////////////////////////////////////
 //
@@ -120,9 +117,10 @@ void cwin_reg_set_key_value(
 //
 
 EIF_POINTER cwin_reg_enum_key(
-		EIF_POINTER key,
-		EIF_INTEGER index )
-{
+	EIF_POINTER key,
+	EIF_INTEGER index
+)
+	{
 	TCHAR key_name[64];
 	DWORD key_size = sizeof (key_name);
 	DWORD key_size_increment = sizeof (key_name);
@@ -134,23 +132,26 @@ EIF_POINTER cwin_reg_enum_key(
 	LONG result = 0;
 
 	REG_KEY* pRK = (REG_KEY*) calloc (sizeof (REG_KEY), 1);
-	if (! pRK)
+	if (!pRK)
 		goto error;
 
 	pRK->LastWriteTime = (PFILETIME) calloc (sizeof (FILETIME), 1);
 	if (! pRK->LastWriteTime)
 		goto error_rk;
 
-	result = RegEnumKeyEx	((HKEY) key,
-												(DWORD) index,
-												key_name,
-												&key_size,
-												NULL,
-												class_name,
-												&class_size,
-												pRK->LastWriteTime);
+	result = RegEnumKeyEx(
+		(HKEY) key,
+		(DWORD) index,
+		key_name,
+		&key_size,
+		NULL,
+		class_name,
+		&class_size,
+		pRK->LastWriteTime
+	);
 
-	if (result == ERROR_SUCCESS)	{
+	if (result == ERROR_SUCCESS)
+		{
 		pRK->name = (EIF_POINTER) malloc (key_size + 1);
 		if (! pRK->name)
 			goto error_last_write;
@@ -166,26 +167,31 @@ EIF_POINTER cwin_reg_enum_key(
 		pRK->KeyClass[class_size] = '\0';
 
 		return (EIF_POINTER) pRK;
-	}
+		}
 
-	if (result == ERROR_MORE_DATA)	{
+	if (result == ERROR_MORE_DATA)
+		{
 
-		if (key_size != last_key_size)	{
+		if (key_size != last_key_size)
+			{
 			pRK->name = malloc (key_size + 1);
 			if (! pRK->name)
 				goto error_class;
 			strcpy (pRK->name, key_name);
-		}
+			}
 
-		if (class_size != last_class_size)	{
+		if (class_size != last_class_size)
+			{
 			pRK->KeyClass = malloc (class_size + 1);
 			if (! pRK->KeyClass)
 				goto error_class;
 			strcpy (pRK->KeyClass, class_name);
-		}
+			}
 
-		do	{
-			if (key_size == last_key_size)	{
+		do	
+			{
+			if (key_size == last_key_size)
+				{
 				key_size += key_size_increment;
 				if (pRK->name)
 					free (pRK->name);
@@ -193,9 +199,10 @@ EIF_POINTER cwin_reg_enum_key(
 				if (! pRK->name)
 					goto error_class;
 				last_key_size = key_size;
-			}
+				}
 
-			if (class_size == last_class_size)	{
+			if (class_size == last_class_size)
+				{
 				class_size += class_size_increment;
 				if (pRK->KeyClass)
 					free (pRK->KeyClass);
@@ -203,21 +210,24 @@ EIF_POINTER cwin_reg_enum_key(
 				if (! pRK->KeyClass)
 					goto error_class;
 				last_class_size = class_size;
-			}
+				}
 
-			result = RegEnumKeyEx	((HKEY) key,
-														(DWORD) index,
-														pRK->name,
-														&key_size,
-														NULL,
-														pRK->KeyClass,
-														&class_size,
-														pRK->LastWriteTime);
-		} while (result == ERROR_MORE_DATA);
+			result = RegEnumKeyEx(
+				(HKEY) key,
+				(DWORD) index,
+				pRK->name,
+				&key_size,
+				NULL,
+				pRK->KeyClass,
+				&class_size,
+				pRK->LastWriteTime
+			);
+		
+			} while (result == ERROR_MORE_DATA);
 		
 		if (result == ERROR_SUCCESS)
 			return (EIF_POINTER) pRK;
-	}
+		}
 
 	if (pRK->KeyClass)
 		free (pRK->KeyClass);
@@ -228,6 +238,7 @@ EIF_POINTER cwin_reg_enum_key(
 
 	return 0;
 
+// Allocation memory error
 error_class:
 	if (pRK->KeyClass)
 		free (pRK->KeyClass);
@@ -235,7 +246,7 @@ error_name:
 	if (pRK->name)
 		free (pRK->name);
 error_last_write:
-	if (pRK->LastWriteTime);
+	if (pRK->LastWriteTime)
 		free (pRK->LastWriteTime);
 error_rk:
 	if (pRK)
@@ -243,7 +254,7 @@ error_rk:
 error:
 	enomem();
 	return 0;
-}
+	}
 
 
 /////////////////////////////////////////////////////
@@ -252,37 +263,32 @@ error:
 // we are enumerating.
 
 EIF_POINTER cwin_reg_enum_value(
-		EIF_POINTER key,
-		EIF_INTEGER index )
-{
-	REG_VALUE* RK;
+	EIF_POINTER key,
+	EIF_INTEGER index
+)
+	{
 	DWORD size;
 	LONG result;
 	CHAR *name;
 	
 	size = 512;
-	RK = (REG_VALUE *) malloc (sizeof (REG_VALUE));
-	RK->data = (EIF_POINTER) malloc(32* sizeof (BYTE));  
-	name=malloc(size*sizeof(CHAR));
+	name = malloc(size*sizeof(CHAR));
 
 	result = RegEnumValue(
-	(HKEY)key,
-	(DWORD)index,
-	(LPTSTR)name,
-	(LPDWORD)&size,
-	NULL,
-	//(LPDWORD) &(RK->type),
-	NULL,
-	//(LPBYTE) &(RK->data),
-	NULL,
-	//(LPDWORD) &(RK->length));
-	NULL);
+		(HKEY)key,			// handle to key to query
+		(DWORD)index,		// index of value to query
+		(LPTSTR)name,		// value buffer
+		(LPDWORD)&size,		// size of value buffer
+		NULL,				// reserved
+		NULL,				// type buffer
+		NULL,				// data buffer
+		NULL				// size of data buffer
+	);
 
 	if (result == ERROR_SUCCESS) 
 		return (EIF_POINTER) name;
 	return NULL;
-
-}
+	}
 
 //////////////////////////////////////////////////////////////
 //
@@ -290,12 +296,12 @@ EIF_POINTER cwin_reg_enum_value(
 //
 
 EIF_BOOLEAN cwin_reg_delete_value(EIF_POINTER key, EIF_POINTER value_name)
-{
+	{
 	if (RegDeleteValue((HKEY)key, (LPCTSTR)value_name) == ERROR_SUCCESS)
 		return EIF_TRUE;
 
 	return EIF_FALSE;
-}
+	}
 
 //////////////////////////////////////////////////////////////
 //
@@ -303,23 +309,22 @@ EIF_BOOLEAN cwin_reg_delete_value(EIF_POINTER key, EIF_POINTER value_name)
 //
 
 EIF_BOOLEAN cwin_reg_close_key( EIF_POINTER key )
-{
-    long result;
+	{
+    LONG result;
 	
 	result = RegCloseKey( (HKEY)key );
 	if (result == ERROR_SUCCESS) 
 		return EIF_TRUE;
 	return EIF_FALSE;
-}
+	}
 
 //////////////////////////////////////////////////////////////
 //
 //  Value accessing of a key.
 //
 
-EIF_POINTER cwin_reg_query_value(
-        EIF_POINTER key, EIF_POINTER value_name )
-{
+EIF_POINTER cwin_reg_query_value(EIF_POINTER key, EIF_POINTER value_name)
+	{
     LONG result;
     LONG bufferSize = 256;
 	DWORD type;
@@ -329,50 +334,64 @@ EIF_POINTER cwin_reg_query_value(
 	buffer = (char *)malloc (bufferSize);	
     buffer[0] = 0;
 	
-    result = RegQueryValueEx( (HKEY)key ,
-        (LPTSTR)value_name,
-		NULL,
-		&type,
-        (LPTSTR)buffer,
-        &bufferSize );
+    result = RegQueryValueEx(
+		(HKEY)key,				// handle to key
+        (LPCTSTR)value_name,	// value name
+		NULL,					// reserved
+		(LPDWORD)(&type),		// type buffer
+        (LPBYTE)buffer,			// data buffer
+        (LPDWORD)(&bufferSize)	// size of data buffer
+	);
 		
-	if (result == ERROR_SUCCESS) {
+	if (result == ERROR_SUCCESS)
+		{
 		RV = (REG_VALUE*)malloc (sizeof (REG_VALUE));
 		if (!RV)
 			goto error_rv;
-		RV->type = type;
-		RV->data = buffer;
-		RV->length = bufferSize -1;	//do not forget the \0 character!
+		RV->type = (DWORD)type;
+		RV->data = (LPBYTE) buffer;
+		RV->length = (DWORD)(bufferSize - 1);	//do not forget the \0 character!
 		return (EIF_POINTER) RV;	
-	} else {
-		if (result == ERROR_MORE_DATA)	{
+		}
+	else
+		{
+		if (result == ERROR_MORE_DATA)
+			{
 			if (buffer)
 				free (buffer);
 			buffer = (char *)malloc (bufferSize); // bufferSize was set by RegQueryValueEx
-			if (! buffer)
+			if (!buffer)
 				goto error;
-			result = RegQueryValueEx	((HKEY) key,
-					(LPTSTR)value_name,
-					NULL,
-					&type,
-					(LPTSTR)buffer,
-					&bufferSize );
-			if (result == ERROR_SUCCESS)	{
+			result = RegQueryValueEx(
+				(HKEY)key,
+				(LPCTSTR)value_name,
+				NULL,
+				(LPDWORD)(&type),
+				(LPBYTE)buffer,
+				(LPDWORD)(&bufferSize)
+			);
+			if (result == ERROR_SUCCESS)
+				{
 				RV = (REG_VALUE*)malloc (sizeof (REG_VALUE));
 				if (!RV)
 					goto error_rv;
-				RV->type = type;
-				RV->data = buffer;
-				RV->length = bufferSize -1;	//do not forget the \0 character!
+				RV->type = (DWORD)type;
+				RV->data = (LPBYTE)buffer;
+				RV->length = (DWORD)(bufferSize - 1); // do not forget the \0 character!
 				return (EIF_POINTER) RV;
-			} else {
+				}
+			else
+				{
 				return NULL;
+				}
 			}
-		} else {
+		else
+			{
 			return NULL;
+			}
 		}
-	}
-// "Out of memory" errors handling.
+
+/* Out of memory errors handling. */
 error_rv:
 	free (buffer);
 error:
@@ -385,12 +404,10 @@ error:
 //  Default value accessing of a key.
 //
 
-EIF_POINTER cwin_reg_def_query_value(
-        EIF_POINTER key, EIF_POINTER value_name )
-{
+EIF_POINTER cwin_reg_def_query_value(EIF_POINTER key, EIF_POINTER value_name)
+	{
     LONG result;
     LONG charCount;
-	DWORD type;
     char *buffer;
 	REG_VALUE* RV;
 
@@ -403,15 +420,18 @@ EIF_POINTER cwin_reg_def_query_value(
         (LPTSTR)buffer,
         &charCount );
 		
-	if (result == ERROR_SUCCESS){
+	if (result == ERROR_SUCCESS)
+		{
 		RV = (REG_VALUE*)malloc (sizeof (REG_VALUE));
-		RV->type = 0;
-		RV->data = buffer;
-		RV->length = charCount;
+		RV->type = (DWORD)0;
+		RV->data = (LPBYTE)buffer;
+		RV->length = (DWORD)charCount;
 		return (EIF_POINTER) RV;	
-	} else {
+		}
+   	else
+		{
 		return NULL;
-	}
+		}
 }
 
 EIF_INTEGER cwin_reg_subkey_number(
@@ -440,12 +460,10 @@ EIF_INTEGER cwin_reg_subkey_number(
 	if (result == ERROR_SUCCESS)
 		return (EIF_INTEGER) nbkeys;
 	return (EIF_INTEGER) 0;
+	}
 
-}
-
-EIF_INTEGER cwin_reg_value_number(
-        EIF_POINTER key)
-{
+EIF_INTEGER cwin_reg_value_number(EIF_POINTER key)
+	{
 	LONG result;
 	DWORD nbkeys;
 	DWORD nbkey;
@@ -463,45 +481,44 @@ EIF_INTEGER cwin_reg_value_number(
 		NULL,
 		NULL,
 		NULL,
-		NULL); 
+		NULL
+	); 
 
 		
 	if (result == ERROR_SUCCESS)
 		return (EIF_INTEGER) Values;
 	return (EIF_INTEGER) 0;
-
-}
+	}
 
 
 void cwin_reg_value_destroy(EIF_POINTER reg_value)
-{
+	{
 	REG_VALUE* pRV = (REG_VALUE*) reg_value;
 	free (pRV->data);
 	free (pRV);
-}
+	}
 
-EIF_POINTER cwin_reg_connect_key(EIF_POINTER hostname,
-        EIF_POINTER key)
-{
+EIF_POINTER cwin_reg_connect_key(EIF_POINTER hostname, EIF_POINTER key)
+	{
 	LONG result;
 	HKEY *phkResult;  // address of buffer for remote registry handle 
   
     result = RegConnectRegistry (
 		(LPTSTR)hostname, 
 		(HKEY)key ,
-		(PHKEY) &phkResult);
+		(PHKEY) &phkResult
+	);
 
 	if (result == ERROR_SUCCESS)
 		return (EIF_POINTER) phkResult;
 	return NULL;
-
-}
+	}
 
 
 /*
 --|-------------------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1995-1997, Interactive Software Engineering, Inc.
+--| Copyright (C) 1995-2000, Interactive Software Engineering, Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, ISE Building, 2nd floor, Goleta, CA 93117 USA

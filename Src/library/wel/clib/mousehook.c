@@ -37,7 +37,7 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 	
 	// Everything went ok, execute the function and return the value returned
 	// by the function.
-	return hook_mouse_func(hWnd);
+	return (EIF_BOOLEAN)(hook_mouse_func(hWnd));
 	}
 
 /*---------------------------------------------------------------------------*/

@@ -29,6 +29,8 @@ inherit
 		end
 
 	EV_PICK_AND_DROPABLE_IMP
+		undefine
+			set_pointer_style
 		redefine
 			interface
 		end
@@ -146,6 +148,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/17 23:26:50  rogers
+--| Undefined set_pointer_style from EV_PICK_AND_AND_DROPABLE_IMP.
+--|
 --| Revision 1.24  2000/03/14 18:43:03  rogers
 --| Fixed bug in relative_position.
 --|

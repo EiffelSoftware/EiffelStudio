@@ -1308,18 +1308,15 @@ feature {NONE} -- Implementation
 			-- Column number `a_column', returns a new column if it doesn't exist
 		require
 			a_column_positive: a_column > 0
-		local
-			a_col_i: EV_GRID_COLUMN_I
 		do
 			if grid_columns.valid_index (a_column) then
-				a_col_i := grid_columns @ a_column
+				Result := grid_columns @ a_column
 			end
-			if a_col_i = Void then
+			if Result = Void then
 					-- There is no column object at position `a_column' so we replace the Void reference with a newly created column object
 				add_column_at (a_column, True)
-				a_col_i := grid_columns @ a_column
+				Result := grid_columns @ a_column
 			end
-			Result := a_col_i
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -1328,17 +1325,14 @@ feature {NONE} -- Implementation
 			-- Row `a_row',  creates a new one if it doesn't exist
 		require
 			a_row_positive: a_row > 0
-		local
-			a_row_i: EV_GRID_ROW_I
 		do
 			if grid_rows.valid_index (a_row) then
-				a_row_i := grid_rows @ a_row
+				Result := grid_rows @ a_row
 			end
-			if a_row_i = Void then
+			if Result = Void then
 				add_row_at (a_row, True)
-				a_row_i := grid_rows @ a_row
+				Result := grid_rows @ a_row
 			end
-			Result := a_row_i
 		ensure
 			row_not_void: Result /= Void
 		end

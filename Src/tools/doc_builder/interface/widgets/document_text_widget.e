@@ -279,23 +279,27 @@ feature -- Status Setting
 			-- becomes '<a_tag>some_text</a_tag>'.  If there is no selection
 			-- just insert '<a_tag></a_tag>'.
 		local
-			l_text: STRING
+			l_text,
+			l_prev_text: STRING
 		do
 			create l_text.make_from_string ("<" + a_tag + ">")
 			if has_selection then
 				l_text.append (selected_text)
+				if not clipboard_content.is_empty then
+					l_prev_text := clipboard_content
+				end
 				cut_selection
 			end
 			l_text.append ("</" + a_tag + ">")
 			insert_text (l_text)
 			select_region (caret_position, caret_position + l_text.count - 1)
-			if current_line_number > 9 then
-				scroll_to_line (current_line_number - 10)
-			end			
+			if l_prev_text /= Void then
+				shared_document_editor.clipboard.set_text (l_prev_text)
+			end
 		end		
 
 	update_subject is
-			-- Update the observed subject of changes so it can update
+			-- Update the observed subjects of changes so it can update
 			-- all of it observers
 		do
 			should_update := False
@@ -312,7 +316,7 @@ feature -- Query
 feature -- Access
 
 	xml: XM_DOCUMENT is
-			-- XML Document representation of `text' if `text' is valid XML, Void otherwise
+			-- XML Document representation of `text' if `text' is valid XML (Void otherwise)
 		do
 			Result := internal_xml
 			if Result = Void or is_modified then				

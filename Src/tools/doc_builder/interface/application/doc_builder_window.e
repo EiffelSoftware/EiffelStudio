@@ -85,12 +85,16 @@ feature {NONE} -- Initialization
 			toolbar_copy.select_actions.extend 				(agent Shared_document_editor.copy_text)
 			toolbar_paste.select_actions.extend 			(agent Shared_document_editor.paste_text)			
 			toolbar_xml_format.select_actions.extend		(agent Shared_document_editor.pretty_print_text)
+			toolbar_code_format.select_actions.extend 		(agent shared_document_editor.pretty_format_code_text)
 			toolbar_new.select_actions.extend 				(agent Shared_document_manager.create_document)
 			toolbar_open.select_actions.extend 				(agent Shared_document_manager.open_document)
 			toolbar_save.select_actions.extend 				(agent Shared_document_editor.save_document)
 			toolbar_validate.select_actions.extend 			(agent Shared_document_editor.validate_document)
 			toolbar_properties.select_actions.extend 		(agent open_document_properties_dialog)
 			output_combo.select_actions.extend 				(agent update_output_filter)
+			
+					-- Temporary toolbar button
+			testing_button.select_actions.extend (agent Shared_document_editor.do_document_test)
 			
 					-- TOC Widget Events
 			toc_new_button.select_actions.extend 			(agent open_new_toc_dialog)
@@ -105,7 +109,7 @@ feature {NONE} -- Initialization
 				
 					-- Misc Interface Events
 			editor_close.select_actions.extend	 			(agent Shared_document_editor.close_document)
-			document_editor.selection_actions.extend 		(agent Shared_document_editor.document_changed)
+			document_editor.selection_actions.extend 		(agent Shared_document_editor.refresh)
 			attribute_list_close.select_actions.extend 		(agent attribute_selector_menu.disable_select)
 			attribute_list_close.select_actions.extend 		(agent show_hide_widget (attribute_list_tool, False))
 			sub_element_close.select_actions.extend 		(agent sub_element_menu.disable_select)
@@ -113,23 +117,13 @@ feature {NONE} -- Initialization
 			node_properties_close.select_actions.extend 	(agent show_hide_widget (node_properties_tool, False))
 			
 
-				-- Initial setup
-			output_combo.disable_edit
+				-- Initial setup			
 			update_status_report (True, "No document loaded")			
-			initialize_path_constants
 			initialize_temp_directory
 			should_update := True
 			update			
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 		end
-
-	initialize_path_constants is
-			-- Initialize constants
-		local
---			tmp_var: DIRECTORY_NAME
-		do
---			tmp_var := Shared_constants.Application_constants.Resources_directory
-		end	
 		
 	initialize_temp_directory is
 			-- Initialize directory for storage of temporary information.  Currently this is a directory
@@ -246,6 +240,7 @@ feature -- Interface Events
 				toggle_sensitivity (toolbar_cut, l_curr_widget.has_selection)
 				toggle_sensitivity (toolbar_paste, Shared_document_editor.clipboard_empty)					
 				toggle_sensitivity (toolbar_xml_format, True)
+				toggle_sensitivity (toolbar_code_format, l_curr_widget.has_selection)
 				toggle_sensitivity (editor_close, True)
 				
 						-- Validation and properties
@@ -265,6 +260,7 @@ feature -- Interface Events
 				toggle_sensitivity (toolbar_cut, False)
 				toggle_sensitivity (toolbar_paste, False)					
 				toggle_sensitivity (toolbar_xml_format, False)
+				toggle_sensitivity (toolbar_code_format, False)
 				toggle_sensitivity (editor_close, False)
 				
 						-- Validation
@@ -284,6 +280,15 @@ feature -- Interface Events
 			l_curr_doc: DOCUMENT
 			l_curr_widget: EV_TEXT
 		do
+			if Shared_project.is_valid then
+				toggle_sensitivity (document_menu, True)
+				toggle_sensitivity (project_menu, True)
+				toggle_sensitivity (tool_menu, True)
+			else
+				toggle_sensitivity (document_menu, False)
+				toggle_sensitivity (project_menu, False)
+				toggle_sensitivity (tool_menu, False)
+			end
 			if Shared_document_editor.has_open_document then
 				l_curr_doc := Shared_document_editor.current_document
 				l_curr_widget := Shared_document_editor.current_widget.internal_edit_widget
@@ -311,16 +316,7 @@ feature -- Interface Events
 				
 						-- Edit Menu
 				toggle_sensitivity (document_menu, False)
-			end
-			if Shared_project.is_valid then
-				toggle_sensitivity (document_menu, True)
-				toggle_sensitivity (project_menu, True)
-				toggle_sensitivity (tool_menu, True)
-			else
-				toggle_sensitivity (document_menu, False)
-				toggle_sensitivity (project_menu, False)
-				toggle_sensitivity (tool_menu, False)
-			end
+			end			
 		end
 		
 	update_toc_toolbar is
@@ -374,12 +370,12 @@ feature -- GUI Updating
 			update_toolbar
 			update_menus
 			update_toc_toolbar
-			update_output_combo
+--			update_output_combo
 			update_status_report (False, "")
 		end		
 	
 	update_sub_element_list (a_el_name: STRING; list: SORTED_TWO_WAY_LIST [STRING]) is
-			-- Update the sub-element list display to reflect `listrequire
+			-- Update the sub-element list display
 		require
 			name_not_void: a_el_name /= Void
 			name_not_empty: not a_el_name.is_empty
@@ -457,7 +453,8 @@ feature -- GUI Updating
 					output_combo.extend (l_list_item)
 					l_filters.forth
 				end
-			end			
+			end	
+			output_combo.disable_edit
 		end
 
 feature -- Status Setting

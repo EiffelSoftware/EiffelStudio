@@ -9,11 +9,14 @@ class
 
 inherit
 	SEARCH_DIALOG_IMP
+		redefine
+			show_relative_to_window
+		end
 
 	SHARED_OBJECTS
 		undefine
 			copy, 
-			default_create
+			default_create		
 		end
 
 create
@@ -30,7 +33,17 @@ feature {NONE} -- Initialization
 		do
 			find_but.select_actions.extend (agent search)
 			cancel_but.select_actions.extend (agent hide)
+			search_text.key_release_actions.extend (agent key_released)
 		end
+	
+feature -- Display
+
+	show_relative_to_window (a_window: EV_WINDOW) is
+			-- Show
+		do
+			Precursor (a_window)	
+			search_text.set_focus
+		end		
 		
 feature -- Status Setting
 
@@ -70,10 +83,19 @@ feature {NONE} -- Implementation
 					if not text_widget.has_focus then
 						text_widget.set_focus
 					end
-					text_widget.select_region (l_string_pos, l_string_pos + l_string_length - 1)				
+					text_widget.select_region (l_string_pos, l_string_pos + l_string_length - 1)
+					text_widget.scroll_to_line (text_widget.current_line_number)
 				end	
 			end
 		end
+	
+	key_released (a_key: EV_KEY) is
+			-- Key was released in search box
+		do
+			if (create {EV_KEY_CONSTANTS}).Key_enter = a_key.code and not search_text.text.is_empty then
+				search
+			end
+		end		
 	
 end -- class SEARCH_DIALOG
 

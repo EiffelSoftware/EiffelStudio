@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			address_bar.key_press_actions.extend (agent address_key_pressed (?))
 			address_bar.select_actions.extend (agent lookup_url (?))
 
-			load_url ((create {TEMPLATE_CONSTANTS}). empty_html_template_file_name)
+			load_url ((create {TEMPLATE_CONSTANTS}).empty_html_template_file_name)
 		end	
 
 	setup_browser is
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			back_button.select_actions.extend (agent build_composite_document)
 			
 			forward_button.select_actions.extend (agent navigate_forward)
-			refresh_button.select_actions.extend (agent refresh_document)
+			refresh_button.select_actions.extend (agent refresh)
 		end	
 
 feature -- Commands
@@ -84,35 +84,44 @@ feature -- Commands
 			Internal_browser.go_forward
 		end	
 	
-	refresh_document is
+	refresh is
 			-- Reload the HTML based upon changes made to `document'.  If there is no
-			-- document then simply refresh the loaded url.	
-		local
-			l_generator: HTML_GENERATOR
-			l_url: STRING
-		do			
+			-- document then simply refresh the loaded url.
+		do
 			if document /= Void then
-				create l_generator
-				l_generator.generate_file (document, Document_hash.item (document.name))
-				load_url (l_generator.last_generated_file.name.string)
+				load_url (generated_document)
 			else
 				Internal_browser.refresh
-			end
+			end			
 		end			
 	
-feature -- Statuse Setting
+feature -- Status Setting
 
 	set_document (a_doc: DOCUMENT) is
 			-- Set `document'
-		local
-			l_target_dir: DIRECTORY
+		require
+			doc_not_void: a_doc /= Void
+		local			
 			l_util: UTILITY_FUNCTIONS
+			l_filename: FILE_NAME
+			l_target_dir: DIRECTORY
 		do
 			document := a_doc
-			create l_util
-			create l_target_dir.make (l_util.temporary_html_location (document.name, False))
-			document_hash.extend (l_target_dir, a_doc.name)
-			refresh_document
+			if document_hash.has (document.name) then
+				create l_util
+				create l_filename.make_from_string (document_hash.item (document.name).name)
+				l_filename.extend (l_util.short_name (l_util.file_no_extension (document.name)))
+				l_filename.add_extension ("html")
+				load_url (l_filename.string)
+			else
+				create l_util
+				create l_target_dir.make (l_util.temporary_html_location (document.name, False))
+				document_hash.extend (l_target_dir, document.name)
+				load_url (generated_document)
+			end
+		ensure
+			is_set: document = a_doc
+			is_know: document_hash.has (a_doc.name)
 		end	
 	
 feature {NONE} -- Status Setting
@@ -185,6 +194,20 @@ feature {NONE} -- Implementation
 			-- History stack
 		once
 			create Result.make (1)	
+		end		
+
+	generated_document: STRING is
+			-- Generated `document' content
+		require
+			document_known: document_hash.has (document.name)
+		local
+			l_generator: HTML_GENERATOR
+		do
+			create l_generator
+			l_generator.generate_file (document, document_hash.item (document.name))
+			Result := l_generator.last_generated_file.name.string
+		ensure
+			has_result: Result /= Void
 		end		
 
 feature -- temporary

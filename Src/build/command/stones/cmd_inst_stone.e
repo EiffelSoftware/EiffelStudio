@@ -43,7 +43,7 @@ feature  -- Command type features
 
 feature -- Command instance features
 
-	original_stone:	CMD_INSTANCE is
+	original_stone: CMD_INSTANCE is
 		deferred
 		end;
 

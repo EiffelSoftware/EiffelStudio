@@ -3,10 +3,7 @@ class CAT_COM_IS
 
 inherit
 
-	COM_ICON_STONE
-		redefine
-			make
-		end;
+	COM_ICON_STONE;
 	HOLE
 		rename
 			target as source

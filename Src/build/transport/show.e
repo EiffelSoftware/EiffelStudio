@@ -32,7 +32,7 @@ feature
 		local
 			temp: WIDGET
 		do
-			if not (argument = Void) then
+			if argument /= Void then
 					-- Button press.
 				showable := argument.transportable;
 				if showable then

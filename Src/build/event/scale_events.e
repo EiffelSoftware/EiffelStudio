@@ -5,19 +5,10 @@ inherit
 	
 	EVENT_PAGE
 		rename
-			make as page_create,
-			make_visible as make_page_visible
+			make as make_page
 		redefine
 			is_optional
 		end;
-	EVENT_PAGE
-		rename
-			make as page_create
-		redefine
-			is_optional, make_visible
-		select
-			make_visible
-		end
 
 creation
 
@@ -38,19 +29,27 @@ feature {NONE}
 		once
 			!!Result.make
 		end;
-	
-feature 
 
-	make (page_n: STRING; a_symbol: PIXMAP; cat: EVENT_CATALOG) is
+	symbol: PIXMAP is
 		do
-			page_create (page_n, a_symbol, cat);
+			Result := Pixmaps.scale_pixmap
 		end;
 
-feature {CATALOG}
-
-	make_visible (a_name: STRING; a_parent: COMPOSITE) is
+	selected_symbol: PIXMAP is
 		do
-			make_page_visible (a_name, a_parent);
+			Result := Pixmaps.selected_scale_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.scale_label
+		end;
+	
+feature {NONE}
+
+	make (cat: like associated_catalog) is
+		do
+			make_page (cat);
 			extend (move_ev);
 			extend (value_changed_ev)
 		end

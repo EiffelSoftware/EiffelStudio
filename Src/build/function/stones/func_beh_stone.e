@@ -5,13 +5,10 @@ inherit
 
 	B_ICON_STONE
 		rename
-			set_original_stone as old_set_original_stone,
-			make as make_stone
+			set_original_stone as old_set_original_stone
 		end;
 
 	B_ICON_STONE
-		rename
-			make as make_stone
 		redefine
 			set_original_stone
 		select

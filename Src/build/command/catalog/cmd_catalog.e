@@ -5,21 +5,27 @@ inherit
 
 	CATALOG [CMD]
 		rename
-			make as catalog_make,
-			execute as catalog_execute
+			make as catalog_make
 		export
 			{ANY} all
 		redefine
-			realize, add_first_button, add_other_buttons,
-			hide, show, shown, current_page
+			realize, hide, show, 
+			shown, current_page
 		end;
-	WINDOWS
+	WINDOWS;
+	CLOSEABLE
 
 creation
 
 	make
 	
 feature 
+
+	close is
+		do
+			hide;
+			main_panel.cmd_cat_t.set_toggle_off	
+		end;
 
 	clear is
 			-- Clear commands from all pages;
@@ -95,20 +101,6 @@ feature
 			end;	
 		end;
 
-	initial_pages is
-		do
-			from
-				pages.start
-			until
-				pages.after
-			loop
-				if pages.item.empty then
-					pages.item.initial_cmd;
-				end;
-				pages.forth
-			end;	
-		end;
-
 	current_page: COMMAND_PAGE;
 
 	
@@ -138,11 +130,6 @@ feature
 			add_command.execute (p);
 		end;
 
--- ********************
--- EiffelVision Section 
--- ********************
-
-	
 feature {NONE}
 
 	shell: TOP_SHELL;
@@ -157,21 +144,20 @@ feature
 	
 feature {NONE}
 
-	user_defined_commands1: COMMAND_PAGE;
-	user_defined_commands2: COMMAND_PAGE;
-	user_defined_commands3: COMMAND_PAGE;
+	user_defined_commands1: USER_DEF_CMDS;
+	user_defined_commands2: USER_DEF_CMDS;
+	user_defined_commands3: USER_DEF_CMDS;
 
-	
 feature 
 
 	make (a_screen: SCREEN) is
 		local
-			continue_command: ITER_COMMAND;
+			del_com: DELETE_WINDOW;
 		do
-			!!shell.make (Widget_names.command_catalog, a_screen);
-			!!continue_command;
-			shell.set_delete_command (continue_command);
-			catalog_make ("Command Catalog", shell);
+			!! shell.make (Widget_names.command_catalog, a_screen);
+			!! del_com.make (Current);
+			shell.set_delete_command (del_com);
+			catalog_make (Widget_names.form, shell);
 		end;
 
 	create_interface is 
@@ -179,72 +165,39 @@ feature
 		local
 			type_button: CMD_CAT_ED_H;
 			create_inst_b: CMD_CAT_CREATE_INST_H;
-			--inst_button: CMD_INST_CAT_ED_H;
-			separator, separator1: SEPARATOR;
+			close_b: CLOSE_WINDOW_BUTTON
 		do
-			!!button_form.make (Widget_names.form1, Current);
-			!!separator.make (Widget_names.separator, Current);
-			!!separator1.make (Widget_names.separator1, Current);
-			!!type_label.make (Widget_names.label, Current);
+			!!button_rc.make (Widget_names.row_column, Current);
+			button_rc.set_preferred_count (1);
+			button_rc.set_row_layout;
 			!!focus_label.make (Current);
 			!!page_sw.make (Widget_names.scroll, Current);
-			!!type_button.make ("Create/edit type"); 
-			!!create_inst_b.make ("Create instance");
-			type_button.make_visible (button_form);
-			create_inst_b.make_visible (button_form);
-			button_form.attach_left (type_button, 5);
-			button_form.attach_left_widget (type_button, create_inst_b, 0);
-			button_form.detach_right (create_inst_b);
-			attach_left (button_form, 10);
-			attach_right (button_form, 10);
-			attach_top (button_form, 10);
-			attach_left (separator, 1);
-			attach_right (separator, 1);
-			attach_top_widget (button_form, separator, 10);
-			attach_left (type_label, 10);
-			attach_right (focus_label, 10);
-			attach_top_widget (separator, focus_label, 10);
-			attach_top_widget (separator, type_label, 10);
-			attach_left (separator1, 1);
-			attach_right (separator1, 1);
-			attach_top_widget (focus_label, separator1, 10);
-			attach_top_widget (type_label, separator1, 10);
-			attach_left (page_sw, 10);
-			attach_right (page_sw, 10);
-			attach_top_widget (separator1, page_sw, 10);
-			attach_bottom (page_sw, 10);
+			!!type_button.make (Current); 
+			!!create_inst_b.make (Current);
+			!!close_b.make (Current, Current, focus_label);
+			attach_left (type_button, 0);
+			attach_left_widget (type_button, create_inst_b, 0);
+			attach_left_widget (create_inst_b, focus_label, 0);
+			attach_right_widget (close_b, focus_label, 0);
+			attach_right (close_b, 0);
+			attach_top (type_button, 0);
+			attach_top (create_inst_b, 0);
+			attach_top (close_b, 0);
+			attach_top (focus_label, 5);
+			attach_top_widget (focus_label, page_sw, 0);
+			attach_top_widget (create_inst_b, page_sw, 2);
+			attach_top_widget (type_button, page_sw, 2);
+			attach_top_widget (close_b, page_sw, 2);
+			attach_left (page_sw, 2);
+			attach_right (page_sw, 2);
+			attach_bottom_widget (button_rc, page_sw, 2);
+			attach_bottom (button_rc, 2);
+			attach_left (button_rc, 2);
 			!!pages.make;
 			define_command_pages;
 			update_interface;
-			set_action("Shift<Btn2Down>", Current, raise_arg)
 		end;
 
-	raise_arg: ANY is
-		once
-			!!Result
-		end
-
-	execute (arg: ANY) is
-		do
-			if arg = raise_arg then
-				main_panel.base.raise
-			else
-				catalog_execute(arg)
-			end
-		end
-
-	add_first_button (b: ICON; i: INTEGER) is 
-		do
-			button_form.attach_right (b, i);
-		end;
-
-	add_other_buttons (pb, b: ICON; i: INTEGER) is
-		do
-			button_form.attach_right_widget (pb, b, i);
-		end;
-
-
-	
 feature {NONE}
 
 	define_command_pages is
@@ -254,21 +207,20 @@ feature {NONE}
 			window_commands: WINDOW_CMDS;
 			command_templates: TEMPL_CMDS
 		do
-			!!user_defined_commands1.make ("User1", Pixmaps.user_defined_pixmap, Current);
-			!!user_defined_commands2.make ("User2", Pixmaps.user_defined_pixmap, Current);
-			!!user_defined_commands3.make ("User3", Pixmaps.user_defined_pixmap, Current);
-			!!command_templates.make ("Templates", Pixmaps.command_o_pixmap, Current);
-			!!window_commands.make ("Window", Pixmaps.windows_pixmap, Current);
-			!!file_commands.make ("File", Pixmaps.file_pixmap, Current);
-			add_page (command_templates);
-			add_page (window_commands);
-			add_page (file_commands);
-			add_page (user_defined_commands3);
-			add_page (user_defined_commands2);
+			!!user_defined_commands1.make (1);
+			!!user_defined_commands2.make (2);
+			!!user_defined_commands3.make (3);
+			!!command_templates.make;
+			!!window_commands.make;
+			!!file_commands.make;
 			add_page (user_defined_commands1);
+			add_page (user_defined_commands2);
+			add_page (user_defined_commands3);
+			add_page (file_commands);
+			add_page (window_commands);
+			add_page (command_templates);
 			set_initial_page (user_defined_commands1);
 		end; --create_command_pages
-
 	
 feature 
 
@@ -298,9 +250,23 @@ feature
 				cmd_eds.forth
 			end;		
 			if not cmd_eds.after then
-				cmd_eds.item.update_name
+				cmd_eds.item.update_title
 			end		
 		end;
+
+    initialize_pages is
+        do
+            from
+                pages.start
+            until
+                pages.after
+            loop
+                if pages.item.empty then
+                    pages.item.reset_commands;
+                end;
+                pages.forth
+            end;
+        end;
 
 feature {NONE}
 

@@ -3,10 +3,7 @@ class CAT_EV_IS
 
 inherit
 
-	EV_ICON_STONE
-		redefine
-			make
-		end;
+	EV_ICON_STONE;
 	HOLE
 		rename
 			target as source

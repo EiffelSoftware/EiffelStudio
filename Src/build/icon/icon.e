@@ -14,7 +14,9 @@ inherit
 	CONSTANTS;
 	BULLETIN
 		rename
-			make as bulletin_create
+			make as bulletin_make,
+			make_unmanaged as bulletin_make_unmanaged,
+			identifier as oui_identifier
 		redefine
 			set_managed,
 			add_button_press_action
@@ -66,15 +68,15 @@ feature
 			end;
 		end;
 
-feature {NONE} -- Interface section
-
-	button: PICT_COLOR_B;
-	icon_label: LABEL_G;
-	
 	widget_created: BOOLEAN is
 		do
 			Result := button /= Void
 		end;
+	
+feature {NONE} -- Interface section
+
+	button: PICT_COLOR_B;
+	icon_label: LABEL_G;
 	
 	update_label is
 		do
@@ -87,30 +89,50 @@ feature {NONE} -- Interface section
 
 feature  -- Interface section
 
-	make_visible (a_parent: COMPOSITE) is
-			-- EiffelVision widget creation.
+	frozen make_unmanaged (a_parent: COMPOSITE) is
+			-- Create current unmanaged.
+			--| It is frozen since it is called by
+			--| the icon box.
+		require
+			not_created: not widget_created
 		do
-			if not widget_created then
-				make_unmanaged (Widget_names.bulletin, a_parent);
-				!! button.make_unmanaged (Widget_names.pcbutton, Current);
-				button.set_x_y (1, 1);
-				if 
-					symbol /= Void and
-					symbol.is_valid
-				then 
-					button.set_pixmap (symbol)
-				end;
-				!!icon_label.make_unmanaged (Widget_names.label, Current);
-				icon_label.set_left_alignment;
-				icon_label.allow_recompute_size;
-				if (label /= Void) and then not label.empty then
-					icon_label.set_y (init_y);
-					icon_label.set_text (label);
-				else
-					icon_label.set_text ("");
-				end;
+			bulletin_make_unmanaged (Widget_names.bulletin, a_parent);
+			!! button.make_unmanaged (Widget_names.pcbutton, Current);
+			button.set_x_y (1, 1);
+			if 
+				symbol /= Void and
+				symbol.is_valid
+			then 
+				button.set_pixmap (symbol)
 			end;
-			set_managed (True)
+			!!icon_label.make_unmanaged (Widget_names.label, Current);
+			icon_label.set_left_alignment;
+			icon_label.allow_recompute_size;
+			if (label /= Void) and then not label.empty then
+				icon_label.set_y (init_y);
+				icon_label.set_text (label);
+			else
+				icon_label.set_text ("");
+			end;
+			set_widget_default
+		end;
+
+	frozen make_visible (a_parent: COMPOSITE) is
+			-- Create current unmanaged.
+			--| It is frozen since it is called by
+			--| the icon box.
+		require
+			not_created: not widget_created
+		do
+			make_unmanaged (a_parent);
+			set_managed (true);	
+		end;
+
+	set_widget_default is
+			-- Set default behaviour after widget
+			-- has been created
+		do
+			-- Do nothing
 		end;
 
 	add_activate_action (a_command: COMMAND; an_argument: ANY) is
@@ -127,14 +149,11 @@ feature  -- Interface section
 		do
 			if b then 
 				manage;
-				if widget_created then
-					if not icon_label.text.empty then
-						icon_label.manage;
-					end;
-					button.manage;
+				if not icon_label.text.empty then
+					icon_label.manage;
 				end;
-			elseif widget_created then
-				unmanage;
+				button.manage;
+			else unmanage;
 				if button.managed then
 					button.unmanage;
 				end;

@@ -24,7 +24,7 @@ feature -- Creation
 			-- Initialize current user
 			-- command.
 		do
-			set_symbol (Pixmaps.command_o_pixmap);
+			set_symbol (Pixmaps.command_pixmap);
 			int_generator.next;
 			identifier := int_generator.value;
 			!!arguments.make;
@@ -133,7 +133,7 @@ feature -- Namable
 						loop
 							if (b.output.associated_command = Current) then
 								if b.output.edited then
-									b.output.inst_editor.set_instance_stone;
+									b.output.inst_editor.update_title;
 								end;
 							end;
 							b.forth
@@ -219,22 +219,6 @@ feature -- Inheritance
 	parent_type: CMD;
 			-- Parent type of Current user
 			-- command
-
-	reset_inherit_stone is
-			-- Reset the inherit stone of command editor.
-		require
-			Edited: edited
-		do
-			command_editor.reset_inherit_stone
-		end;
-
-	update_inherit_stone (c: CMD) is
-			-- Update inherit stone of command editor
-		require
-			Edited: edited
-		do
-			command_editor.set_inherit_stone (c)
-		end;
 
 feature -- Naming
 

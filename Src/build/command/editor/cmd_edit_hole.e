@@ -1,23 +1,11 @@
+-- Editing hole for command editor
 class CMD_EDIT_HOLE 
 
 inherit
 
-	ICON_HOLE
+	CMD_EDITOR_HOLE
 		rename
-			button as source,
-			make_visible as make_icon_visible,
-			identifier as oui_identifier
-		export 
-			{CMD_EDITOR} main_panel
-		end
-	ICON_HOLE
-		rename
-			button as source,
-			identifier as oui_identifier
-		redefine
-			make_visible
-		select
-			make_visible
+			make as old_make
 		end;
 	CMD_STONE
 		redefine
@@ -29,64 +17,55 @@ creation
 
 	make
 
-	
 feature {NONE}
-
-	command_editor: CMD_EDITOR
-		-- Associated command editor
 
 	remove_yourself is
 		do
 			command_editor.clear
-		end
-	
-feature 
+		end;
 
-	make (cmd_editor: CMD_EDITOR) is
+	focus_string: STRING is	
+		do
+			Result := Focus_labels.command_label
+		end;
+	
+	source: WIDGET is
+		do
+			Result := Current
+		end;
+	
+feature {NONE}
+
+	make (cmd_editor: CMD_EDITOR; a_parent: COMPOSITE) is
 			-- Create the cmd_edit_hole with `cmd_editor' 
 			-- as command_editor.
-		require
-			not_void_cmd_editor: not (cmd_editor = Void)
 		do
-			command_editor := cmd_editor
-			set_symbol (Pixmaps.command_pixmap)
+			old_make (cmd_editor, a_parent);
+			initialize_transport
 		end -- Create
 
-
-	reset is 
+	symbol: PIXMAP is
 		do
-			set_label ("")
-  			set_symbol (Pixmaps.command_pixmap)
-			original_stone := Void
-		end
+			Result := Pixmaps.command_pixmap
+		end;
 
-	set_command (cmd: CMD) is
+feature
+
+	original_stone: CMD is
 		do
-			
-			original_stone := cmd
-			if realized and shown and (label = Void or else label.empty 
-			  or else cmd.label.count >= label.count) then
-				parent.unmanage
-			elseif realized and (label = Void or else label.empty 
-			  or else cmd.label.count >= label.count) then
-				hide
-			end
-			set_label (cmd.label)
-			set_symbol (cmd.symbol)
-			if realized and (not shown) then
-				show
-			end
-			if not parent.managed then
-				parent.manage
-			end
-		end
-
-	original_stone: CMD
+			Result := 
+				command_editor.current_command.original_stone
+		end;
 
 	transportable: BOOLEAN is
 		do
 			Result := original_stone /= Void
-		end
+		end;
+
+	label: STRING is
+		do
+			Result := original_stone.label
+		end;
 
 	eiffel_text: STRING is
 		do
@@ -113,18 +92,6 @@ feature
 			Result := original_stone.labels
 		end
 
-
-	make_visible (a_parent: COMPOSITE) is
-		do
-			make_icon_visible (a_parent)
-			initialize_transport
-		end
-
-	update_name is
-		do
-			set_label (command_label)
-		end
-	
 feature {NONE}
 
 	process_stone is
@@ -148,11 +115,5 @@ feature {NONE}
 				end
 			end
 		end -- process_stone
-
-
-	command_label: STRING is
-		do
-			Result := original_stone.label
-		end
 
 end 

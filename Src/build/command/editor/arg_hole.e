@@ -3,19 +3,15 @@ class ARG_HOLE
 
 inherit
 
-	ICON_HOLE
-		export
-			{ANY} all
+	CMD_EDITOR_HOLE
 		redefine
 			stone, compatible
 		end;
-	LABELS
 
 creation
 
 	make
 
-	
 feature 
 
 	stone: TYPE_STONE;
@@ -26,17 +22,17 @@ feature
 			Result := stone /= Void;
 		end;
 
-	make (ed: CMD_EDITOR) is
+	symbol: PIXMAP is
 		do
-			command_editor := ed;
-			set_symbol (Pixmaps.type_pixmap);
-			set_label ("Arguments");
+			Result := Pixmaps.type_pixmap
 		end;
 
+	focus_string: STRING is
+		do
+			Result := Focus_labels.argument_label
+		end;
 	
 feature {NONE}
-
-	command_editor: CMD_EDITOR;
 
 	process_stone is
 		local

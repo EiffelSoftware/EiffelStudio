@@ -52,6 +52,13 @@ feature -- Interface
 			behavior_editor.clear
 		end;
 
+	unregister_holes is
+		do
+			if is_initialized then
+				behavior_editor.unregister_holes
+			end;
+		end;
+
 feature {NONE}
 
 	event_catalog: EVENT_CATALOG;
@@ -84,7 +91,7 @@ feature {NONE}
 				current_state.add (context, behavior);
 			end;
 			behavior_editor.set_edited_function (behavior);
-			behavior_editor.set_edited_context (context);
+			behavior_editor.set_context_editor (editor);
 			behavior_editor.set_current_state (current_state);
 		end;
 

@@ -16,10 +16,9 @@ feature
 	bar_type: CONTEXT_TYPE;
 	option_btn_type: CONTEXT_TYPE;
 
-	
 feature {NONE}
 
-	build is
+	build_interface is
 		local
 			bar_c: BAR_C;
 			submenu_c: MENU_PULL_C;
@@ -52,6 +51,21 @@ feature {NONE}
 
 			attach_top_widget (bar_type.source, submenu_type.source, 10);
 			attach_top_widget (bar_type.source, menu_entry_type.source, 10);
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.menus_pixmap
+		end;
+
+	selected_symbol: PIXMAP is
+		do
+			Result := Pixmaps.selected_menus_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.menus_label
 		end;
 
 end

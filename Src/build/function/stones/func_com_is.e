@@ -4,9 +4,6 @@ class FUNC_COM_IS
 inherit
 
 	COM_INST_IS
-		rename
-			make as com_inst_is_make
-		end;
 	FUNCTION_ELEMENT
 		rename
 			target as source
@@ -17,7 +14,6 @@ inherit
 creation
 
 	make
-
 	
 feature {NONE}
 

@@ -3,10 +3,7 @@ class FUNC_CON_IS
 
 inherit
 
-	CON_ICON_STONE
-		rename
-			make as con_icon_stone_make
-		end;
+	CON_ICON_STONE;
 	FUNCTION_ELEMENT
 		rename
 			target as source

@@ -4,26 +4,11 @@ class TEMPL_CMDS
 inherit
 
 	COMMAND_PAGE
-		rename 
-			make as page_create, 
-			make_visible as make_page_visible 
-		redefine
-			initial_cmd
-		end;
-
-	COMMAND_PAGE
-		redefine
-			make_visible, make, initial_cmd
-		select
-			make_visible, make
-		end
-
 
 creation
 
 	make
 
-	
 feature {NONE}
 
 	command_command: COMMAND_CMD;
@@ -32,28 +17,35 @@ feature {NONE}
 
 	--exit_command: EXIT_CMD;
 
-feature 
+feature {NONE}
 
-	make (page_n: STRING; a_symbol: PIXMAP; cat: CMD_CATALOG) is
+	make is
 		do
-			page_create (page_n, a_symbol, cat);
-		end;
-
-	initial_cmd is
-		do
+			associated_catalog := command_catalog;
 			!!command_command.make;
 			!!undoable_command.make;
+			reset_commands
+		end;
+
+	reset_commands is
+		do
 			extend (command_command);
 			extend (undoable_command);
 		end;
 
-
-	
-feature {CATALOG}
-
-	make_visible (a_name: STRING; a_parent: COMPOSITE) is
+	symbol: PIXMAP is
 		do
-			make_page_visible (a_name, a_parent);
+			Result := Pixmaps.command_page_pixmap
+		end;
+
+	selected_symbol: PIXMAP is
+		do
+			Result := Pixmaps.selected_command_page_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.templates_label
 		end;
 
 end -- class TEMPL_CMDS

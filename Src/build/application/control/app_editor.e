@@ -28,6 +28,7 @@ inherit
 		end;
 	WINDOWS;
 	CONSTANTS
+	CLOSEABLE
 
 creation
 
@@ -58,6 +59,12 @@ feature -- Drawing area
 			Shared_app_graph.clear_all;
 			drawing_area.clear
 			--create_initial_state;
+		end;
+
+	close is
+		do
+			main_panel.app_edit_t.set_toggle_off
+			hide
 		end;
 
 	disable_drawing is
@@ -359,7 +366,12 @@ feature -- EiffelVision Section
 	drawing_area: APP_DR_AREA;
 
 	state_list: STATE_SCR_L;
-	
+
+	focus_label: FOCUS_LABEL is
+		do
+			Result := menu_bar.focus_label
+		end
+
 feature {NONE} -- EiffelVision Section
 
 	form,form1: FORM;
@@ -382,7 +394,7 @@ feature
 	make (a_screen: SCREEN) is
 			-- Create app_editor interface 
 		local
-			contin_command: ITER_COMMAND;
+			del_com: DELETE_WINDOW;
 		do
 				-- **************
 				-- Create widgets
@@ -440,6 +452,7 @@ feature
 			!!figures.make (drawing_area, Current);
 			figures.set_showable_area (drawing_sw);
 			drawing_sw.set_working_area (drawing_area);
+			drawing_area.set_background_color (App_const.white);
 			--add_sub_application_command.Create (Current);
 			!!labels_wnd.make (form);
 				-- *************
@@ -454,8 +467,8 @@ feature
 			state_list.add_selection_action (Current, set_state_action);
 			transition_list.add_selection_action (Current, set_label_action);
 			
-			!!contin_command;
-			set_delete_command (contin_command);
+			!! del_com.make (Current);
+			set_delete_command (del_com);
 		end; 
 
 	context_data_useful: BOOLEAN is

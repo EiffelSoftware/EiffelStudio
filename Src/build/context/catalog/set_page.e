@@ -15,10 +15,9 @@ feature
 	radio_box_type: CONTEXT_TYPE;
 	check_box_type: CONTEXT_TYPE;
 
-	
 feature {NONE}
 
-	build is
+	build_interface is
 		local
 			toggle_b: TOGGLE_BG;
 			frame_radio_box: FRAME;
@@ -58,6 +57,21 @@ feature {NONE}
 			attach_top (frame_check_box, 1);
 
 			attach_top_widget (frame_radio_box, bulletin_type.source, 10);
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.sets_pixmap
+		end;
+
+	selected_symbol: PIXMAP is
+		do
+			Result := Pixmaps.selected_sets_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.sets_label
 		end;
 
 end

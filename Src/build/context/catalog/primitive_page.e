@@ -10,7 +10,6 @@ creation
 
 	make
 
-	
 feature 
 
 	push_b_type: CONTEXT_TYPE;
@@ -24,10 +23,9 @@ feature
 	scroll_list_type: CONTEXT_TYPE;
 	scale_type: CONTEXT_TYPE;
 
-	
 feature {NONE}
 
-	build is
+	build_interface is
 		local
 			push_b_c: PUSH_B_C;
 			text_field_c: TEXT_FIELD_C;
@@ -207,6 +205,21 @@ feature {NONE}
 			end;
 			!!separator_type.make (Widget_names.separator_name, separator_c);
 			separator_type.initialize_callbacks (Result);
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.primitives_pixmap
+		end;
+
+	selected_symbol: PIXMAP is
+		do
+			Result := Pixmaps.Selected_primitives_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.primitives_label
 		end;
 
 end

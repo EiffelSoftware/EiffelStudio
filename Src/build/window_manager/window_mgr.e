@@ -24,7 +24,7 @@ feature {NONE}
 	context_editors_list: CON_EDITOR_MGR;
 		-- Context editors manager
 
-	Window_free_list_nbr: INTEGER is 3
+	Window_free_list_nbr: INTEGER is 0
 	
 	make (a_screen: SCREEN) is
 			-- Create a window manager. All editors will be create 
@@ -95,12 +95,8 @@ feature
 			-- Display `ed' (or raise `ed' if already
 			-- displayed).
 		do
-			if
-				ed.realized
-			then
-				if
-					not ed.shown
-				then
+			if ed.realized then
+				if not ed.shown then
 					ed.show
 				else
 					ed.raise

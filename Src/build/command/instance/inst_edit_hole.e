@@ -3,63 +3,61 @@ class INST_EDIT_HOLE
 
 inherit
 
-	ICON_HOLE
-		rename
-			make_visible as icon_make_visible,
-			identifier as hole_identifier,
-			button as source
+	EB_BUTTON_COM;
+	HOLE
 		redefine
 			stone, compatible
 		end;
-	ICON_HOLE
-		rename
-			identifier as hole_identifier,
-			button as source
+	CMD_INST_STONE
 		redefine
-			stone, compatible, make_visible
-		select
-			make_visible
+			transportable
 		end;
-	CMD_INST_STONE;
 	COMMAND;
 
 creation
 
 	make
 
-	
 feature {NONE}
 
 	instance_editor: CMD_INST_EDITOR;
 			-- Associated instance editor
 
-	
-feature 
-
-	reset is 
+	transportable: BOOLEAN is
 		do
-			set_label ("");
-			set_symbol (Pixmaps.command_instance_pixmap);
-			original_stone := Void;
+			Result := original_stone /= Void
 		end;
 
-	original_stone: CMD_INSTANCE;
+feature 
+
+	original_stone: CMD_INSTANCE is
+		do
+			Result := instance_editor.command_instance.original_stone
+		end;
 
 	arguments: LINKED_LIST [ARG_INSTANCE] is
 		do
 			Result := original_stone.arguments;
 		end;
 
+	target, source: WIDGET is
+		do
+			Result := Current
+		end;
+
+	focus_label: FOCUS_LABEL is
+		do
+			Result := instance_editor.focus_label
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.command_instance_label
+		end;
+
 	associated_command: CMD is
 		do
 			Result := original_stone.associated_command;
-		end;
-
-	make_visible (a_parent: COMPOSITE) is
-		do
-			icon_make_visible (a_parent);
-			add_activate_action (Current, Void);
-			initialize_transport;
 		end;
 
 	stone: CMD_INST_STONE;
@@ -70,29 +68,26 @@ feature
 			Result := stone /= Void;
 		end;
 
-	make (ed: CMD_INST_EDITOR) is
+	make (ed: CMD_INST_EDITOR; a_parent: COMPOSITE) is
 			-- Create the cmd_edit_hole with `ed' 
 			-- as instance_editor.
 		require
 			not_void_ed: not (ed = Void)
 		do
 			instance_editor := ed;
-			set_symbol (Pixmaps.command_instance_pixmap);
-		end; -- Create
+			make_visible (a_parent);
+			register;
+		end; 
 
-
-	set_instance (cmd: CMD_INSTANCE) is
+	symbol: PIXMAP is
 		do
-			original_stone := cmd.original_stone;
-			if label = Void or else label.empty or else cmd.label.count >= label.count then
-				parent.unmanage;
-			end;
-			set_label (cmd.label);
-			set_symbol (cmd.symbol);
-			if not parent.managed then
-				parent.manage;
-			end;
+			Result := Pixmaps.command_instance_pixmap
 		end;
+
+	label: STRING is
+		do
+			Result := stone.label
+		end
 	
 feature {NONE}
 

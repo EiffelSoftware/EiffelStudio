@@ -3,36 +3,38 @@ class CUT_HOLE
 
 inherit
 
-	ICON_HOLE;
-	FOCUSABLE
+	EB_BUTTON;
+	HOLE
+		rename
+			target as focus_source
+		end
 
 creation
 
 	make
 
-	
 feature {NONE}
 
-	focus_source: PICT_COLOR_B is
-		do
-			Result := button;
-		end;
-
-	focus_label: LABEL is
-		do
-			Result := main_panel.focus_label
-		end;
+	focus_label: FOCUS_LABEL;
  
-	focus_string: STRING is "Wastebasket";
- 
+	focus_string: STRING is 
+		do
+			Result := Focus_labels.wastebasket_label;
+		end;
 	
-feature 
-
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_parent: COMPOSITE; l: FOCUS_LABEL) is
+		require
+			valid_a_parent: a_parent /= Void;
+			valid_l: l /= Void
 		do
+			focus_label := l;
 			make_visible (a_parent);
-			set_symbol (Pixmaps.wastebasket_pixmap);
-			initialize_focus
+			register
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.wastebasket_pixmap
 		end;
 	
 feature {NONE}
@@ -47,9 +49,6 @@ feature {NONE}
 			if (r /= Void) then
 				r.remove_yourself;
 				n ?= stone.original_stone;
-				if not (n = Void) then
-					--main_panel.namer_hole.reset (n)
-				end
 			end;
 		end;
 

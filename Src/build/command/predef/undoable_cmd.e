@@ -29,7 +29,7 @@ feature
 
 	make is
 		do
-			set_symbol (Pixmaps.command_o_pixmap);
+			set_symbol (Pixmaps.command_pixmap);
 			set_label (eiffel_type);
 			predefined_command_table.put (Current, identifier * -1)
 		end;

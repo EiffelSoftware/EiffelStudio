@@ -4,17 +4,17 @@ class HISTORY_WND
 inherit
 
 	HISTORY;
-	FORM_D
+	TOP_SHELL
 		rename
-			make as form_d_make
-		export
-			{NONE} all;
-			{ANY} is_popped_up, popup, popdown
+			make as shell_make,
+			show as shell_show,
+			hide as shell_hide
 		end;
 	COMMAND;
 	CONSTANTS;
 	COMMAND_ARGS
 	WINDOWS;
+	CLOSEABLE
 
 creation
 
@@ -233,28 +233,58 @@ feature
 
 feature -- Interface
 
-	make (a_parent: COMPOSITE) is
+	close is
+		do
+			main_panel.history_t.set_toggle_off
+			unrealize;
+		end;
+
+	hide is
+		do
+			close
+		end;
+
+	show is
+		do
+			set_initial_position
+			realize
+		end;
+
+	make (a_screen: SCREEN) is
 			-- Create history window.
+		local
+			close_b: CLOSE_WINDOW_BUTTON;
+			del_com: DELETE_WINDOW;
+			focus_label: FOCUS_LABEL;
+			form: FORM
 		do
 				-----------------
 				-- Create widgets
 				-----------------
-			form_d_make (Widget_names.history_window, a_parent);
-			!!list.make (Widget_names.list, Current);
-			!!row_column.make (Widget_names.row_column, Current);
-			!!undo_button.make ("Undo", row_column);
-			!!redo_button.make ("Redo", row_column);
+			shell_make (Widget_names.history_window, a_screen);
+			!! form.make (Widget_names.form, Current);
+			!! focus_label.make (form);
+			!! list.make (Widget_names.list, form);
+			!! row_column.make (Widget_names.row_column, form);
+			!! undo_button.make (Widget_names.undo_label, row_column);
+			!! redo_button.make (Widget_names.redo_label, row_column);
+			!! close_b.make (Current, form, focus_label);
 
 				----------------------
 				-- Perform attachments
 				----------------------
-			attach_top (list, 0);
-			attach_left (list, 0);
-			attach_right (list, 0);
-			attach_bottom (row_column, 0);
-			attach_left (row_column, 0);
-			attach_right (row_column, 0);
-			attach_bottom_widget (row_column, list, 0);
+			form.attach_top (focus_label, 5);
+			form.attach_left (focus_label, 0);
+			form.attach_right_widget (close_b, focus_label, 0);
+			form.attach_right (close_b, 0);
+			form.attach_top_widget (focus_label, list, 2);
+			form.attach_top_widget (close_b, list, 2);
+			form.attach_left (list, 0);
+			form.attach_right (list, 0);
+			form.attach_bottom (row_column, 0);
+			form.attach_left (row_column, 0);
+			form.attach_right (row_column, 0);
+			form.attach_bottom_widget (row_column, list, 0);
 
 				-----------------
 				-- Set properties
@@ -270,9 +300,18 @@ feature -- Interface
 
 			list.set_visible_item_count (10);
 			set_title (Widget_names.history_window);
+			!! del_com.make (Current);
+			set_delete_command (del_com);
+			set_initial_position;
 		end;
 
-	
+	set_initial_position is	
+		do
+			set_x_y (main_panel.base.x + main_panel.base.width // 2
+				- width // 2,
+				main_panel.base.y)
+		end;
+
 feature {NONE}
 
 	list: SCROLL_LIST;

@@ -3,7 +3,7 @@ class APP_INIT_ST_H
 
 inherit
 
-	ICON_HOLE
+	APP_EDITOR_HOLE
 		redefine
 			stone, compatible
 		end;
@@ -13,14 +13,17 @@ creation
 
 	make
 	
-feature -- Creation
+feature {NONE}
 
-	make (editor: APP_EDITOR) is
-			-- Create a init_state_h.
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.initial_state_pixmap);
-			set_label (Initial_state_label);
-		end; -- Create
+			Result := Pixmaps.initial_state_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.initial_state_label
+		end;
 	
 feature {NONE}
 

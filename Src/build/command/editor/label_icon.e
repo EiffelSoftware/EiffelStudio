@@ -4,23 +4,10 @@ class LABEL_ICON
 inherit
 
 	ICON_STONE
-		rename
-			make_visible as make_icon_visible,
-			make as icon_make
 		undefine
 			stone_cursor
 		redefine
-			original_stone
-		end;
-	ICON_STONE
-		rename
-			make as icon_make
-		undefine
-			stone_cursor
-		redefine
-			make_visible, original_stone
-		select
-			make_visible
+			original_stone, set_widget_default
 		end;
 	LABEL_STONE;
 	REMOVABLE
@@ -43,9 +30,8 @@ feature
 			cmd_editor := ed
 		end;
 
-	make_visible (a_parent: COMPOSITE) is
+	set_widget_default is
 		do
-			make_icon_visible (a_parent);
 			initialize_transport;
 		end;
 

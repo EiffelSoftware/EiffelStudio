@@ -20,6 +20,9 @@ feature
 			Result := Context_const.bulletin_resize_form_nbr
 		end;
 
-	focus_string: STRING is "";
+	focus_string: STRING is	
+		do
+			Result := Focus_labels.resize_policy_label
+		end; 
 
 end

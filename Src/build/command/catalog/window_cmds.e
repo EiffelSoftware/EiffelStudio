@@ -4,20 +4,6 @@ class WINDOW_CMDS
 inherit
 
 	COMMAND_PAGE
-		rename 
-			make as page_create, 
-			make_visible as make_page_visible 
-		redefine
-			initial_cmd
-		end;
-
-	COMMAND_PAGE
-		redefine
-			make_visible, make, initial_cmd
-		select
-			make_visible, make
-		end
-
 
 creation
 
@@ -30,28 +16,33 @@ feature {NONE}
 
 	popdown_command: POPDOWN_CMD;
 
-	
-feature 
-
-	make (page_n: STRING; a_symbol: PIXMAP; cat: CMD_CATALOG) is
+	symbol: PIXMAP is
 		do
-			page_create (page_n, a_symbol, cat);
+			Result := Pixmaps.windows_pixmap
 		end;
-	
-	initial_cmd is
+
+	selected_symbol: PIXMAP is
 		do
+			Result := Pixmaps.selected_windows_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.window_label
+		end;
+
+	make is 
+		do
+			associated_catalog := command_catalog;
 			!!popup_command.make;
 			!!popdown_command.make;
-			extend (popup_command);
-			extend (popdown_command);
+			reset_commands
 		end;
 
-	
-feature {CATALOG}
-
-	make_visible (a_name: STRING; a_parent: COMPOSITE) is
+	reset_commands is
 		do
-			make_page_visible (a_name, a_parent);
+			extend (popup_command);
+			extend (popdown_command);
 		end;
 
 end -- class WINDOW_CMDS

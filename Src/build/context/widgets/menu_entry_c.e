@@ -44,14 +44,10 @@ feature {NONE}
 
 	initialize_transport is
 		do
-			widget.add_button_press_action (2, show_command, Current);
-			widget.add_button_release_action (2, show_command, Void);
 		end;
 
 	remove_widget_callbacks is
 		do
-			widget.remove_button_press_action (2, show_command, Current);
-			widget.remove_button_release_action (2, show_command, Void);
 		end;
 
 	

@@ -20,14 +20,12 @@ feature
 
 feature {COMMAND_PAGE}
 
-	button_form: FORM;
+	button_rc: ROW_COLUMN;
 
 feature {NONE}
 
 	page_sw: SCROLLED_W;
 
-	type_label: LABEL;
-	
 feature 
 
 	focus_label: FOCUS_LABEL;
@@ -51,7 +49,7 @@ feature
 			-- the widgets with their corresponding name and parents) 
 			-- and attach them appropriately in the interface.
 		require
-			not_void_page: not (page = Void);
+			not_void_page: page /= Void;
 		do
 			pages.extend (page);
 		ensure
@@ -67,15 +65,11 @@ feature
 			-- If current_page not defined then the first page
 			-- added is used by default.
 		local
-			previous_button: ICON; 
 			page: CAT_PAGE [T];
-			first_time: BOOLEAN;
 			opt_pages: LINKED_LIST [CAT_PAGE [T]];
 			fix_pages: LINKED_LIST [CAT_PAGE [T]]
 		do
-			if
-				(current_page = Void)
-			then
+			if (current_page = Void) then
 				set_initial_page (pages.first)
 			end;
 			from
@@ -95,22 +89,11 @@ feature
 			end;
 			from 
 				fix_pages.start;
-				first_time := True
 			until
 				fix_pages.after
 			loop
 				page := fix_pages.item;
-				page.make_button_visible (button_form);
-				page.add_button_callback;
-				if
-					first_time	
-				then
-					add_first_button (page.button, 10);
-					first_time := False;
-				else
-					add_other_buttons (previous_button, page.button, 10);
-				end;
-				previous_button := page.button;
+				page.make_button_visible (button_rc);
 				fix_pages.forth
 			end;
 			from
@@ -119,48 +102,41 @@ feature
 				opt_pages.after
 			loop
 				page := opt_pages.item;
-				page.make_button_visible (button_form);
-				page.add_button_callback;
-				if first_time then
-					add_first_button (page.button, 10);
-					first_time := False;
-				else
-					add_other_buttons (previous_button, page.button, 10);
-				end;
+				page.make_button_visible (button_rc);
 				opt_pages.forth
 			end;
-			current_page.make_visible (Widget_names.icon_box1, page_sw);
+			current_page.make_unmanaged (page_sw);
 			page_sw.set_working_area (current_page);
+			current_page.manage;
+			current_page.set_selected_symbol
 		end; -- update_interface 
 
-	add_first_button (b: ICON; i: INTEGER) is 
-		do
-			button_form.attach_left (b, i);
-		end;
-
-	add_other_buttons (pb, b: ICON; i: INTEGER) is
-		do
-			button_form.attach_left_widget (pb, b, i);
-		end;
-
 	set_initial_page (page: CAT_PAGE [T]) is
-			-- Set current_page to `page', update the drawing_sw
-			-- working area with `page' and set the type_label text
-			-- to the page name.
-		require
-			not_void_page: not (page = Void);
-			page_has_been_added: pages.has (page);
-			page_name_is_not_Void: not (page.page_name = Void)
-		do
-			current_page := page;
-			update_type_label
-		ensure
-			initial_page_defined: current_page = page
-					and type_label.text.is_equal(current_page.page_name)
-		end; -- set_initial_page
+            -- Set current_page to `page', update the drawing_sw
+            -- working area with `page'
+        require
+            not_void_page: page /= Void;
+            page_exists: pages.has (page);
+        do
+			current_page := page
+		end;
 
-	
 feature {NONE}
+
+	set_current_page (page: CAT_PAGE [T]) is
+			-- Set current_page to `page', update the drawing_sw
+			-- working area with `page'
+		require
+			not_void_page: page /= Void;
+			page_exists: pages.has (page);
+			current_page_non_void: current_page /= Void
+		do
+			current_page.hide;
+			current_page.set_symbol
+			page.set_selected_symbol
+			current_page := page;
+			page_sw.set_working_area (page);
+		end;
 
 	execute (argument: ANY) is
 			-- Execute the command.
@@ -168,30 +144,21 @@ feature {NONE}
 			page: CAT_PAGE [T]
 		do
 			page ?= argument;
-			if
-				not (page = Void)
-			then
+			if  page /= Void then
 				if current_page /= page then
 					if not page.is_visible then
-						page.make_visible (Widget_names.icon_box1, page_sw);
+						page.make_unmanaged (page_sw);
 						if not page.empty then
 							page.go_i_th (1);
 							page.update_display
 						end
+						page.manage;
 					else
 						page.show;
 					end;
-					current_page.hide;
-					current_page := page;
-					update_type_label;
-					page_sw.set_working_area (current_page);
+					set_current_page (page);
 				end
 			end
 		end; -- execute
-
-	update_type_label is
-		do
-			type_label.set_text (current_page.page_name);
-		end;
 
 end 

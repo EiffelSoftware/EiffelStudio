@@ -3,7 +3,7 @@ class APP_SELF_HOLE
 
 inherit
 
-	ICON_HOLE
+	APP_EDITOR_HOLE
 		redefine
 			stone, compatible
 		end;
@@ -13,15 +13,6 @@ creation
 
 	make
 	
-feature -- Creation
-
-	make (editor: APP_EDITOR) is
-			-- Create a self_hole.
-		do
-			set_label (Self_label);
-			set_symbol (Pixmaps.self_label_pixmap);
-		end; 
-
 feature {NONE}
 
 	stone: LABEL_SCR_L;
@@ -30,6 +21,16 @@ feature {NONE}
 		do
 			stone ?= s;
 			Result := stone /= Void;
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.self_label
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.self_label_pixmap
 		end;
 
 	process_stone is

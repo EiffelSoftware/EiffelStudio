@@ -3,7 +3,7 @@ deferred class EDIT_BUTTON
 
 inherit
 
-	EB_PICT_B;
+	EB_BUTTON_COM;
 	HOLE;
 	WINDOWS
 

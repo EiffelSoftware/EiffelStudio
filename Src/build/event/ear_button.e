@@ -2,7 +2,8 @@ class EAR_BUTTON
 
 inherit
 
-	EB_PICT_B
+	EB_BUTTON
+	COMMAND
 		redefine
 			context_data_useful
 		end
@@ -31,7 +32,10 @@ feature {NONE}
 		do
 		end;
 
-	focus_string: STRING is "";
+	focus_string: STRING is 
+		do
+			Result := Focus_labels.listen_label
+		end;
 
 	symbol: PIXMAP is
 		do

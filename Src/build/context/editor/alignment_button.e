@@ -20,6 +20,9 @@ feature
 			Result := Context_const.alignment_form_nbr
 		end;
 
-	focus_string: STRING is "";
+	focus_string: STRING is 
+		do
+			Result := Focus_labels.alignment_label
+		end;
 
 end

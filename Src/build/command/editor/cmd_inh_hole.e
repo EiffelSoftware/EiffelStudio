@@ -4,22 +4,11 @@ class CMD_INH_HOLE
 
 inherit
 
-	ICON_HOLE
+	CMD_EDITOR_HOLE
 		rename
-			button as source,
-			identifier as oui_identifier,
-			make_visible as icon_make_visible
+			make as old_make
 		redefine
 			stone, compatible
-		end;
-	ICON_HOLE
-		rename
-			button as source,
-			identifier as oui_identifier
-		redefine
-			stone, compatible, make_visible
-		select
-			make_visible
 		end;
 	WINDOWS;
 	CMD_STONE
@@ -36,70 +25,58 @@ feature
 
 	stone: CMD_STONE;
 
+	focus_string: STRING is
+		do
+			if original_stone = Void then
+				Result := focus_labels.parent_label
+			else
+				Result := label
+			end;
+		end;
+
+	label: STRING is
+		do
+			Result := original_stone.label
+		end;
+
 	compatible (s: CMD_STONE): BOOLEAN is
 		do
 			stone ?= s;
 			Result := stone /= Void;
 		end;
 
-	make (ed: CMD_EDITOR) is
+	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
 		do
-			command_editor := ed;
-			set_symbol (Pixmaps.command_pixmap);
-			set_label ("Parent");
-		end;
-
-	make_visible (a_parent: COMPOSITE) is
-		do
-
-			icon_make_visible (a_parent);
-			io.putstring("");
+			old_make (ed, a_parent);
 			initialize_transport;
 		end;
 
-	reset is
+	symbol: PIXMAP is
 		do
-			if original_stone /= Void then
-				set_symbol (Pixmaps.command_pixmap);
-				set_label ("Parent");
-				original_stone := Void;
-			end;
+			Result := Pixmaps.parent_pixmap
 		end;
 
-	set_inherit_command (st: like original_stone) is
-		require
-			not_void_stone: not (st = Void);
-		local
-			parent_label: STRING;
+	source: WIDGET is
 		do
-			original_stone := st.original_stone;
-			if label = Void or else label.empty or else st.label.count >= label.count then
-				parent.unmanage;
-			end;
-			!!parent_label.make (0);
-			parent_label.append ("Parent: ");
-			parent_label.append (st.label);
-			set_symbol (st.symbol);
-			set_label (parent_label);
-			if not parent.managed then
-				parent.manage;
-			end;
-			if realized and (not shown) then
-				show
-			end;
+			Result := Current
 		end;
-	
+
 feature {NONE}
 
-
-
-	original_stone: CMD;
+	original_stone: CMD is
+		local
+			user_cmd: USER_CMD
+		do
+			user_cmd := command_editor.edited_command
+			if user_cmd /= Void then
+				Result := user_cmd.parent_type
+			end
+		end;
 
 	transportable: BOOLEAN is
 		do
 			Result := original_stone /= Void;
 		end;
-
 
 	identifier: INTEGER is
 		do 
@@ -125,8 +102,6 @@ feature {NONE}
 		do
 			Result := original_stone.eiffel_text
 		end;
-
-	command_editor: CMD_EDITOR;
 	
 	process_stone is
 		do

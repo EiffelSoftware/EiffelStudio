@@ -42,9 +42,9 @@ feature {NONE}
 
 feature 
 
-	make (page_n: STRING; a_symbol: PIXMAP; cat: EVENT_CATALOG) is
+	make (cat: like associated_catalog) is
 		do
-			page_create (page_n, a_symbol, cat);
+			page_create (cat);
 			button_type := not_set;
 		end;
 
@@ -53,6 +53,21 @@ feature {NONE}
 	button_type: INTEGER;
 
 	not_set, toggle, other: INTEGER is UNIQUE;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.button_pixmap
+		end;
+
+	selected_symbol: PIXMAP is
+		do
+			Result := Pixmaps.selected_button_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.button_label
+		end;
 
 feature 
 

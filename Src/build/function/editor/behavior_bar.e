@@ -8,7 +8,8 @@ inherit
 		redefine
 			edit_hole,
 			set_function,
-			make
+			make,
+			unregister_holes
 		end
 
 creation
@@ -18,6 +19,11 @@ creation
 feature {NONE}
 
 	edit_hole: B_EDIT_HOLE;
+
+	unregister_holes is
+		do
+			edit_hole.unregister
+		end;
 
 feature 
 
@@ -29,8 +35,7 @@ feature
 			label: LABEL_G;
 		do
 			form_create (a_name, a_parent);
-			!!edit_hole.make (ed);
-			edit_hole.make_visible (Current);
+			!!edit_hole.make (ed, Current);
 			!!state_hole.make (ed);
 			state_hole.make_visible (Current);
 			!!label.make (Widget_names.label, Current);

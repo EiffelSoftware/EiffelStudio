@@ -13,13 +13,9 @@ feature {NONE}
 	toggle_pressed is
 		do
 			if armed then
-				if not History_window.is_popped_up then
-					History_window.popup
-				end
+				History_window.show
 			else
-				if History_window.is_popped_up then
-					History_window.popdown
-				end
+				History_window.hide
 			end
 		end
 

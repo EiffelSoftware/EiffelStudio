@@ -4,22 +4,6 @@ class CMD_CAT_BUTTON
 inherit
 
 	ICON_HOLE
-		rename
-			make_visible as make_icon_visible
-		end;
-
-	ICON_HOLE
-		redefine
-			make_visible
-		select
-			make_visible
-		end;
-
-	FOCUSABLE
-		export
-			{NONE} all
-		end
-
 
 creation
 
@@ -29,38 +13,14 @@ feature
 
 	page: COMMAND_PAGE;
 
-	make (f: STRING; p: like page) is
-			-- Create a button with `f' as the focus_label.
+	make (p: like page; a_parent: COMPOSITE) is
+			-- Create a button.
+		require
+			valid_p: p /= Void
 		do
-			focus_string := f;	
-			page := p
+			page := p;
 		end;
 
-	
-feature {NONE}
-
-	focus_label: LABEL is
-		do
-			Result := command_catalog.focus_label
-		end;
-
-	focus_source: WIDGET is
-		do
-			Result := button;
-		end;
-
-	focus_string: STRING;
-
-	
-feature 
-
-	make_visible (a_parent: COMPOSITE) is
-		do
-			make_icon_visible (a_parent);
-			initialize_focus
-		end;
-
-	
 feature {NONE}
 
 	process_stone is

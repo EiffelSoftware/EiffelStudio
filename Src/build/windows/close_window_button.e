@@ -2,7 +2,7 @@ class CLOSE_WINDOW_BUTTON
 
 inherit
 
-	EB_PICT_B;
+	EB_BUTTON_COM;
 	WINDOWS
 
 creation

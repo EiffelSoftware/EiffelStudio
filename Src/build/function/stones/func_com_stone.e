@@ -5,13 +5,10 @@ inherit
 
 	COM_INST_IS
 		rename
-			set_original_stone as old_set_original_stone,
-			make as make_stone
+			set_original_stone as old_set_original_stone
 		end;
 
 	COM_INST_IS
-		rename
-			make as make_stone
 		redefine
 			set_original_stone
 		select

@@ -5,20 +5,10 @@ inherit
 	
 	EVENT_PAGE
 		rename
-			make as page_create,
-			make_visible as make_page_visible
+			make as page_make
 		redefine
 			is_optional
 		end;
-
-	EVENT_PAGE
-		rename
-			make as page_create
-		redefine
-			is_optional, make_visible
-		select
-			make_visible
-		end
 
 creation
 
@@ -27,7 +17,6 @@ creation
 feature {CATALOG}
 
 	is_optional: BOOLEAN is True;
-
 	
 feature {NONE}
 
@@ -46,20 +35,26 @@ feature {NONE}
 			!!Result.make
 		end;
 
-	
-feature 
-
-	make (page_n: STRING; a_symbol: PIXMAP; cat: EVENT_CATALOG) is
+	symbol: PIXMAP is
 		do
-			page_create (page_n, a_symbol, cat);
+			Result := Pixmaps.drawing_area_pixmap
 		end;
 
-	
-feature {CATALOG}
-
-	make_visible (a_name: STRING; a_parent: COMPOSITE) is
+	selected_symbol: PIXMAP is
 		do
-			make_page_visible (a_name, a_parent);
+			Result := Pixmaps.selected_drawing_area_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.drawing_label
+		end;
+
+feature {NONE}
+
+	make (cat: like associated_catalog) is
+		do
+			page_make (cat);
 			extend (expose_ev);
 			extend (input_ev);
 			extend (resize_ev);

@@ -4,55 +4,44 @@ class FILE_CMDS
 inherit
 
 	COMMAND_PAGE
-		rename 
-			make as page_create, 
-			make_visible as make_page_visible 
-		redefine
-			initial_cmd
-		end;
-
-	COMMAND_PAGE
-		redefine
-			make_visible, make, initial_cmd
-		select
-			make_visible, make
-		end
-
 
 creation
 
 	make
 
-	
 feature {NONE}
 
 	open_command: OPEN_CMD;
 
 	save_command: SAVE_CMD;
 
-	
-feature 
-
-	make (page_n: STRING; a_symbol: PIXMAP; cat: CMD_CATALOG) is
+	make is
 		do
-			page_create (page_n, a_symbol, cat);
-		end;
-
-	initial_cmd is
-		do
+			associated_catalog := command_catalog;
 			!!save_command.make;
 			!!open_command.make;
+			reset_commands
+		end;
+
+	reset_commands is
+		do
 			extend (save_command);
 			extend (open_command);
 		end;
 
-
-	
-feature {CATALOG}
-
-	make_visible (a_name: STRING; a_parent: COMPOSITE) is
+	symbol: PIXMAP is
 		do
-			make_page_visible (a_name, a_parent);
+			Result := Pixmaps.file_pixmap
 		end;
 
-end -- class FILE_CMDS
+	selected_symbol: PIXMAP is
+		do
+			Result := Pixmaps.selected_file_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.file_label
+		end;
+
+end 

@@ -1,7 +1,7 @@
 class SAVE_BUTTON 
 inherit
 
-	EB_PICT_B
+	EB_BUTTON_COM
 		rename
 			make_visible as make
 		end;
@@ -13,7 +13,10 @@ creation
 
 feature {NONE}
 
-	focus_string: STRING is "Save project"
+	focus_string: STRING is 
+		do
+			Result := Focus_labels.save_project_label
+		end;
 
 	focus_label: LABEL is
 		do

@@ -20,8 +20,8 @@ inherit
 		end;
 	SCROLL_LIST
 		rename 
-			make as list_create,
-			identifier as oui_identifier
+			identifier as oui_identifier,
+			make as list_create
 		end;
 	REMOVABLE
 

@@ -49,15 +49,11 @@ feature {NONE}
 
 	initialize_transport is
 		do
-			widget.button.add_button_press_action (2, show_command, Current);
-			widget.button.add_button_release_action (2, show_command,Void);
 			widget.button.add_button_press_action (3, transport_command, Current);
 		end;
 
 	remove_widget_callbacks is
 		do
-			widget.button.remove_button_press_action (2, show_command, Current);
-			widget.button.remove_button_release_action (2, show_command, Void);
 			widget.button.remove_button_press_action (3, transport_command, Current);
 		end;
 

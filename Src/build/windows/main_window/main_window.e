@@ -43,12 +43,13 @@ feature
 	
 feature {NONE}
 
-	form, form1, form3, form4: FORM
+	check_box1, check_box2: CHECK_BOX;
+	form, form1, form2, form3: FORM
 	
 feature 
 
 	quit_b: CLOSE_WINDOW_BUTTON
-	open_b: OPEN_BUTTON
+	create_proj_b: CREATE_PROJ_BUTTON
 	cut_b: CUT_HOLE
 	help_b: HELP_HOLE
 	con_b: CON_ED_HOLE
@@ -59,7 +60,17 @@ feature
 	import_b: IMPORT_BUTTON
 	save_b: SAVE_BUTTON
 	save_as_b: SAVE_AS_BUTTON
-	retrieve_b: RETRIEVE_BUTTON
+	load_proj_b: LOAD_PROJ_BUTTON
+
+	-- Separators:
+	separator, vseparator: SEPARATOR
+
+	-- labels
+	visibility_label: LABEL;
+	focus_label: FOCUS_LABEL
+
+feature
+
 	cont_cat_t: CONTEXT_CAT_B
 	cont_tree_t: CONTEXT_TREE_B
 	history_t: HISTORY_B
@@ -69,13 +80,6 @@ feature
 	interface_t: INTERFACE_B
 	interface_only_t: INTERFACE_ONLY_B
 
-	-- Separators:
-	separator, vseparator: SEPARATOR
-
-	-- labels
-	visibility_label: LABEL;
-	focus_label: FOCUS_LABEL
-	
 feature 
 
 	make (a_screen: SCREEN) is
@@ -98,11 +102,16 @@ feature
 			!! con_b.make (form1, focus_label)
 			!! cmd_b.make (form1, focus_label)
 			!! cmdi_b.make (form1, focus_label)
-			!! state_b.make (form, focus_label)
-			!! cut_b.make (Widget_names.pcbutton8, form1)
-			!! help_b.make (Void, form1)
+			!! state_b.make (form1, focus_label)
+			!! cut_b.make (form1, focus_label)
+			!! help_b.make (Void, form1, focus_label)
 			!! separator.make (Widget_names.separator, form1)
+			!! save_b.make (form1)
+			!! save_as_b.make (form1)	
+			!! load_proj_b.make (form1)
+			!! create_proj_b.make (form1)
 			separator.set_horizontal (True)
+			form1.attach_top (state_b, 0)
 			form1.attach_top (quit_b, 0)
 			form1.attach_top (focus_label, 0)
 			form1.attach_top (con_b, 0)
@@ -110,107 +119,87 @@ feature
 			form1.attach_top (cmdi_b, 0)
 			form1.attach_top (cut_b, 0)
 			form1.attach_top (help_b, 0)
+			form1.attach_top (create_proj_b, 0)
+			form1.attach_top (load_proj_b, 0)
+			form1.attach_top (save_b, 0)
+			form1.attach_top (save_as_b, 0)
 			form1.attach_left (con_b, 0)
-			form1.attach_left_widget (con_b, cmd_b, 5)
-			form1.attach_left_widget (cmd_b, cmdi_b, 5)
-			form1.attach_left_widget (cmdi_b, state_b, 5)
-			form1.attach_left_widget (state_b, cut_b, 20)
-			form1.attach_left_widget (cut_b, help_b, 5)
+			form1.attach_left_widget (con_b, cmd_b, 0)
+			form1.attach_left_widget (cmd_b, cmdi_b, 0)
+			form1.attach_left_widget (cmdi_b, state_b, 0)
+			form1.attach_left_widget (state_b, cut_b, 0)
+			form1.attach_left_widget (cut_b, help_b, 0)
 			form1.attach_left_widget (help_b, focus_label, 0)
-			form1.attach_right_widget (quit_b, focus_label, 0)
+			form1.attach_right_widget (create_proj_b, focus_label, 0)
+			form1.attach_right_widget (load_proj_b, create_proj_b, 0)
+			form1.attach_right_widget (save_b, load_proj_b, 0)
+			form1.attach_right_widget (save_as_b, save_b, 0)
+			form1.attach_right_widget (quit_b, save_as_b, 0)
 			form1.attach_right (quit_b, 0)
-			form1.attach_bottom_widget (separator, quit_b, 2)
 			form1.attach_bottom_widget (separator, focus_label, 0)
-			form1.attach_bottom_widget (separator, con_b, 2)
-			form1.attach_bottom_widget (separator, cmd_b, 2)
-			form1.attach_bottom_widget (separator, cmdi_b, 2)
-			form1.attach_bottom_widget (separator, cut_b, 2)
-			form1.attach_bottom_widget (separator, help_b, 2)
+			form1.attach_bottom_widget (separator, quit_b, 0)
+			form1.attach_bottom_widget (separator, state_b, 0)
+			form1.attach_bottom_widget (separator, con_b, 0)
+			form1.attach_bottom_widget (separator, cmd_b, 0)
+			form1.attach_bottom_widget (separator, cmdi_b, 0)
+			form1.attach_bottom_widget (separator, cut_b, 0)
+			form1.attach_bottom_widget (separator, help_b, 0)
+			form1.attach_bottom_widget (separator, create_proj_b, 0)
+			form1.attach_bottom_widget (separator, load_proj_b, 0)
+			form1.attach_bottom_widget (separator, save_b, 0)
+			form1.attach_bottom_widget (separator, save_as_b, 0)
 			form1.attach_bottom (separator, 0)
 			form1.attach_left (separator, 0)
 			form1.attach_right (separator, 0)
 
-			-- project form
-			!!form3.make (Widget_names.form3, form)
-			!!save_b.make (form3)
-			!!save_as_b.make (form3)	
-			!!retrieve_b.make (form3)
-			!!open_b.make (form3)
-			!!generate_b.make (form3)
-			!!import_b.make (form3)
-			form3.attach_top (open_b, 10)
-			form3.attach_right (open_b, 10)
-			form3.attach_right (retrieve_b, 10)
-			form3.attach_right (save_b, 10)
-			form3.attach_right (save_as_b, 10)
-			form3.attach_right (generate_b, 10)
-			form3.attach_right (import_b, 10)
-			form3.attach_left (open_b, 10)
-			form3.attach_left (retrieve_b, 10)
-			form3.attach_left (save_b, 10)
-			form3.attach_left (save_as_b, 10)
-			form3.attach_left (generate_b, 10)
-			form3.attach_left (import_b, 10)
-			form3.attach_top_widget (open_b, retrieve_b, 0)
-			form3.attach_top_widget (retrieve_b, save_b, 0)
-			form3.attach_top_widget (save_b, save_as_b, 0)
-			form3.attach_top_widget (save_as_b, generate_b, 0)
-			form3.attach_top_widget (generate_b, import_b, 0)
+			!!form2.make (Widget_names.form2, form)
+			!!generate_b.make (form2)
+			!!import_b.make (form2)
+			form2.attach_top (generate_b, 10)
+			form2.attach_right (generate_b, 0)
+			form2.attach_right (import_b, 0)
+			form2.attach_left (generate_b, 0)
+			form2.attach_left (import_b, 0)
+			form2.attach_top_widget (generate_b, import_b, 0)
 
 			-- visibility form
-			!!form4.make (Widget_names.form4, form)
-			!!visibility_label.make (Widget_names.visibility_label, form4)
-			!!cont_cat_t.make (Widget_names.context_catalog, form4)
-			!!cont_tree_t.make (Widget_names.context_tree, form4)
-			!!history_t.make (Widget_names.history_window, form4)
-			!!editor_t.make (Widget_names.editors_toggle, form4)
-			!!cmd_cat_t.make (Widget_names.command_catalog, form4)
-			!!app_edit_t.make (Widget_names.application_editor, form4)
-			!!interface_t.make (Widget_names.interface_toggle, form4)
-			!!interface_only_t.make (Widget_names.interface_only_toggle, form4)
-			form4.set_fraction_base(100)
-			form4.attach_top (visibility_label, 10)
-			form4.attach_left (visibility_label, 10)
-			form4.attach_right (visibility_label, 10)
-			form4.attach_top_position (cont_cat_t, 20)
-			form4.attach_left (cont_cat_t, 10)
-			form4.attach_right_position (cont_cat_t, 49)
-			form4.attach_top_position (cont_tree_t, 40)
-			form4.attach_left (cont_tree_t, 10)
-			form4.attach_right_position (cont_tree_t, 49)
-			form4.attach_top_position (history_t, 60)
-			form4.attach_left (history_t, 10)
-			form4.attach_right_position (history_t, 49)
-			form4.attach_top_position (editor_t, 80)
-			form4.attach_left (editor_t, 10)
-			form4.attach_right_position (editor_t, 49)
-			form4.attach_top_position (cmd_cat_t, 20)
-			form4.attach_right (cmd_cat_t, 10)
-			form4.attach_left_position (cmd_cat_t, 51)
-			form4.attach_top_position (app_edit_t, 40)
-			form4.attach_right (app_edit_t, 10)
-			form4.attach_left_position (app_edit_t, 51)
-			form4.attach_top_position (interface_t, 60)
-			form4.attach_right (interface_t, 10)
-			form4.attach_left_position (interface_t, 51)
-			form4.attach_top_position (interface_only_t, 80)
-			form4.attach_right (interface_only_t, 10)
-			form4.attach_left_position (interface_only_t, 51)
-
+			!!form3.make (Widget_names.form3, form)
+			!!check_box1.make (Widget_names.check_box, form3);
+			!!check_box2.make (Widget_names.check_box, form3);
+			!!visibility_label.make (Widget_names.visibility_label, form3)
+			!!cont_cat_t.make (Widget_names.context_catalog, check_box1)
+			!!cont_tree_t.make (Widget_names.context_tree, check_box1)
+			!!history_t.make (Widget_names.history_window, check_box1)
+			!!editor_t.make (Widget_names.editors_toggle, check_box1)
+			!!cmd_cat_t.make (Widget_names.command_catalog, check_box2)
+			!!app_edit_t.make (Widget_names.application_editor, check_box2)
+			!!interface_t.make (Widget_names.interface_toggle, check_box2)
+			!!interface_only_t.make (Widget_names.interface_only_toggle, check_box2)
+			form3.set_fraction_base (2);
+			form3.attach_left (visibility_label, 0);
+			form3.attach_right (visibility_label, 0);
+			form3.attach_top_widget (visibility_label, check_box1, 0);
+			form3.attach_top_widget (visibility_label, check_box2, 0);
+			form3.attach_right_position (check_box1, 1);
+			form3.attach_left_position (check_box2, 1);
+			form3.attach_left (check_box1, 0);
+			form3.attach_right (check_box2, 0);
+			form3.attach_bottom (check_box1, 0);
+			form3.attach_bottom (check_box2, 0);
 			-- interform attachment
 			form.attach_top_widget (form1, vseparator, 0)
 			form.attach_bottom (vseparator, 0)
-			form.attach_top_widget (form1, form3, 10)
-			form.attach_right (form3, 10)
-			form.attach_bottom (form3, 10)
+			form.attach_top_widget (form1, form2, 2)
+			form.attach_right (form2, 2)
+			form.attach_bottom (form2, 2)
 			form.attach_left (form1, 0)
 			form.attach_top (form1, 0)
 			form.attach_right (form1, 0)
-			form.attach_top_widget (form1, form4, 10)
-			form.attach_left (form4, 10)
-			form.attach_right_widget (vseparator, form4, 10)
-			form.attach_right_widget (form3, vseparator, 10)
-			form.attach_bottom (form4, 10)
+			form.attach_top_widget (form1, form3, 2)
+			form.attach_left (form3, 2)
+			form.attach_right_widget (vseparator, form3, 2)
+			form.attach_right_widget (form2, vseparator, 2)
+			form.attach_bottom (form3, 2)
 
 				-- default state for buttons
 			cont_cat_t.arm -- context catalog

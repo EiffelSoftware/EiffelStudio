@@ -3,16 +3,10 @@ class CMD_ED_INST_ED_H
  
 inherit
  
-	ICON_HOLE
+	CMD_EDITOR_HOLE
 		rename
-			make_visible as make_button_visible
-		end;
-	ICON_HOLE
-		redefine
-			make_visible
-		select
-			make_visible
-		end;
+			make as old_make
+		end
 	WINDOWS;
 	COMMAND
 
@@ -20,25 +14,30 @@ creation
 
 	make
 
-	
-feature 
+feature {NONE}
 
-	make (ed: CMD_EDITOR) is
+	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
 		do
-			associated_editor := ed;
-		end;
- 
-	make_visible (a_parent: COMPOSITE) is
-		do
-			make_button_visible (a_parent);
-			set_symbol (Pixmaps.create_command_instance_b_pixmap);
+			old_make (ed, a_parent);
 			add_activate_action (Current, Void)
 		end;
 
-	
-feature {NONE}
+	focus_string: STRING is
+		do
+			Result := Focus_labels.command_instance_label
+		end;
 
-	associated_editor: CMD_EDITOR;
+	source: WIDGET is
+		do
+			Result := Current
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.create_command_instance_b_pixmap;
+		end;
+			
+feature {NONE}
 
 	create_instance_editor (c: CMD) is
 		local
@@ -69,7 +68,7 @@ feature {NONE}
 
 	execute (argument: ANY) is
 		do
-			create_instance_editor (associated_editor.current_command)	
+			create_instance_editor (command_editor.current_command)	
 		end;
  
 end

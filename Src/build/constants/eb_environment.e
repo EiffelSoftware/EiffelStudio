@@ -12,7 +12,7 @@ feature -- Directory name constants
 
 	Ace_name: STRING is "Ace";
 	Application_name: STRING is "Application";
-	Bitmaps_name: STRING is "Bitmaps";
+	Bitmaps_name: STRING is "bitmaps";
 	Bin_name: STRING is "bin";
 	Build_name: STRING is "build";
 	Classes_name: STRING is "Classes";
@@ -171,6 +171,7 @@ feature -- Directory names for projects
 			--| Has separator at end
 		do
 			Result := clone (Project_directory);
+			Result.extend (directory_separator);
 			Result.append (Classes_name);
 			Result.extend (directory_separator);
 		end;

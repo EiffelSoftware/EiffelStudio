@@ -2,7 +2,7 @@ deferred class FORMAT_BUTTON
 
 inherit
 
-	EB_PICT_B
+	EB_BUTTON_COM
 
 feature {NONE} -- focus
 
@@ -10,7 +10,7 @@ feature {NONE} -- focus
 		deferred
 		end;
 
-	focus_label: LABEL is
+	focus_label: FOCUS_LABEL is
 		do
 			Result := editor.focus_label
 		end

@@ -4,26 +4,16 @@ class TRANSL_HOLE
 inherit
 
 	ICON_HOLE
-		rename
-			make_visible as trans_make_visible
 		redefine
-			stone, compatible
-		end;
-	ICON_HOLE
-		redefine
-			stone, compatible, make_visible
+			stone, compatible, set_widget_default
 		select
-			make_visible, button, identifier, same
+			button, same
 		end;
 	EV_ICON_STONE
-		rename
-			make as unused_make,
-			make_visible as ev_make_visible,
-			identifier as stone_identifier
 		undefine
 			same
 		redefine
-			original_stone, transportable
+			original_stone, transportable, set_widget_default
 		end;
 
 creation
@@ -74,9 +64,8 @@ feature
 			set_symbol (t.symbol);
 		end;
 
-	make_visible (a_parent: COMPOSITE) is
+	set_widget_default is
 		do
-			trans_make_visible (a_parent);
 			initialize_transport
 		end;
 

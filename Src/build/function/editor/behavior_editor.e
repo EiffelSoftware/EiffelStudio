@@ -42,15 +42,23 @@ feature {NONE}
 
 	menu_bar: BEHAVIOR_BAR;
 
-	
 feature -- Editing features
 
 	edited_function: BEHAVIOR;
 
 	current_state: STATE;
 
-	edited_context: CONTEXT;
+	associated_context_editor: CONTEXT_EDITOR;
+
+	edited_context: CONTEXT is
 			-- Context currently edited.
+		require
+			valid_editor: associated_context_editor /= Void
+		do
+			Result := associated_context_editor.edited_context
+		ensure
+			valid_result: Result /= Void
+		end;
 
 	set_current_state (s: STATE) is
 			-- Set current_state to `s'. Also update
@@ -64,10 +72,10 @@ feature -- Editing features
 			end;
 		end;
 
-	set_edited_context (c: CONTEXT) is
-			-- Set edited_context to `c'.
+	set_context_editor (ed: CONTEXT_EDITOR) is
+			-- Set associated_context_editor to `c'.
 		do
-			edited_context := c
+			associated_context_editor := ed
 		end;
 
 feature -- Interface
@@ -82,6 +90,11 @@ feature -- Interface
 			button_form.attach_right_position (page_label, 1);
 			button_form.attach_left_position (row_label, 1);
 			button_form.detach_right (row_label);
+		end;
+
+	focus_label: FOCUS_LABEL is
+		do
+			Result := associated_context_editor.focus_label
 		end;
 
 	

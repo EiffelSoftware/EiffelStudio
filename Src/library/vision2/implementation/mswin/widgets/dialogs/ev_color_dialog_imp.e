@@ -59,6 +59,15 @@ feature -- Element change
 			set_rgb_result (color_imp)
 		end
 
+feature {NONE} -- Implementation for events handling
+
+	dispatch_events is
+			-- Execute the command associated to the action of the user.
+			-- As in `process_message' of WEL_WINDOW, we can't use
+			-- `inspect' here.
+		do
+		end
+
 end -- class EV_COLOR_SELECTION_DIALOG_IMP
 
 --|----------------------------------------------------------------

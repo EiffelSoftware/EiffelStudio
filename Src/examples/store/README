@@ -3,21 +3,36 @@
 Set of small examples showing how to
 use different EiffelStore capabilities
 
+These examples have been succesfully tested with ODBC, Oracle 8.04 and Oracle 8i.
+
 The suggested order of examples use is
 the following:
 
+
+0) esql
+	Very useful to test you Database.
+
 1) select
+	The basic example for a query of your Database.
+	Check the Readme of this example.
 
 2) insert
+	The basic example for an insert in you Database
 
-3) esql
+3) nesting
+	An Example of Nested queries.
 
 4) rm2oom
+	From an Relationnal Model to an Object Oriented Model.
 
 5) oom2rm
+	From an Object Oriente Model to an Relationnal Model.
 
-6) nesting
+6) st_proc
+	Deals with stored procedures.
 
-7) st_proc
+7) convert 
+	to exercise the flat file conversion utilities.
 
-8) convert (to exercise the flat file conversion utilities)
+
+Don't forget to check the Readme file of each example before testing them.

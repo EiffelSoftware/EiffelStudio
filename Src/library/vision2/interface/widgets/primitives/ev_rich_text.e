@@ -38,6 +38,22 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
+	selected_character_format: EV_CHARACTER_FORMAT is
+			-- `Result' is character format of current selection.
+			-- If more than one format is contained in the selection, `Result'
+			-- is the first of these formats.
+		require
+			not_destroyed: not is_destroyed
+			has_selection: has_selection
+		do
+			Result := implementation.selected_character_format
+		ensure
+			result_not_void: Result /= Void
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end
+
 	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		require
@@ -45,6 +61,22 @@ feature -- Access
 			valid_character_index: caret_index >= 1 and caret_index <= text_length + 1
 		do
 			Result := implementation.paragraph_format (caret_index)
+		ensure
+			result_not_void: Result /= Void
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end
+		
+	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph format of current selection.
+			-- If more than one format is contained in the selection, `Result'
+			-- is the first of these formats.
+		require
+			not_destroyed: not is_destroyed
+			has_selection: has_selection
+		do
+			Result := implementation.selected_paragraph_format
 		ensure
 			result_not_void: Result /= Void
 			caret_not_moved: caret_position = old caret_position

@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 --	wiz_dlg: WIZARD_DIALOG is
 --			-- Dialog for the wizard.
 --		once
---			!! Result.make (Interface_names.t_Ace_builder, Project_tool);
+--			create Result.make (Interface_names.t_Ace_builder, Project_tool);
 --		end
 
 end -- class EB_SHOW_SYSTEM_TOOL

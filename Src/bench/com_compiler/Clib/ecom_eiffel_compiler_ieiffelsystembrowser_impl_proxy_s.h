@@ -79,6 +79,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Number of top-level clusters in system.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_root_cluster(  );
+
+
+	/*-----------------------------------------------------------
 	Cluster descriptor.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_cluster_descriptor(  /* [in] */ EIF_OBJECT cluster_name );

@@ -45,6 +45,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	root_cluster_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `root_cluster'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	cluster_descriptor_user_precondition (cluster_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `cluster_descriptor'.
 			-- Redefine in descendants if needed.
@@ -118,6 +125,14 @@ feature -- Basic Operations
 			-- Number of top-level clusters in system.
 		require
 			cluster_count_user_precondition: cluster_count_user_precondition
+		deferred
+
+		end
+
+	root_cluster: IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
+			-- Number of top-level clusters in system.
+		require
+			root_cluster_user_precondition: root_cluster_user_precondition
 		deferred
 
 		end

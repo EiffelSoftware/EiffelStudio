@@ -55,6 +55,12 @@ feature -- Access
 			Result := ccom_cluster_count (initializer)
 		end
 
+	root_cluster: IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
+			-- Number of top-level clusters in system.
+		do
+			Result := ccom_root_cluster (initializer)
+		end
+
 feature -- Basic Operations
 
 	cluster_descriptor (cluster_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
@@ -133,6 +139,12 @@ feature {NONE}  -- Externals
 			-- Number of top-level clusters in system.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy.h%"](): EIF_INTEGER"
+		end
+
+	ccom_root_cluster (cpp_obj: POINTER): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
+			-- Number of top-level clusters in system.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_cluster_descriptor (cpp_obj: POINTER; cluster_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is

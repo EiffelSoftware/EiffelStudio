@@ -130,6 +130,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Number of top-level clusters in system.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP root_cluster(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelClusterDescriptor * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Cluster descriptor.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP cluster_descriptor(  /* [in] */ BSTR cluster_name, /* [out, retval] */ ecom_eiffel_compiler::IEiffelClusterDescriptor * * return_value ) = 0;

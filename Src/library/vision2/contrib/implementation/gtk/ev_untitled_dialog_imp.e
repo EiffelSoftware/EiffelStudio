@@ -12,7 +12,8 @@ inherit
 		redefine
 			make,
 			interface,
-			set_size
+			set_size,
+			has_wm_decorations
 		end
 
 create
@@ -43,6 +44,12 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Implementation
+
+	has_wm_decorations: BOOLEAN is
+			-- Does the current window object have window decorations.
+		do
+			Result := False
+		end
 
 	interface: EV_UNTITLED_DIALOG
 			-- Provides a common user interface to platform dependent

@@ -112,7 +112,7 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::add_argument(  /* [in]
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_features(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out, retval] */ ecom_eiffel_compiler::IEnumCompletionEntry * * return_value )
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_features(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out] */ VARIANT * return_names, /* [out] */ VARIANT * return_signatures, /* [out] */ VARIANT * return_image_indexes )
 
 /*-----------------------------------------------------------
 	Features accessible from target.
@@ -135,22 +135,29 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_features(  /* [
 	{
 		tmp_file_name = eif_protect (rt_ce.ccom_ce_bstr (file_name));
 	}
-	
-	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("target_features", type_id);
-	EIF_REFERENCE tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_target != NULL) ? eif_access (tmp_target) : NULL), ((tmp_feature_name != NULL) ? eif_access (tmp_feature_name) : NULL), ((tmp_file_name != NULL) ? eif_access (tmp_file_name) : NULL));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "target_features", EIF_REFERENCE);
-	if (tmp_value != NULL)
+	EIF_OBJECT tmp_return_names = NULL;
+	if (return_names != NULL)
 	{
-		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_238 (eif_access (tmp_object));
-		eif_wean (tmp_object);
+		tmp_return_names = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_234 (return_names));
 	}
-	else
-		*return_value = NULL;
+	EIF_OBJECT tmp_return_signatures = NULL;
+	if (return_signatures != NULL)
+	{
+		tmp_return_signatures = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_235 (return_signatures));
+	}
+	EIF_OBJECT tmp_return_image_indexes = NULL;
+	if (return_image_indexes != NULL)
+	{
+		tmp_return_image_indexes = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_236 (return_image_indexes));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("target_features", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_target != NULL) ? eif_access (tmp_target) : NULL), ((tmp_feature_name != NULL) ? eif_access (tmp_feature_name) : NULL), ((tmp_file_name != NULL) ? eif_access (tmp_file_name) : NULL), ((tmp_return_names != NULL) ? eif_access (tmp_return_names) : NULL), ((tmp_return_signatures != NULL) ? eif_access (tmp_return_signatures) : NULL), ((tmp_return_image_indexes != NULL) ? eif_access (tmp_return_image_indexes) : NULL));
+	
+	
+	
 	if (tmp_target != NULL)
 		eif_wean (tmp_target);
 	if (tmp_feature_name != NULL)
@@ -197,7 +204,7 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_feature(  /* [i
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_52 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_51 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

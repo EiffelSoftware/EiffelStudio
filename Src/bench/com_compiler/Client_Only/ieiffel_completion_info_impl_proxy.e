@@ -41,13 +41,16 @@ feature -- Basic Operations
 			ccom_add_argument (initializer, name, type)
 		end
 
-	target_features (target: STRING; feature_name: STRING; file_name: STRING): IENUM_COMPLETION_ENTRY_INTERFACE is
+	target_features (target: STRING; feature_name: STRING; file_name: STRING; return_names: ECOM_VARIANT; return_signatures: ECOM_VARIANT; return_image_indexes: ECOM_VARIANT) is
 			-- Features accessible from target.
 			-- `target' [in].  
 			-- `feature_name' [in].  
 			-- `file_name' [in].  
+			-- `return_names' [out].  
+			-- `return_signatures' [out].  
+			-- `return_image_indexes' [out].  
 		do
-			Result := ccom_target_features (initializer, target, feature_name, file_name)
+			ccom_target_features (initializer, target, feature_name, file_name, return_names.item, return_signatures.item, return_image_indexes.item)
 		end
 
 	target_feature (target: STRING; feature_name: STRING; file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
@@ -81,10 +84,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_target_features (cpp_obj: POINTER; target: STRING; feature_name: STRING; file_name: STRING): IENUM_COMPLETION_ENTRY_INTERFACE is
+	ccom_target_features (cpp_obj: POINTER; target: STRING; feature_name: STRING; file_name: STRING; return_names: POINTER; return_signatures: POINTER; return_image_indexes: POINTER) is
 			-- Features accessible from target.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy %"ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,VARIANT *,VARIANT *,VARIANT *)"
 		end
 
 	ccom_target_feature (cpp_obj: POINTER; target: STRING; feature_name: STRING; file_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is

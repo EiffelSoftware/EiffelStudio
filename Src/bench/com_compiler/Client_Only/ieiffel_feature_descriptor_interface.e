@@ -6,9 +6,16 @@ deferred class
 	IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE
 
 inherit
-	IEIFFEL_COMPLETION_ENTRY_INTERFACE
+	ECOM_INTERFACE
 
 feature -- Status Report
+
+	name_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `name'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
 
 	external_name_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `external_name'.
@@ -26,6 +33,13 @@ feature -- Status Report
 
 	evaluated_class_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `evaluated_class'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	signature_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `signature'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -250,6 +264,14 @@ feature -- Status Report
 
 feature -- Basic Operations
 
+	name: STRING is
+			-- Feature name.
+		require
+			name_user_precondition: name_user_precondition
+		deferred
+
+		end
+
 	external_name: STRING is
 			-- Feature external name.
 		require
@@ -270,6 +292,14 @@ feature -- Basic Operations
 			-- Name of class where feature was evaluated in.
 		require
 			evaluated_class_user_precondition: evaluated_class_user_precondition
+		deferred
+
+		end
+
+	signature: STRING is
+			-- Feature signature.
+		require
+			signature_user_precondition: signature_user_precondition
 		deferred
 
 		end

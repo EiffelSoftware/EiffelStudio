@@ -24,7 +24,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	target_features_user_precondition (target: STRING; feature_name: STRING; file_name: STRING): BOOLEAN is
+	target_features_user_precondition (target: STRING; feature_name: STRING; file_name: STRING; return_names: ECOM_VARIANT; return_signatures: ECOM_VARIANT; return_image_indexes: ECOM_VARIANT): BOOLEAN is
 			-- User-defined preconditions for `target_features'.
 			-- Redefine in descendants if needed.
 		do
@@ -60,13 +60,22 @@ feature -- Basic Operations
 
 		end
 
-	target_features (target: STRING; feature_name: STRING; file_name: STRING): IENUM_COMPLETION_ENTRY_INTERFACE is
+	target_features (target: STRING; feature_name: STRING; file_name: STRING; return_names: ECOM_VARIANT; return_signatures: ECOM_VARIANT; return_image_indexes: ECOM_VARIANT) is
 			-- Features accessible from target.
 			-- `target' [in].  
 			-- `feature_name' [in].  
 			-- `file_name' [in].  
+			-- `return_names' [out].  
+			-- `return_signatures' [out].  
+			-- `return_image_indexes' [out].  
 		require
-			target_features_user_precondition: target_features_user_precondition (target, feature_name, file_name)
+			non_void_return_names: return_names /= Void
+			valid_return_names: return_names.item /= default_pointer
+			non_void_return_signatures: return_signatures /= Void
+			valid_return_signatures: return_signatures.item /= default_pointer
+			non_void_return_image_indexes: return_image_indexes /= Void
+			valid_return_image_indexes: return_image_indexes.item /= default_pointer
+			target_features_user_precondition: target_features_user_precondition (target, feature_name, file_name, return_names, return_signatures, return_image_indexes)
 		deferred
 
 		end

@@ -27,16 +27,6 @@ class IEiffelCompletionInfo;
 extern "C" {
 #endif
 
-#ifndef __ecom_eiffel_compiler_IEnumCompletionEntry_FWD_DEFINED__
-#define __ecom_eiffel_compiler_IEnumCompletionEntry_FWD_DEFINED__
-namespace ecom_eiffel_compiler
-{
-class IEnumCompletionEntry;
-}
-#endif
-
-
-
 #ifndef __ecom_eiffel_compiler_IEiffelFeatureDescriptor_FWD_DEFINED__
 #define __ecom_eiffel_compiler_IEiffelFeatureDescriptor_FWD_DEFINED__
 namespace ecom_eiffel_compiler
@@ -74,7 +64,7 @@ public:
 	/*-----------------------------------------------------------
 	Features accessible from target.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP target_features(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out, retval] */ ecom_eiffel_compiler::IEnumCompletionEntry * * return_value ) = 0;
+	virtual STDMETHODIMP target_features(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out] */ VARIANT * return_names, /* [out] */ VARIANT * return_signatures, /* [out] */ VARIANT * return_image_indexes ) = 0;
 
 
 	/*-----------------------------------------------------------

@@ -81,74 +81,6 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_na
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_signature(  )
-
-/*-----------------------------------------------------------
-	Feature signature.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelFeatureDescriptor == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelFeatureDescriptor_, (void **)&p_IEiffelFeatureDescriptor);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR ret_value = 0;
-	
-	hr = p_IEiffelFeatureDescriptor->signature( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
-	rt_ce.free_memory_bstr (ret_value);
-	return eif_wean (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_is_feature(  /* [out] */ EIF_OBJECT return_value )
-
-/*-----------------------------------------------------------
-	Is entry a feature?
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelFeatureDescriptor == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelFeatureDescriptor_, (void **)&p_IEiffelFeatureDescriptor);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	VARIANT_BOOL * tmp_return_value = 0;
-	tmp_return_value = (VARIANT_BOOL *)rt_ec.ccom_ec_pointed_boolean (eif_access (return_value), NULL);
-	
-	hr = p_IEiffelFeatureDescriptor->is_feature(tmp_return_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	rt_ce.ccom_ce_pointed_boolean ((VARIANT_BOOL *)tmp_return_value, return_value);
-	
-	grt_ce_ISE_c.ccom_free_memory_pointed_115 (tmp_return_value);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_external_name(  )
 
 /*-----------------------------------------------------------
@@ -251,6 +183,40 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_ev
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_signature(  )
+
+/*-----------------------------------------------------------
+	Feature signature.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelFeatureDescriptor == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelFeatureDescriptor_, (void **)&p_IEiffelFeatureDescriptor);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR ret_value = 0;
+	
+	hr = p_IEiffelFeatureDescriptor->signature( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	rt_ce.free_memory_bstr (ret_value);
+	return eif_wean (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_description(  )
 
 /*-----------------------------------------------------------
@@ -313,7 +279,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_pa
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_87 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE_c.ccom_ce_pointed_interface_89 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -370,7 +336,7 @@ void ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_loc
 	};
 	};
 	BSTR * tmp_file_path = 0;
-	tmp_file_path = (BSTR *)grt_ec_ISE_c.ccom_ec_pointed_cell_90 (eif_access (file_path), NULL);
+	tmp_file_path = (BSTR *)grt_ec_ISE_c.ccom_ec_pointed_cell_92 (eif_access (file_path), NULL);
 	ULONG * tmp_line_number = 0;
 	tmp_line_number = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (line_number), NULL);
 	
@@ -381,11 +347,11 @@ void ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_loc
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE_c.ccom_ce_pointed_cell_90 ((BSTR *)tmp_file_path, file_path);
+	grt_ce_ISE_c.ccom_ce_pointed_cell_92 ((BSTR *)tmp_file_path, file_path);
 	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_line_number, line_number);
 	
-	grt_ce_ISE_c.ccom_free_memory_pointed_90 (tmp_file_path);
-grt_ce_ISE_c.ccom_free_memory_pointed_91 (tmp_line_number);
+	grt_ce_ISE_c.ccom_free_memory_pointed_92 (tmp_file_path);
+grt_ce_ISE_c.ccom_free_memory_pointed_93 (tmp_line_number);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

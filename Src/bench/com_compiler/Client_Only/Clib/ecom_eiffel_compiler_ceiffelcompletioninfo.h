@@ -22,8 +22,6 @@ class CEiffelCompletionInfo;
 
 #include "ecom_eiffel_compiler_IEiffelCompletionInfo.h"
 
-#include "ecom_eiffel_compiler_IEnumCompletionEntry.h"
-
 #include "ecom_eiffel_compiler_IEiffelFeatureDescriptor.h"
 
 #include "ecom_grt_globals_ISE_c.h"
@@ -57,7 +55,7 @@ public:
 	/*-----------------------------------------------------------
 	Features accessible from target.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_target_features(  /* [in] */ EIF_OBJECT target,  /* [in] */ EIF_OBJECT feature_name,  /* [in] */ EIF_OBJECT file_name );
+	void ccom_target_features(  /* [in] */ EIF_OBJECT target,  /* [in] */ EIF_OBJECT feature_name,  /* [in] */ EIF_OBJECT file_name,  /* [out] */ VARIANT * return_names,  /* [out] */ VARIANT * return_signatures,  /* [out] */ VARIANT * return_image_indexes );
 
 
 	/*-----------------------------------------------------------

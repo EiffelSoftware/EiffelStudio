@@ -11,7 +11,6 @@ ecom_eiffel_compiler_ieiffelclusterdescriptor_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelclusterproperties_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelcompilerevents_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelcompiler_impl_stub.obj \
-ecom_eiffel_compiler_ieiffelcompletionentry_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_stub.obj \
 ecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub.obj \
@@ -26,7 +25,6 @@ ecom_eiffel_compiler_ienumassembly_impl_stub.obj \
 ecom_eiffel_compiler_ienumclusterexcludes_impl_stub.obj \
 ecom_eiffel_compiler_ienumclusterprop_impl_stub.obj \
 ecom_eiffel_compiler_ienumcluster_impl_stub.obj \
-ecom_eiffel_compiler_ienumcompletionentry_impl_stub.obj \
 ecom_eiffel_compiler_ienumeiffelclass_impl_stub.obj \
 ecom_eiffel_compiler_ienumfeature_impl_stub.obj \
 ecom_eiffel_compiler_ienumincludepaths_impl_stub.obj \
@@ -40,7 +38,6 @@ wecom_eiffel_compiler_ieiffelclusterdescriptor_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelclusterproperties_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelcompilerevents_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelcompiler_impl_stub.obj \
-wecom_eiffel_compiler_ieiffelcompletionentry_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_stub.obj \
 wecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub.obj \
@@ -55,7 +52,6 @@ wecom_eiffel_compiler_ienumassembly_impl_stub.obj \
 wecom_eiffel_compiler_ienumclusterexcludes_impl_stub.obj \
 wecom_eiffel_compiler_ienumclusterprop_impl_stub.obj \
 wecom_eiffel_compiler_ienumcluster_impl_stub.obj \
-wecom_eiffel_compiler_ienumcompletionentry_impl_stub.obj \
 wecom_eiffel_compiler_ienumeiffelclass_impl_stub.obj \
 wecom_eiffel_compiler_ienumfeature_impl_stub.obj \
 wecom_eiffel_compiler_ienumincludepaths_impl_stub.obj \
@@ -102,9 +98,6 @@ wecom_eiffel_compiler_ieiffelcompilerevents_impl_stub.obj: ecom_eiffel_compiler_
 wecom_eiffel_compiler_ieiffelcompiler_impl_stub.obj: ecom_eiffel_compiler_ieiffelcompiler_impl_stub.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
-wecom_eiffel_compiler_ieiffelcompletionentry_impl_stub.obj: ecom_eiffel_compiler_ieiffelcompletionentry_impl_stub.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
-
 wecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub.obj: ecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
@@ -145,9 +138,6 @@ wecom_eiffel_compiler_ienumclusterprop_impl_stub.obj: ecom_eiffel_compiler_ienum
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumcluster_impl_stub.obj: ecom_eiffel_compiler_ienumcluster_impl_stub.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
-
-wecom_eiffel_compiler_ienumcompletionentry_impl_stub.obj: ecom_eiffel_compiler_ienumcompletionentry_impl_stub.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumeiffelclass_impl_stub.obj: ecom_eiffel_compiler_ienumeiffelclass_impl_stub.cpp

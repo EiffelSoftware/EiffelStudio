@@ -84,6 +84,13 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	BUILD_RESERVED_WORDS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 	EV_STOCK_COLORS
 		rename
 			implementation as stock_colors_implementation
@@ -288,7 +295,8 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 			name_field.change_actions.block
 				-- If the name exists, we must restore the name of `object' to
 				-- the name before the name change began.
-			if object_handler.name_in_use (name_field.text, object) or (reserved_words.has (name_field.text.as_lower)) then
+			if object_handler.name_in_use (name_field.text, object) or (reserved_words.has (name_field.text.as_lower)) or
+				(build_reserved_words.has (name_field.text.as_lower)) then
 				object.cancel_edited_name
 				check
 					object_names_now_equal: object.edited_name.is_equal (object.name)
@@ -472,7 +480,8 @@ feature {NONE} -- Implementation
 			if valid_class_name (name_field.text) or name_field.text.is_empty  then
 				object.set_edited_name (name_field.text)
 				if object_handler.name_in_use (name_field.text, object) or 
-					(reserved_words.has (name_field.text.as_lower)) then
+					(reserved_words.has (name_field.text.as_lower)) or
+					(build_reserved_words.has (name_field.text.as_lower)) then
 					name_field.set_foreground_color (red)
 				else
 					name_field.set_foreground_color (black)
@@ -525,7 +534,7 @@ feature {NONE} -- Implementation
 		do
 			name_field.focus_out_actions.block
 			if (not name_field.text.is_empty and then object_handler.name_in_use (name_field.text, object)) or
-				(reserved_words.has (name_field.text.as_lower)) then
+				(reserved_words.has (name_field.text.as_lower)) or (build_reserved_words.has (name_field.text.as_lower)) then
 					
 				previous_caret_position := name_field.caret_position
 				create my_dialog.make_with_text (Duplicate_name_warning_part1 + name_field.text + Duplicate_name_warning_part2)

@@ -70,6 +70,13 @@ inherit
 			copy, default_create
 		end
 		
+	BUILD_RESERVED_WORDS	
+		export
+			{NONE} all
+		undefine
+			copy, default_create
+		end
+		
 	GB_EVENT_UTILITIES
 		export
 			{NONE} all
@@ -457,7 +464,8 @@ feature {NONE} -- Implementation
 		do
 			current_text_field := all_text_fields @ index
 			if valid_class_name (current_text_field.text) or current_text_field.text.is_empty then
-				if object_handler.string_is_object_name (current_text_field.text, Void) or (reserved_words.has (current_text_field.text.as_lower)) then
+				if object_handler.string_is_object_name (current_text_field.text, Void) or (reserved_words.has (current_text_field.text.as_lower)) or 
+				(build_reserved_words.has (current_text_field.text.as_lower)) then
 					current_text_field.set_foreground_color (red)
 				elseif object_handler.string_is_feature_name (current_text_field.text, Void) then
 					if object_handler.existing_feature_matches (current_text_field.text, all_types @ index) then
@@ -707,7 +715,10 @@ feature {NONE} -- Implementation
 							-- First check to see whether it is a reserved word.
 						if reserved_words.has (current_text_field.text.as_lower) then
 							create warning_dialog.make_with_text ("You are using an Eiffel reserved word for `"+ all_names @ (counter) + "'.%NPlease enter a valid feature name that is not a reserved word or uncheck the action sequence.")
-							warning_dialog.show_modal_to_window (Current)						
+							warning_dialog.show_modal_to_window (Current)
+						elseif build_reserved_words.has (current_text_field.text.as_lower) then
+							create warning_dialog.make_with_text ("You are using a name for`"+ all_names @ (counter) + "' which will clash with inherited features in the generated code.%NPlease enter a valid feature name or uncheck the action sequence.")
+							warning_dialog.show_modal_to_window (Current)
 						elseif object_handler.string_is_object_name (current_text_field.text, Void) then
 							-- Name has already been used as an object name.
 							create warning_dialog.make_with_text ("The feature name you have specified for `"+ all_names @ (counter) + "'%N is already in use as the name of an object in the system.%NPlease specify a unique name or uncheck this action sequence.")

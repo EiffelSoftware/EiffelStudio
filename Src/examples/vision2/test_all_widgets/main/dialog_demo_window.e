@@ -1,0 +1,85 @@
+indexing
+
+	description:
+		"";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	DIALOG_DEMO_WINDOW
+
+inherit
+
+	DEMO_WINDOW
+		redefine
+			main_widget,
+			set_widgets,
+			set_values
+		end
+
+creation
+
+	make
+
+feature -- Access
+
+	main_widget: EV_DYNAMIC_TABLE is
+		once
+			!!Result.make (Current)
+			Result.set_row_layout
+			Result.set_finite_dimension (1)
+		end
+	
+feature -- Access
+	
+	button: EV_BUTTON
+
+feature -- Status setting
+	
+	set_widgets is
+		local
+			info_cmd: MESSAGE_DIALOG_COMMAND
+			error_cmd: ERROR_DIALOG_COMMAND
+			question_cmd: QUESTION_DIALOG_COMMAND
+			a: EV_ARGUMENT1 [EV_WIDGET]
+		do
+			!!a.make(Current)
+			!!button.make_with_text (main_widget, "EV_INFORMATION_DIALOG")
+			!!info_cmd
+			button.add_click_command (info_cmd, a)
+			!!button.make_with_text (main_widget, "EV_ERROR_DIALOG")
+			!!error_cmd
+			button.add_click_command (error_cmd, a)
+			!!button.make_with_text (main_widget, "EV_QUESTION_DIALOG")
+			!!question_cmd
+			button.add_click_command (question_cmd, a)
+		end
+	
+feature -- Status setting
+	
+	set_values is
+		do
+			set_title ("Dialogs demo")
+			main_widget.set_homogeneous (True)
+			main_widget.set_row_spacing (5)
+			main_widget.set_column_spacing (5)
+			main_widget.set_finite_dimension (3)
+		end
+
+end -- class DIALOG_DEMO_WINDOW
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

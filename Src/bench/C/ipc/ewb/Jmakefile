@@ -3,7 +3,7 @@
  */
 
 ;# Files used to build the daemon
-SRC = connect.c proto.c eif_in.c eif_out.c init.c
+SRC = proto.c eif_in.c eif_out.c init.c
 
 ;# Derived object file names
 OBJ = \

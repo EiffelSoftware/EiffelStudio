@@ -10,8 +10,8 @@ class RESOURCE_USER
 feature -- Dispatch
 
 	dispatch_modified_resource (old_res, new_res: RESOURCE) is
-			-- Dispatch `a_modified_resource' to `users.item' based on
-			-- on the actual type of `a_modified_resource.old_resource'.
+			-- Dispatch modified resource based on
+			-- the actual type of `old_res'.
 		local
 			old_b, new_b: BOOLEAN_RESOURCE
 			old_i, new_i: INTEGER_RESOURCE

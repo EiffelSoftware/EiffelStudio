@@ -13,7 +13,6 @@ inherit
 	EIFFEL_ENV;
 	ISED_X_SLAVE;
 	GRAPHICS;
-	COMMAND;
 	ARGUMENTS
 		rename
 			command_line as arguments_line

@@ -518,37 +518,44 @@
 		<TEXT DESCRIPTION="Use animated icons">use_animated_icons<BOOLEAN>True</BOOLEAN></TEXT>
 		<TOPIC TOPIC_ID="Default_Colors" ICON="icon_preferences_folder">
 			<HEAD>Colors</HEAD>
-			<TEXT DESCRIPTION="Color used to display normal text">normal_text_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display normal text">normal_background_color<COLOR>255;255;255</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display selected text">selection_text_color<COLOR>255;255;128</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display selected text">selection_background_color<COLOR>0;0;128</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display manifest strings">string_text_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display manifest strings">string_background_color<COLOR>255;255;255</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display keywords">keyword_text_color<COLOR>0;0;128</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display keywords">keyword_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display spaces">spaces_text_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display spaces">spaces_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display comments">comments_text_color<COLOR>128;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display comments">comments_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display numbers">number_text_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display numbers">number_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display operators">operator_text_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display operators">operator_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display indexing tags">indexing_tag_text_color<COLOR>64;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display indexing tags">indexing_tag_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display assertion tags">assertion_tag_text_color<COLOR>64;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display assertion tags">assertion_tag_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display reserved words">reserved_text_color<COLOR>64;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display reserved words">reserved_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display locals">local_text_color<COLOR>64;0;0</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display locals">local_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display breakable marks and breakpoints">breakpoint_background_color<COLOR>212;208;200</COLOR></TEXT>
-			<TEXT>class_color<COLOR>0;0;255</COLOR></TEXT>
-			<TEXT>cluster_color<COLOR>128;0;0</COLOR></TEXT>
-			<TEXT>feature_color<COLOR>0;128;0</COLOR></TEXT>
-			<TEXT>error_color<COLOR>255;0;0</COLOR></TEXT>
-			<TEXT>object_color<COLOR>0;0;255</COLOR></TEXT>
-			<TEXT>progress_bar_color<COLOR>0;0;128</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for normal text">normal_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for normal text">normal_background_color<COLOR>255;255;255</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for selected text">selection_text_color<COLOR>255;255;128</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for selected text">selection_background_color<COLOR>0;0;128</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for classes">class_text_color<COLOR>0;0;255</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for classes">class_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for features">feature_text_color<COLOR>0;128;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for features">feature_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for clusters">cluster_text_color<COLOR>128;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for clusters">cluster_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for errors">error_text_color<COLOR>255;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for errors">error_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for objects">object_text_color<COLOR>0;0;255</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for objects">object_background_color<COLOR>255;255;255</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for manifest strings">string_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for manifest strings">string_background_color<COLOR>255;255;255</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for keywords">keyword_text_color<COLOR>0;0;128</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for keywords">keyword_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for spaces">spaces_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for spaces">spaces_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for comments">comments_text_color<COLOR>128;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for comments">comments_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for numbers">number_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for numbers">number_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for operators">operator_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for operators">operator_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for indexing tags">indexing_tag_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for indexing tags">indexing_tag_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for assertion tags">assertion_tag_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for assertion tags">assertion_tag_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for reserved words">reserved_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for reserved words">reserved_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for locals">local_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for locals">local_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Foreground color for generics">generic_text_color<COLOR>255;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color for generics">generic_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color for breakable marks and breakpoints">breakpoint_background_color<COLOR>212;208;200</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color for progress bars">progress_bar_color<COLOR>0;0;128</COLOR></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Dialogs" ICON="icon_preferences_folder">
 			<HEAD>Dialogs</HEAD>

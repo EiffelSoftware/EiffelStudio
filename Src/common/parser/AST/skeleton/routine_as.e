@@ -233,7 +233,8 @@ feature -- Simple formatting
 				ctxt.new_line
 				rescue_clause.simple_format (ctxt)
 				ctxt.new_line
-				ctxt.exdent
+				ctxt.exdent;
+				ctxt.put_breakable;
 			end;
 			ctxt.put_text_item (ti_End_keyword)
 			ctxt.exdent

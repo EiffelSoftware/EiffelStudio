@@ -116,7 +116,6 @@ feature
 		local
 			target_type: TYPE_I;
 			is_expanded: BOOLEAN;
-			feat: FEATURE_B;
 		do
 			target_type := Context.real_type (target.type);
 

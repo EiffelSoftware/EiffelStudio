@@ -93,7 +93,7 @@ feature -- Code generation
 				--|Note: It is actually a double which
 				--|is appended to the byte code despite
 				--|the name `append_real'
-			ba.append_real (real_value)
+			ba.append_double (real_value)
 		end
 
 feature -- Output

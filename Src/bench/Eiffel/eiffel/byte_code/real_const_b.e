@@ -76,7 +76,7 @@ feature -- Byte code generation
 			-- Generate byte code for a real manifest constant.
 		do
 			ba.append (Bc_double)
-			ba.append_real (value.to_double)
+			ba.append_double (value.to_double)
 		end
 
 end

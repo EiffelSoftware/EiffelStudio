@@ -570,9 +570,9 @@ feature {NONE} -- Cursor shape
 			real_x, real_y: INTEGER
 		do
 			if movable then
-				cursor_shape := Cursors.move_cursor;
+				cursor_shape := Cursors.move_cursor
 			else
-				cursor_shape := Cursors.cross_cursor
+				cursor_shape := Cursors.arrow_cursor
 			end
 			x_pos := eb_screen.x;
 			y_pos := eb_screen.y;

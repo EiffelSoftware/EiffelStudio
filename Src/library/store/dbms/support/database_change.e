@@ -64,7 +64,7 @@ feature -- Element change
 			if not parsed then
 				tmp_string := parse (sql)
 				if immediate_execution then
-					handle.status.set (db_spec.pre_immediate (temp_descriptor, 0))					
+					db_spec.pre_immediate (temp_descriptor, 0)
 				else
 					db_spec.init_order (temp_descriptor, tmp_string)
 				end

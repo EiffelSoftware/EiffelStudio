@@ -54,7 +54,7 @@ feature
 					db_spec.init_order (descriptor, parsed_s)
 				end
 				if is_ok then
-					handle.status.set (db_spec.pre_immediate (descriptor, ArgNum))
+					db_spec.pre_immediate (descriptor, ArgNum)
 				end
 			end
 			set_executed (FALSE)

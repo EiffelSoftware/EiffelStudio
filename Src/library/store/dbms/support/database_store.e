@@ -117,7 +117,7 @@ feature -- Basic operations
 			if tmp_string /= Void then
 				temp_descriptor := db_spec.new_descriptor
 				if immediate_execution then
-					handle.status.set (db_spec.pre_immediate (temp_descriptor, 0))
+					db_spec.pre_immediate (temp_descriptor, 0)
 					db_spec.exec_immediate (temp_descriptor, tmp_string)
 				else
 					db_spec.init_order (temp_descriptor, tmp_string)

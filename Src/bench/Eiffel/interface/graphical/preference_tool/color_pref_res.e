@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			-- Initialize the color resouce.
 		do
 			string_init (a_parent);
+			text.remove_activate_action (Current, Void);
 			text.add_button_press_action (3, Current, color_action);
 		end;
 

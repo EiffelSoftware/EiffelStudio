@@ -56,8 +56,10 @@ feature
 			f_name.extend ('E');
 			f_name.append_integer (i);
 			file_make (f_name);
-			open_write;
-			basic_close;	
+			if not Project_read_only.item and not exists then
+				open_write;
+				basic_close
+			end;
 			id := i;
 debug ("SERVER")
 	io.error.putstring ("Creating file E");
@@ -99,8 +101,10 @@ end;
 		do
 			if precompiled then
 				open_read
+			elseif Project_read_only.item then
+				open_read
 			else
-				open_read_write;
+				open_read_write
 			end;
 			is_open := True;
 debug ("SERVER")

@@ -182,6 +182,53 @@ end;
 			end;
 		end;
 
+	is_readable: BOOLEAN is
+			-- Are the server files readable?
+		local
+			i, files_upper: INTEGER;
+			file: SERVER_FILE
+		do
+			from
+				Result := true;
+				i := files.lower;
+				files_upper := files.upper
+			until
+				not Result or i > files_upper
+			loop
+				file:= files.item (i);
+				if file /= Void then
+					Result := file.exists and then file.is_readable
+				end;
+				i := i + 1
+			end
+		end;
+
+	is_writable: BOOLEAN is
+			-- Are the server files readable and writable?
+		local
+			i, files_upper: INTEGER;
+			file: SERVER_FILE
+		do
+			from
+				Result := true;
+				i := files.lower;
+				files_upper := files.upper
+			until
+				not Result or i > files_upper
+			loop
+				file:= files.item (i);
+				if file /= Void then
+					if file.precompiled then
+						Result := file.exists and then file.is_readable
+					else
+						Result := file.exists and then 
+							(file.is_readable and file.is_writable)
+					end
+				end;
+				i := i + 1
+			end
+		end;
+
 feature -- Precompilation
 
 	last_precompiled_id: INTEGER;

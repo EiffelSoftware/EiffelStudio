@@ -114,12 +114,14 @@ feature -- Commands
 	create_new is
 			-- Create a new project
 		do
-			Shared_dialogs.project_dialog.show_modal_to_window (Shared_dialogs.template_dialog)			
-			create file.make_create_read_write (create {FILE_NAME}.make_from_string (full_name))
-			file.close
-			create preferences.make (Current)
-			preferences.write
-			initialize
+			Shared_dialogs.project_dialog.show_modal_to_window (Shared_dialogs.template_dialog)
+			if Shared_dialogs.project_dialog.valid then
+				create file.make_create_read_write (create {FILE_NAME}.make_from_string (full_name))
+				file.close
+				create preferences.make (Current)
+				preferences.write
+				initialize
+			end
 		end
 		
 	open is

@@ -92,7 +92,7 @@ feature -- Access
 		do
 			upper_bound := upper
 			if object_comparison then
-				if v = void then
+				if v = Void then
 					i := upper_bound + 1
 				else
 					from
@@ -275,9 +275,19 @@ feature -- Removal
 
 	wipe_out is
 			-- Make array empty.
+		obsolete
+			"Not applicable since not `prunable'. Use `discard_items' instead."
+		do
+			discard_items
+		end
+
+	discard_items is
+			-- Reset all items to default values with reallocation.
 		do
 			make_area (capacity)
-		end;
+		ensure
+			all_cleared: all_cleared
+		end
 
 	clear_all is
 			-- Reset all items to default values.

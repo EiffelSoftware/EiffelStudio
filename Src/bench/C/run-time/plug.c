@@ -330,9 +330,10 @@ rt_public void chkinv (EIF_CONTEXT char *obj, int where)
 rt_public void chkcinv(EIF_CONTEXT char *obj)
 {
 	/* Check invariant of `obj' after creation. */
-
+	EIF_GET_CONTEXT
 	if (~in_assertion & (WASC(Dtype(obj))) & CK_INVARIANT) {
 		chkinv(MTC obj,1);}
+	EIF_END_GET_CONTEXT
 }
 #endif
 

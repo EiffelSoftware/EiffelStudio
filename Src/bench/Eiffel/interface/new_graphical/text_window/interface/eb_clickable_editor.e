@@ -228,6 +228,22 @@ feature -- Possibly delayed operations
 				end
 		end
 
+	display_line_at_top_when_ready (l_num: INTEGER) is
+			-- same as select_region but scroll to the selected position
+			-- (beginning of selection at then bottom of the editor) and
+			-- does not need the text to be fully loaded
+		local
+			ln: INTEGER
+		do
+				if text_is_fully_loaded then
+					ln := l_num.min (maximum_top_line_index)
+					set_first_line_displayed (ln, True)
+					refresh_now
+				else
+					after_reading_text_actions.extend(~display_line_at_top_when_ready (l_num))
+				end
+		end
+
 	highlight_when_ready (a, b: INTEGER) is
 			-- same as select_region but scroll to the selected position
 			-- (beginning of selection at then bottom of the editor) and

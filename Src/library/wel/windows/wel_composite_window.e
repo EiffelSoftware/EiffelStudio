@@ -244,7 +244,7 @@ feature -- Status setting
 			-- `maximum'.
 		require
 			exists: exists
-			consistent_range: minimum < maximum
+			consistent_range: minimum <= maximum
 		do
 			cwin_set_scroll_range (item, Sb_horz, minimum,
 				maximum, True)
@@ -261,7 +261,7 @@ feature -- Status setting
 			-- `maximum'.
 		require
 			exists: exists
-			consistent_range: minimum < maximum
+			consistent_range: minimum <= maximum
 		do
 			cwin_set_scroll_range (item, Sb_vert, minimum,
 				maximum, True)

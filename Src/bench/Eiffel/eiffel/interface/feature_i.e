@@ -727,13 +727,28 @@ feature -- Check
 
 	body: FEATURE_AS_B is
 			-- Body of the feature
+		local
+			class_ast: CLASS_AS_B;
+			bid: INTEGER
 		do
-			if is_code_replicated then
-				Result := Rep_feat_server.item (body_id);
-			elseif
-				Tmp_body_server.has (body_id) or Body_server.has (body_id)
-			then
-				Result := Body_server.item (body_id);
+			if body_index /= 0 then
+				bid := Body_index_table.item (body_index);
+				if is_code_replicated then
+					Result := Rep_feat_server.item (bid);
+				elseif
+					Tmp_body_server.has (bid) or Body_server.has (bid)
+				then
+					Result := Body_server.item (bid);
+				end
+			end;
+			if Result = Void then
+				if Tmp_ast_server.has (written_in) then
+					-- Means a degree 4 error has occurred so the
+					-- best we can do is to search through the
+					-- class ast and find the feature as
+					class_ast := Tmp_ast_server.item (written_in)
+					Result := class_ast.feature_with_name (feature_name)
+				end
 			end;
 		end;
 
@@ -1215,7 +1230,7 @@ end;
 				new_ext ?= Current;
 					-- This was the previous implementation:
 					-- new_ext.set_encapsulated
-					--              (new_ext.encapsulated or else old_ext.encapsulated);
+					--			  (new_ext.encapsulated or else old_ext.encapsulated);
 					-- In the case where a class redefines a routine that 
 					-- requires encapsulation (is_special or has_signature is True)
 					-- into a `standard' external that doesn't need to be encapsulated

@@ -25,8 +25,8 @@ feature -- Status Setting
 
 	set_use (a_use: XML_XML_SCHEMA_USE) is
 			-- Set `use' value
-		require
-			use_not_void: a_use /= Void
+--		require
+--			use_not_void: a_use /= Void
 		do
 			use := a_use
 		end	

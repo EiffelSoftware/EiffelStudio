@@ -50,8 +50,6 @@ remtrace cpp
 exprt -r $DEFAULT_CVS_TAG -d cpp Src/examples/cpp
 remtrace lex
 exprt -r $DEFAULT_CVS_TAG -d lex Src/examples/lex
-remtrace mel
-exprt -r $DEFAULT_CVS_TAG -d mel Src/examples/mel
 remtrace net
 exprt -r $DEFAULT_CVS_TAG -d net Src/examples/net
 remtrace parse

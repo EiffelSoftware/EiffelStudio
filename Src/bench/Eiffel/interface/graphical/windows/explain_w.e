@@ -80,6 +80,7 @@ feature -- Graphical Interface
 			toolbar_parent.set_margin_height (0)
 			toolbar_parent.set_spacing (1)
 			!! explain_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
+			explain_toolbar.set_height (22)
 		end
 
 	build_menus is

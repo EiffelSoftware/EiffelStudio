@@ -319,6 +319,7 @@ feature {NONE} -- Implementation Graphical Interface
 			toolbar_parent.set_margin_height (0)
 			toolbar_parent.set_spacing (1)
 			!! system_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
+			system_toolbar.set_height (22)
 		end
 
 	build_toolbar_menu is
@@ -345,6 +346,7 @@ feature {NONE} -- Implementation Graphical Interface
 			save_button: EB_BUTTON
 			save_menu_entry: EB_MENU_ENTRY
 			sep: SEPARATOR
+			sep1, sep2, sep3: THREE_D_SEPARATOR
 			stat_cmd: SHOW_STATISTICS
 			stat_button: FORMAT_BUTTON
 			stat_menu_entry: EB_TICKABLE_MENU_ENTRY
@@ -444,23 +446,43 @@ feature {NONE} -- Implementation Graphical Interface
 
 			build_filter_menu_entry
 
+			!! sep1.make (interface_names.t_empty, system_toolbar)
+			sep1.set_horizontal (False)
+			sep1.set_height (20)
+
+			!! sep2.make (interface_names.t_empty, system_toolbar)
+			sep2.set_horizontal (False)
+			sep2.set_height (20)
+
+			!! sep3.make (interface_names.t_empty, system_toolbar)
+			sep3.set_horizontal (False)
+			sep3.set_height (20)
 
 				-- Now we attach everything (this is done here for reason of speed).
-			system_toolbar.attach_left (open_button, 0)
 			system_toolbar.attach_top (open_button, 0)
+			system_toolbar.attach_left (open_button, 5)
 			system_toolbar.attach_top (save_button, 0)
 			system_toolbar.attach_left_widget (open_button, save_button, 0)
 
+			system_toolbar.attach_top (sep1, 0)
+			system_toolbar.attach_left_widget (save_button, sep1, 5)
+
+			system_toolbar.attach_top (search_cmd_holder.associated_button, 0)
+			system_toolbar.attach_left_widget (sep1, search_cmd_holder.associated_button, 5)
+
+			system_toolbar.attach_top (sep2, 0)
+			system_toolbar.attach_left_widget (search_cmd_holder.associated_button, sep2, 5)
+
 			system_toolbar.attach_top (hole_button, 0)
-			system_toolbar.attach_left_widget (save_button, hole_button, 10)
+			system_toolbar.attach_left_widget (sep2, hole_button, 5)
 			system_toolbar.attach_top (shell_button, 0)
 			system_toolbar.attach_left_widget (hole_button, shell_button, 0)
 
-			system_toolbar.attach_top (search_cmd_holder.associated_button, 0)
-			system_toolbar.attach_left_widget (shell_button, search_cmd_holder.associated_button, 10)
+			system_toolbar.attach_top (sep3, 0)
+			system_toolbar.attach_left_widget (shell_button, sep3, 5)
 
 			system_toolbar.attach_top (showtext_button, 0)
-			system_toolbar.attach_left_widget (search_cmd_holder.associated_button, showtext_button, 10)
+			system_toolbar.attach_left_widget (sep3, showtext_button, 10)
 			system_toolbar.attach_top (list_button, 0)
 			system_toolbar.attach_left_widget (showtext_button, list_button, 0)
 			system_toolbar.attach_top (showclass_button, 0)

@@ -82,11 +82,13 @@ feature -- Initialization
 			Application.set_before_stopped_command (app_stopped_cmd)
 			Application.set_after_stopped_command (app_stopped_cmd)
 			set_default_position
-			init_text_window
-			set_composite_attributes (Current)
 			tooltip_initialize (Current)
 			realize
 			focus_label.initialize_focusables (Current)
+			set_composite_attributes (Current)
+			init_text_window
+			feature_part.init_text_window
+			object_part.init_text_window
 		end
 
 feature -- Resource Update
@@ -841,12 +843,14 @@ feature -- Graphical Interface
 
 			attach_all
 
+			display_routine_cmd ?= display_feature_cmd_holder.associated_command
+			display_object_cmd ?= display_object_cmd_holder.associated_command
 			if hide_split_windows then
-				display_routine_cmd ?= display_feature_cmd_holder.associated_command
-				display_object_cmd ?= display_object_cmd_holder.associated_command
-
 				display_routine_cmd.hide
 				display_object_cmd.hide
+			else
+				display_routine_cmd.show
+				display_object_cmd.show
 			end
 		end
 
@@ -1021,6 +1025,7 @@ feature -- Graphical Interface
 			show_prof_menu_entry: EB_MENU_ENTRY
 
 			sep: SEPARATOR
+			sep1, sep2: THREE_D_SEPARATOR
 			display_feature_cmd: DISPLAY_ROUTINE_PORTION
 			display_feature_button: EB_BUTTON
 			display_feature_menu_entry: EB_MENU_ENTRY
@@ -1154,7 +1159,13 @@ feature -- Graphical Interface
 			!! quick_melt_menu_entry.make (quick_update_cmd, menus @ compile_menu)
 			!! quick_update_cmd_holder.make (quick_update_cmd, quick_update_button, quick_melt_menu_entry)
 
-			project_toolbar.attach_left (explain_button, 0)
+			!! sep1.make (interface_names.t_empty, project_toolbar)
+			sep1.set_horizontal (False)
+
+			!! sep2.make (interface_names.t_empty, project_toolbar)
+			sep2.set_horizontal (False)
+
+			project_toolbar.attach_left (explain_button, 5)
 			project_toolbar.attach_top (explain_button, 0)
 			project_toolbar.attach_left_widget (explain_button, system_button,0)
 			project_toolbar.attach_top (system_button, 0)
@@ -1171,14 +1182,23 @@ feature -- Graphical Interface
 			project_toolbar.attach_top (stop_points_button, 0)
 			project_toolbar.attach_top (clear_bp_button, 0)
 
+			project_toolbar.attach_top (sep1, 0)
+			project_toolbar.attach_bottom (sep1, 0)
+			project_toolbar.attach_left_widget (clear_bp_button, sep1, 30)
+
 			project_toolbar.attach_right (quick_update_button, 0)
 			project_toolbar.attach_top (quick_update_button, 0)
 			project_toolbar.attach_top (update_button, 0)
-			project_toolbar.attach_top (search_cmd_holder.associated_button, 0)
 			project_toolbar.attach_right_widget (quick_update_button, update_button, 0)
-			project_toolbar.attach_right_widget (update_button, search_cmd_holder.associated_button, 3)
+			
+			project_toolbar.attach_top (sep2, 0)
+			project_toolbar.attach_bottom (sep2, 0)
+			project_toolbar.attach_right_widget (update_button, sep2, 10)
 
-			project_toolbar.attach_left_widget (stop_points_button, display_feature_button, 60)
+			project_toolbar.attach_top (search_cmd_holder.associated_button, 0)
+			project_toolbar.attach_right_widget (sep2, search_cmd_holder.associated_button, 10)
+
+			project_toolbar.attach_left_widget (sep1, display_feature_button, 30)
 			project_toolbar.attach_top (display_feature_button, 0)
 			project_toolbar.attach_right_widget (display_feature_button, display_object_button, 0)
 			project_toolbar.attach_top (display_object_button, 0)
@@ -1200,6 +1220,7 @@ feature -- Graphical Interface
 			nostop_button: EB_BUTTON
 			nostop_menu_entry: EB_MENU_ENTRY
 			sep: SEPARATOR
+			sep1, sep2, sep3: THREE_D_SEPARATOR
 			run_final_cmd: EXEC_FINALIZED
 			run_final_menu_entry: EB_MENU_ENTRY
 			debug_quit_cmd: DEBUG_QUIT
@@ -1273,11 +1294,25 @@ feature -- Graphical Interface
 			!! run_final_cmd.make (Current)
 			!! run_final_menu_entry.make (run_final_cmd, menus @ debug_menu)
 
+			!! sep1.make (Interface_names.t_empty, format_bar)
+			sep1.set_horizontal (False)
+
+			!! sep2.make (Interface_names.t_empty, format_bar)
+			sep2.set_horizontal (False)
+
+			!! sep3.make (Interface_names.t_empty, format_bar)
+			sep3.set_horizontal (False)
+
 				--| Attachements for the debugging tools will be made from right to left
 			format_bar.attach_right (debug_run_button, 0)
 			format_bar.attach_top (debug_run_button, 0)
+
+			format_bar.attach_top (sep1, 0)
+			format_bar.attach_bottom (sep1, 0)
+			format_bar.attach_right_widget (debug_run_button, sep1, 5)
+
 			format_bar.attach_top (nostop_button, 0)
-			format_bar.attach_right_widget (debug_run_button, nostop_button, 5)
+			format_bar.attach_right_widget (sep1, nostop_button, 5)
 			format_bar.attach_top (step_out_button, 0)
 			format_bar.attach_right_widget (nostop_button, step_out_button, 0)
 			format_bar.attach_top (step_button, 0)
@@ -1285,11 +1320,19 @@ feature -- Graphical Interface
 			format_bar.attach_top (stop_button, 0)
 			format_bar.attach_right_widget (step_button, stop_button, 0)
 
+			format_bar.attach_top (sep2, 0)
+			format_bar.attach_bottom (sep2, 0)
+			format_bar.attach_right_widget (stop_button, sep2, 5)
+
 			format_bar.attach_top (debug_quit_button, 0)
-			format_bar.attach_right_widget (stop_button, debug_quit_button, 10)
+			format_bar.attach_right_widget (sep2, debug_quit_button, 5)
+
+			format_bar.attach_top (sep3, 0)
+			format_bar.attach_bottom (sep3, 0)
+			format_bar.attach_right_widget (debug_quit_button, sep3, 5)
 
 			format_bar.attach_top (debug_status_button, 0)
-			format_bar.attach_right_widget (debug_quit_button, debug_status_button, 10)
+			format_bar.attach_right_widget (sep3, debug_status_button, 5)
 			format_bar.attach_top (down_exception_stack_button, 0)
 			format_bar.attach_right_widget (debug_status_button, down_exception_stack_button, 0)
 			format_bar.attach_top (up_exception_stack_button, 0)

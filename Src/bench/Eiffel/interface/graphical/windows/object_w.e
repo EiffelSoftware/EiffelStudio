@@ -218,7 +218,7 @@ feature -- Update
 			sc: SLICE_COMMAND
 			sw: SLICE_W
 		do
-			{BAR_AND_TEXT} precursor
+			{BAR_AND_TEXT} Precursor
 			sc ?= slice_cmd_holder.associated_command
 			sw ?= sc.slice_window
 			if sw /= Void and then sw.is_popped_up then
@@ -278,11 +278,15 @@ feature {NONE} -- Implementation; Graphical Interface
 			sep: THREE_D_SEPARATOR
 		do
 			!! toolbar_parent.make (new_name, a_parent)
+			if not is_in_project_tool then
+				!! sep.make (interface_names.t_empty, toolbar_parent)
+			end
 			toolbar_parent.set_column_layout
 			toolbar_parent.set_free_size	
 			toolbar_parent.set_margin_height (0)
 			toolbar_parent.set_spacing (1)
 			!! object_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
+			object_toolbar.set_height (22)
 		end
 
 	build_toolbar_menu is
@@ -318,6 +322,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			slice_button: EB_BUTTON
 			slice_menu_entry: EB_MENU_ENTRY
 			sep: SEPARATOR
+			sep1, sep2, sep3: THREE_D_SEPARATOR
 			once_cmd: SHOW_ONCE_RESULTS
 			once_button: FORMAT_BUTTON
 			once_menu_entry: EB_TICKABLE_MENU_ENTRY
@@ -376,33 +381,50 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! history_list_cmd.make (Current)
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button)
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
+
+			!! sep1.make (interface_names.t_empty, object_toolbar)
+			sep1.set_horizontal (False)
+			sep1.set_height (20)
+
+			!! sep2.make (interface_names.t_empty, object_toolbar)
+			sep2.set_horizontal (False)
+			sep2.set_height (20)
+
+			!! sep3.make (interface_names.t_empty, object_toolbar)
+			sep3.set_horizontal (False)
+			sep3.set_height (20)
+
 				-- Attachments are done here, because of speed.
 				-- I know it's not really maintainable.
 			search_button := search_cmd_holder.associated_button
 
---			object_toolbar.attach_left (hole_button, 0)
---			object_toolbar.attach_top (hole_button, 0)
---			object_toolbar.detach_left (quit_button)
---			object_toolbar.attach_right_widget (quit_button, search_button, 5)
---			object_toolbar.detach_left (search_button)
-
-			object_toolbar.attach_left (attr_button, 0)
 			object_toolbar.attach_top (attr_button, 0)
+			object_toolbar.attach_left (attr_button, 5)
 			object_toolbar.attach_top (once_button, 0)
 			object_toolbar.attach_left_widget (attr_button, once_button, 0)
 
+			object_toolbar.attach_top (sep1, 0)
+			object_toolbar.attach_left_widget (once_button, sep1, 5)
+
+			object_toolbar.attach_top (slice_button, 0)
+			object_toolbar.attach_left_widget (sep1, slice_button, 5)
+
+			object_toolbar.attach_top (sep2, 0)
+			object_toolbar.attach_left_widget (slice_button, sep2, 5)
+
 			object_toolbar.attach_top (search_button, 0)
-			object_toolbar.attach_left_widget (once_button, search_button, 10)
+			object_toolbar.attach_left_widget (sep2, search_button, 10)
+
+			object_toolbar.attach_top (sep3, 0)
+			object_toolbar.attach_left_widget (search_button, sep3, 5)
 
 			object_toolbar.attach_top (previous_target_button, 0)
-			object_toolbar.attach_left_widget (search_button, previous_target_button, 10)
+			object_toolbar.attach_left_widget (sep3, previous_target_button, 5)
 			object_toolbar.attach_top (next_target_button, 0)
 			object_toolbar.attach_left_widget (previous_target_button, next_target_button, 0)
 
-			object_toolbar.attach_right (quit_button, 0)
 			object_toolbar.attach_top (quit_button, 0)
-			object_toolbar.attach_top (slice_button, 0)
-			object_toolbar.attach_right_widget (quit_button, slice_button, 10)
+			object_toolbar.attach_right (quit_button, 0)
 		end
 
 	build_widgets is

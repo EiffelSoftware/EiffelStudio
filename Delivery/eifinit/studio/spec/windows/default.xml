@@ -504,6 +504,8 @@
 		<TEXT DESCRIPTION="All-purpose editor font" IMMEDIATE_EFFECT="no">editor_font<FONT>Courier New-r-regular-11-typewriter</FONT></TEXT>
 		<TEXT DESCRIPTION="Keyword editor font" IMMEDIATE_EFFECT="no">keyword_font<FONT>Courier New-r-bold-11-typewriter</FONT></TEXT>
 		<TEXT DESCRIPTION="Tabulation size" IMMEDIATE_EFFECT="no">tab_step<INTEGER>4</INTEGER></TEXT>
+		<TEXT DESCRIPTION="Mouse wheel scroll full page" IMMEDIATE_EFFECT="yes">mouse_wheel_scroll_full_page<BOOLEAN>False</BOOLEAN></TEXT>
+		<TEXT DESCRIPTION="Mouse wheel scroll size" IMMEDIATE_EFFECT="yes">mouse_wheel_scroll_size<INTEGER>3</INTEGER></TEXT>
 		<TEXT DESCRIPTION="Use animated icons">use_animated_icons<BOOLEAN>True</BOOLEAN></TEXT>
 		<TOPIC TOPIC_ID="Default_Colors" ICON="icon_preferences_folder">
 			<HEAD>Colors</HEAD>

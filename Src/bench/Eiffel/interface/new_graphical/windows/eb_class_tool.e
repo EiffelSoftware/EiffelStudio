@@ -45,7 +45,7 @@ icon_id,
 creation
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 --	form_create (a_form: FORM file_m, edit_m, format_m, special_m: MENU_PULL) is
 --			-- Create a feature tool from a form.
@@ -67,18 +67,6 @@ feature -- Initialization
 --			set_composite_attributes (special_m)
 --		end
 
-	build_interface is
-		do
-			precursor
-
-			if resources.command_bar.actual_value = False then
-				edit_bar.hide
-			end
-			if resources.format_bar.actual_value = False then
-				format_bar.hide
-			end
-		end
-
 	init_formatters is
 		do
 			create format_list.make (Current)
@@ -98,6 +86,20 @@ feature -- Initialization
 			create next_target_cmd.make (Current)
 			create previous_target_cmd.make (Current)
 			
+		end
+
+feature {EB_TOOL_MANAGER} -- Initialization
+
+	build_interface is
+		do
+			precursor
+
+			if resources.command_bar.actual_value = False then
+				edit_bar.hide
+			end
+			if resources.format_bar.actual_value = False then
+				format_bar.hide
+			end
 		end
 
 feature -- Access

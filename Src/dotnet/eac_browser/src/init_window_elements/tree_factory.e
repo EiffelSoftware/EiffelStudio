@@ -9,6 +9,10 @@ class
 
 inherit
 	ICON_PATH
+	SESSION
+		export
+			{NONE}all
+		end
 
 create
 	make
@@ -96,7 +100,6 @@ feature {NONE} -- Add element to tree
 			counter: INTEGER
 			eac: EAC_BROWSER
 			cat: CONSUMED_ASSEMBLY_TYPES
---			a_file_name: STRING
 			l_namespaces: ARRAY [STRING]
 			l_namespace_name: STRING
 			l_namespace_node: EV_COMPARABLE_TREE_ITEM
@@ -105,9 +108,6 @@ feature {NONE} -- Add element to tree
 		do
 				-- Is it allready initilized?
 			if tree_item_parent.count = 1 and then tree_item_parent.first.text.is_equal (Fictive_element) then
-					-- Deserialize information of assembly.
-				deserialize_information_assembly (an_assembly)
-				
 					-- remove element that served to show the cross to expand tree.
 				tree_item_parent.first.destroy
 
@@ -115,9 +115,12 @@ feature {NONE} -- Add element to tree
 				create des_dlg
 				des_dlg.show_relative_to_window (parent_window);
 				(create {EV_ENVIRONMENT}).application.process_events
+
+					-- Deserialize information of assembly.
+				deserialize_information_assembly (an_assembly)
+				des_dlg.set_progress_bar (30)
 				
 				create eac
---				a_file_name := absolute_info_assembly_path (an_assembly)
 				cat := eac.consumed_assembly (an_assembly)
 				l_namespaces := cat.namespaces
 				from
@@ -126,7 +129,7 @@ feature {NONE} -- Add element to tree
 				until
 					counter >= l_namespaces.count
 				loop
-					des_dlg.set_progress_bar ((counter * 100 / l_namespaces.count).rounded)
+					des_dlg.set_progress_bar (30 + (counter * 70 / l_namespaces.count).rounded)
 
 					l_namespace_name := l_namespaces.item (counter) 
 					l_namespace_node := initialize_tree_item_namespace (l_namespace_name)
@@ -144,20 +147,21 @@ feature {NONE} -- Add element to tree
 	deserialize_information_assembly (an_assembly: CONSUMED_ASSEMBLY) is
 			-- Deserialize informations of `an_assembly' and store it in `assemblies_informations'.
 			-- It would be interesting to launch this process in a Thread.
-		local
-			my_thread: ASSEMBLY_INFORMATION_THREAD
-		do
-			create my_thread.make (an_assembly)
-			my_thread.launch
-		end
 --		local
---			l_assembly_info: ASSEMBLY_INFORMATION
+--			my_thread: ASSEMBLY_INFORMATION_THREAD
 --		do
---			create l_assembly_info.make ((create {COMMON_PATH}).dotnet_framework_path + an_assembly.name + ".xml")
---			if l_assembly_info /= Void then
---				(create {CACHE}).assemblies_informations.put (l_assembly_info, an_assembly.out)
---			end
+--			create my_thread.make (an_assembly)
+--			my_thread.launch
 --		end
+		local
+			l_assembly_info: ASSEMBLY_INFORMATION
+		do
+			create l_assembly_info.make
+			l_assembly_info.initialize ((create {EAC_COMMON_PATH}).dotnet_framework_path + an_assembly.name + ".xml")
+			if l_assembly_info /= Void then
+				(create {CACHE}).assemblies_informations.put (l_assembly_info, an_assembly.out)
+			end
+		end
 		
 
 	add_types_branches (an_assembly: CONSUMED_ASSEMBLY; a_tree_item_namespace: EV_TREE_ITEM; a_namespace_name: STRING; cat: CONSUMED_ASSEMBLY_TYPES) is
@@ -460,7 +464,7 @@ feature {NONE} -- Add element to tree
 	
 				if ct.flat_entities.count > 0 then
 					create l_node.make_with_text ("All features")
-					l_ico := load_icon (Path_icon_constructor)
+					l_ico := load_icon (Path_icon_all_features)
 					if l_ico /= Void then
 						l_node.set_pixmap (l_ico)
 					end
@@ -470,7 +474,7 @@ feature {NONE} -- Add element to tree
 	
 				if ct.ancestors.count > 0 then
 					create l_node.make_with_text ("Ancestors")
-					l_ico := load_icon (Path_icon_constructor)
+					l_ico := load_icon (Path_icon_ancestors)
 					if l_ico /= Void then
 						l_node.set_pixmap (l_ico)
 					end
@@ -743,7 +747,11 @@ feature {NONE} -- Initialization of tree elements
 
 				-- Add action to item.			
 			Result.expand_actions.extend (agent add_namespaces_branches (an_assembly, Result))
+			Result.expand_actions.extend (agent (create {SESSION}).set_current_assembly (an_assembly))
 			Result.pointer_button_press_actions.force_extend (agent edit.edit_info_assembly (an_assembly))
+			Result.select_actions.extend (agent assembly_node_selected (an_assembly))
+--			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_assembly_information (an_assembly))
+--			Result.select_actions.extend (agent (create {SESSION}).set_current_assembly (an_assembly))
 
 				-- Add a fictive element for a cross to appear.
 			Result.extend (create {EV_TREE_ITEM}.make_with_text (Fictive_element))
@@ -759,6 +767,9 @@ feature {NONE} -- Initialization of tree elements
 			l_ico: EV_PIXMAP
 		do
 			create Result.make_with_text (a_namespace_name)
+
+				-- Add action to item.			
+			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_namespace_information (a_namespace_name))
 
 				-- Add assembly icon.
 			l_ico := load_icon (Path_icon_namespace)
@@ -796,10 +807,11 @@ feature {NONE} -- Initialization of tree elements
 			Result.pointer_button_press_actions.force_extend (agent edit.color_edit_type (an_assembly, full_dotnet_type_name))
 			Result.pointer_button_press_actions.force_extend (agent edit.display_imediat_features (an_assembly, full_dotnet_type_name))
 			--Result.pointer_button_press_actions.force_extend (agent display_type_information (an_assembly, full_dotnet_type_name))
-			Result.pointer_button_press_actions.force_extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_type_information (an_assembly, full_dotnet_type_name))
+			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_type_information (an_assembly, full_dotnet_type_name))
 			Result.expand_actions.extend (agent edit.color_edit_type (an_assembly, full_dotnet_type_name))
 			--Result.expand_actions.extend (agent add_features_branches (an_assembly, Result, full_dotnet_type_name))
 			Result.expand_actions.extend (agent add_choise_type (an_assembly, Result, full_dotnet_type_name))
+			--Result.select_actions.extend (agent (create {SESSION}).set_current_assembly (a_type))
 
 				-- Add a fictive element for a cross to appear
 			Result.extend (create {EV_TREE_ITEM}.make_with_text (Fictive_element))
@@ -919,7 +931,17 @@ feature {NONE} -- Edit
 			end
 		end
 		
+	assembly_node_selected (an_assembly: CONSUMED_ASSEMBLY) is
+			-- Feature performed when assembly_node is selected.
+		require
+			non_an_assembly: an_assembly /= Void
+		do
+			(create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_assembly_information (an_assembly)
+			(create {SESSION}).set_current_assembly (an_assembly)
+			parent_window.color_edit_area.clear
+		end
 		
+	
 feature -- Action
 
 	expand_assembly (an_assembly: CONSUMED_ASSEMBLY) is

@@ -270,7 +270,7 @@ feature -- Output
 	print_version is
 			-- Print Version Number
 		do
-			io.put_string ("ISE Eiffel Explorer version " + Version_number + "%N")
+			io.put_string ("ISE " + Workbench_name + " version " + Version_number + "%N")
 		end
 
 	print_help is

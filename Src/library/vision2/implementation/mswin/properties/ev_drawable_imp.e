@@ -46,6 +46,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_RASTER_OPERATIONS_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_HS_CONSTANTS
 		export
 			{NONE} all
@@ -137,7 +142,6 @@ feature -- Element change
 			if is_drawable then
 				update_dc
 				dc.set_background_color (color_imp)
-				redraw
 			end
 		end
 
@@ -151,7 +155,6 @@ feature -- Element change
 			if is_drawable then
 				update_pen
 				update_brush
-				redraw
 			end
 		end
 
@@ -161,7 +164,6 @@ feature -- Element change
 			line_width := value
 			if is_drawable then
 				update_pen
-				redraw
 			end
 		end
 
@@ -171,7 +173,6 @@ feature -- Element change
 			logical_mode := value
 			if is_drawable then
 				update_dc
-				redraw
 			end
 		end
 
@@ -181,7 +182,6 @@ feature -- Element change
 			font := a_font
 			if is_drawable then
 				update_font
-				redraw
 			end
 		end
 
@@ -193,37 +193,38 @@ feature -- Clearing operations
 			clear_rect (0, 0, width, height)
 		end
 
-	clear_rect (a_left, a_top, a_right, a_bottom: INTEGER) is
+	clear_rect (left, top, right, bottom: INTEGER) is
 			-- Clear the rectangular area defined by
 			-- `a_left', `a_top', `a_right', `a_bottom'.
 		local
-			old_rop2: INTEGER
 			old_brush: WEL_BRUSH
+			old_rop2: INTEGER
 			old_pen: WEL_PEN
-			a_rect: WEL_RECT
+			ldc: WEL_DC
 		do
+			ldc := dc
+
 			-- We store the old values.
-			old_rop2 := dc.rop2
-			old_brush := dc.brush
-			old_pen := dc.pen
+			old_rop2 := ldc.rop2
+			old_brush := ldc.brush
+			old_pen := ldc.pen
 
 			-- We set the new values
-			dc.set_rop2 (r2_copypen)
-			dc.select_brush (background_brush)
-			dc.select_pen (background_pen)
+			ldc.set_rop2 (r2_copypen)
+			ldc.select_brush (background_brush)
+			ldc.select_pen (background_pen)
 
 			-- We clear the area.
-			!! a_rect.make (0, 0, width, height)
-			dc.rectangle (a_left, a_top, a_right, a_bottom)
+			ldc.rectangle (left, top, right, bottom)
+
 			-- We reset the old values
-			dc.set_rop2 (old_rop2)
+			ldc.set_rop2 (old_rop2)
 			if old_brush /= Void then
-				dc.select_brush (old_brush)
+				ldc.select_brush (old_brush)
 			end
 			if old_pen /= Void then
-				dc.select_pen (old_pen)
+				ldc.select_pen (old_pen)
 			end
-			redraw
 		end
 
 feature -- Drawing operations
@@ -232,17 +233,18 @@ feature -- Drawing operations
 			-- Draw `a_point'.
 		do
 			dc.set_pixel (pt.x, pt.y, foreground_color_imp)
-			redraw
 		end
 
 	draw_text (pt: EV_COORDINATES; text: STRING) is
 			-- Draw text
+		local
+			ldc: WEL_DC
 		do
-			dc.set_text_color (foreground_color_imp)
-			dc.set_background_transparent
-			dc.set_text_alignment (ta_baseline)
-			dc.text_out (pt.x, pt.y, text)
-			redraw
+			ldc := dc
+			ldc.set_text_color (foreground_color_imp)
+			ldc.set_background_transparent
+			ldc.set_text_alignment (ta_baseline)
+			ldc.text_out (pt.x, pt.y, text)
 		end
 
 	draw_segment (pt1, pt2: EV_COORDINATES) is
@@ -250,11 +252,11 @@ feature -- Drawing operations
 		do
 			dc.move_to (pt1.x, pt1.y)
 			dc.line_to (pt2.x, pt2.y)
-			redraw
 		end
 
 	draw_straight_line (point1, point2: EV_COORDINATES) is
 			-- Draw an infinite line traversing `point1' and `point2'.
+			-- Do not work
 		local
 			x1, x2, y1, y2, dx, dy: INTEGER
 		do
@@ -272,7 +274,6 @@ feature -- Drawing operations
 				x2 := width
 			end
 			dc.line (x1, y1, x2, y2)
-			redraw
 		end
 
 	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
@@ -281,7 +282,6 @@ feature -- Drawing operations
 			flat_points: ARRAY [INTEGER]
 			flat_index: INTEGER
 			i: INTEGER
-			c: CURSOR
 		do
 			if is_closed then
 				!! flat_points.make (1, 2 * pts.count + 2)
@@ -307,7 +307,6 @@ feature -- Drawing operations
 				flat_points.put ((pts.item (i)).y, flat_index)
 			end
 			dc.polyline (flat_points)
-			redraw
 		end
 
 	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
@@ -315,7 +314,6 @@ feature -- Drawing operations
 			-- and that has the orientation `orientation'.
 		do
 			draw_any_rectangle (pt, w, h, orientation, false)
-			redraw
 		end
 
 	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
@@ -328,7 +326,6 @@ feature -- Drawing operations
 			--    1 : the first and the last point are linked to the center `pt'
 		do
 			draw_any_arc (pt, r1, r2, start_angle, aperture, orientation, style, false)
-			redraw
 		end
 
 	draw_pixmap (pt: EV_COORDINATES; pix : EV_PIXMAP) is
@@ -336,12 +333,18 @@ feature -- Drawing operations
 		local
 			pix_imp: EV_PIXMAP_IMP
 		do
+			-- We retrieve the implementation of the pixmap
 			pix_imp ?= pix.implementation
 			check
 				valid_cast: pix_imp /= Void
 			end
-			dc.draw_bitmap (pix_imp.bitmap, pt.x, pt.y, pix_imp.width, pix_imp.height)
-			redraw
+
+			-- We copy the pixmap
+			if pix_imp.internal_dc = Void then
+				dc.draw_bitmap (pix_imp.bitmap, pt.x, pt.y, pix_imp.width, pix_imp.height)
+			else
+				dc.bit_blt (pt.x, pt.y, pix_imp.width, pix_imp.height, pix_imp.internal_dc, 0, 0, srccopy)
+			end
 		end
 
 feature -- Filling operations
@@ -366,7 +369,6 @@ feature -- Filling operations
 				i := i + 1
 			end
 			dc.polygon (flat_points)
-			redraw
 		end
 
 	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
@@ -374,7 +376,6 @@ feature -- Filling operations
 			-- with an orientation `orientation'.
 		do
 			draw_any_rectangle (pt, w, h, orientation, true)
-			redraw
 		end 
 
 	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
@@ -387,14 +388,6 @@ feature -- Filling operations
 			--    1 : the first and the last point are linked to the center `pt'
 		do
 			draw_any_arc (pt, r1, r2, start_angle, aperture, orientation, style, true)
-			redraw
-		end
-
-feature -- Basic operations
-
-	redraw is
-			-- Redraw the area if necessary.
-		deferred
 		end
 
 feature {NONE} -- Implementation access

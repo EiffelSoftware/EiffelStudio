@@ -466,8 +466,8 @@ feature -- Status setting
 			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
 			a_row_count_positive: a_row_count >= 1
 		do
+			resize_row_lists (a_row_count)
 			fixme ("Implement correct reducing of row count")
-			enlarge_row_lists (a_row_count)
 			recompute_vertical_scroll_bar
 			redraw_client_area
 		ensure
@@ -1427,9 +1427,9 @@ feature {NONE} -- Implementation
 			if a_index > row_count then
 				if replace_existing_item then
 						-- We are inserting at a certain value so we resize to one less
-					enlarge_row_lists (a_index)
+					resize_row_lists (a_index)
 				else
-					enlarge_row_lists (a_index - 1)
+					resize_row_lists (a_index - 1)
 				end
 			end
 
@@ -1475,16 +1475,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	enlarge_row_lists (new_count: INTEGER) is
-			-- Enlarge the row lists to to count `new_count'
+	resize_row_lists (new_count: INTEGER) is
+			-- Resize the row lists so count equals `new_count'
 		require
 			valid_new_count: new_count > row_list.count
 		do
 			internal_row_data.resize (new_count)
 			grid_rows.resize (new_count)
 		ensure
-			grid_rows_increased: grid_rows.count = new_count
-			internal_row_data_count_increased: internal_row_data.count = new_count
+			grid_rows_count_resized: grid_rows.count = new_count
+			internal_row_data_count_resized: internal_row_data.count = new_count
 			counts_equal: grid_rows.count = internal_row_data.count
 		end
 		

@@ -78,7 +78,7 @@ cluster
 			assertion (no)
 		end
 
-	all wizard:		"E:\com_wizard\project"
+	all wizard:		"$EIFFEL_SRC\com_wizard\project"
 		exclude
 			"new_gui"; "CVS"; 
 		visible
@@ -96,7 +96,7 @@ cluster
 				end
 		end
 
-	all eiffel_to_idl:		"E:\com_wizard\eiffeltoidl"
+	all eiffel_to_idl:		"$EIFFEL_SRC\com_wizard\eiffeltoidl"
 		exclude
 			"CVS"; 
 		end
@@ -126,7 +126,7 @@ cluster
 
 	vs_setup:		"$EIFFEL_SRC\Eiffel\extra\finish_freezing\main"
 
-	library eclop:		"$ECLOP\eclop"
+	library eclop:		"$EIFFEL_SRC\free_add_ons\eclop"
 
 external
 

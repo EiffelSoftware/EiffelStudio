@@ -30,7 +30,7 @@ feature -- Basic operations
 	input_from_file (input_file: PLAIN_TEXT_FILE) is
 			-- Input features from text file.
 		local
-			raw_features: LINKED_LIST[STRING]
+			raw_features: ARRAYED_LIST [STRING]
 			l_name, l_description: STRING
 			feature_parser: EI_FEATURE_PARSER
 		do
@@ -72,7 +72,7 @@ feature -- Basic operations
 										raw_features := Void
 									end
 	
-									create raw_features.make
+									create raw_features.make (20)
 									raw_features.extend (input_file.last_string.twin)
 								elseif 
 									input_file.last_string.substring_index ("--", 1) = 1 
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			valid_class: eiffel_class /= Void
 		local
 			l_feature: EI_FEATURE
-			parameter_list: LINKED_LIST[EI_PARAMETER]
+			parameter_list: LIST [EI_PARAMETER]
 		do
 			-- Put type name to 'like ' type.
 			if not eiffel_class.features.is_empty then

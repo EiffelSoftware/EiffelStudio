@@ -10,12 +10,15 @@ class
 inherit
 	WIZARD_COMPONENT_DESCRIPTOR
 		redefine
+			is_equal,
 			creation_message
 		end
 
-	WIZARD_COCLASS_GENERATOR_HELPER
+	WIZARD_UNIQUE_IDENTIFIER_FACTORY
 		export
 			{NONE} all
+		redefine
+			is_equal
 		end
 
 create
@@ -28,16 +31,15 @@ feature {NONE} -- Initialization
 		require
 			valid_creator: a_creator /= Void
 		do
-			a_creator.initialize_descriptor (Current)
-			create feature_c_names.make
+			create feature_c_names.make (20)
 			feature_c_names.compare_objects
-
-			create feature_eiffel_names.make
-			feature_eiffel_names.compare_objects
-
+			create feature_eiffel_names.make (20)
+			a_creator.initialize_descriptor (Current)
 		ensure then
-			non_void_interface_descriptors: interface_descriptors /= Void 
+			non_void_interface_descriptors: interface_descriptors /= Void
 			non_void_feature_c_names: feature_c_names /= Void
+			valid_feature_c_names: feature_c_names.object_comparison
+			non_void_feature_eiffel_names: feature_eiffel_names /= Void
 		end
 
 feature -- Access
@@ -67,18 +69,16 @@ feature -- Access
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
-			Result := Added.twin
-			Result.append (Space)
-			Result.append (Coclass)
-			Result.append (Space)
-			Result.append (Name)
+			create Result.make (14 + name.count)
+			Result.append ("Added coclass ")
+			Result.append (name)
 		end
 	
-	feature_c_names: LINKED_LIST [STRING]
+	feature_c_names: ARRAYED_LIST [STRING]
 			-- List of feature C names
 
-	feature_eiffel_names: LINKED_LIST [STRING]
-			-- List of feature Eiffel names.
+	feature_eiffel_names: HASH_TABLE [WIZARD_INTERFACE_DESCRIPTOR, STRING]
+			-- Table of feature Eiffel names indexed by interface
 
 feature -- Element Change
 
@@ -93,15 +93,22 @@ feature -- Element Change
 				source_interface_descriptors = some_descriptors
 		end
 
-	set_interface_descriptors (some_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]) is
+	set_interface_descriptors (a_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]) is
 			-- Set `interface_descriptors' with `some_descriptors'.
 		require
-			valid_descriptors: some_descriptors /= Void
+			valid_descriptors: a_descriptors /= Void
 		do
-			interface_descriptors := some_descriptors
+			interface_descriptors := a_descriptors
+			from
+				a_descriptors.start
+			until
+				a_descriptors.after
+			loop
+				a_descriptors.item.add_implementing_coclass (Current)
+				a_descriptors.forth
+			end
 		ensure
-			valid_descriptors: interface_descriptors /= Void and 
-				interface_descriptors = some_descriptors
+			valid_descriptors: interface_descriptors /= Void and interface_descriptors = a_descriptors
 		end
 
 	set_lcid (a_lcid: INTEGER) is
@@ -158,78 +165,36 @@ feature -- Basic operations
 
 	disambiguate_feature_names is
 			-- Disambiguate name clashes.
+		local
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
 		do
 			from
 				interface_descriptors.start
 			until
 				interface_descriptors.after
 			loop
-				if not has_descendants_in_coclass (Current, interface_descriptors.item) then
-					interface_descriptors.item.disambiguate_c_names (Current)
-					feature_c_names.append (interface_descriptors.item.feature_c_names)
+				l_interface := interface_descriptors.item
+				if l_interface.is_implementing_coclass (Current) then
+					l_interface.disambiguate_coclass_names (Current)
+					feature_c_names.append (l_interface.feature_c_names)
 				end
 				interface_descriptors.forth
 			end
-
-			from
-				interface_descriptors.start
-			until
-				interface_descriptors.after
-			loop
-				if not has_descendants_in_coclass (Current, interface_descriptors.item) then
-					from
-						interface_descriptors.item.functions_start
-					until
-						interface_descriptors.item.functions_after
-					loop
-
-						if interface_descriptors.item.functions_item.argument_count > 0 then
-							from
-								interface_descriptors.item.functions_item.arguments.start
-							until
-								interface_descriptors.item.functions_item.arguments.after
-							loop
-								if feature_eiffel_names.has (interface_descriptors.item.functions_item.arguments.item.name) then
-									interface_descriptors.item.functions_item.arguments.item.name.prepend ("a_")
-								end
-								interface_descriptors.item.functions_item.arguments.forth
-							end
-						end
-						interface_descriptors.item.functions_forth
-					end
-				end
-				interface_descriptors.forth
-			end
-			
-			if source_interface_descriptors /= Void then
-				from
-					source_interface_descriptors.start
-				until
-					source_interface_descriptors.after
-				loop
-					from
-						source_interface_descriptors.item.functions_start
-					until
-						source_interface_descriptors.item.functions_after
-					loop
-
-						if source_interface_descriptors.item.functions_item.argument_count > 0 then
-							from
-								source_interface_descriptors.item.functions_item.arguments.start
-							until
-								source_interface_descriptors.item.functions_item.arguments.after
-							loop
-								if feature_eiffel_names.has (source_interface_descriptors.item.functions_item.arguments.item.name) then
-									source_interface_descriptors.item.functions_item.arguments.item.name.prepend ("a_")
-								end
-								source_interface_descriptors.item.functions_item.arguments.forth
-							end
-						end
-						source_interface_descriptors.item.functions_forth
-					end
-					source_interface_descriptors.forth
+			if l_interface.is_implementing_coclass (Current) then
+				rename_arguments (interface_descriptors)
+				if source_interface_descriptors /= Void then
+					rename_arguments (source_interface_descriptors)
 				end
 			end
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := guid.is_equal (other.guid)
 		end
 
 feature {WIZARD_TYPE_INFO_VISITOR} -- Visitor
@@ -240,7 +205,54 @@ feature {WIZARD_TYPE_INFO_VISITOR} -- Visitor
 			a_visitor.process_coclass (Current)
 		end
 
-end -- class WIZARD_DESCRIPTOR
+feature {NONE} -- Implementation
+
+	rename_arguments (a_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]) is
+			-- Rename arguments in features of interfaces in `a_descriptors' to avoid name clashes.
+		require
+			non_void_descriptors: a_descriptors /= Void
+		local
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
+			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
+			l_argument: WIZARD_PARAM_DESCRIPTOR
+			l_func: WIZARD_FUNCTION_DESCRIPTOR
+		do
+			from
+				a_descriptors.start
+			until
+				a_descriptors.after
+			loop
+				l_interface := a_descriptors.item
+				from
+					l_interface.functions_start
+				until
+					l_interface.functions_after
+				loop
+					l_func := l_interface.functions_item
+					if not l_func.is_renaming_clause and l_func.argument_count > 0 then
+						l_arguments := l_func.arguments
+						from
+							l_arguments.start
+						until
+							l_arguments.after
+						loop
+							l_argument := l_arguments.item
+							l_argument.set_name (unique_identifier (l_argument.name, agent feature_eiffel_names.has))
+							l_arguments.forth
+						end
+					end
+					l_interface.functions_forth
+				end
+				a_descriptors.forth
+			end
+		end
+
+invariant
+	non_void_feature_c_names: feature_c_names /= Void
+	valid_feature_c_names: feature_c_names.object_comparison
+	non_void_feature_eiffel_names: feature_eiffel_names /= Void
+
+end -- class WIZARD_COCLASS_DESCRIPTOR
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

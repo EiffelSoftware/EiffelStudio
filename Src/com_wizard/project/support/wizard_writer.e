@@ -121,12 +121,12 @@ feature {NONE} -- Implementation
 	backup_file_name (a_file_name: STRING): STRING is
 			-- `a_file_name' backup file name
 		local
-			an_index: INTEGER
+			a_index: INTEGER
 		do
 			Result := a_file_name.twin
-			an_index := Result.last_index_of ('.', 1) - 1
-			if an_index > 0 then
-				Result.keep_head (an_index)
+			a_index := Result.last_index_of ('.', 1) - 1
+			if a_index > 0 then
+				Result.keep_head (a_index)
 			end
 			Result.append (Backup_file_extension)
 		end

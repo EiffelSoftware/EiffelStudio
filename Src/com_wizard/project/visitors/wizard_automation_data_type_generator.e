@@ -154,7 +154,7 @@ feature -- Basic operations
 
 			end
 
-			create c_header_file.make (0)
+			create c_definition_header_file_name.make (0)
 			create c_post_type.make (0)
 			set_visitor_atributes (a_visitor)
 		end

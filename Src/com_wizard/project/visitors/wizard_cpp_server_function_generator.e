@@ -23,7 +23,7 @@ feature -- Basic operations
 			coclass_name := a_component.name
 
 			create ccom_feature_writer.make
-			create c_header_files.make
+			create {ARRAYED_LIST [STRING]} c_header_files.make (20)
 
 			ccom_feature_writer.set_name (func_desc.name)
 			ccom_feature_writer.set_comment (func_desc.description)
@@ -570,7 +570,7 @@ feature {NONE} -- Implementation
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
 			
-			Result.append (func_desc.eiffel_name (component_desc))
+			Result.append (func_desc.component_eiffel_name (component_desc))
 
 			Result.append (Double_quote)
 			Result.append (Comma_space)
@@ -681,7 +681,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Comma_space)
 			Result.append (Double_quote)
-			Result.append (func_desc.eiffel_name (component_desc))
+			Result.append (func_desc.component_eiffel_name (component_desc))
 			Result.append (Double_quote)
 			Result.append (Comma_space)
 			Result.append (return_type)
@@ -711,7 +711,7 @@ feature {NONE} -- Implementation
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
 
-			Result.append (func_desc.eiffel_name (component_desc))
+			Result.append (func_desc.component_eiffel_name (component_desc))
 
 			Result.append (Double_quote)
 			Result.append (Comma_space)
@@ -740,7 +740,7 @@ feature {NONE} -- Implementation
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
 			
-			Result.append (func_desc.eiffel_name (component_desc))
+			Result.append (func_desc.component_eiffel_name (component_desc))
 
 			Result.append (Double_quote)
 			Result.append (Comma_space)

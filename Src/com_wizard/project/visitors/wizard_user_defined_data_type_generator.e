@@ -39,10 +39,10 @@ feature -- Basic operations
 			valid_visitor: a_visitor /= Void
 		local
 			a_type_descriptor: WIZARD_TYPE_DESCRIPTOR
-			an_index: INTEGER
+			a_index: INTEGER
 		do
-			an_index := a_descriptor.type_descriptor_index
-			a_type_descriptor := a_descriptor.library_descriptor.descriptors.item (an_index)
+			a_index := a_descriptor.type_descriptor_index
+			a_type_descriptor := a_descriptor.library_descriptor.descriptors.item (a_index)
 			vt_type := a_descriptor.type
 			local_counter := counter (a_descriptor)
 
@@ -69,7 +69,7 @@ feature -- Processing
 			c_type.append (alias_descriptor.c_type_name)
 			
 			create c_post_type.make (100)
-			c_header_file := alias_descriptor.c_header_file_name.twin
+			c_definition_header_file_name := alias_descriptor.c_header_file_name
 			eiffel_type := alias_descriptor.eiffel_class_name.twin
 
 			need_generate_ce := True
@@ -162,28 +162,25 @@ feature -- Processing
 
 	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
 			-- process coclass
+		local
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
 		do
-			if 
-				coclass_descriptor.default_interface_descriptor.inherit_from_dispatch or
-				coclass_descriptor.default_interface_descriptor.dual or 
-				coclass_descriptor.default_interface_descriptor.dispinterface
-			then
+			l_interface := coclass_descriptor.default_interface_descriptor
+			if l_interface.is_idispatch_heir or l_interface.dual or l_interface.dispinterface then
 				vt_type := Vt_dispatch
 			else
 				vt_type := Vt_unknown
 			end
 			
 			create c_type.make (100)
-			if 
-				coclass_descriptor.default_interface_descriptor.namespace /= Void and then
-				not coclass_descriptor.default_interface_descriptor.namespace.is_empty
-			then
-				c_type.append (coclass_descriptor.default_interface_descriptor.namespace + "::")
+			if l_interface.namespace /= Void and then not l_interface.namespace.is_empty then
+				c_type.append (l_interface.namespace + "::")
 			end
-			c_type.append (coclass_descriptor.default_interface_descriptor.c_type_name)
+			c_type.append (l_interface.c_type_name)
 			
 			create c_post_type.make (100)
-			c_header_file := coclass_descriptor.default_interface_descriptor.c_header_file_name.twin
+			c_definition_header_file_name := l_interface.c_definition_header_file_name
+			c_declaration_header_file_name := l_interface.c_definition_header_file_name
 			eiffel_type := name_for_class (coclass_descriptor.name, coclass_descriptor.type_kind, shared_wizard_environment.client)
 
 			is_coclass := True
@@ -233,8 +230,9 @@ feature -- Processing
 			c_type.append (interface_descriptor.c_type_name)
 			
 			create c_post_type.make (0)
-			c_header_file := interface_descriptor.c_header_file_name.twin
-			eiffel_type := interface_descriptor.eiffel_class_name.twin
+			c_definition_header_file_name := interface_descriptor.c_definition_header_file_name
+			c_declaration_header_file_name := interface_descriptor.c_declaration_header_file_name
+			eiffel_type := interface_descriptor.eiffel_class_name
 			create ce_function_name.make (0)
 			create ec_function_name.make (0)
 		end
@@ -249,7 +247,8 @@ feature -- Processing
 			c_type.append (interface_descriptor.c_type_name)
 			create c_post_type.make (0)
 			is_interface := True
-			c_header_file := interface_descriptor.c_header_file_name.twin
+			c_definition_header_file_name := interface_descriptor.c_definition_header_file_name
+			c_declaration_header_file_name := interface_descriptor.c_declaration_header_file_name
 			create ce_function_name.make (100)
 			create ec_function_name.make (100)
 
@@ -278,10 +277,7 @@ feature -- Processing
 					c_type.prepend ("::")
 					c_type.prepend (interface_descriptor.namespace)
 				end
-				if 
-					interface_descriptor.inherit_from_dispatch or
-					interface_descriptor.dispinterface
-				then
+				if interface_descriptor.is_idispatch_heir or interface_descriptor.dispinterface then
 					vt_type := Vt_dispatch
 				else
 					vt_type := Vt_unknown
@@ -340,7 +336,7 @@ feature -- Processing
 			c_type.append (record_descriptor.c_type_name)
 			
 			create c_post_type.make (100)
-			c_header_file := record_descriptor.c_header_file_name.twin
+			c_definition_header_file_name := record_descriptor.c_header_file_name
 			eiffel_type := record_descriptor.eiffel_class_name.twin
 
 			is_structure := True
@@ -388,7 +384,7 @@ feature -- Processing
 				vt_type := Vt_void
 				need_generate_ce := False
 				need_generate_ec := False
-				c_header_file := ("").twin
+				c_definition_header_file_name := ("").twin
 				cecil_type := ("EIF_INTEGER").twin
 				c_type := Void_c_keyword.twin
 			end
@@ -403,13 +399,12 @@ feature {NONE} -- Implementation
 	enum_processing is
 			-- Enumeration processing.
 		do
-			c_type := Long.twin
-			cecil_type := Eif_integer.twin
-			create c_post_type.make (100)
-			create c_header_file.make (100)
-			eiffel_type := Integer_type.twin
+			c_type := "long"
+			cecil_type := "EIF_INTEGER"
+			create c_post_type.make (0)
+			create c_definition_header_file_name.make (0)
+			eiffel_type := "INTEGER"
 			vt_type := Vt_i4
-
 			is_enumeration := True
 		end
 
@@ -421,32 +416,12 @@ feature {NONE} -- Implementation
 			non_void_c_type: a_c_type /= Void
 			valid_c_type: not a_c_type.is_empty
 		do
-			create Result.make (10000)
-
-			Result.append (tab)
-			Result.append (Return)
-			Result.append (Space)
-
-			Result.append (Ce_mapper)
-			Result.append (Dot)
-			Result.append ("ccom_ce_record")
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Ampersand)
-			Result.append ("a_record")
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append (Double_quote)
+			create Result.make (200)
+			Result.append ("%Treturn rt_ce.ccom_ce_record (&a_record, %"")
 			Result.append (a_class_name)
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (Sizeof)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
+			Result.append ("%", sizeof (")
 			Result.append (a_c_type)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
+			Result.append ("));")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty
@@ -458,25 +433,10 @@ feature {NONE} -- Implementation
 			non_void_class_name: a_class_name /= Void
 			valid_class_name: not a_class_name.is_empty
 		do
-			create Result.make (10000)
-			Result.append (tab)
-
-			Result.append (Return)
-			Result.append (Space)
-
-			Result.append (Ce_mapper)
-			Result.append (Dot)
-			Result.append ("ccom_ce_interface")
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("a_interface")
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append (Double_quote)
+			create Result.make (200)
+			Result.append ("%Treturn rt_ce.ccom_ce_interface (a_interface, %"")
 			Result.append (a_class_name)
-			Result.append (Double_quote)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
+			Result.append ("%");")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty
@@ -490,92 +450,18 @@ feature {NONE} -- Implementation
 			non_void_c_type: a_c_type /= Void
 			valid_c_type: not a_c_type.is_empty
 		do
-			create Result.make (10000)
-			Result.append (Tab)
-
-			-- EIF_OBJECT eif_object = 0;
-
-			Result.append (Eif_object)
-			Result.append (Space)
-			Result.append ("eif_object")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- EIF_POINTER a_pointer = 0;
-			-- 
-
-			Result.append (Eif_pointer)
-			Result.append (Space)
-			Result.append (A_pointer)
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line)
-			Result.append (New_line_tab)
-
-			-- eif_object = eif_protect (eif_ref);
-
-			Result.append (Eif_object_variable)
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_protect)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("eif_ref")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- a_pointer =  (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
-
-			Result.append (A_pointer)
-			Result.append (Space_equal_space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_pointer)
-			Result.append (Close_parenthesis)
-			Result.append (Space)
-			Result.append (Eif_field)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_object_variable)
-			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			Result.append (Double_quote)
-			Result.append ("item")
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (Eif_pointer)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-
-			-- eif_wean (eif_object);
-
-			Result.append (Eif_wean)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_object_variable)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- return *(`a_c_type *') a_pointer;
-
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (Asterisk)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
+			create Result.make (1000)
+			Result.append ("[
+	EIF_OBJECT eif_object = 0;
+	EIF_POINTER a_pointer = 0;
+	
+	eif_object = eif_protect (eif_ref);
+	a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), %"item%", EIF_POINTER);
+	eif_wean (eif_object);
+	return * (
+]")
 			Result.append (a_c_type)
-			Result.append (Space)
-			Result.append (Asterisk)
-			Result.append (Close_parenthesis)
-			Result.append (Space)
-			Result.append (A_pointer)
-			Result.append (Semicolon)
+			Result.append (" *) a_pointer;")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty
@@ -590,140 +476,35 @@ feature {NONE} -- Implementation
 			non_void_ce_function: ce_function_for_alias /= Void
 			valid_ce_function: not ce_function_for_alias.is_empty
 		do
-			create Result.make (10000)
-			Result.append (Tab)
-
-			-- EIF_TYPE_ID type_id = -1;
-
-			Result.append (Eif_type_id)
-			Result.append (Space)
-			Result.append ("type_id")
-			Result.append (Space_equal_space)
-			Result.append (Minus)
-			Result.append (One)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- EIF_PROCEDURE make = 0;
-
-			Result.append (Eif_procedure)
-			Result.append (Space)
-			Result.append ("make")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- EIF_OBJECT result = 0;
-
-			Result.append (Eif_object)
-			Result.append (Space)
-			Result.append ("result")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line)
-
-			Result.append (New_line_tab)
-
-			-- type_id = eif_type_id (`a_class_name');
-
-			Result.append ("type_id")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_type_id_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
+			create Result.make (1000)
+			Result.append ("[
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE make = 0;
+	EIF_OBJECT result = 0;
+	
+	type_id = eif_type_id (%"
+]")
 			Result.append (a_class_name)
-			Result.append (Double_quote)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- result = eif_create (type_id);
-
-			Result.append ("result")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_create)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("type_id")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- make = eif_procedure ("make_from_alias", type_id);
-
-			Result.append ("make")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_procedure_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append ("make_from_alias")
-			Result.append (Double_quote)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("type_id")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line)
-
-			--
-
-			Result.append (New_line_tab)
-
-			-- make (eif_access (result), rt_object.`ce_function_for_alias' (an_alias));
-
-			Result.append ("make")
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("result")
-			Result.append (Close_parenthesis)
-			Result.append (Comma)
-			Result.append (Space)
+			Result.append ("[
+%");
+	result = eif_create (type_id);
+	make = eif_procedure (%"make_from_alias%", type_id);
+	
+	make (eif_access (result), 
+]")
 			if need_generate_alias then
 				Result.append (Generated_ce_mapper)
 			else
-				Result.append (Ce_mapper)
+				Result.append ("rt_ce")
 			end
-			Result.append (Dot)
+			Result.append (".")
 			Result.append (ce_function_for_alias)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("an_alias")
+			Result.append (" (an_alias")
 			if a_writable then
-				Result.append (Comma_space)
-				Result.append (Null)
+				Result.append (", ")
+				Result.append ("NULL")
 			end
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line)
-
-			--
-
-			Result.append (New_line_tab)
-
-			-- return eif_wean (result);
-
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (Eif_wean)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("result")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
+			Result.append ("));%N%N%Treturn eif_wean (result);")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty

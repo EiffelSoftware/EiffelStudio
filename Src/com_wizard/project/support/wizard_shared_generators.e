@@ -102,7 +102,7 @@ feature -- Access
 			a_header_file_name := Generated_ce_class_name.twin
 			mapper.set_name (a_header_file_name.twin)
 			a_header_file_name.append (Header_file_extension)
-			mapper.set_header_file_name (a_header_file_name)
+			mapper.set_definition_header_file_name (a_header_file_name)
 			create a_constructor.make
 			create empty_string.make (0)
 			a_constructor.set_signature (empty_string)
@@ -145,7 +145,7 @@ feature -- Access
 			a_header_file_name := Generated_ec_class_name.twin
 			mapper.set_name (a_header_file_name.twin)
 			a_header_file_name.append (Header_file_extension)
-			mapper.set_header_file_name (a_header_file_name)
+			mapper.set_definition_header_file_name (a_header_file_name)
 			create a_constructor.make
 			create empty_string.make (0)
 			a_constructor.set_signature (empty_string)

@@ -112,6 +112,9 @@ feature -- Basic operations
 			Eiffel_client_visitor: WIZARD_EIFFEL_CLIENT_VISITOR
 			C_server_visitor: WIZARD_C_SERVER_VISITOR
 			Eiffel_server_visitor: WIZARD_EIFFEL_SERVER_VISITOR
+			l_library: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			l_descriptors: ARRAY [WIZARD_TYPE_DESCRIPTOR]
+			l_type: WIZARD_TYPE_DESCRIPTOR
 		do
 			create C_client_visitor
 			create Eiffel_client_visitor
@@ -124,10 +127,9 @@ feature -- Basic operations
 				system_descriptor.after or
 				Shared_wizard_environment.abort
 			loop
-				if 
-					not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
-				then
-					a_range := a_range + system_descriptor.library_descriptor_for_iteration.descriptors.count
+				l_library := system_descriptor.library_descriptor_for_iteration
+				if not Non_generated_type_libraries.has (l_library.guid) then
+					a_range := a_range + l_library.descriptors.count
 				end
 				system_descriptor.forth
 			end
@@ -140,23 +142,23 @@ feature -- Basic operations
 				system_descriptor.after or
 				Shared_wizard_environment.abort
 			loop
-				if 
-					not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) 
-				then
+				l_library := system_descriptor.library_descriptor_for_iteration
+				if not Non_generated_type_libraries.has (l_library.guid) then
+					l_descriptors := l_library.descriptors
 					from
 						i := 1
 					until
-						i > system_descriptor.library_descriptor_for_iteration.descriptors.count or 
-						Shared_wizard_environment.abort
+						i > l_descriptors.count or Shared_wizard_environment.abort
 					loop
-						if system_descriptor.library_descriptor_for_iteration.descriptors.item (i) /= Void then
+						l_type := l_descriptors.item (i)
+						if l_type /= Void then
 							if shared_wizard_environment.client then
-								c_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-								eiffel_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+								c_client_visitor.visit (l_type)
+								eiffel_client_visitor.visit (l_type)
 							end
 							if shared_wizard_environment.server then
-								c_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-								eiffel_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+								c_server_visitor.visit (l_type)
+								eiffel_server_visitor.visit (l_type)
 							end
 						end
 						i := i + 1
@@ -247,7 +249,6 @@ feature -- Basic operations
 			end
 		end
 
-
 	generate_mappers_and_c_alias is
 			-- Generating extra files
 		local
@@ -264,13 +265,15 @@ feature -- Basic operations
 				progress_report.step
 				Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
 				progress_report.step
-				Generated_ce_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)	
+				Generated_ce_mapper_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)	
+				Generated_ce_mapper_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)	
 				progress_report.step
 				Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
 				progress_report.step
 				Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
 				progress_report.step
-				Generated_ec_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+				Generated_ec_mapper_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
+				Generated_ec_mapper_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
 				progress_report.step
 				Shared_file_name_factory.create_c_alias_file_name (Alias_c_writer)
 				progress_report.step

@@ -56,41 +56,31 @@ feature -- Basic operations
 				class_protector.append (name)
 				class_protector.append ("_FWD_DEFINED__")
 
-				Result.append (Hash_if_ndef)
-				Result.append (Space)
+				Result.append ("#ifndef ")
 				Result.append (class_protector)
-				Result.append (New_line)
-
-				Result.append (Hash_define)
-				Result.append (Space)
+				Result.append ("%N#define ")
 				Result.append (class_protector)
-				Result.append (New_line)
+				Result.append ("%N")
 			end
 
 			if namespace /= Void and then not namespace.is_empty then
 				Result.append ("namespace ")
 				Result.append (namespace)
-				Result.append (New_line)
-				Result.append (Open_curly_brace)
-				Result.append (New_line)
+				Result.append ("%N{%N")
 			end
 
-			Result.append (C_class_keyword)
-			Result.append (Space)
+			Result.append ("class ")
 			Result.append (name)
-			Result.append (Semicolon)
-			Result.append (New_line)
+			Result.append (";%N")
 
 			if namespace /= Void and then not namespace.is_empty then
-				Result.append (Close_curly_brace)
-				Result.append (New_line)
+				Result.append ("}%N")
 			end
 
 			if abstract then
-				Result.append (Hash_end_if)
-				Result.append (New_line)
+				Result.append ("#endif%N")
 			end
-			Result.append (New_line)
+			Result.append ("%N")
 
 		ensure
 			non_void_generated_code: Result /= Void

@@ -27,20 +27,20 @@ inherit
 
 feature -- Processing
 
-	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
+	process_alias (a_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
 			-- process alias
 			-- generate code for alias described in `alias_descriptor'
 		local
-			alias_client_generator: WIZARD_ALIAS_C_CLIENT_GENERATOR
+			l_generator: WIZARD_ALIAS_C_CLIENT_GENERATOR
 		do
 			if not shared_wizard_environment.server then
-				Precursor (alias_descriptor)
-				create alias_client_generator
-				alias_client_generator.generate (alias_descriptor)
+				Precursor (a_descriptor)
+				create l_generator
+				l_generator.generate (a_descriptor)
 			end
 		end
 
-	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
+	process_coclass (a_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
 			-- process coclass
 			-- generate code for coclass described in `coclass_descriptor'
 			-- for every interface in `coclass_descriptor'
@@ -48,14 +48,14 @@ feature -- Processing
 				-- generate C calls for every function of interface
 				-- add deferred interface class as parent
 		local
-			coclass_client_generator: WIZARD_COCLASS_C_CLIENT_GENERATOR
+			l_generator: WIZARD_COCLASS_C_CLIENT_GENERATOR
 		do
-			Precursor (coclass_descriptor)
-			create coclass_client_generator
-			coclass_client_generator.generate (coclass_descriptor)
+			Precursor (a_descriptor)
+			create l_generator
+			l_generator.generate (a_descriptor)
 		end
 
-	process_implemented_interface (implemented_interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR ) is
+	process_implemented_interface (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR ) is
 			-- process implemented interface
 			-- generate code for interface described in `implemented_interface_descriptor'
 			-- for interface in `implemented_interface_descriptor'
@@ -63,48 +63,44 @@ feature -- Processing
 				-- generate C calls for every function of interface
 				-- add deferred interface class as parent
 		local
-			implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_C_CLIENT_GENERATOR
+			l_generator: WIZARD_IMPLEMENTED_INTERFACE_C_CLIENT_GENERATOR
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
 		do
-			Precursor (implemented_interface_descriptor)
-			if 
-				not implemented_interface_descriptor.interface_descriptor.name.is_equal (Iunknown_type) and
-				not implemented_interface_descriptor.interface_descriptor.name.is_equal (Idispatch_type)
-			then
-				create implemented_interface_generator
-				implemented_interface_generator.generate (implemented_interface_descriptor)
+			Precursor (a_descriptor)
+			l_interface := a_descriptor.interface_descriptor
+			if not l_interface.is_iunknown and not l_interface.is_idispatch then
+				create l_generator
+				l_generator.generate (a_descriptor)
 			end
 		end
 
-	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	process_interface (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- process interface
 			-- generated deffered class for interface
 			-- `inteface_descriptor' must provide information on
 			-- every functiom of interface
 		local
-			interface_client_generator: WIZARD_INTERFACE_C_CLIENT_GENERATOR
+			l_generator: WIZARD_INTERFACE_C_CLIENT_GENERATOR
 		do
-			Precursor (interface_descriptor)
-			if 
-				not interface_descriptor.name.is_equal (Iunknown_type) and
-				not interface_descriptor.name.is_equal (Idispatch_type)
-			then
-				create interface_client_generator
-				interface_client_generator.generate (interface_descriptor)
+			Precursor (a_descriptor)
+			if not a_descriptor.is_iunknown and not a_descriptor.is_idispatch then
+				create l_generator
+				l_generator.generate (a_descriptor)
 			end
 		end
 
-	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR) is
+	process_enum (a_descriptor: WIZARD_ENUM_DESCRIPTOR) is
 			-- process enumeration
 			-- generate code for enumeration described by `enum_descriptor'
 			-- for every constant in `enum_descriptor'
 				-- generate code for constant
 		do
 			if not shared_wizard_environment.server then
-				Precursor (enum_descriptor)
+				Precursor (a_descriptor)
 			end
 		end
 
-	process_record (record_descriptor: WIZARD_RECORD_DESCRIPTOR) is
+	process_record (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
 			-- process structure
 			-- generate code for structure described by `record_descriptor'
 			-- for every field in `record_descriptor'
@@ -119,11 +115,11 @@ feature -- Processing
 				-- if field type is union then
 					--
 		local
-			record_client_generator: WIZARD_RECORD_C_CLIENT_GENERATOR
+			l_generator: WIZARD_RECORD_C_CLIENT_GENERATOR
 		do
-			Precursor (record_descriptor)
-			create record_client_generator
-			record_client_generator.generate (record_descriptor)
+			Precursor (a_descriptor)
+			create l_generator
+			l_generator.generate (a_descriptor)
 		end
 
 feature {NONE} -- Implementation

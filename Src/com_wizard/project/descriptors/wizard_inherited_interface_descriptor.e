@@ -12,14 +12,14 @@ create
 
 feature -- Initialization
 
-	make (a_library: WIZARD_TYPE_LIBRARY_DESCRIPTOR; an_index: INTEGER) is
+	make (a_library: WIZARD_TYPE_LIBRARY_DESCRIPTOR; a_index: INTEGER) is
 			-- Initialization.
 		require
 			non_void_library: a_library /= Void
-			valid_index: an_index > 0
+			valid_index: a_index > 0
 		do
 			library := a_library
-			index := an_index
+			index := a_index
 		ensure
 			non_void_library: library /= Void
 			valid_index: index > 0

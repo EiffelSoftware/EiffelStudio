@@ -67,15 +67,9 @@ feature -- Basic operations
 		require
 			non_void_description: a_description /= Void
 		do
-			if a_description.is_empty then
-				description := No_description_available.twin
-			else
-				description := a_description.twin
-			end
+			description := a_description
 		ensure
-			non_void_description: description /= Void
-			valid_description: not description.is_empty
-					and (not a_description.is_empty implies description.is_equal (a_description))
+			description_set: description = a_description
 		end
 
 end -- WIZARD_ENUM_ELEMENT_DESCRIPTOR

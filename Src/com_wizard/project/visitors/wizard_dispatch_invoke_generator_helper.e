@@ -60,19 +60,18 @@ feature -- Access
 			
 feature -- Basic operations
 
-	add_ref_to_interface_variable (visitor: WIZARD_DATA_TYPE_VISITOR;
-				a_variable_name: STRING): STRING is
-			-- `AddRef' to interface.
+	add_ref_to_interface_variable (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_variable_name: STRING): STRING is
+			-- Add `AddRef' to interface.
 		require
-			non_void_visitor: visitor /= Void
+			non_void_visitor: a_visitor /= Void
 			non_void_name: a_variable_name /= Void
 			valid_name: not a_variable_name.is_empty
 		do
 			create Result.make (100)
 			if 
-				visitor.is_interface_pointer and
-				(visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
-				visitor.c_type.substring_index (Idispatch_type, 1) > 0)
+				a_visitor.is_interface_pointer and
+				(a_visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+				a_visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 			then
 				Result.append (Open_parenthesis)
 				Result.append (a_variable_name)
@@ -83,9 +82,9 @@ feature -- Basic operations
 			end
 
 			if 
-				visitor.is_interface_pointer_pointer and
-				(visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
-				visitor.c_type.substring_index (Idispatch_type, 1) > 0)
+				a_visitor.is_interface_pointer_pointer and
+				(a_visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+				a_visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 			then
 				Result.append (Open_parenthesis)
 				Result.append (Asterisk)
@@ -347,19 +346,19 @@ feature -- Basic operations
 			non_void_variant: a_variant_name /= Void
 			valid_variant: not a_variant_name.is_empty
 		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			visitor := a_data_descriptor.visitor
+			l_visitor := a_data_descriptor.visitor
 			create Result.make (1000)
 
 			Result.append ("if (" + a_variant_name + 
-						"->vt != " + visitor.vt_type.out + ")%N%T%T%T%T{%N%T%T%T%T%T")
+						"->vt != " + l_visitor.vt_type.out + ")%N%T%T%T%T{%N%T%T%T%T%T")
 			
 			Result.append ("hr = VariantChangeType (" + 
 							a_variant_name +", " +
 							"" + a_variant_name + ", " +
 							"VARIANT_NOUSEROVERRIDE, " + 
-							visitor.vt_type.out + ");%N%T%T%T%T%T")
+							l_visitor.vt_type.out + ");%N%T%T%T%T%T")
 
 			Result.append (check_failer (an_argument_count, 
 							"*puArgErr = " + counter.out + ";", 
@@ -371,12 +370,12 @@ feature -- Basic operations
 
 			
 			if 
-				(visitor.is_interface_pointer or 
-				visitor.is_coclass_pointer) and
-				not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
-				visitor.c_type.substring_index (Idispatch_type, 1) > 0)
+				(l_visitor.is_interface_pointer or 
+				l_visitor.is_coclass_pointer) and
+				not (l_visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+				l_visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 			then
-				Result.append (visitor.c_type)
+				Result.append (l_visitor.c_type)
 				Result.append (Space)
 				Result.append (a_variable_name)
 				Result.append (Space_equal_space)
@@ -388,7 +387,7 @@ feature -- Basic operations
 				Result.append ("IID tmp_iid_")
 				Result.append_integer (counter)
 				Result.append (Space_equal_space)
-				Result.append (interface_descriptor_guid (a_data_descriptor, visitor).to_definition_string)
+				Result.append (interface_descriptor_guid (a_data_descriptor, l_visitor).to_definition_string)
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
@@ -409,12 +408,12 @@ feature -- Basic operations
 				Result.append (Tab)
 
 			elseif 
-				(visitor.is_interface_pointer_pointer or 
-				visitor.is_coclass_pointer_pointer) and
-				not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
-				visitor.c_type.substring_index (Idispatch_type, 1) > 0)
+				(l_visitor.is_interface_pointer_pointer or 
+				l_visitor.is_coclass_pointer_pointer) and
+				not (l_visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+				l_visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 			then
-				Result.append (visitor.c_type)
+				Result.append (l_visitor.c_type)
 				Result.append (Space)
 				Result.append (a_variable_name)
 				Result.append (Space_equal_space)
@@ -426,12 +425,12 @@ feature -- Basic operations
 				Result.append ("IID tmp_iid_")
 				Result.append_integer (counter)
 				Result.append (Space_equal_space)
-				Result.append (interface_descriptor_guid (a_data_descriptor, visitor).to_definition_string)
+				Result.append (interface_descriptor_guid (a_data_descriptor, l_visitor).to_definition_string)
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 
-				Result.append (interface_descriptor_c_type_name (a_data_descriptor, visitor))
+				Result.append (interface_descriptor_c_type_name (a_data_descriptor, l_visitor))
 				Result.append (Space)
 				Result.append (Asterisk)
 				Result.append (Space)
@@ -463,8 +462,8 @@ feature -- Basic operations
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 
-			elseif visitor.is_structure then
-				Result.append (visitor.c_type)
+			elseif l_visitor.is_structure then
+				Result.append (l_visitor.c_type)
 				Result.append (Space)
 				Result.append (a_variable_name)
 				Result.append (Semicolon)
@@ -476,20 +475,20 @@ feature -- Basic operations
 				Result.append (Ampersand)
 				Result.append (a_variable_name)
 				Result.append (Comma_space)
-				if not (visitor.vt_type = Vt_variant) then
+				if not (l_visitor.vt_type = Vt_variant) then
 					Result.append (Ampersand)
 					Result.append (Open_parenthesis)
 				end
 				Result.append (a_variant_name)
 				Result.append ("->")
-				Result.append (vartype_namer.variant_field_name (visitor))
-				if not (visitor.vt_type = Vt_variant) then
+				Result.append (vartype_namer.variant_field_name (l_visitor))
+				if not (l_visitor.vt_type = Vt_variant) then
 					Result.append (Close_parenthesis)
 				end
 				Result.append (Comma_space)
 				Result.append (sizeof)
 				Result.append (Space_open_parenthesis)
-				Result.append (visitor.c_type)
+				Result.append (l_visitor.c_type)
 				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
@@ -497,19 +496,19 @@ feature -- Basic operations
 				Result.append (Tab)
 
 			else
-				Result.append (visitor.c_type)
+				Result.append (l_visitor.c_type)
 				Result.append (Space)
 				Result.append (a_variable_name)
 				Result.append (Space_equal_space)
-				Result.append ("(" +visitor.c_type + ")")
+				Result.append ("(" + l_visitor.c_type + ")")
 				Result.append (a_variant_name)
 				Result.append ("->")
-				Result.append (vartype_namer.variant_field_name (visitor))
+				Result.append (vartype_namer.variant_field_name (l_visitor))
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 
-				Result.append (add_ref_to_interface_variable (visitor, a_variable_name))
+				Result.append (add_ref_to_interface_variable (l_visitor, a_variable_name))
 			end
 		ensure
 			non_void_argumet: Result /= Void

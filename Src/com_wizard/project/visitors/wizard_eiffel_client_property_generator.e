@@ -20,20 +20,16 @@ feature -- Basic operations
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate client access and setting features.
 		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			visitor := a_descriptor.data_type.visitor 
-
+			l_visitor := a_descriptor.data_type.visitor 
 			create changed_names.make (2)
-
-
 			define_feature_names (a_component_descriptor, a_descriptor)
-			generate_access_feature (visitor, a_descriptor)
-			generate_external_access_feature (visitor, a_component_descriptor, a_descriptor)
-
+			generate_access_feature (l_visitor, a_descriptor)
+			generate_external_access_feature (l_visitor, a_component_descriptor, a_descriptor)
 			if not is_varflag_freadonly (a_descriptor.var_flags) then
-				generate_setting_feature (visitor)
-				generate_external_setting_feature (visitor, a_component_descriptor)
+				generate_setting_feature (l_visitor)
+				generate_external_setting_feature (l_visitor, a_component_descriptor)
 			end
 		ensure then
 			external_access_feature_exist: external_access_feature /= Void
@@ -70,28 +66,27 @@ feature {NONE} -- Implementation
 			valid_c_type: not Result.is_empty
 		end
 		
-	define_feature_names (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; 
-				a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	define_feature_names (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Define feature names.
 		require
 			non_void_component: a_component_descriptor /= Void
 			non_void_descriptor: a_descriptor /= Void
 		local
-			tmp_string: STRING
+			l_string: STRING
 		do
-			if a_descriptor.coclass_eiffel_names.has (a_component_descriptor.name) then
+			if a_descriptor.is_renamed_in (a_component_descriptor) then
 				property_renamed := True
-				access_feature_name := a_descriptor.coclass_eiffel_names.item (a_component_descriptor.name).twin
+				access_feature_name := a_descriptor.component_eiffel_name (a_component_descriptor)
 				changed_names.put (access_feature_name, a_descriptor.interface_eiffel_name)
 
-				create tmp_string.make (100)
-				tmp_string.append (Set_clause)
-				tmp_string.append (a_descriptor.interface_eiffel_name)
+				create l_string.make (100)
+				l_string.append (Set_clause)
+				l_string.append (a_descriptor.interface_eiffel_name)
 				
 				create set_feature_name.make (100)
 				set_feature_name.append (Set_clause)
 				set_feature_name.append (access_feature_name)
-				changed_names.put (set_feature_name, tmp_string)
+				changed_names.put (set_feature_name, l_string)
 			else
 				access_feature_name := a_descriptor.interface_eiffel_name
 				
@@ -140,24 +135,19 @@ feature {NONE} -- Implementation
 			non_void_set_feature_name: set_feature_name /= Void
 			valid_set_feature_name: not set_feature_name.is_empty
 		local
-			an_argument: STRING
+			l_argument: STRING
 		do
 			create setting_feature.make
 			setting_feature.set_name (set_feature_name)
 
 			-- Set arguments
-			create an_argument.make (100)
-			an_argument.append (Argument_name)
-			an_argument.append (Colon)
-			an_argument.append (Space)
-			an_argument.append (a_visitor.eiffel_type)
-			setting_feature.add_argument (an_argument)
-
+			create l_argument.make (100)
+			l_argument.append ("a_value: ")
+			l_argument.append (a_visitor.eiffel_type)
+			setting_feature.add_argument (l_argument)
 			setting_feature.set_comment (setting_feature_comment (access_feature_name))
-			
 			setting_feature.set_effective
 			setting_feature.set_body (setting_body (a_visitor))
-
 		ensure
 			non_void_setting_feature: setting_feature /= Void
 			non_void_setting_feature_name: setting_feature.name /= Void
@@ -166,9 +156,7 @@ feature {NONE} -- Implementation
 			valid_setting_feature_arguments: not setting_feature.arguments.is_empty
 		end
 
-	generate_external_access_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR;
-				a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; 
-				a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate_external_access_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate external access feature.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -179,14 +167,10 @@ feature {NONE} -- Implementation
 		do
 			create external_access_feature.make
 			external_access_feature.set_name (external_access_feature_name)
-
 			external_access_feature.set_result_type (a_visitor.eiffel_type)
 			external_access_feature.set_comment (a_descriptor.description)
 			external_access_feature.add_argument (Default_pointer_argument.twin)
-			external_access_feature.set_body 
-					(external_access_body (c_type (a_component_descriptor), 
-											a_component_descriptor.c_header_file_name, 
-											a_visitor))
+			external_access_feature.set_body (external_access_body (c_type (a_component_descriptor), a_component_descriptor.c_definition_header_file_name, a_visitor))
 			external_access_feature.set_external
 		ensure
 			non_void_external_access_feature: external_access_feature /= Void
@@ -196,8 +180,7 @@ feature {NONE} -- Implementation
 			valid_external_access_feature_arguments: not external_access_feature.arguments.is_empty
 		end
 
-	generate_external_setting_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR;
-				a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR) is
+	generate_external_setting_feature (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Generate external set feature.
 		require
 			non_void_visitor: a_visitor /= Void
@@ -205,38 +188,24 @@ feature {NONE} -- Implementation
 			valid_external_set_feature_name: not external_set_feature_name.is_empty
 			non_void_component: a_component_descriptor /= Void
 		local
-			an_argument: STRING
+			l_argument: STRING
 		do
 			create external_setting_feature.make
-
 			external_setting_feature.set_name (external_set_feature_name)
-
 			external_setting_feature.add_argument (Default_pointer_argument.twin)
 		
-			create an_argument.make (100)
-			an_argument.append (Argument_name)
-			an_argument.append (Colon)
-			an_argument.append (Space)
-			if 
-				a_visitor.is_array_basic_type or 
-				a_visitor.is_interface or 
-				a_visitor.is_structure or 
-				a_visitor.is_structure_pointer or
-				a_visitor.is_interface_pointer or 
-				a_visitor.is_coclass_pointer
-			then
-				an_argument.append (Pointer_type)
+			create l_argument.make (100)
+			l_argument.append ("a_value: ")
+			if a_visitor.is_array_basic_type or a_visitor.is_interface or a_visitor.is_structure or 
+					a_visitor.is_structure_pointer or a_visitor.is_interface_pointer or a_visitor.is_coclass_pointer then
+				l_argument.append (Pointer_type)
 			else
-				an_argument.append (a_visitor.eiffel_type)
+				l_argument.append (a_visitor.eiffel_type)
 			end
-			external_setting_feature.add_argument (an_argument)
-			
+			external_setting_feature.add_argument (l_argument)			
 			external_setting_feature.set_comment (setting_feature_comment (access_feature_name))
 			external_setting_feature.set_external
-			external_setting_feature.set_body 
-					(external_setting_body (c_type (a_component_descriptor), 
-							a_component_descriptor.c_header_file_name, 
-							a_visitor))
+			external_setting_feature.set_body (external_setting_body (c_type (a_component_descriptor), a_component_descriptor.c_definition_header_file_name, a_visitor))
 		ensure
 			non_void_external_setting_feature: external_setting_feature /= Void
 			non_void_external_setting_feature_name: external_setting_feature.name /= Void
@@ -251,17 +220,10 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
-			create Result.make (1000)
-			Result.append ("Set ")
-			Result.append (Back_quote)
+			create Result.make (100)
+			Result.append ("Set `")
 			Result.append (a_name)
-			Result.append (Single_quote)
-			Result.append (Space)
-			Result.append ("with ")
-			Result.append (Back_quote)
-			Result.append (Argument_name)
-			Result.append (Single_quote)
-			Result.append (Dot)
+			Result.append ("' with `value'.")
 		ensure
 			non_void_comment: Result /= Void
 			valid_comment: not Result.is_empty
@@ -274,47 +236,29 @@ feature {NONE} -- Implementation
 			non_void_external_set_feature_name: external_set_feature_name /= Void
 			valid_external_set_feature_name: not external_set_feature_name.is_empty
 		local
-			tmp_string, local_variable: STRING
+			l_string, local_variable: STRING
 		do
 			create Result.make (1000)
-			Result.append (Tab_tab_tab)
+			Result.append ("%T%T%T")
 
-			create tmp_string.make (100)
-			tmp_string.append (external_set_feature_name)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Initializer_variable)
-			tmp_string.append (Comma_space)
+			create l_string.make (100)
+			l_string.append (external_set_feature_name)
+			l_string.append (" (initializer, ")
 
 			if a_visitor.is_array_basic_type then
 				create local_variable.make (100)
-				local_variable.append (Any_clause)
-				local_variable.append (Any_type)
+				local_variable.append ("l_c_pointer: ANY")
 				setting_feature.add_local_variable (local_variable)
-
-				Result.append (Any_clause)
-				Result.append (Space)
-				Result.append (Assignment)
-				Result.append (Space)
-				Result.append (Argument_name)
-				Result.append (To_c_function)
-
-				tmp_string.append (Dollar)
-				tmp_string.append (Any_clause)
-			elseif 
-				a_visitor.is_interface or 
-				a_visitor.is_interface_pointer or
-				a_visitor.is_structure or 
-				a_visitor.is_structure_pointer or
-				a_visitor.is_coclass or
-				a_visitor.is_coclass_pointer
-			then
-				tmp_string.append (Argument_name)
-				tmp_string.append (Item_function)
+				Result.append ("l_c_pointer := a_value.to_c")
+				l_string.append ("$l_c_pointer")
+			elseif a_visitor.is_interface or a_visitor.is_interface_pointer or a_visitor.is_structure or 
+						a_visitor.is_structure_pointer or a_visitor.is_coclass or a_visitor.is_coclass_pointer then
+				l_string.append ("a_value.item")
 			else
-				tmp_string.append (Argument_name)
+				l_string.append ("a_value")
 			end
-			tmp_string.append (Close_parenthesis)
-			Result.append (tmp_string)
+			l_string.append (")")
+			Result.append (l_string)
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty		
@@ -326,106 +270,69 @@ feature {NONE} -- Implementation
 			non_void_external_access_feature_name: external_access_feature_name /= Void
 			valid_external_access_feature_name: not external_access_feature_name.is_empty
 		do
-			create Result.make (1000)
-			Result.append (Tab_tab_tab)
-			Result.append (Result_clause)
+			create Result.make (100)
+			Result.append ("%T%T%TResult := ")
 			Result.append (external_access_feature_name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Initializer_variable)
-			Result.append (close_parenthesis)
+			Result.append (" (initializer)")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty		
 		end
 
-	external_access_body (class_name, header_file_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	external_access_body (a_class_name, a_header_file_name: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- External access feature body
 		require
-			non_void_class_name: class_name /= Void
-			valid_class_name: not class_name.is_empty
-			non_void_header_file_name: header_file_name /= Void
-			valud_header_file_name: not header_file_name.is_empty
-			non_void_visitor: visitor /= Void
+			non_void_class_name: a_class_name /= Void
+			valid_class_name: not a_class_name.is_empty
+			non_void_header_file_name: a_header_file_name /= Void
+			valud_header_file_name: not a_header_file_name.is_empty
+			non_void_visitor: a_visitor /= Void
 		do
 			create Result.make (1000)
-			Result.append (Tab_tab_tab)
-			Result.append (Double_quote)
-			Result.append (Cpp_clause)
-			Result.append (class_name)
-			Result.append (Space)
-			Result.append (Percent_double_quote)
-			Result.append (header_file_name)
-			Result.append (Percent_double_quote)
-			Result.append (Close_bracket)
-			Result.append (Open_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Colon)
-			if 
-				visitor.is_basic_type or 
-				visitor.vt_type = Vt_bool or
-				visitor.is_enumeration
-			then
-				Result.append (visitor.cecil_type)
+			Result.append ("%T%T%T%"C++ [")
+			Result.append (a_class_name)
+			Result.append (" %%%"")
+			Result.append (a_header_file_name)
+			Result.append ("%%%"]():")
+			if a_visitor.is_basic_type or a_visitor.vt_type = Vt_bool or a_visitor.is_enumeration then
+				Result.append (a_visitor.cecil_type)
 			else
-				Result.append (Eif_reference)
+				Result.append ("EIF_REFERENCE")
 			end
-			Result.append (Double_quote)
+			Result.append ("%"")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty		
 		end
 
-	external_setting_body (class_name, header_file_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	external_setting_body (a_class_name, a_header_file_name: STRING; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- External setting body
 		require
-			non_void_class_name: class_name /= Void
-			valid_class_name: not class_name.is_empty
-			non_void_header_file_name: header_file_name /= Void
-			valud_header_file_name: not header_file_name.is_empty
-			non_void_visitor: visitor /= Void
+			non_void_class_name: a_class_name /= Void
+			valid_class_name: not a_class_name.is_empty
+			non_void_header_file_name: a_header_file_name /= Void
+			valud_header_file_name: not a_header_file_name.is_empty
+			non_void_visitor: a_visitor /= Void
 		do
 			create Result.make (1000)
-			Result.append (Tab_tab_tab)
-			Result.append (Double_quote)
-			Result.append (Cpp_clause)
-			Result.append (class_name)
-			Result.append (Space)
-			Result.append (Percent_double_quote)
-			Result.append (header_file_name)
-			Result.append (Percent_double_quote)
-			Result.append (Close_bracket)
-			Result.append (Open_parenthesis)
-			if 
-				visitor.is_array_basic_type or 
-				visitor.is_interface or 
-				visitor.is_structure 
-			then
-				Result.append (visitor.c_type)
-				Result.append (Space)
-				Result.append (Asterisk)
-
-			elseif 
-				visitor.is_structure_pointer 
-			then
-				Result.append (visitor.c_type)
-				
-			elseif
-				visitor.is_interface_pointer or
-				visitor.is_coclass_pointer
-			then
-				Result.append (Iunknown)
-
-			elseif 
-				visitor.is_basic_type or 
-				visitor.vt_type = Vt_bool or
-				visitor.is_enumeration
-			then
-				Result.append (visitor.cecil_type)
+			Result.append ("%T%T%T%"C++ [")
+			Result.append (a_class_name)
+			Result.append (" %%%"")
+			Result.append (a_header_file_name)
+			Result.append ("%%%"](")
+			if a_visitor.is_array_basic_type or a_visitor.is_interface or a_visitor.is_structure then
+				Result.append (a_visitor.c_type)
+				Result.append (" *")
+			elseif a_visitor.is_structure_pointer then
+				Result.append (a_visitor.c_type)
+			elseif a_visitor.is_interface_pointer or a_visitor.is_coclass_pointer then
+				Result.append ("IUnknown *")
+			elseif a_visitor.is_basic_type or a_visitor.vt_type = Vt_bool or a_visitor.is_enumeration then
+				Result.append (a_visitor.cecil_type)
 			else
-				Result.append (Eif_object)
+				Result.append ("EIF_OBJECT")
 			end
-			Result.append (Close_parenthesis)
-			Result.append (Double_quote)
+			Result.append (")%"")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty		

@@ -9,8 +9,8 @@ class
 inherit
 	WIZARD_FEATURE_DESCRIPTOR
 		redefine
-			disambiguate_names,
-			disambiguate_eiffel_names
+			disambiguate_coclass_names,
+			disambiguate_interface_names
 		end
 
 	ECOM_VAR_KIND
@@ -34,12 +34,12 @@ feature -- Initialization
 			valid_creator: a_creator /= Void
 		do
 			a_creator.initialize_descriptor (Current)
-			create coclass_eiffel_names.make (5)
+			create components_eiffel_names.make (5)
 		ensure
 			non_void_name: name /= Void 
 			valid_name: not name.is_empty
 			valid_data_type: data_type /= Void
-			non_void_coclass_eiffel_names: coclass_eiffel_names /= Void
+			non_void_components_eiffel_names: components_eiffel_names /= Void
 		end
 
 feature -- Access
@@ -81,109 +81,72 @@ feature -- Status Report
 
 feature -- Transformation
 
-	disambiguate_names (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR;
-				a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	disambiguate_coclass_names (a_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR; a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Disambiguate names for coclass.
 		local
-			tmp_name: STRING
+			l_name, l_coclass_name: STRING
+			l_names: HASH_TABLE [WIZARD_INTERFACE_DESCRIPTOR, STRING]
+			l_c_names: LIST [STRING]
 		do
-		{WIZARD_FEATURE_DESCRIPTOR} Precursor (an_interface_descriptor, a_coclass_descriptor)
-			tmp_name := interface_eiffel_name.twin
-			tmp_name.prepend ("set_")
-			a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
-			tmp_name := interface_eiffel_name.twin
-			tmp_name.prepend ("set_ref_")
-			a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
-			if coclass_eiffel_names.has (a_coclass_descriptor.name) then
-				tmp_name := coclass_eiffel_names.item (a_coclass_descriptor.name).twin
-				tmp_name.prepend ("set_")
-				a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
-				tmp_name := coclass_eiffel_names.item (a_coclass_descriptor.name).twin
-				tmp_name.prepend ("set_ref_")
-				a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
+			Precursor {WIZARD_FEATURE_DESCRIPTOR} (a_interface_descriptor, a_coclass_descriptor)
+			l_name := interface_eiffel_name.twin
+			l_name.prepend ("set_")
+			l_names := a_coclass_descriptor.feature_eiffel_names
+			l_names.force (a_interface_descriptor, l_name)
+			l_name:= interface_eiffel_name.twin
+			l_name.prepend ("set_ref_")
+			l_names.force (a_interface_descriptor, l_name)
+			if is_renamed_in (a_coclass_descriptor) then
+				l_coclass_name := components_eiffel_names.item (a_coclass_descriptor.name).twin
+				create l_name.make (l_coclass_name.count + 4)
+				l_name.append ("set_")
+				l_name.append (l_coclass_name)
+				l_names.force (a_interface_descriptor, l_name)
+				create l_name.make (l_coclass_name.count + 8)
+				l_name.append ("set_ref_")
+				l_name.append (l_coclass_name)
+				l_names.force (a_interface_descriptor, l_name)
 			end
-			tmp_name := name.twin
-			tmp_name.prepend ("set_")
-			a_coclass_descriptor.feature_c_names.force (tmp_name)
-			tmp_name := name.twin
-			tmp_name.prepend ("set_ref_")
-			a_coclass_descriptor.feature_c_names.force (tmp_name)
+			create l_name.make (name.count + 4)
+			l_name.append ("set_")
+			l_name.append (name)
+			l_c_names := a_coclass_descriptor.feature_c_names
+			l_c_names.force (l_name)
+			create l_name.make (name.count + 8)
+			l_name.append ("set_ref_")
+			l_name.append (name)
+			l_c_names.force (l_name)
 		end
 
-	disambiguate_eiffel_names (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
+	disambiguate_interface_names (a_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Disambiguate names for interface.
 		local
-			tmp_string, tmp_string2, set_tmp_string, set_tmp_string2, set_ref_tmp_string, set_ref_tmp_string2: STRING
+			l_name, l_setter: STRING
+			l_names: LIST [STRING]
 		do
-			tmp_string := interface_eiffel_name.twin
-			tmp_string.to_lower
-			tmp_string2 := tmp_string.twin
-			tmp_string2.append ("_user_precondition")
-
-			set_tmp_string := tmp_string.twin
-			set_tmp_string.prepend ("set_")
-			set_tmp_string2 := set_tmp_string.twin
-			set_tmp_string2.append ("_user_precondition")
-
-			set_ref_tmp_string := tmp_string.twin
-			set_ref_tmp_string.prepend ("set_ref_")
-			set_ref_tmp_string2 := set_ref_tmp_string.twin
-			set_ref_tmp_string2.append ("_user_precondition")
-			if 
-				an_interface_descriptor.feature_eiffel_names.has (tmp_string) or
-				an_interface_descriptor.feature_eiffel_names.has (tmp_string2) or
-				an_interface_descriptor.feature_eiffel_names.has (set_tmp_string) or
-				an_interface_descriptor.feature_eiffel_names.has (set_tmp_string2) or
-				an_interface_descriptor.feature_eiffel_names.has (set_ref_tmp_string) or
-				an_interface_descriptor.feature_eiffel_names.has (set_ref_tmp_string2) or
-				eiffel_key_words.has (tmp_string)
-			then
-				interface_eiffel_name.append_integer (counter)
-			end
-			tmp_string := interface_eiffel_name.twin
-			tmp_string2 := tmp_string.twin
-			tmp_string2.append ("_user_precondition")
-
-			set_tmp_string := tmp_string.twin
-			set_tmp_string.prepend ("set_")
-			set_tmp_string2 := set_tmp_string.twin
-			set_tmp_string2.append ("_user_precondition")
-
-			set_ref_tmp_string := tmp_string.twin
-			set_ref_tmp_string.prepend ("set_ref_")
-			set_ref_tmp_string2 := set_ref_tmp_string.twin
-			set_ref_tmp_string2.append ("_user_precondition")
-
-			set_tmp_string := tmp_string.twin
-			set_tmp_string.prepend ("set_")
-			set_tmp_string2 := set_tmp_string.twin
-			set_tmp_string2.append ("_user_precondition")
-
-			set_ref_tmp_string := tmp_string.twin
-			set_ref_tmp_string.prepend ("set_ref_")
-			set_ref_tmp_string2 := set_ref_tmp_string.twin
-			set_ref_tmp_string2.append ("_user_precondition")
-
-			an_interface_descriptor.feature_eiffel_names.force (tmp_string)
-			an_interface_descriptor.feature_eiffel_names.force (tmp_string2)
-
-			an_interface_descriptor.feature_eiffel_names.force (set_tmp_string)
-			an_interface_descriptor.feature_eiffel_names.force (set_tmp_string2)
-
-			an_interface_descriptor.feature_eiffel_names.force (set_ref_tmp_string)
-			an_interface_descriptor.feature_eiffel_names.force (set_ref_tmp_string2)
+			l_name := interface_eiffel_name.as_lower
+			l_names := a_interface_descriptor.feature_eiffel_names
+			l_name := unique_identifier (l_name, agent has_name_or_accessors (l_names, ?))
+			l_names.force (l_name)
+			l_names.force (precondition_feature_name (l_name))
+			l_setter := setter_feature_name (l_name)
+			l_names.force (l_setter)
+			l_names.force (precondition_feature_name (l_setter))
+			l_setter := ref_setter_feature_name (l_name)
+			l_names.force (l_setter)
+			l_names.force (precondition_feature_name (l_setter))
 		end
 
-feature {WIZARD_PROPERTY_DESCRIPTOR_FACTORY}-- Basic operations
+feature {WIZARD_PROPERTY_DESCRIPTOR_FACTORY} -- Basic operations
 
 	set_description (a_description: STRING) is
 			-- Set `description' with `a_description'.
 		require
-			valid_description: a_description /= Void and then not a_description.is_empty
+			valid_description: a_description /= Void
 		do
-			description := a_description.twin
+			description := a_description
 		ensure
-			valid_description: description /= Void and then not description.is_empty and description.is_equal (a_description)
+			description_set: description = a_description
 		end
 
 	set_data_type (a_data_type: WIZARD_DATA_TYPE_DESCRIPTOR) is
@@ -222,6 +185,56 @@ feature {WIZARD_PROPERTY_DESCRIPTOR_FACTORY}-- Basic operations
 			var_flags := some_flags
 		ensure
 			valid_var_flags: is_valid_varflag (var_flags) and var_flags = some_flags
+		end
+
+feature {NONE} -- Implementation
+
+	setter_feature_name (a_name: STRING): STRING is
+			-- Property setter feature name of property with name `a_name'
+		require
+			non_void_name: a_name /= Void
+		do
+			create Result.make (a_name.count + 4)
+			Result.append ("set_")
+			Result.append (a_name)
+		ensure
+			non_void_setter_name: Result /= Void
+		end
+		
+	ref_setter_feature_name (a_name: STRING): STRING is
+			-- Property reference setter feature name of property with name `a_name'
+		require
+			non_void_name: a_name /= Void
+		do
+			create Result.make (a_name.count + 8)
+			Result.append ("set_ref_")
+			Result.append (a_name)
+		ensure
+			non_void_ref_setter_name: Result /= Void
+		end
+
+	has_name_or_accessors (a_list: LIST [STRING]; a_name: STRING): BOOLEAN is
+			-- Does `a_list' or `Eiffel_keywords' have `a_name' or one of its derived accessors?
+		require
+			non_void_list: a_list /= Void
+			non_void_name: a_name /= Void
+		local
+			l_setter: STRING
+		do
+			Result := Eiffel_keywords.has (a_name) or a_list.has (a_name) or a_list.has (precondition_feature_name (a_name))
+			if not Result then
+				l_setter := setter_feature_name (a_name)
+				Result := a_list.has (l_setter) or a_list.has (precondition_feature_name (l_setter))
+				if not Result then
+					l_setter := ref_setter_feature_name (a_name)
+					Result := a_list.has (l_setter) or a_list.has (precondition_feature_name (l_setter))
+				end
+			end
+		ensure
+			definition: Result = a_list.has (a_name) or a_list.has (precondition_feature_name (a_name)) or
+								a_list.has (setter_feature_name (a_name)) or a_list.has (precondition_feature_name (setter_feature_name (a_name))) or
+								a_list.has (ref_setter_feature_name (a_name)) or a_list.has (precondition_feature_name (ref_setter_feature_name (a_name))) or 
+								Eiffel_keywords.has (a_name)
 		end
 
 end -- class WIZARD_PROPERTY_DESCRIPTOR

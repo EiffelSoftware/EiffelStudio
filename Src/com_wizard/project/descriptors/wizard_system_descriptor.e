@@ -19,11 +19,10 @@ feature {NONE} -- Initialization
 			-- Initialize system descriptor.
 		do
 			create library_descriptors.make (5)
-			create {LINKED_LIST [WIZARD_ENUM_DESCRIPTOR]} enumerators.make
-			create {LINKED_LIST [WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR]} 
-					interfaces.make
+			create {ARRAYED_LIST [WIZARD_ENUM_DESCRIPTOR]} enumerators.make (20)
+			create {ARRAYED_LIST [WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR]} interfaces.make (20)
 			interfaces.compare_objects
-			create {LINKED_LIST [WIZARD_COCLASS_DESCRIPTOR]} coclasses.make
+			create {ARRAYED_LIST [WIZARD_COCLASS_DESCRIPTOR]} coclasses.make (20)
 			create eiffel_names.make (100)
 			eiffel_names.compare_objects
 
@@ -42,9 +41,9 @@ feature {NONE} -- Initialization
 			eiffel_names.force ("PICTURE_INTERFACE", "PICTURE_INTERFACE")
 			eiffel_names.force ("PICTURE_IMPL_PROXY", "PICTURE_IMPL_PROXY")
 
-			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_client.make
-			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_server.make
-			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_common.make
+			create {ARRAYED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_client.make (20)
+			create {ARRAYED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_server.make (20)
+			create {ARRAYED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_common.make (20)
 			create c_types.make (20)
 		ensure
 			non_void_library_descriptors: library_descriptors /= Void
@@ -139,79 +138,92 @@ feature -- Basic operations
 			non_void_file_name: a_type_library_file_name /= Void
 			valid_file_name: not a_type_library_file_name.is_empty
 		local
-			a_type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
-			a_type_lib: ECOM_TYPE_LIB
+			l_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			l_type_lib: ECOM_TYPE_LIB
 		do
-			create a_type_lib.make_from_name (a_type_library_file_name)
-			create a_type_library_descriptor.make (a_type_lib)
-			type_lib_guid := a_type_library_descriptor.guid
-			name := a_type_library_descriptor.name.twin
-			add_library_descriptor (a_type_library_descriptor)
-			a_type_library_descriptor.generate
+			create l_type_lib.make_from_name (a_type_library_file_name)
+			create l_descriptor.make (l_type_lib)
+			type_lib_guid := l_descriptor.guid
+			name := l_descriptor.name.twin
+			add_library_descriptor (l_descriptor)
+			
+			-- Pass 1: generate raw descriptors except coclasses
+			l_descriptor.generate
+			
+			-- Pass 2: generate inherited interfaces
+			from
+				start
+			until
+				after
+			loop
+				l_descriptor := library_descriptor_for_iteration
+				l_descriptor.set_complete
+				l_descriptor.finalize_inherited_interfaces
+				forth
+			end
+			
+			-- Pass 3: Build interface vtable and IDispatch feature tables
+			from
+				start
+			until
+				after
+			loop
+				l_descriptor := library_descriptor_for_iteration
+				if not Non_generated_type_libraries.has (l_descriptor.guid) then
+					l_descriptor.finalize_interface_features
+				end
+				forth
+			end
 
+			-- Pass 4: Resolve Eiffel class name clashes,
+			--         Resolve interface feature names clashes,
+			--         Initialize implemented interfaces for server implementation
 			from
 				start
 			until
 				after
 			loop
-				a_type_library_descriptor := library_descriptor_for_iteration
-				a_type_library_descriptor.set_complete
-				a_type_library_descriptor.finalize_inherited_interfaces
-				forth
-			end
-			from
-				start
-			until
-				after
-			loop
-				if not Non_generated_type_libraries.has (library_descriptor_for_iteration.guid) then
-					library_descriptor_for_iteration.finalize_interface_features
+				l_descriptor := library_descriptor_for_iteration
+				l_descriptor.finalize_aliases
+				if not Non_generated_type_libraries.has (l_descriptor.guid) then
+					l_descriptor.finalize_names
+					l_descriptor.finalize_interface_feature_names
+					l_descriptor.create_implemented_interfaces
 				end
 				forth
 			end
+			
+			-- Pass 5: Resolve coclass (Eiffel and C) feature names clashes
 			from
 				start
 			until
 				after
 			loop
-				a_type_library_descriptor := library_descriptor_for_iteration
-				a_type_library_descriptor.finalize_aliases
-				if not Non_generated_type_libraries.has (library_descriptor_for_iteration.guid) then
-					a_type_library_descriptor.finalize_names
-					a_type_library_descriptor.finalize_interface_feature_names
-					a_type_library_descriptor.create_implemented_interfaces
-				end
-				forth
-			end
-			from
-				start
-			until
-				after
-			loop
-				if not Non_generated_type_libraries.has (library_descriptor_for_iteration.guid) then
-					library_descriptor_for_iteration.finalize_coclass_feature_names
+				l_descriptor := library_descriptor_for_iteration
+				if not Non_generated_type_libraries.has (l_descriptor.guid) then
+					l_descriptor.finalize_coclass_feature_names
 				end
 				forth
 			end
 		end
 
-	add_library_descriptor (descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+	add_library_descriptor (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
 			-- Add `descriptor' to `library_descriptors'.
 		require
-			non_void_descriptor: descriptor /= Void
-			not_has_descriptor: not has_library (descriptor.guid)
+			non_void_descriptor: a_descriptor /= Void
+			not_has_descriptor: not has_library (a_descriptor.guid)
 		do
-			library_descriptors.put (descriptor, descriptor.guid.to_string)
+			library_descriptors.put (a_descriptor, a_descriptor.guid.to_string)
 		ensure
-			has_descriptor: has_library (descriptor.guid)
+			has_descriptor: has_library (a_descriptor.guid)
 		end
 
-	add_enumerator (an_enumerator: WIZARD_ENUM_DESCRIPTOR) is
-			-- Add `an_enumerator' to `enumerators'
+	add_enumerator (a_enumerator: WIZARD_ENUM_DESCRIPTOR) is
+			-- Add `a_enumerator' to `enumerators'
 		require
-			non_void_descriptor: an_enumerator /= Void
+			non_void_descriptor: a_enumerator /= Void
 		do
-			enumerators.force (an_enumerator)
+			enumerators.force (a_enumerator)
 		end
 
 	add_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is

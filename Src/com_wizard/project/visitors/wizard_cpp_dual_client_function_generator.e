@@ -152,10 +152,10 @@ feature {NONE} -- Implementation
 	feature_body (interface_name: STRING): STRING is
 			-- Ccom client feature body
 		local
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			out_value, signature, free_memory, variables, return_value: STRING
 			tmp_safearray: WIZARD_SAFEARRAY_DATA_TYPE_DESCRIPTOR
-			pointer_var: LINKED_LIST[STRING]
+			pointer_var: LIST [STRING]
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			tmp_name: STRING
 		do

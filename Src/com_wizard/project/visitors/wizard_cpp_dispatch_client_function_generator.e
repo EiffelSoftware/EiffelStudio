@@ -28,14 +28,12 @@ feature -- Basic operations
 			result_type_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create ccom_feature_writer.make
-			create c_header_files.make
-
-	
+			create {ARRAYED_LIST [STRING]} c_header_files.make (20)
 			func_desc := a_descriptor
 
 			-- Set function name used in ccom
-			if a_descriptor.coclass_eiffel_names.has (a_component_descriptor.name) then
-				ccom_func_name := external_feature_name (a_descriptor.coclass_eiffel_names.item (a_component_descriptor.name))
+			if a_descriptor.is_renamed_in (a_component_descriptor) then
+				ccom_func_name := external_feature_name (a_descriptor.component_eiffel_name (a_component_descriptor))
 			else
 				ccom_func_name := external_feature_name (a_descriptor.interface_eiffel_name)
 			end
@@ -65,7 +63,7 @@ feature -- Basic operations
 
 feature {NONE} -- Access
 
-	free_arguments: LINKED_LIST[STRING]
+	free_arguments: ARRAYED_LIST [STRING]
 
 feature {NONE} -- Implementation
 
@@ -82,14 +80,14 @@ feature {NONE} -- Implementation
 		require
 			non_void_string: interface_name /= Void and guid /= Void
 		local
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			return_value: STRING
 			counter, flag: INTEGER
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			out_variable: BOOLEAN
 			a_type: INTEGER
 		do
-			create free_arguments.make
+			create {ARRAYED_LIST [STRING]} free_arguments.make (20)
 			create return_value.make (10000)
 
 			Result := check_interface_pointer (interface_name)

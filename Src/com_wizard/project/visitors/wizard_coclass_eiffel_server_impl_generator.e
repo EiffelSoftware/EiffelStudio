@@ -93,62 +93,57 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+	set_default_ancestors (a_writer: WIZARD_WRITER_EIFFEL_CLASS) is
 		local
-			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
+			l_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do
-			create tmp_writer.make
+			create l_writer.make
 
 			if shared_wizard_environment.new_eiffel_project then
-				tmp_writer.set_name (shared_wizard_environment.eiffel_class_name)
-				tmp_writer.add_redefine (make_word)
+				l_writer.set_name (shared_wizard_environment.eiffel_class_name)
+				l_writer.add_redefine (make_word)
 			else
-				tmp_writer.set_name (coclass_descriptor.eiffel_class_name)
+				l_writer.set_name (coclass_descriptor.eiffel_class_name)
 			end
 
-			an_eiffel_writer.add_inherit_clause (tmp_writer)
+			a_writer.add_inherit_clause (l_writer)
 
 			if shared_wizard_environment.new_eiffel_project then
-				create tmp_writer.make
-				tmp_writer.set_name ("ECOM_STUB")
-				an_eiffel_writer.add_inherit_clause (tmp_writer)
+				create l_writer.make
+				l_writer.set_name ("ECOM_STUB")
+				a_writer.add_inherit_clause (l_writer)
 			end
 		end
 
 	ccom_create_item_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
 			-- `create_item' feature.
 		local
-			feature_body: STRING
-			an_argument: STRING
+			l_body: STRING
+			l_argument: STRING
 		do
 			create Result.make
 			Result.set_name ("ccom_create_item")
 			Result.set_comment ("Initialize %Qitem%'")
 
-			create an_argument.make (100)
-			an_argument.append ("eif_object: like Current")
-			Result.add_argument (an_argument)
+			create l_argument.make (100)
+			l_argument.append ("eif_object: like Current")
+			Result.add_argument (l_argument)
 
 			Result.set_result_type ("POINTER")
 
-			create feature_body.make (100)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append ("%"C++ %(new ")
+			create l_body.make (100)
+			l_body.append ("%T%T%T%"[C++ %(new ")
 			if a_component.namespace /= Void and then not a_component.namespace.is_empty then
-				feature_body.append (a_component.namespace)
-				feature_body.append ("::")
+				l_body.append (a_component.namespace)
+				l_body.append ("::")
 			end
-			feature_body.append (a_component.c_type_name)
-			feature_body.append (Space)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (a_component.c_header_file_name)
-			feature_body.append (Percent_double_quote)
-			feature_body.append (Close_bracket)
-			feature_body.append ("(EIF_OBJECT)")
-			feature_body.append (double_quote)
+			l_body.append (a_component.c_type_name)
+			l_body.append (" %%%"")
+			l_body.append (a_component.c_definition_header_file_name)
+			l_body.append ("%%%"](EIF_OBJECT)%"")
 
 			Result.set_external
-			Result.set_body (feature_body)
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
@@ -158,21 +153,19 @@ feature {NONE} -- Implementation
 	make_feature_precursor: WIZARD_WRITER_FEATURE is
 			-- `make' feature.
 		local
-			feature_body: STRING
+			l_body: STRING
 		do
 			create Result.make
-			Result.set_name (Make_word)
+			Result.set_name ("make")
 			Result.set_comment ("Creation.")
 
-			create feature_body.make (100)
-			feature_body.append (Tab_tab_tab)
-			feature_body.append ("Precursor ")
-			feature_body.append (Open_curly_brace)
-			feature_body.append (shared_wizard_environment.eiffel_class_name)
-			feature_body.append (Close_curly_brace)
+			create l_body.make (100)
+			l_body.append ("%T%T%TPrecursor {")
+			l_body.append (shared_wizard_environment.eiffel_class_name)
+			l_body.append ("}")
 
 			Result.set_effective
-			Result.set_body (feature_body)
+			Result.set_body (l_body)
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void

@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			-- Create the main window.
 		do
 			state := Initial_state
-			create previous_states.make
+			create {ARRAYED_LIST [INTEGER]} previous_states.make (20)
 			make_top (Title)
 			create msg_box.make
 			create output_edit.make (Current, rebar.height)
@@ -320,7 +320,7 @@ feature {NONE} -- State management
 	state: INTEGER
 			-- Current state
 
-	previous_states: LINKED_LIST [INTEGER]
+	previous_states: LIST [INTEGER]
 			-- Previously taken states
 
 	current_dialog: WEL_DIALOG is

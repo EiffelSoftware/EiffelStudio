@@ -26,12 +26,12 @@ feature {NONE} -- Implementation
 			-- Initialize object. Set 'name' to 'l_name'.
 		do
 			Precursor (l_name)
-			create features.make
+			create {ARRAYED_LIST [EI_MIDL_FEATURE]} features.make (20)
 		end
 
 feature -- Access
 
-	features: LINKED_LIST[EI_MIDL_FEATURE]
+	features: LIST [EI_MIDL_FEATURE]
 			-- Features
 
 feature -- Element change

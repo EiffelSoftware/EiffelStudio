@@ -51,13 +51,11 @@ feature -- Basic Operations
 			cpp_class_writer.set_name (a_component.c_type_name)
 			cpp_class_writer.set_namespace (a_component.namespace)
 			cpp_class_writer.set_header (a_component.description)
-			cpp_class_writer.set_header_file_name (a_component.c_header_file_name)
+			cpp_class_writer.set_declaration_header_file_name (a_component.c_declaration_header_file_name)
+			cpp_class_writer.set_definition_header_file_name (a_component.c_definition_header_file_name)
 			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
 
-			if 
-				shared_wizard_environment.server and
-				not system_descriptor.coclasses.is_empty
-			then
+			if shared_wizard_environment.server and not system_descriptor.coclasses.is_empty then
 				cpp_class_writer.add_import ("server_registration.h")
 			end
 
@@ -112,9 +110,7 @@ feature -- Basic Operations
 			member_writer: WIZARD_WRITER_C_MEMBER
 		do
 			-- Add type library id
-			cpp_class_writer.add_other_source (libid_definition 
-					(a_component.type_library_descriptor.name, 
-					a_component.type_library_descriptor.guid))
+			cpp_class_writer.add_other_source (libid_definition (a_component.type_library_descriptor.name, a_component.type_library_descriptor.guid))
 
 			-- member (ITypeInfo * pTypeInfo)
 			create member_writer.make
@@ -149,33 +145,13 @@ feature -- Basic Operations
 			-- Body of constructor from Eiffel object.
 		do
 			create Result.make (1000)
-			Result.append (Tab)
-			Result.append ("ref_count = 0;")
-			Result.append (New_line_tab)
-
-			Result.append (Eiffel_object)
-			Result.append (Space_equal_space)
-			Result.append (Eif_adopt)
-			Result.append (Space_open_parenthesis)
-			Result.append ("eif_obj")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			Result.append (Type_id)
-			Result.append (Space_equal_space)
-			Result.append ("eif_type (")
-			Result.append (Eiffel_object)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
+			Result.append ("[
+	ref_count = 0;
+	eiffel_object = eif_adopt (eif_obj);
+	type_id = eif_type (eiffel_object);
+	]")
 			if dispatch_interface then
-				Result.append (New_line_tab)
-				Result.append (Type_info_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Zero)
-				Result.append (Semicolon)
+				Result.append ("%N%TpTypeInfo = 0;")
 			end
 			Result.append (constructor_addition (a_component))
 		end
@@ -183,27 +159,12 @@ feature -- Basic Operations
 	add_constructor_from_object (a_component: WIZARD_COMPONENT_DESCRIPTOR)is
 			-- Add constructor from Eiffel object.
 		local
-			constructor_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
-			a_signature: STRING
+			l_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
 		do
-			create constructor_writer.make
-
-			create a_signature.make (100)
-			a_signature.append (Eif_object)
-			a_signature.append (Space)
-			a_signature.append ("eif_obj")
-			constructor_writer.set_signature (a_signature)
-
-			constructor_writer.set_body (constructor_from_object_body (a_component))
-			check
-				valid_constructor_writer: constructor_writer.can_generate
-			end
-
-			cpp_class_writer.add_constructor (constructor_writer)
-
-			check
-				writer_added: cpp_class_writer.constructors.has (constructor_writer)
-			end
+			create l_writer.make
+			l_writer.set_signature ("EIF_OBJECT eif_obj")
+			l_writer.set_body (constructor_from_object_body (a_component))
+			cpp_class_writer.add_constructor (l_writer)
 		end
 
 	constructor_body (a_component: WIZARD_COMPONENT_DESCRIPTOR): STRING is
@@ -211,70 +172,16 @@ feature -- Basic Operations
 		do
 			create Result.make (1000)
 
-			Result.append (New_line_tab)
-			Result.append ("ref_count = 0;")
-			Result.append (New_line_tab)
+			Result.append ("[
+	ref_count = 0;
+	eiffel_object = eif_create (type_id);
+	EIF_PROCEDURE eiffel_procedure;
+	eiffel_procedure = eif_procedure (%"make_from_pointer%", type_id);
 
-			Result.append (Eiffel_object)
-			Result.append (Space_equal_space)
-			Result.append (Eif_create)
-			Result.append (Space_open_parenthesis)
-			Result.append (Type_id)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			Result.append (Eif_procedure)
-			Result.append (Space)
-			Result.append (Eiffel_procedure_variable_name)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- eiffel_procedure = eif_procedure ("make_from_pointer", tid)
-			Result.append (Eiffel_procedure_variable_name)
-			Result.append (Space_equal_space)
-			Result.append (Eif_procedure_name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Double_quote)
-			Result.append ("make_from_pointer")
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (Type_id)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line)
-			Result.append (New_line_tab)
-
-			Result.append ("(FUNCTION_CAST (")
-			Result.append (Void_c_keyword)
-			Result.append (Comma)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_reference)
-			Result.append (Comma_space)
-			Result.append (Eif_pointer)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Eiffel_procedure_variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eiffel_object)
-			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_pointer)
-			Result.append (Close_parenthesis)
-			Result.append ("this")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), (EIF_POINTER)this);
+	]")
 			if dispatch_interface then
-				Result.append (New_line_tab)
-				Result.append (Type_info_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Zero)
-				Result.append (Semicolon)
+				Result.append ("%N%TpTypeInfo = 0;")
 			end
 			Result.append (constructor_addition (a_component))
 		ensure
@@ -291,14 +198,8 @@ feature -- Basic Operations
 			-- "LockModule ();" line
 		do
 			create Result.make (0)
-			if 
-				shared_wizard_environment.server and
-				shared_wizard_environment.out_of_process_server and
-				not system_descriptor.coclasses.is_empty
-			then
-				Result.append (tab)
-				Result.append ("LockModule ();")
-				Result.append (New_line)
+			if shared_wizard_environment.server and shared_wizard_environment.out_of_process_server and not system_descriptor.coclasses.is_empty then
+				Result.append ("%TLockModule ();%N")
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -307,73 +208,23 @@ feature -- Basic Operations
 	add_destructor (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Add destructor.
 		local
-			tmp_body: STRING
+			l_body: STRING
 		do
-			create tmp_body.make (10000)
+			create l_body.make (10000)
 
-			tmp_body.append (Tab)
-			tmp_body.append (Eif_procedure)
-			tmp_body.append (Space)
-			tmp_body.append (Eiffel_procedure_variable_name)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
+			l_body.append ("[
+	EIF_PROCEDURE eiffel_procedure;
+	eiffel_procedure = eif_procedure ("set_item", type_id);
 
-			-- eiffel_procedure = eif_procedure ("set_item", tid)
-			tmp_body.append (Eiffel_procedure_variable_name)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Eif_procedure_name)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Double_quote)
-			tmp_body.append ("set_item")
-			tmp_body.append (Double_quote)
-			tmp_body.append (Comma_space)
-			tmp_body.append (Type_id)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line)
-			tmp_body.append (New_line_tab)
-
-			tmp_body.append ("(FUNCTION_CAST (")
-			tmp_body.append (Void_c_keyword)
-			tmp_body.append (Comma)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Eif_reference)
-			tmp_body.append (Comma_space)
-			tmp_body.append (Eif_pointer)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Eiffel_procedure_variable_name)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Eif_access)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Eiffel_object)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Comma_space)
-			tmp_body.append (Null)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Eif_wean)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Eiffel_object)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
+	eif_wean (eiffel_object);
+	]")
 			if dispatch_interface then
-				tmp_body.append (New_line_tab)
-				tmp_body.append (If_keyword)
-				tmp_body.append (Space_open_parenthesis)
-				tmp_body.append (Type_info_variable_name)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (New_line_tab_tab)
-				tmp_body.append (Type_info_variable_name)
-				tmp_body.append (Release_function)
+				l_body.append ("%N%Tif (pTypeInfo)%N%T%TpTypeInfo->Release ();")
 			end
 
-			tmp_body.append (destructor_addition (a_component))
-			cpp_class_writer.set_destructor (tmp_body)
+			l_body.append (destructor_addition (a_component))
+			cpp_class_writer.set_destructor (l_body)
 		end
 
 	unlock_module: STRING is
@@ -399,35 +250,35 @@ feature -- Basic Operations
 			non_void_component: a_component /= Void
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
-			tmp_body: STRING
+			l_body: STRING
 		do
 			create func_writer.make
 
-			create tmp_body.make (1000)
+			create l_body.make (1000)
 
-			tmp_body.append (tab)
-			tmp_body.append ("if ((itinfo != 0) || (pptinfo == NULL))%N%T%Treturn E_INVALIDARG;")
-			tmp_body.append (New_line_tab)
+			l_body.append (tab)
+			l_body.append ("if ((itinfo != 0) || (pptinfo == NULL))%N%T%Treturn E_INVALIDARG;")
+			l_body.append (New_line_tab)
 
-			tmp_body.append ("*pptinfo = NULL;")
-			tmp_body.append (New_line)
+			l_body.append ("*pptinfo = NULL;")
+			l_body.append (New_line)
 
-			tmp_body.append (check_type_info (a_component))
+			l_body.append (check_type_info (a_component))
 
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append ("*pptinfo")
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Type_info_variable_name)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Add_reference_function)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Return_s_ok)
+			l_body.append (Open_parenthesis)
+			l_body.append ("*pptinfo")
+			l_body.append (Space_equal_space)
+			l_body.append (Type_info_variable_name)
+			l_body.append (Close_parenthesis)
+			l_body.append (Add_reference_function)
+			l_body.append (New_line_tab)
+			l_body.append (Return_s_ok)
 
 			func_writer.set_name (Get_type_info)
 			func_writer.set_comment ("Get type info")
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature ("unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo")
-			func_writer.set_body (tmp_body)
+			func_writer.set_body (l_body)
 
 			check
 				valid_func_writer: func_writer.can_generate
@@ -444,32 +295,32 @@ feature -- Basic Operations
 			-- Add GetTypeInfoCount function.
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
-			tmp_body: STRING
+			l_body: STRING
 		do
 			create func_writer.make
 
-			create tmp_body.make (10000)
-			tmp_body.append (Tab)
-			tmp_body.append ("if (pctinfo == NULL)")
-			tmp_body.append (New_line_tab_tab)
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append ("E_NOTIMPL")
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
+			create l_body.make (10000)
+			l_body.append (Tab)
+			l_body.append ("if (pctinfo == NULL)")
+			l_body.append (New_line_tab_tab)
+			l_body.append (Return)
+			l_body.append (Space)
+			l_body.append ("E_NOTIMPL")
+			l_body.append (Semicolon)
+			l_body.append (New_line_tab)
 
-			tmp_body.append ("*pctinfo")
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (One)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Return_s_ok)
+			l_body.append ("*pctinfo")
+			l_body.append (Space_equal_space)
+			l_body.append (One)
+			l_body.append (Semicolon)
+			l_body.append (New_line_tab)
+			l_body.append (Return_s_ok)
 
 			func_writer.set_name (Get_type_info_count)
 			func_writer.set_comment ("Get type info count")
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature ("unsigned int * pctinfo")
-			func_writer.set_body (tmp_body)
+			func_writer.set_body (l_body)
 
 			check
 				valid_func_writer: func_writer.can_generate
@@ -488,27 +339,27 @@ feature -- Basic Operations
 			non_void_coclass_descriptor: a_component /= Void
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
-			tmp_body: STRING
+			l_body: STRING
 		do
 			create func_writer.make
 
-			tmp_body := check_type_info (a_component)
+			l_body := check_type_info (a_component)
 
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append (Type_info_variable_name)
-			tmp_body.append (Struct_selection_operator)
-			tmp_body.append (Get_ids_of_names)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append ("rgszNames, cNames, rgdispid")
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
+			l_body.append (Return)
+			l_body.append (Space)
+			l_body.append (Type_info_variable_name)
+			l_body.append (Struct_selection_operator)
+			l_body.append (Get_ids_of_names)
+			l_body.append (Space_open_parenthesis)
+			l_body.append ("rgszNames, cNames, rgdispid")
+			l_body.append (Close_parenthesis)
+			l_body.append (Semicolon)
 
 			func_writer.set_name (Get_ids_of_names)
 			func_writer.set_comment ("IDs of function names 'rgszNames'")
 			func_writer.set_result_type (Std_method_imp)
 			func_writer.set_signature ("REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid")
-			func_writer.set_body (tmp_body)
+			func_writer.set_body (l_body)
 
 			check
 				valid_func_writer: func_writer.can_generate
@@ -664,51 +515,49 @@ feature -- Basic Operations
 			prop_get_functions: HASH_TABLE[STRING, INTEGER]
 			prop_put_functions: HASH_TABLE[STRING, INTEGER]
 			a_body: STRING
+			l_function: WIZARD_FUNCTION_DESCRIPTOR
+			l_properties: LIST [WIZARD_PROPERTY_DESCRIPTOR]
 		do
 			create prop_get_functions.make (2)
 			create prop_put_functions.make (2)
 			create Result.make (10000)			
 
-			if interface_desc.inherit_from_dispatch then
+			if interface_desc.is_idispatch_heir then
 				from
 					interface_desc.functions_start
 				until
 					interface_desc.functions_after
 				loop
-					if 
-						interface_desc.functions_item.dual or 
-						interface_desc.functions_item.func_kind = func_dispatch
-					then
-						if is_propertyget (interface_desc.functions_item.invoke_kind) then
-							prop_get_functions.force (propertyget_case (interface_desc.functions_item), interface_desc.functions_item.member_id)
-						elseif is_propertyput (interface_desc.functions_item.invoke_kind) then
-							prop_put_functions.force (propertyput_case (interface_desc.functions_item), interface_desc.functions_item.member_id)
-						elseif is_propertyputref (interface_desc.functions_item.invoke_kind) then
-							prop_put_functions.force (propertyput_case (interface_desc.functions_item), interface_desc.functions_item.member_id)
+					l_function := interface_desc.functions_item
+					if not l_function.is_renaming_clause and (l_function.dual or l_function.func_kind = func_dispatch) then
+						if is_propertyget (l_function.invoke_kind) then
+							prop_get_functions.force (propertyget_case (l_function), l_function.member_id)
+						elseif is_propertyput (l_function.invoke_kind) then
+							prop_put_functions.force (propertyput_case (l_function), l_function.member_id)
+						elseif is_propertyputref (l_function.invoke_kind) then
+							prop_put_functions.force (propertyput_case (l_function), l_function.member_id)
 						else
-							Result.append (function_case (interface_desc.functions_item))
+							Result.append (function_case (l_function))
 						end
 					end
-
 					interface_desc.functions_forth
 				end
-
-				if not interface_desc.properties.is_empty then
+				l_properties := interface_desc.properties
+				if not l_properties.is_empty then
 					from
-						interface_desc.properties.start
+						l_properties.start
 					until
-						interface_desc.properties.after
+						l_properties.after
 					loop
-						Result.append (case_code (properties_case_body (interface_desc.properties.item), interface_desc.properties.item.member_id))
-						interface_desc.properties.forth
+						Result.append (case_code (properties_case_body (l_properties.item), l_properties.item.member_id))
+						l_properties.forth
 					end
 				end
-
 				if not prop_get_functions.is_empty then
 					from
 						prop_get_functions.start
 					until
-						prop_get_functions.off
+						prop_get_functions.after
 					loop
 						create a_body.make (1000)
 						a_body.append (prop_get_functions.item_for_iteration)
@@ -722,27 +571,23 @@ feature -- Basic Operations
 						prop_get_functions.forth
 					end
 				end
-
 				if not prop_put_functions.is_empty then
 					from
 						prop_put_functions.start
 					until
-						prop_put_functions.off
+						prop_put_functions.after
 					loop
 						Result.append (case_code (prop_put_functions.item_for_iteration, prop_put_functions.key_for_iteration))
 						prop_put_functions.forth
 					end
 				end
-
-				if not interface_desc.inherited_interface.name.is_equal (IDispatch_type) then
+				if not interface_desc.is_idispatch_heir then
 					Result.append (invoke_function_case_item (interface_desc.inherited_interface))
 				end
 			end
 		ensure
 			non_void_result: Result /= Void
-			valid_result: interface_desc.inherit_from_dispatch and 
-					not interface_desc.functions_empty
-					implies not Result.is_empty
+			valid_result: (interface_desc.is_idispatch_heir and not interface_desc.functions_empty) implies not Result.is_empty
 		end
 
 	properties_case_body (prop_desc: WIZARD_PROPERTY_DESCRIPTOR): STRING is
@@ -959,26 +804,26 @@ feature -- Basic Operations
 			-- Add function 'AddRef()'.
 		local
 			func_writer: WIZARD_WRITER_C_FUNCTION
-			tmp_body: STRING
+			l_body: STRING
 		do
 			create func_writer.make
 
-			create tmp_body.make (500)
-			tmp_body.append (lock_module)
-			tmp_body.append (Tab)
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append (Interlocked_increment)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Ampersand)
-			tmp_body.append (Ref_count)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
+			create l_body.make (500)
+			l_body.append (lock_module)
+			l_body.append (Tab)
+			l_body.append (Return)
+			l_body.append (Space)
+			l_body.append (Interlocked_increment)
+			l_body.append (Space_open_parenthesis)
+			l_body.append (Ampersand)
+			l_body.append (Ref_count)
+			l_body.append (Close_parenthesis)
+			l_body.append (Semicolon)
 
 			func_writer.set_name ("AddRef")
 			func_writer.set_comment ("Increment reference count")
 			func_writer.set_result_type (Ulong_std_method_imp)
-			func_writer.set_body (tmp_body)
+			func_writer.set_body (l_body)
 
 			check
 				valid_func_writer: func_writer.can_generate
@@ -1121,90 +966,90 @@ feature -- Basic Operations
 	add_release_function is
 			-- Add function 'Release()'. 
 		local
-			tmp_body: STRING
+			l_body: STRING
 			func_writer: WIZARD_WRITER_C_FUNCTION
 		do
 			create func_writer.make
 			
-			create tmp_body.make (10000)
-			tmp_body.append (unlock_module)
-			tmp_body.append (Tab)
-			tmp_body.append (Long_macro)
-			tmp_body.append (Space)
-			tmp_body.append ("res")
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Interlocked_decrement)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Ampersand)
-			tmp_body.append (Ref_count)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
+			create l_body.make (10000)
+			l_body.append (unlock_module)
+			l_body.append (Tab)
+			l_body.append (Long_macro)
+			l_body.append (Space)
+			l_body.append ("res")
+			l_body.append (Space_equal_space)
+			l_body.append (Interlocked_decrement)
+			l_body.append (Space_open_parenthesis)
+			l_body.append (Ampersand)
+			l_body.append (Ref_count)
+			l_body.append (Close_parenthesis)
+			l_body.append (Semicolon)
+			l_body.append (New_line_tab)
 
-			tmp_body.append (If_keyword)
-			tmp_body.append (Space)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append ("res")
-			tmp_body.append (Space)
-			tmp_body.append (C_equal)
-			tmp_body.append (Space)
-			tmp_body.append (Zero)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (New_line_tab)
+			l_body.append (If_keyword)
+			l_body.append (Space)
+			l_body.append (Open_parenthesis)
+			l_body.append ("res")
+			l_body.append (Space)
+			l_body.append (C_equal)
+			l_body.append (Space)
+			l_body.append (Zero)
+			l_body.append (Close_parenthesis)
+			l_body.append (New_line_tab)
 
-			tmp_body.append (Open_curly_brace)
-			tmp_body.append (New_line_tab_tab)
+			l_body.append (Open_curly_brace)
+			l_body.append (New_line_tab_tab)
 
 			if dispatch_interface then
-				tmp_body.append (If_keyword)
-				tmp_body.append (Space)
-				tmp_body.append (Open_parenthesis)
-				tmp_body.append (Type_info_variable_name)
-				tmp_body.append (Space)
-				tmp_body.append (C_not_equal)
-				tmp_body.append (Null)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (New_line_tab_tab)
+				l_body.append (If_keyword)
+				l_body.append (Space)
+				l_body.append (Open_parenthesis)
+				l_body.append (Type_info_variable_name)
+				l_body.append (Space)
+				l_body.append (C_not_equal)
+				l_body.append (Null)
+				l_body.append (Close_parenthesis)
+				l_body.append (New_line_tab_tab)
 
-				tmp_body.append (Open_curly_brace)
-				tmp_body.append (New_line_tab_tab_tab)
+				l_body.append (Open_curly_brace)
+				l_body.append (New_line_tab_tab_tab)
 
-				tmp_body.append (Type_info_variable_name)
-				tmp_body.append (Struct_selection_operator)
-				tmp_body.append ("Release")
-				tmp_body.append (Space_open_parenthesis)
-				tmp_body.append (Close_parenthesis)
-				tmp_body.append (Semicolon)
-				tmp_body.append (New_line_tab_tab_tab)
+				l_body.append (Type_info_variable_name)
+				l_body.append (Struct_selection_operator)
+				l_body.append ("Release")
+				l_body.append (Space_open_parenthesis)
+				l_body.append (Close_parenthesis)
+				l_body.append (Semicolon)
+				l_body.append (New_line_tab_tab_tab)
 
-				tmp_body.append (Type_info_variable_name)
-				tmp_body.append (Space_equal_space)
-				tmp_body.append (Null)
-				tmp_body.append (Semicolon)
-				tmp_body.append (New_line_tab_tab)
+				l_body.append (Type_info_variable_name)
+				l_body.append (Space_equal_space)
+				l_body.append (Null)
+				l_body.append (Semicolon)
+				l_body.append (New_line_tab_tab)
 
-				tmp_body.append (Close_curly_brace)
-				tmp_body.append (New_line_tab_tab)
+				l_body.append (Close_curly_brace)
+				l_body.append (New_line_tab_tab)
 			end
 
-			tmp_body.append (Delete)
-			tmp_body.append (Space)
-			tmp_body.append (This)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
+			l_body.append (Delete)
+			l_body.append (Space)
+			l_body.append (This)
+			l_body.append (Semicolon)
+			l_body.append (New_line_tab)
 
-			tmp_body.append (Close_curly_brace)
-			tmp_body.append (New_line_tab)
+			l_body.append (Close_curly_brace)
+			l_body.append (New_line_tab)
 
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append ("res")
-			tmp_body.append (Semicolon)
+			l_body.append (Return)
+			l_body.append (Space)
+			l_body.append ("res")
+			l_body.append (Semicolon)
 
 			func_writer.set_name ("Release")
 			func_writer.set_comment ("Decrement reference count")
 			func_writer.set_result_type (Ulong_std_method_imp)
-			func_writer.set_body (tmp_body)
+			func_writer.set_body (l_body)
 
 			check
 				valid_func_writer: func_writer.can_generate

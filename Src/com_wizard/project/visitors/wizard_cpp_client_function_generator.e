@@ -16,82 +16,63 @@ inherit
 
 feature -- Basic operations
 
-	cecil_signature(a_function: WIZARD_FUNCTION_DESCRIPTOR): STRING is
+	cecil_signature (a_function: WIZARD_FUNCTION_DESCRIPTOR): STRING is
 			-- set result type and return signature of feature
 		require
 			non_void_feature_writer: ccom_feature_writer /= Void
 			non_void_arguments: a_function.arguments /= Void
 			has_arguments: not a_function.arguments.is_empty
 		local
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
-			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
+			l_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_header_file: STRING
 		do
 			create Result.make (1000)
-			arguments := a_function.arguments
+			l_arguments := a_function.arguments
 			from
-				arguments.start
+				l_arguments.start
 			until
-				arguments.off
+				l_arguments.off
 			loop
-				visitor := arguments.item.type.visitor
+				l_visitor := l_arguments.item.type.visitor
 
-				if is_paramflag_fretval (arguments.item.flags) then
-					pointed_descriptor ?= arguments.item.type
-					if pointed_descriptor /= Void then
-						visitor := pointed_descriptor.pointed_data_type_descriptor.visitor
+				if is_paramflag_fretval (l_arguments.item.flags) then
+					l_descriptor ?= l_arguments.item.type
+					if l_descriptor /= Void then
+						l_visitor := l_descriptor.pointed_data_type_descriptor.visitor
 					end
-					set_return_type (visitor)
-
+					set_return_type (l_visitor)
 				else
-					Result.append (Beginning_comment_paramflag)
-					if is_paramflag_fout (arguments.item.flags) then
-						if is_paramflag_fin (arguments.item.flags) then
+					Result.append (" /* [")
+					if is_paramflag_fout (l_arguments.item.flags) then
+						if is_paramflag_fin (l_arguments.item.flags) then
 							Result.append ("in, ")
 						end
 						Result.append ("out")
 					else
 						Result.append ("in")
 					end
-					Result.append (End_comment_paramflag)
-					if 
-						visitor.is_basic_type or
-						visitor.is_enumeration or
-						visitor.vt_type = Vt_bool
-					then
-						Result.append (visitor.cecil_type)
-
-					elseif 
-						visitor.is_interface_pointer or 
-						visitor.is_coclass_pointer or 
-						visitor.is_structure_pointer 
-					then
-						Result.append (visitor.c_type)
-						
-					elseif 
-						visitor.is_interface or 
-						visitor.is_structure or
-						visitor.is_array_basic_type					
-					then
-						Result.append (visitor.c_type + " *")
-
+					Result.append ("] */ ")
+					if l_visitor.is_basic_type or l_visitor.is_enumeration or l_visitor.vt_type = Vt_bool then
+						Result.append (l_visitor.cecil_type)
+					elseif l_visitor.is_interface_pointer or l_visitor.is_coclass_pointer or l_visitor.is_structure_pointer then
+						Result.append (l_visitor.c_type)
+					elseif l_visitor.is_interface or l_visitor.is_structure or l_visitor.is_array_basic_type then
+						Result.append (l_visitor.c_type + " *")
 					else
-						Result.append (Eif_object)
+						Result.append ("EIF_OBJECT")
 					end
-					
-					Result.append (Space)
-					Result.append (arguments.item.name)
-					
-					if 
-						not (visitor.c_header_file = Void or else 
-						visitor.c_header_file.is_empty) 
-					then
-						c_header_files.extend (visitor.c_header_file)
+					Result.append (" ")
+					Result.append (l_arguments.item.name)
+					l_header_file := l_visitor.c_declaration_header_file_name
+					if l_header_file /= Void and then not l_header_file.is_empty then
+						c_header_files.extend (l_header_file)
 					end
-					Result.append (Comma_space)
+					Result.append (", ")
 				end
-				visitor := Void
-				arguments.forth
+				l_visitor := Void
+				l_arguments.forth
 			end
 
 			if Result.count > 0  then
@@ -108,21 +89,17 @@ feature -- Basic operations
 			non_void_visitor: a_visitor /= Void
 			valid_return_type: a_visitor.vt_type /= Vt_void
 			non_void_feature_writer: ccom_feature_writer /= Void
+		local
+			l_header_file: STRING
 		do
-			if 
-				a_visitor.is_basic_type or 
-				a_visitor.is_enumeration or 
-				(a_visitor.vt_type = Vt_bool) 
-			then
+			if a_visitor.is_basic_type or a_visitor.is_enumeration or a_visitor.vt_type = Vt_bool then
 				ccom_feature_writer.set_result_type (a_visitor.cecil_type)
 			else
-				ccom_feature_writer.set_result_type (Eif_reference)
+				ccom_feature_writer.set_result_type ("EIF_REFERENCE")
 			end
-			if 
-				not (a_visitor.c_header_file = Void or else 
-				a_visitor.c_header_file.is_empty) 
-			then
-				c_header_files.extend (a_visitor.c_header_file)
+			l_header_file := a_visitor.c_declaration_header_file_name
+			if l_header_file /= Void and then not l_header_file.is_empty then
+				c_header_files.extend (l_header_file)
 			end
 		end
 		

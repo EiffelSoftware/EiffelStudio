@@ -35,57 +35,62 @@ inherit
 			{NONE} all
 		end
 	
+	WIZARD_FILE_NAME_FACTORY
+		export
+			{NONE} all
+		end
+
 create
 	generate
 
 feature -- Initialization
 
-	generate (an_interface: WIZARD_INTERFACE_DESCRIPTOR; 
-				a_coclass_writer: WIZARD_WRITER_CPP_CLASS) is
+	generate (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass_writer: WIZARD_WRITER_CPP_CLASS) is
 			-- Generate connection points features and inner class.
 		require
-			non_void_interface: an_interface /= Void
+			non_void_interface: a_interface /= Void
 			non_void_coclass: a_coclass_writer /= Void
 		local
-			an_inner_class_member: WIZARD_WRITER_C_MEMBER
-			coclass_forward_declaration: WIZARD_WRITER_FORWARD_CLASS_DECLARATION
+			l_member: WIZARD_WRITER_C_MEMBER
+			l_forward_declaration: WIZARD_WRITER_FORWARD_CLASS_DECLARATION
 		do
-			source_interface := an_interface
+			source_interface := a_interface
 			coclass_writer := a_coclass_writer
 			create inner_class_writer.make
 			
-			coclass_writer.add_import (inner_class_header_file)
-			inner_class_writer.add_import (source_interface.c_header_file_name)
+			coclass_writer.add_import (inner_class_definition_header_file)
+			inner_class_writer.add_import (source_interface.c_definition_header_file_name)
 			
 			add_attribute_to_coclass
 			coclass_writer.add_other_source (iid_definition (source_interface.name, source_interface.guid))
 			
 			inner_class_writer.set_name (inner_class_name)
 			inner_class_writer.set_header ("To deal with identity relationship of IConnectionPoin,%N" +
-				an_interface.c_type_name + "-specific inner class.")
+				a_interface.c_type_name + "-specific inner class.")
 			
-			inner_class_writer.set_header_file_name (inner_class_header_file)
+			inner_class_writer.set_definition_header_file_name (inner_class_definition_header_file)
+			inner_class_writer.set_declaration_header_file_name (inner_class_declaration_header_file)
 			inner_class_writer.add_parent ("IConnectionPoint", Void, Public)
 			
 			inner_class_writer.add_constructor (inner_class_constructor)
 			
-			create an_inner_class_member.make
-			an_inner_class_member.set_name ("outer")
-			an_inner_class_member.set_result_type (coclass_c_type + " *")
-			an_inner_class_member.set_comment ("Pointer to coclass.")
-			inner_class_writer.add_member (an_inner_class_member, Public)
+			create l_member.make
+			l_member.set_name ("outer")
+			l_member.set_result_type (coclass_c_type + " *")
+			l_member.set_comment ("Pointer to coclass.")
+			inner_class_writer.add_member (l_member, Public)
 
-			create an_inner_class_member.make
-			an_inner_class_member.set_name ("eiffel_object")
-			an_inner_class_member.set_result_type ("EIF_OBJECT")
-			an_inner_class_member.set_comment ("Eiffel object.")
-			inner_class_writer.add_member (an_inner_class_member, Private)
+			create l_member.make
+			l_member.set_name ("eiffel_object")
+			l_member.set_result_type ("EIF_OBJECT")
+			l_member.set_comment ("Eiffel object.")
+			inner_class_writer.add_member (l_member, Private)
 
-			create an_inner_class_member.make
-			an_inner_class_member.set_name ("type_id")
-			an_inner_class_member.set_result_type ("EIF_TYPE_ID")
-			an_inner_class_member.set_comment ("Eiffel object's type ID.")
-			inner_class_writer.add_member (an_inner_class_member, Private)
+			create l_member.make
+			l_member.set_name ("type_id")
+			l_member.set_result_type ("EIF_TYPE_ID")
+			l_member.set_comment ("Eiffel object's type ID.")
+			inner_class_writer.add_member (l_member, Private)
 			
 			inner_class_writer.add_function (inner_class_query_interface, Public)
 			inner_class_writer.add_function (inner_class_add_ref, Public)
@@ -97,16 +102,16 @@ feature -- Initialization
 			inner_class_writer.add_function (inner_class_unadvise, Public)
 			inner_class_writer.add_function (inner_class_enum_connections, Public)
 			
-			create coclass_forward_declaration.make (coclass_writer.name, coclass_writer.namespace, False)
-			inner_class_writer.add_other (coclass_forward_declaration.generated_code)
-			inner_class_writer.add_import_after (coclass_writer.header_file_name)
-			inner_class_writer.add_other_source (iid_definition 
-						(source_interface.name, source_interface.guid))
+			create l_forward_declaration.make (coclass_writer.name, coclass_writer.namespace, False)
+			inner_class_writer.add_other (l_forward_declaration.generated_code)
+			inner_class_writer.add_import_after (coclass_writer.definition_header_file_name)
+			inner_class_writer.add_other_source (iid_definition (source_interface.name, source_interface.guid))
 			
 			-- Generate code and save name.
 			Shared_file_name_factory.create_source_inner_class_name  (inner_class_writer)
 			inner_class_writer.save_file (Shared_file_name_factory.last_created_file_name)
-			inner_class_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+			inner_class_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
+			inner_class_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
 			
 		ensure
 			non_void_inner_class_writer: inner_class_writer /= Void
@@ -132,12 +137,21 @@ feature -- Access
 			valid_name: not Result.is_empty
 		end
 	
-	inner_class_header_file: STRING is
+	inner_class_definition_header_file: STRING is
 			-- Header file name of inner class.
 		do
 			create Result.make (100)
 			Result.append (inner_class_name)
 			Result.append (".h")
+		ensure
+			non_void_name: Result /= Void
+			valid_name: not Result.is_empty
+		end
+	
+	inner_class_declaration_header_file: STRING is
+			-- Header file name of inner class.
+		do
+			Result := declaration_header_file_name (inner_class_definition_header_file)
 		ensure
 			non_void_name: Result /= Void
 			valid_name: not Result.is_empty

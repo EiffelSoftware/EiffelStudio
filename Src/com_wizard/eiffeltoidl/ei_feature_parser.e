@@ -21,7 +21,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	parse_routine (inputs: LINKED_LIST[STRING]) is
+	parse_routine (inputs: LIST [STRING]) is
 		require
 			non_void_input: inputs /= Void
 			valid_input: not inputs.is_empty

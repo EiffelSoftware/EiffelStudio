@@ -53,18 +53,16 @@ feature -- Basic operations
 			-- Generate c server for coclass.
 		local
 			a_class_object: WIZARD_CLASS_OBJECT_GENERATOR
-			tmp_string: STRING
+			l_string: STRING
 		do
 			Precursor {WIZARD_COMPONENT_C_SERVER_GENERATOR} (a_coclass)
-			create interface_names.make
+			create {ARRAYED_LIST [STRING]} interface_names.make (20)
 
 			if shared_wizard_environment.out_of_process_server then
-				create tmp_string.make (500)
-				tmp_string.append (a_coclass.c_type_name)
-				tmp_string.append (Underscore)
-				tmp_string.append (Factory)
-				tmp_string.append (Header_file_extension)
-				cpp_class_writer.add_import (tmp_string)
+				create l_string.make (500)
+				l_string.append (a_coclass.c_type_name)
+				l_string.append ("_factory.h")
+				cpp_class_writer.add_import (l_string)
 			end
 
 			-- Add clsid of the coclass
@@ -77,9 +75,7 @@ feature -- Basic operations
 				dispatch_interface_features (a_coclass)
 			else
 				-- Add type library id
-				cpp_class_writer.add_other_source (libid_definition 
-						(a_coclass.type_library_descriptor.name, 
-						a_coclass.type_library_descriptor.guid))
+				cpp_class_writer.add_other_source (libid_definition (a_coclass.type_library_descriptor.name, a_coclass.type_library_descriptor.guid))
 			end
 			cpp_class_writer.add_parent ("IProvideClassInfo2", Void, Public)
 
@@ -99,7 +95,8 @@ feature -- Basic operations
 			-- Generate code and save name.
 			Shared_file_name_factory.create_file_name (Current, cpp_class_writer)
 			cpp_class_writer.save_file (Shared_file_name_factory.last_created_file_name)
-			cpp_class_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+			cpp_class_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
+			cpp_class_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
 
 			cpp_class_writer := Void
 
@@ -124,7 +121,7 @@ feature {NONE} -- Implementation
 		do
 			create interface_processor.make (a_coclass_descriptor, Current)
 			if (dispinterface_names = Void) then
-				create dispinterface_names.make
+				create {ARRAYED_LIST [STRING]} dispinterface_names.make (20)
 			end
 			interface_processor.process_interfaces
 			dispatch_interface := interface_processor.dispatch_interface
@@ -135,80 +132,77 @@ feature {NONE} -- Implementation
 	default_dispinterface_name (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): STRING is
 			-- Name of default dispinterface.
 		do
-			if 
-				a_coclass_descriptor.default_dispinterface_name /= Void and then
-				not a_coclass_descriptor.default_dispinterface_name.is_empty
-			then
+			if a_coclass_descriptor.default_dispinterface_name /= Void and then not a_coclass_descriptor.default_dispinterface_name.is_empty then
 				Result := a_coclass_descriptor.default_dispinterface_name.twin
-			elseif (dispinterface_names /= Void) then
+			elseif dispinterface_names /= Void then
 				Result := dispinterface_names.first.twin
 			end
 		end
 
 	default_source_dispinterface_name (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): STRING is
 			-- Name of default dispinterface.
+		local
+			l_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
+			l_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 		do
-			if 
-				a_coclass_descriptor.source_interface_descriptors /= Void and then
-				not a_coclass_descriptor.source_interface_descriptors.is_empty
-			then
+			l_descriptors := a_coclass_descriptor.source_interface_descriptors
+			if l_descriptors /= Void then
 				from 
-					a_coclass_descriptor.source_interface_descriptors.start
+					l_descriptors.start
 				until
-					a_coclass_descriptor.source_interface_descriptors.after or
+					l_descriptors.after or
 					Result /= Void
 				loop
-					if
-						a_coclass_descriptor.source_interface_descriptors.item.dispinterface or
-						a_coclass_descriptor.source_interface_descriptors.item.dual
-					then
-						Result := a_coclass_descriptor.source_interface_descriptors.item.name.twin
+					l_descriptor := l_descriptors.item
+					if l_descriptor.dispinterface or l_descriptor.dual then
+						Result := l_descriptor.name.twin
 					end
-					a_coclass_descriptor.source_interface_descriptors.forth
+					l_descriptors.forth
 				end
 			end
 		end
 
 	constructor_addition (a_coclass: WIZARD_COCLASS_DESCRIPTOR): STRING is
 			-- Constructor addition.
+		local
+			l_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 		do
 			create Result.make (0)
-			if 
-				a_coclass.source_interface_descriptors /= Void and then
-				not a_coclass.source_interface_descriptors.is_empty
-			then
+			l_descriptors := a_coclass.source_interface_descriptors
+			if l_descriptors /= Void then
 				from
-					a_coclass.source_interface_descriptors.start
+					l_descriptors.start
 				until
-					a_coclass.source_interface_descriptors.after
+					l_descriptors.after
 				loop
 					Result.append ("%N%T" + 
 							connection_point_attrubute_name 
-								(a_coclass.source_interface_descriptors.item, cpp_class_writer) + 
+								(l_descriptors.item, cpp_class_writer) + 
 							" = new " + connection_point_inner_class_name 
-								(a_coclass.source_interface_descriptors.item, cpp_class_writer) + 
+								(l_descriptors.item, cpp_class_writer) + 
 							" (this, eiffel_object, type_id);")
-					a_coclass.source_interface_descriptors.forth
+					l_descriptors.forth
 				end
 			end
 		end
 
 	destructor_addition (a_coclass: WIZARD_COCLASS_DESCRIPTOR): STRING is
 			-- Destructor addition.
+		local
+			l_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 		do
 			create Result.make (0)
-			if 
-				a_coclass.source_interface_descriptors /= Void and then
-				not a_coclass.source_interface_descriptors.is_empty
-			then
+			l_descriptors := a_coclass.source_interface_descriptors
+			if l_descriptors /= Void then
 				from
-					a_coclass.source_interface_descriptors.start
+					l_descriptors.start
 				until
-					a_coclass.source_interface_descriptors.after
+					l_descriptors.after
 				loop
-					Result.append ("%N%Tdelete " + connection_point_attrubute_name 
-								(a_coclass.source_interface_descriptors.item, cpp_class_writer) + ";")
-					a_coclass.source_interface_descriptors.forth
+					Result.append ("%N%Tdelete ")
+					Result.append (connection_point_attrubute_name (l_descriptors.item, cpp_class_writer))
+					Result.append (";")
+					l_descriptors.forth
 				end
 			end
 		end
@@ -216,140 +210,82 @@ feature {NONE} -- Implementation
 	add_constructor (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add constructor.
 		local
-			constructor_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
-			a_signature, a_constructor_body: STRING
+			l_writer: WIZARD_WRITER_CPP_CONSTRUCTOR
+			l_body: STRING
 		do
-			create constructor_writer.make
-
-			create a_signature.make (100)
-			a_signature.append (Eif_type_id)
-			a_signature.append (Space)
-			a_signature.append (Type_id_variable_name)
-
-			constructor_writer.set_signature (a_signature)
-
-			create a_constructor_body.make (1000)
-			a_constructor_body.append (Tab)
-			a_constructor_body.append (Type_id)
-			a_constructor_body.append (Space_equal_space)
-			a_constructor_body.append (Type_id_variable_name)
-			a_constructor_body.append (Semicolon)
-			a_constructor_body.append (constructor_body (a_coclass))
-			constructor_writer.set_body (a_constructor_body)
-		
-			check
-				valid_constructor_writer: constructor_writer.can_generate
-			end
-
-			cpp_class_writer.add_constructor (constructor_writer)
-
-			check
-				writer_added: cpp_class_writer.constructors.has (constructor_writer)
-			end
+			create l_writer.make
+			l_writer.set_signature ("EIF_TYPE_ID tid")
+			create l_body.make (1000)
+			l_body.append ("%Ttype_id = tid;")
+			l_body.append (constructor_body (a_coclass))
+			l_writer.set_body (l_body)
+			cpp_class_writer.add_constructor (l_writer)
 		end
 
 	add_query_interface (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add function 'QueryInterface'
 		local
-			func_writer: WIZARD_WRITER_C_FUNCTION
-			tmp_body: STRING
+			l_writer: WIZARD_WRITER_C_FUNCTION
+			l_body: STRING
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
+			l_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 		do
-			create func_writer.make
+			create l_writer.make
 
-			func_writer.set_name (Query_interface)
-			func_writer.set_comment ("Query Interface.")
-			func_writer.set_result_type (Std_method_imp)
-			func_writer.set_signature (Query_interface_signature)
+			l_writer.set_name (Query_interface)
+			l_writer.set_comment ("Query Interface.")
+			l_writer.set_result_type ("STDMETHODIMP")
+			l_writer.set_signature ("REFIID riid, void ** ppv")
 
-			create tmp_body.make (10000)
-			tmp_body.append (Tab)
+			create l_body.make (10000)
+			l_body.append ("%T")
 
 			if not a_coclass_descriptor.interface_descriptors.is_empty then
-				tmp_body.append (case_body_in_query_interface 
-					(a_coclass_descriptor.interface_descriptors.first.c_type_name,
-					a_coclass_descriptor.interface_descriptors.first.namespace,
-					Iunknown_clsid))
+				l_interface := a_coclass_descriptor.interface_descriptors.first
+				l_body.append (case_body_in_query_interface (l_interface.c_type_name, l_interface.namespace, Iunknown_clsid))
 			else
-				tmp_body.append (case_body_in_query_interface 
-					("IProvideClassInfo2", Void, Iunknown_clsid))
+				l_body.append (case_body_in_query_interface ("IProvideClassInfo2", Void, Iunknown_clsid))
 			end
 
-			tmp_body.append (Space)
-			tmp_body.append (case_body_in_query_interface 
-				("IProvideClassInfo2", Void, iid_name ("IProvideClassInfo")))
+			l_body.append (" ")
+			l_body.append (case_body_in_query_interface ("IProvideClassInfo2", Void, iid_name ("IProvideClassInfo")))
 
-			tmp_body.append (Space)
-			tmp_body.append (case_body_in_query_interface 
-				("IProvideClassInfo2", Void, iid_name ("IProvideClassInfo2")))
+			l_body.append (" ")
+			l_body.append (case_body_in_query_interface ("IProvideClassInfo2", Void, iid_name ("IProvideClassInfo2")))
 
 			if dispatch_interface then
-				tmp_body.append (Space)
-				tmp_body.append (case_body_in_query_interface 
-						(default_dispinterface_name (a_coclass_descriptor),
-						a_coclass_descriptor.interface_descriptors.first.namespace, 
-						iid_name (Idispatch_type)))
-
+				l_body.append (" ")
+				l_body.append (case_body_in_query_interface (default_dispinterface_name (a_coclass_descriptor), a_coclass_descriptor.interface_descriptors.first.namespace, iid_name (Idispatch_type)))
 			end
 
+			l_descriptors := a_coclass_descriptor.interface_descriptors
 			from
-				a_coclass_descriptor.interface_descriptors.start
+				l_descriptors.start
 			until
-				a_coclass_descriptor.interface_descriptors.off
+				l_descriptors.off
 			loop
-				if
-					not a_coclass_descriptor.interface_descriptors.item.c_type_name.is_equal (Iunknown_type) and 
-					not a_coclass_descriptor.interface_descriptors.item.c_type_name.is_equal (Idispatch_type)
-				then
-					tmp_body.append (Space)
-					tmp_body.append (case_body_in_query_interface 
-							(a_coclass_descriptor.interface_descriptors.item.c_type_name,
-							a_coclass_descriptor.interface_descriptors.item.namespace,
-							iid_name (a_coclass_descriptor.interface_descriptors.item.c_type_name)))
+				l_interface := l_descriptors.item
+				if not l_interface.is_iunknown and not l_interface.is_idispatch then
+					l_body.append (" ")
+					l_body.append (case_body_in_query_interface (l_interface.c_type_name, l_interface.namespace, iid_name (l_interface.c_type_name)))
 				end
-				a_coclass_descriptor.interface_descriptors.forth
+				l_descriptors.forth
 			end
 			
 			if source then
-				tmp_body.append (Space)
-				tmp_body.append (case_body_in_query_interface 
-						("IConnectionPointContainer",
-						Void, iid_name ("IConnectionPointContainer")))				
+				l_body.append (" ")
+				l_body.append (case_body_in_query_interface ("IConnectionPointContainer", Void, iid_name ("IConnectionPointContainer")))
 			end
 
-			tmp_body.append (New_line_tab_tab)
-			tmp_body.append (Return)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Star_ppv)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Zero)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Comma_space)
-			tmp_body.append (E_no_interface)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Reinterpret_cast)
-			tmp_body.append (Less)
-			tmp_body.append (Iunknown)
-			tmp_body.append (More)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (Star_ppv)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Add_reference_function)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Return_s_ok)
+		l_body.append ("[
+	return (*ppv = 0), E_NOINTERFACE;
+		
+	reinterpret_cast<IUnknown *>(*ppv)->AddRef ();
+	return S_OK;
+	]")
 
-			func_writer.set_body (tmp_body)
-
-			check
-				valid_func_writer: func_writer.can_generate
-			end
-
-			cpp_class_writer.add_function (func_writer, Public)
-
-			check
-				writer_added: cpp_class_writer.functions.item (Public).has (func_writer)
-			end
+			l_writer.set_body (l_body)
+			cpp_class_writer.add_function (l_writer, Public)
 		end
 
 	add_source_functions (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
@@ -372,9 +308,8 @@ feature {NONE} -- Implementation
 			create Result.make
 			Result.set_name ("EnumConnectionPoints")
 			Result.set_comment ("EnumConnectionPoints of IConnectionPointContainer.")
-			Result.set_result_type (Std_method_imp)
-			Result.set_signature ("/* [out] */ IEnumConnectionPoints ** ppEnum")
-			
+			Result.set_result_type ("STDMETHODIMP")
+			Result.set_signature ("/* [out] */ IEnumConnectionPoints ** ppEnum")	
 			create body.make (100)
 			body.append ("%Treturn E_NOTIMPL;")
 			Result.set_body (body)
@@ -389,30 +324,29 @@ feature {NONE} -- Implementation
 			source: source
 			non_void_coclass: a_coclass_descriptor /= Void
 		local
-			body: STRING
+			l_body: STRING
+			l_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 		do
 			create Result.make
 			Result.set_name ("FindConnectionPoint")
 			Result.set_comment ("FindConnectionPoint of IConnectionPointContainer.")
-			Result.set_result_type (Std_method_imp)
+			Result.set_result_type ("STDMETHODIMP")
 			Result.set_signature ("/* [in] */ REFIID riid, /* [out] */ IConnectionPoint ** ppCP")
-			
-			create body.make (100)
-			body.append (Tab)
+			create l_body.make (100)
+			l_body.append ("%T")
+			l_descriptors := a_coclass_descriptor.source_interface_descriptors
 			from
-				a_coclass_descriptor.source_interface_descriptors.start
+				l_descriptors.start
 			until
-				a_coclass_descriptor.source_interface_descriptors.after
+				l_descriptors.after
 			loop
-				body.append (case_body_in_find_connection_point 
-						(a_coclass_descriptor.source_interface_descriptors.item, 
-						iid_name (a_coclass_descriptor.source_interface_descriptors.item.c_type_name)))
-				a_coclass_descriptor.source_interface_descriptors.forth
+				l_body.append (case_body_in_find_connection_point (l_descriptors.item, iid_name (l_descriptors.item.c_type_name)))
+				l_descriptors.forth
 			end
-			body.append ("%N%T{%N%T%T*ppCP = NULL;%N%T%Treturn CONNECT_E_NOCONNECTION;%N%T}%N%T")
-			body.append ("(*ppCP)->AddRef ();%N%T")
-			body.append ("return S_OK;")
-			Result.set_body (body)
+			l_body.append ("%N%T{%N%T%T*ppCP = NULL;%N%T%Treturn CONNECT_E_NOCONNECTION;%N%T}%N%T")
+			l_body.append ("(*ppCP)->AddRef ();%N%T")
+			l_body.append ("return S_OK;")
+			Result.set_body (l_body)
 		ensure
 			non_void_function: Result /= Void
 			can_generate: Result.can_generate
@@ -426,21 +360,11 @@ feature {NONE} -- Implementation
 			valid_interface_id: not interface_id.is_empty
 		do
 			create Result.make (200)
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append (Riid)
-			Result.append (C_equal)
+			Result.append ("if (riid == ")
 			Result.append (interface_id)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab)
-			Result.append ("* ppCP")
-			Result.append (Space_equal_space)
-
+			Result.append (")%N%T%T* ppCP = ")
 			Result.append (connection_point_attrubute_name (an_interface, cpp_class_writer))
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			Result.append (Else_keyword)
-			Result.append (Space)
+			Result.append (";%N%Telse ")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty
@@ -448,25 +372,29 @@ feature {NONE} -- Implementation
 
 	get_class_info_function (a_coclass: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
 			-- GetClassInfo of IProvideClassInfo.
+		local
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_comment ("GetClassInfo")
 			
 			Result.set_name ("GetClassInfo")
-			Result.set_result_type (Std_method_imp)
-			
+			Result.set_result_type ("STDMETHODIMP")
 			Result.set_signature ("ITypeInfo ** ppti")
-			
-			Result.set_body ("%Tif (ppti == NULL)%N%T%T%
-									%return E_POINTER;%N%T%
-								%ITypeLib * ptl = NULL;%N%T%
-								%HRESULT hr = LoadRegTypeLib (" + libid_name (a_coclass.type_library_descriptor.name) + ", 1, 0, 0, &ptl);%N%T%
-								%if (SUCCEEDED (hr))%N%T%
-								%{%N%T%T%
-									%hr = ptl->GetTypeInfoOfGuid (" + clsid_name (a_coclass.name) + ", ppti);%N%T%T%
-									%ptl->Release ();%N%T%
-								%}%N%T%
-								%return hr;")
+			create l_body.make (1000)
+			l_body.append ("%Tif (ppti == NULL)%N%T%T%
+								%return E_POINTER;%N%T%
+							%ITypeLib * ptl = NULL;%N%T%
+							%HRESULT hr = LoadRegTypeLib (")
+			l_body.append (libid_name (a_coclass.type_library_descriptor.name))
+			l_body.append (", 1, 0, 0, &ptl);%N%T%
+							%if (SUCCEEDED (hr))%N%T%
+							%{%N%T%T%
+								%hr = ptl->GetTypeInfoOfGuid (" + clsid_name (a_coclass.name) + ", ppti);%N%T%T%
+								%ptl->Release ();%N%T%
+							%}%N%T%
+							%return hr;")
+			Result.set_body (l_body)
 		ensure
 			non_void: Result /= Void
 			valid: Result.can_generate
@@ -481,7 +409,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("GetGUID")
 			
 			Result.set_name ("GetGUID")
-			Result.set_result_type (Std_method_imp)
+			Result.set_result_type ("STDMETHODIMP")
 			
 			Result.set_signature ("DWORD dwKind, GUID * pguid")
 			

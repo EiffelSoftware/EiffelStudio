@@ -26,7 +26,6 @@ default
 
 -- This Ace file requires the following environment variables:
 -- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL_SRC\library)
---	assertion (no)
 -- EiffelBase
 -- WEL
 -- EiffelCOM

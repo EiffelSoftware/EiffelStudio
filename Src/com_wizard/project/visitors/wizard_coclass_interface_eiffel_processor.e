@@ -32,23 +32,17 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate interface features.
 		local
-			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
+			l_clause: WIZARD_WRITER_INHERIT_CLAUSE
 		do
-			if not has_descendants_in_coclass (coclass, an_interface) then
-				if 
-					an_interface.dispinterface and 
-					not an_interface.dual
-				then
-					dispatch_interface := True
-				end
-				create inherit_clause.make
-				inherit_clause.set_name (an_interface.eiffel_class_name)
-
-				generate_functions_and_properties (an_interface, inherit_clause)
-				eiffel_writer.add_inherit_clause (inherit_clause)
+			if a_interface.is_implementing_coclass (coclass) then
+				dispatch_interface := a_interface.dispinterface and not a_interface.dual
+				create l_clause.make
+				l_clause.set_name (a_interface.eiffel_class_name)
+				generate_functions_and_properties (a_interface, l_clause)
+				eiffel_writer.add_inherit_clause (l_clause)
 			end
 		end
 

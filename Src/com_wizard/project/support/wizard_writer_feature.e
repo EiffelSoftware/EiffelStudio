@@ -21,10 +21,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize data.
 		do
-			create {LINKED_LIST [STRING]} arguments.make
-			create {LINKED_LIST [WIZARD_WRITER_ASSERTION]} preconditions.make
-			create {LINKED_LIST [WIZARD_WRITER_ASSERTION]} postconditions.make
-			create {LINKED_LIST [STRING]} local_variables.make
+			create {ARRAYED_LIST [STRING]} arguments.make (20)
+			create {ARRAYED_LIST [WIZARD_WRITER_ASSERTION]} preconditions.make (20)
+			create {ARRAYED_LIST [WIZARD_WRITER_ASSERTION]} postconditions.make (20)
+			create {ARRAYED_LIST [STRING]} local_variables.make (20)
 		end
 
 	make_constant (a_value: INTEGER; a_name, a_description: STRING) is
@@ -49,116 +49,110 @@ feature -- Access
 			Result := Tab.twin
 			Result.append (name_for_feature (name))
 			if not constant and then not arguments.is_empty then
-				Result.append (Space)
+				Result.append (" ")
 				from
 					arguments.start
 					if not arguments.off then
-						Result.append (Open_parenthesis)
+						Result.append ("(")
 						Result.append (arguments.item)
 						arguments.forth
 					end
 				until
 					arguments.after
 				loop
-					Result.append (Semicolon)
-					Result.append (Space)
+					Result.append ("; ")
 					Result.append (arguments.item)
 					arguments.forth
 				end
 				if not arguments.is_empty then
-					Result.append (Close_parenthesis)
+					Result.append (")")
 				end
 			end
 			if result_type /= Void and then not result_type.is_empty then
-				Result.append (Colon)
-				Result.append (Space)
+				Result.append (": ")
 				Result.append (result_type)
 			end
 			if not is_attribute then
-				Result.append (Space)
-				Result.append (Is_keyword)
+				Result.append (" is")
 				if constant then
-					Result.append (Space)
+					Result.append (" ")
 					Result.append (body)
 				end
 			end
-			Result.append (New_line_tab_tab_tab)
-			Result.append (Double_dash)
-			Result.append (Space)
+			Result.append ("%N%T%T%T-- ")
 			Result.append (comment)
 
 			if not is_attribute and not constant then
-				Result.append (New_line_tab_tab)
+				Result.append ("%N%T%T")
 				from
 					preconditions.start
 					if not preconditions.after then
-						Result.append (Require_keyword)
+						Result.append ("require")
 					end
 				until
 					preconditions.after
 				loop
-					Result.append (New_line_tab_tab_tab)
+					Result.append ("%N%T%T%T")
 					Result.append (preconditions.item.generated_code)
 					preconditions.forth
 				end
 				if not preconditions.is_empty then
-					Result.append (New_line_tab_tab)
+					Result.append ("%N%T%T")
 				end
 				if not is_deferred then
 					from
 						local_variables.start
 						if not local_variables.after then
-							Result.append (Local_keyword)
+							Result.append ("local")
 						end
 					until
 						local_variables.after
 					loop
-						Result.append (New_line_tab_tab_tab)
+						Result.append ("%N%T%T%T")
 						Result.append (local_variables.item)
 						local_variables.forth
 					end
 					if not local_variables.is_empty then
-						Result.append (New_line_tab_tab)
+						Result.append ("%N%T%T")
 					end
 				end
 				if is_deferred then
-					Result.append (Deferred_keyword)
+					Result.append ("deferred")
 				elseif is_once then
-					Result.append (Once_keyword)
+					Result.append ("once")
 				elseif is_external then
-					Result.append (External_keyword)
+					Result.append ("external")
 				else
-					Result.append (Do_keyword)
+					Result.append ("do")
 				end
-				Result.append (New_line)
+				Result.append ("%N")
 				if not is_deferred then
 					Result.append (body)
 				end
-				Result.append (New_line_tab_tab)
+				Result.append ("%N%T%T")
 				from
 					postconditions.start
 					if not postconditions.after then
-						Result.append (Ensure_keyword)
+						Result.append ("ensure")
 					end
 				until
 					postconditions.after
 				loop
-					Result.append (New_line_tab_tab_tab)
+					Result.append ("%N%T%T%T")
 					Result.append (postconditions.item.generated_code)
 					postconditions.forth
 				end
 				if postconditions /= Void and then not postconditions.is_empty then
-					Result.append (New_line_tab_tab)
+					Result.append ("%N%T%T")
 				end
-				Result.append (End_keyword)
+				Result.append ("end")
 			end
 		end
 
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		do
-			Result := name /= Void and ((is_deferred or is_attribute) implies (body = Void)) and
-				comment /= Void
+			Result := name /= Void and ((is_deferred or is_attribute) implies (body = Void)) and comment /= Void
 		end
 
 	name: STRING
@@ -293,12 +287,10 @@ feature -- Element Change
 			-- Set `comment' with `a_comment'.
 		require
 			non_void_comment: a_comment /= Void
-			valid_comment: not a_comment.is_empty
-			valid_syntax: not (a_comment.item (a_comment.count) = '%N') and not (a_comment.item (1) = '%N')
 		do
-			comment := a_comment.twin
+			comment := a_comment
 		ensure
-			comment_set: comment.is_equal (a_comment)
+			comment_set: comment = a_comment
 		end
 
 	set_deferred is

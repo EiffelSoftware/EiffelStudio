@@ -18,12 +18,12 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize data.
 		do
-			create {LINKED_LIST [STRING]} sources.make
-			create {LINKED_LIST [STRING]} destinations.make
-			create {LINKED_LIST [WIZARD_WRITER_EXPORT_DIRECTIVE]}exports.make
-			create {LINKED_LIST [STRING]} undefines.make
-			create {LINKED_LIST [STRING]} redefines.make
-			create {LINKED_LIST [STRING]} selects.make
+			create {ARRAYED_LIST [STRING]} sources.make (20)
+			create {ARRAYED_LIST [STRING]} destinations.make (20)
+			create {ARRAYED_LIST [WIZARD_WRITER_EXPORT_DIRECTIVE]}exports.make (20)
+			create {ARRAYED_LIST [STRING]} undefines.make (20)
+			create {ARRAYED_LIST [STRING]} redefines.make (20)
+			create {ARRAYED_LIST [STRING]} selects.make (20)
 		end
 
 feature -- Access
@@ -196,6 +196,7 @@ feature -- Element Change
 			valid_source: not source.is_empty
 			non_void_destination: destination /= Void
 			valid_destination: not destination.is_empty
+			valid_names: not source.is_equal (destination)
 		do
 			sources.extend (source)
 			destinations.extend (destination)

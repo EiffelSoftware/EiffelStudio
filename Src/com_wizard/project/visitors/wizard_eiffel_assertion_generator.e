@@ -30,7 +30,7 @@ inherit
 
 feature -- Access
 	
- 	assertions: LINKED_LIST[WIZARD_WRITER_ASSERTION]
+ 	assertions: LIST [WIZARD_WRITER_ASSERTION]
 			-- Assertions
 
 feature -- Basic operation
@@ -47,7 +47,7 @@ feature -- Basic operation
 			tmp_writer: WIZARD_WRITER_ASSERTION
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create assertions.make
+			create {ARRAYED_LIST [WIZARD_WRITER_ASSERTION]} assertions.make (20)
 		
 			visitor := type.visitor 
 
@@ -111,7 +111,7 @@ feature -- Basic operation
 			tmp_writer: WIZARD_WRITER_ASSERTION
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create assertions.make
+			create {ARRAYED_LIST [WIZARD_WRITER_ASSERTION]} assertions.make (20)
 			visitor := a_type.visitor 
 
 			if 

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	elements: LINKED_LIST[WIZARD_ENUM_ELEMENT_DESCRIPTOR]
+	elements: LIST [WIZARD_ENUM_ELEMENT_DESCRIPTOR]
 			-- list of element descriptors
 
 	size_of_instance: INTEGER
@@ -79,7 +79,7 @@ feature -- Basic Operations
 			added: is_added
 		end
 
-	set_elements (some_elements: LINKED_LIST[WIZARD_ENUM_ELEMENT_DESCRIPTOR]) is
+	set_elements (some_elements: LIST [WIZARD_ENUM_ELEMENT_DESCRIPTOR]) is
 			--
 		require
 			valid_elements: some_elements /= Void

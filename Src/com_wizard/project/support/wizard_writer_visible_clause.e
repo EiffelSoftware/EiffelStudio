@@ -18,7 +18,7 @@ feature -- Initialization
 	make is
 			-- Initialize
 		do
-			create {LINKED_LIST [STRING]} exported_features.make
+			create {ARRAYED_LIST [STRING]} exported_features.make (20)
 		end
 
 feature -- Access

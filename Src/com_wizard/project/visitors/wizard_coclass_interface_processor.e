@@ -15,12 +15,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_COCLASS_GENERATOR_HELPER
-		export
-			{NONE} all
-		end
-
-	
 feature -- Access
 
 	coclass: WIZARD_COCLASS_DESCRIPTOR

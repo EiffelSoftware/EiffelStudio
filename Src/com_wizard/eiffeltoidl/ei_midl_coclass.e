@@ -26,12 +26,12 @@ feature {NONE} -- Implementation
 			-- Initialize object.  Set 'name' to 'c_name'.
 		do
 			Precursor (c_name)
-			create interfaces.make
+			create {ARRAYED_LIST [EI_MIDL_INTERFACE]} interfaces.make (20)
 		end
 
 feature -- Access
 
-	interfaces: LINKED_LIST[EI_MIDL_INTERFACE]
+	interfaces: LIST [EI_MIDL_INTERFACE]
 			-- Interfaces
 
 feature -- Element change

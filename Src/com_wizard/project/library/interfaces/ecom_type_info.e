@@ -81,17 +81,17 @@ feature -- Access
 			non_void_documentation: Result /= Void
 		end
 
-	func_desc (an_index: INTEGER): ECOM_FUNC_DESC is
+	func_desc (a_index: INTEGER): ECOM_FUNC_DESC is
 			-- FUNCDESC structure containing information about specified function
 		require
-			valid_index: an_index >= 0 and an_index < type_attr.count_func
+			valid_index: a_index >= 0 and a_index < type_attr.count_func
 		local
 			tmp_pointer: POINTER
 		do
 			if func_descs = Void then
-				create func_descs.make
+				create {ARRAYED_LIST [ECOM_FUNC_DESC]} func_descs.make (20)
 			end
-			tmp_pointer := ccom_get_func_desc (initializer, an_index)
+			tmp_pointer := ccom_get_func_desc (initializer, a_index)
 			create Result.make_from_pointer (tmp_pointer)
 			Result.set_parent (Current)
 			func_descs.extend (Result)
@@ -125,10 +125,10 @@ feature -- Access
 			non_void_ids: Result /= Void
 		end
 
-	impl_type_flag (an_index: INTEGER): INTEGER is
+	impl_type_flag (a_index: INTEGER): INTEGER is
 			-- See ECOM_IMPL_TYPE_FLAGS for return values.
 		do
-			Result := ccom_get_impl_type_flags (initializer, an_index)
+			Result := ccom_get_impl_type_flags (initializer, a_index)
 		ensure
 			valid_flag: is_valid_impltypeflag (Result)
 		end
@@ -156,14 +156,14 @@ feature -- Access
 			create Result.make_from_pointer (ccom_get_ref_type_info (initializer, a_handle))
 		end
 
-	ref_type_of_impl_type (an_index: INTEGER): INTEGER is
+	ref_type_of_impl_type (a_index: INTEGER): INTEGER is
 			-- handle of inmplemented interface type, which can be passed to 
 			-- `type_info'
 			-- Valid range is 0 to `count_implemented_types' of `type_attr'
 		require
-			valid_index: an_index >= -1 and then an_index <= type_attr.count_implemented_types
+			valid_index: a_index >= -1 and then a_index <= type_attr.count_implemented_types
 		do
-			Result := ccom_get_ref_type_of_impl_type (initializer, an_index)
+			Result := ccom_get_ref_type_of_impl_type (initializer, a_index)
 		end
 
 	type_attr: ECOM_TYPE_ATTR is
@@ -190,17 +190,17 @@ feature -- Access
 			non_void_interface: type_comp /= Void
 		end
 
-	var_desc (an_index: INTEGER): ECOM_VAR_DESC is
+	var_desc (a_index: INTEGER): ECOM_VAR_DESC is
 			-- VARDESC structure
 		require
-			valid_index: an_index >= 0 and an_index < type_attr.count_variables
+			valid_index: a_index >= 0 and a_index < type_attr.count_variables
 		local
 			tmp_pointer: POINTER
 		do
 			if var_descs = Void then
-				create var_descs.make
+				create {ARRAYED_LIST [ECOM_VAR_DESC]} var_descs.make (20)
 			end
-			tmp_pointer := ccom_get_var_desc (initializer, an_index)
+			tmp_pointer := ccom_get_var_desc (initializer, a_index)
 			create Result.make_from_pointer (tmp_pointer)
 			Result.set_parent (Current)
 			var_descs.extend (Result)
@@ -275,10 +275,10 @@ feature {NONE} -- Implementation
 	is_type_attr_set: BOOLEAN
 			-- Is TYPEATTR structure initialized?
 
-	func_descs: LINKED_LIST [ECOM_FUNC_DESC]
+	func_descs: LIST [ECOM_FUNC_DESC]
 			-- FUNCDESC structures
 
-	var_descs: LINKED_LIST [ECOM_VAR_DESC]
+	var_descs: LIST [ECOM_VAR_DESC]
 			-- VARDESC structures
 
 feature {NONE} -- Externals
@@ -336,7 +336,7 @@ feature {NONE} -- Externals
 			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): EIF_REFERENCE"
 		end
 
-	ccom_get_func_desc (cpp_obj: POINTER; an_index: INTEGER): POINTER is
+	ccom_get_func_desc (cpp_obj: POINTER; a_index: INTEGER): POINTER is
 		external
 			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): (FUNCDESC *)"
 		end
@@ -346,7 +346,7 @@ feature {NONE} -- Externals
 			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_POINTER, EIF_INTEGER): EIF_REFERENCE"
 		end
 
-	ccom_get_impl_type_flags (cpp_obj: POINTER; an_index: INTEGER): INTEGER is
+	ccom_get_impl_type_flags (cpp_obj: POINTER; a_index: INTEGER): INTEGER is
 		external
 			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): EIF_INTEGER"
 		end
@@ -366,7 +366,7 @@ feature {NONE} -- Externals
 			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): (ITypeInfo *)"
 		end
 
-	ccom_get_ref_type_of_impl_type (cpp_obj: POINTER; an_index: INTEGER): INTEGER is
+	ccom_get_ref_type_of_impl_type (cpp_obj: POINTER; a_index: INTEGER): INTEGER is
 		external
 			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): EIF_INTEGER"
 		end
@@ -381,7 +381,7 @@ feature {NONE} -- Externals
 			"C++ [E_IType_Info %"E_ITypeInfo.h%"](): (ITypeComp *)"
 		end
 
-	ccom_get_var_desc  (cpp_obj: POINTER; an_index: INTEGER): POINTER is
+	ccom_get_var_desc  (cpp_obj: POINTER; a_index: INTEGER): POINTER is
 		external
 			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): (VARDESC *)"
 		end

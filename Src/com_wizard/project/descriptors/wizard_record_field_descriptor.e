@@ -64,13 +64,9 @@ feature -- Basic Operations
 		require
 			non_void_description: a_description /= Void
 		do
-			if not a_description.is_empty then
-				description := a_description.twin
-			else
-				description := No_description_available.twin
-			end
+			description := a_description.twin
 		ensure
-			valid_description: description /= Void and then not description.is_empty
+			description_set: description.is_equal (a_description)
 		end
 
 	set_data_type (a_data_type: WIZARD_DATA_TYPE_DESCRIPTOR) is

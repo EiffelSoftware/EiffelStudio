@@ -15,26 +15,24 @@ create
 
 feature -- Basic operations
 
-	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_source_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate source interface features.
 		local
-			eiffel_server_visitor: WIZARD_EIFFEL_SERVER_VISITOR
-			source_generator: WIZARD_SOURCE_INTERFACE_EIFFEL_CLIENT_GENERATOR
+			l_visitor: WIZARD_EIFFEL_SERVER_VISITOR
+			l_generator: WIZARD_SOURCE_INTERFACE_EIFFEL_CLIENT_GENERATOR
 		do
-			create eiffel_server_visitor
-			eiffel_server_visitor.visit (an_interface.implemented_interface)
-
-			create source_generator.generate (an_interface, coclass, eiffel_writer)
+			create l_visitor
+			l_visitor.visit (a_interface.implemented_interface)
+			create l_generator.generate (a_interface, coclass, eiffel_writer)
 		end
 
-	generate_functions_and_properties (an_interface: WIZARD_INTERFACE_DESCRIPTOR;
-				an_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
+	generate_functions_and_properties (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
 			-- Generate functions and properties for interface.
 		local
-			interface_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_CLIENT_GENERATOR
+			l_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_CLIENT_GENERATOR
 		do
-			create interface_generator.make (coclass, an_interface, eiffel_writer, an_inherit_clause)
-			interface_generator.generate_functions_and_properties (an_interface)
+			create l_generator.make (coclass, a_interface, eiffel_writer, a_inherit_clause)
+			l_generator.generate_functions_and_properties (a_interface)
 		end
 
 end -- class WIZARD_COCLASS_INTERFACE_EIFFEL_CLIENT_PROCESSOR

@@ -9,6 +9,8 @@ class
 
 inherit
 	WIZARD_FEATURE_DESCRIPTOR
+		rename
+			make_from_other as dic_make_from_other
 		undefine
 			is_equal
 		end
@@ -44,6 +46,8 @@ inherit
 		end
 
 	WIZARD_WRITER_DICTIONARY
+		rename
+			make_from_other as dic_make_from_other
 		export
 			{NONE} all
 		undefine
@@ -63,21 +67,25 @@ feature -- Initialization
 			valid_creator: a_creator /= Void
 		do
 			a_creator.initialize_descriptor (Current)
-			create coclass_eiffel_names.make (5)
+			create components_eiffel_names.make (5)
 			arguments.compare_objects
 		ensure
 			valid_name: name /= Void and then name.count /= 0
 			valid_arguments: arguments /= Void and then arguments.count = argument_count
 			valid_return_type: return_type /= Void
-			non_void_coclass_eiffel_names: coclass_eiffel_names /= Void
+			non_void_components_eiffel_names: components_eiffel_names /= Void
 		end
 
 feature -- Access
 
+	is_renaming_clause: BOOLEAN
+			-- Is function a renaming clause?
+			-- (i.e. an instance of WIZARD_RENAMING_CLAUSE)
+
 	argument_count: INTEGER
 			-- Number of function arguments
 
-	arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+	arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			-- Function parameters
 
 	vtbl_offset: INTEGER
@@ -170,11 +178,9 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 		require
 			non_void_description: a_description /= Void
 		do
-			if not a_description.is_empty then
-				description := a_description.twin
-			else
-				description := No_description_available
-			end
+			description := a_description.twin
+		ensure
+			description_set: description.is_equal (a_description)
 		end
 
 	set_member_id (a_member_id: INTEGER) is
@@ -223,6 +229,8 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 			valid_call_conv: is_valid_callconv (call_conv) and call_conv = a_convention
 		end
 
+feature {WIZARD_INTERFACE_DESCRIPTOR} -- Element Settings
+
 feature -- Basic operations
 
 	set_argument_count (an_argument_count: INTEGER) is
@@ -233,7 +241,7 @@ feature -- Basic operations
 			valid_argument_count: argument_count = an_argument_count
 		end
 
-	set_arguments (some_arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]) is
+	set_arguments (some_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]) is
 			-- Set `arguments' with `some_arguments'
 		require
 			valid_arguments: some_arguments /= Void
@@ -267,8 +275,8 @@ feature -- Comparison
 			-- Is current object less than `other'?
 		do
 			Result := vtbl_offset < other.vtbl_offset
-		end;
-			
+		end
+
 end -- class WIZARD_FUNCTION_DESCRIPTOR
 
 --|----------------------------------------------------------------

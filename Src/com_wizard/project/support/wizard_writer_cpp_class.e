@@ -11,6 +11,10 @@ inherit
 	WIZARD_WRITER_CPP_EXPORT_STATUS
 
 	WIZARD_WRITER_C
+		rename
+			header_file_name as definition_header_file_name,
+			set_header_file_name as set_definition_header_file_name
+		end
 
 	WIZARD_SHARED_GENERATORS
 		export
@@ -27,20 +31,20 @@ feature {NONE} -- Initialization
 		do
 			create members.make (10)
 			create functions.make (10)
-			create {LINKED_LIST [WIZARD_WRITER_C_MEMBER]} global_variables.make
-			create {LINKED_LIST [WIZARD_PARENT_CPP_CLASS]} parents.make
-			create {LINKED_LIST [STRING]} import_files.make
+			create {ARRAYED_LIST [WIZARD_WRITER_C_MEMBER]} global_variables.make (20)
+			create {ARRAYED_LIST [WIZARD_PARENT_CPP_CLASS]} parents.make (20)
+			create {ARRAYED_LIST [STRING]} import_files.make (20)
 			import_files.compare_objects
-			create {LINKED_LIST [STRING]} import_files_after.make
+			create {ARRAYED_LIST [STRING]} import_files_after.make (20)
 			import_files_after.compare_objects
-			create {LINKED_LIST [STRING]} others.make
+			create {ARRAYED_LIST [STRING]} others.make (20)
 			others.compare_objects
-			create {LINKED_LIST [STRING]} others_forward.make
+			create {ARRAYED_LIST [STRING]} others_forward.make (20)
 			others_forward.compare_objects
-			create {LINKED_LIST [STRING]} others_source.make
-			create {LINKED_LIST [WIZARD_WRITER_CPP_CONSTRUCTOR]} constructors.make
-			create {LINKED_LIST [WIZARD_WRITER]} ordered_elements.make
-			create {LINKED_LIST [WIZARD_WRITER_C_FUNCTION]} extern_functions.make
+			create {ARRAYED_LIST [STRING]} others_source.make (20)
+			create {ARRAYED_LIST [WIZARD_WRITER_CPP_CONSTRUCTOR]} constructors.make (20)
+			create {ARRAYED_LIST [WIZARD_WRITER]} ordered_elements.make (20)
+			create {ARRAYED_LIST [WIZARD_WRITER_C_FUNCTION]} extern_functions.make (20)
 			standard_include
 		end
 
@@ -48,22 +52,16 @@ feature -- Access
 
 	generated_code: STRING is
 			-- Generated code
+		local
+			l_writers: LIST [WIZARD_WRITER_C_FUNCTION]
 		do
-			Result := C_open_comment_line.twin
-			Result.append (New_line)
+			create Result.make (4096)
+			Result.append ("/*-----------------------------------------------------------")
+			Result.append ("%N")
 			Result.append (header)
-			Result.append (New_line)
-			Result.append (C_close_comment_line)
-			Result.append (New_line)
-			Result.append (New_line)
-
-			Result.append (Include_clause)
-			Result.append (Space)
-			Result.append (Double_quote)
-			Result.append (header_file_name)
-			Result.append (Double_quote)
-			Result.append (New_line)
-
+			Result.append ("%N-----------------------------------------------------------*/%N%N#include %"")
+			Result.append (definition_header_file_name)
+			Result.append ("%"%N")
 			from
 				others_source.start
 			until
@@ -71,28 +69,20 @@ feature -- Access
 			loop
 				Result.append (others_source.item)
 				others_source.forth
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N%N")
 			end
 
 			Result.append (cpp_protector_start)
-			Result.append (New_line)
-			Result.append (New_line)
+			Result.append ("%N%N")
 
 			from
 				extern_functions.start
 			until
 				extern_functions.after
 			loop
-				Result.append (Extern)
-				Result.append (Space)
-				Result.append (Double_quote)
-				Result.append (C)
-				Result.append (Double_quote)
-				Result.append (Space)
+				Result.append ("extern %"C%" ")
 				Result.append (extern_functions.item.generated_code)
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N%N")
 				extern_functions.forth
 			end
 
@@ -103,8 +93,7 @@ feature -- Access
 			loop
 				Result.append (ordered_elements.item.generated_code)
 				ordered_elements.forth
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N%N")
 			end
 
 			from
@@ -114,46 +103,26 @@ feature -- Access
 			loop
 				if namespace /= Void and then not namespace.is_empty then
 					Result.append (namespace)
-					Result.append (Colon)
-					Result.append (Colon)
+					Result.append ("::")
 				end
 				Result.append (name)
-				Result.append (Colon)
-				Result.append (Colon)
+				Result.append ("::")
 				Result.append (name)
 				Result.append (constructors.item.generated_code)
-				Result.append (New_line)
-				Result.append (C_open_comment_line)
-				Result.append (C_close_comment_line)
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N/*----------------------------------------------------------------------------------------------------------------------*/%N%N")
 				constructors.forth
 			end
 			if destructor_body /= Void and then not destructor_body.is_empty then
 				if namespace /= Void and then not namespace.is_empty then
 					Result.append (namespace)
-					Result.append (Colon)
-					Result.append (Colon)
+					Result.append ("::")
 				end
 				Result.append (name)
-				Result.append (Colon)
-				Result.append (Colon)
-				Result.append (Tilda)
+				Result.append ("::~")
 				Result.append (name)
-				Result.append (Open_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (New_line)
-				Result.append (Open_curly_brace)
-				Result.append (New_line)
+				Result.append ("()%N{%N")
 				Result.append (destructor_body)
-				Result.append (New_line)
-				Result.append (Close_curly_brace)
-				Result.append (Semicolon)
-				Result.append (New_line)
-				Result.append (C_open_comment_line)
-				Result.append (C_close_comment_line)
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N};%N/*----------------------------------------------------------------------------------------------------------------------*/%N%N")
 			end
 			from
 				functions.start
@@ -161,86 +130,91 @@ feature -- Access
 				functions.after
 			loop
 				from
-					functions.item_for_iteration.start
+					l_writers := functions.item_for_iteration
+					l_writers.start
 				until
-					functions.item_for_iteration.after
+					l_writers.after
 				loop
-					Result.append (generated_function_code (functions.item_for_iteration.item))
-					Result.append (New_line)
-					Result.append (C_open_comment_line)
-					Result.append (C_close_comment_line)
-					Result.append (New_line)
-					Result.append (New_line)
-					functions.item_for_iteration.forth
+					Result.append (generated_function_code (l_writers.item))
+					Result.append ("%N/*----------------------------------------------------------------------------------------------------------------------*/%N%N")
+					l_writers.forth
 				end
 				functions.forth
 			end
 
-			Result.append (New_line)
+			Result.append ("%N")
 			Result.append (cpp_protector_end)
 		end
-	
-	generated_header_file: STRING is
-			-- Generated code for corresponding header file
+
+	declaration_header_file_name: STRING
+			-- Declaration header file name
+
+	generated_declaration_header_file: STRING is
+			-- Generated code for corresponding declaration header file
 		require
 			ready: can_generate
 		local
-			class_protector: STRING
-			class_declaration: WIZARD_WRITER_FORWARD_CLASS_DECLARATION
+			l_declaration: WIZARD_WRITER_FORWARD_CLASS_DECLARATION
+			l_name: STRING
+		do
+			if declaration_header_file_name /= Void then
+				create Result.make (4096)
+				Result.append ("/*-----------------------------------------------------------%N")
+				Result.append ("Forward declaration of ")
+				Result.append (name)
+				Result.append ("%N-----------------------------------------------------------*/%N%N#ifndef ")
+				l_name := header_protector (declaration_header_file_name)
+				Result.append (l_name)
+				Result.append ("%N#define ")
+				Result.append (l_name)
+				Result.append ("%N%N")
+				Result.append (cpp_protector_start1)
+				Result.append ("%N%N")
+				create l_declaration.make (name, namespace, abstract)
+				Result.append (l_declaration.generated_code)
+				Result.append (cpp_protector_end1)
+				Result.append ("%N#endif")
+			end
+		end
+
+	generated_definition_header_file: STRING is
+			-- Generated code for corresponding definition header file
+		require
+			ready: can_generate
+		local
+			l_protector: STRING
 		do
 			if not abstract then
 				conversion_include
 			end
-
-			Result := C_open_comment_line.twin
-			Result.append (New_line)
+			create Result.make (4096)
+			Result.append ("/*-----------------------------------------------------------%N")
 			Result.append (header)
-			Result.append (New_line)
-			Result.append (C_close_comment_line)
-			Result.append (New_line)
-			Result.append (New_line)
-
-			Result.append (Sharp)
-			Result.append (Ifndef)
-			Result.append (Space)
-			Result.append (header_protector (header_file_name))
-			Result.append (New_line)
-
-			Result.append (Sharp)
-			Result.append (define)
-			Result.append (Space)
-			Result.append (header_protector (header_file_name))
-			Result.append (New_line)
-
-			Result.append (cpp_protector_start1)
-			Result.append (New_line)
-			Result.append (New_line)
-
-			create class_declaration.make (name, namespace, abstract)
-			Result.append (class_declaration.generated_code)
-
-			Result.append (cpp_protector_end1)
-			Result.append (New_line)
-			Result.append (New_line)
+			Result.append ("%N-----------------------------------------------------------*/%N%N#ifndef ")
+			l_protector := header_protector (definition_header_file_name)
+			Result.append (l_protector)
+			Result.append ("%N#define ")
+			Result.append (l_protector)
+			if declaration_header_file_name /= Void then
+				Result.append ("%N%N#include %"")
+				Result.append (declaration_header_file_name)
+				Result.append ("%"")
+			end
+			Result.append ("%N%N")
 
 			from
 				import_files.start
 			until
 				import_files.after
 			loop
-				Result.append (Include_clause)
-				Result.append (Space)
-				Result.append ("%"")
+				Result.append ("#include %"")
 				Result.append (import_files.item)
-				Result.append ("%"")
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%"%N%N")
 				import_files.forth
 			end
 
 			Result.append (cpp_protector_start)
-			Result.append (New_line)
-			Result.append (New_line)
+			Result.append ("%N%N")
 
 			from
 				global_variables.start
@@ -248,7 +222,7 @@ feature -- Access
 				global_variables.after
 			loop
 				Result.append (global_variables.item.generated_header_file)
-				Result.append (New_line)
+				Result.append ("%N")
 				global_variables.forth
 			end
 
@@ -259,8 +233,7 @@ feature -- Access
 			loop
 				Result.append (others.item)
 				others.forth
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N%N")
 			end
 
 			from
@@ -268,58 +241,43 @@ feature -- Access
 			until
 				extern_functions.after
 			loop
-				Result.append (Extern)
-				Result.append (Space)
-				Result.append (Double_quote)
-				Result.append (C)
-				Result.append (Double_quote)
-				Result.append (Space)
+				Result.append ("extern %"C%" ")
 				Result.append (extern_functions.item.generated_header_file)
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%N%N")
 				extern_functions.forth
 			end
 
 			Result.append (cpp_protector_start1)
 
 			if abstract then
-				create class_protector.make (50)
-				class_protector.append ("__")
-				class_protector.append (namespace)
-				class_protector.append ("_")
-				class_protector.append (name)
-				class_protector.append ("_INTERFACE_DEFINED__")
+				create l_protector.make (50)
+				l_protector.append ("__")
+				l_protector.append (namespace)
+				l_protector.append ("_")
+				l_protector.append (name)
+				l_protector.append ("_INTERFACE_DEFINED__")
 
-				Result.append (Hash_if_ndef)
-				Result.append (Space)
-				Result.append (class_protector)
-				Result.append (New_line)
-
-				Result.append (Hash_define)
-				Result.append (Space)
-				Result.append (class_protector)
-				Result.append (New_line)
+				Result.append ("#ifndef ")
+				Result.append (l_protector)
+				Result.append ("%N#define ")
+				Result.append (l_protector)
+				Result.append ("%N")
 			end
 
 			if namespace /= Void and then not namespace.is_empty then
 				Result.append ("namespace ")
 				Result.append (namespace)
-				Result.append (New_line)
-				Result.append (Open_curly_brace)
-				Result.append (New_line)
+				Result.append ("%N{%N")
 			end
 
-			Result.append (C_class_keyword)
-			Result.append (Space)
+			Result.append ("class ")
 			Result.append (name)
 			if not parents.is_empty then
-				Result.append (Space)
-				Result.append (Colon)
-				Result.append (Space)
+				Result.append (" : ")
 				from
 					parents.start
 					Result.append (cpp_status_keywords.item (parents.item.export_status))
-					Result.append (Space)
+					Result.append (" ")
 					if parents.item.namespace /= Void and then not parents.item.namespace.is_empty then
 						Result.append (parents.item.namespace)
 						Result.append ("::")
@@ -329,126 +287,92 @@ feature -- Access
 				until
 					parents.after
 				loop
-					Result.append (Comma)
-					Result.append (Space)
+					Result.append (", ")
 					Result.append (cpp_status_keywords.item (parents.item.export_status))
-					Result.append (Space)
+					Result.append (" ")
 					Result.append (parents.item.name)
 					parents.forth
 				end
 			end
-			Result.append (New_line)
-			Result.append (Open_curly_brace)
-			Result.append (New_line)
+			Result.append ("%N{%N")
 			Result.append (cpp_status_keywords.item (Public))
-			Result.append (Colon)
-			Result.append (New_line)
+			Result.append (":%N")
 			from
 				constructors.start
 			until
 				constructors.after
 			loop
-				Result.append (tab)
+				Result.append ("%T")
 				Result.append (name)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
+				Result.append (" (")
 				if constructors.item.signature /= Void then
 					Result.append (constructors.item.signature)
 				end
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line)
+				Result.append (");%N")
 				constructors.forth
 			end
 
 			if constructors.is_empty then
-				Result.append (Tab)
+				Result.append ("%T")
 				Result.append (name)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Space)
-				Result.append (Open_curly_brace)
-				Result.append (Close_curly_brace)
-				Result.append (Semicolon)
-				Result.append (New_line)			
+				Result.append (" () {};%N")
 			end
 
-			Result.append (tab)
+			Result.append ("%T")
 			if not abstract then
-				Result.append (Virtual.twin)
-				Result.append (Space)
+				Result.append ("virtual ")
 			end
-			Result.append (Tilda)
+			Result.append ("~")
 			Result.append (name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Close_parenthesis)
+			Result.append (" ()")
 			if destructor_body = Void or else destructor_body.is_empty then
-				Result.append (Space)
-				Result.append (Open_curly_brace)
-				Result.append (Close_curly_brace)
+				Result.append (" {}")
 			end
-			Result.append (Semicolon)
-			Result.append (New_line)
-
+			Result.append (";%N")
 			Result.append (generate_members (members, Public))
 			Result.append (generate_members (functions, Public))
 			Result.append (cpp_status_keywords.item (Protected))
-			Result.append (Colon)
-			Result.append (New_line)
+			Result.append (":%N")
 			Result.append (generate_members (members, Protected))
 			Result.append (generate_members (functions, Protected))
 			Result.append (cpp_status_keywords.item (Private))
-			Result.append (Colon)
-			Result.append (New_line)
+			Result.append (":%N")
 			Result.append (generate_members (members, Private))
 			Result.append (generate_members (functions, Private))
-			Result.append (Close_curly_brace)
-			Result.append (Semicolon)
-			Result.append (New_line)
+			Result.append ("};%N")
 
 			if namespace /= Void and then not namespace.is_empty then
-				Result.append (Close_curly_brace)
-				Result.append (New_line)
+				Result.append ("}%N")
 			end
 
 			if abstract then
-				Result.append (Hash_end_if)
-				Result.append (New_line)
+				Result.append ("#endif%N")
 			end
 			Result.append (cpp_protector_end1)
-			Result.append (New_line)
-			Result.append (New_line)
+			Result.append ("%N%N")
 			Result.append (cpp_protector_end)
-			Result.append (New_line)
+			Result.append ("%N")
 
 			from
 				import_files_after.start
 			until
 				import_files_after.after
 			loop
-				Result.append (Include_clause)
-				Result.append (Space)
-				Result.append ("%"")
+				Result.append ("#include %"")
 				Result.append (import_files_after.item)
-				Result.append ("%"")
-				Result.append (New_line)
-				Result.append (New_line)
+				Result.append ("%"%N%N")
 				import_files_after.forth
 			end
 
-			Result.append (New_line)
-
-			Result.append (Hash_end_if)
+			Result.append ("%N#endif")
 		end
 
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		do
 			Result := name /= Void and header /= Void 
-				and header_file_name /= Void and then not header_file_name.is_empty
-				and not abstract implies not constructors.is_empty
+				and definition_header_file_name /= Void and then not definition_header_file_name.is_empty
+				and (not abstract implies not constructors.is_empty)
 		end
 
 	name: STRING
@@ -510,6 +434,16 @@ feature -- Element Change
 			namespace_set: namespace.is_equal (a_name)
 		end
 
+	set_declaration_header_file_name (a_name: like declaration_header_file_name) is
+			-- Set `declaration_header_file_name' with `a_name'.
+		require
+			non_void_name: a_name /= Void
+		do
+			declaration_header_file_name := a_name
+		ensure
+			declaration_header_file_name_set: declaration_header_file_name = a_name
+		end
+		
 	add_constructor (a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR) is
 			-- Add `a_constructor' to class constructors.
 		require
@@ -539,7 +473,7 @@ feature -- Element Change
 			valid_export_status: is_valid_export_status (a_export_status)
 		do
 			if not members.has (a_export_status) then
-				members.put (create {LINKED_LIST [WIZARD_WRITER_C_MEMBER]}.make, a_export_status)
+				members.put (create {ARRAYED_LIST [WIZARD_WRITER_C_MEMBER]}.make (20), a_export_status)
 			end
 			check
 				members.has (a_export_status)
@@ -555,7 +489,7 @@ feature -- Element Change
 			non_void_function: a_function /= Void
 		do
 			if not functions.has (a_export_status) then
-				functions.put (create {LINKED_LIST [WIZARD_WRITER_C_FUNCTION]}.make, a_export_status)
+				functions.put (create {ARRAYED_LIST [WIZARD_WRITER_C_FUNCTION]}.make (20), a_export_status)
 			end
 			check
 				functions.has (a_export_status)
@@ -576,7 +510,7 @@ feature -- Element Change
 			header_set: header.is_equal (a_header)
 		end
 
-	add_parent (a_name: STRING; a_namespace: STRING; an_export_status: INTEGER) is
+	add_parent (a_name: STRING; a_namespace: STRING; a_export_status: INTEGER) is
 			-- Add `a_parent' to `parents'.
 		require
 			non_void_parent: a_name /= Void
@@ -585,7 +519,7 @@ feature -- Element Change
 		local
 			a_parent: WIZARD_PARENT_CPP_CLASS
 		do
-			create a_parent.make (a_name, a_namespace, an_export_status)
+			create a_parent.make (a_name, a_namespace, a_export_status)
 			parents.extend (a_parent)
 		ensure
 			added: parents.last.name.is_equal (a_name)
@@ -625,12 +559,22 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	save_header_file (a_header_file: STRING) is
-			-- Save header file into `a_header_file'.
+	save_declaration_header_file (a_header_file: STRING) is
+			-- Save declaration header file into `a_header_file'.
    		require
    			can_generate: can_generate
    		do
-			save_content (a_header_file, generated_header_file)
+   			if declaration_header_file_name /= Void then
+				save_content (a_header_file, generated_declaration_header_file)
+			end
+	 	end
+
+	save_definition_header_file (a_header_file: STRING) is
+			-- Save definition header file into `a_header_file'.
+   		require
+   			can_generate: can_generate
+   		do
+			save_content (a_header_file, generated_definition_header_file)
 	 	end
 
 	conversion_include is
@@ -646,22 +590,24 @@ feature {NONE} -- Implementation
 		require
 			non_void_members: a_members /= Void
 			valid_export_status: is_valid_export_status (a_export_status)
+		local
+			l_writers: LIST [WIZARD_WRITER_C_MEMBER]
 		do
 			create Result.make (1000)
 			a_members.search (a_export_status)
 			if a_members.found then
+				l_writers := a_members.found_item
 				from
-					a_members.found_item.start
+					l_writers.start
 				until
-					a_members.found_item.after
+					l_writers.after
 				loop
-					Result.append (a_members.found_item.item.generated_header_file)
-					Result.append (New_line)
-					Result.append (New_line)
-					a_members.found_item.forth
+					Result.append (l_writers.item.generated_header_file)
+					Result.append ("%N%N")
+					l_writers.forth
 				end
 			end
-			Result.append (New_line)
+			Result.append ("%N")
 		end
 					
 	generated_function_code (a_function: WIZARD_WRITER_C_FUNCTION): STRING is
@@ -671,38 +617,26 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (10000)
 			Result.append (a_function.result_type)
-			Result.append (Space)
+			Result.append (" ")
 			if namespace /= Void and then not namespace.is_empty then
 				Result.append (namespace)
-				Result.append (Colon)
-				Result.append (Colon)
+				Result.append ("::")
 			end
 			Result.append (name)
-			Result.append (Colon)
-			Result.append (Colon)
+			Result.append ("::")
 			Result.append (a_function.name)
-			Result.append (Open_parenthesis)
+			Result.append ("(")
 			if a_function.signature /= Void then 
-				Result.append (Space)
+				Result.append (" ")
 				Result.append (a_function.signature)
-				Result.append (Space)
+				Result.append (" ")
 			end
-			Result.append (Close_parenthesis)
-
-			Result.append (New_line)
-			Result.append (New_line)
-			Result.append (C_open_comment_line)
-			Result.append (New_line_tab)
+			Result.append (")")
+			Result.append ("%N%N/*-----------------------------------------------------------%N%T")
 			Result.append (a_function.comment)
-			Result.append (New_line)
-			Result.append (C_close_comment_line)
-			Result.append (New_line)
-			Result.append (Open_curly_brace)
-			Result.append (New_line)
+			Result.append ("%N-----------------------------------------------------------*/%N{%N")
 			Result.append (a_function.body)
-			Result.append (New_line)
-			Result.append (Close_curly_brace)
-			Result.append (Semicolon)
+			Result.append ("%N};")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty

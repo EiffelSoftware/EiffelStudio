@@ -18,17 +18,16 @@ feature -- Basic operations
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate access and setting features from property.
 		local
-			coclass_name, access_name, setting_name, an_argument, a_comment, tmp_string: STRING
+			access_name, setting_name, an_argument, a_comment, tmp_string: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			coclass_name := a_component_descriptor.eiffel_class_name
 			create access_feature.make
 			create setting_feature.make
 			create changed_names.make (2)
 
-			if a_descriptor.coclass_eiffel_names.has (coclass_name) then
+			if a_descriptor.is_renamed_in (a_component_descriptor) then
 				property_renamed := True
-				access_name := a_descriptor.coclass_eiffel_names.item (coclass_name)
+				access_name := a_descriptor.component_eiffel_name (a_component_descriptor)
 				changed_names.put (access_name, a_descriptor.interface_eiffel_name)
 
 				create tmp_string.make (100)

@@ -57,7 +57,7 @@ feature -- Access
 		do
 			Result := (name /= Void and then not name.is_empty) and
 						(result_type /= Void and then not result_type.is_empty) and
-						(comment /= Void and then not comment.is_empty)
+						(comment /= Void)
 		end
 
 feature -- Element Change

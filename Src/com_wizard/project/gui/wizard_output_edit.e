@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			set_height (a_parent.height - an_offset)
 			setup_output_edit
 			font_height := output_edit.font.log_font.height
-			create scroller.make (Current, 1, 1, font_height, height)
+			create scroller.make (Current, font_height.max (height) + 1, font_height.max (height) + 1, font_height, height)
 			hide_horizontal_scroll_bar
 		end
 
@@ -177,7 +177,7 @@ feature -- Basic Operations
 			-- Clear window text.
 		do
 			setup_output_edit
-			create scroller.make (Current, 1, 1, font_height, height)
+			create scroller.make (Current, font_height.max (height) + 1, font_height.max (height) + 1, font_height, height)
 			process_messages
 		end
 

@@ -30,19 +30,18 @@ inherit
 
 	WIZARD_SPECIAL_TYPE_LIBRARIES
 
+	WIZARD_UNIQUE_IDENTIFIER_FACTORY
+		export
+			{NONE} all
+		end
+
 feature -- Basic Operations
 
 	add_c_type is
 			-- Add `c_type_name' to system's list.
 			-- Modify it to avoid name clashes in system.
 		do
-			from
-			until
-				not system_descriptor.c_types.has (name) and
-				not is_forbidden_c_word (name)
-			loop
-				name.append ("_2")
-			end
+			name := unique_identifier (name, agent has_c_type_or_is_forbidden)
 			system_descriptor.add_c_type (name.twin)
 		end
 
@@ -55,7 +54,7 @@ feature -- Basic Operations
 				create description.make (100)
 			end
 			if not description.is_empty then
-				description.append (Space)
+				description.append (" ")
 			end
 			description.append (a_type_lib.description)
 		end
@@ -66,10 +65,10 @@ feature -- Basic Operations
 			valid_descriptor: a_descriptor /= Void
 		do
 			a_descriptor.set_name (name)
-			if description /= Void and then not description.is_empty then
+			if description /= Void then
 				a_descriptor.set_description (description)
 			else
-				a_descriptor.set_description (No_description_available.twin)
+				a_descriptor.set_description ("")
 			end
 			a_descriptor.set_eiffel_class_name (eiffel_class_name)
 			a_descriptor.set_c_header_file_name (c_header_file_name)
@@ -84,6 +83,17 @@ feature -- Basic Operations
 		end
 
 feature {NONE} -- Implementation
+
+	has_c_type_or_is_forbidden (a_name: STRING): BOOLEAN is
+			-- Does `system_descriptor.c_types' have `a_name' or `is_forbidden_c_word'?
+		do
+			Result := is_forbidden_c_word (a_name)
+			if not Result then
+				Result := system_descriptor.c_types.has (a_name)
+			end
+		ensure
+			definition: Result = (system_descriptor.c_types.has (a_name) or is_forbidden_c_word (a_name))
+		end
 
 	name: STRING
 			-- Type name

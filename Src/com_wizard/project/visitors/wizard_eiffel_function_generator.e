@@ -37,51 +37,47 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	set_feature_result_type_and_arguments is
-			-- Set arguments
+			-- Set l_arguments
 		require
 			non_void_feature_writer: feature_writer /= Void
 			non_void_func_desc: func_desc /= Void
 			non_void_arguments: func_desc.arguments /= Void
 		local
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			an_argument: STRING
-			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			l_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			arguments := func_desc.arguments
-
+			l_arguments := func_desc.arguments
 			from
-				arguments.start
+				l_arguments.start
 			until
-				arguments.off
+				l_arguments.after
 			loop
-				visitor := arguments.item.type.visitor 
+				visitor := l_arguments.item.type.visitor 
+				if is_paramflag_fretval (l_arguments.item.flags) then
+					l_descriptor ?= l_arguments.item.type
 
-				if is_paramflag_fretval (arguments.item.flags) then
-					pointed_descriptor ?= arguments.item.type
-
-					if pointed_descriptor /= Void then
-						visitor := pointed_descriptor.pointed_data_type_descriptor.visitor 
-						add_enumeration_comments ("Result", pointed_descriptor.pointed_data_type_descriptor, visitor)
+					if l_descriptor /= Void then
+						visitor := l_descriptor.pointed_data_type_descriptor.visitor 
+						add_enumeration_comments ("Result", l_descriptor.pointed_data_type_descriptor, visitor)
 					else
-						visitor := arguments.item.type.visitor 
-						add_enumeration_comments ("Result", arguments.item.type, visitor)
+						visitor := l_arguments.item.type.visitor 
+						add_enumeration_comments ("Result", l_arguments.item.type, visitor)
 					end
 					feature_writer.set_result_type (visitor.eiffel_type)
 					
 				else
 					create an_argument.make (100)
-					an_argument.append (arguments.item.name)
-					an_argument.append (Colon)
-					an_argument.append (Space)
+					an_argument.append (l_arguments.item.name)
+					an_argument.append (": ")
 					an_argument.append (visitor.eiffel_type)
 					feature_writer.add_argument (an_argument)
 				end
 				visitor := Void
-				arguments.forth
+				l_arguments.forth
 			end
-
-			visitor := func_desc.return_type.visitor 
+			visitor := func_desc.return_type.visitor
 
 			-- Eiffel will not have result type if the result type is "void" or "HRESULT"
 			if not is_hresult (visitor.vt_type) and not is_error (visitor.vt_type) and not is_void (visitor.vt_type) then
@@ -91,127 +87,113 @@ feature {NONE} -- Implementation
 
 		end
 
-	enumeration_comment (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
-				a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	enumeration_comment (a_name: STRING; l_type: WIZARD_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Add coments for enumeration types.
 		local
 			a_user_defined_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
-			an_index: INTEGER
+			a_index: INTEGER
 			a_type_descriptor: WIZARD_TYPE_DESCRIPTOR
 		do
 			if a_visitor.is_enumeration then
-				a_user_defined_descriptor ?= a_type
-				if (a_user_defined_descriptor /= Void) then
-					an_index := a_user_defined_descriptor.type_descriptor_index
-					a_type_descriptor := a_user_defined_descriptor.library_descriptor.descriptors.item (an_index)
+				a_user_defined_descriptor ?= l_type
+				if a_user_defined_descriptor /= Void then
+					a_index := a_user_defined_descriptor.type_descriptor_index
+					a_type_descriptor := a_user_defined_descriptor.library_descriptor.descriptors.item (a_index)
 					create Result.make (100)
-		
 					Result.append ("See ")
 					Result.append (a_type_descriptor.eiffel_class_name)
-					Result.append (" for possible ")
-					Result.append (Back_quote)
+					Result.append (" for possible `")
 					Result.append (a_name)
-					Result.append (Single_quote)
-					Result.append (" values.")
+					Result.append ("' values.")
 				end
 			else
 				create Result.make (0)
 			end
 		end
 
-	add_enumeration_comments (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
+	add_enumeration_comments (a_name: STRING; l_type: WIZARD_DATA_TYPE_DESCRIPTOR;
 				a_visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- Add coments for enumeration types.
 		local
-			a_comment: STRING
+			l_comment: STRING
 		do
-			if (feature_writer.comment = Void) then
-				create a_comment.make (100)
+			if feature_writer.comment = Void then
+				create l_comment.make (100)
 			else
-				a_comment := feature_writer.comment
+				l_comment := feature_writer.comment.twin
 			end
-			if not a_comment.is_empty and a_visitor.is_enumeration then
-				a_comment.append ("%N%T%T%T-- ")
+			if not l_comment.is_empty and a_visitor.is_enumeration then
+				l_comment.append ("%N%T%T%T-- ")
 			end
-
-			a_comment.append (enumeration_comment (a_name, a_type, 	a_visitor))
-			if not a_comment.is_empty then
-				feature_writer.set_comment (a_comment)
+			l_comment.append (enumeration_comment (a_name, l_type, 	a_visitor))
+			if not l_comment.is_empty then
+				feature_writer.set_comment (l_comment)
 			end
 		end
 
 	add_feature_argument_comments is
 			-- Add comments
 		local
-			a_comment: STRING
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+			l_comment: STRING
+			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 		do
 			if (feature_writer.comment = Void) then
-				create a_comment.make (100)
+				create l_comment.make (100)
 			else
-				a_comment := feature_writer.comment
+				l_comment := feature_writer.comment.twin
 			end
-			arguments := func_desc.arguments
+			l_arguments := func_desc.arguments
 			from
-				arguments.start
+				l_arguments.start
 			until 
-				arguments.off
+				l_arguments.after
 			loop
-
-				if not is_paramflag_fretval (arguments.item.flags) then
-					if not a_comment.is_empty then 
-						a_comment.append (New_line_tab_tab_tab)
-						a_comment.append (Double_dash)
-						a_comment.append (Space)
+				if not is_paramflag_fretval (l_arguments.item.flags) then
+					if not l_comment.is_empty then 
+						l_comment.append ("%N%T%T%T-- ")
 					end
-
-					a_comment.append (Back_quote)
-					a_comment.append (arguments.item.name)
-					a_comment.append (Single_quote)
-					a_comment.append (Space)
-					a_comment.append (Open_bracket)
-					if is_paramflag_fin (arguments.item.flags) then
-						if is_paramflag_fout (arguments.item.flags) then
-							a_comment.append (Inout)
+					l_comment.append ("`")
+					l_comment.append (l_arguments.item.name)
+					l_comment.append ("' [")
+					if is_paramflag_fin (l_arguments.item.flags) then
+						if is_paramflag_fout (l_arguments.item.flags) then
+							l_comment.append ("in, out")
 						else
-							a_comment.append (In)
+							l_comment.append ("in")
 						end
 					else
-						a_comment.append (Out_keyword)
+						l_comment.append ("out")
 					end
-					a_comment.append (Close_bracket)
-					a_comment.append (Dot)
-					a_comment.append (Space)
-					a_comment.append (enumeration_comment (arguments.item.name, arguments.item.type, arguments.item.type.visitor))
-					a_comment.append (Space)
-					a_comment.append (arguments.item.description)
+					l_comment.append ("]. ")
+					l_comment.append (enumeration_comment (l_arguments.item.name, l_arguments.item.type, l_arguments.item.type.visitor))
+					l_comment.append (" ")
+					l_comment.append (l_arguments.item.description)
 				end
-				arguments.forth
+				l_arguments.forth
 			end
-			if not a_comment.is_empty then
-				feature_writer.set_comment (a_comment)
+			if not l_comment.is_empty then
+				feature_writer.set_comment (l_comment)
 			end
 		end
 
 	set_feature_assertions is
 			-- Set precondition.
 		local
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
-			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
-			a_type: WIZARD_DATA_TYPE_DESCRIPTOR
+			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
+			l_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			l_type: WIZARD_DATA_TYPE_DESCRIPTOR
 		do
-			arguments := func_desc.arguments
-
+			l_arguments := func_desc.arguments
 			from
-				arguments.start
+				l_arguments.start
 			until 
-				arguments.off
+				l_arguments.after
 			loop
 
-				if not is_paramflag_fretval (arguments.item.flags) then
-					generate_precondition (arguments.item.name, arguments.item.type, 
-						is_paramflag_fin (arguments.item.flags),
-						is_paramflag_fout (arguments.item.flags))
+				if not is_paramflag_fretval (l_arguments.item.flags) then
+					generate_precondition (l_arguments.item.name, l_arguments.item.type, 
+						is_paramflag_fin (l_arguments.item.flags),
+						is_paramflag_fout (l_arguments.item.flags))
 					if not assertions.is_empty then
 						from 
 							assertions.start
@@ -223,39 +205,36 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-
-				if is_paramflag_fout (arguments.item.flags) then
-					if is_paramflag_fretval  (arguments.item.flags) then
-						pointed_descriptor ?= arguments.item.type
-						if pointed_descriptor /= Void then
-							a_type := pointed_descriptor.pointed_data_type_descriptor
+				if is_paramflag_fout (l_arguments.item.flags) then
+					if is_paramflag_fretval  (l_arguments.item.flags) then
+						l_descriptor ?= l_arguments.item.type
+						if l_descriptor /= Void then
+							l_type := l_descriptor.pointed_data_type_descriptor
 						else
-							a_type := arguments.item.type
+							l_type := l_arguments.item.type
 						end
-
-						generate_postcondition (feature_writer.name, a_type, 
-							is_paramflag_fretval  (arguments.item.flags))
+						generate_postcondition (feature_writer.name, l_type, is_paramflag_fretval  (l_arguments.item.flags))
 					else
-						generate_postcondition (arguments.item.name, arguments.item.type, 
-							is_paramflag_fretval  (arguments.item.flags))
+						generate_postcondition (l_arguments.item.name, l_arguments.item.type, 
+							is_paramflag_fretval  (l_arguments.item.flags))
 					end
 					if not assertions.is_empty then
 						from 
 							assertions.start
 						until
-							assertions.off
+							assertions.after
 						loop
 							feature_writer.add_postcondition (assertions.item)
 							assertions.forth
 						end
 					end
 				end
-
-				arguments.forth
+				l_arguments.forth
 			end
 		end
 
 end -- class WIZARD_EIFFEL_FUNCTION_GENERATOR
+
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1988-1999 Interactive Software Engineering Inc.

@@ -256,30 +256,29 @@ feature -- Basic operations
 			valid_feature: Result.can_generate
 		end
 
-	add_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR; 
-				a_coclass: WIZARD_COCLASS_DESCRIPTOR;
-				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+	add_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR; a_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
 			-- Add source interface features to coclass.
 		require
-			non_void_interface: an_interface /= Void
-			non_void_interface_name: an_interface.name /= Void
-			valid_interface_name: not an_interface.name.is_empty
+			non_void_interface: a_interface /= Void
+			non_void_interface_name: a_interface.name /= Void
+			valid_interface_name: not a_interface.name.is_empty
 			non_void_coclass: a_coclass /= Void
-			non_void_writer: an_eiffel_writer /= Void
+			non_void_writer: a_eiffel_writer /= Void
 		local
-			function_generator: WIZARD_EIFFEL_SOURCE_SERVER_FUNCTION_GENERATOR
+			l_generator: WIZARD_EIFFEL_SOURCE_SERVER_FUNCTION_GENERATOR
+			l_function: WIZARD_FUNCTION_DESCRIPTOR
 		do
 			from
-				an_interface.functions_start
+				a_interface.functions_start
 			until
-				an_interface.functions_after
+				a_interface.functions_after
 			loop
-				create function_generator.generate 
-							(an_interface.functions_item, 
-							a_coclass, interface_table_name (an_interface))
-				an_eiffel_writer.add_feature 
-							(function_generator.feature_writer, Basic_operations)
-				an_interface.functions_forth
+				l_function := a_interface.functions_item
+				if not l_function.is_renaming_clause then
+					create l_generator.generate (l_function, a_coclass, interface_table_name (a_interface))
+					a_eiffel_writer.add_feature (l_generator.feature_writer, Basic_operations)
+				end
+				a_interface.functions_forth
 			end
 		end
 		

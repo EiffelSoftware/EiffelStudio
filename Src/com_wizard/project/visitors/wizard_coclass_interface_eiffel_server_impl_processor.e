@@ -18,22 +18,16 @@ create
 
 feature -- Basic operations
 
-	generate_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate interface features.
 		local
-			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
+			l_clause: WIZARD_WRITER_INHERIT_CLAUSE
 		do
-			if not has_descendants_in_coclass (coclass, an_interface) then
-				if 
-					an_interface.dispinterface and 
-					not an_interface.dual
-				then
-					dispatch_interface := True
-				end
-				create inherit_clause.make
-				inherit_clause.set_name (an_interface.eiffel_class_name)
-
-				generate_functions_and_properties (an_interface, inherit_clause)
+			if a_interface.is_implementing_coclass (coclass) then
+				dispatch_interface := a_interface.dispinterface and not a_interface.dual
+				create l_clause.make
+				l_clause.set_name (a_interface.eiffel_class_name)
+				generate_functions_and_properties (a_interface, l_clause)
 			end
 		end
 
@@ -42,14 +36,13 @@ feature -- Basic operations
 		do
 		end
 
-	generate_functions_and_properties (an_interface: WIZARD_INTERFACE_DESCRIPTOR;
-				an_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
+	generate_functions_and_properties (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
 			-- Generate functions and properties for interface.
 		local
-			interface_generator: WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_GENERATOR
+			l_generator: WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_GENERATOR
 		do
-			create interface_generator.make (coclass, an_interface, eiffel_writer, an_inherit_clause)
-			interface_generator.generate_functions_and_properties (an_interface)
+			create l_generator.make (coclass, a_interface, eiffel_writer, a_inherit_clause)
+			l_generator.generate_functions_and_properties (a_interface)
 		end
 
 end -- class WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_PROCESSOR

@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize data.
 		do
-			create {LINKED_LIST[WIZARD_WRITER_DEFINITION_ENTRY]} entries.make
+			create {ARRAYED_LIST [WIZARD_WRITER_DEFINITION_ENTRY]} entries.make (20)
 		end
 
 feature -- Access

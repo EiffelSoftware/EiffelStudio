@@ -18,42 +18,27 @@ feature -- Access
 	generate (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is
 			-- Generate C alias.
 		local
-			a_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
-			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
-			type_definition: STRING
-			included_name: STRING
+			l_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_definition, l_name: STRING
 		do
 			c_writer := Alias_c_writer
-			a_data_type_descriptor := alias_descriptor.type_descriptor
-
-			a_data_visitor := a_data_type_descriptor.visitor
-
-			included_name := a_data_visitor.c_header_file
-			if not (included_name = Void or else included_name.is_empty) then
-				c_writer.add_import (included_name.twin)
+			l_descriptor := alias_descriptor.type_descriptor
+			l_visitor := l_descriptor.visitor
+			l_name := l_visitor.c_definition_header_file_name
+			if l_name /= Void and then not l_name.is_empty then
+				c_writer.add_import (l_name)
 			end
-
-			create type_definition.make (100)
-			type_definition.append ("namespace ")
-			type_definition.append (alias_descriptor.namespace)
-			type_definition.append (Space)
-			type_definition.append (New_line)
-			type_definition.append (Open_curly_brace)
-			type_definition.append (New_line_tab)
-			
-			type_definition.append (Typedef)
-			type_definition.append (Space)
-			type_definition.append (a_data_visitor.c_type)
-			type_definition.append (Space)
-			type_definition.append (alias_descriptor.c_type_name)
-			type_definition.append (a_data_visitor.c_post_type)
-			type_definition.append (Semicolon)
-			type_definition.append (New_line)
-			
-			type_definition.append (Close_curly_brace)
-
-			c_writer.add_other (type_definition)
-
+			create l_definition.make (100)
+			l_definition.append ("namespace ")
+			l_definition.append (alias_descriptor.namespace)
+			l_definition.append ("%N{%N%Ttypedef ")
+			l_definition.append (l_visitor.c_type)
+			l_definition.append (" ")
+			l_definition.append (alias_descriptor.c_type_name)
+			l_definition.append (l_visitor.c_post_type)
+			l_definition.append (";%N}")
+			c_writer.add_other (l_definition)
 			c_writer := Void
 		end
 

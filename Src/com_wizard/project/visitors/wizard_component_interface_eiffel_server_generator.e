@@ -33,7 +33,9 @@ feature -- Basic operations
 		do
 			create a_func_generator.generate (component, a_function)
 			add_feature_rename (a_func_generator)
-			add_feature_to_class (a_func_generator.feature_writer)
+			if not a_function.is_renaming_clause then
+				add_feature_to_class (a_func_generator.feature_writer)
+			end
 		end
 
 end -- class WIZARD_COMPONENT_INTERFACE_EIFFEL_SERVER_GENERATOR

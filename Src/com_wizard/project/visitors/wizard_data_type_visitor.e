@@ -50,14 +50,14 @@ feature -- Basic Operations
 			if not is_interface and not is_coclass then
 				if need_generate_ce and not visited then
 					Generated_ce_mapper_writer.add_function (ce_function_writer, Public)
-					if c_header_file /= Void and then not c_header_file.is_empty then
-						Generated_ce_mapper_writer.add_import (c_header_file)
+					if c_definition_header_file_name /= Void and then not c_definition_header_file_name.is_empty then
+						Generated_ce_mapper_writer.add_import (c_definition_header_file_name)
 					end
 				end
 				if need_generate_ec and not visited then
 					Generated_ec_mapper_writer.add_function (ec_function_writer, Public)
-					if c_header_file /= Void and then not c_header_file.is_empty then
-						Generated_ec_mapper_writer.add_import (c_header_file)
+					if c_definition_header_file_name /= Void and then not c_definition_header_file_name.is_empty then
+						Generated_ec_mapper_writer.add_import (c_definition_header_file_name)
 					end
 				end
 				if need_generate_free_memory and not visited then
@@ -65,7 +65,6 @@ feature -- Basic Operations
 				end
 			end
 		end
-
 
 feature -- Access
 
@@ -201,9 +200,13 @@ feature -- Access
 	eiffel_type: STRING 
 			-- Eiffel class name.
 	
-	c_header_file: STRING
-			-- Name of C header file, in which data type is declared.
-			
+	c_definition_header_file_name: STRING
+			-- Name of C header file, in which data type is defined
+	
+	c_declaration_header_file_name: STRING
+			-- Name of C header file in which data type is declared if any
+			-- Note: this is only initialized for interfaces.
+
 	cecil_type: STRING
 			-- Name of Standard Eiffel type on C side.
 			-- Valid only if `is_basic_type' equals to true.
@@ -262,15 +265,24 @@ feature -- Access
 
 feature -- Element change
 
-	set_c_header_file (a_name: STRING) is
-			-- Set `c_header_file' with `a_name'.
+	set_c_declaration_header_file_name (a_name: STRING) is
+			-- Set `c_declaration_header_file_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
 		do
-			c_header_file := a_name.twin
+			c_declaration_header_file_name := a_name
 		ensure
-			valid_header_file: c_header_file /= Void and
-					not a_name.is_empty implies c_header_file.is_equal (a_name)
+			c_declaration_header_file_name_set: c_declaration_header_file_name = a_name
+		end
+
+	set_c_definition_header_file_name (a_name: STRING) is
+			-- Set `c_definition_header_file_name' with `a_name'.
+		require
+			non_void_name: a_name /= Void
+		do
+			c_definition_header_file_name := a_name
+		ensure
+			c_definition_header_file_name_set: c_definition_header_file_name = a_name
 		end
 
 	set_c_post_type (a_name: STRING) is

@@ -69,6 +69,12 @@ feature -- Access
 	pointed_pointed_data_type_visitor: WIZARD_DATA_TYPE_VISITOR
 			-- Pointed pointed data type visitor.
 
+	is_iunknown: BOOLEAN
+			-- Does this descriptor correspond to interface IUnknown?
+
+	is_idispatch: BOOLEAN
+			-- Does this descriptor correspond to interface IDispatch?
+	
 feature -- Basic Operations
 
 	set_name (a_name: STRING) is
@@ -86,14 +92,9 @@ feature -- Basic Operations
 		require
 			non_void_description: a_description /= Void
 		do
-			if not a_description.is_empty then
-				description := a_description.twin
-			else
-				description := No_description_available.twin
-			end
+			description := a_description.twin
 		ensure
-			non_void_description: description /= Void
-			valid_description: not a_description.is_empty
+			description_set: description.is_equal (a_description)
 		end
 
 	set_eiffel_class_name (a_name: STRING) is

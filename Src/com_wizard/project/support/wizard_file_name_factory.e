@@ -31,6 +31,14 @@ feature -- Access
 	last_created_header_file_name: STRING
 			-- Last created header file name (for c files)
 
+	last_created_declaration_header_file_name: STRING is
+			-- Last created declaration header file name (for cpp files)
+		require
+			non_void_last_created_header_file_name: last_created_header_file_name /= Void
+		do
+			Result := declaration_header_file_name (last_created_header_file_name)
+		end
+			
 feature -- Basic operations
 
 	create_file_name (a_generator: WIZARD_TYPE_GENERATOR; a_writer: WIZARD_WRITER) is
@@ -252,6 +260,26 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 		end
 
 feature {NONE} -- Implementation
+
+	declaration_header_file_name (a_name: STRING): STRING is
+			-- Declaration header file name from definition header file name `a_name'
+		require
+			non_void_name: a_name /= Void
+		local
+			i: INTEGER 
+		do
+			if not a_name.is_empty then
+				i := a_name.last_index_of ('\', a_name.count)
+				create Result.make (a_name.count + 5)
+				Result.append (a_name.substring (1, i))
+				Result.append ("decl_")
+				Result.append (a_name.substring (i + 1, a_name.count))
+			else
+				create Result.make_empty
+			end
+		ensure
+			non_void_declaration_header_file_name: Result /= Void
+		end
 
 	process_c_common is
 			-- Set `last_created_file_name' with file name for `a_generator'.

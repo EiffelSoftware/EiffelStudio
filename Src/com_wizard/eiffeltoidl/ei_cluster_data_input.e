@@ -14,20 +14,20 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize object.
 		do
-			create clusters.make
-			create include_path.make
-			create objects.make
+			create {ARRAYED_LIST [STRING]} clusters.make (20)
+			create {ARRAYED_LIST [STRING]} include_path.make (20)
+			create {ARRAYED_LIST [STRING]} objects.make (20)
 		end
 
 feature -- Access
 
-	clusters: LINKED_LIST[STRING]
+	clusters: LIST [STRING]
 			-- Clusters
 
-	include_path: LINKED_LIST[STRING]
+	include_path: LIST [STRING]
 			-- Include paths
 
-	objects: LINKED_LIST[STRING]
+	objects: LIST [STRING]
 			-- Objects
 
 feature -- Basic operations
@@ -39,9 +39,9 @@ feature -- Basic operations
 			file_exists: input_file.exists
 			valid_file: input_file.is_closed or input_file.is_open_read
 		local
-			raw_data: LINKED_LIST[STRING]
+			l_raw_data: ARRAYED_LIST [STRING]
 		do
-			create raw_data.make
+			create l_raw_data.make (20)
 			if input_file.is_closed then
 				input_file.open_read
 			end
@@ -61,7 +61,7 @@ feature -- Basic operations
 						loop
 							input_file.read_line
 							if not input_file.last_string.is_empty then
-								raw_data.extend (input_file.last_string.twin)
+								l_raw_data.extend (input_file.last_string.twin)
 							end
 						end
 					end
@@ -70,82 +70,82 @@ feature -- Basic operations
 
 			input_file.close
 
-			if not raw_data.is_empty then
-				process_raw_data (raw_data)
+			if not l_raw_data.is_empty then
+				process_raw_data (l_raw_data)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	process_raw_data (raw_data: LINKED_LIST[STRING]) is
+	process_raw_data (a_raw_data: LIST [STRING]) is
 			-- Process 'raw_data' into information.
 		require
-			non_void_list: raw_data /= Void
-			valid_data: not raw_data.is_empty
+			non_void_list: a_raw_data /= Void
+			valid_data: not a_raw_data.is_empty
 		local
 			str_buffer: STRING
 			is_object, is_include_path: BOOLEAN
 		do
 			create str_buffer.make (200)
 			from
-				raw_data.start
+				a_raw_data.start
 			until
-				raw_data.after or raw_data.item.substring_index ("external", 1) > 0
+				a_raw_data.after or a_raw_data.item.substring_index ("external", 1) > 0
 			loop
-				if raw_data.item.index_of (':', 1) > 0 and 
-							raw_data.item.index_of ('%"', 1) > raw_data.item.index_of (':', 1) then
+				if a_raw_data.item.index_of (':', 1) > 0 and 
+							a_raw_data.item.index_of ('%"', 1) > a_raw_data.item.index_of (':', 1) then
 					str_buffer.left_adjust
 					str_buffer.right_adjust
 					if not str_buffer.is_empty and not is_common_path (str_buffer) then
 						clusters.extend (str_buffer)
 					end
-					str_buffer := raw_data.item.twin
+					str_buffer := a_raw_data.item.twin
 					str_buffer.append ("%N")
-				elseif raw_data.item.substring_index ("--", 1) = 0 then
-					str_buffer.append (raw_data.item)
+				elseif a_raw_data.item.substring_index ("--", 1) = 0 then
+					str_buffer.append (a_raw_data.item)
 					str_buffer.append ("%N")
 				end
-				raw_data.forth
+				a_raw_data.forth
 			end
 
-			if not raw_data.after then
+			if not a_raw_data.after then
 				is_object := False
 				is_include_path := False
 
 				from
 				until
-					raw_data.after
+					a_raw_data.after
 				loop
-					if raw_data.item.substring_index ("include_path:", 1) > 0 then
-						raw_data.item.replace_substring_all ("include_path:", "")
-						raw_data.item.left_adjust
+					if a_raw_data.item.substring_index ("include_path:", 1) > 0 then
+						a_raw_data.item.replace_substring_all ("include_path:", "")
+						a_raw_data.item.left_adjust
 
 						is_include_path := True
 						is_object := False
-					elseif raw_data.item.substring_index ("object:", 1) > 0 then
-						raw_data.item.replace_substring_all ("object:", "")
-						raw_data.item.left_adjust
+					elseif a_raw_data.item.substring_index ("object:", 1) > 0 then
+						a_raw_data.item.replace_substring_all ("object:", "")
+						a_raw_data.item.left_adjust
 
 						is_object := True
 						is_include_path := False
 					end
 
-					raw_data.item.left_adjust
-					raw_data.item.right_adjust
+					a_raw_data.item.left_adjust
+					a_raw_data.item.right_adjust
 
-					if raw_data.item.item (raw_data.item.count) = ';' then
-						raw_data.item.put (',', raw_data.item.count)
+					if a_raw_data.item.item (a_raw_data.item.count) = ';' then
+						a_raw_data.item.put (',', a_raw_data.item.count)
 					end
-					if raw_data.item.item (raw_data.item.count) /= ',' then
-						raw_data.item.append_character (',')
+					if a_raw_data.item.item (a_raw_data.item.count) /= ',' then
+						a_raw_data.item.append_character (',')
 					end
 
-					if is_object and not is_common_path (raw_data.item) and raw_data.item.index_of ('%"', 1) > 0 then
-						objects.extend (raw_data.item)
-					elseif is_include_path and not is_common_path (raw_data.item) and raw_data.item.index_of ('%"', 1) > 0 then
-						include_path.extend (raw_data.item)
+					if is_object and not is_common_path (a_raw_data.item) and a_raw_data.item.index_of ('%"', 1) > 0 then
+						objects.extend (a_raw_data.item)
+					elseif is_include_path and not is_common_path (a_raw_data.item) and a_raw_data.item.index_of ('%"', 1) > 0 then
+						include_path.extend (a_raw_data.item)
 					end
-					raw_data.forth
+					a_raw_data.forth
 				end
 			end
 		end

@@ -20,88 +20,86 @@ feature -- Access
 	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate c writer.
 		local
-			func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR
-			a_header_file: STRING
+			l_func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR
+			l_header_file: STRING
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
+			l_functions: SORTED_TWO_WAY_LIST [WIZARD_FUNCTION_DESCRIPTOR]
+			l_function: WIZARD_FUNCTION_DESCRIPTOR
+			l_disp_functions: LIST [WIZARD_FUNCTION_DESCRIPTOR]
+			l_properties: LIST [WIZARD_PROPERTY_DESCRIPTOR]
 		do
 			create cpp_class_writer.make
 			cpp_class_writer.set_abstract
-			create func_generator
+			create l_func_generator
 
 			cpp_class_writer.set_name (a_descriptor.c_type_name)
 			cpp_class_writer.set_namespace (a_descriptor.namespace)
 			cpp_class_writer.set_header (a_descriptor.description)
-			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
+			cpp_class_writer.set_declaration_header_file_name (a_descriptor.c_declaration_header_file_name)
+			cpp_class_writer.set_definition_header_file_name (a_descriptor.c_definition_header_file_name)
 			cpp_class_writer.add_other_source (iid_definition (a_descriptor.name, a_descriptor.guid))
 
-			if a_descriptor.inherited_interface /= Void then
-				cpp_class_writer.add_parent (a_descriptor.inherited_interface.c_type_name, 
-						a_descriptor.inherited_interface.namespace, Public)
-				if 
-					a_descriptor.inherited_interface.c_header_file_name /= Void and then
-					not a_descriptor.inherited_interface.c_header_file_name.is_empty
-				then
-					cpp_class_writer.add_import (a_descriptor.inherited_interface.c_header_file_name)
+			l_interface := a_descriptor.inherited_interface
+			if l_interface /= Void then
+				cpp_class_writer.add_parent (l_interface.c_type_name, l_interface.namespace, Public)
+				if l_interface.c_definition_header_file_name /= Void and then not l_interface.c_definition_header_file_name.is_empty then
+					cpp_class_writer.add_import (l_interface.c_definition_header_file_name)
 				end
 			end
 
-			if a_descriptor.vtable_functions /= Void and then not a_descriptor.vtable_functions.is_empty then
-				a_descriptor.vtable_functions.sort
-				
+			l_functions := a_descriptor.vtable_functions
+			if l_functions /= Void and then not l_functions.is_empty then
+				l_functions.sort
 				from
-					a_descriptor.vtable_functions.start
+					l_functions.start
 				until
-					a_descriptor.vtable_functions.off
+					l_functions.after
 				loop
-					if a_descriptor.vtable_functions.item.func_kind = func_dispatch then
-						func_generator.generate_dual (a_descriptor.vtable_functions.item)
-					else
-						func_generator.generate (a_descriptor.vtable_functions.item)
+					l_function := l_functions.item
+					if not l_function.is_renaming_clause then
+						if l_function.func_kind = func_dispatch then
+							l_func_generator.generate_dual (l_function)
+						else
+							l_func_generator.generate (l_function)
+						end
+						cpp_class_writer.add_function (l_func_generator.ccom_feature_writer, Public)
+						add_type_definitions_and_include_files (l_func_generator)
 					end
-					
-					cpp_class_writer.add_function (func_generator.ccom_feature_writer, Public)
-					
-					add_type_definitions_and_include_files (func_generator)
-
-					a_descriptor.vtable_functions.forth
+					l_functions.forth
 				end
 			end
 
-			if a_descriptor.dispatch_functions /= Void and then not a_descriptor.dispatch_functions.is_empty then
-				
+			l_disp_functions := a_descriptor.dispatch_functions
+			if l_disp_functions /= Void and then not l_disp_functions.is_empty then
 				from
-					a_descriptor.dispatch_functions.start
+					l_disp_functions.start
 				until
-					a_descriptor.dispatch_functions.off
+					l_disp_functions.off
 				loop
-					func_generator.generate_dual (a_descriptor.dispatch_functions.item)
-					add_type_definitions_and_include_files (func_generator)
-					
-					a_descriptor.dispatch_functions.forth
+					l_func_generator.generate_dual (l_disp_functions.item)
+					add_type_definitions_and_include_files (l_func_generator)
+					l_disp_functions.forth
 				end
 			end
 			
-			if a_descriptor.properties /= Void and then not a_descriptor.properties.is_empty then
-			
+			l_properties := a_descriptor.properties
+			if l_properties /= Void and then not l_properties.is_empty then
 				from
-					a_descriptor.properties.start
+					l_properties.start
 				until
-					a_descriptor.properties.off
+					l_properties.off
 				loop
-					a_header_file := a_descriptor.properties.item.data_type.visitor.c_header_file
-					if 
-						a_header_file /= Void and then
-						not a_header_file.is_empty 
-					then
-						add_include_file (a_header_file)
+					l_header_file := l_properties.item.data_type.visitor.c_definition_header_file_name
+					if l_header_file /= Void and then not l_header_file.is_empty then
+						add_include_file (l_header_file)
 					end
-					
-					a_descriptor.properties.forth
+					l_properties.forth
 				end
 			end
 
 			Shared_file_name_factory.create_file_name (Current, cpp_class_writer)
-			cpp_class_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-
+			cpp_class_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
+			cpp_class_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
 			cpp_class_writer := Void
 		end
 
@@ -135,41 +133,39 @@ feature {NONE} -- Implementation
 			-- Add neccessary type definitions and include files.
 		require
 			non_void_function_generator: func_generator /= Void
+		local
+			l_header_files, l_declarations: LIST [STRING]
+			l_header_file, l_declaration: STRING
 		do
-			if 
-				func_generator.c_header_files /= Void and then 
-				not func_generator.c_header_files.is_empty
-			then
+			l_header_files := func_generator.c_header_files
+			if l_header_files /= Void then
 				from
-					func_generator.c_header_files.start
+					l_header_files.start
 				until
-					func_generator.c_header_files.off
+					l_header_files.after
 				loop
-					if func_generator.c_header_files.item /= Void and then not func_generator.c_header_files.item.is_empty then
-						add_include_file (func_generator.c_header_files.item)
+					l_header_file := l_header_files.item
+					if l_header_file /= Void and then not l_header_file.is_empty then
+						add_include_file (l_header_file)
 					end
-					func_generator.c_header_files.forth
+					l_header_files.forth
 				end
 			end
 
-			if 
-				func_generator.forward_declarations /= Void and then 
-				not func_generator.forward_declarations.is_empty
-			then
+			l_declarations := func_generator.forward_declarations
+			if l_declarations /= Void then
 				from
-					func_generator.forward_declarations.start
+					l_declarations.start
 				until
-					func_generator.forward_declarations.off
+					l_declarations.after
 				loop
-					if 
-						func_generator.forward_declarations.item /= Void and then 
-						not func_generator.forward_declarations.item.is_empty 
-					then
-						if cpp_class_writer.others.occurrences (func_generator.forward_declarations.item) = 0 then
-							cpp_class_writer.add_other (func_generator.forward_declarations.item)
+					l_declaration := l_declarations.item
+					if l_declaration /= Void and then not l_declaration.is_empty then
+						if cpp_class_writer.others.occurrences (l_declaration) = 0 then
+							cpp_class_writer.add_other (l_declaration)
 						end
 					end
-					func_generator.forward_declarations.forth
+					l_declarations.forth
 				end
 			end
 		end
@@ -180,11 +176,11 @@ feature {NONE} -- Implementation
 			non_void_file: a_file /= Void
 			valid_file: not a_file.is_empty
 		do
-			if cpp_class_writer.import_files.occurrences (a_file) = 0 then
+			if not cpp_class_writer.import_files.has (a_file) then
 				cpp_class_writer.add_import (a_file)
 			end
 		ensure
-			added: cpp_class_writer.import_files.occurrences (a_file) > 0
+			added: cpp_class_writer.import_files.has (a_file)
 		end
 		
 end -- class WIZARD_INTERFACE_C_GENERATOR

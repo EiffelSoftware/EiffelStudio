@@ -36,13 +36,15 @@ feature -- Basic operations
 		local
 			function_generator: WIZARD_CPP_SERVER_FUNCTION_GENERATOR
 		do
-			if a_function.func_kind = Func_dispatch then
-				create {WIZARD_CPP_DISPATCH_SERVER_FUNCTION_GENERATOR} function_generator
-			else
-				create function_generator
+			if not a_function.is_renaming_clause then
+				if a_function.func_kind = Func_dispatch then
+					create {WIZARD_CPP_DISPATCH_SERVER_FUNCTION_GENERATOR} function_generator
+				else
+					create function_generator
+				end
+				function_generator.generate (component, a_function)
+				cpp_class_writer.add_function (function_generator.ccom_feature_writer, Public)
 			end
-			function_generator.generate (component, a_function)
-			cpp_class_writer.add_function (function_generator.ccom_feature_writer, Public)
 		end
 
 end -- class WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR

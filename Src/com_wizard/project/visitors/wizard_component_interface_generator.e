@@ -33,38 +33,48 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate_functions_and_properties (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+	generate_functions_and_properties (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate functions and properties.
 		require
-			non_void_interface: an_interface /= Void
+			non_void_interface: a_interface /= Void
+		local
+			l_properties: LIST [WIZARD_PROPERTY_DESCRIPTOR]
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
+			l_already_generated: BOOLEAN
+			l_coclass: WIZARD_COCLASS_DESCRIPTOR
 		do
-			if 
-				an_interface.inherited_interface /= Void and then 
-				not an_interface.inherited_interface.c_type_name.is_equal (Iunknown_type) and then
-				not an_interface.inherited_interface.c_type_name.is_equal (Idispatch_type) 
-			then
-				generate_functions_and_properties (an_interface.inherited_interface)
+			l_interface := a_interface.inherited_interface
+			if l_interface /= Void then
+				l_coclass ?= component
+				if l_coclass /= Void then
+					l_already_generated := l_interface.is_implementing_coclass (l_coclass)
+				end
+			
+				if not l_already_generated and not l_interface.is_iunknown and not l_interface.is_idispatch then
+					generate_functions_and_properties (l_interface)
+				end
 			end		
 
-			if not an_interface.properties.is_empty then
+			l_properties := a_interface.properties
+			if not l_properties.is_empty then
 				from
-					an_interface.properties.start
+					l_properties.start
 				until
-					an_interface.properties.after
+					l_properties.after
 				loop
-					process_property (an_interface.properties.item)
-					an_interface.properties.forth
+					process_property (l_properties.item)
+					l_properties.forth
 				end
 			end
 
-			if not an_interface.functions_empty then
+			if not a_interface.functions_empty then
 				from
-					an_interface.functions_start
+					a_interface.functions_start
 				until
-					an_interface.functions_after
+					a_interface.functions_after
 				loop
-					process_function (an_interface.functions_item)
-					an_interface.functions_forth
+					process_function (a_interface.functions_item)
+					a_interface.functions_forth
 				end
 			end
 		end

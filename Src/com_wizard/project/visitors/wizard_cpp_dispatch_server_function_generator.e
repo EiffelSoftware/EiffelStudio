@@ -26,7 +26,7 @@ feature -- Basic operation
 			coclass_name := a_component.name
 
 			create ccom_feature_writer.make
-			create c_header_files.make
+			create {ARRAYED_LIST [STRING]} c_header_files.make (20)
 
 			ccom_feature_writer.set_name (func_desc.name)
 			ccom_feature_writer.set_comment (func_desc.description)

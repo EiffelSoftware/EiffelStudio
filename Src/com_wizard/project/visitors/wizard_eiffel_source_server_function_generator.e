@@ -15,14 +15,17 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_UNIQUE_IDENTIFIER_FACTORY
+		export
+			{NONE} all
+		end
+
 create
 	generate
 
 feature -- Initialization
 
-	generate (a_function: WIZARD_FUNCTION_DESCRIPTOR; 
-				a_coclass: WIZARD_COCLASS_DESCRIPTOR;
-				table_name: STRING) is
+	generate (a_function: WIZARD_FUNCTION_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR; table_name: STRING) is
 			-- Initialize
 		require
 			non_void_function: a_function /= Void
@@ -39,13 +42,10 @@ feature -- Initialization
 			create name.make (100)
 			name.append ("event_")
 			name.append (a_function.interface_eiffel_name)
-			from
-			until 
-				not a_coclass.feature_eiffel_names.has (name) 
-			loop
-				name.append (One)
+			name := unique_identifier (name, agent (a_coclass.feature_eiffel_names).has (?))
+			if not a_coclass.feature_eiffel_names.has (name) then
+				a_coclass.feature_eiffel_names.put (Void, name)
 			end
-			a_coclass.feature_eiffel_names.force (name)
 			feature_writer.set_name (name)
 			
 			create comment.make (100)

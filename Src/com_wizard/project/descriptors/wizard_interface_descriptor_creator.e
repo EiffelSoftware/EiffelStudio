@@ -42,73 +42,72 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_GUIDS
+		export
+			{NONE} all
+		end
+
+	WIZARD_FILE_NAME_FACTORY
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	create_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_INTERFACE_DESCRIPTOR is
 			-- Create descriptor.
 		require
-			valid_documentation: a_documentation /= Void and then
-				a_documentation.name /= Void
+			valid_documentation: a_documentation /= Void and then a_documentation.name /= Void
 			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_interface
 						or a_type_info.type_attr.type_kind = Tkind_dispatch
 		local
-			a_handle: INTEGER
-			tmp_type_info: ECOM_TYPE_INFO
-			dispinterface_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR
+			l_handle: INTEGER
+			l_type_info: ECOM_TYPE_INFO
+			l_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR
 		do
 			name := a_documentation.name.twin
-			if name /= Void then
-				add_c_type
-			end
+			add_c_type
 
 			description := a_documentation.doc_string.twin
 			type_kind := a_type_info.type_attr.type_kind
-
-			if type_kind = Tkind_dispatch then
-				dispinterface := True
-			end
+			dispinterface := type_kind = Tkind_dispatch
 			flags := a_type_info.type_attr.flags
-			if is_typeflag_fdual (flags) then
-				dual := True
-			end
+			dual := is_typeflag_fdual (flags)
 
 			if dual and dispinterface then
-				a_handle := a_type_info.ref_type_of_impl_type (-1)
-				tmp_type_info := a_type_info.type_info (a_handle)
-				type_kind := tmp_type_info.type_attr.type_kind
+	
+			-- From MSDN: 
+			-- If the TKIND_DISPATCH type description is for a dual interface,
+			-- the TKIND_INTERFACE type description can be obtained by calling
+			-- GetRefTypeOfImplType with an index of –1, and by passing the
+			-- returned pRefType handle to GetRefTypeInfo to retrieve the type
+			-- information.
+
+				l_handle := a_type_info.ref_type_of_impl_type (-1)
+				l_type_info := a_type_info.type_info (l_handle)
+				type_kind := l_type_info.type_attr.type_kind
 				dispinterface := False
-				create dispinterface_creator
-				dispinterface_descriptor := dispinterface_creator.create_dispinterface_descriptor (a_documentation, a_type_info)
+				create l_creator
+				dispinterface_descriptor := l_creator.create_dispinterface_descriptor (a_documentation, a_type_info)
 			else
-				check
-					not_dual: not dual
-				end
-				tmp_type_info := a_type_info
+				l_type_info := a_type_info
 			end
-			Result := interface_descriptor (tmp_type_info)
+			Result := interface_descriptor (l_type_info)
 		end
 
 	create_dispinterface_descriptor  (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_INTERFACE_DESCRIPTOR is
 			-- Create descriptor.
 		require
-			valid_documentation: a_documentation /= Void and then
-				a_documentation.name /= Void
+			valid_documentation: a_documentation /= Void and then a_documentation.name /= Void
 			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_interface
 						or a_type_info.type_attr.type_kind = Tkind_dispatch
 		do
 			name := a_documentation.name.twin
-
 			description := a_documentation.doc_string.twin
 			type_kind := a_type_info.type_attr.type_kind
-
-			if type_kind = Tkind_dispatch then
-				dispinterface := True
-			end
+			dispinterface := type_kind = Tkind_dispatch
 			flags := a_type_info.type_attr.flags
-			if is_typeflag_fdual (flags) then
-				dual := True
-			end
-
+			dual := is_typeflag_fdual (flags)
 			Result := interface_descriptor (a_type_info)
 		ensure
 			non_void_dispinterface: Result /= Void
@@ -120,16 +119,16 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_interface
 						or a_type_info.type_attr.type_kind = Tkind_dispatch
 		local
-			tmp_type_attr: ECOM_TYPE_ATTR
-			tmp_type_lib: ECOM_TYPE_LIB
-			tmp_guid: ECOM_GUID
+			l_type_attr: ECOM_TYPE_ATTR
+			l_type_lib: ECOM_TYPE_LIB
+			l_guid: ECOM_GUID
 		do
-			tmp_type_lib := a_type_info.containing_type_lib
-			tmp_guid := tmp_type_lib.library_attributes.guid	
-			tmp_type_attr := a_type_info.type_attr
-			create guid.make_from_guid (tmp_type_attr.guid)
+			l_type_lib := a_type_info.containing_type_lib
+			l_guid := l_type_lib.library_attributes.guid	
+			l_type_attr := a_type_info.type_attr
+			create guid.make_from_guid (l_type_attr.guid)
 
-			type_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
+			type_library_descriptor := system_descriptor.library_descriptor (l_guid)
 			add_type_lib_description (type_library_descriptor)
 
 			if name = Void or else name.is_empty then
@@ -140,8 +139,7 @@ feature -- Basic operations
 				name.append_integer (a_type_info.index_in_type_lib + 1)
 			end
 
-
-			if prefixed_libraries.has (tmp_guid) then
+			if prefixed_libraries.has (l_guid) then
 				name.prepend (Underscore)
 				name.prepend (type_library_descriptor.name)
 			end
@@ -150,10 +148,7 @@ feature -- Basic operations
 			c_type_name.append (name)
 			system_descriptor.add_c_type (name)
 
-			if 
-				not name.is_equal (Iunknown_type) and
-				not name.is_equal (Idispatch_type)
-			then
+			if not name.is_equal (Iunknown_type) and not name.is_equal (Idispatch_type) then
 				namespace := namespace_name (type_library_descriptor.name)
 				eiffel_class_name := name_for_class (name, type_kind, False)
 
@@ -167,8 +162,8 @@ feature -- Basic operations
 				create namespace.make (0)
 			end
 
-			lcid := tmp_type_attr.lcid
-			vtbl_size := tmp_type_attr.vtbl_size
+			lcid := l_type_attr.lcid
+			vtbl_size := l_type_attr.vtbl_size
 
 			if a_type_info.type_attr.count_implemented_types > 0 then
 				create_inherited_interface (a_type_info)
@@ -177,19 +172,11 @@ feature -- Basic operations
 			create feature_names.make
 			create_function_descriptors (a_type_info)
 			create_property_descriptors (a_type_info)
-			if 
-				inherited_interface /= Void or 
-				inherited_interface_descriptor /= Void or 
-				c_type_name.is_equal (Iunknown_type) 
-			then
-				create Result.make (Current)
-			end
+			create Result.make (Current)
 		ensure then
 			valid_guid: guid /= Void
-			valid_functions: a_type_info.type_attr.count_func > 0 implies
-					vtable_functions /= Void and dispatch_functions /= Void
-			valid_properties: a_type_info.type_attr.count_variables > 0 implies
-					properties /= Void 
+			valid_functions: a_type_info.type_attr.count_func > 0 implies function_table /= Void
+			valid_properties: a_type_info.type_attr.count_variables > 0 implies properties /= Void 
 			valid_interface: a_type_info.type_attr.count_implemented_types > 0 implies
 						inherited_interface /= Void or inherited_interface_descriptor /= Void
 		end
@@ -200,19 +187,20 @@ feature -- Basic operations
 				valid_descriptor: a_descriptor /= Void
 			do
 				set_common_fields (a_descriptor)
-				a_descriptor.set_vtable_functions (vtable_functions)
-				a_descriptor.set_dispatch_functions (dispatch_functions)
+				a_descriptor.set_c_declaration_header_file_name (declaration_header_file_name (c_header_file_name))
 				a_descriptor.set_function_table (function_table)
 				a_descriptor.set_properties (properties)
 				a_descriptor.set_inherited_interface (inherited_interface)
 				a_descriptor.set_inherited_interface_descriptor (inherited_interface_descriptor)
 				a_descriptor.set_dispinterface_descriptor (dispinterface_descriptor)
-				a_descriptor.update_dual (dual)
-				a_descriptor.update_dispinterface (dispinterface)
+				a_descriptor.set_dual (dual)
+				a_descriptor.set_dispinterface (dispinterface)
 				a_descriptor.set_lcid (lcid)
 				a_descriptor.set_vtbl_size (vtbl_size)
 				a_descriptor.set_flags (flags)
 				a_descriptor.set_type_library (type_library_descriptor)
+				a_descriptor.set_is_iunknown (guid.is_equal (Iunknown_guid))
+				a_descriptor.set_is_idispatch (guid.is_equal (Idispatch_guid))
 			end
 
 	create_function_descriptors (a_type_info: ECOM_TYPE_INFO) is
@@ -220,71 +208,63 @@ feature -- Basic operations
 		require
 			valid_type_info: a_type_info /= Void
 		local
-			i, count: INTEGER
-			a_function_descriptor: WIZARD_FUNCTION_DESCRIPTOR
-			a_func_desc: ECOM_FUNC_DESC
-			function_descriptor_factory: WIZARD_FUNCTION_DESCRIPTOR_FACTORY
+			i, l_count: INTEGER
+			l_descriptor: WIZARD_FUNCTION_DESCRIPTOR
+			l_desc: ECOM_FUNC_DESC
+			l_factory: WIZARD_FUNCTION_DESCRIPTOR_FACTORY
+			l_name: STRING
 		do
-			count := a_type_info.type_attr.count_func
+			l_count := a_type_info.type_attr.count_func
 			from
-				i := 0
-				create vtable_functions.make
-				create dispatch_functions.make
-				create function_table.make
+				create {ARRAYED_LIST [WIZARD_FUNCTION_DESCRIPTOR]} function_table.make (l_count)
 			variant
-				count - i
+				l_count - i
 			until
-				i = count
+				i = l_count
 			loop
-				a_func_desc := a_type_info.func_desc (i)
-				create function_descriptor_factory
-				a_function_descriptor := function_descriptor_factory.create_descriptor (a_type_info, a_func_desc)
-
-				if feature_names.has (a_function_descriptor.name) then
-					a_function_descriptor.name.append_integer (counter)
-				end
-				feature_names.extend (a_function_descriptor.name)
-				function_table.force (a_function_descriptor)
+				l_desc := a_type_info.func_desc (i)
+				create l_factory
+				l_descriptor := l_factory.create_descriptor (a_type_info, l_desc)
+				l_name := unique_identifier (l_descriptor.name, agent feature_names.has)
+				l_descriptor.set_name (l_name)
+				feature_names.extend (l_name)
+				function_table.force (l_descriptor)
 				i := i + 1
 			end
 		ensure
-			valid_functions: a_type_info.type_attr.count_func > 0 implies
-					vtable_functions /= Void and 
-					dispatch_functions /= Void and 
-					function_table /= Void
+			non_void_function_table: function_table /= Void
+			valid_function_table: function_table.count = a_type_info.type_attr.count_func
 		end
-
 
 	create_property_descriptors (a_type_info: ECOM_TYPE_INFO) is
 			-- Create property descriptors
 		require
 			valid_type_info: a_type_info /= Void
 		local
-			i, count: INTEGER
-			a_property_descriptor: WIZARD_PROPERTY_DESCRIPTOR
-			property_descriptor_factory: WIZARD_PROPERTY_DESCRIPTOR_FACTORY
+			i, l_count: INTEGER
+			l_descriptor: WIZARD_PROPERTY_DESCRIPTOR
+			l_factory: WIZARD_PROPERTY_DESCRIPTOR_FACTORY
+			l_name: STRING
 		do
-			count := a_type_info.type_attr.count_variables
+			l_count := a_type_info.type_attr.count_variables
 			from
 				i := 0
-				create properties.make
+				create {ARRAYED_LIST [WIZARD_PROPERTY_DESCRIPTOR]} properties.make (20)
 			variant
-				count - i
+				l_count - i
 			until
-				i = count
+				i = l_count
 			loop
-				create property_descriptor_factory
-				a_property_descriptor := property_descriptor_factory.create_descriptor (a_type_info, i)
-				if feature_names.has (a_property_descriptor.name) then
-					a_property_descriptor.name.append_integer (counter)
-				end
-				feature_names.extend (a_property_descriptor.name)
-				properties.force (a_property_descriptor)
+				create l_factory
+				l_descriptor := l_factory.create_descriptor (a_type_info, i)
+				l_name := unique_identifier (l_descriptor.name, agent feature_names.has)
+				l_descriptor.set_name (l_name)
+				feature_names.extend (l_name)
+				properties.force (l_descriptor)
 				i := i + 1
 			end
 		ensure
-			valid_properties: a_type_info.type_attr.count_variables > 0 implies
-					properties /= Void 
+			valid_properties: a_type_info.type_attr.count_variables > 0 implies properties /= Void 
 		end
 
 	create_inherited_interface (a_type_info: ECOM_TYPE_INFO) is
@@ -293,54 +273,43 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= void
 			have_inherited_interface: a_type_info.type_attr.count_implemented_types > 0
 		local
-			a_handle: INTEGER
-			tmp_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
-			tmp_type_info: ECOM_TYPE_INFO
-			tmp_descriptor_index: INTEGER
-			tmp_type_lib: ECOM_TYPE_LIB
-			tmp_guid: ECOM_GUID
-			tmp_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			l_handle: INTEGER
+			l_type_info: ECOM_TYPE_INFO
+			l_index: INTEGER
+			l_type_lib: ECOM_TYPE_LIB
+			l_guid: ECOM_GUID
+			l_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			l_type: WIZARD_TYPE_DESCRIPTOR
 		do
-			a_handle := a_type_info.ref_type_of_impl_type (0)
-			tmp_type_info := a_type_info.type_info (a_handle)
+			l_handle := a_type_info.ref_type_of_impl_type (0)
+			l_type_info := a_type_info.type_info (l_handle)
 
-			tmp_descriptor_index := tmp_type_info.index_in_type_lib + 1
-			tmp_type_lib := tmp_type_info.containing_type_lib
-			tmp_guid := tmp_type_lib.library_attributes.guid
-			if system_descriptor.has_library (tmp_guid) then
-				tmp_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
+			l_index := l_type_info.index_in_type_lib + 1
+			l_type_lib := l_type_info.containing_type_lib
+			l_guid := l_type_lib.library_attributes.guid
+			if system_descriptor.has_library (l_guid) then
+				l_library_descriptor := system_descriptor.library_descriptor (l_guid)
 			else
-				create tmp_library_descriptor.make (tmp_type_lib)
-				system_descriptor.add_library_descriptor (tmp_library_descriptor)
-				tmp_library_descriptor.generate
+				create l_library_descriptor.make (l_type_lib)
+				system_descriptor.add_library_descriptor (l_library_descriptor)
+				l_library_descriptor.generate
 			end
-			if tmp_library_descriptor.descriptors.item (tmp_descriptor_index) = void then
-				create inherited_interface_descriptor.make (tmp_library_descriptor, tmp_descriptor_index)
-				
+			l_type := l_library_descriptor.descriptors.item (l_index)
+			if l_type = Void then
+				create inherited_interface_descriptor.make (l_library_descriptor, l_index)		
 			else
-				tmp_interface_descriptor ?= tmp_library_descriptor.descriptors.item (tmp_descriptor_index)
-				if tmp_interface_descriptor = void then
-					raise ("Type descriptor is not inteface descriptor")
-				end
-			end;
-			inherited_interface := tmp_interface_descriptor
+				inherited_interface ?= l_type
+			end
 		ensure
 			valid_interfaces: inherited_interface /= Void or inherited_interface_descriptor /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	vtable_functions: SORTED_TWO_WAY_LIST[WIZARD_FUNCTION_DESCRIPTOR]
-			-- Descriptions of interface's functions
+	function_table: LIST [WIZARD_FUNCTION_DESCRIPTOR]
+			-- Table of interface functions
 
-	dispatch_functions: LINKED_LIST [WIZARD_FUNCTION_DESCRIPTOR]
-			-- Descriptions of interface's dispatch functions.
-
-	function_table: LINKED_LIST [WIZARD_FUNCTION_DESCRIPTOR]
-			-- Table of interface functions.
-			-- Needed for fast search.
-
-	properties: LINKED_LIST [WIZARD_PROPERTY_DESCRIPTOR]
+	properties: LIST [WIZARD_PROPERTY_DESCRIPTOR]
 			-- Descriptions of interface's properties
 
 	inherited_interface: WIZARD_INTERFACE_DESCRIPTOR

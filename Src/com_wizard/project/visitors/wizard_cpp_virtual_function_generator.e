@@ -15,10 +15,10 @@ inherit
 
 feature -- Access
 
-	forward_declarations: LINKED_LIST [STRING]
+	forward_declarations: LIST [STRING]
 			-- Forward type declarations.
 
-	c_header_files_after: LINKED_LIST [STRING]
+	c_header_files_after: LIST [STRING]
 
 feature -- Basic operations
 
@@ -27,32 +27,27 @@ feature -- Basic operations
 		require
 			non_void_descriptor: a_descriptor /= Void
 		local
-			signature: STRING
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_header_file: STRING
 		do
 			func_desc := a_descriptor
 
 			create ccom_feature_writer.make
-			create c_header_files.make
-			create forward_declarations.make
-			create c_header_files_after.make
+			create {ARRAYED_LIST [STRING]} c_header_files.make (20)
+			create {ARRAYED_LIST [STRING]} forward_declarations.make (20)
+			create {ARRAYED_LIST [STRING]} c_header_files_after.make (20)
 			ccom_feature_writer.set_pure_virtual
-
-			create signature.make (1000)
-
 			ccom_feature_writer.set_name (func_desc.name)
-			ccom_feature_writer.set_comment(func_desc.description)
+			ccom_feature_writer.set_comment (func_desc.description)
 
-			visitor := func_desc.return_type.visitor 
-
+			l_visitor := func_desc.return_type.visitor 
 			set_vtable_function_return_type
-
-			if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
-				c_header_files.force (visitor.c_header_file)
+			l_header_file := l_visitor.c_declaration_header_file_name
+			if l_header_file /= Void and then not l_header_file.is_empty then
+				c_header_files.force (l_header_file)
 			end
 
-			ccom_feature_writer.set_signature(vtable_signature)
-
+			ccom_feature_writer.set_signature (vtable_signature)
 		ensure
 			ccom_feature_writer_exist: ccom_feature_writer /= Void
 			function_descriptor_exist: func_desc /= Void
@@ -63,15 +58,15 @@ feature -- Basic operations
 		require
 			non_void_descriptor: a_descriptor /= Void
 		local
-			signature: STRING
+			signature, l_header_file: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			func_desc := a_descriptor
 
 			create ccom_feature_writer.make
-			create c_header_files.make
-			create forward_declarations.make
-			create c_header_files_after.make
+			create {ARRAYED_LIST [STRING]} c_header_files.make (20)
+			create {ARRAYED_LIST [STRING]} forward_declarations.make (20)
+			create {ARRAYED_LIST [STRING]} c_header_files_after.make (20)
 			ccom_feature_writer.set_pure_virtual
 
 			create signature.make (1000)
@@ -93,11 +88,12 @@ feature -- Basic operations
 					if visitor.is_array_type then
 						signature.append (Asterisk)
 					end
-					signature.append (Space)
+					signature.append (" ")
 					signature.append (func_desc.arguments.item.name)
-					signature.append (Comma)
-					if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
-						c_header_files.force (visitor.c_header_file)
+					signature.append (",")
+					l_header_file := visitor.c_declaration_header_file_name
+					if l_header_file /= Void and then not l_header_file.is_empty then
+						c_header_files.force (l_header_file)
 					end
 
 					func_desc.arguments.forth
@@ -105,25 +101,23 @@ feature -- Basic operations
 
 				visitor := a_descriptor.return_type.visitor 
 
-				if visitor.c_type.is_equal (Void_c_keyword) then
+				if visitor.c_type.is_equal ("void") then
 					-- Remove the last comma
 					if signature.item (signature.count).is_equal(',') then
 						signature.remove (signature.count)
 					end
 				else
 					signature.append (visitor.c_type)
-					signature.append (Space)
-					signature.append (Asterisk)
-					signature.append (Return_value_name)
+					signature.append (" *ret_value")
 				end
 					
-				if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
-					c_header_files.force (visitor.c_header_file)
+				l_header_file := visitor.c_declaration_header_file_name
+				if l_header_file /= Void and then not l_header_file.is_empty then
+					c_header_files.force (l_header_file)
 				end
 			end
 
-			ccom_feature_writer.set_signature(signature)
-
+			ccom_feature_writer.set_signature (signature)
 		ensure
 			ccom_feature_writer_exist: ccom_feature_writer /= Void
 			function_descriptor_exist: func_desc /= Void
@@ -135,23 +129,24 @@ feature -- Basic operations
 			a_visitor: WIZARD_DATA_TYPE_VISITOR
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			l_header_file: STRING
 		do
 			a_visitor := a_descriptor.visitor
-			if a_visitor.c_header_file /= Void and then not a_visitor.c_header_file.is_empty then
+			l_header_file := a_visitor.c_declaration_header_file_name
+			if l_header_file /= Void and then not l_header_file.is_empty then
 				if a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
-						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer
-				then
+						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer then
 					pointed_descriptor ?= a_descriptor
 					if pointed_descriptor /= Void then
 						interface_descriptor := pointed_descriptor.interface_descriptor
 						forward_declarations.force 
 							(forward_interface_declaration (interface_descriptor.c_type_name, interface_descriptor.namespace))
-							c_header_files_after.force (a_visitor.c_header_file)
+							c_header_files_after.force (l_header_file)
 					else
-						c_header_files.force (a_visitor.c_header_file)
+						c_header_files.force (l_header_file)
 					end
 				else
-					c_header_files.force (a_visitor.c_header_file)
+					c_header_files.force (l_header_file)
 				end
 			end
 		end

@@ -22,7 +22,7 @@ feature -- Basic operations
 			valid_system_descriptor: a_system_descriptor /= Void
 			valid_type_desc_type: a_type_desc.var_type = Vt_userdefined
 		local
-			handle, an_index: INTEGER
+			handle, a_index: INTEGER
 			tmp_type_info: ECOM_TYPE_INFO
 			tmp_guid: ECOM_GUID
 			tmp_type_lib: ECOM_TYPE_LIB
@@ -32,8 +32,8 @@ feature -- Basic operations
 			
 			handle := a_type_desc.href_type
 			tmp_type_info := a_type_info.type_info (handle)
-			an_index := tmp_type_info.index_in_type_lib + 1
-			type_descriptor_index := an_index
+			a_index := tmp_type_info.index_in_type_lib + 1
+			type_descriptor_index := a_index
 			tmp_type_lib := tmp_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid
 			if a_system_descriptor.has_library (tmp_guid) then

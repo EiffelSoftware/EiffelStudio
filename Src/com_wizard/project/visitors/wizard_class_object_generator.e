@@ -20,6 +20,13 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_FILE_NAME_FACTORY
+		rename
+			create_file_name as factory_create_file_name
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
@@ -30,33 +37,32 @@ feature -- Basic operations
 	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate class object.
 		local
-			a_name, a_header_file_name, a_header: STRING
-			member_writer: WIZARD_WRITER_C_MEMBER
+			l_name, l_header_file_name, l_header: STRING
+			l_writer: WIZARD_WRITER_C_MEMBER
 		do
 			coclass_descriptor := a_descriptor
 
 			create cpp_class_writer.make
 
-			create a_name.make (1000)
-			a_name.append (coclass_descriptor.c_type_name)
-			a_name.append (Underscore)
-			a_name.append (Factory)
-			cpp_class_writer.set_name (a_name)
+			create l_name.make (1000)
+			l_name.append (coclass_descriptor.c_type_name)
+			l_name.append ("_factory")
+			cpp_class_writer.set_name (l_name)
 
-			create a_header_file_name.make (100)
-			a_header_file_name.append (a_name)
-			a_header_file_name.append (Header_file_extension)
-			cpp_class_writer.set_header_file_name (a_header_file_name)
+			create l_header_file_name.make (100)
+			l_header_file_name.append (l_name)
+			l_header_file_name.append (".h")
+			cpp_class_writer.set_definition_header_file_name (l_header_file_name)
+			cpp_class_writer.set_declaration_header_file_name (declaration_header_file_name (l_header_file_name))
 
 			-- Description
-			create a_header.make (1000)
-			a_header.append (coclass_descriptor.c_type_name)
-			a_header.append (Space)
-			a_header.append (Factory)
-			cpp_class_writer.set_header (a_header)
+			create l_header.make (1000)
+			l_header.append (coclass_descriptor.c_type_name)
+			l_header.append (" factory")
+			cpp_class_writer.set_header (l_header)
 
 			-- Import/include header file
-			cpp_class_writer.add_import (coclass_descriptor.c_header_file_name)
+			cpp_class_writer.add_import (coclass_descriptor.c_declaration_header_file_name)
 
 			-- Parent
 			cpp_class_writer.add_parent (Class_factory, Void, Public)
@@ -90,16 +96,17 @@ feature -- Basic operations
 			cpp_class_writer.add_other (Extern_unlock_module)
 
 			-- Member
-			create member_writer.make
-			member_writer.set_name (Type_id)
-			member_writer.set_result_type (Eif_type_id)
-			member_writer.set_comment ("Component class id")
-			cpp_class_writer.add_member (member_writer, Private)
+			create l_writer.make
+			l_writer.set_name (Type_id)
+			l_writer.set_result_type (Eif_type_id)
+			l_writer.set_comment ("Component class id")
+			cpp_class_writer.add_member (l_writer, Private)
 
 			-- Generate code and save name.
 			Shared_file_name_factory.create_file_name (Current, cpp_class_writer)
 			cpp_class_writer.save_file (Shared_file_name_factory.last_created_file_name)
-			cpp_class_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+			cpp_class_writer.save_declaration_header_file (Shared_file_name_factory.last_created_declaration_header_file_name)
+			cpp_class_writer.save_definition_header_file (Shared_file_name_factory.last_created_header_file_name)
 		end
 
 	create_file_name (a_file_name_factory: WIZARD_FILE_NAME_FACTORY) is
@@ -112,18 +119,9 @@ feature {NONE} -- Implementations
 
 	constructor: WIZARD_WRITER_CPP_CONSTRUCTOR is
 			--  Constructor of class factory
-		local
-			tmp_body: STRING 
 		do
 			create Result.make
-			create tmp_body.make (1000)
-			tmp_body.append (Tab)
-			tmp_body.append ("IsInitialized")
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Zero)
-			tmp_body.append (Semicolon)
-
-			Result.set_body(tmp_body)
+			Result.set_body ("%TIsInitialized = 0;")
 		end
 
 	is_initialized_member: WIZARD_WRITER_C_MEMBER is
@@ -139,323 +137,129 @@ feature {NONE} -- Implementations
 	initialize_feature: WIZARD_WRITER_C_FUNCTION is
 			-- Initialize feature.
 		local
-			tmp_body: STRING 
+			l_body: STRING 
 		do
 			create Result.make
 
 			Result.set_name ("Initialize")
 			Result.set_comment ("Initialize")
-			Result.set_result_type (Void_c_keyword)
-
-			create tmp_body.make (1000)
-			tmp_body.append (Tab)
-			tmp_body.append (Type_id)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Eif_type_id_function_name)
-			tmp_body.append (Space)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (Double_quote)
-			
-			tmp_body.append (implemented_coclass_name (coclass_descriptor.eiffel_class_name))
-			
-			tmp_body.append (Double_quote)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-
-			tmp_body.append ("IsInitialized")
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (Type_id)
-			tmp_body.append (Space)
-			tmp_body.append (More)
-			tmp_body.append (Equal_sign)
-			tmp_body.append (Space)
-			tmp_body.append (Zero)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-
-			Result.set_body(tmp_body)
+			Result.set_result_type ("void")
+			create l_body.make (1000)
+			l_body.append ("%Ttype_id = eif_type_id (%"")
+			l_body.append (implemented_coclass_name (coclass_descriptor.eiffel_class_name))
+			l_body.append ("%");%N%TIsInitialized = (type_id >= 0);")
+			Result.set_body (l_body)
 		end
 
 	lock_server_feature: WIZARD_WRITER_C_FUNCTION is
 			-- LoackServer feature
-		local
-			a_signature, tmp_body: STRING
 		do
 			create Result.make
 			Result.set_name ("LockServer")
 			Result.set_comment ("Lock Server")
 			Result.set_result_type (Std_method_imp)
-
-			create a_signature.make (100)
-			a_signature.append (Bool)
-			a_signature.append (Space)
-			a_signature.append (Tmp_variable_name)
-			Result.set_signature (a_signature)
-
-			create tmp_body.make (1000)
-			tmp_body.append (Tab)
-			tmp_body.append (If_keyword)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Tmp_variable_name)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (New_line_tab_tab)
-			tmp_body.append (Lock_module_function)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Else_keyword)
-			tmp_body.append (New_line_tab_tab)
-			tmp_body.append (Unlock_module_function)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append (S_ok)
-			tmp_body.append (Semicolon)
-
-			Result.set_body (tmp_body)
+			Result.set_signature ("BOOL tmp_value")
+			Result.set_body ("%Tif (tmp_value)%N%T%TLockModule ();%N%Telse%N%T%TUnlockModule ();%N%Treturn S_OK;")
 		end
 
 	create_instance_feature: WIZARD_WRITER_C_FUNCTION is
 			-- CreateInstance of class factory
 		local
-			tmp_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name ("CreateInstance")
 			Result.set_comment ("Create Instance")
-			Result.set_result_type (Std_method_imp)
+			Result.set_result_type ("STDMETHODIMP")
 			Result.set_signature ("IUnknown *pIunknown, REFIID riid, void **ppv")
 
-			create tmp_body.make (10000)
-			tmp_body.append (Tab)
-			tmp_body.append (If_keyword)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append ("ppv")
-			tmp_body.append (C_equal)
-			tmp_body.append (Zero)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (New_line_tab_tab)
-			
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append (E_pointer)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Star_ppv)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Zero)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			
-			tmp_body.append (If_keyword)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append ("pIunknown")
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (New_line_tab_tab)
-			
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append (Class_e_noaggregation)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			if 
-				coclass_descriptor.namespace /= Void and then
-				not coclass_descriptor.namespace.is_empty
-			then
-				tmp_body.append (coclass_descriptor.namespace)
-				tmp_body.append ("::")
+			create l_body.make (10000)
+			l_body.append ("[
+	if (ppv == 0)
+		return E_POINTER;
+	*ppv = 0;
+	if (pIunknown)
+		return CLASS_E_NOAGGREGATION;
+		]")
+	
+			if coclass_descriptor.namespace /= Void and then not coclass_descriptor.namespace.is_empty then
+				l_body.append (coclass_descriptor.namespace)
+				l_body.append ("::")
 			end
-			tmp_body.append (coclass_descriptor.c_type_name)
-			tmp_body.append (Space)
-			tmp_body.append (Asterisk)
-			tmp_body.append (Tmp_object_pointer)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (New)
-			tmp_body.append (Space)
-			if 
-				coclass_descriptor.namespace /= Void and then
-				not coclass_descriptor.namespace.is_empty
-			then
-				tmp_body.append (coclass_descriptor.namespace)
-				tmp_body.append ("::")
+			l_body.append (coclass_descriptor.c_type_name)
+			l_body.append (" *pUnknown = new ")
+			if coclass_descriptor.namespace /= Void and then not coclass_descriptor.namespace.is_empty then
+				l_body.append (coclass_descriptor.namespace)
+				l_body.append ("::")
 			end
-			tmp_body.append (coclass_descriptor.c_type_name)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Type_id)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			
-			tmp_body.append (If_keyword)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append ("!")
-			tmp_body.append (Tmp_object_pointer)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (New_line_tab_tab)
-			
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append (E_out_of_memory)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Tmp_object_pointer)
-			tmp_body.append (Add_reference_function)
-			tmp_body.append (New_line_tab)
-			
-			tmp_body.append (Hresult)
-			tmp_body.append (Space)
-			tmp_body.append (Tmp_clause)
-			tmp_body.append (Hresult_variable_name)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Tmp_object_pointer)
-			tmp_body.append (Struct_selection_operator)
-			tmp_body.append (Query_interface)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Riid)
-			tmp_body.append (Comma_space)
-			tmp_body.append ("ppv")
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			
-			tmp_body.append (Tmp_object_pointer)
-			tmp_body.append (Release_function)
-			tmp_body.append (New_line_tab)
-			
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append (Tmp_clause)
-			tmp_body.append (Hresult_variable_name)
-			tmp_body.append (Semicolon)
+			l_body.append (coclass_descriptor.c_type_name)
+			l_body.append ("[
+ (type_id);
+ 	if (!pUnknown)
+ 		return E_OUTOFMEMORY);
+ 	pUnknown->AddRef ();
+ 	HRESULT tmp_hr = pUnknown->QueryInterface (riid, ppv);
+	pUnknown->Release ();
+	return tmp_hr;
+	]")
 
-			Result.set_body (tmp_body)
+			Result.set_body (l_body)
 		end
 
 	query_interface_feature: WIZARD_WRITER_C_FUNCTION is
 			-- QueryInterface of class factory
-		local
-			tmp_body: STRING
 		do
 			create Result.make
 			Result.set_name (Query_interface)
 			Result.set_comment ("Query Interface")
 			Result.set_result_type (Std_method_imp)
 			Result.set_signature (Query_interface_signature)
-
-			create tmp_body.make (10000)
-			tmp_body.append (Tab)
-			tmp_body.append (If_keyword)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Riid)
-			tmp_body.append (C_equal)
-			tmp_body.append (Iid_type)
-			tmp_body.append (Underscore)
-			tmp_body.append (Class_factory)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (New_line_tab_tab)
-			tmp_body.append (Star_ppv)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Static_cast)
-			tmp_body.append (Less)
-			tmp_body.append (Class_factory)
-			tmp_body.append (Asterisk)
-			tmp_body.append (More)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (This)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Else_if)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Riid)
-			tmp_body.append (C_equal)
-			tmp_body.append (Iunknown_clsid)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (New_line_tab_tab)
-			tmp_body.append (Star_ppv)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Static_cast)
-			tmp_body.append (Less)
-			tmp_body.append (class_factory)
-			tmp_body.append (Asterisk)
-			tmp_body.append (More)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (This)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Else_keyword)
-			tmp_body.append (New_line_tab_tab)
-			tmp_body.append (Return)
-			tmp_body.append (Space_open_parenthesis)
-			tmp_body.append (Star_ppv)
-			tmp_body.append (Space_equal_space)
-			tmp_body.append (Zero)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Comma_space)
-			tmp_body.append (E_no_interface)
-			tmp_body.append (Semicolon)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Reinterpret_cast)
-			tmp_body.append (Less)
-			tmp_body.append (Iunknown)
-			tmp_body.append (More)
-			tmp_body.append (Open_parenthesis)
-			tmp_body.append (this)
-			tmp_body.append (Close_parenthesis)
-			tmp_body.append (Add_reference_function)
-			tmp_body.append (New_line_tab)
-			tmp_body.append (Return_s_ok)
-
-			Result.set_body (tmp_body)
+			Result.set_body ("[
+	if (riid == IID_IClassFactory)
+		*ppv = static_cast<IClassFactory*>(this);
+	else if (riid == IID_IUnknown)
+		*ppv = static_cast<IClassFactory*>(this);
+	else
+		return (*ppv = 0), E_NOINTERFACE;
+	reinterpret_cast<IUnknown *>(this)->AddRef ();
+	return S_OK;
+	]")
 		end
 
 	release_feature: WIZARD_WRITER_C_FUNCTION is
 			-- Release of class factory
 		local
-			tmp_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name ("Release")
 			Result.set_comment ("Decrement reference count")
-			Result.set_result_type (Ulong_std_method_imp)
-
-			create tmp_body.make (10000)
-			tmp_body.append (Tab)
-
+			Result.set_result_type ("STDMETHODIMP_(ULONG)")
+			create l_body.make (10000)
+			l_body.append ("%T")
 			if shared_wizard_environment.in_process_server then
-				tmp_body.append ("UnlockModule ();")
-				tmp_body.append (New_line_tab)
+				l_body.append ("UnlockModule ();%N%T")
 			end
-
-			tmp_body.append (Return)
-			tmp_body.append (Space)
-			tmp_body.append (One)
-			tmp_body.append (Semicolon)
-
-			Result.set_body (tmp_body)
+			l_body.append ("return 1;")
+			Result.set_body (l_body)
 		end
 
 	addref_feature: WIZARD_WRITER_C_FUNCTION is
 			-- Addref of class factory
 		local	
-			tmp_body: STRING
+			l_body: STRING
 		do
 			create Result.make
 			Result.set_name ("AddRef")
 			Result.set_comment ("Increment reference count")
-			Result.set_result_type (Ulong_std_method_imp)
-
-			create tmp_body.make (10000)
-			tmp_body.append (Tab)
-
+			Result.set_result_type ("STDMETHODIMP_(ULONG)")
+			create l_body.make (10000)
+			l_body.append ("%T")
 			if shared_wizard_environment.in_process_server then
-				tmp_body.append ("LockModule ();")
-				tmp_body.append (New_line_tab)
+				l_body.append ("LockModule ();%N%T")
 			end
-			tmp_body.append (Return)
-			tmp_body.append (" 2;")
-			Result.set_body (tmp_body)
+			l_body.append ("return 2;")
+			Result.set_body (l_body)
 		end
 
 end -- class WIZARD_CLASS_OBJECT_GENERATOR

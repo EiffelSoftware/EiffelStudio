@@ -21,8 +21,6 @@ inherit
 		end
 
 	ECOM_PARAM_FLAGS
-		export
-			{WIZARD_PARAMETER_DESCRIPTOR_FACTORY} all
 		redefine
 			is_equal
 		end
@@ -66,7 +64,7 @@ feature -- Status report
 			Result := type.is_equal_data_type (other.type)
 		end
 
-feature {WIZARD_PARAMETER_DESCRIPTOR_FACTORY}-- Basic operations
+feature -- Elements Setting
 
 	set_name (a_name: STRING) is
 			-- Set `name' with `a_name'.
@@ -103,6 +101,8 @@ feature {WIZARD_PARAMETER_DESCRIPTOR_FACTORY}-- Basic operations
 			-- Set `description' with `a_description'.
 		do
 			description := a_description
+		ensure
+			description_set: description = a_description
 		end
 
 end -- class WIZARD_PARAM_DESCRIPTOR

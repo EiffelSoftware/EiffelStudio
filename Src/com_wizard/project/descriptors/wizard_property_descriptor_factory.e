@@ -32,7 +32,7 @@ inherit
 
 feature -- Basic operations
 
-	create_descriptor (a_type_info: ECOM_TYPE_INFO; an_index: INTEGER): WIZARD_PROPERTY_DESCRIPTOR is
+	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_index: INTEGER): WIZARD_PROPERTY_DESCRIPTOR is
 			-- Initialize
 		require
 			valid_type_info: a_type_info /= Void
@@ -44,7 +44,7 @@ feature -- Basic operations
 			tmp_guid: ECOM_GUID
 			tmp_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
-			a_var_desc := a_type_info.var_desc (an_index)
+			a_var_desc := a_type_info.var_desc (a_index)
 			member_id := a_var_desc.member_id
 			var_kind := a_var_desc.var_kind
 			var_flags := a_var_desc.var_flags
@@ -70,9 +70,6 @@ feature -- Basic operations
 				name.prepend ("a_")
 			end
 			description := a_documentation.doc_string.twin
-			if description.is_empty then
-				description := No_description_available.twin
-			end
 			a_type_desc := a_var_desc.elem_desc.type_desc
 			data_type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, a_type_desc, system_descriptor)
 

@@ -16,7 +16,7 @@ feature -- Access
 
 	ccom_feature_writer: WIZARD_WRITER_C_FUNCTION
 
-	c_header_files: LINKED_LIST[STRING]
+	c_header_files: LIST [STRING]
 
 feature {NONE} -- Implementation
 
@@ -65,36 +65,27 @@ feature {NONE} -- Implementation
 					func_desc.arguments.off
 				loop
 					visitor := func_desc.arguments.item.type.visitor
-
-					Result.append (Beginning_comment_paramflag)
-
+					Result.append (" /* [")
 					if is_paramflag_fretval (func_desc.arguments.item.flags) then
-						Result.append (Out_keyword)
-						Result.append (Comma_space)
-						Result.append (Retval)
+						Result.append ("out, retval")
 					elseif is_paramflag_fout (func_desc.arguments.item.flags) then
 						if is_paramflag_fin (func_desc.arguments.item.flags) then
-							Result.append (Inout)
+							Result.append ("in, out")
 						else
-							Result.append (Out_keyword)
+							Result.append ("out")
 						end
 					else
-						Result.append (In)
+						Result.append ("in")
 					end
-					Result.append (End_comment_paramflag)
-
+					Result.append ("] */ ")
 					Result.append (visitor.c_type)
-					Result.append (Space)
-
+					Result.append (" ")
 					if visitor.is_array_basic_type or visitor.is_array_type then
-						Result.append (Asterisk)
+						Result.append ("*")
 					end
-
 					Result.append (func_desc.arguments.item.name)
-
-					Result.append (Comma)
+					Result.append (",")
 					add_header_file (func_desc.arguments.item.type)
-
 					func_desc.arguments.forth
 				end
 
@@ -102,7 +93,7 @@ feature {NONE} -- Implementation
 					Result.remove (Result.count)
 				end
 			else
-				Result.append (Void_c_keyword)					
+				Result.append ("void")					
 			end
 		end
 

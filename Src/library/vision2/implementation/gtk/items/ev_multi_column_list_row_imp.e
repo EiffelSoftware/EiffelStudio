@@ -70,16 +70,18 @@ feature -- Status setting
 feature -- PND
 
 	enable_transport is 
-		do 
-			check
-				do_not_call: False
+		do
+			is_transport_enabled := True
+			if parent_imp /= Void then
+				parent_imp.update_pnd_status
 			end
 		end
 
 	disable_transport is
 		do
-			check
-				do_not_call: False
+			is_transport_enabled := False
+			if parent_imp /= Void then
+				parent_imp.update_pnd_status
 			end
 		end
 
@@ -214,6 +216,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/04/05 17:00:13  king
+--| Added update_pnd_status calls for PND transport enabling/disabling
+--|
 --| Revision 1.46  2000/03/31 19:07:26  king
 --| Renamed pebble_o_wid -> pointer_o_wid, indented redundant PND features
 --|

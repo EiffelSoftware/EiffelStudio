@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			host_name := h
 			port := p
 		ensure
-			host_name_set: host = h
+			host_name_set: host_name = h
 			port_set: port = p
 		end
 

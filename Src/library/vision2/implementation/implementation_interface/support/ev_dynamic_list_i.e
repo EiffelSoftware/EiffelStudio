@@ -88,9 +88,11 @@ feature -- Access
 			until
 				interface.after or Result /= Void
 			loop		
-				if (should_compare_objects and then (data = Void and then item.data = Void) or
-				data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data))
-				or (not should_compare_objects and data = item.data) then
+				if
+					(should_compare_objects and then (data = Void and then item.data = Void) or
+					data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data))
+					or (not should_compare_objects and data = item.data)
+				then
 					Result := item
 				end
 				interface.forth

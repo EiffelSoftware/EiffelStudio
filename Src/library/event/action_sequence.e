@@ -130,6 +130,12 @@ feature -- Basic operations
 				old cursor_stack.is_equal (cursor_stack)
 		end
 
+	wrapper (d: EVENT_DATA; p: PROCEDURE [ANY, TUPLE]) is
+			-- 
+		do
+			p.call (d)
+		end
+
 feature -- Access
 
 	name: STRING is
@@ -354,8 +360,11 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
---| Revision 1.1  1999/10/26 21:02:09  oconnor
---| Initial revision
+--| Revision 1.2  1999/10/26 22:16:25  oconnor
+--| experimental: added wrapper to side step type checks
+--|
+--| Revision 1.1.1.1  1999/10/26 21:02:09  oconnor
+--| initail import of proposed event classes
 --|
 --| 
 --|-----------------------------------------------------------------------------

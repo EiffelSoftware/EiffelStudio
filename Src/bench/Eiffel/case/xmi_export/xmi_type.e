@@ -20,6 +20,7 @@ feature --Initialization
 	make_type (id: INTEGER; n: STRING) is
 			-- Initialization of `Current'.
 		do
+			create associations.make
 			xmi_id := id
 			name := n
 		end
@@ -29,12 +30,27 @@ feature -- Access
 	name: STRING
 			-- Name of the type represented by `Current'.
 
+	associations: LINKED_LIST [XMI_ASSOCIATION]
+			-- List of associations to which Current belongs
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Does `other' have the same name as `Current'?
 		do
 			Result := name.is_equal (other.name)
+		end
+
+feature -- Status Setting
+
+	add_association (a_association: XMI_ASSOCIATION) is
+			-- Add 'a_association' to associations
+		require
+			a_association /= Void
+		do
+			if not associations.has (a_association) then
+				associations.extend (a_association)
+			end
 		end
 
 feature -- Action 

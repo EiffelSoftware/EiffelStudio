@@ -18,7 +18,8 @@ inherit
 
 create
 	default_create,
-	make
+	make_with_text,
+	make_with_text_and_actions
 
 feature {NONE} -- Initialization
 
@@ -53,23 +54,51 @@ feature {NONE} -- Initialization
 			set_buttons (<<"OK", "Cancel">>)
 		end
 
-	make (a_title, a_text: STRING; but_texts: ARRAY [STRING]; a_pixmap: EV_PIXMAP) is
-			-- Initialize.
+	make_with_text (a_text: STRING) is
+			-- Create dialog with `a_text'.
 		do
 			default_create
-			set_title (a_title)
 			set_text (a_text)
-			set_buttons (but_texts)
-			set_pixmap (a_pixmap)
+		end
+
+	make_with_text_and_actions (
+		a_text: EV_TEXT;
+		actions: ARRAY [PROCEDURE [ANY, TUPLE []]]
+	) is
+			-- Create dialog with `a_text' and `actions'.
+			-- (`actions' are added to `buttons' in order.)
+		require
+			actions_not_void: actions /= Void
+			actions_not_empty: actions.count > 0
+		local
+			i: INTEGER
+			c: CURSOR
+		do
+			default_create
+			set_text (a_text)
+			c := buttons.cursor
+			from
+				buttons.start
+				i := 1
+
+			until
+				i > actions.count or
+				buttons.after
+			loop
+				buttons.item_for_iteration.press_actions.extend (actions @ i)
+				buttons.forth
+				i := i + 1
+			end
+			buttons.go_to (c)
 		end
 
 feature -- Access
 
 	pixmap: EV_PIXMAP
-			-- Icon associated with dialog.
+			-- Icon displayed by dialog.
 
 	text: STRING is
-			-- Text associated with dialog.
+			-- Message displayed by dialog.
 		do
 			Result := label.text
 		end
@@ -88,7 +117,7 @@ feature -- Status setting
 		end
 
 	set_text (a_text: STRING) is
-			-- Set the message of the dialog.
+			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
 		do
@@ -97,8 +126,8 @@ feature -- Status setting
 			assigned: text.is_equal (a_text)
 		end
 
-	set_buttons (but_texts: ARRAY [STRING]) is
-			-- Set the buttons by label.
+	set_buttons (button_labels: ARRAY [STRING]) is
+			-- Assign new buttons with `button_labels' to `buttons'.
 		local
 			i: INTEGER
 		do
@@ -115,7 +144,7 @@ feature -- Status setting
 feature -- Status report
 
 	has_button (a_label: STRING): BOOLEAN is
-			-- Does button with `a_label' exist in the dialog?
+			-- Is there a button that has `a_label'?
 		require
 			a_label_not_void: a_label /= Void
 		do
@@ -123,7 +152,7 @@ feature -- Status report
 		end
 
 	button (a_label: STRING): EV_BUTTON is
-			-- Get the button object with `a_label'.
+			-- Button that has `a_label'.
 		require
 			a_label_not_void: a_label /= Void
 			has_button_with_a_label: has_button (a_label)
@@ -201,6 +230,10 @@ end -- class EV_MESSAGE_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/06 19:17:42  oconnor
+--| Added make_with_text_and_actions,
+--| moved make_with_text from decendants to EV_MESSAGE_DIALOG.
+--|
 --| Revision 1.14  2000/02/22 18:39:50  oconnor
 --| updated copyright date and formatting
 --|
@@ -209,7 +242,8 @@ end -- class EV_MESSAGE_DIALOG
 --|
 --| Revision 1.11.6.8  2000/02/14 20:09:01  brendel
 --| Added features `has_button' and `button'.
---| Before, the user did not have access to the buttons created with `set_buttons'.
+--| Before, the user did not have access to the buttons created with
+--| `set_buttons'.
 --|
 --| Revision 1.11.6.7  2000/01/28 22:24:23  oconnor
 --| released

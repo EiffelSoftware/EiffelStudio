@@ -24,6 +24,11 @@ feature -- Externals
 		external
 			"C signature (PangoFontDescription*) use <gtk/gtk.h>"
 		end
+		
+	frozen pango_font_description_copy (a_pango_description: POINTER): POINTER is
+		external
+			"C signature (PangoFontDescription*): PangoFontDescription* use <gtk/gtk.h>"
+		end
 
 	frozen pango_font_description_set_family (a_pango_description: POINTER; a_family: POINTER) is
 		external
@@ -503,6 +508,12 @@ feature -- Externals
 		external
 			"C signature (GtkDialog*, gboolean) use <gtk/gtk.h>"
 		end
+	
+	frozen gtk_widget_modify_font (a_widget: POINTER; a_font_description: POINTER) is
+		external
+			"C signature (GtkWidget*, PangoFontDescription*) use <gtk/gtk.h>"
+		end
+		
 end
 
 --|----------------------------------------------------------------

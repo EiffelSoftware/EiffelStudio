@@ -66,7 +66,9 @@ end
 				p_l.extend (inherit_data);
 				no_repeated_parents.forth
 			end;
-			s_class_data.set_heir_links (p_l);
+			if not p_l.empty then
+				s_class_data.set_heir_links (p_l);
+			end
 		end;
 
 	record_renamings (parents: PARENT_LIST) is

@@ -260,10 +260,10 @@ rt_public void str_replace(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER s
 	}
 
 	/* Now there is room to copy the replacement string as is, starting at the
-	 * 'start' index. We may safely use bcopy here, as there is no overlapping.
+	 * 'start' index. We may safely use memcpy  here, as there is no overlapping.
 	 */
 	
-	bcopy(new, str + (start - 1), new_len);
+	memcpy (str + (start - 1),new,  new_len);
 }
 
 rt_public void str_insert(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER string_length, EIF_INTEGER new_len, EIF_INTEGER idx)
@@ -292,10 +292,10 @@ rt_public void str_insert(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER st
 			*t-- = *f--;
 
 	/* Now copy the string at the beginning. No overlap is to be feared, so we
-	 * may safely use bcopy().
+	 * may safely use memcpy ().
 	 */
 
-	bcopy(new, str + idx - 1, new_len);
+	memcpy (str + idx - 1, new, new_len);
 }
 
 /*
@@ -343,7 +343,7 @@ rt_public void str_take(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER star
 {
 	/* Extract the substring (start, end) from 'str' into 'new' */
 
-	bcopy (str + start - 1, new, end - start + 1);
+	memcpy  (new, str + start - 1, end - start + 1);
 }
 
 /*
@@ -397,7 +397,7 @@ rt_public void str_cpy(EIF_CHARACTER *to, EIF_CHARACTER *from, EIF_INTEGER len)
 {
 	/*  Copy 'len' characters from 'from' to 'to' */
 
-	bcopy (from, to, len);
+	memcpy  (to, from, len);
 }
 
 /*
@@ -428,7 +428,7 @@ rt_public void str_append(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER st
 {
 	/* Append 'new' at the end of 'str' */
 
-	bcopy (new, str + string_length, (size_t) new_len);
+	memcpy  (str + string_length, new, (size_t) new_len);
 }
 
 /*

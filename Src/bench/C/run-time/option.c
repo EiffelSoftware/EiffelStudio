@@ -11,13 +11,13 @@
 */
 
 #include <stdio.h>
-#include "eif_project.h"
 #include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
+#include "eif_project.h"
 #ifndef HAS_GETRUSAGE
 #if defined HAS_TIMES && !defined EIF_VMS
 #include <sys/param.h>      /* For value of HZ */

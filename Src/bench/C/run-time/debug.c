@@ -13,7 +13,7 @@
 #include "eif_project.h"
 #include "eif_config.h"
 #include "eif_portable.h"
-#include "eif_confmagic.h"		/* %%ss added for bcopy, bzero */
+#include "eif_confmagic.h"	
 #include "eif_macros.h"
 #include "eif_debug.h"
 #include "eif_hashin.h"
@@ -404,16 +404,7 @@ rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)
 	register1 struct ex_vect *item;	/* Item we deal with */
 	struct xstack saved;			/* Saved stack context */
 
-#ifdef USE_STRUCT_COPY
-	saved = eif_stack;		/* Save stack context */
-#else	/* USE_STRUCT_COPY */
-#ifdef VXWORKS
 	memcpy (&saved, &eif_stack, sizeof(struct xstack));
-#else	/* VXWORKS */
-	bcopy(&eif_stack, &saved, sizeof(struct xstack));
-#endif	/* VXWORKS */
-	
-#endif	/* USE_STRUCT_COPY */
 
 	while (item = extop(&eif_stack)) {		/* While not found */
 		if (
@@ -425,15 +416,7 @@ rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)
 		expop(&eif_stack);	/* Will eif_panic if we underflow, because we can't */
 	}
 
-#ifdef USE_STRUCT_COPY
-	eif_stack = saved;		/* Restore saved stack context */
-#else
-#ifdef VXWORKS
 	memcpy (&eif_stack, &saved, sizeof(struct xstack));
-#else	/* VXWORKS */
-	bcopy(&saved, &eif_stack, sizeof(struct xstack));
-#endif	/* VXWORKS */
-#endif
 
 	return item;			/* Last call recorded on stack */
 
@@ -453,24 +436,10 @@ rt_shared void escontext(EIF_CONTEXT int why)
 	 */
 	EIF_GET_CONTEXT
 
-#ifdef USE_STRUCT_COPY
-	d_cxt.pg_debugger = db_stack;
-	d_cxt.pg_interp = op_stack;
-	d_cxt.pg_stack = eif_stack;
-	d_cxt.pg_trace = eif_trace;
-#else
-#ifdef VXWORKS
-	memcpy (&d_cxt.pg_debugger, s&db_stack, izeof(struct dbstack));
+	memcpy (&d_cxt.pg_debugger, &db_stack, sizeof(struct dbstack));
 	memcpy (&d_cxt.pg_interp, &op_stack, sizeof(struct opstack));
 	memcpy (&d_cxt.pg_stack, &eif_stack, sizeof(struct xstack));
 	memcpy (&d_cxt.pg_trace, &eif_trace, sizeof(struct xstack));
-#else	/* VXWORKS */
-	bcopy(&db_stack, &d_cxt.pg_debugger, sizeof(struct dbstack));
-	bcopy(&op_stack, &d_cxt.pg_interp, sizeof(struct opstack));
-	bcopy(&eif_stack, &d_cxt.pg_stack, sizeof(struct xstack));
-	bcopy(&eif_trace, &d_cxt.pg_trace, sizeof(struct xstack));
-#endif	/* VXWORKS */
-#endif
 
 	d_cxt.pg_status = why;			/* Why did we stop? */
 	d_cxt.pg_IC = IC;				/* Save interpreter counter */
@@ -500,25 +469,10 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	EIF_GET_CONTEXT
 	struct dcall *context;			/* Current calling context */
 
-#ifdef USE_STRUCT_COPY
-	db_stack = d_cxt.pg_debugger;
-	op_stack = d_cxt.pg_interp;
-	eif_stack = d_cxt.pg_stack;
-	eif_trace = d_cxt.pg_trace;
-#else
-#ifdef VXWORKS
 	memcpy (&db_stack, &d_cxt.pg_debugger, sizeof(struct dbstack));
 	memcpy (&op_stack, &d_cxt.pg_interp, sizeof(struct opstack));
 	memcpy (&eif_stack, &d_cxt.pg_stack, sizeof(struct xstack));
 	memcpy (&eif_trace, &d_cxt.pg_trace, sizeof(struct xstack));
-#else	/* VXWORKS */
-	bcopy(&d_cxt.pg_debugger, &db_stack, sizeof(struct dbstack));
-	bcopy(&d_cxt.pg_interp, &op_stack, sizeof(struct opstack));
-	bcopy(&d_cxt.pg_stack, &eif_stack, sizeof(struct xstack));
-	bcopy(&d_cxt.pg_trace, &eif_trace, sizeof(struct xstack));
-#endif	/* VXWORKS */
-
-#endif
 
 	IC = d_cxt.pg_IC;			/* Resume execution where we stopped */
 
@@ -628,17 +582,9 @@ rt_public struct dcall *dpush(register struct dcall *val)
 
 	db_stack.st_top = top + 1;			/* Points to next free location */
 	if (val != (struct dcall *) 0){		/* If value was provided */
-#ifdef VXWORKS 
 		memcpy (top, val, CALL_SZ);		/* Push it on the stack */
-#else	/* VXWORKS */
-		bcopy(val, top, CALL_SZ);		/* Push it on the stack */
-#endif	/* VXWORKS */
 	} else {
-#ifdef VXWORKS 
 		memset (top, 0, CALL_SZ);
-#else	/* VXWORKS */
-		bzero(top, CALL_SZ);
-#endif	/* VXWORKS */
 	}
 
 	return top;				/* Address of allocated item */
@@ -1186,11 +1132,7 @@ rt_public uint32 *onceadd(uint32 id)
 	}
 
 	once_list.idl_last = last + 1;		/* Points to next free location */
-#ifdef VXWORKS
 	memcpy (last, &id, BODY_ID_SZ);		/* Add `id' in the list */
-#else
-	bcopy(&id, last, BODY_ID_SZ);		/* Add `id' in the list */
-#endif
 
 	return last;						/* Address of allocated item */
 	EIF_END_GET_CONTEXT

@@ -2108,11 +2108,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 
 	if (size > 0)
 	{
-#ifdef VXWORKS
 		memcpy (tp, typearr, size*sizeof(int16));
-#else
-		bcopy(typearr,tp,size*sizeof(int16));
-#endif
 	}
 
 	result->size        = size;

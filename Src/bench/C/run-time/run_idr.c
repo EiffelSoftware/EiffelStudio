@@ -14,6 +14,12 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_globals.h"
+#include "eif_store.h"	/* For rt_kind_version */
+#include "eif_retrieve.h"	/* For char_read_func */
+#ifdef VXWORKS
+#include "string.h"	/* For memcpy */
+#endif
+
 #include <stdio.h>
 #include "eif_err_msg.h"
 #include <sys/types.h>
@@ -230,7 +236,7 @@ rt_public bool_t run_long(IDR *idrs, long int *lp, int len, int size)
 #if LNGSIZ == 4
 					/*encode for long = 4 bytes */
 			value = htonl((uint32)(*(lp + (i++))));
-			bcopy(&value, idrs->i_ptr, size);
+			memcpy (idrs->i_ptr, &value, size);
 			idrs->i_ptr += size;
 #else
 							/*encode for long = 8bytes */
@@ -242,11 +248,11 @@ rt_public bool_t run_long(IDR *idrs, long int *lp, int len, int size)
 			lower = (uint32) (temp & 0x00000000ffffffff);
 			upper = (uint32) ((temp >> 32) & 0x00000000ffffffff);
 			value = htonl((uint32)(lower));
-			bcopy(&value, idrs->i_ptr, 4);
+			memcpy(idrs->i_ptr, &value, 4);
 			idrs->i_ptr += 4;
 
 			value = htonl((uint32)(upper));
-			bcopy(&value, idrs->i_ptr, 4);
+			memcpy (idrs->i_ptr, &value, 4);
 			idrs->i_ptr += 4;
 
 #endif
@@ -254,7 +260,7 @@ rt_public bool_t run_long(IDR *idrs, long int *lp, int len, int size)
 	} else {
 		if (size == 4) {				/* decode a 4 byte long */
 			while (len > i) {
-				bcopy(idrs->i_ptr, &value, size);
+				memcpy (&value, idrs->i_ptr, size);
 #if LNGSIZ > 4
 				*(lp + i) = (long) ntohl(value);
 				idrs->i_ptr += size;
@@ -273,10 +279,10 @@ rt_public bool_t run_long(IDR *idrs, long int *lp, int len, int size)
 			while (len > i) {
 				long upper, lower; /* %%ss removed , temp;*/
 
-				bcopy(idrs->i_ptr, &value, 4);
+				memcpy (&value, idrs->i_ptr, 4);
 				lower = (long) ntohl(value);
 				idrs->i_ptr += 4;
-				bcopy(idrs->i_ptr, &value, 4);
+				memcpy (&value, idrs->i_ptr, 4);
 				upper = (long) ntohl(value);
 				idrs->i_ptr += 4;
 #if PTRSIZ == 4
@@ -321,7 +327,7 @@ rt_public bool_t run_ulong(IDR *idrs, long unsigned int *lp, int len, int size)
 #if LNGSIZ == 4
 					/*encode for long = 4 bytes */
 			value = htonl((uint32)(*(lp + (i++))));
-			bcopy(&value, idrs->i_ptr, size);
+			memcpy (idrs->i_ptr, &value, size);
 			idrs->i_ptr += size;
 #else
 							/*encode for long = 8bytes */
@@ -333,26 +339,26 @@ rt_public bool_t run_ulong(IDR *idrs, long unsigned int *lp, int len, int size)
 			lower = (uint32) (temp & 0x00000000ffffffff);
 			upper = (uint32) ((temp >> 32) & 0x00000000ffffffff);
 			value = htonl((uint32)(lower));
-			bcopy(&value, idrs->i_ptr, 4);
+			memcpy (idrs->i_ptr, &value, 4);
 			idrs->i_ptr += 4;
 
 			value = htonl((uint32)(upper));
-			bcopy(&value, idrs->i_ptr, 4);
+			memcpy (idrs->i_ptr, &value, 4);
 			idrs->i_ptr += 4;
 #endif
 		}
 	} else {
 		if (size == 4) {				/* decode a 4 byte long */
 			while (len > i) {
-				bcopy(idrs->i_ptr, &value, size);
+				memcpy (&value, idrs->i_ptr, size);
 				*(lp + (i++)) = (unsigned long) ntohl(value);
 				idrs->i_ptr += size;
 			}
 		} else {						/*decode an 8 byte long */
 			while (len > i) {
-				bcopy(idrs->i_ptr, &value, 4);
+				memcpy (&value, idrs->i_ptr, 4);
 				idrs->i_ptr += 4;
-				bcopy(idrs->i_ptr, &value, 4);
+				memcpy (&value, idrs->i_ptr, 4);
 				idrs->i_ptr += 4;
 #if LNGSIZ == 4
 						/*if the data has come from a 8 byte */
@@ -385,12 +391,12 @@ rt_public bool_t run_int(IDR *idrs, uint32 *ip, int len)
 	if (idrs->i_op == IDR_ENCODE) {
 		while (len > i) {
 			value = htonl(*(ip + (i++)));
-			bcopy(&value, idrs->i_ptr, sizeof (uint32));
+			memcpy (idrs->i_ptr, &value, sizeof (uint32));
 			idrs->i_ptr += sizeof (uint32);
 		}
 	} else {
 		while (len > i) {
-			bcopy(idrs->i_ptr, &value, sizeof (uint32));
+			memcpy (&value, idrs->i_ptr, sizeof (uint32));
 			*(ip + (i++)) = ntohl(value);
 			idrs->i_ptr += sizeof (uint32);
 		}
@@ -405,7 +411,7 @@ rt_public void ridr_multi_char (char *obj, int num)
 
 	if ((num - cap) <= 0) {
 		check_capacity (&idrf.i_decode, num);
-		bcopy (idrf.i_decode.i_ptr, obj, num);
+		memcpy (obj, idrf.i_decode.i_ptr, num);
 		idrf.i_decode.i_ptr += num;
 	} else {
 		int count = num / cap;
@@ -413,13 +419,13 @@ rt_public void ridr_multi_char (char *obj, int num)
 
 		while (count) {
 			check_capacity (&idrf.i_decode, cap);
-            bcopy (idrf.i_decode.i_ptr, obj, cap);
+            memcpy  (obj,idrf.i_decode.i_ptr, cap);
 			obj += cap;
             idrf.i_decode.i_ptr += cap;
 			count--;
 		}
 		check_capacity (&idrf.i_decode, left_over);
-		bcopy (idrf.i_decode.i_ptr, obj, left_over);
+		memcpy (obj, idrf.i_decode.i_ptr, left_over);
 		idrf.i_decode.i_ptr += left_over;
 	}
 }
@@ -430,7 +436,7 @@ rt_public void widr_multi_char (char *obj, int num)
 
 	if ((num - cap) <= 0) {
 		check_capacity (&idrf.i_encode, num);
-		bcopy (obj, idrf.i_encode.i_ptr, num);
+		memcpy (idrf.i_encode.i_ptr, obj, num);
 		idrf.i_encode.i_ptr += num;
 	} else {
 		int count = num / cap;
@@ -438,14 +444,14 @@ rt_public void widr_multi_char (char *obj, int num)
 
 		while (count) {
 			check_capacity (&idrf.i_encode, cap);
-			bcopy (obj, idrf.i_encode.i_ptr, cap);
+			memcpy (idrf.i_encode.i_ptr, obj, cap);
 			obj += cap;
 			idrf.i_encode.i_ptr += cap;
 			count--;
 		}
 
 		check_capacity (&idrf.i_encode, left_over);
-		bcopy (obj, idrf.i_encode.i_ptr, left_over);
+		memcpy (idrf.i_encode.i_ptr, obj, left_over);
 		idrf.i_encode.i_ptr += left_over;
 
 	}
@@ -458,7 +464,7 @@ rt_public void ridr_multi_any (char *obj, int num)
 	char s;
 
 	check_capacity (&idrf.i_decode, sizeof (char));
-	bcopy (idrf.i_decode.i_ptr, &s, sizeof (char));
+	memcpy (&s, idrf.i_decode.i_ptr, sizeof (char));
 	idrf.i_decode.i_ptr += sizeof (char);
 	cap = idrf_buffer_size / s;
 
@@ -484,7 +490,7 @@ rt_public void widr_multi_any (char *obj, int num)
 	char s = (char) sizeof (char *);
 
 	check_capacity (&idrf.i_encode, sizeof (char));
-	bcopy (&s, idrf.i_encode.i_ptr, sizeof (char));
+	memcpy (idrf.i_encode.i_ptr, &s, sizeof (char));
 	idrf.i_encode.i_ptr += sizeof (char);
 
 	if ((num - cap) <= 0) {
@@ -509,7 +515,7 @@ rt_public void ridr_multi_int (long int *obj, int num)
 	char s;
 
 	check_capacity (&idrf.i_decode, sizeof (char));
-	bcopy (idrf.i_decode.i_ptr, &s, sizeof (char));
+	memcpy (&s, idrf.i_decode.i_ptr, sizeof (char));
 	idrf.i_decode.i_ptr += sizeof (char);
 	cap = idrf_buffer_size / s;
 
@@ -534,7 +540,7 @@ rt_public void widr_multi_int (long int *obj, int num)
 	char s = (char) sizeof (long);
 
 	check_capacity (&idrf.i_encode, sizeof (char));
-	bcopy (&s, idrf.i_encode.i_ptr, sizeof (char));
+	memcpy (idrf.i_encode.i_ptr, &s, sizeof (char));
 	idrf.i_encode.i_ptr += sizeof (char);
 
 	if ((num - cap) <= 0) {
@@ -560,11 +566,11 @@ rt_public void ridr_multi_float (float *obj, int num)
 
 	while (num > i++) {
 		check_capacity (&idrf.i_decode, sizeof (char));
-		bcopy (idrf.i_decode.i_ptr, &temp_len, sizeof(char));
+		memcpy (&temp_len, idrf.i_decode.i_ptr, sizeof(char));
 		idrf.i_decode.i_ptr += sizeof (char);
 
 		check_capacity (&idrf.i_decode, (int)temp_len);
-		bcopy (idrf.i_decode.i_ptr, idr_temp_buf, (int)temp_len);
+		memcpy (idr_temp_buf, idrf.i_decode.i_ptr, (int)temp_len);
 		idrf.i_decode.i_ptr += (int)temp_len;
 		*(idr_temp_buf + temp_len) = '\0';
 		sscanf (idr_temp_buf, "%f", (obj++));
@@ -580,11 +586,11 @@ rt_public void widr_multi_float (float *obj, int num)
 		sprintf (idr_temp_buf, "%f", *(obj++));
 		temp_len = (char) strlen (idr_temp_buf);
 		check_capacity (&idrf.i_encode, sizeof (char));
-		bcopy (&temp_len, idrf.i_encode.i_ptr, sizeof(char));
+		memcpy (idrf.i_encode.i_ptr, &temp_len, sizeof(char));
 		idrf.i_encode.i_ptr += sizeof (char);
 
 		check_capacity (&idrf.i_encode, (int)temp_len);
-		bcopy (idr_temp_buf, idrf.i_encode.i_ptr, (int)temp_len);
+		memcpy  (idrf.i_encode.i_ptr, idr_temp_buf, (int)temp_len);
 		idrf.i_encode.i_ptr += (int)temp_len;
 	}
 }
@@ -603,11 +609,11 @@ rt_public void ridr_multi_double (double *obj, int num)
 
 		while (num > i++) {
 			check_capacity (&idrf.i_decode, sizeof (char));
-			bcopy (idrf.i_decode.i_ptr, &temp_len, sizeof(char));
+			memcpy (&temp_len, idrf.i_decode.i_ptr, sizeof(char));
 			idrf.i_decode.i_ptr += sizeof (char);
 
 			check_capacity (&idrf.i_decode, (int)temp_len);
-			bcopy (idrf.i_decode.i_ptr, idr_temp_buf, (int)temp_len);
+			memcpy  (idr_temp_buf, idrf.i_decode.i_ptr, (int)temp_len);
 			idrf.i_decode.i_ptr += (int)temp_len;
 			*(idr_temp_buf + temp_len) = '\0';
 			sscanf (idr_temp_buf, "%lf", obj++);
@@ -626,10 +632,10 @@ rt_public void ridr_multi_double (double *obj, int num)
 					* little endian mode */
 				for (j=0;j<DBLSIZ;j++) 
 					double_buffer[DBLSIZ - 1 - j] = idr_buffer [j];
-				bcopy(double_buffer, obj++,DBLSIZ);
+				memcpy (obj++, double_buffer,DBLSIZ);
 			}
 #elif BYTEORDER == 0x1234
-			bcopy (idrf.i_decode.i_ptr, obj++, DBLSIZ);
+			memcpy  (obj++, idrf.i_decode.i_ptr, DBLSIZ);
 #endif
 			idrf.i_decode.i_ptr += DBLSIZ;
 		}
@@ -644,14 +650,14 @@ rt_public void widr_multi_double (double *obj, int num)
 		char temp_len;
 
 		while (num > i++) {
-			sprintf (idr_temp_buf, "%lf", *(obj++));
+			sprintf (idr_temp_buf, "%f", *(obj++));
 			temp_len = (char) strlen (idr_temp_buf);
 			check_capacity (&idrf.i_encode, sizeof (char));
-			bcopy (&temp_len, idrf.i_encode.i_ptr, sizeof(char));
+			memcpy (idrf.i_encode.i_ptr, &temp_len, sizeof(char));
 			idrf.i_encode.i_ptr += sizeof (char);
 
 			check_capacity (&idrf.i_encode, (int)temp_len);
-			bcopy (idr_temp_buf, idrf.i_encode.i_ptr, (int)temp_len);
+			memcpy  (idrf.i_encode.i_ptr, idr_temp_buf, (int)temp_len);
 			idrf.i_encode.i_ptr += (int)temp_len;
 		}
 	} else {
@@ -664,14 +670,14 @@ rt_public void widr_multi_double (double *obj, int num)
 				char *idr_buffer;
 
 				idr_buffer = idrf.i_encode.i_ptr;
-				bcopy(obj++, double_buffer,DBLSIZ);
+				memcpy (double_buffer, obj++, DBLSIZ);
 					/* Reverse the order of the double since we stored doubles in
 					* little endian mode */
 				for (j=0;j<DBLSIZ;j++) 
 					idr_buffer[DBLSIZ - 1 - j] = double_buffer [j];
 			}
 #elif BYTEORDER == 0x1234
-			bcopy (obj++, idrf.i_encode.i_ptr, DBLSIZ);
+			memcpy  (idrf.i_encode.i_ptr, obj++, DBLSIZ);
 #endif
 			idrf.i_encode.i_ptr += DBLSIZ;
 		}

@@ -191,19 +191,19 @@ rt_public void update(char ignore_updt)
 	esystem = (struct cnode *) cmalloc((count+1) * sizeof(struct cnode));
 	if (esystem == (struct cnode *) 0)
 		enomem();				/* Not enough room */
-	bcopy(egc_fsystem, esystem, (scount+1) * sizeof(struct cnode));
+	memcpy (esystem, egc_fsystem, (scount+1) * sizeof(struct cnode));
 #else
 	esystem = (struct cnode *) cmalloc(count * sizeof(struct cnode));
 	if (esystem == (struct cnode *) 0)
 		enomem(MTC_NOARG);				/* Not enough room */
-	bcopy(egc_fsystem, esystem, scount * sizeof(struct cnode));
+	memcpy (esystem, egc_fsystem, scount * sizeof(struct cnode));
 #endif
 
 	/* Allocation of the variable `ecall' */
 	ecall = (int32 **) cmalloc(count * sizeof(int32 *));
 	if (ecall == (int32 **) 0)
 		enomem(MTC_NOARG);
-	bcopy(egc_fcall, ecall, scount * sizeof(int32 *));
+	memcpy (ecall, egc_fcall, scount * sizeof(int32 *));
 
 	/* FIX ME: `ecall' is indexed by original (static) type id, not by dynamic type
 	 * id. Therefore it should be resized using `scount' which is the number of
@@ -241,7 +241,7 @@ rt_public void update(char ignore_updt)
 		enomem(MTC_NOARG);
 
 	/* Copy of the frozen dispatch table into `dispatch' */
-	bcopy(egc_fdispatch, dispatch, dcount * sizeof(uint32));
+	memcpy (dispatch, egc_fdispatch, dcount * sizeof(uint32));
 	dcount = count;
 
 	/* Update of the dispatch table */
@@ -822,7 +822,7 @@ rt_public void option_updt(void)
 	
 	while ((dtype = wshort()) != -1) {	/* Get a dynamic type */
 		current = eoption + dtype;
-		bzero(current, sizeof(struct eif_opt));
+		memset (current, 0, sizeof(struct eif_opt));
 
 		wread(&c, 1);			/* Assertion level byte code */
 		as_level = 0;
@@ -1031,7 +1031,7 @@ rt_public int16 *wtype_array(int16 *target)
 	if (tp == (int16 *) 0)
 		enomem(MTC_NOARG);
 
-	bcopy(cid,tp,cnt*sizeof(int16));
+	memcpy (tp,cid,cnt*sizeof(int16));
 
 	return tp;
 }
@@ -1062,7 +1062,7 @@ rt_public char *wclass_name(void)
 	if (np == (char *) 0)
 		enomem(MTC_NOARG);
 
-	bcopy(name,np,cnt*sizeof(char));
+	memcpy (np,name,cnt*sizeof(char));
 
 	return np;
 }

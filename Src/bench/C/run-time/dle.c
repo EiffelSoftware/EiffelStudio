@@ -229,12 +229,12 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 		esystem = (struct cnode *) cmalloc((scount+1) * sizeof(struct cnode));
 		if (esystem == (struct cnode *) 0)
 			enomem();
-		bcopy(egc_fsystem, esystem, (old_scount+1) * sizeof(struct cnode));
+		memcpy (eesystem, gc_fsystem, (old_scount+1) * sizeof(struct cnode));
 #else
 		esystem = (struct cnode *) cmalloc(scount * sizeof(struct cnode));
 		if (esystem == (struct cnode *) 0)
 			enomem();
-		bcopy(egc_fsystem, esystem, old_scount * sizeof(struct cnode));
+		memcpy (esystem, egc_fsystem, old_scount * sizeof(struct cnode));
 #endif
 	} else {
 			/* `esystem' has already been "cmalloc"ed when we loaded
@@ -258,7 +258,7 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 		ecall = (int32 **) cmalloc(scount * sizeof(int32 *));
 		if (ecall == (int32 **) 0)
 			enomem();
-		bcopy(egc_fcall, ecall, old_scount * sizeof(int32 *));
+		memcpy (ecall, egc_fcall, old_scount * sizeof(int32 *));
 	} else {
 			/* `ecall' has already been "cmalloc"ed when we loaded
 			 * the static melted code. We just have to realloc it.
@@ -286,7 +286,7 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 		eoption = (struct eif_opt *)cmalloc(scount * sizeof(struct eif_opt));
 		if (eoption == (struct eif_opt *) 0)
 			enomem();
-		bcopy(egc_foption, eoption, old_scount * sizeof(struct eif_opt));
+		memcpy (eoption, egc_foption, old_scount * sizeof(struct eif_opt));
 	} else {
 			/* `eoption' has already been "cmalloc"ed when we loaded
 			 * the static melted code. We just have to realloc it.
@@ -310,7 +310,7 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 		dispatch = (uint32 *) cmalloc(count * sizeof(uint32));
 		if (dispatch == (uint32 *) 0)
 			enomem();
-		bcopy(egc_fdispatch, dispatch, dcount * sizeof(uint32));
+		memcpy (dispatch, egc_fdispatch, dcount * sizeof(uint32));
 	} else {
 			/* `dispatch' has already been "cmalloc"ed when we loaded
 			 * the static melted code. We just have to realloc it.

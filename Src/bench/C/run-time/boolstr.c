@@ -84,13 +84,11 @@ rt_public char *bl_str_shiftr(char *a1, char *a2, int s, int n)
 	int i;
 
 	if (n < s)
-		bcopy (a1, a2 + n * sizeof(char), (s - n) * sizeof(char));
+		memcpy  (a2 + n * sizeof(char), a1, (s - n) * sizeof(char));
 	else
 		n = s;
 
-/* FIXME: use bzero or equiv */
-	for (i = 0; i < n; i++)
-		a2[i] = '\0';
+	memset (a2, 0, n * sizeof (char));
 
 	return a2;
 }
@@ -103,7 +101,7 @@ rt_public char *bl_str_shiftl(char *a1, char *a2, int s, int n)
     int i;
 
 	if (n < s)
-		bcopy (a1 + n * sizeof(char), a2, (s - n) * sizeof(char));
+		memcpy (a2, a1 + n * sizeof(char), (s - n) * sizeof(char));
 	else
 		n = s;
 

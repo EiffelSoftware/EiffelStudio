@@ -296,11 +296,7 @@ rt_public char **eget(register int num)
 
 	SIGBLOCK;			/* Protect against signals */
 
-#ifdef VXWORKS
 	memset (top, 0, (loc_set.st_end - top) * sizeof(char *));
-#else
-	bzero(top, (loc_set.st_end - top) * sizeof(char *));
-#endif
 												/* Fill in end of chunk */
 
 	top = (char **) loc_set.st_cur->sk_next;	/* Pointer to next chunk */

@@ -209,11 +209,7 @@ rt_public void mem_stat(long int type)
 	
 	struct emallinfo *sm = meminfo(type);	/* Get structure by type */
 
-#ifdef VXWORKS
 	memcpy (&mem_stats, sm, sizeof(struct emallinfo));
-#else
-	bcopy(sm, &mem_stats, sizeof(struct emallinfo));
-#endif
 
 	EIF_END_GET_CONTEXT
 }
@@ -267,11 +263,7 @@ rt_public void gc_stat(long int type)
 	EIF_GET_CONTEXT
 	struct gacstat *gs = &g_stat[type];	/* Get structure by type */
 
-#ifdef VXWORKS
 	memcpy (&gc_stats, gs, sizeof(struct gacstat));
-#else
-	bcopy(gs, &gc_stats, sizeof(struct gacstat));
-#endif
 
 	if (type == GST_PART)
 		gc_count = g_data.nb_full;

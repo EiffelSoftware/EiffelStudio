@@ -545,7 +545,7 @@ rt_public void eifsbit(EIF_REFERENCE object, char *name, EIF_BIT bit)
 	 * field is big enough (that would cost one more look-up in the skeleton).
 	 */
 
-	bcopy((char *) bit, (char *) obj_field, size);
+	memcpy (obj_field, bit, size);
 }
 
 rt_public char eifibit(EIF_BIT bit, int i)
@@ -626,7 +626,7 @@ rt_public EIF_BIT eifbcln(EIF_BIT bit)
 	 * field is big enough (that would cost one more look-up in the skeleton).
 	 */
 
-	bcopy((char *) bit, (char *) new_bit, size);
+	memcpy (new_bit, bit, size);
 	return (new_bit);
 }
 

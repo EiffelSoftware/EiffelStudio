@@ -37,6 +37,11 @@
 
 
 #include "eif_config.h"
+#ifdef I_STRING
+#include <string.h>				/* For memset(), bzero() */
+#else
+#include <strings.h>
+#endif
 #include "eif_portable.h"
 #include "eif_tools.h"
 #include "eif_special_table.h"
@@ -45,11 +50,6 @@
 #include "eif_except.h"			/* For eif_panic() */
 #include <assert.h>
 
-#ifdef I_STRING
-#include <string.h>				/* For memset(), bzero() */
-#else
-#include <strings.h>
-#endif
 
 #ifdef EIF_REM_SET_OPTIMIZATION
 
@@ -134,9 +134,9 @@ rt_public int spt_realloc (struct special_table *spt, int size)
 	index = spt->count;				/* Index of first free entry. */
 	
 	/* Initialize free entries to zero. */
-	bzero(spt->h_keys + index, gain * LNGSIZ);
-	bzero(spt->h_values + index, gain * REFSIZ);
-	bzero(spt->old_values + index, gain * REFSIZ);
+	memset (spt->h_keys + index, 0, gain * LNGSIZ);
+	memset (spt->h_values + index, 0, gain * REFSIZ);
+	memset (spt->old_values + index, 0, gain * REFSIZ);
 
 	/************************
 	 *	Postconditions.		*
@@ -206,9 +206,9 @@ rt_public void spt_zero(struct special_table *spt)
 
 	int hsize = spt->h_size;
 
-	bzero(spt->h_keys, hsize * LNGSIZ);
-	bzero(spt->h_values, hsize * REFSIZ);
-	bzero(spt->old_values, hsize * REFSIZ);
+	memset (spt->h_keys, 0, hsize * LNGSIZ);
+	memset (spt->h_values, 0, hsize * REFSIZ);
+	memset (spt->old_values, 0, hsize * REFSIZ);
 }	/* spt_zero () */
  
 rt_public void spt_force(struct special_table *spt, register long key, EIF_REFERENCE val)

@@ -13,6 +13,11 @@
 #include "eif_project.h" /* for egc_..._ref_dtype */
 #include "eif_config.h"
 #include "eif_internal.h"
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
 
 rt_private char *ei_oref(long, EIF_REFERENCE);		/* Offset in object */
 

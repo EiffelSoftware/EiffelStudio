@@ -57,33 +57,6 @@ feature -- Access
 
 	features: LIST [FEATURE_AS]
 			-- Features in `client' having `supplier' as supplier.
-			
-	e_features: LIST [E_FEATURE] is
-			-- Convert from features.
-		local
-			l_item: FEATURE_AS
-			l_feat: E_FEATURE
-			l_class: CLASS_C
-		do
-			l_class := client.class_c
-			if l_class /= Void then
-				create {ARRAYED_LIST [E_FEATURE]} Result.make (features.count)
-				from
-					features.start
-				until
-					features.after
-				loop
-					l_item := features.item
-					l_feat := l_class.feature_with_name (l_item.feature_name)
-					if l_feat /= Void then
-						Result.extend (l_feat)
-					end
-					features.forth
-				end
-			else
-				create {ARRAYED_LIST [E_FEATURE]} Result.make (0)
-			end
-		end
 
 	client: ES_CLASS
 			-- Client of the link.

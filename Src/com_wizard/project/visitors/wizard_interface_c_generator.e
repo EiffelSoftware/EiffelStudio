@@ -40,8 +40,12 @@ feature -- Access
 				until
 					a_descriptor.functions.off
 				loop
-					func_generator.generate (a_descriptor.functions.item)
-					if not a_descriptor.dispinterface then
+					if a_descriptor.dual then
+						func_generator.generate_dual (a_descriptor.functions.item)
+					elseif not a_descriptor.dispinterface then
+						func_generator.generate (a_descriptor.functions.item)
+					end
+					if not a_descriptor.dispinterface or a_descriptor.dual then
 						cpp_class_writer.add_function (func_generator.ccom_feature_writer, Public)
 					end
 					if 

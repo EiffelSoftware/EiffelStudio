@@ -30,6 +30,12 @@ feature
 			"C"
 		end
 
+	send_integer_64_value (value: INTEGER_64) is
+			-- 
+		external
+			"C"
+		end
+		
 	send_real_value (value: REAL) is
 		external
 			"C"

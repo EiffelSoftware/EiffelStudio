@@ -33,6 +33,7 @@ ecom_eiffel_compiler_ieiffelsystembrowser_impl_proxy_s.obj \
 ecom_eiffel_compiler_ienumclass_impl_stub_s.obj \
 ecom_eiffel_compiler_ienumcluster_impl_stub_s.obj \
 ecom_eiffel_compiler_ienumfeature_impl_stub_s.obj \
+registration_utility.obj
 
 WOBJ = wceiffelcompiler_factory.obj \
 wceiffelproject_factory.obj \
@@ -62,13 +63,13 @@ wecom_eiffel_compiler_ieiffelsystembrowser_impl_proxy_s.obj \
 wecom_eiffel_compiler_ienumclass_impl_stub_s.obj \
 wecom_eiffel_compiler_ienumcluster_impl_stub_s.obj \
 wecom_eiffel_compiler_ienumfeature_impl_stub_s.obj \
+registration_utility.obj
 
 all:: ecom.lib ecom_final.lib
 
 ecom.lib: $(WOBJ)
 	if exist $@ del $@
 	lib -OUT:$@ $(WOBJ)
-	del *.obj
 	if not exist msc mkdir msc
 	$(MV) $@ msc
 	del $@

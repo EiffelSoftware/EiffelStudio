@@ -53,10 +53,10 @@ feature -- Execution
 		do
 			if not rescued then
 				if not Workbench.system_defined then
-					output_window.put_string ("Project not been compiled.");
+					output_window.put_string ("Project has not been compiled.");
 					output_window.new_line;
 					output_window.put_string ("The project must be compiled ");
-					output_window.put_string ("before it can be reversed engineered ");
+					output_window.put_string ("before it can be reverse engineered.");
 					output_window.new_line;
 					output_window.display
 				else

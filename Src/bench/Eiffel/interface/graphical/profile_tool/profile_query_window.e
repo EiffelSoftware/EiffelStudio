@@ -246,25 +246,25 @@ feature {NONE} -- Graphical User Interface
 			attach_right (query_form, 0);
 			attach_left (query_form, 0);
 
-			attach_top_widget (query_form, query_sep, 1);
+			attach_top_widget (query_form, query_sep, 0);
 			attach_right (query_sep, 0);
 			attach_left (query_sep, 0);
 
-			attach_top_widget (query_sep, text_form, 2);
+			attach_top_widget (query_sep, text_form, 0);
 			attach_right (text_form, 0);
-			attach_bottom_widget (text_sep, text_form, 2);
+			attach_bottom_widget (text_sep, text_form, 0);
 			attach_left (text_form, 0);
 
 			attach_right (text_sep, 0);
-			attach_bottom_widget (subquery_form, text_sep, 2);
+			attach_bottom_widget (subquery_form, text_sep, 0);
 			attach_left (text_sep, 0);
 
 			attach_right (subquery_form, 0);
-			attach_bottom_widget (subquery_sep, subquery_form, 2);
+			attach_bottom_widget (subquery_sep, subquery_form, 0);
 			attach_left (subquery_form, 0);
 
 			attach_right (subquery_sep, 0);
-			attach_bottom_widget (button_form, subquery_sep, 2);
+			attach_bottom_widget (button_form, subquery_sep, 0);
 			attach_left (subquery_sep, 0);
 
 			attach_right (button_form, 0);

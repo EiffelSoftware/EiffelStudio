@@ -32,7 +32,7 @@ cluster
 
 	finish_freezing:	".\main";
 				
-	resources:		"..\..\API\resources\common";
+	resources:		"..\..\..\common\resources";
 	
 	-- Windows status box
 	statusbox:		".\spec\windows";

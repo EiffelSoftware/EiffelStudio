@@ -395,7 +395,7 @@ feature {NONE} -- GUI
 			l_frame: EV_FRAME
 		do
 				-- Create all widgets.
-			create working_directory.make_with_text_and_parent ("Working directory: ", parent_window)
+			create working_directory.make_with_parent (parent_window)
 			create argument_list.make (parent_window)
 			create argument_combo
 			create current_argument

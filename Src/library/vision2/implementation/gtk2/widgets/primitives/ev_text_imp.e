@@ -44,10 +44,13 @@ feature {NONE} -- Initialization
 			-- Create a gtk text view.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			scrolled_window := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (scrolled_window)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, scrolled_window)
 			text_view := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_new
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_view)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, text_view)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, text_view)
 			text_buffer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (text_view)
 			feature {EV_GTK_EXTERNALS}.object_ref (text_buffer)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (text_view, 1, 1)
@@ -458,7 +461,7 @@ feature -- Basic operation
 		do
 			-- Make sure only vertical scrollbar is showing
 			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
-				c_object, 
+				scrolled_window, 
 				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
 				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM
 			)
@@ -471,7 +474,7 @@ feature -- Basic operation
 		do
 			-- Make sure both scrollbars are showing
 			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
-				c_object, 
+				scrolled_window, 
 				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM,
 				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM
 			)
@@ -549,6 +552,9 @@ feature {NONE} -- Implementation
 		
 	text_view: POINTER
 		-- Pointer to the GtkTextView widget
+		
+	scrolled_window: POINTER
+		-- Pointer to the GtkScrolledWindow
 
 	text_buffer: POINTER
 		-- Pointer to the GtkTextBuffer.

@@ -70,7 +70,7 @@ feature -- Access
 
 	has_recursive (an_item: like item): BOOLEAN is
 			-- Does structure include `an_item' or
-			-- does any structure recursivly included by structure,
+			-- does any structure recursively included by structure,
 			-- include `an_item'.
 		require
 			not_destroyed: not is_destroyed

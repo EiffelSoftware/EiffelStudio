@@ -84,6 +84,13 @@ feature -- Externals (XTEST extension)
 			"XTestFakeKeyEvent"
 		end
 
+	x_keysym_to_keycode (a_display: POINTER; a_keycode: INTEGER): INTEGER is
+		external
+			"C: EIF_INTEGER| <X11/Xlib.h>"
+		alias
+			"XKeysymToKeycode"
+		end
+
 	x_display_name (a_display_name: POINTER): POINTER is
 		external
 			"C: char *| <X11/Xlib.h>"

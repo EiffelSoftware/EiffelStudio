@@ -1,8 +1,9 @@
 class BIN_STAR_B 
 
 inherit
-
 	NUM_BINARY_B
+		rename
+			Bc_star as operator_constant
 		redefine
 			generate_operator, is_commutative,
 			is_simple, generate_simple
@@ -30,12 +31,5 @@ feature
 		do
 			generated_file.putstring (" *= ");
 		end; -- generate_simple
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_star
-		end;
 
 end

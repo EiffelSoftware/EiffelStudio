@@ -1,9 +1,9 @@
 -- Byte code for semi-strict "implies"
 
-class B_IMPLIES_B 
+class
+	B_IMPLIES_B 
 
 inherit
-
 	BOOL_BINARY_B
 		redefine
 			built_in_enlarged, print_register, make_standard_byte_code

@@ -5,6 +5,8 @@ class B_AND_THEN_B
 inherit
 
 	BOOL_BINARY_B
+		rename
+			Bc_and as operator_constant
 		redefine
 			built_in_enlarged, generate_operator,
 			is_commutative, make_standard_byte_code
@@ -37,13 +39,6 @@ feature
 
 feature -- Byte code generation
 	
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_and
-		end;
-
 	make_standard_byte_code (ba: BYTE_ARRAY) is
 			-- Generate standard byte code for binary expression
 		do
@@ -51,7 +46,7 @@ feature -- Byte code generation
 			ba.append (Bc_and_then);
 			ba.mark_forward;
 			right.make_byte_code (ba);
-			ba.append (Bc_and);
+			ba.append (operator_constant); -- Bc_and
 			ba.write_forward;
 		end;
 			

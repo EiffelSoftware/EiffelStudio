@@ -1,8 +1,10 @@
 class BIN_EQ_B 
 
 inherit
-
 	BIN_EQUAL_B
+		rename
+			Bc_eq as operator_constant,
+			Bc_false_compar as obvious_operator_constant
 		redefine
 			enlarged, generate_operator
 		end
@@ -24,18 +26,11 @@ feature
 	enlarged: BIN_EQ_BL is
 			-- Enlarge node
 		do
-			!!Result;
+			!! Result;
 			Result.fill_from (Current);
 		end;
 
 feature -- Byte code generation
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_eq
-		end;
 
     make_expanded_eq_test (ba: BYTE_ARRAY) is
             -- Make byte code for current expanded equality
@@ -47,13 +42,6 @@ feature -- Byte code generation
             -- Make byte code for current bit equality
 		do
 			ba.append (Bc_bit_standard_equal);
-		end;
-
-	obvious_operator_constant: CHARACTER is 
-			-- Byte code operator associated to an obvious false
-			-- comparison
-		do
-			Result := Bc_false_compar;
 		end;
 
 end

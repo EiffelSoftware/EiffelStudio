@@ -3,6 +3,8 @@ class BIN_MOD_B
 inherit
 
 	NUM_BINARY_B
+		rename
+			Bc_mod as operator_constant
 		redefine
 			generate_operator, is_simple,
 			generate_simple, is_built_in
@@ -26,13 +28,6 @@ feature
 			-- Generate a simple assignment operation
 		do
 			generated_file.putstring (" %%= ");
-		end;
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_mod
 		end;
 
 	is_built_in: BOOLEAN is

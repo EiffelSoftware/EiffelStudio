@@ -3,7 +3,6 @@
 class BIN_OR_B 
 
 inherit
-
 	B_OR_ELSE_B
 
 end

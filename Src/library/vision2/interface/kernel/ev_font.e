@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 			-- Create the font corresponding to the given name
 			-- with the default values.
 		do
-			!EV_FONT_IMP! implementation.make
+			!EV_FONT_IMP! implementation.make_by_name (str)
 			implementation.set_interface (Current)
-			set_name (str)
+
 		end
 
 	make_by_system_name (str: STRING) is

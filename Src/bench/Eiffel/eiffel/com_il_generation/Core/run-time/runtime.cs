@@ -129,7 +129,8 @@ feature -- Assertions
 
 		Result = !in_assertion();
 		if (Result) {
-			if (assertion_levels.ContainsKey (t)) {
+				// Let's extract the specified assertion level for type `t'.
+			if ((assertion_levels != null) && (assertion_levels.ContainsKey (t))) {
 				type_assertion_level = (ASSERTION_LEVEL_ENUM) assertion_levels [t];
 			} else {
 				type_assertion_level = ASSERTION_LEVEL_ENUM.no;

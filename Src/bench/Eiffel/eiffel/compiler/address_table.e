@@ -438,6 +438,9 @@ feature {NONE} -- Generation
 						gen_file.putstring ("Dtype(Current)")
 						gen_file.putstring ("];%N")
 
+							-- Mark table used.
+						Eiffel_table.mark_used (rout_id)
+
 							-- Remember extern declarations
 						Extern_declarations.add_routine_table (table_name)
 

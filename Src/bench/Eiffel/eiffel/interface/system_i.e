@@ -2032,6 +2032,9 @@ end;
 			end;
 			close_log_files;
 
+				-- Address table
+			address_table.generate (True)
+
 			generate_table;
 
 				-- Generate makefile
@@ -2040,9 +2043,6 @@ end;
 				-- Generate main file
 			generate_main_file;
 			generate_init_file;
-
-				-- Address table
-			address_table.generate (True)
 
 			if extendible then
 					-- Keep track of the generated data for the
@@ -2529,7 +2529,8 @@ else
 		Skeleton_file.putstring 
 			("{%N0L,%N%"INVALID_TYPE%",%N(char**) 0,%N(int*) 0,%N%
 			%(uint32*) 0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
-			%(int32) 0,%N(int32) 0,%N'\0',%N(int32*) 0,%N%
+			%{{(int32) 0,(int32) 0}},%N%
+			%'\0',%N(int32*) 0,%N%
 			%{(int32) 0, (int) 0, (char**) 0, (char*) 0}}");
 	end
 end;

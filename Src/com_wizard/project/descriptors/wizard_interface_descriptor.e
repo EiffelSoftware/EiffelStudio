@@ -533,12 +533,7 @@ feature -- Miscellaneous
 					l_virtual_function := vtable_functions.item
 					l_dispatch_function := dispinterface_descriptor.dual_function (l_virtual_function)	
 					if l_dispatch_function /= Void then
---						if dispatch_access (l_virtual_function, l_dispatch_function) then
---							vtable_functions.replace (l_dispatch_function)
---						else
---							l_virtual_function.set_dual (True)
---						end
-							l_virtual_function.set_dual (True)
+						l_virtual_function.set_dual (True)
 						l_functions.prune (l_dispatch_function)
 					end
 					vtable_functions.forth

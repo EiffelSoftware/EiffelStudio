@@ -24,6 +24,12 @@
 #include "confmagc.h"
 #endif
 
+#ifdef __VMS
+#include <unixlib.h>
+#include <unixio.h>
+#include <stdlib.h>
+#endif
+
 /*
  * Standard types
  */

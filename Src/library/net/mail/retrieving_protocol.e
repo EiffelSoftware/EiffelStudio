@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	transfert is 
+	transfer is 
 		deferred
 		end
 

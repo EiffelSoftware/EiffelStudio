@@ -118,8 +118,6 @@ feature {NONE} -- Implementation
 			-- label widget
 		deferred
 		end
-	
-
 
 end
 

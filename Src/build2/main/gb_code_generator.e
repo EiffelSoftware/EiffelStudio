@@ -32,12 +32,10 @@ feature -- Basic operation
 			-- Generate a new Eiffel class in `a_file_name',
 			-- named `a_class_name'. The rest is built from the
 			-- current state of the display_window.
-		local
-			project_settings: GB_PROJECT_SETTINGS
+		local	
 			directory: DIRECTORY
 			directory_file_name: FILE_NAME
 		do
-			project_settings := system_status.current_project_settings
 			create directory_file_name.make_from_string (project_settings.project_location)
 			directory_file_name.extend (generation_directory)
 			create directory.make (directory_file_name)
@@ -88,13 +86,11 @@ feature {NONE} -- Implementation
 		local
 			platform_ace_file_name: FILE_NAME
 			project_location, ace_file_name: FILE_NAME
-			project_settings: GB_PROJECT_SETTINGS
 			ace_template_file, ace_output_file: RAW_FILE
 			temp_string: STRING
 			i, j: INTEGER
 		do
 			set_progress (0.1)
-			project_settings := system_status.current_project_settings
 			if Eiffel_platform.is_equal ("windows") then
 				platform_ace_file_name := clone (windows_ace_file_name)
 			else
@@ -144,10 +140,8 @@ feature {NONE} -- Implementation
 				application_file_name: FILE_NAME
 				main_window_type, application_class_name: STRING
 				main_window_tag_index: INTEGER
-				project_settings: GB_PROJECT_SETTINGS
 				change_pos: INTEGER
 			do
-				project_settings := system_status.current_project_settings
 				set_progress (0.2)
 				create application_template_file.make_open_read (application_template_file_name)
 				create application_text.make (application_template_file.count)
@@ -184,9 +178,7 @@ feature {NONE} -- Implementation
 				window_template_file, window_output_file: RAW_FILE
 				window_file_name: FILE_NAME
 				local_tag_index, create_tag_index: INTEGER
-				project_settings: GB_PROJECT_SETTINGS
 			do
-				project_settings := system_status.current_project_settings
 				set_progress (0.3)
 				create store
 					-- Generate an XML representation of the current project.
@@ -525,9 +517,7 @@ feature {NONE} -- Implementation
 			local_name: STRING
 			comment_object_name, parameters: STRING
 			feature_implementation: STRING
-			project_settings: GB_PROJECT_SETTINGS
 		do
-			project_settings := system_status.current_project_settings
 			if element.has_attribute_by_name (type_string) then
 				stored_current_type := element.attribute_by_name (type_string).value.to_utf8
 			end
@@ -642,11 +632,9 @@ feature {NONE} -- Implementation
 			-- button2: EV_BUTTON
 		local	
 			temp_string,local_string_start, indent_string: STRING
-			project_settings: GB_PROJECT_SETTINGS
 		do
 				-- Need to generate slightly different code dependent
 				-- on whether the atrributes are local or not.
-			project_settings := system_status.current_project_settings
 			if project_settings.attributes_local then
 				indent_string := indent
 				local_string_start := "local " + indent
@@ -674,9 +662,7 @@ feature {NONE} -- Implementation
 			temp_string, local_string_start, indent_string: STRING
 			index_of_type, search_counter: INTEGER
 			found_correctly: BOOLEAN
-			project_settings: GB_PROJECT_SETTINGS
 		do
-			project_settings := system_status.current_project_settings
 				-- Need to generate slightly different code dependent
 				-- on whether the atrributes are local or not.
 			if project_settings.attributes_local then
@@ -872,6 +858,14 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+		
+		
+	project_settings: GB_PROJECT_SETTINGS is
+			-- Short access to system_status.current_project_settings.
+			-- Cannot be a once, as the settings may change.
+		do
+			Result := system_status.current_project_settings
+		end		
 	
 	parent_child: ARRAYED_LIST [STRING]
 		-- A list of all parent attribute names and associated child names in the following format:

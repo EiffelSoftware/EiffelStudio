@@ -126,7 +126,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	initialize_component is
-			--
+			-- Initialize window components.
 		local
 			l_size: DRAWING_SIZE
 			l_point: DRAWING_POINT
@@ -148,7 +148,6 @@ feature {NONE} -- Implementation
 			l_point.make_from_x_and_y (16, 24)
 			label_1.set_location (l_point)
 			label_1.set_tab_index (0)
-			--label_1.set_anchor = (System.Windows.Forms.AnchorStyles) 13
 			l_size.make_from_width_and_height (360, 50)
 			label_1.set_size (l_size)
 			label_1.set_text (("Right Click on me - I have a context menu!").to_cil)

@@ -829,6 +829,9 @@ void c_raise_concur_exception(int type) {
 		case exception_void_separate_object:
 			eraise("Void Separate Object", CONCURRENT_CRASH);
 			break;
+		case exception_invalid_separate_object:
+			eraise("Invalid Separate Object", CONCURRENT_CRASH);
+			break;
 		default:
 			eraise("Concurrent Exception", CONCURRENT_CRASH);
 			break;

@@ -137,8 +137,8 @@ feature -- Status setting
 			reference_exists: reference /= Void
 		do
 			if object = Void or else
-				dynamic_type (reference) /= dynamic_type (object) then
-				update_map_table := true
+					dynamic_type (reference) /= dynamic_type (object) then
+				update_map_table := True
 			end
 			object := reference
 		ensure
@@ -244,10 +244,10 @@ feature -- Basic operations
 				end
 				if handle.status.found then
 					cursor.fill_in
-				end
-				if object /= Void and then (cursor.map_table_to_create or else update_map_table) then
-					cursor.update_map_table (object)
-					update_map_table := False
+					if object /= Void and then (cursor.map_table_to_create or else update_map_table) then
+						cursor.update_map_table (object)
+						update_map_table := False
+					end
 				end
 				if stop_condition /= Void then
 					stop_condition.start

@@ -51,6 +51,8 @@ feature {NONE} -- Initialization
 			pointer_motion_actions.extend (agent on_pointer_motion_on_world)
 			is_multiple_selection_enabled := True
 			xml_routines.reset_valid_tags
+			real_grid_x := default_grid_x
+			real_grid_y := default_grid_y
 		end
 
 	make_with_model (a_model: like model) is
@@ -676,6 +678,14 @@ feature -- Element change
 		do
 			Precursor {EV_MODEL_WORLD} (a_scale)
 			scale_factor := scale_factor * a_scale
+			real_grid_x := real_grid_x * a_scale
+			if grid_x /= as_integer (real_grid_x) then
+				grid_x := as_integer (real_grid_x)
+			end
+			real_grid_y := real_grid_y * a_scale
+			if grid_y /= as_integer (real_grid_y) then
+				grid_y := as_integer (real_grid_y)
+			end
 		ensure then
 			new_scale_factor: scale_factor = old scale_factor * a_scale
 		end
@@ -892,6 +902,12 @@ feature {EG_FIGURE, EG_LAYOUT} -- Implementation
 			-- All links in `Current'.
 
 feature {NONE} -- Implementation
+
+	real_grid_x: REAL
+			-- Real grid width in x direction.
+			
+	real_grid_y: REAL
+			-- Real grid width in y direction.
 
 	insert_cluster (a_cluster: EG_CLUSTER) is
 			-- Insert `a_cluster' to view and all its containing subclusters (recursive)

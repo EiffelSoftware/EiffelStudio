@@ -50,9 +50,6 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	body_id: INTEGER;
-			-- Id for the feature server
-
 	id: INTEGER;
 			-- Id of the current instance used by the temporary AST
 			-- server.
@@ -235,8 +232,6 @@ feature {COMPILER_EXPORTER} -- Initialization
 	trace is
 		do
 			io.error.putstring ("FEATURE_AS");
-			io.error.putint (body_id);
-			io.error.new_line;
 			io.error.putint (end_position);
 			io.error.new_line;
 			io.error.putint (start_position);
@@ -248,12 +243,6 @@ feature {COMPILER_EXPORTER} -- Initialization
 		end;
 
 feature {COMPILER_EXPORTER} -- Conveniences
-
-	set_body_id (i: INTEGER) is
-			-- Assign `i' to `body_id'.
-		do
-			body_id := i;
-		end;
 
 	is_feature_obj: BOOLEAN is
 			-- Is the current object an instance of FEATURE_AS ?

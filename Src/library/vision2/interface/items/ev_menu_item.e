@@ -1,6 +1,7 @@
 indexing	
 	description: 
-		"EiffelVision menu item. Menu a container of menu itemsInvisible container that allows unlimited number of other widgets to be packed inside it. Box controls the location the children's location and size automatically."
+		"EiffelVision menu item. Item that must be put in an %
+		% EV_MENU_ITEM_CONTAINER."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -10,9 +11,7 @@ class EV_MENU_ITEM
 
 inherit
 
-	EV_TEXT_CONTAINER
-		rename
-			make_with_text as widget_make_with_text
+	EV_ITEM
 		redefine
 			implementation
 		end
@@ -24,40 +23,39 @@ creation
 feature {NONE} -- Initialization
 	
 	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
-			-- Create menu item
+			-- Create a menu item and add it to the `par'
+			-- container.
 		do
 			!EV_MENU_ITEM_IMP!implementation.make_with_text (par, txt)
 			par.add_menu_item (Current)
 		end	
-	
-feature -- Event - command association
-	
-	add_activate_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the menu item is activated
+
+feature -- Status report
+
+	insensitive: BOOLEAN is
+			-- Is current item insensitive to
+			-- user actions? 
 		require
-			valid_command: command /= Void
+			exists: not destroyed
 		do
-			implementation.add_activate_command ( command, 
-							      arguments )
-		end	
+			Result := implementation.insensitive
+		end
 
+feature -- Status setting
+
+	set_insensitive (flag: BOOLEAN) is
+   			-- Set current item in insensitive mode if
+   			-- `flag'. 
+   		require
+   			exists: not destroyed
+   		do
+ 			implementation.set_insensitive (flag)
+ 		ensure
+   			flag = insensitive
+   		end
 
 feature -- Implementation
 
-	widget_make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Do nothing here, but need to be implemented.
-		do
-		end
-
-	destroyed: BOOLEAN is
-		do
-			Result := implementation.destroyed
-		end
-
-feature -- Implementation
-	
 	implementation: EV_MENU_ITEM_I
 
 end -- class EV_MENU

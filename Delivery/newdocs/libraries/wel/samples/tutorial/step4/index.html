@@ -1,3 +1,5 @@
+<script src="../../../../../technologies/dotnet/samples/instal.js"></script>
+
 <!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
 
 <HTML>
@@ -13,17 +15,24 @@
 		</p>
 		<CENTER><IMG SRC="step4.png" ALT="step4" /></CENTER><BR><BR>
 		<H2>Compiling</H2>
-		<P>
-			To compile the example:
-		</P>
-		<UL>
-			<LI>Launch EiffelStudio.
-			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
-			<LI>Browse to <I>Eiffel52\examples\wel\tutorial\step4\</I>.
-			<LI>Choose <I>Ace.ace</I>
-			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
-			<LI>Click <B>OK</B>.
-		</UL>
+<script language="JavaScript">
+<!--
+var path_to_ace_file = Eiffel_version + "\\examples\\wel\\tutorial\\step4\\";
+var ace_file_name = "Ace";
+var path_eifp_file = "..\\..\\samples\\wel\\tutorial\\step4\\"
+var eifp_name = "step4.eifp";
+
+if (eiffel_studio) {
+	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
+}
+else {
+	write_envision_compiling_instruction (path_eifp_file, eifp_name)
+}
+-->
+        </script>
+<noscript>
+        <p>To see compiling instructions, you have to enable javascript.</p></noscript>
+
 		<H2>Running</H2>
 		After launching the sample, you will see a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> displayed. By holding
 		down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client area of the window. Pressing the right mouse button within the window will clear the client area of the window.

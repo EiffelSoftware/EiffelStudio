@@ -2,7 +2,7 @@ system
 	"ISE.Reflection.EiffelComponents"
 
 root
-	EIFFEL_ASSEMBLY (root_cluster): "make"
+	EIFFEL_COMPONENTS (root_cluster): "make"
 
 default
 	assertion (all)

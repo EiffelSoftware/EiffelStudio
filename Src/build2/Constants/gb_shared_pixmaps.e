@@ -199,7 +199,7 @@ feature -- Pngs
 			result_not_void: Result /= Void
 		end
 
-feature -- Reading
+feature {NONE} -- Update
 
 	pixmap_file_content (fn: STRING): EV_PIXMAP is
 		local
@@ -224,34 +224,6 @@ feature -- Reading
 			retried := True
 			retry
 		end
-		
-	is_visual_studio_wizard: BOOLEAN is
-			-- Has Build been launched from
-			-- VisualStudio in Wizard mode?
-			-- This is a Once, as it will
-			-- never change during the execution of
-			-- the system.
-		local
-			shared_system_status: GB_SHARED_SYSTEM_STATUS
-		once
-			create shared_system_status
-			if shared_system_status.system_status.is_wizard_system then
-				Result := True
-			end
-		end
-		
-	visual_studio_pixmap_location: STRING is
-			--
-		local
-			pixmap_file_location: PIXMAP_LOCATER
-		once
-			create pixmap_file_location
-			Result := pixmap_file_location.pixmap_path
-			Result := Result + "\Wizards\Build\bitmaps\ico"
-		end
-		
-
-feature {NONE} -- Update
 
 	pixmaps_by_name: HASH_TABLE [EV_PIXMAP, STRING] is
 			-- All pixmaps returned from `pixmap_by_name'.
@@ -310,13 +282,19 @@ feature {NONE} -- Update
 			-- `Result' is full path to `file'.
 			-- Dependent on platform, and type of
 			-- execution (Wizard, normal.)
+		require
+			file_name_exists: file /= Void and not file.is_empty
 		do
 				-- Note that if we have launched from
 				-- VisualStudio, then we look for the pixmaps
 				-- relative to the current directory, which is the location
 				-- of build.exe
-			if is_visual_studio_wizard then
-				create Result.make_from_string (visual_studio_pixmap_location)
+			if visual_studio_information.is_visual_studio_wizard then
+				create Result.make_from_string (visual_studio_information.wizard_installation_path)
+				Result.extend ("Wizards")
+				Result.extend ("build")
+				Result.extend ("bitmaps")
+				Result.extend ("ico")
 				Result.set_file_name (file)
 				Result.add_extension ("ico")
 			else
@@ -330,7 +308,20 @@ feature {NONE} -- Update
 					Result.add_extension (Pixmap_suffix)
 				end
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 		
+feature {NONE} -- Implementation
+
+	visual_studio_information: VISUAL_STUDIO_INFORMATION is
+			-- `Result' is instance of VISUAL_STUDIO_INFORMATION.
+			-- Is a Once, as the state will never change during the
+			-- execution of Build.
+		once
+			create Result
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 end -- Class GB_SHARED_PIXMAPS

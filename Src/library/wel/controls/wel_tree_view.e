@@ -72,6 +72,21 @@ feature -- Access
 	last_item: INTEGER
 			-- Handle of the last item inserted
 
+	get_parent_item (an_item: WEL_TREE_VIEW_ITEM): WEL_TREE_VIEW_ITEM is
+			-- Return the parent item of the given item.
+		local
+			handle: INTEGER
+		do
+			handle := cwin_send_message_result (item, Tvm_getnextitem, Tvgn_parent, an_item.h_item)
+			if handle /= 0 then
+				!! Result.make
+				Result.set_h_item (handle)
+				Result := get_item_with_data (Result)
+			else
+				Result := Void
+			end
+		end 
+
 feature -- Status report
 
 	count: INTEGER is

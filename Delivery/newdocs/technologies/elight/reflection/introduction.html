@@ -2,6 +2,7 @@
 	<head>
 		<title>Reflection system specification</title>
 		<LINK REL="StyleSheet" HREF="/default.css">
+		<META NAME = "MS-HKWD" CONTENT = "Reflection system content, ISE.Reflection.Emitter.exe, ISE.Reflection.EiffelComponents.dll, ISE.Reflection.CodeGenerator.dll, ISE.Reflection.ReflectionInterface.dll">
 	</head>
 
 	<body>
@@ -10,19 +11,21 @@
 		<h2>1. Introduction</h2>
 
 				<p>
-						ISE reflection system is composed of four components interacting with each other: `Emitter.exe', `ISE.EiffelComponents.dll', `ISE.CodeGenerator.dll' and `ISE.ReflectionInterface.dll'.
+						ISE reflection system is composed of five components interacting with each other: `ISE.Reflection.Emitter.exe', `ISE.Reflection.EiffelComponents.dll', `ISE.Reflection.Support.dll', `ISE.Reflection.CodeGenerator.dll' and `ISE.Reflection.ReflectionInterface.dll'.
 				</p>
 				<ul>
-						<li><b>`Emitter.exe'</b> enables you to generate Xml files and Eiffel classes from a .NET assembly. This relies on the three other components described below. You can call `Emitter.exe' directly.</li>
+						<li><b>`ISE.Reflection.Emitter.exe'</b> enables you to generate XML files and Eiffel classes from a .NET assembly. This relies on the three other components described below. You can call `ISE.Reflection.Emitter.exe' directly.</li>
 						<br><br>
-						<li><b>`ISE.EiffelComponents.dll'</b> is used internally by `Emitter.exe', `ISE.CodeGenerator.dll' and `ISE.ReflectionInterface.dll'. It provides a representation of an Eiffel class, an Eiffel feature and an Eiffel assembly.</li>
+						<li><b>`ISE.Reflection.EiffelComponents.dll'</b> is used internally by `ISE.Reflection.Emitter.exe', `ISE.Reflection.CodeGenerator.dll' and `ISE.Reflection.ReflectionInterface.dll'. It provides a representation of an Eiffel class, an Eiffel feature and an Eiffel assembly.</li>
 						<br><br>
-						<li><b>`ISE.CodeGenerator.dll'</b> is used by `Emitter.exe' to generate Xml files and Eiffel classes from Eiffel components. It is also used by `ISE.Reflection.Interface.dll' to retrieve Eiffel components from Xml files.</li>
+						<li><b>`ISE.Reflection.Support.dll'</b> provides a feature `hash_value', which computes hash value of a string by using the MD5 hash algorithm. This is used by the database to generate folder name for an assembly, and by the generators to find file location.</li>
 						<br><br>
-						<li><b>`ISE.Reflection.Interface.dll'</b> is aimed at connecting .NET names with corresponding Eiffel names by using XML files. It is a kind of database where you put XML files describing .NET types and you retrieve a more user-friendly type description. (Only shared assemblies can be stored in this database.) You can use it directly to retrieve information from the database.</li>
+						<li><b>`ISE.Reflection.CodeGenerator.dll'</b> is used by `ISE.Reflection.Emitter.exe' to generate XML files and Eiffel classes from Eiffel components. It is also used by `ISE.Reflection.ReflectionInterface.dll' to retrieve Eiffel components from XML files.</li>
+						<br><br>
+						<li><b>`ISE.Reflection.ReflectionInterface.dll'</b> is aimed at connecting .NET names with corresponding Eiffel names by using XML files. It is a kind of database where you put XML files describing .NET types and you retrieve a user-friendlier type description. (Only shared assemblies can be stored in this database.) You can use it directly to retrieve information from the database.</li>
 				</ul>
 
-				<p>Since all other components rely on it, this specification describes `ISE.EiffelComponents.dll' first.</p>
+				<p>Since all other components rely on it, this specification describes `ISE.Reflection.EiffelComponents.dll' first.</p>
 		<br><br>
 	</body>
 </html>

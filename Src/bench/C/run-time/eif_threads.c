@@ -113,7 +113,7 @@ EIF_THR_ENTRY_TYPE eif_thr_entry(start_routine_ctxt_t *routine_ctxt)
 }
 
 
-eif_exit_thread(void)
+void eif_exit_thread(void)
 {
 	EIF_THR_EXIT(0);
 }

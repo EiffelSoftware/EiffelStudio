@@ -1,0 +1,242 @@
+--
+-- Config.eif for cygwin gcc beta 20.1 or greater
+--
+
+-- Directory separator
+directory_separator: "/"
+subcommand_separator: " && "
+
+-- include_path
+include_path: "$(INCLUDE_PATH)"
+
+-- C-compiler
+cc: "gcc"
+cpp: "gcc"
+
+-- C-linker
+sharedlink: "gcc"
+
+-- optimization flags
+optimize: "-O2"
+wkoptimize: "-O0 -g"
+
+-- compiler flags
+ccflags: "-mno-cygwin"
+mtccflags: "-mno-cygwin -MT -DEIF_THREADS"
+cppflags: "-mno-cygwin"
+mtcppflags: "-mno-cygwin -MT -DEIF_THREADS"
+shared_flags: "-mno-cygwin -DEIF_USE_DLL"
+
+large: ""
+
+-- linker flags
+ar: ""
+ld: "ld"
+ldflags: "-mno-cygwin"
+mtldflags: "-mno-cygwin -NODEFAULTLIB:libc"
+console_flags: ""
+windows_flags: ""
+ldsharedflags: "-shared"
+mtldsharedflags: "-shared"
+
+-- eiffel run-time specification
+prefix: "$(ISE_C_COMPILER)/"
+shared_prefix: "$(ISE_C_COMPILER)/dll_"
+mt_prefix: "mt"
+eiflib: "finalized"
+wkeiflib: "wkbench"
+suffix: ".o"
+shared_suffix: ".so"
+
+-- libraries
+libs: ""
+mtlibs: ""
+sharedlibs: ""
+
+mkdep: ""
+
+-- platform $(MV) command
+mv: "cp"
+cp: "cp"
+
+ranlib: "echo"
+
+-- platform remove command
+rm: "rm -f"
+rmdir: "rd"
+
+-- make program
+make: "make"
+command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -f %%i%""
+dpflags: ""
+
+continuation: "\"
+
+appl_make: "$appl.exe: E1/emain.o $precompile_libs_command $(OBJECTS) $appl.res $(EXTERNALS) $library $sharedlibs%N%
+%%T$(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/version.eif .%N%
+%%T$(COMMAND_MAKEFILE)%N%
+%%T$(RM) $@%N%
+%%T$(CC) $(LDFLAGS) -o $appl.exe E1/emain.o $sharedlibs $precompile_libs_command %
+%$appl.res $(OBJECTS) $(EXTERNALS) $library%N%
+%%N%
+%../../$appl.rc:%N%
+%%Tif [ ! -f ../../$appl.rc ] ; then $(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico ../../gnu.ico ; fi %N%
+%%Tif [ ! -f ../../$appl.rc ] ; then $(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc ../../$appl.rc ; fi %N%
+%%N%
+%$appl.rc: ../../$appl.rc%N%
+%%T$(MV) ../../$appl.rc $appl.rc%N%
+%%N%
+%$appl.res: $appl.rc Makefile%N%
+%%Tif [ -f ../../*.ico ] ; then $(MV) ../../*.ico . ; fi %N%
+%%Tif [ -f ../../*.cur ] ; then $(MV) ../../*.cur . ; fi %N%
+%%Tif [ -f ../../*.bmp ] ; then $(MV) ../../*.bmp . ; fi %N%
+%%Tif [ -f ../../*.tlb ] ; then $(MV) ../../*.tlb . ; fi %N%
+%%Tif [ -f ../../*.h ] ; then $(MV) ../../*.h . ; fi %N%
+%%Twindres $appl.rc -O coff -o $appl.res%N%
+%"
+
+-- precompilation
+precompile: "driver.exe: driver.lnk driver.rc%N%
+%%T$(RM) driver.exe%N%
+%%Tlink @driver.lnk%N%
+%%T$(RM) *.err%N%
+%%T$(RM) driver.lnk%N%
+%%T$(RM) driver.res%N%
+%%T$(RM) driver.map%N%
+%%T$(RM) *.ico%N%
+%%T$(RM) *.rc%N%
+%%T$(RM) Makefile%N%
+%%T$(RM) TRANSLAT%N%
+%%T$(RM) Makefile.SH%N%
+%%T$(RM) estudio.pch%N%
+%%T$(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/version.eif .%N%
+%%Tmkdir $(ISE_C_COMPILER)%N%
+%%T$(MV) driver.exe $(ISE_C_COMPILER)/driver.exe%N%
+%%T$(MV) precomp.lib $(ISE_C_COMPILER)/precomp.lib%N%
+%%T$(RM) driver.exe%N%
+%%T$(RM) precomp.lib%N%
+%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/*.o%N%
+%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/*.c%N%
+%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/*.x%N%
+%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/*.lib%N%
+%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/*.pch%N%
+%%Tfor %%i in ($(SUBDIRS)) do $(RM) %%i/Makefile.*%N%
+%%Tfor %%i in ($(SUBDIRS)) do $(RMDIR) %%i%N%
+%%N%
+%driver.rc: $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc%N%
+%%T$(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc driver.rc%N%
+%%N%
+%driver.res: driver.rc%N%
+%%Trc -r driver.rc%N%
+%%N%
+%precomp.lib: $(OBJECTS) $(EXTERNALS)%N%
+%%T$(RM) $@%N%
+%%Tlib -OUT:precomp.lib $(OBJECTS) $(EXTERNALS)%N%
+%%N%
+%driver.lnk: E1/emain.o precomp.lib driver.res $precompilelibs%N%
+%%Techo $(LDFLAGS) -OUT:driver.exe > $@%N%
+%%Techo E1/emain.o >> $@%N%
+%%Techo precomp.lib >> $@%N%
+%%Techo USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.LIB COMDLG32.lib >> $@%N%
+%%T@echo UUID.lib OLE32.lib OLEAUT32.lib>> $@%N%
+%$precompile_libs_command%
+%%Techo $(EIFLIB) >> $@%N%
+%%Techo driver.res >> $@"
+
+-- cecil
+cecil_make: "$(STATIC_CECIL): $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs%N%
+%%T$(RM) $@%N%
+%%Tlib -OUT:$(STATIC_CECIL) $(OBJECTS) $(EXTERNALS) $(EIFLIB) $precompilelibs"
+
+cecil_def: "%
+%DEF_FILE= c_$appl.def %N%
+%c_$appl.def: %N%
+%%T$(RM) $@%N%
+%%T@echo LIBRARY c_$appl.dll > $@%N%
+%%T@echo DESCRIPTION %'c_$appl.dll%' >> $@%N%
+%%T@type $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/templates/cecil.def  >> $@"
+
+cecil_dynlib: "%T/def:$(DEF_FILE) \%N%
+	%%T/OUT:$(SHARED_CECIL) /IMPLIB:c_dll_$appl.lib%N"
+
+system_dynlib: "%T/def:$(DEF_FILE) \%N%
+	%%T/OUT:$(SYSTEM_IN_DYNAMIC_LIB) /IMPLIB:dll_$appl.lib%N"
+
+-- done
+completed: "%Techo done > completed.eif"
+
+all: "all:: "
+
+intermediate_file_ext: "o"
+
+make_intermediate: "%T$(RM) $@%N%
+%%T$(LD) -r -o $@ $obj"
+
+-- options below are for config internal use
+-- mind the spaces!
+
+no_subs: "!NO!SUBS!"
+
+-- platform change directory command
+cd: "cd"
+
+-- text for remove command
+rm_text: "RM ="
+
+-- text for make command
+make_text: "MAKE"
+
+-- text for C-compiler command
+cc_text: "$(CC) $(CFLAGS)"
+
+cobj_text: ".c.o:"
+cppobj_text: ".cpp.o:"
+xobj_text: ".x.o:"
+xppobj_text: ".xpp.o:"
+
+obj_text: ".o "
+
+eobj_text: "$(EOBJ"
+
+objects__text: "$(OBJECTS)"
+
+-- text for precompilation
+precompile_text: "precompile $appl"
+
+appl_text: "appl_make $appl"
+
+cecil_text: "cecil_make $appl"
+
+-- platform 'parent' directory
+updir: ".."
+
+emain_text: "emain"
+
+emain_obj_text: "emain.o"
+
+objects_text: "OBJECTS = "
+c_objects_text: "C_OBJECTS = "
+d_objects_text: "D_OBJECTS = "
+f_objects_text: "F_OBJECTS = "
+
+eobjects_text: "EOBJECTS = "
+
+obj_file_ext: "o"
+
+executable_file_ext: ".exe"
+
+driver_text: "/driver"
+
+driver_filename: "driver.exe"
+
+externals_text: "EXTERNALS"
+
+externals_continuation_text: "EXTERNALS =  \"
+
+precomp_lib_command_text: "@echo $precompiled_library >> $@%N%T"
+
+start_test: "if [ ! -f finished ] ; then"
+
+end_test: "; fi"
+
+create_test: "touch finished"

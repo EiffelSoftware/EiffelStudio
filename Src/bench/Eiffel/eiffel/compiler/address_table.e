@@ -96,8 +96,9 @@ feature -- Generation
 				gen_file.putstring ("eaddress")
 				gen_file.putstring (Dot_h)
 				gen_file.putstring ("%"%N%N")
-			else
+			elseif Compilation_modes.is_precompiling then
 				System.class_counter.generate_extern_offsets (gen_file);
+				System.static_type_id_counter.generate_extern_offsets (gen_file)
 				gen_file.new_line
 			end
 

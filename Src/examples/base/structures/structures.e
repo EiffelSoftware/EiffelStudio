@@ -11,6 +11,8 @@ feature -- Creation
 
 	make is
 		do
+			io.set_error_default
+			
 				--| no_message_on_failure
 			io.putstring ("%N%N     * Class demos from the Eiffel Data Structure Library *%N%N")
 			session

@@ -12,7 +12,7 @@ feature {NONE} -- GTK macros for casting types
 
 	gtk_object (widget: POINTER): POINTER is
 		external 
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_OBJECT"
 		end
@@ -21,28 +21,28 @@ feature {NONE} -- Primitives
 
 	gtk_editable (widget: POINTER): POINTER is
 		external 
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_EDITABLE"
 		end
 
 	gtk_menu_bar (widget: POINTER): POINTER is
 		external 
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_MENU_BAR"
 		end
 
 	gtk_tree (widget: POINTER): POINTER is
 		external 
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_TREE"
 		end
 
 	gtk_tree_item (widget: POINTER): POINTER is
 		external 
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_TREE_ITEM"
 		end
@@ -51,28 +51,28 @@ feature {NONE} -- Containers
 
 	gtk_container (widget: POINTER): POINTER is
 		external 
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_CONTAINER"
 		end
 	
 	gtk_box (widget: POINTER): POINTER is
 		external 
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_BOX"
 		end
 	
 	gtk_table (widget: POINTER): POINTER is
 		external
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_TABLE"
 		end
 	
 	gtk_scrolled_window (widget: POINTER): POINTER is
 		external 
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_SCROLLED_WINDOW"
 		end
@@ -81,14 +81,14 @@ feature {NONE} -- Items
 	
 	gtk_menu_item (widget: POINTER): POINTER is
 		external 
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_MENU_ITEM"
 		end
 	
 	gtk_menu (widget: POINTER): POINTER is
 		external 
-			"C [macro <gtk/gtk.h>]"
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
 		alias
 			"GTK_MENU"
 		end

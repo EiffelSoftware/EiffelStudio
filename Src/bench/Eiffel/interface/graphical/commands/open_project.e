@@ -176,12 +176,23 @@ feature -- Project Initialization
 
 	retrieve_project (project_dir: PROJECT_DIRECTORY) is
 			-- Retrieve a project from the disk.
+		local
+			msg: STRING
 		do	
 			Eiffel_project.retrieve (project_dir);
 			if Eiffel_project.retrieval_error then
+				if Eiffel_project.is_corrupted then
+					msg := Warning_messages.w_Project_corrupted (project_dir.name)
+				elseif Eiffel_project.retrieval_interrupted then
+					msg := Warning_messages.w_Project_interrupted (project_dir.name)
+				else
+					msg := Warning_messages.w_Project_incompatible 
+						(project_dir.name, 
+						version_number, 
+						Eiffel_project.incompatible_version_number)
+				end
 				warner (Project_tool).custom_call (Current, 
-						Warning_messages.w_Project_corrupted (project_dir.name),
-						Void, Interface_names.b_Exit_now, Void)
+						msg, Void, Interface_names.b_Exit_now, Void)
 			elseif Eiffel_project.read_write_error then
 				warner (Project_tool).custom_call (Current,
 						Warning_messages.w_Cannot_open_project, Void, Interface_names.b_Exit, Void)

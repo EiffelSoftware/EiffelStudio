@@ -45,9 +45,9 @@ feature {NONE} -- Implementation
 		do
 			if file.readable then
 				file.read_stream (length)
-				buffer := file.last_string
+				create buffer.make (file.last_string)
 			else
-				buffer := create {STRING}.make (0)
+				create buffer.make_empty (0)
 			end
 		end
 

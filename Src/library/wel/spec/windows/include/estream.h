@@ -20,19 +20,26 @@
 extern "C" {
 #endif
 
-typedef EIF_INTEGER (* EIF_EDITSTREAM_IN_PROCEDURE)
-	(EIF_REFERENCE,     /* WEL_EDIT_STREAM_IN Eiffel object */
+#ifndef EIF_IL_DLL
+typedef EIF_INTEGER (* EIF_EDITSTREAM_IN_PROCEDURE) (
+	EIF_REFERENCE,     /* WEL_EDIT_STREAM_IN Eiffel object */
+#else
+typedef EIF_INTEGER (__stdcall * EIF_EDITSTREAM_IN_PROCEDURE) (
+#endif
 	 EIF_POINTER, /* buffer * */
 	 EIF_INTEGER,  /* length of buffer */
 	 EIF_POINTER /* actual length of data written into the buffer */
 	 );
 
-typedef EIF_INTEGER (* EIF_EDITSTREAM_OUT_PROCEDURE)
-	(EIF_REFERENCE,	/* WEL_EDIT_STREAM_OUT Eiffel object */
+#ifndef EIF_IL_DLL
+typedef EIF_INTEGER (* EIF_EDITSTREAM_OUT_PROCEDURE) (
+	EIF_REFERENCE,	/* WEL_EDIT_STREAM_OUT Eiffel object */
+#else
+typedef EIF_INTEGER (__stdcall * EIF_EDITSTREAM_OUT_PROCEDURE) (
+#endif
 	 EIF_POINTER,	/* buffer */
 	 EIF_INTEGER	/* length of buffer */
 	 );
-
 
 #ifdef __cplusplus
 }

@@ -29,35 +29,39 @@ library emitter
 
     ]
     interface ISE_Cache_COM_ISE_CACHE_MANAGER : IDispatch {
-        [id(0x60020000)]
-        HRESULT make();
-        [id(0x60020001)]
-        HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
-        [id(0x60020002)]
-        HRESULT last_error_message([out, retval] BSTR* pRetVal);
-        [id(0x60020003)]
-        HRESULT initialize();
-        [id(0x60020004)]
-        HRESULT consume_gac_assembly(
-                        [in] BSTR aname,
-                        [in] BSTR aversion,
-                        [in] BSTR aculture,
-                        [in] BSTR akey);
-        [id(0x60020005)]
-        HRESULT consume_local_assembly(
-                        [in] BSTR apath,
-                        [in] BSTR adest);
-        [id(0x60020006)]
-        HRESULT relative_folder_name(
-                        [in] BSTR aname,
-                        [in] BSTR aversion,
-                        [in] BSTR aculture,
-                        [in] BSTR akey,
-                        [out, retval] BSTR* pRetVal);
-        [id(0x60020007)]
-        HRESULT assembly_info_from_assembly(
-                        [in] BSTR apath,
-                        [out, retval] ISE_Cache_COM_ASSEMBLY_INFORMATION** pRetVal);
+    [id(0x60020000)]
+    HRESULT make();
+    [id(0x60020001)]
+    HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
+    [id(0x60020002)]
+    HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
+    [id(0x60020004)]
+    HRESULT last_error_message([out, retval] BSTR* pRetVal);
+    [id(0x60020005)]
+    HRESULT initialize();
+    [id(0x60020006)]
+    HRESULT initialize_with_path([in] IUnknown* a_path);
+    [id(0x60020007)]
+    HRESULT consume_gac_assembly(
+                    [in] BSTR aname,
+                    [in] BSTR aversion,
+                    [in] BSTR aculture,
+                    [in] BSTR akey);
+    [id(0x60020008)]
+    HRESULT consume_local_assembly(
+                    [in] BSTR apath,
+                    [in] BSTR adest);
+    [id(0x60020009)]
+    HRESULT relative_folder_name(
+                    [in] BSTR aname,
+                    [in] BSTR aversion,
+                    [in] BSTR aculture,
+                    [in] BSTR akey,
+                    [out, retval] BSTR* pRetVal);
+    [id(0x6002000a)]
+    HRESULT assembly_info_from_assembly(
+                    [in] BSTR apath,
+                    [out, retval] ISE_Cache_COM_ASSEMBLY_INFORMATION** pRetVal);
     };
 
     [

@@ -7,9 +7,9 @@
 
 
  /* File created by MIDL compiler version 6.00.0347 */
-/* at Thu Jul 18 15:05:06 2002
+/* at Wed Aug 28 15:33:37 2002
  */
-/* Compiler settings for ise_cache_manager.IDL:
+/* Compiler settings for ise_cache_manager.idl:
     Os, W1, Zp8, env=Win32 (32b run)
     protocol : dce , ms_ext, c_ext
     error checks: allocation ref bounds_check enum stub_data 
@@ -100,9 +100,9 @@ MIDL_DEFINE_GUID(CLSID, CLSID_ISE_Cache_Impl_COM_ASSEMBLY_INFORMATION,0x7F6F58E1
 
 
  /* File created by MIDL compiler version 6.00.0347 */
-/* at Thu Jul 18 15:05:06 2002
+/* at Wed Aug 28 15:33:37 2002
  */
-/* Compiler settings for ise_cache_manager.IDL:
+/* Compiler settings for ise_cache_manager.idl:
     Oicf, W1, Zp8, env=Win64 (32b run,appending)
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 

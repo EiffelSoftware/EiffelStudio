@@ -101,6 +101,7 @@ feature -- Status setting
 		local
 			wc: WEL_COMPOSITE_WINDOW
 		do
+			dialog_exists := True
 			is_popped_up := True
 			wc ?= parent
 			activate (wc)
@@ -126,11 +127,7 @@ feature -- Status setting
 	popup is
 			-- Popup a popup shell.
 		do
-			if exists then
-				show
-			else
-				dialog_realize
-			end
+			dialog_realize
 		end
 
 feature -- Status report

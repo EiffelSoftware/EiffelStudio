@@ -11,6 +11,10 @@
 
 #include "eif_eiffel.h"
 
+#ifndef __WEL_GLOBALS__
+#	include "wel_globals.h"
+#endif
+
 #define cwel_editstream_set_dwcookie(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->dwCookie = (DWORD) (_value_))
 #define cwel_editstream_set_dwerror(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->dwError = (DWORD) (_value_))
 #define cwel_editstream_set_pfncallback(_ptr_, _value_) (((EDITSTREAM *) _ptr_)->pfnCallback = (EDITSTREAMCALLBACK) (_value_))
@@ -29,18 +33,6 @@ DWORD CALLBACK cwel_editstream_callback (DWORD, LPBYTE, LONG, LONG FAR *);
 
 extern EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure;
 /* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM) */
-
-extern EIF_OBJ wel_editstream_object;
-/* Address of the Eiffel object WEL_EDIT_STREAM created */
-
-extern EIF_POINTER wel_editstream_buffer;
-/* Address of the buffer */
-
-extern EIF_INTEGER wel_editstream_buffer_size;
-/* Size of `wel_editstream_buffer' */
-
-extern EIF_BOOLEAN wel_editstream_in;
-/* Is the operation stream_in? */
 
 #define cwel_set_editstream_procedure_address(_value_) (wel_editstream_procedure = (EIF_EDITSTREAM_PROCEDURE) _value_)
 /* Set `wel_editstream_procedure' with `value' */

@@ -6,7 +6,11 @@
 #define __WEL_ENUMFONT__
 
 #ifndef __WEL__
-#	include <wel.h>
+#	include "wel.h"
+#endif
+
+#ifndef __WEL_GLOBALS__
+#	include "wel_globals.h"
 #endif
 
 typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
@@ -19,12 +23,6 @@ typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
 /* Eiffel routine signature for `converter' */
 
 int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, int, LPARAM);
-
-extern EIF_ENUM_FONT_FAMILY_PROCEDURE wel_enum_font_fam_procedure;
-/* Address of the Eiffel routine `converter' (class WEL_FONT_FAMILY_ENUMERATOR) */
-
-extern EIF_OBJ font_family_enumerator;
-/* Address of the Eiffel object WEL_FONT_FAMILY_ENUMERATOR created */
 
 #define cwel_set_enum_font_fam_procedure_address(_addr_) (wel_enum_font_fam_procedure = (EIF_ENUM_FONT_FAMILY_PROCEDURE) _addr_)
 /* Set `wel_enum_font_fam_procedure' with `addr' */

@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			extend (widget_holder)
 		end
 		
-feature {GB_CODE_GENERATION_TOOL_BAR_BUTTON} -- Basic operation
+feature {GB_GENERATION_COMMAND} -- Basic operation
 		
 	show_completion is
 			--

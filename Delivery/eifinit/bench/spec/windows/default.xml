@@ -95,7 +95,7 @@
 				</TOPIC>
 				<TOPIC TOPIC_ID="Show search panel" ICON="icon_preferences_folder">
 					<HEAD>Show search panel</HEAD>
-					<TEXT DESCRIPTION="Key">show_search_panel_shortcut_key<STRING>Space</STRING></TEXT>
+					<TEXT DESCRIPTION="Key">show_search_panel_shortcut_key<STRING>F</STRING></TEXT>
 					<TEXT DESCRIPTION="+ Ctrl">show_search_panel_shortcut_ctrl<BOOLEAN>True</BOOLEAN></TEXT>
 					<TEXT DESCRIPTION="+ Alt">show_search_panel_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
 					<TEXT DESCRIPTION="+ Shift">show_search_panel_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>

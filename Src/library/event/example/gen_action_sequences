@@ -43,10 +43,9 @@ while (<>) {
 		$arg_name_array = "";
 		$arg_name_list = "";
 		if ($#args > 0) {
-		$data_type = shift (@ats);
 			@ats = @arg_types;
-			$data_type = shift (@ats);
-			$data_type = "$data_type$data_type";
+			$t = shift (@ats);
+			$data_type = "$data_type$t";
 			foreach $type (@ats) {
 				$data_type = "$data_type, $type";
 			}

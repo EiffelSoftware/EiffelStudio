@@ -161,8 +161,7 @@ feature -- Status
 				if Result then
 					cid := bindex_cid_table.item (body_index)
 					wc := System.class_of_id (cid)
-					Result := not (wc.is_basic or else (wc.is_special
-							and then byte_code.feature_name_id = Names_heap.make_area_name_id))
+					Result := not wc.is_basic
 				end
 
 				if Result then

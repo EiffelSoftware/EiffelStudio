@@ -157,8 +157,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<"
- (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN is
 			-- Is the current object before `other'?
 		do
 			Result := date < other.date or else
@@ -306,7 +305,6 @@ feature -- Basic operations
 		end;
 
 end -- class DATE_TIME
-
 
 --|---------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel 3.

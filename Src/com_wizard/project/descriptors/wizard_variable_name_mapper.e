@@ -45,6 +45,16 @@ feature -- Access
 
 feature -- Basic Operations
 
+	to_legal_name_for_c_function (a_name: STRING) is
+			-- Modify `a_name' to make it legal C function name.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+		do
+			a_name.to_lower
+			a_name.replace_substring_all ("::", "_")
+		end
+
 	user_precondition_name (a_feature_name: STRING): STRING is
 			-- Name for user defined precondition.
 		require

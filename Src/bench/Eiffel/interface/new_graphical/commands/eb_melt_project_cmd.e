@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 							st.add_string ("Please check permissions and disk space")
 							st.add_new_line
 							st.add_string ("Then press ")
-							st.add_string (name)
+--							st.add_string (name)
 							st.add_string (" again")
 							st.add_new_line
 							error_window.process_text (st)
@@ -351,11 +351,11 @@ feature {NONE} -- Attributes
 			Result := Workbench_generation_path
 		end
 
-	name: STRING is
-			-- Name of the command.
-		do
-			Result := Interface_names.f_Update
-		end
+--	name: STRING is
+--			-- Name of the command.
+--		do
+--			Result := Interface_names.f_Update
+--		end
 
 --	menu_name: STRING is
 --			-- Name used in menu entry
@@ -393,6 +393,7 @@ feature {NONE} -- Implementation Execution
 			f: PLAIN_TEXT_FILE
 			temp: STRING
 			arg: ANY
+			wd: EV_WARNING_DIALOG
 		do
 			if argument /= Void then
 				if argument.first = generate_code_only then
@@ -410,7 +411,8 @@ feature {NONE} -- Implementation Execution
 				end
 			end
 			if Eiffel_project.is_read_only then
---				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_compile)
+				create wd.make_default (tool.parent, Interface_names.t_Warning,
+					Warning_messages.w_Cannot_compile)
 			elseif tool.initialized then
 				if not_saved and arg = tool then
 					end_run_confirmed := false

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Unicode</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Unicode">
+	</HEAD>
+
+	<BODY>
+		<H1>Unicode Sample</H1>
+		<CENTER><IMG SRC="unicode.png" ALT="unicode" /></CENTER><BR><BR>
+		<H2>Requirements</H2>
+		<P>This sample demonstates Unicode compatibilty.  It therefore assumes a fully Unicode compatible operating system
+			and recommends the system has more than one input locale installed.  The system used to generate the above screenshot
+			shows the sample running on Windows 2000 with the Korean IME installed.  Since Windows 95/98/Me does not provide full built-in support for
+			Unicode please refer to "Compiling WEL for Unicode on Windows 95/98/Me" before attempting to run this example.
+
+		</P>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch EiffelStudio.
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\unicode\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace
+              file. If
+              you select another directory than the default one, please copy
+              images (*.bmp), icons (*.ico) and resource files (*.rc) from the
+              default directory (the one containing the Ace file) to the new
+              one.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		<P>After launching the program, a window will be displayed as illustrated above.  Selecting the input locale combo box will
+		allow you to switch to a new input locale.  To add new input locales to your system do the following:
+		<UL>
+					<LI>Click on <B>Start</B> -> <B>Settings</B> -> <B>Control Panel</B> -> <B>Regional Options</B>
+					<LI>Select the<B> Input Locale</B> tab and click <B>Add</B>.
+					<LI>Select the input locale then click <B>OK</B>
+					<LI>To test the new input locale restart the Unicode sample.
+		</UL>
+		Selecting an input locale allows entry of the chosen input locale characters into the rich-edit control to right.  Clicking the
+		"Apply to Controls" button will update the controls in the pane below to display the same text as the rich-edit control.
+		If the selected input locale is associated with an Input Method Editor (IME), the details for this will be displayed in the "Input
+		Method Editor" group box and IME specific options will be made available from the "IME Options" menu.
+		</P>
+
+		<H2>Under the Hood</H2>
+		<P>There is one <A CLASS="eclass" HREF="/libraries/wel/reference/controls/main_window_chart.html">MAIN_WINDOW</A> class used for all the controls. The feature
+		'init_locale_list' is used to determine the systems available input locales and populate the corresponding "Input Locales" combo box.  The features 'change_font' and 'change_control'
+		are used to change the applications font (in case the curently selected font does not correctly display Unicode characters), and to set the 'text' property of all controls to the same
+		as that in the rich-edit box.
+
+
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/unicode/root_cluster/unicode_demo_chart.html">UNICODE_DEMO</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/unicode/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/unicode/root_cluster/application_ids_chart.html">DISPLAY_TEXT</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/unicode/root_cluster/display_text_chart.html">APPLICATION_IDS</A>
+			</UL>
+	</BODY>
+</HTML>

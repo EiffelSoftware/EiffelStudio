@@ -337,6 +337,8 @@ feature {NONE} -- Implementation Graphical Interface
 	build_system_toolbar is
 		local
 			quit_cmd: QUIT_SYSTEM
+			quit_button: EB_BUTTON
+			has_close_button: BOOLEAN
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY
 			open_cmd: OPEN_SYSTEM
@@ -375,6 +377,9 @@ feature {NONE} -- Implementation Graphical Interface
 			case_storage_button: EB_BUTTON
 			case_storage_menu_entry: EB_MENU_ENTRY
 		do
+				-- Should we have a close button?
+			has_close_button := General_resources.close_button.actual_value
+
 			!! hole.make (Current)
 			!! hole_button.make (hole, system_toolbar)
 			!! hole_holder.make_plain (hole)
@@ -396,7 +401,10 @@ feature {NONE} -- Implementation Graphical Interface
 
 			!! quit_cmd.make (Current)
 			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit_cmd_holder.make (quit_cmd, Void, quit_menu_entry)
+			if has_close_button then
+				!! quit_button.make (quit_cmd, system_toolbar)
+			end
+			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
@@ -494,6 +502,11 @@ feature {NONE} -- Implementation Graphical Interface
 			system_toolbar.attach_left_widget (stat_button, mod_button, 0)
 			system_toolbar.attach_top (showindex_button, 0)
 			system_toolbar.attach_left_widget (mod_button, showindex_button, 0)
+
+			if has_close_button then
+				system_toolbar.attach_top (quit_button, 0)
+				system_toolbar.attach_right (quit_button, 5)
+			end
 		end
 
 feature {WINDOWS} -- Attributes

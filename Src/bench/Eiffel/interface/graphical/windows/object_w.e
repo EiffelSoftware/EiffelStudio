@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			set_composite_attributes (edit_m)
 			set_composite_attributes (format_m)
 			set_composite_attributes (special_m)
---  			init_text_window
+--			init_text_window
 		end
 
 feature -- Window Properties
@@ -312,7 +312,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			-- Build top bar.
 		local
 			search_button: EB_BUTTON
+			quit_button: EB_BUTTON
 			quit_cmd: QUIT_FILE
+			has_close_button: BOOLEAN
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY
 
@@ -343,10 +345,16 @@ feature {NONE} -- Implementation; Graphical Interface
 			build_save_as_menu_entry
 			build_print_menu_entry
 
+				-- Should we have a close button?
+			has_close_button := General_resources.close_button.actual_value
+
 			!! quit_cmd.make (Current)
 			if not is_in_project_tool then
 				!! quit_menu_entry.make (quit_cmd, file_menu)
-				!! quit_cmd_holder.make (quit_cmd, Void, quit_menu_entry)
+				if has_close_button then
+					!! quit_button.make (quit_cmd, object_toolbar)
+				end
+				!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 
 				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
@@ -428,6 +436,11 @@ feature {NONE} -- Implementation; Graphical Interface
 			object_toolbar.attach_left_widget (sep3, previous_target_button, 5)
 			object_toolbar.attach_top (next_target_button, 0)
 			object_toolbar.attach_left_widget (previous_target_button, next_target_button, 0)
+
+			if not is_in_project_tool and then has_close_button then
+				object_toolbar.attach_top (quit_button, 0)
+				object_toolbar.attach_right (quit_button, 5)
+			end
 		end
 
 	build_widgets is

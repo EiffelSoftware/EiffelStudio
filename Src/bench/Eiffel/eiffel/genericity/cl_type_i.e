@@ -494,45 +494,24 @@ feature {NONE} -- Implementation
 		require
 			a_base_name_not_void: a_base_name /= Void
 		local
-			l_name: STRING
 			l_base_class: like base_class
 		do
 			l_base_class := base_class
 				-- Result needs to be in lower case because that's
 				-- what our casing conversion routines require to perform
 				-- a good job.
-			if
-				(is_expanded and l_base_class.is_expanded) or
-				(not is_expanded and not l_base_class.is_expanded)
-			then
-				Result := a_base_name.as_lower
+			if is_expanded and then not l_base_class.is_expanded then
+				create Result.make (6 + a_base_name.count)
+				Result.append ("value_")
+			elseif not is_expanded and then l_base_class.is_expanded then
+				create Result.make (10 + a_base_name.count)
+				Result.append ("reference_")
 			else
-				if is_expanded then
-					create Result.make (6 + a_base_name.count)
-					Result.append ("VALUE_")
-				else
-					create Result.make (10 + a_base_name.count)
-					Result.append ("REFERENCE_")
-				end
-				Result.append (a_base_name)
-				Result.to_lower
+				create Result.make (a_base_name.count)
 			end
-			l_name := l_base_class.lace_class.actual_namespace
-			if a_prefix /= Void then
-				if l_name.is_empty then
-					l_name := a_prefix + "."
-				else
-					l_name := il_casing.namespace_casing (System.dotnet_naming_convention,
-						l_name) + "." + a_prefix + "."
-				end
-			else
-				if not l_name.is_empty then					
-					l_name := il_casing.namespace_casing (System.dotnet_naming_convention,
-						l_name) + "."
-				end
-			end
-			Result := l_name + il_casing.pascal_casing (System.dotnet_naming_convention,
-				Result, feature {IL_CASING_CONVERSION}.upper_case)
+			Result.append (a_base_name)
+			Result.to_lower
+			Result := il_casing.type_name (l_base_class.lace_class.actual_namespace, a_prefix, Result, System.dotnet_naming_convention)
 		ensure
 			internal_il_type_name_not_void: Result /= Void
 			internal_il_type_name_not_empty: not Result.is_empty

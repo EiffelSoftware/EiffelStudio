@@ -19,7 +19,7 @@ feature
 			until
 				after or else Result
 			loop
-				Result := cmd_label = item.cmd_label;
+				Result := cmd_label.is_equal (item.cmd_label);
 				forth
 			end;	
 		end

@@ -135,8 +135,10 @@ feature -- Status report
 			-- Is the item selected.
 		local
 			par: POINTER
+			par_imp: EV_LIST_ITEM_LIST_IMP
 		do
-			par := parent_imp.list_widget
+			par_imp ?= parent_imp
+			par := par_imp.list_widget
 			if par /= NULL then
 				Result := feature {EV_GTK_EXTERNALS}.g_list_find (
 					feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (par),
@@ -151,10 +153,12 @@ feature -- Status setting
 			-- Select the item.
 		local
 			par: POINTER
+			par_imp: EV_LIST_ITEM_LIST_IMP
 			combo_par: EV_COMBO_BOX_IMP
 		do
 			if not is_selected then
-				par := parent_imp.list_widget
+				par_imp ?= parent_imp
+				par := par_imp.list_widget
 				if par /= NULL then
 					feature {EV_GTK_EXTERNALS}.gtk_list_select_child (par, c_object);
 	--| FIXME hack to ensure the element is selected.				
@@ -179,9 +183,11 @@ feature -- Status setting
 			-- Deselect the item.
 		local
 			par: POINTER
+			par_imp: EV_LIST_ITEM_LIST_IMP
 		do
 			if is_selected then
-				par := parent_imp.list_widget
+				par_imp ?= parent_imp
+				par := par_imp.list_widget
 				if par /= NULL then
 					feature {EV_GTK_EXTERNALS}.gtk_list_unselect_child (par, c_object);
 				end				

@@ -19,15 +19,11 @@ inherit
 		rename
 			interface as item_list_interface
 		redefine
-			add_to_container,
 			insert_i_th,
 			remove_i_th,
-			reorder_child,
 			i_th,
 			count,
-			list_widget,
-			initialize,
-			dispose
+			initialize
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
@@ -62,16 +58,24 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_LIST_IMP}
 			is_initialized := True
 		end
+
+	destroy is
+			-- Clean up `Current'
+		do
+			if parent_imp /= Void then
+				parent_imp.interface.prune_all (interface)
+			end
+			is_destroyed := True
+		end
 		
 	dispose is
 			-- Clean up
 		do
-			Precursor {EV_ITEM_LIST_IMP}
 			if not is_in_final_collect then
-				if gdk_pixmap /= NULL then
+				if gdk_pixmap /= default_pointer then
 					feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdk_pixmap)
 				end
-				if gdk_mask /= NULL then
+				if gdk_mask /= default_pointer then
 					feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdk_mask)
 				end				
 			end
@@ -276,7 +280,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			remove_dummy_node
 			is_expanded := True
 			if expand_actions_internal /= Void then
-				expand_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+				expand_actions_internal.call (Void)
 			end
 		end
 
@@ -285,7 +289,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		do
 			is_expanded := False
 			if collapse_actions_internal /= Void then
-				collapse_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+				collapse_actions_internal.call (Void)
 			end
 		end
 
@@ -295,7 +299,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	set_tree_node (a_tree_node_ptr: POINTER) is
 			-- Set 'tree_node_ptr' to 'a_tree_node_ptr'
 		do
-			if a_tree_node_ptr /= NULL then
+			if a_tree_node_ptr /= default_pointer then
 				parent_tree_imp.tree_node_ptr_table.put (Current, a_tree_node_ptr)
 			end
 			tree_node_ptr := a_tree_node_ptr
@@ -331,13 +335,13 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			-- Used for setting items on addition and removal
 			-- Insert as child of 'parent_node' and one position above 'sibling_node'
 		do
-			if tree_node_ptr = NULL then
+			if tree_node_ptr = default_pointer then
 					-- Current has been added to tree
 				set_tree_node (parent_tree_imp.insert_ctree_node (Current, parent_node, sibling_node))
 			else
 					-- Current is being removed from tree.
 				parent_tree_imp.tree_node_ptr_table.remove (tree_node_ptr)
-				set_tree_node (NULL)
+				set_tree_node (default_pointer)
 			end
 			
 			from
@@ -345,7 +349,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			until
 				ev_children.after
 			loop
-				ev_children.item.set_item_and_children (tree_node_ptr, NULL)
+				ev_children.item.set_item_and_children (tree_node_ptr, default_pointer)
 				ev_children.forth
 			end
 		end
@@ -409,13 +413,13 @@ feature {EV_TREE_IMP} -- Implementation
 			--| just retaining a pointer to passed pixmap.
 			a_pix_imp ?= a_pixmap.implementation
 			gdk_pixmap := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (a_pix_imp.drawable)
-			if a_pix_imp.mask /= NULL then
+			if a_pix_imp.mask /= default_pointer then
 				gdk_mask := feature {EV_GTK_EXTERNALS}.gdk_bitmap_ref (a_pix_imp.mask)
 			end
 			pix_width := a_pix_imp.width
 			pix_height := a_pix_imp.height
 			
-			if tree_node_ptr /= NULL then
+			if tree_node_ptr /= default_pointer then
 				insert_pixmap
 			end
 		end
@@ -433,7 +437,7 @@ feature {EV_TREE_IMP} -- Implementation
 		local
 			pix_imp: EV_PIXMAP_IMP
 		do
-			if gdk_pixmap /= NULL then
+			if gdk_pixmap /= default_pointer then
 				create Result
 				pix_imp ?= Result.implementation
 				pix_imp.copy_from_gdk_data (gdk_pixmap, gdk_mask, pix_width, pix_height)				
@@ -453,22 +457,6 @@ feature {EV_TREE_IMP} -- Implementation
 			-- i-th node of 'Current'
 		do
 			Result := (ev_children @ i).interface
-		end
-
-	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
-			-- Add `v' to tree items tree at position `i'.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	reorder_child (v: like item; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
-			-- Move `v' to `a_position' in Current.
-		do
-			check
-				do_not_call: False
-			end
 		end
 		
 	insert_i_th (v: like item; i: INTEGER) is
@@ -525,7 +513,7 @@ feature {EV_TREE_IMP} -- Implementation
 				else
 					feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (par_tree_imp.list_widget, item_imp.tree_node_ptr)
 				end
-				item_imp.set_item_and_children (NULL, NULL)
+				item_imp.set_item_and_children (default_pointer, default_pointer)
 					-- This resets item and all children
 				item_imp.set_parent_imp (Void)
 			end
@@ -557,8 +545,8 @@ feature {EV_TREE_IMP} -- Implementation
 			a_parent_tree_imp: EV_TREE_IMP
 		do
 			a_d_node := remove_on_expand_node
-			if remove_on_expand_node /= NULL then
-				remove_on_expand_node := NULL
+			if remove_on_expand_node /= default_pointer then
+				remove_on_expand_node := default_pointer
 				a_parent_tree_imp := parent_tree_imp
 				if a_parent_tree_imp /= Void then
 					feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (a_parent_tree_imp.list_widget, a_d_node)

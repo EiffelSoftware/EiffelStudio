@@ -55,11 +55,10 @@ feature -- Basic operations
 			
 			current_row: SPECIAL [EV_GRID_ITEM_I]
 			visible_physical_column_indexes: SPECIAL [INTEGER]
-			temp, temp_row: INTEGER
 			first_column_index, first_row_index: INTEGER
 			last_column_index, last_row_index: INTEGER
 			first_column_index_set, last_column_index_set, first_row_index_set, last_row_index_set: BOOLEAN
-			grid_label_item: EV_GRID_LABEL_ITEM_I
+			grid_item: EV_GRID_ITEM_I
 			current_index_in_row, current_index_in_column: INTEGER
 			column_counter, row_counter: INTEGER
 			bool: BOOLEAN
@@ -68,6 +67,9 @@ feature -- Basic operations
 			invalid_x_start, invalid_x_end, invalid_y_start, invalid_y_end: INTEGER
 			current_column_width, current_row_height: INTEGER
 			rectangle_width, rectangle_height: INTEGER
+			i: INTEGER
+			
+			current_item_y_position, current_item_x_position: INTEGER
 		do
 			printing_values := False
 			if printing_values then
@@ -109,8 +111,8 @@ feature -- Basic operations
 				until
 					last_column_index_set or column_offsets.off
 				loop
-					temp := column_offsets.item
-					if not first_column_index_set and then temp > invalid_x_start then
+					i := column_offsets.item
+					if not first_column_index_set and then i > invalid_x_start then
 						first_column_index := column_offsets.index - 1
 						first_column_index_set := True
 					end
@@ -137,8 +139,8 @@ feature -- Basic operations
 				until
 					last_row_index_set or row_offsets.off
 				loop
-					temp := row_offsets.item
-					if not first_row_index_set and then temp > invalid_y_start then
+					i := row_offsets.item
+					if not first_row_index_set and then i > invalid_y_start then
 						first_row_index := row_offsets.index - 1
 						first_row_index_set := True
 					end
@@ -164,8 +166,7 @@ feature -- Basic operations
 
 				from
 					row_counter := first_row_index
-					temp_row := 0
-					y := 0
+					current_item_y_position := 0
 					current_index_in_column := first_row_index
 				until
 					row_counter > last_row_index or
@@ -176,11 +177,11 @@ feature -- Basic operations
 					end
 					current_row := grid.row_list @ (row_counter - 1)
 					current_index_in_row := first_column_index
-					y := (row_offsets @ (current_index_in_column)) - (virtual_y_position - vertical_buffer_offset)
+					current_item_y_position := (row_offsets @ (current_index_in_column)) - (virtual_y_position - vertical_buffer_offset)
 					current_row_height := row_offsets @ (row_counter + 1) - row_offsets @ (row_counter)
 					from
 						column_counter := first_column_index
-						temp := 0
+						current_item_x_position  := 0
 					until
 						column_counter > last_column_index or
 						column_counter > column_offsets.count or first_column_index = 0
@@ -191,46 +192,43 @@ feature -- Basic operations
 							print ("An_x : " + an_x.out + "%N")
 							print ("a_width : " + a_width.out + "%N")
 						end
-						grid_label_item ?= current_row @ (current_index_in_row - 1)
+						grid_item := current_row @ (current_index_in_row - 1)
 
-						temp := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
+						current_item_x_position  := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
 						current_column_width := column_offsets @ (column_counter + 1) - column_offsets @ (column_counter)
 						
-						grid.drawable.set_foreground_color (red)
-						grid.drawable.fill_rectangle (temp, y, current_column_width, current_row_height)
-						grid.drawable.set_foreground_color (black)
-						grid.drawable.draw_ellipsed_text_top_left (temp + horizontal_border_width, y, grid_label_item.text, current_column_width)
-							
+						grid_item.redraw (current_item_x_position , current_item_y_position, current_column_width, current_row_height, grid.drawable)
+						
 						column_counter := column_counter + 1
 						current_index_in_row := current_index_in_row + 1
 					end
 				
-					if temp + current_column_width < grid.width or grid.is_horizontal_scrolling_per_item then
+					if current_item_x_position  + current_column_width < grid.width or grid.is_horizontal_scrolling_per_item then
 							-- The columns that were drawn did not span to the very edge of
 							-- the grid, so we must fill the remainder in the current grid background color.
 						grid.drawable.set_foreground_color (grid.background_color)
-						rectangle_width := grid.viewport.width - (temp - horizontal_buffer_offset + current_column_width)
+						rectangle_width := grid.viewport.width - (current_item_x_position  - horizontal_buffer_offset + current_column_width)
 						if printing_values then
 							print ("rectangle_width : " + rectangle_width.out + "%N")
 						end
 						if rectangle_width >= 0 then
-							grid.drawable.fill_rectangle (temp + current_column_width, y, rectangle_width, current_row_height)
+							grid.drawable.fill_rectangle (current_item_x_position  + current_column_width, current_item_y_position, rectangle_width, current_row_height)
 						end
 					end
 					bool := True
 					row_counter := row_counter + 1
 					current_index_in_column := current_index_in_column + 1
 				end
-				if y + current_row_height < grid.height or grid.is_vertical_scrolling_per_item then
+				if current_item_y_position + current_row_height < grid.height or grid.is_vertical_scrolling_per_item then
 							-- The rows that were drawn did not span to the very bottom of
 							-- the grid, so we must fill the remainder in the current grid background color.
 						grid.drawable.set_foreground_color (grid.background_color)
-						rectangle_height := grid.viewport.height - (y - vertical_buffer_offset + current_row_height)
+						rectangle_height := grid.viewport.height - (current_item_y_position - vertical_buffer_offset + current_row_height)
 						if rectangle_height >= 0 then
 							if printing_values then
 								print ("rectangle_height : " + rectangle_height.out + "%N")
 							end
-							grid.drawable.fill_rectangle (horizontal_buffer_offset, y + current_row_height, horizontal_buffer_offset + grid.viewport.width, rectangle_height)							
+							grid.drawable.fill_rectangle (horizontal_buffer_offset, current_item_y_position + current_row_height, horizontal_buffer_offset + grid.viewport.width, rectangle_height)							
 						end
 					end
 			else

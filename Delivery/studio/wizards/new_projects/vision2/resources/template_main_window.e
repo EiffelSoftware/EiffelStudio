@@ -10,7 +10,8 @@ class
 inherit
 	EV_TITLED_WINDOW
 		redefine
-			initialize
+			initialize,
+			is_in_default_state
 		end
 
 	INTERFACE_NAMES
@@ -26,15 +27,24 @@ create
 feature {NONE} -- Initialization
 
 	initialize is
+			-- Build the interface for this window.
 		do
 			Precursor {EV_TITLED_WINDOW}
 <FL_MENUBAR_ADD><FL_TOOLBAR_ADD><FL_STATUSBAR_ADD>
-
 			build_main_container
 			extend (main_container)
 
 			set_title (Window_title)
-			set_size (400, 400)
+			set_size (Window_width, Window_height)
+		end
+
+	is_in_default_state: BOOLEAN is
+			-- Is the window in its default state
+			-- (as stated in `initialize')
+		do
+			Result := (width = Window_width) and then
+				(height = Window_height) and then
+				(title.is_equal (Window_title))
 		end
 
 <FL_MENUBAR_INIT><FL_TOOLBAR_INIT><FL_STATUSBAR_INIT><FL_ABOUTDIALOG_INIT>
@@ -59,5 +69,11 @@ feature {NONE} -- Implementation / Constants
 
 	Window_title: STRING is "my_project"
 			-- Title of the window.
+
+	Window_width: INTEGER is 400
+			-- Initial width for this window.
+
+	Window_height: INTEGER is 400
+			-- Initial height for this window.
 
 end -- class MAIN_WINDOW

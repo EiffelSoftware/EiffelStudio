@@ -16,6 +16,8 @@ inherit
 	INTERFACE_NAMES
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 
 create
@@ -52,7 +54,7 @@ feature {NONE} -- Initialization
 
 			create ok_button.make_with_text (Button_ok_item)
 			ok_button.set_minimum_size (75, 24)
-			ok_button.select_actions.extend (~hide)
+			ok_button.select_actions.extend (~destroy)
 
 			create buttons_box
 			buttons_box.extend (create {EV_CELL}) -- Fill in empty space on left

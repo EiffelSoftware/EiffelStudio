@@ -84,8 +84,8 @@ feature -- Compiled parent computation
 					if renaming_c.has (s) then
 						!!vhrc2;
 						vhrc2.set_class (System.current_class);
-						vhrc2.set_parent (Current);
-						vhrc2.set_conflict_name (rename_pair.old_name);
+						vhrc2.set_parent (Result.parent);
+						vhrc2.set_feature_name (rename_pair.old_name.internal_name);
 						Error_handler.insert_error (vhrc2);
 					else
 						renaming_c.put
@@ -139,8 +139,8 @@ feature -- Compiled parent computation
 					else
 					end;
 					vdrs3.set_class (System.current_class);
-					vdrs3.set_parent (Current);
-					vdrs3.set_feature_name (clause.item);
+					vdrs3.set_parent_name (type.class_name);
+					vdrs3.set_feature_name (clause.item.internal_name);
 					Error_handler.insert_error (vdrs3);
 				else
 					Result.put (s)

@@ -156,6 +156,7 @@ feature -- Type check, byte code and dead code removal
 				then
 					!!vxrc;
 					context.init_error (vxrc);
+					vxrc.set_deferred (routine_body.is_deferred);
 					Error_handler.insert_error (vxrc);
 				else
 						 -- Set mark of context
@@ -216,8 +217,7 @@ feature -- Type check, byte code and dead code removal
 								-- current analyzed class.
 							!!vrle1;
 							context.init_error (vrle1);
-							vrle1.set_feature_name (context.a_feature.feature_name);
-							vrle1.set_feature (f_table.item (local_name));
+							vrle1.set_local_name (local_name);
 							Error_handler.insert_error (vrle1);
 						end;
 						id_list.forth;
@@ -272,7 +272,7 @@ feature -- Type check, byte code and dead code removal
 					context_locals := context.locals;
 					locals.start
 				until
-					locals.offright
+					locals.after
 				loop
 					from
 						id_list := locals.item.id_list;
@@ -291,7 +291,7 @@ feature -- Type check, byte code and dead code removal
 	
 						id_list.start;
 					until
-						id_list.offright
+						id_list.after
 					loop
 						local_name := id_list.item;
 						if 
@@ -310,6 +310,7 @@ feature -- Type check, byte code and dead code removal
 								-- current analyzed class.
 							!!vrle1;
 							context.init_error (vrle1);
+							vrle1.set_local_name (local_name);
 							Error_handler.insert_error (vrle1);
 						end;
 							-- Build the local table in the context
@@ -319,28 +320,23 @@ feature -- Type check, byte code and dead code removal
 						if 	solved_type.has_expanded then
 							if	solved_type.expanded_deferred then
 								!!vtec1;
-								vtec1.set_class_id (context_class.id);
-								vtec1.set_body_id (curr_feat.body_id);
-								vtec1.set_type (solved_type);
+								context.init_error (vtec1);
 								vtec1.set_entity_name (local_name);
 								Error_handler.insert_error (vtec1);
 							elseif not solved_type.valid_expanded_creation then
 								!!vtec2;
-								vtec2.set_class_id (context_class.id);
-								vtec2.set_body_id (curr_feat.body_id);
-								vtec2.set_type (solved_type);
+								context.init_error (vtec2);
 								vtec2.set_entity_name (local_name);
 								Error_handler.insert_error (vtec2);
 							end;
 						end;
 							-- Check a generic local type
 						if not solved_type.good_generics then
-							!!vtug3;
-							vtug3.set_class_id (context_class.id);
-							vtug3.set_body_id (curr_feat.body_id);
-							vtug3.set_entity_name (local_name);
-							vtug3.set_type (solved_type);
-							Error_handler.insert_error (vtug3);
+							vtug := solved_type.error_generics;;
+							vtug.set_class (context_class);
+							vtug.set_feature (curr_feat);
+							vtug.set_entity_name (local_name);
+							Error_handler.insert_error (vtug);
 								-- Cannot go on here
 							Error_handler.raise_error;
 						end;
@@ -348,8 +344,8 @@ feature -- Type check, byte code and dead code removal
 						solved_type.check_constraints (context.a_class);
 						if not Constraint_error_list.empty then
 							!!vtgg3;
-							vtgg3.set_class_id (context_class.id);
-							vtgg3.set_body_id (curr_feat.body_id);
+							vtgg3.set_class (context_class);
+							vtgg3.set_feature (curr_feat);
 							vtgg3.set_entity_name (local_name);
 							vtgg3.set_error_list
 								(deep_clone (Constraint_error_list));
@@ -360,10 +356,10 @@ feature -- Type check, byte code and dead code removal
 						local_info.set_position (counter);
 						if context_locals.has (local_name) then
 								-- Error: two locals withe the same name
-							!!vreg2;
-							vreg2.set_local_name (local_name);
-							context.init_error (vreg2);
-							Error_handler.insert_error (vreg2);
+							!!vreg;
+							vreg.set_entity_name (local_name);
+							context.init_error (vreg);
+							Error_handler.insert_error (vreg);
 						else
 							context_locals.put (local_info, local_name);
 						end;
@@ -407,7 +403,7 @@ feature -- Type check, byte code and dead code removal
 					feat_tbl := a_feature.written_class.feature_table;
 					locals.start
 				until
-					locals.offright
+					locals.after
 				loop
 					from
 						local_type := locals.item.type;
@@ -454,25 +450,25 @@ feature -- Debugger
 
 feature -- Equivalent
 
-    is_body_equiv (other: like Current): BOOLEAN is
-        -- Is the current feature equivalent to `other' ?
-        require else
-            valid_other: other /= Void
-        do
+	is_body_equiv (other: like Current): BOOLEAN is
+			-- Is the current feature equivalent to `other' ?
+		require else
+			valid_other: other /= Void
+		do
 			Result := 	deep_equal (routine_body, other.routine_body) and then
                         deep_equal (locals, other.locals) and then
                         deep_equal (rescue_clause, other.rescue_clause) and then
             			deep_equal (obsolete_message, other.obsolete_message)
-        end;
+		end;
  
-    is_assertion_equiv (other: like Current): BOOLEAN is
-            -- Is the current feature equivalent to `other' ?
-        require else
-            valid_other: other /= Void
-        do
-            Result :=   deep_equal (precondition, other.precondition) and then
-                        deep_equal (postcondition, other.postcondition)
-        end;
+	is_assertion_equiv (other: like Current): BOOLEAN is
+			-- Is the current feature equivalent to `other' ?
+		require else
+			valid_other: other /= Void
+		do
+			Result :=   deep_equal (precondition, other.precondition) and then
+				deep_equal (postcondition, other.postcondition)
+		end;
 
 
 

@@ -73,6 +73,10 @@ feature -- Type check, byte code and dead code removal
 			ctxt.always_succeed;
 		end;
 
+	access_name: STRING is
+		once
+			Result := "Result"
+		end;
 
 feature -- Replication
 

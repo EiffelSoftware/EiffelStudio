@@ -50,6 +50,11 @@ feature -- Type check and byte code
 			ctxt.set_types_back_to_global;
 		end;
 
+	access_name: STRING is
+		once
+			Result := "Current"
+		end;
+
 feature -- Replication
 
 	replicate (ctxt: REP_CONTEXT): like Current is

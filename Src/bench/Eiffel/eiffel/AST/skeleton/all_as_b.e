@@ -28,7 +28,7 @@ feature -- Initialization
 			else
 				!!vlel1;
 				vlel1.set_class (System.current_class);
-				vlel1.set_parent_id (parent.parent_id);
+				vlel1.set_parent (parent.parent);
 				Error_handler.insert_error (vlel1);
 			end;
 		end;

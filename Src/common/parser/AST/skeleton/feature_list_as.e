@@ -42,7 +42,7 @@ feature -- Export status computing
 				else
 					!!vlel3;
 					vlel3.set_class (System.current_class);
-					vlel3.set_parent_id (parent.parent_id);
+					vlel3.set_parent (parent.parent);
 					vlel3.set_feature_name (feature_name);
 					Error_handler.insert_error (vlel3);
 				end;

@@ -184,10 +184,6 @@ feature -- New feature description
 				-- A litteral numeric value is interpreted as 
 				-- a DOUBLE. In the case of a constant REAL
 				-- declaration that wont do!
-			ras: REAL_TYPE_AS
-			rvi: REAL_VALUE_I
-			fvi: FLOAT_VALUE_I
-			cvi: VALUE_I
 			ext_lang: EXTERNAL_LANG_AS
 			extension: EXTERNAL_EXT_I
 			il_ext: IL_EXTENSION_I
@@ -210,23 +206,9 @@ feature -- New feature description
 						-- feature, since the second pass does it.
 					create {UNIQUE_I} const.make
 				else
-					ras ?= type
-					create const.make
 						-- Constant value is processed here.
-					if (ras = Void) then
-						const.set_value (constant.value_i)
-					else
-							-- We are handling a REAL constant so we need to convert
-							-- the `VALUE_I' object from REAL_VALUE_I into FLOAT_VALUE_I.
-						cvi := constant.value_i
-						if cvi.is_double then
-							rvi ?= cvi
-							create fvi.make (rvi.double_value)
-							const.set_value (fvi)
-						else
-							const.set_value (cvi)
-						end
-					end
+					create const.make
+					const.set_value (constant.value_i)
 				end
 				check
 					constant_exists: constant /= Void

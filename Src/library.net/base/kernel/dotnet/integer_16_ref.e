@@ -32,15 +32,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			if item >= 0 then
-				Result := item
-			else
-					-- The following instruction in case
-					-- we hit the minumum negative number,
-					-- which could yield a negative result
-					-- when negated.
-				Result := - (item + 1)
-			end
+			Result := item.to_integer.hash_code
 		end
 
 	sign: INTEGER is

@@ -218,8 +218,14 @@ end
 							special_type := special_type.substring (1, index_pos-1)
 							if special_type.is_equal (macro_string) then
 								create {MACRO_EXTENSION_AS} extension.make (is_cpp_extension)
+									-- Even if used in a C++ context it is not a
+									-- CPP extension.
+								is_cpp_extension := False
 							elseif special_type.is_equal (struct_string) then
 								create {STRUCT_EXTENSION_AS} extension.make (is_cpp_extension)
+									-- Even if used in a C++ context it is not a
+									-- CPP extension.
+								is_cpp_extension := False
 							elseif special_type.is_equal (dll16_string) then
 								!! dll_ext
 								dll_ext.set_dll_type (dll16_type)
@@ -239,10 +245,12 @@ end
 							else
 								create {C_EXTENSION_AS} extension
 							end
-							special_part := special_part.substring (pos + 1, special_part.count)
 
-								-- Remove special type from special_part
-							special_part.left_adjust
+							if not is_cpp_extension then
+									-- Remove special type from special_part
+								special_part := special_part.substring (pos + 1, special_part.count)
+								special_part.left_adjust
+							end
 							extension.set_special_part (special_part)
 						end
 					end

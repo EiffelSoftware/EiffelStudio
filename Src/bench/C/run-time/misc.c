@@ -212,7 +212,7 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 	strcpy (lower_k, eif_access(k));
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE Inc\\Eiffel\\");
+	strcpy (key, "Software\\ISE\\Eiffel4\\");
 	strncat (key, rindex(modulename, '\\')+1, appl_len);
 
 	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS) {

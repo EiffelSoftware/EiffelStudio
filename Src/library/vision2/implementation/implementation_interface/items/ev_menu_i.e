@@ -41,6 +41,37 @@ feature -- Basic operations
 			-- of `a_widget'.
 		deferred
 		end
+		
+feature {EV_MENU} -- Contract support
+
+	one_radio_item_selected_per_separator: BOOLEAN is
+			-- Is there at most one selected radio item between
+			-- consecutive separators?
+		local
+			separator: EV_MENU_SEPARATOR
+			checked_radio_items: INTEGER
+			radio_item: EV_RADIO_MENU_ITEM
+		do
+			Result := True
+			from
+				interface.start
+			until
+				interface.off or not Result
+			loop
+				separator ?= item
+				if separator /= Void then
+					checked_radio_items := 0
+				end
+				radio_item ?= item
+				if radio_item /= Void and then radio_item.is_selected then
+					checked_radio_items := checked_radio_items + 1
+					if checked_radio_items > 1 then
+						Result := False
+					end
+				end
+				interface.forth
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -10,7 +10,8 @@ class
 inherit
 	EV_FONT
 		redefine
-			string_width
+			string_width,
+			is_proportional
 		end
 
 create
@@ -39,7 +40,19 @@ feature -- Status report
 		end
 
 feature {NONE} -- Implementation
+	
+	is_proportional: BOOLEAN is
+		do
+			if not internal_is_proportional_computed then
+				internal_is_proportional := Precursor
+			end
+			Result := internal_is_proportional
+		end
 
 	internal_character_width: INTEGER
+
+	internal_is_proportional: BOOLEAN
+
+	internal_is_proportional_computed: BOOLEAN
 
 end -- class EDITOR_FONT

@@ -66,7 +66,7 @@ feature -- Initialization
 				-- Add widgets to our window
 			my_container.extend (my_device)
 			my_container.extend (my_scrollbar)
-			my_container.disable_child_expand (my_scrollbar)
+			my_container.disable_item_expand (my_scrollbar)
 			first_window.extend(my_container)
 
 				-- create Menus & menu items
@@ -74,11 +74,11 @@ feature -- Initialization
 			create a_menu.make_with_text ("File")
 
 			create a_menu_item.make_with_text ("Load")
-			a_menu_item.press_actions.extend (~on_menu_file_load)
+			a_menu_item.select_actions.extend (~on_menu_file_load)
 			a_menu.extend (a_menu_item)
 
 			create a_menu_item.make_with_text ("Close")
-			a_menu_item.press_actions.extend (~on_menu_file_close)
+			a_menu_item.select_actions.extend (~on_menu_file_close)
 			a_menu.extend (a_menu_item)
 
 			a_menu_bar.extend (a_menu)

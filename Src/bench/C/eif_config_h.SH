@@ -789,5 +789,11 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
  */
 #$d_maypanic MAY_PANIC	/* Extra run-time consistency checks */
 
+/* USE_BSD_SIGNALS:
+ * On some Unix, we need to define _BSD_SIGNALS (e.g IRIX*)
+ */
+
+#$d_bsdsig USE_BSD_SIGNALS
+
 #endif
 !GROK!THIS!

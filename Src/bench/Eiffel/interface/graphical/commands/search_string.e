@@ -15,7 +15,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Close window
@@ -47,7 +46,7 @@ feature {NONE} -- Implementation
 			if search_window = Void then
 				!! search_window.make (tool);
 			end;
-			search_window.call 
+			search_window.call
 		end;
 
 feature {NONE} -- Attributes

@@ -36,23 +36,19 @@ feature -- Properites
 	attributes: LINKED_LIST [DEBUG_VALUE];
 			-- Attributes of object being inspected (sorted by name)
 
-	dynamic_class_name: STRING
-			-- Name of dynamic class of object
-
 feature -- Update
 
 	send is
 			-- Send inpect request to application.
 		local
-			obj_addr, dt_lower: STRING;
-			class_i: CLASS_I;
+			dynamic_class_name: STRING;
+			type_id: INTEGER
 		do
 			send_rqst_3 (Rqst_sp_lower, 0, 0, sp_lower);
 			send_rqst_3 (Rqst_sp_upper, 0, 0, sp_upper);
 			send_rqst_3 (request_code, In_h_addr, 0, 
 								hex_to_integer (object_address));
 			dynamic_class_name := c_tread;
-			obj_addr := c_tread;
 			if dynamic_class_name.is_equal ("SPECIAL") then
 				is_special := true;
 				!! attributes.make;
@@ -62,14 +58,12 @@ feature -- Update
 			else
 				is_special := false;
 				!SORTED_TWO_WAY_LIST [DEBUG_VALUE]! attributes.make;
-				dt_lower := clone (dynamic_class_name);
-				dt_lower.to_lower;
-				class_i := Eiffel_universe.class_with_name (dt_lower);
-				if class_i = Void then
-					recv_attributes (attributes, Void)
+				type_id := c_tread.to_integer + 1;
+				if Eiffel_system.valid_dynamic_id (type_id) then
+					recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (type_id))
 				else
-					recv_attributes (attributes, class_i.compiled_eclass)
-				end
+					recv_attributes (attributes, Void)
+				end;
 			end;
 				-- Convert the physical addresses received from
 				-- the application to hector addresses.
@@ -94,8 +88,8 @@ feature {NONE} -- Implementation
 			attr: DEBUG_VALUE;
 			exp_attr: EXPANDED_VALUE;
 			spec_attr: SPECIAL_VALUE;
-			class_i: CLASS_I
-			lower_type_name: STRING
+			type_id: INTEGER;
+			class_type: CLASS_TYPE
 		do
 			attr_nb := c_tread.to_integer;
 			from
@@ -125,16 +119,13 @@ feature {NONE} -- Implementation
 				elseif type_name.is_equal ("BIT") then
 					!BITS_VALUE! attr.make_attribute (attr_name, e_class, c_tread)
 				elseif type_name.is_equal ("expanded") then
-					type_name := c_tread;
-					!! exp_attr.make_attribute (attr_name, e_class, type_name);
-					lower_type_name := clone (type_name);
-					lower_type_name.to_lower;
-					class_i := Eiffel_universe.class_with_name (lower_type_name);
+					type_id := c_tread.to_integer + 1;
+					!! exp_attr.make_attribute (attr_name, e_class, type_id);
 					attr := exp_attr;
-					if class_i = Void then
-						recv_attributes (exp_attr.attributes, Void)
+					if Eiffel_system.valid_dynamic_id (type_id) then
+						recv_attributes (exp_attr.attributes, Eiffel_system.class_of_dynamic_id (type_id))
 					else
-						recv_attributes (exp_attr.attributes, class_i.compiled_eclass)
+						recv_attributes (exp_attr.attributes, Void)
 					end;
 				elseif type_name.is_equal ("SPECIAL") then
 					!! spec_attr.make_attribute (attr_name, e_class, 
@@ -148,8 +139,9 @@ feature {NONE} -- Implementation
 					attr := spec_attr;
 					recv_attributes (spec_attr.items, Void)
 				else
+					type_id := c_tread.to_integer + 1;
 					!REFERENCE_VALUE! attr.make_attribute (attr_name, e_class, 
-													type_name, c_tread)
+													type_id, c_tread)
 				end
 				attr_list.extend (attr);
 				i := i + 1

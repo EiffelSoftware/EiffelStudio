@@ -65,7 +65,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 	set_ref (ref: POINTER; type: INTEGER) is
 			-- Receive a reference value.
 		do
-			!REFERENCE_VALUE! item.make (ref, type)
+			!REFERENCE_VALUE! item.make (ref, type + 1)
 		end;
 
 	set_point (v: POINTER) is

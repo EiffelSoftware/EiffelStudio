@@ -247,8 +247,9 @@ feature -- Commands
 					l_toc.set_filter_skipped_sub_nodes (False)
 					l_toc.set_make_index_root (True)
 				end
-				report ("Sorting Table of Contents...")
-				l_toc.sort
+				report ("Sorting Table of Contents...")				
+				l_toc.sort				
+				shared_constants.help_constants.set_help_toc (l_toc)
 				report ("success%N")
 		
 					-- Generate HTML from written documentation files

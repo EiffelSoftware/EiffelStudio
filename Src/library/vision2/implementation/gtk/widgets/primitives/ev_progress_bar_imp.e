@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EV_PROGRESS_BAR_IMP
 
 inherit
@@ -12,21 +12,16 @@ inherit
 
 	EV_PRIMITIVE_IMP
 
-creation
-	make
-
 feature -- Implementation
 
 	make is
 			-- Create the progress bar.
-		do
-			widget := gtk_progress_bar_new
-			gtk_object_ref (widget)
+		deferred
 		end
 
 feature -- Status report
 
-	mode_is_segmented: BOOLEAN is
+	is_segmented: BOOLEAN is
 			-- Is the mode in segmented mode?
 		local
 			mode: INTEGER
@@ -51,12 +46,13 @@ feature -- Status setting
 
 	set_segmented (flag: BOOLEAN) is
 			-- Set the progress bar mode in
-			-- segmented or not.
+			-- segmented if `flag' is true, in
+			-- continuous otherwise.
 		do
 			if flag then
 				gtk_progress_bar_set_bar_style (widget, GTK_PROGRESS_DISCRETE)
 			else
-				gtk_progress_bar_set_bar_style (widget, GTK_PROGRESS_CONTINOUS)
+				gtk_progress_bar_set_bar_style (widget, GTK_PROGRESS_CONTINUOUS)
 			end
 		end
 

@@ -523,14 +523,14 @@ feature -- Status setting
 
 	set_cursor_position (pos: INTEGER) is
 			-- Set cursor_position to pos.
-			--| Will not move the cursor if a selection
-			--| is active.
 		do
 			private_cursor_position := pos
 			if exists then
 				if not has_selection then
 					set_selection (pos, pos)
 					move_to_selection
+				else
+					set_caret_position (pos)
 				end
 			end
 		end

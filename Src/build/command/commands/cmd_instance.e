@@ -5,21 +5,30 @@ inherit
 
 	DATA;
 	EDITABLE;
-	WINDOWS
+	WINDOWS;
+	NAMABLE
+		rename
+			label as command_label
+		redefine
+			is_able_to_be_named
+		end
 
 creation
 
 	session_init, storage_init
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	session_init (c: CMD) is
 		local
-			a: ARG_INSTANCE	
+			a: ARG_INSTANCE	;
+			cmd: CMD_CREATE_INSTANCE
 		do
 			inst_identifier := c.instance_count;
 			associated_command := c;
-			update_arguments
+			init_arguments;
+			!! cmd.make (Current);
+			cmd.execute (associated_command);
 		end;
 
 	storage_init (c: CMD; al: EB_LINKED_LIST [ARG_INSTANCE]) is
@@ -27,6 +36,124 @@ feature -- Creation
 			inst_identifier := c.instance_count;
 			associated_command := c;
 			arguments := al
+		end;
+
+	init_arguments is
+			-- Update the instance arguments with
+			-- the associated command type arguments.
+		local
+			al: EB_LINKED_LIST [ARG];
+			a: ARG_INSTANCE	
+		do
+			!!arguments.make;
+			from
+				al := associated_command.arguments;
+				al.start;
+			until
+				al.after
+			loop
+				!!a.session_init (al.item);
+				arguments.extend (a);
+				al.forth
+			end;
+		end;
+
+feature {NONE} -- Namable
+
+	command_label: STRING is
+		local
+			user_cmd: USER_CMD
+		do
+			user_cmd ?= associated_command;
+			if user_cmd /= Void then
+				Result := user_cmd.label;
+			end;
+		end;
+
+	visual_name: STRING is
+		local
+			user_cmd: USER_CMD
+		do
+			user_cmd ?= associated_command;
+			if user_cmd /= Void then
+				Result := user_cmd.visual_name
+			end
+		end;
+
+	is_able_to_be_named: BOOLEAN is
+		local
+			user_cmd: USER_CMD
+		do
+			user_cmd ?= associated_command;
+			Result := user_cmd /= Void
+		end;
+
+	set_visual_name (a_name: STRING) is
+		local
+			user_cmd: USER_CMD
+		do
+			user_cmd ?= associated_command;
+			if user_cmd /= Void then
+				user_cmd.set_visual_name (a_name)
+			end
+		end;
+
+feature {CMD_CUT_ARGUMENT}
+
+	add_argument_at (i: INTEGER; arg: ARG_INSTANCE) is
+			-- Add argument at end of instance
+			--| Template command has already been updated
+		require
+			valid_count: associated_command.arguments.count - 1
+							= arguments.count
+		local
+			a: ARG_INSTANCE;
+			al: EB_LINKED_LIST [ARG];
+		do
+			if i = 1 and then arguments.empty then
+				arguments.extend (arg)
+			else
+				arguments.go_i_th (i - 1);
+				arguments.put_right (arg)
+			end
+		ensure
+			valid_count: associated_command.arguments.count 
+							= arguments.count 
+		end;
+
+feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT}
+
+	add_argument is
+			-- Add argument at end of instance
+			--| Template command has already been updated
+		require
+			valid_count: associated_command.arguments.count - 1
+							= arguments.count 
+		local
+			a: ARG_INSTANCE;
+			al: EB_LINKED_LIST [ARG];
+		do
+			al := associated_command.arguments;
+			!!a.session_init (al.last);
+			arguments.extend (a);
+		ensure
+			valid_count: associated_command.arguments.count 
+							= arguments.count 
+		end;
+
+	remove_argument (i: INTEGER) is
+			-- Add argument at end of instance
+			--| Template command has already been updated
+		require
+			valid_i: i > 0 and then i <= arguments.count;
+			valid_count: associated_command.arguments.count + 1
+							= arguments.count 
+		do
+			arguments.go_i_th (i);
+			arguments.remove;
+		ensure
+			valid_count: associated_command.arguments.count 
+							= arguments.count 
 		end;
 
 feature -- Editable
@@ -89,26 +216,6 @@ feature -- Editing
 			arguments := args
 		end;
 
-	update_arguments is
-			-- Update the instance arguments with
-			-- the associated command type arguments.
-		local
-			al: EB_LINKED_LIST [ARG];
-			a: ARG_INSTANCE	
-		do
-			!!arguments.make;
-			from
-				al := associated_command.arguments;
-				al.start;
-			until
-				al.after
-			loop
-				!!a.session_init (al.item);
-				arguments.extend (a);
-				al.forth
-			end;
-		end;
-
 feature -- Stone
 
 	label: STRING is
@@ -121,13 +228,6 @@ feature -- Stone
 
 	inst_identifier: INTEGER;
 
-	set_inst_identifier (n: INTEGER) is
-		require
-			n_not_void: n /= Void;
-		do
-			inst_identifier := n;
-		end;
- 
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.command_i_icon_pixmap 
@@ -206,6 +306,11 @@ feature -- Associated command
 	eiffel_type: STRING is
 		do
 			Result := associated_command.eiffel_type
+		end;
+
+	eiffel_type_to_upper: STRING is
+		do
+			Result := associated_command.eiffel_type_to_upper
 		end;
 
 end

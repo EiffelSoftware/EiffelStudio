@@ -165,9 +165,11 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 		/* Read the byte code */
 		wread(bcode, bsize * sizeof(char));
 		melt[body_id] = bcode;
+/*
 printf ("========\n");
 idump(stdout, bcode); 
 printf ("========\n");
+*/
 #ifdef DEBUG
 	dprintf(2)("sizeof(melt[%ld]) = %ld\n", body_id, bsize);
 #ifdef TEST

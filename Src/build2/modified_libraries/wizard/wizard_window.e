@@ -43,7 +43,13 @@ feature {NONE} -- Initialization
 			build_navigation_bar (v1)
 			extend (v1)
 
-			load_first_state
+
+				-- Only if we are a modify item interface from Visual Studio.
+				-- If we are not, then we must load the interface after the
+				-- application has been launched.
+			if not is_modify_wizard then
+				load_first_state	
+			end
 		end
 		
 	initialize is
@@ -107,15 +113,24 @@ feature {NONE} -- Initialization
 			a_box.disable_item_expand (navigation_bar)
 		end
 		
+feature -- Basic Operations
+		
 	load_first_state is
 			-- Load first state.
 		local
 			wizard_initial_state: WIZARD_INITIAL_STATE
+			wizard_fourth_state: WIZARD_FOURTH_STATE
 		do
-			Create wizard_initial_state.make (create {WIZARD_INFORMATION}.make)
-			proceed_with_new_state (wizard_initial_state)
-			update_navigation
+			if is_modify_wizard then
+				create wizard_fourth_state.make (create {WIZARD_INFORMATION}.make)
+				proceed_with_new_state (wizard_fourth_state)
+				update_navigation
+			else
+				Create wizard_initial_state.make (create {WIZARD_INFORMATION}.make)
+				proceed_with_new_state (wizard_initial_state)
+			end
 		end
+		
 
 feature -- Basic Operations
 

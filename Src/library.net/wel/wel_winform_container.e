@@ -11,7 +11,8 @@ inherit
 		rename
 			make as control_make
 		redefine
-			on_size
+			on_size,
+			on_erase_background
 		end
 
 create
@@ -48,6 +49,17 @@ feature {NONE} -- Messages
 			l_size.make_from_width_and_height (a_width, a_height)
 			winform_container.set_size (l_size)
 			winform.set_size (l_size)
+		end
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+		do
+			disable_default_processing
+			set_message_return_value (1)
 		end
 
 feature -- Access

@@ -226,13 +226,9 @@ feature {EV_ANY_I} -- Access
 
 	visual_widget: POINTER is
 			-- Pointer to the widget viewed by user.
-		local
-			a_child_list: POINTER
 		do
 			if needs_event_box then
-				a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (c_object)
-				Result := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
-				feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+				Result := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (c_object)
 			else
 				Result := c_object
 			end

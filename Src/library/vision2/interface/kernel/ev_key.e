@@ -94,17 +94,6 @@ feature -- Standard output
 		do
 			Result := key_strings @ code
 		end
-		
-feature -- Obsolete
-
-	is_valid_accelerator: BOOLEAN is
-			-- Is `code' accepted as accelerator key code?
-		Obsolete
-			"All current keys are valid accelerators."
-		do
-			Result := True
-			--| All current key constants are valid.
-		end
 
 invariant
 	code_valid: valid_key_code (code)

@@ -84,6 +84,6 @@ remtrace -----------------------------------------------------------------------
 
 cdd %DOCUMENT_DIR
 doc_builder.exe -gen /xml2help -o /studio -t /mshtml %DOCUMENT_DIR\xmldoc\documentation.dpr
-copy C:\doc_temp\HTML\docs.chm %INSTALL_DIR\docs\eiffel.chm
+copy C:\doc\HTML\docs.chm %INSTALL_DIR\docs\eiffel.chm
 
 

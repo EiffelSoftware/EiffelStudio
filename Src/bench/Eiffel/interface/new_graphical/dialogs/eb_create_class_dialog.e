@@ -71,6 +71,13 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 create
 	make_default
@@ -233,7 +240,7 @@ feature -- Basic operations
 			str: STRING
 			clus_list: ARRAYED_LIST [CLUSTER_I]
 			clus: CLUSTER_I
-			i: EV_LIST_ITEM
+			i: EV_TREE_ITEM
 		do
 			if not cluster_preset then
 				cluster := target_cluster
@@ -251,11 +258,16 @@ feature -- Basic operations
 					clus := clus_list.item
 					if
 						not clus.is_precompiled and then
-						not clus.is_library
+						not clus.is_library and then
+						clus.parent_cluster = Void
 					 then
 						create i.make_with_text (clus.cluster_name)
+						i.set_pixmap (pixmaps.icon_cluster_symbol @ 1)
 						cluster_list.extend (i)
 						i.set_data (clus)
+						if not clus.sub_clusters.is_empty then
+							fill_subclusters (i)
+						end
 					end
 					clus_list.forth
 				end
@@ -264,12 +276,10 @@ feature -- Basic operations
 				else
 					i := Void
 					if cluster /= Void then
-						i := cluster_list.retrieve_item_by_data (cluster, True)
-						cluster_list.start
-						cluster_list.search (i)
+						i ?= cluster_list.retrieve_item_recursively_by_data (cluster, True)
 					end
 					if i = Void then
-						i := cluster_list.first
+						i ?= cluster_list.first
 						check
 							i_not_void: i /= Void --| Since `cluster_list' is not empty, there must be a first item.
 						end
@@ -304,6 +314,39 @@ feature {NONE} -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	fill_subclusters (parent_item: EV_TREE_ITEM) is
+			-- Add subclusters to `parent_item' representing cluster
+			-- assigned as `data' of `parent_item'
+		require
+			parent_item_not_void: parent_item /= Void
+			parent_item_has_data: parent_item.data /= Void
+		local
+			i: EV_TREE_ITEM
+			sub_clusters: ARRAYED_LIST [CLUSTER_I]
+			clus: CLUSTER_I
+		do
+			clus ?= parent_item.data
+			check
+				data_was_cluster: clus /= Void
+			end
+			sub_clusters := clus.sub_clusters
+			from
+				sub_clusters.start
+			until
+				sub_clusters.off
+			loop
+				clus := sub_clusters.item
+				create i.make_with_text (clus.short_cluster_name)
+				i.set_pixmap (pixmaps.icon_cluster_symbol @ 1)
+				parent_item.extend (i)
+				i.set_data (clus)
+				if not clus.sub_clusters.is_empty then
+					fill_subclusters (i)
+				end	
+				sub_clusters.forth
+			end
+		end
 
 	class_name: STRING is
 			-- Name of the class entered by the user.
@@ -576,7 +619,7 @@ feature {NONE} -- Implementation
 	on_show_actions is
 			-- The dialog has just been shown, set it up.
 		local
-			curr_selected_item: EV_LIST_ITEM
+			curr_selected_item: EV_TREE_NODE
 		do
 				--| Make sure the currently selected item is visible
 			curr_selected_item := cluster_list.selected_item
@@ -720,7 +763,7 @@ feature {NONE} -- Vision2 widgets
 	create_button: EV_BUTTON
 			-- Button to create the class
 			
-	cluster_list: EV_LIST
+	cluster_list: EV_TREE
 			-- List of all available clusters.
 
 	class_entry: EV_TEXT_FIELD

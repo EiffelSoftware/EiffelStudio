@@ -36,6 +36,7 @@ class FIXED_TREE [G] inherit
 	FIXED_LIST [FIXED_TREE [G]]
 		rename
 			make as fl_make,
+			make_filled as fl_make_filled,
 			item as child,
 			i_th as array_item,
 			last as last_child,
@@ -72,7 +73,7 @@ class FIXED_TREE [G] inherit
 			{NONE}
 				fl_put, fl_replace,
 				fl_writable, fl_extendible,
-				fl_remove, fl_make, fl_has, fl_readable,
+				fl_remove, fl_make, fl_make_filled, fl_has, fl_readable,
 				fl_lin_rep,
 				fl_fill, fl_full;
 			{FIXED_TREE}
@@ -96,7 +97,7 @@ feature -- Initialization
 		require
 			valid_number_of_children: n >= 0
 		do
-			fl_make (n);
+			fl_make_filled (n);
 			replace (v)
 		ensure
 			node_item: item = v;

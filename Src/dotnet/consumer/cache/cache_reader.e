@@ -19,11 +19,33 @@ inherit
 
 feature -- Access
 
-	consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY] is
-			-- Assemblies in EAC
+	consumed_assemblies_info: ARRAY [CONSUMED_ASSEMBLY_INFO] is
+			-- Assemblies in EAC (info.xml)
+		local
+			i: INTEGER
 		do
 			if is_initialized then
-				Result := info.assemblies			
+				Result := info.assemblies_info
+			end
+		end
+
+	consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY] is
+			-- Assemblies in EAC
+		local
+			l_consumed_assemblies_info: ARRAY [CONSUMED_ASSEMBLY_INFO]
+			i: INTEGER
+		do
+			if is_initialized then
+				l_consumed_assemblies_info := info.assemblies_info
+				create Result.make (1, l_consumed_assemblies_info.count)
+				from
+					i := 1
+				until
+					i > l_consumed_assemblies_info.count
+				loop
+					Result.put (l_consumed_assemblies_info.item (i).assembly, i)
+					i := i + 1
+				end
 			end
 		end
 
@@ -36,16 +58,18 @@ feature -- Access
 			i: INTEGER
 			l_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY]
 		do
-			l_consumed_assemblies := consumed_assemblies
-			from
-				i := 1
-			until
-				i > l_consumed_assemblies.count or Result /= Void
-			loop
-				if l_consumed_assemblies.item (i).name.is_equal (an_assembly_name) then
-					Result := l_consumed_assemblies.item (i)
+			if is_initialized then
+				l_consumed_assemblies := consumed_assemblies
+				from
+					i := 1
+				until
+					i > l_consumed_assemblies.count or Result /= Void
+				loop
+					if l_consumed_assemblies.item (i).name.is_equal (an_assembly_name) then
+						Result := l_consumed_assemblies.item (i)
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
@@ -63,7 +87,7 @@ feature -- Access
 		ensure
 			non_void_info: Result /= Void
 		end
-		
+
 	assembly_types_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES is
 			-- Assembly information from EAC for `ca'.
 		require
@@ -77,7 +101,7 @@ feature -- Access
 		ensure
 			non_void_info: Result /= Void
 		end
-		
+
 	consumed_type_from_dotnet_type_name (ca: CONSUMED_ASSEMBLY; type: STRING): CONSUMED_TYPE is
 			-- Type information from type `type' contained in `ca'
 		require
@@ -91,7 +115,7 @@ feature -- Access
 			des.deserialize (type_path)
 			Result ?= des.deserialized_object
 		end
-		
+
 	consumed_type_from_consumed_referenced_type (ca: CONSUMED_ASSEMBLY; crt: CONSUMED_REFERENCED_TYPE): CONSUMED_TYPE is
 			-- Type information from consumed referenced type `crt'.
 		require
@@ -105,7 +129,7 @@ feature -- Access
 		ensure
 			non_void_info: Result /= Void
 		end
-	
+
 	assembly_mapping (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_MAPPING is
 			-- Assembly information from EAC
 		require
@@ -120,7 +144,7 @@ feature -- Access
 		ensure
 			non_void_info: Result /= Void
 		end
-		
+
 	assembly_mapping_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING is
 			-- Assembly information from EAC for `ca'.
 		require
@@ -134,7 +158,7 @@ feature -- Access
 		ensure
 			non_void_info: Result /= Void
 		end
-		
+
 	consumed_type (t: TYPE): CONSUMED_TYPE is
 			-- Consumed type corresponding to `t'.
 		require
@@ -149,7 +173,7 @@ feature -- Access
 		ensure
 			non_void_consumed_type: Result /= Void
 		end
-	
+
 	client_assemblies (assembly: CONSUMED_ASSEMBLY): ARRAY [CONSUMED_ASSEMBLY] is
 			-- List of assemblies in EAC depending on `assembly'.
 		require
@@ -186,11 +210,11 @@ feature -- Access
 						end
 						j := j + 1
 					end
-					i := i + 1					
+					i := i + 1			
 				end
 			end
 		end
-		
+
 feature -- Status Report
 
 	is_initialized: BOOLEAN is
@@ -201,21 +225,53 @@ feature -- Status Report
 
 	is_assembly_in_cache (aname: ASSEMBLY_NAME): BOOLEAN is
 			-- Is `aname' in EAC?
+		require
+			non_void_aname: aname /= Void
 		do
 			if aname.get_public_key_token /= Void then
-				Result := (create {DIRECTORY}.make (absolute_assembly_path (aname))).exists			
+				Result := (create {DIRECTORY}.make (absolute_assembly_path (aname))).exists
 			end
 		end
-	
+
+	is_assembly_in_cache_2 (assembly_location: STRING): BOOLEAN is
+			-- Is `assembly_location' in EAC?
+		require
+			non_void_assembly_location: assembly_location /= Void
+			not_empty_assembly_location: not assembly_location.is_empty
+		local
+			l_assemblies_info: ARRAY [CONSUMED_ASSEMBLY_INFO]
+			l_assembly_name: ASSEMBLY_NAME
+			i: INTEGER
+			relative_path: STRING
+		do
+			l_assemblies_info := consumed_assemblies_info
+			from
+				i := 1
+			until
+				i > l_assemblies_info.count or relative_path /= Void
+			loop
+				l_assembly_name := feature {ASSEMBLY_NAME}.get_assembly_name (assembly_location.to_cil)
+				if l_assemblies_info.item (i).assembly.out.is_equal (create {STRING}.make_from_cil (l_assembly_name.full_name)) then
+					if l_assemblies_info.item (i).location.is_equal (create {STRING}.make_from_cil (l_assembly_name.code_base)) then
+						Result := True
+						check
+							directory_exists: (create {DIRECTORY}.make (absolute_assembly_path (l_assembly_name))).exists
+						end
+					end
+				end
+				i := i + 1
+			end
+		end
+
 	is_type_in_cache (t: TYPE): BOOLEAN is
 			-- Is `t' in EAC?
 		do
 			if t.assembly.get_name.get_public_key_token /= Void then
-				Result := (create {RAW_FILE}.make (absolute_type_path (t))).exists			
+				Result := (create {RAW_FILE}.make (absolute_type_path (t))).exists
 			end
 		end
-		
-feature {CACHE_WRITER} -- Implementation
+
+feature {CACHE_WRITER, EMITTER, CACHE_PATH} -- Implementation
 
 	info: CACHE_INFO is
 			-- Information on EAC content

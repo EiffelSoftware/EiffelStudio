@@ -47,8 +47,8 @@ feature {NONE} -- Implementation
 			current_type: INTEGER
 		do
 			current_type := dynamic_type_from_string (a_type)
-			if type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU")) or
-				type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU_ITEM")) then
+			if type_conforms_to (current_type, dynamic_type_from_string (Ev_menu_string)) or
+				type_conforms_to (current_type, dynamic_type_from_string (Ev_menu_item_string)) then
 				Result := True
 			end
 		end

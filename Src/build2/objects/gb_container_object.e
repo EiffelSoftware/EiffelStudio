@@ -40,8 +40,8 @@ feature -- Basic operation
 		do
 		ensure
 				-- For an EV_TABLE, Count is not the the number of widgets, `widget_count' is the correct measure of this.
-			one_item_added_to_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string ("EV_TABLE")) implies object.count = old object.count + 1
-			one_item_added_to_display_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string ("EV_TABLE")) implies display_object.child.count = old display_object.child.count + 1
+			one_item_added_to_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string (Ev_table_string)) implies object.count = old object.count + 1
+			one_item_added_to_display_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string (Ev_table_string)) implies display_object.child.count = old display_object.child.count + 1
 			one_item_added_to_layout_item: not old layout_item.has (an_object.layout_item) implies layout_item.count = old layout_item.count + 1
 		end
 		

@@ -95,10 +95,12 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define rout_putp(a,i,v) (((EIF_ARG_UNION *)(a))[i].parg = (v))
 #define rout_putr(a,i,v) (((EIF_ARG_UNION *)(a))[i].rarg = (EIF_REFERENCE) v)
 
-/* Copy TUPLE element s[j] into t[i] */
+/* Copy TUPLE element s[j] into t[i]. Note that 0x00 corresponds to a reference type code. */
 #define rout_tuple_item_copy(t,i,s,j) \
-	(*((EIF_TYPED_ELEMENT *) (t) + i)).element = (*((EIF_TYPED_ELEMENT *) (s) + j)).element;\
-	if (eif_item_type(t,i) == 'r') RTAR((EIF_REFERENCE) t, eif_reference_item(s,j));
+	(*((EIF_TYPED_ELEMENT *) (t) + i)).element = (*((EIF_TYPED_ELEMENT *) (s) + j)).element; \
+	if (eif_item_type(t,i) == 0x00) { \
+		RTAR((EIF_REFERENCE) t, eif_reference_item(s,j)); \
+	}
 
 /***************************************/
 /* Macros used for tuple manipulations */

@@ -107,6 +107,16 @@ feature -- Element change
 			emitted := false
 		end
 
+	put_protected_local (i: INTEGER) is
+			-- Write "l[`i']".
+		do
+			emit_tabs
+			append_character ('l')
+			append_character ('[')
+			append_integer (i)
+			append_character (']')
+		end
+
 	putchar (c: CHARACTER) is
 			-- Write char `c'.
 		do

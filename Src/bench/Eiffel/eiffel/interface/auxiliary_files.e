@@ -314,9 +314,9 @@ feature -- Dynamic Library file
 											argument_names.after
 										loop
 											if not args.i_th(argument_names.index).is_basic then
-												buffer.putstring ("%N%Tl[")
-												buffer.putint (argument_names.index)
-												buffer.putstring ("] = (")
+												buffer.putstring ("%N%T")
+												buffer.put_protected_local (argument_names.index)
+												buffer.putstring (" = (")
 												buffer.putstring ( cecil_type(args.i_th(argument_names.index)) )
 												buffer.putstring (") ")
 												buffer.putstring(argument_names.item)
@@ -328,7 +328,9 @@ feature -- Dynamic Library file
 
 
 										-- CALCULATE THE MAIN OBJECT.
-									buffer.putstring ("%N%Tl[0] = RTLN(")
+									buffer.putstring ("%N%T")
+									buffer.put_protected_local (0)
+									buffer.putstring (" = RTLN(")
 
 									if Context.workbench_mode then
 										buffer.putstring ("RTUD(");
@@ -343,7 +345,9 @@ feature -- Dynamic Library file
 									if internal_creation_name /= Void then
 										buffer.putstring ("%N%T/* Call the creation routine */%N%T")
 										buffer.putstring (internal_creation_name)
-										buffer.putstring (" (l[0]);")
+										buffer.putchar ('(')
+										buffer.put_protected_local (0)
+										buffer.putstring (");")
 									end
 									
 										--CALL THE ROUTINE
@@ -355,7 +359,8 @@ feature -- Dynamic Library file
 										buffer.putstring (") ")
 									end -- When the feature return a value.
 									buffer.putstring (internal_feature_name)
-									buffer.putstring ("(l[0]")
+									buffer.putchar ('(')
+									buffer.put_protected_local (0)
 
 									if argument_names /= Void then
 										from
@@ -364,9 +369,8 @@ feature -- Dynamic Library file
 											argument_names.after
 										loop
 											if not args.i_th(argument_names.index).is_basic then
-												buffer.putstring (", l[")
-												buffer.putint (argument_names.index)
-												buffer.putstring ("]")
+												buffer.putchar (',')
+												buffer.put_protected_local (argument_names.index)
 											else
 												buffer.putstring (", ")
 												buffer.putstring (argument_names.item)

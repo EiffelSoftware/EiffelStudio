@@ -921,9 +921,8 @@ feature
 						buffer.putint (argument_b.position)
 						buffer.putstring (gc_rparan_comma)
 						buffer.new_line
-						buffer.putstring ("l[")
-						buffer.putint (position)
-						buffer.putstring ("] = RTEO(arg")
+						buffer.put_protected_local (position)
+						buffer.putstring (" = RTEO(arg")
 						buffer.putint (argument_b.position)
 						buffer.putstring (gc_rparan_comma)
 						buffer.new_line
@@ -931,9 +930,8 @@ feature
 						buffer.putstring (gc_lacc_else_r_acc)
 						buffer.new_line
 						buffer.indent
-						buffer.putstring ("l[")
-						buffer.putint (position)
-						buffer.putstring ("] = ")
+						buffer.put_protected_local (position)
+						buffer.putstring (" = ")
 						buffer.putstring (rname)
 						buffer.putchar (';')
 						buffer.new_line
@@ -944,9 +942,8 @@ feature
 						buffer.exdent
 						buffer.putchar ('}')
 					else
-						buffer.putstring ("l[")
-						buffer.putint (position)
-						buffer.putstring ("] = ")
+						buffer.put_protected_local (position)
+						buffer.putstring (" = ")
 						if 	((reg.is_predefined or reg.is_temporary)
 							and not (reg.is_current or reg.is_argument)
 							and not (reg.is_result and compound_or_post))
@@ -1144,10 +1141,8 @@ feature -- Concurrent Eiffel
 			until
 				i < 0
 			loop
-				buffer.putstring ("l[")
-				buffer.putint (ref_var_used + i)
-				buffer.putstring ("] = ")
-				buffer.putstring ("(EIF_REFERENCE) 0;")
+				buffer.put_protected_local (ref_var_used + i)
+				buffer.putstring (" = (EIF_REFERENCE) 0;")
 				buffer.new_line
 				i := i - 1
 			end

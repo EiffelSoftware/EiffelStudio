@@ -87,9 +87,7 @@ feature
 							loc_idx := -1
 						end
 						if loc_idx /= -1 then
-							buf.putstring ("l[")
-							buf.putint (context.ref_var_used + loc_idx)
-							buf.putstring ("]")
+							buf.put_protected_local (context.ref_var_used + loc_idx)
 						else
 							-- It'll be the case when the value is "Void"
 							expr.print_register

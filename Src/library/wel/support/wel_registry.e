@@ -193,7 +193,6 @@ feature -- Access
 			key_possible: valid_value_for_hkey (key)
 			index_possible: index <= number_of_subkeys (key)
 		local
-			registry_key_ptr: POINTER
 			file_time: WEL_FILE_TIME
 			key_name, class_name: WEL_STRING
 			key_size, class_size: INTEGER

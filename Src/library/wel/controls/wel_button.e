@@ -13,6 +13,8 @@ inherit
 			process_notification
 		end
 
+	WEL_COLOR_CONTROL
+
 	WEL_BN_CONSTANTS
 		export
 			{NONE} all
@@ -37,6 +39,23 @@ feature {NONE} -- Initialization
 			exists: exists
 			name_set: text.is_equal (a_name)
 			id_set: id = an_id
+		end
+
+feature -- Color
+
+	foreground_color: WEL_COLOR_REF is
+			-- Foreground color has no effect with SCROLL_BAR.
+			-- Cannot be Void.
+		do
+			!! Result.make_system (Color_windowtext)
+		end
+
+	background_color: WEL_COLOR_REF is
+			-- Background color used for the background of the
+			-- control
+			-- Can be redefined by the user
+		do
+			!! Result.make_system (color_scrollbar)
 		end
 
 feature -- Notifications

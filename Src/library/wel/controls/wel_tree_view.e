@@ -132,21 +132,32 @@ feature -- Status report
 		require
 			exists: exists
 			valid_item: has_item (an_item)
+		local
+			mask: INTEGER
 		do
+			mask := an_item.mask
+			an_item.set_mask (Tvif_state)
 			an_item.set_statemask (Tvis_selected)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
 			Result := flag_set (an_item.state, Tvis_selected)
+			an_item.set_mask (mask)
 		end
 
 	is_expanded (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
 			-- Is `an_item' expanded?
 		require
 			exists: exists
+			is_parent: is_parent (an_item)
 			valid_item: has_item (an_item)
+		local
+			mask: INTEGER
 		do
+			mask := an_item.mask
+			an_item.set_mask (Tvif_state)
 			an_item.set_statemask (Tvis_expanded)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
 			Result := flag_set (an_item.state, Tvis_expanded)
+			an_item.set_mask (mask)
 		end
 
 	is_cut (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
@@ -155,10 +166,15 @@ feature -- Status report
 		require
 			exists: exists
 			valid_item: has_item (an_item)
+		local
+			mask: INTEGER
 		do
+			mask := an_item.mask
+			an_item.set_mask (Tvif_state)
 			an_item.set_statemask (Tvis_cut)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
 			Result := flag_set (an_item.state, Tvis_cut)
+			an_item.set_mask (mask)
 		end
 
 	is_bold (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
@@ -166,10 +182,15 @@ feature -- Status report
 		require
 			exists: exists
 			valid_item: has_item (an_item)
+		local
+			mask: INTEGER
 		do
+			mask := an_item.mask
+			an_item.set_mask (Tvif_state)
 			an_item.set_statemask (Tvis_bold)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
 			Result := flag_set (an_item.state, Tvis_bold)
+			an_item.set_mask (mask)
 		end
 
 	is_drophilited (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
@@ -177,10 +198,31 @@ feature -- Status report
 		require
 			exists: exists
 			valid_item: has_item (an_item)
+		local
+			mask: INTEGER
 		do
+			mask := an_item.mask
+			an_item.set_mask (Tvif_state)
 			an_item.set_statemask (Tvis_drophilited)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
 			Result := flag_set (an_item.state, Tvis_drophilited)
+			an_item.set_mask (mask)
+		end
+
+	is_parent (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+			-- Is `an_item' a parent of other items?
+		require
+			exists: exists
+			valid_item: has_item (an_item)
+		local
+			mask: INTEGER
+			win_result: INTEGER
+		do
+			mask := an_item.mask
+			an_item.set_mask (Tvif_children)
+			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
+			Result := an_item.children = 1
+			an_item.set_mask (mask)
 		end
 
 	has_item (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
@@ -236,6 +278,52 @@ feature -- Status setting
 		do
 			cwin_send_message (item, Tvm_selectitem,
 				Tvgn_caret, an_item.h_item)
+		ensure
+			item_selected: is_selected (an_item)
+		end
+
+	deselect_item (an_item: WEL_TREE_VIEW_ITEM) is
+			-- Deselect the given item
+		require
+			exists: exists
+			valid_item: has_item (an_item)
+		local
+			mask: INTEGER
+		do
+			mask := an_item.mask
+			an_item.set_mask (Tvif_state)
+			an_item.set_statemask (Tvis_selected)
+			an_item.set_state (0)
+			cwin_send_message (item, Tvm_setitem, 0, an_item.to_integer)
+			an_item.set_mask (mask)
+		ensure
+			item_deselected: not is_selected (an_item)
+		end
+
+	expand_item (an_item: WEL_TREE_VIEW_ITEM) is
+			-- Expand the given item.
+		require
+			exists: exists
+			is_parent: is_parent (an_item)
+			valid_item: has_item (an_item)
+		do
+			cwin_send_message (item, Tvm_expand, Tve_expand,
+				an_item.h_item)
+		ensure
+			item_expanded: is_expanded (an_item)
+		end
+
+	collapse_item (an_item: WEL_TREE_VIEW_ITEM) is
+			-- Collapse the given item.
+		require
+			exists: exists
+			is_parent (an_item)
+			valid_item: has_item (an_item)
+		do
+			cwin_send_message (item, Tvm_expand, Tve_collapse,
+				an_item.h_item)
+		ensure
+			item_collapse: not is_expanded (an_item)
 		end
 
 	select_first_visible (an_item: WEL_TREE_VIEW_ITEM) is
@@ -271,15 +359,18 @@ feature -- Status setting
 feature -- Element change
 
 	insert_item (an_item: WEL_TREE_VIEW_INSERT_STRUCT) is
-			-- Insert `an_item'.
+			-- Insert `an_item' in the tree.
 		require
 			exists: exists
 			an_item_not_void: an_item /= Void
+			an_item_exists: an_item.exists
 		do
 			last_item := cwin_send_message_result (item,
 				Tvm_insertitem, 0, an_item.to_integer)
+			an_item.tree_view_item.set_h_item (last_item)
+			an_item.user_tree_view_item.set_h_item (last_item)
 		ensure
-			new_count: count = old count + 1 
+			new_count: count = old count + 1
 		end
 
 	delete_item (an_item: WEL_TREE_VIEW_ITEM) is

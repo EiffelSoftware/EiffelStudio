@@ -207,6 +207,8 @@ feature -- Output
 			-- `f' is used to retreive the generic type or argument name as string.
 			-- This replaces the old "Generic #2" or "arg #1" texts in feature signature views.
 			-- Actually used in FORMAL_A and LIKE_ARGUMENT.
+		require
+			structured_text_not_void: structured_text /= Void
 		deferred
 		end
 

@@ -196,6 +196,22 @@ void separate_call() {
 				sprintf(crash_info, CURERR13, command_text(_concur_command));
 				c_raise_concur_exception(exception_implementation_error);
 			}
+			if (_concur_command_ack == constant_deep_import) {
+				/* It's to deep import an object, so send the object as a query result */
+				char send_buf[4*constant_sizeofint];
+				
+				*(EIF_INTEGER *)send_buf = htonl(constant_query_result);
+					/* sent command code */
+				*(EIF_INTEGER *)(send_buf+constant_sizeofint) = htonl(1);
+					/* sent parameter number */
+				*(EIF_INTEGER *)(send_buf+2*constant_sizeofint) = htonl(Local_reference);
+					/* sent the parameter's data type */
+				*(EIF_INTEGER *)(send_buf+3*constant_sizeofint) = htonl(-1);
+					/* sent the parameter's length: -1 means the length has no meaning */
+				c_concur_put_stream(_concur_current_client->sock, send_buf, 4*constant_sizeofint);
+				eif_net_independent_store(_concur_current_client->sock, CUROBJ);
+				break;
+			}
 			sprintf(_concur_crash_info, CURERR14, _concur_command_feature, _concur_command_class);
 			dyn_type = Dtype(CUROBJ);
 #ifdef DEBUG
@@ -250,6 +266,20 @@ dprintf(1)("%d(%s) Got Attrib type 0x%x with rout_id %d\n", _concur_pid, _concur
 						}
 					case SK_BIT:
 					case SK_EXP:
+						{ char send_buf[4*constant_sizeofint];
+				
+							*(EIF_INTEGER *)send_buf = htonl(constant_query_result);
+								/* sent command code */
+							*(EIF_INTEGER *)(send_buf+constant_sizeofint) = htonl(1);
+								/* sent parameter number */
+							*(EIF_INTEGER *)(send_buf+2*constant_sizeofint) = htonl(Local_reference);
+								/* sent the parameter's data type */
+							*(EIF_INTEGER *)(send_buf+3*constant_sizeofint) = htonl(-1);
+								/* sent the parameter's length: -1 means the length has no meaning */
+							c_concur_put_stream(_concur_current_client->sock, send_buf, 4*constant_sizeofint);
+							eif_net_independent_store(_concur_current_client->sock, CUROBJ+offset);
+						}
+							break;
 					default:
 						add_nl;
 						sprintf(crash_info, CURERR16, type);

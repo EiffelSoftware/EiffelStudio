@@ -618,10 +618,6 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if msg = Wm_mouseactivate then
 				on_wm_mouseactivate (wparam, lparam)
-			elseif msg= Wm_syncpaint then
-				if item_imp /= Void then
-					item_imp.propagate_syncpaint
-				end
 			else
 				Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (msg, wparam, lparam)
 			end

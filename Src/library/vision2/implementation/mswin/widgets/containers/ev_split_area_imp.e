@@ -27,7 +27,6 @@ inherit
 			initialize,
 			enable_sensitive,
 			disable_sensitive,
-			propagate_syncpaint,
 			update_for_pick_and_drop,
 			on_set_cursor
 		end
@@ -96,18 +95,6 @@ feature {EV_ANY_I} -- Status Setting
 		
 feature {EV_ANY_I} -- Implementation
 
-	propagate_syncpaint is
-			-- Propagate `wm_syncpaint' message recevived by `top_level_window_imp' to
-			-- children. See "WM_SYNCPAINT" in MSDN for more information.
-		do
-			if first_imp /= Void then
-				first_imp.propagate_syncpaint
-			end
-			if second_imp /= Void then
-				second_imp.propagate_syncpaint
-			end
-		end
-		
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so notify `first_imp' and `second_imp'.
 		do

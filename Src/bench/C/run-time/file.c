@@ -22,6 +22,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef HAS_UTIME
+#include <utime.h>
+#endif
+
 #ifdef __VMS
 #define lib$rename_file		LIB$RENAME_FILE
 #include <lib$routines.h>
@@ -1470,7 +1474,7 @@ struct utimbuf *times;
 }
 #endif
 
-#ifndef HAS_LINK
+#ifndef HAS_UNLINK
 #ifndef unlink
 
 int unlink(path)

@@ -172,7 +172,13 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 	dummy_paragraph_format_range_information: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
 			-- 
 		do
-			create Result.make_with_values (True, True, True, True, True)
+			create Result.make_with_flags (
+				feature {EV_PARAGRAPH_CONSTANTS}.alignment
+				| feature {EV_PARAGRAPH_CONSTANTS}.left_margin
+				| feature {EV_PARAGRAPH_CONSTANTS}.right_margin
+				| feature {EV_PARAGRAPH_CONSTANTS}.top_spacing
+				| feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing
+			)
 		end
 
 feature {NONE} -- Implementation

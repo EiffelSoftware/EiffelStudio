@@ -218,7 +218,7 @@ feature {NONE} -- GUI attributes
 	excluded_list: SCROLLABLE_LIST
 			-- List of excluded queries
 	
-feature {ANY_QUERY_EDITOR_FORM}
+feature {QUERY_EDITOR_FORM}
 
 	no_precondition_test,
 			-- No preconditions test by default field
@@ -349,14 +349,21 @@ feature -- Command execution
 		require
 			query_not_void: a_query /= Void
 		local
-			editor_form: ANY_QUERY_EDITOR_FORM
+			any_editor_form: ANY_QUERY_EDITOR_FORM
+			boolean_editor_form: BOOLEAN_QUERY_EDITOR_FORM
 		do
 			if form_table.has (a_query.query_name) and form_table.item (a_query.query_name) /= Void then
 				form_table.item (a_query.query_name).manage
 			else
-				!! editor_form.make ("", properties_rc)
-				editor_form.set_query (a_query)
-				form_table.force (editor_form, a_query.query_name)
+				if a_query.query_type.is_equal ("BOOLEAN") then
+					!! boolean_editor_form.make ("", properties_rc)
+					boolean_editor_form.set_query (a_query)
+					form_table.force (boolean_editor_form, a_query.query_name)
+				else
+					!! any_editor_form.make ("", properties_rc)
+					any_editor_form.set_query (a_query)
+					form_table.force (any_editor_form, a_query.query_name)
+				end
 			end
 		end
 
@@ -405,6 +412,7 @@ feature {NONE} -- Implementation
 		local
 			query_list: LINKED_LIST [APPLICATION_QUERY]
 			temp_title: STRING
+			a_query: APPLICATION_QUERY
 		do
 			!! temp_title.make (0)
 			temp_title.append ("Object tool generator: ")
@@ -419,9 +427,26 @@ feature {NONE} -- Implementation
 			until
 				query_list.after
 			loop
-				excluded_list.extend (query_list.item)
+				a_query ?= query_list.item
+				if a_query /= Void then
+					add_query_editor_form (a_query)
+					included_list.extend (a_query)
+				end
 				query_list.forth
 			end
+
+--  			exclude_all_queries
+--  			excluded_list.wipe_out
+--  			included_list.wipe_out
+--  			query_list := edited_class.query_list
+--  			from
+--  				query_list.start
+--  			until
+--  				query_list.after
+--  			loop
+--  				excluded_list.extend (query_list.item)
+--  				query_list.forth
+--  			end
 		end
 
 feature -- Attributes

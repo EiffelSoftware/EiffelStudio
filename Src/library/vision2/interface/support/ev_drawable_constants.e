@@ -19,7 +19,6 @@ feature -- Constants
 	--| FIXME Remove all the old Ev_ prefixed constants
 
 	Drawing_mode_copy: INTEGER is 0
-	Ev_drawing_mode_copy: INTEGER is 0
 			-- Normal drawing mode.
 			--
 			-- T\S | 0 | 1 |
@@ -29,7 +28,6 @@ feature -- Constants
 			--   1 | 0 | 1 |
 
 	Drawing_mode_xor: INTEGER is 1
-	Ev_drawing_mode_xor: INTEGER is 1
 			-- Drawing mode where bitwise XOR is performed when a
 			-- pixel is drawn.
 			--
@@ -40,7 +38,6 @@ feature -- Constants
 			--   1 | 1 | 0 |
 
 	Drawing_mode_invert: INTEGER is 2
-	Ev_drawing_mode_invert: INTEGER is 2
 			-- Drawing mode where bits are inverted before drawn.
 			--
 			-- T\S | 0 | 1 |
@@ -50,7 +47,6 @@ feature -- Constants
 			--   1 | 1 | 0 |
 
 	Drawing_mode_and: INTEGER is 3
-	Ev_drawing_mode_and: INTEGER is 3
 			-- Drawing mode where bitwise AND is performed when a
 			-- pixel is drawn.
 			--
@@ -61,7 +57,6 @@ feature -- Constants
 			--   1 | 0 | 1 |
 
 	Drawing_mode_or: INTEGER is 4
-	Ev_drawing_mode_or: INTEGER is 4
 			-- Drawing mode where bitwise OR is performed when a
 			-- pixel is drawn.
 			--

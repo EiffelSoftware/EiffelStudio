@@ -503,11 +503,11 @@
 				</code> in the directory after backing it up.  For more profound changes in the structure of the generated HTML, you may also backup and edit the Eiffel Filter Format file 
 				<code>
 					<keyword>html-stylesheet.fil</keyword>
-				</code> in the same directory.  EFF is described in an appendix ( 
+				</code> in the same directory.  EFF is described in 
 				<link>
 					<url>index-20.xml</url><anchor_name>35873</anchor_name>
-					<label> 19, page 144</label>
-				</link>).
+					<label> Chapter 19, "Appendix"</label>
+				</link>.
 				<code_block>
 	<keyword>$ISE_EIFFEL/examples/studio/filters</keyword>
 				</code_block>

@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?><application xmlns="" xmlns:ns1="" xsi="http://www.w3.org/1999/XMLSchema-instance">
 <item type="Constants"><Constant><type>DIRECTORY</type>
 		<Name>icons_directory</Name>
-		<Value>E:\com_wizard\project\new_gui\resources</Value>
+		<Value>E:\com_wizard\root\resources</Value>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>help_png</Name>
-		<Value>E:\com_wizard\project\new_gui\resources\help.png</Value>
+		<Value>E:\com_wizard\root\resources\help.png</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>icons_directory</Directory>
 		<Filename>help.png</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>eiffel_software_png</Name>
+		<Value>E:\com_wizard\root\resources\eiffel_software.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>icons_directory</Directory>
+		<Filename>eiffel_software.png</Filename>
 		</Constant>
 	<Constant><type>COLOR</type>
 		<Name>link_label</Name>
@@ -28,7 +35,7 @@
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>settings_png</Name>
-		<Value>E:\com_wizard\project\new_gui\resources\settings.png</Value>
+		<Value>E:\com_wizard\root\resources\settings.png</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>icons_directory</Directory>
 		<Filename>settings.png</Filename>
@@ -39,7 +46,7 @@
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>output_png</Name>
-		<Value>E:\com_wizard\project\new_gui\resources\output.png</Value>
+		<Value>E:\com_wizard\root\resources\output.png</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>icons_directory</Directory>
 		<Filename>output.png</Filename>
@@ -81,6 +88,8 @@
 <EV_TEXTABLE><Text><![CDATA[Exit]]></Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_exit</Event>
+	</Events>
 </item>
 </item>
 <item type="EV_MENU"><Internal_properties>
@@ -123,6 +132,8 @@
 <EV_TEXTABLE><Text><![CDATA[About]]></Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_about</Event>
+	</Events>
 </item>
 </item>
 </item>
@@ -979,7 +990,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>193</id>
+	<id>192</id>
 	<name>first_generate_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -997,7 +1008,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</Events>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>194</id>
+	<id>193</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1409,7 +1420,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>178</id>
+	<id>177</id>
 	<name>backup_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1422,7 +1433,7 @@ Compiling the Eiffel code requires compiling the C code.]]></Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>176</id>
+	<id>175</id>
 	<name>backup_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1438,7 +1449,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>177</id>
+	<id>176</id>
 	<name>backup_inner_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1462,7 +1473,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>203</id>
+	<id>200</id>
 	<name>backup_buttons_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1474,7 +1485,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>204</id>
+	<id>201</id>
 	<name>cleanup_radio_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1491,7 +1502,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>205</id>
+	<id>202</id>
 	<name>backup_radio_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1508,7 +1519,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 	</Events>
 </item>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>206</id>
+	<id>203</id>
 	<name>overwrite_radio_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1580,7 +1591,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>195</id>
+	<id>194</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1609,7 +1620,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 			</Events>
 		</item>
 	<item type="EV_CELL"><Internal_properties>
-		<id>196</id>
+		<id>195</id>
 		<Expanded>0</Expanded>
 		</Internal_properties>
 	<EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1620,7 +1631,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 	</item>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>192</id>
+	<id>191</id>
 	<name>second_generate_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1691,7 +1702,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>183</id>
+	<id>182</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1703,7 +1714,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>184</id>
+	<id>183</id>
 	<name>progress_bar_inner_box1</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -1716,7 +1727,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_PROGRESS_BAR"><Internal_properties>
-	<id>185</id>
+	<id>184</id>
 	<name>progress_bar1</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -1728,7 +1739,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 <EV_PROGRESS_BAR></EV_PROGRESS_BAR>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>198</id>
+	<id>197</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1739,7 +1750,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>199</id>
+	<id>198</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1754,7 +1765,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>200</id>
+	<id>199</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1770,7 +1781,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>187</id>
+	<id>186</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1782,7 +1793,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>188</id>
+	<id>187</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -1796,7 +1807,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>197</id>
+	<id>196</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -2683,7 +2694,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>179</id>
+	<id>178</id>
 	<name>progress_bar_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2696,7 +2707,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>182</id>
+	<id>181</id>
 	<name>progress_bar_inner_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2709,7 +2720,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_PROGRESS_BAR"><Internal_properties>
-	<id>181</id>
+	<id>180</id>
 	<name>progress_bar</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2721,7 +2732,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PROGRESS_BAR></EV_PROGRESS_BAR>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>190</id>
+	<id>189</id>
 	<name>inner_progress_label_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2733,7 +2744,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>189</id>
+	<id>188</id>
 	<name>percentage_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2749,7 +2760,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 	</EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>191</id>
+	<id>190</id>
 	<name>percent_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2766,7 +2777,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>186</id>
+	<id>185</id>
 	<name>progress_label_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -2779,7 +2790,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>180</id>
+	<id>179</id>
 	<name>progress_bar_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -2988,6 +2999,301 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_exit</Event>
 	</Events>
+</item>
+</item>
+</item>
+</item>
+<item type="EV_DIALOG"><Internal_properties>
+	<id>204</id>
+	<name>wizard_about_dialog</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_WINDOW><User_can_resize>False</User_can_resize>
+	<Title><![CDATA[EiffelCOM Wizard]]></Title>
+	</EV_WINDOW>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_VERTICAL_BOX"><Internal_properties>
+	<id>205</id>
+	<name>main_box</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>101</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>206</id>
+	<name>inside_box</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>00</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_VERTICAL_BOX"><Internal_properties>
+	<id>207</id>
+	<name>left_box</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>101</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_CELL"><Internal_properties>
+	<id>208</id>
+	<name>left_top_padding_cell</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+<item type="EV_PIXMAP"><Internal_properties>
+	<id>209</id>
+	<name>es_logo_pixmap</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET><Minimum_width>182</Minimum_width>
+	<Minimum_height>80</Minimum_height>
+	</EV_WIDGET>
+<EV_PIXMAP><Pixmap_path><Constant>eiffel_software_png</Constant>
+		</Pixmap_path>
+	</EV_PIXMAP>
+</item>
+<item type="EV_CELL"><Internal_properties>
+	<id>210</id>
+	<name>left_bottom_padding_cell</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+</item>
+<item type="EV_VERTICAL_BOX"><Internal_properties>
+	<id>211</id>
+	<name>right_box</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Padding>10</Padding>
+	<Border>10</Border>
+	<Is_item_expanded>000</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_LABEL"><Internal_properties>
+	<id>212</id>
+	<name>title_label</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_FONTABLE><Family>3</Family>
+	<Weight>8</Weight>
+	<Shape>10</Shape>
+	<Height_in_points>12</Height_in_points>
+	<Preferred_family>Trebuchet MS</Preferred_family>
+	</EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[EiffelCOM Wizard]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>213</id>
+	<name>version_box</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>01</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_LABEL"><Internal_properties>
+	<id>214</id>
+	<name>version_title</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[v]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
+	</EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>215</id>
+	<name>version_label</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[2.0.0228]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
+	</EV_TEXT_ALIGNABLE>
+</item>
+</item>
+<item type="EV_VERTICAL_BOX"><Internal_properties>
+	<id>216</id>
+	<name>content_box</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Padding>5</Padding>
+	<Is_item_expanded>11</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_LABEL"><Internal_properties>
+	<id>217</id>
+	<name>copyright_label</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	</EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[Copyright (C) 2005 Eiffel Software]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
+	</EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>218</id>
+	<name>web_address_label</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE><Background_color>255255255</Background_color>
+	<Foreground_color>064000128</Foreground_color>
+	</EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[http://www.eiffel.com]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
+	</EV_TEXT_ALIGNABLE>
+<Events><Event>pointer_button_release_actions EV_WIDGET_ACTION_SEQUENCES on_web_click</Event>
+	<Event>pointer_enter_actions EV_WIDGET_ACTION_SEQUENCES on_mouse_enter</Event>
+	<Event>pointer_leave_actions EV_WIDGET_ACTION_SEQUENCES on_mouse_leave</Event>
+	</Events>
+</item>
+</item>
+</item>
+</item>
+<item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
+	<id>219</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>220</id>
+	<name>bottom_box</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Padding>5</Padding>
+	<Border>7</Border>
+	<Is_item_expanded>101</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_CELL"><Internal_properties>
+	<id>221</id>
+	<name>left_bottom_cell</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>222</id>
+	<name>ok_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[OK]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET><Minimum_width>100</Minimum_width>
+	</EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_ok</Event>
+	</Events>
+</item>
+<item type="EV_CELL"><Internal_properties>
+	<id>223</id>
+	<name>right_button_cell</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
 </item>
 </item>
 </item>

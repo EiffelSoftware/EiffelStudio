@@ -204,22 +204,24 @@ feature {NONE} -- Implementation
 		local
 			mh: INTEGER
 		do
-			-- We calculate the values first
-			mh := title_bar_height + window_border_height +
-				2 * window_frame_height
+			if exists then
+				-- We calculate the values first
+				mh := title_bar_height + window_border_height +
+					2 * window_frame_height
 
-			if item_imp /= Void then
-				mh := mh + item_imp.minimum_height
-			end
-			if has_menu then
-				mh := mh + menu_bar_height
-			end
-			if status_bar /= Void then
-				mh := mh + status_bar.minimum_height
-			end
+				if item_imp /= Void then
+					mh := mh + item_imp.minimum_height
+				end
+				if has_menu then
+					mh := mh + menu_bar_height
+				end
+				if status_bar /= Void then
+					mh := mh + status_bar.minimum_height
+				end
 
-			-- Finaly, we set the value
-			internal_set_minimum_height (mh)
+				-- Finaly, we set the value
+				internal_set_minimum_height (mh)
+			end
 		end
 
 	compute_minimum_size is
@@ -227,25 +229,27 @@ feature {NONE} -- Implementation
 		local
 			mw, mh: INTEGER
 		do
-			-- We calculate the values first
-			mw := 2 * window_frame_width
-			mh := title_bar_height + window_border_height +
-				2 * window_frame_height
+			if exists then
+				-- We calculate the values first
+				mw := 2 * window_frame_width
+				mh := title_bar_height + window_border_height +
+					2 * window_frame_height
 
-			if item_imp /= Void then
-				mw := mw + item_imp.minimum_width
-				mh := mh + item_imp.minimum_height
-			end
-			if has_menu then
-				mh := mh + menu_bar_height
-			end
-			if status_bar /= Void then
-				mh := mh + status_bar.minimum_height
-			end
-			mw := mw.max (status_bar.minimum_width)
+				if item_imp /= Void then
+					mw := mw + item_imp.minimum_width
+					mh := mh + item_imp.minimum_height
+				end
+				if has_menu then
+					mh := mh + menu_bar_height
+				end
+				if status_bar /= Void then
+					mh := mh + status_bar.minimum_height
+				end
+				mw := mw.max (status_bar.minimum_width)
 
-			-- Finaly, we set the value
-			internal_set_minimum_size (mw, mh)
+				-- Finaly, we set the value
+				internal_set_minimum_size (mw, mh)
+			end
 		end
 
 feature {NONE} -- WEL Implementation
@@ -342,6 +346,10 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.67  2000/04/29 03:27:57  pichery
+--| Protected `compute_minimum_size' with
+--| test on `exists'.
+--|
 --| Revision 1.66  2000/04/29 00:44:47  brendel
 --| Changed to take minimum width of status bar into account.
 --|

@@ -34,7 +34,7 @@ feature -- Access
 			loop
 				p := params.item (i)
 				create dn.make_from_cil (p.get_name)
-				en := formatted_variable_name (dn)				
+				en := formatted_argument_name (dn, i + 1)				
 				t := p.get_parameter_type
 				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en,
 					referenced_type_from_type (t),

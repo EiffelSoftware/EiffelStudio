@@ -22,7 +22,7 @@ class LINKED_TREE [G] inherit
 			child_after, child_before, child_item,
 			child_off
 		redefine
-			parent, copy
+			parent
 		select
 			has
 		end
@@ -35,9 +35,7 @@ class LINKED_TREE [G] inherit
 			{ANY} put, replace
 			{LINKED_TREE} l_put_right, forget_right
 		undefine
-			is_equal
-		redefine
-			copy
+			copy, is_equal
 		end
 
 	LINKED_LIST [G]
@@ -94,9 +92,9 @@ class LINKED_TREE [G] inherit
 			child_writable,
 			linear_representation,
 			child_isfirst, child_islast, valid_cursor_index,
-			is_equal
+			copy, is_equal
 		redefine
-			first_child, new_cell, copy
+			first_child, new_cell
 		select
 			is_leaf
 		end
@@ -269,16 +267,11 @@ feature -- Removal
 			end
 		end
 
-feature -- Duplication
+feature {NONE} -- Inapplicable
 
-	copy (other: like Current) is
-			-- Copy contents from `other'.
-		local
-			tmp_tree: like Current
+	forget_left is
+			-- Forget all left siblings.
 		do
-			create tmp_tree.make (other.item)
-			if not other.is_leaf then tree_copy (other, tmp_tree) end
-			standard_copy (tmp_tree)
 		end
 
 feature {LINKED_TREE} -- Implementation
@@ -296,6 +289,16 @@ feature {LINKED_TREE} -- Implementation
 			-- produce an adequately allocated and initialized object.
 		do
 			create Result.make (item)
+		end
+
+
+	cut_off_node is
+			-- Cut off all links from current node.
+		do
+			make (item)
+			wipe_out
+			forget_right
+			parent := Void
 		end
 
 feature {NONE} -- Implementation

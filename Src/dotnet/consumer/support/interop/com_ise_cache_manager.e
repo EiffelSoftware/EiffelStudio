@@ -126,9 +126,23 @@ feature -- Basic Exportations
 			
 			l_app_domain := feature {APP_DOMAIN}.create_domain ("Emitter_exe",
 				new_evidence, new_setup (l_path))
-			
+		
 			l_impl := new_cache_manager (l_app_domain)
 			
+			from
+				i := 0
+				nb := l_native_array.count - 1
+			until
+				i > nb
+			loop
+				l_path := l_native_array.item (i)
+				if l_path.length > 0 then
+					l_impl.assembly_resolver.add_resolver_path_from_file_name (l_path)
+				end
+				i := i + 1
+			end
+			
+				-- consume assemblies
 			from
 				i := 0
 				nb := l_native_array.count - 1
@@ -138,7 +152,8 @@ feature -- Basic Exportations
 				l_impl.consume_local_assembly (l_native_array.item (i), adest)
 				i := i + 1
 			end
-
+			
+			--l_resolver.dispose
 			update_current (l_impl)
 			feature {APP_DOMAIN}.unload (l_app_domain)
 		end

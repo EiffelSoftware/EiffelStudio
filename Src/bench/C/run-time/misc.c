@@ -348,7 +348,7 @@ EIF_INTEGER i, j, k;
 
 #ifdef __WINDOWS_386__
 
-/* DLL Stuff */
+/* DLL declarations */
 
 #define EIF_DLL_CHUNK 20
 

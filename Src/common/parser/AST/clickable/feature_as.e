@@ -7,7 +7,8 @@ inherit
 	AST_EIFFEL
 		redefine
 			is_feature_obj, type_check, byte_node,
-			find_breakable, format
+			find_breakable, format,
+			fill_calls_list, replicate
 		end;
 	IDABLE
 		rename
@@ -140,7 +141,12 @@ feature -- Type check, byte code and dead code removal
 			-- New Eiffel feature description
 		do
 			Result := body.new_feature;
-		end
+		end;
+
+	local_table (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+		do
+			Result := body.local_table (f);
+		end;
 
 feature -- stoning
  
@@ -187,6 +193,47 @@ feature -- Formatter
 				ctxt.commit;
 			end;
 		end;
-				
+
+
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		do
+			body.fill_calls_list (l);
+		end;
+
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			  -- Adapt to replication.
+		local
+			new_feature_names: like feature_names;
+		do
+			Result := twin;
+			Result.set_id (System.feature_counter.next);
+			!!new_feature_names.make (1);
+			new_feature_names.go_i_th (1);
+			new_feature_names.replace (ctxt.replicated_name);
+			Result.set_feature_names (new_feature_names);
+			Result.set_body (body.replicate (ctxt));
+		end;
+
+
+feature {FEATURE_AS}	-- Replication
+
+	set_feature_names (f: like feature_names) is
+		do
+			feature_names := f
+		end;
+
+	set_body (b: like body) is
+		do
+			body := b
+		end;				
+
+	set_id (i: like id) is
+		do
+			id := i
+		end;				
 
 end

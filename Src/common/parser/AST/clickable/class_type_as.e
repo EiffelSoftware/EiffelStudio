@@ -6,7 +6,7 @@ inherit
 
 	TYPE
 		redefine
-			has_like, format
+			has_like, format, fill_calls_list, replicate
 		end;
 	SHARED_INST_CONTEXT;
 	STONABLE
@@ -178,5 +178,24 @@ feature -- stoning
 			ctxt.commit;
 		end;
 			
+feature -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		do
+			if generics /= void then
+				generics.fill_calls_list (l)
+			end
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			if generics /= void then
+				Result := twin;
+				Result.set_generics (generics.replicate (ctxt));
+			end;
+		end;
+
 
 end

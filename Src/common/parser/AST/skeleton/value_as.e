@@ -6,7 +6,8 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node, format,
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -50,6 +51,31 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			terminal.format (ctxt);
+		end;
+
+feature -- Replicate
+
+	-- Only one type of terminal need treatment: ARRAY_AS
+	-- for others, Do nothing
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		do
+			terminal.fill_calls_list (l);
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to replication
+		do
+			Result := twin;
+			Result.set_terminal (terminal.replicate (ctxt))
+		end;
+
+feature {VALUE_AS}	-- Replication
+
+	set_terminal (t: like terminal) is
+		do
+			terminal := t
 		end;
 
 end

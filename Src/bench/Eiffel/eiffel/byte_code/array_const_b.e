@@ -81,14 +81,13 @@ feature
 			f_table := real_ty.base_class.feature_table;
 			feat_i := f_table.item ("make");
 			feat_id := feat_i.feature_id;
-			ba.append (Bc_array);
-			ba.append_short_integer (real_ty.associated_class_type.id - 1);
-			ba.append_short_integer (feat_id);
-			ba.append_integer (expressions.count);
+				-- Need to insert expression into
+				-- the stack back to front in order
+				-- to be inserted into the area correctly
 			from
-				expressions.start;
+				expressions.finish;
 			until
-				expressions.after
+				expressions.before
 			loop
 				expr ?= expressions.item;
 				actual_type ?= context.real_type (expr.type);
@@ -98,14 +97,13 @@ feature
 					basic_i ?= actual_type;	
 					ba.append (Bc_metamorphose);
 				end;
-				ba.append (Bc_insert);
-				if actual_type.is_expanded then
-						-- Require position in array for expandeds
-					ba.append_integer (expressions.index - 1);
-				end;
-				expressions.forth;
+				expressions.back;
 			end;
-			ba.append (Bc_end_insert)
+			ba.append (Bc_array);
+			ba.append_short_integer (real_ty.associated_class_type.id - 1);
+			ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
+			ba.append_short_integer (feat_id);
+			ba.append_integer (expressions.count);
 		end;
 
 end

@@ -5,7 +5,7 @@ class TYPE_DEC_AS
 inherit
 
 	AST_EIFFEL
-		redefine format
+		redefine format, fill_calls_list, replicate
 	end
 
 feature -- Attributes
@@ -38,6 +38,29 @@ feature -- Initialization
 			ctxt.put_special(": ");
 			type.format(ctxt);
 			ctxt.commit;
-		end;	
+		end;
 
+feature  -- Replication
+
+	fill_calls_list (l: CALLS_LIST) is
+			-- find calls to Current
+		do
+			type.fill_calls_list (l);
+				--| useful for like ... only
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- Adapt to Replication
+		do
+			Result := twin;
+			Result.set_type (type.replicate (ctxt));
+				--| useful for like ... only
+		end;
+
+feature {TYPE_DEC_AS} -- Replication
+
+	set_type (t: like type) is
+		do
+			type := t
+		end; 
 end

@@ -48,12 +48,28 @@ feature -- Status report
 
 	collection_period: INTEGER is
 			-- Period of full collection.
+			-- If the environment variable EIF_FULL_COLLECTION_PERIOD   
+			-- is defined, it is set to the closest reasonable 
+			-- value from it.
+			-- If null, no full collection is launched.
 		external
 			"C | %"eif_memory.h%""
 		alias
 			"mem_pget"
 		end;
 
+	coalesce_period: INTEGER is
+			-- Period of full coalesce (in number of collections)
+			-- If the environment variable EIF_FULL_COALESCE_PERIOD   
+			-- is defined, it is set to the closest reasonable 
+			-- value from it.
+			-- If null, no full coalescing is launched.
+		external
+			"C | %"eif_memory.h%""
+		alias
+			"eif_coalesce_period"
+		end
+			
 	collecting: BOOLEAN is
 			-- Is garbage collection enabled?
 		external
@@ -82,11 +98,51 @@ feature -- Status report
 	chunk_size: INTEGER is
 			-- Minimal size of a memory chunk. The run-time always
 			-- allocates a multiple of this size.
+			-- If the environment variable EIF_MEMORY_CHUNK   
+			-- is defined, it is set to the closest reasonable 
+			-- value from it.
 		external
 			"C | %"eif_memory.h%""
 		alias
 			"eif_get_chunk_size"
 		end;
+
+	tenure: INTEGER is
+			-- Maximum age of object before being considered
+			-- as old (old objects are not scanned during 
+			-- partial collection).
+			-- If the environment variable EIF_TENURE_MAX   
+			-- is defined, it is set to the closest reasonable 
+			-- value from it.
+		external
+			"C | %"eif_memory.h%""
+		alias
+			"eif_tenure"
+		end;
+			
+	generation_object_limit: INTEGER is
+			-- Maximum size of object in generational scavenge zone.
+			-- If the environment variable EIF_GS_LIMIT   
+			-- is defined, it is set to the closest reasonable 
+			-- value from it.
+		external
+			"C | %"eif_memory.h%""
+		alias
+			"eif_generation_object_limit"
+		end;
+	
+	scavenge_zone_size: INTEGER is
+			-- Size of generational scavenge zone.
+			-- If the environment variable EIF_MEMORY_SCAVENGE   
+			-- is defined, it is set to the closest reasonable 
+			-- value from it.
+
+		external
+			"C | %"eif_memory.h%""
+		alias
+			"eif_scavenge_zone_size"
+		end
+
 
 feature -- Status setting
 
@@ -160,15 +216,26 @@ feature -- Status setting
 	set_collection_period (value: INTEGER) is
 			-- Set `collection_period'. Every `value' collection,
 			-- the Garbage collector will perform a collection
-			-- on the whole memory, otherwise a simple partial
-			-- collection is done.
-			
+			-- on the whole memory (full collection), otherwise 
+			-- a simple partial collection is done.
 		require
-			positive_value: value > 0;
+			positive_value: value >= 0;
 		external
 			"C | %"eif_memory.h%""
 		alias
 			"mem_pset"
+		end;
+
+	set_coalesce_period (value: INTEGER) is
+			-- Set `coalesce_period'. Every `value' collection,
+			-- the Garbage Collector will coalesce
+			-- the whole memory. 
+		require
+			positive_value: value >= 0;
+		external
+			"C | %"eif_memory.h%""
+		alias
+			"eif_set_coalesce_period"
 		end;
 
 	set_max_mem (value: INTEGER) is
@@ -179,17 +246,6 @@ feature -- Status setting
 			"C | %"eif_memory.h%""
 		alias
 			"eif_set_max_mem"
-		end;
-
-	set_chunk_size (value: INTEGER) is
-			-- Set the minimal size of a memory chunk. 
-			-- A chunk is an Eiffel memory unit.
-		require
-			positive_value: value > 0;
-		external
-			"C | <memory.h>"
-		alias
-			"eif_set_chunk_size"
 		end;
 
 feature -- Removal

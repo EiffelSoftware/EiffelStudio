@@ -672,6 +672,7 @@ feature -- Setting
 			-- If `has_pre_post', `need_gc_hook' is set to True.
 		local
 			assign: ASSIGN_BL
+			reverse_assign: REVERSE_BL
 			call: CALL_B
 			expr_b: EXPR_B
 			instruction_call: INSTR_CALL_B
@@ -691,7 +692,8 @@ feature -- Setting
 				-- If there are some pre/post conditions to check, we choose
 				-- to be safe by encapsulating even when not needed if the checks
 				-- are generated.
-			tmp := System.has_multithreaded or has_rescue or byte_code.has_inlined_code or has_pre_post
+			tmp := System.has_multithreaded or has_rescue or
+				byte_code.has_inlined_code or has_pre_post
 
 			if not tmp and then assertion_type /= In_invariant then
 				tmp := True	
@@ -700,7 +702,11 @@ feature -- Setting
 				if compound /= Void and then compound.count = 1 then
 					byte_node := compound.first
 					assign ?= byte_node
-					if assign /= Void then
+					reverse_assign ?= assign
+						-- FIXME: Manu 05/31/2002: we should try to optimize
+						-- so that not all reverse assignment prevent the optimization
+						-- to be made.
+					if assign /= Void and reverse_assign = Void then
 						if assign.expand_return then
 								-- Assignment in Result is expanded in a return instruction
 							tmp := False

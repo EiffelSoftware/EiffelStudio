@@ -18,6 +18,8 @@ inherit
 creation {MEL_DISPATCHER, MEL_OBJECT}
 	make, 
 	make_no_event
+creation {MEL_APPLICATION_CONTEXT, MEL_WIDGET}
+	make_event_only 
 
 feature {NONE} -- Initialization
 
@@ -33,7 +35,6 @@ feature {NONE} -- Initialization
 				create_event (an_event_ptr)
 			end;
 		ensure
-			non_void_event: event /= Void;
 			widget_set: a_widget = widget
 		end;
 
@@ -53,6 +54,16 @@ end
 		ensure
 			void_event: event = Void;
 			widget_set: a_widget = widget
+		end;
+
+	make_event_only (an_event_ptr: POINTER) is
+			-- Make the event callback_structure.
+		require
+			valid_event_ptr: an_event_ptr /= default_pointer
+		do
+			create_event (an_event_ptr)
+		ensure
+			non_void_event: event /= Void;
 		end;
 
 feature -- Access
@@ -167,10 +178,6 @@ end
 		external
 			"C [macro <events.h>] (XEvent *): EIF_INTEGER"
 		end;
-
-invariant
-	
-	non_void_widget: has_widget implies widget /= Void
 
 end -- class MEL_CALLBACK_STRUCT
 

@@ -1,6 +1,7 @@
 #include "cli_writer.h"
-#include "cor.h"
 #include <objbase.h>
+#include <cor.h>
+#include <CorSym.h>
 
 #ifdef _cplusplus
 extern "C" {
@@ -18,6 +19,10 @@ rt_private void raise_error (HRESULT hr, char *msg);
 #define CHECK(hr,msg)
 #endif
 
+/*
+feature -- COM specific
+*/
+
 rt_private void raise_error (HRESULT hr, char *msg)
 	/* Raise an Eiffel exception */
 {
@@ -33,6 +38,10 @@ rt_public void com_initialize ()
 
 	CHECK (hr, "CoInitialize failed");
 }
+
+/*
+feature -- Unmanaged Metadata API
+*/
 
 rt_public EIF_POINTER new_md_dispenser ()
 	/* Create new instance of IMetaDataDispenser */
@@ -75,6 +84,24 @@ rt_public EIF_POINTER c_query_assembly_emit (EIF_POINTER md_emit)
 	CHECK (hr, "Could not get IMetaDataAssemblyEmit");
 
 	return imda;
+}
+
+/*
+feature -- Debuggin information
+*/
+
+rt_public EIF_POINTER new_sym_writer ()
+	/* Create new instance of ISymUnmanagedWriter */
+{
+	HRESULT hr;
+	ISymUnmanagedWriter *writer;
+
+	hr = CoCreateInstance (CLSID_CorSymWriter, NULL,
+		CLSCTX_INPROC_SERVER, IID_ISymUnmanagedWriter, (void **) & writer);
+
+	CHECK (hr, "Could not create ISymUnmanagedWriter")
+
+	return writer;
 }
 
 #ifdef _cplusplus

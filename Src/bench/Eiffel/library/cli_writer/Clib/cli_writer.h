@@ -12,6 +12,7 @@ extern void com_initialize ();
 extern EIF_POINTER new_md_dispenser ();
 extern EIF_POINTER c_define_scope_for_md_emit (EIF_POINTER);
 extern EIF_POINTER c_query_assembly_emit (EIF_POINTER);
+extern EIF_POINTER new_sym_writer ();
 
 typedef struct _CLI_IMPORT_TABLE {
 	DWORD ImportLookupTable;// RVA to ImportLookupTable

@@ -39,7 +39,7 @@ feature -- Element change
 		do
 			if not has (bp) then
 				put (bp, bp)
-			elseif item (bp).is_continue /= bp.is_continue then
+			elseif found_item.is_continue /= bp.is_continue then
 				remove (bp)
 			end
 		end;

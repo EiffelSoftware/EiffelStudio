@@ -64,6 +64,7 @@ feature {NONE} -- Initialize
 			create section_text.make_with_text ("+" + a_fs.features.count.out + " <<" + a_fs.name + ">>")
 			section_text.set_pointer_style (default_pixmaps.standard_cursor)
 			section_text.pointer_button_press_actions.extend (agent on_section_press)
+			section_text.disable_events_sended_to_group
 
 			section_text.set_point_position (point_x, point_y)
 			attr_height := attr_height + section_text.height
@@ -109,6 +110,7 @@ feature {NONE} -- Initialize
 
 			diagram_preferences.add_observer (Current)
 			retrieve_preferences
+			
 		ensure
 			set: feature_section = a_fs and container = a_container
 			collabsed: not is_expanded

@@ -45,7 +45,8 @@ feature -- Access
 	line (i: INTEGER): STRING is		
 			-- Returns the content of the `i'th line.
 		require
-			valid_line_index: valid_line_index (i)
+			valid_line_index: valid_line_index (i) and then
+				(i = line_count implies last_line_not_empty)
 		do
 			Result := implementation.line (i)
 		ensure
@@ -79,7 +80,8 @@ feature -- Status Report
 			-- Position of the first character on the `i'-th line.
 		require
 			exist: not destroyed
-			valid_line: valid_line_index (i)
+			valid_line: valid_line_index (i) and then
+				(i = line_count implies last_line_not_empty)
 		do
 			Result := implementation.first_position_from_line_number (i)
 		ensure
@@ -90,20 +92,12 @@ feature -- Status Report
 			-- Position of the last character on the `i'-th line.
 		require
 			exist: not destroyed
-			valid_line: valid_line_index (i)
+			valid_line: valid_line_index (i) and then
+				(i = line_count implies last_line_not_empty)
 		do
 			Result := implementation.last_position_from_line_number (i)
 		ensure
 			valid_position: valid_position (i)
-		end
-
-
-	valid_line_index (i: INTEGER): BOOLEAN is
-			-- Is `i' a valid line index?
-		require
-			exist: not destroyed
-		do
-			Result := i > 0 and i < line_count
 		end
 
 	has_system_frozen_widget: BOOLEAN is
@@ -146,8 +140,6 @@ feature -- Status Settings
 			no_frozen_widget: not has_system_frozen_widget
 		end
 
-	
-
 feature -- Basic operation
 
 	put_new_line is
@@ -158,16 +150,14 @@ feature -- Basic operation
 			implementation.put_new_line
 		end
 
-	search (str: STRING): INTEGER is
-			-- Search the string `str' in the text.
-			-- If `str' is find, it returns its start
-			-- index in the text, otherwise, it returns
-			-- `-1'
+	search (str: STRING; start: INTEGER): INTEGER is
+			-- Position of first occurrence of `str' at or after `start';
+			-- 0 if none.
 		require
 			exists: not destroyed
 			valid_string: str /= Void
 		do
-			Result := implementation.search (str)
+			Result := implementation.search (str, start)
 		end
 
 	select_lines (first_line, last_line: INTEGER) is
@@ -180,6 +170,24 @@ feature -- Basic operation
 								last_position_from_line_number (last_line))
 		ensure
 			has_selection: has_selection
+		end
+
+feature -- Assertion
+
+	valid_line_index (i: INTEGER): BOOLEAN is
+			-- Is `i' a valid line index?
+		require
+			exist: not destroyed
+		do
+			Result := i > 0 and i <= line_count
+		end
+
+	last_line_not_empty: BOOLEAN is
+			-- Has the last line at least one character?
+		require
+			exist: not destroyed
+		do
+			Result := implementation.last_line_not_empty
 		end
 
 feature {NONE} -- Implementation

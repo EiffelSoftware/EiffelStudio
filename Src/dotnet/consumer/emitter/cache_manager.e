@@ -81,7 +81,9 @@ feature -- Basic Oprtations
 			
 			add_to_eac := True
 			l_assembly := feature {ASSEMBLY}.load_string (fully_quantified_name (a_name, a_version, a_culture, a_key))
+			assembly_resolver.add_resolver_path_from_assembly (l_assembly)
 			add_assembly_to_eac (l_assembly.location)
+			assembly_resolver.remove_resolver_path_from_assembly (l_assembly)
 		ensure
 			successful: is_successful
 		end
@@ -92,14 +94,14 @@ feature -- Basic Oprtations
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 			path_exists: (create {RAW_FILE}.make (a_path)).exists
-		local
-			--l_assembly: ASSEMBLY
 		do	
 			is_successful := True
 			last_error_message := ""
 
-			add_to_eac := True			
+			add_to_eac := True
+			assembly_resolver.add_resolver_path_from_file_name (a_path)
 			add_assembly_to_eac (a_path)
+			assembly_resolver.remove_resolver_path_from_file_name (a_path)
 		ensure
 			successful: is_successful
 		end
@@ -111,13 +113,11 @@ feature -- Basic Oprtations
 			valid_name: not a_name.is_empty
 		local
 			l_assembly: ASSEMBLY
-			l_writer: CACHE_WRITER
 			l_ca: CONSUMED_ASSEMBLY
 		do
 			l_assembly := feature {ASSEMBLY}.load_string (fully_quantified_name (a_name, a_version, a_culture, a_key))	
-			create l_writer.make (clr_version)
-			
-			l_ca := l_writer.consumed_assembly_from_path (l_assembly.location)
+		
+			l_ca := cache_writer.consumed_assembly_from_path (l_assembly.location)
 			if l_ca /= Void then
 				Result := relative_assembly_path_from_consumed_assembly (l_ca)
 				Result.prune_all_trailing ('\')
@@ -130,12 +130,9 @@ feature -- Basic Oprtations
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
-			l_writer: CACHE_WRITER
 			l_ca: CONSUMED_ASSEMBLY
-		do
-			create l_writer.make (clr_version)
-			
-			l_ca := l_writer.consumed_assembly_from_path (a_path)
+		do		
+			l_ca := cache_writer.consumed_assembly_from_path (a_path)
 			if l_ca /= Void then
 				Result := relative_assembly_path_from_consumed_assembly (l_ca)
 				Result.prune_all_trailing ('\')
@@ -152,11 +149,8 @@ feature -- Basic Oprtations
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
-		local
-			l_writer: CACHE_WRITER
 		do
-			create l_writer.make (clr_version)
-			Result := l_writer.consumed_assembly_from_path (a_path)
+			Result := cache_writer.consumed_assembly_from_path (a_path)
 		ensure
 			non_void_result: Result /= Void
 		end
@@ -193,6 +187,8 @@ feature {NONE} -- Internal Agents
 		end		
 
 invariant
-	non_void_assembly_resolver: assembly_resolver /= Void
+	assembly_resolver_not_void: assembly_resolver /= Void
+	cache_writer_not_void: cache_writer /= Void
+	cache_reader_not_void: cache_reader /= Void
 
 end -- class CACHE_MANAGER

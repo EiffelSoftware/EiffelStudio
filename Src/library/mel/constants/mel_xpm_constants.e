@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	MEL_XMP_CONSTANTS
+	MEL_XPM_CONSTANTS
 
 feature -- Attribute Access
 

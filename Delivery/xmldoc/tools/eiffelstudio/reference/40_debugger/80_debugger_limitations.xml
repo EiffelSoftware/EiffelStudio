@@ -1,0 +1,15 @@
+<document title="Debugging limitations" output="studio">
+	<meta_data/>
+	<paragraph>
+		<paragraph>General limitations:</paragraph>
+		<list ordered="false" >
+			<item>Expression evaluation follow export rules, then it is not possible for now, to evaluate function exported to NONE for instance.</item>
+		</list>
+		<paragraph>Limitations or known bugs for the .Net debugger:</paragraph>
+		<list ordered="false" >
+			<item>when stepping through disabled assertions or disabled debug clauses, the debugger may show incorrect current line.</item>
+			<item>AppDomain debugging is not yet fully supported. When debugging 'AppDomain' related code, it may occur unexpected behavior (stepping or putting breakpoints).</item>
+			<item>In rare cases, EiffelStudio happens to stay blocked when launching dotnet system, and uses a lot of resources (mainly CPU). You will have to kill estudio processes and relaunch it.</item>
+		</list>
+	</paragraph>
+</document>

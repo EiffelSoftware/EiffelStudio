@@ -55,5 +55,18 @@
 					<label>Stack overflow prevention</label>
 				</link>
 			</item>
+			<item>
+				<link>
+					<url>70_debugger_preferences.xml</url>
+					<label>Debugging preferences</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>80_debugger_limitations.xml</url>
+					<label>Debugging limitations</label>
+				</link>
+			</item>						
 		</list>
-	</paragraph></document>
+	</paragraph>
+	</document>

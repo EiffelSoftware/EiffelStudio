@@ -41,7 +41,7 @@ feature
 		do
 			is_nested := not is_first;
 			type_i := real_type (type);
-			type_c := type.c_type;
+			type_c := type_i.c_type;
 			if not type_i.is_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
 				generated_file.putchar ('*');

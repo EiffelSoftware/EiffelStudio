@@ -76,6 +76,7 @@ feature -- Basic operations
 				test_file: RAW_FILE
 				error_dialog: EV_ERROR_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
+				discardable_error_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 			do
 				create project_settings
 				create file_handler
@@ -93,14 +94,11 @@ feature -- Basic operations
 						end
 						system_status.set_current_project (project_settings)
 						if not directory_of_file (file_name).is_equal (project_settings.project_location) then								
-							create error_dialog.make_with_text ("The location of the .bpr file has changed from " + project_settings.project_location + " to " + directory_of_file (file_name) + ".%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory.%NBuild will now update the reference to `system_interface.xml' and attempt to load the file.")
-							create dialog_constants
-								-- Hide unwanted buttons from the dialog
-							error_dialog.button (dialog_constants.ev_retry).set_text ("Continue")
-							error_dialog.button (dialog_constants.ev_retry).select_actions.extend (agent update_location (directory_of_file (file_name)))
-							error_dialog.button (dialog_constants.ev_ignore).hide
-							error_dialog.button (dialog_constants.ev_abort).select_actions.extend (agent cancel_update_location)
-							error_dialog.show_modal_to_window (main_window)
+							create discardable_error_dialog.make_initialized (1, show_project_location_changed_warning,
+								"The location of the .bpr file has changed from " + project_settings.project_location + " to " + directory_of_file (file_name) + ".%N%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory%NEiffelBuild will now attempt to load `system_interface.xml'.",
+								"Do not show again and always check for `system_interface.xml' in the current directory")
+							discardable_error_dialog.set_ok_action (agent update_location (directory_of_file (file_name)))
+							discardable_error_dialog.show_modal_to_window (main_window)
 						end
 						
 						if not location_update_cancelled then
@@ -140,6 +138,7 @@ feature -- Basic operations
 				file_handler: GB_SIMPLE_XML_FILE_HANDLER
 				test_file: RAW_FILE
 				error_dialog: EV_ERROR_DIALOG
+				discardable_error_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
 			do
 					-- Reset this value.
@@ -184,14 +183,11 @@ feature -- Basic operations
 									-- to the location referenced in the file. If it is, we need to update the
 									-- location, so we can find `system_interface.xml' correctly in the new location.
 								if not dialog.file_path.is_equal (project_settings.project_location) then								
-									create error_dialog.make_with_text ("The location of the .bpr file has changed from " + project_settings.project_location + " to " + dialog.file_path + ".%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory.%NBuild will now update the reference to `system_interface.xml' and attempt to load the file.")
-									create dialog_constants
-										-- Hide unwanted buttons from the dialog
-									error_dialog.button (dialog_constants.ev_retry).set_text ("Continue")
-									error_dialog.button (dialog_constants.ev_retry).select_actions.extend (agent update_location (dialog.file_path))
-									error_dialog.button (dialog_constants.ev_ignore).hide
-									error_dialog.button (dialog_constants.ev_abort).select_actions.extend (agent cancel_update_location)
-									error_dialog.show_modal_to_window (main_window)
+									create discardable_error_dialog.make_initialized (1, show_project_location_changed_warning,
+										"The location of the .bpr file has changed from " + project_settings.project_location + " to " + dialog.file_path + ".%N%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory%NEiffelBuild will now attempt to load `system_interface.xml'.",
+										"Do not show again and always check for `system_interface.xml' in the current directory")
+									discardable_error_dialog.set_ok_action (agent update_location (dialog.file_path))
+									discardable_error_dialog.show_modal_to_window (main_window)
 								end
 								
 								if not location_update_cancelled then
@@ -220,12 +216,14 @@ feature -- Basic operations
 					system_status.close_current_project
 				end
 			end
-
+			
 feature {NONE} -- Implementation
 	
 	update_location (new_location: STRING) is
 			-- Assign `new_location' to `project_location' in the
 			-- system settings, and save the current settings.
+		require
+			new_location_not_void: new_location /= Void
 		do
 			system_status.current_project_settings.set_project_location (new_location)
 			system_status.current_project_settings.save

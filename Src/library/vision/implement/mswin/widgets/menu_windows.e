@@ -132,19 +132,20 @@ feature -- Status setting
 			end
 		end
 
-	put_children_in_menu (root: ROOT_MENU_WINDOWS) is
-			-- Put all the menu children in the list
+	put_children_in_menu is
+			-- Put the children back in the menu when
+			-- item is managed.
 		local
 			c: ARRAYED_LIST [WIDGET_WINDOWS]
 		do
 			c := children_list
 			from
-				c.finish
+				c.start
 			until
-				c.off
+				c.after
 			loop
 				add_a_child (c.item)
-				c.back
+				c.forth
 			end
 		end
 
@@ -190,7 +191,6 @@ feature -- Status setting
 					pulldown ?= widget
 					if pulldown /= Void then
 						pulldown.create
-						pulldown.put_children_in_menu (associated_root)
 						if pulldown.managed then
 							append_popup (pulldown, pulldown.menu_button.text)
 						end
@@ -236,7 +236,7 @@ feature -- Element change
 					mp ?= w
 					if mp /= Void then
 						mp.create
-						mp.put_children_in_menu (associated_root)
+						mp.put_children_in_menu
 						m ?= w.parent
 						m.insert_popup (mp, index_of (mp) -
 								unmanaged_count (mp) - 1, mp.menu_button.text)

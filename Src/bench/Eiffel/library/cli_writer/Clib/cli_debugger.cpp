@@ -134,11 +134,12 @@ rt_private void raise_error (HRESULT hr, char *msg); /* Raise error */
 ////////////////////////////////////////////////////////////////////////////
 */
 #ifdef DBGTRACE_ENABLED
-/*
 #define CLI_MUTEX_TYPE	CRITICAL_SECTION
 #define CLI_MUTEX_CREATE(m,msg) \
+		if (m == NULL) { 	\
     	m = (CLI_MUTEX_TYPE *) eif_malloc (sizeof(CLI_MUTEX_TYPE)); \
-		InitializeCriticalSection(m);
+		InitializeCriticalSection(m);	\
+		}
 #define CLI_MUTEX_LOCK(m,msg) \
 		EnterCriticalSection(m)
 #define CLI_MUTEX_UNLOCK(m,msg) \
@@ -152,12 +153,12 @@ rt_private void raise_error (HRESULT hr, char *msg); /* Raise error */
 
 rt_private CLI_MUTEX_TYPE *trace_mutex;
 
-*/
+/*
 #define LOCK_DEBUG_OUTPUT_ACCESS 
 #define UNLOCK_DEBUG_OUTPUT_ACCESS 
 #define CLI_MUTEX_CREATE(m,msg) 
 #define CLI_MUTEX_DESTROY(m,msg)
-
+*/
 
 rt_private LONG dbg_msg_displayed_index;
 rt_public void trace_event (char* mesg)
@@ -318,10 +319,10 @@ rt_public void dbg_notify_from_estudio (char * str) {
 
 rt_public void dbg_init_synchro () {
 	/* Initialize synchronisation */
-	DBG_INIT_ESTUDIO_THREAD_HANDLE;
 #ifdef DBGTRACE_ENABLED
 	CLI_MUTEX_CREATE(trace_mutex, "");
 #endif
+	DBG_INIT_ESTUDIO_THREAD_HANDLE;
 	reset_variables ();
 }
 rt_public void dbg_terminate_synchro () {
@@ -681,6 +682,10 @@ rt_public EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** icd)
 	/* Create new instance of ICorDebug */
 {
 	HRESULT hr;
+#ifdef DBGTRACE_ENABLED
+	CLI_MUTEX_CREATE(trace_mutex, "");
+#endif
+	
 	rt_private FARPROC create_debug_address;
 	HMODULE mscoree_module;
 

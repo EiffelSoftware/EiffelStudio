@@ -550,8 +550,8 @@ feature -- Status Setting
 					user_arguments_list.select_item (saved_argument, 1)
 					select_combo_item (saved_argument)
 				else
-					notebook.select_item (notebook.i_th (1))
-					set_mode (Ace_mode)
+					notebook.select_item (notebook.i_th (2))
+					set_mode (User_mode)
 				end			
 			else
 				argument_check.disable_select
@@ -647,6 +647,11 @@ feature {NONE} -- Element Change
 			synch_with_others
 		end
 	
+feature -- GUI Properties
+
+	current_argument: EV_TEXT
+			-- The current argument (either 'ace_current_arg_text' or 'user_current_arg_text').
+	
 feature {NONE} -- GUI Properties
 
 	working_directory: EV_PATH_FIELD
@@ -663,9 +668,6 @@ feature {NONE} -- GUI Properties
 			
 	argument_combo: EV_COMBO_BOX
 			-- The current list of arguments (either 'ace_combo' or 'custom_combo').
-			
-	current_argument: EV_TEXT
-			-- The current argument (either 'ace_current_arg_text' or 'user_current_arg_text').
 
 	ace_arguments_list: EV_EDITABLE_LIST
 			-- Widget displaying arguments from Ace file.
@@ -725,13 +727,14 @@ feature {NONE} -- Actions
 		local
 			l_text: STRING
 			l_caret_pos: INTEGER
---			l_dialog: EB_ARGUMENT_DIALOG
---			l_system_win: EB_SYSTEM_WINDOW
---			l_list: SPECIAL [ANY]
---			l_counter: INTEGER
---			mem: MEMORY
+			l_dialog, l_dialog2: EB_ARGUMENT_DIALOG
+			l_list: SPECIAL [ANY]
+			l_counter: INTEGER
+			mem: MEMORY
 		do
-			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then				
+			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then
+				
+					-- Disallow new line character.
 				l_caret_pos := current_argument.caret_position
 				l_text := clone (current_argument.text.substring (1, l_caret_pos - 2))
 				if not l_text.is_empty then
@@ -742,33 +745,26 @@ feature {NONE} -- Actions
 					current_argument.set_text (l_text)
 					current_argument.set_caret_position (l_caret_pos + 1)
 				end
---				create mem
---				create l_dialog
---				l_list := mem.objects_instance_of (l_dialog)
---				from
---					l_counter := 1
---				until
---					l_counter > l_list.count
---				loop
---					if not (l_list.item (l_counter) = l_dialog) then
---						l_dialog.run_button.set_focus
---					end
---					l_counter := l_counter + 1
---				end
---				create l_system_win
---				l_list := mem.objects_instance_of (l_system_win)
---				from
---					l_counter := 1
---				until
---					l_counter > l_list.count
---				loop
---					if l_list.item (l_counter) /= l_system_win then
---						--l_system_win.run_button.set_focus
---					end
---					l_counter := l_counter + 1
---				end
-			end
-			
+				
+					-- Set focus to Run button if Current is in a dialog and not
+					-- in the project settings.
+				create mem
+				create l_dialog
+				l_list := mem.objects_instance_of (l_dialog)
+				from
+					l_counter := 0
+				until
+					l_counter = l_list.count
+				loop
+					if not (l_list.item (l_counter) = l_dialog) then
+						l_dialog2 ?= l_list.item (l_counter)
+						if l_dialog2.has_focus then
+							l_dialog2.run_and_close_button.set_focus
+						end					
+					end
+					l_counter := l_counter + 1
+				end
+			end			
 		end		
 
 	on_list_edited is

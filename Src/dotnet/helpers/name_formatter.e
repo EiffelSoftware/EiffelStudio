@@ -241,8 +241,6 @@ feature -- Basic Operations
 
 	valid_variable_name (name: STRING): STRING is
 			-- Format `name' to Eiffel valid variable name.
-		obsolete
-			"Marked for removal for no detectable clients found"
 		require
 			non_void_name: name /= Void
 			name_not_empty: not name.is_empty

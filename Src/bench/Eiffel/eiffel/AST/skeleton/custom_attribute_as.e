@@ -16,20 +16,25 @@ create
 	
 feature {AST_FACTORY} -- Initialization
 
-	initialize (c: like creation_expr) is
+	initialize (c: like creation_expr; t: like tuple) is
 			-- Create a new UNIQUE AST node.
 		require
 			c_not_void: c /= Void
 		do
 			creation_expr := c
+			tuple := t
 		ensure
 			creation_expr_set: creation_expr = c
+			tuple_set: tuple = t
 		end
 
 feature -- Access
 
 	creation_expr: CREATION_EXPR_AS
 			-- Creation of Custom attribute.
+			
+	tuple: TUPLE_AS
+			-- Tuple for addition custom attribute settings.
 
 feature -- Comparison
 

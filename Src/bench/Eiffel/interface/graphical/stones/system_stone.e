@@ -30,9 +30,9 @@ feature
 			Eiffel_project.set_lace_file_name (s)
 		end;
  
-	click_list: ARRAY [CLICK_STONE] is
+	click_list: CLICK_STONE_ARRAY is
 		do
-			Result := Eiffel_project.lace_click_list
+			!! Result.make (Eiffel_project.lace_click_list, Void)
 		end;
  
 	signature: STRING is

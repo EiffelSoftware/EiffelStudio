@@ -18,7 +18,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_local.h"
 #include "eif_urgent.h"
 #include "eif_sig.h"				/* For signal description */
@@ -559,7 +559,7 @@ rt_public void exasrt(char *tag, int type)
  * exceptions and perform some cleanup (e.g. in a retrieve operation).
  */
 
-rt_public void excatch(jmp_buf *jmp)
+rt_shared void excatch(jmp_buf *jmp)
 		/* The jump buffer used to catch exception */
 {
 	/* Push a pseudo EX_OSTK execution vector on the exception stack. Whenever
@@ -591,7 +591,45 @@ rt_public void excatch(jmp_buf *jmp)
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 }
 
-rt_public void exhdlr(Signal_t (*handler)(int), int sig)
+#ifdef EIF_WIN32
+rt_private LONG WINAPI windows_exception_filter (LPEXCEPTION_POINTERS an_exception)
+{
+		/* In order to be able to catch exceptions that cannot be caught by
+		 * just using signals on Windows, we need to set `windows_exception_filter'
+		 * as an unhandled exception filter.
+		 */
+	switch (an_exception->ExceptionRecord->ExceptionCode) {
+		case STATUS_STACK_OVERFLOW:
+			eraise ("Stack overflow", EN_EXT);
+			break;
+
+		case STATUS_INTEGER_DIVIDE_BY_ZERO:
+			eraise ("Integer division by Zero", EN_FLOAT);
+			break;
+
+		default:
+			eraise ("Unhandled exception", EN_EXT);
+			break;
+	}
+
+		/* Possible return values include:
+		 * EXCEPTION_CONTINUE_EXECUTION : Returns to the statement that caused the exception
+		 *    and re-executes that statement. (Causes an infinite loop of calling the exception
+		 *    handler if the handler does not fix the problem)
+		 * EXCEPTION_EXECUTE_HANDLER: Passes the exception to default handler, in our case
+		 *    none, since `windows_exception_filter' is the default one now.
+		 * EXCEPTION_CONTINUE_SEARCH: Continue to search up the stack for a handle
+		 */
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+rt_public void set_windows_exception_filter() {
+	LPTOP_LEVEL_EXCEPTION_FILTER old_exception_handler = NULL;
+	old_exception_handler = SetUnhandledExceptionFilter (windows_exception_filter);
+}
+#endif
+
+rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 			/* The signal handler to be called */
 			/* Caught signal */
 {
@@ -1171,7 +1209,7 @@ rt_public void eviol(void)
 	/* NOTREACHED */
 }
 
-rt_public void ereturn(void)
+rt_shared void ereturn(void)
 {
 	/* Return to the first setjmp buffer stored in the exception stack. The
 	 * bottom of the stack (created by the main routine) always has a valid

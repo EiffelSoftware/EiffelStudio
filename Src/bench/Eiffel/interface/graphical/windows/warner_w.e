@@ -81,10 +81,12 @@ feature {NONE}
 			set_cancel_label ("Cancel");
 			set_help_label ("Help");
 			i ?= argument;
-			if i = 1 then
-				last_caller.execute (void)
-			elseif argument = Current then
-				last_caller.execute (Current)
+			if last_caller /= void then
+				if i = 1 then
+					last_caller.execute (void)
+				elseif argument = Current then
+					last_caller.execute (Current)
+				end
 			end
 		end;
 

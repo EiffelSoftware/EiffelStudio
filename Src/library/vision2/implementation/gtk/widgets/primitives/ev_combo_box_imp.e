@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			real_signal_connect (v_imp.c_object, "key-press-event", on_key_pressed_intermediary_agent, key_event_translate_agent)
 
 			-- Make sure the first item is always selected.
-			feature {EV_GTK_EXTERNALS}.gtk_list_select_item (container_widget, 1)
+			feature {EV_GTK_EXTERNALS}.gtk_list_select_item (list_widget, 1)
 		end
 
 	remove_i_th (a_position: INTEGER) is

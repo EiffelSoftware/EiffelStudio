@@ -51,7 +51,7 @@ rt_private int old_scount = 0;			/* Old number of dynamic types */
 rt_private void *dle_handle = (void *) 0;		/* C shared library handle */
 #endif
 #ifdef WORKBENCH
-FILE *fil;							/* melted.eif file */
+static FILE *fil;						/* melted.eif file */
 #endif
 
 

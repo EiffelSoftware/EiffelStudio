@@ -56,7 +56,7 @@ feature -- Save command
 			until
 				after
 			loop
-				if item.text_window.changed then
+				if item.text_area.changed then
 					item.save_text
 				end
 				forth
@@ -66,46 +66,46 @@ feature -- Save command
 
 feature -- Update
 
-	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
-			-- Update all active class tools according to
-			-- `new_res'.
-		do
-			from
-				start
-			until
-				after
-			loop
+--	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
+--			-- Update all active class tools according to
+--			-- `new_res'.
+--		do
+--			from
+--				start
+--			until
+--				after
+--			loop
 --				item.update_boolean_resource (old_res, new_res)
-				forth
-			end
-		end
+--				forth
+--			end
+--		end
 
-	update_integer_resource (old_res, new_res: EB_INTEGER_RESOURCE) is
-			-- Update all active class tools according to
-			-- `new_res'.
-		do
-			from
-				start
-			until
-				after
-			loop
+--	update_integer_resource (old_res, new_res: EB_INTEGER_RESOURCE) is
+--			-- Update all active class tools according to
+--			-- `new_res'.
+--		do
+--			from
+--				start
+--			until
+--				after
+--			loop
 --				item.update_integer_resource (old_res, new_res)
-				forth
-			end
-		end
+--				forth
+--			end
+--		end
 
-	update_array_resource (old_res, new_res: EB_ARRAY_RESOURCE) is
-			-- Update `old_res' with the value of `new_res',
-			-- if the value of `new_res' is applicable.
-			-- Also update the interface.
-		local
+--	update_array_resource (old_res, new_res: EB_ARRAY_RESOURCE) is
+--			-- Update `old_res' with the value of `new_res',
+--			-- if the value of `new_res' is applicable.
+--			-- Also update the interface.
+--		local
 --			cr: like Class_resources
-		do
+--		do
 --			cr := Class_resources
 --			if old_res = cr.feature_clause_order then
 --				clear_class_tables
 --			end
 --			old_res.update_with (new_res)
-		end
+--		end
 
 end -- class EB_CLASS_TOOL_LIST

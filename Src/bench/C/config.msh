@@ -5,13 +5,29 @@ microsoft-=''
 include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\nmake'
-ccflags='/nologo'
-cc='cl'
-#optimize='/Zi'
-#optimize='/Ogityb1'
-optimize='/Oityb1'
+#
+#-- MT debug
+#-----------
+#optimize='/Od'
+#ccflags='/nologo /Zi /MTd /DEIF_THREADS /DWIN32 /D_WINDOWS'
+#link_line='$compiler_path\bin\lib /OUT:$@ $(OBJECTS) /DEBUGTYPE:BOTH /NODEFAULTLIB:LIBC.LIB'
+#link_wline='$compiler_path\bin\lib /OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
+#
+#-- MT no debug
+#--------------
+optimize='/Ogityb1'
+ccflags='/nologo /MT /DEIF_THREADS /DWIN32 /D_WINDOWS'
 link_line='$compiler_path\bin\lib /OUT:$@ $(OBJECTS)'
 link_wline='$compiler_path\bin\lib /OUT:$@ $(WOBJECTS)'
+#
+#-- no MT
+#--------
+#optimize='/Oityb1'
+#ccflags='/nologo /DWIN32'
+#link_line='$compiler_path\bin\lib /OUT:$@ $(OBJECTS)'
+#link_wline='$compiler_path\bin\lib /OUT:$@ $(WOBJECTS)'
+#
+cc='cl'
 extra_object_files=''
 compiler_path='d:\apps\msdev'
-# 
+#

@@ -67,7 +67,7 @@ md $INSTALL_DIR
 cd $INSTALL_DIR
 remtrace studio
 exprt -r $DEFAULT_CVS_TAG -d studio Delivery/studio
-mv studio/config/unix studio/config/$ISE_PLATFORM
+copy studio/config/unix studio/config/$ISE_PLATFORM
 rm -rf studio/config/windows
 remtrace eifinit
 exprt -r $DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
@@ -99,7 +99,7 @@ safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 cd $INSTALL_DIR/studio/spec
-mv unix/* $ISE_PLATFORM/bin
+move unix/* $ISE_PLATFORM/bin
 fullrd unix
 
 cd $INIT_DIR
@@ -152,17 +152,17 @@ if [ ! "$NO_INSTALL" ]; then
 		cd $EIFFEL_SRC
 		tar -cf c.tar C
 		gzip c.tar
-		mv c.tar.gz $EXPORT_DIR
+		move c.tar.gz $EXPORT_DIR
 
 		remtrace C_library
 		tar -cf c_libs.tar C_library
 		gzip c_libs.tar
-		mv c_libs.tar.gz $EXPORT_DIR
+		move c_libs.tar.gz $EXPORT_DIR
 
 		remtrace Eiffel libraries
 		tar -cf libs.tar library
 		gzip libs.tar
-		mv libs.tar.gz $EXPORT_DIR
+		move libs.tar.gz $EXPORT_DIR
 		EIFFEL_SRC=$TMP_EIFFEL_SRC
 		TMP_EIFFEL_SRC=""
 	fi
@@ -170,11 +170,11 @@ if [ ! "$NO_INSTALL" ]; then
 	cd $INSTALL_DIR
 	tar -cf delivery.tar *
 	gzip delivery.tar
-	mv delivery.tar.gz $EXPORT_DIR
+	move delivery.tar.gz $EXPORT_DIR
 	
 	cd $INIT_DIR
-	cp compile* $EXPORT_DIR
-	cp set_aliases $EXPORT_DIR
+	copy compile* $EXPORT_DIR
+	copy set_aliases $EXPORT_DIR
 	give_time_to compile the delivery
 fi
 

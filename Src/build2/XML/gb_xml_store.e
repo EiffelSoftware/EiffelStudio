@@ -32,7 +32,7 @@ feature -- Basic operation
 			formater: XML_FORMATER
 		do
 				-- Generate an XML representation of the system in `document'.
-			generate_document (False)
+			generate_document (create {GB_GENERATION_SETTINGS})
 			create formater.make
 				-- Process the document ready for output
 			formater.process_document (document)
@@ -56,14 +56,14 @@ feature {NONE} -- Basic operation.
 		
 feature {GB_XML_HANDLER} -- Implementation
 
-	add_new_object_to_output (an_object: GB_OBJECT; element: XML_ELEMENT; add_names: BOOLEAN) is
+	add_new_object_to_output (an_object: GB_OBJECT; element: XML_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
 			-- Add XML representation of `an_object' to `element'.
 		local
 			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			new_widget_element: XML_ELEMENT
 			gb_parent_object: GB_PARENT_OBJECT
 		do
-			output_attributes (an_object, element, add_names)
+			output_attributes (an_object, element, generation_settings)
 			gb_parent_object ?= an_object
 				-- We check that the object may have children.
 			if gb_parent_object /= Void then
@@ -77,7 +77,7 @@ feature {GB_XML_HANDLER} -- Implementation
 						current_layout_item ?= layout_item.item
 						new_widget_element := create_widget_instance (element, current_layout_item.object.type)
 						element.force_last (new_widget_element)
-						add_new_object_to_output (current_layout_item.object, new_widget_element, add_names)
+						add_new_object_to_output (current_layout_item.object, new_widget_element, generation_settings)
 						layout_item.forth
 					end
 				end
@@ -85,7 +85,7 @@ feature {GB_XML_HANDLER} -- Implementation
 		end
 		
 		
-	output_attributes (an_object: GB_OBJECT; element: XML_ELEMENT; add_names: BOOLEAN) is
+	output_attributes (an_object: GB_OBJECT; element: XML_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
 			--Output attributes of `an_object' to `element'. If `add_names' then generate
 			-- a unique name for each object that is not named.
 		local
@@ -106,7 +106,7 @@ feature {GB_XML_HANDLER} -- Implementation
 			element.force_last (new_type_element)
 			an_object.generate_xml (new_type_element)
 				-- Generate a name if `add_names'.
-			if add_names then
+			if generation_settings.generate_names then
 				if an_object.name.is_empty then
 					new_name := unique_name (generated_names, Local_object_name_prepend_string + an_object.short_type)
 					generated_names.force (new_name)
@@ -157,7 +157,7 @@ feature {GB_XML_HANDLER} -- Implementation
 		
 feature {GB_CODE_GENERATOR} -- Implementation
 		
-	generate_document (add_names: BOOLEAN) is
+	generate_document (generation_settings: GB_GENERATION_SETTINGS) is
 			-- Generate an XML representation of the
 			-- current system in `document'.
 			-- If `add_names' then generate a name
@@ -171,7 +171,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 		do
 				-- If we are adding names, then we must ensure that the list of
 				-- names is empty when we being generating.
-			if add_names then
+			if generation_settings.generate_names then
 				generated_names.wipe_out
 			end
 			application_element := new_root_element ("application", "")
@@ -193,7 +193,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 				-- one window, then this will need to be updated.
 			window_element := create_widget_instance (application_element, Ev_titled_window_string)
 			application_element.force_last (window_element)
-			add_new_object_to_output (window_item.object, window_element, add_names)		
+			add_new_object_to_output (window_item.object, window_element, generation_settings)		
 		end
 		
 	document: XML_DOCUMENT

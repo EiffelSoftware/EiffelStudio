@@ -206,9 +206,7 @@ feature -- Status Settings
 		do
 			a_string := clone (txt)
 			previous_caret_position := caret_position
-			if interface.text /= Void then
-				set_caret_position (text_length + 1)
-			end
+			set_caret_position (text_length + 1)
 				-- Replace "%N" with "%R%N" for Windows.
 			convert_string (a_string)
 			replace_selection (a_string)

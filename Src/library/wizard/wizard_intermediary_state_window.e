@@ -26,7 +26,6 @@ feature {NONE} -- Basic Operations
 			main_box_empty: main_box.count=0
 		local
 			title_white_box: EV_HORIZONTAL_BOX	-- Box where is displayed the state title and an icon (white bkgroud).
-			message_box: EV_HORIZONTAL_BOX		-- Box where is displayed the description of current state (gray bkground).
 			actions_box: EV_HORIZONTAL_BOX		-- Box where are displayed the choices for the user.
 			interior_box: EV_VERTICAL_BOX		-- Message Box + Actions Box.
 			horizontal_separator: EV_HORIZONTAL_SEPARATOR
@@ -146,7 +145,7 @@ feature {NONE} -- Basic Operations
 			--------------------------------------------
 			-- Create the main box from the other box.
 			--------------------------------------------
-			main_box.extend(title_white_box)
+			main_box.extend (title_white_box)
 			main_box.disable_item_expand (title_white_box)
 			main_box.extend (horizontal_separator)
 			main_box.disable_item_expand (horizontal_separator)
@@ -162,4 +161,6 @@ feature {WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
 
 	choice_box: EV_VERTICAL_BOX
 
+	message_box: EV_HORIZONTAL_BOX		-- Box where is displayed the description of current state (gray bkground).
+	
 end -- class INTERMEDIARY_STATE_WINDOW

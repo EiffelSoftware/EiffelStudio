@@ -103,7 +103,10 @@ feature -- Update
 		do
 			f := fs.e_feature
 			if f.is_debuggable then
-				Application.enable_first_breakpoint_of_feature (f)
+				if application.has_disabled_breakpoints then
+					Application.enable_breakpoints_in_feature (f)
+				end
+				Application.enable_first_breakpoint_of_feature (f)				
 
 				if Application.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)

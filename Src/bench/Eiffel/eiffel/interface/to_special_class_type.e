@@ -257,7 +257,7 @@ feature
 			then
 				rout_info := System.rout_info_table.item (rout_id);
 				file.putstring ("RTWPA(");
-				file.putint (rout_info.origin.id);
+				file.putstring (rout_info.origin.generated_id);
 				file.putstring (", ");
 				file.putint (rout_info.offset);
 				file.putstring (", Dtype(l[0])))");

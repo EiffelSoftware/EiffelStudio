@@ -317,13 +317,13 @@ feature {NONE} -- Storage
 
 feature {NONE} -- GUI
 
-	execution_frame: EV_FRAME is
+	execution_frame: EV_VERTICAL_BOX is
 			-- Frame widget containing argument controls.
 		local
-			vbox: EV_VERTICAL_BOX
+			vbox, vbox2: EV_VERTICAL_BOX
+			l_frame: EV_FRAME
 		do
 				-- Create all widgets.
-			create vbox
 			create working_directory.make_with_text_and_parent ("Working directory: ", parent_window)
 			create argument_list.make (parent_window)
 			create argument_combo
@@ -335,23 +335,43 @@ feature {NONE} -- GUI
 			create user_combo
 			create user_current_arg_text
 			create notebook
-			create Result.make_with_text ("Execution Options")
-
+			create Result
+			
+			
+			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
+				-- Working directory.
+			create l_frame.make_with_text ("Working Directory")
+			l_frame.extend (vbox)
 			vbox.extend (working_directory)
-			vbox.disable_item_expand (working_directory)
+			Result.extend (l_frame)
+			Result.disable_item_expand (l_frame)
+			
+				-- Ace file arguments tab.
 			set_mode (Ace_mode)
 			create project_args_tab
 			populate_by_template (project_args_tab)
 			notebook.extend (project_args_tab)
 			notebook.set_item_text (project_args_tab, "Project Arguments")
+			
+				-- My Arguments tab.
 			set_mode (User_mode)
 			create user_args_tab
 			populate_by_template (user_args_tab)
 			notebook.extend (user_args_tab)
 			notebook.set_item_text (user_args_tab, "My Arguments")
-
+				
+			create vbox
+			vbox.set_border_width (Layout_constants.Small_border_size)
+			vbox.set_padding (Layout_constants.Small_padding_size)
+			create l_frame.make_with_text ("Arguments")
+			create argument_check.make_with_text ("Enable arguments")
+			l_frame.extend (vbox)
+			vbox.extend (argument_check)
+			vbox.extend (notebook)
+			Result.extend (l_frame)
+			
 			ace_arguments_list.set_all_editable
 			user_arguments_list.set_all_editable
 			ace_combo.disable_edit
@@ -359,6 +379,9 @@ feature {NONE} -- GUI
 			
 				-- Global actions.
 			pointer_leave_actions.extend (agent synch_with_others)
+			
+				-- Check button actions
+			argument_check.select_actions.extend (agent arg_check_selected)
 			
 				-- Notebook actions.
 			notebook.selection_actions.extend (agent on_tab_changed)
@@ -374,9 +397,6 @@ feature {NONE} -- GUI
 				-- Combo actions.
 			ace_combo.select_actions.force_extend (agent argument_selected (ace_combo))
 			user_combo.select_actions.force_extend (agent argument_selected (user_combo))
-				
-			vbox.extend (notebook)
-			Result.extend (vbox)
 		end
 
 	populate_by_template (a_vbox: EV_VERTICAL_BOX) is
@@ -393,12 +413,14 @@ feature {NONE} -- GUI
 			a_vbox.set_border_width (Layout_constants.Small_border_size)
 			a_vbox.set_padding (Layout_constants.Small_padding_size)
 	
+				-- Argument combo box.
+			a_vbox.extend (argument_combo)
+			a_vbox.disable_item_expand (argument_combo)
+	
+				-- Argument list box.
 			a_vbox.extend (argument_list)
 			argument_list.set_minimum_size (400, 50)
 			a_vbox.disable_item_expand (argument_list)
-			
-			a_vbox.extend (argument_combo)
-			a_vbox.disable_item_expand (argument_combo)
 			
 			create l_horizontal_box
 			l_horizontal_box.set_padding (Layout_constants.Default_padding_size)
@@ -627,6 +649,9 @@ feature {NONE} -- GUI Properties
 	notebook: EV_NOTEBOOK
 			-- The notebook containing project and user argument tabs.
 
+	argument_check: EV_CHECK_BUTTON
+			-- Check button to determine of arguments used or not.
+
 	argument_list: EV_EDITABLE_LIST
 			-- The current list with focus (either 'ace_arguments_list' or 'custom_arguments_list').
 			
@@ -681,6 +706,17 @@ feature {NONE} -- Actions
 				end
 			end
 			refresh
+		end
+
+	arg_check_selected is
+			-- Argument check box has been selected.
+		do
+			if argument_check.is_selected then
+				notebook.disable_sensitive				
+			else
+				notebook.enable_sensitive
+			end
+
 		end
 
 	on_list_edited is

@@ -119,7 +119,7 @@ feature -- Initialization
 					height.min (maximal_height))
 				!! client_dc.make (Current)
 				client_dc.get
-				client_dc.set_bk_color (gc_bg_color)
+				client_dc.set_background_color (gc_bg_color)
 				client_dc.select_brush (background_brush)
 				drawing_dc := client_dc
 				clear

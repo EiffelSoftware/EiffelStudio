@@ -199,6 +199,7 @@ feature {NONE} -- Initialization
 			temp_box.extend (h_box)
 			temp_box.disable_item_expand (h_box)
 			set_default_push_button (close_button)
+			set_default_cancel_button (close_button)
 			close_button.select_actions.extend (agent update_object_and_destroy)
 			update_scroll_bar
 				-- We must automatically update `scroll_bar' and

@@ -75,10 +75,20 @@ cluster
 
 	all compiler_api:		"$EIFFEL_SRC/Eiffel/API"
 		exclude
-			"CVS"; 
+			"CVS"; "structured_text";
 		end
 
-	all helpers:            "$EIFFEL_SRC/library/helpers"
+	all eiffel_structured_text:	"$EIFFEL_SRC/Eiffel/API/structured_text"
+		exclude
+			"CVS"; "common"
+		end
+
+	all common_structured_text:	"$EIFFEL_SRC/library/editor/text_window/text/structure/structured_text/common"
+		exclude
+			"CVS"; "text_formatter.e"; "structured_text.e";
+		end
+
+	all helpers:	"$EIFFEL_SRC/library/helpers"
 		exclude
 			"CVS"; 
 		end
@@ -99,7 +109,7 @@ cluster
 
 	interface_shared (interface):		"$/shared"
 
-	tty (interface):		"$/tty"
+	all tty (interface):		"$/tty"
 
 	preference_tool (interface):		"$/graphical/preference_tool"
 
@@ -126,7 +136,7 @@ cluster
 			"eiffel_envision_10"; "windows"; "CVS"; "EIFGEN"; 
 		end
 
-	all preferences:	"$EIFFEL_SRC\library\preferences"
+	all preferences:	"$EIFFEL_SRC/library/preferences"
 		exclude
 			"registry_implementation"; "graphical"; "interface";
 		end		

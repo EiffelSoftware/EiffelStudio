@@ -22,7 +22,7 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
 
 	make (a_popup: POPUP) is
 			-- Create a motif popup menu.
@@ -35,6 +35,8 @@ feature
 					parent_screen_object (a_popup, widget_index));
 			abstract_menu := a_popup
 		end;
+
+feature
 
 	popup is
 			-- Popup current popup menu on screen.

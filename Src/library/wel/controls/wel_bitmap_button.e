@@ -97,9 +97,17 @@ feature -- Status setting
 		require
 			exists: exists
 			valid_bitmap : current_pixmap = Image_bitmap implies bitmap /= Void
-			valid_icon: current_pixmap = Image_icon implies icon /= Void
 		do
 			set_style (set_flag (style, Bs_bitmap))
+		end
+
+	show_icon is
+			-- Show the icon of the button and not the text.
+		require
+			exists: exists
+			valid_icon: current_pixmap = Image_icon implies icon /= Void
+		do
+			set_style (set_flag (style, Bs_icon))
 		end
 
 feature -- Element change
@@ -124,7 +132,7 @@ feature -- Element change
 			valid_icon: an_icon /= Void
 		do
 			internal_icon := an_icon
-			show_bitmap
+			show_icon
 			cwin_send_message (item, Bm_setimage, Image_icon, an_icon.to_integer)
 		end
 

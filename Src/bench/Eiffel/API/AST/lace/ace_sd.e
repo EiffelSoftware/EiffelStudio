@@ -41,10 +41,9 @@ inherit
 			adapt
 		end;
 	SHARED_USE;
-	SHARED_STATUS;
 	SHARED_MELT_ONLY;
 	EIFFEL_ENV;
-	CLICKER
+	CLICKER;
 
 feature -- Attributes
 
@@ -205,7 +204,7 @@ feature -- Lace compilation
 							!!vd38;
 							Error_handler.insert_error (vd38);
 							Error_handler.raise_error;
-						elseif Workbench.system.precompilation then
+						elseif Compilation_modes.is_precompiling then
 								-- Do not call the once function `System'
 								-- directly since it's value may be replaced
 								-- during the first compilation (as soon as
@@ -233,7 +232,7 @@ feature -- Lace compilation
 				-- Class Set or not).
 			if
 				melt_only and then
-				not Workbench.system.precompilation and then
+				not Compilation_modes.is_precompiling and then
 				Result = Void
 			then
 					-- For the melt_only version, if no precompiled project is specified,
@@ -529,7 +528,6 @@ feature -- DLE
 			-- Directory name of the dynamically extendible system;
 			-- Check also whether the combination of options is valid
 		local
-			system_i: SYSTEM_I;
 			precomp_found, found: BOOLEAN;
 			extendible: BOOLEAN;
 			d_option: D_OPTION_SD;
@@ -543,12 +541,6 @@ feature -- DLE
 			v9cd: V9CD;
 			v9cx: V9CX
 		do
-			system_i := Workbench.system;
-				-- Do not call the once function `System'
-				-- directly since it's value may be replaced
-				-- during the first compilation (as soon as
-				-- we figured out whether the system describes
-				-- a Dynamic Class Set or not).
 			if defaults /= Void then
 				from
 					defaults.start
@@ -562,7 +554,7 @@ feature -- DLE
 							!!v9xc;
 							Error_handler.insert_error (v9xc);
 							Error_handler.raise_error
-						elseif system_i.precompilation then
+						elseif Compilation_modes.is_precompiling then
 								-- `exdending' option when precompiling.
 							!!v9xq;
 							Error_handler.insert_error (v9xq);
@@ -602,29 +594,29 @@ feature -- DLE
 					Error_handler.raise_error
 				end
 			end;
-			if extendible and system_i.precompilation then
+			if extendible and Compilation_modes.is_precompiling then
 					-- `extendible' option when precompiling.
 				!!v9dp;
 				Error_handler.insert_error (v9dp);
 				Error_handler.raise_error
 			end;
 			if Lace.not_first_parsing then
-				if extendible /= system_i.extendible then
+				if extendible /= Compilation_modes.is_extendible then
 						-- Cannot change the `extendible' status between
 						-- two compilations.
 					!!v9cd;
 					Error_handler.insert_error (v9cd);
 					Error_handler.raise_error
 				end;
-				if Result /= Void xor system_i.is_dynamic then
+				if Result /= Void xor System.is_dynamic then
 						-- Cannot change the `extending' status between
 						-- two compilations.
 					!!v9cx;
 					Error_handler.insert_error (v9cx);
 					Error_handler.raise_error
 				end
-			end
-			system_i.set_extendible (extendible)
+			end;
+			Compilation_modes.set_is_extendible (extendible)
 		end;
 			
 end

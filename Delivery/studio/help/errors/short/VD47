@@ -1,0 +1,2 @@
+Lace error: A class appears twice on the left of a `rename' clause.
+What to do: Rename each class at most once in each cluster.

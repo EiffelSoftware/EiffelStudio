@@ -870,7 +870,7 @@ feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
 			id_set: id >= 0
 		end
 
-feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITEM} -- Element change
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITEM, GB_PASTE_OBJECT_COMMAND} -- Element change
 
 	create_object_from_type is
 			-- Create an object of type `type' and assign
@@ -932,13 +932,13 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WINDOW_SELECTOR_ITE
 				if Result then
 					standard_object_stone ?= an_object_stone
 					if standard_object_stone /= Void and then standard_object_stone.object.window_selector_item /= Void then
-						create all_dependents.make (4)
-					all_dependents_recursive (standard_object_stone.object, all_dependents)
-					all_dependents.extend (standard_object_stone.object, standard_object_stone.object.id)
-					Result := not all_dependents.has (Current.id)
-					if not Result then
-						set_status_text (cyclic_inheritance_error)
-					end
+							create all_dependents.make (4)
+						all_dependents_recursive (standard_object_stone.object, all_dependents)
+						all_dependents.extend (standard_object_stone.object, standard_object_stone.object.id)
+						Result := not all_dependents.has (Current.id)
+						if not Result then
+							set_status_text (cyclic_inheritance_error)
+						end
 					end
 				end
 				if Result and an_object_stone /= Void and then an_object_stone.is_instance_of_top_level_object then
@@ -1370,7 +1370,7 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 			end
 		end
 		
-feature {GB_OBJECT} -- Implementation
+feature {GB_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Implementation
 		
 	override_drop_on_child (an_object: GB_OBJECT): BOOLEAN is
 			-- If `Current' is held within `an_object' or
@@ -1603,7 +1603,7 @@ feature {GB_WINDOW_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
 			window_selector_item_object_set: window_selector_item.object = Current
 		end
 		
-feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND} -- Implementation
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WINDOW_SELECTOR} -- Implementation
 
 	add_client_representation (client_object: GB_OBJECT) is
 			-- Add a client representation for `client_object' to the `window_selector_item'

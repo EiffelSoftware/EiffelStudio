@@ -1,7 +1,7 @@
 CC = cl
-CFLAGS = -Zi -I$(EIFFEL4)\bench\spec\windows\include\ -Ic:\library\EiffelCOM\library\include\ -c 
+CFLAGS = -Zi -I$(EIFFEL4)\bench\spec\windows\include\ -Ic:\library\EiffelCOM\library\include\ -Ic:\library\EiffelCOM\Runtime\ -c 
 
-OBJ = E_IRootStorage.obj E_IStorage.obj E_IStream.obj E_statstg.obj E_wide_string.obj E_IEnumSTATSTG.obj E_Routines.obj ecom_exception.obj E_arraydesc.obj E_custdata.obj E_bstr.obj E_IType_lib.obj E_IType_Info.obj E_IType_Comp.obj E_guid.obj 
+OBJ = E_IRootStorage.obj E_IStorage.obj E_IStream.obj E_statstg.obj E_wide_string.obj E_IEnumSTATSTG.obj E_Routines.obj ecom_exception.obj E_arraydesc.obj E_custdata.obj E_bstr.obj E_IType_lib.obj E_IType_Info.obj E_IType_Comp.obj E_guid.obj E_Currency.obj E_Decimal.obj
 
 com.lib: $(OBJ)
 	if exist $@ del $@

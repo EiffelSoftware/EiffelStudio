@@ -40,11 +40,32 @@ feature -- Status setting
    		deferred
    		end
 
+	set_selected is
+   			-- Set current item as the selected one.
+			-- We use it only when the grand parent is an option button.
+   		deferred
+   		end
+
 feature -- Element change
 
 	set_parent (par: EV_MENU_ITEM_HOLDER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
+		deferred
+		end
+
+feature -- Assertion
+
+	grand_parent_is_option_button: BOOLEAN is
+			-- Is true if the grand parent is an option button.
+			-- False otherwise.
+		deferred
+		end
+
+	is_selected: BOOLEAN is
+			-- True if the current item is selected.
+			-- False otherwise.
+			-- We use it only when the grand parent is an option button.
 		deferred
 		end
 

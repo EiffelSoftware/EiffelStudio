@@ -11,7 +11,6 @@
 #include "eif_retrieve.h"
 #include "eif_error.h"    	/* for eio() */
 #include "eif_traverse.h"
-#include "eif_lmalloc.h"
 
 #ifdef EIF_WIN32
 #include "winsock.h"

@@ -693,7 +693,7 @@ feature {EV_ANY_I} -- Implementation
 			Create Result
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation 
 
 	application_imp: EV_APPLICATION_IMP is
 			-- `Result' is implementation of application from environment.

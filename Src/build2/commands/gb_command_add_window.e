@@ -63,7 +63,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (window: GB_TITLED_WINDOW_OBJECT; a_new_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
+	make (window: GB_OBJECT; a_new_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
 		require
@@ -81,33 +81,38 @@ feature -- Basic Operation
 	execute is
 			-- Execute `Current'.
 		local
+			an_object: GB_OBJECT
 			window_object: GB_TITLED_WINDOW_OBJECT
 			selector_item: GB_WINDOW_SELECTOR_ITEM
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
-			window_object ?= Object_handler.deep_object_from_id (original_id)
+			an_object := Object_handler.deep_object_from_id (original_id)
 			check
-				object_was_window: window_object /= Void
+				object_not_void: an_object /= Void
 			end
-			create selector_item.make_with_object (window_object)
+			create selector_item.make_with_object (an_object)
 			if parent_directory = Void then
-				window_selector.extend (window_object.window_selector_item)
+				window_selector.extend (an_object.window_selector_item)
 			else
 				directory_item := window_selector.directory_object_from_name (parent_directory)
-				directory_item.extend (window_object.window_selector_item)
+				directory_item.extend (an_object.window_selector_item)
 			end
 				-- If this is the only window contained, select it.
 			if window_selector.objects.count = 1 then
-				window_object.window_selector_item.enable_select
-				window_selector.change_root_window_to (window_object)
+				an_object.window_selector_item.enable_select
+				window_object ?= an_object
+				if window_object /= Void then
+						-- Only set window object's as root windows.
+					window_selector.change_root_window_to (window_object)	
+				end
 			end
 				-- Now mark object as non deleted, only if it is deleted.
 				-- Handles case, where you repeatedly undo/redo.
-			if object_handler.deleted_objects.has (window_object) then
-				object_handler.mark_existing (window_object)
+			if object_handler.deleted_objects.has (an_object.id) then
+				object_handler.mark_existing (an_object)
 			end	
 			
-				-- Restore all files associated with `window_object' if any.
+				-- Restore all files associated with `an_object' if any.
 			restore_files
 				
 				-- Record `Current' in the history list.
@@ -123,21 +128,25 @@ feature -- Basic Operation
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		local
+			an_object: GB_OBJECT
 			window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			window_object ?= Object_handler.deep_object_from_id (original_id)
+			an_object := Object_handler.deep_object_from_id (original_id)
 			check
-				object_was_window: window_object /= Void
+				object_not_void: an_object /= Void
 			end
-				-- If the root window is being deleted, select the next window.
-			if Object_handler.root_window_object = window_object then
-				Window_selector.mark_next_window_as_root (1)
+			window_object ?= an_object
+			if window_object /= Void then
+					-- If the root window is being deleted, select the next window.
+				if Object_handler.root_window_object = window_object then
+					Window_selector.mark_next_window_as_root (1)
+				end
 			end
 			object_handler.update_for_delete (original_id)
-			object_handler.update_object_editors_for_delete (window_object, Void)
-			window_object.layout_item.unparent
-			window_object.window_selector_item.unparent
-			object_handler.mark_as_deleted (window_object)
+			object_handler.update_object_editors_for_delete (an_object, Void)
+			an_object.layout_item.unparent
+			an_object.window_selector_item.unparent
+			object_handler.mark_as_deleted (an_object)
 			
 				-- Store and delete all files associated with `window_object' if any.
 				-- Files associated are only there if already generated.
@@ -150,19 +159,19 @@ feature -- Basic Operation
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
 		local
-			window_name: STRING
-			window_object: GB_TITLED_WINDOW_OBJECT
+			object_name: STRING
+			an_object: GB_OBJECT
 		do
-			window_object ?= Object_handler.deep_object_from_id (original_id)
+			an_object ?= Object_handler.deep_object_from_id (original_id)
 			check
-				object_was_window: window_object /= Void
+				object_not_void: an_object /= Void
 			end
-			if not window_object.name.is_empty then
-				window_name := window_object.name
+			if not an_object.name.is_empty then
+				object_name := an_object.name
 			else
-				window_name := window_object.short_type
+				object_name := an_object.short_type
 			end
-			Result := window_name + " added to the project"
+			Result := object_name + " added to the project"
 		end
 	
 feature {NONE} -- Implementation

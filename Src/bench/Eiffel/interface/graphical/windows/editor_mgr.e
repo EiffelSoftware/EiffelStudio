@@ -70,8 +70,8 @@ feature {WINDOW_MGR}
 				free_list.start;
 				Result := free_list.item;
 				Result.set_x_y (screen.x, screen.y);
-				Result.text_window.set_tab_length 
-							(Result.text_window.default_tab_length.item);
+				Result.text_window.set_tab_length_to_default; 
+				Result.text_window.set_font_to_default; 
 				free_list.remove;
 			else
 				set_global_cursor (watch_cursor);
@@ -170,6 +170,43 @@ feature -- Synchronization
 			loop
 				active_editors.item.set_default_format;
 				active_editors.item.synchronize;
+				active_editors.forth
+			end
+		end;
+
+feature -- Fonts
+
+	set_font_to_default is
+			-- Set the font of all active editors to the default font.
+		do
+			from 
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.text_window.set_font_to_default;
+				active_editors.forth
+			end
+		end;
+
+feature -- Tabulations
+
+	set_tab_length_to_default is
+			-- Set the tab length of all active editors 
+			-- to the default tab length.
+		local
+			text_window: TEXT_WINDOW;
+			was_changed: BOOLEAN
+		do
+			from 
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				text_window := active_editors.item.text_window;
+				was_changed := text_window.changed;
+				text_window.set_tab_length_to_default;
+				text_window.set_changed (was_changed);
 				active_editors.forth
 			end
 		end;

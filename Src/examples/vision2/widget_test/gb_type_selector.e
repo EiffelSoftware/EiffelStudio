@@ -93,19 +93,29 @@ feature {NONE} -- Implementation
 		local
 			filename: FILE_NAME
 			extension: STRING
+			file_location: STRING
 		do
-			create filename.make_from_string (current_working_directory)
-			filename.extend ("bitmaps")
+			file_location := get ("ISE_VISION2_TOUR")
+			if file_location = Void then
+				file_location := get ("ISE_EIFFEL")
+			end
 			if (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO") then
 				extension := "ico"
-				filename.extend (extension)
 			else
 				extension := "png"
-				filename.extend (extension)
 			end
-			filename.extend (a_type.as_lower + "." + extension)
-			create Result
-			Result.set_with_named_file (filename.out)
+			if file_location /= Void then
+				create filename.make_from_string (file_location)
+				filename.extend ("bitmaps")
+				
+				filename.extend (extension)
+				filename.extend (a_type.as_lower + "." + extension)
+				create Result
+				Result.set_with_named_file (filename.out)
+			else
+				create Result
+				Missing_files.extend (a_type.as_lower + "." + extension)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end

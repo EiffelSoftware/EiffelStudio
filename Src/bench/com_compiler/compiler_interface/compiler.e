@@ -13,6 +13,7 @@ inherit
 			is_successful,
 			compile,
 			finalize,
+			precompile,
 			freezing_occurred,
 			compiler_version,
 			Freeze_command_name,
@@ -125,6 +126,25 @@ feature -- Basic Operations
 			rescued := True
 			retry
 		end
+		
+	precompile is
+			-- Precompile
+		local
+			rescued: BOOLEAN
+		do
+			is_successful := False
+			if not rescued then
+				if not Eiffel_project.is_compiling then
+					Eiffel_project.precompile (true)
+				end
+			else
+				event_output_string ("Compilation stopped%N")
+			end
+		rescue
+			rescued := True
+			retry
+		end
+		
 		
 	freezing_occurred: BOOLEAN is
 			-- Did last compile warrant a call to finish_freezing?

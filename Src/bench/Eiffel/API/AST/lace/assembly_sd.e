@@ -14,7 +14,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	initialize (a_cluster_name, a_assembly_name, a_version, a_culture, a_public_key_token: ID_SD) is
+	initialize (a_cluster_name, a_assembly_name, a_prefix, a_version, a_culture, a_public_key_token: ID_SD) is
 			-- New Instance of an assembly reference.
 		require
 			cluster_name_not_void: a_cluster_name /= Void
@@ -25,9 +25,11 @@ feature {NONE} -- Initialization
 			version := a_version
 			culture := a_culture
 			public_key_token := a_public_key_token
+			prefix_name := a_prefix
 		ensure
 			cluster_name_set: cluster_name = a_cluster_name
 			assembly_name_set: assembly_name = a_assembly_name
+			prefix_name_set: prefix_name = a_prefix
 			version_set: version = a_version
 			culture_set: culture = a_culture
 			public_key_token_set: public_key_token = a_public_key_token
@@ -40,6 +42,9 @@ feature -- Access
 	
 	assembly_name: ID_SD
 			-- Assembly name or file location of assembly if local assembly.
+			
+	prefix_name: ID_SD
+			-- Prefix added to all Eiffel class names in current assembly.
 
 	version, culture, public_key_token: ID_SD
 			-- Specification of current assembly.
@@ -51,6 +56,7 @@ feature -- Equality
 		do
 			Result := other /= Void and then cluster_name.same_as (other.cluster_name)
 				and then assembly_name.same_as (other.assembly_name)
+				and then same_ast (prefix_name, other.prefix_name)
 				and then same_ast (version, other.version)
 				and then same_ast (culture, other.culture)
 				and then same_ast (public_key_token, other.public_key_token)
@@ -62,8 +68,8 @@ feature -- Duplication
 			-- Duplicate current object.
 		do
 			create Result.initialize (cluster_name.duplicate,
-				assembly_name.duplicate, duplicate_ast (version),
-				duplicate_ast (culture),
+				assembly_name.duplicate, duplicate_ast (prefix_name),
+				duplicate_ast (version), duplicate_ast (culture),
 				duplicate_ast (public_key_token))
 		end
 		
@@ -89,6 +95,18 @@ feature -- Saving
 				public_key_token.save (st)
 			end
 			st.new_line
+			if prefix_name /= Void then
+				st.indent
+				st.putstring ("prefix")
+				st.new_line
+				st.indent
+				prefix_name.save (st)
+				st.exdent
+				st.new_line
+				st.putstring ("end")
+				st.exdent
+				st.new_line
+			end
 		end
 
 invariant

@@ -12,19 +12,37 @@ class
 inherit
 	WEL_CURSOR
 		redefine
-			exists
+			exists,
+			destroy_item
+		end
+
+creation
+	make
+
+feature -- Initialization
+
+	make is
+			-- Make a null cursor.
+		do
+			exists := True
+		ensure
+			exists: exists
 		end
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does the `item' exist?
-		once
-			Result := True
+
+feature {NONE} -- Removal
+
+	destroy_item is
+			-- `item' does not need to be garbage collected.
+		do
+			exists := False
 		end
 
 invariant
-
 	no_item: item = default_pointer
 
 end -- class WEL_NULL_CURSOR

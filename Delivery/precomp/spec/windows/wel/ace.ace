@@ -6,7 +6,7 @@ root
 
 default
 	assertion (all);
-	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base");
+--	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base");
 
 cluster 
 	-- EiffelBase

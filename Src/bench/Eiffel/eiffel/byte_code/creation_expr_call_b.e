@@ -33,10 +33,6 @@ feature -- Generation
 		deferred
 		end
 
-	generate_il_array_creation is
-		deferred
-		end
-
 	generate is
 		deferred
 		end

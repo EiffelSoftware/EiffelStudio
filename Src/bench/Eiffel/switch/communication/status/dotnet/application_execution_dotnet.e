@@ -40,7 +40,6 @@ inherit
 		export
 			{NONE} all
 		end
-		
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 		export
@@ -236,19 +235,12 @@ feature -- Bridge to Debugger
 	eifnet_debugger: EIFNET_DEBUGGER
 			-- Access to the Dotnet Debugger
 
-	string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): STRING is
-			-- String value of the `icd_string_instance'.
+	icd_string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): ICOR_DEBUG_STRING_VALUE is
+			-- ICorDebugStringValue of the `icd_string_instance'.
 		do
-			Result := eifnet_debugger.string_value_from_string_class_object_value (icd_string_instance)
+			Result := eifnet_debugger.icd_string_value_from_string_class_object_value (icd_string_instance)
 		end
 		
-	debug_output_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
-							a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE): STRING is
-			-- Debug_output string value.			
-		do
-			Result := eifnet_debugger.debug_output_value_from_object_value (a_frame, a_icd, a_icd_obj, a_class_type)
-		end
-
 feature -- Execution
 
 	run (args, cwd: STRING) is

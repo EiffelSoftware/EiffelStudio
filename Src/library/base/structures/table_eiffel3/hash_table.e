@@ -48,7 +48,7 @@ feature -- Initialization
 			!! content.make (0, table_size - 1);
 			!! keys.make (0, table_size - 1);
 			!! deleted_marks.make (0, table_size - 1);
-			pos_for_iter := table_size
+			iteration_position := table_size
 		ensure
 			keys_big_enough: keys.capacity >= n and keys.capacity >= Minimum_size;
 			content_big_enough: content.capacity >= n and content.capacity >= Minimum_size;
@@ -156,7 +156,7 @@ feature -- Access
 		require
 			not_off: not off
 		do
-			Result := content.item (pos_for_iter)
+			Result := content.item (iteration_position)
 		end;
 
 	key_for_iteration: H is
@@ -164,13 +164,13 @@ feature -- Access
 		require
 			not_off: not off
 		do
-			Result := keys.item (pos_for_iter)
+			Result := keys.item (iteration_position)
 		end;
 
 	cursor: CURSOR is
 			-- Current cursor position
 		do
-			!HASH_TABLE_CURSOR! Result.make (pos_for_iter)
+			!HASH_TABLE_CURSOR! Result.make (iteration_position)
 		ensure
 			cursor_not_void: Result /= Void
 		end;
@@ -256,7 +256,7 @@ feature -- Status report
 	after, off: BOOLEAN is
 			-- Is cursor past last item?
 		do
-			Result := pos_for_iter > keys.upper
+			Result := iteration_position > keys.upper
 		end;
 
 	valid_cursor (c: CURSOR): BOOLEAN is
@@ -283,7 +283,7 @@ feature -- Cursor movement
 	start is
 			-- Bring cursor to first position.
 		do
-			pos_for_iter := keys.lower - 1;
+			iteration_position := keys.lower - 1;
 			forth
 		end;
 
@@ -298,8 +298,8 @@ feature -- Cursor movement
 			until
 				stop
 			loop
-				pos_for_iter := pos_for_iter + 1;
-				stop := off or else valid_key (keys.item (pos_for_iter))
+				iteration_position := iteration_position + 1;
+				stop := off or else valid_key (keys.item (iteration_position))
 			end
 		end;
 
@@ -313,7 +313,7 @@ feature -- Cursor movement
 		do
 			ht_cursor ?= c;
 			if ht_cursor /= Void then
-				pos_for_iter := ht_cursor.position
+				iteration_position := ht_cursor.position
 			end
 		end
 
@@ -515,6 +515,10 @@ feature {HASH_TABLE} -- Implementation
 			deleted_marks := c
 		end;
 
+	set_replaced is
+		do
+			control := changed_constant
+		end
 
 feature {NONE} -- Inapplicable
 
@@ -536,7 +540,7 @@ feature {NONE} -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	pos_for_iter: INTEGER;
+	iteration_position: INTEGER;
 			-- Cursor for iteration primitives
 
 	internal_search (search_key: H) is

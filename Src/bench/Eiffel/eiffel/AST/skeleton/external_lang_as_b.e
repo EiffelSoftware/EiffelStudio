@@ -4,7 +4,7 @@ inherit
 
 	EXTERNAL_LANG_AS
 		redefine
-			language_name, display_results
+			language_name
 		end;
 
 	AST_EIFFEL_B;

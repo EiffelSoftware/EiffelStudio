@@ -706,13 +706,15 @@ feature -- Preferences
 
 	constants_do_not_show_again: STRING is "Reject invalid constants, and do not show this dialog again."
 
-	--show_pixmap_constant_directory_warning: STRING is "show_pixmap_constant_directory_warning"
 	show_repeated_absolute_constant_warning: STRING is "show_repeated_absolute_constant_warning"
-	
---	show_create_new_directory_constant_warning: STRING is "show_create_new_directory_constant_warning"
 	
 	show_invalid_constant_selection_warning: STRING is "show_invalid_constant_selection_warning"
 	
 	show_constant_manifest_conversion_warning: STRING is "show_constant_manifest_conversion_warning"
+	
+feature -- Prompts
+
+	select_directory_location_modify_string: STRING is "Please select new location for directory constant %""
+		-- String displayed when selecting a new directroy during a modification of an existing directory constant.
 
 end -- class GB_CONSTANTS

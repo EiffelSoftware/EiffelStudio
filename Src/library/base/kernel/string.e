@@ -775,7 +775,7 @@ feature {STRING} -- Implementation
 	c_p_i: INTEGER is
 			-- Number of characters per INTEGER
 		do
-			Result := Integer_bits / Character_bits;
+			Result := Integer_bits // Character_bits;
 		end;
 
 	str_len (c_string: ANY): INTEGER is

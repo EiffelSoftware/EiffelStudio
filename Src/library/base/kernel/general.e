@@ -120,11 +120,15 @@ feature -- Duplication
 			--
 			-- For non-void `other', `clone' calls `copy';
 		 	-- to change copying/cloning semantics, redefine `copy'.
+		local
+			temp: BOOLEAN
 		do
 			if other /= Void then
+				temp := c_check_assert (False);
 				Result := c_standard_clone ($other);
 				Result.setup (other);
-				Result.copy (other)
+				Result.copy (other);
+				temp := c_check_assert (temp);
 			end
 		ensure
 			equal: equal (Result, other)
@@ -280,6 +284,11 @@ feature {NONE} -- Implementation
 
 	frozen c_generator (some: GENERAL): STRING is
 			-- Name of the generating class of `some'
+		external
+			"C"
+		end;
+
+	frozen c_check_assert (b: BOOLEAN): BOOLEAN is
 		external
 			"C"
 		end;

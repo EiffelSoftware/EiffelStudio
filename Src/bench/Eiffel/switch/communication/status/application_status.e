@@ -97,6 +97,10 @@ feature -- Values
 			current_thread_id := tid
 		end
 		
+	refresh_current_thread_id is
+		deferred
+		end		
+		
 	set_thread_ids (a: ARRAY [INTEGER]) is
 			-- 
 		require

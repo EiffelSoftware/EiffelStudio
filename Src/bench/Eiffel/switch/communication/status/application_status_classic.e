@@ -90,6 +90,12 @@ feature -- Class stack creation
 
 feature -- Values
 
+	refresh_current_thread_id is
+		do
+			-- FIXME jfiat: for now Classic system do not support thread selection
+			-- TODO
+		end
+
 	call_stack (tid: INTEGER): EIFFEL_CALL_STACK_CLASSIC is
 			-- Eiffel call stack
 		do

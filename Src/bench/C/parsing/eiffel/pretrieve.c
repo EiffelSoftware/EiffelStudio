@@ -115,7 +115,7 @@ rt_private void stream_buffer_initialization (EIF_INTEGER file_desc, size_t file
 
 	if (number_left > parsing_stream_size) {
 		parsing_stream_size = number_left; 
-		parsing_stream_buffer = realloc (parsing_stream_buffer, parsing_stream_size);
+		parsing_stream_buffer = (char *) realloc (parsing_stream_buffer, parsing_stream_size);
 	}
 
 	if (lseek (file_desc, position, SEEK_SET) == -1)

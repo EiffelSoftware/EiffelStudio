@@ -39,6 +39,17 @@ feature {NONE} -- Initialization
 
 feature {EV_GRID_I} -- Initialization
 
+	internal_index: INTEGER
+			-- Index of `Current' in parent grid
+
+	set_internal_index (a_index: INTEGER) is
+			-- Set the internal index of row
+		require
+			a_index_greater_than_zero: a_index > 0
+		do
+			internal_index := a_index
+		end
+
 	set_grid_i (a_grid_i: EV_GRID_I) is
 			-- Make `Current' associated with `a_grid_i'
 		require
@@ -156,7 +167,11 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			Result := parent_grid_i.grid_rows.index_of (Current, 1)
+			Result := internal_index
+			
+			check
+				indexes_equivalent: parent_grid_i.grid_rows.i_th (internal_index) = Current
+			end
 		ensure
 			index_positive: Result > 0
 			index_less_than_row_count: Result <= parent.row_count
@@ -169,7 +184,7 @@ feature -- Status report
 				Result := parent_grid_i.column_count
 			end
 		ensure
-			count_positive: count > 0
+			count_not_negative: count >= 0
 		end
 		
 feature -- Status setting
@@ -283,6 +298,7 @@ feature {EV_GRID_I} -- Implementation
 			is_parented: parent /= Void
 		do
 			parent_grid_i := Void
+			internal_index := 0
 		ensure
 			parent_grid_i_unset: parent_grid_i = Void
 		end
@@ -300,6 +316,7 @@ feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 			
 invariant
 	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded
+	index_same_as_parent_index: parent_grid_i /= Void implies parent_grid_i.grid_rows.index_of (Current, 1) = index
 
 end
 

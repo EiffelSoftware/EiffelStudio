@@ -165,10 +165,15 @@ feature
 
 	print_register is
 			-- Print expression value
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
+			buf.putchar ('(')
 			left.print_register;
 			generate_operator;
 			right.print_register;
+			buf.putchar (')')
 		end;
 
 	generate_operator is

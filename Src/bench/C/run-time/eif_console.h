@@ -11,8 +11,8 @@
 
 */
 
-#ifndef _console_h_
-#define _console_h_
+#ifndef _eif_console_h_
+#define _eif_console_h_
 
 #ifdef __cplusplus
 extern "C" {

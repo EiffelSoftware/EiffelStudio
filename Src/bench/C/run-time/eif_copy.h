@@ -10,8 +10,8 @@
 	Include file for source file copy.c
 */
 
-#ifndef _copy_h_
-#define _copy_h_
+#ifndef _eif_copy_h_
+#define _eif_copy_h_
 
 #ifdef __cplusplus
 extern "C" {

@@ -10,8 +10,8 @@
 	Data structures and functions used by debugger.
 */
 
-#ifndef _debug_h_
-#define _debug_h_
+#ifndef _eif_debug_h_
+#define _eif_debug_h_
 
 #ifdef __cplusplus
 extern "C" {

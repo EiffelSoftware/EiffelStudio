@@ -10,8 +10,8 @@
 	Declarations for plugging routines and structures.
 */
 
-#ifndef _plug_h_
-#define _plug_h_
+#ifndef _eif_plug_h_
+#define _eif_plug_h_
 
 #ifdef __cplusplus
 extern "C" {

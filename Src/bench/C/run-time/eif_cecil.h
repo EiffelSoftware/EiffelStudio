@@ -10,8 +10,8 @@
 	Definitions and macros for the C-Eiffel Call-In Library.
 */
 
-#ifndef _cecil_h_
-#define _cecil_h_
+#ifndef _eif_cecil_h_
+#define _eif_cecil_h_
 
 #include "eif_plug.h"
 

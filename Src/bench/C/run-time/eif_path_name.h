@@ -5,8 +5,8 @@
 
 */
 
-#ifndef _path_name_h_
-#define _path_name_h_
+#ifndef _eif_path_name_h_
+#define _eif_path_name_h_
 
 #ifdef __cplusplus
 extern "C" {

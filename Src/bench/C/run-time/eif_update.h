@@ -10,8 +10,8 @@
 	Interpretor datas update primitives declarations
 */
 
-#ifndef _update_h_
-#define _update_h_
+#ifndef _eif_update_h_
+#define _eif_update_h_
 
 #ifdef __cplusplus
 extern "C" {

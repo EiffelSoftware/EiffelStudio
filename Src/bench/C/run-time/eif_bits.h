@@ -10,8 +10,8 @@
 	Declarations for bits handling routines.
 */
 
-#ifndef _bits_h_
-#define _bits_h_
+#ifndef _eif_bits_h_
+#define _eif_bits_h_
 
 #include "eif_portable.h"
 #include "eif_plug.h"

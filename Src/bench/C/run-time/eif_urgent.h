@@ -10,8 +10,8 @@
 	Declarations for urgent memory chunk allocation.
 */
 
-#ifndef _urgent_h_
-#define _urgent_h_
+#ifndef _eif_urgent_h_
+#define _eif_urgent_h_
 
 #ifdef __cplusplus
 extern "C" {

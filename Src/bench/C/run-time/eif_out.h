@@ -10,8 +10,8 @@
 			Include file for printing an Eiffel object
 */
 
-#ifndef _out_h_
-#define _out_h_
+#ifndef _eif_out_h_
+#define _eif_out_h_
 
 #ifdef __cplusplus
 extern "C" {

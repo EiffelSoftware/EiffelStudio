@@ -11,8 +11,8 @@
  */
 
 
-#ifndef _compress_h_
-#define _compress_h_
+#ifndef _eif_compress_h_
+#define _eif_compress_h_
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,5 +49,5 @@ void eif_cmps_write_u32_to_char_buf (uint32 in_value, unsigned char *out_buf);
 }
 #endif
 
-#endif /* !_compress_h_ */
+#endif /* !_eif_compress_h_ */
 

@@ -10,8 +10,8 @@
 	Inclusions and declarations for timer routines.
 */
 
-#ifndef _timer_h_
-#define _timer_h_
+#ifndef _eif_timer_h_
+#define _eif_timer_h_
 
 #ifdef __cplusplus
 extern "C" {

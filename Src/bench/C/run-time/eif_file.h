@@ -11,8 +11,8 @@
 
 */
 
-#ifndef _file_h_
-#define _file_h_
+#ifndef _eif_file_h_
+#define _eif_file_h_
 
 #ifdef __cplusplus
 extern "C" {

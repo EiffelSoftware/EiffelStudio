@@ -10,8 +10,8 @@
 	Argument vectors.
 */
 
-#ifndef _argv_h_
-#define _argv_h_
+#ifndef _eif_argv_h_
+#define _eif_argv_h_
 
 #ifdef __cplusplus
 extern "C" {

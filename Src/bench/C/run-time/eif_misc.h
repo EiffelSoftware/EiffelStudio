@@ -11,8 +11,8 @@
 
 */
 
-#ifndef _misc_h_
-#define _misc_h_
+#ifndef _eif_misc_h_
+#define _eif_misc_h_
 
 #ifdef __cplusplus
 extern "C" {

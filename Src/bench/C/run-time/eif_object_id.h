@@ -3,8 +3,8 @@
     Object id externals
 */
 
-#ifndef _object_id_h_
-#define _object_id_h_
+#ifndef _eif_object_id_h_
+#define _eif_object_id_h_
 
 #ifdef __cplusplus
 extern "C" {

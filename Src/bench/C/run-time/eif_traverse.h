@@ -10,8 +10,8 @@
 	Include file for traversal of objects.
 */
 
-#ifndef _traverse_h_
-#define _traverse_h_
+#ifndef _eif_traverse_h_
+#define _eif_traverse_h_
 
 #ifdef __cplusplus
 extern "C" {

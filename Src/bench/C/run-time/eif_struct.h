@@ -10,8 +10,8 @@
 	Basic structure definitions.
 */
 
-#ifndef _struct_h_
-#define _struct_h_
+#ifndef _eif_struct_h_
+#define _eif_struct_h_
 
 #include "eif_globals.h"
 #include "eif_config.h"

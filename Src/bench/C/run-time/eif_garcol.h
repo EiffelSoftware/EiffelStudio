@@ -10,8 +10,8 @@
 	Declarations for garbage collector routines.
 */
 
-#ifndef _garcol_h_
-#define _garcol_h_
+#ifndef _eif_garcol_h_
+#define _eif_garcol_h_
 
 #include "eif_portable.h"
 #include "eif_struct.h"

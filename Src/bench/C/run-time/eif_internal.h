@@ -10,8 +10,8 @@
 	Routines to implement class INTERNAL
 */
 
-#ifndef _internal_h_
-#define _internal_h_
+#ifndef _eif_internal_h_
+#define _eif_internal_h_
 
 #ifdef __cplusplus
 extern "C" {

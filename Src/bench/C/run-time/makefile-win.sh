@@ -128,7 +128,7 @@ WOBJECTS = \
 	$(INDIR)\wrout_obj.$obj \
 	$(INDIR)\weif_special_table.$obj \
 	$(TOP)\idrs\idr.$lib \
-	$(TOP)\console\winconsole.$lib \
+	$(TOP)\console\wwinconsole.$lib \
 
 EOBJECTS = \
 	$(INDIR)\wlmalloc.$obj \
@@ -184,7 +184,7 @@ EOBJECTS = \
 	$(INDIR)\wrout_obj.$obj \
 	$(INDIR)\weif_special_table.$obj \
 	$(TOP)\ipc\shared\networku.$obj \
-	$(TOP)\console\winconsole.$lib
+	$(TOP)\console\wwinconsole.$lib
 
 MT_OBJECTS = \
 	$(INDIR)\MTlmalloc.$obj \
@@ -294,7 +294,7 @@ MT_WOBJECTS = \
 	$(INDIR)\MTwrout_obj.$obj \
 	$(INDIR)\MTweif_special_table.$obj \
 	$(TOP)\idrs\mtidr.$lib \
-	$(TOP)\console\mtwinconsole.$lib \
+	$(TOP)\console\mtwwinconsole.$lib \
 
 all:: eif_size.h
 all:: $output_libraries
@@ -351,6 +351,16 @@ finalized.dll : $(OUTDIR) $(OBJECTS)
 	cd ..\run-time
 
 ..\console\mtwinconsole.$lib: ..\console\econsole.c ..\console\argcargv.c
+	cd ..\console
+	$(MAKE)
+	cd ..\run-time
+
+..\console\wwinconsole.$lib: ..\console\econsole.c ..\console\argcargv.c
+	cd ..\console
+	$(MAKE)
+	cd ..\run-time
+
+..\console\mtwwinconsole.$lib: ..\console\econsole.c ..\console\argcargv.c
 	cd ..\console
 	$(MAKE)
 	cd ..\run-time

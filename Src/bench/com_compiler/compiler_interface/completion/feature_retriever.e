@@ -9,6 +9,11 @@ class
 inherit
 	COMPLETION_ENGINE
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -79,7 +84,7 @@ feature {NONE} -- Implementation
 			if feature_table.has_overloaded (a_name) then
 				l_overloaded_features := feature_table.overloaded_items (a_name)
 				l_feature_i := l_overloaded_features.first
-				create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), class_i.file_name)
+				create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), System.class_of_id (feature_table.feat_tbl_id).file_name)
 				from
 					l_overloaded_features.start
 					l_overloaded_features.forth
@@ -94,7 +99,7 @@ feature {NONE} -- Implementation
 				feature_table.search (a_name)
 				if feature_table.found then
 					l_feature_i := feature_table.found_item
-					create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), class_i.file_name)
+					create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), System.class_of_id (feature_table.feat_tbl_id).file_name)
 				end
 			end
 			found := Result /= Void

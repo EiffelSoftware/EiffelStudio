@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	title: STRING is "Generating Code:"
+	title: STRING is "Generating code"
 			-- Task title
 
 	steps_count: INTEGER is

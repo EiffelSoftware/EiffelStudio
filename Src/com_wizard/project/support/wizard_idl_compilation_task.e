@@ -17,7 +17,7 @@ feature -- Access
 			if not environment.is_new_component or not environment.marshaller_generated then
 				Result := "Compiling IDL:"
 			else
-				Result := "Compiling IDL and Marshaller DLL:"
+				Result := "Compiling IDL and marshaller DLL"
 			end
 		end
 

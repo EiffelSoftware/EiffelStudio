@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	title: STRING is "Compiling Code:"
+	title: STRING is "Compiling code"
 			-- Task title
 
 	steps_count: INTEGER is
@@ -72,28 +72,25 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Access
 
-	Compilation_title_c: STRING is "Compiling Generated C Code"
+	Compilation_title_c: STRING is "Compiling C code"
 			-- Compilation message.
 
-	Compilation_title_eiffel: STRING is "Compiling Generated Eiffel Code"
+	Compilation_title_eiffel: STRING is "Compiling Eiffel code"
 			-- Compilation message.
 
-	C_client_compilation_title: STRING is "Compiling Generated C Client Code"
+	C_client_compilation_title: STRING is "Compiling C client code"
 			-- C compilation message.
 
-	C_common_compilation_title: STRING is "Compiling Generated C Common Code"
+	C_common_compilation_title: STRING is "Compiling C common code"
 			-- C compilation message.
 
-	C_server_compilation_title: STRING is "Compiling Generated C Server Code"
+	C_server_compilation_title: STRING is "Compiling C server code"
 			-- C compilation message.
 
-	Compilation_successful: STRING is "Compilation Completed."
+	Compilation_successful: STRING is "Compilation Completed"
 			-- Compilation successful message.
 
-	Compilation_failed: STRING is "Compilation Failed."
-			-- Compilation failed message.
-
-	Eiffel_compilation_title: STRING is "Compiling Eiffel Code"
+	Eiffel_compilation_title: STRING is "Compiling Eiffel code"
 			-- Eiffel compilation message.
 
 end -- class WIZARD_CODE_COMPILATION_TASK

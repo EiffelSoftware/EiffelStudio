@@ -122,7 +122,7 @@ feature -- Reinitialization
 			cluster_name := Void
 			content := Void
 			is_ready := False
-			pos_in_file := 0
+			pos_in_file := 1
 		end
 
 	reset_after_search is
@@ -1103,14 +1103,9 @@ feature {NONE}-- Implementation
 			entities_list: EIFFEL_LIST [TYPE_DEC_AS]
 			id_list: ARRAYED_LIST [INTEGER]
 			stop: BOOLEAN
-			index, count, name_id: INTEGER
+			name_id: INTEGER
 			retried: BOOLEAN
-			name_list: LINKED_LIST [STRING]
-			tst, lower_name: STRING
-			class_i: CLASS_I
-			formal: FORMAL_A
 			l_current_class_c: CLASS_C
-			l_parser: EIFFEL_PARSER			
 		do
 			if retried then
 				Result := Void
@@ -1471,9 +1466,16 @@ feature {NONE} -- Implementation
 			current_class_name_is_not_void: current_class_name /= Void
 			cluster_name_is_not_void: cluster_name /= Void
 			workbench_is_not_compiling: not workbench.is_compiling
+		local
+			l_cluster: CLUSTER_I
 		do
-			current_class_i := Universe.class_named (current_class_name,
-				Universe.cluster_of_name (cluster_name))
+				-- Check if we can find the cluster (this happens if a class text is being loaded
+				-- while starting a compilation, i.e. loading while degree 6 is actually computing
+				-- the cluster hierarchy and `cluster_name' might not be found)
+			l_cluster := Universe.cluster_of_name (cluster_name)
+			if l_cluster /= Void then
+				current_class_i := universe.class_named (current_class_name, l_cluster)
+			end
 		end
 
 	current_class_i: CLASS_I

@@ -18,6 +18,8 @@ inherit
 		end
 
 	EV_TREE_NODE_LIST
+		rename
+			is_parent_recursive as item_is_parent_recursive
 		redefine
 			is_in_default_state,
 			implementation
@@ -143,6 +145,14 @@ feature -- Basic operations
 
 feature {NONE} -- Contract support
 
+	item_is_parent_recursive (a_tree_node: EV_TREE_NODE): BOOLEAN is
+			-- Is `a_tree_node' a parent of `Current'?
+		do
+				-- As we cannot insert a EV_TREE into a EV_TREE_NODE,
+				-- it cannot be True.
+			Result := False
+		end
+		
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do

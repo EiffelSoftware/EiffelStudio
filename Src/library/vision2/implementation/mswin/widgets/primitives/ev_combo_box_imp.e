@@ -330,7 +330,9 @@ feature {NONE} -- Wel implementation
 			-- The selection is about to be changed.
 		do
 			execute_command (Cmd_selection, Void)
-			(ev_children.i_th (wel_selected_item + 1)).execute_command (Cmd_item_activate, Void)
+			if selected then
+				(ev_children.i_th (wel_selected_item + 1)).execute_command (Cmd_item_activate, Void)
+			end
 		end
 
 	on_cbn_editupdate is

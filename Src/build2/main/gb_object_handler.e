@@ -11,11 +11,13 @@ inherit
 	INTERNAL
 		export
 			{NONE} all
+			{ANY} dynamic_type_from_string, is_instance_of
 		end
 	
 	GB_CONSTANTS
 		export
 			{NONE} all
+			{ANY} gb_primitive_object_class_name
 		end
 	
 	GB_SHARED_OBJECT_EDITORS
@@ -339,8 +341,6 @@ feature -- Basic operation
 		
 	add_initial_window is
 			-- Add a new window when there are no other contained.
-		require
-			window_selector_empty: window_selector.is_empty
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
 		do

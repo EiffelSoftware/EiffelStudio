@@ -53,7 +53,6 @@ feature
 			else
 				io.error.putstring ("Invalid user/password!%N")
 			end
-			io.readline
 		end
 
 	select_string: STRING is

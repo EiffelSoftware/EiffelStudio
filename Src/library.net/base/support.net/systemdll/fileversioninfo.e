@@ -7,7 +7,7 @@ frozen external class
 	FILEVERSIONINFO
 
 inherit
-	ANY
+	SYSTEM_OBJECT
 		redefine
 			to_string
 		end

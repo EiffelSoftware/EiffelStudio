@@ -82,7 +82,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	get_service (service: TYPE): ANY is
+	get_service (service: TYPE): SYSTEM_OBJECT is
 		external
 			"IL signature (System.Type): System.Object use System.ComponentModel.Component"
 		alias

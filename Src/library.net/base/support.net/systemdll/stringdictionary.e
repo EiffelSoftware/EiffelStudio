@@ -7,7 +7,7 @@ external class
 	STRINGDICTIONARY
 
 inherit
-	ANY
+	SYSTEM_OBJECT
 		redefine
 			finalize,
 			get_hash_code,
@@ -42,7 +42,7 @@ feature -- Access
 			"get_Values"
 		end
 
-	get_sync_root: ANY is
+	get_sync_root: SYSTEM_OBJECT is
 		external
 			"IL signature (): System.Object use System.Collections.Specialized.StringDictionary"
 		alias
@@ -88,7 +88,7 @@ feature -- Basic Operations
 			"ToString"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	equals (obj: SYSTEM_OBJECT): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Collections.Specialized.StringDictionary"
 		alias

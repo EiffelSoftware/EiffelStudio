@@ -7,7 +7,7 @@ frozen external class
 	EVENTHANDLERLIST
 
 inherit
-	ANY
+	SYSTEM_OBJECT
 		redefine
 			finalize,
 			get_hash_code,
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen get_item (key: ANY): DELEGATE is
+	frozen get_item (key: SYSTEM_OBJECT): DELEGATE is
 		external
 			"IL signature (System.Object): System.Delegate use System.ComponentModel.EventHandlerList"
 		alias
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_item (key: ANY; value: DELEGATE) is
+	frozen set_item (key: SYSTEM_OBJECT; value: DELEGATE) is
 		external
 			"IL signature (System.Object, System.Delegate): System.Void use System.ComponentModel.EventHandlerList"
 		alias
@@ -46,7 +46,7 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	frozen remove_handler (key: ANY; value: DELEGATE) is
+	frozen remove_handler (key: SYSTEM_OBJECT; value: DELEGATE) is
 		external
 			"IL signature (System.Object, System.Delegate): System.Void use System.ComponentModel.EventHandlerList"
 		alias
@@ -74,14 +74,14 @@ feature -- Basic Operations
 			"ToString"
 		end
 
-	frozen add_handler (key: ANY; value: DELEGATE) is
+	frozen add_handler (key: SYSTEM_OBJECT; value: DELEGATE) is
 		external
 			"IL signature (System.Object, System.Delegate): System.Void use System.ComponentModel.EventHandlerList"
 		alias
 			"AddHandler"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	equals (obj: SYSTEM_OBJECT): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.ComponentModel.EventHandlerList"
 		alias

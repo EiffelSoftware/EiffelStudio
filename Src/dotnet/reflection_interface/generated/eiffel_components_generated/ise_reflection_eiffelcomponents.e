@@ -17,11 +17,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	get_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
+	frozen a_internal_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
 		external
-			"IL signature (): ISE.Reflection.UndefineClause use ISE.Reflection.EiffelComponents"
+			"IL field signature :ISE.Reflection.UndefineClause use ISE.Reflection.EiffelComponents"
 		alias
-			"get_UndefineClause"
+			"_internal_UndefineClause"
 		end
 
 	get_rename_clause: ISE_REFLECTION_RENAMECLAUSE is
@@ -29,13 +29,6 @@ feature -- Access
 			"IL signature (): ISE.Reflection.RenameClause use ISE.Reflection.EiffelComponents"
 		alias
 			"get_RenameClause"
-		end
-
-	frozen a_internal_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
-		external
-			"IL field signature :ISE.Reflection.UndefineClause use ISE.Reflection.EiffelComponents"
-		alias
-			"_internal_UndefineClause"
 		end
 
 	get_redefine_clause: ISE_REFLECTION_REDEFINECLAUSE is
@@ -78,6 +71,13 @@ feature -- Access
 			"IL field signature :ISE.Reflection.RenameClause use ISE.Reflection.EiffelComponents"
 		alias
 			"_internal_RenameClause"
+		end
+
+	get_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
+		external
+			"IL signature (): ISE.Reflection.UndefineClause use ISE.Reflection.EiffelComponents"
+		alias
+			"get_UndefineClause"
 		end
 
 	get_select_clause: ISE_REFLECTION_SELECTCLAUSE is

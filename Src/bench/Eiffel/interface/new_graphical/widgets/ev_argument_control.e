@@ -740,9 +740,6 @@ feature {NONE} -- Actions
 			l_text: STRING
 			l_caret_pos: INTEGER
 			l_argument_dialog: EB_ARGUMENT_DIALOG
-			l_list: SPECIAL [ANY]
-			l_counter: INTEGER
-			mem: MEMORY
 		do
 			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then
 				

@@ -20,6 +20,7 @@ cluster
 	wel_structures: 	"$EIFFEL3\library\wel\structs";
 	wel_support:		"$EIFFEL3\library\wel\support";
 	wel_windows:		"$EIFFEL3\library\wel\windows";
+	wel_win32:		"$EIFFEL3\library\wel\win32";
 
 	-- EiffelBase
 	kernel: 		"$EIFFEL3\library\base\kernel";

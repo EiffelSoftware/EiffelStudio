@@ -120,7 +120,7 @@ feature -- Access
 			-- Horizontal position of viewport relative to `item'.
 		do
 			if child /= Void then
-				Result := - child.x_position
+				Result := horizontal_position
 			end
 		end
 
@@ -128,7 +128,7 @@ feature -- Access
 			-- Vertical position of viewport relative to `item'.
 		do
 			if child /= Void then
-				Result := - child.y_position
+				Result := vertical_position
 			end
 		end
 
@@ -138,7 +138,8 @@ feature -- Element change
 			-- Set `x_offset' to `an_x'.
 		do
 			if child /= Void then
-				child.wel_move (- an_x, child.y_position)
+				set_horizontal_position (an_x)
+				Precursor (an_x)
 			end
 		end
 
@@ -146,34 +147,9 @@ feature -- Element change
 			-- Set `y_offset' to `a_y'.
 		do
 			if child /= Void then
-				child.wel_move (child.x_position, - a_y)
+				set_vertical_position (a_y)
+				Precursor (a_y)
 			end
-		end
-
-feature -- Obsolete
-
-	set_horizontal_value (value: INTEGER) is
-			-- Make `value' the new horizontal value where `value' is given in percentage.
-		local
-			step: INTEGER
-		do
-		--	if horizontal_bar_shown then
-		--		step := (maximal_horizontal_position - minimal_horizontal_position) * value // 100
-		--		step := step + minimal_horizontal_position
-		--		horizontal_update (horizontal_position - step, step)
-		--	end
-		end
-
-	set_vertical_value (value: INTEGER) is
-			-- Make `value' the new vertical value where `value' is given in percentage.
-		local
-			step: INTEGER
-		do
-		--	if vertical_bar_shown then
-		--		step := (maximal_vertical_position - minimal_vertical_position) * value // 100
-		--		step := step + minimal_vertical_position
-		--		vertical_update (vertical_position - step, step)
-		--	end
 		end
 
 feature {NONE} -- Implementation
@@ -203,9 +179,17 @@ feature {NONE} -- Implementation
 			wel_cw_move_and_resize (a_x, a_y, a_width, a_height, repaint)
 	
 			if child /= Void then
-				child.parent_ask_resize (client_width, client_height)
+				child.set_move_and_size ((0).min (- x_offset),
+					(0).min (- y_offset), client_width, client_height)
 				cw := child.width - client_width
 				ch := child.height - client_height
+
+				if x_offset > cw then
+					set_x_offset (cw)
+				end
+				if y_offset > ch then
+					set_y_offset (ch)
+				end
 
 				if cw > 0 then
 					enable_horizontal_scroll_bar
@@ -248,6 +232,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/22 00:58:49  brendel
+--| Implemented.
+--|
 --| Revision 1.24  2000/04/22 00:06:17  brendel
 --| Started implementation of interface features.
 --|

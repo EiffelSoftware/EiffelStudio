@@ -104,7 +104,16 @@ feature {NONE} -- Execution
 
 	perform_compilation is
 		do
-			Eiffel_project.finalize (keep_assertions);
-		end;
+			if
+				Workbench.system_defined and then
+				System.keep_assertions /= keep_assertions
+			then
+					-- Force refinalization when user changed is mind since
+					-- last time.
+				System.set_finalize
+			end
+
+			Eiffel_project.finalize (keep_assertions)
+		end
 
 end -- class EWB_FINALIZE

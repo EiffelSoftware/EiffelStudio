@@ -16,16 +16,6 @@ inherit
 			interface
 		end
 
-	EV_COMPOSED_ITEM_IMP
-		rename
-			count as columns,
-			set_count as set_columns
-		undefine
-			parent
-		redefine
-			parent_imp,
-			interface
-		end
 
 create
 	make
@@ -40,65 +30,17 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Create the linked lists
-		do
-			-- create the arrayed_list where text will be stored.
-			create internal_text.make (0)
-			internal_text.extend ("")
-
-			-- create arrayed_list where pixmaps will be stored.
-			create internal_pixmaps.make (0)
-			internal_pixmaps.extend (Void)
+		do			
 			is_initialized := True
 		end
 
-feature -- Access
-
-	columns: INTEGER is
-			-- Number of columns in the row
-		do
-			Result := internal_text.count
-		end
-
-	--| FIXME Not used in interface. 
-	--background_color: EV_COLOR is
-			-- Color used for the background of the widget
-			-- Currently, on windows, we can only set the color
-			-- for the whole mclist and not for each row.
-			-- Therefore, this feature is not available to the client, yet.
-		--local
-		--	r, g, b: INTEGER
-		--do
-		--	C.c_gtk_clist_get_bg_color (
-		--		parent_imp.list_widget,
-		--		index - 1, $r, $g, $b
-		--	)
-		--	create Result.make_with_rgb (r, g, b)
-		--end
-
-	--| FIXME Not used in interface.
-	--foreground_color: EV_COLOR is
-			-- Color used for the foreground of the widget,
-			-- usually the text.
-			-- Currently, on windows, we can only set the color
-			-- for the whole mclist and not for each row.
-			-- Therefore, this feature is not available to the client, yet.
-	--	local
-	--		r, g, b: INTEGER
-	--	do
-	--		C.c_gtk_clist_get_fg_color (
-	--			parent_imp.list_widget,
-	--			index - 1, $r, $g, $b
-	--		)
-	--		create Result.make_with_rgb (r, g, b)
-	--	end
-
 feature -- Status report
 	
-	destroyed: BOOLEAN is
+	--destroyed: BOOLEAN is
 			-- Is Current object destroyed?  
-		do
-			Result := (internal_text = Void) and (internal_pixmaps = void)
-		end
+	--	do
+	--		Result := (internal_text = Void) and (internal_pixmaps = void)
+	--	end
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
@@ -112,12 +54,14 @@ feature -- Status report
 
 feature -- Status setting
 
+	update is
+		do
+		end
+
 	destroy is
 			-- Destroy actual object.
 		local
 		do
-			internal_text := Void
-			internal_pixmaps := Void
 			parent_imp := Void	
 		end
 
@@ -131,43 +75,6 @@ feature -- Status setting
 			-- Deselect the row from the list.
 		do
 			C.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
-		end
-
-	set_columns (value: INTEGER) is
-			-- if value > number of columns, add empty columns 
-			-- if value < number of columns, remove the last columns
-			-- does nothing if equal.
-		do
-			if (value > columns) then
-				from
-					internal_text.finish
-					internal_pixmaps.finish
-				until
-					internal_text.count = value
-				loop
-					internal_text.extend ("")
-					internal_pixmaps.extend (Void)
-				end
-			elseif (value < columns) then
-				from
-					internal_text.finish
-					internal_pixmaps.finish
-				until
-					internal_text.count = value
-				loop
-					-- Decreasing the number of fields in the 
-					-- `internal_text' array.
-					internal_text.remove
-
-					-- Decreasing the number of fields in the 
-					-- `internal_pixmaps' array.
-					internal_pixmaps.remove
-				
-					internal_text.finish
-					internal_pixmaps.finish
-				end
-			end
-				
 		end
 
 feature -- PND
@@ -207,7 +114,10 @@ feature -- Element Change
 		do
 			-- Prepare the pixmap and the text.
 			txt := a_text.to_c
-			pix_imp := (internal_pixmaps @ column)
+
+			if column = 1 then
+				pix_imp ?= pixmap.implementation
+			end
 
 			-- Set the pixmap and the text in the given column.
 			if (pix_imp /= void and then parent_imp /= Void) then
@@ -227,9 +137,19 @@ feature -- Element Change
 					$txt
 				)
 			end
-			-- Update the `internal_text' and `internal_pixmaps' arrays.
-			internal_text.go_i_th (column)
-			internal_text.put (a_text)
+		end
+
+	set_pixmap (a_pix: EV_PIXMAP) is
+		do
+			set_cell_pixmap (1, a_pix)
+			pixmap := a_pix
+		end
+
+	pixmap: EV_PIXMAP
+
+	remove_pixmap is
+		do
+			unset_cell_pixmap (1)
 		end
 
 	set_cell_pixmap (column: INTEGER; pix: EV_PIXMAP) is
@@ -242,7 +162,7 @@ feature -- Element Change
 		do
 			-- Prepare the pixmap and the text.
 			pix_imp ?= pix.implementation
-			txt := cell_text (column)
+			txt := interface.i_th (column)
 			a := txt.to_c
 
 			-- Set the pixmap and the text in the given column.
@@ -266,9 +186,6 @@ feature -- Element Change
 					$a
 				)
 			end
-			-- Update the `internal_text' and `internal_pixmaps' arrays.
-			internal_pixmaps.go_i_th (column)
-			internal_pixmaps.put (pix_imp)
 		end
 
 	unset_cell_pixmap (column: INTEGER) is
@@ -281,33 +198,14 @@ feature -- Element Change
 			)
 		end
 
-	--| FIXME Not used in interface.
-	--set_background_color (color: EV_COLOR) is
-			-- Make `color' the new `background_color'.
-			-- Currently, on windows, we can only set the color
-			-- for the whole mclist and not for each row.
-			-- Therefore, this feature is not available to the client, yet.
-	--	do
-			--| FIXME IEK External expects integers for colors
-			--C.c_gtk_clist_set_bg_color
-			--		(parent_imp.list_widget,
-			-- index - 1, color.red, color.green, color.blue)
-	--	end
-
-	--| FIXME Not used in interface.
-	--set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'.
-			-- Currently, on windows, we can only set the color
-			-- for the whole mclist and not for each row.
-			-- Therefore, this feature is not available to the client, yet.
-	--	do
-			--| FIXME IEK External expects integers for colors
-			--C.c_gtk_clist_set_fg_color
-			--	(parent_imp.list_widget,
-			--	index - 1, color.red, color.green, color.blue)
-	--	end
-
 feature {EV_ANY_I} -- Implementation
+
+	set_parent_imp (par_imp: EV_MULTI_COLUMN_LIST_IMP) is
+		do
+			parent_imp := par_imp
+		end
+	
+	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 
 	index: INTEGER is
 			-- Index of the row in the list
@@ -326,9 +224,6 @@ feature {EV_ANY_I} -- Implementation
 		end	
 
 	interface: EV_MULTI_COLUMN_LIST_ROW
-
-	parent_imp: EV_MULTI_COLUMN_LIST_IMP
-		-- Multi-column list that own the current object 
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 
@@ -353,6 +248,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/23 19:16:59  king
+--| Made compilable with new row structure
+--|
 --| Revision 1.37  2000/03/17 23:23:45  king
 --| Added set_pointer_style as it doesnt inherit from widget
 --|

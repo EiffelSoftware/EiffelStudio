@@ -83,7 +83,7 @@ feature -- Basic operations
 			-- Negation
 		do
 			!! Result;
-			Result.set_item ( item)
+			Result.set_item (not item)
 		end;
 
 	infix "or" (other: like Current): BOOLEAN is
@@ -140,7 +140,7 @@ invariant
 
 	involutive_negation: is_equal (not (not Current));
 	non_contradiction: not (Current and (not Current));
-	completeness: Current or (not Current)
+	completeness: Current or else (not Current)
 
 end -- class BOOLEAN_REF
 

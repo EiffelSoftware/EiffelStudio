@@ -1048,10 +1048,9 @@ feature -- Skeleton generation
 			end
 			buffer.putstring ("-1};%N%N")
 
-			if	byte_context.final_mode
-				and
-				associated_class.has_invariant
-				and
+			if
+				byte_context.final_mode and
+				associated_class.has_invariant and
 				associated_class.assertion_level.check_invariant
 			then
 					-- Generate extern declaration for invariant
@@ -1105,8 +1104,8 @@ feature -- Skeleton generation
 
 			if byte_context.final_mode then
 				if
-					a_class.has_invariant
-					and a_class.assertion_level.check_invariant
+					a_class.has_invariant and then
+					a_class.assertion_level.check_invariant
 				then
 					buffer.putstring (
 						Invariant_body_id.feature_name (id))

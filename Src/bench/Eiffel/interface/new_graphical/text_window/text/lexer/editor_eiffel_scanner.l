@@ -270,10 +270,17 @@ create
 
 ----------/** Eiffel strings **/------------------------------------------------
 
-[\"]([^\n\"]*(%\")*)*[\"]		|										
-[\"]([^\n\"]*(%\")*)*[%\n]	|
-[ \t\r](%)[^\n]*[%\n]		|
-[ \t\r](%)[^\n]*[\"]			{
+-- We accept here a fully formed Eiffel string which is complete, i.e:
+-- 1 - whatever but `"' and '\n' except '%"' which is enclosed in
+--     between (","), (",%), (%,%) or (%,")
+-- We also accept beginning of a string, i.e:
+-- 2 - whatever that start with either `"' or `%' and that does
+--     not finishes with a `"' or `%'. Because we needed to support
+--     the special character such as %N, %T,... we have to list all of
+--     them in the second expression.
+
+[%\"]([^\n\"]|%\")*(\"|%)	|
+[%\"]([^\n\"\%]|%\"|%A|%B|%C\%D|%F|%H|%L|%N|%Q|%R|%S|%T|%U|%V|%%|%\'|%\(|%\)|%<|%>|%\/[0-9]{1,3}\/)*		{
 					-- Eiffel String
 					if not in_comments then
 						create {EDITOR_TOKEN_STRING} curr_token.make(text, tab_size_cell)

@@ -74,6 +74,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_move_action (a_command, argument)
@@ -85,6 +86,7 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_value_changed_action (a_command, argument)
@@ -94,6 +96,7 @@ feature -- Callbacks (adding)
 			-- Remove `a_command' from the list of action to be executed when
 			-- slide is moved.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_move_action (a_command, argument)
@@ -103,6 +106,7 @@ feature -- Callbacks (adding)
 			-- Remove `a_command' from the list of action to be executed when
 			-- value is changed.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_value_changed_action (a_command, argument)
@@ -113,6 +117,8 @@ feature -- Slider setup (max, min, granularity ...)
 	granularity: INTEGER is
 			-- Value of the amount that the current slider can be moved 
 			-- whenever a move action occurs
+		require
+			exists: not destroyed
 		do
 			Result := implementation.granularity
 		ensure
@@ -122,6 +128,8 @@ feature -- Slider setup (max, min, granularity ...)
 
 	maximum: INTEGER is
 			-- Maximum value of the slider
+		require
+			exists: not destroyed
 		do
 			Result := implementation.maximum
 		ensure
@@ -130,6 +138,8 @@ feature -- Slider setup (max, min, granularity ...)
 
 	minimum: INTEGER is
 			-- Minimum value of the slider
+		require
+			exists: not destroyed
 		do
 			Result := implementation.minimum
 		ensure
@@ -140,6 +150,7 @@ feature -- Slider setup (max, min, granularity ...)
 			-- Set amount to move the slider when a move action 
 			-- occurs to `new_granularity'.
 		require
+			exists: not destroyed;
 			granularity_large_enough: new_granularity >= 1;
 			granularity_small_enough: new_granularity <= (maximum - minimum)
 		do
@@ -151,6 +162,7 @@ feature -- Slider setup (max, min, granularity ...)
 	set_maximum (new_maximum: INTEGER) is
 			-- Set maximum value of the slider to `new_maximum'.
 		require
+			exists: not destroyed;
 			maximum_greater_than_minimum: new_maximum > minimum
 		do
 			if value > new_maximum then
@@ -165,6 +177,7 @@ feature -- Slider setup (max, min, granularity ...)
 	set_minimum (new_minimum: INTEGER) is
 			-- Set minimum value of the slider to `new_minimum'.
 		require
+			exists: not destroyed;
 			minimum_smaller_than_maximum: new_minimum < maximum
 		do
 			if value < new_minimum then
@@ -181,6 +194,7 @@ feature -- Slider Value
 	set_value (new_value: INTEGER) is
 			-- Set value to `new_value'.
 		require
+			exists: not destroyed;
 			value_small_enough: new_value <= maximum;
 			value_large_enough: new_value >= minimum
 		do
@@ -191,6 +205,8 @@ feature -- Slider Value
 
 	value: INTEGER is
 			-- Value of the current slider position along the scale
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.value
 		ensure
@@ -202,6 +218,8 @@ feature -- Output Mode
 
 	is_output_only: BOOLEAN is
 			-- Is scale mode output only?
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.is_output_only
 		end;
@@ -209,6 +227,8 @@ feature -- Output Mode
 	set_output_only (flag: BOOLEAN) is
 			-- Set scale mode to output only if `flag'. The user
 			-- can not modify the current scale interactively.
+		require
+			exists: not destroyed;
 		do
 			implementation.set_output_only (flag)
 		ensure
@@ -220,6 +240,8 @@ feature -- Orientation of Slider
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
+		require
+			exists: not destroyed;
 		do
 			implementation.set_horizontal (flag)
 		ensure
@@ -228,6 +250,8 @@ feature -- Orientation of Slider
 
 	is_horizontal: BOOLEAN is
 			-- Is scale oriented horizontal?
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.is_horizontal
 		end; 
@@ -237,6 +261,7 @@ feature -- Text
 	set_text (a_text: STRING) is
 			-- Set scale text to `a_text'.
 		require
+			exists: not destroyed;
 			not_text_void: not (a_text = Void)
 		do
 			implementation.set_text (a_text);
@@ -246,6 +271,8 @@ feature -- Text
 
 	text: STRING is
 			-- Scale text
+		require
+			exists: not destroyed
 		do
 			Result := implementation.text
 		end;
@@ -268,10 +295,10 @@ feature {NONE}
 			-- Set default values to current scale.
 		do
 		ensure then
-			maximum = 100;
-			minimum = 0;
-			granularity = 10;
-			value = 0;
+			--maximum = 100;
+			--minimum = 0;
+			--granularity = 10;
+			--value = 0;
 			--not is_horizontal;
 		end;
 
@@ -279,27 +306,33 @@ feature
  
  
     is_maximum_right_bottom: BOOLEAN is 
+		require
+			exists: not destroyed;
 		do 
 			Result := implementation.is_maximum_right_bottom;
 		end;
 
     set_maximum_right_bottom (flag: BOOLEAN) is 
+		require
+			exists: not destroyed;
 		do 
 			implementation.set_maximum_right_bottom (flag);
 		end;
 
     show_value (flag: BOOLEAN) is 
+		require
+			exists: not destroyed;
 		do 
 			implementation.show_value (flag);
 		end;
 
     is_value_shown: BOOLEAN is 
+		require
+			exists: not destroyed;
 		do 
 			Result := implementation.is_value_shown;
 		end;
  
-
-
 end
 
 

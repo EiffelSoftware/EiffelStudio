@@ -38,6 +38,8 @@ feature -- Color
 
 	foreground_color: COLOR is
 			-- Foreground color of manager widget
+		require
+			exists: not destroyed
 		do
 			Result:= implementation.foreground_color
 		end;
@@ -45,6 +47,7 @@ feature -- Color
 	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
 		require
+			exists: not destroyed;
 			color_not_void: not (new_color = Void)
 		do
 			implementation.set_foreground_color (new_color)
@@ -55,6 +58,7 @@ feature -- Color
 	set_foreground (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
 		require
+			exists: not destroyed;
 			color_not_void: not (new_color = Void)
 		do
 			set_foreground_color (new_color)

@@ -7,7 +7,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class DIALOG 
+deferred class DIALOG 
 
 inherit
 
@@ -21,6 +21,8 @@ feature -- Windowing
 	allow_resize is
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
+		require
+			exists: not destroyed
 		do
 			implementation.allow_resize
 		end;
@@ -28,6 +30,8 @@ feature -- Windowing
 	forbid_resize is
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
+		require
+			exists: not destroyed
 		do
 			implementation.forbid_resize
 		end;
@@ -35,18 +39,24 @@ feature -- Windowing
 	is_cascade_grab: BOOLEAN is
 			-- Is the shell popped up with cascade grab (allowing the other
 			-- shells popped up with grab to receive events) ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_cascade_grab
 		end;
 
 	is_exclusive_grab: BOOLEAN is
 			-- Is the shell popped up with exclusive grab ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_exclusive_grab
 		end;
 
 	is_no_grab: BOOLEAN is
 			-- Is the shell popped up with no grab ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_no_grab
 		end;
@@ -54,24 +64,32 @@ feature -- Windowing
 	is_poped_up: BOOLEAN is
 			-- Is the popup widget popped up on screen ?
 		obsolete "Use is_popped_up, corrected spelling for feature."
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_popped_up
 		end;
 
 	is_popped_up: BOOLEAN is
 			-- Is the popup widget popped up on screen ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_popped_up
 		end;
 
 	lower is
 			-- Lower the dialog box in the stacking order.
+		require
+			exists: not destroyed
 		do
 			implementation.lower
 		end;
 
 	popdown is
 			-- Popdown dialog shell.
+		require
+			exists: not destroyed
 		do
 			implementation.popdown
 		ensure
@@ -80,6 +98,8 @@ feature -- Windowing
 
 	popup is
 			-- Popup a dialog shell with no grab on it.
+		require
+			exists: not destroyed
 		do
 			implementation.popup
 		ensure
@@ -88,6 +108,8 @@ feature -- Windowing
 
 	raise is
 			-- Raise the dialog box to the top of the stacking order.
+		require
+			exists: not destroyed
 		do
 			implementation.raise
 		end;
@@ -95,6 +117,8 @@ feature -- Windowing
 	set_cascade_grab is
 			-- Specifies that the shell would be popped up with cascade grab
 			-- (allowing the other shells popped up with grab to receive events).
+		require
+			exists: not destroyed
 		do
 			implementation.set_cascade_grab
 		ensure
@@ -103,6 +127,8 @@ feature -- Windowing
 
 	set_exclusive_grab is
 			-- Specifies that the shell would be popped up with exclusive grab.
+		require
+			exists: not destroyed
 		do
 			implementation.set_exclusive_grab
 		ensure
@@ -111,6 +137,8 @@ feature -- Windowing
 
 	set_no_grab is
 			-- Specifies that the shell would be popped up with no grab.
+		require
+			exists: not destroyed
 		do
 			implementation.set_no_grab
 		ensure
@@ -120,13 +148,17 @@ feature -- Windowing
 feature
 
 	dialog_command_target is
-			-- set the command target to be the dialog shell
+			-- Set the command target to be the dialog shell
+		require
+			exists: not destroyed
 		do
 			implementation.dialog_command_target;
 		end;
 
 	widget_command_target is
 			-- set the command target to be the widget
+		require
+			exists: not destroyed
 		do
 			implementation.widget_command_target;
 		end

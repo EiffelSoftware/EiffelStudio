@@ -69,6 +69,7 @@ feature -- Layout
 			-- layout, or number of rows if row
 			-- layout.
 		require
+			exists: not destroyed;
 			Not_negative_number: not (a_number < 0);
 			Not_nul_number: not (a_number = 0)
 		do
@@ -77,12 +78,16 @@ feature -- Layout
 
 	is_row_layout: BOOLEAN is
 			-- Are children laid out in rows?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_row_layout
 		end;
 
 	set_row_layout is
 			-- Lay the children out in rows.
+		require
+			exists: not destroyed
 		do
 			implementation.set_row_layout (True)
 		ensure
@@ -91,6 +96,8 @@ feature -- Layout
 
 	set_column_layout is
 			-- Lay the children out in columns.
+		require
+			exists: not destroyed
 		do
 			implementation.set_row_layout (False)
 		ensure
@@ -103,6 +110,8 @@ feature -- Margin
 			-- Amount of blank space between the top edge
 			-- of row column and the first item in each column, and the
 			-- bottom edge of row column and the last item in each column
+		require
+			exists: not destroyed
 		do
 			Result:= implementation.margin_height
 		ensure
@@ -113,6 +122,8 @@ feature -- Margin
 			-- Amount of blank space between the left edge
 			-- of row column and the first item in each row , and the
 			-- right edge of row column and the last item in each row
+		require
+			exists: not destroyed
 		do
 			Result:= implementation.margin_width
 		ensure
@@ -124,6 +135,7 @@ feature -- Margin
 			-- of row column and the first item in each column, and the
 			-- bottom edge of row column and the last item in each column.
 		require
+			exists: not destroyed;
 			not_negative_margin_height: new_margin_height >= 0
 		do
 			implementation.set_margin_height (new_margin_height)
@@ -136,6 +148,7 @@ feature -- Margin
 			-- of row column and the first item in each row , and the
 			-- right edge of row column and the last item in each row.
 		require
+			exists: not destroyed;
 			not_negative_margin_width: new_margin_width >= 0
 		do
 			implementation.set_margin_width (new_margin_width)
@@ -150,6 +163,8 @@ feature  -- Children widgets manipulation
 			-- only width is set to be the same as the widest one, in
 			-- horizontal layout mode only height is set to be the same
 			-- as the tallest one.
+		require
+			exists: not destroyed
 		do
 			implementation.set_free_size
 		end;
@@ -157,6 +172,8 @@ feature  -- Children widgets manipulation
 	set_same_size is
 			-- Set width of items to be the same as the widest one
 			-- and height as the tallest one.
+		require
+			exists: not destroyed
 		do
 			implementation.set_same_size
 		end; 
@@ -164,6 +181,7 @@ feature  -- Children widgets manipulation
 	set_spacing (new_spacing: INTEGER) is
 			-- Set spacing between items to `new_spacing'.
 		require
+			exists: not destroyed;
 			Not_spacing_negative: new_spacing >= 0
 		do
 			implementation.set_spacing (new_spacing)
@@ -173,6 +191,8 @@ feature  -- Children widgets manipulation
 
 	spacing: INTEGER is
 			-- Spacing between items
+		require
+			exists: not destroyed
 		do
 			Result:= implementation.spacing
 		ensure

@@ -65,6 +65,8 @@ feature -- Help
 	help_button: MENU_B is
 			-- Menu Button which appears at the lower right corner of the
 			-- menu bar
+		require
+			exists: not destroyed
 		do
 			Result := implementation.help_button
 		end;
@@ -72,6 +74,8 @@ feature -- Help
 	set_help_button (button: MENU_B) is
 			-- Set the Menu Button which appears at the lower right corner
 			-- of the menu bar.
+		require
+			exists: not destroyed
 		do
 			implementation.set_help_button (button)
 		ensure
@@ -79,11 +83,15 @@ feature -- Help
 		end;
 
 	allow_recompute_size is
+		require
+			exists: not destroyed
 		do
 			implementation.allow_recompute_size;
 		end;
 
 	forbid_recompute_size is
+		require
+			exists: not destroyed
 		do
 			implementation.forbid_recompute_size;
 		end;

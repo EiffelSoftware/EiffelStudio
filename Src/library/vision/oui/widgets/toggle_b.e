@@ -70,6 +70,7 @@ feature -- Calllbacks (adding and removing)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed;
 			Valid_command: a_command /= Void
 		do
 			implementation.add_value_changed_action (a_command, argument)
@@ -89,6 +90,7 @@ feature -- Calllbacks (adding and removing)
 			-- Remove `a_command' with `argument' from the list of action 
 			-- to be executed when value is changed.
 		require
+			exists: not destroyed;
 			valid_command: a_command /= Void
 		do
 			implementation.remove_value_changed_action (a_command, argument)
@@ -106,20 +108,30 @@ feature -- State of Toggle Button
 	set_toggle_on is
 			-- Set Current toggle on and set
 			-- state to True.
+		require
+			exists: not destroyed
 		do
 			implementation.set_toggle_on
+		ensure
+			state_is_true: state
 		end;
 
 	set_toggle_off is 
 			-- Set Current toggle off and set
 			-- state to False.
+		require
+			exists: not destroyed
 		do
 			implementation.set_toggle_off
+		ensure
+			state_is_false: not state
 		end;
 
 	arm is
 			-- Set `state' to True and call 
 			-- callback (if set).
+		require
+			exists: not destroyed
 		do
 			implementation.arm
 		ensure
@@ -129,6 +141,8 @@ feature -- State of Toggle Button
 	disarm is
 			-- Set `state' to False and call 
 			-- callback (if set).
+		require
+			exists: not destroyed
 		do
 			implementation.disarm
 		ensure
@@ -152,6 +166,8 @@ feature
 
 	state: BOOLEAN is
 			-- State of current toggle button.
+		require
+			exists: not destroyed
 		do
 			Result := implementation.state
 		end 

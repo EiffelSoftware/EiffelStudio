@@ -55,6 +55,7 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.add_cancel_action (a_command, argument)
@@ -64,6 +65,7 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.add_help_action (a_command, argument)
@@ -73,6 +75,7 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.add_ok_action (a_command, argument)
@@ -80,18 +83,24 @@ feature
 
 	hide_cancel_button is
 			-- Make cancel button invisible.
+		require
+			exists: not destroyed;
 		do
 			implementation.hide_cancel_button
 		end;
 
 	hide_help_button is
 			-- Make help button invisible.
+		require
+			exists: not destroyed;
 		do
 			implementation.hide_help_button
 		end;
 
 	hide_ok_button is
 			-- Make ok button invisible.
+		require
+			exists: not destroyed;
 		do
 			implementation.hide_ok_button
 		end;
@@ -109,6 +118,7 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.remove_cancel_action (a_command, argument)
@@ -118,6 +128,7 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.remove_help_action (a_command, argument)
@@ -127,6 +138,7 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.remove_ok_action (a_command, argument)
@@ -136,6 +148,7 @@ feature
 			-- Set `a_label' as label for cancel button,
 			-- by default this label is `cancel'.
 		require
+			exists: not destroyed;
 			not_label_void: not (a_label = Void)
 		do
 			implementation.set_cancel_label (a_label)
@@ -143,12 +156,16 @@ feature
 
 	set_center_alignment is
 			-- Set message alignment to center.
+		require
+			exists: not destroyed
 		do
 			implementation.set_center_alignment
 		end;
 
 	set_end_alignment is
 			-- Set message alignment to end.
+		require
+			exists: not destroyed
 		do
 			implementation.set_end_alignment
 		end;
@@ -157,6 +174,7 @@ feature
 			-- Set `a_label' as label for help button,
 			-- by default this label is `help'.
 		require
+			exists: not destroyed;
 			not_label_void: not (a_label = Void)
 		do
 			implementation.set_help_label (a_label)
@@ -165,6 +183,7 @@ feature
 	set_message (a_message: STRING) is
 			-- Set `a_message' as message.
 		require
+			exists: not destroyed;
 			not_message_void: not (a_message = Void)
 		do
 			implementation.set_message (a_message)
@@ -174,6 +193,7 @@ feature
 			-- Set `a_label' as label for ok button,
 			-- by default this label is `ok'.
 		require
+			exists: not destroyed;
 			not_label_void: not (a_label = Void)
 		do
 			implementation.set_ok_label (a_label)
@@ -181,24 +201,32 @@ feature
 
 	set_start_alignment is
 			-- Set message alignment to beginning.
+		require
+			exists: not destroyed;
 		do
 			implementation.set_start_alignment
 		end;
 
 	show_cancel_button is
 			-- Make cancel button visible.
+		require
+			exists: not destroyed;
 		do
 			implementation.show_cancel_button
 		end;
 
 	show_help_button is
 			-- Make help button visible.
+		require
+			exists: not destroyed;
 		do
 			implementation.show_help_button
 		end;
 
 	show_ok_button is
 			-- Make ok button visible.
+		require
+			exists: not destroyed;
 		do
 			implementation.show_ok_button
 		end

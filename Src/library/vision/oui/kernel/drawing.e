@@ -22,6 +22,7 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- current area is exposed.
 		require
+			exists: not destroyed
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.add_expose_action (a_command, argument)
@@ -29,6 +30,8 @@ feature
 
 	clear is
 			-- Clear the entire area.
+		require
+			exists: not destroyed
 		do
 			implementation.clear
 		end;
@@ -42,6 +45,7 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is exposed.
 		require
+			exists: not destroyed
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.remove_expose_action (a_command, argument)
@@ -50,6 +54,7 @@ feature
 	set_clip (a_clip: CLIP) is
 			-- Set a clip area.
 		require
+			exists: not destroyed;
 			a_clip_exists: not (a_clip = Void)
 		do
 			implementation.set_clip (a_clip)
@@ -57,9 +62,15 @@ feature
 
 	set_no_clip is
 			-- Remove all clip area.
+		require
+			exists: not destroyed
 		do
 			implementation.set_no_clip
-		end
+		end;
+
+	destroyed: BOOLEAN is
+		deferred
+		end;
 
 end
 

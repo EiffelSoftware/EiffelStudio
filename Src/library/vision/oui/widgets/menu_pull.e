@@ -65,6 +65,8 @@ feature -- Menu
 
 	menu_button: MENU_B is
 			-- Menu button 
+		require
+			exists: not destroyed
 		do
 			Result := implementation.menu_button
 		end;
@@ -85,11 +87,11 @@ feature -- Menu
 			Result := parent.real_x + x;
 		end;
 
-
 	real_y: INTEGER is
 		do
 			Result := parent.real_y + y;
 		end;
+
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 	implementation: MENU_PULL_I;

@@ -77,6 +77,7 @@ feature -- Text size
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
+			exists: not destroyed
 			Valid_command: a_command /= Void
 		do
 			implementation.add_activate_action (a_command, argument)
@@ -86,6 +87,7 @@ feature -- Text size
 			-- Remove `a_command' from the list of action to be executed 
 			-- when an activate event occurs.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.remove_activate_action (a_command, argument)
@@ -94,12 +96,16 @@ feature -- Text size
 	maximum_size: INTEGER is
 			-- Maximum number of characters in current
 			-- text field
+		require
+			exists: not destroyed
 		do
 			Result := implementation.maximum_size
 		end; 
 
 	count: INTEGER is
 			-- Number of character in current text field
+		require
+			exists: not destroyed
 		do
 			Result := implementation.count
 		ensure
@@ -109,6 +115,7 @@ feature -- Text size
 	set_maximum_size (a_max: INTEGER) is
 			-- Set maximum_size to `a_max'.
 		require
+			exists: not destroyed;
 			not_negative_maximum: a_max >= 0
 		do
 			implementation.set_maximum_size (a_max)
@@ -118,6 +125,8 @@ feature -- Text manipulation
 
 	text: STRING is
 			-- Value of current text field
+		require
+			exists: not destroyed
 		do
 			Result := implementation.text
 		ensure
@@ -127,6 +136,7 @@ feature -- Text manipulation
 	append (a_text: STRING) is
 			-- Append `a_text' at the end of current text.
 		require
+			exists: not destroyed;
 			not_a_text_void: not (a_text = Void)
 		do
 			implementation.append (a_text)
@@ -134,6 +144,8 @@ feature -- Text manipulation
 
 	clear is
 			-- Clear current text field.
+		require
+			exists: not destroyed
 		do
 			implementation.clear
 		end;
@@ -142,6 +154,7 @@ feature -- Text manipulation
 			-- Insert `a_text' in current text field at `a_position'.
 			-- Same as `replace (a_position, a_position, a_text)'.
 		require
+			exists: not destroyed;
 			not_a_text_void: not (a_text = Void);
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= count
@@ -157,6 +170,7 @@ feature -- Text manipulation
 	replace (from_position, to_position: INTEGER; a_text: STRING) is
 			-- Replace text from `from_position' to `to_position' by `a_text'.
 		require
+			exists: not destroyed;
 			not_text_void: not (a_text = Void);
 			from_position_smaller_th_to_position: from_position <= to_position;
 			from_position_large_enough: from_position >= 0;
@@ -172,6 +186,7 @@ feature -- Text manipulation
 	set_text (a_text: STRING) is
 			-- Set `text' to `a_text'.
 		require
+			exists: not destroyed;
 			not_a_text_void: not (a_text = Void)
 		do
 			implementation.set_text (a_text)

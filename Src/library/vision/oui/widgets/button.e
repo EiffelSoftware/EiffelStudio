@@ -28,7 +28,8 @@ feature -- Callback (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
-			Valid_command: a_command /= Void
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_activate_action (a_command, argument)
 		end;
@@ -39,7 +40,8 @@ feature -- Callback (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
-			Valid_command: a_command /= Void
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_arm_action (a_command, argument)
 		end;
@@ -50,7 +52,8 @@ feature -- Callback (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
-			Valid_command: a_command /= Void
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_release_action (a_command, argument)
 		end;
@@ -61,7 +64,8 @@ feature -- Callbacks (removing)
 			-- Remove `a_command' with `argument' from the list of action 
 			-- to be executed when current arrow button is activated.
 		require
-			Valid_command: a_command /= Void
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_activate_action (a_command, argument)
 		end;
@@ -70,7 +74,8 @@ feature -- Callbacks (removing)
 			-- Remove `a_command' with `argument' from the list of action 
 			-- to be executed when current arrow button is armed.
 		require
-			Valid_command: a_command /= Void
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_arm_action (a_command, argument)
 		end;
@@ -79,7 +84,8 @@ feature -- Callbacks (removing)
 			-- Remove `a_command' with `argument' from the list of action 
 			-- to be executed when current arrow button is released.
 		require
-			Valid_command: a_command /= Void
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_release_action (a_command, argument)
 		end;
@@ -89,6 +95,8 @@ feature -- Resizing policies
 	allow_recompute_size is
 			-- Allow current button to recompute its size according to
 			-- changes on its text.
+		require
+			exists: not destroyed
 		do
 			implementation.allow_recompute_size
 		end;
@@ -96,39 +104,48 @@ feature -- Resizing policies
 	forbid_recompute_size is
 			-- Forbid current button to recompute its size according to
 			-- changes on its text.
+		require
+			exists: not destroyed
 		do
 			implementation.forbid_recompute_size
-		end; -- forbid_recompute_size
+		end; 
 
 feature -- Text 
 
 	set_center_alignment is
 			-- Set text alignment of current label to center
+		require
+			exists: not destroyed
 		do
 			implementation.set_center_alignment
 		end;
  
 	set_left_alignment is
 			-- Set text alignment of current label to left.
+		require
+			exists: not destroyed
 		do
 			implementation.set_left_alignment
 		end;
 
 	text: STRING is
 			-- Text of current button
+		require
+			exists: not destroyed
 		do
 			Result:= implementation.text
-		end; -- text
+		end; 
 
 	set_text (a_text: STRING) is
 			-- Set current button text to `a_text'.
 		require
-			not_text_void: not (a_text = Void)
+			exists: not destroyed;
+			not_text_void: a_text /= Void
 		do
 			implementation.set_text (a_text)
 		ensure
 			text.is_equal (a_text)
-		end -- set_text
+		end 
 
 feature {G_ANY, G_ANY_I, WIDGET_I}
 

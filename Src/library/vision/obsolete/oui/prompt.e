@@ -51,6 +51,7 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.add_cancel_action (a_command, argument)
@@ -60,6 +61,7 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.add_apply_action (a_command, argument)
@@ -69,6 +71,7 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.add_help_action (a_command, argument)
@@ -78,6 +81,7 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.add_ok_action (a_command, argument)
@@ -120,6 +124,7 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.remove_cancel_action (a_command, argument)
@@ -129,6 +134,7 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.remove_apply_action (a_command, argument)
@@ -138,6 +144,7 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.remove_help_action (a_command, argument)
@@ -147,6 +154,7 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		require
+			exists: not destroyed;
 			not_a_command_void: not (a_command = Void)
 		do
 			implementation.remove_ok_action (a_command, argument)
@@ -162,6 +170,7 @@ feature
 			-- Set `a_label' as label for apply button,
 			-- by default this label is `apply'.
 		require
+			exists: not destroyed;
 			not_label_void: not (a_label = Void)
 		do
 			implementation.set_apply_label (a_label)
@@ -171,6 +180,7 @@ feature
 			-- Set `a_label' as label for cancel button,
 			-- by default this label is `cancel'.
 		require
+			exists: not destroyed;
 			not_label_void: not (a_label = Void)
 		do
 			implementation.set_cancel_label (a_label)
@@ -180,6 +190,7 @@ feature
 			-- Set `a_label' as label for help button,
 			-- by default this label is `help'.
 		require
+			exists: not destroyed;
 			not_label_void: not (a_label = Void)
 		do
 			implementation.set_help_label (a_label)
@@ -189,6 +200,7 @@ feature
 			-- Set `a_label' as label for ok button,
 			-- by default this label is `ok'.
 		require
+			exists: not destroyed;
 			not_label_void: not (a_label = Void)
 		do
 			implementation.set_ok_label (a_label)
@@ -197,6 +209,8 @@ feature
 	set_selection_label (a_label: STRING) is
 			-- Set `a_label' as selection label,
 			-- by default this label is `selection'.
+		require
+			exists: not destroyed
 		do
 			implementation.set_selection_label (a_label)
 		end; -- set_selection_label
@@ -204,6 +218,7 @@ feature
 	set_selection_text (a_text: STRING) is
 			-- Set selection text to `a_text'.
 		require
+			exists: not destroyed;
 			a_text_not_void: not (a_text = Void)
 		do
 			implementation.set_selection_text (a_text)
@@ -211,24 +226,32 @@ feature
 
 	show_apply_button is
 			-- Make apply button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_apply_button
 		end; -- show_apply_button
 
 	show_cancel_button is
 			-- Make cancel button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_cancel_button
 		end; -- show_cancel_button
 
 	show_help_button is
 			-- Make help button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_help_button
 		end; -- show_help_button
 
 	show_ok_button is
 			-- Make ok button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_ok_button
 		end -- show_ok_button

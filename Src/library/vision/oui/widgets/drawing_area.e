@@ -70,7 +70,8 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
-			Valid_command: a_command /= Void
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_input_action (a_command, argument)
 		end;
@@ -81,7 +82,8 @@ feature -- Callbacks (adding)
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
-			Valid_command: a_command /= Void
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_resize_action (a_command, argument)
 		end;
@@ -93,7 +95,8 @@ feature -- Callbacks (removing)
 			-- to be executed when a key is pressed or when a mouse button 
 			-- is pressed.
 		require
-			Valid_command: a_command /= Void
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_input_action (a_command, argument)
 		end;
@@ -102,7 +105,8 @@ feature -- Callbacks (removing)
 			-- Remove `a_command' with `argument' from the list of action 
 			-- to be executed when current area is resized.
 		require
-			Valid_command: a_command /= Void
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_resize_action (a_command, argument)
 		end;

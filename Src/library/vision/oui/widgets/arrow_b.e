@@ -71,48 +71,64 @@ feature --  Arrow direction
 
 	down: BOOLEAN is
 			-- Is the arrow direction down ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.down
 		end;
 
 	left: BOOLEAN is
 			-- Is the arrow direction left ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.left
 		end;
 
 	right: BOOLEAN is
 			-- Is the arrow direction right ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.right
 		end;
 
 	up: BOOLEAN is
 			-- Is the arrow direction up ?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.up
 		end;
 
 	set_down is
 			-- Set the arrow direction to down.
+		require
+			exists: not destroyed
 		do
 			implementation.set_down
 		end;
 
 	set_left is
 			-- Set the arrow direction to left.
+		require
+			exists: not destroyed
 		do
 			implementation.set_left
 		end;
 
 	set_right is
 			-- Set the arrow direction to right.
+		require
+			exists: not destroyed
 		do
 			implementation.set_right
 		end;
 
 	set_up is
 			-- Set the arrow direction to up.
+		require
+			exists: not destroyed
 		do
 			implementation.set_up
 		end;
@@ -148,6 +164,11 @@ feature {NONE}
  
 	set_center_alignment is
 			--  Set text alignment to center.
+		do
+		end; -- set_text
+
+	set_right_alignment is
+			--  Set text alignment to right.
 		do
 		end; -- set_text
 

@@ -68,16 +68,20 @@ feature -- Option Menu
 			-- Parent of pulldown menu
         do
             Result ?= widget_manager.parent (Current)
-        end ;
+        end;
 
 	selected_button: BUTTON is
             		-- Current Push Button selected in the option menu
+		require
+			exists: not destroyed
 		do
 			Result := implementation.selected_button
 		end;
 
    	set_selected_button (a_button: BUTTON) is
             		-- Set `selected_button' to `a_button'
+		require
+			exists: not destroyed
 		do
 			implementation.set_selected_button(a_button)				
 		ensure
@@ -86,6 +90,8 @@ feature -- Option Menu
 
 	option_button: OPTION_B is
 			-- Option button of the current opt_pull
+		require
+			exists: not destroyed
 		do
 			Result := implementation.option_button
 		end;
@@ -96,12 +102,15 @@ feature -- Option Menu
 		end;
 
 	caption: STRING is
+		require
+			exists: not destroyed
 		do
 			Result := implementation.caption;
 		end
 
 	set_caption (a_caption: STRING) is
 		require
+			exists: not destroyed;
 			valid_caption: a_caption /= Void;
 		do
 			implementation.set_caption (a_caption);

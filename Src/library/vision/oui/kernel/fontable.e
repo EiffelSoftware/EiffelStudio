@@ -6,12 +6,14 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class FONTABLE 
+deferred class FONTABLE 
 
 feature 
 
 	font: FONT is
 			-- Font name of label
+		require
+			exists: not destroyed
 		do
 			Result := implementation.font
 		end; -- font
@@ -26,6 +28,7 @@ feature
 	set_font (a_font: FONT) is
 			-- Set font label to `font_name'.
 		require
+			exists: not destroyed;
 			a_font_exists: not (a_font = Void);
 			a_font_specified: a_font.is_specified
 		do
@@ -35,6 +38,7 @@ feature
 	set_font_name (a_font_name: STRING) is
 			-- Set font label to `a_font_name'.
 		require
+			exists: not destroyed;
 			a_font_name_exists: not (a_font_name = Void);
 		local
 			a_font: FONT;
@@ -42,6 +46,10 @@ feature
 			!! a_font.make;
 			a_font.set_name (a_font_name);
 			set_font (a_font);
+		end;
+
+	destroyed: BOOLEAN is
+		deferred
 		end;
 
 feature {G_ANY, WIDGET_I, TOOLKIT}

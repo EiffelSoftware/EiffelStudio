@@ -42,6 +42,8 @@ feature
 
 	popup is
 			-- Popup Current popup menu.
+		require
+			exists: not destroyed
 		do
 			implementation.popup
 		end

@@ -53,7 +53,8 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_apply_action (a_command, argument)
 		end;
@@ -62,7 +63,8 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_cancel_action (a_command, argument)
 		end;
@@ -71,43 +73,50 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_ok_action (a_command, argument)
 		end; 
 
 	font: FONT is
 			-- Font currently selected by the user
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.font
 		ensure
-			not (Result = Void)
+			valid_result: Result /= Void
 		end;
 
 	hide_apply_button is
 			-- Make apply button invisible.
+		require
+			exists: not destroyed
 		do
 			implementation.hide_apply_button
 		end;
 
 	hide_cancel_button is
 			-- Make cancel button invisible.
+		require
+			exists: not destroyed
 		do
 			implementation.hide_cancel_button
 		end;
 
 	hide_ok_button is
 			-- Make ok button invisible.
+		require
+			exists: not destroyed
 		do
 			implementation.hide_ok_button
 		end; 
 
-	
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 	implementation: FONT_BOX_I;
 			-- Implementation of current font box
-
 	
 feature 
 
@@ -115,7 +124,8 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_apply_action (a_command, argument)
 		end; 
@@ -124,7 +134,8 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_cancel_action (a_command, argument)
 		end; 
@@ -133,7 +144,7 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			valid_command: a_command /= Void
 		do
 			implementation.remove_ok_action (a_command, argument)
 		end;
@@ -141,25 +152,32 @@ feature
 	set_font (a_font: FONT) is
 			-- Edit `a_font'.
 		require
-			a_font_exists: not (a_font = Void)
+			exists: not destroyed;
+			a_font_exists: a_font /= Void
 		do
 			implementation.set_font (a_font)
 		end;
 
 	show_apply_button is
 			-- Make apply button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_apply_button
 		end;
 
 	show_cancel_button is
 			-- Make cancel button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_cancel_button
 		end;
 
 	show_ok_button is
 			-- Make ok button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_ok_button
 		end 

@@ -20,19 +20,24 @@ feature -- Text
 	set_title (a_title: STRING) is
 			-- Set menu title to `a_title'.
 		require
-			Valid_title: a_title /= Void
+			exists: not destroyed;
+			valid_title: a_title /= Void
 		do
 			implementation.set_title (a_title)
 		end;
 
 	title: STRING is
 			-- Title of menu
+		require
+			exists: not destroyed;
 		do
 			Result:= implementation.title
 		end; 
 
 	remove_title is
 			-- Remove current menu title if any.
+		require
+			exists: not destroyed;
 		do
 			implementation.remove_title
 		end

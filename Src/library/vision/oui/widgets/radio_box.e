@@ -69,6 +69,8 @@ feature {NONE} -- Creation
 feature
 
 	set_always_one (flag: BOOLEAN) is
+		require
+			exists: not destroyed
 		do
 			implementation.set_always_one (flag);
 		end;

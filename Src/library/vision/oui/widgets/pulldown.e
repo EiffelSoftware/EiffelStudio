@@ -28,22 +28,30 @@ feature -- Text
 
 	text: STRING is
 			-- Label of menu button
+		require
+			exists: not destroyed
 		do
 			Result := implementation.text
 		end;
 
 	set_text (a_text: STRING) is
 			-- Set button label to `a_text'.
+		require
+			exists: not destroyed
 		do
 			implementation.set_text(a_text)
 		end;
 
 	allow_recompute_size is
+		require
+			exists: not destroyed
 		do
 			implementation.allow_recompute_size;
 		end;
 
 	forbid_recompute_size is
+		require
+			exists: not destroyed
 		do
 			implementation.forbid_recompute_size;
 		end;

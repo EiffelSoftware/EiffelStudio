@@ -63,7 +63,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelProjectProperties_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelProjectProperties : public IUnknown
+class IEiffelProjectProperties : public IDispatch
 {
 public:
 	IEiffelProjectProperties () {};

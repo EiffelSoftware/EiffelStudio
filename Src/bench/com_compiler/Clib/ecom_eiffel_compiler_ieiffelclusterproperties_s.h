@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelClusterProperties_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelClusterProperties : public IUnknown
+class IEiffelClusterProperties : public IDispatch
 {
 public:
 	IEiffelClusterProperties () {};

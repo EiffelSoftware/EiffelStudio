@@ -737,6 +737,9 @@
  */
 #define EIF_INTEGER_64_DISPLAY "I64d"
 
+/* INTEGER_64 constant definition: */
+#define RTI64C(x)	CAT2(x,L)
+
 #define HAS_UNLINK
 
 #ifdef EIF_BORLAND 

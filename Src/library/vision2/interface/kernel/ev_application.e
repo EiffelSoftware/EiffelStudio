@@ -32,7 +32,7 @@ feature {NONE} -- Initialization is
 		do
 			set_tooltip_delay (default_tooltip_delay)
 			is_initialized := True
-		ensure
+		ensure then
 			tooltip_delay_initialized: tooltip_delay = default_tooltip_delay
 		end
 

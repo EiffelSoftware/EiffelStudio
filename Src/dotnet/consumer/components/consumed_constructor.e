@@ -73,7 +73,7 @@ feature -- Settings
 			-- Set `is_public' with `pub'.
 		do
 			p := pub
-		ensure
+		ensure then
 			is_public_set: is_public = pub
 		end
 
@@ -88,4 +88,4 @@ feature {NONE} -- Access
 invariant
 	non_void_arguments: arguments /= Void
 
-end -- class CONSUMED_CONSTRUCTOR
+end -- class CONSUMED_CONSTRUCTOR then

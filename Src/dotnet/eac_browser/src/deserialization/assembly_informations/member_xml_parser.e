@@ -24,7 +24,7 @@ feature -- Initialization
 			create Xml_members.make (10000)
 			create current_xml_member.make
 			create current_tag.make (10)
-		ensure
+		ensure then
 			non_void_xml_members: xml_members /= Void
 			non_void_current_xml_member: current_xml_member /= Void
 			non_void_current_tag: current_tag /= Void

@@ -103,18 +103,18 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
+			-- when the item is selected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
-		end	
+		end
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unactivated.
+			-- when the item is unselected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -132,17 +132,17 @@ feature -- Event : command association
 
 feature -- Event -- removing command association
 
-	remove_activate_commands is
+	remove_select_commands is
 			-- Empty the list of commands to be executed when
-			-- the item is activated.
+			-- the item is selected.
 		require
 			exists: not destroyed
 		deferred			
 		end	
 
-	remove_deactivate_commands is
+	remove_unselect_commands is
 			-- Empty the list of commands to be executed when
-			-- the item is deactivated.
+			-- the item is unselected.
 		require
 			exists: not destroyed
 		deferred	

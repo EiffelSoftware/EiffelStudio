@@ -397,6 +397,7 @@ feature {NONE} -- Implementation
 					-- We must also re-draw the widgets when a selection changes,
 					-- as the selected widget should be highlighted.
 				list_item.select_actions.extend (agent draw_widgets)
+				list_item.deselect_actions.extend (agent check_unselect)
 				list_item.set_data (first.item)
 				list.extend (list_item)
 				first.forth
@@ -1083,11 +1084,23 @@ feature {NONE} -- Implementation
 				draw_widgets
 			end
 		end
+		
+	check_unselect is
+			-- If no item is selected in `list' any more,
+			-- then we must remove the highlighting from
+			-- the display.
+		do
+			if list.selected_items.count = 0 then
+				selected_item_index := 0
+				draw_widgets
+			end
+		end
+		
 
 feature {NONE} -- Scrolling attributes.
 
 	last_x, last_y: INTEGER
-		-- Last known cooridnates of mouse pointer.
+		-- Last known coordinates of mouse pointer.
 		
 	x_right, x_center: INTEGER is unique
 		-- Constants used with `scrolling_x_start'.

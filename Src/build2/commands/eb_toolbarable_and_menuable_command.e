@@ -59,7 +59,7 @@ feature -- Status setting
 		end
 
 	disable_sensitive is
-			-- Set `is_sensitive' to True.
+			-- Set `is_sensitive' to False.
 		local
 			menu_items: like managed_menu_items
 			toolbar_items: like managed_toolbar_items

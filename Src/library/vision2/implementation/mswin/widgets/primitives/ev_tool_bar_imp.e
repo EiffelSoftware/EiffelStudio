@@ -45,7 +45,7 @@ inherit
 			interface
 		end
 
-	EV_HASH_TABLE_ITEM_HOLDER_IMP [EV_TOOL_BAR_ITEM]
+	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
 		redefine
 			interface,
 			initialize
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			create ctrl.make (default_parent, "EV_INTERNAL_TOOL_BAR_IMP")
 			wel_make (ctrl, 0)	
 			{EV_PRIMITIVE_IMP} Precursor
-			{EV_HASH_TABLE_ITEM_HOLDER_IMP} Precursor	
+			{EV_ITEM_LIST_IMP} Precursor	
 			create radio_group.make
 			new_item_actions.extend (~add_radio_button)
 			remove_item_actions.extend (~remove_radio_button)
@@ -712,6 +712,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/04/26 17:38:40  brendel
+--| Removed inheritance of obsolete EV_HASH_TABLE_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.60  2000/04/25 21:39:56  rogers
 --| Fixed bug in internal_propagate_pointer_press which would allow
 --| you to dtill select a radio button by clicking when it was

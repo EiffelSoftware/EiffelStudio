@@ -22,6 +22,55 @@ inherit
 
 	SHARED_SERVER
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (f: FEATURE_I; t: like type; p_type: like precursor_type) is
+			-- Initialization
+		require
+			good_argument: f /= Void
+		local
+			feat: FEATURE_I
+			feat_tbl: FEATURE_TABLE
+		do
+			feature_name_id := f.feature_name_id
+			body_index := f.body_index
+			routine_id := f.rout_id_set.first
+			is_once := f.is_once
+			precursor_type := p_type
+			type := t
+			if System.il_generation then
+				if precursor_type = Void then
+						-- Normal feature call.
+					if f.origin_class_id /= 0 then
+						feature_id := f.origin_feature_id
+						written_in := f.origin_class_id
+					else
+							-- Case of a non-external Eiffel routine
+							-- written in an external class.
+						feature_id := f.feature_id
+						written_in := f.written_in
+					end
+				else
+						-- Precursor access, we need to find where body
+						-- is defined. It is slow since we have to do a lookup
+						-- in the parent feature table but we do not have
+						-- much choice at the moment. The good thing is that
+						-- since it is done at degree 3, we are most likely
+						-- to hit the feature table cache.
+					written_in := f.written_in
+					feat_tbl := System.class_of_id (written_in).feature_table
+					feat := feat_tbl.feature_of_rout_id_set (f.rout_id_set)
+					feature_id := feat.feature_id
+				end
+			else
+				feature_id := f.feature_id
+				written_in := f.written_in
+			end
+		end
+
 feature -- Access
 
 	type: TYPE_I
@@ -75,48 +124,6 @@ feature -- Access
 			-- Otherwize, return false
 		do
 			Result := special_routines.has (feature_name_id, compilation_type, target_type)
-		end
-
-	init (f: FEATURE_I) is
-			-- Initialization
-		require
-			good_argument: f /= Void
-		local
-			feat: FEATURE_I
-			feat_tbl: FEATURE_TABLE
-		do
-			feature_name_id := f.feature_name_id
-			body_index := f.body_index
-			routine_id := f.rout_id_set.first
-			is_once := f.is_once
-			if System.il_generation then
-				if precursor_type = Void then
-						-- Normal feature call.
-					if f.origin_class_id /= 0 then
-						feature_id := f.origin_feature_id
-						written_in := f.origin_class_id
-					else
-							-- Case of a non-external Eiffel routine
-							-- written in an external class.
-						feature_id := f.feature_id
-						written_in := f.written_in
-					end
-				else
-						-- Precursor access, we need to find where body
-						-- is defined. It is slow since we have to do a lookup
-						-- in the parent feature table but we do not have
-						-- much choice at the moment. The good thing is that
-						-- since it is done at degree 3, we are most likely
-						-- to hit the feature table cache.
-					written_in := f.written_in
-					feat_tbl := System.class_of_id (written_in).feature_table
-					feat := feat_tbl.feature_of_rout_id_set (f.rout_id_set)
-					feature_id := feat.feature_id
-				end
-			else
-				feature_id := f.feature_id
-				written_in := f.written_in
-			end
 		end
 
 	is_feature: BOOLEAN is True

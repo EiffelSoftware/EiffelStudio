@@ -25,11 +25,6 @@ inherit
 		undefine
 			default_create
 		end
-	
-	GB_GENERAL_UTILITIES
-		undefine
-			default_create
-		end
 		
 	CDATA_HANDLER
 		undefine
@@ -143,15 +138,15 @@ feature {GB_XML_STORE} -- Output
 				end
 			end
 			
-			if full_information @ (Maximum_width_string) /= Void then
-				for_first_object (agent {EV_WINDOW}.set_maximum_width(retrieve_and_set_integer_value (Maximum_width_string)))
+			if attribute_set (Maximum_width_string) then
+				for_first_object (agent {EV_WINDOW}.set_maximum_width (retrieve_and_set_integer_value (Maximum_width_string)))
 			end
 			
-			if full_information @ (Maximum_height_string) /= Void then
-				for_first_object (agent {EV_WINDOW}.set_maximum_height(retrieve_and_set_integer_value (Maximum_height_string)))
+			if attribute_set (Maximum_height_string) then
+				for_first_object (agent {EV_WINDOW}.set_maximum_height (retrieve_and_set_integer_value (Maximum_height_string)))
 			end
 			
-			if full_information @ (title_string) /= Void then
+			if attribute_set (title_string) then
 				for_first_object (agent {EV_WINDOW}.set_title (strip_cdata (retrieve_and_set_string_value (title_string))))
 			end
 		end
@@ -174,21 +169,17 @@ feature {GB_XML_STORE} -- Output
 					Result := info.name + ".disable_user_resize"
 				end
 			end
-		
-			element_info := full_information @ (Maximum_width_string)
-			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_maximum_width (" + element_info.data + ")"
+			
+			if attribute_set (Maximum_width_string) then
+				Result := Result + indent + info.name + ".set_maximum_width (" + retrieve_integer_setting (Maximum_width_string) + ")"
 			end
 				
-			element_info := full_information @ (Maximum_height_string)
-			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_maximum_height (" + element_info.data + ")"
+			if attribute_set (Maximum_height_string) then
+				Result := Result + indent + info.name + ".set_maximum_height (" + retrieve_integer_setting (Maximum_height_string) + ")"
 			end
 			
-			element_info := full_information @ (Title_string)
-			if element_info /= Void then
-				escaped_text := escape_special_characters (strip_cdata (element_info.data))
-				Result := Result + indent + info.name + ".set_title (%"" + escaped_text + "%")"
+			if attribute_set (Title_string) then
+				Result := Result + indent + info.name + ".set_title (" + retrieve_string_setting (title_string) + ")"
 			end
 
 			Result := strip_leading_indent (Result)

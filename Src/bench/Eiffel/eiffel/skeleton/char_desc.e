@@ -9,11 +9,8 @@ inherit
 	
 feature 
 
-	is_character: BOOLEAN is
+	is_character: BOOLEAN is True
 			-- Is the attribute a character one ?
-		do
-			Result := True;
-		end;
 
 	level: INTEGER is
 			-- Level comparison

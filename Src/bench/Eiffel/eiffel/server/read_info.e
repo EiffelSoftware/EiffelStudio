@@ -4,8 +4,6 @@ class READ_INFO
 
 inherit
 	SERVER_INFO
-		rename
-			position as offset
 		redefine
 			trace
 		end
@@ -22,10 +20,10 @@ feature -- Access
 
 feature -- Update
 
-	set_offset (i: INTEGER) is
+	set_position (i: INTEGER) is
 			-- Assign `i' to `offset'.
 		do
-			offset := i;
+			position := i;
 		end;
 
 	set_object_count (i: INTEGER) is
@@ -44,8 +42,8 @@ feature -- Trace
 
 	trace is
 		do
-			io.error.putstring ("READ_INFO:%NOffset: ");
-			io.error.putint (offset);
+			io.error.putstring ("READ_INFO:%NPosition: ");
+			io.error.putint (Position);
 			io.error.putstring ("%NClass_id: ");
 			class_id.trace;
 			io.error.putstring ("%Nobject_count: ");

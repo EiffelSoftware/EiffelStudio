@@ -304,12 +304,20 @@ feature -- Element change
 			-- Make `color' the new `background_color'
 		do
 			background_color_imp ?= color.implementation
+			if displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
+			end
 		end
 
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do
 			foreground_color_imp ?= color.implementation
+			if displayed then
+				-- If the widget is not hidden then invalidate.
+				invalidate
+			end
 		end
 
 feature -- Accelerators - command association

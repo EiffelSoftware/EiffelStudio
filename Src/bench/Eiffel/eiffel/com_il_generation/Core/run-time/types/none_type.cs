@@ -8,6 +8,7 @@ indexing
 using System;
 namespace ISE.Runtime {
 
+[Serializable]
 public class NONE_TYPE: CLASS_TYPE {
 
 	public override String class_name ()

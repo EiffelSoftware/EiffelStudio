@@ -9,6 +9,7 @@ indexing
 using System;
 namespace ISE.Runtime {
 
+[Serializable]
 public class GENERIC_TYPE: CLASS_TYPE {
 
 /*

@@ -12,6 +12,7 @@ namespace ISE.Runtime
 
 [CLSCompliant(false)]
 [AttributeUsage (AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+[Serializable]
 public class EIFFEL_CLASS_NAME_ATTRIBUTE : Attribute
 {
 /*

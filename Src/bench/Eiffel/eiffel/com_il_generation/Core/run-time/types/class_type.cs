@@ -11,6 +11,7 @@ using System;
 
 namespace ISE.Runtime {
 
+[Serializable]
 public class CLASS_TYPE: TYPE {
 
 /*

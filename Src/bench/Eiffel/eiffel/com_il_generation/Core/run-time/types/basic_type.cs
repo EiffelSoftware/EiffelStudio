@@ -10,6 +10,7 @@ using System.Collections;
 
 namespace ISE.Runtime {
 
+[Serializable]
 public class BASIC_TYPE: CLASS_TYPE {
 
 /*

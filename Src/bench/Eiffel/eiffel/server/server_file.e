@@ -47,11 +47,18 @@ feature
 		require
 			positive_argument: i > 0
 		local
-			path, f_name: STRING;
+			f_name: STRING;
+			d: DIRECTORY
 		do
-			path := Compilation_path;
-			!!f_name.make (path.count + 6);
-			f_name.append (path);
+			!!f_name.make (0);
+			f_name.append (Compilation_path);
+			f_name.extend (Directory_separator);
+			f_name.extend ('S');
+			f_name.append_integer ((i // packet_size) + 1);
+			!!d.make (f_name);
+			if not d.exists then
+				d.create
+			end;
 			f_name.extend (Directory_separator);
 			f_name.extend ('E');
 			f_name.append_integer (i);
@@ -144,8 +151,11 @@ end;
 			else
 				path := Compilation_path;
 			end;
-			!!name.make (path.count + 6);
+			!!name.make (path.count + 10);
 			name.append (path);
+			name.extend (Directory_separator);
+			name.extend ('S');
+			name.append_integer ((id // packet_size) + 1);
 			name.extend (Directory_separator);
 			name.extend ('E');
 			name.append_integer (id);
@@ -160,5 +170,19 @@ end;
 		do
 			precompiled := True
 		end;
+
+feature -- Packet size
+
+	packet_size: INTEGER is
+		once
+			Result := eif_packet_size
+		end
+
+feature {NONE} -- Externals
+
+	eif_packet_size: INTEGER is
+		external
+			"C"
+		end
 
 end

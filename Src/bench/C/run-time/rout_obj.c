@@ -4,7 +4,7 @@
 
 #include "eif_portable.h"
 #include "rt_macros.h"
-#include "eif_struct.h"
+#include "rt_struct.h"
 #include "eif_interp.h"
 #include "eif_project.h"
 #include "eif_rout_obj.h"

@@ -46,6 +46,7 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 #define EIF_POSIX_THREADS
 #define EIF_NONPOSIX_TSD
 #define HASNT_SCHEDPARAM
+#define EIF_THR_SET_PRIO attr.prio = pr
 #define pthread_attr_setschedpolicy pthread_attr_setsched
 #define EIF_THR_SET_DETACHSTATE(attr,detach) \
 	{int idetach = (int) detach; pthread_attr_setdetachstate (&attr, &idetach);}
@@ -64,6 +65,15 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 #define EIF_NONPOSIX_TSD
 #define EIF_SCHEDPARAM_EXTRA param.sched_quantum = 2; /* bug in PCThreads */
 #define EIF_DEFAULT_PRIORITY 16
+#endif
+
+/* Tuning for CRAY */
+#ifdef _CRAY
+#define EIF_NO_SEM
+#define EIF_NO_POSIX_SEM
+#define HASNT_SCHED_H
+#define HASNT_SCHEDPARAM
+#define pthread_attr_setschedpolicy(a,b)
 #endif
 
 /* Tuning for Solaris Threads */
@@ -198,6 +208,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #endif
 
 /* Thread attributes initialization macros */
+#ifndef EIF_NO_SCHED
 #define EIF_THR_SET_SCHED(attr,sc) \
 	switch(sc) { \
 		case EIF_SCHED_OTHER: \
@@ -206,6 +217,9 @@ extern EIF_POINTER eif_thr_last_thread(void);
 			pthread_attr_setschedpolicy(&attr,SCHED_RR); break; \
 		case EIF_SCHED_FIFO: \
 			pthread_attr_setschedpolicy(&attr,SCHED_FIFO); break; }
+#else
+#define EIF_THR_SET_SCHED(a,b)
+#endif
 #ifndef EIF_THR_SET_DETACHSTATE
 #define EIF_THR_SET_DETACHSTATE(attr,detach) \
 	pthread_attr_setdetachstate(&attr, \
@@ -213,9 +227,12 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #endif
 
 #ifdef HASNT_SCHEDPARAM
+#ifndef EIF_THR_SET_PRIO
+#define EIF_THR_SET_PRIO(p)
+#endif
 #define EIF_THR_ATTR_INIT(attr,pr,sc,detach) \
 	pthread_attr_init(&(attr)); \
-	attr.prio = pr; \
+	EIF_THR_SET_PRIO(pr); \
 	EIF_THR_SET_SCHED(attr,sc) \
 	EIF_THR_SET_DETACHSTATE(attr,detach)
 #else

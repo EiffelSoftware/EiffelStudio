@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Lexical analysis of the resource.";
 	date: "$Date$";
 	revision: "$Revision $"

@@ -19,7 +19,7 @@ feature -- Properies
 
 	is_not_actual_class_type: BOOLEAN is
 			-- Is Current a basic formal or like feature or
-            -- like argument or like_current type which does
+			-- like argument or like_current type which does
 			-- not have a class type declaration
 		do
 		end;

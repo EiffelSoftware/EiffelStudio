@@ -141,13 +141,13 @@ feature -- Properties
 		do
 			Result := disk_content.feature_clause_list
 		end;
- 
+
 	invariants: FIXED_LIST [S_TAG_DATA] is
 			-- Invariants of the current class
 		do
 			Result := disk_content.invariants
 		end;
- 
+
 	chart: S_CLASS_CHART is
 			-- Informal description of Current class
 		do
@@ -191,7 +191,7 @@ feature -- Setting
 		ensure
 			id_set: id = i
 		end;
- 
+
 	set_is_effective is
 			-- Set is_effective to `true'.
 		do
@@ -229,7 +229,7 @@ feature -- Setting
 		ensure
 			features_set: feature_clause_list = l
 		end;
- 
+
 	set_invariants (l: like invariants) is
 			-- Set invariants to `l'.
 		require
@@ -241,7 +241,7 @@ feature -- Setting
 		ensure
 			invariants_set: invariants = l
 		end;
- 
+
 	set_chart (ch: like chart) is
 			-- Set chart to `ch'.
 		do

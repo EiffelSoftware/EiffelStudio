@@ -27,10 +27,10 @@ feature -- Properties
 
 	description: S_FREE_TEXT_DATA;
 			-- Description of Current
- 
+
 	explanation: S_FREE_TEXT_DATA;
 			-- Brief explanation of Current
- 
+
 	client_links: ARRAYED_LIST [S_CLI_SUP_DATA];
 			-- List of supplier relations for which current
 			-- is the client

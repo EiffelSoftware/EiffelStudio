@@ -53,18 +53,18 @@ feature -- Properties
 							Result.count = 1);
 		end;
 
-    is_valid: BOOLEAN is
-            -- Is Current valid?
-        do
-            if free_text_name = Void then
-                Result := class_id > 0
+	is_valid: BOOLEAN is
+			-- Is Current valid?
+		do
+			if free_text_name = Void then
+				Result := class_id > 0
 			else
 				Result := True
-            end
+			end
 		ensure then
 			ok: Result implies (free_text_name /= Void or else
 						(class_id > 0))
-        end;
+		end;
 
 feature -- Output
 

@@ -73,13 +73,13 @@ feature -- Storing
 
 	save_information (path: STRING) is
 			-- Save Current.
-            --| (Rename tmp file to normal file name);
+			--| (Rename tmp file to normal file name);
 		require
 			valid_path: path /= Void;
-        local
-            system_file: RAW_FILE;
-            old_name, new_name: FILE_NAME;
-        do
+		local
+			system_file: RAW_FILE;
+			old_name, new_name: FILE_NAME;
+		do
 			!!new_name.make_from_string (path);
 			new_name.set_file_name (System_name);
 
@@ -87,9 +87,9 @@ feature -- Storing
 			old_name.set_file_name (System_name);
 			old_name.add_extension (Tmp_file_name_ext);
 
-            !! system_file.make (old_name);
-            system_file.change_name (new_name);
-        end;
+			!! system_file.make (old_name);
+			system_file.change_name (new_name);
+		end;
 	
 	tmp_store_to_disk (path: STRING) is
 			-- Store a project temporarily

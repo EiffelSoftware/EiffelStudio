@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Parser for the resource file.";
 	date: "$Date$";
 	revision: "$Revision $"

@@ -16,8 +16,8 @@ inherit
 
 feature -- Properties
 
-    label: STRING;
-            -- Label of relation
+	label: STRING;
+			-- Label of relation
 
 	is_implementation: BOOLEAN;
 			-- Is this link a result of the implementation
@@ -47,14 +47,14 @@ feature -- Setting
 			reflexive_set: is_reflexive = b
 		end;
 
-    set_label (l: STRING) is
-            -- Set label to `l'.
-        require
-            valid_arg: l /= Void
-        do
-            label := l
-        ensure
-            label_set: label = l
-        end;
+	set_label (l: STRING) is
+			-- Set label to `l'.
+		require
+			valid_arg: l /= Void
+		do
+			label := l
+		ensure
+			label_set: label = l
+		end;
 
 end -- class S_CLI_SUP_DATA

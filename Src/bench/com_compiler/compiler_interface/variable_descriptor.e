@@ -33,7 +33,7 @@ feature -- Access
 	is_feature (return_value: BOOLEAN_REF) is
 			-- Is entry a feature? (could be a variable)
 			-- Not a feature
-		once
+		do
 			return_value.set_item (False)
 		end
 

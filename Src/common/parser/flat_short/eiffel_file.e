@@ -39,7 +39,7 @@ feature -- Initialization
 					file.open_read;
 					file.readline;
 				until
-					file.end_of_file
+					file.end_of_file and then start_pos = file.position
 				loop
 					end_pos := file.position;
 					!! line.make (start_pos, end_pos - 1, clone (file.laststring));
@@ -56,8 +56,7 @@ end
 			start;
 		end;
 
-	make_with_positions (a_file_name: STRING; start_feat_pos,
-				end_feat_pos: INTEGER) is
+	make_with_positions (a_file_name: STRING; start_feat_pos, end_feat_pos: INTEGER) is
 			-- Initialize eiffel file with file name `a_file_name'
 			-- with file_end_position of `end_pos' between
 			-- `start_feat_pos' and `end_feat_pos'.
@@ -78,8 +77,8 @@ end
 					file.open_read;
 					file.readline;
 				until
-					file.end_of_file or else
-					start_pos > end_feat_pos
+					(file.end_of_file and then start_pos = file.position)
+					or else start_pos > end_feat_pos
 				loop
 					end_pos := file.position;
 					if start_feat_pos <= end_pos then

@@ -81,6 +81,12 @@ feature -- Access
 			value: Result = 0
 		end;
 
+	ascii_char: CHARACTER is
+			-- Returns corresponding ASCII character to `item' value.
+		do
+			Result := c_ascii_char (item) 
+		end
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -284,6 +290,14 @@ feature {NONE} -- Implementation
 		external
 			"C | %"eif_out.h%""
 		end;
+
+	c_ascii_char (code: INTEGER) : CHARACTER is
+			-- Character associated to integer value
+        external
+            "C | %"eif_misc.h%""
+		alias
+			"chconv"
+    end
 
 	one_ref: INTEGER_REF is
 			-- Neutral element for "*" and "/"

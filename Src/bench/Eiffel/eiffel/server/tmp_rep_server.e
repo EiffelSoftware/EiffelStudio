@@ -76,10 +76,10 @@ feature
 			read_info.set_offset (file_position - last_offset);
 			read_info.set_class_id (last_id);
 			read_info.set_object_count (object_count);
-			feat ?= obj;
-			if feat /= Void then
+			if is_feature_as ($obj) then
+				feat ?= obj;
 				index.force (read_info, feat.id);
-			end;
+			end
 		end;
 
 	need_index (obj: ANY): BOOLEAN is
@@ -98,5 +98,12 @@ feature
 
 	Chunk: INTEGER is 150
 			-- Size of a HASH_TABLE block
+
+feature {NONE} -- External features
+
+	is_feature_as (o: POINTER): BOOLEAN is
+		external
+			"C"
+		end
 
 end

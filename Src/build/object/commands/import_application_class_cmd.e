@@ -42,6 +42,7 @@ feature
 					process_line (line)
 				end
 				description_file.close
+				update_routine_list
 			end
 		end
 
@@ -226,6 +227,27 @@ feature {NONE} -- Implementation
 			io.put_string ("Error in generated code at line")
 			io.put_integer (current_line)
 			io.new_line
+		end
+
+	update_routine_list is
+			-- Update routine list of `current_application_class' with
+			-- command list at the end of file.
+		local
+			cmd_list: LINKED_LIST [APPLICATION_COMMAND]
+			app_routine: APPLICATION_ROUTINE
+		do
+			if current_application_class /= Void then
+				cmd_list := current_application_class.command_list
+				from
+					cmd_list.start
+				until
+					cmd_list.after
+				loop
+					!! app_routine.make_from_command (cmd_list.item)
+					current_application_class.add_routine (app_routine)
+					cmd_list.forth
+				end
+			end
 		end
 
 feature {NONE} -- Attribute

@@ -20,7 +20,7 @@ cd $EIFFEL4
 gunzip -c eiffelbuild-4.2.tar.gz | tar xvf -
 
 
-- Add directory $EIFFEL4/build/spec/$PLATFORM into your path
+- Add directory $EIFFEL4/build/spec/$PLATFORM/bin into your path
 
 
 - Run EiffelBuild

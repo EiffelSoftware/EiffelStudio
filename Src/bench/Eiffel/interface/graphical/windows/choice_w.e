@@ -15,7 +15,9 @@ inherit
 			execute
 		end;
 
-	NAMER
+	NAMER;
+
+	SET_WINDOW_ATTRIBUTES
 
 creation
 
@@ -31,7 +33,8 @@ feature -- Initialization
 			list.set_single_selection;
 			allow_resize;
 			set_exclusive_grab;
-			list.add_single_action (Current, Void)
+			list.add_single_action (Current, Void);
+			set_composite_attributes (Current)
 		end;
 
 feature

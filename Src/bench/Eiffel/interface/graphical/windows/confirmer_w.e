@@ -18,7 +18,9 @@ inherit
 			popup
 		select
 			popup
-		end
+		end;
+
+	SET_WINDOW_ATTRIBUTES
 
 creation
 
@@ -35,6 +37,7 @@ feature
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);
 			set_default_position (false);
+			set_composite_attributes (Current)
 			realize
 		end;
 

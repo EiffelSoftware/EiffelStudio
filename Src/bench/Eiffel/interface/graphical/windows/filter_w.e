@@ -9,7 +9,8 @@ inherit
 	FORM_D
 		rename
 			make as form_dialog_create
-		end
+		end;
+	SET_WINDOW_ATTRIBUTES
 
 creation
 
@@ -80,7 +81,8 @@ feature
 			display_button.add_activate_action (Current, display_it);
 			execute_button.add_activate_action (Current, execute_it);
 			cancel_button.add_activate_action (Current, cancel_it);
-			associated_command := cmd
+			associated_command := cmd;
+			set_composite_attributes (Current)
 		end;
 
 	

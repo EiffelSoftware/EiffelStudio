@@ -21,18 +21,36 @@ feature -- Access
 	param_ref: INTEGER is 10
 	unknow: INTEGER is 15
 
+		-- Elements
 	doc_str: STRING is "doc"
 	assembly_str: STRING is "assembly"
-	name_str: STRING is "name"
 	members_str: STRING is "members"
 	member_str: STRING is "member"
-	summary_str: STRING is "summary"
+	
+	c_str: STRING is "c"
+	code_str: STRING is "code"
+	example_str: STRING is "example"
+	exception_str: STRING is "exception"
+	include_str: STRING is "include"
+	list_str: STRING is "list"
 	param_str: STRING is "param"
-	returns_str: STRING is "returns"
 	para_str: STRING is "para"
-	see_str: STRING is "see"
 	param_ref_str: STRING is "paramref"
---	list_str: STRING is "list"
+	permission_str: STRING is "permission"
+	remarks_str: STRING is "remarks"
+	returns_str: STRING is "returns"
+	see_str: STRING is "see"
+	see_also_str: STRING is "seealso"
+	summary_str: STRING is "summary"
+	value_str: STRING is "value"
+	
+		-- Attributes
+	name_str: STRING is "name"
+	cref_str: STRING is "cref"
+	file_str: STRING is "file"
+	path_str: STRING is "path"
+	type_str: STRING is "type"
+	
 --	list_header_str: STRING is "listheader"
 --	item_str: STRING is "item"
 --	term_str: STRING is "term"

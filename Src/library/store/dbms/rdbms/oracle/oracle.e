@@ -123,8 +123,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; sql: STRING) is
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
-		require
-			arguments_mapped: not uht.is_empty
+			-- `uht' can be empty (for stored procedures).
 		local 
 			tmp_c, tmp_c2, c_temp: ANY
 		do

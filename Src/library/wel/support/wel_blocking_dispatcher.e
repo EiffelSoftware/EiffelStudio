@@ -103,6 +103,7 @@ feature {NONE} -- Implementation
 			Result.put (Wel_window_constants.Wm_command,			Wel_window_constants.Wm_command)
 			Result.put (Wel_window_constants.Wm_geticon,			Wel_window_constants.Wm_geticon)
 			Result.put (Wel_window_constants.Wm_showwindow,			Wel_window_constants.Wm_showwindow)
+			Result.put (Wel_window_constants.Wm_enteridle,			Wel_window_constants.Wm_enteridle)
 		end
 
 	special_messages: HASH_TABLE [INTEGER, INTEGER] is

@@ -24,7 +24,7 @@ feature
 			-- a failure occurs.
 		do
 debug ("DEBUGGER")
-	io.error.putstring ("Failure happened%N")
+	io.error.put_string ("Failure happened%N")
 end
 			debug_info.restore
 		end

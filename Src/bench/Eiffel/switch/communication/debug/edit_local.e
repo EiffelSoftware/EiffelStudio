@@ -74,7 +74,7 @@ feature {NONE} -- Implementation of deferred features
 		rescue
 			-- FIXME ARNAUD
 			-- toTo: write a beautiful message box instead of this crappy message
-			io.putstring("Error while getting Application callstack. Application will be terminated%N")
+			io.put_string("Error while getting Application callstack. Application will be terminated%N")
 			-- END FIXME
 			retry_clause := True
 			retry

@@ -238,13 +238,13 @@ feature {NONE} -- Implementation
 			launched_project_tool: PROJECT_W
 		do
 			if not ewb_display.is_valid then
-				io.error.putstring ("Cannot open display %"")
+				io.error.put_string ("Cannot open display %"")
 				create exec_env
 				display_name := exec_env.get ("DISPLAY")
 				if display_name /= Void then
-					io.error.putstring (display_name)
+					io.error.put_string (display_name)
 				end
-				io.error.putstring ("%"%N%
+				io.error.put_string ("%"%N%
 					%Check that $DISPLAY is properly set and that you are%N%
 					%authorized to connect to the corresponding server%N")
 				create exc

@@ -51,7 +51,7 @@ feature
 				Application_notification_controller.notify_on_before_stopped
 
 				debug ("DEBUGGER_TRACE")
-					io.error.putstring ("STOPPED_HDLR: Application is stopped - reading information from application%N")
+					io.error.put_string ("STOPPED_HDLR: Application is stopped - reading information from application%N")
 				end
 					-- Physical address of objects held in object tools
 					-- may have been change...
@@ -93,10 +93,10 @@ feature
 				read_string;
 
 				debug ("DEBUGGER_TRACE")
-					io.error.putstring ("STOPPED_HDLR: Application is stopped - finished reading%N")
-					io.error.putstring ("              Setting app status for routine: ")
-					io.error.putstring (name)
-					io.error.new_line
+					io.error.put_string ("STOPPED_HDLR: Application is stopped - finished reading%N")
+					io.error.put_string ("              Setting app status for routine: ")
+					io.error.put_string (name)
+					io.error.put_new_line
 				end
 				status := Application.imp_classic.status;
 				check
@@ -107,7 +107,7 @@ feature
 				status.set_exception (last_int, last_string)
 
 				debug ("DEBUGGER_TRACE")
-					io.error.putstring ("STOPPED_HDLR: Finished setting status (Now calling after cmd)%N")
+					io.error.put_string ("STOPPED_HDLR: Finished setting status (Now calling after cmd)%N")
 				end
 
 				if reason /= Pg_new_breakpoint then
@@ -137,7 +137,7 @@ feature
 						Application_notification_controller.notify_on_after_stopped
 							
 						debug ("DEBUGGER_TRACE")
-							io.error.putstring ("STOPPED_HDLR: Finished calling after_cmd%N")
+							io.error.put_string ("STOPPED_HDLR: Finished calling after_cmd%N")
 						end
 					else
 							-- Relaunch the application.
@@ -149,7 +149,7 @@ feature
 						-- If the reason is Pg_new_breakpoint, the application sends the
 						-- new breakpoints and then automatically resume its execution.
 					debug ("DEBUGGER_TRACE")
-						io.error.putstring ("STOPPED_HDLR: New breakpoint added, do nothing%N")
+						io.error.put_string ("STOPPED_HDLR: New breakpoint added, do nothing%N")
 					end
 				end
 			else -- retry_clause
@@ -160,7 +160,7 @@ feature
 --		rescue
 -- FIXME ARNAUD
 -- toTo: write a beautiful message box instead of this crappy message
---			io.putstring("Error while getting Application status. Application will be terminated%N")
+--			io.put_string("Error while getting Application status. Application will be terminated%N")
 -- END FIXME
 --			retry_clause := True
 --			retry

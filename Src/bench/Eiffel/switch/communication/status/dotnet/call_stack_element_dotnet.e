@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 				initialized := True
 			else
 				debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
-					io.putstring ("  @-> Initializing stack (CALL_STACK_ELEMENT_DOTNET): "+routine_name+" from: "+dynamic_class.name+"%N")
+					io.put_string ("  @-> Initializing stack (CALL_STACK_ELEMENT_DOTNET): "+routine_name+" from: "+dynamic_class.name+"%N")
 				end
 				rout := routine
 				if rout /= Void then
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 				end
 --			else
 --				debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
---					io.putstring ("  Error occurred during CALL_STACK_ELEMENT_DOTNET Initialisation : "+routine_name+" from: "+dynamic_class.name+"%N")
+--					io.put_string ("  Error occurred during CALL_STACK_ELEMENT_DOTNET Initialisation : "+routine_name+" from: "+dynamic_class.name+"%N")
 --				end
 --				initialized := True
 			end

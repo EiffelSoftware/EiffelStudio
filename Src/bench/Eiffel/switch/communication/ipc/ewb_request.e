@@ -32,7 +32,7 @@ feature -- Update
 			bp: BREAKPOINT
 		do
 			debug("DEBUGGER")
-				io.putstring("sending new breakpoint to the application%N")
+				io.put_string("sending new breakpoint to the application%N")
 			end
 			bpts := debug_info.breakpoints
 			status := Application.status
@@ -126,17 +126,17 @@ feature {NONE} -- Implementation
 		do
 			if (bp_mode = bp.breakpoint_to_remove) then
 				debug("DEBUGGER")
-					io.putstring("removing the breakpoint...%N")
+					io.put_string("removing the breakpoint...%N")
 					print(bp)
-					io.new_line
+					io.put_new_line
 				end
 				send_rqst_3 (Rqst_break, bp.real_body_id - 1, Break_remove, bp.breakable_line_number)
 				bp.set_application_not_set
 			elseif (bp_mode = bp.breakpoint_to_add) then
 				debug("DEBUGGER")
-					io.putstring("adding the breakpoint...%N")
+					io.put_string("adding the breakpoint...%N")
 					print(bp)
-					io.new_line
+					io.put_new_line
 				end
 				send_rqst_3 (Rqst_break, bp.real_body_id - 1, Break_set, bp.breakable_line_number)
 				bp.set_application_set

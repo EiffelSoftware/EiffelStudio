@@ -29,11 +29,11 @@ feature -- Access
 			Result := addr_table.item (addr)
 
 debug ("HECTOR")
-	io.error.putstring ("Address: ");
-	io.error.putstring (addr);
-	io.error.putstring (" Hector: ");
-	io.error.putstring (Result);
-	io.error.new_line
+	io.error.put_string ("Address: ");
+	io.error.put_string (addr);
+	io.error.put_string (" Hector: ");
+	io.error.put_string (Result);
+	io.error.put_new_line
 end
 		end;
 	
@@ -47,11 +47,11 @@ end
 			Result := c_tread
 	
 debug ("HECTOR")
-	io.error.putstring ("Hector: ");
-	io.error.putstring (h_addr);
-	io.error.putstring (" Address: ");
-	io.error.putstring (Result);
-	io.error.new_line
+	io.error.put_string ("Hector: ");
+	io.error.put_string (h_addr);
+	io.error.put_string (" Address: ");
+	io.error.put_string (Result);
+	io.error.put_new_line
 end
 		end;
 
@@ -120,9 +120,9 @@ feature {NONE}
 			send_rqst_3 (Rqst_wean, In_address, 0, hex_to_integer (h_addr))
 
 debug ("HECTOR")
-	io.error.putstring ("Wean Hector: ");
-	io.error.putstring (h_addr);
-	io.error.new_line
+	io.error.put_string ("Wean Hector: ");
+	io.error.put_string (h_addr);
+	io.error.put_new_line
 end
 		end;
 

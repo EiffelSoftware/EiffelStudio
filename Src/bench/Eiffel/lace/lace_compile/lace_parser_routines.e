@@ -177,8 +177,8 @@ feature {NONE} -- Implementation
 				file.start
 				f_count := file.count
 				if f_count > 0 then
-					file.readstream (f_count)
-					copy_file.putstring (file.laststring)
+					file.read_stream (f_count)
+					copy_file.put_string (file.last_string)
 				end
 				copy_file.close
 			end

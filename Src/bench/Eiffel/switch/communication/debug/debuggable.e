@@ -88,30 +88,30 @@ feature -- Tracing
 		do
 			from
 				i := 1;
-				io.putstring ("Byte code breakpoints:%N");
+				io.put_string ("Byte code breakpoints:%N");
 			until
 				i > byte_code.size
 			loop
 				if byte_code.item (i) = '%/066/' then
-					io.putstring ("Breakpoint, offset: ");
-					io.putint (i);
-					io.new_line;
+					io.put_string ("Breakpoint, offset: ");
+					io.put_integer (i);
+					io.put_new_line;
 				elseif byte_code.item (i) = '%/096/' then
-					io.putstring ("Contpoint, offset: ");
-					io.putint (i);
-					io.new_line;
+					io.put_string ("Contpoint, offset: ");
+					io.put_integer (i);
+					io.put_new_line;
 				end;
 				i := i + 1;
 			end;
 			-- Breakable points
 			from
 				breakable_points.start;
-				io.putstring ("Breakable point offsets: %N");
+				io.put_string ("Breakable point offsets: %N");
 			until
 				breakable_points.after
 			loop
-				io.putint (breakable_points.item.position);
-				io.new_line;
+				io.put_integer (breakable_points.item.position);
+				io.put_new_line;
 				breakable_points.forth
 			end
 		end;

@@ -51,25 +51,25 @@ feature {NONE} -- Initialization
 				-- set the private to a fake value
 			private_body_index := -1
 
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: Creating item%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: Creating item%N"); end
 			create unprocessed_values.make(10)
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_recv_c%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_recv_c%N"); end
 			init_recv_c
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_rout_c%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_rout_c%N"); end
 			init_rout_c
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_rout_info%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_rout_info%N"); end
 			c_recv_rout_info(Current)
 
 			debug ("DEBUGGER_TRACE")
 				if is_exhausted then
-					io.error.putstring("%T%TEXHAUSTED")
+					io.error.put_string("%T%TEXHAUSTED")
 				else
-					io.error.putstring("%T%T")
-					io.error.putstring(routine_name)
+					io.error.put_string("%T%T")
+					io.error.put_string(routine_name)
 				end
-				io.error.new_line
+				io.error.put_new_line
 			end
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: Finished creating%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: Finished creating%N"); end
 		end
 	
 	dummy_make (fn: STRING; lvl: INTEGER; mlt: BOOLEAN; br: INTEGER; addr: STRING; type, origin: INTEGER) is
@@ -89,11 +89,11 @@ feature {NONE} -- Initialization
 				-- set the private body index to a fake value
 			private_body_index := -1
 
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: Creating item%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: Creating item%N"); end
 			create unprocessed_values.make(10)
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_recv_c%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_recv_c%N"); end
 			init_recv_c
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_rout_c%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: init_rout_c%N"); end
 			init_rout_c
 		end
 
@@ -158,8 +158,8 @@ feature {NONE} -- Implementation
 
 	retrieve_locals_and_arguments is
 		do
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("CALL_STACK_ELEMENT_CLASSIC: receiving locals & arguments%N"); end
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("CALL_STACK_ELEMENT_CLASSIC: sending the request%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("CALL_STACK_ELEMENT_CLASSIC: receiving locals & arguments%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("CALL_STACK_ELEMENT_CLASSIC: sending the request%N"); end
 				-- send the request
 			send_rqst_1 (Rqst_dump_variables, level_in_stack)
 
@@ -167,38 +167,38 @@ feature {NONE} -- Implementation
 			retrieved_arguments_count := 0
 			retrieved_locals_count := 0
 				-- (`item' is set to Void when no more values are expected.)
-				debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: receiving the arguments%N"); end
+				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: receiving the arguments%N"); end
 			from
-					debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_value%N"); end
+					debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_value%N"); end
 				if not error then
 					c_recv_value (Current)
 				end
 			until
 				error or item = Void
 			loop
-					debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: processing value%N"); end
+					debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: processing value%N"); end
 				unprocessed_values.extend (item)
 				retrieved_arguments_count := retrieved_arguments_count + 1
-					debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_value%N"); end
+					debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_value%N"); end
 				c_recv_value (Current)
 			end
 
 				-- Receive the local entities. 
 				-- user-defined, then loop variants and old expr, and finally the result if any. 
 				-- (`item' is set to Void when no more values are expected).
-				debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: receiving the locals%N"); end
+				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: receiving the locals%N"); end
 			from
-					debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_value%N"); end
+					debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_value%N"); end
 				if not error then 
 					c_recv_value (Current) 
 				end
 			until
 				error or item = Void
 			loop
-					debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: processing value%N"); end
+					debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: processing value%N"); end
 				unprocessed_values.extend (item)
 				retrieved_locals_count := retrieved_locals_count + 1
-					debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_value%N"); end
+					debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%TCALL_STACK_ELEMENT_CLASSIC: c_recv_value%N"); end
 				c_recv_value (Current)
 			end
 		end
@@ -217,12 +217,12 @@ feature {NONE} -- Implementation
 			counter			: INTEGER
 			l_names_heap: like Names_heap
 		do
-				debug ("DEBUGGER_TRACE_CALLSTACK"); io.putstring ("Initializing stack (CALL_STACK_ELEMENT_CLASSIC): "+routine_name+" from: "+dynamic_class.name+"%N"); end
+				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("Initializing stack (CALL_STACK_ELEMENT_CLASSIC): "+routine_name+" from: "+dynamic_class.name+"%N"); end
 			if not is_exhausted then
 				retrieve_locals_and_arguments
 				set_hector_addr_for_locals_and_arguments
 			end
-				debug ("DEBUGGER_TRACE_CALLSTACK"); io.putstring ("Finished retrieving locals and argument"+"%N"); end
+				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("Finished retrieving locals and argument"+"%N"); end
 			rout := routine
 			unprocessed_l := unprocessed_values
 			unprocessed_l.start
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			private_locals := locals_list
 			unprocessed_values := Void
 			initialized := True
-				debug ("DEBUGGER_TRACE_CALLSTACK"); io.putstring ("%TFinished initializating stack: "+routine_name+"%N"); end
+				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("%TFinished initializating stack: "+routine_name+"%N"); end
 		ensure then
 			void_unprocessed: unprocessed_values = Void
 		end

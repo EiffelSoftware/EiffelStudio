@@ -40,16 +40,16 @@ feature
 			end
 	
 debug ("ONCE")
-	io.error.putstring ("Once routine `");
-	io.error.putstring (once_routine.name);
-	io.error.putstring ("' (");
-	io.error.putint (once_routine.real_body_id)
+	io.error.put_string ("Once routine `");
+	io.error.put_string (once_routine.name);
+	io.error.put_string ("' (");
+	io.error.put_integer (once_routine.real_body_id)
 	if Result then
-		io.error.putstring (") already called.")
+		io.error.put_string (") already called.")
 	else
-		io.error.putstring (") not called yet.")
+		io.error.put_string (") not called yet.")
 	end
-	io.error.new_line
+	io.error.put_new_line
 end
 		end
 

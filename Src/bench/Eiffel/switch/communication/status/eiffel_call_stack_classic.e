@@ -43,7 +43,7 @@ feature -- Output
 			stack_num, i: INTEGER
 			cs: CALL_STACK_ITEM
 		do
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: Displaying stack %N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Displaying stack %N"); end
 			st.add_new_line;
 			st.add_string ("Call stack:");
 			st.add_new_line;
@@ -65,10 +65,10 @@ feature -- Output
 			st.add_string ("-------");
 			st.add_new_line;
 
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: getting stack number %N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: getting stack number %N"); end
 			stack_num := Application.current_execution_stack_number;
 
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: processing %N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: processing %N"); end
 			from
 				start;
 				i := 1
@@ -87,7 +87,7 @@ feature -- Output
 				i := i + 1;
 			end;
 			st.add_new_line
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: end displaying call stack %N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: end displaying call stack %N"); end
 		end;
 
 feature {NONE} -- Initialization
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 			call	: CALL_STACK_ELEMENT_CLASSIC
 			level	: INTEGER
 		do
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: Creating Eiffel Stack%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Creating Eiffel Stack%N"); end
 			error_occurred := False
 			list_make
 	
@@ -122,8 +122,8 @@ feature {NONE} -- Initialization
 			end
 
 			debug ("DEBUGGER_TRACE");
-				io.error.putstring ("%TEIFFEL_CALL_STACK: Finished creating Eiffel Stack%N");
-				io.error.putstring ("%TEIFFEL_CALL_STACK: Adopting callstack objects%N");
+				io.error.put_string ("%TEIFFEL_CALL_STACK: Finished creating Eiffel Stack%N");
+				io.error.put_string ("%TEIFFEL_CALL_STACK: Adopting callstack objects%N");
 			end
 			
 				-- Now we adopt each object situated on the callstack
@@ -132,13 +132,13 @@ feature {NONE} -- Initialization
 				forth
 			end
 						
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: Finished Adopting callstack objects%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Finished Adopting callstack objects%N"); end
 		end
 
 	dummy_make is
 			-- Initialize only the first call stack element.
 		do
-			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: Creating dummy Eiffel Stack%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Creating dummy Eiffel Stack%N"); end
 			error_occurred := False
 			list_make
 		end

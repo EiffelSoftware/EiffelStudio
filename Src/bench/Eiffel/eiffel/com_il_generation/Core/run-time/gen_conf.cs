@@ -263,9 +263,4 @@ public interface EIFFEL_TYPE_INFO {
 	void ____set_type(EIFFEL_DERIVATION type);
 }
 
-public class EIFFEL_DERIVATION_LIST {
-	public static EIFFEL_DERIVATION [] eiffel_types;
-		// List all computed Eiffel types.
-}
-
 }

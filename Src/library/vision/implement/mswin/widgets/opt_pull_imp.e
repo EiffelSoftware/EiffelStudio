@@ -56,7 +56,8 @@ inherit
 			on_key_down,
 			on_set_cursor,
 			on_mouse_move,
-			on_destroy
+			on_destroy,
+			background_brush
 		redefine
 			on_cbn_killfocus,
 			exists

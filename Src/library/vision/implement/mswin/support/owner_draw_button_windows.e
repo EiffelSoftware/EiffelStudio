@@ -40,14 +40,19 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item,
 			font as wel_font,
-			set_font as wel_set_font
+			set_font as wel_set_font,
+			foreground_color as wel_foreground_color,
+			background_color as wel_background_color
 		undefine
 			on_hide, on_show, on_size, on_move,
 			on_right_button_up, on_left_button_down,
 			on_bn_clicked, on_left_button_up,
 			on_right_button_down, on_mouse_move,
 			on_destroy, on_set_cursor, on_key_up,
-			on_key_down
+			on_key_down, background_brush
+		redefine
+			wel_foreground_color,
+			wel_background_color
 		end
 
 	WEL_DIB_COLORS_CONSTANTS
@@ -247,8 +252,6 @@ feature {NONE} -- Implementation
 
 	wel_foreground_color: WEL_COLOR_REF is
 			-- Foreground color
-		require
-			exists: exists
 		do
 			if private_foreground_color /= Void then
 				Result ?= private_foreground_color.implementation
@@ -258,14 +261,10 @@ feature {NONE} -- Implementation
 			else
 				!! Result.make_system (color_btntext)
 			end
-		ensure
-			result_not_void: Result /= Void
 		end
 
 	wel_background_color: WEL_COLOR_REF is
 			-- Background color
-		require
-			exists: exists
 		do
 			if private_background_color /= Void then
 				Result ?= private_background_color.implementation
@@ -275,8 +274,6 @@ feature {NONE} -- Implementation
 			else
 				!! Result.make_system (color_btnface)
 			end
-		ensure
-			result_not_void: Result /= Void
 		end
 
 	on_bn_clicked is

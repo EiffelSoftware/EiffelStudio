@@ -63,7 +63,8 @@ inherit
 			on_set_cursor,
 			on_key_up,
 			on_key_down,
-			on_char
+			on_char,
+			background_brush
 		end
 
 	SIZEABLE_WINDOWS

@@ -289,8 +289,9 @@ RT_LNK EIF_OBJECT eifcreate(EIF_TYPE_ID cid);				/* Object creation */
 
 RT_LNK EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning ANY */
 
-RT_LNK EIF_TYPE_ID eiftype(EIF_OBJECT object);					/* Give dynamic type of EIF_OBJECT. Obsolete, use "eif_type_by_object". */
-RT_LNK EIF_TYPE_ID eif_type_by_object (EIF_REFERENCE object);					/* Give dynamic type of EIF_OBJECT */
+RT_LNK EIF_TYPE_ID eiftype(EIF_OBJECT object);			/* Give dynamic type of EIF_OBJECT. Obsolete, use "eif_type_by_object". */
+RT_LNK EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object);
+#define eif_type_by_object(obj)	eiftype(obj)			/* Give dynamic type of EIF_OBJECT */
 RT_LNK char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
 RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validityi. Must be preceded by *(EIF_TYPE*). */
 RT_LNK void *old_eifaddr(EIF_REFERENCE object, char *name);					/* Compute address of attribute. Old version. */

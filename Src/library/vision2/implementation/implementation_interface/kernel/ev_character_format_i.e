@@ -133,6 +133,11 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 		deferred
 		end
 		
+	height_in_points: INTEGER is
+			-- Height of `Current' in points.
+		deferred
+		end
+	
 	weight: INTEGER is
 			-- Weight of `Current'.
 		deferred

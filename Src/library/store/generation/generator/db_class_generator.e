@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			end
-			if tags.has_last_attribute_option then
+			if tags.has_last_attribute_option and then count > 0 then
 				append_block (template_block, count + 1)
 			end
 		ensure
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 		end
 
 	append_block (template_block: STRING; index: INTEGER) is
-			-- Replace tags in `template_block' with values of descritption item in
+			-- Replace tags in `template_block' with values of description item in
 			-- at `index'. Append result to `result_block'.
 		deferred
 		end

@@ -84,6 +84,7 @@ feature -- Formatting
 							display_header (stone);
 							mp.restore
 						else
+							holder.set_selected (False);
 							tool.showtext_frmt_holder.execute (stone)
 						end
 					else

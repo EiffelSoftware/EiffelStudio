@@ -40,6 +40,7 @@ feature {NONE}-- Initialization
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
+				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_1
 			create l_ev_vertical_box_2
@@ -63,6 +64,7 @@ feature {NONE}-- Initialization
 			create next_tip_button
 			create close_button
 			
+				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_vertical_box_2)
@@ -144,6 +146,7 @@ feature {NONE}-- Initialization
 			close_button.set_text (close_text)
 			close_button.set_minimum_width (default_button_width)
 			
+				--Connect events.
 			show_actions.extend (agent window_shown)
 			next_tip_button.select_actions.extend (agent next_tip_selected)
 			close_button.select_actions.extend (agent close_button_selected)
@@ -153,6 +156,7 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
+
 feature -- Access
 
 	tip_label: EV_LABEL

@@ -29,26 +29,26 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		local 
 			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
-			l_ev_frame_1, l_ev_frame_2, l_ev_frame_3: EV_FRAME
 			l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, 
 			l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7: EV_VERTICAL_BOX
-			l_ev_label_1, l_ev_label_2, l_ev_label_3: EV_LABEL
+			l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
 			l_ev_notebook_1: EV_NOTEBOOK
+			l_ev_frame_1, l_ev_frame_2: EV_FRAME
 			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 			l_ev_cell_1: EV_CELL
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
 			
+				-- Create all widgets.
 			create l_ev_horizontal_box_1
-			create l_ev_frame_1
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_2
 			create l_ev_label_1
 			create location_field
 			create l_ev_notebook_1
 			create l_ev_vertical_box_2
-			create l_ev_frame_2
+			create l_ev_frame_1
 			create l_ev_vertical_box_3
 			create l_ev_horizontal_box_3
 			create project_radio_button
@@ -57,12 +57,15 @@ feature {NONE}-- Initialization
 			create class_radio_button
 			create class_naming_frame
 			create l_ev_vertical_box_4
+			create project_specific_name_holder
 			create l_ev_label_2
 			create project_class_name_field
 			create l_ev_label_3
 			create application_class_name_field
+			create l_ev_label_4
+			create constants_class_name_field
 			create l_ev_vertical_box_5
-			create l_ev_frame_3
+			create l_ev_frame_2
 			create l_ev_vertical_box_6
 			create attributes_local_check_button
 			create attributes_non_local_check_button
@@ -77,16 +80,16 @@ feature {NONE}-- Initialization
 			create cancel_button
 			create l_ev_cell_1
 			
+				-- Build_widget_structure.
 			extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (l_ev_frame_1)
-			l_ev_frame_1.extend (l_ev_vertical_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (l_ev_label_1)
 			l_ev_horizontal_box_2.extend (location_field)
 			l_ev_vertical_box_1.extend (l_ev_notebook_1)
 			l_ev_notebook_1.extend (l_ev_vertical_box_2)
-			l_ev_vertical_box_2.extend (l_ev_frame_2)
-			l_ev_frame_2.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_2.extend (l_ev_frame_1)
+			l_ev_frame_1.extend (l_ev_vertical_box_3)
 			l_ev_vertical_box_3.extend (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_3.extend (project_radio_button)
 			l_ev_horizontal_box_3.extend (rebuild_ace_file_check_button)
@@ -94,13 +97,16 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_4.extend (class_radio_button)
 			l_ev_vertical_box_2.extend (class_naming_frame)
 			class_naming_frame.extend (l_ev_vertical_box_4)
-			l_ev_vertical_box_4.extend (l_ev_label_2)
-			l_ev_vertical_box_4.extend (project_class_name_field)
-			l_ev_vertical_box_4.extend (l_ev_label_3)
-			l_ev_vertical_box_4.extend (application_class_name_field)
+			l_ev_vertical_box_4.extend (project_specific_name_holder)
+			project_specific_name_holder.extend (l_ev_label_2)
+			project_specific_name_holder.extend (project_class_name_field)
+			project_specific_name_holder.extend (l_ev_label_3)
+			project_specific_name_holder.extend (application_class_name_field)
+			l_ev_vertical_box_4.extend (l_ev_label_4)
+			l_ev_vertical_box_4.extend (constants_class_name_field)
 			l_ev_notebook_1.extend (l_ev_vertical_box_5)
-			l_ev_vertical_box_5.extend (l_ev_frame_3)
-			l_ev_frame_3.extend (l_ev_vertical_box_6)
+			l_ev_vertical_box_5.extend (l_ev_frame_2)
+			l_ev_frame_2.extend (l_ev_vertical_box_6)
 			l_ev_vertical_box_6.extend (attributes_local_check_button)
 			l_ev_vertical_box_6.extend (attributes_non_local_check_button)
 			l_ev_vertical_box_6.extend (attributes_optimal_local_check_button)
@@ -115,20 +121,21 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_7.extend (l_ev_cell_1)
 			
 			set_title (system_window_title)
+			l_ev_horizontal_box_1.set_padding_width (large_padding)
+			l_ev_horizontal_box_1.set_border_width (medium_padding)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_7)
-			l_ev_vertical_box_1.set_border_width (2)
+			l_ev_vertical_box_1.set_padding_width (medium_padding)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.set_padding_width (5)
-			l_ev_horizontal_box_2.set_border_width (5)
+			l_ev_horizontal_box_2.set_padding_width (medium_padding)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_1)
 			l_ev_label_1.set_text ("Project Location:")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_2, "Build")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_5, "Generation")
 			l_ev_vertical_box_2.set_padding_width (small_padding)
 			l_ev_vertical_box_2.set_border_width (small_padding)
-			l_ev_vertical_box_2.disable_item_expand (l_ev_frame_2)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_frame_1)
 			l_ev_vertical_box_2.disable_item_expand (class_naming_frame)
-			l_ev_frame_2.set_text ("Build Type")
+			l_ev_frame_1.set_text ("Build Type")
 			l_ev_horizontal_box_4.merge_radio_button_groups (l_ev_horizontal_box_3)
 			project_radio_button.set_text ("Project")
 			rebuild_ace_file_check_button.set_text ("Always rebuild ace?")
@@ -139,13 +146,15 @@ feature {NONE}-- Initialization
 			l_ev_label_2.align_text_left
 			l_ev_label_3.set_text ("Application class name:")
 			l_ev_label_3.align_text_left
+			l_ev_label_4.set_text ("Constants class name:")
+			l_ev_label_4.align_text_left
 			l_ev_vertical_box_5.set_padding_width (small_padding)
 			l_ev_vertical_box_5.set_border_width (small_padding)
-			l_ev_vertical_box_5.disable_item_expand (l_ev_frame_3)
+			l_ev_vertical_box_5.disable_item_expand (l_ev_frame_2)
 			l_ev_vertical_box_5.disable_item_expand (debugging_check_button)
 			l_ev_vertical_box_5.disable_item_expand (client_check_button)
 			l_ev_vertical_box_5.disable_item_expand (load_constants_check_button)
-			l_ev_frame_3.set_text ("Attribute declarations")
+			l_ev_frame_2.set_text ("Attribute declarations")
 			attributes_local_check_button.set_text ("Local")
 			attributes_non_local_check_button.set_text ("Exported")
 			attributes_optimal_local_check_button.set_text ("Export only named")
@@ -153,8 +162,7 @@ feature {NONE}-- Initialization
 			debugging_check_button.set_text ("Generate debugging information?")
 			client_check_button.set_text ("Client of windows?")
 			load_constants_check_button.set_text ("Load constants from file?")
-			l_ev_vertical_box_7.set_padding_width (5)
-			l_ev_vertical_box_7.set_border_width (10)
+			l_ev_vertical_box_7.set_padding_width (medium_padding)
 			l_ev_vertical_box_7.disable_item_expand (ok_button)
 			l_ev_vertical_box_7.disable_item_expand (cancel_button)
 			ok_button.set_text (ok_button_text)
@@ -162,6 +170,7 @@ feature {NONE}-- Initialization
 			cancel_button.set_text (cancel_button_text)
 			cancel_button.set_minimum_width (default_button_width)
 			
+				--Connect events.
 			show_actions.extend (agent display_project_information)
 			show_actions.extend (agent display_project_information)
 			show_actions.extend (agent display_project_information)
@@ -176,14 +185,16 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
+
 feature -- Access
 
-	location_field, project_class_name_field, application_class_name_field: EV_TEXT_FIELD
+	location_field, project_class_name_field, application_class_name_field, constants_class_name_field: EV_TEXT_FIELD
 	project_radio_button, class_radio_button, attributes_local_check_button, attributes_non_local_check_button, 
 	attributes_optimal_local_check_button: EV_RADIO_BUTTON
 	rebuild_ace_file_check_button, local_check_button, debugging_check_button, client_check_button, 
 	load_constants_check_button: EV_CHECK_BUTTON
 	class_naming_frame: EV_FRAME
+	project_specific_name_holder: EV_VERTICAL_BOX
 	ok_button, cancel_button: EV_BUTTON
 
 feature {NONE} -- Implementation

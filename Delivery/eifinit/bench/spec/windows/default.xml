@@ -2,7 +2,7 @@
 <TOPIC TOPIC_ID="Bench_preferences" ICON="icon_preferences_root">
 	<HEAD>EiffelBench Resources, version 4.8</HEAD>
 	<TOPIC TOPIC_ID="General" ICON="icon_preferences_folder">
-		<HEAD>General Preferences</HEAD>
+		<HEAD>General</HEAD>
 		<TOPIC TOPIC_ID="Applications_and_directories" ICON="icon_preferences_folder">
 			<HEAD>Applications and Directories</HEAD>
 			<TEXT>acrobat_reader<STRING>acrobat</STRING></TEXT>
@@ -16,9 +16,7 @@
 			<TEXT>web_browser<STRING>netscape</STRING></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="tools" ICON="icon_preferences_folder">
-			<HEAD>Tool Preferences</HEAD>
-			<TEXT>close_button_in_tools<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT>default_window_position<BOOLEAN>False</BOOLEAN></TEXT>
+			<HEAD>Tool</HEAD>
 			<TEXT>history_size<INTEGER>10</INTEGER></TEXT>
 		</TOPIC>
 	</TOPIC>
@@ -100,7 +98,7 @@
 				</TOPIC>
 			</TOPIC>
 			<TOPIC TOPIC_ID="Automatic completion" ICON="icon_preferences_folder">
-				<HEAD>Autocomplete preferences</HEAD>
+				<HEAD>Autocomplete</HEAD>
 				<TEXT DESCRIPTION="Brackets and parenthesis are closed automatically">autocomplete_brackets_and_parenthesis<BOOLEAN>False</BOOLEAN></TEXT>
 				<TEXT DESCRIPTION="Quotes are closed automatically">autocomplete_quotes<BOOLEAN>False</BOOLEAN></TEXT>
 				<TEXT DESCRIPTION="Enable syntax autocomplete">syntax_autocomplete<BOOLEAN>True</BOOLEAN></TEXT>
@@ -507,6 +505,7 @@
 			<TEXT DESCRIPTION="Display New/Open project dialog at startup">show_starting_dialog<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog on exit">confirm_on_exit<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog on freeze operation">confirm_freeze<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved">confirm_save_before_compile<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Graphics" ICON="icon_preferences_folder">

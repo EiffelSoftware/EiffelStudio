@@ -5,19 +5,19 @@ indexing
 
 class SHARED_TYPE_I
 	
-feature {NONE}
+feature -- Access
 
 	Boolean_c_type: BOOLEAN_I is
 			-- Boolean C type
 		once
-			!!Result;
-		end;
+			create Result
+		end
 
 	Char_c_type: CHAR_I is
 			-- Char C type
 		once
 			create Result.make (False)
-		end;
+		end
 
 	Wide_char_c_type: CHAR_I is
 			-- Wide char C type
@@ -28,7 +28,7 @@ feature {NONE}
 	Pointer_c_type: POINTER_I is
 			-- Pointer C type
 		once
-			!! Result
+			create Result
 		end
 
 	int8_c_type: LONG_I is
@@ -46,8 +46,8 @@ feature {NONE}
 	Long_c_type: LONG_I is
 			-- long C type
 		once
-			create Result.make (32);
-		end;
+			create Result.make (32)
+		end
 
 	int64_c_type: LONG_I is
 			-- int64 C type
@@ -58,31 +58,31 @@ feature {NONE}
 	Float_c_type: FLOAT_I is
 			-- Float C type
 		once
-			!!Result;
-		end;
+			create Result
+		end
 
 	Double_c_type: DOUBLE_I is
 			-- Double C type
 		once
-			!!Result;
-		end;
+			create Result
+		end
 
 	Reference_c_type: REFERENCE_I is
 			-- Reference C type
 		once
-			!!Result;
-		end;
+			create Result
+		end
 
 	Void_c_type: VOID_I is
 			-- Void C type
 		once
-			!!Result;
-		end;
+			create Result
+		end
 
 	None_c_type: NONE_I is
 			-- None C type
 		once
-			!! Result
+			create Result
 		end
 
 end

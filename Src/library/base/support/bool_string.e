@@ -28,7 +28,7 @@ feature -- Initialization
 	make (n: INTEGER) is
 			-- Allocate area of `n' booleans.
 		require
-			positive_size: n > 0
+			non_negative_size: n >= 0
 		do
 			make_area (n);
 		ensure

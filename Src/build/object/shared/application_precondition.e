@@ -161,9 +161,12 @@ feature {NONE} -- Code generation
 		local
 			temp_word: STRING
 			i, j: INTEGER
+			target_needed: BOOLEAN
+			car: CHARACTER
 		do
 			!! Result.make (0)
 			from
+				target_needed := True
 				i := 1
 			until
 				i > precondition_text.count
@@ -203,11 +206,19 @@ feature {NONE} -- Code generation
 					then
 						Result.append (temp_word)
 					else
-						Result.append ("target.")
+						if target_needed then
+							Result.append ("target.")
+						end
 						Result.append (temp_word)
 					end					
 				else
-					Result.append_character (precondition_text.item (i))
+					car := precondition_text.item (i)
+					if car.is_equal ('.') then
+						target_needed := False
+					elseif car.is_equal ('(') then
+						target_needed := True
+					end
+					Result.append_character (car)
 					i := i + 1
 				end
 			end
@@ -230,7 +241,7 @@ feature {NONE} -- Code generation
 				not precondition_text.item (i).is_digit 
 				and not precondition_text.item (i).is_alpha
 			   	and not precondition_text.item (i).is_equal ('_')
-				and not precondition_text.item (i).is_equal ('.')
+				or precondition_text.item (i).is_equal ('.')
 			loop
 				Result.append_character (precondition_text.item (i))
 				i := i + 1

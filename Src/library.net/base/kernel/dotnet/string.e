@@ -571,6 +571,7 @@ feature -- Element change
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone'.)
 		do
+			standard_copy (other)
 			create internal_string_builder.make_from_value (other.to_cil)
 		ensure then
 			new_result_count: count = other.count
@@ -1579,7 +1580,7 @@ feature -- Duplication
 
 feature -- Output
 
-	out: like Current is
+	out: STRING is
 			-- Printable representation
 		do
 			Result := clone (Current)

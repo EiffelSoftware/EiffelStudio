@@ -17,15 +17,24 @@ inherit
 
 creation
 
-	make
+	make,
+	make_for_screen
 
-feature 
+feature {NONE} -- Initialization
 
 	make is
 			-- Create a cursor.
 		do
 			implementation := toolkit.screen_cursor (current)
 		end;
+
+    make_for_screen (a_screen: SCREEN) is
+            -- Create a cursor for `a_screen'.
+        require
+            valid_screen: a_screen /= Void and then a_screen.is_valid
+        do
+            implementation := toolkit.screen_cursor_for_screen (Current, a_screen)
+        end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

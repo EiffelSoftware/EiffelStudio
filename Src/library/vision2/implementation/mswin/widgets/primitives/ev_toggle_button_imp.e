@@ -15,103 +15,104 @@ inherit
 
 	EV_BUTTON_IMP
 		undefine
-			wel_make,
-			make_by_id,
-			default_style,
-			process_message
+			process_notification
 		redefine
-			interface, wel_parent,
+			interface,
 			redraw_current_push_button,
-			update_current_push_button
-		end
-
-	WEL_SELECTABLE_BUTTON
-		rename
-			make as wel_make,
-			parent as wel_parent,
-			set_parent as wel_set_parent,
-			font as wel_font,
-			set_font as wel_set_font,
-			shown as is_displayed,
-			destroy as wel_destroy,
-			width as wel_width,
-			height as wel_height,
-			item as wel_item,
-			enabled as is_sensitive,
-			x as x_position,
-			y as y_position,
-			move_and_resize as wel_move_and_resize,
-			move as wel_move,
-			resize as wel_resize,
-			text as wel_text,
-			set_text as wel_set_text,
-			set_checked as enable_select,
-			set_unchecked as disable_select,
-			checked as is_selected,
-			background_color as wel_background_color,
-			foreground_color as wel_foreground_color,
-			has_capture as wel_has_capture
-		undefine
-			remove_command,
-			set_width,
-			set_height,
-			on_left_button_down,
-			on_middle_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_middle_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_middle_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_key_down,
-			on_key_up,
-			on_char,
-			on_set_focus,
-			on_desactivate,
-			on_kill_focus,
-			on_set_cursor,
+			update_current_push_button,
 			on_bn_clicked,
-			on_size,
-			wel_set_text,
-			on_show,
-			on_hide,
-			show,
-			hide,
-			x_position,
-			y_position,
-			wel_background_color,
-			wel_foreground_color,
-			on_sys_key_down,
-			on_sys_key_up,
-			default_process_message
-		redefine
-			default_style,
-			enable_select,
-			disable_select
-		end	
-
+			has_pushed_appearence,
+			initialize,
+			internal_background_brush
+		end
+		
 create
 	make
+	
+feature {NONE} -- Initialization
+
+	initialize is
+			--
+		do
+			Precursor {EV_BUTTON_IMP}
+			is_selected := False
+		end
+		
+	
+feature -- Access
+
+	is_selected: BOOLEAN
+		-- Is `Current' selected?
 
 feature -- Status setting
 
 	enable_select is
-			-- Enable `Current'.
+			-- Ensure `is_selected' is True.
 		do
-			Precursor
+			is_selected := True
 			select_actions.call ([])
+		ensure
+			is_selected = True
 		end
 
 	disable_select is
-			-- Disable `Current'.
+			-- Ensure `is_selected' is False.
 		do
-			Precursor
+			is_selected := False
 			select_actions.call ([])
+		ensure
+			is_selected = False
 		end
 
 feature {NONE} -- Implementation, focus event
+
+	has_pushed_appearence (state: INTEGER): BOOLEAN is
+			-- Should `Current' have the appearence of being
+			-- pressed?
+			-- As `Current' is a toggle, button, it must be displayed as
+			-- pushed when `is_selected', or if `state' has `button_in' enabled.
+		do
+			Result := Precursor {EV_BUTTON_IMP} (state)
+			if not Result then
+				Result := is_selected
+			end
+		end
+
+	on_bn_clicked is
+			-- Bn_clicked message received from Windows,
+			-- so toggle `is_selected', redraw `Current' and
+			-- fire `select_actions'.
+		do
+			is_selected := not is_selected
+			invalidate
+			select_actions.call ([])
+		ensure
+			state_changed: old is_selected = not is_selected
+		end
+		
+	on_bn_double_clicked is
+			-- Bn_clicked message received from Windows,
+			-- so toggle `is_selected', redraw `Current' and
+			-- fire `select_actions'.
+		do
+			is_selected := not is_selected
+			invalidate
+			select_actions.call ([])
+		ensure
+			state_changed: old is_selected = not is_selected
+		end
+		
+	process_notification (notification_code: INTEGER) is
+			-- Process any windows notification messages.
+			-- In this case, it is redefined to handle
+			-- BN_doubleclick.
+		do
+			if notification_code = Bn_doubleclicked then
+				on_bn_double_clicked
+			else
+				Precursor {EV_BUTTON_IMP} (notification_code)
+			end
+		end
 
 	update_current_push_button is
 			-- Update the current push button
@@ -132,14 +133,55 @@ feature {NONE} -- Implementation, focus event
 			-- remove any bold border to the other buttons.
 		do
 		end
-		
-	default_style: INTEGER is
-			-- Default style used to create `Current'.
-		do
-			Result := Ws_visible + Ws_child + 
-				Ws_group + Ws_tabstop + Bs_autocheckbox +
-				Bs_pushlike + Ws_clipchildren + Ws_clipsiblings
+
+ 	internal_background_brush: WEL_BRUSH is
+ 			-- `Result' is brush used for redrawing background of `Current'.
+ 		do
+ 			if not is_selected then
+ 				Result := Precursor {EV_BUTTON_IMP}
+ 			else
+	 			Result := splitter_brush
+	 		end
+	 	ensure
+	 		Result_not_void: Result /= Void
  		end
+ 		
+ 		
+ 		
+ 	splitter_brush: WEL_BRUSH is
+			-- Create the brush used to draw the invert splitter.
+		local
+			a_bitmap: WEL_BITMAP
+			string_bitmap: STRING
+			i: INTEGER
+		do
+				-- We create a bitmap 8x8 which follows the pattern:
+				-- black / white / black... on one line
+				-- and white / black / white... on the other.
+				-- The hexa number 0xAA correspond to the first line
+				-- and the 0x55 to the other line. Since Windows expects
+				-- value aligned on DWORD, we have gap in our strings.
+
+				-- Creating data of bitmaps
+			create string_bitmap.make (16)
+			string_bitmap.fill_blank
+			from
+				i := 1
+			until
+				i > 16
+			loop	
+				string_bitmap.put ((0x000000AA).to_character, i)
+				string_bitmap.put ((0x00000055).to_character, i + 2)
+				i := i + 4
+			end
+
+				-- Then, we create the brush
+			create a_bitmap.make_direct (8, 8, 1, 1, string_bitmap)
+			create Result.make_by_pattern (a_bitmap)
+			
+			a_bitmap.delete
+		end
+ 		
 
 feature {EV_ANY_I} -- Implementation
 

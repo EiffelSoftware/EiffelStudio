@@ -112,7 +112,7 @@ feature -- Access
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			Result := fs_valid and then class_i /= Void
+			Result := class_i /= Void and then fs_valid
 		end;
 
 	invalid_stone_message: STRING is

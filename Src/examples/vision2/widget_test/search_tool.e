@@ -77,7 +77,7 @@ feature -- Basic operations
 			end
 			found_position := search_text.substring_index (search_string, 1)
 			if found_position = 0 then
-				search_text := text_control.text.substring (1, caret_position)
+				search_text := text_control.text.substring (1, caret_position - 1)
 				if not case_matching then
 					search_text := search_text.as_upper
 				end

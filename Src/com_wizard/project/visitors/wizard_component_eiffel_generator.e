@@ -5,7 +5,8 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	WIZARD_COMPONENT_EIFFEL_GENERATOR
+	WIZARD_COMPONENT_EIFFEL_GENERATOR 
+
 
 inherit
 	WIZARD_WRITER_FEATURE_CLAUSES
@@ -41,10 +42,7 @@ feature {NONE} -- Implementation
 			-- Set default ancestors
 		require
 			non_void_eiffel_writer: an_eiffel_writer /= Void
-		local
-			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
-		do
-				
+		deferred
 		end
 
 end -- class WIZARD_COMPONENT_EIFFEL_GENERATOR

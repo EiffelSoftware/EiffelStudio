@@ -787,7 +787,7 @@ feature {NONE} -- Implementation, cursor of the widget
 			end
 		end
 
-feature {WEL_DISPATCHER}
+feature {WEL_DISPATCHER} -- Message dispatcher
 
 	window_process_message (hwnd: POINTER; msg,
 			wparam, lparam: INTEGER): INTEGER is

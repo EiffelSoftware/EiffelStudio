@@ -142,6 +142,34 @@ feature -- Access
 			"TBM_CLEARSEL"
 		end
 
+	Tbm_getlinesize: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TBM_GETLINESIZE"
+		end
+
+	Tbm_getpagesize: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TBM_GETPAGESIZE"
+		end
+
+	Tbm_setlinesize: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TBM_SETLINESIZE"
+		end
+
+	Tbm_setpagesize: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TBM_SETPAGESIZE"
+		end
+
 end -- class WEL_TBM_CONSTANTS
 
 --|----------------------------------------------------------------

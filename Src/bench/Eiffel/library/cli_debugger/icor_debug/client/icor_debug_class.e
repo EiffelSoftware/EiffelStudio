@@ -58,6 +58,7 @@ feature {ICOR_EXPORTER} -- Access
 			-- determine the proper value.
 		require
 			frame_not_void: a_frame /= Void
+			token_valid: mdfielddef > 0
 		local
 			p: POINTER
 		do

@@ -55,9 +55,11 @@ feature -- Setting
 	set_root_class_name (a_name: like root_class_name) is
 			-- Set `root_class_name' with `a_name'.
 		do
-			root_class_name := a_name
+			upper_case_name := clone (a_name)
+			upper_case_name.to_upper
+			root_class_name := upper_case_name
 		ensure
-			root_class_name_set: root_class_name = a_name
+			root_class_name_set: root_class_name = upper_case_name
 		end
 
 	set_root_class_external_name (a_name: like root_class_external_name) is
@@ -490,6 +492,9 @@ feature -- Basic operation
 		
 feature {NONE} -- Implementation
 
+	upper_case_name: STRING
+			-- Upper case root class name
+			
 	Default_project_name: STRING is
 			-- Default project name
 		do

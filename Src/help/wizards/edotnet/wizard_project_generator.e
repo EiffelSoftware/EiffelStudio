@@ -35,31 +35,35 @@ feature -- Basic Operations
 			create tuple.make
 			tuple.put (Application_type_template, 1)
 			tuple.put (wizard_information.application_type, 2)
-			map_list.extend (tuple)			
+			map_list.extend (tuple)		
+			
 				-- Add the root class name
-			create tuple.make
-			tuple.put (Root_class_name_template, 1)
-			tuple.put (wizard_information.root_class_name, 2)
-			map_list.extend (tuple)
+			root_class_name_lowercase := clone (wizard_information.root_class_name)
+			root_class_name_lowercase.to_lower
+			if not root_class_name_lowercase.is_equal (None_class) then
+				create tuple.make
+				tuple.put (Root_class_name_template, 1)
+				tuple.put (wizard_information.root_class_name, 2)
+				map_list.extend (tuple)
 
-				-- Add the root class external name
-			create tuple.make
-			tuple.put (Root_class_external_name_template, 1)
-			tuple.put (wizard_information.root_class_external_name, 2)
-			map_list.extend (tuple)
-			
-				-- Add the creation routine name
-			create tuple.make
-			tuple.put (Creation_routine_name_template, 1)
-			tuple.put (wizard_information.creation_routine_name, 2)
-			map_list.extend (tuple)
+					-- Add the root class external name
+				create tuple.make
+				tuple.put (Root_class_external_name_template, 1)
+				tuple.put (wizard_information.root_class_external_name, 2)
+				map_list.extend (tuple)
 
-				-- Add the creation routine external name
-			create tuple.make
-			tuple.put (Creation_routine_external_name_template, 1)
-			tuple.put (wizard_information.creation_routine_external_name, 2)
-			map_list.extend (tuple)
-			
+					-- Add the creation routine name
+				create tuple.make
+				tuple.put (Creation_routine_name_template, 1)
+				tuple.put (wizard_information.creation_routine_name, 2)
+				map_list.extend (tuple)
+
+					-- Add the creation routine external name
+				create tuple.make
+				tuple.put (Creation_routine_external_name_template, 1)
+				tuple.put (wizard_information.creation_routine_external_name, 2)
+				map_list.extend (tuple)
+			end
 				-- Add the external classes paths
 			create tuple.make
 			tuple.put (External_classes_template, 1)
@@ -78,13 +82,14 @@ feature -- Basic Operations
 				tuple.put (Empty_string, 2)
 			end
 			map_list.extend (tuple)
-			
-				-- Root class name
-			root_class_name_lowercase := clone (wizard_information.root_class_name)
-			root_class_name_lowercase.to_lower
-			
-			from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Ace_extension, map_list)
-			from_template_to_project (wizard_resources_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
+		
+				-- Generation
+			if not root_class_name_lowercase.is_equal (None_class) then
+				from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Ace_extension, map_list)
+				from_template_to_project (wizard_resources_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
+			else
+				from_template_to_project (wizard_resources_path, Ace_template_with_root_class_none_filename, project_location, project_name_lowercase + Ace_extension, map_list)			
+			end
 		end
 
 	tuple_from_file_content (an_index: STRING; a_content_file: STRING): TUPLE [STRING, STRING] is
@@ -453,13 +458,19 @@ feature {NONE} -- Constants
 	
 	Ace_template_filename: STRING is "template_ace.ace"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
+
+	Ace_template_with_root_class_none_filename: STRING is "template_ace_with_root_class_none.ace"
+			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 	
 	Application_template_filename: STRING is "template_application.e"
 			-- Filename of the template used to automatically generate a root class for .NET applications
-	
+
 	External_classes_comment: STRING is "-- .NET System"
 			-- Comment before paths to external classes
 	
+	None_class: STRING is "none"
+			-- `NONE' class
+			
 	Inverted_comma: STRING is "%""
 			-- Inverted comma
 	

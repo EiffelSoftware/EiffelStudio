@@ -228,7 +228,7 @@ feature -- Removal
 			until
 				l.after
 			loop
-				on_item_removed_at (l.item, l.index)
+				on_item_removed_at (l.item, 1)
 				l.forth
 			end
 		end

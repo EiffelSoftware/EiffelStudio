@@ -207,11 +207,14 @@
 					performing object comparison, even when reference comparison was selected by 
 					passing `False' as the second argument.
 					<li>
-						<B>EV_TREE_NODE_LIST</B> - Fixed `retrieve_item_recursively_by_data' and 
-						`retrieve_items_recursively_by_data' which were always performing object 
-						comparison, even when reference comparison was selected by passing `False' as 
-						the second argument.</li>
-					<li><B>EV_CONTAINER</B> - Fixed bug in `unmerge_radio_button_groups' which would crash if the container had no radio buttons.</li>
+						<B>EV_TREE_NODE_LIST</B>
+					- Fixed `retrieve_item_recursively_by_data' and 
+					`retrieve_items_recursively_by_data' which were always performing object 
+					comparison, even when reference comparison was selected by passing `False' as 
+					the second argument.
+					<li>
+						<B>EV_CONTAINER</B> - Fixed bug in `unmerge_radio_button_groups' which would 
+						crash if the container had no radio buttons.</li>
 				</ul>
 			<li>
 				<b>Windows</b>
@@ -241,14 +244,15 @@
 					<LI>
 						<B>EV_LIST</B>
 						<UL>
-					<li>Calling `disable_sensitive' when already non sensitive would loose the 
-					original selection, and calling `enable_sensitive' when already sensitive would 
-					alter the selected item. The features will no longer alter the selection if 
-					called twice.
-					</LI>
-					<li>Fixed result of `background_color' which was returning gray instead of white before a color was assigned</li>
-						
-					</ul>
+							<li>
+							Calling `disable_sensitive' when already non sensitive would loose the original 
+							selection, and calling `enable_sensitive' when already sensitive would alter 
+							the selected item. The features will no longer alter the selection if called 
+							twice.
+							<li>
+								Fixed result of `background_color' which was returning gray instead of white 
+								before a color was assigned</li>
+						</UL>
 						<B>EV_CELL</B>
 					- If you removed the item, the minimum size was not updated to reflect this, 
 					thereby retaining the minimum size as constrained by the minimum size of the 
@@ -286,20 +290,29 @@
 						<B>EV_COMBO_BOX_IMP</B><UL>
 							<LI>
 							Fixed `set_foreground_color' and `set_background_color' which previously did 
-							nothing.</li>
+							nothing.
 							<LI>
-								Fixed bug in selection. If during execution of the `select_actions' of an item 
-								contained, you called `enable_select' on another item within the combo box, 
-								subsequently selecting the originally selected item would no longer fire its 
-								`select_actions'.</LI>
-			<LI>`enable_edit' and `disable_edit' were both causing the pixmaps of any items contained to be no longer displayed.</LI></UL>
+							Fixed bug in selection. If during execution of the `select_actions' of an item 
+							contained, you called `enable_select' on another item within the combo box, 
+							subsequently selecting the originally selected item would no longer fire its 
+							`select_actions'.
+							<LI>
+								`enable_edit' and `disable_edit' were both causing the pixmaps of any items 
+								contained to be no longer displayed.</LI></UL>
 					<li>
-						<B>EV_PRINT_DIALOG</B> - Querying `print_context' from a print dialog if a user 
-						selected "Cancel" would previously crash.</li>
-					<LI><B>EV_TREE</B> and <B>EV_MULTI_COLUMN_LIST</B> - Fixed result of `background_color' which was returning gray instead of white before a color was assigned</li>
-				<LI><B>EV_SCREEN</B> - `widget_at_pointer_position' now returns the combo box if the mouse pointer is held above the drop down list button of a combo box. Previously, `Void' was returned.</LI>
+						<B>EV_PRINT_DIALOG</B>
+					- Querying `print_context' from a print dialog if a user selected "Cancel" 
+					would previously crash.
+					<LI>
+						<B>EV_TREE</B> and <B>EV_MULTI_COLUMN_LIST</B>
+					- Fixed result of `background_color' which was returning gray instead of white 
+					before a color was assigned
+					<LI>
+						<B>EV_SCREEN</B> - `widget_at_pointer_position' now returns the combo box if 
+						the mouse pointer is held above the drop down list button of a combo box. 
+						Previously, `Void' was returned.</LI>
 				</ul>
-			<li>
+			<LI>
 				<b>Gtk</b>
 				<UL>
 					<LI>
@@ -310,8 +323,11 @@
 					- Fixed bug where 100 percent of CPU time was being used when dialog was shown 
 					modally.
 					<LI>
-						<STRONG>EV_WINDOW</STRONG> - Now sizing invariants are fulfilled when widget is 
-						destroyed, preventing segmentation violation. <STRONG>EV_COMBO_BOX</STRONG>
+						<STRONG>EV_WINDOW</STRONG>
+					- Now sizing invariants are fulfilled when widget is destroyed, preventing 
+					segmentation violation.
+					<LI>
+						<STRONG>EV_COMBO_BOX</STRONG>
 						<UL>
 							<LI>
 							Fixed bug where reselecting an item within the combo box list was in fact 
@@ -345,10 +361,31 @@
 						<STRONG>EV_WINDOW</STRONG>
 					- Now all window specific&nbsp;events&nbsp;work as expected
 					<LI>
-						<STRONG>EV_TITLED_WINDOW</STRONG> - Now is_displayed returns false when window 
-						is minimized.</LI>
-				</UL>
-			</li>
+						<STRONG>EV_TITLED_WINDOW</STRONG>
+					- Now is_displayed returns false when window is minimized.
+					<LI>
+						<STRONG>EV_TREE_NODE</STRONG>
+					- Insertion of children at specific rows now displays as expected.
+					<LI>
+						<STRONG>EV_WINDOW</STRONG>
+					- Now windows have a border and are resizable to match Win32 behavior
+					<LI>
+						<STRONG>EV_SPLIT_AREA</STRONG>
+					- Now 'split position' honors request when widget resize is pending
+					<LI>
+						<STRONG>EV_DRAWING_AREA </STRONG>
+					- Fixed full size optimization so that all expose actions are handled correctly
+					<LI>
+						<STRONG>EV_TEXT_COMPONENT - </STRONG>
+					Fixed issue where up and down arrow keys caused widget to lose focus 
+					unnecessarily
+					<LI>
+						<STRONG>EV_FONT</STRONG>
+					- Now preferred families are taken in to account when no style is set
+					<LI>
+						<STRONG>EV_STANDARD_DIALOG </STRONG>- Now all file handling dialogs are 
+						resizable</LI></UL>
+			</LI>
 		</UL>
 		<h2>Eiffel Studio 5.3</h2>
 		<p><b>Interface modifications</b></p>

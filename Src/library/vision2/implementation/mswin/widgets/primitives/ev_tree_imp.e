@@ -33,7 +33,7 @@ inherit
 			interface
 		end
 
-	EV_TREE_ITEM_HOLDER_IMP
+	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
 		undefine
 			item_by_data
 		redefine
@@ -287,7 +287,7 @@ feature -- Basic operations
 		end
 
 	general_remove_item (item_imp: EV_TREE_ITEM_IMP) is
-			-- Remove the given ite, if it has any children, it store them in
+			-- Remove the given item, if it has any children, it store them in
 			-- the item.
 		local
 			c: ARRAYED_LIST [EV_TREE_ITEM_IMP]
@@ -390,7 +390,7 @@ feature {EV_TREE_ITEM_I} -- Implementation
 			general_insert_item (item_imp, default_pointer, Tvi_last)
 		end
 
-	insert_item (item_imp: like item_type; an_index: INTEGER) is
+	insert_item (item_imp: EV_TREE_ITEM_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' at the `an_index' position.
 		do
 			if an_index = 1 then
@@ -644,6 +644,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/07 17:34:47  rogers
+--| Now inherits from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM] instead of EV_TREE_ITEM_HOLDER_IMP. Reference to item_type replaced with EV_TREE_ITEM_IMP.
+--|
 --| Revision 1.39  2000/03/06 20:46:07  rogers
 --| Corrected reference from index -> an_index in insert_item.
 --|

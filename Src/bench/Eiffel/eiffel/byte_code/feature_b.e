@@ -190,9 +190,6 @@ feature -- IL code generation
 				-- or on an enum type. This happens only when we are calling
 				-- magically added feature on basic types.
 			if is_il_feature_special (cl_type) then
-				if il_special_routines.not_need_target.has (feature_name_id) then
-					il_generator.pop
-				end
 				il_special_routines.generate_il (cl_type, parameters)
 			else
 					-- Find location of feature.

@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_dc: WEL_DC) is
 			-- Make a compatible dc with `a_dc'
 		require
-			a_dc_not_not: a_dc /= Void
+			a_dc_not: a_dc /= Void
 			a_dc_exists: a_dc.exists
 		do
 			item := cwin_create_compatible_dc (a_dc.item)
@@ -32,8 +32,7 @@ feature {NONE} -- Removal
 	destroy_item is
 		do
 			unselect_all
-			cwin_delete_dc (item)
-			item := default_pointer
+			delete
 		end
 
 feature {NONE} -- Externals

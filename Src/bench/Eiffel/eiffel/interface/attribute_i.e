@@ -305,6 +305,9 @@ feature
 			result_type: TYPE_I;
 			static_type: INTEGER;
 			current_type: CL_TYPE_I;
+			base_class: CLASS_C;
+			r_id: INTEGER;
+			rout_info: ROUT_INFO
 		do
 			ba := Byte_array;
 			ba.clear;
@@ -334,11 +337,21 @@ feature
 			ba.append ('%U');
 				-- Access to attribute; Result := <attribute access>
 			ba.append (Bc_current);
-			ba.append (Bc_attribute);
-				-- Feature id
-			ba.append_integer (feature_id);
-				-- Static type
-			ba.append_short_integer (current_type.associated_class_type.id - 1);
+			base_class := current_type.base_class;
+			if base_class.is_precompiled then
+				r_id := - rout_id_set.first;
+				rout_info := System.rout_info_table.item (r_id);
+				ba.append (Bc_pattribute);
+				ba.append_integer (rout_info.origin);
+				ba.append_integer (rout_info.offset)
+			else
+				ba.append (Bc_attribute);
+					-- Feature id
+				ba.append_integer (feature_id);
+					-- Static type
+				ba.append_short_integer
+					(current_type.associated_class_type.id - 1);
+			end;
 				-- Attribute meta-type
 			ba.append_uint32_integer (result_type.sk_value);
 			ba.append (Bc_rassign);

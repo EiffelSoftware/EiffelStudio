@@ -774,6 +774,8 @@ feature -- Skeleton generation
 			skeleton_empty: BOOLEAN;
 			a_class: CLASS_C;
 			creation_feature: FEATURE_I;
+			r_id: INTEGER;
+			rout_info: ROUT_INFO
 		do
 			a_class := associated_class;
 			skeleton_empty := skeleton.empty;
@@ -855,21 +857,39 @@ feature -- Skeleton generation
 					Skeleton_file.putstring ("'\0',%N");
 				end;
 
-					-- Creation feature id if any.
-				Skeleton_file.putstring ("(int32) ");
-				creation_feature := a_class.creation_feature;
-				if creation_feature /= Void then
-					Skeleton_file.putint (creation_feature.feature_id);
-				else
-					Skeleton_file.putint (0);
-				end;
-				Skeleton_file.putstring (",%N");
+				if
+					not Compilation_modes.is_precompiling and
+					not associated_class.is_precompiled
+				then
+						-- Creation feature id if any.
+					Skeleton_file.putstring ("(int32) ");
+					creation_feature := a_class.creation_feature;
+					if creation_feature /= Void then
+						Skeleton_file.putint (creation_feature.feature_id);
+					else
+						Skeleton_file.putint (0);
+					end;
+					Skeleton_file.putstring (",%N");
 
-					-- Class id 
-				Skeleton_file.putstring ("(int32) ");
-				Skeleton_file.putint (id - 1);
-				Skeleton_file.putstring (",%N");
-				
+						-- Static type id 
+					Skeleton_file.putstring ("(int32) ");
+					Skeleton_file.putint (id - 1);
+					Skeleton_file.putstring (",%N");
+				else
+					Skeleton_file.putstring ("(int32) ");
+					creation_feature := a_class.creation_feature;
+					if creation_feature /= Void then
+						r_id := creation_feature.rout_id_set.first;
+						rout_info := System.rout_info_table.item (r_id);
+						Skeleton_file.putint (rout_info.origin);
+						Skeleton_file.putstring (",%N(int32) ");
+						Skeleton_file.putint (rout_info.offset);
+						Skeleton_file.putstring (",%N");
+					else
+						Skeleton_file.putstring ("0,%N(int32) 0,%N");
+					end
+				end;
+					
 					-- Dispose routine id
 				if System.memory_descendants.has (associated_class) then
 					Skeleton_file.putstring ("'\01',%N");
@@ -877,9 +897,16 @@ feature -- Skeleton generation
 					Skeleton_file.putstring ("'\0',%N");
 				end;
 
-					-- Generate reference on routine id array
-				Skeleton_file.putstring ("ra");
-				Skeleton_file.putint (associated_class.id);
+				if
+					not Compilation_modes.is_precompiling and
+					not associated_class.is_precompiled
+				then
+						-- Generate reference on routine id array
+					Skeleton_file.putstring ("ra");
+					Skeleton_file.putint (associated_class.id)
+				else
+					Skeleton_file.putstring ("(int32 *) 0")
+				end;
 				Skeleton_file.putstring (",%N");
 
 					-- Generate cecil structure if any
@@ -1072,7 +1099,9 @@ feature -- DLE
 			upper_class_name: STRING;
 			skeleton_empty: BOOLEAN;
 			a_class: CLASS_C;
-			creation_feature: FEATURE_I
+			creation_feature: FEATURE_I;
+			r_id: INTEGER;
+			rout_info: ROUT_INFO
 		do
 			a_class := associated_class;
 			skeleton_empty := skeleton.empty;
@@ -1189,24 +1218,46 @@ feature -- DLE
 				Skeleton_file.putchar (';');
 				Skeleton_file.new_line;
 
-					-- Creation feature id if any.
-				Skeleton_file.putstring ("node->cn_creation_id = ");
-				Skeleton_file.putstring ("(int32) ");
-				creation_feature := a_class.creation_feature;
-				if creation_feature /= Void then
-					Skeleton_file.putint (creation_feature.feature_id);
+				if associated_class.is_precompiled then
+						-- Creation origin class.
+					Skeleton_file.putstring ("node->exp_info.precomp.origin = ")
+					Skeleton_file.putstring ("(int32) ");
+					creation_feature := a_class.creation_feature;
+					if creation_feature /= Void then
+						r_id := creation_feature.rout_id_set.first;
+						rout_info := System.rout_info_table.item (r_id);
+						Skeleton_file.putint (rout_info.origin);
+						Skeleton_file.putstring
+							("node->exp_info.precomp.offset = ")
+						Skeleton_file.putint (rout_info.offset)
+					else
+						Skeleton_file.putint (0);
+						Skeleton_file.putstring
+							("node->exp_info.precomp.offset = (int32) 0")
+					end;
+					Skeleton_file.putchar (';');
+					Skeleton_file.new_line;
 				else
-					Skeleton_file.putint (0);
-				end;
-				Skeleton_file.putchar (';');
-				Skeleton_file.new_line;
-
-					-- Class id 
-				Skeleton_file.putstring ("node->static_id = ");
-				Skeleton_file.putstring ("(int32) ");
-				Skeleton_file.putint (id - 1);
-				Skeleton_file.putchar (';');
-				Skeleton_file.new_line;
+						-- Creation feature id if any.
+					Skeleton_file.putstring
+						("node->exp_info.noprecomp.cn_creation_id = ");
+					Skeleton_file.putstring ("(int32) ");
+					creation_feature := a_class.creation_feature;
+					if creation_feature /= Void then
+						Skeleton_file.putint (creation_feature.feature_id);
+					else
+						Skeleton_file.putint (0);
+					end;
+					Skeleton_file.putchar (';');
+					Skeleton_file.new_line;
+	
+						-- Class id 
+					Skeleton_file.putstring ("node->exp_info.noprecomp.static_id = ");
+					Skeleton_file.putstring ("(int32) ");
+					Skeleton_file.putint (id - 1);
+					Skeleton_file.putchar (';');
+					Skeleton_file.new_line;
+				end
 				
 					-- Dispose routine id
 				Skeleton_file.putstring ("node->cn_disposed = ");
@@ -1220,8 +1271,12 @@ feature -- DLE
 
 					-- Generate reference on routine id array
 				Skeleton_file.putstring ("node->cn_routids = ");
-				Skeleton_file.putstring ("ra");
-				Skeleton_file.putint (associated_class.id);
+				if associated_class.is_precompiled then
+					Skeleton_file.putstring ("(int32 *) 0");
+				else
+					Skeleton_file.putstring ("ra");
+					Skeleton_file.putint (associated_class.id);
+				end;
 				Skeleton_file.putchar (';');
 				Skeleton_file.new_line;
 

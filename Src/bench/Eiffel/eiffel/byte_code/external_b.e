@@ -221,6 +221,18 @@ feature -- Byte code generation
 			Result := Bc_extern_inv
 		end;
 
+	precomp_code_first: CHARACTER is
+			-- Code when external precompiled call is first (no invariant)
+		do
+			Result := Bc_pextern
+		end;
+
+	precomp_code_next: CHARACTER is
+			-- Code when external precompiled call is nested (invariant)
+		do
+			Result := Bc_pextern_inv
+		end;
+
 feature -- Array optimization
 
 	is_unsafe: BOOLEAN is

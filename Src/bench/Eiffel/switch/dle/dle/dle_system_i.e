@@ -1569,10 +1569,11 @@ end;
 				loop
 					a_class := class_of_id (i);
 					if a_class /= Void and then a_class.has_dynamic then
-						Skeleton_file.putstring ("%
-							%extern int32 ra");
-						Skeleton_file.putint (i);
-						Skeleton_file.putstring ("[];%N");
+						if not a_class.is_precompiled then
+							Skeleton_file.putstring ("extern int32 ra");
+							Skeleton_file.putint (i);
+							Skeleton_file.putstring ("[];%N");
+						end;
 						if a_class.has_visible then
 							Skeleton_file.putstring ("extern char *cl");
 							Skeleton_file.putint (i);
@@ -1672,14 +1673,20 @@ end;
 					i > nb
 				loop
 					cl_type := class_types.item (i);
-					if cl_type /= Void then
-						Skeleton_file.putstring ("Routids(");
-						Skeleton_file.putint (cl_type.id - 1);
-						Skeleton_file.putstring (") = ra");
+					Skeleton_file.putstring ("Routids(");
+					Skeleton_file.putint (cl_type.id - 1);
+					Skeleton_file.putstring (") = ");
+					if
+						cl_type /= Void and then
+						not cl_type.associated_class.is_precompiled
+					then
+						Skeleton_file.putstring ("ra");
 						Skeleton_file.putint (cl_type.associated_class.id);
-						Skeleton_file.putchar (';');
-						Skeleton_file.new_line
+					else
+						Skeleton_file.putstring ("(int32 *) 0")
 					end;
+					Skeleton_file.putchar (';');
+					Skeleton_file.new_line
 					i := i + 1
 				end
 			else

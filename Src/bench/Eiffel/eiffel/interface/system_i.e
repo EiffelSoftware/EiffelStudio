@@ -1749,34 +1749,36 @@ end;
 			end;
 			close_log_files;
 
-			from
-				id_list := freeze_set2;
+			if not Compilation_modes.is_precompiling then
+				from
+					id_list := freeze_set2;
 debug ("COUNT")
 	i := id_list.count;
 end;
-				id_list.start
-			until
-				id_list.off
-			loop
-				a_class := id_array.item (id_list.item);
+					id_list.start
+				until
+					id_list.off
+				loop
+					a_class := id_array.item (id_list.item);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
 	io.error.putstring ("] ");
 	i := i - 1;
 end;
-				if not a_class.is_precompiled then
-						-- Verbose
-					io.error.putstring ("Degree -3: class ");
-						temp := clone (a_class.class_name);
-						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
+					if not a_class.is_precompiled then
+							-- Verbose
+						io.error.putstring ("Degree -3: class ");
+							temp := clone (a_class.class_name);
+							temp.to_upper;
+						io.error.putstring (temp);
+						io.error.new_line;
+	
+						a_class.generate_feature_table;
+					end;
 
-					a_class.generate_feature_table;
+					id_list.forth
 				end;
-
-				id_list.forth
 			end;
 
 debug ("ACTIVITY")
@@ -2447,10 +2449,14 @@ end;
 					a_class := class_of_id (i);
 					if a_class /= Void then
 							-- Classes could be removed
-						Skeleton_file.putstring ("%
-							%extern int32 ra");
-						Skeleton_file.putint (i);
-						Skeleton_file.putstring ("[];%N");
+						if
+							not Compilation_modes.is_precompiling and
+							not a_class.is_precompiled
+						then
+							Skeleton_file.putstring ("extern int32 ra");
+							Skeleton_file.putint (i);
+							Skeleton_file.putstring ("[];%N");
+						end;
 						if a_class.has_visible then
 							Skeleton_file.putstring ("extern char *cl");
 							Skeleton_file.putint (i);
@@ -2536,7 +2542,11 @@ end;
 					i > nb
 				loop
 					cl_type := cltype_array.item (i);
-					if cl_type /= Void then
+					if
+						not Compilation_modes.is_precompiling and
+						cl_type /= Void and then
+						not cl_type.associated_class.is_precompiled
+					then
 						Skeleton_file.putstring ("ra");
 						Skeleton_file.putint (cl_type.associated_class.id);
 					else

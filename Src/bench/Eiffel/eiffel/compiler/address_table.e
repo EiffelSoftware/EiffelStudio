@@ -361,7 +361,8 @@ feature {NONE} -- Generation
 
 			table_name, function_name: STRING
 			entry: POLY_TABLE [ENTRY]
-			cursor: CURSOR
+			cursor: CURSOR;
+			rout_info: ROUT_INFO
 		do
 			feature_id := a_feature.feature_id
 			rout_id := a_feature.rout_id_set.first
@@ -443,10 +444,21 @@ feature {NONE} -- Generation
 					end
 				else
 						-- Workbench mode
-					gen_file.putstring ("RTWP(")
-					gen_file.putint (a_type.id - 1)
-					gen_file.putstring (", ")
-					gen_file.putint (feature_id)
+					if
+						Compilation_modes.is_precompiling or
+						a_type.associated_class.is_precompiled
+					then
+						rout_info := System.rout_info_table.item (rout_id);
+						gen_file.putstring ("RTPWP(")
+						gen_file.putint (rout_info.origin);
+						gen_file.putstring (", ")
+						gen_file.putint (rout_info.offset);
+					else
+						gen_file.putstring ("RTWP(")
+						gen_file.putint (a_type.id - 1)
+						gen_file.putstring (", ")
+						gen_file.putint (feature_id)
+					end;
 					gen_file.putstring (", Dtype (Current));%N")
 				end
 

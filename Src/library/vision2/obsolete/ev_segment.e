@@ -9,6 +9,10 @@ inherit
 		end
 
 	EV_ENDED_FIGURE
+		undefine
+			out,
+			default_create
+		end
 
 create
 	make
@@ -37,8 +41,10 @@ feature -- Output
 
 feature -- Status report
 
-	is_null: BOOLEAN is do end
+	point_count: INTEGER
 
 	is_superimposable (other: like Current): BOOLEAN is do end
+
+	position_on_figure (x,y: INTEGER): BOOLEAN is do end
 
 end -- class EV_SEGMENT

@@ -5,7 +5,6 @@ inherit
 	EV_RICH_TEXT_EVENT_DATA	
 		redefine
 			make,
-			implementation,
 			print_contents
 		end
 

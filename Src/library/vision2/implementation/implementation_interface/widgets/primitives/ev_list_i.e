@@ -146,7 +146,7 @@ feature -- Event : command association
 		deferred
 		end
 
-	add_unselect_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
+	add_unselect_command (cmd: EV_COMMAND; arguments: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when an item has been unselected.
 		require

@@ -366,12 +366,6 @@ feature -- Update
 			normal_background_color := color_resource_value ("normal_background_color", 255, 255, 255)
 			selection_text_color := color_resource_value ("selection_text_color", 255, 255, 128)
 			selection_background_color := color_resource_value ("selection_background_color", 0, 0, 128)
-			string_text_color := color_resource_value ("string_text_color", 255, 255, 128)
-			if has_color_resource ("string_background_color") then
-				string_background_color := color_resource_value ("string_background_color", 255, 255, 255)
-			else
-				string_background_color := Void
-			end
 			cr ?= resources.item ("string_background_color")
 			if cr /= Void then
 				cr.allow_void
@@ -385,10 +379,6 @@ feature -- Update
 				cr.allow_void
 			end
 			cr ?= resources.item ("comments_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("string_background_color")
 			if cr /= Void then
 				cr.allow_void
 			end
@@ -423,6 +413,13 @@ feature -- Update
 			cr ?= resources.item ("local_background_color")
 			if cr /= Void then
 				cr.allow_void
+			end
+
+			string_text_color := color_resource_value ("string_text_color", 255, 255, 128)
+			if has_color_resource ("string_background_color") then
+				string_background_color := color_resource_value ("string_background_color", 255, 255, 255)
+			else
+				string_background_color := Void
 			end
 			keyword_text_color := color_resource_value ("keyword_text_color", 0, 153, 255)
 			if has_color_resource ("keyword_background_color") then

@@ -55,7 +55,7 @@ feature -- Access
 	prepare is
 		local
 			t: EV_TIMEOUT
-			b: BUTTON
+			b: EV_BUTTON
 		do
 			create t
 			create b.make_with_text ("Test button")

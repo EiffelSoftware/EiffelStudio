@@ -749,8 +749,10 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 					-- Windows does not seem to generate any messages when a key is
 					-- pressed in a modal or modeless dialog, so if `Current' is parented
 					-- in one of these, we must force the calling of the key_press_actions.
+					-- We also handle the case where `Current' is a dialog, as the escape key is fired
+					-- and we need to ignore it, to avoid the actions being called twice.
 				common_dialog_imp ?= top_level_window_imp
-				if common_dialog_imp /= Void then
+				if common_dialog_imp /= Void and then common_dialog_imp /= Current then
 					common_dialog_imp.key_press_actions.call ([key])
 				end							
 				if key_press_actions_internal /= Void then

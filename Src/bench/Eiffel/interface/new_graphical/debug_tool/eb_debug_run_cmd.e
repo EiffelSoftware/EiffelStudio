@@ -67,6 +67,11 @@ inherit
 		export
 			{NONE} all
 		end
+	
+	SHARED_RESOURCES
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -257,6 +262,8 @@ feature -- Execution
 			wd: EV_WARNING_DIALOG
 			cd: EV_CONFIRMATION_DIALOG
 			ignore_all_breakpoints_confirmation_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			l_il_env: IL_ENVIRONMENT
+			l_app_string: STRING
 		do
 			if  (not Eiffel_project.system_defined) or else (Eiffel_System.name = Void) then
 				create wd.make_with_text (Warning_messages.w_No_system)
@@ -279,8 +286,32 @@ feature -- Execution
 	
 					if uf.exists then
 						if Eiffel_system.system.il_generation then
-							(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
-								current_cmd_line_argument)
+							if feature {EXEC_MODES}.User_stop_points = Application.execution_mode then
+								create l_il_env
+								l_app_string := l_il_env.Dotnet_debugger_path (dotnet_debugger)
+								if l_app_string /= Void then
+									if l_il_env.use_cordbg (dotnet_debugger) then
+											-- Launch cordbg.exe.
+										(create {COMMAND_EXECUTOR}).execute_with_args
+											(l_app_string, 
+												eiffel_system.application_name (True).out + " " + current_cmd_line_argument)
+									elseif l_il_env.use_dbgclr (dotnet_debugger) then
+											-- Launch DbgCLR.exe.
+										(create {COMMAND_EXECUTOR}).execute_with_args 
+											(l_app_string,
+												eiffel_system.application_name (True).out)
+									else
+										(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
+											current_cmd_line_argument)
+									end							
+								else
+									(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
+										current_cmd_line_argument)
+								end
+							else
+								(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
+									current_cmd_line_argument)
+							end
 						else
 							if make_f.exists and then make_f.date > uf.date then
 									-- The Makefile file is more recent than the 
@@ -435,5 +466,12 @@ feature {NONE} -- Implementation / Attributes
 	
 	need_to_wait: BOOLEAN
 			-- Do we need to wait until the end of the compilation?
+
+	dotnet_debugger: STRING is
+			-- String indicating the .NET debugger to launch if specified in the
+			-- Preferences Tool.
+		do
+			Result := selected_array_resource_value ("dotnet_debugger", Void)
+		end
 
 end -- class EB_DEBUG_RUN_COMMAND

@@ -226,7 +226,8 @@
 					</Internal_properties>
 				<EV_COLORIZABLE />
 				<EV_SENSITIVE />
-				<EV_WIDGET />
+				<EV_WIDGET ><Minimum_width >150</Minimum_width>
+					</EV_WIDGET>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
 				</item>

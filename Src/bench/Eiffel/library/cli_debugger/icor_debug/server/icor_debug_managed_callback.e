@@ -117,11 +117,19 @@ feature {NONE} -- debugger behavior
 					execution_stopped := execution_stopped_on_end_of_breakpoint_callback
 				elseif Eifnet_debugger_info.last_managed_callback_is_step_complete then
 					if Eifnet_debugger_info.application.imp_dotnet.status.is_evaluating	then
-						print ("StepComplete while execution ...%N")
+--						print ("StepComplete while execution ...%N")
 						execution_stopped := False
 					else
 						execution_stopped := execution_stopped_on_end_of_step_complete_callback
 					end
+				elseif 
+					Eifnet_debugger_info.last_managed_callback_is_exception and then
+					Eifnet_debugger_info.is_inside_function_evaluation
+				then
+					if Eifnet_debugger_info.icd_process /= Void then
+						Eifnet_debugger_info.controller.do_continue
+					end					
+					execution_stopped := False
 				else
 						--| Then we stop the execution ;)
 						--| do nothing for now
@@ -468,9 +476,9 @@ feature -- Basic Operations
 			-- `p_module' [in].  
 		require
 		local
-			l_hr: INTEGER
-			mp: MANAGED_POINTER
-			p_cchname: INTEGER
+--			l_hr: INTEGER
+--			mp: MANAGED_POINTER
+--			p_cchname: INTEGER
 			
 			l_module: ICOR_DEBUG_MODULE
 		do
@@ -484,12 +492,12 @@ feature -- Basic Operations
 				Eifnet_debugger_info.register_new_module (l_module)	
 			end
 
-			debug ("DEBUGGER_TRACE_MESSAGE")
-				--| Get Module Name
-	 			create mp.make (256 * 2)
-	 			l_hr := feature {ICOR_DEBUG_MODULE}.cpp_get_name (p_module, 256, $p_cchname, mp.item)
-	 			debugger_messages.extend ("Module :: " + (create {UNI_STRING}.make_by_pointer (mp.item)).string)
-	 		end
+--			debug ("DEBUGGER_TRACE_MESSAGE")
+--				--| Get Module Name
+--	 			create mp.make (256 * 2)
+--	 			l_hr := feature {ICOR_DEBUG_MODULE}.cpp_get_name (p_module, 256, $p_cchname, mp.item)
+--	 			debugger_messages.extend ("Module :: " + (create {UNI_STRING}.make_by_pointer (mp.item)).string)
+--	 		end
 
 			end_of_managed_callback (Cst_managed_cb_load_module)
 		end

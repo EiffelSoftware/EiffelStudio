@@ -117,8 +117,8 @@ feature {ICOR_EXPORTER} -- Access
 	clear_current_exception is
 		do
 			last_call_success := cpp_clear_current_exception (item)
-		ensure
-			success: last_call_success = 0
+--		ensure
+--			success: last_call_success = 0
 		end
 
 	create_stepper: ICOR_DEBUG_STEPPER is

@@ -66,7 +66,7 @@ feature {SHARED_APPLICATION_EXECUTION} -- Initialization
 		do
 			Precursor
 			create eifnet_debugger.make
-			create_watcher
+--			create_watcher
 		end
 
 feature {NONE} -- Watcher/Timer
@@ -109,6 +109,13 @@ feature {NONE} -- Watcher/Timer
 					end	
 				end
 			end
+		end
+		
+feature {EIFNET_DEBUGGER} -- Trigger eStudio done
+
+	estudio_callback_notify is
+		do
+			event_timer_notify			
 		end
 		
 feature {APPLICATION_EXECUTION} -- load and save

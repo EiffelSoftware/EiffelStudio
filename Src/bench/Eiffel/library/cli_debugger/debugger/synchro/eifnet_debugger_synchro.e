@@ -4,10 +4,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EIFNET_DEBUGGER_SYNCHRO
 	
-feature
+feature -- Synchro Initialization
 
 	init_dbg_synchronisation is
 			-- Initialize eStudio/.NET debugger synchronisation
@@ -17,21 +17,35 @@ feature
 			end
 			c_init_dbg_synchronisation
 		end
+		
+feature -- eStudio callback
+
+	estudio_callback_event is
+		deferred
+		end
+		
+	enable_estudio_callback is
+			-- Enable callback
+		do
+			c_dbg_enable_estudio_callback (Current, $estudio_callback_event);
+		end
+
+feature -- Synchro Timer
 	
 	start_dbg_timer is
 			-- 
 		local
 			l_id: INTEGER
 		do
+			l_id := c_dbg_timer_id
 			debug ("DBG_SYNCHRO")
-				l_id := c_dbg_timer_id
 				print (">>timer::" + l_id.out + "%N")
 			end
 			if l_id = 0 then
 				debug ("DBG_SYNCHRO")
 					io.put_string ("[EIFFEL] Start dbg timer%N")
 				end
-				c_start_dbg_timer			
+				c_start_dbg_timer
 			end
 		end
 		
@@ -52,6 +66,8 @@ feature
 			end
 		end	
 
+feature -- Evaluation 
+
 	lock_and_wait_for_callback is
 			-- 
 		do
@@ -65,6 +81,13 @@ feature {NONE} -- External DBG Timer
 			"C use %"cli_debugger.h%" "
 		alias
 			"dbg_init_synchro"
+		end
+
+	c_dbg_enable_estudio_callback (obj: EIFNET_DEBUGGER_SYNCHRO; p_cb: POINTER) is
+		external
+			"C signature () use %"cli_debugger.h%" "
+		alias
+			"dbg_enable_estudio_callback"
 		end
 		
 	c_dbg_timer_id: INTEGER is

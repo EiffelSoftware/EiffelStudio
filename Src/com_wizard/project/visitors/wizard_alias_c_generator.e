@@ -35,15 +35,15 @@ feature -- Access
 			create type_definition.make (0)
 			type_definition.append (Typedef)
 			type_definition.append (Space)
-			if a_data_visitor.is_structure then
-				type_definition.append (Struct)
-				type_definition.append (Space)
-
-			elseif a_data_visitor.is_enumeration then
-				type_definition.append (Enum)
-				type_definition.append (Space)
-
-			end
+	--		if a_data_visitor.is_structure then
+	--			type_definition.append (Struct)
+	--			type_definition.append (Space)
+	--
+	--		elseif a_data_visitor.is_enumeration then
+	--			type_definition.append (Enum)
+	--			type_definition.append (Space)
+	--
+	--		end
 			type_definition.append (a_data_visitor.c_type)
 			type_definition.append (Space)
 			type_definition.append (alias_descriptor.c_type_name)

@@ -22,6 +22,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include "proto.h"
+#include "listen.h"
 
 #ifdef I_STRING
 #include <string.h>
@@ -37,6 +38,10 @@
 #ifdef EIF_WIN32
 #include <windows.h>
 #define EWB		"\\bin\\es4.exe -bench"	/* Ewb process within Eiffel dir */
+#elif defined EIF_VMS
+#include "ipcvms.h"	/* for ipcvms_get_progname() */
+/* #define EIFFEL4		"EIFFEL4:"		/* Default installation directory */
+#define EWB		".bin]es4 -bench"	/* Ewb process within Eiffel dir */
 #else
 #define EIFFEL4	"/usr/lib/Eiffel4"	/* Default installation directory */
 #define EWB		"/bin/es4 -bench"	/* Ewb process within Eiffel dir */
@@ -181,12 +186,16 @@ rt_public void init_bench(int argc, char **argv)
 		exit(1);
 	}
 
+#ifdef EIF_VMS
+	strcpy(ewb_path, "EIFFEL4:[bench.spec.");	/* VMS system will translate base name */
+#else
 	strcpy(ewb_path, eiffel4);			/* Base name */
-#ifdef EIF_WIN32
+#if defined EIF_WIN32
 	strcat(ewb_path, "\\bench\\spec\\");
 #else
 	strcat(ewb_path, "/bench/spec/");
-#endif
+#endif /* (not) EIF_WIN32 */
+#endif /* (not) EIF_VMS */
 
 #ifdef EIF_WIN32
 	platform = win_eif_getenv ("PLATFORM", "es4");
@@ -203,7 +212,6 @@ rt_public void init_bench(int argc, char **argv)
 		exit (1);
 	}
 #endif
-
 
 	strcat(ewb_path, platform);
 	process_name (ewb_path);
@@ -310,7 +318,7 @@ rt_public void dexit(int code)
 }
 
 /* Create the name of the executable from the macro EWB (always on Windows) */
-/* or from the environment variable ES4_NAME (only on Unix) */
+/* or from the environment variable ES4_NAME (only on Unix/VMS) */
 
 rt_private void process_name (char *ewb_path)
 {
@@ -327,7 +335,11 @@ rt_private void process_name (char *ewb_path)
 	else
 		{
 			local = (char *) malloc (50 * sizeof (char));
+#ifdef EIF_VMS
+			strcat (local, ".bin]");
+#else
 			strcat (local, "/bin/");
+#endif
 			strcat (local, es4_name);
 			strcat (local, " -bench");
 			strcat (ewb_path, local);
@@ -336,7 +348,11 @@ rt_private void process_name (char *ewb_path)
 }
 
 #ifndef HAS_STRDUP
+#if defined(EIF_VMS) || defined(__STDC__)
+rt_public char *strdup (const char* s)
+#else
 rt_public char *strdup (char *s)
+#endif
 {
 	char *new;
 	int l = strlen (s) + 1;
@@ -348,7 +364,8 @@ rt_public char *strdup (char *s)
 
 	return new;
 }
-#endif
+#endif  /* HAS_STRDUP */
+
 
 #ifdef EIF_WIN32
 	//extern char **_argv;		/* External declaration for command-line argumnents */
@@ -366,7 +383,7 @@ char slogan6 [] = "Object Magazine, Editor's Choice, December 96: ISE Eiffel.\n\
 char slogan7 [] = "Windows Tech Journal on ISE Eiffel, December 96:\"Tired of\ndevelopment environments that only pretend to be O-O?\nISE Eiffel will have you marching to a different drummmer\"";
 char slogan8 [] = "GUI building: are you aware of the Eiffel Resource Bench?\nFREE for a limited time only with purchase of\nISE Eiffel 4. <info@eiffel.com>, 805-685-1006.";
 char slogan9 [] = "Tell us about your project! Let us study with you how\nISE Eiffel 4 can help you gain the competitive edge.\nWrite to <info@eiffel.com>.";
-char slogan10 [] = "Do you know about Eiffel on other platforms? The most\nportable environment in the industry also runs on\nUnix, Linux, VMS, and more.";
+char slogan10 [] = "Do you know about Eiffel on other platforms? The most\nportable environment in the industry also runs on\nUnix, Linux, OpenVMS, and more.";
 char slogan11 [] = "How to build quality reusable component libraries?\nRead the definitive reference:\"Reusable Software\",\nPrentice Hall. See http://www.eiffel.com/doc/books/reusable.html";
 char slogan12 [] = "Does your manager understand objects? Be kind: get him\nor her a copy of \"Object Success: A Manager's Guide to Object Technologie\"\nSee http://www.eiffel.com/doc/books/success.html";
 char slogan13 [] = "Addison-Wesley has a whole book series devoted to\nEiffel:\"Eiffel in Practice\".\n See http://www.awl.com/cp/eiffel.html";
@@ -562,9 +579,10 @@ int WINAPI WinMain (HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpszCmdLine, i
 	init_bench ();
 	return 0L;
 }
-#else
 
-rt_public void main(int argc, char **argv)
+#else  /* (not) EIF_WIN32 */
+
+rt_public void main (int argc, char **argv)
 {
 	/* This is the main entry point for the ISE daemon */
 	init_bench (argc, argv);

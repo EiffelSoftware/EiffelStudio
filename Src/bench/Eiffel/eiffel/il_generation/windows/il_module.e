@@ -407,8 +407,13 @@ feature {NONE} -- Implementations: signatures
 					a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
 					set_signature_type (a_sig, l_native_array_type.true_generics.item (1))
 				else
-					a_sig.set_type (a_type.element_type,
-						actual_class_type_token (a_type.static_type_id))
+					if a_type.is_expanded then
+						a_sig.set_type (a_type.element_type,
+							actual_class_type_token (a_type.implementation_id))
+					else
+						a_sig.set_type (a_type.element_type,
+							actual_class_type_token (a_type.static_type_id))
+					end
 				end
 			end
 		end
@@ -711,7 +716,7 @@ feature -- Metadata description
 				else
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Is_class |
 						feature {MD_TYPE_ATTRIBUTES}.Serializable
-					if class_c.is_frozen then
+					if class_c.is_frozen or class_type.is_expanded then
 						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
 					end
 
@@ -774,7 +779,7 @@ feature -- Metadata description
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
 				end
 
-				if class_c.is_frozen then
+				if class_c.is_frozen or class_type.is_expanded then
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
 				end
 			

@@ -428,10 +428,16 @@ feature -- Access
 			end
 				-- Unblock internal locking of `Current'.
 			unblock
-	
+
 			if not all_heights.is_empty then
 					-- Now replace heights, as `Current' was blocked during the re-building.
-				set_heights_no_resize (all_heights)
+				if not explorer_style then
+						-- It is possible that there are heights, even though the single explorer
+						-- bar style is selected. This occurs when you switch to explorer bar style while
+						-- more than one tool is displayed, and then restart EiffelStudio. In this case,
+						-- perform no resizing, as the heights are not valid.
+					set_heights_no_resize (all_heights)
+				end
 			else
 				explorer_bar_manager.close_all_bars_except (Current)
 			end

@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Thu Oct 02 14:48:28 2003
+/* at Wed Oct 08 16:33:53 2003
  */
 /* Compiler settings for ise_cache_manager.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -103,6 +103,10 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             /* [in] */ BSTR apath,
             /* [retval][out] */ ISE_Cache_COM_ASSEMBLY_INFORMATION **pRetVal) = 0;
         
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing8( void) = 0;
+        
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing9( void) = 0;
+        
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE consume_gac_assembly( 
             /* [in] */ BSTR aname,
             /* [in] */ BSTR aversion,
@@ -113,9 +117,9 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             /* [in] */ BSTR apath,
             /* [in] */ BSTR adest) = 0;
         
-        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing10( void) = 0;
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing12( void) = 0;
         
-        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing11( void) = 0;
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing13( void) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize( 
             /* [in] */ BSTR a_clr_version) = 0;
@@ -133,10 +137,20 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE is_successful( 
             /* [retval][out] */ VARIANT_BOOL *pRetVal) = 0;
         
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _set_is_successful( 
+            /* [in] */ VARIANT_BOOL p1) = 0;
+        
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE last_error_message( 
             /* [retval][out] */ BSTR *pRetVal) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE make( void) = 0;
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _set_last_error_message( 
+            /* [in] */ BSTR p1) = 0;
+        
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing22( void) = 0;
+        
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing23( void) = 0;
+        
+        virtual /* [restricted] */ void STDMETHODCALLTYPE Missing24( void) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE relative_folder_name( 
             /* [in] */ BSTR aname,
@@ -198,6 +212,12 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             /* [in] */ BSTR apath,
             /* [retval][out] */ ISE_Cache_COM_ASSEMBLY_INFORMATION **pRetVal);
         
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing8 )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+        
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing9 )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+        
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *consume_gac_assembly )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [in] */ BSTR aname,
@@ -210,10 +230,10 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             /* [in] */ BSTR apath,
             /* [in] */ BSTR adest);
         
-        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing10 )( 
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing12 )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This);
         
-        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing11 )( 
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing13 )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize )( 
@@ -237,11 +257,25 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [retval][out] */ VARIANT_BOOL *pRetVal);
         
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_set_is_successful )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+            /* [in] */ VARIANT_BOOL p1);
+        
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *last_error_message )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
             /* [retval][out] */ BSTR *pRetVal);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *make )( 
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *_set_last_error_message )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+            /* [in] */ BSTR p1);
+        
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing22 )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+        
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing23 )( 
+            ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+        
+        /* [restricted] */ void ( STDMETHODCALLTYPE *Missing24 )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *relative_folder_name )( 
@@ -291,17 +325,23 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_assembly_info_from_assembly(This,apath,pRetVal)	\
     (This)->lpVtbl -> assembly_info_from_assembly(This,apath,pRetVal)
 
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing8(This)	\
+    (This)->lpVtbl -> Missing8(This)
+
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing9(This)	\
+    (This)->lpVtbl -> Missing9(This)
+
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_consume_gac_assembly(This,aname,aversion,aculture,akey)	\
     (This)->lpVtbl -> consume_gac_assembly(This,aname,aversion,aculture,akey)
 
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_consume_local_assembly(This,apath,adest)	\
     (This)->lpVtbl -> consume_local_assembly(This,apath,adest)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing10(This)	\
-    (This)->lpVtbl -> Missing10(This)
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing12(This)	\
+    (This)->lpVtbl -> Missing12(This)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing11(This)	\
-    (This)->lpVtbl -> Missing11(This)
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing13(This)	\
+    (This)->lpVtbl -> Missing13(This)
 
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_initialize(This,a_clr_version)	\
     (This)->lpVtbl -> initialize(This,a_clr_version)
@@ -318,11 +358,23 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_is_successful(This,pRetVal)	\
     (This)->lpVtbl -> is_successful(This,pRetVal)
 
+#define ISE_Cache_COM_ISE_CACHE_MANAGER__set_is_successful(This,p1)	\
+    (This)->lpVtbl -> _set_is_successful(This,p1)
+
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message(This,pRetVal)	\
     (This)->lpVtbl -> last_error_message(This,pRetVal)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER_make(This)	\
-    (This)->lpVtbl -> make(This)
+#define ISE_Cache_COM_ISE_CACHE_MANAGER__set_last_error_message(This,p1)	\
+    (This)->lpVtbl -> _set_last_error_message(This,p1)
+
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing22(This)	\
+    (This)->lpVtbl -> Missing22(This)
+
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing23(This)	\
+    (This)->lpVtbl -> Missing23(This)
+
+#define ISE_Cache_COM_ISE_CACHE_MANAGER_Missing24(This)	\
+    (This)->lpVtbl -> Missing24(This)
 
 #define ISE_Cache_COM_ISE_CACHE_MANAGER_relative_folder_name(This,aname,aversion,aculture,akey,pRetVal)	\
     (This)->lpVtbl -> relative_folder_name(This,aname,aversion,aculture,akey,pRetVal)
@@ -341,6 +393,28 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
 
 
 void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_assembly_info_from_assembly_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing8_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+
+
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing8_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing9_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+
+
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing9_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
@@ -375,22 +449,22 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_consume_local_assembly_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing10_Proxy( 
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing12_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This);
 
 
-void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing10_Stub(
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing12_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
 
-/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing11_Proxy( 
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing13_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This);
 
 
-void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing11_Stub(
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing13_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
@@ -458,6 +532,18 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_is_successful_Stub(
     DWORD *_pdwStubPhase);
 
 
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__set_is_successful_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+    /* [in] */ VARIANT_BOOL p1);
+
+
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__set_is_successful_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
 /* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
     /* [retval][out] */ BSTR *pRetVal);
@@ -470,11 +556,45 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_last_error_message_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_make_Proxy( 
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__set_last_error_message_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This,
+    /* [in] */ BSTR p1);
+
+
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__set_last_error_message_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing22_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This);
 
 
-void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_make_Stub(
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing22_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing23_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+
+
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing23_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [restricted] */ void STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_Missing24_Proxy( 
+    ISE_Cache_COM_ISE_CACHE_MANAGER * This);
+
+
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_Missing24_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,

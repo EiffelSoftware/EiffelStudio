@@ -3,7 +3,7 @@
 // typelib filename: emitter.tlb
 
 [
-  uuid(3A0E2FF7-8B0B-369F-8336-D2BCC82DF77B),
+  uuid(CBE2E32B-0A86-3380-A185-2E6D0869C2C5),
   version(5.4)
 ]
 library emitter
@@ -31,35 +31,42 @@ library emitter
         HRESULT assembly_info_from_assembly(
                         [in] BSTR apath, 
                         [out, retval] ISE_Cache_COM_ASSEMBLY_INFORMATION** pRetVal);
-        [id(0x60020001)]
+        [restricted] void Missing8();
+        [restricted] void Missing9();
+        [id(0x60020003)]
         HRESULT consume_gac_assembly(
                         [in] BSTR aname, 
                         [in] BSTR aversion, 
                         [in] BSTR aculture, 
                         [in] BSTR akey);
-        [id(0x60020002)]
+        [id(0x60020004)]
         HRESULT consume_local_assembly(
                         [in] BSTR apath, 
                         [in] BSTR adest);
-        [restricted] void Missing10();
-        [restricted] void Missing11();
-        [id(0x60020005)]
+        [restricted] void Missing12();
+        [restricted] void Missing13();
+        [id(0x60020007)]
         HRESULT initialize([in] BSTR a_clr_version);
-        [id(0x60020006)]
+        [id(0x60020008)]
         HRESULT initialize_with_path(
                         [in] BSTR a_path, 
                         [in] BSTR a_clr_version);
-        [id(0x60020007)]
-        HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
-        [id(0x60020008)]
-        HRESULT _set_is_initialized([in] VARIANT_BOOL p1);
         [id(0x60020009)]
-        HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
+        HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
         [id(0x6002000a)]
-        HRESULT last_error_message([out, retval] BSTR* pRetVal);
+        HRESULT _set_is_initialized([in] VARIANT_BOOL p1);
         [id(0x6002000b)]
-        HRESULT make();
+        HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
         [id(0x6002000c)]
+        HRESULT _set_is_successful([in] VARIANT_BOOL p1);
+        [id(0x6002000d)]
+        HRESULT last_error_message([out, retval] BSTR* pRetVal);
+        [id(0x6002000e)]
+        HRESULT _set_last_error_message([in] BSTR p1);
+        [restricted] void Missing22();
+        [restricted] void Missing23();
+        [restricted] void Missing24();
+        [id(0x60020012)]
         HRESULT relative_folder_name(
                         [in] BSTR aname, 
                         [in] BSTR aversion, 

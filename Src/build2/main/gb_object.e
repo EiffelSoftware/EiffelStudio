@@ -1589,7 +1589,7 @@ feature {GB_WINDOW_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
 			window_selector_item_object_set: window_selector_item.object = Current
 		end
 		
-feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_ADD_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_ADD_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Implementation
 
 	add_client_representation (client_object: GB_OBJECT) is
 			-- Add a client representation for `client_object' to the `window_selector_item'

@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	EV_PRIMITIVE_I
+		rename
+			make as wrong_make
+		end
 
 feature -- Status report
 
@@ -19,6 +22,16 @@ feature -- Status report
 		deferred
 		ensure
 			positive_result: Result > 0
+		end
+
+feature {NONE} -- Inapplicable
+
+	wrong_make is
+			-- Not applicable.
+		do
+			check
+				Inapplicable: False
+			end
 		end
 
 end -- class EV_STATUS_BAR_I

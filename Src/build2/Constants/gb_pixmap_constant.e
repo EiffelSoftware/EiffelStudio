@@ -26,6 +26,7 @@ inherit
 	GB_SHARED_CONSTANTS
 		export
 			{NONE} all
+			{ANY} constants
 		end
 		
 create

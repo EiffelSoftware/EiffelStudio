@@ -519,8 +519,11 @@ feature {NONE} -- Implementation; Window Settings
 	set_default_size is
 			-- Set the size of Current to its default.
 		do
-			eb_shell.set_size (Feature_tool_resources.tool_width.actual_value, 
-				Feature_tool_resources.tool_height.actual_value)
+			if eb_shell /= Void then
+				eb_shell.set_size 
+					(Feature_tool_resources.tool_width.actual_value, 
+					Feature_tool_resources.tool_height.actual_value)
+			end
 		end;
 
 feature {NONE} -- Implementation; Graphical Interface

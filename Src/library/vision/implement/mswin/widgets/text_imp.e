@@ -9,8 +9,6 @@ class
 
 inherit
 	PRIMITIVE_IMP
-		rename
-			set_cursor_position as wel_set_cursor_position
 		redefine
 			set_foreground_color,
 			set_background_color,

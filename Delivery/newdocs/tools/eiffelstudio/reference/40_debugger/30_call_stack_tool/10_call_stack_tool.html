@@ -10,7 +10,7 @@
 <body>
 
 <h1>Call stack tool</h1>
-SCREENSHOT(call stack tool, complete)
+<P align="center"><IMG SRC="/images/eiffelstudio/debugger/call_stack_tool.png"></P>
 <p>The call stack tool gives information about the current call stack of a debugged application.<p>It
 is mainly composed of a list representing the call stack elements, where the entry
 feature of the program is at the bottom and the top of the call stack is at the
@@ -18,7 +18,8 @@ top. The current call stack element, to which the <a HREF="20_current_level_info
 represented by a green arrow. Double-clicking on a call stack element, or
 picking it and dropping it onto either the call stack list or the locals view
 defines it as being the current call stack element. For each feature in the call stack, its name, its
-dynamic class and its static class are displayed. The dynamic class is the type
+dynamic class and its static class are displayed. An asterisk next to the name
+of a feature means the feature is melted, as opposed to frozen. The dynamic class is the type
 of the object upon which the feature is called, whereas the static class is the
 class in which the feature was written.
 <p>On top of this list, a line gives the state of the debugged application, and

@@ -1,14 +1,11 @@
 indexing
-
-	description: 
-		"Explicit generic class type information.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "Explicit generic class type information.";
+	date: "$Date$"; 
+	revision: "$Revision$"
 
 class S_GEN_TYPE_INFO
 
 inherit
-
 	S_CLASS_TYPE_INFO
 		redefine
 			has_generics, string_value,
@@ -24,24 +21,31 @@ feature -- Properties
 	generics: FIXED_LIST [S_TYPE_INFO];
 			-- Generics list
 
-	has_generics: BOOLEAN is True
+	has_generics: BOOLEAN is
 			-- Does Current contain generics?
-			-- (Yes, it does)
+		do
+				-- TUPLEs may have zero generics
+			Result := (generics /= Void)
+		end
 
 	real_class_ids: LINKED_LIST [INTEGER] is
 			-- List of real class ids that exist in system
 			-- in the generic paraments
 		do
 			!! Result.make;
-			from
-				generics.start
-			until
-				generics.after
-			loop
-				if generics.item.is_normal_class then
-					Result.append (generics.item.real_class_ids)
+
+				-- TUPLEs may have zero generics
+			if generics /= Void then
+				from
+					generics.start
+				until
+					generics.after
+				loop
+					if generics.item.is_normal_class then
+						Result.append (generics.item.real_class_ids)
+					end
+					generics.forth
 				end
-				generics.forth
 			end
 		end
 
@@ -65,19 +69,23 @@ feature -- Output
 			-- String value of Current generic
 		do
 			Result := clone (free_text_name);
-			Result.append (" [");
-			from
-				generics.start
-			until
-				generics.after
-			loop
-				Result.append (generics.item.string_value);
-				if not generics.after then
-					Result.append (", ")
-				end
-				generics.forth
+
+				-- TUPLEs may have zero generics
+			if generics /= Void then
+				Result.append (" [");
+				from
+					generics.start
+				until
+					generics.after
+				loop
+					Result.append (generics.item.string_value);
+					if not generics.after then
+						Result.append (", ")
+					end
+					generics.forth
+				end;
+				Result.append ("]");
 			end;
-			Result.append ("]");
 		end;
 
 	string_value_minus_id (id: INTEGER): STRING is
@@ -91,27 +99,31 @@ feature -- Output
 			type_info: S_TYPE_INFO
 		do
 			Result := clone (free_text_name);
-            Result.append (" [");
-            from
-                generics.start
-            until
-                generics.after
-            loop
-				type_info := generics.item;
-				class_type_info ?= type_info;
-				if class_type_info = Void then
-                	Result.append (type_info.string_value);
-				elseif class_type_info.class_id = id then
-                	Result.append ("...");
-				else
-                	Result.append (type_info.string_value);
+
+			-- TUPLEs may have zero generics
+			if generics /= Void then
+				Result.append (" [");
+				from
+					generics.start
+				until
+					generics.after
+				loop
+					type_info := generics.item;
+					class_type_info ?= type_info;
+					if class_type_info = Void then
+						Result.append (type_info.string_value);
+					elseif class_type_info.class_id = id then
+						Result.append ("...");
+					else
+						Result.append (type_info.string_value);
+					end;
+					generics.forth;
+					if not generics.after then
+						Result.append (", ")
+					end
 				end;
-                generics.forth;
-                if not generics.after then
-                    Result.append (", ")
-                end
-            end;
-            Result.append ("]");
+				Result.append ("]");
+			end;
 		end;
 
 end -- class S_GEN_TYPE_INFO

@@ -292,7 +292,9 @@ feature -- Generation
 						
 						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp))
 						copy_to_local (l_precomp.assembly_helper_driver (l_use_optimized_precomp))
-						copy_to_local (l_precomp.assembly_debug_info (l_use_optimized_precomp))
+						if not l_use_optimized_precomp or l_precomp.line_generation then
+							copy_to_local (l_precomp.assembly_debug_info (l_use_optimized_precomp))
+						end
 
 						Workbench.Precompilation_directories.forth
 					end
@@ -1028,7 +1030,7 @@ feature {NONE} -- File copying
 				else
 					create l_vicf.make (a_source, "Unknown target")
 				end
-				error_handler.insert_warning (l_vicf)
+				error_handler.insert_warning (l_vicf)	
 			end
 		rescue
 			l_retried := True

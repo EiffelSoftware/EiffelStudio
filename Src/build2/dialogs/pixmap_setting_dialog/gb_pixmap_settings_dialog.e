@@ -133,6 +133,7 @@ feature {NONE} -- Initialization
 			check_buttons_cell.hide
 			all_object_and_event_names := object_handler.all_object_and_event_names
 			retrieve_all_names
+			retrieve_all_paths
 		end
 
 feature {NONE} -- Implementation
@@ -143,12 +144,14 @@ feature {NONE} -- Implementation
 	select_pixmap_pressed is
 			-- Called by `select_actions' of `select_pixmap_button'.
 		do
+			pixmap_list.wipe_out
 			modify_pixmap
 		end
 		
 	select_directory_pressed is
 			-- Called by `select_actions' of `select_directory_button'.
 		do
+			pixmap_list.wipe_out
 			modify_directory
 		end
 
@@ -543,7 +546,9 @@ feature {NONE} -- Implementation
 					create list_item.make_with_text (file_title)
 					list_item.set_pixmap (new_pixmap)
 					pixmap_list.extend (list_item)
-					pixmap_list.check_item (list_item)
+					if not pixmap_paths.has (dialog.file_name) then
+						pixmap_list.check_item (list_item)
+					end
 					create pixmap_constant.set_attributes (get_unique_pixmap_name (file_title), "", file_path, file_title, False)
 					list_item.set_data (pixmap_constant)
 					display_pixmap_info (list_item)
@@ -644,9 +649,11 @@ feature {NONE} -- Implementation
 						create list_item.make_with_text (current_filename)
 						list_item.set_pixmap (pixmap)
 						pixmap_list.extend (list_item)
-						pixmap_list.check_item (list_item)
 						create pixmap_constant.set_attributes (get_unique_pixmap_name (current_filename), filename, directory.name, current_filename, False)
 						list_item.set_data (pixmap_constant)
+						if not pixmap_paths.has (filename.string) then
+							pixmap_list.check_item (list_item)
+						end
 						list_item.select_actions.extend (agent display_pixmap_info (list_item))
 						list_item.deselect_actions.extend (agent item_unselected (list_item))
 						
@@ -770,6 +777,26 @@ feature {NONE} -- Implementation
 			Build_reserved_words.linear_representation.do_all (agent add_to_existing_names)
 		end
 		
+	retrieve_all_paths is
+			-- Retrieve all paths of pixmaps in system, into `existing_names'.
+		local
+			pixmap_constants: ARRAYED_LIST [GB_CONSTANT]
+			pixmap_constant: GB_PIXMAP_CONSTANT
+		do
+			create pixmap_paths.make (50)
+			pixmap_constants := Constants.pixmap_constants
+			from
+				pixmap_constants.start
+			until
+				pixmap_constants.off
+			loop
+				pixmap_constant ?= pixmap_constants.item
+				pixmap_paths.put (pixmap_constant.value_as_string, pixmap_constant.value_as_string)
+				pixmap_constants.forth
+			end
+		end
+		
+		
 	add_to_existing_names (current_name: STRING) is
 		require
 			current_name_not_void: current_name /= Void
@@ -782,6 +809,9 @@ feature {NONE} -- Implementation
 	existing_names: HASH_TABLE [STRING, STRING]
 		-- All names already in use in system. Initially generated when `Current' is displayed,
 		--and subsequently updated as a user modifies file names.
+		
+	pixmap_paths: HASH_TABLE [STRING, STRING]
+		-- Full paths of all pixmaps in system, when `Current' is created.
 
 	last_pixmap_name: STRING
 	

@@ -117,6 +117,7 @@ feature {NONE}
 		do
 			main_panel.set_title (Environment.project_directory);
 			main_panel.set_project_initialized;
+			main_panel.set_interface_toggle
 		end;
 
 	popuper_parent: COMPOSITE is

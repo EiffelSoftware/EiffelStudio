@@ -612,7 +612,7 @@ feature -- Status setting
 			-- Open file in write-only mode;
 			-- create it if it does not exist.
 		do
-			internal_stream := internal_file.open_file_mode_file_access (feature {FILE_MODE}.open, feature {FILE_ACCESS}.write)
+			internal_stream := internal_file.open_file_mode_file_access (feature {FILE_MODE}.open_or_create, feature {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -842,6 +842,12 @@ feature -- Status setting
 	close is
 			-- Close file.
 		do
+			if internal_sread /= Void then
+				internal_sread.close
+			end
+			if internal_swrite /= Void then
+				internal_swrite.close
+			end
 			internal_stream.close
 			mode := Closed_file
 			descriptor_available := False

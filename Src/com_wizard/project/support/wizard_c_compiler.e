@@ -92,6 +92,7 @@ feature -- Basic Operations
 				l_string := C_compiler.twin
 				l_string.append (Space)
 				l_string.append (last_make_command)
+				create l_process_launcher
 				l_process_launcher.run_hidden
 				l_process_launcher.launch (l_string, Env.current_working_directory, agent message_output.add_text)
 				if not l_process_launcher.last_launch_successful then

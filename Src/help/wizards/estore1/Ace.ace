@@ -1,0 +1,52 @@
+system
+	sample
+
+root
+	root_class:"make"
+
+default
+	assertion (no)
+
+cluster
+	
+	all root_cluster: "d:\wizards\database";
+
+	-- EiffelBase
+	all base:						"d:\Eiffel45\library\base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+	
+	--all wel:						"d:\Eiffel45\library\wel"
+
+	--all vision:						"d:\Eiffel45\library\vision2"
+	--	exclude
+	--		"gtk"
+	--	end
+
+
+	-- EiffelTime
+	time:				"d:\Eiffel45\library\time";
+	time_format(time):	"$\format";
+	time_english(time):	"$\format\english";
+
+	-- EiffelStore
+	estore_support:		"d:\Eiffel45\library\store\support"
+	estore_interface:	"d:\Eiffel45\library\store\interface"
+	estore_db_support:	"d:\Eiffel45\library\store\dbms\support"
+	estore_rdbms:		"d:\Eiffel45\library\store\dbms\rdbms\oracle"
+
+
+external
+	include_path:		
+						"d:\Eiffel45\library\store\dbms\rdbms\oracle\Clib",
+	--					"d:\Eiffel45\library\wel\spec\windows\include",
+						"$(ORACLE_HOME)\OCI\include"
+
+	object: 			"d:\Eiffel45\library\store\spec\$(COMPILER)\lib\support.lib",
+	--					"d:\Eiffel45\library\wel\spec\msc\lib\wel.lib",
+						"d:\Eiffel45\library\time\spec\$(COMPILER)\lib\datetime.lib",
+						"d:\Eiffel45\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
+						"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib"
+end

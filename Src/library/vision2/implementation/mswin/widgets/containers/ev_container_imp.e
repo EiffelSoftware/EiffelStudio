@@ -449,7 +449,7 @@ feature {NONE} -- Implementation, focus event
 			from
 				l.start
 			until
-				l.after
+				l.off
 			loop
 				widget_imp ?= l.item.implementation
 				check 

@@ -1,0 +1,4 @@
+Lace error: Missing assembly from project settings could not automatically
+    be added.
+What to do: Make sure to add missing assembly in your project settings before
+    next compilation.

@@ -516,7 +516,7 @@ void wstdinit(char *obj, char *parent)
 			if (cid != (int16 *) 0)
 			{
 				dftype = eif_compound_id ((int16 *)0, l[1], 
-										   exp_dtype & EO_TYPE, cid);
+										   (int16) (exp_dtype & EO_TYPE), cid);
 
 				exp_dtype = (exp_dtype & EO_UPPER) | dftype;
 			}

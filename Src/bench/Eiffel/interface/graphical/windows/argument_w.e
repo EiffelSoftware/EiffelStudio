@@ -5,9 +5,7 @@ class ARGUMENT_W
 
 inherit
 
-	SHARED_WORKBENCH;
 	COMMAND_W;
-	NAMER;
 	PROMPT_D
 		rename
 			make as prompt_dialog_create

@@ -24,7 +24,8 @@ inherit
 			set_x,
 			set_y,
 			x,
-			y
+			y,
+			wel_move
 		end
 
 	BASIC_ROUTINES
@@ -90,6 +91,14 @@ feature -- Access
 		end
 
 feature -- Basic operations
+
+	wel_move (a_x, a_y: INTEGER) is
+			-- Move the window to `a_x', `a_y' position.
+		do
+			cwin_set_window_pos (wel_item, default_pointer,
+				a_x, a_y, 0, 0,
+				Swp_nosize + Swp_nozorder + Swp_noactivate)
+		end
 
 	popup is
 			-- Popup the dialog.
@@ -165,7 +174,7 @@ feature -- Status setting
 	hide_ok_button is
 			-- Hide the `ok_button'.
 		do
-			if exists and then not ok_button_hidden and then shown then
+			if exists and then not ok_button_hidden then
 				ok_button.hide
 				ok_button_hidden := True
 				adjust_dialog
@@ -180,7 +189,7 @@ feature -- Status setting
 	hide_cancel_button is
 			-- Hide the `cancel_button'.
 		do
-			if exists and then not cancel_button_hidden and then shown then
+			if exists and then not cancel_button_hidden then
 				cancel_button.hide
 				cancel_button_hidden := True
 				adjust_dialog
@@ -195,7 +204,7 @@ feature -- Status setting
 	hide_help_button is
 			-- Hide the `help_button'.
 		do
-			if exists and then not help_button_hidden and then shown then
+			if exists and then not help_button_hidden then
 				help_button.hide
 				help_button_hidden:= True
 				adjust_dialog
@@ -210,7 +219,7 @@ feature -- Status setting
 	show_ok_button is
 			-- Show the `ok_button'.
 		do
-			if exists and then ok_button_hidden and then shown then
+			if exists and then ok_button_hidden then
 				ok_button.show
 				ok_button_hidden := False
 				adjust_dialog
@@ -225,7 +234,7 @@ feature -- Status setting
 	show_cancel_button is
 			-- Show the `cancel_button'.
 		do
-			if exists and then cancel_button_hidden and then shown then
+			if exists and then cancel_button_hidden then
 				cancel_button.show
 				cancel_button_hidden := False
 				adjust_dialog
@@ -240,7 +249,7 @@ feature -- Status setting
 	show_help_button is
 			-- Show the `help_button'.
 		do
-			if exists and then help_button_hidden and then shown then
+			if exists and then help_button_hidden then
 				help_button.show
 				help_button_hidden := False
 				adjust_dialog
@@ -594,23 +603,17 @@ feature {NONE} -- Implementation
 			if ok_button_hidden then
 				ok_button.hide
 			else
-				if not flag_set (ok_button.style, Ws_visible) then
-					ok_button.set_style (set_flag (ok_button.style, Ws_visible))
-				end
+				ok_button.show
 			end
 			if cancel_button_hidden then
 				cancel_button.hide
 			else
-				if not flag_set (cancel_button.style, Ws_visible) then
-					cancel_button.set_style (set_flag (cancel_button.style, Ws_visible))
-				end
+				cancel_button.show
 			end
 			if help_button_hidden then
 				help_button.hide
 			else
-				if not flag_set (help_button.style, Ws_visible) then
-					help_button.set_style (set_flag (help_button.style, Ws_visible))
-				end
+				help_button.show
 			end
 		end
 
@@ -698,8 +701,13 @@ feature {NONE} -- Implementation
 			exists: exists
 		do
 			if default_position then
-				wel_move (((parent.wel_width - wel_width) // 2),
-					(parent.wel_height - wel_height) // 2)
+				if parent /= Void and then parent.exists then
+					wel_move (((parent.wel_width - wel_width) // 2),
+						(parent.wel_height - wel_height) // 2)
+				else
+					wel_move (((full_screen_client_area_width - wel_width) // 2),
+						(full_screen_client_area_height - wel_height) // 2)
+				end
 			end
 		end
 

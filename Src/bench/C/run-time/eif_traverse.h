@@ -29,7 +29,8 @@ extern "C" {
 extern EIF_INTEGER_32 obj_nb;					/* Count of marked objects */
 extern void traversal(char *object, int p_accounting); /* Traversal of objects */
 
-RT_LNK void find_referers (EIF_REFERENCE target, EIF_REFERENCE result, int result_size);
+RT_LNK EIF_REFERENCE find_referers (EIF_REFERENCE target, int result_type);
+RT_LNK EIF_REFERENCE find_instance_of (int instance_type, int result_type);
 
 /* Maping table handling */
 extern void map_start(void);			/* Reset LIFO stack into a FIFO one */

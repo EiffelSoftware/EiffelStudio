@@ -72,11 +72,13 @@ rt_shared long nomark(char *);
 rt_private long chknomark(char *, struct htable *, long);
 #endif
 
-rt_private void find_referers_2 (EIF_REFERENCE object, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int* i, EIF_REFERENCE **marked, int* marked_index, int* marked_size);
+rt_private EIF_REFERENCE matching (int (*compare_function) (EIF_REFERENCE), int result_type);
+rt_private void match_object (EIF_REFERENCE object, struct obj_array *collection, int (*compare_function) (EIF_REFERENCE));
+rt_private void match_simple_stack (struct stack *stk, struct obj_array *collection, int (*compare_function) (EIF_REFERENCE));
+rt_private void match_stack (struct stack *stk, struct obj_array *collection, int (*compare_function) (EIF_REFERENCE));
 
-rt_private void find_simple_stack (struct stack *stk, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int *i, EIF_REFERENCE **marked, int * marked_index, int* marked_size);
-
-rt_private void find_stack (struct stack *stk, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int *i, EIF_REFERENCE **marked, int * marked_index, int* marked_size);
+rt_private int internal_find_instance_of (EIF_REFERENCE compare_to);
+rt_private int internal_find_referers (EIF_REFERENCE compare_to);
 
 rt_shared void traversal(char *object, int p_accounting)
 {
@@ -292,41 +294,123 @@ rt_shared void map_reset(int emergency)
 	epop(&hec_stack, obj_nb);		/* Remove stacked EIF_OBJECT pointers */
 }
 
-rt_public void find_referers (EIF_REFERENCE target, EIF_REFERENCE result, int result_size)
+rt_private EIF_REFERENCE referers_target = NULL;
+rt_private EIF_INTEGER instance_type = 0;
+
+rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_type)
+	/* Find all objects that refers to `target' and return a SPECIAL object
+	 * of type `result_type'. */
+{
+	referers_target = target;
+	return matching (internal_find_referers, result_type);
+}
+
+rt_public EIF_REFERENCE find_instance_of (EIF_INTEGER type, EIF_INTEGER result_type)
+	/* Find all object that have `type' as dynamic type and return a SPECIAL
+	 * object containing them all of type `result_type'. */
+{
+	instance_type = type;
+	return matching (internal_find_instance_of, result_type);
+}
+
+struct obj_array {
+	EIF_REFERENCE *area;	/* Area where objects are stored */
+	int count;				/* Number of inserted items */
+	int capacity;			/* Capacity of `area' */
+	int index;				/* Cursor position */
+};
+
+rt_private void obj_array_extend (EIF_REFERENCE obj, struct obj_array *collection)
+	/* Add `obj' to `collection'. */
+{
+	collection->index = collection->index + 1;
+
+	if (collection->index >= collection->capacity) {
+		collection->capacity = collection->capacity * 2;
+		collection->area = realloc (collection->area, sizeof (EIF_REFERENCE) * (collection->capacity));
+	}
+	collection->area [collection->index] = obj;
+	collection->count = collection->count + 1;
+}
+
+rt_private int internal_find_instance_of (EIF_REFERENCE compare_to)
+	/* Check if dynamic type of `compare_to' matches `instance_type'. */
+{
+	return ((EIF_INTEGER) ((HEADER(compare_to)->ov_flags) & EO_TYPE) == instance_type ? 1 : 0);
+}
+
+rt_private int internal_find_referers (EIF_REFERENCE compare_to)
+	/* Check if `compare_to' refers to `referers_target'. */
+{
+	return (referers_target == compare_to ? 1 : 0);
+}
+
+rt_private EIF_REFERENCE matching (int (*compare_function) (EIF_REFERENCE), int result_type)
+	/* Using `compare_function' find all objects where `compare_function' returns
+	 * a matching object. Return a SPECIAL [ANY] of type `result_type' with all
+	 * found references. */
 {
 	GTCX
 	int i = 0;
-	EIF_REFERENCE *marked;
-	int marked_index = 0;
-	int marked_size = 1024;
+	struct obj_array collection;
 	union overhead *zone;
 	uint32 flags;
+	EIF_REFERENCE Result;
+	EIF_REFERENCE ref;
+	
+		/* Initialize structure that will hold found objects */
+	collection.count = 0;
+	collection.capacity = 64;
+	collection.area = malloc (sizeof (EIF_REFERENCE) * collection.count);
+	collection.index = -1;
 
-	marked = malloc (sizeof (EIF_REFERENCE) * marked_size);
+		/* Traverse all stacks and root object to find objects matching `compare_function'. */
+	match_object (root_obj, &collection, compare_function);
 
-	find_simple_stack (&hec_saved, target, result, result_size, &i, &marked, &marked_index, &marked_size);
-	find_simple_stack (&hec_stack, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+	match_simple_stack (&hec_saved, &collection, compare_function);
+	match_simple_stack (&hec_stack, &collection, compare_function);
 
-	find_stack (&loc_set, target, result, result_size, &i, &marked, &marked_index, &marked_size);
-	find_stack (&loc_stack, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+	match_stack (&loc_set, &collection, compare_function);
+	match_stack (&loc_stack, &collection, compare_function);
 
 #ifdef WORKBENCH
-	find_simple_stack (&once_set, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+	match_simple_stack (&once_set, &collection, compare_function);
 #else
-	find_stack (&once_set, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+	match_stack (&once_set, &collection, compare_function);
 #endif
 
-	find_referers_2 (root_obj, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+		/* Now `collection' is properly populated so let's create
+		 * SPECIAL objects of type `result_type' that we will return.
+		 * We turn off GC since we do not want objects to be moved. */
+	gc_stop();
+	Result = spmalloc (CHRPAD (collection.count * sizeof (EIF_REFERENCE)) + LNGPAD(2), EIF_FALSE);
+	zone = HEADER (Result);
+	ref = Result + (zone->ov_size & B_SIZE) - LNGPAD (2);
+	zone->ov_flags |= result_type | EO_REF;
+	*(EIF_INTEGER *) ref = collection.count;
+	*(EIF_INTEGER *) (ref + sizeof (EIF_INTEGER)) = sizeof (EIF_REFERENCE);
 
-	for (i = 0 ; i < marked_index ; i++) {
-		zone = HEADER(marked[i]);
+		/* Now, populate `Result' with content of `collection'. Since we just
+		 * created a new Eiffel objects. */
+	for (i = 0 ; i < collection.count ; i++) {
+			/* First reset `EO_STORE' flags */
+		zone = HEADER(collection.area [i]);
 		flags = zone->ov_flags;
 		zone->ov_flags &= (~EO_STORE);
+		
+			/* Store object in `Result'. */
+		*((EIF_REFERENCE*) Result + i) = collection.area [i];
+		RTAS_OPT (collection.area [i], i, Result);
 	}
-	free (marked);
+	free (collection.area);
+
+		/* Let's turn back the GC on */
+	gc_run ();
+
+	return Result;
 } 
 
-rt_private void find_simple_stack (struct stack *stk, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int *i, EIF_REFERENCE **marked, int * marked_index, int* marked_size)
+rt_private void match_simple_stack (struct stack *stk, struct obj_array *collection, int (*compare_function) (EIF_REFERENCE))
 {
 	struct stchunk* s;
 	EIF_REFERENCE *object, o_ref;
@@ -344,15 +428,13 @@ rt_private void find_simple_stack (struct stack *stk, EIF_REFERENCE target, EIF_
 		for ( ; n > 0 ; n--, object++) {
 			o_ref = *object;
 			if (o_ref) {
-				if (o_ref != target) {
-					find_referers_2 (o_ref, target, result, result_size, i, marked, marked_index, marked_size);
-				}
+				match_object (o_ref, collection, compare_function);
 			}
 		}
 	}
 }
 
-rt_private void find_stack (struct stack *stk, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int *i, EIF_REFERENCE **marked, int * marked_index, int* marked_size)
+rt_private void match_stack (struct stack *stk, struct obj_array *collection, int (*compare_function) (EIF_REFERENCE))
 {
 	struct stchunk* s;
 	EIF_REFERENCE *object, o_ref;
@@ -370,15 +452,13 @@ rt_private void find_stack (struct stack *stk, EIF_REFERENCE target, EIF_REFEREN
 		for ( ; n > 0 ; n--, object++) {
 			o_ref = *(EIF_REFERENCE *) *object;
 			if (o_ref) {
-				if (o_ref != target) {
-					find_referers_2 (o_ref, target, result, result_size, i, marked, marked_index, marked_size);
-				}
+				match_object (o_ref, collection, compare_function);
 			}
 		}
 	}
 }
 
-rt_private void find_referers_2 (EIF_REFERENCE object, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int* i, EIF_REFERENCE **marked, int* marked_index, int* marked_size)
+rt_private void match_object (EIF_REFERENCE object, struct obj_array *collection, int (*compare_function) (EIF_REFERENCE))
 		/* Find objects below by `object' that reference `target'. */
 {
 	EIF_REFERENCE *o_ref;
@@ -389,17 +469,12 @@ rt_private void find_referers_2 (EIF_REFERENCE object, EIF_REFERENCE target, EIF
 	zone = HEADER(object);
 	flags = zone->ov_flags;
 
-	if ((flags & EO_C) || (flags & EO_STORE))
+	if ((flags & EO_C) || (flags & EO_STORE)) {
+		/* Object is already marked, so we skip it. */
 		return;
+	}
 
 	zone->ov_flags |= EO_STORE;	/* We marked object as traversed. */
-	obj_nb++;
-	if (*marked_index >= *marked_size) {
-		*marked_size = *marked_size * 2;
-		*marked = realloc (*marked, sizeof (EIF_REFERENCE) * (*marked_size));
-	}
-	(*marked) [*marked_index] = object;
-	*marked_index = *marked_index + 1;
 
 	if (flags & EO_SPEC) {	/* Special object */
 		if (!(flags & EO_REF))	/* Object does not have any references. */
@@ -414,12 +489,10 @@ rt_private void find_referers_2 (EIF_REFERENCE object, EIF_REFERENCE target, EIF
 		/* Perform recursion on enclosed references */
 	for (o_ref = (EIF_REFERENCE *) object; count > 0; count--, o_ref++) {
 		if (*o_ref != NULL) {
-			if ((*o_ref == target) && (*i < result_size)) {
-				*((EIF_REFERENCE*)result + (*i)) = object;
-				RTAS_OPT (object, *i, result);
-				*i = *i + 1;
+			if (compare_function (*o_ref)) {
+				obj_array_extend (object, collection);
 			}
-			find_referers_2 (*o_ref, target, result, result_size, i, marked, marked_index, marked_size);
+			match_object (*o_ref, collection, compare_function);
 		}
 	}
 }

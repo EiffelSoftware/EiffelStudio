@@ -1293,22 +1293,22 @@ end
 		local
 			buf: GENERATION_BUFFER
 		do
-			buf := buffer
-			if exception_stack_managed or rescue_clause /= Void then
+			if exception_stack_managed or else rescue_clause /= Void or else is_once then
+				buf := buffer
 				buf.put_string ("RTEX;")
 				buf.put_new_line
-			end
-			if rescue_clause /= Void then
-				buf.put_string ("RTED;")
-				buf.put_new_line
-					-- We only need this for finalized mode...
-				if trace_enabled then
-					buf.put_string ("RTLT;")
+				if rescue_clause /= Void then
+					buf.put_string ("RTED;")
 					buf.put_new_line
-				end
-				if profile_enabled then
-					buf.put_string ("RTLP;")
-					buf.put_new_line
+						-- We only need this for finalized mode...
+					if trace_enabled then
+						buf.put_string ("RTLT;")
+						buf.put_new_line
+					end
+					if profile_enabled then
+						buf.put_string ("RTLP;")
+						buf.put_new_line
+					end
 				end
 			end
 		end
@@ -1318,7 +1318,10 @@ end
 		do
 			if exception_stack_managed then
 				generate_stack_macro ("RTEAA")
-			elseif rescue_clause /= Void then
+			elseif rescue_clause /= Void or else is_once then
+					-- Prepare execution stack to catch exceptions
+					--   explicitly by a rescue clause
+					--   implicitly by a code of once routine
 				buffer.put_string ("RTEV;")
 				buffer.put_new_line
 			end
@@ -1330,7 +1333,7 @@ end
 		local
 			buf: GENERATION_BUFFER
 		do
-			if rescue_clause = Void and then exception_stack_managed then
+			if rescue_clause = Void and then (exception_stack_managed or else is_once) then
 				buf := buffer
 				buf.put_string ("RTEE;")
 				buf.put_new_line

@@ -125,7 +125,7 @@ feature -- Internal Properties
 	stone: CLASS_STONE is
 			-- associated stone of current	
 		do
-			!! Result.make (Current);
+			!! Result.make (Current)
 		end
 
 	stone_type: INTEGER is

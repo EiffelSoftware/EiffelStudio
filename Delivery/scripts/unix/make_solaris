@@ -13,15 +13,15 @@ verbose
 open dakar.ise 
 user manus manus 
 binary
-get local/TEST_DELIV/PorterPackage/Eiffel51_deliv.tgz Eiffel51_solaris.tgz
-get local/TEST_DELIV/PorterPackage/Eiffel51.iso Eiffel51_solaris.iso
+get local/TEST_DELIV/PorterPackage/Eiffel52_deliv.tgz Eiffel52_solaris.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel52.iso Eiffel52_solaris.iso
 close 
 EOF
 
 	echo Solaris compilation done
 else
 	rm -rf PorterPackage
-	tar xvfz ~/PorterPackage_enterprise.tgz
+	tar xvf ~/PorterPackage_enterprise.tar
 	cd PorterPackage
 	export ISE_PLATFORM=solaris-2.5+
 	bash compile_exes

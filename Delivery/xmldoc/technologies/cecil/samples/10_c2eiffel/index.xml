@@ -1,4 +1,11 @@
-<document title="CECIL - C to Eiffel" output="studio"><meta_data ><help /></meta_data>	<paragraph >		<heading >			<size >2			</size>array		</heading>This example shows how to create an Eiffel array from an existing C array. 					After you have done the appropriate steps to compile the example, you will get a `cecil.exe' on windows, or `cecil' on Unix. 									Launch the program and you will be prompted for 10 integers that will be inserted in a C array, it will then initialize the Eiffel array and calls display from the MY_ARRAY class. 													A typical output will be:
+<document title="CECIL - C to Eiffel" output="studio">
+	<meta_data/>
+	<paragraph >
+		<heading >
+			<size >2</size>array
+		</heading>
+
+This example shows how to create an Eiffel array from an existing C array. After you have done the appropriate steps to compile the example, you will get a `cecil.exe' on windows, or `cecil' on Unix. Launch the program and you will be prompted for 10 integers that will be inserted in a C array, it will then initialize the Eiffel array and calls display from the MY_ARRAY class. A typical output will be:
 
 <code_block >
 $ ./cecil
@@ -27,7 +34,9 @@ Display an Eiffel Array:
 @10 = 10
 </code_block>
 
-								<heading >									<size >2									</size>string								</heading>This example shows how to create an Eiffel string from an existing C string. 																	After you have done the appropriate steps to compile the example, you will get a `cecil.exe' on windows, or `cecil' on Unix. 																					Launch the program and you will be prompted for a string, it will then initialize the Eiffel string and calls io. put_string from the STD_FILES class. 																									A typical output will be:
+<heading ><size >2	</size>string</heading>
+
+This example shows how to create an Eiffel string from an existing C string. After you have done the appropriate steps to compile the example, you will get a `cecil.exe' on windows, or `cecil' on Unix. Launch the program and you will be prompted for a string, it will then initialize the Eiffel string and calls io. put_string from the STD_FILES class. A typical output will be:
 
 <code_block >
 $ ./cecil

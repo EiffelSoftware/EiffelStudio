@@ -56,6 +56,8 @@ feature -- Access
 		end
 
 	font_resource_value (s: STRING): EV_FONT is
+			-- Font value of resource named `s', or a default font
+			-- if resource does not exist.
 		local
 			r: FONT_RESOURCE
 		do
@@ -64,6 +66,21 @@ feature -- Access
 				Result := r.actual_value
 			else
 				Create r.make (s, "verdana,arial,helvetica-r-regular-12-screen")
+				Result := r.actual_value
+			end
+		end
+
+	secure_font_resource_value (s: STRING; df: STRING): EV_FONT is
+			-- Font value of resource named `s', or font defined by
+			-- `df' if resource does not exist.
+		local
+			r: FONT_RESOURCE
+		do
+			r ?= resources.item (s)
+			if r /= Void then
+				Result := r.actual_value
+			else
+				Create r.make (s, df)
 				Result := r.actual_value
 			end
 		end

@@ -1566,16 +1566,16 @@ feature -- Basic operations
 			create rf.make_create_read_write (file)
 
 			-- Write the file header
-			c_file_ps (rf.file_pointer, bfh.item, bfh.structure_size)
+			rf.put_data (bfh.item, bfh.structure_size)
 
 			create bits.make (di_bits (a_bitmap, 0, bmi2.header.height, bmi2,
 				Dib_rgb_colors))
 
 			-- Write the bitmap info header
-			c_file_ps (rf.file_pointer, bmi2.item, size)
+			rf.put_data (bmi2.item, size)
 
 			-- Write the DIB and close the file
-			c_file_ps (rf.file_pointer, bits.item, bmi2.header.size_image)
+			rf.put_data (bits.item, bmi2.header.size_image)
 			rf.close
 		end
 
@@ -2301,14 +2301,6 @@ feature {NONE} -- Externals
 				%VOID *, BITMAPINFO *, UINT)"
 		alias
 			"GetDIBits"
-		end
-
-	c_file_ps (file: POINTER; a_string: POINTER; length: INTEGER) is
-			-- Run-time function to print `a_string' to `file'.
-		external
-			"C(FILE *, char *, EIF_INTEGER) | %"eif_file.h%""
-		alias
-			"file_ps"
 		end
 
 	Opaque: INTEGER is

@@ -750,8 +750,7 @@ feature {EB_CONTEXT_EDITOR, EB_DIAGRAM_HTML_GENERATOR} -- Saving
 				diagram_output := Xml_routines.deserialize_document (ptf.name)
 			else
 					-- Create a new view.
-				create diagram_output.make
-				create node.make_root (diagram_output, "CLUSTER_DIAGRAM",
+				create diagram_output.make_with_root_named ("CLUSTER_DIAGRAM",
 					create {XM_NAMESPACE}.make_default)
 			end
 			if diagram_output /= Void then

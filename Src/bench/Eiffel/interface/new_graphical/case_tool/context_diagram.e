@@ -1632,8 +1632,7 @@ feature {EB_CONTEXT_EDITOR} -- Saving
 				diagram_output := Xml_routines.deserialize_document (ptf.name)
 			else
 					-- Create a new view.
-				create diagram_output.make
-				create node.make_root (diagram_output, "CONTEXT_DIAGRAM",
+				create diagram_output.make_with_root_named ("CONTEXT_DIAGRAM",
 					create {XM_NAMESPACE}.make_default)
 			end
 			if diagram_output /= Void then

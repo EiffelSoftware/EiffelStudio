@@ -118,7 +118,7 @@ feature {GB_CODE_GENERATOR} -- Output
 				end
 				lower := element_info2.data
 				upper := element_info.data
-				Result := info.name + ".value_range.adapt(create {INTEGER_INTERVAL}.make (" + lower + ", " + upper + "))"
+				Result := info.name + ".value_range.adapt (create {INTEGER_INTERVAL}.make (" + lower + ", " + upper + "))"
 			end
 			
 			element_info := full_information @ (Value_string)

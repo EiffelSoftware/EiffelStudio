@@ -11,7 +11,7 @@ deferred class
 
 inherit
 	EV_ITEM_HOLDER_IMP
-
+	
 feature -- Access
 
 	get_item (index: INTEGER): EV_ITEM is
@@ -19,6 +19,20 @@ feature -- Access
 			-- `index'.
 		do
 			Result ?= (ev_children @ index).interface
+		end
+
+feature -- Element change
+
+	remove_all_items is
+			-- Remove `ev_children' without destroying them.
+		do
+			from
+				ev_children.start
+			until
+				ev_children.count = 0
+			loop
+				ev_children.item.set_parent (Void)
+			end
 		end
 
 feature -- Basic operations

@@ -63,7 +63,7 @@ feature {NONE}
 			!! Result.make (new_parent);
 			Result.set_window (new_parent);
 			old_warner := last_warner;
-			if old_warner /= Void then
+			if old_warner /= Void and then not old_warner.destroyed then
 				old_warner.popdown;
 				old_warner.destroy
 			end;

@@ -718,7 +718,10 @@ feature -- Element change
 			end
 			cwin_set_window_text (item, a_wel_string.item)
 		ensure
-			 text_set: text.is_equal (a_text)
+			text_set_when_not_void: a_text /= Void implies
+				equal (text, a_text)
+			text_set_when_void: a_text = Void implies	
+				text.count = 0
 		end
 		
 	set_placement (a_placement: WEL_WINDOW_PLACEMENT) is

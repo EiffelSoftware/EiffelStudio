@@ -91,8 +91,7 @@ feature -- Access
 			-- Is this button currently a default push button 
 			-- for a particular container?
 		do
-			Result := is_default_button
---| FIXME To_be_implemented
+			Result := GTK_WIDGET_CAN_DEFAULT (c_object)
 		end
 
 feature -- Status Setting
@@ -101,16 +100,36 @@ feature -- Status Setting
 			-- Set the style of the button corresponding
 			-- to the default push button.
 		do
-			is_default_button := True
---| FIXME To_be_implemented
+			GTK_WIDGET_SET_FLAGS (c_object, C.GTK_CAN_DEFAULT_ENUM)
+			C.gtk_widget_grab_default (c_object)
 		end
 
 	disable_default_push_button is
 			-- Remove the style of the button corresponding
 			-- to the default push button.
 		do
-			is_default_button := False
---| FIXME To_be_implemented
+			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_DEFAULT_ENUM)
+		end
+
+	gtk_widget_can_default (a_widget: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>]: EIF_BOOLEAN"
+		alias
+			"GTK_WIDGET_CAN_DEFAULT"
+		end
+
+	gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_SET_FLAGS"
+		end
+
+	gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_UNSET_FLAGS"
 		end
 
 feature -- Element change
@@ -215,6 +234,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/05/03 18:19:07  king
+--| Added push button style implementation
+--|
 --| Revision 1.34  2000/05/03 02:28:10  bonnard
 --| Fixed "default_button" features so they do not trigger assertion violations.
 --| Features still have to be implemented.

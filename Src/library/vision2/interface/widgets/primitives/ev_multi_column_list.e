@@ -1,12 +1,10 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"EiffelVision multi-column-list. Contains a list of items%
-		% from which the user can select."
+		"Displays a list of multi item rows from which the user can select."
 	note: "The list start at the index 1, the titles are not count among%
 		%the rows. The columns start also at the index 1."	
 	status: "See notice at end of class"
-	id: "$$"
+	keywords: "list, multi, column, row, table"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,132 +32,128 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_columns (i: INTEGER) is
-			-- Create list and assign `i' to `columns'.
+	make_with_columns (n_columns: INTEGER) is
+			-- Create with `n_columns'.
 		do
 			default_create
-			set_columns (i)
+			set_columns (n_columns)
+		ensure
+			columns_assigned: columns = n_columns
 		end
 
 feature -- Access
 
-	rows: INTEGER is
-			-- Number of rows
-		obsolete
-			"Use count instead."
-		do
-			Result := implementation.count
-		end
-
 	columns: INTEGER is
-			-- Number of columns in the list.
-		require
+			-- Column count.
 		do
 			Result := implementation.columns
+		ensure
+			bridge_ok: Result = implementation.columns
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
-			-- Currently selected item in a single
-			-- selection mode.
-		require
-			single_selection: not multiple_selection_enabled
+			-- Currently selected item.
+			-- Topmost selected item if multiple items are selected.
+			-- (For multiple selections see `selected_items')
 		do
 			Result := implementation.selected_item
+		ensure
+			bridge_ok: Result = implementation.selected_item
 		end
 
 	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
-			-- List of all the selected items. For a single
-			-- selection list, it gives a list with only one
-			-- element which is `selected_item'. Therefore, one
-			-- should use `selected_item' rather than 
-			-- `selected_items' for a single selection list
-		require
+			-- Currently selected items.
 		do
 			Result := implementation.selected_items
+		ensure
+			bridge_ok: Result = implementation.selected_items
 		end
 
 feature -- Status report
 
-	selected: BOOLEAN is
-			-- Is at least one item selected ?
-		require
-		do
-			Result := implementation.selected
-		end
-
 	multiple_selection_enabled: BOOLEAN is
-			-- True if the user can choose several items
-			-- False otherwise
-		require
+			-- Can more that one item be selected?
 		do
 			Result := implementation.multiple_selection_enabled
+		ensure
+			bridge_ok: Result = implementation.multiple_selection_enabled
 		end
 	
 	title_shown: BOOLEAN is
-			-- True if the title row is shown.
-			-- False if the title row is not shown.
-		require
+			-- Is a row displaying column titles shown?
 		do
 			Result := implementation.title_shown
+		ensure
+			bridge_ok: Result = implementation.title_shown
 		end
 
 	column_title (a_column: INTEGER): STRING is
-			-- Title of column `a_column'.
+			-- Title of `a_column'.
 		require
-			column_exists: a_column >= 1 and a_column <= columns
+			a_column_within_range: a_column >= 1 and a_column <= columns
 		do
 			Result := implementation.column_title (a_column)
+		ensure
+			bridge_ok: Result.is_equal (implementation.column_title (a_column))
 		end
 	
 	column_width (a_column: INTEGER): INTEGER is
-			-- Width of column `a_column' in pixels.
+			-- Width of `a_column' in pixels.
 		require
-			column_exists: a_column >= 1 and a_column <= columns
+			a_column_within_range: a_column >= 1 and a_column <= columns
 		do
 			Result := implementation.column_width (a_column)
+		ensure
+			bridge_ok: Result = implementation.column_width (a_column)
 		end
 
 feature -- Status setting
 	
-	set_columns (i: INTEGER) is
-			-- Assign `i' to `columns'.
+	set_columns (n_columns: INTEGER) is
+			-- Assign `n_columns' to `columns'.
 		require
 			empty: empty
+			n_columns_positive: n_columns > 0
 		do
-			implementation.set_columns (i)
+			implementation.set_columns (n_columns)
 		ensure
-			columns_assigned: columns = i					
+			columns_assigned: columns = n_columns					
 		end
 
-	select_item (index_to_select: INTEGER) is
-			-- Select an item at the one-based `index' the list.
+	select_item (an_index: INTEGER) is
+			-- Select item at `an_index'.
 		require
-			index_large_enough: index_to_select > 0
-			index_small_enough: index_to_select <= count
+			an_index_within_range: an_index > 0 and an_index <= count
 		do
-			implementation.select_item (index_to_select)
+			implementation.select_item (an_index)
+		ensure
+			item_selected: selected_items.has (i_th (an_index))
 		end
 
-	deselect_item (index_to_deselect: INTEGER) is
-			-- Unselect the item at the one-based `index'.
+	deselect_item (an_index: INTEGER) is
+			-- Deselect item at `an_index'.
 		require
-			index_large_enough: index_to_deselect > 0
-			index_small_enough: index_to_deselect <= count
+			an_index_within_range: an_index > 0 and an_index <= count
 		do
-			implementation.deselect_item (index_to_deselect)
+			implementation.deselect_item (an_index)
+		ensure
+			item_deselected: not selected_items.has (i_th (an_index))
 		end
 
 	clear_selection is
-			-- Clear the selection of the list.
-		require
+			-- Make `selected_items' empty.
 		do
 			implementation.clear_selection
+		ensure
+			selected_items_empty: selected_items.empty
 		end
 
 	enable_multiple_selection is
 			-- Allow more than one item to be selected.
 		do
 			implementation.enable_multiple_selection	
+		ensure
+			multiple_selection_enabled: multiple_selection_enabled
 		end
 
 	disable_multiple_selection is
@@ -167,96 +161,111 @@ feature -- Status setting
 
 		do
 			implementation.disable_multiple_selection
+		ensure
+			not_multiple_selection_enabled: not multiple_selection_enabled
 		end
 
 	show_title_row is
-			-- Show the row of the titles.
-		require
+			-- Show row displaying column titles.
 		do
 			implementation.show_title_row
+		ensure
+			title_shown: title_shown
 		end
 
 	hide_title_row is
-			-- Hide the row of the titles.
-		require
+			-- Hide row displaying column titles.
 		do
 			implementation.hide_title_row
+		ensure
+			not_title_shown: not title_shown
 		end
 
-	align_text_left (column: INTEGER) is
-			-- Align the text of the column at left.
-			-- Cannot be used for the first column which is 
-			-- always left aligned.
+	align_text_left (a_column: INTEGER) is
+			-- Display text of `a_column' left aligned.
+			-- First column is always left aligned.
 		require
-			column_exists: column > 1 and column <= columns
+			a_column_withing_range: a_column > 1 and a_column <= columns
 		do
-			implementation.set_column_alignment (0, column)
+			implementation.set_column_alignment (0, a_column)
+			--|FIXME 0 is a magic number!
 		end
 
-	align_text_center (column: INTEGER) is
-			-- Align the text of the column at left.
-			-- Cannot be used for the first column which is 
-			-- always left aligned.
+	align_text_center (a_column: INTEGER) is
+			-- Display text of `a_column' centered.
+			-- First column is always left aligned.
 		require
-			column_exists: column > 1 and column <= columns
+			a_column_within_range: a_column > 1 and a_column <= columns
 		do
-			implementation.set_column_alignment (2, column)
+			implementation.set_column_alignment (2, a_column)
+			--|FIXME 2 is a magic number!
 		end
 	
-	align_text_right (column: INTEGER) is
-			-- Align the text of the column at left.
-			-- Cannot be used for the first column which is 
-			-- always left aligned.
+	align_text_right (a_column: INTEGER) is
+			-- Display text of `a_column' right aligned.
+			-- First column is always left aligned.
 		require
-			column_exists: column > 1 and column <= columns
+			a_column_within_range: a_column > 1 and a_column <= columns
 		do
-			implementation.set_column_alignment (1, column)
+			implementation.set_column_alignment (1, a_column)
+			--|FIXME 1 is a magic number!
 		end
 
 feature -- Element change
 
-	set_column_title (txt: STRING; column: INTEGER) is
-			-- Make `txt' the title of the one-based `column'.
+	set_column_title (a_title: STRING; a_column: INTEGER) is
+			-- Assign `a_title' to the `column_title'(`a_column').
 		require
-			column_exists: column >= 1 and column <= columns
+			a_column_within_range: a_column > 0 and a_column <= columns
+			a_title_not_void: a_title /= Void
 		do
-			implementation.set_column_title (txt, column)
+			implementation.set_column_title (a_title, a_column)
+		ensure
+			a_title_assigned: a_title.is_equal (column_title (a_column))
 		end
 
-	set_columns_title (txt: ARRAY [STRING]) is         
-			-- Make `txt' the new titles of the columns.
+	set_column_titles (titles: ARRAY [STRING]) is         
+			-- Assign `titles' to titles of columns in order.
 		require
-			text_not_void: txt /= Void
-			valid_text_length: txt.count <= columns
+			titles_not_void: titles /= Void
+			titles_count_is_columns: titles.count = columns
 		do
-			implementation.set_columns_title (txt)
+			implementation.set_columns_title (titles)
+				--|FIXME feature name in _I needs to be updated.
+		end
+		--|FIXME This nees a postcondition!
+
+	set_column_width (a_width: INTEGER; a_column: INTEGER) is
+			-- Assign `a_width' `column_width'(`a_column').
+		require
+			a_column_within_range: a_column > 0 and a_column <= columns
+			a_width_positive: a_width > 0
+		do
+			implementation.set_column_width (a_width, a_column)
+		ensure
+			a_width_assigned: a_width = column_width (a_column)
 		end
 
-	set_column_width (a_width: INTEGER; column: INTEGER) is
-			-- Make `a_width' the new width of the one-based column.
+	set_column_widths (widths: ARRAY [INTEGER]) is         
+			-- Assign `widths' to column widths in order.
 		require
-			valid_width: a_width >= 1
-			column_exists: column >= 1 and column <= columns
+			widths_not_void: widths /= Void
+			widths_count_is_columns: widths.count = columns
 		do
-			implementation.set_column_width (a_width, column)
+			implementation.set_columns_width (widths)
+				--|FIXME feature name in _I needs to be updated.
 		end
+		--|FIXME This nees a postcondition!
 
-	set_columns_width (value: ARRAY [INTEGER]) is         
-			-- Make `value' the new values of the columns width.
-		require
-			value_not_void: value /= Void
-			valid_value_length: value.count <= columns
-		do
-			implementation.set_columns_width (value)
-		end
-
-	set_rows_height (value: INTEGER) is
-			-- Make `value' the new height of all the rows.
+	set_row_height (a_height: INTEGER) is
+			-- Assign `a_height' to ??.
+			--| FIXME to what???
 		require
 			height_valid: value > 0
 		do
 			implementation.set_rows_height (value)
 		end
+		--|FIXME This nees a postcondition!
 
 feature -- Event handling
 
@@ -269,24 +278,21 @@ feature -- Event handling
 	column_click_actions: EV_NOTIFY_ACTION_SEQUENCE
 		-- Actions performed when a column is clicked.
 
-feature {NONE} -- Inapplicable
-
-	make (par: EV_CONTAINER) is
-			-- Do nothing, but need to be implemented.
-		do
-			check
-				inapplicable: False
-			end
-		end
+feature {EV_ANY_I} -- Implementation
+	
+	implementation: EV_MULTI_COLUMN_LIST_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE} -- Implementation
 
 	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MULTI_COLUMN_LIST_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_PRIMITIVE} Precursor
 			create select_actions
@@ -294,10 +300,23 @@ feature {NONE} -- Implementation
 			create column_click_actions
 		end
 
-feature {EV_ANY_I} -- Implementation
-	
-	implementation: EV_MULTI_COLUMN_LIST_I
-			-- Platform specific access.
+feature -- Obsolete
+
+	rows: INTEGER is
+			-- Number of rows.
+		obsolete
+			"Use count instead."
+		do
+			Result := implementation.count
+		end
+
+	selected: BOOLEAN is
+			-- Is at least one item selected ?
+		obsolete
+			"use selected_item = Void or selected_items.empty"
+		do
+			Result := implementation.selected
+		end
 
 end -- class EV_MULTI_COLUMN_LIST
 
@@ -315,18 +334,26 @@ end -- class EV_MULTI_COLUMN_LIST
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!---------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/21 02:13:32  oconnor
+--| Added contracts to most features.
+--| Added FIXMES where contracts were not imediately implementable.
+--| Formatting, comments...
+--| Fixed broken feature names:
+--| set_columns_with -> set_column_withs etc
+--|
 --| Revision 1.39  2000/03/06 20:15:48  king
 --| Changed action sequence types
 --|
 --| Revision 1.38  2000/03/06 18:05:14  rogers
---| Changed types, select actions and deselect actions from EV_NOTIFY_ACTION_SEQUENCE -> EV_ITEM_SELECT_ACTION_SEQUENCE.
+--| Changed types, select actions and deselect actions from
+--| EV_NOTIFY_ACTION_SEQUENCE -> EV_ITEM_SELECT_ACTION_SEQUENCE.
 --|
 --| Revision 1.37  2000/03/03 21:26:24  king
 --| Added valid_width precond to set_column_width
@@ -400,7 +427,6 @@ end -- class EV_MULTI_COLUMN_LIST
 --|
 --| Revision 1.23.2.2  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

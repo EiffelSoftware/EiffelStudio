@@ -685,38 +685,6 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	}
 	epop(&loc_stack, 1);
 
-	/* If the object has moved in the reallocation process and was in the
-	 * remembered set, we must re-issue a memorization call otherwise all the
-	 * old contents of the area could be freed. Note that the test below is
-	 * NOT perfect, since the area could have been moved by the GC and still
-	 * have not been moved around wrt the GC stacks. But it doen't hurt--RAM.
-	 */
-
-	if ((object != ptr) && (HEADER (ptr)->ov_flags & EO_REM))
-	{
-#ifdef EIF_REM_SET_OPTIMIZATION 
-		if (HEADER(ptr)->ov_flags & EO_REF)
-		{
-#ifdef SPREALLOC_DEBUG
-			printf ("SPREALLOC: object %x has moved to %x\n", ptr, object);
-#endif
-			assert (HEADER (object)->ov_flags & EO_REF);
-			assert (HEADER (object)->ov_flags & EO_SPEC);
-			assert (HEADER (object)->ov_flags & EO_REM);
-			assert (HEADER (object)->ov_flags & EO_OLD);
-			assert(!(is_in_rem_set (ptr)));
-			assert (is_in_special_rem_set (ptr));
-			eif_promote_special (object); 
-			/* We re-issue the remembering process. */
-		}
-		else
-			erembq (object);
-#else
-		erembq (object);	/* Usual remembrance process. */
-				/* A simple remembering for other special objects. */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-	}
-
 	/* Reset extra-items with zeros */
 	if (count < nbitems)
 		bzero(object + (count * elem_size), (nbitems - count) * elem_size);
@@ -766,6 +734,39 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 
 	zone->ov_size &= ~B_C;					/* Cannot freeze a special object */
 
+	/* If the object has moved in the reallocation process and was in the
+	 * remembered set, we must re-issue a memorization call otherwise all the
+	 * old contents of the area could be freed. Note that the test below is
+	 * NOT perfect, since the area could have been moved by the GC and still
+	 * have not been moved around wrt the GC stacks. But it doen't hurt--RAM.
+	 */
+
+	if ((object != ptr) && (HEADER (ptr)->ov_flags & EO_REM))
+	{
+#ifdef EIF_REM_SET_OPTIMIZATION 
+		if (HEADER(ptr)->ov_flags & EO_REF)
+		{
+#ifdef SPREALLOC_DEBUG
+			printf ("SPREALLOC: object %x has moved to %x\n", ptr, object);
+#endif
+			assert (HEADER (object)->ov_flags & EO_REF);
+			assert (HEADER (object)->ov_flags & EO_SPEC);
+			assert (HEADER (object)->ov_flags & EO_REM);
+			assert (HEADER (object)->ov_flags & EO_OLD);
+			assert(!(is_in_rem_set (ptr)));
+			assert (is_in_special_rem_set (ptr));
+			eif_promote_special (object); 
+					/* FIXME:  Should we replace old `ptr' 
+					 * by  `object' instead? */
+				/* We re-issue the remembering process. */
+		}
+		else
+			erembq (object);
+#else
+		erembq (object);	/* Usual remembrance process. */
+				/* A simple remembering for other special objects. */
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+	}
 	if (HEADER(ptr)->ov_flags & EO_NEW) {			/* Original was new */
 		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
 			urgent_plsc(&object);					/* Full safe collection */
@@ -777,7 +778,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	return object;
 
 	EIF_END_GET_CONTEXT
-}
+}	/* sprealloc () */
 
 rt_public EIF_REFERENCE cmalloc(unsigned int nbytes)
 {

@@ -213,13 +213,16 @@ feature
 	widgets_frame: EV_FRAME is
 			-- Frame containing one instance of each widget.
 		once
-			Result := test_frame (widgets.count, widgets~i_th)
+			Result := test_frame (widgets.count, widgets~i_th, widgets~i_th)
+			Result.set_text ("Widgets")
 		end
 
 	non_widgets_frame: EV_FRAME is
 			-- Frame containing one instance of each non-widget.
 		once
-			Result := test_frame (non_widgets.count, ~non_widgets_i_th)
+			Result := test_frame (non_widgets.count, ~non_widgets_i_th,
+				non_widgets~i_th)
+			Result.set_text ("Non-widgets")
 		end
 
 	non_widgets_i_th (an_index: INTEGER): EV_WIDGET is
@@ -233,17 +236,20 @@ feature
 			end
 		end
 
-	test_frame (a_count: INTEGER; a_i_th: FUNCTION [ANY, TUPLE [INTEGER], EV_WIDGET]): EV_FRAME is
+	test_frame (a_count: INTEGER;
+			a_i_th: FUNCTION [ANY, TUPLE [INTEGER], EV_WIDGET]
+			real_i_th: FUNCTION [ANY, TUPLE [INTEGER], ANY]): EV_FRAME is
 			-- Frame containing one instance of each widget.
 		local
 			i, j, n: INTEGER
 			test_subject: EV_WIDGET
+			test_type: STRING
 			vbox, wbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
 			l: EV_LABEL
 			c: CURSOR
 		do
-			create Result.make_with_text ("Widgets")
+			create Result
 			create vbox
 			vbox.set_padding (10)
 			Result.extend (vbox)
@@ -259,18 +265,15 @@ feature
 				from i := 1 until i > 3 or n > a_count loop
 					test_subject := a_i_th.item ([n])
 					if test_subject /= Void then
+						test_type := real_i_th.item ([n]).generating_type
 						create wbox
 						wbox.set_padding (3)
 						hbox.extend (wbox)
-						create l.make_with_text (
-							test_subject.generating_type
-						)
+						create l.make_with_text (test_type)
 						l.pointer_button_press_actions.force_extend (
 							widget_label~set_text (
-								test_subject.generating_type + "%N" +
-								class_descriptions.item (
-									widgets.item.generating_type
-									)
+								test_type + "%N" +
+								class_descriptions.item (test_type)
 							)
 						)
 						l.set_background_color (create {EV_COLOR}.make_with_rgb (0.7, 0.7, 1.0))
@@ -506,6 +509,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/04/27 00:03:53  brendel
+--| Corrected test_frame.
+--|
 --| Revision 1.37  2000/04/26 23:51:38  brendel
 --| Insert notebook!
 --|

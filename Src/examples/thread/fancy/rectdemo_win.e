@@ -22,6 +22,9 @@ feature -- deferred
 			Result := rect_demo_cmd
 		end
 
+	title: STRING is "Rectangles"
+			-- Title of the window.
+		
 
 end -- class RECTANGLE_DEMO_WINDOW
 

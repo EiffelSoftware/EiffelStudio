@@ -245,7 +245,7 @@ feature {EV_ANY_I} -- implementation
 		deferred
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	item_to_imp (an_item: EV_ITEM): EV_ITEM_IMP is
 			-- Get implementation from `an_item'.
@@ -296,6 +296,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/30 17:47:12  brendel
+--| Changed export status.
+--|
 --| Revision 1.24  2000/03/27 19:11:31  rogers
 --| Removed call to remove_item_actions from prune.
 --|

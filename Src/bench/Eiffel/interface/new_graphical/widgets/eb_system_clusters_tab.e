@@ -559,7 +559,7 @@ feature {NONE} -- Cluster display and saving
 				prop.set_default_option (default_options)
 			end
 
-			if System.il_generation and then not namespace_name.text.is_empty then
+			if not namespace_name.text.is_empty then
 				from
 					default_options.start
 				until

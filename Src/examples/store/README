@@ -10,11 +10,10 @@ the following:
 
 
 0) esql
-	Very useful to test you Database.
+	Very useful to test you Database connection.
 
 1) select
 	The basic example for a query of your Database.
-	Check the Readme of this example.
 
 2) insert
 	The basic example for an insert in you Database

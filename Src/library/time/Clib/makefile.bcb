@@ -1,0 +1,22 @@
+# datetime.lib - Makefile for Borland C
+
+CC = bcc32
+CFLAGS = -q -c -w-8065 -O2 -DEIF_BORLAND -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
+
+.c.obj:
+	$(CC) @&&|
+	$(CFLAGS) $<
+|
+
+OBJ = datetime.obj
+
+datetime.lib: $(OBJ)
+	if exist $@ del $@
+	tlib $@ +datetime.obj
+	if not exist ..\spec mkdir ..\spec
+	if not exist ..\spec\bcc mkdir ..\spec\bcc
+	if not exist ..\spec\bcc\lib mkdir ..\spec\bcc\lib
+	copy $@ ..\spec\bcc\lib
+	del $@
+	del datetime.obj
+	if exist datetime.bak del *.bak

@@ -23,8 +23,8 @@ inherit
 		end
 	
 create
-
-	make
+	make,
+	make_without_label
 
 feature {NONE} -- Initialization
 	
@@ -40,35 +40,30 @@ feature {NONE} -- Initialization
 			label_text_not_void_or_empty: label_text /= Void and not label_text.is_empty
 			an_agent_not_void: an_execution_agent /= Void
 			a_validate_agent_not_void: a_validate_agent /= Void
-		local
-			label: EV_LABEL
-			gb_ev_any: GB_EV_ANY
 		do
-			gb_ev_any ?= any
-			check
-				gb_ev_any_not_void: gb_ev_any /= Void
-			end
-			default_create
-			create label.make_with_text (label_text)
-			label.set_tooltip (tooltip)
-			extend (label)
-			label.align_text_left
-			create text_field
-			text_field.set_tooltip (tooltip)
-			extend (text_field)
-			disable_item_expand (label)
-			a_parent.extend (Current)
-			text_field.return_actions.extend (agent process)
-			text_field.focus_in_actions.extend (agent set_initial)
-			text_field.focus_out_actions.extend (agent process)
-			
-				-- Store `an_exection_agent' internally.
-			execution_agent := an_execution_agent
-
-				-- Store `a_validate_agent'.
-			validate_agent := a_validate_agent
-			
-			internal_gb_ev_any := gb_ev_any
+			call_default_create (any)
+			add_label (label_text, tooltip)
+			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
+		ensure
+			execution_agent_not_void: execution_agent /= Void
+			validate_agent_not_void: validate_agent /= Void
+			internal_gb_ev_any_not_void: internal_gb_ev_any /= Void
+		end
+		
+	make_without_label (any: ANY; a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
+			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
+			-- Build widget structure into `a_parent'.
+			-- `an_execution_agent' is to execute the setting of the attribute.
+			-- `a_validate_agent' is used to query whether the current value is valid as an argument for `execution_agent'.
+			-- `tooltip' is tooltip to be displayed on visible parts of control.
+		require
+			gb_ev_any_not_void: any /= Void
+			a_parent_not_void: a_parent /= Void
+			an_agent_not_void: an_execution_agent /= Void
+			a_validate_agent_not_void: a_validate_agent /= Void
+		do
+			call_default_create (any)
+			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
 		ensure
 			execution_agent_not_void: execution_agent /= Void
 			validate_agent_not_void: validate_agent /= Void
@@ -149,6 +144,58 @@ feature {NONE} -- Implementation
 					text_field.set_text (value_on_entry)
 				end
 			end
+		end
+		
+	call_default_create (any: ANY) is
+			-- Call `default_create' and assign `any' to `internal_gb_ev_any'.
+		require
+			gb_ev_any_not_void: any /= Void
+		local
+			gb_ev_any: GB_EV_ANY
+		do
+			gb_ev_any ?= any
+			check
+				gb_ev_any_not_void: gb_ev_any /= Void
+			end
+			internal_gb_ev_any := gb_ev_any
+			default_create
+		end
+		
+	add_label (label_text, tooltip: STRING) is
+			-- Add a label to `Current' with `text' `label_text' and
+			-- tooltip `tooltip'.
+		require
+			label_text_not_void_or_empty: label_text /= Void and not label_text.is_empty
+		local
+			label: EV_LABEL
+		do
+			create label.make_with_text (label_text)
+			label.set_tooltip (tooltip)
+			extend (label)
+			disable_item_expand (label)
+			label.align_text_left
+		end
+		
+	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
+			-- Initialize text field for entry.
+		require
+			a_parent_not_void: a_parent /= Void
+			an_agent_not_void: an_execution_agent /= Void
+			a_validate_agent_not_void: a_validate_agent /= Void
+		do
+			create text_field
+			text_field.set_tooltip (tooltip)
+			extend (text_field)
+			a_parent.extend (Current)
+			text_field.return_actions.extend (agent process)
+			text_field.focus_in_actions.extend (agent set_initial)
+			text_field.focus_out_actions.extend (agent process)
+			
+				-- Store `an_exection_agent' internally.
+			execution_agent := an_execution_agent
+
+				-- Store `a_validate_agent'.
+			validate_agent := a_validate_agent
 		end
 
 end -- class GB_INTEGER_INPUT_FIELD

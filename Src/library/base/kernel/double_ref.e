@@ -197,7 +197,7 @@ feature -- Conversion
 	rounded: INTEGER is
 			-- Rounded integral value
 		do
-			Result := sign * ((abs + 0.5).floor)
+			Result := sign * (c_floor (abs_ref.item + 0.5).truncated_to_integer)
 		ensure
 			definition: Result = sign * ((abs + 0.5).floor)
 		end;

@@ -53,7 +53,11 @@
 					<Directory Id="bitmaps" Name="bitmaps">
 						<Directory Id="png" Name="png">
 							<Component Id="png" Guid="F22C8D4F-8BD8-4A68-8A4E-AC91108993E3">
-								<File Id="icon_redo_color.png" Name="ICON_R~1.PNG" LongName="icon_redo_color.png" KeyPath="yes" />
+								<File Id="icon_clipboard_color.png" Name="ICON_C~6.PNG" LongName="icon_clipboard_color.png" />
+								<File Id="icon_copy_color.png" Name="IC2FAE~1.PNG" LongName="icon_copy_color.png" />
+								<File Id="icon_cut_color.png" Name="IC0D42~1.PNG" LongName="icon_cut_color.png" />
+								<File Id="icon_past_color.png" Name="ICON_P~4.PNG" LongName="icon_past_color.png" />
+								<File Id="icon_redo_color.png" Name="ICON_R~1.PNG" LongName="icon_redo_color.png" />
 								<File Id="icon_icon_view_color.png" Name="ICON_I~1.PNG" LongName="icon_icon_view_color.png" />
 								<File Id="icon_object_symbol.png" Name="ICON_O~2.PNG" LongName="icon_object_symbol.png" />
 								<File Id="ev_vertical_box.png" Name="EV_VER~1.PNG" LongName="ev_vertical_box.png" />

@@ -1215,6 +1215,114 @@ feature -- Update
  
 feature {NONE} -- Implementation
 
+	add_tool_to_menu (a_tool: BAR_AND_TEXT; a_menu: MENU_PULL) is
+			-- Add a menu entry reflecting `a_tool' to `a_menu'.
+		local
+			sep: SEPARATOR;
+			entry: EB_MENU_ENTRY;
+			cmd: RAISE_TOOL_CMD
+		do
+			if a_menu.children_count = 1 then
+				!! sep.make ("", a_menu);
+			end
+			!! cmd.make (a_tool)
+			!! entry.make_tools_menu (cmd, a_menu)
+		end;
+
+	change_tool_in_menu (a_tool: BAR_AND_TEXT; a_menu: MENU_PULL) is
+			-- Change the entry in `a_menu' reflecting `a_tool'
+			-- so that the entry has `a_tool.title' as text.
+		local
+			done: BOOLEAN;
+			list: ARRAYED_LIST [WIDGET];
+			menu_entry: EB_MENU_ENTRY;
+			raise_cmd: RAISE_TOOL_CMD
+		do
+			from
+				list := a_menu.children
+				list.start
+			until
+				list.after or done
+			loop
+					-- Get rid of the separators.
+				menu_entry ?= list.item;
+				if menu_entry /= Void then
+					raise_cmd ?= menu_entry.associated_command;
+					if
+						raise_cmd /= Void and then
+						raise_cmd.tool = a_tool
+					then
+						menu_entry.set_text (a_tool.title);
+						done := True
+					else
+						list.forth
+					end
+				else
+					list.forth
+				end
+			end
+		end;
+
+	remove_tool_from_menu (a_tool: BAR_AND_TEXT; a_menu: MENU_PULL) is
+			-- Remove menu entry reflecting `a_tool' from
+			-- `a_menu'.
+		local
+			done: BOOLEAN;
+			list: ARRAYED_LIST [WIDGET];
+			menu_entry: EB_MENU_ENTRY;
+			raise_cmd: RAISE_TOOL_CMD
+		do
+			from
+				list := a_menu.children
+				list.start
+			until
+				list.after or done
+			loop
+					-- Get rid of the separators.
+				menu_entry ?= list.item;
+				if menu_entry /= Void then
+					raise_cmd ?= menu_entry.associated_command;
+					if
+						raise_cmd /= Void and then
+						raise_cmd.tool = a_tool
+					then
+						menu_entry.destroy;
+						done := True
+					else
+						list.forth
+					end
+				else
+					list.forth
+				end
+			end
+			if list.count = 3 then
+				remove_separator (list)
+			end
+		end;
+
+	remove_separator (list: ARRAYED_LIST [WIDGET]) is
+			-- Remove the separator item from `list'
+		require
+			list_count_is_three: list.count = 3
+		local
+			done: BOOLEAN;
+			sep: SEPARATOR
+		do
+			from
+				list.start
+			until
+				list.after or done
+			loop
+				sep ?= list.item;
+				if sep /= Void then
+					sep.destroy;
+					done := True
+				else
+					list.forth
+				end
+			end
+		end;
+
 	saved_cursor: CURSOR;
 			-- Saved cursor position for displaying the stack
 

@@ -184,7 +184,9 @@ feature -- Access
 			-- Special representation for `Current'.
 		do
 			create Result.make_from_native_array (to_cil.to_char_array)
-			Result := Result.resized_area (capacity)
+			if Result.capacity < Result.count then
+				Result := Result.resized_area (capacity)
+			end
 		end
 
 	item, infix "@" (i: INTEGER): CHARACTER is

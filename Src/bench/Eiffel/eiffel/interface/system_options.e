@@ -35,6 +35,9 @@ feature -- Access
 	has_multithreaded: BOOLEAN
 			-- Is the system a multithreaded one?
 
+	has_syntax_warning: BOOLEAN
+			-- Does system produce warnings on old syntactical constructs?
+
 	exception_stack_managed: BOOLEAN;
 			-- Is the exception stack managed in final mode
 
@@ -357,6 +360,14 @@ feature -- Update
 			has_multithreaded_set: has_multithreaded = b
 		end
 
+	set_has_syntax_warning (b: BOOLEAN) is
+			-- Set `has_syntax_warning' to `b'
+		do
+			has_syntax_warning := b
+		ensure
+			has_syntax_warning_set: has_syntax_warning = b
+		end
+	
 	set_console_application (b: BOOLEAN) is
 			-- Set `is_console_application' to `b'
 		do

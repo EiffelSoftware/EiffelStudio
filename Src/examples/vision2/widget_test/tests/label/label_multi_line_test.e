@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that deomnstrate a multi line EV_LABEL."
+	description: "Objects that demonstrate a multi line EV_LABEL."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

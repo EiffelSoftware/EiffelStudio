@@ -451,7 +451,7 @@ feature {NONE} -- Implementation Execution
 						end
 					else
 						warner (popup_parent).custom_call (Current,
-							Interface_names.t_Specify_ace, Interface_names.b_Browse, Interface_names.b_Build, Interface_names.b_Cancel)
+							Warning_messages.w_specify_ace, Interface_names.b_Browse, Interface_names.b_Build, Interface_names.b_Cancel)
 					end
 				end
 			end

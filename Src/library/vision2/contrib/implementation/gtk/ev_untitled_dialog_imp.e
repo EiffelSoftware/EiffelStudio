@@ -13,7 +13,8 @@ inherit
 			make,
 			interface,
 			set_size,
-			has_wm_decorations
+			has_wm_decorations,
+			initialize
 		end
 
 create
@@ -29,6 +30,14 @@ feature {NONE} -- Initialization
 				-- Cannot use popup window as Window manager cannot give focus to it.
 			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 		end
+		
+		initialize is
+				-- Initialize `Current'
+			do
+				Precursor {EV_DIALOG_IMP}
+				feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
+					-- We don't want any decorations at all
+			end
 
 feature -- Status setting	
 		

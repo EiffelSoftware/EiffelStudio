@@ -313,7 +313,7 @@ feature {NONE} -- Storage Implementation
 	list_feature_token: HASH_TABLE [INTEGER, INTEGER]
 			-- {feature_name_id} => {feature_token}
 
-	list_once_tokens: HASH_TABLE [TUPLE [INTEGER, INTEGER], HASHABLE] 
+	list_once_tokens: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER] 
 			-- feature_tokens[_done|_result] <= [feature_name_id]
 
 --	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST[INTEGER], INTEGER] 

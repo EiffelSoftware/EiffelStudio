@@ -1,23 +1,24 @@
 indexing
 
 	description: 
-		"An ast that has a position and associated api class.";
-	date: "$Date$";
+		"An ast that has a position and associated api class."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class CLICKABLE_AST
+class
+	CLICKABLE_AST
 
 feature -- Properties
 
 	is_class: BOOLEAN is
 			-- Does the Current AST represent a class?
 		do
-		end;
+		end
 
 	is_feature: BOOLEAN is
 			-- Does the Current AST represent a feature?
 		do
-		end;
+		end
 
 	is_precursor: BOOLEAN is
 			-- Does the Current AST represent a Precursor construct?
@@ -38,10 +39,10 @@ feature -- Access
 			-- `ref_class' cluster is used to resolve name conflict 
 			-- arising from class renaming.
 		require
-			is_class_or_precursor: is_class or is_precursor;
+			is_class_or_precursor: is_class or is_precursor
 			valid_ref_class: valid_reference_class (reference_class)
 		do
-		end;
+		end
 
     associated_feature_name: STRING is
 			-- Associated feature name representing AST
@@ -50,6 +51,6 @@ feature -- Access
 		do
 		ensure
 			non_void_result: Result /= Void
-		end;
+		end
 
 end -- class CLICKABLE_AST

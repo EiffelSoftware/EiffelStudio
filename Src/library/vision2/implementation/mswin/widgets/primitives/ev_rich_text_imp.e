@@ -190,6 +190,8 @@ inherit
 	EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 		export
 			{NONE} all
+		redefine
+			initialize_for_saving
 		end
 	
 create
@@ -226,6 +228,10 @@ feature {NONE} -- Initialization
 			screen_dc.release
 			tab_width := logical_pixels // 2
 			
+				-- Associate `Current' as `rich_text' inherited from EV_RICH_TEXT_BUFFERING_STRUCTURES_I
+				-- This is because instances of EV_RICH_TEXT_BUFFERING_STRUCTURES need access to
+				-- a rich text implementation object and they may be created independently.
+			set_rich_text (Current)
 				-- Ensure all structures for buffering are set to defaults.
 			clear_structures
 		end
@@ -430,6 +436,7 @@ feature -- Status report
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
 		do
+			Precursor {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 			disable_redraw
 			if selection_change_actions_internal /= Void then
 				selection_change_actions_internal.block
@@ -849,14 +856,6 @@ feature -- Status setting
 			-- Apply `a_text' with format `format' to append buffer.
 			-- To apply buffer contents to `Current', call `flush_append_buffer' or
 			-- `flush_append_buffer_to'.
-		local
-			hashed_character_format: STRING
-			temp_string: STRING
-			format_index: INTEGER
-			vertical_offset, counter: INTEGER
-			character: CHARACTER
-			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
-			screen_dc: WEL_SCREEN_DC
 		do
 			if not buffer_locked_in_append_mode then
 					-- If we are not already locked in append mode then
@@ -865,95 +864,7 @@ feature -- Status setting
 				clear_structures
 				buffer_locked_in_append_mode := True
 			end
-			hashed_character_format := format.hash_value
-			if not hashed_formats.has (hashed_character_format) then
-				hashed_formats.put (format, hashed_character_format)
-				formats.extend (format)
-				heights.extend (format.font.height * 2)
-				format_offsets.put (hashed_formats.count, hashed_character_format)
-			
-				build_color_from_format (format)
-				
-				build_font_from_format (format)
-			end
-
-			format_index := format_offsets.item (hashed_character_format)
-				
-					-- Must clone otherwise we will always be modifying `highlight_string'.
-			temp_string := highlight_string.twin
-			temp_string.append (back_color_offset.i_th (format_index).out)
-			temp_string.append (color_string)
-			temp_string.append (color_offset.i_th (format_index).out)
-			
-			format_underlined := formats.i_th (format_index).effects.is_underlined
-			if not is_current_format_underlined and format_underlined then
-				temp_string.append (start_underline_string)
-				is_current_format_underlined := True
-			elseif is_current_format_underlined and not format_underlined then
-				temp_string.append (end_underline_string)
-				is_current_format_underlined := False
-			end
-			format_striked := formats.i_th (format_index).effects.is_striked_out
-			if not is_current_format_striked_through and format_striked then
-				temp_string.append (start_strikeout_string)
-				is_current_format_striked_through := True
-			elseif is_current_format_striked_through and not format_striked then
-				temp_string.append (end_strikeout_string)
-				is_current_format_striked_through := False
-			end
-			format_bold := formats.i_th (format_index).font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
-			if not is_current_format_bold and format_bold then
-				temp_string.append (start_bold_string)
-				is_current_format_bold := True
-			elseif is_current_format_bold and not format_bold then
-				temp_string.append (end_bold_string)
-				is_current_format_bold := False
-			end
-			format_italic := formats.i_th (format_index).font.shape = feature {EV_FONT_CONSTANTS}.shape_italic
-			if not is_current_format_italic and format_italic then
-				temp_string.append (start_italic_string)
-				is_current_format_italic := True
-			elseif is_current_format_italic and not format_italic then
-				temp_string.append (end_italic_string)
-				is_current_format_italic := False
-			end
-			vertical_offset := formats.i_th (format_index).effects.vertical_offset
-			if vertical_offset /= current_vertical_offset then
-				temp_string.append (start_vertical_offset)
-					-- Create a screen DC for access to metrics
-					-- We must specify the vertical offset in half points.
-				create screen_dc
-				screen_dc.get
-				temp_string.append ((pixel_to_point (screen_dc, vertical_offset) * 2).out)
-				screen_dc.release
-				current_vertical_offset := vertical_offset
-			end
-			
-			temp_string.append (font_string)
-			temp_string.append (font_offset.i_th (format_index).out)
-			temp_string.append (font_size_string)
-			temp_string.append (heights.i_th (format_index).out)
-			temp_string.append (space_string)
-			internal_text.append (temp_string)
-			from
-				counter := 1
-			until
-				counter > a_text.count
-			loop
-				character := a_text.item (counter)
-				if character = '%N' then
-					internal_text.append (rtf_newline)
-				elseif character = '\' then
-					internal_text.append (rtf_backslash)
-				elseif character = '{' then
-					internal_text.append (rtf_open_brace)	
-				elseif character = '}' then
-					internal_text.append (rtf_close_brace)
-				else
-					internal_text.append_character (a_text.item (counter))
-				end
-				counter := counter + 1
-			end
+			append_text_for_rtf (a_text, format)
 		end
 		
 	flush_buffer_to (start_position, end_position: INTEGER) is
@@ -1129,15 +1040,12 @@ feature -- Status setting
 					counter := counter + 1
 				end
 				internal_text.append ("}")
-				buffered_text := Void
 				set_selection (lowest_buffered_value - 1, highest_buffered_value - 1)
 				create stream.make (internal_text)
 				insert_rtf_stream_in (stream)
 				stream.release_stream
 			elseif buffer_locked_in_append_mode then
-				
-				generate_rtf_heading_for_buffered_append			
-				buffered_text := Void
+				generate_rtf_heading_for_buffered_append
 				create stream.make (internal_text)
 				rtf_stream_in (stream)
 				stream.release_stream
@@ -1152,131 +1060,7 @@ feature -- Status setting
 			text_up_to_date := False
 			set_caret_position (original_position)
 		end
-		
-	generate_rtf_heading_for_buffered_append is
-			-- Generate the rtf heading for buffered operations into `internal_text'.
-			-- Current contents of `internal_text' are lost.
-		require
-			buffer_locked_in_append_mode: buffer_locked_in_append_mode
-		local
-			internal_text_twin: STRING
-		do
-				-- `font_text' contents is generated by each call to `buffered_append',
-				-- so simply close the tag.
-			font_text.append ("}")
 
-				-- `color_text' contents is generated by each call to `buffered_append',
-				-- so simply close the tag.
-			color_text.append ("}")
-			
-			internal_text_twin := internal_text.twin
-			internal_text := font_text.twin
-			internal_text.append ("%R%N")
-			internal_text.append (color_text)
-			internal_text.append ("%R%N")
-			internal_text.append (internal_text_twin)
-			internal_text.append ("}")
-		end
-		
-	build_font_from_format (a_format: EV_CHARACTER_FORMAT) is
-			-- Update font text `font_text' for addition of a new format to the buffering.
-		local
-			a_font_imp: EV_FONT_IMP
-			log_font: WEL_LOG_FONT
-			current_family: INTEGER
-			family: STRING
-			temp_string: STRING
-			a_font: EV_FONT
-		do
-			a_font := a_format.font
-			a_font_imp ?= a_font.implementation
-			check
-				font_imp_not_void: a_font_imp /= Void
-			end
-			log_font := a_font_imp.wel_font.log_font
-			current_family := a_font_imp.family
-			inspect current_family
-			when family_screen then 
-				family := "ftech"
-			when family_roman then 
-				family := "froman"
-			when family_sans then 
-				family := "fswiss"
-			when family_typewriter then 
-				family := "fscript"
-			when family_modern then 
-				family := "fmodern"
-			else
-				family := "fnil"
-			end
-			temp_string := "\" + family + "\fcharset" + log_font.char_set.out + " " + a_font.name
-			hashed_fonts.search (temp_string)
-			if not hashed_fonts.found then
-				font_count := font_count + 1
-				hashed_fonts.put (font_count, temp_string)
-				font_offset.force (hashed_fonts.found_item)
-				font_text.append ("{\f")
-				font_text.append (font_count.out)
-				font_text.append (temp_string)
-				font_text.append ("}")
-			else
-				font_offset.force (hashed_fonts.item (temp_string))
-			end
-		end
-		
-		
-	build_color_from_format (a_format: EV_CHARACTER_FORMAT) is
-			-- Update color text `color_text' for addition of a new format to the buffering.
-		local
-			color, back_color: EV_COLOR
-			hashed_color, hashed_back_color: STRING
-		do
-			color := a_format.color
-			hashed_color := rtf_red.twin
-			hashed_color.append (color.red_8_bit.out)
-			hashed_color.append (rtf_green)
-			hashed_color.append (color.green_8_bit.out)
-			hashed_color.append (rtf_blue)
-			hashed_color.append (color.blue_8_bit.out)
-			hashed_color.append (";")
-
-			hashed_colors.search (hashed_color)
-				-- If the color does not already exist.
-			if not hashed_colors.found then
-					-- Add the color to `colors' for later retrieval.
-				color_count := color_count + 1
-				hashed_colors.put (color_count, hashed_color)
-					-- Store the offset from the character index to the new color index for retrieval.
-				color_offset.force (hashed_colors.found_item)
-				color_text.append (hashed_color)
-			else
-				color_offset.force (hashed_colors.item (hashed_color))
-			end
-			
-			back_color := a_format.background_color
-			hashed_back_color := rtf_red.twin
-			hashed_back_color.append (back_color.red_8_bit.out)
-			hashed_back_color.append (rtf_green)
-			hashed_back_color.append (back_color.green_8_bit.out)
-			hashed_back_color.append (rtf_blue)
-			hashed_back_color.append (back_color.blue_8_bit.out)
-			hashed_back_color.append (";")
-
-			hashed_colors.search (hashed_back_color)
-				-- If the color does not already exist.
-			if not hashed_colors.found then
-				-- Add the color to `colors' for later retrieval.
-				color_count := color_count + 1
-				hashed_colors.put (color_count, hashed_back_color)
-					-- Store the offset from the character index to the new color index for retrieval.
-				back_color_offset.force (hashed_colors.found_item)
-				color_text.append (hashed_back_color)
-			else
-				back_color_offset.force (hashed_colors.item (hashed_back_color))
-			end
-		end
-		
-		
 	enable_word_wrapping is
 			-- Ensure `has_word_wrap' is True.
 		do
@@ -1583,6 +1367,24 @@ feature {EV_CONTAINER_IMP} -- Implementation
 	must_fire_final_selection: BOOLEAN
 		-- Must the selection change actions be fired when there is no selection, notifying
 		-- that the selection has been lost. This is only fired once, hence the need for this boolean.
+		
+feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
+
+	font_char_set (a_font: EV_FONT): INTEGER is
+			-- `Result' is char set of font `a_font'.
+		require
+			a_font_not_void: a_font /= Void
+		local
+			font_imp: EV_FONT_IMP
+		do
+			font_imp ?= a_font.implementation
+			check
+				font_imp_not_void: font_imp /= Void
+			end
+			Result := font_imp.wel_font.log_font.char_set
+		ensure
+			result_not_void: Result >= 0
+		end
 
 feature {NONE} -- Implementation
 

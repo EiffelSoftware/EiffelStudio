@@ -22,6 +22,7 @@ feature -- Access
 		do
 			create Result.make_empty
 			Result.append (html_help_header)
+			Result.append (icon_type_text)
 			Result.append ("<UL>")	
 			Result.append (processed_text)
 			Result.append (html_help_footer)
@@ -53,9 +54,12 @@ feature {NONE} -- Implementation
 				create l_name.make_from_string (l_util.toc_friendly_url (l_url))
 				l_name := l_util.file_no_extension (l_name)
 				l_name.append (".html")
-				Result.append ("%N<param name=%"Local%" value=%"")
+				Result.append ("%N<param name=%"Local%" value=%"")						
 				Result.append (l_name)
 				Result.append ("%">")
+				if not a_node.has_child then
+					Result.append ("%N<param name=%"ImageNumber%" value=%"11%">")
+				end	
 			end			
 			
 			Result.append ("%N</OBJECT>%N")

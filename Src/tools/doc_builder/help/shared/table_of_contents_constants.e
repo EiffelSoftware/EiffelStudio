@@ -12,6 +12,9 @@ feature -- HTML Help 1.x
 
 	html_help_footer: STRING is "</UL></BODY></HTML>"
 	
+	icon_type_text: STRING is "<OBJECT type=%"text/site properties%"><param name=%"Window Styles%" value=%"0x800025%"></OBJECT>"
+			-- Uses folders instead of books
+	
 feature -- File	
 	
 	default_url: STRING is "index.xml"

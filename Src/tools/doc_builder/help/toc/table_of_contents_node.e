@@ -92,12 +92,36 @@ feature -- Retrieval
 						-- Limitation:  currently only take the FIRST match, so won't work
 						-- where nodes have same titles on same level
 				if not l_new_titles.is_empty then
-					Result := l_matches.first.node_by_title_location  (l_new_titles)
+					Result := l_matches.first.node_by_title_location (l_new_titles)
 				else
 					Result := l_matches.first
 				end
 			end
 		end
+		
+	node_by_url (a_url: STRING): TABLE_OF_CONTENTS_NODE is
+			-- Node matching `a_url'.
+		require
+			url_not_void: a_url /= Void
+			url_not_empty: not a_url.is_empty
+		local
+			l_curr_node: like Current
+		do
+			if url /= Void and then url.is_equal (a_url) then
+				Result := Current
+			end
+			if Result = Void and then has_child then
+				from				
+					children.start				
+				until
+					children.after or Result /= Void
+				loop				
+					l_curr_node := children.item					
+					Result := l_curr_node.node_by_url (a_url)
+					children.forth
+				end
+			end
+		end	
 		
 feature -- Element change
 

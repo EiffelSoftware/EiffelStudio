@@ -40,15 +40,16 @@ feature -- Access
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			classes: ARRAY [CLASS_C]
 			class_desc: CLASS_DESCRIPTOR
-			i: INTEGER
+			count, i: INTEGER
 		do
 			if Eiffel_project.initialized then
 				classes := Eiffel_system.Workbench.system.classes.sorted_classes
-				create res.make (Eiffel_system.Workbench.system.classes.count)
+				count := Eiffel_system.Workbench.system.classes.count
+				create res.make (count)
 				from
-					i := 0
+					i := 1
 				until
-					i >= res.count
+					i > count
 				loop
 					create class_desc.make_with_class_i (classes.item (i).lace_class)
 					res.extend (class_desc)

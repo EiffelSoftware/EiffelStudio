@@ -59,7 +59,7 @@ cluster
 	-- EiffelBase
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"table"; "desc"; "CVS"; 
+			"table_eiffel3"; "desc"; "CVS"; 
 		visible
 			array
 				end

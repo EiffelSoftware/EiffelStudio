@@ -31,6 +31,7 @@ feature -- Access
 			-- of items held in `objects'.
 		local
 			horizontal_box: EV_HORIZONTAL_BOX
+			tool_bar: EV_TOOL_BAR
 		do
 			create Result
 			initialize_attribute_editor (Result)
@@ -49,11 +50,13 @@ feature -- Access
 			homogeneous_button.select_actions.extend (agent update_editors)
 			Result.extend (homogeneous_button)
 			create layout_button.make_with_text ("Position children...")
+			create tool_bar
+			tool_bar.extend (layout_button)
 			create horizontal_box
-			horizontal_box.extend (layout_button)
-			horizontal_box.disable_item_expand (layout_button)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
 			if first.count = 0 then
-				layout_button.disable_sensitive
+				layout_button.parent.disable_sensitive
 			end
 			layout_button.select_actions.extend (agent show_layout_window)
 			Result.extend (horizontal_box)
@@ -260,7 +263,7 @@ feature {GB_TABLE_POSITIONER} -- Implementation
 	homogeneous_button: EV_CHECK_BUTTON
 		-- Toggles `is_homogeneous' for table.
 		
-	layout_button: EV_BUTTON
+	layout_button: EV_TOOL_BAR_BUTTON
 		-- Provides access to the layout window.
 		
 	Column_positions_string: STRING is "Column_positions"

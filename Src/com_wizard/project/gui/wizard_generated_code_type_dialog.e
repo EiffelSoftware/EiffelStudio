@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 		do
 			client_check.set_unchecked
 			server_check.set_unchecked
-			in_process_check.set_checked
+			in_process_check.set_unchecked
 			out_of_process_check.set_unchecked
 		end
 

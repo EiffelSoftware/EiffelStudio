@@ -12,11 +12,8 @@ inherit
 --			edit_bar as project_toolbar,
 --			Project_resources as resources,
 --			progress_dialog as shared_progress_dialog,
-
-			empty_tool_name as tool_name
-				-- Provisoire
 		redefine
-			make, tool_name, icon_id
+			make, tool_name
 --			process_system, process_error,
 --			process_object, process_breakable, process_class,
 --			process_classi, compatible, process_feature,
@@ -46,11 +43,6 @@ inherit
 
 	PROJECT_CONTEXT
 
-	EB_RESOURCE_USER
-		redefine
-			dispatch_modified_resource
-		end
-
 --	WIDGET_ROUTINES
 
 creation
@@ -64,8 +56,9 @@ feature {NONE} -- Initialization
 			app_stopped_cmd: EB_APPLICATION_STOPPED_CMD
 			t_s: EB_TOOL_SUPERVISOR
 		do
-			General_resources.add_user (Current)
-			Project_resources.add_user (Current)
+--			General_resources.add_user (Current)
+--			Project_resources.add_user (Current)
+			register
 			create t_s.make (parent)
 			set_tool_supervisor (t_s)
 			create history.make
@@ -129,20 +122,24 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			tool_parent := hori_split_window
 			create feature_part.make (Current)
 			feature_part.build_interface
+			feature_part.update
 
 			tool_parent := top_verti_split_window
 			create debug_part.make (Current)
 			debug_part.build_interface
+			debug_part.update
 
 			set_debug_tool (debug_part)
 			create object_part.make (Current)
 			object_part.build_interface
+			object_part.update
 
 				-- now that the debug tool is created,
 				-- we can make the toolbar.
 			build_top (project_toolbar)
 
 			set_default_size
+			update
 
 -- 			create feature_part.form_create (feature_form, 
 --					menus @ special_feature_menu, 
@@ -187,29 +184,34 @@ feature {EB_TOOL_MANAGER} -- Initialization
 		
 feature -- Resource Update
 
-	dispatch_modified_resource (mod_res: EB_MODIFIED_RESOURCE) is
-		local
-			old_b, new_b: EB_BOOLEAN_RESOURCE
-			old_i, new_i: EB_INTEGER_RESOURCE
-			old_s, new_s: EB_STRING_RESOURCE
+	register is
 		do
-			old_b ?= mod_res.old_resource
-			if old_b /= Void then
-				new_b ?= mod_res.new_resource
-				update_boolean_resource (old_b, new_b)
+			register_to ("project_tool_x")
+			register_to ("project_tool_y")
+			register_to ("project_tool_width")
+			register_to ("project_tool_height")
+			register_to ("project_tool_bar")
+		end
+
+	update is
+		do
+			if project_tool_bar then
+				project_toolbar.show
 			else
-				old_i ?= mod_res.old_resource
-				if old_i /= Void then
-					new_i ?= mod_res.new_resource
-					update_integer_resource (old_i, new_i)
-				else
-					old_s ?= mod_res.old_resource
-					if old_s /= Void then
-						new_s ?= mod_res.new_resource
-						update_string_resource (old_s, new_s)
-					end
-				end
+				project_toolbar.hide
 			end
+--			Eiffel_project.set_filter_path (new_res.value)
+--			Eiffel_project.set_profile_path (new_res.value)
+--			Eiffel_project.set_tmp_directory (new_res.value)
+		end
+
+	unregister is
+		do
+			unregister_to ("project_tool_x")
+			unregister_to ("project_tool_y")
+			unregister_to ("project_tool_width")
+			unregister_to ("project_tool_height")
+			unregister_to ("project_tool_bar")
 		end
 
 	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
@@ -352,11 +354,11 @@ feature -- Access
 			create Result.make (Void)
 		end
 
-	icon_id: INTEGER is
-			-- Icon id of Current window (for windows)
-		do
-			Result := Interface_names.i_Project_id
-		end
+--	icon_id: INTEGER is
+--			-- Icon id of Current window (for windows)
+--		do
+--			Result := Interface_names.i_Project_id
+--		end
 
 feature -- Window Settings
 
@@ -373,8 +375,8 @@ feature -- Window Settings
 --				default_height := screen.visible_height
 --				set_maximized_state
 --			else
-				default_width := Project_resources.tool_width.actual_value
-				default_height := Project_resources.tool_height.actual_value
+				default_width := project_tool_width
+				default_height := project_tool_height
 --			end
 			set_size (default_width, default_height)
 		end

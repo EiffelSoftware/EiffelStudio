@@ -53,13 +53,6 @@ feature {NONE}
 			Result.extend_from_array (<<"bench", "bitmaps", "cursor">>);
 		end;
 
-	Bitmap_path: DIRECTORY_NAME is
-		once
-			!! Result.make_from_string (Eiffel_installation_dir_name);
-			Result.extend_from_array (<<"bench", "bitmaps">>);
-			Result.extend (Pixmap_suffix)
-		end;
-
 	Help_path: DIRECTORY_NAME is
 		once
 			!! Result.make_from_string (Eiffel_installation_dir_name);

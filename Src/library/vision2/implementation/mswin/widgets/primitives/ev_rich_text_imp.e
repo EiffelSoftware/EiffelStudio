@@ -299,6 +299,8 @@ feature -- Status report
 			create Result
 			char_imp ?= Result.implementation
 			cwin_send_message (wel_item, em_getcharformat, 1, char_imp.to_integer)
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	internal_selected_character_format_i: EV_CHARACTER_FORMAT_IMP is
@@ -311,6 +313,8 @@ feature -- Status report
 			create char_format
 			Result ?= char_format.implementation
 			cwin_send_message (wel_item, em_getcharformat, 1, Result.to_integer)
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
@@ -357,6 +361,8 @@ feature -- Status report
 			create Result
 			imp ?= Result.implementation
 			cwin_send_message (wel_item, em_getparaformat, 0, imp.to_integer)
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
@@ -633,18 +639,6 @@ feature -- Status report
 			Result := internal_position_from_index (an_index)
 		end
 
-	internal_position_from_index (an_index: INTEGER): EV_COORDINATE is
-			-- Position of character at index `an_index'.
-			-- Internal version which has no precondition, as we implement `character_displayed'
-			-- using the result of this call. Using `position_from_index' directly is not
-			-- possible due to its precondition.
-		local
-			wel: WEL_POINT
-		do
-			wel := position_from_character_index (an_index - 1)
-			create Result.set (wel.x, wel.y)
-		end
-
 	character_displayed (an_index: INTEGER): BOOLEAN is
 			-- Is character `an_index' currently visible in `Current'?
 		local
@@ -757,31 +751,6 @@ feature -- Status setting
 			-- `end_position' fall on.
 		do
 			format_paragraph_internal (start_position, end_position, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
-		end
-		
-	cformat_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT) is
-			-- Apply paragraph formatting `format' to character positions `start_position', `end_position' inclusive.
-			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
-			-- `end_position' fall on.
-		do
-			format_paragraph_internal (start_position, end_position, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
-		end
-		
-	format_paragraph_internal (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER) is
-			-- Apply paragraph formatting `format' to character positions `start_position', `end_position' inclusive, only
-			-- modifying attributes specified in `mask'. Formatting applies to complete lines as seperated by new line
-			-- characters that `start_position' and `end_position' fall on.
-		local
-			paragraph: WEL_PARAGRAPH_FORMAT2
-		do
-			disable_redraw
-			safe_store_caret
-			set_selection (start_position - 1, end_position - 1)
-			paragraph ?= format.implementation
-			paragraph.set_mask (mask)
-			set_paragraph_format (paragraph)
-			safe_restore_caret
-			enable_redraw
 		end
 		
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
@@ -1173,7 +1142,7 @@ feature -- Status setting
 		
 		
 	set_tab_width (a_width: INTEGER) is
-			-- Assign `a_width' to `tab_width'.
+			-- Assign `a_width' in pixels to `tab_width'.
 		local
 			screen_dc: WEL_SCREEN_DC
 			logical_pixels: INTEGER
@@ -1199,7 +1168,7 @@ feature -- Status setting
 	update_tab_positions (value: INTEGER) is
 			-- Update tab widths based on contents of `tab_positions'.
 			-- `value' is the index of the changed value when called directly by `tab_positions', as
-			-- the result of a list modidifcation, and is not used.
+			-- the result of a list modification, and is not used.
 			-- Therefore, when calling `update_tab_positions' explicitly, any value may be passed.
 		local
 			array: ARRAY [INTEGER]
@@ -1424,6 +1393,42 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 
 feature {NONE} -- Implementation
 
+	internal_position_from_index (an_index: INTEGER): EV_COORDINATE is
+			-- Position of character at index `an_index'.
+			-- Internal version which has no precondition, as we implement `character_displayed'
+			-- using the result of this call. Using `position_from_index' directly is not
+			-- possible due to its precondition.
+		require
+			index_valid: an_index >= 1 and an_index <= text_length
+		local
+			wel: WEL_POINT
+		do
+			wel := position_from_character_index (an_index - 1)
+			create Result.set (wel.x, wel.y)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	format_paragraph_internal (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER) is
+			-- Apply paragraph formatting `format' to character positions `start_position', `end_position' inclusive, only
+			-- modifying attributes specified in `mask'. Formatting applies to complete lines as seperated by new line
+			-- characters that `start_position' and `end_position' fall on.
+		require
+			valid_positions: start_position <= end_position and start_position >= 1 and end_position <= text_length + 1
+			format_not_void: format /= Void
+		local
+			paragraph: WEL_PARAGRAPH_FORMAT2
+		do
+			disable_redraw
+			safe_store_caret
+			set_selection (start_position - 1, end_position - 1)
+			paragraph ?= format.implementation
+			paragraph.set_mask (mask)
+			set_paragraph_format (paragraph)
+			safe_restore_caret
+			enable_redraw
+		end
+
 	generate_font_heading (a_font: EV_FONT; index: INTEGER): STRING is
 			-- `Result' is a generated font descriptions for `a_font' with index `index'
 			-- within the document.
@@ -1458,7 +1463,15 @@ feature {NONE} -- Implementation
 			else
 				family := "fnil"
 			end
-			Result := Result + "\f" + index.out + "\" + family + "\fcharset" + log_font.char_set.out + " " + a_font.name + ";}"
+			Result.append ("\f")
+			Result.append (index.out)
+			Result.append ("\")
+			Result.append (family)
+			Result.append ("\fcharset")
+			Result.append (log_font.char_set.out)
+			Result.append (" ")
+			Result.append (a_font.name)
+			Result.append (";}")
 		ensure
 			Result_not_void: Result /= Void
 		end

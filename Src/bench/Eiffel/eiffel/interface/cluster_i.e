@@ -982,7 +982,10 @@ end;
 			ptr := path.to_c;
 			Result := eif_file_has_changed ($ptr, date);
 			
-			if not Result and then not Has_smart_file_system and then Platform_constants.is_windows then
+			if not Result and then not Has_smart_file_system then
+					-- New Note: this comment has been previously done for Windows OS, however
+					-- the described situation can also occurs on other UNIX operating systems:
+					--
 					-- We need to check on Windows FAT file systems the content of a non-changed
 					-- directory since it can have been changed anyway (FAT is not a good file
 					-- system).
@@ -996,16 +999,16 @@ end;
 
 				Result := True
 
---			elseif not Result then
---
---				from
---					classes.start
---				until
---					Result or else classes.after
---				loop
---					Result := classes.item_for_iteration.date_has_changed
---					classes.forth
---				end
+			elseif not Result then
+
+				from
+					classes.start
+				until
+					Result or else classes.after
+				loop
+					Result := classes.item_for_iteration.date_has_changed
+					classes.forth
+				end
 
 --				if not Result then
 --					if inc_l = Void then

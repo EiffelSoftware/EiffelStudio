@@ -17,24 +17,25 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 5;
+	subcode: INTEGER is 5
 
-	positive_value: INTEGER;
+	positive_value: ATOMIC_AS
+			-- Non-unique positive value in multi-branch instruction interval
 
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("Non-Unique value: ");
-			st.add_int (positive_value);
-			st.add_new_line;
-		end;
+			st.add_string ("Non-Unique value: ")
+			st.add_string (positive_value.string_value)
+			st.add_new_line
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_positive_value (i: INTEGER) is
+	set_positive_value (i: like positive_value) is
 		do
-			positive_value := i;
-		end;
+			positive_value := i
+		end
 
 end -- class VOMB5

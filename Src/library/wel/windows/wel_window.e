@@ -9,9 +9,6 @@ deferred class
 
 inherit
 	WEL_ANY
-		redefine
-			exists
-		end
 
 	WEL_WINDOW_MANAGER
 		export
@@ -103,9 +100,6 @@ feature -- Access
 		end
 
 feature -- Status report
-
-	exists: BOOLEAN
-			-- Does the window exist?
 
 	is_inside: BOOLEAN is
 			-- Is the current window inside another window?
@@ -1230,9 +1224,8 @@ feature -- Removal
 		require
 			exists: exists
 		do
-			exists := False
-			unregister_window (Current)
 			cwin_destroy_window (item)
+			destroy_item
 		ensure
 			not_exists: not exists
 		end
@@ -1438,17 +1431,16 @@ feature {WEL_WINDOW} -- Implementation
 			if a_name /= Void then
 				create a_wel_string2.make (a_name)
 				item := cwin_create_window_ex (default_ex_style,
-				a_wel_string1.item, a_wel_string2.item, a_style, a_x, a_y, a_w, a_h,
-				parent_item, an_id,
-				main_args.current_instance.item, data)
+					a_wel_string1.item, a_wel_string2.item, a_style, a_x, a_y, a_w, a_h,
+					parent_item, an_id,
+					main_args.current_instance.item, data)
 			else
 				item := cwin_create_window_ex (default_ex_style,
-				a_wel_string1.item, default_pointer, a_style, a_x, a_y, a_w, a_h,
-				parent_item, an_id,
-				main_args.current_instance.item, data)
+					a_wel_string1.item, default_pointer, a_style, a_x, a_y, a_w, a_h,
+					parent_item, an_id,
+					main_args.current_instance.item, data)
 			end
 			if item /= default_pointer then
-				exists := True
 				register_window (Current)
 				set_default_window_procedure
 			end
@@ -1528,8 +1520,7 @@ feature {WEL_WINDOW} -- Implementation
 			exists: exists
 		do
 			on_destroy
-			exists := False
-			unregister_window (Current)
+			destroy_item
 		ensure
 			destroyed: not exists
 			unregistered: not registered (Current)
@@ -1645,10 +1636,14 @@ feature {WEL_DISPATCHER, WEL_WINDOW}
 feature {NONE} -- Removal
 
 	destroy_item is
-		do
 			-- At this stage, the window has been already destroyed
 			-- by Windows (see `on_wm_destroy').
-			exists := False
+			-- Reset C and WEL structure that keep track of Current.
+		do
+				-- Remove Current window from `windows' of WEL_WINDOW_MANAGER.
+			unregister_window (Current)
+
+				-- Clean `item' C pointer.
 			item := default_pointer
 		end
 
@@ -1937,8 +1932,7 @@ feature {NONE} -- Externals
 			"GetWindowLong"
 		end
 
-	cwin_set_window_long (hwnd: POINTER; offset,
-				value: INTEGER) is
+	cwin_set_window_long (hwnd: POINTER; offset, value: INTEGER) is
 			-- SDK SetWindowLong
 		external
 			"C [macro %"wel.h%"] (HWND, int, LONG)"

@@ -79,9 +79,8 @@ feature -- Status Setting
 			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_text)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (clipboard, a_cs.item, -1)
-			
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (primary, a_cs.item, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (clipboard, a_cs.item, a_cs.string_length)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (primary, a_cs.item, a_cs.string_length)
 				-- We also set the primary selection as there is no windows equivalent.
 		end
 		

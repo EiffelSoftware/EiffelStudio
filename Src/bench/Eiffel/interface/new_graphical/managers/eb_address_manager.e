@@ -567,10 +567,6 @@ feature {NONE} -- Execution
 			end
 		end
 
-	already_showed_error: BOOLEAN
-			-- Have we already told the user that his class name was incorrect?
-			-- If so we don't tell him again unless he changes the contents of the combo box.
-
 	process_class is
 			-- Finish processing the class after the user chose it.
 		local
@@ -592,11 +588,8 @@ feature {NONE} -- Execution
 						new_class_win.set_stone_when_finished
 						new_class_win.call (class_address.text)
 					else
-						if not already_showed_error then
-							already_showed_error := True
-							create wd.make_with_text (Warning_messages.w_Invalid_class_name (ctxt))
-							wd.show_modal_to_window (parent.window)
-						end
+						create wd.make_with_text (Warning_messages.w_Invalid_class_name (ctxt))
+						wd.show_modal_to_window (parent.window)
 					end
 				else
 					if output_line /= Void then
@@ -728,6 +721,9 @@ feature {NONE} -- Implementation
 	choosing_class: BOOLEAN
 			-- Do we want a feature or a class?
 
+	must_show_choice: BOOLEAN
+			-- Does the user have to perform a choice?
+
 	class_list: LINKED_LIST [CLASS_I]
 			-- List of classes displayed in `choice'.
 
@@ -743,12 +739,15 @@ feature {NONE} -- Implementation
 			Result := parent.history_manager
 		end
 
+	choice: EB_CHOICE_DIALOG
+			-- Dialog that gives the user the choice between possible classes, clusters or features.
+			-- It may be Void, destroyed, anything, so use with care.
+
 	display_cluster_choice is
 				-- Display cluster names from `cluster_list' to `choice'.
 		require
 			cluster_list_not_void: cluster_list /= Void
 		local
-			choice: EB_CHOICE_DIALOG
 			cluster_names: ARRAYED_LIST [STRING]
 			clusteri: CLUSTER_I
 			cname: STRING
@@ -775,7 +774,7 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_cluster)
 					choice.set_list (cluster_names)
 					choice.set_position (cluster_address.screen_x, cluster_address.screen_y + cluster_address.height)
-					choice.show
+					must_show_choice := True
 				end
 			else
 				if output_line /= Void then
@@ -792,7 +791,6 @@ feature {NONE} -- Implementation
 		require
 			class_list_not_void: class_list /= Void
 		local
-			choice: EB_CHOICE_DIALOG
 			class_names: ARRAYED_LIST [STRING]
 			classi, last_class: CLASS_I
 			cname, last_name: STRING
@@ -834,7 +832,7 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_class)
 					choice.set_list (class_names)
 					choice.set_position (class_address.screen_x, class_address.screen_y + class_address.height)
-					choice.show
+					must_show_choice := True
 				end
 			else
 				if output_line /= Void then
@@ -855,7 +853,6 @@ feature {NONE} -- Implementation
 		require
 			feature_list_not_void: feature_list /= Void
 		local
-			choice: EB_CHOICE_DIALOG
 			feature_names: ARRAYED_LIST [STRING]
 		do
 			create feature_names.make (feature_list.count)
@@ -875,7 +872,7 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names)
 					choice.set_position (feature_address.screen_x, feature_address.screen_y + feature_address.height)
-					choice.show
+					must_show_choice := True
 				end
 			else
 				if choosing_class then
@@ -1036,14 +1033,11 @@ feature {NONE} -- open new class
 						end
 						cluster := Universe.cluster_of_name (cluster_name)
 						if cluster = Void then
-							if already_showed_error = False then
-								already_showed_error := True
-								create wd.make_with_text (Warning_messages.w_Cannot_find_cluster (cluster_name))
-								wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-								if class_address.is_displayed then
-									class_address.set_focus
-									class_address.select_region (at_pos + 1, class_address.text_length)
-								end
+							create wd.make_with_text (Warning_messages.w_Cannot_find_cluster (cluster_name))
+							wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+							if class_address.is_displayed then
+								class_address.set_focus
+								class_address.select_region (at_pos + 1, class_address.text_length)
 							end
 						else
 							class_i := cluster.classes.item (cname)
@@ -1231,7 +1225,9 @@ feature {NONE} -- open new class
 		do
 			if k /= Void then
 				if k.code = Key_csts.key_enter then
-					execute_with_cluster
+					if must_show_choice and choice /= Void and then not choice.is_destroyed then
+						choice.show
+					end
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
@@ -1246,7 +1242,9 @@ feature {NONE} -- open new class
 		do
 			if k /= Void then
 				if k.code = Key_csts.key_enter then
-					execute_with_class
+					if must_show_choice and choice /= Void and then not choice.is_destroyed then
+						choice.show
+					end
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
@@ -1261,7 +1259,9 @@ feature {NONE} -- open new class
 		do
 			if k /= Void then
 				if k.code = Key_csts.key_enter then
-					execute_with_feature
+					if must_show_choice and choice /= Void and then not choice.is_destroyed then
+						choice.show
+					end
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
@@ -1277,7 +1277,9 @@ feature {NONE} -- open new class
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = Key_csts.Key_delete then
+				if k.code = Key_csts.key_enter then
+					execute_with_class
+				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then
 					last_key_was_backspace := True
@@ -1298,7 +1300,9 @@ feature {NONE} -- open new class
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = Key_csts.Key_delete then
+				if k.code = Key_csts.key_enter then
+					execute_with_cluster
+				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then
 					last_key_was_backspace := True
@@ -1323,7 +1327,9 @@ feature {NONE} -- open new class
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = Key_csts.Key_delete then
+				if k.code = Key_csts.key_enter then
+					execute_with_feature
+				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then
 					last_key_was_backspace := True
@@ -1409,8 +1415,6 @@ feature {NONE} -- open new class
 		do
 				-- The text in `class_address' has changed => we don't know what's inside.
 			current_typed_class := Void
-				-- Warn the user again if the class name is invalid.
-			already_showed_error := False
 			
 			str := clone (class_address.text)
 			if not str.is_empty and then (str @ (str.count) /= ' ') then

@@ -25,6 +25,9 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [STRING]} others_source.make
 			create {LINKED_LIST [STRING]} import_files.make
 			import_files.compare_objects
+			create {LINKED_LIST [STRING]} import_files_after.make
+			import_files_after.compare_objects
+
 			standard_include
 		end
 

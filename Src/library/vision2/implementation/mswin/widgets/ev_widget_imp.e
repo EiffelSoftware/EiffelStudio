@@ -219,16 +219,6 @@ feature -- Status setting
 			end
 		end
 
-	set_expand (flag: BOOLEAN) is
-			-- Make `flag' the new expand option.
-		do
-			expandable := flag
-			-- May be replaced by a child_expand changed.
-			if parent_imp /= Void then
-				parent_imp.notify_change (2+1)
-			end
-		end
-
 -- 	set_horizontal_resize (flag: BOOLEAN) is
 -- 			-- Adapt `resize_type' to `flag'.
 -- 		do

@@ -146,7 +146,6 @@ feature {NONE} -- Implementation
 			l_cnt: INTEGER
 			l_done,
 			l_found: BOOLEAN
-			l_prev_char: CHARACTER
 		do
 			from
 				l_index := 1
@@ -230,12 +229,6 @@ feature {NONE} -- Implementation
 		
 	format_all_keywords (a_line: STRING) is
 			-- Format all recognized code keywords
-		local
-			l_index: INTEGER
-			l_word,
-			l_end_string,
-			l_start_string: STRING
-			l_char: CHARACTER
 		do
 			from
 				keywords.start
@@ -262,8 +255,7 @@ feature {NONE} -- Implementation
 		local
 			l_index,
 			l_cnt: INTEGER
-			l_char, 
-			l_invalid_char: CHARACTER
+			l_char: CHARACTER
 			l_substring: STRING
 		do
 			from

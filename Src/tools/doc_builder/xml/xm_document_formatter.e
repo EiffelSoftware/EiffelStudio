@@ -57,7 +57,7 @@ feature {NONE} -- Commands
 			l_element: XM_ELEMENT
 			l_url: STRING
 			l_link: DOCUMENT_LINK
-			l_el_name, l_new_link: STRING
+			l_el_name: STRING
 		do
 			l_el_name := "url"
 			l_element ?= e.element_by_name (l_el_name)

@@ -156,10 +156,7 @@ feature {NONE} -- Filter UI
 			-- Populate filter list
 		local
 			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
-			l_list_row: EV_MULTI_COLUMN_LIST_ROW
-			l_tocs: ARRAY [STRING]
-			l_manager: TABLE_OF_CONTENTS_MANAGER
-			l_toc: TABLE_OF_CONTENTS	
+			l_list_row: EV_MULTI_COLUMN_LIST_ROW			
 			l_default_toc_name: STRING
 		do			
 			if shared_project.filter_manager /= Void then
@@ -235,7 +232,6 @@ feature -- TOC UI
 	populate_toc_list is
 			-- Populate toc list
 		local
-			l_list_item: EV_LIST_ITEM
 			l_list_row: EV_MULTI_COLUMN_LIST_ROW
 			l_tocs: ARRAY [STRING]
 			l_manager: TABLE_OF_CONTENTS_MANAGER
@@ -266,7 +262,6 @@ feature -- TOC UI
 	populate_toc_combo is
 			-- Populate toc combo
 		local
-			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
 			l_list_item: EV_LIST_ITEM
 			l_cnt: INTEGER			
 			l_manager: TABLE_OF_CONTENTS_MANAGER
@@ -315,7 +310,6 @@ feature {NONE} -- Implementation
 	run is
 			-- Run
 		local
-			l_error_report: ERROR_REPORT
 			l_html_dir, l_toc_dir: DIRECTORY					
 		do
 			if options_valid then

@@ -101,7 +101,7 @@
 #define ccom_variant_error_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_hresult (*(HRESULT *)V_ERRORREF(_ptr_)))
 
 #define ccom_set_variant_error(_ptr_,a_value) (V_VT(_ptr_) = VT_ERROR, V_ERROR(_ptr_) = (SCODE)a_value)
-#define ccom_set_variant_error_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_ERROR|VT_BYREF, V_ERRORREF(_ptr_) = (SCODE *)&(a_value))
+#define ccom_set_variant_error_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_ERROR|VT_BYREF, V_ERRORREF(_ptr_) = rt_ce.ccom_ec_pointed_hresult((SCODE)a_value))
 
 // decimal
 #define ccom_variant_decimal(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_decimal (V_DECIMAL(_ptr_)))

@@ -49,6 +49,7 @@ class ecom_runtime_ec
 		long * ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * ild);
 		float * ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old);
 		double * ccom_ec_pointed_double (EIF_REFERENCE a_ref, double * old);
+		SCODE * ccom_ec_pointed_hresult (SCODE a_hresult);
 		VARIANT_BOOL * ccom_ec_pointed_boolean (EIF_REFERENCE a_ref, VARIANT_BOOL * old);
 		CURRENCY * ccom_ec_pointed_currency (EIF_REFERENCE a_ref, CURRENCY * old);
 		VARIANT * ccom_ec_pointed_variant (EIF_REFERENCE a_ref, VARIANT * old);

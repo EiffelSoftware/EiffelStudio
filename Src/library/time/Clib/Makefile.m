@@ -1,6 +1,6 @@
 AR= lib
 CC = cl
-CFLAGS = -Ox -nologo -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+CFLAGS = -Ox -nologo -I$(EIFFEL5)\bench\spec\$(PLATFORM)\include
 LIBS = 
 MAKE = nmake
 MV = copy
@@ -15,7 +15,7 @@ all:: clean datetime.lib
 OBJECTS = datetime.obj
 
 datetime.lib: $(OBJECTS)
-	$(RM) $@
+	if exist $@ $(RM) $@
 	$(AR) -OUT:$@ $(OBJECTS)
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\msc mkdir ..\spec\msc

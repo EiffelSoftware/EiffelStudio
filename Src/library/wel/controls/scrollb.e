@@ -10,11 +10,6 @@ class
 inherit
 	WEL_BAR
 
-	WEL_SB_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	WEL_SBS_CONSTANTS
 		export
 			{NONE} all
@@ -41,6 +36,8 @@ feature {NONE} -- Initialization
 				a_x, a_y, a_width, a_height, an_id,
 				default_pointer)
 			id := an_id
+			set_line (Default_line_value)
+			set_page (Default_page_value)
 		ensure
 			parent_set: parent = a_parent
 			exists: exists
@@ -48,6 +45,10 @@ feature {NONE} -- Initialization
 			position_equal_zero: position = 0
 			minimum_equal_zero: minimum = 0
 			maximum_equal_zero: maximum = 0
+			x_set: x = a_x
+			y_set: y = a_y
+			width_set: width = a_width
+			height_set: height = a_height
 		end
 
 	make_horizontal (a_parent: WEL_COMPOSITE_WINDOW;
@@ -55,14 +56,18 @@ feature {NONE} -- Initialization
 			-- Make a horizontal scroll bar.
 		require
 			a_parent_not_void: a_parent /= Void
-			width_large_enough: a_width >= minimal_width
-			height_large_enough: a_height >= minimal_height
+			a_width_small_enough: a_width <= maximal_width
+			a_width_large_enough: a_width >= minimal_width
+			a_height_small_enough: a_height <= maximal_height
+			a_height_large_enough: a_height >= minimal_height
 		do
 			internal_window_make (a_parent, Void,
 				default_style + Sbs_horz,
 				a_x, a_y, a_width, a_height, an_id,
 				default_pointer)
 			id := an_id
+			set_line (Default_line_value)
+			set_page (Default_page_value)
 		ensure
 			parent_set: parent = a_parent
 			exists: exists
@@ -70,9 +75,19 @@ feature {NONE} -- Initialization
 			position_equal_zero: position = 0
 			minimum_equal_zero: minimum = 0
 			maximum_equal_zero: maximum = 0
+			x_set: x = a_x
+			y_set: y = a_y
+			width_set: width = a_width
+			height_set: height = a_height
 		end
 
 feature -- Access
+
+	line: INTEGER
+			-- Number of scroll units per line
+
+	page: INTEGER
+			-- Number of scroll units per page
 
 	position: INTEGER is
 			-- Current position of the scroll box
@@ -114,7 +129,67 @@ feature -- Element change
 				a_minimum, a_maximum, True)
 		end
 
+	set_line (line_magnitude: INTEGER) is
+			-- Set `line' with `line_magnitude'.
+		require
+			positive_line: line >= 0
+		do
+			line := line_magnitude
+		ensure
+			line_set: line = line_magnitude
+		end
+
+	set_page (page_magnitude: INTEGER) is
+			-- Set `page' with `page_magnitude'.
+		require
+			positive_page: page >= 0
+		do
+			page := page_magnitude
+		ensure
+			page_set: page = page_magnitude
+		end
+
+feature -- Basic operations
+
+	on_scroll (scroll_code, pos: INTEGER) is
+			-- Process the scroll messages.
+			-- Typically, this routine will be called from
+			-- `on_vertical_scroll_control' or
+			-- `on_horizontal_scroll_control' of the parent window.
+		require
+			exists: exists
+		local
+			new_pos: INTEGER
+		do
+			new_pos := position
+			if scroll_code = Sb_pagedown then
+				new_pos := new_pos + page
+			elseif scroll_code = Sb_pageup then
+				new_pos := new_pos - page
+			elseif scroll_code = Sb_linedown then
+				new_pos := new_pos + line
+			elseif scroll_code = Sb_lineup then
+				new_pos := new_pos - line
+			elseif scroll_code = Sb_thumbposition then
+				new_pos := pos
+			elseif scroll_code = Sb_thumbtrack then
+				new_pos := pos
+			end
+			if new_pos > maximum then
+				new_pos := maximum
+			elseif new_pos < minimum then
+				new_pos := minimum
+			end
+			set_position (new_pos)
+		end
+
 feature {NONE} -- Implementation
+
+	Default_line_value: INTEGER is 1
+			-- Default scroll units per line
+
+	Default_page_value: INTEGER is 20
+			-- Default scroll units per page
 
 	class_name: STRING is
 			-- Window class name to create
@@ -164,6 +239,10 @@ feature {NONE} -- Externals
 		alias
 			"GetScrollRange"
 		end
+
+invariant
+	positive_line: line >= 0
+	positive_page: page >= 0
 
 end -- class WEL_SCROLL_BAR
 

@@ -129,7 +129,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	remove_parent_action (action: STRING; cmd: COMMAND; arg: ANY) is
+	remove_parent_action (action: STRING) is
 			-- Remove the dialog shell action of
 			-- `cmd', with argument `arg'.
 		do

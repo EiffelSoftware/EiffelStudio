@@ -69,19 +69,19 @@ feature  -- Access
 	blue: INTEGER
 			-- Blue saturation level
 
-	allocated_blue (a_widget: WIDGET_WINDOWS): INTEGER is
+	allocated_blue: INTEGER is
                         -- Allocated blue saturation level for `a_widget'
 		do
 			Result := blue
 		end
 
-	allocated_green (a_widget: WIDGET_I): INTEGER is
+	allocated_green: INTEGER is
                         -- Allocated green saturation level for `a_widget'
 		do
 			Result := green
 		end
 
-	allocated_red (a_widget: WIDGET_I): INTEGER is
+	allocated_red: INTEGER is
                         -- Allocated red saturation level for `a_widget'
 		do
 			Result := red
@@ -161,6 +161,11 @@ feature -- Settings
 					wel_set_red (0)
 					wel_set_green (0)
 					wel_set_blue (0)
+				end
+				debug ("COLORS")
+					print ("undefined color: ")
+					print (a_name)
+					print ("%N")
 				end
 			end
 		end

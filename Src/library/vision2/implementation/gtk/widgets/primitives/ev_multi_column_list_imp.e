@@ -64,14 +64,6 @@ create
 
 feature {NONE} -- Initialization
 
-	append (s: SEQUENCE [EV_MULTI_COLUMN_LIST_ROW]) is
-			-- Copy `s' to end of `Current'.  Do not move cursor.
-		do
-			C.gtk_clist_freeze (list_widget)
-			Precursor (s)
-			C.gtk_clist_thaw (list_widget)			
-		end
-
 	make (an_interface: like interface) is         
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
@@ -556,6 +548,14 @@ feature -- Status setting
 		end
 
 feature -- Element change
+
+	append (s: SEQUENCE [EV_MULTI_COLUMN_LIST_ROW]) is
+			-- Copy `s' to end of `Current'.  Do not move cursor.
+		do
+			C.gtk_clist_freeze (list_widget)
+			Precursor (s)
+			C.gtk_clist_thaw (list_widget)			
+		end
 
 	column_title_changed (a_txt: STRING; a_column: INTEGER) is
 			-- Make `a_txt' the title of the column number.

@@ -1,4 +1,7 @@
--- Internal description of a basic class such as INTEGER, BOOLEAN etc..
+indexing
+	description: "Internal description of a basic class such as INTEGER, BOOLEAN etc.."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CLASS_B 
 
@@ -56,7 +59,7 @@ feature -- Validity
 		do
 				-- First, no generics
 			if generics /= Void then
-				create special_error.make (Case_14, Current)
+				create special_error.make (basic_case_1, Current)
 				Error_handler.insert_error (special_error)
 			end
 			
@@ -66,13 +69,13 @@ feature -- Validity
 				skelet.count /= 1 or else
 				not skelet.first.type_i.same_as (actual_type.type_i)
 			then
-				create special_error.make (Case_15, Current)
+				create special_error.make (basic_case_2, Current)
 				Error_handler.insert_error (special_error)
 			else
 					-- Check it is indeed called `item'.
 				l_attr ?= feature_table.item_id (names_heap.item_name_id)
 				if l_attr = Void then
-					create special_error.make (Case_15_bis, Current)
+					create special_error.make (basic_case_3, Current)
 					Error_handler.insert_error (special_error)
 				end
 			end
@@ -84,7 +87,7 @@ feature -- Validity
 				l_feat.argument_count /= 1 or else
 				not l_feat.arguments.i_th (1).same_as (actual_type)
 			then
-				create special_error.make (Case_15_ter, Current)
+				create special_error.make (basic_case_4, Current)
 				Error_handler.insert_error (special_error)
 			end
 		end

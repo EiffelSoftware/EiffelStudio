@@ -1,13 +1,14 @@
 -- Difference expressions: PRODUCT "-" PRODUCT "-" ... "-" PRODUCT
 
-class DIFF 
+class
+	DIFF 
 
 inherit
 
-	AGGREGATE
+	REPETITION
 		redefine
 			post_action
-		end;
+		end
 
 	POLYNOM
 		undefine
@@ -15,7 +16,6 @@ inherit
 		end
 
 create
-
 	make
 
 feature 
@@ -26,36 +26,36 @@ feature {NONE}
 
 	separator: STRING is "-"
 
-feature 
+feature
 
 	production: LINKED_LIST [CONSTRUCT] is
 		local
 			base: PRODUCT
 		once
-			create Result.make;
+			create Result.make
 			Result.forth;
-			create base.make;
+			create base.make
 			put (base)
-		end; -- production
+		end -- production
 
 	post_action is
 		local
 			int_value: INTEGER
 		do
 			from
-				child_start;
+				child_start
 				if not no_components then
-					child.post_action;
-					int_value := info.child_value;
+					child.post_action
+					int_value := info.child_value
 					child_forth
 				end;
 			until
 				no_components or child_after
 			loop
-				child.post_action;
-				int_value := int_value - info.child_value;
+				child.post_action
+				int_value := int_value - info.child_value
 				child_forth
-			end;
+			end
 			info.set_child_value (int_value)
 		end -- post_action
 

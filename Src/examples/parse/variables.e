@@ -4,10 +4,10 @@ class VARIABLES
 
 inherit
 
-	AGGREGATE
+	REPETITION
 		redefine
 			post_action
-		end;
+		end
 
 	POLYNOM
 		undefine
@@ -15,7 +15,6 @@ inherit
 		end
 
 create
-
 	make
 
 feature 
@@ -35,9 +34,9 @@ feature
 		local
 			base: VAR
 		once
-			create Result.make;
-			Result.forth;
-			create base.make;
+			create Result.make
+			Result.forth
+			create base.make
 			put (base)
 		end; -- production
 
@@ -49,7 +48,7 @@ feature
 				until
 					child_after
 				loop
-					child.post_action;
+					child.post_action
 					child_forth
 				end
 			end

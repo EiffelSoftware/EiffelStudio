@@ -1,13 +1,14 @@
 -- Sums: DIFF "+" DIFF "+" ... "+" DIFF
 
-class SUM 
+class
+	SUM 
 
 inherit
 
-	AGGREGATE
+	REPETITION
 		redefine
 			post_action
-		end;
+		end
 
 	POLYNOM
 		undefine
@@ -35,11 +36,11 @@ feature
 		local
 			base: DIFF
 		once
-			create Result.make;
-			Result.forth;
-			create base.make;
+			create Result.make
+			Result.forth
+			create base.make
 			put (base)
-		end; -- production
+		end -- production
 
 	post_action is
 		local
@@ -47,12 +48,12 @@ feature
 		do
 			if not no_components then
 				from
-					child_start;
+					child_start
 				until
 					child_after
 				loop
-					child.post_action;
-					int_value := int_value + info.child_value;
+					child.post_action
+					int_value := int_value + info.child_value
 					child_forth
 				end;
 				info.set_child_value (int_value)

@@ -516,7 +516,6 @@ feature {NONE} -- Implementation
 	dotnet_arguments (a_feature: FEATURE_I): STRING is
 			-- List of .NET argument types or empty if no arguments
 			-- Format: (System.String,System.Int32)
-			-- Doesn't work for an argument of type NATIVE_ARRAY (Gives NATIVE_ARRAY instead of e.g. System.Char[])
 		require
 			non_void_feature: a_feature /= Void
 			external_feature: a_feature.is_il_external

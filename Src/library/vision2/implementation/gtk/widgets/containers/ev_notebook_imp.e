@@ -40,6 +40,14 @@ feature -- Status report
 			-- Number of pages in the notebook
 		do
 		end
+
+	current_page: INTEGER is
+			-- Index of the page currently opened
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
 	
 feature -- Status setting
 	
@@ -83,6 +91,24 @@ feature -- Element change
 			gtk_notebook_append_page (widget, 
 						  c.widget, 
 						  p)
+		end	
+
+feature -- Event - command association
+	
+	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed
+			-- the a page is switch in the notebook.
+		do
+			add_command ("switch_page", cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_switch_commands is
+			-- Empty the list of commands to be executed
+			-- when a page is switch in the notebook.
+		do
+			check False end
 		end	
 
 feature {EV_CONTAINER} -- Element change

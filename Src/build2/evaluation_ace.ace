@@ -39,7 +39,8 @@ default
 cluster
 	all build2:		"$EIFFEL_SRC\build2"
 		exclude
-			"gb_about_dialog.e"; "gb_code_generation_dialog.e"; "gb_code_generator.e"; object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se"; "ve"; "base"; "test"; "CVS"; "demo_version"; "gobo_16"; "exml"; 
+			"gb_about_dialog.e"; "gb_code_generation_dialog.e"; "gb_code_generator.e"; "object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se"; "ve";
+			"base"; "test"; "CVS"; "demo_version"; "gobo_16"; "exml"; 
 		end
 
 	build2_demo_version:		"$EIFFEL_SRC\build2\demo_version"

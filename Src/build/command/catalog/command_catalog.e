@@ -100,13 +100,13 @@ feature {NONE}
 			!! window_commands.make (Current)
 			!! file_commands.make (Current)
 			!! reset_commands.make (Current)
-			add_page (generated_commands)
-			add_page (user_defined_commands1)
+			add_page (window_commands)
 			add_page (reset_commands)
 			add_page (file_commands)
-			add_page (window_commands)
 			add_page (command_templates)
-			set_initial_page (generated_commands)
+			add_page (user_defined_commands1)
+			add_page (generated_commands)
+			set_initial_page (window_commands)
 		end
 
 feature {CMD_CAT_BUTTON} -- Attributes

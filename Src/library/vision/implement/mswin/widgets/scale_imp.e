@@ -43,7 +43,9 @@ inherit
 			set_focus as wel_set_focus,
 			set_capture as wel_set_capture,
 			release_capture as wel_release_capture,
-			item as wel_item
+			item as wel_item,
+			font as wel_control_font,
+			set_font as wel_control_set_font
 		export
 			{SCALE_SCROLL_BAR_WINDOWS}
 				on_left_button_down,

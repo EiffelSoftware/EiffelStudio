@@ -307,6 +307,24 @@ feature {EV_ANY_I} -- Measurement
 
 feature {EV_ANY_I} -- Delegated features
 
+	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+			-- `Result' is widget implementation at current
+			-- cursor position.
+		do
+			check
+				must_be_widget_to_get_called: False
+			end
+		end
+		
+	pnd_screen: EV_SCREEN is
+			-- `Result' is screen used for pick and drop.
+		do
+			check
+				must_be_widget_to_get_called: False
+			end
+		end
+		
+
 	set_pebble (a_pebble: like pebble) is
 			-- Assign `a_pebble' to `pebble'.
 		do
@@ -709,6 +727,19 @@ feature {EV_ANY_I} -- Delegated features
 		do
 				-- Simple implementation => no tile.
 			Result := Void
+		end
+		
+	internal_enable_drag is
+			-- Platform specific implementation of `enable_drag'.
+			-- Does nothing in this implementation.
+		do
+		end
+		
+	internal_disable_drag is
+			-- Platform specific implementation of `disable_drag'.
+			-- Does nothing in this implementation.
+		do
+			
 		end
 
 	disable_capture is

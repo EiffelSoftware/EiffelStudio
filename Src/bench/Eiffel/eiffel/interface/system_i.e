@@ -949,7 +949,7 @@ end
 					print ("%N")
 				end
 			end
-			if il_generation and then (private_melt or else not degree_minus_1.is_empty) then
+			if il_generation and then (private_melt or else not degree_minus_1.is_empty) and not il_quick_finalization then
 				generate_il
 				debug ("Timing")
 					create d2.make_now

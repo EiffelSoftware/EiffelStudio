@@ -124,8 +124,7 @@ rt_public void eif_system_asynchronous (char *cmd)
 	siStartInfo.lpReserved2 = NULL;
 	siStartInfo.cbReserved2 = 0;
 	siStartInfo.lpDesktop = NULL;
-	siStartInfo.dwFlags = STARTF_USESHOWWINDOW;
-	siStartInfo.wShowWindow = SW_RESTORE;
+	siStartInfo.dwFlags = STARTF_FORCEONFEEDBACK;
 
 	result = CreateProcess (
 		NULL,
@@ -133,7 +132,7 @@ rt_public void eif_system_asynchronous (char *cmd)
 		NULL,
 		NULL,
 		TRUE,
-		CREATE_NEW_CONSOLE,		/* DETACHED_PROCESS, does not work for .NET application */
+		CREATE_NEW_CONSOLE,
 		NULL,
 		current_dir,
 		&siStartInfo,

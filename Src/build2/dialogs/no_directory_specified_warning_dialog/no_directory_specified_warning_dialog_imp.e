@@ -28,7 +28,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		local 
 			l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
-			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
 			l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
 			l_ev_label_1, l_ev_label_2: EV_LABEL
 		do
@@ -44,10 +44,11 @@ feature {NONE}-- Initialization
 			create l_ev_cell_2
 			create l_ev_label_1
 			create l_ev_horizontal_box_2
+			create l_ev_horizontal_box_3
 			create l_ev_label_2
 			create directory_name_field
 			create l_ev_cell_3
-			create l_ev_horizontal_box_3
+			create l_ev_horizontal_box_4
 			create l_ev_cell_4
 			create ok_button
 			create cancel_button
@@ -61,19 +62,20 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_2.extend (l_ev_cell_2)
 			l_ev_horizontal_box_1.extend (l_ev_label_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (l_ev_label_2)
+			l_ev_horizontal_box_2.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (l_ev_label_2)
 			l_ev_horizontal_box_2.extend (directory_name_field)
 			l_ev_vertical_box_1.extend (l_ev_cell_3)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (l_ev_cell_4)
-			l_ev_horizontal_box_3.extend (ok_button)
-			l_ev_horizontal_box_3.extend (cancel_button)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (l_ev_cell_4)
+			l_ev_horizontal_box_4.extend (ok_button)
+			l_ev_horizontal_box_4.extend (cancel_button)
 			
 			set_title (no_directory_dialog)
 			l_ev_vertical_box_1.set_padding_width (10)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
 			l_ev_horizontal_box_1.set_padding_width (10)
 			l_ev_horizontal_box_1.set_border_width (10)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_2)
@@ -81,12 +83,12 @@ feature {NONE}-- Initialization
 			l_ev_label_1.align_text_left
 			l_ev_horizontal_box_2.set_padding_width (10)
 			l_ev_horizontal_box_2.set_border_width (10)
-			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_2)
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_2)
 			l_ev_label_2.set_text ("Use DIRECTORY constant named:")
-			l_ev_horizontal_box_3.set_padding_width (10)
-			l_ev_horizontal_box_3.set_border_width (10)
-			l_ev_horizontal_box_3.disable_item_expand (ok_button)
-			l_ev_horizontal_box_3.disable_item_expand (cancel_button)
+			l_ev_horizontal_box_4.set_padding_width (10)
+			l_ev_horizontal_box_4.set_border_width (10)
+			l_ev_horizontal_box_4.disable_item_expand (ok_button)
+			l_ev_horizontal_box_4.disable_item_expand (cancel_button)
 			ok_button.disable_sensitive
 			ok_button.set_text (ok_button_text)
 			ok_button.set_minimum_width (default_button_width)

@@ -147,6 +147,7 @@ feature {NONE}-- Initialization
 			l_ev_label_3.align_text_left
 			l_ev_label_4.set_text ("Constants class name:")
 			l_ev_label_4.align_text_left
+			l_ev_vertical_box_5.hide
 			l_ev_vertical_box_5.set_padding_width (small_padding)
 			l_ev_vertical_box_5.set_border_width (small_padding)
 			l_ev_vertical_box_5.disable_item_expand (l_ev_frame_2)

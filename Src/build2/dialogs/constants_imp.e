@@ -195,6 +195,16 @@ feature -- Access
 			Result := 12
 		end
 
+	icon_build_window_color_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_location)
+			a_file_name.set_file_name ("icon_build_window_color.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	large_spacing_width: INTEGER is 
 			-- `Result' is INTEGER constant named large_spacing_width.
 		once
@@ -296,7 +306,7 @@ feature {NONE} -- Implementation
 						end_quote2 := line_contents.index_of ('"', start_quote2 + 1)
 						name := line_contents.substring (start_quote1 + 1, end_quote1 - 1)
 						value := line_contents.substring (start_quote2 + 1, end_quote2 - 1)
-						all_constants.extend (value, name)
+						all_constants.put (value, name)
 					end
 				end
 			end

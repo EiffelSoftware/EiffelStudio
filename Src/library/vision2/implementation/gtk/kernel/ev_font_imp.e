@@ -577,162 +577,20 @@ invariant
 	
 end -- class EV_FONT_IMP
 
---!-----------------------------------------------------------------------------
---! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license. 
---! Contact ISE for any other use.
---!
---! Interactive Software Engineering Inc.
---! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
---! Telephone 805-685-1006, Fax 805-685-6869
---! Electronic mail <info@eiffel.com>
---! Customer support e-mail <support@eiffel.com>
---! For latest info see award-winning pages: http://www.eiffel.com
---!-----------------------------------------------------------------------------
 
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
 --|
---| $Log$
---| Revision 1.19  2001/06/14 18:45:29  rogers
---| Corrected spelling mistake. familys is now families.
---|
---| Revision 1.18  2001/06/14 17:19:07  rogers
---| Changed preferred_faces to preferred_familys.
---|
---| Revision 1.17  2001/06/07 23:08:03  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.10.4.16  2001/04/26 18:58:11  king
---| Changed last matchable font to terminal to avoid chinese on some systems
---|
---| Revision 1.10.4.15  2001/04/20 00:12:37  king
---| Updated set_height comment
---|
---| Revision 1.10.4.14  2001/04/14 00:01:14  king
---| Added app_imp to export clause of c_object
---|
---| Revision 1.10.4.13  2001/04/06 18:01:45  xavier
---| Modifying the preferred faces of the font used not to update the actual font.
---|
---| Revision 1.10.4.12  2000/12/15 19:39:58  king
---| Changed .empty to .is_empty
---|
---| Revision 1.10.4.11  2000/10/05 19:17:49  oconnor
---| fixed constant names
---|
---| Revision 1.10.4.10  2000/09/07 22:34:15  king
---| Added is_initialized to font invariants
---|
---| Revision 1.10.4.9  2000/09/04 18:22:49  oconnor
---| make try_string_array once
---|
---| Revision 1.10.4.8  2000/07/28 00:25:42  king
---| Removed unused locals, default height of font is now 12, like GTK
---|
---| Revision 1.10.4.7  2000/07/25 20:25:12  king
---| Added functions to return vision font codes
---|
---| Revision 1.10.4.6  2000/06/19 17:45:09  king
---| Moved update_face_name post cond into imp int
---|
---| Revision 1.10.4.5  2000/06/16 00:31:53  oconnor
---| fixed action sequence names
---|
---| Revision 1.10.4.4  2000/06/15 19:06:43  pichery
---| Changed the implementation of `last_resort_string' in order to make the
---| face name more important than the font size.
---|
---| Revision 1.10.4.3  2000/06/15 07:23:51  pichery
---| Adapted the class so that it handle multiple preferred faces.
---|
---| Revision 1.10.4.2  2000/06/15 03:51:35  pichery
---| Removed `preferred_face' and replaced it with
---| `preferred_faces'.
---|
---| Revision 1.10.4.1  2000/05/03 19:08:38  oconnor
---| mergred from HEAD
---|
---| Revision 1.16  2000/05/02 18:55:21  oconnor
---| Use NULL instread of Defualt_pointer in C code.
---| Use eiffel_to_c (a) instead of a.to_c.
---|
---| Revision 1.15  2000/04/18 19:36:03  oconnor
---| renamed get_pointer_from_array_by_index->pointer_array_i_th
---|
---| Revision 1.14  2000/03/28 21:51:41  brendel
---| Redefined set_values for optimization purpose.
---| update_font_face uses local variable for speed optimization.
---|
---| Revision 1.13  2000/03/08 17:09:05  brendel
---| Replaced `extend' with `put' on hash-table.
---|
---| Revision 1.12  2000/02/22 18:39:35  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.11  2000/02/14 11:40:28  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.10.6.18  2000/02/04 04:20:42  oconnor
---| released
---|
---| Revision 1.10.6.17  2000/01/27 19:29:28  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.10.6.16  2000/01/21 20:14:03  brendel
---| Added check of valid constant value.
---|
---| Revision 1.10.6.15  2000/01/18 22:43:39  brendel
---| Works.
---|
---| Revision 1.10.6.14  2000/01/18 17:00:52  brendel
---| Changed default font size.
---|
---| Revision 1.10.6.13  2000/01/17 22:21:16  brendel
---| Font is again a little bit faster... Noticed?
---|
---| Revision 1.10.6.10  2000/01/17 17:55:31  brendel
---| Started implementing "best match" font system.
---|
---| Revision 1.10.6.8  2000/01/13 01:17:50  brendel
---| Started implementation of font.
---| EV_FONT_NAME_IMP is now obsolete.
---|
---| Revision 1.10.6.7  2000/01/10 21:40:39  king
---| Corrected weight to return int, Correctedstring width to not use eiffel_to_c
---|
---| Revision 1.10.6.6  2000/01/10 19:14:06  king
---| Changed interface.
---| Improved comments.
---| Improved contracts.
---| set_name is now obsolete.
---|
---| Revision 1.10.6.5  1999/12/22 20:17:12  king
---| Removed ev_any_imp
---|
---| Revision 1.10.6.4  1999/12/18 02:13:26  king
---| Removed inheritence from ev_any_imp
---|
---| Revision 1.10.6.3  1999/12/15 19:20:33  king
---| Removed inheritence from ev_any_imp
---| Removed reference to pointer widget (now c_object)
---|
---| Revision 1.10.6.2  1999/12/04 18:35:26  oconnor
---| inherit EV_ANY_IMP, use new externals object
---|
---| Revision 1.10.6.1  1999/11/24 17:29:45  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.10.2.3  1999/11/02 17:20:02  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------
 

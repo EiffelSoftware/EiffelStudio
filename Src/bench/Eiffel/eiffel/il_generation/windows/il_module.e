@@ -689,7 +689,7 @@ feature -- Metadata description
 
 			if
 				class_type.is_precompiled or
-				il_code_generator.il_modules (class_type) /= Current
+				il_code_generator.il_module (class_type) /= Current
 			then
 				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
 			else
@@ -763,7 +763,7 @@ feature -- Metadata description
 
 			if
 				class_type.is_precompiled or
-				il_code_generator.il_modules (class_type) /= Current
+				il_code_generator.il_module (class_type) /= Current
 			then
 				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
 			else
@@ -925,7 +925,7 @@ feature -- Metadata description
 			if
 				is_reference or
 				class_type.is_precompiled or class_type.associated_class.is_external or
-				il_code_generator.il_modules (class_type) /= Current
+				il_code_generator.il_module (class_type) /= Current
 			then
 				l_meth_token := md_emit.define_member_ref (l_uni_string,
 					class_type_token (class_type.implementation_id), l_sig)
@@ -1479,7 +1479,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_module: IL_MODULE
 			l_uni_string: UNI_STRING
 		do
-			l_module := il_code_generator.il_modules (a_class_type)
+			l_module := il_code_generator.il_module (a_class_type)
 			check
 					-- Cannot be current since we are looking for a reference to another
 					-- module.

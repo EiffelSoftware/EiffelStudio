@@ -19,6 +19,9 @@ inherit
 	BULLETIN_I
 
 	SIZEABLE_WINDOWS
+		redefine
+			resize_for_shell
+		end
 
 	WEL_CONTROL_WINDOW
 		rename
@@ -93,6 +96,7 @@ feature -- Status setting
 		do
 			if not realized then
 				wc ?= parent
+				resize_for_shell
 				make_with_coordinates (wc, "", x, y, width, height);
 				set_enclosing_size
 				if not fixed_size_flag then
@@ -128,11 +132,25 @@ feature {NONE} -- Implementation
 			-- Action to perform when a child 
 			-- has changed size
 		do
-			set_enclosing_size
+			if not fixed_size_flag then
+				set_enclosing_size
+			end
 		end;
 
 	default_position: BOOLEAN;
 			-- Is this to be centered around parent?
+
+	resize_for_shell is
+			-- Resize current widget if the parent is a shell.			
+		local
+			tw: TOP_WINDOWS
+		do
+			tw ?= parent
+			if tw /= Void and then tw.exists then
+				set_x_y (0, 0)
+				set_size (tw.client_width, tw.client_height)
+			end
+		end
 
 end -- class BULLETIN_WINDOWS
  

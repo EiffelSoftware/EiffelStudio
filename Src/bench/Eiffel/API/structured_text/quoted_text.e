@@ -51,7 +51,7 @@ feature -- Initialization
 			image.extend ('%'')
 			e_feature := feature_by_name (text)
 			if e_feature = Void then
-				if is_class_name (text) then
+				if (create {IDENTIFIER_CHECKER}).is_valid_upper (text) then
 					class_i := class_by_name (text)
 				end
 				if class_i = Void then

@@ -17,7 +17,8 @@ inherit
 			process_message,
 			on_wm_notify
 		redefine
-			process_notification_info
+			process_notification_info,
+			set_parent
 		end
 
 	WEL_COMPOSITE_WINDOW
@@ -31,7 +32,8 @@ inherit
 			move_and_resize,
 			move
 		redefine
-			on_wm_paint
+			on_wm_paint,
+			set_parent
 		end
 
 	WEL_CCS_CONSTANTS
@@ -174,6 +176,22 @@ feature -- Status setting
 		end
 
 feature -- Element change
+
+   	set_parent (a_parent: WEL_WINDOW) is
+   			-- Change the parent of the current window.
+			-- We need to use both windows methods to reparent
+			-- the rebar otherwise it doesn't work.
+   		do
+			if a_parent /= void then
+				parent := a_parent
+				cwin_set_parent (item, a_parent.item)
+				cwin_send_message (item, Rb_setparent, a_parent.to_integer, 0)
+			else
+				parent := void
+				cwin_set_parent (item, default_pointer)
+				cwin_send_message (item, Rb_setparent, 0, 0)
+			end
+		end
 
 	prepend_band (band: WEL_REBARBANDINFO) is
 			-- Insert `band' in the rebar.

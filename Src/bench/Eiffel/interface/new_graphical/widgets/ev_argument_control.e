@@ -249,19 +249,19 @@ feature {NONE} -- Storage
             	d_option := defaults.item
              	opt := d_option.option
              	val := d_option.value
-          	if opt.is_free_option then
-             	free_option ?= opt
-	         	inspect
-	            	free_option.code
-	          	when feature {FREE_OPTION_SD}.arguments then
-	             	defaults.remove
-				 	defaults.back
-				when feature {FREE_OPTION_SD}.Working_directory then
-				 	defaults.remove
-				 	defaults.back
-	           	else
-          		end
-         	end
+	          	if opt.is_free_option then
+	             	free_option ?= opt
+		         	inspect
+		            	free_option.code
+		          	when feature {FREE_OPTION_SD}.arguments then
+		             	defaults.remove
+					 	defaults.back
+					when feature {FREE_OPTION_SD}.Working_directory then
+					 	defaults.remove
+					 	defaults.back
+		           	else
+	          		end
+	         	end
             	defaults.forth
            	end
             

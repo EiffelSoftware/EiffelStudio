@@ -18,8 +18,9 @@ inherit
 --			update_boolean_resource, create_toolbar, build_toolbar_menu,
 			set_mode_for_editing, parse_file, raise,
 --			history_window_title, has_editable_text, help_index, icon_id
+			format_list,
 
-make, empty_tool_name, synchronize, build_edit_bar,
+make, empty_tool_name, synchronize, build_edit_bar,stone,set_stone,
 history_window_title, has_editable_text, icon_id
 
 		end
@@ -77,6 +78,8 @@ feature -- Initialization
 
 	init_formatters is
 		do
+			create format_list.make (Current)
+			set_last_format (format_list.default_format)
 		end
 
 feature -- Update Resources
@@ -116,7 +119,7 @@ feature -- Update Resources
 
 feature -- Window Properties
 
---	stone: FEATURE_STONE
+	stone: FEATURE_STONE
 			-- Stone in tool
 
 	history_window_title: STRING is
@@ -142,8 +145,8 @@ feature -- Resetting
 		do
 			Precursor
 			-- class_hole.set_empty_symbol
---			class_text_field.clear
---			feature_text_field.clear
+			class_text_field.set_text("")
+			feature_text_field.set_text("")
 		end
 
 feature -- Access
@@ -207,8 +210,6 @@ feature -- Update
 			ss: SEARCH_STRING
 		do
 -- 			Precursor
---			feature_text_field.close_choice_window
---			class_text_field.close_choice_window
 		end
 
 	highlight_breakable (index: INTEGER) is
@@ -284,10 +285,10 @@ feature -- Status setting
 --			feature_text_field.set_focus
 		end
 
---	set_stone (s: like stone) is
---			-- Update stone from `s'.
---		do
---			stone := s
+	set_stone (s: like stone) is
+			-- Update stone from `s'.
+		do
+			stone := s
 --			if s = Void then
 --				set_icon_name (tool_name)
 --			else
@@ -296,16 +297,16 @@ feature -- Status setting
 --				hole_button.set_full_symbol
 --				class_hole_button.set_full_symbol
 --			end
---		end
+		end
 
 feature -- Stone updating
 
 	process_feature (a_stone: FEATURE_STONE) is
 			-- Process the feature stone `a_stone'. 
 		do
---			last_format.execute (a_stone)
---			add_to_history (a_stone)
---			update_feature_toolbar
+			last_format.format (a_stone)
+			add_to_history (a_stone)
+			update_feature_toolbar
 		end
 
 --	process_breakable (a_stone: BREAKABLE_STONE) is
@@ -366,8 +367,8 @@ feature -- Graphical Interface
 --			synchronise_stone
 --			if stone = Void then
 --				-- class_hole.set_empty_symbol
---				class_text_field.clear
---				feature_text_field.clear
+--				class_text_field.set_text("")
+--				feature_text_field.set_text("")
 --			else
 --				update_feature_toolbar
 --			end
@@ -375,13 +376,11 @@ feature -- Graphical Interface
 
 	update_feature_toolbar is
 			-- Updates the edit bar.
-		local
-			f_name: STRING
 		do
--- 			if stone /= Void then
---				class_text_field.update_class_name (stone.e_class.name)
---				feature_text_field.set_text (stone.e_feature.name)
---			end
+ 			if stone /= Void then
+				class_text_field.update_class_name (stone.e_class.name)
+				feature_text_field.set_text (stone.e_feature.name)
+			end
 		end 
 	
 feature {EB_FORMATTED_TEXT} -- Forms And Holes
@@ -401,7 +400,9 @@ feature {EB_FORMATTED_TEXT} -- Forms And Holes
 	stop_hole_button: EB_BUTTON_HOLE
 			-- Button for the stop points hole
 
-feature {EB_FORMATTED_TEXT, PROJECT_W} -- Formats
+feature -- Formats
+
+	format_list: EB_FEATURE_FORMATTER_LIST
 
 	showroutclients_frmt_holder: FORMAT_HOLDER
 
@@ -427,9 +428,9 @@ feature -- Commands
 
 	next_target_cmd_holder: COMMAND_HOLDER
 
---	feature_text_field: EB_FEATURE_TEXT_FIELD
+	feature_text_field: EB_FEATURE_TEXT_FIELD
 
---	class_text_field: EB_FEATURE_CLASS_TEXT_FIELD
+	class_text_field: EB_FEATURE_CLASS_TEXT_FIELD
 
 	super_melt_menu_entry: EB_MENU_ENTRY
 
@@ -494,8 +495,8 @@ feature {NONE} -- Implementation Graphical Interface
 		end
 
 	build_edit_bar is
---			-- Build feature toolbar
---		local
+			-- Build feature toolbar
+		local
 --			shell_cmd: SHELL_COMMAND
 --			shell_button: EB_BUTTON_HOLE
 --			shell_menu_entry: EB_MENU_ENTRY
@@ -536,7 +537,7 @@ feature {NONE} -- Implementation Graphical Interface
 --			homonym_cmd: SHOW_HOMONYMS
 --			homonym_button: FORMAT_BUTTON
 --			homonym_menu_entry: EB_TICKABLE_MENU_ENTRY
---			label: LABEL
+			label: EV_LABEL
 --			quit_cmd: QUIT_FILE
 --			quit_button: EB_BUTTON
 --			has_close_button: BOOLEAN
@@ -624,19 +625,18 @@ feature {NONE} -- Implementation Graphical Interface
 --			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button,
 --					previous_target_menu_entry)
 --			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
---			
---			!! class_text_field.make (current_bar, Current)
---			!! feature_text_field.make (current_bar, Current)
+			
+			create feature_text_field.make_with_tool (feature_toolbar, Current)
 --			feature_text_field.debug_tab (class_text_field)
+			create label.make_with_text (feature_toolbar, "from: ")
+			label.set_right_alignment
+			create class_text_field.make_with_tool (feature_toolbar, Current)
 --			class_text_field.debug_tab (feature_text_field)
 --			if class_text_field.toolkit.name.is_equal ("MOTIF") then
 --				class_text_field.set_width (class_text_field.width - 10)
 --				feature_text_field.set_width (feature_text_field.width - 10)
 --			end
---			!! label.make (Interface_names.t_Empty, current_bar)
---			label.set_text ("from: ")
---			label.set_right_alignment
---
+
 --			!! quit_cmd.make (Current)
 --			if not is_in_project_tool then
 --				!! quit_menu_entry.make (quit_cmd, file_menu)

@@ -511,6 +511,7 @@ feature {NONE} -- Implementation
 			app: like app_context;
 			mask: INTEGER
 		do
+			update_display;
 			app := app_context;
 			from
 				mask := app.pending;

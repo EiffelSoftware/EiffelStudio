@@ -7,7 +7,6 @@ root
 default
 
 	assertion (all)
-	--assertion (require)
 	--debug("EVENT_TRACE")
 	--debug("EV_GTK_DEBUG")
 cluster
@@ -23,6 +22,7 @@ all vision2(dev):				"$/vision2"
 		"test";
 		"mswin";
 		"EIFGEN";
+		"release";
 	end
 
 test(dev):				"$/vision2/release/test"

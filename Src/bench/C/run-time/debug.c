@@ -254,11 +254,11 @@ int why;
 	 */
 
 #ifdef NEVER
+	dserver();
+#else
 	escontext(why);				/* Save run-time context */
 	dserver();					/* Put application in server mode */
 	esresume();					/* Restore run-time context */
-#else
-	dserver();
 #endif
 
 	/* Returning from this routine will resume execution where it stopped */
@@ -850,10 +850,13 @@ char *root;
 	EIF_OBJ object;				/* The hector pointer */
 	char *out;					/* Where out form is stored */
 
-	object = hrecord(root);		/* Protect object against GC effects */
-	out = build_out(object);	/* Build `tagged_out' (I hate that name--RAM) */
-	epop(&hec_stack);			/* Release object from hector stack */
+	/*object = hrecord(root);*/		/* Protect object against GC effects */
+	/*out = build_out(object);*/	/* Build `tagged_out' (I hate that name--RAM) */
+	/*epop(&hec_stack);*/			/* Release object from hector stack */
 
+	/* FIXME */
+	/* We would like to use the hector protection, but it does not seem to work */
+	out = build_out (&root);
 	return out;		/* To-be-freed pointer to the tagged out representation */
 }
 
@@ -867,9 +870,12 @@ int new;		/* Amount of new entries in melting table */
 	/* Pre-extend the melting table, making room for the new byte codes entries.
 	 * This avoids successive realloc() which could cause fragmentation within
 	 * the C memory. The function returns -1 in case of error.
+	 * The table containing the pattern ids of the melted routines also
+	 * needs to be reallocated.
 	 */
 
 	char **new_melt;			/* New melting table address */
+	int *new_mpatidtab;			/* New melted pattern id table */
 
 	if (new == 0)				/* Table does not need any extension */
 		return 0;				/* Everything is fine */
@@ -877,24 +883,32 @@ int new;		/* Amount of new entries in melting table */
 #ifdef DEBUG
 	dprintf(4)("dmake_room: extending melt (0x%x), %d items by %d\n",
 		 melt, mcount, new);
+	dprintf(4)("dmake_room: extending mpatidtab (0x%x), %d items by %d\n",
+		 mpatidtab, mcount, new);
 #endif
 
-	if (melt == (char **) 0)
-		new_melt = (char **) cmalloc(melt, new * sizeof(char *));
-	else
+	if (melt == (char **) 0) {
+		new_melt = (char **) cmalloc(new * sizeof(char *));
+		new_mpatidtab = (int *) cmalloc(new * sizeof(int));
+	}
+	else {
 		new_melt = (char **) crealloc(melt, (mcount + new) * sizeof(char *));
-	if (new_melt == (char **) 0)
+		new_mpatidtab = (int *) crealloc(mpatidtab, (mcount + new) * sizeof(int));
+	}
+	if ((new_melt == (char **) 0) || (new_mpatidtab == (int *) 0))
 		return -1;				/* Not enough memory for extension */
 
 	mcount += new;				/* New melting table size */
 	melt = new_melt;			/* Melting table address may have changed */
+	mpatidtab = new_mpatidtab;	/* Melted pattern id table may heve changed */
 	
 #ifdef DEBUG
 	dprintf(4)("dmake_room: extension ok, melt now at 0x%x, %d items\n",
 		 melt, mcount);
+	dprintf(4)("dmake_room: extension ok, mpatidtab now at 0x%x, %d items\n",
+		 mpatidtab, mcount);
 #endif
 
-	new_melt = (char **) crealloc(melt, (mcount + new) * sizeof(char *));
 	return 0;					/* Reallocation ok */
 }
 
@@ -908,10 +922,22 @@ char *addr;			/* Address where byte code is stored */
 	 * to be recorded in the melting table, which means body_id > zeroc.
 	 */
 
+	uint32 old_body_id;
+
 #ifdef DEBUG
 	dprintf(4)("drecord_bc: recording 0x%x (%d), idx: %d, id: %d\n",
 		 addr, body_id - zeroc, body_idx, body_id);
 #endif
+
+	old_body_id = dispatch[body_idx];
+	if (old_body_id < zeroc) {			/* The routine was frozen */
+		mpatidtab[body_id] = 			/* Get the pattern id from the */
+			fpatidtab[old_body_id];		/* frozen table of pattern ids */
+	}
+	else {								/* The routine was already melted */
+		mpatidtab[body_id] = 			/* Get the pattern id from the */
+			mpatidtab[old_body_id];		/* melted table of pattern ids */
+	}
 
 	dispatch[body_idx] = body_id;		/* Set-up indirection table */
 	melt[body_id] = addr;				/* And record new byte code */
@@ -927,4 +953,3 @@ public void dexit(code)
 
 	esdie(code);		/* Propagate dying request */
 }
-

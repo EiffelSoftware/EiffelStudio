@@ -74,10 +74,11 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 # Files used to build the daemon
-SRC = proto.c eproto.c eif_in.c eif_out.c init.c new.c
+SRC = proto.c eproto.c eif_in.c eif_out.c init.c new.c dumped.c
 
 # Derived object file names
 OBJ = \
+	dumped.o \
 	proto.o \
 	eproto.o \
 	eif_in.o \

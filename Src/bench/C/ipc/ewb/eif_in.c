@@ -10,11 +10,15 @@ EIF_OBJ db_info_handler;
 EIF_OBJ job_done_handler;
 EIF_OBJ failure_handler;
 EIF_OBJ melt_handler;
+EIF_OBJ dead_handler;
+EIF_OBJ stopped_handler;
 
 EIF_PROC db_info_hdlr_set;
 EIF_PROC job_done_hldr_set;
 EIF_PROC failure_hdlr_set;
 EIF_PROC melt_hdlr_set;
+EIF_PROC dead_hdlr_set;
+EIF_PROC stopped_hdlr_set;
 
 void rqst_handler_to_c(eif_rqst_hdlr, rqst_type, eif_set)
 EIF_OBJ eif_rqst_hdlr;
@@ -42,8 +46,18 @@ EIF_PROC eif_set;
 			melt_handler = eif_adopt (eif_rqst_hdlr);
 			melt_hdlr_set = eif_set;
 			break;
+		case REP_DEAD:
+			dead_handler = eif_adopt (eif_rqst_hdlr);
+			dead_hdlr_set = eif_set;
+			break;
+		case REP_STOPPED:
+			stopped_handler = eif_adopt (eif_rqst_hdlr);
+			stopped_hdlr_set = eif_set;
+			break;
 	}
 }
+
+EIF_OBJ request_dispatch ();
 
 EIF_OBJ request_handler ()
 {
@@ -55,33 +69,79 @@ EIF_OBJ request_handler ()
 	STREAM *sp = stream_by_fd[EWBOUT];
 	char *buf;
 	char *eif_string;
-
+	
+	Request_Clean (rqst);
+		/* ensure Request is all 0 (recognized as non initialized) -- Didier */
 	recv_packet (readfd(sp), &rqst);
+	return request_dispatch (rqst);
+}
+
+
+EIF_OBJ request_dispatch (rqst)
+	Request rqst;
+{
+	char *buf;
+	char *eif_string;
 
 	switch (rqst.rq_type) {
-		default: /* default should not be encountered, but
-				as long as other cases do not compile... */
-		case DEAD:
-			eif_string = makestr("Nothing", 7);
-			(failure_hdlr_set)(eif_access(failure_handler), eif_string); 
-			return eif_access(failure_handler);
-	}
-/*
-		case APP_JOB_DONE:
+	/*	case JOB_DONE:  NOT IMPLEMENTED
+			printf ("JOB DONE \n");
 			sprintf(buf, "%d", rqst.rq_opaque.op_first);
 			eif_string = makestr(buf, strlen(buf));
 			(job_done_hldr_set)(eif_access(job_done_handler), eif_string);
 			return eif_access(job_done_handler);
-		case APP_FAILURE:
+	*/
+	/*	case FAILURE: NOT IMPLEMENTED 
+			printf("FAILURE \n");
 			eif_string = makestr("Nothing", 7);
 			(failure_hdlr_set)(eif_access(failure_handler), eif_string);
 			return eif_access(failure_handler);
-		case APP_MELT:
+	*/
+	/*	case MELT:	NOT IMPLEMENTED 
+			printf ("MELT \n");
 			eif_string = makestr("Nothing", 7);
 			(melt_hdlr_set)(eif_access(failure_handler), eif_string);
 			return eif_access(failure_handler);
-	}
-*/
+	*/
+		case DEAD:
+			printf ("DEAD \n");
+			eif_string = makestr ("Nothing", 7);
+			(dead_hdlr_set) (eif_access (dead_handler), eif_string);
+			return eif_access (dead_handler);
+		case STOPPED:
+			{
+				Stop stop_info;
+				char string [1024], *ptr = string;	
+
+				stop_info = rqst.rqu.rqu_stop;
+				strcpy (ptr, stop_info.st_where.wh_name);
+				ptr += strlen (ptr) + 1; /* one char farther than terminating NULL */
+				sprintf (ptr, "%x", stop_info.st_where.wh_obj);
+				ptr += strlen (ptr) + 1;
+				sprintf (ptr, "%i", stop_info.st_where.wh_origin);
+				ptr += strlen (ptr) + 1;
+				sprintf (ptr, "%i", stop_info.st_where.wh_type);
+				ptr += strlen (ptr) + 1;
+				sprintf (ptr, "%i", stop_info.st_where.wh_offset);
+				ptr += strlen (ptr) + 1;
+				sprintf (ptr, "%i", stop_info.st_why);
+				ptr += strlen (ptr) + 1;
+				sprintf (ptr, "%i", stop_info.st_code);
+				ptr += strlen (ptr) + 1;
+				strcpy (ptr, stop_info.st_tag);
+				ptr += strlen (ptr); /* terminating null so that (ptr - string) is the length */
+				eif_string = makestr (string, ptr - string);
+				printf ("CALL STOPPED HANDLER \n");
+				(stopped_hdlr_set) (eif_access (stopped_handler), eif_string);
+				printf ("STOPPED HANDLER CALLED \n");
+				return eif_access (stopped_handler);
+			}
+		default: 
+			printf ("DEFAULT %i \n", rqst.rq_type);
+			eif_string = makestr ("Nothing", 7);
+			(failure_hdlr_set) (eif_access (failure_handler), eif_string);
+			return eif_access (failure_handler);
+		}
 }
 
 /* 
@@ -100,7 +160,8 @@ EIF_INTEGER size;
 	Request rqst;
 
 	sp = stream_by_fd [EWBOUT];
-
+	
+	Request_Clean (rqst);
 	rqst.rq_type = BCODE;
 	rqst.rq_opaque.op_first = (int) real_body_index;
 	rqst.rq_opaque.op_second = (int) real_body_id;
@@ -131,7 +192,8 @@ EIF_BOOLEAN opcode;
 	Request rqst;
 
 	sp = stream_by_fd [EWBOUT];
-
+	
+	Request_Clean (rqst);
 	rqst.rq_type = BREAK_ON;
 	rqst.rq_opaque.op_first = (int) real_body_index;
 	rqst.rq_opaque.op_second = (int) real_body_id;

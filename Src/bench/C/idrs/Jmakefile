@@ -6,6 +6,8 @@ DPFLAGS = -I$(TOP)
 CFLAGS = $(DPFLAGS)
 
 LSRC = \
+	idr_float.c \
+	idr_double.c \
 	idr_array.c \
 	idr_char.c \
 	idr_getpos.c \

@@ -43,5 +43,6 @@ int size;		/* Size of IDR buffers */
 
 	idrmem_create(&idrf->i_decode, in_addr, size, IDR_DECODE);
 	idrmem_create(&idrf->i_encode, out_addr, size, IDR_ENCODE);
+	return 0;
 }
 

@@ -39,9 +39,8 @@ shared void dserver()
 	add_log(9, "STOPPED");
 #endif
 
-#ifdef NEVER
 	stop_rqst(EWBOUT);		/* Notify workbench we stopped */
-#endif
+							/* was ifdef NEVER */
 	wide_listen();			/* Listen on the socket, waiting for requests */
 
 	/* Exiting from this routine resumes control to the debugger */

@@ -8,7 +8,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 
 	make
 
@@ -24,7 +24,7 @@ feature
 			18., 9., 8., 6., 27.,
 			7.0
 			>>;
-			!! ms.make (x);
+			create ms.make (x);
 			print("Expecting 9.0, 4.0, 5.930%N");
 			print(ms);
 			print(ms.tagged_out);

@@ -11,7 +11,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 	make
 
 	
@@ -46,14 +46,14 @@ feature -- Basic operations
 
 	test_real is
 		do
-			!! system.make_real_from_array (
+			create system.make_real_from_array (
 				<<2.0, 2.5, 2.5,
 				  2.0, 2.5, 2.5,
 				  1.6,-0.4, 2.8,
 				  2.0,-0.5, 0.5,
 				  1.2,-0.3,-2.9>>, 5, 3);
 
-			!! orth.make (system);
+			create orth.make (system);
 
 			print ("%N ---------------- %N");
 			print ("%N NAG tests f01qcc - see Nag manual%N");
@@ -75,7 +75,7 @@ feature -- Basic operations
 			print ("%N ---------------- %N");
 			print ("%N NAG tests f01qdc %N");
 
-			!! extra.make_real_from_array (
+			create extra.make_real_from_array (
 				<<1.1, 0.0,
 				  0.9, 0.0,
 				  0.6, 1.32,
@@ -96,7 +96,7 @@ feature -- Basic operations
 			print (extra1);
 
 			print ("%N Testing feature 'solution' - made up data..%N");
-			!! vector.make_real_from_array (
+			create vector.make_real_from_array (
 				<<1.0, 0.0, 1.0>>);
 			vector.transpose;
 			vector := system | vector;
@@ -121,14 +121,14 @@ feature -- Basic operations
 	test_complex is
 			-- case of complex system
 		do
-			!! system.make_complex_from_array (
+			create system.make_complex_from_array (
 				<<0.0, 0.5,-0.5, 1.5,-1.0, 1.0, 
 				  0.4, 0.3, 0.9, 1.3, 0.2, 1.4,
 				  0.4, 0.0,-0.4, 0.4, 1.8, 0.0,
 				  0.3,-0.4, 0.1, 0.7, 0.0, 0.0,
 				  0.0,-0.3, 0.3, 0.3, 0.0, 2.4>>, 5, 3);
 
-			!! orth.make (system);
+			create orth.make (system);
 
 			print ("%N ---------------- %N");
 			print ("%N NAG tests f01rcc %N");
@@ -150,7 +150,7 @@ feature -- Basic operations
 			print ("%N ---------------- %N");
 			print ("%N NAG tests f01rdc %N");
 
-			!! extra.make_complex_from_array (
+			create extra.make_complex_from_array (
 				<<-0.55, 1.05, 0.45, 1.05,
 				   0.49, 0.93, 1.09, 0.13,
 				   0.56,-0.16, 0.64, 0.16,
@@ -170,7 +170,7 @@ feature -- Basic operations
 			print (extra1);
 
 			print ("%N Testing feature 'solution' - made up data..%N");
-			!! vector.make_complex_from_array (
+			create vector.make_complex_from_array (
 				<<1.0, 0.0, 0.0, 0.0, 1.0, 0.0>>);
 			vector.transpose;
 			vector := system | vector;

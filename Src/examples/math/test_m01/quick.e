@@ -11,7 +11,7 @@ class
 inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
-creation
+create
 
 	make
 

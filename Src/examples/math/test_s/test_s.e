@@ -13,7 +13,7 @@ inherit
 			print
 		end
 
-creation
+create
 	make
 
 feature

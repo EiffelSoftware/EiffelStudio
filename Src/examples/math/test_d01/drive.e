@@ -20,7 +20,7 @@ inherit
 		end
 
 
-creation
+create
 	make
 
 feature -- Status report
@@ -54,7 +54,7 @@ feature -- Initialization
 	make is
 			-- test of various routines from d01
 		do
-			!! testf;
+			create testf;
 	 
 	 		test_gl;
 	 		test_gm;
@@ -90,11 +90,11 @@ feature -- Basic operations
 		do
 			-- The harder interface:
 	 		-- create an EIFFEL_FUNCTION for passing to the integrator.
-			!! ef_testf;
+			create ef_testf;
 			ef_testf.set_target (testf) ;
 			ef_testf.set_by_name ("EXAMPLE_INTEGRANDS", "f2") ;
 
-			!! gl_integrator.make;
+			create gl_integrator.make;
 			gl_integrator.set_abscissae_count(7);
 			gl_integrator.set_integration_limits (0., 1);
 			gl_integrator.set_integrand (ef_testf);
@@ -102,7 +102,7 @@ feature -- Basic operations
 
 			r ("testgl/f2 #1", gl_integrator.integral, 1./3.);
 
-			!! gl_integrator.make;
+			create gl_integrator.make;
 			gl_integrator.make_integrand(testf, "f2");
 			gl_integrator.set_abscissae_count(7);
 			gl_integrator.set_integration_limits (0., 1);
@@ -123,8 +123,8 @@ feature -- Basic operations
 			x_in, y_in: ARRAY [DOUBLE]
 			-- The arrays of points to define a function.
 		do
-			!! x_in.make (1, 10);
-			!! y_in.make (1, 10);
+			create x_in.make (1, 10);
+			create y_in.make (1, 10);
 			from i :=1 until i > 10 loop
 				d := (i-1.)/9.;
 				d2 := d * d;
@@ -132,7 +132,7 @@ feature -- Basic operations
 				y_in.put (d2, i);
 				i := i + 1
 			end;
-			!! gm_integrator.make (x_in, y_in);
+			create gm_integrator.make (x_in, y_in);
 
 			gm_integrator.integrate;
 			r ("test_gm", gm_integrator.integral, 1./3.);
@@ -146,7 +146,7 @@ feature -- Basic operations
 			gg_integrator: SEMI_INFINITE_FIXED_INTEGRATOR;
 			-- An integrator for a function over a semi-infinite interval.
 		do
-			!! gg_integrator.make;
+			create gg_integrator.make;
 			gg_integrator.set_abscissae_count (7);
 			gg_integrator.set_integration_limit (2.);
 			gg_integrator.set_decay_rate (1.);
@@ -162,7 +162,7 @@ feature -- Basic operations
 			gr_integrator: RATIONAL_SEMI_INFINITE_FIXED_INTEGRATOR;
 			-- An integrator for a rational function on a semi-infinite interval
 		do
-			!! gr_integrator.make;
+			create gr_integrator.make;
 			gr_integrator.set_abscissae_count (7);
 			gr_integrator.set_integration_limit (2.);
 			gr_integrator.set_decay_rate (0.);
@@ -179,7 +179,7 @@ feature -- Basic operations
 			gh_integrator: INFINITE_FIXED_INTEGRATOR;
 			-- Integrator for functions on (-Infinity, Infinity).
 		do
-			!! gh_integrator.make;
+			create gh_integrator.make;
 			gh_integrator.set_abscissae_count(7);
 			gh_integrator.make_integrand (testf, "fun4");
 			gh_integrator.set_decay_rate(3.);
@@ -196,7 +196,7 @@ feature -- Basic operations
 		local
 		 	ajc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
 		do
-			!! ajc_integrator.make;
+			create ajc_integrator.make;
 			ajc_integrator.make_integrand (testf, "f2");
 			ajc_integrator.set_integration_limits (0., 1.);
 			ajc_integrator.integrate;
@@ -231,7 +231,7 @@ feature -- Basic operations
 		local
 		 	akc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
 		do
-			!! akc_integrator.make;
+			create akc_integrator.make;
 			akc_integrator.make_integrand (testf, "oscillator");
 			akc_integrator.set_integration_limits (0.0, 2.0 * Pi);
 			akc_integrator.set_absolute_tolerance(0.0);
@@ -247,7 +247,7 @@ feature -- Basic operations
 		local
 		 	alc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
 		do
-			!! alc_integrator.make;
+			create alc_integrator.make;
 			alc_integrator.make_integrand (testf, "difficult_at_one_seventh");
 			alc_integrator.set_integration_limits (0.0, 1.0);
 			alc_integrator.set_absolute_tolerance(0.0);
@@ -263,7 +263,7 @@ feature -- Basic operations
 		local
 		 	amc_integrator: SEMI_INFINITE_ADAPTIVE_INTEGRATOR;
 		do
-			!! amc_integrator.make;
+			create amc_integrator.make;
 			amc_integrator.make_integrand (testf, "fun5");
 			amc_integrator.set_integration_limit (.0001);
 
@@ -301,7 +301,7 @@ feature -- Basic operations
 		local		
 			amc2_integrator: INFINITE_ADAPTIVE_INTEGRATOR;
 		do
-			!! amc2_integrator.make;
+			create amc2_integrator.make;
 			amc2_integrator.make_integrand (testf, "fun4");
 			amc2_integrator.integrate;
 			
@@ -335,7 +335,7 @@ feature -- Basic operations
 		local
 		 	asc_integrator: TRIG_WEIGHTED_SEMI_INFINITE_ADAPTIVE_INTEGRATOR;
 		do
-			!! asc_integrator.make;
+			create asc_integrator.make;
 			asc_integrator.make_integrand (testf, "one_over_sqrt_x");
 			asc_integrator.set_integration_limit (0.);
 			asc_integrator.set_absolute_tolerance (.001);
@@ -380,7 +380,7 @@ feature -- Basic operations
 		local
 		 	anc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
 		do
-			!! anc_integrator.make;
+			create anc_integrator.make;
 			anc_integrator.make_integrand (testf, "careful_log");
 			anc_integrator.set_integration_limits (0.0, 1.0);
 			anc_integrator.set_absolute_tolerance(0.0);
@@ -396,7 +396,7 @@ feature -- Basic operations
 		local
 		 	apc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
 		do
-			!! apc_integrator.make;
+			create apc_integrator.make;
 			apc_integrator.make_integrand (testf, "f_cos");
 			apc_integrator.set_integration_limits (0.0, 1.0);
 			apc_integrator.set_absolute_tolerance(0.0);
@@ -420,7 +420,7 @@ feature -- Basic operations
 		local
 		 	aqc_integrator: FINITE_ADAPTIVE_INTEGRATOR;
 		do
-			!! aqc_integrator.make;
+			create aqc_integrator.make;
 			aqc_integrator.make_integrand (testf, "g");
 			aqc_integrator.set_integration_limits (-1.0, 1.0);
 			aqc_integrator.set_absolute_tolerance(0.0);
@@ -438,15 +438,15 @@ feature -- Basic operations
 			j: INTEGER;
 		 	fcc_integrator: GENERAL_ADAPTIVE_FUNCTIONAL_INTEGRATOR;
 		do
-			!! a.make(1,4);
-			!! b.make(1,4);
+			create a.make(1,4);
+			create b.make(1,4);
 			from j := 1 until j > 4 loop
 				a.put(0.0, j);
 				b.put(1.0, j);
 				j := j + 1
 			end;
 
-			!! fcc_integrator.make;
+			create fcc_integrator.make;
 			fcc_integrator.make_integrand (testf, "functional1");
 
 			fcc_integrator.set_integration_limits (a, b);
@@ -472,15 +472,15 @@ feature -- Basic operations
 			j: INTEGER;
 		 	gbc_integrator: MONTE_CARLO_FUNCTIONAL_INTEGRATOR;
 		do
-			!! a.make(1,4);
-			!! b.make(1,4);
+			create a.make(1,4);
+			create b.make(1,4);
 			from j := 1 until j > 4 loop
 				a.put(0.0, j);
 				b.put(1.0, j);
 				j := j + 1
 			end;
 
-			!! gbc_integrator.make_non_repeatable;
+			create gbc_integrator.make_non_repeatable;
 			gbc_integrator.make_integrand (testf, "functional1");
 
 			gbc_integrator.set_integration_limits (a, b);
@@ -509,15 +509,15 @@ feature -- Basic operations
 		 	gbc_integrator: MONTE_CARLO_FUNCTIONAL_INTEGRATOR;
 			iters: INTEGER;
 		do
-			!! a.make(1,4);
-			!! b.make(1,4);
+			create a.make(1,4);
+			create b.make(1,4);
 			from j := 1 until j > 4 loop
 				a.put(0.0, j);
 				b.put(1.0, j);
 				j := j + 1
 			end;
 
-			!! gbc_integrator.make_repeatable (0);
+			create gbc_integrator.make_repeatable (0);
 			gbc_integrator.make_integrand (testf, "functional1");
 
 			gbc_integrator.set_integration_limits (a, b);
@@ -567,10 +567,10 @@ feature -- Basic operations
 			p2: EXAMPLE_INTEGRAND_MOLY;
 			p3: EXAMPLE_INTEGRAND_FOLY;
 		do
-			!! p1.make;
-			!! p2;
-			!! p3;
-			!! gl_integrator.make;
+			create p1.make;
+			create p2;
+			create p3;
+			create gl_integrator.make;
 
 			gl_integrator.make_integrand(p1, "f1");
 			gl_integrator.set_target(p2);
@@ -596,7 +596,7 @@ feature -- Basic operations
 		local
 		 	gen_integrator: GENERAL_ADAPTIVE_INTEGRATOR;
 		do
-			!! gen_integrator.make;
+			create gen_integrator.make;
 			gen_integrator.make_integrand (testf, "f2");
 			gen_integrator.set_integration_limits (0., 1.);
 			gen_integrator.integrate;

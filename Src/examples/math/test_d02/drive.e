@@ -15,7 +15,7 @@ inherit
 			print
 		end
 
-creation
+create
 
 	make
 
@@ -52,7 +52,7 @@ feature -- Basic operations
 			tests: EXAMPLE_STIFF_ODE;
 		do
 			print ("For EXAMPLE_PLAIN_ODE...%N");
-			!! testf;
+			create testf;
 			y1 := <<0.5, 0.5, Pi / 5.0>>;
 			print ("Result of normal call to rhs: %N");
 			y2 := testf.rhs (0.0, y1);
@@ -69,7 +69,7 @@ feature -- Basic operations
 			print_nl ("");
 
 			print ("For EXAMPLE_STIFF_ODE...%N");
-			!! tests;
+			create tests;
 			y1 := <<1.0, 0.001, 0.0001>>;
 			print ("Result of normal call to rhs: %N");
 			y2 := tests.rhs (0.0, y1);
@@ -98,9 +98,9 @@ feature -- Basic operations
 			testf: EXAMPLE_PLAIN_ODE;
 		do
 			print("Beginning Adams solver root test.%N");
-			!! testf;
+			create testf;
 			y1 := <<0.5, 0.5, Pi / 5.0>>;
-			!! g.make (0.0, 10.0, y1);
+			create g.make (0.0, 10.0, y1);
 			g.set_target (testf);
 			g.set_tolerance (0.0001);
 			g.set_output_times (<<0., 2., 4., 6., 8.>>);
@@ -112,7 +112,7 @@ feature -- Basic operations
 
 			print("Beginning Adams solver no root test.%N");
 			y1 := <<0.5, 0.5, Pi / 5.0>>;
-			!! g.make (0.0, 10.0, y1);
+			create g.make (0.0, 10.0, y1);
 			g.set_target (testf);
 			g.set_tolerance (0.0001);
 			g.set_output_times (<<0., 2., 4., 6., 8.>>);
@@ -131,9 +131,9 @@ feature -- Basic operations
 			testf: EXAMPLE_PLAIN_ODE;
 		do
 			print("Beginning stiff solver non-stiff system test.%N");
-			!! testf;
+			create testf;
 			y1 := <<0.5, 0.5, Pi / 5.0>>;
-			!! g.make (0.0, 10., y1);
+			create g.make (0.0, 10., y1);
 			g.set_target (testf);
 			g.set_tolerance (0.0001);
 			g.set_output_times (<<0., 2., 4., 6., 8.>>);
@@ -146,7 +146,7 @@ feature -- Basic operations
 
 			print("Beginning no root stiff solver non-stiff system test.%N");
 			y1 := <<0.5, 0.5, Pi / 5.0>>;
-			!! g.make (0.0, 10.0, y1);
+			create g.make (0.0, 10.0, y1);
 			g.set_target (testf);
 			g.set_tolerance (0.0001);
 			g.set_output_times (<<0., 2., 4., 6., 8.>>);
@@ -166,9 +166,9 @@ feature -- Basic operations
 			stiff: EXAMPLE_STIFF_ODE;
 		do
 			print("Beginning stiff solver stiff system test.%N");
-			!! stiff;
+			create stiff;
 			y1 := <<1.0, 0.0, 0.0>>;
-			!! g.make (0.0, 10.0, y1);
+			create g.make (0.0, 10.0, y1);
 			g.set_target (stiff);
 			g.set_tolerance (0.0001);
 			g.relative_tolerance;
@@ -181,9 +181,9 @@ feature -- Basic operations
 			print_nl ("");
 
 			print("...and with jacobian...%N");
-			!! stiff;
+			create stiff;
 			y1 := <<1.0, 0.0, 0.0>>;
-			!! g.make (0.0, 10.0, y1);
+			create g.make (0.0, 10.0, y1);
 			g.set_target (stiff);
 			g.set_tolerance (0.0001);
 			g.relative_tolerance;
@@ -206,9 +206,9 @@ feature -- Basic operations
 			xout: DOUBLE;
 		do
 			print("Beginning RK range test.%N");
-			!! testf;
+			create testf;
 			y1 := <<0.0, 1.0>>;
-			!! g.make (0.0, 2.0 * Pi, y1);
+			create g.make (0.0, 2.0 * Pi, y1);
 			g.set_target (testf);
 			g.set_tolerance (0.0001);
 			g.set_all_thresholds (1.0e-8);
@@ -236,9 +236,9 @@ feature -- Basic operations
 			i: INTEGER;
 		do
 			print("Beginning RK one_step test.%N");
-			!! testf;
+			create testf;
 			y1 := <<0.0, 1.0>>;
-			!! g.make (0.0, 2.0*Pi, y1);
+			create g.make (0.0, 2.0*Pi, y1);
 			g.set_target (testf);
 			g.set_tolerance (0.0001);
 			g.set_all_thresholds (1.0e-8);

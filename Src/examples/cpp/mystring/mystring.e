@@ -13,7 +13,7 @@ inherit
 			dispose
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -42,7 +42,7 @@ feature
 		local
 			loc_ptr: POINTER
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			loc_ptr := cpp_value (object_ptr);
 			if loc_ptr /= default_pointer then
 				Result.from_c (loc_ptr)

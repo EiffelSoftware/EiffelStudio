@@ -11,7 +11,7 @@ class
 inherit
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 	make
 
 feature -- The main program
@@ -36,9 +36,9 @@ feature -- Test of c05adc, root finder
 			-- An zero finder for finite intervals.
 		do
 	 		-- create an instance of the target class for passing to the root finder.
-			!! testf
+			create testf
 
-			!! gr.make;
+			create gr.make;
 			gr.make_target (testf, "f1");
 			gr.set_interval(1., 2.);
 
@@ -58,9 +58,9 @@ feature -- Test of c05adc, root finder
 			x: ARRAY [DOUBLE];
 		do
 	 		-- create an instance of the target class for passing to the root finder.
-			!! t;
+			create t;
 
-			!! gr.make (t);
+			create gr.make (t);
 
 			print("Solving for zero of system. Answer should be %N");
 			x := <<-.5707, -.6816, -.7017, -.7042, -.7014,

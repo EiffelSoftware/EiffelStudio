@@ -12,7 +12,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 	make
 
 feature -- The main program
@@ -23,7 +23,7 @@ feature -- The main program
 			zz: POLYNOMIAL_ROOT_FINDER;
 			v: BASIC_VECTOR
 		do
-			!! v.make_complex_from_array ( <<
+			create v.make_complex_from_array ( <<
 				5., 6., 
 				30., 20., 
 				-0.2, -6.0,
@@ -31,12 +31,12 @@ feature -- The main program
 				-2.0, 40.,
 				10., 1.0 
 				>>);
-			!! zz.make (v);
+			create zz.make (v);
 			print(zz.roots);
 			print ("Compare to c02afc example.%N");	
 
-			!! v.make_real_from_array (<<1., 2., 3., 4., 5., 6>>);
-			!! zz.make (v);
+			create v.make_real_from_array (<<1., 2., 3., 4., 5., 6>>);
+			create zz.make (v);
 			print(zz.roots);
 			print ("Compare to c02agc example.%N");	
 		end;

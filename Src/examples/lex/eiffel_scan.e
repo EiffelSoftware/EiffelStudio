@@ -17,7 +17,7 @@ inherit
 			copy, consistent, is_equal, setup
 		end
 
-creation
+create
 
 	make
 

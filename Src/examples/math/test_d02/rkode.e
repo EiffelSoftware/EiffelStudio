@@ -19,7 +19,7 @@ feature -- Basic operations
 
 	rhs (x: DOUBLE; y: ARRAY [DOUBLE]): ARRAY [DOUBLE] is
 		do
-			!! Result.make (1, 2);
+			create Result.make (1, 2);
 			Result.put (y @ 2, 1);
 			Result.put (- (y @ 1), 2);
 		end;	

@@ -11,7 +11,7 @@ class
 inherit
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 	make
 
 
@@ -31,13 +31,13 @@ feature -- Initialization
 			print ("%N========%N"); 
 			print ("Testing c06eac - fft of real bra vector to packed complex %N");
 	
-			!! vector.make_real_from_array (
+			create vector.make_real_from_array (
 				<<0.34907, 0.54890, 0.74776, 0.94459, 1.13850, 1.32850, 1.51370>>);		
 			print ("Vector to be transformed %N%N");
 			print (vector);
 
 			print ("After transformation - packed complex vector %N%N");
-			!! fft.make (vector);
+			create fft.make (vector);
 			fft.transform_using_standard_fft (True);
 			print (vector);
 
@@ -58,14 +58,14 @@ feature -- Initialization
 			print ("%N========%N"); 
 			print ("Testing c06ecc - fft of complex dual vector to dual complex %N");
 
-			!! vector.make_complex_from_arrays (
+			create vector.make_complex_from_arrays (
 				<<0.34907, 0.54890, 0.74776, 0.94459, 1.13850, 1.32850, 1.51370>>,
 				<<-0.37168, -0.35669, -0.31175, -0.23702, -0.13274, 0.00074, 0.16298>>);		
 			print ("Vector to be transformed %N%N");
 			print (vector);
 
 			print ("Vector after transformation - dual complex %N%N");
-			!! fft.make (vector);
+			create fft.make (vector);
 			fft.transform_using_standard_fft (True);
 			print (vector);
 
@@ -79,7 +79,7 @@ feature -- Initialization
 			print ("Testing c06fpc - fft of real matrix to packed complex %N");
 			print ("Each row of matrix is treated as independent row vector %N");
 
-			!! matrix.make_real_from_array (
+			create matrix.make_real_from_array (
 				<<0.3854, 0.6772, 0.1138, 0.6751, 0.6362, 0.1424,
 				  0.5417, 0.2983, 0.1181, 0.7255, 0.8638, 0.8723,
 				  0.9172, 0.0644, 0.6037, 0.6430, 0.0428, 0.4815 >>, 3, 6);
@@ -87,7 +87,7 @@ feature -- Initialization
 			print (matrix);
 
 			print ("Matrix after transformation - packed complex %N%N");
-			!! fft.make (matrix);
+			create fft.make (matrix);
 			fft.transform_using_standard_fft (True);
 			print (matrix);
 
@@ -108,7 +108,7 @@ feature -- Initialization
 			print ("Testing c06frc - fft of complex dual matrix to dual complex %N");
 			print ("Each row of matrix is treated as independent row vector %N");
 
-			!! matrix.make_complex_from_arrays (
+			create matrix.make_complex_from_arrays (
 				<<0.3854, 0.6772, 0.1138, 0.6751, 0.6362, 0.1424,				 
 				  0.9172, 0.0644, 0.6037, 0.6430, 0.0428, 0.4815,
 				  0.1156, 0.0685, 0.2060, 0.8630, 0.6967, 0.2792 >>,
@@ -120,7 +120,7 @@ feature -- Initialization
 			print (matrix);
 
 			print ("Matrix after transformation - dual complex %N%N");
-			!! fft.make (matrix);
+			create fft.make (matrix);
 			fft.transform_using_standard_fft (True);
 			print (matrix);
 
@@ -133,7 +133,7 @@ feature -- Initialization
 			print ("Testing c06fuc - 2-d fft of complex dual matrix to dual complex %N");
 			print ("Matrix represents a rectangular grid of data points %N");
 
-			!! matrix.make_complex_from_arrays (
+			create matrix.make_complex_from_arrays (
 				<<1.0000, 0.9990, 0.9870, 0.9360, 0.8020,
 				  0.9940, 0.9890, 0.9630, 0.8910, 0.7310,
 				  0.9030, 0.8850, 0.8230, 0.6940, 0.4670 >>,
@@ -145,7 +145,7 @@ feature -- Initialization
 			print (matrix);
 
 			print ("Matrix after 2-dim transformation - dual complex %N%N");
-			!! fft.make (matrix);
+			create fft.make (matrix);
 			fft.transform_using_two_dimensional_fft (True);
 			print (matrix);
 
@@ -158,7 +158,7 @@ feature -- Initialization
 			print ("Testing c06hac - sine fft of real matrix to real %N");
 			print ("Matrix represents three rows of independent real data %N");
 
-			!! matrix.make_real_from_array (
+			create matrix.make_real_from_array (
 				<<0.6772, 0.1138, 0.6751, 0.6362, 0.1424,
 				  0.2983, 0.1181, 0.7255, 0.8638, 0.8723,
 				  0.0644, 0.6037, 0.6430, 0.0428, 0.4815 >>,
@@ -167,7 +167,7 @@ feature -- Initialization
 			print (matrix);
 
 			print ("Matrix after sine transformation %N%N");
-			!! fft.make (matrix);
+			create fft.make (matrix);
 			fft.transform_using_sine_fft (True);
 			print (matrix);
 
@@ -180,7 +180,7 @@ feature -- Initialization
 			print ("Testing c06hbc - cosine fft of real matrix to real %N");
 			print ("Matrix represents three rows of independent real data %N");
 
-			!! matrix.make_real_from_array (
+			create matrix.make_real_from_array (
 				<<0.3854, 0.6772, 0.1138, 0.6751, 0.6362, 0.1424, 0.9562,
 				  0.5417, 0.2983, 0.1181, 0.7255, 0.8638, 0.8723, 0.4936,
 				  0.9172, 0.0644, 0.6037, 0.6430, 0.0428, 0.4815, 0.2057 >>,
@@ -189,7 +189,7 @@ feature -- Initialization
 			print (matrix);
 
 			print ("Matrix after cosine transformation %N%N");
-			!! fft.make (matrix);
+			create fft.make (matrix);
 			fft.transform_using_cosine_fft (True);
 			print (matrix);
 
@@ -203,7 +203,7 @@ feature -- Initialization
 			print ("MY COPY OF NAG MANUAL MISSES SOME PAGES HERE - USING MADE UP DATA %N");
 			print ("Matrix represents three rows of independent real data %N");
 
-			!! matrix.make_real_from_array (
+			create matrix.make_real_from_array (
 				<<0.6772, 0.1138, 0.6751, 0.6362, 0.1424,
 				  0.2983, 0.1181, 0.7255, 0.8638, 0.8723,
 				  0.0644, 0.6037, 0.6430, 0.0428, 0.4815 >>,
@@ -212,7 +212,7 @@ feature -- Initialization
 			print (matrix);
 
 			print ("Matrix after quarter-sine transformation %N%N");
-			!! fft.make (matrix);
+			create fft.make (matrix);
 			fft.transform_using_quarter_sine_fft (True);
 			print (matrix);
 
@@ -225,7 +225,7 @@ feature -- Initialization
 			print ("Testing c06hdc - quarted-cosine fft of real matrix to real %N");
 			print ("Matrix represents three rows of independent real data %N");
 
-			!! matrix.make_real_from_array (
+			create matrix.make_real_from_array (
 				<<0.3854, 0.6772, 0.1138, 0.6751, 0.6362, 0.1424,
 				  0.5417, 0.2983, 0.1181, 0.7255, 0.8638, 0.8723,
 				  0.9172, 0.0644, 0.6037, 0.6430, 0.0428, 0.4815 >>,
@@ -234,7 +234,7 @@ feature -- Initialization
 			print (matrix);
 
 			print ("Matrix after quarter-cosine transformation %N%N");
-			!! fft.make (matrix);
+			create fft.make (matrix);
 			fft.transform_using_quarter_cosine_fft (True);
 			print (matrix);
 

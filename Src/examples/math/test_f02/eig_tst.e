@@ -11,7 +11,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -47,13 +47,13 @@ feature -- Basic operations
 		do
 			-- PART I: NAG tests f02afc, f02agc
 
-			!! system.make_real_from_array (
+			create system.make_real_from_array (
 				<<  1.5, 0.1,  4.5, -1.5,
 				  -22.5, 3.5, 12.5, -2.5,
 				   -2.5, 0.3,  4.5, -2.5,
 				   -2.5, 0.1,  4.5,  2.5>>, 4, 4);
 
-			!! eigen.make (system);
+			create eigen.make (system);
 			
 			values := eigen.eigenvalues;
 			vectors := eigen.eigenvectors;
@@ -105,14 +105,14 @@ feature -- Basic operations
 			print_nl ("");
 
 			-- PART III: NAG tests f02bjc
-			!! system.make_real_from_array (
+			create system.make_real_from_array (
 				<<  3.9,   4.3,   4.3,   4.4,
 				   12.5,  21.5,  21.5,  26.0,
 				  -34.5, -47.5, -43.5, -46.0,
 				   -0.5,   7.5,   3.5,   6.0>>, 4, 4);
-			!! eigen.make (system);
+			create eigen.make (system);
 
-			!! extra.make_real_from_array (
+			create extra.make_real_from_array (
 				<< 1.0,  1.0,  1.0,  1.0,
 				   2.0,  3.0,  3.0,  3.0,
 				  -3.0, -5.0, -4.0, -4.0,
@@ -150,14 +150,14 @@ feature -- Basic operations
 			-- Test the real symmetric case.		
 		do
 			-- PART I: NAG tests f02aac, f02abc
-			!! system.make_real_from_array (
+			create system.make_real_from_array (
 				<< 0.5,  0.0, 2.3,-2.6,
 				   0.0,  0.5,-1.4,-0.7,
 				   2.3, -1.4, 0.5, 0.0,
 				  -2.6, -0.7, 0.0, 0.5>>, 4, 4);
 			system.set_symmetricity (True);
 
-			!! eigen.make (system);
+			create eigen.make (system);
 			
 			values := eigen.eigenvalues;
 			vectors := eigen.eigenvectors;
@@ -201,7 +201,7 @@ feature -- Basic operations
 			print_nl ("");
 
 			-- PART III: NAG tests f02adc, f02aec
-			!! system.make_real_from_array (
+			create system.make_real_from_array (
 				<<0.5,  1.5,  6.6, 4.8,
 				  1.5,  6.5, 16.2, 8.6,
 				  6.6, 16.2, 37.6, 9.8,
@@ -209,7 +209,7 @@ feature -- Basic operations
 
 			system.set_symmetricity (True);
 
-			!! extra.make_real_from_array (
+			create extra.make_real_from_array (
 				<<1.0,  3.0,  4.0, 1.0,
 				  3.0, 13.0, 16.0, 11.0,
 				  4.0, 16.0, 24.0, 18.0,
@@ -219,7 +219,7 @@ feature -- Basic operations
 
 			print("NAG tests: f02adc and f02aec %N");
 
-			!! eigen.make (system);
+			create eigen.make (system);
 			eigen.set_extra_matrix (extra);
 			values := eigen.generalized_eigenvalues;
 			vectors := eigen.generalized_eigenvectors;
@@ -246,7 +246,7 @@ feature -- Basic operations
 		do
 			-- PART I: NAG tests f02awc, f02axc
 
-			!! system.make_complex_from_arrays (
+			create system.make_complex_from_arrays (
 				<<0.50, 0.00, 1.84, 2.08,
 				  0.00, 0.50, 1.12,-0.56,
 				  1.84, 1.12, 0.50, 0.00,
@@ -259,7 +259,7 @@ feature -- Basic operations
 			system.as_blended_complex;
 			system.set_symmetricity (True);
 
-			!! eigen.make (system);
+			create eigen.make (system);
 			
 			values := eigen.eigenvalues;
 			vectors := eigen.eigenvectors;

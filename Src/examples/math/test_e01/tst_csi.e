@@ -12,7 +12,7 @@ inherit
 
 	EIFFELMATH_TESTING_FRAMEWORK
 
-creation
+create
 
 	make 
 
@@ -26,16 +26,16 @@ feature -- Initialization
 			a: DOUBLE;
 			i: INTEGER;		
 		do
-			!! form.make(13, 4);
-			!! x.make_real_from_array (
+			create form.make(13, 4);
+			create x.make_real_from_array (
 				<<0.0, 0.2, 0.4, 0.6, 0.75, 0.9, 1.0>>);
-			!! f.make_real_from_array (
+			create f.make_real_from_array (
 				<<1.0, 1.2214028, 1.4918247, 1.8221188, 2.1170, 2.4596031, 2.718218>>);
 			print_nl ("Test of CURVE_SPLINE_INTERPOLATOR (eo1bac)")
 			printv ("x", x)
 			printv ("y", f)
-			!! interpolator.make (x, f);
-			!! x1.make_real_from_array (
+			create interpolator.make (x, f);
+			create x1.make_real_from_array (
 			<<0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.675, 0.75, 0.825, 0.9, 0.95, 1.0>>);
 
 			from

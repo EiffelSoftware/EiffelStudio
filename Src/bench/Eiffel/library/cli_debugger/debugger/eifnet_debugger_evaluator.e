@@ -452,12 +452,15 @@ feature {NONE}
 			elseif eifnet_debugger.last_managed_callback_is_eval_exception then
 				Result := Void
 				last_eval_is_exception := True
+			elseif eifnet_debugger.last_managed_callback_is_exit_process then
+				eifnet_debugger.notify_exit_process_occured
+				Result := Void
 			else				
 				Result := l_icd_eval.get_result
 			end
 			l_status.set_is_evaluating (False)
 			eifnet_debugger.start_dbg_timer
-			restore_state_info			
+			restore_state_info
 			last_call_success := l_icd_eval.last_call_success			
 		end
 

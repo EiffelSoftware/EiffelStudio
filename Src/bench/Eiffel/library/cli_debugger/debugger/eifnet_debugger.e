@@ -93,7 +93,8 @@ feature -- Initialization
 			reset_dbg_evaluator
 			eifnet_debugger_info.reset
 			Eifnet_debugger_info.set_controller (Current)
-
+			exit_process_occured := False
+			
 				-- not required
 			last_stepper := Void
 			last_dbg_call_success := 0
@@ -145,6 +146,15 @@ feature -- Initialization
 			is_debugging implies icor_debug /= Void
 		end
 
+	is_debugging: BOOLEAN
+			-- Is current process in debugging session ?
+
+	exit_process_occured: BOOLEAN
+			-- Does Call back "ExitProcess" occured ?
+			--| This could be during evaluation ...
+			
+feature -- Termination ...
+
 	terminate_debugger is
 			-- Terminate the debugging session
 		require
@@ -158,18 +168,12 @@ feature -- Initialization
 				eif_debug_display ("[EIFDBG] pProcess->Terminate (..)")
 				l_icor_dbg_pro.stop (infinite_time) --| to get the hand on and to be synchronized
 				l_icor_dbg_pro.terminate (1)
-				--| the end of the killing process will be done on callback ExitProcess
-
+					--| the end of the killing process will be done on callback ExitProcess
 			else
 				eif_debug_display ("[EIFDBG] could not find ICorDebugProcess object ...")
+				on_exit_process
 			end
 	
---			stop_dbg_timer
-
---			Eifnet_debugger_info.reset
---			Eifnet_debugger_info.set_controller (Void)
---			Application.process_termination			
-
 		end
 
 	on_exit_process	is
@@ -181,10 +185,14 @@ feature -- Initialization
 			Application.process_termination
 		ensure
 			not is_debugging
-		end		
+		end
 
-	is_debugging: BOOLEAN
-
+	notify_exit_process_occured is
+			-- Notify callback `ExitProcess' occured
+		do
+			exit_process_occured := True			
+		end
+		
 feature -- Status
 
 	last_dbg_call_success: INTEGER
@@ -227,21 +235,30 @@ feature -- Interaction with .Net Debugger
 		require
 			process_exists: icor_debug_process /= Void
 		do
-			icor_debug_process.stop (infinite_time)
-			debug ("debugger_eifnet_data")
-				print ("EIFNET_DEBUGGER.do_stop : after stop icor_debug_process.last_call_success = " + icor_debug_process.last_error_code_id + "%N")
+			if exit_process_occured or else icor_debug_process = Void then
+				on_exit_process
+			else
+				icor_debug_process.stop (infinite_time)
+				debug ("debugger_eifnet_data")
+					print ("EIFNET_DEBUGGER.do_stop : after stop icor_debug_process.last_call_success = " + icor_debug_process.last_error_code_id + "%N")
+				end
+				
+				waiting_debugger_callback ("stop")
+				last_dbg_call_success := icor_debug_process.last_call_success
 			end
-			
-			waiting_debugger_callback ("stop")
-			last_dbg_call_success := icor_debug_process.last_call_success
 		end
 
 	do_continue is
-		require
-			process_exists: icor_debug_process /= Void
-		do
-			icor_debug_process.continue (False)
-			last_dbg_call_success := icor_debug_process.last_call_success
+		local
+			l_controller: ICOR_DEBUG_CONTROLLER		
+		do	
+			if exit_process_occured or else icor_debug_process = Void then
+				on_exit_process
+			else
+				l_controller := icor_debug_process
+				l_controller.continue (False)
+				last_dbg_call_success := l_controller.last_call_success
+			end
 		end
 		
 	do_clear_exception is
@@ -300,7 +317,6 @@ feature {NONE} -- Stepping Implementation
 			process_exists: icor_debug_process /= Void
 		local
 			l_succeed: BOOLEAN
-			l_controller: ICOR_DEBUG_CONTROLLER			
 		do
 			l_succeed := get_stepper
 			if l_succeed then
@@ -317,13 +333,7 @@ feature {NONE} -- Stepping Implementation
 				end
 				check last_stepper.check_last_call_succeed end
 				
-				--| Get the controller
-				l_controller := icor_debug_thread.get_process
-				check icor_debug_thread.check_last_call_succeed end
-				
-				--| And continue the debugging
-				l_controller.continue (False)
-				check l_controller.check_last_call_succeed end
+				do_continue
 			else
 				debug  ("DEBUGGER_TRACE_EIFNET")
 					eif_debug_display ("[DBG/WARNING] No stepper made available ...")			
@@ -337,8 +347,6 @@ feature -- Stepping Access
 			-- Step next.
 		local
 			l_succeed: BOOLEAN
-			l_controller: ICOR_DEBUG_CONTROLLER
-
 		do
 			debug ("debugger_trace_operation")
 				print ("[enter] EIFNET_DEBUGGER.do_step_range ("+a_bstep_in.out+")%N")
@@ -351,13 +359,7 @@ feature -- Stepping Access
 				last_stepper.step_range (a_bstep_in, a_il_ranges)
 				check last_stepper.check_last_call_succeed end				
 
-				--| Get the controller
-				l_controller := icor_debug_thread.get_process
-				check icor_debug_thread.check_last_call_succeed end
-				
-				--| And continue the debugging
-				l_controller.continue (False)
-				check l_controller.check_last_call_succeed end				
+				do_continue
 			else
 				eif_debug_display ("[DBG/WARNING] No stepper made available ...")			
 			end
@@ -461,6 +463,11 @@ feature {EIFNET_EXPORTER} -- Restricted Bridge to EIFNET_DEBUGGER_INFO
 		
 feature -- Bridge to EIFNET_DEBUGGER_INFO
 
+	last_managed_callback_is_exit_process: BOOLEAN is
+		do
+			Result := Eifnet_debugger_info.last_managed_callback_is_exit_process
+		end	
+		
 	last_managed_callback_is_exception: BOOLEAN is
 		do
 			Result := Eifnet_debugger_info.last_managed_callback_is_exception
@@ -571,8 +578,6 @@ feature -- Function Evaluation
 		do
 			l_class_c := ct.associated_class
 			l_feat_i := l_class_c.feature_named (a_f_name)
--- FIXME jfiat [2004/03/11] : check why this was done with non_generic before ...
---			l_feat_tok := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_i)
 			l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feat_i, ct)
 			
 			if l_feat_tok = 0 then
@@ -783,7 +788,7 @@ feature -- Function Evaluation
 			l_icd_module := l_icd_class.get_module		
 			l_md_import := l_icd_module.interface_md_import
 			l_feature_token := l_md_import.find_method (l_icd_class.get_token, "generating_type")
--- FIXME JFIAT: check if this could be done 
+			-- FIXME JFIAT: check if we could be use directly feature_token (..)
 --			l_feature_token := feature_token (l_class_type, "generating_type")
 			
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
@@ -916,19 +921,19 @@ feature -- Function Evaluation
 			-- System.Exception.ToString value
 		local
 			l_icd: ICOR_DEBUG_VALUE		
-			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
-			l_icd_class: ICOR_DEBUG_CLASS
+--			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
+--			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_module_name: STRING
+--			l_module_name: STRING
 			l_feature_token: INTEGER
 			l_func: ICOR_DEBUG_FUNCTION
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
 		do	
 			l_icd := a_icd
-			l_icd_object := a_icd_obj
-			l_icd_class := l_icd_object.get_class
-			l_icd_module := l_icd_class.get_module
-			l_module_name := l_icd_module.get_name
+--			l_icd_object := a_icd_obj
+--			l_icd_class := l_icd_object.get_class
+--			l_icd_module := l_icd_class.get_module
+--			l_module_name := l_icd_module.get_name
 
 			l_icd_module := icor_debug_module_for_mscorlib
 			l_feature_token := Edv_external_formatter.token_Exception_get_Message

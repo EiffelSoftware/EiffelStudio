@@ -1840,6 +1840,13 @@ feature {NONE} -- Removal
 			end
 		end
 
+	track_mouse_event (info: WEL_TRACK_MOUSE_EVENT): BOOLEAN is
+			-- Start a windows TRACKMOUSEEVENT dependent on information
+			-- contained in `info'
+		do
+			Result := cwin_track_mouse_event (info.item)
+		end
+
 feature {NONE} -- Constants
 
 	Wel_gcl_constants: WEL_GCL_CONSTANTS is
@@ -2051,6 +2058,13 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (HWND)"
 		alias
 			"UpdateWindow"
+		end
+
+	cwin_track_mouse_event (struct: POINTER): BOOLEAN is
+		external
+			"C [macro %"wel.h%"] (TRACKMOUSEEVENT*): EIFBOOLEAN"
+		alias
+			"_TrackMouseEvent"
 		end
 
 	cwin_invalidate_rect (hwnd, a_rect: POINTER;

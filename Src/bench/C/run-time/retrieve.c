@@ -193,6 +193,15 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 	char rt_type = (char) 0;
 	int pos = 0;
 
+#ifdef EIF_ALPHA
+		/* The conversion from a FILE pointer to a file descriptor
+		 * does not keep the position correctly in the stream, one has
+		 * to call `fflush' to ensure the validity of the position in
+		 * the stream.
+		 */
+	fflush (NULL);
+#endif
+
 	/* Reset nb_recorded */
 	nb_recorded = 0;
 
@@ -414,11 +423,7 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 			buffer_read((char *)(&spec_size), (sizeof(uint32)));
 			nb_char = (spec_size & B_SIZE) * sizeof(char);
 			newadd = spmalloc(nb_char);
-			if (rt_kind) {
-				HEADER(newadd)->ov_flags |= dtypes[flags & EO_TYPE] |
-							(flags & (EO_REF|EO_COMP));
-			} else
-				HEADER(newadd)->ov_flags |= flags & (EO_REF|EO_COMP|EO_TYPE);
+			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 			/* Normal object */
 			if (rt_kind) {
@@ -628,8 +633,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 				*o_ref = spec_size;
 				/* FIXME spec_elm_size[dtypes[flags & EO_TYPE]] = elm_size;*/
 			} 
-			HEADER(newadd)->ov_flags |= dtypes[flags & EO_TYPE] |
-							(flags & (EO_REF|EO_COMP));
+			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 			/* Normal object */
 			nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
@@ -822,8 +826,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 				*o_ref = spec_size;
 				spec_elm_size[dtypes[flags & EO_TYPE]] = elm_size;
 			} 
-			HEADER(newadd)->ov_flags |= dtypes[flags & EO_TYPE] |
-							(flags & (EO_REF|EO_COMP));
+			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 			/* Normal object */
 			nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));

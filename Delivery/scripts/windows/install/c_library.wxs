@@ -356,7 +356,7 @@
 								<File Id="makefile.acorn" Name="MAKEFI~1.ACO" LongName="makefile.acorn" />
 								<File Id="makefile.vcwin32" Name="MAKEFI~1.VCW" LongName="makefile.vcwin32" />
 								<File Id="makefile.sco" Name="makefile.sco" />
-								<File Id="makefile.msc" Name="makefile.msc" />
+								<File Id="makefile.msc2" Name="makefile.msc" />
 								<File Id="makefile.openbsd" Name="MAKEFI~1.OPE" LongName="makefile.openbsd" />
 								<File Id="makefile.mips" Name="MAKEFI~1.MIP" LongName="makefile.mips" />
 								<File Id="makefile.knr" Name="makefile.knr" />
@@ -365,13 +365,13 @@
 								<File Id="makefile.ibmc" Name="MAKEFI~1.IBM" LongName="makefile.ibmc" />
 								<File Id="makefile.freebsd" Name="MAKEFI~1.FRE" LongName="makefile.freebsd" />
 								<File Id="makefile.elf" Name="makefile.elf" />
-								<File Id="makefile.dj2" Name="makefile.dj2" />
+								<File Id="makefile.dj22" Name="makefile.dj2" />
 								<File Id="makefile.bc32" Name="MAKEFI~1.BC3" LongName="makefile.bc32" />
 								<File Id="makefile.aix" Name="makefile.aix" />
 								<File Id="makefile.ne12bsd" Name="MAKEFI~1.NE1" LongName="makefile.ne12bsd" />
 								<File Id="makefile.darwin" Name="MAKEFI~1.DAR" LongName="makefile.darwin" />
 								<File Id="makefile.64sunu" Name="MAKEFI~1.64S" LongName="makefile.64sunu" />
-								<File Id="makefile.os2" Name="makefile.os2" />
+								<File Id="makefile.os22" Name="makefile.os2" />
 								<File Id="makefile.netbsd" Name="MAKEFI~1.NET" LongName="makefile.netbsd" />
 								<File Id="makefile.bcb" Name="makefile.bcb" />
 								<File Id="makefile.32sunu" Name="MAKEFI~1.32S" LongName="makefile.32sunu" />
@@ -385,7 +385,7 @@
 								<File Id="makefile.sgi" Name="makefile.sgi" />
 								<File Id="smakefile.ppc" Name="SMAKEF~1.PPC" LongName="smakefile.ppc" />
 								<File Id="makefile.hp64" Name="MAKEFI~1.HP6" LongName="makefile.hp64" />
-								<File Id="makefile.bor" Name="makefile.bor" />
+								<File Id="makefile.bor2" Name="makefile.bor" />
 								<File Id="libpngconfigbody.in" Name="LIBPNG~1.IN" LongName="libpng-config-body.in" />
 								<File Id="descrip.mms" Name="descrip.mms" />
 								<File Id="SCOPTIONS.ppc" Name="SCOPTI~1.PPC" LongName="SCOPTIONS.ppc" />
@@ -393,7 +393,7 @@
 								<File Id="makefile.sggcc" Name="MAKEFI~1.SGG" LongName="makefile.sggcc" />
 								<File Id="makefile.beos" Name="MAKEFI~1.BEO" LongName="makefile.beos" />
 								<File Id="makefile.linux" Name="MAKEFI~1.LIN" LongName="makefile.linux" />
-								<File Id="makefile.gcc" Name="makefile.gcc" />
+								<File Id="makefile.gcc2" Name="makefile.gcc" />
 								<File Id="libpng.icc" Name="libpng.icc" />
 								<File Id="makefile.intel" Name="MAKEFI~1.INT" LongName="makefile.intel" />
 							</Component>
@@ -424,8 +424,8 @@
 								</Component>
 							</Directory>
 							<Directory Id="visualc71" Name="VISUAL~1" LongName="visualc71">
-								<Component Id="README.txt" Guid="A6B76B42-7917-476C-9CD4-6DBFD0F21EA2">
-									<File Id="README.txt" Name="README.txt" KeyPath="yes" />
+								<Component Id="README.txt2" Guid="A6B76B42-7917-476C-9CD4-6DBFD0F21EA2">
+									<File Id="README.txt2" Name="README.txt" KeyPath="yes" />
 									<File Id="pngtest.vcproj" Name="PNGTES~1.VCP" LongName="pngtest.vcproj" />
 									<File Id="libpng.sln" Name="libpng.sln" />
 									<File Id="libpng.vcproj" Name="LIBPNG~1.VCP" LongName="libpng.vcproj" />
@@ -458,7 +458,7 @@
 									<File Id="readpng.c" Name="readpng.c" />
 									<File Id="toucan.png" Name="toucan.png" />
 									<File Id="writepng.h" Name="writepng.h" />
-									<File Id="Makefile.sgi" Name="Makefile.sgi" />
+									<File Id="makefile.sgi2" Name="Makefile.sgi" />
 									<File Id="wpng.c" Name="wpng.c" />
 									<File Id="Makefile.w32" Name="Makefile.w32" />
 									<File Id="rpng2win.c" Name="RPNG2-~1.C" LongName="rpng2-win.c" />

@@ -2821,8 +2821,8 @@
 									</Component>
 									<Directory Id="multiple" Name="multiple">
 										<Directory Id="diamond" Name="diamond">
-											<Component Id="readme.txt" Guid="0982C48C-B296-43F5-B860-1A7BED0076F0">
-												<File Id="readme.txt" Name="readme.txt" KeyPath="yes" />
+											<Component Id="readme.txt2" Guid="0982C48C-B296-43F5-B860-1A7BED0076F0">
+												<File Id="readme.txt2" Name="readme.txt" KeyPath="yes" />
 												<File Id="a1.eant" Name="A167C9~1.EAN" LongName="a1.eant" />
 												<File Id="c1.eant" Name="C16BC9~1.EAN" LongName="c1.eant" />
 												<File Id="b1.eant" Name="B169C9~1.EAN" LongName="b1.eant" />
@@ -5024,7 +5024,7 @@
 								<File Id="ge2e.eant" Name="GE2E~1.EAN" LongName="ge2e.eant" KeyPath="yes" />
 								<File Id="test.eant" Name="TEST~1.EAN" LongName="test.eant" />
 								<File Id="eiffel.eant" Name="EIFFEL~1.EAN" LongName="eiffel.eant" />
-								<File Id="todo.txt" Name="todo.txt" />
+								<File Id="todo.txt2" Name="todo.txt" />
 							</Component>
 						</Directory>
 						<Directory Id="bin" Name="bin">
@@ -5075,7 +5075,7 @@
 					</Directory>
 					<Directory Id="wex" Name="wex">
 						<Component Id="Forum.txt" Guid="BEA6EC49-5EC7-45E8-B920-167C73CB747F">
-							<File Id="Forum.txt" Name="Forum.txt" KeyPath="yes" />
+							<File Id="Forum.txt2" Name="Forum.txt" KeyPath="yes" />
 							<File Id="Version.txt1988" Name="Version.txt" />
 							<File Id="readme.txt1989" Name="readme.txt" />
 						</Component>
@@ -5099,7 +5099,7 @@
 										<File Id="main_win.e" Name="main_win.e" />
 										<File Id="App.ico" Name="App.ico" />
 										<File Id="Ace.ace" Name="Ace.ace" />
-										<File Id="App.e" Name="App.e" />
+										<File Id="App.e2" Name="App.e" />
 									</Component>
 								</Directory>
 							</Directory>

@@ -26,6 +26,7 @@
 #define ARGV_NUMBER		5		/* Initial number of arguments expected */
 #define ARGV_INCREASE	10		/* Amount by which argument array increases */
 #define MAX_WORD_SIZE	1024	/* Maximum size for each collected word */
+#define is_separator(c)	(ifs[0] == (char) (c))? 1 : 0		/* Test whether char is an IFS */
 
 /* The variable IFS is used by the shell to perform the split of each word.
  * It contains a list of single characters which are to be taken as Input
@@ -41,7 +42,6 @@ rt_private int argc;				/* Argument count */
 rt_private int where;				/* Current position within argv[] */
 
 /* Function declarations */
-rt_private int is_separator(char c);		/* Test whether char is an IFS */
 rt_private void free_argv(void);		/* Free inside of argv[] array */
 rt_private int init_argv(void);		/* Initialize argv[] for new command */
 rt_private char *add_argv(char *word);		/* Append one word to the argv[] array */
@@ -53,20 +53,6 @@ rt_private char *str_save(char *s);		/* Save string somewhere in memory */
 #else
 extern char *str_save(char *s);			/* Save string somewhere in memory */
 #endif
-
-rt_private int is_separator(char c)
-       			/* Character to be tested among those in the ifs set */
-{
-	/* Is char 'c' a valid input field separator ? */
-
-	char *p = ifs;			/* To parse the input field separator string */
-	char d;					/* Current char in IFS string */
-
-	while ((d = *p) && c != d)	/* Loop over, until end of string or match */
-		p++;
-
-	return d ? 1 : 0;		/* Boolean stating whether we found it */
-}
 
 rt_private void free_argv(void)
 {

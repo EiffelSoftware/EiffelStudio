@@ -1966,6 +1966,7 @@ feature {NONE} -- Event handling
 			node_x_position_click_edge: INTEGER
 			pointed_row_i: EV_GRID_ROW_I
 		do
+			drawable.set_focus
 			pointed_item := drawer.item_at_position (a_x, a_y)
 			if pointed_item /= Void then
 				pointed_row_i := pointed_item.row_i
@@ -2033,7 +2034,43 @@ feature {NONE} -- Event handling
 
 	key_press_received (a_key: EV_KEY) is
 			-- Called by `key_press_actions' of `drawable'.
+		local
+			a_sel_item: EV_GRID_ITEM
+			a_sel_row, parent_row: EV_GRID_ROW
+			sel_items: like selected_items
+			sel_offset: INTEGER
 		do
+				-- Handle the selection events
+			sel_items := selected_items
+			if not sel_items.is_empty then
+				a_sel_item := sel_items.last
+				a_sel_row := a_sel_item.row
+				sel_offset := 1
+				if a_key.code = {EV_KEY_CONSTANTS}.Key_down then
+					if not a_sel_row.is_expanded then
+						sel_offset := sel_offset + a_sel_row.implementation.subnode_count_recursive
+					end
+					a_sel_item := a_sel_item.column.item ((a_sel_item.row.index + sel_offset).min (row_count))
+				elseif a_key.code = {EV_KEY_CONSTANTS}.Key_up then
+						-- Find the next visible node above currently selected item by looping up through parent rows if any
+					from
+						a_sel_item := a_sel_item.column.item ((a_sel_item.row.index - sel_offset).max (1))
+						parent_row := a_sel_item.row.parent_row
+					until
+						parent_row = Void
+					loop
+						if not parent_row.is_expanded then
+							a_sel_item := parent_row.item (a_sel_item.column.index)
+						end
+						parent_row := parent_row.parent_row
+					end
+				elseif a_key.code = {EV_KEY_CONSTANTS}.Key_right then
+					a_sel_item := a_sel_item.row.item ((a_sel_item.column.index + 1).min (column_count))
+				elseif a_key.code = {EV_KEY_CONSTANTS}.Key_left then
+					a_sel_item := a_sel_item.row.item ((a_sel_item.column.index - 1).max (1))
+				end
+				a_sel_item.enable_select
+			end
 		end
 
 	key_press_string_received (a_keystring: STRING) is

@@ -198,6 +198,7 @@ private int cc_for_speed = 1;	/* Optimized for speed */
 extern struct chunk *last_from;			/* Last 'from' chunk used by plsc() */
 extern struct sc_zone ps_from;			/* Partial scavenging 'from' zone */
 extern struct sc_zone ps_to;			/* Partial scavenging 'to' zone */
+extern int gc_running;				/* Is the GC running? */
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
@@ -2142,6 +2143,8 @@ int chunk_type;
 	 * no coalescing ever occurred.
 	 */
 	
+	int started_here;
+
 	register1 struct chunk *c;		/* To walk along chunk list */
 	register2 int max_size = 0;		/* Size of biggest coalesced block */
 	register3 int max_coalesced;	/* Size of coalesced block in a chunk */
@@ -2149,6 +2152,15 @@ int chunk_type;
 	/* Choose the correct head for the list depending on the memory type.
 	 * If ALL_T is used, then the whole memory is scanned and coalesced.
 	 */
+
+	if (!gc_running) {
+		double dummy;
+
+		gc_running = 1;
+		getcputime(&dummy,&last_gc_time);
+		started_here = 1;
+		gc_ran = 1;
+	}
 
 	switch (chunk_type) {
 	case C_T:						/* Only walk through the C chunks */
@@ -2186,6 +2198,14 @@ int chunk_type;
 		max_size);
 	flush;
 #endif
+
+	if (started_here) {			/* Keep track of this run */
+		double dummy, new_time;
+
+		getcputime(&dummy, &new_time);
+		last_gc_time = new_time - last_gc_time;
+		gc_running = 0;
+	}
 
 	return max_size;		/* Maximum size of coalesced block or 0 */
 }

@@ -16,8 +16,19 @@ inherit
 		end
 
 	WIZARD_WRITER_DICTIONARY
+		export
+			{NONE} all
+		end
 
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
+	WIZARD_VARIABLE_NAME_MAPPER
+		export
+			{NONE} all
+		end
 
 feature -- Basic operations
 
@@ -140,7 +151,7 @@ feature -- Processing
 			c_type := clone (coclass_descriptor.name)
 			create c_post_type.make (0)
 			c_header_file := clone (coclass_descriptor.c_header_file_name)
-			eiffel_type := clone (coclass_descriptor.eiffel_class_name)
+			eiffel_type := name_for_class (coclass_descriptor.name, coclass_descriptor.type_kind, shared_wizard_environment.client)
 
 			is_coclass := True
 

@@ -49,8 +49,13 @@ feature -- Access
 			-- Nested ARRAYDESC structure
 		require
 			valid_type: is_carray (var_type)
+		local
+			l_pointer: POINTER
 		do
-			!! Result.make_from_pointer (ccom_typedesc_arraydesc (item))
+			l_pointer := ccom_typedesc_arraydesc (item)
+			if l_pointer /= default_pointer then
+				create Result.make_from_pointer (l_pointer)
+			end
 		end
 
 	href_type: INTEGER is

@@ -1,0 +1,4 @@
+Error: class inherits multiply from classes that are .NET external classes
+    or that inherit from .NET external classes.
+What to do: you can only inherit once from .NET external classes that do not
+    support multiple inheritance. Keep only one class from error list.

@@ -2,7 +2,7 @@ indexing
 
 	description:
 		" Description of submenu Switches for %
-		% command line option for es3 -loop.  %
+		% command line option for es4 -loop.  %
 		% This one prints also the values of  %
 		% the switches in the submenu.	      ";
 	date: "$Date$";

@@ -322,7 +322,7 @@ feature {NONE} -- Properties
 
 	precompiles: TWO_WAY_LIST [STRING] is
 			-- Looks up the disk to find the precompiled libraries in
-			-- $EIFFEL3/precomp/spec/$PLATFORM/*.
+			-- $EIFFEL4/precomp/spec/$PLATFORM/*.
 			-- The list will only contain those precompiles that are actually
 			-- precompiled (by the means the file ./EIFGEN/project.eif exists).
 		local
@@ -376,7 +376,7 @@ feature -- Standard precompiles
 
 	standard_precompiles_reverse: HASH_TABLE [STRING, STRING];
 			-- A hash table of the qualified name of standard precompiles (EiffelBase, EiffelLex, etc.)
-			-- against their location in $EIFFEL3/precomp/spec/$PLATFORM (base, lex, etc.)
+			-- against their location in $EIFFEL4/precomp/spec/$PLATFORM (base, lex, etc.)
 			--| Dynamically created.
 
 feature -- Subdirs from a directory name
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 						precomp_lines.append ("precompiled (");
 						!! d_name.make;
 						d_name.extend_from_array (
-							<<"$EIFFEL3", "precomp", "spec", "$PLATFORM">>);
+							<<"$EIFFEL4", "precomp", "spec", "$PLATFORM">>);
 						d_name.set_directory (standard_precompiles_reverse.item (toggle.text));
 						precomp_lines.append (d_name);
 						precomp_lines.append (");%N")

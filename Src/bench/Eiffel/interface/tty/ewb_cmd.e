@@ -2,7 +2,7 @@ indexing
 
 	description: 
 		"General notion of command line command%
-		%corresponding to an option of `es3'.";
+		%corresponding to an option of `es4'.";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -75,7 +75,7 @@ feature {BASIC_EWB_LOOP} -- Execution
 
 	loop_action is
 			-- Action performed when invoked from the
-			-- command loop (ie after es3 -loop).
+			-- command loop (ie after es4 -loop).
 		do
 			check_arguments_and_execute
 		end;

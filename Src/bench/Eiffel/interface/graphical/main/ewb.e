@@ -37,16 +37,16 @@ feature -- Initialization
 			if not retried then
 					-- Check that environment variables
 					-- are properly set.
-				temp := Execution_environment.get ("EIFFEL3");
+				temp := Execution_environment.get ("EIFFEL4");
 				if (temp = Void) or else temp.empty then
 					io.error.putstring 
-						("ISE Eiffel3: the environment variable $EIFFEL3 is not set%N");
+						("ISE Eiffel4: the environment variable $EIFFEL4 is not set%N");
 					new_die (-1)
 				end;
 				temp := Execution_environment.get ("PLATFORM");
 				if (temp = Void) or else temp.empty then
 					io.error.putstring 
-						("ISE Eiffel3: the environment variable $PLATFORM is not set%N");
+						("ISE Eiffel4: the environment variable $PLATFORM is not set%N");
 					new_die (-1)
 				end;
 
@@ -79,7 +79,7 @@ feature -- Initialization
 			discard_licence;
 			if not Eiffel_project.batch_mode then
 					-- The rescue in BASIC_ES will display the tag
-				io.error.putstring ("ISE Eiffel3: Session aborted%N");
+				io.error.putstring ("ISE Eiffel4: Session aborted%N");
 				io.error.putstring ("Exception tag: ");
 				temp := original_tag_name;
 				if temp /= Void then

@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize the resource table.
 			-- (By default, resources will be looked the `eifinit'
-			-- directory in $EIFFEL3, $HOME, and $EIF_DEFAULTS looking
+			-- directory in $EIFFEL4, $HOME, and $EIF_DEFAULTS looking
 			-- for file general and for platform specific files).
 		local
 			resource_table: RESOURCE_TABLE;

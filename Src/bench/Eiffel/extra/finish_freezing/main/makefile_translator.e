@@ -9,10 +9,10 @@ feature -- Initialization
 		do
 			!!options.make (25)
 			!!dependent_directories.make
-			eiffel3 := env.get ("EIFFEL3")
+			eiffel4 := env.get ("EIFFEL4")
 
-			if eiffel3 = Void or else eiffel3.empty then
-				io.error.putstring ("EIFFEL3 environment variable not set.%N")
+			if eiffel4 = Void or else eiffel4.empty then
+				io.error.putstring ("EIFFEL4 environment variable not set.%N")
 			end
 		end
 
@@ -45,8 +45,8 @@ feature -- Access
 	appl: STRING			
 			-- Application name
 
-	eiffel3: STRING			
-			-- Eiffel3 environment variable
+	eiffel4: STRING			
+			-- EIFFEL4 environment variable
 
 feature -- Execution
 
@@ -930,15 +930,15 @@ feature {NONE} -- Translation
 feature {NONE}	-- substitutions
 
 	subst_eiffel  (line: STRING) is
-			-- Replace all occurrences of eiffel3 environment variable in `line'
+			-- Replace all occurrences of EIFFEL4 environment variable in `line'
 		do
 			debug ("subst")
 				io.putstring("%Tsubst_eiffel%N")
 			end
 
-			if eiffel3 /= Void and then not eiffel3.empty then
-				line.replace_substring_all ("\$(EIFFEL3)", eiffel3)
-				line.replace_substring_all ("$(EIFFEL3)", eiffel3)
+			if eiffel4 /= Void and then not eiffel4.empty then
+				line.replace_substring_all ("\$(EIFFEL4)", eiffel4)
+				line.replace_substring_all ("$(EIFFEL4)", eiffel4)
 			end
 		end
 
@@ -970,7 +970,7 @@ feature {NONE}	-- substitutions
 				io.putstring("%Tsubst_library%N")
 			end
 
-			library_name := clone (eiffel3)
+			library_name := clone (eiffel4)
 			library_name.append_character (operating_environment.directory_separator)
 			library_name.append ("bench")
 			library_name.append_character (operating_environment.directory_separator)
@@ -1136,8 +1136,8 @@ feature {NONE} -- Implementation
 			end
 
 			if options.has (word) then			
-				if word.is_equal ("eiffel3") then
-					Result := clone (eiffel3)
+				if word.is_equal ("eiffel4") then
+					Result := clone (eiffel4)
 				else
 					Result := clone (options.get_string (word, Void))
 				end
@@ -1220,7 +1220,7 @@ feature {NONE} -- Implementation
 
 	config_eif_fn: FILE_NAME is
 			-- the full filename for the CONFIG.EIF file
-			-- currently: $EIFFEL3|bench|spec|$PLATFORM|es3sh|config.eif
+			-- currently: $EIFFEL4|bench|spec|$PLATFORM|es3sh|config.eif
 		local
 			platform: STRING
 			temp_result: STRING
@@ -1234,7 +1234,7 @@ feature {NONE} -- Implementation
 				io.error.putstring ("PLATFORM environment variable not set%N")
 			end
 
-			temp_result := clone (eiffel3)
+			temp_result := clone (eiffel4)
 			temp_result.append_character (operating_environment.directory_separator)
 			temp_result.append ("bench")
 			temp_result.append_character (operating_environment.directory_separator)
@@ -1242,7 +1242,7 @@ feature {NONE} -- Implementation
 			temp_result.append_character (operating_environment.directory_separator)
 			temp_result.append (platform)
         		temp_result.append_character (operating_environment.directory_separator)
-			temp_result.append ("es3sh")
+			temp_result.append ("es4sh")
 			temp_result.append_character (operating_environment.directory_separator)
 			temp_result.append ("config.eif")
 

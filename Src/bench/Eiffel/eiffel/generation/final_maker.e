@@ -41,7 +41,7 @@ feature
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%N%
 				%.x.o:%N%
-				%%T$(EIFFEL3)/bench/spec/$(PLATFORM)/bin/x2c $< $*.c%N%
+				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.c%N%
 				%%T$(CC) $(CFLAGS) -c $*.c%N%
 				%%T$(RM) $*.c%N%N");
 		end;
@@ -192,10 +192,10 @@ feature
 		do
 			if System.has_separate then
 				Result := "%
-					%$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libcruntime.a %
-					%$(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+					%$(EIFFEL4)/bench/spec/$(PLATFORM)/lib/libcruntime.a %
+					%$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
 			else
-				Result := "$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libruntime.a"
+				Result := "$(EIFFEL4)/bench/spec/$(PLATFORM)/lib/libruntime.a"
 			end
 		end;
 

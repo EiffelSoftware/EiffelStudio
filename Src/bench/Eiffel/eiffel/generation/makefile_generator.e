@@ -451,7 +451,7 @@ feature -- Generation, Header
 				Make_file.putstring ("-DCONCURRENT_EIFFEL ");
 			end;
 			generate_specific_defines;
-			Make_file.putstring ("-I%H$(EIFFEL3)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N%
+			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N%
 				%LDFLAGS = $ldflags%N%
 				%LIBS = $libs%N%
 				%MAKE = make%N%

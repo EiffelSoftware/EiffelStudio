@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 	fill_profiler_list is
 			-- Fill `profiler_list' with profilers
 			-- for which configuration files could be found
-			-- in "$EIFFEL3/bench/profiler".
+			-- in "$EIFFEL4/bench/profiler".
 		require
 			profiler_list_not_void: profiler_list /= Void
 		local

@@ -55,33 +55,40 @@ feature -- Initialization
 			to_label.set_right_alignment;
 			!!from_field.make (new_name, bounds_form);
 			from_field.set_width (40);
+			from_field.set_height (26);
 			!!to_field.make (new_name, bounds_form);
 			to_field.set_width (40);
+			to_field.set_height (26);
+
 			bounds_form.attach_top (from_label, 0);
-			bounds_form.attach_top (from_field, 0);
-			bounds_form.attach_top (to_label, 0);
-			bounds_form.attach_top (to_field, 0);
 			bounds_form.attach_bottom (from_label, 0);
-			bounds_form.attach_bottom (from_field, 0);
-			bounds_form.attach_bottom (to_label, 0);
-			bounds_form.attach_bottom (to_field, 0);
-			bounds_form.attach_left (from_label, 0);
 			bounds_form.attach_right_position (from_label, 1);
+			bounds_form.attach_left (from_label, 0);
+
+			bounds_form.attach_top (from_field, 0);
+			bounds_form.attach_bottom (from_field, 1);
 			bounds_form.attach_left_position (from_field, 1);
 			bounds_form.attach_right_position (from_field, 2);
+
+			bounds_form.attach_top (to_label, 0);
+			bounds_form.attach_bottom (to_label, 0);
 			bounds_form.attach_left_position (to_label, 2);
 			bounds_form.attach_right_position (to_label, 3);
+
+			bounds_form.attach_top (to_field, 0);
+			bounds_form.attach_bottom (to_field, 1);
 			bounds_form.attach_left_position (to_field, 3);
 			bounds_form.attach_right (to_field, 0);
+
+			attach_left (sep, 1);
+			attach_right (sep, 1);
+			attach_top_widget (bounds_form, sep, 5);
 
 			!!button_form.make (new_name, Current);
 			button_form.set_fraction_base (17);
 			attach_left (button_form, 10);
 			attach_bottom (button_form, 10);
-			attach_left (sep, 0);
-			attach_right (sep, 0);
 			attach_right (button_form, 10);
-			attach_top_widget (bounds_form, sep, 5);
 			attach_bottom_widget (button_form, sep, 5);
 
 			!!ok_button.make (Interface_names.b_Ok, button_form);

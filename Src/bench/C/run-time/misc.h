@@ -23,7 +23,6 @@ extern EIF_INTEGER eif_system ();
 #ifdef EIF_WINDOWS
 
 /* DLL declarations */
-#define WIN32
 #include <windows.h>
 
 extern HANDLE eif_load_dll();

@@ -1,7 +1,7 @@
 indexing
 	description: "Eiffel components"
 	external_name: "ISE.Reflection.EiffelComponents"
-	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
+--	attribute: 	create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end--,
 --			create {SYSTEM_REFLECTION_ASSEMBLYDELAYSIGNATTRIBUTE}.make_assemblydelaysignattribute (False) end,
 --			create {SYSTEM_REFLECTION_ASSEMBLYKEYFILEATTRIBUTE}.make_assemblykeyfileattribute ("Key") end,
 --			create {SYSTEM_REFLECTION_ASSEMBLYKEYNAMEATTRIBUTE}.make_assemblykeynameattribute ("") end,
@@ -24,12 +24,12 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	eiffel_assembly_factory: EIFFEL_ASSEMBLY_FACTORY
+	eiffel_class: EIFFEL_CLASS
 		indexing
-			description: "Eiffel assembly factory"
-			external_name: "EiffelAssemblyFactory"
+			description: "Eiffel class"
+			external_name: "EiffelClass"
 		end
-	
+		
 	rename_clause: RENAME_CLAUSE
 		indexing
 			description: "Rename clause"

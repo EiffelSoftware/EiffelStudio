@@ -15,7 +15,8 @@ inherit
 			finalize,
 			freezing_occurred,
 			compiler_version,
-			Freeze_command_name
+			Freeze_command_name,
+			freeze_command_arguments
 		end
 		
 	SHARED_EIFFEL_PROJECT
@@ -121,5 +122,12 @@ feature -- Basic Operations
 			freeze_command := Eiffel_project.Freeze_command_name
 			Result := freeze_command + ".exe"
 		end
+		
+	Freeze_command_arguments: STRING is
+			-- Retrieve command-line arguments needed by Freeze command.
+		do
+			Result := clone (freeze_command_name + " -silent -vs")
+		end
+		
 		
 end -- class COMPILER

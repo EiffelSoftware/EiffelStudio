@@ -1,18 +1,19 @@
 %{
 /*
 
- ######	 #	######		  #			   #
- #		  #	#			   #			   #
- #####	  #	#####		   #			   #
- #		  #	#			   #		###	#
- #		  #	#			   #		###	#
- ######	 #	#	  #######  ######   ###	######
+ ######  #  ######         #            #
+ #       #  #              #            #
+ #####   #  #####          #            #
+ #       #  #              #        ### #
+ #       #  #              #        ### #
+ ######  #  #     #######  ######   ### ######
 
 	Lace lexical parsing, looking for classes inside file.
 */
 
 #include "config.h"
 #include "portable.h"
+#include "macros.h"
 
 #include "lace_y.h"
 #include "limits.h"
@@ -44,7 +45,7 @@ s		[sS]
 .|\n						;
 %%
 
-public int yywrap()
+public int zzwrap()
 {
 	return 1;
 }
@@ -154,5 +155,25 @@ void reset_class_name_parser()
     /* Reset lex parser */
     zzsptr = zzsbuf;
 #endif
+}
+
+char  *c_clname(file_pointer)
+FILE *file_pointer;
+{
+	/* Parse Eiffel source file `file_pointer'. It assumes that the file
+	 * has been correctly opened in reading mode.
+	 * Return TRUE is it is an Eiffel source file
+	 */
+
+	int result;				/* Parsing result */
+
+	zzin = file_pointer;
+
+	/* Parsing */
+	init_lace();
+	reset_class_name_parser();
+	result = zzlex();
+
+	return result ? RTMS(zztext): (char *) 0;
 }
 

@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		do
 			copy (other)
 			
---| FIXME: JFIAT: check if some info can be void, at the copy time.
+--| FIXME JFIAT: check if some info can be void, at the copy time.
 --			is_synchronized            := other.is_synchronized
 --
 --			current_stack_address      := other.current_stack_address.twin

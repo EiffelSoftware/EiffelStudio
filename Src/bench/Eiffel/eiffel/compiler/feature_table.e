@@ -601,8 +601,7 @@ end;
 					if not attribute_type.is_none then
 							-- No attribute of NONE type in skeleton
 						attr_type := attribute_type.type_i;
-						if attr_type.has_formal or attr_type.is_expanded
-						then
+						if attr_type.has_formal or attr_type.is_expanded then
 							!!generic_desc;
 							generic_desc.set_type (attr_type);
 							desc := generic_desc;

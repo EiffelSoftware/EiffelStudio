@@ -21,7 +21,8 @@ inherit
 			internal_accept,
 			copy, is_equal
 		redefine
-			interface
+			interface,
+			file_name
 		end
 
 	WEL_OPEN_FILE_DIALOG
@@ -38,6 +39,67 @@ inherit
 
 create
 	make
+	
+feature -- Status report
+
+	file_name: STRING is
+			-- Full name of currently selected file including path.
+		do
+			if multiple_selection_enabled and then not file_names.is_empty then
+					-- It appears that if multiple files are selected, `file_name'
+					-- returns the path of the files. Therefore, we must retrieve the
+					-- first of the file names.
+				Result := file_names.first
+			else
+				Result := Precursor {EV_FILE_DIALOG_IMP}
+			end
+		end
+
+	multiple_selection_enabled: BOOLEAN is
+			-- Can more than one item be selected?
+		do
+			Result := has_flag (feature {WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
+		end
+		
+	file_names: ARRAYED_LIST [STRING] is
+			-- Full names of currently selected files including path.
+		local
+			linked_list: LINKED_LIST [STRING]
+		do
+			if multiple_selection_enabled then
+				linked_list := multiple_file_names
+				create Result.make (linked_list.count)
+				from
+					linked_list.start
+				until
+					linked_list.off
+				loop
+					Result.extend (linked_list.item.twin)
+					linked_list.forth
+				end
+			else
+					-- If there is no multiple selection, simply copy `file_name' into `Result'.
+				create Result.make (1)
+				if not file_name.is_empty then
+						-- if `file_name' is empty then cancel was selected and `Result' must be empty.
+					Result.extend (file_name.twin)
+				end
+			end
+		end
+
+feature -- Status setting
+
+	enable_multiple_selection is
+			-- Allow multiple items to be selected.
+		do
+			set_flags (flags | feature {WEL_OFN_CONSTANTS}.Ofn_allowmultiselect | feature {WEL_OFN_CONSTANTS}.ofn_explorer)
+		end
+
+	disable_multiple_selection is
+			-- Allow only one item to be selected.
+		do
+			remove_flag (feature {WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
+		end
 
 feature {EV_ANY_I}
 

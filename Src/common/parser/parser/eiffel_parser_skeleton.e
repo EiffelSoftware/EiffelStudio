@@ -30,6 +30,9 @@ inherit
 	AST_FACTORY
 		export {NONE} all end
 
+	REFACTORING_HELPER
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -842,6 +845,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
+			fixme ("Change plain syntax error to Integer_too_large error when the corresponding validity rule is available.")
 			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
@@ -855,6 +859,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
+			fixme ("Change plain syntax error to Integer_too_small error when the corresponding validity rule is available.")
 			create an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error

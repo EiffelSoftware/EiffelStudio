@@ -1,12 +1,21 @@
 TOP = ..\..
 CC = $cc
-JCFLAGS = $(CFLAGS) $ccflags $optimize -DWIN32
+JCFLAGS = $(CFLAGS) $ccflags $optimize
 MV = copy
 RM = del
 
-.c.obj:
-	$(RM) $@
-	$(CC) -c $(JCFLAGS) $<
+# Where shared archive is located (path and name)
+LIBDIR = ..\shared
+LIBNAME = ipc.lib
+LIBARCH = $(LIBDIR)\$(LIBNAME)
+LIBRUN = $(TOP)\run-time
+LIBIDR = $(TOP)\idrs
+LIBIDRNAME = idr.lib
+LIBIDRARCH = $(LIBIDR)\$(LIBIDRNAME)
+LIBS = $(LIBIDRARCH) $(LIBARCH)
+
+CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
+LDFLAGS =
 
 # Derived object file names
 OBJECTS = \
@@ -15,18 +24,9 @@ OBJECTS = \
 	main.obj \
 	proto.obj
 
-# Where shared archive is located (path and name)
-LIBDIR = ..\shared
-LIBNAME = ipc.lib
-LIBARCH = $(LIBDIR)\$(LIBNAME)
-LIBRUN = ..\..\run-time
-LIBIDR = ..\..\idrs
-LIBIDRNAME = idr.lib
-LIBIDRARCH = $(LIBIDR)\$(LIBIDRNAME)
-LIBS = $(LIBIDRARCH) $(LIBARCH)
-
-CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
-LDFLAGS =
+.c.obj:
+	$(RM) $@
+	$(CC) -c $(JCFLAGS) $<
 
 all:: ebench.exe
 
@@ -35,7 +35,7 @@ $microsoft-ebench.exe: $(LIBS) ebench.lmk
 	link $(LDFLAGS) $(LIBS) -OUT:$@ @ebench.lmk
 
 ebench.res: ebench.rc
-	rc /r ebench.rc
+	rc -r ebench.rc
 
 ebench.lmk: $(OBJECTS) ebench.res
 	del ebench.lmk
@@ -51,7 +51,7 @@ ebench.lbk: $(OBJECTS)
 	&echo $** + >> ebench.lbk
 	echo , ebench.exb,, IMPORT32.LIB+CW32.LIB+>> ebench.lbk
 	echo ..\shared\ipc.lbb + >> ebench.lbk
-	echo ..\..\idrs\idr.lbb,,ebench.res >> ebench.lbk
+	echo $(TOP)\idrs\idr.lbb,,ebench.res >> ebench.lbk
 
 $watcom-ebench.exe: $(LIBS) ebench.lwk
 	$(RM) $@
@@ -64,6 +64,6 @@ ebench.lwk: $(OBJECTS)
 	echo NAME ebench.exw >> ebench.lwk
 	for %i in ($(OBJECTS)) do echo FILE %i >> ebench.lwk
 	echo LIB ..\shared\ipc.lwb >> ebench.lwk
-	echo LIB ..\..\idrs\idr.lwb >> ebench.lwk
+	echo LIB $(TOP)\idrs\idr.lwb >> ebench.lwk
 
 listen.obj: ..\shared\select.h

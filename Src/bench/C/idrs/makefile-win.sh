@@ -4,10 +4,6 @@ JCFLAGS = $ccflags $optimize -I$(TOP)
 MV = copy
 RM = del
 
-.c.obj:
-	$(RM) $@
-	$(CC) -c $(JCFLAGS) $<
-
 OBJECTS = \
 	idr_double.obj \
 	idr_float.obj \
@@ -36,7 +32,11 @@ OBJECTS = \
 	idrf_dstry.obj \
 	idrf_pos.obj \
 	idrm_creat.obj \
-	idrm_dstry.obj 
+	idrm_dstry.obj
+
+.c.obj:
+	$(RM) $@
+	$(CC) -c $(JCFLAGS) $<
 
 all:: idr.lib
 

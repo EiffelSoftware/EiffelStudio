@@ -1,13 +1,15 @@
 TOP = ..\..
 CC = $cc
-JCFLAGS = $(CFLAGS) $ccflags $optimize -DWIN32
+RUN_TIME = $(TOP)\run-time
+CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(LIBIDR)
+JCFLAGS = $(CFLAGS) $ccflags $optimize
 MAKE = make
 MV = copy
 RM = del
 
-.c.obj:
-	$(RM) $@
-	$(CC) -c $(JCFLAGS) $<
+# Where shared archive is located (path and name)
+LIBDIR = ..\shared
+LIBIDR = $(TOP)\idrs
 
 # Files used to build the ewb
 SRC = proto.c eproto.c eif_in.c eif_out.c init.c dumped.c
@@ -21,16 +23,12 @@ OBJECTS = \
 	eif_out.obj \
 	init.obj
 
-# Where shared archive is located (path and name)
-LIBDIR = ..\shared
-LIBIDR = ..\..\idrs
-
-RUN_TIME = ..\..\run-time
-CFLAGS = /I$(TOP) /I$(LIBDIR) /I$(RUN_TIME) /I$(LIBIDR)
+.c.obj:
+	$(RM) $@
+	$(CC) -c $(JCFLAGS) $<
 
 all:: ewb.lib
 
 ewb.lib: $(OBJECTS)
 	$(RM) $@
 	$link_line
-

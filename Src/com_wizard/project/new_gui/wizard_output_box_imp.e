@@ -26,6 +26,8 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
+		local
+			internal_font: EV_FONT
 		do
 			Precursor {EV_VERTICAL_BOX}
 			initialize_constants
@@ -42,14 +44,6 @@ feature {NONE}-- Initialization
 			create percent_label
 			create progress_bar_inner_box
 			create progress_bar
-			create task_progress_bar_box
-			create task_progress_label_box
-			create task_progress_bar_label
-			create inner_task_progress_label_box
-			create task_percentage_label
-			create task_percent_label
-			create task_progress_bar_inner_box
-			create task_progress_bar
 			create stop_button
 			create final_message_box
 			create final_message_label
@@ -76,15 +70,7 @@ feature {NONE}-- Initialization
 			inner_progress_label_box.extend (percent_label)
 			progress_bar_box.extend (progress_bar_inner_box)
 			progress_bar_inner_box.extend (progress_bar)
-			output_outter_box.extend (task_progress_bar_box)
-			task_progress_bar_box.extend (task_progress_label_box)
-			task_progress_label_box.extend (task_progress_bar_label)
-			task_progress_label_box.extend (inner_task_progress_label_box)
-			inner_task_progress_label_box.extend (task_percentage_label)
-			inner_task_progress_label_box.extend (task_percent_label)
-			task_progress_bar_box.extend (task_progress_bar_inner_box)
-			task_progress_bar_inner_box.extend (task_progress_bar)
-			task_progress_bar_inner_box.extend (stop_button)
+			progress_bar_inner_box.extend (stop_button)
 			output_outter_box.extend (final_message_box)
 			final_message_box.extend (final_message_label)
 			final_message_box.extend (destination_path_label)
@@ -101,36 +87,30 @@ feature {NONE}-- Initialization
 			output_outter_box.set_padding_width (10)
 			output_outter_box.set_border_width (7)
 			output_outter_box.disable_item_expand (progress_bar_box)
-			output_outter_box.disable_item_expand (task_progress_bar_box)
 			output_outter_box.disable_item_expand (final_message_box)
 			wizard_output_upper_box.set_padding_width (5)
 			output_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (121, 252, 65))
+			create internal_font
+			internal_font.set_family (4)
+			internal_font.set_weight (7)
+			internal_font.set_shape (10)
+			internal_font.set_height_in_points (8)
+			internal_font.preferred_families.extend ("Lucida Console")
+			output_text.set_font (internal_font)
 			output_text.disable_edit
 			progress_bar_box.hide
 			progress_bar_box.set_padding_width (5)
 			progress_bar_box.disable_item_expand (progress_bar_inner_box)
 			progress_label_box.set_padding_width (7)
 			progress_label_box.disable_item_expand (progress_bar_label)
-			progress_bar_label.set_text ("Total Progress:")
+			progress_bar_label.set_text ("Progress:")
 			progress_bar_label.align_text_left
 			inner_progress_label_box.disable_item_expand (percentage_label)
 			percentage_label.align_text_left
 			percent_label.set_text ("%%")
 			percent_label.align_text_left
 			progress_bar_inner_box.set_padding_width (7)
-			task_progress_bar_box.hide
-			task_progress_bar_box.set_padding_width (5)
-			task_progress_bar_box.disable_item_expand (task_progress_bar_inner_box)
-			task_progress_label_box.set_padding_width (7)
-			task_progress_label_box.disable_item_expand (task_progress_bar_label)
-			task_progress_bar_label.set_text ("Progress:")
-			task_progress_bar_label.align_text_left
-			inner_task_progress_label_box.disable_item_expand (task_percentage_label)
-			task_percentage_label.align_text_left
-			task_percent_label.set_text ("%%")
-			task_percent_label.align_text_left
-			task_progress_bar_inner_box.set_padding_width (7)
-			task_progress_bar_inner_box.disable_item_expand (stop_button)
+			progress_bar_inner_box.disable_item_expand (stop_button)
 			stop_button.disable_sensitive
 			stop_button.set_text ("Stop")
 			stop_button.set_minimum_width (100)
@@ -179,17 +159,15 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	output_text: EV_RICH_TEXT
-	progress_bar, task_progress_bar: EV_HORIZONTAL_PROGRESS_BAR
-	output_outter_box, wizard_output_upper_box,
-	progress_bar_box, task_progress_bar_box, wizard_output_middle_box: EV_VERTICAL_BOX
-	progress_label_box,
-	inner_progress_label_box, progress_bar_inner_box, task_progress_label_box, inner_task_progress_label_box,
-	task_progress_bar_inner_box, final_message_box, output_buttons_box: EV_HORIZONTAL_BOX
-	progress_bar_label,
-	percentage_label, percent_label, task_progress_bar_label, task_percentage_label,
-	task_percent_label, final_message_label, destination_path_label: EV_LABEL
-	stop_button, save_button,
-	open_eiffelstudio_button, exit_button: EV_BUTTON
+	progress_bar: EV_HORIZONTAL_PROGRESS_BAR
+	output_outter_box, wizard_output_upper_box, progress_bar_box,
+	wizard_output_middle_box: EV_VERTICAL_BOX
+	progress_label_box, inner_progress_label_box, progress_bar_inner_box,
+	final_message_box, output_buttons_box: EV_HORIZONTAL_BOX
+	progress_bar_label, percentage_label, percent_label,
+	final_message_label, destination_path_label: EV_LABEL
+	stop_button, save_button, open_eiffelstudio_button,
+	exit_button: EV_BUTTON
 	left_output_padding_cell, right_output_padding_cell: EV_CELL
 
 feature {NONE} -- Implementation

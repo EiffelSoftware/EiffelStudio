@@ -41,6 +41,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "rt_garcol.h"
 #include "rt_struct.h"
 #include "server.h" /* For debug_mode: we need to move dynamic_eval */
+#include "eif_helpers.h"
 
 #ifdef CONCURRENT_EIFFEL
 #include "eif_curextern.h"
@@ -193,7 +194,6 @@ rt_private void diadic_op(int code);				/* Execute a diadic operation */
 rt_private void eif_interp_gt(struct item *first, struct item *second);	/* > operation */
 rt_private void eif_interp_lt(struct item *first, struct item *second);	/* < operation */
 rt_private void eif_interp_eq (struct item *f, struct item *s);			/* == operation */
-rt_private uint32 eif_expression_type (uint32 first, uint32 second);	/* type of a numeric binary expression */
 
 /* Min and max operation */
 rt_private void eif_three_way_comparison (void);	/* Execute `three_way_comparison'. */
@@ -304,46 +304,20 @@ rt_public void metamorphose_top()
 	head_type = last->type & SK_HEAD;
 	if (head_type != SK_BIT) {
 		switch (head_type) {
-		case SK_BOOL:
-			new_obj = RTLN(egc_bool_ref_dtype);
-			*new_obj = last->it_char;
-			break;
-		case SK_CHAR:	
-			new_obj = RTLN(egc_char_ref_dtype);
-			*new_obj = last->it_char;
-			break;
-		case SK_WCHAR:	
-			new_obj = RTLN(egc_wchar_ref_dtype);
-			*(EIF_WIDE_CHAR *) new_obj = last->it_wchar;
-			break;
-		case SK_INT8:
-			new_obj = RTLN(egc_int8_ref_dtype);
-			*(EIF_INTEGER_8 *) new_obj = last->it_int8;
-			break;
-		case SK_INT16:
-			new_obj = RTLN(egc_int16_ref_dtype);
-			*(EIF_INTEGER_16 *) new_obj = last->it_int16;
-			break;
-		case SK_INT32:
-			new_obj = RTLN(egc_int32_ref_dtype);
-			*(EIF_INTEGER_32 *) new_obj = last->it_int32;
-			break;
-		case SK_INT64:
-			new_obj = RTLN(egc_int64_ref_dtype);
-			*(EIF_INTEGER_64 *) new_obj = last->it_int64;
-			break;
-		case SK_REAL32:
-			new_obj = RTLN(egc_real32_ref_dtype);
-			*(EIF_REAL_32 *) new_obj = last->it_real32;
-			break;
-		case SK_REAL64:
-			new_obj = RTLN(egc_real64_ref_dtype);
-			*(EIF_REAL_64 *) new_obj = last->it_real64;
-			break;
-		case SK_POINTER:
-			new_obj = RTLN(egc_point_ref_dtype);
-			*(EIF_REFERENCE *) new_obj = last->it_ptr;
-			break;
+		case SK_BOOL: new_obj = RTLN(egc_bool_ref_dtype); *new_obj = last->it_char; break;
+		case SK_CHAR:	new_obj = RTLN(egc_char_ref_dtype); *new_obj = last->it_char; break;
+		case SK_WCHAR:	new_obj = RTLN(egc_wchar_ref_dtype); *(EIF_WIDE_CHAR *) new_obj = last->it_wchar; break;
+		case SK_UINT8: new_obj = RTLN(egc_uint8_ref_dtype); *(EIF_NATURAL_8 *) new_obj = last->it_uint8; break;
+		case SK_UINT16: new_obj = RTLN(egc_uint16_ref_dtype); *(EIF_NATURAL_16 *) new_obj = last->it_uint16; break;
+		case SK_UINT32: new_obj = RTLN(egc_uint32_ref_dtype); *(EIF_NATURAL_32 *) new_obj = last->it_uint32; break;
+		case SK_UINT64: new_obj = RTLN(egc_uint64_ref_dtype); *(EIF_NATURAL_64 *) new_obj = last->it_uint64; break;
+		case SK_INT8: new_obj = RTLN(egc_int8_ref_dtype); *(EIF_INTEGER_8 *) new_obj = last->it_int8; break;
+		case SK_INT16: new_obj = RTLN(egc_int16_ref_dtype); *(EIF_INTEGER_16 *) new_obj = last->it_int16; break;
+		case SK_INT32: new_obj = RTLN(egc_int32_ref_dtype); *(EIF_INTEGER_32 *) new_obj = last->it_int32; break;
+		case SK_INT64: new_obj = RTLN(egc_int64_ref_dtype); *(EIF_INTEGER_64 *) new_obj = last->it_int64; break;
+		case SK_REAL32: new_obj = RTLN(egc_real32_ref_dtype); *(EIF_REAL_32 *) new_obj = last->it_real32; break;
+		case SK_REAL64: new_obj = RTLN(egc_real64_ref_dtype); *(EIF_REAL_64 *) new_obj = last->it_real64; break;
+		case SK_POINTER: new_obj = RTLN(egc_point_ref_dtype); *(EIF_REFERENCE *) new_obj = last->it_ptr; break;
 		case SK_REF:			/* Had to do this for bit operations */
 			new_obj = last->it_ref;
 			break;
@@ -583,11 +557,15 @@ rt_private void interpret(int flag, int where)
 						case SK_BOOL:
 						case SK_CHAR: last->it_char = *((EIF_CHARACTER *) PResult); break;
 						case SK_WCHAR: last->it_wchar = *((EIF_WIDE_CHAR *) PResult); break;
+						case SK_UINT8: last->it_uint8 = *((EIF_NATURAL_8 *) PResult); break;
+						case SK_UINT16: last->it_uint16 = *((EIF_NATURAL_16 *) PResult); break;
+						case SK_UINT32: last->it_uint32 = *((EIF_NATURAL_32 *) PResult); break;
+						case SK_UINT64: last->it_uint64 = *((EIF_NATURAL_64 *) PResult); break;
 						case SK_INT8: last->it_int8 = *((EIF_INTEGER_8 *) PResult); break;
 						case SK_INT16: last->it_int16 = *((EIF_INTEGER_16 *) PResult); break;
 						case SK_INT32: last->it_int32 = *((EIF_INTEGER_32 *) PResult); break;
-						case SK_REAL32: last->it_real32 = *((EIF_REAL_32 *) PResult); break;
 						case SK_INT64: last->it_int64 = *((EIF_INTEGER_64 *) PResult); break;
+						case SK_REAL32: last->it_real32 = *((EIF_REAL_32 *) PResult); break;
 						case SK_REAL64: last->it_real64 = *((EIF_REAL_64 *) PResult); break;
 						case SK_POINTER: last->it_ptr = *((EIF_POINTER *) PResult); break;
 						case SK_BIT:
@@ -621,6 +599,22 @@ rt_private void interpret(int flag, int where)
 								PResult = (void *) cmalloc (sizeof (EIF_WIDE_CHAR));
 								*((EIF_WIDE_CHAR *) PResult) = (EIF_WIDE_CHAR) 0;
 								break;
+						case SK_UINT8:    
+								PResult = (void *) cmalloc (sizeof (EIF_NATURAL_8));
+								*((EIF_NATURAL_8 *) PResult) = (EIF_NATURAL_8) 0;
+								break;
+						case SK_UINT16:    
+								PResult = (void *) cmalloc (sizeof (EIF_NATURAL_16));
+								*((EIF_NATURAL_16 *) PResult) = (EIF_NATURAL_16) 0;
+								break;
+						case SK_UINT32:    
+								PResult = (void *) cmalloc (sizeof (EIF_NATURAL_32));
+								*((EIF_NATURAL_32 *) PResult) = (EIF_NATURAL_32) 0;
+								break;
+						case SK_UINT64:    
+								PResult = (void *) cmalloc (sizeof (EIF_NATURAL_64));
+								*((EIF_NATURAL_64 *) PResult) = (EIF_NATURAL_64) 0;
+								break;
 						case SK_INT8:    
 								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_8));
 								*((EIF_INTEGER_8 *) PResult) = (EIF_INTEGER_8) 0;
@@ -633,13 +627,13 @@ rt_private void interpret(int flag, int where)
 								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_32));
 								*((EIF_INTEGER_32 *) PResult) = (EIF_INTEGER_32) 0;
 								break;
-						case SK_REAL32:  
-								PResult = (void *) cmalloc (sizeof (EIF_REAL_32));
-								*((EIF_REAL_32 *) PResult) = (EIF_REAL_32) 0;
-								break;
 						case SK_INT64:    
 								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_64));
 								*((EIF_INTEGER_64 *) PResult) = (EIF_INTEGER_64) 0;
+								break;
+						case SK_REAL32:  
+								PResult = (void *) cmalloc (sizeof (EIF_REAL_32));
+								*((EIF_REAL_32 *) PResult) = (EIF_REAL_32) 0;
 								break;
 						case SK_REAL64: 
 								PResult = (void *) cmalloc (sizeof (EIF_REAL_64));
@@ -924,33 +918,40 @@ rt_private void interpret(int flag, int where)
 	 * Cast of a numeric type
 	 */
 
-	case BC_CAST_LONG:
+	case BC_CAST_INTEGER:
 #ifdef DEBUG
-		dprintf(2)("BC_CAST_LONG\n");
+		dprintf(2)("BC_CAST_INTEGER\n");
 #endif
 		offset = get_long ();	/* Get integer size */
 		last = otop ();
 		switch (last->type & SK_HEAD) {
-			case SK_REAL32:
+			case SK_BOOL:
 				switch (offset) {
-					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_real32; break;
-					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_real32; break;
-					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_real32; break;
-					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_real32; break;
+					case 8: last->it_int8 = (last->it_char ? 1 : 0); break;
+					case 16: last->it_int16 = (last->it_char ? 1 : 0); break;
+					case 32: last->it_int32 = (last->it_char ? 1 : 0); break;
+					case 64: last->it_int64 = (last->it_char ? 1 : 0); break;
 					default:
 						eif_panic ("Illegal type");
 				}
-				break;
-			case SK_REAL64:
+			case SK_CHAR:
 				switch (offset) {
-					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_real64; break;
-					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_real64; break;
-					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_real64; break;
-					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_real64; break;
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_char; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_char; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_char; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_char; break;
 					default:
 						eif_panic ("Illegal type");
 				}
-				break;
+			case SK_WCHAR:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_wchar; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_wchar; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_wchar; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_wchar; break;
+					default:
+						eif_panic ("Illegal type");
+				}
 			case SK_INT8:
 				switch (offset) {
 					case 8: break;
@@ -991,16 +992,27 @@ rt_private void interpret(int flag, int where)
 						eif_panic ("Illegal type");
 				}	
 				break;
-			case SK_BOOL:
+			case SK_REAL32:
 				switch (offset) {
-					case 8: last->it_int8 = (EIF_INTEGER_8) EIF_TEST(last->it_char); break;
-					case 16: last->it_int16 = (EIF_INTEGER_16) EIF_TEST(last->it_char); break;
-					case 32: last->it_int32 = (EIF_INTEGER_32) EIF_TEST(last->it_char); break;
-					case 64: last->it_int64 = (EIF_INTEGER_64) EIF_TEST(last->it_char); break;
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_real32; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_real32; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_real32; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_real32; break;
 					default:
 						eif_panic ("Illegal type");
-				}
+				}	
 				break;
+			case SK_REAL64:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_real64; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_real64; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_real64; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_real64; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+
 			default:
 				eif_panic (MTC "Illegal cast operation");
 			}
@@ -1018,29 +1030,22 @@ rt_private void interpret(int flag, int where)
 	 * Cast of a numeric type
 	 */
 
-	case BC_CAST_FLOAT:
+	case BC_CAST_REAL_32:
 #ifdef DEBUG
-		dprintf(2)("BC_CAST_FLOAT\n");
+		dprintf(2)("BC_CAST_REAL_32\n");
 #endif
 		last = otop ();
 		switch (last->type & SK_HEAD) {
-			case SK_INT8:
-				last->it_real32 = (EIF_REAL_32) last->it_int8;
-				break;
-			case SK_INT16:
-				last->it_real32 = (EIF_REAL_32) last->it_int16;
-				break;
-			case SK_INT32:
-				last->it_real32 = (EIF_REAL_32) last->it_int32;
-				break;
-			case SK_INT64:
-				last->it_real32 = (EIF_REAL_32) last->it_int64;
-				break;
-			case (SK_REAL64):
-				last->it_real32 = (EIF_REAL_32) last->it_real64;
-				break;
-			case SK_REAL32:
-				break;
+			case SK_UINT8: last->it_real32 = (EIF_REAL_32) last->it_uint8; break;
+			case SK_UINT16: last->it_real32 = (EIF_REAL_32) last->it_uint16; break;
+			case SK_UINT32: last->it_real32 = (EIF_REAL_32) last->it_uint32; break;
+			case SK_UINT64: last->it_real32 = eif_uint64_to_real32(last->it_uint64); break;
+			case SK_INT8: last->it_real32 = (EIF_REAL_32) last->it_int8; break;
+			case SK_INT16: last->it_real32 = (EIF_REAL_32) last->it_int16; break;
+			case SK_INT32: last->it_real32 = (EIF_REAL_32) last->it_int32; break;
+			case SK_INT64: last->it_real32 = (EIF_REAL_32) last->it_int64; break;
+			case (SK_REAL64): last->it_real32 = (EIF_REAL_32) last->it_real64; break;
+			case SK_REAL32: break;
 			default:
 				eif_panic (MTC "Illegal cast operation");
 			}
@@ -1051,29 +1056,22 @@ rt_private void interpret(int flag, int where)
 	 * Cast of a numeric type
 	 */
 
-	case BC_CAST_DOUBLE:
+	case BC_CAST_REAL_64:
 #ifdef DEBUG
-		dprintf(2)("BC_CAST_DOUBLE\n");
+		dprintf(2)("BC_CAST_REAL_64\n");
 #endif
 		last = otop ();
 		switch (last->type & SK_HEAD) {
-			case SK_INT8:
-				last->it_real64 = (EIF_REAL_64) last->it_int8;
-				break;
-			case SK_INT16:
-				last->it_real64 = (EIF_REAL_64) last->it_int16;
-				break;
-			case SK_INT32:
-				last->it_real64 = (EIF_REAL_64) last->it_int32;
-				break;
-			case SK_INT64:
-				last->it_real64 = (EIF_REAL_64) last->it_int64;
-				break;
-			case SK_REAL32:
-				last->it_real64 = (EIF_REAL_64) last->it_real32;
-				break;
-			case SK_REAL64:
-				break;
+			case SK_UINT8: last->it_real64 = (EIF_REAL_64) last->it_uint8; break;
+			case SK_UINT16: last->it_real64 = (EIF_REAL_64) last->it_uint16; break;
+			case SK_UINT32: last->it_real64 = (EIF_REAL_64) last->it_uint32; break;
+			case SK_UINT64: last->it_real64 = eif_uint64_to_real64 (last->it_uint64); break;
+			case SK_INT8: last->it_real64 = (EIF_REAL_64) last->it_int8; break;
+			case SK_INT16: last->it_real64 = (EIF_REAL_64) last->it_int16; break;
+			case SK_INT32: last->it_real64 = (EIF_REAL_64) last->it_int32; break;
+			case SK_INT64: last->it_real64 = (EIF_REAL_64) last->it_int64; break;
+			case SK_REAL32: last->it_real64 = (EIF_REAL_64) last->it_real32; break;
+			case SK_REAL64: break;
 			default:
 				eif_panic (MTC "Illegal cast operation");
 			}
@@ -1090,18 +1088,14 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = otop();
 		switch (last->type & SK_HEAD) {
-			case SK_INT8:
-				last->it_char = (EIF_CHARACTER) last->it_int8;
-				break;
-			case SK_INT16:
-				last->it_char = (EIF_CHARACTER) last->it_int16;
-				break;
-			case SK_INT32:
-				last->it_char = (EIF_CHARACTER) last->it_int32;
-				break;
-			case SK_INT64:
-				last->it_char = (EIF_CHARACTER) last->it_int64;
-				break;
+			case SK_UINT8: last->it_char = (EIF_CHARACTER) last->it_uint8; break;
+			case SK_UINT16: last->it_char = (EIF_CHARACTER) last->it_uint16; break;
+			case SK_UINT32: last->it_char = (EIF_CHARACTER) last->it_uint32; break;
+			case SK_UINT64: last->it_char = (EIF_CHARACTER) last->it_uint64; break;
+			case SK_INT8: last->it_char = (EIF_CHARACTER) last->it_int8; break;
+			case SK_INT16: last->it_char = (EIF_CHARACTER) last->it_int16; break;
+			case SK_INT32: last->it_char = (EIF_CHARACTER) last->it_int32; break;
+			case SK_INT64: last->it_char = (EIF_CHARACTER) last->it_int64; break;
 			}
 		last->type = SK_CHAR;
 		break;
@@ -1125,6 +1119,10 @@ rt_private void interpret(int flag, int where)
 				case SK_BOOL:
 				case SK_CHAR:   *((EIF_CHARACTER *) PResult) = last->it_char; break;
 				case SK_WCHAR: *((EIF_WIDE_CHAR *) PResult) = last->it_wchar; break;
+				case SK_UINT8: *((EIF_NATURAL_8 *) PResult) = last->it_uint8; break;
+				case SK_UINT16: *((EIF_NATURAL_16 *) PResult) = last->it_uint16; break;
+				case SK_UINT32: *((EIF_NATURAL_32 *) PResult) = last->it_uint32; break;
+				case SK_UINT64: *((EIF_NATURAL_64 *) PResult) = last->it_uint64; break;
 				case SK_INT8: *((EIF_INTEGER_8 *) PResult) = last->it_int8; break;
 				case SK_INT16: *((EIF_INTEGER_16 *) PResult) = last->it_int16; break;
 				case SK_INT32: *((EIF_INTEGER_32 *) PResult) = last->it_int32; break;
@@ -1778,6 +1776,10 @@ rt_private void interpret(int flag, int where)
 					case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;
 					case SK_WCHAR: elem_size = sizeof(EIF_WIDE_CHAR); break;
 					case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
+					case SK_UINT8: elem_size = sizeof(EIF_NATURAL_8); break;
+					case SK_UINT16: elem_size = sizeof(EIF_NATURAL_16); break;
+					case SK_UINT32: elem_size = sizeof(EIF_NATURAL_32); break;
+					case SK_UINT64: elem_size = sizeof(EIF_NATURAL_64); break;
 					case SK_INT8: elem_size = sizeof(EIF_INTEGER_8); break;
 					case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
 					case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
@@ -1792,13 +1794,8 @@ rt_private void interpret(int flag, int where)
 			}
 
 			nb_item = opop();
-			switch (nb_item->type & SK_HEAD) {
-				case SK_INT8: nb = (uint32) nb_item->it_int8; break;
-				case SK_INT16: nb = (uint32) nb_item->it_int16; break;
-				case SK_INT32: nb = (uint32) nb_item->it_int32; break;
-				default:
-					eif_panic ("Illegal count for SPECIAL creation.");
-			}
+			CHECK("valid_type", (nb_item->type & SK_HEAD) == SK_INT32);
+			nb = (uint32) nb_item->it_int32;
 
 			if (is_expanded) {
 				flags = EO_COMP;
@@ -1830,42 +1827,21 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			struct item *lower, *upper;
-			EIF_INTEGER_8 intval_8;
-			EIF_INTEGER_16 intval_16;
-			EIF_INTEGER_32 intval_32;
-			EIF_INTEGER_64 intval_64;
-			EIF_CHARACTER charval;
 
 			upper = opop();				/* Get the upper bound */
 			lower = opop();				/* Get the lower bound */
 			last = otop();				/* Get the inspect expression value */
 			offset = get_long();		/* Get the jump value */
 			switch (last->type) {
-			case SK_INT8:
-				intval_8 = last->it_int8;
-				if (lower->it_int8 <= intval_8 && intval_8 <= upper->it_int8)
-					IC += offset;
-				break;
-			case SK_INT16:
-				intval_16 = last->it_int16;
-				if (lower->it_int16 <= intval_16 && intval_16 <= upper->it_int16)
-					IC += offset;
-				break;
-			case SK_INT32:
-				intval_32 = last->it_int32;
-				if (lower->it_int32 <= intval_32 && intval_32 <= upper->it_int32)
-					IC += offset;
-				break;
-			case SK_INT64:
-				intval_64 = last->it_int64;
-				if (lower->it_int64 <= intval_64 && intval_64 <= upper->it_int64)
-					IC += offset;
-				break;
-			case SK_CHAR:
-				charval = last->it_char;
-				if (lower->it_char <= charval && charval <= upper->it_char)
-					IC += offset;
-				break;
+			case SK_UINT8: if (lower->it_uint8 <= last->it_uint8 && last->it_uint8 <= upper->it_uint8) { IC += offset; } break;
+			case SK_UINT16: if (lower->it_uint16 <= last->it_uint16 && last->it_uint16 <= upper->it_uint16) { IC += offset; } break;
+			case SK_UINT32: if (lower->it_uint32 <= last->it_uint32 && last->it_uint32 <= upper->it_uint32) { IC += offset; } break;
+			case SK_UINT64: if (lower->it_uint64 <= last->it_uint64 && last->it_uint64 <= upper->it_uint64) { IC += offset; } break;
+			case SK_INT8: if (lower->it_int8 <= last->it_int8 && last->it_int8 <= upper->it_int8) { IC += offset; } break;
+			case SK_INT16: if (lower->it_int16 <= last->it_int16 && last->it_int16 <= upper->it_int16) { IC += offset; } break;
+			case SK_INT32: if (lower->it_int32 <= last->it_int32 && last->it_int32 <= upper->it_int32) { IC += offset; } break;
+			case SK_INT64: if (lower->it_int64 <= last->it_int64 && last->it_int64 <= upper->it_int64) { IC += offset; } break;
+			case SK_CHAR: if (lower->it_char <= last->it_char && last->it_char <= upper->it_char) { IC += offset; } break;
 			default:
 				eif_panic(MTC "invalid inspect type");
 				/* NOTREACHED */
@@ -2452,6 +2428,10 @@ rt_private void interpret(int flag, int where)
 					case SK_BOOL:
 					case SK_CHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_char)); break;
 					case SK_WCHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_wchar)); break;
+					case SK_UINT8: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint8)); break;
+					case SK_UINT16: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint16)); break;
+					case SK_UINT32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint32)); break;
+					case SK_UINT64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint64)); break;
 					case SK_INT8: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int8)); break;
 					case SK_INT16: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int16)); break;
 					case SK_INT32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int32)); break;
@@ -2489,6 +2469,10 @@ rt_private void interpret(int flag, int where)
 			case SK_BOOL:
 			case SK_CHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_char)); break;
 			case SK_WCHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_wchar)); break;
+			case SK_UINT8: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint8)); break;
+			case SK_UINT16: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint16)); break;
+			case SK_UINT32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint32)); break;
+			case SK_UINT64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint64)); break;
 			case SK_INT8: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int8)); break;
 			case SK_INT16: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int16)); break;
 			case SK_INT32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int32)); break;
@@ -2589,15 +2573,20 @@ rt_private void interpret(int flag, int where)
 				it = opop();		/* Pop expression off stack */
 				switch (it->type & SK_HEAD) {
 					case SK_BOOL:
-					case SK_CHAR:
-						*((EIF_CHARACTER *) sp_area + curr_pos) = it->it_char;
-						break;
-					case SK_WCHAR:
-						*((EIF_WIDE_CHAR *) sp_area + curr_pos) = it->it_wchar;
-						break;
-					case SK_BIT:
-						*((EIF_REFERENCE *) sp_area + curr_pos) = it->it_bit;
-						break;
+					case SK_CHAR: *((EIF_CHARACTER *) sp_area + curr_pos) = it->it_char; break;
+					case SK_WCHAR: *((EIF_WIDE_CHAR *) sp_area + curr_pos) = it->it_wchar; break;
+					case SK_BIT: *((EIF_REFERENCE *) sp_area + curr_pos) = it->it_bit; break;
+					case SK_UINT8: *((EIF_NATURAL_8 *) sp_area + curr_pos) = it->it_uint8; break;
+					case SK_UINT16: *((EIF_NATURAL_16 *) sp_area + curr_pos) = it->it_uint16; break;
+					case SK_UINT32: *((EIF_NATURAL_32 *) sp_area + curr_pos) = it->it_uint32; break;
+					case SK_UINT64: *((EIF_NATURAL_64 *) sp_area + curr_pos) = it->it_uint64; break;
+					case SK_INT8: *((EIF_INTEGER_8 *) sp_area + curr_pos) = it->it_int8; break;
+					case SK_INT16: *((EIF_INTEGER_16 *) sp_area + curr_pos) = it->it_int16; break;
+					case SK_INT32: *((EIF_INTEGER_32 *) sp_area + curr_pos) = it->it_int32; break;
+					case SK_INT64: *((EIF_INTEGER_64 *) sp_area + curr_pos) = it->it_int64; break;
+					case SK_REAL32: *((EIF_REAL_32 *) sp_area + curr_pos) = it->it_real32; break;
+					case SK_REAL64: *((EIF_REAL_64 *) sp_area + curr_pos) = it->it_real64; break;
+					case SK_POINTER: *((EIF_POINTER *) sp_area + curr_pos) = it->it_ptr; break;
 					case SK_EXP:
 						elem_size = *(EIF_INTEGER_32 *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(EIF_INTEGER_32));
 						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
@@ -2605,27 +2594,6 @@ rt_private void interpret(int flag, int where)
 					case SK_REF:
 						*((EIF_REFERENCE *) sp_area + curr_pos) = it->it_ref;
 						RTAR(sp_area, it->it_ref);
-						break;
-					case SK_INT8:
-						*((EIF_INTEGER_8 *) sp_area + curr_pos) = it->it_int8;
-						break;
-					case SK_INT16:
-						*((EIF_INTEGER_16 *) sp_area + curr_pos) = it->it_int16;
-						break;
-					case SK_INT32:
-						*((EIF_INTEGER_32 *) sp_area + curr_pos) = it->it_int32;
-						break;
-					case SK_INT64:
-						*((EIF_INTEGER_64 *) sp_area + curr_pos) = it->it_int64;
-						break;
-					case SK_REAL32:
-						*((EIF_REAL_32 *) sp_area + curr_pos) = it->it_real32;
-						break;
-					case SK_REAL64:
-						*((EIF_REAL_64 *) sp_area + curr_pos) = it->it_real64;
-						break;
-					case SK_POINTER:
-						*((EIF_POINTER *) sp_area + curr_pos) = it->it_ptr;
 						break;
 					default:
 						eif_panic(MTC RT_BOTCHED_MSG);
@@ -2681,48 +2649,23 @@ rt_private void interpret(int flag, int where)
 
 				it = opop();		/* Pop expression off stack */
 				switch (it->type & SK_HEAD) {
-					case SK_BOOL:
-						eif_put_boolean_item(new_obj, curr_pos, it->it_char);
-						break;
-					case SK_CHAR:
-						eif_put_character_item(new_obj, curr_pos, it->it_char);
-						break;
-					case SK_WCHAR:
-						eif_put_wide_character_item(new_obj, curr_pos, it->it_wchar);
-						break;
-					case SK_BIT:
-						eif_put_reference_item(new_obj, curr_pos, it->it_bit);
-						break;
-					case SK_EXP:
-						{
-							EIF_REFERENCE loc1 = RTCL(it->it_ref);
-							eif_put_reference_item(new_obj, curr_pos, loc1);
-						}
-						break;
-					case SK_REF:
-						eif_put_reference_item(new_obj, curr_pos, it->it_ref);
-						break;
-					case SK_INT8:
-						eif_put_integer_8_item(new_obj, curr_pos, it->it_int8);
-						break;
-					case SK_INT16:
-						eif_put_integer_16_item(new_obj, curr_pos, it->it_int16);
-						break;
-					case SK_INT32:
-						eif_put_integer_32_item(new_obj, curr_pos, it->it_int32);
-						break;
-					case SK_INT64:
-						eif_put_integer_64_item(new_obj, curr_pos, it->it_int64);
-						break;
-					case SK_REAL32:
-						eif_put_real_32_item(new_obj, curr_pos, it->it_real32);
-						break;
-					case SK_REAL64:
-						eif_put_real_64_item(new_obj, curr_pos, it->it_real64);
-						break;
-					case SK_POINTER:
-						eif_put_pointer_item(new_obj, curr_pos, it->it_ptr);
-						break;
+					case SK_BOOL: eif_put_boolean_item(new_obj, curr_pos, it->it_char); break;
+					case SK_CHAR: eif_put_character_item(new_obj, curr_pos, it->it_char); break;
+					case SK_WCHAR: eif_put_wide_character_item(new_obj, curr_pos, it->it_wchar); break;
+					case SK_BIT: eif_put_reference_item(new_obj, curr_pos, it->it_bit); break;
+					case SK_UINT8: eif_put_natural_8_item(new_obj, curr_pos, it->it_uint8); break;
+					case SK_UINT16: eif_put_natural_16_item(new_obj, curr_pos, it->it_uint16); break;
+					case SK_UINT32: eif_put_natural_32_item(new_obj, curr_pos, it->it_uint32); break;
+					case SK_UINT64: eif_put_natural_64_item(new_obj, curr_pos, it->it_uint64); break;
+					case SK_INT8: eif_put_integer_8_item(new_obj, curr_pos, it->it_int8); break;
+					case SK_INT16: eif_put_integer_16_item(new_obj, curr_pos, it->it_int16); break;
+					case SK_INT32: eif_put_integer_32_item(new_obj, curr_pos, it->it_int32); break;
+					case SK_INT64: eif_put_integer_64_item(new_obj, curr_pos, it->it_int64); break;
+					case SK_REAL32: eif_put_real_32_item(new_obj, curr_pos, it->it_real32); break;
+					case SK_REAL64: eif_put_real_64_item(new_obj, curr_pos, it->it_real64); break;
+					case SK_POINTER: eif_put_pointer_item(new_obj, curr_pos, it->it_ptr); break;
+					case SK_EXP: eif_put_reference_item(new_obj, curr_pos, RTCL(it->it_ref)); break;
+					case SK_REF: eif_put_reference_item(new_obj, curr_pos, it->it_ref); break;
 					default:
 						eif_panic(MTC RT_BOTCHED_MSG);
 				}
@@ -3042,654 +2985,6 @@ rt_private void interpret(int flag, int where)
 		}
 
 
-#ifdef CONCURRENT_EIFFEL
-	/* The following instructions started with BC_SEP are used by
-	 * Concurrent Eiffel.
-	*/
-
-	/* the current has called a separate feature in checking its
-	 * pre-condition.
-	*/
-	case BC_SEP_SET:
-#ifdef DEBUG
-		dprintf(2)("BC_SEP_SET\n");
-#endif
-		has_called_sep_feature = 1;
-		break;
-	
-	/* clear the flag indicating whether the current separate feature
-	 * has called a separate feature call in its pre-condition 
-	 * checking.
-	*/
-	case BC_SEP_UNSET:
-#ifdef DEBUG
-		dprintf(2)("BC_SEP_UNSET\n");
-#endif
-		has_called_sep_feature = 0;
-		break;
-
-	/* reserve separate parameters of the current feature which are
-	 * used in at least one separate feature call.
-	*/
-	case BC_SEP_RESERVE: 
-#ifdef DEBUG
-		dprintf(2)("BC_SEP_RESERVE\n");
-#endif
-		{
-			short nb_of_sep_paras;
-			short sep_para_index[constant_max_number_of_sep_paras];
-			short tmp_tyc;
-			nb_of_sep_paras = get_short();
-			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-				sep_para_index[tmp_tyc] = get_short();
-			}
-			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; ) {
-				if (CURRSO(ivalue(IV_ARG, sep_para_index[tmp_tyc],0)->it_ref)) {
-					for(tmp_tyc--; tmp_tyc >= 0; tmp_tyc--) {
-						CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc],0)->it_ref);
-					}
-					tmp_tyc = 0;
-					CURRSFW;
-				}
-				else 
-					tmp_tyc++;
-			}
-		}	
-		break;
-
-	/* free separate parameters of the current feature which are
-	 * used in at least one  separate feature call.
-	*/
-	case BC_SEP_FREE: 
-#ifdef DEBUG
-		dprintf(2)("BC_SEP_FREE\n");
-#endif
-		{
-			short nb_of_sep_paras;
-			short tmp_tyc;
-			nb_of_sep_paras = get_short();
-			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-				CURFSO(ivalue(MTC IV_ARG, get_short(),0)->it_ref);
-			}
-		}	
-		break;
-
-	/* change the local object stored in the top of the operation stack into 
-	 * a separate object 
-	*/
-	case BC_SEP_TO_SEP:
-#ifdef DEBUG
-		dprintf(2)("BC_SEP_TO_SEP\n");
-#endif
-		otop()->it_ref = CURLTS(otop()->it_ref);
-		break;
-
-	/* to perform a separate external feature call */
-	/* to perform a separate feature call */
-	case BC_SEP_EXTERN:
-	case BC_SEP_PEXTERN:
-	case BC_SEP_FEATURE:
-	case BC_SEP_PFEATURE:
-		{
-			short nb_of_paras;
-			short tyc_tmp;
-			struct item *tyc_last;
-			EIF_REFERENCE tyc_current;
-			uint32 ret_type;
-			char need_ack;
-			char *feature_name;
-			char *class_name;
-			char tyc_command = *(IC-1);
-
-			int32 origin;
-
-#ifdef DEBUG
-			if (tyc_command == BC_SEP_FEATURE) {
-				dprintf(2)("BC_SEP_FEATURE\n");
-			} else if (tyc_command == BC_SEP_PFEATURE) {
-				dprintf(2)("BC_SEP_PFEATURE\n");
-			} else if (tyc_command == BC_SEP_EXTERN) {
-				dprintf(2)("BC_SEP_EXTERN\n");
-			} else if (tyc_command == BC_SEP_PEXTERN) {
-				dprintf(2)("BC_SEP_PEXTERN\n");
-			}
-#endif
-			nb_of_paras = get_short();	/* number of parameters */
-			class_name = IC;			/* get the class name   */
-			IC += strlen(IC) + 1;
-			feature_name = IC;			/* get the feature name */
-			IC += strlen(IC) + 1;
-			ret_type = get_uint32();	/* Get the feature's return type */
-			need_ack = *IC++;			/* if the proc needs acknowledgement */
-#ifdef DEBUG
-			dprintf(2)("	paras#=%d, class=%s, feature=%s, ret=%d\n", nb_of_paras, class_name, feature_name, ret_type & SK_HEAD);
-#endif
-
-			if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
-				offset = get_long(); 		/* Get the feature id */		
-				code = get_short();   		/* Get the static type */
-#ifdef DEBUG
-			dprintf(2)("	offset=%d, code=%d\n", offset, code);
-#endif
-			} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
-				origin = get_long();		/* Get the origin class id */
-				offset = get_long(); 		/* Get the offset in origin */
-#ifdef DEBUG
-			dprintf(2)("	origin=%d, offset=%d\n", origin, offset);
-#endif
-			}
-			nstcall = 0;        		/* Invariant check turned off */
-
-			if (on_local_processor(otop()->it_ref)) {
-			/* execute the feature on the local processor */
- 			/* In the current implementation, it's impossible for this part
-			 * to be executed, because BC_SEP_FEXTURE, BC_SEP_PFEATURE, BC_SEP_EXTERN
-			 * and BC_SEP_PEXTERN are possible only for the creation of a separate
-			 * object, but the created separate object will never be on the local
-			 * processor. 
-			 */
-				/* get the current object on the local processor */
-				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
-				if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
-					if (icall(MTC (int)offset, code, GET_PTYPE))
-						sync_registers(MTC scur, stop);
-				} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
-					if (ipcall(origin, offset, GET_PTYPE))
-						sync_registers(MTC scur, stop);
-				}
-				/* if the return value's type is REFERENCE object, change it 
-				 * into a separate object.
-				*/
-				switch (ret_type & SK_HEAD) {
-					case SK_REF:
-						/* change the return REFERENCE object into separate
-						 * object.
-						*/
-						otop()->it_ref = CURLTS(otop()->it_ref);
-						break;
-					default:
-						break;
-				}
-			}
-			else {
-			/* send a request to the remote processor */
-				if ((ret_type & SK_HEAD) != SK_VOID) {
-					CURSARI(constant_execute_query, oid_of_sep_obj(otop()->it_ref), constant_query, class_name, feature_name, nb_of_paras);
-				}
-				else {
-					if (need_ack) {
-						CURSARI(constant_execute_procedure, oid_of_sep_obj(otop()->it_ref), constant_procedure_with_ack, class_name, feature_name, nb_of_paras);
-					} else {
-						CURSARI(constant_execute_procedure, oid_of_sep_obj(otop()->it_ref), constant_procedure_without_ack, class_name, feature_name, nb_of_paras);
-					}
-				}
-				tyc_current = henter(opop()->it_ref);
-				for (tyc_tmp=nb_of_paras-1; tyc_tmp>=0; tyc_tmp--) {
-					tyc_last = otop();
-					/* The reason that I use the above statement and the following
-					 * statement:
-					 *	tyc_last = opop()
-					 * instead of using
-					 * 	tyc_last = opop(0)
-					 * directly is that GC may move the corresponding object stored
-					 * in the stack element but not change the information of the 
-					 * stack element.
-					 */
-#ifdef SEP_DEBUG
-	fprintf(stdout, "	Put %dth parameter with type %lx into %dth cell\n", tyc_tmp+1, tyc_last->type, tyc_tmp);
-#endif
-					switch (tyc_last->type & SK_HEAD) {
-						case SK_BOOL: 
-							CURPB(tyc_last->it_char, tyc_tmp); break;
-						case SK_CHAR: 
-							CURPC(tyc_last->it_char, tyc_tmp); break;
-						case SK_WCHAR: 
-							CURPWC(tyc_last->it_wchar, tyc_tmp); break;
-						case SK_INT8: 
-							CURPI8(tyc_last->it_int8, tyc_tmp); break;
-						case SK_INT16: 
-							CURPI16(tyc_last->it_int16, tyc_tmp); break;
-						case SK_INT32: 
-							CURPI32(tyc_last->it_int32, tyc_tmp); break;
-						case SK_INT64: 
-							CURPI64(tyc_last->it_int64, tyc_tmp); break;
-						case SK_REAL32:
-							CURPR(tyc_last->it_real32, tyc_tmp); break;
-						case SK_REAL64:
-							CURPD(tyc_last->it_real64, tyc_tmp); break;
-						case SK_REF:
-							CURPSO(tyc_last->it_ref, tyc_tmp); break;
-						case SK_POINTER:
-							CURPP(tyc_last->it_ptr, tyc_tmp); break; 
-						case SK_BIT:
-						case SK_EXP:
-						default:	
-							add_nl;
-							sprintf(crash_info, "    Not implemented type(0x%x) of separate feature.", tyc_last->type);
-							c_raise_concur_exception(exception_implementation_error);
-					}
-					tyc_last = opop();
-				}
-				CURSG(eif_access(tyc_current));
-				tyc_current = eif_wean(tyc_current);
-				if ((ret_type & SK_HEAD) != SK_VOID) {
-					last = iget();
-					last->type = ret_type;
-					switch (ret_type & SK_HEAD) {
-						case SK_BOOL: 	last->it_char = (char)(CURGB(0)); break;
-						case SK_CHAR: 	last->it_char = CURGC(0); break;
-						case SK_WCHAR: 	last->it_wchar = CURGWC(0); break;
-						case SK_INT8: 	last->it_int8 = CURGI8(0); break;
-						case SK_INT16: 	last->it_int16 = CURGI16(0); break;
-						case SK_INT32: 	last->it_int32 = CURGI32(0); break;
-						case SK_INT64: 	last->it_int64 = CURGI64(0); break;
-						case SK_REAL32: 	last->it_real32 = CURGR(0); break;
-						case SK_REAL64:	last->it_real64 = CURGD(0); break; 
-						case SK_REF: 	last->it_ref = CURGSO(0); break;
-						case SK_POINTER: last->it_ptr = CURGP(0); break;
-						case SK_BIT: 
-						case SK_EXP: 
-						default:	
-							add_nl;
-							sprintf(crash_info, "    Not implemented type(0x%x) of separate feature.", ret_type);
-							c_raise_concur_exception(exception_implementation_error);
-					}
-				}
-			}
-		}	
-		break;
-
-
-	/* to perform a separate external feature call */
-	/* to perform a separate feature call */
-	case BC_SEP_EXTERN_INV:
-	case BC_SEP_PEXTERN_INV:
-	case BC_SEP_FEATURE_INV:
-	case BC_SEP_PFEATURE_INV:
-		{
-			short nb_of_paras;
-			short tyc_tmp;
-			struct item *tyc_last;
-			EIF_REFERENCE tyc_current;
-			uint32 ret_type;
-			char need_ack;
-			char *feature_name;
-			char *class_name;
-			char tyc_command = *(IC-1);
-
-			int32 origin;
-
-#ifdef DEBUG
-			if (tyc_command == BC_SEP_FEATURE_INV) {
-				dprintf(2)("BC_SEP_FEATURE_INV\n");
-			} else if (tyc_command == BC_SEP_PFEATURE_INV) {
-				dprintf(2)("BC_SEP_PFEATURE_INV\n");
-			} else if (tyc_command == BC_SEP_EXTERN_INV) {
-				dprintf(2)("BC_SEP_EXTERN_INV\n");
-			} else if (tyc_command == BC_SEP_PEXTERN_INV) {
-				dprintf(2)("BC_SEP_PEXTERN_INV\n");
-			}
-#endif
-			nb_of_paras = get_short();	/* number of parameters */
-			class_name = IC;			/* get the class name   */
-			IC += strlen(IC) + 1;
-			feature_name = IC;			/* get the feature name */
-			IC += strlen(IC) + 1;
-			ret_type = get_uint32();	/* Get the feature's return type */
-			need_ack = *IC++;			/* if the proc needs acknowledgement */
-#ifdef DEBUG
-			dprintf(2)("	paras#=%d, class=%s, feature=%s, ret_type=0x%lx\n", nb_of_paras, class_name, feature_name, ret_type);
-#endif
-
-			string = feature_name;
-			if (otop()->it_ref == (EIF_REFERENCE) 0) /* Called on a void reference? */
-				eraise(string, EN_VOID); 	/* Yes, raise exception */
-			if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
-				offset = get_long(); 		/* Get the feature id */		
-				code = get_short();   		/* Get the static type */
-#ifdef DEBUG
-			dprintf(2)("	offset=%d, code=%d\n", offset, code);
-#endif
-			} else if (tyc_command == BC_SEP_PFEATURE_INV || tyc_command == BC_SEP_PEXTERN_INV) {
-				origin = get_long();		/* Get the origin class id */
-				offset = get_long(); 		/* Get the offset in origin */
-#ifdef DEBUG
-			dprintf(2)("	origin=%d, offset=%d\n", origin, offset);
-#endif
-			}
-			nstcall = 1;        		/* Invariant check turned on */
-
-			if (on_local_processor(otop()->it_ref)) {
-			/* execute the feature on the local processor */
-				/* get the current object on the local processor */
-				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
-				if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
-					if (icall(MTC (int)offset, code, GET_PTYPE))
-						sync_registers(MTC scur, stop);
-				} else if (tyc_command == BC_SEP_PFEATURE_INV || tyc_command == BC_SEP_PEXTERN_INV) {
-					if (ipcall(origin, offset, GET_PTYPE))
-						sync_registers(MTC scur, stop);
-				}
-				/* if the return value's type is REFERENCE object, change it 
-				 * into a separate object.
-				*/
-				switch (ret_type & SK_HEAD) {
-					case SK_REF:
-						/* change the return REFERENCE object into separate
-						 * object.
-						*/
-						otop()->it_ref = CURLTS(otop()->it_ref);
-						break;
-					default:
-						break;
-				}
-			}
-			else {
-			/* send a request to the remote processor */
-				if ((ret_type & SK_HEAD) != SK_VOID) {
-					CURSARI(constant_execute_query, oid_of_sep_obj(otop()->it_ref), constant_query, class_name, feature_name, nb_of_paras);
-				}
-				else {
-					if (need_ack) {
-						CURSARI(constant_execute_procedure, oid_of_sep_obj(otop()->it_ref), constant_procedure_with_ack, class_name, feature_name, nb_of_paras);
-					} else {
-						CURSARI(constant_execute_procedure, oid_of_sep_obj(otop()->it_ref), constant_procedure_without_ack, class_name, feature_name, nb_of_paras);
-					}
-				}
-				tyc_current = henter(opop()->it_ref);
-				for (tyc_tmp=nb_of_paras-1; tyc_tmp>=0; tyc_tmp--) {
-					tyc_last = otop();
-					/* The reason that I use the above statement and the following
-					 * statement:
-					 *	tyc_last = opop()
-					 * instead of using
-					 * 	tyc_last = opop(0)
-					 * directly is that GC may move the corresponding object stored
-					 * in the stack element but not change the information of the 
-					 * stack element.
-					 */
-#ifdef SEP_DEBUG
-	fprintf(stdout, "	Put %dth parameter with type %lx into %dth cell\n", tyc_tmp+1, tyc_last->type, tyc_tmp);
-#endif
-					switch (tyc_last->type & SK_HEAD) {
-						case SK_BOOL: 
-							CURPB(tyc_last->it_char, tyc_tmp); break;
-						case SK_CHAR: 
-							CURPC(tyc_last->it_char, tyc_tmp); break;
-						case SK_WCHAR: 
-							CURPWC(tyc_last->it_wchar, tyc_tmp); break;
-						case SK_INT8: 
-							CURPI8(tyc_last->it_int8, tyc_tmp); break;
-						case SK_INT16: 
-							CURPI16(tyc_last->it_int16, tyc_tmp); break;
-						case SK_INT32: 
-							CURPI32(tyc_last->it_int32, tyc_tmp); break;
-						case SK_INT64: 
-							CURPI64(tyc_last->it_int64, tyc_tmp); break;
-						case SK_REAL32:
-							CURPR(tyc_last->it_real32, tyc_tmp); break;
-						case SK_REAL64:
-							CURPD(tyc_last->it_real64, tyc_tmp); break;
-						case SK_REF:
-							CURPSO(tyc_last->it_ref, tyc_tmp); break;
-						case SK_POINTER:
-							CURPP(tyc_last->it_ptr, tyc_tmp); break;
-						case SK_BIT:
-						case SK_EXP:
-						default:	
-							add_nl;
-							sprintf(crash_info, "    Not implemented type(0x%x) of separate feature.", tyc_last->type);
-							c_raise_concur_exception(exception_implementation_error);
-					}
-					tyc_last = opop();
-				}
-				CURSG(eif_access(tyc_current));
-				tyc_current = eif_wean(tyc_current);
-				if ((ret_type & SK_HEAD) != SK_VOID) {
-					last = iget();
-					last->type = ret_type;
-					switch (ret_type & SK_HEAD) {
-						case SK_BOOL: 	last->it_char = (char)(CURGB(0)); break;
-						case SK_CHAR: 	last->it_char = CURGC(0); break;
-						case SK_WCHAR: 	last->it_wchar = CURGWC(0); break;
-						case SK_INT8: 	last->it_int8 = CURGI8(0); break;
-						case SK_INT16: 	last->it_int16 = CURGI16(0); break;
-						case SK_INT32: 	last->it_int32 = CURGI32(0); break;
-						case SK_INT64: 	last->it_int64 = CURGI64(0); break;
-						case SK_REAL32: 	last->it_real32 = CURGR(0); break;
-						case SK_REAL64:	last->it_real64 = CURGD(0); break; 
-						case SK_REF: 	last->it_ref = CURGSO(0); break;
-						case SK_POINTER:last->it_ptr = CURGP(0); break; 
-						case SK_BIT: 
-						case SK_EXP: 
-						default:	
-							add_nl;
-							sprintf(crash_info, "    Not implemented type(0x%x) of separate feature.", ret_type);
-							c_raise_concur_exception(exception_implementation_error);
-					}
-				}
-			}
-		}	
-		break;
-
-	/* to perform a separate attribute call */
-	case BC_SEP_ATTRIBUTE_INV:
-	case BC_SEP_PATTRIBUTE_INV:
-		{
-			uint32 ret_type;
-			char *feature_name;
-			char *class_name;
-			char tyc_command = *(IC-1);
-			struct item *tyc_current;
-
-			int32 origin, ooffset;
-
-#ifdef DEBUG
-			if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
-				dprintf(2)("BC_SEP_ATTRIBUTE_INV\n");
-			} else if (tyc_command == BC_SEP_PATTRIBUTE_INV) {
-				dprintf(2)("BC_SEP_PATTRIBUTE_INV\n");
-			}
-#endif
-			class_name = IC;			/* get the class name   */
-			IC += strlen(IC) + 1;
-			feature_name = IC;			/* get the feature name */
-			IC += strlen(IC) + 1;
-
-#ifdef DEBUG
-			dprintf(2)("	class=%s, feature=%s\n", class_name, feature_name);
-#endif
-			string = feature_name;
-			if (otop()->it_ref == (EIF_REFERENCE) 0)
-				eraise(string, EN_VOID);
-			if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
-				offset = get_long();  			/* Get feature id */ 
-				code = get_short();        		/* Get static type */
-#ifdef DEBUG
-			dprintf(2)("	offset=%d, code=%d, ", offset, code);
-#endif
-			} else if (tyc_command == BC_SEP_PATTRIBUTE_INV) {
-				origin = get_long();   			/* Get the origin class id */
-				ooffset = get_long();			/* Get the offset in origin */
-#ifdef DEBUG
-			dprintf(2)("	origin=%d, offset=%d, ", origin, ooffset);
-#endif
-			}
-			ret_type = get_uint32();		/* Get attribute meta-type */
-#ifdef DEBUG
-			dprintf(2)(" ret_type=0x%lx\n", ret_type);
-#endif
-			
-			if (on_local_processor(otop()->it_ref)) {
-			/* execute the attribute on the local processor */
-				/* get the current object on the local processor */
-				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
-				if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
-					interp_access((int)offset, code, ret_type);
-				} else if (tyc_command == BC_SEP_PATTRIBUTE_INV) {
-					interp_paccess(origin, ooffset, ret_type);
-				}
-				/* if the return value's type is REFERENCE object, change it 
-				 * into a separate object.
-				*/
-				switch (ret_type & SK_HEAD) {
-					case SK_REF:
-						/* change the return REFERENCE object into separate
-						 * object.
-						*/
-						otop()->it_ref = CURLTS(otop()->it_ref);
-						break;
-					default:
-						break;
-				}
-			}
-			else {
-			/* send a request to the remote processor */
-				CURSARI(constant_execute_query, oid_of_sep_obj(otop()->it_ref), constant_attribute, class_name, feature_name, 0);
-				tyc_current = otop();
-				CURSG(tyc_current->it_ref);
-				tyc_current = opop();
-				if ((ret_type & SK_HEAD) != SK_VOID) {
-					last = iget();
-					last->type = ret_type;
-					switch (ret_type & SK_HEAD) {
-						case SK_BOOL: 	last->it_char = (char)(CURGB(0)); break;
-						case SK_CHAR: 	last->it_char = CURGC(0); break;
-						case SK_WCHAR: 	last->it_wchar = CURGWC(0); break;
-						case SK_INT8: 	last->it_int8 = CURGI8(0); break;
-						case SK_INT16: 	last->it_int16 = CURGI16(0); break;
-						case SK_INT32: 	last->it_int32 = CURGI32(0); break;
-						case SK_INT64: 	last->it_int64 = CURGI64(0); break;
-						case SK_REAL32: 	last->it_real32 = CURGR(0); break;
-						case SK_REAL64:	last->it_real64 = CURGD(0); break; 
-						case SK_REF: 	last->it_ref = CURGSO(0); break;
-						case SK_POINTER:last->it_ptr = CURGP(0); break; 
-						case SK_BIT: 
-						case SK_EXP: 
-						default:	
-							add_nl;
-							sprintf(crash_info, "    Not implemented type(0x%x) of separate attribute.", ret_type);
-							c_raise_concur_exception(exception_implementation_error);
-					}
-				}
-			}
-		}	
-		break;
-
-	/*
-	 * process the failure of precondition checking with separate feature call(s)
-	 */
-	case BC_SEP_RAISE_PREC:
-#ifdef DEBUG
-		dprintf(2)("BC_SEP_RAISE_PREC\n");
-#endif
-		{
-			short nb_of_sep_paras;
-			short sep_para_index[constant_max_number_of_sep_paras];
-			short tmp_tyc;
-			char reserve_cmd = *IC++;
-			if (reserve_cmd != BC_SEP_RESERVE) {
-#ifdef DEBUG
-		dprintf(2)("expect BC_SEP_RESERVE\n");
-#endif
-			}
-			nb_of_sep_paras = get_short();
-			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-				sep_para_index[tmp_tyc] = get_short();
-			}
-			offset = get_long(); 		/* get the offset to the point to recheck
-										 * the pre-condition.
-										*/
-			if (!has_called_sep_feature) {
-				RTCF;
-			}
-			else {
-				RTCK;
-				pre_success = '\01';
-				/* free the separate parameters */
-				for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-					CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc],0)->it_ref);
-
-				}
-				/* wait some time */
-				CURCSPFW;
-				/* reserve the separate parameters */
-				for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; ) {
-					if (CURRSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc],0)->it_ref)) {
-						for(tmp_tyc--; tmp_tyc >= 0; tmp_tyc--) {
-							CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc],0)->it_ref);
-						}
-						tmp_tyc = 0;
-						CURRSFW;
-					}
-					else {
-						tmp_tyc++;
-					}
-				}
-				IC += offset;
-				/* "has_called_sep_feature" will be unset by the next statement, 
-				 * i.e, the instruction to which we will jump must be "BC_SEP_UNSET"
-				 */
-			}
-		}	
-		break;
-
-	/* create separate object */
-	case BC_SEP_CREATE:
-		{
-			char *class_name, *feature_name;
-			struct item *tyc_last;
-			class_name = IC;
-			IC += strlen(IC) + 1;
-			feature_name = IC;
-			IC += strlen(IC) + 1;
-#ifdef DEBUG
-		dprintf(2)("BC_SEP_CREATE on %s with procedure <%s>\n", class_name, feature_name);
-#endif
-#ifdef SEP_DEBUG
-fprintf(stdout, "$$$$$$$$$$ Before CREATE_SEP_OBJ, STACK_TOP=%lx\n", otop()); 
-#endif
-			last = iget();
-			last->type = SK_REF;
-			CURCCI(class_name, feature_name);
-			CURCC(last->it_ref);
-#ifdef SEP_DEBUG
-fprintf(stdout, "$$$$$$$$$$Created separate obj <%s, %d, %d> on <%s, %d>\n", hostname_of_sep_obj(last->it_ref), pid_of_sep_obj(last->it_ref), oid_of_sep_obj(last->it_ref), _concur_hostname, _concur_pid); 
-#endif
-			if (strlen(feature_name)) {
-			/* make a copy of the reference to the new-born separate object, because
-			 * in the case, we have to release the reservation to the new-born 
-			 * separate object later(after its creation feature is performed).
-			 */
-				tyc_last = last;
-				last = iget();
-				last->type = SK_REF;
-				last->it_ref = tyc_last->it_ref;
-				CURRSO(last->it_ref);
-				has_reserved_new_born_sep = 1;
-			}
-			else 
-				has_reserved_new_born_sep = 0;
-		}
-		break;
-
-	/* finishing creating separate object */
-	case BC_SEP_CREATE_END:
-#ifdef DEBUG
-		dprintf(2)("BC_SEP_CREATE_END\n");
-#endif
-		if (has_reserved_new_born_sep) {
-			CURFSO(opop()->it_ref);
-		}
-#ifdef SEP_DEBUG
-fprintf(stdout, "$$$$$$$$$$  After CREATE_SEP_OBJ, STACK_TOP=%lx\n", otop()); 
-#endif
-		break;
-
-/* end of inserted instructions for Concurrent Eiffel */
-#endif
-
-
 	/*
 	 * End of rescue clause
 	 */
@@ -3968,384 +3263,104 @@ rt_private void diadic_op(int code)
 
 	/* Minus operation. */
 	case BC_MINUS: {
-		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
-		switch(f->type & SK_HEAD) {
-		case SK_INT8:
-			switch (s->type & SK_HEAD) {
+		uint32 sk_type = s->type & SK_HEAD;
+		CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
+		switch(sk_type) {
+			case SK_UINT8: f->it_uint8 = f->it_uint8 - s->it_uint8; break;
+			case SK_UINT16: f->it_uint16 = f->it_uint16 - s->it_uint16; break;
+			case SK_UINT32: f->it_uint32 = f->it_uint32 - s->it_uint32; break;
+			case SK_UINT64: f->it_uint64 = f->it_uint64 - s->it_uint64; break;
 			case SK_INT8: f->it_int8 = f->it_int8 - s->it_int8; break;
-			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 - s->it_int16; break;
-			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 - s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 - s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int8 - s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int8 - s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT16:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int16 = f->it_int16 - (EIF_INTEGER_16) s->it_int8; break;
 			case SK_INT16: f->it_int16 = f->it_int16 - s->it_int16; break;
-			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 - s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 - s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int16 - s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int16 - s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT32:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int32 = f->it_int32 - (EIF_INTEGER_32) s->it_int8; break;
-			case SK_INT16: f->it_int32 = f->it_int32 - (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 - s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 - s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int32 - s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int32 - s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT64:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int8; break;
-			case SK_INT16: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int16; break;
-			case SK_INT32: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int32; break;
 			case SK_INT64: f->it_int64 = f->it_int64 - s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int64 - s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int64 - s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_REAL32:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real32 = f->it_real32 - (EIF_REAL_32) s->it_int8; break;
-			case SK_INT16: f->it_real32 = f->it_real32 - (EIF_REAL_32) s->it_int16; break;
-			case SK_INT32: f->it_real32 = f->it_real32 - (EIF_REAL_32) s->it_int32; break;
-			case SK_INT64: f->it_real32 = f->it_real32 - (EIF_REAL_32) s->it_int64; break;
 			case SK_REAL32: f->it_real32 = f->it_real32 - s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_real32 - s->it_real64;break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_REAL64:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real64 = f->it_real64 - (EIF_REAL_64) s->it_int8; break;
-			case SK_INT16: f->it_real64 = f->it_real64 - (EIF_REAL_64) s->it_int16; break;
-			case SK_INT32: f->it_real64 = f->it_real64 - (EIF_REAL_64) s->it_int32; break;
-			case SK_INT64: f->it_real64 = f->it_real64 - (EIF_REAL_64) s->it_int64; break;
-			case SK_REAL32: f->it_real64 = f->it_real64 - (EIF_REAL_64) s->it_real32; break;
 			case SK_REAL64: f->it_real64 = f->it_real64 - s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
-		f->type = sk_type;
 		}
 		break;
 
-
 	/* Plus operator. */
 	case BC_PLUS: {
-		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
-		switch(f->type & SK_HEAD) {
-		case SK_INT8:
-			switch (s->type & SK_HEAD) {
+		uint32 sk_type = s->type & SK_HEAD;
+		CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
+		switch(sk_type) {
+			case SK_UINT8: f->it_uint8 = f->it_uint8 + s->it_uint8; break;
+			case SK_UINT16: f->it_uint16 = f->it_uint16 + s->it_uint16; break;
+			case SK_UINT32: f->it_uint32 = f->it_uint32 + s->it_uint32; break;
+			case SK_UINT64: f->it_uint64 = f->it_uint64 + s->it_uint64; break;
 			case SK_INT8: f->it_int8 = f->it_int8 + s->it_int8; break;
-			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 + s->it_int16; break;
-			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 + s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 + s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int8 + s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int8 + s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT16:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int16 = f->it_int16 + (EIF_INTEGER_16) s->it_int8; break;
 			case SK_INT16: f->it_int16 = f->it_int16 + s->it_int16; break;
-			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 + s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 + s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int16 + s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int16 + s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT32:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int32 = f->it_int32 + (EIF_INTEGER_32) s->it_int8; break;
-			case SK_INT16: f->it_int32 = f->it_int32 + (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 + s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 + s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int32 + s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int32 + s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT64:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int8; break;
-			case SK_INT16: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int16; break;
-			case SK_INT32: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int32; break;
 			case SK_INT64: f->it_int64 = f->it_int64 + s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int64 + s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int64 + s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_REAL32:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real32 = f->it_real32 + (EIF_REAL_32) s->it_int8; break;
-			case SK_INT16: f->it_real32 = f->it_real32 + (EIF_REAL_32) s->it_int16; break;
-			case SK_INT32: f->it_real32 = f->it_real32 + (EIF_REAL_32) s->it_int32; break;
-			case SK_INT64: f->it_real32 = f->it_real32 + (EIF_REAL_32) s->it_int64; break;
 			case SK_REAL32: f->it_real32 = f->it_real32 + s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_real32 + s->it_real64;break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_REAL64:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real64 = f->it_real64 + (EIF_REAL_64) s->it_int8; break;
-			case SK_INT16: f->it_real64 = f->it_real64 + (EIF_REAL_64) s->it_int16; break;
-			case SK_INT32: f->it_real64 = f->it_real64 + (EIF_REAL_64) s->it_int32; break;
-			case SK_INT64: f->it_real64 = f->it_real64 + (EIF_REAL_64) s->it_int64; break;
-			case SK_REAL32: f->it_real64 = f->it_real64 + (EIF_REAL_64) s->it_real32; break;
 			case SK_REAL64: f->it_real64 = f->it_real64 + s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
-		f->type = sk_type;
 		}
 		break;
 
 	/* Power operator. */
 	case BC_POWER:
+		CHECK("double_type", (s->type & SK_HEAD) == SK_REAL64);
 		switch (f->type & SK_HEAD) {
-			case SK_INT8:
-				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, (EIF_REAL_64)s->it_int8); break;
-				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, (EIF_REAL_64)s->it_int16); break;
-				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, (EIF_REAL_64)s->it_int32); break;
-				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, (EIF_REAL_64)s->it_int64); break;
-				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, (EIF_REAL_64)s->it_real32); break;
-				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, s->it_real64); break;
-				default: eif_panic(MTC RT_BOTCHED_MSG);
-				}
-				break;
-			case SK_INT16:
-				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, (EIF_REAL_64)s->it_int8); break;
-				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, (EIF_REAL_64)s->it_int16); break;
-				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, (EIF_REAL_64)s->it_int32); break;
-				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, (EIF_REAL_64)s->it_int64); break;
-				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, (EIF_REAL_64)s->it_real32); break;
-				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, s->it_real64); break;
-				default: eif_panic(MTC RT_BOTCHED_MSG);
-				}
-				break;
-			case SK_INT32:
-				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, (EIF_REAL_64)s->it_int8); break;
-				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, (EIF_REAL_64)s->it_int16); break;
-				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, (EIF_REAL_64)s->it_int32); break;
-				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, (EIF_REAL_64)s->it_int64); break;
-				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, (EIF_REAL_64)s->it_real32); break;
-				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, s->it_real64); break;
-				default: eif_panic(MTC RT_BOTCHED_MSG);
-				}
-				break;
-			case SK_INT64:
-				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, (EIF_REAL_64)s->it_int8); break;
-				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, (EIF_REAL_64)s->it_int16); break;
-				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, (EIF_REAL_64)s->it_int32); break;
-				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, (EIF_REAL_64)s->it_int64); break;
-				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, (EIF_REAL_64)s->it_real32); break;
-				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, s->it_real64); break;
-				default: eif_panic(MTC RT_BOTCHED_MSG);
-				}
-				break;
-			case SK_REAL32:
-				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, (EIF_REAL_64)s->it_int8); break;
-				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, (EIF_REAL_64)s->it_int16); break;
-				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, (EIF_REAL_64)s->it_int32); break;
-				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, (EIF_REAL_64)s->it_int64); break;
-				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, (EIF_REAL_64)s->it_real32); break;
-				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, s->it_real64); break;
-				default: eif_panic(MTC RT_BOTCHED_MSG);
-				}
-				break;
-			case SK_REAL64:
-				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, (EIF_REAL_64)s->it_int8); break;
-				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, (EIF_REAL_64)s->it_int16); break;
-				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, (EIF_REAL_64)s->it_int32); break;
-				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, (EIF_REAL_64)s->it_int64); break;
-				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, (EIF_REAL_64)s->it_real32); break;
-				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, s->it_real64); break;
-				default: eif_panic(MTC RT_BOTCHED_MSG);
-				}
-				break;
-		default:
-			eif_panic(MTC RT_BOTCHED_MSG);
+			case SK_UINT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_uint8, s->it_real64); break;
+			case SK_UINT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_uint16, s->it_real64); break;
+			case SK_UINT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_uint32, s->it_real64); break;
+			case SK_UINT64: f->it_real64 = (EIF_REAL_64) pow (eif_uint64_to_real64(f->it_uint64), s->it_real64); break;
+			case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, s->it_real64); break;
+			case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, s->it_real64); break;
+			case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, s->it_real64); break;
+			case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, s->it_real64); break;
+			case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, s->it_real64); break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, s->it_real64); break;
+			default:
+				eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		f->type = SK_REAL64;
 		break;
 
 	/* Multiplication operator. */
 	case BC_STAR: {
-		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
-		switch(f->type & SK_HEAD) {
-		case SK_INT8:
-			switch (s->type & SK_HEAD) {
+		uint32 sk_type = s->type & SK_HEAD;
+		CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
+		switch(sk_type) {
+			case SK_UINT8: f->it_uint8 = f->it_uint8 * s->it_uint8; break;
+			case SK_UINT16: f->it_uint16 = f->it_uint16 * s->it_uint16; break;
+			case SK_UINT32: f->it_uint32 = f->it_uint32 * s->it_uint32; break;
+			case SK_UINT64: f->it_uint64 = f->it_uint64 * s->it_uint64; break;
 			case SK_INT8: f->it_int8 = f->it_int8 * s->it_int8; break;
-			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 * s->it_int16; break;
-			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 * s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 * s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int8 * s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int8 * s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT16:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int16 = f->it_int16 * (EIF_INTEGER_16) s->it_int8; break;
 			case SK_INT16: f->it_int16 = f->it_int16 * s->it_int16; break;
-			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 * s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 * s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int16 * s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int16 * s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT32:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int32 = f->it_int32 * (EIF_INTEGER_32) s->it_int8; break;
-			case SK_INT16: f->it_int32 = f->it_int32 * (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 * s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 * s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int32 * s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int32 * s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT64:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int8; break;
-			case SK_INT16: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int16; break;
-			case SK_INT32: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int32; break;
 			case SK_INT64: f->it_int64 = f->it_int64 * s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int64 * s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int64 * s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_REAL32:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real32 = f->it_real32 * (EIF_REAL_32) s->it_int8; break;
-			case SK_INT16: f->it_real32 = f->it_real32 * (EIF_REAL_32) s->it_int16; break;
-			case SK_INT32: f->it_real32 = f->it_real32 * (EIF_REAL_32) s->it_int32; break;
-			case SK_INT64: f->it_real32 = f->it_real32 * (EIF_REAL_32) s->it_int64; break;
 			case SK_REAL32: f->it_real32 = f->it_real32 * s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_real32 * s->it_real64;break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_REAL64:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real64 = f->it_real64 * (EIF_REAL_64) s->it_int8; break;
-			case SK_INT16: f->it_real64 = f->it_real64 * (EIF_REAL_64) s->it_int16; break;
-			case SK_INT32: f->it_real64 = f->it_real64 * (EIF_REAL_64) s->it_int32; break;
-			case SK_INT64: f->it_real64 = f->it_real64 * (EIF_REAL_64) s->it_int64; break;
-			case SK_REAL32: f->it_real64 = f->it_real64 * (EIF_REAL_64) s->it_real32; break;
 			case SK_REAL64: f->it_real64 = f->it_real64 * s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
-		f->type = sk_type;
 		}
 		break;
 
 	/* Real division operator. */
 	case BC_SLASH: {
-		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
-		switch(f->type & SK_HEAD) {
-		case SK_INT8:
-			switch (s->type & SK_HEAD) {
+		uint32 sk_type = s->type & SK_HEAD;
+		CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
+		switch(sk_type) {
+			case SK_UINT8: f->it_real64 = (EIF_REAL_64) f->it_uint8 / (EIF_REAL_64) s->it_uint8; break;
+			case SK_UINT16: f->it_real64 = (EIF_REAL_64) f->it_uint16 / (EIF_REAL_64) s->it_uint16; break;
+			case SK_UINT32: f->it_real64 = (EIF_REAL_64) f->it_uint32 / (EIF_REAL_64) s->it_uint32; break;
+			case SK_UINT64: f->it_real64 = eif_uint64_to_real64(f->it_uint64) / eif_uint64_to_real64(s->it_uint64); break;
 			case SK_INT8: f->it_real64 = (EIF_REAL_64) f->it_int8 / (EIF_REAL_64) s->it_int8; break;
-			case SK_INT16: f->it_real64 = (EIF_REAL_64) f->it_int8 / (EIF_REAL_64) s->it_int16; break;
-			case SK_INT32: f->it_real64 = (EIF_REAL_64) f->it_int8 / (EIF_REAL_64) s->it_int32; break;
-			case SK_INT64: f->it_real64 = (EIF_REAL_64) f->it_int8 / (EIF_REAL_64) s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int8 / s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int8 / s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT16:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real64 = (EIF_REAL_64) f->it_int16 / (EIF_REAL_64) s->it_int8; break;
 			case SK_INT16: f->it_real64 = (EIF_REAL_64) f->it_int16 / (EIF_REAL_64) s->it_int16; break;
-			case SK_INT32: f->it_real64 = (EIF_REAL_64) f->it_int16 / (EIF_REAL_64) s->it_int32; break;
-			case SK_INT64: f->it_real64 = (EIF_REAL_64) f->it_int16 / (EIF_REAL_64) s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int16 / s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int16 / s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT32:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real64 = (EIF_REAL_64) f->it_int32 / (EIF_REAL_64) s->it_int8; break;
-			case SK_INT16: f->it_real64 = (EIF_REAL_64) f->it_int32 / (EIF_REAL_64) s->it_int16; break;
 			case SK_INT32: f->it_real64 = (EIF_REAL_64) f->it_int32 / (EIF_REAL_64) s->it_int32; break;
-			case SK_INT64: f->it_real64 = (EIF_REAL_64) f->it_int32 / (EIF_REAL_64) s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int32 / s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int32 / s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT64:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real64 = (EIF_REAL_64) f->it_int64 / (EIF_REAL_64) s->it_int8; break;
-			case SK_INT16: f->it_real64 = (EIF_REAL_64) f->it_int64 / (EIF_REAL_64) s->it_int16; break;
-			case SK_INT32: f->it_real64 = (EIF_REAL_64) f->it_int64 / (EIF_REAL_64) s->it_int32; break;
 			case SK_INT64: f->it_real64 = (EIF_REAL_64) f->it_int64 / (EIF_REAL_64) s->it_int64; break;
-			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int64 / s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int64 / s->it_real64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_REAL32:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real32 = f->it_real32 / (EIF_REAL_32) s->it_int8; break;
-			case SK_INT16: f->it_real32 = f->it_real32 / (EIF_REAL_32) s->it_int16; break;
-			case SK_INT32: f->it_real32 = f->it_real32 / (EIF_REAL_32) s->it_int32; break;
-			case SK_INT64: f->it_real32 = f->it_real32 / (EIF_REAL_32) s->it_int64; break;
 			case SK_REAL32: f->it_real32 = f->it_real32 / s->it_real32; break;
-			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_real32 / s->it_real64;break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_REAL64:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_real64 = f->it_real64 / (EIF_REAL_64) s->it_int8; break;
-			case SK_INT16: f->it_real64 = f->it_real64 / (EIF_REAL_64) s->it_int16; break;
-			case SK_INT32: f->it_real64 = f->it_real64 / (EIF_REAL_64) s->it_int32; break;
-			case SK_INT64: f->it_real64 = f->it_real64 / (EIF_REAL_64) s->it_int64; break;
-			case SK_REAL32: f->it_real64 = f->it_real64 / (EIF_REAL_64) s->it_real32; break;
 			case SK_REAL64: f->it_real64 = f->it_real64 / s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		if ((sk_type != SK_REAL64) && (sk_type != SK_REAL32))
 		  		/* First type was before an integer that we divided with another
-				 * integer of a different size. In that case the return type is
-				 * always a DOUBLE. */
+				 * integer. In that case the return type is always a REAL_64. */
 			f->type = SK_REAL64;
 		else
 			f->type = sk_type;
@@ -4354,95 +3369,38 @@ rt_private void diadic_op(int code)
 
 	/* Integer division operator. */
 	case BC_DIV: {
-		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
-		switch(f->type & SK_HEAD) {
-		case SK_INT8:
-			switch (s->type & SK_HEAD) {
+		uint32 sk_type = s->type & SK_HEAD;
+		CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
+		switch(sk_type) {
+			case SK_UINT8: f->it_uint8 = f->it_uint8 / s->it_uint8; break;
+			case SK_UINT16: f->it_uint16 = f->it_uint16 / s->it_uint16; break;
+			case SK_UINT32: f->it_uint32 = f->it_uint32 / s->it_uint32; break;
+			case SK_UINT64: f->it_uint64 = f->it_uint64 / s->it_uint64; break;
 			case SK_INT8: f->it_int8 = f->it_int8 / s->it_int8; break;
-			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 / s->it_int16; break;
-			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 / s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 / s->it_int64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT16:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int16 = f->it_int16 / (EIF_INTEGER_16) s->it_int8; break;
 			case SK_INT16: f->it_int16 = f->it_int16 / s->it_int16; break;
-			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 / s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 / s->it_int64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT32:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int32 = f->it_int32 / (EIF_INTEGER_32) s->it_int8; break;
-			case SK_INT16: f->it_int32 = f->it_int32 / (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 / s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 / s->it_int64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT64:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int64 = f->it_int64 / (EIF_INTEGER_64) s->it_int8; break;
-			case SK_INT16: f->it_int64 = f->it_int64 / (EIF_INTEGER_64) s->it_int16; break;
-			case SK_INT32: f->it_int64 = f->it_int64 / (EIF_INTEGER_64) s->it_int32; break;
 			case SK_INT64: f->it_int64 = f->it_int64 / s->it_int64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
-		f->type = sk_type;
 		}
 		break;
 
 	/* Modulo operator. */
 	case BC_MOD: {
-		uint32 sk_type = eif_expression_type (f->type & SK_HEAD, s->type & SK_HEAD);
-		switch(f->type & SK_HEAD) {
-		case SK_INT8:
-			switch (s->type & SK_HEAD) {
+		uint32 sk_type = s->type & SK_HEAD;
+		CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
+		switch(sk_type) {
+			case SK_UINT8: f->it_uint8 = f->it_uint8 % s->it_uint8; break;
+			case SK_UINT16: f->it_uint16 = f->it_uint16 % s->it_uint16; break;
+			case SK_UINT32: f->it_uint32 = f->it_uint32 % s->it_uint32; break;
+			case SK_UINT64: f->it_uint64 = f->it_uint64 % s->it_uint64; break;
 			case SK_INT8: f->it_int8 = f->it_int8 % s->it_int8; break;
-			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 % s->it_int16; break;
-			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 % s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 % s->it_int64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT16:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int16 = f->it_int16 % (EIF_INTEGER_16) s->it_int8; break;
 			case SK_INT16: f->it_int16 = f->it_int16 % s->it_int16; break;
-			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 % s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 % s->it_int64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT32:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int32 = f->it_int32 % (EIF_INTEGER_32) s->it_int8; break;
-			case SK_INT16: f->it_int32 = f->it_int32 % (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 % s->it_int32; break;
-			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 % s->it_int64; break;
-			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		case SK_INT64:
-			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_int64 = f->it_int64 % (EIF_INTEGER_64) s->it_int8; break;
-			case SK_INT16: f->it_int64 = f->it_int64 % (EIF_INTEGER_64) s->it_int16; break;
-			case SK_INT32: f->it_int64 = f->it_int64 % (EIF_INTEGER_64) s->it_int32; break;
 			case SK_INT64: f->it_int64 = f->it_int64 % s->it_int64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
-			}
-			break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
-		f->type = sk_type;
 		}
-
 		break;
 
 	default:
@@ -4453,260 +3411,64 @@ rt_private void diadic_op(int code)
 #undef f
 }
 
-rt_private int eif_type_weight (uint32 sk_type) {
-	/* Compute weight of `sk_type' */
-	switch (sk_type) {
-		case SK_INT8: return 1L;
-		case SK_INT16: return 2L;
-		case SK_INT32: return 3L;
-		case SK_INT64: return 4L;
-		case SK_REAL32: return 5L;
-		case SK_REAL64: return 6L;
-		default:
-			CHECK ("False", 0);
-			return 0L;
-	}
-}
-
-rt_private uint32 eif_expression_type (uint32 first, uint32 second)
-	/* Compute the type of expression `f' op `s' using Eiffel type checking */
-{
-  	if (eif_type_weight(first) >= eif_type_weight(second))
-		return first;
-	else
-		return second;
-}
-
 rt_private void eif_interp_gt(struct item *f, struct item *s) {
 	switch(f->type & SK_HEAD) {
-	case SK_CHAR: f->it_char = f->it_char > s->it_char; break;
-	case SK_WCHAR: f->it_char = f->it_wchar > s->it_wchar; break;
-	case SK_INT8:
-		switch (s->type & SK_HEAD) {
+		case SK_CHAR: f->it_char = f->it_char > s->it_char; break;
+		case SK_WCHAR: f->it_char = f->it_wchar > s->it_wchar; break;
+		case SK_UINT8: f->it_char = f->it_uint8 > s->it_uint8; break;
+		case SK_UINT16: f->it_char = f->it_uint16 > s->it_uint16; break;
+		case SK_UINT32: f->it_char = f->it_uint32 > s->it_uint32; break;
+		case SK_UINT64: f->it_char = f->it_uint64 > s->it_uint64; break;
 		case SK_INT8: f->it_char = f->it_int8 > s->it_int8; break;
-		case SK_INT16: f->it_char = (EIF_INTEGER_16) f->it_int8 > s->it_int16; break;
-		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int8 > s->it_int32; break;
-		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int8 > s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int8 > s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int8 > s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_INT16:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_int16 > (EIF_INTEGER_16) s->it_int8; break;
 		case SK_INT16: f->it_char = f->it_int16 > s->it_int16; break;
-		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int16 > s->it_int32; break;
-		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int16 > s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int16 > s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int16 > s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_INT32:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_int32 > (EIF_INTEGER_32) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_int32 > (EIF_INTEGER_32) s->it_int16; break;
 		case SK_INT32: f->it_char = f->it_int32 > s->it_int32; break;
-		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int32 > s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int32 > s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int32 > s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_INT64:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int64 > s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int64 > s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_REAL32:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_real32 > (EIF_REAL_32) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_real32 > (EIF_REAL_32) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_real32 > (EIF_REAL_32) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_real32 > (EIF_REAL_32) s->it_int64; break;
+		case SK_INT64: f->it_char = f->it_int64 > s->it_int64; break;
 		case SK_REAL32: f->it_char = f->it_real32 > s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_real32 > s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_REAL64:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_real64 > (EIF_REAL_64) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_real64 > (EIF_REAL_64) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_real64 > (EIF_REAL_64) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_real64 > (EIF_REAL_64) s->it_int64; break;
-		case SK_REAL32: f->it_char = f->it_real64 > (EIF_REAL_64) s->it_real32; break;
 		case SK_REAL64: f->it_char = f->it_real64 > s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 	f->type = SK_BOOL;		/* Result is a boolean */
 }
 
 rt_private void eif_interp_lt(struct item *f, struct item *s) {
 	switch(f->type & SK_HEAD) {
-	case SK_CHAR: f->it_char = f->it_char < s->it_char; break;
-	case SK_WCHAR: f->it_char = f->it_wchar < s->it_wchar; break;
-	case SK_INT8:
-		switch (s->type & SK_HEAD) {
+		case SK_CHAR: f->it_char = f->it_char < s->it_char; break;
+		case SK_WCHAR: f->it_char = f->it_wchar < s->it_wchar; break;
+		case SK_UINT8: f->it_char = f->it_uint8 < s->it_uint8; break;
+		case SK_UINT16: f->it_char = f->it_uint16 < s->it_uint16; break;
+		case SK_UINT32: f->it_char = f->it_uint32 < s->it_uint32; break;
+		case SK_UINT64: f->it_char = f->it_uint64 < s->it_uint64; break;
 		case SK_INT8: f->it_char = f->it_int8 < s->it_int8; break;
-		case SK_INT16: f->it_char = (EIF_INTEGER_16) f->it_int8 < s->it_int16; break;
-		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int8 < s->it_int32; break;
-		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int8 < s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int8 < s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int8 < s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_INT16:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_int16 < (EIF_INTEGER_16) s->it_int8; break;
 		case SK_INT16: f->it_char = f->it_int16 < s->it_int16; break;
-		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int16 < s->it_int32; break;
-		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int16 < s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int16 < s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int16 < s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_INT32:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_int32 < (EIF_INTEGER_32) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_int32 < (EIF_INTEGER_32) s->it_int16; break;
 		case SK_INT32: f->it_char = f->it_int32 < s->it_int32; break;
-		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int32 < s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int32 < s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int32 < s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_INT64:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int64 < s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int64 < s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_REAL32:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_real32 < (EIF_REAL_32) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_real32 < (EIF_REAL_32) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_real32 < (EIF_REAL_32) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_real32 < (EIF_REAL_32) s->it_int64; break;
+		case SK_INT64: f->it_char = f->it_int64 < s->it_int64; break;
 		case SK_REAL32: f->it_char = f->it_real32 < s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_real32 < s->it_real64; break;
+		case SK_REAL64: f->it_char = f->it_real64 < s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_REAL64:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_real64 < (EIF_REAL_64) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_real64 < (EIF_REAL_64) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_real64 < (EIF_REAL_64) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_real64 < (EIF_REAL_64) s->it_int64; break;
-		case SK_REAL32: f->it_char = f->it_real64 < (EIF_REAL_64) s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_BOOLEAN) (f->it_real64 < s->it_real64); break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 	f->type = SK_BOOL;		/* Result is a boolean */
 }
 
 rt_private void eif_interp_eq (struct item *f, struct item *s) {
 	switch(f->type & SK_HEAD) {
-	case SK_BOOL:
-	case SK_CHAR: f->it_char = f->it_char == s->it_char; break;
-	case SK_WCHAR: f->it_char = f->it_wchar == s->it_wchar; break;
-	case SK_INT8:
-		switch (s->type & SK_HEAD) {
+		case SK_BOOL:
+		case SK_CHAR: f->it_char = f->it_char == s->it_char; break;
+		case SK_WCHAR: f->it_char = f->it_wchar == s->it_wchar; break;
+		case SK_UINT8: f->it_char = f->it_uint8 == s->it_uint8; break;
+		case SK_UINT16: f->it_char = f->it_uint16 == s->it_uint16; break;
+		case SK_UINT32: f->it_char = f->it_uint32 == s->it_uint32; break;
+		case SK_UINT64: f->it_char = f->it_uint64 == s->it_uint64; break;
 		case SK_INT8: f->it_char = f->it_int8 == s->it_int8; break;
-		case SK_INT16: f->it_char = (EIF_INTEGER_16) f->it_int8 == s->it_int16; break;
-		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int8 == s->it_int32; break;
-		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int8 == s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int8 == s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int8 == s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_INT16:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_int16 == (EIF_INTEGER_16) s->it_int8; break;
 		case SK_INT16: f->it_char = f->it_int16 == s->it_int16; break;
-		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int16 == s->it_int32; break;
-		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int16 == s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int16 == s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int16 == s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_INT32:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_int32 == (EIF_INTEGER_32) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_int32 == (EIF_INTEGER_32) s->it_int16; break;
 		case SK_INT32: f->it_char = f->it_int32 == s->it_int32; break;
-		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int32 == s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int32 == s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int32 == s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_INT64:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int64; break;
-		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int64 == s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int64 == s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_REAL32:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_real32 == (EIF_REAL_32) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_real32 == (EIF_REAL_32) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_real32 == (EIF_REAL_32) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_real32 == (EIF_REAL_32) s->it_int64; break;
+		case SK_INT64: f->it_char = f->it_int64 == s->it_int64; break;
 		case SK_REAL32: f->it_char = f->it_real32 == s->it_real32; break;
-		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_real32 == s->it_real64; break;
-		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_REAL64:
-		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_real64 == (EIF_REAL_64) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_real64 == (EIF_REAL_64) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_real64 == (EIF_REAL_64) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_real64 == (EIF_REAL_64) s->it_int64; break;
-		case SK_REAL32: f->it_char = f->it_real64 == (EIF_REAL_64) s->it_real32; break;
 		case SK_REAL64: f->it_char = f->it_real64 == s->it_real64; break;
+		case SK_POINTER: f->it_char = f->it_ptr == s->it_ptr; break;
+		case SK_BIT:
+		case SK_EXP:
+		case SK_REF: f->it_char = f->it_ref == s->it_ref; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
-		}
-		break;
-	case SK_BIT:
-	case SK_EXP:
-	case SK_REF:
-		f->it_char = f->it_ref == s->it_ref;
-		break;
-	case SK_POINTER:
-		f->it_char = f->it_ptr == s->it_ptr;
-		break;
-	default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 	f->type = SK_BOOL;		/* Result is a boolean */
 }
@@ -4723,12 +3485,16 @@ rt_private void eif_interp_generator (void)
 		case SK_BOOL: first->it_ref = RTMS_EX("BOOLEAN", 7); break;
 		case SK_CHAR: first->it_ref = RTMS_EX("CHARACTER", 9); break;
 		case SK_WCHAR: first->it_ref = RTMS_EX("WIDE_CHARACTER", 14); break;
+		case SK_UINT8: first->it_ref = RTMS_EX("NATURAL_8", 9); break;
+		case SK_UINT16: first->it_ref = RTMS_EX("NATURAL_16", 10); break;
+		case SK_UINT32: first->it_ref = RTMS_EX("NATURAL_32", 10); break;
+		case SK_UINT64: first->it_ref = RTMS_EX("NATURAL_64", 10); break;
 		case SK_INT8: first->it_ref = RTMS_EX("INTEGER_8", 9); break;
 		case SK_INT16: first->it_ref = RTMS_EX("INTEGER_16", 10); break;
-		case SK_INT32: first->it_ref = RTMS_EX("INTEGER", 7); break;
+		case SK_INT32: first->it_ref = RTMS_EX("INTEGER_32", 10); break;
 		case SK_INT64: first->it_ref = RTMS_EX("INTEGER_64", 10); break;
-		case SK_REAL32: first->it_ref = RTMS_EX("REAL", 4); break;
-		case SK_REAL64: first->it_ref = RTMS_EX("DOUBLE", 6); break;
+		case SK_REAL32: first->it_ref = RTMS_EX("REAL_32", 7); break;
+		case SK_REAL64: first->it_ref = RTMS_EX("REAL_64", 7); break;
 		case SK_POINTER: first->it_ref = RTMS_EX("POINTER", 7); break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
@@ -4757,6 +3523,10 @@ rt_private void eif_interp_min_max (int code)
 			switch(first->type & SK_HEAD) {
 				case SK_CHAR: first->it_char = (EIF_CHARACTER) EIF_MAX(first->it_char, second->it_char); break;
 				case SK_WCHAR: first->it_wchar = (EIF_CHARACTER) EIF_MAX(first->it_wchar, second->it_wchar); break;
+				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) EIF_MAX(first->it_uint8, second->it_uint8); break;
+				case SK_UINT16: first->it_uint16 = (EIF_NATURAL_16) EIF_MAX(first->it_uint16, second->it_uint16); break;
+				case SK_UINT32: first->it_uint32 = (EIF_NATURAL_32) EIF_MAX(first->it_uint32, second->it_uint32); break;
+				case SK_UINT64: first->it_uint64 = (EIF_NATURAL_64) EIF_MAX(first->it_uint64, second->it_uint64); break;
 				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) EIF_MAX(first->it_int8, second->it_int8); break;
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MAX(first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MAX(first->it_int32, second->it_int32); break;
@@ -4770,6 +3540,10 @@ rt_private void eif_interp_min_max (int code)
 			switch(first->type & SK_HEAD) {
 				case SK_CHAR: first->it_char = (EIF_CHARACTER) EIF_MIN(first->it_char, second->it_char); break;
 				case SK_WCHAR: first->it_wchar = (EIF_CHARACTER) EIF_MIN(first->it_wchar, second->it_wchar); break;
+				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) EIF_MIN(first->it_uint8, second->it_uint8); break;
+				case SK_UINT16: first->it_uint16 = (EIF_NATURAL_16) EIF_MIN(first->it_uint16, second->it_uint16); break;
+				case SK_UINT32: first->it_uint32 = (EIF_NATURAL_32) EIF_MIN(first->it_uint32, second->it_uint32); break;
+				case SK_UINT64: first->it_uint64 = (EIF_NATURAL_64) EIF_MIN(first->it_uint64, second->it_uint64); break;
 				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) EIF_MIN(first->it_int8, second->it_int8); break;
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MIN(first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MIN(first->it_int32, second->it_int32); break;
@@ -4807,6 +3581,10 @@ rt_private void eif_three_way_comparison (void)
 	switch(first->type & SK_HEAD) {
 		case SK_CHAR: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_char, second->it_char); break;
 		case SK_WCHAR: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_wchar, second->it_wchar); break;
+		case SK_UINT8: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_uint8, second->it_uint8); break;
+		case SK_UINT16: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_uint16, second->it_uint16); break;
+		case SK_UINT32: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_uint32, second->it_uint32); break;
+		case SK_UINT64: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_uint64, second->it_uint64); break;
 		case SK_INT8: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int8, second->it_int8); break;
 		case SK_INT16: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int16, second->it_int16); break;
 		case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int32, second->it_int32); break;
@@ -4882,6 +3660,10 @@ rt_private void eif_interp_basic_operations (void)
 		case BC_ZERO:
 			first = otop();	/* First operand will be replace by result */
 			switch(first->type & SK_HEAD) {
+				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) 0; break;
+				case SK_UINT16: first->it_uint16 = (EIF_NATURAL_16) 0; break;
+				case SK_UINT32: first->it_uint32 = (EIF_NATURAL_32) 0; break;
+				case SK_UINT64: first->it_uint64 = (EIF_NATURAL_64) 0; break;
 				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) 0; break;
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) 0; break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) 0; break;
@@ -4896,6 +3678,10 @@ rt_private void eif_interp_basic_operations (void)
 		case BC_ONE:
 			first = otop();	/* First operand will be replace by result */
 			switch(first->type & SK_HEAD) {
+				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) 1; break;
+				case SK_UINT16: first->it_uint16 = (EIF_NATURAL_16) 1; break;
+				case SK_UINT32: first->it_uint32 = (EIF_NATURAL_32) 1; break;
+				case SK_UINT64: first->it_uint64 = (EIF_NATURAL_64) 1; break;
 				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) 1; break;
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) 1; break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) 1; break;
@@ -4932,6 +3718,10 @@ rt_private void eif_interp_bit_operations (void)
 	switch (code) {
 		case BC_INT_BIT_AND:
 			switch (first->type & SK_HEAD) {
+				case SK_UINT8: first->it_uint8 = eif_bit_and (first->it_uint8, second->it_uint8); break;
+				case SK_UINT16: first->it_uint16 = eif_bit_and (first->it_uint16, second->it_uint16); break;
+				case SK_UINT32: first->it_uint32 = eif_bit_and (first->it_uint32, second->it_uint32); break;
+				case SK_UINT64: first->it_uint64 = eif_bit_and (first->it_uint64, second->it_uint64); break;
 				case SK_INT8: first->it_int8 = eif_bit_and (first->it_int8, second->it_int8); break;
 				case SK_INT16: first->it_int16 = eif_bit_and (first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = eif_bit_and (first->it_int32, second->it_int32); break;
@@ -4940,6 +3730,10 @@ rt_private void eif_interp_bit_operations (void)
 			break;
 		case BC_INT_BIT_OR:
 			switch (first->type & SK_HEAD) {
+				case SK_UINT8: first->it_uint8 = eif_bit_or (first->it_uint8, second->it_uint8); break;
+				case SK_UINT16: first->it_uint16 = eif_bit_or (first->it_uint16, second->it_uint16); break;
+				case SK_UINT32: first->it_uint32 = eif_bit_or (first->it_uint32, second->it_uint32); break;
+				case SK_UINT64: first->it_uint64 = eif_bit_or (first->it_uint64, second->it_uint64); break;
 				case SK_INT8: first->it_int8 = eif_bit_or (first->it_int8, second->it_int8); break;
 				case SK_INT16: first->it_int16 = eif_bit_or (first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = eif_bit_or (first->it_int32, second->it_int32); break;
@@ -4948,6 +3742,10 @@ rt_private void eif_interp_bit_operations (void)
 			break;
 		case BC_INT_BIT_XOR:
 			switch (first->type & SK_HEAD) {
+				case SK_UINT8: first->it_uint8 = eif_bit_xor (first->it_uint8, second->it_uint8); break;
+				case SK_UINT16: first->it_uint16 = eif_bit_xor (first->it_uint16, second->it_uint16); break;
+				case SK_UINT32: first->it_uint32 = eif_bit_xor (first->it_uint32, second->it_uint32); break;
+				case SK_UINT64: first->it_uint64 = eif_bit_xor (first->it_uint64, second->it_uint64); break;
 				case SK_INT8: first->it_int8 = eif_bit_xor (first->it_int8, second->it_int8); break;
 				case SK_INT16: first->it_int16 = eif_bit_xor (first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = eif_bit_xor (first->it_int32, second->it_int32); break;
@@ -4956,6 +3754,10 @@ rt_private void eif_interp_bit_operations (void)
 			break;
 		case BC_INT_BIT_NOT:
 			switch (first->type & SK_HEAD) {
+				case SK_UINT8: first->it_uint8 = eif_bit_not (first->it_uint8); break;
+				case SK_UINT16: first->it_uint16 = eif_bit_not (first->it_uint16); break;
+				case SK_UINT32: first->it_uint32 = eif_bit_not (first->it_uint32); break;
+				case SK_UINT64: first->it_uint64 = eif_bit_not (first->it_uint64); break;
 				case SK_INT8: first->it_int8 = eif_bit_not (first->it_int8); break;
 				case SK_INT16: first->it_int16 = eif_bit_not (first->it_int16); break;
 				case SK_INT32: first->it_int32 = eif_bit_not (first->it_int32); break;
@@ -4964,6 +3766,10 @@ rt_private void eif_interp_bit_operations (void)
 			break;
 		case BC_INT_BIT_SHIFT_LEFT:
 			switch (first->type & SK_HEAD) {
+				case SK_UINT8: first->it_uint8 = eif_bit_shift_left (first->it_uint8, second->it_int32); break;
+				case SK_UINT16: first->it_uint16 = eif_bit_shift_left (first->it_uint16, second->it_int32); break;
+				case SK_UINT32: first->it_uint32 = eif_bit_shift_left (first->it_uint32, second->it_int32); break;
+				case SK_UINT64: first->it_uint64 = eif_bit_shift_left (first->it_uint64, second->it_int32); break;
 				case SK_INT8: first->it_int8 = eif_bit_shift_left (first->it_int8, second->it_int32); break;
 				case SK_INT16: first->it_int16 = eif_bit_shift_left (first->it_int16, second->it_int32); break;
 				case SK_INT32: first->it_int32 = eif_bit_shift_left (first->it_int32, second->it_int32); break;
@@ -4972,6 +3778,10 @@ rt_private void eif_interp_bit_operations (void)
 			break;
 		case BC_INT_BIT_SHIFT_RIGHT:
 			switch (first->type & SK_HEAD) {
+				case SK_UINT8: first->it_uint8 = eif_bit_shift_right (first->it_uint8, second->it_int32); break;
+				case SK_UINT16: first->it_uint16 = eif_bit_shift_right (first->it_uint16, second->it_int32); break;
+				case SK_UINT32: first->it_uint32 = eif_bit_shift_right (first->it_uint32, second->it_int32); break;
+				case SK_UINT64: first->it_uint64 = eif_bit_shift_right (first->it_uint64, second->it_int32); break;
 				case SK_INT8: first->it_int8 = eif_bit_shift_right (first->it_int8, second->it_int32); break;
 				case SK_INT16: first->it_int16 = eif_bit_shift_right (first->it_int16, second->it_int32); break;
 				case SK_INT32: first->it_int32 = eif_bit_shift_right (first->it_int32, second->it_int32); break;
@@ -4980,6 +3790,10 @@ rt_private void eif_interp_bit_operations (void)
 			break;
 		case BC_INT_BIT_TEST:
 			switch (first->type & SK_HEAD) {
+				case SK_UINT8: first->it_char = eif_bit_test (EIF_NATURAL_8, first->it_uint8, second->it_int32); break;
+				case SK_UINT16: first->it_char = eif_bit_test (EIF_NATURAL_16, first->it_uint16, second->it_int32); break;
+				case SK_UINT32: first->it_char = eif_bit_test (EIF_NATURAL_32, first->it_uint32, second->it_int32); break;
+				case SK_UINT64: first->it_char = eif_bit_test (EIF_NATURAL_64, first->it_uint64, second->it_int32); break;
 				case SK_INT8: first->it_char = eif_bit_test (EIF_INTEGER_8, first->it_int8, second->it_int32); break;
 				case SK_INT16: first->it_char = eif_bit_test (EIF_INTEGER_16, first->it_int16, second->it_int32); break;
 				case SK_INT32: first->it_char = eif_bit_test (EIF_INTEGER_32, first->it_int32, second->it_int32); break;
@@ -5237,6 +4051,10 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	case SK_BOOL:
 	case SK_CHAR: last->it_char = *(current + offset); break;
 	case SK_WCHAR: last->it_wchar = *(EIF_WIDE_CHAR *) (current + offset); break;
+	case SK_UINT8: last->it_uint8 = *(EIF_NATURAL_8 *) (current + offset); break;
+	case SK_UINT16: last->it_uint16 = *(EIF_NATURAL_16 *) (current + offset); break;
+	case SK_UINT32: last->it_uint32 = *(EIF_NATURAL_32 *) (current + offset); break;
+	case SK_UINT64: last->it_uint64 = *(EIF_NATURAL_64 *) (current + offset); break;
 	case SK_INT8: last->it_int8 = *(EIF_INTEGER_8 *) (current + offset); break;
 	case SK_INT16: last->it_int16 = *(EIF_INTEGER_16 *) (current + offset); break;
 	case SK_INT32: last->it_int32 = *(EIF_INTEGER_32 *) (current + offset); break;
@@ -5277,6 +4095,10 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	case SK_BOOL:
 	case SK_CHAR: last->it_char = *(current + offset); break;
 	case SK_WCHAR: last->it_wchar = *(EIF_WIDE_CHAR *) (current + offset); break;
+	case SK_UINT8: last->it_uint8 = *(EIF_NATURAL_8 *) (current + offset); break;
+	case SK_UINT16: last->it_uint16 = *(EIF_NATURAL_16 *) (current + offset); break;
+	case SK_UINT32: last->it_uint32 = *(EIF_NATURAL_32 *) (current + offset); break;
+	case SK_UINT64: last->it_uint64 = *(EIF_NATURAL_64 *) (current + offset); break;
 	case SK_INT8: last->it_int8 = *(EIF_INTEGER_8 *) (current + offset); break;
 	case SK_INT16: last->it_int16 = *(EIF_INTEGER_16 *) (current + offset); break;
 	case SK_INT32: last->it_int32 = *(EIF_INTEGER_32 *) (current + offset); break;
@@ -5323,6 +4145,10 @@ rt_private void assign(long offset, uint32 type)
 	case SK_BOOL:
 	case SK_CHAR: *(i->it_ref + offset) = l->it_char; break;
 	case SK_WCHAR: *(EIF_WIDE_CHAR *) (i->it_ref + offset) = l->it_wchar; break;
+	case SK_UINT8: *(EIF_NATURAL_8 *)(i->it_ref + offset) = l->it_uint8; break;
+	case SK_UINT16: *(EIF_NATURAL_16 *)(i->it_ref + offset) = l->it_uint16; break;
+	case SK_UINT64: *(EIF_NATURAL_64 *)(i->it_ref + offset) = l->it_uint64; break;
+	case SK_UINT32: *(EIF_NATURAL_32 *)(i->it_ref + offset) = l->it_uint32; break;
 	case SK_INT8: *(EIF_INTEGER_8 *)(i->it_ref + offset) = l->it_int8; break;
 	case SK_INT16: *(EIF_INTEGER_16 *)(i->it_ref + offset) = l->it_int16; break;
 	case SK_INT64: *(EIF_INTEGER_64 *)(i->it_ref + offset) = l->it_int64; break;
@@ -5628,6 +4454,10 @@ rt_private void init_var(struct item *ptr, long int type, EIF_REFERENCE current_
 	case SK_BOOL:
 	case SK_CHAR:		ptr->it_char = (EIF_CHARACTER) 0; break;
 	case SK_WCHAR:		ptr->it_wchar = (EIF_WIDE_CHAR) 0; break;
+	case SK_UINT8:		ptr->it_uint8 = (EIF_NATURAL_8) 0; break;
+	case SK_UINT16:		ptr->it_uint16 = (EIF_NATURAL_16) 0; break;
+	case SK_UINT32:		ptr->it_uint32 = (EIF_NATURAL_32) 0; break;
+	case SK_UINT64:		ptr->it_uint64 = (EIF_NATURAL_64) 0; break;
 	case SK_INT8:		ptr->it_int8 = (EIF_INTEGER_8) 0; break;
 	case SK_INT16:		ptr->it_int16 = (EIF_INTEGER_16) 0; break;
 	case SK_INT32:		ptr->it_int32 = (EIF_INTEGER_32) 0; break;
@@ -6288,6 +5118,10 @@ rt_public struct item *ivalue(int code, int num, uint32 start)
 			case SK_BOOL:
 			case SK_CHAR: result_item->it_char = *((EIF_CHARACTER *)(result_item->it_addr)); break;
 			case SK_WCHAR: result_item->it_wchar = *((EIF_WIDE_CHAR *)(result_item->it_addr)); break;
+			case SK_UINT8: result_item->it_uint8 = *((EIF_NATURAL_8 *)(result_item->it_addr)); break;
+			case SK_UINT16: result_item->it_uint16 = *((EIF_NATURAL_16 *)(result_item->it_addr)); break;
+			case SK_UINT32: result_item->it_uint32 = *((EIF_NATURAL_32 *)(result_item->it_addr)); break;
+			case SK_UINT64: result_item->it_uint64 = *((EIF_NATURAL_64 *)(result_item->it_addr)); break;
 			case SK_INT8: result_item->it_int8 = *((EIF_INTEGER_8 *)(result_item->it_addr)); break;
 			case SK_INT16: result_item->it_int16 = *((EIF_INTEGER_16 *)(result_item->it_addr)); break;
 			case SK_INT32: result_item->it_int32 = *((EIF_INTEGER_32 *)(result_item->it_addr)); break;

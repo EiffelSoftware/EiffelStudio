@@ -61,8 +61,18 @@ feature -- Access
 					
 				else
 					if target_type.is_enum then
-						Result := feat.feature_name_id = infix_or_name_id	
-						function_type := basic_type_table.item (infix_or_name_id)
+						Result := True
+						inspect
+							feat.feature_name_id
+						when Infix_or_name_id then
+							function_type := basic_type_table.item (Infix_or_name_id)
+						when To_integer_name_id then
+							function_type := From_enum_to_integer_type
+						when From_integer_name_id then
+							function_type := From_integer_to_enum_type
+						else
+							Result := False
+						end
 					else
 						Result := False
 					end
@@ -193,7 +203,17 @@ feature -- IL code generation
 			when abs_type then
 				il_generator.generate_abs (type)
 
+			when from_integer_to_enum_type then
+					-- Argument value becomes the enum value, we discard
+					-- original value of enum.
+				il_generator.pop
+				parameters.generate_il
+
+			when from_enum_to_integer_type then
+					-- Nothing to do, as enums are basically integers.
+				
 			else
+
 			end
 		end
 
@@ -288,7 +308,9 @@ feature {NONE} -- Fast access to feature name
 	is_equal_type: INTEGER is 27
 	to_real_type: INTEGER is 28
 	to_character_type: INTEGER is 29
-	max_type_id: INTEGER is 29
+	From_integer_to_enum_type: INTEGER is 30
+	From_enum_to_integer_type: INTEGER is 31
+	max_type_id: INTEGER is 31
 
 feature {NONE} -- IL code generation
 

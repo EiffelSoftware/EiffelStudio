@@ -183,6 +183,7 @@ feature -- Status setting
 			separator: SEPARATOR_WINDOWS
 			pulldown: MENU_PULL_WINDOWS
 			menu_b: MENU_BUTTON_WINDOWS
+			menu_id: INTEGER
 		do
 			button ?= widget
 			if button /= Void then
@@ -193,16 +194,23 @@ feature -- Status setting
 							associated_root.remove (id_children.item (button))
 							id_children.remove (button)
 						end
-						associated_root.add (button)
-						button.set_hash_code
-						id_children.put (associated_root.value, button)
 						push_b ?= button
 						if push_b /= Void then
 							if push_b.has_accelerator then
-								push_b.new_accelerator_id (associated_root.value)
+								menu_id := 10000 + push_b.private_text.hash_code \\ 50000
+								push_b.new_accelerator_id (menu_id)
+								associated_root.add_with_id (button, menu_id)
+							else
+								associated_root.add (button)
+								menu_id := associated_root.value
 							end
+						else
+							associated_root.add (button)
+							menu_id := associated_root.value
 						end
-						append_string (button.text, associated_root.value)
+						button.set_hash_code
+						id_children.put (menu_id, button)
+						append_string (button.text, menu_id)
 					end
 					toggle_b ?= widget
 					if toggle_b /= Void and then toggle_b.managed then
@@ -258,6 +266,7 @@ feature -- Element change
 			push_b: PUSH_BUTTON_WINDOWS
 			toggle_b: TOGGLE_B_WINDOWS
 			s: SEPARATOR_WINDOWS
+			menu_id: INTEGER
 		do
 			b ?= w
 			if b /= Void then
@@ -265,23 +274,29 @@ feature -- Element change
 				check
 					parent_not_void: mp /= Void
 				end
-				associated_root.add (b)
-				mp.insert_button (b, associated_root.value)
-				b.set_hash_code
-				id_children.put (associated_root.value, b)
 				push_b ?= b
 				if push_b /= Void then
 					if push_b.has_accelerator then
-						push_b.new_accelerator_id (associated_root.value)
+						menu_id := 10000 + push_b.private_text.hash_code \\ 50000
+						push_b.new_accelerator_id (menu_id)
+						associated_root.add_with_id (b, menu_id)
+					else
+						associated_root.add (b)
+						menu_id := associated_root.value
 					end
 				else
+					associated_root.add (b)
+					menu_id := associated_root.value
 					toggle_b ?= b
 					if toggle_b /= Void then
 						if toggle_b.has_accelerator then
-							toggle_b.new_accelerator_id (associated_root.value)
+							toggle_b.new_accelerator_id (menu_id)
 						end
 					end
 				end
+				mp.insert_button (b, menu_id)
+				b.set_hash_code
+				id_children.put (menu_id, b)
 			else
 				s ?= w
 				if s /= Void then

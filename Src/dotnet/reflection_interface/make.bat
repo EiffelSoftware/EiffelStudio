@@ -8,10 +8,15 @@ echo ***********************************************
 
 cd ISE.Reflection.Emitter
 copy ..\..\..\tools\emitter\formatter.cs .
+gacutil -u ISE.Reflection.Formatter
 call make_formatter.bat
+gacutil -i ISE.Reflection.Formatter.dll
 copy ISE.Reflection.Formatter.dll ..\bin
+copy formatter.netmodule ..\bin
 del formatter.cs
 del ISE.Reflection.Formatter.dll
+del formatter.netmodule
+del Key
 cd ..
 
 echo *****************************************************************
@@ -28,7 +33,9 @@ echo ******************************************************
 
 cd ISE.Reflection.EiffelComponents
 cd ace_file
-ec -ace ace.ace -batch 
+gacutil -u ISE.Reflection.EiffelComponents
+ec -ace ace.ace 
+gacutil -i ISE.Reflection.EiffelComponents.dll
 copy .\ISE.Reflection.EiffelComponents.dll ..\..\bin
 
 cd ..
@@ -47,7 +54,9 @@ echo *****************************************************************
 
 cd ISE.Reflection.EiffelAssemblyCacheNotifier
 cd ace_file
-ec -ace ace.ace -batch 
+gacutil -u ISE.Reflection.EiffelAssemblyCacheNotifier
+ec -ace ace.ace 
+gacutil -i ISE.Reflection.EiffelAssemblyCacheNotifier.dll
 copy .\ISE.Reflection.EiffelAssemblyCacheNotifier.dll ..\..\bin
 
 cd ..
@@ -66,7 +75,9 @@ echo *********************************************
 
 cd ISE.Reflection.Support
 cd ace_file
-ec -ace ace.ace -batch 
+gacutil -u ISE.Reflection.Support
+ec -ace ace.ace 
+gacutil -i ISE.Reflection.Support.dll
 copy .\ISE.Reflection.Support.dll ..\..\bin
 
 cd ..
@@ -85,7 +96,9 @@ echo ******************************************************************
 
 cd ISE.Reflection.EiffelAssemblyCacheHandler
 cd ace_file
-ec -ace ace.ace -batch 
+gacutil -u ISE.Reflection.EiffelAssemblyCacheHandler
+ec -ace ace.ace 
+gacutil -i ISE.Reflection.EiffelAssemblyCacheHandler.dll
 copy .\ISE.Reflection.EiffelAssemblyCacheHandler.dll ..\..\bin
 
 cd ..
@@ -105,7 +118,9 @@ echo ***************************************************
 
 cd ISE.Reflection.CodeGenerator
 cd ace_file
-ec -ace ace.ace -batch 
+gacutil -u ISE.Reflection.CodeGenerator
+ec -ace ace.ace
+gacutil -i ISE.Reflection.CodeGenerator.dll
 copy .\ISE.Reflection.CodeGenerator.dll ..\..\bin
 
 cd ..
@@ -124,7 +139,9 @@ echo *********************************************************
 
 cd ISE.Reflection.ReflectionInterface
 cd ace_file
-ec -ace ace.ace -batch 
+gacutil -u ISE.Reflection.ReflectionInterface
+ec -ace ace.ace 
+gacutil -i ISE.Reflection.ReflectionInterface.dll
 copy .\ISE.Reflection.ReflectionInterface.dll ..\..\bin
 
 cd ..
@@ -147,8 +164,12 @@ echo ********************************************************************
 
 cd assembly_manager
 cd gac_browser
+gacutil -u ISE.AssemblyManager.WindowsDirectoryExtractor
 call make.bat
+gacutil -i ISE.AssemblyManager.WindowsDirectoryExtractor.dll
 copy ISE.AssemblyManager.WindowsDirectoryExtractor.dll ..\..\bin
+copy windowsdirectoryextractor.netmodule ..\..\bin
+
 
 echo *************************************************************
 echo * Generating `FolderBrowser.dll' and `FolderDialog.dll'     *
@@ -157,23 +178,31 @@ echo *************************************************************
 cd ..
 cd folder_dialog
 cd Core
+gacutil -u FolderBrowser
+gacutil -u FolderDialog
 call build.bat
+gacutil -i FolderBrowser.dll
+gacutil -i FolderDialog.dll
 copy FolderBrowser.dll ..\..\..\bin
 copy FolderDialog.dll ..\..\..\bin
+copy folderdialog.netmodule ..\..\..\bin
 
 cd ..
 cd Clib
 call make_finalize.bat
 cd ..
 
+
 echo *************************************
 echo *  Generating `folder_browser.dll'  *
 echo *************************************
 
-ec -ace Ace.ace -batch -finalize
+gacutil -u folder_browser
+ec -ace Ace.ace -finalize
 cd EIFGEN
 cd F_code
 finish_freezing
+gacutil -i folder_browser.dll
 copy .\folder_browser.dll ..\..\..\..\bin
 
 cd ..
@@ -199,9 +228,12 @@ copy ..\..\..\tools\emitter\renameclauses.cs .
 copy ..\..\..\tools\emitter\selectclauses.cs .
 copy ..\..\..\tools\emitter\undefineclauses.cs .
 
+gacutil -u ISE.Reflection.Emitter
+sn -k Key
 call make.bat
+gacutil -i ISE.Reflection.Emitter.exe
 copy ISE.Reflection.Emitter.exe ..\bin
-
+del ISE.Reflection.Emitter.exe
 del argparser.cs
 del eiffelclassfactory.cs
 del eiffelcreationroutine.cs
@@ -223,7 +255,9 @@ echo ******************************************
 
 cd assembly_manager
 cd ace_file
-ec -ace ace.ace -batch 
+gacutil -u ISE.AssemblyManager
+ec -ace ace.ace
+gacutil -i ISE.AssemblyManager.exe
 copy ISE.AssemblyManager.exe .\..\dotnet\reflection_interface\bin
 copy ..\..\bin\ISE.Reflection.Formatter.dll .
 copy ..\..\bin\ISE.Reflection.EiffelComponents.dll .

@@ -174,7 +174,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnShowWindow(  /* [in] */ LONG f_show )
+STDMETHODIMP ecom_control_library::control_site::OnShowWindow(  /* [in] */ BOOL  f_show )
 
 /*-----------------------------------------------------------
   No description available.
@@ -236,7 +236,7 @@ STDMETHODIMP ecom_control_library::control_site::GetWindow(  /* [out] */ HWND * 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::ContextSensitiveHelp(  /* [in] */ LONG f_enter_mode )
+STDMETHODIMP ecom_control_library::control_site::ContextSensitiveHelp(  /* [in] */ BOOL  f_enter_mode )
 
 /*-----------------------------------------------------------
   No description available.
@@ -307,7 +307,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::GetWindowContext(  /* [out] */ ::IOleInPlaceFrame * * pp_frame, /* [out] */ ::IOleInPlaceUIWindow * * pp_doc, /* [out] */ ecom_control_library::tagRECT * lprc_pos_rect, /* [out] */ ecom_control_library::tagRECT * lprc_clip_rect, /* [in, out] */ ecom_control_library::tagOIFI * lp_frame_info )
+STDMETHODIMP ecom_control_library::control_site::GetWindowContext(  /* [out] */ ::IOleInPlaceFrame * * pp_frame, /* [out] */ ::IOleInPlaceUIWindow * * pp_doc, /* [out] */ ::tagRECT * lprc_pos_rect, /* [out] */ ::tagRECT * lprc_clip_rect, /* [in, out] */ ::tagOIFI * lp_frame_info )
 
 /*-----------------------------------------------------------
   No description available.
@@ -332,17 +332,17 @@ STDMETHODIMP ecom_control_library::control_site::GetWindowContext(  /* [out] */ 
   EIF_OBJECT tmp_lprc_pos_rect = NULL;
   if (lprc_pos_rect != NULL)
   {
-    tmp_lprc_pos_rect = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (lprc_pos_rect));
+    tmp_lprc_pos_rect = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)lprc_pos_rect));
   }
   EIF_OBJECT tmp_lprc_clip_rect = NULL;
   if (lprc_clip_rect != NULL)
   {
-    tmp_lprc_clip_rect = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (lprc_clip_rect));
+    tmp_lprc_clip_rect = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)lprc_clip_rect));
   }
   EIF_OBJECT tmp_lp_frame_info = NULL;
   if (lp_frame_info != NULL)
   {
-    tmp_lp_frame_info = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_229 (lp_frame_info));
+    tmp_lp_frame_info = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_229 ((ecom_control_library::tagOIFI *)lp_frame_info));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
@@ -370,7 +370,7 @@ STDMETHODIMP ecom_control_library::control_site::GetWindowContext(  /* [out] */ 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::Scroll(  /* [in] */ ecom_control_library::tagSIZE scroll_extant )
+STDMETHODIMP ecom_control_library::control_site::Scroll(  /* [in] */ ::tagSIZE scroll_extant )
 
 /*-----------------------------------------------------------
   No description available.
@@ -379,7 +379,7 @@ STDMETHODIMP ecom_control_library::control_site::Scroll(  /* [in] */ ecom_contro
   ECATCH;
 
   EIF_OBJECT tmp_scroll_extant = NULL;
-  tmp_scroll_extant = eif_protect (grt_ce_control_interfaces2.ccom_ce_record_tag_size_record230 (scroll_extant));
+  tmp_scroll_extant = eif_protect (grt_ce_control_interfaces2.ccom_ce_record_tag_size_record230 (*((ecom_control_library::tagSIZE*)&scroll_extant)));
   
   EIF_PROCEDURE eiffel_procedure = 0;
   eiffel_procedure = eif_procedure ("scroll", type_id);
@@ -393,7 +393,7 @@ STDMETHODIMP ecom_control_library::control_site::Scroll(  /* [in] */ ecom_contro
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnUIDeactivate(  /* [in] */ LONG f_undoable )
+STDMETHODIMP ecom_control_library::control_site::OnUIDeactivate(  /* [in] */ BOOL f_undoable )
 
 /*-----------------------------------------------------------
   No description available.
@@ -464,7 +464,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnPosRectChange(  /* [in] */ ecom_control_library::tagRECT * lprc_pos_rect )
+STDMETHODIMP ecom_control_library::control_site::OnPosRectChange(  /* [in] */const ::tagRECT * lprc_pos_rect )
 
 /*-----------------------------------------------------------
   No description available.
@@ -475,7 +475,7 @@ STDMETHODIMP ecom_control_library::control_site::OnPosRectChange(  /* [in] */ ec
   EIF_OBJECT tmp_lprc_pos_rect = NULL;
   if (lprc_pos_rect != NULL)
   {
-    tmp_lprc_pos_rect = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (lprc_pos_rect));
+    tmp_lprc_pos_rect = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)lprc_pos_rect));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
@@ -490,7 +490,7 @@ STDMETHODIMP ecom_control_library::control_site::OnPosRectChange(  /* [in] */ ec
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnInPlaceActivateEx(  /* [out] */ LONG * pf_no_redraw, /* [in] */ ULONG dw_flags )
+STDMETHODIMP ecom_control_library::control_site::OnInPlaceActivateEx(  /* [out] */ BOOL * pf_no_redraw, /* [in] */ ULONG dw_flags )
 
 /*-----------------------------------------------------------
   No description available.
@@ -501,7 +501,7 @@ STDMETHODIMP ecom_control_library::control_site::OnInPlaceActivateEx(  /* [out] 
   EIF_OBJECT tmp_pf_no_redraw = NULL;
   if (pf_no_redraw != NULL)
   {
-    tmp_pf_no_redraw = eif_protect (rt_ce.ccom_ce_pointed_long (pf_no_redraw, NULL));
+    tmp_pf_no_redraw = eif_protect (rt_ce.ccom_ce_pointed_long ((LONG*)pf_no_redraw, NULL));
   }
   EIF_INTEGER tmp_dw_flags = (EIF_INTEGER)dw_flags;
   
@@ -509,14 +509,14 @@ STDMETHODIMP ecom_control_library::control_site::OnInPlaceActivateEx(  /* [out] 
   eiffel_procedure = eif_procedure ("on_in_place_activate_ex", type_id);
 
   (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pf_no_redraw != NULL) ? eif_access (tmp_pf_no_redraw) : NULL), (EIF_INTEGER)tmp_dw_flags);
-  rt_ec.ccom_ec_pointed_long (((tmp_pf_no_redraw != NULL) ? eif_wean (tmp_pf_no_redraw) : NULL), pf_no_redraw);
+  rt_ec.ccom_ec_pointed_long (((tmp_pf_no_redraw != NULL) ? eif_wean (tmp_pf_no_redraw) : NULL), (LONG*)pf_no_redraw);
   
   END_ECATCH;
   return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnInPlaceDeactivateEx(  /* [in] */ LONG f_no_redraw )
+STDMETHODIMP ecom_control_library::control_site::OnInPlaceDeactivateEx(  /* [in] */ BOOL f_no_redraw )
 
 /*-----------------------------------------------------------
   No description available.
@@ -587,7 +587,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::SetCapture(  /* [in] */ LONG f_capture )
+STDMETHODIMP ecom_control_library::control_site::SetCapture(  /* [in] */ BOOL f_capture )
 
 /*-----------------------------------------------------------
   No description available.
@@ -624,7 +624,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::SetFocus(  /* [in] */ LONG f_focus )
+STDMETHODIMP ecom_control_library::control_site::SetFocus(  /* [in] */ BOOL f_focus )
 
 /*-----------------------------------------------------------
   No description available.
@@ -644,7 +644,7 @@ STDMETHODIMP ecom_control_library::control_site::SetFocus(  /* [in] */ LONG f_fo
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::GetDC(  /* [in] */ ecom_control_library::tagRECT * p_rect, /* [in] */ ULONG grf_flags, /* [out] */ ecom_control_library::wireHDC * ph_dc )
+STDMETHODIMP ecom_control_library::control_site::GetDC(  /* [in] */const ::tagRECT * p_rect, /* [in] */ ULONG grf_flags, /* [out] */ HDC * ph_dc )
 
 /*-----------------------------------------------------------
   No description available.
@@ -655,7 +655,7 @@ STDMETHODIMP ecom_control_library::control_site::GetDC(  /* [in] */ ecom_control
   EIF_OBJECT tmp_p_rect = NULL;
   if (p_rect != NULL)
   {
-    tmp_p_rect = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (p_rect));
+    tmp_p_rect = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)p_rect));
   }
   EIF_INTEGER tmp_grf_flags = (EIF_INTEGER)grf_flags;
   EIF_OBJECT tmp_ph_dc = NULL;
@@ -677,7 +677,7 @@ STDMETHODIMP ecom_control_library::control_site::GetDC(  /* [in] */ ecom_control
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::ReleaseDC(  /* [in] */ ecom_control_library::wireHDC h_dc )
+STDMETHODIMP ecom_control_library::control_site::ReleaseDC(  /* [in] */ HDC h_dc )
 
 /*-----------------------------------------------------------
   No description available.
@@ -697,7 +697,7 @@ STDMETHODIMP ecom_control_library::control_site::ReleaseDC(  /* [in] */ ecom_con
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::InvalidateRect(  /* [in] */ ecom_control_library::tagRECT * p_rect, /* [in] */ LONG f_erase )
+STDMETHODIMP ecom_control_library::control_site::InvalidateRect(  /* [in] */const ::tagRECT * p_rect, /* [in] */ BOOL f_erase )
 
 /*-----------------------------------------------------------
   No description available.
@@ -708,7 +708,7 @@ STDMETHODIMP ecom_control_library::control_site::InvalidateRect(  /* [in] */ eco
   EIF_OBJECT tmp_p_rect = NULL;
   if (p_rect != NULL)
   {
-    tmp_p_rect = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (p_rect));
+    tmp_p_rect = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)p_rect));
   }
   EIF_INTEGER tmp_f_erase = (EIF_INTEGER)f_erase;
   
@@ -724,7 +724,7 @@ STDMETHODIMP ecom_control_library::control_site::InvalidateRect(  /* [in] */ eco
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::InvalidateRgn(  /* [in] */ void * h_rgn, /* [in] */ LONG f_erase )
+STDMETHODIMP ecom_control_library::control_site::InvalidateRgn(  /* [in] */ HRGN  h_rgn, /* [in] */ BOOL f_erase )
 
 /*-----------------------------------------------------------
   No description available.
@@ -745,7 +745,7 @@ STDMETHODIMP ecom_control_library::control_site::InvalidateRgn(  /* [in] */ void
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::ScrollRect(  /* [in] */ INT dx, /* [in] */ INT dy, /* [in] */ ecom_control_library::tagRECT * p_rect_scroll, /* [in] */ ecom_control_library::tagRECT * p_rect_clip )
+STDMETHODIMP ecom_control_library::control_site::ScrollRect(  /* [in] */ INT dx, /* [in] */ INT dy, /* [in] */const ::tagRECT * p_rect_scroll, /* [in] */const ::tagRECT * p_rect_clip )
 
 /*-----------------------------------------------------------
   No description available.
@@ -758,12 +758,12 @@ STDMETHODIMP ecom_control_library::control_site::ScrollRect(  /* [in] */ INT dx,
   EIF_OBJECT tmp_p_rect_scroll = NULL;
   if (p_rect_scroll != NULL)
   {
-    tmp_p_rect_scroll = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (p_rect_scroll));
+    tmp_p_rect_scroll = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)p_rect_scroll));
   }
   EIF_OBJECT tmp_p_rect_clip = NULL;
   if (p_rect_clip != NULL)
   {
-    tmp_p_rect_clip = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (p_rect_clip));
+    tmp_p_rect_clip = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)p_rect_clip));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
@@ -780,7 +780,7 @@ STDMETHODIMP ecom_control_library::control_site::ScrollRect(  /* [in] */ INT dx,
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::AdjustRect(  /* [in, out] */ ecom_control_library::tagRECT * prc )
+STDMETHODIMP ecom_control_library::control_site::AdjustRect(  /* [in, out] */ ::tagRECT * prc )
 
 /*-----------------------------------------------------------
   No description available.
@@ -791,7 +791,7 @@ STDMETHODIMP ecom_control_library::control_site::AdjustRect(  /* [in, out] */ ec
   EIF_OBJECT tmp_prc = NULL;
   if (prc != NULL)
   {
-    tmp_prc = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (prc));
+    tmp_prc = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)prc));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
@@ -850,7 +850,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::LockInPlaceActive(  /* [in] */ LONG f_lock )
+STDMETHODIMP ecom_control_library::control_site::LockInPlaceActive(  /* [in] */ BOOL f_lock )
 
 /*-----------------------------------------------------------
   No description available.
@@ -902,7 +902,7 @@ STDMETHODIMP ecom_control_library::control_site::GetExtendedControl(  /* [out] *
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::TransformCoords(  /* [in, out] */ ecom_control_library::_POINTL * p_ptl_himetric, /* [in, out] */ ecom_control_library::tagPOINTF * p_ptf_container, /* [in] */ ULONG dw_flags )
+STDMETHODIMP ecom_control_library::control_site::TransformCoords(  /* [in, out] */ ::_POINTL * p_ptl_himetric, /* [in, out] */ ::tagPOINTF * p_ptf_container, /* [in] */ ULONG dw_flags )
 
 /*-----------------------------------------------------------
   No description available.
@@ -913,12 +913,12 @@ STDMETHODIMP ecom_control_library::control_site::TransformCoords(  /* [in, out] 
   EIF_OBJECT tmp_p_ptl_himetric = NULL;
   if (p_ptl_himetric != NULL)
   {
-    tmp_p_ptl_himetric = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_205 (p_ptl_himetric));
+    tmp_p_ptl_himetric = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_205 ((ecom_control_library::_POINTL *)p_ptl_himetric));
   }
   EIF_OBJECT tmp_p_ptf_container = NULL;
   if (p_ptf_container != NULL)
   {
-    tmp_p_ptf_container = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_207 (p_ptf_container));
+    tmp_p_ptf_container = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_207 ((ecom_control_library::tagPOINTF *)p_ptf_container));
   }
   EIF_INTEGER tmp_dw_flags = (EIF_INTEGER)dw_flags;
   
@@ -934,7 +934,7 @@ STDMETHODIMP ecom_control_library::control_site::TransformCoords(  /* [in, out] 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::TranslateAccelerator(  /* [in] */ ecom_control_library::tagMSG * p_msg, /* [in] */ ULONG grf_modifiers )
+STDMETHODIMP ecom_control_library::control_site::TranslateAccelerator(  /* [in] */ MSG * p_msg, /* [in] */ ULONG grf_modifiers )
 
 /*-----------------------------------------------------------
   No description available.
@@ -945,7 +945,7 @@ STDMETHODIMP ecom_control_library::control_site::TranslateAccelerator(  /* [in] 
   EIF_OBJECT tmp_p_msg = NULL;
   if (p_msg != NULL)
   {
-    tmp_p_msg = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_198 (p_msg));
+    tmp_p_msg = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_198 ((ecom_control_library::tagMSG *)p_msg));
   }
   EIF_INTEGER tmp_grf_modifiers = (EIF_INTEGER)grf_modifiers;
   
@@ -961,7 +961,7 @@ STDMETHODIMP ecom_control_library::control_site::TranslateAccelerator(  /* [in] 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnFocus(  /* [in] */ LONG f_got_focus )
+STDMETHODIMP ecom_control_library::control_site::OnFocus(  /* [in] */ BOOL f_got_focus )
 
 /*-----------------------------------------------------------
   No description available.
@@ -1084,7 +1084,7 @@ STDMETHODIMP ecom_control_library::control_site::EnumObjects(  /* [in] */ ULONG 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::LockContainer(  /* [in] */ LONG f_lock )
+STDMETHODIMP ecom_control_library::control_site::LockContainer(  /* [in] */ BOOL f_lock )
 
 /*-----------------------------------------------------------
   No description available.
@@ -1846,7 +1846,7 @@ STDMETHODIMP ecom_control_library::control_site::OptionKeyPath(  /* [out, retval
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::ShowContextMenu(  /* [in] */ ULONG dw_id, /* [in] */ ecom_control_library::tagPOINT * ppt, /* [in] */ IUnknown * pcmdt_reserved, /* [in] */ IDispatch * pdisp_reserved )
+STDMETHODIMP ecom_control_library::control_site::ShowContextMenu(  /* [in] */ ULONG dw_id, /* [in] */ ::tagPOINT * ppt, /* [in] */ IUnknown * pcmdt_reserved, /* [in] */ IDispatch * pdisp_reserved )
 
 /*-----------------------------------------------------------
   No description available.
@@ -1858,7 +1858,7 @@ STDMETHODIMP ecom_control_library::control_site::ShowContextMenu(  /* [in] */ UL
   EIF_OBJECT tmp_ppt = NULL;
   if (ppt != NULL)
   {
-    tmp_ppt = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_453 (ppt));
+    tmp_ppt = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_453 ((ecom_control_library::tagPOINT *)ppt));
   }
   EIF_OBJECT tmp_pcmdt_reserved = NULL;
   if (pcmdt_reserved != NULL)
@@ -1889,7 +1889,7 @@ STDMETHODIMP ecom_control_library::control_site::ShowContextMenu(  /* [in] */ UL
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::GetHostInfo(  /* [in, out] */ ecom_control_library::_DOCHOSTUIINFO * p_info )
+STDMETHODIMP ecom_control_library::control_site::GetHostInfo(  /* [in, out] */ ::_DOCHOSTUIINFO * p_info )
 
 /*-----------------------------------------------------------
   No description available.
@@ -1900,7 +1900,7 @@ STDMETHODIMP ecom_control_library::control_site::GetHostInfo(  /* [in, out] */ e
   EIF_OBJECT tmp_p_info = NULL;
   if (p_info != NULL)
   {
-    tmp_p_info = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_455 (p_info));
+    tmp_p_info = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_455 ((ecom_control_library::_DOCHOSTUIINFO *)p_info));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
@@ -2000,7 +2000,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::EnableModeless(  /* [in] */ LONG f_enable )
+STDMETHODIMP ecom_control_library::control_site::EnableModeless(  /* [in] */ BOOL f_enable )
 
 /*-----------------------------------------------------------
   No description available.
@@ -2020,7 +2020,7 @@ STDMETHODIMP ecom_control_library::control_site::EnableModeless(  /* [in] */ LON
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnDocWindowActivate(  /* [in] */ LONG f_activate )
+STDMETHODIMP ecom_control_library::control_site::OnDocWindowActivate(  /* [in] */ BOOL f_activate )
 
 /*-----------------------------------------------------------
   No description available.
@@ -2040,7 +2040,7 @@ STDMETHODIMP ecom_control_library::control_site::OnDocWindowActivate(  /* [in] *
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnFrameWindowActivate(  /* [in] */ LONG f_activate )
+STDMETHODIMP ecom_control_library::control_site::OnFrameWindowActivate(  /* [in] */ BOOL f_activate )
 
 /*-----------------------------------------------------------
   No description available.
@@ -2060,7 +2060,7 @@ STDMETHODIMP ecom_control_library::control_site::OnFrameWindowActivate(  /* [in]
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::ResizeBorder(  /* [in] */ ecom_control_library::tagRECT * prc_border, /* [in] */ ::IOleInPlaceUIWindow * p_uiwindow, /* [in] */ LONG f_rame_window )
+STDMETHODIMP ecom_control_library::control_site::ResizeBorder(  /* [in] */const ::tagRECT * prc_border, /* [in] */ ::IOleInPlaceUIWindow * p_uiwindow, /* [in] */ BOOL f_rame_window )
 
 /*-----------------------------------------------------------
   No description available.
@@ -2071,7 +2071,7 @@ STDMETHODIMP ecom_control_library::control_site::ResizeBorder(  /* [in] */ ecom_
   EIF_OBJECT tmp_prc_border = NULL;
   if (prc_border != NULL)
   {
-    tmp_prc_border = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (prc_border));
+    tmp_prc_border = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)prc_border));
   }
   EIF_OBJECT tmp_p_uiwindow = NULL;
   if (p_uiwindow != NULL)
@@ -2095,7 +2095,7 @@ STDMETHODIMP ecom_control_library::control_site::ResizeBorder(  /* [in] */ ecom_
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::IDocHostUIHandler_TranslateAccelerator(  /* [in] */ ecom_control_library::tagMSG * lpmsg, /* [in] */ GUID * pguid_cmd_group, /* [in] */ ULONG n_cmd_id )
+STDMETHODIMP ecom_control_library::control_site::TranslateAccelerator(  /* [in] */ MSG * lpmsg, /* [in] */const GUID * pguid_cmd_group, /* [in] */ ULONG n_cmd_id )
 
 /*-----------------------------------------------------------
   No description available.
@@ -2106,7 +2106,7 @@ STDMETHODIMP ecom_control_library::control_site::IDocHostUIHandler_TranslateAcce
   EIF_OBJECT tmp_lpmsg = NULL;
   if (lpmsg != NULL)
   {
-    tmp_lpmsg = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_198 (lpmsg));
+    tmp_lpmsg = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_198 ((ecom_control_library::tagMSG *)lpmsg));
   }
   EIF_OBJECT tmp_pguid_cmd_group = NULL;
   if (pguid_cmd_group != NULL)
@@ -2303,23 +2303,22 @@ STDMETHODIMP ecom_control_library::control_site::FilterDataObject(  /* [in] */ :
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::OnDataChange(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::wireASYNC_STGMEDIUM * p_stgmed )
+STDMETHODIMP_(void) ecom_control_library::control_site::OnDataChange(  /* [in] */ ::tagFORMATETC * p_formatetc, /* [in] */ STGMEDIUM * p_stgmed )
 
 /*-----------------------------------------------------------
   No description available.
 -----------------------------------------------------------*/
 {
-  ECATCH;
 
   EIF_OBJECT tmp_p_formatetc = NULL;
   if (p_formatetc != NULL)
   {
-    tmp_p_formatetc = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_2 (p_formatetc));
+    tmp_p_formatetc = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_2 ((ecom_control_library::tagFORMATETC *)p_formatetc));
   }
   EIF_OBJECT tmp_p_stgmed = NULL;
   if (p_stgmed != NULL)
   {
-    tmp_p_stgmed = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_cell_6 (p_stgmed, NULL));
+    tmp_p_stgmed = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_5 (p_stgmed));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
@@ -2331,8 +2330,6 @@ STDMETHODIMP ecom_control_library::control_site::OnDataChange(  /* [in] */ ecom_
   if (tmp_p_stgmed != NULL)
     eif_wean (tmp_p_stgmed);
   
-  END_ECATCH;
-  return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -3932,7 +3929,7 @@ STDMETHODIMP ecom_control_library::control_site::QueryInterface( REFIID riid, vo
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::control_site::QueryService(  /* [in] */ GUID * guid_service, /* [in] */ GUID * riid, /* [out] */ IUnknown * * ppv_object )
+STDMETHODIMP ecom_control_library::control_site::QueryService(  /* [in] */REFGUID  guid_service, /* [in] */REFIID  riid, /* [out] */ void * * ppv_object )
 
 /*-----------------------------------------------------------
   No description available.
@@ -3941,33 +3938,29 @@ STDMETHODIMP ecom_control_library::control_site::QueryService(  /* [in] */ GUID 
   ECATCH;
 
   EIF_OBJECT tmp_guid_service = NULL;
-  if (guid_service != NULL)
-  {
-    tmp_guid_service = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_57 (guid_service));
-  }
+  tmp_guid_service = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_57 (&guid_service));
+
   EIF_OBJECT tmp_riid = NULL;
-  if (riid != NULL)
-  {
-    tmp_riid = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_57 (riid));
-  }
+  tmp_riid = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_57 (&riid));
   EIF_OBJECT tmp_ppv_object = NULL;
   if (ppv_object != NULL)
   {
-    tmp_ppv_object = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_cell_431 (ppv_object, NULL));
+    tmp_ppv_object = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_cell_431 ((IUnknown * *)ppv_object, NULL));
     if (*ppv_object != NULL)
-      (*ppv_object)->AddRef ();
+      (*(IUnknown * *)ppv_object)->AddRef ();
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
   eiffel_procedure = eif_procedure ("query_service", type_id);
 
-  (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_guid_service != NULL) ? eif_access (tmp_guid_service) : NULL), ((tmp_riid != NULL) ? eif_access (tmp_riid) : NULL), ((tmp_ppv_object != NULL) ? eif_access (tmp_ppv_object) : NULL));
+  (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), eif_access (tmp_guid_service), eif_access (tmp_riid), ((tmp_ppv_object != NULL) ? eif_access (tmp_ppv_object) : NULL));
   
   if (*ppv_object != NULL)
-    (*ppv_object)->Release ();
-  grt_ec_control_interfaces2.ccom_ec_pointed_cell_431 (((tmp_ppv_object != NULL) ? eif_wean (tmp_ppv_object) : NULL), ppv_object);
+    (*(IUnknown * *)ppv_object)->Release ();
+  grt_ec_control_interfaces2.ccom_ec_pointed_cell_431 (((tmp_ppv_object != NULL) ? eif_wean (tmp_ppv_object) : NULL), (IUnknown * *)ppv_object);
   if (*ppv_object != NULL)
-    (*ppv_object)->AddRef ();
+    (*(IUnknown * *)ppv_object)->AddRef ();
+
   if (tmp_guid_service != NULL)
     eif_wean (tmp_guid_service);
   if (tmp_riid != NULL)

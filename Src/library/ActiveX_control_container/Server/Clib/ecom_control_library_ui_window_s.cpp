@@ -73,7 +73,7 @@ STDMETHODIMP ecom_control_library::ui_window::GetWindow(  /* [out] */ HWND * phw
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::ui_window::ContextSensitiveHelp(  /* [in] */ LONG f_enter_mode )
+STDMETHODIMP ecom_control_library::ui_window::ContextSensitiveHelp(  /* [in] */ BOOL f_enter_mode )
 
 /*-----------------------------------------------------------
   No description available.
@@ -93,7 +93,7 @@ STDMETHODIMP ecom_control_library::ui_window::ContextSensitiveHelp(  /* [in] */ 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::ui_window::GetBorder(  /* [out] */ ecom_control_library::tagRECT * lprect_border )
+STDMETHODIMP ecom_control_library::ui_window::GetBorder(  /* [out] */ ::tagRECT * lprect_border )
 
 /*-----------------------------------------------------------
   No description available.
@@ -104,7 +104,7 @@ STDMETHODIMP ecom_control_library::ui_window::GetBorder(  /* [out] */ ecom_contr
   EIF_OBJECT tmp_lprect_border = NULL;
   if (lprect_border != NULL)
   {
-    tmp_lprect_border = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (lprect_border));
+    tmp_lprect_border = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)lprect_border));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
@@ -118,7 +118,7 @@ STDMETHODIMP ecom_control_library::ui_window::GetBorder(  /* [out] */ ecom_contr
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::ui_window::RequestBorderSpace(  /* [in] */ ecom_control_library::tagRECT * pborderwidths )
+STDMETHODIMP ecom_control_library::ui_window::RequestBorderSpace(  /* [in] */const ::tagRECT * pborderwidths )
 
 /*-----------------------------------------------------------
   No description available.
@@ -129,7 +129,7 @@ STDMETHODIMP ecom_control_library::ui_window::RequestBorderSpace(  /* [in] */ ec
   EIF_OBJECT tmp_pborderwidths = NULL;
   if (pborderwidths != NULL)
   {
-    tmp_pborderwidths = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (pborderwidths));
+    tmp_pborderwidths = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)pborderwidths));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
@@ -144,7 +144,7 @@ STDMETHODIMP ecom_control_library::ui_window::RequestBorderSpace(  /* [in] */ ec
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::ui_window::SetBorderSpace(  /* [in] */ ecom_control_library::tagRECT * pborderwidths )
+STDMETHODIMP ecom_control_library::ui_window::SetBorderSpace(  /* [in] */const ::tagRECT * pborderwidths )
 
 /*-----------------------------------------------------------
   No description available.
@@ -155,7 +155,7 @@ STDMETHODIMP ecom_control_library::ui_window::SetBorderSpace(  /* [in] */ ecom_c
   EIF_OBJECT tmp_pborderwidths = NULL;
   if (pborderwidths != NULL)
   {
-    tmp_pborderwidths = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 (pborderwidths));
+    tmp_pborderwidths = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_210 ((ecom_control_library::tagRECT *)pborderwidths));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
@@ -170,7 +170,7 @@ STDMETHODIMP ecom_control_library::ui_window::SetBorderSpace(  /* [in] */ ecom_c
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::ui_window::SetActiveObject(  /* [in] */ ::IOleInPlaceActiveObject * p_active_object, /* [in] */ LPWSTR psz_obj_name )
+STDMETHODIMP ecom_control_library::ui_window::SetActiveObject(  /* [in] */ ::IOleInPlaceActiveObject * p_active_object, /* [in] */ LPCOLESTR  psz_obj_name )
 
 /*-----------------------------------------------------------
   No description available.
@@ -187,7 +187,7 @@ STDMETHODIMP ecom_control_library::ui_window::SetActiveObject(  /* [in] */ ::IOl
   EIF_OBJECT tmp_psz_obj_name = NULL;
   if (psz_obj_name != NULL)
   {
-    tmp_psz_obj_name = eif_protect (rt_ce.ccom_ce_lpwstr (psz_obj_name, NULL));
+    tmp_psz_obj_name = eif_protect (rt_ce.ccom_ce_lpwstr ((LPOLESTR)psz_obj_name, NULL));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;

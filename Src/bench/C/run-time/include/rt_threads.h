@@ -117,6 +117,11 @@ extern int eif_is_synchronized (void);
 		result_success = (res != WAIT_TIMEOUT ? 1 : 0); \
 	}
 #else
+/* For platforms other than solaris that potentially do not define ETIME */
+#ifndef ETIME
+#define ETIME ETIMEDOUT
+#endif
+	
 #define EIF_COND_WAIT_WITH_TIMEOUT(result_success, pcond, pmutex, timeout, msg) \
 	{ \
 		int res = 0; \

@@ -15,12 +15,12 @@ feature -- Initialization
 	initialize is
 			-- Initilize all the parameters of the container.
 		do
-			!! children.make
+			!! ev_children.make
 		end
 
 feature {NONE} -- Access
 
-	children: LINKED_LIST [EV_ITEM_IMP]
+	ev_children: LINKED_LIST [EV_ITEM_IMP]
 			-- List of all the children of the container
 			-- In most case, the index of the child is its id.
 
@@ -32,6 +32,8 @@ feature {NONE} -- Implementation
 			-- to stock his name temporary and once the string has
 			-- been added in the menu, the name of the item is
 			-- stored in the menu
+
+feature {EV_ITEM_IMP} -- Implementation
 
 	set_name (new_name: STRING) is
 			-- Set `name_item' to `new_name'. This string corresponds

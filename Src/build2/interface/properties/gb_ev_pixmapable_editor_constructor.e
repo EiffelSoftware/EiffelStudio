@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 						else
 							error_dialog.set_text (Unix_unsupported_pixmap_type)
 						end
-						error_dialog.show_modal_to_window (parent_editor.parent_window (parent_editor))
+						error_dialog.show_modal_to_window (parent_window (parent_editor))
 					end
 				end
 			else

@@ -169,7 +169,6 @@ feature -- Element Change
 			-- position. Do not move cursor. Empty `other'
 		local
 			original_index: INTEGER
-			new_item_count: INTEGER
 			original_other_count: INTEGER
 		do
 			original_index := index
@@ -228,7 +227,7 @@ feature -- Removal
 			until
 				l.after
 			loop
-				on_item_removed (l.item)
+				on_item_removed_at (l.item, l.index)
 				l.forth
 			end
 		end

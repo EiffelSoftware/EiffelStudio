@@ -173,7 +173,6 @@ feature -- Callback notification about synchro
 	estudio_callback_event is
 			-- 
 		do
---			print ("eStudio : Notification callback done%N")
 			Application.imp_dotnet.estudio_callback_notify
 		end
 		
@@ -215,7 +214,6 @@ feature -- Interaction with .Net Debugger
 			process_exists: icor_debug_process /= Void
 		do
 			icor_debug_process.continue (False)
---			waiting_debugger_callback ("continue")
 			last_dbg_call_success := icor_debug_process.last_call_success
 		end
 		
@@ -227,9 +225,6 @@ feature -- Interaction with .Net Debugger
 			l_thread := Eifnet_debugger_info.icd_thread
 			if l_thread /= Void then
 				l_thread.clear_current_exception
---				check
---					l_thread.last_call_succeed
---				end
 			end
 		end	
 	
@@ -638,27 +633,11 @@ feature -- Function Evaluation
 			Result /= Void
 		end
 		
---| FIXME: JFIAT : we do not need to call the default .ctor ()
---	eiffel_string_ctor: ICOR_DEBUG_FUNCTION is
---			-- ICorDebugFunction for STRING.ctor (void)
---		local
---			l_string_class : CLASS_C
---			l_mod_name: STRING
---			l_icd_module: ICOR_DEBUG_MODULE
---			l_feat_ctor : FEATURE_I
---			l_feat_ctor_tok: INTEGER
---
---		do
---			l_string_class := Eiffel_system.String_class.compiled_class
---			l_feat_ctor_tok := 0x060000D5 -- .ctor
---			l_mod_name := il_debug_info_recorder.module_file_name_for_class (l_string_class.types.first)
---			l_icd_module := icor_debug_module (l_mod_name)
---			Result := l_icd_module.get_function_from_token (l_feat_ctor_tok)
---		ensure
---			Result /= Void
---		end	
 
-	string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): STRING is
+	icd_string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): ICOR_DEBUG_STRING_VALUE is
+			-- ICorDebugStringValue for `icd_string_instance' (STRING object)
+		require
+			icd_string_instance /= Void
 		local
 			l_icd_value: ICOR_DEBUG_VALUE
 			
@@ -666,27 +645,55 @@ feature -- Function Evaluation
 			l_feat_internal_string_builder: FEATURE_I
 			l_feat_internal_string_builder_token: INTEGER
 		do
+				--| Get STRING info from compilo
+			l_string_class := Eiffel_system.String_class.compiled_class
+				
+				--| Get token to access `internal_string_builder'
+			l_feat_internal_string_builder := l_string_class.feature_named ("internal_string_builder")
+			l_feat_internal_string_builder_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_internal_string_builder)
+				
+				--| Get `internal_string_builder' from `STRING' instance Value
+			l_icd_value := icd_string_instance.get_field_value (icd_string_instance.get_class, l_feat_internal_string_builder_token)
+				
+				--| l_icd_value represents the `internal_string_builder' value
+			if l_icd_value /= Void then
+				Result := edv_external_formatter.icor_debug_string_value_from_string_builder (l_icd_value)
+			end
+		end	
+
+	last_string_value_length: INTEGER
+			-- Last length of the Result from `string_value_from_string_class_object_value'
+			
+	string_value_from_string_class_object_value (icd_string_instance: ICOR_DEBUG_OBJECT_VALUE; min, max: INTEGER): STRING is
+			-- STRING value for `icd_string_instance' with limits `min, max'
+		local
+			l_icd_string_value: ICOR_DEBUG_STRING_VALUE
+			l_size: INTEGER
+			last_string_length: INTEGER
+		do
+			last_string_value_length := 0
 			if icd_string_instance = Void then
 				Result := "Void"
 			else
-					--| Get STRING info from compilo
-				l_string_class := Eiffel_system.String_class.compiled_class
-				
-					--| Get token to access `internal_string_builder'
-				l_feat_internal_string_builder := l_string_class.feature_named ("internal_string_builder")
-				l_feat_internal_string_builder_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_internal_string_builder)
-				
-					--| Get `internal_string_builder' from `STRING' instance Value
-				l_icd_value := icd_string_instance.get_field_value (icd_string_instance.get_class, l_feat_internal_string_builder_token)
-				
-					--| l_icd_value represents the `internal_string_builder' value
-				if l_icd_value /= Void then
-					Result := Edv_external_formatter.string_from_string_builder (l_icd_value)
+				l_icd_string_value := icd_string_value_from_string_class_object_value (icd_string_instance)
+				if l_icd_string_value /= Void then
+					last_string_length := l_icd_string_value.get_length
+					last_string_value_length := last_string_length
+						--| Be careful, in this context min,max correspond to string starting at position '0'
+					if max < 0 then
+						l_size := last_string_length
+					else
+						l_size := (max + 1).min (last_string_length)
+					end
+					Result := l_icd_string_value.get_string (l_size)
+					Result := Result.substring ((min + 1).max (1), l_size)
 				end
 			end
 		end
 
- 	debug_output_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE): STRING is
+ 	debug_output_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
+ 				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE;
+ 				min,max: INTEGER ): STRING is
 			-- Debug ouput string value
 		local
 			l_icd: ICOR_DEBUG_VALUE		
@@ -724,7 +731,7 @@ feature -- Function Evaluation
 						l_icd := function_evaluation (a_frame, l_func, <<l_icd>>)
 						if l_icd /= Void then
 							create l_value_info.make (l_icd)
-							Result := string_value_from_string_class_object_value (l_value_info.interface_debug_object_value)							
+							Result := string_value_from_string_class_object_value (l_value_info.interface_debug_object_value, min, max)							
 						else
 							Result := Void -- "WARNING: Could not evaluate output"	
 						end
@@ -736,7 +743,6 @@ feature -- Function Evaluation
 							print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
 						end
 					end
-	
 				else
 					debug ("DEBUGGER_TRACE_EVAL")
 						print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve FEATURE_I [" 
@@ -874,8 +880,10 @@ feature -- Function Evaluation
 feature -- Bridge to evaluator
 
 	evaluator: EIFNET_DEBUGGER_EVALUATOR
+			-- Dotnet function evaluator
 
 	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]): ICOR_DEBUG_VALUE is
+			-- Return evaluation of function `a_func'
 		do
 			Result := evaluator.function_evaluation (a_frame, a_func, a_args)
 		end

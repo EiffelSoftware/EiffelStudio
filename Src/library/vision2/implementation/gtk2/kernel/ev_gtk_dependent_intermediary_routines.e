@@ -181,7 +181,8 @@ feature {EV_ANY_I} -- Implementation
 			-- Call accelerators for window `a_object_id'
 		local
 			arg: POINTER
-			accel_key, accel_mods: INTEGER
+			accel_key: NATURAL_32
+			accel_mods: INTEGER
 			a_titled_window_imp: EV_TITLED_WINDOW_IMP
 		do
 			a_titled_window_imp ?= eif_id_object (a_object_id)

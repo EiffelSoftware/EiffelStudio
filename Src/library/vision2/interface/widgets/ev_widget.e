@@ -714,7 +714,7 @@ feature -- Event -- removing command association
 			implementation.remove_loose_focus_commands
 		end
 	
-feature {EV_ANY_I, EV_ANY} -- Implementation
+feature {EV_ANY_I, EV_ANY, EV_EVENT_DATA_I} -- Implementation
 
 	implementation: EV_WIDGET_I
 			-- Implementation of Current widget

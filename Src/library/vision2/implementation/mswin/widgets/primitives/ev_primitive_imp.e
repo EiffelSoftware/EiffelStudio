@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"EiffelVision primitive, gtk implementation."
+		"EiffelVision primitive, mswin implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"

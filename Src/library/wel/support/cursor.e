@@ -19,23 +19,11 @@ inherit
 creation
 	make_by_id,
 	make_by_name,
-	make_by_file,
 	make_by_bitmask,
 	make_by_predefined_id,
 	make_by_pointer
 
 feature {NONE} -- Initialization
-
-	make_by_file (file: FILE_NAME) is
-			-- Make a cursor using `file'.
-		require
-			file_not_void: file /= Void
-			-- XXXX file_exists: file.exists (for v3.3.10)
-		do
-			check
-				to_do: False
-			end
-		end
 
 	make_by_bitmask (x_hot_spot, y_hot_spot: INTEGER;
 			and_plane, xor_plane: ARRAY [CHARACTER]) is

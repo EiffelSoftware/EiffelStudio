@@ -9,7 +9,7 @@
 	<paragraph>
 		<paragraph>The Assertions property page allows you to choose which of the Design By  Contract assertions to apply globally to your project. It is possible to  override theses default assertions at the individual cluster level on the 
 			<link>
-				<url>clusters_ppg.htm</url>
+				<url>clusters_ppg.xml</url>
 				<label>  Clusters Property Page</label>
 			</link>.
 		</paragraph>
@@ -46,27 +46,27 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>/20_Language\10_Eiffel_NET\60_Design_By_Contract.htm</url>
+				<url>/20_Language\10_Eiffel_NET\60_Design_By_Contract.xml</url>
 				<label>Invitation To  Eiffel: Design By Contract</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>project_configuration.htm</url>
+				<url>index.xml</url>
 				<label>Property Page Overview</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>assembly_info.htm</url>
+				<url>assembly_info.xml</url>
 				<label>Assembly InfoProperty Page</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>clusters_ppg.htm</url>
-				<label>ClustersReferences Property Page</label>
+				<url>clusters_ppg.xml</url>
+				<label>Clusters References Property Page</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>ClustersPage.htm</url>
+				<url>clusters_ppg.xml</url>
 				<label/>
 			</link>
 		</seealso>

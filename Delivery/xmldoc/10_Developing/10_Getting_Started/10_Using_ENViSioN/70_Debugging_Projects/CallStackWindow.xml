@@ -16,15 +16,15 @@
 		</paragraph>
 		<paragraph>  This screenshot corresponds to system that has stopped in the creation 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 				<label>feature</label>
 			</link> of the 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#root class</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>root class</anchor_name>
 				<label>Root Class</label>
 			</link>  as the Result of a 
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/breakpoints/index.xml</url>
 				<label>Break point</label>
 			</link>  being reached. This is why there is only one entry in the list.
 		</paragraph>
@@ -33,22 +33,22 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>./index.htm</url>
+				<url>./index.xml</url>
 				<label>Debugging</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./LocalsWindow.htm</url>
+				<url>./LocalsWindow.xml</url>
 				<label>Locals Window</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./BreakPointWindow.htm</url>
+				<url>./BreakPointWindow.xml</url>
 				<label>Break Point Window</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>./WatchWindow.htm</url>
+				<url>./WatchWindow.xml</url>
 				<label>Watch Window</label>
 			</link>
 			<line_break/>

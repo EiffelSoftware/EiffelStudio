@@ -3,15 +3,15 @@
 	<paragraph>
 		<paragraph>  The Class View allows you to browse the Eiffel classes that are included in your  solution. You may only browse the classes of a compiled system that is  currently open in Visual Studio. As well as being able to view available  classes, the Class View allows you to see the 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#feature</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>feature</anchor_name>
 				<label>features</label>
 			</link>  of each class and the relationships between classes, for example, 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#ancestors</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>ancestors</anchor_name>
 				<label>ancestors</label>
 			</link>  or 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#descendants</url>
+				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>descendants</anchor_name>
 				<label>descendants</label>
 			</link>.
 		</paragraph>
@@ -41,17 +41,17 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 				<label>Solution Explorer</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_Object_Browser/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_Object_Browser/index.xml</url>
 				<label>Object Browser</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.htm</url>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
 				<label>Using ENViSioN! Within Visual Studio.NET</label>
 			</link>
 			<line_break/>

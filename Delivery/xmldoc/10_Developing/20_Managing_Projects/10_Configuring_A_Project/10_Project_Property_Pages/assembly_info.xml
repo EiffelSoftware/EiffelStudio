@@ -56,22 +56,22 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>project_configuration.htm</url>
+				<url>index.xml</url>
 				<label>Property Page Overview</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>general_ppg.htm</url>
+				<url>general_ppg.xml</url>
 				<label>GeneralProperty Page</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>assertions_ppg.htm</url>
+				<url>assertions_ppg.xml</url>
 				<label>Assertions Property Page</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>ExternalsPage.htm</url>
+				<url>externals_ppg.xml</url>
 				<label>Externals Property Page</label>
 			</link>
 		</seealso>

@@ -26,21 +26,21 @@
 		<list ordered="false">
 			<item>  Auto list members: when selected, a list of available members of a given 
 				<link>
-					<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#object</url>
+					<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>object</anchor_name>
 					<label>object</label>
 				</link>  or 
 				<link>
-					<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
+					<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>class</anchor_name>
 					<label>class</label>
 				</link>  displays at the appropriate places when you enter a line of code.
 			</item>
 			<item>  Parameter information: when selected, parameter information displays for the 
 				<link>
-					<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#function</url>
+					<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>function</anchor_name>
 					<label>function</label>
 				</link>  or
 				<link>
-					<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#procedure</url>
+					<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url><anchor_name>procedure</anchor_name>
 					<label>procedure</label>
 				</link>,  if any are available.
 			</item>
@@ -64,17 +64,17 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>index.htm</url>
+				<url>index.xml</url>
 				<label>The Eiffel Editor</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>EditorFeatures.htm</url>
+				<url>EditorFeatures.xml</url>
 				<label>Editor Features</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>EditorQuickInfo.htm</url>
+				<url>EditorQuickInfo.xml</url>
 				<label>Editor Quick Info</label>
 			</link>
 			<line_break/>

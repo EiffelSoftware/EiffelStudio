@@ -30,24 +30,24 @@
 						<item>
 							<bold>Build Selection</bold> - Compiles only the currently selected project in the 
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 								<label>Solution Explorer</label>
 							</link>.  The compilation method of this project is equivalent to that performed by 
 							<bold>Build   Solution</bold>. This menu entry is greyed out when there is no project  selected in the 
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 								<label>Solution Explorer</label>
 							</link>.
 						</item>
 						<item>
 							<bold>Rebuild Selection</bold> - Compiles only the currently selected project in the 
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 								<label>Solution Explorer</label>
 							</link>.The  compilation method of this project is equivalent to that performed by 
 							<bold>Rebuild  Solution</bold>. This menu entry is greyed out when there is no project  selected in the
 							<link>
-								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
 								<label>Solution Explorer</label>
 							</link>.
 						</item>
@@ -63,13 +63,13 @@
 					</list>
 					<paragraph>  The 
 						<link>
-							<url>/10_Developing/20_Managing_Projects/10_Configuring_A_Project/10_Project_Property_Pages/ProjectConfiguration.htm</url>
+							<url>/10_Developing/20_Managing_Projects/10_Configuring_A_Project/10_Project_Property_Pages/index.xml</url>
 							<label>Project Property Pages</label>
 						</link>  allow you to adjust the properties of your project, many of which apply  directly to the compilation.
 					</paragraph>
 					<paragraph>  If your compilation fails, see 
 						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/CompilationErrors.htm</url>
+							<url>CompilationErrors.xml</url>
 							<label>Compilation Errors</label>
 						</link>  for more information on correcting such errors.
 					</paragraph>
@@ -78,17 +78,17 @@
 						<bold>See also</bold>
 						<line_break/>
 						<link>
-							<url>/10_Using_ENViSioN/60_Compiling_Projects/CompilationErrors.htm</url>
+							<url>CompilationErrors.xml</url>
 							<label>Compilation Errors</label>
 						</link>
 						<line_break/>
 						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.htm</url>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
 							<label>Using ENViSioN! Within Visual Studio.NET</label>
 						</link>
 						<line_break/>
 						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/index.htm</url>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/index.xml</url>
 							<label>Debugging</label>
 						</link>
 						<line_break/>

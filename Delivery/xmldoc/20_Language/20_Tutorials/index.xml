@@ -26,11 +26,11 @@
 		</list>
 		<paragraph> Both these documents refer to features of classic Eiffel, and although similar, no specific Eiffel for .NET syntax or features are described. For more information regarding the 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Eiffel_for_NET.htm</url>
+				<url>/20_Language/10_Eiffel_NET/index.xml</url>
 				<label>Eiffel for .Net Language</label>
 			</link>, click 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Eiffel_for_NET.htm</url>
+				<url>/20_Language/10_Eiffel_NET/index.xml</url>
 				<label>here</label>
 			</link>. 
 		</paragraph>
@@ -40,7 +40,7 @@
 				<label>Object-Oriented Software Construction, 2nd edition</label>
 			</link>; for a full description of the language, get the book 
 			<link>
-				<url>http://www.eiffel.com/doc/#etl</url>
+				<url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name>
 				<label>Eiffel:  The Language</label>
 			</link>. (These two links require Web access.)
 		</paragraph>
@@ -48,7 +48,7 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>/20_Language/10_Eiffel_NET/Eiffel_for_NET.htm</url>
+				<url>/20_Language/10_Eiffel_NET/index.xml</url>
 				<label>Eiffel for .Net Language</label>
 			</link>
 			<line_break/>

@@ -74,17 +74,17 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>project_configuration.htm</url>
+				<url>index.xml</url>
 				<label>Property Page Overview</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>externals_ppg.htm</url>
+				<url>externals_ppg.xml</url>
 				<label>Externals Property Page</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>debugging_ppg.htm</url>
+				<url>debugging_ppg.xml</url>
 				<label>DebuggingProperty Page</label>
 			</link>
 		</seealso>

@@ -15,31 +15,31 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#introduction</url>
+					<anchor_name>introduction</anchor_name>
 					<label>Introduction Page</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#select_project</url>
+					<anchor_name>select_project</anchor_name>
 					<label>Select Eiffel ENViSioN! Project</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#select_configuration</url>
+					<anchor_name>select_configuration</anchor_name>
 					<label>Select Project Configration</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#select_clusters</url>
+					<anchor_name>select_clusters</anchor_name>
 					<label>Select Clusters</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>#summary</url>
+					<anchor_name>summary</anchor_name>
 					<label>Generate Documentation</label>
 				</link>
 			</item>
@@ -49,13 +49,13 @@
 		</heading>
 		<paragraph>TheHTML Report Wizard requires that you use a compiled Eiffel ENViSioN! project.  For the best results ensure that you compile in the release configuration mode,  or a configuration mode that has the 
 			<link>
-				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\GeneralPage.htm#OptimizeCode</url>
+				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\general_ppg.xml</url><anchor_name>OptimizeCode</anchor_name>
 				<label>Optimize  Code</label>
 			</link> project property set in the 
 			<link>
-				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\GeneralPage.htm</url>
-				<label>Genera</label>
-			</link>l property page.
+				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\general_ppg.xml</url>
+				<label>General property page</label>.
+			</link>
 		</paragraph>
 		<heading>
 			<size>2</size>  Introduction
@@ -128,7 +128,7 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>/10_Developing/10_Getting_Started/20_Managing_Projects/30_Documenting_A_Project/documenting_a_project.htm</url>
+				<url>../../../20_Managing_Projects/30_Documenting_A_Project/documenting_a_project.xml</url>
 				<label>  Documenting ENViSioN! Projects</label>
 			</link>
 		</seealso>

@@ -43,12 +43,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>project_configuration.htm</url>
+				<url>index.xml</url>
 				<label>Property Page Overview</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>advanced_ppg.htm</url>
+				<url>advanced_ppg.xml</url>
 				<label>Advanced Property Page</label>
 			</link>
 			<line_break/>

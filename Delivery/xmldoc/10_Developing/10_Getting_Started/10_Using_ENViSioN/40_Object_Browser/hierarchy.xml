@@ -9,17 +9,17 @@
 	<paragraph>
 		<paragraph>  For every node in the 
 			<link>
-				<url>index.htm</url>
+				<url>index.xml</url>
 				<label>Object Browser</label>
 			</link>, there will be a set of child nodes that  you may expand in order to explore relevent information regarding the current  node. For example, if the current node represents a cluster, then the child  nodes will be all Eiffel Classes in that cluster. If you subsequently open up  one of the child nodes representing an Eiffel Class, you will be presented with  a new set of nodes, applicable only to an Eiffel Class.
 		</paragraph>
 		<paragraph>  Each node in the 
 			<link>
-				<url>index.htm</url>
+				<url>index.xml</url>
 				<label>Object Browser</label>
 			</link> is represented by a text and an icon. Below is a  table of all the icons that may appear in the 
 			<link>
-				<url>index.htm</url>
+				<url>index.xml</url>
 				<label>Object Browser</label>
 			</link>, along details of  their functionality.
 		</paragraph>
@@ -436,12 +436,12 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>index.htm</url>
+				<url>index.xml</url>
 				<label>Object Browser</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>../index.htm</url>
+				<url>../index.xml</url>
 				<label>Using ENViSioN! Within Visual Studio.NET</label>
 			</link>
 			<line_break/>

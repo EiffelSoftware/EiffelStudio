@@ -70,7 +70,7 @@
 					</label>
 				</link>: Situated to the right hand side of the window, this  object editor automatically targets itself to the selected 
 				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/02_notation.xml#object</url>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 					<label>  object</label>
 				</link> in the 
 				<link>
@@ -102,11 +102,11 @@
 					</cell>
 					<cell>Delete 
 						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/02_notation.xml#object</url>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 							<label>   object</label>
 						</link>/
 						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/02_notation.xml#component</url>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/02_notation.xml</url><anchor_name>component</anchor_name>
 							<label>component</label>
 						</link>.
 					</cell>
@@ -132,7 +132,7 @@
 					</cell>
 					<cell>
 						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/70_history/index.xml#undo</url>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/70_history/index.xml</url><anchor_name>undo</anchor_name>
 							<label>Undo</label>
 						</link>   last action.
 					</cell>
@@ -158,7 +158,7 @@
 					</cell>
 					<cell>
 						<link>
-							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/70_history/index.xml#redo</url>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/eiffelbuild/reference/70_history/index.xml</url><anchor_name>redo</anchor_name>
 							<label>Redo</label>
 						</link>   last undone action.
 					</cell>

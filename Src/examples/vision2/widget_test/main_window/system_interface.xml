@@ -494,7 +494,7 @@
 								</EV_BOX>
 							<EV_PIXMAPABLE />
 							<EV_CONTAINER />
-							<item type="EV_VERTICAL_BOX"><Internal_properties ><id >70</id>
+							<item type="EV_VERTICAL_BOX"><Internal_properties ><id >50</id>
 									<name >object_editor</name>
 									</Internal_properties>
 								<EV_COLORIZABLE />
@@ -691,40 +691,30 @@
 								<EV_TEXT_ALIGNABLE />
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />
-								<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >67</id>
+								<item type="EV_CELL"><Internal_properties ><id >67</id>
 										</Internal_properties>
 									<EV_COLORIZABLE />
 									<EV_SENSITIVE />
 									<EV_WIDGET />
-									<EV_BOX ><Is_item_expanded >11</Is_item_expanded>
-										</EV_BOX>
 									<EV_PIXMAPABLE />
 									<EV_CONTAINER />
-									<item type="EV_BUTTON"><Internal_properties ><id >68</id>
-											<name >increase_text_button</name>
+									<item type="EV_SPIN_BUTTON"><Internal_properties ><id >68</id>
+											<name >modify_text_size</name>
 											</Internal_properties>
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE />
-										<EV_TOOLTIPABLE ><Tooltip >Increase size of displayed text</Tooltip>
-											</EV_TOOLTIPABLE>
+										<EV_TEXTABLE ><Text >4</Text>
+											</EV_TEXTABLE>
+										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
-										<EV_TEXT_ALIGNABLE />
-										<EV_PIXMAPABLE />
-										</item>
-									<item type="EV_BUTTON"><Internal_properties ><id >69</id>
-											<name >decrease_text_button</name>
-											</Internal_properties>
-										<EV_COLORIZABLE />
-										<EV_FONTABLE />
-										<EV_SENSITIVE />
-										<EV_TEXTABLE />
-										<EV_TOOLTIPABLE ><Tooltip >Decrease size of displayed text</Tooltip>
-											</EV_TOOLTIPABLE>
-										<EV_WIDGET />
-										<EV_TEXT_ALIGNABLE />
-										<EV_PIXMAPABLE />
+										<EV_GAUGE ><Value >4</Value>
+											<Lower >4</Lower>
+											<Upper >75</Upper>
+											</EV_GAUGE>
+										<EV_TEXT_COMPONENT />
+										<Events ><Event >change_actions EV_GAUGE_ACTION_SEQUENCES update_text_size</Event>
+											</Events>
 										</item>
 									</item>
 								</item>

@@ -71,6 +71,9 @@ feature -- Status report
 	is_text_displayed: BOOLEAN
 			-- Should text be displayed next to buttons when available?
 
+	is_text_important: BOOLEAN
+			-- Should only text deemed as important be displayed?
+
 	has_gray_icons: BOOLEAN
 			-- Should gray icons be displayed?
 
@@ -83,14 +86,25 @@ feature -- Status setting
 			-- Set `is_text_displayed' to True.
 			-- Call `update_toolbar' to have change taken into account.
 		do
+			is_text_important := False
 			is_text_displayed := True
 		end
 
 	disable_text_displayed is
-			-- Set `is_text_displayed' to False.
+			-- Set icons only
+			-- Call `update_toolbar' to have change taken into account.
+		do
+			is_text_important := False
+			is_text_displayed := False
+		end
+
+	enable_important_text is
+			-- Set `is_text_important' to True
+			-- This shows only icons with important text
 			-- Call `update_toolbar' to have change taken into account.
 		do
 			is_text_displayed := False
+			is_text_important := True
 		end
 
 	enable_gray_icons is
@@ -141,7 +155,7 @@ feature -- Transformation
 			end
 
 				-- Show the dialog and let the user customize the toolbar.
-			dialog.customize_toolbar (widget_parent, has_gray_icons, is_text_displayed, Current)
+			dialog.customize_toolbar (widget_parent, has_gray_icons, is_text_displayed, is_text_important, Current)
 
 				-- Rebuilt the toolbar if needed.
 			if dialog.valid_data then
@@ -155,6 +169,7 @@ feature -- Transformation
 					dialog.final_toolbar.forth
 				end
 				is_text_displayed := dialog.is_text_displayed
+				is_text_important := dialog.is_text_important
 				has_gray_icons := dialog.has_gray_icons
 				update_toolbar
 				changed := True
@@ -163,17 +178,28 @@ feature -- Transformation
 
 feature -- Conversion
 
+	new_toolbar: EV_TOOL_BAR is
+			-- 
+		do
+			create Result
+			if is_text_important then
+				Result.disable_vertical_button_style
+			else
+				Result.enable_vertical_button_style
+			end
+		end	
+
 	update_toolbar is
 			-- [Re]generate `widget' using the ARRAYED_LIST.
 		local
 			curitem: EV_TOOL_BAR_ITEM
 			recyclable_item: EB_RECYCLABLE
-			cur_x, cur_y: INTEGER
 			cur_bar: EV_TOOL_BAR
 			cv_sep: EB_TOOLBARABLE_SEPARATOR
 			cv_cmd: EB_TOOLBARABLE_COMMAND
-			cmd_found: BOOLEAN
 			loc_top_window: EB_VISION_WINDOW
+			in_text_toolbar: BOOLEAN
+			tool_bar_b: EV_TOOL_BAR_BUTTON
 		do
 			loc_top_window := top_parent
 			if loc_top_window /= Void then
@@ -185,64 +211,54 @@ feature -- Conversion
 			widget.wipe_out
 
 				-- Create a new toolbar.
-			create cur_bar
-			cmd_found := False
-			if count > 0 then
-				from
-					start
-				until
-					after or cmd_found
-				loop
-					curitem := item.new_toolbar_item (is_text_displayed, has_gray_icons)
-					recyclable_item ?= curitem
-					if recyclable_item /= Void then
-						add_recyclable (recyclable_item)
-					end
-					cv_sep ?= item
-					if cv_sep /= Void then
-						cur_bar.extend (curitem)
-					else
-						cv_cmd ?= item
-						if cv_cmd /= Void and then cv_cmd.is_displayed then
-							cur_x := curitem.pixmap.width
-							cur_y := curitem.pixmap.height
-							cur_bar.extend (curitem)
-							cmd_found := True
-						end
-					end
-					forth
+			from
+				start
+				cur_bar := new_toolbar
+			until
+				after
+			loop
+				curitem := item.new_toolbar_item (is_text_displayed or is_text_important, has_gray_icons)
+				recyclable_item ?= curitem
+				if recyclable_item /= Void then
+					add_recyclable (recyclable_item)
 				end
-
-				from
-				until
-					after
-				loop
-					curitem := item.new_toolbar_item (is_text_displayed, has_gray_icons)
-					recyclable_item ?= curitem
-					if recyclable_item /= Void then
-						add_recyclable (recyclable_item)
-					end
-					cv_sep ?= item
-					if cv_sep /= Void then
-						cur_bar.extend (curitem)
-					else
-						cv_cmd ?= item
-						if cv_cmd /= Void and then cv_cmd.is_displayed then
-							if curitem.pixmap.height /= cur_y or else curitem.pixmap.width /= cur_x then
-								widget.extend (cur_bar)
-								widget.disable_item_expand (cur_bar)
-								create cur_bar
-								cur_x := curitem.pixmap.width
-								cur_y := curitem.pixmap.height
+				cv_sep ?= item
+				if cv_sep /= Void then
+					cur_bar.extend (curitem)
+					widget.extend (cur_bar)
+					widget.disable_item_expand (cur_bar)
+					cur_bar := new_toolbar
+					in_text_toolbar := False
+				else
+					cv_cmd ?= item
+					if cv_cmd /= Void and then cv_cmd.is_displayed then							
+						if is_text_important then
+							if cv_cmd.is_tooltext_important then
+								if not in_text_toolbar then
+									widget.extend (cur_bar)
+									widget.disable_item_expand (cur_bar)
+									cur_bar := new_toolbar
+									in_text_toolbar := True										
+								end
+							else
+									-- Strip unimportant text if not needed
+								tool_bar_b ?= curitem
+								tool_bar_b.remove_text
+								if in_text_toolbar then
+									widget.extend (cur_bar)
+									widget.disable_item_expand (cur_bar)
+									cur_bar := new_toolbar
+									in_text_toolbar := False
+								end
 							end
-							cur_bar.extend (curitem)
 						end
+						cur_bar.extend (curitem)
 					end
-					forth
 				end
-				widget.extend (cur_bar)
-				widget.disable_item_expand (cur_bar)
+				forth
 			end
+			widget.extend (cur_bar)
+			widget.disable_item_expand (cur_bar)
 
 			if loc_top_window /= Void then
 				loc_top_window.unlock_update

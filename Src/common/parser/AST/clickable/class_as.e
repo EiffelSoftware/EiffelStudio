@@ -209,7 +209,7 @@ feature {COMPILER_EXPORTER} -- Output
 			end;
 			ctxt.put_text_item (ti_Class_keyword);
 			ctxt.put_space;
-			ctxt.put_string (c_name);
+			ctxt.put_class_name (c_name);
 
 			if generics /= Void then
 				ctxt.put_space;
@@ -267,7 +267,7 @@ feature {COMPILER_EXPORTER} -- Output
 			ctxt.put_text_item_without_tabs (ti_Class_keyword);
 
 			ctxt.put_space
-			ctxt.put_string (c_name)
+			ctxt.put_class_name (c_name)
 			ctxt.new_line
 		end;
 

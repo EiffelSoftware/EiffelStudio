@@ -82,7 +82,7 @@ feature {COMPILER_EXPORTER}
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_string (dump)
+			ctxt.put_class_name (dump)
 		end;
 
 end -- class TYPE

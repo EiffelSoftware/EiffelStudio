@@ -70,7 +70,7 @@ feature {AST_EIFFEL} -- Output
 			s := clone (class_name)
 			s.to_upper;
 
-			ctxt.put_string (s)
+			ctxt.put_class_name (s)
 			if generics /= Void then
 				ctxt.put_space;
 				ctxt.put_text_item_without_tabs (ti_L_bracket);

@@ -84,7 +84,7 @@ feature {AST_EIFFEL} -- Output
 				loop
 					temp := clone (clients.item)
 					temp.to_upper
-					ctxt.put_string (temp)
+					ctxt.put_class_name (temp)
 					clients.forth
 					if not clients.after then
 						ctxt.put_text_item_without_tabs (ti_Comma)

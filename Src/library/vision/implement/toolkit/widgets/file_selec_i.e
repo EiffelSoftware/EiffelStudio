@@ -52,6 +52,12 @@ feature -- Access
 		deferred
 		end;
 
+	pattern_name: STRING is
+			-- Name of the search pattern used in combination
+			-- with `directory' files and directories to be displayed
+		deferred
+		end;
+
 	selected_file: STRING is
 			-- Current selected file
 		deferred
@@ -199,6 +205,13 @@ feature -- Element change
 			-- Set pattern to `a_pattern'.
 		require
 			not_a_pattern_void: a_pattern /= Void
+		deferred
+		end;
+
+	set_pattern_name (a_name: STRING) is
+			-- Set pattern_name to `a_name'.
+		require
+			not_a_name_void: a_name /= Void
 		deferred
 		end;
 

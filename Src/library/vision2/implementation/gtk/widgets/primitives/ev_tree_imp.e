@@ -25,6 +25,15 @@ feature {NONE} -- Initialization
 			widget := gtk_tree_new
 		end
 
+feature -- Event : command association
+
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+			-- Make `command' executed when an item is
+			-- selected.
+		do
+			add_command ("selection_changed", a_command, arguments)
+		end
+
 feature {EV_TREE_ITEM} -- Implementation
 
 	add_item (item: EV_TREE_ITEM) is

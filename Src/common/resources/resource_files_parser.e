@@ -2,7 +2,7 @@ indexing
 
 	description: "Resource file name server"
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class RESOURCE_FILES_PARSER
 

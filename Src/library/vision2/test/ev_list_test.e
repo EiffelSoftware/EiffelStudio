@@ -20,19 +20,19 @@ create
 
 feature {NONE} -- Initalization
 
-	make (a_list: DYNAMIC_LIST [G]; a_name: STRING; an_agent: like item_agent) is
+	make (a_name: STRING; list_creator: like list_agent; item_creator: like item_agent) is
 			-- test `a_list'.
 		require
-			a_list_not_void: a_list /= Void
-			a_list_empty: a_list.empty
 			a_name_not_void: a_name /= Void
-			an_agent_not_void: an_agent /= Void
+			item_agent_not_void: item_agent /= Void
+			list_agent_not_void: list_agent /= Void
 		do
 			subject_name := a_name
 			description := "Test of dynamic list: " + a_name + "."
-			list := a_list
-			item_agent := an_agent
+			list_agent := list_creator
+			item_agent := item_creator
 			create {LINKED_LIST [G]} similar_list.make
+			list := list_agent.item ([])
 		end
 
 feature -- Basic operation
@@ -61,12 +61,11 @@ feature -- Basic operation
 		--	test_list.extend (["remove", ~test_remove])
 		--	test_list.extend (["remove_left", ~test_remove_left])
 		--	test_list.extend (["remove_right", ~test_remove_right])
-
-			test_list.extend (["append", ~test_append])
-			test_list.extend (["fill", ~test_fill])
 		--	test_list.extend (["append", ~test_append])
-		--	test_list.extend (["merge_left", ~test_merge_left])
-		--	test_list.extend (["merge_right", ~test_merge_right])
+		--	test_list.extend (["fill", ~test_fill])
+			test_list.extend (["append", ~test_append])
+			test_list.extend (["merge_left", ~test_merge_left])
+			test_list.extend (["merge_right", ~test_merge_right])
 
 			description.append ("Initial state... ")
 			append_result
@@ -192,6 +191,8 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	item_agent: FUNCTION [ANY, TUPLE [], G]
+
+	list_agent: FUNCTION [ANY, TUPLE [], like list]
 
 	list: DYNAMIC_LIST [G]
 			-- The list to perform the tests on.
@@ -608,6 +609,71 @@ feature {NONE} -- Implementation
 			similar_list.fill (s)
 		end
 
+	test_merge_left is
+		local
+			n: INTEGER
+			sl: LINKED_LIST [G]
+			l: DYNAMIC_LIST [G]
+		do
+			from
+				n := Testsize
+				create sl.make
+				l := list_agent.item ([])
+			until
+				n = 1
+			loop
+				new_item
+				l.extend (last_item)
+				sl.extend (last_item)
+				n := n - 1
+			end
+			if similar_list.extendible and then not similar_list.off then
+				list.merge_left (l)
+				similar_list.merge_left (sl)
+			end
+		end
+
+	test_merge_right is
+		local
+			n: INTEGER
+			sl: LINKED_LIST [G]
+			l: DYNAMIC_LIST [G]
+		do
+			from
+				n := Testsize
+				create sl.make
+				l := list_agent.item ([])
+			until
+				n = 1
+			loop
+				new_item
+				l.extend (last_item)
+				sl.extend (last_item)
+				n := n - 1
+			end
+			if similar_list.extendible and then not similar_list.off then
+				list.merge_right (l)
+				similar_list.merge_right (sl)
+			end
+		end
+
+	test_swap is
+		local
+			n: INTEGER
+		do
+			from
+				n := Testsize
+			until
+				n = 1
+			loop
+				if not similar_list.off and then similar_list.valid_index (n) then
+					list.swap (n)
+					similar_list.swap (n)
+				end
+				n := n - 1
+			end
+		end
+
 invariant
 	list_not_void: list /= Void
 	description_not_void: description /= Void
@@ -635,8 +701,8 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.12  2000/03/02 17:11:41  brendel
---| Added tests for `append' and `fill'.
+--| Revision 1.13  2000/03/02 17:46:57  brendel
+--| Added tests for `merge_left', `merge_right' and `swap'.
 --|
 --| Revision 1.11  2000/03/02 01:35:27  brendel
 --| Added tests for remove-features.

@@ -21,7 +21,7 @@
 #define ccom_string_to_guid(_pwchar_,_p_guid_) (CLSIDFromString ((LPOLESTR)_pwchar_, (LPCLSID)_p_guid_))
 
 #ifdef __cplusplus
-#define ccom_is_equal_guid(_guid1_,_guid2_) ((IsEqualGUID((REFGUID)*(_guid1_),(REFGUID)*(_guid2_)) == FALSE)? EIF_FALSE : EIF_TRUE)
+#define ccom_is_equal_guid(_guid1_,_guid2_) ((IsEqualGUID((REFGUID)*(GUID *)(_guid1_),(REFGUID)*(GUID *)(_guid2_)) == FALSE)? EIF_FALSE : EIF_TRUE)
 #else
 #define ccom_is_equal_guid(_guid1_,_guid2_) ((IsEqualGUID((REFGUID)(_guid1_),(REFGUID)(_guid2_)) == FALSE)? EIF_FALSE : EIF_TRUE)
 #endif

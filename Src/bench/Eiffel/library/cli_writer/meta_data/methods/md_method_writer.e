@@ -90,6 +90,8 @@ feature -- Update
 			until
 				method_locations.after
 			loop
+				md_emit.set_method_rva (method_locations.key_for_iteration,
+					top_rva + method_locations.item_for_iteration)
 				method_locations.forth
 			end
 		ensure

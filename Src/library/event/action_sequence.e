@@ -53,28 +53,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; some_event_data_names: ARRAY [STRING]) is
+	make is
 			-- Create with `a_name' and
 			-- `some_event_data_names' describing each event datum.
 			-- Begin in `Normal_state'.
 		require
-			name_not_void: a_name /= Void
-			name_not_empty: not a_name.empty
-			event_data_names_not_void: some_event_data_names /= Void
-			correct_event_data_names_count:
-				 some_event_data_names.count = dummy_event_data.count
 		do
 			linked_list_make
 			create is_aborted_stack.make
 			create call_buffer.make
-			name_internal := a_name
-			event_data_names_internal := some_event_data_names
 			state := Normal_state
 			create not_empty_actions.make
 			create empty_actions.make
-		ensure
-			name_assigned: name_internal.is_equal (a_name)
-			event_data_names_assigned: event_data_names_internal.is_equal (some_event_data_names)
 		end
 
 feature -- Basic operations
@@ -88,7 +78,6 @@ feature -- Basic operations
 		local
 			snapshot: LINKED_LIST [PROCEDURE [ANY, EVENT_DATA]]
 		do
-			debug ("EVENT_TRACE") print (call_log (event_data)) end
 			create snapshot.make
 			snapshot.fill (Current)
 			inspect
@@ -96,7 +85,6 @@ feature -- Basic operations
 			when
 				Normal_state
 			then
-				debug ("EVENT_TRACE") print (" calling "+count.out+" actions...%N") end
 				from
 					is_aborted_stack.extend (False)
 					snapshot.start
@@ -113,12 +101,10 @@ feature -- Basic operations
 			when
 				Paused_state
 			then
-				debug ("EVENT_TRACE") print (" while paused, buffering.%N") end
 				call_buffer.extend (event_data)
 			when
 				 Blocked_state
 			then
-				debug ("EVENT_TRACE") print (" while blocked, ignoring.%N") end
 				-- do_nothing
 			end
 		ensure
@@ -171,7 +157,6 @@ feature -- Status setting
 	block is
 			-- Ignore subsequent `call's.
 		do
-			debug ("EVENT_TRACE") print (name_internal + ".block%N") end
 			state := Blocked_state
 		ensure
 			blocked_state: state = Blocked_state
@@ -181,7 +166,6 @@ feature -- Status setting
 			-- Buffer subsequent `call's for later execution.
 			-- If `is_blocked' calls will simply be ignored.
 		do
-			debug ("EVENT_TRACE") print (name_internal + ".pause%N") end
 			state := Paused_state
 		ensure
 			paused_state: state = Paused_state
@@ -191,13 +175,11 @@ feature -- Status setting
 			-- Used after `block' or `pause' to resume normal `call'
 			-- execution.  Executes any buffered `call's.
 		do
-			debug ("EVENT_TRACE") print (name_internal + ".resume%N") end
 			state := Normal_state
 			from
 			until
 				call_buffer.empty
 			loop
-				debug ("EVENT_TRACE") print ("from buffer: ") end
 				call (call_buffer.item)
 				call_buffer.remove
 			end
@@ -208,7 +190,6 @@ feature -- Status setting
 	flush is
 			-- Discard any buffered `call's.
 		do
-			debug ("EVENT_TRACE") print (name_internal + ".flush%N") end
 			call_buffer.wipe_out
 		ensure
 			call_buffer_empty: call_buffer.empty
@@ -353,41 +334,9 @@ feature {NONE} -- Implementation
 	dummy_event_data_internal: EVENT_DATA
 			-- See dummy_event_data.
 
-feature {NONE} -- Debug
-
-	call_log (event_data: EVENT_DATA): STRING is
-			-- Textual description of the input to `call'.
-		local
-			i, j: INTEGER
-		do
-			Result := "action_sequence ("+ is_aborted_stack.count.out + " nests) "
-				 + name_internal + ".call ("
-			from
-				i := event_data.lower
-				j := event_data_names_internal.lower
-			until
-				i > event_data.upper
-			loop
-				Result.append (event_data_names_internal.entry (j))
-				Result.append (" = ")
-				Result.append (event_data.entry (i).out)
-				if i /=  event_data.upper then
-						Result.append (", ")
-				end
-				i := i + 1
-				j := j + 1
-			end
-			Result.append (")")
-		end
-
 invariant
 	is_aborted_stack_not_void: is_aborted_stack /= Void
 	call_buffer_not_void: call_buffer /= Void
-	name_not_void: name_internal /= Void
-	name_not_empty: not name_internal.empty
-	event_data_names_not_void: event_data_names_internal /= Void
-	event_data_names_count_ok:
-		event_data_names_internal.count = dummy_event_data.count
 	not_has_void: not has (Void)
 	valid_state:
 		state = Normal_state or state = Paused_state or state = Blocked_state
@@ -419,6 +368,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.19  2000/07/24 22:43:17  oconnor
+--| removed textual identifiers
+--|
 --| Revision 1.18  2000/06/26 19:00:23  oconnor
 --| call  call_action_list (empty_actions) on wipe_out
 --|

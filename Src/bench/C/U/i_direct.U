@@ -1,0 +1,18 @@
+?MAKE:i_direct: Inhdr
+?MAKE:	-pick add $@ %<
+?S:i_direct:
+?S:	This variable conditionally defines the I_DIRECT symbol, and indicates
+?S:	whether a C program should include <direct.h>.
+?S:.
+?C:I_DIRECT:
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <direct.h>.
+?C: This is a pseudo unit for the Watcom C compiler (DOS)
+?C:.
+?H:#$i_direct I_DIRECT		/**/
+?H:.
+?LINT:set i_direct
+: see if this is a direct system
+set direct.h i_direct
+eval $inhdr
+

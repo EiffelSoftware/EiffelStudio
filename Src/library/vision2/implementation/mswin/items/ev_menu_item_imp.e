@@ -164,6 +164,7 @@ feature {EV_MENU_ITEM_HANDLER_IMP} -- WEL Implementation
 	on_activate is
 			-- Is called by the menu when the item is activated.
 		do
+			interface.press_actions.call ([])
 			--| FIXME execute_command (Cmd_item_activate, Void)
 		--	parent_imp.on_selection_changed (Current)
 		end
@@ -205,6 +206,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/22 19:16:21  brendel
+--| Added callback to interface.press_actions.
+--|
 --| Revision 1.26  2000/02/19 05:44:59  oconnor
 --| released
 --|

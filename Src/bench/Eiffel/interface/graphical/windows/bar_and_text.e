@@ -35,7 +35,9 @@ feature
 			shell_make (tool_name, a_screen);
 			!!global_form.make (new_name, Current);
 			build_widgets;
-			set_icon_pixmap (hole.symbol);
+			if hole.icon_symbol.is_valid then
+				set_icon_pixmap (hole.icon_symbol);
+			end;
 			set_icon_name (tool_name);
 			transporter_init
 		end;

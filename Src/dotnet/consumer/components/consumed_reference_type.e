@@ -18,7 +18,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; id: INTEGER) is
-			-- set `name' with `a_name'.
+			-- Set `name' with `a_name'.
 			-- Set `assembly_id' with `id'.
 		require
 			non_void_name: a_name /= Void
@@ -45,7 +45,23 @@ feature -- Access
 		do
 			Result := i
 		end
+		
+	is_by_ref: BOOLEAN is
+			-- Is current type a byref one?
+		do
+			Result := n.item (n.count) = '&'
+		end
 
+feature -- Setting
+
+	set_is_by_ref is
+			-- Set `is_byref'.
+		do
+			n.append_character ('&')
+		ensure
+			is_by_ref_set: is_by_ref
+		end
+		
 feature {NONE} -- Access
 
 	n: STRING
@@ -59,7 +75,8 @@ feature {CONSUMED_ARGUMENT, OVERLOAD_SOLVER, CONSUMED_REFERENCED_TYPE, CONSUMED_
 	is_equal (other: like Current): BOOLEAN is
 			-- Only compare referenced types from same assembly as ids may change for other assemblies!
 		do
-			Result := other.name.is_equal (name) and other.assembly_id.is_equal (assembly_id)
+			Result := other.name.is_equal (name) and other.assembly_id = assembly_id and
+				other.is_by_ref = is_by_ref
 		end
 
 invariant

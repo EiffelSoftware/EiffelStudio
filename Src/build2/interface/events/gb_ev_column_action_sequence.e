@@ -42,11 +42,11 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	internal_display_agent (row: INTEGER; name: STRING; string_handler: ORDERED_STRING_HANDLER) is
+	internal_display_agent (column: INTEGER; name: STRING; string_handler: ORDERED_STRING_HANDLER) is
 			-- Display all other arguments of `Current' on `string_handler', prepended
 			-- with `name' fired.
 		do
-			string_handler.record_string (name + " fired.%NRow : " + row.out)
+			string_handler.record_string (name + " fired.%NColumns : " + column.out)
 		end
 
 end -- class GB_EV_COLUMN_ACTION_SEQUENCE

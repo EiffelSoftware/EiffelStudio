@@ -86,6 +86,8 @@ feature -- Status report
 
 	accepts_pebble (a_pebble: ANY): BOOLEAN is
 			-- Do any actions accept `a_pebble'.
+		require
+			a_pebble_not_void: a_pebble /= Void
 		local
 			cur: CURSOR
 		do
@@ -140,6 +142,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/05 17:09:14  king
+--| Added pebble_not_void precondition to set_pebble
+--|
 --| Revision 1.8  2000/02/29 18:09:06  oconnor
 --| reformatted indexing cluase
 --|

@@ -1,0 +1,5 @@
+Set an environment variable VISION_PRERELEASE to point to
+the directory where you extracted the distribution archive.
+
+Windows users should use Ace.win.ace and copy test_pixmap.win
+over test_pixmap.

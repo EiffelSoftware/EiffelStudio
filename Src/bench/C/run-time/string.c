@@ -18,7 +18,7 @@ doc:<file name="string.c" header="eif_string.h" version="$Id$" summary="External
 #include "eif_portable.h"
 #include "eif_macros.h"			/* For EIF_FALSE|EIF_TRUE. */
 #include "eif_str.h"
-#include "eif_globals.h"
+#include "rt_globals.h"
 #include "rt_constants.h"
 #include <ctype.h>
 #include <string.h>
@@ -43,7 +43,7 @@ rt_private EIF_CHARACTER *make_string(EIF_CHARACTER *s, EIF_INTEGER length)
 	static EIF_CHARACTER buffer [MAX_NUM_LEN + 1];
 #else	/* !EIF_THREADS */
 	EIF_CHARACTER *buffer;
-	EIF_GET_CONTEXT			
+	RT_GET_CONTEXT			
 	buffer = eif_string_buffer;		/* Per thread buffer. */
 #endif	/* !EIF_THREADS */
 	l = length > MAX_NUM_LEN ? MAX_NUM_LEN : length;

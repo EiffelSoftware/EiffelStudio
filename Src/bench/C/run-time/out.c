@@ -121,7 +121,7 @@ rt_public EIF_REFERENCE c_tagged_out(EIF_OBJECT object)
 	/* Write a tagged out printing in an string.
 	 * Return a pointer on an Eiffel string object.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_REFERENCE result;		/* The Eiffel string returned */
 
 	tagged_out = build_out(object);	/* Build tagged out string for object */
@@ -137,7 +137,7 @@ rt_public char *eif_out (EIF_REFERENCE object)
 	 * as argument.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_OBJECT i_object;	/* Safe indirection to object. */
 	
 	i_object = eif_protect (object);	/* Protect "object". */
@@ -155,7 +155,7 @@ rt_public char *eif_out (EIF_REFERENCE object)
 rt_shared char *build_out(EIF_OBJECT object)
 {
 	/* Build up tagged out representation in a private global buffer */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	uint32 flags;		/* Object flags */
 
 	buffer_allocate();	/* Allocation of `tagged_out' */
@@ -195,7 +195,7 @@ rt_shared char *build_out(EIF_OBJECT object)
 
 rt_private void buffer_allocate(EIF_CONTEXT_NOARG)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	/* Allocates initial tagged out buffer */
 
 	tagged_out = (char *) xcalloc(TAG_SIZE, sizeof(char));
@@ -208,7 +208,7 @@ rt_private void buffer_allocate(EIF_CONTEXT_NOARG)
 rt_private void rec_write(register EIF_REFERENCE object, int tab)
 {
 	/* Print recursively `object' in `tagged_out' */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 struct cnode *obj_desc;	   /* Object type description */
 	register3 long nb_attr;				 /* Attribute number */
 	register4 uint32 *types;                /* Attribute types */
@@ -390,7 +390,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 {
 	/* Print special object */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	union overhead *zone;		/* Object header */
 	register5 uint32 flags;		/* Object flags */
 	register3 EIF_INTEGER count;		/* Element count */
@@ -497,7 +497,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 	/* Print tuple object */
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	unsigned int count = RT_SPECIAL_COUNT (object);
 	unsigned int i = 1;
 	int16 dftype = (int16) Dftype (object);
@@ -567,7 +567,7 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 
 rt_private void write_tab(register int tab)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 int i = 0;
 
 	for (; i < tab; i++) {
@@ -596,7 +596,7 @@ rt_private void write_char (EIF_CHARACTER c, char *buf)
 
 rt_private void write_out(EIF_CONTEXT_NOARG)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	/* Print private string `buffer' in `tagged_out'. */
 	write_string(buffero);
@@ -605,7 +605,7 @@ rt_private void write_out(EIF_CONTEXT_NOARG)
 rt_private void write_string(char *str)
 {
 	/* Print `str' in `tagged_out'. */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	int buffer_len = strlen(str);	/* Length of `str' */
 
 	tagged_len += buffer_len;
@@ -628,7 +628,7 @@ rt_private void write_string(char *str)
 
 rt_public EIF_REFERENCE c_outi(EIF_INTEGER i)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register int len;
 	len = sprintf(buffero, "%ld", (long) i);
 	return makestr(buffero, len);
@@ -636,7 +636,7 @@ rt_public EIF_REFERENCE c_outi(EIF_INTEGER i)
 
 rt_public EIF_REFERENCE c_outi64(EIF_INTEGER_64 i)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register int len;
 	len = sprintf(buffero, "%" EIF_INTEGER_64_DISPLAY, i);
 	return makestr(buffero, len);
@@ -644,7 +644,7 @@ rt_public EIF_REFERENCE c_outi64(EIF_INTEGER_64 i)
 
 rt_public EIF_REFERENCE c_outr(EIF_REAL f)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register int len;
 	len = sprintf(buffero, "%g", f);
 	return makestr(buffero, len);
@@ -652,7 +652,7 @@ rt_public EIF_REFERENCE c_outr(EIF_REAL f)
 
 rt_public EIF_REFERENCE c_outd(EIF_DOUBLE d)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register int len;
 	len = sprintf(buffero, "%.17g", d);
 	return makestr(buffero, strlen(buffero));
@@ -665,7 +665,7 @@ rt_public EIF_REFERENCE c_outc(EIF_CHARACTER c)
 
 rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register int len;
 	len = sprintf(buffero, "0x%lX", (unsigned long) p);
 	return makestr(buffero, len);
@@ -688,7 +688,7 @@ rt_shared char *simple_out(struct item *val)
 	 * representation should be kept in sync with those defined above.
 	 * NB: this whole file needs a clean rewriting--RAM.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	buffer_allocate();		/* Allocate initial `tagged_out' buffer */
 
 	switch (val->type & SK_HEAD) {

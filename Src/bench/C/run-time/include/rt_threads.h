@@ -15,6 +15,7 @@
 #define _rt_threads_h_
 
 #include "eif_threads.h"
+#include "rt_globals.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,8 +24,8 @@ extern "C" {
 #ifdef EIF_THREADS
 
 /* GC synchronization feature */
-extern void eif_synchronize_gc(eif_global_context_t *);
-extern void eif_unsynchronize_gc(eif_global_context_t *);
+extern void eif_synchronize_gc(rt_global_context_t *);
+extern void eif_unsynchronize_gc(rt_global_context_t *);
 
 /*---------------------------------------*/
 /*---  In multi-threaded environment  ---*/

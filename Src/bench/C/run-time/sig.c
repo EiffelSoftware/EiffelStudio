@@ -25,6 +25,7 @@ doc:<file name="sig.c" header="eif_sig.h" version="$Id$" summary="Signal handlin
 #include "rt_except.h"
 #include "rt_constants.h"
 #include "rt_sig.h"
+#include "rt_globals.h"
 #include <signal.h>
 #include <errno.h>
 #include <stdio.h>				/* For sprintf() */
@@ -56,27 +57,27 @@ rt_public Signal_t (*esig[EIF_NSIG])(int);	/* Array of signal handlers */
 #ifndef EIF_THREADS
 
 /*
-doc:	<attribute name="sig_ign" return_type="char [EIF_NSIG]" export="public">
+doc:	<attribute name="sig_ign" return_type="char [EIF_NSIG]" export="private">
 doc:		<summary>Records whether a signal is ignored by default or not. Some of these values where set during the initialization, others were hardwired.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread</synchronization>
-doc:		<fixme>Does it really make sense to have per thread data here and to make it `public'?</fixme>
+doc:		<fixme>Does it really make sense to have per thread data here?</fixme>
 doc:	</attribute>
 */
 
-rt_public char sig_ign[EIF_NSIG];
+rt_private char sig_ign[EIF_NSIG];
 
 /*
-doc:	<attribute name="osig_ign" return_type="char [EIF_NSIG]" export="public">
+doc:	<attribute name="osig_ign" return_type="char [EIF_NSIG]" export="private">
 doc:		<summary>Records original status of a signal to know whether by default a signal is ignored or not.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread</synchronization>
-doc:		<fixme>Does it really make sense to have per thread data here and to make it `public'?</fixme>
+doc:		<fixme>Does it really make sense to have per thread data here?</fixme>
 doc:	</attribute>
 */
-rt_public char osig_ign[EIF_NSIG];
+rt_private char osig_ign[EIF_NSIG];
 
 /*
 doc:	<attribute name="esigblk" return_type="int" export="shared">
@@ -134,6 +135,7 @@ rt_public Signal_t ehandlr(EIF_CONTEXT register int sig)
 	 * process jump to this routine, which is in charge of dispatching the
 	 * signal or simply ignoring it.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	Signal_t (*handler)(int);			/* The Eiffel signal handler routine */
 
@@ -206,7 +208,7 @@ rt_public Signal_t exfpe(int sig)
 	 * _longjmp and _setjmp routines which do not do any system call.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 #ifdef HAS_SIGSETMASK
 	int oldmask;	/* Signal mask value */ /* %%ss moved from above */
@@ -366,6 +368,7 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
 	 * being received now. We knwo the signal was not meant to be ignored,
 	 * otherwise it would not have been queued.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	Signal_t (*handler)(int);			/* The Eiffel signal handler routine */
 	int sig;						/* Signal number to be sent */
@@ -403,7 +406,7 @@ rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
 	 * automatically reinstanciated by the run-time (although race conditions
 	 * may occur if this is not done by the kernel).
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
 	int ignored;				/* Ignore status for previous handler */
 
@@ -518,7 +521,7 @@ rt_shared void initsig(void)
 	 * properly initialize signals. This code is thus executed only once
 	 * and was made as short as possible--RAM.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 int sig;				/* To loop over the signals */
 	register2 Signal_t (*old)();	/* Old signal handler */
 
@@ -714,7 +717,7 @@ rt_private void spush(int sig)
 	 * are BSD reliable signals out there, race conditions may occur and lead
 	 * to duplicate signals and/or losses--RAM.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 #ifdef HAS_SIGSETMASK
 	 int oldmask;	/* To save old signal blocking mask */ /* %%ss addded #if ..#endif */
 #endif
@@ -763,7 +766,7 @@ rt_private int spop(void)
 	/* Pops off a signal from the FIFO stack and returns its value. If the
 	 * stack is empty, return 0.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 int newpos;		/* Position we'll go to if we read something */
 	int cursig;					/* Current signal to be sent */
 
@@ -1005,7 +1008,7 @@ rt_public long esignum(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 
 rt_public void esigcatch(long int sig)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	/* Catch signal `sig'.
 	 * Check that the signal is defined
 	 */
@@ -1069,7 +1072,7 @@ rt_public void esigcatch(long int sig)
 
 rt_public void esigignore(long int sig)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	/* Ignore signal `sig'.
 	 * Check that the signal is defined
      */
@@ -1129,7 +1132,7 @@ rt_public void esigignore(long int sig)
 
 rt_public char esigiscaught(long int sig)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	/* Is signal of number `sig' caught?
 	 * Check that the signal is defined
      */
@@ -1160,7 +1163,7 @@ rt_public char esigdefined (long int sig)
 void esigresall(void)
 {
 	/* Reset all the signals to their default handling */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	int sig;
 	for (sig = 1; sig < EIF_NSIG; sig++)
 #ifdef SIGPROF
@@ -1197,7 +1200,7 @@ void esigresall(void)
 
 void esigresdef(long int sig)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	/* Reset signal `sig' to its default handling */
 	if (!(esigdefined(sig) == (char) 1))

@@ -36,6 +36,7 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #include "rt_lmalloc.h"		/* for eif_free, eif_realloc */
 #include "rt_malloc.h"
 #include "rt_assert.h"
+#include "rt_globals.h"
 
 #ifdef EIF_WIN32
 #include "eif_console.h"
@@ -103,13 +104,13 @@ rt_shared struct xstack eif_trace = {		/* Exception trace */
 };
 
 /*
-doc:	<attribute name="ex_ign" return_type="char []" export="public">
+doc:	<attribute name="ex_ign" return_type="char []" export="private">
 doc:		<summary>Array of ignored exceptions. The EN_BYE exception is a run-time panic that can never be caught, even by a rescue. The EN_OMEM cannot be ignored but can be caught. It is raised by the run-time system when there is not enough memory to ensure a correct Eiffel execution. The EN_FATAL exception is a run-time fatal error which cannot be caught nor ignored.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt */
+rt_private unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */
 
 /*
 doc:	<attribute name="exdata" return_type="struct eif_exception" export="public">
@@ -134,13 +135,13 @@ rt_public struct eif_exception exdata = {
 
 #ifdef WORKBENCH
 /*
-doc:	<attribute name="db_ign" return_type="unsigned char []" export="public">
+doc:	<attribute name="db_ign" return_type="unsigned char []" export="private">
 doc:		<summary>Array of ignored exceptions, from the debugger's point of view. Normally an exception stops the program to allow user inspection of the objects.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
+rt_private unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
 #endif
 
 /*
@@ -247,7 +248,7 @@ rt_private void extend_trace_string(char *line);	/* Extend exception trace strin
 #ifndef EIF_THREADS
 
 /*
-doc:	<attribute name="ex_string" return_type="SMART_STRING" export="public">
+doc:	<attribute name="ex_string" return_type="SMART_STRING" export="private">
 doc:		<summary>Container of the exception trace</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
@@ -255,7 +256,7 @@ doc:		<eiffel_classes>EXCEPTIONS</eiffel_classes>
 doc:		<fixme>Should we protect access through use of a private per thread data?</fixme>
 doc:	</attribute>
 */
-rt_public SMART_STRING ex_string = {	/* Container of the exception trace */
+rt_private SMART_STRING ex_string = {	/* Container of the exception trace */
 	NULL,	/* No area */
 	0L,		/* No byte used yet */
 	0L		/* Null length */
@@ -422,6 +423,7 @@ rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsign
 	 * This routine is normally called at the very top of each Eiffel routine;
 	 * it returns the address of the exception vector or raises an exception.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 struct ex_vect *vector;	/* The exception vector */
 
@@ -459,6 +461,7 @@ rt_public struct ex_vect *exft(void)
 	/* Get an execution vector, in final mode. We don't bother setting the
 	 * feature name or the object ID as there is no stack dump in final mode.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 struct ex_vect *vector;	/* The exception vector */
 
@@ -505,6 +508,7 @@ rt_public struct ex_vect *exret(register1 struct ex_vect *rout_vect)
 	 * The routine returns the address of the new execution vector for
 	 * the Eiffel routine we're in.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *last_item;		/* Item at the top of the calling stack */
 
@@ -566,6 +570,7 @@ rt_public void exinv(register2 char *tag, register3 char *object)
 		/* The object on which invariant is checked */
 {
 	/* Checking of the invariant 'tag' on 'object' */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 struct ex_vect *vector;		/* The execution vector */
 
@@ -596,6 +601,7 @@ rt_public void exasrt(char *tag, int type)
 	 * help providing the exception trace.
 	 * This routine records an assertion 'type' whose tag is 'tag'.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 struct ex_vect *vector;		/* The execution vector */
 
@@ -635,6 +641,7 @@ rt_shared void excatch(jmp_buf *jmp)
 	 * be possible to restore the saved stack context (i.e. clean up the mess
 	 * from the failed melted routines).
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 struct ex_vect *vector;		/* The execution vector */
 
@@ -708,6 +715,7 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 	 * which will know about the exception stack)--RAM.
 	 */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect * volatile trace;		/* Top of Eiffel trace stack */
 	jmp_buf exenv;							/* Environment saving for setjmp */
@@ -795,6 +803,7 @@ rt_public void exfail(void)
 	 * on eif_stack and the EN_ILVL record on top of eif_trace (pushed on
 	 * entry in the rescue clause).
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *vector;			/* The stack vector entry at the top */
 	unsigned char code;						/* Exception code */
@@ -860,6 +869,7 @@ rt_public void exresc(register2 struct ex_vect *rout_vect)
 	 * Eiffel trace stack and signal we've been in the rescue of the current
 	 * call (top of Eiffel trace stack).
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 struct ex_vect *trace;	/* Top of Eiffel trace item */
 
@@ -926,6 +936,7 @@ rt_public void eraise(char *tag, long num)
 	 * all the exceptions (e.g. it has no meaning for an operating system
 	 * signal).
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect	*trace = NULL;			/* The stack trace entry */
 	struct ex_vect	*vector;		/* The stack trace entry */
@@ -1066,6 +1077,7 @@ rt_public void com_eraise(char *tag, long num)
 	 * all the exceptions (e.g. it has no meaning for an operating system
 	 * signal).
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *trace = NULL;		/* The stack trace entry */
 	struct ex_vect *vector;     /* The stack trace entry */
@@ -1196,6 +1208,7 @@ rt_public void eviol(void)
 	 * execution vector at the top of the stack and start backtracking, unless
 	 * we have to ignore the exception.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *vector;			/* The stack vector entry at the top */
 	unsigned char code;						/* Exception code */
@@ -1280,6 +1293,7 @@ rt_shared void ereturn(void)
 	 * return point anyway, but returning there causes the immediate system
 	 * failure and the dumping of the exception stack held in eif_trace.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	jmp_buf *rescue;					/* The rescue setjmp buffer */
 
@@ -1308,6 +1322,7 @@ rt_private jmp_buf *backtrack(void)
 	 * There is no real concern for being really fast here, so I've chosen to
 	 * rely on existing interface functions instead of hardwiring a loop--RAM.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 struct ex_vect *top;		/* Top of calling stack */
 	struct ex_vect *trace = NULL;	/* The stack trace entry */
@@ -1510,6 +1525,7 @@ rt_public void exok(void)
 	 * It's not our concern to deal with the local variable stack. This routine
 	 * is called only before returning from a routine with a rescue clause.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 struct ex_vect *top;		/* Top of calling stack */
 	register2 struct stxchunk *start;	/* First chunk in trace stack */
@@ -1575,6 +1591,7 @@ rt_public void exok(void)
 /* Clears the exception stack */
 rt_public void exclear(void)
 {
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
 	/* If 'echval' is set to zero, then no exception occurred, so return
@@ -1612,6 +1629,7 @@ rt_private void excur(void)
 	 * raised) and it is normally carried by 'echval'. Also reset 'echtg' to be
 	 * the current exception tag.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct xstack context;		/* Saved stack context */
 	struct ex_vect *top;		/* Walk through stack */
@@ -1644,6 +1662,7 @@ rt_private void exorig(void)
 	 * the original exception tag.
 	 */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct xstack context;		/* Saved stack context */
 	struct ex_vect *top;		/* Walk through stack */
@@ -1773,6 +1792,7 @@ rt_public void esfail(void)
 	 * called on every dead objects (for instance to ensure all temporary
 	 * files are removed and locks are cleared).
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
 	/* We flush stdout now, to avoid unprinted data being printed after the
@@ -1827,6 +1847,7 @@ rt_private void exception(int how)
 	 * pushes an exception record in eif_trace while eviol() relies on the
 	 * backtracking process to do it).
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
 	if (db_ign[echval])		/* Current exception to be ignored */
@@ -1849,6 +1870,7 @@ rt_public void eif_panic(char *msg)
 	/* In case of run-time panic, print the final message 'msg' and dumps
 	 * an execution stack if possible. This exception cannot be trapped.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *trace;		/* To insert the panic in the stack */
 	static int done = 0;		/* Avoid panic cascade */
@@ -1904,6 +1926,7 @@ rt_public void fatal_error(char *msg)
 	/* In case of run-time fatal error, print the final message 'msg' and dumps
 	 * an execution stack if possible. This exception cannot be trapped.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *trace;		/* To insert the panic in the stack */
 	static int done = 0;		/* Avoid fatal cascade */
@@ -1998,7 +2021,7 @@ rt_private void find_call(void)
 	 * EN_FAIL vector). The context of the stack is saved/restored.
 	 * The function return the address of the enclosing call vector.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 struct ex_vect *item;	/* Item we deal with */
 	struct xstack saved;			/* Saved stack context */
 
@@ -2102,7 +2125,7 @@ rt_private void extend_trace_string(char *line)
 	/* Appends the string line to the exception string. Memory reallocation is
 	 * performed if necessary.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	if ((ex_string.size - ex_string.used) > (long) strlen(line)) {
 		strcpy (ex_string.area + ex_string.used, line);
@@ -2126,7 +2149,7 @@ rt_public EIF_REFERENCE stack_trace_string (void)
     /* Initialize the SMART_STRING structure supposed to receive the exception
      * stack, dump the exception stack into it and return an Eiffel string.
      */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
     /* Clean the area from a previous call. */
     if (ex_string.area)
@@ -2155,7 +2178,7 @@ rt_private void dump_trace_stack(void)
 
 rt_private void dump_stack(void (*append_trace)(char *))
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	char buffer[1024];
 	/* Dump the Eiffel exception trace stack once a system failure has occurred.
 	 * Due to the upside-down nature of this stack, we need to use the 'st_bot'
@@ -2214,6 +2237,7 @@ rt_private void recursive_dump(void (*append_trace)(char *), register1 int level
 	 * While the calling stack cannot be inconsistant (otherwise it's a panic),
 	 * the exception stack may well be, in case we ran out of memory.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *trace;		/* Call on top of the stack */
 	char buffer[1024];
@@ -2425,6 +2449,7 @@ rt_private void print_top(void (*append_trace)(char *))
 	 * The exception tag is limited to 26 characters, the class name to 19 and
 	 * the routine name to 22 characters. These should be #defined--RAM, FIXME.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	char			buf[256];				/* To pre-compute the (From orig) string */
 	char			buffer[1024];
@@ -2751,7 +2776,7 @@ rt_public void expop(register1 struct xstack *stk)
 {
 	/* Removes one item from the Eiffel stack */
 #ifdef WORKBENCH
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 #endif
 
 	register2 struct ex_vect *top = stk->st_top;	/* Top of the stack */
@@ -2832,7 +2857,7 @@ rt_shared struct ex_vect *exnext(void)
 	 * in case of stack overflow.
 	 * NB: The stack structure is physically destroyed, mangled from the bottom.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 struct ex_vect *first_item;	/* First item pushed */
 
 	/* If we already reached the end of the stack, return immediately */
@@ -2862,7 +2887,7 @@ rt_shared struct ex_vect *exnext(void)
 rt_private int exend(void)
 {
 	/* Returns true if the end of the Eiffel trace stack has been reached */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	/* If we already reached the end of the stack, return immediately */
 	if (eif_trace.st_bot == eif_trace.st_top)
@@ -3046,7 +3071,7 @@ rt_public char *eelclass(void)	/* %%zmt never called in C dir. */
 rt_public void eetrace(char b)	/* %%zmt never called in C dir. */
 {
 	/* Enable/diable printing of the history table */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	if (b == (char) 1)
 		print_history_table = ~0;
@@ -3069,7 +3094,7 @@ rt_public EIF_REFERENCE eename(long ex)
 
 rt_public void eecatch(long ex)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	/* Catch exception `ex' */
 
 	if (eedefined(ex) == (char) 1){
@@ -3081,7 +3106,7 @@ rt_public void eecatch(long ex)
 
 rt_public void eeignore(long ex)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	/* Ignore exception `ex' */
 	if (eedefined(ex) == (char) 1){

@@ -20,7 +20,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "eif_portable.h"
 #include "eif_project.h" /* for egc_prof_enabled */
 #include "eif_eiffel.h"		/* For bcopy/memcpy */
-#include "eif_globals.h"
+#include "rt_globals.h"
 #include "eif_misc.h"	
 #include "eif_size.h"
 #include "rt_malloc.h"
@@ -135,13 +135,13 @@ rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
 #ifndef EIF_THREADS
 #ifdef ISE_GC
 /*
-doc:	<attribute name="loc_stack" return_type="struct stack" export="shared">
+doc:	<attribute name="loc_stack" return_type="struct stack" export="public">
 doc:		<summary>To protect EIF_REFERENCE in C routines through RT_GC_PROTECT/RT_GC_WEAN macros. Used internally by runtime. Content points to ojbects which may be moved by garbage collector or memory management routines.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_shared struct stack loc_stack = {			/* Local indirection stack */ 
+rt_public struct stack loc_stack = {			/* Local indirection stack */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -1048,7 +1048,7 @@ rt_private int mark_and_sweep(void)
 	 * all the local reference variables. I suppose no object is already
 	 * marked at the beginning of the processing.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	SIGBLOCK;			/* Block all signals during garbage collection */
 
@@ -1070,7 +1070,7 @@ rt_private void clean_up(void)
 	 * then dispatch signals which may have been stacked while in the GC process
 	 * and finally stop blocking signals.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	rel_core();				/* We may give some core back to the kernel */
 	SIGRESUME;				/* Dispatch any signal which has been queued */
@@ -2388,13 +2388,13 @@ rt_private int partial_scavenging(void)
 	 * of a memory chunk (because this zone is skipped by doing pointer
 	 * comparaisons).
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	SIGBLOCK;				/* Block all signals during garbage collection */
-	GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 	init_plsc();			/* Initialize scavenging (find 'to' space) */
 	run_plsc();				/* Normal sequence */
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 
 	return 0;
 }
@@ -2417,12 +2417,12 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 	 * which must be part of the local roots for the collector.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	if (g_data.status & GC_STOP)
 		return;							/* Garbage collection stopped */
 
 	SIGBLOCK;				/* Block all signals during garbage collection */
-	GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 	init_plsc();			/* Initialize scavenging (find 'to' space) */
 
 	/* This object needs to be taken care of, because it might be dead from
@@ -2433,7 +2433,7 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 
 	run_plsc();				/* Normal sequence */
 
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 }
 
 rt_private void clean_zones(void)
@@ -3347,7 +3347,7 @@ rt_private int generational_collect(void)
 	 * stopped or generation scavenging was stopped for some reason.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 int age;			/* Computed tenure age */
 	register2 int overused;		/* Amount of data over watermark */
 	EIF_REFERENCE watermark;			/* Watermark in generation zone */
@@ -4540,7 +4540,7 @@ rt_shared int epush(register struct stack *stk, register void *value)
 	 * full, we try to allocate a new chunk. If this fails, nothing is done,
 	 * and -1 is returned to signal failure. Otherwise 0 is returned.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register3 EIF_REFERENCE *top = stk->st_top;		/* Current top of stack */
 
 	if (top == (EIF_REFERENCE *) 0)	{					/* No stack yet? */
@@ -4586,7 +4586,7 @@ rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 				 					/* Initial size */
 {
 	/* The stack 'stk' is created, with size 'size'. Return the arena value */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register3 EIF_REFERENCE *arena;				/* Address for the arena */
 	register4 struct stchunk *chunk;	/* Address of the chunk */
 
@@ -4617,7 +4617,7 @@ rt_shared int st_extend(register struct stack *stk, register int size)
 	/* The stack 'stk' is extended and the 'stk' structure updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register3 EIF_REFERENCE *arena;				/* Address for the arena */
 	register4 struct stchunk *chunk;	/* Address of the chunk */
 

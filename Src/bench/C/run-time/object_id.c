@@ -14,6 +14,7 @@ doc:<file name="object_id.c" header="eif_object_id.h" version="$Id$" summary="Ob
 #include "rt_garcol.h"
 #include "rt_object_id.h"
 #include "rt_assert.h"
+#include "rt_globals.h"
 
 
 /*#define DEBUG 2 */		/* Debug level */
@@ -134,7 +135,7 @@ rt_private void eif_private_extend_object_id (EIF_INTEGER nb_chunks, struct stac
 	/* extends of `nb_chunks the size of `object_id_stack' */
 {
 	
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	register3 char **top;
 	

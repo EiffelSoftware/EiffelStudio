@@ -299,7 +299,7 @@ rt_private char *rcsid =
 
 rt_public void metamorphose_top()
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	EIF_REFERENCE new_obj = NULL;
 	uint32 head_type;
@@ -381,6 +381,7 @@ rt_public void xinterp(unsigned char *icval)
 	 * code, before propagating it to the C code, the operational stack
 	 * must be cleaned.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	STACK_PRESERVE;			/* Stack contextual informations */
@@ -443,6 +444,7 @@ rt_public void xiinv(unsigned char *icval, int where)
 				/* Invariant checked after or before ? */
 {
 	/* Starts interpretation of invariant at IC = icval. */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	RTXD;					/* Save stack contexts */
@@ -471,7 +473,7 @@ rt_public void xiinv(unsigned char *icval, int where)
 rt_public void xinitint(void)
 {
 	/* Creation of the register array. */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	iregsz = REGISTER_SIZE * sizeof(struct item *);
 	iregs = (struct item **) cmalloc(iregsz);
@@ -490,6 +492,7 @@ rt_private void interpret(int flag, int where)
 	 * CPU cycles--RAM.
 	 */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	register1 int volatile code;			/* Current intepreted byte code */
 	register2 struct item * volatile last;	/* Last pushed value */
@@ -3713,6 +3716,7 @@ rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, struct item
 							/* To save stack context */
 		  					/* Invariant after or before */
 {
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	/* Check invariant on non-void object `obj' */
 	unsigned char *OLD_IC;		/* IC backup */
@@ -3740,6 +3744,7 @@ rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk 
 {
 	/* Recursive invariant check. */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct cnode *node = esystem + dtype;
 	int *cn_parents;
@@ -4939,6 +4944,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 	 * they're welcome to do so (I give up: I think it works and that's enough).
 	 */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	RTED;
 	int				saved_debug_mode = debug_mode;
@@ -5043,6 +5049,7 @@ rt_private int icall(int fid, int stype, int ptype)
 	 * resynchronization of registers is needed.
 	 */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	uint16 body_id;					/* Value of selected body ID */
 	unsigned long stagval = tagval;	/* Save tag value */
@@ -5098,6 +5105,7 @@ rt_private int ipcall(int32 origin, int32 offset, int ptype)
 	 * 1 to the caller if a resynchronization of registers is needed.
 	 */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	uint16 body_id;					/* Value of selected body ID */
 	unsigned long stagval = tagval;	/* Save tag value */
@@ -5222,7 +5230,7 @@ rt_private void assign(long offset, uint32 type)
 	/* Assign the value on top of the stack to the attribute described by its
 	 * offset. */
 	
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	struct item *last;				/* Value on top of the stack */
 	EIF_REFERENCE ref;
 
@@ -5415,7 +5423,7 @@ rt_private uint32 get_uint32(void)
 rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 {
 	/* Get array of short ints and convert it to a compound id. */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	int16   gen_types [MAX_CID_SIZE+1], *gp, last;
 	int     cnt, pos;
 
@@ -5523,7 +5531,7 @@ rt_private void init_registers(void)
 	 * informations about the type of each variable. They are retrieved here.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 int n;				/* # of locals/arguments to be fetched */
 	register2 struct item **reg;	/* Pointer in register array */
 	register3 struct item *last;	/* Initialization of stack frame */
@@ -5594,7 +5602,7 @@ rt_private void allocate_registers(void)
 	 * memory exception is register array cannot be created.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	static int bigger = 0;			/* Records # of time array is bigger */
 	register1 int size;				/* Size of iregs array */
 	register2 struct item **new;	/* New location for array extension */
@@ -5634,7 +5642,7 @@ rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top
 	 * opop() calls--RAM.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 int n;				/* Loop index */
 	register2 struct item **reg;	/* Address in register's array */
 	struct opstack op_context;		/* To save stack's context */
@@ -5694,7 +5702,7 @@ rt_private void pop_registers(void)
 	 * It we were in a function, the Result value is pushed back on the stack.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 int nb_items;			/* Number of registers to be popped off */
 	struct item *result;			/* To save the result */
 	struct item saved_result;		/* Save value pointed to by iresult */
@@ -5729,7 +5737,7 @@ rt_private struct item *stack_allocate(register int size)
 	 * Return the arena value (bottom of stack).
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 struct item *arena;		/* Address for the arena */
 	register3 struct stochunk *chunk;	/* Address of the chunk */
 
@@ -5765,7 +5773,7 @@ rt_public struct item *opush(register struct item *val)
 	 * an "Out of memory" exception. If 'val' is a null pointer, simply
 	 * get a new cell at the top of the stack.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 struct item *top = op_stack.st_top;	/* Top of stack */
 	
 	if (top == (struct item *) 0)	{			/* No stack yet? */
@@ -5808,7 +5816,7 @@ rt_private int stack_extend(register int size)
 	/* The operational stack is extended and the stack structure is updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 struct item *arena;		/* Address for the arena */
 	register3 struct stochunk *chunk;	/* Address of the chunk */
 
@@ -5840,7 +5848,7 @@ rt_public struct item *opop(void)
 	/* Removes one item from the operational stack and return a pointer to
 	 * the removed item, which also happens to be the first free location.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 struct item *top = op_stack.st_top;	/* Top of the stack */
 	register2 struct stochunk *s;			/* To walk through stack chunks */
 	register3 struct item *arena;			/* Base address of current chunk */
@@ -5879,7 +5887,7 @@ rt_private void npop(register int nb_items)
 	 * try to truncate the unused chunks from the tail of the stack. We do
 	 * not do that in opop() because that would create an overhead...
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 struct item *top;			/* Current top of operational stack */
 	register3 struct stochunk *s;		/* To walk through stack chunks */
 	register4 struct item *arena;		/* Base address of current chunk */
@@ -5948,7 +5956,7 @@ rt_public struct item *otop(void)
 	 * stack has been created).
 	 */
 	
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	struct item *last_item;		/* Address of last item stored */
 	struct stochunk *prev;		/* Previous chunk in stack */
 
@@ -5974,6 +5982,7 @@ rt_private struct item *oitem(uint32 n)
 	{
 	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if */ 
 	/* stack is empty. It assumes a value has already been pushed (i.e. the stack has been created). */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct item		*access_item;	/* Address of item we try to access */
 	struct stochunk	*prev;			/* Previous chunk in stack */
@@ -6008,7 +6017,7 @@ rt_private void stack_truncate(void)
 	 * next one. Otherwise, we skip the next chunk and free the remainder.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 struct item *top;		/* The current top of the stack */
 	struct stochunk *next;			/* Address of next chunk */
 
@@ -6068,6 +6077,7 @@ rt_public struct item *ivalue(int code, int num, uint32 start)
 	 * To avoid endless tests, there is a convention: if the routine has n
 	 * locals, then n+1 is the result of the routine, if it exists.
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
 	struct ex_vect 	*exvect = eif_stack.st_top; /* get the execution vector */

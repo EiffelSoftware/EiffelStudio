@@ -24,7 +24,7 @@ doc:<file name="pattern.c" header="eif_pattern.h" version="$Id$" summary="Patter
 #include "eif_hector.h"
 #include "rt_except.h"
 #include "rt_constants.h"
-#include "eif_globals.h"
+#include "rt_globals.h"
 #include "eif_eiffel.h"
 #include "rt_lmalloc.h"
 
@@ -76,7 +76,7 @@ rt_public int str_str(char *text, char *pattern, int tlen, int plen, int start, 
 	 * one is a generalization--RAM.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	char *p;			/* Returned address from quick search algorithm */
 
 	if (fuzzy < 0)		/* Invalid fuzzy parameter */
@@ -146,7 +146,7 @@ rt_private void fuz_compile(char *pattern, register int plen, int fuzzy)
 	 * the rightmost character removed, and so on. A total of (fuzzy + 1) tables
 	 * are computed.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	int i;
 	uint32 *new;	/* Address of new delta table */
 
@@ -176,7 +176,7 @@ rt_private void fuz_compile(char *pattern, register int plen, int fuzzy)
 
 rt_private void free_structures(int n)
 {
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	int i;
 
 	/* Free fuzzy delta shift tables from 0 to 'n' */
@@ -194,7 +194,7 @@ rt_private char *qsearch(char *text, int tlen, char *pattern, int plen)
 	/* The quick substring search algorithm. It returns the address of the start
 	 * of the matching substring or a null pointer if not found.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 unsigned char *p;		/* Pattern string pointer */
 	register2 unsigned char *t;		/* Text pointer */
 	register4 unsigned char *tx;	/* Another text pointer (start of search) */
@@ -235,7 +235,7 @@ rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int 
 	 * of the matching substring or a null pointer if not found. At most 'fuzzy'
 	 * mismatches are allowed.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 char *p;		/* Pattern string pointer */
 	register2 char *t;		/* Text pointer */
 	register4 char *tx;		/* Another text pointer (start of search) */

@@ -48,6 +48,7 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "rt_sig.h"
 #include "rt_err_msg.h"
 #include "rt_bits.h"
+#include "rt_globals.h"
 #ifdef ISE_GC
 #endif
 #ifdef VXWORKS
@@ -554,7 +555,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	 * "No more memory" exception. The routine returns the pointer on a new
 	 * object holding at least 'nbytes'.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_REFERENCE object;				/* Pointer to the freshly created object */
 	
 #ifdef EMCHK
@@ -623,9 +624,9 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	 * scavenge zones are freed. A last attempt is then made before raising
 	 * an exception if it also failed.
 	 */
-	GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 	object = xmalloc(nbytes, EIFFEL_T, GC_ON);
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 
 	if (object != (EIF_REFERENCE) 0) {
 		UNDISCARD_BREAKPOINTS
@@ -645,12 +646,12 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 #endif
 	}
 
-	GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
 		sc_stop();					/* Free 'to' and explode 'from' space */
 
 	object = xmalloc(nbytes, EIFFEL_T, GC_OFF);		/* Retry */
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 
 	if (object != (EIF_REFERENCE) 0) {
 		UNDISCARD_BREAKPOINTS
@@ -781,7 +782,7 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 	 * `atomic' means that it is a special object without references.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_REFERENCE object;		/* Pointer to the freshly created special object */
 	
 	DISCARD_BREAKPOINTS
@@ -807,9 +808,9 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 #endif
 		/* New special object is too big to be created in generational scavenge zone.
 		 * So we allocate it in free list. */
-		GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
+		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 		object = xmalloc(nbytes, EIFFEL_T, GC_ON);
-		GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 		UNDISCARD_BREAKPOINTS
 		if (object == (EIF_REFERENCE) 0)
 			eraise("Special allocation", EN_MEM);	/* No more memory */
@@ -827,9 +828,9 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 	}
 	
 		 /* No more space in scavenge zone: allocation in free list. */
-	GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 	object = xmalloc(nbytes, EIFFEL_T, GC_ON);
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 	if (object == (EIF_REFERENCE) 0) {
 		UNDISCARD_BREAKPOINTS
 		eraise("Special allocation", EN_MEM);	/* No more memory */
@@ -1430,7 +1431,7 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 	 * free list described in 'hlist'. Return the address of the (splited)
 	 * block if found, a null pointer otherwise.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 uint32 i;					/* Index in hlist */
 	register3 union overhead *selected = (union overhead *) 0;	
 							/* The selected block */
@@ -1559,7 +1560,7 @@ rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead 
 	 * placed in the specified H list. The function returns the address of
 	 * the new block or null if no more core is available.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 union overhead *selected;		/* The selected block */
 	register1 struct chunk *chkbase;		/* Base address of new chunk */
 	
@@ -1649,7 +1650,7 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 	 * pointer if no more memory is available. The chunk is linked in the main
 	 * list, but left out of any free list.
 	 */
-	EIF_GET_CONTEXT	
+	RT_GET_CONTEXT	
 #if defined HAS_SMART_MMAP || defined HAS_SBRK
 	register1 union overhead *oldbrk = (union overhead *) -1;
 						/* Initialized with `failed' value. */
@@ -1861,7 +1862,7 @@ rt_private int free_last_chunk(void)
 	 * anything referenced by the process (otherwise, you get a free ticket for
 	 * a memory fault)--RAM.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	int nbytes;				/* Number of bytes to be freed */
 	union overhead *arena;	/* The address of the arena enclosed in chunk */
 	struct chunk *last_chk;	/* Pointer to last chunk header */
@@ -2094,7 +2095,7 @@ rt_private EIF_REFERENCE set_up(register union overhead *selected, unsigned int 
 	 * correct flags in the malloc info zone (header). We then return the
 	 * address the user will know (points to the first datum byte).
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 uint32 r;		/* For temporary storage */
 	register3 uint32 i;		/* To store true size */
 
@@ -2161,7 +2162,7 @@ rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigne
 	/* Same as set_up() but for memory chunk when they are explicitely
 	 * allocated from core for the partial scavenging.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 uint32 r;		/* For temporary storage */
 	register3 uint32 i;		/* To store true size */
 
@@ -2389,7 +2390,7 @@ rt_private void xfreeblock(union overhead *zone, uint32 r)
 	 * Note that zone points at the beginning of the memory block
 	 * (beginning of the header) and not at an object data area.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register2 uint32 i;					/* Index in hlist */
 #ifndef EIF_MALLOC_OPTIMIZATION
 	register5 uint32 size;				/* Size of the coalesced block */
@@ -2449,6 +2450,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	 * free is performed: the GC will take care of the object (this is crucial
 	 * when reallocing an object which is part of the moved set).
 	 */
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 #ifdef ISE_GC
 	register1 uint32 r;					/* For shifting purposes */
@@ -3003,7 +3005,7 @@ rt_shared int chunk_coalesc(struct chunk *c)
 	 * returns the size of the largest coalesced block or 0 if no coalescing
 	 * occurred.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register3 union overhead *zone;	/* Malloc info zone */
 	register4 uint32 flags;			/* Malloc flags */
 	register2 uint32 i;				/* Index in free list */
@@ -3144,7 +3146,7 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	/* Try to allocate 'nbytes' in the scavenge zone. Returns a pointer to the
 	 * object's location or a null pointer if an error occurred.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_REFERENCE object;			/* Address of the allocated object */
 	uint32 mod;				/* Remainder for padding */
 
@@ -3164,14 +3166,14 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	 */
 	if (sc_from.sc_arena == (EIF_REFERENCE) 0) {
 		/* FIXME THREAD: Lazy initialization issue here */
-		GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
+		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 		if (sc_from.sc_arena == NULL) {
 			if (0 != create_scavenge_zones()) {
 				gen_scavenge = GS_OFF;	/* Turn off generation scavenging */
 				return (EIF_REFERENCE) 0;		/* No scavenge zone available */
 			}
 		}
-		GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 	}
 	
 	/* Pad to correct size -- see xmalloc() for a detailed explaination of
@@ -3188,26 +3190,26 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	 * of occupation go below the watermark at the next collection. There is
 	 * enough room after the watermark to safely allocate the object, anyway.
 	 */
-	GC_THREAD_PROTECT(eif_globals->gc_thread_status = EIF_THREAD_GC_GSZ);
+	GC_THREAD_PROTECT(rt_globals->gc_thread_status = EIF_THREAD_GC_GSZ);
 	GC_THREAD_PROTECT(EIF_GC_GSZ_LOCK);
 	if (sc_from.sc_top >= sc_from.sc_mark) {
-		GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
+		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 		if (eiffel_usage > th_alloc) {	/* Above threshold */
 			if (0 == acollect()) {		/* Perform automatic collection */
 				eiffel_usage = 0;		/* Reset amount of allocated data */
 			} else {
-				GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
-				GC_THREAD_PROTECT(eif_globals->gc_thread_status = EIF_THREAD_RUNNING);
+				GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+				GC_THREAD_PROTECT(rt_globals->gc_thread_status = EIF_THREAD_RUNNING);
 				GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 				return (EIF_REFERENCE) 0;		/* Collection failed */
 			}
 		} else if (0 != collect()) {	/* Simple generation scavenging */
-			GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
-			GC_THREAD_PROTECT(eif_globals->gc_thread_status = EIF_THREAD_RUNNING);
+			GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+			GC_THREAD_PROTECT(rt_globals->gc_thread_status = EIF_THREAD_RUNNING);
 			GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 			return (EIF_REFERENCE) 0;			/* Collection failed */
 		}
-		GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 
 		/* When we're back from any of the GC call above, we're not sure
 		 * the scavenge zone has been freed from as much memory as we thought.
@@ -3224,7 +3226,7 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 		 */
 
 		if ((OVERHEAD+nbytes+sc_from.sc_top) > sc_from.sc_end) {
-			GC_THREAD_PROTECT(eif_globals->gc_thread_status = EIF_THREAD_RUNNING);
+			GC_THREAD_PROTECT(rt_globals->gc_thread_status = EIF_THREAD_RUNNING);
 			GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 			return NULL;
 		}
@@ -3247,7 +3249,7 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	flush;
 #endif
 
-	GC_THREAD_PROTECT(eif_globals->gc_thread_status = EIF_THREAD_RUNNING);
+	GC_THREAD_PROTECT(rt_globals->gc_thread_status = EIF_THREAD_RUNNING);
 	GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 	return (EIF_REFERENCE) (((union overhead *) object ) + 1);	/* Free data space */
 }
@@ -3259,7 +3261,7 @@ rt_private int create_scavenge_zones(void)
 	 * zones are created and the routine returns 0 or no zone is allocated at
 	 * all and -1 is returned.
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_REFERENCE from;		/* From zone */
 	EIF_REFERENCE to;		/* To zone */
 
@@ -3302,7 +3304,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	 * in use for the statistics, but now we have to account for the overhead
 	 * used by each stored object...
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register1 uint32 flags;				/* Store some flags */
 	register2 union overhead *zone;		/* Malloc info zone */
 	register3 union overhead *next;		/* Next zone to be studied */
@@ -3431,7 +3433,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 	 * record the object inside the moved set, if necessary. The function
 	 * returns the address of the object (it may move if a GC cycle is raised).
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register3 union overhead *zone = HEADER(object);		/* Object's header */
 	register4 void *(*init)(EIF_REFERENCE, EIF_REFERENCE);	/* The optional initialization */
 
@@ -3483,6 +3485,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 
 	init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
 	if (init) {
+		EIF_GET_CONTEXT
 		RT_GC_PROTECT(object);
 		(init)(object, object);
 		RT_GC_WEAN(object);
@@ -3509,7 +3512,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 	 * The function returns the location of the object (it may move if a GC
 	 * cycle has been raised to remember the object).
 	 */
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	register3 union overhead *zone = HEADER(object);		/* Malloc info zone */
 
 	SIGBLOCK;					/* Critical section */

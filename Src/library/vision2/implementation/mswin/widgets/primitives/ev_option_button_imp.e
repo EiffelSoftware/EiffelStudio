@@ -12,8 +12,7 @@ inherit
 
 	EV_MENU_CONTAINER_IMP
 		undefine
-			add_menu,
-			on_selection_changed
+			add_menu
 		end
 
 	EV_BUTTON_IMP
@@ -37,7 +36,6 @@ feature {NONE} -- Initialization
 			ev_children := parent_imp.menu_items
 			!! menu_container.make_track
 		end
-
 
 feature -- Event association
 

@@ -138,6 +138,20 @@ feature -- Pngs
 		end
 		
 		
+	Icon_minimize: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("minimize")
+		end
+		
+	Icon_maximize: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("maximize")
+		end
+		
+	Icon_close: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("close")
+		end
 
 feature -- Reading
 

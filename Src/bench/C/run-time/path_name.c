@@ -122,9 +122,9 @@ EIF_POINTER v;
 	(eif_strset)(string, strlen ((char *)p));
 }
 
-EIF_BOOLEAN eif_case_sensitive_file_names()
+EIF_BOOLEAN eif_case_sensitive_path_names()
 {
-		/* Are file names case sensitive? */
+		/* Are path names case sensitive? */
 	return TRUE;
 }
 

@@ -16,7 +16,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 #include "eif_config.h"
 #include "eif_portable.h"
 
@@ -40,13 +40,6 @@ struct bit {
 extern char *makestr(register char *s, register int len);				/* Build an Eiffel string object */
 extern char *makebit(char *bit, long int bit_count);				/* Build an Eiffel bit object */
 extern char *striparr(register char *curr, register int dtype, register char **items, register long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
-extern int str_dtype;				/* Dynamic type for string */
-extern int arr_dtype;				/* Dynamic type for ARRAY[ANY] */
-extern int32 disp_rout_id;			/* Dispose routine id */ 
-
-extern void (*eif_strmake)(char *, EIF_INTEGER);	/* STRING creation feature */
-extern void (*eif_strset)(char *, EIF_INTEGER);		/* STRING `set_count' feature */
-extern void (*eif_arrmake)(char *, EIF_INTEGER, EIF_INTEGER);	/* STRING creation feature */
 
 extern char *argarr(int argc, char **argv);				/* ARRAY[STRING] creation from command line arguments */
 
@@ -95,20 +88,6 @@ extern char *(**dle_make)();		/* Make routines of DYNAMIC descendants */
  * of simple type, e.g. ARRAY[REAL]. They are used by all the object "viewing"
  * routines.
  */
-
-extern int sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
-extern int sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
-extern int sp_int;			/* Dynamic type of SPECIAL[INTEGER] */
-extern int sp_real;			/* Dynamic type of SPECIAL[REAL] */
-extern int sp_double;		/* Dynamic type of SPECIAL[DOUBLE] */
-extern int sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
-
-extern int int_ref_dtype;	/* Dynamic type of INTEGER_REF */
-extern int bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
-extern int real_ref_dtype;	/* Dynamic type of REAL_REF */
-extern int doub_ref_dtype;	/* Dynamic type of DOUBLE_REF */
-extern int char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
-extern int point_ref_dtype;	/* Dynamic type of POINTER_REF */
 
 extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
 

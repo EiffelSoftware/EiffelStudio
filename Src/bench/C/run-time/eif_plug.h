@@ -115,7 +115,7 @@ RT_LNK void chkcinv(EIF_REFERENCE obj);			/* Creation invariant call */
 #endif
 
 #ifndef WORKBENCH
-RT_LNK void rt_norout(void);		/* No function pointer */
+RT_LNK void rt_norout(EIF_REFERENCE);		/* No function pointer */
 #endif
 
 #ifdef __cplusplus

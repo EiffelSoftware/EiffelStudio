@@ -54,6 +54,7 @@ feature {NONE} -- Initial windowing
 			app_editor.clear;
 			history_window.wipe_out;
 			main_panel.unset_project_initialized;
+			namer_window.close;
 		end;
 
 	update_all_windows is

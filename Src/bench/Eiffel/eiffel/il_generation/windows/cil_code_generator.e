@@ -456,9 +456,16 @@ feature -- Generation Structure
 			location_not_empty: not location.is_empty
 		local
 			l_assembly_flags: INTEGER
+			l_host: CLR_HOST
 		do
 			location_path := location
 			assembly_name := a_assembly_name
+			
+				-- Set CLR host to proper version if not yet done.
+			l_host := (create {CLR_HOST_FACTORY}).runtime_host (System.clr_runtime_version, 0)
+			check
+				l_host_not_void: l_host /= Void
+			end
 
 				-- Create unicode string buffer.
 			create uni_string.make_empty (1024)

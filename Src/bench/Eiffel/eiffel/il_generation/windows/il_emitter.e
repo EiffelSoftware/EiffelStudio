@@ -11,13 +11,13 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make (runtime_version: STRING) is
 			-- Create new instance of IL_EMITTER
 		local
 			l_path: UNI_STRING
 		do
 			create l_path.make ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
-			implementation := (create {EMITTER_FACTORY}).new_emitter
+			implementation := (create {EMITTER_FACTORY}).new_emitter (runtime_version)
 			if implementation /= Void then
 				implementation.initialize_with_path (l_path)
 			end

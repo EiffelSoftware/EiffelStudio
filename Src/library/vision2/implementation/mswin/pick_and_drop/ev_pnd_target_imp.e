@@ -116,9 +116,10 @@ feature {EV_PND_TRANSPORTER_IMP} -- Access
 			!! Result.make
 			Result.implementation.set_data_type (data_type)
 			Result.implementation.set_data (data)
-			Result.implementation.set_x (button_data.x)
-			Result.implementation.set_y (button_data.y)
-			Result.implementation.set_state (button_data.state)
+			Result.implementation.set_all (button_data.widget, button_data.x,
+				button_data.y, button_data.button, button_data.shift_key_pressed,
+				button_data.control_key_pressed, button_data.first_button_pressed,
+				button_data.second_button_pressed, button_data.third_button_pressed)
 			Result.implementation.set_button (button_data.button)
 		end
 

@@ -37,6 +37,8 @@ inherit
 				compare_references,
 				compare_objects,
 				object_comparison
+			{EV_ANY_HANDLER}
+				default_create
 		undefine
 			default_create,
 			copy
@@ -54,6 +56,8 @@ inherit
 				compare_references,
 				compare_objects,
 				object_comparison
+			{EV_ANY_HANDLER}
+				default_create
 		undefine
 			default_create,
 			copy

@@ -169,8 +169,7 @@ feature
 			init_work: INIT_WORKBENCH;
 			precomp_r: PRECOMP_R;
 			workb: WORKBENCH_I;
-			temp: STRING;
-			execution_table: EXECUTION_TABLE
+			temp: STRING
 		do
 			if not retried then
 				init_project_directory := project_dir;
@@ -193,10 +192,6 @@ feature
 					precomp_r.set_precomp_dir
 				end;
 				System.server_controler.init;
-				execution_table := System.execution_table;
-				if execution_table /= Void then
-					execution_table.reset_debug_counter
-				end;
 				Universe.update_cluster_paths;
 				project_tool.set_icon_name (System.system_name);
 				if is_project_writable then

@@ -6,6 +6,10 @@ indexing
 
 class
 	GB_PROJECT_SETTINGS
+	
+inherit
+	
+	GB_CONSTANTS
 
 create
 	default_create,
@@ -47,14 +51,13 @@ feature -- Basic operation
 			file_name: FILE_NAME
 			data: ARRAYED_LIST [TUPLE [STRING, STRING]]
 		do
-			io.putstring (complete_project.out)
 			create data.make (0)
 			data.extend ([project_location_string, project_location])
 			data.extend ([main_window_class_name_string, main_window_class_name])
 			data.extend ([main_window_file_name_string, main_window_file_name])
 			data.extend ([complete_project_string, complete_project.out])
 			create file_name.make_from_string (project_location)
-			file_name.extend ("project_settings.xml")
+			file_name.extend (project_filename)
 			create file_handler
 			file_handler.create_file ("Project_settings", file_name, data)
 		end

@@ -8,6 +8,9 @@ class
 
 inherit
 	EB_DEVELOPMENT_WINDOW_COMMAND
+		redefine
+			initialize
+		end
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
@@ -19,6 +22,9 @@ inherit
 	SYSTEM_CONSTANTS
 
 	EB_GENERAL_DATA
+		export
+			{NONE} all
+		end
 
 	EB_CONSTANTS
 
@@ -26,6 +32,14 @@ inherit
 
 creation
 	make
+
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Enable `Current'.
+		do
+			is_sensitive := True
+		end
 
 feature -- Basic operations
 

@@ -9,9 +9,6 @@ class
 inherit
 
 	EB_STANDARD_CMD
-		redefine
-			initialize
-		end
 
 	TEXT_OBSERVER
 		redefine
@@ -21,14 +18,6 @@ inherit
 
 creation
 	make
-
-feature -- Initialization
-
-	initialize is
-		do	
-			Precursor
-			disable_sensitive
-		end
 
 feature -- Status setting
 

@@ -13,7 +13,7 @@ inherit
 		rename
 			make as make_standard
 		redefine
-			executable, initialize
+			executable
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
@@ -38,13 +38,6 @@ feature {NONE} -- initialization
 			make_standard
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND} (a_target)
 		end
-
-	initialize is
-		do	
-			Precursor
-			disable_sensitive
-		end
-
 
 feature -- Execution
 

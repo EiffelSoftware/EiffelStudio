@@ -8,11 +8,11 @@ class
 
 inherit
 	EB_FILEABLE_COMMAND
-
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			initialize
 		end
+
+	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 
 	EB_CONFIRM_SAVE_CALLBACK
 		export
@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize default values.
 		do
-			Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 			create accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_constants.Key_o),
 				True, False, False)

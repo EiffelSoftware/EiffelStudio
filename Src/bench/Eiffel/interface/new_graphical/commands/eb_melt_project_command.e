@@ -67,7 +67,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize default values.
 		do
-			initialize
 			create accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_constants.Key_f7),
 				False, False, False)

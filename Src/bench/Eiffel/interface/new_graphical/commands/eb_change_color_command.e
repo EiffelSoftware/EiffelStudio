@@ -12,6 +12,11 @@ inherit
 			new_toolbar_item
 		end
 
+	EB_CONTEXT_TOOL_DATA
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -118,9 +123,9 @@ feature {NONE} -- Implementation
 					cf.set_generics_color (white)
 				end
 			else
-				cf.set_name_color (cf.bon_class_name_color)
+				cf.set_name_color (bon_class_name_color)
 				if cf.generics /= Void then
-					cf.set_generics_color (cf.bon_generics_color)
+					cf.set_generics_color (bon_generics_color)
 				end
 			end
 		end

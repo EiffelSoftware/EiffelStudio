@@ -33,6 +33,9 @@ inherit
 		--| preferences of the editor.
 
 	EB_GENERAL_DATA
+		export
+			{NONE} all
+		end
 
 create
 	make

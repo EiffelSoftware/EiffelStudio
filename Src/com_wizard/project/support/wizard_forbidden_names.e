@@ -35,6 +35,7 @@ feature -- Access
 			Result.force (As_keyword, As_keyword)
 			Result.force (Check_keyword, Check_keyword)
 			Result.force (Class_keyword, Class_keyword)
+			Result.force (Convert_keyword, Convert_keyword)
 			Result.force (Create_keyword, Create_keyword)
 			Result.force (Creation_keyword, Creation_keyword)
 			Result.force (Debug_keyword, Debug_keyword)

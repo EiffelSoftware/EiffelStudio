@@ -665,7 +665,8 @@ feature {NONE}
 			end
 				int_buffer := text_length
 			
-				execute_highlight (first_pos, last_pos, cf)
+--				execute_highlight (first_pos, last_pos, cf)
+				format_region (first_pos, last_pos, cf)				
 --			else
 				debug
 					print ("Warning: Analyzer gives invalid token positions:")

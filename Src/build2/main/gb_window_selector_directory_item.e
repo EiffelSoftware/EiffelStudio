@@ -125,14 +125,7 @@ feature -- Implementation
 		require
 			an_object_not_void: an_object /= Void
 		do
-			if an_object.window_selector_item = Void then
-				window_selector.add_new_object (an_object)
-			end
-			if an_object.window_selector_item /= Void then
-				add_selector_item (an_object.window_selector_item)
-			else
-				add_selector_item (object_handler.deep_object_from_id (an_object.associated_top_level_object).window_selector_item)
-			end
+			window_selector.add_new_object (an_object, Current)
 			system_status.enable_project_modified
 			command_handler.update
 		end
@@ -184,30 +177,6 @@ feature -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 			is_empty_implies_parent_is_window_selector: Result.is_empty and parent /= Void implies parent = window_selector
-		end
-		
-feature {NONE} -- Implementation
-
-	add_selector_item (an_item: GB_WINDOW_SELECTOR_ITEM) is
-			-- Add `an_item' to `Current' by first removing it from
-			-- its current `parent'.
-		require
-			an_item_not_void: an_item /= Void
-		local
-			command_move_window: GB_COMMAND_MOVE_WINDOW
-		do
-			if an_item.object.window_selector_item.parent /= Void then
-				create command_move_window.make (an_item.object, Current)
-				command_move_window.execute
-			
-					-- Ensure that `Current' is expanded
-				expand
-					-- Update the system
-				system_status.enable_project_modified
-				command_handler.update	
-			end
-		ensure
-			item_contained: children.has (an_item)
 		end
 		
 invariant

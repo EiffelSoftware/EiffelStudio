@@ -163,6 +163,7 @@ feature {CACHE_READER} -- Access
 						Result.append_character (l_dir_sep)
 					end
 					Result.append (eac_path)
+					Result.append (clr_version)
 					
 						-- set internal EAC path to registry key
 					internal_eiffel_cache_path.put (Result)

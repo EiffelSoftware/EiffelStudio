@@ -56,6 +56,12 @@ feature -- Access
 			-- and not pressed states each time the user clicks it.
 			-- The button has a different background color when it
 			-- is in the pressed state.
+			
+	Tbstyle_autosize: INTEGER is 16
+			-- The toolbar will not assign the standard width to
+			-- the button. Instead, the buttons width will be calculated
+			-- based on the width of the text plus the image of the
+			-- button.
 
 	Tbstyle_checkgroup: INTEGER is 6
 			-- Creates a check button that stays pressed until

@@ -492,7 +492,12 @@ feature
 					if register /= Void and not register_for_metamorphosis then
 						print_register;
 					else
-						if is_bit_assignment then
+						if context.real_type(target.type).is_separate and
+							not context.real_type(source.type).is_separate then 
+							generated_file.putstring ("CURLTS(")
+							source_print_register;
+							generated_file.putstring (")")
+						elseif is_bit_assignment then
 							generated_file.putstring (gc_comma);
 							target.print_register;
 							generated_file.putchar (')');

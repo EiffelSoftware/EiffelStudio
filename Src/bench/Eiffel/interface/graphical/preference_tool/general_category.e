@@ -37,9 +37,12 @@ feature {TTY_RESOURCES} -- Initialization
 			!! acrobat_reader.make ("acrobat_reader", rt, "acrobat");
 			!! tab_step.make ("tab_step", rt, 4);
 			!! editor.make ("editor", rt, "vi");
-			!! filter_path.make ("filter_directory", rt, env_filter_path);
-			!! profile_path.make ("profile_directory", rt, env_profile_path);
-			!! tmp_path.make ("temporary_directory", rt, env_tmp_directory);
+			!! filter_path.make ("filter_directory", rt, 
+					clone (env_filter_path));
+			!! profile_path.make ("profile_directory", rt, 
+					clone (env_profile_path));
+			!! tmp_path.make ("temporary_directory", rt, 
+					clone (env_tmp_directory));
 			!! shell_command.make ("shell_command", 
 					rt, "xterm -geometry 80x40 -e vi +$line $target");
 			!! filter_name.make ("filter_name", rt, "PostScript");

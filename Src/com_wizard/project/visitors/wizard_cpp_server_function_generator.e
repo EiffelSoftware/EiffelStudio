@@ -374,8 +374,17 @@ feature {NONE} -- Implementation
 				Result.append (Dot)
 				Result.append (visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
-				Result.append (Tmp_clause)
-				Result.append (arg_name)
+
+				if is_boolean (visitor.vt_type) then
+					Result.append (Tmp_clause)
+					Result.append (arg_name)
+				else
+					Result.append (Eif_wean)
+					Result.append (Space_opne_parenthesis)
+					Result.append (Tmp_clause)
+					Result.append (arg_name)
+					Result.append (Close_parenthesis)
+				end
 				if visitor.writable then
 					Result.append (Comma_space)
 					Result.append (Null)

@@ -1362,7 +1362,7 @@ char *path;
 		return (EIF_BOOLEAN) '\0';
 
 	file_stat(temp, &buf);
-	if (buf.st_mode & S_IFDIR != 0)	/* Is parent a directory? */
+	if (buf.st_mode & S_IFDIR)	/* Is parent a directory? */
 		if (file_eaccess(&buf, 1)) {	/* Check for write permissions */
 				/* Check if a non writable file `path' exists */
 			if (file_exists(path)) {

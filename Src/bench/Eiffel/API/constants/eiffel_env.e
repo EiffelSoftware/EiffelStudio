@@ -124,7 +124,7 @@ feature -- Access: file name
 			fname: FILE_NAME
 		once
 			if Platform_constants.is_windows then
-				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" + Major_version_number.out + Minor_version_number.out
+				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" + Major_version_number.out + Minor_version_number.out + "\Preferences"
 			else
 				create fname.make_from_string (Execution_environment.home_directory_name)
 				fname.set_file_name (".ecrc" + Major_version_number.out + Minor_version_number.out)
@@ -178,6 +178,12 @@ feature -- Access: file name
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "bitmaps", "cursor">>)
+		end
+
+	Syntax_path: DIRECTORY_NAME is
+		once
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<short_studio_name, "syntax">>)
 		end
 
 	Help_path: DIRECTORY_NAME is

@@ -513,17 +513,19 @@ feature -- Access
 			type_as_not_void: Result /= Void
 		end
 
-	new_check_as (c: EIFFEL_LIST [TAGGED_AS]; l: TOKEN_LOCATION): CHECK_AS is
+	new_check_as (c: EIFFEL_LIST [TAGGED_AS]; l, e: TOKEN_LOCATION): CHECK_AS is
 			-- New CHECK AST node
 		require
 			l_not_void: l /= Void
+			e_not_void: e /= Void
 		do
 			create Result
-			Result.initialize (c, l)
+			Result.initialize (c, l, e)
 		ensure
 			check_as_not_void: Result /= Void
 			check_list_set: Result.check_list = c
 			location_set: Result.location.is_equal (l)
+			end_location_set: Result.end_location.is_equal (e)
 		end
 
 	new_class_as (n: ID_AS; ext_name: STRING;
@@ -670,18 +672,20 @@ feature -- Access
 			current_as_not_void: Result /= Void
 		end
 
-	new_debug_as (k: EIFFEL_LIST [STRING_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; l: TOKEN_LOCATION): DEBUG_AS is
+	new_debug_as (k: EIFFEL_LIST [STRING_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; l, e: TOKEN_LOCATION): DEBUG_AS is
 			-- New DEBUG AST node
 		require
 			l_not_void: l /= Void
+			e_not_void: e /= Void
 		do
 			create Result
-			Result.initialize (k, c, l)
+			Result.initialize (k, c, l, e)
 		ensure
 			debug_as_not_void: Result /= Void
 			keys_set: Result.keys = k
 			compound_set: Result.compound = c
 			location_set: Result.location.is_equal (l)
+			end_location_set: Result.end_location.is_equal (e)
 		end
 
 	new_deferred_as: DEFERRED_AS is
@@ -1141,14 +1145,15 @@ feature -- Access
 
 	new_if_as (cnd: EXPR_AS; cmp: EIFFEL_LIST [INSTRUCTION_AS];
 		ei: EIFFEL_LIST [ELSIF_AS]; e: EIFFEL_LIST [INSTRUCTION_AS];
-		l: TOKEN_LOCATION): IF_AS is
+		l, end_location: TOKEN_LOCATION): IF_AS is
 			-- New IF AST node
 		require
 			cnd_not_void: cnd /= Void
 			l_not_void: l /= Void
+			end_location_not_void: end_location /= Void
 		do
 			create Result
-			Result.initialize (cnd, cmp, ei, e, l)
+			Result.initialize (cnd, cmp, ei, e, l, end_location)
 		ensure
 			if_as_not_void: Result /= Void
 			condition_set: Result.condition = cnd
@@ -1156,6 +1161,7 @@ feature -- Access
 			elsif_list_set: Result.elsif_list = ei
 			else_part_set: Result.else_part = e
 			location_set: Result.location.is_equal (l)
+			end_location_set: Result.end_location.is_equal (end_location)
 		end
 
 	new_index_as (t: ID_AS; i: EIFFEL_LIST [ATOMIC_AS]): INDEX_AS is
@@ -1185,20 +1191,22 @@ feature -- Access
 		end
 
 	new_inspect_as (s: EXPR_AS; c: EIFFEL_LIST [CASE_AS];
-		e: EIFFEL_LIST [INSTRUCTION_AS]; l: TOKEN_LOCATION): INSPECT_AS is
+		e: EIFFEL_LIST [INSTRUCTION_AS]; l, end_location: TOKEN_LOCATION): INSPECT_AS is
 			-- New INSPECT AST node
 		require
 			s_not_void: s /= Void
 			l_not_void: l /= Void
+			end_location_not_void: end_location /= Void
 		do
 			create Result
-			Result.initialize (s, c, e, l)
+			Result.initialize (s, c, e, l, end_location)
 		ensure
 			inspect_as_not_void: Result /= Void
 			switch_set: Result.switch = s
 			case_list_set: Result.case_list = c
 			else_part_set: Result.else_part = e
 			location_set: Result.location.is_equal (l)
+			end_location_set: Result.end_location.is_equal (end_location)
 		end
 
 	new_instr_call_as (c: CALL_AS; l: TOKEN_LOCATION): INSTR_CALL_AS is
@@ -1294,14 +1302,15 @@ feature -- Access
 
 	new_loop_as (f: EIFFEL_LIST [INSTRUCTION_AS]; i: EIFFEL_LIST [TAGGED_AS];
 		v: VARIANT_AS; s: EXPR_AS; c: EIFFEL_LIST [INSTRUCTION_AS];
-		l: TOKEN_LOCATION): LOOP_AS is
+		l, e: TOKEN_LOCATION): LOOP_AS is
 			-- New LOOP AST node
 		require
 			s_not_void: s /= Void
 			l_not_void: l /= Void
+			e_not_void: e /= Void
 		do
 			create Result
-			Result.initialize (f, i, v, s, c, l)
+			Result.initialize (f, i, v, s, c, l, e)
 		ensure
 			loop_as_not_void: Result /= Void
 			from_part_set: Result.from_part = f
@@ -1310,6 +1319,7 @@ feature -- Access
 			stop_set: Result.stop = s
 			compound_set: Result.compound = c
 			location_set: Result.location.is_equal (l)
+			end_location_set: Result.end_location.is_equal (e)
 		end
 
 	new_nested_as (t: ACCESS_AS; m: CALL_AS): NESTED_AS is

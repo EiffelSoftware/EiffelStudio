@@ -15,23 +15,26 @@ inherit
 feature {AST_FACTORY} -- Initialization
 
 	initialize (cnd: like condition; cmp: like compound;
-		ei: like elsif_list; e: like else_part; l: like location) is
+		ei: like elsif_list; e: like else_part; l, el: like location) is
 			-- Create a new IF AST node.
 		require
 			cnd_not_void: cnd /= Void
 			l_not_void: l /= Void
+			el_not_void: el /= Void
 		do
 			condition := cnd
 			compound := cmp
 			elsif_list := ei
 			else_part := e
 			location := clone (l)
+			end_location := clone (el)
 		ensure
 			condition_set: condition = cnd
 			compound_set: compound = cmp
 			elsif_list_set: elsif_list = ei
 			else_part_set: else_part = e
 			location_set: location.is_equal (l)
+			end_location_set: end_location.is_equal (el)
 		end
 
 feature -- Attributes
@@ -47,6 +50,9 @@ feature -- Attributes
 
 	else_part: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Else part
+
+	end_location: like location
+			-- Line number where `end' keyword is located
 
 feature -- Access
 
@@ -128,6 +134,7 @@ feature -- Type check, byte code and dead code removal
 				Result.set_else_part (else_part.byte_node)
 			end
 			Result.set_line_number (line_number)
+			Result.set_end_location (end_location)
 		end
 			
 feature {AST_EIFFEL} -- Output

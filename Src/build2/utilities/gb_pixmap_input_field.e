@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			a_validate_agent_not_void: a_validate_agent /= Void
 		local
 			tool_bar: EV_TOOL_BAR
-			pixmap: EV_PIXMAP
 		do
 			call_default_create (any)
 			internal_type := a_type

@@ -1,3 +1,8 @@
+-- This Ace file requires the following environment variables:
+
+-- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL4\library)
+-- * "DEVSTUDIO" should be set to the Microsoft Devstudio folder
+
 system
 	wizard
 
@@ -20,40 +25,47 @@ default
 
 cluster
 	
-	root_cluster: "d:\projects\EiffelCOM";
+	root_cluster: "$LIBRARY\com\Wizard\root";
 
-		-- EiffelBase
+	-- EiffelBase
 	base:					"$LIBRARY\base"
 	structures(base):			"$\structures"
 	kernel(base):				"$\kernel"
 	support(base):			"$\support"
 	access(structures):			"$\access"
-	cursors(structures):			"$\cursors"
+	cursors(structures):		"$\cursors"
 	cursor_tree(structures):		"$\cursor_tree"
 	dispenser(structures):		"$\dispenser"
 	iteration(structures):		"$\iteration"
 	list(structures):			"$\list"
 	set(structures):			"$\set"
 	sort(structures):			"$\sort"
-	storage(structures):			"$\storage"
+	storage(structures):		"$\storage"
 	table(structures):			"$\table"
 	traversing(structures):		"$\traversing"
 	tree(structures):			"$\tree"
 
 	-- WEL
-	wel_constants:	"$LIBRARY\wel\consts";
-	wel_controls:		"$LIBRARY\wel\controls";
-	wel_gdi:		"$LIBRARY\wel\gdi";
-	wel_gdi_stocks: 	"$LIBRARY\wel\gdistock";
-	wel_messages:		"$LIBRARY\wel\messages";
-	wel_standard_dialogs:"$LIBRARY\wel\stddlgs";
-	wel_structures: 	"$LIBRARY\wel\structs";
-	wel_support:		"$LIBRARY\wel\support";
-	wel_windows:		"$LIBRARY\wel\windows";
+	wel:						"$LIBRARY\wel"
+	wel_constants(wel):		"$\consts"
+	wel_controls(wel):			"$\controls"
+	wel_gdi(wel):				"$\gdi"
+	wel_gdi_stocks(wel): 		"$\gdistock"
+	wel_messages(wel):		"$\messages"
+	wel_standard_dialogs(wel):	"$\stddlgs"
+	wel_structures(wel): 		"$\structs"
+	wel_support(wel):			"$\support"
+	wel_windows(wel):		"$\windows"
+
+	-- EiffelCOM
+	ecom_wizard:							"$LIBRARY\com\Wizard";
+	ecom_wizard_visitors(ecom_wizard):		"$\visitors"
+	ecom_wizard_descriptors(ecom_wizard):	"$\descriptors"
+	ecom_wizard_support(ecom_wizard):		"$\root"
 
 external
-	include_path:		"$(EIFFEL4)\library\wel\spec\windows\include";
+	include_path:	"$(EIFFEL4)\library\wel\spec\windows\include";
 	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib",
-					"C:\dev\devstudio\vc\lib\shell32.lib",
-					"C:\dev\devstudio\vc\lib\comctl32.lib";
+					"$DEVSTUDIO\vc\lib\shell32.lib",
+					"$DEVSTUDIO\vc\lib\comctl32.lib";
 end

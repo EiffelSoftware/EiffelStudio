@@ -75,6 +75,9 @@ feature -- Default values
 
 	Minimum_width_of_object_editor: INTEGER is 155
 		-- The minimum width allowed for a GB_OBJECT_EDITOR
+		
+	Default_floating_object_editor_height: INTEGER is 500
+		-- The default height of a newly created floating object editor window.
 
 feature -- Generation constants
 
@@ -203,8 +206,8 @@ feature -- XML saving
 		do
 			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
 			Result.extend ("build")
-			Result.extend ("temp")
-			Result.extend ("xml_components.xml")
+			Result.extend ("components")
+			Result.extend ("components.xml")
 		end
 		
 	project_filename: STRING is "build_project.bpr"

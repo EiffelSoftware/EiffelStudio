@@ -11,6 +11,21 @@ inherit
 	
 -- EV_SELECTABLE
 
+create {EV_GRID_I}
+	make_with_grid_i
+
+feature {NONE} -- Initialization
+
+	make_with_grid_i (a_grid_i: EV_GRID_I) is
+			-- Make `Current' associated with `a_grid_i'
+		require
+			a_grid_i_not_void: a_grid_i /= Void
+		do
+			parent_grid_i := a_grid_i
+		ensure
+			parent_grid_i = a_grid_i
+		end
+
 feature -- Access
 
 	title: STRING is
@@ -35,7 +50,7 @@ feature -- Access
 	parent: EV_GRID is
 			-- Grid to which current column belongs
 		do
-			to_implement ("EV_GRID_COLUMN.parent")
+			Result := parent_grid_i.interface
 		end
 		
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
@@ -115,6 +130,21 @@ feature -- Element change
 		ensure
 			width_set: width = a_width
 		end
+
+feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
+
+	set_parent_grid_i (a_parent_grid_i: EV_GRID_I) is
+			-- Set `parent_grid_i' to `a_parent_grid_i'
+		require
+			a_parent_grid_i_not_void: a_parent_grid_i /= Void
+		do
+			parent_grid_i := a_parent_grid_i
+		ensure
+			parent_grid_i_set: parent_grid_i = a_parent_grid_i
+		end
+
+	parent_grid_i: EV_GRID_I
+		-- Grid that `Current' resides in.
 
 end
 

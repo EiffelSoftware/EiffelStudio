@@ -330,7 +330,6 @@ feature -- Basic operation
 			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			titled_window: EV_TITLED_WINDOW
 			display_win: GB_DISPLAY_WINDOW
-			builder_win: GB_BUILDER_WINDOW
 		do
 			create layout_item.make (window_object)
 				-- We must only add the layout item if there is

@@ -7,6 +7,9 @@ indexing
 class
 	VISUAL_STUDIO_INFORMATION
 
+inherit
+	EXECUTION_ENVIRONMENT
+
 feature -- Access
 
 	wizard_installation_path: STRING  is
@@ -14,26 +17,15 @@ feature -- Access
 			-- contains the Wizards directory.
 		require
 			visual_studio_wizard: is_visual_studio_wizard
-		local
-			reg: WEL_REGISTRY
-			p: POINTER
-			key: WEL_REGISTRY_KEY_VALUE
 		do
-			create reg
-			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\7.0\Setup\Eiffel", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
-			if p /= default_pointer then
-				key := reg.key_value (p, "ProductDir")
-				reg.close_key (p)
-			end
-			if key /= Void then
-				Result := key.string_value
-			end
+			Result := command_line.argument_array @ 1
 		ensure
 			Result_exists: Result /= Void and not Result.is_empty
 		end
 		
 	is_visual_studio_wizard: BOOLEAN is
-			-- Has Build been launched from			-- VisualStudio in Wizard mode?
+			-- Has Build been launched from	
+			-- VisualStudio in Wizard mode?
 			-- This is a Once, as it will
 			-- never change during the execution of
 			-- the system.
@@ -55,7 +47,7 @@ feature -- Access
 			visual_studio_wizard: is_visual_studio_wizard
 		once
 			create Result.make_from_string (wizard_installation_path)
-			Result := Result + "\Wizards\Build\bitmaps\ico"
+			Result := Result + "\bitmaps\ico"
 		ensure
 			Result_exists: Result /= Void and not Result.is_empty
 		end

@@ -253,9 +253,11 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 	EIF_REFERENCE_FUNCTION *ref;
 #endif
 
+	if (cid == EIF_NO_TYPE)	/* No type id */
+		return (EIF_REFERENCE_FUNCTION) 0;
+
 	if (dtype < 0)						/* Invalid type (not a reference) */
 		return (EIF_REFERENCE_FUNCTION) 0;			/* Cannot use Cecil on simple types */
-
 	ptr_table = &Cecil(dtype);			/* Get associated H table */
 
 #ifndef WORKBENCH

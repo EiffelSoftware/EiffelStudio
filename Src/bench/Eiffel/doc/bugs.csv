@@ -57,7 +57,7 @@ Debugger,,,,,,,,,,
 Compiler,,,,,,,,,,
 ,2,2,"When a compilation is interrupted (or fails) during degree 6, the command line arguments are not used if the project is run.",,Xavier,,,,CMP0001,11/16/2001
 ,2,2,"After an error ""local has same name as feature"", the returned line index is sometimes wrong (it is if the error message includes ""character position"")",,Julian,,,,CMP0002,11/16/2001
-
+,3,3,Named string constants are not considered as constants from the feature {TOTO} point of view and cause VSTA2 errors,,Xavier,,,,CMP0003,11/19/2001
 
 
 

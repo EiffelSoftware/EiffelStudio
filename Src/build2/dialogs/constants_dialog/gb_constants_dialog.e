@@ -182,10 +182,21 @@ feature -- Basic operation
 
 feature {GB_CONSTANTS_HANDLER} -- Implementation
 
-	reset_list is
-			-- Ensure `constants_list' is empty.
+	reset_contents is
+			-- Ensure `constants_list' is empty and clear constants.
 		do
 			constants_list.wipe_out
+			modify_constant := Void
+			name_field.remove_text
+			string_input.remove_text
+			integer_input.remove_text
+			directory_input.remove_text
+			filename_input.remove_text
+			color_input.remove_text
+			font_input.remove_text
+			remove_button.disable_sensitive
+			type_combo_box.first.enable_select
+			update_buttons
 		ensure
 			constants_list_empty: constants_list.is_empty
 		end
@@ -896,16 +907,12 @@ feature {NONE} -- Implementation
 	cancel_pressed is
 			-- Called by `select_actions' of `cancel_button'.
 		do
-				-- Reset modify constant before next showing.
-			modify_constant := Void
 			Command_handler.Show_hide_constants_dialog_command.execute
 		end
 		
 	ok_pressed is
 			-- Called by `select_actions' of `ok_button'.
 		do
-				-- Reset modify constant before next showing.
-			modify_constant := Void
 			Command_handler.Show_hide_constants_dialog_command.execute
 		end
 		

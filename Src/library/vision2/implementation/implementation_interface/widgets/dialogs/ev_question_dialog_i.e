@@ -13,30 +13,34 @@ inherit
 feature -- status settings
 
 	add_yesno_buttons is
-			-- Add two buttons `yes' and `no'
+			-- Add two buttons Yes and No.
 		deferred
 		end
 
 	add_yesnocancel_buttons is
-			-- Add three buttons : `yes', `no' and `cancel'.
+			-- Add three buttons : Yes, No and Cancel.
 		deferred
 		end
 
 feature -- Event - command association
 
-	add_yes_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a command that responds when the `ok' button
-			-- is pressed. If there is no `ok' button, the event
-			-- never occurs and then the command isn't execute,
-			-- yet, the user can add a command if he wish it.
+	add_yes_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the Yes button is pressed.
+			-- If there is no Yes button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end
 
-	add_no_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add a command that responds when the `cancel' button
-			-- is pressed. If there is no `cancel' button, the event
-			-- never occurs and then the command isn't execute,
-			-- yet, the user can add a command if he wish it.
+	add_no_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the No button is pressed.
+			-- If there is no No button, the event never occurs.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		deferred
 		end
 

@@ -46,9 +46,7 @@ feature -- Access
 			l_value: INTEGER
 		do
 			l_value := setting (a_name)
-			if l_value /= Void then
-				Result := l_value = True_value
-			end
+			Result := l_value = True_value
 		end
 
 	saved_list (a_name: STRING): LIST [STRING] is

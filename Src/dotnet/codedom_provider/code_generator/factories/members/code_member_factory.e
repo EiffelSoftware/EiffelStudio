@@ -41,9 +41,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					l_attribute.set_result_type (Type_reference_factory.type_reference_from_reference (a_source.type))
 					l_attribute.set_feature_kind (Access)
 					set_current_feature (l_attribute)
-					if a_source.attributes /= Void then
-						initialize_member_status (a_source.attributes)
-					end
+					initialize_member_status (a_source.attributes)
 					if a_source.custom_attributes /= Void then
 						initialize_custom_attributes (a_source.custom_attributes)
 					end
@@ -147,7 +145,6 @@ feature {NONE} -- Components initialization.
 	initialize_member_status (status_attributes: SYSTEM_DLL_MEMBER_ATTRIBUTES) is
 			-- Initialize current feature with `status_attribute'.
 		require
-			non_void_status_attributes: status_attributes /= Void
 			non_void_feature: current_feature /= Void
 		local
 			scope_status: SYSTEM_DLL_MEMBER_ATTRIBUTES

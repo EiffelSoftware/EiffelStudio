@@ -525,15 +525,17 @@ feature {NONE} -- Implementation
 			stored_widths: ARRAYED_LIST [INTEGER]
 			minimized_items: ARRAYED_LIST [BOOLEAN]
 			maximized_index: INTEGER
+			tool: EV_WIDGET
+			storable_tool: GB_STORABLE_TOOL
 		do
 			multiple_split_area.wipe_out
 			create stored_heights.make (info.count)
 			create stored_widths.make (info.count)
 			create minimized_items.make (info.count)
 			from
-				counter := 1
+				counter := info.lower
 			until
-				counter > info.count
+				counter > info.upper
 			loop
 				info_string := info @ counter
 				index := info_string.index_of ('_', 1)
@@ -560,8 +562,15 @@ feature {NONE} -- Implementation
 				stored_widths.extend (info_string.to_integer)
 				info_string := info_string.substring (index + 1, info_string.count)
 				
+				
+				storable_tool := tool_by_name (tool_name)
+				tool ?= storable_tool
+				check
+					tool_was_widget: tool /= Void
+				end
 					-- Note that we convert from the stored name to the real name for the second argument.
-				multiple_split_area.extend (tool_by_name (tool_name), name_by_tool (tool_by_name (tool_name)))				
+				multiple_split_area.extend (tool, storable_tool.name)
+				multiple_split_area.customizeable_area_of_widget (tool).extend (storable_tool.tool_bar)
 				counter := counter + 1
 			end
 
@@ -608,6 +617,7 @@ feature {NONE} -- Implementation
 			an_x, a_y: INTEGER
 			tool: EV_WIDGET
 			counter: INTEGER
+			storable_tool: GB_STORABLE_TOOL
 		do
 			from
 				counter := 1
@@ -636,14 +646,16 @@ feature {NONE} -- Implementation
 				a_height :=  info_string.to_integer
 				info_string := info_string.substring (index + 1, info_string.count)
 
-				tool := tool_by_name (tool_name)
+				tool := tool_by_name (tool_name).as_widget
+				storable_tool := tool_by_name (tool_name)
 					-- Remove `tool' from its parent if any.
 				if tool.parent /= Void then
 					tool.parent.prune_all (tool)
 				end
 					-- Add `tool' as an enternal tool, that is one that apepars if it has been docked out of
 					-- `multiple_split_area'.
-				multiple_split_area.add_external (tool, Current, name_by_tool (tool_by_name (tool_name)), 1, an_x, a_y, a_width, a_height)
+				multiple_split_area.add_external (tool, Current, storable_tool.name, 1, an_x, a_y, a_width, a_height)
+				multiple_split_area.customizeable_area_of_widget (tool).extend (storable_tool.tool_bar)
 				counter := counter + 1
 			end
 		end	
@@ -656,6 +668,7 @@ feature {NONE} -- Implementation
 			linear_rep: ARRAYED_LIST [EV_WIDGET]
 			output: STRING
 			a_dialog: EV_DIALOG
+			storable_tool: GB_STORABLE_TOOL
 		do
 			output := ""
 			create info.make (1, multiple_split_area.count)
@@ -665,7 +678,11 @@ feature {NONE} -- Implementation
 			until
 				linear_rep.off
 			loop
-				output := storable_name_by_tool (linear_rep.item)
+				storable_tool ?= linear_rep.item
+				check
+					widget_was_storable_tool: storable_tool /= Void
+				end
+				output := storable_name_by_tool (storable_tool)
 				output := output + "_"
 				if multiple_split_area.is_item_maximized (linear_rep.item) then
 					output := output + "maximized"
@@ -687,7 +704,11 @@ feature {NONE} -- Implementation
 			until
 				linear_rep.off
 			loop
-				output := storable_name_by_tool (linear_rep.item)
+				storable_tool ?= linear_rep.item
+				check
+					widget_was_storable_tool: storable_tool /= Void
+				end
+				output := storable_name_by_tool (storable_tool)
 				a_dialog := parent_dialog (linear_rep.item)
 				check
 					dialog_not_void: a_dialog /= Void

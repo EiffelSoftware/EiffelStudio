@@ -153,7 +153,8 @@ feature {NONE} -- Implementation
 						elseif visitor.is_enumeration then
 							Result.append (Eif_integer)
 
-						elseif visitor.is_structure or visitor.is_interface or visitor.is_array_basic_type then
+						elseif visitor.is_structure or visitor.is_interface or 
+								visitor.is_array_basic_type then
 							Result.append (visitor.c_type)
 							Result.append (Space)
 							Result.append (Asterisk)

@@ -64,6 +64,15 @@ feature -- Basic operations
 			-- Set signature
 			if visitor.is_basic_type then
 				tmp_string := clone (visitor.cecil_type)
+
+			elseif visitor.is_structure or visitor.is_array_basic_type or
+					visitor.is_interface then
+				tmp_string := clone (visitor.c_type)
+				tmp_string.append (Space)
+				tmp_string.append (Asterisk)
+			elseif visitor.is_structure_pointer or visitor.is_interface_pointer then
+				tmp_string := clone (visitor.c_type)
+
 			else
 				tmp_string := clone (Eif_object)
 			end

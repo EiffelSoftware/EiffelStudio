@@ -2564,6 +2564,24 @@ end:
 		dbreak(PG_BREAK);		/* Debugger hook */
 		break;
 
+	/*
+	 * Change the type from REFERENCE to POINTER for a stack item generated
+	 * from a statement like "$object"
+	 */
+	case BC_REF_TO_PTR:
+#ifdef DEBUG
+		dprintf(2)("BC_REF_TO_PTR\n");
+#endif
+		{
+			struct item *my_last;
+			char *my_tmp;
+			my_last = otop();
+			my_last->type = SK_POINTER;
+			my_tmp =  my_last->it_ref;
+			my_last->it_ptr = my_tmp;	
+			break;
+		}
+
 
 #ifdef CONCURRENT_EIFFEL
 	/* The following instructions started with BC_SEP are used by
@@ -2621,6 +2639,7 @@ end:
 						CURFSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
 					}
 					tmp_tyc = 0;
+					CURRSFW;
 				}
 				else 
 					tmp_tyc++;
@@ -3124,8 +3143,7 @@ end:
 
 				}
 				/* wait some time */
-				if (constant_waiting_time_in_precondition)
-					cur_usleep(constant_waiting_time_in_precondition);
+				CURCSPFW;
 				/* reserve the separate parameters */
 				for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; ) {
 					if (CURRSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref)) {
@@ -3133,6 +3151,7 @@ end:
 							CURFSO(ivalue(IV_ARG, sep_para_index[tmp_tyc])->it_ref);
 						}
 						tmp_tyc = 0;
+						CURRSFW;
 					}
 					else {
 						tmp_tyc++;
@@ -6549,6 +6568,9 @@ char *start;
 		fprintf(fd, "0x%lX BC_CAST_DOUBLE\n", IC - 1);
 		break;
 
+	case BC_REF_TO_PTR:
+		fprintf(fd, "0x%lX BC_REF_TO_PTR\n", IC - 1);
+		break;
 
 #ifdef CONCURRENT_EIFFEL
 	/* The following instructions started with BC_SEP are used by

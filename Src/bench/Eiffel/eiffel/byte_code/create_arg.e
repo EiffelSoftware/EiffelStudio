@@ -57,7 +57,7 @@ feature -- C code generation
 		do
 			buffer := context.buffer
 			
-			buffer.putstring ("RTLN(")
+			buffer.putstring ("RTLNSMART(")
 			cl_type_i := type_to_create
 			gen_type_i ?= cl_type_i
 			buffer.putstring ("RTCA(arg")

@@ -37,7 +37,7 @@ feature -- C code generation
 		do
 			buffer := context.buffer
 
-			buffer.putstring ("RTLN(RTGPTID(")
+			buffer.putstring ("RTLNSMART(RTGPTID(")
 			buffer.putint (context.current_type.generated_id (context.final_mode))
 			buffer.putchar (',')
 			context.current_register.print_register

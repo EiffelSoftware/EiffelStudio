@@ -99,7 +99,7 @@ feature -- C code generation
 			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
-			buffer.putstring ("RTLN(")
+			buffer.putstring ("RTLNSMART(")
 
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)

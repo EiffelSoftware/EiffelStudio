@@ -42,19 +42,29 @@ feature {NONE} -- Initialization
 			create vertical_box
 			frame.extend (vertical_box)
 			create application_class_name_field
+			create project_name_field
 			create project_radio_button.make_with_text ("Project")
 			project_radio_button.select_actions.extend (agent project_type_modified)
 			vertical_box.extend (project_radio_button)
 			create class_radio_button.make_with_text ("Class")
 			class_radio_button.select_actions.extend (agent project_type_modified)
 			vertical_box.extend (class_radio_button)
-			create label.make_with_text (window_class_name_prompt)
+			
+			create label.make_with_text (project_name_prompt)
 			extend (label)
-			create main_window_class_name_field
-			extend (main_window_class_name_field)
+			extend (project_name_field)
+			
+			
 			create label.make_with_text (application_class_name_prompt)
 			extend (label)
 			extend (application_class_name_field)
+
+			
+			create label.make_with_text (window_class_name_prompt)
+			extend (label)
+			create main_window_class_name_field
+			extend (main_window_class_name_field)			
+			
 
 			is_initialized := True
 			disable_all_items (Current)
@@ -74,6 +84,7 @@ feature -- Status setting
 		do
 			main_window_class_name_field.set_text (project_settings.main_window_class_name)
 			application_class_name_field.set_text (project_settings.application_class_name)
+			project_name_field.set_text (project_settings.project_name)
 			if project_settings.complete_project then
 				project_radio_button.enable_select
 			else
@@ -86,6 +97,7 @@ feature -- Status setting
 		do
 			project_settings.set_main_window_class_name (main_window_class_name_field.text)
 			project_settings.set_application_class_name (application_class_name_field.text)
+			project_settings.set_project_name (project_name_field.text)
 			if project_radio_button.is_selected then
 				project_settings.enable_complete_project
 			else
@@ -99,18 +111,20 @@ feature {GB_SYSTEM_WINDOW} -- Implementation
 			-- Validate input fields of `Current'.
 		local
 			warning_dialog: EV_WARNING_DIALOG
-			invalid_text: STRING
-			application_name_lower, class_name_lower: STRING
-			warning_message: STRING
+			application_name_lower, class_name_lower, project_name_lower,
+			invalid_text, warning_message: STRING
 		do
 				-- Check for invalid eiffel names as language specification.
 			validate_successful := True
 			application_name_lower := application_class_name_field.text.as_lower
 			class_name_lower := main_window_class_name_field.text.as_lower
+			project_name_lower := project_name_field.text.as_lower
 			if not valid_class_name (application_name_lower) then
 				invalid_text := application_name_lower
 			elseif not valid_class_name (class_name_lower) then
 				invalid_text := class_name_lower
+			elseif not valid_class_name (project_name_lower) then
+				invalid_text := project_name_lower
 			end
 			if invalid_text /= Void then
 				warning_message := Class_invalid_name_warning
@@ -122,6 +136,8 @@ feature {GB_SYSTEM_WINDOW} -- Implementation
 				invalid_text := application_name_lower
 			elseif reserved_words.has (class_name_lower) then
 				invalid_text := class_name_lower
+			elseif reserved_words.has (project_name_lower) then
+				invalid_text := project_name_lower
 			end
 			if invalid_text /= Void then
 				select_in_parent
@@ -146,8 +162,10 @@ feature {GB_SYSTEM_WINDOW} -- Implementation
 		do
 			if project_radio_button.is_selected then
 				application_class_name_field.enable_sensitive
+				project_name_field.enable_sensitive
 			else
 				application_class_name_field.disable_sensitive
+				project_name_field.disable_sensitive
 			end
 		end
 		
@@ -165,5 +183,8 @@ feature {NONE} -- Implementation
 	
 	application_class_name_field: EV_TEXT_FIELD
 		-- Holds the name used for generated window file name.
+		
+	project_name_field: EV_TEXT_FIELD
+		-- Holds the name used for generated project name.
 		
 end -- class GB_SYSTEM_BUILD_TAB

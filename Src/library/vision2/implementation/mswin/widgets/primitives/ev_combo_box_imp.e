@@ -209,7 +209,7 @@ feature -- Status setting
 			-- of index.
 		do
 			wel_select_item (index - 1)
-			old_selected_item := ev_children @ index
+			old_selected_item := ev_children @ (index)
 		end
 
 	deselect_item (index: INTEGER) is

@@ -48,6 +48,7 @@ feature -- Basic operations
 				name.append ("_")
 				name.append_integer (a_type_info.index_in_type_lib + 1)
 			end
+			namespace := namespace_name (tmp_lib_descriptor .name)
 
 			if prefixed_libraries.has (tmp_guid) then
 				name.prepend (Underscore)

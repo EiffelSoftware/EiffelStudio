@@ -64,6 +64,8 @@ feature -- Basic operations
 				name.prepend (type_library_descriptor.name)
 			end
 
+			namespace := namespace_name (type_library_descriptor.name)
+
 			add_c_type
 			create eiffel_class_name.make (100)
 			eiffel_class_name.append (name_for_class (name, type_kind, False))

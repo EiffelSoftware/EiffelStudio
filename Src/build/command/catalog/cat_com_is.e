@@ -1,13 +1,16 @@
+indexing
+	description: "Stone for a command (used to edit a command)."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class CAT_COM_IS 
 
 inherit
 
 	COM_ICON_STONE
-		-- added by samik
 		undefine
 			init_toolkit
-		-- end of samik     
 		end;
 	HOLE
 		rename
@@ -17,6 +20,7 @@ inherit
 		end;
 	REMOVABLE;
 	ERROR_POPUPER
+	SHARED_INSTANTIATOR
 
 creation
 
@@ -56,6 +60,7 @@ feature {NONE}
 						user_cmd.label)
 				else
 					page.remove_command (user_cmd)
+					command_instantiator.remove_command (user_cmd)
 				end
 			end;
 		end;

@@ -136,7 +136,7 @@ feature {NONE} -- External features
 	eif_wean (obj: POINTER) is
 			-- eif_wean object `obj'.
 		external
-			"C [macro %"macros.h%"]"
+			"C [macro %"eif_macros.h%"]"
 		alias
 			"eif_wean"
 		end
@@ -144,7 +144,7 @@ feature {NONE} -- External features
 	eif_adopt (obj: ANY): POINTER is
 			-- Adopt object `obj'
 		external
-			"C [macro %"macros.h%"]"
+			"C [macro %"eif_macros.h%"]"
 		alias
 			"eif_adopt"
 		end;

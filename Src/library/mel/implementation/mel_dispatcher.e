@@ -446,7 +446,7 @@ feature {NONE} -- External features
 	eif_adopt (object: ANY): POINTER is
 			-- Eiffel macro to adopt an object
 		external
-			"C [macro %"macros.h%"] (EIF_OBJ): EIF_POINTER"
+			"C [macro %"eif_macros.h%"] (EIF_OBJ): EIF_POINTER"
 		alias
 			"eif_adopt"
 		end;

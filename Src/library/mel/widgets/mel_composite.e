@@ -39,7 +39,7 @@ creation
 
 creation {MEL_COMPOSITE}
 
-	make_for_descendents
+	make_for_descendants
 
 feature -- Access
 
@@ -124,16 +124,16 @@ feature -- Access
 			children_list_not_void: Result /= Void
 		end;
 
-	descendents: ARRAYED_LIST [POINTER] is
-			-- List of all descendents of current composite
+	descendants: ARRAYED_LIST [POINTER] is
+			-- List of all descendants of current composite
 			-- (Does not include popup children)
 		do
 			!! Result.make (20);
-			descendents_of (Current, Result)
+			descendants_of (Current, Result)
 		end;
 
-	mel_descendents: ARRAYED_LIST [MEL_OBJECT] is
-			-- List of descendents of current composite recorded in MEL
+	mel_descendants: ARRAYED_LIST [MEL_OBJECT] is
+			-- List of descendants of current composite recorded in MEL
 			-- (This list may vary from `children' since a widget
 			-- may have been created in C without being recorded in MEL.
 			-- Does not include popup children)
@@ -145,7 +145,7 @@ feature -- Access
 			temp: INTEGER;
 			c_list: ARRAYED_LIST [POINTER]
 		do
-			c_list := descendents;
+			c_list := descendants;
 			temp := c_list.count;
 			!! Result.make (temp);
 			if temp > 0 then
@@ -163,7 +163,7 @@ feature -- Access
 				end
 			end
 		ensure
-			descendents_list_not_void: Result /= Void
+			descendants_list_not_void: Result /= Void
 		end;
 
 feature -- Measurement
@@ -212,8 +212,8 @@ feature {NONE} -- Implementation
 		do
 		end;
 
-	make_for_descendents (a_screen_object: POINTER) is
-			-- Make a composite for calculating descendents
+	make_for_descendants (a_screen_object: POINTER) is
+			-- Make a composite for calculating descendants
 		require
 			not_null: a_screen_object /= default_pointer;
 			is_composite: xt_is_composite (a_screen_object)
@@ -238,8 +238,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	descendents_of (a_comp: MEL_COMPOSITE; list: ARRAYED_LIST [POINTER]) is
-			-- List of all descendents of current composite
+	descendants_of (a_comp: MEL_COMPOSITE; list: ARRAYED_LIST [POINTER]) is
+			-- List of all descendants of current composite
 		require
 			valid_comp: a_comp /= Void;
 			valid_list: list /= Void
@@ -257,8 +257,8 @@ feature {NONE} -- Implementation
 				w := c_list.item;
 				list.extend (w);
 				if xt_is_composite (w) then
-					!! mel_comp.make_for_descendents (w)
-					descendents_of (mel_comp, list)
+					!! mel_comp.make_for_descendants (w)
+					descendants_of (mel_comp, list)
 				end
 				c_list.forth
 			end;
@@ -272,12 +272,12 @@ feature {MEL_OBJECT}
 		local
 			children_list: ARRAYED_LIST [MEL_OBJECT];
 			a_child: MEL_OBJECT;
-			old_descendents: ARRAYED_LIST [POINTER]
+			old_descendants: ARRAYED_LIST [POINTER]
 		do
 			debug ("MEL")
-				old_descendents := descendents
+				old_descendants := descendants
 			end;
-			children_list := mel_descendents;
+			children_list := mel_descendants;
 			from
 				children_list.start
 			until
@@ -306,7 +306,7 @@ feature {MEL_OBJECT}
 				object_clean_up;
 			end
 			debug ("MEL")
-				if all_children_destroyed (old_descendents) then
+				if all_children_destroyed (old_descendants) then
 					io.error.putstring ("Object cleanned up properly")
 				else
 					io.error.putstring ("**** Object NOT cleanned up properly")

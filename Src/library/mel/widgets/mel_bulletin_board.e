@@ -613,7 +613,7 @@ feature -- Element change
 
 	set_focus_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Set `a_command' to be executed when the widget or one of
-			-- its descendents receives the input focus. 
+			-- its descendants receives the input focus. 
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require

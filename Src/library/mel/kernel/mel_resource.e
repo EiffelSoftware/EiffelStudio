@@ -2,7 +2,7 @@ indexing
 
 	description: 
 		"Abstract class for Motif resources that has been allocated %
-		%for a `display'. All descendents sets `is_shared' to True at %
+		%for a `display'. All descendants sets `is_shared' to True at %
 		%creation. This means that the user must call `destroy' or %
 		%`set_unshared' and not reference it to free the resource.";
 	status: "See notice at end of class.";

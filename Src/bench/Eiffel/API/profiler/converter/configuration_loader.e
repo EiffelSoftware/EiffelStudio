@@ -35,7 +35,30 @@ feature {NONE} -- Implementation
 			file_name: FILE_NAME;
 			retried: BOOLEAN
 		do
+			if not retried then
+				!! file_name.make_from_string (profile_path);
+				file_name.extend (prof);
 
+				if not file_name.is_valid then
+					error_occured := true;
+					error_code := Invalid_profiler_type
+				else
+					!! config_file.make_open_read (file_name);
+					config_file.read_stream (config_file.count);
+					file_contents := config_file.last_string;
+					config_file.close;
+					get_number_of_columns;
+					get_index_column;
+					get_function_time_column;
+					get_descendent_time_column;
+					get_number_of_calls_column;
+					get_function_name_column;
+					get_percentage_column;
+					get_leading_underscore;
+				end;
+			else
+				error_occured := true;
+			end;
 		rescue
 			retried := true;
 			retry;
@@ -255,6 +278,9 @@ feature {EWB_GENERATE, GENERATE_PROFILE_INFO_CMD} -- Error handling
 
 	error_occured: BOOLEAN
 		-- Was there an error during the load of the config file?
+
+	error_code: INTEGER
+		-- Configure load error code
 
 	shared_prof_config: SHARED_PROF_CONFIG
 		-- Shared configuration values

@@ -21,14 +21,14 @@ inherit
 			set_size as button_set_size,
 			set_height as button_set_height,
 			set_width as button_set_width,
-            is_shown as shown
+			is_shown as shown
 		undefine
 			create_callback_struct			
 		end;
 
 	MANAGER_M
-        rename
-            is_shown as shown
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct			
 		redefine
@@ -37,10 +37,7 @@ inherit
 			set_size, set_height, set_width
 		end;
 
-	FONTABLE_M
-		rename
-			screen_object as font_screen_object
-		end;
+	FONTABLE_M;
 
 	MEL_OPTION_MENU
 		rename
@@ -53,7 +50,7 @@ inherit
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
 			screen as mel_screen,
-            is_shown as shown
+			is_shown as shown
 		redefine
 			set_size, set_height, set_width
 		end
@@ -66,15 +63,22 @@ feature {NONE} -- Initialization
 
 	make (an_option_menu: OPTION_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif option menu button.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_opt_make (an_option_menu.identifier,
-					mel_parent (an_option_menu, widget_index),
-					man);
+			mel_opt_make (an_option_menu.identifier, mc, man);
 			an_option_menu.set_font_imp (Current);
 		end;
 
 feature -- Status report
+
+	font_list: MEL_FONT_LIST is
+			-- Font list of button gadget
+		do
+			Result := button_gadget.font_list
+		end;
 
 	selected_button: BUTTON is
 			-- Current Push Button selected in the option menu
@@ -106,6 +110,12 @@ feature -- Status report
 		end;
 
 feature -- Status setting
+
+	set_font_list (a_font_list: MEL_FONT_LIST) is
+			-- Set button_gadget font_list to `_font_list'.
+		do
+			button_gadget.set_font_list (a_font_list)
+		end;
 
 	set_text (a_text: STRING) is
 			-- Set button text to `a_text'.
@@ -204,12 +214,6 @@ feature -- Removal
 		end;
 
 feature {NONE} -- Implementation
-
-	font_screen_object: POINTER is
-			-- Pointer to the text who change its font
-		do
-			Result := button_gadget.screen_object
-		end;
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 		do

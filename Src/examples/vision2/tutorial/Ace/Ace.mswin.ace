@@ -19,6 +19,7 @@ cluster
 	main (tutorial):					"$\main"
 	demo_items (tutorial):				"$\demo_items"
 	demo_windows (tutorial):			"$\demo_windows"
+	demo_tabs (tutorial):			"$\demo_tabs"
 
 
 ------------------------ EiffelBase:

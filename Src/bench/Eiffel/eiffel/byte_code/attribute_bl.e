@@ -5,7 +5,7 @@ class ATTRIBUTE_BL
 inherit
 	ATTRIBUTE_B
 		redefine
-			generate, print_register, free_register,
+			free_register,
 			basic_register, generate_access_on_type,
 			is_polymorphic, generate_on, generate_access,
 			analyze_on, analyze, set_parent, parent, set_register, register
@@ -40,16 +40,6 @@ feature
 			register := r
 		end
 
-	print_register is
-			-- Print register or generate
-		do
-			if real_type (type).is_none then
-				buffer.putstring ("(EIF_REFERENCE) 0")
-			else
-				Precursor {ATTRIBUTE_B}
-			end
-		end
-
 	free_register is
 			-- Free registers
 		do
@@ -67,10 +57,8 @@ io.error.putstring ("In attribute_bl%N")
 io.error.putstring (attribute_name)
 io.error.new_line
 end
-			if not type.is_none then
-				analyze_on (Current_register)
-				get_register
-			end
+			analyze_on (Current_register)
+			get_register
 debug
 io.error.putstring ("Out attribute_bl%N")
 end
@@ -107,24 +95,16 @@ io.error.new_line
 end
 		end
 
-	generate is
-			-- Generation of access
-		do
-			if not real_type (type).is_none then
-				Precursor {ATTRIBUTE_B}
-			end
-		end
-
 	generate_on (reg: REGISTRABLE) is
 			-- Generate call of feature on `reg'
 		do
-			generate_attribute (reg)
+			do_generate (reg)
 		end
 
 	generate_access is
 			-- Generate access to attribute
 		do
-			generate_attribute (Current_register)
+			do_generate (Current_register)
 		end
 
 	check_dt_current (reg: REGISTRABLE) is
@@ -155,17 +135,6 @@ end
 			if not type_i.is_basic then
 				class_type ?= type_i;	-- Cannot fail
 				Result := Eiffel_table.is_polymorphic (routine_id, class_type.type_id, False) >= 0
-			end
-		end
-
-	generate_attribute (reg: REGISTRABLE) is
-			-- Generate attribute or NONE instance.
-		do
-			if type.is_none then
-				buffer.putstring ("(EIF_REFERENCE) 0")
-			else
-					-- Generate attribute
-				do_generate (reg)
 			end
 		end
 

@@ -21,7 +21,9 @@ extern "C" {
 #else
 #include <strings.h>
 #endif
+#include <assert.h>
 #include "eif_portable.h"
+#include "eif_constants.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include "eif_except.h"
@@ -29,6 +31,10 @@ extern "C" {
 #include "eif_main.h"
 #include "eif_memory.h"
 
+#ifndef EIF_THREADS
+rt_public EIF_INTEGER clsc_per = 0;	
+							/* Period of full coalescing: 0 => never. */
+#endif	/* !EIF_THREADS */
 
 rt_public void mem_free(char *object)
 {
@@ -338,6 +344,13 @@ rt_public char gc_ison(void)
 	EIF_END_GET_CONTEXT
 }
 
+rt_public void		eif_set_coalesc_period (EIF_INTEGER p)
+{
+	EIF_GET_CONTEXT
+	assert (p >= 0);
+	clsc_per = p;
+	EIF_END_GET_CONTEXT
+}
 
 rt_public void eif_set_max_mem (EIF_INTEGER lim)
 {
@@ -375,6 +388,12 @@ rt_public EIF_INTEGER eif_get_max_mem (void)
 	EIF_END_GET_CONTEXT
 }
 
+rt_public EIF_INTEGER eif_coalesc_period () 
+{
+	EIF_GET_CONTEXT
+	EIF_END_GET_CONTEXT
+	return plsc_per;
+}	
 rt_public EIF_INTEGER eif_get_chunk_size (void)
 {
 	/*

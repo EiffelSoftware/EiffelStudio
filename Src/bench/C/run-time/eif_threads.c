@@ -183,11 +183,16 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	tenure = (uint32) TENURE_MAX;
 	plsc_per = PLSC_PER;
 	th_alloc = TH_ALLOC;
+#ifdef EIF_REM_SET_OPTIMIZATION
+	special_rem_set = (struct special_table *) 0;	
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 
 		/* malloc.c */
 	gen_scavenge = GS_SET;
 		/* main.c */
 	in_assertion = 0;
+		/* memory.c */
+	clsc_per = CLSC_PER;	/* Full coalescing period. */
 }
 
 

@@ -42,6 +42,10 @@ extern "C" {
 
 #include <stdio.h>		/* For stream flushing */
 
+#include <assert.h> 				/* For assertions checking. */
+#ifdef EIF_REM_SET_OPTIMIZATION
+#include "eif_special_table.h" 		/* For special table interface. */
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 #if ! defined CUSTOM || defined NEED_OPTION_H
 #include "eif_option.h"		/* For exitprf */
 #endif
@@ -181,6 +185,13 @@ rt_private struct stack rem_set = {			/* Remembered set */ /* %%zmt */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
+
+#ifdef EIF_REM_SET_OPTIMIZATION
+rt_private struct special_table *special_rem_set = 
+		(struct special_table *) 0; 
+				/* Remembered special table for special objects. */ 
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+
 rt_shared struct stack moved_set = {			/* Moved objects set */ /* %%zmt */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -195,6 +206,21 @@ rt_public struct stack once_set = {			/* Once functions */ /* %%zmt */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
+
+#ifdef EIF_MEMORY_OPTIMIZATION
+	/********************************************************************
+	 * Memory set: Record memory objects in the GS zone.		 		*
+	 * It is traversed to call the 'dispose' routine when it is garbage.*
+	 ********************************************************************/
+rt_public struct stack memory_set = 
+{
+	(struct stchunk *) 0,	/* st_hd */
+	(struct stchunk *) 0,	/* st_tl */
+	(struct stchunk *) 0,	/* st_cur */
+	(char **) 0,			/* st_top */
+	(char **) 0,			/* st_end */
+};
+#endif	/* EIF_MEMORY_OPTIMIZATION */
 
 /* Array used to store the number of objects used, indexed by object's age.
  * This is used when computing the demographic feedback-mediated tenuring
@@ -225,9 +251,14 @@ rt_public long th_alloc = TH_ALLOC;	/* Allocation threshold before calling GC */
 rt_public int gc_monitor = 0;			/* Disable GC time-monitoring by default */ /* %%zmt */
 rt_public char *root_obj = (char *) 0;	/* Address of the 'root' object */ /* %%zmt */
 
-#endif /* EIF_THREADS */
+#endif /* !EIF_THREADS */
 
+rt_private int nb_items(register1 struct stack *);	/* Number of items held in a stack */
+#ifdef EIF_REM_SET_OPTIMIZATION
+rt_shared int is_in_rem_set (char *obj);	/* Is obj in rem_set? */
+rt_shared int is_in_special_rem_set (char *obj);	/* Is obj in special_rem_set? */
 /* Automatic invokations of GC */
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 rt_public int acollect(void);				/* Collection based on threshold */
 rt_public int scollect(int (*gc_func) (void), int i);				/* Collect with statistics */
 
@@ -247,6 +278,12 @@ rt_private void clean_up(void);			/* After collection, time to clean up */
 /* Stack markers */
 rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move);	/* Marks a collector's stack */
 rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move);			/* Marks a collector's stack */
+#ifdef EIF_REM_SET_OPTIMIZATION
+rt_private void mark_special_table (register struct special_table *spt, 
+									register char *(*marker) (char *),
+								   	register int move);
+										/* Mark special table. */
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 rt_private void update_object_id_stack(void); /* Update the object id stack */
 #endif
@@ -271,10 +308,24 @@ rt_public int collect(void);				/* Generation based collector main entry */
 rt_private int generational_collect(void);	/* The generational collection algorithm */
 rt_public void eremb(char *obj);				/* Remember an old object */
 rt_public void erembq(char *obj);				/* Quick version (no GC call) of eremb */
+rt_public void special_erembq(char *obj, EIF_INTEGER offst);				
+									/* Quick version (no GC call) of eremb 
+									 * for special objects full of references.*/
+#ifdef EIF_REM_SET_OPTIMIZATION
+rt_public int special_erembq_replace(char *old, char *val);				
+									/* Replace `old' by `val' in special_rem_set. */
+rt_private int update_special_rem_set(void);	
+					/* Update remembered set for special object full of references.*/
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+#ifdef EIF_MEMORY_OPTIMIZATION
+rt_private void update_memory_set (void);		/* Update memory set */
+#endif	/* EIF_MEMORY_OPTIMIZATION */
 rt_private void mark_new_generation(EIF_CONTEXT_NOARG);	/* The name says it all, I think--RAM */
 rt_private char *mark_expanded(char *root, char *(*marker) (char *));		/* Marks expanded reference in stack */
 rt_private void update_moved_set(void);	/* Update the moved set (young objects) */
 rt_private void update_rem_set(void);		/* Update remembered set */
+rt_private int refers_new_object_not_updated(register char *object);
+rt_private int	all_subreferences_processed (char *root);
 rt_shared int refers_new_object(register char *object);		/* Does an object refers to young ones ? */
 rt_private char *gscavenge(char *root);			/* Generation scavenging on an object */
 rt_private void swap_gen_zones(void);		/* Exchange 'from' and 'to' zones */
@@ -366,7 +417,6 @@ static int fdone = 0;	/* Tracing flag to only get the last full collect */
 
 /* Function(s) used only in DEBUG mode */
 #ifdef DEBUG
-rt_private int nb_items(register1 struct stack *);	/* Number of items held in a stack */
 #ifndef MEMCHK
 #define memck(x)	;				/* No memory checking compiled */
 #endif
@@ -455,6 +505,7 @@ rt_public int acollect(void)
 	half_tau = tau >> 1;
 	allocated = e_data.ml_total - eif_total;
 
+#ifdef EIF_CONDITIONAL_COLLECT
 	if (allocated < tau && freemem > half_tau && freemem < (tau + half_tau)) {
 
 #ifdef DEBUG
@@ -462,6 +513,10 @@ rt_public int acollect(void)
 #endif
 		return -1;	/* Do not perform collection */ /* %%ss -1 was 0 */
 	}
+#endif
+	/* Every "plsc_per" collections, we ran a full collection.
+	 * This period can be set by the user.
+	 */
 
 	if (0 == nb_calls % plsc_per) {	/* Full collection required */
 		plsc();
@@ -470,6 +525,16 @@ rt_public int acollect(void)
 	} else							/* Generation-base collector */
 		status =  collect();
 
+
+	/* We may want to run periodically a full coalescing (Eiffel and C objects).
+	 * Note that the user can also set his own period of full coalescing. 
+	 */
+
+	if (clsc_per)		
+	{
+			if (0 == nb_calls % clsc_per)
+				full_coalesc (ALL_T);
+	}
 #ifdef DEBUG
 	dprintf(1)("acollect: returning status %d\n", status);
 #endif
@@ -838,6 +903,23 @@ rt_public void reclaim(void)
 	 */
 	g_data.status = 0;
 
+	/* We must call the dispose routine for the objects in the GSZ before
+	 * destroying them.
+  	 */
+#ifdef EIF_CALL_UPDATE
+#ifdef EIF_MEMORY_OPTIMIZATION
+	printf ("Call Update memory_set in %d\n", EIF_THR_SELF);
+	update_memory_set ();
+	printf ("Finished Update memory_set in %d\n", EIF_THR_SELF);
+#endif	/* EIF_MEMORY_OPTIMIZATION */
+
+#ifdef EIF_REM_SET_OPTIMIZATION
+	printf ("Call Update special_rem_set in %d\n", EIF_THR_SELF);
+	update_special_rem_set();
+	printf ("Finished Update special_rem_set in %d\n", EIF_THR_SELF);
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+#endif
+
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
 #ifdef EIF_THREADS 
@@ -1033,6 +1115,218 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 
 	EIF_END_GET_CONTEXT
 }
+
+#ifdef EIF_REM_SET_OPTIMIZATION
+rt_private void mark_special_table (register struct special_table *spt, register char *(*marker) (char *), register int move)
+{
+	/* 
+	 * Mark the special table: scan only the references recorded in the
+	 * special table.	-- ET
+	 */
+ 
+	EIF_GET_CONTEXT
+
+	int 			count; 				/* Count of special table. */
+	char 			**hvalues;			/* Array of pointers. */
+	char 			**container;		/* Special object. */
+	union overhead	*zone;				/* Special object malloc info zone. */
+	union overhead	*iz;				/* Item header. */
+	long 			ofst;				/* Index of item in special. */
+	long 			*hkeys;				/* Array of indexes. */
+	int 			i;					/* Index. */
+
+	assert (g_data.status & GC_FAST);
+
+	if (spt == (struct special_table *) 0)	/* Table not created yet. */
+		return;
+
+
+	/* Initialization. */
+
+	count   = spt->count;				/* Number of elements in table. */
+	hvalues = spt->h_values;			/* Object pointers table. */
+	hkeys = spt->h_keys;				/* Indexes table. */
+
+	assert (hkeys != (long *) 0);
+	assert (hvalues != (char **) 0);
+	assert (count <= spt->h_size);		/* Special table must be coherent. */
+
+#ifdef MARK_SPECIAL_TABLE_DEBUG
+	printf ("MARK_SPECIAL_TABLE: count = %d\n", count);
+#endif /* MARK_SPECIAL_TABLE_DEBUG */
+
+
+	for (i = 0; i < special_rem_set->count ; i++)
+			/* It is very important to access directly to the `count' value 
+			 * of the table,since it can increase during the following marking. 
+			 * -- ET
+		 	 */
+	{
+		zone = HEADER (hvalues [i]);
+		assert (hvalues [i] != (char *) 0);
+
+#ifdef MARK_SPECIAL_TABLE_DEBUG
+	printf ("MARK_SPECIAL_TABLE: object %x\n", hvalues [i]);
+#endif	/* MARK_SPECIAL_TABLE_DEBUG */
+
+
+		assert (zone->ov_flags & EO_REF);		/* Must be full of references.*/
+		assert (zone->ov_flags & EO_SPEC);		/* Must be a special object. */
+		assert (!(zone->ov_size & B_FWD));		/* Not forwarded. */
+		assert (!(zone->ov_flags & EO_EXP));	/* Not expanded. */
+		assert (!(zone->ov_flags & EO_COMP));	/* Not composite. */
+		assert (zone->ov_flags & EO_OLD);		/* Must be old. */
+		assert (zone->ov_flags & EO_REM);		/* Must be remembered. */
+		assert (!(zone->ov_flags & EO_C));		/* Not C object. */
+		
+
+	/***************************************
+	 * Marking of special remembered object*
+	 ***************************************/
+
+		if (!(zone->ov_flags & EO_MARK))
+			/* The object has not been processed yet. 
+			 * It must be referenced from an old object. */
+		{
+			zone->ov_flags |= EO_MARK;	/* Mark it. */	
+			assert (HEADER (hvalues [i])->ov_flags & EO_MARK);
+			assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_MARK);
+		}
+		
+			
+	/****************************************
+	 * Marking of items. 					*
+	 ****************************************/
+
+
+		/* Initializations. */
+
+		ofst = hkeys [i];
+		if (ofst == -1)
+			continue;				/* No new reference, just unmark it. */
+		container = (char **) (hvalues [i] + ofst * sizeof (EIF_REFERENCE));
+		if (*container == (char *) 0)
+			continue;				/* Skip Void elements. */
+
+		iz = HEADER (*container);	/* Fetch malloc info zone for item. */
+
+#ifdef MARK_SPECIAL_TABLE_DEBUG
+/****************************** Debug. *************************************/
+		printf("MARK_SPECIAL_TABLE: marking at 0x%x (type %d, %d bytes) %s %s %s %s %s %s %s, \n\t\t\twith item %x, offset %ld (type %d, %d bytes) %s age %ld, %s %s%s %s %s %s\n",
+			hvalues [i],
+			HEADER(
+				zone->ov_size & B_FWD ? zone->ov_fwd : hvalues [i]
+			)->ov_flags & EO_TYPE,
+			zone->ov_size & B_SIZE,
+			zone->ov_size & B_FWD ? "forwarded" : "",
+			zone->ov_flags & EO_REM ? "rem" : "",
+			zone->ov_flags & EO_OLD ? "old" : "",
+			zone->ov_flags & EO_MARK ? "marked" : "",
+			zone->ov_flags & EO_REF ? "ref" : "",
+			zone->ov_flags & EO_COMP ? "cmp" : "",
+			zone->ov_flags & EO_SPEC ? "spec" : "",
+			*container,
+			hkeys [i],
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : *container
+			)->ov_flags & EO_TYPE,
+			iz->ov_size & B_SIZE,
+			iz->ov_size & B_FWD ? "forwarded" : "",
+			((HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : *container
+			)->ov_flags & EO_AGE)  >> 24) / 2,
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : *container
+			)->ov_flags & EO_OLD ? "old " : "",
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : *container
+			)->ov_flags & EO_REM ? "remembered" : "",
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : *container
+			)->ov_flags & EO_MARK ? "marked" : "",
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : *container
+			)->ov_flags & EO_REF ? "ref" : "",
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : *container
+			)->ov_flags & EO_COMP ? "comp" : "",
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : *container
+			)->ov_flags & EO_SPEC ? "spec" : ""
+		);
+#endif	/* MARK_SPECIAL_TABLE_DEBUG */
+/************************ End of debug. ********************************/
+		
+
+
+		/* Actual marking and update of items. */
+
+		if (move) 	/* May Item move? */
+		{
+			if (*container > sc_to.sc_arena && *container <= sc_to.sc_end)	
+						/* Is it in the generational scavenge `to' zone? */
+							
+	 		{
+						/* Then, it's a twin and it is already processed. */
+
+#ifdef MARK_SPECIAL_TABLE_DEBUG
+				printf ("MARK_SPECIAL_TABLE:Item %x is already processed!\n", *container);
+#endif	/* MARK_SPECIAL_TABLE_DEBUG */
+
+				assert (!(HEADER (*container)->ov_size & B_FWD));	
+									/* Not forwarded twice. */
+				assert (!(HEADER (*container)->ov_flags & EO_MARK));	
+									/* Not marked and still in scavenge zone. */
+				hkeys [i] = -2;		/* Mark it as a twin, -2 by convention. */
+				continue;			/* Next reference. */
+			}
+			else		/* Not a twin, then mark it. */
+			{
+				*container = mark_expanded (*container, marker);
+									/* FIXME. Maybe call `marker' directly. */
+				iz = HEADER (*container);	/* Update item's info zone. */
+			}
+		}
+		else 				/* Then, Item does not move. */
+		{
+			(void) marker(*container);			/* Mark it. */
+			assert (HEADER (*container)->ov_flags & EO_MARK);	/* Item is marked. */
+		}
+
+		assert ((HEADER (*container)->ov_flags & EO_MARK) 
+				|| !(HEADER (*container)->ov_size & B_FWD));
+									/* Must be marked or not forwarded. */
+		assert (!(HEADER (*container)->ov_flags & EO_SPEC));
+								/* Special cannot reference a special directly. */
+		
+	}	/* for ... */
+
+#ifndef NDEBUG
+	/************************ Postconditions. **********************/
+	for (i = 0; i < special_rem_set->count; i ++)
+	{
+		assert ((hvalues [i]) != (char *) 0);
+		assert ((hvalues [i]) == (special_rem_set->h_values) [i]);
+		assert (!(HEADER ((special_rem_set->h_values) [i])->ov_size & B_FWD));
+		if ((hkeys [i] >= 0) && ((*(char **) ((special_rem_set->h_values) [i] + hkeys [i]*sizeof (EIF_REFERENCE))) != (char *) 0))
+				assert (!(HEADER (*(char **) ((special_rem_set->h_values) [i] + hkeys [i]*sizeof (EIF_REFERENCE)))->ov_size & B_FWD));
+		assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_MARK);
+		assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_SPEC);
+			assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_REF);
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+		if (hkeys [i] >= 0) 
+		{
+			assert (all_subreferences_processed ((special_rem_set->h_values) [i]));	
+		}
+							/* Checking coherence. */
+#endif	/* EIF_EXPENSIVE_ASSERTIONS */
+	}
+	/*********************** End of postconditions. ****************/
+#endif
+
+}	/* mark_special_table () */
+
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 
 rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move)
 									/* The stack which is to be marked */
@@ -2508,20 +2802,35 @@ rt_private void full_sweep(void)
 			 * reference)--RAM.
 			 */
 
+#ifdef FULL_SWEEP_DEBUG
+		printf("FULL_SWEEP: Removing 0x%x (type %d, %d bytes) %s %s %s %s %s %s %s, age %ld\n",
+			(union overhead *) zone + 1,
+			HEADER( (union overhead *) zone + 1 )->ov_flags & EO_TYPE,
+			zone->ov_size & B_SIZE,
+			((union overhead *) zone + 1),
+			zone->ov_size & B_FWD ? "forwarded" : "",
+			zone->ov_flags & EO_MARK ? "marked" : "",
+			zone->ov_flags & EO_REF ? "ref" : "",
+			zone->ov_flags & EO_COMP ? "cmp" : "",
+			zone->ov_flags & EO_SPEC ? "spec" : "",
+			zone->ov_flags & EO_NEW ? "new" : "",
+			zone->ov_flags & EO_OLD ? "old" : "",
+			((zone->ov_flags & EO_AGE) >> 24) / 2);
+		
+
+#endif	/* FULL_SWEEP_DEBUG */
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+			assert (!(is_in_spt (special_rem_set, (char *) (zone + 1))));
+#endif	/* EIF_EXPENSIVE_ASSERTIONS */
 			gfree(zone);		/* Object is freed */
 		}
 	}
 
-/* FIXME !!!!!!!!!! */
-/* FIXME !!!!!!!!!! */
-/* FIXME !!!!!!!!!! */
-/* FIXME !!!!!!!!!! */
+	/* The Hector stack has to be traversed to call `dispose' on protected objects 
+	 * Standard dispose traversal checks for Eiffel objects, frozen obj are 
+	 * marked as C obj thus ignored. The other stacks are referencing "moving" 
+	 * objects so there's no problem */
 
-	/* The Hector stack has to be traversed to call `dispose' on protected objects */
-
-	/* Standard dispose traversal checks for Eiffel objects, frozen obj are marked as C obj thus ignored. The other stacks are referencing "moving" objects so there's no problem */
-
-	/* Xavier */
 	EIF_END_GET_CONTEXT
 }
 
@@ -2536,8 +2845,15 @@ rt_private void full_update(void)
 	 * proper job.
 	 */
 
+	
 	update_moved_set();
 	update_rem_set();		/* Must be done after moved set (for GC_FAST) */
+#ifdef EIF_REM_SET_OPTIMIZATION 
+	(void) update_special_rem_set ();		
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+#ifdef EIF_MEMORY_OPTIMIZATION
+	update_memory_set ();
+#endif	/* EIF_MEMORY_OPTIMIZATION */
 }
 
 /*
@@ -3745,6 +4061,16 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	}
 #endif
 
+#ifdef EIF_REM_SET_OPTIMIZATION 
+	/* Finally, deal with special remembered objects set, which records 
+	 * the old special objects, full of reference pointing to new ones. 
+	 * (FIXME only hybrid_gen_mark support it.)
+	 */
+
+	mark_special_table(special_rem_set, GEN_SWITCH, moving);
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+
+
 	EIF_END_GET_CONTEXT
 }
 
@@ -3990,7 +4316,24 @@ rt_private char *hybrid_gen_mark(char *root)
 
 		if (flags & EO_OLD) {			/* Old object unmarked */
 			if (flags & EO_REM)		/* But remembered--mark it as processed */
+			{
 				zone->ov_flags = flags | EO_MARK;
+#ifdef EIF_REM_SET_OPTIMIZATION
+				if ((flags & EO_SPEC) && (flags & EO_REF))	
+									/* Is Object special and full of refs? */
+				{
+					assert (is_in_spt (special_rem_set, current));
+					goto done;			
+						/* Skip it. it will be processed later in 
+						 * "mark_special_rem_set()". 
+						 * This is actually the purpose of the special_rem_set:
+						 * to avoid to mark recursively all the reference in a 
+						 * special rememembered old object, but only those 
+						 * which are `young'. */
+				}
+
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+			}
 			else						/* Old object is not remembered */
 				goto done;				/* Skip it--object did not move */
 		}
@@ -4008,7 +4351,22 @@ rt_private char *hybrid_gen_mark(char *root)
 			flags = zone->ov_flags;			/* And Eiffel flags */
 			if (prev)						/* Update referencing pointer */
 				*prev = current;
+#ifdef EIF_REM_SET_OPTIMIZATION
+			if ((flags & (EO_SPEC | EO_REF | EO_OLD)) == (EO_SPEC | EO_REF | EO_OLD))
+				/* It has been tenured and may be in the special remembered set. 
+				 * Skip it-- Only the new references will  be processed in 
+				 * "mark_special_table()". */
+			{
+#ifndef NDEBUG
+				assert (flags & EO_OLD);
+				assert (flags & EO_MARK);
+				assert (1 == is_in_spt (special_rem_set, current));
+#endif	/* !NDEBUG */
+				goto done;	/* Skip it. */
+			}
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 		}
+
 
 		/* It's useless to mark an expanded, because it has only one reference
 		 * on itself, in the object which holds it. Scavengend objects need not
@@ -4431,6 +4789,8 @@ rt_private char *gscavenge(char *root)
 	register3 uint32 flags;				/* Eiffel flags */
 	char *new;							/* Address of new object (tenured) */ 
 	int size;							/* Size of scavenged object */
+	int ret;							/* status returned by "epush" or 
+										 * "eif_promote_special" */
 
 	zone = HEADER(root);				/* Info header */
 	flags = zone->ov_flags;				/* Eiffel flags */
@@ -4472,7 +4832,26 @@ rt_private char *gscavenge(char *root)
 			 * be remembered, it remains in the new generation.
 			 */
 
-			if (-1 != epush(&rem_set, root)) {	/* We could record it */
+#ifdef EIF_REM_SET_OPTIMIZATION
+			if ((flags & EO_SPEC) && (flags & EO_REF))
+				/* We need to push it into the special_rem_set
+				 * So we scan the young object reference that
+				 * it contains.
+				 */
+				
+			{
+#ifdef GSCAVENGE_DEBUG
+				printf ("GSCAVENGE: Pushing  %x in a special remembered table\n", root);
+#endif	/* GSCAVENGE_DEBUG */
+				ret = eif_promote_special (root);
+			}
+			else	/* Not a special object */
+				ret = epush (&rem_set, root);
+
+#else	/* EIF_REM_SET_OPTIMIZATION */
+			ret = epush (&rem_set, root);
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+			if (-1 != ret) {	/* We could record it */
 
 				/* Mark the object as being old, but do not remove the EO_MARK
 				 * mark. See comment about GC_FAST in update_moved_set()--RAM.
@@ -4846,6 +5225,840 @@ rt_private void update_rem_set(void)
 	EIF_END_GET_CONTEXT
 }
 
+#ifdef EIF_MEMORY_OPTIMIZATION
+rt_private void update_memory_set ()
+	/* Traverse the memory_set which contains all the objects, which have a
+	 * dispose routine. It calls the dispose routine
+	 * on the objects thar are garbage.
+	 * To be compared with "update_rem_set ()". 
+	 * -- ET
+	 */
+{
+	EIF_GET_CONTEXT					/* In MT-mode, for memory_set.	*/
+
+	char **object;					/* Current inspected object */
+	int n;							/* Number of objects to be dealt with */
+	struct stack new_stack;			/* The new stack built from the old one */
+	register1 char *current;		/* Address of inspected object */
+	register3 union overhead *zone;	/* Malloc info zone */
+	register4 struct stchunk *s;	/* To walk through each stack's chunk */
+	int saved_in_assertion;			/* Saved assertion level.	*/
+	char gc_status;					/* Saved GC status.	*/
+	int dtype;						/* Dynamic type of Current object.	*/
+	int done = 0;					/* Top of stack not reached yet */
+
+	/************************ Preconditions. ******************************/
+
+	assert (!(g_data.status & GC_STOP)); 	/* GC Cannot be stopped.	*/
+
+	/************************* End of postconditions. **********************/
+
+#ifdef USE_STRUCT_COPY
+	new_stack = memory_set;
+#else
+	bcopy(&memory_set, &new_stack, sizeof(struct stack));
+#endif
+	s = new_stack.st_cur = memory_set.st_hd;		/* New empty stack */
+	if (s) {
+		new_stack.st_top = s->sk_arena;				/* Lowest possible top */
+		new_stack.st_end = s->sk_end;				/* End of first chunk */
+	}
+
+#ifdef DEBUG_UPDATE_MEMORY_SET
+	printf("update_memory_set: %d objects to be studied\n",
+		nb_items(&memory_set));
+#endif
+
+	/* Traverse stack.	*/
+	for (s = memory_set.st_hd; s && !done; s = s->sk_next) 
+	{
+		object = s->sk_arena;				/* Start of stack */
+		if (s != memory_set.st_cur)			/* Top is before after 's' */
+			n = s->sk_end - object;			/* Look at the whole chunk */
+		else 
+		{
+			n = memory_set.st_top - object;	/* Stop at the top */
+			done = 1;						/* Reached end of stack */
+		}
+
+		for (; n > 0; n--, object++) 
+		{
+			current = *object;				/* Save that for later perusal */
+			zone = HEADER(current);			/* Object's header */
+
+#ifdef DEBUG_UPDATE_MEMORY_SET
+			printf("update_memory_set: at 0x%lx (type %d, %d bytes) %s\n",
+				current,
+				HEADER(
+					zone->ov_size & B_FWD ? zone->ov_fwd : current
+				)->ov_flags & EO_TYPE,
+				zone->ov_size & B_SIZE,
+				zone->ov_size & B_FWD ? "forwarded" : "dead"
+			);
+#endif	/* DEBUG_UPDATE_MEMORY_SET	*/
+
+			/* We need to call the dispose routine on the objects that
+			 * not alive any longer. 
+			 * If the object holds the B_FWD flag, it has survived the 
+			 * generational collection and we just need to update the proper
+			 * entry in the stack. Otherwise it is garbage: we must call the 
+			 * dispose routine on it and remove it from the stack. 
+			 */
+
+			assert (!(zone->ov_size & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));	
+								/* Those objects cannot be in the GSZ.	*/
+
+			if (zone->ov_size & B_FWD)	/* Object survived GS collection. */
+			{
+				current = zone->ov_fwd;		/* Update entry. */
+
+				assert (Disp_rout (Dtype (HEADER (current) + 1)));
+							/* Forwarded object must have a dispose routine.*/
+				assert (!(HEADER (current)->ov_size & B_FWD));
+										/* Cannot be forwarded twice.	*/
+
+				if (!(HEADER (current)->ov_flags & (EO_OLD | EO_NEW)))
+										/* Forwarded object is still in GSZ. */
+					epush(&new_stack, current);		/* Save it in the stack. */
+			}
+			else 									/* Object is dead. */
+			{										/* Call dispose routine.*/
+				dtype = zone->ov_flags & EO_TYPE;	/* Need it for dispose.	*/ 
+
+				assert (Disp_rout (dtype) != 0);
+								/* Object must have a dispose routine.	*/
+
+				gc_status = g_data.status;			/* Save GC status. */
+				g_data.status |= GC_STOP;			/* Stop GC. */
+
+				/* We should disable invariants but not postconditions 
+				 * (see `dispose' from IDENTIFIED).
+ 				 */
+				saved_in_assertion = in_assertion;	/* Save in_assertion. */
+				in_assertion = ~0;			/* Turn off assertion checking. */
+				DISP(dtype,(char *) (zone + 1));	/* Call 'dispose'. */
+				in_assertion = saved_in_assertion;	/* Set in_assertion back. */
+				g_data.status = gc_status;		/* Restore previous GC status.*/
+			}
+
+#ifdef DEBUG_UPDATE_MEMORY_SET
+			printf("update_memory_set: object %lx (type %d, %d bytes) %s\n",
+				current, HEADER(current)->ov_flags & EO_TYPE,
+				HEADER(current)->ov_size & B_SIZE,
+				HEADER(current)->ov_size & B_FWD ? "updated":"disposed");
+#endif	/* DEBUG_UPDATE_MEMORY_SET	*/
+
+		}	/* for ... */
+	}	/* for ... */
+
+#ifdef DEBUG_UPDATE_MEMORY_SET
+	printf("update_memory_set: %d objects remaining\n",
+		nb_items(&new_stack));
+#endif	/* DEBUG_UPDATE_MEMORY_SET	*/
+
+	/* Memory objects have been pushed on stack "new_stack". Now reset the
+	 * the memory set correctly by making "memory_set" refer to the new stack.
+	 */
+
+#ifdef USE_STRUCT_COPY
+	memory_set = new_stack;
+#else
+	bcopy(&new_stack, &memory_set, sizeof(struct stack));
+#endif
+
+	/* Usually, the memory set shrinks after a collection. The unused chunks
+	 * in the stack are freed. 
+	 */
+	
+	st_truncate(&memory_set);
+
+	EIF_END_GET_CONTEXT			/* In MT-mode only.	*/
+
+}	/* update_memory_set() */	
+#endif	/* EIF_MEMORY_OPTIMIZATION */
+
+#ifdef EIF_REM_SET_OPTIMIZATION
+rt_private int update_special_rem_set(void)
+{
+	/* Update the special remembered set. This is an iterative process: we check
+	 * only for the item that is new. 
+	 * During partial collections, this routine update the refernces, which
+	 * are remembered in the "special_rem_set", removing twin, void, and old
+	 * references.
+	 * This routine checks that the object is alive only when doing a full
+	 * collection. 
+	 */
+
+	EIF_GET_CONTEXT
+
+	char 					*object;	/* Current inspected remembered object */
+	char 					*item;		/* Current inspected item. */
+	struct special_table 	*new_table;	/* The new table built from the old one */
+	register2 char 			moving;		/* May GC move objects around? */
+	union overhead 			*zone;		/* Malloc info zone of current object.*/
+	union overhead 			*izone;		/* Malloc info zone of current item. */
+	int 					generational;	/* Are we in a generational cycle? */
+	int						hsize;
+	int						count;			
+	int						i;			/* Index for loop. */
+	long 					*hkeys;		/* Index of remembered items table. */
+	char 					**hvalues;	/* Special old object pointers table. */
+	long 					offset;		/* Index of item. */
+	uint32					flags;		/* Eiffel flags of current object. */
+
+	/* Initializations. */
+
+#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
+	printf ("In update_special_rem_set ()  : special_rem_set %x\n", special_rem_set);
+#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
+
+	if (!special_rem_set)			 	/* No special_rem_set . */
+		return 0;
+		
+	
+	count = special_rem_set->count;		
+								/* Fetch number of special remembered objects. */
+	if (count == 0) 					/* No object in special_rem_set . */
+		return 0;						/* Pass it. */
+
+
+	/* Initializations. */
+
+	hsize = special_rem_set->h_size;	/* Fetch fields of "special_rem_set". */
+	hkeys = special_rem_set->h_keys;
+	hvalues = special_rem_set->h_values;	 
+	moving = g_data.status;				/* Garbage collector's status */
+	generational = moving & GC_FAST;	/* Is this a collect() cycle? */
+	moving &= GC_PART | GC_GEN ;		/* Current algorithm moves objects? */
+
+	new_table = (struct special_table *) malloc (sizeof (struct special_table));
+	if (new_table == (struct special_table *) 0)	
+		enomem();	/* Could not allocate struct. */
+
+
+		/* Initializations of "new_table". 
+		 * In "old_values" are the table of the non processed special
+		 * remembered objects. We must do it to unmark them when exiting the
+		 * the procedure. */
+
+	new_table->count = 0;
+	new_table->h_size = special_rem_set->h_size;
+	new_table->old_values = special_rem_set->h_values;
+	new_table->old_count = special_rem_set->count;
+	new_table->h_values = special_rem_set->old_values;
+	new_table->h_keys = special_rem_set->h_keys;
+
+#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
+	printf ("Status %d, Generational = %d, Moving = %d\n", g_data.status,generational, moving);
+	printf("update_special_rem_set: %d objects to be studied in %s collection\n",
+		special_rem_set->count, generational? "generational" : "full");
+#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
+
+
+#ifndef NDEBUG
+	/************************ Checks. *********************************/
+	assert (count <= hsize);			/* Table must be coherent. */
+	{
+		int32	old_count = count;		/* For postcondittions. */
+	for (i = 0 ; i < count  ; i++)
+	{
+		union overhead 	*zone = HEADER (hvalues [i]);
+										/* Current special's Malloc info zone. */
+		uint32 		flags;	
+										/* Fetch curennt special Eiffel flags. */
+		if (zone->ov_size & B_FWD)		/* Is object forwarded? */
+			zone = HEADER (zone->ov_fwd);	/* Update Malloc info zone. */
+		flags = zone->ov_flags;			/* fetch Eiffel flags. */
+
+		assert (!(flags & EO_COMP));	/* Not a Composite one. */
+		assert (!(flags & EO_C));		/* Not a C object. */
+		assert (flags & EO_REM);		/* Must be remembered. */
+		assert (!(flags & EO_EXP));		/* Must be a reference. */
+		assert (flags & EO_OLD);		/* Must be old. */
+		assert (flags & EO_REF);		/* Must be full of references. */
+		assert (flags & EO_SPEC);		/* Must be a special object. */
+		if (generational)
+		{
+			assert (!(zone->ov_size  & B_FWD));	/* Not forwarded. */
+			assert (zone->ov_flags  & EO_MARK);	/* Must be marked. */
+		}
+		
+	}
+	/************************ End of checks. *********************************/
+#endif /* !NDEBUG */
+
+	/* First, we remove the EO_REM flags from all the special object inside the 
+	 * table. Later on, we will process this flag with  `| EO_REM' if it really 
+	 * has to be remembered or `| ~EO_REM' if it does not references a young 
+	 * item any longer. This way, if at least one remembered reference has to
+	 * be remembered the enclosing special will remain remembered. This is 
+	 * necessary since a special remembered objects can be recorded several times
+	 * in the "special-rem_set".
+	 * We only do it during partial collection.
+	 */
+
+	if (generational)
+		/* We take care of the EO_REM flag only during a partial collection. */
+	{
+
+		for (i = 0 ; i < count; i++)
+		{
+			assert (!(HEADER (hvalues [i])->ov_size & B_FWD));
+												/* Must be udpdated earlier. */
+			HEADER (hvalues [i])->ov_flags &= ~EO_REM;	
+												/* Remove remembered flag. */
+			assert (!(HEADER(hvalues [i])->ov_flags & EO_REM));	
+												/* This flag must be unset. */
+		}	/* for ... */
+	}	/* if ... */
+
+
+	/* We check whether the special object references any new objects. 
+	 * We scan only the references recorded in the table. 
+	 */
+
+	for (i = 0; i < count ; i++)
+	{
+		/* Initializations. */
+		object 	= hvalues [i];			/* Current remembered object. */
+		if (object == (char *) 0)		/* Is special void? */
+			continue;					/* Skip it. */
+		zone = HEADER (object);			/* Current special's Malloc info zone. */
+		
+
+#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
+	/******************************* Debug.	*********************************/
+
+		{
+		int32 ofst = hkeys [i];
+		if (ofst  >= 0)
+		{
+		char *itm;
+		union overhead *iz;
+		itm =  *(char **)(object + ofst * sizeof (EIF_REFERENCE));
+		if (itm != (char *) 0)
+		{
+		iz = HEADER (itm);
+
+		printf("update_special_rem_set: at 0x%x (type %d, %d bytes) %s%s %s %s %s, \n\t\t\twith item %x, offset %ld (type %d, %d bytes) %s age %ld, %s %s%s %s %s %s\n",
+			object,
+			HEADER(
+				zone->ov_size & B_FWD ? zone->ov_fwd : object
+			)->ov_flags & EO_TYPE,
+			zone->ov_size & B_SIZE,
+			zone->ov_size & B_FWD ? "forwarded" : "",
+			zone->ov_flags & EO_MARK ? "marked" : "",
+			zone->ov_flags & EO_REF ? "ref" : "",
+			zone->ov_flags & EO_COMP ? "cmp" : "",
+			zone->ov_flags & EO_SPEC ? "spec" : "",
+			itm,
+			ofst,
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : itm
+			)->ov_flags & EO_TYPE,
+			iz->ov_size & B_SIZE,
+			iz->ov_size & B_FWD ? "forwarded" : "",
+			((HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : itm
+			)->ov_flags & EO_AGE)  >> 24) / 2,
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : itm
+			)->ov_flags & EO_OLD ? "old " : "",
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : itm
+			)->ov_flags & EO_REM ? "remembered" : "",
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : itm
+			)->ov_flags & EO_MARK ? "marked" : "",
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : itm
+			)->ov_flags & EO_REF ? "ref" : "",
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : itm
+			)->ov_flags & EO_COMP ? "comp" : "",
+			HEADER (
+				iz->ov_size & B_FWD ? iz->ov_fwd : itm
+			)->ov_flags & EO_SPEC ? "spec" : ""
+		);
+		}
+		}
+		}
+	/*************************** End of debug. *****************************/
+#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
+
+
+
+		/* When objects are moving, we need to focus on both the B_FWD
+		 * mark (which is an indication that the object is alive) and the
+		 * EO_MARK which is the traditional alive mark. Dead objects are
+		 * simply removed from the special remembered set.
+		 */
+
+
+		if (moving)						/* May object move? */
+		{
+			if (zone->ov_size & B_FWD)	/* Object was forwarded. */
+			{
+
+#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
+				printf ("UPDATE_SPECIAL_REM_SET_DEBUG: Object was forwarded.\n");
+#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
+
+				hvalues [i] = zone->ov_fwd;
+				object = hvalues [i];
+				zone = HEADER (object);
+				assert (!(zone->ov_size & B_FWD));
+			}
+			else if (!(zone->ov_flags & EO_MARK))	/* Object is dead */
+				continue;			/* Remove it from special remembered table. */
+		} 
+		else if (!(zone->ov_flags & EO_MARK))	/* Object cannot move */
+		{
+
+#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
+			printf ("UPDATE_SPECIAL_REM_SET:Remembered object %x is dead and kicked out.\n", object);
+#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
+
+			continue;	/* Skip it. */
+		}	/* if ... */
+		
+ 
+		/* The objects referred by the hvalues [i] could have been
+		 * tenured, so we need to recheck whether it has its place in the
+		 * special remembered set.
+		 * We deal only with the subreferences recorded in the table. 
+		 */
+		
+		assert (!(HEADER (object)->ov_size & B_FWD));	/* Must be updated. */
+
+		/* Initializations for item. */
+		offset 	= hkeys [i];
+
+		if (offset == -1)		 /* No new references in it, by convention. */
+		{
+			assert (!(refers_new_object_not_updated (hvalues [i])));
+			continue;						/* Remove it. */
+		}
+		if (offset == -2)		 	/* Twin, by convention.*/
+		{
+
+
+#ifndef NDEBUG
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+			/* Must be present in hvalues. */
+
+			{
+				int j;
+				int present = 0;
+				int twin = 0;
+				for (j = 0; j < count; j++)
+				{
+					if  (hvalues [j] == hvalues [i])
+					{
+						present = 1;	
+						if (hkeys [j] == hkeys [i])
+						{
+							twin = 1;
+							break;
+						}
+					}	
+				}
+				assert (present == 1);
+				assert (twin == 1);
+			}
+#endif	/* EIF_EXPENSIVE_ASSERTIONS */
+#endif	/* !NDEBUG */		
+
+			continue;				/* Skip twins. */
+		}	/* if ... */
+
+		item 	= *(char **)(object + offset * sizeof (EIF_REFERENCE));		
+									/* Fetch current item . */
+		izone 	= HEADER (item);	/* Malloc info zone of item. */
+		if (item == (char *) 0)
+			continue;				/* Skip Void item. */
+
+
+#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
+		printf("update_special_rem_set: Item at 0x%x (type %d, %d bytes) %s%s\n",
+			item,
+			HEADER(
+				izone->ov_size & B_FWD ? izone->ov_fwd : item
+			)->ov_flags & EO_TYPE,
+			izone->ov_size & B_SIZE,
+			izone->ov_size & B_FWD ? "forwarded" : "",
+			izone->ov_flags & EO_MARK ? "marked" : ""
+			
+		);
+#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
+
+		assert (!(HEADER (item)->ov_size & B_FWD));		/* Must be updated. */
+
+
+		/* Look for the new item only. */
+
+		if (!(izone->ov_flags & EO_OLD))		/* Is Item still young? */
+		{
+				/* Copy it into the new table. */
+			zone->ov_flags |= EO_REM ;	/* Still remember it. */
+			if (-1 == spt_put (new_table, offset, object))
+					/* Insertion failed. */
+				eif_panic ("New special rem_set cannot be bigger."); 
+		}
+#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
+		else	/* Then , it is old. */
+				/* Remove entry by ommitting it, reset the EO_REM flag. */
+		{
+
+			printf ("Removing reference special-offset = (%x, %ld (=item %x))\n", object, offset, item);
+
+		}
+#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
+			
+	}	/* for ... */
+	
+	/* In a generational cycle, we need to explicitely unmark all the
+	 * alive objects, whether we keep them in the special remembered set or
+	 * not. Why? Because when we tenure those objects, we mark them
+	 * and also set the EO_OLD and EO_REM bit. If we do not unmark them
+	 * and those are once functions, then we will never scan the inside
+	 * of those objects. In other cycles, the unmarking will be done
+	 * by the full sweep operation.
+	 */
+
+	if (generational)				/* Is this a partial collection? */
+	{
+		for (i = 0; i < new_table->old_count; i ++)
+		{
+			assert (!(HEADER(new_table->old_values [i])->ov_size & B_FWD));	
+					/* The old object do not move during generational collect. */
+			HEADER (new_table->old_values [i])->ov_flags &=~EO_MARK;
+										/* Unmark object */
+			assert (!(HEADER (new_table->old_values [i])->ov_flags & EO_MARK));	
+										/* Must be unmarked. */
+		}
+	}
+
+				
+	/* Update "special_rem_set". */
+	special_rem_set->h_values = new_table->h_values;
+	special_rem_set->h_keys = new_table->h_keys;
+	special_rem_set->old_values = new_table->old_values;
+	special_rem_set->count = new_table->count;
+	special_rem_set->old_count = new_table->old_count;
+
+#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
+	printf("Out of update_special_rem_set: %s object %lx (type %d, %d bytes) %s\n",
+		HEADER(object)->ov_flags & EO_OLD ? "old" :
+		HEADER(object)->ov_flags & EO_NEW ? "new" : "gen",
+		object, HEADER(object)->ov_flags & EO_TYPE,
+		HEADER(object)->ov_size & B_SIZE,
+		HEADER(object)->ov_flags & EO_REM ? "remembered":"forgotten");
+	printf("update_special_rem_set: %ld references remaining\n",
+		special_rem_set->count);
+	printf ("UPDATE_REM_SET: %ld couples kicked out\n", old_count - special_rem_set->count);
+#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
+
+#ifndef NDEBUG
+	assert (special_rem_set->count == new_table->count );	
+	assert (special_rem_set->h_size == new_table->h_size );	
+	assert (special_rem_set->h_values == new_table->h_values);	
+	assert (special_rem_set->h_keys == new_table->h_keys);	
+	assert (special_rem_set->count <= old_count);			/* Must be less elements in new special set. */
+#endif	/* !NDEBUG */
+
+	free (new_table);
+
+#ifndef NDEBUG
+	 /**************************** Postconditions *********************/
+
+	for (i = 0;  i < special_rem_set->count ; i++)			/* All still remembered.	*/
+	{
+		
+		uint32 flags = HEADER (special_rem_set->h_values [i])->ov_flags;
+								/* Fetch object flags. */
+
+#ifdef UPDATE_SPECIAL_REM_SET_DEBUG
+		printf ("UPDATE_SPECIAL_REM_SET: Checking coherence of special %x\n", special_rem_set->h_values [i]);
+#endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
+
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+		assert (all_subreferences_processed (special_rem_set->h_values [i]));
+		assert (refers_new_object (special_rem_set->h_values [i]));
+#endif	/* EIF_EXPENSIVE_ASSERTIONS */
+
+		assert (flags & EO_REM);	/* Must be remembered. */
+		assert (!(HEADER (special_rem_set->h_values [i])->ov_size & B_FWD));	
+									/* Must be updated. */
+		assert (!(flags & EO_EXP));	/* Must be a reference. */
+		assert (flags & EO_OLD);	/* Must be old. */
+		assert (flags & EO_REF);	/* Must be full of references. */
+		assert (flags & EO_SPEC);	/* Must be a special object. */
+		if (generational)
+			assert (!(flags & EO_MARK));	/* Must be unmarked. */
+	}
+	}	/* (bracket open in Preconditions.) */
+	 /******************** End of Postconditions *****************************/
+#endif 	/* !NDEBUG */
+
+	EIF_END_GET_CONTEXT
+
+	return 0;						/* Always returns 0. */
+
+}	/* update_special_rem_set () */
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+
+
+#ifdef EIF_REM_SET_OPTIMIZATION 
+rt_shared int eif_promote_special (register char *object)
+	/* Promote a special object full of reference. This function
+	 * scan all the subreferences of "object" so that only the
+	 * young references will be processed during a partial
+	 * collection.	-- ET
+	 */
+{
+
+	register uint32 	flags;			/* Eiffel flags */
+	register int 		refs;			/* Number of references */
+	
+	register char 		*item;			/* Address of referred object */
+	register uint32 	size;			/* Size in bytes of an item */
+	register char		*ptr;				
+	union overhead 		*zone;			/* Malloc info zone of "object"'s item. */		
+	int 				ret = -2;		/* Returned status. */
+	int 				i;				/* Index of loop. */
+
+	EIF_GET_CONTEXT
+#ifdef EIF_PROMOTE_SPECIAL_DEBUG
+	printf ("EIF_PROMOTE_SPECIAL: promoting special %x\n", object);
+#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
+
+	/************************ Preconditions. *********************************/
+
+	assert (object != (char *) 0);		/* Not void. */
+	assert (HEADER (object)->ov_flags & EO_SPEC);
+	assert (HEADER (object)->ov_flags & EO_REF);
+	assert (!(HEADER (object)->ov_size & B_FWD));	
+
+	/********************** End of preconditions. ****************************/
+
+
+	/* Initializations. */
+
+	size = sizeof(EIF_REFERENCE);				/* Usual item size */
+	flags = HEADER(object)->ov_flags;			/* Fetch Eiffel flags */
+	size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
+	refs = *(long *) (object + size);
+	size = sizeof(char *);						/* Usual item size */
+
+
+	/* Loop over the referenced objects to check 
+	 * if there is a new one. 
+	 */
+
+	ptr = object;							/* Temproray pointer. */
+	for (i = 0; i < refs ; i++, ptr += size) 
+	{
+	#ifdef EIF_PROMOTE_SPECIAL_DEBUG
+		printf ("EIF_PROMOTE_SPECIAL: Scanning subref #%d amongthe %d references in %x\n", i, refs, object);
+	#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
+		item = *(char **) ptr;				/* Fetch item in special object. */
+		if (item == (char *) 0)
+		{
+	#ifdef EIF_PROMOTE_SPECIAL_DEBUG
+		printf ("EIF_PROMOTE_SPECIAL: Item at %d : 0x%x was void\n", i, item);
+	#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
+			continue;						/* Skip void references.*/
+		}
+		zone = HEADER (item);				/* Item's malloc info zone. */
+		flags = zone->ov_flags;				/* Item's Eiffel flags. */
+
+		if (zone->ov_size & B_FWD)			/* Item is already forwarded? */
+		{
+
+#ifdef EIF_PROMOTE_SPECIAL_DEBUG
+	printf ("EIF_PROMOTE_SPECIAL: item %x at %d was forwarded\n", item, i);
+#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
+			
+			/* An item was forwarded before the enclosing special has been promoted. 
+			 * Thus, we must update now the reference if it is an old object, 
+			 * since it will not be updated at the end of the collection 
+			 * in "update_special_rem_set ()". -- ET
+			 */
+
+			item = zone->ov_fwd;						/* Update. */
+			flags = HEADER (item)->ov_flags;			/* Fetch new flags. */
+			assert (!(HEADER (item)->ov_size & B_FWD));	/* Not twice forwarded. */
+			if (!(flags & EO_OLD))						/* Is item young? */
+			{
+				ret = 1;					/* We found a new reference. */
+#ifdef EIF_PROMOTE_SPECIAL_DEBUG
+	printf ("EIF_PROMOTE_SPECIAL: remembering object %x with offset %di without update\n", object, i);
+#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
+				special_erembq (object, i);	/* Remember the reference. */
+			}
+			else	/* Then, it is old */
+			{
+				/* This reference will not be processed, we must update it now. */
+
+#ifdef EIF_PROMOTE_SPECIAL_DEBUG
+	printf ("EIF_PROMOTE_SPECIAL: updating new location of forwarded %x at %d without remembering it\n", item, i);
+#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
+				*(char **) (object + size * i) = item;	/* Update. */
+			}
+
+			continue;									/* Process next item. */
+		}
+			
+		assert (!(HEADER (item)->ov_size & B_FWD));		/* Not forwarded. */
+		if (!(flags & EO_OLD))							/* Is item young? */
+		{
+			ret = 1;								/* We found a new reference. */
+
+#ifdef EIF_PROMOTE_SPECIAL_DEBUG
+	printf ("EIF_PROMOTE_SPECIAL: inserting item in special rem set %x with index %d\n", item, i);
+#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
+				/* Check that the object is valid. */
+			assert ((*(char **) (object + size * i)) == (char *) item);
+			special_erembq (object, i);		/* Remember young reference. */
+		}
+			
+	}	/* for ... */
+
+	if (ret == -2)							/* No young references found. */
+	{
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+		assert (!(refers_new_object (object)));	
+#endif	/* EIF_EXPENSIVE_ASSERTIONS */
+#ifdef EIF_PROMOTE_SPECIAL_DEBUG
+		printf ("EIF_PROMOTE_SPECIAL: no item to be inserted");
+#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
+
+			/* Remember the object, with new new references, just to unmark
+			 * it in "update_special_table ()". 
+			 */
+
+		special_erembq (object, -1);		
+	}
+
+	/************************ Postconditions. *****************************/
+
+	assert (HEADER (object)->ov_flags & EO_SPEC);	/* No header corruption. */
+	assert (HEADER (object)->ov_flags & EO_REF);	/* No header corruption. */
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+	assert (is_in_spt (special_rem_set, object));	/* Has been pushed. */
+#endif
+
+	/*********************** End of Postconditions. ************************/
+
+	EIF_END_GET_CONTEXT
+	return ret;		/* Object does not reference any new object */
+
+}	/* eif_promote_special () */
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+
+rt_private int	all_subreferences_processed (char *root)
+	/* Check that all the subreferences under root (root included)
+	 * have been processed by some marking. Check is done at the first
+	 * level only.
+	 */
+{
+	union overhead 	*zone;		/* Malloc info zone of root. */
+	union overhead 	*szone;		/* Malloc info zone of subreference. */
+	int 			refs; 		/* Number of references in root. */
+	int				size;		/* Size of references. */
+	int				i;
+	char			*subref;	/* Subreference in root. */
+
+	EIF_GET_CONTEXT						/* For MT-mode: special_rem_set. */
+	if (root == (char *) 0)
+		return 1;
+
+	zone = HEADER (root);
+	assert (zone->ov_flags & EO_REF);	/* Does not apply to other objects. */
+	
+	if (zone->ov_size & B_FWD)
+	{
+		EIF_END_GET_CONTEXT 
+		return 0;	/* Not updated. */
+	}
+	if ((zone->ov_flags & (EO_OLD | EO_REM)) == EO_OLD)
+	{
+		assert (!(refers_new_object (root)));
+		EIF_END_GET_CONTEXT
+		return 1;
+	}
+	
+	refs = *(long *) (root + ((HEADER (root)->ov_size & B_SIZE) - LNGPAD_2));
+	size = sizeof (EIF_REFERENCE);
+
+	for (i = 0; i < refs; i++)
+	{
+		subref = *(char **) (root + i * size); 
+		szone = HEADER (subref);
+		if (!subref)			/* Is reference Void? */
+			continue;			/* Skip it - Next reference. */
+		if (szone->ov_size & B_FWD)
+		{
+			EIF_END_GET_CONTEXT
+			return 0;	/* Not updated. */
+		}
+		if (szone->ov_flags & EO_MARK)
+			continue;	/* Ok, next one. */
+		if (szone->ov_flags & EO_OLD)
+			continue;	/* Do not explore. */
+		if ((subref > sc_to.sc_arena && subref <= sc_to.sc_end) ||
+		(subref > ps_to.sc_arena && subref <= ps_to.sc_end))
+			continue;	/* Ok, next. */
+		EIF_END_GET_CONTEXT
+		return 0;
+	}	
+
+	EIF_END_GET_CONTEXT
+	return 1;	/* Passed successfully. */	
+}	/* all_subreferences_processed () */
+
+
+rt_private int refers_new_object_not_updated(register char *object)
+{
+	/* Does 'object' directly refers to a new object? Stop as soon as the
+	 * answer is known. Return a boolean value stating the result. This
+	 * routine is recursively called to deal with expanded objects. However,
+	 * there are few of them, so I chose to delcare locals in registers--RAM.
+	 *
+	 * Take care of forwarded items. 
+	 */
+
+	register2 uint32 flags;			/* Eiffel flags */
+	register3 int refs;				/* Number of references */
+	register4 char *root;			/* Address of referred object */
+	register5 uint32 size;			/* Size in bytes of an item */
+
+	if (object == (char *) 0)
+		eif_panic("special remembered set botched");
+
+	assert (HEADER (object)->ov_flags & EO_SPEC);
+	assert (HEADER (object)->ov_flags & EO_REF);
+
+	flags = HEADER(object)->ov_flags;	/* Fetch Eiffel flags */
+	size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2);
+	refs = *(long *) (object + size);
+	size = sizeof(char *);				/* Usual item size */
+
+	for (; refs != 0; refs--, object += size) {
+		root = *(char **) object;			/* Get reference */
+		if (root == (char *) 0)
+			continue;						/* Skip void references */
+		if (HEADER (root)->ov_size & B_FWD)
+			root = HEADER (root)->ov_fwd;	/* Update it. */
+		flags = HEADER(root)->ov_flags;
+		if (!(flags & EO_OLD))
+			return 1;						/* Object references a young one */
+	}
+
+	return 0;		/* Object does not reference any new object */
+}
+
 rt_shared int refers_new_object(register char *object)
 {
 	/* Does 'object' directly refers to a new object? Stop as soon as the
@@ -4979,6 +6192,79 @@ rt_public void erembq(char *obj)
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered */
 	EIF_END_GET_CONTEXT
 }
+
+#ifdef EIF_REM_SET_OPTIMIZATION
+rt_public int special_erembq_replace(char *old, char *val)
+{
+	/* Replace `old' by `val' in special_rem_set. */
+	EIF_GET_CONTEXT
+	return spt_replace (special_rem_set, old, val);
+}	/* special_erembq_replace () */
+
+rt_public void 	special_erembq (char *obj, EIF_INTEGER offst)
+{
+	/*  	
+	 * Special version of erembq() for special objects full of references
+	 */
+
+	EIF_GET_CONTEXT
+	
+#ifdef SPECIAL_EREMBQ_DEBUG
+	printf ("Remembering special object %x, with offset %d\n", obj, offst);
+#endif	/* SPECIAL_EREMBQ_DEBUG */
+	/************************ Preconditions. ******************************/
+
+	assert (HEADER (obj)->ov_flags & EO_SPEC);	/* Necessarily an special object. */
+	assert (HEADER (obj)->ov_flags & EO_REF);	
+									/* Necessarily an object full of references. */
+	
+	/********************* End of preconditions. **************************/
+
+	if (special_rem_set == (struct special_table *)	0)
+			/* Initialize it. */
+	{
+		special_rem_set = (struct special_table *) malloc (sizeof (struct special_table));
+		if (special_rem_set == (struct special_table *) 0)
+			enomem();
+
+		if (-1 == spt_create (special_rem_set, EIF_SPT_SZ))
+			eif_panic ("Could not create special remembered special table");
+		else
+			/* Fill it  with zero. */
+			spt_zero (special_rem_set);
+	}
+
+	assert (special_rem_set != (struct special_table *) 0);	
+
+	/* Push the old object in it with corresponding offset as a key. *
+	 * With resizing of the special-table when needed.			 */
+
+	spt_force (special_rem_set, offst, obj);
+	
+	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered. */
+	
+	/************************ Postconditions. ************************/
+
+	assert (HEADER(obj)->ov_flags & EO_REM);	/* Should be now remembered. */
+
+	/************************ End of assertions.***********************/
+		
+}	/* special_erembq () */
+#else
+	
+rt_public void 	special_erembq (char *obj, EIF_INTEGER offst)
+{
+	/* Remember it in the remembered set. In the case we do not any
+	 * remembrance optimization, we redirect this function to the usual
+	 * remembrance process without changing the generated C-code (i.e
+	 * RTAS_OPT). There is only a slight overhead in RTAS_OPT compared
+	 * with the usual RTAS. -- ET*/
+
+	erembq (obj);
+}
+
+
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 
 /*
  * Freeing objects: each class has a chance to redefine the 'dispose' routine
@@ -5292,7 +6578,50 @@ rt_private int reset(register1 struct stack *stk)
 	bzero(stk, sizeof(struct stack));	/* Reset to null pointers ? -- RAM */
 	return 0;
 }
+#endif
 
+
+#ifdef EIF_REM_SET_OPTIMIZATION
+rt_shared int is_in_special_rem_set (char *obj)
+{
+	EIF_GET_CONTEXT
+	int ret;
+	ret = is_in_spt (special_rem_set, obj);
+	EIF_END_GET_CONTEXT 
+	return ret;
+}
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+
+rt_shared int is_in_rem_set (char *obj)
+{
+	register2 struct stchunk	*s;			/* To walk through the list */
+	register3 int				n = 0;		/* Number of items */
+	register4 int 				done = 0;	/* Top of stack not reached yet */
+	char 						**object;
+	
+
+	EIF_GET_CONTEXT
+	for (s = rem_set.st_hd; s && !done; s = s->sk_next) 
+	{
+		object = s->sk_arena;				/* Start of stack */
+		if (s != rem_set.st_cur)			/* Top is before after 's' */
+			n = s->sk_end - object;			/* Look at the whole chunk */
+		else {
+			n = rem_set.st_top - object;	/* Stop at the top */
+			done = 1;						/* Reached end of stack */
+		}
+
+		for (; n > 0; n--, object++) 
+		{
+			if (*object == obj)
+				return 1;
+			continue;
+		}
+	}
+	EIF_END_GET_CONTEXT
+	return 0;
+}
+#ifndef NDEBUG
 rt_private int nb_items(register1 struct stack *stk)
 		/* The stack */
 {
@@ -5313,7 +6642,7 @@ rt_private int nb_items(register1 struct stack *stk)
 
 	return n;		/* Number of objects held in stack */
 }
-#endif
+#endif	/* !NDEBUG */
 
 #ifdef TEST
 

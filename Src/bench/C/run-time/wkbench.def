@@ -238,6 +238,8 @@ EXPORTS
 	eif_dir_is_writable
 	eif_dir_separator
 	eif_extracted_paths
+	eif_set_coalesc_period
+	eif_coalesc_period
 	eif_get_chunk_size
 	eif_get_max_mem
 	eif_getenv
@@ -445,6 +447,7 @@ EXPORTS
 	stream_eestore
 	stream_estore
 	stream_malloc
+	strrealloc
 	upintdiv
 	xequal
 

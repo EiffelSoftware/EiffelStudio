@@ -25,7 +25,7 @@
 #include "eif_hector.h"
 #include "eif_garcol.h"
 #include "x2c.header"		/* For macro LNGPAD */
-
+#include <assert.h>
 #define SHALLOW		1		/* Copy first level only */
 #define DEEP		2		/* Recursive copy */
 
@@ -259,11 +259,34 @@ rt_private char *duplicate(char *source, char *enclosing, int offset)
 	if (!(flags & EO_OLD))				/* Receiver is a new object */
 		return clone;					/* No aging tests necessary */
 
-	if (flags & EO_REM)					/* Old object is already remembered */
+	if (HEADER (clone)->ov_flags & EO_OLD)		/* Old object with old reference.*/
 		return clone;					/* No further action necessary */
 
-	if (!(HEADER(clone)->ov_flags & EO_OLD))	/* Copied is a new object */
+	/* Then, the object is old and has a new reference in it. */
+	assert ((flags & EO_OLD) && !(HEADER (clone)->ov_flags & EO_OLD));
+
+#ifdef EIF_REM_SET_OPTIMIZATION
+	if ((flags & EO_SPEC) && (flags & EO_REF))
+		/* In this special case, we have to remember 
+		 * the couple (special<->item index)
+		 * in the special_rem_table.	-- ET
+		 */
+	{
+		special_erembq (enclosing, offset >> EIF_REFERENCE_BITS);
+		assert (*(char **) (enclosing + offset) == clone);
+	}
+	else if (flags & EO_REM)			/* Old object is already remembered */
+			return clone;				/* No further action necessary */
+	else
 		erembq(enclosing);				/* Then remember the enclosing object */
+#else	/* EIF_REM_SET_OPTIMIZATION */
+	if (flags & EO_REM)					/* Old object is already remembered */
+			return clone;					/* No further action necessary */
+	else
+		erembq(enclosing);				/* Then remember the enclosing object */
+		
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+	
 	return clone;
 }
 
@@ -296,7 +319,15 @@ rt_private void rdeepclone (char *source, char *enclosing, int offset)
 
 		clone = *hash_search(&hclone, source);
 		*(char **) (enclosing + offset) = clone;
-		RTAS(clone, enclosing);
+		assert (!(HEADER (enclosing)->ov_size & B_FWD));/* Not forwarded. */
+		if (HEADER (enclosing)->ov_flags & (EO_REF | EO_SPEC) == (EO_REF | EO_SPEC))
+		{
+			RTAS_OPT (clone, offset >> EIF_REFERENCE_BITS, enclosing);
+		}	
+		else
+		{
+			RTAS(clone, enclosing);
+		}
 		return;
 	}
 
@@ -395,15 +426,35 @@ rt_public void ecopy(register char *source, register char *target)
 		/* Perform aging tests. We need the address of the enclosing object to
 		 * update the flags there, in case the target is to be memorized.
 		 */
-
 		t_flags = HEADER(enclosing)->ov_flags;
+		assert (!(HEADER (enclosing)->ov_size & B_FWD));/* Not forwarded. */
 
+#ifdef EIF_REM_SET_OPTIMIZATION
+		if (
+			(t_flags & EO_OLD) &&			/* Object is old */
+			refers_new_object(target)	/* And copied refers to new objects */
+		)
+		{
+			if ((HEADER(enclosing)->ov_flags & EO_SPEC) && 
+					(HEADER (enclosing)->ov_flags & EO_REF))
+			{
+				/* Only remember the couple (special<->new object index). */
+				if (-2 == eif_promote_special (enclosing))
+					eif_panic ("There must be a young reference.");
+			}
+			else if (!(t_flags & EO_REM))	/* normal object not remembered. */
+			{
+				erembq(enclosing);		/* Then remember the enclosing object */
+			}
+		}
+#else	/* EIF_REM_SET_OPTIMIZATION */
 		if (
 			t_flags & EO_OLD &&			/* Object is old */
 			!(t_flags & EO_REM)	&&		/* Not remembered */
 			refers_new_object(target)	/* And copied refers to new objects */
 		)
 			erembq(enclosing);			/* Then remember the enclosing object */
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 
 		if (s_flags & EO_COMP) {
 			/* Case of composite object: updating of references on expanded
@@ -441,8 +492,15 @@ rt_public void spcopy(register char *source, register char *target)
 	 */
 
 	flags = HEADER(target)->ov_flags;
+	assert (!(HEADER (target)->ov_flags & B_FWD));	/* Not forwarded. */
+#ifdef EIF_REM_SET_OPTIMIZATION
+	if ((flags & (EO_REF | EO_OLD)) == (EO_OLD | EO_REF))
+			if (-2 == eif_promote_special (target))	/* FIXME: not sure it is needed. */
+				eif_panic ("MAY PANIC in copy.c");
+#else
 	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
-		eremb(target);
+			erembq (target);
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 }
 
 rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
@@ -604,8 +662,19 @@ rt_public void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER st
 	 */
 
 	flags = HEADER(target)->ov_flags;
+#ifdef EIF_REM_SET_OPTIMIZATION
+	if ((flags & (EO_REF | EO_OLD )) == (EO_OLD | EO_REF))
+		/* FIXME: This can be optimized by only scanning what are 
+		 * the new objects. Not sure it is necessary anyway.-- ET */	
+	{
+		if (-2 == eif_promote_special (target))
+			eif_panic ("MAY PANIC in copy.c");
+		assert (flags & EO_REM);	
+	}
+#else	/* EIF_REM_SET_OPTIMIZATION */
 	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
-		eremb(target);
+			eremb(target);
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 }
 
 rt_public void spclearall (EIF_POINTER spobj)

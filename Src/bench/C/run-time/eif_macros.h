@@ -106,12 +106,18 @@ RT_LNK int fcount;
 
 /* Macros used for assignments:
  *  RTAG(x) is true if 'x' is an old object not remembered
+ *  RTAO(x) is true if 'x' is an old object.
+ *  RTAE(x) is true if 'x' is full of references .
  *  RTAN(x) is true if 'x' is a new object (i.e. not old)
  *  RTAM(x) memorizes 'x'
  *  RTAX(x,y) remembers 'y' if 'x' is new and 'y' is old not remembered yet
  *  RTAR(x,y) remembers 'y' if it is old and not remembered and 'x' is new
  *  RTAS(x,y) is the same as RTAR but for special objects and with no GC call
+ *  RTAS_OPT(x,i, y) is the same as RTAR but for special objects passing 
+ *	the index, and with no GC call.
  */
+#define RTAO(x) (HEADER(x)->ov_flags & EO_OLD)
+#define RTAE(x) (HEADER(x)->ov_flags & EO_REF)
 #define RTAG(x) ((HEADER(x)->ov_flags & (EO_OLD | EO_REM)) == EO_OLD)
 #define RTAN(x) (!(HEADER(x)->ov_flags & EO_OLD))
 #define RTAM(x) eremb(x)
@@ -122,14 +128,39 @@ RT_LNK int fcount;
 		if (RTAG(z)) RTAM(z); \
 	} else if (RTAG(y)) RTAM(y); \
 	}
-
+#if (!defined NDEBUG && defined EIF_REM_SET_OPTIMIZATION)
+#define RTAS(x,y) if ((x) != (char *) 0 && RTAN(x)) { \
+	if (RTAE(y)) eif_panic ("Must call RTAS_OPT instead");\
+	if (HEADER(y)->ov_flags & EO_EXP) { \
+		register char *z = (char *) y - (HEADER(y)->ov_size & B_SIZE); \
+		if (RTAG(z)) erembq((z)); \
+	} else if (RTAG(y)) erembq((y)); \
+	}
+#else	/* !NDEBUG && EIF_REM_SET_OPTIMIZATION */
 #define RTAS(x,y) if ((x) != (char *) 0 && RTAN(x)) { \
 	if (HEADER(y)->ov_flags & EO_EXP) { \
 		register char *z = (char *) y - (HEADER(y)->ov_size & B_SIZE); \
 		if (RTAG(z)) erembq((z)); \
 	} else if (RTAG(y)) erembq((y)); \
 	}
+#endif	/* !NDEBUG && EIF_REM_SET_OPTIMIZATION */
 
+#define RTAS_OPT(x,i,y) \
+	if ((x) != (char *) 0 && RTAN(x)) \
+	{ \
+	if (HEADER(y)->ov_flags & EO_EXP) \
+	{ \
+		register char *z = (char *) y - (HEADER(y)->ov_size & B_SIZE); \
+		if (RTAG(z)) erembq((z)); \
+	} \
+	else if (RTAO(y)) \
+	{ \
+			if (RTAE(y)) \
+				special_erembq((y), (i)); \
+			else \
+				erembq((y)); \
+			} \
+	} 
 
 /* Macros used by reverse assignments:
  *  RTRC(x,y) is true if type 'y' conforms to type 'x'

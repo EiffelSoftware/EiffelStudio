@@ -994,9 +994,23 @@ rt_private void rt_update1 (register char *old, register EIF_OBJECT new)
 		/* Attachement to hector pointer dereference */
 		client = eif_access(rt_solved->rt_obj);
 		supplier = eif_access(new);
+
+#ifdef EIF_REM_SET_OPTIMIZATION
+		*(char **)(client + offset) = supplier;	/* Attachment */
+		if (((HEADER(client))->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF))
+		{
+			RTAS_OPT (supplier, offset >> EIF_REFERENCE_BITS, client);	
+		}
+		else	
+		{
+			RTAS(supplier, client);					/* Age check */
+		}
+	
+#else	/* EIF_REM_SET_OPTIMIZATION */
 		RTAS(supplier, client);					/* Age check */
 		*(char **)(client + offset) = supplier;	/* Attachment */
-	
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+
 		xfree((char *) rt_unsolved);		/* Free reference solving cell */
 		rt_unsolved = next;	
 	}
@@ -1100,8 +1114,21 @@ update:
 			if (rt_info->rt_status == SOLVED) {
 				/* Reference is already solved */
 				supplier = eif_access(rt_info->rt_obj);
-				RTAS(supplier, new);						/* Age check */
 				*(char **) addr = supplier;					/* Attachment */
+#ifdef EIF_REM_SET_OPTIMIZATION
+				if ((HEADER (new)->ov_flags & (EO_SPEC | EO_REF)) 
+						== (EO_SPEC | EO_REF))
+				{
+					RTAS_OPT (supplier, (addr - new) >> EIF_REFERENCE_BITS, new);
+				}
+				else	
+				{
+					RTAS(supplier, new);						/* Age check */
+				}
+#else	/* EIF_REM_SET_OPTIMIZATION */
+				RTAS(supplier, new);					/* Age check */
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+
 			} else {
 				/* Reference is stil unsolved */
 				struct rt_cell *new_cell, *old_cell;

@@ -116,10 +116,18 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack loc_set_cx;			/* Local variable stack */
 	struct stack rem_set_cx;			/* Remembered set */
 	struct stack moved_set_cx;			/* Moved objects set */
+#ifdef EIF_MEMORY_OPTIMIZATION
+	struct stack memory_set_cx;		/* Memory objects in GSZ stack.		*/
+#endif	/* EIF_MEMORY_OPTIMIZATION */
+#ifdef EIF_REM_SET_OPTIMIZATION
+	struct special_table 	*special_rem_set_cx;
+#endif	/* EIF_REM_SET_OPTIMIZATION */
+						/* Special remembered objects full of references table.	*/
 	struct stack once_set_cx;		/* Once functions */
 	uint32 age_table_cx[TENURE_MAX];	/* Number of objects/age */
 	uint32 size_table_cx[TENURE_MAX];	/* Amount of bytes/age */
 	uint32 tenure_cx;					/* Hector needs to see that */
+	EIF_INTEGER	clsc_per_cx;		/* Period of full coalescing. */
 	long plsc_per_cx;					/* Period of plsc in acollect */
 	int gc_running_cx;					/* Is the GC running */
 	double last_gc_time_cx;			/* The time spent on the last collect, sweep or whatever the GC did */
@@ -268,10 +276,18 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define loc_set			(eif_globals->loc_set_cx)		/* rt_public */
 #define rem_set			(eif_globals->rem_set_cx)		/* rt_private */
 #define moved_set		(eif_globals->moved_set_cx)	/* rt_shared */
+#ifdef EIF_MEMORY_OPTIMIZATION
+#define memory_set		(eif_globals->memory_set_cx)	/* rt_public 	*/
+#endif	/* EIF_MEMORY_OPTIMIZATION */
+#ifdef EIF_REM_SET_OPTIMIZATION 
+#define special_rem_set	(eif_globals->special_rem_set_cx)	/* rt_private 	*/
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 #define once_set		(eif_globals->once_set_cx)	/* rt_public */
 #define age_table		(eif_globals->age_table_cx)	/* rt_private */
 #define size_table		(eif_globals->size_table_cx)	/* rt_private */
 #define tenure			(eif_globals->tenure_cx)		/* rt_shared */
+#define clsc_per		(eif_globals->clsc_per_cx)
+														/* rt_public */
 #define plsc_per		(eif_globals->plsc_per_cx)		/* rt_public */
 #define gc_running		(eif_globals->gc_running_cx)	/* rt_public */
 #define last_gc_time	(eif_globals->last_gc_time_cx)	/* rt_public */
@@ -397,6 +413,8 @@ extern struct xstack eif_trace;	/* Unsolved exception trace */
 RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 
 
+	/* eif_memory.h */
+RT_LNK EIF_INTEGER clsc_per;	/* Period of full coalescing. */
 	/* garcol.h */
 extern struct gacinfo g_data;			/* Garbage collection status */
 extern struct gacstat g_stat[GST_NBR];	/* Collection statistics */

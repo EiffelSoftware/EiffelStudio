@@ -21,7 +21,7 @@ creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Make a tool manager. All editors will be create 
@@ -34,14 +34,8 @@ feature -- Initialization
 			Graphical_resources.add_user (Current)	
 		end
 
-feature -- Properties
+feature {NONE} -- Implementation
 
-	need_to_resynchronize: BOOLEAN	
-		-- Do all the tools need to be resynchonized?
-	
-	need_to_update_attributes: BOOLEAN	
-		-- Do all the tools need to update their colors and fonts?
-	
 	feature_tool_mgr: EB_FEATURE_TOOL_LIST
 		-- Manager for feature tools 
 
@@ -54,6 +48,14 @@ feature -- Properties
 	explain_tool_mgr: EB_EXPLAIN_TOOL_LIST
 		-- Manager for explain tools
 
+feature -- Properties
+
+	need_to_resynchronize: BOOLEAN	
+		-- Do all the tools need to be resynchonized?
+	
+	need_to_update_attributes: BOOLEAN	
+		-- Do all the tools need to update their colors and fonts?
+	
 	new_feature_tool: EB_FEATURE_TOOL is
 			-- Make a feature tool in a new window
 		local
@@ -133,6 +135,15 @@ feature -- Properties
 			Result := feature_tools_count /= 0 or else
 				class_tools_count /= 0
 		end
+
+	has_modified_editor_tools: BOOLEAN is
+			-- Are there any editor tools 
+			-- (system and class) having been modified?
+		do
+			Result := class_tool_mgr.changed
+--				or else
+--			(is_system_tool_valid and then system_tool.changed)
+		end
 				
 	is_class_opened (cl_name:STRING):BOOLEAN is
 			-- Return True if the class is already opened in a class_tool
@@ -142,7 +153,7 @@ feature -- Properties
 			from
 				class_tool_mgr.start
 			until
-				class_tool_mgr.after and Result
+				class_tool_mgr.after or Result
 			loop
 				if class_tool_mgr.item.class_text_field.text.is_equal(cl_name) then
 					Result := True
@@ -154,7 +165,8 @@ feature -- Properties
 feature -- Graphical Interface
 
 	remove (ed: EB_TOOL) is
-			-- Remove `ed' from the supervisor. 
+			-- Remove `ed' from the supervisor.
+			-- This feature destroys the tool itself 
 		local
 			f_t: EB_FEATURE_TOOL
 			c_t: EB_CLASS_TOOL
@@ -167,21 +179,26 @@ feature -- Graphical Interface
 			e_t ?= ed
 			if f_t /= Void then
 				feature_tool_mgr.remove_editor (f_t)
+			elseif c_t /= Void then
+				class_tool_mgr.remove_editor (c_t)
+			elseif o_t /= Void then
+				object_tool_mgr.remove_editor (o_t)
+			elseif e_t /= Void then
+				explain_tool_mgr.remove_editor (e_t)
 			else
-				if c_t /= Void then
-					class_tool_mgr.remove_editor (c_t)
-				elseif o_t /= Void then
-					object_tool_mgr.remove_editor (o_t)
-				elseif e_t /= Void then
-					explain_tool_mgr.remove_editor (e_t)
-				end
+					-- tool MUST be destroyed.
+				ed.destroy
 			end
+		ensure
+			tool_is_destroyed: ed.destroyed
 		end
 
 	remove_class (c_t: EB_CLASS_TOOL) is
 			-- Remove `c_t' from the supervisor. 
 		do
 			class_tool_mgr.remove_editor (c_t)
+		ensure
+			tool_is_destroyed: c_t.destroyed
 		end
 
 	hide_all_editors is
@@ -319,10 +336,10 @@ feature -- Update
 --			end
 --			if need_to_resynchronize then
 --				Project_tool.update_graphical_resources
---				if is_system_tool_created then
+--				if is_system_tool_valid then
 --					System_tool.update_graphical_resources
 --				end
---				if Profile_tool /= Void then	
+--				if is_profile_tool_valid then	
 --					Profile_tool.update_graphical_resources
 --				end
 --				feature_tool_mgr.update_graphical_resources

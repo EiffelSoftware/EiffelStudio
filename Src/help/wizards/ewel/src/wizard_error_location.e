@@ -1,40 +1,27 @@
 indexing
-	description: "Objects that ..."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Wizard state: Error in the choosen directory"
+	author		: "David Solal"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WIZARD_ERROR_LOCATION
 
 inherit
-	WIZARD_FINAL_STATE_WINDOW
---		rename
---			pixmap_location as last_pixmap_location
-		redefine
-			build
-		end
+	BENCH_WIZARD_ERROR_STATE_WINDOW
 
 creation
 	make
-
-
-feature -- Initialization
-
-	build is
-		do
-			Precursor
-			first_window.set_final_state ("Abort")
-		end
-
 
 feature -- basic Operations
 
 	display_state_text is
 		do
-			title.set_text ("LOCATION ERROR")
-			message.set_text ("%TThe Directory provided doesn't exist.%
-								%%N%NChoose another folder or use the Browse button")
+			title.set_text ("Location Error")
+			message.set_text (
+				"The directory you have choosen doesn't exist and the Wizard cannot create it.%N%
+				%%N%
+				%Click Back and choose another directory.")
 		end
 
 	final_message: STRING is
@@ -43,10 +30,7 @@ feature -- basic Operations
 
 feature {WIZARD_STATE_WINDOW}
 
---	pixmap_location: STRING is "f_state_red.bmp"
-
 	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
-
 
 end -- class WIZARD_ERROR_LOCATION
 

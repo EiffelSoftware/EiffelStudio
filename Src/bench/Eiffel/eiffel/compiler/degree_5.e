@@ -83,40 +83,46 @@ feature {NONE} -- Processing
 			a_class_not_void: a_class /= Void
 		local
 			ast: CLASS_AS
+			ext_class: EXTERNAL_CLASS_C
 			class_id: INTEGER
 			comment_reg: COMMENT_REGISTRATION
 		do
 			class_id := a_class.class_id
-			if a_class.parsing_needed then
-					-- Parse class and save a backup if requested.
-				ast := a_class.build_ast (True)
-				if Compilation_modes.is_precompiling then
-						-- Register the comments for precompiled class.
-					create comment_reg.make (ast, a_class)
-					comment_reg.register
-				end
-								debug ("PARSE")
-									io.error.put_string ("parsed%N")
-								end
-			elseif Tmp_ast_server.has (class_id) then
-								debug ("PARSE")
-									io.error.put_string ("retrieved%N")
-								end
-				ast := Tmp_ast_server.item (class_id)
+			ext_class ?= a_class
+			if ext_class /= Void then
+				ext_class.initialize_from_xml_data
 			else
-				ast := Ast_server.item (class_id)
-			end
-			check
-					-- The ast is either recomputed or
-					-- retrieved from a server.
-				ast_not_void: ast /= Void
-			end
-			a_class.end_of_pass1 (ast)
+				if a_class.parsing_needed then
+						-- Parse class and save a backup if requested.
+					ast := a_class.build_ast (True)
+					if Compilation_modes.is_precompiling then
+							-- Register the comments for precompiled class.
+						create comment_reg.make (ast, a_class)
+						comment_reg.register
+					end
+									debug ("PARSE")
+										io.error.put_string ("parsed%N")
+									end
+				elseif Tmp_ast_server.has (class_id) then
+									debug ("PARSE")
+										io.error.put_string ("retrieved%N")
+									end
+					ast := Tmp_ast_server.item (class_id)
+				else
+					ast := Ast_server.item (class_id)
+				end
+				check
+						-- The ast is either recomputed or
+						-- retrieved from a server.
+					ast_not_void: ast /= Void
+				end
+				a_class.end_of_pass1 (ast)
 
-				-- No syntax error happened: set the compilation
-				-- status of the current changed class.
-			check
-				No_error: not Error_handler.has_error
+					-- No syntax error happened: set the compilation
+					-- status of the current changed class.
+				check
+					No_error: not Error_handler.has_error
+				end
 			end
 		end
 

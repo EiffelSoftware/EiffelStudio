@@ -104,7 +104,7 @@ feature -- Initialization
 				if maximum_size > 0 then
 					set_maximum_size (maximum_size)
 				end
-				if not managed and then wel_shown then
+				if not managed then
 					wel_hide
 				elseif parent.shown then
 					shown := true

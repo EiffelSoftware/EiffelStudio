@@ -15,40 +15,15 @@ inherit
 			interface
 		end
 
-	EV_TOOL_BAR_BUTTON_IMP
+	EV_TOOL_BAR_SELECT_BUTTON_IMP
 		redefine
-			interface,
-			make
+			interface
 		end
 
 create
 	make
 
-feature -- Initialization
-
-	make (an_interface: like interface) is
-		-- Create the tool-bar toggle button.
-		do
-			base_make (an_interface)
-			set_c_object (C.gtk_toggle_button_new)
-			C.gtk_button_set_relief (c_object, C.gtk_relief_none_enum)
-		end
-
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is the current button selected?
-		do
-			Result := C.gtk_toggle_button_get_active (c_object)
-		end
-
 feature -- Status setting
-
-	enable_select is
-			-- Select the current button.
-		do
-			set_selected (True)
-		end
 
 	disable_select is
 			-- Unselect the current button.
@@ -92,6 +67,9 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/05 17:02:51  king
+--| Moved make, is_selected and enable_select in to tb select button imp
+--|
 --| Revision 1.10  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

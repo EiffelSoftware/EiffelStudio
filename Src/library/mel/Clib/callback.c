@@ -145,7 +145,7 @@ void c_add_event_handler (EIF_POINTER scr_obj, EIF_INTEGER mask)
 	XtAddEventHandler ((Widget) scr_obj, 
 				(EventMask) mask, 
 				False,
-				handle_event, 
+				(XtEventHandler) handle_event, 
 				(XtPointer) mask);
 }
 
@@ -154,7 +154,7 @@ void c_remove_event_handler (EIF_POINTER scr_obj, EIF_INTEGER mask)
 	XtRemoveEventHandler ((Widget) scr_obj, 
 				(EventMask) mask, 
 				False,
-				handle_event, 
+				(XtEventHandler) handle_event, 
 				(XtPointer) mask);
 }
 

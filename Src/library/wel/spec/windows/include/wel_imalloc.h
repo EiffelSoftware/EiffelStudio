@@ -5,7 +5,7 @@
 #ifndef __WEL_IMALLOC__
 #define __WEL_IMALLOC__
 
-#include <objidl.h>
+#include <objbase.h>
 
 #ifndef __cplusplus
 

@@ -24,9 +24,6 @@ inherit
 			y_position,
 			screen_x,
 			screen_y,
-			minimum_width,
-			minimum_height,
-			internal_set_minimum_size,
 			interface,
 			initialize,
 			destroy,
@@ -36,7 +33,8 @@ inherit
 			height,
 			on_size_allocate,
 			show,
-			hide
+			hide,
+			internal_set_minimum_size
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -117,32 +115,6 @@ feature  -- Access
 	maximum_height: INTEGER
 			-- Maximum height that application wishes widget
 			-- instance to have.
-			
-	minimum_width: INTEGER is
-			-- Minimum width that the widget may occupy.
-		do
-			if internal_minimum_width /= -1 then
-				Result := internal_minimum_width
-			else
-				Result := Precursor
-			end
-		end
-		
-	minimum_height: INTEGER is
-			-- Minimum width that the widget may occupy.
-		do
-			if internal_minimum_height /= -1 then
-				Result := internal_minimum_height
-			else
-				Result := Precursor
-			end
-		end
-
-	internal_minimum_width: INTEGER	
-			-- Minimum width for the window.
-
-	internal_minimum_height: INTEGER
-			-- Minimum height for the window.
 
 	title: STRING is
 			-- Application name to be displayed by
@@ -503,9 +475,8 @@ feature {NONE} -- Implementation
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
-			internal_minimum_width := a_minimum_width
-			internal_minimum_height := a_minimum_height
-			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
+			Precursor {EV_CONTAINER_IMP} (a_minimum_width, a_minimum_height)
+			--C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
 		end
 
 	default_width: INTEGER
@@ -581,8 +552,6 @@ feature {NONE} -- Implementation
 			enable_user_resize
 			default_height := -1
 			default_width := -1
-			internal_minimum_width := -1
-			internal_minimum_height := -1
 			is_initialized := True
 		end
 		

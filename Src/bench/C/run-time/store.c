@@ -440,7 +440,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 				xfree((char *)sorted_attributes);
 				sorted_attributes = (unsigned int **) 0;
 			}
-		eio();
+		eise_io("Store: unable to write the kind of storable.");
 		}
 
 #if DEBUG & 3
@@ -786,7 +786,7 @@ rt_private void gen_object_write(char *object)
 					buffer_write(object + attrib_offset, sizeof(EIF_REFERENCE));
 					break;
 				default:
-					eio();
+					eise_io("General store: not an Eiffel object.");
 			}
 		} 
 	} else {
@@ -858,7 +858,7 @@ rt_private void gen_object_write(char *object)
 						buffer_write(object, count*sizeof(EIF_POINTER));
 						break;
 					default:
-						eio();
+						eise_io("General store: not an Eiffel object.");
 						break;
 				}
 			} else {
@@ -964,7 +964,7 @@ rt_private void object_write(char *object)
 					break;
 
 				default:
-					eio();
+					eise_io("Basic store: not an Eiffel object.");
 			}
 		} 
 	} else {
@@ -1086,7 +1086,7 @@ rt_private void object_write(char *object)
 						break;
 
 					default:
-						eio();
+						eise_io("Basic store: not an Eiffel object.");
 						break;
 				}
 			} else {
@@ -1141,7 +1141,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 	s_buffer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
 	/* Write maximum dynamic type */
 	if (0 > sprintf(s_buffer,"%d\n", scount)) {
-		eio();
+		eise_io("General store: unable to write number of different Eiffel types.");
 	}
 	buffer_write(s_buffer, (strlen (s_buffer)));
 	
@@ -1151,7 +1151,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 			nb_line++;
 	/* Write number of header lines */
 	if (0 > sprintf(s_buffer,"%d\n", nb_line)) {
-		eio();
+		eise_io("General store: unable to write number of header lines.");
 	}
 	buffer_write(s_buffer, (strlen (s_buffer)));
 
@@ -1181,7 +1181,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 			int j;
 
 			if (0 > sprintf(s_buffer, "%d %s %ld %d", i, vis_name, Size(i), nb_gen)) {
-				eio();
+				eise_io("General store: unable to write the generic type name.");
 			}
 
 			buffer_write(s_buffer, (strlen (s_buffer)));
@@ -1201,7 +1201,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 
 				dgen = (long) *(gt_gen++);
 				if (0 > sprintf(s_buffer, " %lu", dgen)) {
-					eio();
+					eise_io("General store: unable to write the generic type description.");
 				}
 				buffer_write(s_buffer, (strlen (s_buffer)));
 			}
@@ -1210,12 +1210,12 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 			 *	"dtype visible_name size 0"
 			 */
 			if (0 > sprintf(s_buffer, "%d %s %ld 0", i, vis_name, Size(i))) {
-				eio();
+				eise_io("General store: unable to write type description.");
 			}
 			buffer_write(s_buffer, (strlen (s_buffer)));
 		}
 		if (0 > sprintf(s_buffer,"\n")) {
-			eio();
+			eise_io("General store: unable to write new header entry.");
 		}
 		buffer_write(s_buffer, (strlen (s_buffer)));
 	}
@@ -1314,12 +1314,12 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	s_buffer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
 	/* Write maximum dynamic type */
 	if (0 > sprintf(s_buffer,"%d\n", scount)) {
-		eio();
+		eise_io("Independent store: unable to write number of different Eiffel types.");
 	}
 	widr_multi_char (s_buffer, (strlen (s_buffer)));
 	
 	if (0 > sprintf(s_buffer,"%d\n", OVERHEAD)) {
-		eio();
+		eise_io("Independent store: unable to write OVERHEAD size.");
 	}
 	widr_multi_char (s_buffer, (strlen (s_buffer)));
 
@@ -1328,7 +1328,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 			nb_line++;
 	/* Write number of header lines */
 	if (0 > sprintf(s_buffer,"%d\n", nb_line)) {
-		eio();
+		eise_io("Independent store: unable to write number of header lines.");
 	}
 	widr_multi_char (s_buffer, (strlen (s_buffer)));
 
@@ -1354,7 +1354,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 			int j;
 
 			if (0 > sprintf(s_buffer, "%d %s %d", i, vis_name, nb_gen)) {
-				eio();
+				eise_io("Independent store: unable to write the generic type name.");
 			}
 
 			widr_multi_char (s_buffer, (strlen (s_buffer)));
@@ -1374,7 +1374,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 
 				dgen = (long) *(gt_gen++);
 				if (0 > sprintf(s_buffer, " %lu", dgen)) {
-					eio();
+					eise_io("Independent store: unable to write the generic type description.");
 				}
 				widr_multi_char (s_buffer, (strlen (s_buffer)));
 			}
@@ -1383,7 +1383,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 			 *	"dtype visible_name size 0"
 			 */
 			if (0 > sprintf(s_buffer, "%d %s 0", i, vis_name)) {
-				eio();
+				eise_io("Independent store: unable to write type description.");
 			}
 			widr_multi_char (s_buffer, (strlen (s_buffer)));
 		}
@@ -1394,18 +1394,18 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 
 		num_attrib = System(i).cn_nbattr;
 		if (0 > sprintf(s_buffer, " %d", num_attrib)) {
-			eio();
+			eise_io("Independent store: unable to write number of attributes.");
 		}
 		widr_multi_char (s_buffer, (strlen (s_buffer)));
 		for (; num_attrib-- > 0;) {
 			if (0 > sprintf(s_buffer, "\n%lu %s", (*(System(i).cn_types + num_attrib) & SK_HEAD), 
 					*(System(i).cn_names + num_attrib))) {
-				eio();
+				eise_io("Independent store: unable to write attribute description.");
 			}
 			widr_multi_char (s_buffer, (strlen (s_buffer)));
 		}	
 		if (0 > sprintf(s_buffer,"\n")) {
-			eio();
+			eise_io("Independent store: unable to write new header entry.");
 		}
 		widr_multi_char (s_buffer, (strlen (s_buffer)));
 	}
@@ -1533,7 +1533,7 @@ void store_write(void)
 	if (((unsigned int) (ptr - cmps_general_buffer)) == cmps_out_size + EIF_CMPS_HEAD_SIZE)
 		current_position = 0;
 	else
-		eio();
+		eise_io("Store: incorrect compression size.");
 }
 
 void st_write_cid (uint32 dftype)

@@ -846,8 +846,6 @@ feature -- Graphical Interface
 			show_pref_cmd: SHOW_PREFERENCE_TOOL;
 			show_pref_menu_entry: EB_MENU_ENTRY;
 
-			-- FIXME profile tool will be impl in 4.1 show_prof_cmd: SHOW_PROFILE_TOOL;
-			-- FIXME profile tool will be impl in 4.1 show_prof_menu_entry: EB_MENU_ENTRY;
 			show_prof_cmd: SHOW_PROFILE_TOOL
 			show_prof_menu_entry: EB_MENU_ENTRY
 
@@ -929,8 +927,6 @@ feature -- Graphical Interface
 			!! stop_points_status_menu_entry.make_default (stop_points_status_cmd, debug_menu);
 			!! sep.make (Interface_names.t_Empty, debug_menu);
 
-			-- FIXME !! show_prof_cmd;
-			-- FIXME !! show_prof_menu_entry.make_default (show_prof_cmd, window_menu);
 			!! show_prof_cmd;
 			!! show_prof_menu_entry.make_default (show_prof_cmd, window_menu);
 
@@ -1517,8 +1513,7 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 						edit_feature_menu, 
 						format_feature_menu,
 						special_feature_menu);
-				feature_height := 
-					Project_resources.debugger_feature_height.actual_value;
+				feature_height := Project_resources.debugger_feature_height.actual_value;
 			else
 				feature_height := feature_form.height
 			end;

@@ -278,7 +278,6 @@ parsing/eiffel/infix.gperf
 parsing/eiffel/infix.c
 parsing/eiffel/prefix.gperf
 parsing/eiffel/prefix.c
-parsing/eiffel/y.output
 parsing/lace
 parsing/lace/Jmakefile
 parsing/lace/Makefile.SH

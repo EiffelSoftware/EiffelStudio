@@ -178,7 +178,7 @@ feature -- Status setting
 			pix_imp ?= pixmap.implementation
 
 --|FIXME			C.c_gtk_container_set_bg_pixmap (c_object, pix_imp.c_object)
-			C.gtk_widget_show (pix_imp.c_object)
+--|FIXME			C.gtk_widget_show (pix_imp.c_object)
 
 			background_pixmap := pixmap
 		end
@@ -225,6 +225,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/04/26 17:04:50  oconnor
+--| put GtkPixmap in an event box
+--|
 --| Revision 1.33  2000/04/21 18:07:05  king
 --| Made client dimensions return widget dimensions
 --|

@@ -1,0 +1,43 @@
+To facilitate the consistency and improve the management of suggestions and bug reports, here are the semantics of the various columns in todo.csv and bugs.csv.
+
+1) Todo.csv
+Category: indicates the sub-part of EiffelStudio that is concerned by the suggestion. This field helps distributes tasks between teams. The category is not repeated in all entries, but is reflected in the identifier of the suggestion.
+
+Priority: indicates the improvement provided by the suggestion. Ranges from 1 to 5. This takes into account the number of people that would benefit from the suggestion and how much their lives would be made easier.
+
+Description: a succinct description of the suggestion. It should include keywords to easily find the suggestion when it is being worked on.
+
+Submitter: The name of the person who submitted the bug.
+
+Fixer: The name of the person who should take care of fixing the bug.
+
+Identifier: A unique identifier for the suggestion. May be used to refer to it more easily.
+
+Est. Time: An estimation in days of the time needed to implement the suggestion. This estimation is done by the fixer when he is known.
+
+State: Reflects the progress made on the suggestion. Nothing means nobody is currently working on it, open means it is being worked on, implemented means it is done, closed means the submitter has acknowledged the desired functionality is now available. Suggestions should not be removed immediately after they are closed, to facilitate the debugging of the new functionality.
+
+2) Bugs.csv
+Category: indicates the sub-part of EiffelStudio that is concerned by the suggestion. This field helps distributes tasks between teams. The category is not repeated in all entries, but is reflected in the identifier of the suggestion.
+
+Criticality: The seriousness of the consequences of the bug. Ranges from 1 (slight annoyance, minor display problem) to 5 (loss of important data, crash of the environment).
+
+Frequency: How likely the bug is to occur in average use conditions. Ranges from 1 (only David Hollenberg can find it) to 5 (occurs during all sessions).
+
+Description: A succinct description of the bug from the user's point of view (when it occurs, what it does). May include hints at a fix.
+
+Additional info: If available, gives a reference to an external file that gives more information, such as a mail, an exception trace, etc.
+
+Submitter: The person who submitted the bug report.
+
+Est. time: An estimation by the fixer of how much time is needed to fix the bug.
+
+Fixer: Name of the person who should fix the bug.
+
+Status: Indicates the progress made on the bug. Nothing means the bug has not been looked at, open means the fixer is working on it, test means the bug fix has to be evaluated by the submitter, closed means the submitter acknowledged the bug was fixed. Closed bugs shouldn't be removed from the list right away for history purposes.
+
+ID: An unique identifier for the bug. It includes the category of the bug.
+
+Date of submission: Date (mm/dd/yyyy) when the bug was submitted.
+
+Note: the priority of the bug is roughly given by criticality*frequency. The order in which bugs should be fixed should take into account both the priority and the estimated fixing time.

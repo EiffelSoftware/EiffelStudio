@@ -1,9 +1,9 @@
-,Priority,EiffelStudio list of to-do functionality,,,,,
+,,EiffelStudio list of to-do functionality,,,,,
 
-Category,,Description,Submitter,Identifier,Fixer,Est. Time,State
+Category,Priority,Description,Submitter,Identifier,Fixer,Est. Time,State
 interface,,,,,,,
 ,3,Use DLLs throughout the interface,Arnaud,INT0001,,,
-,3,Refactoring tool,Arnaud,INT0002,,,
+,2,Do not always extend dropped favorite items,Xavier,INT0002,,,
 ,2,Auto-hide tools like VC++,T. Beale,INT0003,,,
 ,3,Send bug report automatically in case of crash,Xavier,INT0004,,,
 ,3,Save workspace altogether,Xavier,INT0005,,,
@@ -18,14 +18,14 @@ interface,,,,,,,
 ,4,Add a status bar,Xavier,INT0014,,
 ,4,Improve the default handling of tool sizes,Xavier,INT0015,Xavier,3
 ,4,Make it easier to import libraries (XML description file for each) + make it possible to generate such XML files,Xavier,INT0016,Xavier,5
-,3,Make it possible to launch an external command by giving it the current class,Xavier,INT0017,,
+,3,Unify the event handling in trees (feature/cluster/favorites),Xavier,INT0017,,
 ,3,Support CVS from within EiffelStudio,Xavier,INT0018,,
-,3,Add a test wizard,Xavier,INT0019,,
+,2,Make it possible to drop onto the context tool labels,Julian,INT0019,,
 ,4,"Improve new class command (deferred, parents,…)",Xavier,INT0020,Xavier,2
 ,3,"Improve new cluster command (import existing cluster, create top-level cluster)",Xavier,INT0021,,
 ,4,New blank project: let the user choose the root class name and root feature name,Xavier,INT0022,,
 ,4,Give support for the feature tree even if the project is half-compiled,Xavier,INT0023,Xavier,1
-,3,Eiffel beautifier (automatically indents the text correctly and put it in the editor = clickable + load_text),Xavier,INT0024,,
+,2,"When opening an existing Ace, if a .epr file exists, propose to open it",Julian,INT0024,,
 ,3,"At start-up, propose to create a library instead of an executable",Xavier,INT0025,,
 ,4,Add a recompile from scratch command,Arnaud,INT0026,,
 ,3,Make it easier to precompile several libraries,Arnaud,INT0027,,
@@ -35,15 +35,32 @@ interface,,,,,,,
 ,3,Add cluster too complex in the project settings dialog,Arnaud,INT0031,,
 ,3,"Need for a standard tools menu, where external executables can be launched",Arnaud,INT0032,,
 ,3,Add a cell separator in toolbars,R. Osmond,INT0033,Xavier,1
-,2,Add a pretty print button to reformat quickly a class,Manus,INT0034,,
+,2,Clean up the history of the history managers now and then,Xavier,INT0034,,
 ,2,"Add a close menu in the file menu, to close the current file",Julian,INT0034,,
 ,3,Add a central dictionary of ordered classes somewhere to optimize some things,Xavier,INT0035,,
 ,3,"Add a class with queries relative to the validity of names (for classes, features, system,…)",Xavier,INT0036,,
 ,4,"Save all backed up files in a file, and propose to reopen these back-ups at next start-up",Julian,INT0037,,
-,4,"In the new blank project wizard, let the user choose the name of the root_class and of the root_cluster",Xavier,INT0038,,
+,3,Add a way to pick the current stone from the address,Xavier,INT0038,,
 ,3,Give a different icon in the cluster tree to deferred/effective classes,Xavier,INT0039,,
 ,2,Give a way to choose among the last 'star-list' in the address (such as not closing the choice dialog when ctrl is pressed at selection time),Julian,INT0040,,
 ,3,"Support Ctrl-right click everywhere + add a preference telling what to do (open a new window, a new editor window, a new context window, send to current editor, send to current context, send to external editor...)",Xavier,INT0041,,
+,2,"Gray out raise all, minimize all, raise all unsaved, step out, run finalized, recent projects when they do not make sense",Julian,INT0042,,
+,2,What about `send file to external editor' when there is no file?,Julian,INT0043,,
+,3,Precompilations done should be Precompilations completed,Julian,INT0044
+,3,"In the new class dialog, warn the user against invalid file names?",Julian,INT0045
+,3,Make it possible to drop a feature into a feature clause in the feature tree to change the location of the feature,Julian,INT0046
+,1,Automatically open last open project,Xavier,INT0047
+,3,Do not collapse the cluster tree after recompilations,Xavier,INT0048
+,1,Gather more commands under EB_STANDARD_CMD to decrease the number of classes in the system,Xavier,INT0049
+,1,Sort _DATA files to decrease their number,Xavier,INT0050
+,2,"Display a real splash screen at start-up, both on Windows and Unix",Xavier,INT0051
+,1,Let the user create a class outside existing clusters?,Julian,INT0052
+
+
+
+
+
+
 
 
 Formats,,,,,,
@@ -58,7 +75,14 @@ Formats,,,,,,
 ,3,"For all feature formats, give the choice between the name-only display, the basic text display and the flat form",Xavier,FMT0009,Xavier,10
 ,3,Being able to query location of creation of class instance,Manus,FMT0010,,
 ,3,Being able to find location of assignment to an attribute,Manus,FMT0011,,
-,,List of creation features for a class,Xavier,FMT0012,,
+,3,List of creation features for a class,Xavier,FMT0012,,
+
+
+
+
+
+
+
 
 
 
@@ -84,20 +108,35 @@ debugger,,,,,,
 ,3,Debugger loses focus when running the application,Xavier,DBG0015,,
 ,4,Exception text field is too short,Xavier,DBG0016,Xavier,1
 ,2,"Add a ""Remove all breakpoints except this one"" in the breakpoint context menu",Julian,DBG0017,,
-,?,Gray out the step into command when it is not possible to step into,Julian,DBG0018,,
+,1,Gray out the step into command when it is not possible to step into,Julian,DBG0018,,
+,3,Improve step by step/step out relatively to dot calls,Xavier,DBG0019,,
+,3,"In the call stack tool, let the user choose the columns that should be displayed",Xavier,DBG0020
+,2,"Let the user set breakpoints in features of SPECIAL, only not in put and item",Xavier,DBG0021
 
 
 
 
-editor,,,,,,
-,3,"Improve pick in inheritance clauses (redefine, rename)",Xavier,EDT0001,,
-,4,Make it possible to drag the selection (copy/paste),Xavier,EDT0002,,
-,4,Improve auto-completion in new lines,Xavier,EDT0003,,
-,2,"Emacs integration with COM on Windows, Netscape on Linux",Arnaud,EDT0004,,
+
+
+
+
+
+
+editor,,,,
+,3,"Improve pick in inheritance clauses (redefine, rename)",Xavier,EDT0001
+,4,Make it possible to drag the selection (copy/paste),Xavier,EDT0002
+,4,Improve auto-completion in new lines,Xavier,EDT0003
+,2,"Emacs integration with COM on Windows, Netscape on Linux",Arnaud,EDT0004
 ,3,"Add ""Add setter feature""",Arnaud,EDT0005
 ,2,Add an option to search outside the comments/indexing clauses,Xavier,EDT0006
 ,3,"When a class that does not belong to the universe is typed, put it in red",Manus,EDT0006
 ,4,"Auto-complete when user presses ;,.) …, not only return",Xavier,EDT0008
+,2,When the text in the editor shrinks horizontally the scroll bar should reflect the change,Julian,EDT0009
+,2,Add a reload command to discard all unsaved changes,Xavier,EDT0010
+,2,Use a different highlight for found/picked words and for the selection,Xavier,EDT0011
+
+
+
 
 
 
@@ -110,10 +149,10 @@ compiler,,,,
 ,2,Make the EIFGEN directory name user-defined in the Ace or <project_name>_gen,E. Bezaut,CMP0004
 ,3,Ability to create .rc files (Windows),Xavier,CMP0005
 ,3,Send an event at the end of finish_freezing/during C compilation,Xavier,CMP0006
-,3,Add compilation time information,Xavier,CMP0007
+,3,"Add compilation, crash, execution time information",Xavier,CMP0007
 ,4,Make freeze/finalize melt .NET projects,Xavier,CMP0008
 ,4,Fix inlining (run-time panics) and improve it,Xavier,CMP0009
-,3,"When a .def file is present in the Ace, automatically add the right features as ""export""",Xavier,CMP0010
+,3,"When a .def file is present in the Ace, automatically add the right features as ""visible""",Xavier,CMP0010
 ,4,"put #ifdef in Ace files, to change options between workbench and finalized, ….",Xavier,CMP0011
 ,3,Optimize the initialization of local variables,Manus,CMP0012
 ,3,Optimize the number of local variables,Manus,CMP0013
@@ -137,6 +176,40 @@ compiler,,,,
 ,3,Drag down the code of features into the nearest common ancestor to all classes that use the feature. Optionally drag the code down to all classes that use the feature (flat out all classes). This should remove polymorphic calls inside features (but increase the code size),Emmanuel,CMP0031
 ,3,Make the finalization independent from the workbench mode: this would remove bugs (cf DH) and facilitate some optimizations,Xavier,CMP0032
 ,4,"Save project file even if we don't have a successful compilation, so that we can resume compilation later on",,
+
+
+
+
+
+
+
+
+Metrics,,,,
+,3,Hide/Show details in metrics is not optimized (performs the same computations again),Julian,MET0001
+
+
+
+
+
+
+Diagram,,,,
+,3,Support UML,Xavier,DGM0001
+,3,Merge the command history with the one of the editor,Xavier,DGM0002
+,2,Add an undo all item at the top of the history dialog to be able to undo all modifications,Xavier,DGM0003
+
+
+
+
+
+
+Wizards,,,,
+,3,Refactoring tool,Arnaud,WIZ0001
+,3,Add a test wizard,Xavier,WIZ0002
+,3,Eiffel beautifier (automatically indents the text correctly and put it in the editor = clickable + load_text),Xavier,WIZ0003
+,4,"In the new blank project wizard, let the user choose the name of the root_class and of the root_cluster",Xavier,WIZ0004
+
+
+
 
 
 libraries,,,,

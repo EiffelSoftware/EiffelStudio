@@ -73,14 +73,16 @@ feature {ACCESS_FEAT_AS_B} -- Setting
 		require
 			valid_f: f /= Void
 		do
-			obsolete_feature := f.api_feature
+			obsolete_feature := f.api_feature (f.written_in)
 		end;
 
 	set_feature (f: FEATURE_I) is
 			-- Assign `f' to `feature'
+		require
+			valid_associated_class: associated_class /= Void
 		do
 			if f /= Void then
-				a_feature := f.api_feature
+				a_feature := f.api_feature (associated_class.id)
 			end
 		end;
 

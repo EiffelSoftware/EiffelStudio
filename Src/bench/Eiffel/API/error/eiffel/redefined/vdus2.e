@@ -62,7 +62,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_f: f /= Void
 		do
-			undefined_feature := f.api_feature;
+			undefined_feature := f.api_feature (f.written_in);
 		end;
 
 	set_parent (c: CLASS_C) is

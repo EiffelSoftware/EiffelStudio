@@ -77,7 +77,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		require
 			valid_f: f /= Void
 		do
-			exported_feature := f.api_feature;
+			exported_feature := f.api_feature (f.written_in);
 		end;
 
 end -- class VUEX

@@ -52,7 +52,7 @@ feature {ACCESS_FEAT_AS_B} -- Setting
 		require
 			valid_f: f /= Void
 		do
-			called_feature := f.api_feature;
+			called_feature := f.api_feature (f.written_in);
 		end;
 
 end -- class VUAR

@@ -6,7 +6,7 @@
 
 
 import "oaidl.idl";
-import "common_enums.idl"
+import "common_enums.idl";
 
 interface IEiffelProject;
 interface IEiffelCompiler;
@@ -334,9 +334,6 @@ interface IEiffelProjectProperties: IDispatch
   [helpstring ("Apply changes")]
   HRESULT Apply ();
   
-  [id (101), propget, helpstring ("Open Ace file.")]
-  HRESULT open_ace_file ([in] BSTR ace_file_name);
-  
   [id (DISPID_VALUE), propget, helpstring ("System name.")]
   HRESULT system_name ([out, retval] BSTR * return_value);
 
@@ -356,10 +353,10 @@ interface IEiffelProjectProperties: IDispatch
   HRESULT creation_routine ([in] BSTR a_routine);
   
   [id (121), propget, helpstring ("Compilation type.")]
-  HRESULT compilation_type ([out, retval] EIF_COMPILATON_TYPES * return_value);
+  HRESULT compilation_type ([out, retval] EIF_COMPILATION_TYPES * return_value);
   
   [id (121), propput, helpstring ("Compilation type.")]
-  HRESULT compilation_type ([in] EIF_COMPILATON_TYPES new_value);  
+  HRESULT compilation_type ([in] EIF_COMPILATION_TYPES new_value);  
   
   [id (122), propget, helpstring ("Is console application?")]
   HRESULT console_application ([out, retval] VARIANT_BOOL * return_value);

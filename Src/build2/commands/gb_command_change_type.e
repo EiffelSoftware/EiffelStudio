@@ -42,6 +42,7 @@ feature -- Basic Operation
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
+			command_handler.update
 		end
 		
 	undo is

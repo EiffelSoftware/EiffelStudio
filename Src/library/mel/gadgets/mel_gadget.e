@@ -29,9 +29,10 @@ feature -- Status Report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixel (screen_object, XmNbottomShadowColor)
+			Result := get_xt_pixel (Current, XmNbottomShadowColor)
 		ensure
-			bottom_shadow_color_created: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display)
 		end;
 
 	top_shadow_color: MEL_PIXEL is
@@ -40,9 +41,10 @@ feature -- Status Report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixel (screen_object, XmNtopShadowColor)
+			Result := get_xt_pixel (Current, XmNtopShadowColor)
 		ensure
-			top_shadow_color_created: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display)
 		end;
 
 	highlight_color: MEL_PIXEL is
@@ -50,9 +52,10 @@ feature -- Status Report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixel (screen_object, XmNhighlightColor)
+			Result := get_xt_pixel (Current, XmNhighlightColor)
 		ensure
-			highlight_color_created: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display)
 		end;
 
 	is_highlighted_on_entry: BOOLEAN is
@@ -171,7 +174,8 @@ feature  -- Status setting
 			-- Set `bottom_shadow_color' to a `a_color'.
 		require
 			exists: not is_destroyed;
-			a_color_is_valid: a_color /= Void and then a_color.is_valid
+			valid_color: a_color /= Void and then a_color.is_valid;
+			same_display: a_color.same_display (display)
 		do
 			set_xt_pixel (screen_object, XmNbottomShadowColor, a_color)
 		ensure
@@ -182,7 +186,8 @@ feature  -- Status setting
 			-- Set `top_shadow_color' to a `a_color'.
 		require
 			exists: not is_destroyed;
-			a_color_is_valid: a_color /= Void and then a_color.is_valid
+			valid_color: a_color /= Void and then a_color.is_valid;
+			same_display: a_color.same_display (display)
 		do
 			set_xt_pixel (screen_object, XmNtopShadowColor, a_color)
 		ensure
@@ -193,7 +198,8 @@ feature  -- Status setting
 			-- Set `highlight_color' to a `a_color'.
 		require
 			exists: not is_destroyed;
-			a_color_is_valid: a_color /= Void and then a_color.is_valid
+			valid_color: a_color /= Void and then a_color.is_valid;
+			same_display: a_color.same_display (display)
 		do
 			set_xt_pixel (screen_object, XmNhighlightColor, a_color)
 		ensure
@@ -375,7 +381,7 @@ feature -- Miscellaneous
 			exists: not is_destroyed;
 			non_void_a_color: a_color /= Void
 		do
-			xm_change_color (screen_object, a_color.id);
+			xm_change_color (screen_object, a_color.identifier);
 		end;
 
 feature {NONE} -- Implementation

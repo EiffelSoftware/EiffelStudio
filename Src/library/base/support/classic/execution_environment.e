@@ -42,6 +42,7 @@ feature -- Access
 			-- void otherwise.
 		require
 			s_exists: s /= Void
+			not_has_null_character: not s.has ('%U')
 		local
 			ext: ANY
 			c_string: POINTER
@@ -89,8 +90,10 @@ feature -- Status setting
 			-- Set the environment variable `key' to `value'.
 		require
 			key_exists: key /= Void
-			key_meaningful: key.count > 0
+			key_meaningful: not key.is_empty
+			not_key_has_null_character: not key.has ('%U')
 			value_exists: value /= Void
+			not_value_has_null_character: not value.has ('%U')
 		local
 			v_to_c, k_to_c: ANY
 		do

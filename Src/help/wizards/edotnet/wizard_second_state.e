@@ -13,11 +13,6 @@ inherit
 			make
 		end
 
-	BENCH_WIZARD_CONSTANTS
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -75,7 +70,7 @@ feature -- Basic Operation
 			choice_box.extend (create {EV_CELL}) -- expandable item
 
 			choice_box.extend (create {EV_LABEL})
-			create console_app_b.make_with_text (Bench_interface_names.l_Console_application)
+			create console_app_b.make_with_text (l_Console_application)
 			if wizard_information.console_application then
 				console_app_b.enable_select
 			else
@@ -232,6 +227,9 @@ feature {NONE} -- Constants
 
 	Subtitle_text: STRING is "You can choose to create a .exe or a .dll file%N%
 					%and select the names of the root class and its creation routine."
+
+	l_Console_application: STRING is "Console application"
+			-- Text associated to `console_app_b'.
 
 	console_app_b: EV_CHECK_BUTTON
 			-- Console application check box.

@@ -52,11 +52,17 @@ feature -- Access
 				(x+(w/2)).truncated_to_integer,
 				(y+(h/2)).truncated_to_integer
 			)
+			process_events
 			sleep (1000)
+			process_events
 			s.fake_pointer_button_press (1)
+			process_events
 			sleep (1000)
+			process_events
 			s.fake_pointer_button_release (1)
+			process_events
 			sleep (2000)
+			process_events
 			if
 				selected and
 				pressed and

@@ -26,10 +26,21 @@ feature {NONE} -- Status report
 			Result := handle.status.error_code
 		end
 
+	is_ok_mat: BOOLEAN is
+		do
+			Result := handle.status.is_ok_mat
+		end
+
 	is_ok: BOOLEAN is
 			-- Is last SQL statement ok ?
 		do
-			Result := handle.status.is_ok
+-- FIXME: Jacques, added status.is_ok according to matisse library
+			if handle.database.name.is_equal("MATISSE") then
+				Result := is_ok_mat --or error_code = 0
+			else 
+				Result := error_code = 0
+			end -- if
+-- end FIXME
 		end
 
 	error_message: STRING is

@@ -24,7 +24,7 @@ feature -- Conversion
 			Result := implementation.boolean_format (object)
 		end
 
-	date_format (object: ABSOLUTE_DATE): STRING is
+	date_format (object: DATE_TIME): STRING is
 			-- Converted string of `object' according to the database format.
 		require
 			argument_not_void: object /= Void

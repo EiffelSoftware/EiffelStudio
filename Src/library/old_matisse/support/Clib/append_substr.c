@@ -8,7 +8,7 @@
 --| Telephone 805-685-1006
 --| Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <eiffel@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
 
 	date: "$Date$";
@@ -19,9 +19,7 @@
 
 extern void * memcpy ();
 
-void c_append_substring (a1, a2, c, n1, n2)
-	char * a1, * a2;
-	int c, n1, n2;
+void c_append_substring (char *a1, char *a2, int c, int n1, int n2)
 {
 	memcpy (a1 + c, a2 + n1 - 1, n2 - n1 + 1);
 }

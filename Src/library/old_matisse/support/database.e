@@ -10,7 +10,9 @@ deferred class
 	DATABASE
 inherit
 	MEMORY
+-- FIXME: Jacques, added according matisse library
 		export {NONE} all
+--
 		redefine
 			dispose
 		end

@@ -95,7 +95,7 @@ feature {NONE}
 				until
 					observer_list.after
 				loop
-					observer_list.item.execute
+					observer_list.item.work
 					observer_list.forth
 				end
 			end

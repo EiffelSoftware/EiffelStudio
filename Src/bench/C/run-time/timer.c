@@ -11,12 +11,12 @@
 */
 
 #include "eif_config.h"
+#include "eif_portable.h"
 #include "eif_confmagic.h"
 #include "eif_timer.h"
-#include "eif_portable.h"
 
 #ifndef HAS_GETRUSAGE
-#ifdef HAS_TIMES
+#if defined HAS_TIMES && !defined __VMS
 #include <sys/param.h>		/* For value of HZ */
 #endif
 #endif

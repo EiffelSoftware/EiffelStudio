@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	initialize_children is
 			-- Create the children list.
 		do
-			create children.make (1)
+			create children.make (0)
 		end
 
 	remove_children is

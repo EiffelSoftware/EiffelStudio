@@ -112,6 +112,7 @@ feature -- Status report
 			Result := implementation.column_title (a_column)
 		ensure
 			bridge_ok: Result.is_equal (implementation.column_title (a_column))
+			cloned: Result /= implementation.column_title (a_column)
 		end
 	
 	column_width (a_column: INTEGER): INTEGER is
@@ -274,6 +275,7 @@ feature -- Element change
 			implementation.set_column_title (a_title, a_column)
 		ensure
 			a_title_assigned: a_title.is_equal (column_title (a_column))
+			cloned: column_title (a_column) /= a_title
 		end
 
 	set_column_titles (titles: ARRAY [STRING]) is         

@@ -446,9 +446,7 @@ feature -- Generation, Header
 			Make_file.putstring ("%
 				%SHELL = /bin/sh%N%
 				%CC = $cc%N%
-				%CPP = $cpp%N%
-				%AR = $ar%
-				%LD = $ld%N")
+				%CPP = $cpp%N")
 
 			if Lace.ace_options.has_multithreaded then
 				Make_file.putstring ("CFLAGS = $optimize $mtccflags $large ");
@@ -486,8 +484,15 @@ feature -- Generation, Header
 
 			Make_file.putstring (run_time);
 
-			Make_file.putstring ("%NLIBS = $libs%N%
-				%MAKE = make%N%
+			if Lace.ace_options.has_multithreaded then
+				Make_file.putstring ("%NLIBS = $mtlibs")
+			else
+				Make_file.putstring ("%NLIBS = $libs")
+			end
+
+			Make_file.putstring ("%NMAKE = make%N%
+				%AR = $ar%N%
+				%LD = $ld%N%
 				%MKDEP = $mkdep %H$(DPFLAGS) --%N%
 				%MV = $mv%N%
 				%RANLIB = $ranlib%N%
@@ -923,7 +928,7 @@ feature -- Generation (Linking rules)
 				-- The following is not portable (if people want to use
 				-- their own linker).
 				-- FIXME
-			Make_file.putstring ("%Tld -r -o ");
+			Make_file.putstring ("%T$(LD) $(LDFLAGS) -r -o ");
 			Make_file.putstring (suffix);
 			Make_file.putstring ("obj");
 			Make_file.putint (index);
@@ -958,7 +963,7 @@ feature -- Generation (Linking rules)
 					-- The following is not portable (if people want to use
 					-- their own linker).
 					-- FIXME
-				Make_file.putstring ("%Tld -r -o ");
+				Make_file.putstring ("%T$(LD) $(LDFLAGS) -r -o ");
 				Make_file.putstring (System_object_prefix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);

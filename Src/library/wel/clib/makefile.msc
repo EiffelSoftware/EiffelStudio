@@ -9,7 +9,6 @@ CFLAGS = -nologo -c -Ox -W4 -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spe
 #CFLAGS = -c -Zi -nologo -Od -W4 -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
 
 all:: wel.lib
-	del $@
 	del *.obj
 
 .c.obj:

@@ -292,7 +292,8 @@ end;
 
 	display_error_error is
 		do
-			error_window.put_string ("Exception occurred while displaying error message.%N");
+			error_window.put_string ("Exception occurred while displaying error message.%N%
+										%Please contact ISE to report this bug.%N");
 		end;
 
 	display_separation_line is

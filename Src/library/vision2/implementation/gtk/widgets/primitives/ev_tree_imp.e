@@ -78,8 +78,9 @@ feature {NONE} -- Initialization
 			C.gtk_ctree_set_expander_style (list_widget, C.GTK_CTREE_EXPANDER_SQUARE_ENUM)
 			C.gtk_clist_set_shadow_type (list_widget, C.GTK_SHADOW_NONE_ENUM)
 			C.gtk_ctree_set_show_stub (list_widget, True)
-			C.gtk_container_add (c_object, list_widget)
 			C.gtk_widget_show (list_widget)
+			C.gtk_container_add (c_object, list_widget)
+			
 			
 			create ev_children.make (0)
 				-- Make initial hash table with room for 100 child pointers, may be increased later.
@@ -99,33 +100,34 @@ feature {NONE} -- Initialization
 			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_TREE_I} Precursor
-			real_signal_connect (list_widget, "motion_notify_event", agent motion_handler, Default_translate)
-
+			
+			--| Event position 1 in intermediary
 			real_signal_connect (
 				list_widget,
 				"tree-select-row",
-				agent select_callback,
-				agent gtk_value_pointer_to_tuple
+				agent gtk_marshal.on_tree_event_intermediary (c_object, 1, ?),
+				agent gtk_marshal.gtk_value_pointer_to_tuple
 			)
+			
 			real_signal_connect (
 				list_widget,
 				"tree-unselect-row",
-				agent deselect_callback,
-				agent gtk_value_pointer_to_tuple
+				agent gtk_marshal.on_tree_event_intermediary (c_object, 2, ?),
+				agent gtk_marshal.gtk_value_pointer_to_tuple
 			)
 
 			real_signal_connect (
 				list_widget,
 				"tree-expand",
-				agent expand_callback,
-				agent gtk_value_pointer_to_tuple
+				agent gtk_marshal.on_tree_event_intermediary (c_object, 3, ?),
+				agent gtk_marshal.gtk_value_pointer_to_tuple
 			)
 
 			real_signal_connect (
 				list_widget,
 				"tree-collapse",
-				agent collapse_callback,
-				agent gtk_value_pointer_to_tuple
+				agent gtk_marshal.on_tree_event_intermediary (c_object, 4, ?),
+				agent gtk_marshal.gtk_value_pointer_to_tuple
 			)
 			connect_button_press_switch
 				-- Needed so items are always hooked up, even though widget may not need to be.
@@ -242,6 +244,8 @@ feature {NONE} -- Implementation
 
 	dummy_tree_node: POINTER
 		-- Added to prevent seg fault on wipeout by adding temporarily
+		
+feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
 	expand_callback (a_tree_item: POINTER) is
 			-- Expand callback passing expanded `a_tree_item' node pointer.

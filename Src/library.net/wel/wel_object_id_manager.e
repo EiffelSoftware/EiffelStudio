@@ -12,8 +12,7 @@ feature -- Access
 	frozen eif_object_id (an_object: ANY): INTEGER is
 			-- Unique for current object in any given session
 		do
-			reference_list.extend (
-				create {CLI_CELL [WEAK_REFERENCE]}.put (create {WEAK_REFERENCE}.make_from_target (an_object)))
+			reference_list.extend (create {WEAK_REFERENCE}.make_from_target (an_object))
 			Result := reference_list.count
 		end
 
@@ -23,7 +22,7 @@ feature -- Access
 			wr: WEAK_REFERENCE
 		do
 			if reference_list.valid_index (an_id) then
-				wr := reference_list.i_th (an_id).item
+				wr := reference_list.i_th (an_id)
 				if wr /= Void then
 					Result ?= wr.target
 				end
@@ -44,7 +43,7 @@ feature -- Removal
 
 feature {IDENTIFIED_CONTROLLER} -- Implementation
 
-	reference_list: ARRAYED_LIST [CLI_CELL [WEAK_REFERENCE]] is
+	reference_list: ARRAYED_LIST [WEAK_REFERENCE] is
 			-- List of weak references used. Id's correspond to indices in this list.
 		once
 			create Result.make (50)

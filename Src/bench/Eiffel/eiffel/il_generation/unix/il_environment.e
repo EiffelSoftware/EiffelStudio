@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		do
 			version := default_version
 		ensure then
-			version_set: version = default_version
+			version_set: version /= Void and then version.is_equal (default_version)
 		end
 		
 feature -- Access

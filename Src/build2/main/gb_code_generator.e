@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 						-- This handles the case where the string contains EV_MENU_ITEM and we are searching for EV_MENU, as this will fail on
 						-- the new line character check.
 						-- The second check ignores the new line character if we are at the last position in `local_string'.
-					if ( local_string @ (index_of_type + local_type.count) = '%R') or --index_of_type + local_type.count - 1 <= local_string.count and
+					if (index_of_type + local_type.count <= local_string.count and then local_string @ (index_of_type + local_type.count) = '%R') or
 						(index_of_type + local_type.count - 1  = local_string.count) then
 						found_correctly := True
 						-- Otherwise, continue searching.

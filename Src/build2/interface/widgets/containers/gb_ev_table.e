@@ -81,6 +81,7 @@ feature -- Access
 			create layout_button.make_with_text ("Position children")
 			layout_button.select_actions.extend (agent show_layout_window)
 			Result.extend (layout_button)
+			selected_item_color := red
 			
 			update_attribute_editor
 		end
@@ -255,7 +256,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 --			
 --			element_info := full_information @ (height_string)
 --			if element_info /= Void then
---				temp_height_string := element_info.data				
+--				temp_height_string := element_info.data			
 --			end
 --			
 --			check
@@ -472,7 +473,7 @@ feature {NONE} -- Implementation
 					create relative_pointb.make_with_position ((first.item_column_position (selected_item) - 1) * grid_size + (first.item_column_span (selected_item)) * grid_size, (first.item_row_position (selected_item) - 1) * grid_size + (first.item_row_span (selected_item)) * grid_size)
 					create figure_rectangle.make_with_points (relative_pointa, relative_pointb)
 					figure_rectangle.remove_background_color
-					figure_rectangle.set_foreground_color (red)
+					figure_rectangle.set_foreground_color (selected_item_color)
 					world.extend (figure_rectangle)
 			end
 --				listi := list.selected_item
@@ -590,20 +591,17 @@ feature {NONE} -- Implementation
 --				-- Store `x' and `y' for use elsewhere.
 --			last_x := x
 --			last_y := y
---				-- We only need to perform this operation if a widget representation
---				-- is selected for manipulation.
---			if selected_item_index > 0  then
---				widget := first.i_th (selected_item_index)
+
 				if close_to (x, y, end_column_position, end_row_position) or
 					close_to (x, y, column_position, row_position) then
 					if not resizing_widget then
 						set_all_pointer_styles (sizenwse_cursor)	
 					end
---				elseif close_to (x, y, widget.x_position, widget.y_position + widget.height) or
---					close_to (x, y, widget.x_position + widget.width, widget.y_position) then
---					if not resizing_widget then
---						set_all_pointer_styles (sizenesw_cursor)	
---					end
+				elseif close_to (x, y, column_position, end_row_position) or
+					close_to (x, y, end_column_position, row_position) then
+					if not resizing_widget then
+						set_all_pointer_styles (sizenesw_cursor)	
+					end
 --				elseif close_to_line (x, y, widget.y_position + widget.height, widget.x_position + accuracy_value, widget.x_position + widget.width - accuracy_value) or
 --					close_to_line (x, y, widget.y_position, widget.x_position + accuracy_value, widget.x_position + widget.width - accuracy_value) then
 --					if not resizing_widget then
@@ -629,59 +627,23 @@ feature {NONE} -- Implementation
 			if resizing_widget then
 					-- Update scrolling status.
 	--			update_scrolling (x, y)
-				temp_x := x				
+				temp_x := x - column_position
+				temp_y := y - row_position
 				new_x := temp_x + half_grid_size - ((temp_x + half_grid_size) \\ grid_size)
-				new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)	
+				new_y := temp_y + half_grid_size - ((temp_y + half_grid_size) \\ grid_size)	
 					
 				if x_scale /= 0 then
-					new_column := new_x // grid_size.max (first.columns - first.item_column_position (selected_item) + 1)
+					new_column := (new_x // grid_size).min (first.columns - first.item_column_position (selected_item) + 1).max (1)
 					if first.item_column_span (selected_item)/= new_column and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), new_column.max (1).min (first.columns - first.item_column_position (selected_item) + 1), first.item_row_span (selected_item)) then
-						set_item_span (selected_item, new_column.max (1).min (first.columns - first.item_column_position (selected_item) + 1), first.item_row_span (selected_item))	
+						set_item_span (selected_item, new_column, first.item_row_span (selected_item))
 					end
---				if x_offset = 0 then
---					if new_x < widget.x_position + widget.width - widget.minimum_width then
---						if widget.x_position + (new_x - widget.x_position) > 0 then
---							set_item_width (widget, (widget.width - (new_x - widget.x_position)).max (widget.minimum_width))
---							set_x_position (widget, (widget.x_position + (new_x - widget.x_position)))							
---						else
---							temp := widget.x_position
---							set_item_width (widget, widget.width + temp)
---							set_x_position (widget, (0))							
---						end
---					else
---						temp := widget.width - widget.minimum_width
---						set_item_width (widget, widget.width - temp)
---						set_x_position (widget, widget.x_position + temp)
---						end
---				else
---					set_item_width (widget, (new_x - widget.x_position).max (widget.minimum_width))
---				end
-				--	first.set_item_span_item_
 				end
 				
 				if y_scale /= 0 then
-					new_row := new_y // grid_size.max (first.rows - first.item_row_position (selected_item) + 1)
+					new_row := (new_y // grid_size).min (first.rows - first.item_row_position (selected_item) + 1).max (1)
 					if first.item_row_span (selected_item) /= new_row and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), first.item_column_span (selected_item), new_row.max (1).min (first.rows - first.item_row_position (selected_item) + 1)) then
-						first.set_item_span (selected_item, first.item_column_span (selected_item), new_row.max (1).min (first.rows - first.item_row_position (selected_item) + 1))	
+						set_item_span (selected_item, first.item_column_span (selected_item), new_row)	
 					end
---				if y_offset = 0 then
---					if new_y < widget.y_position + widget.height - widget.minimum_height then
---						if widget.y_position + (new_y - widget.y_position) > 0 then
---							set_item_height (widget, (widget.height - (new_y - widget.y_position)).max (widget.minimum_height))
---							set_y_position (widget, (widget.y_position + (new_y - widget.y_position)))
---						else
---							temp := widget.y_position
---							set_item_height (widget, widget.height + temp)
---							set_y_position (widget, (0))
---						end
---					else
---						temp := widget.height - widget.minimum_height
---						set_item_height (widget, widget.height - temp)
---						set_y_position (widget, widget.y_position + temp)
---					end
---				else
---					set_item_height (widget, (new_y - widget.y_position).max (widget.minimum_height))
---				end
 				end								
 				draw_widgets
 			end
@@ -1215,6 +1177,9 @@ feature {NONE} -- Attributes
 		
 	selected_item: EV_WIDGET
 		-- Item that is currently selected for movement.
+		
+	selected_item_color: EV_COLOR
+		-- Color used to draw `selected_item'.
 		
 --	x_position_string: STRING is "Children_x_position"
 --	

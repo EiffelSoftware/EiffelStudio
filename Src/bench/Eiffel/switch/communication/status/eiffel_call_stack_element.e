@@ -43,6 +43,13 @@ feature -- Properties
 		deferred
 		end
 		
+	has_result: BOOLEAN is
+			-- Does this routine has a Result ?
+			-- ie: function or once
+		do
+			Result := routine /= Void and then routine.is_function
+		end
+		
 	result_value: ABSTRACT_DEBUG_VALUE is
 			-- Result value of routine
 		do
@@ -50,6 +57,9 @@ feature -- Properties
 				initialize_stack
 			end
 			Result := private_result
+			if routine /= Void and then routine.is_function and then Result = Void then
+				Result := error_value ("Result", "unable to get the value")
+			end
 		ensure
 			is_function_non_void: routine.is_function implies Result /= Void
 		end
@@ -61,6 +71,17 @@ feature -- Properties
 				initialize_stack
 			end
 			Result := private_locals
+			if 
+				Result = Void 
+				and (
+						routine /= Void 
+						and then routine.locals /= Void
+						and then not routine.locals.is_empty 
+					)
+			then
+				create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
+				Result.extend (error_value ("Result", "unable to get the locals"))
+			end
 		ensure
 			non_void_implies_not_empty: Result /= Void implies not Result.is_empty
 		end
@@ -72,6 +93,17 @@ feature -- Properties
 				initialize_stack
 			end
 			Result := private_arguments
+			if 
+				Result = Void 
+				and (
+						routine /= Void 
+						and then routine.arguments /= Void
+						and then not routine.arguments.is_empty 
+					)
+			then
+				create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
+				Result.extend (error_value ("Result", "unable to get the arguments"))
+			end			
 		ensure
 			non_void_implies_not_empty: Result /= Void implies not Result.is_empty
 		end
@@ -226,7 +258,15 @@ feature {NONE} -- Implementation Properties
 			-- Is the stack initialized
 
 	private_body_index: like body_index
-			-- Associated body index		
+			-- Associated body index
+			
+feature {NONE} -- Implementation helper
+
+	error_value (a_name, a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE is
+		do		
+			create Result.make_with_name (a_name)
+			Result.set_message (a_mesg)
+		end
 
 invariant
 --

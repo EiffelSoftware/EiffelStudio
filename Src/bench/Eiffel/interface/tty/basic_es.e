@@ -34,6 +34,7 @@ feature -- Initialization
 		local
 			temp: STRING
 			new_resources: RESOURCES
+			expiration: INTEGER
 		do
 			if not retried then
 					-- Check that environment variables
@@ -52,8 +53,16 @@ feature -- Initialization
 				end;
 
 				if init_licence then
+					if not licence.is_unlimited then
+					expiration := licence.time_left
+						if expiration <= 100 then
+							io.error.putstring ("Your license will expire in ")
+							io.error.putint (expiration)
+							io.error.putstring (" days.%N")
+						end
+					end
 						-- Read the resource files
-					if resources /= Void then end;
+					if resources /= Void then end
 					!! new_resources.initialize;
 
 					analyze_options;

@@ -2614,7 +2614,7 @@ feature -- Supplier checking
 			if supplier_class /= Void and then not cl_name.is_equal ("none") then
 					-- The supplier class is in the universe associated
 					-- to `cluster'.
-				if not supplier_class.compiled then
+				if not supplier_class.is_compiled then
 						-- Class is not in the system yet: ask the
 						-- workbench to mark it `changed'.
 						-- Mark the class `changed'.
@@ -4310,10 +4310,8 @@ feature {NONE} -- Genericity
 					l_generic_features.put (an_item, l_rout_id)
 				else
 						-- Should we report an error in this case, as it is not
-						-- well implemented by compiler?
-					check
-						same_type: l_generic_features.item (l_rout_id).type.same_as (an_item.type)
-					end
+						-- well implemented by compiler? Meaning that we have
+						-- some repeated inheritance of generic parameters.
 				end
 
 				i := i + 1	

@@ -105,7 +105,6 @@ feature -- Status setting
 			-- set current insertion position
 		require
 			valid_caret_position: valid_caret_position (pos)
-			is_editable: is_editable
 		deferred
 		end
 	

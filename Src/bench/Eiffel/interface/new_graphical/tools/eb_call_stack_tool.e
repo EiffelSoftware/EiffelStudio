@@ -50,6 +50,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -508,7 +513,7 @@ feature {NONE} -- Implementation
 				standard_path.extend (last_path)
 			end
 			create fd
-			fd.set_filter ("*.txt")
+			set_dialog_filters_and_add_all (fd, <<text_files_description>>)
 			fd.set_start_directory (standard_path)
 				--| We try to find a file_name that does not exist.
 			create fn.make

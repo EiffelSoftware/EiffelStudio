@@ -12,6 +12,11 @@ inherit
 			new_toolbar_item,
 			menu_name
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -42,8 +47,7 @@ feature -- Basic operations
 					check cld /= Void end
 					cd := cld
 				end
-	
-				dial.set_filter ("*.png")
+				set_dialog_filters_and_add_all (dial, <<png_files_description>>)
 				if cld = Void then
 					dial.set_file_name (cd.center_class.name + ".png")
 				else

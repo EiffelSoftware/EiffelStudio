@@ -9,6 +9,14 @@ class
 
 inherit
 	SHARED_XML_ROUTINES
+		export
+			{NONE} all
+		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -271,7 +279,7 @@ feature -- Importation
 			-- Open dialog to select file for metric importation.
 		do
 			create open_dialog
-			open_dialog.set_filter ("*.xml")
+			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
 			open_dialog.open_actions.extend (agent import_file)
 			open_dialog.show_modal_to_window (interface.management_dialog)
 		end

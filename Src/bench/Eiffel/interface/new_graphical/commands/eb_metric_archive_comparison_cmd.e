@@ -11,14 +11,31 @@ inherit
 	EB_METRIC_COMMAND
 
 	SHARED_XML_ROUTINES
+		export
+			{NONE} all
+		end
 
 	EV_KEY_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	TRANSFER_MANAGER_BUILDER
 	
 	PROJECT_CONTEXT
+		export
+			{NONE} all
+		end
 	
 	EB_CONSTANTS
+		export
+			{NONE} all
+		end
+	
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -293,7 +310,7 @@ feature -- Action
 			ee: EXECUTION_ENVIRONMENT
 		do
 			create save_dialog
-			save_dialog.set_filter ("*.xml")
+			set_dialog_filters_and_add_all (save_dialog, <<xml_files_filter>>)
 			create ee
 			current_directory := ee.current_working_directory
 			save_dialog.save_actions.extend (agent confirm_new_archive (current_directory))
@@ -364,7 +381,7 @@ feature -- Action
 			ee: EXECUTION_ENVIRONMENT
 		do
 			create open_dialog
-			open_dialog.set_filter ("*.xml")
+			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
 			create ee
 			current_directory := ee.current_working_directory
 			open_dialog.open_actions.extend (agent confirm_update_archive (current_directory))
@@ -460,7 +477,7 @@ feature -- Action
 			ee: EXECUTION_ENVIRONMENT
 		do
 			create open_dialog
-			open_dialog.set_filter ("*.xml")
+			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
 			create ee
 			current_directory := ee.current_working_directory
 			open_dialog.open_actions.extend (agent on_browse_archive (current_directory))

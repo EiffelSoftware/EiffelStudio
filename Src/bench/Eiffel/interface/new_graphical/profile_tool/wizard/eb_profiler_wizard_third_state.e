@@ -29,6 +29,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -43,7 +48,7 @@ feature -- Basic Operation
 		do
 			create runtime_information_record_textfield.make (Current)
 			runtime_information_record_textfield.set_label_string (Interface_names.l_Runtime_information_record)
-			runtime_information_record_textfield.enable_file_browse_button ("*.*")
+			runtime_information_record_textfield.enable_file_browse_button (all_files_filter)
 			runtime_information_record_textfield.set_starting_directory (information.generation_path)
 			runtime_information_record_textfield.generate
 		

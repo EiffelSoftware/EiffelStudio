@@ -12,6 +12,12 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+			{ANY} supported_filters
+		end
 
 create	
 	make
@@ -258,7 +264,7 @@ feature -- Settings
 		require
 			not_yet_generated: not generated
 			not_has_browse_button: not has_browse_button
-			valid_filter: a_filter /= Void and then not a_filter.is_empty
+			valid_filter: a_filter /= Void and then not a_filter.is_empty and supported_filters.has (a_filter)
 		do
 			has_browse_button := True
 			browse_button_action := agent browse_file
@@ -324,7 +330,7 @@ feature {NONE} -- Implementation
 			then
 				file_selector.set_start_directory (starting_directory)
 			end
-			file_selector.set_filter (browse_file_filter)
+			set_dialog_filters_and_add_all (file_selector, <<browse_file_filter>>)
 			file_selector.open_actions.extend(agent file_selected(file_selector))
 			file_selector.show_modal_to_window (caller.first_window)
 		end

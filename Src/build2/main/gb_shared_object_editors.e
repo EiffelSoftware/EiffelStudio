@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 						-- We ignore when `Ev_widget_string' as we update them all below.
 					local_item.replace_object_editor_item (property_type)
 				end
-					-- We must now update the minimum size displayed in all object editors, as a change to ny properties
+					-- We must now update the minimum size displayed in all object editors, as a change to any properties
 					-- may have adjusted the minimum size of an object. We perform this on all object editors, as if one holds
 					-- a container, then its minimum size will be affected by its children. We are not smart enough to determine
 					-- exactly which ones must be updated, and it is also a quick process.

@@ -4006,7 +4006,8 @@ feature -- Conveniences
 			is_precompiled := False
 			has_precompiled_preobj := False
 			cls_compliant := False
-			dotnet_naming_convention := False		
+			dotnet_naming_convention := False
+			metadata_cache_path := Void
 		end
 
 	set_executable_directory (d: STRING) is

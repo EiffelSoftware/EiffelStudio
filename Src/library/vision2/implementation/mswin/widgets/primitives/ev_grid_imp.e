@@ -17,7 +17,9 @@ inherit
 			set_item as wel_set_item,
 			interface as drawing_area_interface,
 			pointer_motion_actions as cell_pointer_motion_actions,
-			pointer_motion_actions_internal as cell_pointer_motion_actions_internal
+			pointer_motion_actions_internal as cell_pointer_motion_actions_internal,
+			pointer_double_press_actions as cell_pointer_double_press_actions,
+			pointer_double_press_actions_internal as cell_pointer_double_press_actions_internal
 		redefine
 			initialize,
 			destroy

@@ -114,25 +114,33 @@ feature {NONE} -- Initialization
 			Result := tree_view
 		end
 
+	initialize_model is
+			-- Initialize data model
+		local
+			a_type_array: ARRAY [INTEGER]
+			a_type_array_c: ANY
+		do
+	create a_type_array.make (0, 1)
+			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_type_pixbuf, 0)
+			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_type_string, 1)
+			a_type_array_c := a_type_array.to_c
+			
+			tree_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_newv (2, $a_type_array_c)
+		end
+
 	initialize is
 			-- Connect action sequences to signals.
 		local
 			a_column, a_cell_renderer: POINTER
 			a_gtk_c_str: EV_GTK_C_STRING
 			a_selection: POINTER
-			a_type_array: ARRAY [INTEGER]
-			a_type_array_c: ANY
+
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_TREE_I}
 			
-			create a_type_array.make (0, 1)
-			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_type_pixbuf, 0)
-			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_type_string, 1)
-			a_type_array_c := a_type_array.to_c
-			
-			tree_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_newv (2, $a_type_array_c)
+			initialize_model
 			
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, tree_store)				
 			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
@@ -148,16 +156,17 @@ feature {NONE} -- Initialization
 			a_column := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
 
+			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, True)
+			create a_gtk_c_str.make ("text")
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
+
 			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, False)
 			create a_gtk_c_str.make ("pixbuf")
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
 			
-			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, True)
-			
-			create a_gtk_c_str.make ("text")
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
+
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, 1)
 			
 			real_signal_connect (tree_view, "row-collapsed", agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, False, ?, ?), agent (app_implementation.gtk_marshal).gtk_args_to_tuple)

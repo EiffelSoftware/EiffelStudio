@@ -8,7 +8,7 @@ class
 
 feature -- IL generator object
 
-	il_generator: CIL_CODE_GENERATOR is
+	il_generator: IL_CODE_GENERATOR is
 			-- To generate IL code. So far we only support CIL.
 		once
 			Result := cil_generator

@@ -21,6 +21,10 @@ cluster
 			"EIFGEN"; 
 			"to_replace";
 			"generated";
+	--	default
+	--		assertion (check)
+	--		assertion (require)
+	--		assertion (ensure)
 		visible
 			IEIFFEL_COMPILER_EVENTS_IMPL_PROXY
 			IEIFFEL_PROJECT_IMPL_PROXY
@@ -52,9 +56,11 @@ cluster
 			PROJECT_MANAGER;
 			PROJECT_PROPERTIES;
 			SYSTEM_BROWSER;
+			SYSTEM_CLUSTERS;
 			CLASS_ENUMERATOR;
 			CLUSTER_ENUMERATOR;
 			FEATURE_ENUMERATOR;
+			CLUSTER_PROP_ENUMERATOR;
 		end
 
 	-- BASE
@@ -155,6 +161,8 @@ cluster
 	all lace:		"$EIFFEL_SRC\Eiffel\lace"
 		exclude
 			"CVS"; 
+		default
+			assertion (all)
 		end
 
 	liman:		"$EIFFEL_SRC\Eiffel\limand"

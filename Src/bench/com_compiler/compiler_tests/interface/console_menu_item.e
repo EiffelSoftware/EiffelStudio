@@ -51,7 +51,7 @@ feature -- Element change
 			non_void_option: a_option /= Void
 			non_empty_option: not a_option.is_empty
 		do
-			option := a_option.clone (a_option)
+			option := clone (a_option)
 		ensure
 			option_set: option.is_equal (a_option)
 		end
@@ -62,7 +62,7 @@ feature -- Element change
 			non_void_title: a_title /= Void
 			non_empty_title: not a_title.is_empty
 		do
-			title := a_title.clone (a_title)
+			title := clone (a_title)
 		ensure
 			title_set: title.is_equal (a_title)
 		end

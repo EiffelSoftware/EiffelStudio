@@ -100,7 +100,7 @@ feature -- Access
 			env: EXECUTION_ENVIRONMENT
 		do
 			create env
-			Result := a_path.clone(a_path)
+			Result := clone(a_path)
 			
 			if not Result.is_empty then
 				Result.replace_substring_all ("/", "\")
@@ -145,7 +145,7 @@ feature -- Access
 						var := Result.substring (dollar_pos, slash_pos - 1)
 						
 						-- remove the () and $
-						formatted_var := var.clone(var);
+						formatted_var := clone(var);
 						formatted_var.prune_all('(')
 						formatted_var.prune_all(')')
 						formatted_var.prune_all_leading('$')
@@ -315,7 +315,7 @@ feature -- Element Change
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
-			output_pipe_name := a_name.clone (a_name)
+			output_pipe_name := clone (a_name)
 		ensure then
 			output_pipe_name_set: output_pipe_name.is_equal (a_name)
 		end

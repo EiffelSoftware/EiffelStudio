@@ -8,7 +8,8 @@ indexing
 	
 class KMP_MATCHER 
 
-inherit MATCHER
+inherit
+	MATCHER
 
 creation
 	make, make_empty

@@ -27,6 +27,16 @@ feature -- Access
 	eiffel_name: STRING
 			-- Eiffel entity name
 
+	arguments: ARRAY [CONSUMED_ARGUMENT] is
+			-- Arguments if any.
+		do
+		end
+		
+	return_type: CONSUMED_REFERENCED_TYPE is
+			-- Return type if any.
+		do
+		end
+
 feature -- Status report
 
 	has_arguments: BOOLEAN is

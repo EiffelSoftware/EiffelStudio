@@ -11,7 +11,7 @@ inherit
 		rename
 			make as member_make
 		redefine
-			has_return_value
+			has_return_value, return_type
 		end
 
 create

@@ -8,6 +8,18 @@
 #include <windows.h>
 #include "eif_portable.h"
 
+#ifndef EIF_IL_DLL
+typedef void (* EIF_DISK_PROC) (
+	EIF_REFERENCE,     /* WEL_DISK_SPACE Eiffel object */
+#else
+typedef void (__stdcall* EIF_DISK_PROC) (
+#endif
+	 EIF_INTEGER, /* free_space */
+	 EIF_INTEGER, /* total_space */
+	 EIF_INTEGER, /* free_space_in_bytes */
+	 EIF_INTEGER  /* total_space_in_bytes */
+	 );
+
 /*---------------------------------------------------------------------------*/
 /* Return the free disk space available for the current user in Mb.          */
 /*   - If the user is Administrator or if the OS is Windows95/98             */
@@ -17,11 +29,14 @@
 /*                                                                           */
 /* Note: We do not protect the `CurrentObject' because Eiffel callback is    */
 /*       the last call in the function body.                                 */
+/* Note: `CurrentObject' is not used in .NET mode.                           */
 /*---------------------------------------------------------------------------*/
 EIF_BOOLEAN cwin_query_disk_space(
-		EIF_POINTER CurrentObject,					// Object calling this function
+#ifndef EIF_IL_DLL
+		EIF_REFERENCE CurrentObject,				// Object calling this function
+#endif
 		EIF_CHARACTER DriveLetter,					// Letter of the drive to query
-		void *fnptr									// EiffelCallback
+		EIF_POINTER fnptr							// EiffelCallback
 		)
 	{
 	char szRootPath[3];				// Path to root directory of requested drive.
@@ -36,21 +51,9 @@ EIF_BOOLEAN cwin_query_disk_space(
 	unsigned long ResultHigh;
 	unsigned long ResultLow;
 	unsigned long Result;
+	EIF_DISK_PROC SetAttributeFunction;				// Eiffel Callback function.
 
-	void (*SetAttributeFunction)(				// Eiffel Callback function.
-		EIF_POINTER	ObjectToUse,
-		EIF_INTEGER MBytes_FreeSpace, 	
-		EIF_INTEGER MBytes_TotalSpace,
-		EIF_INTEGER Bytes_FreeSpace,
-		EIF_INTEGER Bytes_TotalSpace
-		);
-
-	SetAttributeFunction = (void (*) (
-		EIF_POINTER,
-		EIF_INTEGER,
-		EIF_INTEGER,
-		EIF_INTEGER,
-		EIF_INTEGER)) fnptr;
+	SetAttributeFunction = (EIF_DISK_PROC) fnptr;
 
 	szRootPath[0] = (char) DriveLetter;
 	szRootPath[1] = ':';
@@ -84,7 +87,11 @@ EIF_BOOLEAN cwin_query_disk_space(
 	MBytes_TotalSpace = Result & 0x7FFF;	// mask to prevent returning a negative value
 
 	// Call the Eiffel routine to update the attribute of our object
-	SetAttributeFunction(CurrentObject, MBytes_FreeSpace, MBytes_TotalSpace, Bytes_FreeSpace, Bytes_TotalSpace);
+	SetAttributeFunction(
+#ifndef EIF_IL_DLL
+		CurrentObject,
+#endif
+		MBytes_FreeSpace, MBytes_TotalSpace, Bytes_FreeSpace, Bytes_TotalSpace);
 
 	// Success
 	return TRUE;

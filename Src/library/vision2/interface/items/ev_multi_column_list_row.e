@@ -85,7 +85,7 @@ feature -- Implementation
 		do
 			{EV_COMPOSED_ITEM} Precursor
 			create select_actions
-			create deselect_actions
+			--| FIXME create deselect_actions
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
@@ -111,6 +111,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/02/18 18:43:49  king
+--| Added deselect_actions with fixme as it is currently not connected
+--|
 --| Revision 1.21  2000/02/17 22:46:29  king
 --| Removed command association commands
 --|

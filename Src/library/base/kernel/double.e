@@ -5,6 +5,8 @@
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+-- Built-in double representation of real number
+
 indexing
 
 	date: "$Date$";
@@ -25,7 +27,7 @@ inherit
 			prefix "-"
 		end
 
-feature	-- Comparison
+feature -- Comparison
 
 	infix "<" (other: DOUBLE): BOOLEAN is
 			-- Is `other' greater than Current ?
@@ -33,7 +35,7 @@ feature	-- Comparison
 			-- Built-in
 		end;
 
-feature -- Numeric
+feature -- Basic operation
 
 	infix "+" (other: DOUBLE): DOUBLE is
 			-- Sum of `Current' and `other'

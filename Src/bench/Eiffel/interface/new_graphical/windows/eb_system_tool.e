@@ -14,6 +14,7 @@ inherit
 --			System_type as stone_type
 		redefine
 			make, build_interface,
+			init_commands,
 			save_text,
 			empty_tool_name, stone, 
 			synchronise_stone,
@@ -57,7 +58,17 @@ feature -- Initialization
 			set_last_format (format_list.default_format)
 		end
 
-feature -- Properties
+	init_commands is
+		do
+			Precursor
+			create open_cmd.make (Current)
+			create save_cmd.make (Current)
+			create save_as_cmd.make (Current)
+			create shell_cmd.make (Current)
+			create filter_cmd.make (Current)
+		end
+
+feature -- Access
 
 	stone: SYSTEM_STONE
 
@@ -79,6 +90,8 @@ feature -- Window Settings
 		end
  
 feature -- Access
+
+	format_bar_is_used: Boolean is False
 
 --	compatible (a_stone: STONE): BOOLEAN is
 --			-- Is Current hole compatible with `a_stone'?
@@ -277,137 +290,52 @@ feature {NONE} -- Implementation Graphical Interface
 --			system_toolbar.init_toggle (toolbar_t)
 --		end
 
-	build_system_toolbar is
---		local
+	build_system_toolbar (a_toolbar: EV_BOX) is
+		local
 --			quit_cmd: QUIT_SYSTEM
---			quit_button: EB_BUTTON
 --			has_close_button: BOOLEAN
---			quit_menu_entry: EB_MENU_ENTRY
---			exit_menu_entry: EB_MENU_ENTRY
---			open_cmd: OPEN_SYSTEM
---			open_button: EB_BUTTON
---			open_menu_entry: EB_MENU_ENTRY
---			save_cmd: SAVE_SYSTEM
---			save_button: EB_BUTTON
---			save_menu_entry: EB_MENU_ENTRY
---			sep: SEPARATOR
---			sep1, sep2, sep3: THREE_D_SEPARATOR
---			stat_cmd: SHOW_STATISTICS
---			stat_button: FORMAT_BUTTON
---			stat_menu_entry: EB_TICKABLE_MENU_ENTRY
---			mod_cmd: SHOW_MODIFIED
---			mod_button: FORMAT_BUTTON
---			mod_menu_entry: EB_TICKABLE_MENU_ENTRY
---			list_cmd: SHOW_CLUSTERS
---			list_button: FORMAT_BUTTON
---			list_menu_entry: EB_TICKABLE_MENU_ENTRY
---			showtext_cmd: SHOW_TEXT
---			showtext_button: FORMAT_BUTTON
---			showtext_menu_entry: EB_TICKABLE_MENU_ENTRY
---			showclass_cmd: SHOW_CLASS_LIST
---			showclass_button: FORMAT_BUTTON
---			showclass_menu_entry: EB_TICKABLE_MENU_ENTRY
---			showhier_cmd: SHOW_CLUSTER_HIERARCHY
---			showhier_button: FORMAT_BUTTON
---			showhier_menu_entry: EB_TICKABLE_MENU_ENTRY
---			showindex_cmd: SHOW_INDEXING
---			showindex_button: FORMAT_BUTTON
---			showindex_menu_entry: EB_TICKABLE_MENU_ENTRY
---			shell_cmd: SHELL_COMMAND
---			shell_button: EB_BUTTON_HOLE
---			shell_menu_entry: EB_MENU_ENTRY
 --			case_storage_cmd: CASE_STORAGE
 --			case_storage_button: EB_BUTTON
 --			case_storage_menu_entry: EB_MENU_ENTRY
+			b: EV_BUTTON
+			sep: EV_VERTICAL_SEPARATOR
 		do
---				-- Should we have a close button?
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Open)
+			b.add_click_command (open_cmd, Void)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Save)
+			b.add_click_command (save_cmd, Void)
+
+			create sep.make (a_toolbar)
+
+				-- Should we have a close button?
 --			has_close_button := General_resources.close_button.actual_value
---
---			!! hole.make (Current)
---			!! hole_button.make (hole, system_toolbar)
---			!! hole_holder.make_plain (hole)
---			hole_holder.set_button (hole_button)
---
---			!! open_cmd.make (Current)
---			!! open_button.make (open_cmd, system_toolbar)
---			!! open_menu_entry.make (open_cmd, file_menu)
---			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
---
---			!! save_cmd.make (Current)
---			!! save_button.make (save_cmd, system_toolbar)
---			!! save_menu_entry.make (save_cmd, file_menu)
---			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
---
---			build_save_as_menu_entry
---			build_print_menu_entry
---			build_edit_menu (system_toolbar)
---
---			!! quit_cmd.make (Current)
---			!! quit_menu_entry.make (quit_cmd, file_menu)
---			if has_close_button then
---				!! quit_button.make (quit_cmd, system_toolbar)
---			end
---			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
---
---			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
---			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
---			exit_cmd_holder.set_menu_entry (exit_menu_entry)
---
---			!! showtext_cmd.make (Current)
---			!! showtext_button.make (showtext_cmd, system_toolbar)
---			!! showtext_menu_entry.make (showtext_cmd, format_menu)
---			!! showtext_frmt_holder.make (showtext_cmd, showtext_button, showtext_menu_entry)
---
---			!! list_cmd.make (Current)
---			!! list_button.make (list_cmd, system_toolbar)
---			!! list_menu_entry.make (list_cmd, format_menu)
---			!! showlist_frmt_holder.make (list_cmd, list_button, list_menu_entry)
---
---			!! showclass_cmd.make (Current)
---			!! showclass_button.make (showclass_cmd, system_toolbar)
---			!! showclass_menu_entry.make (showclass_cmd, format_menu)
---			!! showclasses_frmt_holder.make (showclass_cmd, showclass_button, showclass_menu_entry)
---
---			!! showhier_cmd.make (Current)
---			!! showhier_button.make (showhier_cmd, system_toolbar)
---			!! showhier_menu_entry.make (showhier_cmd, format_menu)
---			!! showhier_frmt_holder.make (showhier_cmd, showhier_button, showhier_menu_entry)
---
---			!! stat_cmd.make (Current)
---			!! stat_button.make (stat_cmd, system_toolbar)
---			!! stat_menu_entry.make (stat_cmd, format_menu)
---			!! showstatistics_frmt_holder.make (stat_cmd, stat_button, stat_menu_entry)
---
---			!! mod_cmd.make (Current)
---			!! mod_button.make (mod_cmd, system_toolbar)
---			!! mod_menu_entry.make (mod_cmd, format_menu)
---			!! showmodified_frmt_holder.make (mod_cmd, mod_button, mod_menu_entry)
---
---			!! showindex_cmd.make (Current)
---			!! showindex_button.make (showindex_cmd, system_toolbar)
---			!! showindex_menu_entry.make (showindex_cmd, format_menu)
---			!! showindexing_frmt_holder.make (showindex_cmd, showindex_button, showindex_menu_entry)
---
---			!! shell_cmd.make (Current)
---			!! shell_button.make (shell_cmd, system_toolbar)
+
+--			create hole.make (Current)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_System_dot)
+--			b.add_click_command (hole, Void)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Shell)
 --			shell_button.add_button_press_action (3, shell_cmd, Void)
---			!! shell_menu_entry.make (shell_cmd, special_menu)
---			!! shell.make (shell_cmd, shell_button, shell_menu_entry)
---
---			build_filter_menu_entry
---
---			!! sep1.make (system_toolbar)
---			sep1.set_horizontal (False)
---			sep1.set_height (20)
---
---			!! sep2.make (system_toolbar)
---			sep2.set_horizontal (False)
---			sep2.set_height (20)
---
---			!! sep3.make (system_toolbar)
---			sep3.set_horizontal (False)
---			sep3.set_height (20)
---
+			b.add_click_command (shell_cmd, Void)
+
+			create sep.make (a_toolbar)
+
+			create format_bar.make (a_toolbar)
+
+				-- Should we have a close button?
+--			has_close_button := Tool_resources.close_button.actual_value
+
+--			if has_close_button then
+--				create sep.make (a_toolbar)
+--				create b.make (a_toolbar)
+--				b.set_pixmap (Pixmaps.bm_Quit)
+--				b.add_click_command (close_cmd, Void)
+--			end
 		end
 
 feature {EB_TOOL_MANAGER} -- Menus Implementation
@@ -416,15 +344,12 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 		local
 			i: EV_MENU_ITEM
 		do
-			create open_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Open)
 			i.add_select_command (open_cmd, Void)
 
-			create save_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Save)
 			i.add_select_command (save_cmd, Void)
 
-			create save_as_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Save_as)
 			i.add_select_command (save_as_cmd, Void)
 
@@ -440,16 +365,14 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 		local
 			i: EV_MENU_ITEM
 		do
-			create shell_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Shell)
 			i.add_select_command (shell_cmd, Void)
 
-			create filter_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Filter)
 			i.add_select_command (filter_cmd, Void)
 		end
 
-feature {WINDOWS} -- Attributes
+feature {NONE} -- Attributes
 
 	empty_tool_name: STRING is
 			-- Name of the tool represented by Current.
@@ -462,11 +385,6 @@ feature {NONE} -- Attributes
 	editable:BOOLEAN is True
 			-- Is Current editable?
 
-feature {NONE} -- Attributes Forms And Holes
-
---	hole: SYSTEM_HOLE
-			-- Hole charaterizing current
-
 feature
 
 	save_text is
@@ -474,6 +392,11 @@ feature
 		do
 			save_cmd.execute (Void, Void)
 		end
+
+feature {NONE} -- Attributes Forms And Holes
+
+--	hole: SYSTEM_HOLE
+			-- Hole charaterizing current
 
 feature {NONE} -- Commands
 

@@ -11,7 +11,7 @@ class
 inherit
 	EV_STATIC_MENU_BAR_I
 
-	EV_MENU_ITEM_CONTAINER_IMP
+	EV_MENU_CONTAINER_IMP
 
 creation
 	make
@@ -29,18 +29,6 @@ feature {NONE} -- Initialization
 			end
 			parent_imp.set_menu (Current)
 		end	
-
-feature -- Access
-	
-	parent: EV_WINDOW is
-			-- The window that has the current menu
-		do
-			if parent_imp /= Void then
-				Result := parent_imp.interface
-			else
-				Result := Void
-			end
-		end
 
 feature -- Status report
 

@@ -41,6 +41,8 @@ feature -- Basic operation
 			-- Set arguments and precondition
 			set_feature_result_type_and_arguments
 			set_feature_assertions
+			add_feature_argument_comments
+
 			precondition_writer := user_defined_precondition (func_desc.interface_eiffel_name)
 
 			if func_desc.arguments /= Void and not func_desc.arguments.empty then

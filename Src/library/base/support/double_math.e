@@ -33,7 +33,7 @@ feature -- Access
 			-- Trigonometric cosine of radian `v' approximated
 			-- in the range [-pi/4, +pi/4]
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		alias
 			"cos"
 		end;
@@ -42,7 +42,7 @@ feature -- Access
 			-- Trigonometric arccosine of radian `v'
 			-- in the range [0, pi]
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		alias
 			"acos"
 		end;
@@ -51,7 +51,7 @@ feature -- Access
 			-- Trigonometric sine of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		alias
 			"sin"
 		end;
@@ -60,7 +60,7 @@ feature -- Access
 			-- Trigonometric arcsine of radian `v'
 			-- in the range [-pi/2, +pi/2]
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		alias
 			"asin"
 		end;
@@ -69,7 +69,7 @@ feature -- Access
 			-- Trigonometric tangent of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		alias
 			"tan"
 		end;
@@ -78,7 +78,7 @@ feature -- Access
 			-- Trigonometric arctangent of radian `v'
 			-- in the range [-pi/2, +pi/2]
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		alias
 			"atan"
 		end;
@@ -86,31 +86,31 @@ feature -- Access
 	sqrt (v: DOUBLE): DOUBLE is
 			-- Square root of `v'
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		end;
 
 	log (v: DOUBLE): DOUBLE is
 			-- Natural logarithm of `v'
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		end;
 
 	log10 (v: DOUBLE): DOUBLE is
 			-- Base 10 logarithm of `v'
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		end;
 
 	floor (v: DOUBLE): DOUBLE is
 			-- Greatest integral less than or equal to `v'
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		end;
 
 	ceiling (v: DOUBLE): DOUBLE is
 			-- Least integral greater than or equal to `v'
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		alias
 			"ceil"
 		end;
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 	dabs (v: DOUBLE): DOUBLE is
 			-- Absolute of `v'
 		external
-			"C | %"math.h%""
+			"C | <math.h>"
 		alias
 			"fabs"
 		end;

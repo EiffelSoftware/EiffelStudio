@@ -408,7 +408,7 @@ feature {NONE} -- Externals
 			-- Copy `size' characters from `source'
 			-- to `target' + `offset'
 		external
-			"C [macro <desc.h>]"
+			"C [macro %"eif_desc.h%"]"
 		alias
 			"DESC_BCOPY"
 		end
@@ -417,7 +417,7 @@ feature {NONE} -- Externals
 			-- Copy `size' characters from `source'
 			-- to `target' + `offset'
 		external
-			"C [macro <desc.h>]"
+			"C [macro %"eif_desc.h%"]"
 		alias
 			"DESC_BCOPY"
 		end

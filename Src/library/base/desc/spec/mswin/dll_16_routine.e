@@ -433,7 +433,7 @@ feature {NONE} -- Externals
 			-- Copy `size' characters from `source'
 			-- to `target' + `offset'
 		external
-			"C [macro <desc.h>]"
+			"C [macro %"eif_desc.h%"]"
 		alias
 			"DESC_BCOPY"
 		end
@@ -467,7 +467,7 @@ feature {NONE} -- Externals
 			-- a 16-bit far pointer `fp16'
 			--| Watcom specific
 		external
-			"C [macro <desc.h>] (EIF_POINTER): EIF_POINTER"
+			"C [macro %"eif_desc.h%"] (EIF_POINTER): EIF_POINTER"
 		alias
 			"DESC_MAKE_NP32"
 		end
@@ -476,7 +476,7 @@ feature {NONE} -- Externals
 			-- Creates an Eiffel string from a
 			-- C manifest string `str'
 		external
-			"C [macro <macros.h>] (EIF_POINTER): EIF_REFERENCE"
+			"C [macro %"eif_macros.h%"] (EIF_POINTER): EIF_REFERENCE"
 		alias
 			"RTMS"
 		end

@@ -26,9 +26,9 @@ feature {NONE} -- Initialization
 			list_item: EV_LIST_ITEM
 			counter: INTEGER
 			font: EV_FONT
-			format: EV_CHARACTER_FORMAT
 			tab_positioner: EV_RICH_TEXT_TAB_POSITIONER
 			a_file_name: FILE_NAME
+			format: EV_CHARACTER_FORMAT
 		do
 				-- Initialize color display to black.
 			last_displayed_color := (create {EV_STOCK_COLORS}).red
@@ -1193,7 +1193,12 @@ feature {NONE} -- To be removed
 		do
 			get_file_name (opening_file)
 			if not file_dialog_cancelled then
+				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 100))
+				general_label.hide
+				save_progress.show
 				rich_text.set_with_named_file (create {FILE_NAME}.make_from_string (current_file_name))
+				save_progress.hide
+				general_label.show
 			end
 		end
 		
@@ -1204,8 +1209,7 @@ feature {NONE} -- To be removed
 				get_file_name (saving_file)
 			end
 			if not file_dialog_cancelled then
-				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (1, rich_text.text_length))
-				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (1, rich_text.text_length))
+				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (0, 100))
 				general_label.hide
 				save_progress.show
 				rich_text.save_to_named_file (create {FILE_NAME}.make_from_string (current_file_name))
@@ -1270,9 +1274,16 @@ feature {NONE} -- To be removed
 
 	update_progress_on_file_access (pos: INTEGER) is
 			-- Display progress of file loading or saving operation.
+		local
+			app: EV_APPLICATION
 		do
-			save_progress.set_value (pos.max (1).min (rich_text.text_length))			
-			(create {EV_ENVIRONMENT}).application.process_events
+			save_progress.set_value (pos)	
+			app := (create {EV_ENVIRONMENT}).application
+				-- We must check that the application is launched as when we first
+				-- load the rtf upon starting, the application has not yet been launched.
+			if app.is_launched then
+				app.process_events
+			end
 		end
 		
 	

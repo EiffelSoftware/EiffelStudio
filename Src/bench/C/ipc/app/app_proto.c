@@ -37,6 +37,9 @@
 #include "eif_hector.h"
 #include "eif_bits.h"
 #include "eif_eiffel.h"
+#include "eif_memory.h"
+#include "eif_debug.h"
+#include "proto.h"
 
 #ifdef EIF_WIN32
 #include "stream.h"
@@ -511,7 +514,6 @@ rt_private void adopt(int s, Opaque *what)
 
 	char *physical_addr;	/* Address of unprotected object */
 	char hector_addr[20];	/* Buffer where indirection address is stored */
-	char *result;			/* Eiffel string */
 
 	physical_addr = (char *) what->op_third;
 	sprintf(hector_addr, "0x%lX", eif_adopt((EIF_OBJ) &physical_addr));
@@ -718,9 +720,7 @@ rt_private void rec_inspect(register1 char *object)
 	char *o_ref;
 	register7 char **names;					/* Attribute names */
 	char *reference;						/* Reference attribute */
-	char *refptr;
-	union overhead *zone;
-	long i,nb_old, nb_reference;
+	long i;
 	uint32 type, ref_flags;
 
 	dyn_type = Dtype(object);
@@ -860,7 +860,7 @@ rt_private void rec_sinspect(register1 char *object)
 	register3 long sp_index;	/* Element index */
 	register4 long elem_size;	/* Element size */
 	char *o_ref;
-	char *reference, *bit;
+	char *reference;
 	long count;					/* Element count */
 	long sp_start, sp_end;		/* Bounds for inspection */
 	int dt_type;

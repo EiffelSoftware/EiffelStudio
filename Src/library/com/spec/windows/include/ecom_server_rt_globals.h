@@ -27,12 +27,20 @@ extern struct xstack eif_stack;
 
 #define ECATCH	struct ex_vect *exvect;\
 	jmp_buf exenv;\
-	exvect = exset((char *) 0, 0, (char *) 0);\
+	exvect = exft();\
 	exvect->ex_jbuf = (char *) exenv;\
 	if (return_hr_value = setjmp (exenv)) \
 		return (HRESULT)(MAKE_HRESULT (1, FACILITY_ITF, 1024 + return_hr_value))
 
-#define END_ECATCH	expop(&eif_stack);
+#define END_ECATCH expop (&eif_stack);\
+					exok()
+
+#define ECATCH_AUTO(_arg_) struct ex_vect *exvect;\
+	jmp_buf exenv;\
+	exvect = exft();\
+	exvect->ex_jbuf = (char *) exenv;\
+	if (return_hr_value = setjmp (exenv)) \
+		return (_arg_)
 
 #ifdef __cplusplus
 }

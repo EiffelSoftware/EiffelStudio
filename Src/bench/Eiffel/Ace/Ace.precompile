@@ -24,121 +24,123 @@ cluster
 -- ES4 SPECIFIC CLUSTERS
 
 
-		liman_client:		"$BENCH/Eiffel/limand/client";
-		liman_shared:		"$BENCH/Eiffel/limand/shared";
-		beurk:				"$BENCH/Eiffel/beurk";
-		replication:		"$BENCH/Eiffel/eiffel/replication";
+		--liman_client:		"$EIFFEL4/Eiffel/limand/client";
+		--liman_shared:		"$EIFFEL4/Eiffel/limand/shared";
+		liman_abstract:		"$EIFFEL4/Eiffel/limand/abstract";
+		liman_bench:		"$EIFFEL4/Eiffel/limand/bench";
+		beurk:				"$EIFFEL4/Eiffel/beurk";
+		bench_support:		"$EIFFEL4/Eiffel/support";
+		replication:		"$EIFFEL4/Eiffel/eiffel/replication";
 
 	-- General compilation:
 
-		flat_short:			"$BENCH/Eiffel/flat_short/abstract";
-		flat_short_b:		"$BENCH/Eiffel/flat_short/bench";
+		flat_short:			"$EIFFEL4/Eiffel/flat_short/abstract";
+		flat_short_b:		"$EIFFEL4/Eiffel/flat_short/bench";
 
-		yacc:				"$BENCH/Eiffel/yacc";
-		const:				"$BENCH/Eiffel/const";
+		yacc:				"$EIFFEL4/Eiffel/yacc";
+		const:				"$EIFFEL4/Eiffel/const";
 
 	-- Lace compilation:
 
-		env:				"$BENCH/Eiffel/lace/env";
-		lace_compile:		"$BENCH/Eiffel/lace/lace_compile";
-		lace_shared:		"$BENCH/Eiffel/lace/shared";
+		env:				"$EIFFEL4/Eiffel/lace/env";
+		lace_compile:		"$EIFFEL4/Eiffel/lace/lace_compile";
+		lace_shared:		"$EIFFEL4/Eiffel/lace/shared";
 
 	-- Eiffel compilation:
 
-		instructions_b:		"$BENCH/Eiffel/eiffel/AST/instructions";
-		expressions_b:		"$BENCH/Eiffel/eiffel/AST/expressions";
-		ast_skeleton_b:		"$BENCH/Eiffel/eiffel/AST/skeleton";
-		ast_clickable_b:	"$BENCH/Eiffel/eiffel/AST/clickable";
+		instructions_b:		"$EIFFEL4/Eiffel/eiffel/AST/instructions";
+		expressions_b:		"$EIFFEL4/Eiffel/eiffel/AST/expressions";
+		ast_skeleton_b:		"$EIFFEL4/Eiffel/eiffel/AST/skeleton";
+		ast_clickable_b:	"$EIFFEL4/Eiffel/eiffel/AST/clickable";
 
-		byte_code:			"$BENCH/Eiffel/eiffel/byte_code";
-		cecil:				"$BENCH/Eiffel/eiffel/cecil";
-		compiler:			"$BENCH/Eiffel/eiffel/compiler";
-		eiffel_const:		"$BENCH/Eiffel/eiffel/const";
-		generation:			"$BENCH/Eiffel/eiffel/generation";
-		genericity:			"$BENCH/Eiffel/eiffel/genericity";
-		compiler_ids:		"$BENCH/Eiffel/eiffel/ids/compiler";
-		routine_ids:		"$BENCH/Eiffel/eiffel/ids/routine";
-		class_ids:			"$BENCH/Eiffel/eiffel/ids/class";
-		type_ids:			"$BENCH/Eiffel/eiffel/ids/type";
-		body_ids:			"$BENCH/Eiffel/eiffel/ids/body_id";
-		body_indexes:		"$BENCH/Eiffel/eiffel/ids/body_index";
-		real_body_ids:		"$BENCH/Eiffel/eiffel/ids/real_body_id";
-		real_body_indexes:	"$BENCH/Eiffel/eiffel/ids/real_body_index";
-		file_ids:			"$BENCH/Eiffel/eiffel/ids/file";
-		feature_as_ids:		"$BENCH/Eiffel/eiffel/ids/feature_as";
-		pattern_ids:		"$BENCH/Eiffel/eiffel/ids/pattern";
-		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
-		interface:			"$BENCH/Eiffel/eiffel/interface";
-		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";
-		server:				"$BENCH/Eiffel/eiffel/server";
-		eiffel_shared:		"$BENCH/Eiffel/eiffel/shared";
-		skeleton:			"$BENCH/Eiffel/eiffel/skeleton";
-		structures:			"$BENCH/Eiffel/eiffel/structures";
-		tables:				"$BENCH/Eiffel/eiffel/tables";
-		descriptor:			"$BENCH/Eiffel/eiffel/descriptor";
+		byte_code:			"$EIFFEL4/Eiffel/eiffel/byte_code";
+		cecil:				"$EIFFEL4/Eiffel/eiffel/cecil";
+		compiler:			"$EIFFEL4/Eiffel/eiffel/compiler";
+		eiffel_const:		"$EIFFEL4/Eiffel/eiffel/const";
+		generation:			"$EIFFEL4/Eiffel/eiffel/generation";
+		genericity:			"$EIFFEL4/Eiffel/eiffel/genericity";
+		compiler_ids:		"$EIFFEL4/Eiffel/eiffel/ids/compiler";
+		routine_ids:		"$EIFFEL4/Eiffel/eiffel/ids/routine";
+		class_ids:			"$EIFFEL4/Eiffel/eiffel/ids/class";
+		type_ids:			"$EIFFEL4/Eiffel/eiffel/ids/type";
+		body_ids:			"$EIFFEL4/Eiffel/eiffel/ids/body_id";
+		body_indexes:		"$EIFFEL4/Eiffel/eiffel/ids/body_index";
+		real_body_ids:		"$EIFFEL4/Eiffel/eiffel/ids/real_body_id";
+		real_body_indexes:	"$EIFFEL4/Eiffel/eiffel/ids/real_body_index";
+		file_ids:			"$EIFFEL4/Eiffel/eiffel/ids/file";
+		feature_as_ids:		"$EIFFEL4/Eiffel/eiffel/ids/feature_as";
+		pattern_ids:		"$EIFFEL4/Eiffel/eiffel/ids/pattern";
+		inheritance:		"$EIFFEL4/Eiffel/eiffel/inheritance";
+		interface:			"$EIFFEL4/Eiffel/eiffel/interface";
+		polymorphism:		"$EIFFEL4/Eiffel/eiffel/polymorphism";
+		server:				"$EIFFEL4/Eiffel/eiffel/server";
+		eiffel_shared:		"$EIFFEL4/Eiffel/eiffel/shared";
+		skeleton:			"$EIFFEL4/Eiffel/eiffel/skeleton";
+		structures:			"$EIFFEL4/Eiffel/eiffel/structures";
+		tables:				"$EIFFEL4/Eiffel/eiffel/tables";
+		descriptor:			"$EIFFEL4/Eiffel/eiffel/descriptor";
 
 
 -- API cluster
 
-		api_constants:	  	"$BENCH/Eiffel/API/constants";
-		api_shared:		 	"$BENCH/Eiffel/API/shared";
-		api_ids:			"$BENCH/Eiffel/API/ids";
-		api_queries:		"$BENCH/Eiffel/API/queries";
-		api_interface:	  	"$BENCH/Eiffel/API/interface";
-		api_common:			"$BENCH/Eiffel/API/common";
-		communication:		"$BENCH/Eiffel/API/communication";
-		output:		 		"$BENCH/Eiffel/API/output";
-		evaluated_type:		"$BENCH/Eiffel/API/evaluated_type";
+		api_constants:	  	"$EIFFEL4/Eiffel/API/constants";
+		api_shared:		 	"$EIFFEL4/Eiffel/API/shared";
+		api_ids:			"$EIFFEL4/Eiffel/API/ids";
+		api_queries:		"$EIFFEL4/Eiffel/API/queries";
+		api_interface:	  	"$EIFFEL4/Eiffel/API/interface";
+		api_common:			"$EIFFEL4/Eiffel/API/common";
+		communication:		"$EIFFEL4/Eiffel/API/communication";
+		output:		 		"$EIFFEL4/Eiffel/API/output";
+		evaluated_type:		"$EIFFEL4/Eiffel/API/evaluated_type";
 			-- Error processing
-		error_common:		"$BENCH/Eiffel/API/error/common";
-		lace_error:			"$BENCH/Eiffel/API/error/lace";
-		feature_error:		"$BENCH/Eiffel/API/error/eiffel/feature";
-		parents_error:		"$BENCH/Eiffel/API/error/eiffel/parents";
-		redefined_error:	"$BENCH/Eiffel/API/error/eiffel/redefined";
-		unredefined_error:	"$BENCH/Eiffel/API/error/eiffel/unredefined";
+		error_common:		"$EIFFEL4/Eiffel/API/error/common";
+		lace_error:			"$EIFFEL4/Eiffel/API/error/lace";
+		feature_error:		"$EIFFEL4/Eiffel/API/error/eiffel/feature";
+		parents_error:		"$EIFFEL4/Eiffel/API/error/eiffel/parents";
+		redefined_error:	"$EIFFEL4/Eiffel/API/error/eiffel/redefined";
+		unredefined_error:	"$EIFFEL4/Eiffel/API/error/eiffel/unredefined";
 			-- Resources
-		resources:			"$BENCH/Eiffel/API/resources/common";
-		resources_bench:	"$BENCH/Eiffel/API/resources/bench";
+		resources:			"$EIFFEL4/Eiffel/API/resources/common";
 			-- Profiling
-		converter:			"$BENCH/Eiffel/API/profiler/converter";
-		profiling:			"$BENCH/Eiffel/API/profiler/profiling";
-		querying:		  	"$BENCH/Eiffel/API/profiler/querying";
-		filters:			"$BENCH/Eiffel/API/profiler/filters";
-		matching:		  	"$BENCH/Eiffel/API/profiler/matching";
-		struct_text:		"$BENCH/Eiffel/API/structured_text";
+		converter:			"$EIFFEL4/Eiffel/API/profiler/converter";
+		profiling:			"$EIFFEL4/Eiffel/API/profiler/profiling";
+		querying:		  	"$EIFFEL4/Eiffel/API/profiler/querying";
+		filters:			"$EIFFEL4/Eiffel/API/profiler/filters";
+		matching:		  	"$EIFFEL4/Eiffel/API/profiler/matching";
+		struct_text:		"$EIFFEL4/Eiffel/API/structured_text";
 			-- AST structures
-		lace_AST:			"$BENCH/Eiffel/API/AST/lace";
-		instructions:		"$BENCH/Eiffel/API/AST/eiffel/instructions";
-		expressions:		"$BENCH/Eiffel/API/AST/eiffel/expressions";
-		ast_skeleton:		"$BENCH/Eiffel/API/AST/eiffel/skeleton";
-		ast_stonables:		"$BENCH/Eiffel/API/AST/eiffel/clickable";
+		lace_AST:			"$EIFFEL4/Eiffel/API/AST/lace";
+		instructions:		"$EIFFEL4/Eiffel/API/AST/eiffel/instructions";
+		expressions:		"$EIFFEL4/Eiffel/API/AST/eiffel/expressions";
+		ast_skeleton:		"$EIFFEL4/Eiffel/API/AST/eiffel/skeleton";
+		ast_stonables:		"$EIFFEL4/Eiffel/API/AST/eiffel/clickable";
 
 -- SWITCH clusters (chose one cluster per directory in switch directory)
 	
-		dle_switch:			"$BENCH/Eiffel/switch/dle/no_dle";
-		generation_switch:	"$BENCH/Eiffel/switch/generation/professional";
-		license_switch:		"$BENCH/Eiffel/switch/license/license";
+		dle_switch:			"$EIFFEL4/Eiffel/switch/dle/no_dle";
+		generation_switch:	"$EIFFEL4/Eiffel/switch/generation/professional";
+		license_switch:		"$EIFFEL4/Eiffel/switch/license/no_license";
 
 	-- Communications
 
-		ipc:				"$BENCH/Eiffel/ipc";
-		debugclas:			"$BENCH/Eiffel/debug";
+		ipc:				"$EIFFEL4/Eiffel/ipc";
+		debugclas:			"$EIFFEL4/Eiffel/debug";
 
 	-- Case
-		case_common:		"$BENCH/Eiffel/case_storage/common";
-		case_bench:			"$BENCH/Eiffel/case_storage/bench";
+		case_common:		"$EIFFEL4/Eiffel/case_storage/common";
+		case_bench:			"$EIFFEL4/Eiffel/case_storage/bench";
 
 external
 
 	object:
-		"$(BENCH)/C/parsing/eiffel/libweiffel.a";
-		"$(BENCH)/C/parsing/lace/liblace.a";
-		"$(BENCH)/C/parsing/shared/libparsing.a";
-		"$(BENCH)/C/platform/libplatform.a";
-		"$(BENCH)/C/ipc/ewb/libewb.a";
-		"$(BENCH)/C/ipc/shared/libipc.a";
-		"$(BENCH)/C/liman/client/libliman.a";
-		"$(BENCH)/C/liman/shared/libshared.a";
-		"$(BENCH)/C/idrs/libidr.a"
+		"$(C)/C/parsing/eiffel/libweiffel.a",
+		"$(C)/C/parsing/lace/liblace.a",
+		"$(C)/C/parsing/shared/libparsing.a",
+		"$(C)/C/platform/libplatform.a",
+		"$(C)/C/ipc/ewb/libewb.a",
+		"$(C)/C/ipc/shared/libipc.a",
+		"$(C)/C/liman/client/libliman.a",
+		"$(C)/C/liman/shared/libshared.a",
+		"$(C)/C/idrs/libidr.a"
 
 end

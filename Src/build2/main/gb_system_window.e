@@ -1,5 +1,5 @@
 indexing
-	description: "Window for configuring Eiffel projects"
+	description: "Window for configuring EiffelBuild projects"
 	date: "$Date$"
 	revision: "$Revision$"
 

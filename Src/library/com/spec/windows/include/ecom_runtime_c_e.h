@@ -32,6 +32,8 @@ typedef void (*EIF_SET_REAL_ITEM)(EIF_REFERENCE, EIF_REAL);
 class ecom_runtime_ce
 {
 public:
+	void free_memory_bstr (BSTR a_bstr);
+	void free_memory_safearray (SAFEARRAY * a_safearray);
 	// Help functions for arrays.
 
 	char * ccom_name_n_dim_array (char * element_name, EIF_INTEGER dim_count);

@@ -10,46 +10,57 @@ class
 	OBJECT_OWNER
 
 obsolete
-	"Not needed anymore"
+	"Do not use it anymore, it will be removed"
 
 feature {NONE}
 
-	thread_owner: POINTER
-
+	thread_owner: POINTER is
+		obsolete
+			"Do not use it anymore, it will be removed"
+		require
+			Do_not_use_obsolete: False
+		do
+		ensure
+			Do_not_use_obsolete: False
+		end
 
 feature -- Access
 
 	record_owner is
 			-- Record calling thread's id.
+		obsolete
+			"Do not use it anymore, it will be removed"
 		require
-			not_recorded_yet: not has_owner
+			Do_not_use_obsolete: False
 		do
-			thread_owner := get_current_id
-			has_owner := True
+		ensure
+			Do_not_use_obsolete: False
 		end
 
 	thread_is_owner: BOOLEAN is
 			-- Is calling thread creator of the object?
+		obsolete
+			"Do not use it anymore, it will be removed"
+		require
+			Do_not_use_obsolete: False
 		do
-			Result := (thread_owner = get_current_id)
+		ensure
+			Do_not_use_obsolete: False
 		end
 
-	has_owner: BOOLEAN
+	has_owner: BOOLEAN is
 			-- Is object already associated with a thread?
-
-
-feature {NONE} -- Externals
-
-	get_current_id: POINTER is
-			-- Returns a pointer to the thread-id of the thread.
-		external
-			"C | %"eif_threads.h%""
-		alias
-			"eif_thr_thread_id"
+		obsolete
+			"Do not use it anymore, it will be removed"
+		require
+			Do_not_use_obsolete: False
+		do
+		ensure
+			Do_not_use_obsolete: False
 		end
+		
 
-end -- OBJECT_OWNER
-
+end -- class OBJECT_OWNER
 
 --|----------------------------------------------------------------
 --| EiffelThread: library of reusable components for ISE Eiffel.

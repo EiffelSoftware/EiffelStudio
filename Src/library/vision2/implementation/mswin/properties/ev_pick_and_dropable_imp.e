@@ -532,12 +532,6 @@ feature {EV_ANY_I} -- Implementation
 		-- Rubber band starting position.
 		-- Only initialised when a pick/drag and drop is started.
 
-	original_x, original_y: INTEGER
-	original_x_tilt, original_y_tilt, original_pressure: DOUBLE
-		-- Hold the values passed to start transport so when a drag and drop
-		-- actually starts, with real_start_transport,these can be passed
-		-- as arguments.
-
 	pnd_stored_cursor: EV_CURSOR
 			-- Cursor used on the widget before PND started.
 
@@ -676,18 +670,6 @@ feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-
-feature -- Public constants
-
-	Capture_heavy: INTEGER is 1
-			-- The mouse [has been/should be] captured through
-			-- a call to `set_heavy_capture'
-
-	Capture_normal: INTEGER is 0
-			-- The mouse [has been/should be] captured through
-			-- a call to `set_capture'
-			--
-			-- Default value.
 
 end -- class EV_PICK_AND_DROPABLE_IMP
 

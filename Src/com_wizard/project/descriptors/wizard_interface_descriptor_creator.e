@@ -64,7 +64,7 @@ feature -- Basic operations
 			tmp_type_attr := a_type_info.type_attr
 			create guid.make_from_guid (tmp_type_attr.guid)
 
-			if not guid.is_equal (Iunknown_guid) then
+--			if not guid.is_equal (Iunknown_guid) then
 				tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
 				if name = Void or else name.empty then
 					create name.make (0)
@@ -97,7 +97,7 @@ feature -- Basic operations
 				create_function_descriptors (a_type_info)
 				create_property_descriptors (a_type_info)
 				create Result.make (Current)
-			end
+--			end
 		ensure then
 			valid_guid: guid /= Void
 			valid_functions: a_type_info.type_attr.count_func > 0 implies

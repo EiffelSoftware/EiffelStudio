@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 	delete_wrapper is
 			-- Delete structure
 		do
-			ccom_delete_c_type_info (initializer);
+--			ccom_delete_c_type_info (initializer);
 		end
 
 	containing_type_lib_impl: ECOM_TYPE_LIB 

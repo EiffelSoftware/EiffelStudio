@@ -51,7 +51,7 @@ feature -- Extentions
 		require
 			a_resolver_not_void: a_resolver /= Void
 			app_domain_not_void: app_domain /= Void
-			not_app_domain_is_unloading: app_domain.is_finalizing_for_unload
+			not_app_domain_is_unloading: not app_domain.is_finalizing_for_unload
 		do
 			app_domain.add_assembly_resolve (a_resolver.resolve_event_handler)
 			internal_assembly_resolvers.extend (a_resolver)

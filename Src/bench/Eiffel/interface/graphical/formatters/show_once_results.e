@@ -24,7 +24,7 @@ creation
 
 feature -- Initialization
 
-	make (a_text_window: OBJECT_TEXT) is
+	make (a_text_window: TEXT_WINDOW) is
 		do
 			init (a_text_window);
 			indent := 2
@@ -76,9 +76,9 @@ feature {NONE} -- Properties
 		do
 			status := Application.status;
 			if status = void then
-				warner (text_window).gotcha_call (w_System_not_running)
+				warner (popup_parent).gotcha_call (w_System_not_running)
 			elseif not status.is_stopped then
-				warner (text_window).gotcha_call (w_System_not_stopped)
+				warner (popup_parent).gotcha_call (w_System_not_stopped)
 			else
 				!! Result.make;
 				dynamic_class := object.dynamic_class;
@@ -98,7 +98,7 @@ feature {NONE} -- Properties
 				until
 					once_func_list.after
 				loop
-					Result.add_string ("%T");
+					Result.add_indent;
 					e_feature := once_func_list.item;
 					e_feature.append_name (Result, dynamic_class);
 					arguments := e_feature.arguments;
@@ -124,7 +124,8 @@ feature {NONE} -- Properties
 						once_request.once_result (e_feature).append_type_and_value (Result)
 					else
 						e_feature.type.append_to (Result);
-						Result.add_string ("%TNot yet called")
+						Result.add_indent;
+						Result.add_string ("Not yet called")
 					end;
 					Result.add_new_line;
 					once_func_list.forth
@@ -137,7 +138,7 @@ feature {NONE} -- Implementation
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Finding values of once functions...")
+			tool.set_title ("Finding values of once functions...")
 		end;
 
 end -- class SHOW_ONCE_RESULTS

@@ -3,8 +3,6 @@ class REQUIRE_AS_B
 inherit
 
 	REQUIRE_AS
-		undefine
-			reset
 		redefine
 			assertions
 		end;

@@ -4,7 +4,7 @@ inherit
 
 	ASSERT_LIST_AS
 		redefine
-			assertions, reset
+			assertions
 		end;
 
 	AST_EIFFEL_B
@@ -33,15 +33,6 @@ feature -- Type check, byte code, dead code removal and formatter
 		do
 			if assertions /= Void then
 				Result := assertions.byte_node;
-			end;
-		end;
-
-feature -- Incrementality
-
-	reset is
-		do
-			if assertions /= Void then
-				assertions.start
 			end;
 		end;
 

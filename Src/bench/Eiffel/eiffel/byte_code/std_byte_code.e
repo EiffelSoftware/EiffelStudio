@@ -228,8 +228,11 @@ feature -- Analyzis
 		local
 			type_i: TYPE_I
 			internal_name: STRING
+			name: STRING
 			buf: GENERATION_BUFFER
 			l_is_once: BOOLEAN
+			args: like argument_names
+			i: INTEGER
 		do
 			buf := buffer
 			l_is_once := is_once
@@ -259,9 +262,23 @@ feature -- Analyzis
 			end
 
 				-- Generate function signature
+			name := internal_name
+			if l_is_once and then context.is_once_twofold then
+					-- Once routines should be protected against exceptions.
+					-- C compiler generates inefficient code for functions that catch exceptions.
+					-- Therefore two functions are generated instead of one
+					-- when feature-call assertions are not involved.
+					-- One routine contains an exception block and the
+					-- other one either returns the result if it is ready
+					-- or calls the first one to evaluate it:
+					-- 	RESULT_TYPE aaa_body (arguments) {...}
+					--  RESULT_TYPE aaa (arguments) { return RTOVF (aaa, aaa_body, (arguments));}
+				name := internal_name + "_body"
+			end
+			args := argument_names
 			buf.generate_function_signature
-				(type_i.c_type.c_string, internal_name, True,
-				 Context.header_buffer, argument_names, argument_types)
+				(type_i.c_type.c_string, name, True,
+				 Context.header_buffer, args, argument_types)
 
 				-- Starting body of C routine
 			buf.indent
@@ -271,15 +288,11 @@ feature -- Analyzis
 			generate_execution_declarations
 			generate_locals
 
+				-- Declare variables required for once routines.
+			generate_once_data (internal_name)
+
 				-- Clone expanded parameters.
 			generate_expanded_initialization
-
-				-- If necessary, generate the once stuff (i.e. checks if
-				-- the value of the once was already set within the same
-				-- thread).  That way we do not enter the body of the
-				-- once if it has already been done. Preconditions,
-				-- if any, are only tested on the very first call.
-			generate_once (internal_name)
 
 				-- Before entering in the code generate GC hooks, i.e. pass
 				-- the addresses of all the reference variables.
@@ -323,6 +336,14 @@ feature -- Analyzis
 					-- For chained precondition (to implement or else...)
 				Context.generate_body_label
 			end
+
+				-- If necessary, generate the once stuff (i.e. check if
+				-- the value of the once was already set within the same
+				-- thread).  That way we do not enter the body of the
+				-- once if it has already been done. Preconditions,
+				-- if any, are tested for all calls.
+			generate_once_prologue (internal_name)
+
 			if rescue_clause /= Void then
 					-- Generate a `setjmp' C instruction in case of a
 					-- rescue clause
@@ -334,7 +355,7 @@ feature -- Analyzis
 					buf.put_string ("RTPI;")
 					buf.put_new_line
 				end
-				buf.put_string ("RTEJ;")
+				buf.put_string ("RTE_T")
 				buf.put_new_line
 			end
 
@@ -351,23 +372,23 @@ feature -- Analyzis
 			generate_postcondition
 
 			if not result_type.is_void then
-					-- Function returns something. So generate the return
-					-- expression, if necessary. Otherwise, have some mercy
+					-- Function returns something. This can be done
+					-- by inner returns, so have some mercy
 					-- for lint and highlight the NOTREACHED status...
-				generate_return
-			else
-					-- No return, this is a procedure. However, remove the
-					-- GC hooks we've been generated.
-				finish_compound
-
-				if rescue_clause /= Void then
-					buf.put_string ("return;")
-					buf.put_new_line
-				end
+				generate_return_not_reached
 			end
 
 				-- If there is a rescue clause, generate it now...
 			generate_rescue
+
+				-- Generate termination for once routine
+			generate_once_epilogue (generated_c_feature_name)
+
+				-- Remove the GC hooks we've been generated.
+			finish_compound
+
+				-- Generate final "return Result", if required
+			generate_return_exp
 
 			buf.exdent
 
@@ -386,6 +407,36 @@ feature -- Analyzis
 				buf.put_new_line
 				buf.put_string ("#define EIF_VOLATILE")
 				buf.put_new_line
+			end
+
+			if l_is_once and then context.is_once_twofold then
+					-- Generate optimized stub for once routine.
+				buf.generate_function_signature
+					(type_i.c_type.c_string, internal_name, True,
+					 Context.header_buffer, argument_names, argument_types)
+				buf.indent
+				if result_type.is_void then
+					buf.put_string ("RTOVP (")
+				else
+					buf.put_string ("return RTOVF (")
+				end
+				buf.put_string (internal_name)
+				buf.put_character (',')
+				buf.put_string (internal_name)
+				buf.put_string ("_body,(")
+				from
+					i := 1
+				until
+					i > args.count
+				loop
+					if i > 1 then
+						buf.put_character (',')
+					end
+					buf.put_string (args.item (i))
+					i := i + 1
+				end
+				buf.exdent
+				buf.put_string ("));%N}%N%N")
 			end
 
 			Context.inherited_assertion.wipe_out
@@ -411,8 +462,8 @@ end
 			end
 		end
 
-	generate_return is
-			-- Generate return Result or hard-coded null
+	generate_return_not_reached is
+			-- Generate a mark that the final return is not reached
 		local
 			assignment: ASSIGN_B
 			buf: GENERATION_BUFFER
@@ -433,11 +484,7 @@ end
 						buf.put_string ("/* NOTREACHED */")
 						buf.put_new_line
 					end
-				else
-					generate_return_exp
 				end
-			else
-				generate_return_exp
 			end
 		end
 
@@ -447,15 +494,13 @@ end
 			type_i: TYPE_I
 			buf: GENERATION_BUFFER
 		do
-			buf := buffer
 				-- Do not forget to remove the GC hooks before returning
 				-- if they have already been generated. For instance, when
 				-- generating return for a once function, hooks have not
 				-- been generated.
 			type_i := real_type (result_type)
-			finish_compound
-
 			if not result_type.is_void then
+				buf := buffer
 				buf.put_string ("return ")
 					-- If Result was used, generate it. Otherwise, its value
 					-- is simply the initial one (i.e. generic 0).
@@ -480,17 +525,24 @@ end
 		do
 		end
 
-	generate_once (a_name: STRING) is
-			-- Generate test at the head of once routines
+	generate_once_data (a_name: STRING) is
+			-- Generate data for once routines.
 		require
 			a_name_not_void: a_name /= Void
 		do
 		end
 
-	generate_global_once_termination (a_name: STRING) is
-			-- Generate end of global once block.
+	generate_once_prologue (a_name: STRING) is
+			-- Generate start of a once block that will ensure that body is not re-executed.
 		require
-			is_global_once: is_global_once
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+		end
+
+	generate_once_epilogue (a_name: STRING) is
+			-- Generate end of a once block.
+		require
 			a_name_not_void: a_name /= Void
 		do
 		end
@@ -931,12 +983,6 @@ end
 				generate_result_declaration (has_rescue and then not wkb_mode)
 			end
 
-			if is_global_once then
-					-- Generate locals for global once routine
-				buf.put_string ("RTOPD")
-				buf.put_new_line
-			end
-
 				-- Declare the 'dtype' variable which holds the pre-computed
 				-- dynamic type of current. To avoid unnecssary computations,
 				-- this is not done in case of a once, before we know we have
@@ -994,23 +1040,6 @@ end
 			if wkb_mode and then has_rescue then
 				buf.put_string ("RTLXD;")
 				buf.put_new_line
-			end
-
-				-- Onces are processed via keys. We store a pointer to
-				-- Result (or something !=0 if void) to indicate whether
-				-- the once was processed or not. If processed, we'll get
-				-- the pointer to Result != 0.
-				-- Note that even if Result is not used in once functions,
-				-- we have to go through the key: we cannot simply return 0
-				-- in case some treatment with side effect were done.
-			if
-				l_is_once and then not is_global_once and then
-				(System.has_multithreaded or else not context.final_mode)
-			then
-				real_type (result_type).c_type.generate (buf)
-				buf.put_string ("*PResult = (")
-				real_type (result_type).c_type.generate (buf)
-				buf.put_string ("*) 0;%N")
 			end
 
 				-- Generate temporary non-reference locals declarations
@@ -1228,11 +1257,7 @@ end
 			if rescue_clause /= Void then
 				buf := buffer
 				buf.put_new_line
-				buf.exdent
-				buf.put_string ("rescue:")
-				buf.put_new_line
-				buf.indent
-				buf.put_string ("RTEU;")
+				buf.put_string ("RTE_E")
 				buf.put_new_line
 					-- Restore the C operational stack
 				if context.workbench_mode then
@@ -1251,7 +1276,7 @@ end
 				generate_profile_stop
 				buf.put_string ("/* NOTREACHED */")
 				buf.put_new_line
-				buf.put_string ("RTEF;")
+				buf.put_string ("RTE_EE")
 				buf.put_new_line
 			end
 		end
@@ -1305,11 +1330,7 @@ end
 		local
 			buf: GENERATION_BUFFER
 		do
-			if rescue_clause /= Void then
-				buf := buffer
-				buf.put_string ("RTEOK;")
-				buf.put_new_line
-			elseif exception_stack_managed then
+			if rescue_clause = Void and then exception_stack_managed then
 				buf := buffer
 				buf.put_string ("RTEE;")
 				buf.put_new_line
@@ -1462,10 +1483,6 @@ end
 				-- Generate the update of the trace stack before quitting
 				-- the routine
 			generate_pop_execution_trace
-
-			if is_global_once then
-				generate_global_once_termination (generated_c_feature_name)
-			end
 		end
 
 feature -- Byte code generation

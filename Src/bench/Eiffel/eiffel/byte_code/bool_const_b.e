@@ -9,13 +9,21 @@ inherit
 	EXPR_B
 		redefine
 			print_register, make_byte_code, generate_il,
-			is_simple_expr, is_predefined
+			is_simple_expr, is_predefined, evaluate
 		end
 	
 feature -- Access
 
 	value: BOOLEAN
 			-- Boolean value
+
+feature -- Evaluation
+
+	evaluate: VALUE_I is
+			-- Evaluation of Current.
+		do
+			create {BOOL_VALUE_I} Result.make (value)
+		end
 
 feature -- Status report
 

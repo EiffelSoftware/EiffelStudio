@@ -8,7 +8,7 @@ class CHAR_CONST_B
 inherit
 	EXPR_B
 		redefine
-			print_register, make_byte_code,
+			print_register, make_byte_code, evaluate,
 			is_simple_expr, is_predefined, generate_il
 		end
 	
@@ -16,6 +16,14 @@ feature -- Access
 
 	value: CHARACTER
 			-- Character value
+
+feature -- Evaluation
+
+	evaluate: VALUE_I is
+			-- Evaluation of Current.
+		do
+			create {CHAR_VALUE_I} Result.make (value)
+		end
 
 feature -- Status report
 

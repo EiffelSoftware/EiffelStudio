@@ -7,15 +7,15 @@
 			Comments="EiffelStudio is a registered trademark of Eiffel Software" Manufacturer="Eiffel Software"
 			InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
 
-		<Property Id="FRAMEWORKPATH">empty<RegistrySearch Id="AppReg1" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="registry" /></Property>
-		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\ec" Name="ISE_C_COMPILER" Type="registry" /></Property>
+		<Property Id="FRAMEWORKPATH">empty<RegistrySearch Id="AppReg1" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="registry" Win64="$(var.IsWin64)" /></Property>
+		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\ec" Name="ISE_C_COMPILER" Type="registry" Win64="$(var.IsWin64)" /></Property>
 		<Condition Message="This installation can only run in full UI mode.">Installed OR UILevel = 5</Condition>
 
 		<Media Id="1" Cabinet="Sample.cab" EmbedCab="yes" DiskPrompt="EiffelStudio 5.6 Installation CD-ROM" />
 
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="INSTALLDIR" Name="Eiffel56">
-				<Component Id="display_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7">
+				<Component Id="display_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7" Win64="$(var.IsWin64)" >
 					<Registry Id="registry" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe,0" />
 				</Component>
 				<?if $(var.EDITION)="free" ?>
@@ -91,10 +91,10 @@
 
 		</Feature>
 		
-		<CustomAction Id="is_cd_key_valid" BinaryKey="setup_dll" DllEntry="is_cd_key_valid" />
-		<CustomAction Id="retrieve_cd_key" BinaryKey="setup_dll" DllEntry="retrieve_cd_key" />
-		<CustomAction Id="prepare_finalize_setup" BinaryKey="setup_dll" DllEntry="prepare_finalize_setup" />
-		<CustomAction Id="finalize_setup" BinaryKey="setup_dll" DllEntry="finalize_setup" Execute="deferred" />
+		<CustomAction Id="is_cd_key_valid" BinaryKey="setup_dll" DllEntry="is_cd_key_valid" Win64="$(var.IsWin64)" />
+		<CustomAction Id="retrieve_cd_key" BinaryKey="setup_dll" DllEntry="retrieve_cd_key" Win64="$(var.IsWin64)" />
+		<CustomAction Id="prepare_finalize_setup" BinaryKey="setup_dll" DllEntry="prepare_finalize_setup" Win64="$(var.IsWin64)" />
+		<CustomAction Id="finalize_setup" BinaryKey="setup_dll" DllEntry="finalize_setup" Execute="deferred" Win64="$(var.IsWin64)" />
 
 		<UI>
 			<Property Id="DefaultUIFont">DlgFont8</Property>

@@ -4,7 +4,7 @@
 		<Package Id="925B6F83-D534-4335-A8D1-D030B4DA753E" Keywords="MergeModule, MSI, Database" Description="$(var.ISE_PRODUCT_NAME)" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" />
 	<IgnoreModularization Name="PROJECTDIR" Type="Property" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Component Id="Registry" Guid="AE44C028-98E2-41B0-A2B5-5B359D6C13A0">
+			<Component Id="Registry" Guid="AE44C028-98E2-41B0-A2B5-5B359D6C13A0" Win64="$(var.IsWin64)" >
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\build" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry6" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\build" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry7" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\build" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" Type="string" />

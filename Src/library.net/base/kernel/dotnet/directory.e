@@ -229,11 +229,13 @@ feature -- Status report
 		local
 			l_name: SYSTEM_STRING
 			pa: FILE_IOPERMISSION
+			di: DIRECTORY_INFO
 			retried: BOOLEAN
 		do
 			if not retried then
+				create di.make (name.to_cil)
 				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.Read,
-					name.to_cil)
+					di.full_name)
 				pa.demand
 			end
 			Result := not retried
@@ -249,11 +251,14 @@ feature -- Status report
 		local
 			l_name: SYSTEM_STRING
 			pa: FILE_IOPERMISSION
+			di: DIRECTORY_INFO
 			retried: BOOLEAN
 		do
 			if not retried then
+				create di.make (name.to_cil)
 				create pa.make_from_access_and_path (
-					feature {FILE_IOPERMISSION_ACCESS}.path_discovery, name.to_cil)
+					feature {FILE_IOPERMISSION_ACCESS}.path_discovery,
+					di.full_name)
 				pa.demand
 			end
 			Result := not retried
@@ -269,11 +274,13 @@ feature -- Status report
 		local
 			l_name: SYSTEM_STRING
 			pa: FILE_IOPERMISSION
+			di: DIRECTORY_INFO
 			retried: BOOLEAN
 		do
 			if not retried then
+				create di.make (name.to_cil)
 				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.write,
-					name.to_cil)
+					di.full_name)
 				pa.demand
 			end
 			Result := not retried

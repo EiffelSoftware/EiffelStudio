@@ -57,6 +57,13 @@ feature -- Access
 				elseif directory.has_entry ("es4.exe") then
 					Result :=  Eiffel4_location + "\bench\spec\windows\bin\" + "es4.exe"
 				end
+			else
+				create directory.make (Eiffel4_location + "\studio\spec\windows\bin")
+				if directory.exists then
+					if directory.has_entry ("ec.exe") then
+						Result := Eiffel4_location + "\studio\spec\windows\bin\" + "ec.exe"
+					end
+				end
 			end
 		ensure
 			non_void_compiler: Result /= Void

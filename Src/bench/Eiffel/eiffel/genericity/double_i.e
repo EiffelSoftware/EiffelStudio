@@ -69,31 +69,31 @@ feature
 	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do
-			file.putstring ("double ");
+			file.putstring ("EIF_DOUBLE ");
 		end;
 
 	generate_cast (file: INDENT_FILE) is
 			-- Generate C cast in file `file'.
 		do
-			file.putstring ("(double) ");
+			file.putstring ("(EIF_DOUBLE) ");
 		end;
 
 	generate_access_cast (file: INDENT_FILE) is
 			-- Generate access C cast in file `file'.
 		do
-			file.putstring ("(double *) ");
+			file.putstring ("(EIF_DOUBLE *) ");
 		end;
 
 	generate_function_cast (file: INDENT_FILE) is
 			-- Generate C function cast in file `file'.
 		do
-			file.putstring ("(double (*)()) ");
+			file.putstring ("(EIF_DOUBLE (*)()) ");
 		end;
 
 	generate_size (file: INDENT_FILE) is
 			-- Generate size of C type
 		do
-			file.putstring ("sizeof(double)");
+			file.putstring ("sizeof(EIF_DOUBLE)");
 		end;
 
 	hash_code: INTEGER is

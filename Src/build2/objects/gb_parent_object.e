@@ -9,6 +9,9 @@ deferred class
 	
 inherit
 	INTERNAL
+		export
+			{NONE} all
+		end
 	
 feature -- Access
 

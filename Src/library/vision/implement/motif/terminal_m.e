@@ -155,8 +155,7 @@ feature {NONE} -- Implementation
 		do
 			font_implementation.allocate_font;
 			if font_implementation.is_valid then
-				!! an_entry.make_default_from_font_struct (font_implementation);
-				!! a_font_list.append_entry (an_entry);
+				a_font_list := font_implementation.font_list;
 				if a_font_list.is_valid then
 					if value = Button_font_value then
 						list := button_widget_list
@@ -181,7 +180,6 @@ feature {NONE} -- Implementation
 				else
 					io.error.putstring ("Warning can not allocate font%N");
 				end;
-				an_entry.destroy
 			else
 				io.error.putstring ("Warning can not allocate font%N");
 			end;

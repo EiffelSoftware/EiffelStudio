@@ -10,6 +10,15 @@ deferred class
 inherit
 	EV_PRIMITIVE_I
 
+feature -- Status report
+
+	mode_is_segmented: BOOLEAN is
+			-- Is the mode in segmented mode?
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature -- Status setting
 
 	set_percentage (value: INTEGER) is

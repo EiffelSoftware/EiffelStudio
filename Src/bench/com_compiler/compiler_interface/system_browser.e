@@ -259,7 +259,9 @@ feature -- Basic Operations
 						matcher.set_text (classes.item (i).lace_class.name)
 						if matcher.search_for_pattern then
 							create class_desc.make_with_class_i (classes.item (i).lace_class)
-							res.extend (class_desc)
+							if not class_desc.is_external then
+								res.extend (class_desc)
+							end
 						end
 						i := i + 1
 					end
@@ -272,7 +274,9 @@ feature -- Basic Operations
 						matching_classes.after
 					loop
 						create class_desc.make_with_class_i (matching_classes.item)
-						res.extend (class_desc)
+						if not class_desc.is_external then
+							res.extend (class_desc)
+						end
 						matching_classes.forth
 					end
 				end

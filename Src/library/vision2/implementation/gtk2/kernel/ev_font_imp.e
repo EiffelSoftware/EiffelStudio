@@ -139,17 +139,35 @@ feature -- Status report
 	ascent: INTEGER is
 			-- Vertical distance from the origin of the drawing
 			-- operation to the top of the drawn character. 
+		local
+			a_cs: C_STRING
+			pango_layout, pango_iter: POINTER
+			a_width, a_height: INTEGER
 		do
-		--	Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (c_object)
-			Result := 20
+			create a_cs.make ("A")
+			pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, font_description)
+			pango_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pango_layout)
 		end
 
 	descent: INTEGER is
 			-- Vertical distance from the origin of the drawing
 			-- operation to the bottom of the drawn character. 
+		local
+			a_cs: C_STRING
+			pango_layout, pango_iter: POINTER
+			a_width, a_height: INTEGER
 		do
-		--	Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_descent (c_object)
-			Result := 10
+			create a_cs.make ("A")
+			pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, font_description)
+			pango_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (pango_layout, $a_width, $a_height)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pango_layout)
+			Result := a_height - Result
 		end
 
 	width: INTEGER is
@@ -174,27 +192,33 @@ feature -- Status report
 			-- Width in pixels of `a_string' in the current font.
 		local
 			a_cs: C_STRING
+			pango_layout: POINTER
+			a_width, a_height: INTEGER
 		do
 			create a_cs.make (a_string)
-			Result := feature {EV_GTK_EXTERNALS}.gdk_string_width (c_object, a_cs.item)
+			pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, font_description)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (pango_layout, $a_width, $a_height)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pango_layout)
+			Result := a_width
 		end
 
 	horizontal_resolution: INTEGER is
 			-- Horizontal resolution of screen for which the font is designed.
 		do
-			--| FIXME To be implemented
+			Result := 75
 		end
 
 	vertical_resolution: INTEGER is
 			-- Vertical resolution of screen for which the font is designed.
 		do
-			--| FIXME To be implemented
+			Result := 75
 		end
 
 	is_proportional: BOOLEAN is
 			-- Can characters in the font have different sizes?
 		do
-			--| FIXME To be implemented
+			Result := True
 		end
  
 feature {NONE} -- Implementation

@@ -95,21 +95,41 @@ feature	-- Status report
 	sorted: BOOLEAN is
 			-- Is tree sorted?
 		do
-			Result := true;
+			Result := True;
 			if
-				has_left and left_item > item
-				or has_right and right_item < item
+				(has_left and then left_item > item)
+				or (has_right and then right_item < item)
 			then
 				Result := false
 			else
 				if has_left then
-					Result := left_child.sorted
+					Result := left_child.sorted_and_less (item)
 				end;
 				if has_right and Result then
 					Result := right_child.sorted
 				end
 			end
 		end;
+
+	sorted_and_less (i: like item): BOOLEAN is
+			-- Is tree sorted and all its elements less then i
+		do
+			Result := True
+			if
+				(has_left and then left_item > item)
+				or (has_right and then right_item < item)
+			then
+				Result := false
+			else
+				if has_left then
+					Result := left_child.sorted_and_less (item)
+				end;
+				if has_right and Result then
+					Result := right_child.sorted_and_less (i)
+				end
+			end
+		end;
+
 
 feature -- Cursor movement
 
@@ -207,11 +227,12 @@ feature -- Transformation
 			i: INTEGER
 		do
 			seq := linear_representation;
+			i := count
 			remove_left_child;
 			remove_right_child;
 			from
 				seq.start;
-				!! heap.make (count)
+				!! heap.make (i)
 			until
 				seq.off
 			loop
@@ -220,6 +241,7 @@ feature -- Transformation
 			end;
 			from
 				!! temp.make (1, heap.count)
+				i := 1
 			until
 				heap.empty
 			loop
@@ -227,7 +249,7 @@ feature -- Transformation
 				heap.remove;
 				i := i + 1
 			end;
-			replace (temp.item ((temp.count) // 2));
+			replace (temp.item ((temp.count) // 2 + 1));
 			fill_from_sorted_special (temp.area, 0, temp.count - 1);
 		ensure
 			is_sorted: sorted
@@ -387,10 +409,10 @@ feature {NONE} -- Implementation
 		do
 			m := (s + e) // 2;
 			put (t.item (m));
-			if m - 1 > s then
+			if m - 1 >= s then
 				fill_from_sorted_special (t, s, m - 1)
 			end;
-			if m + 1 < e then
+			if m + 1 <= e then
 				fill_from_sorted_special (t, m + 1, e)
 			end;
 		end;

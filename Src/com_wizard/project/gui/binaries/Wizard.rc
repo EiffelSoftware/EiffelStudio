@@ -249,13 +249,14 @@ BEGIN
                     Definition_File_Input_Static2,115,51,100,10
 END
 
-WIZARD_ABOUT_DIALOG DIALOG DISCARDABLE  0, 0, 322, 161
+WIZARD_ABOUT_DIALOG DIALOGEX 0, 0, 322, 161
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About EiffelCOM Release 4.5 Build 3"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,137,140,50,14
-    CONTROL         127,IDC_STATIC,"Static",SS_BITMAP,7,7,167,113
+    CONTROL         127,IDC_STATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,7,7,
+                    167,113,WS_EX_STATICEDGE
     LTEXT           "EiffelCOM 4.5 Build 3 \n\nCopyright (C) 1999-2000\nInteractive Software Engineering Inc. \n\n ISE Building, 2nd floor \n 270 Storke Road, Goleta, \nCA 93117 USA \n\nTel: (805)685-1006   Fax: (805)695-6869 \nEmail: <info@eiffel.com> \n Webpage: http://www.eiffel.com \n\nSupport Webpage: http://support.eiffel.com",
                     ABOUT_STATIC,180,7,135,112
 END

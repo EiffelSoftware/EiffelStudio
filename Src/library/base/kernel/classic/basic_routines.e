@@ -12,11 +12,11 @@ class
 feature -- Conversion
 
 	charconv (i: INTEGER): CHARACTER is
-			-- Character corresponding to ascii code `i'
+			-- Character associated with integer value `i'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use %"eif_eiffel.h%""
 		alias
-			"chconv"
+			"((EIF_CHARACTER) ($i))"
 		end
 
 feature -- Basic operations

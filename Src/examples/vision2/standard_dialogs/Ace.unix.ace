@@ -6,51 +6,58 @@
 --!----------------------------------------------------------------
 
 system
-	dial -- Your executable.
+	standard_dialogs	
 
 root
-	DIALOG_TEST (root_cluster): "make_and_launch"
+	STANDARD_DIALOGS: make_and_launch
 
 default
 	assertion (all)
 
 cluster
+	root_cluster:	"."
 
-	root_cluster:				"."
-	devel:					"/home/brendel/local"
-	all base (devel):			"$/bbase/base"
+
+	all base:	"$ISE_EIFFEL/library/base"
 		exclude
-			"table_eiffel3"
+			"table"; "desc"; "CVS"; 
 		end
 
-	all gel (devel):			"$/gel_remote"
-	new_event (devel):			"$/event"
+	gel:		"$ISE_EIFFEL/library/gel"
+		exclude
+			"CVS"; "clib"; 
+		end
 
-	all vision2 (devel):			"/home/brendel/hack-fig/vision2"
-		exclude 
-			"mswin"
+	all vision2_interface:  "$ISE_EIFFEL/library/vision2/interface" 
+
+	all vision2_implementation:	"$ISE_EIFFEL/library/vision2/implementation"
+		exclude
+			"mswin"; "components"; "obsolete"; 
 		end
 
 external
+
 	include_path:
-		"/home/brendel/hack-fig/vision2/implementation/gtk/Clib",
-		"`gtk-config --cflags`";
+		"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+		"\$(ISE_EIFFEL)/library/vision2/spec/include"
+
 	object:
-		"/home/brendel/hack-fig/vision2/implementation/gtk/Clib/gtk_eiffel.o",
-		"`gtk-config --libs`"
+		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+		"-lpng -lz -lXtst"
 
 end
 
 --!----------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license. 
+--! May be used only with ISE Eiffel, under terms of user license.
 --! Contact ISE for any other use.
 --!
 --! Interactive Software Engineering Inc.
 --! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
+--! 360 Storke Road, Goleta, CA 93117 USA
 --! Telephone 805-685-1006, Fax 805-685-6869
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>

@@ -767,6 +767,7 @@ feature {NONE} -- Implementation
 			Result.append (Space)
 			Result.append (Open_parenthesis)
 			Result.append ("eif_object")
+			Result.append (Close_parenthesis)
 			if element_writable then
 				Result.append (Comma_space)
 				Result.append (Null)

@@ -266,11 +266,14 @@ feature {NONE} -- Implementation
 			bitmap_right, bitmap_bottom: INTEGER
 				-- coordinates of the bottom-right corner of the bitmap inside the drawn area
 			bitmap_width, bitmap_height: INTEGER
+			window_width, window_height: INTEGER
 		do
 			if bitmap /= Void then
 					-- Compute usefull constants
 				bitmap_height := bitmap.height
 				bitmap_width := bitmap.width
+				window_width := display_width
+				window_height := display_height
 				bitmap_left := (display_width - bitmap_width) // 2
 				bitmap_top := (display_height - bitmap_height) // 2
 				bitmap_right := bitmap_left + bitmap_width
@@ -300,13 +303,13 @@ feature {NONE} -- Implementation
 				create wel_rect.make (0, 0, 0, 0)
 					-- fill AREA 1
 				if bitmap_top > 0 then
-					wel_rect.set_rect (0, 0, display_width, bitmap_top)
+					wel_rect.set_rect (0, 0, window_width, bitmap_top)
 					display_dc.fill_rect(wel_rect, our_background_brush)
 				end
 
 					-- fill AREA 2
-				if bitmap_bottom < display_height then
-					wel_rect.set_rect (0, bitmap_bottom, display_width, display_height)
+				if bitmap_bottom < window_height then
+					wel_rect.set_rect (0, bitmap_bottom, window_width, window_height)
 					display_dc.fill_rect(wel_rect, our_background_brush)
 				end
 
@@ -317,8 +320,8 @@ feature {NONE} -- Implementation
 				end
 
 					-- fill AREA 4
-				if bitmap_right < display_width then
-					wel_rect.set_rect (bitmap_right, bitmap_top, display_width, bitmap_bottom)
+				if bitmap_right < window_width then
+					wel_rect.set_rect (bitmap_right, bitmap_top, window_width, bitmap_bottom)
 					display_dc.fill_rect(wel_rect, our_background_brush)
 				end
 			else
@@ -538,6 +541,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/25 01:07:51  pichery
+--| Added a small trick to speed up the display of pixmaps under Windows.
+--|
 --| Revision 1.19  2000/02/24 05:06:35  pichery
 --| Work on the Windows implementation of EV_PIXMAP. Some work remains but
 --| the main part is done.

@@ -152,6 +152,50 @@ feature -- Insertion, deletion
 			position := 0
 		end;
 
+	merge (other: like Current) is
+			-- Merge two search_tables
+		local
+			local_other, local_current, new_content: SPECIAL[H]
+			new: SEARCH_TABLE[H]
+			i, my_size, other_size: INTEGER
+			current_key: H
+		do
+			if other.count /= 0 then
+				local_other := other.content
+				local_current := content
+				other_size := local_other.count
+				my_size := local_current.count
+				if ((my_size + other_size) * Size_threshold <= 100*count) then
+					from		
+						!! new.make (3 * (capacity + other_size) // 2)
+						new_content := new.content
+					until
+						i >= my_size
+					loop
+						current_key := local_current.item(i)
+						if valid_key (current_key) then
+							new.put (current_key)
+						end
+						i := i + 1
+					end
+					content := new.content
+					deleted_marks := new.deleted_marks
+					capacity := new.capacity
+				end
+				from
+					i := 0
+				until
+					i >= other_size
+				loop
+					current_key := local_other.item(i)
+					if valid_key (current_key) then
+						put (current_key)
+					end
+					i := i + 1
+				end
+			end
+		end
+				
 feature -- Number of elements
 
 	count: INTEGER;

@@ -299,7 +299,6 @@ feature -- Basic operations
 		local
 			f: E_FEATURE
 			o: DEBUGGED_OBJECT
-			dv: ABSTRACT_DEBUG_VALUE
 		do
 			error_message := Void
 			final_result := Void
@@ -630,8 +629,6 @@ feature {NONE} -- Implementation
 			-- Evaluate `f' in the context of its dynamic_class
 		require
 			valid_feature: f /= Void
-		local
-			once_r: ONCE_REQUEST
 		do
 			if f.is_once and f.is_function then
 				evaluate_once (f)
@@ -652,7 +649,6 @@ feature {NONE} -- Implementation
 			lst: LIST [ABSTRACT_DEBUG_VALUE]
 			dmp: DUMP_VALUE
 			found: BOOLEAN
-			dv: ABSTRACT_DEBUG_VALUE
 			par: INTEGER
 		do
 			if f.is_once and f.is_function then
@@ -858,10 +854,8 @@ feature {NONE} -- Implementation
 		local
 			lower_name: STRING
 			cse: CALL_STACK_ELEMENT
-			dv: ABSTRACT_DEBUG_VALUE
 			o: DEBUGGED_OBJECT
 			cf, f: E_FEATURE
-			onces: LIST [E_FEATURE]
 			pos, cnt: INTEGER
 			locals: EIFFEL_LIST [TYPE_DEC_AS]
 			t: TYPE_DEC_AS

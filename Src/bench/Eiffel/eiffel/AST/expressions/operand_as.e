@@ -16,7 +16,10 @@ inherit
 	SHARED_TYPES
 	SHARED_EVALUATOR
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (c: like class_type; t: like target; e: like expression) is
 			-- Create a new OPERAND AST node.
@@ -28,16 +31,6 @@ feature {AST_FACTORY} -- Initialization
 			class_type_set: class_type = c
 			target_set: target = t
 			expression_set: expression = e
-		end
-
-	initialize_result is
-			-- Create a new OPERAND_AST node on `Result'
-		require
-			not_is_result: not is_result
-		do
-			is_result := True
-		ensure
-			is_resul_set: is_result
 		end
 
 feature -- Visitor
@@ -53,14 +46,41 @@ feature -- Attributes
 	class_type: TYPE_AS
 			-- Type from which the feature comes if specified
 
-	target : ID_AS
+	target : ACCESS_AS
 			-- Name of target of delayed call
-
-	is_result: BOOLEAN
-			-- Is operand `Result'
 
 	expression: EXPR_AS
 			-- Object expression given at routine object evaluation
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if class_type /= Void then
+				Result := class_type.start_location
+			elseif target /= Void then
+				Result := target.start_location
+			elseif expression /= Void then
+				Result := expression.start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if class_type /= Void then
+				Result := class_type.end_location
+			elseif target /= Void then
+				Result := target.end_location
+			elseif expression /= Void then
+				Result := expression.end_location
+			else
+				Result := null_location
+			end
+		end
 
 feature -- Comparison
 
@@ -69,8 +89,7 @@ feature -- Comparison
 		do
 			Result := equivalent (class_type, other.class_type) and then
 					  equivalent (target, other.target) and then
-					  equivalent (expression, other.expression) and then
-					  is_result = other.is_result
+					  equivalent (expression, other.expression)
 		end
 
 feature
@@ -78,7 +97,6 @@ feature
 	is_open : BOOLEAN is
 			-- Is it an open operand?
 		do
-			--| FIXME ... and "not Result" ?
 			Result := (expression = Void) and then (target = Void)
 		ensure
 			Result = (expression = Void) and then (target = Void)
@@ -113,35 +131,6 @@ feature -- Type check, byte code and dead code removal
 					Result := expression.byte_node
 				else
 					create {OPERAND_B} Result
-				end
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if class_type /= Void then
-					-- We print an open operand on `class_type'
-				ctxt.put_text_item (Ti_L_curly)
-				ctxt.format_ast (class_type)
-				ctxt.put_text_item (Ti_R_curly)
-				ctxt.put_space
-				ctxt.put_text_item (Ti_question)
-			else
-				if expression /= Void then
-						-- Closed operand on an expression
-					expression.format (ctxt)
-				else
-					if target /= Void then
-							-- Closed operand on a target
-						ctxt.format_ast (target)
-					else
-							-- This is an open operand without
-							-- any `class_type'
-						ctxt.put_text_item (Ti_question)
-					end
 				end
 			end
 		end
@@ -188,6 +177,7 @@ feature {NONE}  -- Type
 				vtug := ttype.error_generics
 				vtug.set_class (a_class)
 				vtug.set_feature (context.current_feature)
+				vtug.set_location (class_type.start_location)
 				Error_handler.insert_error (vtug)
 				Error_handler.raise_error
 			end
@@ -205,6 +195,7 @@ feature {NONE}  -- Type
 				create not_supported
 				context.init_error (not_supported)
 				not_supported.set_message ("Type qualifiers in delayed calls may not involve anchors.")
+				not_supported.set_location (class_type.start_location)
 				Error_handler.insert_error (not_supported)
 				Error_handler.raise_error
 			end
@@ -216,6 +207,7 @@ feature {NONE}  -- Type
 				create not_supported
 				context.init_error (not_supported)
 				not_supported.set_message ("Type qualifiers in delayed calls may not be a basic type.")
+				not_supported.set_location (class_type.start_location)
 				Error_handler.insert_error (not_supported)
 				Error_handler.raise_error
 			end
@@ -228,8 +220,11 @@ feature {NONE}  -- Type
 				create vtcg3
 				vtcg3.set_class (context.current_class)
 				vtcg3.set_feature (context.current_feature)
-				vtcg3.set_entity_name (target)
+				if target /= Void then
+					vtcg3.set_entity_name (target.access_name)
+				end
 				vtcg3.set_error_list (ttype.constraint_error_list)
+				vtcg3.set_location (class_type.start_location)
 				Error_handler.insert_error (vtcg3)
 			end
 

@@ -8,7 +8,10 @@ inherit
 
 	SHARED_EXPORT_STATUS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (c: like clients; f: like features) is
 			-- Create a new EXPORT_ITEM AST node.
@@ -39,6 +42,20 @@ feature -- Attributes
 	features: FEATURE_SET_AS
 			-- Feature set
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := clients.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := features.end_location
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -55,26 +72,12 @@ feature -- Export status computing
 		local
 			export_status: EXPORT_I
 		do
-			if clients = Void then
-				export_status := Export_all;	
-			else
-				export_status := clients.export_status; 
-			end
+			export_status := clients.export_status; 
 			features.update (export_adapt, export_status, parent)
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt : FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if clients /= Void then
-				ctxt.set_separator (ti_Comma)
-				ctxt.set_space_between_tokens
-				ctxt.format_ast (clients)
-				ctxt.put_space
-			end
-			ctxt.format_ast (features)
-		end
+invariant
+	clients_not_void: clients /= Void
+	features_not_void: features /= Void
 
 end -- class EXPORT_ITEM_AS

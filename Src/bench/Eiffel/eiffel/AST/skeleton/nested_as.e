@@ -10,10 +10,13 @@ class NESTED_AS
 inherit
 	CALL_AS
 		redefine
-			type_check, byte_node, format, is_equivalent
+			type_check, byte_node, is_equivalent, start_location, end_location
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (t: like target; m: like message) is
 			-- Create a new NESTED CALL AST node.
@@ -44,6 +47,20 @@ feature -- Attributes
 	message: CALL_AS
 			-- Message send to the target
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := target.start_location
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := message.end_location
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -71,6 +88,7 @@ feature -- Type check, byte code and dead code removal
 					create not_supported
 					context.init_error (not_supported)
 					not_supported.set_message ("Invalid separate call")
+					not_supported.set_location (target.start_location)
 					Error_handler.insert_error (not_supported)
 					Error_handler.raise_error
 				else
@@ -100,34 +118,6 @@ feature -- Type check, byte code and dead code removal
 			m.set_parent (Result)
 			Result.set_message (m)
 		end
-	
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin
-			target.format (ctxt)
-			if ctxt.last_was_printed then
-				ctxt.need_dot
-				message.format (ctxt)
-				if ctxt.last_was_printed then
-					ctxt.commit
-				else
-					ctxt.rollback
-				end
-			else
-				ctxt.rollback
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			target.simple_format (ctxt)
-			ctxt.need_dot
-			message.simple_format (ctxt)
-		end
 
 feature {NESTED_AS} -- Replication
 
@@ -144,5 +134,9 @@ feature {NESTED_AS} -- Replication
 		do
 			message := m
 		end
+
+invariant
+	message_not_void: message /= Void
+	target_not_void: target /= Void
 						
 end -- class NESTED_AS

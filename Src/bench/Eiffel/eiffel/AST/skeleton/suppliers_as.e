@@ -8,20 +8,8 @@ indexing
 
 class SUPPLIERS_AS
 
-inherit
-	AST_EIFFEL
-
 create
-	make, initialize
-
-feature {AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new SUPPLIERS AST node.
-		do
-			create supplier_ids.make
-			supplier_ids.compare_objects
-		end
+	make
 
 feature {NONE} -- Initialization
 
@@ -29,14 +17,6 @@ feature {NONE} -- Initialization
 		do
 			create supplier_ids.make
 			supplier_ids.compare_objects
-		end
-
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_suppliers_as (Current)
 		end
 
 feature -- Attributes

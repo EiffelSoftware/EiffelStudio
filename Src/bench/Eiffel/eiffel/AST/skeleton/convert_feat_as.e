@@ -52,6 +52,20 @@ feature -- Access
 	conversion_types: EIFFEL_LIST [TYPE_AS]
 			-- Types	 to which we can either convert to or from.
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := feature_name.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := conversion_types.end_location
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -60,30 +74,6 @@ feature -- Comparison
 			Result := is_creation_procedure = other.is_creation_procedure and
 				feature_name.is_equivalent (other.feature_name) and
 				conversion_types.is_equivalent (other.conversion_types)
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt : FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			feature_name.simple_format (ctxt)
-			
-			if is_creation_procedure then
-				ctxt.put_space
-				ctxt.put_text_item (Ti_l_parenthesis)
-			else
-				ctxt.put_text_item (Ti_colon)
-				ctxt.put_space
-			end
-			
-			ctxt.put_text_item (Ti_l_curly)
-			conversion_types.simple_format (ctxt)
-			ctxt.put_text_item (Ti_r_curly)
-			
-			if is_creation_procedure then
-				ctxt.put_text_item (Ti_r_parenthesis)
-			end
 		end
 
 invariant

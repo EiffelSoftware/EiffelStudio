@@ -11,16 +11,13 @@ inherit
 		redefine
 			type_check, byte_node
 		end
+		
+	LEAF_AS
 
 	SHARED_TYPES
 
-feature {AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new ADDRESS_RESULT AST node.
-		do
-			-- Do nothing.
-		end
+create
+	make_from_other
 
 feature -- Visitor
 
@@ -51,6 +48,7 @@ feature -- Type check, byte code and dead code removal
 					-- acceptable (e.g. an invariant, or within the body of a procedure).
 				create vrle3
 				context.init_error (vrle3)
+				vrle3.set_location (start_location)
 				Error_handler.insert_error (vrle3)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -58,6 +56,7 @@ feature -- Type check, byte code and dead code removal
 					-- Result entity in precondition
 				create veen2a
 				context.init_error (veen2a)
+				veen2a.set_location (start_location)
 				Error_handler.insert_error (veen2a)
 			end
 			context.put (create {TYPED_POINTER_A}.make_typed (Context.feature_type))
@@ -67,15 +66,6 @@ feature -- Type check, byte code and dead code removal
 			-- Byte code for current node
 		do
 			create Result.make (create {RESULT_B})
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item_without_tabs (ti_Dollar)
-			ctxt.put_text_item_without_tabs (ti_Result)
 		end
 
 end -- class ADDRESS_RESULT_AS

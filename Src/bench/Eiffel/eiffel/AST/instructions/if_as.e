@@ -12,29 +12,29 @@ inherit
 			number_of_breakpoint_slots, byte_node
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (cnd: like condition; cmp: like compound;
-		ei: like elsif_list; e: like else_part; l, el: like location) is
+		ei: like elsif_list; e: like else_part; el: like end_keyword) is
 			-- Create a new IF AST node.
 		require
 			cnd_not_void: cnd /= Void
-			l_not_void: l /= Void
 			el_not_void: el /= Void
 		do
 			condition := cnd
 			compound := cmp
 			elsif_list := ei
 			else_part := e
-			location := l.twin
-			end_location := el.twin
+			end_keyword := el
 		ensure
 			condition_set: condition = cnd
 			compound_set: compound = cmp
 			elsif_list_set: elsif_list = ei
 			else_part_set: else_part = e
-			location_set: location.is_equal (l)
-			end_location_set: end_location.is_equal (el)
+			end_keyword_set: end_keyword = el
 		end
 
 feature -- Visitor
@@ -59,8 +59,22 @@ feature -- Attributes
 	else_part: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Else part
 
-	end_location: like location
+	end_keyword: LOCATION_AS
 			-- Line number where `end' keyword is located
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := condition.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := end_keyword
+		end
 
 feature -- Access
 
@@ -107,6 +121,7 @@ feature -- Type check, byte code and dead code removal
 				create vwbe1
 				context.init_error (vwbe1)
 				vwbe1.set_type (current_context)
+				vwbe1.set_location (condition.end_location)
 				Error_handler.insert_error (vwbe1)
 			end
 
@@ -141,74 +156,12 @@ feature -- Type check, byte code and dead code removal
 			if else_part /= Void then
 				Result.set_else_part (else_part.byte_node)
 			end
-			Result.set_line_number (line_number)
-			Result.set_end_location (end_location)
-		end
-			
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text
-		do
-			ctxt.put_breakable
-			ctxt.put_text_item (ti_If_keyword)
-			ctxt.put_space
-			ctxt.new_expression
-			ctxt.format_ast (condition)
-			ctxt.put_space
-			ctxt.put_text_item_without_tabs (ti_Then_keyword)
-			if compound /= Void then
-				ctxt.indent
-				ctxt.put_new_line
-				ctxt.set_new_line_between_tokens
-				ctxt.format_ast (compound)
-				ctxt.exdent
-			end
-			ctxt.put_new_line
-			if elsif_list /= Void then
-				ctxt.set_separator (ti_Empty)
-				ctxt.set_no_new_line_between_tokens
-				ctxt.format_ast (elsif_list)
-				ctxt.set_separator (Void)
-			end
-			if else_part /= Void then
-				ctxt.put_text_item (ti_Else_keyword)
-				ctxt.indent
-				ctxt.put_new_line
-				ctxt.set_new_line_between_tokens
-				ctxt.format_ast (else_part)
-				ctxt.exdent
-				ctxt.put_new_line
-			end
-			ctxt.put_text_item (ti_End_keyword)
-		end
-		 			   
-feature {IF_AS} -- Replication
-
-	set_condition (c: like condition) is
-			-- Set `condition' to `c'.
-		require
-			valid_arg: c /= Void
-		do
-			condition := c
+			Result.set_line_number (condition.start_location.line)
+			Result.set_end_location (end_keyword)
 		end
 
-	set_compound (c: like compound) is
-			-- Set `compound' to `c'.
-		do
-			compound := c
-		end
-
-	set_elsif_list (e: like elsif_list) is
-			-- Set `elsif_list' to `e'.
-		do
-			elsif_list := e
-		end
-
-	set_else_part (e: like else_part) is
-			-- Set `else_part' to `e'.
-		do
-			else_part := e
-		end
+invariant
+	condition_not_void: condition /= Void
+	end_keyword_not_void: end_keyword /= Void
 
 end -- class IF_AS

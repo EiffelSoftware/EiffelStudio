@@ -13,7 +13,10 @@ inherit
 			is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (v: like bits_value) is
 			-- Create a new BITS AST node.
@@ -27,6 +30,7 @@ feature {AST_FACTORY} -- Initialization
 				create vtbt
 				vtbt.set_class (System.current_class)
 				vtbt.set_value (bits_value.integer_32_value)
+				vtbt.set_location (bits_value.start_location)
 				Error_handler.insert_error (vtbt)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -47,6 +51,20 @@ feature -- Attributes
 
 	bits_value: INTEGER_CONSTANT
 			-- Bits value
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := bits_value.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := bits_value.end_location
+		end
 
 feature -- Comparison
 
@@ -72,6 +90,7 @@ feature -- Type evaluation
 				vtbt.set_class (feat_table.associated_class)
 				vtbt.set_feature (f)
 				vtbt.set_value (bits_value.integer_32_value)
+				vtbt.set_location (bits_value.start_location)
 				Error_handler.insert_error (vtbt)
 					-- Cannot go on here
 				Error_handler.raise_error

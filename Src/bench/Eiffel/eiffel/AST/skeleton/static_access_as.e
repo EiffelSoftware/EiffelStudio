@@ -16,7 +16,7 @@ inherit
 			{NONE} feat_initialize
 		redefine
 			process,
-			type_check, is_equivalent, simple_format, format,
+			type_check, is_equivalent,
 			valid_feature, report_error_for_feature,
 			assoc_class, context_last_type,
 			new_call_access
@@ -24,7 +24,7 @@ inherit
 		
 	ATOMIC_AS
 		undefine
-			format, byte_node
+			byte_node
 		redefine
 			inspect_value,
 			is_valid_inspect_value,
@@ -123,6 +123,7 @@ feature -- Type check, byte code and dead code removal
 			if l_type.is_formal or l_type.has_like or l_type.is_none then
 				create vsta1.make (l_type.dump, feature_name)
 				vsta1.set_class (context.current_class)
+				vsta1.set_location (class_type.start_location)
 				error_handler.insert_error (vsta1)
 				error_handler.raise_error
 			else
@@ -130,6 +131,7 @@ feature -- Type check, byte code and dead code removal
 					vtug := l_type.error_generics
 					vtug.set_class (context.current_class)
 					vtug.set_feature (context.current_feature)
+					vtug.set_location (class_type.start_location)
 					Error_handler.insert_error (vtug)
 					Error_handler.raise_error
 				end
@@ -153,6 +155,7 @@ feature -- Type check, byte code and dead code removal
 				create veen
 				context.init_error (veen)
 				veen.set_identifier (a_feature_name)
+				veen.set_location (feature_name)
 				error_handler.insert_error (veen)
 				error_handler.raise_error
 			else
@@ -160,6 +163,7 @@ feature -- Type check, byte code and dead code removal
 				create vsta2
 				context.init_error (vsta2)
 				vsta2.set_non_static_feature (a_feature)
+				vsta2.set_location (feature_name)
 				Error_handler.insert_error (vsta2)
 				Error_handler.raise_error
 			end
@@ -219,37 +223,6 @@ feature {AST_EIFFEL} -- Output
 			-- Printed value of Current
 		do
 			Result := "{" + class_type.dump + "}." + feature_name.string_value
-		end
-		
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			dummy_call: ACCESS_INV_AS
-			dummy_name: ID_AS
-		do
-			ctxt.begin
-
-			ctxt.put_text_item (ti_L_curly)
-			ctxt.format_ast (class_type)
-			create dummy_call
-			create dummy_name.initialize (ti_r_curly.image)
-			dummy_call.set_feature_name (dummy_name)
-			ctxt.format_ast (dummy_call)
-			ctxt.set_type_creation (class_type)
-			ctxt.need_dot
-			ctxt.prepare_for_feature (feature_name, parameters)
-			ctxt.put_current_feature
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			simple_format (ctxt)
 		end
 
 feature {NONE} -- Implementation

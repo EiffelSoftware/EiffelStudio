@@ -8,15 +8,18 @@ deferred class AST_EIFFEL
 inherit
 	SHARED_ERROR_HANDLER
 
-	SHARED_TEXT_ITEMS
-	
 	SHARED_WORKBENCH
 
 	SHARED_AST_CONTEXT
 
 	COMPILER_EXPORTER
+	
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
 
-feature {AST_VISITOR, EIFFEL_LIST} -- Visitor
+feature {AST_VISITOR} -- Visitor
 
 	process (v: AST_VISITOR) is
 			-- Visitor feature.
@@ -31,15 +34,6 @@ feature -- Access
 			-- Return 0 by default
 		end
 
-feature {AST_EIFFEL, COMPILER_EXPORTER} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconsitute text according to context.
-		require
-			ctxt_not_void: ctxt /= Void
-		deferred
-		end
-
 feature -- Type check, byte code and dead code removal
 
 	type_check is
@@ -52,16 +46,6 @@ feature -- Type check, byte code and dead code removal
 			-- Byte node associated to node
 		do
 			-- Do nothing
-		end
-
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconsitute text according to context.
-		require
-			valid_ctxt: ctxt /= Void
-		do
-			simple_format (ctxt)
 		end
 
 feature -- Comparison
@@ -87,57 +71,47 @@ feature -- Comparison
 					o1.is_equivalent (o2)
 			end
 		end
-	
-feature -- Location of Node
 
-	frozen start_position: INTEGER is
-			-- Start position of the item in text
-		local
-			l: like location
-		do
-			l := location
-			if l /= Void then
-				Result := l.start_position
-			else
-					-- Return -1 which refers to an unknown value.
-				Result := -1
-			end
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		deferred
+		ensure
+			start_location_not_void: Result /= Void
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		deferred
+		ensure
+			end_location_not_void: Result /= Void
 		end
 
-	frozen end_position: INTEGER is
-			-- End position of the item in text
-		local
-			l: like location
+	start_position: INTEGER is
+			-- Starting position for current construct.
 		do
-			l := location
-			if l /= Void then
-				Result := l.end_position
-			else
-					-- Return -1 which refers to an unknown value.
-				Result := -1
-			end
+			Result := start_location.position
+		ensure
+			start_position_non_negative: Result >= 0
 		end
 
-	frozen line_number : INTEGER is
-			-- line of the item in the source text
-		local
-			l: like location
+	end_position: INTEGER is
+			-- End position for current construct
 		do
-			l := location
-			if l /= Void then
-				Result := l.line_number
-			else
-					-- Return -1 which refers to an unknown value.
-				Result := -1
-			end
+			Result := end_location.position + end_location.location_count
+		ensure
+			end_position_non_negative: Result >= 0
 		end
+		
+feature {NONE} -- Constants
 
-feature {NONE} -- Location
-
-	location: TOKEN_LOCATION is
-			-- Location of Current node.
-		do
-			-- Not used by default.
+	null_location: LOCATION_AS is
+			-- Null location
+		once
+			create Result.make_null
+		ensure
+			null_location_not_void: Result /= Void and then Result.is_null
 		end
 		
 end -- class AST_EIFFEL

@@ -11,7 +11,7 @@ class
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node
 		end
 
 	SHARED_TYPES
@@ -24,7 +24,10 @@ inherit
 			{NONE} all
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (f: like feature_name) is
 			-- Create a new ADDRESS AST node.
@@ -48,6 +51,20 @@ feature -- Attribute
 
 	feature_name: FEATURE_NAME
 			-- Feature name to address
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := feature_name.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := feature_name.end_location
+		end
 
 feature -- Comparison
 
@@ -92,6 +109,7 @@ feature -- Type check, byte code and dead code removal
 				create not_supported
 				context.init_error (not_supported)
 				not_supported.set_message ("The $ operator is not supported on external features")
+				not_supported.set_location (feature_name.start_location)
 				Error_handler.insert_error (not_supported)
 				Error_handler.raise_error
 			end
@@ -122,30 +140,6 @@ feature -- Type check, byte code and dead code removal
 				Context.typed_pointer_line.forth
 				Result := hector
 			end
-		end
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin
-			ctxt.prepare_for_feature (feature_name.internal_name, Void)
-			if ctxt.is_feature_visible then
-				ctxt.put_text_item_without_tabs (ti_Dollar)
-				ctxt.put_current_feature; 	
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.prepare_for_feature (feature_name.internal_name, Void)
-			ctxt.put_text_item_without_tabs (ti_Dollar)
-			ctxt.put_current_feature
 		end
 
 end -- class ADDRESS_AS

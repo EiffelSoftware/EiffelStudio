@@ -11,14 +11,6 @@ inherit
 			byte_node
 		end
 
---feature -- Visitor
---
---	process (v: AST_VISITOR) is
---			-- process current element.
---		do
---			v.process_expr_as (Current)
---		end
-
 feature -- Byte code generation
 
 	byte_node: EXPR_B is

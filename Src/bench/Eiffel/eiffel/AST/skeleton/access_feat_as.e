@@ -11,12 +11,15 @@ class ACCESS_FEAT_AS
 inherit
 	ACCESS_AS
 		redefine
-			type_check, byte_node, format, is_equivalent
+			type_check, byte_node, is_equivalent
 		end
 
 	SHARED_CONFIGURE_RESOURCES
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (f: like feature_name; p: like parameters) is
 			-- Create a new FEATURE_ACCESS AST node.
@@ -60,6 +63,24 @@ feature -- Attributes
 	access_name: STRING is
 		do
 			Result := feature_name
+		end
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := feature_name.start_location
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			if parameters /= Void then
+				Result := parameters.end_location
+			else
+				Result := feature_name.end_location
+			end
 		end
 
 feature -- Delayed calls
@@ -158,12 +179,14 @@ feature -- Type check, byte code and dead code removal
 					-- No call when target is a procedure
 				create vkcn3
 				context.init_error (vkcn3)
+				vkcn3.set_location (feature_name)
 				Error_handler.insert_error (vkcn3)
 					-- Cannot go on here
 				Error_handler.raise_error
 			elseif last_constrained.is_none then
 				create vuex.make_for_none (feature_name)
 				context.init_error (vuex)
+				vuex.set_location (feature_name)
 				Error_handler.insert_error (vuex)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -202,7 +225,7 @@ feature -- Type check, byte code and dead code removal
 					until
 						parameters.after
 					loop
-						create operand
+						create operand.initialize (Void, Void, Void)
 						parameters.put (operand)
 						parameters.forth
 					end
@@ -214,6 +237,7 @@ feature -- Type check, byte code and dead code removal
 					context.init_error (vuar1)
 					vuar1.set_called_feature (a_feature, last_id)
 					vuar1.set_argument_count (count)
+					vuar1.set_location (feature_name)
 					Error_handler.insert_error (vuar1)
 						-- Cannot go on here: too dangerous
 					Error_handler.raise_error
@@ -361,6 +385,7 @@ feature -- Type check, byte code and dead code removal
 					context.init_error (vuex)
 					vuex.set_static_class (last_class)
 					vuex.set_exported_feature (a_feature)
+					vuex.set_location (feature_name)
 					Error_handler.insert_error (vuex)
 				end
 				if
@@ -407,6 +432,7 @@ feature -- Type check, byte code and dead code removal
 						create vape
 						context.init_error (vape)
 						vape.set_exported_feature (a_feature)
+						vape.set_location (feature_name)
 						Error_handler.insert_error (vape)
 						Error_handler.raise_error
 					end
@@ -469,6 +495,7 @@ feature -- Type check, byte code and dead code removal
 				context.init_error (veen)
 				veen.set_identifier (a_feature_name)
 				veen.set_parameter_count (parameter_count)
+				veen.set_location (a_feature_name)
 				error_handler.insert_error (veen)
 				error_handler.raise_error
 			end
@@ -545,28 +572,6 @@ feature -- Type check, byte code and dead code removal
 			Result := Context.parameters
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin
-			ctxt.prepare_for_feature (feature_name, parameters)
-			ctxt.put_current_feature
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.prepare_for_feature (feature_name, parameters)
-			ctxt.put_current_feature
-		end
-
 feature {COMPILER_EXPORTER} -- Replication {ACCESS_FEAT_AS, USER_CMD, CMD}
 
 	set_feature_name (name: like feature_name) is
@@ -640,6 +645,7 @@ feature {NONE} -- Implementation: overloading
 					end
 					create viof.make (System.current_class, context.current_feature,
 						l_features, feature_name, last_id, l_list)
+					viof.set_location (feature_name)
 					Error_handler.insert_error (viof)
 						-- Cannot go on here
 					Error_handler.raise_error

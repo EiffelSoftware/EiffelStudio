@@ -11,10 +11,12 @@ class
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node
 		end
+create
+	initialize
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (e: like expr) is
 			-- Create a new PARAN AST node.
@@ -39,6 +41,20 @@ feature -- Attributes
 	expr: EXPR_AS
 			-- Parenthesized expression
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := expr.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := expr.end_location
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -62,35 +78,7 @@ feature -- Type check, byte code and dead code removal
 			Result.set_expr (expr.byte_node)
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
-		do
-			ctxt.begin
-			simple_format (ctxt)
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_L_parenthesis)
-			ctxt.format_ast (expr)
-			ctxt.put_text_item_without_tabs (ti_R_parenthesis)
-		end
-
-feature {PARAN_AS}	-- Replication
-
-	set_expr (e: like expr) is
-			-- FIXME: move to bench specific???
-		require
-			valid_arg: e /= Void
-		do
-			expr := e
-		end
+invariant
+	expr_not_void: expr /= Void
 
 end -- class PARAN_AS

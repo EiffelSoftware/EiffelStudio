@@ -17,7 +17,10 @@ inherit
 			{NONE} all
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (i: like id_list) is
 			-- Create a new UN_STRIP AST node.
@@ -39,8 +42,22 @@ feature -- Visitor
 
 feature -- Attributes
 
-	id_list: ARRAYED_LIST [INTEGER]
+	id_list: CONSTRUCT_LIST [INTEGER]
 			-- Attribute list
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := null_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := null_location
+		end
 
 feature -- Comparison
 
@@ -78,6 +95,7 @@ feature -- Type check, byte code and dead code removal
 					create vwst2
 					context.init_error (vwst2)
 					vwst2.set_attribute_name (Names_heap.item (an_id))
+					vwst2.set_location (start_location)
 					Error_handler.insert_error (vwst2)
 				else
 					attribute_i ?= feature_table.item_id (an_id)
@@ -85,6 +103,7 @@ feature -- Type check, byte code and dead code removal
 						create vwst1
 						context.init_error (vwst1)
 						vwst1.set_attribute_name (Names_heap.item (an_id))
+						vwst1.set_location (start_location)
 						Error_handler.insert_error (vwst1)
 					else
 						create depend_unit.make (context.current_class.class_id,
@@ -133,46 +152,7 @@ feature -- Type check, byte code and dead code removal
 			end
 		end
 
-feature -- Replication
-
-	-- nothing is done and that is a bug (Didier)
-	-- The correct policy should be something like
-	-- fill_calls_list does nothing (ok): strip cannot
-	-- trigger a replication by itself.
-	-- replicate should replace a feature with all its version,
-	-- and add the attribute introduced in the descendant class		
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			first_printed: BOOLEAN
-			l_names_heap: like Names_heap
-		do
-			ctxt.put_text_item (ti_Strip_keyword)
-			ctxt.put_space
-			ctxt.put_text_item_without_tabs (ti_L_parenthesis)
-
-			from
-				l_names_heap := Names_heap
-				id_list.start
-			until
-				id_list.after
-			loop
-				ctxt.new_expression
-				ctxt.prepare_for_feature (l_names_heap.item (id_list.item), Void)
-				if ctxt.is_feature_visible then
-					if first_printed then
-						ctxt.put_text_item_without_tabs (ti_Comma)
-						ctxt.put_space
-					end
-					ctxt.put_current_feature
-					first_printed := True
-				end
-				id_list.forth
-			end
-			ctxt.put_text_item_without_tabs (ti_R_parenthesis)
-		end
+invariant
+	id_list_not_void: id_list /= Void
 
 end -- class UN_STRIP_AS

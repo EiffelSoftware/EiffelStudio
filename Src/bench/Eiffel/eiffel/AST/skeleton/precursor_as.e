@@ -20,18 +20,26 @@ inherit
 
 	SHARED_CONFIGURE_RESOURCES
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (n: like parent_name; p: like parameters) is
+feature {NONE} -- Initialization
+
+	initialize (pk: like precursor_keyword; n: like parent_base_class; p: like parameters) is
 			-- Create a new PRECURSOR AST node.
+		require
+			pk_not_void: pk /= Void
+			valid_n: n /= Void implies n.generics = Void
 		do
-			parent_name := n
+			precursor_keyword := pk
+			parent_base_class := n
 			parameters := p
 			if parameters /= Void then
 				parameters.start
 			end
 		ensure
-			parent_name_set: parent_name = n
+			precursor_keyword_set: precursor_keyword = pk
+			parent_base_class_set: parent_base_class = n
 			parameters_set: parameters = p
 		end
 
@@ -45,7 +53,10 @@ feature -- Visitor
 
 feature -- Attributes
 
-	parent_name: ID_AS
+	precursor_keyword: LOCATION_AS
+			-- Position of Precursor keyword
+
+	parent_base_class: CLASS_TYPE_AS
 			-- Optional name of the parent
 
 	parameters: EIFFEL_LIST [EXPR_AS]
@@ -68,12 +79,32 @@ feature -- Attributes
 	is_precursor: BOOLEAN is True
 			-- Precursor makes reference to a class
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := precursor_keyword
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if parameters /= Void then
+				Result := parameters.end_location
+			elseif parent_base_class /= Void then
+				Result := parent_base_class.start_location
+			else
+				Result := precursor_keyword
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (parent_name, other.parent_name) and
+			Result := equivalent (parent_base_class, other.parent_base_class) and
 				equivalent (parameters, other.parameters)
 		end
 
@@ -81,7 +112,7 @@ feature -- Stoning
 
 	associated_eiffel_class (reference_class: CLASS_I): CLASS_I is
 		do
-			Result :=  Universe.class_named (parent_name, reference_class.cluster)
+			Result :=  Universe.class_named (parent_base_class.class_name, reference_class.cluster)
 		end
 
 feature -- Type check, byte code and dead code removal
@@ -95,7 +126,7 @@ feature -- Type check, byte code and dead code removal
 			pre_table: LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]]
 			feature_i: FEATURE_I
 			parent_type: CL_TYPE_A
-			parent_class: CLASS_C
+			l_parent_class: CLASS_C
 			feat_ast: FEATURE_AS
 		do
 				-- Check that we're in the body of a routine (vupr1).
@@ -129,7 +160,7 @@ feature -- Type check, byte code and dead code removal
 
 				-- Check that current feature is a redefinition.
 			if pre_table.count = 0 then
-				if parent_name /= Void then
+				if parent_base_class /= Void then
 						-- The specified parent does not have
 						-- an effective precursor.
 					create vupr2
@@ -162,8 +193,8 @@ feature -- Type check, byte code and dead code removal
 				-- Table has exactly one entry.
 			pre_table.start
 			parent_type := pre_table.item.first
-			parent_class := parent_type.associated_class
-			feature_i := parent_class.feature_table.feature_of_rout_id (pre_table.item.second)
+			l_parent_class := parent_type.associated_class
+			feature_i := l_parent_class.feature_table.feature_of_rout_id (pre_table.item.second)
 			
 				-- Update signature of parent `feature_i' in context of its instantiation
 				-- in current class.
@@ -440,15 +471,15 @@ feature {NONE}  -- precursor table
 			rout_id_set := context.current_feature.rout_id_set
 			rc := rout_id_set.count
 
-			if parent_name /= Void then
+			if parent_base_class /= Void then
 				-- Take class renaming into account
 				a_cluster := context.current_class.cluster
-				r_class_i := Universe.class_named (parent_name, a_cluster)
+				r_class_i := Universe.class_named (parent_base_class.class_name, a_cluster)
 
 				if r_class_i /= Void then
 					spec_p_name := r_class_i.name_in_upper
 				else
-					-- A class of name `parent_name' does not exist
+					-- A class of name `parent_base_class' does not exist
 					-- in the universe. Use an empty name to trigger
 					-- an error message later.
 					spec_p_name := ""
@@ -516,71 +547,6 @@ feature {NONE}  -- precursor table
 			end
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			real_feature: E_FEATURE
-			parent_class: CLASS_C
-			current_feature: E_FEATURE
-		do
-			ctxt.begin
-
-			current_feature := ctxt.global_adapt.target_enclosing_feature.api_feature (ctxt.class_c.class_id)
-
-			if parent_name /= Void then
-				parent_class := Universe.class_named (parent_name, ctxt.class_c.cluster).compiled_class
-			else
-				parent_class := current_feature.precursors.last
-			end
-
-			if parent_class /= Void then
-				real_feature := current_feature.ancestor_version (parent_class)
-			end
-
-			if real_feature /= Void then
-				ctxt.put_text_item (
-					create {PRECURSOR_KEYWORD_TEXT}.make (real_feature)
-				) 
-			else
-					-- For some reason the parent feature could not be found, so the keyword won't be pickable.
-				ctxt.put_text_item (
-					create {KEYWORD_TEXT}.make (Ti_precursor_keyword.image)
-				)
-			end
-
-			if parent_name /= Void then
-				ctxt.put_text_item (ti_space)
-				ctxt.put_text_item (ti_L_curly)
-				ctxt.put_class_name (parent_name)
-				ctxt.put_text_item (ti_R_curly)
-			end
-
-				-- We simply use an empty feature in
-				-- order to print the parameter list.
-			if parameter_count > 0 then
-				ctxt.prepare_for_feature ("", parameters)
-				ctxt.put_current_feature
-			end
-
-			ctxt.commit
-		end
-
-feature {COMPILER_EXPORTER} -- Replication {PRECURSOR_AS, USER_CMD, CMD}
-
-	set_parent_name (name: like parent_name) is
-		require
-			valid_arg: name /= Void
-		do
-			parent_name := name
-		end
-
-	set_parameters (p: like parameters) is
-		do
-			parameters := p
-		end
-
 feature {NONE} -- Implementation
 
 	special_has (l: LINKED_LIST [PAIR [INTEGER, INTEGER]]; p: PAIR [INTEGER, INTEGER]): BOOLEAN is
@@ -610,5 +576,9 @@ feature {NONE} -- Implementation: convertibility
 	parameters_convert_info: ARRAY [CONVERSION_INFO]
 			-- For each parameters that need a conversion call, we store info used in `byte_node'
 			-- to generate conversion call
+
+invariant
+	precursor_keyword_not_void: precursor_keyword /= Void
+	valid_parent_base_class: parent_base_class /= Void implies parent_base_class.generics = Void
 
 end -- class PRECURSOR_AS

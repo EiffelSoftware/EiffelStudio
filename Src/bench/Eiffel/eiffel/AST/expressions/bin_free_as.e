@@ -15,7 +15,10 @@ inherit
 
 	PREFIX_INFIX_NAMES
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (l: like left; op: like op_name; r: like right) is
 			-- Create a new BIN_FREE AST node.
@@ -31,14 +34,6 @@ feature {AST_FACTORY} -- Initialization
 			left_set: left = l
 			op_name_set: op_name = op
 			right_set: right = r
-		end
-
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_bin_free_as (Current)
 		end
 
 feature -- Attributes
@@ -63,6 +58,14 @@ feature -- Comparison
 			Result := equivalent (op_name, other.op_name) and then
 				equivalent (left, other.left) and then
 				equivalent (right, other.right)
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bin_free_as (Current)
 		end
 
 feature -- Byte Node

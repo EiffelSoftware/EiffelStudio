@@ -9,18 +9,19 @@ class FORMAL_AS
 
 inherit
 	TYPE_AS
-		rename
-			start_position as text_position
 		redefine
-			format, simple_format, has_formal_generic, is_loose
+			has_formal_generic, is_loose
 		end
-
+		
 	CLICKABLE_AST
 		redefine
 			is_class, associated_eiffel_class
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (n: ID_AS; is_ref, is_exp: BOOLEAN) is
 			-- Create a new FORMAL AST node.
@@ -68,6 +69,20 @@ feature -- Properties
 	is_loose: BOOLEAN is True
 			-- Does type depend on formal generic parameters and/or anchors?
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := name.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := name.end_location
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -92,26 +107,8 @@ feature
 			create Result.make (is_reference, is_expanded, position)
 		end
 
-feature -- Output
-
-	format (ctxt: FORMAT_CONTEXT) is
-		local
-			l_a: LOCAL_FEAT_ADAPTATION
-			new_type: TYPE_A
-		do
-			l_a := ctxt.local_adapt
-			if l_a /= Void then
-				new_type := l_a.adapted_type (Current)
-			end
-			if new_type = Void then
-				simple_format (ctxt)
-			else
-				new_type.format (ctxt)
-			end
-		end
-
 feature -- Stoning
- 
+
 	associated_eiffel_class (ref_class: CLASS_I): CLASS_I is
 		local
 			l_class: CLASS_C
@@ -129,14 +126,6 @@ feature -- Output
 			create Result.make (12)
 			Result.append ("Generic #")
 			Result.append_integer (position)
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (create {GENERIC_TEXT}.make (ctxt.formal_name (position)))
 		end
 
 feature {COMPILER_EXPORTER}

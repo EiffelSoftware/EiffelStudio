@@ -8,13 +8,8 @@ class UN_NOT_AS
 inherit
 	UNARY_AS
 
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_un_not_as (Current)
-		end
+create
+	initialize
 
 feature -- Properties
 
@@ -26,6 +21,14 @@ feature -- Type check
 			-- Associated byte code
 		do
 			create Result
+		end
+		
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_un_not_as (Current)
 		end
 
 end -- class UN_NOT_AS

@@ -11,16 +11,13 @@ inherit
 		redefine
 			type_check, byte_node
 		end
+		
+	LEAF_AS
 
 	SHARED_TYPES
 
-feature {AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new ADDRESS_CURRENT AST node.
-		do
-			-- Do nothing.
-		end
+create
+	make_from_other
 
 feature -- Visitor
 
@@ -50,15 +47,6 @@ feature -- Type check, byte code and dead code removal
 			-- Byte code for current node.
 		do
 			create Result.make (create {CURRENT_B})
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item_without_tabs (ti_Dollar)
-			ctxt.put_text_item_without_tabs (ti_Current)
 		end
 
 end -- class ADDRESS_CURRENT_AS

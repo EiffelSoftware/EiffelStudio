@@ -8,13 +8,8 @@ class UN_PLUS_AS
 inherit
 	UNARY_AS
 
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_un_plus_as (Current)
-		end
+create
+	initialize
 
 feature -- Properties
 
@@ -27,5 +22,13 @@ feature -- Access
 		do
 			create Result
 		end
-	
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_un_plus_as (Current)
+		end
+
 end -- class UN_PLUS_AS

@@ -8,7 +8,7 @@ deferred class UNARY_AS
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node, format
+			type_check, byte_node
 		end
 
 	SYNTAX_STRINGS
@@ -18,7 +18,7 @@ inherit
 			is_equal
 		end
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (e: like expr) is
 			-- Create a new UNARY AST node.
@@ -34,6 +34,27 @@ feature -- Attributes
 
 	expr: EXPR_AS
 			-- Expression
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := expr.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := expr.end_location
+		end
+		
+	operator_location: LOCATION_AS is
+			-- Location of operator
+		do
+			fixme ("Need to store operator location")
+			Result := start_location
+		end
 
 feature -- Properties
 
@@ -73,7 +94,7 @@ feature -- Type check, byte code and dead code removal
 			vuex: VUEX
 			vape: VAPE
 			l_manifest: MANIFEST_INTEGER_A
-			l_value: VALUE_AS
+			l_value: ATOMIC_AS
 		do
 				-- Check operand
 			expr.type_check
@@ -82,6 +103,7 @@ feature -- Type check, byte code and dead code removal
 			if last_constrained.is_none then
 				create vuex.make_for_none (prefix_feature_name)
 				context.init_error (vuex)
+				vuex.set_location (expr.end_location)
 				Error_handler.insert_error (vuex)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -96,6 +118,7 @@ feature -- Type check, byte code and dead code removal
 				context.init_error (vwoe)
 				vwoe.set_other_class (last_class)
 				vwoe.set_op_name (prefix_feature_name)
+				vwoe.set_location (operator_location)
 				Error_handler.insert_error (vwoe)
 					-- Cannot go on here.
 				Error_handler.raise_error
@@ -107,6 +130,7 @@ feature -- Type check, byte code and dead code removal
 				context.init_error (vuex)
 				vuex.set_static_class (last_class)
 				vuex.set_exported_feature (prefix_feature)
+				vuex.set_location (operator_location)
 				Error_handler.insert_error (vuex)
 				Error_handler.raise_error
 			end
@@ -120,6 +144,7 @@ feature -- Type check, byte code and dead code removal
 				create vape
 				context.init_error (vape)
 				vape.set_exported_feature (context.current_feature)
+				vape.set_location (operator_location)
 				Error_handler.insert_error (vape)
 				Error_handler.raise_error
 			end
@@ -200,38 +225,6 @@ feature -- Type check, byte code and dead code removal
 			access_line.forth
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.begin
-			ctxt.set_insertion_point
-			expr.format (ctxt)
-			if not ctxt.last_was_printed then
-				ctxt.rollback
-			else
-				ctxt.need_dot
-				ctxt.prepare_for_prefix (prefix_feature_name, operator_name)
-				ctxt.put_current_feature
-				ctxt.put_prefix_space
-				if ctxt.last_was_printed then
-					ctxt.commit
-				else
-					ctxt.rollback
-				end
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.prepare_for_prefix (prefix_feature_name, operator_name)
-			ctxt.put_prefix_feature
-			ctxt.put_space
-			expr.simple_format (ctxt)
-		end
-
 feature {UNARY_AS} -- Replication
 
 	set_expr (e: like expr) is
@@ -250,6 +243,9 @@ feature {NONE} -- Implementation
 			-- Create typed byte code depending on Current.
 		deferred
 		end
+		
+invariant
+	expr_not_void: expr /= Void
 
-end -- class UNARY_AS
+end
 

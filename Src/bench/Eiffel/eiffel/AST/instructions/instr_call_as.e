@@ -20,17 +20,14 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like call; l: like location) is
+	initialize (c: like call) is
 			-- Create a new INSTR_CALL AST node.
 		require
 			c_not_void: c /= Void
-			l_not_void: l /= Void
 		do
 			call := c
-			location := l.twin
 		ensure
 			call_set: call = c
-			location_set: location.is_equal (l)
 		end
 
 feature -- Visitor
@@ -45,6 +42,20 @@ feature -- Attributes
 
 	call: CALL_AS
 			-- Call instruction
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := call.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := call.end_location
+		end
 
 feature -- Comparison
 
@@ -69,6 +80,7 @@ feature -- Type check, byte code and dead code removal
 					-- Error
 				create vkcn1
 				context.init_error (vkcn1)
+				vkcn1.set_location (call.end_location)
 				Error_handler.insert_error (vkcn1)
 			end
 				-- Update the type stack
@@ -80,16 +92,7 @@ feature -- Type check, byte code and dead code removal
 		do
 			create Result
 			Result.set_call (call.byte_node)
-			Result.set_line_number (line_number)
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_breakable
-			ctxt.format_ast (call)
+			Result.set_line_number (call.start_location.line)
 		end
 
 feature {INTERNAL_AS} -- Status report
@@ -103,5 +106,8 @@ feature {INTERNAL_AS} -- Status report
 			nested ?= call
 			Result := nested /= Void
 		end
+
+invariant
+	call_not_void: call /= Void
 
 end -- class INSTR_CALL_AS

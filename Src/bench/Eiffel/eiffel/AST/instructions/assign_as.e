@@ -11,22 +11,22 @@ inherit
 			byte_node
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (t: like target; s: like source; l: TOKEN_LOCATION) is
+feature {NONE} -- Initialization
+
+	initialize (t: like target; s: like source) is
 			-- Create a new ASSIGN AST node.
 		require
 			t_not_void: t /= Void
 			s_not_void: s /= Void
-			l_not_void: l /= Void
 		do
 			target := t
 			source := s
-			location := l.twin
 		ensure
 			target_set: target = t
 			source_set: source = s
-			location_set: location.is_equal (l)
 		end
 
 feature -- Visitor
@@ -44,6 +44,20 @@ feature -- Attributes
 
 	source: EXPR_AS
 			-- Source of the assignment
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := target.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := source.end_location
+		end
 
 feature -- Comparison
 
@@ -75,11 +89,12 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 				-- know that the routine `type_check' appiled on `target'
 				-- didn't fail.
 			access := context.access_line.access
-			if  access.read_only then
+			if access.read_only then
 					-- Read-only entity
 				create ve03
 				context.init_error (ve03)
 				ve03.set_target (target)
+				ve03.set_location (target.end_location)
 				Error_handler.insert_error (ve03)
 			end
 
@@ -136,6 +151,7 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 						l_vncb.set_target_name (target.access_name)
 						l_vncb.set_source_type (source_type)
 						l_vncb.set_target_type (target_type)
+						l_vncb.set_location (start_location)
 						Error_handler.insert_error (l_vncb)
 					else
 						create l_vjar
@@ -143,6 +159,7 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 						l_vjar.set_source_type (source_type)
 						l_vjar.set_target_type (target_type)
 						l_vjar.set_target_name (target.access_name)
+						l_vjar.set_location (start_location)
 						Error_handler.insert_error (l_vjar)
 						
 					end
@@ -164,31 +181,9 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 			else
 				Result.set_source (source.byte_node)
 			end
-			Result.set_line_number (line_number)
+			Result.set_line_number (target.start_location.line)
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconsitute text.
-		do
-			ctxt.put_breakable
-			ctxt.new_expression
-			ctxt.format_ast (target)
-			ctxt.put_space
-			ctxt.put_text_item_without_tabs (assign_symbol)
-			ctxt.put_space
-			ctxt.new_expression
-			ctxt.format_ast (source)
-		end
-
-feature {ASSIGN_AS} -- Formatter
-
-	assign_symbol: TEXT_ITEM is
-		do
-			Result := ti_Assign
-		end
-		
 feature {ASSIGN_AS}	-- Replication
 		
 	set_target (t: like target) is
@@ -209,5 +204,9 @@ feature {NONE} -- Convertibility
 
 	conversion_info: CONVERSION_INFO
 			-- Store information about source and target type to perform proper conversion.
+
+invariant
+	target_not_void: target /= Void
+	source_not_void: source /= Void
 
 end -- class ASSIGN_AS

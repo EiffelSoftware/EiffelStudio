@@ -10,25 +10,25 @@ class
 inherit
 	EXPR_AS
 		redefine
-			type_check, byte_node, format,
-			number_of_breakpoint_slots, location
+			type_check, byte_node,
+			number_of_breakpoint_slots
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (t: like tag; e: like expr; l: like location) is
+feature {NONE} -- Initialization
+
+	initialize (t: like tag; e: like expr) is
 			-- Create a new TAGGED AST node.
 		require
 			e_not_void: e /= Void
-			l_not_void: l /= Void
 		do
 			tag := t
 			expr := e
-			location := l.twin
 		ensure
 			tag_set: tag = t
 			expr_set: expr = e
-			location_set: location.is_equal (l)
 		end
 
 feature -- Visitor
@@ -44,9 +44,6 @@ feature -- Access
 	number_of_breakpoint_slots: INTEGER is 1
 			-- Number of stop points for AST
 
-	location: TOKEN_LOCATION
-		-- Position of assertions
-
 feature -- Attributes
 
 	tag: ID_AS
@@ -55,6 +52,24 @@ feature -- Attributes
 	expr: EXPR_AS
 			-- Expression
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			if tag /= Void then
+				Result := tag.start_location
+			else
+				Result := expr.start_location
+			end
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			Result := expr.end_location
+		end
+		
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -78,7 +93,6 @@ feature -- Type check, byte code and dead code removal
 			current_context: TYPE_A
 			vwbe3: VWBE3
 		do
-			Error_handler.set_error_position (start_position)
 			expr.type_check
 				-- Check if the type of the expression is boolean
 			current_context := context.item
@@ -86,6 +100,7 @@ feature -- Type check, byte code and dead code removal
 				create vwbe3
 				context.init_error (vwbe3)
 				vwbe3.set_type (current_context)
+				vwbe3.set_location (expr.end_location)
 				Error_handler.insert_error (vwbe3)
 			end
 				
@@ -99,68 +114,10 @@ feature -- Type check, byte code and dead code removal
 			create Result
 			Result.set_tag (tag)
 			Result.set_expr (expr.byte_node)
-			Result.set_line_number (line_number)
+			Result.set_line_number (expr.start_location.line)
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			internal_format (ctxt, not ctxt.is_with_breakable)
-		end
+invariant
+	expr_not_void: expr /= Void
 
-	format_without_breakable_marks (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text without creating the breakable marks
-		do
-			internal_format (ctxt, True)
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_breakable
-			if tag /= Void then
-				ctxt.put_text_item (
-					create {ASSERTION_TAG_TEXT}.make (tag.string_value)
-				)
-				ctxt.put_text_item_without_tabs (ti_Colon)
-				ctxt.put_space
-			end
-			ctxt.new_expression
-			ctxt.format_ast (expr)
-		end
-
-	internal_format (ctxt: FORMAT_CONTEXT; hide_breakable_marks: BOOLEAN) is
-		do
-			ctxt.new_expression
-			ctxt.begin
-			if not hide_breakable_marks then
-				ctxt.put_breakable
-			end
-			if tag /= Void then
-				ctxt.put_text_item (
-					create {ASSERTION_TAG_TEXT}.make (tag.string_value)
-				)
-				ctxt.put_text_item_without_tabs (ti_Colon)
-				ctxt.put_space
-			end
-			ctxt.new_expression
-			ctxt.format_ast (expr)
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-		end
-
-feature {TAGGED_AS}	-- Replication
-
-	set_expr (e: like expr) is
-		require
-			valid_arg: e /= Void
-		do
-			expr := e
-		end
-	
 end -- class TAGGED_AS

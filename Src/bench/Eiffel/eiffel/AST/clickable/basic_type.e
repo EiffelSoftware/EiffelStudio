@@ -9,7 +9,7 @@ deferred class BASIC_TYPE
 inherit
 	TYPE_AS
 		redefine
-			format, append_to
+			append_to
 		end
 
 	CLICKABLE_AST
@@ -54,14 +54,6 @@ feature -- Stoning
 			if l_class /= Void then
 				Result := l_class.lace_class
 			end
-		end
-
-feature -- Formatting
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_classi (actual_type.associated_class.lace_class)
 		end
 
 end -- class BASIC_TYPE

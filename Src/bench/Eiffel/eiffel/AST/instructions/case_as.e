@@ -10,24 +10,24 @@ inherit
 	AST_EIFFEL
 		redefine
 			number_of_breakpoint_slots, is_equivalent,
-			type_check, byte_node, location
+			type_check, byte_node
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (i: like interval; c: like compound; l: like location) is
+feature {NONE} -- Initialization
+
+	initialize (i: like interval; c: like compound) is
 			-- Create a new WHEN AST node.
 		require
 			i_not_void: i /= Void
-			l_not_void: l /= Void
 		do
 			interval := i
 			compound := c
-			location := l.twin
 		ensure
 			interval_set: interval = i
 			compound_set: compound = c
-			location_set: location.is_equal (l)
 		end
 
 feature -- Visitor
@@ -46,6 +46,24 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := interval.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if compound /= Void then
+				Result := compound.end_location
+			else
+				Result := interval.end_location
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -56,9 +74,6 @@ feature -- Comparison
 		end
 
 feature -- Access
-
-	location: TOKEN_LOCATION
-			-- Location of Current.
 
 	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points
@@ -137,31 +152,7 @@ feature {NONE} -- Type check, byte code production, dead code removal
 				if compound /= Void then
 					Result.set_compound (compound.byte_node)
 				end
-				Result.set_line_number (line_number)
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_When_keyword)
-			ctxt.put_space
-			ctxt.set_separator (ti_Comma)
-			ctxt.set_no_new_line_between_tokens
-			ctxt.format_ast (interval)
-			ctxt.put_space
-			ctxt.put_text_item_without_tabs (ti_Then_keyword)
-			ctxt.put_space
-			ctxt.put_new_line
-			if compound /= Void then
-				ctxt.indent
-				ctxt.set_separator (ti_Semi_colon)
-				ctxt.set_new_line_between_tokens
-				ctxt.format_ast (compound)
-				ctxt.put_new_line
-				ctxt.exdent
+				Result.set_line_number (interval.start_location.line)
 			end
 		end
 
@@ -178,5 +169,8 @@ feature {CASE_AS} -- Replication
 		do
 			compound := c
 		end
+
+invariant
+	interval_not_void: interval /= Void
 
 end -- class CASE_AS

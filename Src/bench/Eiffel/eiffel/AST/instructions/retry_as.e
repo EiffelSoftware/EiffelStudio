@@ -13,18 +13,11 @@ inherit
 		redefine
 			byte_node
 		end
+		
+	LEAF_AS
 
-feature {AST_FACTORY} -- Initialization
-
-	initialize (l: like location) is
-			-- Create a new RETRY AST node.
-		require
-			l_not_void: l /= Void
-		do
-			location := l.twin
-		ensure
-			location_set: location.is_equal (l)			
-		end
+create
+	make_with_location
 
 feature -- Visitor
 
@@ -42,22 +35,13 @@ feature -- Comparison
 			Result := True
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_breakable
-			ctxt.put_text_item (ti_Retry_keyword)
-		end
-
 feature -- Type check and byte code
 
 	byte_node: RETRY_B is
 			-- Associated byte code
 		do
 			create Result
-			Result.set_line_number (line_number)
+			Result.set_line_number (line)
 		end
 
 	perform_type_check is
@@ -69,6 +53,7 @@ feature -- Type check and byte code
 					-- Retry instruction outside a recue clause
 				create vxrt
 				context.init_error (vxrt)
+				vxrt.set_location (start_location)
 				Error_handler.insert_error (vxrt)
 			end
 		end

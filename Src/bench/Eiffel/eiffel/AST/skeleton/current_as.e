@@ -13,14 +13,11 @@ inherit
 			type_check, byte_node,
 			is_equivalent
 		end
-
-feature {AST_FACTORY} -- Initialization
-
-	initialize is
-			-- Create a new CURRENT AST node.
-		do
-			-- Do nothing.
-		end
+		
+	LEAF_AS
+		
+create
+	make_with_location
 
 feature -- Visitor
 
@@ -41,6 +38,11 @@ feature -- Comparison
 feature -- Properties
 
 	access_name: STRING is "Current"
+
+	parameters: EIFFEL_LIST [EXPR_AS] is
+			-- No parameters for Current
+		do
+		end
 
 feature -- Type check and byte code
 
@@ -63,15 +65,6 @@ feature -- Type check and byte code
 			end
 			Result ?= access_line.access
 			access_line.forth
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.prepare_for_current
-			ctxt.put_text_item (ti_Current)
 		end
 
 end -- class CURRENT_AS

@@ -9,7 +9,7 @@ class
 inherit
 	CALL_AS
 		redefine
-			type_check, is_equivalent, location
+			type_check, is_equivalent, start_location, end_location
 		end
 
 	SHARED_INSTANTIATOR
@@ -27,19 +27,16 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like type; c: like call; l: like location) is
+	initialize (t: like type; c: like call) is
 			-- Create a new CREATION_EXPR AST node.
 		require
 			t_not_void: t /= Void
-			l_not_void: l /= Void
 		do
 			type := t
 			call := c
-			location := l.twin
 		ensure
 			type_set: type = t
 			call_set: call = c
-			location_set: location.is_equal (l)
 		end
 
 feature -- Visitor
@@ -50,57 +47,7 @@ feature -- Visitor
 			v.process_creation_expr_as (Current)
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			dummy_call: ACCESS_INV_AS
-			dummy_name: ID_AS
-		do
-			ctxt.put_text_item (ti_Create_keyword)
-			ctxt.put_space
-			ctxt.put_text_item (ti_L_curly)
-			ctxt.format_ast (type)
-
-			if call /= Void then
-					--| We have to create a dummy call because the current formating
-					--| algorithm which makes the assumption that a feature call is
-					--| either on Current or on something else.
-					--| In the case of creation expression there is no current or no
-					--| something else, so we create a dummy call which only goal is
-					--| to set some properties of FORMAT_CONTEXT and LOCAL_FEAT_ADAPTATION
-					--| to their correct value and then pass them to the real call, that
-					--| way `call' is correctly formatted thanks to the information provided
-					--| by the call to `dummy_call.format'.
-					--| GB 12/13/2000: Changed dummy_name from " " to "}" to avoid
-					--| useless space.
-				create dummy_call
-				create dummy_name.initialize (ti_R_curly.image)
-				dummy_call.set_feature_name (dummy_name)
-				ctxt.format_ast (dummy_call)
-				ctxt.set_type_creation (type)
-				ctxt.need_dot
-				ctxt.format_ast (call)
-			else
-					--| Simply calling put_text_item doesn't work:
-					--| the context local_adapt must change.
-					--| Yeah yeah I know it's not really clean,
-					--| but if you want to redo completely the text generation, go on.
-				create dummy_call
-				create dummy_name.initialize (ti_R_curly.image)
-				dummy_call.set_feature_name (dummy_name)
-				ctxt.format_ast (dummy_call)
-			end
-
-				--| If a dot call follows, it has to be relative to `type'.
-			ctxt.set_type_creation (type)
-		end
-
 feature -- Access
-
-	location: TOKEN_LOCATION
-			-- Location of current.
 
 	type: TYPE_AS
 			-- Creation Type.
@@ -109,6 +56,24 @@ feature -- Access
 			-- Routine call: it is an instance of ACCESS_INV_AS because
 			-- only procedure and functions are valid and no export validation
 			-- is made.
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := type.start_location
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			if call /= Void then
+				Result := call.end_location
+			else
+				Result := type.end_location
+			end
+		end
 
 feature -- Type check
 
@@ -121,7 +86,7 @@ feature -- Type check
 			export_status, context_export: EXPORT_I
 			create_type: CREATE_INFO
 			creators: HASH_TABLE [EXPORT_I, STRING]
-			feature_name: STRING
+			feature_name: ID_AS
 			vgcc1: VGCC1
 			vgcc11: VGCC11
 			vgcc2: VGCC2
@@ -161,10 +126,12 @@ feature -- Type check
 				if new_creation_type.expanded_deferred then
 					create vtec1
 					context.init_error (vtec1)
+					vtec1.set_location (type.start_location)
 					Error_handler.insert_error (vtec1)
 				elseif not new_creation_type.valid_expanded_creation (context.current_class) then
 					create vtec2
 					context.init_error (vtec2)
+					vtec2.set_location (type.start_location)
 					Error_handler.insert_error (vtec2)
 				end
 			end
@@ -185,6 +152,7 @@ feature -- Type check
 					create vgcc1
 					context.init_error (vgcc1)
 					vgcc1.set_target_name ("")
+					vgcc1.set_location (type.start_location)
 					Error_handler.insert_error (vgcc1);					
 				end
 			end
@@ -193,6 +161,7 @@ feature -- Type check
 				vtug := new_creation_type.error_generics
 				vtug.set_class (context.current_class)
 				vtug.set_feature (context.current_feature)
+				vtug.set_location (type.start_location)
 				Error_handler.insert_error (vtug)
 				Error_handler.raise_error
 			elseif
@@ -203,6 +172,7 @@ feature -- Type check
 				context.init_error (vgcc3)
 				vgcc3.set_target_name ("")
 				vgcc3.set_type (new_creation_type)
+				vgcc3.set_location (type.start_location)
 				Error_handler.insert_error (vgcc3)
 			else
 				new_creation_type.reset_constraint_error_list
@@ -212,6 +182,7 @@ feature -- Type check
 					vtcg3.set_class (context.current_class)
 					vtcg3.set_feature (context.current_feature)
 					vtcg3.set_error_list (new_creation_type.constraint_error_list)
+					vtcg3.set_location (type.start_location)
 					Error_handler.insert_error (vtcg3)
 				else
 					Instantiator.dispatch (new_creation_type, context.current_class)
@@ -235,6 +206,7 @@ feature -- Type check
 				context.init_error (vgcc2)
 				vgcc2.set_target_name ("")
 				vgcc2.set_type (new_creation_type)
+				vgcc2.set_location (type.start_location)
 				Error_handler.insert_error (vgcc2)
 				Error_handler.raise_error
 			end
@@ -248,8 +220,9 @@ feature -- Type check
 				dcr_feat := creation_class.default_create_feature
 
 					-- Use default_create
-				create {ACCESS_INV_AS} the_call
-				the_call.set_feature_name (create {ID_AS}.initialize (dcr_feat.feature_name))
+				create {ACCESS_INV_AS} the_call.initialize (
+					create {ID_AS}.initialize (dcr_feat.feature_name),
+					Void)
 				if is_formal_creation or else not dcr_feat.is_empty then
 						-- We want to generate a call only when needed:
 						-- 1 - In a formal generic creation call
@@ -296,6 +269,7 @@ feature -- Type check
 						vgcc5.set_type (new_creation_type)
 						a_feature := creation_class.feature_table.item (feature_name)
 						vgcc5.set_creation_feature (a_feature)
+						vgcc5.set_location (feature_name)
 						Error_handler.insert_error (vgcc5)
 					elseif creators /= Void then
 						export_status := creators.item (feature_name)
@@ -307,6 +281,7 @@ feature -- Type check
 							vgcc5.set_type (new_creation_type)
 							a_feature := creation_class.feature_table.item (feature_name)
 							vgcc5.set_creation_feature (a_feature)
+							vgcc5.set_location (feature_name)
 							Error_handler.insert_error (vgcc5)
 						else
 							if context.is_checking_precondition then
@@ -315,6 +290,7 @@ feature -- Type check
 									create vape
 									context.init_error (vape)
 									vape.set_exported_feature (a_feature)
+									vape.set_location (feature_name)
 									Error_handler.insert_error (vape)
 									Error_handler.raise_error
 								end
@@ -331,6 +307,7 @@ feature -- Type check
 						vgcc11.set_target_name ("")
 						a_feature := creation_class.feature_table.item (feature_name)
 						vgcc11.set_creation_feature (a_feature)
+						vgcc11.set_location (feature_name)
 						Error_handler.insert_error (vgcc11)
 					end
 				end
@@ -344,12 +321,14 @@ feature -- Type check
 						vgcc5.set_target_name ("")
 						vgcc5.set_type (new_creation_type)
 						vgcc5.set_creation_feature (Void)
+						vgcc5.set_location (type.start_location)
 						Error_handler.insert_error (vgcc5)
 					else
 						create vgcc4
 						context.init_error (vgcc4)
 						vgcc4.set_target_name ("")
 						vgcc4.set_type (new_creation_type)
+						vgcc4.set_location (type.start_location)
 						Error_handler.insert_error (vgcc4)
 					end
 				else
@@ -358,6 +337,7 @@ feature -- Type check
 					create vgcc1
 					context.init_error (vgcc1)
 					vgcc1.set_target_name ("")
+					vgcc1.set_location (type.start_location)
 					Error_handler.insert_error (vgcc1);				
 				end
 			end
@@ -413,7 +393,7 @@ feature
 			
 			Result.set_info (create_type)
 			Result.set_type (l_type)
-			Result.set_line_number (line_number)
+			Result.set_line_number (type.start_location.line)
 		end
 
 feature -- Comparison

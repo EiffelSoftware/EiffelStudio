@@ -12,8 +12,11 @@ inherit
 	ASSIGN_AS
 		redefine
 			process,
-			check_validity, byte_node, assign_symbol
+			check_validity, byte_node
 		end
+
+create
+	initialize
 
 feature -- Visitor
 
@@ -46,6 +49,7 @@ feature -- Access
 					context.init_error (vjrv1)
 					vjrv1.set_target_name (target.access_name)
 					vjrv1.set_target_type (target_type)
+					vjrv1.set_location (target.end_location)
 					Error_handler.insert_error (vjrv1)
 				end
 			elseif target_type.is_formal then
@@ -58,6 +62,7 @@ feature -- Access
 					context.init_error (vjrv2)
 					vjrv2.set_target_name (target.access_name)
 					vjrv2.set_target_type (target_type)
+					vjrv2.set_location (target.end_location)
 					Error_handler.insert_error (vjrv2)
 				end
 			else
@@ -112,7 +117,7 @@ feature -- Access
 			else
 				Result.set_source (source.byte_node)
 			end
-			Result.set_line_number (line_number)
+			Result.set_line_number (target.start_location.line)
 			
 			if l_access.is_result then
 				l_feature_type ?= context.current_feature.type
@@ -130,13 +135,6 @@ feature -- Access
 			end
 			
 			Result.set_info (l_create_info)
-		end
-
-feature {NONE} -- Formatter
-	
-	assign_symbol: TEXT_ITEM is 
-		do
-			Result := ti_Reverse_assign
 		end
 
 end -- class REVERSE_AS

@@ -8,7 +8,10 @@ class ALL_AS
 inherit
 	FEATURE_SET_AS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	 initialize is
 			-- Create a new ALL AST node.
@@ -32,6 +35,20 @@ feature -- Comparison
 			Result := True
 		end
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := null_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := null_location
+		end
+
 feature -- Initialization
 
 	update (export_adapt: EXPORT_ADAPTATION; export_status: EXPORT_I; parent: PARENT_C) is
@@ -45,16 +62,9 @@ feature -- Initialization
 				create vlel1
 				vlel1.set_class (System.current_class)
 				vlel1.set_parent (parent.parent)
+				vlel1.set_location (start_location)
 				Error_handler.insert_error (vlel1)
 			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_All_keyword)
 		end
 
 end -- class ALL_AS

@@ -9,12 +9,15 @@ class
 inherit
 	TYPE_AS
 		redefine
-			has_like, is_loose, simple_format
+			has_like, is_loose
 		end
 
 	SHARED_LIKE_CONTROLER
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (a: like anchor) is
 			-- Create a new LIKE_ID AST node.
@@ -38,6 +41,20 @@ feature -- Attributes
 
 	anchor: ID_AS
 			-- Anchor name
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := anchor.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := anchor.end_location
+		end
 
 feature -- Comparison
 
@@ -137,6 +154,7 @@ feature -- Implementation of inherited deferred features
 					veen.set_class (System.current_class)
 					veen.set_feature (f)
 					veen.set_identifier (anchor)
+					veen.set_location (anchor)
 					Error_handler.insert_error (veen)
 					Error_handler.raise_error
 				end
@@ -156,17 +174,6 @@ feature -- Output
 			Result.append (anchor)
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item_without_tabs (ti_Like_keyword)
-			ctxt.put_space
-			ctxt.prepare_for_feature (anchor, Void)
-			ctxt.put_current_feature
-		end
-	
 feature {LIKE_ID_AS} -- Replication
 
 	set_anchor (a: like anchor) is

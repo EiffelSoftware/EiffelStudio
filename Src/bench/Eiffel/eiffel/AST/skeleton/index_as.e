@@ -11,27 +11,24 @@ class INDEX_AS
 inherit
 	AST_EIFFEL
 		redefine
-			type_check, location
+			type_check
 		end
 
 create
 	initialize
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
-	initialize (t: like tag; i: like index_list; l: like location) is
+	initialize (t: like tag; i: like index_list) is
 			-- Create a new INDEX AST node.
 		require
 			i_not_void: i /= Void
-			l_not_void: l /= Void
 		do
 			tag := t
 			index_list := i
-			location := l.twin
 		ensure
 			tag_set: tag = t
 			index_list_set: index_list = i
-			location_set: equal (location, l)
 		end
 
 feature -- Visitor
@@ -49,10 +46,21 @@ feature -- Attributes
 
 	index_list: EIFFEL_LIST [ATOMIC_AS]
 			-- Indexes
-			
-	location: TOKEN_LOCATION
-			-- Location where clause starts
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := tag.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := index_list.end_location
+		end
+			
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -85,41 +93,16 @@ feature {DOCUMENTATION_ROUTINES} -- Access
 		do
 			create Result.make (20)
 			il := index_list
-			if il /= Void then
-				from
-					il.start
-				until
-					il.after
-				loop
-					Result.append (il.item.string_value)
-					il.forth
-					if not il.after then
-						Result.append (", ")
-					end
+			from
+				il.start
+			until
+				il.after
+			loop
+				Result.append (il.item.string_value)
+				il.forth
+				if not il.after then
+					Result.append (", ")
 				end
-			end
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if tag /= Void then
-				ctxt.put_text_item (
-					create {INDEXING_TAG_TEXT}.make (tag.string_value)
-				)
-				ctxt.put_text_item_without_tabs (ti_Colon)
-				ctxt.put_space
-			end
-			if index_list /= Void then
-				ctxt.set_in_indexing_clause (True)
-				ctxt.put_text_item (ti_Before_indexing_content)
-				ctxt.set_space_between_tokens
-				ctxt.set_separator (ti_Comma)
-				ctxt.format_ast (index_list)
-				ctxt.put_text_item (ti_After_indexing_content)
-				ctxt.set_in_indexing_clause (False)
 			end
 		end
 

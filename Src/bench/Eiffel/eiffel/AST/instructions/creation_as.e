@@ -21,23 +21,23 @@ inherit
 			{NONE} all
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (tp: like type; tg: like target; c: like call; l: like location) is
+feature {NONE} -- Initialization
+
+	initialize (tp: like type; tg: like target; c: like call) is
 			-- Create a new CREATION AST node.
 		require
 			tg_not_void: tg /= Void
-			l_not_void: l /= Void
 		do
 			type := tp
 			target := tg
 			call := c
-			location := l.twin
 		ensure
 			type_set: type = tp
 			target_set: target = tg
 			call_set: call = c
-			location_set: location.is_equal (l)
 		end
 
 feature -- Visitor
@@ -61,6 +61,28 @@ feature -- Attributes
 			-- only procedure and functions are valid and no export validation
 			-- is made.
 
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if type /= Void then
+				Result := type.start_location
+			else
+				Result := target.start_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if call /= Void then
+				Result := call.end_location
+			else
+				Result := target.end_location
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -79,7 +101,7 @@ feature -- Type check, byte code and dead code removal
 			access: ACCESS_B
 			creation_type, new_creation_type: TYPE_A
 			creation_class: CLASS_C
-			feature_name: STRING
+			feature_name: ID_AS
 			a_feature: FEATURE_I
 			export_status: EXPORT_I
 			create_info: CREATE_INFO
@@ -129,6 +151,7 @@ feature -- Type check, byte code and dead code removal
 				context.init_error (vgcc7)
 				vgcc7.set_target_name (target.access_name)
 				vgcc7.set_type (creation_type)
+				vgcc7.set_location (target.start_location)
 				Error_handler.insert_error (vgcc7)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -140,6 +163,7 @@ feature -- Type check, byte code and dead code removal
 				context.init_error (vgcc3)
 				vgcc3.set_target_name (target.access_name)
 				vgcc3.set_type (creation_type)
+				vgcc3.set_location (target.start_location)
 				Error_handler.insert_error (vgcc3)
 			else
 				if type /= Void then
@@ -154,11 +178,13 @@ feature -- Type check, byte code and dead code removal
 								create vtec1
 								context.init_error (vtec1)
 								vtec1.set_entity_name (target.access_name)
+								vtec1.set_location (type.start_location)
 								Error_handler.insert_error (vtec1)
 							elseif not new_creation_type.valid_expanded_creation (context.current_class) then
 								create vtec2
 								context.init_error (vtec2)
 								vtec2.set_entity_name (target.access_name)
+								vtec2.set_location (type.start_location)
 								Error_handler.insert_error (vtec2)
 							end
 						end
@@ -166,6 +192,7 @@ feature -- Type check, byte code and dead code removal
 							vtug := new_creation_type.error_generics
 							vtug.set_class (context.current_class)
 							vtug.set_feature (context.current_feature)
+							vtug.set_location (type.start_location)							
 							Error_handler.insert_error (vtug)
 							Error_handler.raise_error
 						elseif
@@ -180,6 +207,7 @@ feature -- Type check, byte code and dead code removal
 							context.init_error (vgcc3)
 							vgcc3.set_target_name (target.access_name)
 							vgcc3.set_type (creation_type)
+							vgcc3.set_location (type.start_location)
 							Error_handler.insert_error (vgcc3)
 						elseif
 							not new_creation_type.conform_to (creation_type)
@@ -190,6 +218,7 @@ feature -- Type check, byte code and dead code removal
 							context.init_error (vgcc31)
 							vgcc31.set_target_name (target.access_name)
 							vgcc31.set_type (creation_type)
+							vgcc31.set_location (type.start_location)
 							Error_handler.insert_error (vgcc31)
 						else
 							new_creation_type.reset_constraint_error_list
@@ -200,6 +229,7 @@ feature -- Type check, byte code and dead code removal
 								vtcg3.set_feature (context.current_feature)
 								vtcg3.set_entity_name (target.access_name)
 								vtcg3.set_error_list (new_creation_type.constraint_error_list)
+								vtcg3.set_location (type.start_location)
 								Error_handler.insert_error (vtcg3)
 							else
 								creation_type := new_creation_type
@@ -220,6 +250,7 @@ feature -- Type check, byte code and dead code removal
 						vgcc3.set_target_name (target.access_name)
 						vgcc3.set_is_symbol
 						vgcc3.set_symbol_name (type.dump)
+						vgcc3.set_location (type.start_location)
 						Error_handler.insert_error (vgcc3)
 					end
 				end
@@ -238,6 +269,7 @@ feature -- Type check, byte code and dead code removal
 						create vgcc1
 						context.init_error (vgcc1)
 						vgcc1.set_target_name (target.access_name)
+						vgcc1.set_location (target.start_location)
 						Error_handler.insert_error (vgcc1);					
 					end
 				end
@@ -255,6 +287,7 @@ feature -- Type check, byte code and dead code removal
 					context.init_error (vgcc2)
 					vgcc2.set_target_name (target.access_name)
 					vgcc2.set_type (creation_type)
+					vgcc2.set_location (target.start_location)
 					Error_handler.insert_error (vgcc2)
 					Error_handler.raise_error
 				end
@@ -267,8 +300,8 @@ feature -- Type check, byte code and dead code removal
 					dcr_feat := creation_class.default_create_feature
 
 						-- Use default_create
-					create {ACCESS_INV_AS} the_call
-					the_call.set_feature_name (create {ID_AS}.initialize (dcr_feat.feature_name))
+					create {ACCESS_INV_AS} the_call.initialize (
+						create {ID_AS}.initialize (dcr_feat.feature_name), Void)
 					if is_formal_creation or else not dcr_feat.is_empty then
 							-- We want to generate a call only when needed:
 							-- 1 - In a formal generic creation call
@@ -309,6 +342,7 @@ feature -- Type check, byte code and dead code removal
 							vgcc5.set_type (creation_type)
 							a_feature := creation_class.feature_table.item (feature_name)
 							vgcc5.set_creation_feature (a_feature)
+							vgcc5.set_location (feature_name)
 							Error_handler.insert_error (vgcc5)
 						elseif creators /= Void then
 							export_status := creators.item (feature_name)
@@ -320,6 +354,7 @@ feature -- Type check, byte code and dead code removal
 								vgcc5.set_type (creation_type)
 								a_feature := creation_class.feature_table.item (feature_name)
 								vgcc5.set_creation_feature (a_feature)
+								vgcc5.set_location (feature_name)
 								Error_handler.insert_error (vgcc5)
 							end
 						end
@@ -333,6 +368,7 @@ feature -- Type check, byte code and dead code removal
 							vgcc11.set_target_name (target.access_name)
 							a_feature := creation_class.feature_table.item (feature_name)
 							vgcc11.set_creation_feature (a_feature)
+							vgcc11.set_location (feature_name)
 							Error_handler.insert_error (vgcc11)
 						end
 					end
@@ -345,12 +381,14 @@ feature -- Type check, byte code and dead code removal
 							vgcc5.set_target_name (target.access_name)
 							vgcc5.set_type (creation_type)
 							vgcc5.set_creation_feature (Void)
+							vgcc5.set_location (target.start_location)
 							Error_handler.insert_error (vgcc5)
 						else
 							create vgcc4
 							context.init_error (vgcc4)
 							vgcc4.set_target_name (target.access_name)
 							vgcc4.set_type (creation_type)
+							vgcc4.set_location (target.start_location)
 							Error_handler.insert_error (vgcc4)
 						end
 					else
@@ -359,6 +397,7 @@ feature -- Type check, byte code and dead code removal
 						create vgcc1
 						context.init_error (vgcc1)
 						vgcc1.set_target_name (target.access_name)
+						vgcc1.set_location (target.start_location)
 						Error_handler.insert_error (vgcc1);				
 					end
 				end
@@ -434,50 +473,15 @@ feature -- Type check, byte code and dead code removal
 			
 			l_creation_expr.set_info (l_create_info)
 			l_creation_expr.set_type (l_type)
-			l_creation_expr.set_line_number (line_number)
+			l_creation_expr.set_line_number (target.start_location.line)
 			
 			create Result
 			Result.set_target (l_access)
 			Result.set_source (l_creation_expr)
-			Result.set_line_number (line_number)
+			Result.set_line_number (target.start_location.line)
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_breakable
-			ctxt.put_text_item (ti_create_keyword)
-			ctxt.put_space
-			if type /= Void then
-				ctxt.put_text_item (ti_l_curly)
-				ctxt.format_ast (type)
-				ctxt.put_text_item_without_tabs (ti_r_curly)
-				ctxt.put_space
-			end
-			ctxt.format_ast (target)
-			if type /= Void then
-				ctxt.set_type_creation (type)
-			end
-			if call /= Void then
-				ctxt.need_dot
-				ctxt.format_ast (call)
-			end
-		end
-
-feature {CREATION_AS} -- Replication
-
-	set_call (c: like call) is
-		do
-			call := c
-		end
-
-	set_target (t: like target) is
-		require
-			valid_arg: t /= Void
-		do
-			target := t
-		end
+invariant
+	target_not_void: target /= Void
 
 end -- class CREATION_AS

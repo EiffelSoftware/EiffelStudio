@@ -10,13 +10,19 @@ inherit
 		redefine
 			type_check, byte_node, value_i, is_equivalent
 		end
+		
+	LEAF_AS
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
 
-	initialize (b: BOOLEAN) is
+feature {NONE} -- Initialization
+
+	initialize (b: BOOLEAN; l, c, p, s: INTEGER) is
 			-- Create a new BOOLEAN AST node.
 		do
 			value := b
+			set_position (l, c, p, s)
 		ensure
 			value_set: value = b
 		end
@@ -66,17 +72,6 @@ feature -- Output
 	string_value: STRING is
 		do
 			Result := value.out
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-		do
-			if value then
-				ctxt.put_text_item (ti_True_keyword)
-			else
-				ctxt.put_text_item (ti_False_keyword)
-			end
 		end
 
 end -- class BOOL_AS

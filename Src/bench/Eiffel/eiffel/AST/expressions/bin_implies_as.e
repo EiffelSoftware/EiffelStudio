@@ -14,13 +14,8 @@ inherit
 
 	PREFIX_INFIX_NAMES
 
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_bin_implies_as (Current)
-		end
+create
+	initialize
 
 feature -- Byte code
 
@@ -93,5 +88,13 @@ feature -- Properties
 
 	op_name: STRING is "implies"
 			-- Name without the infix keyword.
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bin_implies_as (Current)
+		end
 
 end -- class BIN_IMPLIES_AS

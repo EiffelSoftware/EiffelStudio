@@ -9,9 +9,9 @@ inherit
 	TYPE_AS
 		redefine
 			has_formal_generic, has_like, is_loose,
-			simple_format, is_equivalent,
+			is_equivalent,
 			check_constraint_type, solved_type_for_format,
-			append_to
+			append_to, start_location, end_location
 		end
 
 	CLICKABLE_AST
@@ -21,7 +21,10 @@ inherit
 
 	SHARED_INST_CONTEXT
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (n: like class_name; g: like generics; a_is_exp, a_is_sep: BOOLEAN) is
 			-- Create a new CLASS_TYPE AST node.
@@ -80,7 +83,25 @@ feature -- Attributes
 			
 	is_separate: BOOLEAN
 			-- Is current type used with `separate' keyword?
-			
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Start location of Current
+		do
+			Result := class_name.start_location
+		end
+
+	end_location: LOCATION_AS is
+			-- End location of Current
+		do
+			if generics /= Void then
+				Result := generics.end_location
+			else
+				Result := class_name.end_location
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -278,6 +299,7 @@ feature -- Conveniences
 				create vcfg3
 				vcfg3.set_class (a_class)
 				vcfg3.set_formal_name ("Constraint genericity")
+				vcfg3.set_location (generics.start_location)
 				Error_handler.insert_error (vcfg3)
 			else
 				cluster := a_class.cluster
@@ -286,6 +308,7 @@ feature -- Conveniences
 					create vtct
 					vtct.set_class (a_class)
 					vtct.set_class_name (class_name)
+					vtct.set_location (class_name)
 					Error_handler.insert_error (vtct)
 					error_handler.raise_error
 				else
@@ -308,6 +331,7 @@ feature -- Conveniences
 						vtug.set_class (a_class)
 						vtug.set_type (actual_type)
 						vtug.set_base_class (associated_class)
+						vtug.set_location (class_name)
 						Error_handler.insert_error (vtug)
 					elseif generics /= Void then
 						if not is_tuple_type then
@@ -434,30 +458,6 @@ feature -- Output
 			-- Search for Current compiled class in context of `reference_class'.
 		do
 			Result := Universe.class_named (class_name, reference_class.cluster)
-		end
-
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if is_separate then
-				ctxt.put_text_item_without_tabs (ti_separate_keyword)
-				ctxt.put_space
-			end
-			if is_expanded then
-				ctxt.put_text_item_without_tabs (ti_expanded_keyword)
-				ctxt.put_space
-			end
-			ctxt.put_class_name (class_name)
-			if generics /= Void then
-				ctxt.put_space
-				ctxt.put_text_item_without_tabs (ti_L_bracket)
-				ctxt.set_space_between_tokens
-				ctxt.set_separator (ti_Comma)
-				ctxt.format_ast (generics)
-				ctxt.put_text_item_without_tabs (ti_R_bracket)
-			end
 		end
 
 feature {COMPILER_EXPORTER} -- Conveniences

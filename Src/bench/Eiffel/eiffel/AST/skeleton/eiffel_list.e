@@ -3,17 +3,16 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class EIFFEL_LIST [T -> AST_EIFFEL]
+class EIFFEL_LIST [reference T -> AST_EIFFEL]
 
 inherit
 	AST_EIFFEL
-		rename
-			start_position as text_position
 		undefine
 			copy, is_equal
 		redefine
-			byte_node, type_check, format,
-			number_of_breakpoint_slots, is_equivalent
+			byte_node, type_check,
+			number_of_breakpoint_slots, is_equivalent,
+			start_location, end_location
 		end
 
 	CONSTRUCT_LIST [T]
@@ -46,22 +45,31 @@ feature -- Visitor
 
 	process (v: AST_VISITOR) is
 			-- process current element.
-		local
-			l_cursor: CURSOR
 		do
-			l_cursor := cursor
-			from
-				start
-			until
-				after
-			loop
-				item.process (v)
-				forth
-			end
-			go_to (l_cursor)
+			v.process_eiffel_list (Current)
 		end
 
 feature -- Access
+
+	start_location: LOCATION_AS is
+			-- 
+		do
+			if not is_empty then
+				Result := area.item (0).start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- 
+		do
+			if not is_empty then
+				Result := area.item (count - 1).end_location
+			else
+				Result := null_location
+			end
+		end
 
 	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST
@@ -190,74 +198,6 @@ feature -- Type check, byte code and dead code removal
 				r_area.put (l_area.item (i).byte_node, max - i)
 				i := i + 1
 			end
-		end
-
-feature -- Formatter
-
-	format (ctxt : FORMAT_CONTEXT) is
-		local
-			i, l_count: INTEGER
-			failure: BOOLEAN
-			not_first:  BOOLEAN
-			must_abort: BOOLEAN
-		do
-			ctxt.begin
-			must_abort := ctxt.must_abort_on_failure
-			from	
-				i := 1
-				l_count := count
-			until
-				i > l_count or failure
-			loop
-				if not_first then
-					ctxt.put_separator
-				end
-				ctxt.new_expression
-				ctxt.begin
-				i_th(i).format(ctxt)
-				if not ctxt.last_was_printed then
-					ctxt.rollback
-					if must_abort then
-						failure := true;	
-						not_first := false
-					end
-				else
-					ctxt.commit
-					not_first := true
-				end;	
-				i := i + 1
-			end
-			if l_count > 0 and then not not_first then
-				ctxt.rollback
-			else
-				ctxt.commit
-			end
-		end
-
-feature {AST_EIFFEL, FORMAT_CONTEXT, DOTNET_CLASS_AS} -- Output
-
-	simple_format (ctxt : FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		local
-			i, l_count: INTEGER
-		do
-			ctxt.begin
-			from
-				i := 1
-				l_count := count
-			until
-				i > l_count
-			loop
-				if i > 1 then
-					ctxt.put_separator
-				end
-				ctxt.new_expression
-				ctxt.begin
-				i_th (i).simple_format (ctxt)
-				ctxt.commit
-				i := i + 1
-			end
-			ctxt.commit
 		end
 
 end -- class EIFFEL_LIST

@@ -12,6 +12,9 @@ inherit
 			byte_node, is_once
 		end
 
+create
+	initialize
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -52,14 +55,6 @@ feature -- Access
 					System.set_freeze
 				end
 			end
-		end
-
-feature {NONE}
-
-	begin_keyword: BASIC_TEXT is
-			-- "once" keyword
-		once
-			Result := ti_Once_keyword
 		end
 
 end -- class ONCE_AS

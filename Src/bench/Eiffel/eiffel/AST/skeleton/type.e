@@ -125,6 +125,7 @@ feature
 				create vcfg3;
 				vcfg3.set_class (a_class);
 				vcfg3.set_formal_name ("Constraint genericity");
+				vcfg3.set_location (start_location)
 				Error_handler.insert_error (vcfg3);
 			end
 		end;

@@ -10,10 +10,13 @@ inherit
 		rename
 			initialize as initialize_basic_type
 		redefine
-			is_equivalent, append_to, format
+			is_equivalent, append_to
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (s: like bits_symbol) is
 			-- Create a new BITS_SYMBOL AST node.
@@ -37,6 +40,20 @@ feature -- Attributes
 
 	bits_symbol: ID_AS
 			-- Bits value
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := bits_symbol.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := bits_symbol.end_location
+		end
 
 feature -- Comparison
 
@@ -63,6 +80,7 @@ feature
 				veen.set_class (feat_table.associated_class)
 				veen.set_feature (f)
 				veen.set_identifier (bits_symbol)
+				veen.set_location (bits_symbol)
 				Error_handler.insert_error (veen)
 				Error_handler.raise_error
 			end
@@ -83,6 +101,7 @@ feature
 				vtbt.set_class (feat_table.associated_class)
 				vtbt.set_feature (f)
 				vtbt.set_value (bits_value)
+				vtbt.set_location (bits_symbol)
 				Error_handler.insert_error (vtbt)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -124,12 +143,6 @@ feature
 
 feature -- Output
 
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_class_name (dump)
-		end
-
 	dump: STRING is
 			-- Debug purpose
 		do
@@ -137,5 +150,8 @@ feature -- Output
 			Result.append ("BIT ")
 			Result.append (bits_symbol)
    		end
+
+invariant
+	bits_symbol_not_void: bits_symbol /= Void
 
 end -- class BITS_SYMBOL_AS

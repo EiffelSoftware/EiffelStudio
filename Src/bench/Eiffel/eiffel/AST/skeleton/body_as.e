@@ -12,7 +12,10 @@ inherit
 			type_check, byte_node
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (a: like arguments; t: like type; c: like content) is
 			-- Create a new BODY AST node.
@@ -44,6 +47,36 @@ feature -- Attributes
 
 	content: CONTENT_AS
 			-- Content of the body: constant or regular body
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			if arguments /= Void then
+				Result := arguments.start_location
+			elseif type /= Void then
+				Result := type.start_location
+			elseif content /= Void then
+				Result := content.start_location
+			else
+				Result := null_location
+			end
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			if content /= Void then
+				Result := content.end_location
+			elseif type /= Void then
+				Result := type.end_location
+			elseif arguments /= Void then
+				Result := arguments.end_location
+			else
+				Result := null_location
+			end
+		end
 
 feature -- Comparison
 
@@ -419,33 +452,6 @@ end
 			end
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if arguments /= Void and then not arguments.is_empty then
-				ctxt.put_space
-				ctxt.put_text_item_without_tabs (ti_L_parenthesis)
-				ctxt.set_separator (ti_Semi_colon)
-				ctxt.set_space_between_tokens
-				ctxt.format_ast (arguments)
-				ctxt.put_text_item_without_tabs (ti_R_parenthesis)
-			end
-			if type /= Void then
-				ctxt.put_text_item_without_tabs (ti_Colon)
-				ctxt.put_space
-				if type.has_like then
-					ctxt.new_expression
-				end
-				ctxt.format_ast (type)
-			end
-			ctxt.set_separator (ti_Empty)
-			if content /= Void then
-				ctxt.format_ast (content)
-			end
-		end
-				
 feature {BODY_AS, FEATURE_AS, BODY_MERGER, USER_CMD, CMD} -- Replication
 
 	set_arguments (a: like arguments) is

@@ -13,7 +13,10 @@ inherit
 			type_check, byte_node
 		end
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (c: like call) is
 			-- Create a new EXPR_CALL AST node.
@@ -37,6 +40,20 @@ feature -- Attributes
 
 	call: CALL_AS
 			-- Expression call
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := call.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := call.end_location
+		end
 
 feature -- Comparison
 
@@ -63,6 +80,7 @@ feature -- Type check, byte code and dead code removal
 			if expr_type.is_void then
 				create vkcn3
 				context.init_error (vkcn3)
+				vkcn3.set_location (call.end_location)
 				error_handler.insert_error (vkcn3)
 				error_handler.raise_error	
 			end
@@ -74,14 +92,6 @@ feature -- Type check, byte code and dead code removal
 			Result := call.byte_node
 		end
 
-feature {AST_EIFFEL} -- Output
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.format_ast (call)
-		end
-
 feature {EXPR_CALL_AS, OPERAND_AS}
 
 	set_call (c: like call) is
@@ -91,5 +101,8 @@ feature {EXPR_CALL_AS, OPERAND_AS}
 			call := c
 		end
 
-end -- class EXPR_CALL_AS
+invariant
+	call_not_void: call /= Void
+
+end
 

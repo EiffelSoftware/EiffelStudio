@@ -6,7 +6,7 @@ indexing
 class TUPLE_AS
 
 inherit
-	ATOMIC_AS
+	EXPR_AS
 		redefine
 			type_check, byte_node, is_equivalent
 		end
@@ -16,15 +16,10 @@ inherit
 			{NONE} all
 		end
 
-feature -- Visitor
+create
+	initialize
 
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_tuple_as (Current)
-		end
-
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (exp: like expressions) is
 			-- Create a new Manifest TUPLE AST node.
@@ -40,6 +35,28 @@ feature -- Attributes
 
 	expressions: EIFFEL_LIST [EXPR_AS]
 			-- Expression list symbolizing the manifest tuple
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := expressions.start_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := expressions.end_location
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_tuple_as (Current)
+		end
 
 feature -- Comparison
 
@@ -101,26 +118,10 @@ feature -- Type check, byte code, dead code removal and formatter
 
 feature {AST_EIFFEL} -- Output
 
-	simple_format (ctxt : FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_text_item (ti_L_bracket)
-			ctxt.set_separator (ti_Comma)
-			ctxt.set_space_between_tokens
-			ctxt.format_ast (expressions)
-			ctxt.put_text_item_without_tabs (ti_R_bracket)
-		end
-
 	string_value: STRING is ""
 
-feature {TUPLE_AS, ROUTINE_CREATION_AS} 
-
-	set_expressions (e: like expressions) is
-		require
-			valid_arg: e /= Void
-		do
-			expressions := e
-		end
+invariant
+	expressions_not_void: expressions /= Void
 
 end -- class TUPLE_AS
 

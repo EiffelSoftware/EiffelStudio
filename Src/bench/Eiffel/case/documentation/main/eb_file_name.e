@@ -53,7 +53,7 @@ feature -- Status setting
 			if sep /= '%U' then
 				sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
 				replace_all
-				sep := Void
+				sep := '%U'
 			end
 		end
 

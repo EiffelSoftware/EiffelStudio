@@ -16,12 +16,13 @@ create
 
 feature -- Initialization
 
-	make_window (appli: APPLICATION; result_list: LINKED_LIST [ANY]; row_titles: ARRAY [STRING]) is
+	make_window (appli: APPLICATION; result_list: ARRAYED_LIST [DB_TABLE]; row_titles: ARRAY [STRING]) is
 			-- Initialize Current
 		local
 			v1: EV_VERTICAL_BOX
 		do
 			default_create
+			close_actions.extend (~destroy)
 			set_height (300)
 			set_width (300)
 			create v1
@@ -34,22 +35,23 @@ feature -- Initialization
 			fill_list (result_list, row_titles)
 		end
 
-	fill_list (li: LINKED_LIST [ANY]; titles: ARRAY [STRING]) is
+	fill_list (li: ARRAYED_LIST [DB_TABLE]; titles: ARRAY [STRING]) is
 			-- Fill the 'multi_list' with the features of objects of 'li' contained in 'titles'.
 		require
 			not_void: li /= Void and then titles /= Void
 		local
 			it: EV_MULTI_COLUMN_LIST_ROW
-			qu: QUERYABLE
+			table_descr: DB_TABLE_DESCRIPTION
 		do
 			from
 				li.start
 			until
 				li.after
 			loop
-				qu ?= li.item
+				table_descr := li.item.table_description
 				create it
-				it.fill (qu.get_feature_values (titles))
+				it.fill (table_descr.printable_attribute_list)
+			--	it.fill (table_descr.get_feature_values (titles))
 				multi_list.extend (it)
 				li.forth
 			end

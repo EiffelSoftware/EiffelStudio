@@ -183,11 +183,11 @@ feature -- Status
 		-- Are the combo boxes made?
 	
 	table_cb_item_has_data: BOOLEAN is
-			-- Does the current combo box item from "table_cb" has a data of class 'QUERYABLE' associated?
+			-- Does the current combo box item from "table_cb" has a data of class 'DB_TABLE' associated?
 		require
 			table_cb_item_selected: tables_cb.selected_item /= void
 		local
-			q: QUERYABLE
+			q: DB_TABLE
 		do
 			q?= tables_cb.selected_item.data
 			Result:= q /= Void

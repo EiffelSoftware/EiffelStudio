@@ -37,6 +37,7 @@ feature -- Initialization
 		do
 			default_create
 			application := appli
+			close_actions.extend (~destroy)
 			make_combo_box -- Create combo_boxes.
 			create_widgets
 		ensure
@@ -141,8 +142,8 @@ feature
 			appli_not_void: application /= Void
 		local
 			query_text : STRING
-			result_item_object : ANY
-			result_list : LINKED_LIST [ANY] -- Like result_item_object.
+			result_item_object : DB_TABLE
+			result_list : ARRAYED_LIST [DB_TABLE] -- Like result_item_object.
 			titles_array : ARRAY [STRING]
 		do
 			query_text := "select " + active_rows_cb.selected_item.text + " from " 
@@ -153,8 +154,11 @@ feature
 				create titles_array.make (1, 1)
 				titles_array.put (active_rows_cb.selected_item.text, 1)
 			end
-			result_item_object := tables_cb.selected_item.data
-			result_list := db_manager.load_list_from_select (query_text, result_item_object)
+			result_item_object ?= tables_cb.selected_item.data
+			check
+				result_item_object /= Void
+			end
+			result_list := db_manager.load_list_with_select (query_text, result_item_object)
 			application.destroy_select_results_window
 			application.popup_select_results_window (result_list, titles_array)
 		end

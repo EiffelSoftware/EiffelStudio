@@ -72,6 +72,7 @@ OBJECTS = \
 	"$(INDIR)\eif_threads.obj" \
 	"$(INDIR)\eif_cond_var.obj" \
 	"$(INDIR)\eif_once.obj" \
+	"$(INDIR)\eif_rw_lock.obj" \
 	"$(INDIR)\eif_project.obj" \
 	"$(INDIR)\gen_conf.obj" \
 	"$(INDIR)\rout_obj.obj" \
@@ -130,6 +131,7 @@ WOBJECTS = \
 	"$(INDIR)\weif_threads.obj" \
 	"$(INDIR)\weif_cond_var.obj" \
 	"$(INDIR)\weif_once.obj" \
+	"$(INDIR)\eif_rw_lock.obj" \
 	"$(INDIR)\weif_project.obj" \
 	"$(INDIR)\wgen_conf.obj" \
 	"$(INDIR)\wrout_obj.obj" \
@@ -186,6 +188,7 @@ EOBJECTS = \
 	"$(INDIR)\weif_threads.obj" \
 	"$(INDIR)\weif_cond_var.obj" \
 	"$(INDIR)\weif_once.obj" \
+	"$(INDIR)\eif_rw_lock.obj" \
 	"$(INDIR)\weif_project.obj" \
 	"$(INDIR)\wgen_conf.obj" \
 	"$(INDIR)\wrout_obj.obj" \
@@ -603,6 +606,9 @@ eif_portable.h : $(TOP)\eif_portable.h
 
 "$(INDIR)\weif_once.obj" :	"$(RTSRC)\weif_once.c"
 	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\weif_once.c"
+
+"$(INDIR)\eif_rw_lock.obj" : "$(RTSRC)\eif_rw_lock.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\eif_rw_lock.c"
 
 "$(INDIR)\weif_project.obj" :	"$(RTSRC)\weif_project.c"
 	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\weif_project.c"

@@ -74,7 +74,7 @@ feature -- Access
 		do
 		end
 
-	h_filename: STRING is "reference\40_settings_summary\index.html"
+	h_filename: STRING is "help\wizards\edotnet\docs\reference\40_settings_summary\index.html"
 			-- Path to HTML help file
 			
 feature {NONE} -- Implementation

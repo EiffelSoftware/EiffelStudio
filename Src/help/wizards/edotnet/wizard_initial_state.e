@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 		
 feature -- Access
 
-	h_filename: STRING is "reference\01_welcome\index.html"
+	h_filename: STRING is "help\wizards\edotnet\docs\reference\01_welcome\index.html"
 			-- Path to HTML help file
 			
 feature -- basic Operations
@@ -36,7 +36,7 @@ feature -- basic Operations
 	proceed_with_current_info is 
 		do
 			Precursor
-			proceed_with_new_state(Create {WIZARD_PROJECT_NAME_AND_LOCATION_STATE}.make(wizard_information))
+			proceed_with_new_state(Create {DOTNET_WIZARD_PROJECT_NAME_AND_LOCATION_STATE}.make(wizard_information))
 		end
 
 	display_state_text is

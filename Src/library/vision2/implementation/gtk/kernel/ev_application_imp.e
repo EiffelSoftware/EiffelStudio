@@ -270,7 +270,9 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					pnd_targets.forth
 				end
 			end
-			pnd_targets.go_to (cur)
+			if pnd_targets.valid_cursor (cur) then
+				pnd_targets.go_to (cur)
+			end
 			interface.pick_actions.call ([a_pebble])
 		end
 		

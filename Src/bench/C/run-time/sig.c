@@ -30,7 +30,7 @@
 #include <errno.h>
 #include <stdio.h>				/* For sprintf() */
 
-#if defined EIF_VMS && !defined sigmask
+#if !defined sigmask
 #define sigmask(m)	(1<<((m)-1))
 #endif
 

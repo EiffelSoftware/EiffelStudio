@@ -222,15 +222,16 @@ feature -- Access
 			-- Color used for the background of the widget.
 			-- This feature might change if we give the
 			-- possibility to set colors on the rows.
-		local
-			one_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+		--| FIXME IEK BG color not applicable to rows at present.
+		--local
+		--	one_row: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			if (rows > 0) then
-				one_row := (ev_children @ (1))
-				Result := one_row.background_color
-			else	
+		--	if (rows > 0) then
+		--		one_row := (ev_children @ (1))
+		--		Result := one_row.background_color
+		--	else	
 				Result := {EV_PRIMITIVE_IMP} Precursor
-			end
+		--	end
 		end
 
 	foreground_color: EV_COLOR is
@@ -238,15 +239,17 @@ feature -- Access
 			-- usually the text.
 			-- This feature might change if we give the
 			-- possibility to set colors on the rows.
-		local
-			one_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+
+		--| FIXME IEK FG color not applicable to rows at present.
+		--local
+		--	one_row: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			if (rows > 0) then
-				one_row := (ev_children @ (1))
-				Result := one_row.foreground_color
-			else	
+		--	if (rows > 0) then
+		--		one_row := (ev_children @ (1))
+		--		Result := one_row.foreground_color
+		--	else	
 				Result := {EV_PRIMITIVE_IMP} Precursor
-			end
+		--	end
 		end
 
 feature -- Status report
@@ -407,11 +410,6 @@ feature -- Element change
 	clear_items is
 			-- Clear all the items of the list.
 			-- (Remove them from the list and destroy them).
-		local
-			--c: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
-				-- to work with local variable which
-				-- increases speed if there are many elements
-				-- in `ev_children'
 		do
 			if rows > 0 then
 				ev_children.wipe_out	
@@ -425,20 +423,21 @@ feature -- Element change
 			children_array: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 			row: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			if (rows > 0) then
-				from
-					children_array := ev_children
-					children_array.start
-				until
-					children_array.after
-				loop
-					row := children_array.item
-					row.set_background_color (a_color)
-					children_array.forth
-				end
-			else
+			--| FIXME IEK BG color not applicable for rows at present.
+			--if (rows > 0) then
+			--	from
+			--		children_array := ev_children
+			--		children_array.start
+			--	until
+			--		children_array.after
+			--	loop
+			--		row := children_array.item
+			--		row.set_background_color (a_color)
+			--		children_array.forth
+			--	end
+			--else
 				 {EV_PRIMITIVE_IMP} Precursor (a_color)
-			end
+			--end
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -447,20 +446,21 @@ feature -- Element change
 			children_array: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 			row: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			if (rows > 0) then
-				from
-					children_array := ev_children
-					children_array.start
-				until
-					children_array.after
-				loop
-					row := children_array.item
-					row.set_foreground_color (a_color)
-					children_array.forth
-				end
-			else
+			--| FIXME FG color not applicable for rows at present.
+			--if (rows > 0) then
+			--	from
+			--		children_array := ev_children
+			--		children_array.start
+			--	until
+			--		children_array.after
+			--	loop
+			--		row := children_array.item
+			--		row.set_foreground_color (a_color)
+			--		children_array.forth
+			--	end
+			--else
 				{EV_PRIMITIVE_IMP} Precursor (a_color)
-			end
+			--end
 		end
 
 feature {NONE} -- Implementation
@@ -570,8 +570,8 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.36  2000/03/03 23:56:03  king
---| Corrected remove_item_from_position to use go_i_th instead of move
+--| Revision 1.37  2000/03/04 00:25:54  king
+--| Commented out redundant code that deals with setting individual colors of rows
 --|
 --| Revision 1.35  2000/03/03 20:10:27  king
 --| Corrected create_list to deal with resetting col wid and titles to prev values

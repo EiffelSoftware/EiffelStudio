@@ -330,6 +330,12 @@ interface IEiffelCompletionInfo: IDispatch
 	[id (DISPID_EiffelComCompiler_AddArgument), helpstring ("Add an argument used for solving member completion list")]
 	HRESULT AddArgument ([in] BSTR bstrName, [in] BSTR bstrType);
 
+	[id (DISPID_EiffelComCompiler_FlushLocals), helpstring ("Flush locals list")]
+	HRESULT FlushLocals();
+
+	[id (DISPID_EiffelComCompiler_FlushArguments), helpstring ("Flush arguments list")]
+	HRESULT FlushArguments();
+
 	[id (DISPID_EiffelComCompiler_TargetFeatures), helpstring ("Features accessible from target.")]
 	HRESULT TargetFeatures ([in] BSTR bstrTarget, [in] BSTR bstrLocationName, [in] EIF_COMPLETION_LOCATION clLocation, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out] VARIANT* pvarNames, [out] VARIANT* pvarSignatures, [out] VARIANT* pvarImageIndexes);
 

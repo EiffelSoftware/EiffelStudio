@@ -17,7 +17,7 @@ default
 	inlining (no)
 	inlining_size ("4")
 cluster
-	all client_server: "$EIFFEL_SRC\Src\dotnet\reflection_interface\assembly_manager\folder_dialog"
+	all client_server: "f:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog"
 		visible
 			IFOLDER_BROWSER_IMPL_PROXY
 				export
@@ -30,7 +30,7 @@ cluster
 		end
 
 	-- BASE
-	all base:	"$EIFFEL_SRC\library\base"
+	all base:	"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3";
 			"desc"
@@ -46,10 +46,10 @@ cluster
 		end;
 
 	-- WEL
-	all wel:	"$EIFFEL_SRC\library\wel"
+	all wel:	"$ISE_EIFFEL\library\wel"
 
 	-- TIME
-	all time: 	"$EIFFEL_SRC\library\time"
+	all time: 	"$ISE_EIFFEL\library\time"
 		exclude
 			"french";
 			"german"
@@ -58,7 +58,7 @@ cluster
 		end;
 
 	-- COM
-	all ecom:	"$EIFFEL_SRC\library\com"
+	all ecom:	"$ISE_EIFFEL\library\com"
 		visible
 			ECOM_DECIMAL;
 			ECOM_CURRENCY;
@@ -83,15 +83,15 @@ cluster
 		end;
 
 external
-	include_path:	"$EIFFEL_SRC\library\wel\spec\windows\include",
-			"$EIFFEL_SRC\library\com\spec\windows\include",
-			"$EIFFEL_SRC\library\time\Clib",
-			"$EIFFEL_SRC\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Clib"
+	include_path:	"$ISE_EIFFEL\library\wel\spec\windows\include",
+			"$ISE_EIFFEL\library\com\spec\windows\include",
+			"$ISE_EIFFEL\library\time\Clib",
+			"f:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Clib"
 
-	object: 	"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-			"$(EIFFEL_SRC)\library\time\spec\msc\lib\datetime.lib",
-			"$(EIFFEL_SRC)\library\com\spec\msc\lib\com.lib",
-			"$(EIFFEL_SRC)\library\com\spec\msc\lib\com_runtime.lib",
-			"$EIFFEL_SRC\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Clib\ecom_client.lib",
-			"$EIFFEL_SRC\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Clib\ecom_server.lib";
+	object: 	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+			"$(ISE_EIFFEL)\library\time\spec\msc\lib\datetime.lib",
+			"$(ISE_EIFFEL)\library\com\spec\msc\lib\com.lib",
+			"$(ISE_EIFFEL)\library\com\spec\msc\lib\com_runtime.lib",
+			"f:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Clib\ecom_client.lib",
+			"F:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Clib\ecom_server.lib";
 end

@@ -1126,6 +1126,13 @@ feature -- Exception handling
 		do
 		end
 
+	generate_leave_to (a_label: IL_LABEL) is
+			-- Instead of using `branch_to' which is forbidden in a `try-catch' clause,
+			-- we generate a `leave' opcode that has the same semantic except that it
+			-- should branch outside the `try-catch' clause.
+		do
+		end
+
 	generate_end_exception_block is
 			-- Mark end of rescue clause.
 		do

@@ -373,6 +373,7 @@ feature {NONE} -- Event handling
 			-- Called by `select_actions' of `left_alignment_button'.
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
+			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 		do
 			if not left_alignment_button.is_selected then
 				left_alignment_button.select_actions.block
@@ -384,7 +385,11 @@ feature {NONE} -- Event handling
 			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_left_alignment
 			if rich_text.has_selection then
-				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
+				create paragraph_info.make_with_values (True, False, False, False, False)
+				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
+					rich_text.line_number_from_position (rich_text.selection_end),
+					paragraph,
+					paragraph_info)
 			else
 				rich_text.format_paragraph (rich_text.current_line_number, rich_text.current_line_number, paragraph)
 			end
@@ -394,6 +399,7 @@ feature {NONE} -- Event handling
 			-- Called by `select_actions' of `center_alignment_button'.
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
+			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 		do
 			if not center_alignment_button.is_selected then
 				center_alignment_button.select_actions.block
@@ -405,7 +411,11 @@ feature {NONE} -- Event handling
 			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_center_alignment
 			if rich_text.has_selection then
-				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
+				create paragraph_info.make_with_values (True, False, False, False, False)
+				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
+					rich_text.line_number_from_position (rich_text.selection_end),
+					paragraph,
+					paragraph_info)
 			else
 				rich_text.format_paragraph (rich_text.current_line_number, rich_text.current_line_number, paragraph)
 			end
@@ -415,6 +425,7 @@ feature {NONE} -- Event handling
 			-- Called by `select_actions' of `right_alignment_button'.
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
+			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 		do
 			if not right_alignment_button.is_selected then
 				right_alignment_button.select_actions.block
@@ -426,7 +437,11 @@ feature {NONE} -- Event handling
 			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_right_alignment
 			if rich_text.has_selection then
-				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
+				create paragraph_info.make_with_values (True, False, False, False, False)
+				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
+					rich_text.line_number_from_position (rich_text.selection_end),
+					paragraph,
+					paragraph_info)
 			else
 				rich_text.format_paragraph (rich_text.current_line_number, rich_text.current_line_number, paragraph)
 			end
@@ -436,6 +451,7 @@ feature {NONE} -- Event handling
 			-- Called by `select_actions' of `justified_button'.
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
+			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 		do
 			if not justified_button.is_selected then
 				justified_button.select_actions.block
@@ -447,7 +463,11 @@ feature {NONE} -- Event handling
 			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_justification
 			if rich_text.has_selection then
-				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
+				create paragraph_info.make_with_values (True, False, False, False, False)
+				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
+					rich_text.line_number_from_position (rich_text.selection_end),
+					paragraph,
+					paragraph_info)
 			else
 				rich_text.format_paragraph (rich_text.current_line_number, rich_text.current_line_number, paragraph)
 			end
@@ -883,9 +903,18 @@ feature {NONE} -- Implementation
 			-- Called by `change_actions' of `left_margin'.
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
+			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			line_number: INTEGER
 		do
 			if rich_text.has_selection then
+				create paragraph
+				paragraph.set_left_margin (a_value)
+				create paragraph_info.make_with_values (False, True, False, False, False)
+				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
+						rich_text.line_number_from_position (rich_text.selection_end),
+						paragraph,
+						paragraph_info)
+						
 			else
 				paragraph := rich_text.paragraph_format (rich_text.caret_position)
 				paragraph.set_left_margin (a_value)
@@ -898,9 +927,17 @@ feature {NONE} -- Implementation
 			-- Called by `change_actions' of `right_margin'.
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
+			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			line_number: INTEGER
 		do
 			if rich_text.has_selection then
+				create paragraph
+				paragraph.set_right_margin (a_value)
+				create paragraph_info.make_with_values (False, False, True, False, False)
+				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
+						rich_text.line_number_from_position (rich_text.selection_end),
+						paragraph,
+						paragraph_info)
 			else
 				paragraph := rich_text.paragraph_format (rich_text.caret_position)
 				paragraph.set_right_margin (a_value)
@@ -913,9 +950,17 @@ feature {NONE} -- Implementation
 			-- Called by `change_actions' of `top_spacing'.
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
+			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			line_number: INTEGER
 		do
 			if rich_text.has_selection then
+				create paragraph
+				paragraph.set_top_spacing (a_value)
+				create paragraph_info.make_with_values (False, False, False, True, False)
+				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
+						rich_text.line_number_from_position (rich_text.selection_end),
+						paragraph,
+						paragraph_info)
 			else
 				paragraph := rich_text.paragraph_format (rich_text.caret_position)
 				paragraph.set_top_spacing (a_value)
@@ -928,9 +973,17 @@ feature {NONE} -- Implementation
 			-- Called by `change_actions' of `bottom_spacing'.
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
+			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			line_number: INTEGER
 		do
 			if rich_text.has_selection then
+				create paragraph
+				paragraph.set_top_spacing (a_value)
+				create paragraph_info.make_with_values (False, False, False, False, True)
+				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
+						rich_text.line_number_from_position (rich_text.selection_end),
+						paragraph,
+						paragraph_info)
 			else
 				paragraph := rich_text.paragraph_format (rich_text.caret_position)
 				paragraph.set_bottom_spacing (a_value)

@@ -64,8 +64,6 @@ feature -- Basic operations
 
 end -- class ABSOLUTE
 
-
-
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.

@@ -82,6 +82,7 @@ invariant
 	date_exists: date /= Void
 	time_exists: time /= Void
 
+end -- class DATE_TIME_MEASUREMENT
 
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.

@@ -82,6 +82,8 @@ feature -- Settings
 			hour_set: hour = h 
 		end
 
+end -- class TIME_MEASUREMENT
+
 
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.

@@ -32,25 +32,25 @@ feature {NONE}-- Initialization
 			create l_notebook_1
 			create l_horizontal_box_2
 			create l_vertical_box_2
-			create l_frame_1
-			create l_scrollable_area_1
-			create l_horizontal_box_3
-			create l_cell_1
-			create l_vertical_box_3
-			create l_cell_2
+			create scrollable_parent
+			create scrollable_widget_area
+			create horizontal_spacing_box
+			create left_spacing_cell
+			create vertical_spacing_box
+			create top_spacing_cell
 			create widget_holder
-			create l_cell_3
-			create l_cell_4
-			create l_horizontal_box_4
+			create bottom_spacing_cell
+			create right_spacing_cell
+			create l_horizontal_box_3
 			create event_output
 			create event_selector_list
-			create l_vertical_box_4
+			create l_vertical_box_3
 			create object_editor
 			create padding_cell
-			create l_horizontal_box_5
+			create l_horizontal_box_4
 			create l_vertical_split_area_1
 			create controller_parent
-			create l_horizontal_box_6
+			create l_horizontal_box_5
 			create test_class_display
 			create flat_short_display
 			
@@ -61,26 +61,26 @@ feature {NONE}-- Initialization
 			l_horizontal_box_1.extend (l_notebook_1)
 			l_notebook_1.extend (l_horizontal_box_2)
 			l_horizontal_box_2.extend (l_vertical_box_2)
-			l_vertical_box_2.extend (l_frame_1)
-			l_frame_1.extend (l_scrollable_area_1)
-			l_scrollable_area_1.extend (l_horizontal_box_3)
-			l_horizontal_box_3.extend (l_cell_1)
-			l_horizontal_box_3.extend (l_vertical_box_3)
-			l_vertical_box_3.extend (l_cell_2)
-			l_vertical_box_3.extend (widget_holder)
-			l_vertical_box_3.extend (l_cell_3)
-			l_horizontal_box_3.extend (l_cell_4)
-			l_vertical_box_2.extend (l_horizontal_box_4)
-			l_horizontal_box_4.extend (event_output)
-			l_horizontal_box_4.extend (event_selector_list)
-			l_horizontal_box_2.extend (l_vertical_box_4)
-			l_vertical_box_4.extend (object_editor)
-			l_vertical_box_4.extend (padding_cell)
-			l_notebook_1.extend (l_horizontal_box_5)
-			l_horizontal_box_5.extend (l_vertical_split_area_1)
+			l_vertical_box_2.extend (scrollable_parent)
+			scrollable_parent.extend (scrollable_widget_area)
+			scrollable_widget_area.extend (horizontal_spacing_box)
+			horizontal_spacing_box.extend (left_spacing_cell)
+			horizontal_spacing_box.extend (vertical_spacing_box)
+			vertical_spacing_box.extend (top_spacing_cell)
+			vertical_spacing_box.extend (widget_holder)
+			vertical_spacing_box.extend (bottom_spacing_cell)
+			horizontal_spacing_box.extend (right_spacing_cell)
+			l_vertical_box_2.extend (l_horizontal_box_3)
+			l_horizontal_box_3.extend (event_output)
+			l_horizontal_box_3.extend (event_selector_list)
+			l_horizontal_box_2.extend (l_vertical_box_3)
+			l_vertical_box_3.extend (object_editor)
+			l_vertical_box_3.extend (padding_cell)
+			l_notebook_1.extend (l_horizontal_box_4)
+			l_horizontal_box_4.extend (l_vertical_split_area_1)
 			l_vertical_split_area_1.extend (controller_parent)
-			l_vertical_split_area_1.extend (l_horizontal_box_6)
-			l_horizontal_box_6.extend (test_class_display)
+			l_vertical_split_area_1.extend (l_horizontal_box_5)
+			l_horizontal_box_5.extend (test_class_display)
 			l_notebook_1.extend (flat_short_display)
 			
 				-- Initialize properties of all widgets.
@@ -90,37 +90,37 @@ feature {NONE}-- Initialization
 			set_title ("Display window")
 			l_horizontal_box_1.disable_item_expand (l_notebook_1)
 			l_notebook_1.set_item_text (l_horizontal_box_2, "Properties")
-			l_notebook_1.set_item_text (l_horizontal_box_5, "Tests")
+			l_notebook_1.set_item_text (l_horizontal_box_4, "Tests")
 			l_notebook_1.set_item_text (flat_short_display, "Documentation")
-			l_horizontal_box_2.disable_item_expand (l_vertical_box_4)
-			l_vertical_box_2.disable_item_expand (l_frame_1)
-			l_scrollable_area_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
-			l_scrollable_area_1.set_minimum_width (330)
-			l_scrollable_area_1.set_minimum_height (330)
+			l_horizontal_box_2.disable_item_expand (l_vertical_box_3)
+			l_vertical_box_2.disable_item_expand (scrollable_parent)
+			scrollable_widget_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
+			scrollable_widget_area.set_minimum_width (330)
+			scrollable_widget_area.set_minimum_height (330)
 			
-			l_scrollable_area_1.set_item_width (310)
-			l_scrollable_area_1.set_item_height (310)
-			l_horizontal_box_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
-			l_horizontal_box_3.disable_item_expand (l_cell_1)
-			l_horizontal_box_3.disable_item_expand (l_cell_4)
-			l_cell_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
-			l_cell_1.set_minimum_width (5)
-			l_cell_1.set_minimum_height (0)
-			l_vertical_box_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
-			l_vertical_box_3.disable_item_expand (l_cell_2)
-			l_vertical_box_3.disable_item_expand (l_cell_3)
-			l_cell_2.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
-			l_cell_2.set_minimum_height (5)
-			l_cell_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
-			l_cell_3.set_minimum_width (300)
-			l_cell_3.set_minimum_height (5)
-			l_cell_4.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
-			l_cell_4.set_minimum_width (5)
-			l_cell_4.set_minimum_height (310)
-			l_horizontal_box_4.disable_item_expand (event_selector_list)
+			scrollable_widget_area.set_item_width (310)
+			scrollable_widget_area.set_item_height (310)
+			horizontal_spacing_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
+			horizontal_spacing_box.disable_item_expand (left_spacing_cell)
+			horizontal_spacing_box.disable_item_expand (right_spacing_cell)
+			left_spacing_cell.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
+			left_spacing_cell.set_minimum_width (5)
+			left_spacing_cell.set_minimum_height (0)
+			vertical_spacing_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
+			vertical_spacing_box.disable_item_expand (top_spacing_cell)
+			vertical_spacing_box.disable_item_expand (bottom_spacing_cell)
+			top_spacing_cell.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
+			top_spacing_cell.set_minimum_height (5)
+			bottom_spacing_cell.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
+			bottom_spacing_cell.set_minimum_width (300)
+			bottom_spacing_cell.set_minimum_height (5)
+			right_spacing_cell.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
+			right_spacing_cell.set_minimum_width (5)
+			right_spacing_cell.set_minimum_height (310)
+			l_horizontal_box_3.disable_item_expand (event_selector_list)
 			event_selector_list.set_minimum_width (150)
-			l_vertical_box_4.disable_item_expand (object_editor)
-			l_vertical_box_4.disable_item_expand (padding_cell)
+			l_vertical_box_3.disable_item_expand (object_editor)
+			l_vertical_box_3.disable_item_expand (padding_cell)
 			padding_cell.set_minimum_width (180)
 			test_class_display.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (253, 255, 255))
 			test_class_display.disable_edit
@@ -148,14 +148,14 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	l_vertical_box_1, l_vertical_box_2, l_vertical_box_3, l_vertical_box_4: EV_VERTICAL_BOX
-	l_horizontal_box_1, l_horizontal_box_2, l_horizontal_box_3, l_horizontal_box_4, 
-	l_horizontal_box_5, l_horizontal_box_6: EV_HORIZONTAL_BOX
-	widget_selector_parent, l_cell_1, l_cell_2, widget_holder, l_cell_3, l_cell_4, 
-	object_editor, padding_cell, controller_parent: EV_CELL
+	l_vertical_box_1, l_vertical_box_2, vertical_spacing_box, l_vertical_box_3: EV_VERTICAL_BOX
+	l_horizontal_box_1, l_horizontal_box_2, horizontal_spacing_box, l_horizontal_box_3, 
+	l_horizontal_box_4, l_horizontal_box_5: EV_HORIZONTAL_BOX
+	widget_selector_parent, left_spacing_cell, top_spacing_cell, widget_holder, bottom_spacing_cell, 
+	right_spacing_cell, object_editor, padding_cell, controller_parent: EV_CELL
 	l_notebook_1: EV_NOTEBOOK
-	l_frame_1: EV_FRAME
-	l_scrollable_area_1: EV_SCROLLABLE_AREA
+	scrollable_parent: EV_FRAME
+	scrollable_widget_area: EV_SCROLLABLE_AREA
 	event_output, test_class_display, flat_short_display: EV_TEXT
 	event_selector_list: EV_CHECKABLE_LIST
 	l_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA

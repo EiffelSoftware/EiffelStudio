@@ -34,6 +34,9 @@ RT_LNK int16 eif_typeof_array_of (int16 type);
 /* Full type name of an object as STRING object */
 RT_LNK char *eif_gen_typename (char *obj);
 
+/* Dynamic Type id of an object of type `type_string' */
+RT_LNK EIF_TYPE_ID eif_type_id (char *type_string);
+
 /* CID which creates a given type */
 RT_LNK int16 *eif_gen_cid (int16);
 

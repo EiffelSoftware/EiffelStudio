@@ -118,10 +118,10 @@ feature -- Access
         do
             cluster ?= clusters_table.item (cluster_name)
             if cluster /= Void then
-                Result := clone(cluster_name)
+                Result := cluster_name.twin
                 if cluster.has_parent then
                     Result.prepend_character('.')
-                    Result.prepend(get_cluster_full_name (cluster.parent_name))
+                    Result.prepend (get_cluster_full_name (cluster.parent_name))
                 end             
             end
         end
@@ -138,9 +138,9 @@ feature -- Access
             cluster ?= clusters_table.item (cluster_name)
             if cluster /= Void then
             	if cluster.cluster_namespace /= Void and not cluster.cluster_namespace.is_empty then
-	                Result := clone (cluster.cluster_namespace)
+	                Result := cluster.cluster_namespace.twin
 	            else
-	            	Result := clone (cluster.name)
+	            	Result := cluster.name.twin
 	            end
             	if ace_accesser.dot_net_naming_convention then
             		--| FIXME We should only need to convert cluster.name to .Net naming

@@ -78,7 +78,7 @@ feature -- Access
 			l_assembly: ASSEMBLY_SD
 			l_cluster_name: STRING
 		do
-			l_cluster_name := clone (a_cluster_name)
+			l_cluster_name := a_cluster_name.twin
 			
 			if not assemblies_table.has (l_cluster_name) then
 				if a_prefix /= Void and not a_prefix.is_empty then
@@ -105,10 +105,9 @@ feature -- Access
 		local
 			l_assembly: ASSEMBLY_SD
 			l_cluster_name: STRING
-			l_public_key_token: STRING
 			l_culture: STRING
 		do
-			l_cluster_name := clone (a_cluster_name)
+			l_cluster_name := a_cluster_name.twin
 			
 			if a_culture = Void or else a_culture.is_empty then
 				l_culture := "neutral"	
@@ -130,10 +129,9 @@ feature -- Access
 		local
 			l_assemblies: LACE_LIST [ASSEMBLY_SD]
 			copy_assemblies: like assemblies_table
-			cluster_name: ID_SD
 		do
 			-- Save assemblies
-			copy_assemblies := clone (assemblies_table)
+			copy_assemblies := assemblies_table.twin
 			l_assemblies := ace_accesser.root_ast.assemblies
 			if l_assemblies = Void then
 					-- if there is no assembly option then we need to create it

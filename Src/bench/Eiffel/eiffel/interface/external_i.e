@@ -44,6 +44,12 @@ feature -- Routines for externals
 			Result := extension /= Void and then extension.has_signature
 		end;
 
+	is_cpp: BOOLEAN is
+			-- Is the external declaration a C++ feature ?
+		do
+			Result := extension /= Void and then extension.is_cpp
+		end;
+
 	has_arg_list: BOOLEAN is
 			-- Does the signature include arguments ?
 		do
@@ -254,7 +260,7 @@ feature
 	execution_unit (cl_type: CLASS_TYPE): EXECUTION_UNIT is
 			-- Execution unit
 		do
-			if is_special or has_signature then
+			if is_cpp or is_special or has_signature then
 				!!Result.make (cl_type, Current);
 			elseif has_include_list then
 				!EXT_INCL_EXEC_UNIT! Result.make (cl_type, Current)

@@ -47,6 +47,7 @@ feature -- Creation
 			!! argument_list.make
 			!! arg.make (a_command.argument_name, a_command.argument_type)
 			argument_list.extend (arg)
+			precondition_list := a_command.precondition_list
 		end
 
 feature -- Scrollable element

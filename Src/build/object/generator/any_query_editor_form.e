@@ -490,7 +490,7 @@ feature -- Command generation
 					preconditions.after
 				loop
 					Result.append ("%T%T%Tprecondition := precondition and then ")
-					Result.append (preconditions.item.generated_eiffel_text (procedure.argument_name, actual_argument))
+					Result.append (preconditions.item.generated_text_for_command (procedure.argument_name, actual_argument))
 					Result.append ("%N")
 					preconditions.forth
 				end		

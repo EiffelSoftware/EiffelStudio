@@ -14,7 +14,8 @@ inherit
 		rename
 			index as position
 		redefine
-			is_plain_text, put_string, putstring
+			is_plain_text, put_string, putstring,
+			read_character, readchar
 		end
 
 create
@@ -253,6 +254,29 @@ feature -- Input
 				last_double := - last_double
 			end
 			internal_end_of_file := reader.peek = -1
+		end
+
+	read_character, readchar is
+			-- Read a new character.
+			-- Make result available in `last_character'.
+		local
+		  	a_code: INTEGER
+		do
+		  	a_code := reader.read
+		  	if a_code = - 1 then
+				internal_end_of_file := True
+		  	else
+		  			-- If we read `%R', i.e. value 13, then let's
+		  			-- check if next character is `%N'. If it is '%N'
+		  			-- then we return '%N', else we return '%R'.
+		  		if a_code = 13 then
+		  			a_code := reader.peek
+		  			if a_code = 10 then
+		  				a_code := reader.read
+		  			end
+		  		end
+				last_character := a_code.to_character
+		  	end
 		end
 
 feature {NONE} -- Implementation

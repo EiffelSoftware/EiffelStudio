@@ -1005,6 +1005,12 @@ interface IEiffelClusterProperties: IDispatch
 
 	[id (DISPID_EiffelComCompiler_ClusterNamespace), helpstring ("Cluster namespace."), propput]
 	HRESULT ClusterNamespace ([in] BSTR bstrNamespace);
+
+	[id (DISPID_EiffelComCompiler_AddVisible), helpstring ("Add a visible class.")]
+	HRESULT AddVisible ([in] BSTR bstrName);
+
+	[id (DISPID_EiffelComCompiler_RemoveVisible), helpstring ("Remove a visible class.")]
+	HRESULT RemoveVisible ([in] BSTR bstrName);
 };
 
 //---------------------------------------------------------------------

@@ -46,7 +46,11 @@ inherit
 			add_exclude_user_precondition,
 			remove_exclude,
 			remove_exclude_user_precondition,
-			cluster_id
+			cluster_id,
+			add_visible,
+			add_visible_user_precondition,
+			remove_visible,
+			remove_visible_user_precondition
 		end	 
 create
 	make_with_cluster_sd_and_ace_accesser
@@ -120,8 +124,10 @@ feature -- Access
 		do
 			Result := cluster_sd.directory_name
 			if Result = Void then
-				Result := ""
+				create Result.make_empty
 			end
+		ensure then
+			non_void_path: Result /= Void
 		end
 
 	parent_name: STRING is
@@ -132,6 +138,8 @@ feature -- Access
 			else
 				create Result.make_empty
 			end
+		ensure then
+			non_void_path: Result /= Void
 		end
 		
 	override: BOOLEAN is
@@ -359,7 +367,7 @@ feature -- Access
 			env: EXECUTION_ENVIRONMENT
 		do
 			create env
-			Result := clone (cluster_path)
+			Result := cluster_path.twin
 			Result.replace_substring_all ("/", "\")
 			if parent_name /= Void and not parent_name.is_empty then
 				if Result.substring_index ("$\", 1) > 0 then
@@ -407,7 +415,7 @@ feature -- Access
 					var := Result.substring (dollar_pos, slash_pos - 1)
 					
 					-- remove the () and $
-					formatted_var := clone (var);
+					formatted_var := var.twin
 					formatted_var.prune_all ('(')
 					formatted_var.prune_all (')')
 					formatted_var.prune_all_leading ('$')
@@ -788,6 +796,57 @@ feature -- Element change
 			end
 		end
 	
+	add_visible (a_class_name: STRING) is
+			-- Add `a_class_name' to list of visible classes.
+		require else
+			non_void_class_name: a_class_name /= Void
+			valid_class_name: not a_class_name.is_empty
+		local
+			l_visible_option: LACE_LIST [CLAS_VISI_SD]
+			l_visi_sd: CLAS_VISI_SD
+			l_cl_prop: CLUST_PROP_SD
+		do
+			l_cl_prop := cluster_sd.cluster_properties
+			if l_cl_prop /= Void then
+				create l_visi_sd.initialize (create {ID_SD}.initialize (a_class_name), Void, Void, Void, Void)
+				l_visible_option := l_cl_prop.visible_option
+				if l_visible_option = Void then
+					create l_visible_option.make (10)
+					l_cl_prop.set_visible_option (l_visible_option)
+				end
+				l_visible_option.extend (l_visi_sd)
+			end
+		end
+		
+	remove_visible (a_class_name: STRING) is
+			-- Remove `a_class_name' from list of visible classes.
+		require else
+			non_void_class_name: a_class_name /= Void
+			valid_class_name: not a_class_name.is_empty
+		local
+			l_visible_option: LACE_LIST [CLAS_VISI_SD]
+			l_cl_prop: CLUST_PROP_SD
+			l_removed: BOOLEAN
+		do
+			l_cl_prop := cluster_sd.cluster_properties
+			if l_cl_prop /= Void then
+				l_visible_option := l_cl_prop.visible_option
+				if l_visible_option /= Void then
+					from
+						l_visible_option.start
+					until
+						l_visible_option.after or l_removed
+					loop
+						if a_class_name.is_equal (l_visible_option.item.class_name) then
+							l_visible_option.remove
+							l_removed := True
+						end
+						l_visible_option.forth
+					end
+				end
+			end
+		end
+		
 feature -- Validation
 
 	valid_parent_name (a_parent_name: STRING): BOOLEAN is
@@ -797,7 +856,6 @@ feature -- Validation
 				Result := not name.as_lower.is_equal (a_parent_name.as_lower)
 			end
 		end
-		
 	
 feature -- User Preconditions
 
@@ -825,6 +883,17 @@ feature -- User Preconditions
 			Result := False
 		end
 
+	add_visible_user_precondition (dir_name: STRING): BOOLEAN is
+			-- 'add_visible' precondition
+		do
+			Result := False
+		end
+		
+	remove_visible_user_precondition (dir_name: STRING): BOOLEAN is
+			-- 'remove_visible' precondition
+		do
+			Result := False
+		end
 
 feature {SYSTEM_CLUSTERS} -- Element Changes
 

@@ -399,6 +399,8 @@ enum
     DISPID_EiffelComCompiler_IsEiffelLibrary,
     DISPID_EiffelComCompiler_ExpandedClusterPath,
     DISPID_EiffelComCompiler_ClusterNamespace,
+    DISPID_EiffelComCompiler_AddVisible,
+    DISPID_EiffelComCompiler_RemoveVisible,
 
     // IEnumClusterExcludes dispatch ID's
 

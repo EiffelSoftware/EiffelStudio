@@ -18,7 +18,8 @@ inherit
 			set_default_minimum_size,
 			child_added,
 			compute_minimum_width,
-			compute_minimum_height
+			compute_minimum_height,
+			compute_minimum_size
 		end
 
 	EV_FONTABLE_IMP
@@ -33,6 +34,7 @@ inherit
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
+			shown as displayed,
 			destroy as wel_destroy
 		undefine
 			window_process_message,
@@ -56,11 +58,15 @@ inherit
 			on_color_control,
 			on_wm_vscroll,
 			on_wm_hscroll,
-			on_key_down
+			on_key_down,
+			show,
+			hide
 		redefine
 			default_ex_style,
 			default_style,
 			adjust_items,
+			hide_current_selection,
+			show_current_selection,
 			on_tcn_selchange
 		end
 
@@ -127,14 +133,8 @@ feature -- Status setting
 			set_font (font)
 			if tab_pos = Pos_top or tab_pos = Pos_bottom then
 				internal_set_minimum_height (tab_height)
-				if parent_imp /= Void then
-					notify_change (2)
-				end
 			else
 				internal_set_minimum_width (tab_height)
-				if parent_imp /= Void then
-					notify_change (1)
-				end
 			end
 		end
 	
@@ -144,8 +144,7 @@ feature -- Status setting
  			tab_pos := pos
  			set_style (basic_style)
 			set_font (font)
-			--------
-			notify_change (2)
+			notify_change (1 + 2)
 		end
 
 	set_current_page (index: INTEGER) is
@@ -245,7 +244,7 @@ feature -- Element change
 			index: INTEGER
 		do
 			index := get_child_index (a_child)
-			delete_item (index - 1)
+			delete_item (index)
 			notify_change (2 + 1)
 		end
 
@@ -432,7 +431,7 @@ feature {NONE} -- Implementation
 			end
 
 			-- We found the biggest child
-			if tab_pos = Pos_top or tab_pos = Pos_top then
+			if tab_pos = Pos_top or tab_pos = Pos_bottom then
 				internal_set_minimum_width (value + 6)
 			else
 				internal_set_minimum_width (value + tab_height + 2)
@@ -471,6 +470,44 @@ feature {NONE} -- Implementation
 				internal_set_minimum_height (value + tab_height + 2)
 			else
 				internal_set_minimum_height (value + 6)
+			end
+		end
+
+	compute_minimum_size is
+			-- Recompute both the minimum_width and then
+			-- minimum_height of the object.
+		local
+			index: INTEGER
+			child_imp: EV_WIDGET_IMP
+			rect: WEL_RECT
+			mw, mh: INTEGER
+		do
+			from
+				index := 0
+				mw := 0; mh := 0
+				rect := sheet_rect
+			until
+				index = count
+			loop
+				child_imp ?= (get_item (index)).window
+				check
+					valid_cast: child_imp /= Void
+				end
+				if child_imp.minimum_width > mw then
+					mw := child_imp.minimum_width
+				end
+				if child_imp.minimum_height > mh then
+					mh := child_imp.minimum_height
+				end
+				index := index + 1
+			end
+
+			-- We found the biggest child
+			inspect tab_pos
+			when Pos_top, Pos_bottom then
+				internal_set_minimum_size (mw + 6, mh + tab_height + 2)
+			when Pos_left, Pos_right then
+				internal_set_minimum_size (mw + tab_height + 2, mh + 6)
 			end
 		end
 
@@ -520,14 +557,15 @@ feature {NONE} -- WEL Implementation
  			Result := Ws_child + Ws_group + Ws_tabstop
 				+ Ws_clipchildren + Ws_clipsiblings
 				+ Ws_visible
-			if tab_pos = Pos_top then
+			inspect tab_pos
+			when Pos_top then
 				Result := Result + Tcs_singleline
-			elseif tab_pos = Pos_bottom then
+			when Pos_bottom then
  				Result := Result + Tcs_bottom + Tcs_singleline
- 			elseif tab_pos = Pos_left then
+ 			when Pos_left then
  				Result := Result + Tcs_vertical + Tcs_fixedwidth 
 					+ Tcs_multiline
-			elseif tab_pos = Pos_right then
+			when Pos_right then
  				Result := Result + Tcs_right + Tcs_vertical
 					+ Tcs_fixedwidth + Tcs_multiline
  			end
@@ -548,6 +586,34 @@ feature {NONE} -- WEL Implementation
 				Result := client_rect.right - sheet_rect.right
 			else
 				Result := 0
+			end
+		end
+
+	hide_current_selection is
+			-- Hide the current selected page.
+		local
+			ww: WEL_WINDOW
+		do
+			ww := (get_item (current_selection)).window
+			if ww /= Void and then ww.exists then
+				cwin_show_window (ww.item, Sw_hide)
+			end
+		end
+
+	show_current_selection is
+			-- Show the current selected page.
+			-- Do not use directly show, because there is no use to notify back the parent.
+			-- Though, if there was any change done on the child, it should be reset directly
+			-- on the child.
+		local
+			ww: EV_WIDGET_IMP
+			rect: WEL_RECT
+		do
+			ww ?= (get_item (current_selection)).window
+			if ww /= Void and then ww.exists then
+				cwin_show_window (ww.item, Sw_show)
+				rect := sheet_rect
+				ww.move_and_resize (rect.left, rect.top, rect.width, rect.height, True)
 			end
 		end
 
@@ -593,6 +659,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 	get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is

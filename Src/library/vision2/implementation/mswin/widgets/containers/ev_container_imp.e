@@ -21,11 +21,13 @@ inherit
 	EV_WIDGET_IMP
 		undefine
 			internal_resize,
+			notify_change,
 			minimum_width,
 			minimum_height
 		redefine
 			move_and_resize,
-			widget_make
+			widget_make,
+			destroy
 		end
 
 	WEL_SB_CONSTANTS
@@ -70,6 +72,16 @@ feature -- Access
 
 	background_pixmap: EV_PIXMAP
 			-- Pixmap used for the background of the widget
+
+feature -- Status setting
+
+	destroy is
+			-- Destroy the widget, but set the parent sensitive
+			-- in case it was set insensitive by the child.
+		do
+			background_pixmap.destroy
+			{EV_WIDGET_IMP} Precursor
+		end
 
 feature -- Element change
 

@@ -189,7 +189,7 @@ feature -- Implementation
 			-- Add child into composite. In this container, `child' is the
 			-- child of the container whose page is currently selected.
 		do
-			child := child_imp
+			{EV_CONTAINER_IMP} Precursor (child_imp)
 			child_imp.hide
 		end
 

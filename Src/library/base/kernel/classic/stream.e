@@ -37,8 +37,19 @@ feature -- Status report
 
 feature -- Access
 
-	buffer: POINTER
-		-- C buffer correspond to the Eiffel STREAM.
+	item: POINTER is
+			-- Direct access to stored/retrieved data
+		do
+			Result := c_buffer (internal_buffer_access)
+		end
+	
+	buffer: POINTER is
+			-- C buffer correspond to the Eiffel STREAM
+		obsolete
+			"Use `item' instead to directly access stored/retrieved data"
+		do
+			Result := internal_buffer_access
+		end
 
 	buffer_size: INTEGER
 			-- Buffer's size.
@@ -47,10 +58,9 @@ feature -- Access
 			-- Size of last stored object.
 
 	create_c_buffer is
-			-- Create the C memory corresponding to the C
-			-- buffer.
+			-- Create the C memory corresponding to the C buffer.
 		do
-			buffer := c_malloc (buffer_size)
+			internal_buffer_access := c_malloc (buffer_size)
 		end
 
 	retrieved: ANY is
@@ -65,7 +75,7 @@ feature -- Access
 			size: INTEGER
 		do
 			(create {MISMATCH_CORRECTOR}).mismatch_information.do_nothing
-			Result := c_retrieved (buffer, buffer_size, 0, $size)
+			Result := c_retrieved (internal_buffer_access, buffer_size, 0, $size)
 			object_stored_size := size
 		end
 
@@ -78,7 +88,7 @@ feature -- Element change
 		local
 			size: INTEGER
 		do
-			buffer_size := c_stream_basic_store (buffer, buffer_size, $object, $size)
+			buffer_size := c_stream_basic_store (internal_buffer_access, buffer_size, $object, $size)
 			object_stored_size := size
 		end
 
@@ -93,7 +103,7 @@ feature -- Element change
 		local
 			size: INTEGER
 		do
-			buffer_size := c_stream_general_store (buffer, buffer_size, $object, $size)
+			buffer_size := c_stream_general_store (internal_buffer_access, buffer_size, $object, $size)
 			object_stored_size := size
 		end
 
@@ -105,7 +115,7 @@ feature -- Element change
 		local
 			size: INTEGER
 		do
-			buffer_size := c_stream_independent_store (buffer, buffer_size, $object, $size)
+			buffer_size := c_stream_independent_store (internal_buffer_access, buffer_size, $object, $size)
 			object_stored_size := size
 		end
 
@@ -119,10 +129,23 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
- 
+
+	internal_buffer_access: POINTER
+			-- Access to C buffer pointed by `item'.
+
+	c_buffer (a_buf: POINTER): POINTER is
+			-- Dereferenced pointer of `a_buf'
+		require
+			a_buf_not_null: a_buf /= default_pointer
+		external
+			"C inline"
+		alias
+			"*(EIF_POINTER *) $a_buf"
+		end
+			
 	c_stream_basic_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
-			-- Return new size of `buffer'.
+			-- Return new size of `internal_buffer_access'.
 		external
 			"C signature (EIF_POINTER *, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER *): EIF_INTEGER use %"eif_store.h%""
 		alias
@@ -131,7 +154,7 @@ feature {NONE} -- Implementation
 
 	c_stream_general_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
-			-- Return new size of `buffer'.
+			-- Return new size of `internal_buffer_access'.
 		external
 			"C signature (EIF_POINTER *, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER *): EIF_INTEGER use %"eif_store.h%""
 		alias
@@ -140,7 +163,7 @@ feature {NONE} -- Implementation
 
 	c_stream_independent_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
-			-- Return new size of `buffer'.
+			-- Return new size of `internal_buffer_access'.
 		external
 			"C signature (EIF_POINTER *, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER *): EIF_INTEGER use %"eif_store.h%""
 		alias
@@ -212,8 +235,8 @@ feature -- Status setting
 			-- Close medium.
 		do
 			is_closed := True
-			c_free (buffer)
-			buffer := default_pointer
+			c_free (internal_buffer_access)
+			internal_buffer_access := default_pointer
 		end
 
 feature -- Output

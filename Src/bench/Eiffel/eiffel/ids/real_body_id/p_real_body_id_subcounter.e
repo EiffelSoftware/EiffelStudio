@@ -53,7 +53,7 @@ feature -- Generation
 			file.putstring (buff);
 			file.putstring (" = ");
 			file.putint (offset);
-			file.putstring (";%N")
+			file.putstring (";%N%N")
 		end
 
 	generate_extern_offset (file: INDENT_FILE) is

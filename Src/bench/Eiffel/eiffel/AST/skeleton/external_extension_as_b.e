@@ -20,6 +20,12 @@ feature
 			ext_i.set_return_type (return_type)
 		end
 
+	need_encapsulation: BOOLEAN is
+			-- Does this language extension need an encapsulation?
+		do
+			Result := True
+		end
+
 feature -- Type check
 
 	type_check (ext_as_b: EXTERNAL_AS_B) is

@@ -348,7 +348,7 @@ STDMETHODIMP ecom_control_library::control_site::GetWindowContext(  /* [out] */ 
   EIF_OBJECT tmp_lp_frame_info = NULL;
   if (lp_frame_info != NULL)
   {
-    tmp_lp_frame_info = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_229 ((ecom_control_library::tagOIFI *)lp_frame_info));
+    tmp_lp_frame_info = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_record_229 ((OLEINPLACEFRAMEINFO *)lp_frame_info));
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;

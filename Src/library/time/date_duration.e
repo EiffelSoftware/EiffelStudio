@@ -325,7 +325,7 @@ feature -- Conversion
 			d1: INTEGER 
 		do 
 			if canonical (start_date) then 
-				Result := deep_clone (Current) 
+				Result := deep_twin
 			else 
 				final_date := start_date + Current; 
 				d1 := (final_date.year - start_date.year) * Months_in_year + 

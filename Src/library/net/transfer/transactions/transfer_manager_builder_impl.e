@@ -269,7 +269,7 @@ feature -- Element change
 							-- Because resource has been created during 
 							-- correctness check
 					end
-				sr := deep_clone (resource_hash.found_item)
+				sr := resource_hash.found_item.deep_twin
 
 				resource_factory.set_address (t)
 				tu := resource_factory.url
@@ -279,7 +279,7 @@ feature -- Element change
 							-- Because resource has been created during 
 							-- correctness check
 					end
-				tr := deep_clone (resource_hash.found_item)
+				tr := resource_hash.found_item.deep_twin
 					debug
 						Io.error.put_string (s)
 						Io.error.put_string (" -> ")

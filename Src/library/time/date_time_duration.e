@@ -289,7 +289,7 @@ feature -- Conversion
 			time_part_of_result: TIME_DURATION
 		do
 			if canonical (start_date) then
-				Result := deep_clone (Current)
+				Result := deep_twin
 			else
 				final_date := start_date + Current
 				create time_part_of_result.make_fine (final_date.hour - 
@@ -323,7 +323,7 @@ feature -- Conversion
 		require
 			definite_duration: definite
 		do
-			Result := deep_clone (Current)
+			Result := deep_twin
 			if Current >= zero then
 				if time < time.zero then
 					Result.time.hour_add (-time.to_days * Hours_in_day)

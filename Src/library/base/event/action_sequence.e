@@ -142,7 +142,9 @@ feature -- Access
 			-- Textual description of each event datum.
 		obsolete "Not implemented. To be removed"
 		do
-			Result := deep_clone (event_data_names_internal)
+			if event_data_names_internal /= Void then
+				Result := event_data_names_internal.deep_twin
+			end
 		ensure
 			equal_to_event_data_names_internal:
 				 deep_equal (Result, event_data_names_internal)

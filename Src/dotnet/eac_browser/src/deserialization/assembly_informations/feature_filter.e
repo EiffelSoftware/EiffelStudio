@@ -149,7 +149,7 @@ feature
 				if current_tag.last.is_equal (Param_str) then
 					l_str := format_comment (current_comment)
 					a_parameter.set_description (l_str)
-					a_member.add_parameter (deep_clone (a_parameter))
+					a_member.add_parameter (a_parameter.deep_twin)
 					current_comment.wipe_out
 				elseif current_tag.last.is_equal (Summary_str) then
 					l_str := format_comment (current_comment)

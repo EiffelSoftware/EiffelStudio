@@ -66,6 +66,51 @@ feature -- Basic Operations
 			delete_file (a_directory_name)
 		end
 
+	clean_directory (a_directory_name: STRING) is
+			-- Delete all files and subdirectories from directory `a_directory_name'
+		require
+			non_void_directory_name: a_directory_name /= Void
+			valid_directory_name: not a_directory_name.empty
+		local
+			a_directory: DIRECTORY
+			a_file: RAW_FILE
+			a_working_directory, a_file_name: STRING
+			a_file_list: LIST [STRING]
+		do
+			create a_directory.make (a_directory_name)
+			if a_directory.exists then
+				a_working_directory := execution_environment.current_working_directory
+				execution_environment.change_working_directory (a_directory_name)
+				a_file_list := a_directory.linear_representation
+				from
+					a_file_list.start
+				until
+					a_file_list.after
+				loop
+					if 
+						not a_file_list.item.is_equal (".") or
+						not a_file_list.item.is_equal ("..")
+					then
+						a_file_name := clone (a_directory_name)
+						a_file_name.append_character (Directory_separator)
+						a_file_name.append (a_file_list.item)
+						create a_file.make (a_file_name)
+						if a_file.exists then
+							if a_file.is_directory then
+								clean_directory (a_file_name)
+							end
+							delete_file (a_file_name)
+						end
+					end
+					a_file_list.forth
+				end
+				execution_environment.change_working_directory (a_working_directory)
+				check
+					directory_empty: a_directory.empty
+				end
+			end
+		end
+		
 	delete_object_files (a_directory_name: STRING) is
 			-- Delete all object files in directory `a_directory_name'.
 		require
@@ -87,7 +132,7 @@ feature -- Basic Operations
 					a_file_list.after
 				loop
 					if is_object_file (a_file_list.item) then
-						a_file_name := a_directory_name
+						a_file_name := clone (a_directory_name)
 						a_file_name.append_character (Directory_separator)
 						a_file_name.append (a_file_list.item)
 						delete_file (a_file_name)

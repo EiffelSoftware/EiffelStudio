@@ -121,7 +121,7 @@ feature -- Case Storage
 		local	
 			ctxt: FORMAT_CONTEXT;
 		do
-			!! Result.make (assertion_list.count);
+			!! Result.make_filled (assertion_list.count);
 			!! ctxt.make_for_case;
 			from
 				Result.start;

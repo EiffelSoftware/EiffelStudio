@@ -23,10 +23,7 @@ feature
 			type := t
 		end;
 
-	is_function: BOOLEAN is
-		do
-			Result := True
-		end;
+	is_function: BOOLEAN is True
 
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current

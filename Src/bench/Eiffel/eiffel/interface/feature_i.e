@@ -701,8 +701,8 @@ feature -- Conveniences
 			-- Do nothig
 		end
 
-	is_procedure: BOOLEAN is
-			-- Is current feature a procedure ?
+	is_routine: BOOLEAN is
+			-- Is current feature a routine ?
 		do
 			-- Do nothing
 		end

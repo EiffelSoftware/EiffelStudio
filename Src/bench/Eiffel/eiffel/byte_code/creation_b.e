@@ -66,6 +66,7 @@ feature -- Byte code generation
 			-- Generate byte code for a creation instruction
 		local
 			target_type: TYPE_I;
+			basic_type: BASIC_I
 			feat: FEATURE_B;
 			cl_type: CL_TYPE_I;
 		do
@@ -90,16 +91,29 @@ end;
 				end;
 				ba.append (Bc_sep_create_end);
 			else
-				ba.append (Bc_create);
-				info.make_byte_code (ba);
-				target.make_assignment_code (ba, target_type);
-				if call /= Void then
-					call.make_creation_byte_code (ba);
-				end;
-				if not target_type.is_basic then
-					target.make_byte_code (ba);
-					ba.append (Bc_create_inv);
-				end;
+				if target_type.is_basic then
+					basic_type ?= target_type
+					if basic_type.is_bit then
+						ba.append (Bc_create)
+						ba.append (Bc_bit)
+					end
+					basic_type.make_basic_creation_byte_code (ba)
+					target.make_assignment_code (ba, target_type)
+					if call /= Void then
+						call.make_creation_byte_code (ba)
+					end
+				else
+					ba.append (Bc_create);
+					info.make_byte_code (ba);
+					target.make_assignment_code (ba, target_type);
+					if call /= Void then
+						call.make_creation_byte_code (ba);
+					end;
+					if not target_type.is_basic then
+						target.make_byte_code (ba);
+						ba.append (Bc_create_inv);
+					end;
+				end
 			end;
 		end;
 

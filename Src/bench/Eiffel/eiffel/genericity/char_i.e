@@ -123,5 +123,13 @@ feature -- Generic conformance
 		do
 			Result := -2        -- Code for CHARACTER
 		end
+feature
+
+	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
+
+		do
+			ba.append (Bc_char)
+			ba.append ('%U')
+		end 
 
 end

@@ -115,6 +115,7 @@ feature
 			-- Genrate the creation
 		local
 			target_type: TYPE_I;
+			basic_type: BASIC_I
 			is_expanded: BOOLEAN;
 			gen_type: GEN_TYPE_I
 			buf: GENERATION_BUFFER
@@ -149,8 +150,9 @@ feature
 						buf.new_line;
 					elseif target_type.is_basic then
 						generate_register_assignment;
-						target_type.c_type.generate_cast (buf);
-						buf.putstring ("0;");
+						basic_type ?= target_type
+						basic_type.generate_basic_creation (buf)
+						buf.putchar (';')
 						buf.new_line;
 					elseif target_type.is_expanded then
 						buf.putstring ("RTXA(");
@@ -259,8 +261,9 @@ feature
 					generate_creation_invariant;	
 				else
 					generate_register_assignment;
-					target_type.c_type.generate_cast (buf);
-					buf.putstring ("0;");
+					basic_type ?= target_type
+					basic_type.generate_basic_creation (buf)
+					buf.putchar (';')
 					buf.new_line;
 				end;
 			end

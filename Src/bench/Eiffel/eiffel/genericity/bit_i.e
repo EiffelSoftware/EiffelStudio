@@ -8,7 +8,8 @@ inherit
 			is_pointer, 
 			metamorphose, append_signature,
 			generate_cid, generated_id, make_gen_type_byte_code,
-			generate_cid_array, generate_cid_init
+			generate_cid_array, generate_cid_init,
+			generate_basic_creation
 		end
 
 feature
@@ -199,4 +200,21 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 			dummy := idx_cnt.next
 		end
+
+feature
+
+	generate_basic_creation (buffer : GENERATION_BUFFER) is
+
+		do
+			buffer.putstring ("RTLB(")
+			buffer.putint (size)
+			buffer.putchar (')')
+		end
+	
+	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
+
+		do
+			ba.append_integer (size)
+		end 
+
 end

@@ -141,6 +141,7 @@ feature {NONE}
 	Bc_rcreate:		CHARACTER is '%/133/';
 	Bc_gen_param_create:	CHARACTER is '%/134/';
 	Bc_create_exp:	CHARACTER is '%/135/';
+	Bc_null_pointer:	CHARACTER is '%/136/';
 
 		-- Instructions for Concurrent Eiffel
 

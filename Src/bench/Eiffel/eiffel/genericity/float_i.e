@@ -145,5 +145,13 @@ feature -- Generic conformance
 		do
 			Result := -5        -- Code for REAL
 		end
+feature
+
+	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
+
+		do
+			ba.append (Bc_float)
+			ba.append_real (0.0)
+		end 
 
 end

@@ -228,7 +228,7 @@ char *object;
 			xraise(EN_MEM);
 		bzero(account, scount * sizeof(char));
 		if (accounting == INDEPEND_ACCOUNT)
-			c = INDEPENDENT_STORE_4_0;
+			c = INDEPENDENT_STORE_3_2;
 		else {
 			c = GENERAL_STORE_4_0;
 

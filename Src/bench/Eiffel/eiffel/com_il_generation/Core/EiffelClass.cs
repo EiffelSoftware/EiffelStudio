@@ -289,7 +289,7 @@ internal class EiffelClass : Globals
 				.DefineDefaultConstructor( MethodAttributes.Public );
 		} else {
 			constructor =(( TypeBuilder )Builder )
-				.DefineConstructor( MethodAttributes.Public, CallingConventions.Standard, EmptyArrayTypes );
+				.DefineConstructor( MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes );
 			generator = constructor.GetILGenerator ();
 				// If parent does not define a default constructor,
 				// we generate a non-verifiable constructor.

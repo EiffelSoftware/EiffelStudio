@@ -129,32 +129,32 @@ struct gt_info {
 extern struct ctable fce_rname[];		/* Routine names -> function pointer */
 #endif
 
-extern EIF_TYPE_ID eifcid(char *class_name);		     /* Get a class ID */
-extern EIF_TYPE_ID eifexp(EIF_TYPE_ID id);			/* Force expansion */
+RT_LNK EIF_TYPE_ID eifcid(char *class_name);		     /* Get a class ID */
+RT_LNK EIF_TYPE_ID eifexp(EIF_TYPE_ID id);			/* Force expansion */
 
-extern EIF_TYPE_ID eifgid(char *class_name, ...);	/* Get a generic class ID */
+RT_LNK EIF_TYPE_ID eifgid(char *class_name, ...);	/* Get a generic class ID */
 
-extern EIF_OBJ eifcreate(EIF_TYPE_ID cid);				/* Object creation */
+RT_LNK EIF_OBJ eifcreate(EIF_TYPE_ID cid);				/* Object creation */
 
-extern EIF_PROC eifproc(char *routine, EIF_TYPE_ID cid);				/* Pointer to Eiffel procedure */
-extern EIF_FN_INT eiflong(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning INTEGER */
-extern EIF_FN_CHAR eifchar(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning CHAR */
-extern EIF_FN_FLOAT eifreal(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning REAL */
-extern EIF_FN_DOUBLE eifdouble(char *routine, EIF_TYPE_ID cid);		/* Eiffel function returning DOUBLE */
-extern EIF_FN_BIT eifbit(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning BIT */
-extern EIF_FN_BOOL eifbool(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning BOOLEAN */
-extern EIF_FN_POINTER eifptr(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning POINTER */
-extern EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning ANY */
+RT_LNK EIF_PROC eifproc(char *routine, EIF_TYPE_ID cid);				/* Pointer to Eiffel procedure */
+RT_LNK EIF_FN_INT eiflong(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning INTEGER */
+RT_LNK EIF_FN_CHAR eifchar(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning CHAR */
+RT_LNK EIF_FN_FLOAT eifreal(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning REAL */
+RT_LNK EIF_FN_DOUBLE eifdouble(char *routine, EIF_TYPE_ID cid);		/* Eiffel function returning DOUBLE */
+RT_LNK EIF_FN_BIT eifbit(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning BIT */
+RT_LNK EIF_FN_BOOL eifbool(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning BOOLEAN */
+RT_LNK EIF_FN_POINTER eifptr(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning POINTER */
+RT_LNK EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning ANY */
 
-extern int eiftype(EIF_OBJ object);					/* Give dynamic type of EIF_OBJ */
-extern char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
-extern char *eifaddr(char *object, char *name);					/* Compute address of attribute */
-extern EIF_BIT eifgbit(char *object, char *name);				/* Get a bit field structure */
-extern void eifsbit(char *object, char *name, EIF_BIT bit);					/* Set a bit field structure */
-extern char eifibit(EIF_BIT bit, int i);					/* Access ith bit in bit field */
-extern int eifsibit(EIF_BIT bit, int i);					/* Set ith bit to 1 */
-extern int eifribit(EIF_BIT bit, int i);					/* Reset ith bit to 0 */
-extern EIF_BIT eifbcln(EIF_BIT bit);				/* Eiffel bit cloning */
+RT_LNK int eiftype(EIF_OBJ object);					/* Give dynamic type of EIF_OBJ */
+RT_LNK char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
+RT_LNK char *eifaddr(char *object, char *name);					/* Compute address of attribute */
+RT_LNK EIF_BIT eifgbit(char *object, char *name);				/* Get a bit field structure */
+RT_LNK void eifsbit(char *object, char *name, EIF_BIT bit);					/* Set a bit field structure */
+RT_LNK char eifibit(EIF_BIT bit, int i);					/* Access ith bit in bit field */
+RT_LNK int eifsibit(EIF_BIT bit, int i);					/* Set ith bit to 1 */
+RT_LNK int eifribit(EIF_BIT bit, int i);					/* Reset ith bit to 0 */
+RT_LNK EIF_BIT eifbcln(EIF_BIT bit);				/* Eiffel bit cloning */
 
 RT_LNK void  failure(void);					/* The Eiffel exectution failed */
 RT_LNK void eif_rtinit(int argc, char **argv, char **envp);				/* Eiffel run-time initialization */

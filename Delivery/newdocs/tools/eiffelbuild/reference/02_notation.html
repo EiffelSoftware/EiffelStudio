@@ -12,6 +12,18 @@
 		<P> An EiffelBuild object is a representation of a Vision2 component and its properties. When developing with EiffelBuild, you manipulate objects to build the desired interface.<br><br> Within EiffelBuild, there may be multiple views of a single object displayed simultaneously. Deleting or modifying an object will update all applicable views of that object.</P>
 		<A NAME="component"></A><H2>Component</H2>
 		<P>EiffelBuild components are templates representing user defined object structures.<br><br> You specify a new component by creating it from an existing object structure.</P>
+		<A NAME="pick_and_drop"></A><H2>Pick and Drop</H2>
+		<P>The pick and drop mechanism is one of ISE's exclusive technologies and is provided by <A HREF="/libraries/vision2/00_introduction.html">EiffelVision2</A>. In EiffelBuild, it allows you to easily send data from a component of the interface to another.</P>
+<P>You can pick a reference to a <b>development object</b>, such as an object or component with a single click of the <b>right</b> mouse button. Then as you start moving the mouse around - not pressing any of its buttons - a pebble tracks the cursor position, and a line continuously connects the pebble to the object's original position.</P>
+<p>You may terminate this situation in either of two ways:
+	<ul>
+		<li>If the pebble you are dragging is the regular cursor, you can right-click again to confirm the pick-and-drop
+		and so effectively send the dragged development object to the targeted component. 	<p>Right-clicking when the pebble is the <B>no</B> cursor, will only stop the
+        pick-and-drop because the component you are
+        hovering with the
+		mouse does not accept your development object.	<li>If, for any reason, you change your mind, you can cancel the pick-and-drop by left-clicking anywhere
+		or by pressing the Escape key.
+	</ul></p>
 
 	</BODY>
 </HTML>

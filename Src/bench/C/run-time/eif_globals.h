@@ -202,8 +202,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 
 		/* sig.c */
-	char sig_ign_cx[NSIG];		/* Is signal ignored by default? */
-	char osig_ign_cx[NSIG];	/* Original signal default (1 = ignored) */
+	char sig_ign_cx[EIF_NSIG];		/* Is signal ignored by default? */
+	char osig_ign_cx[EIF_NSIG];	/* Original signal default (1 = ignored) */
 	int esigblk_cx;			/* By default, signals are not blocked */
 	struct s_stack sig_stk_cx;	/* Initialized by initsig() */
 

@@ -1,10 +1,8 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: 
-		"EiffelVision primitive, mswin implementation."
-	note: "This class would be the equivalent of a wel_control in%
+	description: "EiffelVision primitive, mswin implementation.%N%
+			%This class would be the equivalent of a wel_control in%N%
 			% the wel hierarchy."
-	status: "See notice at end of class"
+	status: "See notice at end of class,"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +29,7 @@ inherit
 feature -- Access
 
 	top_level_window_imp: EV_WINDOW_IMP
-			-- Top level window that contains the current widget.
+			-- Top level window that contains `Current'.
 
 feature -- Element change
 
@@ -44,9 +42,6 @@ feature -- Element change
 			ww: WEL_WINDOW
 		do
 			if par /= Void then
-				--if parent_imp /= Void then
-				--	parent_imp.remove_child (Current)
-				--end
 				par_imp ?= par.implementation
 				par_imp.add_child (Current)
 				ww ?= par.implementation
@@ -62,7 +57,7 @@ feature -- Element change
 	
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
-			-- of the widget.
+			-- of `Current'.
 		do
 			top_level_window_imp := a_window
 		end
@@ -70,27 +65,29 @@ feature -- Element change
 feature -- Basic operations
 
 	tab_action (direction: BOOLEAN) is
-			-- Go to the next widget that takes the focus through to the tab key.
-			-- If `direction' it goes to the next widget otherwise, it goes to the 
-			-- previous one.
+			-- Go to the next widget that takes the focus through to the tab
+			-- key. If `direction' it goes to the next widget otherwise,
+			-- it goes to the previous one.
 		local
 			hwnd: POINTER
 			window: WEL_WINDOW
 		do
-			hwnd := next_dlgtabitem (top_level_window_imp.wel_item, wel_item, direction)
+			hwnd := next_dlgtabitem (top_level_window_imp.wel_item,
+			wel_item, direction)
 			window := windows.item (hwnd)
 			window.set_focus
 		end
 
 	arrow_action (direction: BOOLEAN) is
-			-- Go to the next widget that takes the focus through the arrow keys.
-			-- If `direction' it goes to the next widget otherwise, it goes to the 
-			-- previous one.
+			-- Go to the next widget that takes the focus throughthe arrow
+			-- keys. If `direction' it goes to the next widget otherwise,
+			-- it goes to the previous one.
 		local
 			hwnd: POINTER
 			window: EV_WIDGET_IMP
 		do
-			hwnd := next_dlggroupitem (top_level_window_imp.wel_item, wel_item, direction)
+			hwnd := next_dlggroupitem (top_level_window_imp.wel_item,
+			wel_item, direction)
 			window ?= windows.item (hwnd)
 			check
 				valid_cast: window /= Void
@@ -103,9 +100,9 @@ feature -- Basic operations
 		end
 
 	process_tab_key (virtual_key: INTEGER) is
-			-- Process a tab or arrow key press to give the focus to the next widget
-			-- Need to be called in the feature on_key_down when the control need to
-			-- process this kind of keys.
+			-- Process a tab or arrow key press to give the focus to the next
+			-- widget. Need to be called in the feature on_key_down when the
+			-- control needs to process this kind of keys.
 		do
 			if virtual_key = Vk_tab and then flag_set (style, Ws_tabstop) then
 				if key_down (Vk_shift) then
@@ -117,9 +114,9 @@ feature -- Basic operations
 		end
 
 	process_tab_and_arrows_keys (virtual_key: INTEGER) is
-			-- Process a tab or arrow key press to give the focus to the next widget
-			-- Need to be called in the feature on_key_down when the control need to
-			-- process this kind of keys.
+			-- Process a tab or arrow key press to give the focus to the next
+			-- widget. Need to be called in the feature on_key_down when the
+			-- control need to process this kind of keys.
 		do
 			if virtual_key = Vk_tab then
 				if key_down (Vk_shift) then
@@ -135,10 +132,6 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Deferred features
-
-	--item: POINTER is
-	--	deferred
-	--	end
 
 	windows: HASH_TABLE [WEL_WINDOW, POINTER] is
 		deferred
@@ -166,7 +159,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_PRIMITIVE_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -180,13 +173,17 @@ end -- class EV_PRIMITIVE_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/05 22:47:46  rogers
+--| removed FIXME NOT_REVIEWED. Fixed description, made whole
+--| class fit within 80 columns. Formatting.
+--|
 --| Revision 1.24  2000/03/14 20:09:08  brendel
 --| Rearranged initialization
 --|
@@ -222,7 +219,8 @@ end -- class EV_PRIMITIVE_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.20.6.2  1999/12/17 00:33:38  rogers
---| Altered to fit in with the review branch. Basic alterations, redefinitaions of name clashes etc.
+--| Altered to fit in with the review branch. Basic alterations, redefinitaions
+--| of name clashes etc.
 --|
 --| Revision 1.20.6.1  1999/11/24 17:30:33  oconnor
 --| merged with DEVEL branch

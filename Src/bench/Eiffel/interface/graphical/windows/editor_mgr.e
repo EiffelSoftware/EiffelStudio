@@ -189,53 +189,7 @@ feature {WINDOW_MGR} -- Properties
 			Result := active_editors.count
 		end;
 
-	empty_editor: like editor_type is
-			-- Retrieve an empty editor. If not found
-			-- then create one.
-		do
-			from
-				active_editors.start
-			until
-				active_editors.after
-			loop
-				active_editors.forth
-			end;
-			if not active_editors.after then
-				Result := active_editors.item
-			else
-				Result := top_shell_editor
-			end
-		end;
-
-	form_d_editor: like editor_type is
-		local
-			mp: MOUSE_PTR;
-			ed: BAR_AND_TEXT;
-			fd: EB_FORM_DIALOG
-		do
-			!! mp.set_watch_cursor;
-			!! fd.make ("", Project_tool);
-			ed := shell_editor (fd);
-			fd.set_title (ed.tool_name);
-			Result ?= ed;
-			mp.restore;
-		end;
-
-	top_shell_editor: like editor_type is
-		local
-			mp: MOUSE_PTR;
-			ed: BAR_AND_TEXT;
-			ts: EB_TOP_SHELL
-		do
-			!! mp.set_watch_cursor;
-			!! ts.make (Project_tool.screen);
-			ed := shell_editor (ts);
-			ts.set_title (ed.tool_name);
-			Result ?= ed
-			mp.restore;
-		end;
-
-	shell_editor (a_parent: EB_SHELL): like editor_type is
+	editor: like editor_type is
 			-- Creates new editor. (Either creates one or
 			-- retrieves one from the free_list).
 		local
@@ -249,7 +203,7 @@ feature {WINDOW_MGR} -- Properties
 				free_list.remove;
 			else
 				!! mp.set_watch_cursor;
-				!! Result.make_shell (a_parent);
+				!! Result.make_shell (screen);
 				mp.restore
 			end;
 			active_editors.extend (Result);

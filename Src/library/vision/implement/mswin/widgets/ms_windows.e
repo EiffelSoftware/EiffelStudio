@@ -16,14 +16,16 @@ inherit
 	WEL_APPLICATION
 		rename
 			make as wel_make,
+			accelerators as wel_accelerators,
 			main_window as wel_main_window
 		redefine
-			idle_action, run
+			idle_action
 		end
 
 	MAIN_WINDOW_MANAGER_WINDOWS
 		rename
-			make as wel_make
+			make as wel_make,
+			accelerators as wel_accelerators
 		redefine
 			idle_action
 		select
@@ -43,8 +45,7 @@ feature {NONE} -- Initialization
 	make (application_class: STRING) is
 			-- Create the toolkit.
                         -- `application_class' is used for the resource specifications.
-		do 
-			runable := True
+		do
 			set_application (Current)
 			if application_class /= Void then
 				app_class := clone (application_class)
@@ -106,13 +107,6 @@ feature
                         -- MS-Windows implementation of `a_pixmap'
 		do
 			!! Result.make (a_pixmap)
-		end;
-
-	message (a_message: MESSAGE; managed: BOOLEAN;
-		oui_parent: COMPOSITE): MESSAGE_WINDOWS is
-			-- Toolkit implementation of `a_message'
-		do
-			!! Result.make (a_message, managed, oui_parent)
 		end;
 
 	pixmap_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN): PIXMAP_WINDOWS is

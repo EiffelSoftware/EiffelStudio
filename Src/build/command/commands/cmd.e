@@ -344,7 +344,9 @@ feature -- Code Generation
 			temp: STRING
 		do
 			!! Result.make (0)
-			Result.append ("%Texecute is%N%T%Tdo%N%T%T%TPrecursor%N%T%Tend")
+			Result.append ("%Texecute is%N%T%Tdo%N%T%T%T{")
+			Result.append (eiffel_type)
+			Result.append ("} Precursor%N%T%Tend")
 		end
 
 	eiffel_creation_text (l: LINKED_LIST [STRING]): STRING is
@@ -352,8 +354,9 @@ feature -- Code Generation
 			-- creation clause of Current.
 		do
 			!! Result.make (0)
-			Result.append ("%T%T%T")
-			Result.append ("Precursor")
+			Result.append ("%T%T%T{")
+			Result.append (eiffel_type)
+			Result.append ("} Precursor")
 			if not l.empty then
 				Result.append (" (")
 				from

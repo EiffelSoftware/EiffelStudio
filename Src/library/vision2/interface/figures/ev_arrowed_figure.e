@@ -86,8 +86,8 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 			end
 			if start_arrow /= Void then
 				start_draw_point.set_x (-line_width)
-				start_arrow.i_th_point (1).set_position (-s, -s // 2)
-				start_arrow.i_th_point (3).set_position (-s, s // 2)
+				start_arrow.i_th_point (1).set_position (s, -s // 2)
+				start_arrow.i_th_point (3).set_position (s, s // 2)
 			end
 		end
 

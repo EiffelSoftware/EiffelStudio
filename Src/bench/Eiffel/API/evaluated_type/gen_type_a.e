@@ -215,24 +215,27 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER
 			meta_generic: META_GENERIC
 			true_generics: ARRAY [TYPE_I]
+			gt:TYPE_A
 		do
 			from
 				i := 1
 				count := generics.count
 				!!meta_generic.make (count)
 				!!true_generics.make (1, count)
-				!!Result
-				Result.set_base_id (base_class_id)
-				Result.set_meta_generic (meta_generic)
-				Result.set_true_generics (true_generics)
-				Result.set_is_expanded (is_expanded)
 			until
 				i > count
 			loop
+				gt := generics.item (i)
 				meta_generic.put (generics.item (i).meta_type, i)
 				true_generics.put (generics.item (i).type_i, i)
 				i := i + 1
 			end
+
+			!!Result
+			Result.set_base_id (base_class_id)
+			Result.set_meta_generic (meta_generic)
+			Result.set_true_generics (true_generics)
+			Result.set_is_expanded (is_expanded)
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): GEN_TYPE_A is
@@ -249,9 +252,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := 1
 					count := generics.count
 					!!new_generics.make (1, count)
-					!!Result
-					Result.set_base_class_id (base_class_id)
-					Result.set_generics (new_generics)
 				until
 					i > count
 				loop
@@ -259,6 +259,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 							(generics.item (i).solved_type (feat_table, f), i)
 					i := i + 1
 				end
+				!!Result
+				Result.set_base_class_id (base_class_id)
+				Result.set_generics (new_generics)
 			end
 		end
 
@@ -385,14 +388,14 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i := 1
 				count := generics.count
 				!!duplicate_generics.make (1, count)
-				Result := clone (Current)
-				Result.set_generics (duplicate_generics)
 			until
 				i > count
 			loop
 				duplicate_generics.put (generics.item (i).duplicate, i)
 				i := i + 1
 			end
+			Result := clone (Current)
+			Result.set_generics (duplicate_generics)
 		end
 
 	good_generics: BOOLEAN is
@@ -644,8 +647,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			ctxt.put_classi (associated_class.lace_class)
 			count := generics.count
 
-			-- TUPLE may have zero generic parameters
-
+				-- TUPLE may have zero generic parameters
 			if count > 0 then
 				ctxt.put_space
 				ctxt.put_text_item (ti_L_bracket)
@@ -675,18 +677,22 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 		do
 			!! Result.make (Void, associated_class.id.id)
 			count := generics.count
-			!! gens.make_filled (count)
-			from
-				gens.start
-				i := 1
-			until
-				i > count
-			loop
-				gens.replace (generics.item (i).storage_info (classc))
-				gens.forth
-				i := i + 1
+
+				-- TUPLE may have zero generics
+			if count > 0 then
+				!! gens.make_filled (count)
+				from
+					gens.start
+					i := 1
+				until
+					i > count
+				loop
+					gens.replace (generics.item (i).storage_info (classc))
+					gens.forth
+					i := i + 1
+				end
+				Result.set_generics (gens)
 			end
-			Result.set_generics (gens)
 		end
 
 	storage_info_with_name (classc: CLASS_C): S_GEN_TYPE_INFO is
@@ -702,18 +708,22 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			class_name := clone (ass_classc.name)
 			!! Result.make (class_name, ass_classc.id.id)
 			count := generics.count
-			!! gens.make_filled (count)
-			from
-				gens.start
-				i := 1
-			until
-				i > count
-			loop
-				gens.replace (generics.item (i).storage_info_with_name (classc))
-				gens.forth
-				i := i + 1
+
+				-- TUPLE may have zero generics
+			if count > 0 then
+				!! gens.make_filled (count)
+				from
+					gens.start
+					i := 1
+				until
+					i > count
+				loop
+					gens.replace (generics.item (i).storage_info_with_name (classc))
+					gens.forth
+					i := i + 1
+				end
+				Result.set_generics (gens)
 			end
-			Result.set_generics (gens)
 		end
 
 feature {NONE} -- Error generation

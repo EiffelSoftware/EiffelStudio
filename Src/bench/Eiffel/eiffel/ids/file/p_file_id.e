@@ -23,7 +23,12 @@ feature -- Access
 	directory_path: STRING is
 			-- Server file directory path
 		do
-			Result := Precompilation_directories.item (compilation_id).compilation_path
+			if is_precompiled then
+				Result := Precompilation_directories.item
+					(compilation_id).compilation_path
+			else
+				Result := Compilation_path
+			end
 		end
 
 end -- class P_FILE_ID

@@ -78,10 +78,12 @@ feature -- Basic operation
 			has_item: item /= Void
 			item_is_filler: item = filler
 		do
+			lock_update
 				-- Remove the filler.
 			wipe_out
 				-- Add the tools.
 			extend (tool_holder)
+			unlock_update
 		ensure
 			has_item: item /= Void
 			item_is_tool_holder: item = tool_holder
@@ -94,10 +96,12 @@ feature -- Basic operation
 			has_item: item /= Void
 			item_is_tool_holder: item = tool_holder
 		do
+			lock_update
 				-- Remove the tools
 			wipe_out
 				-- Add the filler
 			extend (filler)
+			unlock_update
 		ensure
 			has_item: item /= Void
 			item_is_filler: item = filler
@@ -131,7 +135,7 @@ feature {NONE} -- Implementation
 			create file_exit.make_with_text (Gb_file_exit_menu_text)
 			file_menu.extend (file_exit)
 			file_exit.select_actions.extend (agent close_requested)
-			
+
 				-- Initialize the view menu.
 			create view_menu.make_with_text (Gb_view_menu_text)
 			a_menu_bar.extend (view_menu)
@@ -147,8 +151,6 @@ feature {NONE} -- Implementation
 			project_menu.extend (command_handler.project_settings_command.new_menu_item)
 			create project_menu_build.make_with_text (Gb_project_menu_build_text)
 			project_menu.extend (project_menu_build)
-			
-			
 			
 				-- Initialize the help menu.
 			create help_menu.make_with_text (Gb_help_menu_text)

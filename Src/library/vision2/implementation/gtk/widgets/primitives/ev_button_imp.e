@@ -91,9 +91,8 @@ feature -- Access
 			-- Is this button currently a default push button 
 			-- for a particular container?
 		do
-			check
-				To_be_implemented: False
-			end
+			Result := is_default_button
+--| FIXME To_be_implemented
 		end
 
 feature -- Status Setting
@@ -102,18 +101,16 @@ feature -- Status Setting
 			-- Set the style of the button corresponding
 			-- to the default push button.
 		do
-			check
-				To_be_implemented: False
-			end
+			is_default_button := True
+--| FIXME To_be_implemented
 		end
 
 	disable_default_push_button is
 			-- Remove the style of the button corresponding
 			-- to the default push button.
 		do
-			check
-				To_be_implemented: False
-			end
+			is_default_button := False
+--| FIXME To_be_implemented
 		end
 
 feature -- Element change
@@ -179,6 +176,13 @@ feature {NONE} -- implementation
 			Result := C.g_list_nth_data (Result, 0)
 		end
 
+	is_default_button: BOOLEAN
+			-- Temporary flag whose only use is to enable functions
+			-- `is_default_push_button', `enable_default_push_button'
+			-- and `disable_default_push_button' to be executed
+			-- without raising zillions of assertion violations.
+			--| FIXME implement cited function, then remove me.
+
 feature {EV_ANY_I} -- implementation
 
 	interface: EV_BUTTON
@@ -211,6 +215,10 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/05/03 02:28:10  bonnard
+--| Fixed "default_button" features so they do not trigger assertion violations.
+--| Features still have to be implemented.
+--|
 --| Revision 1.33  2000/05/02 18:55:30  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

@@ -182,6 +182,7 @@ feature -- Status setting
 			if name /= Void then
 				str := name.to_c
 			end;
+			exclear
 			eraise ($str, Developer_exception);
 		end;
 
@@ -219,6 +220,11 @@ feature -- Status setting
 		end;
 
 feature {NONE} -- Implementation
+
+	exclear is
+		external
+			"C | %"eif_except.h%""
+		end
 
 	eraise (str: POINTER; code: INTEGER) is
 			-- Raise an exception

@@ -326,17 +326,18 @@ feature -- Cursor
 
 	finish is
 			-- Move cursor to last position.
-			-- (Go after if empty)
+			-- (Go before if empty)
 		do
 			if not empty then
 				active := last_element;
-				after := false
+				after := false;
+				before := false
 			else
-				after := true
+				after := false;
+				before := true;
 			end;
-			before := false
 		ensure then
-			not_before: not before
+			not_after: not after
 		end;
 
 	move (i: INTEGER) is

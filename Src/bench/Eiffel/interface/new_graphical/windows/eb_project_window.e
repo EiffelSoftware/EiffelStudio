@@ -138,8 +138,8 @@ feature -- Pulldown Menus
 	open_objects_menu: EV_MENU_ITEM
 			-- ID Menu for open object tools
 
-	open_explains_menu: EV_MENU_ITEM
-			-- ID Menu for open explain tools
+	open_clusters_menu: EV_MENU_ITEM
+			-- ID Menu for open cluster tools
 
 	edit_feature_menu: EV_MENU_ITEM
 			-- ID Edit menu specific for the feature part
@@ -362,8 +362,8 @@ feature -- Update
 		local
 			tool_action: EB_TOOL_BROADCASTER
 
-			create_explain_cmd: EB_CREATE_EXPLAIN_CMD
-			explain_menu_item: EV_MENU_ITEM
+			create_cluster_cmd: EB_CREATE_CLUSTER_CMD
+			cluster_menu_item: EV_MENU_ITEM
 
 			create_class_cmd: EB_CREATE_CLASS_CMD
 			class_menu_item: EV_MENU_ITEM
@@ -390,14 +390,14 @@ feature -- Update
 			i.add_select_command (tool_action, tool_action.Raise_all)
 
 				-- Sub menus for open tools.
-			create open_explains_menu.make_with_text (a_menu, Interface_names.m_Explain_tools)
+			create open_clusters_menu.make_with_text (a_menu, Interface_names.m_Explain_tools)
 			create open_classes_menu.make_with_text (a_menu, Interface_names.m_Class_tools)
 			create open_features_menu.make_with_text (a_menu, Interface_names.m_Feature_tools)
 			create open_objects_menu.make_with_text (a_menu, Interface_names.m_Object_tools)
 
-			create create_explain_cmd.make (tool)
-			create explain_menu_item.make_with_text (open_explains_menu, Interface_names.m_New_explain)
-			explain_menu_item.add_select_command (create_explain_cmd, Void)
+			create create_cluster_cmd.make (tool)
+			create cluster_menu_item.make_with_text (open_clusters_menu, Interface_names.m_New_explain)
+			cluster_menu_item.add_select_command (create_cluster_cmd, Void)
 
 			create create_class_cmd.make (tool)
 			create class_menu_item.make_with_text (open_classes_menu, Interface_names.m_New_class)

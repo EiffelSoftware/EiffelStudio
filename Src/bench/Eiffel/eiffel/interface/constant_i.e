@@ -87,7 +87,7 @@ feature
 	check_types (feat_tbl: FEATURE_TABLE) is
 			-- Check Result and argument types 
 		local
-			actual_type	: TYPE_A
+			actual_type: TYPE_A
 			vqmc: VQMC
 		do
 			Precursor {ENCAPSULATED_I} (feat_tbl)

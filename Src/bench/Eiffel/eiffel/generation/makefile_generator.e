@@ -520,7 +520,7 @@ feature -- Generation, Header
 				make_file.putstring ("%NLIBS = $libs")
 			end
 
-			make_file.putstring ("%NMAKE = make%N%
+			make_file.putstring ("%NMAKE = $make%N%
 				%AR = $ar%N%
 				%LD = $ld%N%
 				%MKDEP = $mkdep %H$(DPFLAGS) --%N%

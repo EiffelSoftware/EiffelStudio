@@ -14,6 +14,14 @@ feature -- For weak references
 			"C | %"eif_object_id.h%""
 		end
 
+	eif_id_any_object (an_id: INTEGER): ANY is
+			-- Object associated with `an_id'
+		external
+			"C | %"eif_object_id.h%""
+		alias
+			"eif_id_object"
+		end
+		
 	eif_object_id (an_object: ANY): INTEGER is
 			-- New identifier for `an_object'
 		external

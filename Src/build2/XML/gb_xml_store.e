@@ -161,7 +161,7 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 			end
 			create handler
 				-- We must store the name and other attributes
-				-- which are used internallly. These are not in the
+				-- which are used internally. These are not in the
 				-- interface of Vision2
 			new_type_element := new_child_element (element, Internal_properties_string, "")
 			element.force_last (new_type_element)
@@ -303,7 +303,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 		-- XML document generated from created window.
 
 feature {NONE} -- Implementation
-			
+
 	generated_names: ARRAYED_LIST [STRING] is
 			-- All names generated automatically.
 		once

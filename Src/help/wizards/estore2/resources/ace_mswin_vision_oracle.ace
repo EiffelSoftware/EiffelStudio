@@ -40,10 +40,7 @@ cluster
 			"gtk"
 			"test"
 		end
-	all Events:				"$EIFFEL4\library\event"
-
-
-		-- EiffelTime
+			-- EiffelTime
 	time:				"$EIFFEL4\library\time";
 	time_format(time):	"$\format";
 	time_english(time):	"$\format\english";
@@ -53,19 +50,20 @@ cluster
 	estore_interface:	"$EIFFEL4\library\store\interface"
 	estore_db_support:	"$EIFFEL4\library\store\dbms\support"
 	estore_rdbms:		"$EIFFEL4\library\store\dbms\rdbms\oracle"
+	all estore_generation:	"$EIFFEL4\library\store\generation"
 
 
 external
 	include_path:		
-						"$EIFFEL4\library\store\dbms\rdbms\oracle\Clib",
 						"$EIFFEL4\library\wel\spec\windows\include",
 						"$EIFFEL4\library\vision2\spec\include",
-						
-						"c:\oracle\ora81\OCI\include"
+						"$EIFFEL4\library\store\dbms\rdbms\oracle\Clib",
+						"$(ORACLE_HOME)\OCI\include"
 
-	object: 			"$EIFFEL4\library\store\spec\$(COMPILER)\lib\support.lib",
+	object: 
+						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\support.lib",
 						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
-						"c:\oracle\ora81\OCI\lib\msvc\oci.lib",
+						"$(ORACLE_HOME)\OCI\lib\msvc\oci.lib",
 						"$EIFFEL4\library\time\spec\$(COMPILER)\lib\datetime.lib",
 						"$EIFFEL4\library\wel\spec\msc\lib\wel.lib",
 						"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\vision2.lib",

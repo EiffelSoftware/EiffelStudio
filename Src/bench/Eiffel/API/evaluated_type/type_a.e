@@ -7,10 +7,13 @@ deferred class TYPE_A
 
 inherit
 	TYPE_AS
-		rename
-			start_position as comment_position
 		redefine
-			is_solved, same_as, format, append_to
+			is_solved, same_as, append_to
+		end
+
+	SHARED_TEXT_ITEMS
+		export
+			{NONE} all
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -35,6 +38,20 @@ feature -- Visitor
 	process (v: AST_VISITOR) is
 			-- process current element.
 		do
+		end
+
+feature -- Location
+
+	start_location: LOCATION_AS is
+			-- Starting point for current construct.
+		do
+			Result := null_location
+		end
+		
+	end_location: LOCATION_AS is
+			-- Ending point for current construct.
+		do
+			Result := null_location
 		end
 
 feature -- Properties
@@ -308,25 +325,6 @@ feature {COMPILER_EXPORTER} -- Access
 				l_vtcg7.set_error_list (constraint_error_list)
 				l_vtcg7.set_parent_type (a_gen_type)
 				Error_handler.insert_error (l_vtcg7)
-			end
-		end
-
-	check_conformance (target_name: STRING; target_type: TYPE_A) is
-			-- Check if Current conforms to `other'.
-			-- If not, insert error into Error handler.
-		require
-			target_name_not_void: target_name /= Void
-			target_type_not_void: target_type /= Void
-		local
-			vjar: VJAR
-		do
-			if not conform_to (target_type) then
-				create vjar
-				context.init_error (vjar)
-				vjar.set_source_type (Current)
-				vjar.set_target_type (target_type)
-				vjar.set_target_name (target_name)
-				Error_handler.insert_error (vjar)
 			end
 		end
 

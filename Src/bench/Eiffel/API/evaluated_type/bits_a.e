@@ -13,7 +13,7 @@ inherit
 			is_bits, conform_to, 
 			associated_class, dump,
 			same_as, ext_append_to,
-			check_conformance, format, is_equivalent
+			format, is_equivalent
 		end
 
 create
@@ -83,24 +83,6 @@ feature -- Output
 		end
 
 feature {COMPILER_EXPORTER}
-
-	check_conformance (target_name: STRING; target_type: TYPE_A) is
-			-- Check if Current conforms to `other'.
-			-- If not, insert error into Error handler
-			-- which uses `context' for initialisation of the
-			-- error.
-		local
-			vncb: VNCB
-		do
-			if not conform_to (target_type) then
-				create vncb
-				context.init_error (vncb)
-				vncb.set_target_name (target_name)
-				vncb.set_source_type (Current)
-				vncb.set_target_type (target_type)
-				Error_handler.insert_error (vncb)
-			end
-		end
 
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?

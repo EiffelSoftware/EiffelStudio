@@ -121,18 +121,15 @@ RT_LNK void expop(register1 struct xstack *stk);	/* Pops an execution vector off
 #ifdef EIF_IL_DLL
 #define com_eraise(tag,num) eraise (tag,num)
 #define eraise(tag,num) RaiseException(num, 0, 0, NULL)
+#define enomem() RaiseException(EN_OMEM, 0, 0, NULL)
 #else
-RT_LNK void eraise(EIF_CONTEXT char *tag, long num);		/* Raise an Eiffel exception */
-RT_LNK void com_eraise(EIF_CONTEXT char *tag, long num);	/* Raise an EiffelCOM exception */
+RT_LNK void eraise(EIF_CONTEXT char *tag, long num);		/* Raise Eiffel exception */
+RT_LNK void com_eraise(EIF_CONTEXT char *tag, long num);	/* Raise EiffelCOM exception */
+RT_LNK void enomem();										/* Raises "Out of memory" exception */
 #endif
 
 RT_LNK void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */
 RT_LNK void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */
-#ifdef EIF_IL_DLL
-#define enomem()	
-#else
-RT_LNK void enomem();			/* Raises an "Out of memory" exception */
-#endif
 RT_LNK struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
 RT_LNK void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig);			/* Call signal handler */
 RT_LNK void exinv(EIF_CONTEXT register2 char *tag, register3 char *object);			/* Invariant record */

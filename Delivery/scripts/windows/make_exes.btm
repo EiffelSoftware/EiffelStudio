@@ -20,68 +20,6 @@ mkdir %INSTALL_DIR\releases\enterprise\lib
 mkdir %INSTALL_DIR\releases\enterprise\lib\bcb
 mkdir %INSTALL_DIR\releases\enterprise\lib\msc
 
-
-iff not defined BUILD_ENTERPRISE_ONLY then
-	remtrace Compile the non-commercial run-times
-	remtrace Compile a run-time for Borland
-	exprt -r %DEFAULT_CVS_TAG -d C runtime
-	cd C\run-time
-	sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
-	move new_main.c main.c
-	cd ..
-	alias pause echo
-	call configure win32 b >>& %INSTALL_LOG
-	unalias pause
-	cd %EIFFEL_SRC
-	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\bcb
-	fullrf %INSTALL_DIR\releases\free_version\lib\bcb\ebench.lib
-
-	remtrace Compile a dynamic run-time
-	fullrd C
-	exprt -r %DEFAULT_CVS_TAG -d C runtime
-	cd C\run-time
-	sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
-	move new_main.c main.c
-	cd ..
-	sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
-	move new_config.msh config.msh
-	sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" config.msh >> new_config.msh
-	move new_config.msh config.msh
-	sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.msh >> new_config.msh
-	move new_config.msh config.msh
-	alias pause echo
-	call configure win32 m >>& %INSTALL_LOG
-	unalias pause
-	cd %EIFFEL_SRC
-	copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\free_version\lib\msc
-	fullrf %INSTALL_DIR\releases\free_version\lib\msc\*.exp
-	fullrf %INSTALL_DIR\releases\free_version\lib\msc\ebench.lib
-	cd %EIFFEL_SRC
-
-	remtrace Compile a run-time for Microsoft
-	fullrd C
-	exprt -r %DEFAULT_CVS_TAG -d C runtime
-	cd C\run-time
-	sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
-	move new_main.c main.c
-	cd ..
-	sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
-	move new_config.msh config.msh
-	alias pause echo
-	call configure win32 m >>& %INSTALL_LOG
-	unalias pause
-	cd %EIFFEL_SRC
-	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\msc
-	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\free_version\lib\msc
-	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\free_version\lib\msc
-	fullrf %INSTALL_DIR\releases\free_version\lib\msc\ebench.lib
-
-	remtrace Copying header to new delivery
-	copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
-	copy %EIFFEL_SRC\C\eif_confmagic.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
-	cd %EIFFEL_SRC
-endiff
-
 remtrace Compile the commercial run-times
 remtrace Compile a run-time for Borland
 fullrd C
@@ -91,8 +29,30 @@ alias pause echo
 call configure win32 b >>& %INSTALL_LOG
 unalias pause
 cd %EIFFEL_SRC
+fullrf C\run-time\LIB\ebench.lib
 copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise\lib\bcb
-fullrf %INSTALL_DIR\releases\enterprise\lib\bcb\ebench.lib
+copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\bcb
+copy C\run-time\FREELIB\*.lib %INSTALL_DIR\releases\free_version\lib\bcb
+remtrace Compile a run-time for Microsoft
+fullrd C
+exprt -r %DEFAULT_CVS_TAG -d C runtime
+cd C
+sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
+move new_config.msh config.msh
+alias pause echo
+call configure win32 m >>& %INSTALL_LOG
+unalias pause
+cd %EIFFEL_SRC
+fullrf C\run-time\LIB\ebench.lib
+copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise\lib\msc
+copy C\desc\ise_desc.dll %INSTALL_DIR\releases\enterprise\lib\msc
+copy C\desc\ise_desc.lib %INSTALL_DIR\releases\enterprise\lib\msc
+
+copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\msc
+copy C\run-time\FREELIB\*.lib %INSTALL_DIR\releases\free_version\lib\msc
+copy C\desc\ise_desc.dll %INSTALL_DIR\releases\free_version\lib\msc
+copy C\desc\ise_desc.lib %INSTALL_DIR\releases\free_version\lib\msc
+
 remtrace Compile a dynamic run-time
 fullrd C
 exprt -r %DEFAULT_CVS_TAG -d C runtime
@@ -107,34 +67,18 @@ alias pause echo
 call configure win32 m >>& %INSTALL_LOG
 unalias pause
 cd %EIFFEL_SRC
+fullrf C\run-time\LIB\ebench.lib
+fullrf C\run-time\LIB\*.exp
+fullrf C\run-time\FREELIB\*.exp
 copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\enterprise\lib\msc
-fullrf %INSTALL_DIR\releases\enterprise\lib\msc\*.exp
-fullrf %INSTALL_DIR\releases\enterprise\lib\msc\ebench.lib
+copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\free_version\lib\msc
+copy C\run-time\FREELIB\*dll* %INSTALL_DIR\releases\free_version\lib\msc
 cd %EIFFEL_SRC
-remtrace Compile a run-time for Microsoft
-fullrd C
-exprt -r %DEFAULT_CVS_TAG -d C runtime
-cd C
-sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
-move new_config.msh config.msh
-alias pause echo
-call configure win32 m >>& %INSTALL_LOG
-unalias pause
-cd %EIFFEL_SRC
-copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise\lib\msc
-copy C\desc\ise_desc.dll %INSTALL_DIR\releases\enterprise\lib\msc
-copy C\desc\ise_desc.lib %INSTALL_DIR\releases\enterprise\lib\msc
-fullrf %INSTALL_DIR\releases\enterprise\lib\msc\ebench.lib
 
 remtrace Copy the header files
 copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\eif_confmagic.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
-
-remtrace We need to copy finalized.lib to ISE_EIFFEL so that the new run-time is used to compile the exe's.
-cd %ISE_EIFFEL\studio\spec\%ISE_PLATFORM\lib\msc
-move finalized.lib finalized.lib_backup
-copy %EIFFEL_SRC\C\run-time\LIB\finalized.lib .
 
 remtrace Then the C libraries
 cd %EIFFEL_SRC\C_library

@@ -458,7 +458,7 @@ feature -- Type queries
 			Result := (generic_typecode (index - 1) = integer_16_code)
 		end
 
-	is_integer_item, is_integer_32 (index: INTEGER): BOOLEAN is
+	is_integer_item, is_integer_32_item (index: INTEGER): BOOLEAN is
 			-- Is item at `index' an INTEGER?
 		require
 			valid_index: valid_index (index)

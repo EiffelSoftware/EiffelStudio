@@ -15,7 +15,8 @@ default
 
 cluster
 
-	ROOT_CLUSTER: 		"$WS/text";
+	ROOT_CLUSTER: 		"$EIFFEL_SRC/library/text_editor";
+
 
 --		-- EiffelBase
 --	all base: 		"$EIFFEL4/library/base"

@@ -465,6 +465,19 @@ feature {NONE} -- Implementation
 					row := constants_list.i_th (modify_constant_index)
 					row.put_i_th (directory_constant.value_as_string, 3)
 					directory_input.set_text (directory_constant.value)
+						-- Now must update all pixmaps in `Current' relying on `directory_constant'.
+					from
+						constants_list.start
+					until
+						constants_list.off
+					loop
+						pixmap_constant ?= constants_list.item.data
+						if pixmap_constant /= Void and then not pixmap_constant.is_absolute and then
+							pixmap_constant.directory.is_equal (directory_constant.name) then
+							constants_list.item.set_pixmap (pixmap_constant.pixmap)
+						end
+						constants_list.forth
+					end
 				end
 			else
 				create error_dialog.make_with_text ("Unable to change as one or more refers may not be set to this value.")

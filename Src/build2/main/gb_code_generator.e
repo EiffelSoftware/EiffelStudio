@@ -89,12 +89,18 @@ feature {NONE} -- Implementation
 			i, j: INTEGER
 		do
 			set_progress (0.1)
-			if Eiffel_platform.is_equal ("windows") then
-				platform_ace_file_name := clone (windows_ace_file_name)
+			if system_status.is_wizard_system then
+				create platform_ace_file_name.make_from_string (execution_environment.command_line.argument_array @ 1)
+				platform_ace_file_name.extend ("templates")
+				platform_ace_file_name.extend ("windows")
+				platform_ace_file_name.extend ("ace_template.ace")--+ "\templates\windows"
 			else
-				platform_ace_file_name := clone (unix_ace_file_name)
+				if Eiffel_platform.is_equal ("windows") then
+					platform_ace_file_name := clone (windows_ace_file_name)
+				else
+					platform_ace_file_name := clone (unix_ace_file_name)
+				end
 			end
-			
 			create project_location.make_from_string (system_status.current_project_settings.project_location)
 			
 			create ace_template_file.make_open_read (platform_ace_file_name)
@@ -137,12 +143,20 @@ feature {NONE} -- Implementation
 				-- Generate an application class for the project.
 			local
 				application_template_file, application_output_file: RAW_FILE
-				application_file_name: FILE_NAME
+				application_file_name, application_template: FILE_NAME
 				application_class_name: STRING
 				change_pos: INTEGER
 			do
 				set_progress (0.2)
-				create application_template_file.make_open_read (application_template_file_name)
+				if system_status.is_wizard_system then
+					create application_template.make_from_string (execution_environment.command_line.argument_array @ 1)
+					application_template.extend ("templates")
+					application_template.extend ("build_application_template.e")
+				else
+					application_template := application_template_file_name			
+				end
+					
+				create application_template_file.make_open_read (application_template)
 				create application_text.make (application_template_file.count)
 				application_template_file.start
 				application_template_file.read_stream (application_template_file.count)
@@ -175,7 +189,7 @@ feature {NONE} -- Implementation
 			local
 				store: GB_XML_STORE
 				window_template_file, window_output_file: RAW_FILE
-				window_file_name: FILE_NAME
+				window_file_name, window_template: FILE_NAME
 				local_tag_index, create_tag_index: INTEGER
 			do
 				set_progress (0.3)
@@ -190,7 +204,14 @@ feature {NONE} -- Implementation
 				
 				set_progress (0.6)
 					-- Retrieve the template for a class file to generate.
-				create window_template_file.make_open_read (window_template_imp_file_name)
+				if system_status.is_wizard_system then
+					create window_template.make_from_string (execution_environment.command_line.argument_array @ 1)
+					window_template.extend ("templates")
+					window_template.extend ("build_class_template_imp.e")
+				else
+					window_template := window_template_imp_file_name		
+				end
+				create window_template_file.make_open_read (window_template)
 				create class_text.make (window_template_file.count)
 				window_template_file.start
 				window_template_file.read_stream (window_template_file.count)
@@ -270,10 +291,17 @@ feature {NONE} -- Implementation
 			--
 		local
 			window_template_file, window_output_file: RAW_FILE
-			window_file_name: FILE_NAME
+			window_file_name, window_template: FILE_NAME
 		do
 				-- Retrieve the template for a class file to generate.
-			create window_template_file.make_open_read (window_template_file_name)
+			if system_status.is_wizard_system then
+				create window_template.make_from_string (execution_environment.command_line.argument_array @ 1)
+				window_template.extend ("templates")
+				window_template.extend ("build_class_template.e")
+			else
+				window_template := window_template_file_name		
+			end
+			create window_template_file.make_open_read (window_template)
 			create class_text.make (window_template_file.count)
 			window_template_file.start
 			window_template_file.read_stream (window_template_file.count)

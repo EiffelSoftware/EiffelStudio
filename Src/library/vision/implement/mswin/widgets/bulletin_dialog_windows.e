@@ -15,6 +15,7 @@ inherit
 			allow_resize as allow_recompute_size,
 			forbid_resize as forbid_recompute_size
 		undefine
+			class_background,
 			set_height,
 			set_size, 
 			set_width,
@@ -44,12 +45,12 @@ inherit
 			resize_for_shell,
 			default_style,
 			destroy,
-			class_background,
 			height,
 			minimal_height,
 			minimal_width,
 			move_and_resize,
 			on_menu_command,
+			on_accelerator_command,
 			on_paint,
 			real_x,
 			real_y,

@@ -50,7 +50,9 @@ feature -- Initialization
 			!! private_attributes
 			a_file_sel_dialog.set_dialog_imp (Current)
 			title := clone (a_file_sel_dialog.identifier)
-			pattern := "*.*"
+			pattern := ""
+			directory := ""
+			filter := "*.*"
 		end
 
 	realize is
@@ -61,21 +63,21 @@ feature -- Initialization
 
 feature -- Access
 
-	dir_count : INTEGER is
+	dir_count: INTEGER is
 			-- Count of directories below `filter'
 		do
 		end
 
-	dir_list : LINKED_LIST [STRING] is
+	dir_list: LINKED_LIST [STRING] is
 			-- List of directories below `filter'
 		do
 		end
 
-	directory : STRING 
+	directory: STRING 
 			-- Base directory used in determining files and directories
 			-- to be displayed
 
-	file_list : LINKED_LIST [STRING] is
+	file_list: LINKED_LIST [STRING] is
 			-- List of files below `filter' that match `pattern'
 		do
 		end
@@ -153,18 +155,22 @@ feature -- Status setting
 					wel_file_dialog.add_flag (ofn_hidereadonly)
 				else
 					!WEL_OPEN_FILE_DIALOG! wel_file_dialog.make
-					wel_file_dialog.add_flag (ofn_createprompt)
+					wel_file_dialog.add_flag (Ofn_createprompt)
 				end
+				wel_file_dialog.add_flag (Ofn_nochangedir)
 				wel_file_dialog.set_title (title)
 				wel_file_dialog.set_file_name (pattern)
-				if filter = Void then
+				wel_file_dialog.set_filter (<<filter>>, <<"">>)
+				if directory = "" then
 					wel_file_dialog.set_initial_directory_as_current
 				else
-					wel_file_dialog.set_initial_directory (filter)
+					wel_file_dialog.set_initial_directory (directory)
 				end
 				wel_file_dialog.activate (wc)
 				if wel_file_dialog.selected then
 					ok_actions.execute (Current, Void)
+					directory.set (wel_file_dialog.file_name,
+						1, wel_file_dialog.file_name_offset)
 				else
 					cancel_actions.execute (Current, Void)
 				end
@@ -185,8 +191,25 @@ feature -- Status setting
 
 	set_filter (s: STRING) is
 			-- Set the filter to `s'
+		local
+			string_count: INTEGER
+			f: STRING
 		do
-			filter := s
+			string_count := s.count
+			if s @ string_count = '\' or s @ string_count = '/' then
+				string_count := string_count - 1
+			end
+			from
+				f := ""
+			until
+				s @ string_count = '\' or
+				s @ string_count = '/'
+			loop
+				f.prepend_character (s @ string_count)
+				string_count := string_count - 1
+			end
+			filter := f
+			directory.set (s, 1, string_count)
 		end
 
 	set_directory (s: STRING) is

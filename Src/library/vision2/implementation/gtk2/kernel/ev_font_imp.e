@@ -185,14 +185,14 @@ feature -- Status report
 			-- Width in pixels of `a_string' in the current font.
 		local
 			a_cs: EV_GTK_C_STRING
-			pango_layout: POINTER
+			a_pango_layout: POINTER
 			a_width, a_height: INTEGER
 		do
 			create a_cs.make (a_string)
-			pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, font_description)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (pango_layout, $a_width, $a_height)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pango_layout)
+			a_pango_layout := App_implementation.pango_layout
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (a_pango_layout, $a_width, $a_height)
 			Result := a_width
 		end
 
@@ -236,7 +236,7 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 		
 	pango_family_string: STRING is
 			-- Get standard string to represent family.
-		do
+		do			
 			from
 				preferred_families.start
 			until
@@ -330,15 +330,17 @@ feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
 		-- Pointer to the PangoFontDescription struct
 
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
-	pango_weight_ultra_light: INTEGER is 200
-	pango_weight_light: INTEGER is 300
-	pango_weight_normal: INTEGER is 400
-	pango_weight_bold: INTEGER is 700
-	pango_weight_ultrabold: INTEGER is 800
-	pango_weight_heavy: INTEGER is 900
+	frozen pango_weight_ultra_light: INTEGER is 200
+	frozen pango_weight_light: INTEGER is 300
+	frozen pango_weight_normal: INTEGER is 400
+	frozen pango_weight_bold: INTEGER is 700
+	frozen pango_weight_ultrabold: INTEGER is 800
+	frozen pango_weight_heavy: INTEGER is 900
 		-- Pango font weight constants
+
+feature {NONE} -- Implementation
 			
 	app_implementation: EV_APPLICATION_IMP is
 			-- Return the instance of EV_APPLICATION_IMP.

@@ -37,9 +37,9 @@ feature -- Schema
 		do
 			create schema.make_from_schema_file (schema_filename)
 			if schema.is_valid then
-				set_schema (schema)
-			else				
-				shared_error_reporter.show
+				set_schema (schema)				
+			else
+				shared_error_reporter.set_error (create {ERROR}.make (schema_filename + " is invalid."))
 				set_schema (Void)				
 			end
 		end

@@ -161,7 +161,7 @@ feature -- Output
 			start_pos: INTEGER
 		do
 			if not is_empty then
-				start_pos := current_feature_clause.end_position;
+				start_pos := current_feature_clause.feature_location.final_position;
 				Result := extract_comments_from (start_pos, end_position);
 			end
 		end
@@ -208,6 +208,13 @@ debug ("COMMENTS")
 	io.error.put_integer (end_pos)
 	io.error.put_new_line
 end
+			if off then
+				if after then
+					back
+				else
+					forth
+				end
+			end
 			if not item.is_within (start_pos) then
 				if item.start_position > start_pos then
 					from
@@ -258,7 +265,7 @@ end
 			if next_feature /= Void then
 				Result := next_feature.start_position
 			elseif next_feature_clause /= Void then
-				Result := next_feature_clause.end_position
+				Result := next_feature_clause.feature_location.final_position
 			else
 				Result := file_end_position
 			end
@@ -267,7 +274,7 @@ end
 						Result = next_feature.start_position
 			check_next_feature_clause: next_feature = Void and then
 							next_feature_clause /= Void implies 
-						Result = next_feature_clause.end_position
+						Result = next_feature_clause.feature_location.final_position
 			check_file_end_position: next_feature = Void and then next_feature_clause = Void
 							implies Result = file_end_position
 			positive_result: Result >= 0 and then Result <= file_end_position

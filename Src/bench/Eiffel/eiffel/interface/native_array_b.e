@@ -21,11 +21,10 @@ feature -- Validity
 	check_validity is
 			-- Check validity of class ARRAY
 		local
-			stop, error: BOOLEAN
+			error: BOOLEAN
 			special_error: SPECIAL_ERROR
 			l_feat_tbl: like feature_table
 			l_feat: FEATURE_I
-			to_special_p, parent_t: CL_TYPE_A
 			done: BOOLEAN
 		do
 			l_feat_tbl := feature_table

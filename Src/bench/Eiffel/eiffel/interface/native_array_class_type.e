@@ -56,9 +56,7 @@ feature -- Access
 			good_generic_count: type.true_generics.count = 1
 			in_il_generation: System.il_generation
 		local
-			gen_param: TYPE_I
 			cl_type: CL_TYPE_I
-			ref: REFERENCE_I
 		do
 			cl_type ?=  type.true_generics.item (1)
 			check

@@ -609,7 +609,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		EIF_END_GET_CONTEXT
 	}
 	eif_thr_exit ();
-#ifndef SOLARIS_THREADS
+#if (!defined SOLARIS_THREADS && !defined EIF_WIN32)
 	return (EIF_THR_ENTRY_TYPE) 0;	/* 	NOTREACHED. */
 #else
 	/* On solaris, EIF_ENTRY_TYPE is void: there is no Null void. */

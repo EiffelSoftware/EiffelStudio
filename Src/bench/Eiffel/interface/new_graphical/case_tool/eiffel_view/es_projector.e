@@ -327,8 +327,17 @@ feature {NONE} -- Implementation
 				l_item := point_array.item (point_array.count)
 				old_lex := l_item.x_precise
 				old_ley := l_item.y_precise
-				l_item.set_precise ((a1.x_precise + a2.x_precise) / 2, (a1.y_precise + a2.y_precise) / 2)
-	
+				
+				p0 := point_array.item (point_array.count - 1)
+				x1 := p0.x
+				y1 := p0.y
+				if (old_lex - x1).abs <= 1 then
+					l_item.set_precise (old_lex, (a1.y_precise + a2.y_precise) / 2)
+				elseif (old_ley - y1).abs <= 1 then
+					l_item.set_precise ((a1.x_precise + a2.x_precise) / 2, old_ley)
+				else
+					l_item.set_precise ((a1.x_precise + a2.x_precise) / 2, (a1.y_precise + a2.y_precise) / 2)
+				end
 
 				if offset_x /= 0 or else offset_y /= 0 then
 					offset_coordinates (point_array)
@@ -395,7 +404,6 @@ feature {NONE} -- Implementation
 			old_lex, old_ley: DOUBLE
 			l_item: EV_COORDINATE
 			x1, y1, x2, y2: INTEGER
-			x2d, y2d: DOUBLE
 			pa: SPECIAL [EV_COORDINATE]
 		do
 			d := drawable
@@ -420,7 +428,17 @@ feature {NONE} -- Implementation
 				l_item := point_array.item (point_array.count)
 				old_lex := l_item.x_precise
 				old_ley := l_item.y_precise
-				l_item.set_precise ((a1.x_precise + a2.x_precise) / 2, (a1.y_precise + a2.y_precise) / 2)
+				
+				p0 := point_array.item (point_array.count - 1)
+				x1 := p0.x
+				y1 := p0.y
+				if (old_lex - x1).abs <= 1 then
+					l_item.set_precise (old_lex, (a1.y_precise + a2.y_precise) / 2)
+				elseif (old_ley - y1).abs <= 1 then
+					l_item.set_precise ((a1.x_precise + a2.x_precise) / 2, old_ley)
+				else
+					l_item.set_precise ((a1.x_precise + a2.x_precise) / 2, (a1.y_precise + a2.y_precise) / 2)
+				end
 
 				if offset_x /= 0 or else offset_y /= 0 then
 					offset_coordinates (point_array)

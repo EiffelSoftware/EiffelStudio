@@ -635,8 +635,10 @@ end
 			type_i: TYPE_I
 			used_upper: INTEGER
 			l_buffer: like buffer
+			is_workbench: BOOLEAN
 		do
 			l_buffer := buffer
+			is_workbench := context.workbench_mode
 			if locals /= Void then
 				from
 					i := locals.lower
@@ -646,7 +648,7 @@ end
 					i > count
 				loop
 							-- Generate only if variable used
-					if i <= used_upper and then context.local_vars.item(i) then
+					if i <= used_upper and then (is_workbench or context.local_vars.item(i)) then
 						type_i := real_type (locals.item (i))
 						if type_i.is_true_expanded then
 							local_var.set_position (i)

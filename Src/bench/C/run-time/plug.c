@@ -311,18 +311,13 @@ int where;		/* Invariant is beeing checked before or after compound? */
 	int dtype = Dtype(obj);
 	int i;
 
-	inv_mark_table = (char *) cmalloc (scount * sizeof(char));
-	for (i=0; i<scount; i++) inv_mark_table[i]=(char) 0;
+	if (inv_mark_table == (char *) 0)
+		if ((inv_mark_table = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
+			enomem();
 
-	if (!(zone->ov_flags & EO_INV)) {
-		epush(&loc_stack, &obj);				/* Protect against GC moves */
-		zone->ov_flags |= EO_INV;				/* Avoid loops in checks */
-		recursive_chkinv(dtype, obj, where);	/* Recurive invariant check */
-		HEADER(obj)->ov_flags &= ~EO_INV;		/* Unmark the object */
-		epop(&loc_stack, 1);					/* Release GC protection */
-	}
+	bzero (inv_mark_table, scount);
 
-	xfree(inv_mark_table);
+	recursive_chkinv(dtype, obj, where);	/* Recurive invariant check */
 }
 
 #ifdef WORKBENCH

@@ -393,9 +393,6 @@ feature -- Generation Structure
 				-- Create unicode string buffer.
 			create uni_string.make_empty (1024)
 
-				-- Initialize COM.
-			(create {CLI_COM}).initialize_com
-
 				-- Initialize metadata emitter.
 			create md_dispenser.make
 			md_emit := md_dispenser.emitter

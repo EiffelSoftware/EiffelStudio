@@ -25,8 +25,7 @@ inherit
 
 	EV_TEXTABLE_IMP
 		redefine
-			interface,
-			accelerators_enabled
+			interface
 		end
 
 	EV_FONTABLE_IMP
@@ -51,9 +50,6 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Implementation
-
-	accelerators_enabled: BOOLEAN is False
-		-- Labels shouldn't have accelerators enabled
 
 	fontable_widget: POINTER is
 			-- Pointer to `text_label'

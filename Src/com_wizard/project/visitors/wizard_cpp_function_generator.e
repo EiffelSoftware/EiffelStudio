@@ -21,7 +21,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	set_result_type_and_signature: STRING is
-			-- Result type and signature of feature
+			-- set result type and return signature of feature
 		require
 			non_void_feature_writer: ccom_feature_writer /= Void
 			non_void_arguments: func_desc.arguments /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 						if pointed_descriptor /= Void then
 							create visitor
 							visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
-							if visitor.is_basic_type or visitor.is_enumeration then
+							if visitor.is_basic_type or visitor.is_enumeration or (visitor.vt_type = Vt_bool) then
 								ccom_feature_writer.set_result_type (visitor.cecil_type)
 							else
 								ccom_feature_writer.set_result_type (Eif_reference)
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 				Result.remove (Result.count)
 			end
 		ensure
-			valid_result: Result /= Void and then not Result.empty
+			valid_result: Result /= Void
 		end
 
 	set_client_result_type_and_signature is

@@ -56,7 +56,7 @@ feature -- Event - command association
 			-- Add 'com' to the list of commands to be
 			-- executed when the button is pressed
 		do
-			add_command (widget, "clicked", com, arg)
+			add_command (widget, "clicked", com, arg, default_pointer)
 		end
 	
 feature -- Event -- removing command association

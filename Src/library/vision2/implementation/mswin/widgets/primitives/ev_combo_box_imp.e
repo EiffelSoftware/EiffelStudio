@@ -127,6 +127,7 @@ feature {NONE} -- Initialization
 			internal_window_make (default_parent, Void, default_style +
 				Cbs_dropdown,
 				0, 0, 0, 90, 0, default_pointer)
+			create ev_children.make (2)
  			id := 0
 		end
 
@@ -137,7 +138,6 @@ feature {NONE} -- Initialization
 			{EV_LIST_ITEM_LIST_IMP} Precursor
 			create text_field.make_with_combo (Current)
 			create combo.make_with_combo (Current)
-			create ev_children.make (2)
 		end
 
 feature -- Access
@@ -698,6 +698,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.70  2000/04/11 19:01:29  rogers
+--| Moved creation of ev_children into make.
+--|
 --| Revision 1.69  2000/04/11 17:02:39  rogers
 --| Added internal_propagate_pointer_press.
 --|

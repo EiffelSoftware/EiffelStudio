@@ -54,12 +54,12 @@ feature -- Status setting
 
 feature {EV_DYNAMIC_TABLE} -- Implementation
 
-	add_child (child_imp: EV_WIDGET_I) is
+	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite. Several children
 			-- possible.
 		do
-			child ?= child_imp
-			set_child_position (child.interface, row_index, column_index, row_index + 1, column_index + 1)
+			child := child_imp
+			set_child_position (child_imp.interface, row_index, column_index, row_index + 1, column_index + 1)
 			if is_row_layout then
 				if column_index + 1 >= finite_dimension then
 					row_index := row_index + 1

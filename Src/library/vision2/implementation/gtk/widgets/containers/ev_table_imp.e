@@ -78,11 +78,11 @@ feature -- Status settings
 
 feature {EV_TABLE} -- Implementation
 
-	add_child (child_imp: EV_WIDGET_I) is
+	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite. Several children
 			-- possible.
 		do
-			child ?= child_imp
+			child := child_imp
 		end
 
 end -- class EV_TABLE_IMP

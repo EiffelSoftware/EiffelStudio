@@ -1157,11 +1157,13 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 		 * it in place, so there is no need to update the usage.
 		 */
 
+#ifdef ISE_GC
 	if (new_size > old_size) {				/* Then update memory usage. */
 		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
 		eiffel_usage += (new_size - old_size);
 		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_UNLOCK);
 	}
+#endif
 
 	return object;
 }

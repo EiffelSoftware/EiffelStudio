@@ -171,7 +171,7 @@ extern int fcount;
 		}
 
 #define RTAA(cast,x,i) \
-	*(cast*)(CAT2(x,_area_minus_lower)+i*sizeof(cast))
+	*(cast*)(CAT2(x,_area_minus_lower)+(i)*sizeof(cast))
 
 #define RTAP(cast,x,val,i) CAT2(RTAP_,cast)(cast,x,val,i)
 
@@ -185,11 +185,11 @@ extern int fcount;
 #define RTAP_EIF_REFERENCE(cast,x,val,i) \
 		{ \
 		RTAS (val, CAT2(x,_area)); \
-		*(cast*)(CAT2(x,_area_minus_lower)+i*sizeof(cast)) = val; \
+		*(cast*)(CAT2(x,_area_minus_lower)+(i)*sizeof(cast)) = val; \
 		}
 
 #define RTAP_BASIC(cast,x,val,i) \
-	*(cast*)(CAT2(x,_area_minus_lower)+i*sizeof(cast)) = val;
+	*(cast*)(CAT2(x,_area_minus_lower)+(i)*sizeof(cast)) = val;
 
 /* Macros used for local variable management:
  *  RTLI(x) makes room on the stack for 'x' addresses

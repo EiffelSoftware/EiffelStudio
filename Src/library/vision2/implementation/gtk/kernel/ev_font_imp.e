@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 			a_cs: C_STRING
 		do
 			create a_cs.make (pattern)
-			Result := feature {EV_GTK_EXTERNALS}.c_match_font_name (a_cs.item)
+			Result := c_match_font_name (a_cs.item)
 		end
 
 feature {EV_FONT_DIALOG_IMP} -- Implementation
@@ -556,6 +556,14 @@ feature {NONE} -- Implementation
 		end		
 
 feature {EV_ANY_I} -- Implementation
+
+	frozen c_match_font_name (pattern: POINTER): STRING is
+			-- Match to first in list or return NULL.
+			-- `pattern' and `Result': char *
+			-- (from EV_C_GTK)
+		external
+			" C signature (char *): EIF_REFERENCE use %"gtk_eiffel.h%""
+		end
 
 	interface: EV_FONT
 

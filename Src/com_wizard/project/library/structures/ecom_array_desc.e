@@ -16,6 +16,13 @@ creation
 	make,
 	make_from_pointer
 
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
 
 feature -- Access
 
@@ -43,14 +50,6 @@ feature -- Measurement
 			-- Size of TYPEDESC structure
 		do
 			Result := c_size_of_array_desc
-		end
-
-feature {NONE} -- Initialization
-
-	make_from_pointer (a_pointer: POINTER) is
-			-- Make from pointer.
-		do
-			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- externals

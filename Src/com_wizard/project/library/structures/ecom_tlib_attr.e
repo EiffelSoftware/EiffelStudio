@@ -17,6 +17,14 @@ inherit
 creation
 	make, make_from_pointer
 
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
+
 feature -- Access
 
 	guid: ECOM_GUID is
@@ -67,14 +75,6 @@ feature -- Measurement
 			-- Size of TLIBATTR structure
 		do
 			Result := c_size_of_tlib_attr 
-		end
-
-feature {NONE} -- Initialization
-
-	make_from_pointer (a_pointer: POINTER) is
-			-- Make from pointer.
-		do
-			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals

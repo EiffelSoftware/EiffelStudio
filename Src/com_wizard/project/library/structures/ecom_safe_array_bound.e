@@ -14,6 +14,14 @@ creation
 	make,
 	make_from_pointer
 
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
+
 feature -- Access
 
 	element_count: INTEGER is
@@ -48,14 +56,6 @@ feature -- Measurement
 			-- Size of SAFEARRAYBOUND structure
 		do
 			Result := c_size_of_safe_array_bound
-		end
-
-feature {NONE} -- Initialization
-
-	make_from_pointer (a_pointer: POINTER) is
-			-- Make from pointer.
-		do
-			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals

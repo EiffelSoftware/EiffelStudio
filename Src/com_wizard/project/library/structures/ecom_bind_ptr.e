@@ -14,6 +14,13 @@ creation
 	make,
 	make_from_pointer
 
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
 
 feature -- Access
 
@@ -41,14 +48,6 @@ feature -- Measurement
 			-- Size of BINDPTR structure
 		do
 			Result := c_size_of_bind_ptr
-		end
-
-feature {NONE} -- Initialization
-
-	make_from_pointer (a_pointer: POINTER) is
-			-- Make from pointer.
-		do
-			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals

@@ -15,6 +15,14 @@ inherit
 creation
 	make, make_from_pointer
 
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
+
 feature -- Access
 
 	default_value: ECOM_PARAM_DESCEX is
@@ -39,14 +47,6 @@ feature -- Measurement
 			-- Size of PARAMDESC structure
 		do
 			Result := c_size_of_param_desc
-		end
-
-feature {NONE} -- Initialization
-
-	make_from_pointer (a_pointer: POINTER) is
-			-- Make from pointer.
-		do
-			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals

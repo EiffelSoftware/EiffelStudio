@@ -14,6 +14,14 @@ creation
 	make,
 	make_from_pointer
 
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
+
 feature -- Access
 
 	guid: ECOM_GUID is
@@ -41,12 +49,6 @@ feature -- Measurement
 		end
 
 feature {NONE} -- Externals
-
-	make_from_pointer (a_pointer: POINTER) is
-			-- Make from pointer.
-		do
-			make_by_pointer (a_pointer)
-		end
 
 	c_size_of_cust_data_item: INTEGER is
 		external 

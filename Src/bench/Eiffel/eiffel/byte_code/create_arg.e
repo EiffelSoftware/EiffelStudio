@@ -10,7 +10,7 @@ inherit
 	CREATE_INFO
 		redefine
 			generate_cid, make_gen_type_byte_code,
-			generate_reverse, make_reverse_byte_code,
+			generate_reverse,
 			generate_cid_array, generate_cid_init
 		end
 
@@ -245,19 +245,6 @@ feature -- Assignment attempt
 			buffer.putstring (gc_comma)
 			buffer.putint (cl_type_i.generated_id (final_mode))
 			buffer.putchar (')')
-		end
-
-	make_reverse_byte_code (ba: BYTE_ARRAY) is
-
-		local
-			cl_type_i : CL_TYPE_I
-		do
-			cl_type_i := type_to_create
-
-			ba.append_short_integer (Like_arg_type)
-			ba.append_short_integer (position)
-				-- Default creation type
-			ba.append_short_integer (cl_type_i.generated_id (False))
 		end
 
 end -- class CREATE_ARG

@@ -986,7 +986,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 				-- merge members.
 			create l_merged_members.make (internal_members.count + l_members.count)
 			feature {SYSTEM_ARRAY}.copy (internal_members, l_merged_members, internal_members.count)
-			feature {SYSTEM_ARRAY}.copy_array_integer (l_members, 0, l_merged_members, internal_members.count, l_members.count)
+			feature {SYSTEM_ARRAY}.copy (l_members, 0, l_merged_members, internal_members.count, l_members.count)
 			internal_members := l_merged_members
 
 --				-- merge methods.
@@ -998,13 +998,13 @@ feature {NONE} -- Added features of System.Object to Interfaces
 				-- merge properties.
 			create l_merged_properties.make (internal_properties.count + l_properties.count)
 			feature {SYSTEM_ARRAY}.copy (internal_properties, l_merged_properties, internal_properties.count)
-			feature {SYSTEM_ARRAY}.copy_array_integer (l_properties, 0, l_merged_properties, internal_properties.count, l_properties.count)
+			feature {SYSTEM_ARRAY}.copy (l_properties, 0, l_merged_properties, internal_properties.count, l_properties.count)
 			internal_properties := l_merged_properties
 
 				-- merge events.
 			create l_merged_events.make (internal_events.count + l_events.count)
 			feature {SYSTEM_ARRAY}.copy (internal_events, l_merged_events, internal_events.count)
-			feature {SYSTEM_ARRAY}.copy_array_integer (l_events, 0, l_merged_events, internal_events.count, l_events.count)
+			feature {SYSTEM_ARRAY}.copy (l_events, 0, l_merged_events, internal_events.count, l_events.count)
 			internal_events := l_merged_events
 			from
 				l_interfaces := t.get_interfaces

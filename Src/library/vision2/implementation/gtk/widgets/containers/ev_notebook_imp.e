@@ -26,6 +26,13 @@ inherit
 			initialize,
 			remove_i_th
 		end
+		
+	EV_FONTABLE_IMP
+		undefine
+			destroy
+		redefine
+			interface
+		end
 	  
 	EV_NOTEBOOK_ACTION_SEQUENCES_IMP
 
@@ -43,6 +50,7 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_show_border (c_object, False)
 			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_hborder (c_object, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_vborder (c_object, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_scrollable (c_object, True)
 			real_signal_connect (c_object, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
 		end
 

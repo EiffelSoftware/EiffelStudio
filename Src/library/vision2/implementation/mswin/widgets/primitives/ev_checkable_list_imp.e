@@ -21,7 +21,8 @@ inherit
 			interface,
 			default_ex_style,
 			on_lvn_itemchanged,
-			insert_i_th
+			insert_i_th,
+			on_erase_background
 		end
 		
 	EV_CHECKABLE_LIST_ACTION_SEQUENCES_IMP
@@ -70,6 +71,14 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			--
+		do
+			-- Do nothing here.
+			-- To reduce flickering, call `disable_default_processing' and
+			-- redraw only the parts that need redrawing.
+		end
 
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.

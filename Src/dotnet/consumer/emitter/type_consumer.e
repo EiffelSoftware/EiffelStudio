@@ -321,10 +321,20 @@ feature {NONE} -- Implementation
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_dotnet_args: NATIVE_ARRAY [PARAMETER_INFO]
 			i, nb: INTEGER
+			l_parameter_type: CONSUMED_REFERENCED_TYPE
 		do
 			l_add_method := info.get_add_method
+			if l_add_method = Void then
+				l_add_method := info.get_add_method_boolean (True)
+			end
 			l_remove_method := info.get_remove_method
+			if l_remove_method = Void then
+				l_remove_method := info.get_remove_method_boolean (True)
+			end
 			l_raise_method := info.get_raise_method
+			if l_raise_method = Void then
+				l_raise_method := info.get_raise_method_boolean (True)
+			end
 			if l_raise_method /= Void then
 				l_dotnet_args := l_raise_method.get_parameters
 				nb := l_dotnet_args.get_length
@@ -355,13 +365,18 @@ feature {NONE} -- Implementation
 					referenced_type_from_type (l_raise_method.get_declaring_type))
 			end
 			create dotnet_name.make_from_cil (info.get_name)
+			if l_add_method /= Void then
+				l_parameter_type := referenced_type_from_type (l_add_method.get_parameters.item (0).get_parameter_type)
+			elseif l_remove_method /= Void then
+				l_parameter_type := referenced_type_from_type (l_remove_method.get_parameters.item (0).get_parameter_type)
+			end
 			create Result.make (
 				formatted_feature_name (dotnet_name),
 				dotnet_name,
 				True,
 				(l_add_method /= Void),
 				(l_remove_method /= Void),
-				referenced_type_from_type (l_add_method.get_parameters.item (0).get_parameter_type),
+				l_parameter_type,
 				l_raiser,
 				referenced_type_from_type (info.get_declaring_type))
 		ensure

@@ -103,7 +103,7 @@ feature {NONE}
 	check_precompiled_licenses is
 			-- Check the precompiled licenses
 		local
-			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
+			precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			r: REMOTE_PROJECT_DIRECTORY
 			l: LIBRARY_LICENSE
 			precomp_name: STRING

@@ -1025,7 +1025,7 @@ feature {NONE}-- Implementation
 				Result := found_class.actual_type
 			end
 			if Result = Void then
-				image := current_token.image.as_lower
+				image := current_token.image.as_upper
 				class_i := Universe.class_named (image, Universe.cluster_of_name (cluster_name))
 				if class_i /= Void and then class_i.compiled then
 					found_class := class_i.compiled_class

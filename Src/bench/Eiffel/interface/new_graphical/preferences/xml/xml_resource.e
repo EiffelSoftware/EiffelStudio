@@ -76,7 +76,7 @@ feature -- Implementation
 			elseif node.name.is_equal ("A") then
 				txt ?= node.first
 				s := clone (txt.string)
-				if not s.empty then
+				if not s.is_empty then
 					s.prune_all ('%R')
 					s.prune_all ('%T')
 					name.append (s)
@@ -133,6 +133,6 @@ feature -- Implementation
 
 invariant
 	XML_RESOURCE_exists: name /= Void and value /= Void
-	XML_RESOURCE_consistency: not name.empty
+	XML_RESOURCE_consistency: not name.is_empty
 
 end -- class XML_RESOURCE

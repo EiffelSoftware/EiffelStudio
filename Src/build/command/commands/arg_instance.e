@@ -29,8 +29,8 @@ feature
 		do
 			Result := not (context = Void or else
 				context.deleted)
-		end
-	
+		end;
+
 feature {NONE}
 
 	associated_icon_stone: ARG_INST_ICON;
@@ -63,7 +63,7 @@ feature
 			context := other.data;
 			if associated_icon_stone /= Void then
 				associated_icon_stone.set_symbol (context.symbol);
-				associated_icon_stone.set_label (context.label);
+				associated_icon_stone.set_label (context.title_label);
 			end
 		end;
 
@@ -94,7 +94,7 @@ feature
 	label: STRING is
 		do
 			if instantiated then
-				Result := context.label
+				Result := context.title_label
 			else
 				Result := type.label
 			end;

@@ -24,8 +24,8 @@ EIF_INTEGER cwin_reg_create_key(
 	LPDWORD lpdwDisposition;
 
 	// Get the cecil Id of class EOLE_REGISTRY
-    eti = Dtype( eif_access(main_obj) ) ;
-    SetDisposition = eif_proc("set_create_disposition_result",eti);
+    eti = Dtype (eif_access(main_obj));
+    SetDisposition = eif_proc("set_create_disposition_result", eti);
 	lpdwDisposition = (LPDWORD)malloc(sizeof (DWORD));
 
     result = RegCreateKeyEx(
@@ -129,3 +129,16 @@ EIF_POINTER cwin_reg_query_value(
     return (EIF_POINTER)buffer;
 }
 
+/*
+--|-------------------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1995-1997, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, ISE Building, 2nd floor, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------
+*/

@@ -50,7 +50,7 @@ feature {NONE}
 			else
 				warner (project_tool.text_window).custom_call (Void,
 						"A compilation must complete%N%
-						%succesfully before compressing", Void, Void, "OK");
+						%successfully before compressing", Void, Void, "OK");
 			end;
 		end;
  

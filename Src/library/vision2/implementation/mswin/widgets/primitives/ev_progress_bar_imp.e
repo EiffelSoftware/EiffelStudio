@@ -56,6 +56,14 @@ feature {NONE} -- Initialization
 			set_range (0, 100)
 		end
 
+feature -- Status report
+
+	is_segmented: BOOLEAN is
+			-- Is the mode in segmented mode?
+		do
+			Result := not flag_set (style, Pbs_smooth)
+		end
+
 feature -- Status setting
 
 	set_segmented (flag: BOOLEAN) is

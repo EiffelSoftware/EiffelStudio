@@ -47,10 +47,10 @@ feature -- Resizing
 			--| Trades space for time:
 			--| allocates fairly large chunks of memory but not very often.
 		do
-			grow (additional_space)
+			grow (capacity + additional_space)
 		ensure
 			increased_capacity:
-				capacity >= old capacity + old capacity * Growth_percentage // 100 + 1
+				capacity >= old capacity + old capacity * Growth_percentage // 100
 		end;
 
 	grow (i: INTEGER) is

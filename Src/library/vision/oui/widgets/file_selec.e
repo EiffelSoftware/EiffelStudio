@@ -53,7 +53,8 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_cancel_action (a_command, argument)
 		end;
@@ -62,7 +63,8 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- filter button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_filter_action (a_command, argument)
 		end;
@@ -71,7 +73,8 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_help_action (a_command, argument)
 		end; 
@@ -80,19 +83,24 @@ feature
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.add_ok_action (a_command, argument)
-		end; -- add_ok_action
+		end; 
 
 	dir_count: INTEGER is
 			-- Number of items in directory list
+		require
+			exists: not destroyed
 		do
 			Result := implementation.dir_count
 		end;
 
 	dir_list: LINKED_LIST [STRING] is
 			-- Items of current directory list
+		require
+			exists: not destroyed
 		do
 			Result := implementation.dir_list
 		end;
@@ -100,88 +108,111 @@ feature
 	directory: STRING is
 			-- Base directory used in determining files and directories
 			-- to be displayed
+		require
+			exists: not destroyed
 		do
 			Result := implementation.directory
 		end;
 
 	file_count: INTEGER is
 			-- Number of items in file list
+		require
+			exists: not destroyed
 		do
 			Result := implementation.file_count
 		end;
 
 	file_list: LINKED_LIST [STRING] is
 			-- Items of current file list
+		require
+			exists: not destroyed
 		do
 			Result := implementation.file_list
 		end;
 
 	filter: STRING is
 			-- Current filter value
+		require
+			exists: not destroyed
 		do
 			Result := implementation.filter
 		end;
 
 	hide_cancel_button is
 			-- Make cancel button invisible.
+		require
+			exists: not destroyed
 		do
 			implementation.hide_cancel_button
 		end;
 
 	hide_filter_button is
 			-- Make filter button invisible.
+		require
+			exists: not destroyed
 		do
 			implementation.hide_filter_button
 		end;
 
 	hide_help_button is
 			-- Make help button invisible.
+		require
+			exists: not destroyed
 		do
 			implementation.hide_help_button
 		end;
 
 	hide_ok_button is
 			-- Make ok button invisible.
+		require
+			exists: not destroyed
 		do
 			implementation.hide_ok_button
 		end;
 
 	set_directory_selection is
 			-- Sets selection to directories only.
+		require
+			exists: not destroyed
 		do
 			implementation.set_directory_selection
-	end;
+		end;
 
-    	set_file_selection is
-        	    -- Sets selection to files (default value). 
-        	do
-            		implementation.set_file_selection
-        	end;
+   	set_file_selection is
+       	    -- Sets selection to files (default value). 
+		require
+			exists: not destroyed
+       	do
+   			implementation.set_file_selection
+       	end;
 
-    	set_all_selection is
-        	    -- Sets selection to files and directories.
-        	do
-            		implementation.set_all_selection
-        	end;
+   	set_all_selection is
+       	    -- Sets selection to files and directories.
+		require
+			exists: not destroyed
+       	do
+     		implementation.set_all_selection
+       	end;
 
-
-	
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 	implementation: FILE_SELEC_I;
 			-- Implementation of current file selection
-
 	
 feature 
 
 	is_dir_valid: BOOLEAN is
 			-- Is current search directory valid?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_dir_valid
 		end;
 
 	is_list_updated: BOOLEAN is
 			-- Is file od directory list updated during last search?
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_list_updated
 		end;
@@ -189,6 +220,8 @@ feature
 	pattern: STRING is
 			-- Search pattern used in combination with `directory'
 			-- files and directories to be displayed
+		require
+			exists: not destroyed
 		do
 			Result := implementation.pattern
 		end;
@@ -197,7 +230,8 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_cancel_action (a_command, argument)
 		end;
@@ -206,7 +240,8 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- filter button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_filter_action (a_command, argument)
 		end;
@@ -215,7 +250,8 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_help_action (a_command, argument)
 		end;
@@ -224,13 +260,16 @@ feature
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		require
-			not_a_command_void: not (a_command = Void)
+			exists: not destroyed;
+			valid_command: a_command /= Void
 		do
 			implementation.remove_ok_action (a_command, argument)
 		end;
 
 	selected_file: STRING is
 			-- Current selected file
+		require
+			exists: not destroyed;
 		do
 			Result := implementation.selected_file
 		end;
@@ -238,6 +277,8 @@ feature
 	set_dir_list_label (a_label: STRING) is
 			-- Set `a_label' as dir list label,
 			-- by default this label is `Directories'.
+		require
+			exists: not destroyed;
 		do
 			implementation.set_dir_list_label (a_label)
 		end;
@@ -246,7 +287,8 @@ feature
 			-- Set base directory used in determining files and directories
 			-- to be displayed to `a_directory_name'.
 		require
-			not_a_directory_name_void: not (a_directory_name = Void)
+			exists: not destroyed;
+			not_a_directory_name_void: a_directory_name /= Void
 		do
 			implementation.set_directory (a_directory_name)
 		end;
@@ -254,6 +296,9 @@ feature
 	set_file_list_label (a_label: STRING) is
 			-- Set `a_label' as file list label,
 			-- by default this label is `Files'.
+		require
+			exists: not destroyed;
+			valid_a_label: a_label /= Void
 		do
 			implementation.set_file_list_label (a_label)
 		end;
@@ -261,7 +306,8 @@ feature
 	set_filter (a_filter: STRING) is
 			-- Set current filter to `a_filter'.
 		require
-			not_a_filter_void: not (a_filter = Void)
+			exists: not destroyed;
+			not_a_filter_void: a_filter /= Void
 		do
 			implementation.set_filter (a_filter)
 		end;
@@ -269,6 +315,9 @@ feature
 	set_filter_label (a_label: STRING) is
 			-- Set `a_label' as filter label,
 			-- by default this label is `Filter'.
+		require
+			exists: not destroyed;
+			valid_a_label: a_label /= Void
 		do
 			implementation.set_filter_label (a_label)
 		end;
@@ -276,57 +325,76 @@ feature
 	set_pattern (a_pattern: STRING) is
 			-- Set pattern to `a_pattern'.
 		require
-			not_a_pattern_void: not (a_pattern = Void)
+			exists: not destroyed;
+			not_a_pattern_void: a_pattern /= Void
 		do
 			implementation.set_pattern (a_pattern)
 		end;
 
 	show_cancel_button is
 			-- Make cancel button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_cancel_button
 		end;
 
 	show_filter_button is
 			-- Make filter button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_filter_button
 		end;
 
 	show_help_button is
 			-- Make help button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_help_button
 		end;
 
 	show_ok_button is
 			-- Make ok button visible.
+		require
+			exists: not destroyed
 		do
 			implementation.show_ok_button
 		end;
 
 	hide_file_selection_list is
+		require
+			exists: not destroyed
 		do
 			implementation.hide_file_selection_list;
 		end;
 
 	show_file_selection_list is
+		require
+			exists: not destroyed
 		do
 			implementation.show_file_selection_list;
 		end;
 
-
 	hide_file_selection_label is
+		require
+			exists: not destroyed
 		do
 			implementation.hide_file_selection_label;
 		end;
 
 	show_file_selection_label is
+		require
+			exists: not destroyed
 		do
 			implementation.show_file_selection_label;
 		end;
 
 	set_file_list_width (new_width: INTEGER) is
+		require
+			exists: not destroyed;
+			width_large_enough: new_width >= 1;
 		do
 			implementation.set_file_list_width (new_width);
 		end;

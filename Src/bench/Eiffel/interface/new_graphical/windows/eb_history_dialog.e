@@ -101,7 +101,10 @@ feature -- Element change
 			-- Disgard all previous undoable commands.
 		do
 			undo_list.wipe_out
-			action_list.wipe_out
+			if not action_list.is_empty then
+				action_list.wipe_out
+				action_list.extend (create {EV_LIST_ITEM}.make_with_text (history_discarded_string))
+			end
 			undo_exhausted_actions.call (Void)
 			redo_exhausted_actions.call (Void)
 		end
@@ -122,6 +125,7 @@ feature -- Basic operations
 			undo_agent: PROCEDURE [ANY, TUPLE]
 			undo_pair: UNDO_PAIR
 			new_graphical_item: EV_LIST_ITEM
+			offset: INTEGER
 		do
 			from
 			until
@@ -167,10 +171,13 @@ feature -- Basic operations
 			end
 			do_actions.call (Void)
 			redo_exhausted_actions.call (Void)
-			action_list.go_i_th (undo_list.index)
+			if action_list.first.text.is_equal (history_discarded_string) then
+				offset := 1
+			end
+			action_list.go_i_th (undo_list.index + offset)
 			if undo_list.index > 0 then
 				user_selected := False
-				action_list.i_th (undo_list.index).enable_select
+				action_list.i_th (undo_list.index + offset).enable_select
 				previously_selected_item := action_list.selected_item
 			else
 				action_list.remove_selection
@@ -193,6 +200,7 @@ feature -- Basic operations
 			undo_agent: PROCEDURE [ANY, TUPLE]
 			undo_pair: UNDO_PAIR
 			new_graphical_item: EV_LIST_ITEM
+			offset: INTEGER
 		do
 			from
 			until
@@ -237,10 +245,13 @@ feature -- Basic operations
 			end
 			do_actions.call (Void)
 			redo_exhausted_actions.call (Void)
-			action_list.go_i_th (undo_list.index)
+			if action_list.first.text.is_equal (history_discarded_string) then
+				offset := 1
+			end
+			action_list.go_i_th (undo_list.index + offset)
 			if undo_list.index > 0 then
 				user_selected := False
-				action_list.i_th (undo_list.index).enable_select
+				action_list.i_th (undo_list.index + offset).enable_select
 				previously_selected_item := action_list.selected_item
 			else
 				action_list.remove_selection
@@ -250,6 +261,8 @@ feature -- Basic operations
 
 	undo is
 			-- Reverse the most recent reversable action.
+		local
+			offset: INTEGER
 		do
 			undo_list.item.undo
 			if not undo_list.is_empty then
@@ -259,10 +272,13 @@ feature -- Basic operations
 			if undo_list.off then
 				undo_exhausted_actions.call (Void)
 			end
-			action_list.go_i_th (undo_list.index)
+			if action_list.first.text.is_equal (history_discarded_string) then
+				offset := 1
+			end
+			action_list.go_i_th (undo_list.index + offset)
 			if undo_list.index > 0 then
 				user_selected := False
-				action_list.i_th (undo_list.index).enable_select
+				action_list.i_th (undo_list.index + offset).enable_select
 				previously_selected_item := action_list.selected_item
 			else
 				action_list.remove_selection
@@ -272,12 +288,17 @@ feature -- Basic operations
 
 	redo is
 			-- Reperform the most recently reversed action.
+		local
+			offset: INTEGER
 		do
 			Precursor
-			action_list.go_i_th (undo_list.index)
+			if action_list.first.text.is_equal (history_discarded_string) then
+				offset := 1
+			end
+			action_list.go_i_th (undo_list.index + offset)
 			if undo_list.index > 0 then
 				user_selected := False
-				action_list.i_th (undo_list.index).enable_select
+				action_list.i_th (undo_list.index + offset).enable_select
 				previously_selected_item := action_list.selected_item
 			else
 				action_list.remove_selection
@@ -310,6 +331,7 @@ feature {NONE} -- Implementation
 
 	user_selected: BOOLEAN
 			-- Was last selection made by the user?
+			
 
 feature {NONE} -- Events
 
@@ -318,34 +340,40 @@ feature {NONE} -- Events
 			-- Undo all younger actions.
 		local
 			to_undo, to_redo: INTEGER
+			offset: INTEGER
 		do
-			if user_selected then
-				if previously_selected_item /= Void then
-			 		to_undo := action_list.index_of (previously_selected_item, 1) - 
-						action_list.index_of (action_list.selected_item, 1)
-					to_redo := - to_undo
-				else
-			 		to_undo := - action_list.index_of (action_list.selected_item, 1)
-					to_redo := - to_undo	
+			if not action_list.selected_item.text.is_equal (history_discarded_string) then
+				if user_selected then
+					if previously_selected_item /= Void then
+				 		to_undo := action_list.index_of (previously_selected_item, 1) - 
+							action_list.index_of (action_list.selected_item, 1)
+						to_redo := - to_undo
+					else
+						if action_list.first.text.is_equal (history_discarded_string) then
+							offset := 1
+						end
+				 		to_undo := - (action_list.index_of (action_list.selected_item, 1) - offset)
+						to_redo := - to_undo	
+					end
+					previously_selected_item := action_list.selected_item
+			
+					from
+					until
+						to_undo <= 0
+					loop
+						undo
+						to_undo := to_undo - 1
+					end
+					from
+					until
+						to_redo <= 0
+					loop
+						redo
+						to_redo := to_redo - 1
+					end			
 				end
-				previously_selected_item := action_list.selected_item
-		
-				from
-				until
-					to_undo <= 0
-				loop
-					undo
-					to_undo := to_undo - 1
-				end
-				from
-				until
-					to_redo <= 0
-				loop
-					redo
-					to_redo := to_redo - 1
-				end			
+				user_selected := True
 			end
-			user_selected := True
 		end
 
 	close_action is
@@ -353,5 +381,11 @@ feature {NONE} -- Events
 		do
 			hide
 		end
+		
+	history_discarded_string: STRING is
+		once
+			Result := "--- History discarded ---"
+		end
+		
 
 end -- class EB_HISTORY_DIALOG

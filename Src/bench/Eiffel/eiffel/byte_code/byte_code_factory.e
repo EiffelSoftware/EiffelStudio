@@ -115,7 +115,10 @@ feature {NONE} -- Implementation: status report
 		local
 			l_string_b: STRING_B
 		do
-			if a_source_type.same_as (String_type) and a_target_type.same_as (System_string_type) then
+			if
+				System.il_generation and
+				(a_source_type.same_as (String_type) and a_target_type.same_as (System_string_type))
+			then
 				l_string_b ?= a_expr
 				Result := l_string_b /= Void
 			end
@@ -133,7 +136,10 @@ feature {NONE} -- Implementation: Byte node
 		local
 			l_string_b: STRING_B
 		do
-			if a_source_type.same_as (String_type) and a_target_type.same_as (System_string_type) then
+			if
+				System.il_generation and
+				(a_source_type.same_as (String_type) and a_target_type.same_as (System_string_type))
+			then
 				l_string_b ?= a_expr
 				check
 					l_string_b_not_void: l_string_b /= Void

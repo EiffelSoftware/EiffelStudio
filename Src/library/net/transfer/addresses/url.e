@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 	make (a: STRING) is
 			-- Create URL with address `a'.
 		require
-			address_specified: a /= Void and then not a.empty
+			address_specified: a /= Void and then not a.is_empty
 		do
 			address := a
 			port := default_port
@@ -102,7 +102,7 @@ feature -- Status setting
 			-- Set proxy information.
 		require
 			proxy_supported: is_proxy_supported
-			non_empty_host: host /= Void and then not host.empty
+			non_empty_host: host /= Void and then not host.is_empty
 			host_valid: proxy_host_ok (host)
 			positive_port: port_no > 0
 		do
@@ -117,7 +117,7 @@ feature -- Status setting
 			-- Set username.
 		require
 			username_ok: has_username
-			non_empty_username: un /= Void and then not un.empty
+			non_empty_username: un /= Void and then not un.is_empty
 		deferred
 		end
 	 
@@ -125,7 +125,7 @@ feature -- Status setting
 			-- Set password.
 		require
 			password_accepted: is_password_accepted
-			non_empty_password: pw /= Void and then not pw.empty
+			non_empty_password: pw /= Void and then not pw.is_empty
 		deferred
 		end
 	 
@@ -146,7 +146,7 @@ feature {NONE} -- Basic operations
 	analyze is
 			-- Analyze URL.
 		require
-			address_specified: address /= Void and then not address.empty
+			address_specified: address /= Void and then not address.is_empty
 		deferred
 		end
 

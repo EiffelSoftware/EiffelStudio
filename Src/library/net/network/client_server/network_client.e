@@ -26,7 +26,7 @@ feature -- Access
 	make (a_peer_port: INTEGER; a_peer_name: STRING) is
 		require
 			a_valid_port: a_peer_port > 0;
-			a_valid_name: a_peer_name /= Void and then not a_peer_name.empty
+			a_valid_name: a_peer_name /= Void and then not a_peer_name.is_empty
 		do
 			create in_out.make_client_by_port (a_peer_port, a_peer_name);
 			in_out.connect

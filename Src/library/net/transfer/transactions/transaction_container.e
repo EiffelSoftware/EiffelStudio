@@ -49,7 +49,7 @@ feature -- Status setting
 	select_transaction (n: INTEGER) is
 			-- Select `n'-th transaction.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			index_in_range: 1 <= n and n <= count
 		deferred
 		ensure
@@ -82,12 +82,12 @@ feature -- Element change
 		local
 			e: BOOLEAN
 		do
-			e := empty
+			e := is_empty
 			extend (t)
 			if e then select_transaction (1) end
 		ensure
 			one_more_item: count = old count + 1
-			index_unchanged: not old empty implies index = old index
+			index_unchanged: not old is_empty implies index = old index
 		end
 
 feature {NONE} -- Implementation
@@ -143,8 +143,8 @@ feature {NONE} -- Implementation
 	 
 invariant
 
-	empty_definition: empty = (count = 0)
-	index_in_range: not empty implies (1 <= index and index <= count)
+	empty_definition: is_empty = (count = 0)
+	index_in_range: not is_empty implies (1 <= index and index <= count)
 
 end -- class TRANSACTION_CONTAINER
 

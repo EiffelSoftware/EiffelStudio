@@ -48,7 +48,7 @@ feature -- Access
 			Result.append ("://")
 			Result.append (host)
 			Result.extend ('/')
-			if path /= Void and then not path.empty then
+			if path /= Void and then not path.is_empty then
 				Result.append (path)
 			end
 		end
@@ -59,7 +59,7 @@ feature -- Access
 			str: STRING
 		do
 			str := clone (host)
-			if not username.empty then
+			if not username.is_empty then
 				str.precede (':')
 				str.prepend (username)
 			end
@@ -105,7 +105,7 @@ feature -- Status report
 	proxy_host_ok (h: STRING): BOOLEAN is
 	 		-- Is host name of proxy correct?
 		do
-			if h /= Void and then not h.empty then
+			if h /= Void and then not h.is_empty then
 				Result := host_charset.contains_string (h)
 			end
 		end
@@ -113,7 +113,7 @@ feature -- Status report
 	is_password_accepted: BOOLEAN is
 			-- Can a password be set?
 		do
-			Result := not username.empty
+			Result := not username.is_empty
 		end
 		
 feature -- Status setting
@@ -154,19 +154,19 @@ feature {NONE} -- Basic operations
 				host := address.substring (1, pos - 1)
 				address.tail (address.count - pos)
 				path := clone (address)
-				if not host.empty and has_username and 
+				if not host.is_empty and has_username and 
 					host.occurrences ('@') = 1 then
 					pos := host.index_of ('@', 1)
 					username := host.substring (1, pos - 1)
 					host.tail (host.count - pos)
-					if not username.empty and 
+					if not username.is_empty and 
 						username.occurrences (':') = 1 then
 						pos := username.index_of (':', 1)
 						password := username.substring (pos + 1, username.count)
 						username.head (pos - 1)
 					end
 				end
-				if not host.empty and host.occurrences (':') <= 1 then
+				if not host.is_empty and host.occurrences (':') <= 1 then
 					pos := host.index_of (':', 1)
 					if pos = host.count then
 						host.head (host.count - 1)
@@ -191,11 +191,13 @@ feature {NONE} -- Implementation
 	
 invariant
 
-	host_charset_defined: host_charset /= Void and then not host_charset.empty
-	path_charset_defined: path_charset /= Void and then not path_charset.empty
+	host_charset_defined: host_charset /= Void and then 
+				not host_charset.is_empty
+	path_charset_defined: path_charset /= Void and then 
+				not path_charset.is_empty
 	username_exists: username /= Void
 	password_exists: password /= Void
-	password_constraint: not password.empty implies not username.empty
+	password_constraint: not password.is_empty implies not username.is_empty
 	
 end -- class NETWORK_RESOURCE_URL
 

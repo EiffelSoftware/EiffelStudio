@@ -28,7 +28,7 @@ feature -- Initialization
 	make (a : STRING) is
 			-- Create an unix socket client.
 		require
-			a_valid_name: a /= Void and then not a.empty
+			a_valid_name: a /= Void and then not a.is_empty
 		do
 			create in_out.make_client (a);
 			in_out.connect

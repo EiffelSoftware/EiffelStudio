@@ -62,7 +62,7 @@ feature -- Initialization
 			-- Create an unix stream server socket bound to local
 			-- address `a_name'.
 		require
-			valid_path: a_name /= Void and then not a_name.empty
+			valid_path: a_name /= Void and then not a_name.is_empty
 		do
 			make;
 			create address.make;

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	 		-- Create address.
 		do
 			Precursor (a)
-			if username.empty then
+			if username.is_empty then
 				username.append ("anonymous")
 				password.append ("ftp@")
 			end
@@ -48,7 +48,7 @@ feature -- Status report
 	is_path_correct (p: STRING): BOOLEAN is
 			-- Is path name correct?
 		do
-			Result := not p.empty and then path_charset.contains_string (p)
+			Result := not p.is_empty and then path_charset.contains_string (p)
 		end
 
 end -- class FTP_URL

@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 		require
 			socket_exists: s /= Void
 			socket_writable: s.is_open_write
-			non_empty_string: str /= Void and then not str.empty
+			non_empty_string: str /= Void and then not str.is_empty
 		local
 			packet: STRING
 		do
@@ -341,7 +341,9 @@ feature {NONE} -- Implementation
 				last_reply := clone (s.last_string)
 				last_reply.append ("%N")
 				debug
-					if not last_reply.empty then Io.putstring (last_reply) end
+					if not last_reply.is_empty then 
+						Io.putstring (last_reply) 
+					end
 				end
 				if has_num (last_reply) then
 					if dash_check (last_reply) then
@@ -451,8 +453,8 @@ feature {NONE} -- Implementation
 	reply_code_ok (codes: ARRAY[INTEGER]): BOOLEAN is
 			-- Is reply code in `codes`?
 		require
-			non_empty_reply: last_reply /= Void and then not last_reply.empty
-			non_empty_array: codes /= Void and then not codes.empty
+			non_empty_reply: last_reply /= Void and then not last_reply.is_empty
+			non_empty_array: codes /= Void and then not codes.is_empty
 		local
 			i: INTEGER
 			code: INTEGER
@@ -499,7 +501,7 @@ feature {NONE} -- Implementation
 			-- passive mode.
 		require
 			passive_mode: passive_mode
-			non_empty_data: data /= Void and then not data.empty
+			non_empty_data: data /= Void and then not data.is_empty
 		local
 			ip_address: STRING
 			l_paren, r_paren: INTEGER

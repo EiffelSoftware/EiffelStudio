@@ -41,6 +41,12 @@ EIF_CHARACTER c;
 	return (EIF_INTEGER) c;	/* (EIF_CHARACTER) -> (EIF_INTEGER) */
 }
 
+public EIF_INTEGER conv_pi(p)
+EIF_POINTER p;
+{
+	return (EIF_INTEGER) p;	/* (EIF_POINTER) -> (EIF_INTEGER) */
+}
+
 public EIF_REAL conv_ir(v)
 EIF_INTEGER v;
 {

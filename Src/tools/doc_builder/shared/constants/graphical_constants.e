@@ -33,8 +33,10 @@ feature -- Access
 			Result.set_with_named_file (l_file.string)
 		end
 		
+	css_file_icon, 
+	js_file_icon,
 	text_file_icon: EV_PIXMAP is
-			-- File icon (text file)
+			-- File icon (text files)
 		local
 			l_file: FILE_NAME
 		once
@@ -63,6 +65,39 @@ feature -- Access
 			create Result
 			create l_file.make_from_string (Icon_resources_directory)
 			l_file.extend ("icon_html_file.ico")
+			Result.set_with_named_file (l_file.string)
+		end
+
+	png_file_icon: EV_PIXMAP is
+			-- File icon (png file)
+		local
+			l_file: FILE_NAME
+		once
+			create Result
+			create l_file.make_from_string (Icon_resources_directory)
+			l_file.extend ("icon_png_file.ico")
+			Result.set_with_named_file (l_file.string)
+		end
+		
+	jpg_file_icon: EV_PIXMAP is
+			-- File icon (jpg file)
+		local
+			l_file: FILE_NAME
+		once
+			create Result
+			create l_file.make_from_string (Icon_resources_directory)
+			l_file.extend ("icon_jpeg_file.ico")
+			Result.set_with_named_file (l_file.string)
+		end
+
+	gif_file_icon: EV_PIXMAP is
+			-- File icon (gif file)
+		local
+			l_file: FILE_NAME
+		once
+			create Result
+			create l_file.make_from_string (Icon_resources_directory)
+			l_file.extend ("icon_gif_file.ico")
 			Result.set_with_named_file (l_file.string)
 		end
 

@@ -38,6 +38,13 @@ feature -- Directory Paths
 			Result.extend ("bin")
 		end
 
+	documentation_directory: DIRECTORY_NAME is
+			-- Directory holding documentation
+		once
+			create Result.make_from_string (application_root_directory)
+			Result.extend ("documentation")
+		end
+
 	templates_path: DIRECTORY_NAME is
 			-- Path to folder containing template files
 		once
@@ -314,6 +321,11 @@ feature -- Access
 			Result.extend (l_graphical_constants.xml_file_icon, "xml")
 			Result.extend (l_graphical_constants.html_file_icon, "htm")
 			Result.extend (l_graphical_constants.html_file_icon, "html")
+			Result.extend (l_graphical_constants.png_file_icon, "png")
+			Result.extend (l_graphical_constants.gif_file_icon, "gif")
+			Result.extend (l_graphical_constants.jpg_file_icon, "jpg")
+			Result.extend (l_graphical_constants.css_file_icon, "css")
+			Result.extend (l_graphical_constants.js_file_icon, "js")
 		end	
 
 end -- class APPLICATION_CONSTANTS

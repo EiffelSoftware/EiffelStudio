@@ -34,6 +34,12 @@ feature -- Once objects
 			create Result.make
 		end
 		
+	Shared_help_manager: HELP_MANAGER is
+			-- Help Manager
+		once
+			create Result	
+		end		
+		
 	Shared_toc_manager: TABLE_OF_CONTENTS_MANAGER is
 			-- Table of Content manage
 		once

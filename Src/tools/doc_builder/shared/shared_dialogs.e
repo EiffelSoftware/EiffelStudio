@@ -86,4 +86,10 @@ feature -- Access
 			create Result
 		end			
 			
+	character_dialog: CHARACTER_DIALOG is
+			-- Dialog for special character codes
+		once
+			create Result
+		end			
+			
 end -- class SHARED_DIALOGS

@@ -20,52 +20,72 @@ feature -- Copying
 			l_file, target_file: RAW_FILE
 			path: STRING
 			l_filename: FILE_NAME
+			retried: BOOLEAN
 		do	
-			from
-				cnt := 0
-				a_dir.open_read
-				a_dir.start
-				path := a_dir.name
-				l_cnt := a_dir.count
-			until
-				cnt = l_cnt
-			loop	
-				a_dir.readentry
-				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
-					create l_filename.make_from_string (path)
-					l_filename.extend (a_dir.lastentry)
-					create src_sub_dir.make (l_filename.string)
-					if not src_sub_dir.exists then
-							-- This is not a directory, so check for file
+			if not retried then
+				from
+					cnt := 0
+					a_dir.open_read
+					a_dir.start
+					path := a_dir.name
+					l_cnt := a_dir.count
+				until
+					cnt = l_cnt
+				loop	
+					a_dir.readentry
+					if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
 						create l_filename.make_from_string (path)
 						l_filename.extend (a_dir.lastentry)
-						create l_file.make (l_filename.string)
-						if l_file.exists then
-								-- This is a file
-							create l_filename.make_from_string (target.name)
+						create src_sub_dir.make (l_filename.string)
+						if not src_sub_dir.exists then
+								-- This is not a directory, so check for file
+							create l_filename.make_from_string (path)
 							l_filename.extend (a_dir.lastentry)
-							create target_file.make_create_read_write (l_filename)
-							target_file.close
-							if not l_file.is_empty then
-								copy_file (l_file, target_file)	
+							create l_file.make (l_filename.string)
+							if l_file.exists then
+									-- This is a file
+								create l_filename.make_from_string (target.name)
+								create sub_dir.make (l_filename.string)
+								if not sub_dir.exists then
+									print ("Unable to make file: " + a_dir.lastentry + " because the following directory does not%
+									% exist:" + l_filename.string + "%N")
+								else
+									l_filename.extend (a_dir.lastentry)
+									create target_file.make_create_read_write (l_filename.string)
+									target_file.close
+									if not l_file.is_empty then
+										copy_file (l_file, target_file)	
+									end
+								end
+								
+							end
+						else		
+								-- This is a directory
+							create l_filename.make_from_string (target.name)
+							create sub_dir.make (l_filename.string)
+							if not sub_dir.exists then
+								print ("Unable to copy directory: " + src_sub_dir.name + " to " + sub_dir.name + "because " +
+								sub_dir.name + " does not exist%N")
+							else
+								l_filename.extend (a_dir.lastentry)
+								create sub_dir.make (l_filename.string)
+								if not sub_dir.exists then							
+									sub_dir.create_dir	
+								end
+								copy_directory (src_sub_dir, sub_dir)
 							end
 						end
-					else		
-							-- This is a directory
-						create l_filename.make_from_string (target.name)
-						l_filename.extend (a_dir.lastentry)
-						create sub_dir.make (l_filename)
-						if not sub_dir.exists then							
-							sub_dir.create_dir	
-						end
-						copy_directory (src_sub_dir, sub_dir)
 					end
+					cnt := cnt + 1			
 				end
-				cnt := cnt + 1			
-			end
-			a_dir.close
+				a_dir.close
+			end		
 		ensure
-			directories_closed: a_dir.is_closed and target.is_closed
+			directories_closed: a_dir.is_closed and target.is_closed			
+		rescue
+			retried := True
+			print ("Exception in UTILITY_FUNCTIONS 'copy_directory'%N")
+			io.read_character
 		end		
 
 	copy_file (file, target: FILE) is
@@ -161,20 +181,23 @@ feature -- Directory
 		local
 			cnt, l_max_index, l_arr_index: INTEGER
 			l_char: CHARACTER
+			l_dir,
 			l_dir_string: STRING
 		do
-			l_max_index := a_dir.occurrences ('\') + a_dir.occurrences ('/')
+			l_dir := a_dir
+			l_dir.replace_substring_all ("\", "/")
+			l_max_index := l_dir.occurrences ('\') + l_dir.occurrences ('/')
 			if l_max_index > 0 then
 				from
 					cnt := 1
 					l_arr_index := 1
 					create Result.make (1, l_max_index)
-					create l_dir_string.make_empty				
+					create l_dir_string.make_empty
 				until
-					cnt > a_dir.count
+					cnt > l_dir.count
 				loop
-					l_char := a_dir.item (cnt)
-					if l_char = '/' or l_char = '\' and then not l_dir_string.is_empty then
+					l_char := l_dir.item (cnt)
+					if l_char = '/' and not l_dir_string.is_empty then
 						Result.put (l_dir_string.twin, l_arr_index)
 						l_dir_string.wipe_out
 						l_arr_index := l_arr_index + 1
@@ -237,15 +260,35 @@ feature -- File
 		require
 			path_not_void: a_path /= Void
 		do
-			Result := a_path.substring (1, a_path.last_index_of ('\', a_path.count) - 1)
-			if Result.is_empty then
+			if a_path.last_index_of ('\', a_path.count) > 0 then
+				Result := a_path.substring (1, a_path.last_index_of ('\', a_path.count) - 1)
+			elseif a_path.last_index_of ('/', a_path.count) > 0 then
 				Result := a_path.substring (1, a_path.last_index_of ('/', a_path.count) - 1)
-				if Result.is_empty then
-					Result := a_path	
-				end
+			else
+				Result := a_path	
 			end
 		ensure
 			has_result: Result /= Void
+		end		
+
+	create_file_plus_directories (a_file: STRING) is
+			-- Create a new empty file at location of `a_file'.  Create all directories
+			-- part of filename if they do not exist also.
+		require
+			file_not_void: a_file /= Void
+		local
+			l_dirs: like directory_array
+			l_cnt: INTEGER
+		do
+			l_dirs := directory_array (a_file)
+			from
+				l_cnt := 1
+			until
+				l_cnt > l_dirs.count
+			loop
+				--l_dirs.item (l_cnt)
+				l_cnt := l_cnt + 1
+			end
 		end		
 
 feature -- String
@@ -289,16 +332,14 @@ feature -- Document
 		local
 			l_root_dir: STRING
 			l_index: INTEGER
+			l_consts: APPLICATION_CONSTANTS
 		do			
-			create l_root_dir.make_from_string ((create {SHARED_CONSTANTS}).Application_constants.Temporary_html_directory.string)
+			l_consts := (create {SHARED_CONSTANTS}).Application_constants
+			create l_root_dir.make_from_string (l_consts.Temporary_html_directory.string)
 			Result := temporary_location (a_name, l_root_dir)
 			
 			if with_name then
-				if 
-					not (file_type (Result).is_equal ("html") or 
-					file_type (Result).is_equal ("css") or 
-					file_type (Result).is_equal ("gif"))
-				then
+				if not l_consts.allowed_file_types.has (file_type (Result)) then
 					l_index := Result.last_index_of ('.', Result.count)
 					if l_index > 0 then					
 						Result := Result.substring (1, l_index - 1)
@@ -454,7 +495,9 @@ feature {NONE} -- Implementation
 			l_sub_dir: DIRECTORY
 		do				
 			Result := a_name.twin
+			Result.replace_substring_all ("\", "/")
 			l_proj_root := (create {SHARED_OBJECTS}).Shared_project.root_directory
+			l_proj_root.replace_substring_all ("\", "/")
 			if l_proj_root /= Void then
 				if Result.has_substring (l_proj_root) then
 					Result.replace_substring_all (l_proj_root, "")
@@ -466,7 +509,7 @@ feature {NONE} -- Implementation
 				
 			end
 			create l_file_name.make_from_string (a_root)
-			if (Result.item (1) = '\' or Result.item (1) = '/') then
+			if Result.item (1) = '/' then
 				Result := Result.substring (2, Result.count)
 			end
 			l_file_name.extend (Result)

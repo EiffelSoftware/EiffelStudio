@@ -17,6 +17,7 @@ feature -- Access
 			Result.extend (envision_flag, envision_desc)
 			Result.extend (studio_lin_flag, studio_lin_desc)
 			Result.extend (studio_mac_flag, studio_mac_desc)
+			Result.extend (studio_win_flag, studio_win_desc)
 			Result.extend (unfiltered_flag, unfiltered)
 		end
 		

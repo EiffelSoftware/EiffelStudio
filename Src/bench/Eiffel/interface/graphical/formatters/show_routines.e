@@ -22,24 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showroutines 
+			Result := Pixmaps.bm_Showroutines 
 		end;
 	
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showroutines 
+			Result := Pixmaps.bm_Dark_showroutines 
 		end;
 	
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showroutines
+			Result := Interface_names.f_Showroutines
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showroutines
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Routines_of
+			Result := Interface_names.t_Routines_of
 		end;
 
 	post_fix: STRING is "rou";

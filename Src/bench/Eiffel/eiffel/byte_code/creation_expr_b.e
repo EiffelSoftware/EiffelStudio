@@ -11,7 +11,7 @@ inherit
 		redefine
 			make_byte_code, analyze,
 			generate, register, get_register,
-			enlarged
+			enlarged, size
 		end
 
 creation
@@ -183,4 +183,13 @@ feature -- Generation
 				context.set_current_type (current_type)
 			end
 
+feature -- Inlining
+
+	size: INTEGER is
+		do
+				-- Inlining will not be done if the feature
+				-- has a creation instruction
+			Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
+		end
+	
 end -- class CREATION_EXPR_B

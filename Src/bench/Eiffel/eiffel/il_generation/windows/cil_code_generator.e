@@ -236,9 +236,6 @@ feature {NONE} -- Access
 	once_generation: BOOLEAN
 			-- Are we currently generating a once feature?
 
-	global_once_generation: BOOLEAN
-			-- Are we currently generating a per-process once feature?
-
 feature {NONE} -- Debug info
 
 	dbg_writer: DBG_WRITER is
@@ -387,14 +384,6 @@ feature -- Settings
 			once_generation := v
 		ensure
 			once_generation_set: once_generation = v
-		end
-
-	set_global_once_generation (v: BOOLEAN) is
-			-- Set `global_once_generation' to `v'.
-		do
-			global_once_generation := v
-		ensure
-			global_once_generation_set: global_once_generation = v
 		end
 
 	set_current_module_for_class (class_c: CLASS_C) is
@@ -948,6 +937,7 @@ feature -- Generation Structure
 			a_class: CLASS_C
 			root_feat: FEATURE_I
 			l_decl_type: CL_TYPE_I
+			entry_point_token: INTEGER
 		do
 			if
 				not is_single_module and then
@@ -960,10 +950,15 @@ feature -- Generation Structure
 					l_decl_type := implemented_type (root_feat.origin_class_id,
 						a_class.types.first.type)
 
-					current_module.dbg_writer.set_user_entry_point (
-						current_module.implementation_feature_token (
-							l_decl_type.associated_class_type.implementation_id,
-							root_feat.origin_feature_id))
+					entry_point_token := current_module.implementation_feature_token (
+						l_decl_type.associated_class_type.implementation_id,
+						root_feat.origin_feature_id)
+						-- Debugger API does not allow to use MethodRef token for user entry point
+					if entry_point_token & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_method_def then
+						current_module.dbg_writer.set_user_entry_point (entry_point_token)
+					else
+						fixme ("Regenerate root procedure to get MethodDef token or generate a fictious procedure with relevant debug information that will call root procedure.")
+					end
 				end
 					-- Save module.
 				current_module.save_to_disk
@@ -4053,6 +4048,16 @@ feature {NONE} -- Once management
 			result_not_void: Result /= Void
 		end
 
+	once_ready_name (feature_name: STRING): STRING is
+			-- Name of flag that indicates that once data is ready to use from a different thread
+		require
+			feature_name_not_void: feature_name /= Void
+		do
+			Result := feature_name + "_ready"
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	once_sync_name (feature_name: STRING): STRING is
 			-- Name of the field that is used to synchronize access to once routine data
 		require
@@ -4115,7 +4120,7 @@ feature -- Once management
 								feature {MD_METHOD_ATTRIBUTES}.hide_by_signature,
 								l_method_sig,
 								feature {MD_METHOD_ATTRIBUTES}.il | feature {MD_METHOD_ATTRIBUTES}.managed)
-							method_body := method_writer.new_method_body (class_constructor_token)
+							start_new_body (class_constructor_token)
 						end
 						method_body.put_newobj (constructor_token (current_module.object_type_id), 0)
 						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.stsfld, sync_token)
@@ -4129,11 +4134,23 @@ feature -- Once management
 			end
 		end
 
-	done_token, result_token, sync_token: INTEGER
+	done_token, result_token: INTEGER
 			-- Token for static fields holding value if once has been computed,
-			-- its value if computed and synchronization object.
+			-- its value if computed.
 			-- Ok to use token in a non-module specific code here, because they
 			-- are only local to current feature generation.
+			
+	ready_token, sync_token: INTEGER
+			-- Token for static fields holding ready-to-use flag and synchronization object
+			-- for process-relative once routines.
+			-- Ok to use token in a non-module specific code here, because they
+			-- are only local to current feature generation.
+
+	once_done_label: IL_LABEL
+			-- Label which is used in test of a "done" flag `done_token'
+
+	once_ready_label: IL_LABEL
+			-- Label which is used in test of a "ready" flag `ready_token'
 
 	generate_once_data_info (feat: FEATURE_I) is
 			-- Generate declaration of variables required to store data of once feature `feat'.
@@ -4174,6 +4191,13 @@ feature -- Once management
 			Il_debug_info_recorder.record_once_info_for_class (current_class_token, done_token, result_token, feat, current_class)
 
 			if feat.is_process_relative then
+					-- Generate flag that indicates that once data fields are ready to use
+				uni_string.set_string (once_ready_name (name))
+				sync_token := md_emit.define_field (
+					uni_string,
+					current_class_token,
+					feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
+					done_sig)
 					-- Generate field to synchronize access to other data fields
 				uni_string.set_string (once_sync_name (name))
 				sync_token := md_emit.define_field (
@@ -4184,84 +4208,182 @@ feature -- Once management
 			end
 		end
 
-	generate_once_done_info (name: STRING) is
-			-- Initialize a token of static `done' variable corresponding
-			-- to once feature `name'.
+	generate_once_access_info (feature_i: FEATURE_I) is
+			-- Initialize tokens for fields that are used to store result of `feature_i'.
 		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
+			feature_i_not_void: feature_i /= Void
+			once_feature: feature_i.is_once
 		local
 			class_data_token: INTEGER
-		do
-			class_data_token := current_module.class_data_token (current_class)
-			uni_string.set_string (once_done_name (name))
-			done_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
-			if global_once_generation then
-				uni_string.set_string (once_sync_name (name))
-				sync_token := md_emit.define_member_ref (uni_string, class_data_token, sync_sig)
-			end
-		end
-
-	generate_once_result_info (name: STRING; type_i: TYPE_I) is
-			-- Initialize a token of static `result' variable corresponding
-			-- to once function `name' that has a return type `type_i'.
-		require
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			type_i: type_i /= Void
-		local
+			name: STRING
 			l_sig: like field_sig
 		do
-			l_sig := field_sig
-			l_sig.reset
-			set_signature_type (l_sig, type_i)
-
-			uni_string.set_string (once_result_name (name))
-			result_token := md_emit.define_member_ref (
-				uni_string,
-				current_module.class_data_token (current_class),
-				l_sig)
+			name := feature_i.feature_name
+			class_data_token := current_module.class_data_token (system.class_of_id (feature_i.access_in))
+			uni_string.set_string (once_done_name (name))
+			done_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
+			if feature_i.has_return_value then
+				l_sig := field_sig
+				l_sig.reset
+				set_signature_type (l_sig, argument_actual_type (feature_i.type.actual_type.type_i))
+				uni_string.set_string (once_result_name (name))
+				result_token := md_emit.define_member_ref (uni_string, class_data_token, l_sig)
+			else
+				result_token := 0
+			end
+			if feature_i.is_process_relative then
+				uni_string.set_string (once_ready_name (name))
+				ready_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
+				uni_string.set_string (once_sync_name (name))
+				sync_token := md_emit.define_member_ref (uni_string, class_data_token, sync_sig)
+			else
+				ready_token := 0
+				sync_token := 0
+			end
+		ensure
+			done_token_set: done_token /= 0
+			result_token_set: feature_i.has_return_value = (result_token /= 0)
+			ready_token_set: feature_i.is_process_relative = (ready_token /= 0)
+			sync_token_set: feature_i.is_process_relative = (sync_token /= 0)
 		end
 
-	generate_once_computed is
-			-- Mark current once as being computed.
+	generate_once_prologue is
+			-- Generate prologue for once feature.
+			-- The feature is used with `generate_once_epilogue' as follows:
+			--    generate_once_prologue
+			--    ... -- code of once feature body
+			--    generate_once_epilogue
+		require
+			-- current_feature_not_void: byte_context.current_feature /= Void
+			-- current_feature_is_once: byte_context.current_feature.is_once
 		do
+				-- Thread-relative code looks like
+				--    if not done then
+				--       done := true
+				--       ... -- code of once feature body
+				--    end
+				--    return result -- if required
+				
+				-- Process-relative code uses double-check algorithm and looks like
+				--    if not volatile ready then
+				--       lock (sync)
+				--       if not done then
+				--          done := true
+				--          ... -- code of once feature body
+				--          volatile ready := true
+				--       end
+				--       unlock (sync)
+				--    end
+				--    return result -- if required
+
+			fixme ("Put try/finally block around lock/unlock to avoid permanetly locked sync object due to exception in once routine body")
+			
+				-- Initialize once code generation
+			set_once_generation (True)
+			generate_once_access_info (byte_context.current_feature)
+
+			if ready_token /= 0 then
+				check sync_token /= 0 end
+					-- Generate synchronization for process-relative feature:
+					--    if not volatile ready then
+					--       lock (sync)
+				method_body.put_opcode (feature {MD_OPCODES}.volatile)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, ready_token)
+				once_ready_label := create_label
+				branch_on_true (once_ready_label)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, sync_token)
+				method_body.put_static_call (current_module.define_monitor_method_token ("Enter"), 1, False)
+			end
+
+				-- Generate code that is common for thread-relative and process-relative case:
+				--    if not done then
+				--       done := true
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, done_token)
+			once_done_label := create_label
+			branch_on_true (once_done_label)
 			put_boolean_constant (True)
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, done_token)
+		ensure
+			once_generation: once_generation
+			done_token_set: done_token /= 0
+			result_token_set: byte_context.current_feature.has_return_value = (result_token /= 0)
+			ready_token_set: byte_context.current_feature.is_process_relative = (ready_token /= 0)
+			sync_token_set: byte_context.current_feature.is_process_relative = (sync_token /= 0)
+			once_done_label_set: once_done_label /= Void
+			once_ready_label_set: (ready_token /= 0) = (once_ready_label /= Void)
+		end
+
+	generate_once_epilogue is
+			-- Generate epilogue for once feature.
+		require
+			-- current_feature_not_void: byte_context.current_feature /= Void
+			-- current_feature_is_once: byte_context.current_feature.is_once
+		local
+			is_process_relative: BOOLEAN
+			has_result: BOOLEAN
+		do
+			if ready_token /= 0 then
+				check sync_token /= 0 end
+				check once_ready_label /= Void end
+				is_process_relative := True
+					-- Notify other threads that result is ready:
+					--          volatile ready := true
+				put_boolean_constant (True)
+				method_body.put_opcode (feature {MD_OPCODES}.volatile)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ready_token)
+			end
+			
+				-- Close "if not done" block:
+				--       end
+			mark_label (once_done_label)
+
+			if is_process_relative then
+					-- Unlock synchronization object and close "if not volatile ready" block in process-relative case:
+					--       unlock (sync)
+					--    end
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, sync_token)
+				method_body.put_static_call (current_module.define_monitor_method_token ("Exit"), 1, False)
+				mark_label (once_ready_label)
+			end
+			
+			if result_token /= 0 then
+					-- Load result of a feature:
+					-- return result -- if required
+				has_result := True
+				generate_once_result
+			end
+			generate_return (has_result)
+
+			done_token := 0
+			result_token := 0
+			ready_token := 0
+			sync_token := 0
+			once_done_label := Void
+			once_ready_label := Void
+			set_once_generation (False)
+		ensure
+			not_once_generation: not once_generation
+			done_token_unset: done_token = 0
+			result_token_unset: result_token = 0
+			ready_token_unset: ready_token = 0
+			sync_token_unset: sync_token = 0
+			once_done_label_unset: once_done_label = Void
+			once_ready_label_unset: once_ready_label = Void
 		end
 
 	generate_once_result_address is
 			-- Generate test on `done' of once feature `name'.
+		require
+			result_token_set: result_token /= 0
 		do
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsflda, result_token)
-		end
-
-	generate_once_test is
-			-- Generate test on `done' of once feature `name'.
-		do
-			if global_once_generation then
-				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, sync_token)
-				method_body.put_static_call (current_module.define_monitor_method_token ("Enter"), 1, False)
-			end
-			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, done_token)
-		end
-
-	generate_once_return (has_result: BOOLEAN) is
-			-- Generate return from once routine, including loading of function result if `has_result' is true.
-		do
-			if has_result then
-				generate_once_result
-			end
-			if global_once_generation then
-				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, sync_token)
-				method_body.put_static_call (current_module.define_monitor_method_token ("Exit"), 1, False)
-			end
-			generate_return (has_result)
 		end
 
 	generate_once_result is
 			-- Generate access to static `result' variable to load last
 			-- computed value of current processed once function
+		require
+			result_token_set: result_token /= 0
 		do
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, result_token)
 		end
@@ -4269,6 +4391,8 @@ feature -- Once management
 	generate_once_store_result is
 			-- Generate setting of static `result' variable corresponding
 			-- to current processed once function.
+		require
+			result_token_set: result_token /= 0
 		do
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, result_token)
 		end

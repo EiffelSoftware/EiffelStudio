@@ -317,13 +317,22 @@ feature -- Basic Operations
 		local
 			a_size: SYSTEM_DRAWING_SIZE
 			on_resize_delegate: SYSTEM_EVENTHANDLER
+			retried: BOOLEAN
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
 		do
 			set_enabled (True)
 			set_text (dictionary.Title)
 			a_size.set_width (dictionary.Window_width)
 			a_size.set_height (dictionary.Window_height)
 			set_size (a_size)
-			set_icon (dictionary.Assembly_manager_icon)
+			if not retried then
+				set_icon (dictionary.Assembly_manager_icon)
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+			end
 
 			build_menu
 			set_menu_actions
@@ -341,6 +350,9 @@ feature -- Basic Operations
 			non_void_toolbar: toolbar /= Void
 			non_void_data_table: data_table /= Void
 			non_void_data_grid: data_grid /= Void
+		rescue
+			retried := True
+			retry
 		end
 
 	build_menu_assembly_viewer is
@@ -492,8 +504,6 @@ feature -- Basic Operations
 		require
 			non_void_toolbar: toolbar /= Void
 		deferred
-		ensure
-			non_void_image_list: toolbar.get_image_list /= Void
 		end
 
 	build_toolbar_assembly_viewer is
@@ -507,15 +517,18 @@ feature -- Basic Operations
 			appearance: SYSTEM_WINDOWS_FORMS_TOOLBARAPPEARANCE
 			style: SYSTEM_WINDOWS_FORMS_TOOLBARBUTTONSTYLE
 			a_size: SYSTEM_DRAWING_SIZE
+			retried: BOOLEAN
 		do
 			create toolbar.make_toolbar
 			toolbar.set_appearance (appearance.Flat)
 			--toolbar.set_auto_size (True)
 			a_size.set_width (get_width)
-			--a_size.set_height (32)
+			a_size.set_height (32)
 			toolbar.set_size (a_size)
 			
-			build_image_list
+			if not retried then
+				build_image_list
+			end
 			
 				-- Create toolbar buttons.
 			create name_toolbar_button.make_toolbarbutton
@@ -528,13 +541,15 @@ feature -- Basic Operations
 			create separator.make_toolbarbutton
 			
 				-- Set icons to toolbar buttons.
-			name_toolbar_button.set_image_index (0)
-			version_toolbar_button.set_image_index (1)
-			culture_toolbar_button.set_image_index (2)
-			public_key_toolbar_button.set_image_index (3)
-			dependancies_toolbar_button.set_image_index (4)
-			dependancy_viewer_toolbar_button.set_image_index (5)
-			help_toolbar_button.set_image_index (6)
+			if not retried then
+				name_toolbar_button.set_image_index (0)
+				version_toolbar_button.set_image_index (1)
+				culture_toolbar_button.set_image_index (2)
+				public_key_toolbar_button.set_image_index (3)
+				dependancies_toolbar_button.set_image_index (4)
+				dependancy_viewer_toolbar_button.set_image_index (5)
+				help_toolbar_button.set_image_index (6)
+			end
 			
 				-- Set tooltips.
 			name_toolbar_button.set_tool_tip_text (dictionary.Name_menu_item)
@@ -573,6 +588,9 @@ feature -- Basic Operations
 				-- Set action.
   			create toolbar_button_click_delegate.make_toolbarbuttonclickeventhandler (Current, $on_toolbar_button_clicked)
   			toolbar.add_button_click (toolbar_button_click_delegate)
+  		rescue
+  			retried := True
+  			retry
 		end
 
 	build_image_list_assembly_viewer is
@@ -591,6 +609,12 @@ feature -- Basic Operations
 			help_image: SYSTEM_DRAWING_IMAGE	
 			image_list: SYSTEM_WINDOWS_FORMS_IMAGELIST 
 			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST
+			retried: BOOLEAN
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			file: SYSTEM_IO_FILE
 		do
 		--	create resources.make_2 (Current.Get_Type)
 		--	name_icon ?= resources.getobject ("assembly_name_icon")
@@ -598,25 +622,60 @@ feature -- Basic Operations
  		--	statusBarPanel1.Icon = (System.Drawing.Icon)resources.GetObject("statusBarPanel1.Icon");
  
 				-- Create icons
-			name_image := image_factory.from_file (dictionary.Name_icon_filename)
-			version_image := image_factory.from_file (dictionary.Version_icon_filename)
-			culture_image := image_factory.from_file (dictionary.Culture_icon_filename)
-			public_key_image := image_factory.from_file (dictionary.Public_key_icon_filename)
-			dependancies_image := image_factory.from_file (dictionary.Dependancies_icon_filename)
-			dependancy_viewer_image := image_factory.from_file (dictionary.Dependancy_viewer_icon_filename)
-			help_image := image_factory.from_file (dictionary.Help_icon_filename)
+			if not retried then
+				if file.exists (dictionary.Name_icon_filename) then
+					name_image := image_factory.from_file (dictionary.Name_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Name_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+				if file.exists (dictionary.Version_icon_filename) then
+					version_image := image_factory.from_file (dictionary.Version_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Version_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+				if file.exists (dictionary.Culture_icon_filename) then
+					culture_image := image_factory.from_file (dictionary.Culture_icon_filename)				
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Culture_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+				if file.exists (dictionary.Public_key_icon_filename) then
+					public_key_image := image_factory.from_file (dictionary.Public_key_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Public_key_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+				if file.exists (dictionary.Dependancies_icon_filename) then
+					dependancies_image := image_factory.from_file (dictionary.Dependancies_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Dependencies_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+				if file.exists (dictionary.Dependancy_viewer_icon_filename) then
+					dependancy_viewer_image := image_factory.from_file (dictionary.Dependancy_viewer_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Dependency_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
+				if file.exists (dictionary.Help_icon_filename) then
+					help_image := image_factory.from_file (dictionary.Help_icon_filename)
+				else
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Help_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+				end
 			
-				-- Add icons to `image_list'.
-			create image_list.make_imagelist
-			toolbar.set_image_list (image_list)
-			images := image_list.get_images
-			images.add (name_image)
-			images.add (version_image)
-			images.add (culture_image)
-			images.add (public_key_image)
-			images.add (dependancies_image)
-			images.add (dependancy_viewer_image)
-			images.add (help_image)
+					-- Add icons to `image_list'.
+				create image_list.make_imagelist
+				toolbar.set_image_list (image_list)
+				images := image_list.get_images
+				images.add (name_image)
+				images.add (version_image)
+				images.add (culture_image)
+				images.add (public_key_image)
+				images.add (dependancies_image)
+				images.add (dependancy_viewer_image)
+				images.add (help_image)
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Toolbar_icon_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	build_data_table_assembly_viewer is

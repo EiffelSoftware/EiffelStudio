@@ -131,13 +131,22 @@ feature -- Basic Operations
 			a_font: SYSTEM_DRAWING_FONT
 			on_ok_event_handler_delegate: SYSTEM_EVENTHANDLER
 			on_cancel_event_handler_delegate: SYSTEM_EVENTHANDLER
+			retried: BOOLEAN
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do	
 			initialize
 			set_text (dictionary.Title)
 			a_size.set_Height (dictionary.Window_height)
 			a_size.set_Width (dictionary.Window_width)
 			set_size (a_size)
-			set_icon (dictionary.Import_icon)
+			if not retried then
+				set_icon (dictionary.Import_icon)
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+			end						
 			destination_path_text_box.set_text (dictionary.Default_generation_path)
 
 				-- Eiffel names check box
@@ -154,30 +163,10 @@ feature -- Basic Operations
 			eiffel_names_check_box.set_auto_check (True)
 			get_controls.add (eiffel_names_check_box)
 			
-				-- Dependancies check box (checked by default)
-			if dependancies.count > 0 then
-				create dependancies_check_box.make_checkbox
-				dependancies_check_box.set_text (dictionary.Dependancies_check_box_text)
-				dependancies_check_box.set_font (a_font)
-				a_point.set_X (dictionary.Margin)
-				a_point.set_Y (4 * dictionary.Margin + 10 * dictionary.Label_height)
-				dependancies_check_box.set_location (a_point)
-				a_size.set_height (dictionary.Label_height)
-				a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-				dependancies_check_box.set_size (a_size)
-				dependancies_check_box.set_checked (True)
-				dependancies_check_box.set_auto_check (True)
-				get_controls.add (dependancies_check_box)
-			end
-			
 				-- OK button
 			create ok_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
-			if dependancies.count > 0 then
-				a_point.set_Y (5 * dictionary.Margin + 11 * dictionary.Label_height)
-			else
-				a_point.set_Y (4 * dictionary.Margin + 10 * dictionary.Label_height)
-			end
+			a_point.set_Y (4 * dictionary.Margin + 10 * dictionary.Label_height)
 			ok_button.set_location (a_point)
 			ok_button.set_text (dictionary.Ok_button_label)
 			ok_button.set_height (dictionary.Button_height)
@@ -188,11 +177,7 @@ feature -- Basic Operations
 				-- Cancel button
 			create cancel_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin // 2))
-			if dependancies.count > 0 then
-				a_point.set_Y (5 * dictionary.Margin + 11 * dictionary.Label_height)
-			else
-				a_point.set_Y (4 * dictionary.Margin + 10 * dictionary.Label_height)
-			end
+			a_point.set_Y (4 * dictionary.Margin + 10 * dictionary.Label_height)
 			cancel_button.set_location (a_point)
 			cancel_button.set_height (dictionary.Button_height)
 			cancel_button.set_width (dictionary.Button_width)
@@ -203,6 +188,9 @@ feature -- Basic Operations
 				-- Addition of controls
 			get_controls.add (ok_button)
 			get_controls.add (cancel_button)
+		rescue
+			retried := True
+			retry
 		end
 		
 feature -- Event handling
@@ -211,48 +199,16 @@ feature -- Event handling
 		indexing
 			description: "Process `ok_button' activation."
 			external_name: "OnOkEventHandler"
-		local
-			on_confirmation_event_handler_delegate: SYSTEM_EVENTHANDLER
-			warning_dialog: WARNING_DIALOG
 		do
-			if dependancies.count > 0 then
-				if not dependancies_check_box.get_Checked then
-					if not dependancies_imported then
-						create on_confirmation_event_handler_delegate.make_eventhandler (Current, $import_assembly_without_dependancies)
-						create warning_dialog.make (assembly_descriptor, non_imported_dependancies, dictionary.Warning_text, dictionary.Caption_text, on_confirmation_event_handler_delegate)
-					else
-						import_assembly_without_dependancies
-					end
-				else
-					import_assembly_and_dependancies
-				end
-			else
-				import_assembly_without_dependancies
-			end
+			import
 		end
 		
 feature {NONE} -- Implementation
 	
-	import_assembly_and_dependancies is
+	import is
 		indexing
-			description: "Import the assembly corresponding to `assembly_descriptor' and its dependancies."
-			external_name: "ImportAssemblyAndDependancies"
-		require
-			non_void_assembly_descriptor: assembly_descriptor /= Void
-		local
-			message_box: MESSAGE_BOX
-			import_with_dependancies_delegate: SYSTEM_EVENTHANDLER
-		do
-			create import_with_dependancies_delegate.make_eventhandler (Current, $import_with_dependancies)
-			create message_box.make (dictionary.Assembly_and_dependancies_importation_message, import_with_dependancies_delegate)
-		end
-	
-	import_with_dependancies (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-		indexing
-			description: "Import assembly with dependancies."
-			external_name: "ImportWithDependancies"
-		require
-			non_void_sender: sender /= Void
+			description: "Import assembly with dependencies."
+			external_name: "Import"
 		local
 			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
 			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
@@ -262,88 +218,21 @@ feature {NONE} -- Implementation
 			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
 			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
 			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
-			message_box: MESSAGE_BOX
 			retried: BOOLEAN		
 		do
-			message_box ?= sender
-			if message_box /= Void then
-				message_box.refresh
-				if not retried then
-					create conversion_support.make_conversionsupport
-					assembly_name := conversion_support.assembly_name_from_descriptor (assembly_descriptor)
-					assembly := assembly.load (assembly_name)
-					close
-					create emitter.make_neweiffelclassgenerator
-					if destination_path_text_box.get_text /= Void and then destination_path_text_box.get_text.get_length > 0 then
-						emitter.import_assembly_with_dependancies (assembly, destination_path_text_box.get_text, eiffel_names_check_box.get_checked)
-						message_box.close
-					else
-						message_box.close
-						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.No_path, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
-					end
+			if not retried then
+				create conversion_support.make_conversionsupport
+				assembly_name := conversion_support.assembly_name_from_descriptor (assembly_descriptor)
+				assembly := assembly.load (assembly_name)
+				close
+				create emitter.make_neweiffelclassgenerator
+				if destination_path_text_box.get_text /= Void and then destination_path_text_box.get_text.get_length > 0 then
+					emitter.import_assembly_with_dependancies (assembly, destination_path_text_box.get_text, eiffel_names_check_box.get_checked)
 				else
-					message_box.close
-					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Importation_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.No_path, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	import_assembly_without_dependancies is
-		indexing
-			description: "Import the assembly corresponding to `assembly_descriptor' without its dependancies."
-			external_name: "ImportAssemblyWithoutDependancies"
-		require	
-			non_void_assembly_descriptor: assembly_descriptor /= Void
-		local
-			import_without_dependancies_delegate: SYSTEM_EVENTHANDLER
-			message_box: MESSAGE_BOX
-		do
-			create import_without_dependancies_delegate.make_eventhandler (Current, $import_without_dependancies)
-			create message_box.make (dictionary.Assembly_importation_message, import_without_dependancies_delegate)
-		end
-		
-	import_without_dependancies (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-		indexing
-			description: "Import the assembly corresponding to `assembly_descriptor' without its dependancies."
-			external_name: "ImportWithoutDependancies"
-		require	
-			non_void_assembly_descriptor: assembly_descriptor /= Void
-			non_void_sender: sender /= Void
-		local
-			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
-			assembly: SYSTEM_REFLECTION_ASSEMBLY
-			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
-			emitter: NEWEIFFELCLASSGENERATOR
-			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
-			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
-			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
-			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
-			message_box: MESSAGE_BOX
-			retried: BOOLEAN
-		do
-			message_box ?= sender
-			if message_box /= Void then
-				message_box.refresh
-				if not retried then
-					create conversion_support.make_conversionsupport
-					assembly_name := conversion_support.assembly_name_from_descriptor (assembly_descriptor)
-					assembly := assembly.load (assembly_name)
-					close
-					create emitter.make_neweiffelclassgenerator
-					if destination_path_text_box.get_text /= Void and then destination_path_text_box.get_text.get_length > 0 then
-						emitter.import_assembly_without_dependancies (assembly, destination_path_text_box.get_text, eiffel_names_check_box.get_checked)
-						message_box.close
-					else
-						message_box.close
-						returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.No_path, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
-					end
-				else
-					message_box.close
-					returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Importation_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
-				end
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Importation_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
 			end
 		rescue
 			retried := True

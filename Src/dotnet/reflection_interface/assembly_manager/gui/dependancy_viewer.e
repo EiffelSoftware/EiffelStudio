@@ -64,6 +64,11 @@ feature -- Basic Operations
 			label_font: SYSTEM_DRAWING_FONT
 			style: SYSTEM_DRAWING_FONTSTYLE
 			border_style: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
+			retried: BOOLEAN
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON 
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
@@ -72,7 +77,11 @@ feature -- Basic Operations
 			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)	
 			set_maximize_box (False)
-			set_icon (dictionary.Dependancies_icon)
+			if not retried then
+				set_icon (dictionary.Dependancies_icon)
+			else
+				returned_value := windows_message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Pixmap_not_found_error, dictionary.Error_caption, message_box_buttons.Ok, message_box_icon.Error)
+			end
 
 				-- `Selected assembly: '
 			create assembly_label.make_label
@@ -108,6 +117,9 @@ feature -- Basic Operations
 				dependancies_label.set_font (label_font)	
 				get_controls.add (dependancies_label)
 			end
+		rescue
+			retried := True
+			retry
 		end
 		
 end -- class DEPENDANCY_VIEWER

@@ -14,7 +14,7 @@ class
 inherit
 	ANY
 		undefine
-			consistent, setup, is_equal, copy
+			is_equal, copy
 		end
 
 	ARRAY [G]

@@ -12,13 +12,8 @@
           <Component Id="CreateFolder" Guid="0EC46414-25FA-4814-A018-00F63912F9B9" KeyPath="yes">
             <CreateFolder />
             <CreateFolder Directory="assemblies" />
-            <CreateFolder Directory="v1.0.3705" />
-            <CreateFolder Directory="v1.1.4322" />
           </Component>
-          <Directory Id="assemblies" Name="ASSEMB~1" LongName="assemblies">
-            <Directory Id="v1.0.3705" Name="v103705" LongName="v1.0.3705" />
-            <Directory Id="v1.1.4322" Name="v114322" LongName="v1.1.4322" />
-          </Directory>
+		  <Directory Id="assemblies" Name="ASSEMB~1" LongName="assemblies" />
         </Directory>
         <Directory Id="studio" Name="studio">
           <Directory Id="spec" Name="spec">

@@ -83,10 +83,44 @@ feature {NONE} -- Initialization
 			set_center_alignment
 		end
 
-feature -- Access
+	realize is
+			-- Realize a push_button
+		local
+			menu: MENU_WINDOWS
+			wc: WEL_COMPOSITE_WINDOW
+			mp: MENU_PULL_WINDOWS
+			op: OPTION_PULL_WINDOWS
+		do
+			if not realized then
+				realized := true
+				if is_parent_menu_pull then
+					mp ?= parent
+					if mp.realized then
+						mp.add_a_child (Current)
+					end
+				elseif is_parent_option_pull then
+					op ?= parent
+					if op.realized then
+						op.add_a_child (Current)
+					end
+				else
+					resize_for_shell
+					wc ?= parent
+					wel_make (wc, text, x, y, width, height, id_default);
+					if private_font /= Void then
+						set_font (private_font)
+					end
+					if not fixed_size_flag then
+						set_default_size
+					end
+					if private_attributes.insensitive then
+						set_insensitive (true)
+					end
+				end
+			end
+		end
 
-	realized: BOOLEAN
-			-- Is this widget realized?
+feature -- Access
 
 	set_managed (flag: BOOLEAN) is
 			-- Enable geometry managment on screen widget implementation,
@@ -132,8 +166,6 @@ feature -- Access
 			end
 		end
 
-feature -- Status setting
-
 	unrealize is
 			-- Unrealize the button.
 		do
@@ -143,42 +175,38 @@ feature -- Status setting
 			realized := False
 		end
 
-	realize is
-			-- Display a push_button
-		local
-			menu: MENU_WINDOWS
-			wc: WEL_COMPOSITE_WINDOW
-			mp: MENU_PULL_WINDOWS
-			op: OPTION_PULL_WINDOWS
+feature -- Status report
+
+	realized: BOOLEAN
+			-- Is this widget realized?
+
+	has_accelerator: BOOLEAN
+			-- Is there an accelerator key associated with
+			-- this widget?
+
+	accelerator_text: STRING
+			-- Text of accelerator.
+
+feature -- Status setting
+
+	set_accelerator_action (a_translation: STRING) is
+			-- Set the accerlator action (modifiers and key to use as a shortcut
+			-- in selecting a button) to `a_translation'.
+			-- `a_translation' must be specified with the X toolkit conventions.
 		do
-			if not realized then
-				realized := true
-				if is_parent_menu_pull then
-					mp ?= parent
-					if mp.realized then
-						mp.add_a_child (Current)
-					end
-				elseif is_parent_option_pull then
-					op ?= parent
-					if op.realized then
-						op.add_a_child (Current)
-					end
-				else
-					resize_for_shell
-					wc ?= parent
-					wel_make (wc, text, x, y, width, height, id_default);
-					if private_font /= Void then
-						set_font (private_font)
-					end
-					if not fixed_size_flag then
-						set_default_size
-					end
-					if private_attributes.insensitive then
-						set_insensitive (true)
-					end
-				end
-			end
+			accelerator_text := a_translation
+			has_accelerator := True
 		end
+
+feature -- Removal
+
+	remove_accelerator_action is
+			-- Remove the accelerator action.
+		do
+			has_accelerator := False
+		end
+	
+feature {NONE} -- Notification
 
 	on_bn_clicked is
 		local

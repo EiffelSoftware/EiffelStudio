@@ -170,7 +170,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	tab_positions: ACTIVE_LIST [INTEGER]
+	tab_positions: EV_ACTIVE_LIST [INTEGER]
 			-- Width of each tab position in pixels, from left to right.
 			-- All tab positions not included use `tab_width'.
 		

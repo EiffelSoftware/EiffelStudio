@@ -1266,7 +1266,7 @@ feature -- Removal
 			not_exists: not exists
 		end
 
-feature -- Messages
+feature {NONE} -- Messages
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Wm_size message

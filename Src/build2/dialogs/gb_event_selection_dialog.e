@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title ("Event selection")
-			disable_user_resize
+		--	disable_user_resize
 			object := an_object
 			show_actions.extend (agent update_text_field_minimum_width)
 				-- Reset building counter.
@@ -202,9 +202,11 @@ feature {NONE} -- Initialization
 				-- of items displayed, but with a maximum of 400.
 				-- We add 50 as a rough estimate for the items above and below
 				-- the window, and the windows client area to coordinate difference.
-			set_size (600, (main_vertical_box.minimum_height + 50).min (400))
-			set_minimum_size (200, 200)
+			set_minimum_size (600, (main_vertical_box.minimum_height + 50).min (400))
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
+			
+				-- Handle re-sizing
+			resize_actions.force_extend (agent update_text_fields)
 		end
 
 feature -- Access
@@ -333,6 +335,7 @@ feature {NONE} -- Implementation
 				horizontal_box.extend (vertical_box)
 				horizontal_box.disable_item_expand (vertical_box)
 				main_vertical_box.extend (horizontal_box)
+				main_vertical_box.disable_item_expand (horizontal_box)
 				
 				
 				create info.make_with_details (an_action_sequence.names @ counter, action_sequences_list.item, an_action_sequence.types @ counter, temp_event_string)
@@ -372,16 +375,20 @@ feature {NONE} -- Implementation
 					create frame.make_with_text (renamed_action_sequence_name)
 					frame.set_background_color (text_background_color)
 					horizontal_box.extend (frame)
+					horizontal_box.disable_item_expand (frame)
+					create cell
+					cell.set_background_color (text_background_color)
+					horizontal_box.extend (cell)
 					horizontal_box.set_background_color (text_background_color)
-					create label.make_with_text ("Generated feature name : ")
+					create label.make_with_text ("Feature name : ")
 					label.set_background_color (text_background_color)
 					create horizontal_box2
-					horizontal_box.set_background_color (text_background_color)
+					horizontal_box2.set_background_color (text_background_color)
 					horizontal_box2.extend (label)
+					horizontal_box2.disable_item_expand (label)
 					horizontal_box2.extend (text_field)
 					text_field.set_text (feature_name)
 					frame.extend (horizontal_box2)
-					disable_all_items (horizontal_box2)
 				end
 				
 					
@@ -489,6 +496,7 @@ feature {NONE} -- Implementation
 			current_check_button: EV_CHECK_BUTTON
 			frame: EV_FRAME
 			current_text_field: EV_TEXT_FIELD
+			cell: EV_CELL
 		do
 			lock_update
 			current_check_button := all_check_buttons @ index
@@ -500,18 +508,23 @@ feature {NONE} -- Implementation
 				create frame.make_with_text (all_names @ index)
 				frame.set_background_color (text_background_color)
 				horizontal_box.extend (frame)
-				create label.make_with_text ("Generated feature name : ")
+				horizontal_box.disable_item_expand (frame)
+				create cell
+				cell.set_background_color (text_background_color)
+				horizontal_box.extend (cell)
+				create label.make_with_text ("Feature name : ")
 				label.set_background_color (text_background_color)
 				create horizontal_box
 				horizontal_box.extend (label)
+				horizontal_box.disable_item_expand (label)
 				current_text_field.set_text (current_text_field.text.as_lower)
 				horizontal_box.extend (current_text_field)
-				disable_all_items (horizontal_box)
 				frame.extend (horizontal_box)
 				horizontal_box.set_background_color (text_background_color)
 			else
 				vertical_box ?= current_check_button.parent
 				horizontal_box ?= vertical_box.parent
+				horizontal_box.prune (horizontal_box @ 3)
 				horizontal_box.prune (horizontal_box @ 3)
 				
 				create label.make_with_text (all_names @ index)
@@ -526,7 +539,6 @@ feature {NONE} -- Implementation
 					parent_was_a_horizontal_box: horizontal_box /= Void
 				end
 				horizontal_box.prune (current_text_field)
-				rebuild_controls_minimally
 			end
 			update_scroll_bar
 			unlock_update
@@ -539,12 +551,47 @@ feature {NONE} -- Implementation
 			command_handler.update
 				-- We do this here as when the update is locked,
 				-- there appears to be problems.
+				
 			if current_check_button.is_selected then
-				current_text_field.set_minimum_width (x_position_relative_to_window (scroll_bar) -
-					x_position_relative_to_window (current_text_field) - right_side_spacing)
+				update_single_text_field (current_text_field)
 				current_text_field.set_focus
 			end
 		end
+		
+	update_single_text_field (current_text_field: EV_TEXT_FIELD )is
+			--
+		local
+			right_hand_position: INTEGER
+		do
+			if current_text_field.is_displayed then
+				if scroll_bar.is_displayed then
+					right_hand_position := x_position_relative_to_window (scroll_bar)
+				else
+					right_hand_position := (parent_dialog (current_text_field)).client_width
+				end
+				current_text_field.set_minimum_width (right_hand_position -
+				x_position_relative_to_window (current_text_field) - right_side_spacing)
+			end
+		end
+		
+		
+	update_text_fields is
+			-- Update size of all displayed text fields, to almost "touch"
+			-- the right hand side of the window, less a border.
+		local
+			current_text_field: EV_TEXT_FIELD
+		do
+			from
+				all_text_fields.start
+			until
+				all_text_fields.off
+			loop
+				current_text_field := all_text_fields.item
+				update_single_text_field (current_text_field)
+				all_text_fields.forth
+			end
+		end
+		
 		
 	create_main_box is
 			-- Create `main_vertical_box' and initialize.
@@ -563,7 +610,8 @@ feature {NONE} -- Implementation
 				scroll_bar.hide
 			else
 				if not scroll_bar.is_show_requested then
-					scroll_bar.show		
+					scroll_bar.show	
+					update_text_fields
 				end
 				scroll_bar.value_range.adapt ((create {INTEGER_INTERVAL}.make (0, main_vertical_box.minimum_height - viewport.height)))
 				if viewport.height > 0 then
@@ -589,6 +637,7 @@ feature {NONE} -- Implementation
 		local
 			a_box: EV_VERTICAL_BOX
 			temp_widget: EV_WIDGET
+			cell: EV_CELL
 		do
 			a_box := main_vertical_box
 			create_main_box
@@ -600,6 +649,7 @@ feature {NONE} -- Implementation
 				temp_widget ?= a_box.item
 				a_box.remove
 				main_vertical_box.extend (temp_widget)
+				main_vertical_box.disable_item_expand (temp_widget)
 			end
 			viewport.wipe_out
 			viewport.extend (main_vertical_box)

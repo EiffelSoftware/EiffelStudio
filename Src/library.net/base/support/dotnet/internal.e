@@ -207,17 +207,31 @@ feature -- Access
 		end
 
 	field_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
-			-- Type of `i'-th field of dynamic type `type_id'
-		require
-			index_large_enough: i >= 1
-			index_small_enough: i <= field_count_of_type (type_id)
+			-- Abstract type of `i'-th field of dynamic type `type_id'
 		local
-			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
+			l_m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
+			l_field: FIELD_INFO
+			l_type: TYPE
 		do
-			m := get_members (type_id)
-			if m /= Void and then m.valid_index (i) then
-				Result := get_type_index (m.i_th (i).item.get_type)
+			l_m := get_members (type_id)
+			if l_m /= Void and then l_m.valid_index (i) then
+				l_field ?= l_m.i_th (i).item
+				check
+					l_field_not_void: l_field /= Void
+				end
+				l_type := l_field.get_field_type
+				if abstract_types.contains (l_type) then
+					Result ?= abstract_types.get_item (l_type)
+				else
+						-- FIXME: BIT not supported
+					if l_type.is_subclass_of (feature {TYPE}.get_type_string (("System.Enum").to_cil)) then
+						Result := Expanded_type
+					else
+						Result := Reference_type
+					end
+				end
 			end
+				
 		end
 
 	expanded_field_type (i: INTEGER; object: ANY): STRING is
@@ -452,6 +466,22 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
+	field_dynamic_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
+			-- Type of `i'-th field of dynamic type `type_id'
+			-- Not used yet, but might be in future.
+		require
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count_of_type (type_id)
+		local
+			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
+			t: TYPE
+		do
+			m := get_members (type_id)
+			if m /= Void and then m.valid_index (i) then
+				Result := get_type_index (m.i_th (i).item.get_type)
+			end
+		end
+
 	insert_type (t: TYPE) is
 			-- Add `t' to the list of known types if it is not already inside.
 		do
@@ -495,6 +525,22 @@ feature {NONE} -- Implementation
 			Result.extend (create {CLI_CELL [TYPE]}.put (feature {TYPE}.get_type_string (("System.Char").to_cil)))
 		end
 
+	abstract_types: HASHTABLE is
+			-- List of all known basic types. Indexed by corresponding
+			-- constant type of Current
+		once
+			create Result.make_1 (10)
+			Result.add (feature {TYPE}.get_type_string (("System.IntPtr").to_cil), Pointer_type)
+			Result.add (feature {TYPE}.get_type_string (("System.Char").to_cil), Character_type)
+			Result.add (feature {TYPE}.get_type_string (("System.Boolean").to_cil), Boolean_type)
+			Result.add (feature {TYPE}.get_type_string (("System.Int32").to_cil), Integer_type)
+			Result.add (feature {TYPE}.get_type_string (("System.Single").to_cil), Real_type)
+			Result.add (feature {TYPE}.get_type_string (("System.Double").to_cil), Double_type)
+			Result.add (feature {TYPE}.get_type_string (("System.Byte").to_cil), Integer_8_type)
+			Result.add (feature {TYPE}.get_type_string (("System.Int16").to_cil), Integer_16_type)
+			Result.add (feature {TYPE}.get_type_string (("System.Int64").to_cil), Integer_64_type)
+		end
+		
 	get_members (type_id: INTEGER): ARRAYED_LIST [CLI_CELL [MEMBER_INFO]] is
 			-- Retrieve all members of type `type_id'.
 			-- We need permission to retrieve non-public members.

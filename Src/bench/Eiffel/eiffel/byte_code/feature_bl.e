@@ -292,6 +292,11 @@ end;
 			feature_id := f.feature_id;
 			type := f.type;
 			parameters := f.parameters;
+			enlarge_parameters
+		end;
+
+	enlarge_parameters is
+		do
 			if parameters /= Void then
 				from
 					parameters.start;
@@ -302,7 +307,7 @@ end;
 					parameters.forth;
 				end;
 			end;
-		end;
+		end
 
 	has_call: BOOLEAN is true;
 			-- The expression as at least one call

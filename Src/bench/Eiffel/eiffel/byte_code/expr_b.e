@@ -11,7 +11,7 @@ inherit
 
 	BYTE_NODE
 		redefine
-			need_enlarging, enlarged
+			need_enlarging, enlarged, optimized_byte_node
 		end;
 	SHARED_C_LEVEL;
 	TYPE_I_CONST;
@@ -125,5 +125,13 @@ feature
 			-- Do nothing
 		do
 		end;
+
+feature
+
+	optimized_byte_node: EXPR_B is
+			-- Redefined for type check
+		do
+			Result := Current
+		end
 
 end

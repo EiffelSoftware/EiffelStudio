@@ -7,7 +7,7 @@ inherit
 	INSTR_B
 		redefine
 			need_enlarging, enlarged, make_byte_code,
-			assigns_to
+			assigns_to, is_unsafe, optimized_byte_node, calls_special_features
 		end;
 	
 feature 
@@ -67,5 +67,21 @@ feature -- Array optimization
 		do
 			Result := target.assigns_to (i)
 		end
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := source.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := source.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current;
+			source := source.optimized_byte_node
+		end;
 
 end

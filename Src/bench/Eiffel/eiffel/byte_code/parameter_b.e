@@ -8,7 +8,8 @@ inherit
 		redefine
 			enlarged, is_hector, make_byte_code,
 			is_simple_expr, has_gcable_variable, has_call,
-			stored_register
+			stored_register, is_unsafe, optimized_byte_node,
+			calls_special_features
 		end;
 	
 feature 
@@ -126,5 +127,23 @@ feature -- Byte code generation
 				end;
 			end;
 		end;
+
+feature -- Array optimization
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := expression.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := expression.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+			expression := expression.optimized_byte_node
+		end
 
 end

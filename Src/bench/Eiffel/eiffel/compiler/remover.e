@@ -247,7 +247,7 @@ end;
 					end;
 
 						-- Array optimization
-					array_optimizer.process (written_class, original_feature);
+					array_optimizer.process (written_class, original_feature, depend_list);
 				end;
 			end;
 		end;

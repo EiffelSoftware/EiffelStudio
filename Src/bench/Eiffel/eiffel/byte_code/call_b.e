@@ -4,7 +4,7 @@ inherit
 
 	EXPR_B
 		redefine
-			enlarged, is_simple_expr
+			enlarged, is_simple_expr, optimized_byte_node
 		end;
 	
 feature 
@@ -77,5 +77,18 @@ feature -- Byte code generation
 		do
 			make_byte_code (ba);
 		end;
+
+feature -- Array optimization
+
+	is_special_feature: BOOLEAN is
+			-- Is it a call to a `special' feature?
+		do
+		end
+
+	optimized_byte_node: CALL_B is
+			-- Redefined only for type check
+		do
+			Result := Current
+		end
 
 end

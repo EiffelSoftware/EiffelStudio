@@ -7,7 +7,8 @@ inherit
 	INSTR_B
 		redefine
 			analyze, generate, enlarge_tree, make_byte_code,
-			has_loop, assigns_to
+			has_loop, assigns_to, is_unsafe,
+			optimized_byte_node, calls_special_features
 		end;
 	VOID_REGISTER
 		export
@@ -161,5 +162,30 @@ feature -- Array optimization
 				(else_part /= Void and then else_part.assigns_to (i))
 		end
 
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := (case_list /= Void and then case_list.calls_special_features (array_desc))
+				or else (else_part /= Void and then else_part.calls_special_features (array_desc))
+				or else switch.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := (case_list /= Void and then case_list.is_unsafe)
+				or else (else_part /= Void and then else_part.is_unsafe)
+				or else switch.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current;
+			switch := switch.optimized_byte_node
+			if case_list /= Void then
+				case_list := case_list.optimized_byte_node
+			end
+			if else_part /= Void then
+				else_part := else_part.optimized_byte_node
+			end
+		end;
 
 end

@@ -591,6 +591,13 @@ feature
 			register_server.clear_all;
 		end;
 
+	array_opt_clear is
+			-- Clear during the array optimization
+		do
+			class_type := Void;
+			byte_code := Void;
+		end;
+
 	wipe_out is
 			-- Clear the structure
 		do

@@ -4,7 +4,9 @@ inherit
 
 	INSTR_B
 		redefine
-			enlarge_tree, analyze, generate, make_byte_code
+			enlarge_tree, analyze, generate, make_byte_code,
+			is_unsafe, optimized_byte_node,
+			calls_special_features
 		end;
 	ASSERT_TYPE
 		
@@ -98,5 +100,26 @@ feature -- Byte code generation
 				ba.write_forward;
 			end;
 		end;
+
+feature -- Array optimization
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := check_list /= Void and then
+						check_list.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := check_list /= Void and then check_list.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+			if check_list /= Void then
+				check_list := check_list.optimized_byte_node
+			end
+		end
 
 end

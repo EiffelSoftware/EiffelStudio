@@ -8,7 +8,8 @@ inherit
 		redefine
 			analyze, generate, enlarge_tree,
 			find_assign_result, last_all_in_result, make_byte_code,
-			has_loop, assigns_to
+			has_loop, assigns_to, is_unsafe,
+			optimized_byte_node, calls_special_features
 		end;
 	VOID_REGISTER
 		export
@@ -282,5 +283,36 @@ feature -- Array optimization
 				(else_part /= Void and then else_part.assigns_to (i)) or else
 				(elsif_list /= Void and then elsif_list.assigns_to (i))
 		end;
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := condition.calls_special_features (array_desc) or else
+				(compound /= Void and then compound.calls_special_features (array_desc)) or else
+				(else_part /= Void and then else_part.calls_special_features (array_desc)) or else
+				(elsif_list /= Void and then elsif_list.calls_special_features (array_desc))
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := condition.is_unsafe or else
+				(compound /= Void and then compound.is_unsafe) or else
+				(else_part /= Void and then else_part.is_unsafe) or else
+				(elsif_list /= Void and then elsif_list.is_unsafe)
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+			condition := condition.optimized_byte_node
+			if compound /= Void then
+				compound := compound.optimized_byte_node
+			end
+			if else_part /= Void then
+				else_part := else_part.optimized_byte_node
+			end
+			if elsif_list /= Void then
+				elsif_list := elsif_list.optimized_byte_node
+			end
+		end
 
 end

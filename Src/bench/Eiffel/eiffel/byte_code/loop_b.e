@@ -7,7 +7,8 @@ inherit
 	INSTR_B
 		redefine
 			need_enlarging, enlarged, make_byte_code,
-			has_loop, assigns_to
+			has_loop, assigns_to, is_unsafe, optimized_byte_node,
+			calls_special_features
 		end;
 	ASSERT_TYPE
 		export
@@ -152,6 +153,153 @@ feature -- Array optimization
 		do
 			Result := (from_part /= Void and then from_part.assigns_to (i))
 				or else (compound /= Void and then compound.assigns_to (i))
+		end
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := (from_part /= Void and then from_part.calls_special_features (array_desc))
+				or else loop_calls_special_features (array_desc)
+		end;
+
+	loop_calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := (compound /= Void and then compound.calls_special_features (array_desc))
+				or else (invariant_part /= Void and then invariant_part.calls_special_features (array_desc))
+				or else (variant_part /= Void and then variant_part.calls_special_features (array_desc))
+				or else stop.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := (from_part /= Void and then from_part.is_unsafe)
+				or else loop_is_unsafe
+		end;
+
+	loop_is_unsafe: BOOLEAN is
+		do
+			Result := (compound /= Void and then compound.is_unsafe)
+				or else (invariant_part /= Void and then invariant_part.is_unsafe)
+				or else (variant_part /= Void and then variant_part.is_unsafe)
+				or else stop.is_unsafe
+		end
+
+	new_optimization_context: OPTIMIZATION_CONTEXT is
+		local
+			old_context: OPTIMIZATION_CONTEXT;
+			array_desc: TWO_WAY_SORTED_SET [INTEGER]
+			old_safe_array_desc: TWO_WAY_SORTED_SET [INTEGER]
+			safe_array_desc: TWO_WAY_SORTED_SET [INTEGER]
+			id: INTEGER;
+		do
+			old_context := optimizer.optimization_context;
+			array_desc := old_context.array_desc;
+			old_safe_array_desc := old_context.safe_array_desc;
+			safe_array_desc := deep_clone (old_safe_array_desc);
+
+			from
+				array_desc.start
+			until
+				array_desc.after
+			loop
+				id := array_desc.item
+				if not (safe_array_desc.has (id)) then
+					check
+						id <= 0
+					end;
+						-- It is safe to optimize if
+						--	- no assignment is done
+						--	- some special features are called
+					if not (compound /= Void and then compound.assigns_to (id)) and then
+						loop_calls_special_features (id)
+					then
+							-- This local/Result is not assigned to
+						safe_array_desc.extend (id)
+					end;
+				end
+				array_desc.forth
+			end
+
+			!!Result.make (array_desc, safe_array_desc);
+			Result.set_generated_array_desc (deep_clone (old_context.generated_array_desc));
+		end
+
+	optimized_byte_node: like Current is
+		local
+			opt_loop: OPT_LOOP_B
+			opt_context: OPTIMIZATION_CONTEXT;
+			safe_array_desc, generated_array_desc: TWO_WAY_SORTED_SET [INTEGER];
+			id: INTEGER
+		do
+			opt_context := new_optimization_context;
+			optimizer.push_optimization_context (opt_context);
+
+			if  not loop_is_unsafe then
+					-- It is safe to optimize array accesses
+
+					-- Create an optimized loop byte_code
+				!!opt_loop;
+
+					-- The from part must be optimized with the `old' context, i.e.
+					-- the new generated arrays cannot be used
+				if from_part /= Void then
+					opt_loop.set_from_part (from_part.optimized_byte_node)
+				end;
+
+					-- Check to see if the new safe array types can
+					-- be generated at this level (they must be generated at
+					-- the highest pssible level but onl if they are used!!)
+				from
+					generated_array_desc := opt_context.generated_array_desc;
+					safe_array_desc := opt_context.safe_array_desc
+					safe_array_desc.start
+				until
+					safe_array_desc.after
+				loop
+					id := safe_array_desc.item;
+					if not generated_array_desc.has (id) then
+						generated_array_desc.extend (id);
+						opt_loop.add_array_to_generate (id);
+					end
+					safe_array_desc.forth
+				end
+
+					-- The new generated arrays can be used now
+
+				if compound /= Void then
+					opt_loop.set_compound (compound.optimized_byte_node)
+				end;
+				if invariant_part /= Void then
+					opt_loop.set_invariant_part (invariant_part.optimized_byte_node)
+				end;
+				opt_loop.set_stop (stop.optimized_byte_node)
+				if variant_part /= Void then
+					opt_loop.set_variant_part (variant_part.optimized_byte_node)
+				end;
+				Result := opt_loop
+			else
+					-- The loop cannot be optimized but the `safe arrays' can be propagated
+					-- deeper in the code: once they are marked as safe, no processing is
+					-- needed deeper in the code
+				Result := Current;
+
+					-- Only the from_part and the compound can be optimized
+					-- (the other parts don't contain any loop anyway)
+				if from_part /= Void then
+					from_part := from_part.optimized_byte_node
+				end;
+				if compound /= Void then
+					compound := compound.optimized_byte_node
+				end
+			end;
+
+			optimizer.pop_optimization_context
+		end;
+
+feature {NONE} -- Array optimization
+
+	optimizer: ARRAY_OPTIMIZER is
+		do
+			Result := System.remover.array_optimizer
 		end
 
 end

@@ -6,7 +6,8 @@ inherit
 	INSTR_B
 		redefine
 			make_byte_code, enlarge_tree, analyze, generate,
-			has_loop, assigns_to
+			has_loop, assigns_to, is_unsafe,
+			optimized_byte_node, calls_special_features
 		end
 	
 feature 
@@ -163,6 +164,25 @@ feature -- Array optimization
 	assigns_to (i: INTEGER): BOOLEAN is
 		do
 			Result := compound /= Void and then compound.assigns_to (i)
+		end
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := compound /= Void and then
+						compound.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := compound /= Void and then compound.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current;
+			if compound /= Void then
+				compound := compound.optimized_byte_node
+			end
 		end
 
 end

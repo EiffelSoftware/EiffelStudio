@@ -73,7 +73,6 @@ feature -- Input
 					if file.laststring.is_equal ("BM") then
 						!! file.make_open_read (a_file_name)
 						!! dib.make_by_file (file)
-						file.close
 						is_valid := dib.exists
 						depth := dib.color_count
 						height := dib.height

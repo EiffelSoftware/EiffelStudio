@@ -64,26 +64,6 @@ feature {GB_XML_HANDLER} -- Implementation
 			new_widget_element: XML_ELEMENT
 		do
 			output_attributes (an_object, element, add_names)
-				-- If `object' is a primitive then there are no children, so we do nothing.
-				-- When we support items, we will need to alter this.
-		--	if not is_instance_of (an_object, dynamic_type_from_string (gb_primitive_object_class_name)) then
-				gb_primitive_object ?= an_object
-				if gb_primitive_object /= Void then
-					layout_item ?= gb_primitive_object.layout_item
-					if not layout_item.is_empty then
-						from
-							layout_item.start
-						until
-							layout_item.off
-						loop
-							current_layout_item ?= layout_item.item
-							new_widget_element := create_widget_instance (element, current_layout_item.object.type)
-							element.force_last (new_widget_element)
-							add_new_object_to_output (current_layout_item.object, new_widget_element, add_names)
-							layout_item.forth
-						end
-					end
-				end
 				gb_cell_object ?= an_object
 				if gb_cell_object /= Void then
 					if not gb_cell_object.layout_item.is_empty then
@@ -92,11 +72,17 @@ feature {GB_XML_HANDLER} -- Implementation
 						element.force_last (new_widget_element)
 						add_new_object_to_output (layout_item.object, new_widget_element, add_names)
 					end
-				end
-				gb_container_object ?= an_object
-				if gb_container_object /= Void then
-					layout_item := gb_container_object.layout_item
-					if not layout_item.is_empty then
+				else
+					gb_container_object ?= an_object
+					if gb_container_object /= Void then
+						layout_item := gb_container_object.layout_item	
+					end
+					gb_primitive_object ?= an_object
+					if gb_primitive_object /= Void then
+						layout_item ?= gb_primitive_object.layout_item
+					end
+
+					if layout_item /= Void and then not layout_item.is_empty then
 						from
 							layout_item.start	
 						until
@@ -110,7 +96,6 @@ feature {GB_XML_HANDLER} -- Implementation
 						end
 					end
 				end
-		--	end
 		end
 		
 		

@@ -316,7 +316,6 @@ feature -- Output
 	append_to (st: STRUCTURED_TEXT) is
 		local
 			class_c: CLASS_C;
-			e_class: E_CLASS;
 			class_i: CLASS_I;
 			c_name: STRING
 		do
@@ -330,14 +329,9 @@ feature -- Output
 			end;
 			c_name.to_upper;
 			if class_i = Void then
-				st.add_string (c_name);
+				st.add_string (c_name)
 			else
-				e_class := class_i.compiled_eclass;
-				if e_class /= Void then
-					st.add_class (e_class)
-				else
-					st.add_classi (class_i, c_name)
-				end
+				st.add_classi (class_i, c_name)
 			end;
 			if generics /= Void then
 				from

@@ -245,17 +245,21 @@ feature -- Widget
 			-- implementation with same `screen_object'
 		local
 			i: INTEGER;
+			w: WIDGET;
+			done: BOOLEAN
 		do
 			from
 				i := 1
 			until
-				(i > count) or ((not (list.item (i) = Void)) and then (list.item (i).implementation.screen_object = screen_object))
+				done or else i > count
 			loop
+				w := list.item (i);
+				if w /= Void and then w.implementation.screen_object = screen_object then
+					Result := w;
+					done := True
+				end;
 				i := i+1
 			end;
-			if i <= count then
-				Result := list.item (i)
-			end
 		end;
 
 	show_tree (a_file: UNIX_FILE) is
@@ -297,16 +301,22 @@ feature -- Widget
 		require
 			widget_exists: not (widget = Void)
 		local
-			i: INTEGER
+			i: INTEGER;
+			w: WIDGET;
+			done: BOOLEAN
 		do
 			from
 				i := index_of (widget)
 			until
-				list.item (i).depth = 0
+				done
 			loop
-				i := i-1
+				w := list.item (i);
+				if w /= Void and then w.depth = 0 then
+					done := True;
+					Result ?= w
+				end;
+				i := i - 1
 			end;
-			Result ?= list.item (i)
 		ensure
 			not (Result = Void)
 		end

@@ -36,9 +36,9 @@ feature {NONE}
 	dispose is
 			-- Called when garbaged.
 		do
-			if not has_objects then
-				free_resources
-			end
+			--if not has_objects then
+				--free_resources
+			--end
 		end; 
 	
 feature 

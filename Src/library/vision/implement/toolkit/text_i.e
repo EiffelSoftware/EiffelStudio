@@ -240,7 +240,7 @@ feature
 			first_positive_not_null: first >= 0;
 			last_fewer_than_count: last <= count;
 			first_fewer_than_last: first < last;
-            realized: realized
+			realized: realized
 		deferred
 		ensure
 			is_selection_active;

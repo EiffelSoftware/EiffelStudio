@@ -38,15 +38,51 @@ feature -- Initialization
 			-- Create the tree item.
 		do
 			base_make (an_interface)
-			check
-				not_available_with_gtk1_implementation: False
-			end
+			set_c_object  (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new)
 		end
 
 	initialize is
-			-- Initialize the dynamic list.
+			-- Initialize the header item
 		do
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, True)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, 80)
+			
+			pixmapable_imp_initialize
+			textable_imp_initialize
+			initialize_box
+			
+			real_signal_connect (c_object, "notify::fixed_width", agent handle_resize, Void)
+			real_signal_connect (c_object, "clicked", agent print ("Column clicked%N"), Void)
+
+
 			is_initialized := True
+		end
+
+	handle_resize is
+			-- 
+		do
+			if parent_imp /= Void and then parent_imp.item_resize_actions_internal /= Void and then width /= old_width then
+				parent_imp.item_resize_actions_internal.call ([interface])
+				parent_imp.item_resize_end_actions_internal.call ([interface])
+			end
+			old_width := width
+		end
+
+	old_width: INTEGER
+		
+
+	initialize_box is
+			-- Create and initialize box.
+		local
+			box: POINTER
+		do
+			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (box)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
 		end
 
 feature -- Access
@@ -55,6 +91,7 @@ feature -- Access
 			-- `Result' is width of `Current' used
 			-- while parented.
 		do
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (c_object)
 		end
 
 feature -- Status setting
@@ -62,6 +99,7 @@ feature -- Status setting
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
 		do
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, a_width)
 		end
 		
 	resize_to_content is
@@ -143,6 +181,11 @@ feature -- PND
 		end
 
 feature
+
+	set_parent_imp (par_imp: like parent_imp) is
+		do
+			parent_imp := par_imp
+		end
 
 	parent_imp: EV_HEADER_IMP
 	

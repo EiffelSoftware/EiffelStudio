@@ -302,6 +302,12 @@ feature -- Execution
 				
 				eifnet_debugger.do_run
 				
+				if not eifnet_debugger.last_dbg_call_succeed then
+						-- This means we had issue creating process
+					set_status (Void)
+					eifnet_debugger.terminate_debugger_session
+				end
+				
 				if status /= Void then
 						-- Application was able to be started
 					status.set_is_stopped (False)

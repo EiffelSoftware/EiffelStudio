@@ -235,8 +235,10 @@ feature -- Access
 				end
 				if not l_parser.is_correct then
 					Result := l_parser.last_error_extended_description
+				else
+					Result := l_filter.last_output
 				end
-			end
+			end		
 		rescue
 			retried := True
 			retry

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			associated_command := cmd;
 			button_make (button_name, a_parent);
 			set_symbol (cmd.symbol);
-			add_activate_action (cmd, cmd.text_window);
+			add_activate_action (cmd, cmd.tool);
 			initialize_focus (a_parent)
 		end;
 

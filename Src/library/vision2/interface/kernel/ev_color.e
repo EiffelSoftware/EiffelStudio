@@ -503,28 +503,6 @@ feature {NONE} -- Implementation
 		do
 			create {EV_COLOR_IMP} implementation.make (Current)
 		end
-	
-feature -- Obsolete
-
-	name: STRING is
-			-- A textual description.
-		obsolete
-			"use out"
-		do
-			Result := out
-		end
-		
-	set_name (a_name: STRING) is
-			-- Assign `a_name' to `name'.
-		obsolete
-			"if you still need this mail vision2@eiffel.com"
-		require
-			name_not_void: a_name /= Void
-		do
-			implementation.set_name (a_name)
-		ensure
-			name_assigned: name.is_equal (a_name)
-		end
 
 invariant
 	red_within_range: red >= 0 and red <= 1

@@ -15,6 +15,7 @@ all: str_conv mklink
 clean:
 	$(DELDIR) EIFGEN
 	$(RM) tst tst.melted
+	$(RM) core
 	$(RM) tst.epr
 	$(RM) fext.o
 

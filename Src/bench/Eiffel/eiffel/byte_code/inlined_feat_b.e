@@ -195,7 +195,7 @@ feature -- Generation
 			buf.new_line;
 
 			buf.putstring ("/* INLINED CODE (");
-			buf.putstring (feature_name);
+			buf.putstring (escaped_feature_name);
 			buf.putstring (") */");
 			buf.new_line;
 

@@ -13,9 +13,6 @@ inherit
 		end
 
 	PREFIX_INFIX_NAMES
-		rename
-			or_infix as infix_function_name
-		end
 
 feature -- Properties
 
@@ -28,5 +25,14 @@ feature -- Properties
 		do
 			!! Result
 		end
+
+	infix_function_name: STRING is
+			-- Qualified name with the infix keyword.
+		once
+			Result := infix_feature_name_with_symbol (op_name)
+		end
+
+	op_name: STRING is "or"
+			-- Name without the infix keyword.
 
 end -- class BIN_OR_AS

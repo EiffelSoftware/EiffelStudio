@@ -89,7 +89,7 @@ feature
 			buf.putstring (gc_comma);
 			if is_nested then
 				buf.putchar ('"');
-				buf.putstring (attribute_name);
+				buf.putstring (escaped_attribute_name);
 				buf.putstring ("%", ");
 				reg.print_register;
 			else

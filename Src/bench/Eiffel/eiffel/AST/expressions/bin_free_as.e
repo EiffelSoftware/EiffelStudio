@@ -44,11 +44,8 @@ feature -- Properties
 			-- Internal name of the infixed feature associated to the
 			-- binary expression
 		do
-			Result := infix_function_name_with_symbol(op_name)
+			Result := infix_feature_name_with_symbol (op_name)
 		end
-
-	Internal_infix: STRING is "_infix_"
-			-- Internal prefix name for feature
 
 	operator_is_keyword: BOOLEAN is False
 
@@ -74,9 +71,7 @@ feature {BINARY_AS}
 
 	set_infix_function_name (name: ID_AS) is
 		do
-			op_name := clone (name)
-			op_name.tail (op_name.count - 7)
-			-- 7 = "_infix_".count
+			create op_name.initialize (extract_symbol_from_infix (name))
 		end
 
 end -- class BIN_FREE_AS

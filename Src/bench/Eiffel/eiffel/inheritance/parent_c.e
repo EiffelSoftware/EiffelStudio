@@ -8,6 +8,10 @@ inherit
 	SHARED_SELECTED;
 	SHARED_ERROR_HANDLER;
 	COMPILER_EXPORTER
+	SYNTAX_STRINGS
+		export
+			{NONE} all
+		end
 	
 feature 
 
@@ -213,23 +217,17 @@ feature
 
 	is_infix (s: STRING): BOOLEAN is
 			-- Is `s' the internal name of an infix feature ?
-		local
-			pre: STRING;
 		do
-			if s.count > 7 then
-				pre := s.substring (1, 7);
-				Result := pre.is_equal ("_infix_")
+			if s.count > Infix_str.count then
+				Result := s.substring_index_in_bounds (Infix_str, 1, Infix_str.count) = 1
 			end;
 		end;
 
 	is_prefix (s: STRING): BOOLEAN is
 			-- Is `s' the internal name of a prefix feature ?
-		local
-			pre: STRING;
 		do
-			if s.count > 8 then
-				pre := s.substring (1, 8);
-				Result := pre.is_equal ("_prefix_")
+			if s.count > Prefix_str.count then
+				Result := s.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1
 			end;
 		end;
 

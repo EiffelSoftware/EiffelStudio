@@ -26,10 +26,15 @@ feature -- Properties
 feature -- Type check, byte code and dead code removal
 
 	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
+			-- Qualified name with the infix keyword.
 		once
-			Result := equal_infix
+			Result := infix_feature_name_with_symbol (op_name)
+		end
+
+	op_name: STRING is
+			-- Name without the infix keyword.
+		once
+			Result := "="
 		end
 
 	type_check is

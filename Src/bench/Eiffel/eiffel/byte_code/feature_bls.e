@@ -193,7 +193,7 @@ feature
 
 			buf.putstring(typ.base_class.name_in_upper)
 			buf.putstring("%", %"")
-			buf.putstring(feature_name)
+			buf.putstring(escaped_feature_name)
 			buf.putstring ("%", ")
 			if parameters /= Void then
 				buf.putint (parameters.count)

@@ -11,10 +11,6 @@ inherit
 			operator_is_keyword
 		end
 
-	PREFIX_INFIX_NAMES
-		rename
-			not_prefix as prefix_feature_name
-		end
 feature -- Properties
 
 	operator_name: STRING is "not"

@@ -8,10 +8,6 @@ class UN_MINUS_AS
 inherit
 	UNARY_AS
 
-	PREFIX_INFIX_NAMES
-		rename
-			minus_prefix as prefix_feature_name
-		end
 feature -- Properties
 
 	operator_name: STRING is "-"

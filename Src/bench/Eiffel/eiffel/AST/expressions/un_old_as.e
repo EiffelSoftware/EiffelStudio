@@ -10,7 +10,7 @@ inherit
 		redefine
 			operator_is_keyword, simple_format,
 			type_check, byte_node, format,
-			replicate, fill_calls_list
+			replicate, fill_calls_list, prefix_feature_name
 		end
 
 	SHARED_TYPES

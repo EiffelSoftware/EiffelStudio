@@ -127,7 +127,7 @@ feature
 				end
 			elseif need_invariant then
 				buf.putchar ('"');
-				buf.putstring (feature_name);
+				buf.putstring (escaped_feature_name);
 				buf.putstring ("%", ");
 				reg.print_register;
 			else

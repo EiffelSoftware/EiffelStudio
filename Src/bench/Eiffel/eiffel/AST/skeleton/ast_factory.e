@@ -1182,10 +1182,11 @@ feature -- Access
 			op_not_void: op /= Void
 		do
 			create Result
-			Result.initialize (op, b)
+			Result.initialize (op, b, True)
 		ensure
 			infix_as_not_void: Result /= Void
-			operator_set: Result.fix_operator = op
+			operator_set: Result.visual_name = op.value
+			operator_is_infix: Result.is_infix
 			is_frozen_set: Result.is_frozen = b
 		end
 
@@ -1452,16 +1453,17 @@ feature -- Access
 		end
 
 
-	new_prefix_as (op: STRING_AS; b: BOOLEAN): PREFIX_AS is
+	new_prefix_as (op: STRING_AS; b: BOOLEAN): INFIX_AS is
 			-- New PREFIX AST node
 		require
 			op_not_void: op /= Void
 		do
 			create Result
-			Result.initialize (op, b)
+			Result.initialize (op, b, False)
 		ensure
 			prefix_as_not_void: Result /= Void
-			operator_set: Result.fix_operator = op
+			operator_set: Result.visual_name = op.value
+			operator_is_prefix: Result.is_prefix
 			is_frozen_set: Result.is_frozen = b
 		end
 

@@ -813,34 +813,26 @@ feature -- Element change
 			arguments := Void
 		end
 
-	prepare_for_infix (internal_name: STRING; right: EXPR_AS) is
+	prepare_for_infix (internal_name: STRING; visual_name: STRING; right: EXPR_AS) is
 			-- Prepare for infix with feature `internal_name'
 			-- and arg `right'.
-		local
-			name: STRING
 		do
 			if is_for_case then
-				name := clone (internal_name);
-				name.tail (name.count - 7);
-				name_of_current_feature := operator_table.name (name);
+				name_of_current_feature := visual_name;
 			else
-				local_adapt := local_adapt.adapt_infix (internal_name, global_adapt)
+				local_adapt := local_adapt.adapt_infix (internal_name, visual_name, global_adapt)
 				was_infix_arguments := True
 			end
 			arguments := right
 		end
 
-	prepare_for_prefix (internal_name: STRING) is
+	prepare_for_prefix (internal_name: STRING; visual_name: STRING) is
 			-- Prepare for infix with feature `internal_name'.
-		local
-			name: STRING
 		do
 			if is_for_case then
-				name := clone (internal_name)
-				name.tail (name.count - 8)
-				name_of_current_feature := operator_table.name (name)
+				name_of_current_feature := visual_name
 			else
-				local_adapt := local_adapt.adapt_prefix (internal_name, global_adapt)
+				local_adapt := local_adapt.adapt_prefix (internal_name, visual_name, global_adapt)
 			end
 			arguments := Void
 		end

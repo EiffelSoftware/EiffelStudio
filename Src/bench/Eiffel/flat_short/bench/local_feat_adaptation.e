@@ -15,6 +15,7 @@ inherit
 	SHARED_FORMAT_INFO;
 	SHARED_INST_CONTEXT;
 	COMPILER_EXPORTER
+	PREFIX_INFIX_NAMES
 
 feature -- Update
 	
@@ -242,36 +243,28 @@ feature -- Transformation
 			Result.adapt 
 		end;
 
-	adapt_infix (int_name: STRING;
+	adapt_infix (int_name, v_name: STRING;
 				global_type: GLOBAL_FEAT_ADAPTATION): like Current is
 			-- Feature adaptation for infix feature `int_name'
 		require
 			valid_int_name: int_name /= Void;
 			valid_global_type: global_type /= Void
-		local
-			name: STRING;	
 		do
-			name := clone (int_name);
-			name.tail (name.count - 7);
 			Result := new_adapt_from_current (global_type);
 			Result.set_is_infix;
-			Result.set_feature_name (operator_table.name (name));
+			Result.set_feature_name (v_name);
 			Result.set_source_feature (Result.compute_feature (int_name));
 			Result.adapt 
 		end;
 
-	adapt_prefix (int_name: STRING; global_type: GLOBAL_FEAT_ADAPTATION): like Current is
+	adapt_prefix (int_name, v_name: STRING; global_type: GLOBAL_FEAT_ADAPTATION): like Current is
 			-- Feature adaptation for prefix feature `int_name'
 		require
 			valid_int_name: int_name /= Void
 			valid_global_type: global_type /= Void
-		local
-			name: STRING; 
 		do
-			name := clone (int_name)
-			name.tail (name.count - 8);
 			Result := new_adapt_from_current (global_type);
-			Result.set_feature_name (operator_table.name (name));
+			Result.set_feature_name (v_name);
 			Result.set_source_feature (Result.compute_feature (int_name));
 			Result.adapt 
 		end;
@@ -327,19 +320,16 @@ end
 			valid_target_feature: target_feature /= Void
 		do
 			final_name := clone (target_feature.feature_name)
-			if final_name.item (1) = '_' then
-				if final_name.substring 
-						(1, 8).is_equal ("_prefix_") 
-				then
-					final_name.tail (final_name.count - 8);
+			if final_name.item (final_name.count) = '%"' and final_name.count > Infix_str.count then
+				if final_name.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1 then
+					final_name := extract_symbol_from_prefix (final_name)
 					is_infix := False;
 					is_normal := False;
 				else
-					final_name.tail (final_name.count - 7);
+					final_name := extract_symbol_from_infix (final_name)
 					is_normal := False;
 					is_infix := True;
 				end;
-				final_name := operator_table.name (final_name);
 			else
 				is_normal := True;
 				is_infix := False;

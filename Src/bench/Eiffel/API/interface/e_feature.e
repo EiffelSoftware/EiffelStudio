@@ -549,18 +549,10 @@ feature -- Output
 		do
 			if is_infix then
 				st.add (Ti_infix_keyword)
-				if infix_reverse_table.has (name) then
-					create ot.make (Current, infix_reverse_table.found_item)
-				else
-					create ot.make (Current, name.substring (8, name.count))
-				end
+				create ot.make (Current, extract_symbol_from_infix (name))
 			else
 				st.add (Ti_prefix_keyword)
-				if prefix_reverse_table.has (name) then
-					create ot.make (Current, prefix_reverse_table.found_item)
-				else
-					create ot.make (Current, name.substring (9, name.count))
-				end
+				create ot.make (Current, extract_symbol_from_prefix (name))
 			end
 			st.add_space
 			st.add (Ti_double_quote)

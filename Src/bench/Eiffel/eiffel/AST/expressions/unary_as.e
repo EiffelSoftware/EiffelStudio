@@ -12,6 +12,13 @@ inherit
 			fill_calls_list, replicate
 		end
 
+	SYNTAX_STRINGS
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 feature {AST_FACTORY} -- Initialization
 
 	initialize (e: like expr) is
@@ -33,7 +40,8 @@ feature -- Properties
 
 	prefix_feature_name: STRING is
 			-- Internal name of the prefixed feature
-		deferred
+		do
+			Result := Prefix_str + operator_name + Quote_str
 		end
 
 	operator_name: STRING is
@@ -173,7 +181,7 @@ feature -- Type check, byte code and dead code removal
 				ctxt.rollback
 			else
 				ctxt.need_dot
-				ctxt.prepare_for_prefix (prefix_feature_name)
+				ctxt.prepare_for_prefix (prefix_feature_name, operator_name)
 				ctxt.put_current_feature
 				ctxt.put_prefix_space
 				if ctxt.last_was_printed then
@@ -219,7 +227,7 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.prepare_for_prefix (prefix_feature_name)
+			ctxt.prepare_for_prefix (prefix_feature_name, operator_name)
 			ctxt.put_prefix_feature
 			ctxt.put_space
 			expr.simple_format (ctxt)

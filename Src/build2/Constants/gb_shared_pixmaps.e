@@ -190,6 +190,11 @@ feature -- Pngs
 			Result := build_classic_pixmap ("titled_window_main")
 		end
 		
+	Icon_titled_window_main_small: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("titled_window_main_small")
+		end
+		
 	Icon_missing_pixmap_small: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("missing_pixmap_small")

@@ -42,7 +42,7 @@ feature
 			end;
 			!!f.make (appl_name);
 			if not f.exists then
-				io.putstring ("The application ");
+				io.putstring ("The system ");
 				io.putstring (appl_name);
 				io.putstring (" does not exist.%N");
 			else
@@ -54,7 +54,7 @@ feature
 					!!make_f.make (makefile_sh_name);
 					if make_f.exists and then make_f.date > f.date then
 						io.putstring (Makefile_SH);
-						io.putstring (" is more recent than the application%N");
+						io.putstring (" is more recent than the system%N");
 						error := True
 					end;
 				end;

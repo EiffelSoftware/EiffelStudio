@@ -40,31 +40,31 @@ feature -- Events
 feature -- Status report
 
 	center: EV_COORDINATE is
-			-- get the center point of the ellipse.
+			-- Center point of ellipse.
 		do
 			create Result.set (center_x, center_y)
 		end
 
 	center_x: INTEGER is
-			-- The horizontal position of the center point.
+			-- Horizontal position of center point.
 		do
 			Result := (point_a.x_abs + point_b.x_abs) // 2
 		end
 
 	center_y: INTEGER is
-			-- The vertical position of the center point.
+			-- Vertical position of center point.
 		do
 			Result := (point_a.y_abs + point_b.y_abs) // 2
 		end
 
 	radius1: INTEGER is
-			-- The horizontal component of the radius.
+			-- Horizontal component of radius.
 		do
 			Result := ((point_a.x_abs - point_b.x_abs) // 2).abs
 		end
 
 	radius2: INTEGER is
-			-- The vertical component of the radius.
+			-- Vertical component of radius.
 		do
 			Result := ((point_a.y_abs - point_b.y_abs) // 2).abs
 		end
@@ -81,8 +81,8 @@ feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
 			bx := point_b.x_abs
 			by := point_b.y_abs
 			Result := [
-				ax,
-				ay,
+				ax.min (bx),
+				ay.min (by),
 				(ax - bx).abs,
 				(ay - by).abs
 			]

@@ -70,7 +70,7 @@ feature -- Access
 			des: EIFFEL_XML_DESERIALIZER
 		do
 			create des
-			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + assembly_types_file_name)
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + assembly_types_file_name, True)
 			Result ?= des.deserialized_object
 		ensure
 			non_void_info: Result /= Void
@@ -87,7 +87,7 @@ feature -- Access
 		do
 			create des
 			type_path := absolute_assembly_path_from_consumed_assembly (a_assembly) + classes_path + type + ".xml"			
-			des.deserialize (type_path)
+			des.deserialize (type_path, True)
 			Result ?= des.deserialized_object
 		ensure
 			non_void_result: Result /= Void
@@ -117,7 +117,7 @@ feature -- Access
 			des: EIFFEL_XML_DESERIALIZER
 		do
 			create des
-			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + Assembly_mapping_file_name)
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + Assembly_mapping_file_name, False)
 			Result ?= des.deserialized_object
 		ensure
 			non_void_info: Result /= Void
@@ -135,7 +135,7 @@ feature -- Access
 			l_ca := consumed_assembly_from_path (a_type.assembly.location)
 			if l_ca /= Void then
 				create l_des
-				l_des.deserialize (absolute_type_path (l_ca, a_type))
+				l_des.deserialize (absolute_type_path (l_ca, a_type), True)
 				Result ?= l_des.deserialized_object
 			end
 		ensure
@@ -216,7 +216,7 @@ feature {CACHE_WRITER} -- Implementation
 		do
 			if is_initialized then
 				create des
-				des.deserialize (Absolute_info_path)
+				des.deserialize (Absolute_info_path, False)
 				if des.successful then
 					Result ?= des.deserialized_object
 				end

@@ -45,16 +45,10 @@ feature -- Status report
 	allocated: BOOLEAN
 			-- Has a new font been allocated?
 
-	ascent (a_widget: WIDGET_I): INTEGER is
+	ascent: INTEGER is
 			-- Ascent value in pixel of the font loaded for `a_widget'.
-		local
-			ww: WEL_WINDOW
 		do
-			ww ?= a_widget
-			check
-				ww_exists: ww /= Void
-			end
-			Result := text_metrics (ww).ascent
+			Result := text_metrics.ascent
 		end
 
 	average_width: INTEGER
@@ -66,16 +60,10 @@ feature -- Status report
 			Result := "*-*" 
 		end
 
-	descent (a_widget: WIDGET_I): INTEGER is
+	descent: INTEGER is
 			-- Descent value in pixel of the font loaded for `a_widget'.
-		local
-			ww: WEL_WINDOW
 		do
-			ww ?= a_widget
-			check
-				ww_exists: ww /= Void
-			end
-			Result := text_metrics (ww).descent
+			Result := text_metrics.descent
 		end
 
 	family: STRING is
@@ -102,7 +90,7 @@ feature -- Status report
 	is_standard: BOOLEAN
 			-- Is the font standard and information available ?
 
-	is_valid (a_widget: WIDGET_I): BOOLEAN is
+	is_valid: BOOLEAN is
 			-- Is the font valid in `a_widget''s display ?
 		do
 			Result := wel_font /= Void and wel_font.exists
@@ -328,6 +316,27 @@ feature -- Status report
 				else
 					screen_dc.release
 				end
+			end
+		end
+
+	width_of_string (a_text: STRING): INTEGER is
+		local
+			screen_dc: WEL_SCREEN_DC
+			ww: WEL_WINDOW
+			number_of_lines: INTEGER
+		do
+			if not a_text.empty then
+				!! screen_dc
+				screen_dc.get
+				screen_dc.select_font (wel_font)
+				number_of_lines := a_text.occurrences ('%N') + 1
+				if number_of_lines > 1 then
+					Result := maximum_line_width (screen_dc, a_text, number_of_lines)
+				else
+					Result := screen_dc.string_width (a_text)
+				end
+				screen_dc.unselect_font
+				screen_dc.release
 			end
 		end
 
@@ -567,26 +576,16 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	text_metrics (a_window: WEL_WINDOW): WEL_TEXT_METRIC is
+	text_metrics: WEL_TEXT_METRIC is
 		local
-			wdc: WEL_CLIENT_DC
 			sdc: WEL_SCREEN_DC
 		do
-			if not a_window.exists then
-				!! sdc
-				sdc.get
-				sdc.select_font (wel_font)
-				!! Result.make (sdc)
-				sdc.unselect_font
-				sdc.release
-			else
-				!! wdc.make (a_window)
-				wdc.get
-				wdc.select_font (wel_font)
-				!! Result.make (wdc)
-				wdc.unselect_font
-				wdc.release
-			end
+			!! sdc
+			sdc.get
+			sdc.select_font (wel_font)
+			!! Result.make (sdc)
+			sdc.unselect_font
+			sdc.release
 		ensure
 			result_exists: Result /= Void
 		end

@@ -342,18 +342,20 @@ feature {GB_CODE_GENERATOR} -- Implementation
 				-- Store all directories and windows.
 		end
 		
-	store_windows (children_list: EV_TREE_NODE_LIST; xml_element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
-			-- Store all windows and directoris contained within `children_list' into `xml_settings', using geenration
+	store_windows (children_holder: GB_WINDOW_SELECTOR_COMMON_ITEM; xml_element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
+			-- Store all windows and directoris contained within `children_list' into `xml_settings', using generation
 			-- settings `generation_settings'.
 		require
-			children_list_not_void: children_list /= Void
+			children_list_not_void: children_holder /= Void
 			xml_element_not_void: xml_element /= Void
 			generation_settings_not_void: generation_settings /= Void
 		local
 			window_selector_item: GB_WINDOW_SELECTOR_ITEM
 			window_selector_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			new_element, new_type_element: XM_ELEMENT
+			children_list: ARRAYED_LIST [GB_WINDOW_SELECTOR_COMMON_ITEM]
 		do
+			children_list := children_holder.children
 			from
 				children_list.start
 			until

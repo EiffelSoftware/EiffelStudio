@@ -325,7 +325,7 @@ feature -- Status Report
 	
 feature -- Status Setting
 
-	set_frozen (a_value: like is_frozen) is
+	set_frozen (a_value: BOOLEAN) is
 		indexing
 			description: "Set `is_frozen' with `a_value'."
 			external_name: "SetFrozen"
@@ -335,7 +335,7 @@ feature -- Status Setting
 			frozen_set: is_frozen = a_value
 		end
 		
-	set_expanded (a_value: like is_expanded) is
+	set_expanded (a_value: BOOLEAN) is
 		indexing
 			description: "Set `is_expanded' with `expanded'."
 			external_name: "SetExpanded"
@@ -345,7 +345,7 @@ feature -- Status Setting
 			expanded_set: is_expanded = a_value
 		end
 	
-	set_deferred (a_value: like is_deferred) is
+	set_deferred (a_value: BOOLEAN) is
 		indexing
 			description: "Set `is_deferred' with `deferred'."
 			external_name: "SetDeferred"
@@ -355,7 +355,7 @@ feature -- Status Setting
 			deferred_set: is_deferred = a_value
 		end
 
-	set_create_none (a_value: like create_none) is
+	set_create_none (a_value: BOOLEAN) is
 		indexing
 			description: "Set `create_none' with `a_value'."
 			external_name: "SetCreateNone"
@@ -365,7 +365,7 @@ feature -- Status Setting
 			create_none_set: create_none = a_value
 		end
 	
-	set_modified (a_value: like modified) is
+	set_modified (a_value: BOOLEAN) is
 		indexing
 			description: "Set `modified' with `a_value'."
 			external_name: "SetModified"
@@ -375,7 +375,7 @@ feature -- Status Setting
 			modified_set: modified = a_value
 		end
 
-	set_bit_or_infix (a_value: like bit_or_infix) is
+	set_bit_or_infix (a_value: BOOLEAN) is
 		indexing
 			description: "Set `bit_or_infix' with `a_value'."
 			external_name: "SetBitOrInfix"
@@ -385,7 +385,7 @@ feature -- Status Setting
 			bit_or_infix_set: bit_or_infix = a_value
 		end
 
-	set_generic (a_value: like is_generic) is
+	set_generic (a_value: BOOLEAN) is
 		indexing
 			description: "Set `is_generic' with `a_value'."
 			external_name: "SetGeneric"
@@ -395,7 +395,7 @@ feature -- Status Setting
 			is_generic_set: is_generic = a_value
 		end
 		
-	set_eiffel_name (a_name: like eiffel_name) is
+	set_eiffel_name (a_name: STRING) is
 		indexing
 			description: "Set `eiffel_name' with `a_name'."
 			external_name: "SetEiffelName"
@@ -408,7 +408,7 @@ feature -- Status Setting
 			eiffel_name_set: eiffel_name.Equals_String (a_name)
 		end
 	
-	set_external_name (a_name: like external_name) is
+	set_external_name (a_name: STRING) is
 		indexing
 			description: "Set `external_name' with `a_name'."
 			external_name: "SetExternalName"
@@ -421,7 +421,7 @@ feature -- Status Setting
 			external_name_set: external_name.Equals_String (a_name)
 		end	
 	
-	set_enum_type (an_enum_type: like enum_type) is
+	set_enum_type (an_enum_type: STRING) is
 		indexing
 			description: "Set `enum_type' with `an_enum_type'."
 			external_name: "SetEnumType"
@@ -434,7 +434,7 @@ feature -- Status Setting
 			enum_type_set: enum_type.equals_string (an_enum_type)
 		end
 		
-	set_namespace (a_name: like namespace) is
+	set_namespace (a_name: STRING) is
 		indexing
 			description: "Set `namespace' with `a_name'."
 			external_name: "SetNamespace"
@@ -447,10 +447,10 @@ feature -- Status Setting
 			namespace_set: namespace.Equals_String (a_name)
 		end	
 
-	set_external_names (a_full_name: like full_external_name) is 
+	set_external_names (a_full_name: STRING) is 
 		indexing
 			description: "[
-						Set `full_external_name' with `a_full_name'.
+						Set `full_external_name' from `a_full_name'.
 						Set `external_name' and `namespace' from `a_full_name'.
 					  ]"
 			external_name: "SetExternalNames"
@@ -458,20 +458,24 @@ feature -- Status Setting
 			non_void_full_name: a_full_name /= Void
 			not_empty_full_name: a_full_name.get_length > 0
 		local
-			dot_index: INTEGER
-			full_name: STRING
+			name_elements, namespace_elements: ARRAY [STRING]
+			i: INTEGER
 		do
 			full_external_name := a_full_name
-			full_name ?= a_full_name.Clone
-			if full_name /= Void then
-				full_name := full_name.Trim				
-				dot_index := full_name.Last_Index_Of_Char ('.')
-				if dot_index > -1 then
-					set_namespace (full_name.Substring_Int32_Int32 (0, dot_index))
-					set_external_name (full_name.Substring (dot_index + 1))
-				else
-					set_external_name (full_name)
+			name_elements := a_full_name.split (<<'.'>>)
+			set_external_name (name_elements.item (name_elements.count - 1))
+			if name_elements.count > 2 then
+				create namespace_elements.make (name_elements.count -1 )
+				from
+				until
+					i = name_elements.count - 2
+				loop
+					namespace_elements.put (i, name_elements.item (i))
+					i := i + 1
 				end
+				set_namespace (a_full_name.join (".", namespace_elements))
+			else
+				set_namespace (namespace.empty)
 			end
 		ensure
 			full_external_name_set: full_external_name.Equals_String (a_full_name)
@@ -489,7 +493,7 @@ feature -- Status Setting
 			assembly_descriptor_set: assembly_descriptor = a_descriptor
 		end
 		
-	set_full_external_name (a_full_name: like full_external_name) is
+	set_full_external_name (a_full_name: STRING) is
 		indexing
 			description: "Set `full_external_name' from `a_full_name'."
 			external_name: "SetFullExternalName"
@@ -733,7 +737,6 @@ feature {NONE} -- Implementation
 			external_name: "HasAttribute"
 		require
 			non_void_info: info /= Void
-			non_void_member_name: info.get_name /= Void
 			non_void_list: a_list /= Void
 		local
 			i: INTEGER
@@ -747,7 +750,7 @@ feature {NONE} -- Implementation
 					i = a_list.get_count or Result
 				loop
 					eiffel_feature ?= a_list.get_item (i)
-					if eiffel_feature /= Void and then eiffel_feature.external_name /= Void then
+					if eiffel_feature /= Void then
 						if info.get_name.equals_String (eiffel_feature.external_name) then
 							attribute := eiffel_feature
 							Result := True
@@ -778,7 +781,6 @@ feature {NONE} -- Implementation
 			external_name: "HasRoutine"
 		require
 			non_void_info: info /= Void
-			non_void_methodname: info.get_name /= Void
 			non_void_list: a_list /= Void
 		local
 			i: INTEGER
@@ -794,7 +796,7 @@ feature {NONE} -- Implementation
 					i = a_list.get_count or Result
 				loop
 					eiffel_feature ?= a_list.get_item (i)
-					if eiffel_feature /= Void and then eiffel_feature.external_name /= Void then
+					if eiffel_feature /= Void then
 						if info.get_name.equals_string (eiffel_feature.external_name) then
 							Result := intern_has_routine (eiffel_feature, info)
 						elseif constructor_info /= Void then	
@@ -826,7 +828,7 @@ feature {NONE} -- Implementation
 			matching: BOOLEAN		
 		do
 			arguments := eiffel_feature.arguments
-			if arguments /= Void and then arguments.get_count > 0 then
+			if arguments.get_count > 0 then
 				matching := matching_arguments (info, arguments)
 				if matching then
 					routine := eiffel_feature
@@ -862,7 +864,7 @@ feature {NONE} -- Implementation
 							j = arguments.get_count or not Result
 						loop
 							an_argument ?= arguments.get_item (j)
-							if an_argument /= Void and then an_argument.type_full_external_name /= Void then
+							if an_argument /= Void then
 								Result := info.get_parameters.item (j).get_parameter_type.get_full_name.equals_String (an_argument.type_full_external_name)
 							else
 								Result := False

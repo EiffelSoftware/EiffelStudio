@@ -133,6 +133,24 @@ feature -- Access
 			end			
 		end
 
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_MULTI_COLUMN_LIST_ROW_IMP is
+			-- Find the item at the given position.
+			-- Position is relative to the toolbar.
+		local
+			pt: WEL_POINT
+			handle: INTEGER
+			info: WEL_LV_HITTESTINFO
+		do
+			create pt.make (x_pos, y_pos)
+			create info.make_with_point (pt)
+			cwin_send_message (item, Lvm_hittest, 0, info.to_integer)
+			if flag_set (info.flags, Lvht_onitemlabel)
+			or flag_set (info.flags, Lvht_onitemicon)
+			then
+				Result := ev_children @ (info.iitem + 1)
+			end
+		end
+
 feature -- Status report
 
 	selected: BOOLEAN is
@@ -444,14 +462,11 @@ feature {NONE} -- WEL Implementation
 	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
 			-- Propagate `event_id' to the good item.
 		local
-			pt: WEL_POINT
-			info: WEL_LV_HITTESTINFO
+			it: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			create pt.make (x_pos, y_pos)
-			create info.make_with_point (pt)
-			cwin_send_message (item, Lvm_hittest, 0, info.to_integer)
-			if flag_set (info.flags, Lvht_onitemlabel) or else flag_set (info.flags, Lvht_onitemicon) then
-				(ev_children @ (info.iitem + 1)).execute_command (event_id, ev_data)
+			it := find_item_at_position (x_pos, y_pos)
+			if it /= Void then
+				it.execute_command (event_id, ev_data)
 			end
 		end
 

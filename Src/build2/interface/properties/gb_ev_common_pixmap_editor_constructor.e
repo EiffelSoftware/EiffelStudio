@@ -47,7 +47,6 @@ feature -- Access
 		do
 			create Result
 			initialize_attribute_editor (Result)
-			
 				-- Tool bar and menu separators do inherit from EV_PIXMAPABLE,
 				-- however, the facilities are not exported.
 			if not (object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") or object.type.is_equal ("EV_MENU_SEPARATOR")) then

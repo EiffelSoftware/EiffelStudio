@@ -724,13 +724,13 @@ feature {NONE} -- Implementation
 	must_show_choice: BOOLEAN
 			-- Does the user have to perform a choice?
 
-	class_list: LINKED_LIST [CLASS_I]
+	class_list: LIST [CLASS_I]
 			-- List of classes displayed in `choice'.
 
-	cluster_list: LINKED_LIST [CLUSTER_I]
+	cluster_list: LIST [CLUSTER_I]
 			-- List of clusters displayed in `choice'.
 
-	feature_list: LINKED_LIST [E_FEATURE]
+	feature_list: LIST [E_FEATURE]
 			-- List of features of current class, if any.
 
 	history_manager: EB_HISTORY_MANAGER is

@@ -1914,7 +1914,7 @@ feature {NONE} -- XML
 			hf: INHERITANCE_FIGURE
 			csf: CLIENT_SUPPLIER_FIGURE
 			class_name, a_source_name, a_target_name: STRING
-			classes_found: LINKED_LIST [CLASS_I]
+			classes_found: LIST [CLASS_I]
 			new_ancestor_depth, new_descendant_depth, new_client_depth, new_supplier_depth: INTEGER
 			all_cluster, only_in_cluster: BOOLEAN
 		do

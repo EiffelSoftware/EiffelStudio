@@ -1041,7 +1041,7 @@ feature {NONE} -- XML
 			hf: BON_INHERITANCE_FIGURE
 			csf: CLIENT_SUPPLIER_FIGURE
 			class_name, cluster_name, a_source_name, a_target_name: STRING
-			classes_found: LINKED_LIST [CLASS_I]
+			classes_found: LIST [CLASS_I]
 			new_supercluster_depth, new_subcluster_depth: INTEGER
 		do
 			reset_links

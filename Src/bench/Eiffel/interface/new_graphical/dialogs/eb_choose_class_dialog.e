@@ -114,7 +114,7 @@ feature {NONE} -- Vision2 events
 	on_ok is
 			-- Terminate the dialog.
 		local
-			loclist: LINKED_LIST [CLASS_I]
+			loclist: LIST [CLASS_I]
 		do
 			selected_class_name := class_name_entry.text
 			selected := (selected_class_name /= Void) and then (not selected_class_name.is_empty)

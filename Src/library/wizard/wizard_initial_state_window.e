@@ -31,7 +31,6 @@ feature -- Basic Operations
 			interior_box: EV_HORIZONTAL_BOX
 			message_and_title_box: EV_VERTICAL_BOX
 			tuple: TUPLE
-			white_cell: EV_CELL
 		do
 			create title
 			title.set_background_color (white_color)
@@ -46,8 +45,6 @@ feature -- Basic Operations
 			create choice_box
 			choice_box.set_background_color (white_color)			
 			
-			create white_cell
-			white_cell.set_background_color (white_color)
 
 			display_state_text
 			create message_and_title_box
@@ -56,11 +53,7 @@ feature -- Basic Operations
 			message_and_title_box.set_padding (Default_padding_size)
 			message_and_title_box.extend (title)
 			message_and_title_box.disable_item_expand (title)
-			message_and_title_box.extend (message)
-			message_and_title_box.disable_item_expand (message)
-			message_and_title_box.extend (choice_box)
-			message_and_title_box.disable_item_expand (choice_box)
-			message_and_title_box.extend (white_cell)
+			fill_message_and_title_box (message_and_title_box)
 
 			local_pixmap := clone (pixmap)
 			local_pixmap.set_minimum_size (
@@ -81,20 +74,35 @@ feature -- Basic Operations
 			create tuple.make
 			choice_box.set_help_context (agent create_help_context (tuple))
 		end
+		
+	current_help_context: WIZARD_HELP_CONTEXT is
+			-- Help context for this window
+		local
+			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+		do
+			hc := choice_box.help_context
+			Result ?= hc.item (hc.operands)		
+		end		
 
-	pixmap_location: FILE_NAME is
-			-- Pixmap location
-		once
-			create Result.make_from_string ("eiffel_wizard")
-			Result.add_extension (pixmap_extension)
-		end
+feature {NONE} -- Widgets
 
-	pixmap_icon_location: FILE_NAME is
-			-- Path in which can be found the pixmap icon associated with
-			-- the current state.
-		deferred
-		ensure
-			exists: Result /= Void
+	choice_box: EV_VERTICAL_BOX
+
+feature {NONE} -- Implementation
+
+	fill_message_and_title_box (message_and_title_box: EV_VERTICAL_BOX) is
+			-- Fill `message_and_title_box' with needed widgets.
+		local
+			white_cell: EV_CELL
+		do
+			create white_cell
+			white_cell.set_background_color (white_color)
+
+			message_and_title_box.extend (message)
+			message_and_title_box.disable_item_expand (message)
+			message_and_title_box.extend (choice_box)
+			message_and_title_box.disable_item_expand (choice_box)
+			message_and_title_box.extend (white_cell)
 		end
 
 	display_pixmap is
@@ -129,15 +137,21 @@ feature -- Basic Operations
 			end
 		end
 
-	current_help_context: WIZARD_HELP_CONTEXT is
-			-- Help context for this window
-		local
-			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
-		do
-			hc := choice_box.help_context
-			Result ?= hc.item (hc.operands)		
-		end		
+feature {NONE} -- Constants
 
-	choice_box: EV_VERTICAL_BOX
+	pixmap_location: FILE_NAME is
+			-- Pixmap location
+		once
+			create Result.make_from_string ("eiffel_wizard")
+			Result.add_extension (pixmap_extension)
+		end
+
+	pixmap_icon_location: FILE_NAME is
+			-- Path in which can be found the pixmap icon associated with
+			-- the current state.
+		deferred
+		ensure
+			exists: Result /= Void
+		end
 
 end -- class WIZARD_INITIAL_STATE_WINDOW

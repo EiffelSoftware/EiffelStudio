@@ -695,7 +695,7 @@ rt_private void obj_inspect(EIF_OBJ object)
 		rec_sinspect(eif_access(object));
 	} else {
 		/* Send instance class name and object id */
-		sprintf(buffer, "%s", System(flags & EO_TYPE).cn_generator);
+		sprintf(buffer, "%s", System(eif_cid_map[flags & EO_TYPE]).cn_generator);
 		twrite (buffer, strlen(buffer));
 		sprintf(buffer, "%ld", (flags & EO_TYPE));
 		twrite (buffer, strlen(buffer));

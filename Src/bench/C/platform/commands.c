@@ -371,3 +371,50 @@ EIF_BOOLEAN tabs_disabled_for_the_platform()
 #endif
 }
 
+/* Platform definition */
+
+EIF_BOOLEAN eif_is_os2()
+{
+#ifdef EIF_OS2
+	return EIF_TRUE;
+#else
+	return EIF_FALSE;
+#endif
+}
+
+EIF_BOOLEAN eif_is_vms()
+{
+#ifdef __VMS
+	return EIF_TRUE;
+#else
+	return EIF_FALSE;
+#endif
+}
+
+EIF_BOOLEAN eif_is_windows()
+{
+#ifdef EIF_WINDOWS
+	return EIF_TRUE;
+#else
+	return EIF_FALSE;
+#endif
+}
+
+EIF_BOOLEAN eif_is_win32()
+{
+#ifdef EIF_WIN32
+	return EIF_TRUE;
+#else
+	return EIF_FALSE;
+#endif
+}
+
+EIF_BOOLEAN eif_is_windows_3_1()
+{
+#ifdef EIF_WIN_31
+	return EIF_TRUE;
+#else
+	return EIF_FALSE;
+#endif
+}
+

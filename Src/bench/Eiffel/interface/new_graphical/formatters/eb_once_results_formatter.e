@@ -49,6 +49,8 @@ feature {NONE} -- Properties
 			Result := Interface_names.t_Oncefunc_of
 		end
 
+	post_fix: STRING is "onc"
+
 	criterium (f: E_FEATURE): BOOLEAN is
 			-- `f' is a once function and `f' is written in a descendant of ANY
 			-- or the object is a direct instance of a parent of ANY

@@ -44,7 +44,14 @@
 						<bold>EV_MULTI_COLUMN_LIST_IMP</bold> - calling `column_width' after calling `resize_column_to_content' did not return the correct result but instead the previously set column width.
 					</item>
 					<item>
-						<bold>EV_DIALOG</bold> - Calling `show', moving the window and then subsequently calling `show_relative_to_window' or `show_modal_to_window' caused the dialog to move from its current position. Now the window no longer moves which mirrors the behavior in the opposite case where `show_relative_to_window' or `show_modal_to_window' is called before `show'.
+						<bold>EV_DIALOG</bold> 
+						<list ordered="false"> 
+							<item>Calling `show', moving the window and then subsequently calling `show_relative_to_window' or `show_modal_to_window' caused the dialog to move from its current position. Now the window no longer moves which mirrors the behavior in the opposite case where `show_relative_to_window' or `show_modal_to_window' is called before `show'.</item>
+							<item>Fixed bug which caused processing of particular keys in widgets contained within the dialog to be processed by the dialog preventing the `key_press_actions' from being fired and causing miscellaneous keyboard navigational issues.</item>
+						</list>
+					</item>
+					<item>
+						<bold>EV_TEXT_FIELD</bold> - calling `set_font' now updates the `minimum_height' of the text field so that it is large enough to completely display the font.
 					</item>
 				</list>
 			</item>
@@ -180,9 +187,6 @@
 					</item>
 					<item>
 						<bold>EV_PROGRESS_BAR</bold> - Fixed bug which was limiting values in the range 0 to 65535. 
-					</item>
-					<item>
-						<bold>EV_DIALOG</bold> - Fixed bug which caused processing of particular keys in widgets contained within the dialog to be processed by the dialog preventing the `key_press_actions' from being fired and causing miscellaneous keyboard navigational issues.
 					</item>
 				</list>
 			</item>

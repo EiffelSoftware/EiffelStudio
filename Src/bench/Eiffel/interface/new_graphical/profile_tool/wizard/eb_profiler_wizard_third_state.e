@@ -51,6 +51,7 @@ feature -- Basic Operation
 			profiler_type_label.align_text_left
 
 			create profiler_list
+			profiler_list.disable_edit
 			fill_profiler_list
 			
 			create profiler_type_box
@@ -139,17 +140,21 @@ feature {NONE} -- Implementation
 			an_item: EV_LIST_ITEM
 			found: BOOLEAN
 		do
-			from
-				profiler_list.start
-			until
-				profiler_list.after or found
-			loop
-				an_item := profiler_list.item
-				if an_item.text.is_equal (a_profiler) then
-					an_item.enable_select
-					found := True
+			if a_profiler /= Void then
+				from
+					profiler_list.start
+				until
+					profiler_list.after or found
+				loop
+					an_item := profiler_list.item
+					if an_item.text.is_equal (a_profiler) then
+						an_item.enable_select
+						found := True
+					end
+					profiler_list.forth
 				end
-				profiler_list.forth
+			else
+				profiler_list.first.enable_select
 			end
 		end
 		

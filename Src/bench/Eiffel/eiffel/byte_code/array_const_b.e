@@ -234,7 +234,7 @@ feature -- Byte code generation
 				ba.append (Bc_array);
 				ba.append_short_integer (real_ty.associated_class_type.static_type_id - 1);
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
-				ba.append_short_integer (context.current_type.associated_class_type.static_type_id - 1)
+				ba.append_short_integer (context.class_type.static_type_id - 1)
 				real_ty.make_gen_type_byte_code (ba, True)
 				ba.append_short_integer (-1);
 				feat_id := feat_i.feature_id;

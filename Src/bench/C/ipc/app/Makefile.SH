@@ -1,18 +1,18 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL60]
-: $X-Id: Jmake.tmpl,v 3.0.1.2 1995/01/11 14:50:21 ram Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
+: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
 
 case $CONFIG in
 '')
-	if test -f config.sh; then TOP=.;
-	elif test -f ../config.sh; then TOP=..;
-	elif test -f ../../config.sh; then TOP=../..;
-	elif test -f ../../../config.sh; then TOP=../../..;
-	elif test -f ../../../../config.sh; then TOP=../../../..;
-	else
-		echo "Can't find config.sh."; exit 1
-	fi
-	. $TOP/config.sh
-	;;
+	       if test -f config.sh; then TOP=.;
+	       elif test -f ../config.sh; then TOP=..;
+	       elif test -f ../../config.sh; then TOP=../..;
+	       elif test -f ../../../config.sh; then TOP=../../..;
+	       elif test -f ../../../../config.sh; then TOP=../../../..;
+	       else
+	               echo "Can't find config.sh."; exit 1
+	       fi
+	       . $TOP/config.sh
+	       ;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -37,36 +37,33 @@ DIR = $DIR
 # Parameters set by Configure -- edit config.sh if changes are needed
 
 CC = $cc
-LDFLAGS = $ldflags
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
 LD = ld
+LINT = lint
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RM = $rm -f
-LN = $ln
 SED = $sed
 
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  \$(LIB)
+USRINC = $usrinc
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
 .c.o:
-	\$(RM) \$@
 	\$(CC) -c \$(JCFLAGS) \$<
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.5 1995/09/25 09:07:19 ram Exp $
-
+# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -77,58 +74,95 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
+# Where shared archive is located (path and name)
+LIB_RUNTIME = $(TOP)/run-time
+LIB_IDRS = $(TOP)/idrs
+LIB_IDRSNAME = libidr.a
+LIB_MTIDRSNAME = libmtidr.a
+LIB_IDRS_ARCH = $(LIB_IDRS)/$(LIB_IDRSNAME)
+LIB_MTIDRS_ARCH = $(LIB_IDRS)/$(LIB_MTIDRSNAME)
+LIB_SHARED = $(TOP)/ipc/shared
+LIB_IPCNAME = libipc.a
+LIB_MTIPCNAME = libmtipc.a
+LIB_IPC_ARCH = $(LIB_SHARED)/$(LIB_IPCNAME)
+LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
+
+DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(LIB_RUNTIME) -I$(LIB_IDRS) -I$(LIB_RUNTIME)/include
+CFLAGS = $(DPFLAGS) -DWORKBENCH
+LDFLAGS = $(LIB_SHARED)/$(LIB_IPCNAME)
+
 # Files used to build the application
-LIB = app_listen.c app_proto.c app_server.c
+LSRC = app_listen.c app_proto.c app_server.c
 
 # Derived object file names
-OBJ = app_listen.o \
-	app_proto.o \
-	app_server.o 
-
-# Derived object file names for MT lib generation
-MT_OBJ = MTapp_listen.o \
-    MTapp_proto.o \
-    MTapp_server.o
-
-MTapp_listen.o: app_listen.c
-	$(CC) -c $(JMTCFLAGS)  $? -o $@
-
-MTapp_proto.o: app_proto.c
-	$(CC) -c $(JMTCFLAGS)  $? -o $@
-
-MTapp_server.o: app_server.c
-	$(CC) -c $(JMTCFLAGS)  $? -o $@
+OBJ = \
+	       app_listen.o \
+	       app_proto.o \
+	       app_server.o 
 
 # Derived library object file names
-LOBJ = \
-	app_listen.o \
-	app_proto.o \
-	app_server.o 
+MT_OBJ = \
+	       MTapp_listen.o \
+	       MTapp_proto.o \
+	       MTapp_server.o 
 
-#derived library object file names for MT libs
+MTapp_listen.o: app_listen.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
-MT_LOBJ = \
-    MTapp_listen.o \
-    MTapp_proto.o \
-    MTapp_server.o
+MTapp_proto.o: app_proto.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
-# Where shared archive is located (path and name)
-LIBDIR = ../shared
-LIBRUN = ../../run-time
-LIBIDR = ../../idrs
-LIBIDRNAME = libidr.a
-MTLIBIDRNAME = libmtidr.a
-LIBNAME = libipc.a
-MTLIBNAME = libmtipc.a
-LIBWKBENCH = libwkbench.a
-LIBMTWKBENCH = libwkbench.a
-LIBARCH = $(LIBDIR)/$(LIBNAME)
-MTLIBARCH = $(LIBDIR)/$(MTLIBNAME)
-LIBIDRARCH = $(LIBIDR)/$(LIBIDRNAME)
-MTLIBIDRARCH = $(LIBIDR)/$(MTLIBIDRNAME)
+MTapp_server.o: app_server.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
-DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR) -I$(LIBRUN)/include
-CFLAGS = $(DPFLAGS) -DWORKBENCH
+
+.FORCE:
+
+$(LIB_SHARED)/$(LIB_IPCNAME): .FORCE
+	@echo "Checking "$(LIB_IPCNAME)" in "$(LIB_SHARED)"..."
+	cd $(LIB_SHARED); $(MAKE) $(LIB_IPCNAME)
+	@echo "Continuing in $(CURRENT)..."
+
+network.o: $(LIB_SHARED)/$(LIB_IPCNAME)
+
+$(LIB_IDRS)/$(LIB_IDRSNAME): .FORCE
+	@echo "Checking "$(LIB_IDRSNAME)" in "$(LIB_IDRS)"..."
+	cd $(LIB_IDRS); $(MAKE) $(LIB_IDRSNAME)
+	@echo "Continuing in $(CURRENT)..."
+
+network.o: $(LIB_IDRS)/$(LIB_IDRSNAME)
+
+all:: network.o
+
+local_realclean::
+	$(RM) network.o
+
+network.o: $(OBJ)
+	$(RM) $@
+	$(LD) $(JLKFLAGS) -r $(OBJ) -o $@ $(LIB_IPC_ARCH) $(LIB_IDRS_ARCH)
+
+$(LIB_SHARED)/$(LIB_MTIPCNAME): .FORCE
+	@echo "Checking "$(LIB_MTIPCNAME)" in "$(LIB_SHARED)"..."
+	cd $(LIB_SHARED); $(MAKE) $(LIB_MTIPCNAME)
+	@echo "Continuing in $(CURRENT)..."
+
+MTnetwork.o: $(LIB_SHARED)/$(LIB_MTIPCNAME)
+
+$(LIB_IDRS)/$(LIB_MTIDRSNAME): .FORCE
+	@echo "Checking "$(LIB_MTIDRSNAME)" in "$(LIB_IDRS)"..."
+	cd $(LIB_IDRS); $(MAKE) $(LIB_MTIDRSNAME)
+	@echo "Continuing in $(CURRENT)..."
+
+MTnetwork.o: $(LIB_IDRS)/$(LIB_MTIDRSNAME)
+
+all:: MTnetwork.o
+
+local_realclean::
+	$(RM) MTnetwork.o
+
+MTnetwork.o: $(MT_OBJ)
+	$(RM) $@
+	$(LD) $(JLKFLAGS) -r $(MT_OBJ) -o $@ $(LIB_MTIPC_ARCH) $(LIB_MTIDRS_ARCH)
 
 depend:: ../../mkdep
 
@@ -138,66 +172,16 @@ depend:: ../../mkdep
 depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
-	$(SED) -e 's/: \.\//: /; s/\/usr\/include[^ ]*//g' -e '/: *$$/d' \
+	$(SED) -e 's:/usr/include[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
+	-e '/: / b print' -e 'H; d; n; : print' -e 'x; s/\\\n//g' \
+	-e 's/  */ /g; s/ :/:/;' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
 	$(RM) Makefile.new
 
-all:: $(OBJ) $(MT_OBJ)
-
-local_realclean::
-	$(RM) $(OBJ) $(MT_OBJ)
-
-.FORCE:
-
-$(LIBDIR)/$(LIBNAME): .FORCE
-	@echo "Checking "$(LIBNAME)" in "$(LIBDIR)"..."
-	cd $(LIBDIR); $(MAKE) $(LIBNAME)
-	@echo "Continuing in $(CURRENT)..."
-
-network.o: $(LIBDIR)/$(LIBNAME)
-
-$(LIBIDR)/$(LIBIDRNAME): .FORCE
-	@echo "Checking "$(LIBIDRNAME)" in "$(LIBIDR)"..."
-	cd $(LIBIDR); $(MAKE) $(LIBIDRNAME)
-	@echo "Continuing in $(CURRENT)..."
-
-network.o: $(LIBIDR)/$(LIBIDRNAME)
-
-all:: network.o
-
-local_realclean::
-	$(RM) network.o
-
-network.o: $(LOBJ)
-	$(RM) $@
-	$(LD) $(LDFLAGS) -r $(LOBJ) -o $@ $(LIBARCH) $(LIBIDRARCH)
-
-# for MT
-
-.FORCE:
-
-$(LIBDIR)/$(MTLIBNAME): .FORCE
-	@echo "Checking "$(iMTLIBNAME)" in "$(LIBDIR)"..."
-	cd $(LIBDIR); $(MAKE) $(MTLIBNAME)
-	@echo "Continuing in $(CURRENT)..."
-
-MTnetwork.o: $(LIBDIR)/$(MTLIBNAME)
-
-$(LIBIDR)/$(MTLIBIDRNAME): .FORCE
-	@echo "Checking "$(MTLIBIDRNAME)" in "$(LIBIDR)"..."
-	cd $(LIBIDR); $(MAKE) $(MTLIBIDRNAME)
-	@echo "Continuing in $(CURRENT)..."
-
-MTnetwork.o: $(LIBIDR)/$(MTLIBIDRNAME)
-
-all:: MTnetwork.o
-
-MTnetwork.o: $(MT_LOBJ) $(LIBDIR)/$(MTLIBNAME)  $(LIBIDR)/$(MTLIBIDRNAME)
-	$(RM) $@
-	$(LD) $(LDFLAGS) -r $(MT_LOBJ) -o $@ $(MTLIBARCH) $(MTLIBIDRARCH)
-
+lint:
+	$(LINT) $(LINTFLAGS) $(SOURCES) $(LINTLIBS)
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit
@@ -240,16 +224,16 @@ local_clobber::
 # Empty rules for directories with no sub-directories -- do not edit
 
 install::
-	@echo "install in $(CURRENT) done."
+	       @echo "install in $(CURRENT) done."
 
 deinstall::
-	@echo "deinstall in $(CURRENT) done."
+	       @echo "deinstall in $(CURRENT) done."
 
 install.man::
-	@echo "install.man in $(CURRENT) done."
+	       @echo "install.man in $(CURRENT) done."
 
 deinstall.man::
-	@echo "deinstall.man in $(CURRENT) done."
+	       @echo "deinstall.man in $(CURRENT) done."
 
 Makefiles::
 
@@ -265,4 +249,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

@@ -45,7 +45,8 @@ feature
 				cmd := predefined_command_table.item (- identifier);
 			end;
 			inst_id := instance_identifier;
-			if inst_id /= 0 then
+			if inst_id /= -1 then
+					-- New version (3.3.2)
 				inst_internal_name := clone (cmd.eiffel_type);
 				inst_internal_name.append_integer (inst_id);
 				inst_id := inst_internal_name.hash_code;
@@ -70,7 +71,8 @@ feature
 					arguments.forth
 				end;
 				!!Result.storage_init (cmd, arg_list);
-				if inst_id /= 0 then
+				if inst_id /= -1 then
+					-- New version (3.3.2)
 					command_instance_table.put (Result, inst_id)
 				end
 			end;
@@ -81,6 +83,7 @@ feature {NONE}
 	instance_identifier: INTEGER is
 			-- Instance identifier
 		do
+			Result := -1
 		end;
 
 	identifier: INTEGER;

@@ -33,7 +33,8 @@ feature {CACHE_READER} -- Access
 		require
 			non_void_assembly: a_assembly /= Void
 		do
-			create Result.make (a_assembly.folder_name.count + 1)
+			create Result.make (a_assembly.folder_name.count + relative_executing_env_path.count + 1)
+			Result.append (relative_executing_env_path)
 			Result.append (a_assembly.folder_name)
 			Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 		ensure
@@ -161,7 +162,6 @@ feature {CACHE_READER} -- Access
 						Result.append_character (l_dir_sep)
 					end
 					Result.append (eac_path)
-					Result.append (clr_version)
 					
 						-- set internal EAC path to registry key
 					internal_eiffel_cache_path.put (Result)
@@ -170,7 +170,7 @@ feature {CACHE_READER} -- Access
 				end
 				if Result.item (Result.count) /= l_dir_sep then
 					Result.append_character (l_dir_sep)
-				end	
+				end
 			else
 					-- FIXME: Manu 05/14/2002: we should raise an error here.
 				io.error.put_string ("ISE_EIFFEL environment variable is not defined!%N")
@@ -190,6 +190,7 @@ feature {CACHE_READER} -- Access
 		once
 			create Result.make (eiffel_assembly_cache_path.count + info_path.count + 1)
 			Result.append (eiffel_assembly_cache_path)
+			Result.append (relative_executing_env_path)
 			Result.append (info_path)
 		ensure
 			non_void_result: Result /= Void
@@ -199,13 +200,34 @@ feature {CACHE_READER} -- Access
 	ise_key: STRING is "ISE_EIFFEL"
 			-- Environment variable $ISE_EIFFEL
 
-	eac_path: STRING is "dotnet\assemblies\"
+	eac_path: STRING is "dotnet\assemblies"
 			-- EAC path relative to $ISE_EIFFEL
 			
 	clr_version: STRING
 			-- Version of runtime used to consume/read XML.
 
 feature {EMITTER} -- Access
+		
+	relative_executing_env_path: STRING is
+			-- retrieve relative path for execting environment
+		local
+			l_name: STRING
+			l_dir_sep: CHARACTER
+		once
+			l_name := to_dotnet.get_type.assembly.get_name.name
+			l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
+			
+			create Result.make (l_name.count + clr_version.count + 3)
+			Result.append (l_name)
+			Result.append_character (l_dir_sep)
+			Result.append (clr_version)
+			Result.append_character (l_dir_sep)
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+		end
+		
 		
 	internal_eiffel_cache_path: CELL [STRING] is
 			-- internal eiffel cache path

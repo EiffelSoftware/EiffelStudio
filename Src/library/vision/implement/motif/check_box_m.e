@@ -29,9 +29,10 @@ feature -- Creation
 		local
 			ext_name_c_box: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name_c_box := a_check_box.identifier.to_c;
 			screen_object := create_check_box ($ext_name_c_box,
-						a_check_box.parent.implementation.screen_object)
+						parent_screen_object (a_check_box, widget_index));
 		end
 
 feature {NONE} -- External features

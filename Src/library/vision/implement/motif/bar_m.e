@@ -29,8 +29,10 @@ feature  -- Creation
 		local
 			ext_name_bar: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name_bar := a_bar.identifier.to_c;
-			screen_object := create_bar ($ext_name_bar, a_bar.parent.implementation.screen_object);
+			screen_object := create_bar ($ext_name_bar, 
+						parent_screen_object (a_bar, widget_index));
 			abstract_menu := a_bar
 		end;
 

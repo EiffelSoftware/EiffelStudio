@@ -265,20 +265,21 @@ feature -- Keybord shortcuts Customization
 	customizable_shortcuts: ARRAY [STRING] is
 			-- list of customizable shortcuts
 		once
-			Result := <<"autocomplete", "show_search_panel", "show_search_and_replace_panel", "search_selection", "search_last", "search_backward",
+			Result := <<"autocomplete", "class_autocomplete", "show_search_panel", "show_search_and_replace_panel", "search_selection", "search_last", "search_backward",
 			"customized_insertion_1", "customized_insertion_2", "customized_insertion_3">>
 		end
 
 	default_key_codes: ARRAY [INTEGER] is
 			-- default key codes
 		once
-			Result := <<Key_space, Key_f, Key_h, Key_F3, Key_F3, Key_F3, Key_F2, Key_F2, Key_F2>>
+			Result := <<Key_space, Key_space, Key_f, Key_h, Key_F3, Key_F3, Key_F3, Key_F2, Key_F2, Key_F2>>
 		end
 
 	default_ctrl_alt_shift: ARRAY [ARRAY [BOOLEAN]] is
 			-- default ctrl/alt/shift status associated with actions above
 		once
 			Result := << 	<<True, False, False>>,
+					<<True, False, True>>,
 					<<True, False, False>>,
 					<<True, False, False>>,
 					<<False, False, False>>,

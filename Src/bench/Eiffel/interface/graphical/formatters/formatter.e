@@ -17,9 +17,9 @@ inherit
 		undefine
 			dark_symbol
 		redefine
-			execute, holder
+			execute
 		end;
-	SHARED_BENCH_RESOURCES;
+	SHARED_CONFIGURE_RESOURCES;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_ok as loose_changes
@@ -69,23 +69,21 @@ feature -- Execution
 		local
 			mp: MOUSE_PTR
 		do
-			if is_sensitive then
-				focus_label.popdown
+			focus_label.popdown
 
-				if last_warner /= Void then
-					last_warner.popdown
-				end;
+			if last_warner /= Void then
+				last_warner.popdown
+			end;
 
-				if argument = tool then
-					formatted ?= tool.stone
-				else
-					formatted ?= argument
-				end;
-				if not text_window.changed then
-					execute_licenced (formatted)
-				else
-					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
-				end
+			if argument = tool then
+				formatted ?= tool.stone
+			else
+				formatted ?= argument
+			end;
+			if not text_window.changed then
+				execute_licenced (formatted)
+			else
+				warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 			end
 		end;
 
@@ -96,6 +94,13 @@ feature -- Setting
 		do
 			do_format := b
 		end;
+
+	set_holder (h: like holder) is
+			-- Set `holder' to `h'.
+		do
+			holder := h
+		end;
+
 
 feature -- Formatting
 
@@ -114,6 +119,7 @@ feature -- Formatting
 					(stone /= Void and then not stone.same_as (tool.stone)))
 				then
 					if stone /= Void and then stone.is_valid then
+						tool.close_search_window;	
 						if stone.clickable then
 							display_temp_header (stone);
 							!! mp.set_watch_cursor;
@@ -143,7 +149,7 @@ feature -- Formatting
 				mp.restore;
 			end
 		rescue
-			if not resources.get_boolean (r_Fail_on_rescue, False) then
+			if not fail_on_rescue then
 				if original_exception = Io_exception then
 						-- We probably don't have the read permissions
 						-- on the server files.

@@ -79,6 +79,10 @@ feature -- Access
 	transparent_color: EV_COLOR
 			-- Color used as transparent (Void by default).
 
+	parent_imp: EV_DRAWING_AREA_IMP
+			-- Parent of the pixmap when it is a drawing
+			-- area only. Needed to update this last one.
+
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -143,6 +147,14 @@ feature -- Element change
 			end
 		end
 
+	set_parent (par: EV_DRAWING_AREA_IMP) is
+			-- Make `par' the new parent of the pixmap.
+		require
+			locked: is_locked
+		do
+			parent_imp := par
+		end
+
 feature -- Basic operation
 
 	read_from_file (file_name: STRING) is
@@ -159,6 +171,14 @@ feature -- Basic operation
 			internal_dc.select_palette (dib.palette)
 			!! bmp.make_by_dib (internal_dc, dib, Dib_rgb_colors)
 			internal_dc.select_bitmap (bmp)
+		end
+
+	redraw is
+			-- Redraw the area if necessary.
+		do
+			if parent_imp /= Void then
+				parent_imp.dc.copy_dc (internal_dc, parent_imp.client_rect)
+			end
 		end
 
 --	character_representation: ARRAY [CHARACTER] is
@@ -238,6 +258,7 @@ feature -- Implementation
 invariant
 	not_double_data: not (internal_bitmap /= Void and internal_dc /= Void)
 	dc_void_or_valid: (internal_dc /= Void) implies (internal_dc.exists)
+	parent_implies_drawable: (parent_imp /= Void) implies (is_drawable)
 
 end -- class EV_PIXMAP_IMP
 

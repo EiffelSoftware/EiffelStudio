@@ -65,6 +65,14 @@ feature -- Status setting
 			dc.delete
 		end
 
+feature {NONE} -- Implementation
+
+	redraw is
+			-- Redraw the area if necessary.
+		do
+			-- Nothing to do here.
+		end
+
 end -- class EV_SCREEN_IMP
 
 --|----------------------------------------------------------------

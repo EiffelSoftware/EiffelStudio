@@ -149,7 +149,7 @@ feature {COMPILER_EXPORTER}
 									$make_too_many_generics);
 		end;
 
-feature {COMPILER_EXPORTER, EXPR_ADDRESS_AS} -- Passed to C
+feature {EXPR_ADDRESS_AS} -- Passed to C
 
 	make_syntax_error is
 			-- Build a syntax error message
@@ -161,6 +161,19 @@ feature {COMPILER_EXPORTER, EXPR_ADDRESS_AS} -- Passed to C
 			insert_error (syntax_error);
 			raise_error;
 		end;
+
+feature {COMPILER_EXPORTER}
+
+	make_separate_syntax_error is
+			-- Build an error message for using `separate' when
+			-- Concurrent Eiffel is not enabled
+		local
+			separate_error: SEPARATE_SYNTAX_ERROR
+		do
+			!! separate_error.init;
+			insert_error (separate_error);
+			raise_error;
+		end
 
 feature {NONE} -- Passed to C
 

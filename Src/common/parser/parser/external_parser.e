@@ -38,167 +38,173 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 1 then
---|#line 49
+--|#line 50
 	yy_do_action_1
 when 2 then
---|#line 54
+--|#line 55
 	yy_do_action_2
 when 3 then
---|#line 58
+--|#line 59
 	yy_do_action_3
 when 4 then
---|#line 62
+--|#line 63
 	yy_do_action_4
 when 5 then
---|#line 66
+--|#line 67
 	yy_do_action_5
 when 6 then
---|#line 72
+--|#line 73
 	yy_do_action_6
 when 7 then
---|#line 77
+--|#line 78
 	yy_do_action_7
 when 8 then
---|#line 82
+--|#line 83
 	yy_do_action_8
 when 9 then
---|#line 87
+--|#line 88
 	yy_do_action_9
 when 10 then
---|#line 93
+--|#line 94
 	yy_do_action_10
 when 11 then
---|#line 98
+--|#line 99
 	yy_do_action_11
 when 12 then
---|#line 103
+--|#line 104
 	yy_do_action_12
 when 13 then
---|#line 108
+--|#line 109
 	yy_do_action_13
 when 14 then
---|#line 114
+--|#line 115
 	yy_do_action_14
 when 15 then
---|#line 119
+--|#line 120
 	yy_do_action_15
 when 16 then
---|#line 123
+--|#line 124
 	yy_do_action_16
 when 17 then
---|#line 127
+--|#line 128
 	yy_do_action_17
 when 19 then
---|#line 136
+--|#line 137
 	yy_do_action_19
 when 20 then
---|#line 141
+--|#line 142
 	yy_do_action_20
 when 21 then
---|#line 145
+--|#line 146
 	yy_do_action_21
 when 22 then
---|#line 149
+--|#line 150
 	yy_do_action_22
 when 23 then
---|#line 153
+--|#line 154
 	yy_do_action_23
 when 24 then
---|#line 157
+--|#line 158
 	yy_do_action_24
 when 25 then
---|#line 161
+--|#line 162
 	yy_do_action_25
 when 26 then
---|#line 165
+--|#line 166
 	yy_do_action_26
 when 27 then
---|#line 169
+--|#line 170
 	yy_do_action_27
 when 28 then
---|#line 173
+--|#line 174
 	yy_do_action_28
 when 29 then
---|#line 177
+--|#line 178
 	yy_do_action_29
 when 30 then
---|#line 181
+--|#line 182
 	yy_do_action_30
 when 31 then
---|#line 187
+--|#line 188
 	yy_do_action_31
 when 32 then
---|#line 192
+--|#line 193
 	yy_do_action_32
 when 34 then
---|#line 199
+--|#line 200
 	yy_do_action_34
 when 35 then
---|#line 203
+--|#line 204
 	yy_do_action_35
 when 37 then
---|#line 210
+--|#line 211
 	yy_do_action_37
 when 38 then
---|#line 214
+--|#line 215
 	yy_do_action_38
 when 40 then
---|#line 221
+--|#line 222
 	yy_do_action_40
 when 41 then
---|#line 225
+--|#line 226
 	yy_do_action_41
 when 42 then
---|#line 230
+--|#line 231
 	yy_do_action_42
 when 44 then
---|#line 239
+--|#line 240
 	yy_do_action_44
 when 45 then
---|#line 243
+--|#line 244
 	yy_do_action_45
 when 46 then
---|#line 249
+--|#line 251
 	yy_do_action_46
-when 48 then
+when 47 then
 --|#line 257
+	yy_do_action_47
+when 48 then
+--|#line 262
 	yy_do_action_48
-when 49 then
---|#line 263
-	yy_do_action_49
 when 50 then
---|#line 265
+--|#line 270
 	yy_do_action_50
 when 51 then
---|#line 269
+--|#line 276
 	yy_do_action_51
 when 52 then
---|#line 271
+--|#line 278
 	yy_do_action_52
+when 53 then
+--|#line 282
+	yy_do_action_53
 when 54 then
---|#line 277
+--|#line 284
 	yy_do_action_54
-when 55 then
---|#line 281
-	yy_do_action_55
 when 56 then
---|#line 286
+--|#line 290
 	yy_do_action_56
 when 57 then
---|#line 291
+--|#line 294
 	yy_do_action_57
 when 58 then
---|#line 298
+--|#line 299
 	yy_do_action_58
 when 59 then
---|#line 303
+--|#line 304
 	yy_do_action_59
 when 60 then
---|#line 307
+--|#line 311
 	yy_do_action_60
 when 61 then
---|#line 313
+--|#line 316
 	yy_do_action_61
+when 62 then
+--|#line 320
+	yy_do_action_62
+when 63 then
+--|#line 326
+	yy_do_action_63
 			else
 					-- No action
 				yyval := yyval_default
@@ -206,7 +212,7 @@ when 61 then
 		end
 
 	yy_do_action_1 is
-			--|#line 49
+			--|#line 50
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -217,7 +223,7 @@ when 61 then
 		end
 
 	yy_do_action_2 is
-			--|#line 54
+			--|#line 55
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -228,7 +234,7 @@ when 61 then
 		end
 
 	yy_do_action_3 is
-			--|#line 58
+			--|#line 59
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -239,7 +245,7 @@ when 61 then
 		end
 
 	yy_do_action_4 is
-			--|#line 62
+			--|#line 63
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -250,7 +256,7 @@ when 61 then
 		end
 
 	yy_do_action_5 is
-			--|#line 66
+			--|#line 67
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -261,7 +267,7 @@ when 61 then
 		end
 
 	yy_do_action_6 is
-			--|#line 72
+			--|#line 73
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -272,7 +278,7 @@ when 61 then
 		end
 
 	yy_do_action_7 is
-			--|#line 77
+			--|#line 78
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -284,7 +290,7 @@ when 61 then
 		end
 
 	yy_do_action_8 is
-			--|#line 82
+			--|#line 83
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -296,7 +302,7 @@ when 61 then
 		end
 
 	yy_do_action_9 is
-			--|#line 87
+			--|#line 88
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -307,7 +313,7 @@ when 61 then
 		end
 
 	yy_do_action_10 is
-			--|#line 93
+			--|#line 94
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -318,7 +324,7 @@ when 61 then
 		end
 
 	yy_do_action_11 is
-			--|#line 98
+			--|#line 99
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -330,7 +336,7 @@ when 61 then
 		end
 
 	yy_do_action_12 is
-			--|#line 103
+			--|#line 104
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -342,7 +348,7 @@ when 61 then
 		end
 
 	yy_do_action_13 is
-			--|#line 108
+			--|#line 109
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -353,7 +359,7 @@ when 61 then
 		end
 
 	yy_do_action_14 is
-			--|#line 114
+			--|#line 115
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -364,7 +370,7 @@ when 61 then
 		end
 
 	yy_do_action_15 is
-			--|#line 119
+			--|#line 120
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -375,7 +381,7 @@ when 61 then
 		end
 
 	yy_do_action_16 is
-			--|#line 123
+			--|#line 124
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -386,7 +392,7 @@ when 61 then
 		end
 
 	yy_do_action_17 is
-			--|#line 127
+			--|#line 128
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -397,7 +403,7 @@ when 61 then
 		end
 
 	yy_do_action_19 is
-			--|#line 136
+			--|#line 137
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -408,7 +414,7 @@ when 61 then
 		end
 
 	yy_do_action_20 is
-			--|#line 141
+			--|#line 142
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -419,7 +425,7 @@ when 61 then
 		end
 
 	yy_do_action_21 is
-			--|#line 145
+			--|#line 146
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -430,7 +436,7 @@ when 61 then
 		end
 
 	yy_do_action_22 is
-			--|#line 149
+			--|#line 150
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -441,7 +447,7 @@ when 61 then
 		end
 
 	yy_do_action_23 is
-			--|#line 153
+			--|#line 154
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -452,7 +458,7 @@ when 61 then
 		end
 
 	yy_do_action_24 is
-			--|#line 157
+			--|#line 158
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -463,7 +469,7 @@ when 61 then
 		end
 
 	yy_do_action_25 is
-			--|#line 161
+			--|#line 162
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -474,7 +480,7 @@ when 61 then
 		end
 
 	yy_do_action_26 is
-			--|#line 165
+			--|#line 166
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -485,7 +491,7 @@ when 61 then
 		end
 
 	yy_do_action_27 is
-			--|#line 169
+			--|#line 170
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -496,7 +502,7 @@ when 61 then
 		end
 
 	yy_do_action_28 is
-			--|#line 173
+			--|#line 174
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -507,7 +513,7 @@ when 61 then
 		end
 
 	yy_do_action_29 is
-			--|#line 177
+			--|#line 178
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -518,7 +524,7 @@ when 61 then
 		end
 
 	yy_do_action_30 is
-			--|#line 181
+			--|#line 182
 		local
 			yyval1: EXTERNAL_EXTENSION_AS
 		do
@@ -529,7 +535,7 @@ when 61 then
 		end
 
 	yy_do_action_31 is
-			--|#line 187
+			--|#line 188
 		local
 			yyval6: INTEGER
 		do
@@ -540,7 +546,7 @@ when 61 then
 		end
 
 	yy_do_action_32 is
-			--|#line 192
+			--|#line 193
 		local
 			yyval6: INTEGER
 		do
@@ -551,7 +557,7 @@ when 61 then
 		end
 
 	yy_do_action_34 is
-			--|#line 199
+			--|#line 200
 		local
 			yyval2: SIGNATURE_AS
 		do
@@ -561,7 +567,7 @@ yyval2 := yytype2 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_35 is
-			--|#line 203
+			--|#line 204
 		local
 			yyval2: SIGNATURE_AS
 		do
@@ -571,7 +577,7 @@ yyval2 := new_signature_as (yytype8 (yyvs.item (yyvsp - 1)), yytype3 (yyvs.item 
 		end
 
 	yy_do_action_37 is
-			--|#line 210
+			--|#line 211
 		local
 			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
 		do
@@ -581,7 +587,7 @@ yyval8 := yytype8 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_38 is
-			--|#line 214
+			--|#line 215
 		local
 			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
 		do
@@ -591,7 +597,7 @@ yyval8 := yytype8 (yyvs.item (yyvsp - 1))
 		end
 
 	yy_do_action_40 is
-			--|#line 221
+			--|#line 222
 		local
 			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
 		do
@@ -601,7 +607,7 @@ yyval8 := yytype8 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_41 is
-			--|#line 225
+			--|#line 226
 		local
 			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
 		do
@@ -613,7 +619,7 @@ yyval8 := yytype8 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_42 is
-			--|#line 230
+			--|#line 231
 		local
 			yyval8: EIFFEL_LIST [EXTERNAL_TYPE_AS]
 		do
@@ -625,7 +631,7 @@ yyval8 := yytype8 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_44 is
-			--|#line 239
+			--|#line 240
 		local
 			yyval3: EXTERNAL_TYPE_AS
 		do
@@ -635,31 +641,57 @@ yyval3 := yytype3 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_45 is
-			--|#line 243
+			--|#line 244
 		local
 			yyval3: EXTERNAL_TYPE_AS
 		do
 
 					-- False because no `struct' keyword.
-				yyval3 := new_external_type_as (yytype4 (yyvs.item (yyvsp - 2)), False, yytype6 (yyvs.item (yyvsp - 1)), yytype5 (yyvs.item (yyvsp)), False)
+					-- Void because no `signed', `unsigned' keyword.
+				yyval3 := new_external_type_as (yytype4 (yyvs.item (yyvsp - 2)), Void, False, yytype6 (yyvs.item (yyvsp - 1)), yytype5 (yyvs.item (yyvsp)))
 			
 			yyval := yyval3
 		end
 
 	yy_do_action_46 is
-			--|#line 249
+			--|#line 251
 		local
 			yyval3: EXTERNAL_TYPE_AS
 		do
 
 					-- True because `struct' keyword.
-				yyval3 := new_external_type_as (yytype4 (yyvs.item (yyvsp - 2)), True, yytype6 (yyvs.item (yyvsp - 1)), yytype5 (yyvs.item (yyvsp)), False)
+					-- Void because no `signed', `unsigned' keyword.
+				yyval3 := new_external_type_as (yytype4 (yyvs.item (yyvsp - 2)), Void, True, yytype6 (yyvs.item (yyvsp - 1)), yytype5 (yyvs.item (yyvsp)))
+			
+			yyval := yyval3
+		end
+
+	yy_do_action_47 is
+			--|#line 257
+		local
+			yyval3: EXTERNAL_TYPE_AS
+		do
+
+					-- False because no `struct' keyword.
+				yyval3 := new_external_type_as (yytype4 (yyvs.item (yyvsp - 2)), signed_prefix, False, yytype6 (yyvs.item (yyvsp - 1)), yytype5 (yyvs.item (yyvsp)))
 			
 			yyval := yyval3
 		end
 
 	yy_do_action_48 is
-			--|#line 257
+			--|#line 262
+		local
+			yyval3: EXTERNAL_TYPE_AS
+		do
+
+					-- False because no `struct' keyword.
+				yyval3 := new_external_type_as (yytype4 (yyvs.item (yyvsp - 2)), unsigned_prefix, False, yytype6 (yyvs.item (yyvsp - 1)), yytype5 (yyvs.item (yyvsp)))
+			
+			yyval := yyval3
+		end
+
+	yy_do_action_50 is
+			--|#line 270
 		local
 			yyval3: EXTERNAL_TYPE_AS
 		do
@@ -669,8 +701,8 @@ yyval3 := yytype3 (yyvs.item (yyvsp))
 			yyval := yyval3
 		end
 
-	yy_do_action_49 is
-			--|#line 263
+	yy_do_action_51 is
+			--|#line 276
 		local
 			yyval6: INTEGER
 		do
@@ -679,8 +711,8 @@ yyval6 := 0
 			yyval := yyval6
 		end
 
-	yy_do_action_50 is
-			--|#line 265
+	yy_do_action_52 is
+			--|#line 278
 		local
 			yyval6: INTEGER
 		do
@@ -689,8 +721,8 @@ yyval6 := yytype6 (yyvs.item (yyvsp - 1)) + 1
 			yyval := yyval6
 		end
 
-	yy_do_action_51 is
-			--|#line 269
+	yy_do_action_53 is
+			--|#line 282
 		local
 			yyval5: BOOLEAN
 		do
@@ -699,8 +731,8 @@ yyval5 := False
 			yyval := yyval5
 		end
 
-	yy_do_action_52 is
-			--|#line 271
+	yy_do_action_54 is
+			--|#line 284
 		local
 			yyval5: BOOLEAN
 		do
@@ -709,28 +741,28 @@ yyval5 := True
 			yyval := yyval5
 		end
 
-	yy_do_action_54 is
-			--|#line 277
-		local
-			yyval7: USE_LIST_AS
-		do
-
-yyval7 := yytype7 (yyvs.item (yyvsp))
-			yyval := yyval7
-		end
-
-	yy_do_action_55 is
-			--|#line 281
-		local
-			yyval7: USE_LIST_AS
-		do
-
-yyval7 := yytype7 (yyvs.item (yyvsp))
-			yyval := yyval7
-		end
-
 	yy_do_action_56 is
-			--|#line 286
+			--|#line 290
+		local
+			yyval7: USE_LIST_AS
+		do
+
+yyval7 := yytype7 (yyvs.item (yyvsp))
+			yyval := yyval7
+		end
+
+	yy_do_action_57 is
+			--|#line 294
+		local
+			yyval7: USE_LIST_AS
+		do
+
+yyval7 := yytype7 (yyvs.item (yyvsp))
+			yyval := yyval7
+		end
+
+	yy_do_action_58 is
+			--|#line 299
 		local
 			yyval7: USE_LIST_AS
 		do
@@ -741,8 +773,8 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 			yyval := yyval7
 		end
 
-	yy_do_action_57 is
-			--|#line 291
+	yy_do_action_59 is
+			--|#line 304
 		local
 			yyval7: USE_LIST_AS
 		do
@@ -753,30 +785,8 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 			yyval := yyval7
 		end
 
-	yy_do_action_58 is
-			--|#line 298
-		local
-			yyval4: ID_AS
-		do
-
-			yyval4 := new_double_quote_id_as (token_buffer)
-		
-			yyval := yyval4
-		end
-
-	yy_do_action_59 is
-			--|#line 303
-		local
-			yyval4: ID_AS
-		do
-
-			yyval4 := new_system_id_as (token_buffer)
-		
-			yyval := yyval4
-		end
-
 	yy_do_action_60 is
-			--|#line 307
+			--|#line 311
 		local
 			yyval4: ID_AS
 		do
@@ -787,7 +797,29 @@ yyval7 := yytype7 (yyvs.item (yyvsp))
 		end
 
 	yy_do_action_61 is
-			--|#line 313
+			--|#line 316
+		local
+			yyval4: ID_AS
+		do
+
+			yyval4 := new_system_id_as (token_buffer)
+		
+			yyval := yyval4
+		end
+
+	yy_do_action_62 is
+			--|#line 320
+		local
+			yyval4: ID_AS
+		do
+
+			yyval4 := new_double_quote_id_as (token_buffer)
+		
+			yyval := yyval4
+		end
+
+	yy_do_action_63 is
+			--|#line 326
 		local
 			yyval4: ID_AS
 		do
@@ -834,7 +866,7 @@ feature {NONE} -- Table templates
 			    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
 			   15,   16,   17,   18,   19,   20,   21,   22,   23,   24,
 			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
-			   35,   36,   37>>)
+			   35,   36,   37,   38,   39>>)
 		end
 
 	yyr1_template: ANY is
@@ -842,13 +874,13 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			    0,   38,   38,   38,   38,   38,   39,   39,   39,   39,
-			   40,   40,   40,   40,   43,   43,   43,   43,   41,   42,
-			   42,   42,   42,   42,   42,   42,   42,   42,   42,   42,
-			   42,   56,   56,   44,   44,   45,   57,   57,   58,   59,
-			   59,   60,   60,   46,   46,   47,   47,   48,   48,   52,
-			   52,   51,   51,   53,   53,   54,   55,   55,   50,   50,
-			   50,   49>>)
+			    0,   40,   40,   40,   40,   40,   41,   41,   41,   41,
+			   42,   42,   42,   42,   45,   45,   45,   45,   43,   44,
+			   44,   44,   44,   44,   44,   44,   44,   44,   44,   44,
+			   44,   58,   58,   46,   46,   47,   59,   59,   60,   61,
+			   61,   62,   62,   48,   48,   49,   49,   49,   49,   50,
+			   50,   54,   54,   53,   53,   55,   55,   56,   57,   57,
+			   52,   52,   52,   51>>)
 		end
 
 	yyr2_template: ANY is
@@ -860,9 +892,9 @@ feature {NONE} -- Table templates
 			    1,    6,    3,    2,    3,    4,    4,    4,    2,    4,
 			    5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
 			    5,    1,    1,    0,    1,    3,    0,    1,    3,    0,
-			    1,    1,    3,    0,    2,    3,    4,    0,    2,    0,
-			    2,    0,    1,    0,    1,    2,    1,    3,    3,    3,
-			    1,    1>>)
+			    1,    1,    3,    0,    2,    3,    4,    4,    4,    0,
+			    2,    0,    2,    0,    1,    0,    1,    2,    1,    3,
+			    3,    3,    1,    1>>)
 		end
 
 	yydefact_template: ANY is
@@ -871,21 +903,22 @@ feature {NONE} -- Table templates
 		once
 			Result := yyfixed_array (<<
 			    0,   32,   31,   33,   33,    0,   33,    5,   33,   36,
-			    4,    0,   34,    3,   61,    0,    0,    0,   33,    0,
-			   53,    2,   10,   33,    0,   33,   53,    1,   53,   33,
+			    4,    0,   34,    3,   63,    0,    0,    0,   33,    0,
+			   55,    2,   10,   33,    0,   33,   55,    1,   55,   33,
 			   33,   33,   33,   33,   33,   33,   33,   33,   33,   33,
 			    0,   39,   43,   37,    0,   18,    0,   33,   33,    0,
-			   33,   13,   54,    0,    0,    0,    9,    6,    0,    0,
+			   33,   13,   56,    0,    0,    0,    9,    6,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,   41,   49,    0,   40,    0,   35,   60,    0,    0,
-			   56,   55,    0,    0,    0,   12,    0,   14,    0,    8,
-			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,   41,   51,    0,   40,    0,   35,   62,
+			    0,    0,   58,   57,    0,    0,    0,   12,    0,   14,
+			    0,    8,    0,    0,    0,    0,    0,    0,    0,    0,
 
-			    0,   19,   49,   51,   38,    0,   44,    0,    0,    0,
-			   47,   15,   17,   16,   47,   25,   23,   21,   27,   29,
-			   26,   30,   20,   22,   28,   24,   51,   50,   52,   45,
-			   42,   58,   59,   57,    0,    0,    0,   46,   48,   11,
-			    7,    0,    0,    0>>)
+			    0,    0,    0,   19,   51,   51,   51,   53,   38,    0,
+			   44,    0,    0,    0,   49,   15,   17,   16,   49,   25,
+			   23,   21,   27,   29,   26,   30,   20,   22,   28,   24,
+			   53,   53,   53,   52,   54,   45,   42,   60,   61,   59,
+			    0,    0,    0,   48,   47,   46,   50,   11,    7,    0,
+			    0,    0>>)
 		end
 
 	yydefgoto_template: ANY is
@@ -893,9 +926,9 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			  141,   27,   21,   10,    7,   22,   11,   12,   76,   71,
-			  135,   72,   80,  129,  103,   51,   52,   81,    8,   42,
-			   43,   73,   74>>)
+			  149,   27,   21,   10,    7,   22,   11,   12,   78,   73,
+			  141,   74,   82,  135,  107,   51,   52,   83,    8,   42,
+			   43,   75,   76>>)
 		end
 
 	yypact_template: ANY is
@@ -903,22 +936,23 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			   50, -32768, -32768,   53,   53,   -8,    6, -32768,   26,   93,
-			 -32768,  -19, -32768, -32768, -32768,   -3,   -3,   -3,   53,   -3,
-			  -19, -32768, -32768,   53,   -3,   53,  -19, -32768,  -19,   53,
-			   53,   53,   53,   53,   53,   53,   53,   53,   53,   53,
-			   49,  -28,   59, -32768,   -6, -32768,   71,   53,   53,  -19,
-			   53, -32768, -32768,  -19,   57,  -19, -32768, -32768,   45,   44,
-			   43,   41,   40,   34,   24,   14,   12,   11,    7,   -3,
-			   -3, -32768, -32768,   36,   33,  -28, -32768, -32768,    0,   -1,
-			 -32768,   27,   -3,  -19,  -19, -32768,  -19, -32768,   -3, -32768,
-			   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+			   38, -32768, -32768,   79,   79,   42,   84, -32768,   96,  108,
+			 -32768,  -20, -32768, -32768, -32768,   11,   11,   11,   79,   11,
+			  -20, -32768, -32768,   79,   11,   79,  -20, -32768,  -20,   79,
+			   79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
+			   73,   48,  107, -32768,    8, -32768,   97,   79,   79,  -20,
+			   79, -32768, -32768,  -20,   59,  -20, -32768, -32768,   69,   67,
+			   66,   65,   64,   63,   62,   45,   41,   40,   31,   11,
+			   11,   11,   11, -32768, -32768,   58,   55,   48, -32768, -32768,
+			   21,   15, -32768,   47,   11,  -20,  -20, -32768,  -20, -32768,
+			   11, -32768,   11,   11,   11,   11,   11,   11,   11,   11,
 
-			   -3, -32768, -32768,   17, -32768,  -28, -32768,   16,   20,   -6,
-			  -16, -32768, -32768, -32768,  -16, -32768, -32768, -32768, -32768, -32768,
-			 -32768, -32768, -32768, -32768, -32768, -32768,   17, -32768, -32768, -32768,
-			 -32768, -32768, -32768, -32768,  -28,  -19,  -19, -32768, -32768, -32768,
-			 -32768,   10,    4, -32768>>)
+			   11,   11,   11, -32768, -32768, -32768, -32768,   33, -32768,   48,
+			 -32768,   32,   39,    8,  -13, -32768, -32768, -32768,  -13, -32768,
+			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			   33,   33,   33, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			   48,  -20,  -20, -32768, -32768, -32768, -32768, -32768, -32768,   14,
+			    2, -32768>>)
 		end
 
 	yypgoto_template: ANY is
@@ -926,8 +960,8 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			 -32768, -32768, -32768,   94, -32768, -32768,   97, -32768, -32768,  -73,
-			  -13,   -4,   -7,  -27,   -2,  -10,  -11, -32768, -32768, -32768,
+			 -32768, -32768, -32768,  116, -32768, -32768,   -2, -32768, -32768,  -70,
+			   -1,   -4,    1, -106,  -96,  -23,  -11, -32768, -32768, -32768,
 			 -32768, -32768, -32768>>)
 		end
 
@@ -936,22 +970,21 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			   45,   23,  106,   79,  143,   78,   70,   20,   19,   14,
-			  142,   46,   47,   48,   18,   50,   56,   44,   57,  134,
-			   54,   26,   17,   16,  128,  127,   15,  131,   25,   14,
-			  132,   77,  130,  109,   14,    9,  108,  107,   85,  105,
-			   24,  104,   87,  100,   89,   39,   38,   99,   98,   37,
-			   97,   36,   35,   34,   33,    9,   32,   31,   30,   29,
-			   96,  138,   75,    6,    5,  101,  102,    4,    3,   88,
-			   95,    2,  111,  112,    1,  113,   94,   93,  110,   92,
-			   91,   90,    9,   82,  114,   69,  115,  116,  117,  118,
-			  119,  120,  121,  122,  123,  124,  125,   41,   13,  137,
+			   45,   23,  151,   56,   28,   57,   40,  110,  130,  131,
+			  132,   46,   47,   48,  150,   50,   49,   81,   44,   80,
+			   54,   53,  140,   55,  143,  144,  145,   58,   59,   60,
+			   61,   62,   63,   64,   65,   66,   67,   68,   87,  136,
+			  134,  133,   89,  137,   91,   85,   86,   79,   88,  138,
+			   14,    6,    5,  113,  112,    4,    3,   20,   19,    2,
+			  111,  109,    1,  108,   18,  103,  104,  105,  106,  102,
+			  146,   90,   17,   16,  115,  116,   15,  117,  101,  100,
+			  114,   14,   72,   99,   71,   70,  118,   14,  119,  120,
+			  121,  122,  123,  124,  125,  126,  127,  128,  129,   26,
 
-			  126,  136,  133,   28,    0,   40,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,   49,    0,    0,    0,    0,
-			   53,    0,   55,    0,  139,  140,   58,   59,   60,   61,
-			   62,   63,   64,   65,   66,   67,   68,    0,    0,    0,
-			    0,    0,    0,    0,   83,   84,    0,   86>>)
+			   98,   97,   96,   95,   94,   93,   25,   92,    9,   84,
+			   77,   69,   41,    9,  139,   39,   38,  142,   24,   37,
+			   13,   36,   35,   34,   33,    9,   32,   31,   30,   29,
+			  147,  148>>)
 		end
 
 	yycheck_template: ANY is
@@ -959,22 +992,21 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yyfixed_array (<<
-			   11,    5,   75,    9,    0,   11,   34,   15,   16,   37,
-			    0,   15,   16,   17,   22,   19,   26,   36,   28,   35,
-			   24,   15,   30,   31,    7,    8,   34,   11,   22,   37,
-			   10,   37,  105,    6,   37,   29,   37,   37,   49,    6,
-			   34,    5,   53,   36,   55,   19,   20,   36,   36,   23,
-			   36,   25,   26,   27,   28,   29,   30,   31,   32,   33,
-			   36,  134,    3,   13,   14,   69,   70,   17,   18,   12,
-			   36,   21,   83,   84,   24,   86,   36,   36,   82,   36,
-			   36,   36,   29,   12,   88,   36,   90,   91,   92,   93,
-			   94,   95,   96,   97,   98,   99,  100,    4,    4,  126,
+			   11,    5,    0,   26,    6,   28,    8,   77,  104,  105,
+			  106,   15,   16,   17,    0,   19,   18,    9,   38,   11,
+			   24,   23,   35,   25,  130,  131,  132,   29,   30,   31,
+			   32,   33,   34,   35,   36,   37,   38,   39,   49,  109,
+			    7,    8,   53,   11,   55,   47,   48,   39,   50,   10,
+			   39,   13,   14,    6,   39,   17,   18,   15,   16,   21,
+			   39,    6,   24,    5,   22,   69,   70,   71,   72,   38,
+			  140,   12,   30,   31,   85,   86,   34,   88,   38,   38,
+			   84,   39,   34,   38,   36,   37,   90,   39,   92,   93,
+			   94,   95,   96,   97,   98,   99,  100,  101,  102,   15,
 
-			  102,  114,  109,    6,   -1,    8,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   -1,   18,   -1,   -1,   -1,   -1,
-			   23,   -1,   25,   -1,  135,  136,   29,   30,   31,   32,
-			   33,   34,   35,   36,   37,   38,   39,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   47,   48,   -1,   50>>)
+			   38,   38,   38,   38,   38,   38,   22,   38,   29,   12,
+			    3,   38,    4,   29,  113,   19,   20,  118,   34,   23,
+			    4,   25,   26,   27,   28,   29,   30,   31,   32,   33,
+			  141,  142>>)
 		end
 
 feature {NONE} -- Conversion
@@ -1120,29 +1152,35 @@ feature {NONE} -- Conversion
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 143
+	yyFinal: INTEGER is 151
 			-- Termination state id
 
 	yyFlag: INTEGER is -32768
 			-- Most negative INTEGER
 
-	yyNtbase: INTEGER is 38
+	yyNtbase: INTEGER is 40
 			-- Number of tokens
 
-	yyLast: INTEGER is 147
+	yyLast: INTEGER is 131
 			-- Upper bound of `yytable' and `yycheck'
 
-	yyMax_token: INTEGER is 292
+	yyMax_token: INTEGER is 294
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER is 61
+	yyNsyms: INTEGER is 63
 			-- Number of symbols
 			-- (terminal and nonterminal)
 
 feature -- User-defined features
 
 
+
+feature {NONE} -- Constants
+
+	signed_prefix: STRING is "signed "
+	unsigned_prefix: STRING is "unsigned "
+			-- Available prefix to C/C++ basic types.
 
 end -- class EIFFEL_PARSER
 

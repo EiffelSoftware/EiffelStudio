@@ -45,7 +45,30 @@ feature -- Status report
 		do
 			Result := gtk_notebook_get_current_page (widget)
 		end
-	
+
+	tab_position: STRING is
+			-- Position of the tabs.
+			-- "left" for left position.
+			-- "right" for right position.
+			-- "top" for top position.
+			-- "bottom" for bottom position.
+		local
+			pos: INTEGER
+		do
+			pos := c_gtk_notebook_tab_position (widget)
+			inspect
+				pos
+			when 0 then
+				Result := "left"
+			when 1 then
+				Result := "right"
+			when 2 then
+				Result := "top"
+			when 3 then
+				Result := "bottom"
+			end
+		end
+
 feature -- Status setting
 	
 	set_tab_position (pos: INTEGER) is
@@ -97,9 +120,10 @@ feature -- Element change
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into container
 		do
-			check
-				Do_nothing_here: True
-			end
+			-- We do nothing here except adding a reference to the child
+			-- otherwise the latter will be destroyed after
+			-- `gtk_object_unref' in `set_parent'.
+			gtk_object_ref (child_imp.widget)
 		end
 
 feature -- Event - command association
@@ -108,7 +132,7 @@ feature -- Event - command association
 			-- Add 'cmd' to the list of commands to be executed
 			-- when a page is switched in the notebook.
 		do
-			add_command (widget, "switch_page", cmd, arg)
+			add_command (widget, "switch_page", cmd, arg, default_pointer)
 		end
 
 feature -- Event -- removing command association

@@ -183,7 +183,7 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 	connect_button_press_switch_intermediary (a_c_object: POINTER) is
 			-- Connect button switch 
 		local
-			a_widget: EV_GTK_WIDGET_IMP
+			a_widget: EV_PICK_AND_DROPABLE_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_widget.connect_button_press_switch

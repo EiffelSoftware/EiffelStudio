@@ -52,7 +52,6 @@ feature -- Assertions
 		// invariants and check them too.
 	{
 		EIFFEL_TYPE_INFO target;
-		Type object_type;
 
 		if (!in_assertion ()) {
 			if (o is EIFFEL_TYPE_INFO) {
@@ -61,7 +60,7 @@ feature -- Assertions
 
 				invariant_checked_table = new Hashtable (10);
 
-					// Check current invariant defined in `object_type'.
+					// Check current invariant defined in `target'.
 				target._invariant ();
 
 				set_in_assertion (false);
@@ -253,12 +252,36 @@ feature -- Hash code
 /*
 feature -- Equality
 */
-	public static Boolean standard_equal (EIFFEL_TYPE_INFO o1, EIFFEL_TYPE_INFO o2) 
-		// Is `o1' equal to `o2'?
+	public static Boolean standard_equal (EIFFEL_TYPE_INFO target, EIFFEL_TYPE_INFO source) 
+		// Is `target' equal to `source'?
+		// Simple Object comparison attribute by attribute.
 	{
-			// FIXME: Manu 4/16/2002 we should not do a `deep_equal' here, but
-			// don't have time to implement it right now.
-		return deep_equal (o1, o2);
+		FieldInfo [] attributes;
+		Boolean Result = false;
+		Object l_attr;
+
+		ASSERTIONS.REQUIRE ("target_not_void", target != null);
+		ASSERTIONS.REQUIRE ("source_not_void", source != null);
+
+		if (target.GetType ().Equals (source.GetType ())) {
+			attributes = source.GetType().GetFields (
+				BindingFlags.Instance | BindingFlags.Public |
+				BindingFlags.NonPublic);
+
+			foreach (FieldInfo attribute in attributes) {
+				l_attr = attribute.GetValue (source);
+				if (l_attr is ValueType) {
+					Result = Equals (l_attr, attribute.GetValue (target));
+				} else {
+					Result = l_attr == attribute.GetValue (target);
+				}
+				if (!Result) {
+						// Force exit from loop as objects are not identical.
+					return Result;
+				}
+			}
+		}
+		return Result;
 	}
 
 

@@ -2,8 +2,9 @@ indexing
 	description: "COM visible class representing an assemblies information"
 	date: "$Date$"
 	revision: "$Revision$"
-	attribute: create {COM_VISIBLE_ATTRIBUTE}.make (True) end, 
-		create {CLASS_INTERFACE_ATTRIBUTE}.make_from_class_interface_type (feature {CLASS_INTERFACE_TYPE}.none.to_integer.to_integer_16) end
+	interface_attribute:
+		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
+		create {GUID_ATTRIBUTE}.make (("FD2F67FF-FF44-3B67-A55D-8EE3086D3970").to_cil) end
 
 class
 	COM_ASSEMBLY_INFORMATION

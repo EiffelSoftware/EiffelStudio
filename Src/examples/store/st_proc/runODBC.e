@@ -63,6 +63,7 @@ feature
 				repository.load
 				if repository.exists then
 					make_selection
+					session_control.commit
 					session_control.disconnect
 				else
 					io.putstring ("Table not found!");
@@ -100,7 +101,7 @@ feature {NONE}
 					io.laststring.is_equal ("exit")
 				loop
 					author := clone (io.laststring)
-					io.putstring ("Seeking for books whose author's name match: ")
+					io.putstring ("Seeking books whose author's name match: ")
 					io.putstring (author)
 					io.new_line
 

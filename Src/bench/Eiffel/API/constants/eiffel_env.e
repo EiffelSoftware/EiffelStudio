@@ -86,8 +86,6 @@ feature {NONE}
 				Result.extend (c);
 				Result.append ("bench");
 				Result.extend (c);
-				Result.append ("help");
-				Result.extend (c);
 				Result.append ("filters");
 				Result.extend (c)
 			end

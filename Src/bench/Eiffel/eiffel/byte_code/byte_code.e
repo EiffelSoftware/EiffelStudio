@@ -765,7 +765,7 @@ feature -- IL code generation
 			debug_generation := System.line_generation or context.workbench_mode
 
 			if debug_generation then
-				feature_as := System.Body_server.item (body_index)
+				feature_as := context.current_feature.body
 				routine_as ?= feature_as.body.content
 				if routine_as /= Void and then routine_as.locals /= Void then
 						-- `local_list' is in the same order as `routine_as.locals'

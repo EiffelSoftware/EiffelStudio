@@ -626,7 +626,8 @@ register1 char *key;
 	register2 long pos;		/* Position in H table */
 	register3 int32 hsize;		/* Size of H table */
 	register4 char **hkeys;		/* Array of keys */
-	register5 int32 try = 0;	/* Count number of attempts */
+
+	register5 int32 tryv = (int32) 0;	/* Count number of attempts */
 	register6 long inc;		/* Loop increment */
 
 	/* Initializations */
@@ -642,8 +643,8 @@ register1 char *key;
 	inc = hashcode(key, (long) strlen(key));
 	for (
 		pos = inc % hsize, inc = 1 + (inc % (hsize - 1));
-		try < hsize;
-		try++, pos = (pos + inc) % hsize
+		tryv < hsize; 
+		tryv++, pos = (pos + inc) % hsize
 	) {
 		if (hkeys[pos] == (char *) 0)
 			break;

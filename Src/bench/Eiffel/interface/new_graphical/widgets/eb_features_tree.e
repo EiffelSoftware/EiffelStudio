@@ -57,11 +57,9 @@ feature {EB_FEATURES_TOOL} -- Implementation
 			name: STRING
 			expand_tree: BOOLEAN
 			class_text: STRING
+			retried: BOOLEAN
 		do
-			if
-				Workbench.is_already_compiled and then
-				Workbench.last_reached_degree < 3
-			then
+			if not retried then
 				expand_tree := expand_feature_tree
 				class_text := features_tool.current_compiled_class.text
 				if class_text /= Void then
@@ -80,6 +78,9 @@ feature {EB_FEATURES_TOOL} -- Implementation
 							tree_item.set_pixmap (Pixmaps.Icon_feature_clause_some)
 						else
 							tree_item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+						end
+						if is_clickable then
+							tree_item.select_actions.extend (agent features_tool.go_to_clause (fcl.item))
 						end
 						extend (tree_item)
 						if
@@ -109,6 +110,9 @@ feature {EB_FEATURES_TOOL} -- Implementation
 						else
 							tree_item.set_pixmap (Pixmaps.Icon_feature_clause_any)
 						end
+						if is_clickable then
+							tree_item.select_actions.extend (agent features_tool.go_to_clause (fcl.item))
+						end
 						extend (tree_item)
 						if
 							expand_tree and then
@@ -127,8 +131,12 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.w_Cannot_read_file (features_tool.current_compiled_class.file_name)))
 				end
 			else
+				wipe_out
 				extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Compile_first))
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation
@@ -162,8 +170,18 @@ feature {NONE} -- Implementation
 				if is_clickable then
 					tree_item.select_actions.extend (features_tool~go_to (fl.item))
 				end
-				tree_item.set_pixmap (Pixmaps.Icon_feature @ 1)
 				ef := features_tool.current_compiled_class.feature_with_name (fl.item.feature_name)
+				if ef.is_deferred then
+					tree_item.set_pixmap (Pixmaps.Icon_deferred_feature)
+				elseif ef.is_once or ef.is_constant then
+					tree_item.set_pixmap (Pixmaps.Icon_once_objects)
+				elseif ef.is_attribute then
+					tree_item.set_pixmap (Pixmaps.Icon_attributes)
+				elseif ef.is_external then
+					tree_item.set_pixmap (Pixmaps.Icon_external_feature)
+				else
+					tree_item.set_pixmap (Pixmaps.Icon_feature @ 1)
+				end
 				create st.make (ef)
 				tree_item.set_pebble (st)
 				tree_item.set_accept_cursor (st.stone_cursor)

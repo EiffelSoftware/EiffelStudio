@@ -130,6 +130,25 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end	
 		end
+		
+	paragraph_format_range_information (start_line, end_line: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from lines `start_line' to `end_line'.
+			-- All attributes in `Result' are set to `True' if they remain consitent from `start_line' to
+			--`end_line' and `False' otherwise.
+			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
+			-- are subsequently changed.
+		require
+			not_destroyed: not is_destroyed
+			valid_line_index: start_line >= 1 and end_line <= line_count and
+				start_line <= end_line
+		do
+			Result := implementation.paragraph_format_range_information (start_line, end_line)
+		ensure
+			result_not_void: Result /= Void
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end	
+		end
 
 	buffer_locked_in_format_mode: BOOLEAN is
 			-- Is buffered formatting underway?

@@ -320,7 +320,7 @@ feature -- Contract support
 				until
 					j > 4
 				loop
-					last.set_cell_text (j, "Row" + i.out + " Col" + j.out)
+--| FIXME					last.set_cell_text (j, "Row" + i.out + " Col" + j.out)
 					last.select_actions.extend (~prune (last))
 					last.select_actions.extend (~put_front (last))
 					j := j + 1
@@ -370,6 +370,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/03/23 18:18:54  brendel
+--| Commented out line that uses set_cell_text. get back to this.
+--|
 --| Revision 1.43  2000/03/21 21:42:07  oconnor
 --| formatting
 --|

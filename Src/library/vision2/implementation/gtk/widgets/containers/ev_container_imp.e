@@ -61,9 +61,6 @@ feature -- Element change
 			-- Add child into composite
 		do
 			gtk_container_add (GTK_CONTAINER (widget), child_imp.widget)
-
-			-- Sets the resizing options.
-			child_packing_changed (child_imp)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is	

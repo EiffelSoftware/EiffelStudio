@@ -113,6 +113,22 @@ feature -- Status setting
 		deferred
 		end
 
+	deselect_item (index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		require
+			exists: not destroyed
+			index_large_enough: index > 0
+			index_small_enough: index <= count
+		deferred
+		end
+
+	clear_selection is
+			-- Clear the selection of the list.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 	set_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.

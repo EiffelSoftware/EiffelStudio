@@ -170,6 +170,26 @@ feature -- Status setting
 			end
 		end
 
+	deselect_item (index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		do
+			if is_multiple_selection then
+				unselect_item (index)
+			else
+				unselect
+			end
+		end
+
+	clear_selection is
+			-- Clear the selection of the list.
+		do
+			if is_multiple_selection then
+				unselect_all
+			else
+				unselect
+			end
+		end
+
 	set_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.

@@ -120,6 +120,18 @@ feature -- Status setting
 			wel_select_item (index - 1)
 		end
 
+	deselect_item (index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		do
+			unselect
+		end
+
+	clear_selection is
+			-- Clear the selection of the list.
+		do
+			unselect
+		end
+
 	set_editable (flag: BOOLEAN) is
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.

@@ -103,6 +103,24 @@ feature -- Status setting
 			implementation.select_item (index)
 		end
 
+	deselect_item (index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		require
+			exists: not destroyed
+			index_large_enough: index > 0
+			index_small_enough: index <= count
+		do
+			implementation.deselect_item (index)
+		end
+
+	clear_selection is
+			-- Clear the selection of the list.
+		require
+			exists: not destroyed
+		do
+			implementation.clear_selection
+		end
+
 	set_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.

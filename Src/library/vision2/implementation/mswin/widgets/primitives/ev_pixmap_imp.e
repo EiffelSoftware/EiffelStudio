@@ -40,7 +40,7 @@ inherit
 			interface,
 			initialize,
 			set_size,
-			on_contained
+			on_parented
 		end
 
 	EV_DRAWING_AREA_IMP
@@ -68,7 +68,7 @@ inherit
 			interface,
 			initialize,
 			set_size,
-			on_contained
+			on_parented
 		select
 			dc,
 			width,
@@ -376,7 +376,7 @@ feature {NONE} -- Internal states and Operations
 	in_container: BOOLEAN
 			-- Is the pixmap in a container?
 	
-	on_contained is
+	on_parented is
 			-- `Current' has just been added to a container
 		do
 			convert_icon_to_bitmap
@@ -758,6 +758,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/23 23:24:14  brendel
+--| Renamed on_contained to on_parented.
+--|
 --| Revision 1.21  2000/03/20 23:18:02  pichery
 --| - Entirely reviewed the implementation of pixmaps.
 --| - Added mask notion

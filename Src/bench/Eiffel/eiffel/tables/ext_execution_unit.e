@@ -39,11 +39,8 @@ feature
 			external_name := f.external_name;
 		end;
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN is True
 			-- Is the current executino unit an external one ?
-		do
-			Result := True
-		end;
 
 	compound_name: STRING is
 			-- Compound C routine name

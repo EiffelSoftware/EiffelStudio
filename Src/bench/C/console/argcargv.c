@@ -31,13 +31,12 @@ int       eif_nCmdShow;
 
 static char **argv = NULL, *t = NULL;
 
-APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance,
-    LPSTR lpCmdLine, int nCmdShow)
+APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	int ret = 0;
 
 	int argc, tl;
-	char **environ;
+	char **eif_environ;
 
 	ghInstance = hInstance;
 	eif_hInstance = hInstance;
@@ -58,11 +57,11 @@ APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance,
 	argv = shword (t);
 	for (argc = 0; argv[argc] != (char *) 0; argc++)
 		;
-	environ = (char **) GetEnvironmentStrings();
+	eif_environ = (char **) GetEnvironmentStrings();
 
-	main(argc, argv, environ);
+	main(argc, argv, eif_environ);
 
-	FreeEnvironmentStrings ((LPTSTR) environ);
+	FreeEnvironmentStrings ((LPTSTR) eif_environ);
 
 	return ret;
 }
@@ -75,7 +74,7 @@ void eif_cleanup()
 	int i;
 
 	if (argv != NULL)
-		shfree (argv);
+		shfree ();	/* %%manu removed `argv' as argument, shfree needs no argument */
 	if (t != NULL)
 		free (t);
 

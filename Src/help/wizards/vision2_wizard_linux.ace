@@ -1,0 +1,73 @@
+system
+	 wizard
+
+root
+	WIZARD_MANAGER (vision2_wizard): "make_and_launch"
+
+default
+	assertion (no)
+--	assertion (ensure)
+--	assertion (check)
+	multithreaded (no)
+	console_application (yes)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+	exception_trace (yes)
+	arguments ("/usr/local/home/xavier/50dev/help/wizards -callback /tmp/test.txt")
+
+cluster
+		-- Root cluster
+	root_cluster: "$EIFFEL_SRC/help/wizards"
+	
+		-- Wel Wizard
+	vision2_wizard (root_cluster): "$/evision2/src"
+	
+		-- Bench Common
+	bench_common (root_cluster): "$/bench_common"
+	
+		-- EiffelBase
+	all base: "$EIFFEL_SRC/library/base"
+		exclude
+			"desc";"table_eiffel3";"CVS"
+		end
+
+	all gel: "$EIFFEL_SRC/library/gel"
+		exclude
+			"CVS"
+		end
+
+		-- EiffelVision
+	all vision2: "$EIFFEL_SRC/library/vision2"
+		exclude
+			"mswin";"EIFGEN";"tmp";"temp";"release";"obsolete";"CVS"
+		end
+
+		-- Wizard library
+	all wizard_library: "$EIFFEL_SRC/library/wizard"
+		exclude
+			"mswin";"CVS"
+		end
+
+		-- Lex and Parse
+	all lex: "$EIFFEL_SRC/library/lex"
+	all parse: "$EIFFEL_SRC/library/parse"
+	all helpers (root_cluster): "$/linux_helpers"
+
+external
+	include_path:
+		"\$(EIFFEL_SRC)/library/event/Clib",
+		"\$(EIFFEL_SRC)/library/vision2/spec/include",
+		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
+	object:
+		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+			-- For system time.
+--		"/usr/lib/libc.a",
+		"-L/usr/X11R6/lib -lXt -lX11 -lpng -lz -lXext -lXp -lSM -lICE -lXtst"
+end

@@ -24,7 +24,8 @@ inherit
 
 creation
 	make,
-	make_no_auto_unmanage
+	make_no_auto_unmanage,
+	make_from_existing
 
 feature {NONE} -- Initialization
 
@@ -36,98 +37,163 @@ feature {NONE} -- Initialization
 			else
 				screen_object := xm_create_selection_box (p_so, $w_name, auto_unmanage_arg, 1)
 			end;
-			Mel_widgets.put (Current, screen_object);
-			create_selection_children
-		end;
-
-	create_selection_children is
-			-- Create corresponding mel children.
-		local
-			ptr: POINTER;
-			so: POINTER;
-			null: POINTER
-		do
-			so := screen_object;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_APPLY_BUTTON);
-			if ptr /= null then
-				!! apply_button.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_CANCEL_BUTTON);
-			if ptr /= null then
-				!! cancel_button.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_DEFAULT_BUTTON);
-			if ptr /= null then
-				!! default_button.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_HELP_BUTTON);
-			if ptr /= null then
-				!! help_button.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_LIST);
-			if ptr /= null then
-				!! list.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_LIST_LABEL);
-			if ptr /= null then
-				!! list_label.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_OK_BUTTON);
-			if ptr /= null then
-				!! ok_button.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_SELECTION_LABEL);
-			if ptr /= null then
-				!! selection_label.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_SEPARATOR);
-			if ptr /= null then
-				!! separator.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_TEXT);
-			if ptr /= null then
-				!! text.make_from_existing (ptr)
-			end;
-			ptr := xm_selection_box_get_child (so, XmDIALOG_WORK_AREA);
-			if ptr /= null then
-				!! work_area.make_from_existing (ptr)
-			end
 		end;
 
 feature -- Access
 
-	apply_button,
+	apply_button: MEL_PUSH_BUTTON_GADGET is
 			-- Apply button
+		local
+			w: POINTER
+		do
+			w := xm_selection_box_get_child (screen_object, XmDIALOG_APPLY_BUTTON);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	cancel_button, 
+	cancel_button: MEL_PUSH_BUTTON_GADGET is
 			-- Cancel button
+		local
+			w: POINTER
+		do
+			w := xm_selection_box_get_child (screen_object, XmDIALOG_CANCEL_BUTTON);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	default_button,
-			-- Default button
-
-	help_button,
+	help_button: MEL_PUSH_BUTTON_GADGET is
 			-- Help button
+		local
+			w: POINTER
+		do
+			w := xm_selection_box_get_child (screen_object, XmDIALOG_HELP_BUTTON);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	ok_button: MEL_PUSH_BUTTON_GADGET;
+	ok_button: MEL_PUSH_BUTTON_GADGET is
 			-- Ok button
+		local
+			w: POINTER
+		do
+			w := xm_selection_box_get_child (screen_object, XmDIALOG_OK_BUTTON);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	list: MEL_SCROLLED_LIST;
+	list: MEL_SCROLLED_LIST is
 			-- List in box
+		local
+			w: POINTER
+		do
+			w := xm_selection_box_get_child (screen_object, XmDIALOG_LIST);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	list_label,
+	list_label: MEL_LABEL_GADGET is
 			-- Label of `list'
+		local
+			w: POINTER
+		do
+			w := xm_selection_box_get_child (screen_object, XmDIALOG_LIST_LABEL);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	selection_label: MEL_LABEL_GADGET;
+	selection_label: MEL_LABEL_GADGET is
 			-- Label to show selection
+		local
+			w: POINTER
+		do
+			w := xm_selection_box_get_child (screen_object, XmDIALOG_SELECTION_LABEL);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	separator: MEL_SEPARATOR_GADGET;
+	separator: MEL_SEPARATOR_GADGET is
 			-- Separator used
+		local
+			w: POINTER
+		do
+			w := xm_selection_box_get_child (screen_object, XmDIALOG_SEPARATOR);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	text: MEL_TEXT_FIELD;
+	text: MEL_TEXT_FIELD is
 			-- Text
+		local
+			w: POINTER
+		do
+			w := xm_selection_box_get_child (screen_object, XmDIALOG_TEXT);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	work_area: MEL_WIDGET;
+	work_area: MEL_WIDGET is
 			-- Work area of box
+		local
+			w: POINTER
+		do
+			w := xm_selection_box_get_child (screen_object, XmDIALOG_WORK_AREA);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
+
+	default_button: MEL_PUSH_BUTTON_GADGET is
+			-- Default button
+		local
+			ptr: POINTER
+		do
+			ptr := xm_selection_box_get_child (screen_object, XmDIALOG_DEFAULT_BUTTON);
+			if ptr /= default_pointer then
+				Result ?= Mel_widgets.item (ptr)
+				if Result = Void then
+					!! Result.make_from_existing (ptr, Current)
+				end
+			end;
+		end;
 
 feature -- Status report
 

@@ -896,8 +896,6 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
    			-- By default there is no background  
-   		local
-   			tmp_bitmap: WEL_BITMAP
 		do
  			if exists then
 				create Result.make_solid (wel_background_color)

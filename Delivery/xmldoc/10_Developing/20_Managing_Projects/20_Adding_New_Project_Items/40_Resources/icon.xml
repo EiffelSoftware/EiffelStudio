@@ -1,9 +1,6 @@
 <document output="envision" title="Icon File">
 	<meta_data/>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>The Icon item adds a new Win32 icon file. </paragraph>
 					<seealso>
 						<bold>See Also</bold>
@@ -13,7 +10,4 @@
 							<label>  Adding New Project Items</label>
 						</link>
 					</seealso>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

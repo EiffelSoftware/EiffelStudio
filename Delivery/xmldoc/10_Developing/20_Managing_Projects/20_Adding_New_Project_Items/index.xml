@@ -7,9 +7,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>A set of predefined project items have been defined for Eiffel Systems. To add a  new item to a project that is currently open, right click on the project icon  in the 
 						<help_link>
 							<tab_index>0</tab_index>
@@ -158,7 +155,4 @@
 							<label>Using  Eiffel ENViSioN! Within Visual Studio.NET</label>
 						</link>
 					</seealso>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

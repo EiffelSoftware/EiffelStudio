@@ -8,9 +8,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>  The ability to manage Projects effectively is an important part of any  development environment. ENViSioN! has many facilities for easing the  management process, to ensure that the development of your Projects is as  simple and painless as possible.</paragraph>
 					<paragraph>  Many different development tasks fall into the category of management, but the  following facilities are especially relevent:</paragraph>
 					<list ordered="false">
@@ -45,7 +42,4 @@
 							<label>  Adding A New Project</label>
 						</link>
 					</seealso>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

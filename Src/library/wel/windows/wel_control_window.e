@@ -48,7 +48,50 @@ feature {NONE} -- Intialization
 			parent_set: parent = a_parent
 		end
 
+feature -- Access
+
+	font: WEL_FONT is
+			-- Font with which the control is drawing its text.
+		require
+			exists: exists
+		do
+			if has_system_font then
+				Result := (create {WEL_SHARED_FONTS}).system_font
+			else
+				!! Result.make_by_pointer (cwel_integer_to_pointer (
+					cwin_send_message_result (item, Wm_getfont,
+					0, 0)))
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature -- Element change
+
+	set_font (a_font: WEL_FONT) is
+			-- Set `font' with `a_font'.
+		require
+			exists: exists
+			a_font_not_void: a_font /= Void
+			a_font_exists: a_font.exists
+		do
+			cwin_send_message (item, Wm_setfont,
+				cwel_pointer_to_integer (a_font.item),
+				cwin_make_long (1, 0))
+		ensure
+			font_set: not has_system_font implies font.item = a_font.item
+		end
+
 feature -- Status report
+
+	has_system_font: BOOLEAN is
+			-- Does the control use the system font?
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item, Wm_getfont,
+				0, 0) = 0
+		end
 
 	minimal_width: INTEGER is
 			-- Minimal width allowed for the window

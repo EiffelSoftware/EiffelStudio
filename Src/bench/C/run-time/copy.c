@@ -282,8 +282,13 @@ int offset;				/* Offset within enclosing where attachment is made */
 	/* The object has now been duplicated and entered in the H table */
 
 	if (flags & EO_SPEC) {					/* Special object */
-		if (!(flags & EO_REF))				/* No references */
+		if (!(flags & EO_REF)){				/* No references */
+			flags = HEADER(clone)->ov_flags;
+			if ((flags & EO_OLD) && (!(flags & EO_REM)) && 
+											refers_new_object(clone))
+				erembq(clone);
 			return;
+		}
 		zone = HEADER(clone);
 		size = zone->ov_size & B_SIZE;		/* Size of special object */
 		c_ref = clone + size - LNGPAD(2);	/* Where count is stored */
@@ -321,9 +326,9 @@ int offset;				/* Offset within enclosing where attachment is made */
 	 * at that time `clone' still referenced the (possibly old) attributes
 	 * of the source.
 	 */
-	flags = HEADER(enclosing)->ov_flags;
+	flags = HEADER(clone)->ov_flags;
 	if ((flags & EO_OLD) && (!(flags & EO_REM)) && refers_new_object(clone))
-		erembq(enclosing);
+		erembq(clone);
 }
 
 public void xcopy(source, target)

@@ -153,7 +153,7 @@ feature -- Element change
 	set_page (page_magnitude: INTEGER) is
 			-- Set `page' with `page_magnitude'.
 		require
-			positive_page: page >= 0
+			positive_page: page_magnitude >= 0
 		do
 			scroll_info_struct.set_mask (Sif_page)
 			scroll_info_struct.set_page (page_magnitude)

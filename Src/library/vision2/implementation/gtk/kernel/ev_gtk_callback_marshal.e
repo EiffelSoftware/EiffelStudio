@@ -286,13 +286,13 @@ feature {EV_ANY_IMP} -- Access
 
 feature {EV_ANY_IMP} -- Agent implementation routines
 
-	signal_disconnect_agent_routine (visual_widget: POINTER; a_connection_id: INTEGER; signal_ids_list: ARRAYED_LIST [INTEGER]) is
+	signal_disconnect_agent_routine (a_c_object: POINTER; a_connection_id: INTEGER; signal_ids_list: ARRAYED_LIST [INTEGER]) is
 			-- Disconnect signal connection with `a_connection_id'.
 			-- Used to avoid reference on widget implementation object.
 		require
 			a_connection_id_positive: a_connection_id > 0
 		do
-			C.gtk_signal_disconnect (visual_widget, a_connection_id)
+			C.gtk_signal_disconnect (a_c_object, a_connection_id)
 			signal_ids_list.prune_all (a_connection_id)
 		end
 		

@@ -111,7 +111,8 @@ feature {NONE} -- Constants
 	Common_message: STRING is 
 			-- Message to the user (no matter if there are selected assemblies)
 		local
-			creation_routine_name: STRING
+			creation_routine_name,
+			l_root_class_name: STRING
 		do
 			create Result.make (3000)
 			Result.append ("You have specified the following settings:" + New_line + New_line +
@@ -132,9 +133,11 @@ feature {NONE} -- Constants
 			end
 
 			Result.append (New_line + New_line)
-			Result.append ("Root class name: " + Tab + Tab + wizard_information.root_class_name + New_line)
+			l_root_class_name := wizard_information.root_class_name.twin
+			Result.append ("Root class name: " + Tab + Tab + l_root_class_name + New_line)
 			creation_routine_name := wizard_information.creation_routine_name
-			if creation_routine_name /= Void and then not creation_routine_name.is_empty and then not creation_routine_name.is_equal (Unrelevant_data) then
+			l_root_class_name.to_lower
+			if not l_root_class_name.is_equal (interface_names.l_none_class) and then creation_routine_name /= Void and then not creation_routine_name.is_empty then
 				Result.append ("Creation routine name: " + Tab + wizard_information.creation_routine_name + New_line)
 			end
 			Result.append (New_line)

@@ -40,7 +40,7 @@ feature -- Access
 	blue_from_allocation: INTEGER is
 			-- Allocated blue saturation level
 		do
-			Result := implementation.allocated_red
+			Result := implementation.allocated_blue
 		end;
 
 	green_from_allocation: INTEGER is

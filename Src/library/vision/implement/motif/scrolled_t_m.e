@@ -11,25 +11,22 @@ inherit
 
 	TEXT_M
 		rename
-			enable_word_wrap as text_enable_word_wrap,
-			disable_word_wrap as text_disable_word_wrap,
-			set_foreground as text_set_foreground,
+			set_foreground_color as text_set_foreground_color,
 			set_background_color as text_set_background_color
 		undefine
-			make
+			make, make_word_wrapped
 		redefine
 			action_target
 		end;
 
 	TEXT_M
 		undefine
-			make
+			make, make_word_wrapped
 		redefine
-			action_target, disable_word_wrap, enable_word_wrap,
-			set_foreground, set_background_color
+			action_target, 
+			set_foreground_color, set_background_color
 		select
-			disable_word_wrap, enable_word_wrap,
-			set_foreground, set_background_color
+			set_foreground_color, set_background_color
 		end;
 
 	SCROLLED_W_R_M;
@@ -38,11 +35,11 @@ inherit
 
 creation
 
-	make
+	make, make_word_wrapped
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_scrolled_text: TEXT) is
+	make (a_scrolled_text: TEXT; man: BOOLEAN) is
 			-- Create a motif scrolled text.
 		local
 			ext_name: ANY
@@ -50,7 +47,22 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_scrolled_text.identifier.to_c;
 			action_target := create_scrolled_text ($ext_name,
-					parent_screen_object (a_scrolled_text, widget_index));
+				parent_screen_object (a_scrolled_text, widget_index),
+				man);
+			screen_object := xt_parent (action_target);
+			a_scrolled_text.set_font_imp (Current)
+		end;
+
+	make_word_wrapped (a_scrolled_text: TEXT; man: BOOLEAN) is
+			-- Create a motif scrolled text enabling word wrap.
+		local
+			ext_name: ANY
+		do
+			widget_index := widget_manager.last_inserted_position;
+			ext_name := a_scrolled_text.identifier.to_c;
+			action_target := create_scrolled_text_ww ($ext_name,
+					parent_screen_object (a_scrolled_text, widget_index),
+					man);
 			screen_object := xt_parent (action_target);
 			a_scrolled_text.set_font_imp (Current)
 		end;
@@ -64,66 +76,55 @@ feature -- Color
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if not (background_pixmap = Void) then
-				pixmap_implementation ?= background_pixmap.implementation;
+			if not (bg_pixmap = Void) then
+				pixmap_implementation ?= bg_pixmap.implementation;
 				pixmap_implementation.remove_object (Current);
-				background_pixmap := Void
+				bg_pixmap := Void
 			end;
-			if not (background_color = Void) then
-				color_implementation ?= background_color.implementation;
+			if not (bg_color = Void) then
+				color_implementation ?= bg_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
 			bg_color := a_color;
 			color_implementation ?= background_color.implementation;
 			color_implementation.put_object (Current);
 			ext_name := Mbackground.to_c;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
-			c_set_color (action_target, color_implementation.pixel (screen), $ext_name);
-			c_set_color (vertical_widget, color_implementation.pixel (screen), $ext_name);
-			c_set_color (horizontal_widget, color_implementation.pixel (screen), $ext_name);
+			c_set_color (screen_object, 
+					color_implementation.pixel (screen), $ext_name);
+			c_set_color (action_target, 
+					color_implementation.pixel (screen), $ext_name);
+			c_set_color (vertical_widget, 
+					color_implementation.pixel (screen), $ext_name);
+			c_set_color (horizontal_widget, 
+					color_implementation.pixel (screen), $ext_name);
 		end;
 
-	set_foreground (a_color: COLOR) is
-			-- Set `foreground' to `a_color'.
+	set_foreground_color (a_color: COLOR) is
+			-- Set `foreground_color' to `a_color'.
 		local
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if not (foreground = Void) then
-				color_implementation ?= foreground.implementation;
+			if not (foreground_color = Void) then
+				color_implementation ?= foreground_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
-			foreground := a_color;
+			fg_color := a_color;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
-			ext_name := Mforeground.to_c;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
-			c_set_color (action_target, color_implementation.pixel (screen), $ext_name);
-			c_set_color (vertical_widget, color_implementation.pixel (screen), $ext_name);
-			c_set_color (horizontal_widget, color_implementation.pixel (screen), $ext_name);
+			ext_name := Mforeground_color.to_c;
+			c_set_color (screen_object, 
+					color_implementation.pixel (screen), $ext_name);
+			c_set_color (action_target, 
+					color_implementation.pixel (screen), $ext_name);
+			c_set_color (vertical_widget, 
+					color_implementation.pixel (screen), $ext_name);
+			c_set_color (horizontal_widget, 
+					color_implementation.pixel (screen), $ext_name);
 		end;
 
 
 feature
-
-	disable_word_wrap is
-            -- Specify that lines are free to go off the right edge
-            -- of the window.
-		do
-			show_horizontal_scrollbar;
-           		text_disable_word_wrap; 
-		end;
-	
-	enable_word_wrap is
-            -- Specify that lines are to be broken at word breaks.
-            -- The text does not go off the right edge of the window.
-			-- The horizontal bar is not shown.
-		do
-			hide_horizontal_scrollbar;
-			text_enable_word_wrap;
-		ensure then
-			not is_horizontal_scrollbar
-		end;
 
 	action_target: POINTER;
 			-- Widget ID on which action must be applied
@@ -145,8 +146,8 @@ feature
 	is_horizontal_scrollbar: BOOLEAN is
 			-- Is horizontal scrollbar visible?
 		do
-            		Result := xt_is_managed (horizontal_widget);
-            		--Result := xt_boolean (action_target, MscrollHorizontal);
+            Result := xt_is_managed (horizontal_widget);
+            --Result := xt_boolean (action_target, MscrollHorizontal);
 		end;
 
 	is_vertical_scrollbar: BOOLEAN is
@@ -183,7 +184,14 @@ feature {NONE}
 
 feature {NONE} -- Externals
 
-	create_scrolled_text (st_name: ANY; scr_obj: POINTER): POINTER is
+	create_scrolled_text (st_name: ANY; scr_obj: POINTER; 
+				is_man: BOOLEAN): POINTER is
+		external
+			"C"
+		end;
+
+	create_scrolled_text_ww (st_name: ANY; scr_obj: POINTER; 
+				is_man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

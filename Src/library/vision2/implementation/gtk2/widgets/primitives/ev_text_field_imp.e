@@ -143,8 +143,7 @@ feature -- Status report
 	is_editable: BOOLEAN is
 			-- Is the text editable.
 		do
-			--| FIXME This should be removed when gtk1 imp is made obsolete
-			Result := (create {EV_GTK_DEPENDENT_EXTERNALS}).gtk_editable_get_editable (entry_widget)
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_editable_get_editable (entry_widget)
 		end
 
 	has_selection: BOOLEAN is
@@ -224,20 +223,37 @@ feature -- Basic operation
 			-- Select (highlight) the text between 
 			-- 'start_pos' and 'end_pos'.
 		do
-			internal_set_caret_position (end_pos.max (start_pos) + 1)
-			select_region_internal (start_pos, end_pos)
-
-				-- Hack to ensure text field is selected when called from change actions
 			if a_timeout_imp = Void then
 				a_timeout_imp ?= (create {EV_TIMEOUT}).implementation
 			else
 				a_timeout_imp.interface.actions.wipe_out
 			end
-			a_timeout_imp.interface.actions.extend (agent select_region_internal (start_pos, end_pos))
-			a_timeout_imp.set_interval_kamikaze (0)
+
+			internal_set_caret_position (end_pos.max (start_pos) + 1)
+			select_region_internal (start_pos, end_pos)
+
+				-- Hack to ensure text field is selected when called from change actions
+			if not last_key_backspace and then change_actions_internal /= Void and then change_actions_internal.state = change_actions_internal.blocked_state and then end_pos = text.count then
+				a_timeout_imp.interface.actions.extend (agent select_from_start_pos (start_pos, end_pos))
+				a_timeout_imp.set_interval_kamikaze (0)			
+			end
 		end
 
 	a_timeout_imp: EV_TIMEOUT_IMP
+
+	select_from_start_pos (start_pos, end_pos: INTEGER) is
+			-- Hack to select region from change actions
+		local
+			a_start, a_end, text_count: INTEGER
+		do
+			a_start := start_pos.min (end_pos)
+			a_end := end_pos.max (start_pos)
+			text_count := text.count
+			if a_end < text_count then
+				a_start := a_start + (text_count - a_end)
+			end
+			feature {EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, a_start - 1, -1)
+		end
 
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region
@@ -305,16 +321,20 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_change_actions is
 			-- A change action has occurred.
+		local
+			new_text: STRING
 		do
-			in_change_action := True
-			if (stored_text /= Void and then not text.is_equal (stored_text)) or else stored_text = Void then
+			new_text := text
+			if not in_change_action and then (stored_text /= Void and then not new_text.is_equal (stored_text)) or else stored_text = Void then
 					-- The text has actually changed
-				stored_text := text
+				in_change_action := True
 				if change_actions_internal /= Void then
 					change_actions_internal.call (Void)
 				end
+				in_change_action := False
+				stored_text := text
 			end
-			in_change_action := False
+			
 		end
 
 	in_change_action: BOOLEAN

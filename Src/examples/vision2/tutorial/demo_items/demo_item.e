@@ -106,16 +106,27 @@ feature {DEMO_ITEM} -- Execution commands
 			-- get a Void parent
 		local
 			cur: EV_WIDGET
+
+			dem_win: DEMO_WINDOW
 		do
 			-- First, we set the demo on the first page.
 			cur := current_demo.item
+
 			if cur /= Void then
 				cur.set_parent (Void)
+				dem_win ?= cur
+--				dem_win.clear_notebook
+				dem_win.hide_action_window
 			end
 			if demo_window = Void then
 				create_demo
 			else
 				demo_window.set_parent (demo_page)
+
+				dem_win ?= demo_window
+				dem_win.show_action_window
+				
+
 			end
 			current_demo.put (demo_window)
 			example_page.set_text(clone(read_text(example_path)))

@@ -1,5 +1,5 @@
 class
-   OTHER_NESTED
+   OTHER_NESTEDODBC
    
 inherit
    DATABASE_APPL [ODBC]

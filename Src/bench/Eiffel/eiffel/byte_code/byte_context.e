@@ -580,7 +580,7 @@ feature
 			constant_b: CONSTANT_B
 			compound: BYTE_LIST [BYTE_NODE]
 			rassign: REVERSE_BL
-
+			byte_node: BYTE_NODE
 			source_type: TYPE_I
 			target_type: TYPE_I
 		do
@@ -595,8 +595,8 @@ feature
 						-- Not in an invariant generation
 					compound := byte_code.compound
 					if compound /= Void and then compound.count = 1 then
-						assign ?= compound.first
-						call ?= compound.first
+						byte_node := compound.first
+						assign ?= byte_node
 						rassign ?= assign
 						if assign /= Void and then (rassign = Void) then
 							if assign.expand_return then
@@ -630,9 +630,12 @@ feature
 									end
 								end
 							end
-						elseif call /= Void and then call.is_single then
+						else
+							call ?= byte_node
+							if call /= Void and then call.is_single then
 								-- A single call
-							Result := has_invariant
+								Result := has_invariant
+							end
 						end
 					end
 						-- If there is a rescue clause, then we'll
@@ -1010,9 +1013,10 @@ feature
 	ref_var_used: INTEGER is
 			-- Number of reference variable needed for GC hooks
 		do
-			Result := local_index_table.count
 			if not need_gc_hooks then
 				Result := 0
+			else
+				Result := local_index_table.count
 			end
 		end
 

@@ -259,29 +259,24 @@ feature -- Setting
 					else
 							-- set the breakpoint to be removed: the line does no longer exist
 						discard
+						is_corrupted := True
 					end
 				else
 						-- The breakpoint is now invalid since its feature has been removed
 						-- or is no longer debuggable.
 					discard
+					is_corrupted := True
 				end
 			else
 					-- This is an invalid breakpoint. Discard it.
 				discard
+				is_corrupted := True
 			end
 		ensure
 			is_set implies routine /= Void
 		rescue
 				-- The synchronization of the breakpoint has failed.
 				-- We declare the breakpoint as "invalid".
--- FIXME ARNAUD
--- To do: display a message box with Vision2 instead of using the console.
-			io.putstring("INTERNAL ERROR%N")
-			io.putstring("--------------------------------------------------------------------------%N")
-			io.putstring("The following breakpoint cannot be set. Please report this error to ISE%N")
-			print(Current)
-			io.new_line
--- END FIXME
 			invalid_breakpoint := True
 			retry			
 		end

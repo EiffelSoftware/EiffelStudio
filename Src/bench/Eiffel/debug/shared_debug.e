@@ -7,5 +7,10 @@ feature
 		once
 			!!Result.make
 		end;
+	
+	run_info: RUN_INFO is
+		once
+			!!Result.make
+		end;
 
 end

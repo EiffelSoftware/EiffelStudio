@@ -12,6 +12,7 @@ feature
 		do
 			make_debuggables;
 			make_breakpoints;
+			!! debugged_routines.make
 		end;
 
 	wipe_out is
@@ -19,6 +20,7 @@ feature
 		do
 			clear_debuggables;
 			clear_breakpoints;
+			debugged_routines.wipe_out
 		end;
 
 	restore is
@@ -85,7 +87,8 @@ feature -- Debuggables (Byte code,...)
 			-- Do nothing if `f' has previously been added.
 		do
 			if not has_feature (f) then
-			    new_debuggables.put (f.debuggables, f.feature_id)
+			    new_debuggables.put (f.debuggables, f.body_id);
+				debugged_routines.add (f)
 			end
 		end;
 
@@ -144,8 +147,8 @@ feature -- Debuggables (Byte code,...)
 			--|
 		do
 			Result := 
-				new_debuggables.has (feature_i.feature_id) or else 
-				sent_debuggables.has (feature_i.feature_id)
+				new_debuggables.has (feature_i.body_id) or else 
+				sent_debuggables.has (feature_i.body_id)
 		end;
 
 	debuggables (f: FEATURE_I): LINKED_LIST [DEBUGGABLE] is
@@ -154,13 +157,36 @@ feature -- Debuggables (Byte code,...)
 		require
 			has_feature (f)
 		do
-			if new_debuggables.has (f.feature_id) then
-				Result := new_debuggables.item (f.feature_id);
+			if new_debuggables.has (f.body_id) then
+				Result := new_debuggables.item (f.body_id);
 			else
-				Result := sent_debuggables.item (f.feature_id);
+				Result := sent_debuggables.item (f.body_id);
 			end;
 		ensure
 			Result /= Void
+		end;
+
+	breakable_index (f: INTEGER; offset: INTEGER): INTEGER is
+		local
+			breakables: SORTED_TWO_WAY_LIST [AST_POSITION];
+			i: INTEGER;
+		do
+			if sent_debuggables.has (f) then
+				breakables := sent_debuggables.item (f).first.breakable_points;
+				from
+					breakables.start;
+					i := 1	
+				until
+					Result > 0 or breakables.after
+				loop
+					if breakables.item.position = offset then
+						Result := i
+					else
+						i := i + 1;
+						breakables.forth;
+					end
+				end
+			end
 		end;
 
 feature -- Breakpoints
@@ -182,47 +208,130 @@ feature -- Breakpoints
 
 	new_breakpoints: LINKED_LIST [BREAKPOINT];
 
-	sent_breakpoints: LINKED_LIST [BREAKPOINT];
-
 	make_breakpoints is
 			-- Create breakpoints structures.
 		do
 			!! new_breakpoints.make;
-			!! sent_breakpoints.make
 		end;
 
 	tenure_breakpoints is
 			-- Tenure breakpoints. See comment
 			-- of feature `tenure'.		
+		obsolete
+			"not needed any more. Does nothing"
 		do
-			sent_breakpoints.finish;
-			sent_breakpoints.merge_right (new_breakpoints);
-			!! new_breakpoints.make
 		end;
 
 	restore_breakpoints is
 			-- Restore breakpoints. See comment
 			-- of feature `restore'.
+		local
+			debug_bodies: LINKED_LIST [DEBUGGABLE];
+			breakables: SORTED_TWO_WAY_LIST [AST_POSITION];
+			body_id: INTEGER;
+			bp: BREAKPOINT;
 		do
-			sent_breakpoints.finish;
-			sent_breakpoints.merge_right (new_breakpoints);
-			new_breakpoints := sent_breakpoints;
-			!! sent_breakpoints.make
+			!!new_breakpoints.make;
+			from
+				new_debuggables.start
+			until
+				new_debuggables.offright
+			loop
+				from	
+					debug_bodies := new_debuggables.item_for_iteration;
+					debug_bodies.start
+				until
+					debug_bodies.after
+				loop
+					from 
+						breakables := debug_bodies.item.breakable_points;
+						body_id := debug_bodies.item.real_body_id;
+						breakables.start;
+					until
+						breakables.after
+					loop
+						if breakables.item.is_set then
+							!!bp;
+							bp.set_stop;
+							bp.set_offset (breakables.item.position);
+							bp.set_real_body_id (body_id);
+							new_breakpoints.add (bp)
+						end;
+						breakables.forth
+					end;
+					debug_bodies.forth
+				end;
+				new_debuggables.forth;
+			end
 		end;
-
+						
+	
+				
 	clear_breakpoints is
 			-- Clear the breakpoint structures.
 		do
 			!! new_breakpoints.make;
-			!! sent_breakpoints.make
 		end;
 
-	add_breakpoint (bp: BREAKPOINT) is
-			-- Add a breakpoint to be sent
-			-- to the application.
+
+	switch_breakpoint (f: FEATURE_I; i: INTEGER) is
+			-- switch the i-th breakpoint of f
+		require
+			prepared_for_debug: has_feature (f)
+		local
+			debug_bodies: LINKED_LIST [DEBUGGABLE];
+			is_stop: BOOLEAN;
+			bp: BREAKPOINT;
+			ap: AST_POSITION;
+			pos: INTEGER;
+			debug_item: DEBUGGABLE;
 		do
-			new_breakpoints.add (bp)		
+			debug_bodies := debuggables (f);
+			from
+				debug_bodies.start;
+				ap := debug_bodies.item.breakable_points.i_th (i);
+				pos := ap.position;
+				is_stop := not ap.is_set;
+			until
+				debug_bodies.after
+			loop
+				debug_item := debug_bodies.item;
+				debug_item.breakable_points.i_th (i).set_stop (is_stop);
+				!!bp;
+				bp.set_offset (pos);
+				bp.set_real_body_id	(debug_item.real_body_id);
+				if is_stop then
+					bp.set_stop
+				else
+					bp.set_continue
+				end;
+				new_breakpoints.add (bp);
+				debug_bodies.forth;
+			end;	
+			is_last_breakpoint_set := is_stop;
 		end;
+			
+		
+	is_last_breakpoint_set: BOOLEAN;	
+		-- did last switch_breakpoint set a breakpoint to stop
+
+	is_breakpoint_set (f: FEATURE_I; i: INTEGER): BOOLEAN is
+			-- is the i-th breakpoint of f set is
+		local
+			debuggable: DEBUGGABLE;
+		do
+			if has_feature (f) then
+				debuggable := debuggables (f).first;
+				if i <= debuggable.breakable_points.count then
+					Result := debuggable.breakable_points.i_th (i).is_set
+				end
+			end
+		end;
+
+feature -- Status
+
+	debugged_routines: LINKED_LIST [FEATURE_I];
+			-- Routines that are currently debugged.
 
 feature -- Trace
 

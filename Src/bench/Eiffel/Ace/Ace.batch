@@ -1,8 +1,8 @@
-system ewb
+system es3
 
 root
 
-	ewb (root_cluster): "make"
+	es (root_cluster): "make"
 
 cluster
 
@@ -24,12 +24,16 @@ cluster
 
 	-- Root
 
-		root_cluster:       "$BENCH/Eiffel/es";
+		root_cluster:		"$BENCH/Eiffel/root";
+
+	-- Switch cluster
+
+		switch_cluster:		"$BENCH/Eiffel/batch_bench/batch";
 
 	-- General compilation:
 
-        flat_short:         "$BENCH/Eiffel/flat_short";
 		special_ast:		"$BENCH/Eiffel/special_ast";
+		flat_short:			"$BENCH/Eiffel/flat_short";
 		yacc:				"$BENCH/Eiffel/yacc";
 		const:				"$BENCH/Eiffel/const";
 		error:				"$BENCH/Eiffel/error";
@@ -53,6 +57,9 @@ cluster
 		byte_code:			"$BENCH/Eiffel/eiffel/byte_code";
 		cecil:				"$BENCH/Eiffel/eiffel/cecil";
 		compiler:			"$BENCH/Eiffel/eiffel/compiler";
+			--default
+				--debug ("ACTIVITY")
+			--end;
 		eiffel_const:		"$BENCH/Eiffel/eiffel/const";
 		eiffel_error_feature:			"$BENCH/Eiffel/eiffel/error/feature";
 		eiffel_error_parents:			"$BENCH/Eiffel/eiffel/error/parents";
@@ -61,14 +68,20 @@ cluster
 		generation:			"$BENCH/Eiffel/eiffel/generation";
 		genericity:			"$BENCH/Eiffel/eiffel/genericity";
 		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
+			--option
+				--debug (yes): INHERIT_TABLE
+			--end;
 		interface:			"$BENCH/Eiffel/eiffel/interface";
+			--default
+				--debug ("ACTIVITY")
+			--end;
 		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";
 		server:				"$BENCH/Eiffel/eiffel/server";
 		eiffel_shared:		"$BENCH/Eiffel/eiffel/shared";
 		skeleton:			"$BENCH/Eiffel/eiffel/skeleton";
 		structures:			"$BENCH/Eiffel/eiffel/structures";
 		tables:				"$BENCH/Eiffel/eiffel/tables";
-		descriptor:         "$BENCH/Eiffel/eiffel/descriptor";
+		descriptor:			"$BENCH/Eiffel/eiffel/descriptor";
 		debuggable:			"$BENCH/Eiffel/debug";
 
 -- SHARED BETWEEN COMPILER AND INTERFACE:
@@ -81,8 +94,8 @@ cluster
 external
 
 	object:
-		"$(BENCH)/C/parsing/shared/libparsing.a";
 		"$(BENCH)/C/parsing/eiffel/libeiffel.a";
-		"$(BENCH)/C/parsing/lace/liblace.a"
+		"$(BENCH)/C/parsing/lace/liblace.a";
+		"$(BENCH)/C/parsing/shared/libparsing.a"
 
 end

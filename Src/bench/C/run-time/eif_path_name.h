@@ -37,7 +37,10 @@ extern EIF_REFERENCE eif_extracted_paths(EIF_POINTER p);
 #ifdef EIF_VMS_V6_ONLY
 RT_LNK char * dir_dot_dir (char * dir);
 #endif
-RT_LNK char * eifrt_vms_directory_file_name (const char* dir, char* buf);
+RT_LNK int   eifrt_vms_has_path_terminator (const char* path) ;
+RT_LNK void  eifrt_vms_append_file_name (char* path, const char* file) ;
+RT_LNK char* eifrt_vms_filespec (const char* filespec, char* buf) ;
+RT_LNK char* eifrt_vms_directory_file_name (const char* dir, char* buf) ;
 #endif
 
 #ifdef __cplusplus

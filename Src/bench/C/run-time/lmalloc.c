@@ -32,6 +32,7 @@
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include "eif_lmalloc.h"
+
 #ifndef EIF_VMS
 #include <malloc.h>
 #endif
@@ -189,14 +190,80 @@ void eif_free(register void *ptr)
 
 
 #ifdef EIF_VMS
+#include <lib$routines>
+#include <dvidef>
+#include <ssdef>
+#pragma message disable (NEEDCONSTEXT)	/* skip non-constant address warnings */
+#pragma message disable (ADDRCONSTEXT)	/* skip non-constant address warnings */
+#define DX_BUF(d,buf) DX d = { sizeof buf, DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)&buf }
+#include <starlet>		/* vms system services */
+#include <descrip>		/* descriptor data structures */
+#include <lnmdef>		/* sys$crelnm, etc. LNM$ symbols */
+
+/* Problem: Unix-centric programs often check each element of a path name for		*/
+/* environment variables ($-prefixed names) and translate them in place, emulating	*/
+/* shell processing. On VMS, logical names are made to appear as environment variables	*/
+/* by the VMS DECC RTL implementation of getenv().  Many VMS DECC RTL functions, and	*/
+/* getenv() in particular, do not respect the "concealed" attribute of a logical name.	*/
+/* This causes a problem in using translated names to build Unix-style file		*/
+/* specifications - they end up with mixed Unix- and VMS- filespecs.			*/
+/* Solution: If an "envrionment variable" value is or contains a concealed logical	*/
+/* name, then return the variable name, rather than the value.  This allows the VMS	*/
+/* file system calls to handle the name translation.					*/
+/* Note: this is a kludge. A more correct solution would be to implement this		*/
+/* functionality only when the name is being used as the first element of a pathname.	*/
+#undef getenv
+extern char* getenv (const char *name) ;	/* copied from unixlib.h */
+rt_public char* eif_vms_getenv (const char* name)
+{
+    char* crtval = getenv (name);          	/* call the "real deal" */
+    if (strlen(name) <= LNM$C_NAMLENGTH) {
+	static const $DESCRIPTOR (tab_dx, "LNM$FILE_DEV");   /* standard default table name */
+	char nambuf[LNM$C_NAMLENGTH +1];		/* documented max length +1 for terminator */
+	char valbuf[LNM$C_NAMLENGTH +1]; 
+	char tblbuf[LNM$C_TABNAMLEN +1]; 
+	DX_BLD (lnm_dx, nambuf, 0);
+	unsigned short vallen, tbllen;
+	long name_attr, max_index;
+	ITEMLIST items = { 
+	    ITEM (LNM$_STRING, valbuf, sizeof valbuf -1, &vallen), 
+	    ITEM (LNM$_ATTRIBUTES, &name_attr, sizeof name_attr, NULL),
+	    ITEM (LNM$_MAX_INDEX, &max_index, sizeof max_index, NULL),
+	    ITEM (LNM$_TABLE,  tblbuf, sizeof tblbuf -1, &tbllen), 
+	    ITEMLIST_END };
+	VMS_STS sts;
+	int tries;
+	unsigned int tran_attr = 0;	/* could be  LNM$M_CASE_BLIND */
+	/* loop: ***tbs*** */
+	strcpy (nambuf, name);
+	for (tries = LNM$C_MAXDEPTH;  tries > 0;  --tries) {
+	    char *p;
+	    lnm_dx.dsc$w_length = strlen (lnm_dx.dsc$a_pointer);
+	    sts = sys$trnlnm (&tran_attr, (void*)&tab_dx, &lnm_dx, 0, &items);
+	    if (VMS_FAILURE(sts)) break;
+	    if (name_attr & LNM$M_CONCEALED)
+		return (char*) name;
+	    valbuf[vallen] = '\0';
+	    if ( !(p = strchr (valbuf, ':')) )
+		break;
+	    lnm_dx.dsc$w_length = p - valbuf;
+	    strncpy (nambuf, valbuf, lnm_dx.dsc$w_length);
+	    nambuf[lnm_dx.dsc$w_length] = '\0';
+	}
+    }
+#ifdef moose
+    /* simple hack: if translation contains a ":", assume its a path and return the name. */
+    if (crtval && *crtval && strchr (crtval, ':'))
+	return (char*)name;	/* const_cast<char*>(name) */
+#endif
+    return crtval;
+}
 
 #ifdef EIF_VMS_OLD
 /*	**********************************************	    */
 /*	***   VMS specific function definitions.   ***	    */
 /*	**********************************************	    */
 
-#include <starlet.h>		/* vms system services */
-#include <descrip.h>		/* descriptor data structures */
 
 /* VMS version of "putenv" (note - VMS V7 onward has a putenv (and a	*/
 /* setenv as well); I'm not sure precisely what they do (that is, how	*/
@@ -208,9 +275,8 @@ void eif_free(register void *ptr)
 /* subprocess to modify a parent's environment.  This routine was	*/
 /* pinched from the C/ipc/ipcshared/ipcvms.c version.			*/
 
-#include lnmdef				/* sys$crelnm, etc. LNM$ symbols */
 
-rt_public int eif_rt_putenv (const char *envstring)
+rt_public int eif_vms_putenv (const char *envstring)
 {
     VMS_STS st;
     char *eq;
@@ -228,7 +294,7 @@ rt_public int eif_rt_putenv (const char *envstring)
     st = sys$crelnm(0, (void*)&tabnam_d, &nam_d, 0, &lnm_list);
     if (VMS_FAILURE(st)) {
 #ifdef DEBUG
-	printerr(EVMSERR, "eif_rt_putenv: error %%x%x from sys$crelnm(%s)\n-- %s",
+	printerr(EVMSERR, "eif_vms_putenv: error %%x%x from sys$crelnm(%s)\n-- %s",
 		st, envstring, strerror(EVMSERR,st));
 #endif /* DEBUG */
 	return -1;
@@ -237,7 +303,7 @@ rt_public int eif_rt_putenv (const char *envstring)
 } /* end putenv() */
 
 
-rt_public int eif_rt_setenv(const char *name, const char *val, int overwrite) {
+rt_public int eif_vms_setenv (const char *name, const char *val, int overwrite) {
     VMS_STS st;
     DX_BLD(nam_d,0,0);
     const $DESCRIPTOR(tabnam_d, "LNM$PROCESS");
@@ -251,7 +317,7 @@ rt_public int eif_rt_setenv(const char *name, const char *val, int overwrite) {
     st = sys$crelnm(0, (void*)&tabnam_d, &nam_d, 0, &lnm_list);
 #ifdef DEBUG
     if (VMS_FAILURE(st)) {
-	printerr(EVMSERR, "eif_rt_setenv: error %%x%x from sys$crelnm(%s)=%s\n-- %s",
+	printerr(EVMSERR, "eif_vms_setenv: error %%x%x from sys$crelnm(%s)=%s\n-- %s",
 		st, name,val, strerror(EVMSERR,st));
 	return -1;
     }
@@ -260,34 +326,45 @@ rt_public int eif_rt_setenv(const char *name, const char *val, int overwrite) {
 } /* end setenv() */
 
 
-int eif_rt_unlink (const char *name)
+int eif_vms_unlink (const char *name)
 {
     int err;
     err = remove(name);
     return err;
 }
 
+#else  /* (not) EIF_VMS_OLD */
 
-#else  /* EIF_VMS_OLD */
-
-rt_public int eif_rt_putenv (const char *envstring) {  
+rt_public int eif_vms_putenv (const char *envstring) {  
     extern int DECC$PUTENV (const char *envstring) ;
-    return DECC$PUTENV (envstring);  
+    int result = DECC$PUTENV (envstring);  
+    return result;
 }
 
-rt_public int eif_rt_setenv(const char *name, const char *val, int overwrite) {  
+rt_public int eif_vms_setenv (const char *name, const char *val, int overwrite) {  
     extern int DECC$SETENV (const char *name, const char *val, int overwrite) ;
-    return DECC$SETENV (name, val, overwrite);  
+    int result = DECC$SETENV (name, val, overwrite);  
+    return result;
 }
 
-rt_public int eif_rt_unlink (const char *name) {
-    extern int DECC$UNLINK ( const char*name) ;
-    return DECC$UNLINK (name);  
+rt_public char* eif_vms_strdup (const char* str) {
+    extern char* DECC$STRDUP (const char* str) ;
+    char* result = DECC$STRDUP (str);
+    return result;
 }
 
-rt_public char* eif_rt_strdup (const char* str) {
-    extern char* DECC$STRDUP ( const char* str) ;
-    return DECC$STRDUP (str);
+rt_public int eif_vms_system (const char* cmd) {
+    extern int DECC$SYSTEM (const char* cmd) ;
+    int result = DECC$SYSTEM (cmd);
+    if (getenv("EIF_TRACE_SYSTEM"))
+	fprintf (stderr, "eif_vms_system (%s): result = %d\n", cmd, result);
+    return result;
+}
+
+rt_public int eif_vms_unlink (const char *name) {
+    extern int DECC$UNLINK (const char*name) ;
+    int result = DECC$UNLINK (name);  
+    return result;
 }
 
 #endif  /* EIF_VMS_OLD */

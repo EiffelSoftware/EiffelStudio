@@ -30,6 +30,11 @@ inherit
 			is_valid_peer_address
 		end
 
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
+		
 creation
 
 	make, make_client_by_port, make_bound_client_by_port,
@@ -58,13 +63,23 @@ feature -- Initialization
 			-- known local address with port `a_port'.
 		local
 			an_address: NETWORK_SOCKET_ADDRESS
+			retried: BOOLEAN
 		do
-			c_reset_error
-			create an_address.make_local_from_port (a_port);
-			make_bound_to_address (an_address)
-			timeout := default_timeout
+			if not retried then
+				c_reset_error
+				create an_address.make_local_from_port (a_port);
+				make_bound_to_address (an_address)
+				timeout := default_timeout
+			end
 		ensure
 			timeout_set_to_default: timeout = default_timeout
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				is_open_write := False
+				retried := True
+				retry
+			end
 		end;
 
 	make_targeted_to_hostname (a_hostname: STRING; a_peer_port: INTEGER) is
@@ -72,13 +87,24 @@ feature -- Initialization
 			-- hostname `a_hostname' and port `a_port'.
 		local
 			an_address: NETWORK_SOCKET_ADDRESS
+			retried: BOOLEAN
 		do
-			c_reset_error
-			create an_address.make_from_name_and_port (a_hostname, a_peer_port);
-			make_connected_to_peer (an_address)
-			timeout := default_timeout
+			if not retried then
+				c_reset_error
+				create an_address.make_from_name_and_port 
+					(a_hostname, a_peer_port);
+				make_connected_to_peer (an_address)
+				timeout := default_timeout
+			end
 		ensure
 			timeout_set_to_default: timeout = default_timeout
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				is_open_write := False
+				retried := True
+				retry
+			end
 		end;
 
 	make_targeted_to_ip (an_ip_number: STRING; a_peer_port: INTEGER) is
@@ -86,13 +112,24 @@ feature -- Initialization
 			-- hostname `a_hostname' and port `a_port'.
 		local
 			an_address: NETWORK_SOCKET_ADDRESS
+			retried: BOOLEAN
 		do
-			c_reset_error
-			create an_address.make_from_ip_and_port (an_ip_number, a_peer_port);
-			make_connected_to_peer (an_address)
-			timeout := default_timeout
+			if not retried then
+				c_reset_error
+				create an_address.make_from_ip_and_port 
+					(an_ip_number, a_peer_port);
+				make_connected_to_peer (an_address)
+				timeout := default_timeout
+			end
 		ensure
 			timeout_set_to_default: timeout = default_timeout
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				is_open_write := False
+				retried := True
+				retry
+			end
 		end;
 
 	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING) is
@@ -106,31 +143,43 @@ feature -- Initialization
 			i, count: INTEGER;
 			code: CHARACTER;
 			is_hostname: BOOLEAN
+			retried: BOOLEAN
 		do
-			make;
-			is_open_write := True;
-			count := a_peer_host.count
-			from i := 1 until i > count or is_hostname loop
-				code := a_peer_host.item (i);
-				is_hostname := (code /= '.' and then (code < '0' or else code > '9'));
-				i := i + 1
-			end;
-			if descriptor_available then
-				create h_address.make;
-				if is_hostname then
-					h_address.set_address_from_name (a_peer_host)
-				else
-					h_address.set_host_address (a_peer_host)
+			if not retried then
+				make;
+				is_open_write := True;
+				count := a_peer_host.count
+				from i := 1 until i > count or is_hostname loop
+					code := a_peer_host.item (i);
+					is_hostname := (code /= '.' and then 
+						(code < '0' or else code > '9'));
+					i := i + 1
 				end;
-				create peer_address.make;
-				peer_address.set_host_address (h_address);
-				peer_address.set_port (a_peer_port);
-				create address.make;
-				bind
+				if descriptor_available then
+					create h_address.make;
+					if is_hostname then
+						h_address.set_address_from_name (a_peer_host)
+					else
+						h_address.set_host_address (a_peer_host)
+					end;
+					create peer_address.make;
+					peer_address.set_host_address (h_address);
+					peer_address.set_port (a_peer_port);
+					create address.make;
+					bind
+				end
+			end
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				is_open_write := False
+				retried := True
+				retry
 			end
 		end;
 
-	make_bound_client_by_port (a_local_port, a_peer_port: INTEGER; a_peer_host: STRING) is
+	make_bound_client_by_port (a_local_port, a_peer_port: INTEGER; 
+					a_peer_host: STRING) is
 		obsolete "Use features `make_bound' and `target_to'."
 			-- Make a bound network datagram client socket.
 		require
@@ -140,26 +189,37 @@ feature -- Initialization
 			h_address: HOST_ADDRESS;
 			i, code: INTEGER;
 			is_hostname: BOOLEAN
+			retried: BOOLEAN
 		do
-			make;
-			from i := 1 until i > a_peer_host.count or is_hostname loop
-				code := a_peer_host.item_code (i);
-				is_hostname := (code /= 46 and then (code < 48 or else code > 57));
-				i := i + 1
-			end;
-			if descriptor_available then
-				create h_address.make;
-				if is_hostname then
-					h_address.set_address_from_name (a_peer_host)
-				else
-					h_address.set_host_address (a_peer_host)
+			if not retried then
+				make;
+				from i := 1 until i > a_peer_host.count or is_hostname loop
+					code := a_peer_host.item_code (i);
+					is_hostname := (code /= 46 and then 
+						(code < 48 or else code > 57));
+					i := i + 1
+				end;
+				if descriptor_available then
+					create h_address.make;
+					if is_hostname then
+						h_address.set_address_from_name (a_peer_host)
+					else
+						h_address.set_host_address (a_peer_host)
+					end
+					create peer_address.make;
+					peer_address.set_host_address (h_address);
+					peer_address.set_port (a_peer_port);
+					create address.make;
+					address.set_port (a_local_port);
+					bind
 				end
-				create peer_address.make;
-				peer_address.set_host_address (h_address);
-				peer_address.set_port (a_peer_port);
-				create address.make;
-				address.set_port (a_local_port);
-				bind
+			end
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				is_open_write := False
+				retried := True
+				retry
 			end
 		end;
 
@@ -170,16 +230,57 @@ feature -- Initialization
 			valid_port: a_port >= 0
 		local
 			h_address: HOST_ADDRESS
+			retried: BOOLEAN
 		do
-			make;
-			if descriptor_available then
-				create h_address.make;
-				h_address.set_in_address_any;
-				create address.make;
-				address.set_host_address (h_address);
-				address.set_port (a_port);
-				bind
+			if not retried then
+				make;
+				if descriptor_available then
+					create h_address.make;
+					h_address.set_in_address_any;
+					create address.make;
+					address.set_host_address (h_address);
+					address.set_port (a_port);
+					bind
+				end
 			end
+		rescue
+			if not assertion_violation then
+				is_open_read := False
+				is_open_write := False
+				retried := True
+				retry
+			end
+		end
+
+feature -- Status report
+
+	broadcast_enabled: BOOLEAN is
+			-- Is broadcasting enabled?
+		require
+			valid_descriptor: exists
+		local
+			is_set: INTEGER
+		do
+			is_set := c_get_sock_opt_int (descriptor, level_sol_socket, sobroadcast);
+			Result := is_set /= 0
+		end
+
+feature -- Status setting
+
+	enable_broadcast is
+			-- Enable broadcasting.
+		require
+			valid_descriptor: exists
+		do
+			c_set_sock_opt_int (descriptor, level_sol_socket, sobroadcast, 1)
+		end;
+
+	disable_broadcast is
+			-- Disable broadcasting.
+		require
+			valid_descriptor: exists
+		do
+			c_set_sock_opt_int (descriptor, level_sol_socket, sobroadcast, 0)
 		end
 
 feature -- Miscellaneous
@@ -212,37 +313,6 @@ feature -- Miscellaneous
 			-- Create peer address.
 		do
 			create peer_address.make
-		end
-
-feature -- Status setting
-
-	enable_broadcast is
-			-- Enable broadcasting.
-		require
-			valid_descriptor: exists
-		do
-			c_set_sock_opt_int (descriptor, level_sol_socket, sobroadcast, 1)
-		end;
-
-	disable_broadcast is
-			-- Disable broadcasting.
-		require
-			valid_descriptor: exists
-		do
-			c_set_sock_opt_int (descriptor, level_sol_socket, sobroadcast, 0)
-		end
-
-feature -- Status report
-
-	broadcast_enabled: BOOLEAN is
-			-- Is broadcasting enabled ?
-		require
-			valid_descriptor: exists
-		local
-			is_set: INTEGER
-		do
-			is_set := c_get_sock_opt_int (descriptor, level_sol_socket, sobroadcast);
-			Result := is_set /= 0
 		end
 
 end -- class NETWORK_DATAGRAM_SOCKET

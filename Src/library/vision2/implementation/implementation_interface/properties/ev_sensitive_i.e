@@ -68,8 +68,8 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	internal_non_sensitive: BOOLEAN
-		-- Is `Current' not sensitive to input as seen purely
-		-- from the interface?
+		-- Is `Current' not sensitive to input as seen
+		-- from `interface'?
 		
 	is_sensitive: BOOLEAN is
 			-- Is the object sensitive to user input.
@@ -103,6 +103,9 @@ end -- class EV_SENSITIVE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/07/10 16:50:50  rogers
+--| Comment rewording.
+--|
 --| Revision 1.3  2001/06/07 23:08:09  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

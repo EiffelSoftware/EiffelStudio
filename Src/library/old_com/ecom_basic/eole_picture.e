@@ -31,8 +31,8 @@ feature -- Access
 	interface_identifier_list: LINKED_LIST [STRING] is
 			-- List of supported interfaces
 		once
-			Result := precursor
-			Result.extend (interface_identifier)
+			Result := Precursor
+			Result.extend (Iid_picture)
 		end
 
 feature -- Message Transmission

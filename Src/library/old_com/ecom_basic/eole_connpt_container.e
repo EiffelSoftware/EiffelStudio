@@ -30,7 +30,7 @@ feature -- Access
 			-- List of supported interfaces
 		once
 			Result := precursor
-			Result.extend (interface_identifier)
+			Result.extend (Iid_connection_point_container)
 		end
 
 feature -- Message Transmission

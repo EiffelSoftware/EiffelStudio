@@ -31,7 +31,7 @@ feature -- Access
 			-- List of supported interfaces
 		once
 			Result := Precursor
-			Result.extend (interface_identifier)
+			Result.extend (Iid_class_factory)
 		end
 
 	server_locks: INTEGER

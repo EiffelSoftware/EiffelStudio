@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			parent: CONSUMED_REFERENCED_TYPE
 			i: INTEGER
 			interface_type: TYPE
+			members, constructors: NATIVE_ARRAY [MEMBER_INFO]
 		do
 			create dotnet_name.make_from_cil (t.get_full_name)
 			if t.get_base_type /= Void then
@@ -44,22 +45,23 @@ feature {NONE} -- Initialization
 				interfaces.put (referenced_type_from_type (inter.item (i - 1)), i)
 				i := i + 1
 			end
-			create consumed_type.make (
-				dotnet_name,
-				format_type_name (dotnet_name),
-				t.get_is_interface,
-				t.get_is_abstract,
-				t.get_is_sealed,
-				t.get_is_value_type,
-				parent,
-				interfaces)
-			internal_features := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
-																feature {BINDING_FLAGS}.static |
-																feature {BINDING_FLAGS}.public |
-																feature {BINDING_FLAGS}.non_public)
+			create consumed_type.make (dotnet_name,
+										format_type_name (dotnet_name),
+										t.get_is_interface,
+										t.get_is_abstract,
+										t.get_is_sealed,
+										t.get_is_value_type,
+										parent,
+										interfaces)
+			internal_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
+													feature {BINDING_FLAGS}.static |
+													feature {BINDING_FLAGS}.public |
+													feature {BINDING_FLAGS}.non_public)
+			internal_constructors := t.get_constructors
 		ensure
 			non_void_consumed_type: consumed_type /= Void
-			non_void_internal_features: internal_features /= Void
+			non_void_internal_members: internal_members /= Void
+			non_void_internal_constructors: internal_constructors /= Void
 		end
 		
 feature -- Access
@@ -91,33 +93,41 @@ feature -- Basic Operation
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]
 		do
 			check
-				non_void_internal_features: internal_features /= Void
+				non_void_internal_members: internal_members /= Void
+				non_void_internal_constructors: internal_constructors /= Void
 			end
 			create tc.make
 			create fields.make (0)
 			create {SORTED_TWO_WAY_LIST [STRING]} reserved_names.make
 			reserved_names.compare_objects
 			create overload_solver.make
+
 			from
 				i := 0
 			until
-				i = internal_features.get_length
+				i = internal_constructors.get_length
 			loop
-				member := internal_features.item (i)
-				if member.get_member_type = feature {MEMBER_TYPES}.constructor then
-					cons ?= member
-					check
-						is_constructor: cons /= Void
-					end
-					if is_consumed_method (cons) then
-						tc.extend (create {CONSTRUCTOR_SOLVER}.make (cons))					
-					end
-				elseif member.get_member_type = feature {MEMBER_TYPES}.field then
+				cons := internal_constructors.item (i)
+				if is_consumed_method (cons) then
+					tc.extend (create {CONSTRUCTOR_SOLVER}.make (cons))					
+				end
+				i := i + 1
+			end
+			
+			from
+				i := 0
+			until
+				i = internal_members.get_length
+			loop
+				member := internal_members.item (i)
+				if member.get_member_type = feature {MEMBER_TYPES}.field then
 					field ?= member
 					check
 						is_field: field /= Void
 					end
-					fields.extend (consumed_field (field))
+					if is_consumed_field (field) then
+						fields.extend (consumed_field (field))						
+					end
 				elseif member.get_member_type = feature {MEMBER_TYPES}.method then
 					meth ?= member
 					check
@@ -129,6 +139,7 @@ feature -- Basic Operation
 				end
 				i := i + 1
 			end
+
 			consumed_type.set_constructors (solved_constructors (tc))
 			consumed_type.set_fields (fields)
 			overload_solver.set_reserved_names (reserved_names)
@@ -216,8 +227,11 @@ feature {NONE} -- Implementation
 			non_void_constructors: Result /= Void
 		end
 		
-	internal_features: NATIVE_ARRAY [MEMBER_INFO]
+	internal_members: NATIVE_ARRAY [MEMBER_INFO]
 			-- Type members used to initialize `features'
+
+	internal_constructors: NATIVE_ARRAY [CONSTRUCTOR_INFO]
+			-- Constructors of .NET type
 
 	Default_creation_routine_name: STRING is "make"
 			-- Default Eiffel creation routine name

@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"General notion of an eiffel command (semantic unity).%
 		%To write an actual command inherit from this class and%

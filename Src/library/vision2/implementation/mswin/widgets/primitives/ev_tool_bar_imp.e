@@ -344,7 +344,8 @@ feature -- Basic operation
 				end
 			if it /= Void then
 				radio_button ?= it
-				if radio_button /= Void and button = 1 then
+				if radio_button /= Void and button = 1 and 
+					radio_button.is_sensitive then
 					-- We check `button' as the radio button is only selected
 					-- if the button is equal to 1. If another button is
 					-- pressed, we do not need to unselect the selected
@@ -711,6 +712,11 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/04/25 21:39:56  rogers
+--| Fixed bug in internal_propagate_pointer_press which would allow
+--| you to dtill select a radio button by clicking when it was
+--| disabled.
+--|
 --| Revision 1.59  2000/04/25 21:17:55  brendel
 --| Cosmetics.
 --|

@@ -75,6 +75,7 @@ feature -- Initialization
 		do
 			make (n)
 			fill_character (c)
+			set_count (n)
 		ensure
 			count_set: count = n
 			filled: occurrences (c) = count
@@ -687,34 +688,40 @@ feature -- Element change
 			s_area: like internal_string_builder
 			s_count: INTEGER
 			start0: INTEGER
+			old_count: INTEGER
 		do
 			start0 := start_index - 1
 			substring_size := end_index - start0
 			s_count := s.count
+			old_count := count
 			s_area := s.internal_string_builder
 			diff := s_count - substring_size
-			new_size := diff + count
-			set_count (new_size)
+			new_size := diff + old_count
 			if diff > 0 then
+				grow (new_size)
+				set_count (new_size)
 					--| We move the end of the string forward.
 				from
-					i := end_index
+					i := old_count - 1
 				until
-					i = count
+					i < end_index
 				loop
-					internal_string_builder.set_chars (i + diff, internal_string_builder.chars (i))
-					i := i + 1
+					internal_string_builder.set_chars (i + diff,
+						internal_string_builder.chars (i))
+					i := i - 1
 				end
 			elseif diff < 0 then
 					--| We move the end of the string backward.
 				from
-					i := count - 1
+					i := end_index
 				until
-					i < end_index
+					i = old_count
 				loop
-					internal_string_builder.set_chars (i + diff, internal_string_builder.chars (i))
-					i := i - 1
+					internal_string_builder.set_chars (i + diff,
+						internal_string_builder.chars (i))
+					i := i + 1
 				end
+				set_count (new_size)
 			end
 				--| We copy the substring.
 			from

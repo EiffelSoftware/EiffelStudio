@@ -17,7 +17,7 @@ inherit
 			implementation
 		end
 
-	EV_PIXMAP_CONTAINER
+	EV_PIXMAPABLE
 		redefine
 			implementation
 		end

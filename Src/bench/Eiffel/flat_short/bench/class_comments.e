@@ -17,7 +17,7 @@ inherit
 			{NONE} all;
 			{ANY} put, clear_all, remove, item, empty
 		end;
-	COMPILER_IDABLE
+	IDABLE
 		rename
 			id as class_id
 		export

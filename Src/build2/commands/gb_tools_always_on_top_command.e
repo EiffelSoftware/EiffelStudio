@@ -37,8 +37,16 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create `Current'.
+		local
+			acc: EV_ACCELERATOR
+			key: EV_KEY
 		do
 			enable_sensitive
+				-- Now add an accelerator
+			create key.make_with_code ((create {EV_KEY_CONSTANTS}).key_t)
+			create acc.make_with_key_combination (key, True, False, False)
+			acc.actions.extend (agent execute)
+			Main_window.accelerators.extend (acc)
 		end
 
 feature -- Access

@@ -142,6 +142,11 @@ feature -- Basic operations
 				if builder_window.is_show_requested then
 					command_handler.show_hide_builder_window_command.execute
 				end
+					-- Restore display and builder windows to their
+					-- default appeaence, so any settings made during the
+					-- last project are lost.
+				builder_window.restore_to_default
+				display_window.restore_to_default
 				
 					-- Hide the history window.
 				if history.history_dialog.is_show_requested then

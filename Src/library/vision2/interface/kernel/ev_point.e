@@ -9,13 +9,17 @@ class
 	
 inherit
 	ANY
-		rename
-			do_nothing as make
-		end
 				
 creation
 	make,
 	set
+
+feature {NONE} -- Initialization
+
+	make is
+			-- A feature to be consistant, but nothing to do.
+		do
+		end
 	
 feature -- Access
 

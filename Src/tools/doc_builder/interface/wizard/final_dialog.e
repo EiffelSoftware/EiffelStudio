@@ -71,13 +71,13 @@ feature {NONE} -- Implementation
 			-- Finish wizard, perform necessary tasks.
 		do
 			hide
-			if Wizard_data.is_html_convert then
-				generate_html				
+			if Wizard_data.is_html_to_help_convert then
+				generate_html
+				generate_help						
 			elseif Wizard_data.is_help_convert then
 				generate_help
-			elseif Wizard_data.is_html_to_help_convert then
+			elseif Wizard_data.is_html_convert then
 				generate_html
-				generate_help
 			end
 			destroy
 		end
@@ -99,8 +99,19 @@ feature {NONE} -- Implmentation
 			-- Generate HTML
 		local
 			html: HTML_GENERATOR
+			l_dir_name: DIRECTORY_NAME
+			l_files: ARRAYED_LIST [STRING]
 		do
-			create html.make (Shared_project, create {DIRECTORY_NAME}.make_from_string (Shared_constants.Application_constants.html_location))
+			create l_dir_name.make_from_string (Shared_constants.Application_constants.html_location)
+			if Wizard_data.is_help_convert then
+					-- Since we are also converting into a help project, for speed purposes 
+					-- convert only the files necessary for the toc
+				l_files := Shared_constants.Help_constants.Toc.files
+			else
+					-- Since there is no help project to be generated use all files in loaded project
+				create l_files.make_from_array (Shared_document_manager.documents.current_keys)
+			end
+			create html.make (l_files, l_dir_name)
 			html.generate
 		end
 	
@@ -108,28 +119,21 @@ feature {NONE} -- Implmentation
 			-- Generate help	
 		local			
 			help: HELP_GENERATOR
-			l_loc, l_toc: DIRECTORY
+			l_loc: DIRECTORY
 			l_help_settings: HELP_SETTING_CONSTANTS
+			l_toc: XML_TABLE_OF_CONTENTS
+			l_name: STRING
 		do			
 			l_help_settings := Shared_constants.Help_constants
+			l_name := l_help_settings.help_project_name
 			create l_loc.make (l_help_settings.help_directory)
-			create l_toc.make (l_help_settings.help_toc_location)
+			l_toc := l_help_settings.toc
 			if l_help_settings.is_html_help then
-				if l_help_settings.toc_is_physical then
-					create help.make (create {HTML_HELP_PROJECT}.make_from_directory (l_loc, l_toc, l_help_settings.help_project_name))
-					help.generate
-				else
-					create help.make (create {HTML_HELP_PROJECT}.make_from_toc (l_loc, l_help_settings.help_project_name, Application_window.internal_studio_toc))
-					help.generate
-				end				
-			elseif l_help_settings.is_vsip_help then
-				if l_help_settings.toc_is_physical then
-					create help.make (create {MSHELP_PROJECT}.make_from_directory (l_loc, l_toc, l_help_settings.help_project_name))
-					help.generate
-				else
-					create help.make (create {MSHELP_PROJECT}.make_from_toc (l_loc, l_help_settings.help_project_name, Application_window.internal_envision_toc))
-					help.generate
-				end
+				create help.make (create {HTML_HELP_PROJECT}.make (l_loc, l_name, l_toc))
+				help.generate
+			elseif l_help_settings.is_vsip_help then				
+				create help.make (create {MSHELP_PROJECT}.make (l_loc, l_name, l_toc))
+				help.generate				
 			elseif l_help_settings.is_web_help then
 				-- TO DO: Web generation
 				--create {WEB_HELP_PROJECT} help.create_with_filename (Wizard_data.help_generated_file_location, Wizard_data.help_project_name)

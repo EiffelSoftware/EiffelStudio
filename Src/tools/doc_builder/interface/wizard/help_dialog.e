@@ -53,7 +53,8 @@ feature {NONE} -- Initialization
 			cancel_but.select_actions.extend (agent cancel)
 			back_but.select_actions.extend (agent move_previous)
 			browse_proj1.select_actions.extend (agent browse_directories (location_text))
-			title_text1.set_text (Shared_project.preferences.name + "_help")
+			title_text1.set_text (Shared_project.name + "_help")
+			toc_combo.disable_edit
 		end
 
 feature -- Commands
@@ -62,15 +63,12 @@ feature -- Commands
 			-- Show dialog
 		local
 			l_dir_name: DIRECTORY_NAME
-		do
-			if Wizard_data.is_html_to_help_convert then
-				toc_view_check.enable_select
-			elseif Wizard_data.is_help_convert then
-				toc_view_check.disable_select
-			end
-				
-			if Shared_project.document_toc = Void then
-				toc_view_check.hide
+		do			
+			if Shared_toc_manager.is_empty then
+				toc_header_box.hide
+				toc_combo.hide
+			else
+				build_toc_combo
 			end			
 			Precursor
 		end		
@@ -82,6 +80,7 @@ feature -- Query
 		local
 			proj_dir, toc_dir: DIRECTORY
 			l_constants: APPLICATION_CONSTANTS
+			l_toc: XML_TABLE_OF_CONTENTS
 		do
 			l_constants := Shared_constants.Application_constants
 			if title_text1.text.is_empty then
@@ -90,26 +89,19 @@ feature -- Query
 				set_validation_error ("No location for the help project specified.")
 			else
 				create proj_dir.make (location_text.text)
-				if toc_view_check.is_selected then
-					create toc_dir.make (l_constants.temporary_help_directory)
-					if not toc_dir.exists then
-						toc_dir.create_dir
-					end
-				else
-					if Wizard_data.is_html_to_help_convert then
-							-- For XML -> HTML -> Help use intermediate directory
-						create toc_dir.make (l_constants.Temporary_html_directory)
-					else
-							-- For HTML -> Help it will be generated from the project
-						create toc_dir.make (Shared_project.preferences.root_directory)
-					end
+				create toc_dir.make (l_constants.temporary_help_directory)
+				if not toc_dir.exists then
+					toc_dir.create_dir
 				end
-				Help_constants.set_toc_is_physical (toc_view_check.is_selected)
 				if proj_dir.exists and toc_dir.exists then
 					Result := True
 					Help_constants.set_help_project_name (title_text1.text)
-					Help_constants.set_help_toc_location (toc_dir.name)
+							-- Set the table of contents
+					l_toc ?= toc_combo.selected_item.data
+					Help_constants.set_help_toc (l_toc)
+							-- Set the location to generate help
 					Help_constants.set_help_directory (create {DIRECTORY_NAME}.make_from_string (proj_dir.name))
+							-- Set type of help to generate
 					if html_radio.is_selected then
 						Help_constants.set_help_type (Help_constants.Html_help)
 					elseif vs_radio.is_selected then
@@ -148,6 +140,29 @@ feature {NONE} -- Implementation
 		do
 			target.set_text (a_location)
 		end	
+		
+	build_toc_combo is
+			-- Populate `toc_combo'
+		local
+			l_list_item: EV_LIST_ITEM
+			l_tocs: ARRAY [STRING]
+			l_manager: TABLE_OF_CONTENTS_MANAGER
+			l_cnt: INTEGER
+		do
+			l_manager := Shared_toc_manager
+			from				
+				toc_combo.wipe_out
+				l_tocs := l_manager.displayed_tocs_list
+				l_cnt := 1
+			until
+				l_cnt > l_tocs.count
+			loop
+				create l_list_item.make_with_text (l_tocs.item (l_cnt))
+				l_list_item.set_data (l_manager.toc_by_name (l_tocs.item (l_cnt)))
+				toc_combo.extend (l_list_item)
+				l_cnt := l_cnt + 1
+			end
+		end
 		
 	set_summary is
 			-- Set summary data

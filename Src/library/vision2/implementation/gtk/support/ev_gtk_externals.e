@@ -202,6 +202,10 @@ feature {NONE} -- GTK C functions for text_component
 		external "C | <gtk/gtk.h>"
 		end
 
+	gtk_entry_set_visibility (widget: POINTER; flag: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+
 feature {NONE} -- GTK C functions for gtk_combo
 
 	gtk_combo_new: POINTER is

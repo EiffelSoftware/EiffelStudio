@@ -82,7 +82,23 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 			return "";
 	}
 	
-	// Location of the assembly with `Name', `Version', `Culture' and `PublicKey'
+	// Dependencies of local assemblies with filename `Filename'
+	public String [] LocalAssemblyDependencies( String Filename )
+	{
+		AssemblyName AName;
+		ConversionSupport convert;
+		AssemblyDescriptor descriptor;
+		
+		AName = AssemblyName.GetAssemblyName( Filename );
+		convert = new ConversionSupport();
+		descriptor = convert.AssemblyDescriptorFromName( AName );
+		if( descriptor != null )
+			return AssemblyDependencies( descriptor.Name, descriptor.Version, descriptor.Culture, descriptor.PublicKey );
+		else
+			return new String [0];
+	}
+	
+	// Dependencies of the assembly with `Name', `Version', `Culture' and `PublicKey'
 	public String [] AssemblyDependencies( String Name, String Version, String Culture, String PublicKey )
 	{
 		AssemblyDescriptor Descriptor, ADescriptor;
@@ -111,22 +127,36 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		{
 			AName = ( AssemblyName )Dependencies [i];
 			ADescriptor = convert.AssemblyDescriptorFromName( AName );
+			
+			assemblyDependencies [j] = ADescriptor.Name;
+			assemblyDependencies [j + 1] = ADescriptor.Version;
+			assemblyDependencies [j + 2] = ADescriptor.Culture;
+			assemblyDependencies [j + 3] = ADescriptor.PublicKey;	
+			
 			reflectionInterface.Search( ADescriptor );
 			if( reflectionInterface.Found )
 			{
 				anEiffelAssembly = reflectionInterface.SearchResult;
-				if( anEiffelAssembly != null )
-				{
-					assemblyDependencies [j] = ADescriptor.Name;
-					assemblyDependencies [j + 1] = ADescriptor.Version;
-					assemblyDependencies [j + 2] = ADescriptor.Culture;
-					assemblyDependencies [j + 3] = ADescriptor.PublicKey;				
+				if( anEiffelAssembly != null )			
 					assemblyDependencies [j + 4] = anEiffelAssembly.EiffelClusterPath;
-					j = j + 5;
-				}
 			}
+			j = j + 5;
 		}
 		return assemblyDependencies;
+	}
+
+	// Is assembly corresponding to `Filename' signed?
+	public bool IsSigned( String Filename )
+	{
+		AssemblyName AName;
+		Array Key;
+		
+		AName = AssemblyName.GetAssemblyName( Filename );
+		Key = AName.GetPublicKey();
+		if( Key != null )
+			return( Key.Length > 0 );
+		else
+			return false;
 	}
 
 	// Remove locks from the Eiffel Assembly Cache.
@@ -137,6 +167,7 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		support = new ReflectionSupport();
 		support.Make();
 		support.CleanAssemblies();
+		RInterface.SetLastError( null );
 	}
 	
 	protected String [] PrivateImportedAssemblies( ArrayList ImportedAssemblies )

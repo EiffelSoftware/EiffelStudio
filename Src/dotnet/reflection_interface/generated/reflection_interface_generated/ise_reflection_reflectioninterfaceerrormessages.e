@@ -20,6 +20,13 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
+	no_assembly_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"NoAssemblyMessage"
+		end
+
 	read_lock_creation_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
@@ -41,11 +48,11 @@ feature -- Basic Operations
 			"TypeRetrievalFailed"
 		end
 
-	assemblies_retrieval_failed_message: STRING is
+	invalid_assembly_qualified_name_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
-			"AssembliesRetrievalFailedMessage"
+			"InvalidAssemblyQualifiedNameMessage"
 		end
 
 	file_access_failed: STRING is
@@ -69,25 +76,11 @@ feature -- Basic Operations
 			"HasWriteLock"
 		end
 
-	assemblies_retrieval_failed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"AssembliesRetrievalFailed"
-		end
-
 	read_lock_creation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
 			"ReadLockCreationFailed"
-		end
-
-	invalid_assembly_qualified_name_message: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
-		alias
-			"InvalidAssemblyQualifiedNameMessage"
 		end
 
 	type_retrieval_failed_message: STRING is
@@ -118,6 +111,13 @@ feature -- Basic Operations
 			"AssemblyRetrievalFailed"
 		end
 
+	no_assembly: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
+		alias
+			"NoAssembly"
+		end
+
 	assembly_removal_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
@@ -125,11 +125,11 @@ feature -- Basic Operations
 			"AssemblyRemovalFailedMessage"
 		end
 
-	invalid_assembly_qualified_name: STRING is
+	assembly_removal_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
-			"InvalidAssemblyQualifiedName"
+			"AssemblyRemovalFailed"
 		end
 
 	has_read_lock: STRING is
@@ -139,11 +139,11 @@ feature -- Basic Operations
 			"HasReadLock"
 		end
 
-	assembly_removal_failed: STRING is
+	invalid_assembly_qualified_name: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.ReflectionInterfaceErrorMessages"
 		alias
-			"AssemblyRemovalFailed"
+			"InvalidAssemblyQualifiedName"
 		end
 
 end -- class ISE_REFLECTION_REFLECTIONINTERFACEERRORMESSAGES

@@ -147,6 +147,18 @@ feature -- Status Report
 			external_name: "Found"
 		end
 
+feature -- Status Setting
+
+	set_last_error (an_error: like last_error) is
+		indexing
+			description: "Set `last_error' with `an_error'."
+			external_name: "SetLastError"
+		do
+			last_error := an_error
+		ensure
+			last_error_set: last_error = an_error
+		end
+		
 feature -- Basic Operations
 
 	search (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
@@ -252,10 +264,13 @@ feature -- Retrieval
 				xml_reader.Close
 			else
 				Result := Void
-				file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+				support.create_error (error_messages.No_assembly, error_messages.No_assembly_message)
+				last_error := support.get_last_error
+				last_read_successful := False		
+				if assembly_path /= Void and then assembly_path.get_length > 0 then
+					file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+				end
 			end
-		ensure
-			assemblies_built: Result /= Void
 		rescue
 			retried := True
 			retry
@@ -317,7 +332,10 @@ feature -- Retrieval
 				end
 			else
 				Result := Void
-				file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+				if assembly_path /= Void and then assembly_path.get_length > 0 then
+					file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+				end
+				last_read_successful := False
 			end
 		rescue
 			retried := True
@@ -393,7 +411,10 @@ feature -- Retrieval
 				end
 			else
 				Result := Void
-				file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+				if assembly_path /= Void and then assembly_path.get_length > 0 then
+					file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+				end
+				last_read_successful := False
 			end
 		rescue
 			retried := True

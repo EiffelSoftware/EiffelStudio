@@ -63,19 +63,19 @@ feature -- Access
 		end
 
 	
-	Assemblies_retrieval_failed: STRING is "Assemblies retrieval failed"
+	No_assembly: STRING is "No assembly"
 		indexing
-			description: "Error name: Assemblies retrieval failed"
-			external_name: "AssembliesRetrievalFailed"
+			description: "Error name: No assembly"
+			external_name: "NoAssembly"
 		end
 
-	Assemblies_retrieval_failed_message: STRING is "The retrieval of assemblies from Eiffel repository has failed. There may be a sharing violation."
+	No_assembly_message: STRING is "There is no assembly in the Eiffel Assembly Cache."
 		indexing
-			description: "Error message when assemblies retrieval has failed"
-			external_name: "AssembliesRetrievalFailedMessage"
+			description: "Error message when there is no assembly in the EAC"
+			external_name: "NoAssemblyMessage"
 		end
 		
-
+		
 	Assembly_retrieval_failed: STRING is "Assembly retrieval failed"
 		indexing
 			description: "Error name: Assembly retrieval failed"

@@ -642,27 +642,27 @@ feature {NONE} -- Implementation
 			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 			imported: BOOLEAN
 		do
-			check
-				non_void_shared_assemblies: shared_assemblies /= Void
-				non_void_imported_table: imported_table /= Void
-			end
-			from
-				row_count := 0
-				i := 0
-			until
-				i = shared_assemblies.get_Count
-			loop
-				a_descriptor ?= shared_assemblies.get_Item (i)
-				if a_descriptor /= Void then
-					imported ?= imported_table.get_item (a_descriptor)
-					if not imported then
-						build_row (a_descriptor, row_count)
-						row_count := row_count + 1
-					end
+			if shared_assemblies /= Void and then shared_assemblies.get_count > 0 then
+				check
+					non_void_imported_table: imported_table /= Void
 				end
-				i := i + 1
+				from
+					row_count := 0
+					i := 0
+				until
+					i = shared_assemblies.get_Count
+				loop
+					a_descriptor ?= shared_assemblies.get_Item (i)
+					if a_descriptor /= Void then
+						imported ?= imported_table.get_item (a_descriptor)
+						if not imported then
+							build_row (a_descriptor, row_count)
+							row_count := row_count + 1
+						end
+					end
+					i := i + 1
+				end
 			end
-			--fill_data_grid
 		end
 
 	build_row (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; row_count: INTEGER) is 

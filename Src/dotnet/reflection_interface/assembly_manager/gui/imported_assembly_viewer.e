@@ -376,7 +376,9 @@ feature -- Basic Operations
 			eiffel_path_column_style.set_header_text (dictionary.Eiffel_path_column_title)
 			added := data_grid_table_style.get_grid_column_styles.add (eiffel_path_column_style)	
 			set_read_only
-			resize_columns
+			if imported_assemblies /= Void and then imported_assemblies.get_count > 0 then
+				resize_columns
+			end
 			--create on_row_delegate.make_eventhandler (Current, $on_row)
 			--data_grid.add_enter (on_row_delegate)
 		end
@@ -1017,28 +1019,42 @@ feature {NONE} -- Implementation
 			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 			error_code: INTEGER
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
+			diagnostics: SYSTEM_DIAGNOSTICS_PROCESS
+			process: SYSTEM_DIAGNOSTICS_PROCESS
 		do
 			if not retried then
 				imported_assemblies := reflection_interface.assemblies
-				if reflection_interface.get_last_error /= Void then 
-					error_code := reflection_interface.get_last_error.get_code
-					if error_code = reflection_interface.Has_write_lock_code or error_code = reflection_interface.Has_read_lock_code then
-						returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Access_violation_error, dictionary.Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
-						if returned_value = returned_value.Retry_ then
-							imported_assemblies := reflection_interface.assemblies
-							sort_assemblies
-						elseif returned_value = returned_value.Ignore then
-							create reflection_support.make_reflectionsupport
-							reflection_support.make
-							reflection_support.clean_assemblies
-							imported_assemblies := reflection_interface.assemblies
-							sort_assemblies
-						else
-							close
-						end
+				if imported_assemblies = Void or else imported_assemblies.get_count = 0 then
+					returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.No_assembly_in_the_EAC, dictionary.Error_caption, message_box_buttons.OK, message_box_icon.Error)
+					process := diagnostics.get_current_process
+					if process /= Void then
+						process.kill
 					end
 				else
-					sort_assemblies
+					if reflection_interface.get_last_error /= Void then 
+						error_code := reflection_interface.get_last_error.get_code
+						if error_code = reflection_interface.Has_write_lock_code or error_code = reflection_interface.Has_read_lock_code then
+							returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (dictionary.Access_violation_error, dictionary.Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
+							if returned_value = returned_value.Retry_ then
+								imported_assemblies := reflection_interface.assemblies
+								sort_assemblies
+							elseif returned_value = returned_value.Ignore then
+								create reflection_support.make_reflectionsupport
+								reflection_support.make
+								reflection_support.clean_assemblies
+								imported_assemblies := reflection_interface.assemblies
+								sort_assemblies
+							else
+								close
+								process := diagnostics.get_current_process
+								if process /= Void then
+									process.kill
+								end
+							end
+						end
+					else
+						sort_assemblies
+					end
 				end
 			else					
 				if reflection_interface.get_last_error /= Void then 
@@ -1052,10 +1068,15 @@ feature {NONE} -- Implementation
 							create reflection_support.make_reflectionsupport
 							reflection_support.make
 							reflection_support.clean_assemblies
+							reflection_interface.set_last_error (Void)
 							imported_assemblies := reflection_interface.assemblies
 							sort_assemblies
 						else
 							close
+							process := diagnostics.get_current_process
+							if process /= Void then
+								process.kill
+							end
 						end
 					end
 				end
@@ -1089,23 +1110,21 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			an_assembly: ISE_REFLECTION_EIFFELASSEMBLY
 		do
-			check
-				non_void_imported_assemblies: imported_assemblies /= Void
-			end
-			from
-				row_count := 0
-				i := 0
-			until
-				i = imported_assemblies.get_Count
-			loop
-				an_assembly ?= imported_assemblies.get_Item (i)
-				if an_assembly /= Void then
-					build_row (an_assembly.get_assembly_descriptor, row_count, an_assembly.get_Eiffel_Cluster_Path)
-					row_count := row_count + 1
+			if imported_assemblies /= Void and then imported_assemblies.get_count > 0 then
+				from
+					row_count := 0
+					i := 0
+				until
+					i = imported_assemblies.get_Count
+				loop
+					an_assembly ?= imported_assemblies.get_Item (i)
+					if an_assembly /= Void then
+						build_row (an_assembly.get_assembly_descriptor, row_count, an_assembly.get_Eiffel_Cluster_Path)
+						row_count := row_count + 1
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
-			--fill_data_grid
 		end
 
 	build_row (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; row_count: INTEGER; an_eiffel_path: STRING) is 

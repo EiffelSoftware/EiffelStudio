@@ -6,11 +6,9 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_LIST_I
 	
 inherit
-	
 	EV_PRIMITIVE_I
 		redefine
 			build
@@ -26,10 +24,10 @@ feature {EV_WIDGET} -- Initialization
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
---			!! color.make_rgb (255, 255, 255)
---			set_background_color (color)
---			!! color.make_rgb (0, 0, 0)
---			set_foreground_color (color)
+			!! color.make_rgb (255, 255, 255)
+			set_background_color (color)
+			!! color.make_rgb (0, 0, 0)
+			set_foreground_color (color)
 		end
 
 feature -- Access
@@ -70,6 +68,7 @@ feature -- Access
 		local
 			list_item: EV_LIST_ITEM
 		do
+			!! Result.make
 			if is_multiple_selection then
 				from
 					ev_children.start
@@ -179,7 +178,6 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			end
 			ev_children.wipe_out
 		end
-
 
 end -- class EV_LIST_I
 

@@ -16,6 +16,7 @@ MKDIR build_studio_debug\EiffelSoftware.CodeDom.Splitter
 MKDIR build_studio_debug\ecdpman
 MKDIR build_studio_debug\esplitter
 MKDIR build_studio_debug\esplit
+MKDIR build_studio_debug\nmap
 
 COPY configuration\base.debug.ace build_studio_debug\EiffelSoftware.CodeDom.Base\ace.ace
 COPY configuration\vision2.debug.ace build_studio_debug\EiffelSoftware.CodeDom.Vision2\ace.ace
@@ -25,6 +26,7 @@ COPY configuration\esplitter.common.debug.ace build_studio_debug\EiffelSoftware.
 COPY configuration\manager.debug.ace build_studio_debug\ecdpman\ace.ace
 COPY configuration\esplitter.gui.debug.ace build_studio_debug\esplitter\ace.ace
 COPY configuration\esplitter.text.debug.ace build_studio_debug\esplit\ace.ace
+COPY configuration\nmap.debug.ace build_studio_debug\nmap\ace.ace
 GOTO END
 
 :RELEASE
@@ -37,6 +39,7 @@ MKDIR build_studio\EiffelSoftware.CodeDom.Splitter
 MKDIR build_studio\ecdpman
 MKDIR build_studio\esplitter
 MKDIR build_studio\esplit
+MKDIR build_studio\nmap
 
 COPY configuration\base.ace build_studio\EiffelSoftware.CodeDom.Base\ace.ace
 COPY configuration\vision2.ace build_studio\EiffelSoftware.CodeDom.Vision2\ace.ace
@@ -46,6 +49,7 @@ COPY configuration\esplitter.common.ace build_studio\EiffelSoftware.CodeDom.Spli
 COPY configuration\manager.ace build_studio\ecdpman\ace.ace
 COPY configuration\esplitter.gui.ace build_studio\esplitter\ace.ace
 COPY configuration\esplitter.text.ace build_studio\esplit\ace.ace
+COPY configuration\nmap.ace build_studio\nmap\ace.ace
 
 :END
 ECHO Done setting up EiffelStudio Eiffel CodeDom Provider projects.

@@ -350,6 +350,22 @@ feature {NONE} -- Implementation
 			wel_insert_item (citem)
 		end
 
+	insert_item (item_imp: EV_ITEM_IMP; an_index: INTEGER) is
+			-- Insert `item_imp' at position `an_index'.
+			--|FIXME graphical_insert_item now appears to be redundent.
+		local
+			citem: WEL_COMBO_BOX_EX_ITEM
+			list_item_imp: EV_LIST_ITEM_IMP
+		do
+			list_item_imp ?= item_imp
+			check
+				list_item_not_void: list_item_imp /= Void
+			end
+			!! citem.make_with_index (an_index)
+			citem.set_text (list_item_imp.interface.text)
+			wel_insert_item (citem)
+		end
+
 	set_read_only is
 			-- Set the read-only state.
 		local
@@ -634,6 +650,10 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.64  2000/03/30 16:24:14  rogers
+--| Implemented insert_item
+--| -----------------------------------------------------
+--|
 --| Revision 1.63  2000/03/24 19:30:38  rogers
 --| Added call to {EV_LIST_ITEM_HOLDER_IMP} Precursor in initialize.
 --|

@@ -11,19 +11,12 @@ class INTEGER_REF inherit
 
 	NUMERIC
 		rename
-			infix "/" as infix "//",
-			one as one_ref,
-			zero as zero_ref
+			infix "/" as infix "//"
 		redefine
 			out, is_equal
 		end;
 
 	COMPARABLE
-		rename
-			max as max_ref,
-			min as min_ref
-		export
-			{NONE} max_ref, min_ref
 		redefine
 			out, three_way_comparison, is_equal
 		end;
@@ -64,20 +57,18 @@ feature -- Access
 			three_way: Result = three_way_comparison (zero)
 		end;
 
-	one: INTEGER is
+	one: like Current is
 			-- Neutral element for "*" and "/"
 		do
-			Result := 1
-		ensure
-			value: Result = 1
+			create Result
+			Result.set_item (1)
 		end;
 
-	zero: INTEGER is
+	zero: like Current is
 			-- Neutral element for "+" and "-"
 		do
-			Result := 0
-		ensure
-			value: Result = 0
+			create Result
+			Result.set_item (0)
 		end;
 
 	ascii_char: CHARACTER is
@@ -110,22 +101,6 @@ feature -- Comparison
 			elseif other.item < item then
 				Result := 1
 			end
-		end;
-
-	max (other: like Current): INTEGER is
-			-- The greater of current object and `other'
-		require
-			other_exists: other /= Void
-		do
-			Result := max_ref (other).item
-		end;
-
-	min (other: like Current): INTEGER is
-			-- The smaller of current object and `other'
-		require
-			other_exists: other /= Void
-		do
-			Result := min_ref (other).item
 		end;
 
 feature -- Element change
@@ -304,20 +279,6 @@ feature {NONE} -- Implementation
 		alias
 			"chconv"
 		end
-
-	one_ref: INTEGER_REF is
-			-- Neutral element for "*" and "/"
-		do
-			!! Result;
-			Result.set_item (one)
-		end;
-
-	zero_ref: INTEGER_REF is
-			-- Neutral element for "+" and "-"
-		do
-			!! Result;
-			Result.set_item (zero)
-		end;
 
 	abs_ref: INTEGER_REF is
 			-- Absolute value

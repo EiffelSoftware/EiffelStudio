@@ -10,11 +10,6 @@ indexing
 class CHARACTER_REF inherit
 
 	COMPARABLE
-		rename
-			max as max_ref,
-			min as min_ref
-		export
-			{NONE} max_ref, min_ref
 		redefine
 			out, three_way_comparison, is_equal
 		end;
@@ -74,22 +69,6 @@ feature -- Comparison
 			elseif other.item < item then
 				Result := 1
 			end
-		end;
-
-	max (other: like Current): CHARACTER is
-			-- The greater of current object and `other'
-		require
-			other_exists: other /= Void
-		do
-			Result := max_ref (other).item
-		end;
-
-	min (other: like Current): CHARACTER is
-			-- The smaller of current object and `other'
-		require
-			other_exists: other /= Void
-		do
-			Result := min_ref (other).item
 		end;
 
 feature -- Basic routines

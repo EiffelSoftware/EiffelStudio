@@ -10,19 +10,11 @@ indexing
 class DOUBLE_REF inherit
 
 	NUMERIC
-		rename
-			one as one_ref,
-			zero as zero_ref
 		redefine
 			out, is_equal
 		end;
 
 	COMPARABLE
-		rename
-			max as max_ref,
-			min as min_ref
-		export
-			{NONE} max_ref, min_ref
 		redefine
 			out, three_way_comparison, is_equal
 		end;
@@ -55,20 +47,18 @@ feature -- Access
 			three_way: Result = three_way_comparison (zero)
 		end;
 
-	one: DOUBLE is
+	one: like Current is
 			-- Neutral element for "*" and "/"
 		do
-			Result := 1.0
-		ensure
-			value: Result = 1.0
+			!! Result;
+			Result.set_item (1.0)
 		end;
 
-	zero: DOUBLE is
+	zero: like Current is
 			-- Neutral element for "+" and "-"
 		do
-			Result := 0.0
-		ensure
-			value: Result = 0.0
+			!! Result;
+			Result.set_item (0.0)
 		end;
 
 feature -- Comparison
@@ -95,22 +85,6 @@ feature -- Comparison
 			elseif other.item < item then
 				Result := 1
 			end
-		end;
-
-	max (other: like Current): DOUBLE is
-			-- The greater of current object and `other'
-		require
-			other_exists: other /= Void
-		do
-			Result := max_ref (other).item
-		end;
-
-	min (other: like Current): DOUBLE is
-			-- The smaller of current object and `other'
-		require
-			other_exists: other /= Void
-		do
-			Result := min_ref (other).item
 		end;
 
 feature -- Element change
@@ -182,7 +156,7 @@ feature -- Conversion
 			Result := c_ceiling (item).truncated_to_integer
 		ensure
 			result_no_smaller: Result >= item;
-			close_enough: Result - item < one
+			close_enough: Result - item < item.one
 		end;
 
 	floor: INTEGER is
@@ -191,7 +165,7 @@ feature -- Conversion
 			Result := c_floor (item).truncated_to_integer
 		ensure
 			result_no_greater: Result <= item;
-			close_enough: item - Result < one
+			close_enough: item - Result < Result.one
 		end;
 
 	rounded: INTEGER is
@@ -248,7 +222,7 @@ feature -- Basic operations
 			real_value: REAL_REF;
 			double_value: DOUBLE_REF
 		do
-			!! Result;
+			!! Result
 			integer_value ?= other;
 			real_value ?= other;
 			double_value ?= other;
@@ -284,20 +258,6 @@ feature -- Output
 		end;
 
 feature {NONE} -- Implementation
-
-	one_ref: DOUBLE_REF is
-			-- Neutral element for "*" and "/"
-		do
-			!! Result;
-			Result.set_item (one)
-		end;
-
-	zero_ref: DOUBLE_REF is
-			-- Neutral element for "+" and "-"
-		do
-			!! Result;
-			Result.set_item (zero)
-		end;
 
 	abs_ref: DOUBLE_REF is
 			-- Absolute value

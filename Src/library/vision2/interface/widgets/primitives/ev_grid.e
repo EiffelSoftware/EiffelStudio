@@ -241,6 +241,26 @@ feature -- Access
 		ensure
 			result_non_negative: result >= 0
 		end
+		
+	expand_node_pixmap: EV_PIXMAP is
+			-- Pixmap displayed within tree structures when a row with one or more
+			-- subrows is collapsed. Clicking the area occupied by this pixmap in `Current'
+			-- expands the row.
+		do
+			Result := implementation.expand_node_pixmap
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	collapse_node_pixmap: EV_PIXMAP is
+			-- Pixmap displayed within tree structures when a row with one or more
+			-- subrows is expanded. Clicking the area occupied by this pixmap in `Current'
+			-- collapses the row.
+		do
+			Result := implementation.collapse_node_pixmap
+		ensure
+			result_not_void: Result /= Void
+		end
 
 feature -- Status setting
 
@@ -580,6 +600,21 @@ feature -- Status setting
 			implementation.set_subrow_indent (a_subrow_indent)
 		ensure
 			subrow_indent_set: subrow_indent = a_subrow_indent
+		end
+		
+	set_node_pixmaps (an_expand_node_pixmap, a_collapse_node_pixmap: EV_PIXMAP) is
+			-- Assign `an_expand_node_pixmap' to `expand_node_pixmap' and `a_collapse_node_pixmap'
+			-- to `collapse_node_pixmap'. These pixmaps are used in rows containing subrows for
+			-- expanding/collapsing the row.
+		require
+			not_destroyed: not is_destroyed
+			pixmaps_not_void: an_expand_node_pixmap /= Void and a_collapse_node_pixmap /= Void
+			pixmaps_dimensions_identical: an_expand_node_pixmap.width = a_collapse_node_pixmap.width and
+				an_expand_node_pixmap.height = a_collapse_node_pixmap.height
+		do
+			implementation.set_node_pixmaps (an_expand_node_pixmap, a_collapse_node_pixmap)
+		ensure
+			pixmaps_set: expand_node_pixmap = an_expand_node_pixmap and collapse_node_pixmap = a_collapse_node_pixmap
 		end
 
 feature -- Status report

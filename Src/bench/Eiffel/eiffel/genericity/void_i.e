@@ -68,6 +68,7 @@ feature
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate Cecil type value.
 		do
+			generate_sk_value (buffer)
 		ensure then
 			False
 		end
@@ -85,11 +86,6 @@ feature
 
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
-		do
-			Result := Sk_void
-		end
-
-	cecil_value: INTEGER is
 		do
 			Result := Sk_void
 		end

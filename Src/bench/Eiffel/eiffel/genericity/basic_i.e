@@ -11,7 +11,7 @@ inherit
 			type_a
 		redefine
 			is_basic, is_reference, c_type, is_valid,
-			cecil_value, reference_type
+			reference_type, generate_cecil_value
 		end
 
 	TYPE_C
@@ -94,12 +94,13 @@ feature -- Byte code generation
 --			reg.print_register
 		end
 
-	cecil_value: INTEGER is
-		do
-			Result := sk_value
-		end
+feature -- C code generation
 
-feature
+	generate_cecil_value (buffer: GENERATION_BUFFER) is
+			-- Generate cecil value
+		do
+			generate_sk_value (buffer)
+		end	
 
 	generate_default_value (buffer : GENERATION_BUFFER) is
 			-- Generate default value associated to current basic type.

@@ -6,7 +6,7 @@ inherit
 			is_none, is_void, is_bit, is_basic, 
 			is_reference, same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			cecil_value, generated_id,
+			generated_id,
 			generate_gen_type_il
 		end
 
@@ -82,7 +82,7 @@ feature
 	generate_cecil_value (buffer: GENERATION_BUFFER) is
 			-- Generate Cecil type value.
 		do
-			buffer.putstring ("SK_DTYPE")
+			generate_sk_value (buffer)
 		end
 
 	c_string: STRING is "EIF_REFERENCE"
@@ -105,11 +105,6 @@ feature
 			-- Generate SK value associated to the current type.
 		do
 			Result := Sk_ref
-		end
-
-	cecil_value: INTEGER is
-		do
-			Result := Sk_dtype
 		end
 
 	generate_union (buffer: GENERATION_BUFFER) is

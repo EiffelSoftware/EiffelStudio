@@ -16,16 +16,16 @@ inherit
 			debug_output, complete_instantiation_in, generic_derivation
 		redefine
 			is_feature_pointer, name,
-			description, sk_value, generate_cecil_value,
+			description, sk_value,
 			element_type, reference_type, tuple_code
 		end
 		
 	GEN_TYPE_I
 		undefine
-			is_basic, is_reference, cecil_value, is_void, c_type, is_valid
+			is_basic, is_reference, cecil_value, is_void, c_type, is_valid, generate_cecil_value
 		redefine
 			is_feature_pointer, type_a, description, sk_value,
-			generate_cecil_value, element_type, tuple_code,
+			element_type, tuple_code,
 			name, reference_type
 		end
 
@@ -95,12 +95,6 @@ feature
 			-- Type description for skeleton
 		do
 			create Result
-		end
-
-	generate_cecil_value (f: GENERATION_BUFFER) is
-			-- Generate Cecil type value.
-		do
-			f.putstring ("SK_POINTER")
 		end
 
 	c_string: STRING is

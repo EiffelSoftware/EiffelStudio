@@ -5,7 +5,7 @@ inherit
 		redefine
 			is_feature_pointer,
 			same_as,
-			description, sk_value, hash_code, generate_cecil_value,
+			description, sk_value, hash_code,
 			element_type, default_create, tuple_code
 		end
 
@@ -58,12 +58,6 @@ feature
 			-- Type description for skeleton
 		do
 			create Result
-		end
-
-	generate_cecil_value (f: GENERATION_BUFFER) is
-			-- Generate Cecil type value.
-		do
-			f.putstring ("SK_POINTER")
 		end
 
 	c_string: STRING is "EIF_POINTER"

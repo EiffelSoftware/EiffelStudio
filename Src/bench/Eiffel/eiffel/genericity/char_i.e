@@ -7,7 +7,7 @@ inherit
 		redefine
 			is_char,
 			same_as, element_type, tuple_code,
-			description, sk_value, generate_cecil_value, hash_code
+			description, sk_value, hash_code
 		end
 
 create
@@ -88,16 +88,6 @@ feature -- Access
 			-- Type description for skeleton
 		do
 			create Result.make (is_wide)
-		end
-
-	generate_cecil_value (buffer: GENERATION_BUFFER) is
-			-- Generate cecil type value
-		do
-			if is_wide then
-				buffer.putstring ("SK_WCHAR")
-			else
-				buffer.putstring ("SK_CHAR")
-			end
 		end
 
 	c_string: STRING is

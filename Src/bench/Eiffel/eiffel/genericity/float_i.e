@@ -11,7 +11,7 @@ inherit
 			is_float,
 			is_numeric,
 			same_as, element_type, il_convert_from,
-			description, sk_value, generate_cecil_value, hash_code,
+			description, sk_value, hash_code,
 			generate_byte_code_cast, heaviest,
 			default_create, tuple_code
 		end
@@ -120,12 +120,6 @@ feature -- Byte code generation
 		end
 
 feature -- C code generation
-
-	generate_cecil_value (buffer: GENERATION_BUFFER) is
-			-- Generate Cecil type value.
-		do
-			buffer.putstring ("SK_FLOAT")
-		end
 
 	c_string: STRING is "EIF_REAL"
 			-- String generated for the type.

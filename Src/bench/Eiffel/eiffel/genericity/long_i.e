@@ -13,7 +13,7 @@ inherit
 			is_long,
 			is_numeric,
 			same_as, element_type, il_convert_from,
-			description, sk_value, generate_cecil_value, hash_code,
+			description, sk_value, hash_code,
 			generate_byte_code_cast, heaviest, tuple_code
 		end
 
@@ -143,13 +143,6 @@ feature -- Access
 			-- Type description for skeleton
 		do
 			create Result.make (size)
-		end
-
-	generate_cecil_value (buffer: GENERATION_BUFFER) is
-			-- Generate Cecil type value.
-		do
-			buffer.putstring ("SK_INT")
-			buffer.putint (size)
 		end
 
 	c_string: STRING is

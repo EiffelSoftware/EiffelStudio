@@ -48,6 +48,7 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
 			-- Remove `Current' from its parent.
 		local
 			parent_item: EV_TREE_NODE_LIST
+			original_index: INTEGER
 		do
 			parent_item ?= parent
 			if parent_item /= Void then
@@ -55,12 +56,13 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
 					parent_item_not_void: parent_item /= Void
 					item_contained_in_parent: parent_item.has (Current)
 				end
-				parent_item.prune (Current)			
+				original_index := parent_item.index
+				parent_item.prune (Current)		
+				parent_item.go_i_th (original_index)
 			end
 		ensure
 			parent_void: parent = Void
 		end
-
 
 feature -- Access
 

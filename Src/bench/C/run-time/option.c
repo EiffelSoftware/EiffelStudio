@@ -75,7 +75,7 @@ struct htable *class_table;		/* The H table that contains all info */
 
 /* INTERNAL PROFILE DEFINITIONS */
 
-#define file_name	"./profile_information"
+#define profile_output_file	"profinfo"
 
 /* INTERNAL PROFILE FUNCTIONS */
 
@@ -211,7 +211,7 @@ void exitprf()
 	    j;					/* Counter for the inner-loop */
 	FILE *prof_output;			/* File to write the output in. */
 
-	prof_output = fopen(file_name, "w");
+	prof_output = fopen(profile_output_file, "w");
 	if (prof_output == (FILE *) 0)
 		eraise("Unable to open to output file for profile", EN_FATAL);
 

@@ -1,6 +1,5 @@
 indexing
 	description: "Create MIDL coclass"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

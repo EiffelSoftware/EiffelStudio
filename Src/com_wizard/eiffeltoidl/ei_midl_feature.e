@@ -1,6 +1,5 @@
 indexing
 	description: "MIDL feature"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

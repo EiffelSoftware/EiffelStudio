@@ -70,13 +70,13 @@ feature
 
 	widget_created: BOOLEAN is
 		do
-			Result := button /= Void
+			Result := implementation /= Void
 		end;
 	
 feature {NONE} -- Interface section
 
 	button: PICT_COLOR_B;
-	icon_label: LABEL_G;
+	icon_label: LABEL;
 	
 	update_label is
 		do
@@ -160,6 +160,35 @@ feature  -- Interface section
 				if icon_label.managed then
 					icon_label.unmanage;
 				end;
+			end;
+		end;
+
+feature {EB_BOX}
+
+	update_attributes is
+			-- Update Current colors and font attributes.
+		require
+			exists: widget_created
+		local
+			color: COLOR;	
+			font: FONT;
+			res: like Resources
+		do
+			res := Resources;
+			color := res.background_color;
+			if color /= Void then
+				set_background_color (color);
+				icon_label.set_background_color (color);
+				button.set_background_color (color)
+			end;
+			color := res.foreground_color;
+			if color /= Void then
+				button.set_foreground_color (color)
+				icon_label.set_foreground_color (color);
+			end;
+			font := res.default_font;
+			if font /= Void then
+				icon_label.set_font (font);
 			end;
 		end;
 

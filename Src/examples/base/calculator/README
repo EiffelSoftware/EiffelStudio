@@ -2,7 +2,5 @@ Usage:
 	calculator
 
 Description:
-Calculator in reverse Polish form.  Structure of the program follows
-that described in Chapter 12 of "Object-oriented Software
-Construction."
+Basic calculator in reverse Polish form.  
 

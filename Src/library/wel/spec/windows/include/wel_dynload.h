@@ -12,6 +12,10 @@
 #include "Windows.h"
 #include "eif_portable.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*---------------------------------------------------------------------------*/
 /* Pack the minor and the major version number into a single DWORD           */
 /*---------------------------------------------------------------------------*/
@@ -85,5 +89,9 @@ DWORD cwin_get_comctl32dll_version(void);
 /*  if(cwin_get_shlwapidll_version() >= PACKVERSION(4,71))                   */
 /*---------------------------------------------------------------------------*/
 DWORD cwin_get_shlwapidll_version(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_DYNLOAD_H_ */

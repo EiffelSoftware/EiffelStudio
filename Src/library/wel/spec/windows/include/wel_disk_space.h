@@ -6,8 +6,17 @@
 /* Done			: local disk                                                 */
 /* To be done	: remote disks using UNC                                     */
 /*****************************************************************************/
+
+#ifndef _WEL_DISK_SPACE_H_
+#define _WEL_DISK_SPACE_H_
+
 #include "Windows.h"
 #include "eif_portable.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*---------------------------------------------------------------------------*/
 /* Return the free disk space available for the current user in Mb.          */
 /*   - If the user is Administrator or if the OS is Windows95/98             */
@@ -25,3 +34,9 @@ EIF_BOOLEAN cwin_query_disk_space(
 					EIF_INTEGER Bytes_TotalSpace 
 					)
 		);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

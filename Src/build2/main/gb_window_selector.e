@@ -319,6 +319,8 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			directory_of_root_window: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			original_root_index, new_root_index: INTEGER
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			directory: DIRECTORY
+			temp_file_name: FILE_NAME
 		do
 			perform_delete := True
 			all_objects := objects
@@ -378,7 +380,14 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 						-- to the directory. It will simply be replaced at the root.
 					unparent_tree_node (window_item)
 					Command_handler.Delete_object_command.delete_object (window_item.object)
+				
 				end
+					-- Now actually remove the directory from the disk.
+				create temp_file_name.make_from_string (generated_path.string)
+				temp_file_name.extend (a_directory.text)	
+				create directory.make (temp_file_name)
+				delete_directory_and_content (directory)
+				
 				unparent_tree_node (a_directory)
 					-- Update project so it may be saved.
 				system_status.enable_project_modified

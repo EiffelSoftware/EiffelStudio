@@ -208,8 +208,7 @@ feature -- Code generation
 			if parameters /= Void then
 				buffer := Context.buffer
 
-				generate_cast := Context.final_mode and then
-					generate_parameter_cast
+				generate_cast := generate_parameter_cast
  
 				if generate_cast then
 					arg_types := argument_types

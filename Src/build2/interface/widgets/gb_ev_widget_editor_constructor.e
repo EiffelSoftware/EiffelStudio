@@ -9,11 +9,13 @@ deferred class
 	
 inherit
 	GB_EV_EDITOR_CONSTRUCTOR
+	
+	GB_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
-	
-	GB_CONSTANTS
 	
 	GB_SHARED_OBJECT_HANDLER	
 		export

@@ -28,7 +28,9 @@ inherit
 			set_tab_stops,
 			set_default_tab_stops,
 			text,
-			set_text
+			set_text,
+			process_notification_info,
+			caret_position
 		end
 
 	WEL_RICH_EDIT_MESSAGE_CONSTANTS
@@ -120,6 +122,16 @@ feature -- Status report
 				Result.to_integer)
 		end
 
+	caret_position: INTEGER is
+		local
+			range: WEL_CHARACTER_RANGE
+		do
+			!! range.make_empty
+			cwin_send_message (item, Em_exgetsel, 0,
+				range.to_integer)
+			Result := range.minimum
+		end
+		
 	has_selection: BOOLEAN is
 			-- Has a current selection?
 		do
@@ -222,6 +234,17 @@ feature -- Status report
 			!! p.make (a_x, a_y)
 			Result := cwin_send_message_result (item,
 				Em_charfrompos, 0, p.to_integer)
+		end
+
+	line_number_from_position (a_pos: INTEGER): INTEGER is
+			-- Retrieves the line number from a character position.
+			-- Line numbers start at 0.
+		require
+			exists: exists
+			a_pos_large_enough: a_pos >= 0
+		do
+			Result := cwin_send_message_result (item,
+				Em_exlinefromchar, 0, a_pos)
 		end
 
 	event_mask: INTEGER is
@@ -697,6 +720,29 @@ feature -- Element change
 			dc.end_document
 		end
 
+		ignore_filtered_message is
+				-- Call this message from within `on_en_msgfilter'
+				-- to prevent the filtered message to be handled
+				-- by the Rich Edit Control.
+			do
+				parent.set_message_return_value (1)
+				parent.disable_default_processing
+			end
+feature -- Notifications
+
+	on_en_msgfilter (a_msg_filter: WEL_MSG_FILTER) is
+			-- Notfication of a keyboard or mouse event in the control. 
+			-- Only notfications are sent that are enabled
+			-- in the `event_mask'.
+			-- Note:
+			-- To prevent the Rich Edit Control from handling the message
+			-- indicated with `a_msg_filter' call `ignore_filtered_message'
+		require
+			exists: exists
+			msg_filter_exists: a_msg_filter /= Void and then a_msg_filter.exists
+		do
+		end
+
 feature -- Obsolete
 
 	default_char_format: WEL_CHARACTER_FORMAT is obsolete
@@ -724,7 +770,9 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			Result := "RichEdit"
+			!! Result.make (0)
+--			Result.from_c (Class_name_pointer) -- for version 2.0
+			Result := "RichEdit" -- for version 1.0
 		end
 
 	default_style: INTEGER is
@@ -733,6 +781,27 @@ feature {NONE} -- Implementation
 			Result := Ws_visible + Ws_child + Ws_border +
 				Ws_hscroll + Ws_vscroll + Es_savesel +
 				Es_disablenoscroll + Es_multiline
+		end
+
+	process_notification_info (notification_info: WEL_NMHDR) is
+		local
+			a_msg_filter: WEL_MSG_FILTER
+		do
+			if
+				notification_info.code = En_msgfilter
+			then
+				create a_msg_filter.make_from_nmhdr (notification_info)
+				on_en_msgfilter (a_msg_filter)			
+			end
+		end
+
+feature {NONE} -- Externals
+
+	Class_name_pointer: POINTER is
+		external
+			"C [macro %"richedit.h%"]"
+		alias
+			"RICHEDIT_CLASS"
 		end
 
 end -- class WEL_RICH_EDIT
@@ -752,4 +821,6 @@ end -- class WEL_RICH_EDIT
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
+
 

@@ -26,8 +26,10 @@ feature
 
 feature {NONE} -- Implementation
 
+--	rich_edit_dll_name: STRING is "riched20.dll"
 	rich_edit_dll_name: STRING is "riched32.dll"
 			-- Name of the rich edit DLL
+	
 
 end -- class WEL_RICH_EDIT_DLL
 

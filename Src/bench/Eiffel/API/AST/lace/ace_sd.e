@@ -16,6 +16,11 @@ inherit
 	EIFFEL_ENV
 
 	SHARED_EIFFEL_PROJECT
+	
+	SHARED_IL_EMITTER
+		export
+			{NONE} all
+		end
 
 create
 	default_create,
@@ -423,6 +428,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			l_precomp_assembly: ASSEMBLY_I
 			l_cluster_of_name, l_cluster_of_path: CLUSTER_I
 			l_new_assemblies, l_local_assemblies: ARRAYED_LIST [ASSEMBLY_I]
+			l_emitter: like il_emitter
 			vdcn: VDCN
 			vd28: VD28
 		do
@@ -522,6 +528,11 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					l_new_assemblies.forth
 				end
 
+				l_emitter := il_emitter
+				if l_emitter /= Void then
+						-- unload emitter used resources
+					l_emitter.unload
+				end
 			end
 		end
 

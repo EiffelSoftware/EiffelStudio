@@ -386,7 +386,11 @@ Index_value: Identifier
 			{ $$ := $1 }
 	|	Creation_expression TE_END
 			{
-				create {CUSTOM_ATTRIBUTE_AS} $$.initialize ($1)
+				create {CUSTOM_ATTRIBUTE_AS} $$.initialize ($1, Void)
+			}
+	|	Creation_expression Manifest_tuple TE_END
+			{
+				create {CUSTOM_ATTRIBUTE_AS} $$.initialize ($1, $2)
 			}
 	;
 

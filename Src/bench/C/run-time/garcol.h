@@ -33,57 +33,6 @@ extern "C" {
 #define CHUNK_MIN		5		/* Minimum Eiffel chunk # to activate plsc() */
 #define PLSC_PER		3		/* Period of plsc in acollect */
 #define SPOILT_TBL		20		/* Size of spoilt chunks recording table */
-#define TENURE_MAX		(1<<AGE_BITS)	/* Non reached age */
-
-/*
- * General information structure.
- */
-struct gacinfo {
-	unsigned long nb_full;		/* Number of full GC collections */
-	unsigned long nb_partial;	/* Number of partial collections */
-	unsigned long mem_used;		/* State of memory after previous run */
-	unsigned long mem_copied;	/* Amount of memory copied by the scavenging */
-	unsigned long mem_move;		/* Size of the 'from' spaces */
-	int gc_to;					/* Number of 'to' zone allocated for plsc */
-	char status;				/* Describes the collecting status */
-};
-
-struct gacstat {
-	long mem_used;			/* State of memory after previous run */
-	long mem_collect;		/* Memory collected during previous run */
-	long mem_avg;			/* Average memory collected in a cycle */
-	long real_avg;			/* Average amount of real cs used by plsc() */
-	long real_time;			/* Amount of real cs used by last plsc() */
-	long real_iavg;			/* Average real time between two collections */
-	long real_itime;		/* Real time between two collections */
-	double cpu_avg;			/* Average amount of CPU used by plsc() */
-	double sys_avg;			/* Average kernel time used by plsc() */
-	double cpu_iavg;		/* Average CPU time between two collections */
-	double sys_iavg;		/* Average kernel time between collections */
-	double cpu_time;		/* Amount of CPU used by last plsc() */
-	double sys_time;		/* Average kernel time used by last plsc() */
-	double cpu_itime;		/* CPU time between two collections */
-	double sys_itime;		/* Average kernel time between collections */
-};
-
-/*
- * Stack used by local variables, remembered set, etc... It is implemented
- * with small chunks linked together.
- */
-struct stack {
-	struct stchunk *st_hd;	/* Head of chunk list */
-	struct stchunk *st_tl;	/* Tail of chunk list */
-	struct stchunk *st_cur;	/* Current chunk in use (where top is) */
-	char **st_top;			/* Top in chunk (pointer to next free location) */
-	char **st_end;			/* Pointer to first element beyond current chunk */
-};
-
-struct stchunk {
-	struct stchunk *sk_next;	/* Next chunk in stack */
-	struct stchunk *sk_prev;	/* Previous chunk in stack */
-	char **sk_arena;			/* Arena where objects are stored */
-	char **sk_end;				/* Pointer to first element beyond the chunk */
-};
 
 /*
  * Eiffel flags -- edit with care.
@@ -108,7 +57,6 @@ struct stchunk {
  * For aging -- edit with care.
  */
 #define AGE_ONE		0x02000000		/* First birthday time */
-#define AGE_BITS	4				/* How many bits are used to store age */
 #define AGE_OFFSET	25				/* Age starts at bit 25 and lasts 4 bits */
 
 /*
@@ -148,27 +96,6 @@ extern void gc_stop(void);				/* Stop the garbage collector */
 extern void gc_run(void);				/* Restart the garbage collector */
 extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
 extern void gfree(register union overhead *zone);	/* Garbage collector's free routine */
-
-/* Exported data-structure declarations */
-extern struct stack loc_set;			/* Local variable stack */
-extern struct stack once_set;			/* Once functions */
-extern struct stack moved_set;			/* Describes the new generation */
-extern struct chunk *last_from;			/* Last 'from' chunk used by plsc() */
-extern struct sc_zone ps_from;			/* Partial scavenging 'from' zone */
-extern struct sc_zone ps_to;			/* Partial scavenging 'to' zone */
-
-/* To start timing or not for GC-profiling */
-extern int gc_ran;				/* Has the GC been running */
-extern int gc_running;			/* Is the GC currently running */
-extern double last_gc_time;		/* Time spent during the last run */
-
-/* Exported variables */
-extern char *root_obj;			/* Address of the 'root' object */
-extern uint32 tenure;			/* Tenure value for next generation cycle */
-extern long th_alloc;			/* Allocation threshold (in bytes) */
-extern long plsc_per;			/* Period of plsc() in acollect() */
-extern int gc_monitor;			/* GC monitoring flag */
-extern int r_fides;				/* moved here from retrieve.c */
 
 
 #ifdef __cplusplus

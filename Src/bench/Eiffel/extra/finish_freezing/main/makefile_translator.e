@@ -548,8 +548,9 @@ feature {NONE} -- Translation
 			dir: STRING -- the directory
 			filename: STRING -- the filename of the sub makefile
 			number: INTEGER -- the number of the Eobj file
-			F_done, D_done, C_done, is_emain: BOOLEAN
+			F_done, D_done, C_done, is_emain, is_E1_makefile: BOOLEAN
 			emain_line: STRING
+			min: INTEGER
 		do
 			debug ("progress")
 				io.putstring ("%Tdependencies%N")
@@ -576,12 +577,13 @@ feature {NONE} -- Translation
 				end
 
 				dir := lastline.substring (1, dir_sep_pos-1)
-				filename := lastline.substring (dir_sep_pos+1, lastline.index_of ('.', 1)-1)
+				min := (lastline.index_of ('.', 1) - 1).min (lastline.index_of (':', 1) - 1)
+				filename := lastline.substring (dir_sep_pos+1, min)
 
-				makefile.putstring (dir)
-				makefile.putstring (directory_separator)
 
 				if filename.is_equal (options.get_string ("emain_text", Void)) then
+					makefile.putstring (dir)
+					makefile.putstring (directory_separator)
 					is_emain := True
 					emain_line := lastline.substring( lastline.index_of ('$', 1), lastline.count)
 					if emain_line.count > 0 then
@@ -602,7 +604,11 @@ feature {NONE} -- Translation
 						makefile.putstring (options.get_string ("emain_obj_text", Void))
 						makefile.putstring (": Makefile%N")
 					end
+				elseif filename.is_equal ("Makefile") and then dir.is_equal ("E1") then
+					is_E1_makefile := True
 				else
+					makefile.putstring (dir)
+					makefile.putstring (directory_separator)
 					dependent_directories.extend (dir)
 
 					makefile.putstring (filename)
@@ -611,48 +617,53 @@ feature {NONE} -- Translation
 					makefile.putstring (": Makefile%N")
 				end
 
-				makefile.putstring ("%T")
-				makefile.putstring (options.get_string ("cd", Void))
-				makefile.putstring (" ")
-				makefile.putstring (dir)
-				makefile.putstring (options.get_string ("subcommand_separator", " && "))
-				if not is_emain then
-					makefile.putstring ("$(START_TEST) ")
-				end
-				makefile.putstring ("$(MAKE)")
-				makefile.putstring (" ")
-
-				if is_emain then
-					makefile.putstring (options.get_string ("emain_obj_text", Void))
-				else
-					makefile.putstring (filename)
-					makefile.putstring (".")
-					makefile.putstring (options.get_string ("intermediate_file_ext", Void))
-				end
-
-				if not is_emain then
-					makefile.putstring (" $(END_TEST)")
-				end
-				makefile.putstring (options.get_string ("subcommand_separator", " && "))
-				makefile.putstring (options.get_string ("cd", Void))
-				makefile.putstring (" ")
-				makefile.putstring (options.get_string ("updir", Void))
-
-				read_next
-
-				if is_emain then
-					makefile.putstring ("%N%T$(RM) ")
+				if not is_E1_makefile then
+					makefile.putstring ("%T")
+					makefile.putstring (options.get_string ("cd", Void))
+					makefile.putstring (" ")
 					makefile.putstring (dir)
-					makefile.putstring (directory_separator)
-					makefile.putstring ("emain.c%N")
-					is_emain := False
+					makefile.putstring (options.get_string ("subcommand_separator", " && "))
+					if not is_emain then
+						makefile.putstring ("$(START_TEST) ")
+					end
+					makefile.putstring ("$(MAKE)")
+					makefile.putstring (" ")
+	
+					if is_emain then
+						makefile.putstring (options.get_string ("emain_obj_text", Void))
+					else
+						makefile.putstring (filename)
+						makefile.putstring (".")
+						makefile.putstring (options.get_string ("intermediate_file_ext", Void))
+					end
+	
+					if not is_emain then
+						makefile.putstring (" $(END_TEST)")
+					end
+					makefile.putstring (options.get_string ("subcommand_separator", " && "))
+					makefile.putstring (options.get_string ("cd", Void))
+					makefile.putstring (" ")
+					makefile.putstring (options.get_string ("updir", Void))
+
+					read_next
+
+					if is_emain then
+						makefile.putstring ("%N%T$(RM) ")
+						makefile.putstring (dir)
+						makefile.putstring (directory_separator)
+						makefile.putstring ("emain.c%N")
+						is_emain := False
+					end
+
+					makefile.putstring ("%N%N")
+				else
+					is_E1_makefile := False
+					read_next
 				end
 
-				makefile.putstring ("%N%N")
-
 				read_next
 				read_next
-
+	
 				lastline := clone (makefile_sh.laststring)
 			end
 			

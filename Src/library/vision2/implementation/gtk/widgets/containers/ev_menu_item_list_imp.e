@@ -38,6 +38,7 @@ feature {NONE} -- implementation
 			menu_imp: EV_MENU_IMP
 			chk_imp: EV_CHECK_MENU_ITEM_IMP
 			rgroup: POINTER
+			radio_item_pointer: POINTER
 		do
 			an_item_imp ?= v.implementation
 			a_curs := interface.cursor
@@ -97,8 +98,22 @@ feature {NONE} -- implementation
 								sep_imp.set_radio_group (radio_imp.radio_group)
 								radio_imp.enable_select
 							else
-								radio_imp.set_radio_group (sep_imp.radio_group)
+								rgroup := C.g_slist_prepend (sep_imp.radio_group,  radio_imp.c_object)
+								C.set_gtk_radio_menu_item_struct_group (radio_imp.c_object, rgroup)
+								from
+									rgroup := sep_imp.radio_group
+								until
+									rgroup = Default_pointer
+								loop
+									radio_item_pointer := C.gslist_struct_data (rgroup)
+									C.set_gtk_radio_menu_item_struct_group (
+										radio_item_pointer,
+										radio_imp.radio_group
+									)
+									rgroup := C.gslist_struct_next (rgroup)
+								end
 								C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
+								sep_imp.set_radio_group (radio_imp.radio_group)
 							end
 						else
 							-- It is above any separator.
@@ -219,6 +234,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/26 23:47:22  king
+--| Implemented radio_grouping after separator
+--|
 --| Revision 1.14  2000/04/26 16:37:26  king
 --| Corrected reordering external call
 --|

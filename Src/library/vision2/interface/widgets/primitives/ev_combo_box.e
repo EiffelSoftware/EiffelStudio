@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision Combo-box. A combo-box contains a %
@@ -96,6 +95,9 @@ end -- class EV_COMBO_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/02/17 02:20:37  oconnor
+--| released
+--|
 --| Revision 1.24  2000/02/15 19:26:52  king
 --| Exporting interface to ev_any
 --|

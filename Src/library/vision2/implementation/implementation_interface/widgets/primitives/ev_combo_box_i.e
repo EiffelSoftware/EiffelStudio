@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description: "EiffelVision Combo-box. Implementation interface"
@@ -108,6 +107,9 @@ end -- class EV_COMBO_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/17 02:19:23  oconnor
+--| released
+--|
 --| Revision 1.23  2000/02/14 11:40:38  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision radio button.%
@@ -127,6 +126,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/17 02:18:47  oconnor
+--| released
+--|
 --| Revision 1.18  2000/02/14 11:40:44  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
@@ -332,6 +331,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/17 02:18:41  oconnor
+--| released
+--|
 --| Revision 1.19  2000/02/15 19:23:51  king
 --| Tidied up code in select_region
 --|

@@ -12,8 +12,9 @@ feature
 
 	comment: EIFFEL_COMMENTS;
 
-	clauses: LINKED_LIST [FEATURE_CLAUSE_EXPORT];
-
+	clauses: SORTED_TWO_WAY_LIST [FEATURE_CLAUSE_EXPORT];
+			-- Sorted list of features based on export clauses
+			-- and comments
 
 	make is
 		do
@@ -61,58 +62,37 @@ feature
 		require
 			good_argument: other /= void
 		local
-			new_clauses: like clauses;
+			other_clauses: like clauses;
 			clauses_count, other_count: INTEGER;
+			found: BOOLEAN;
+			item: FEATURE_CLAUSE_EXPORT
 		do
 			from
-				!!new_clauses.make;
-				clauses.start;
-				other.clauses.start;
-				clauses_count := clauses.count;
-				other_count := other.clauses.count
-			invariant
-				clauses_is_stable: clauses.count = clauses_count;
-				other_is_stable: other.clauses.count = other_count;
-			variant
-				other_count + clauses_count + 3
-				- clauses.index - other.clauses.index	
-			--	clauses_count + other_count - new_clauses.count + 1
+				other_clauses := other.clauses;
+				other_clauses.start
 			until
-				clauses.after
-				and other.clauses.after
+				other_clauses.after
 			loop
+				item := other_clauses.item;
 				from
+					found := False;
+					clauses.start
 				until
-					clauses.after 
-					or else ((not other.clauses.after)
-						and then clauses.item > other.clauses.item )
+					clauses.after or else
+					found
 				loop
-					new_clauses.add_right (clauses.item);
-					new_clauses.finish;
-					clauses.forth;
+					found := clauses.item.compatible (item);
+					if not found then
+						clauses.forth
+					end
+				end
+				if found then
+					clauses.item.merge (item);
+				else
+					clauses.add (item)
 				end;
-				if not new_clauses.off and not other.clauses.off
-				then
-					if new_clauses.item.compatible (other.clauses.item) then
-						new_clauses.item.merge (other.clauses.item);
-					else
-						new_clauses.add_right (other.clauses.item);
-						new_clauses.finish;
-					end;
-					other.clauses.forth;
-				end;
-				from
-				until
-					other.clauses.after
-					or else ((not clauses.after)
-						and then (other.clauses.item >= clauses.item))
-				loop
-					new_clauses.add_right (other.clauses.item);
-					new_clauses.finish;
-					other.clauses.forth;
-				end;
-			end;
-			clauses := new_clauses;
+				other_clauses.forth
+			end
 		end;
 
 	add (names_adapter: NAMES_ADAPTER) is
@@ -121,35 +101,28 @@ feature
 		local
 			names: NAMES_LIST;
 			new_clause: FEATURE_CLAUSE_EXPORT;
-			synonymous: LINKED_LIST [NAMES_LIST];
 		do
-			from
-				synonymous := names_adapter.synonymous;
-				synonymous.start;
-			until
-				synonymous.after
-			loop
-				names := synonymous.item;
+			names := names_adapter.names_list;
+			if names /= Void then
 				from
 					clauses.start
 				until
 					clauses.after
-					or else clauses.item.export_less_than (names)
+					or else clauses.item.can_include (names)
 				loop
 					clauses.forth;
 				end;
-				clauses.back;
-				if
-					not clauses.off
-					and then clauses.item.can_include (names) 
-				then
-					clauses.item.add (names_adapter.new_as (names));
+			end;
+			if names /= Void then 
+				names_adapter.update_ast;
+				if not clauses.off then
+					clauses.item.add (names_adapter.ast);
 				else
-					!!new_clause.make (names_adapter.new_as (names), names.feature_i);
+					!!new_clause.make (names_adapter.ast, names.feature_i);
+					clauses.finish;
 					clauses.add_right (new_clause)	
-				end;
-				synonymous.forth;
-			end
+				end
+			end;
 		end;
 
 	format (ctxt: FORMAT_CONTEXT) is

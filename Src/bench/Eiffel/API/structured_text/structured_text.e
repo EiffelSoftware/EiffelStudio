@@ -13,7 +13,6 @@ inherit
 		select
 			add	
 		end;
-
 	TWO_WAY_LIST [TEXT_ITEM]
 		rename
 			add as old_add
@@ -22,9 +21,8 @@ inherit
 				all;
 			{ANY}
 				cursor
-		end
-			
-
+		end;
+	STORABLE;
 
 creation
 

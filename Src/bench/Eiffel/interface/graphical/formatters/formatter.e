@@ -12,6 +12,8 @@ inherit
 	
 feature 
 
+	formatted: STONE;
+
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into watch shape.
 		do
@@ -20,8 +22,18 @@ feature
 			elseif argument = get_out then
 				text_window.tool.clean_type
 			elseif argument = warner then
+					--| If it comes here this means ok has
+					--| been pressed in the warner window
+					--| for file modification (only showtext
+					--| command can modify text)
 				set_global_cursor (watch_cursor);
-				execute_licenced (formatted);
+				formatted := text_window.root_stone;
+				if formatted /= Void then
+						--| Last format has to be
+						--| show text command.
+					text_window.last_format.format (formatted);
+				end
+				--execute_licenced (formatted);
 				restore_cursors;
 			elseif not text_window.changed then
 				if argument = text_window then
@@ -37,13 +49,6 @@ feature
 			end
 		end;
 
-	
-feature {NONE}
-
-	formatted: STONE;
-			-- Last stone to be formatted since last call to `execute'
-
-	
 feature 
 
 	format (stone: STONE) is

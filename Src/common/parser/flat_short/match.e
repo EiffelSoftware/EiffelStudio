@@ -1,17 +1,17 @@
 class MATCH
 
 inherit
+
 	BASIC_ROUTINES
 
-	
 creation
-	make 
 
+	make 
 
 feature
 
 	make(t, p: STRING; must_check: BOOLEAN) is
-			-- set text to t and pattern to p
+			-- Set text to t and pattern to p
 		require
 			text_exist: t /= void;
 			pattern_exist: t /= pattern;
@@ -26,20 +26,17 @@ feature
 			pattern = p;
 			before;
 			index_before;
-			--must_check_borders := must_check
 		end;
-
 	
 	pattern: STRING;
-		-- pattern to search in text
+		-- Pattern to search in text
 
 	text: STRING;
-		-- text where the search is performed	
+		-- Text where the search is performed	
 
 	must_check_borders: BOOLEAN;
-		-- must check whether character before and after pattern
+		-- Must check whether character before and after pattern
 		-- are compatible with pattern
-	
 
 	position: INTEGER;
 		-- position of pattern in text after last find
@@ -60,11 +57,6 @@ feature
 			-- nothing at left of current position in text
 		do
 			Result := position < 1;
-		end;
-
-	offleft: BOOLEAN is obsolete "Use `before'"
-		do
-			Result := before
 		end;
 
 	after: BOOLEAN  is
@@ -94,7 +86,7 @@ feature
 		end;
 
 	find_next is
-		-- find first substring in text matching pattern after position
+		-- Find first substring in text matching pattern after position
 		-- position is set to the index of the first character
 		-- of the substring or text.count + 1 if not found
 
@@ -117,11 +109,9 @@ feature
 				position := last_start;
 			end;
 		end;	
-					
-				
 
 	find_previous is
-		-- find last substring in text matching pattern before position
+		-- Find last substring in text matching pattern before position
 		-- postition is set to the index of the last character of the
 		-- substring or 0 if not found
 
@@ -145,8 +135,7 @@ feature
 			end;
 		end;
 
-
-feature {}
+feature {NONE}
 	
 	index: INTEGER;
 		-- current position in pattern
@@ -156,7 +145,6 @@ feature {}
 		do
 			Result := index = pattern.count;
 		end;
-		
 
 	index_after: BOOLEAN is
 			-- nothing at right of current index in pattern
@@ -210,9 +198,6 @@ feature {}
 			end;
 		end;
 			
-				
-			
-	
 	match_forward is
 		-- increment position and index as long as corresponding
 		-- character in text and pattern match
@@ -245,7 +230,6 @@ feature {}
 			end;
 		end;
 
-
 	stop_token (i: INTEGER): BOOLEAN is
 		local
 			c1: CHARACTER; c2: CHARACTER;
@@ -266,7 +250,6 @@ feature {}
 				end
 			end
 		end;
-	
 
 	matching_chars: BOOLEAN is
 			-- Do c1 and c2 match each other
@@ -275,20 +258,17 @@ feature {}
 				= to_lower(pattern @ index);
 		end;
 
-
-			
-			
-	Specials: ARRAY [CHARACTER] is once
+	Specials: ARRAY [CHARACTER] is 
+		once
 			Result := << '-', ';', ',', ':', '.', '!', '=',
 				'/', '>', '(', ')', '[', ']', '{', '}', '<', '%'', '?', 
-				'"', '+', '$', '%%', '*' >> end;
+				'"', '+', '$', '%%', '*' >> 
+		end;
 		
-
-
-	Blanks: ARRAY [CHARACTER] is once
-	Result := << ' ', '%T' >>
-end;
-
+	Blanks: ARRAY [CHARACTER] is 
+		once
+			Result := << ' ', '%T' >>
+		end;
 
 	to_lower (c: CHARACTER): CHARACTER is
 			-- if c is not a letter then c
@@ -300,8 +280,6 @@ end;
 				Result := c;
 			end;
 		end;
-
-
 
 invariant
 	text_exists: text /= void;

@@ -1,10 +1,11 @@
 class EIFFEL_LINE
 
 inherit
+
 	COMPARABLE
 
-
 creation
+
 	make
 	
 feature
@@ -24,7 +25,6 @@ feature
 			Result := position < other.position;
 		end;
 			
-
 	text: STRING;
 		-- text of the line;
 
@@ -38,7 +38,6 @@ feature
 		do
 			Result := text.empty;
 		end;
-
 	
 	left_adjust is
 			-- Remove leading blanks or tabs update position accordingly
@@ -48,7 +47,8 @@ feature
 			from
 				i := 1
 			until
-				(i > text.count) or else ((text @ i) /= ' ') and ((text @ i) /= '%T')	
+				(i > text.count) or else ((text @ i) /= ' ') 
+				and then ((text @ i) /= '%T')	
 			loop
 				i := i + 1
 			end;
@@ -56,7 +56,6 @@ feature
 			text.tail (text.count - i);
 			position := position + i;
 		end;
-
 
 	right_adjust is
 			-- Remove trailing blanks or tabs.
@@ -66,7 +65,8 @@ feature
 			from 
 				i := text.count
 			until
-				  (i < 1) or else ((text @ i) /= ' ') and ((text @ i) /= '%T')
+				(i < 1) or else ((text @ i) /= ' ') 
+				and then ((text @ i) /= '%T')
 			loop
 	 			i := i - 1
 			end;
@@ -76,12 +76,11 @@ feature
 				text.wipe_out;
 			end;
 		end;
-
 	
-	comment:  like Current is
-			-- comment at the end of the string			
+	comment: like Current is
+			-- Comment at the end of the string			
 		local
-			seeker : MATCH;
+			seeker: MATCH;
 		do
 			if comment_string = void  and not comment_found then
 				!!seeker.make (text, "--", false);
@@ -95,8 +94,6 @@ feature
 			Result := comment_string;
 		end;
 				
-			
-	
 	discard_comment	is
 			-- discard the comment, if any
 		do
@@ -105,10 +102,18 @@ feature
 			comment_string := void;
 		end;
 
+feature -- trace
 
+	trace is
+		do
+			io.error.putstring ("position: ");
+			io.error.putint (position);
+			io.error.putstring (" ");
+			io.error.putstring (text);
+			io.error.new_line;	
+		end
 
-feature {}
-	
+feature {NONE}
 
 		comment_string: like Current;
 		

@@ -38,6 +38,13 @@ feature
 			ctxt.commit;
 		end;
 
+	trace is
+		do
+			io.error.putstring ("origin feature for assertion: ");
+			io.error.putstring (origin.feature_name);
+			io.error.new_line;
+		end;
+
 
 end
 		

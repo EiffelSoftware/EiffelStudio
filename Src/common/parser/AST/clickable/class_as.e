@@ -189,6 +189,8 @@ feature -- formatting
 			ctxt.flat_struct.format (ctxt);	
 			ctxt.commit;	
 			ctxt.put_keyword ("end");
+			ctxt.end_class_text;
+			ctxt.next_line;
 			ctxt.commit;
 		end;
 

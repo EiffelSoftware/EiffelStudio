@@ -227,7 +227,7 @@ end;
 		local
 			s_table: SELECT_TABLE;
 			rout_id_set: ROUT_ID_SET;
-			written_in, i: INTEGER;
+			i: INTEGER;
 			rout_id: INTEGER;
 		do
 			s_table := Feat_tbl_server.item

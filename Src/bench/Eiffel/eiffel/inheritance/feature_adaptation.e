@@ -28,6 +28,16 @@ feature
 			-- Do nothing
 		end;
 
+	trace is
+		do
+			io.error.putstring ("Adapted feature: ");
+			io.error.putstring (new_feature.feature_name);
+			io.error.new_line;
+			io.error.putstring ("inherited features%N");
+			old_features.trace;
+			io.error.new_line;
+		end
+
 invariant
 
 	old_features_exists: old_features /= Void;

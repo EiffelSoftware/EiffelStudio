@@ -305,7 +305,6 @@ feature -- Type check, byte code and dead code removal
 			if  call /= void then
 				ctxt.need_dot;
 				call.format (ctxt);
-				-- check whether "." is needeed
 			end;
 			ctxt.put_breakable;
 			ctxt.always_succeed;

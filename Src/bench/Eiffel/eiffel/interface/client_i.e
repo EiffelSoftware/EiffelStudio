@@ -86,9 +86,9 @@ feature -- Incrementality
 			consistency: other.written_in = written_in;
 		local
 			other_clients: like clients;
-			pos, other_pos: INTEGER;
+			cur, other_cur: CURSOR;
 		do
-			pos := clients.position;
+			cur := clients.cursor;
 			other_clients := other.clients;
 			from
 				Result := True;
@@ -96,14 +96,14 @@ feature -- Incrementality
 			until
 				clients.after or else not Result
 			loop
-				other_pos := other_clients.position;
+				other_cur := other_clients.cursor;
 				other_clients.start;
 				other_clients.search_equal (clients.item);
 				Result := not other_clients.after;
-				other_clients.go (other_pos);
+				other_clients.go_to (other_cur);
 				clients.forth;
 			end;
-			clients.go (pos);
+			clients.go_to (cur);
 		end;
 
 	same_as (other: CLIENT_I): BOOLEAN is

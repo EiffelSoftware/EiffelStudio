@@ -44,11 +44,13 @@ feature -- formatter
 			if not last_was_printed then 
 				ctxt.rollback; -- check whether must retain if short
 			else
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.set_separator(",");
-				ctxt.new_line_between_tokens;
-				feature_list.format (ctxt);
+				if feature_list /= Void then
+					ctxt.indent_one_more;
+					ctxt.next_line;
+					ctxt.set_separator(",");
+					ctxt.new_line_between_tokens;
+					feature_list.format (ctxt);
+				end;
 				ctxt.commit
 			end
 		end;

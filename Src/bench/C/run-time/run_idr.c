@@ -136,8 +136,9 @@ rt_private bool_t run_idr_setpos(IDR *idrs, size_t pos)
 	 * false otherwise.
 	 */
 
-	if (pos >= (size_t) idrs->i_size || pos < 0)
+	if (pos >= (size_t) idrs->i_size) {
 		return FALSE;
+	}
 	
 	idrs->i_ptr = idrs->i_buf + pos;
 	return TRUE;

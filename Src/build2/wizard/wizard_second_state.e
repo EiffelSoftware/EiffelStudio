@@ -15,12 +15,24 @@ inherit
 		end
 		
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_NAMING_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	EIFFEL_RESERVED_WORDS
+		export
+			{NONE} all
+		end
 
 create
 	make

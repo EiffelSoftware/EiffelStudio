@@ -1509,15 +1509,31 @@ feature {NONE} -- Implementation
 	wel_text_length, text_length: INTEGER is
 			-- Number of characters comprising `text'. This is an optimized
 			-- version, which only recomputes the length if not `text_up_to_date'.
+		local
+			int: INTEGER
+			l_length: INTEGER
 		do
-			if not text_up_to_date then
-				internal_text_length := text.count
-				Result := internal_text_length
-				text_up_to_date := True
+			if has_word_wrapping then				
+				l_length := cwin_get_window_text_length (wel_item)
+				if not text_up_to_date or l_length /= private_windows_text_length then
+					private_windows_text_length := l_length
+					internal_text_length := text.count
+					Result := internal_text_length
+					text_up_to_date := True
+				else
+					Result := internal_text_length
+				end
 			else
-				Result := internal_text_length
+				-- If no wrapping we can calculate this the quick way.
+				Result := cwin_get_window_text_length (wel_item) - line_count + 1
 			end
 		end
+		
+	private_windows_text_length: INTEGER
+		-- The last value that windows returned as being the text length.
+		-- We cannot use this directly as it includes %R%N but we can use
+		-- it as a final check in `wel_text_length' to see if we must recomupte
+		-- the length.
 
 feature {EV_ANY_I} -- Implementation
 

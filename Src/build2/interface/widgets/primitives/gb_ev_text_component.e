@@ -107,7 +107,7 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
-				for_all_objects (agent {EV_TEXTABLE}.set_text (element_info.data))
+				for_all_objects (agent {EV_TEXT_COMPONENT}.set_text (element_info.data))
 			end
 			element_info := full_information @ (Is_editable_string)
 			if element_info /= Void and then element_info.data.is_equal (False_string) then

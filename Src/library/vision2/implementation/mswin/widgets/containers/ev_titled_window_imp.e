@@ -445,6 +445,9 @@ feature {NONE} -- Implementation
 							+ system_metrics.window_border_height 
 							+ 2 * system_metrics.window_frame_height)
 			end
+			if has_menu then
+				draw_menu
+			end
 			never_displayed := False
 		end
 

@@ -38,15 +38,46 @@ feature -- Initialization
 			end
 		end
 
-	make_default_root (doc: XML_ELEMENT; struct: like structure) is
+	make_root (location: STRING; struct: RESOURCE_STRUCTURE) is
+		deferred
+		end
+
+	make_default_root (file_name: FILE_NAME; struct: like structure) is
+		local
+			file: RAW_FILE
+			s: STRING
+			parser: XML_TREE_PARSER
+			error_message: STRING
 		do
 			name := "root"
 			description := "root folder"
 			structure := struct
-			load_default_attributes (doc)
+
+			create parser.make
+			create file.make (file_name)
+			if file.exists then
+				file.open_read
+				file.read_stream (file.count)
+				s := file.last_string
+				parser.parse_string (s)
+				parser.set_end_of_file
+				file.close
+				if not parser.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
+					error_message := "EIFFEL_DOCUMENT TAG missing%N"
+				else
+					xml_data := parser.root_element
+					load_default_attributes (xml_data)
+				end
+			else
+				error_message := "does not exist%N"
+				error_message.prepend (file_name)
+			end
+			if error_message /= Void then
+				io.put_string (error_message)
+			end
 		end
 
-	load_default_attributes (xml_data: XML_ELEMENT) is
+	load_default_attributes (xml_elem: XML_ELEMENT) is
 		local
 			res_xml: XML_RESOURCE
 			resource: RESOURCE
@@ -60,7 +91,7 @@ feature -- Initialization
 			create description.make (20)
 			create child_list.make
 			create resource_list.make
-			cursor := xml_data.new_cursor
+			cursor := xml_elem.new_cursor
 			from
 				cursor.start
 			until
@@ -94,6 +125,12 @@ feature -- Initialization
 				end
 				cursor.forth
 			end
+		end
+
+feature -- Update
+
+	update_root (location: STRING) is
+		deferred
 		end
 
 feature -- Status Report
@@ -156,6 +193,12 @@ feature -- Access
 
 	child_list: LINKED_LIST [like Current]
 
+feature -- Save
+
+	root_save (location: STRING) is
+		deferred
+		end
+
 feature -- Interface creation
 
 	create_interface is
@@ -170,6 +213,10 @@ feature -- Interface creation
 feature -- Implementation
 
 	interface: RESOURCE_FOLDER
+
+feature {NONE} -- Implementation
+
+	xml_data: XML_ELEMENT
 
 invariant
 	structure_exists: structure /= Void

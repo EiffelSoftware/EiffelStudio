@@ -1242,63 +1242,63 @@ feature {NONE} -- dynamic method calls
 
 	c_call_boolean_method (env: POINTER; oid: POINTER; mid: POINTER; args: POINTER): BOOLEAN is
 		external
-			"C++ JNIEnv signature (jclass, jmethodID, jvalue *): EIF_BOOLEAN use %"jni.h%""
+			"C++ JNIEnv signature (jobject, jmethodID, jvalue *): EIF_BOOLEAN use %"jni.h%""
 		alias
 			"CallBooleanMethodA"
 		end
 
 	c_call_byte_method (env: POINTER; oid: POINTER; mid: POINTER; args: POINTER): INTEGER_8 is
 		external
-			"C++ JNIEnv signature (jclass, jmethodID, jvalue *): EIF_INTEGER_8 use %"jni.h%""
+			"C++ JNIEnv signature (jobject, jmethodID, jvalue *): EIF_INTEGER_8 use %"jni.h%""
 		alias
 			"CallByteMethodA"
 		end
 
 	c_call_char_method (env: POINTER; oid: POINTER; mid: POINTER; args: POINTER): CHARACTER is
 		external
-			"C++ JNIEnv signature (jclass, jmethodID, jvalue *):EIF_CHARACTER use %"jni.h%""
+			"C++ JNIEnv signature (jobject, jmethodID, jvalue *):EIF_CHARACTER use %"jni.h%""
 		alias
 			"CallCharMethodA"
 		end
 
 	c_call_short_method (env: POINTER; oid: POINTER; mid: POINTER; args: POINTER): INTEGER_16 is
 		external
-			"C++ JNIEnv signature (jclass, jmethodID, jvalue *): EIF_INTEGER_16 use %"jni.h%""
+			"C++ JNIEnv signature (jobject, jmethodID, jvalue *): EIF_INTEGER_16 use %"jni.h%""
 		alias
 			"CallShortMethodA"
 		end
 
 	c_call_int_method (env: POINTER; oid: POINTER; mid: POINTER; args: POINTER): INTEGER is
 		external
-			"C++ JNIEnv signature (jclass, jmethodID, jvalue *): EIF_INTEGER use %"jni.h%""
+			"C++ JNIEnv signature (jobject, jmethodID, jvalue *): EIF_INTEGER use %"jni.h%""
 		alias
 			"CallIntMethodA"
 		end
 
 	c_call_long_method (env: POINTER; oid: POINTER; mid: POINTER; args: POINTER): INTEGER_64 is
 		external
-			"C++ JNIEnv signature (jclass, jmethodID, jvalue *): EIF_INTEGER_64 use %"jni.h%""
+			"C++ JNIEnv signature (jobject, jmethodID, jvalue *): EIF_INTEGER_64 use %"jni.h%""
 		alias
 			"CallLongMethodA"
 		end
 
 	c_call_float_method (env: POINTER; oid: POINTER; mid: POINTER; args: POINTER): REAL is
 		external
-			"C++ JNIEnv signature (jclass, jmethodID, jvalue *): EIF_REAL use %"jni.h%""
+			"C++ JNIEnv signature (jobject, jmethodID, jvalue *): EIF_REAL use %"jni.h%""
 		alias
 			"CallFloatMethodA"
 		end
 
 	c_call_double_method (env: POINTER; oid: POINTER; mid: POINTER; args: POINTER): DOUBLE is
 		external
-			"C++ JNIEnv signature (jclass, jmethodID, jvalue *): EIF_DOUBLE use %"jni.h%""
+			"C++ JNIEnv signature (jobject, jmethodID, jvalue *): EIF_DOUBLE use %"jni.h%""
 		alias
 			"CallDoubleMethodA"
 		end
 
-	c_call_object_method (lenv: POINTER; cls: POINTER; mid: POINTER; argsp: POINTER): POINTER is
+	c_call_object_method (lenv: POINTER; oid: POINTER; mid: POINTER; argsp: POINTER): POINTER is
 		external
-			"C++ JNIEnv signature (jclass, jmethodID, jvalue *): EIF_POINTER use %"jni.h%""
+			"C++ JNIEnv signature (jobject, jmethodID, jvalue *): EIF_POINTER use %"jni.h%""
 		alias
 			"CallObjectMethodA"
 		end

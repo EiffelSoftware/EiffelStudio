@@ -7,6 +7,8 @@ class NATIVE_ARRAY_CLASS_TYPE
 
 inherit
 	CLASS_TYPE
+		rename
+			il_type_name as eiffel_il_type_name
 		redefine
 			type
 		end

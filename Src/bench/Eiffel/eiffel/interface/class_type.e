@@ -149,6 +149,29 @@ feature -- Access
 	assembly_info: ASSEMBLY_INFO
 			-- Information about assembly in which current class is being generated.
 
+	is_dotnet_name: BOOLEAN
+			-- Is current type being generated using dotnet name convention?
+
+	il_type_name (a_prefix: STRING): STRING is
+			-- Name of type in IL code generation.
+		require
+			is_precompiled: is_precompiled
+		local
+			l_pos: INTEGER
+			l_name: STRING
+		do
+			Result := clone (il_casing.namespace_casing (is_dotnet_name, internal_namespace))
+			if a_prefix /= Void then
+				Result.append_character ('.')
+				Result.append (a_prefix)
+			end
+			if not Result.is_empty then
+				Result.append_character ('.')	
+			end
+			Result.append (il_casing.pascal_casing (is_dotnet_name, internal_type_name,
+					feature {IL_CASING_CONVERSION}.upper_case))
+		end
+
 feature -- Settings
 
 	set_is_changed (b: BOOLEAN) is
@@ -219,6 +242,21 @@ feature -- Settings
 			assembly_info_set: assembly_info = a
 		end
 
+	set_il_type_name is
+			-- Store basic information that will help us reconstruct
+			-- a complete name.
+		require
+			not_is_precompiled: not is_precompiled
+		local
+			l_pos: INTEGER
+		do
+			internal_namespace := clone (associated_class.lace_class.actual_namespace)
+			internal_type_name := type.il_type_name (Void)
+			l_pos := internal_type_name.last_index_of ('.', internal_type_name.count)
+			internal_type_name := internal_type_name.substring (l_pos + 1, internal_type_name.count)
+			is_dotnet_name := System.dotnet_naming_convention
+		end
+		
 feature -- Conveniences
 
 	full_il_type_name: STRING is
@@ -1496,6 +1534,13 @@ feature -- Debug
 			type.trace
 		end
 
+feature {NONE} -- Implementation
+
+	internal_namespace: STRING
+	internal_type_name: STRING
+			-- Internal storage to help us reconstruct names of classes and features
+			-- from a precompiled library.
+		
 invariant
 	type_not_void: type /= Void
 	valid_type_id: type_id > 0

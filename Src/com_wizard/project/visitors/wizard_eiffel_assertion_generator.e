@@ -132,54 +132,49 @@ feature -- Basic operation
 
 feature {NONE}  
 
-	additional_precondition (a_name: STRING; type: WIZARD_DATA_TYPE_DESCRIPTOR; 
-		visitor: WIZARD_DATA_TYPE_VISITOR; in_param, out_param: BOOLEAN): WIZARD_WRITER_ASSERTION is
+	additional_precondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR; 
+		a_visitor: WIZARD_DATA_TYPE_VISITOR; a_in_param, a_out_param: BOOLEAN): WIZARD_WRITER_ASSERTION is
 			-- A writer
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
-			non_void_descriptor: type /= Void
-			non_void_visitor: visitor /= Void
+			non_void_descriptor: a_type /= Void
+			non_void_visitor: a_visitor /= Void
 		local
-			tmp_tag, tmp_body: STRING
-			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			l_tag, l_body: STRING
+			l_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
-			pointed_descriptor ?= type
-			if pointed_descriptor /= Void and not (visitor.vt_type = binary_or (Vt_ptr, Vt_byref)) then
-				if 
-					visitor.is_structure_pointer 
-				then
-					create tmp_tag.make (100)
-					tmp_tag.append ("valid_")
-					tmp_tag.append (a_name)
-					
-					create tmp_body.make (100)
-					tmp_body.append (a_name)
-					tmp_body.append (".item /= default_pointer")
-					create Result.make (tmp_tag, tmp_body)
-
-				elseif is_error (visitor.vt_type) or is_hresult (visitor.vt_type) then
-
-				elseif not visitor.is_basic_type_ref and in_param then
-					
-					create tmp_tag.make (100)
-					tmp_tag.append ("valid_")
-					tmp_tag.append (a_name)
-					
-					create tmp_body.make (100)
-					tmp_body.append (a_name)
-					tmp_body.append (".item /= Void")
-					create Result.make (tmp_tag, tmp_body)
+			l_descriptor ?= a_type
+			if l_descriptor /= Void and not (a_visitor.vt_type = binary_or (Vt_ptr, Vt_byref)) then
+				if a_visitor.is_structure_pointer then
+					create l_tag.make (100)
+					l_tag.append ("valid_")
+					l_tag.append (a_name)
+					create l_body.make (100)
+					l_body.append (a_name)
+					l_body.append (".item /= default_pointer")
+					create Result.make (l_tag, l_body)
+				elseif not a_visitor.is_basic_type_ref and a_in_param then
+					create l_tag.make (100)
+					l_tag.append ("valid_")
+					l_tag.append (a_name)
+					create l_body.make (100)
+					l_body.append (a_name)
+					if is_pointed_pointer (l_descriptor) then
+						l_body.append (".item /= default_pointer")
+					else
+						l_body.append (".item /= Void")
+					end
+					create Result.make (l_tag, l_body)
 				end
-			elseif visitor.is_structure then
-				create tmp_tag.make (100)
-				tmp_tag.append ("valid_")
-				tmp_tag.append (a_name)
-				
-				create tmp_body.make (100)
-				tmp_body.append (a_name)
-				tmp_body.append (".item /= default_pointer")
-				create Result.make (tmp_tag, tmp_body)
+			elseif a_visitor.is_structure then
+				create l_tag.make (100)
+				l_tag.append ("valid_")
+				l_tag.append (a_name)
+				create l_body.make (100)
+				l_body.append (a_name)
+				l_body.append (".item /= default_pointer")
+				create Result.make (l_tag, l_body)
 			end
 		end
 
@@ -240,7 +235,11 @@ feature {NONE}
 						create tmp_body.make (100)
 						tmp_body.append (a_name)
 					end
-					tmp_body.append (".item /= Void")
+					if is_pointed_pointer (pointed_descriptor) then
+						tmp_body.append (".item /= default_pointer")
+					else
+						tmp_body.append (".item /= Void")
+					end
 					create Result.make (tmp_tag, tmp_body)
 				end
 			elseif visitor.is_structure then
@@ -260,6 +259,28 @@ feature {NONE}
 			end
 		end
 
+	is_pointed_pointer (a_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR): BOOLEAN is
+			-- Does `a_descriptor' point to a pointer?
+		require
+			non_void_descriptor: a_descriptor /= Void
+		local
+			l_descriptor, l_pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			l_is_pointer: BOOLEAN
+			l_type: INTEGER
+		do
+			from
+				l_descriptor := a_descriptor
+				l_pointed_descriptor ?= l_descriptor.pointed_data_type_descriptor
+			until
+				l_pointed_descriptor = Void
+			loop
+				l_descriptor := l_pointed_descriptor
+				l_pointed_descriptor ?= l_descriptor.pointed_data_type_descriptor
+			end
+			l_type := l_descriptor.pointed_data_type_descriptor.type
+			l_is_pointer := is_ptr (l_type) or is_void (l_type)
+		end
+		
 end -- class WIZARD_EIFFEL_ASSERTION_GENERATOR
 
 --+----------------------------------------------------------------

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			create stop_check.make_by_id (Current, Stop_check_constant)
 			create id_ok.make_by_id (Current, Idok)
 			create id_back.make_by_id (Current, id_back_constant)
-			create help_button.make_by_id (Current, Help_button_constant)
+	--		create help_button.make_by_id (Current, Help_button_constant)
 			create id_cancel.make_by_id (Current, Idcancel)
 		end
 

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			create id_cancel.make_by_id (Current, Idcancel)
 			create definition_file_browse_button.make_by_id (Current, Definition_file_browse_button_constant)
 			create destination_folder_browse_button.make_by_id (Current, Destination_folder_browse_button_constant)
-			create help_button.make_by_id (Current, Help_button_constant)
+	--		create help_button.make_by_id (Current, Help_button_constant)
 			create id_back.make_by_id (Current, Id_back_constant)
 			create msg_box.make
 		end

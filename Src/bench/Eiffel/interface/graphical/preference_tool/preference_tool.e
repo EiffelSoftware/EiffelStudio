@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 		do
 			!! category_list.make;
 			last_selected := Void
-			tooltip_initialize (Current)
 		end;
 
 	initialize_menu_form is
@@ -192,7 +191,7 @@ feature -- Display
 			set_delete_command (Current);
 
 			initialize_window;
-
+			tooltip_initialize (Current)
 		ensure
 			created: not destroyed
 		end;

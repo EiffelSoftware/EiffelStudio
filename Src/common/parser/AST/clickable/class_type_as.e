@@ -302,10 +302,18 @@ feature -- stoning
  
 	stone (reference_class: CLASS_C): CLASSC_STONE is
 		local
-			aclass: CLASS_C;
+			aclassi: CLASS_I
 		do
-			aclass := Universe.class_named (class_name, reference_class.cluster).compiled_class;
-			!!Result.make (aclass)
+				-- Check if we can find the class in the cluster.
+				-- If the class is not compiled anymore (or doesnot
+				-- exist at all), the resulting stone will not be
+				-- valid (`is_valid' = false because `class_c' = Void).
+			aclassi := Universe.class_named (class_name, reference_class.cluster);
+			if aclassi /= Void then
+				!!Result.make (aclassi.compiled_class)
+			else
+				!!Result.make (Void)
+			end
 		end;
 
 

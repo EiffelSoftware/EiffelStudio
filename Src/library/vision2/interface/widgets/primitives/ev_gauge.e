@@ -278,6 +278,13 @@ feature {EV_ANY} -- Contract support
 			reset_timer.actions.extend (~set_value (0))
 		end
 
+	delta: REAL is 
+			-- Amount by which `proportion' can differ from expected value
+			-- and still be considered correct.
+		do
+			Result := (maximum - minimum) / (step * 10000)
+		end
+
 invariant
 	range_not_void: is_useable implies range /= Void
 	maximum_greater_than_or_equal_to_minimum: is_useable implies
@@ -293,7 +300,8 @@ invariant
 	proportion_definition: is_useable implies
 		maximum = minimum implies proportion = 0.0
 	proportion_correct_value: (is_useable and maximum /= minimum) implies
-		value / (maximum - minimum) = proportion
+		value / (maximum - minimum) < proportion + delta and
+		value / (maximum - minimum) > proportion - delta
 
 	--| FIXME VB 02/14/2000
 	--| This should work but it does not for melted code.
@@ -325,6 +333,10 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/20 17:03:59  rogers
+--| Added delta, which is now used in the assertion
+--| proportion_correct_value.
+--|
 --| Revision 1.14  2000/04/13 18:01:18  brendel
 --| Revised. Added proportion and set_proportion.
 --| Default value for minimum is now 0.

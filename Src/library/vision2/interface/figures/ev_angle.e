@@ -1,6 +1,6 @@
 indexing
-	description: "Angle"
-	author: "pascalf"
+	description: "Angle accessable in either degrees or radians."
+	keywords: "angle degrees radians"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,25 +13,26 @@ inherit
 			tangent as compute_tangent,
 			sine as compute_sine,
 			cosine as compute_cosine
-		undefine
+		redefine
 			is_equal
 		end
 
 creation
-	make, make_in_degrees
+	make_radians,
+	make_degrees
 
 feature -- initialization
 
-	make(r: REAL) is
-		-- Create Current, 'r' is in radian
+	make_radians(r: REAL) is
+			-- Create Current, 'r' is in radian
 		do
-			value := r
+			radians := r
 		end
 
-	make_in_degrees(r: REAL) is
-		-- Create Current, 'r' is in degrees
+	make_degrees(r: REAL) is
+			-- Create Current, 'r' is in degrees
 		do
-				value := ((Pi*r)/180.0).truncated_to_real
+			radians := ((Pi*r)/Pi_in_degrees).truncated_to_real
 		end
 
 feature -- Comparisons
@@ -40,7 +41,7 @@ feature -- Comparisons
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
-			Result := (other.value = value)
+			Result := (other.radians = radians)
 		end
 
 feature -- Operations
@@ -48,19 +49,19 @@ feature -- Operations
 	infix "+" (other: like Current): like Current is
 			-- Sum with `other'
 		do
-			Create Result.make(other.value + value)
+			create Result.make_radians (other.radians + radians)
 		end
 
 	infix "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		do
-			Create Result.make(value - other.value)
+			create Result.make_radians (radians - other.radians)
 		end
 
 	infix "*" (r: REAL): like Current is
 			-- Product by `r'
 		do
-			Create Result.make (value * r)
+			create Result.make_radians (radians * r)
 		end
 
 	infix "/" (r: REAL): like Current is
@@ -68,20 +69,20 @@ feature -- Operations
 		require
 			possible: r /= 0.0
 		do
-			Create Result.make (value / r)
+			create Result.make_radians (radians / r)
 		end
 
 
 	sine: REAL is
 			-- Return the sine of Current.
 		do
-			Result := compute_sine(value)
+			Result := compute_sine(radians)
 		end
 
 	cosine: REAL is
 			-- Return the cosine of Current.
 		do
-			Result := compute_cosine(value)
+			Result := compute_cosine(radians)
 		end
 
 	tangent: REAL is
@@ -89,28 +90,25 @@ feature -- Operations
 		require
 			cosine_not_nul: cosine /= 0.0
 		do
-			Result := compute_tangent(value)
+			Result := compute_tangent(radians)
 		end
 	
 feature -- Access
 
-	radians: REAL is
-			-- value of Current in radians
-		do
-			Result := value
-		end
+	radians: REAL
+			-- Value of Current, in radians.
 	
 	degrees: REAL is
 			-- value of Current in degrees
 		do
 			if value /= 0.0 then
-				Result := 180*(value/Pi).truncated_to_real
+				Result := Pi_in_degrees*(radians/Pi).truncated_to_real
 			end
 		end
-	
-feature {EV_ANGLE} -- Implementation
 
-	value: REAL
-		-- Value of Current, in radians.
+feature {NONE} -- Implementation constants
+
+	Pi_in_degrees: REAL is 180.0
+			-- Pi radians in degrees
 
 end -- class EV_ANGLE

@@ -68,8 +68,8 @@ feature -- Basic operations
 				internal_minimum_width := value
 				if parent_imp /= Void then
 					if managed then
-						if changed and not bit_set (internal_changes, 1) then
-								parent_imp.notify_change (1)
+						if changed then 
+							parent_imp.notify_change (1)
 						elseif displayed then
 							move_and_resize (x, y, width, height, True)
 						end
@@ -94,22 +94,11 @@ feature -- Basic operations
 				internal_minimum_height := value
 				if parent_imp /= Void then
 					if managed then
-						if changed and not bit_set (internal_changes, 2) then
+						if changed then 
 							parent_imp.notify_change (2)
 						elseif displayed then
 							move_and_resize (x, y, width, height, True)
 						end
-
---					if changed then
---						if not bit_set (internal_changes, 2) and parent_imp /= Void then
---							parent_imp.notify_change (2)
---						elseif displayed then
---							move_and_resize (x, y, width, height, True)
---						end
---					elseif displayed then
---						move_and_resize (x, y, width, height, True)
---					end
-
 					else
 						move_and_resize (x, y, width, height.max (value), True)
 					end
@@ -150,23 +139,11 @@ feature -- Basic operations
 				if parent_imp /= Void then
 	 				if managed then
 						if w_cd and h_cd then
-							if not bit_set (internal_changes, 1) then
-								parent_imp.notify_change (3)
-							elseif displayed then
-								move_and_resize (x, y, width, height, True)
-							end
+							parent_imp.notify_change (3)
 						elseif w_cd then
-							if not bit_set (internal_changes, 1) then
-								parent_imp.notify_change (1)
-							elseif displayed then
-								move_and_resize (x, y, width, height, True)
-							end
+							parent_imp.notify_change (1)
 						elseif h_cd then
-							if not bit_set (internal_changes, 1) then
-								parent_imp.notify_change (2)
-							elseif displayed then
-								move_and_resize (x, y, width, height, True)
-							end
+							parent_imp.notify_change (2)
 						elseif displayed then
 							move_and_resize (x, y, width, height, True)
 						end
@@ -181,7 +158,7 @@ feature -- Basic operations
 				internal_minimum_width := mw
 				if parent_imp /= Void then
 					if managed then
-						if w_cd and not bit_set (internal_changes, 1) then
+						if w_cd then --and not bit_set (internal_changes, 1) then
 							parent_imp.notify_change (1)
 						elseif displayed then
 							move_and_resize (x, y, width, height, True)
@@ -197,7 +174,7 @@ feature -- Basic operations
 				internal_minimum_height := mh
 				if parent_imp /= Void then
 					if managed then
-						if h_cd and not bit_set (internal_changes, 2) then
+						if h_cd then -- and not bit_set (internal_changes, 2) then
 								parent_imp.notify_change (2)
 						elseif displayed then
 							move_and_resize (x, y, width, height, True)

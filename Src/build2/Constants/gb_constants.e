@@ -246,6 +246,8 @@ feature -- Dialogs
 	Save_prompt: STRING is "Do you wish to save the current project?"
 	
 feature -- Warning Dialogs
+
+	Object_editor_button_warning: STRING is "Please drop an object on this button%NUse right click for both%Npick and drop actions."
 	
 	Project_exists_warning: STRING is "A Build project already exists in the selected directory. Do you wish to overwrite this project?"
 

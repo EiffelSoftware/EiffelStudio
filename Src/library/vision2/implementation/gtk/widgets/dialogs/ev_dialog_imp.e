@@ -95,19 +95,14 @@ feature -- Basic operations
 				enable_modal
 			end
 
-			if a_window /= Void then
-				C.gtk_window_set_transient_for (c_object, a_window_imp.c_object)
-			else
-				C.gtk_window_set_transient_for (c_object, NULL)
-			end				
-			
+			set_blocking_window (a_window)			
 			show
-			
 			block
+			set_blocking_window (Void)
+			
 			if not is_destroyed and then not was_modal then
 				disable_modal
 			end
-
 				-- Put parent's original modality back.
 			if a_window /= Void and then parent_was_modal then
 				a_window_imp.enable_modal
@@ -116,15 +111,8 @@ feature -- Basic operations
 
 	show_relative_to_window (a_window: EV_WINDOW) is
 			-- Show `Current' with respect to `a_window'.
-		local
-			a_window_imp: EV_WINDOW_IMP
 		do
-			if a_window /= Void then
-				a_window_imp ?= a_window.implementation
-				C.gtk_window_set_transient_for (c_object, a_window_imp.c_object)
-			else
-				C.gtk_window_set_transient_for (c_object, NULL)
-			end				
+			set_blocking_window (a_window)			
 			show
 		end
 
@@ -148,6 +136,7 @@ feature {NONE} -- Implementation
 	call_close_request_actions is
 			-- Call the cancel actions if dialog is closeable.
 		do
+			Precursor {EV_TITLED_WINDOW_IMP}
 			if is_dialog_closeable then 
 				if internal_default_cancel_button /= Void and then
 					internal_default_cancel_button.is_sensitive and then

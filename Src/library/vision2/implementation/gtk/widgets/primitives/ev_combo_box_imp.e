@@ -196,6 +196,11 @@ feature -- Status setting
 			C.gtk_widget_grab_focus (entry_widget)
 		end
 
+feature {EV_LIST_ITEM_IMP} -- Implementation
+		
+	container_widget: POINTER
+			-- Gtk combo struct
+
 feature {NONE} -- Implementation
 
 
@@ -282,9 +287,6 @@ feature {NONE} -- Implementation
 	
 	triggering_item: EV_LIST_ITEM_IMP
 		-- Item that has been selected.
-	
-	container_widget: POINTER
-			-- Gtk combo struct
 	
 	activate_id: INTEGER
 			-- Activate event handler id

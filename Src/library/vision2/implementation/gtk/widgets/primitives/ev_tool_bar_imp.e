@@ -62,6 +62,13 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
+	insertion_position: INTEGER is
+			-- `Result' is index of item beneath the
+			-- current mouse pointer or count + 1 if over the toolbar
+			-- and not over a button.
+		do
+		end
+
 	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to tool bar, set to non-expandable.
 		local

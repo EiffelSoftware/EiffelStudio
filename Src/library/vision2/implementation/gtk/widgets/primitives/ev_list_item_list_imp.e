@@ -65,7 +65,6 @@ feature {NONE} -- Initialization
 				c_object,
 				list_widget
 			)
-			C.gtk_container_add (c_object, list_widget)
 			real_signal_connect (
 				list_widget,
 				"unselect_child",

@@ -22,6 +22,11 @@ inherit
 			interface,
 			replace
 		end
+		
+	EV_DOCKABLE_TARGET_IMP
+		redefine
+			interface
+		end
 
 create
 	make
@@ -66,7 +71,7 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_CONTAINER
+	interface: EV_CELL
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 

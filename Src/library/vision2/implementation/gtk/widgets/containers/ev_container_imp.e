@@ -239,7 +239,7 @@ feature -- Status setting
 				mem_ptr.memory_copy ($pix_ptr, 4)
 				i := i + 1
 			end
-			C.gtk_widget_set_style (visual_widget, a_style)
+	--		C.gtk_widget_set_style (visual_widget, a_style)
 			C.gtk_style_unref (a_style)
 		end
 		

@@ -156,7 +156,9 @@ feature -- Basic operations
 						Environment.application.destroy
 					end
 				end
-				add_project_to_recent_projects
+				if System_status.project_open then
+					add_project_to_recent_projects
+				end
 			end
 			
 	

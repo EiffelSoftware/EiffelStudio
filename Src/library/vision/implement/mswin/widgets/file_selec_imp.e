@@ -108,6 +108,8 @@ feature -- Status report
 			-- Search pattern used in combination with `directory'
 			-- files and directories to be displayed
 
+	pattern_name: STRING
+			-- Name of the search pattern.
 
 	selected_file: STRING
 			-- Current selected file
@@ -218,6 +220,12 @@ feature -- Status setting
 			-- Set pattern to `a_pattern'.
 		do
 			pattern := a_pattern
+		end
+
+	set_pattern_name (a_pattern_name: STRING) is
+			-- Set pattern_name to `a_pattern'.
+		do
+			pattern_name := a_pattern_name
 		end
 
 	set_form_height (a_height: INTEGER) is
@@ -501,13 +509,13 @@ feature {NONE} -- Implementation
 	button_count: INTEGER is
 		do
 			if ok_button /= Void and then not ok_button_hidden then
-				result := result + 1
+				Result := Result + 1
 			end
 			if cancel_button /= Void and then not cancel_button_hidden then
-				result := result + 1
+				Result := Result + 1
 			end
 			if help_button /= Void and then not help_button_hidden then
-				result := result + 1
+				Result := Result + 1
 			end
 		end
 

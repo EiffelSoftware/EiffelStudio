@@ -16,7 +16,8 @@ inherit
 		end
 	
 create
-	make
+	make,
+	make_without_label
 
 feature {NONE} -- Initialization
 	
@@ -40,6 +41,40 @@ feature {NONE} -- Initialization
 			label.set_tooltip (tooltip)
 			extend (label)
 			label.align_text_left
+			create text_field
+			text_field.set_tooltip (tooltip)
+			extend (text_field)
+			disable_item_expand (label)
+			a_parent.extend (Current)
+			text_field.return_actions.extend (agent process)
+			text_field.focus_in_actions.extend (agent set_initial)
+			text_field.focus_out_actions.extend (agent process)
+			
+				-- Store `an_exection_agent' internally.
+			execution_agent := an_execution_agent
+
+				-- Store `a_validate_agent'.
+			validate_agent := a_validate_agent
+		ensure
+			execution_agent_not_void: execution_agent /= Void
+			validate_agent_not_void: validate_agent /= Void
+		end
+		
+	make_without_label (any: ANY; a_parent: EV_CONTAINER;  a_type, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
+			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
+			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
+			-- `an_execution_agent' is to execute the setting of the attribute.
+			-- `a_validate_agent' is used to query whether the current value is valid as an argument for `execution_agent'.
+			-- `tooltip' is tooltip to be displayed on visible parts of control.
+		require
+			gb_ev_any_not_void: any /= Void
+			a_parent_not_void: a_parent /= Void
+			an_agent_not_void: an_execution_agent /= Void
+			a_validate_agent_not_void: a_validate_agent /= Void
+		local
+			label: EV_LABEL
+		do
+			default_create
 			create text_field
 			text_field.set_tooltip (tooltip)
 			extend (text_field)

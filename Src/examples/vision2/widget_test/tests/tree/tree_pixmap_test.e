@@ -13,11 +13,6 @@ inherit
 			default_create
 		end
 		
-	EXECUTION_ENVIRONMENT
-		redefine
-			default_create
-		end
-		
 feature {NONE} -- Implementation
 
 	default_create is
@@ -48,7 +43,7 @@ feature {NONE} -- Implementation
 			root_item: EV_TREE_ITEM
 		do
 			create root_item.make_with_text ("Root Item")
-			root_item.set_pixmap (odd_pixmap)
+			root_item.set_pixmap (numbered_pixmap (1))
 			tree.extend (root_item)
 			add_items (root_item, 4)
 		end
@@ -66,38 +61,14 @@ feature {NONE} -- Implementation
 			loop
 				create tree_item.make_with_text ("Item")
 				if count \\ 2 = 1 then
-					tree_item.set_pixmap (odd_pixmap)
+					tree_item.set_pixmap (numbered_pixmap (1))
 				else
-					tree_item.set_pixmap (even_pixmap)
+					tree_item.set_pixmap (numbered_pixmap (2))
 				end
 				item.extend (tree_item)
 				add_items (tree_item, count - 1)
 				counter := counter + 1
 			end
-		end
-		
-	odd_pixmap: EV_PIXMAP is
-			--
-		local
-			filename: FILE_NAME
-		once
-			create filename.make_from_string (current_working_directory)
-			filename.extend ("png")
-			filename.extend ("shell.png")
-			create Result
-			Result.set_with_named_file (filename)	
-		end
-		
-	even_pixmap: EV_PIXMAP is
-			--
-		local
-			filename: FILE_NAME
-		once
-			create filename.make_from_string (current_working_directory)
-			filename.extend ("png")
-			filename.extend ("info.png")
-			create Result
-			Result.set_with_named_file (filename)	
 		end
 
 end -- class TREE_PIXMAP_TEST

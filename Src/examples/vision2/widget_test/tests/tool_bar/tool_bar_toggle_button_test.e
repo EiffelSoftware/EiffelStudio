@@ -13,11 +13,6 @@ inherit
 			default_create
 		end
 		
-	EXECUTION_ENVIRONMENT
-		redefine
-			default_create
-		end
-		
 feature {NONE} -- Implementation
 
 	default_create is

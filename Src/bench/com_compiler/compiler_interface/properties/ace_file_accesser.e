@@ -296,7 +296,6 @@ feature -- Access
 			valid_ast: is_valid
 		local
 			defaults: LACE_LIST [D_OPTION_SD]
-			free_opt: FREE_OPTION_SD
 			found: BOOLEAN
 		do
 			Result := ""

@@ -109,7 +109,7 @@ feature -- Modification & Insertion
         	require
             		a_center_exists: a_center /= Void
         	do
-            		center := a_center;			
+            		center := a_center;
 					set_conf_modified
         	ensure
             		center = a_center
@@ -175,8 +175,8 @@ feature -- Modification & Insertion
             		scale_factor_positive: f > 0.0
         	do
             		center.xyscale (f, px, py);
-            		radius1 := real_to_integer (radius1*f);
-            		radius2 := real_to_integer (radius2*f);
+            		radius1 := (radius1*f).truncated_to_integer;
+            		radius2 := (radius2*f).truncated_to_integer;
 					set_conf_modified
         	end;
 
@@ -200,8 +200,6 @@ feature -- Output
             		end
         	end;
 
-	
-
 feature -- Status report
 
     	is_superimposable (other: like Current): BOOLEAN is
@@ -218,7 +216,7 @@ feature {CONFIGURE_NOTIFY} -- Updating
 			radius: INTEGER;
 		do
 			if radius1 > radius2 then
-				radius := radius1;	
+				radius := radius1;
 			else
 				radius := radius2;
 			end;
@@ -226,8 +224,6 @@ feature {CONFIGURE_NOTIFY} -- Updating
 			surround_box.set (center.x - radius, center.y - radius, diameter, diameter);
 			unset_conf_modified
 		end;
-
-
 
 invariant
 

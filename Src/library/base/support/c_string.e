@@ -63,14 +63,17 @@ feature -- Access
 		ensure
 			item_not_null: Result /= default_pointer
 		end
-		
+
+feature -- Measurement
+
 	capacity: INTEGER is
-			-- Number of character in Current.
+			-- Number of characters in Current.
 		do
 			Result := managed_data.count
 		end
 
 	count: INTEGER
+			-- Number of characters in Current.
 
 feature -- Element change
 

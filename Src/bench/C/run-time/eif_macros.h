@@ -562,7 +562,7 @@ RT_LNK int fcount;
 			r = rs; \
 		}
 #else
-#define RTOMS(b,n)	EIF_oms_##b [n]
+#define RTOMS(b,n)	CAT2(EIF_oms_,b) [n]
 #define RTDOMS(b,m)	EIF_REFERENCE * RTOMS(b,m)
 #define RTEOMS(b,m)	extern RTDOMS(b,m)
 #define RTPOMS(b,n,s,c,h) \

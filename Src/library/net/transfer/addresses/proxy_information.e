@@ -7,8 +7,9 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
-	PROXY_INFORMATION
+class PROXY_INFORMATION inherit
+
+	HOST_VALIDITY_CHECKER
 
 create
 
@@ -20,6 +21,7 @@ feature {NONE} -- Initialization
 			-- Create proxy information for host `h' and port `p'.
 		require
 			host_not_empty: h /= Void and then not h.is_empty
+			host_valid: proxy_host_ok (h)
 			port_number_non_negative: p >= 0
 		do
 			host := h
@@ -43,6 +45,7 @@ feature -- Status setting
 			-- Set host name to `h'.
 		require
 			host_not_empty: h /= Void and then not h.is_empty
+			host_valid: proxy_host_ok (h)
 		do
 			host := h
 		ensure
@@ -62,6 +65,7 @@ feature -- Status setting
 invariant
 
 	host_not_empty: host /= Void and then not host.is_empty
+	host_valid: proxy_host_ok (host)
 	port_non_negative: port >= 0
 
 end -- class PROXY_INFORMATION

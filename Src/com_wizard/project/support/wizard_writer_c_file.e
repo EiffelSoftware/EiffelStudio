@@ -38,7 +38,7 @@ feature -- Access
 		require
 			ready: can_generate
 		do
-			Result := clone (C_open_comment_line)
+			Result := C_open_comment_line.twin
 			Result.append (New_line)
 			Result.append (header)
 			Result.append (New_line)
@@ -163,7 +163,7 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			Result := clone (C_open_comment_line)
+			Result := C_open_comment_line.twin
 			Result.append (New_line)
 			Result.append (header)
 			Result.append (New_line)

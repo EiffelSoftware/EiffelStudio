@@ -267,7 +267,7 @@ feature -- Element change
 		require
 			non_void_name: a_name /= Void
 		do
-			c_header_file := clone (a_name)
+			c_header_file := a_name.twin
 		ensure
 			valid_header_file: c_header_file /= Void and
 					not a_name.is_empty implies c_header_file.is_equal (a_name)
@@ -278,7 +278,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			c_post_type := clone (a_name)
+			c_post_type := a_name.twin
 		ensure
 			valid_c_post_type: c_post_type /= Void and
 					not a_name.is_empty implies c_post_type.is_equal (a_name)
@@ -289,7 +289,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			c_type := clone (a_name)
+			c_type := a_name.twin
 		ensure
 			valid_c_type: c_type /= Void and
 					not a_name.is_empty implies c_type.is_equal (a_name)
@@ -300,7 +300,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			cecil_type := clone (a_name)
+			cecil_type := a_name.twin
 		ensure
 			valid_cecil_type: cecil_type /= Void and
 					not a_name.is_empty implies cecil_type.is_equal (a_name)
@@ -311,7 +311,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			eiffel_type := clone (a_name)
+			eiffel_type := a_name.twin
 		ensure
 			valid_eiffel_type: eiffel_type /= Void and
 					not a_name.is_empty implies eiffel_type.is_equal (a_name)
@@ -322,7 +322,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			ce_function_body := clone (a_name)
+			ce_function_body := a_name.twin
 		ensure
 			valid_ce_function_body: ce_function_body /= Void and
 					not a_name.is_empty implies ce_function_body.is_equal (a_name)
@@ -333,7 +333,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			ce_function_name := clone (a_name)
+			ce_function_name := a_name.twin
 		ensure
 			valid_ce_function_name: ce_function_name /= Void and
 					not a_name.is_empty implies ce_function_name.is_equal (a_name)
@@ -344,7 +344,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			ce_function_return_type := clone (a_name)
+			ce_function_return_type := a_name.twin
 		ensure
 			valid_ce_function_return_type: ce_function_return_type /= Void and
 					not a_name.is_empty implies ce_function_return_type.is_equal (a_name)
@@ -355,7 +355,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			ce_function_signature := clone (a_name)
+			ce_function_signature := a_name.twin
 		ensure
 			valid_ce_function_signature: ce_function_signature /= Void and
 					not a_name.is_empty implies ce_function_signature.is_equal (a_name)
@@ -366,7 +366,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			ec_function_body := clone (a_name)
+			ec_function_body := a_name.twin
 		ensure
 			valid_ec_function_body: ec_function_body /= Void and
 					not a_name.is_empty implies ec_function_body.is_equal (a_name)
@@ -377,7 +377,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			ec_function_name := clone (a_name)
+			ec_function_name := a_name.twin
 		ensure
 			valid_ce_function_name: ec_function_name /= Void and
 					not a_name.is_empty implies ec_function_name.is_equal (a_name)
@@ -388,7 +388,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			ec_function_return_type := clone (a_name)
+			ec_function_return_type := a_name.twin
 		ensure
 			valid_ec_function_return_type: ec_function_return_type /= Void and
 					not a_name.is_empty implies ec_function_return_type.is_equal (a_name)
@@ -399,7 +399,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			ec_function_signature := clone (a_name)
+			ec_function_signature := a_name.twin
 		ensure
 			valid_ce_function_signature: ec_function_signature /= Void and
 					not a_name.is_empty implies ec_function_signature.is_equal (a_name)
@@ -410,7 +410,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			free_memory_function_body := clone (a_name)
+			free_memory_function_body := a_name.twin
 		ensure
 			valid_free_memory_function_body: free_memory_function_body /= Void and
 					not a_name.is_empty implies free_memory_function_body.is_equal (a_name)
@@ -421,7 +421,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			free_memory_function_name := clone (a_name)
+			free_memory_function_name := a_name.twin
 		ensure
 			valid_free_memory_function_name: free_memory_function_name /= Void and
 					not a_name.is_empty implies free_memory_function_name.is_equal (a_name)
@@ -432,7 +432,7 @@ feature -- Element change
 		require
 			valid_name: a_name /= Void
 		do
-			free_memory_function_signature := clone (a_name)
+			free_memory_function_signature := a_name.twin
 		ensure
 			valid_free_memory_function_signature: free_memory_function_signature /= Void and
 					not a_name.is_empty implies free_memory_function_signature.is_equal (a_name)

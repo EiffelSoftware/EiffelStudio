@@ -1383,7 +1383,7 @@ feature {NONE} -- Implementation
 			loop
 				if not Non_generated_type_libraries.has (system_descriptor.coclasses.item.type_library_descriptor.guid) then
 					coclass_descriptor := system_descriptor.coclasses.item
-					coclass_guid := clone (coclass_descriptor.guid.to_string)
+					coclass_guid := coclass_descriptor.guid.to_string.twin
 					type_library_name := coclass_descriptor.type_library_descriptor.name
 					type_library_guid := coclass_descriptor.type_library_descriptor.guid.to_string
 
@@ -1523,7 +1523,7 @@ feature {NONE} -- Implementation
 		local
 			string_one, string_two, tmp_guid: STRING
 		do
-			tmp_guid := clone (interface_descriptor.guid.to_string)
+			tmp_guid := interface_descriptor.guid.to_string.twin
 
 			create string_one.make (500)
 			string_one.append (Interface)
@@ -1637,7 +1637,7 @@ feature {NONE} -- Implementation
 		local
 			tmp_guid, string_one, string_two: STRING
 		do
-			tmp_guid := clone (interface_descriptor.guid.to_string)
+			tmp_guid := interface_descriptor.guid.to_string.twin
 
 			create string_one.make (1000)
 			string_one.append (Interface)

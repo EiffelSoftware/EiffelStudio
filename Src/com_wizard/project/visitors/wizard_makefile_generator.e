@@ -127,7 +127,7 @@ feature -- Basic operations
 			obj_list: STRING
 			wobj_list, wobj_generation: STRING
 		do
-			a_working_directory := clone (execution_environment.current_working_directory)
+			a_working_directory := execution_environment.current_working_directory.twin
 			create a_directory.make_open_read (a_folder_name)
 			a_file_list := a_directory.linear_representation
 			execution_environment.change_working_directory (a_folder_name)
@@ -197,7 +197,7 @@ feature -- Basic operations
 			a_string: STRING
 		do
 			if not retried then
-				a_string := clone (execution_environment.current_working_directory)
+				a_string := execution_environment.current_working_directory.twin
 				a_string.append_character (Directory_separator)
 				a_string.append (a_file_name)
 				create a_file.make_open_write (a_string)

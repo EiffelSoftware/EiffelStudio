@@ -28,7 +28,7 @@ feature -- Access
 	Could_not_delete_file: STRING is "File cannot be deleted"
 			-- File cannot be deleted
 
-	Eiffel4_not_set: STRING is "Environment variable EIFFEL4 is not set correctly."
+	Eiffel4_not_set: STRING is "Environment variable ISE_EIFFEL or EIFFEL4 is not set correctly."
 			-- Environment variable EIFFEL4 is not set correctly.
 
 end -- class WIZARD_ERRORS

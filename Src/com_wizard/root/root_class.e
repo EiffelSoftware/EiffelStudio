@@ -85,7 +85,7 @@ feature -- Initialization
 						new_project  := True
 						
 						is_server := True
-						project_name := clone (a_project_name)
+						project_name := a_project_name.twin
 						separator_index := project_name.last_index_of (Directory_separator, project_name.count)
 						project_name.tail (project_name.count - separator_index)
 						
@@ -108,7 +108,7 @@ feature -- Initialization
 						else
 							type_library_file_name := com_file
 						end
-						project_name := clone (com_file)
+						project_name := com_file.twin
 						separator_index := project_name.last_index_of (Directory_separator, project_name.count)
 						project_name.tail (project_name.count - separator_index)
 					end
@@ -366,41 +366,44 @@ feature {NONE} -- Implementation
 		local
 			a_folder: DIRECTORY
 			a_file: RAW_FILE
+			l_retried: BOOLEAN
 		do
-			if 
-				shared_wizard_environment.destination_folder /= Void and then
-				shared_wizard_environment.destination_folder.substring_index (":\", 1) = 2
-			then
-				create a_folder.make (destination_folder)
-				if not a_folder.exists then
-					a_folder.create_dir
+			if not l_retried then
+				if shared_wizard_environment.destination_folder /= Void then
+					create a_folder.make (shared_wizard_environment.destination_folder.substring (1, shared_wizard_environment.destination_folder.count - 1))
+					if not a_folder.exists then
+						a_folder.create_dir
+					end
+					Result := a_folder.exists
+					if not Result then
+						message_output.add_error (Current, "Destination folder does not exist and could not create it (" + a_folder.name + ")")
+					end
 				end
-				Result := a_folder.exists
-			end
-			
-			Result := Result and (shared_wizard_environment.server xor 
-						shared_wizard_environment.client) and
-						
-						(not shared_wizard_environment.idl implies
-						(shared_wizard_environment.type_library_file_name /= Void)) and
-						
-						(not shared_wizard_environment.compile_c implies 
-						not shared_wizard_environment.compile_eiffel)
-						
-			if shared_wizard_environment.new_eiffel_project and
-				(shared_wizard_environment.new_eiffel_project implies
-				((shared_wizard_environment.eiffel_class_name /= Void) and 
-				(shared_wizard_environment.class_cluster_name /= Void) and
-				(shared_wizard_environment.eiffel_project_name /= Void) and
-				(shared_wizard_environment.ace_file_name /= Void))) 
-			then
-				create a_file.make (shared_wizard_environment.eiffel_project_name)
-				Result := Result and a_file.exists
 				
-				create a_file.make (shared_wizard_environment.ace_file_name)
-				Result := Result and a_file.exists
+				Result := Result and
+					(shared_wizard_environment.server xor shared_wizard_environment.client) and
+					(not shared_wizard_environment.idl implies (shared_wizard_environment.type_library_file_name /= Void)) and
+					(not shared_wizard_environment.compile_c implies not shared_wizard_environment.compile_eiffel)
+							
+				if shared_wizard_environment.new_eiffel_project and
+					(shared_wizard_environment.new_eiffel_project implies
+					((shared_wizard_environment.eiffel_class_name /= Void) and 
+					(shared_wizard_environment.class_cluster_name /= Void) and
+					(shared_wizard_environment.eiffel_project_name /= Void) and
+					(shared_wizard_environment.ace_file_name /= Void))) 
+				then
+					create a_file.make (shared_wizard_environment.eiffel_project_name)
+					Result := Result and a_file.exists
+					
+					create a_file.make (shared_wizard_environment.ace_file_name)
+					Result := Result and a_file.exists
+				end						
+			else
+				message_output.add_error (Current, "Destination folder does not exist and could not create it (" + a_folder.name + ")")
 			end
-						
+		rescue
+			l_retried := True
+			retry
 		end
 	
 end -- class ROOT_CLASS

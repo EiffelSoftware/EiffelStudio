@@ -61,7 +61,7 @@ feature -- Basic operations
 				name.append ("_")
 				name.append_integer (member_id)
 			else
-				name := clone (a_documentation.name)
+				name := a_documentation.name.twin
 			end
 
 			eiffel_name := name_for_feature_with_keyword_check (name)
@@ -69,9 +69,9 @@ feature -- Basic operations
 			if is_forbidden_c_word (name) and not shared_wizard_environment.new_eiffel_project then
 				name.prepend ("a_")
 			end
-			description := clone (a_documentation.doc_string)
+			description := a_documentation.doc_string.twin
 			if description.is_empty then
-				description := clone (No_description_available)
+				description := No_description_available.twin
 			end
 			a_type_desc := a_var_desc.elem_desc.type_desc
 			data_type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, a_type_desc, system_descriptor)

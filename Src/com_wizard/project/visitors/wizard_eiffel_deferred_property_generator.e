@@ -101,7 +101,7 @@ feature -- Basic operations
 				tmp_assertion.body.append (tmp_body)
 				setting_feature.add_precondition (tmp_assertion)
 				set_precondition_feature_writer (precondition_set_feature_writer, a_set_name)
-				precondition_set_feature_writer.arguments.append (clone (setting_feature.arguments))
+				precondition_set_feature_writer.arguments.append (setting_feature.arguments.twin)
 			end
 		end
 

@@ -32,8 +32,8 @@ feature -- Basic operations
 			tmp_guid: ECOM_GUID
 			tmp_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
-			name := clone (a_documentation.name)
-			description := clone (a_documentation.doc_string)
+			name := a_documentation.name.twin
+			description := a_documentation.doc_string.twin
 			type_kind := a_type_info.type_attr.type_kind
 			create guid.make_from_guid (a_type_info.type_attr.guid)
 
@@ -94,7 +94,7 @@ feature -- Basic operations
 			loop
 				member_id := a_type_info.var_desc (i).member_id
 				a_documentation := a_type_info.documentation (member_id)
-				elem_name := clone (a_documentation.name)
+				elem_name := a_documentation.name.twin
 				if elem_name = Void or else elem_name.count = 0 then
 					create elem_name.make (100)
 					elem_name.append (name)

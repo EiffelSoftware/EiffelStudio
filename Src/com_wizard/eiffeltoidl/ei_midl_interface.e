@@ -59,7 +59,7 @@ feature -- Output
 			-- uuid ('guid')
 			Result.append ("uuid (")
 
-			guid_str := clone (guid.to_string)
+			guid_str := guid.to_string.twin
 			guid_str.remove (1)
 			guid_str.remove (guid_str.count)
 
@@ -81,7 +81,7 @@ feature -- Output
 			-- interface I'name: IDispatch
 			Result.append ("interface I")
 
-			l_name := clone (name)
+			l_name := name.twin
 			l_name.to_lower
 			Result.append (l_name)
 			Result.append (": IDispatch%N{%N")

@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			a_c_writer: WIZARD_WRITER_C
 		do
 			last_created_file_name.append_character (Directory_separator)
-			last_created_header_file_name := clone (last_created_file_name)
+			last_created_header_file_name := last_created_file_name.twin
 			last_created_file_name.append (Clib)
 			last_created_file_name.append_character (Directory_separator)
 			a_c_writer ?= transient_writer
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 			valid_file_name: not a_filename.is_empty
 			valid_syntax: a_filename.substring (a_filename.count - 1, a_filename.count).is_equal (Header_file_extension)
 		do
-			Result := clone (a_filename)
+			Result := a_filename.twin
 			Result.keep_head (Result.count - 2)
 			if is_cpp then
 				Result.append (Cpp_file_extension)
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 	create_directory_prefix (a_directory: STRING) is
 			-- Prepend `last_created_file_name' with path to `a_directory'.
 		do
-			last_created_file_name := clone (shared_wizard_environment.destination_folder)
+			last_created_file_name := shared_wizard_environment.destination_folder.twin
 			last_created_file_name.append (a_directory)
 		end
 

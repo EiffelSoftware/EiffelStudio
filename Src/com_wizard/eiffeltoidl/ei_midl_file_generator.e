@@ -63,7 +63,7 @@ feature  -- Basic operations
 					end
 				end
 
-				l_str_buffer := clone (e_class.name)
+				l_str_buffer := e_class.name.twin
 				l_str_buffer.to_lower
 				l_str_buffer.append ("_library")
 

@@ -111,9 +111,9 @@ feature -- Basic operations
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
 			if a_visitor.c_type.substring_index (iunknown_type, 1) /= 0 then
-				Result := clone (iunknown_type)
+				Result := iunknown_type.twin
 			elseif a_visitor.c_type.substring_index (idispatch_type, 1) /= 0 then
-				Result := clone (idispatch_type)
+				Result := idispatch_type.twin
 			else
 				check 
 					interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or

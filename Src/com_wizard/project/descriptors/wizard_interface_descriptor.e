@@ -114,7 +114,7 @@ feature -- Access
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
-			Result := clone (Processed)
+			Result := Processed.twin
 			Result.append (Space)
 			if dispinterface then
 				Result.append (Dispinterface_string)

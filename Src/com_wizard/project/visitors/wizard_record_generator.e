@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 			valid_header_file_name: a_header_file_name.substring_index (".h", 1) = 
 								a_header_file_name.count - 1
 		do
-			Result := clone (a_header_file_name)
+			Result := a_header_file_name.twin
 			Result.insert_string ("_impl", Result.count - 1)
 		ensure
 			non_void_header_file_name: Result /= Void

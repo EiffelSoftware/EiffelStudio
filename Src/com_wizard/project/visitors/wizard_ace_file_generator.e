@@ -108,7 +108,7 @@ feature -- Access
 						original_cluster_info.clusters.after
 					loop
 						if original_cluster_info.clusters.item.substring_index ("%".%"", 1) > 0 then
-							str_buffer := clone (shared_wizard_environment.eiffel_project_name)
+							str_buffer := shared_wizard_environment.eiffel_project_name.twin
 							str_buffer.keep_head (str_buffer.last_index_of ('\', str_buffer.count) - 1)
 							str_buffer.prepend ("%"")
 							str_buffer.append ("%"")
@@ -304,7 +304,7 @@ feature -- Basic operations
 			a_directory: DIRECTORY
 			a_working_directory: STRING
 		do
-			a_working_directory := clone (shared_wizard_environment.destination_folder)
+			a_working_directory := shared_wizard_environment.destination_folder.twin
 			a_working_directory.append (a_folder)
 			a_working_directory.append_character (Directory_separator)
 			a_working_directory.append (Clib)
@@ -342,7 +342,9 @@ feature -- Basic operations
 			create Result.make (10000)
 			Result.append (System_keyword)
 			Result.append (New_line_tab)
+			Result.append_character ('%"')
 			Result.append (Shared_wizard_environment.project_name)
+			Result.append_character ('%"')
 			if Shared_wizard_environment.client then
 				Result.append ("_client")
 			end
@@ -450,7 +452,7 @@ feature -- Basic operations
 			end
 
 			Result.append (Double_quote)
-			Result.append (clone (Shared_wizard_environment.destination_folder))
+			Result.append (Shared_wizard_environment.destination_folder.twin)
 			Result.append (Client)
 			Result.append_character (Directory_separator)
 			Result.append (Include)
@@ -460,7 +462,7 @@ feature -- Basic operations
 			Result.append (Tab)
 
 			Result.append (Double_quote)
-			Result.append (clone (Shared_wizard_environment.destination_folder))
+			Result.append (Shared_wizard_environment.destination_folder.twin)
 			Result.append (Server)
 			Result.append_character (Directory_separator)
 			Result.append (Include)
@@ -470,7 +472,7 @@ feature -- Basic operations
 			Result.append (Tab)
 
 			Result.append (Double_quote)
-			Result.append (clone (Shared_wizard_environment.destination_folder))
+			Result.append (Shared_wizard_environment.destination_folder.twin)
 			Result.append (Common)
 			Result.append_character (Directory_separator)
 			Result.append (Include)

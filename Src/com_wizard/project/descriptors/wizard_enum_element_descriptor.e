@@ -49,7 +49,7 @@ feature -- Basic operations
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			name := clone (a_name)
+			name := a_name.twin
 		ensure
 			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end
@@ -68,9 +68,9 @@ feature -- Basic operations
 			non_void_description: a_description /= Void
 		do
 			if a_description.is_empty then
-				description := clone (No_description_available)
+				description := No_description_available.twin
 			else
-				description := clone (a_description)
+				description := a_description.twin
 			end
 		ensure
 			non_void_description: description /= Void

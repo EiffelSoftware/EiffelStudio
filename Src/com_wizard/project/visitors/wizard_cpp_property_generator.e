@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 			non_void_header_file: a_header_file /= Void
 			valid_header_file: not a_header_file.is_empty
 		do
-			c_header_file := clone (a_header_file)
+			c_header_file := a_header_file.twin
 		end
 
 end -- class WIZARD_CPP_PROPERTY_GENERATOR

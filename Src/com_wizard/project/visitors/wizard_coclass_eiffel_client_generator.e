@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 		local
 			a_coclass_name: STRING
 		do
-			a_coclass_name := name_for_feature (clone (a_coclass_descriptor.eiffel_class_name))
+			a_coclass_name := name_for_feature (a_coclass_descriptor.eiffel_class_name.twin)
 
 			create ccom_create_feature_name.make (1000)
 			ccom_create_feature_name.append (Ccom_clause)

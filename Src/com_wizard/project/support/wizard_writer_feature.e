@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 		do
 			constant := True
 			body := a_value.out
-			name := clone (a_name)
-			comment := clone (a_description)
-			result_type := clone (Integer_type)
+			name := a_name.twin
+			comment := a_description.twin
+			result_type := Integer_type.twin
 		ensure
 			name_set: name.is_equal (a_name)
 			description_set: comment.is_equal (a_description)
@@ -46,7 +46,7 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			Result := clone (Tab)
+			Result := Tab.twin
 			Result.append (name_for_feature (name))
 			if not constant and then not arguments.is_empty then
 				Result.append (Space)
@@ -209,7 +209,7 @@ feature -- Element Change
 	set_name (a_name: like name) is
 			-- Set `name' with `a_name'.
 		do
-			name := clone (a_name)
+			name := a_name.twin
 		ensure
 			name_set: name.is_equal (a_name)
 		end
@@ -247,7 +247,7 @@ feature -- Element Change
 			valid_result_type: not a_result_type.is_empty
 			not_constant: not constant
 		do
-			result_type := clone (a_result_type)
+			result_type := a_result_type.twin
 		ensure
 			result_type_set: result_type.is_equal (a_result_type)
 		end
@@ -284,7 +284,7 @@ feature -- Element Change
 			not_constant: not constant
 			not_deferred: not is_deferred
 		do
-			body := clone (a_body)
+			body := a_body.twin
 		ensure
 			body_set: body.is_equal (a_body)
 		end
@@ -296,7 +296,7 @@ feature -- Element Change
 			valid_comment: not a_comment.is_empty
 			valid_syntax: not (a_comment.item (a_comment.count) = '%N') and not (a_comment.item (1) = '%N')
 		do
-			comment := clone (a_comment)
+			comment := a_comment.twin
 		ensure
 			comment_set: comment.is_equal (a_comment)
 		end

@@ -139,9 +139,9 @@ feature {NONE} -- Implementation
 				a_coclass_descriptor.default_dispinterface_name /= Void and then
 				not a_coclass_descriptor.default_dispinterface_name.is_empty
 			then
-				Result := clone (a_coclass_descriptor.default_dispinterface_name)
+				Result := a_coclass_descriptor.default_dispinterface_name.twin
 			elseif (dispinterface_names /= Void) then
-				Result := clone (dispinterface_names.first)
+				Result := dispinterface_names.first.twin
 			end
 		end
 
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 						a_coclass_descriptor.source_interface_descriptors.item.dispinterface or
 						a_coclass_descriptor.source_interface_descriptors.item.dual
 					then
-						Result := clone (a_coclass_descriptor.source_interface_descriptors.item.name)
+						Result := a_coclass_descriptor.source_interface_descriptors.item.name.twin
 					end
 					a_coclass_descriptor.source_interface_descriptors.forth
 				end

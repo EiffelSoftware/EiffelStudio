@@ -53,7 +53,7 @@ feature -- Basic operations
 
 				-- Add memeber "EXCEPINFO * excepinfo"
 				create default_member.make
-				default_member.set_name (clone (Excepinfo_variable_name))
+				default_member.set_name (Excepinfo_variable_name.twin)
 				
 				create tmp_string.make (10000)
 				tmp_string.append (Excepinfo)
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line)
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line)
-			tmp_string := clone ("a_qi.hr")
+			tmp_string := ("a_qi.hr").twin
 			Result.append (examine_hresult (tmp_string))
 			Result.append (New_line_tab)
 			Result.append (Iunknown_variable_name)

@@ -640,10 +640,10 @@ feature {NONE} -- Implementation
 				visitor.vt_type = Vt_bool
 			then
 				Result.append (visitor.cecil_type)
-				return_type := clone (visitor.cecil_type)
+				return_type := visitor.cecil_type.twin
 			else
 				Result.append (Eif_reference)
-				return_type := clone (Eif_reference)
+				return_type := Eif_reference.twin
 			end
 			Result.append (Space)
 			Result.append (Tmp_variable_name)

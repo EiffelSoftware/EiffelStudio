@@ -50,7 +50,7 @@ feature -- Access
 			Result := generated_signature
 			if is_pure_virtual then
 				Result.prepend (Space)
-				Result.prepend (clone (Virtual))
+				Result.prepend (Virtual.twin)
 				Result.append (Pure_virtual_sufix)
 			end
 			Result.prepend (tab)

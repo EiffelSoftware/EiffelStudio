@@ -74,7 +74,7 @@ feature {WIZARD_PARAMETER_DESCRIPTOR_FACTORY}-- Basic operations
 			non_void_name: a_name /= Void 
 			valid_name: not a_name.is_empty
 		do
-			name := clone (a_name)
+			name := a_name.twin
 		ensure
 			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end

@@ -167,7 +167,7 @@ feature -- Basic Operations
 			a_complete_text: STRING
 		do
 			if a_text /= Void then
-				a_complete_text := clone (a_text)
+				a_complete_text := a_text.twin
 				a_complete_text.append (New_line)
 				add_continuous_text (a_complete_text)
 			end

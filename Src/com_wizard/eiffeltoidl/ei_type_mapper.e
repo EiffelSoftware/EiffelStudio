@@ -133,7 +133,7 @@ feature -- Basic operations
 			end
 
 			if Result = Void then
-				tmp_string := clone (l_type)
+				tmp_string := l_type.twin
 				tmp_string.append (Space)
 				tmp_string.append (message_output.Not_e2idl_convertable_type)
 
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			in_type := True
 			inout_type := False
 
-			Result := clone (Safearray)
+			Result := Safearray.twin
 			Result.append ("(")
 
 			g_type := inner_type (l_type)
@@ -212,11 +212,11 @@ feature {NONE} -- Implementation
 			g_type := inner_type (l_type)
 
 			if cell_types.has (g_type) then
-				Result := clone (cell_types.item (g_type))
+				Result := cell_types.item (g_type).twin
 				Result.append (" * ")
 
 			elseif inout_types.has (g_type) then
-				Result := clone (inout_types.item (g_type))
+				Result := inout_types.item (g_type).twin
 				Result.append (" * ")
 
 			elseif is_cell (g_type) then

@@ -79,7 +79,7 @@ feature -- Basic Operations
 			a_string: STRING
 		do
 			generate_command_line_file (C_compiler_command_line (a_file_name), Temporary_input_file_name)
-			a_string := clone (C_compiler)
+			a_string := C_compiler.twin
 			a_string.append (Space)
 			a_string.append (last_make_command)
 			launch (a_string, execution_environment.current_working_directory)
@@ -117,12 +117,12 @@ feature {NONE} -- Implementation
 			a_string: STRING
 		do
 			if not retried then
-				a_string := clone (execution_environment.current_working_directory)
+				a_string := execution_environment.current_working_directory.twin
 				a_string.append_character (Directory_separator)
 				a_string.append (a_file_name)
 				create a_file.make_open_write (a_string)
 				a_file.put_string (content)
-				last_make_command := clone (At_sign)
+				last_make_command := At_sign.twin
 				last_make_command.append (a_file_name)
 				a_file.close
 			else
@@ -138,11 +138,11 @@ feature {NONE} -- Implementation
 	C_compiler_command_line (a_file_name: STRING): STRING is
 			-- Cl command line used to compile Proxy Stub
 		do
-			Result := clone (Common_c_compiler_options)
+			Result := Common_c_compiler_options.twin
 			if Shared_wizard_environment.output_level = message_output.Output_none then
 				Result.append (" /nologo ")
 			end
-			Result.append (clone (execution_environment.current_working_directory))
+			Result.append (execution_environment.current_working_directory.twin)
 			Result.append_character (Directory_separator)
 			Result.append (a_file_name)
 		end

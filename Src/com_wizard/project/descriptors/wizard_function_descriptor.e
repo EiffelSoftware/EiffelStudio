@@ -171,7 +171,7 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 			non_void_description: a_description /= Void
 		do
 			if not a_description.is_empty then
-				description := clone (a_description)
+				description := a_description.twin
 			else
 				description := No_description_available
 			end

@@ -70,7 +70,7 @@ feature -- Output
 
 			Result.append ("%N%(%N%Tuuid (")
 
-			guid_str := clone (guid.to_string)
+			guid_str := guid.to_string.twin
 			guid_str.remove (1)
 			guid_str.remove (guid_str.count)
 

@@ -56,7 +56,7 @@ feature -- Output
 			-- [ uuid ('guid'),
 			Result := "%T%(uuid ("
 
-			guid_str := clone (guid.to_string)
+			guid_str := guid.to_string.twin
 			guid_str.remove (1)
 			guid_str.remove (guid_str.count)
 
@@ -74,7 +74,7 @@ feature -- Output
 			Result.append ("),%N%T%)%N%T")
 
 			-- coclass 'name
-			l_name := clone (name)
+			l_name := name.twin
 			l_name.to_lower
 			Result.append ("coclass ")
 			Result.append (l_name)

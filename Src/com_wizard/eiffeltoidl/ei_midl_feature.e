@@ -28,7 +28,7 @@ feature -- Output
 		do
 			Result := ("%T%(helpstring (%"")
 
-			l_comment := clone (comment)
+			l_comment := comment.twin
 			l_comment.prune_all ('%N')
 			l_comment.prune_all ('%"')
 

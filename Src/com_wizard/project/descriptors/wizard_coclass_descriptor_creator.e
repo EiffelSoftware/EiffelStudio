@@ -36,8 +36,8 @@ feature -- Basic operations
 			tmp_type_lib: ECOM_TYPE_LIB
 			tmp_guid: ECOM_GUID
 		do
-			name := clone (a_documentation.name)
-			description := clone (a_documentation.doc_string)
+			name := a_documentation.name.twin
+			description := a_documentation.doc_string.twin
 			type_kind := a_type_info.type_attr.type_kind
 			flags := a_type_info.type_attr.flags
 
@@ -170,7 +170,7 @@ feature -- Basic operations
 						if 
 							(tmp_type_info.type_attr.type_kind = Tkind_dispatch) 
 						then
-							default_source_dispinterface_name := clone (tmp_interface_descriptor.c_type_name)
+							default_source_dispinterface_name := tmp_interface_descriptor.c_type_name.twin
 						end
 					end
 				else
@@ -184,7 +184,7 @@ feature -- Basic operations
 						if 
 							(tmp_type_info.type_attr.type_kind = Tkind_dispatch) 
 						then
-							default_dispinterface_name := clone (tmp_interface_descriptor.c_type_name)
+							default_dispinterface_name := tmp_interface_descriptor.c_type_name.twin
 						end
 					end
 					if not is_frestricted (tmp_impl_flag) then

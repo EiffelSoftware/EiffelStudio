@@ -75,6 +75,7 @@ feature -- Basic Operations
 
 				if Eiffel4_location = Void or else Eiffel4_location.is_empty then
 					message_output.add_error (Current, message_output.Eiffel4_not_set)
+					(create {EXCEPTIONS}).die (1)
 				end
 			end
 			
@@ -225,7 +226,7 @@ feature {NONE} -- Implementation
 			message_output.add_title (Current, Compilation_title_c)
 			execution_environment.change_working_directory (shared_wizard_environment.destination_folder)
 			if not shared_wizard_environment.abort then
-				Clib_folder_name := clone (Client)
+				Clib_folder_name := Client.twin
 				Clib_folder_name.append_character (Directory_separator)
 				Clib_folder_name.append (Clib)
 				progress_report.set_title (C_client_compilation_title)
@@ -235,7 +236,7 @@ feature {NONE} -- Implementation
 				progress_report.step
 			end
 			if not shared_wizard_environment.abort then
-				Clib_folder_name := clone (Server)
+				Clib_folder_name := Server.twin
 				Clib_folder_name.append_character (Directory_separator)
 				Clib_folder_name.append (Clib)
 				progress_report.set_title (C_server_compilation_title)
@@ -289,9 +290,9 @@ feature {NONE} -- Implementation
 			inspect
 				Shared_wizard_environment.return_code
 			when Standard_abort_value then
-				a_string := clone (Standard_failure_error_message)
+				a_string := Standard_failure_error_message.twin
 			else
-				a_string := clone (Failed_message)
+				a_string := Failed_message.twin
 				a_string.append_integer (Shared_wizard_environment.return_code)
 			end
 			message_output.add_error (Current, a_string)
@@ -316,7 +317,7 @@ feature {NONE} -- Implementation
 		local
 			a_path2: STRING
 		do
-			a_path2 := clone (a_path)
+			a_path2 := a_path.twin
 			a_path2.append (a_subdirectory)
 			initialize_directory (a_path2)
 		end
@@ -337,10 +338,10 @@ feature {NONE} -- Implementation
 			a_path, a_path2: STRING
 		do
 			-- Initialize Common subdirectory
-			a_path := clone (shared_wizard_environment.destination_folder)
+			a_path := shared_wizard_environment.destination_folder.twin
 			initialize_subdirectory (a_path, Common)
 
-			a_path2 := clone (a_path)
+			a_path2 := a_path.twin
 			a_path2.append (Common)
 			a_path2.append_character (Directory_separator)
 			initialize_clib_include (a_path2)
@@ -351,7 +352,7 @@ feature {NONE} -- Implementation
 			-- Initialize Client subdirectory
 			initialize_subdirectory (a_path, Client)
 			
-			a_path2 := clone (a_path)
+			a_path2 := a_path.twin
 			a_path2.append (Client)
 			a_path2.append_character (Directory_separator)
 			initialize_clib_include (a_path2)
@@ -362,7 +363,7 @@ feature {NONE} -- Implementation
 			-- Initialize Server subdirectory
 			initialize_subdirectory (a_path, Server)
 			
-			a_path2 := clone (a_path)
+			a_path2 := a_path.twin
 			a_path2.append (Server)
 			a_path2.append_character (Directory_separator)
 			initialize_clib_include (a_path2)
@@ -386,13 +387,13 @@ feature {NONE} -- Implementation
 			create a_file.make (a_path)
 			if a_file.exists then
 				if not a_file.is_directory then
-					a_string := clone (message_output.File_already_exists)
+					a_string := message_output.File_already_exists.twin
 					a_string.append (Colon)
 					a_string.append (Space)
 					a_string.append (a_path)
 					message_output.add_warning (Current, a_string)
 					message_output.add_message (Current, message_output.File_backed_up)
-					a_string := clone (a_path)
+					a_string := a_path.twin
 					a_string.append (Backup_file_extension)
 					file_copy (a_path, a_string)
 					file_delete (a_path)

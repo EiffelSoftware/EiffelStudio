@@ -56,7 +56,7 @@ feature -- Access
 	to_string: STRING is
 			-- String representation used for output
 		do
-			Result := clone (name)
+			Result := name.twin
 			Result.append (Colon)
 			Result.append (Space)
 			Result.append (data_type.name)
@@ -88,24 +88,24 @@ feature -- Transformation
 			tmp_name: STRING
 		do
 		{WIZARD_FEATURE_DESCRIPTOR} Precursor (an_interface_descriptor, a_coclass_descriptor)
-			tmp_name := clone (interface_eiffel_name)
+			tmp_name := interface_eiffel_name.twin
 			tmp_name.prepend ("set_")
 			a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
-			tmp_name := clone (interface_eiffel_name)
+			tmp_name := interface_eiffel_name.twin
 			tmp_name.prepend ("set_ref_")
 			a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
 			if coclass_eiffel_names.has (a_coclass_descriptor.name) then
-				tmp_name := clone (coclass_eiffel_names.item (a_coclass_descriptor.name))
+				tmp_name := coclass_eiffel_names.item (a_coclass_descriptor.name).twin
 				tmp_name.prepend ("set_")
 				a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
-				tmp_name := clone (coclass_eiffel_names.item (a_coclass_descriptor.name))
+				tmp_name := coclass_eiffel_names.item (a_coclass_descriptor.name).twin
 				tmp_name.prepend ("set_ref_")
 				a_coclass_descriptor.feature_eiffel_names.force  (tmp_name)
 			end
-			tmp_name := clone (name)
+			tmp_name := name.twin
 			tmp_name.prepend ("set_")
 			a_coclass_descriptor.feature_c_names.force (tmp_name)
-			tmp_name := clone (name)
+			tmp_name := name.twin
 			tmp_name.prepend ("set_ref_")
 			a_coclass_descriptor.feature_c_names.force (tmp_name)
 		end
@@ -115,19 +115,19 @@ feature -- Transformation
 		local
 			tmp_string, tmp_string2, set_tmp_string, set_tmp_string2, set_ref_tmp_string, set_ref_tmp_string2: STRING
 		do
-			tmp_string := clone (interface_eiffel_name)
+			tmp_string := interface_eiffel_name.twin
 			tmp_string.to_lower
-			tmp_string2 := clone (tmp_string)
+			tmp_string2 := tmp_string.twin
 			tmp_string2.append ("_user_precondition")
 
-			set_tmp_string := clone (tmp_string)
+			set_tmp_string := tmp_string.twin
 			set_tmp_string.prepend ("set_")
-			set_tmp_string2 := clone (set_tmp_string)
+			set_tmp_string2 := set_tmp_string.twin
 			set_tmp_string2.append ("_user_precondition")
 
-			set_ref_tmp_string := clone (tmp_string)
+			set_ref_tmp_string := tmp_string.twin
 			set_ref_tmp_string.prepend ("set_ref_")
-			set_ref_tmp_string2 := clone (set_ref_tmp_string)
+			set_ref_tmp_string2 := set_ref_tmp_string.twin
 			set_ref_tmp_string2.append ("_user_precondition")
 			if 
 				an_interface_descriptor.feature_eiffel_names.has (tmp_string) or
@@ -140,28 +140,28 @@ feature -- Transformation
 			then
 				interface_eiffel_name.append_integer (counter)
 			end
-			tmp_string := clone (interface_eiffel_name)
-			tmp_string2 := clone (tmp_string)
+			tmp_string := interface_eiffel_name.twin
+			tmp_string2 := tmp_string.twin
 			tmp_string2.append ("_user_precondition")
 
-			set_tmp_string := clone (tmp_string)
+			set_tmp_string := tmp_string.twin
 			set_tmp_string.prepend ("set_")
-			set_tmp_string2 := clone (set_tmp_string)
+			set_tmp_string2 := set_tmp_string.twin
 			set_tmp_string2.append ("_user_precondition")
 
-			set_ref_tmp_string := clone (tmp_string)
+			set_ref_tmp_string := tmp_string.twin
 			set_ref_tmp_string.prepend ("set_ref_")
-			set_ref_tmp_string2 := clone (set_ref_tmp_string)
+			set_ref_tmp_string2 := set_ref_tmp_string.twin
 			set_ref_tmp_string2.append ("_user_precondition")
 
-			set_tmp_string := clone (tmp_string)
+			set_tmp_string := tmp_string.twin
 			set_tmp_string.prepend ("set_")
-			set_tmp_string2 := clone (set_tmp_string)
+			set_tmp_string2 := set_tmp_string.twin
 			set_tmp_string2.append ("_user_precondition")
 
-			set_ref_tmp_string := clone (tmp_string)
+			set_ref_tmp_string := tmp_string.twin
 			set_ref_tmp_string.prepend ("set_ref_")
-			set_ref_tmp_string2 := clone (set_ref_tmp_string)
+			set_ref_tmp_string2 := set_ref_tmp_string.twin
 			set_ref_tmp_string2.append ("_user_precondition")
 
 			an_interface_descriptor.feature_eiffel_names.force (tmp_string)
@@ -181,7 +181,7 @@ feature {WIZARD_PROPERTY_DESCRIPTOR_FACTORY}-- Basic operations
 		require
 			valid_description: a_description /= Void and then not a_description.is_empty
 		do
-			description := clone (a_description)
+			description := a_description.twin
 		ensure
 			valid_description: description /= Void and then not description.is_empty and description.is_equal (a_description)
 		end

@@ -63,7 +63,7 @@ feature -- Element Change
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
-			system_name := clone (a_name)
+			system_name := a_name.twin
 		ensure
 			name_set: system_name.is_equal (a_name)
 		end

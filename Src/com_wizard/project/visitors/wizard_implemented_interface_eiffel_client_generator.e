@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 		local
 			a_coclass_name: STRING
 		do
-			a_coclass_name := name_for_feature (clone (an_implemented_interface_descriptor.eiffel_class_name))
+			a_coclass_name := name_for_feature (an_implemented_interface_descriptor.eiffel_class_name.twin)
 
 			create ccom_create_from_pointer_feature_name.make (100)
 			ccom_create_from_pointer_feature_name.append (Ccom_clause)

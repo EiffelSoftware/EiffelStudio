@@ -33,7 +33,7 @@ feature -- Access
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
-			Result := clone (Added)
+			Result := Added.twin
 			Result.append (Space)
 			Result.append (Alias_keyword)
 			Result.append (Space)

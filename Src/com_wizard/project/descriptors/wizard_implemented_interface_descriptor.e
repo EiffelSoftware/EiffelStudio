@@ -27,10 +27,10 @@ feature -- Initialization
 		do
 			interface_descriptor := a_descriptor
 			type_kind := Tkind_coclass
-			name := clone (a_descriptor.name)
-			namespace := clone (a_descriptor.namespace)
+			name := a_descriptor.name.twin
+			namespace := a_descriptor.namespace.twin
 			name.append ("_impl")
-			c_type_name := clone (name)
+			c_type_name := name.twin
 			
 			eiffel_class_name := name_for_class (name, type_kind, True)
 				
@@ -55,7 +55,7 @@ feature -- Access
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
-			Result := clone (Processed)
+			Result := Processed.twin
 			Result.append (Space)
  			Result.append (Implemented_word)
 			Result.append (Space)
@@ -141,7 +141,7 @@ feature {NONE} -- implementation
 			non_void_name: name /= Void
 			valid_name: not name.is_empty
 		do
-			Result := clone (name)
+			Result := name.twin
 			if is_client then
 				Result.append ("_proxy")
 			else

@@ -84,7 +84,7 @@ feature -- Behavior
 					shared_wizard_environment.set_destination_folder (folder_name)
 					shared_wizard_environment.set_idl (True)
 
-					idl_file_name := clone (folder_name)
+					idl_file_name := folder_name.twin
 					idl_file_name.append ("\idl\")
 					idl_file_name.append (shared_wizard_environment.eiffel_class_name)
 					idl_file_name.append (idl_file_extension)
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			-- Initialize edits according to `shared_wizard_environment'.
 		do
 			if shared_wizard_environment.destination_folder /= Void then
-				destination_folder_edit.set_text (clone (shared_wizard_environment.destination_folder))
+				destination_folder_edit.set_text (shared_wizard_environment.destination_folder.twin)
 			end
 		end
 

@@ -74,7 +74,7 @@ feature -- Basic operation
 
 			feature_writer.set_deferred
 			set_precondition_feature_writer (precondition_feature_writer, func_desc.interface_eiffel_name)
-			precondition_feature_writer.arguments.append (clone (feature_writer.arguments))
+			precondition_feature_writer.arguments.append (feature_writer.arguments.twin)
 		end
 
 end -- class WIZARD_EIFFEL_DEFERRED_FUNCTION_GENERATOR

@@ -15,7 +15,7 @@ feature -- Element Change
 	set_title (a_title: STRING) is
 			-- Set `title' with `a_title'.
 		do
-			title := clone (a_title)
+			title := a_title.twin
 		end
 
 	set_progress (an_integer: INTEGER) is

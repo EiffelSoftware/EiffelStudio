@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
-			Result := clone (a_name)
+			Result := a_name.twin
 			Result.prepend ("on_")
 		ensure
 			non_void_name: Result /= Void

@@ -56,12 +56,12 @@ feature -- Basic operations
 			tmp_type_info: ECOM_TYPE_INFO
 			dispinterface_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR
 		do
-			name := clone (a_documentation.name)
+			name := a_documentation.name.twin
 			if name /= Void then
 				add_c_type
 			end
 
-			description := clone (a_documentation.doc_string)
+			description := a_documentation.doc_string.twin
 			type_kind := a_type_info.type_attr.type_kind
 
 			if type_kind = Tkind_dispatch then
@@ -96,9 +96,9 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_interface
 						or a_type_info.type_attr.type_kind = Tkind_dispatch
 		do
-			name := clone (a_documentation.name)
+			name := a_documentation.name.twin
 
-			description := clone (a_documentation.doc_string)
+			description := a_documentation.doc_string.twin
 			type_kind := a_type_info.type_attr.type_kind
 
 			if type_kind = Tkind_dispatch then
@@ -162,7 +162,7 @@ feature -- Basic operations
 					c_header_file_name := header_name (namespace, name)
 				end
 			else
-				eiffel_class_name := clone (Ecom_interface)
+				eiffel_class_name := Ecom_interface.twin
 				create c_header_file_name.make (0)
 				create namespace.make (0)
 			end

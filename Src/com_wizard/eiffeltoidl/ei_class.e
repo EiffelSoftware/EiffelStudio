@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			non_void_name: c_name /= Void
 			valid_name: not c_name.is_empty
 		do
-			name := clone (c_name)
+			name := c_name.twin
 			create description.make (0)
 			create features.make (5)
 		end
@@ -41,7 +41,7 @@ feature -- Basic operations
 		require
 			valid_name: c_name /= Void and then not c_name.is_empty
 		do
-			name := clone (c_name)
+			name := c_name.twin
 		ensure
 			name_set: name.is_equal (c_name)
 		end
@@ -51,7 +51,7 @@ feature -- Basic operations
 		require
 			valid_description: desc /= Void and then not desc.is_empty
 		do
-			description := clone (desc)
+			description := desc.twin
 		ensure
 			description_set: description.is_equal (desc)
 		end

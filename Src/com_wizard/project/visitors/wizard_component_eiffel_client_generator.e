@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 
 			Result.set_name ("make_from_pointer")
 			Result.set_comment ("Make from pointer")
-			Result.add_argument (clone (Default_pointer_argument))
+			Result.add_argument (Default_pointer_argument.twin)
 			Result.set_effective
 
 			create feature_body.make (10000)
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			Result.set_name (ccom_create_from_pointer_feature_name)
 			Result.set_comment ("Create from pointer")
 			Result.set_result_type (Pointer_type)
-			Result.add_argument (clone (Pointer_variable))
+			Result.add_argument (Pointer_variable.twin)
 			Result.set_external
 
 			create feature_body.make (1000)
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Item")
 			Result.set_external
 			Result.set_result_type (Pointer_type)
-			Result.add_argument (clone (Default_pointer_argument))
+			Result.add_argument (Default_pointer_argument.twin)
 
 			create feature_body.make (500)
 			feature_body.append (Tab_tab_tab)
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			feature_body: STRING
 		do
 			create Result.make
-			Result.set_name (clone (last_error_code_name))
+			Result.set_name (last_error_code_name.twin)
 			Result.set_comment ("Last error code.")
 			Result.set_result_type (Integer_type)
 
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 			feature_body: STRING
 		do
 			create Result.make
-			Result.set_name (clone (last_source_of_exception_name))
+			Result.set_name (last_source_of_exception_name.twin)
 			Result.set_comment ("Last source of exception.")
 			Result.set_result_type (String_type)
 
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 			feature_body: STRING
 		do
 			create Result.make
-			Result.set_name (clone (last_error_description_name))
+			Result.set_name (last_error_description_name.twin)
 			Result.set_comment ("Last error description.")
 			Result.set_result_type (String_type)
 
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			feature_body: STRING
 		do
 			create Result.make
-			Result.set_name (clone (last_error_help_file_name))
+			Result.set_name (last_error_help_file_name.twin)
 			Result.set_comment ("Last error help file.")
 			Result.set_result_type (String_type)
 
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last error code")
 			Result.set_external
 			Result.set_result_type (Integer_type)
-			Result.add_argument (clone (Default_pointer_argument))
+			Result.add_argument (Default_pointer_argument.twin)
 
 			create feature_body.make (500)
 			feature_body.append (Tab_tab_tab)
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last source of exception")
 			Result.set_external
 			Result.set_result_type (String_type)
-			Result.add_argument (clone (Default_pointer_argument))
+			Result.add_argument (Default_pointer_argument.twin)
 
 			create feature_body.make (500)
 			feature_body.append (Tab_tab_tab)
@@ -478,7 +478,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last error description")
 			Result.set_external
 			Result.set_result_type (String_type)
-			Result.add_argument (clone (Default_pointer_argument))
+			Result.add_argument (Default_pointer_argument.twin)
 
 			create feature_body.make (500)
 			feature_body.append (Tab_tab_tab)
@@ -519,7 +519,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Last error help file")
 			Result.set_external
 			Result.set_result_type (String_type)
-			Result.add_argument (clone (Default_pointer_argument))
+			Result.add_argument (Default_pointer_argument.twin)
 
 			create feature_body.make (500)
 			feature_body.append (Tab_tab_tab)

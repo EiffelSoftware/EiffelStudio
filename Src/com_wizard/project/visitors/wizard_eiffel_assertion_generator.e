@@ -92,8 +92,8 @@ feature -- Basic operation
 			tmp_tag, tmp_body, a_precondition_name: STRING
 		do
 			a_precondition_name := user_precondition_name (a_feature_name)
-			tmp_tag := clone (a_precondition_name)
-			tmp_body := clone (a_precondition_name)
+			tmp_tag := a_precondition_name.twin
+			tmp_body := a_precondition_name.twin
 
 			create Result.make (tmp_tag, tmp_body)
 		ensure

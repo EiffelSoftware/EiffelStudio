@@ -30,7 +30,7 @@ feature -- Access
 
 			included_name := a_data_visitor.c_header_file
 			if not (included_name = Void or else included_name.is_empty) then
-				c_writer.add_import (clone (included_name))
+				c_writer.add_import (included_name.twin)
 			end
 
 			create type_definition.make (100)

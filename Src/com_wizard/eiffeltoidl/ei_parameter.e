@@ -39,7 +39,7 @@ feature -- Element change
 			non_void_name: new_name /= Void
 			valid_name: not new_name.is_empty
 		do
-			name := clone (new_name)
+			name := new_name.twin
 		ensure
 			name_set: name.is_equal (new_name)
 		end
@@ -50,7 +50,7 @@ feature -- Element change
 			non_void_type: new_type /= Void
 			valid_type: not new_type.is_empty
 		do
-			type:= clone (new_type)
+			type:= new_type.twin
 		ensure
 			type_set: type.is_equal (new_type)
 		end

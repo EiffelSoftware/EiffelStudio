@@ -61,7 +61,7 @@ feature -- Basic operations
 						loop
 							input_file.read_line
 							if not input_file.last_string.is_empty then
-								raw_data.extend (clone (input_file.last_string))
+								raw_data.extend (input_file.last_string.twin)
 							end
 						end
 					end
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 					if not str_buffer.is_empty and not is_common_path (str_buffer) then
 						clusters.extend (str_buffer)
 					end
-					str_buffer := clone (raw_data.item)
+					str_buffer := raw_data.item.twin
 					str_buffer.append ("%N")
 				elseif raw_data.item.substring_index ("--", 1) = 0 then
 					str_buffer.append (raw_data.item)

@@ -95,7 +95,7 @@ feature -- Basic Operations
 			if not (a_command_line.item (a_command_line.count) = '"') then
 				a_command_line.append ("%"")
 			end
-			a_string := clone (Console_spawn_application)
+			a_string := Console_spawn_application.twin
 			a_string.append (" ")
 			a_string.append (a_command_line)
 			spawn (a_string, a_working_directory)

@@ -49,11 +49,11 @@ feature -- Basic operations
 		local
 			tmp_string: STRING
 		do
-			name := clone (a_name)
+			name := a_name.twin
 			if is_forbidden_c_word (name)  then
 				name.prepend ("a_")
 			end
-			tmp_string := clone (name)
+			tmp_string := name.twin
 			tmp_string.to_lower
 			if eiffel_key_words.has (tmp_string) then
 				name.prepend ("a_")

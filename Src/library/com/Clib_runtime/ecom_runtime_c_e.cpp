@@ -21,16 +21,14 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_currency (CURRENCY a_currency)
 {
 	EIF_OBJECT result;
 	EIF_TYPE_ID eif_currency_id;
-	EIF_PROC currency_make;
-	EIF_POINTER_FUNCTION item;
+	EIF_PROCEDURE make;
 	EIF_POINTER an_item;
 
 	eif_currency_id = eif_type_id ("ECOM_CURRENCY");
-	currency_make = eif_proc ("make", eif_currency_id);
+	make = eif_procedure ("make", eif_currency_id);
 	result = eif_create (eif_currency_id);
-	currency_make (eif_access (result));
-	item = eif_pointer_function ("item", eif_currency_id);
-	an_item = item (eif_access (result));
+	make (eif_access (result));
+	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
 	memcpy (an_item, &a_currency, sizeof (CURRENCY));
 	return eif_wean (result);
 };
@@ -43,15 +41,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_decimal (DECIMAL a_decimal)
 	EIF_OBJECT result;
 	EIF_TYPE_ID eif_decimal_id;
 	EIF_PROC make;
-	EIF_POINTER_FUNCTION item;
 	EIF_POINTER an_item;
 
 	eif_decimal_id = eif_type_id ("ECOM_DECIMAL");
 	make = eif_proc ("make", eif_decimal_id);
 	result = eif_create (eif_decimal_id);
 	make (eif_access (result));
-	item = eif_pointer_function ("item", eif_decimal_id);
-	an_item = item (eif_access (result));
+	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
 	memcpy (an_item, &a_decimal, sizeof (DECIMAL));
 	return eif_wean (result);
 };

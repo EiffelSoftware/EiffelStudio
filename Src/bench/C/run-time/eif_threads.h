@@ -312,7 +312,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_TYPE			CRITICAL_SECTION
 #define EIF_TSD_TYPE			DWORD
 #define EIF_TSD_VAL_TYPE		LPVOID
-#define EIF_SEM_TYPE			unsigned char /* FIXME - not used */
+#define EIF_SEM_TYPE			HANDLE
 
 /* Constants */
 #define EIF_MIN_PRIORITY 0			/* FIXME - not used */
@@ -350,12 +350,21 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_DESTROY0(m,msg)		DeleteCriticalSection(m)
 #define EIF_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY0(m,msg); free(m)
 
-/* Semaphore management -- not implemented */
-#define EIF_SEM_CREATE(sem,count,msg)
-#define EIF_SEM_POST(sem,msg)
-#define EIF_SEM_WAIT(sem,msg)
-#define EIF_SEM_TRYWAIT(sem,msg)
-#define EIF_SEM_DESTROY(sem,msg)
+/* Semaphore management */
+#define EIF_SEM_CREATE(sem,count,msg) \
+        sem = CreateSemaphore (NULL, (LONG) count, (LONG) 0x7fffffff, NULL);  \
+        if (!sem) eif_thr_panic (msg)
+#define EIF_SEM_POST(sem,msg) \
+        if (!ReleaseSemaphore(sem, 1, NULL)) eif_thr_panic (msg)
+#define EIF_SEM_WAIT(sem,msg) \
+        if (WaitForSingleObject(sem, INFINITE)==WAIT_FAILED) \
+                eif_thr_panic (msg)
+#define EIF_SEM_TRYWAIT(sem,r,msg) \
+        r = (WaitForSingleObject(sem, INFINITE)); \
+        if (r==WAIT_FAILED) eif_thr_panic (msg); \
+        r = (r!=WAIT_TIMEOUT)
+#define EIF_SEM_DESTROY(sem,msg) \
+        if (!CloseHandle(sem)) eif_thr_panic (msg)
 
 /* Thread Specific Data management */
 #define EIF_TSD_CREATE(key,msg) \

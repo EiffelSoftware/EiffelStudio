@@ -9,7 +9,7 @@ indexing
 class
 	MEL_POINT
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

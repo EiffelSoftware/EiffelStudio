@@ -11,7 +11,7 @@ inherit
 
 	MT_RELATIONSHIP_STREAM_EXTERNAL
 
-Creation 
+create 
     make, make_from_name
 
 feature  -- Implementation

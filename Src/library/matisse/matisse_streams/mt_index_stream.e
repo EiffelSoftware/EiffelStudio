@@ -13,7 +13,7 @@ inherit
 
 	MT_CONSTANTS
 	
-Creation 
+create 
 	make, make_from_index
 
 feature {MT_ENTRYPOINT} -- Implementation
@@ -36,8 +36,8 @@ feature {MT_ENTRYPOINT} -- Implementation
 			c_index_name := index_name.to_c
 			c_class_name := one_class.name.to_c
 
-			!! c_crit_start_array.make (crit_start_array.lower, crit_start_array.upper)
-			!! c_crit_end_array.make (crit_end_array.lower, crit_end_array.upper)
+			create c_crit_start_array.make (crit_start_array.lower, crit_start_array.upper)
+			create c_crit_end_array.make (crit_end_array.lower, crit_end_array.upper)
 
 			from 
 				i:= crit_start_array.lower 
@@ -79,8 +79,8 @@ feature {MT_ENTRYPOINT} -- Implementation
 			i, class_oid: INTEGER
 			c_one_string: ANY
 		do
-			!! c_crit_start_array.make (0, an_index.criteria_count - 1)
-			!! c_crit_end_array.make (0, an_index.criteria_count - 1)
+			create c_crit_start_array.make (0, an_index.criteria_count - 1)
+			create c_crit_end_array.make (0, an_index.criteria_count - 1)
 			from
 				i := 0
 			until

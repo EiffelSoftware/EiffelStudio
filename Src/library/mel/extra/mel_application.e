@@ -17,11 +17,11 @@ feature {NONE} -- Initialization
 			-- Create the application.
 		do
 			set_default;
-			!! application_context.make;
-			!! display.make (application_context, Void, 
+			create application_context.make;
+			create display.make (application_context, Void, 
 				Void, application_name);
 			if display.is_valid then
-				!! top_level.make (application_name, Void, display.default_screen);
+				create top_level.make (application_name, Void, display.default_screen);
 				build;
 				top_level.realize;
 				application_context.main_loop

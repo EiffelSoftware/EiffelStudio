@@ -18,7 +18,7 @@ inherit
 			revert_to_unloaded
 		end
 
-creation
+create
 	make, make_from_names, make_from_id
 
 feature
@@ -46,9 +46,9 @@ feature  -- Successors
 		do
 			c_get_successors (an_object.oid, oid)
 			if c_keys_count = 0 then
-				!! Result.make (1, 0)
+				create Result.make (1, 0)
 			else
-				!MT_ARRAY [MT_STORABLE]! Result.make (1, 1)
+				create {MT_ARRAY [MT_STORABLE]} Result.make (1, 1)
 				Result.put(database.new_eif_object_from_oid (c_ith_key(1)), 1)
 			end
 			c_free_keys
@@ -63,7 +63,7 @@ feature {MATISSE} -- Persistence
 		local
 			temp: MT_STORABLE
 		do
-			!! Result.make (1, 1)
+			create Result.make (1, 1)
 			temp ?= field (eif_field_index, an_object)
 			Result.put (temp, 1)
 		end

@@ -15,7 +15,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 	make_motif, 
 	make_xt_event, 
 	make_wm_protocol

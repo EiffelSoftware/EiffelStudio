@@ -24,7 +24,7 @@ inherit
 			set_foreground, set_foreground_color
 		end;
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 						a_parent.screen_object, False);
 			screen_object := font_box_form (handle)
 			Mel_widgets.add (Current);
-			!! button_form.make_from_existing (xt_parent 
+			create button_form.make_from_existing (xt_parent 
 					(font_box_ok_button (handle)), Current);
 			set_default;
 			if do_manage then
@@ -58,7 +58,7 @@ feature -- Access
 			w := font_box_ok_button (handle);
 			Result ?= Mel_widgets.item (w);
 			if Result = Void then
-				!! Result.make_from_existing (w, button_form)
+				create Result.make_from_existing (w, button_form)
 			end
 		end; 
 
@@ -70,7 +70,7 @@ feature -- Access
 			w := font_box_apply_button (handle);
 			Result ?= Mel_widgets.item (w);
 			if Result = Void then
-				!! Result.make_from_existing (w, button_form)
+				create Result.make_from_existing (w, button_form)
 			end
 		end;
 
@@ -82,7 +82,7 @@ feature -- Access
 			w := font_box_cancel_button (handle);
 			Result ?= Mel_widgets.item (w);
 			if Result = Void then
-				!! Result.make_from_existing (w, button_form)
+				create Result.make_from_existing (w, button_form)
 			end
 		end;
 
@@ -112,7 +112,7 @@ feature -- Status report
 	current_font_name: STRING is
 			-- Font name currently selected by the user
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.from_c (font_box_current_font (handle));
 		ensure
 			has_result: Result /= Void

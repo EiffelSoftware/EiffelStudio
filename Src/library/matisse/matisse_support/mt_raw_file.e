@@ -9,7 +9,7 @@ class
 inherit
 	RAW_FILE
 
-creation
+create
 	make, make_open_read, make_open_write, make_open_append,
 	make_open_read_write, make_create_read_write,
 	make_open_read_append
@@ -29,7 +29,7 @@ feature
 		local
 			bytes_area: ANY
 		do
-			!! last_bytes.make (1, nb_bytes)
+			create last_bytes.make (1, nb_bytes)
 			bytes_area := last_bytes.area
 			last_bytes_count := file_read_bytes (file_pointer, $bytes_area, nb_bytes)
 		end

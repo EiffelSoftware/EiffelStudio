@@ -13,7 +13,7 @@ inherit
 			{NONE} all;	
 		end
 
-creation
+create
 	set_login, make
 
 feature -- Initialization
@@ -24,7 +24,7 @@ feature -- Initialization
 			arguments_exist: a_hostname /= Void and db_name /= Void
 			arguments_not_empty: not (a_hostname.is_empty or db_name.is_empty)
 		do
-			!! session_control.make
+			create session_control.make
 			session_control.set_hostname (a_hostname)
 			session_control.set_database_name (db_name)
 		end -- login

@@ -21,7 +21,7 @@ inherit
 			is_equal 
 		end
 		
-creation
+create
 	make, make_from_names, make_from_id
 
 feature {NONE} -- Initialization
@@ -79,8 +79,8 @@ feature -- Accessing
 			a_class: MT_CLASS
 			i: INTEGER
 		do
-			!! a_stream.make_from_name (Current, "Mt Successors")
-			!! Result.make (0, 1)
+			create a_stream.make_from_name (Current, "Mt Successors")
+			create Result.make (0, 1)
 			from
 				a_stream.start
 			until
@@ -165,15 +165,15 @@ feature {MATISSE} -- Persistence
 			i: INTEGER
 		do
 			if is_single then
-				!! Result.make (1, 1)
+				create Result.make (1, 1)
 				temp ?= field (eif_field_index, an_object)
 				Result.put (temp, 1)
 			else
 				collection ?= field (eif_field_index, an_object)
 				if collection = Void then
-					!! Result.make (1, 0)
+					create Result.make (1, 0)
 				else
-					!! Result.make (collection.lower, collection.upper)
+					create Result.make (collection.lower, collection.upper)
 					from
 						i := collection.lower
 					until

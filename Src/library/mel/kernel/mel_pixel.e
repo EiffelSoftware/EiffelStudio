@@ -21,7 +21,7 @@ inherit
 			is_valid
 		end
 
-creation
+create
 	make_by_name, 
 	make_by_rgb_value, 
 	make_from_existing
@@ -102,7 +102,7 @@ feature -- Access
 			-- Associated color map
 		do
 			if colormap_identifier /= default_pointer then	
-				!! Result.make_from_existing (colormap_identifier)
+				create Result.make_from_existing (colormap_identifier)
 			end
 		end;
 

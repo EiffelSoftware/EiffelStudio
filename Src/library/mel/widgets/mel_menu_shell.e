@@ -23,7 +23,7 @@ inherit
 			make, make_from_existing
 		end
 
-creation
+create
 	make,
 	make_from_existing
 

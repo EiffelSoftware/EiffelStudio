@@ -23,7 +23,7 @@ inherit
 			{NONE} put
 		end
 
-creation 
+create 
 	make
 
 feature {NONE} -- Initialization

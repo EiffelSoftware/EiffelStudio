@@ -25,7 +25,7 @@ inherit
 			parent
 		end
 
-creation 
+create 
 	make
 
 feature -- Initialization
@@ -42,7 +42,7 @@ feature -- Initialization
 			screen_object := 
 				xm_create_popup_menu (a_parent.screen_object, 
 					$widget_name, default_pointer, 0);
-			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			create parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add_without_parent (Current);
 			set_default
 		ensure

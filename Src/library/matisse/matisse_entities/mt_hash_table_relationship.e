@@ -13,7 +13,7 @@ inherit
 			empty_container_for
 		end
 
-creation
+create
 	make_from_id
 
 feature

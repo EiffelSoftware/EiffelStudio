@@ -27,7 +27,7 @@ inherit
 			create_callback_struct
 		end;
 
-creation
+create
 	make, 
 	make_from_existing
 
@@ -216,7 +216,7 @@ feature -- Status report
 			c_string: POINTER
 		do
 			c_string := xm_text_get_string (screen_object);
-			!! Result.make (0);
+			create Result.make (0);
 			Result.from_c (c_string);
 			Xt_Free (c_string)
 		ensure
@@ -859,12 +859,12 @@ feature {MEL_DISPATCHER} -- Basic operations
 				resource_name = XmNmodifyVerifyCallback or
 				resource_name = XmNmotionVerifyCallback
 			then
-				!MEL_TEXT_VERIFY_CALLBACK_STRUCT! Result.make (Current, a_callback_struct_ptr)
+				create {MEL_TEXT_VERIFY_CALLBACK_STRUCT} Result.make (Current, a_callback_struct_ptr)
 			else
 				if resource_name = XmNmodifyVerifycallbackWcs then
-					!MEL_TEXT_VERIFY_CALLBACK_STRUCT_WCS! Result.make (Current, a_callback_struct_ptr)
+					create {MEL_TEXT_VERIFY_CALLBACK_STRUCT_WCS} Result.make (Current, a_callback_struct_ptr)
 				else
-					!! Result.make (Current, a_callback_struct_ptr)
+					create Result.make (Current, a_callback_struct_ptr)
 				end
 			end
 		end;

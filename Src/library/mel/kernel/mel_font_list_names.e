@@ -18,7 +18,7 @@ inherit
 			{NONE} list_make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			until
 				after
 			loop
-				!! str.make (0);
+				create str.make (0);
 				str.from_c (mel_font_list_name (handle, index));
 				replace (str);
 				forth

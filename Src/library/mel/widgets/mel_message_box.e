@@ -21,7 +21,7 @@ inherit
 			cancel_button, create_widget
 		end
 
-creation
+create
 	make, 
 	make_no_auto_unmanage,
 	make_from_existing
@@ -49,7 +49,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -63,7 +63,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -77,7 +77,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -91,7 +91,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -105,7 +105,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;
@@ -119,7 +119,7 @@ feature -- Access
 			if w /= default_pointer then
 				Result ?= Mel_widgets.item (w);
 				if Result = Void then
-					!! Result.make_from_existing (w, Current)
+					create Result.make_from_existing (w, Current)
 				end
 			end
 		end;

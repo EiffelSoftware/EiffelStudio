@@ -21,7 +21,7 @@ inherit
 			create_widget, parent, created_dialog_automatically
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -36,7 +36,7 @@ feature -- Initialization
 		do
 			widget_name := a_name.to_c;
 			create_widget (a_parent.screen_object, widget_name, True);
-			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			create parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
 			set_default
 		ensure
@@ -55,7 +55,7 @@ feature -- Initialization
 		do
 			widget_name := a_name.to_c;
 			create_widget (a_parent.screen_object, widget_name, False);
-			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			create parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
 			set_default
 		ensure

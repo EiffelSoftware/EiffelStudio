@@ -9,7 +9,7 @@ indexing
 class
 	MEL_BITMAP_FORMAT
 
-creation
+create
 
 	make_from_file
 
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 					(a_screen.handle, $path_ptr, 
 					$a_status, $a_width, $a_height, $x1, $y1);
 			if identifier /= default_pointer then
-				!! bitmap.make_from_existing (a_screen.display, identifier, 1)
+				create bitmap.make_from_existing (a_screen.display, identifier, 1)
 				width := a_width;
 				height := a_height;
 				x_hot := x1;
@@ -88,7 +88,7 @@ feature -- Transformation
 		require
 			is_valid: is_valid	
 		do
-			!! Result.make (a_screen, width, height,
+			create Result.make (a_screen, width, height,
 					a_screen.default_depth);
 			Result.copy_plane (bitmap, a_gc, 0, 0, width, height,
 				0, 0, 1)

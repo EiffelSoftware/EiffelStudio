@@ -20,7 +20,7 @@ inherit
 			parent, clean_up
 		end;
 
-creation
+create
 	make_variable,
 	make_constant,
 	make_resize_if_possible,
@@ -39,7 +39,7 @@ feature -- Initialization
 		do
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_list (a_parent.screen_object, $widget_name, default_pointer, 0);
-			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			create parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
@@ -62,7 +62,7 @@ feature -- Initialization
 		do
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_list_constant (a_parent.screen_object, $widget_name);
-			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			create parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
@@ -85,7 +85,7 @@ feature -- Initialization
 		do
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_list_resize (a_parent.screen_object, $widget_name);
-			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			create parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
@@ -104,7 +104,7 @@ feature -- Initialization
 			valid_a_screen_object: a_screen_object /= default_pointer;
 			valid_parent: a_parent /= Void
 		do
-			!! parent.make_from_existing (xt_parent (a_screen_object), 
+			create parent.make_from_existing (xt_parent (a_screen_object), 
 				a_parent);
 			screen_object := a_screen_object;
 			Mel_widgets.add (Current);

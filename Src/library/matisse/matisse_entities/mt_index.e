@@ -17,7 +17,7 @@ inherit
 			is_equal 
 		end
 
-Creation 
+create 
 	make
 
 feature {NONE} -- Initilization
@@ -40,13 +40,13 @@ feature {NONE} -- Initilization
 			c_load_index_info (oid)
 			
 			criteria_count := c_get_index_criteria_count
-			!! criteria.make (0, criteria_count - 1)
+			create criteria.make (0, criteria_count - 1)
 			from
 				i := 0
 			until
 				i = criteria_count
 			loop
-				!! a_criterion.make (
+				create a_criterion.make (
 					c_get_index_criterion_attr_oid (i),
 					c_get_index_criterion_type (i),
 					c_get_index_criterion_size (i),
@@ -56,7 +56,7 @@ feature {NONE} -- Initilization
 			end
 			
 			num_classes := c_get_index_classes_count
-			!! classes.make (0, num_classes - 1)
+			create classes.make (0, num_classes - 1)
 			from
 				i := 0
 			until
@@ -102,7 +102,7 @@ feature -- Stream
 
 	open_stream: MT_INDEX_STREAM is
 		do
-			!! stream.make_from_index (Current)
+			create stream.make_from_index (Current)
 			Result := stream
 		end
 

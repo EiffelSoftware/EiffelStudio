@@ -12,7 +12,7 @@ inherit
 
 	MEL_EVENT
 
-creation
+create
 	make
 
 feature -- Access
@@ -24,7 +24,7 @@ feature -- Access
 		do
 			id := c_event_colormap (handle)
 			if id /= default_pointer then
-				!! Result.make_from_existing (id)
+				create Result.make_from_existing (id)
 			end
 		end
 

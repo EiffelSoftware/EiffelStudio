@@ -14,7 +14,7 @@ feature -- Access
 	name: STRING is
 			-- "Mt Name" of meta-schema object in Matisse
 		do
-			!! Result.make (0) 
+			create Result.make (0) 
 			Result.from_c (c_object_mt_name (oid))
 		end -- name
 

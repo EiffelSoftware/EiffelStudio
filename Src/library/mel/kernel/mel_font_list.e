@@ -13,7 +13,7 @@ inherit
 
 	MEL_MEMORY
 
-creation
+create
 	make_from_existing, 	
 	append_entry
 
@@ -37,7 +37,7 @@ feature -- Access
 		require
 			is_valid: is_valid
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		end;
 
 feature -- Removal

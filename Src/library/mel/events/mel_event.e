@@ -23,7 +23,7 @@ inherit
 			out
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -75,7 +75,7 @@ feature -- Access
 		do
 			d := display_pointer;
 			if d /= default_pointer then
-				!! Result.make_from_existing (display_pointer)
+				create Result.make_from_existing (display_pointer)
 			end
 		end;
 
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 		local
 			w: MEL_WIDGET
 		do
-			!! Result.make (0);
+			create Result.make (0);
 			Result.append ("class: ");
 			Result.append (generator);
 			Result.append ("%N");

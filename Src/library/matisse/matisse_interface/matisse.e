@@ -27,7 +27,7 @@ inherit
 	
 	MT_DB_CONTROL_EXTERNAL
 	
-creation
+create
 	make
 
 feature -- Initialization
@@ -61,9 +61,9 @@ feature -- Initialization
 			if need_cache_update then
 				update_object_table
 			end
-			!! attr_modified_set.make
-			!! rl_modified_set.make
-			!! container_modified_set.make
+			create attr_modified_set.make
+			create rl_modified_set.make
+			create container_modified_set.make
 			load_mt_classes
 		end
 
@@ -86,7 +86,7 @@ feature -- Initialization
 	connected is
 			-- The connection has just been disconnected.
 		do
-			!! eif_object_table.make (100)
+			create eif_object_table.make (100)
 		end
 	
 	disconnected is
@@ -170,13 +170,13 @@ feature -- Schema
 			a_class: MT_CLASS
 		do
 			cids := oids_of_all_classes
-			!! mt_schema.make (cids.count)
+			create mt_schema.make (cids.count)
 			from
 				i := cids.lower
 			until
 				i > cids.upper
 			loop
-				!! a_class.make_from_oid (cids.item (i))
+				create a_class.make_from_oid (cids.item (i))
 				a_class.set_database (Current)
 				mt_schema.put (a_class, a_class.eiffel_type_id)
 				i := i + 1
@@ -189,9 +189,9 @@ feature -- Schema
 			all_classes: ARRAY [MT_OBJECT]
 			i: INTEGER
 		do
-			!! a_class.make_from_name ("Mt Class")
+			create a_class.make_from_name ("Mt Class")
 			all_classes := a_class.all_instances
-			!! mt_schema.make (all_classes.count)
+			create mt_schema.make (all_classes.count)
 			
 			from
 				i := all_classes.lower
@@ -266,7 +266,7 @@ feature -- Schema
 				aid := c_get_attribute ($c_attr_name)
 					-- If no attribute is found, an exception will be raised
 					-- from C environment.
-				!! Result.make_from_id (aid)
+				create Result.make_from_id (aid)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -1939,7 +1939,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			c_get_oids_of_classes
-			!! Result.make (1, c_keys_count)
+			create Result.make (1, c_keys_count)
 			from
 				i := 1
 			until

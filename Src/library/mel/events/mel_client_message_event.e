@@ -13,7 +13,7 @@ inherit
 
 	MEL_EVENT
 
-creation
+create
 	make
 
 feature -- Access
@@ -21,7 +21,7 @@ feature -- Access
 	message_type: MEL_ATOM is
 			-- Atom for Message type
 		do
-			!! Result.make_from_existing (c_event_message_type (handle))
+			create Result.make_from_existing (c_event_message_type (handle))
 		ensure
 			result_not_void: Result /= Void
 		end

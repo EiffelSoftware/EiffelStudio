@@ -21,7 +21,7 @@ inherit
 			screen, is_shown
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

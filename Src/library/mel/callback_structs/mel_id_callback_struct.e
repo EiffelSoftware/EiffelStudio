@@ -18,7 +18,7 @@ inherit
 			has_widget
 		end
 
-creation
+create
 
 	make 
 

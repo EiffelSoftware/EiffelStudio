@@ -12,7 +12,7 @@ inherit
 
 	SHARED_MEL_DISPATCHER
 
-creation {MEL_DISPATCHER}
+create {MEL_DISPATCHER}
 
 	make_timer, make_input, make_work_proc
 

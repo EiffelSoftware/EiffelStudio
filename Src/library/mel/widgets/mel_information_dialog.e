@@ -21,7 +21,7 @@ inherit
 			create_widget
 		end;
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

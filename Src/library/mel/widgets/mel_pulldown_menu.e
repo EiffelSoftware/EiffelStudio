@@ -27,7 +27,7 @@ inherit
 			parent
 		end
 
-creation 
+create 
 	make,
 	build_pulldown_menu,
 	build_pulldown_menu_gadget
@@ -51,9 +51,9 @@ feature -- Initialization
 			if a_parent.is_menu_pulldown or else 
 				a_parent.is_menu_popup 
 			then
-				!! parent.make_from_existing (parent_so, a_parent.parent)
+				create parent.make_from_existing (parent_so, a_parent.parent)
 			else
-				!! parent.make_from_existing (parent_so, a_parent)
+				create parent.make_from_existing (parent_so, a_parent)
 			end;
 			Mel_widgets.add_without_parent (Current); 
 					-- Don't check the parent consistency
@@ -79,7 +79,7 @@ feature -- Initialization
 			a_cascade: MEL_CASCADE_BUTTON
 		do
 			make ("_pulldown", a_parent);
-			!! a_cascade.make (a_name, a_parent, True);
+			create a_cascade.make (a_name, a_parent, True);
 			a_cascade.set_sub_menu (Current)
 		ensure
 			exists: not is_destroyed;
@@ -102,7 +102,7 @@ feature -- Initialization
 			a_cascade: MEL_CASCADE_BUTTON_GADGET
 		do
 			make ("_pulldown", a_parent);
-			!! a_cascade.make (a_name, a_parent, True);
+			create a_cascade.make (a_name, a_parent, True);
 			a_cascade.set_sub_menu (Current)
 		ensure
 			exists: not is_destroyed;

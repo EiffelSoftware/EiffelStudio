@@ -13,7 +13,7 @@ inherit
 
 	MEL_MEMORY
 
-creation
+create
 	make_from_existing, 
 	make_from_font_struct,
 	make_default_from_font_struct,
@@ -80,13 +80,13 @@ feature -- Access
 			end;
 			
 			if font_type = XmFONT_IS_FONT then
-				!! Result.make_from_existing_handle (p)
+				create Result.make_from_existing_handle (p)
 			elseif font_type = XmFONT_IS_FONTSET then 
 					-- We look at the C level for the first
 					-- XFontStruct in the XFontSet returned
 					-- by XmFontListEntryGetFont.
 				p := x_build_font_from_set (p)
-				!! Result.make_from_existing_handle (p)
+				create Result.make_from_existing_handle (p)
 			end
 		end;
 
@@ -98,7 +98,7 @@ feature -- Access
 			p: POINTER
 		do
 			p := xm_font_list_entry_get_tag (handle);
-			!! Result.make (0);
+			create Result.make (0);
 			Result.from_c (p);
 			xt_free (p)
 		end;

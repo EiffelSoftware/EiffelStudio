@@ -18,7 +18,7 @@ inherit
 			reasons_list
 		end
 
-creation
+create
 	make
 
 feature -- Access

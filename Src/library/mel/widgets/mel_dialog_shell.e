@@ -16,7 +16,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make, 
 	make_from_existing
 

@@ -13,7 +13,7 @@ inherit
 
 	MEL_EVENT
 
-creation
+create
 	make
 
 feature -- Access
@@ -39,7 +39,7 @@ feature -- Access
     selection: MEL_ATOM is
 			-- Name of selection
         do
-            !! Result.make_from_existing (c_event_selection (handle))
+            create Result.make_from_existing (c_event_selection (handle))
 		ensure
 			result_non_void: Result /= Void
         end;
@@ -47,7 +47,7 @@ feature -- Access
     target: MEL_ATOM is
 			-- Data should be converted to this type by the owner
         do
-            !! Result.make_from_existing (c_event_target (handle))
+            create Result.make_from_existing (c_event_target (handle))
 		ensure
 			result_non_void: Result /= Void
         end;
@@ -55,7 +55,7 @@ feature -- Access
     property: MEL_ATOM is
 			-- Selection's owner should copy data to this property
         do
-			!! Result.make_from_existing (c_event_property (handle))
+			create Result.make_from_existing (c_event_property (handle))
 		ensure
 			result_non_void: Result /= Void
         end;

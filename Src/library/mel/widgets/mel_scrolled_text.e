@@ -26,7 +26,7 @@ inherit
 			parent, clean_up
 		end;
 
-creation 
+create 
 	make,
 	make_detailed
 
@@ -43,7 +43,7 @@ feature -- Initialization
 			widget_name := a_name.to_c;
 			screen_object := xm_create_scrolled_text 
 				(a_parent.screen_object, $widget_name);
-			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			create parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
 			set_default;
 
@@ -78,7 +78,7 @@ feature -- Initialization
 								  scroll_vert, 
 								  scroll_top, 
 								  scroll_left);
-			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			create parent.make_from_existing (xt_parent (screen_object), a_parent);
 			Mel_widgets.add (Current);
 			set_default;
 		   	if do_manage then
@@ -100,7 +100,7 @@ feature -- Initialization
 			valid_a_screen_object: a_screen_object /= default_pointer;
 			valid_parent: a_parent /= Void
 		do
-			!! parent.make_from_existing (xt_parent (a_screen_object),
+			create parent.make_from_existing (xt_parent (a_screen_object),
 				a_parent);
 			screen_object := a_screen_object;
 			Mel_widgets.add (Current);

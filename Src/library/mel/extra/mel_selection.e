@@ -20,7 +20,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make_own_selection, 
 	make_get_selection_value
 
@@ -54,10 +54,10 @@ feature {NONE} -- Initialization
 			lose_cmd_exec, done_cmd_exec: MEL_COMMAND_EXEC
 		do
 			if lose_cmd /= Void then
-				!! lose_cmd_exec.make (lose_cmd, lose_arg);
+				create lose_cmd_exec.make (lose_cmd, lose_arg);
 			end;
 			if done_cmd /= Void then
-				!! done_cmd_exec.make (done_cmd, done_arg);
+				create done_cmd_exec.make (done_cmd, done_arg);
 			end;
 			Mel_dispatcher.make_own_selection (a_widget,
 				target_atom, time, a_string, lose_cmd_exec, done_cmd_exec)
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			cmd_exec: MEL_COMMAND_EXEC
 		do
 			if requestor_cmd /= Void then
-				!! cmd_exec.make (requestor_cmd, Void)
+				create cmd_exec.make (requestor_cmd, Void)
 			end;
 			Mel_dispatcher.make_get_selection_value (a_widget,
 				target_atom, time, cmd_exec)
@@ -128,7 +128,7 @@ feature -- Element change
 		local
 			atom: MEL_ATOM
 		do
-			!! atom.make_primary;
+			create atom.make_primary;
 			xt_disown_selection (a_widget.screen_object, atom.identifier, time)
 		end;
 

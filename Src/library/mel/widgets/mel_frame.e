@@ -21,7 +21,7 @@ inherit
 			is_frame
 		end
 
-creation 
+create 
 	make,
 	make_from_existing
 

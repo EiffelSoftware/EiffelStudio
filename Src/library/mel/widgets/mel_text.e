@@ -21,7 +21,7 @@ inherit
 			make
 		end;
 
-creation 
+create 
 	make,
 	make_from_existing
 
@@ -73,7 +73,7 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing (xm_text_get_source (screen_object))
+			create Result.make_from_existing (xm_text_get_source (screen_object))
 		ensure
 			valid_text_source: Result /= Void and then not Result.is_destroyed
 		end;

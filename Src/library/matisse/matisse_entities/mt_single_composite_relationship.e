@@ -17,7 +17,7 @@ inherit
 			set_successors_of
 		end
 
-creation
+create
 	make_from_oid	
 
 feature {MATISSE}

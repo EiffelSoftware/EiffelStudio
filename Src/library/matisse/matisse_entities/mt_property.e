@@ -38,7 +38,7 @@ feature  -- Access
 			if i = 0 then
 				Result := mt_name
 			else
-				!! Result.make (mt_name.count - i - 1)
+				create Result.make (mt_name.count - i - 1)
 				Result.set (mt_name, i + 2, mt_name.count)
 			end
 		end

@@ -17,7 +17,7 @@ inherit
 			reasons_list
 		end;
 
-creation
+create
 	make
 
 feature -- Access
@@ -34,7 +34,7 @@ feature -- Access
 	value: MEL_STRING is
 			-- Value of `dir_spec' 
 		do
-			!! Result.make_from_existing (c_value (handle));
+			create Result.make_from_existing (c_value (handle));
 			Result.set_shared
 		ensure
 			Result_not_void: Result /= Void;
@@ -50,7 +50,7 @@ feature -- Access
 	mask: MEL_STRING is
 			-- Value of `dir_mask' 
 		do
-			!! Result.make_from_existing (c_mask (handle));
+			create Result.make_from_existing (c_mask (handle));
 			Result.set_shared
 		ensure
 			Result_not_null: Result /= Void;
@@ -66,7 +66,7 @@ feature -- Access
 	dir: MEL_STRING is
 			-- Current base directory
 		do
-			!! Result.make_from_existing (c_dir (handle));
+			create Result.make_from_existing (c_dir (handle));
 			Result.set_shared
 		ensure
 			Result_not_null: Result /= Void;
@@ -82,7 +82,7 @@ feature -- Access
 	pattern: MEL_STRING is
 			-- Current search pattern
 		do
-			!! Result.make_from_existing (c_pattern (handle));
+			create Result.make_from_existing (c_pattern (handle));
 			Result.set_shared
 		ensure
 			Result_not_null: Result /= Void;

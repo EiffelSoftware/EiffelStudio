@@ -15,10 +15,10 @@ inherit
 
 	MEL_EVENT_CONSTANTS
 
-creation {MEL_DISPATCHER, MEL_OBJECT}
+create {MEL_DISPATCHER, MEL_OBJECT}
 	make, 
 	make_no_event
-creation {MEL_APPLICATION_CONTEXT, MEL_WIDGET}
+create {MEL_APPLICATION_CONTEXT, MEL_WIDGET}
 	make_event_only 
 
 feature {NONE} -- Initialization
@@ -105,65 +105,65 @@ feature {NONE} -- Implementation
 		do
 			type := c_event_type (event_ptr);
 			if type = KeyPress or type = KeyRelease then
-				!MEL_KEY_EVENT! event.make (event_ptr)
+				create {MEL_KEY_EVENT} event.make (event_ptr)
 			elseif type = ButtonPress or type = ButtonRelease then
-				!MEL_BUTTON_EVENT! event.make (event_ptr)
+				create {MEL_BUTTON_EVENT} event.make (event_ptr)
 			elseif type = MotionNotify then
-				!MEL_MOTION_EVENT! event.make (event_ptr)
+				create {MEL_MOTION_EVENT} event.make (event_ptr)
 			elseif type = EnterNotify or type = LeaveNotify then
-				!MEL_CROSSING_EVENT! event.make (event_ptr)
+				create {MEL_CROSSING_EVENT} event.make (event_ptr)
 			elseif type = FocusIn or type = FocusOut then
-				!MEL_FOCUS_CHANGE_EVENT! event.make (event_ptr)
+				create {MEL_FOCUS_CHANGE_EVENT} event.make (event_ptr)
 			elseif type = KeymapNotify then
-				!MEL_KEYMAP_EVENT! event.make (event_ptr)
+				create {MEL_KEYMAP_EVENT} event.make (event_ptr)
 			elseif type = Expose then
-				!MEL_EXPOSE_EVENT! event.make (event_ptr)
+				create {MEL_EXPOSE_EVENT} event.make (event_ptr)
 			elseif type = GraphicsExpose then
-				!MEL_GRAPHICS_EXPOSE_EVENT! event.make (event_ptr)
+				create {MEL_GRAPHICS_EXPOSE_EVENT} event.make (event_ptr)
 			elseif type = NoExpose then
-				!MEL_NO_EXPOSE_EVENT! event.make (event_ptr)
+				create {MEL_NO_EXPOSE_EVENT} event.make (event_ptr)
 			elseif type = VisibilityNotify then
-				!MEL_VISIBILITY_EVENT! event.make (event_ptr)
+				create {MEL_VISIBILITY_EVENT} event.make (event_ptr)
 			elseif type = CreateNotify then
-				!MEL_CREATE_WINDOW_EVENT! event.make (event_ptr)
+				create {MEL_CREATE_WINDOW_EVENT} event.make (event_ptr)
 			elseif type = DestroyNotify then
-				!MEL_DESTROY_WINDOW_EVENT! event.make (event_ptr)
+				create {MEL_DESTROY_WINDOW_EVENT} event.make (event_ptr)
 			elseif type = UnmapNotify then
-				!MEL_UNMAP_EVENT! event.make (event_ptr)
+				create {MEL_UNMAP_EVENT} event.make (event_ptr)
 			elseif type = MapNotify then
-				!MEL_MAP_EVENT! event.make (event_ptr)
+				create {MEL_MAP_EVENT} event.make (event_ptr)
 			elseif type = MapRequest then
-				!MEL_MAP_REQUEST_EVENT! event.make (event_ptr)
+				create {MEL_MAP_REQUEST_EVENT} event.make (event_ptr)
 			elseif type = ReparentNotify then
-				!MEL_REPARENT_EVENT! event.make (event_ptr)
+				create {MEL_REPARENT_EVENT} event.make (event_ptr)
 			elseif type = ConfigureNotify then
-				!MEL_CONFIGURE_EVENT! event.make (event_ptr)
+				create {MEL_CONFIGURE_EVENT} event.make (event_ptr)
 			elseif type = ConfigureRequest then
-				!MEL_CONFIGURE_REQUEST_EVENT! event.make (event_ptr)
+				create {MEL_CONFIGURE_REQUEST_EVENT} event.make (event_ptr)
 			elseif type = GravityNotify then
-				!MEL_GRAVITY_EVENT! event.make (event_ptr)
+				create {MEL_GRAVITY_EVENT} event.make (event_ptr)
 			elseif type = ResizeRequest then
-				!MEL_RESIZE_REQUEST_EVENT! event.make (event_ptr)
+				create {MEL_RESIZE_REQUEST_EVENT} event.make (event_ptr)
 			elseif type = CirculateNotify then
-				!MEL_CIRCULATE_EVENT! event.make (event_ptr)
+				create {MEL_CIRCULATE_EVENT} event.make (event_ptr)
 			elseif type = CirculateRequest then
-				!MEL_CIRCULATE_REQUEST_EVENT! event.make (event_ptr)
+				create {MEL_CIRCULATE_REQUEST_EVENT} event.make (event_ptr)
 			elseif type = PropertyNotify then
-				!MEL_PROPERTY_EVENT! event.make (event_ptr)
+				create {MEL_PROPERTY_EVENT} event.make (event_ptr)
 			elseif type = SelectionClear then
-				!MEL_SELECTION_CLEAR_EVENT! event.make (event_ptr)
+				create {MEL_SELECTION_CLEAR_EVENT} event.make (event_ptr)
 			elseif type = SelectionRequest then
-				!MEL_SELECTION_REQUEST_EVENT! event.make (event_ptr)
+				create {MEL_SELECTION_REQUEST_EVENT} event.make (event_ptr)
 			elseif type = SelectionNotify then
-				!MEL_SELECTION_EVENT! event.make (event_ptr)
+				create {MEL_SELECTION_EVENT} event.make (event_ptr)
 			elseif type = ColormapNotify then
-				!MEL_COLORMAP_EVENT! event.make (event_ptr)
+				create {MEL_COLORMAP_EVENT} event.make (event_ptr)
 			elseif type = ClientMessage then
-				!MEL_CLIENT_MESSAGE_EVENT! event.make (event_ptr)
+				create {MEL_CLIENT_MESSAGE_EVENT} event.make (event_ptr)
 			elseif type = MappingNotify then
-				!MEL_MAPPING_EVENT! event.make (event_ptr)
+				create {MEL_MAPPING_EVENT} event.make (event_ptr)
 			else
-				!! event.make (event_ptr)
+				create event.make (event_ptr)
 			end
 debug ("MEL_CALLBACK")
 	io.error.putstring ("Mel structure:%N ");

@@ -14,7 +14,7 @@ inherit
 	
 	MT_MULTI_RELATIONSHIP
 
-creation
+create
 
 	make_from_oid
 		

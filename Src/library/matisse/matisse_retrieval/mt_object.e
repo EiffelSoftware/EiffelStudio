@@ -30,7 +30,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 	make 
 
 feature {NONE} -- Initialization
@@ -167,8 +167,8 @@ feature {NONE} -- Implementation
 			oids: ARRAY [INTEGER]
 		do
 			keys_count := c_keys_count
-			!! Result.make (1, keys_count)
-			!! oids.make (1, keys_count)
+			create Result.make (1, keys_count)
+			create oids.make (1, keys_count)
 			from
 				i := 1
 			until 

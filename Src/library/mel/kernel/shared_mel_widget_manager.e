@@ -16,7 +16,7 @@ feature -- Access
 	Mel_widgets: MEL_WIDGET_MANAGER is
 			-- MEL widget manager
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			valid_result: Result /= void
 		end;

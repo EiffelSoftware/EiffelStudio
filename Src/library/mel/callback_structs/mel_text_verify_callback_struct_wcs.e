@@ -17,7 +17,7 @@ inherit
 			reasons_list
 		end
 
-creation
+create
 	make
 
 feature -- Access
@@ -67,7 +67,7 @@ feature -- Access
 		do
 			len := text_length;
 			if len = 0 then
-				!! Result.make (0);
+				create Result.make (0);
 			else
 				Result := makestr (c_text_wcsptr (text), len)
 			end;

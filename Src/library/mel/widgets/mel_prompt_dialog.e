@@ -22,7 +22,7 @@ inherit
 			create_widget
 		end;
 
-creation
+create
 	make,
 	make_no_auto_unmanage
 

@@ -11,7 +11,7 @@ inherit
 
 	MT_SQL_EXTERNAL
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -29,7 +29,7 @@ feature -- Queryf
 		do
 			to_c := statement.to_c
 			selection_id := c_sql_exec ($to_c)
-			!! Result.make (selection_id)
+			create Result.make (selection_id)
 		end
 		
 feature {NONE}

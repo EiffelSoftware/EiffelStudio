@@ -32,7 +32,7 @@ feature -- Stream
 		require
 			predecessor_and_relationship_not_void: is_persistent
 		do
-			!! Result.make (predecessor, relationship)
+			create Result.make (predecessor, relationship)
 		end
 				
 feature {NONE} -- Element change
@@ -88,7 +88,7 @@ feature {NONE} -- Element change
 		do
 			if is_persistent then
 				linear_rep := linear_representation
-				!! succ_oids.make (0, count - 1)
+				create succ_oids.make (0, count - 1)
 			
 				from
 					linear_rep.start

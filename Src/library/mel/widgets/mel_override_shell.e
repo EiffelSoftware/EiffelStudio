@@ -13,7 +13,7 @@ inherit
 
 	MEL_SHELL
 
-creation
+create
 	make,
 	make_from_existing
 

@@ -12,7 +12,7 @@ inherit
 			{NONE} all
 		end
 		
-creation
+create
 	make, make_from_selection
 
 feature -- Initialization
@@ -52,7 +52,7 @@ feature -- Cursor movement
 			-- This procedure initializes the internal selection stream to access
 			-- the objects available through the SQL result selection.
 		do
-			!! selection_stream.make (selection_id)
+			create selection_stream.make (selection_id)
 			selection_stream.start
 		end
 
@@ -136,7 +136,7 @@ feature {NONE}
 		local
 			c_string: POINTER
 		do
-			!! selection_name.make (0)
+			create selection_name.make (0)
 			c_string := c_get_selection_name (selection_id)
 			if c_string = default_pointer then
 				selection_name := ""

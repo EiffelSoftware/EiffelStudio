@@ -30,7 +30,7 @@ inherit
 			is_equal as another_is_equal
 		end
 	
-creation
+create
 	make, make_from_names, make_from_id
 	
 feature
@@ -98,7 +98,7 @@ feature {MT_CLASS, MATISSE, MT_RS_CONTAINABLE} -- Successors loading
 			if a_mt_collection /= Void then
 				c_get_successors (an_obj.oid, oid)
 				a_count := c_keys_count
-				!! succ_oids.make (1, a_count)
+				create succ_oids.make (1, a_count)
 				if a_count > 0 then
 					from 
 						i := 1
@@ -159,10 +159,10 @@ feature {MATISSE} -- Persistence
 		do
 			collection ?= field (eif_field_index, an_object)
 			if collection = Void then
-				!! Result.make (1, 0)
+				create Result.make (1, 0)
 					-- Return an empty array
 			else
-				!! Result.make (1, collection.count)
+				create Result.make (1, collection.count)
 				linear_rep := collection.linear_representation
 				from
 					linear_rep.start

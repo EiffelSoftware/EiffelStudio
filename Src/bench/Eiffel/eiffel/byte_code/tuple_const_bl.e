@@ -20,8 +20,8 @@ feature
 	array_area_reg: REGISTER
 			-- Register for array area
 
-	metamorphose_regs: ARRAY [REGISTER]
-			-- Registers for metamorphosis
+	metamorphose_reg: REGISTER
+			-- Register for metamorphosis
 
 	set_register (r: REGISTRABLE) is
 			-- Set `register' to `r' 
@@ -46,7 +46,7 @@ feature
 			real_ty ?= context.real_type (type)
 
 			get_register
-			!!array_area_reg.make (Reference_c_type.c_type)
+			create array_area_reg.make (Reference_c_type.c_type)
 			from
 				i := 0
 				expressions.start
@@ -56,7 +56,7 @@ feature
 				expr ?= expressions.item
 				expr_type := context.real_type (expr.type)
 
-				if expr_type.is_basic then 
+				if expr_type.is_expanded then 
 					require_meta := True
 				end
 				expr.analyze
@@ -65,24 +65,7 @@ feature
 				i := i + 1
 			end
 			if require_meta then
-				from
-					!!ref_i
-					!!metamorphose_regs.make (1, i)
-					expressions.start
-					i := 1
-				until
-					expressions.after 
-				loop
-					expr ?= expressions.item
-					expr_type := context.real_type (expr.type)
-
-					if expr_type.is_basic then 
-						!!reg.make (ref_i.c_type)
-						metamorphose_regs.put (reg, i)
-					end
-					expressions.forth
-					i := i + 1
-				end
+				create metamorphose_reg.make (Reference_c_type)
 			end
 		end
 
@@ -92,7 +75,7 @@ feature
 			expr: EXPR_B
 		do
 			array_area_reg := Void
-			metamorphose_regs := Void
+			metamorphose_reg := Void
 			set_register (Void)	
 			from
 				expressions.start
@@ -115,19 +98,8 @@ feature
 			if array_area_reg /= Void then
 				array_area_reg.free_register
 			end
-			if metamorphose_regs /= Void then
-				from
-					i := metamorphose_regs.count
-				until
-					i < 1
-				loop
-					reg := metamorphose_regs.item (i)
-
-					if reg /= Void then
-						reg.free_register
-					end
-					i := i - 1
-				end
+			if metamorphose_reg /= Void then
+				metamorphose_reg.free_register
 			end
 		end
 
@@ -183,39 +155,17 @@ feature {NONE} -- C code generation
 			target_type: REFERENCE_I
 			basic_i: BASIC_I
 			metamorphosed: BOOLEAN
-			is_expanded: BOOLEAN
 			i, position: INTEGER
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			from
-				i := target_types.count
-			until
-				(i < 1) or is_expanded
-			loop
-				is_expanded := target_types.item(i).is_true_expanded
-				i := i - 1
-			end
 
-			!!target_type
+			create target_type
 			array_area_reg.print_register
 			buf.putstring (" = * (EIF_REFERENCE *) ")
 			print_register
 			buf.putchar (';')
 			buf.new_line
-			if (is_expanded and then expressions.count > 0) then
-				buf.putchar ('{')
-				buf.new_line
-				buf.indent
-				buf.putstring ("long elem_size;")
-				buf.new_line
-				buf.putstring ("elem_size = *(long *) (")
-				array_area_reg.print_register
-				buf.putstring (" + (HEADER(")
-				array_area_reg.print_register
-				buf.putstring (")->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));")
-				buf.new_line
-			end
 			from
 				expressions.start
 				i := 1
@@ -230,66 +180,54 @@ feature {NONE} -- C code generation
 					basic_i ?= actual_type
 					expr.generate
 					basic_i.metamorphose 
-						(metamorphose_regs.item (i), expr, buf, context.workbench_mode)
+						(metamorphose_reg, expr, buf, context.workbench_mode)
 					buf.putchar (';')
+					buf.new_line
+					metamorphosed := True
+				elseif actual_type.is_true_expanded then
+					expr.generate
+					metamorphose_reg.print_register
+					buf.putstring (" = RTCL(")
+					expr.print_register
+					buf.putstring (");")
 					buf.new_line
 					metamorphosed := True
 				else
 					expr.generate
 				end
-				if is_expanded then
-					buf.putstring ("ecopy(")
-					if metamorphosed then
-						metamorphose_regs.item (i).print_register
-					else
-						expr.print_register
-					end
-					buf.putstring (gc_comma)
-					array_area_reg.print_register
-					buf.putstring (" + OVERHEAD + elem_size * ")
-					buf.putint (position)
-					buf.putchar (')')
+				buf.putchar ('*')
+				buf.putchar ('(')
+				target_type.c_type.generate_access_cast (buf)
+				array_area_reg.print_register
+				buf.putchar('+');
+				buf.putint (position)
+				buf.putchar (')')
+				buf.putstring (" = ")
+				if metamorphosed then
+					metamorphose_reg.print_register
 				else
-					buf.putchar ('*')
-					buf.putchar ('(')
-					target_type.c_type.generate_access_cast (buf)
-					array_area_reg.print_register
-					buf.putchar('+');
-					buf.putint (position)
-					buf.putchar (')')
-					buf.putstring (" = ")
-					if metamorphosed then
-						metamorphose_regs.item (i).print_register
-					else
-						expr.print_register
-					end
-					buf.putchar (';')
-					buf.new_line
-						-- Generation of the RTAS_OPT protection
-						-- since the array contains references
-					buf.putstring ("RTAS_OPT(")
-					if metamorphosed then
-						metamorphose_regs.item (i).print_register
-					else
-						expr.print_register
-					end
-					buf.putchar (',')
-					buf.putint (position)
-					buf.putchar (',')
-					array_area_reg.print_register
-					buf.putchar (')')
-					buf.new_line
+					expr.print_register
 				end
+				buf.putchar (';')
+				buf.new_line
+					-- Generation of the RTAS_OPT protection
+					-- since the array contains references
+				buf.putstring ("RTAS_OPT(")
+				if metamorphosed then
+					metamorphose_reg.print_register
+				else
+					expr.print_register
+				end
+				buf.putchar (',')
+				buf.putint (position)
+				buf.putchar (',')
+				array_area_reg.print_register
+				buf.putchar (')')
 				buf.putchar (';')
 				buf.new_line
 				expressions.forth
 				position := position + 1
 				i := i + 1
-			end
-			if (is_expanded and expressions.count > 0) then
-				buf.exdent
-				buf.putchar ('}')
-				buf.new_line
 			end
 		end
 

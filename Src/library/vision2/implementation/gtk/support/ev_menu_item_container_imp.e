@@ -7,10 +7,10 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	EV_MENU_ITEM_CONTAINER_IMP
+	EV_MENU_ITEM_HOLDER_IMP
 	
 inherit
-	EV_MENU_ITEM_CONTAINER_I
+	EV_MENU_ITEM_HOLDER_I
 		-- Inheriting from widget, because menu and menu bar
 		-- are widgets in gtk, although it is not a widget in
 		-- EiffelVision. This is just for implementation
@@ -33,7 +33,7 @@ feature -- Deferred features
 		deferred
 		end
 
-end -- class EV_MENU_ITEM_CONTAINER_IMP
+end -- class EV_MENU_ITEM_HOLDER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

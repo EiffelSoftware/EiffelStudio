@@ -10,7 +10,7 @@ class
 inherit
 	EV_OPTION_BUTTON_I
 
-	EV_MENU_CONTAINER_IMP
+	EV_MENU_HOLDER_IMP
 
 	EV_BUTTON_IMP
 		redefine
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			gtk_object_ref (widget)
 		end	
 
-feature {EV_MENU_ITEM_CONTAINER} -- Element change	
+feature {EV_MENU_ITEM_HOLDER} -- Element change	
 	
 	add_menu (menu_imp: EV_MENU_IMP) is
 			-- Set menu for menu item

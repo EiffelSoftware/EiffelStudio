@@ -13,7 +13,7 @@ class
 inherit
 	EV_MENU_I
 		
-	EV_MENU_ITEM_CONTAINER_IMP
+	EV_MENU_ITEM_HOLDER_IMP
 		redefine
 			parent_imp
 		end
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_MENU_CONTAINER_IMP
+	parent_imp: EV_MENU_HOLDER_IMP
 		-- Parent of the current menu.
 
 feature -- Status report
@@ -54,11 +54,11 @@ feature -- Status report
 
 feature -- Element change
 
-	set_parent (par: EV_MENU_CONTAINER) is
+	set_parent (par: EV_MENU_HOLDER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		local
-			par_imp: EV_MENU_CONTAINER_IMP
+			par_imp: EV_MENU_HOLDER_IMP
 		do
 			if parent_imp /= Void then
 				gtk_object_ref (widget)
@@ -77,7 +77,7 @@ feature -- Element change
 			end
 		end
 
-feature {EV_MENU_CONTAINER_IMP} -- Implementation
+feature {EV_MENU_HOLDER_IMP} -- Implementation
 
 	name: STRING
 

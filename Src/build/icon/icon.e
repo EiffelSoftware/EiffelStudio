@@ -76,7 +76,7 @@ feature
 	
 feature {NONE} -- Interface section
 
-	button: PICT_COLOR_B;
+	button: ACTIVE_PICT_COLOR_B;
 	icon_label: LABEL;
 	
 	update_label is

@@ -96,13 +96,6 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			add_accel
 		end
 
-	name: STRING is
-			-- Get the GTK string representation.
-		do
-			create Result.make (0)
-			Result.from_c (C.gtk_accelerator_name (key_code_from_gtk (key.code), modifier_mask))
-		end
-
 feature -- Access
 
 	key: EV_KEY
@@ -199,6 +192,9 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/22 23:54:31  brendel
+--| Removed feature `name'.
+--|
 --| Revision 1.6  2000/03/21 23:55:11  brendel
 --| Fixed FIXME.
 --|

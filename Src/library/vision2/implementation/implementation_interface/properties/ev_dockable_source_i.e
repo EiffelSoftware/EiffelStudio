@@ -208,6 +208,12 @@ feature -- Basic operations
 			original_parent: EV_DOCKABLE_TARGET
 			widget: EV_WIDGET
 			original_tool_bar: EV_TOOL_BAR
+			
+			insert_index, original_index: INTEGER
+			tool_bar_item: EV_TOOL_BAR_ITEM
+			moved_within_same_parent: BOOLEAN
+			
+			
 		do
 			dockable_target := closest_dockable_target
 				-- Note that if the parent is not a dialog, then we do not destroy the dialog.
@@ -348,8 +354,20 @@ feature -- Basic operations
 						check
 							original_tool_bar_not_void: original_tool_bar /= Void
 						end
+						tool_bar_item ?= tool_bar_button
+						insert_index := original_tool_bar.index_of (insert_sep, 1)
+						original_index := original_tool_bar.index_of (tool_bar_item, 1)
+						moved_within_same_parent := tool_bar_item.parent = tool_bar
+						
 						unparent_source_being_docked
 						replace_insert_sep
+						
+							-- We must now provide provisions for updating the state of the tool bar buttons.
+							-- In some cases, the state is affected by the transport. We provide a platform
+							-- specific implementation, as any work required will depend on the exact behaviour.
+					if moved_within_same_parent and then original_index = insert_index + 2 then
+						update_buttons (tool_bar, insert_index + 1, insert_index + 1)	
+					end
 							
 							-- We have to ensure that a tool bar button does not become
 							-- selected as a result of the transport ending.
@@ -401,6 +419,8 @@ feature -- Basic operations
 						end
 						
 					end
+					insert_index := tool_bar.index_of (tool_bar_button, 1)
+					update_buttons (tool_bar, insert_index, insert_index)
 				end
 				end
 				end
@@ -856,6 +876,8 @@ feature {NONE} -- Implementation
 				tool_bar: EV_TOOL_BAR
 				tool_bar_item: EV_TOOL_BAR_ITEM
 				source: EV_DOCKABLE_SOURCE
+				insert_index, original_index: INTEGER
+				moved_within_same_parent: BOOLEAN
 			do
 				tool_bar ?= insert_sep.parent
 				check
@@ -869,7 +891,18 @@ feature {NONE} -- Implementation
 				check
 					source_not_void: source /= Void
 				end
+				insert_index := tool_bar.index_of (insert_sep, 1)
+			--	original_index := tool_bar_item.parent.index_of (tool_bar_item, 1)
+			--	moved_within_same_parent := tool_bar_item.parent = tool_bar
 				tool_bar.put_i_th (tool_bar_item, tool_bar.index_of (insert_sep, 1))
+				
+					-- We must now provide provisions for updating the state of the tool bar buttons.
+					-- In some cases, the state is affected by the transport. We provide a platform
+					-- specific implementation, as any work required will depend on the exact behaviour.
+				if original_index = insert_index + 2then
+					update_buttons (tool_bar, original_index, insert_index)	
+				end
+				
 				if tool_bar.implementation.docked_actions_internal /= Void then
 					tool_bar.docked_actions.call ([source])
 				end
@@ -878,6 +911,13 @@ feature {NONE} -- Implementation
 				insert_sep_not_parented: insert_sep.parent = Void
 				parent_swapped: old insert_sep.parent = item_source_being_docked.parent
 			end
+			
+	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
+			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
+			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
+			-- as on some platforms, they end up in an invalid state, and need refreshing.
+		deferred
+		end
 
 feature {EV_ANY_I} -- Implementation
 

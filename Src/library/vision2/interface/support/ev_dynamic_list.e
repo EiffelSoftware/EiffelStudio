@@ -26,7 +26,8 @@ inherit
 			put_front as dl_put_front,
 			put_right as dl_put_right,
 			put_i_th as dl_put_i_th,
-			put_left as dl_put_left
+			put_left as dl_put_left,
+			append as dl_append
 		export
 			{NONE} duplicate, new_chain, dl_prune
 			{EV_DYNAMIC_LIST_I} sequential_index_of
@@ -44,6 +45,7 @@ inherit
 			merge_left,
 			merge_right,
 			dl_put_left,
+			dl_append,
 			wipe_out,
 			swap
 		end
@@ -170,6 +172,20 @@ feature -- Cursor movement
 		end
 
 feature -- Element change
+
+	append (s: SEQUENCE [G]) is
+			-- Append a copy of `s'. Do not move cursor.
+		require
+			not_destroyed: not is_destroyed
+			extendible: extendible
+			sequence_not_void: s /= Void
+			sequence_not_current: s /= Current
+		do
+			implementation.append (s)
+		ensure
+			count_increased: old count + s.count = count
+			cursor_not_moved: (index = old index) or (after and old after)
+		end
 
 	extend (v: like item) is
 			-- Add `v' to end. Do not move cursor.
@@ -407,6 +423,11 @@ feature -- Contract support
 		end
 
 feature {NONE} -- Inapplicable
+
+	dl_append (s: SEQUENCE [G]) is
+		do
+			append (s)
+		end
 
 	dl_extend (v: like item) is
 		do

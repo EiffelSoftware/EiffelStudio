@@ -24,8 +24,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_window_new (C.Gtk_window_popup_enum))
-
-			C.gtk_object_ref (c_object)
 			C.gtk_widget_realize (c_object)
 			C.gtk_window_set_position (
 				c_object,

@@ -67,22 +67,6 @@ feature -- Access
 	current_position: TOKEN_LOCATION
 			-- Position of last token read
 
-	start_position: INTEGER is
-			-- Start position of last token
-		do
-			Result := current_position.start_position
-		ensure
-			definition: Result = current_position.start_position
-		end
-
-	end_position: INTEGER is
-			-- End position of last token
-		do
-			Result := current_position.end_position
-		ensure
-			definition: Result = current_position.end_position
-		end
-
 	last_value: ANY
 			-- Semantic value to be passed to the parser
 

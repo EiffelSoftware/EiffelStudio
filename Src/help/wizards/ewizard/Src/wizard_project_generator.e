@@ -25,11 +25,14 @@ feature -- Basic Operations
 			class_name: STRING
 			i: INTEGER
 			next_state: STRING
-			project_location: STRING
+			project_location: FILE_NAME
+			src_location: FILE_NAME
+			pixmap_location: FILE_NAME
+			rsc_location: FILE_NAME
 			project_name: STRING
 		do
 				-- Cached variables.
-			project_location := wizard_information.project_location
+			create project_location.make_from_string (wizard_information.project_location)
 			project_name := wizard_information.project_name
 
 			create list_of_name.make
@@ -52,11 +55,17 @@ feature -- Basic Operations
 			else
 				dir.create_dir
 			end
-			create dir.make (project_location + "\pixmaps")
+			create pixmap_location.make_from_string (project_location)
+			pixmap_location.extend ("pixmaps")
+			create dir.make (pixmap_location)
 			dir.create_dir
-			create dir.make (project_location + "\src")
+			create src_location.make_from_string (project_location)
+			src_location.extend ("src")
+			create dir.make (src_location)
 			dir.create_dir
-			create dir.make (project_location + "\resources")
+			create rsc_location.make_from_string (project_location)
+			rsc_location.extend ("resources")
+			create dir.make (rsc_location)
 			dir.create_dir
 
 			create tuple1.make
@@ -112,7 +121,7 @@ feature -- Basic Operations
 				tuple1.put (next_state, 2)
 				l.extend (tuple1)
 
-				from_template_to_project (wizard_resources_path, "template_wizard_state.e", project_location + "/src", class_name + ".e", l)
+				from_template_to_project (wizard_resources_path, "template_wizard_state.e", src_location, class_name + ".e", l)
 			end
 
 			create tuple1.make
@@ -120,13 +129,13 @@ feature -- Basic Operations
 			tuple1.put (project_name, 2)
 			create l.make
 			l.extend (tuple1)
-			from_template_to_project (wizard_resources_path, "template_wizard_initial_state.e", project_location + "/src", "wizard_initial_state.e", l)
-			from_template_to_project (wizard_resources_path, "template_wizard_final_state.e",   project_location + "/src", "wizard_final_state.e", l)
+			from_template_to_project (wizard_resources_path, "template_wizard_initial_state.e", src_location, "wizard_initial_state.e", l)
+			from_template_to_project (wizard_resources_path, "template_wizard_final_state.e",   src_location, "wizard_final_state.e", l)
 
-			copy_file ("wizard_information", 	"e",   project_location + "/src")
-			copy_file ("wizard_project_shared",	"e",   project_location + "/src")
-			copy_file ("eiffel_wizard_icon", 	"bmp", project_location + "/pixmaps")
-			copy_file ("eiffel_wizard", 		"bmp", project_location + "/pixmaps")
+			copy_file ("wizard_information", 	"e",   src_location)
+			copy_file ("wizard_project_shared",	"e",   src_location)
+			copy_file ("eiffel_wizard_icon", 	pixmap_extension, pixmap_location)
+			copy_file ("eiffel_wizard", 		pixmap_extension, pixmap_location)
 		end
 
 end -- class WIZARD_PROJECT_GENERATOR

@@ -32,11 +32,17 @@ feature -- Once objects
 			create Result.make
 		end
 		
---	Shared_web_browser: DOCUMENT_BROWSER is
---			-- Object used for web browsing and XSLT output display
---		once
---			create Result.make
---		end		
+	Shared_toc_manager: TABLE_OF_CONTENTS_MANAGER is
+			-- Table of Content manage
+		once
+			create Result.make
+		end		
+		
+	Shared_web_browser: DOCUMENT_BROWSER is
+			-- Object used for web browsing and XSLT output display
+		once
+			create Result.make
+		end		
 
 	Wizard_data: WIZARD_INFORMATION is
 			-- Wizard data
@@ -44,6 +50,13 @@ feature -- Once objects
 			create Result
 		end
 		
+	progress_generator: GENERATOR is
+			-- Generator
+		once
+			create Result
+			Result.set_graphical_mode (Shared_constants.Application_constants.is_gui_mode)
+		end
+
 feature -- Shared
 	
 	Shared_dialogs: SHARED_DIALOGS is

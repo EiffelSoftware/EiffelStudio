@@ -68,4 +68,16 @@ feature -- Access
 			create Result
 		end	
 			
+	new_toc_dialog: TOC_NEW_DIALOG is
+			-- Dialog for new toc creation
+		once
+			create Result
+		end	
+		
+	toc_dialog: TOC_DIALOG is
+			-- Dialog for toc properties
+		once
+			create Result
+		end	
+			
 end -- class SHARED_DIALOGS

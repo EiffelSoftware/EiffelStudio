@@ -217,7 +217,7 @@ rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 	strcpy (lower_k, k);
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE\\Eiffel43-9\\");
+	strcpy (key, "Software\\ISE\\Eiffel43-12\\");
 	strncat (key, rindex(modulename, '\\') + 1, appl_len);
 
 	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS) {
@@ -296,7 +296,7 @@ rt_public EIF_OBJ eif_getenv (EIF_OBJ k)
 	strcpy (lower_k, k);
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE\\Eiffel43-9\\");
+	strcpy (key, "Software\\ISE\\Eiffel43-12\\");
 	strncat (key, rindex(modulename, '\\')+1, appl_len);
 
 	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {

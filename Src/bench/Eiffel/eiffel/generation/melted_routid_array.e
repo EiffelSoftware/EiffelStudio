@@ -1,10 +1,14 @@
--- Byte code description of melted routine id array
+indexing
+	description: "Byte code description of melted routine id array."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class MELTED_ROUTID_ARRAY
+class
+	MELTED_ROUTID_ARRAY
 
 inherit
+	CHARACTER_ARRAY
 
-	CHARACTER_ARRAY;
 	IDABLE
 		rename
 			id as class_id,
@@ -14,4 +18,4 @@ inherit
 creation
 	make
 
-end
+end -- class MELTED_ROUTID_ARRAY

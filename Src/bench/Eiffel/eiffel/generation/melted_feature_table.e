@@ -1,6 +1,10 @@
--- Byte code description of melted feature table
+indexing
+	description: "Byte code description of melted feature table."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class MELTED_FEATURE_TABLE 
+class
+	MELTED_FEATURE_TABLE 
 
 inherit
 	CHARACTER_ARRAY
@@ -11,9 +15,7 @@ inherit
 			set_id as set_type_id
 		end
 
-	SHARED_WORKBENCH
-
 creation
 	make
 	
-end
+end -- class MELTED_FEATURE_TABLE

@@ -9,6 +9,9 @@ class
 	
 inherit
 	EV_VIEWPORT_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
 		redefine
 			interface
 		end
@@ -30,6 +33,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_viewport_new (NULL, NULL))
 			viewport := c_object
+			C.gtk_viewport_set_shadow_type (c_object, Gtk_shadow_none_enum)
 		end	
 
 feature -- Access
@@ -102,6 +106,35 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.2.6  2001/04/11 16:09:17  xavier
+--| Removed the border around viewports.
+--|
+--| Revision 1.4.2.5  2000/10/27 16:54:42  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.4.2.4  2000/09/18 18:06:43  oconnor
+--| reimplemented propogate_[fore|back]ground_color for speeeeed
+--|
+--| Revision 1.4.2.3  2000/08/08 00:03:14  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.4.2.2  2000/06/09 20:53:30  manus
+--| Cosmetics
+--|
+--| Revision 1.4.2.1  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/05/02 18:55:28  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

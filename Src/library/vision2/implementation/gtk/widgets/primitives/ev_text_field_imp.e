@@ -15,11 +15,13 @@ inherit
 	
 	EV_TEXT_COMPONENT_IMP
 		redefine
-			interface,
-			initialize
+			interface
 		end
-	
-	EV_BAR_ITEM_IMP
+
+	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
+		redefine
+			create_return_actions
+		end
 
 create
 	make
@@ -34,58 +36,30 @@ feature {NONE} -- Initialization
 			entry_widget := c_object
 		end
 
-	initialize is
-			-- Set up action sequence connection and `Precursor' initialization.
-		do
-			{EV_TEXT_COMPONENT_IMP} Precursor
-			real_connect_signal_to_actions (
-				entry_widget,
-				"activate",
-				interface.return_actions,
-				Void
-			)
-			real_connect_signal_to_actions (
-				entry_widget,
-				"changed",
-				interface.change_actions,
-				Void
-			)
-		end
-
 feature -- Access
 
 	text: STRING is
 			-- Text displayed in field.
 		do
 			create Result.make_from_c (C.gtk_entry_get_text (entry_widget))
+			if Result.is_equal ("") then
+				Result := Void
+			end
 		end
 
 feature -- Status setting
 	
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
-		do
-			C.gtk_entry_set_text (entry_widget, eiffel_to_c (a_text))
-		end
-
-	set_caret_position (pos: INTEGER) is
-			-- Set the position of the caret to `pos'.
-		do
-			C.gtk_editable_set_position (entry_widget, pos)
-		end
-
-	insert_text (txt: STRING) is
-			-- Insert `txt' at the current position.
 		local
-			pos: INTEGER
+			tf_text: STRING
 		do
-			pos := caret_position
-			C.gtk_editable_insert_text (
-				entry_widget,
-				eiffel_to_c (txt),
-				txt.count,
-				$pos
-			)
+			if a_text /= Void then
+				tf_text := a_text
+			else
+				tf_text := ""
+			end
+			C.gtk_entry_set_text (entry_widget, eiffel_to_c (tf_text))
 		end
 
 	append_text (txt: STRING) is
@@ -117,13 +91,21 @@ feature -- Status Report
 	caret_position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := C.gtk_editable_get_position (entry_widget)
+			Result := C.gtk_editable_get_position (entry_widget) + 1
 		end
 
 feature {NONE} -- Implementation
 
 	entry_widget: POINTER
 		-- A pointer on the text field
+
+feature {EV_ANY_I} -- Implementation
+
+	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE is
+		do
+			create Result
+			real_connect_signal_to_actions (entry_widget, "activate", Result, Void)
+		end
 
 feature {EV_TEXT_FIELD_I} -- Implementation
 
@@ -156,8 +138,23 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.20  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.21  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.13.4.7  2000/10/27 22:45:47  king
+--| Updated set/get text routines to account for interface revision
+--|
+--| Revision 1.13.4.6  2000/09/13 16:46:31  oconnor
+--| fixed off by one on carret_position
+--|
+--| Revision 1.13.4.5  2000/09/12 19:08:09  king
+--| Moved some implementation up to text_component
+--|
+--| Revision 1.13.4.4  2000/08/03 20:15:53  king
+--| Removed unneeded initialize, redefined create_return_actions
+--|
+--| Revision 1.13.4.3  2000/07/24 21:36:10  oconnor
+--| inherit action sequences _IMP class
 --|
 --| Revision 1.13.4.2  2000/05/25 00:41:58  king
 --| Implemented external in Eiffel

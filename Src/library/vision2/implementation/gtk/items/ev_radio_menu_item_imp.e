@@ -100,8 +100,8 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.20  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.21  2001/06/07 23:08:01  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
 --| Revision 1.11.4.3  2000/06/02 21:05:27  king
 --| Added select_actions bug fix

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description: 
@@ -18,16 +17,19 @@ inherit
 		end
 	
 	EV_PRIMITIVE_IMP
-		undefine
-			set_default_colors
 		redefine
 			interface
+		end
+
+	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
+		redefine
+			create_change_actions
 		end
 
 feature -- Access
 
 	text_length: INTEGER is
-			-- Length of the text in the widget
+			-- Length of the text in the widget.
 		do
 			Result := text.count
 		end
@@ -35,7 +37,7 @@ feature -- Access
 feature -- Status report
 
 	is_editable: BOOLEAN is
-			-- Is the text editable
+			-- Is the text editable.
 		do
 			Result := C.gtk_editable_struct_editable (entry_widget) /= 0
 		end
@@ -43,25 +45,47 @@ feature -- Status report
 	position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := C.gtk_text_get_point (entry_widget) + 1
+			Result := C.gtk_editable_get_position (entry_widget) + 1
 		end
 
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := C.gtk_editable_struct_has_selection (entry_widget) /= 0
+			Result := selection_start < selection_end
 		end
 
 	selection_start: INTEGER is
-			-- Index of the first character selected
+			-- Index of the first character selected.
 		do
 			Result := C.gtk_editable_struct_selection_start_pos (entry_widget) + 1
 		end
 
 	selection_end: INTEGER is
-			-- Index of the last character selected
+			-- Index of the last character selected.
 		do
 			Result := C.gtk_editable_struct_selection_end_pos (entry_widget)
+		end
+
+	maximum_character_width: INTEGER is
+			-- Maximum width of a single character in `Current'.
+		do
+		end
+
+	clipboard_content: STRING is
+			-- `Result' is current clipboard content.
+		do
+			--temp_label := C.gtk_entry_new
+			--C.gtk_widget_show (temp_label)
+			--C.gtk_container_add (default_gtk_window, temp_label)
+			--a_success := C.gtk_selection_convert (
+			--	temp_label,
+			--	C.gdk_atom_intern (eiffel_to_c ("CLIPBOARD"), 0),
+			----	C.gdk_atom_intern (eiffel_to_c ("COMPOUND_TEXT"), 0),
+			--	C.GDK_CURRENT_TIME
+			--)
+			--create Result.make (0)
+			--Result.from_c (C.gtk_editable_get_chars (temp_label, 0, -1))
+			--C.gtk_container_remove (default_gtk_window, temp_label)
 		end
 
 feature -- status settings
@@ -74,9 +98,15 @@ feature -- status settings
 		end
 
 	set_position (pos: INTEGER) is
-			-- set current insertion position
+			-- Set current insertion position.
 		do
-			C.gtk_text_set_point (entry_widget, pos - 1)
+			C.gtk_editable_set_position (entry_widget, pos - 1)
+		end
+
+	set_caret_position (pos: INTEGER) is
+			-- Set the position of the caret to `pos'.
+		do
+			C.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
 feature -- Resizing
@@ -89,18 +119,26 @@ feature -- Resizing
 
 feature -- Basic operation
 
+	insert_text (txt: STRING) is
+			-- Insert `txt' at the current position.
+		local
+			pos: INTEGER
+		do
+			pos := caret_position - 1
+			C.gtk_editable_insert_text (
+				entry_widget,
+				eiffel_to_c (txt),
+				txt.count,
+				$pos
+			)
+		end
+
 	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (hilight) the text between 
-			-- 'start_pos' and 'end_pos'
+			-- Select (highlight) the text between 
+			-- 'start_pos' and 'end_pos'.
 		do
 			C.gtk_editable_select_region (entry_widget, start_pos - 1, end_pos)
 		end	
-
-	select_all is
-			-- Select all the text.
-		do
-			C.gtk_editable_select_region (entry_widget, 0, text_length)
-		end
 
 	deselect_all is
 			-- Unselect the current selection.
@@ -118,7 +156,7 @@ feature -- Basic operation
 			-- Cut the `selected_region' by erasing it from
 			-- the text and putting it in the Clipboard 
 			-- to paste it later.
-			-- If the `selectd_region' is empty, it does
+			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
 			C.gtk_editable_cut_clipboard (entry_widget)
@@ -135,7 +173,7 @@ feature -- Basic operation
 
 	paste (index: INTEGER) is
 			-- Insert the string which is in the 
-			-- Clipboard at the `index' postion in the
+			-- Clipboard at the `index' position in the
 			-- text.
 			-- If the Clipboard is empty, it does nothing. 
 		local
@@ -143,16 +181,22 @@ feature -- Basic operation
 		do
 			pos := position
 			set_position (index)
-			C.gtk_editable_paste_clipboard (entry_widget)
+			insert_text (clipboard_content)
 			set_position (pos)
 		end
 
 feature {EV_ANY_I} -- Implementation
 
+	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+		do
+			create Result
+			real_connect_signal_to_actions (entry_widget, "changed", Result, Void)
+		end
+
 	entry_widget: POINTER is
 			-- Pointer to the gtkeditable widget.
 		deferred
-	end
+		end
 
 	interface: EV_TEXT_COMPONENT
 
@@ -179,8 +223,49 @@ end -- class EV_TEXT_COMPONENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.20  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.21  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.16.4.13  2000/11/30 19:30:10  king
+--| Removing unused local variables
+--|
+--| Revision 1.16.4.12  2000/10/30 17:36:47  king
+--| Removed gdk_current_time, commented out clipboard_content implementation
+--|
+--| Revision 1.16.4.11  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.16.4.10  2000/09/13 16:46:48  oconnor
+--| fixed off by one on carret_position
+--|
+--| Revision 1.16.4.9  2000/09/12 19:07:19  king
+--| Added set_caret_position, insert_text, comments, spelling corrections
+--|
+--| Revision 1.16.4.8  2000/09/08 00:27:20  king
+--| Corrected spelling mistake
+--|
+--| Revision 1.16.4.7  2000/09/07 17:27:32  king
+--| Removed select_all
+--|
+--| Revision 1.16.4.6  2000/09/07 16:14:42  king
+--| Half implemented new features
+--|
+--| Revision 1.16.4.5  2000/09/06 23:18:48  king
+--| Reviewed
+--|
+--| Revision 1.16.4.4  2000/08/03 20:14:46  king
+--| Redefined create_change_actions to connect signal
+--|
+--| Revision 1.16.4.3  2000/07/24 21:36:10  oconnor
+--| inherit action sequences _IMP class
 --|
 --| Revision 1.16.4.2  2000/05/25 00:41:18  king
 --| Implemented externals in Eiffel

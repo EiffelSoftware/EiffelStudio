@@ -23,32 +23,50 @@ feature -- Status report
 
 	pointer_position: EV_COORDINATES is
 			-- Position of the screen pointer.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.pointer_position
 		end 
+	
+	widget_at_position (x, y: INTEGER): EV_WIDGET is
+			-- Widget at position (`x', `y') if any.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.widget_at_position (x, y)
+		end
 
 feature -- Basic operation
 
 	set_pointer_position (x, y: INTEGER) is
-			-- Set `pointer_position' to (`x',`y`).		
+			-- Set `pointer_position' to (`x',`y`).
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_pointer_position (x, y)
 		end
 
 	fake_pointer_button_press (a_button: INTEGER) is
 			-- Simulate the user pressing a `a_button' on the pointing device.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.fake_pointer_button_press (a_button)
 		end
 
 	fake_pointer_button_release (a_button: INTEGER) is
 			-- Simulate the user releasing a `a_button' on the pointing device.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.fake_pointer_button_release (a_button)
 		end
 
 	fake_pointer_button_click (a_button: INTEGER) is
 			-- Simulate the user clicking `a_button' on the pointing device.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.fake_pointer_button_press (a_button)
 			implementation.fake_pointer_button_release (a_button)
@@ -56,18 +74,24 @@ feature -- Basic operation
 
 	fake_key_press (a_key: EV_KEY) is
 			-- Simulate the user pressing a `key'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.fake_key_press (a_key)
 		end
 
 	fake_key_release (a_key: EV_KEY) is
 			-- Simulate the user releasing a `key'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.fake_key_release (a_key)
 		end
 
 	fake_key_click (a_key: EV_KEY) is
 			-- Simulate the user clicking a `key'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.fake_key_press (a_key)
 			implementation.fake_key_release (a_key)
@@ -76,10 +100,10 @@ feature -- Basic operation
 feature -- Measurement
 
 	width: INTEGER is
-			-- Horizontal size in pixels.
+			-- Horizontal size in pixels.				
 		do
 			Result := implementation.width
-		ensure
+		ensure then
 			bridge_ok: Result = implementation.width
 			positive: Result > 0
 		end
@@ -88,10 +112,15 @@ feature -- Measurement
 			-- Vertical size in pixels.
 		do
 			Result := implementation.height
-		ensure
+		ensure then
 			bridge_ok: Result = implementation.height
 			positive: Result > 0
 		end
+		
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_SCREEN_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE} -- Implementation
 
@@ -100,11 +129,6 @@ feature {NONE} -- Implementation
 		do
 			create {EV_SCREEN_IMP} implementation.make (Current)
 		end
-
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_SCREEN_I
-			-- Responsible for interaction with the native graphics toolkit.
 
 invariant
 	pointer_position_not_negative:
@@ -127,76 +151,3 @@ end -- class EV_SCREEN
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.14  2000/04/26 22:33:26  pichery
---| Added usefull features `fake_pointer_button_click'
---| and `fake_key_click'.
---|
---| Revision 1.13  2000/04/25 22:56:34  king
---| Removed invalid comments and pointer_position
---|
---| Revision 1.12  2000/04/25 21:38:58  king
---| Commented out invalid bridge_ok post-cond which doesn't hold
---|
---| Revision 1.11  2000/04/11 19:01:55  king
---| Added pointer manipulation functions
---|
---| Revision 1.10  2000/04/06 23:26:59  oconnor
---| added implementation comments and new fake event features
---|
---| Revision 1.9  2000/04/06 20:12:30  oconnor
---| added pointer position features
---|
---| Revision 1.8  2000/03/17 01:23:34  oconnor
---| formatting and layout
---|
---| Revision 1.7  2000/03/01 20:28:53  king
---| Corrected export clauses for implementation and create_imp/act_seq
---|
---| Revision 1.6  2000/02/22 18:39:52  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.5  2000/02/14 11:40:53  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.4.6.10  2000/01/28 20:00:22  oconnor
---| released
---|
---| Revision 1.4.6.9  2000/01/27 19:30:59  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.4.6.8  1999/12/17 19:21:05  rogers
---| implementation is now exported to EV_ANY_I.
---|
---| Revision 1.4.6.7  1999/12/16 03:47:51  oconnor
---| added width and height, removed expose action, inablicable
---|
---| Revision 1.4.6.6  1999/12/15 19:17:00  king
---| Removed fixme from interface
---|
---| Revision 1.4.6.5  1999/12/13 19:31:14  oconnor
---| kernel/ev_application.e
---|
---| Revision 1.4.6.4  1999/12/09 23:13:26  brendel
---| Corrected export status of implementation.
---|
---| Revision 1.4.6.3  1999/12/09 19:00:56  brendel
---| Improved cosmetics and indexing clauses.
---|
---| Revision 1.4.6.2  1999/12/04 00:40:00  brendel
---| Added expose_actions.
---|
---| Revision 1.4.6.1  1999/11/24 17:30:57  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.4.2.2  1999/11/02 17:20:13  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

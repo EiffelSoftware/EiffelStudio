@@ -23,10 +23,6 @@ char * c_match_font_name (char * pattern);
 
 EIF_REFERENCE generize (EIF_OBJECT g_item);
 
-void enable_motion_notify (GtkWidget *widg);
-void c_gtk_widget_set_all_events (GtkObject *w);
-
-
 /*==============================================================================
  gtk_window functions
 ==============================================================================*/

@@ -18,6 +18,7 @@ inherit
 
 	EV_WIDGET_IMP
 		redefine
+			update_for_pick_and_drop,
 			interface
 		end
 
@@ -28,7 +29,8 @@ inherit
 
 	EV_TOOLTIPABLE_IMP
 		redefine
-			interface
+			interface,
+			tooltip_window
 		end
 
 feature -- Access
@@ -79,7 +81,9 @@ feature -- Basic operations
 			hwnd := next_dlgtabitem (top_level_window_imp.wel_item,
 			wel_item, direction)
 			window := window_of_item (hwnd)
-			window.set_focus
+			if window /= Void then
+				window.set_focus
+			end
 		end
 
 	arrow_action (direction: BOOLEAN) is
@@ -111,11 +115,7 @@ feature -- Basic operations
 			if virtual_key = Wel_input_constants.Vk_tab and then 
 				flag_set (style, Wel_window_constants.Ws_tabstop)
 			then
-				if key_down (Wel_input_constants.Vk_shift) then
-					tab_action (False)
-				else
-					tab_action (True)
-				end
+				tab_action (not key_down (Wel_input_constants.Vk_shift))
 			end
 		end
 
@@ -125,11 +125,7 @@ feature -- Basic operations
 			-- control need to process this kind of keys.
 		do
 			if virtual_key = Wel_input_constants.Vk_tab then
-				if key_down (Wel_input_constants.Vk_shift) then
-					tab_action (False)
-				else
-					tab_action (True)
-				end
+				tab_action (not key_down (Wel_input_constants.Vk_shift))
 			elseif virtual_key = Wel_input_constants.Vk_down then
 				arrow_action (True)
 			elseif virtual_key = Wel_input_constants.Vk_up then
@@ -137,10 +133,10 @@ feature -- Basic operations
 			end
 		end
 
-feature {NONE} -- Deferred features
-
-	window_of_item (hwnd: POINTER): WEL_WINDOW is
-		deferred
+	tooltip_window: WEL_WINDOW is
+			-- `Result' is WEL_WINDOW of `Current'.
+		do
+			Result := window_of_item (wel_item)
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -161,6 +157,13 @@ feature {NONE} -- Feature that should be directly implemented by externals
 
 feature {EV_ANY_I} -- Implementation
 
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so update appearence of
+			-- `Current'.
+		do
+			--| Redefine this for each primitive that changes its appearence
+		end
+		
 	interface: EV_PRIMITIVE
 
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
@@ -172,29 +175,47 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_PRIMITIVE_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.30  2000/06/07 17:28:01  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.31  2001/06/07 23:08:16  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.20.4.11  2001/03/16 19:06:46  rogers
+--| Implemented update_for_pick_and_drop.
+--|
+--| Revision 1.20.4.10  2001/02/04 19:22:30  pichery
+--| Fixed bug
+--|
+--| Revision 1.20.4.9  2000/10/11 00:01:03  raphaels
+--| `window_of_item' is now inherited from WEL_WINDOWS_ROUTINES
+--|
+--| Revision 1.20.4.8  2000/10/05 20:37:54  manus
+--| Simplified `tab_action' call to avoid the use of an `if' statement.
+--|
+--| Revision 1.20.4.7  2000/08/11 18:47:40  rogers
+--| Fixed copyright clauses. Now use ! instead of |.
+--|
+--| Revision 1.20.4.6  2000/06/27 22:15:50  rogers
+--| Added tooltip_window which is redefined from EV_TOOLTIPABLE_IMP.
 --|
 --| Revision 1.20.4.5  2000/05/23 16:48:48  rogers
 --| Undid previous change as the code was definitely required.

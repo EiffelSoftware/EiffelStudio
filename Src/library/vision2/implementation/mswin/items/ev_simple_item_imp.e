@@ -37,6 +37,12 @@ end -- class EV_SIMPLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.14.8.1  2000/05/03 19:09:11  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.22  2000/04/07 22:31:51  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

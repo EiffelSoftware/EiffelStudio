@@ -43,6 +43,12 @@ end -- class EV_VERTICAL_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.4.1  2000/05/03 19:09:08  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

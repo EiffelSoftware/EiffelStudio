@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision fontable, gtk implementation.";
 	status: "See notice at end of class";
@@ -14,107 +13,44 @@ inherit
 			interface
 		end
 
---	EV_ANY_IMP
---		redefine
---			interface
---		end
+	EV_ANY_IMP
+		redefine
+			interface
+		end
 	
 feature -- Access
 
 	font: EV_FONT is
 			-- Character appearance for `Current'.
 		do
-			if private_font = Void then
-				create private_font
-				Result := private_font
+			if private_font = void then
+				create Result
+				-- Default create is standard gtk font
 			else
-				Result := private_font
+				Result := clone (private_font)
 			end
 		end
-		
-
---		local
---			font_x: FONT_IMP
---		do
--- 			if private_font = Void then
--- 				create private_font.make;
--- 				font_x ?= private_font.implementation;
--- --XX				font_x.set_default_font (font_list)
--- 			end;
--- 			Result := private_font
---			create Result
---		end;
+			
 
 feature -- Status setting
 
---XX 	set_font_list (a_font_list: MEL_FONT_LIST) is
--- 			-- Set `font_list' to `a_font_list'.
--- 		require
--- 			valid_font_list: a_font_list /= Void and then a_font_list.is_valid
--- 		deferred
--- 		end;
-
 	set_font (a_font: EV_FONT) is
 			-- Assign `a_font' to `font'.
-
+		local
+			a_style: POINTER
+			font_imp: EV_FONT_IMP
 		do
-			private_font := a_font
+			private_font := clone (a_font)
+			font_imp ?= a_font.implementation
+			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (visual_widget))
+			C.set_gtk_style_struct_font (a_style, font_imp.c_object)
+			C.gtk_widget_set_style (visual_widget, a_style)
+			C.gtk_style_unref (a_style)
 		end
 
---		local
---			font_implementation: FONT_IMP;
---		do
--- 			if private_font /= Void then
--- 				font_implementation ?= private_font.implementation;
--- 				font_implementation.decrement_users
--- 			end;
--- 			private_font := a_font;
--- 			font_implementation ?= a_font.implementation;
--- 			font_implementation.increment_users;
--- 			set_font_from_imp (font_implementation)
---			check
---				to_be_implemented: False
---			end
---		end
-
--- feature {FONT_IMP} -- Implementation
-
- 	private_font: EV_FONT
-			-- Private font
-
--- 	update_font is
--- 			-- Update the X font after a change inside the Eiffel font.
--- 		local
--- 			font_implementation: FONT_IMP
--- 		do
--- 			font_implementation ?= private_font.implementation;
--- 			set_font_from_imp (font_implementation)
--- 		end	
-
--- feature {NONE} -- Implementation
-
--- 	set_font_from_imp (font_implementation: FONT_IMP) is
--- 			-- Set the font from `a_font_imp'.
--- 		require
--- 			valid_font_imp: font_implementation /= Void
--- 		local
--- 			a_font_list: MEL_FONT_LIST
--- 		do
--- 			font_implementation.allocate_font;
--- 			if font_implementation.is_valid then
--- 				a_font_list := font_implementation.font_list;
--- 				if a_font_list.is_valid then
--- --XX					set_font_list (a_font_list);
--- 					a_font_list.destroy
--- 				else
--- 					io.error.putstring ("Warning can not allocate font%N");
--- 				end;
--- 			else
--- 				io.error.putstring ("Warning can not allocate font%N");
--- 			end
--- 		end;	
-
 feature {NONE} -- Implementation
+
+	private_font: EV_FONT
 
 	interface: EV_FONTABLE
 
@@ -141,6 +77,36 @@ end -- class EV_FONTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/07 23:08:04  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.8  2001/06/05 22:43:39  king
+--| Using clone instead of copy
+--|
+--| Revision 1.3.4.7  2001/06/04 17:21:23  rogers
+--| We now use copy instead of ev_clone.
+--|
+--| Revision 1.3.4.6  2000/09/20 17:31:29  oconnor
+--| Fixed leaking copied style with an unref.
+--| Get the widgets current style then modify it to set the font.
+--| Before the default style was used, this hosed any prior style
+--| settings.
+--|
+--| Revision 1.3.4.5  2000/09/06 23:18:41  king
+--| Reviewed
+--|
+--| Revision 1.3.4.4  2000/08/09 20:57:09  oconnor
+--| use ev_clone instead of clone as per instructions of manus
+--|
+--| Revision 1.3.4.3  2000/08/08 20:57:52  king
+--| Changed ev_clone calls to clone
+--|
+--| Revision 1.3.4.2  2000/07/28 00:28:19  king
+--| Simplified implementation
+--|
+--| Revision 1.3.4.1  2000/05/03 19:08:41  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

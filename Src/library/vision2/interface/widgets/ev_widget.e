@@ -14,23 +14,54 @@ inherit
 
 	EV_PICK_AND_DROPABLE
 		redefine
-			create_action_sequences,
-			implementation
+			implementation,
+			is_in_default_state
 		end
 
 	EV_SENSITIVE
+		undefine
+			initialize
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 
 	EV_COLORIZABLE
+		undefine
+			initialize
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
+	EV_POSITIONED
+		undefine
+			initialize
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
+	EV_CONTAINABLE
+		undefine
+			initialize
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
+	EV_WIDGET_ACTION_SEQUENCES
 		redefine
 			implementation
 		end
 
-	EV_CONTAINABLE
+		--|FIXME add destroy actions and make sure it works for everything
+		--|including windows, titled and untitled.
+
+	EV_HELP_CONTEXTABLE
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 
 feature -- Access
@@ -45,6 +76,8 @@ feature -- Access
 
 	is_parent_recursive (a_widget: EV_WIDGET): BOOLEAN is
 			-- Is `a_widget' `parent', or recursivly, `parent' of `parent'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := a_widget = parent or else
 				(parent /= Void and then parent.is_parent_recursive (a_widget))
@@ -53,6 +86,7 @@ feature -- Access
 	pointer_position: EV_COORDINATES is
 			-- Position of the screen pointer relative to `Current'.
 		require
+			not_destroyed: not is_destroyed
 			is_show_requested: is_show_requested
 		do
 			Result := implementation.pointer_position
@@ -63,6 +97,8 @@ feature -- Access
 
 	pointer_style: EV_CURSOR is
 			-- Cursor displayed when pointer is over this widget.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.pointer_style
 			if Result = Void then
@@ -70,11 +106,24 @@ feature -- Access
 			end
 		end
 
+	actual_drop_target_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE] is
+			-- Overrides default drop target on a certain position.
+			-- If `Void', `Current' will use the default drop target.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.actual_drop_target_agent
+		ensure
+			bridge_ok: Result = implementation.actual_drop_target_agent
+		end
+
 feature -- Status report
 
 	is_show_requested: BOOLEAN is
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_show_requested
 		ensure
@@ -84,6 +133,8 @@ feature -- Status report
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible on the screen?
 			-- `True' when show requested and parent displayed.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_displayed
 		ensure
@@ -92,10 +143,22 @@ feature -- Status report
 
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.has_focus
 		ensure
 			bridge_ok: Result = implementation.has_focus
+		end
+
+	has_capture: BOOLEAN is
+			-- Does widget have capture?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.has_capture
+		ensure
+			bridge_ok: Result = implementation.has_capture
 		end
 
 feature -- Status setting
@@ -103,6 +166,8 @@ feature -- Status setting
 	hide is
 			-- Request that `Current' not be displayed even when its parent is.
 			-- Make `is_show_requested' `False'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.hide
 		ensure
@@ -113,6 +178,8 @@ feature -- Status setting
 			-- Request that `Current' be displayed when its parent is.
 			-- `True' by default.
 			-- Make `is_show_requested' `True'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.show
 		ensure
@@ -122,7 +189,9 @@ feature -- Status setting
 	set_focus is
 			-- Grab keyboard focus.
 		require
+			not_destroyed: not is_destroyed
 			is_displayed: is_displayed
+			is_sensitive: is_sensitive
 		do
 			implementation.set_focus
 		ensure
@@ -133,24 +202,28 @@ feature -- Status setting
 			-- Grab all user input events (mouse and keyboard).
 			-- `disable_capture' must be called to resume normal input handling.
 		require
+			not_destroyed: not is_destroyed
 			is_displayed: is_displayed
 		do
 			implementation.enable_capture
 		ensure
-			--has_capture: has_capture
-			--| FIXME IEK Implement has_capture
+			has_capture: has_capture
 		end
 
 	disable_capture is
 			-- Disable grab of all user input events.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.disable_capture
 		ensure
-			--has_no_capture: not has_capture
+			not_has_capture: not has_capture
 		end
 
 	center_pointer is
 			-- Position screen pointer over center of `Current'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			(create {EV_SCREEN}).set_pointer_position (
 				(screen_x + (width/2)).truncated_to_integer,
@@ -158,11 +231,23 @@ feature -- Status setting
 			)
 		end
 
+	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent) is
+			-- Assign `an_agent' to `actual_drop_target_agent'.
+		require
+			not_destroyed: not is_destroyed
+			an_agent_not_void: an_agent /= Void
+		do
+			implementation.set_actual_drop_target_agent (an_agent)
+		ensure
+			assigned: actual_drop_target_agent = an_agent
+		end
+
 feature -- Element change
 
 	set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style'.
 		require
+			not_destroyed: not is_destroyed
 			a_cursor_not_void: a_cursor /= Void
 		do
 			implementation.set_pointer_style (a_cursor)
@@ -177,6 +262,7 @@ feature -- Element change
 			-- From now, `minimum_width' is fixed and will not be changed
 			-- dynamically by the application anymore.
 		require
+			not_destroyed: not is_destroyed
 			a_minimum_width_positive: a_minimum_width > 0
 		do
 			implementation.set_minimum_width (a_minimum_width)
@@ -191,6 +277,7 @@ feature -- Element change
 			-- From now, `minimum_height' is fixed and will not be changed
 			-- dynamically by the application anymore.
 		require
+			not_destroyed: not is_destroyed
 			a_minimum_height_positive: a_minimum_height > 0
 		do
 			implementation.set_minimum_height (a_minimum_height)
@@ -206,6 +293,7 @@ feature -- Element change
 			-- From now, minimum size is fixed and will not be changed
 			-- dynamically by the application anymore.
 		require
+			not_destroyed: not is_destroyed
 			a_minimum_width_positive: a_minimum_width > 0
 			a_minimum_height_positive: a_minimum_height > 0
 		do
@@ -217,24 +305,10 @@ feature -- Element change
 
 feature -- Measurement 
 	
-	x_position: INTEGER is
-			-- Horizontal offset relative to parent `x_position' in pixels.
-		do
-			Result := implementation.x_position
-		ensure
-			bridge_ok: Result = implementation.x_position
-		end
-
-	y_position: INTEGER is
-			-- Vertical offset relative to parent `y_position' in pixels.
-		do
-			Result := implementation.y_position
-		ensure
-			bridge_ok: Result = implementation.y_position
-		end
-
 	screen_x: INTEGER is
 			-- Horizontal offset relative to left of screen in pixels.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.screen_x
 		ensure
@@ -243,202 +317,39 @@ feature -- Measurement
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to top of screen in pixels.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.screen_y
 		ensure
 			bridge_ok: Result = implementation.screen_y
 		end
+		
+feature {NONE} -- Contract support
 
-	width: INTEGER is
-			-- Horizontal size in pixels.
-			-- Same as `minimum_width' when not displayed.
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
 		do
-			Result := implementation.width
-		ensure
-			bridge_ok: Result = implementation.width
+			Result := Precursor {EV_PICK_AND_DROPABLE} and Precursor {EV_SENSITIVE} and
+				Precursor {EV_COLORIZABLE} and Precursor {EV_POSITIONED} and
+				Precursor {EV_CONTAINABLE} and Precursor {EV_HELP_CONTEXTABLE}
 		end
-
-	height: INTEGER is
-			-- Vertical size in pixels.
-			-- Same as `minimum_height' when not displayed.
-		do
-			Result := implementation.height
-		ensure
-			bridge_ok: Result = implementation.height
-		end 
-
-	minimum_width: INTEGER is
-			-- Lower bound on `width' in pixels.
-		do
-			Result := implementation.minimum_width
-		ensure
-			bridge_ok: Result = implementation.minimum_width
-			positive_or_zero: Result >= 0
-		end 
-
-	minimum_height: INTEGER is
-			-- Lower bound on `height' in pixels.
-		do
-			Result := implementation.minimum_height
-		ensure
-			bridge_ok: Result = implementation.minimum_height
-			positive_or_zero: Result >= 0
-		end 
-
-feature -- User input events
-
-	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Actions to be performed when screen pointer moves.
-
-	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-			-- Actions to be performed when screen pointer button is pressed.
-
-	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-			-- Actions to be performed when screen pointer is double clicked.
-
-	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-			-- Actions to be performed when screen pointer button is released.
-
-	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to be performed when screen pointer enters widget.
-
-	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to be performed when screen pointer leaves widget.
-
-	key_press_actions: EV_KEY_ACTION_SEQUENCE
-			-- Actions to be performed when a keyboard key is pressed.
-
-	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE
-			-- Actions to be performed when a keyboard key is pressed.
-			-- String representation of key is passed to actions.
-
-	key_release_actions: EV_KEY_ACTION_SEQUENCE
-			-- Actions to be performed wehn a keyboard key is released.
-
-	proximity_out_actions: EV_PROXIMITY_ACTION_SEQUENCE
-			-- Actions to be performed when pointing device goes
-			-- out of range. (Applicable to extended input devices
-			-- such as graphics tablets.)
-
-	proximity_in_actions: EV_PROXIMITY_ACTION_SEQUENCE
-			-- Actions to be performed when pointing device comes
-			-- into range. (Applicable to extended input devices
-			-- such as graphics tablets.)
-
-	focus_in_actions: EV_FOCUS_ACTION_SEQUENCE
-			-- Actions to be performed when keyboard focus is gained.
-
-	focus_out_actions: EV_FOCUS_ACTION_SEQUENCE
-			-- Actions to be performed when keyboard focus is lost.
-
-	resize_actions: EV_GEOMETRY_ACTION_SEQUENCE
-			-- Actions to be performed when size changes.
-
-		--|FIXME add destroy actions and make sure it works for everything
-		--|including windows, titled and untitled.
-
-feature {EV_WIDGET, EV_ANY_I} -- Implementation
+		
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_WIDGET_I
 			-- Responsible for interaction with the native graphics toolkit.
 			-- See `{EV_ANY}.implementation'.
 
-feature {EV_WIDGET, EV_WIDGET_I} -- Implementation
+feature {NONE} -- Implementation
 
-	create_action_sequences is
-			-- See `{EV_ANY}.create_action_sequences'.
-		do
-			{EV_PICK_AND_DROPABLE} Precursor
-			create pointer_motion_actions
-			create pointer_button_press_actions
-			create pointer_button_release_actions
-			create pointer_double_press_actions
-			create pointer_enter_actions
-			create pointer_leave_actions
-			create proximity_in_actions
-			create proximity_out_actions
-			create focus_in_actions
-			create focus_out_actions
-			create key_press_actions
-			create key_press_string_actions
-			create key_release_actions
-			create resize_actions
+	Default_pixmaps: EV_STOCK_PIXMAPS is
+			-- Default pixmaps and cursors.
+		once
+			create Result
 		end
-
-feature {EV_ANY} -- Contract support
-
-	make_for_test is
-			-- Instance of `Current' for testing purposes.
-		local
-			textable: EV_TEXTABLE
-			container: EV_CONTAINER
-			label: EV_LABEL
-			i: INTEGER
-		do
-			default_create
-			textable ?= Current
-			container ?= Current
-			if textable /= Void then
-				textable.set_text ("Text label")
-			end
-			if container /= Void then
-				from i := 1 until i = 6 or container.full
-				loop
-					create label.make_with_text ("item " + i.out)
-					container.extend (label)
-					inspect i
-						when 1 then label.set_background_color (
-							create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
-						when 2 then label.set_background_color (
-							create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
-						when 3 then label.set_background_color (
-							create {EV_COLOR}.make_with_rgb (0.2,0.7,0.2))
-						when 4 then label.set_background_color (
-							create {EV_COLOR}.make_with_rgb (0.2,0.7,0.7))
-						when 5 then label.set_background_color (
-							create {EV_COLOR}.make_with_rgb (0.2,0.2,0.7))
-					end
-					i := i + 1
-				end
-			end
-debug ("make_for_test")
-			create_test_actions
-end
-		end
-
-	create_test_actions is
-		local
-			t: HASH_TABLE [ACTION_SEQUENCE [TUPLE], STRING]
-			asq: EV_ACTION_SEQUENCE [TUPLE]
-		do
-			t := action_sequences
-			from
-				t.start
-			until
-				t.after
-			loop
-				asq ?= t.item_for_iteration
-				if asq /= Void then
-					asq.force_extend (
-						~print (generating_type + " "
-							+ t.key_for_iteration + " fired %N")
-					)
-				end
-				t.forth
-			end
-		end
-
+		
 feature -- Obsolete
-
-	is_horizontally_resizable: BOOLEAN is obsolete "dont use it"
-			-- Should `width' change when widget is resized?
-		do
-		end
-
-	is_vertically_resizable: BOOLEAN is obsolete "dont use it"
-			-- Should `height' change when widget is resized?
-		do
-		end
 
 	managed: BOOLEAN is obsolete "dont use it" do end
 			-- Is the geometry of current widget managed by its 
@@ -468,26 +379,6 @@ feature -- Obsolete
 			Result := not is_sensitive
 		end
 
-	expandable: BOOLEAN is
-			-- Does the widget expand its cell to take the
-			-- size the parent would like to give to it.
-		obsolete
-			"Use is_child_expandable of EV_BOX instead"
-		do
-			Result := False
-		end
-
-	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		obsolete
-			"see new containers"
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
 	is_window: BOOLEAN is
 			-- Is the current widget a window?
 		obsolete
@@ -515,28 +406,6 @@ feature -- Obsolete
 			Result := is_displayed
 		end
 
-	horizontal_resizable: BOOLEAN is
-			-- Does the widget change its width when the parent
-			-- or the user want to resize the widget
-		obsolete
-			"Not supported anymore."
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
-	vertical_resizable: BOOLEAN is
-			-- Does the widget change its width when the parent
-			-- or the user want to resize the widget
-		obsolete
-			"Not supported anymore."
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode.
 			-- This means that any events with an
@@ -555,26 +424,6 @@ feature -- Obsolete
 			end
 		end
 
-	set_horizontal_resize (flag: BOOLEAN) is
-			-- Adapt `resize_type' to `flag'.
-		obsolete
-			"Not supported anymore."
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
-	set_vertical_resize (flag: BOOLEAN) is
-			-- Adapt `resize_type' to `flag'.
-		obsolete
-			"Not supported anymore."
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
 	x: INTEGER is
 		obsolete
 			"Use: x_position"
@@ -589,37 +438,6 @@ feature -- Obsolete
 			Result := y_position
 		end
 
-	set_x (a_x: INTEGER) is
-			-- Set horizontal offset to parent to `a_x'.
-		obsolete
-			"Not supported anymore."
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
-	set_y (a_y: INTEGER) is
-			-- Set vertical offset to parent to `a_y'.
-		obsolete
-			"Not supported anymore."
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
-	set_x_y (a_x, a_y: INTEGER) is
-			-- Set horizontal offset to parent to `a_x'.
-			-- Set vertical offset to parent to `a_y'.
-		obsolete
-			"Not supported anymore."
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
 	is_insensitive: BOOLEAN is
 			-- Is widget disabled?
 			-- This means that no events are triggered.
@@ -629,56 +447,16 @@ feature -- Obsolete
 			Result := not is_sensitive
 		end
 
-	set_default_minimum_size is
-			-- Initialize the size of the widget.
-		obsolete
-			"Useless."
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
-feature {NONE} -- Constants
-
-	Default_pixmaps: EV_DEFAULT_PIXMAPS is
-			-- Default pixmaps and cursors.
-		once
-			create Result
-		end
-
 invariant
-	pointer_position_not_void: is_useable and is_show_requested implies
+	pointer_position_not_void: is_usable and is_show_requested implies
 		pointer_position /= Void
 
-	minimum_width_not_negative: is_useable implies minimum_width >= 0
-	minimum_height_not_negative: is_useable implies minimum_height >= 0
-
 	--| VB size can be less than minimum size, if parent is smaller.
-	width_non_negative: is_useable implies width >= 0
-	height_non_negative: is_useable implies height >= 0
 
 	is_displayed_implies_show_requested:
-		is_useable and is_displayed implies is_show_requested
+		is_usable and then is_displayed implies is_show_requested
 	parent_contains_current:
-		is_useable and parent /= Void implies parent.has (Current)
-
-	pointer_motion_actions_not_void: pointer_motion_actions /= Void
-	pointer_button_press_actions_not_void:
-		pointer_button_press_actions /= Void
-	pointer_button_release_actions_not_void:
-		pointer_button_release_actions /= Void
-	pointer_double_press_actions_not_void:
-		pointer_double_press_actions /= Void
-	pointer_enter_actions_not_void: pointer_enter_actions /= Void
-	pointer_leave_actions_not_void: pointer_leave_actions /= Void
-	proximity_in_actions_not_void: proximity_in_actions /= Void
-	proximity_out_actions_not_void: proximity_out_actions /= Void
-	focus_in_actions_not_void: focus_in_actions /= Void
-	focus_out_actions_not_void: focus_out_actions /= Void
-	key_press_actions_not_void: key_press_actions /= Void
-	key_release_actions_not_void: key_release_actions /= Void
-	resize_actions_not_void: resize_actions /= Void
+		is_usable and then parent /= Void implies parent.has (Current)
 
 end -- class EV_WIDGET
 
@@ -697,295 +475,3 @@ end -- class EV_WIDGET
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.82  2000/06/07 17:28:09  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.64.2.10  2000/06/05 17:42:51  manus
---| Added debug ("make_for_test") around `create_test_actions' in order to avoid too many
---| outputs. If one wants them, it simply has to add `debug ("make_for_test")' in his Ace file.
---|
---| Revision 1.64.2.9  2000/05/15 22:14:39  king
---| Removed commented out obsolete set_expand
---|
---| Revision 1.64.2.8  2000/05/13 00:04:18  king
---| Converted to new EV_CONTAINABLE class
---|
---| Revision 1.64.2.7  2000/05/12 17:35:01  king
---| Integrated ev_colorize
---|
---| Revision 1.64.2.6  2000/05/11 19:33:28  king
---| Integrated ev_sensitive
---|
---| Revision 1.64.2.5  2000/05/10 23:03:06  king
---| Integrated inital tooltipable changes
---|
---| Revision 1.64.2.4  2000/05/04 17:33:05  brendel
---| Corrected contracts about sizes: size can be less than minimum size,
---| if the parent is smaller than the minimum size of the widget.
---|
---| Revision 1.64.2.3  2000/05/04 04:14:41  pichery
---| Replaced call to EV_CURSOR_CODE with calls
---| to EV_DEFAULT_PIXMAPS
---|
---| Revision 1.64.2.2  2000/05/03 19:04:19  oconnor
---| mergred from HEAD
---|
---| Revision 1.81  2000/05/03 18:05:42  brendel
---| Added precondition to pointer_position: is_show_requested.
---|
---| Revision 1.80  2000/05/02 23:33:04  oconnor
---| cosmetics
---|
---| Revision 1.79  2000/05/01 18:59:12  rogers
---| Removed post condition on pointer_position and added a comment explaing why.
---|
---| Revision 1.78  2000/04/25 00:48:23  oconnor
---| added center_pointer is
---| Position screen pointer over center of `Current'.
---|
---| Revision 1.77  2000/04/21 21:13:24  oconnor
---| added create_test_actions
---|
---| Revision 1.76  2000/03/27 19:01:40  oconnor
---| added fixme
---|
---| Revision 1.75  2000/03/27 18:35:53  oconnor
---| comments
---|
---| Revision 1.74  2000/03/24 17:03:44  oconnor
---| comments and formatting
---|
---| Revision 1.73  2000/03/20 19:38:13  king
---| Altered pointer_style to always return a valid cursor
---|
---| Revision 1.72  2000/03/09 16:37:06  brendel
---| Improved comments on minimum size setting routines.
---|
---| Revision 1.71  2000/03/09 16:09:10  brendel
---| Improved comments on minimim size setting functions.
---|
---| Revision 1.70  2000/03/09 01:29:54  oconnor
---| Obsoleted:
---|        is_horizontally_resizable: BOOLEAN
---|        is_vertically_resizable: BOOLEAN
---|        managed: BOOLEAN
---| Added fixmes and comments about tooltip.
---|
---| Revision 1.69  2000/03/02 17:47:11  king
---| Changed Contract_support to Contract Support
---|
---| Revision 1.68  2000/03/01 03:11:20  oconnor
---| added make_for_test to produce an interesting example widget for testing
---|
---| Revision 1.67  2000/02/22 18:39:49  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.66  2000/02/14 11:40:49  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.64.2.1.2.55  2000/02/11 18:49:35  oconnor
---| removed make
---|
---| Revision 1.64.2.1.2.54  2000/02/11 01:30:01  king
---| Commented out make to make descendants compile
---|
---| Revision 1.64.2.1.2.53  2000/02/11 00:03:45  oconnor
---| Added make and implemented make_with_parent as obsolete.
---| To be removed after initial change over phase.
---|
---| Revision 1.64.2.1.2.52  2000/02/09 01:23:26  pichery
---| - added creation of key_press_string_actions (which has been added but not
---|   created)
---|
---| Revision 1.64.2.1.2.51  2000/02/08 09:26:09  oconnor
---| added is_parent_recursive
---|
---| Revision 1.64.2.1.2.50  2000/02/07 23:31:57  oconnor
---| added key string action sequence
---|
---| Revision 1.64.2.1.2.49  2000/02/07 19:02:26  oconnor
---| added resize_actions
---|
---| Revision 1.64.2.1.2.48  2000/02/06 21:17:11  brendel
---| Commented out postconditions that do not hold in EV_PIXMAP.
---|
---| Revision 1.64.2.1.2.47  2000/01/28 21:18:25  brendel
---| Added `tooltip', `set_tooltip', `remove_tooltip'.
---|
---| Revision 1.64.2.1.2.46  2000/01/28 20:00:11  oconnor
---| released
---|
---| Revision 1.64.2.1.2.45  2000/01/27 19:30:47  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.64.2.1.2.44  2000/01/26 19:18:43  rogers
---| width_not_less_than_minimum_width and
---| height_not_less_than_minimum_height have been commented out with a
---| FIXME and a detailed description of why.
---|
---| Revision 1.64.2.1.2.43  2000/01/25 17:17:55  king
---| Added absolute screen coord features
---|
---| Revision 1.64.2.1.2.42  2000/01/25 00:08:02  oconnor
---| removed obsolete command manipulation features
---| use action sequences instead
---|
---| Revision 1.64.2.1.2.41  2000/01/21 19:34:18  king
---| Altered > 0 assertion naming covention to be positive from greater_than_zero
---|
---| Revision 1.64.2.1.2.40  2000/01/20 23:51:51  king
---| Changed minimum size assertions to be >= 1 instead of 0
---|
---| Revision 1.64.2.1.2.39  2000/01/19 08:08:40  oconnor
---| added precondition is_displayed to set_foucs
---|
---| Revision 1.64.2.1.2.38  2000/01/17 00:25:44  oconnor
---| comments and formattinginterface/widgets/ev_widget.e
---|
---| Revision 1.64.2.1.2.37  1999/12/17 20:51:29  rogers
---| is_vertically_resizeable and is_horizontally_resizeable no longer do
---| anything. The implementation is now exported to EV_WIDGET and EV_ANY_I.
---|
---| Revision 1.64.2.1.2.36  1999/12/16 09:21:58  oconnor
---| add is_useable to invariant
---|
---| Revision 1.64.2.1.2.35  1999/12/15 20:16:48  oconnor
---| removed set_expand
---|
---| Revision 1.64.2.1.2.34  1999/12/15 01:57:23  oconnor
---| export implementation to  EV_PICK_AND_DROPABLE_I
---|
---| Revision 1.64.2.1.2.33  1999/12/14 18:57:22  oconnor
---| rename POINT->COORDINATES for pointer_position
---|
---| Revision 1.64.2.1.2.32  1999/12/14 18:07:46  oconnor
---| implemented feature pointer_position
---|
---| Revision 1.64.2.1.2.31  1999/12/14 17:43:45  oconnor
---| added pointer_position
---|
---| Revision 1.64.2.1.2.30  1999/12/14 16:52:58  oconnor
---| renamed EV_PND_SOURCE -> EV_PICK_AND_DROPABLE
---|
---| Revision 1.64.2.1.2.29  1999/12/10 00:06:13  brendel
---| Forgot to remove my bar on the top.
---|
---| Revision 1.64.2.1.2.28  1999/12/10 00:05:06  brendel
---| Changes minor spelling errors.
---| Made obsolete clause nicer.
---|
---| Revision 1.64.2.1.2.27  1999/12/07 17:46:10  oconnor
---| added comment to implementation attribute
---|
---| Revision 1.64.2.1.2.26  1999/12/07 17:39:22  oconnor
---| fixed comment for consistency
---|
---| Revision 1.64.2.1.2.25  1999/12/07 17:37:34  oconnor
---| removed accelerator action sequence
---|
---| Revision 1.64.2.1.2.24  1999/12/07 17:36:08  oconnor
---| replaced unworkable post condition with comment
---|
---| Revision 1.64.2.1.2.23  1999/12/07 17:26:26  oconnor
---| improved comments
---|
---| Revision 1.64.2.1.2.22  1999/12/07 04:10:02  oconnor
---| rename create pointer_double_click_actions ->
---| create pointer_double_press_actions
---|
---| Revision 1.64.2.1.2.21  1999/12/04 18:44:53  oconnor
---| added contracts: width|height = min width|height when not displayed
---|
---| Revision 1.64.2.1.2.20  1999/12/02 22:54:01  oconnor
---| removed obsolete part of set_sensitive comment
---|
---| Revision 1.64.2.1.2.19  1999/12/02 22:48:19  oconnor
---| removed postconditions that are part of invariant
---|
---| Revision 1.64.2.1.2.18  1999/12/02 22:23:27  brendel
---| Commented out features that are now in EV_WINDOW.
---|
---| Revision 1.64.2.1.2.17  1999/12/02 20:10:52  brendel
---| Added previously deleted features to Obsolete clause.
---|
---| Revision 1.64.2.1.2.16  1999/12/02 19:39:40  brendel
---| Moved `set_default_minimum_size' to Obsolete clause.
---| Changes small error in invariant.
---| Added postconsition tags to `set_default_colors'.
---|
---| Revision 1.64.2.1.2.15  1999/12/02 19:18:04  oconnor
---| Reworded comments.
---| Removed is_horizontally_resizable is_vertically_resizable et al,
---| all the box in a box in a box stuff has been removed, it breaks GTK's
---| default behaviour.
---| rename *insensitive -> *sensitive
---| Removed:
---| 	- geometry setting stuff that only applies to EV_FIXED.
---| 	- parent needed, irrelevant.
---| 	- expose_actions
---|
---| New invariants for:
---| 	bounds checking of geometry and
---| 	integrity check for is_show_requested/is_displayed
---|
---| Removed old review notes.
---|
---| Revision 1.64.2.1.2.14  1999/12/02 17:01:53  brendel
---| Replaced Result_assigned with bridge_ok.
---| Renamed features to comply with review report & fix-me's.
---| Declared the old ones as obsolete.
---|
---| Revision 1.64.2.1.2.13  1999/12/02 00:08:32  oconnor
---| removed old review notes and obsolete set_x|set_y features
---|
---| Revision 1.64.2.1.2.12  1999/12/01 21:47:30  brendel
---| Changed export status for `implementation'.
---|
---| Revision 1.64.2.1.2.11  1999/12/01 20:23:31  brendel
---| Changed `is_visible' to `is_show_requested'.
---|
---| Revision 1.64.2.1.2.10  1999/12/01 20:05:55  brendel
---| Changed most from review report.
---|
---| Revision 1.64.2.1.2.8  1999/12/01 18:45:16  brendel
---| Started to apply a great deal of review comments to class text.
---|
---| Revision 1.64.2.1.2.6  1999/12/01 17:03:50  brendel
---| First implementation of new events.
---|
---| Revision 1.64.2.1.2.5  1999/11/30 22:16:06  oconnor
---| implement parent in implementation layer
---|
---| Revision 1.64.2.1.2.4  1999/11/29 17:47:16  brendel
---| Added precursor calls for `create_action_sequences'.
---|
---| Revision 1.64.2.1.2.3  1999/11/24 22:48:07  brendel
---| Just managed to compile figure cluster example.
---|
---| Revision 1.64.2.1.2.2  1999/11/24 22:40:58  oconnor
---| added review notes
---|
---| Revision 1.64.2.1.2.1  1999/11/24 17:30:49  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.63.2.6  1999/11/23 02:10:19  oconnor
---| added experimental event action sequence for button press
---|
---| Revision 1.63.2.5  1999/11/09 16:53:16  oconnor
---| reworking dead object cleanup
---|
---| Revision 1.63.2.4  1999/11/04 23:10:54  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.63.2.3  1999/11/02 17:20:12  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

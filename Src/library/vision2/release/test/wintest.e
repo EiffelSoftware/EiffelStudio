@@ -9,10 +9,14 @@ create
 
 feature
 
-	first_window: EV_TITLED_WINDOW is
-		once
-			create Result
+	make_and_launch is
+		do
+			default_create
+			prepare
+			launch
 		end
+
+	first_window: EV_TITLED_WINDOW 
 
 	prepare is
 		local
@@ -134,6 +138,7 @@ feature
 			EV_ITEM_SELECT_ACTION_SEQUENCE_OBJECT: EV_ITEM_SELECT_ACTION_SEQUENCE
 			EV_FOCUS_ACTION_SEQUENCE_OBJECT: EV_FOCUS_ACTION_SEQUENCE
 		do
+			create first_window
 			create main_split
 			first_window.extend (main_split)
 

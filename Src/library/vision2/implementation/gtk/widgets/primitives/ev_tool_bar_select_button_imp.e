@@ -68,6 +68,12 @@ end -- class EV_TOOL_BAR_SELECT_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.2.1  2000/05/03 19:08:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.1  2000/04/05 17:58:45  king
 --| initial
 --|

@@ -73,6 +73,12 @@ end -- class EV_SELECT_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2001/06/07 23:08:17  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.6.1  2000/05/03 19:09:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.2  2000/02/25 21:28:16  brendel
 --| Formatting.
 --|

@@ -1,9 +1,8 @@
 indexing
 	description:
-		"A figure that is a part of circle enclosed by two lines from its%N%
-		%center. Defined by a center point, one of the corner points and an%N%
-		%aperture."
-	status: "See notice at end of file"
+		"Slices from a circle with `center_point'. Size is determined by%N%
+		%`aperture' [-2*Pi..2*Pi]."
+	status: "See notice at end of class"
 	keywords: "figure, slice, pizza, pie"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,92 +18,55 @@ inherit
 			default_create
 		end
 
-create
-	default_create,
-	make_with_points,
-	make_for_test
-
-feature -- Initialization
-
-	default_create is
-			-- Default situation.
-		do
-			Precursor
-			aperture := Pi / 4
+	EV_DOUBLE_POINTED_FIGURE
+		undefine
+			default_create
 		end
 
-	make_with_points (a_center, a_corner: EV_RELATIVE_POINT) is
-			-- Create with points `center' and `corner'.
-		require
-			a_center_exists: a_center /= Void
-			a_center_not_in_figure: a_center.figure = Void
-			a_corner_exists: a_corner /= Void
-			a_corner_not_in_figure: a_corner.figure = Void
+create
+	default_create,
+	make_with_points
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Create with some `start_angle' and `aperture'.
 		do
-			default_create
-			set_center (a_center)
-			set_corner (a_corner)
-		ensure
-			center_assigned: center = a_center
-			corner_assigned: corner = a_corner
+			Precursor {EV_CLOSED_FIGURE}
+			start_angle := 0.0
+			aperture := Pi / 2
 		end
 
 feature -- Access
 
-	aperture: REAL
-			-- Angle that denotes the size of the pie slice.
+	start_angle: DOUBLE
+			-- Angle that defines the start of the arc.
 
-	point_count: INTEGER is
-			-- A pie slice consists of 2 points.
-		once
-			Result := 2
-		end
-
-	center: EV_RELATIVE_POINT is
-			-- The center of the pie slice.
-		do
-			Result := get_point_by_index (1)
-		end
-
-	corner: EV_RELATIVE_POINT is
-			-- One of the corner coordinates.
-		do
-			Result := get_point_by_index (2)
-		end
+	aperture: DOUBLE
+			-- Angle that defines the percentage of the arc.
 
 feature -- Status setting
 
-	set_aperture (an_aperture: REAL) is
+	set_start_angle (a_start_angle: DOUBLE) is
+			-- Set `start_angle' to `a_start_angle'.
+		require
+			a_start_angle_within_bounds:
+				a_start_angle >= 0 and a_start_angle <= 2 * Pi
+		do
+			start_angle := a_start_angle
+		ensure
+			start_angle_assigned: start_angle = a_start_angle
+		end
+
+	set_aperture (an_aperture: DOUBLE) is
 			-- Set `aperture' to `an_aperture'.
 		require
-			an_aperture_bigger_than_minus_two_times_pi: an_aperture >= -2 * Pi
-			an_aperture_smaller_than_two_times_pi: an_aperture <= 2 * Pi
+			an_aperture_within_bounds:
+				an_aperture >= 0 and an_aperture <= 2 * Pi
 		do
 			aperture := an_aperture
 		ensure
 			aperture_assigned: aperture = an_aperture
-		end
-
-	set_center (a_center: EV_RELATIVE_POINT) is
-			-- Change the reference of `center' with `a_center'.
-		require
-			a_center_exists: a_center /= Void
-			a_center_not_in_figure: a_center.figure = Void
-		do
-			set_point_by_index (1, a_center)
-		ensure
-			center_assigned: a_center = center
-		end
-
-	set_corner (a_corner: EV_RELATIVE_POINT) is
-			-- Change the reference of `corner' with `a_corner'.
-		require
-			a_corner_exists: a_corner /= Void
-			a_corner_not_in_figure: a_corner.figure = Void
-		do
-			set_point_by_index (2, a_corner)
-		ensure
-			corner_assigned: a_corner = corner
 		end
 
 feature -- Events
@@ -112,12 +74,27 @@ feature -- Events
 	position_on_figure (x, y: INTEGER): BOOLEAN is
 			-- Is the point on (`x', `y') on this figure?
 		do
+			--| FIXME To be implemented
 			Result := False
-			--| FIXME To be implemented.
+		end
+
+feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
+
+	metrics: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- [`top_left_x', `top_left_y', `width', `height']
+		local
+			ay, ax, bx, by: INTEGER
+		do
+			ax := point_a.x_abs
+			ay := point_a.y_abs
+			bx := point_b.x_abs
+			by := point_b.y_abs
+			Result := [ax, ay, (bx - ax), (by - ay)]
 		end
 
 invariant
-	aperture_within_bounds: aperture >= -2 * Pi and then aperture <= 2 * Pi
+	start_angle_within_bounds: start_angle >= 0 and then start_angle <= 2 * Pi
+	aperture_within_bounds: aperture >= 0 and then aperture <= 2 * Pi
 
 end -- class EV_FIGURE_PIE_SLICE
 
@@ -136,24 +113,3 @@ end -- class EV_FIGURE_PIE_SLICE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.6  2000/04/27 19:10:50  brendel
---| Centralized testing code.
---|
---| Revision 1.5  2000/04/26 15:56:34  brendel
---| Added CVS Log.
---| Added copyright notice.
---| Improved description.
---| Added keywords.
---| Formatted for 80 columns.
---| Added make_for_test.
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

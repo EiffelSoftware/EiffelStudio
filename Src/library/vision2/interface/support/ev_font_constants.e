@@ -11,46 +11,46 @@ class
 
 feature -- Constants
 
-	Ev_font_family_screen: INTEGER is 1
-	Ev_font_family_roman: INTEGER is 2
-	Ev_font_family_sans: INTEGER is 3
-	Ev_font_family_typewriter: INTEGER is 4
-	Ev_font_family_modern: INTEGER is 5
+	Family_screen: INTEGER is 1
+	Family_roman: INTEGER is 2
+	Family_sans: INTEGER is 3
+	Family_typewriter: INTEGER is 4
+	Family_modern: INTEGER is 5
 
-	Ev_font_weight_thin: INTEGER is 6
-	Ev_font_weight_regular: INTEGER is 7
-	Ev_font_weight_bold: INTEGER is 8
-	Ev_font_weight_black: INTEGER is 9
+	Weight_thin: INTEGER is 6
+	Weight_regular: INTEGER is 7
+	Weight_bold: INTEGER is 8
+	Weight_black: INTEGER is 9
 
-	Ev_font_shape_regular: INTEGER is 10
-	Ev_font_shape_italic: INTEGER is 11
+	Shape_regular: INTEGER is 10
+	Shape_italic: INTEGER is 11
 
 feature -- Contract support
 
 	valid_family (a_family: INTEGER): BOOLEAN is
 			-- Is `a_family' a valid family value.
 		do
-			Result := a_family = Ev_font_family_screen or else
-				a_family = Ev_font_family_roman or else
-				a_family = Ev_font_family_sans or else
-				a_family = Ev_font_family_typewriter or else
-				a_family = Ev_font_family_modern
+			Result := a_family = family_screen or else
+				a_family = family_roman or else
+				a_family = family_sans or else
+				a_family = family_typewriter or else
+				a_family = family_modern
 		end
 
 	valid_weight (a_weight: INTEGER): BOOLEAN is
 			-- Is `a_weight' a valid weight value.
 		do
-			Result := a_weight = Ev_font_weight_thin or else
-				a_weight = Ev_font_weight_regular or else
-				a_weight = Ev_font_weight_bold or else
-				a_weight = Ev_font_weight_black
+			Result := a_weight = weight_thin or else
+				a_weight = weight_regular or else
+				a_weight = weight_bold or else
+				a_weight = weight_black
 		end
 
 	valid_shape (a_shape: INTEGER): BOOLEAN is
 			-- Is `a_shape' a valid shape value.
 		do
-			Result := a_shape = Ev_font_shape_regular or else
-				a_shape = Ev_font_shape_italic
+			Result := a_shape = shape_regular or else
+				a_shape = shape_italic
 		end
 
 end -- class EV_FONT_CONSTANTS
@@ -70,36 +70,3 @@ end -- class EV_FONT_CONSTANTS
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.4  2000/03/16 01:18:11  oconnor
---| comments
---|
---| Revision 1.3  2000/02/22 18:39:48  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.2  2000/02/14 12:05:12  oconnor
---| added from prerelease_20000214
---|
---| Revision 1.1.2.5  2000/01/28 20:02:21  oconnor
---| released
---|
---| Revision 1.1.2.4  2000/01/27 19:30:44  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.1.2.3  2000/01/21 22:24:49  brendel
---| A
---|
---| Revision 1.1.2.2  2000/01/21 20:05:28  brendel
---| Added valid_family, valid_weight and valid_shape.
---|
---| Revision 1.1.2.1  2000/01/07 18:06:26  king
---| Initial.
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

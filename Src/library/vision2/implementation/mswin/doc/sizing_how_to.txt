@@ -1,0 +1,36 @@
+Author: Emmanuel STAPF
+Date: "08/07/200"
+
+Sizing operation on Windows:
+============================
+
+There is a class EV_POS_INFO which stores all the positioning information
+about a EV_WIDGET:
+- x: horizontal position within parent
+- y: vertical position within parent
+- width
+- height
+- minimum_width
+- minimum_height
+- is_user_min_width_set
+- is_user_min_height_set
+
+This information is always valid and always in sync with the information given
+by WEL. A current limitation is that windows will always appear at position
+(0,0). We will try to remove this latter on.
+
+In EV_SIZEABLE_IMP you will find all features that update the `child_cell'
+field of type EV_POS_INFO such as:
+- ev_set_minimum_size
+- ev_set_minimum_width
+- ev_set_minimum_height
+- ev_move
+- ev_apply_new_size
+- ev_move_and_resize
+- ev_resize
+
+You can access the size information through:
+- minimum_width
+- minimum_height
+- width
+- height

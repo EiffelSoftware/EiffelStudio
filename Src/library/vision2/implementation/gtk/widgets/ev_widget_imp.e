@@ -17,7 +17,8 @@ inherit
 
 	EV_PICK_AND_DROPABLE_IMP
 		redefine
-			interface
+			interface,
+			is_displayed
 		end
 
 	EV_ANY_IMP
@@ -35,76 +36,93 @@ inherit
 			interface
 		end
 
-feature {NONE} -- Initialization	
+	EV_WIDGET_ACTION_SEQUENCES_IMP
+		redefine
+			interface
+		end
+
+feature {NONE} -- Initialization
+
+	gdk_events_mask: INTEGER is
+			-- Mask of all the gdk events the gdkwindow shall receive.
+		do
+			Result := C.GDK_EXPOSURE_MASK_ENUM +
+			C.GDK_POINTER_MOTION_MASK_ENUM +
+			C.GDK_BUTTON_MOTION_MASK_ENUM +
+			C.GDK_BUTTON_PRESS_MASK_ENUM +
+			C.GDK_BUTTON_RELEASE_MASK_ENUM +
+			C.GDK_KEY_PRESS_MASK_ENUM +
+			C.GDK_KEY_RELEASE_MASK_ENUM +
+			C.GDK_ENTER_NOTIFY_MASK_ENUM +
+			C.GDK_LEAVE_NOTIFY_MASK_ENUM +
+			C.GDK_FOCUS_CHANGE_MASK_ENUM +
+			C.GDK_VISIBILITY_NOTIFY_MASK_ENUM +
+			C.GDK_PROXIMITY_IN_MASK_ENUM +
+			C.GDK_PROXIMITY_OUT_MASK_ENUM
+		end
+
+	initialize_events is
+		do
+			if not gtk_widget_no_window (visual_widget) then
+				C.gtk_widget_add_events (visual_widget, gdk_events_mask)
+			end
+		end
+
+	gtk_widget_no_window (a_wid: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_NO_WINDOW"
+		end
 
 	initialize is
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
 			-- Connect action sequences to GTK signals.
-		local
-			signal_name: STRING
-			actions: ACTION_SEQUENCE [TUPLE]
-			signal_map: ARRAY [TUPLE [STRING, ACTION_SEQUENCE [TUPLE]]]
-			i: INTEGER
 		do
+			if not C.gtk_is_widget (c_object) then
+				print ("not widget!! " + generating_type)
+			end
 			if
 				C.gtk_is_widget (c_object) and not C.gtk_is_window (c_object)
 			then
 				C.gtk_widget_show (c_object)
 			end
+
+			initialize_events
+			
 			set_default_colors
-			signal_map := <<
-			["motion-notify-event",  interface.pointer_motion_actions],
-			["button-release-event", interface.pointer_button_release_actions],
-			["enter-notify-event",   interface.pointer_enter_actions],
-			["leave-notify-event",   interface.pointer_leave_actions],
-			["proximity-in-event",   interface.proximity_in_actions],
-			["proximity-out-event",  interface.proximity_out_actions],
-			["focus-in-event",       interface.focus_in_actions],
-			["focus-out-event",      interface.focus_out_actions],
-			["key-press-event",      interface.key_press_actions],
-			["key-release-event",    interface.key_release_actions]
-			>>
-			from
-				i := signal_map.lower
-			until
-				i > signal_map.upper
-			loop
-				signal_name ?= signal_map.item (i).item (Signal_map_signal_name)
-				actions ?= signal_map.item (i).item (Signal_map_actions)
-				connect_signal_to_actions (
-					signal_name,
-					actions,
-					default_translate
-				)
-				i := i + 1
-			end
 
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
 
 			if C.gtk_is_window (c_object) then
-				signal_connect (
+				real_signal_connect (
+					c_object,
 					"configure-event",
 					~on_size_allocate,
 					Default_translate
 				)
 			else
-				signal_connect (
+				real_signal_connect (
+					c_object,
 					"size-allocate",
 					~on_size_allocate,
 					~size_allocate_translate
 				)
 			end
+
+			real_signal_connect (visual_widget, "key_press_event", ~on_key_event, ~key_event_translate)
+			real_signal_connect (visual_widget, "key_release_event", ~on_key_event, ~key_event_translate)
 				--| "button-press-event" is a special case, see below.
-			interface.pointer_button_press_actions.not_empty_actions.extend (
+			pointer_button_press_actions.not_empty_actions.extend (
 				~connect_button_press_switch
 			)
-			interface.pointer_double_press_actions.not_empty_actions.extend (
+			pointer_double_press_actions.not_empty_actions.extend (
 				~connect_button_press_switch
 			)
-			if not interface.pointer_button_press_actions.empty or
-				not interface.pointer_double_press_actions.empty then
+			if not pointer_button_press_actions.is_empty or
+				not pointer_double_press_actions.is_empty then
 				connect_button_press_switch
 			end
 			is_initialized := True
@@ -137,12 +155,16 @@ feature {NONE} -- Initialization
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
-			if a_type = C.GDK_BUTTON_PRESS_ENUM then
-				interface.pointer_button_press_actions.call (t)
-			else -- a_type = C.GDK_2BUTTON_PRESS_ENUM
-				interface.pointer_double_press_actions.call (t)
+			if a_type = C.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
+				if pointer_button_press_actions_internal /= Void then
+					pointer_button_press_actions_internal.call (t)
+				end
+			elseif a_type = C.GDK_2BUTTON_PRESS_ENUM then
+				if pointer_double_press_actions_internal /= Void then
+					pointer_double_press_actions_internal.call (t)
+				end
 			end
-        end
+        	end
 
 	button_press_switch_is_connected: BOOLEAN
 			-- Is `button_press_switch' connected to its event source.
@@ -170,30 +192,11 @@ feature -- Access
 			--| Search back up through GtkWidget->parent to find a GtkWidget
 			--| with an EV_ANY_IMP attached.
 		local
-			c_parent: POINTER
-			Result_imp: EV_CONTAINER_IMP
-			agg_cell: EV_AGGREGATE_CELL
+			a_par_imp: EV_CONTAINER_IMP
 		do
-			from
-				c_parent := c_object
-			until
-				Result /= Void or c_parent = NULL
-			loop
-				c_parent := C.gtk_widget_struct_parent (c_parent)
-				if c_parent /= NULL then
-					Result_imp ?= eif_object_from_c (c_parent)
-					if Result_imp /= Void then
-						Result := Result_imp.interface
-					end
-				end
-			end
-
-			agg_cell ?= Result
-			if agg_cell /= Void then
-				Result := agg_cell.real_parent
-				check
-					real_parent_not_void: Result /= Void
-				end
+			a_par_imp := parent_imp
+			if a_par_imp /= Void then
+				Result := a_par_imp.interface
 			end
 		end
 
@@ -225,8 +228,8 @@ feature -- Access
 			wind ?= Current
 			if wind /= Void then
 				Result := x_position
-			elseif parent /= Void
-				then Result := x_position + parent.screen_x
+			elseif parent_imp /= Void
+				then Result := x_position + parent_imp.screen_x
 			end
 		end
 
@@ -238,8 +241,8 @@ feature -- Access
 			wind ?= Current
 			if wind /= Void then
 				Result := y_position
-			elseif parent /= Void then
-				Result := y_position + parent.screen_y
+			elseif parent_imp /= Void then
+				Result := y_position + parent_imp.screen_y
 			end
 		end
 	
@@ -260,19 +263,25 @@ feature -- Status report
 			-- Is `Current' visible on the screen?
 		do
 			--| Shift to put bit in least significant place then take mod 2.
-			Result := (
+			Result := ((
 				(C.gtk_object_struct_flags (c_object)
-				// C.GTK_MAPPED_ENUM) \\ 2
+				// C.GTK_MAPPED_ENUM) \\ 2)
 			) = 1
 		end
 
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
 		do
+			Result := gtk_widget_has_focus (visual_widget)
+		end
+		
+	has_capture: BOOLEAN is
+			-- Has capture?
+		do
 			--| Shift to put bit in least significant place then take mod 2.
-			Result := (
-				(C.gtk_object_struct_flags (c_object)
-				// C.GTK_HAS_FOCUS_ENUM) \\ 2
+			Result := ((
+				(C.gtk_object_struct_flags (visual_widget)
+				// C.GTK_HAS_GRAB_ENUM) \\ 2)
 			) = 1
 		end
 
@@ -280,20 +289,32 @@ feature -- Status setting
 
 	hide is
 			-- Request that `Current' not be displayed even when its parent is.
+		local
+			sa_par_imp: EV_SPLIT_AREA_IMP
 		do
 			C.gtk_widget_hide (c_object)
+			sa_par_imp ?= parent_imp
+			if sa_par_imp /= Void then
+				sa_par_imp.update_child_visibility (Current)
+			end
 		end
 	
 	show is
 			-- Request that `Current' be displayed when its parent is.
+		local
+			sa_par_imp: EV_SPLIT_AREA_IMP
 		do
-			C.gtk_widget_show (c_object)
+			C.gtk_widget_show_now (c_object)
+			sa_par_imp ?= parent_imp
+			if sa_par_imp /= Void then
+				sa_par_imp.update_child_visibility (Current)
+			end
 		end
 
 	set_focus is
 			-- Grab keyboard focus.
 		do
-			C.gtk_widget_grab_focus (c_object)
+			C.gtk_widget_grab_focus (visual_widget)
 		end
 
 	enable_capture is
@@ -302,10 +323,10 @@ feature -- Status setting
 		local
 			i: INTEGER
 		do
-			C.gtk_grab_add (c_object)
+			C.gtk_grab_add (visual_widget)
 			i := C.gdk_pointer_grab (
-				C.gtk_widget_struct_window (c_object),
-				1,                                    -- gint owner_events
+				C.gtk_widget_struct_window (visual_widget),
+				1, -- gint owner_events
 				C.GDK_BUTTON_RELEASE_MASK_ENUM +
 				C.GDK_BUTTON_PRESS_MASK_ENUM +
 				C.GDK_BUTTON_MOTION_MASK_ENUM +
@@ -320,7 +341,7 @@ feature -- Status setting
 			-- Ungrab all the mouse and keyboard events.
 			--| Used by pick and drop.
 		do
-			C.gtk_grab_remove (c_object)
+			C.gtk_grab_remove (visual_widget)
 			C.gdk_pointer_ungrab (
 				0 -- guint32 time
 			) 
@@ -328,47 +349,54 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_pointer_style (a_cursor: like pointer_style) is
+	set_pointer_style, internal_set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style'.
+		local
+			--a_cursor_imp: EV_PIXMAP_IMP
+			--src_pixmap, dest_bitmap, mask_ptr: POINTER
 		do
-			--| FIXME Implement me now!!!!!!
-			--pointer_style := a_cursor
-			--if ((C.gtk_object_struct_flags (c_object)
-			--		// C.GTK_REALIZED_ENUM) \\ 2
-			--	) = 0
-			--then
-			--	C.gtk_widget_realize (c_object)
+			pointer_style := clone (a_cursor)
+			--print ("%Nset pointer style needs implementing%N")
+			--a_cursor_imp ?= a_cursor.implementation
+			--check
+			--	a_cursor_imp_not_void: a_cursor_imp /= Void
 			--end
-			--cursor_imp ?= a_cursor.implementation
-			--C.gdk_window_set_cursor (
-			--	C.gtk_widget_struct_window (c_object),
-			--	cursor_imp.c_object
+			--dest_bitmap := C.gdk_pixmap_new (NULL, a_cursor_imp.width, a_cursor_imp.height, 1)
+			--C.gtk_pixmap_get (a_cursor_imp.gtk_pixmap, NULL, $src_pixmap)
+			--C.gdk_draw_pixmap (
+			--	dest_bitmap,
+			--	C.gtk_style_struct_white_gc (C.gtk_widget_struct_style (a_cursor_imp.gtk_pixmap)),
+			--	src_pixmap,
+			--	0, -- xsrc
+			--	0, -- ysrc
+			--	0, -- xdest
+			--	0, -- ydest
+			--	a_cursor_imp.width,
+			--	a_cursor_imp.height
 			--)
-
-			--if cursor_imp.code /= 0 then
-				--| FIXME
-			--	create pointer_style--.make_with_code (cursor_imp.code)
-			--else
-			--	create pointer_style--.make_with_pixmap (cursor_imp.pixmap)
-			--end
 		end
 
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
-			set_minimum_size (a_minimum_width, minimum_height.max(1))
+			set_minimum_size (a_minimum_width, minimum_height.max (1))
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
-			set_minimum_size (minimum_width.max(1), a_minimum_height)
+			set_minimum_size (minimum_width.max (1), a_minimum_height)
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
+			if widget_in_fixed then
+				fixed_minimum_height := 0
+				fixed_minimum_width := 0
+				widget_in_fixed := False
+			end				
 			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
 		end
 
@@ -393,47 +421,61 @@ feature -- Element change
 		end
 
 feature -- Measurement
+
+	--| FIXME x/y_position needs testing.
 	
 	x_position: INTEGER is
 			-- Horizontal offset relative to parent `x_position'.
 			-- Unit of measurement: screen pixels.
+		local
+			a_aux_info: POINTER
+			tmp_struct_x: INTEGER
 		do
 			Result := C.gtk_allocation_struct_x (
 				C.gtk_widget_struct_allocation (c_object)
 			)
+			a_aux_info := aux_info_struct
+			if a_aux_info /= NULL then
+				tmp_struct_x := C.gtk_widget_aux_info_struct_x (a_aux_info)
+				if tmp_struct_x >= 0 then
+					Result := tmp_struct_x
+				end
+			end
 		end
 
 	y_position: INTEGER is
 			-- Vertical offset relative to parent `y_position'.
 			-- Unit of measurement: screen pixels.
+		local
+			a_aux_info: POINTER
+			tmp_struct_y: INTEGER
 		do
 			Result := C.gtk_allocation_struct_y (
 				C.gtk_widget_struct_allocation (c_object)
 			)
+			a_aux_info := aux_info_struct
+			if a_aux_info /= NULL then
+				tmp_struct_y := C.gtk_widget_aux_info_struct_y (a_aux_info)
+				if tmp_struct_y >= 0 then
+					Result := tmp_struct_y
+				end
+			end
 		end	
 
 	width: INTEGER is
 			-- Horizontal size measured in pixels.
 		do
-			if is_displayed then
-				Result := C.gtk_allocation_struct_width (
-					C.gtk_widget_struct_allocation (c_object)
-				).max (minimum_width)
-			else
-				Result := minimum_width
-			end
+			Result := C.gtk_allocation_struct_width (
+				C.gtk_widget_struct_allocation (c_object)
+			).max (minimum_width)
 		end
 
 	height: INTEGER is
 			-- Vertical size measured in pixels.
 		do
-			if is_displayed then
-				Result := C.gtk_allocation_struct_height (
-					C.gtk_widget_struct_allocation (c_object)
-				).max (minimum_height)
-			else
-				Result := minimum_height
-			end
+			Result := C.gtk_allocation_struct_height (
+				C.gtk_widget_struct_allocation (c_object)
+			).max (minimum_height)
 		end
 	
  	minimum_width: INTEGER is
@@ -441,29 +483,124 @@ feature -- Measurement
 		local
 			gr: POINTER
 		do
-			gr := C.c_gtk_requisition_struct_allocate
-			C.gtk_widget_size_request (c_object, gr)
-			Result := C.gtk_requisition_struct_width (gr)
-			C.c_gtk_requisition_struct_free (gr)
-		end	
+			if not widget_in_fixed then
+				gr := C.c_gtk_requisition_struct_allocate
+				C.gtk_widget_size_request (c_object, gr)
+				Result := C.gtk_requisition_struct_width (gr)
+				C.c_gtk_requisition_struct_free (gr)
+			else
+				Result := fixed_minimum_width
+			end
+		end
 
 	minimum_height: INTEGER is
 			-- Minimum vertical size in pixels.
 		local
 			gr: POINTER
 		do
-			gr := C.c_gtk_requisition_struct_allocate
-			C.gtk_widget_size_request (c_object, gr)
-			Result := C.gtk_requisition_struct_height (gr)
-			C.c_gtk_requisition_struct_free (gr)
-		end	
+			if not widget_in_fixed then
+				gr := C.c_gtk_requisition_struct_allocate
+				C.gtk_widget_size_request (c_object, gr)
+				Result := C.gtk_requisition_struct_height (gr)
+				C.c_gtk_requisition_struct_free (gr)
+			else
+				Result := fixed_minimum_height
+			end
+		end
 
+feature {EV_FIXED_IMP} -- Implementation
+
+	fixed_minimum_height: INTEGER
+
+	fixed_minimum_width: INTEGER
+
+	widget_in_fixed: BOOLEAN
+
+	set_fixed_size (a_width, a_height: INTEGER) is
+			-- Set the size within EV_FIXED without appearing to alter min size.
+		do
+			fixed_minimum_height := minimum_height
+			fixed_minimum_width := minimum_width
+			widget_in_fixed := True
+			C.gtk_widget_set_usize (c_object, a_width, a_height)
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	reset_minimum_size is
+			-- Reset all values to defaults.
+		do
+			set_minimum_size (minimum_width, minimum_height)
+		end
+				
 feature {NONE} -- Implementation
 
 	cursor_signal_tag: INTEGER
 		-- Tag returned from Gtk used to disconnect `enter-notify' signal
 
+feature {EV_WINDOW_IMP} -- Implementation
+
+	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
+			-- Used for drawing area to keep focus on all keys.
+		do
+			Result := False
+		end
+
+feature {NONE} -- Externals
+
+	gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_SET_FLAGS"
+		end
+
+	gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_UNSET_FLAGS"
+		end
+
 feature {NONE} -- Implementation
+
+	parent_imp: EV_CONTAINER_IMP is
+			-- Container widget that contains `Current'.
+			-- (Void if `Current' is not in a container)
+			--| Search back up through GtkWidget->parent to find a GtkWidget
+			--| with an EV_ANY_IMP attached.
+		local
+			c_parent: POINTER
+		do
+			from
+				c_parent := c_object
+			until
+				Result /= Void or c_parent = NULL
+			loop
+				c_parent := C.gtk_widget_struct_parent (c_parent)
+				if c_parent /= NULL then
+					Result ?= eif_object_from_c (c_parent)
+				end
+			end
+		end
+
+	top_level_window_imp: EV_WINDOW_IMP is
+		local
+			wind_ptr: POINTER
+		do
+			wind_ptr := C.gtk_widget_get_toplevel (c_object)
+			if wind_ptr /= NULL then
+				Result ?= eif_object_from_c (wind_ptr)
+			end
+		end
+
+	aux_info_struct: POINTER is
+		do
+			Result := C.gtk_object_get_data (
+				c_object,
+				eiffel_to_c ("gtk-aux-info")
+			)
+		end
 
 	size_allocate_translate (n: INTEGER; p: POINTER): TUPLE is
 			-- Convert GtkAllocation to tuple.
@@ -488,7 +625,9 @@ feature {NONE} -- Implementation
 			if not in_resize_event then
 				in_resize_event := True
 				if last_width /= a_width or else last_height /= a_height then
-					interface.resize_actions.call ([a_x, a_y, a_width, a_height])
+					if resize_actions_internal /= Void then
+						resize_actions_internal.call ([a_x, a_y, a_width, a_height])
+					end
 					last_width := a_width
 					last_height := a_height
 				end
@@ -496,6 +635,131 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	key_event_translate (n: INTEGER; p: POINTER): TUPLE is
+			-- Convert GdkEventKey to tuple.
+		local
+			keyval: INTEGER
+			gdkeventkey: POINTER
+			a_key_string: STRING
+			key: EV_KEY
+			a_key_press: BOOLEAN
+		do
+			gdkeventkey := gtk_value_pointer (p)
+			if C.gdk_event_key_struct_type (gdkeventkey) = C.gdk_key_press_enum then
+				a_key_press := True
+				create a_key_string.make (0)
+				a_key_string.from_c (C.gdk_event_key_struct_string (gdkeventkey))
+			end
+			keyval := C.gdk_event_key_struct_keyval (gdkeventkey)
+			if valid_gtk_code (keyval) then
+				create key.make_with_code (key_code_from_gtk (keyval))
+			end
+			
+			Result := [key, a_key_string, a_key_press]
+		end
+
+feature {EV_WINDOW_IMP} -- Implementation
+
+	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Used for key event actions sequences.
+		local
+			temp_key_string: STRING
+		do
+			if a_key_press then
+				-- The event is a key press event.
+				if key_press_actions_internal /= Void then
+					key_press_actions_internal.call ([a_key])
+				end
+				if key_press_string_actions_internal /= Void then
+					temp_key_string := a_key_string
+					if a_key /= Void then
+						if a_key.out.count /= 1 and not a_key.is_numpad then
+							temp_key_string := ""
+						end
+						if a_key.code = a_key.Key_space then
+							temp_key_string := " "
+						end
+					end
+					key_press_string_actions_internal.call ([temp_key_string])
+				end
+			else
+				-- The event is a key release event.
+				if key_release_actions_internal /= Void then
+					key_release_actions_internal.call ([a_key])
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	gtk_widget_has_focus (a_c_object: POINTER): BOOLEAN is
+			-- Does `a_c_object' have the focus.
+		do
+				--| Shift to put bit in least significant place then take mod 2.
+			if a_c_object /= NULL then
+				Result := ((
+					(C.gtk_object_struct_flags (a_c_object)
+					// C.GTK_HAS_FOCUS_ENUM) \\ 2) 
+				) = 1
+			end
+		end
+
+	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
+			-- Propagate `a_color' to the foreground color of `a_c_object's children.
+		local
+			l: POINTER
+			child: POINTER
+			fg: EV_COLOR
+		do
+			if
+				C.gtk_is_container (a_c_object)
+			then
+				from
+					fg := a_color
+					l := C.gtk_container_children (a_c_object)
+				until
+					l = NULL
+				loop
+					child := C.glist_struct_data (l)
+					real_set_foreground_color (child, fg)
+					if C.gtk_is_container (child) then
+						propagate_foreground_color_internal (fg, child)
+					end
+					l := C.glist_struct_next (l) 
+				end
+			else
+				real_set_foreground_color (a_c_object, fg)
+			end
+		end
+		
+	propagate_background_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
+			-- Propagate `a_color' to the background color of `a_c_object's children.
+		local
+			l: POINTER
+			child: POINTER
+			bg: EV_COLOR
+		do
+			if
+				C.gtk_is_container (a_c_object)
+			then
+				from
+					bg := a_color
+					l := C.gtk_container_children (a_c_object)
+				until
+					l = NULL
+				loop
+					child := C.glist_struct_data (l)
+					real_set_background_color (child, bg)
+					if C.gtk_is_container (child) then
+						propagate_background_color_internal (bg, child)
+					end
+					l := C.glist_struct_next (l) 
+				end
+			else
+				real_set_background_color (a_c_object, bg)
+			end
+		end
+		
 	last_width, last_height: INTEGER
 			-- Dimenions during last "size-allocate".
 
@@ -527,15 +791,24 @@ feature {NONE} -- Implementation
 			height_assigned: height = minimum_height or else height = a_height
 		end
 
+feature {EV_ANY_I} -- Contract Support
+
+	parent_is_sensitive: BOOLEAN is
+		local
+			a_par: EV_CONTAINER_IMP
+		do
+			a_par := parent_imp
+			Result := a_par.is_sensitive
+		end
+
+	has_parent: BOOLEAN is
+		do
+			Result := parent_imp /= Void
+		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_WIDGET
-
-	enable_motion_notify (widg: POINTER) is
-		external
-			"C (GtkWidget *) | %"gtk_eiffel.h%""
-		end
 
 end -- class EV_WIDGET_IMP
 
@@ -560,8 +833,180 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.68  2000/06/07 17:27:35  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.69  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.54.2.75  2001/06/05 22:44:16  king
+--| Using clone instead of copy
+--|
+--| Revision 1.54.2.74  2001/06/04 17:21:35  rogers
+--| We now use copy instead of ev_clone.
+--|
+--| Revision 1.54.2.73  2001/05/24 00:34:42  king
+--| Updated width height functions
+--|
+--| Revision 1.54.2.72  2001/05/18 18:14:39  king
+--| Refactored focus, key and color code
+--|
+--| Revision 1.54.2.71  2001/05/15 23:17:44  king
+--| Removed reference to aggregate widget
+--|
+--| Revision 1.54.2.70  2001/05/10 22:16:21  king
+--| Added hack for split area item widget hide show
+--|
+--| Revision 1.54.2.69  2001/04/27 21:33:00  king
+--| Redefining is_displayed
+--|
+--| Revision 1.54.2.68  2001/04/26 19:01:21  king
+--| Commented out unused locals
+--|
+--| Revision 1.54.2.67  2001/04/18 19:40:31  king
+--| Using is_show_requested instead of is_displayed for width and height
+--|
+--| Revision 1.54.2.66  2001/04/12 16:14:15  king
+--| Fixed gdk unknown window bug, removed key error message
+--|
+--| Revision 1.54.2.65  2001/03/13 20:24:46  etienne
+--| (Gauthier) Now checks the aux-info struct in `x_position' and `y_position' not to override
+--| previous result with an error value.
+--|
+--| Revision 1.54.2.64  2001/01/29 21:12:34  rogers
+--| Added internal_set_pointer_style.
+--|
+--| Revision 1.54.2.63  2000/12/15 19:54:29  king
+--| Commented out debug event messages
+--|
+--| Revision 1.54.2.62  2000/12/15 19:40:00  king
+--| Changed .empty to .is_empty
+--|
+--| Revision 1.54.2.61  2000/11/20 18:23:30  king
+--| Accounted for is_keypad name change
+--|
+--| Revision 1.54.2.59  2000/11/03 23:32:21  king
+--| Formatting
+--|
+--| Revision 1.54.2.58  2000/11/02 19:58:47  etienne
+--| Corrected a bug in `button_press_switch'.
+--|
+--| Revision 1.54.2.57  2000/11/01 01:12:38  andrew
+--| Implemented a parent_imp to avoid cat calls due to interface indirection
+--|
+--| Revision 1.54.2.56  2000/10/27 16:54:40  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.54.2.55  2000/10/25 23:14:34  king
+--| Corrected button actions sequence calling
+--|
+--| Revision 1.54.2.54  2000/10/17 23:11:04  king
+--| Corrected pointer style error output
+--|
+--| Revision 1.54.2.53  2000/10/10 22:51:13  king
+--| Implemented set_pointer_style to satisfy postcond
+--|
+--| Revision 1.54.2.52  2000/10/10 21:27:51  king
+--| Fixed has_focus
+--|
+--| Revision 1.54.2.51  2000/10/09 17:58:00  oconnor
+--| added has_capture
+--|
+--| Revision 1.54.2.50  2000/09/13 21:17:46  king
+--| Formatting
+--|
+--| Revision 1.54.2.49  2000/09/12 23:14:36  king
+--| Added top_level_window
+--|
+--| Revision 1.54.2.48  2000/09/12 19:04:52  king
+--| Removed focus flag setting
+--|
+--| Revision 1.54.2.47  2000/09/11 22:22:03  oconnor
+--| Try to get position the old way before using the aux-info struct as
+--| it seems not to be present for non windows.
+--|
+--| Revision 1.54.2.46  2000/09/06 23:18:44  king
+--| Reviewed
+--|
+--| Revision 1.54.2.45  2000/09/05 23:37:23  king
+--| Altered export clause of on_key_event
+--|
+--| Revision 1.54.2.44  2000/09/05 21:47:34  king
+--| Added custom key event translation/execution routines
+--|
+--| Revision 1.54.2.43  2000/08/29 21:41:13  king
+--| Removed keyboard masks from enable capture
+--|
+--| Revision 1.54.2.42  2000/08/29 00:23:01  king
+--| Implemented handling for key_press_string_actions
+--|
+--| Revision 1.54.2.41  2000/08/28 21:48:31  king
+--| Added keyboard masks to enable_capture
+--|
+--| Revision 1.54.2.40  2000/08/28 21:28:28  king
+--| Changed set_focus to use visual_widget
+--|
+--| Revision 1.54.2.39  2000/08/28 16:34:31  king
+--| event_widget->visual_widget
+--|
+--| Revision 1.54.2.38  2000/08/25 17:12:00  king
+--| events mask now using all events enum
+--|
+--| Revision 1.54.2.37  2000/08/23 00:33:01  king
+--| Added property flag setting macro externals
+--|
+--| Revision 1.54.2.36  2000/08/15 20:33:41  king
+--| Added sensitive contract support features
+--|
+--| Revision 1.54.2.35  2000/08/09 18:44:49  oconnor
+--| removed use of bit_or, not avalible in 4.5
+--|
+--| Revision 1.54.2.34  2000/08/08 00:03:12  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.54.2.33  2000/08/03 23:16:59  king
+--| Using internal pointer_*_press_actions
+--|
+--| Revision 1.54.2.32  2000/07/31 18:57:27  king
+--| Removed unused local variables
+--|
+--| Revision 1.54.2.31  2000/07/24 21:36:06  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.54.2.30  2000/06/28 00:45:37  king
+--| Event grabbing now on event_widget instead of c_object
+--|
+--| Revision 1.54.2.29  2000/06/27 23:42:45  king
+--| Using event_widget instead of c_object for event connection
+--|
+--| Revision 1.54.2.28  2000/06/23 19:12:09  king
+--| Reimplemented x/y_position, moved aux_info_struct up from window_imp
+--|
+--| Revision 1.54.2.27  2000/06/21 22:43:21  king
+--| Altered min size features for compatability with ev_fixed item sizing
+--|
+--| Revision 1.54.2.26  2000/06/15 22:15:29  king
+--| Changed event error comment
+--|
+--| Revision 1.54.2.25  2000/06/15 20:40:06  king
+--| Added printout message for widgets with no corresponding gdkwindow
+--|
+--| Revision 1.54.2.24  2000/06/15 19:04:40  king
+--| Abstracted event masking function so it can be redefined to do nothing for radio buts
+--|
+--| Revision 1.54.2.23  2000/06/14 23:14:49  king
+--| Added code to initialize event mask
+--|
+--| Revision 1.54.2.22  2000/06/14 00:44:21  king
+--| Removed enable_motion_notify
+--|
+--| Revision 1.54.2.21  2000/06/13 23:59:22  king
+--| Added default gdk_events_mask function
 --|
 --| Revision 1.54.2.20  2000/05/25 00:34:40  king
 --| Removed reference to cursor code

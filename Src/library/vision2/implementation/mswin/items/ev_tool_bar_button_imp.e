@@ -12,30 +12,31 @@ class
 inherit
 	EV_TOOL_BAR_BUTTON_I
 		redefine
-			parent_imp,
-			interface
+			parent_imp, interface
 		end
 
 	EV_ITEM_IMP
 		undefine
 			parent
 		redefine
-			set_pixmap,
-			parent_imp,
-			interface
+			set_pixmap, parent_imp, interface, pixmap, remove_pixmap
 		end
 
-	EV_TEXTABLE_IMP
+	EV_INTERNALLY_PROCESSED_TEXTABLE_IMP
 		redefine
 			interface
 		end
 
 	EV_TOOLTIPABLE_IMP
 		redefine
-			interface
+			interface, set_tooltip
 		end
 
+	WEL_ILC_CONSTANTS
+
 	EV_ID_IMP
+
+	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_IMP
 
 creation
 	make
@@ -43,7 +44,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create `Current'.
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			make_id
@@ -53,6 +54,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Do post creation initialization.
 		do
+			is_sensitive := True
 			is_initialized := True
 		end
 
@@ -94,38 +96,110 @@ feature -- Access
 			end
 		end
 
-	gray_pixmap: EV_PIXMAP
-		-- The gray_pixmap of `Current'.
-
-	gray_pixmap_imp: EV_PIXMAP_IMP is
-			-- Implementation of the gray pixmap contained 
+	gray_pixmap: EV_PIXMAP is
+			-- Pixmap of `Current'.
+		local
+			pix_imp: EV_PIXMAP_IMP
+			image_icon: WEL_ICON
+			image_list: EV_IMAGE_LIST_IMP
 		do
-			if gray_pixmap /= Void then
-				Result ?= gray_pixmap.implementation
+				-- Retrieve the pixmap from the imagelist
+			if has_gray_pixmap then
+				if private_gray_pixmap = Void then
+					create Result
+					pix_imp ?= Result.implementation
+					check
+						pix_imp /= Void
+					end
+					image_list := parent_imp.default_imagelist
+					image_icon := image_list.get_icon (image_index, Ild_normal)
+					pix_imp.set_with_resource (image_icon)
+				else
+					Result := private_gray_pixmap
+				end
 			end
-		end
+		end 
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap of `Current'.
+		local
+			pix_imp: EV_PIXMAP_IMP
+			an_icon: WEL_ICON
+		do
+				-- Retrieve the pixmap from the imagelist
+			if has_pixmap then
+				if private_pixmap = Void then
+					create Result
+					pix_imp ?= Result.implementation
+					check
+						pix_imp /= Void
+					end
+					an_icon := parent_imp.hot_imagelist.get_icon (image_index, Ild_normal)
+					an_icon.enable_reference_tracking
+					pix_imp.set_with_resource (an_icon)
+					an_icon.decrement_reference
+				else
+					Result := private_pixmap
+				end
+			end
+		end 
 
 feature -- Status report
 
-	is_sensitive: BOOLEAN is
-			-- Is `Current' insensitive?
-		do
-			Result := parent_imp.button_enabled (id)
-		end
+	is_sensitive: BOOLEAN
+			-- Is `Current' sensitive?
+
+	has_pixmap: BOOLEAN
+			-- Has Current a pixmap?
+
+	has_gray_pixmap: BOOLEAN
+			-- Has Current a gray pixmap?
+
+	image_index: INTEGER
+			-- Index of the pixmaps in the imagelists.
 
 feature -- Status setting
 
 	enable_sensitive is
 			 -- Enable `Current'.
 		do
-			parent_imp.enable_button (id)
+			is_sensitive := True
+			if parent_imp /= Void then
+				parent_imp.enable_button (id)	
+			end
 		end
 
 	disable_sensitive is
 			 -- Disable `Current'.
 		do
-			parent_imp.disable_button (id)
+			is_sensitive := False
+			if parent_imp /= Void then
+				parent_imp.disable_button (id)
+			end
 		end
+
+	parent_is_sensitive: BOOLEAN is
+			-- Is parent of `Current' sensitive?
+		do
+			if parent_imp /= Void and then parent_imp.is_sensitive then
+				result := True
+			end
+		end
+
+	has_parent: BOOLEAN is
+			-- Is `Current' parented?
+		do
+			if parent_imp /= Void then
+				result := True
+			end
+		end
+
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `tooltip'.
+		do
+			tooltip := clone (a_tooltip)
+		end
+
 
 feature -- Element change
 
@@ -139,36 +213,181 @@ feature -- Element change
 			end
 		end
 
-	set_pixmap (pix: EV_PIXMAP) is
-			-- Make `pix' the new pixmap of `Current'.
-			-- We need to destroy the dc that comes with it,
-			-- because a bitmap can be linked to only one dc
-			-- at a time.
+	set_pixmap (p: EV_PIXMAP) is
+			-- Assign `p' to the displayed pixmap.
 		do
-			{EV_ITEM_IMP} Precursor (pix)
+				-- We must destroy the pixmap before we set a new one,
+				-- to ensure that we free up Windows GDI objects
+			if private_pixmap /= Void then
+				private_pixmap.destroy
+				private_pixmap := Void
+			end
+			private_pixmap := clone (p)
+			has_pixmap := True
+
+				-- If the item is currently contained in the toolbar then
 			if parent_imp /= Void then
 				parent_imp.internal_reset_button (Current)
 			end
 		end
 
-	set_gray_pixmap (pix: EV_PIXMAP) is
-			-- Make `pix' the new pixmap of `Current'.
-			-- We need to destroy the dc that comes with it,
-			-- because a bitmap can be linked to only one dc
-			-- at a time.
+	remove_pixmap is
+			-- Remove pixmap from `Current'.
 		do
- 			remove_gray_pixmap
-			gray_pixmap := pix.ev_clone(pix)
-			if parent_imp /= Void then
+			if has_pixmap then
+				has_pixmap := False
+				if private_pixmap /= Void then
+					private_pixmap.destroy
+					private_pixmap := Void
+				end
+
+					-- If the item is currently contained in the toolbar then
+				if parent_imp /= Void then
+					parent_imp.internal_reset_button (Current)
+				end
+			end
+		end
+
+	set_gray_pixmap (p: EV_PIXMAP) is
+			-- Assign `p' to the displayed gray pixmap.
+		do
+			if private_gray_pixmap /= Void then
+				private_gray_pixmap.destroy
+				private_gray_pixmap := Void
+			end
+			private_gray_pixmap.copy (p)
+			
+			has_gray_pixmap := True
+
+				-- If the item is currently contained in the toolbar then
+			if has_pixmap and parent_imp /= Void then
 				parent_imp.internal_reset_button (Current)
 			end
 		end
 
 	remove_gray_pixmap is
-			-- Make `gray_pixmap' `Void'.
+			-- Remove pixmap from `Current'.
 		do
-			gray_pixmap := Void
+			if has_gray_pixmap then
+				has_gray_pixmap := False
+				if private_gray_pixmap /= Void then
+					private_gray_pixmap.destroy
+					private_gray_pixmap := Void
+				end
+
+					-- If the item is currently contained in the toolbar then
+				if parent_imp /= Void then
+					parent_imp.internal_reset_button (Current)
+				end
+			end
 		end
+
+	set_pixmap_in_parent is
+			-- Add the pixmap to the parent by updating the 
+			-- parent's image list.
+		require
+			button_has_pixmap: has_pixmap
+		local
+			default_imagelist: EV_IMAGE_LIST_IMP
+			hot_imagelist: EV_IMAGE_LIST_IMP
+			local_pixmap: EV_PIXMAP
+			local_gray_pixmap: EV_PIXMAP
+			gray_pixmap_position: INTEGER
+			pixmap_position: INTEGER
+		do
+			default_imagelist := parent_imp.default_imagelist
+				-- Create the image list and associate it
+				-- to the control if it's not already done.
+			if default_imagelist = Void then
+				parent_imp.setup_image_list (private_pixmap.width, private_pixmap.height)
+			end
+
+			if private_pixmap = Void and private_gray_pixmap = Void then
+				-- image_index is already up-to-date.
+			else
+				default_imagelist := parent_imp.default_imagelist
+				hot_imagelist := parent_imp.hot_imagelist
+
+				local_pixmap := private_pixmap
+				if local_pixmap = Void then
+					local_pixmap := pixmap
+				end
+
+				if has_gray_pixmap then
+					local_gray_pixmap := private_gray_pixmap
+					if local_gray_pixmap = Void then
+						local_gray_pixmap := gray_pixmap
+					end
+				else
+						-- No gray pixmap, so both normal and hot state will
+						-- have the same bitmap.
+					local_gray_pixmap := local_pixmap
+				end
+
+					-- Look for `gray_pixmap' and `pixmap' in the imagelist
+				default_imagelist.pixmap_position (local_gray_pixmap)
+				hot_imagelist.pixmap_position (local_pixmap)
+				gray_pixmap_position := default_imagelist.last_position
+				pixmap_position := hot_imagelist.last_position
+
+				if pixmap_position = gray_pixmap_position and then
+				   pixmap_position /= -1
+				then
+						-- Add pixmap. Take cached versions into account.
+					default_imagelist.add_pixmap (local_gray_pixmap)
+					hot_imagelist.add_pixmap (local_pixmap)
+				else
+						-- Add pixmap. Do not take cached versions into account.
+					default_imagelist.extend_pixmap (local_gray_pixmap)
+					hot_imagelist.extend_pixmap (local_pixmap)
+				end
+				check
+					hot_and_default_imagelist_synchronized: 
+						default_imagelist.last_position = hot_imagelist.last_position
+				end
+				image_index := default_imagelist.last_position
+
+					-- Destroy the pixmaps.
+				if private_pixmap /= Void then
+					private_pixmap.destroy
+					private_pixmap := Void
+				end
+				if private_gray_pixmap /= Void then
+					private_gray_pixmap.destroy
+					private_gray_pixmap := Void
+				end
+			end
+		end
+		
+	enabled_before: BOOLEAN
+		-- Was `Current' enabled before `update_for_pick_and_drop' modified
+		-- the current state.
+		
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so update appearance of
+			-- `Current' to reflect available targets.
+		local
+			env: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
+		do
+			create env
+			app_imp ?= env.application.implementation
+			if starting then
+				if not interface.drop_actions.accepts_pebble (app_imp.pick_and_drop_source.pebble) then	
+					enabled_before := is_sensitive
+					disable_sensitive
+				end
+			else
+				if enabled_before then
+					enable_sensitive	
+				end
+			end
+		end
+		
+feature {NONE} -- Implementation
+
+	private_gray_pixmap: EV_PIXMAP
+			-- Internal gray pixmap for Current. Void if none.
 
 feature {NONE} -- Implementation, pick and drop
 
@@ -184,29 +403,112 @@ feature {EV_ANY_I} -- Interface
 
 end -- class EV_TOOL_BAR_BUTTON_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.28  2000/06/07 17:27:52  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.29  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.9.4.29  2001/06/05 22:25:27  rogers
+--| Improved comment in set_pixmap.
+--|
+--| Revision 1.9.4.28  2001/06/05 21:54:40  rogers
+--| Set_pixmap now uses clone internally instead of copy. Saves creation line.
+--|
+--| Revision 1.9.4.27  2001/06/05 18:35:59  rogers
+--| We now create `private_pixmap' during `set_pixmap' if Void.
+--|
+--| Revision 1.9.4.26  2001/06/04 17:29:47  rogers
+--| Removed redundent precondition from `remove_pixmap'.
+--|
+--| Revision 1.9.4.25  2001/06/04 17:11:17  rogers
+--| Updated to use copy instead of ev_clone.
+--|
+--| Revision 1.9.4.24  2001/04/24 16:01:29  rogers
+--| Changed inheritence from ev_textable_imp to
+--| ev_internally_processed_textable.
+--|
+--| Revision 1.9.4.23  2001/03/16 19:24:55  rogers
+--| Added update_for_pick_and_drop and `enabled_before'.
+--|
+--| Revision 1.9.4.22  2001/03/04 22:16:22  pichery
+--| Added reference tracking
+--|
+--| Revision 1.9.4.21  2000/11/17 18:23:49  pichery
+--| Fixed bug when someone wanted to change an existing
+--| pixmap.
+--|
+--| Revision 1.9.4.20  2000/11/17 00:40:29  rogers
+--| ev_tool_bar_button_imp.e
+--|
+--| Revision 1.9.4.19  2000/11/09 17:18:28  pichery
+--| - Changed pixmap handling,
+--| 1. it is now done as in EV_LIST_IMP and EV_TREE_IMP.
+--|     i.e. much of the work is done in
+--|     EV_TOOL_BAR_BUTTON_IMP instead of EV_TOOL_BAR_IMP
+--| 2. `pixmap' now build an EV_PIXMAP from the WEL_ICON
+--|     extracted from the WEL_IMAGE_LIST associated with the
+--|     parent of this item.
+--|
+--| Revision 1.9.4.18  2000/10/13 19:00:45  manus
+--| pixmap_gray should return Void if there is no internal gray pixmap.
+--|
+--| Revision 1.9.4.17  2000/10/12 15:50:21  pichery
+--| Added reference tracking for GDI objects to decrease
+--| the number of GDI objects alive.
+--|
+--| Revision 1.9.4.16  2000/09/13 22:15:09  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.9.4.15  2000/08/17 17:23:50  rogers
+--| Comment.
+--|
+--| Revision 1.9.4.14  2000/08/17 00:26:32  rogers
+--| Added parent_is_sensitive and has_parent.
+--|
+--| Revision 1.9.4.13  2000/08/11 19:17:01  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.9.4.12  2000/08/09 20:57:11  oconnor
+--| use ev_clone instead of clone as per instructions of manus
+--|
+--| Revision 1.9.4.11  2000/08/08 20:39:59  rogers
+--| Replaced use of ev_clone with clone.
+--|
+--| Revision 1.9.4.10  2000/08/08 00:33:52  manus
+--| Removed non-used local variable.
+--|
+--| Revision 1.9.4.9  2000/07/24 22:48:10  rogers
+--| Now inherits EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.9.4.8  2000/07/20 23:22:33  rogers
+--| Added set_tooltip.
+--|
+--| Revision 1.9.4.7  2000/06/28 19:43:17  rogers
+--| Initialize noe assigns `True' to `is_sensitive'.
+--|
+--| Revision 1.9.4.6  2000/06/12 17:21:52  rogers
+--| Fixed bug where changing the sensitivity of a button required it to be
+--| parented. Changed is_sensitive to an attribute. Added a check that
+--| parent_imp is not Void in enable_sensitive and disable_sensitive.
 --|
 --| Revision 1.9.4.5  2000/06/05 16:50:39  manus
 --| Added `text_length' in `EV_TEXTABLE_IMP' to improve the performance of its

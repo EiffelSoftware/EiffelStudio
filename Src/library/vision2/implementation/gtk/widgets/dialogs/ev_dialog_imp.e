@@ -9,6 +9,9 @@ class
 	
 inherit
 	EV_DIALOG_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
 		redefine
 			initialize,
 			interface
@@ -36,6 +39,8 @@ feature {NONE} -- Initialization
 				c_object,
 				C.Gtk_win_pos_center_enum
 			)
+			C.gtk_window_set_policy (c_object, 0, 0, 1) -- False, False, True
+			enable_closeable
 		end
 
 feature -- Status Report
@@ -46,44 +51,85 @@ feature -- Status Report
 			-- pressing ALT-F4)
 		do
 			Result := is_dialog_closeable
---| FIXME To_be_implemented
 		end
 
 feature -- Status Setting
 	
 	enable_closeable is
 			-- Set the window to be closeable by the user
-			-- (Through a clik on the Window Menu, or by
-			-- pressing ALT-F4)
 		do
+			C.gdk_window_set_functions (
+				C.gtk_widget_struct_window (c_object),
+				C.GDK_FUNC_CLOSE_ENUM + C.GDK_FUNC_MOVE_ENUM
+			)
 			is_dialog_closeable := True
---| FIXME To_be_implemented
 		end
 
 	disable_closeable is
 			-- Set the window not to be closeable by the user
 		do
+			C.gdk_window_set_functions (
+				C.gtk_widget_struct_window (c_object),
+				C.GDK_FUNC_MOVE_ENUM
+			)
 			is_dialog_closeable := False
---| FIXME To_be_implemented
 		end
 
 feature -- Basic operations
 
-	show_modal is
-			-- Show and wait until window is closed.
+	show_modal_to_window (a_window: EV_WINDOW) is
+			-- Show `Current' modal with respect to `a_window'.
 		local
 			was_modal: BOOLEAN
+			parent_was_modal: BOOLEAN
+			a_window_imp: EV_WINDOW_IMP
 		do
+				-- Remove the modality of the parent if it is modal
+			if a_window /= Void then
+				a_window_imp ?= a_window.implementation
+
+				if a_window_imp.is_modal then
+					parent_was_modal := True
+					a_window_imp.disable_modal
+				end
+			end
+
 			if is_modal then
 				was_modal := True
 			else
 				enable_modal
 			end
+
+			if a_window /= Void then
+				C.gtk_window_set_transient_for (c_object, a_window_imp.c_object)
+			else
+				C.gtk_window_set_transient_for (c_object, NULL)
+			end				
+			
 			show
 			block
 			if not is_destroyed and then not was_modal then
 				disable_modal
 			end
+
+				-- Put parent's original modality back.
+			if a_window /= Void and then parent_was_modal then
+				a_window_imp.enable_modal
+			end
+		end
+
+	show_relative_to_window (a_window: EV_WINDOW) is
+			-- Show `Current' with respect to `a_window'.
+		local
+			a_window_imp: EV_WINDOW_IMP
+		do
+			if a_window /= Void then
+				a_window_imp ?= a_window.implementation
+				C.gtk_window_set_transient_for (c_object, a_window_imp.c_object)
+			else
+				C.gtk_window_set_transient_for (c_object, NULL)
+			end				
+			show
 		end
 
 feature {NONE} -- Implementation
@@ -122,8 +168,20 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.14  2000/06/07 17:27:37  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.15  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.7.2.5  2001/02/03 21:26:44  pichery
+--| - Implemented `show_relative_to_window'.
+--| - Removed precondition to `show_modal_to_window' requiring that
+--|   the parent window should be modeless. If it is the case, the parent
+--|   is made modeless while Current is displayed as modal.
+--|
+--| Revision 1.7.2.4  2000/09/18 18:06:42  oconnor
+--| reimplemented propogate_[fore|back]ground_color for speeeeed
+--|
+--| Revision 1.7.2.3  2000/08/16 19:45:52  king
+--| Added show_modal_to_window, implemented closeable procs
 --|
 --| Revision 1.7.2.2  2000/05/09 16:39:02  brendel
 --| Added not is_destroyed when disabling modal again.

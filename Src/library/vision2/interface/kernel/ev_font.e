@@ -33,13 +33,6 @@ inherit
 			copy
 		end
 
-	EV_TESTABLE_NON_WIDGET
-		undefine
-			default_create,
-			is_equal,
-			copy
-		end
-
 create
 	default_create,
 	make_with_values
@@ -53,23 +46,28 @@ feature {NONE} -- Initialization
 			a_weight_valid: valid_weight (a_weight)
 			a_shape_valid: valid_shape (a_shape)
 			a_height_bigger_than_zero: a_height > 0
+		local
+			empty_list: ACTIVE_LIST [STRING]
 		do
 			default_create
+			create empty_list
 			implementation.set_values (
 				a_family,
 				a_weight,
 				a_shape,
 				a_height,
-				Void
+				empty_list
 			)
 		end
 
 feature -- Access
 
 	family: INTEGER is
-			-- Font category. Can be any of the Ev_font_family_* constants
+			-- Font category. Can be any of the Family_* constants
 			-- defined in EV_FONT_CONSTANTS.
-			-- Default: Ev_font_family_sans
+			-- Default: Family_sans
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.family
 		ensure
@@ -77,9 +75,11 @@ feature -- Access
 		end
 
 	weight: INTEGER is
-			-- Preferred font thickness. Can be any of the Ev_font_weight_*
+			-- Preferred font thickness. Can be any of the Weight_*
 			-- constants defined in EV_FONT_CONSTANTS.
-			-- Default: Ev_font_weight_regular
+			-- Default: Weight_regular
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.weight
 		ensure
@@ -87,9 +87,11 @@ feature -- Access
 		end
 
 	shape: INTEGER is
-			-- Preferred font slant. Can be any of the Ev_font_shape_*
+			-- Preferred font slant. Can be any of the Shape_*
 			-- constants defined in EV_FONT_CONSTANTS.
-			-- Default: Ev_font_shape_regular
+			-- Default: Shape_regular
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.shape
 		ensure
@@ -99,19 +101,27 @@ feature -- Access
 	height: INTEGER is
 			-- Preferred font height in pixels.
 			-- Default: 8
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.height
 		ensure
 			bridge_ok: Result = implementation.height
 		end
 
-	preferred_face: STRING is
-			-- Preferred typeface.
+	preferred_faces: ACTIVE_LIST [STRING] is
+			-- Preferred typefaces. The first one in the list
+			-- will be tried first. If it does not exists on
+			-- the system, the second will be tried, etc.
+			--
 			-- Overrides `family' if found on current system.
+		require
+			not_destroyed: not is_destroyed
 		do
-			Result := implementation.preferred_face
+			Result := implementation.preferred_faces
 		ensure
-			bridge_ok: Result = implementation.preferred_face
+			bridge_ok: Result = implementation.preferred_faces
+			Result_not_void: Result /= Void
 		end 
 
 feature -- Element change
@@ -119,6 +129,7 @@ feature -- Element change
 	set_family (a_family: INTEGER) is
 			-- Assign  `a_family' to `family'.
 		require
+			not_destroyed: not is_destroyed
 			a_family_valid: valid_family (a_family)
 		do
 			implementation.set_family (a_family)
@@ -129,6 +140,7 @@ feature -- Element change
 	set_weight (a_weight: INTEGER) is
 			-- Set `a_weight' to `weight'.
 		require
+			not_destroyed: not is_destroyed
 			a_weight_valid: valid_weight (a_weight)
 		do
 			implementation.set_weight (a_weight)
@@ -139,6 +151,7 @@ feature -- Element change
 	set_shape (a_shape: INTEGER) is
 			-- Set `a_shape' to `shape'.
 		require
+			not_destroyed: not is_destroyed
 			a_shape_valid: valid_shape (a_shape)
 		do
 			implementation.set_shape (a_shape)
@@ -149,6 +162,7 @@ feature -- Element change
 	set_height (a_height: INTEGER) is
 			-- Set `a_height' to `height'.
 		require
+			not_destroyed: not is_destroyed
 			a_height_bigger_than_zero: a_height > 0
 		do
 			implementation.set_height (a_height)
@@ -156,28 +170,12 @@ feature -- Element change
 			height_assigned: height = a_height
 		end
 
-	set_preferred_face (a_preferred_face: STRING) is
-			-- Set `a_preferred_face' to `preferred_face'.
-		require
-			a_preferred_face_not_void: a_preferred_face /= Void
-		do
-			implementation.set_preferred_face (a_preferred_face)
-		ensure
-			preferred_face_assigned: preferred_face = a_preferred_face
-		end
-
-	remove_preferred_face is
-			-- Set `a_preferred_face' to Void.
-		do
-			implementation.remove_preferred_face
-		ensure
-			preferred_face_void: preferred_face = Void
- 		end
-
 feature -- Status report
 
 	name: STRING is
 			-- Face name chosen by toolkit.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.name
 		ensure
@@ -187,6 +185,8 @@ feature -- Status report
 	ascent: INTEGER is
 			-- Vertical distance from the origin of the drawing
 			-- operation to the top of the drawn character. 
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.ascent 
 		ensure
@@ -196,6 +196,8 @@ feature -- Status report
 	descent: INTEGER is
 			-- Vertical distance from the origin of the drawing
 			-- operation to the bottom of the drawn character. 
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.descent 
 		ensure
@@ -205,6 +207,8 @@ feature -- Status report
 	width: INTEGER is
 			-- Character width of current fixed-width font.
 			-- If font is proportional, returns the average width.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.width
 		ensure
@@ -213,6 +217,8 @@ feature -- Status report
 
 	minimum_width: INTEGER is
 			-- Width of the smallest character in the font.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.minimum_width
 		ensure
@@ -221,6 +227,8 @@ feature -- Status report
 
 	maximum_width: INTEGER is
 			-- Width of the biggest character in the font.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.maximum_width
 		ensure
@@ -230,6 +238,7 @@ feature -- Status report
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		require
+			not_destroyed: not is_destroyed
 			a_string_not_void: a_string /= Void
 		do
 			Result := implementation.string_width (a_string)
@@ -242,6 +251,8 @@ feature -- Status report
 			-- Horizontal resolution of screen for which the font is designed.
 			-- Measured in dots per inch. If return value is zero, the
 			-- resolution is not known.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.horizontal_resolution
 		ensure
@@ -252,6 +263,8 @@ feature -- Status report
 			-- Vertical resolution of screen for which the font is designed.
 			-- Measured in dots per inch. If return value is zero, the
 			-- resolution is not known.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.vertical_resolution
 		ensure
@@ -260,10 +273,27 @@ feature -- Status report
 
 	is_proportional: BOOLEAN is
 			-- Can characters in the font have different widths?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_proportional
 		ensure
 			bridge_ok: Result = implementation.is_proportional
+		end
+
+	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+			-- [width, height] in pixels of `a_string' in the current font,
+			-- taking into account line breaks ('%N').
+		require
+			not_destroyed: not is_destroyed
+			a_string_not_void: a_string /= Void
+		do
+			Result := implementation.string_size (a_string)
+		ensure
+			bridge_ok: Result.item (1).is_equal
+				(implementation.string_size (a_string).item (1)) and
+				Result.item (2).is_equal
+				(implementation.string_size (a_string).item (2))
 		end
 
 feature -- Basic operations
@@ -274,112 +304,50 @@ feature -- Basic operations
 			Result := family = other.family and then
 				weight = other.weight and then
 				shape = other.shape and then
-				height = other.height and then
-				(preferred_face = other.preferred_face or else
-				preferred_face.is_equal (other.preferred_face))
+				height = other.height-- and then
+				--(preferred_faces = other.preferred_faces or else
+				--preferred_faces.is_equal (other.preferred_faces))
+				--| FIXME IEK PR 2585
 		end
 
 	copy (other: like Current) is
 			-- Update `Current' with all attributes of `other'.
 		do
+			if implementation = Void then
+				default_create
+			end
 			implementation.set_values (
 				other.family,
 				other.weight,
 				other.shape,
 				other.height,
-				other.preferred_face
+				other.preferred_faces
 			)
 		end
 
-feature -- Miscellaneous
-
-	test_widget: EV_WIDGET is
-			-- Visualization on pixmap.
-		local
-			sa: EV_SCROLLABLE_AREA
-			p: EV_PIXMAP
-			test_subject: EV_FONT
-		do
-			create sa
-			create p.make_with_size (300, 250)
-			sa.extend (p)
-			create test_subject
-			test_subject.set_family (Ev_font_family_screen)
-			test_subject.set_weight (Ev_font_weight_regular)
-			test_subject.set_shape (Ev_font_shape_regular)
-			test_subject.set_height (36)
-			p.set_font (test_subject)
-			p.draw_text (3, 40, "Screen")
-			test_subject.set_family (Ev_font_family_roman)
-			p.set_font (test_subject)
-			p.draw_text (3, 80, "Roman")
-			test_subject.set_family (Ev_font_family_sans)
-			p.set_font (test_subject)
-			p.draw_text (3, 120, "Sans")
-			test_subject.set_family (Ev_font_family_typewriter)
-			p.set_font (test_subject)
-			p.draw_text (3, 160, "Typewriter")
-			test_subject.set_family (Ev_font_family_modern)
-			p.set_font (test_subject)
-			p.draw_text (3, 200, "Modern")
-			Result := sa
-		end
-
-feature {EV_ANY} -- Contract support
+feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state.
 		do
-			Result := {EV_ANY} Precursor and then
+			Result := Precursor {EV_ANY} and then
 				family = ev_default_fonts.Screen_font.family and then
 				weight = ev_default_fonts.Screen_font.weight and then
 				shape = ev_default_fonts.Screen_font.shape and then
 				height = ev_default_fonts.Screen_font.height and then
-				preferred_face = Void
+				preferred_faces /= Void and then preferred_faces.is_empty
 		end
 
-	ev_default_fonts: EV_DEFAULT_FONTS is
+	Ev_default_fonts: EV_STOCK_FONTS is
 		once
 			create Result
 		end
+		
+feature {EV_ANY_I} -- Implementation
 
-feature -- Obsolete
-
-	set_name (str: STRING) is
-			-- Make `str' the new name of the string.
-		obsolete
-			"Use either set_family or set_preferred_face."
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
-	set_system_name (str: STRING) is
-			-- Make `str' the new name of the string.
-		obsolete
-			"Use either set_family or set_preferred_face."
-		do
-			check
-				not_used_anymore: False
-			end
-		end
-
-	system_name: STRING is
-			-- Platform dependent font name.
-		obsolete
-			"Platform dependent so not a vision feature."
-		do
-			Result := implementation.system_name
-		end
-
- 	is_standard: BOOLEAN is
- 			-- Is the font standard and information available (except for name)?
-		obsolete
-			"Is this needed?"
- 		do
- 			Result := implementation.is_standard
- 		end
+	implementation: EV_FONT_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 feature {NONE} -- Implementation
 
@@ -388,26 +356,50 @@ feature {NONE} -- Implementation
 		do
 			create {EV_FONT_IMP} implementation.make (Current)
 		end
+			
+feature -- Obsolete
+		
+	set_preferred_face (a_preferred_face: STRING) is
+			-- Set `a_preferred_face' to `preferred_face'.
+		obsolete "Use `preferred_faces.extend' instead"
+		require
+			a_preferred_face_not_void: a_preferred_face /= Void
+		do
+			preferred_faces.extend (a_preferred_face)
+		ensure
+			preferred_face_assigned: preferred_face = a_preferred_face
+		end
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_FONT_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+	remove_preferred_face is
+			-- Set `a_preferred_face' to Void.
+		obsolete "Use `prefered_faces.wipe_out' instead"
+		do
+			preferred_faces.wipe_out
+		ensure
+			preferred_face_void: preferred_face = Void
+ 		end
+		
+	preferred_face: STRING is
+			-- Preferred typeface.
+			-- Overrides `family' if found on current system.
+		obsolete "Use `prefered_faces.first' instead"
+		do
+			Result := preferred_faces.first
+		end 
 
 invariant
-	family_valid: valid_family (family)
-	weight_valid: valid_weight (weight)
-	shape_valid: valid_shape (shape)
-	height_bigger_than_zero: height > 0
-	ascent_bigger_than_zero: ascent > 0
-	descent_bigger_than_zero: descent > 0
-	height_positive: height > 0
-	ascent_positive: ascent > 0
-	descent_positive: descent > 0
-	width_of_empty_string_equals_zero: string_width("") = 0
-	horizontal_resolution_non_negative: horizontal_resolution >= 0
-	vertical_resolution_non_negative: vertical_resolution >= 0
+	family_valid: is_initialized implies valid_family (family)
+	weight_valid: is_initialized implies valid_weight (weight)
+	shape_valid: is_initialized implies valid_shape (shape)
+	height_bigger_than_zero: is_initialized implies height > 0
+	ascent_bigger_than_zero: is_initialized implies ascent > 0
+	descent_bigger_than_zero: is_initialized implies descent > 0
+	height_positive: is_initialized implies height > 0
+	ascent_positive: is_initialized implies ascent > 0
+	descent_positive: is_initialized implies descent > 0
+	width_of_empty_string_equals_zero: is_initialized implies string_width("") = 0
+	horizontal_resolution_non_negative: is_initialized implies horizontal_resolution >= 0
+	vertical_resolution_non_negative: is_initialized implies vertical_resolution >= 0
 
 end -- class EV_FONT
 
@@ -426,116 +418,3 @@ end -- class EV_FONT
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.22  2000/05/01 21:20:06  brendel
---| Added test_widget.
---|
---| Revision 1.21  2000/03/28 21:48:44  brendel
---| Now uses new set_values in _I.
---|
---| Revision 1.20  2000/03/16 01:15:33  oconnor
---| comments
---|
---| Revision 1.19  2000/03/01 20:28:52  king
---| Corrected export clauses for implementation and create_imp/act_seq
---|
---| Revision 1.18  2000/02/23 02:33:45  pichery
---| Added class EV_DEFAULT_FONT which contains default fonts. Used this new
---| class to improve contracts into EV_FONT (is_in_default_state)
---|
---| Revision 1.17  2000/02/22 21:22:32  pichery
---| The default creation of EV_FONT under Windows now creates the
---| WEL_DEFAULT_GUI_FONT and set family, weight and shape according to
---| the retrieved font.
---|
---| Revision 1.16  2000/02/22 18:39:48  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.15  2000/02/14 11:40:48  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.14.6.20  2000/02/07 20:55:50  pichery
---| - added feature "set_values" to EV_FONT
---| - fixed some bugs (replaced 0 with 0.0 - because DOUBLE were expected)
---|   in the class ASSIGN_ATTEMPT
---|
---| Revision 1.14.6.19  2000/01/28 20:02:21  oconnor
---| released
---|
---| Revision 1.14.6.18  2000/01/27 19:30:44  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.14.6.17  2000/01/25 01:20:42  brendel
---| Improved comments.
---|
---| Revision 1.14.6.16  2000/01/24 20:14:53  oconnor
---| added comments
---|
---| Revision 1.14.6.15  2000/01/21 20:09:11  brendel
---| Improved contracts.
---| Added feature `copy'.
---|
---| Revision 1.14.6.14  2000/01/21 19:35:56  king
---| Altered naming conventions of > 0 assertions to be positive instead of
---| greater_than_zero
---|
---| Revision 1.14.6.13  2000/01/21 19:16:09  king
---| Commented out resolution invariants as they do not hold for some fonts in
---| GTK
---|
---| Revision 1.14.6.12  2000/01/18 18:09:30  brendel
---| Corrected `is_equal'.
---| Added `is_in_default_state'.
---|
---| Revision 1.14.6.11  2000/01/18 17:42:46  brendel
---| Added redefine of is_equal.
---|
---| Revision 1.14.6.10  2000/01/18 17:30:41  king
---| Added `is_equal'.
---|
---| Revision 1.14.6.9  2000/01/17 17:41:18  brendel
---| Fixed spelling error(s).
---|
---| Revision 1.14.6.8  2000/01/17 17:36:49  oconnor
---| comments and formatting
---|
---| Revision 1.14.6.7  2000/01/17 17:17:16  brendel
---| Removed commented out invariant.
---|
---| Revision 1.14.6.6  2000/01/17 17:15:50  brendel
---| Moved comment about default values to features.
---| Commented out invariant that will not hold.
---|
---| Revision 1.14.6.5  2000/01/11 00:59:51  king
---| Changed note in indexing clause.
---|
---| Revision 1.14.6.4  2000/01/10 19:14:06  king
---| Changed interface.
---| Improved comments.
---| Improved contracts.
---| set_name is now obsolete.
---|
---| Revision 1.14.6.3  1999/12/17 21:00:59  rogers
---| make_with_name, make_with_system and set implementation have been commented
---| out. They need to be re-implemented as required.
---|
---| Revision 1.14.6.2  1999/12/01 21:46:43  brendel
---| Added FIXME with suggestion for `minimum_width'.
---|
---| Revision 1.14.6.1  1999/11/24 17:30:45  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.14.2.4  1999/11/04 23:10:53  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.14.2.3  1999/11/02 17:20:11  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

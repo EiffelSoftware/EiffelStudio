@@ -11,8 +11,6 @@ deferred class
 
 inherit
 	EV_ANY
-		undefine
-			create_action_sequences
 		redefine
 			implementation
 		end
@@ -20,17 +18,21 @@ inherit
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is object state set as selected.
+			-- Is selected.
 		require
-			is_selectable: is_selectable
+			not_destroyed: not is_destroyed
 		do
-			Result := implementation.is_selected
+			if is_selectable then
+				Result := implementation.is_selected
+			end
 		ensure
 			bridge_ok: Result = implementation.is_selected
 		end
 
 	is_selectable: BOOLEAN is
-			-- May the object be selected
+			-- May `enable_select' be called.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_selectable
 		end
@@ -38,8 +40,9 @@ feature -- Status report
 feature -- Status setting
 
 	enable_select is
-			-- Select the object.
+			-- Make `is_selected' True.
 		require
+			not_destroyed: not is_destroyed
 			is_selectable: is_selectable
 		do
 			implementation.enable_select
@@ -69,22 +72,3 @@ end -- class EV_SELECTABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.3  2000/06/07 17:28:07  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.2.2.2  2000/05/09 22:37:33  king
---| Integrated selectable, is_selectable for list items
---|
---| Revision 1.2.2.1  2000/05/09 20:27:58  king
---| Initial
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

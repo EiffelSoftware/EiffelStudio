@@ -5,7 +5,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EV_DEFAULT_PIXMAPS_IMP
+	EV_STOCK_PIXMAPS_IMP
 
 feature -- Access
 
@@ -47,6 +47,46 @@ feature -- Access
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (question_pixmap_xpm)
+		end
+
+	Collate_pixmap: EV_PIXMAP is
+			-- Pixmap symbolizing collated printing.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+		do
+			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (collate_pixmap_xpm)
+		end
+
+	No_collate_pixmap: EV_PIXMAP is
+			-- Pixmap symbolizing non collated printing.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+		do
+			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (no_collate_pixmap_xpm)
+		end
+
+	Landscape_pixmap: EV_PIXMAP is
+			-- Pixmap symbolizing landscape printing.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+		do
+			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (landscape_pixmap_xpm)
+		end
+
+	Portrait_pixmap: EV_PIXMAP is
+			-- Pixmap symbolizing portrait printing.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+		do
+			create Result
+			pixmap_imp ?= Result.implementation
+			pixmap_imp.set_from_xpm_data (portrait_pixmap_xpm)
 		end
 
 	Default_window_icon: EV_PIXMAP is
@@ -116,6 +156,18 @@ feature -- Default cursors
 			create Result
 		end
 
+	Sizenwse_cursor: EV_CURSOR is
+			-- Double-pointed arrow pointing north-west and south-east
+		do
+			create Result
+		end
+
+	Sizenesw_cursor: EV_CURSOR is
+			-- Double-pointed arrow pointing north-east and south-west
+		do
+			create Result
+		end
+
 	Sizewe_cursor: EV_CURSOR is
 			-- Double-pointed arrow pointing west and east
 		do
@@ -169,6 +221,33 @@ feature {NONE} -- Externals
 			"question_pixmap_xpm"
 		end
 
+	collate_pixmap_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"collate_pixmap_xpm"
+		end
+
+	no_collate_pixmap_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"no_collate_pixmap_xpm"
+		end
+
+	landscape_pixmap_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"landscape_pixmap_xpm"
+		end
+
+	portrait_pixmap_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"portrait_pixmap_xpm"
+		end
 
 	GDK_WATCH: INTEGER is
 		external
@@ -233,7 +312,7 @@ feature {NONE} -- Externals
 			"GDK_SB_UP_ARROW"
 		end
 
-end -- class EV_DEFAULT_PIXMAPS_IMP
+end -- class EV_STOCK_PIXMAPS_IMP
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -256,8 +335,18 @@ end -- class EV_DEFAULT_PIXMAPS_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.4  2000/06/07 17:27:34  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.5  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.2.10  2000/11/06 19:38:29  king
+--| Accounted for default to stock name change
+--|
+--| Revision 1.2.2.9  2000/10/07 03:16:12  andrew
+--| Added print dialog xpms
+--|
+--| Revision 1.2.2.8  2000/06/28 21:41:57  pichery
+--| Added 2 new default cursors: "Size North-East/South-West" and
+--| "Size North-West/South-east"
 --|
 --| Revision 1.2.2.7  2000/05/08 22:05:42  king
 --| Implemented default_pixmaps

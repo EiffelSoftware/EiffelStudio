@@ -11,6 +11,9 @@ inherit
 	EV_STANDARD_DIALOG_I
 		redefine
 			interface
+		select
+			interface,
+			make
 		end
 
 	EV_ANY_IMP
@@ -18,16 +21,33 @@ inherit
 			interface
 		end
 
+	EV_WINDOW_IMP
+		rename
+			interface as ev_window_imp_interface,
+			make as ev_window_imp_make
+		undefine
+			destroy,
+			title,
+			set_title,
+			set_blocking_window,
+			block,
+			initialize
+		redefine
+			blocking_window
+		end
+
+	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
+
 feature -- Access
 
 	title: STRING is
 			-- Title of dialog shown in title bar.
 		do
 			check
-				c_object /= Void
+				c_object /= NULL
 			end
 			check
-				C.gtk_window_struct_title (c_object) /= Void
+				C.gtk_window_struct_title (c_object) /= NULL
 			end
 			create Result.make_from_c (C.gtk_window_struct_title (c_object))
 		end
@@ -42,12 +62,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_modal is
+	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show the dialog and wait until the user closes it.
 		do
+			set_blocking_window (a_window)
 			selected_button := Void
 			C.gtk_widget_show (c_object)
 			block
+			set_blocking_window (Void)
 			if selected_button /= Void then
 				if selected_button.is_equal ("OK") then
 					interface.ok_actions.call ([])
@@ -69,8 +91,12 @@ feature -- Status setting
 			win_imp: EV_WINDOW_IMP
 		do
 			blocking_window := a_window
-			win_imp ?= a_window.implementation
-			C.gtk_window_set_transient_for (c_object, win_imp.c_object)
+			if a_window /= Void then
+				win_imp ?= a_window.implementation
+				C.gtk_window_set_transient_for (c_object, win_imp.c_object)
+			else
+				C.gtk_window_set_transient_for (c_object, NULL)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -86,6 +112,15 @@ feature {NONE} -- Implementation
 			loop
 				dummy := C.gtk_main_iteration_do (True)
 			end
+		end
+
+	enable_closeable is
+			-- Set the window to be closeable by the user
+		do
+			C.gdk_window_set_functions (
+				C.gtk_widget_struct_window (c_object),
+				C.GDK_FUNC_CLOSE_ENUM + C.GDK_FUNC_MOVE_ENUM
+			)
 		end
 
 	on_cancel is
@@ -127,8 +162,26 @@ end -- class EV_STANDARD_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.12  2000/06/07 17:27:36  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.13  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.7.4.9  2000/11/17 19:41:19  etienne
+--| Added void support for set_blocking_window
+--|
+--| Revision 1.7.4.8  2000/09/04 18:23:26  oconnor
+--| inherit EV_WINDOW_IMP for positionable stuff
+--|
+--| Revision 1.7.4.7  2000/08/16 19:45:01  king
+--| Implemented show_modal_to_window and enable_closeable
+--|
+--| Revision 1.7.4.6  2000/07/24 21:36:07  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.7.4.5  2000/07/20 19:56:36  king
+--| Removed hide/show
+--|
+--| Revision 1.7.4.4  2000/07/20 18:38:52  king
+--| Added double_array_i_thimplementation/gtk/Clib/ev_c_util.h
 --|
 --| Revision 1.7.4.3  2000/06/05 23:50:13  oconnor
 --| dont try to access void selected_button

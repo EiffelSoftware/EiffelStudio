@@ -38,28 +38,37 @@ inherit
 			y as y_position,
 			move as wel_move,
 			move_and_resize as wel_move_and_resize,
-			resize as wel_resize
+			resize as wel_resize,
+			has_capture as wel_has_capture
 		undefine
-			window_process_message,
-			remove_command,
 			set_width,
 			set_height,
 			on_left_button_down,
+			on_middle_button_down,
 			on_right_button_down,
 			on_left_button_up,
+			on_middle_button_up,
 			on_right_button_up,
 			on_left_button_double_click,
+			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
 			on_set_focus,
+			on_desactivate,
 			on_kill_focus,
 			on_key_down,
 			on_key_up,
+			on_char,
 			on_set_cursor,
 			default_style,
 			show,
 			hide,
-			on_size
+			on_size,
+			x_position,
+			y_position,
+			on_sys_key_down,
+			on_sys_key_up,
+			default_process_message
 		redefine
 			wel_set_step
 		end
@@ -160,8 +169,8 @@ feature -- Status setting
 			old_value := value
 			old_step := step
 			old_leap := leap
-			old_minimum := minimum
-			old_maximum := maximum
+			old_minimum := value_range.lower
+			old_maximum := value_range.upper
 				-- All attributes now stored.
 
 			wel_destroy
@@ -170,8 +179,7 @@ feature -- Status setting
 				old_width, old_height, -1, default_pointer)
 				-- Create a new control.
 
-			set_minimum (old_minimum)
-			set_maximum (old_maximum)
+			value_range.resize (old_minimum, old_maximum)
 			set_value (old_value)
 			wel_set_leap (old_leap)
 			wel_set_step (old_step)
@@ -243,29 +251,63 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_PROGRESS_BAR_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.17  2000/06/09 01:38:34  manus
---| Merged version 1.10.8.5 from DEVEL branch to trunc
+--| Revision 1.18  2001/06/07 23:08:16  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.8.17  2001/01/26 23:22:09  rogers
+--| Undefined on_sys_key_down inherited from WEL.
+--|
+--| Revision 1.10.8.16  2001/01/09 19:14:14  rogers
+--| Undefined default_process_message from WEL.
+--|
+--| Revision 1.10.8.15  2000/11/14 18:29:07  rogers
+--| Renamed has_capture inherited from WEL as wel_has_capture.
+--|
+--| Revision 1.10.8.14  2000/11/06 17:57:23  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.10.8.13  2000/10/11 23:37:31  raphaels
+--| Added `on_desactivate' in list of undefined features from WEL.
+--|
+--| Revision 1.10.8.12  2000/09/13 19:47:51  rogers
+--| Fixed recreate_current so that it uses value_range from interface change.
+--|
+--| Revision 1.10.8.11  2000/09/13 19:26:39  rogers
+--| Added temporary fixme for compilation.
+--|
+--| Revision 1.10.8.10  2000/08/11 18:46:41  rogers
+--| Fixed copyright clauses. Now use ! instead of |.
+--|
+--| Revision 1.10.8.9  2000/08/08 02:40:20  manus
+--| Updated inheritance with new WEL messages handling
+--|
+--| Revision 1.10.8.8  2000/07/12 16:09:39  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.10.8.7  2000/06/13 18:36:18  rogers
+--| Removed undefintion of remove_command.
 --|
 --| Revision 1.10.8.6  2000/05/03 23:58:35  rogers
 --| Comments, formatting.

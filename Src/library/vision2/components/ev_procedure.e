@@ -1,7 +1,8 @@
 indexing
 	description: "Procedure with inspection features."
 
-class EV_PROCEDURE [TARGET, OPERANDS -> TUPLE]
+class
+	EV_PROCEDURE [TARGET, OPERANDS -> TUPLE]
 
 inherit
 	PROCEDURE [TARGET, OPERANDS]

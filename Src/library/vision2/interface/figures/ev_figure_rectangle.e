@@ -1,7 +1,7 @@
 indexing
 	description:
-		"A figure that is a rectangle defined by 2 points."
-	status: "See notice at end of file"
+		"Rectangular area defined by `point_a' and `point_b'."
+	status: "See notice at end of class"
 	keywords: "figure, rectangle, square"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,128 +12,48 @@ class
 inherit
 	EV_CLOSED_FIGURE
 
+	EV_DOUBLE_POINTED_FIGURE
+		undefine
+			default_create
+		end
+
 create
 	default_create,
-	make_with_points,
-	make_with_point_and_dimensions,
-	make_with_position_and_dimensions,
-	make_for_test
-
-feature {NONE} -- Initialization
-
-	make_with_points (p1, p2: EV_RELATIVE_POINT) is
-			-- Create with position `p1' and `p2'.
-		require
-			p1_exists: p1 /= Void
-			p2_exists: p2 /= Void
-		do
-			default_create
-			set_point_a (p1)
-			set_point_b (p2)
-		end
-
-	make_with_point_and_dimensions (p: EV_RELATIVE_POINT; w, h: INTEGER) is
-			-- Create on `p' with dimensions `w', `h'.
-		require
-			p_exists: p /= Void
-			width_positive: w >= 0
-			height_positive: h >= 0
-		do
-			default_create
-			set_point_a (p)
-			set_point_b (p.get_relative_point (w, h))
-		end
-
-	make_with_position_and_dimensions (x, y, w, h: INTEGER) is
-			-- Create on (x, y) with dimension `width', `height'.
-		require
-			width_positive: w >= 0
-			height_positive: h >= 0
-		local
-			base: EV_RELATIVE_POINT
-		do
-			default_create
-			create base
-			set_point_a (base.get_relative_point (x, y))
-			set_point_b (point_a.get_relative_point (w, h))
-		end
-
-feature -- Status report
-
-	point_count: INTEGER is
-			-- A line consists of 2 points.
-		once
-			Result := 2
-		end
-
-	point_a: EV_RELATIVE_POINT is
-			-- The first coordinates of the line.
-		do
-			Result := get_point_by_index (1)
-		end
-
-	point_b: EV_RELATIVE_POINT is
-			-- The first coordinates of the line.
-		do
-			Result := get_point_by_index (2)
-		end
-
-feature -- Status setting
-
-	set_point_a (p1: EV_RELATIVE_POINT) is
-			-- Change the reference of `position_a' with `p1'.
-		require
-			p1_exists: p1 /= Void
-		do
-			set_point_by_index (1, p1)
-		ensure
-			point_a_assigned: p1 = point_a
-		end
-
-	set_point_b (p2: EV_RELATIVE_POINT) is
-			-- Change the reference of `position_b' with `p2'.
-		require
-			p2_exists: p2 /= Void
-		do
-			set_point_by_index (2, p2)
-		ensure
-			point_a_assigned: p2 = point_b
-		end
+	make_with_points
 
 feature -- Events
 
 	polygon_array: ARRAY [EV_COORDINATES] is
 			-- Return an array with the four absolute corner points.
 		local
-			sin_a, cos_a: REAL
-			w, h: REAL
+			sin_a, cos_a: DOUBLE
+			w, h: INTEGER
+			xa, ya: INTEGER
 			c: EV_COORDINATES
 		do
 			sin_a := sine (point_a.angle_abs)
 			cos_a := cosine (point_a.angle_abs)
-
+			xa := point_a.x_abs
+			ya := point_a.y_abs
 			if point_b.relative_to (point_a) then
-				w := point_b.x_rel_to (point_a)
+				w := point_b.x
+				h := point_b.y
 			else
-				w := (point_a.x_abs - point_b.x_abs)
-			end
-
-			if point_b.relative_to (point_a) then
-				h := point_b.y_rel_to (point_a)
-			else
-				h := (point_a.y_abs - point_b.y_abs)
+				w := (point_b.x_abs - point_a.x_abs)
+				h := (point_b.y_abs - point_a.y_abs)
 			end
 
 			create Result.make (1, 4)
-			create c.set (point_a.x_abs, point_a.y_abs)
+			create c.set (xa, ya)
 			Result.force (c, 1)
-			create c.set (point_a.x_abs + (cos_a * w).rounded,
-				point_a.y_abs + (sin_a * w).rounded)
+			create c.set ((cos_a * w).rounded + xa,
+				(sin_a * w).rounded + ya)
 			Result.force (c, 2)
-			create c.set (point_b.x_abs, point_b.y_abs)
+			create c.set ((cos_a * w - sin_a * h).rounded + xa,
+				(sin_a * w + cos_a * h).rounded + ya)
 			Result.force (c, 3)
-			create c.set (point_a.x_abs - (sin_a * h).rounded,
-				point_a.y_abs + (cos_a * h).rounded)
+			create c.set ((- sin_a * h).rounded + xa,
+				(cos_a * h).rounded + ya)
 			Result.force (c, 4)
 		end
 
@@ -165,7 +85,7 @@ feature -- Status report
 			if point_b.relative_to (point_a) then
 				Result := point_b.x_rel_to (point_a)
 			else
-				Result := (point_a.x_abs - point_b.x_abs)
+				Result := (point_b.x_abs - point_a.x_abs)
 			end
 			if Result < 0 then
 				Result := - Result
@@ -178,7 +98,7 @@ feature -- Status report
 			if point_b.relative_to (point_a) then
 				Result := point_b.y_rel_to (point_a)
 			else
-				Result := (point_a.y_abs - point_b.y_abs)
+				Result := (point_b.y_abs - point_a.y_abs)
 			end
 			if Result < 0 then
 				Result := - Result
@@ -228,24 +148,3 @@ end -- class EV_FIGURE_RECTANGLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.7  2000/04/27 19:10:50  brendel
---| Centralized testing code.
---|
---| Revision 1.6  2000/04/26 15:56:34  brendel
---| Added CVS Log.
---| Added copyright notice.
---| Improved description.
---| Added keywords.
---| Formatted for 80 columns.
---| Added make_for_test.
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

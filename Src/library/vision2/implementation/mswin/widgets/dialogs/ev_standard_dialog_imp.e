@@ -11,6 +11,8 @@ deferred class
 inherit
 	EV_STANDARD_DIALOG_I
 
+	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
+
 feature -- Access
 
 	blocking_window: EV_WINDOW
@@ -18,23 +20,29 @@ feature -- Access
 
 feature -- Status setting
 
-	show_modal is
+	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show the window and wait until the user closed it.
+			--| A window is required for the gtk implementation.
 		local
 			modal_to: WEL_COMPOSITE_WINDOW
+			app_imp: EV_APPLICATION_IMP
+			app: EV_APPLICATION
 		do
-			if blocking_window /= Void then
-				modal_to ?= blocking_window.implementation
-			else
-				modal_to ?= (create {EV_ENVIRONMENT}).application.first_window.implementation
-			end
+			app := (create {EV_ENVIRONMENT}).application
+			app_imp ?= app.implementation
+			set_blocking_window (a_window)
+			modal_to ?= blocking_window.implementation
 			activate (modal_to)
 			if selected then
 				selected_button := "OK"
-				interface.ok_actions.call ([])
+				if ok_actions_internal /= Void then
+					ok_actions_internal.call ([])
+				end
 			else
 				selected_button := "Cancel"
-				interface.cancel_actions.call ([])
+				if cancel_actions_internal /= Void then
+					cancel_actions_internal.call ([])
+				end
 			end
 		end
 
@@ -61,27 +69,78 @@ feature -- Deferred
 
 end -- class EV_STANDARD_DIALOG_IMP
 
---|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/07 23:08:14  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.14  2001/01/02 22:12:25  rogers
+--| Removed unused local variable from show_modal_to_window.
+--|
+--| Revision 1.6.4.13  2000/12/29 15:30:22  pichery
+--| Removed the WEL_BLOCKING_DISPATCHER. It is now useless
+--| with the new implementation for Dialogs
+--|
+--| Revision 1.6.4.12  2000/10/04 17:54:01  rogers
+--| Removed unreferenced variable from show_modal_to_window.
+--|
+--| Revision 1.6.4.11  2000/09/05 17:51:45  rogers
+--| Show_modal_to_window now sets the blocking window. Removed redundent
+--| code from show_modal_to_window as the window passed as an argument
+--| can never be Void.
+--|
+--| Revision 1.6.4.10  2000/08/16 22:06:27  rogers
+--| Renamed show_modal to show_modal_to_window.
+--|
+--| Revision 1.6.4.9  2000/08/11 23:52:05  rogers
+--| Corrected copyright clause.
+--|
+--| Revision 1.6.4.8  2000/08/04 00:44:02  rogers
+--| Replaced action sequence calls made through the interface of `Current' with
+--| calls to the internal action sequences.
+--|
+--| Revision 1.6.4.7  2000/07/24 23:59:26  rogers
+--| Now inherits EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.6.4.6  2000/07/20 20:03:25  rogers
+--| Removed hide and show.
+--|
+--| Revision 1.6.4.5  2000/07/20 19:22:34  rogers
+--| Added hide and show. Still to be implemented.
+--|
+--| Revision 1.6.4.4  2000/06/15 03:42:59  pichery
+--| Fixed bug. The blocking dispatcher was
+--| enabled at the end when it should not.
+--|
+--| Revision 1.6.4.3  2000/06/14 22:21:21  rogers
+--| Show_modal now references the new feature, windows from EV_APPLICATION.
+--|
+--| Revision 1.6.4.2  2000/06/13 03:58:47  pichery
+--| Disable blocking dispatcher before showing the
+--| standard dialogs
+--|
+--| Revision 1.6.4.1  2000/05/03 19:09:23  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/04/19 00:38:40  brendel
 --| Cosmetics.
 --|

@@ -25,7 +25,10 @@ inherit
 			set_pixmap,
 			remove_pixmap,
 			parent,
-			pointer_over_widget
+			pointer_over_widget,
+			set_foreground_color,
+			foreground_color_pointer,
+			visual_widget
 		redefine
 			initialize
 		end
@@ -33,20 +36,43 @@ inherit
 	EV_BUTTON_IMP
 		rename
 			interface as button_interface,
-			parent as button_parent
+			parent as button_parent,
+			select_actions_internal as button_select_actions_internal,	
+			pointer_motion_actions_internal as button_pointer_motion_actions_internal,	
+			pointer_button_press_actions_internal as button_pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal as button_pointer_double_press_actions_internal,
+			parent_imp as widget_parent_imp 
 		undefine
-			button_press_switch
+			button_press_switch,
+			select_actions,
+			pointer_motion_actions,	
+			pointer_button_press_actions,
+			pointer_double_press_actions,
+			create_select_actions,
+			create_pointer_button_press_actions,
+			create_pointer_double_press_actions
 		redefine
 			make,
 			initialize,
 			initialize_button_box
 		select
-			button_parent
+			button_parent,
+			button_pointer_motion_actions_internal,	
+			button_pointer_button_press_actions_internal,
+			button_pointer_double_press_actions_internal 
 		end
 
 	EV_TOOLTIPABLE_IMP
+		undefine
+			visual_widget
 		redefine
 			interface
+		end
+
+	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_IMP
+		redefine
+			select_actions_internal,
+			create_select_actions
 		end
 
 create
@@ -62,14 +88,10 @@ feature {NONE} -- Initialization
 			C.gtk_button_set_relief (c_object, C.gtk_relief_none_enum)
 		end
 
-	connect_signals is
-			-- Redefined in radio as press_actions is not connected directly
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
-			connect_signal_to_actions (
-				"clicked",
-				interface.select_actions,
-				Void
-			)
+			create Result
+			connect_signal_to_actions ("clicked", Result, Void)
 		end
 
 	initialize is
@@ -79,7 +101,6 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
-			connect_signals
 			is_initialized := True
 		end
 
@@ -115,11 +136,15 @@ feature -- Element change
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
 			-- Assign `a_gray_pixmap' to `gray_pixmap'.
 		do
+			gray_pixmap := clone (a_gray_pixmap)
+			--| FIXME IEK Needs proper implementation
 		end
 
 	remove_gray_pixmap is
 			-- Make `pixmap' `Void'.
 		do
+			gray_pixmap := Void
+			--| FIXME IEK Needs proper implementation
 		end
 
 feature -- Status report
@@ -161,11 +186,50 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.26  2000/06/07 20:08:03  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.27  2001/06/07 23:08:02  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.25  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.15.2.20  2001/06/05 22:42:03  king
+--| Corrected set_gray_pixmap to use clone instead of copy
+--|
+--| Revision 1.15.2.19  2001/06/04 17:20:58  rogers
+--| We now use copy instead of ev_clone.
+--|
+--| Revision 1.15.2.18  2000/11/02 01:04:19  etienne
+--| Made compilable with parent_imp change in ev_widget
+--|
+--| Revision 1.15.2.17  2000/10/09 18:01:48  king
+--| Made compilable
+--|
+--| Revision 1.15.2.16  2000/08/17 16:28:55  king
+--| Made compilable with change to button_imp
+--|
+--| Revision 1.15.2.15  2000/08/11 23:59:40  king
+--| No need for translate agent
+--|
+--| Revision 1.15.2.14  2000/08/09 20:57:07  oconnor
+--| use ev_clone instead of clone as per instructions of manus
+--|
+--| Revision 1.15.2.13  2000/08/08 20:59:13  king
+--| Changed ev_clone call to clone
+--|
+--| Revision 1.15.2.12  2000/08/04 17:25:33  king
+--| Redefining AS creation procs
+--|
+--| Revision 1.15.2.11  2000/08/03 19:23:41  king
+--| Redefining create_select_actions
+--|
+--| Revision 1.15.2.10  2000/08/01 21:31:38  king
+--| Removed connect_signals which is done on action sequence creation
+--|
+--| Revision 1.15.2.9  2000/07/24 21:33:39  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.15.2.8  2000/06/29 19:08:20  king
+--| Removed unnecessary creation of grey_pixmap from set_grey_pixmap
+--|
+--| Revision 1.15.2.6  2000/06/12 17:32:54  king
+--| Accounted for widget_imp obsolete feature removal
 --|
 --| Revision 1.15.2.5  2000/06/06 00:40:41  king
 --| Undefined button_press_switch

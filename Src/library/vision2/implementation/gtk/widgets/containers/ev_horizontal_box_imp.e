@@ -7,12 +7,13 @@ indexing
 	revision: "$Revision$"
 	
 class
-	
 	EV_HORIZONTAL_BOX_IMP
 	
 inherit
-	
 	EV_HORIZONTAL_BOX_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
 		redefine
 			interface
 		end
@@ -32,7 +33,10 @@ feature {NONE} -- Initialization
 			-- Create a GTK horizontal box.
 		do	
 			base_make (an_interface)
-			set_c_object (C.gtk_hbox_new (Default_homogeneous, Default_spacing))
+			set_c_object (C.gtk_event_box_new)
+			container_widget := C.gtk_hbox_new (Default_homogeneous, Default_spacing)
+			C.gtk_container_add (c_object, container_widget)
+			C.gtk_widget_show (container_widget)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -62,6 +66,38 @@ end -- class EV_HORIZONTAL_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.15.4.7  2000/10/27 16:54:42  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.15.4.6  2000/10/09 19:28:09  oconnor
+--| cosmetics
+--|
+--| Revision 1.15.4.5  2000/09/18 18:06:43  oconnor
+--| reimplemented propogate_[fore|back]ground_color for speeeeed
+--|
+--| Revision 1.15.4.4  2000/08/28 18:20:58  king
+--| Adding box b4 showing
+--|
+--| Revision 1.15.4.3  2000/08/08 00:03:14  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.15.4.2  2000/06/14 00:01:39  king
+--| Added event box to catch events
+--|
+--| Revision 1.15.4.1  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.17  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

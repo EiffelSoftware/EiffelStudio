@@ -261,7 +261,7 @@ feature -- Element change
 			from
 				other.start
 			until
-				other.empty
+				other.is_empty
 			loop
 				v := other.item
 				other.remove
@@ -278,7 +278,7 @@ feature -- Element change
 		do
 			from
 			until
-				other.empty
+				other.is_empty
 			loop
 				other.finish
 				v := other.item
@@ -293,15 +293,26 @@ feature -- Removal
 			-- Remove `v' if present. Do not move cursor, except if
 			-- cursor was on `v', move to right neighbor.
 		local
-			old_index, item_index: INTEGER
+			item_index: INTEGER
 		do
-			old_index := index
 			item_index := index_of (v, 1)
 			if item_index > 0 then
 				remove_i_th (item_index)
+				if item_index <= index then
+					index := index - 1
+				end
 			end
-			index := old_index
 		ensure
+			--| It is not possible to call old item as if off, it will cause
+			--| imp to_int to fail and because all old expressions are evaluated
+			--| on entry to a routine, we cannot check that we were not off
+			--| before evaluating old item. Julian. 
+			cursor_not_moved: not old has (v) implies
+				old interface.index = interface.index
+			cursor_not_moved: old has (v) and then old interface.index <
+				old index_of (v, 1) implies index = old index
+			cursor_not_moved: old has (v) and then old interface.index >=
+				old index_of (v, 1) implies index = old index - 1
 			not_has_v: not has (v)
 		end
 
@@ -334,6 +345,19 @@ feature -- Removal
 			remove_i_th (index + 1)
 		ensure then
 			right_neighbor_removed: not has (old i_th (index + 1))
+		end
+
+	wipe_out is
+			-- Remove all items.
+		do
+			from
+				interface.start
+			until
+				interface.is_empty
+			loop
+				interface.remove
+			end
+			interface.back
 		end
 
 feature {NONE} -- Implementation
@@ -380,7 +404,8 @@ feature {NONE} -- Implementation
 	g_converter: ASSIGN_ATTEMPT [G]
 
 invariant
-	index_within_bounds: index >= 0 and then index <= count + 1
+	index_within_bounds: is_usable implies (index >= 0 and then
+		index <= count + 1)
 
 end -- class EV_DYNAMIC_LIST_I
 
@@ -405,8 +430,40 @@ end -- class EV_DYNAMIC_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.9  2000/06/07 17:27:46  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.10  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.2.12  2001/05/18 18:21:55  king
+--| Corrected index_within_bounds invariant
+--|
+--| Revision 1.8.2.11  2001/02/16 00:17:13  rogers
+--| Replaced is_useable with is_usable.
+--|
+--| Revision 1.8.2.10  2001/01/15 20:13:50  rogers
+--| Implemented wipe_out. This now allows implementation to redefine wipe_out
+--| for performance optimizations.
+--|
+--| Revision 1.8.2.9  2000/11/29 00:35:22  rogers
+--| Changed empty to is_empty.
+--|
+--| Revision 1.8.2.8  2000/10/04 17:25:08  rogers
+--| Fixed post condition on prune again, as it turned out it is not possible
+--| to use old item without being sure that imp_to_int will not fail, as
+--| pre and post conditions are only checked one level deep. Post condition
+--| on prune now does not use old item, it now works with the index. Formatting
+--| to 80 columns.
+--|
+--| Revision 1.8.2.7  2000/10/04 15:47:01  rogers
+--| Fixed prune. The index was not moved correctly, and there was still a bug
+--| in the post condition.
+--|
+--| Revision 1.8.2.6  2000/10/03 22:20:06  rogers
+--| Corrected post condition on prune.
+--|
+--| Revision 1.8.2.5  2000/09/18 18:15:30  oconnor
+--| Previous implementor of prune did not understand that cursor position
+--| not changing is not the same as `index' not changing. (ie when the
+--| pruned item index is less than `index'.)
 --|
 --| Revision 1.8.2.4  2000/05/27 01:53:24  pichery
 --| Cosmetics

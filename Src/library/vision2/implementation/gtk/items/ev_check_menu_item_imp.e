@@ -88,8 +88,8 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.19  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.20  2001/06/07 23:08:01  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
 --| Revision 1.13.4.2  2000/05/09 21:46:45  king
 --| Intergrated selectable/deselectable

@@ -34,16 +34,18 @@ feature {NONE} -- Initialization
 
  	make (an_interface: like interface) is
  			-- Create the default font.
-		local
-			iname: ANY
-			list: LINKED_LIST [STRING]
 		do
 			create C
 			base_make (an_interface)
-			family := Ev_font_family_sans
-			weight := Ev_font_weight_regular
-			shape := Ev_font_shape_regular
-			height := 11
+			family := Family_sans
+			weight := Weight_regular
+			shape := Shape_regular
+			height := 12
+
+			create preferred_faces
+			preferred_faces.add_actions.extend (~update_preferred_faces)
+			preferred_faces.remove_actions.extend (~update_preferred_faces)
+
 			update_font_face
 		end
 
@@ -66,9 +68,10 @@ feature -- Access
 	height: INTEGER
 			-- Preferred font height measured in screen pixels.
 
-	preferred_face: STRING
-			-- Preferred user font.
-			-- `family' will be ignored when not Void.
+-- FIXME ARNAUD
+--	preferred_face: STRING
+--			-- Preferred user font.
+--			-- `family' will be ignored when not Void.
 
 feature -- Element change
 
@@ -94,28 +97,14 @@ feature -- Element change
 		end
 
 	set_height (a_height: INTEGER) is
-			-- Set `a_height' as preferred font size.
+			-- Set `a_height' as preferred font size in screen pixels
 		do
 			height := a_height
 			update_font_face
 		end
 
-	set_preferred_face (a_preferred_face: STRING) is
-			-- Set `a_preferred_face' as preferred font face.
-		do
-			preferred_face := a_preferred_face
-			update_font_face
-		end
-
-	remove_preferred_face is
-			-- Set `a_preferred_face' to Void.
-		do
-			preferred_face := Void
-			update_font_face
-		end
-
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
-		a_preferred_face: STRING) is
+		a_preferred_faces: like preferred_faces) is
 			-- Set `a_family', `a_weight', `a_shape' `a_height' and
 			-- `a_preferred_face' at the same time for speed.
 		do
@@ -123,21 +112,18 @@ feature -- Element change
 			weight := a_weight
 			shape := a_shape
 			height := a_height
-			preferred_face := a_preferred_face
+			preferred_faces.add_actions.wipe_out
+			preferred_faces.remove_actions.wipe_out
+			preferred_faces := a_preferred_faces
+			preferred_faces.add_actions.extend (~update_preferred_faces)
+			preferred_faces.remove_actions.extend (~update_preferred_faces)
 			update_font_face
 		end
 
 feature -- Status report
 
-	name: STRING is
+	name: STRING
 			-- Face name chosen by toolkit.
-		do
-			if preferred_face /= Void then
-				Result := preferred_face
-			else
-				Result := family_string
-			end
-		end
 
 	ascent: INTEGER is
 			-- Vertical distance from the origin of the drawing
@@ -205,55 +191,88 @@ feature {NONE} -- Implementation
 			create Result.make (10)
 		end
 
+	try_font (a_try_string: STRING; a_try_face: STRING): EV_GDK_FONT is
+		local
+			exp_name: STRING
+		do
+			if preloaded.has (a_try_string) then
+				Result := preloaded.item (a_try_string)
+				name := a_try_face
+			else
+				exp_name := match_name (a_try_string)
+				if exp_name /= Void then
+					create Result.make (exp_name)
+					preloaded.put (Result, a_try_string)
+					name := a_try_face
+				end
+			end
+		end
+
+	match_preferred_face (
+		try_string_creator: FUNCTION[EV_FONT_IMP, TUPLE [EV_FONT_IMP, STRING], STRING]
+	): EV_GDK_FONT is
+			-- Match the preferred face using the font 
+			-- string creator `try_string_creator'
+		local
+			temp_font: EV_GDK_FONT
+			a_try_string: STRING
+			curr_face: STRING
+		do
+			if preferred_faces.is_empty then
+				curr_face := family_string
+				a_try_string := try_string_creator.item ([Current, curr_face])
+				temp_font := try_font (a_try_string, curr_face)
+			else
+				from
+					preferred_faces.start
+				until
+					temp_font /= Void or
+					preferred_faces.after
+				loop
+					curr_face := preferred_faces.item
+					a_try_string := try_string_creator.item ([Current, curr_face])
+					temp_font := try_font (a_try_string, curr_face)
+					preferred_faces.forth
+				end
+					-- Impossible to match the font with the given faces, try with the
+					-- family.
+				if temp_font = Void then
+					curr_face := family_string
+					a_try_string := try_string_creator.item ([Current, curr_face])
+					temp_font := try_font (a_try_string, curr_face)
+				end
+			end
+			Result := temp_font
+		end
+
+	update_preferred_faces (a_face: STRING) is
+		do
+			update_font_face
+		end
+
 	update_font_face is
 			-- Look up font and if not in list, find best match.
 		local
-			exp_name: STRING
 			temp_font: EV_GDK_FONT
-			a_try_string: STRING
+			i: INTEGER
 		do
-			a_try_string := try_string
-			if preloaded.has (a_try_string) then
-				temp_font := preloaded.item (a_try_string)
-			else
-				exp_name := match_name (a_try_string)
-				if exp_name = Void then
-					if preferred_face /= Void then
-						io.put_string ("Warning: no match found for " +
-							a_try_string + "%N")
-					end
-					exp_name := rescue_match
-				end
-				create temp_font.make (exp_name)
-				preloaded.put (temp_font, a_try_string)
+			from
+				i := try_string_array.lower
+			until
+				temp_font /= Void or i > try_string_array.upper
+			loop
+				temp_font := match_preferred_face (try_string_array.item (i))
+				i := i + 1
 			end
+
+			if temp_font = Void then
+				name := ""
+				io.put_string ("Error: no fonts installed%N")
+				--| FIXME Raise exception?
+			end
+
 			full_name := temp_font.full_name
 			c_object := temp_font.c_object
-		end
-
-	rescue_match: STRING is
-			-- Try to match as good as possible.
-		do
-			Result := match_name (rescue_string_one)
-			if Result = Void then
-				Result := match_name (rescue_string_two)
-				if Result = Void then
-					io.put_string ("Warning: non-optimal font match.%N")
-					Result := match_name (non_optimal)
-					if Result = Void then		
-						Result := match_name (last_resort_string)
-						if Result = Void then				
-							Result := match_name (any_name)
-							if Result = Void then	
-								io.put_string ("Error: no fonts installed%N")
-								--| FIXME Raise exception?
-							end
-						end
-					end
-				end
-			end
-		ensure
-			not_void: Result /= Void
 		end
 
 	match_name (pattern: STRING): STRING is
@@ -297,7 +316,7 @@ feature {NONE} -- Implementation
 			C.x_free_font_names (array_pointer)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_FONT_DIALOG_IMP} -- Implementation
 
 	--| Routine for extracting items from a X-font.
 
@@ -342,24 +361,58 @@ feature {NONE} -- Implementation
 			no_dashes: Result.occurrences ('-') = 0
 		end
 
+	weight_from_string (a_string: STRING): INTEGER is
+			-- Return appropriate weight code from string.
+		do
+			if equal (a_string, "bold") then
+				Result := Weight_bold
+			elseif equal (a_string, "black") then
+				Result := Weight_black
+			else
+				Result := Weight_regular
+			end
+		end
+
+	shape_from_string (a_string: STRING): INTEGER is
+			-- Return appropriate shape code from string.
+		do
+			if equal (a_string, "o") then
+				Result := Shape_italic
+			else
+				Result := Shape_regular
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	--| String-routines to facilitate in searching the best matching font.
+
+	try_string_array: ARRAY [FUNCTION [EV_FONT_IMP, TUPLE [EV_FONT_IMP, STRING], STRING]] is
+				-- Create and setup the preferred font face mechanism
+		once
+			create Result.make (1, 6)
+			Result.put ({EV_FONT_IMP}~try_string, 1)
+			Result.put ({EV_FONT_IMP}~rescue_string_one, 2)
+			Result.put ({EV_FONT_IMP}~rescue_string_two, 3)
+			Result.put ({EV_FONT_IMP}~non_optimal, 4)
+			Result.put ({EV_FONT_IMP}~last_resort_match, 5)
+			Result.put ({EV_FONT_IMP}~default_font, 6)
+		end
 
 	family_string: STRING is
 			-- Get standard string to represent family.
 		do
 			check valid_family (family) end
 			inspect family
-			when Ev_font_family_screen then
+			when Family_screen then
 				Result := "fixed"
-			when Ev_font_family_roman then
+			when Family_roman then
 				Result := "times"
-			when Ev_font_family_typewriter then
+			when Family_typewriter then
 				Result := "courier"
-			when Ev_font_family_sans then
+			when Family_sans then
 				Result := "helvetica"
-			when Ev_font_family_modern then
+			when Family_modern then
 				Result := "lucida"
 			else
 				Result := "*"
@@ -371,13 +424,13 @@ feature {NONE} -- Implementation
 		do
 			check valid_weight (weight) end
 			inspect weight
-			when Ev_font_weight_thin then
+			when Weight_thin then
 				Result := "medium"
-			when Ev_font_weight_regular then
+			when Weight_regular then
 				Result := "medium"
-			when Ev_font_weight_bold then
+			when Weight_bold then
 				Result := "bold"
-			when Ev_font_weight_black then
+			when Weight_black then
 				Result := "black"
 			else
 				Result := "*"
@@ -389,9 +442,9 @@ feature {NONE} -- Implementation
 		do
 			check valid_shape (shape) end
 			inspect shape
-			when Ev_font_shape_regular then
+			when Shape_regular then
 				Result := "r"
-			when Ev_font_shape_italic then
+			when Shape_italic then
 				Result := "o"
 			else
 				Result := "*"
@@ -401,7 +454,7 @@ feature {NONE} -- Implementation
 	setwidth_string: STRING is
 			-- Get standard string to represent shape.
 		do
-			if weight = Ev_font_weight_thin then
+			if weight = Weight_thin then
 				Result := "narrow"
 			else
 				Result := "normal"
@@ -411,24 +464,25 @@ feature {NONE} -- Implementation
 	addstyle_string: STRING is
 			-- Get standard string to represent addstyle.
 		do
-			if family = Ev_font_family_sans then
+			if family = Family_sans then
 				Result := "sans"
 			else
 				Result := "*"
 			end
 		end
 
-	try_string: STRING is
+	try_string (a_name: STRING): STRING is
 			-- Font with wildcards, trying to get the best match
-			-- for the current attributes.
+			-- for the current attributes and the font face name
+			-- `a_name'.
 		do
-			Result := "-*-" + name + "-" + weight_string + "-"
+			Result := "-*-" + a_name + "-" + weight_string + "-"
 				+ shape_string + "-" + setwidth_string + "-"
 				+ addstyle_string + "-" + height.out
 				+ "-*-*-*-*-*-iso8859-*"
 		end
 
-	rescue_string_one: STRING is
+	rescue_string_one (a_name: STRING): STRING is
 			-- If try_string does not give any matches, use this string.
 			-- It replaces "black" with "bold" and does not use a
 			-- preferred setwidth or addstyle.
@@ -439,12 +493,12 @@ feature {NONE} -- Implementation
 			if wgt.is_equal ("black") then
 				wgt := "bold"
 			end
-			Result := "-*-" + name + "-" + wgt + "-"
+			Result := "-*-" + a_name + "-" + wgt + "-"
 				+ shape_string + "-normal-*-" + height.out
 				+ "-*-*-*-*-*-iso8859-*"
 		end
 
-	rescue_string_two: STRING is
+	rescue_string_two (a_name: STRING): STRING is
 			-- If rescue-string-one does not match anything, use this.
 			-- It replaces "o" with "i".
 		local
@@ -458,32 +512,35 @@ feature {NONE} -- Implementation
 			if shp.is_equal ("o") then
 				shp := "i"
 			end
-			Result := "-*-" + name + "-" + wgt + "-"
+			Result := "-*-" + a_name + "-" + wgt + "-"
 				+ shp + "-*-*-" + height.out
 				+ "-*-*-*-*-*-iso8859-*"
 		end
 
-	non_optimal: STRING is
+	non_optimal (a_name: STRING): STRING is
 			-- If there is no optimal match: too bad!
 			-- Try this and get at least the right size and family.
 		do
-			Result := "-*-" + name + "-*-"
+			Result := "-*-" + a_name + "-*-"
 				+ "*-*-*-" + height.out
 				+ "-*-*-*-*-*-*-*"
 		end
 
-	last_resort_string: STRING is
+	last_resort_match (a_font_name: STRING): STRING is
 			-- This is getting painful. Try to get a font with only
-			-- the right size and you'll be OK.
+			-- the right name and you'll be OK.
 		do
-			Result := "-*-*-*-*-*-*-" + height.out + "-*-*-*-*-*-*-*"
-		end
+			Result := "-*-" + a_font_name + "-*-*-*-**-*-*-*-*-*-*-*"
+		end	
 
-	any_name: STRING is "-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+	default_font (a_font_name: STRING): STRING is 
 			-- If this font does not give a match, there is not
 			-- a single font installed on the system.
+		do
+			Result := "-misc-fixed-*-*-*-*-*-*-*-*-*-*-*-*"
+		end
 
-feature {EV_ANY_IMP, EV_DRAWABLE_IMP} -- Implementation
+feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
 
 	c_object: POINTER
 		-- Reference to the GdkFont object.
@@ -515,8 +572,8 @@ feature -- Obsolete
 		end
 
 invariant
-	c_object_not_null: c_object /= NULL
-	full_name_not_void: full_name /= Void
+	c_object_not_null: is_initialized implies c_object /= NULL
+	full_name_not_void: is_initialized implies full_name /= Void
 	
 end -- class EV_FONT_IMP
 
@@ -542,6 +599,59 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2001/06/07 23:08:03  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.4.16  2001/04/26 18:58:11  king
+--| Changed last matchable font to terminal to avoid chinese on some systems
+--|
+--| Revision 1.10.4.15  2001/04/20 00:12:37  king
+--| Updated set_height comment
+--|
+--| Revision 1.10.4.14  2001/04/14 00:01:14  king
+--| Added app_imp to export clause of c_object
+--|
+--| Revision 1.10.4.13  2001/04/06 18:01:45  xavier
+--| Modifying the preferred faces of the font used not to update the actual font.
+--|
+--| Revision 1.10.4.12  2000/12/15 19:39:58  king
+--| Changed .empty to .is_empty
+--|
+--| Revision 1.10.4.11  2000/10/05 19:17:49  oconnor
+--| fixed constant names
+--|
+--| Revision 1.10.4.10  2000/09/07 22:34:15  king
+--| Added is_initialized to font invariants
+--|
+--| Revision 1.10.4.9  2000/09/04 18:22:49  oconnor
+--| make try_string_array once
+--|
+--| Revision 1.10.4.8  2000/07/28 00:25:42  king
+--| Removed unused locals, default height of font is now 12, like GTK
+--|
+--| Revision 1.10.4.7  2000/07/25 20:25:12  king
+--| Added functions to return vision font codes
+--|
+--| Revision 1.10.4.6  2000/06/19 17:45:09  king
+--| Moved update_face_name post cond into imp int
+--|
+--| Revision 1.10.4.5  2000/06/16 00:31:53  oconnor
+--| fixed action sequence names
+--|
+--| Revision 1.10.4.4  2000/06/15 19:06:43  pichery
+--| Changed the implementation of `last_resort_string' in order to make the
+--| face name more important than the font size.
+--|
+--| Revision 1.10.4.3  2000/06/15 07:23:51  pichery
+--| Adapted the class so that it handle multiple preferred faces.
+--|
+--| Revision 1.10.4.2  2000/06/15 03:51:35  pichery
+--| Removed `preferred_face' and replaced it with
+--| `preferred_faces'.
+--|
+--| Revision 1.10.4.1  2000/05/03 19:08:38  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.16  2000/05/02 18:55:21  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

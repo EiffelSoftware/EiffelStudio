@@ -19,6 +19,8 @@ feature -- Access
 	file_name: STRING is
 			-- Full name of currently selected file including path.
 			-- `Void' if user did not click "OK".
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.file_name
 		ensure
@@ -28,6 +30,8 @@ feature -- Access
 
 	filter: STRING is
 			-- Filter currently applied to file list.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.filter
 		ensure
@@ -36,6 +40,8 @@ feature -- Access
 
 	start_directory: STRING is
 			-- Base directory where browsing will start.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.start_directory
 		ensure
@@ -47,6 +53,8 @@ feature -- Status report
 	file_title: STRING is
 			-- `file_name' without its path.
 			-- `Void' if user did not click "OK".
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.file_title
 		ensure
@@ -57,6 +65,8 @@ feature -- Status report
 	file_path: STRING is
 			-- Path of `file_name'.
 			-- `Void' if user did not click "OK".
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.file_path
 		ensure
@@ -69,6 +79,7 @@ feature -- Element change
 	set_filter (a_filter: STRING) is
 			-- Set `a_filter' as new filter.
 		require
+			not_destroyed: not is_destroyed
 			a_filter_not_void: a_filter /= Void
 		do
 			implementation.set_filter (a_filter)
@@ -79,6 +90,7 @@ feature -- Element change
 	set_file_name (a_name: STRING) is
 			-- Make `a_name' the selected file.
 		require
+			not_destroyed: not is_destroyed
 			a_name_not_void: a_name /= Void
 		do
 			implementation.set_file_name (a_name)
@@ -89,6 +101,7 @@ feature -- Element change
 	set_start_directory (a_path: STRING) is
 			-- Make `a_path' the base directory.
 		require
+			not_destroyed: not is_destroyed
 			a_path_not_void: a_path /= Void
 		do
 			implementation.set_start_directory (a_path)
@@ -96,9 +109,10 @@ feature -- Element change
 			assigned: start_directory.is_equal (a_path)
 		end
 
-feature {NONE} -- implementation
+feature {EV_ANY_I} -- implementation
 
 	implementation: EV_FILE_DIALOG_I
+		-- Responsible for interaction with the native graphics toolkit.
 
 invariant
 	filter_not_void: filter /= Void
@@ -125,52 +139,3 @@ end -- class EV_FILE_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.10  2000/02/29 18:09:09  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.9  2000/02/22 18:39:50  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.8  2000/02/14 11:40:50  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.7.6.7  2000/01/28 22:24:22  oconnor
---| released
---|
---| Revision 1.7.6.6  2000/01/27 23:45:26  brendel
---| Improved contracts.
---|
---| Revision 1.7.6.5  2000/01/27 22:03:11  brendel
---| Improved contracts.
---| Removed feature default_extension.
---| Added features file_path and file_title.
---|
---| Revision 1.7.6.4  2000/01/27 19:30:49  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.7.6.3  2000/01/27 18:54:55  brendel
---| Fixed bug in postconditions.
---|
---| Revision 1.7.6.2  2000/01/27 02:40:11  brendel
---| Revised. Now has attributes: file_name, start_directory, default_extension,
---| filter.
---|
---| Revision 1.7.6.1  1999/11/24 17:30:50  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.7.2.3  1999/11/04 23:10:54  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.7.2.2  1999/11/02 17:20:12  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

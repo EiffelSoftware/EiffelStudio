@@ -10,39 +10,62 @@ deferred class
 	EV_SENSITIVE
 
 inherit
-	EV_ANY
-		undefine
-			create_action_sequences
+	EV_CONTAINABLE
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 	
 feature -- Status report
 
 	is_sensitive: BOOLEAN is
 			-- Is object sensitive to user input.
+		require
+			not_destroyed: not is_destroyed
 		do
-			Result := implementation.is_sensitive
+			Result := implementation.user_is_sensitive
 		ensure
-			bridge_ok: Result = implementation.is_sensitive
+			bridge_ok: Result = implementation.user_is_sensitive
 		end
 
 feature -- Status setting
 
 	enable_sensitive is
 			-- Make object sensitive to user input.
+		require
+			not_destroyed: not is_destroyed
 		do
-			implementation.enable_sensitive
+			implementation.user_enable_sensitive
 		ensure
-			is_sensitive: is_sensitive
+			is_sensitive: (parent = Void or parent_is_sensitive) implies is_sensitive
 		end
 
 	disable_sensitive is
 			-- Make object non-sensitive to user input.
+		require
+			not_destroyed: not is_destroyed
 		do
-			implementation.disable_sensitive
+			implementation.user_disable_sensitive
 		ensure
 			is_unsensitive: not is_sensitive
+		end
+
+feature {NONE} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_CONTAINABLE} and is_sensitive
+		end
+
+	parent_is_sensitive: BOOLEAN is
+		local
+			sensitive_parent: EV_SENSITIVE
+		do
+			sensitive_parent ?= parent
+			if sensitive_parent /= Void then
+				Result := sensitive_parent.is_sensitive
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -67,19 +90,3 @@ end -- class EV_SENSITIVE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.2  2000/06/07 17:28:07  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.1.2.1  2000/05/11 19:27:30  king
---| Initial
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

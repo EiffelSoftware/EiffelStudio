@@ -12,7 +12,8 @@ deferred class
 inherit
 	EV_SELECTABLE
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 	
 feature -- Status setting
@@ -20,17 +21,49 @@ feature -- Status setting
 	disable_select is
 			-- Deselect the object.
 		require
-			is_deselectable: is_selectable
+			not_destroyed: not is_destroyed
 		do
 			implementation.disable_select
 		ensure
 			unselected: not is_selected
+		end
+		
+	toggle is
+			-- Change `is_selected'.
+		require
+			not_is_destroyed: not is_destroyed
+			can_be_selected: not is_selected implies is_selectable
+		do
+			if is_selected then
+				disable_select
+			else
+				enable_select
+			end
+		ensure
+			is_selected_changed: is_selected /= old is_selected
+		end
+
+feature {NONE} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_SELECTABLE} and not is_selected 
 		end
 
 feature {EV_ANY_I} -- Implementation
 	
 	implementation: EV_DESELECTABLE_I
 			-- Responsible for interaction with the native graphics toolkit.
+			
+invariant
+
+	not_selectable_therefore_not_selected: not is_selectable implies not is_selected
+		-- Some descendents of deselectable may only be selected when parented. This is
+		-- any descendent in which the parent can be in a single selection mode, to combat the
+		-- problem of adding two selected items, we have this assertion, so these items
+		-- cannot be selected unless they are parented.
+		
 
 end -- class EV_DESELECTABLE
 
@@ -49,22 +82,3 @@ end -- class EV_DESELECTABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.2  2000/06/07 17:28:07  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.1.2.2  2000/05/09 22:37:33  king
---| Integrated selectable, is_selectable for list items
---|
---| Revision 1.1.2.1  2000/05/09 20:27:49  king
---| Initial
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

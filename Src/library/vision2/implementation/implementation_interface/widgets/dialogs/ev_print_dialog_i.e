@@ -38,14 +38,28 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	maximum_range: INTEGER is
-			-- Maximum value for the range of pages specified
-			-- in the From and To page edit controls.
-			-- 1 by default.
+	maximum_to_page: INTEGER
+			-- Maximum `to_page' value.
+
+	minimum_from_page: INTEGER
+			-- Minimum `from_page' value.
+
+	output_file_name: STRING is
+			-- String representation of the path to output
+			-- the printed area to.
 		require
 		deferred
 		ensure
-			positive_result: Result >= 0
+			result_not_void: Result /= Void
+		end
+
+	printer_name: STRING is
+			-- String representation of the printer to output
+			-- the printed area to.
+		require
+		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -57,7 +71,7 @@ feature -- Status report
 		end
 
 	page_numbers_selected: BOOLEAN is
-			-- Is the "Page" radio button selected?
+			-- Is the "Range" radio button selected?
 		require
 		deferred
 		end
@@ -68,8 +82,14 @@ feature -- Status report
 		deferred
 		end
 
-	print_to_file_checked: BOOLEAN is
-			-- Is the "Print to file" check box checked?
+	page_numbers_enabled: BOOLEAN is
+			-- Is the "Range" radio button enabled?
+		require
+		deferred
+		end
+
+	selection_enabled: BOOLEAN is
+			-- Is the "Selection" radio button selected?
 		require
 		deferred
 		end
@@ -80,7 +100,68 @@ feature -- Status report
 		deferred
 		end
 
+	print_to_file_enabled: BOOLEAN is
+			-- Is the "File" radio button enabled?
+		require
+		deferred
+		end
+
+	print_to_file_shown: BOOLEAN is
+			-- Is the "File" radio button visible?
+		require
+		deferred
+		end
+
+	print_to_file_checked: BOOLEAN is
+                        -- Is the "File" radio button checked?
+                require
+		deferred
+		end
+
+	landscape_checked: BOOLEAN is
+			-- Is the landscape option selected.
+		require
+		deferred
+		end
+
+	print_context: EV_PRINT_CONTEXT is
+			-- Return a print context for the dialog box.
+		local
+			context: EV_PRINT_CONTEXT
+		do
+			create context
+			context.set_range (from_page, to_page)
+			context.set_copies (copies)
+			if all_pages_selected then
+				context.set_selection_to_all
+			elseif page_numbers_selected then
+				context.set_selection_to_range
+			else
+				context.set_selection_to_selection
+			end
+			context.set_printer_name (printer_name)
+			context.set_file_name (output_file_name)
+			if landscape_checked then
+				context.set_landscape
+			else
+				context.set_portrait
+			end
+			if print_to_file_checked then
+				context.set_output_to_file
+			else
+				context.set_output_to_printer
+			end
+			Result := context
+		end
+
 feature -- Status setting
+
+	select_all_pages is
+			-- Select the "All pages" radio button.
+                        -- Selected by default.
+                require
+		deferred
+		end
 
 	select_page_numbers is
 			-- Select the "Page numbers" radio button.
@@ -96,24 +177,20 @@ feature -- Status setting
 		deferred
 		end
 
-	check_print_to_file is
-			-- Check the "Print to file" check box.
+	enable_page_numbers is
+			-- Enable the "Range" radio button.
 		require
 		deferred
-		ensure
-			print_to_file_checked: print_to_file_checked
-		end
-
-	check_collate is
-			-- Check the "Collate" check box.
-		require
-		deferred
-		ensure
-			collate_checked: collate_checked
 		end
 
 	disable_page_numbers is
-			-- Disable the "Page numbers" radio button.
+			-- Disable the "Range" radio button.
+		require
+		deferred
+		end
+
+	enable_selection is
+			-- Enable the "Selection" radio button.
 		require
 		deferred
 		end
@@ -124,8 +201,36 @@ feature -- Status setting
 		deferred
 		end
 
+	check_collate is
+			-- Check the "Collate" check box.
+		require
+		deferred
+		ensure
+			collate_checked: collate_checked
+		end
+
+	uncheck_collate is
+			-- Uncheck the "Collate" check box.
+		require
+		deferred
+		ensure
+			colate_not_checked: not collate_checked
+		end	
+
+	enable_print_to_file is
+			-- Enable the "Print to file" check box.
+		require
+		deferred
+		end
+
 	disable_print_to_file is
 			-- Disable the "Print to file" check box.
+		require
+		deferred
+		end
+
+	show_print_to_file is
+			-- Show the "Print to file" check box.
 		require
 		deferred
 		end
@@ -134,6 +239,22 @@ feature -- Status setting
 			-- Hide the "Print to file" check box.
 		require
 		deferred
+		end
+
+	check_print_to_file is
+			-- Check the "Print to file" check box.
+		require
+		deferred
+		ensure
+			print_to_file_checked: print_to_file_checked
+		end
+
+	uncheck_print_to_file is
+			-- Check the "Print to file" check box.
+		require
+		deferred
+		ensure
+			print_to_file_not_checked: not print_to_file_checked
 		end
 
 feature -- Element change
@@ -165,13 +286,24 @@ feature -- Element change
 			copies_set: copies = value
 		end
 
-	set_maximum_range (value: INTEGER) is
-			-- Make `value' the new maximum_range.
+	set_maximum_to_page (value: INTEGER) is
+			-- Make `value' the new maximum `to_page' value.
 		require
-			positive_value: value >= 0
+			positive_value: value > 0
+			not_less_than_minimum: value >= minimum_from_page
 		deferred
 		ensure
-			maximum_range_set: maximum_range = value
+			maximum_to_page_set: maximum_to_page = value
+		end
+
+	set_minimum_from_page (value: INTEGER) is
+			-- Make `value' the new minimum `from_page' value.
+		require
+			positive_value: value > 0
+			not_greater_than_maximum_value: value <= maximum_to_page
+		deferred
+		ensure
+			minimum_from_page_set: minimum_from_page = value
 		end
 
 end -- class EV_PRINT_DIALOG_I
@@ -197,6 +329,30 @@ end -- class EV_PRINT_DIALOG_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.4.7  2000/11/11 00:56:33  andrew
+--| Replaced maximum_range facilities with minimum_from_page and maximum_to_page.
+--|
+--| Revision 1.2.4.6  2000/10/31 01:54:56  andrew
+--| Added landscape_checked
+--|
+--| Revision 1.2.4.5  2000/10/31 01:36:48  andrew
+--| interface/support/ev_print_context.e
+--|
+--| Revision 1.2.4.4  2000/10/13 21:36:37  andrew
+--| Removed landscape_checked: BOOLEAN
+--|
+--| Revision 1.2.4.3  2000/10/13 20:55:07  andrew
+--| Removed portrait_checked: BOOLEAN
+--|
+--| Revision 1.2.4.2  2000/10/12 21:52:12  andrew
+--| Updated with routines added to ev_print_dialog_imp
+--|
+--| Revision 1.2.4.1  2000/05/03 19:09:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

@@ -4,7 +4,10 @@ indexing
 		%applied."
 	note:
 		"When line style is dashed and line width is bigger than one,%N%
-		%lines are not guaranteed to be dashed on all platforms."
+		%lines are not guaranteed to be dashed on all platforms.%N%
+		%All drawing operations are performed in the current%N%
+		%foreground color unless otherwise stated. i.e. `clear_rectangle'%N%
+		% uses the current background color."
 	status: "See notice at end of class"
 	keywords: "figure, primitive, drawing, line, point, ellipse" 
 	date: "$Date$"
@@ -22,10 +25,17 @@ inherit
 
 	EV_DRAWABLE_CONSTANTS
 		undefine
-			default_create
+			default_create,
+			copy
 		end
 
 	EV_COLORIZABLE
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
+	EV_FONTABLE
 		redefine
 			implementation,
 			is_in_default_state
@@ -35,6 +45,8 @@ feature -- Access
 
 	line_width: INTEGER is
 			-- Line thickness. Default: 1.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.line_width
 		ensure
@@ -43,7 +55,9 @@ feature -- Access
 
 	drawing_mode: INTEGER is
 			-- Logical operation on pixels when drawing.
-			-- Default: Ev_drawing_mode_copy_enum.
+			-- Default: Ev_drawing_mode_copy.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.drawing_mode
 		ensure
@@ -51,7 +65,9 @@ feature -- Access
 		end
 
 	clip_area: EV_RECTANGLE is
-			-- Rectangular to apply clipping on.
+			-- Rectangular area to apply clipping on.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.clip_area
 		ensure
@@ -61,6 +77,8 @@ feature -- Access
 	tile: EV_PIXMAP is
 			-- Pixmap that is used to draw filled primitives with
 			-- instead of `foreground_color'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.tile
 		ensure
@@ -69,18 +87,28 @@ feature -- Access
 
 	dashed_line_style: BOOLEAN is
 			-- Are lines drawn dashed?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.dashed_line_style
 		ensure
 			bridge_ok: Result = implementation.dashed_line_style
 		end
 
-	font: EV_FONT is
-			-- Character appearance.
-		do
-			Result := implementation.font
-		ensure
-			bridge_ok: Result = implementation.font
+feature -- Measurement
+
+	width: INTEGER is
+			-- Horizontal size in pixels.
+		require
+			not_destroyed: not is_destroyed
+		deferred
+		end
+
+	height: INTEGER is
+			-- Vertical size in pixels.
+		require
+			not_destroyed: not is_destroyed
+		deferred
 		end
 
 feature -- Element change
@@ -89,6 +117,7 @@ feature -- Element change
 			-- Assign `a_width' to `line_width'.
 			-- See note at top.
 		require
+			not_destroyed: not is_destroyed
 			a_width_positive_or_zero: a_width >= 0
 		do
 			implementation.set_line_width (a_width)
@@ -100,6 +129,7 @@ feature -- Element change
 			-- Set drawing mode to `a_logical_mode'.
 			--| See below for convenience setting functions.
 		require
+			not_destroyed: not is_destroyed
 			a_mode_valid: valid_drawing_mode (a_mode)
 		do
 			implementation.set_drawing_mode (a_mode)
@@ -110,6 +140,7 @@ feature -- Element change
 	set_clip_area (an_area: EV_RECTANGLE) is
 			-- Set area which will be refreshed.
 		require
+			not_destroyed: not is_destroyed
 			an_area_not_void: an_area /= Void
 		do
 			implementation.set_clip_area (an_area)
@@ -119,6 +150,8 @@ feature -- Element change
 
 	remove_clip_area is
 			-- Do not apply any clipping.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.remove_clip_area
 		ensure
@@ -129,6 +162,7 @@ feature -- Element change
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.
 		require
+			not_destroyed: not is_destroyed
 			a_pixmap_not_void: a_pixmap /= Void
 		do
 			implementation.set_tile (a_pixmap)
@@ -138,6 +172,8 @@ feature -- Element change
 
 	remove_tile is
 			-- Do not apply a tile when filling.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.remove_tile
 		ensure
@@ -147,6 +183,8 @@ feature -- Element change
 	enable_dashed_line_style is
 			-- Draw lines dashed.
 			-- See note at top.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.enable_dashed_line_style
 		ensure
@@ -155,55 +193,67 @@ feature -- Element change
 
 	disable_dashed_line_style is
 			-- Draw lines solid.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.disable_dashed_line_style
 		ensure
 			dashed_line_style_disabled: not dashed_line_style
 		end
 
-	set_font (a_font: EV_FONT) is
-			-- Set `font' to `a_font'.
-		require
-			a_font_not_void: a_font /= Void
-		do
-			implementation.set_font (a_font)
-		ensure
-			assigned: font.is_equal (a_font)
-		end
-
 feature -- Clearing operations
 
 	clear is
 			-- Erase `Current' with `background_color'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.clear
 		end
 
-	clear_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Erase rectangle (`x1, `y1') - (`x2', `y2') with
-			-- `background_color'.
+	clear_rectangle (x, y, a_width, a_height: INTEGER) is
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height' in `background_color'.
+		require
+			not_destroyed: not is_destroyed
+			a_width_positive_or_zero: a_width >= 0
+			a_height_positive_or_zero: a_height >= 0
 		do
-			implementation.clear_rectangle (x1, y1, x2, y2)
+			implementation.clear_rectangle (x, y, a_width, a_height)
 		end
 
 feature -- Drawing operations
 
 	draw_point (x, y: INTEGER) is
 			-- Draw point at (`x', `y').
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.draw_point (x, y)
 		end
 
 	draw_text (x, y: INTEGER; a_text: STRING) is
-			-- Draw `a_text' at (`x', `y') using `font'.
+			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		require
+			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
 		do
 			implementation.draw_text (x, y, a_text)
 		end
 
+	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+		require
+			not_destroyed: not is_destroyed
+			a_text_not_void: a_text /= Void
+		do
+			implementation.draw_text_top_left (x, y, a_text)
+		end
+
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', `y1') to (`x2', `y2').
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.draw_segment (x1, y1, x2, y2)
 		end
@@ -211,6 +261,8 @@ feature -- Drawing operations
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
 			-- Draw infinite straight line through (`x1', `y1') and
 			-- (`x2', `y2').
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.draw_straight_line (x1, y1, x2, y2)
 		end
@@ -218,45 +270,61 @@ feature -- Drawing operations
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		require
+			not_destroyed: not is_destroyed
 			a_pixmap_not_void: a_pixmap /= Void
 		do
 			implementation.draw_pixmap (x, y, a_pixmap)
 		end
 
-	draw_arc (x, y, a_vertical_radius, a_horizontal_radius: INTEGER;
+	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
+			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
+		require
+			not_destroyed: not is_destroyed
+			a_pixmap_not_void: a_pixmap /= Void
+			area_not_void: area /= Void
+		do
+			implementation.draw_sub_pixmap (x, y, a_pixmap, area)
+		end
+
+	draw_arc (x, y, a_bounding_width, a_bounding_height: INTEGER;
 		a_start_angle, an_aperture: REAL) is
-			-- Draw a part of an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' +
-			-- `an_aperture'. Angles are measured in radians, and go
+			-- Draw part of an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Angles are measured in radians, and go
 			-- counterclockwise from the 3 o'clock angle.
 		require
-			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
-			a_horizontal_radius_positive_or_zero: a_horizontal_radius >= 0
+			not_destroyed: not is_destroyed
+			a_bounding_width_positive_or_zero: a_bounding_width >= 0
+			a_bounding_height_positive_or_zero: a_bounding_width >= 0
 		do
-			implementation.draw_arc (x, y, a_vertical_radius,
-				a_horizontal_radius, a_start_angle, an_aperture)
+			implementation.draw_arc (x, y, a_bounding_width,
+				a_bounding_height, a_start_angle, an_aperture)
 		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		require
+			not_destroyed: not is_destroyed
 			a_width_positive_or_zero: a_width >= 0
 			a_height_positive_or_zero: a_height >= 0
 		do
 			implementation.draw_rectangle (x, y, a_width, a_height)
 		end
 
-	draw_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
-			-- Draw an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
+	draw_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
+			-- Draw an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
 		require
-			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
-			a_horizontal_radius_positive_or_zero: a_horizontal_radius >= 0
+			not_destroyed: not is_destroyed
+			a_bounding_width_positive_or_zero: a_bounding_width >= 0
+			a_bounding_height_positive_or_zero: a_bounding_height >= 0
 		do
-			implementation.draw_ellipse (x, y, a_vertical_radius,
-				a_horizontal_radius)
+			implementation.draw_ellipse (x, y, a_bounding_width,
+				a_bounding_height)
 		end
 
 	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
@@ -264,25 +332,28 @@ feature -- Drawing operations
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
 		require
+			not_destroyed: not is_destroyed
 			points_not_void: points /= Void
 		do
 			implementation.draw_polyline (points, is_closed)
 		end
 
-	draw_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER;
+	draw_pie_slice (x, y, a_bounding_width, a_bounding_height: INTEGER;
 		a_start_angle, an_aperture: REAL) is
-			-- Draw a part of an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' +
-			-- `an_aperture'. The arc is then closed by two segments through
-			-- (`x', `y'). Angles are measured in radians, start at the
+			-- Draw part of an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', 'y').
+			-- Angles are measured in radians, start at the
 			-- 3 o'clock angle and grow counterclockwise.
 		require
-			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
-			a_horizontal_radius_positive_or_zero: a_horizontal_radius >= 0
+			not_destroyed: not is_destroyed
+			a_bounding_width_positive_or_zero: a_bounding_width >= 0
+			a_bounding_height_positive_or_zero: a_bounding_height >= 0
 		do
-			implementation.draw_pie_slice (x, y, a_vertical_radius,
-				a_horizontal_radius, a_start_angle, an_aperture)
+			implementation.draw_pie_slice (x, y, a_bounding_width,
+				a_bounding_height, a_start_angle, an_aperture)
 		end
 
 feature -- Drawing operations (filled)
@@ -291,51 +362,59 @@ feature -- Drawing operations (filled)
 			-- Draw filled rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		require
+			not_destroyed: not is_destroyed
 			a_width_positive_or_zero: a_width >= 0
 			a_height_positive_or_zero: a_height >= 0
 		do
 			implementation.fill_rectangle (x, y, a_width, a_height)
 		end
 
-	fill_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
-			-- Draw filled ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
+	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
+			-- Fill an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
 		require
-			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
-			a_horizontal_radius_positive_or_zero: a_horizontal_radius >= 0
+			not_destroyed: not is_destroyed
+			a_bounding_width_positive_or_zero: a_bounding_width >= 0
+			a_bounding_height_positive_or_zero: a_bounding_height >= 0
 		do
-			implementation.fill_ellipse (x, y, a_vertical_radius,
-				a_horizontal_radius)
+			implementation.fill_ellipse (x, y, a_bounding_width,
+				a_bounding_height)
 		end
 
 	fill_polygon (points: ARRAY [EV_COORDINATES]) is
 			-- Draw filled polygon between subsequent points in `points'.
 		require
+			not_destroyed: not is_destroyed
 			points_not_void: points /= Void
 		do
 			implementation.fill_polygon (points)
 		end
 
-	fill_pie_slice (x, y, a_vertical_radius, a_horizontal_radius: INTEGER;
+	fill_pie_slice (x, y, a_bounding_width, a_bounding_height: INTEGER;
 		a_start_angle, an_aperture: REAL) is
-			-- Draw filled part of an ellipse centered on (`x', `y') with
-			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' +
-			-- `an_aperture'. The arc is then closed by two segments through
-			-- (`x', `y'). Angles are measured in radians, start at the 3
+			-- Fill part of an ellipse defined by a rectangular area with an
+			-- upper left corner at `x',`y', width `a_bounding_width' and height
+			-- `a_bounding_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', 'y').
+			-- Angles are measured in radians, start at the 3
 			-- o'clock angle and grow counterclockwise.
 		require
-			a_vertical_radius_positive_or_zero: a_vertical_radius >= 0
-			a_horizontal_radius_positive_or_zero: a_horizontal_radius >= 0
+			not_destroyed: not is_destroyed
+			a_bounding_width_positive_or_zero: a_bounding_width >= 0
+			a_bounding_height_positive_or_zero: a_bounding_height >= 0
 		do
-			implementation.fill_pie_slice (x, y, a_vertical_radius,
-				a_horizontal_radius, a_start_angle, an_aperture)
+			implementation.fill_pie_slice (x, y, a_bounding_width,
+				a_bounding_height, a_start_angle, an_aperture)
 		end
 
 feature -- Drawing mode setting
 
 	set_copy_mode is
 			-- Set `drawing_mode' to normal.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_drawing_mode (Ev_drawing_mode_copy)
 		ensure
@@ -344,6 +423,8 @@ feature -- Drawing mode setting
 
 	set_xor_mode is
 			-- Set `drawing_mode' to bitwise XOR.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_drawing_mode (Ev_drawing_mode_xor)
 		ensure
@@ -352,6 +433,8 @@ feature -- Drawing mode setting
 
 	set_invert_mode is
 			-- Set `drawing_mode' to bitwise invert.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_drawing_mode (Ev_drawing_mode_invert)
 		ensure
@@ -360,6 +443,8 @@ feature -- Drawing mode setting
 
 	set_and_mode is
 			-- Set `drawing_mode' to bitwise AND.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_drawing_mode (Ev_drawing_mode_and)
 		ensure
@@ -368,34 +453,30 @@ feature -- Drawing mode setting
 
 	set_or_mode is
 			-- Set `drawing_mode' to bitwise OR.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_drawing_mode (Ev_drawing_mode_or)
 		ensure
 			drawing_mode_assigned: drawing_mode = Ev_drawing_mode_or
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_DRAWABLE_I
-
-feature {EV_ANY} -- Contract support
+feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state.
 		do
-			Result := {EV_ANY} Precursor and then
-				--| FIXME why is this commented out? - sam
-				--foreground_color.is_equal (create {EV_COLOR}.make_with_rgb
-					--(0, 0, 0)) and then
-				--background_color.is_equal (create {EV_COLOR}.make_with_rgb
-					--(1, 1, 1)) and then
+			Result := Precursor {EV_ANY} and then
 				line_width = 1 and then
 				drawing_mode = Ev_drawing_mode_copy and then
 				clip_area = Void and then
 				tile = Void and then
-				dashed_line_style = False and then
-				font.is_equal (create {EV_FONT})
+				dashed_line_style = False
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_DRAWABLE_I
 
 feature -- Obsolete
 
@@ -417,9 +498,8 @@ feature -- Obsolete
 		end
 
 invariant
-	font_not_void: font /= Void
-	line_width_positive_or_zero: line_width >= 0
-	drawing_mode_valid: valid_drawing_mode (drawing_mode)
+	line_width_positive_or_zero: is_usable implies line_width >= 0
+	drawing_mode_valid: is_usable implies valid_drawing_mode (drawing_mode)
 
 end -- class EV_DRAWABLE
 
@@ -438,174 +518,3 @@ end -- class EV_DRAWABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.22  2000/06/07 17:28:07  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.14.4.13  2000/05/12 17:35:00  king
---| Integrated ev_colorize
---|
---| Revision 1.14.4.12  2000/05/03 19:10:03  oconnor
---| mergred from HEAD
---|
---| Revision 1.21  2000/04/27 17:21:01  brendel
---| Spelling.
---|
---| Revision 1.20  2000/03/17 01:23:33  oconnor
---| formatting and layout
---|
---| Revision 1.19  2000/02/21 18:13:54  brendel
---| Added obsolete declaration of clear_rect, since, because the interfaces
---| have been frozen, any feature that is being renamed has to be
---| well-documented, so that customers do not have any more problems.
---|
---| Revision 1.18  2000/02/19 20:24:42  brendel
---| Updated copyright to 1986-2000.
---|
---| Revision 1.17  2000/02/16 18:06:57  pichery
---| Cosmetics: renammed feature `clear_rect' into `clear_rectangle'.
---|
---| Revision 1.14.4.11.2.33  2000/01/28 20:00:09  oconnor
---| released
---|
---| Revision 1.14.4.11.2.32  2000/01/27 19:30:45  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.14.4.11.2.31  2000/01/25 22:19:43  brendel
---| Removed _enum from drawing mode constants.
---|
---| Revision 1.14.4.11.2.30  2000/01/24 23:54:22  oconnor
---| renamed EV_CLIP -> EV_RECTANGLE
---|
---| Revision 1.14.4.11.2.29  2000/01/22 02:29:02  oconnor
---| comments
---|
---| Revision 1.14.4.11.2.28  2000/01/22 00:54:25  brendel
---| Improved comments.
---| Changed contracts about valid drawing_mode.
---|
---| Revision 1.14.4.11.2.27  2000/01/21 22:30:20  brendel
---| Uncommented set_background_color postcondition.
---|
---| Revision 1.14.4.11.2.26  2000/01/21 20:04:24  brendel
---| Improved contracts.
---|
---| Revision 1.14.4.11.2.25  2000/01/20 21:38:45  brendel
---| Added features remove_tile and remove_clip_area.
---|
---| Revision 1.14.4.11.2.24  2000/01/20 00:11:59  brendel
---| Improved comments.
---|
---| Revision 1.14.4.11.2.23  2000/01/19 17:43:21  brendel
---| Renamed fill_color to background_color.
---| Renamed line_color to foreground_color.
---|
---| Revision 1.14.4.11.2.22  2000/01/18 22:43:22  brendel
---| Uncommented invariant.
---|
---| Revision 1.14.4.11.2.21  2000/01/18 18:10:17  brendel
---| Added `is_in_default_state'.
---|
---| Revision 1.14.4.11.2.20  2000/01/18 16:33:17  brendel
---| Removed figure drawing routines.
---|
---| Revision 1.14.4.11.2.19  2000/01/17 17:26:13  oconnor
---| comment improvements
---|
---| Revision 1.14.4.11.2.18  2000/01/15 00:57:11  oconnor
---| comments re: default colors
---|
---| Revision 1.14.4.11.2.17  2000/01/14 00:23:49  oconnor
---| removed draw_figure_arrow
---|
---| Revision 1.14.4.11.2.16  2000/01/14 00:04:58  oconnor
---| commented out postcondition pending implementation changes
---|
---| Revision 1.14.4.11.2.15  2000/01/13 23:37:26  oconnor
---| removed is drawable precondition
---|
---| Revision 1.14.4.11.2.14  2000/01/11 01:00:42  king
---| Removed inh. from fontable.
---| Added own font and set_font features.
---|
---| Revision 1.14.4.11.2.13  2000/01/07 00:49:57  king
---| Added features draw_figure_picture and draw_figure_pie_slice.
---|
---| Revision 1.14.4.11.2.12  1999/12/29 19:51:36  king
---| Formatting.
---|
---| Revision 1.14.4.11.2.11  1999/12/17 21:07:15  rogers
---| implementation is now exported to EV_ANY_I. TEMP invariant has been
---| commented out as it needs fixing.
---|
---| Revision 1.14.4.11.2.10  1999/12/09 18:18:39  brendel
---| Corrected description.
---|
---| Revision 1.14.4.11.2.9  1999/12/08 23:45:40  brendel
---| Removed old drawing modes.
---|
---| Revision 1.14.4.11.2.8  1999/12/08 19:42:58  brendel
---| Moved constants to new file: EV_DRAWABLE_CONSTANTS.
---| Renamed constants Gx* to Ev_drawing_mode_*.
---| Improved indexing clause.
---| Implemented features:
---|  - (set_) tile.
---|  - dashed_line_style.
---|  - (set_) clip_area.
---|
---| Revision 1.14.4.11.2.7  1999/12/07 23:17:34  brendel
---| Changed EV_COORDINATES arg to x, y.
---| Changes EV_ANGLE to REAL (in radians).
---| Added draw_pie_slice and fill_pie_slice.
---| Removed `style' from *_arc.
---| Removed orientation from draw/fill_rectangle and draw/fill_ellipse.
---| Remaining to be implemented:
---|  - draw_figure_picture
---|  - draw_figure_picture
---|
---| in EV_DRAWABLE_IMP (GTK):
---|  - draw_text (because of font)
---|  - draw_straight_line
---|  - draw_pie_slice
---|
---| Revision 1.14.4.11.2.6  1999/12/07 18:00:47  brendel
---| Changed background_color to background_color.
---| Changed foreground_color to foreground_color.
---|
---| Revision 1.14.4.11.2.5  1999/12/06 18:03:00  brendel
---| Improved contracts.
---| Changed constants to look like: Ev_drawing_mode_Clear instead of
---| Ev_drawing_mode_clear.
---|
---| Revision 1.14.4.11.2.4  1999/12/04 22:44:50  brendel
---| Improved EV_FONTABLE. EV_DRAWABLE is now fontable.
---|
---| Revision 1.14.4.11.2.3  1999/12/03 23:48:07  brendel
---| Improved contracts on functions.
---| Improved parameter names.
---| Improved comments.
---| Declared set_logical_mode obsolete: replaced by set_drawing_mode.
---| Moved implementation of Figure drawing routines to EV_DRAWABLE_I.
---| Inserted drawing-mode constants and convenience functions.
---|
---| Revision 1.14.4.11.2.2  1999/12/01 01:02:34  brendel
---| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied
---| on specific things like return value BOOLEAN instead of INTEGER.
---|
---| Revision 1.14.4.11.2.1  1999/11/24 17:30:47  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.14.2.3  1999/11/04 23:10:54  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.14.2.2  1999/11/02 17:20:12  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

@@ -1,5 +1,3 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"Eiffel Vision table. Ms windows implementation"
@@ -25,19 +23,20 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			disable_sensitive,
-			child_added,
+			enable_sensitive,
 			compute_minimum_width,
 			compute_minimum_height,
 			compute_minimum_size,
-			interface
+			interface,
+			initialize,
+			on_size
 		end
 		
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
 			make as ev_wel_control_container_make
 		redefine
-			top_level_window_imp,
-			wel_move_and_resize
+			top_level_window_imp
 		end
 
 creation
@@ -46,78 +45,69 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a table widget with `par' as
-			-- parent.
-		local
-			fix: FIXED_LIST [INTEGER]
+			-- Create `Current' with `an_interface'.
 		do
 			base_make (an_interface)
 			ev_wel_control_container_make
 			create ev_children.make (2)
-			create old_ev_children.make (2)
-			create_columns
-			create_rows
-			--|FIXME
-			--|set_text ("EV_TABLE")
 		end	
 
+	initialize is
+			-- Initialize `Current'. Precusor and create new_item_actions.
+		do
+			create_columns
+			create_rows
+			Precursor {EV_CONTAINER_IMP}
+			enable_homogeneous
+		end
+
 	create_columns is
-			-- Initialize all the columns attributes.
+			-- Initialize columns.
 		do
 			create columns_minimum.make_filled (1)
 			column_spacing := Default_column_spacing
-			columns_homogeneous := Default_homogeneous
 		end
 
 	create_rows is
-			-- Initialize all the columns attributes.
+			-- Initialize rows.
 		do
 			create rows_minimum.make_filled (1)
 			row_spacing := Default_row_spacing
-			rows_homogeneous := Default_homogeneous
 		end
 
-feature -- Access
+feature {EV_TABLE_I} -- Access
 
 	count: INTEGER is
+			-- Number of widgets contained in `Current'.
 		do
 			Result := ev_children.count
 		end
 
-	is_homogeneous: BOOLEAN is
-			-- Does children have the same size ?
-			-- On windows, we can set either the rows homogeneous
-			-- or the columns_homogeneous flag, but not on gtk,
-			-- so it sets everything.
-		do
-			Result := rows_homogeneous and columns_homogeneous
-		end
-
-	rows_homogeneous: BOOLEAN
-			-- Do all the rows have the same size.
-
-	columns_homogeneous: BOOLEAN
-			-- Do all the columns have the same size.
+	is_homogeneous: BOOLEAN
+			-- Are all the cells equal in size ?
+			--| Gtk does not allow you to set the homogenuity of the
+			--| Columns seperately from that of the rows.
+			--| We provide the same behaviour for this implementation.
 
 	border_width: INTEGER
-			-- Widgth of the border of the container
+			-- Widgth of the border of the container in pixels.
 
 	column_spacing: INTEGER
-			-- Spacing between two columns.
+			-- Spacing between two columns in pixels.
 
 	row_spacing: INTEGER
-			-- Spacing betwwen two rows.
+			-- Spacing betwwen two rows in pixels.
 
-feature -- Status report
+feature {EV_TABLE_I} -- Status report
 
 	rows: INTEGER is
-			-- Number of rows
+			-- Number of rows in `Current'
 		do
 			Result := rows_minimum.count
 		end
 
 	columns: INTEGER is
-			-- Number of columns
+			-- Number of columns in `Current'
 		do
 			Result := columns_minimum.count
 		end
@@ -131,43 +121,59 @@ feature -- Status report
 		end
 
 	top_level_window_imp: EV_WINDOW_IMP
-			-- Top level window that contains the current widget.
+			-- Top level window that contains `Current'.
 
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
 			-- Is the control of handle `hwnd_control'
-			-- located inside the current window?
+			-- located inside `Current'?
 		local	
 			loc_cursor: CURSOR
 		do
-		--|FIXME Implement
-		--	if hwnd_control = wel_item then
-		--		Result := True
-		--	else
-		--		loc_cursor := ev_children.cursor
-		--		from
-		--			ev_children.start
-		--		until
-		--			Result or ev_children.after
-		--		loop
-		--			Result := ev_children.item.
-		--				is_control_in_window (hwnd_control)
-		--			ev_children.forth
-		--		end
-		--		ev_children.go_to (loc_cursor)
-		--	end
+			if hwnd_control = wel_item then
+				Result := True
+			else
+				loc_cursor := ev_children.cursor
+				from
+					ev_children.start
+				until
+					Result or ev_children.after
+				loop
+					Result := ev_children.item.widget.
+						is_control_in_window (hwnd_control)
+					ev_children.forth
+				end
+				ev_children.go_to (loc_cursor)
+			end
 		end
 
 
 feature -- Status settings
 
-	disable_sensitive  is
-			-- Set current widget in insensitive mode if
-				-- `flag'.
+	disable_sensitive is
+			-- Set `Current' insensitive.
+		do
+			set_insensitive (True)
+			Precursor
+		end
+
+	enable_sensitive is
+			-- Set `Current' sensitive.
+		do
+			set_insensitive (False)
+			Precursor
+		end
+
+	set_insensitive (flag: BOOLEAN) is
+			-- Set `Current' sensitive if `sensitive'.
+			-- Set `Current' insensitive if not `sensitive'.
+			--| As it is a container, all children's sensitivity
+			--| is updated to the same as `Current'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
+			widget_imp: EV_WIDGET_IMP
 			cur: CURSOR
 		do
-			if not ev_children.empty then
+			if not ev_children.is_empty then
 				list := ev_children
 				from
 					cur := list.cursor
@@ -175,45 +181,34 @@ feature -- Status settings
 				until
 					list.after
 				loop
-					list.item.widget.disable_sensitive
+					widget_imp := list.item.widget
+					if flag then
+						widget_imp.disable_sensitive
+					else
+						if not widget_imp.internal_non_sensitive then
+							list.item.widget.enable_sensitive
+						end
+					end
 					list.forth
 				end
 				list.go_to (cur)
 			end
-			Precursor
+		ensure
+			cursor_not_moved: old ev_children.index = ev_children.index
 		end
 
 	enable_homogeneous is
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			rows_homogeneous := True
-			columns_homogeneous := True
+			is_homogeneous := True
 			notify_change (2 + 1, Current)
 		end
 
 	disable_homogeneous is
 			-- Disable homogeneous. Allow controls to take different sizes.
 		do
-			rows_homogeneous := False
-			columns_homogeneous := False
-		end
-		
-
-	set_rows_homogeneous (flag: BOOLEAN) is
-			-- Rows_homogenous controls whether each object in
-			-- the box has the same height.
-		do
-			rows_homogeneous := flag
-			notify_change (2, Current)
-		end
-
-	set_columns_homogeneous (flag: BOOLEAN) is
-			-- Columns_homogenous controls whether each object in
-			-- the box has the same width.
-		do
-			columns_homogeneous := flag
-			notify_change (1, Current)
+			is_homogeneous := False
 		end
 	
 	set_row_spacing (value: INTEGER) is
@@ -237,27 +232,6 @@ feature -- Status settings
 			notify_change (2 + 1, Current)
 		end
 
-		put (v: like item; a_column, a_row, column_span, row_span: INTEGER) is
-				-- Set the position in one-based coordinates
-				-- 
-				--
-				--           1         2
-				--     +----------+---------+
-				--   1 |xxxxxxxxxxxxxxxxxxxx|
-				--     +----------+---------+
-				--   2 |          |         |
-				--     +----------+---------+
-				--
-				-- To describe the widget in the table as shown above
-				-- the corresponding coordinates would be (1, 1, 2, 1)
-			do
-				--add_child (v)
-				set_position_by_widget (v, a_column, a_row, column_span, row_span)
-			--	check
-			--		to_be_implemented: False
-			--	end
-			end
-
 		replace (v: like item) is
 			-- Replace `item' with `v'.
 			do
@@ -266,16 +240,10 @@ feature -- Status settings
 				end
 			end
 
-			
-
-
-	set_position_by_widget (the_child: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER) is
-			-- Set the position and the size of the given child in
-			-- the table. `top', `left', `bottom' and `right' give the
-			-- zero-based numbers of the line where the child starts and ends.
-			-- This feature must be called after the creation of
-			-- the child, otherwise, the child won't appear in
-			-- the table.
+	put, set_position_by_widget
+		(the_child: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER) is
+			--	Add a child to `Current' at cell position `a_x', `a_y',
+			-- with size `a_width', `a_height' in cells.
 		local
 			table_child: EV_TABLE_CHILD_IMP
 			child_imp: EV_WIDGET_IMP
@@ -284,28 +252,16 @@ feature -- Status settings
 			check
 				valid_child: child_imp /= Void
 			end
-
-			-- First, we change the number of cells of the table if it is too small.
-			if a_x + a_width > columns + 1 then
-				initialize_columns (a_x + a_width - 1)
-			end
-
-			if a_y + a_height > rows + 1 then
-				initialize_rows (a_y + a_height - 1)
-			end
-
-			--| FIXME Added by me
+				-- Set the parent of `child_imp'.
 			child_imp.set_parent (Current.interface)
-
-			-- Then, we check if the children has already been placed in the table,
-			-- if not, we create a table child with the given information.
-			table_child := find_widget_child (child_imp)
-			if table_child = Void then
-				!! table_child.make (child_imp, Current)
-				ev_children.extend (table_child)
-			end
-			-- The list start at one, then we change the attachment
-			table_child.set_attachment (a_y - 1, a_x - 1, a_y + a_height - 1, a_x + a_width - 1)
+				-- Create `table_child' to hold `child_imp'.
+			create table_child.make (child_imp, Current)
+				-- Add the table child to `ev_children'.
+			ev_children.extend (table_child)
+				-- Set the attachment of the table child.
+			table_child.set_attachment
+				(a_y - 1, a_x - 1, a_y + a_height - 1, a_x + a_width - 1)
+		
 
 			-- We show the child and resize the container
 			child_imp.show
@@ -313,10 +269,8 @@ feature -- Status settings
 		end
 
 	resize (a_column, a_row: INTEGER) is
-			-- Resize the table to.
+			-- Resize the table to `a_column', `a_row'.
 		do
-			io.putstring ("Re-sizing")
-			-- Initialize the size of the rows
 				initialize_columns (a_column)
 				initialize_rows (a_row)
 		end
@@ -325,51 +279,37 @@ feature -- Status settings
 			-- Remove `v' from `Current' if present.
 		local
 			widget_imp: EV_WIDGET_IMP
+			tchild: EV_TABLE_CHILD_IMP
 		do
+				-- Retrieve implementation of `v'.
 			widget_imp ?= v.implementation
 			check
 				implementation_not_void: widget_imp /= Void
 			end
-			remove_child (widget_imp)
-		end
-
-
-feature -- Element change
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-				-- Add a child to the table. the child doesn't appear, it has to be
-				-- placed after in the table to be shown.
-		do
-			child_imp.hide
-		end
-
-	remove_child (child_imp: EV_WIDGET_IMP) is
-			-- Remove the given child from the children of
-			-- the container.
-		local
-			tchild: EV_TABLE_CHILD_IMP
-		do
-				-- Retrieve the table child for `tchild'.
-			tchild := find_widget_child (child_imp)
+			-- Retrieve the table child for `tchild'.
+			tchild := find_widget_child (widget_imp)
 				-- Remove the table child from `ev_children'.
 			ev_children.prune_all (tchild)
 				-- Update changes.
 			notify_change (2 + 1, Current)
 				-- Update the parent of `child_imp'.
-			child_imp.set_parent (Void)
+			widget_imp.set_parent (Void)
 				-- Call on_orphaned.
-			child_imp.on_orphaned
+			widget_imp.on_orphaned
 		end
+
+
+feature -- Element change
 
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
-			-- of the widget.
+			-- of `Current'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 			cur: CURSOR
 		do
 			top_level_window_imp := a_window
-			if not ev_children.empty then
+			if not ev_children.is_empty then
 				list := ev_children
 				from
 					cur := list.cursor
@@ -384,40 +324,25 @@ feature -- Element change
 			end
 		end
 
-feature -- Assertions
-
-	add_child_ok: BOOLEAN is
-			-- Used in the precondition of
-			-- 'add_child'. True, if it is ok to add a
-			-- child to container
-		do
-			Result := True
-		end
+feature {NONE} -- Assertions
 
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Is `a_child' a child of the container?
+			-- Is `a_child' a child of `Current'?
 		do
 			Result := find_widget_child (a_child) /= Void
 		end
 
-	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Has `a_child' been added properly?
-		do
-			Result := not a_child.is_show_requested
-		end
-
 feature {NONE} -- Access features for implementation
-
-	old_ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 
 	ev_children: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 			-- List of the children of the tab.
-			-- The children are in the order left -> right and top -> bottom of the
-			-- table. An item that takes several cells are several times in the list.
-			-- Be carefull to remove everything when needed.
+			-- The children are in the order left -> right and top -> bottom of
+			-- the table. An item that takes several cells are several times in
+			-- the list. Be carefull to remove everything when needed.
 
 	columns_minimum: ARRAYED_LIST [INTEGER]
-			-- Width of the biggest element of the column (includes one spacing per cell).
+			-- Width of the biggest element of the column
+			-- (includes one spacing per cell).
 			-- The last cell represent the total of the items of the list.
 
 	rows_minimum: ARRAYED_LIST [INTEGER]
@@ -432,33 +357,40 @@ feature {NONE} -- Access features for implementation
 
 feature {NONE} -- Resize Implementation
 
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-			repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
-			-- resize it with `a_width', `a_height'.
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- `Current' has been resized.
 		do
-			set_local_size (a_width, a_height)
-			wel_move (a_x, a_y)
+			Precursor {EV_CONTAINER_IMP} (size_type, a_width, a_height)
+			set_local_size (a_width, a_height, True)
 		end
 
-	set_local_size (new_width, new_height: INTEGER) is
-			-- Recalculate the values of both rows and columns. Do not resize the children for
-			-- efficiency purposes.
+	ev_apply_new_size (a_x_position, a_y_position,
+				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+		do
+			ev_move_and_resize (a_x_position, a_y_position, a_width,
+					a_height, repaint)
+			set_local_size (a_width, a_height, False)
+		end
+
+	set_local_size (new_width, new_height: INTEGER; originator: BOOLEAN) is
+			-- Recalculate the values of both rows and columns.
+			-- Do not resize the children for efficiency purposes.
 		local
 			columns_value, rows_value: ARRAYED_LIST [INTEGER]
 		do
-			columns_value := compute_values (columns_minimum, new_width, columns_sum, column_spacing, columns_homogeneous)
-			rows_value := compute_values (rows_minimum, new_height, rows_sum, row_spacing, rows_homogeneous)
+			columns_value := compute_values (columns_minimum,
+							new_width, columns_sum, column_spacing)
+			rows_value := compute_values (rows_minimum, new_height,
+							rows_sum, row_spacing)
 			if columns_value /= Void and rows_value /= Void then
-				adjust_children (columns_value, rows_value)
+				adjust_children (columns_value, rows_value, originator)
 			end
-			wel_resize (new_width, new_height)
 		end
 
 feature {NONE} -- Basic operations for implementation
 
 	compute_minimum_width is
-			-- Recompute the minimum_width of the object.
+			-- Recompute minimum_width of `Curren'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 			minimums: ARRAYED_LIST [INTEGER]
@@ -467,48 +399,54 @@ feature {NONE} -- Basic operations for implementation
 			cur: CURSOR
 		do
 			list := ev_children
-			initialize_columns (columns)
+			if not list.is_empty then
+				initialize_columns (columns)
 
-			-- A first loop for the children that take only one cell
-			from
-				cur := list.cursor
-				minimums := columns_minimum
-				list.start
-			until
-				list.after
-			loop
-				tchild := list.item
-				right := tchild.right_attachment
-				if (right - tchild.left_attachment = 1) then
-					mw := tchild.widget.minimum_width
-					if mw > minimums.i_th (right) then
-						minimums.put_i_th (mw + column_spacing, right)
-					end	
+				-- A first loop for the children that take only one cell
+				from
+					cur := list.cursor
+					minimums := columns_minimum
+					list.start
+				until
+					list.after
+				loop
+					tchild := list.item
+					right := tchild.right_attachment
+					if (right - tchild.left_attachment = 1) then
+						mw := tchild.widget.minimum_width
+						if mw > minimums.i_th (right) then
+							minimums.put_i_th (mw + column_spacing, right)
+						end	
+					end
+					list.forth
 				end
-				list.forth
-			end
 
-			-- Then, a second loop for the children that take more than one
-			-- cell
-			from
-				list.start
-			until
-				list.after
-			loop
-				tchild := list.item
-				if (tchild.right_attachment - tchild.left_attachment > 1) then
-					second_body_loop (minimums, tchild.widget.minimum_width, tchild.left_attachment,
-										tchild.right_attachment, column_spacing)
+				-- Then, a second loop for the children that take more than one
+				-- cell
+				from
+					list.start
+				until
+					list.after
+				loop
+					tchild := list.item
+					if (tchild.right_attachment - tchild.left_attachment > 1)
+						then
+						second_body_loop (minimums, tchild.widget.minimum_width,
+							tchild.left_attachment, tchild.right_attachment,
+							column_spacing)
+					end
+					list.forth
 				end
-				list.forth
+				list.go_to (cur)
+				sum_columns_minimums
+				ev_set_minimum_width (columns_sum)
+			else
+				ev_set_minimum_width (0)
 			end
-			list.go_to (cur)
-			sum_columns_minimums
-			internal_set_minimum_width (columns_sum)
 		end
 
 	compute_minimum_height is
-			-- Recompute the minimum_width of the object.
+			-- Recompute minimum_width of `Current'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 			minimums: ARRAYED_LIST [INTEGER]
@@ -517,48 +455,54 @@ feature {NONE} -- Basic operations for implementation
 			cur: CURSOR
 		do
 			list := ev_children
-			initialize_rows (rows)
+			if not list.is_empty then
+				initialize_rows (rows)
 
-			-- A first loop for the children that take only one cell
-			from
-				cur := list.cursor
-				minimums := rows_minimum
-				list.start
-			until
-				list.after
-			loop
-				tchild := list.item
-				bottom := tchild.bottom_attachment
-				if (bottom - tchild.top_attachment = 1) then
-					mh := tchild.widget.minimum_height
-					if mh > minimums.i_th (bottom) then
-						minimums.put_i_th (mh + row_spacing, bottom)
-					end	
+				-- A first loop for the children that take only one cell
+				from
+					cur := list.cursor
+					minimums := rows_minimum
+					list.start
+				until
+					list.after
+				loop
+					tchild := list.item
+					bottom := tchild.bottom_attachment
+					if (bottom - tchild.top_attachment = 1) then
+						mh := tchild.widget.minimum_height
+						if mh > minimums.i_th (bottom) then
+							minimums.put_i_th (mh + row_spacing, bottom)
+						end	
+					end
+					list.forth
 				end
-				list.forth
-			end
 
-			-- Then, a second loop for the children that take more than one
-			-- cell
-			from
-				list.start
-			until
-				list.after
-			loop
-				tchild := list.item
-				if (tchild.bottom_attachment - tchild.top_attachment > 1) then
-					second_body_loop (minimums, tchild.widget.minimum_height, tchild.top_attachment,
-										tchild.bottom_attachment, row_spacing)
+				-- Then, a second loop for the children that take more than one
+				-- cell
+				from
+					list.start
+				until
+					list.after
+				loop
+					tchild := list.item
+					if (tchild.bottom_attachment - tchild.top_attachment > 1)
+						then
+						second_body_loop (minimums,tchild.widget.minimum_height,
+							tchild.top_attachment, tchild.bottom_attachment,
+							row_spacing)
+					end
+					list.forth
 				end
-				list.forth
+				list.go_to (cur)
+				sum_rows_minimums
+				ev_set_minimum_height (rows_sum)
+			else
+				ev_set_minimum_height (0)
 			end
-			list.go_to (cur)
-			sum_rows_minimums
-			internal_set_minimum_height (rows_sum)
 		end
 
 	compute_minimum_size is
-			-- Recompute the minimum size of the object.
+			-- Recompute minimum size of `Current'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 			minrow, mincol: ARRAYED_LIST [INTEGER]
@@ -568,69 +512,84 @@ feature {NONE} -- Basic operations for implementation
 			cur: CURSOR
 		do
 			list := ev_children
-			initialize_rows (rows)
+			if not list.is_empty then
+				initialize_rows (rows)
 
-			-- A first loop for the children that take only one cell
-			from
-				cur := list.cursor
-				minrow := rows_minimum
-				mincol := columns_minimum
-				list.start
-			until
-				list.after
-			loop
-				tchild := list.item
-				bottom := tchild.bottom_attachment
-				right := tchild.right_attachment
-				if (bottom - tchild.top_attachment = 1) then
-					mh := tchild.widget.minimum_height
-					if mh > minrow.i_th (bottom) then
-						minrow.put_i_th (mh + row_spacing, bottom)
-					end	
+				-- A first loop for the children that take only one cell
+				from
+					cur := list.cursor
+					minrow := rows_minimum
+					mincol := columns_minimum
+					list.start
+				until
+					list.after
+				loop
+					tchild := list.item
+					bottom := tchild.bottom_attachment
+					right := tchild.right_attachment
+					if (bottom - tchild.top_attachment = 1) then
+						mh := tchild.widget.minimum_height
+						if mh > minrow.i_th (bottom) then
+							minrow.put_i_th (mh + row_spacing, bottom)
+						end	
+					end
+					if (right - tchild.left_attachment = 1) then
+						mw := tchild.widget.minimum_width
+						if mw > mincol.i_th (right) then
+							mincol.put_i_th (mw + column_spacing, right)
+						end	
+					end
+					list.forth
 				end
-				if (right - tchild.left_attachment = 1) then
-					mw := tchild.widget.minimum_width
-					if mw > mincol.i_th (right) then
-						mincol.put_i_th (mw + column_spacing, right)
-					end	
-				end
-				list.forth
-			end
 
-			-- Then, a second loop for the children that take more than one
-			-- cell
-			from
-				list.start
-			until
-				list.after
-			loop
-				tchild := list.item
-				if (tchild.bottom_attachment - tchild.top_attachment > 1) then
-					second_body_loop (minrow, tchild.widget.minimum_height, tchild.top_attachment,
-										tchild.bottom_attachment, row_spacing)
+				-- Then, a second loop for the children that take more than one
+				-- cell
+				from
+					list.start
+				until
+					list.after
+				loop
+					tchild := list.item
+					if (tchild.bottom_attachment - tchild.top_attachment > 1)
+						then
+						second_body_loop (minrow, tchild.widget.minimum_height,
+							tchild.top_attachment, tchild.bottom_attachment,
+							row_spacing)
+					end
+					if (tchild.right_attachment - tchild.left_attachment > 1)
+						then
+						second_body_loop (mincol, tchild.widget.minimum_width,
+							tchild.left_attachment, tchild.right_attachment,
+							column_spacing)
+					end
+					list.forth
 				end
-				if (tchild.right_attachment - tchild.left_attachment > 1) then
-					second_body_loop (mincol, tchild.widget.minimum_width, tchild.left_attachment,
-										tchild.right_attachment, column_spacing)
-				end
-				list.forth
+				list.go_to (cur)
+				sum_rows_minimums
+				sum_columns_minimums
+				ev_set_minimum_size (columns_sum, rows_sum)
+			else
+				ev_set_minimum_size (0, 0)
 			end
-			list.go_to (cur)
-			sum_rows_minimums
-			sum_columns_minimums
-			internal_set_minimum_size (columns_sum, rows_sum)
 		end
 
 feature {NONE} -- Implementation
 
-	compute_values (minimums: ARRAYED_LIST [INTEGER]; new_size, total_sum, spacing: INTEGER; homogeneous: BOOLEAN): ARRAYED_LIST [INTEGER] is
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so notify children.
+		do
+			--| FIXME Propagate to  children.
+		end
+		
+
+	compute_values
+		(minimums: ARRAYED_LIST [INTEGER]; new_size, total_sum, spacing: INTEGER
+		): ARRAYED_LIST [INTEGER] is
 			-- Recalculate values depending on the options and the minimums. 
 		local
 			rate, total_rest, mark: INTEGER
 			total_size, count1: INTEGER
 		do
-			io.putstring("Compute values called.%N")
-			io.putstring ("     New size " + new_size.out + "%N")
 			count1 := minimums.count
 			if count1 = 1 then
 				create Result.make_filled (2)
@@ -647,11 +606,9 @@ feature {NONE} -- Implementation
 				Result.replace (mark)
 				Result.forth
 
-				-- Homogeneous : All the cells have the same size.
-				if homogeneous then
-						--|FIXME This has been added, how did the old algorithm work.
-						count1 := Result.count - 1
-
+					-- Homogeneous : All the cells have the same size.
+				if is_homogeneous then
+					count1 := Result.count - 1
 					rate := total_size // count1
 					total_rest := total_size \\ count1
 					from
@@ -669,8 +626,8 @@ feature {NONE} -- Implementation
 						Result.forth
 					end
 
-				-- Non homogeneous : we have to be carefull to the non expanded
-				-- children too.
+					-- Non homogeneous : we have to be carefull to the non
+					-- expanded children too.
 				else
 					rate := (total_size - total_sum) // count1
 					total_rest := (total_size - total_sum) \\ count1
@@ -679,7 +636,7 @@ feature {NONE} -- Implementation
 					until
 						minimums.after
 					loop
-						-- We calculate the position of the new line.
+							-- We calculate the position of the new line.
 						mark := mark + minimums.item + rate + rest (total_rest)
 						if total_rest > 0 then
 							total_rest := total_rest - 1
@@ -699,14 +656,14 @@ feature {NONE} -- Implementation
 		end
 
 	initialize_columns (value: INTEGER) is
-			-- Recreate the columns_minimum list to have it empty.
+			-- Recreate `columns_minimum'.
 		do
 			columns_minimum.wipe_out
 			columns_minimum.make_filled (value)
 		end
 
 	initialize_rows (value: INTEGER) is
-			-- Recreate the rows_minimum list to have it empty.
+			-- Recreate `rows_minimum'.
 		do
 			rows_minimum.wipe_out
 			rows_minimum.make_filled (value)
@@ -727,8 +684,7 @@ feature {NONE} -- Implementation
 		end
 
 	find_widget_child (a_child: EV_WIDGET_IMP): EV_TABLE_CHILD_IMP is
-				-- Find the table child corresponding to a given widget
-				-- child.
+				-- `Result' is the table child containing `a_child'.
 		require
 			valid_child: a_child /= Void
 			current_child: a_child.parent_imp = Current
@@ -738,7 +694,7 @@ feature {NONE} -- Implementation
 			cur: CURSOR
 		do
 			list := ev_children
-			if not list.empty then
+			if not list.is_empty then
 				from
 					cur := list.cursor
 					list.start
@@ -756,8 +712,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	adjust_children (columns_value, rows_value: ARRAYED_LIST [INTEGER]) is
-			-- Ask the children to move and to resize therself according to the given values :
+	adjust_children
+		(columns_value, rows_value: ARRAYED_LIST [INTEGER];
+		originator: BOOLEAN) is
+			-- Ask the children to move and to resize theirselves
+			-- according to the given values :
 			-- `columns_value' for the columns, `rows_value' for the rows.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
@@ -765,9 +724,9 @@ feature {NONE} -- Implementation
 			cs, rs: INTEGER
 			cur: CURSOR
 		do
-				-- Initialize some local variables to be faster.
+				-- Initialize local variables for speed.
 			list := ev_children
-			if not list.empty then
+			if not list.is_empty then
 				cs := column_spacing
 				rs := row_spacing
 
@@ -779,25 +738,40 @@ feature {NONE} -- Implementation
 					list.after
 				loop
 					tchild := list.item
-					tchild.widget.set_move_and_size
-						(columns_value @ (tchild.left_attachment + 1), rows_value @ (tchild.top_attachment + 1),
-   						 columns_value @ (tchild.right_attachment + 1) - columns_value @ (tchild.left_attachment + 1) - cs,
-   						 rows_value @ (tchild.bottom_attachment + 1 )- rows_value @ (tchild.top_attachment + 1) - rs)
+					if originator then
+						tchild.widget.set_move_and_size
+							(columns_value @ (tchild.left_attachment + 1),
+							rows_value @ (tchild.top_attachment + 1),
+							columns_value @ (tchild.right_attachment + 1) -
+							columns_value @ (tchild.left_attachment + 1) - cs,
+							rows_value @ (tchild.bottom_attachment + 1 )-
+							rows_value @ (tchild.top_attachment + 1) - rs)
+					else
+						tchild.widget.ev_apply_new_size
+							(columns_value @ (tchild.left_attachment + 1),
+							rows_value @ (tchild.top_attachment + 1),
+							columns_value @ (tchild.right_attachment + 1) -
+							columns_value @ (tchild.left_attachment + 1) - cs,
+							rows_value @ (tchild.bottom_attachment + 1 )-
+							rows_value @ (tchild.top_attachment + 1) - rs, True)
+					end
 					list.forth
 				end
 				list.go_to (cur)
 			end
 		end
 
-	second_body_loop (minimums: ARRAYED_LIST [INTEGER]; value, first, last, spacing: INTEGER) is
-			-- Loop on the several-cells widget to check their minimum parameter.
-			-- We check than the current size is bigger than the actual lenght of the
-			-- cells the widget wants to cover. Then, if it is bigger indeed, we
-			-- distribute this value to the covered cells.
-			-- And we set the atttributes of the line if it is necessary.
+	second_body_loop
+		(minimums: ARRAYED_LIST [INTEGER]; value, first, last,
+		spacing: INTEGER) is
+			-- Adjust `minimums' to take into account widgets that occupy more
+			-- than one cell.
+			-- `value' is minimum width of widget at span `first', `last'.
+			-- `spacing' is spacing between each table cell.
 		local
-			length, test, step, total_rest: INTEGER
+			length, current_minimums_total, step, total_rest: INTEGER
 			cur: CURSOR
+			clone_min: ARRAYED_LIST [INTEGER]
 		do
 			-- Lets see what is the length of the current cells the
 			-- widget covers.
@@ -805,11 +779,10 @@ feature {NONE} -- Implementation
 			cur := minimums.cursor
 			from
 				minimums.go_i_th (first + 1)
-				test := 0
 			until
 				minimums.index = last + 1
 			loop
-				test := test + minimums.item + spacing
+				current_minimums_total := current_minimums_total + minimums.item
 				if not minimums.after then
 					minimums.forth
 				end
@@ -817,9 +790,24 @@ feature {NONE} -- Implementation
 
 			-- If it is bigger than the current minimum size, we distribute the
 			-- rest among the columns.
-			if test < value + spacing then
-				step := (value + spacing) // length
-				total_rest := (value + spacing) \\ length
+			if current_minimums_total < value + spacing then
+					-- Set step to the `width' + `spacing'
+				step := (value + spacing)
+				clone_min := clone (minimums)
+
+					-- Reduce step by the total values contained in `minimums'
+					-- between the `first' + 1 and `last'. 
+				from
+					clone_min.go_i_th (first + 1)
+				until
+					clone_min.index = last + 1
+				loop
+					step := step - clone_min.item
+					if not clone_min.after then
+						clone_min.forth
+					end
+				end
+				step := step // length
 				from
 					minimums.go_i_th (first + 1)
 				until
@@ -855,6 +843,10 @@ feature {NONE} -- Implementation
 				minimums.after
 			loop
 				sum := sum + minimums.item
+					-- Add row spacing for completely empty rows.
+				if minimums.item = 0 and row_spacing /= 0 then
+					sum := sum + row_spacing
+				end
 				minimums.forth
 			end
 			rows_sum := sum
@@ -876,9 +868,21 @@ feature {NONE} -- Implementation
 				minimums.after
 			loop
 				sum := sum + minimums.item
+					-- Add column spacing for completely empty columns.
+				if minimums.item = 0 and column_spacing /= 0 then
+					sum := sum + column_spacing
+				end
 				minimums.forth
 			end
 			columns_sum := sum
+		end
+		
+	adjust_tab_ordering (ordered_widgets: ARRAYED_LIST [WEL_WINDOW]; widget_depths: ARRAYED_LIST [INTEGER]; depth: INTEGER) is
+			-- Adjust tab ordering of children in `Current'.
+			-- used when `Current' is a child of an EV_DIALOG_IMP_MODAL
+			-- or an EV_DIALOG_IMP_MODELESS. When 
+		do
+			--| FIXME implement.
 		end
 
 feature -- Implementation
@@ -887,39 +891,90 @@ feature -- Implementation
 
 invariant
 
---	ev_children_not_void: ev_children /= Void
---	columns_exists: columns_value /= Void
---	rows_exists: rows_value /= Void
+	ev_children_not_void: ev_children /= Void
 
 end -- class EV_TABLE_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.20  2000/06/07 17:27:59  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.21  2001/06/07 23:08:15  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.18.8.8  2000/06/07 16:12:31  rogers
---| Implemented remove, and fixed remove_child which is called by
---| remove. Result from compute_values is created one larger to fix bug.
+--| Revision 1.18.8.30  2001/03/29 18:23:04  rogers
+--| Renamed reverse_tab_order to adjust_tab_ordering.
+--|
+--| Revision 1.18.8.29  2001/03/28 21:39:30  rogers
+--| Changed signature of reverse_tab_order.
+--|
+--| Revision 1.18.8.28  2001/03/28 19:18:21  rogers
+--| Added reverse_tab_order, still to be implemented.
+--|
+--| Revision 1.18.8.27  2001/03/16 19:13:52  rogers
+--| Previous commit chould have read: Implemented update_for_pick_and_drop.
+--|
+--| Revision 1.18.8.26  2001/03/16 19:07:18  rogers
+--| Added update_for
+--|
+--| Revision 1.18.8.25  2001/01/26 23:31:33  rogers
+--| Removed undefinition of on_sys_key_down as this is already done in the
+--| ancestor EV_WEL_CONTROL_CONTAINER_IMP.
+--|
+--| Revision 1.18.8.24  2000/11/29 00:41:52  rogers
+--| Changed empty to is_empty.
+--|
+--| Revision 1.18.8.23  2000/11/06 18:01:56  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.18.8.22  2000/08/16 17:06:17  rogers
+--| Changed update_sensitivity to set_insensitive. Added postcondition.
+--| Now correctly handle the children when enabling `Current'.
+--|
+--| Revision 1.18.8.21  2000/08/11 18:55:31  rogers
+--| Fixed copyright clauses. Now use ! instead of |. Formatting.
+--|
+--| Revision 1.18.8.20  2000/08/08 03:23:45  manus
+--| New resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--| Added protection in `compute_minimum_*' features when list is empty.
+--|
+--| Revision 1.18.8.19  2000/07/21 23:06:12  rogers
+--| Removed add_child and add_child_ok as no longer used in Vision2.
+--|
+--| Revision 1.18.8.18  2000/07/21 20:18:51  rogers
+--| Removed remove_child as it is no longer necessary in Vision2.
+--|
+--| Revision 1.18.8.17  2000/06/09 17:13:55  rogers
+--| Removed unreferenced variable in make.
+--|
+--| Revision 1.18.8.16  2000/06/09 16:55:12  rogers
+--| Removed debugging output.
+--|
+--| Revision 1.18.8.11  2000/06/08 17:49:02  rogers
+--| sum_columns_minimum and sem_rows_minimum now take into account the
+--| spacing on empty rows as part of the minimum. Initial fix of
+--| second_body_loop for items taking up more than one space.
+--|
+--| Revision 1.18.8.10  2000/06/07 17:59:03  rogers
+--| Comments, formatting. Implemented enable_sensitive.
 --|
 --| Revision 1.18.8.7  2000/06/06 23:35:59  rogers
 --| Added set_border_width and some basic funcationality.

@@ -39,8 +39,8 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			create new_item_actions.make ("new item", <<"item">>)
-			create remove_item_actions.make ("remove item", <<"item">>)
+			create new_item_actions
+			create remove_item_actions
 			is_initialized := True
 		end
 
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			check
 				v_imp_not_void: v /= Void
 			end
-			Precursor (v, i)
+			Precursor {EV_DYNAMIC_LIST_IMP} (v, i)
 			v_imp.set_parent_imp (Current)
 			insert_item (v_imp, i)
 			v_imp.on_parented
@@ -108,8 +108,8 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_ITEM_LIST [G]
 
 invariant
-	new_item_actions_not_void: is_useable implies new_item_actions /= Void
-	remove_item_actions_not_void: is_useable implies remove_item_actions /= Void
+	new_item_actions_not_void: is_usable implies new_item_actions /= Void
+	remove_item_actions_not_void: is_usable implies remove_item_actions /= Void
 
 end -- class EV_ITEM_LIST_IMP
 
@@ -134,8 +134,21 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.30  2000/06/07 17:27:57  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.31  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.16.4.6  2001/02/15 23:56:08  rogers
+--| Replaced is_useable with is_usable.
+--|
+--| Revision 1.16.4.5  2000/10/25 22:45:34  rogers
+--| New_item_actions and remove_item_actions are no longer created with make
+--| within initialize. Default create is used instead.
+--|
+--| Revision 1.16.4.4  2000/07/25 00:51:07  rogers
+--| Removed arguments to make procedure from action sequences.
+--|
+--| Revision 1.16.4.3  2000/06/20 01:00:16  manus
+--| Cosmetics
 --|
 --| Revision 1.16.4.2  2000/05/18 23:05:20  rogers
 --| Insert_i_th and remove_i_th now call set_parent_imp instead of set_parent.

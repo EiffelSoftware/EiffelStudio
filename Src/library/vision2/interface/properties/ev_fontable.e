@@ -19,7 +19,8 @@ feature -- Access
 
 	font: EV_FONT is
 			-- Typeface appearance for `Current'.
-			-- Default: FIXME
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.font
 		ensure
@@ -32,6 +33,7 @@ feature -- Element change
 	set_font (a_font: EV_FONT) is
 			-- Assign `a_font' to `font'.
 		require
+			not_destroyed: not is_destroyed
 			a_font_not_void: a_font /= Void
 		do
 			implementation.set_font (a_font)
@@ -39,13 +41,10 @@ feature -- Element change
 			font_assigned: font.is_equal (a_font)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_FONTABLE_I
 		-- Responsible for interaction with the native graphics toolkit.
-
-invariant
-	font_not_void: font /= Void
 
 end -- class EV_FONTABLE
 
@@ -64,61 +63,3 @@ end -- class EV_FONTABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.10  2000/03/17 01:23:34  oconnor
---| formatting and layout
---|
---| Revision 1.9  2000/02/29 18:09:08  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.8  2000/02/22 18:39:48  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.7  2000/02/14 11:40:49  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.6.6.9  2000/01/28 20:00:10  oconnor
---| released
---|
---| Revision 1.6.6.8  2000/01/27 19:30:46  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.6.6.7  2000/01/14 02:12:28  oconnor
---| tweaked comments
---|
---| Revision 1.6.6.6  2000/01/06 18:34:57  king
---| Removed undefine clause.
---|
---| Revision 1.6.6.5  1999/12/16 03:49:55  oconnor
---| mutiple inheritance of creation_action_sequences tweaked
---|
---| Revision 1.6.6.4  1999/12/16 03:45:48  oconnor
---| added width and height
---|
---| Revision 1.6.6.3  1999/12/06 18:01:58  brendel
---| Improved contracts.
---|
---| Revision 1.6.6.2  1999/12/04 22:44:50  brendel
---| Improved EV_FONTABLE. EV_DRAWABLE is now fontable.
---|
---| Revision 1.6.6.1  1999/11/24 17:30:48  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.6.2.4  1999/11/23 23:01:25  oconnor
---| undefine create_action_sequences on repeated inherit
---|
---| Revision 1.6.2.3  1999/11/04 23:10:54  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.6.2.2  1999/11/02 17:20:12  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------
- 

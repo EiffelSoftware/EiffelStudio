@@ -1,9 +1,7 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
 	description: 
 		"Eiffel Vision table. Implementation interface";
+	status: "See notice at end of class."
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -18,11 +16,8 @@ inherit
 
 feature -- Access
 
-	Default_homogeneous: BOOLEAN is True
-	Default_row_spacing: INTEGER is 0
-	Default_column_spacing: INTEGER is 0
-
 	item: EV_WIDGET is
+			-- There is no `item' for `Current'.
 		do
 			check Inapplicable: False end
 		end
@@ -30,17 +25,17 @@ feature -- Access
 feature -- Status report
 
 	widget_count: INTEGER is
-			-- Number of widgets in table.
+			-- Number of widgets in `Current'.
 		deferred
 		end
 
 	row_spacing: INTEGER is
-			-- Spacing between two rows
+			-- Spacing between two consecutive rows.
 		deferred
 		end
 	
 	column_spacing: INTEGER is
-			-- Spacing between two columns
+			-- Spacing between two consecutive columns.
 		deferred
 		end
 
@@ -52,7 +47,7 @@ feature -- Status report
 feature -- Status settings
 
 	enable_homogeneous is
-			-- Set all item's sizes to that of the largest in the table.
+			-- Set all item's sizes to that of the largest in `Current'.
 		deferred
 		end
 
@@ -62,14 +57,14 @@ feature -- Status settings
 		end
 	
 	set_row_spacing (a_value: INTEGER) is
-			-- Spacing between two rows of the table.
+			-- Spacing between two consecutive rows of `Current'.
 		require
 			positive_value: a_value >= 0
 		deferred
 		end
 
 	set_column_spacing (a_value: INTEGER) is
-			-- Spacing between two columns of the table.
+			-- Spacing between two consecutive columns of `Current'.
 		require
 			positive_value: a_value >= 0
 		deferred
@@ -83,7 +78,7 @@ feature -- Status settings
 		end
 
 	resize (a_column, a_row: INTEGER) is
-			-- Resize the table to.
+			-- Resize `Current' to `a_column' columns by `a_row' rows.
 		require
 			a_column_positive: a_column >= 1
 			a_row_positive: a_row >= 1
@@ -105,17 +100,33 @@ feature -- Element change
 		end
 
 	remove (v: EV_WIDGET) is
-			-- Remove `v' from the table if present.
+			-- Remove `v' from `Current' if present.
 		require
 			v_not_void: v /= Void
 		deferred
 		end
 
-	extend (v: like item) is do check Inapplicable: False end end
+	extend (v: like item) is
+			-- Not used by `Current'.
+		do
+			check
+				Inapplicable: False
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TABLE
+
+	Default_homogeneous: BOOLEAN is True
+		-- `Current' is homgeneous by default.
+
+	Default_row_spacing: INTEGER is 0
+		-- Default row spacing of `Current'.
+
+	Default_column_spacing: INTEGER is 0
+		-- Default column spacing of `Current'.
+
 
 end -- class EV_TABLE_I
 
@@ -140,8 +151,14 @@ end -- class EV_TABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.7  2000/06/07 17:27:48  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.8  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.11  2000/08/17 22:53:42  rogers
+--| Removed fixme not_reviewed. Comments, formatting.
+--|
+--| Revision 1.3.4.10  2000/06/09 20:52:55  rogers
+--| Removed FIXME Not for release.
 --|
 --| Revision 1.3.4.9  2000/06/06 23:37:41  rogers
 --| Added border_Width and set_border_wdith. Removed some redundent

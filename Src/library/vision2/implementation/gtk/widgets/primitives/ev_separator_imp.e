@@ -9,28 +9,19 @@ deferred class
 	EV_SEPARATOR_IMP
 
 inherit
+	EV_SEPARATOR_I
+		redefine
+			interface
+		end
+
 	EV_PRIMITIVE_IMP
-
-feature -- Access
-
-	is_raised: BOOLEAN
-			-- Does `Current' appear raised?
-
-feature -- Status setting
-
-	enable_raised is
-			-- Set `is_raised' `True'.
-		do
-			is_raised := True
-			--| FIXME To be implemented
+		redefine
+			interface
 		end
 
-	disable_raised is
-			-- Set `is_raised' `False'.
-		do
-			is_raised := False
-			--| FIXME To be implemented
-		end
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_SEPARATOR
 
 end -- class EV_SEPARATOR_IMP
 
@@ -55,8 +46,31 @@ end -- class EV_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.7  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.8  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.4.7  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.4.4.6  2000/09/08 18:35:02  oconnor
+--| Removed stuff no longer needed by split area.
+--|
+--| Revision 1.4.4.5  2000/08/08 00:03:16  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.4.4.4  2000/06/23 16:17:23  king
+--| Implementation, now inheriting from, shock horror, implementation interface
+--|
+--| Revision 1.4.4.3  2000/06/22 19:02:08  pichery
+--| - Added the style `is_flat'
 --|
 --| Revision 1.4.4.2  2000/05/05 23:34:03  brendel
 --| Added is_raised, enable_raised and disable_raised.

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"Eiffel Vision tooltipable. Implementation interface."
@@ -66,11 +65,8 @@ end -- class EV_TOOLTIPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.4  2000/06/07 17:27:45  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.3  2000/05/05 16:40:54  king
---| Added not for release
+--| Revision 1.5  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
 --| Revision 1.2.2.2  2000/05/05 15:49:47  brendel
 --| Made deferred.

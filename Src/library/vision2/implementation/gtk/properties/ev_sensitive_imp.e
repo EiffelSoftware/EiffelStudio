@@ -7,11 +7,9 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_SENSITIVE_IMP
 	
 inherit
-	
 	EV_SENSITIVE_I
 		redefine
 			interface
@@ -28,10 +26,12 @@ feature -- Status report
 			-- Is the object sensitive to user input.
 		do
 			-- Shift to put bit in least significant place then take mod 2
-			Result := (
-				(C.gtk_object_struct_flags (c_object)
-				// C.GTK_SENSITIVE_ENUM) \\ 2
-			) = 1
+			if not is_destroyed then
+				Result := (
+					(C.gtk_object_struct_flags (c_object)
+					// C.GTK_SENSITIVE_ENUM) \\ 2
+				) = 1
+			end
 		end
 
 feature -- Status setting
@@ -39,13 +39,17 @@ feature -- Status setting
 	enable_sensitive is
 			-- Allow the object to be sensitive to user input.
 		do
-			C.gtk_widget_set_sensitive (c_object, True)
+			if not is_destroyed then
+				C.gtk_widget_set_sensitive (c_object, True)
+			end
 		end
 
 	disable_sensitive is
 			-- Set the object to ignore all user input.
 		do
-			C.gtk_widget_set_sensitive (c_object, False)
+			if not is_destroyed then
+				C.gtk_widget_set_sensitive (c_object, False)
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -75,8 +79,14 @@ end -- EV_SENSITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.2  2000/06/07 17:27:33  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.3  2001/06/07 23:08:04  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.2.3  2001/04/23 22:38:46  king
+--| Added is_destroyed protection around sensitive features
+--|
+--| Revision 1.1.2.2  2000/10/09 19:16:38  oconnor
+--| cosmetics
 --|
 --| Revision 1.1.2.1  2000/05/11 19:28:27  king
 --| Initial

@@ -1,7 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description:
-		"EiffelVision clip. Rectangular area."
+	description: "Rectangular areas."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,8 +20,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_x, a_y, a_width, a_height: INTEGER) is
-			-- 
+	make, set (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Initialize with `a_x', `a_y', `a_width', `a_height'.
 		require
 			a_width_positive: a_width >= 0
 			a_height_positive: a_height >= 0
@@ -48,12 +46,32 @@ feature -- Access
 	height: INTEGER
 			-- Height of the clip area.
 
+	left: INTEGER is
+		do
+			Result := x
+		end
+
+	top: INTEGER is
+		do
+			Result := y
+		end
+
+	right: INTEGER is
+		do
+			Result := x + width
+		end
+
+	bottom: INTEGER is
+		do
+			Result := y + height
+		end
+
 feature -- Status report
 
 	upper_left: EV_COORDINATES is
 			-- Upper-left corner of the clip area.
 		do
-			create Result.set (x, y)
+			create Result.set (left, top)
 		ensure
 			Result_exists: Result /= Void
 			Result_assigned: Result.x = x and then Result.y = y
@@ -62,7 +80,7 @@ feature -- Status report
 	upper_right: EV_COORDINATES is
 			-- Upper-right corner of the clip area.
 		do
-			create Result.set (x + width, y)
+			create Result.set (right, top)
 		ensure
 			Result_exists: Result /= Void
 			Result_assigned: Result.x = x + width and then Result.y = y
@@ -71,7 +89,7 @@ feature -- Status report
 	lower_left: EV_COORDINATES is
 			-- Lower-left corner of the clip area.
 		do
-			create Result.set (x, y + height)
+			create Result.set (left, bottom)
 		ensure
 			Result_exists: Result /= Void
 			Result_assigned: Result.x = x and then Result.y = y + height
@@ -80,13 +98,170 @@ feature -- Status report
 	lower_right: EV_COORDINATES is
 			-- Lower-right corner of the clip area.
 		do
-			create Result.set (x + width, y + height)
+			create Result.set (right, bottom)
 		ensure
 			Result_exists: Result /= Void
 			Result_assigned: Result.x = x + width and then Result.y = y + height
 		end
 
+feature -- Status report
+
+	empty: BOOLEAN is
+			-- Is area of `Current' 0?
+		do
+			Result := width = 0 and height = 0
+		end
+
+	has (c: EV_COORDINATES): BOOLEAN is
+			-- Is `c' inside `Current'?
+		require
+			c_not_void: c /= Void
+		do
+			Result :=
+				c.x >= left and then
+				c.x <= right and then
+				c.y >= top and then
+				c.y <= bottom 
+		end
+
+	has_x_y (a_x, a_y: INTEGER): BOOLEAN is
+			-- Is (`a_x', `a_y') inside `Current'?
+		local
+			l_x, l_y: INTEGER
+		do
+			l_x := x
+			l_y := y
+			Result :=
+				a_x >= l_x and then
+				a_x <= l_x + width and then
+				a_y >= l_y and then
+				a_y <= l_y + height
+		end
+
+	intersects (other: like Current): BOOLEAN is
+			-- Does `other' at least partially overlap `Current'?
+		local
+			y_test: BOOLEAN
+		do
+			if left <= other.left then
+				y_test := right >= other.left
+			else
+				y_test := left <= other.right
+			end
+			if y_test then
+				if top <= other.bottom then
+					Result := bottom >= other.top
+				else
+					Result := top <= other.bottom
+				end
+			end
+		end
+
 feature -- Element change
+
+	include_point (c: EV_COORDINATES) is
+			-- Enlarge so that `c' is in `Current'.
+		require
+			c_not_void: c /= Void
+		do
+			include (c.x, c.y)
+		ensure
+			has_c: has (c)
+		end
+
+	include (a_x, a_y: INTEGER) is
+			-- Enlarge so that `a_x', `a_y' is in `Current'.
+		do
+			set_left (left.min (a_x))
+			set_top (top.min (a_y))
+			set_right (right.max (a_x))
+			set_bottom (bottom.max (a_y))
+		end
+
+	merge (other: like Current) is
+			-- Enlarge `Current' so that `other' fits inside.
+		require
+			other_not_void: other /= Void
+		do
+			set_left (left.min (other.left))
+			set_top (top.min (other.top))
+			set_right (right.max (other.right))
+			set_bottom (bottom.max (other.bottom))
+		end
+
+	grow_left (i: INTEGER) is
+			-- Increment size by `i' to west.
+		require
+			width + i > 0
+		do
+			x := x - i
+			width := width + i
+		end
+
+	grow_right (i: INTEGER) is
+			-- Increment size by `i' to east.
+		do
+			width := width + i
+		end
+
+	grow_top (i: INTEGER) is
+			-- Increment size by `i' to north.
+		require
+			height + i > 0
+		do
+			y := y - i
+			height := height + i
+		end
+
+	grow_bottom (i: INTEGER) is
+			-- Increment size by `i' to south.
+		do
+			height := height + i
+		end
+
+	set_left (i: INTEGER) is
+			-- Set `left' to `i'.
+		require
+			i <= right
+		do
+			width := width - i + x
+			x := i
+		ensure
+			assigned: left = i
+			right_same: right = old right
+		end
+
+	set_right (i: INTEGER) is
+			-- Set `right' to `i'.
+		require
+			i - x >= 0
+		do
+			width := i - x
+		ensure
+			assigned: right = i
+		end
+
+	set_top (i: INTEGER) is
+			-- Set `top' to `i'.
+		require
+			i <= bottom
+		do
+			height := height - i + y
+			y := i
+		ensure
+			assigned: top = i
+			bottom_same: bottom = old bottom
+		end
+
+	set_bottom (i: INTEGER) is
+			-- Set `bottom' to `i'.
+		require
+			i - y >= 0
+		do
+			height := i - y
+		ensure
+			assigned: bottom = i
+		end
 
 	set_x (new_x: INTEGER) is
 			-- Set `x' to `new_x'.
@@ -147,36 +322,36 @@ feature -- Element change
 			y_assigned: y = a_y
 		end
 
-	set (upper_left_POINT: EV_COORDINATES; new_width, new_height: INTEGER) is
-			-- Set all values op the clip area.
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Move to `a_x' and `a_y' and resize to `a_width' and `a_height'.
 		require
-			upper_left_POINT: upper_left_POINT /= Void
-			new_width_positive: new_width >= 0
-			new_height_positive: new_height >= 0
+			a_width_positive: a_width >= 0
+			a_height_positive: a_height >= 0
 		do
-			x := upper_left_POINT.x
-			y := upper_left_POINT.y
-			width := new_width
-			height := new_height
+			move (a_x, a_y)
+			resize (a_width, a_height)
 		end
 
-feature -- Debug
-
-	print_contents is
-			-- Write string representation to standard output.
-		obsolete
-			"Use: io.put_string (yours.out)."
-		do
-			io.put_string (out)
-		end
+feature -- Output
 
 	out: STRING is
 			-- Return readable string.
 		do
 			Result := "(X: " + x.out + ", Y: " + y.out +
 				", Width: " + width.out +
-				", Height: " + height.out + ")%N"
+				", Height: " + height.out + ")"
 		end
+		
+feature -- Obsolete
+
+	trace is
+			-- Write string representation to standard output.
+		Obsolete
+			"Please do not use this feature as it will shortly be removed."
+		do
+			io.error.put_string (out)
+		end
+
 
 invariant
 	width_positive: width >= 0
@@ -199,50 +374,3 @@ end -- class EV_RECTANGLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.10  2000/03/14 03:02:57  brendel
---| Merged changed from WINDOWS_RESIZING_BRANCH.
---|
---| Revision 1.9.2.1  2000/03/09 19:16:51  brendel
---| Added features `resize' and `move'.
---|
---| Revision 1.9  2000/02/29 19:20:22  oconnor
---| removed simicolons from indexing
---|
---| Revision 1.8  2000/02/29 18:09:08  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.7  2000/02/22 18:39:48  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.6  2000/02/14 11:40:48  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.5.4.1.2.5  2000/02/04 05:02:31  oconnor
---| released
---|
---| Revision 1.5.4.1.2.4  2000/01/27 19:30:45  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.5.4.1.2.3  2000/01/24 23:54:22  oconnor
---| renamed EV_CLIP -> EV_RECTANGLE
---|
---| Revision 1.5.4.1.2.2  2000/01/20 19:06:09  brendel
---| Changed make to something useful.
---|
---| Revision 1.5.4.1.2.1  1999/11/24 17:30:46  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.5.2.2  1999/11/02 17:20:11  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

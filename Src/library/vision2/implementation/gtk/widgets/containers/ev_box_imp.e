@@ -11,42 +11,39 @@ deferred class
 	
 inherit
 	EV_BOX_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
 		redefine
 			interface
 		end
 
 	EV_WIDGET_LIST_IMP
 		redefine
-			interface
+			interface,
+			container_widget
 		end
-		
+
 feature -- Access
 
 	is_homogeneous: BOOLEAN is
 			-- Are all children restriced to be the same size.
 		do
-			Result := C.gtk_box_struct_homogeneous (c_object) /= 0
+			Result := C.gtk_box_struct_homogeneous (container_widget) /= 0
 		end
 
 	border_width: INTEGER is
 			-- Width of border around container in pixels.
 		do
 			Result := C.gtk_container_struct_border_width (
-					C.gtk_box_struct_container (c_object)
+					C.gtk_box_struct_container (container_widget)
 				)
-		end
-
-	gtk_container_struct_border_width (a_c_struct: POINTER): INTEGER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkContainer): EIF_INTEGER"
-		alias
-			"border_width"
 		end
 
 	padding: INTEGER is
 			-- Space between children in pixels.		
 		do
-			Result := C.gtk_box_struct_spacing (c_object)
+			Result := C.gtk_box_struct_spacing (container_widget)
 		end
 	
 feature -- Status report
@@ -60,7 +57,7 @@ feature -- Status report
 		do
 			wid_imp ?= child.implementation
 			C.gtk_box_query_child_packing (
-				c_object,
+				container_widget,
 				wid_imp.c_object,
 				$expand,
 				$fill,
@@ -75,19 +72,19 @@ feature -- Status settings
 	set_homogeneous (flag: BOOLEAN) is
 			-- Set whether every child is the same size.
 		do
-			C.gtk_box_set_homogeneous (c_object, flag)
+			C.gtk_box_set_homogeneous (container_widget, flag)
 		end
 
 	set_border_width (value: INTEGER) is
 			 -- Assign `value' to `border_width'.
 		do
-			C.gtk_container_set_border_width (c_object, value)
+			C.gtk_container_set_border_width (container_widget, value)
 		end	
 	
 	set_padding (value: INTEGER) is
 			-- Assign `value' to `padding'.
 		do
-			C.gtk_box_set_spacing (c_object, value)
+			C.gtk_box_set_spacing (container_widget, value)
 		end	
 
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
@@ -98,7 +95,7 @@ feature -- Status settings
 		do
 			wid_imp ?= child.implementation
 			C.gtk_box_query_child_packing (
-				c_object,
+				container_widget,
 				wid_imp.c_object,
 				$old_expand,
 				$fill,
@@ -106,7 +103,7 @@ feature -- Status settings
 				$pack_type
 			)
 			C.gtk_box_set_child_packing (
-				c_object,
+				container_widget,
 				wid_imp.c_object,
 				flag,
 				fill.to_boolean,
@@ -114,6 +111,10 @@ feature -- Status settings
 				pack_type
 			)
 		end
+
+feature {NONE} -- Implementation
+
+	container_widget: POINTER
 
 feature {EV_ANY_I} -- Implementation
 
@@ -150,8 +151,31 @@ end -- class EV_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.25  2000/06/07 17:27:37  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.26  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.21.4.8  2000/10/27 16:54:41  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.21.4.7  2000/09/18 18:06:42  oconnor
+--| reimplemented propogate_[fore|back]ground_color for speeeeed
+--|
+--| Revision 1.21.4.6  2000/08/08 00:03:13  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.21.4.5  2000/06/14 00:00:03  king
+--| Converted to new container_widget structure
+--|
+--| Revision 1.21.4.4  2000/06/07 17:15:29  king
+--| Removed redundant external
 --|
 --| Revision 1.21.4.3  2000/05/25 00:35:25  king
 --| Implemented external calls in Eiffel

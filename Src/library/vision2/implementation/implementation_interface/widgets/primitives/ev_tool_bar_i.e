@@ -1,6 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision toolbar, implementation interface."
+	description: "EiffelVision toolbar. Implementation interface."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,15 +16,6 @@ inherit
 	EV_ITEM_LIST_I [EV_TOOL_BAR_ITEM]
 		redefine
 			interface
-		end
-
-feature -- Status setting
-
-	set_default_options is
-			-- Initialize the options of the widget.
-		do
-			--set_vertical_resize (False)
-			--set_horizontal_resize (True)
 		end
 
 feature {NONE} -- Implementation
@@ -55,6 +45,15 @@ end -- class EV_TOOL_BAR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.4.2  2000/08/18 16:15:04  rogers
+--| removed fixme not_Reviewed. Comments. Removed set_default_options as redundent.
+--|
+--| Revision 1.8.4.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.12  2000/04/11 23:30:07  king
 --| Removed connect_radio_grouping
 --|

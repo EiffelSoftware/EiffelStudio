@@ -15,7 +15,6 @@ inherit
 
 	EV_BUTTON_IMP
 		undefine
-			--| FIXME Get back to this.
 			wel_make,
 			make_by_id,
 			default_style
@@ -45,29 +44,48 @@ inherit
 			set_text as wel_set_text,
 			set_checked as enable_select,
 			set_unchecked as disable_select,
-			checked as is_selected
+			checked as is_selected,
+			background_color as wel_background_color,
+			foreground_color as wel_foreground_color,
+			has_capture as wel_has_capture
 		undefine
-			window_process_message,
 			remove_command,
 			set_width,
 			set_height,
 			on_left_button_down,
+			on_middle_button_down,
 			on_right_button_down,
 			on_left_button_up,
+			on_middle_button_up,
 			on_right_button_up,
 			on_left_button_double_click,
+			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
 			on_key_down,
 			on_key_up,
+			on_char,
 			on_set_focus,
+			on_desactivate,
 			on_kill_focus,
 			on_set_cursor,
 			on_bn_clicked,
 			on_size,
 			wel_set_text,
+			on_show,
+			on_hide,
 			show,
-			hide
+			hide,
+			x_position,
+			y_position,
+			wel_background_color,
+			wel_foreground_color,
+			on_sys_key_down,
+			on_sys_key_up,
+			default_process_message
+		redefine
+			enable_select,
+			disable_select
 		end	
 
 create
@@ -75,14 +93,18 @@ create
 
 feature -- Status setting
 
-	toggle is
-			-- Invert the value of `is_selected'.
+	enable_select is
+			-- Enable `Current'.
 		do
-			if is_selected then
-				enable_select
-			else
-				disable_select
-			end
+			Precursor
+			select_actions.call ([])
+		end
+
+	disable_select is
+			-- Disable `Current'.
+		do
+			Precursor
+			select_actions.call ([])
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -91,7 +113,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_TOGGLE_BUTTON_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -105,15 +127,52 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.30  2000/06/07 17:28:01  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.31  2001/06/07 23:08:17  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.14.2.13  2001/05/14 17:10:10  rogers
+--| Removed toggle as not needed.
+--|
+--| Revision 1.14.2.12  2001/01/26 23:19:06  rogers
+--| Undefined on_sys_key_down inherited from WEL.
+--|
+--| Revision 1.14.2.11  2001/01/09 19:08:30  rogers
+--| Undefined default_process_message from WEL.
+--|
+--| Revision 1.14.2.10  2000/11/14 18:19:56  rogers
+--| Renamed has_capture inherited from WEL as wel_has_capture.
+--|
+--| Revision 1.14.2.9  2000/11/06 17:55:01  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.14.2.8  2000/10/11 23:39:58  raphaels
+--| Added `on_desactivate' in list of undefined features from WEL.
+--|
+--| Revision 1.14.2.7  2000/09/05 18:22:33  rogers
+--| Fixed toggle. Enable_select and disable_select were reversed.
+--|
+--| Revision 1.14.2.6  2000/08/08 02:50:03  manus
+--| Updated inheritance with new WEL messages handling and with the fact that buttons
+--| are now colorizable.
+--|
+--| Revision 1.14.2.5  2000/08/01 23:24:32  rogers
+--| Redefined enable_select and disable_select from wel_selectable_button.
+--| This allows select_actions to be called.
+--|
+--| Revision 1.14.2.4  2000/07/12 16:07:13  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.14.2.3  2000/06/19 19:46:10  rogers
+--| Removed FIXME as was no longer relevent. i.e. it had been fixed.
+--| Comments, formatting.
 --|
 --| Revision 1.14.2.2  2000/05/09 20:48:28  king
 --| Implemented to fit in with new selectable abstract classes
@@ -122,7 +181,8 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --| mergred from HEAD
 --|
 --| Revision 1.29  2000/05/01 17:04:44  manus
---| Use of `wel_parent' directly without the hack of renaming into `wel_window_parent'.
+--| Use of `wel_parent' directly without the hack of renaming into
+--| `wel_window_parent'.
 --|
 --| Revision 1.28  2000/04/25 16:14:52  rogers
 --| Parent from WEL_SELECTABLE_BUTTON is now renamed as wel_parent.

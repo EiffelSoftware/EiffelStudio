@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision menu item container, implementation interface."
@@ -10,6 +9,9 @@ indexing
 deferred class
 	EV_MENU_ITEM_HOLDER_I
 
+obsolete
+	"This class is no longer required by Vision2."
+
 inherit
 	EV_ITEM_LIST_I [EV_MENU_ITEM]
 
@@ -18,20 +20,6 @@ feature -- Element change
 	ev_children: ARRAYED_LIST [EV_ITEM_IMP] is
 		deferred
 		end
-	
-
-	--|FIXME should now use extend from ev_item_list_i
-	--add_item (item_imp: EV_MENU_ITEM_IMP) is
-	--		-- Add `item_imp' into container.
-	--	require
-	--	deferred
-	--	end
-
-	--remove_item (item_imp: EV_MENU_ITEM_IMP) is
-	--		-- Add `item_imp' into container.
-	--	require
-	--	deferred
-	--	end
 
 end -- class EV_MENU_ITEM_HOLDER_I
 
@@ -56,6 +44,15 @@ end -- class EV_MENU_ITEM_HOLDER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.12.4.2  2000/08/18 16:27:38  rogers
+--| Removed fixme not_reviewed. Removed commented features. Made obsolete.
+--|
+--| Revision 1.12.4.1  2000/05/03 19:09:00  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/02/22 18:39:42  oconnor
 --| updated copyright date and formatting
 --|

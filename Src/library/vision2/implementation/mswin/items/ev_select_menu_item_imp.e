@@ -63,6 +63,12 @@ end -- class EV_SELECT_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.6.1  2000/05/03 19:09:11  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.2  2000/02/25 20:31:10  brendel
 --| Now defines is_selected as attribute, because before we were not able
 --| to call any of the *selected features when not parented without feature

@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -97,7 +98,7 @@ feature -- Basic operations
 			end
 
 			-- If the hash-table is empty, we destroy it.
-			if ht.empty then
+			if ht.is_empty then
 				ht := Void
 			end
 		end
@@ -142,6 +143,18 @@ end -- class EV_MENU_ITEM_HANDLER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.3  2001/03/01 03:23:44  manus
+--| Removed obsolete calls to `empty', now replaced by `is_equal'.
+--|
+--| Revision 1.3.4.2  2000/08/11 23:59:17  rogers
+--| Aded fixme not for release. As this class is no longer used by Vision2.
+--|
+--| Revision 1.3.4.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/02/23 02:20:45  brendel
 --| Removed feature `on_menu_command'.
 --| This is now handled in EV_WINDOW_IMP.

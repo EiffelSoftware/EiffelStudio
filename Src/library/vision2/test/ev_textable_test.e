@@ -32,6 +32,7 @@ feature {NONE} -- Initalization
 			description := "Testing textable: " + a_name + ".%N"
 			textable := a_textable
 			item_parent := a_item_parent
+			test_successful := True
 		end
 
 	make_with_widget (a_name: STRING; a_textable: EV_TEXTABLE;
@@ -45,6 +46,7 @@ feature {NONE} -- Initalization
 			description := "Testing textable: " + a_name + ".%N"
 			textable := a_textable
 			widget_parent := a_widget_parent
+			test_successful := True
 		end
 
 feature -- Basic operation
@@ -164,6 +166,15 @@ end -- class EV_TEST_TEXTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/06/07 23:08:57  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.2  2000/06/30 21:52:16  king
+--| Set test_successful flag to true in both constructors
+--|
+--| Revision 1.3.4.1  2000/05/03 19:10:21  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.3  2000/03/30 18:39:17  brendel
 --| Renamed to EV_TEST_TEXTABLE.
 --|

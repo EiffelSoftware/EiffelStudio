@@ -36,19 +36,30 @@ feature -- Access
 		deferred
 		end
 
-	shift_key: BOOLEAN is
+	shift_required: BOOLEAN is
 			-- Must the shift key be pressed?
 		deferred
 		end
 
-	alt_key: BOOLEAN is
+	alt_required: BOOLEAN is
 			-- Must the alt key be pressed?
 		deferred
 		end
 
-	control_key: BOOLEAN is
+	control_required: BOOLEAN is
 			-- Must the control key be pressed?
 		deferred
+		end
+
+feature -- Events
+
+	actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when `key' is pressed.
+		do
+			if actions_internal = Void then
+				create actions_internal
+			end
+			Result := actions_internal
 		end
 
 feature -- Element change
@@ -58,37 +69,40 @@ feature -- Element change
 		deferred
 		end
 
-	enable_shift_key is
+	enable_shift_required is
 			-- "Shift" must be pressed for the key combination.
 		deferred
 		end
 
-	disable_shift_key is
+	disable_shift_required is
 			-- "Shift" is not part of the key combination.
 		deferred
 		end
 
-	enable_alt_key is
+	enable_alt_required is
 			-- "Alt" must be pressed for the key combination.
 		deferred
 		end
 
-	disable_alt_key is
+	disable_alt_required is
 			-- "Alt" is not part of the key combination.
 		deferred
 		end
 
-	enable_control_key is
+	enable_control_required is
 			-- "Control" must be pressed for the key combination.
 		deferred
 		end
 
-	disable_control_key is
+	disable_control_required is
 			-- "Control" is not part of the key combination.
 		deferred
 		end
 
 feature {EV_ACCELERATOR_I} -- Implementation
+
+	actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions to be performed on accelerator activation.
 
 	interface: EV_ACCELERATOR
 
@@ -115,8 +129,14 @@ end -- class EV_ACCELERATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.5  2000/06/07 17:27:43  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.6  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.4.4  2000/09/08 00:18:33  rogers
+--| Changed feature names that did not match the interface.
+--|
+--| Revision 1.4.4.3  2000/08/16 19:47:53  king
+--| Moved actions from interface to i_i
 --|
 --| Revision 1.4.4.2  2000/05/19 21:58:45  rogers
 --| Added parented, enable_parented and disable_parented.

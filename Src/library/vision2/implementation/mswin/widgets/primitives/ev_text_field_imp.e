@@ -1,9 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision text field. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -19,14 +17,14 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			on_key_down,
-			interface,
-			initialize_sizeable
+			on_char,
+			interface
 		end
 
 	WEL_SINGLE_LINE_EDIT
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
@@ -49,28 +47,38 @@ inherit
 			x as x_position,
 			y as y_position,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			move_and_resize as wel_move_and_resize,
+			text as wel_text,
+			has_capture as wel_has_capture
 		undefine
-			window_process_message,
-			remove_command,
 			set_width,
 			set_height,
 			on_left_button_down,
+			on_middle_button_down,
 			on_right_button_down,
 			on_left_button_up,
+			on_middle_button_up,
 			on_right_button_up,
 			on_left_button_double_click,
+			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
 			on_key_up,
 			on_set_focus,
+			on_desactivate,
 			on_kill_focus,
 			on_set_cursor,
 			wel_background_color,
 			wel_foreground_color,
 			show,
 			hide,
-			on_size
+			on_size,
+			x_position,
+			y_position,
+			select_all,
+			on_sys_key_down,
+			on_sys_key_up,
+			default_process_message
 		redefine
 			on_key_down,
 			on_en_change,
@@ -80,66 +88,68 @@ inherit
 			on_char
 		end
 
+	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
+
 creation
 	make
 
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create an empty text field.
+			-- Create `Current' with inteface `an_interface'.
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 		end
 
-	initialize_sizeable is
-			-- Set as not vertically resizable.
+feature -- {EV_ANY_I} -- Status report
+
+	text: STRING is
+			-- Text of `Current'
 		do
-			Precursor
-			internal_changes := set_bit (internal_changes, 32, False)
+			Result := wel_text
+			if Result.count = 0 then
+				Result := Void
+			end
 		end
 
 feature {NONE} -- WEL Implementation
 
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
-
 	default_style: INTEGER is
-			-- We specified the Es_autovscroll style otherwise
-			-- the system keep on beeping when we press the
-			-- return key.
+			-- We specify the Es_autovscroll style otherwise
+			-- the system beeps when we press the return key.
 		do
 			Result := Ws_child + Ws_visible + Ws_tabstop
 					+ Ws_group + Ws_border + Es_left + Es_autohscroll
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- We check if the enter key is pressed)
+			-- We check if the enter key is pressed.
 			-- 13 is the number of the return key.
+		local
+			spin_button: EV_SPIN_BUTTON_IMP
 		do
-			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
-			if virtual_key = Vk_return then
+			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
+			if virtual_key = Vk_return and is_editable then
 				set_caret_position (1)
 				interface.return_actions.call ([])
+			end
+				--| EV_SPIN_BUTTON_IMP is composed of `Current'.
+				--| Therefore if `Current' is parented in an EV_SPIN_BUTTON_IMP,
+				--| we must propagate the key press event.
+			spin_button ?= wel_parent
+			if spin_button /= Void then
+				spin_button.on_key_down (virtual_key, key_data)
 			end
 		end	
 
 	on_char (character_code, key_data: INTEGER) is
-			-- Wm_char message
+			-- Wm_char message.
 			-- Avoid an unconvenient `beep' when the user
 			-- tab to another control.
 		do
+			Precursor {EV_TEXT_COMPONENT_IMP} (character_code, key_data)
 			if not has_focus then
 				disable_default_processing
 			end
@@ -155,9 +165,9 @@ feature {NONE} -- WEL Implementation
 	enable is
 			-- Enable mouse and keyboard input.
 		local
-			default_colors: EV_DEFAULT_COLORS
+			default_colors: EV_STOCK_COLORS
 		do
-			!! default_colors
+			create default_colors
 			cwin_enable_window (wel_item, True)
 			set_background_color (default_colors.Color_read_write)
 		end
@@ -165,14 +175,15 @@ feature {NONE} -- WEL Implementation
 	disable is
 			-- Disable mouse and keyboard input
 		local
-			default_colors: EV_DEFAULT_COLORS
+			default_colors: EV_STOCK_COLORS
 		do
-			!! default_colors
+			create default_colors
 			cwin_enable_window (wel_item, False)
 			set_background_color (default_colors.Color_read_only)
 		end
 
-feature {NONE} -- Feature that should be directly implemented by externals
+feature {EV_SPIN_BUTTON_IMP} -- Feature that should be directly
+	-- implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
@@ -221,49 +232,124 @@ feature {NONE} -- Implementation
 
 	interface: EV_TEXT_FIELD
 
-invariant
-	not_vertically_resizable: is_useable implies not vertical_resizable
-
 end -- class EV_TEXT_FIELD_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable  components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable  components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.43  2000/06/09 01:49:10  manus
---| Merged version 1.27.8.4 from DEVEL branch to trunc
+--| Revision 1.44  2001/06/07 23:08:17  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.42  2000/06/08 18:46:50  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.27.8.27  2001/05/21 15:25:42  rogers
+--| On_key_down now propagates the message to the spin button if `Current'
+--| is part of a spin button.
 --|
---| Revision 1.41  2000/06/07 17:28:01  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.27.8.26  2001/02/02 00:50:50  rogers
+--| On_key_down now calls process_tab_key before Precursor. This ensures that
+--| any tab movement we do in our implementation can be overriden by the user
+--| with key_press_actions.
+--|
+--| Revision 1.27.8.25  2001/01/26 23:20:03  rogers
+--| Undefined on_sys_key_down inherited from WEL.
+--|
+--| Revision 1.27.8.24  2001/01/09 19:11:15  rogers
+--| Undefined default_process_message from WEL.
+--|
+--| Revision 1.27.8.23  2000/12/06 01:16:42  rogers
+--| If `Current' is not editable then pressing return will no longer
+--| reset the caret_position or call the return actions. The movement of the
+--| caret_position would cause post conditions to fail.
+--|
+--| Revision 1.27.8.22  2000/11/14 18:21:04  rogers
+--| Renamed has_capture inherited from WEL as wel_has_capture.
+--|
+--| Revision 1.27.8.21  2000/11/06 19:37:11  king
+--| Accounted for default to stock name change
+--|
+--| Revision 1.27.8.20  2000/11/06 17:55:39  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.27.8.19  2000/10/27 22:17:43  rogers
+--| Renamed text as wel_text and implemented text to allow Void texts.
+--|
+--| Revision 1.27.8.18  2000/10/17 23:34:10  rogers
+--| on_char now calls Precursor which fixes the key_press_string_actions.
+--|
+--| Revision 1.27.8.17  2000/10/11 00:01:49  raphaels
+--| Added `on_desactivate' to list of undefined features from WEL_WINDOW.
+--|
+--| Revision 1.27.8.16  2000/10/07 02:18:35  manus
+--| They can resize vertically, otherwise it has a an ugly drawing behavior.
+--|
+--| Revision 1.27.8.15  2000/10/06 18:39:57  rogers
+--| Formatting to 80 columns. Replaced !! with create.
+--|
+--| Revision 1.27.8.14  2000/09/26 03:57:22  manus
+--| No more vertical resizing as it used to be.
+--|
+--| Revision 1.27.8.13  2000/09/13 22:09:21  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.27.8.12  2000/09/08 19:26:36  manus
+--| Added export clause to `EV_SPIN_BUTTON_IMP' since it is using some of the
+--| internals of EV_TEXT_FIELD_IMP.
+--|
+--| Revision 1.27.8.11  2000/09/07 17:09:25  rogers
+--| Undefined select_all from WEL_SINGLE_LINE_EDIT.
+--|
+--| Revision 1.27.8.10  2000/08/11 18:30:12  rogers
+--| Fixed copyright clauses. Now use ! instead of |. Formatting.
+--|
+--| Revision 1.27.8.9  2000/08/08 02:51:57  manus
+--| Updated inheritance with new WEL messages handling
+--| New resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--| Removed hack with `wel_window_parent'.
+--| TEXT_FIELD are now vertically resizable.
+--|
+--| Revision 1.27.8.8  2000/07/24 23:22:35  rogers
+--| Now inherits EV_TEXT_FIELD_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.27.8.7  2000/07/13 22:18:18  rogers
+--| Removed FIXME NOT_REVIEWED. Comments, formatting.
+--|
+--| Revision 1.27.8.6  2000/07/12 16:07:50  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.27.8.5  2000/06/13 18:34:53  rogers
+--| Removed undefintion of remove_command.
 --|
 --| Revision 1.27.8.4  2000/05/04 17:40:30  brendel
 --| Added redefinition of initialize_sizeable which sets vertically resizable
 --| to False.
 --|
 --| Revision 1.27.8.3  2000/05/03 22:35:05  brendel
---|
---| Revision 1.40  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.27.8.2  2000/05/03 22:01:35  rogers
+--| Redefined initialize, Fixed not_vertically_resizeable assertion.
+--|
+--| Revision 1.27.8.1  2000/05/03 19:09:51  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.39  2000/05/02 16:13:59  brendel
 --| First implementation to disable ugly vertical resizing.
@@ -284,7 +370,8 @@ end -- class EV_TEXT_FIELD_IMP
 --| move is now correctly re-named to wel_move.
 --|
 --| Revision 1.32  2000/02/23 01:49:08  rogers
---| Removed old command association. Change events are now fired when the text of changes.
+--| Removed old command association. Change events are now fired when the text
+--| of changes.
 --|
 --| Revision 1.31  2000/02/23 01:32:17  rogers
 --| Added the call to the new events when return is pressed.
@@ -305,10 +392,12 @@ end -- class EV_TEXT_FIELD_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.27.10.3  2000/01/27 00:37:51  rogers
---| Commented out previous command executions. Need to implement using the new event system.
+--| Commented out previous command executions. Need to implement using the new
+--| event system.
 --|
 --| Revision 1.27.10.2  2000/01/04 18:51:37  rogers
---| Fitted in with the development branch. on_key_down, now goes to position one when return is pressed, instead of 0. Redefined interface.
+--| Fitted in with the development branch. on_key_down, now goes to position one
+--| when return is pressed, instead of 0. Redefined interface.
 --|
 --| Revision 1.27.10.1  1999/11/24 17:30:34  oconnor
 --| merged with DEVEL branch

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "External C functions for accessing gtk.%
 		% Those are used by all the widgets.";
@@ -31,8 +30,11 @@ end -- class EV_GTK_GENERAL_EXTERNALS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.13  2000/06/07 17:27:34  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.14  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.4.3  2000/09/06 23:18:42  king
+--| Reviewed
 --|
 --| Revision 1.10.4.2  2000/05/25 00:33:01  king
 --| Removed redundant externals

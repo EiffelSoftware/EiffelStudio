@@ -19,8 +19,17 @@ void c_ev_gtk_callback_marshal_init
 		EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)
 	);
 
+void c_ev_gtk_callback_marshal_destroy ();
+
 guint c_ev_gtk_callback_marshal_signal_connect
 	(GtkObject*, const gchar*, EIF_OBJECT);
+
+void c_ev_gtk_callback_marshal_signal_connect_true
+	(GtkObject*, const gchar*, EIF_OBJECT);
+
+int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent);
+
+int c_ev_gtk_callback_marshal_true_event_callback (GtkWidget*, GdkEvent*, EIF_OBJECT);
 
 void c_ev_gtk_callback_marshal_delayed_agent_call (gint, EIF_OBJECT);
 
@@ -41,6 +50,22 @@ int gtk_value_int (void*);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.5  2001/06/07 23:07:59  rogers
+// Merged DEVEL branch into Main trunc.
+//
+// Revision 1.4.6.4  2000/09/18 23:55:40  oconnor
+// Added c_ev_gtk_callback_marshal_destroy
+// This stops EV_APPLICATION.marshal from being called
+//
+// Revision 1.4.6.3  2000/08/09 19:07:41  king
+// Made signal_connect_true callback return void
+//
+// Revision 1.4.6.2  2000/08/04 19:37:14  king
+// Added c_ev_gtk_callback_marshal_signal_connect_true
+//
+// Revision 1.4.6.1  2000/05/03 19:08:33  oconnor
+// mergred from HEAD
+//
 // Revision 1.4  2000/02/18 19:32:23  oconnor
 // fixed type of gtk_value_int
 //

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"EiffelVision WEL_DIB version. We do not want the file %
@@ -18,7 +17,7 @@ creation
 feature {NONE} -- Initialization
 
 	make_by_stream (medium: IO_MEDIUM) is
-			-- Create the dib by reading `medium'.
+			-- Create `Current' by reading `medium'.
 			-- Contrary to `make_by_file', the medium
 			-- is not closed when finished.
 		require
@@ -37,7 +36,8 @@ feature {NONE} -- Initialization
 			create a_wel_string1.make (s)
 			bitmap_file_header.memory_copy (a_wel_string1.item,
 				bitmap_file_header.structure_size)
-			structure_size := bitmap_file_header.size - bitmap_file_header.structure_size
+			structure_size := bitmap_file_header.size -
+				bitmap_file_header.structure_size
 			structure_make
 			medium.read_stream (structure_size)
 			s := medium.last_string
@@ -56,18 +56,34 @@ feature {NONE} -- Initialization
 
 end -- class EV_WEL_DIB
 
---|----------------------------------------------------------------
---| EiffelVision library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
+--!-----------------------------------------------------------------------------
+--! EiffelVision library: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
 --|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--| $Log$
+--| Revision 1.2  2001/06/07 23:08:14  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.6.2  2000/09/12 21:40:53  rogers
+--| Removed fixme not_reviewed. Comments, formatting. Added CVS log.
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------
+

@@ -13,26 +13,35 @@ class
 
 inherit
 	EV_PRIMITIVE
+		undefine
+			is_equal
 		redefine
 			implementation,
-			create_action_sequences,
-			make_for_test
+			is_in_default_state
 		end
 
 	EV_ITEM_LIST [EV_MULTI_COLUMN_LIST_ROW]
 		redefine
-			create_action_sequences,
+			implementation,
+			is_in_default_state
+		end
+
+	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES
+		undefine
+			is_equal
+		redefine
 			implementation
 		end
 
 create
-	default_create,
-	make_for_test
+	default_create
 
 feature -- Access
 
 	column_count: INTEGER is
 			-- Column count.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.column_count
 		ensure
@@ -43,6 +52,8 @@ feature -- Access
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items').
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.selected_item
 		ensure
@@ -51,6 +62,8 @@ feature -- Access
 
 	selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW] is
 			-- Currently selected items.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.selected_items
 		ensure
@@ -59,6 +72,8 @@ feature -- Access
 
 	row_height: INTEGER is
 			-- Height in pixels of each row.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.row_height
 		ensure
@@ -68,7 +83,9 @@ feature -- Access
 feature -- Status report
 
 	multiple_selection_enabled: BOOLEAN is
-			-- Can more that one item be selected?
+			-- Can more than one item be selected?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.multiple_selection_enabled
 		ensure
@@ -77,6 +94,8 @@ feature -- Status report
 	
 	title_shown: BOOLEAN is
 			-- Is a row displaying column titles shown?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.title_shown
 		ensure
@@ -87,6 +106,7 @@ feature -- Status report
 			-- Title of `a_column'.
 			-- Returns "" if no title given yet.
 		require
+			not_destroyed: not is_destroyed
 			a_column_positive: a_column >= 1
 		do
 			Result := implementation.column_title (a_column)
@@ -97,6 +117,7 @@ feature -- Status report
 	column_width (a_column: INTEGER): INTEGER is
 			-- Width of `a_column' in pixels.
 		require
+			not_destroyed: not is_destroyed
 			a_column_within_range: a_column >= 1 and a_column <= column_count
 		do
 			Result := implementation.column_width (a_column)
@@ -104,8 +125,22 @@ feature -- Status report
 			bridge_ok: Result = implementation.column_width (a_column)
 		end
 
+	column_alignment (a_column: INTEGER): EV_TEXT_ALIGNMENT is
+			-- `Result' is alignment of column `a_column'.
+		require
+			not_destroyed: not is_destroyed
+			a_column_within_range: a_column >= 1 and a_column <= column_count
+		do
+			Result := implementation.column_alignment (a_column)
+		ensure
+			bridge_ok: Result.is_equal (implementation.column_alignment (a_column))
+		end
+
+
 	pixmaps_width: INTEGER is
-			-- Width of displayed pixmaps in the Multicolumn list.
+			-- Width of displayed pixmaps in `Current'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.pixmaps_width
 		ensure
@@ -113,7 +148,9 @@ feature -- Status report
 		end
 
 	pixmaps_height: INTEGER is
-			-- Height of displayed pixmaps in the Multicolumn list.
+			-- Height of displayed pixmaps in `Current'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.pixmaps_height
 		ensure
@@ -122,38 +159,20 @@ feature -- Status report
 
 feature -- Status setting
 
-	select_item (an_index: INTEGER) is
-			-- Select item at `an_index'.
-		require
-			an_index_within_range: an_index > 0 and an_index <= count
-		do
-			implementation.select_item (an_index)
-		ensure
-			item_selected: selected_items.has (i_th (an_index))
-		end
-
-	deselect_item (an_index: INTEGER) is
-			-- Deselect item at `an_index'.
-		require
-			an_index_within_range: an_index > 0 and an_index <= count
-		do
-			implementation.deselect_item (an_index)
-		ensure
-			item_deselected: not selected_items.has (i_th (an_index))
-		end
-
 	clear_selection is
 			-- Make `selected_items' empty.
-			--| FIXME according to PR 2359 clear_selection does not
-			--| cause an unselect event. This needs to be checked out.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.clear_selection
 		ensure
-			selected_items_empty: selected_items.empty
+			selected_items_empty: selected_items.is_empty
 		end
 
 	enable_multiple_selection is
 			-- Allow more than one item to be selected.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.enable_multiple_selection	
 		ensure
@@ -162,6 +181,8 @@ feature -- Status setting
 
 	disable_multiple_selection is
 			-- Allow only one item to be selected.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.disable_multiple_selection
 		ensure
@@ -170,6 +191,8 @@ feature -- Status setting
 
 	show_title_row is
 			-- Show row displaying column titles.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.show_title_row
 		ensure
@@ -178,6 +201,8 @@ feature -- Status setting
 
 	hide_title_row is
 			-- Hide row displaying column titles.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.hide_title_row
 		ensure
@@ -188,7 +213,8 @@ feature -- Status setting
 			-- Display text of `a_column' left aligned.
 			-- First column is always left aligned.
 		require
-			a_column_withing_range: a_column > 1 and a_column <= column_count
+			not_destroyed: not is_destroyed
+			a_column_within_range: a_column > 1 and a_column <= column_count
 		do
 			implementation.align_text_left (a_column)
 		end
@@ -197,6 +223,7 @@ feature -- Status setting
 			-- Display text of `a_column' centered.
 			-- First column is always left aligned.
 		require
+			not_destroyed: not is_destroyed
 			a_column_within_range: a_column > 1 and a_column <= column_count
 		do
 			implementation.align_text_center (a_column)
@@ -206,6 +233,7 @@ feature -- Status setting
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
 		require
+			not_destroyed: not is_destroyed
 			a_column_within_range: a_column > 1 and a_column <= column_count
 		do
 			implementation.align_text_right (a_column)
@@ -215,6 +243,7 @@ feature -- Status setting
 			-- Set the size of displayed pixmaps in the Multicolumn list.
 			-- Note: The Default value is 16x16
 		require
+			not_destroyed: not is_destroyed
 			valid_width: a_width > 0
 			valid_height: a_height > 0
 		do
@@ -229,6 +258,7 @@ feature -- Element change
 	set_column_title (a_title: STRING; a_column: INTEGER) is
 			-- Assign `a_title' to the `column_title'(`a_column').
 		require
+			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
 			a_title_not_void: a_title /= Void
 		do
@@ -239,32 +269,48 @@ feature -- Element change
 
 	set_column_titles (titles: ARRAY [STRING]) is         
 			-- Assign `titles' to titles of columns in order.
+			-- `Current' will resize if the number of titles exceeds
+			-- `Column_count'.
 		require
+			not_destroyed: not is_destroyed
 			titles_not_void: titles /= Void
 		do
 			implementation.set_column_titles (titles)
+		ensure
+			column_titles_assigned: column_titles_assigned (titles)
 		end
-		--|FIXME This needs a postcondition!
 
 	set_column_width (a_width: INTEGER; a_column: INTEGER) is
 			-- Assign `a_width' `column_width'(`a_column').
 		require
+			not_destroyed: not is_destroyed
 			a_column_within_range: a_column > 0 and a_column <= column_count
-			a_width_positive: a_width > 0
+			a_width_positive: a_width >= 0
 		do
 			implementation.set_column_width (a_width, a_column)
 		ensure
 			a_width_assigned: a_width = column_width (a_column)
 		end
 
+	resize_column_to_content (a_column: INTEGER) is
+			-- Resize column `a_column' to width of its widest text.
+		require
+			not_destroyed: not is_destroyed
+			a_column_within_range: a_column > 0 and a_column <= column_count
+		do
+			implementation.resize_column_to_content (a_column)
+		end
+
 	set_column_widths (widths: ARRAY [INTEGER]) is 
 				-- Assign `widths' to column widths in order.
 		require
+			not_destroyed: not is_destroyed
 			widths_not_void: widths /= Void
 		do
 			implementation.set_column_widths (widths)
+		ensure
+			column_widths_assigned: column_widths_assigned (widths)
 		end
-		--|FIXME This needs a postcondition!
 
 	set_column_alignment (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
 			-- Align the text of column `a_column' to `an_alignment'
@@ -272,33 +318,97 @@ feature -- Element change
 			-- states that the first column can only be set as left aligned
 			-- for Win32.
 		require
+			not_destroyed: not is_destroyed
 			a_column_within_range: a_column > 1 and a_column <= column_count
 			alignment_not_void: an_alignment /= Void
 		do
 			implementation.set_column_alignment (an_alignment, a_column)
+		ensure
+			column_alignment_assigned: column_alignment (a_column).is_equal (an_alignment) 
 		end
-		--|FIXME IEK This needs a postcondition!
 
 	set_column_alignments (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT]) is
 			-- Assign `alignments' to column text alignments in order.
-			-- The first alignment element is ignored (see set_column_alignment).
+			-- The first alignment element is ignored
+			-- (see set_column_alignment).
 		require
+			not_destroyed: not is_destroyed
 			alignments_not_void: alignments /= Void
 		do
 			implementation.set_column_alignments (alignments)
+		ensure
+			column_alignments_assigned: column_alignments_assigned (alignments)
 		end
-		--| FIXME IEK This needs a postcondition!
+		
+feature {NONE} -- Contract support
+	
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST}
+		end
 
-feature -- Event handling
+feature -- Contract support
 
-	select_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
-		-- Actions performed when a row is selected.
+	column_widths_assigned (widths: ARRAY [INTEGER]): BOOLEAN is
+			-- Are widths of columns equal to `widths'?
+		require
+			widths_not_void: widths /= Void
+		local
+			i: INTEGER
+		do
+			Result := True
+			from
+				i := 1
+			until
+				i > widths.count
+			loop
+				if not (widths.item (i) = (column_width (i))) then
+					Result := False
+				end
+				i := i + 1
+			end
+		end
 
-	deselect_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
-		-- Actions performed when a row is deselected.
+	column_titles_assigned (titles: ARRAY [STRING]): BOOLEAN is
+			-- Are titles of columns equal to `titles'?
+		require
+			titles_not_void: titles /= Void
+		local
+			i: INTEGER
+		do
+			Result := True
+			from
+				i := 1
+			until
+				i > titles.count
+			loop
+				if not titles.item (i).is_equal (column_title (i)) then
+					Result := False
+				end
+				i := i + 1
+			end
+		end
 
-	column_click_actions: EV_NOTIFY_ACTION_SEQUENCE
-		-- Actions performed when a column is clicked.
+	column_alignments_assigned (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT]): BOOLEAN is
+			-- Are alignments of columns equal to `alignments'.
+		require
+			alignment_not_void: alignments /= Void
+		local
+			i: INTEGER
+		do
+			Result := True
+			from
+				i := 1
+			until
+				i > alignments.count
+			loop
+				if not column_alignment (i).is_equal (column_alignment (i)) then
+					Result := False
+				end
+				i := i + 1
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 	
@@ -311,44 +421,6 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MULTI_COLUMN_LIST_IMP} implementation.make (Current)
-		end
-
-	create_action_sequences is
-			-- See `{EV_ANY}.create_action_sequences'.
-		do
-			{EV_PRIMITIVE} Precursor
-			{EV_ITEM_LIST} Precursor
-			create select_actions
-			create deselect_actions
-			create column_click_actions
-		end
-
-feature -- Contract support
-
-	make_for_test is
-		local
-			i, j: INTEGER
-		do
-			default_create
-			set_column_titles (<<"Title 1", "Title 2", "Title 3", "Title 4">>)
-			from
-				i := 1
-			until
-				i > 9
-			loop
-				extend (create {EV_MULTI_COLUMN_LIST_ROW})
-				from
-					j := 1
-				until
-					j > 4
-				loop
-					last.extend ("Row" + i.out + " Col" + j.out)
-					last.select_actions.extend (~prune (last))
-					last.select_actions.extend (~put_front (last))
-					j := j + 1
-				end
-				i := i + 1
-			end
 		end
 
 feature -- Obsolete
@@ -364,9 +436,9 @@ feature -- Obsolete
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
 		obsolete
-			"use selected_item = Void or selected_items.empty"
+			"use selected_item = Void or selected_items.is_empty"
 		do
-			Result := implementation.selected_item.empty
+			Result := implementation.selected_item.is_empty
 		end
 	
 	set_columns (a_column_count: INTEGER) is
@@ -375,7 +447,7 @@ feature -- Obsolete
 		obsolete
 			"Column count is determined by biggest item in list."
 		require
-			empty: empty
+			is_empty: is_empty
 			a_column_count_positive: a_column_count > 0
 		do
 			check
@@ -391,17 +463,30 @@ feature -- Obsolete
 		do
 			Result := implementation.column_count
 		end
-
-
-	set_row_height (a_height: INTEGER) is
-			-- Set all rows to `a_height'.
+			
+	select_item (an_index: INTEGER) is
+			-- Select item at `an_index'.
 		obsolete
-				"Not implemented. Please let us know why you need this feature."
-			do
-				check
-					not_implemented: False
-				end
-			end
+			"Use i_th (an_index).enable_select"
+		require
+			an_index_within_range: an_index > 0 and an_index <= count
+		do
+			implementation.select_item (an_index)
+		ensure
+			item_selected: selected_items.has (i_th (an_index))
+		end
+
+	deselect_item (an_index: INTEGER) is
+			-- Deselect item at `an_index'.
+		obsolete
+			"Use i_th (an_index).disable_select"
+		require
+			an_index_within_range: an_index > 0 and an_index <= count
+		do
+			implementation.deselect_item (an_index)
+		ensure
+			item_deselected: not selected_items.has (i_th (an_index))
+		end
 
 end -- class EV_MULTI_COLUMN_LIST
 
@@ -420,168 +505,3 @@ end -- class EV_MULTI_COLUMN_LIST
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.59  2000/04/27 17:50:47  pichery
---| - changed the type of `selected_items' from
---|   LINKED_LIST to ARRAYED_LIST.
---|
---| Revision 1.58  2000/04/26 00:04:04  pichery
---| Slight redesign of the pixmap handling in
---| trees and multi-column lists.
---|
---| Added `set_pixmaps_size', `pixmaps_width'
---| and `pixmaps_height' in the interfaces and
---| in the implementations.
---|
---| Fixed bugs in multi-column lists and trees.
---|
---| Revision 1.57  2000/04/25 18:43:05  king
---| Moved set_row_height in to obsolete feature clause
---|
---| Revision 1.56  2000/04/21 16:27:29  rogers
---| Added a check False to set_row_height.
---|
---| Revision 1.55  2000/04/21 00:59:56  king
---| Corrected all alignment preconditions
---|
---| Revision 1.54  2000/04/20 21:31:18  king
---| Added column alignment features
---|
---| Revision 1.53  2000/04/20 18:44:14  rogers
---| Previous comment should read - made set_row_height odsolete.
---|
---| Revision 1.51  2000/04/05 21:16:23  brendel
---| Merged changes from LIST_REFACTOR_BRANCH.
---|
---| Revision 1.50.2.1  2000/04/04 22:59:03  brendel
---| Included EV_ITEM_LIST.create_action_sequences.
---|
---| Revision 1.50  2000/03/29 20:26:30  rogers
---| Postcondition on selected_items now uses lists_equal for
---| comparison
---|
---| Revision 1.49  2000/03/27 19:31:27  brendel
---| Fixed `make_for_text'.
---|
---| Revision 1.48  2000/03/27 18:38:58  oconnor
---| added fixme
---|
---| Revision 1.47  2000/03/27 17:16:09  brendel
---| columns -> column_count.
---| Declared columns obsolete.
---|
---| Revision 1.46  2000/03/25 01:12:13  brendel
---| Revised.
---| `set_columns' is now obsolete.
---| `make_with_columns' is removed.
---|
---| Revision 1.45  2000/03/24 01:35:42  brendel
---| Added `row_height'.
---|
---| Revision 1.44  2000/03/23 18:18:54  brendel
---| Commented out line that uses set_cell_text. get back to this.
---|
---| Revision 1.43  2000/03/21 21:42:07  oconnor
---| formatting
---|
---| Revision 1.42  2000/03/21 20:17:29  king
---| Implemented basic make_for_test
---|
---| Revision 1.41  2000/03/21 02:42:34  oconnor
---| naming problem fixed
---|
---| Revision 1.40  2000/03/21 02:13:32  oconnor
---| Added contracts to most features.
---| Added FIXMES where contracts were not imediately implementable.
---| Formatting, comments...
---| Fixed broken feature names:
---| set_columns_with -> set_column_withs etc
---|
---| Revision 1.39  2000/03/06 20:15:48  king
---| Changed action sequence types
---|
---| Revision 1.38  2000/03/06 18:05:14  rogers
---| Changed types, select actions and deselect actions from
---| EV_NOTIFY_ACTION_SEQUENCE -> EV_ITEM_SELECT_ACTION_SEQUENCE.
---|
---| Revision 1.37  2000/03/03 21:26:24  king
---| Added valid_width precond to set_column_width
---|
---| Revision 1.36  2000/03/03 18:22:59  king
---| Renamed get_column_width -> column_width, added column_title
---|
---| Revision 1.35  2000/03/03 17:05:29  rogers
---| Added set_columns and make_with_columns.
---|
---| Revision 1.34  2000/03/02 22:07:03  king
---| Made cvs log to be 80 cols or less
---|
---| Revision 1.33  2000/03/02 18:45:54  rogers
---| Minor comment change. Previous revision comment should have read :
---| renamed set_multiple_selection -> enable_multiple_selection,
---| set_single_selection -> disable_multiple_selection,
---| set_left_alignment -> align_text_left,
---| set_right_alignment to align_text_right,
---| set_cent_alignment -> align_text_right.
---|
---| Revision 1.31  2000/03/01 19:48:53  king
---| Corrected export clauses for implementation and create_imp/act_seq
---|
---| Revision 1.30  2000/03/01 03:28:43  oconnor
---| added make_for_test
---|
---| Revision 1.29  2000/02/22 18:39:51  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.28  2000/02/19 01:21:00  king
---| Reinstated column_click_actions
---|
---| Revision 1.27  2000/02/18 23:54:11  oconnor
---| released
---|
---| Revision 1.26  2000/02/18 18:45:33  king
---| Added select, deselect and column_click actions sequences
---|
---| Revision 1.25  2000/02/17 21:54:19  king
---| Added row height precond to be > 0
---|
---| Revision 1.24  2000/02/14 11:40:52  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.23.6.7  2000/02/03 17:15:36  brendel
---| Removed old event features.
---| Corrected error in create_implementation.
---|
---| Revision 1.23.6.6  2000/02/02 23:53:34  king
---| Removed redundant initialization routines
---|
---| Revision 1.23.6.5  2000/01/29 01:05:04  brendel
---| Tweaked inheritance clause.
---|
---| Revision 1.23.6.4  2000/01/27 19:30:55  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.23.6.3  1999/12/17 19:36:51  rogers
---| redefined implementation to be a a more refined type. Changed index
---| wherever it appeared as a parameter.
---|
---| Revision 1.23.6.2  1999/12/01 19:10:02  rogers
---| Changed inheritance structure from EV_ITEM_HOLDER to EV_ITEM_LIST
---|
---| Revision 1.23.6.1  1999/11/24 17:30:54  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.23.2.3  1999/11/04 23:10:55  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.23.2.2  1999/11/02 17:20:13  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

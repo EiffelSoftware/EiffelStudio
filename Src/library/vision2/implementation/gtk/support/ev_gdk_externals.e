@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "External C routines for accessing gdk";
 	status: "See notice at end of class";
@@ -6,30 +5,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class EV_GDK_EXTERNALS
-
-
---feature {NONE} -- GDK extenals for the fonts
-
---	gdk_font_load (name: POINTER): POINTER is
---		external
---			"C | <gdk/gdk.h>"
---		end
-
---	gdk_string_width (font, str: POINTER): INTEGER is
---		external
---			"C | <gdk/gdk.h>"
---		end
-
---	c_gdk_font_ascent (font: POINTER): INTEGER is
---		external
---			"C [macro %"gdk_eiffel.h%"]"
---		end
-
---	c_gdk_font_descent  (font: POINTER): INTEGER is
---		external
---			"C [macro %"gdk_eiffel.h%"]"
---		end
+class
+	EV_GDK_EXTERNALS
 
 feature -- GTK macros for casting types
 	
@@ -122,6 +99,18 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.8.5  2000/10/06 20:11:47  oconnor
+--| cosmetics
+--|
+--| Revision 1.6.8.4  2000/09/06 23:18:42  king
+--| Reviewed
+--|
+--| Revision 1.6.8.3  2000/05/03 19:08:42  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/02/14 11:40:29  oconnor
 --| merged changes from prerelease_20000214
 --|

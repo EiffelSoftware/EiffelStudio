@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision list item list. Implementation interface."
 	status: "See notice at end of class"
@@ -11,7 +10,6 @@ deferred class
 inherit
 	EV_PRIMITIVE_I
 		redefine
-			set_default_colors,
 			interface
 		end
 
@@ -20,23 +18,12 @@ inherit
 			interface
 		end
 
-feature {EV_WIDGET} -- Initialization
-
-	set_default_colors is
-			-- Common initializations for Gtk and Windows.
-		local
-			color: EV_COLOR
-		do
-			create color.make_with_rgb (1, 1, 1)
-			set_background_color (color)
-			create color.make_with_rgb (0, 0, 0)
-			set_foreground_color (color)
-		end
+	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_I
 
 feature -- Access
 
 	selected_item: EV_LIST_ITEM is
-			-- Currently selected item.
+			-- `Result' is currently selected item.
 			-- Topmost selected item if multiple items are selected.
 		deferred
 		end
@@ -44,21 +31,21 @@ feature -- Access
 feature -- Status setting
 
 	select_item (an_index: INTEGER) is
-			-- Select item at `an_index'.
+			-- Select item at one based index, `an_index'.
 		require
 			index_within_range: an_index > 0 and an_index <= count
 		deferred
 		end
 
 	deselect_item (an_index: INTEGER) is
-			-- Deselect item at `an_index'.
+			-- Deselect item at one based index, `an_index'.
 		require
 			index_within_range: an_index > 0 and an_index <= count
 		deferred
 		end
 
 	clear_selection is
-			-- Ensure there is no `selected_item'.
+			-- Ensure there is no `selected_item' in `Current'.
 		deferred
 		end
 
@@ -89,8 +76,18 @@ end -- class EV_LIST_ITEM_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.2  2000/06/07 17:27:50  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.3  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.2.4  2000/10/27 02:28:21  manus
+--| Removed declaration or undefinition of `set_default_colors'. Now it is defined
+--| in a platform dependent manner to improve performance and correctness.
+--|
+--| Revision 1.1.2.3  2000/08/17 23:44:45  rogers
+--| removed fixme not_reviewed. Comments, formatting.
+--|
+--| Revision 1.1.2.2  2000/07/24 21:30:48  oconnor
+--| inherit action sequences _I class
 --|
 --| Revision 1.1.2.1  2000/05/10 19:00:17  king
 --| Initial

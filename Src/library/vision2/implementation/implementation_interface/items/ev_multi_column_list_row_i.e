@@ -31,10 +31,12 @@ inherit
 			is_selectable
 		end
 
+	EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES_I
+
 feature -- Status report
 
 	is_selectable: BOOLEAN is
-			-- May the tree item be selected
+			-- May the tree item be selected.
 		do
 			Result := parent /= Void
 		end
@@ -44,7 +46,7 @@ feature -- Element Change
 	set_pixmap (a_pix: EV_PIXMAP) is
 			-- Set the rows `pixmap' to `a_pix'.
 		do
-			pixmap := interface.ev_clone (a_pix)
+			pixmap := clone (a_pix)
 			update
 		end
 
@@ -68,7 +70,10 @@ feature -- Basic operations
 			if parent_imp /= Void then
 				update_needed := True
 				app := (create {EV_ENVIRONMENT}).application.implementation
-				if not app.once_idle_actions.has (
+				if interface.count > parent_imp.count then
+					parent_imp.update_children_agent.call ([])
+					app.once_idle_actions.prune (parent_imp.update_children_agent)
+				elseif not app.once_idle_actions.has (
 						parent_imp.update_children_agent) then
 					app.do_once_on_idle (
 						parent_imp.update_children_agent)
@@ -124,8 +129,32 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.39  2000/06/07 17:27:41  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.40  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.25.4.12  2001/06/05 21:55:33  rogers
+--| Set_pixmap now uses clone internally instead of copy. Saves creation line.
+--|
+--| Revision 1.25.4.11  2001/06/05 18:55:28  rogers
+--| we now create pixmap before calling `copy' on it.
+--|
+--| Revision 1.25.4.10  2001/06/04 19:38:03  rogers
+--| Replaced use of ev_clone with copy.
+--|
+--| Revision 1.25.4.9  2000/12/01 18:27:33  king
+--| Reimplemented update to immediately update list if row size is bigger than list count
+--|
+--| Revision 1.25.4.8  2000/08/09 20:57:10  oconnor
+--| use ev_clone instead of clone as per instructions of manus
+--|
+--| Revision 1.25.4.7  2000/08/08 20:41:10  rogers
+--| Replaced use of ev_clone with clone.
+--|
+--| Revision 1.25.4.6  2000/07/24 21:31:44  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.25.4.5  2000/07/05 23:59:27  king
+--| Added period/full stop to comment
 --|
 --| Revision 1.25.4.4  2000/05/09 23:22:41  king
 --| Redefined is_selectable

@@ -15,24 +15,12 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			clear,
-			clear_rectangle,
-			draw_point,
-			draw_text,
-			draw_segment,
-			draw_straight_line,
-			draw_arc,
-			draw_pixmap,
-			draw_rectangle,
-			draw_ellipse,
-			draw_polyline,
-			draw_pie_slice,
-			fill_rectangle,
-			fill_ellipse,
-			fill_polygon,
-			fill_pie_slice,
-			initialize,
-			interface
+			clear, clear_rectangle, draw_point, draw_text_top_left,
+			draw_segment, draw_straight_line, draw_arc,
+			draw_pixmap, draw_sub_pixmap, draw_rectangle,
+			draw_ellipse, draw_polyline, draw_pie_slice,
+			fill_rectangle, fill_ellipse, fill_polygon,
+			fill_pie_slice,	initialize, interface, destroy
 		end
 
 	EV_PRIMITIVE_IMP
@@ -42,50 +30,16 @@ inherit
 			background_color,
 			foreground_color
 		redefine
-			interface,
-			initialize,
-			on_left_button_down,
-			on_middle_button_down,
-			on_right_button_down
+			interface, initialize, on_left_button_down, 
+			on_middle_button_down, on_right_button_down,
+			propagate_syncpaint, destroy
 		end
 
-	WEL_CONTROL_WINDOW
-		rename
-			make as wel_make,
-			parent as wel_window_parent,
-			set_parent as wel_set_parent,
-			shown as is_displayed,
-			destroy as wel_destroy,
-			destroy_item as wel_destroy_item,
-			item as wel_item,
-			enabled as is_sensitive,
-			width as wel_width,
-			height as wel_height,
-			x as x_position,
-			y as y_position,
-			move as wel_move,
-			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+	EV_WEL_CONTROL_WINDOW
 		undefine
-			window_process_message,
-			set_width,
-			set_height,
-			remove_command,
-			on_left_button_down,
-			on_mouse_move,
-			on_left_button_up,
-			on_right_button_down,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_key_down,
-			on_key_up,
-			on_kill_focus,
-			on_set_focus,
-			on_set_cursor,
-			show,
-			hide,
-			on_size
+			on_sys_key_down,
+			wel_set_font,
+			wel_font
 		redefine
 			on_paint,
 			on_erase_background,
@@ -99,18 +53,21 @@ inherit
 			{NONE} all
 		end
 
+	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
+
 create
 	make
 
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create an empty drawing area.
+			-- Create `Current' empty with interface `an_interface'.
 		do
 			base_make (an_interface)
 		end
 
 	initialize is
+			-- Initialize `Current'.
 			-- Set up action sequence connections
 			-- and `Precursor' initialization.
 		do
@@ -118,8 +75,8 @@ feature {NONE} -- Initialization
 			create screen_dc.make (Current)
 			internal_paint_dc := screen_dc
 			internal_paint_dc.get
-			{EV_DRAWABLE_IMP} Precursor
-			{EV_PRIMITIVE_IMP} Precursor
+			Precursor {EV_DRAWABLE_IMP}
+			Precursor {EV_PRIMITIVE_IMP}
 			internal_paint_dc.release
 		end	
 
@@ -131,20 +88,15 @@ feature -- Access
 			Result := internal_paint_dc
 		end
 
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
-
 feature {NONE} -- Implementation
+
+	propagate_syncpaint is
+			-- Propagate `wm_syncpaint' message recevived by `top_level_window_imp' to
+			-- children. No children, but must force `Current' to re-draw. See
+			-- "WM_SYNCPAINT" in MSDN for more information.
+		do
+			invalidate
+		end
 
 	in_paint: BOOLEAN
 			-- Are we inside an onPaint event?
@@ -167,15 +119,15 @@ feature {NONE} -- Implementation
 				internal_paint_dc.get
 				internal_paint_dc.set_background_transparent
 				if internal_pen /= Void then
-					internal_paint_dc.select_pen(internal_pen)
+					internal_paint_dc.select_pen (internal_pen)
 				else
-					internal_paint_dc.select_pen(empty_pen)
+					internal_paint_dc.select_pen (empty_pen)
 				end
 
 				if internal_brush /= Void then
-					internal_paint_dc.select_brush(internal_brush)
+					internal_paint_dc.select_brush (internal_brush)
 				else
-					internal_paint_dc.select_brush(empty_brush)
+					internal_paint_dc.select_brush (empty_brush)
 				end
 			end
 		end
@@ -226,12 +178,14 @@ feature {NONE} -- Implementation
 			internal_initialized_text_color := False
 
 				-- Call registered onPaint actions
-			interface.expose_actions.call ([
-				invalid_rect.x,
-				invalid_rect.y,
-				invalid_rect.width,
-				invalid_rect.height
-				])
+			if expose_actions_internal /= Void then
+				expose_actions_internal.call ([
+					invalid_rect.x,
+					invalid_rect.y,
+					invalid_rect.width,
+					invalid_rect.height
+					])
+			end
 
 				-- Switch back the dc from paint_dc to screen_dc.
 			internal_paint_dc := screen_dc
@@ -240,30 +194,34 @@ feature {NONE} -- Implementation
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the left button is pressed.
-			-- Redefined as the button press does not set the focus automatically.
+			-- Redefined as the button press does not set the
+			-- focus automatically.
 		do
 			set_focus
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the left button is pressed.
-			-- Redefined as the button press does not set the focus automatically.
+			-- Redefined as the button press does not set the
+			-- focus automatically.
 		do
 			set_focus
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the left button is pressed.
-			-- Redefined as the button press does not set the focus automatically.
+			-- Redefined as the button press does not set the
+			-- focus automatically.
 		do
 			set_focus
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
-	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Redraw the rectangle (`x1',`y1') - (`x2', `y2')
+	clear_and_redraw_rectangle (x1, y1, a_width, a_height: INTEGER) is
+			-- Redraw the rectangle at (`x1',`y1') with width `a_width' and
+			-- height `a_height'.
 		local
 			wel_rect: WEL_RECT
 		do
@@ -273,7 +231,7 @@ feature {NONE} -- Implementation
 				-- Ask windows to redraw the rectangle
 				-- Windows will then call on_background_erase and
 				-- then on_paint.
-			create wel_rect.make(x1, y1, x2 + 1, y2 + 1)
+			create wel_rect.make(x1, y1, x1 + a_width, y1 + a_height)
 			invalidate_rect(wel_rect, True)
 		end
 
@@ -289,14 +247,15 @@ feature {NONE} -- Implementation
 			invalidate
 		end
 
-	redraw_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Redraw the rectangle (`x1',`y1') - (`x2', `y2')
+	redraw_rectangle (x1, y1, a_width, a_height: INTEGER) is
+			-- Redraw the rectangle at (`x1',`y1') with width
+			-- `a_width' and height and `a_height'.
 		local
 			wel_rect: WEL_RECT
 		do
 				-- Ask windows to redraw the rectangle
 				-- Windows will then call on_paint.
-			create wel_rect.make(x1, y1, x2 + 1, y2 + 1)
+			create wel_rect.make(x1, y1, x1 + a_width, y1 + a_height)
 			invalidate_rect(wel_rect, False)
 		end
 
@@ -311,7 +270,7 @@ feature {NONE} -- Implementation
 		end
 
 	flush is
-			-- Update immediately the screen if needed
+			-- Update immediately the screen if needed.
 		do
 			update
 		end
@@ -325,7 +284,7 @@ feature {NONE} -- Implementation
 	class_style: INTEGER is
    			-- Standard style used to create the window class.
    			-- Can be redefined to return a user-defined style.
-   			-- (from WEL_FRAME_WINDOW)
+   			-- (from WEL_FRAME_WINDOW).
    		once
 			Result := 
 				cs_hredraw + 
@@ -335,7 +294,17 @@ feature {NONE} -- Implementation
 				Cs_savebits
  		end
 
-feature {NONE} -- Feature that should be directly implemented by externals
+feature -- Commands.
+
+	destroy is
+			-- Destroy `Current', but set the parent sensitive
+			-- in case it was set insensitive by the child.
+		do
+			{EV_DRAWABLE_IMP} Precursor
+			{EV_PRIMITIVE_IMP} Precursor
+		end
+
+feature {NONE} -- Feature that should be directly implemented by externals.
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
@@ -399,16 +368,16 @@ feature -- Drawing primitives
 			end
 		end
 
-	clear_rectangle (x1, y1, x2, y2: INTEGER) is
+	clear_rectangle (x1, y1, a_width, a_height: INTEGER) is
 			-- Lock the device context, call precursor
 			-- and release the device context.
 		do
 			if not in_paint then
 				get_dc
-				Precursor (x1, y1, x2, y2)
+				Precursor (x1, y1, a_width, a_height)
 				release_dc
 			else
-				Precursor (x1, y1, x2, y2)
+				Precursor (x1, y1, a_width, a_height)
 			end
 		end
 
@@ -425,7 +394,7 @@ feature -- Drawing primitives
 			end
 		end
 
-	draw_text (a_x, a_y: INTEGER; a_text: STRING) is
+	draw_text_top_left (a_x, a_y: INTEGER; a_text: STRING) is
 			-- Lock the device context, call precursor
 			-- and release the device context.
 		do
@@ -444,10 +413,10 @@ feature -- Drawing primitives
 		do
 			if not in_paint then
 				get_dc
-				Precursor (x1, y2, x2, y2)
+				Precursor (x1, y1, x2, y2)
 				release_dc
 			else
-				Precursor (x1, y2, x2, y2)
+				Precursor (x1, y1, x2, y2)
 			end
 		end
 
@@ -507,6 +476,19 @@ feature -- Drawing primitives
 				release_dc
 			else
 				Precursor (a_x, a_y, a_pixmap)
+			end
+		end
+
+	draw_sub_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
+			-- Lock the device context, call precursor
+			-- and release the device context.
+		do
+			if not in_paint then
+				get_dc
+				Precursor (a_x, a_y, a_pixmap, area)
+				release_dc
+			else
+				Precursor (a_x, a_y, a_pixmap, area)
 			end
 		end
 
@@ -634,29 +616,94 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 
 end -- class EV_DRAWING_AREA_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.42  2000/05/03 20:13:27  brendel
+--| Revision 1.43  2001/06/07 23:08:16  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.26.8.20  2001/05/11 21:50:29  rogers
+--| Clear_and_redraw_rectangle and redraw_rectanlge now both use width and
+--| height instead of absolute coordinates.
+--|
+--| Revision 1.26.8.19  2001/05/07 20:08:13  rogers
+--| Updated argument names for `clear_rectangle'.
+--|
+--| Revision 1.26.8.18  2001/03/14 19:18:41  rogers
+--| Added propagate_syncpaint which invalidates `Current'.
+--|
+--| Revision 1.26.8.17  2000/12/06 15:45:32  pichery
+--| Added 2 undefine clauses since `font' and `set_font' have been
+--| added to WEL_CONTROL_WINDOW
+--|
+--| Revision 1.26.8.16  2000/11/28 00:24:46  gauthier
+--| Added redefinition of `draw_sub_pixmap'.
+--|
+--| Revision 1.26.8.15  2000/11/06 17:59:14  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.26.8.14  2000/10/16 14:42:51  pichery
+--| Cosmetics
+--|
+--| Revision 1.26.8.13  2000/09/13 22:10:54  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.26.8.12  2000/08/16 18:20:36  brendel
+--| draw_text -> draw_text_top_left.
+--|
+--| Revision 1.26.8.11  2000/08/11 18:51:43  rogers
+--| Fixed copyright clauses. Now use ! instead of |. Formatting.
+--|
+--| Revision 1.26.8.10  2000/08/08 02:30:32  manus
+--| Use of `EV_WEL_CONTROL_WINDOW' instead of `WEL_CONTROL_WINDOW' for
+--| inheritance simplification.
+--|
+--| Revision 1.26.8.9  2000/08/04 20:27:38  rogers
+--| All action sequence calls through the interface have been replaced with
+--| calls to the internal action sequences.
+--|
+--| Revision 1.26.8.8  2000/07/24 23:14:43  rogers
+--| Now inherits EV_DRAWING_AREA_ACTION_SREQUENCES_IMP.
+--|
+--| Revision 1.26.8.7  2000/07/13 17:49:47  gauthier
+--| Fixed precursor call in draw_segment.
+--|
+--| Revision 1.26.8.6  2000/07/12 16:12:34  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.26.8.5  2000/06/13 21:47:40  rogers
+--| Removed FIXME NOT_REVIEWED and wel_window_parent fix. Comments, formatting.
+--|
+--| Revision 1.26.8.4  2000/06/13 18:37:11  rogers
+--| Removed undefintion of remove_command.
+--|
+--| Revision 1.26.8.3  2000/06/09 20:57:32  manus
+--| Removed useless undefinition of `on_size'
+--|
+--| Revision 1.26.8.2  2000/05/03 22:35:04  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.26.8.1  2000/05/03 19:09:50  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.41  2000/04/13 23:37:00  pichery
 --| Fixed a small bug. The brush and the pen were not correctly
@@ -669,7 +716,8 @@ end -- class EV_DRAWING_AREA_IMP
 --| - Cosmetics
 --|
 --| Revision 1.39  2000/03/25 01:27:41  rogers
---| Redefined on_left_button_down, on_middle_button_down and on_right_button_down to set the focus to `Current'.
+--| Redefined on_left_button_down, on_middle_button_down and
+--| on_right_button_down to set the focus to `Current'.
 --|
 --| Revision 1.38  2000/03/21 02:34:11  brendel
 --| Removed on_accelerator_command from undefine clause.

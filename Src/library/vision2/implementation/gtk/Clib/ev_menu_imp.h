@@ -38,6 +38,12 @@ c_gtk_menu_popup (GtkMenu * menu, gint x, gint y);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2001/06/07 23:07:59  rogers
+// Merged DEVEL branch into Main trunc.
+//
+// Revision 1.1.2.1  2000/05/03 19:08:34  oconnor
+// mergred from HEAD
+//
 // Revision 1.1  2000/04/25 17:37:54  brendel
 // Initial.
 //

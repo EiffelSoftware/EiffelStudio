@@ -50,8 +50,8 @@ end -- class EV_RADIO_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.10  2000/06/07 17:27:50  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.11  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
 --| Revision 1.3.4.2  2000/05/09 20:31:08  king
 --| Integrated selectable/deselectable

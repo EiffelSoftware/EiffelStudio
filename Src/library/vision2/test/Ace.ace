@@ -1,17 +1,17 @@
 system
 
-	test
+dynamic_list_test	
 
 root
 
-	TEST: make_and_launch
+	EV_DYNAMIC_LIST_TEST: make_and_launch
 
 default
 
-	assertion (no)
+	assertion (all)
 
-	debug("EVENT_TRACE")
-	debug("EV_GTK_DEBUG")
+	--debug("EVENT_TRACE")
+	--debug("EV_GTK_DEBUG")
 cluster
 
 dev:						"$WS"
@@ -20,11 +20,13 @@ event(dev):					"$/event"
 
 gel(dev):					"$/gel"
 
-all vision2(dev):				"$/v2_hack-o-rama"
+all vision2(dev):				"$/vision2"
 	exclude
 		"mswin";
 		"new_figures";
 		"EIFGEN";
+		"release";
+		"obsolete";
 	end
 
 all base(dev):					"$/base"
@@ -35,9 +37,11 @@ all base(dev):					"$/base"
 external
 
 	include_path:
-		"$WS/v2_hack-o-rama/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
+		"$WS/vision2/implementation/gtk/Clib", "`gtk-config --cflags`",
+		"$WS/vision2/spec/include";
 	object:
-		"$(WS)/v2_hack-o-rama/vision2/implementation/gtk/spec/$(PLATFORM)/gtk_eiffel.o",
+		"$(WS)/vision2/implementation/gtk/Clib/gtk_eiffel.o -lpng -lz -lXtst",
+		"$(WS)/vision2/Clib/load_pixmap.o",
 		"`gtk-config --libs`"
 
 end

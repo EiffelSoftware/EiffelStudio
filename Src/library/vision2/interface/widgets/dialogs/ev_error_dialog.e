@@ -22,13 +22,14 @@ create
 feature {NONE} -- Initialization
 
 	initialize is
+			-- Initialize `Current'.
 		do
-			Precursor
-			set_title ("Error")
+			Precursor {EV_MESSAGE_DIALOG}
+			set_title (ev_error_dialog_title)
 			set_pixmap (Default_pixmaps.Error_pixmap)
-			set_buttons (<<"Abort", "Retry", "Ignore">>)
-			set_default_push_button(button ("Retry"))
-			set_default_cancel_button(button ("Abort"))
+			set_buttons (<<ev_abort, ev_retry, ev_ignore>>)
+			set_default_push_button(button (ev_retry))
+			set_default_cancel_button(button (ev_abort))
 		end
 
 end -- class EV_ERROR_DIALOG
@@ -48,51 +49,3 @@ end -- class EV_ERROR_DIALOG
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.14  2000/04/29 03:37:24  pichery
---| Changed Dialogs. Added default & cancel
---| buttons, Default pixmaps, ...
---|
---| Revision 1.13  2000/03/06 19:17:42  oconnor
---| Added make_with_text_and_actions,
---| moved make_with_text from decendants to EV_MESSAGE_DIALOG.
---|
---| Revision 1.12  2000/02/29 18:09:09  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.11  2000/02/22 18:39:50  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.10  2000/02/14 11:40:50  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.9.6.6  2000/02/05 05:26:14  oconnor
---| redefine initialize
---|
---| Revision 1.9.6.5  2000/01/28 22:24:22  oconnor
---| released
---|
---| Revision 1.9.6.4  2000/01/28 22:20:37  brendel
---| Added `default_create' to create-clause.
---|
---| Revision 1.9.6.3  2000/01/27 19:30:49  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.9.6.2  2000/01/26 18:17:21  brendel
---| Completed in a platform independant way.
---|
---| Revision 1.9.6.1  1999/11/24 17:30:50  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.9.2.2  1999/11/02 17:20:12  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

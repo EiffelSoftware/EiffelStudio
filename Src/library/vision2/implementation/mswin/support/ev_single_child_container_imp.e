@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"A common class for Mswindows containers with one child without%N%
@@ -17,13 +16,16 @@ inherit
 			disable_sensitive,
 			propagate_foreground_color,
 			propagate_background_color,
-			extend
+			extend,
+			propagate_syncpaint,
+			update_for_pick_and_drop,
+			on_size
 		end
 
 feature -- Access
 
 	item: EV_WIDGET
-			-- The child of the container.
+			-- The child of `Current'.
 
 	item_imp: EV_WIDGET_IMP is
 			-- `item'.`implementation'.
@@ -38,25 +40,25 @@ feature -- Status setting
 	enable_sensitive is
 			-- Set `item' sensitive to user actions.
 		do
-			if item /= Void then
-				item.enable_sensitive
+			if item_imp /= Void and not item_imp.internal_non_sensitive then
+				item_imp.enable_sensitive
 			end
-			{EV_CONTAINER_IMP} Precursor
+			Precursor {EV_CONTAINER_IMP}
 		end
 
 	disable_sensitive is
 			-- Set `item' insensitive to user actions.
 		do
-			if item /= Void then
-				item.disable_sensitive
+			if item_imp /= Void then
+				item_imp.disable_sensitive
 			end
-			{EV_CONTAINER_IMP} Precursor
+			Precursor {EV_CONTAINER_IMP}
 		end
-
+	
 feature -- Element change
 
 	remove is
-			-- Remove `item' from `Current'.
+			-- Remove `item' from `Current' if present.
 		local
 			v_imp: EV_WIDGET_IMP
 		do
@@ -90,7 +92,6 @@ feature -- Element change
 				item := v
 				v_imp.set_parent (interface)
 				notify_change (2 + 1, Current)
-				
 				new_item_actions.call ([item])
 			end
 		end
@@ -107,7 +108,7 @@ feature -- Element change
 feature -- Basic operations
 
 	propagate_background_color is
-			-- Propagate the current background color of the container
+			-- Propagate the current background color of `Current'
 			-- to the children.
 		do
 			if item /= Void then
@@ -116,7 +117,7 @@ feature -- Basic operations
 		end
 
 	propagate_foreground_color is
-			-- Propagate the current foreground color of the container
+			-- Propagate the current foreground color of `Current'
 			-- to the children.
 		do
 			if item /= Void then
@@ -125,6 +126,50 @@ feature -- Basic operations
 		end
 
 feature {EV_ANY_I} -- WEL Implementation
+
+	adjust_tab_ordering (ordered_widgets: ARRAYED_LIST [WEL_WINDOW]; widget_depths: ARRAYED_LIST [INTEGER]; depth: INTEGER) is
+			-- Adjust tab ordering of children in `Current'.
+			-- used when `Current' is a child of an EV_DIALOG_IMP_MODAL
+			-- or an EV_DIALOG_IMP_MODELESS.
+		local
+			widget_imp: EV_WIDGET_IMP
+			child: WEL_WINDOW
+			container: EV_CONTAINER_IMP
+		do
+			if item /= Void then
+				container ?= item.implementation
+				if container /= Void then
+						-- Reverse tab order of `widget_list'.
+					container.adjust_tab_ordering (ordered_widgets, widget_depths, depth + 1)
+				end
+					-- Add `child' to `ordered_widgets'.
+				widget_imp ?= item.implementation
+				child ?= widget_imp
+				check
+					child_not_void: child /= Void
+				end
+				ordered_widgets.force (child)
+				widget_depths.force (depth)
+			end
+		end
+
+	propagate_syncpaint is
+			-- Propagate `wm_syncpaint' message recevived by `top_level_window_imp' to
+			-- child. See "WM_SYNCPAINT" in MSDN for more information.
+		do
+			if item_imp /= Void then
+				item_imp.propagate_syncpaint		
+			end
+		end
+		
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so notify `item_imp'.
+		do
+			if item_imp /= Void then
+				item_imp.update_for_pick_and_drop (starting)	
+			end
+		end
+		
 
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
 			-- Is the control of handle `hwnd_control'
@@ -144,34 +189,29 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Called when `Current' is resized.
+		do
+			if size_type /= Wel_window_constants.Size_minimized then
+				if item /= Void then
+					item_imp.set_move_and_size (client_x, client_y,
+						client_width, client_height)
+				end
+				Precursor {EV_CONTAINER_IMP} (size_type, a_width, a_height)
+			end
+		end
+
+	ev_apply_new_size (a_x_position, a_y_position,
+				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+		do
+			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
+			if item /= Void then
+				item_imp.ev_apply_new_size (client_x, client_y,
+					client_width, client_height, True)
+			end
+		end
+	
 feature -- Obsolete
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
-		obsolete
-			"Call notify_change."
-		do
-			notify_change (2 + 1, Current)
-		end
-
-	remove_child (child_imp: EV_WIDGET_IMP) is
-			-- Remove the given child from the children of
-			-- the container.
-		obsolete
-			"Call notify_change."
-		do
-			notify_change (2 + 1, Current)
-		end
-
-	add_child_ok: BOOLEAN is
-			-- Used in the precondition of
-			-- 'add_child'. True, if it is ok to add a
-			-- child to container.
-		obsolete
-			"Do: item = Void"
-		do
-			Result := item = Void
-		end
 
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
 			-- Is `a_child' a child of the container?
@@ -204,18 +244,71 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.15  2000/06/07 17:27:57  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.16  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.14  2000/05/13 01:08:09  pichery
---| Protected call by a check.
+--| Revision 1.4.8.20  2001/03/29 18:50:47  rogers
+--| Optimized and simplified adjust_tab_ordering.
+--|
+--| Revision 1.4.8.19  2001/03/29 18:21:28  rogers
+--| Renamed reverse_tab_order to adjust_tab_ordering.
+--|
+--| Revision 1.4.8.18  2001/03/28 21:46:22  rogers
+--| Chnaged signature of reverse_tab_order. We now also store the depths of
+--| widgets and containers.
+--|
+--| Revision 1.4.8.17  2001/03/28 19:59:01  rogers
+--| Fixed reverse_tab_order. We now add containers to `widget_list'.
+--|
+--| Revision 1.4.8.16  2001/03/28 19:33:35  rogers
+--| Fixed reverse_tab_order. Previously would crash if `item' was Void.
+--|
+--| Revision 1.4.8.15  2001/03/28 19:22:51  rogers
+--| Implemented reverse_tab_order.
+--|
+--| Revision 1.4.8.14  2001/03/16 19:27:06  rogers
+--| Redefined update_for_pick_and_drop.
+--|
+--| Revision 1.4.8.13  2001/03/14 19:26:17  rogers
+--| Fixed propagate_syncpaint to only propagate to `child_imp' if
+--| `child_imp' /= Void.
+--|
+--| Revision 1.4.8.12  2001/03/14 19:24:03  rogers
+--| Redefined `propagate_syncpaint' to call `propagate_syncpaint' on child.
+--|
+--| Revision 1.4.8.11  2000/09/13 22:13:46  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.4.8.10  2000/08/16 00:04:10  rogers
+--| Fixed enable_sensitive. Now reference item_imp instead of item.
+--|
+--| Revision 1.4.8.9  2000/08/15 23:46:07  rogers
+--| enable_sensitive and disable_sensitive now call enable_sensitive and
+--| disable_sensitive on the implementation of the child, instead of the
+--| interface. Enable sensitive also now only enables children which have been
+--| made insensitive non directly. i.e. placed in a container which has had
+--| sensitivity disabled.
+--|
+--| Revision 1.4.8.8  2000/08/08 01:48:07  manus
+--| Added correct definition of `on_size' for correct resizing of enclosing item.
+--| Added implementation of `ev_apply_new_size' as required by EV_SIZEABLE_CONTAINER_IMP.
+--|
+--| Revision 1.4.8.7  2000/07/21 23:07:11  rogers
+--| Removed add_child and add_child_ok as no longer used in Vision2.
+--|
+--| Revision 1.4.8.6  2000/07/21 19:01:58  rogers
+--| Removed remove_child as it is no longer required in Vision2.
+--|
+--| Revision 1.4.8.5  2000/06/13 00:00:50  rogers
+--| Removed FIXME NOT_REVIEWED. Comments, formatting.
 --|
 --| Revision 1.4.8.4  2000/06/06 00:08:39  manus
---| `compute_minimum_size' will compute something only if a window is visible, and will just
---| notify the parent otherwise.
---| New signature for `notify_change' that takes `child' which request the change as 2 parameter.
---| The rational is that it is used only for EV_NOTEBOOK_IMP where we do not want to resize a
---| page if it is not visible. This largely improves the resizing performance.
+--| `compute_minimum_size' will compute something only if a window is visible,
+--| and will just notify the parent otherwise.
+--| New signature for `notify_change' that takes `child' which request the
+--| change as 2 parameter. The rational is that it is used only for
+--| EV_NOTEBOOK_IMP where we do not want to resize a page if it is not
+--| visible. This largely improves the resizing performance.
 --|
 --| Revision 1.4.8.3  2000/05/09 00:48:27  manus
 --| `insert' can now accept a Void argument (and does nothing in this case).
@@ -275,7 +368,8 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --| Added redefine of propagate_*_color to inh.
 --|
 --| Revision 1.4.10.2  1999/12/17 01:09:05  rogers
---| Altered to fit in with the review branch. set_insensitive has been split into two.
+--| Altered to fit in with the review branch. set_insensitive has been split
+--| into two.
 --|
 --| Revision 1.4.10.1  1999/11/24 17:30:22  oconnor
 --| merged with DEVEL branch

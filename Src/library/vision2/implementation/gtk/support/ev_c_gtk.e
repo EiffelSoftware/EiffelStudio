@@ -30,6 +30,13 @@ feature -- Externals
 			"GDK_DISPLAY()"
 		end
 
+	gdk_current_time: INTEGER is
+		external
+			"C [macro <gtk/gtk.h>]: EIF_INTEGER"
+		alias
+			"GDK_CURRENT_TIME"
+		end
+
 	x_list_fonts (display, pattern: POINTER; max_return: INTEGER;
 		actual_size: POINTER): POINTER is
 			-- Display * display
@@ -141,9 +148,6 @@ feature -- Externals
 		end
 		
 feature -- Externals
-
-	c_gtk_widget_set_all_events (a_w: POINTER) is
-		 external " C | %"gtk_eiffel.h%"" end
 
 	c_gtk_window_set_modal (a_window: POINTER; a_modal: BOOLEAN) is 
 		external " C | %"gtk_eiffel.h%"" end

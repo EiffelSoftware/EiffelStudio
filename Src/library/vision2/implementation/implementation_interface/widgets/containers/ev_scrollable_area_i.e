@@ -105,6 +105,12 @@ end -- class EV_SCROLLABLE_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.4.1  2000/05/03 19:09:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/04/21 23:07:58  brendel
 --| scrollbar -> scroll_bar.
 --|

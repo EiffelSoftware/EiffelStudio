@@ -36,6 +36,12 @@ end -- class EV_LIST_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/07 23:08:01  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.4.1  2000/05/03 19:08:35  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/04/05 21:16:09  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -1,14 +1,16 @@
-class EV_C_UTIL
+class
+	EV_C_UTIL
 
 inherit
 	C_GSLIST_STRUCT
 
 feature -- Initialization
 
-	enable_ev_gtk_log is
+	enable_ev_gtk_log (a_mode: INTEGER) is
 			-- Connect GTK+ logging to Eiffel exception handler.
+			-- `a_mode' = 0 means no log messages, 1 = messages, 2 = messages with exceptions.
 		external
-			"C | %"ev_c_util.h%""
+			"C (EIF_INTEGER) | %"ev_c_util.h%""
 		end
 
 feature -- Output
@@ -34,18 +36,34 @@ feature -- Measurement
 			"sizeof (void*)"
 		end
 
-		NULL: POINTER is
-			external
-				"C [macro <stdio.h>]"
-			alias
-				"NULL"
-			end
+	NULL: POINTER is
+		external
+			"C [macro <stdio.h>]"
+		alias
+			"NULL"
+		end
 
 feature -- Conversion
 
 	pointer_array_i_th (pointer_array: POINTER; index: INTEGER): POINTER is
 			-- void * pointer_array_i_th (void ** pointer_array, int index) {
 			--     return pointer_array [index];
+			-- }
+		external
+			"C | %"ev_c_util.h%""
+		end
+
+	double_array_i_th (double_array: POINTER; index: INTEGER): REAL is
+			-- EIF_DOUBLE double_array_i_th (double *double_array, int index) {
+			--	return double_array [index];
+			-- }
+		external
+			"C | %"ev_c_util.h%""
+		end
+
+	gtk_args_array_i_th (args_array: POINTER; index: INTEGER): POINTER is
+			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
+			--	return (GtkArg*)(args_array + index);
 			-- }
 		external
 			"C | %"ev_c_util.h%""
@@ -63,8 +81,9 @@ feature -- Conversion
 			-- int pointer_to_integer (void* pointer) {
 			--     return (int) pointer;
 			-- }
+			-- Hack used for Result = ((EIF_INTEGER)(pointer)), blank alias avoids parser rules.
 		external
-			"C [macro <stdio.h>]"
+			"C [macro <stdio.h>] (EIF_POINTER): EIF_INTEGER"
 		alias
 			" "
 		end
@@ -88,9 +107,6 @@ feature -- Conversion
 			a: ANY
 			s: STRING
 			sl: SEQUENCE [STRING]
-			i: INTEGER
-			b: BOOLEAN
-			r: REAL
 			c_sl: ARRAY [POINTER]
 		do
 			s ?= o
@@ -109,7 +125,7 @@ feature -- Conversion
 				a ?= c_sl.to_c
 			end
 			if a /= Void then
-				Result := p2p($a)
+				Result := p2p ($a)
 			end
 		end
 
@@ -142,31 +158,31 @@ feature -- Conversion
 
 feature {NONE} -- Nasty hack
 
-        p2p (p: POINTER): POINTER is
-                        -- Because Result := $x causes a syntax error.
-                do
-                        Result := p
-                end
+	p2p (p: POINTER): POINTER is
+			-- Because Result := $x causes a syntax error.
+		do
+			Result := p
+		end
 
-		sizeof_pointer: INTEGER is
-			external
-				"C [macro <stdio.h>]"
-			alias
-				"sizeof(void*)"
-			end
+	sizeof_pointer: INTEGER is
+		external
+			"C [macro <stdio.h>]"
+		alias
+			"sizeof(void*)"
+		end
 
-		calloc (nmemb, size: INTEGER): POINTER is
-				-- void *calloc(size_t nmemb, size_t size);
-			external
-				"C (size_t, size_t): void* | <stdlib.h>"
-			end
+	calloc (nmemb, size: INTEGER): POINTER is
+			-- void *calloc(size_t nmemb, size_t size);
+		external
+			"C (size_t, size_t): void* | <stdlib.h>"
+		end
 
-		c_free (ptr: POINTER) is
-				-- free (void* ptr);
-			external
-				"C (void*) | <stdlib.h>"
-			alias
-				"free"
-			end
-		
+	c_free (ptr: POINTER) is
+			-- free (void* ptr);
+		external
+			"C (void*) | <stdlib.h>"
+		alias
+			"free"
+		end
+
 end

@@ -7,8 +7,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
---| FIXME Feature names in this class should be propogated to the _I.
-
 class
 	EV_ACCELERATOR
 
@@ -17,7 +15,6 @@ inherit
 		redefine
 			out,
 			is_equal,
-			create_action_sequences,
 			implementation
 		end
 
@@ -28,41 +25,53 @@ create
 feature {NONE} -- Initialization
 
 	make_with_key_combination (a_key: EV_KEY;
-		require_shift, require_alt, require_control: BOOLEAN) is
+		 require_control, require_alt, require_shift: BOOLEAN) is
 			-- Create with `a_key' and modifiers.
 		require
 			a_key_not_void: a_key /= Void
-			a_key_is_valid_accelerator: a_key.is_valid_accelerator
 		do
 			default_create
 			set_key (a_key)
-			if require_shift then
-				enable_shift_required
+			if require_control then
+				enable_control_required
 			end
 			if require_alt then
 				enable_alt_required
 			end
-			if require_control then
-				enable_control_required
+			if require_shift then
+				enable_shift_required
 			end
 		end
 
 feature -- Events
 
-	actions: EV_NOTIFY_ACTION_SEQUENCE
+	actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when `key' is pressed.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.actions
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 feature -- Access
 
 	parented: BOOLEAN is
-		-- Does `Current' have a parent.
-		-- key combination of `Current' can not be modified if True.
+			-- Does `Current' have a parent?
+			-- `Current' is parented if it has been placed in the
+			-- accelerator list of a window.
+			-- key combination of `Current' can not be modified if True.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.parented
 		end
 
 	key: EV_KEY is
 			-- Key that will trigger `actions'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.key
 		ensure
@@ -71,26 +80,32 @@ feature -- Access
 
 	shift_required: BOOLEAN is
 			-- Must the shift key be pressed to trigger `actions'?
+		require
+			not_destroyed: not is_destroyed
 		do
-			Result := implementation.shift_key
+			Result := implementation.shift_required
 		ensure
-			bridge_ok: Result = implementation.shift_key
+			bridge_ok: Result = implementation.shift_required
 		end
 
 	alt_required: BOOLEAN is
 			-- Must the alt key be pressed to trigger `actions'?
+		require
+			not_destroyed: not is_destroyed
 		do
-			Result := implementation.alt_key
+			Result := implementation.alt_required
 		ensure
-			bridge_ok: Result = implementation.alt_key
+			bridge_ok: Result = implementation.alt_required
 		end
 
 	control_required: BOOLEAN is
 			-- Must the control key be pressed to trigger `actions'?
+		require
+			not_destroyed: not is_destroyed
 		do
-			Result := implementation.control_key
+			Result := implementation.control_required
 		ensure
-			bridge_ok: Result = implementation.control_key
+			bridge_ok: Result = implementation.control_required
 		end
 
 feature -- Status setting
@@ -98,8 +113,8 @@ feature -- Status setting
 	set_key (a_key: EV_KEY) is
 			-- Assign `a_key' to `key'.
 		require
+			not_destroyed: not is_destroyed
 			a_key_not_void: a_key /= Void
-			a_key_valid_accelerator: a_key.is_valid_accelerator
 			not_parented: not parented
 		do
 			implementation.set_key (a_key)
@@ -110,9 +125,10 @@ feature -- Status setting
 	enable_shift_required is
 			-- Make `shift_required' True.
 		require
+			not_destroyed: not is_destroyed
 			not_parented: not parented
 		do
-			implementation.enable_shift_key
+			implementation.enable_shift_required
 		ensure
 			shift_required: shift_required
 		end
@@ -120,9 +136,10 @@ feature -- Status setting
 	disable_shift_required is
 			-- Make `shift_required' False.
 		require
+			not_destroyed: not is_destroyed
 			not_parented: not parented
 		do
-			implementation.disable_shift_key
+			implementation.disable_shift_required
 		ensure
 			not_shift_required: not shift_required
 		end
@@ -130,9 +147,10 @@ feature -- Status setting
 	enable_alt_required is
 			-- Make `alt_required' True.
 		require
+			not_destroyed: not is_destroyed
 			not_parented: not parented
 		do
-			implementation.enable_alt_key
+			implementation.enable_alt_required
 		ensure
 			alt_required: alt_required
 		end
@@ -140,9 +158,10 @@ feature -- Status setting
 	disable_alt_required is
 			-- Make `alt_required' False.
 		require
+			not_destroyed: not is_destroyed
 			not_parented: not parented
 		do
-			implementation.disable_alt_key
+			implementation.disable_alt_required
 		ensure
 			not_alt_required: not alt_required
 		end
@@ -150,9 +169,10 @@ feature -- Status setting
 	enable_control_required is
 			-- Make `control_required' True.
 		require
+			not_destroyed: not is_destroyed
 			not_parented: not parented
 		do
-			implementation.enable_control_key
+			implementation.enable_control_required
 		ensure
 			control_required: control_required
 		end
@@ -160,9 +180,10 @@ feature -- Status setting
 	disable_control_required is
 			-- Make `control_required' False.
 		require
+			not_destroyed: not is_destroyed
 			not_parented: not parented
 		do
-			implementation.disable_control_key
+			implementation.disable_control_required
 		ensure
 			not_control_required: not control_required
 		end
@@ -180,33 +201,35 @@ feature -- Status report
 
 	out: STRING is
 			-- String representation of key combination.
+		local
+			a_key: STRING
 		do
 			create Result.make (0)
-			if alt_required then
-				Result.append ("Alt+")
-			end
 			if control_required then
 				Result.append ("Ctrl+")
+			end
+			if alt_required then
+				Result.append ("Alt+")
 			end
 			if shift_required then
 				Result.append ("Shift+")
 			end
-			Result.append (key.out)
+			a_key := key.out
+				--| We only need to convert the key to upper case if
+				--| it is one character long such as 'a'. Other keys
+				--| do not need to be converted.
+			if a_key.count = 1 then
+				a_key.to_upper
+			end
+			Result.append (a_key)
 		end
 
-feature {EV_WINDOW_IMP, EV_ACCELERATOR_LIST} -- Implementation
+feature {EV_ANY_I, EV_ACCELERATOR_LIST} -- Implementation
 
 	implementation: EV_ACCELERATOR_I
 			-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE} -- Implementation
-
-	create_action_sequences is
-			-- See `{EV_ANY}.create_action_sequences'
-		do
-			Precursor
-			create actions
-		end
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'
@@ -215,9 +238,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	actions_not_void: actions /= Void
 	key_not_void: key /= Void
-	key_valid_accelerator: key.is_valid_accelerator
 
 end -- class EV_ACCELERATOR
 
@@ -236,75 +257,3 @@ end -- class EV_ACCELERATOR
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.14  2000/06/07 17:28:06  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.3.4.2  2000/05/19 21:57:37  rogers
---| Added parented, enable_*_required and disable_*_required all require
---| not parented.
---|
---| Revision 1.3.4.1  2000/05/03 19:09:59  oconnor
---| mergred from HEAD
---|
---| Revision 1.13  2000/04/20 16:27:01  brendel
---| Export status updated to EV_WINDOW_IMP.
---|
---| Revision 1.12  2000/03/21 20:12:19  brendel
---| Improved postcodition on `key'.
---|
---| Revision 1.11  2000/03/16 17:17:49  brendel
---| disable_control_key -> disable_control_required.
---|
---| Revision 1.10  2000/03/16 01:08:06  oconnor
---| reinserted accidently removed FIXME
---|
---| Revision 1.9  2000/03/15 23:04:46  brendel
---| Fixed compiler errors.
---|
---| Revision 1.8  2000/03/15 22:08:24  oconnor
---| updated comments and modifier feature names
---|
---| Revision 1.7  2000/03/15 21:14:52  brendel
---| Changed key_code: INTEGER to key: EV_KEY.
---| Improved comments.
---|
---| Revision 1.6  2000/02/29 16:11:43  brendel
---| Removed obsolete declaration. Added FIXME about usage of feature.
---|
---| Revision 1.5  2000/02/22 18:39:48  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.4  2000/02/14 11:40:47  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.3.6.6  2000/01/28 22:24:21  oconnor
---| released
---|
---| Revision 1.3.6.5  2000/01/27 19:30:38  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.3.6.4  2000/01/25 22:09:00  brendel
---| Added feature `is_equal'.
---|
---| Revision 1.3.6.3  2000/01/25 03:16:38  brendel
---| Changed export status.
---|
---| Revision 1.3.6.2  2000/01/24 23:15:03  brendel
---| Accelerators are now platform dependent.
---| Features are not yet implemented.
---|
---| Revision 1.3.6.1  1999/11/24 17:30:43  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.3.2.2  1999/11/02 17:20:11  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

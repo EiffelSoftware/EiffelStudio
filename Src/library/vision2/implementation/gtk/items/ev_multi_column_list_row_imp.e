@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
 	description:
@@ -16,6 +15,11 @@ inherit
 			interface
 		end
 
+	EV_ITEM_ACTION_SEQUENCES_IMP
+
+	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
+
+	EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES_IMP
 
 create
 	make
@@ -29,7 +33,7 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
-			-- Create the linked lists
+			-- Create the linked lists.
 		do			
 			is_initialized := True
 		end
@@ -37,7 +41,7 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is the item selected
+			-- Is the item selected.
 		local
 			row: EV_MULTI_COLUMN_LIST_ROW
 		do
@@ -123,21 +127,16 @@ feature -- PND
 			end
 		end
 
-	end_transport (a_x, a_y, a_button: INTEGER) is
+	end_transport (a_x, a_y, a_button: INTEGER;
+		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+		a_screen_x, a_screen_y: INTEGER) is
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	pointed_target: EV_PICK_AND_DROPABLE is
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	set_pointer_style (curs: EV_CURSOR) is
+	set_pointer_style, internal_set_pointer_style (curs: EV_CURSOR) is
 		do
 			check
 				do_not_call: False
@@ -162,6 +161,27 @@ feature {EV_APPLICATION_IMP} -- Implementation
 					end	
 				end
 			end
+		end
+
+feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
+
+	set_pebble_void is
+			-- Resets pebble from MCL_Imp.
+		do
+			pebble := Void
+		end
+
+	able_to_transport (a_button: INTEGER): BOOLEAN is
+			-- Is the row able to transport data with `a_button' click.
+		do
+			Result := is_transport_enabled and
+			((a_button = 1 and mode_is_drag_and_drop) or
+			(a_button = 3 and (mode_is_pick_and_drop or mode_is_target_menu)))
+		end
+
+	real_pointed_target: EV_PICK_AND_DROPABLE is
+		do
+			check do_not_call: False end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -216,6 +236,33 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2001/06/07 23:08:01  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.22.4.8  2001/01/29 21:25:41  rogers
+--| Added internal_set_pointer_style.
+--|
+--| Revision 1.22.4.7  2000/10/25 23:14:32  king
+--| Corrected button actions sequence calling
+--|
+--| Revision 1.22.4.6  2000/09/06 23:18:38  king
+--| Reviewed
+--|
+--| Revision 1.22.4.5  2000/07/24 21:33:39  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.22.4.4  2000/07/19 18:55:31  king
+--| Made compilable with new pnd changes, needs testing
+--|
+--| Revision 1.22.4.3  2000/06/26 00:22:41  king
+--| Added able_to_transport
+--|
+--| Revision 1.22.4.2  2000/06/25 19:03:10  king
+--| Added set_pebble_void function
+--|
+--| Revision 1.22.4.1  2000/05/03 19:08:35  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.47  2000/04/05 17:00:13  king
 --| Added update_pnd_status calls for PND transport enabling/disabling
 --|

@@ -31,10 +31,9 @@ feature {EV_ANY_I} -- Implementation
 feature -- Command
 
 	destroy is
-			-- Render current unuseable.
+			-- Render current unusable.
 		do
 			is_destroyed := True
-			destroy_just_called := True
 		end
 
 end -- class EV_ENVIRONMENT_I
@@ -60,6 +59,18 @@ end -- class EV_ENVIRONMENT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.6.3  2001/05/18 18:21:14  king
+--| Removed destroy_just_called code
+--|
+--| Revision 1.3.6.2  2001/02/16 00:21:18  rogers
+--| Replaced is_useable with is_usable.
+--|
+--| Revision 1.3.6.1  2000/05/03 19:08:56  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.3  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

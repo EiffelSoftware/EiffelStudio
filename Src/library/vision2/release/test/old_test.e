@@ -8,11 +8,15 @@ create
 	make_and_launch
 
 feature
-
-	first_window: EV_TITLED_WINDOW is
-		once
-			create Result
+	
+	make_and_launch is
+		do
+			default_create
+			prepare
+			launch
 		end
+
+	first_window: EV_TITLED_WINDOW
 
 	test_cb is
 		do
@@ -177,6 +181,7 @@ feature
 			EV_TREE_ITEM_OBJECT2: EV_TREE_ITEM
 
 		do
+			create first_window
 			create main_split
 			first_window.extend (main_split)
 

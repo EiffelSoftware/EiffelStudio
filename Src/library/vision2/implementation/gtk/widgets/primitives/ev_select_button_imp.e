@@ -61,6 +61,26 @@ end -- class EV_SELECT_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.6.3  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.2.6.2  2000/08/08 18:12:40  oconnor
+--| undefined old implementation of set_default_colors
+--|
+--| Revision 1.2.6.1  2000/05/03 19:08:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.2  2000/02/25 01:49:28  brendel
 --| Implemented.
 --|

@@ -59,22 +59,12 @@ feature -- Status setting
 			end
 		end
 
-	toggle is
-			-- Change the checked state of the menu-item.
-		do
-			if is_selected then
-				disable_select
-			else
-				enable_select
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	on_activate is
 			-- Invert the state and call `Precursor'.
 		do
-			toggle
+			interface.toggle
 			Precursor
 		end
 
@@ -83,7 +73,7 @@ feature {NONE} -- Implementation
 end -- class EV_CHECK_MENU_ITEM_IMP
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Eiffel Vision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
@@ -103,8 +93,14 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.17  2000/06/07 17:27:52  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.18  2001/06/07 23:08:11  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.4.4  2001/05/15 22:55:19  rogers
+--| Removed toggle, as we now call interface.toggle.
+--|
+--| Revision 1.8.4.3  2000/08/11 23:55:55  rogers
+--| Corrected copyright clause so it now references EiffelVision2.
 --|
 --| Revision 1.8.4.2  2000/05/09 21:51:33  king
 --| Implemented to new selectable abstract class

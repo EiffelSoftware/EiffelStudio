@@ -165,6 +165,12 @@ EOT
 #===============================================================================
 #
 # $Log$
+# Revision 1.3  2001/06/07 23:08:28  rogers
+# Merged DEVEL branch into Main trunc.
+#
+# Revision 1.2.6.1  2000/05/03 19:10:01  oconnor
+# mergred from HEAD
+#
 # Revision 1.2  2000/03/01 03:10:29  oconnor
 # perl bug fixes
 #

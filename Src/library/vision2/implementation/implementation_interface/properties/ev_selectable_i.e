@@ -25,8 +25,6 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected.
-		require
-			is_selectable: is_selectable
 		deferred
 		end
 
@@ -70,8 +68,11 @@ end -- class EV_SELECTABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.2  2000/06/07 17:27:45  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.3  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.2.3  2000/12/13 18:26:53  rogers
+--| Removed pre-condition from is_selected.
 --|
 --| Revision 1.1.2.2  2000/05/09 22:37:31  king
 --| Integrated selectable, is_selectable for list items

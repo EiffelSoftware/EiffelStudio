@@ -40,9 +40,26 @@ feature -- Access
 			C.gtk_label_get (text_label, $p)
 			if p /= NULL then
 				create Result.make_from_c (p)
-				if Result.empty then
+				if Result.is_empty then
 					Result := Void
 				end
+			end
+		end
+
+	alignment: EV_TEXT_ALIGNMENT is
+			-- Alignment of the text in the label.
+		local
+			an_alignment_code: INTEGER
+		do
+			an_alignment_code := C.gtk_label_struct_jtype (text_label)
+			if an_alignment_code = C.Gtk_justify_center_enum then
+				create Result.make_with_center_alignment
+			elseif an_alignment_code = C.Gtk_justify_left_enum then
+				create Result.make_with_left_alignment
+			elseif an_alignment_code = C.Gtk_justify_right_enum then
+				create Result.make_with_right_alignment
+			else
+				check alignment_code_not_set: False end
 			end
 		end
 	
@@ -85,7 +102,7 @@ feature -- Element change
 			C.gtk_widget_hide (text_label)
 		end
 	
-feature {NONE} -- Implementation
+feature {EV_ANY_IMP} -- Implementation
 	
 	text_label: POINTER
 			-- GtkLabel containing `text'.
@@ -95,7 +112,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_TEXTABLE
 
 invariant
-	text_label_not_void: is_useable implies text_label /= Void
+	text_label_not_void: is_usable implies text_label /= Void
 
 end -- class EV_TEXTABLE_IMP
 
@@ -120,6 +137,24 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2001/06/07 23:08:04  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.19.4.5  2001/05/10 22:31:38  king
+--| Changed text_label export for tree implementation
+--|
+--| Revision 1.19.4.4  2001/02/16 00:31:27  rogers
+--| Replaced is_useable with is_usable.
+--|
+--| Revision 1.19.4.3  2000/12/15 19:39:59  king
+--| Changed .empty to .is_empty
+--|
+--| Revision 1.19.4.2  2000/08/24 23:55:05  king
+--| Implemented alignment
+--|
+--| Revision 1.19.4.1  2000/05/03 19:08:41  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.26  2000/05/02 18:55:23  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

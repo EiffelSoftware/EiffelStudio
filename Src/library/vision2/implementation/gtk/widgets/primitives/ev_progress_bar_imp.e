@@ -25,11 +25,8 @@ feature {NONE} -- Implementation
 			-- Create the progress bar.
 		do
 			Precursor (an_interface)
-			set_c_object (C.gtk_event_box_new)		
-			gtk_progress_bar :=
-				 C.gtk_progress_bar_new_with_adjustment (adjustment)
-			C.gtk_widget_show (gtk_progress_bar)
-			C.gtk_container_add (c_object, gtk_progress_bar)
+			set_c_object (C.gtk_progress_bar_new_with_adjustment (adjustment))
+			gtk_progress_bar := c_object
 		end
 
 feature -- Status report
@@ -90,6 +87,29 @@ end -- class EV_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.4.4  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.10.4.3  2000/08/08 00:03:15  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.10.4.2  2000/06/29 02:13:51  king
+--| Removed unneeded event box
+--|
+--| Revision 1.10.4.1  2000/05/03 19:08:50  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/04/14 17:08:40  oconnor
 --| formatting
 --|

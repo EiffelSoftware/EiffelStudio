@@ -14,7 +14,17 @@ char* string_pointer_deref (char** pointer) {return *pointer;}
 
 void* pointer_array_i_th (void** pointer_array, int index)
 {
-	return pointer_array [index];
+	return pointer_array [0];
+}
+
+EIF_REAL double_array_i_th (double *double_array, int index)
+{
+	return (EIF_REAL) double_array [index];
+}
+
+GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index)
+{
+	return (GtkArg*)args_array + index;
 }
 
 void ev_gtk_log (
@@ -26,8 +36,8 @@ void ev_gtk_log (
 	char buf[1000];
 	char* level;
 	int fatal = FALSE;
-	
-
+	int a_debug_mode;
+	a_debug_mode = (int) user_data;
 	switch (log_level) {
 	case G_LOG_LEVEL_ERROR:
 		level = "ERROR";
@@ -52,27 +62,39 @@ void ev_gtk_log (
 		level = "UNKNOWN";
 		fatal = TRUE;
 	}
+	if (a_debug_mode > 0){
 	if ( strlen (log_domain) + strlen (level) + strlen (message) + 2 > 999 ) {
 		if ( strlen (log_domain) + strlen (level) > 999 ) {
-			sprintf (buf, "%s-%s", log_domain, level);
+			sprintf (buf, "%s-%s\n", log_domain, level);
 		} else {
-			sprintf (buf, "GTK-%s", level);
+			sprintf (buf, "GTK-%s\n", level);
 		}
 	} else {
 		sprintf (buf, "%s-%s %s", log_domain, level, message);
 	}
-	printf ("%s\n", buf);
-	if (fatal) {
+	printf ("%S\n", buf);
+	if (fatal && a_debug_mode > 1) {
 		eraise (buf, EN_EXT);
+	}
 	}
 }
 
-void enable_ev_gtk_log (void)
+void enable_ev_gtk_log (int a_mode)
 {
 	g_log_set_handler ("Gtk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
 		G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, NULL);
+		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
+    g_log_set_handler ("Gdk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
+        G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
+		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
+	g_log_set_handler ("GLib",  G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
+        G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
+        G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
+    g_log_set_handler (NULL,  G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
+        G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
+        G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
 }
+
 
 //------------------------------------------------------------------------------
 // EiffelVision2: library of reusable components for ISE Eiffel.
@@ -95,6 +117,36 @@ void enable_ev_gtk_log (void)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.6  2001/06/07 23:07:59  rogers
+// Merged DEVEL branch into Main trunc.
+//
+// Revision 1.5.2.9  2001/06/05 17:32:09  king
+// Including all gtk message logging domains
+//
+// Revision 1.5.2.8  2001/06/05 01:29:55  king
+// Updated message logging modes
+//
+// Revision 1.5.2.7  2001/06/04 20:05:01  king
+// Updated enable_ev_gtk_log to include debig signature
+//
+// Revision 1.5.2.6  2001/06/04 19:05:19  king
+// Removed printing of error messages for later debug mechanism
+//
+// Revision 1.5.2.5  2000/11/29 00:40:42  king
+// Implemented gtk_args_array_i_th
+//
+// Revision 1.5.2.4  2000/10/12 16:20:49  king
+// Removed set_pixmap_and_mask
+//
+// Revision 1.5.2.3  2000/10/02 23:14:10  king
+// Added test set_pixmap_and_mask
+//
+// Revision 1.5.2.2  2000/07/20 18:38:33  king
+// Added double_array_i_th
+//
+// Revision 1.5.2.1  2000/05/03 19:08:33  oconnor
+// mergred from HEAD
+//
 // Revision 1.5  2000/04/18 21:43:23  king
 // Moved string_pointer_deref definition from header to source
 //

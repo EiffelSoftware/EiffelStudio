@@ -12,13 +12,21 @@ deferred class
 inherit
 	ACTION_SEQUENCE [EVENT_DATA]
 
-feature
+feature -- Element change
 
 	force_extend (an_item: PROCEDURE [ANY, TUPLE]) is
 			-- Extend without checking type of `an_item'.
 		deferred
 		end
-end
+
+	extend_kamikaze (an_item: like item) is
+			-- Extend `an_item' and remove it again after it is called.
+		do
+			extend (an_item)
+			prune_when_called (an_item)
+		end
+
+end -- class EV_ACTION_SEQUENCE
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -35,22 +43,3 @@ end
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.7  2000/02/29 18:09:06  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.6  2000/02/22 18:39:46  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.5  2000/02/15 19:11:35  oconnor
---| added missing quotes
---|
---| Revision 1.4  2000/02/15 18:44:06  oconnor
---| added force_extend
---|
---|-----------------------------------------------------------------------------

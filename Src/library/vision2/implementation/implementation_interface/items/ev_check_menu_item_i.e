@@ -17,15 +17,6 @@ inherit
 		redefine
 			interface
 		end
-	
-feature -- Status setting
-
-	toggle is
-			-- Invert the value of `is_selected'.
-		deferred
-		ensure
-			inverted: old is_selected = not is_selected
-		end
 
 feature {NONE} -- Implementation
 
@@ -54,8 +45,11 @@ end -- class EV_CHECK_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.12  2000/06/07 17:27:41  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.13  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.3  2001/05/14 16:53:52  rogers
+--| Removed toggle.
 --|
 --| Revision 1.6.4.2  2000/05/09 21:46:46  king
 --| Intergrated selectable/deselectable

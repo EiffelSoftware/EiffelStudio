@@ -8,9 +8,6 @@
 /* Note: This code has been successfully compiled using VC++ 6.0 in Warning  */
 /*       Level 4 without issuing any warning message                         */
 /*****************************************************************************/
-#include "eif_portable.h"
-#include "eif_malloc.h"
-#include <stdio.h>
 
 #ifdef EIF_WIN32
 #include <windows.h>
@@ -19,6 +16,10 @@
 #include <stdlib.h>
 #include <png.h>
 #endif
+
+#include "eif_portable.h"
+#include "eif_malloc.h"
+#include <stdio.h>
 
 #include <sys/timeb.h>
 #include "load_pixmap.h"
@@ -59,6 +60,9 @@
 #define MINIMUM_BYTES_TO_READ_PER_ACCESS	2048
 #define BUFFER_SIZE							16384
 
+/* Other constants */
+#define TEMP_PATH_MAX_LENGTH	1024
+
 /* Bufferred File definition */
 struct TBufferedFile {
 		unsigned long nCurrBufferSize;
@@ -71,9 +75,9 @@ typedef struct TBufferedFile  BufferedFile;
 
 /* Bufferred File definition */
 struct TLoadPixmapCtx {
-		void *pCurrObject;		// Current Eiffel Object executed
-		char *pszFileName;		// File name
-		FILE *pFile;			// File Pointer
+		void *pCurrObject;		/* Current Eiffel Object executed */
+		char *pszFileName;		/* File name */
+		FILE *pFile;			/* File Pointer */
 		void (*LoadPixmapUpdateObject)(
 				void*, 
 				unsigned int, 
@@ -122,8 +126,8 @@ void 			c_ev_load_windows_file(
 #endif
 
 
-// Default Vision2 icon
-unsigned char default_vision2_icon[833] = {
+/* Default Vision2 icon (32x32 png) */
+/*unsigned char default_vision2_icon[833] = {
 		137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 32, 0, 
 		0, 0, 32, 8, 2, 0, 0, 0, 252, 24, 237, 163, 0, 0, 0, 7, 116, 73, 77, 69, 7, 
 		208, 5, 2, 2, 3, 16, 137, 29, 102, 189, 0, 0, 0, 9, 112, 72, 89, 115, 0, 0, 
@@ -175,6 +179,403 @@ unsigned char default_vision2_icon[833] = {
 		0, 239, 86, 18, 108, 118, 212, 26, 236, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 
 		96, 130
 	};
+*/
+
+/* Default Vision2 icon (png, 16x16) */
+unsigned char default_vision2_icon[275] = {
+		137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 
+		0, 0, 0, 16, 0, 0, 0, 16, 8, 3, 0, 0, 0, 40, 45, 15, 83, 0, 
+		0, 0, 7, 116, 73, 77, 69, 7, 208, 10, 26, 21, 49, 34, 162, 
+		46, 62, 24, 0, 0, 0, 9, 112, 72, 89, 115, 0, 0, 10, 240, 0, 
+		0, 10, 240, 1, 66, 172, 52, 152, 0, 0, 0, 78, 80, 76, 84, 69, 
+		198, 0, 0, 255, 255, 255, 181, 0, 0, 214, 123, 123, 173, 0, 
+		0, 198, 57, 57, 231, 189, 189, 206, 66, 66, 214, 99, 99, 255, 
+		239, 239, 214, 132, 132, 247, 198, 198, 206, 74, 74, 231, 
+		181, 181, 156, 0, 0, 255, 247, 247, 247, 214, 214, 239, 189, 
+		189, 231, 140, 140, 181, 33, 33, 239, 156, 156, 231, 165, 
+		165, 206, 123, 123, 222, 90, 90, 231, 148, 148, 222, 115, 
+		115, 224, 47, 91, 56, 0, 0, 0, 88, 73, 68, 65, 84, 120, 218, 
+		109, 207, 201, 14, 128, 32, 12, 69, 81, 104, 41, 162, 136, 
+		117, 30, 254, 255, 71, 13, 154, 144, 82, 189, 203, 211, 205, 
+		171, 49, 159, 108, 85, 134, 135, 145, 222, 107, 1, 223, 40, 
+		192, 160, 224, 66, 5, 167, 2, 216, 227, 81, 1, 49, 67, 5, 
+		105, 89, 55, 9, 224, 199, 105, 6, 1, 125, 26, 28, 147, 0, 12, 
+		173, 239, 34, 20, 0, 139, 142, 40, 143, 181, 127, 207, 169, 
+		110, 231, 244, 2, 2, 235, 107, 53, 211, 0, 0, 0, 0, 73, 69, 
+		78, 68, 174, 66, 96, 130
+	};
+
+
+/* Default Vision2 icon (ico) */
+unsigned char default_vision2_icon_for_windows[4710] = {
+		0, 0, 1, 0, 4, 0, 16, 16, 16, 0, 0, 0, 0, 0, 40, 1, 0, 0, 
+		70, 0, 0, 0, 16, 16, 0, 0, 0, 0, 0, 0, 104, 5, 0, 0, 110, 1, 
+		0, 0, 32, 32, 16, 0, 0, 0, 0, 0, 232, 2, 0, 0, 214, 6, 0, 0, 
+		32, 32, 0, 0, 0, 0, 0, 0, 168, 8, 0, 0, 190, 9, 0, 0, 40, 0, 
+		0, 0, 16, 0, 0, 0, 32, 0, 0, 0, 1, 0, 4, 0, 0, 0, 0, 0, 192, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 128, 0, 0, 128, 0, 0, 0, 128, 128, 0, 128, 0, 
+		0, 0, 128, 0, 128, 0, 128, 128, 0, 0, 192, 192, 192, 0, 128, 
+		128, 128, 0, 0, 0, 255, 0, 0, 255, 0, 0, 0, 255, 255, 0, 
+		255, 0, 0, 0, 255, 0, 255, 0, 255, 255, 0, 0, 255, 255, 255, 
+		0, 145, 145, 145, 145, 145, 145, 145, 145, 31, 255, 255, 
+		255, 255, 255, 255, 249, 159, 145, 159, 113, 129, 248, 145, 
+		241, 31, 25, 23, 127, 247, 121, 25, 249, 159, 145, 152, 113, 
+		159, 129, 145, 241, 31, 25, 25, 255, 247, 25, 25, 249, 159, 
+		145, 145, 113, 247, 145, 145, 241, 31, 25, 25, 143, 249, 25, 
+		25, 249, 159, 145, 145, 151, 119, 145, 145, 241, 31, 25, 25, 
+		23, 121, 25, 25, 249, 159, 145, 145, 151, 113, 145, 145, 
+		241, 31, 25, 25, 23, 137, 25, 25, 249, 159, 145, 145, 159, 
+		129, 145, 145, 241, 31, 25, 25, 23, 25, 25, 25, 249, 159, 
+		255, 255, 255, 255, 255, 255, 241, 25, 25, 25, 25, 25, 25, 
+		25, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 16, 0, 0, 0, 32, 0, 0, 0, 
+		1, 0, 8, 0, 0, 0, 0, 0, 64, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 249, 249, 254, 0, 245, 245, 253, 0, 
+		235, 235, 251, 0, 225, 225, 248, 0, 212, 212, 246, 0, 200, 
+		200, 243, 0, 193, 193, 242, 0, 191, 191, 235, 0, 191, 191, 
+		230, 0, 177, 177, 232, 0, 178, 178, 227, 0, 165, 165, 230, 
+		0, 157, 157, 233, 0, 149, 149, 231, 0, 143, 143, 230, 0, 
+		129, 129, 215, 0, 127, 127, 212, 0, 112, 112, 216, 0, 127, 
+		127, 205, 0, 100, 100, 210, 0, 93, 93, 216, 0, 76, 76, 206, 
+		0, 67, 67, 205, 0, 63, 63, 200, 0, 62, 62, 195, 0, 0, 0, 
+		198, 0, 36, 36, 176, 0, 0, 0, 185, 0, 0, 0, 179, 0, 0, 0, 
+		169, 0, 0, 0, 158, 0, 0, 0, 198, 0, 0, 0, 188, 0, 0, 0, 180, 
+		0, 0, 0, 171, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 255, 255, 255, 0, 25, 25, 25, 25, 25, 25, 
+		25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 255, 255, 255, 
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 25, 
+		25, 255, 25, 25, 28, 255, 16, 29, 24, 24, 7, 23, 25, 25, 
+		255, 25, 25, 255, 25, 25, 25, 16, 19, 2, 8, 15, 5, 27, 25, 
+		25, 255, 25, 25, 255, 25, 25, 25, 21, 9, 30, 29, 0, 24, 25, 
+		25, 25, 255, 25, 25, 255, 25, 25, 25, 28, 7, 4, 6, 14, 28, 
+		25, 25, 25, 255, 25, 25, 255, 25, 25, 25, 25, 10, 26, 12, 
+		11, 25, 25, 25, 25, 255, 25, 25, 255, 25, 25, 25, 25, 24, 1, 
+		0, 28, 25, 25, 25, 25, 255, 25, 25, 255, 25, 25, 25, 25, 28, 
+		18, 5, 20, 25, 25, 25, 25, 255, 25, 25, 255, 25, 25, 25, 25, 
+		25, 13, 16, 25, 25, 25, 25, 25, 255, 25, 25, 255, 25, 25, 
+		25, 25, 25, 17, 16, 25, 25, 25, 25, 25, 255, 25, 25, 255, 
+		25, 25, 25, 25, 25, 16, 19, 25, 25, 25, 25, 25, 255, 25, 25, 
+		255, 25, 25, 25, 25, 25, 8, 22, 25, 25, 25, 25, 25, 255, 25, 
+		25, 255, 25, 25, 25, 25, 25, 16, 24, 25, 25, 25, 25, 25, 
+		255, 25, 25, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
+		255, 255, 255, 255, 255, 25, 25, 25, 25, 25, 25, 25, 25, 25, 
+		25, 25, 25, 25, 25, 25, 25, 25, 0, 0, 255, 255, 0, 0, 255, 
+		255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 
+		255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 
+		0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 
+		0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 40, 0, 0, 0, 
+		32, 0, 0, 0, 64, 0, 0, 0, 1, 0, 4, 0, 0, 0, 0, 0, 128, 2, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 128, 0, 0, 128, 0, 0, 0, 128, 128, 0, 128, 0, 0, 0, 
+		128, 0, 128, 0, 128, 128, 0, 0, 192, 192, 192, 0, 128, 128, 
+		128, 0, 0, 0, 255, 0, 0, 255, 0, 0, 0, 255, 255, 0, 255, 0, 
+		0, 0, 255, 0, 255, 0, 255, 255, 0, 0, 255, 255, 255, 0, 145, 
+		145, 145, 145, 145, 145, 145, 145, 145, 145, 145, 145, 145, 
+		145, 145, 145, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 
+		25, 25, 25, 25, 25, 145, 255, 255, 255, 255, 255, 255, 255, 
+		255, 255, 255, 255, 255, 255, 255, 145, 25, 249, 25, 25, 24, 
+		249, 25, 25, 25, 25, 25, 25, 25, 25, 31, 25, 145, 241, 145, 
+		145, 145, 255, 159, 145, 145, 129, 159, 145, 145, 145, 159, 
+		145, 25, 249, 25, 25, 25, 127, 31, 25, 31, 249, 255, 121, 
+		25, 25, 31, 25, 145, 241, 145, 145, 145, 159, 113, 247, 255, 
+		159, 255, 145, 145, 145, 159, 145, 25, 249, 25, 25, 25, 31, 
+		249, 255, 249, 119, 249, 25, 25, 25, 31, 25, 145, 241, 145, 
+		145, 145, 145, 241, 152, 145, 255, 241, 145, 145, 145, 159, 
+		145, 25, 249, 25, 25, 25, 31, 247, 25, 24, 127, 25, 25, 25, 
+		25, 31, 25, 145, 241, 145, 145, 145, 145, 255, 255, 135, 
+		127, 145, 145, 145, 145, 159, 145, 25, 249, 25, 25, 25, 25, 
+		31, 127, 255, 249, 25, 25, 25, 25, 31, 25, 145, 241, 145, 
+		145, 145, 145, 159, 145, 127, 255, 145, 145, 145, 145, 159, 
+		145, 25, 249, 25, 25, 25, 25, 127, 121, 119, 121, 25, 25, 
+		25, 25, 31, 25, 145, 241, 145, 145, 145, 145, 159, 247, 255, 
+		145, 145, 145, 145, 145, 159, 145, 25, 249, 25, 25, 25, 25, 
+		25, 255, 255, 25, 25, 25, 25, 25, 31, 25, 145, 241, 145, 
+		145, 145, 145, 145, 241, 255, 247, 145, 145, 145, 145, 159, 
+		145, 25, 249, 25, 25, 25, 25, 25, 249, 248, 25, 25, 25, 25, 
+		25, 31, 25, 145, 241, 145, 145, 145, 145, 145, 241, 241, 
+		145, 145, 145, 145, 145, 159, 145, 25, 249, 25, 25, 25, 25, 
+		25, 247, 249, 25, 25, 25, 25, 25, 31, 25, 145, 241, 145, 
+		145, 145, 145, 145, 151, 241, 145, 145, 145, 145, 145, 159, 
+		145, 25, 249, 25, 25, 25, 25, 25, 23, 249, 25, 25, 25, 25, 
+		25, 31, 25, 145, 241, 145, 145, 145, 145, 145, 159, 113, 
+		145, 145, 145, 145, 145, 159, 145, 25, 249, 25, 25, 25, 25, 
+		25, 31, 121, 25, 25, 25, 25, 25, 31, 25, 145, 241, 145, 145, 
+		145, 145, 145, 159, 145, 145, 145, 145, 145, 145, 159, 145, 
+		25, 249, 25, 25, 25, 25, 25, 255, 121, 25, 25, 25, 25, 25, 
+		31, 25, 145, 241, 145, 145, 145, 145, 145, 159, 113, 145, 
+		145, 145, 145, 145, 159, 145, 25, 249, 25, 25, 25, 25, 25, 
+		31, 25, 25, 25, 25, 25, 25, 31, 25, 145, 241, 145, 145, 145, 
+		145, 145, 159, 145, 145, 145, 145, 145, 145, 159, 145, 25, 
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
+		255, 255, 25, 145, 145, 145, 145, 145, 145, 145, 145, 145, 
+		145, 145, 145, 145, 145, 145, 145, 25, 25, 25, 25, 25, 25, 
+		25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 40, 0, 0, 0, 32, 0, 0, 0, 64, 0, 0, 0, 1, 0, 8, 0, 0, 0, 
+		0, 0, 128, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+		0, 0, 0, 255, 255, 255, 0, 245, 245, 252, 0, 236, 236, 250, 
+		0, 231, 231, 249, 0, 220, 220, 246, 0, 210, 210, 244, 0, 
+		203, 203, 243, 0, 197, 197, 241, 0, 191, 191, 240, 0, 188, 
+		188, 239, 0, 178, 178, 237, 0, 167, 167, 235, 0, 156, 156, 
+		232, 0, 155, 155, 231, 0, 140, 140, 228, 0, 130, 130, 226, 
+		0, 124, 124, 225, 0, 108, 108, 222, 0, 91, 91, 217, 0, 81, 
+		81, 215, 0, 77, 77, 215, 0, 70, 70, 213, 0, 60, 60, 211, 0, 
+		51, 51, 209, 0, 50, 50, 207, 0, 44, 44, 208, 0, 46, 46, 207, 
+		0, 0, 0, 198, 0, 0, 0, 187, 0, 0, 0, 181, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 
+		0, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+		27, 27, 27, 27, 27, 27, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 27, 
+		27, 27, 0, 27, 27, 27, 27, 27, 27, 21, 0, 27, 27, 27, 27, 
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 0, 
+		27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 0, 4, 27, 9, 
+		27, 27, 27, 25, 23, 27, 27, 6, 27, 27, 27, 27, 27, 27, 27, 
+		0, 27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 16, 0, 27, 
+		0, 27, 27, 27, 0, 9, 28, 0, 7, 10, 27, 27, 27, 27, 27, 27, 
+		0, 27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 27, 0, 15, 
+		22, 0, 14, 0, 0, 28, 0, 5, 0, 27, 27, 27, 27, 27, 27, 27, 0,
+		27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 27, 9, 0, 29,
+		7, 0, 2, 28, 20, 10, 4, 22, 27, 27, 27, 27, 27, 27, 27, 0,
+		27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 27, 27, 0,
+		27, 28, 28, 28, 28, 0, 2, 2, 27, 27, 27, 27, 27, 27, 27, 27,
+		0, 27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 24, 1, 0,
+		12, 28, 28, 28, 23, 10, 0, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 0, 27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 10, 0, 0, 4, 20, 9, 18, 7, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 0, 27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 0, 17, 0, 0, 0, 0, 23, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 0, 27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 28, 0, 22, 28, 14, 0, 0, 0, 27, 27, 27, 27, 27,
+		27, 27, 27, 27, 0, 27, 27, 27, 27, 0, 27, 27, 27, 27, 27,
+		27, 27, 27, 27, 14, 0, 14, 29, 18, 11, 15, 27, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 0, 27, 27, 27, 27, 0, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 3, 0, 10, 7, 9, 27, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 0, 27, 27, 27, 27, 0, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 0, 0, 0, 0, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 0, 27, 27, 27, 27, 0, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 0, 28, 0, 0, 0, 19,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 0, 27, 27, 27, 27, 0,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 2, 27, 0, 21,
+		25, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 0, 27, 27, 27,
+		27, 0, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 2, 25, 0,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 0, 27, 27,
+		27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 2,
+		18, 0, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 0,
+		27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 12, 0, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 0, 27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 27, 12, 2, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 0, 27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 6, 13, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 27, 27, 0, 27, 27, 27, 27, 0, 27, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 6, 17, 27, 27, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 0, 27, 27, 27, 27, 0, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 2, 23, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 0, 27, 27, 27, 27, 0,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 0, 0, 12, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 0, 27, 27, 27,
+		27, 0, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 4,
+		12, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 0, 27,
+		27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 2, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		0, 27, 27, 27, 27, 0, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 28, 9, 28, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 0, 27, 27, 27, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+		27, 27, 27, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	};
+
+void c_ev_save_png (char image[], char *path, int array_width, int array_height, int a_width, int a_height, int colormode)
+{
+	FILE *fp;
+    png_structp png_ptr;
+    png_infop info_ptr;
+    //png_colorp palette;
+    png_uint_32 k;
+	//png_bytep row_pointers[32];
+	png_bytep *row_pointers;
+	int pic_depth = 8;
+
+    // Create a new file handle
+
+    fp = fopen (path, "wb");
+    if (fp == NULL)
+    {
+        //Raise Eiffel exception
+        printf ("File could not be created\n");
+        //return (0);
+    }
+
+    png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+    if (png_ptr == NULL)
+    {
+        // Raise eiffel exception
+        printf ("Png Write struct could not be created\n");
+        fclose (fp);
+        //return (0);
+    }
+
+    info_ptr = png_create_info_struct (png_ptr);
+    if (info_ptr == NULL)
+    {
+        printf ("Png info struct could not be created\n");
+        fclose (fp);
+        png_destroy_write_struct (&png_ptr, (png_infopp)NULL);
+        //return (0);
+    }
+
+    if (setjmp (png_ptr->jmpbuf))
+    {
+        //Eiffel exception, file could not be read
+        fclose (fp);
+        png_destroy_write_struct (&png_ptr, (png_infopp)NULL);
+        //return (0);
+    }
+
+   // Set up output control using c streams
+    png_init_io (png_ptr, fp);
+
+    //Set up PNG header info
+    png_set_IHDR (
+        png_ptr,
+        info_ptr,
+        a_width,
+        a_height,
+        pic_depth,
+        PNG_COLOR_TYPE_RGB_ALPHA,
+        PNG_INTERLACE_NONE,
+        PNG_COMPRESSION_TYPE_BASE,
+        PNG_FILTER_TYPE_BASE
+    );
+	
+    png_write_info (png_ptr, info_ptr);
+	row_pointers = malloc (array_height*sizeof (png_bytep));
+    for (k = 0; k < array_height; k++){
+	row_pointers[k] = (png_bytep) ((png_byte *)image +k* (array_width * 4));
+      //printf ("Pointer value is %p\n", row_pointers[k]);
+    }
+
+//png_write_rows (png_ptr, (png_bytepp) &image, array_height);
+
+	png_write_image (png_ptr, row_pointers);
+    png_write_end (png_ptr, info_ptr);
+
+    //memory deallocation
+    fclose (fp);
+    png_destroy_write_struct (&png_ptr, &info_ptr);
+	free (row_pointers);
+  //  return (0);
+
+}
 
 
 /*---------------------------------------------------------------------------*/
@@ -197,29 +598,75 @@ void c_ev_load_pixmap(
 		)
 	{
 	FILE *pFile;
-	unsigned char *pBuffer;
-	BufferedFile stBufFile;
-	unsigned char nFileFormat; // File format found: one of FILEFORMAT_XXXX
-	LoadPixmapCtx stCtx;
+	unsigned char*	pBuffer;
+	BufferedFile	stBufFile;
+	unsigned char	nFileFormat; /* File format found: one of FILEFORMAT_XXXX */
+	LoadPixmapCtx	stCtx;
+	unsigned char	bFileToBeDeleted = FALSE;
+	int				bFreeFileName = FALSE;
 	
 	if (pszFileName == NULL)
 		{
-//		FILE *pFile2 = fopen ("C:\\validate.png", "wb");
-//		fwrite (default_vision2_icon, 1, sizeof (default_vision2_icon), pFile2);
-//		fclose (pFile2);
+		/* Load the default Vision2 icon */
+#ifdef EIF_WIN32
+		char szTempDir[TEMP_PATH_MAX_LENGTH];
+		char szPrefix[TEMP_PATH_MAX_LENGTH];
+		if (GetTempPath(TEMP_PATH_MAX_LENGTH, szTempDir) == 0)
+			{
+			/* Function failed, Set szTempDir to Current directory. */
+			strcpy (szTempDir, ".");
+			}
+		/* We got the path, now get the filename */
+		strcpy (szPrefix, "vision2_");
+		pszFileName = (char *) malloc (MAX_PATH);
+		bFreeFileName = TRUE;
+		if (GetTempFileName(szTempDir, szPrefix, 0, pszFileName)==0)
+			{
+			free(pszFileName);
+			bFreeFileName = FALSE;
 
-		// Load the default Vision2 icon
-		pFile = tmpfile(); // create a temporary file
+			/* Function failed, use "tmpnam" instead */
+			pszFileName = tmpnam(NULL);
+			}
+		
+		/* Open the temporary file */
+		pFile = fopen ((const char *)pszFileName, "w+");
+		if (pFile==NULL && bFreeFileName==TRUE)
+			{
+			/* Unable to open temporary file created with GetTempFileName,
+			 * try "tmpnam"
+			 */
+			free(pszFileName);
+			bFreeFileName = FALSE;
+
+			/* Function failed, use "tmpnam" instead */
+			pszFileName = tmpnam(NULL);
+
+			/* Open the temporary file */
+			pFile = fopen ((const char *)pszFileName, "w+");
+			}
+
+		if (pFile == NULL)
+			{
+			/* Unable to create the file, return NULL */
+			LoadPixmapUpdateObject(pCurrObject, LOADPIXMAP_ERROR_UNABLE_OPEN_FILE, 0, 0, 0, NULL, NULL);
+			return;
+			}
+		bFileToBeDeleted = TRUE;
+		fwrite (default_vision2_icon_for_windows, 1, sizeof (default_vision2_icon_for_windows), pFile);
+#else
+		pFile = tmpfile(); /* create a temporary file */
 		fwrite (default_vision2_icon, 1, sizeof (default_vision2_icon), pFile);
+#endif /* EIF_WIN32 */
 		fseek (pFile, 0, SEEK_SET);
 		}
 	else
 		{
-		// Open the file
+		/* Open the file */
 		pFile = fopen ((const char *)pszFileName, "rb");
 		if (pFile == NULL)
 			{
-			// Unable to open the file, return NULL
+			/* Unable to open the file, return NULL */
 			LoadPixmapUpdateObject(
 				pCurrObject,
 				LOADPIXMAP_ERROR_UNABLE_OPEN_FILE,
@@ -233,14 +680,12 @@ void c_ev_load_pixmap(
 			}
 		}
 
-	// Setup the buffered file
+	/* Setup the buffered file */
 	pBuffer = malloc(BUFFER_SIZE*sizeof(unsigned char));
 	if (pBuffer == NULL)
 		{
 		/* Out of memory */
-		LoadPixmapUpdateObject(
-			pCurrObject,
-			LOADPIXMAP_ERROR_OUTOFMEMORY, 0, 0, 0, NULL, NULL);
+		LoadPixmapUpdateObject(pCurrObject,LOADPIXMAP_ERROR_OUTOFMEMORY, 0, 0, 0, NULL, NULL);
 		return;
 		}
 	stBufFile.nCurrBufferSize = 0;
@@ -258,12 +703,13 @@ void c_ev_load_pixmap(
 		{
 		/* Windows ICO file format */
 		case FILEFORMAT_ICO:
+			/* close the graphical file or the temporary file */
+			fclose (pFile);
 #ifdef EIF_WIN32
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
 			stCtx.pCurrObject = pCurrObject;
 			stCtx.pszFileName = pszFileName;
 			c_ev_load_windows_file(IMAGE_ICON, &stCtx);
-			return;
 #else
 			/* ICO files are currently not supported under Unix */
 			LoadPixmapUpdateObject(
@@ -275,17 +721,22 @@ void c_ev_load_pixmap(
 				NULL,
 				NULL
 			);
-			return;
 #endif
+			if (bFileToBeDeleted)
+				unlink(pszFileName);
+			if (bFreeFileName)
+				free(pszFileName);
+			return;
 
 		/* Windows BMP file format */
 		case FILEFORMAT_BMP:
+			/* close the graphical file or the temporary file */
+			fclose (pFile);
 #ifdef EIF_WIN32
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
 			stCtx.pCurrObject = pCurrObject;
 			stCtx.pszFileName = pszFileName;
 			c_ev_load_windows_file(IMAGE_BITMAP, &stCtx);
-			return;
 #else
 			/* BMP files are currently not supported under Unix */
 			LoadPixmapUpdateObject(
@@ -297,8 +748,12 @@ void c_ev_load_pixmap(
 				NULL,
 				NULL
 			);
-			return;
 #endif
+			if (bFileToBeDeleted)
+				unlink(pszFileName);
+			if (bFreeFileName)
+				free(pszFileName);
+			return;
 
 		case FILEFORMAT_PNG:
 			stCtx.LoadPixmapUpdateObject = LoadPixmapUpdateObject;
@@ -306,6 +761,12 @@ void c_ev_load_pixmap(
 			stCtx.pszFileName = pszFileName;
 			stCtx.pFile = pFile;
 			c_ev_load_png_file(&stCtx);
+			/* close the graphical file or the temporary file */
+			fclose (pFile);
+			if (bFileToBeDeleted)
+				unlink(pszFileName);
+			if (bFreeFileName)
+				free(pszFileName);
 			return;
 
 		default:
@@ -319,11 +780,15 @@ void c_ev_load_pixmap(
 				NULL,
 				NULL
 			);
+			/* close the graphical file or the temporary file */
+			fclose (pFile);
+			if (bFileToBeDeleted)
+				unlink(pszFileName);
+			if (bFreeFileName)
+				free(pszFileName);
 			return;
 		}
 	
-	/* close the graphical file or the temporary file */
-	fclose (pFile);
 	}
 
 
@@ -391,12 +856,12 @@ void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
 		EIF_INTEGER	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
 
 		handle = (void *) LoadImage(
-			NULL,				// handle to instance
-			pCtx->pszFileName,	// name or identifier of the image 
-			nWindowsType,		// image type
-			0,					// desired width
-			0,					// desired height
-			LR_LOADFROMFILE		// load options
+			NULL,				/* handle to instance */
+			pCtx->pszFileName,	/* name or identifier of the image  */
+			nWindowsType,		/* image type */
+			0,					/* desired width */
+			0,					/* desired height */
+			LR_LOADFROMFILE		/* load options */
 		);
 		if (handle==NULL)
 			{
@@ -716,8 +1181,8 @@ unsigned char c_ev_is_ppm_file(BufferedFile *pBufFile)
 /*---------------------------------------------------------------------------*/
 void c_ev_set_bit(unsigned char bit, unsigned char *pData, long iData)
 	{
-	long iOff = iData / 8;	// Offset of the bit in byte
-	long iBitPos = 7 - (iData % 8);		// Position of the bit within the byte
+	long iOff = iData / 8;	/* Offset of the bit in byte */
+	long iBitPos = 7 - (iData % 8);		/* Position of the bit within the byte */
 	unsigned char bitValue;
 
 	bitValue = (unsigned char)(1 << iBitPos);
@@ -747,26 +1212,26 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	int				bit_depth;
 	int				color_type;
 	int				interlace_type;
-	FILE 			*fp;			// Current opened file
-	unsigned char 	**ppImage;		// Pointer on an array of scan lines
-	unsigned char 	*pData;			// Pointer on the RGB data
-	unsigned char 	*pImage;		// Pointer on a DIB structure
-	unsigned char 	*pAlphaData;	// Pointer on the Alpha data
-	unsigned char 	*pAlphaImage;	// Pointer on a DIB structure
-	unsigned char	bAlphaImage = FALSE;// Is there a mask for this image?
+	FILE 			*fp;			/* Current opened file */
+	unsigned char 	**ppImage;		/* Pointer on an array of scan lines */
+	unsigned char 	*pData;			/* Pointer on the RGB data */
+	unsigned char 	*pImage;		/* Pointer on a DIB structure */
+	unsigned char 	*pAlphaData;	/* Pointer on the Alpha data */
+	unsigned char 	*pAlphaImage;	/* Pointer on a DIB structure */
 #ifdef EIF_WIN32
+	unsigned char	bAlphaImage = FALSE;/* Is there a mask for this image? */
 	unsigned long 	iData;
 	unsigned long 	iAlphaData;
 #endif
-	unsigned long 	sRowSize;		// Size in bytes of a scan line
-	unsigned long 	row;			// Current scan line
+	unsigned long 	sRowSize;		/* Size in bytes of a scan line */
+	unsigned long 	row;			/* Current scan line */
 	unsigned long	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
 
-	// Retrieve File Stream
+	/* Retrieve File Stream */
 	fp = pCtx->pFile;
 	if (fp == NULL)
 		return;
-	// reset the file pointer
+	/* reset the file pointer */
 	fseek (fp, 0, SEEK_SET);
 
 	/* Create and initialize the png_struct with the desired error handler
@@ -778,7 +1243,6 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 	if (png_ptr == NULL)
 		{
-		//fclose(fp);
 		return;
 		}
 
@@ -786,7 +1250,6 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	info_ptr = png_create_info_struct(png_ptr);
 	if (info_ptr == NULL)
 		{
-		//fclose(fp);
 		png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
 		return;
 		}
@@ -799,7 +1262,6 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 		{
 		/* Free all of the memory associated with the png_ptr and info_ptr */
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
-		//fclose(fp);
 
 		/* If we get here, we had a problem reading the file */
 		return;
@@ -870,9 +1332,6 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	/* clean up after the read, and free any memory allocated - REQUIRED */
 	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 
-	/* close the file */
-	//fclose(fp);
-
 #ifdef EIF_WIN32
 	sRowSize = 4 * ((width * 24 + 31) / 32);
 	pImage = (unsigned char *) malloc(sRowSize * height + 40);
@@ -885,33 +1344,33 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	iAlphaData = 0;
 
 	/* Create a Windows DIB Header for the color bitmap */
-	*((DWORD *)pData) = 40;			pData += 4;				// Size of header
-	*((DWORD *)pData) = width;		pData += 4;				// width in pixel
-	*((DWORD *)pData) = height;		pData += 4;				// height in pixel
-	*((WORD *)pData) = 1;			pData += 2;				// bit plane
-	*((WORD *)pData) = 24;			pData += 2;				// bits/pixel
-	*((DWORD *)pData) = BI_RGB;		pData += 4;				// compression
-	*((DWORD *)pData) = 0;			pData += 4;				// imageSize
-	*((DWORD *)pData) = 0;			pData += 4;				// XPelPerM
-	*((DWORD *)pData) = 0;			pData += 4;				// YPelPerM
-	*((DWORD *)pData) = 0;			pData += 4;				// ClrUsed
-	*((DWORD *)pData) = 0;			pData += 4;				// ClrImportant
+	*((DWORD *)pData) = 40;			pData += 4;				/* Size of header */
+	*((DWORD *)pData) = width;		pData += 4;				/* width in pixel */
+	*((DWORD *)pData) = height;		pData += 4;				/* height in pixel */
+	*((WORD *)pData) = 1;			pData += 2;				/* bit plane */
+	*((WORD *)pData) = 24;			pData += 2;				/* bits/pixel */
+	*((DWORD *)pData) = BI_RGB;		pData += 4;				/* compression */
+	*((DWORD *)pData) = 0;			pData += 4;				/* imageSize */
+	*((DWORD *)pData) = 0;			pData += 4;				/* XPelPerM */
+	*((DWORD *)pData) = 0;			pData += 4;				/* YPelPerM */
+	*((DWORD *)pData) = 0;			pData += 4;				/* ClrUsed */
+	*((DWORD *)pData) = 0;			pData += 4;				/* ClrImportant */
 
 	/* Create a Windows DIB Header for the mask bitmap */
-	*((DWORD *)pAlphaData) = 40;		pAlphaData += 4;	// size of header
-	*((DWORD *)pAlphaData) = width;		pAlphaData += 4;	// width in pixel
-	*((DWORD *)pAlphaData) = height;	pAlphaData += 4;	// height in pixel
-	*((WORD *)pAlphaData) = 1;			pAlphaData += 2;	// bit plane
-	*((WORD *)pAlphaData) = 1;			pAlphaData += 2;	// bits/pixel
-	*((DWORD *)pAlphaData) = BI_RGB;	pAlphaData += 4;	// compression
-	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	// imageSize
-	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	// XPelPerM
-	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	// YPelPerM
-	*((DWORD *)pAlphaData) = 2;			pAlphaData += 4;	// ClrUsed
-	*((DWORD *)pAlphaData) = 2;			pAlphaData += 4;	// ClrImportant
+	*((DWORD *)pAlphaData) = 40;		pAlphaData += 4;	/* size of header */
+	*((DWORD *)pAlphaData) = width;		pAlphaData += 4;	/* width in pixel */
+	*((DWORD *)pAlphaData) = height;	pAlphaData += 4;	/* height in pixel */
+	*((WORD *)pAlphaData) = 1;			pAlphaData += 2;	/* bit plane */
+	*((WORD *)pAlphaData) = 1;			pAlphaData += 2;	/* bits/pixel */
+	*((DWORD *)pAlphaData) = BI_RGB;	pAlphaData += 4;	/* compression */
+	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	/* imageSize */
+	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	/* XPelPerM */
+	*((DWORD *)pAlphaData) = 0;			pAlphaData += 4;	/* YPelPerM */
+	*((DWORD *)pAlphaData) = 2;			pAlphaData += 4;	/* ClrUsed */
+	*((DWORD *)pAlphaData) = 2;			pAlphaData += 4;	/* ClrImportant */
 	/* Color Table */
-	*((DWORD *)pAlphaData) = 0x00000000;pAlphaData += 4;	// Index 0 (black)
-	*((DWORD *)pAlphaData) = 0x00FFFFFF;pAlphaData += 4;	// Index 1 (white)
+	*((DWORD *)pAlphaData) = 0x00000000;pAlphaData += 4;	/* Index 0 (black) */
+	*((DWORD *)pAlphaData) = 0x00FFFFFF;pAlphaData += 4;	/* Index 1 (white) */
 
 
 	for (row = height; row > 0; row--)
@@ -924,11 +1383,11 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 		for (column = 0; column < width; column++)
 			{
 			/* Copy the RGB data */
-			*(pData + iData + 0) = *(pSrc + 2);	// B
-			*(pData + iData + 1) = *(pSrc + 1);	// G
-			*(pData + iData + 2) = *(pSrc + 0);	// R
+			*(pData + iData + 0) = *(pSrc + 2);	/* B */
+			*(pData + iData + 1) = *(pSrc + 1);	/* G */
+			*(pData + iData + 2) = *(pSrc + 0);	/* R */
 
-			// Copy the alpha channel */
+			/* Copy the alpha channel */
 			if (*(pSrc + 3) > 0x7F)
 				c_ev_set_bit(0, pAlphaData, iAlphaData);
 			else
@@ -959,7 +1418,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 			}
 		}
 	
-	// The mast is empty, remove it
+	/* The mast is empty, remove it */
 	if (bAlphaImage == FALSE)
 		{
 		free (pAlphaImage);
@@ -991,7 +1450,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 			pAlphaData++;
 			}
 		}
-#endif // EIF_WIN32
+#endif /* EIF_WIN32 */
 
 	/* Free the memory */
 	for (row = 0; row < height; row++)
@@ -1011,8 +1470,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 		pAlphaImage
 	);
 
-	// Free the image occupied by the image & the
-	// mask.
+	/* Free the image occupied by the image & the mask. */
 	if (pImage != NULL)
 		free(pImage);
 	
@@ -1023,8 +1481,8 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	return;
 	}
 
-//<HACK>
-//FIXME this puts milliseconds into 32 bit, it doesn't last long.
+/*<HACK>*/
+/*FIXME this puts milliseconds into 32 bit, it doesn't last long.*/
 unsigned long time_msec (void)
 {
 	struct timeb tb;
@@ -1034,4 +1492,4 @@ unsigned long time_msec (void)
 	return (((tb.time - begining) * 1000) + tb.millitm);
 }
 
-//</HACK>
+/*</HACK>*/

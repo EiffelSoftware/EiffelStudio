@@ -29,8 +29,7 @@ inherit
 		rename
 			make as ev_wel_control_container_make
 		redefine
-			top_level_window_imp,
-			wel_move_and_resize
+			top_level_window_imp
 		end
 
 create
@@ -62,33 +61,19 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-		repaint: BOOLEAN) is
-			-- Make `x' and `y' the new position of `Current' and
-			-- `w' and `h' the new width and height.
-			-- If there is a child, it also adapts them to fit to the given
-			-- value.
-		do
-			Precursor (a_x, a_y, a_width, a_height, repaint)
-			if item_imp /= Void then
-				item_imp.set_move_and_size (0, 0, 
-					client_width, client_height)
-			end
-		end
-
 	compute_minimum_width is
 			-- Recompute the minimum_width of `Current'.
 		do
-			if item_imp /= Void then
-				internal_set_minimum_width (item_imp.minimum_width)
+			if item_imp /= Void and item_imp.is_show_requested then
+				ev_set_minimum_width (item_imp.minimum_width)
 			end
 		end
 
 	compute_minimum_height is
 			-- Recompute the minimum_width of `Current'.
 		do
-			if item_imp /= Void then
-				internal_set_minimum_height (item_imp.minimum_height)
+			if item_imp /= Void and item_imp.is_show_requested then
+				ev_set_minimum_height (item_imp.minimum_height)
 			end
 		end
 
@@ -96,8 +81,8 @@ feature {EV_ANY_I} -- Implementation
 			-- Recompute both the minimum_width the
 			-- minimum_height of `Current'.
 		do
-			if item_imp /= Void then
-				internal_set_minimum_size (item_imp.minimum_width, 
+			if item_imp /= Void and item_imp.is_show_requested then
+				ev_set_minimum_size (item_imp.minimum_width, 
 					item_imp.minimum_height)
 			end
 		end
@@ -129,6 +114,28 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2001/06/07 23:08:14  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.13.2.5  2001/01/26 23:38:36  rogers
+--| Removed undefinition of on_sys_key_down as this is already done in the
+--| ancestor EV_WEL_CONTROL_CONTAINER_IMP.
+--|
+--| Revision 1.13.2.4  2000/11/06 18:03:29  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.13.2.3  2000/10/18 16:23:00  rogers
+--| Compute_minimum_width, compute_minimum_size and compute_minimum_height
+--| now all take into account whether the child is visible or not.
+--|
+--| Revision 1.13.2.2  2000/08/08 03:12:22  manus
+--| New resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--| Sizing is now done in EV_SINGLE_CHILD_CONTAINER_IMP
+--|
+--| Revision 1.13.2.1  2000/05/03 19:09:26  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.13  2000/05/03 16:23:02  rogers
 --| Comments, formatting.
 --|

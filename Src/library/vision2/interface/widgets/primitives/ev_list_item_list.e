@@ -11,35 +11,33 @@ deferred class
 
 inherit
 	EV_PRIMITIVE
+		undefine
+			is_equal
 		redefine
 			implementation,
-			create_action_sequences
+			is_in_default_state
 		end
 
 	EV_ITEM_LIST [EV_LIST_ITEM]
 		redefine
 			implementation,
-			create_action_sequences
+			is_in_default_state
 		end
 
-feature -- Initialization
+	EV_LIST_ITEM_LIST_ACTION_SEQUENCES
+		undefine
+			is_equal
+		redefine
+			implementation
+		end
 
-	make_with_strings (strings: CHAIN [STRING]) is
-			-- Create with an item for each of `strings'.
-		local
-			c: CURSOR
+feature {NONE} -- Initialization
+
+	make_with_strings (a_string_array: INDEXABLE [STRING, INTEGER]) is
+			-- Create with an item for each of `a_string_array'.
 		do
 			default_create
-			c := strings.cursor
-			from
-				strings.start
-			until
-				strings.after
-			loop
-				extend (create {EV_LIST_ITEM}.make_with_text (strings.item))
-				strings.forth
-			end
-			strings.go_to (c)
+			set_strings (a_string_array)
 		ensure
 			items_created: count = strings.count
 		end
@@ -49,60 +47,107 @@ feature -- Access
 	selected_item: EV_LIST_ITEM is
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.selected_item
 		ensure
 			bridge_ok: Result = implementation.selected_item
 		end
 
+	strings: LINKED_LIST [STRING] is
+			-- Representation of `Current'.
+		require
+			not_destroyed: not is_destroyed
+		local
+			c: CURSOR
+		do
+			create Result.make
+			c := cursor
+			from start until after loop
+				Result.extend (clone (item.text))
+				forth
+			end
+			go_to (c)
+		ensure
+			not_void: Result /= Void
+			same_size: Result.count = count
+		end
+
 feature -- Status setting
 
-	select_item (an_index: INTEGER) is
-			-- Select item at `an_index'.
-		require
-			index_within_range: an_index > 0 and an_index <= count
-		do
-			implementation.select_item (an_index)
-		end
-
-	deselect_item (an_index: INTEGER) is
-			-- Deselect item at `an_index'.
-		require
-			index_within_range: an_index > 0 and an_index <= count
-		do
-			implementation.deselect_item (an_index)
-		end
-
-	clear_selection is
+	remove_selection is
 			-- Ensure there is no `selected_item'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.clear_selection
 		ensure
 			not_selected: selected_item = Void
 		end
 
-feature -- Event handling
+	set_strings (a_string_array: INDEXABLE [STRING, INTEGER]) is
+			-- Wipe out and re-initialize with an item
+			-- for each of `a_string_array'.
+		require
+			not_destroyed: not is_destroyed
+		local
+			sc: like a_string_array
+			i, upper: INTEGER
+			li: EV_LIST_ITEM
+		do
+			wipe_out
+			sc := a_string_array
+			upper := sc.index_set.upper
+			from i := sc.index_set.lower until i > upper loop
+				create li.make_with_text (sc.item (i))
+				extend (li)
+				i := i + 1
+			end
+		ensure
+			items_created: count = strings.count
+		end
+		
+feature {NONE} -- Contract support
 
-	select_actions: EV_LIST_ITEM_SELECT_ACTION_SEQUENCE
-			-- Actions to be performed when an item is selected. 
-
-	deselect_actions: EV_LIST_ITEM_SELECT_ACTION_SEQUENCE
-			-- Actions to be performed when an item is deselected.
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST}
+		end
 
 feature {EV_ANY_I, EV_LIST_ITEM_LIST} -- Implementation
 
 	implementation: EV_LIST_ITEM_LIST_I
 			-- Responsible for interaction with the native graphics toolkit.
 
-feature {NONE} -- Implementation
-
-	create_action_sequences is
-   			-- See `{EV_ANY}.create_action_sequences'.
+feature -- Obsolete
+	
+	clear_selection is
+		obsolete
+			"Use remove_selection instead"
 		do
-			{EV_ITEM_LIST} Precursor
-			{EV_PRIMITIVE} Precursor
-			create select_actions
-			create deselect_actions
+			remove_selection
+		end
+
+	select_item (an_index: INTEGER) is
+			-- Select item at `an_index'.
+		obsolete
+			"Use i_th (an_index).enable_select"
+		require
+			index_within_range: an_index > 0 and an_index <= count
+		do
+			i_th (an_index).enable_select
+		end
+
+	deselect_item (an_index: INTEGER) is
+			-- Deselect item at `an_index'.
+		obsolete
+			"Use i_th (an_index).disable_select"
+		require
+			index_within_range: an_index > 0 and an_index <= count
+		do
+			i_th (an_index).disable_select
 		end
 
 end -- class EV_LIST_ITEM_LIST
@@ -122,19 +167,3 @@ end -- class EV_LIST_ITEM_LIST
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.2  2000/06/07 17:28:13  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.1.2.1  2000/05/10 18:54:33  king
---| initial
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

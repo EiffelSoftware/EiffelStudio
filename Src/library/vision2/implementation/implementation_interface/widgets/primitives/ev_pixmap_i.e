@@ -1,7 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
-	description: "EiffelVision pixmap, implementation interface"
+	description: "EiffelVision pixmap. Implementation interface."
 	status: "See notice at end of class"
 	keywords: "drawable, primitives, figures, buffer, bitmap, picture"
 	date: "$Date$"
@@ -21,31 +19,16 @@ inherit
 			interface
 		end
 
-feature -- Initialization
+	EV_PIXMAP_ACTION_SEQUENCES_I
 
-	read_from_file (a_file: IO_MEDIUM) is
-			-- Load pixmap data from data-medium `a_file'.
-		require
-			medium_data_readable: a_file.is_open_read
-			medium_data_is_binary: not a_file.is_plain_text
-		deferred
-		end
+feature -- Initialization
 
 	read_from_named_file (file_name: STRING) is
 			-- Load pixmap data from the file named `file_name'.
-			--
 			-- Exceptions: "Unable to retrieve icon information"
 		require
 			file_name_not_void: file_name /= Void
-			file_name_not_empty: not file_name.empty
-		deferred
-		end
-
-	set_with_buffer (a_buffer: STRING) is
-			-- Load pixmap data from `a_buffer' in memory.
-		require
-			buffer_data_not_void: a_buffer /= Void
-			buffer_contains_data: a_buffer.count > 0
+			file_name_not_empty: not file_name.is_empty
 		deferred
 		end
 
@@ -58,7 +41,7 @@ feature -- Initialization
 		end
 
 	set_size (a_x, a_y: INTEGER) is
-			-- Set the size of the pixmap to `a_x' by `a_y'.
+			-- Set the size of the pixmap to `a_x' by `a_y' pixels.
 		require
 			x_coordinate_valid: a_x > 0
 			y_coordinate_valid: a_y > 0
@@ -66,16 +49,41 @@ feature -- Initialization
 		end
 
 	stretch (a_x, a_y: INTEGER) is
-			-- Stretch the image to fit in size `a_x' by `a_y'.
+			-- Stretch the image to fit in size `a_x' by `a_y' pixels.
 		require
 			x_coordinate_valid: a_x > 0
 			y_coordinate_valid: a_y > 0
 		deferred
 		end
 
-feature  -- Duplication
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
+			-- Save `Current' to `a_filename' in `a_format' format.
+		require
+			a_format_not_void: a_format /= Void
+			a_filename_not_void: a_filename /= Void
+		do
+			a_format.save (raw_image_data, a_filename)
+		end
+
+feature -- Access
+
+	raw_image_data: EV_RAW_IMAGE_DATA is
+			-- RGBA representation of `Current'.
+		deferred
+		end
+
+feature -- Basic operations
+
+	flush is
+			-- Execute any delayed calls to `expose_actions' without waiting
+			-- for next idle.
+		do
+		end
+
+feature -- Duplication
 
 	copy_pixmap(other: EV_PIXMAP) is
+			-- Update `Current' to have same appearence as `other'.
 		deferred
 		end
 
@@ -106,6 +114,33 @@ end -- class EV_PIXMAP_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2001/06/07 23:08:11  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.4.8  2000/11/29 00:34:40  rogers
+--| Changed empty to is_empty.
+--|
+--| Revision 1.10.4.7  2000/10/12 15:37:54  pichery
+--| Removed `set_with_buffer' and `read_from_file'
+--|
+--| Revision 1.10.4.6  2000/10/03 17:29:10  rogers
+--| Commented raw_image_data.
+--|
+--| Revision 1.10.4.5  2000/10/03 00:40:56  king
+--| Added save_to_named_file and raw_image_data
+--|
+--| Revision 1.10.4.4  2000/08/18 16:23:32  rogers
+--| Removed fixme not_reviewed. Comments, formatting.
+--|
+--| Revision 1.10.4.3  2000/07/25 01:13:44  oconnor
+--| added EV_PIXMAP_ACTION_SEQUENCES_I
+--|
+--| Revision 1.10.4.2  2000/06/26 23:24:10  pichery
+--| added `flush' feature
+--|
+--| Revision 1.10.4.1  2000/05/03 19:09:09  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.21  2000/05/03 04:33:10  pichery
 --| Changed feature `set_with_default'
 --|

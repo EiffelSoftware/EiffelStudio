@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision tree node. Mswindows implementation."
 	status: "See notice at end of class"
@@ -20,6 +19,8 @@ inherit
 	EV_ITEM_IMP
 		rename
 			parent as old_parent
+		undefine
+			set_pnd_original_parent
 		redefine
 			parent_imp,
 			destroy,
@@ -28,9 +29,7 @@ inherit
 			remove_pixmap,
 			on_parented,
 			on_orphaned,
-			set_pnd_original_parent
-		--select
-			--old_simple_parent
+			pixmap
 		end
 
 	EV_TEXTABLE_IMP
@@ -43,7 +42,7 @@ inherit
 			interface
 		end
 
-	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_NODE]
+	EV_ITEM_LIST_IMP [EV_TREE_NODE]
 		rename
 			interface as il_interface
 		undefine
@@ -80,65 +79,102 @@ inherit
 			{NONE} all
 		end
 
+	WEL_ILC_CONSTANTS
+		export {NONE}
+			all
+		end
+
+	EV_TREE_NODE_ACTION_SEQUENCES_IMP
+
 creation
 	make
 
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create the item.
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			create ev_children.make (1)
 			create real_text.make (0)
 			wel_make
 			set_mask (Tvif_text + Tvif_state + Tvif_handle)
+
+				-- By default, no image.
+			has_pixmap := False
+			image_index := 0
+			set_image (image_index, image_index)
 		end
 
 	initialize is
-			-- Do post creation initialization.
+			-- Perfrom post creation initialization on `Current'.
 		do
 			Precursor
 			create internal_children.make (1)
 			is_initialized := True
 		end
 
-feature -- Access
+feature {EV_ANY_I}-- Access
 
-	parent_imp: EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_NODE]
-			-- Parent implementation
+	parent_imp: EV_ITEM_LIST_IMP [EV_TREE_NODE]
+			-- Parent implementation.
 
 	top_parent_imp: EV_TREE_IMP is
 			-- Implementation of `parent_tree'.
+		local
+			loc_parent_tree: like parent_tree
 		do
-			if parent_tree /= Void then
-				Result ?= parent_tree.implementation
+			loc_parent_tree := parent_tree
+			if loc_parent_tree /= Void then
+				Result ?= loc_parent_tree.implementation
 				check
 					parent_tree_not_void: Result /= Void
 				end
 			end
 		end
 
-feature -- Status report
+	pixmap: EV_PIXMAP is
+			-- Pixmap of `Current'.
+		local
+			pix_imp: EV_PIXMAP_IMP
+			image_icon: WEL_ICON
+			image_list: EV_IMAGE_LIST_IMP
+		do
+				-- Retrieve the pixmap from the imagelist
+			if has_pixmap then
+				if private_pixmap = Void then
+					create private_pixmap
+					pix_imp ?= private_pixmap.implementation
+					check
+						pix_imp /= Void
+					end
+					image_list := top_parent_imp.image_list
+					image_icon := image_list.get_icon (image_index, Ild_normal)
+					pix_imp.set_with_resource (image_icon)
+				end
+				Result := private_pixmap
+			end
+		end 
+
+feature {EV_ANY_I} -- Status report
 
 	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
-			-- List of the direct children of the tree-item.
+			-- List of the direct children of `Current'.
 
 	is_selected: BOOLEAN is
-			-- Is the item selected?
-		
+			-- Is `Current' selected?
 		do
 			Result := top_parent_imp.is_selected (Current)
 		end
 
 	is_expanded: BOOLEAN is
-			-- is the item expanded ?
+			-- is `Current' expanded ?
 		do
 			Result := top_parent_imp.is_expanded (Current)
 		end
 
 	is_parent: BOOLEAN is
-			-- is the item the parent of other items?
+			-- is `Current' the parent of other items?
 		do
 			if top_parent_imp /= Void then
 				Result := top_parent_imp.is_parent (Current)
@@ -148,7 +184,7 @@ feature -- Status report
 			end
 		end
 
-feature -- Status setting
+feature {EV_ANY_I} -- Status setting
 
 	set_parent_imp (a_parent_imp: like parent_imp) is
 			-- Make `a_parent_imp' the new parent of the widget.
@@ -162,26 +198,28 @@ feature -- Status setting
 		end
 
 	destroy is
-			-- Destroy the current item
+			-- Destroy `Current'.
 		do
-			{EV_ITEM_IMP} Precursor
+			Precursor {EV_ITEM_IMP}
 			internal_children := Void
 		end
 
 	enable_select is
-			-- Select the item
+			-- Select `Current'.
 		do
 			top_parent_imp.select_item (Current)
 		end
 
 	disable_select is
-			-- Deselect the item
+			-- Deselect `Current'.
 		do
-			top_parent_imp.deselect_item (Current)
+			if top_parent_imp /= Void then
+				top_parent_imp.deselect_item (Current)	
+			end
 		end
 
 	set_expand (flag: BOOLEAN) is
-			-- Expand the item if `flag', collapse it otherwise.
+			-- Expand `Current' if `flag', else collapse `Current'.
 		do
 			if flag then
 				top_parent_imp.expand_item (Current)
@@ -190,16 +228,16 @@ feature -- Status setting
 			end
 		end
  
-feature -- Element change
+feature {EV_ANY_I} -- Element change
 
 	wel_text: STRING is
-			-- Item text.
+			-- Text of `Current'.
 		do
 			Result := clone (real_text)
 		end
 
 	text_length: INTEGER is
-			-- Length of item text.
+			-- Number of characters in `text'.
 		do
 			Result := real_text.count
 		end
@@ -208,7 +246,7 @@ feature -- Element change
 			-- Internal `text'.
 
 	wel_set_text (txt: STRING) is
-			-- Make `txt' the new label of the item.
+			-- Make `txt' the new label of `Current'.
 		local
 			tree: EV_TREE_IMP
 		do
@@ -221,36 +259,51 @@ feature -- Element change
 			end
 		end
 
-	clear_items is
-			-- Clear all the children of the tree-item.
-			-- It destroys them.
-		local
-			c: ARRAYED_LIST [EV_TREE_NODE_IMP]
-		do
-			c := ev_children
-			from
-				c.start
-			until
-				c.after
-			loop
-				c.item.destroy
-				c.forth
-			end
-		end
-
 feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
+
+	--| This is redundent in this class.
+	--| The events are only propagated to the tree, not a tree node.
+	--| These features are required by any parent of items, however, as
+	--| in this case, the parent is an item as well, they will never
+	--| recieve any events. Cannot see an easy way to get rid of this
+	--| dependency without complicating the inheritance structure
+	--| unecessarily for pick and drop. Julian
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+		do	
+		end
+
+	internal_propagate_pointer_double_press
+		(keys, x_pos, y_pos, button: INTEGER) is
+		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		do
-			--|FIXME This is redundent in this class.
+		end
+
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_NODE_IMP is
+			-- `Result' is tree node at pixel position `x_pos', `y_pos'.
+		do
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset of `Current' relative to screen.
+		do
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset of `Current' relative to screen.
+		do
 		end
 
 	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
 			-- `Result' is absolute screen coordinates in pixels
 			-- of coordinates `a_x', a_y_' on `Current'.
 		do
-			--|FIXME This is redundent
+		end
+
+	disable_default_processing is
+			-- Disable default window processing.
+		do
 		end
 
 	on_parented is
@@ -261,20 +314,22 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		local
 			original_index: INTEGER
 		do
-			original_index := ev_children.index
-			from
-				ev_children.start
-			until
-				ev_children.off
-			loop
-				ev_children.item.on_parented
-				ev_children.forth
-			end
-			ev_children.go_i_th (original_index)
-			if pixmap /= Void then
-				-- If `Current' has a pixmap 
-				set_pixmap_in_parent
+				-- We process the message only if this item is linked to a tree,
+				-- i.e. `top_parent' exists.
+			if parent_tree /= Void then
+				original_index := ev_children.index
+				from
+					ev_children.start
+				until
+					ev_children.off
+				loop
+					ev_children.item.on_parented
+					ev_children.forth
+				end
+				ev_children.go_i_th (original_index)
+
 					-- Assign `pixmap' to tree. 
+				set_pixmap_in_parent
 			end
 		ensure then
 			index_not_changed: ev_children.index = old ev_children.index
@@ -286,6 +341,11 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			-- the child of a tree, we need to recurse through all children of 
 			-- the item and send this message.
 		do
+				-- Retrieve the pixmap from the imagelist.
+			if has_pixmap and then private_pixmap /= Void then
+				private_pixmap := pixmap
+			end
+
 			remove_all_direct_references
 		ensure then
 			index_not_changed: ev_children.index = old ev_children.index
@@ -313,13 +373,23 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
  
 feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 
+	has_pixmap: BOOLEAN
+			-- Has `Current' a pixmap?
+
+	image_index: INTEGER
+			-- Index of pixmap assigned with Current in the imageList.
+
 	set_pixmap (p: EV_PIXMAP) is
 			-- Assign `p' to the displayed pixmap.
-		require else
-			pixmap_not_void: pixmap /= Void
 		do
-			create pixmap
-			pixmap.copy (p)
+				-- We must destroy the pixmap before we set a new one,
+				-- to ensure that we free up Windows GDI objects
+			if private_pixmap /= Void then
+				private_pixmap.destroy
+				private_pixmap := Void
+			end
+			private_pixmap := clone (p)
+			has_pixmap := True
 
 				-- If the item is currently contained in the tree then
 			if top_parent_imp /= Void then
@@ -329,14 +399,16 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 		end
 
 	remove_pixmap is
-			-- Assign `p' to the displayed pixmap.
-		require else
-			pixmap_not_void: pixmap /= Void
+			-- Remove pixmap from `Current'.
 		do
-			if pixmap /= Void then
-				pixmap := Void
+			if has_pixmap then
+				has_pixmap := False
+				if private_pixmap /= Void then
+					private_pixmap.destroy
+					private_pixmap := Void
+				end
 
-				-- If the item is currently contained in the tree then..
+					-- If the item is currently contained in the tree then..
 				if top_parent_imp /= Void then
 						-- Update the parent's image list.
 					remove_pixmap_in_parent
@@ -345,32 +417,41 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 		end
 
 	set_pixmap_in_parent is
-			-- Add the pixmap to the parent by updating the parent's image 
-			-- list.
+			-- Add/Remove the pixmap to the parent by updating the 
+			-- parent's image list.
 		local
 			image_list: EV_IMAGE_LIST_IMP
-			image_index: INTEGER
 			root_imp: like top_parent_imp
 		do
 			root_imp := top_parent_imp
-
-			image_list := root_imp.image_list
-				-- Create the image list and associate it
-				-- to the control if it's not already done.
-			if image_list = Void then
-				root_imp.setup_image_list
-				image_list := root_imp.image_list
+			if root_imp = Void then
+				root_imp := top_parent_imp
 			end
 
-			image_list.add_pixmap (pixmap)
-			image_index := image_list.last_position
+			if has_pixmap then
+				image_list := root_imp.image_list
+					-- Create the image list and associate it
+					-- to the control if it's not already done.
+				if image_list = Void then
+					root_imp.setup_image_list
+					image_list := root_imp.image_list
+				end
 
+				if private_pixmap /= Void then
+					image_list.add_pixmap (private_pixmap)
+					image_index := image_list.last_position
+					private_pixmap.destroy
+					private_pixmap := Void
+				end
+			else
+				image_index := 0 -- transparent image.
+			end
 			set_image (image_index, image_index)
 			root_imp.set_tree_item (Current)
 		end
 
 	remove_pixmap_in_parent is
-			-- Remove the pixmap to the parent by updating the parent's image 
+			-- Remove the pixmap from the parent by updating the parent's image 
 			-- list.
 		do
 			set_image (0, 0) -- 0 = transparent image.
@@ -378,15 +459,13 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 		end
 
 	general_reset_pixmap is
-			-- Reset the pixmap (if the size of displayed has
-			-- changed for example)
+			-- Reset the pixmap
+			--| For example: if the size of displayed has changed.
 		local	
 			c: like ev_children
 		do
 				-- Reset the current pixmap
-			if pixmap /= Void then
-				set_pixmap_in_parent
-			end
+			set_pixmap_in_parent
 
 				-- Reset the pixmap of all children.
 			c := ev_children
@@ -414,11 +493,11 @@ feature {EV_TREE_IMP} -- Implementation, pick and drop
 feature {EV_TREE_IMP} -- Implementation
 
 	internal_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
-			-- Void if there is a parent, store the children
-			-- otherwise.
+			-- Holds the children of `Current'.
+			--| May be void if `Current' is parented.
 
 	set_internal_children (list: ARRAYED_LIST [EV_TREE_NODE_IMP]) is
-			-- Make `list' the new list of children
+			-- Make `list' the new list of children.
 		do
 			internal_children := list
 		end
@@ -467,7 +546,7 @@ feature {NONE} -- Implementation
 		end
 
 	remove_item (item_imp: EV_TREE_NODE_IMP) is
-			-- Remove `item_imp' from the children.
+			-- Remove `item_imp' from `Current'.
 		do
 			if top_parent_imp /= Void then
 				top_parent_imp.general_remove_item (item_imp)
@@ -482,21 +561,21 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_TREE_NODE_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 
 --|-----------------------------------------------------------------------------
@@ -504,8 +583,96 @@ end -- class EV_TREE_NODE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.2  2000/06/07 17:27:52  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.3  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.2.30  2001/06/05 22:25:27  rogers
+--| Improved comment in set_pixmap.
+--|
+--| Revision 1.1.2.29  2001/06/05 21:54:40  rogers
+--| Set_pixmap now uses clone internally instead of copy. Saves creation line.
+--|
+--| Revision 1.1.2.28  2001/06/05 19:21:12  rogers
+--| Moved creation of pixmap out of `if' statement in `set_pixmap'.
+--|
+--| Revision 1.1.2.27  2001/06/05 18:35:59  rogers
+--| We now create `private_pixmap' during `set_pixmap' if Void.
+--|
+--| Revision 1.1.2.26  2001/06/04 17:11:17  rogers
+--| Updated to use copy instead of ev_clone.
+--|
+--| Revision 1.1.2.25  2001/05/15 22:54:58  rogers
+--| Removed toggle, as we now call interface.toggle.
+--|
+--| Revision 1.1.2.24  2001/02/06 01:49:56  rogers
+--| Added find_item_at_position, screen_x and screen_y.
+--|
+--| Revision 1.1.2.23  2000/12/29 18:25:06  rogers
+--| Added disable_default_processing.
+--|
+--| Revision 1.1.2.22  2000/11/09 17:05:36  pichery
+--| Changed pixmap handling: `pixmap' now build an EV_PIXMAP
+--| from the WEL_ICON extracted from the WEL_IMAGE_LIST
+--| associated with the parent of this item.
+--|
+--| Revision 1.1.2.21  2000/10/19 23:16:50  rogers
+--| Removed three fixmes and replaced with a detailed description of
+--| why there are thre features that do nothing within this class.
+--|
+--| Revision 1.1.2.20  2000/10/12 15:50:22  pichery
+--| Added reference tracking for GDI objects to decrease
+--| the number of GDI objects alive.
+--|
+--| Revision 1.1.2.19  2000/09/26 03:53:36  manus
+--| Cosmetics.
+--|
+--| Revision 1.1.2.18  2000/09/26 00:33:05  rogers
+--| Set_pixmap_in_parent no longer creates a temporary pixmap implementation,
+--| it now directly inserts private_icon into the image_list. This reduces
+--| temporary GDI use.
+--|
+--| Revision 1.1.2.17  2000/09/25 20:07:37  rogers
+--| Now uses private icon. This drastically improves the number of GDI
+--| objects used.
+--|
+--| Revision 1.1.2.16  2000/09/25 15:49:49  manus
+--| Removed pixmap copy because we do not need the copy here since we use the pixmap just
+--| for a minimal amount of time and then discard it (it saves us so manu GDI objects).
+--|
+--| Revision 1.1.2.15  2000/09/13 22:15:09  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.1.2.14  2000/08/18 19:33:00  rogers
+--| Corrected comment for remove_pixmap.
+--|
+--| Revision 1.1.2.13  2000/08/11 19:19:47  rogers
+--| Fixed copyright clause to use ! instead of |. Removed clear_items as it is
+--| redundent.
+--|
+--| Revision 1.1.2.12  2000/08/11 01:00:00  rogers
+--| Removed FIXME NOT_REVIEWED. Comments, formatting.
+--|
+--| Revision 1.1.2.11  2000/08/03 23:34:59  rogers
+--| Changed type of parent_imp from
+--| 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_NODE] to
+--| 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
+--|
+--| Revision 1.1.2.10  2000/08/02 22:47:43  rogers
+--| Changed inheritence from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_NODE] to
+--| EV_ITEM_LIST_IMP [EV_TREE_NODE].
+--|
+--| Revision 1.1.2.9  2000/07/24 23:57:19  rogers
+--| Now inherits EV_TREE_NODE_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.1.2.8  2000/07/01 09:00:45  pichery
+--| Fixed bug in pixmap settings
+--|
+--| Revision 1.1.2.7  2000/06/19 21:45:52  manus
+--| Now `pixmap' of `EV_PIXMAPABLE_IMP' returns a copy of the internal pixmap to
+--| satisfy the Vision2 interface behavior.
+--|
+--| Revision 1.1.2.6  2000/06/09 20:10:15  rogers
+--| Added internal_propagate_pointer_double_press
 --|
 --| Revision 1.1.2.5  2000/06/05 16:50:39  manus
 --| Added `text_length' in `EV_TEXTABLE_IMP' to improve the performance of its

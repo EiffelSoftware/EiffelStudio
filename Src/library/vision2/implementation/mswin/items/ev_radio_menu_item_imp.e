@@ -39,11 +39,17 @@ feature {NONE} -- Initialization
 			is_selected := True
 		end
 
-feature -- Status report
+feature {EV_ANY_I} -- Status report
 
 	is_selected: BOOLEAN
 
-feature -- Status setting
+feature {EV_ANY_I} -- Status setting
+
+	disable_select is
+			-- Assign `False' to `is_selected'.
+		do
+			is_selected := False
+		end
 	
 	enable_select is
 		local
@@ -57,6 +63,7 @@ feature -- Status setting
 					radio_group.off
 				loop
 					parent_imp.uncheck_item (radio_group.item.id)
+					radio_group.item.disable_select
 					radio_group.forth
 				end
 				radio_group.go_to (cur)
@@ -83,7 +90,7 @@ feature {NONE} -- Implementation
 end -- class EV_RADIO_MENU_ITEM_IMP
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
@@ -103,8 +110,15 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.19  2000/06/07 17:27:52  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.20  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.4.4  2000/08/17 17:26:12  rogers
+--| Added disable_select. Enable_Select now calls disable_Select on the
+--| previously selected item. Features are now exported to EV_ANY_I.
+--|
+--| Revision 1.10.4.3  2000/08/11 23:55:55  rogers
+--| Corrected copyright clause so it now references EiffelVision2.
 --|
 --| Revision 1.10.4.2  2000/05/09 21:51:33  king
 --| Implemented to new selectable abstract class

@@ -22,13 +22,15 @@ inherit
 		end
 
 create
-	make_and_launch
+	start
 
 feature
 
-	first_window: EV_TITLED_WINDOW is
-		once
-			create Result
+	start is
+		do
+			default_create
+			prepare
+			launch
 		end
 
 	non_widget_test_area: EV_CELL
@@ -39,6 +41,7 @@ feature
 			--  Create some procedure widgets in a notebook.
 			--  Create one of each Vision widget in a notebook.
 		local
+			first_window: EV_TITLED_WINDOW
 			box: EV_BOX
 			notebook: EV_NOTEBOOK
 			scroll: EV_SCROLLABLE_AREA
@@ -48,11 +51,14 @@ feature
 			description_frame: EV_FRAME
 			timer: EV_TIMEOUT
 			da: EV_DRAWING_AREA
-			p1, p2: EV_PIXMAP
+			p1, p2, p3: EV_PIXMAP
 			t: EV_TIMEOUT
+			ev_status_bar: EV_STATUS_BAR
 		do
-			first_window.set_title ("Eiffel Vision Widgets")
-			first_window.set_status_bar (create {EV_STATUS_BAR}.make_for_test)
+			create first_window.make_with_title ("Eiffel Vision Widgets")
+			first_window.close_actions.extend (~destroy)
+			create ev_status_bar.make_for_test
+			first_window.lower_bar.extend (ev_status_bar)
 			create menu_bar
 			first_window.set_menu_bar (menu_bar)
 			create object_menu.make_with_text ("Other objects")
@@ -112,6 +118,7 @@ feature
 			end
 			create timer.make_with_interval (30*60*1000)
 			timer.actions.extend (~exit_zero_wrapper)
+			first_window.show
 		end
 
 	exit_zero_wrapper is do exit_zero end
@@ -148,6 +155,7 @@ feature
 			pool.put_front (p)
 			create p; p.set_with_named_file ("pool4.png")
 			pool.put_front (p)
+			pool.start
 			create label.make_with_text ("<-- Drop stuff here to see class name.     Or try the bottomless pit. -->")
 			label.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
 			main.extend (label)
@@ -166,7 +174,7 @@ feature
 			t.set_interval (50)
 		end
 
-	pool: LINKED_CIRCULAR [EV_PIXMAP]
+	pool: LINKED_LIST [EV_PIXMAP]
 	pool_da: EV_DRAWING_AREA
 
 	update_pool is
@@ -189,6 +197,9 @@ feature
 				i := i + 1
 			end
 			pool.forth
+			if pool.after then
+				pool.start
+			end
 		end
 
 	update_face (da: EV_DRAWING_AREA; p1, p2: EV_PIXMAP) is
@@ -357,7 +368,7 @@ feature
 			Result.extend (create {EV_FIXED}.make_for_test)
 			Result.extend (create {EV_HORIZONTAL_PROGRESS_BAR}.make_for_test)
 			Result.extend (create {EV_HORIZONTAL_RANGE}.make_for_test)
-			Result.extend (create {EV_HORIZONTAL_SCROLL_BAR}.make_for_test)
+--|			Result.extend (create {EV_HORIZONTAL_SCROLL_BAR}.make_for_test)
 			Result.extend (create {EV_HORIZONTAL_SEPARATOR}.make_for_test)
 			Result.extend (create {EV_LABEL}.make_for_test)
 			Result.extend (create {EV_LIST}.make_for_test)
@@ -367,19 +378,20 @@ feature
 			Result.extend (create {EV_TEXT_FIELD}.make_for_test)
 			Result.extend (create {EV_TOGGLE_BUTTON}.make_for_test)
 			Result.extend (create {EV_TOOL_BAR}.make_for_test)
---			Result.extend (create {EV_TREE}.make_for_test)
+			Result.extend (create {EV_TREE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_PROGRESS_BAR}.make_for_test)
 			Result.extend (create {EV_VERTICAL_RANGE}.make_for_test)
-			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
+--|			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SEPARATOR}.make_for_test)
 			Result.extend (create {EV_PIXMAP}.make_for_test)
 			Result.last.set_minimum_size (100,100)
 			Result.extend (create {EV_TEXT}.make_for_test)
 			Result.extend (create {EV_PASSWORD_FIELD}.make_for_test)
 			Result.extend (create {EV_COMBO_BOX}.make_for_test)
+			Result.extend (create {EV_TABLE}.make_for_test)
 		end
 
-	windows: LINKED_LIST [EV_WINDOW] is
+	ev_windows: LINKED_LIST [EV_WINDOW] is
 			-- List of different windows.
 		once
 			create Result.make
@@ -419,7 +431,9 @@ feature
 			Result.extend (create {EV_FIGURE_POLYGON}.make_for_test)
 			Result.extend (create {EV_FIGURE_POLYLINE}.make_for_test)
 			Result.extend (create {EV_FIGURE_RECTANGLE}.make_for_test)
+			Result.extend (create {EV_FIGURE_ROUNDED_RECTANGLE}.make_for_test)
 			Result.extend (create {EV_FIGURE_TEXT}.make_for_test)
+			Result.extend (create {EV_FIGURE_STAR}.make_for_test)
 			Result.extend (create {EV_FIGURE_WORLD})
 --|FIXME		Result.extend (create {EV_PROJECTION})
 --|FIXME		Result.extend (create {EV_RELATIVE_POINT})
@@ -437,14 +451,13 @@ feature
 			Result.extend (create {EV_COLOR})
 			Result.extend (create {EV_COORDINATES})
 			Result.extend (create {EV_CURSOR})
---|FIXME		Result.extend (create {EV_CURSOR_CODE})
 			Result.extend (create {EV_ENVIRONMENT})
 			Result.extend (create {EV_FONT})
 			Result.extend (create {EV_FONT_CONSTANTS})
 			Result.extend (create {EV_RECTANGLE})
-			Result.extend (create {EV_TIMEOUT})
+--|			Result.extend (create {EV_TIMEOUT})
 			Result.extend (create {EV_DRAWABLE_CONSTANTS})
-			Result.extend (create {EV_DEFAULT_COLORS})
+			Result.extend (create {EV_STOCK_COLORS})
 			Result.extend (create {EV_MENU})
 			Result.extend (create {EV_MENU_BAR})
 			Result.extend (create {EV_SCREEN})
@@ -548,8 +561,45 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.46  2000/06/07 17:28:17  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.47  2001/06/07 23:08:56  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.45.2.16  2000/12/20 19:05:48  rogers
+--| Changed EV_DEFAULT_COLORS to EV_STOCK_COLORS.
+--|
+--| Revision 1.45.2.15  2000/08/09 21:33:57  king
+--| Made compilable with clone reversion
+--|
+--| Revision 1.45.2.14  2000/08/08 21:14:39  king
+--| Renaming clone to defunct_clone
+--|
+--| Revision 1.45.2.13  2000/08/04 23:42:46  brendel
+--| Added rounded rectangle and star.
+--|
+--| Revision 1.45.2.12  2000/07/03 17:50:27  oconnor
+--| added close action
+--|
+--| Revision 1.45.2.11  2000/06/16 00:29:09  oconnor
+--| tweak
+--|
+--| Revision 1.45.2.10  2000/06/15 23:41:43  oconnor
+--| added toolbar :-)
+--|
+--| Revision 1.45.2.9  2000/06/15 23:37:45  oconnor
+--| removed toolbar
+--|
+--| Revision 1.45.2.8  2000/06/14 18:40:31  oconnor
+--| removed use of LINKED_CIRCULAR, it is horribly broken.
+--| added TREE and TABLE to test.
+--|
+--| Revision 1.45.2.7  2000/06/14 17:56:50  oconnor
+--| show first window
+--|
+--| Revision 1.45.2.6  2000/06/14 17:11:01  oconnor
+--| show first window
+--|
+--| Revision 1.45.2.5  2000/06/14 17:09:17  oconnor
+--| use new APP class
 --|
 --| Revision 1.45.2.4  2000/05/18 17:47:26  brendel
 --| *** empty log message ***

@@ -6,7 +6,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EV_DEFAULT_PIXMAPS_IMP
+	EV_STOCK_PIXMAPS_IMP
 
 feature -- Default pixmaps
 
@@ -92,6 +92,18 @@ feature -- Default cursors
 			Result := build_default_cursor (Idc_constants.Idc_sizeall)
 		end
 
+	Sizenwse_cursor: EV_CURSOR is
+			-- Double-pointed arrow pointing north-west and south-east
+		do
+			Result := build_default_cursor (Idc_constants.Idc_sizenwse)
+		end
+
+	Sizenesw_cursor: EV_CURSOR is
+			-- Double-pointed arrow pointing north-east and south-west
+		do
+			Result := build_default_cursor (Idc_constants.Idc_sizenesw)
+		end
+
 	Sizens_cursor: EV_CURSOR is
 			-- Double-pointed arrow pointing north and south
 		do
@@ -123,19 +135,20 @@ feature {NONE} -- Implementation
 			-- Windows Icon constants `Idi_constant'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
-			icon: WEL_ICON
+			wel_icon: WEL_ICON
 		do
 				-- Create a default pixmap
 			create Result
 
 				-- Read the predefined Cursor.
-			create icon.make_by_predefined_id (
-				Idi_constant
-				)
+			create wel_icon.make_by_predefined_id (Idi_constant)
+			wel_icon.enable_reference_tracking
 			
 				-- Initialize the pixmap with the icon
 			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_with_icon (icon)
+			pixmap_imp.set_with_resource (wel_icon)
+
+			wel_icon.decrement_reference
 		end
 
 	build_default_cursor (Idc_constant: POINTER): EV_CURSOR is
@@ -149,17 +162,18 @@ feature {NONE} -- Implementation
 			create Result
 
 				-- Read the predefined Cursor.
-			create wel_cursor.make_by_predefined_id (
-				Idc_constant
-				)
+			create wel_cursor.make_by_predefined_id (Idc_constant)
+			wel_cursor.enable_reference_tracking
 			
 				-- Initialize the pixmap with the icon
 			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_with_cursor (wel_cursor)
+			pixmap_imp.set_with_resource (wel_cursor)
 
 				-- Set the hotspot of the cursor
 			Result.set_x_hotspot (wel_cursor.x_hotspot)
 			Result.set_y_hotspot (wel_cursor.y_hotspot)
+
+			wel_cursor.decrement_reference
 		end
 
 feature {NONE} -- Constants
@@ -174,7 +188,7 @@ feature {NONE} -- Constants
 			create Result
 		end
 
-end -- class EV_DEFAULT_PIXMAPS_IMP
+end -- class EV_STOCK_PIXMAPS_IMP
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -197,8 +211,25 @@ end -- class EV_DEFAULT_PIXMAPS_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.2  2000/06/07 17:27:57  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.3  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.2.7  2001/03/04 22:25:08  pichery
+--| Added reference tracking
+--|
+--| Revision 1.1.2.6  2000/11/06 19:37:08  king
+--| Accounted for default to stock name change
+--|
+--| Revision 1.1.2.5  2000/10/12 15:50:24  pichery
+--| Added reference tracking for GDI objects to decrease
+--| the number of GDI objects alive.
+--|
+--| Revision 1.1.2.4  2000/06/28 21:52:39  pichery
+--| Fixed bug
+--|
+--| Revision 1.1.2.3  2000/06/28 21:41:58  pichery
+--| Added 2 new default cursors: "Size North-East/South-West" and
+--| "Size North-West/South-east"
 --|
 --| Revision 1.1.2.2  2000/05/04 04:24:53  pichery
 --| - Implemented the new default cursors.

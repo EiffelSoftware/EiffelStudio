@@ -12,29 +12,35 @@ deferred class
 inherit
 	EV_CONTAINER_I
 		redefine
-			interface
+			interface,
+			propagate_foreground_color,
+			propagate_background_color
 		end
 
 	EV_WIDGET_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			destroy
 		end
+	
+	EV_CONTAINER_ACTION_SEQUENCES_IMP
 
 feature {NONE} -- Initialization
 
 	initialize is
-			-- Precusor and create new_item_actions.
+			-- Create `shared_pointer' for radio groups.
 		do
-			create shared_pointer
 			Precursor
-			create new_item_actions.make ("new_item", <<"widget">>)
-			new_item_actions.extend (~add_radio_button)
-			create remove_item_actions.make ("remove_item", <<"widget">>)
-			remove_item_actions.extend (~remove_radio_button)
+			create shared_pointer
 		end
 
 feature -- Access
+
+	container_widget: POINTER is
+		do
+			Result := c_object
+		end
 	
 	client_width: INTEGER is
 			-- Width of the client area of container.
@@ -60,15 +66,15 @@ feature -- Element change
 		local
 			w: EV_WIDGET_IMP
 		do
-			if not interface.empty then
-				remove_item_actions.call ([interface.item])
+			if not interface.is_empty then
+				on_removed_item (interface.item)
 				w ?= interface.item.implementation
-				C.gtk_container_remove (c_object, w.c_object)
+				C.gtk_container_remove (container_widget, w.c_object)
 			end
 			if v /= Void then
 				w ?= v.implementation
-				C.gtk_container_add (c_object, w.c_object)
-				new_item_actions.call ([v])
+				C.gtk_container_add (container_widget, w.c_object)
+				on_new_item (v)
 			end
 		end
 	
@@ -141,11 +147,11 @@ feature -- Status setting
 			r ?= w.implementation
 			if r /= Void then
 				if radio_group /= NULL then
-					C.gtk_radio_button_set_group (r.c_object, radio_group)
+					C.gtk_radio_button_set_group (r.button_widget, radio_group)
 				else
-					C.gtk_toggle_button_set_active (r.c_object, False)
+					C.gtk_toggle_button_set_active (r.button_widget, False)
 				end
-				set_radio_group (C.gtk_radio_button_group (r.c_object))
+				set_radio_group (C.gtk_radio_button_group (r.button_widget))
 			end
 		end
 
@@ -155,17 +161,50 @@ feature -- Status setting
 			w_not_void: w /= Void
 		local
 			r: EV_RADIO_BUTTON_IMP
+			a_max_index: INTEGER
+			a_item_index: INTEGER
+			a_item_pointer: POINTER
+			an_item_imp: EV_RADIO_BUTTON_IMP
 		do
 			r ?= w.implementation
 			if r /= Void then
-				set_radio_group (C.g_slist_remove (radio_group, r.c_object))
-				C.gtk_radio_button_set_group (r.c_object, NULL)
+				a_max_index := C.g_slist_length (radio_group) - 1
+				a_item_index := C.g_slist_index (radio_group, r.button_widget)
+				
+				if a_max_index - a_item_index > 0 then
+					a_item_pointer := C.g_slist_nth_data (
+								radio_group,
+								a_max_index
+							)
+				elseif a_max_index > 0 then
+					a_item_pointer := C.g_slist_nth_data (
+								radio_group,
+								a_max_index - 1
+							)
+				end				
+				
+				C.gtk_radio_button_set_group (r.button_widget, NULL)
+
+				if a_item_pointer /= NULL then
+					an_item_imp ?= eif_object_from_c (
+						C.gtk_widget_struct_parent (a_item_pointer)
+						-- c_object for radio button is event box.
+					)
+					check an_item_imp_not_void: an_item_imp /= Void end
+					set_radio_group (an_item_imp.radio_group)
+				else
+					set_radio_group (NULL)
+				end
+
 				if r.is_selected then
 					if radio_group /= NULL then
-						C.gtk_toggle_button_set_active (C.gslist_struct_data (radio_group), True)
+						C.gtk_toggle_button_set_active (
+							C.gslist_struct_data (radio_group),
+							True
+						)
 					end
 				else
-					C.gtk_toggle_button_set_active (r.c_object, True)
+					C.gtk_toggle_button_set_active (r.button_widget, True)
 				end
 			end
 		end
@@ -177,30 +216,65 @@ feature -- Status setting
 		do
 			pix_imp ?= pixmap.implementation
 
---|FIXME			C.c_gtk_container_set_bg_pixmap (c_object, pix_imp.c_object)
+--|FIXME			C.c_gtk_container_set_bg_pixmap (container_widget, pix_imp.c_object)
 --|FIXME			C.gtk_widget_show (pix_imp.c_object)
 
 			background_pixmap := pixmap
 		end
 			-- FIXME NPC
 
+feature -- Basic operations
+
+	propagate_foreground_color is
+			-- Propagate the current foreground color of the
+			-- container to the children.
+		do
+			propagate_foreground_color_internal (foreground_color, c_object)
+		end
+
+	propagate_background_color is
+			-- Propagate the current background color of the
+			-- container to the children.
+		do
+			propagate_background_color_internal (background_color, c_object)
+		end
+
+feature -- Command
+	
+	destroy is
+			-- Detatch children.
+			-- Destroy `c_object'.
+			-- Render `Current' unusable.
+			--| We remove all children before destroying
+			--| the `c_object'. This prevents them from
+			--| being destroyed when the container is destroyed.
+		do
+			interface.wipe_out
+			Precursor
+		end
+
 feature -- Event handling
 
-	new_item_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
-			-- Actions to be performed after an item is added.
+	on_new_item (an_item: EV_WIDGET) is
+			-- Called after `an_item' is added.
+		do
+			add_radio_button (an_item)
+			if new_item_actions_internal /= Void then
+				new_item_actions_internal.call ([an_item])
+			end
+		end
 
-	remove_item_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
-			-- Actions to be performed before an item is removed.
+	on_removed_item (an_item: EV_WIDGET) is
+			-- Called just before `an_item' is removed.
+		do
+			remove_radio_button (an_item)
+		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CONTAINER
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
-
-invariant
-	new_item_actions_not_void: is_useable implies new_item_actions /= Void
-	remove_item_actions_not_void: is_useable implies remove_item_actions /= Void
 
 end -- class EV_CONTAINER_IMP
 
@@ -225,6 +299,60 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.20.2.15  2001/05/18 18:15:14  king
+--| Moved color propagation up
+--|
+--| Revision 1.20.2.14  2000/12/15 19:40:02  king
+--| Changed .empty to .is_empty
+--|
+--| Revision 1.20.2.13  2000/10/27 16:54:41  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.20.2.12  2000/09/18 18:06:42  oconnor
+--| reimplemented propogate_[fore|back]ground_color for speeeeed
+--|
+--| Revision 1.20.2.11  2000/09/06 23:42:17  oconnor
+--| added new_item_actions to ev_container
+--|
+--| Revision 1.20.2.10  2000/08/30 16:21:35  oconnor
+--| Redefined destroy to remove children before destroying.
+--|
+--| Revision 1.20.2.9  2000/08/08 00:03:13  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.20.2.8  2000/08/04 19:19:28  oconnor
+--| Optimised radio button management by using a polymorphic call
+--| instaed of using agents.
+--|
+--| Revision 1.20.2.7  2000/07/24 21:36:08  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.20.2.6  2000/06/30 23:51:46  king
+--| Corrected implemented remove_radio_button
+--|
+--| Revision 1.20.2.5  2000/06/15 19:05:45  king
+--| Converted radio grouping to use button_widget instead of c_object radio button events
+--|
+--| Revision 1.20.2.4  2000/06/14 23:15:24  king
+--| Removed event masking code
+--|
+--| Revision 1.20.2.3  2000/06/14 00:00:48  king
+--| Corrected event handling with introduction of a container_widget
+--|
+--| Revision 1.20.2.2  2000/05/03 19:08:47  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.35  2000/05/02 18:55:28  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

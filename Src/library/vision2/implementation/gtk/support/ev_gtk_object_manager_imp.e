@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Hashtable which associates GtkObject handles with%
 				%the corresponding Eiffel";
@@ -35,6 +34,15 @@ end -- class EV_GTK_OBJECT_MANAGER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.2.2  2000/09/06 23:18:42  king
+--| Reviewed
+--|
+--| Revision 1.4.2.1  2000/05/03 19:08:43  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

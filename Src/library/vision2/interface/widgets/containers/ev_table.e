@@ -1,14 +1,10 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
 	description: 
 		"EiffelVision table. Invisible container that allows %N%
 		% unlimited number of other widgets to be packed inside it.%N%
 		% A table controls the children's location and size%N%
 		% automatically."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,7 +24,6 @@ inherit
 		redefine
 			implementation,
 			create_implementation,
-			make_for_test,
 			items_unique,
 			parent_of_items_is_current
 		end
@@ -51,36 +46,27 @@ inherit
 		undefine
 			copy, is_equal, default_create,
 			changeable_comparison_criterion, extend
+		redefine
+			linear_representation
 		select
 			bag_put, extend
 		end
 
 create
-	default_create,
-	make_for_test
-
-feature {NONE} -- Initialization
-
-	create_implementation is
-			-- See `See {EV_ANY}.create_implementation'.
-		do
-			create {EV_TABLE_IMP} implementation.make (Current)
-			columns := 2
-			rows := 2
-			array_make (1, columns * rows)
-		end
+	default_create
 
 feature -- Access
 
 	rows: INTEGER
-			-- Number of rows in table.
+			-- Number of rows in `Current'.
 
 	columns: INTEGER
-			-- Number of columns in table.
+			-- Number of columns in `Current'.
 
 	item (a_column, a_row: INTEGER): EV_WIDGET is
-			-- Entry at coordinates (`row', `column')
+			-- Widget at coordinates (`row', `column')
 		require
+			not_destroyed: not is_destroyed
 			valid_row: (1 <= a_row) and (a_row <= rows);
 			valid_column: (1 <= a_column) and (a_column <= columns)
 		do
@@ -88,23 +74,25 @@ feature -- Access
 		end;
 
 	item_list: ARRAYED_LIST [EV_WIDGET] is
-			-- List of items in the table.
+			-- List of items in `Current'.
+		require
+			not_destroyed: not is_destroyed
 		local
-			temp_linear: LINEAR [EV_WIDGET]
+			i, j: INTEGER
 		do
-			create Result.make (0)
+			create Result.make (count)
 			if count > 0 then
-				temp_linear := linear_representation
 				from
-					temp_linear.start
+					i := lower
+					j := upper
 				until
-					temp_linear.after
+					i > j
 				loop
-					--| FIXME IEK Needs a more efficient algorithm.
-					if temp_linear.item /= Void and then not Result.has (temp_linear.item) then
-						Result.force (temp_linear.item)
+					if array_item (i) /= Void and not Result.has
+						(array_item (i)) then
+						Result.extend (array_item (i))
 					end
-					temp_linear.forth
+					i := i + 1
 				end
 			end
 		end
@@ -112,8 +100,9 @@ feature -- Access
 feature -- Status report
 
 	columns_resizable_to (a_column: INTEGER): BOOLEAN is
-			-- May the column count be resized to `a_column'.
+			-- May the column count be resized to `a_column'?
 		require
+			not_destroyed: not is_destroyed
 			a_column_positive: a_column >= 1
 		local
 			a_column_index: INTEGER
@@ -133,8 +122,9 @@ feature -- Status report
 		end
 
 	rows_resizable_to (a_row: INTEGER): BOOLEAN is
-			-- May the row count be resized to `a_row'.
+			-- May the row count be resized to `a_row'?
 		require
+			not_destroyed: not is_destroyed
 			a_row_positive: a_row >= 1
 		local
 			a_row_index: INTEGER
@@ -156,6 +146,7 @@ feature -- Status report
 	column_clear (a_column: INTEGER): BOOLEAN is
 			-- Is column `a_column' free of widgets?
 		require
+			not_destroyed: not is_destroyed
 			a_column_positive: a_column >= 1
 			a_column_in_table: a_column <= columns
 		local
@@ -175,6 +166,7 @@ feature -- Status report
 	row_clear (a_row: INTEGER): BOOLEAN is
 			-- Is row `a_row' free of widgets?
 		require
+			not_destroyed: not is_destroyed
 			a_row_positive: a_row >= 1
 			a_row_in_table: a_row <= rows
 		local
@@ -192,32 +184,42 @@ feature -- Status report
 		end
 
 	widget_count: INTEGER is
-			-- Number of widgets in table.
+			-- Number of widgets in `Current'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.widget_count
 		end
 
 	row_spacing: INTEGER is
-			-- Spacing between two rows in pixels.
+			-- Spacing between two consecutive rows, in pixels.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.row_spacing
 		end
 
 	column_spacing: INTEGER is
-			-- Spacing between two columns in pixels.
+			-- Spacing between two consecutive columns, in pixels.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.column_spacing
 		end
 
 	border_width: INTEGER is
-			-- Spacing between edge of `Current' and outside edge items, in pixels.
+			-- Spacing between edge of `Current' and outside edge items,
+			-- in pixels.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.border_width
 		end
 
 	area_clear (a_column, a_row, column_span, row_span: INTEGER): BOOLEAN is
-			-- Are the cells represented from parameters free of widgets.
+			-- Are the cells represented by parameters free of widgets?
 		require
+			not_destroyed: not is_destroyed
 			table_wide_enough: a_column + (column_span - 1) <= columns
 			table_tall_enough: a_row + (row_span - 1) <= rows
 		local
@@ -242,34 +244,43 @@ feature -- Status report
 		end
 
 	readable: BOOLEAN is True
+		-- `Current' is always readable.
+
 	writable: BOOLEAN is True
+		-- `Current' is always writeable.
 
 feature -- Status settings
 
 	enable_homogeneous is
-			-- Set each item in the table to be equal in size
+			-- Set each item in `Current' to be equal in size
 			-- to that of the largest item.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.enable_homogeneous
 		end
 
 	disable_homogeneous is
 			-- Allow items to have varying sizes.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.disable_homogeneous
 		end
 	
 	set_row_spacing (a_value: INTEGER) is
-			-- Spacing in-between rows.
+			-- Assign `a_value' to the spacing in-between rows, in pixels.
 		require
+			not_destroyed: not is_destroyed
 			positive_value: a_value >= 0
 		do
 			implementation.set_row_spacing (a_value)
 		end
 
 	set_column_spacing (a_value: INTEGER) is
-			-- Spacing in-between columns.
+			-- Assign `a_value' to the spacing in-between columns, in pixels.
 		require
+			not_destroyed: not is_destroyed
 			positive_value: a_value >= 0
 		do
 			implementation.set_column_spacing (a_value)
@@ -278,14 +289,16 @@ feature -- Status settings
 	set_border_width (a_value: INTEGER) is
 			-- Assign `a_value' to `border_width'.
 		require
+			not_destroyed: not is_destroyed
 			positive_value: a_value >= 0
 		do
 			implementation.set_border_width (a_value)
 		end
 
 	resize (a_column, a_row: INTEGER) is
-			-- Resize the table to (`a_column' * `a_row').
+			-- Resize the table to hold `a_column' by `a_row' widgets.
 		require
+			not_destroyed: not is_destroyed
 			a_column_positive: a_column >= 1
 			a_row_positive: a_row >= 1
 			columns_resizeable: columns_resizable_to (a_column)
@@ -308,7 +321,8 @@ feature -- Status settings
 				until
 					col_index > column_max
 				loop
-					new.put (item (col_index, row_index), ((row_index - 1) * a_column) + col_index)
+					new.put (item (col_index, row_index),
+						((row_index - 1) * a_column) + col_index)
 					col_index := col_index + 1
 				end
 				row_index := row_index + 1
@@ -339,18 +353,23 @@ feature -- Element change
 			--   2 |          |         |
 			--     +----------+---------+
 			--
-			-- To describe the widget in the table as shown above
+			-- To describe the widget in the table as shown above,
 			-- the corresponding coordinates would be (1, 1, 2, 1)
 		require
+			not_destroyed: not is_destroyed
 			v_not_void: v /= Void
 			v_not_current: v /= Current
+			v_not_contained: not has (v)
+			v_parent_void: v.parent = Void
+			v_not_parent_of_current: not is_parent_recursive (v)
 			a_column_positive: a_column >= 1
 			a_row_positive: a_row >= 1
 			column_span_positive: column_span >= 1
 			row_span_positive: row_span >= 1
 			table_wide_enough: a_column + (column_span - 1) <= columns
 			table_tall_enough: a_row + (row_span - 1) <= rows
-			table_area_clear: area_clear (a_column, a_row, column_span, row_span)
+			table_area_clear:
+				area_clear (a_column, a_row, column_span, row_span)
 		local
 			a_col_ctr, a_row_ctr, a_cell_index: INTEGER
 		do
@@ -376,8 +395,9 @@ feature -- Element change
 		end
 
 	remove (v: EV_WIDGET) is
-			-- Remove `v' from table if present.
+			-- Remove `v' from `Current' if present.
 		require
+			not_destroyed: not is_destroyed
 			item_not_void: v /= Void
 			item_in_table: has (v)
 		local
@@ -400,9 +420,21 @@ feature -- Element change
 			item_removed: not has (v)
 		end
 
+feature -- Conversion
+
+	linear_representation: LINEAR [EV_WIDGET] is
+			-- Representation as a linear structure
+		do
+			check
+				not_destroyed: not is_destroyed
+			end
+			Result := item_list
+		end
+
 feature {NONE} -- Contract support
 
 	parent_of_items_is_current: BOOLEAN is
+			-- Do all items in `Current' have `Current' as parent?
 		local
 			temp_list: ARRAYED_LIST [EV_WIDGET]
 		do
@@ -441,44 +473,22 @@ feature {NONE} -- Contract support
 				l.forth
 			end
 		end
-
-	make_for_test is
-		local
-			a_x, a_y: INTEGER
-			a_but: EV_TOGGLE_BUTTON
-		do
-			default_create
-			resize (5, 5)
-			from
-				a_y := 1
-			until
-				a_y > 5
-			loop
-				from
-					a_x := 1
-				until
-					a_x > 5
-				loop
-					if ((a_x + a_y) \\ 2 = 0) then
-						create a_but.make_with_text (
-						"("+a_x.out+","+a_y.out+")"
-						)
-						a_but.set_background_color (
-							create {EV_COLOR}.make_with_rgb (1, 0, 0)
-						)
-						put (a_but, a_x, a_y, 1, 1)
-					end
-					a_x := a_x + 1
-				end
-				a_y := a_y + 1
-			end
-				
-		end
-
-
-feature {NONE} -- Implementation
+		
+feature {EV_ANY_I} -- Implementation
 	
 	implementation: EV_TABLE_I
+		-- Responsible for interaction with the native graphics toolkit.
+	
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_TABLE_IMP} implementation.make (Current)
+			columns := 2
+			rows := 2
+			array_make (1, columns * rows)
+		end
 
 end -- class EV_TABLE
 
@@ -497,61 +507,3 @@ end -- class EV_TABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.9  2000/06/07 17:28:12  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.6.4.16  2000/06/06 23:42:11  rogers
---| Added border_width and set_border_width. Removed redundent requires.
---|
---| Revision 1.6.4.15  2000/06/06 23:26:06  king
---| Updated make_for_test
---|
---| Revision 1.6.4.14  2000/06/06 19:52:39  king
---| Added postconditions, updated comments
---|
---| Revision 1.6.4.13  2000/06/06 17:50:35  king
---| Correctly setting upper on array resize
---|
---| Revision 1.6.4.12  2000/06/06 17:32:04  king
---| Added resizing code, possible infinite loop if resize is smaller
---|
---| Revision 1.6.4.11  2000/06/06 01:28:16  king
---| Half implemented resize, mapping calculation is incorrect
---|
---| Revision 1.6.4.10  2000/06/06 00:42:18  king
---| Added resize
---|
---| Revision 1.6.4.5  2000/05/31 22:36:33  king
---| Updated make_for_test
---|
---| Revision 1.6.4.1  2000/05/03 19:10:08  oconnor
---| mergred from HEAD
---|
---| Revision 1.8  2000/02/22 18:39:51  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.7  2000/02/14 11:40:51  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.6.6.2  2000/01/27 19:30:52  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.6.6.1  1999/11/24 17:30:52  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.6.2.3  1999/11/04 23:10:55  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.6.2.2  1999/11/02 17:20:13  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

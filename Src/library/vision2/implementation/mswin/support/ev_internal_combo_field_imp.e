@@ -1,9 +1,8 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" Text field inside a combo-box-ex when it is%
-		% editable. It receive all the events, it forward%
-		% them."
+		% editable. It receive all the events and forewards them.%
+		%Mswindows implementation."
 	note: "Created by pointer from the system."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -15,17 +14,20 @@ class
 inherit
 	WEL_SINGLE_LINE_EDIT
 		redefine
-			window_process_message,
 			parent,
 			on_left_button_down,
+			on_middle_button_down,
 			on_right_button_down,
 			on_left_button_up,
+			on_middle_button_up,
 			on_right_button_up,
 			on_left_button_double_click,
+			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
 			on_key_down,
 			on_key_up,
+			on_erase_background,
 			on_set_focus,
 			on_kill_focus,
 			on_set_cursor,
@@ -51,7 +53,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	parent: EV_COMBO_BOX_IMP
-			-- Parent of the text field.
+			-- Parent of `Current'.
 
 feature {NONE} -- Implementation
 
@@ -162,13 +164,13 @@ feature {NONE} -- Implementation
 		end
 
 	on_set_focus is
-			-- Wm_setfocus message
+			-- Wm_setfocus message.
 		do
 			parent.on_set_focus
 		end
 
 	on_kill_focus is
-			-- Wm_killfocus message
+			-- Wm_killfocus message.
 		do
 			parent.on_kill_focus
 		end
@@ -180,108 +182,52 @@ feature {NONE} -- Implementation
 			parent.on_set_cursor (hit_code)
 		end
 
-feature {WEL_DISPATCHER} -- Message dispatcher
-
-	window_process_message (hwnd: POINTER; msg, wparam,
-		lparam: INTEGER): INTEGER is
-			-- Call the routine `on_*' corresponding to the
-			-- message `msg'.
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
 		do
-			if msg = Wm_mousemove then
-				on_mouse_move (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
-			elseif msg = Wm_setcursor then
-				on_set_cursor (cwin_lo_word (lparam))
-			elseif msg = Wm_size then
-				on_size (wparam,
-					cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
-			elseif msg = Wm_move then
-				on_move (cwin_lo_word (lparam),
-					cwin_hi_word (lparam))
-			elseif msg = Wm_lbuttondown then
-				on_left_button_down (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
-			elseif msg = wm_lbuttonup then
-				on_left_button_up (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
-			elseif msg = Wm_lbuttondblclk then
-				on_left_button_double_click (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
-			elseif msg = Wm_mbuttondown then
-				on_middle_button_down (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
-			elseif msg = Wm_mbuttonup then
-				on_middle_button_up (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
-			elseif msg = Wm_mbuttondblclk then
-				on_middle_button_double_click (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
-			elseif msg = Wm_rbuttondown then
-				on_right_button_down (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
-			elseif msg = Wm_rbuttonup then
-				on_right_button_up (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
-			elseif msg = Wm_rbuttondblclk then
-				on_right_button_double_click (wparam,
-					c_mouse_message_x (lparam),
-					c_mouse_message_y (lparam))
-			elseif msg = Wm_timer then
-				on_timer (wparam)
-			elseif msg = Wm_setfocus then
-				on_set_focus
-			elseif msg = Wm_killfocus then
-				on_kill_focus
-			elseif msg = Wm_keydown then
-				on_key_down (wparam, lparam)
-			elseif msg = Wm_keyup then
-				on_key_up (wparam, lparam)
-			elseif msg = Wm_showwindow then
-				on_wm_show_window (wparam, lparam)
-			elseif msg = Wm_notify then
-				on_wm_notify (wparam, lparam)
-			elseif msg = Wm_destroy then
-				on_wm_destroy
-			else
-				default_process_message (msg, wparam, lparam)
-			end
+			disable_default_processing
+			set_message_return_value (1)
 		end
 
 end -- class EV_INTERNAL_COMBO_FIELD_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.5  2000/06/07 17:27:57  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.6  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.8.6  2000/08/11 19:09:55  rogers
+--| Fixed copyright clause. Now use ! instead of |. Formatting.
+--|
+--| Revision 1.2.8.5  2000/08/08 01:44:15  manus
+--| No need for redefining the messages handling procedure, the new one from
+--| WEL will do it.
+--|
+--| Revision 1.2.8.4  2000/06/12 22:13:13  rogers
+--| Removed FIXME NOT_REVIEWED. Comments. Formatting.
 --|
 --| Revision 1.2.8.3  2000/05/09 00:49:41  manus
 --| Update with recent WEL changes:
@@ -290,8 +236,8 @@ end -- class EV_INTERNAL_COMBO_FIELD_IMP
 --|
 --| Revision 1.2.8.2  2000/05/07 03:53:09  manus
 --| No need to set `exists' explicitely since it is not an attribute anymore and
---| we are using `exists' of WEL_ANY that computes this value automatically without
---| user intervention.
+--| we are using `exists' of WEL_ANY that computes this value automatically
+--| without user intervention.
 --|
 --| Revision 1.2.8.1  2000/05/03 19:09:17  oconnor
 --| mergred from HEAD

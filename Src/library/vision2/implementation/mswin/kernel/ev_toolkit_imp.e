@@ -45,6 +45,12 @@ end -- class EV_TOOLKIT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.8.1  2000/05/03 19:09:13  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.2  2000/02/14 11:40:40  oconnor
 --| merged changes from prerelease_20000214
 --|

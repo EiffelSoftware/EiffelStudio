@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"Eiffel Vision tool bar separator. Implementation interface."
@@ -11,18 +10,6 @@ deferred class
 
 inherit
 	EV_ITEM_I
-		redefine
-			parent
-		end
-
-feature -- Access
-
-	parent: EV_ITEM_LIST [EV_TOOL_BAR_ITEM] is
-			-- The parent of the Current widget
-			-- Can be void.
-		do
-			Result ?= {EV_ITEM_I} Precursor
-		end
 
 end -- class EV_TOOL_BAR_SEPARATOR_I
 
@@ -47,6 +34,15 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.2  2000/08/17 20:07:42  rogers
+--| Reviewed file. Removed redefinition of parent.
+--|
+--| Revision 1.6.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.12  2000/04/12 17:55:10  brendel
 --| Description.
 --|

@@ -1,6 +1,6 @@
 indexing
 	description: "EiffelVision toolbar, mswindows implementation."
-	status: "See notica at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,92 +15,63 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			minimum_width,
-			on_right_button_down,
-			on_left_button_down,
-			on_middle_button_down,
-			on_left_button_up,
-			minimum_height,
-			integrate_changes,
-			pnd_press
+			on_right_button_down, on_left_button_down, on_middle_button_down,
+ 			on_left_button_up, on_left_button_double_click,
+ 			on_middle_button_double_click, on_right_button_double_click,
+ 			minimum_width, minimum_height, pnd_press
 		redefine
-			parent_imp,
-			wel_move_and_resize,
-			on_mouse_move,
-			on_key_down,
-			destroy,
-			interface,
-			initialize,
-			on_left_button_double_click
+			parent_imp, wel_move_and_resize, on_mouse_move, on_key_down,
+			destroy, interface, initialize, on_left_button_double_click,
+			x_position, y_position, disable_sensitive, enable_sensitive,
+			update_for_pick_and_drop
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
 		undefine
-			internal_set_minimum_width,
-			internal_set_minimum_height,
-			internal_set_minimum_size
+			ev_set_minimum_width, ev_set_minimum_height, ev_set_minimum_size,
+			initialize_sizeable 
 		redefine
-			compute_minimum_width,
-			compute_minimum_height,
-			compute_minimum_size,
-			interface
+			compute_minimum_width, compute_minimum_height, 
+			compute_minimum_size, interface
 		end
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
 		redefine
-			interface,
-			initialize
+			interface, initialize, on_left_button_double_click
 		end
 	
-	WEL_FLAT_TOOL_BAR
+	WEL_IMAGELIST_TOOL_BAR
 		rename
-			make as wel_make,
-			insert_button as wel_insert_button,
-			parent as wel_parent,
-			set_parent as wel_set_parent,
-			shown as is_displayed,
-			destroy as wel_destroy,
-			destroy_item as wel_destroy_item,
-			item as wel_item,
-			enabled as is_sensitive, 
-			width as wel_width,
-			height as wel_height,
-			tooltip as wel_tooltip,
-			set_tooltip as wel_set_tooltip,
-			x as x_position,
-			y as y_position,
-			move as wel_move,
-			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			make as wel_make, insert_button as wel_insert_button,
+			parent as wel_parent, set_parent as wel_set_parent,
+			shown as is_displayed, destroy as wel_destroy,
+			destroy_item as wel_destroy_item, item as wel_item,
+			enabled as is_sensitive,  width as wel_width,
+			height as wel_height, tooltip as wel_tooltip,
+			set_tooltip as wel_set_tooltip, x as x_position,
+			y as y_position, move as wel_move, resize as wel_resize,
+			move_and_resize as wel_move_and_resize,
+			has_capture as wel_has_capture
 		undefine
-			set_width,
-			set_height,
-			remove_command,
-			on_left_button_down,
-			on_mouse_move,
-			on_left_button_up,
-			on_right_button_down,
-			on_right_button_up,
-			on_right_button_double_click,
-			on_key_up,
-			on_key_down,
-			on_kill_focus,
-			on_set_focus,
-			on_set_cursor,
-			window_process_message,
-			show,
-			hide,
-			on_size
+			set_width, set_height, on_mouse_move, on_left_button_down,
+			on_middle_button_down, on_right_button_down, on_left_button_up,
+			on_middle_button_up, on_right_button_up, 
+			on_left_button_double_click, on_middle_button_double_click,
+			on_right_button_double_click, on_key_up, on_key_down, 
+			on_kill_focus, on_desactivate, on_set_focus, on_set_cursor,
+			on_char, show, hide, on_size, x_position, y_position,
+			on_sys_key_down, default_process_message, on_sys_key_up
 		redefine
-			wel_set_parent,
-			wel_resize,
-			wel_move,
-			wel_move_and_resize,
-			default_process_message,
-			on_left_button_double_click
+			wel_set_parent, wel_resize, wel_move, wel_move_and_resize,
+ 			on_left_button_double_click, default_style
 		end
 
 	WEL_COLOR_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	EV_SHARED_IMAGE_LIST_IMP
 		export
 			{NONE} all
 		end
@@ -111,7 +82,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create `Current'.
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			create ev_children.make (2)
@@ -122,18 +93,19 @@ feature {NONE} -- Initialization
 		local
 			ctrl: EV_INTERNAL_TOOL_BAR_IMP
 		do
-			create ctrl.make (default_parent, "EV_INTERNAL_TOOL_BAR_IMP")
+			create ctrl.make_with_toolbar (default_parent, Current)
 			wel_make (ctrl, 0)	
-			{EV_PRIMITIVE_IMP} Precursor
-			{EV_ITEM_LIST_IMP} Precursor	
+			Precursor {EV_PRIMITIVE_IMP}
+			Precursor {EV_ITEM_LIST_IMP}
 			create radio_group.make
+			new_item_actions.extend (~add_button)
 			new_item_actions.extend (~add_radio_button)
 			new_item_actions.extend (~add_toggle_button)
 			remove_item_actions.extend (~remove_radio_button)
 		end
 
 feature -- Access
-
+	
 	bar: EV_INTERNAL_TOOL_BAR_IMP is
 			-- WEL container of `Current'
 		do
@@ -153,6 +125,56 @@ feature -- Access
 				Result := Void
 			else
 				Result ?= bar.parent
+			end
+		end
+
+	x_position: INTEGER is
+			-- `Result' is x_position of `Current' in pixels.
+			-- If `wel_parent' not Void then `Result' is relative to
+			-- `wel_parent' else `Result' is relative to screen.
+			--| We redefine this as the parent of `Current' is always `bar'
+			--| which has the same coordinates, we need to perform our
+			--| calculations against the parent of `bar'.
+		local
+			rect: WEL_RECT
+			point: WEL_POINT
+		do
+			if is_show_requested then
+				if wel_parent /= Void then	
+					rect := bar.window_rect
+					create point.make (rect.x, rect.y)
+					point.screen_to_client (bar.parent)
+					Result := point.x
+				else
+					Result := absolute_x
+				end
+			else
+				Result := child_cell.x
+			end
+		end
+
+	y_position: INTEGER is
+			-- `Result' is y_position of `Current' in pixels.
+			-- If `wel_parent' not Void then `Result' is relative to
+			-- `wel_parent' else `Result' is relative to screen.
+			--| We redefine this as the parent of `Current' is always `bar'
+			--| which has the same coordinates, we need to perform our
+			--| calculations against the parent of `bar'.
+		local
+			rect: WEL_RECT
+			point: WEL_POINT
+		do
+			if is_show_requested then
+				if wel_parent /= Void then	
+					rect := bar.window_rect
+					create point.make (rect.x, rect.y)
+					point.screen_to_client (bar.parent)
+					Result := point.y
+				else
+					Result := absolute_y
+				end
+			else
+				Result := child_cell.x
 			end
 		end
 
@@ -180,7 +202,59 @@ feature -- Status setting
 				parent_imp.interface.prune (Current.interface)
 			end
 			bar.destroy
+			if default_imagelist /= Void then
+				destroy_toolbar_default_imagelist (default_imagelist)
+			end
+			if hot_imagelist /= Void then
+				destroy_toolbar_hot_imagelist (hot_imagelist)
+			end
 		end
+
+	enable_sensitive is
+			-- Make object sensitive to user input.
+		do
+			set_insensitive (False)
+			Precursor
+		end
+
+	disable_sensitive is
+			-- Make object non-sensitive to user input.
+		do
+			set_insensitive (True)
+			Precursor
+		end
+
+	set_insensitive (flag: BOOLEAN) is
+			-- If `flag' then make `Current' insensitive. Else
+			-- make `Current' sensitive.
+		local
+			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+			widget_imp: EV_TOOL_BAR_BUTTON_IMP
+			cur: CURSOR
+		do
+			if not ev_children.is_empty then
+				list := ev_children
+				from
+					cur := list.cursor
+					list.start
+				until
+					list.after
+				loop
+					widget_imp := list.item
+					if flag then
+						widget_imp.disable_sensitive 
+					else
+						if not widget_imp.internal_non_sensitive then
+							widget_imp.enable_sensitive
+						end
+					end
+					list.forth
+				end
+				list.go_to (cur)
+			end
+		ensure
+			cursor_not_moved: old ev_children.index = ev_children.index
+		end	
 
 feature -- Element change
 
@@ -188,15 +262,13 @@ feature -- Element change
 			-- Insert `button' at the `an_index' position in `Current'.
 		local
 			but: WEL_TOOL_BAR_BUTTON
-			pixmap: EV_PIXMAP
-			gray_pixmap: EV_PIXMAP
 			button_text: STRING
 			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
 			separator_button: EV_TOOL_BAR_SEPARATOR_IMP
 			toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 		do
 			-- We need to check the type of tool bar button.
-			-- Dpending on the type, `but' is created differently.
+			-- Depending on the type, `but' is created differently.
 			radio_button ?= button
 			toggle_button ?= button
 			if radio_button /= Void or toggle_button /= Void then
@@ -213,39 +285,49 @@ feature -- Element change
 			end
 
 				-- First, we take care of the pixmap,
-			pixmap := button.pixmap
-			if pixmap /= Void then
-					-- The first bitmap added determine the size of all bitmaps
-				if not has_bitmap then
-					set_bitmap_size(pixmap.width, pixmap.height)
-				end
-
-				gray_pixmap := button.gray_pixmap
-				if gray_pixmap = Void then
-						-- No gray pixmap, so both normal and hot state will
-						-- have the same bitmap.
-					gray_pixmap := pixmap
-				end
-
-				add_pixmap (gray_pixmap)
-				add_hot_pixmap (pixmap)
-				but.set_bitmap_index (last_bitmap_index)
+			if button.has_pixmap then
+				button.set_pixmap_in_parent
+				but.set_bitmap_index (button.image_index)
 			end
 
-				-- Then, the text of the button.
-			button_text := button.text -- Speed optimization
-			if button_text /= Void and then not button_text.empty then
-				add_strings (<<button_text>>)
-				but.set_string_index (last_string_index)
+			
+				-- If we are a separator then there is no need to handle the text.
+			if separator_button = Void then	
+					-- Then, the text of the button.
+				button_text := button.text -- Speed optimization
+				if button_text /= Void and then not button_text.is_empty then
+						--| We now add an empty text to all children without
+						--| text, so that they do not share text with other buttons.
+						--| Only performed when a text is added to the first child.
+					if children_with_text = 1 then
+						update_buttons_with_no_text
+					end
+					add_strings (<<button_text>>)
+					but.set_string_index (last_string_index)
+				else
+						--| If we do not have a text, then we need to add an empty text in
+						--| order to stop the text from another button being used.
+						--| Adding the empty text causes the toolbar to re-size, so
+						--| we only add the empty text when there are children already with text.
+					if a_child_has_text then
+						add_strings (<<" ">>)
+						but.set_string_index (last_string_index)	
+					end
+				end
 			end
 
-			-- Finally, we insert the button
+				-- Finally, we insert the button
 			wel_insert_button (an_index - 1, but)
+			auto_size
 
-			-- We notify the change to integrate them if necessary
+			if not is_sensitive then
+				disable_button (button.id)
+			end
+
+				-- We notify the change to integrate them if necessary
 			notify_change (2 + 1, Current)
 		end
-
+		
 	remove_item (button: EV_TOOL_BAR_BUTTON_IMP) is
 			-- Remove `button' from `current'.
 		local
@@ -272,12 +354,12 @@ feature -- Basic operation
 		do
 			if comctl32_version >= version_471 then
 					-- New version using API available starting with IE4.
-				internal_set_minimum_width (get_max_width)
+				ev_set_minimum_width (get_max_width)
 			else
-					-- Old version
+					-- No API available, we can only guess the right value...
 				num := separator_count
 				num := (count - num) * buttons_width + num * separator_width
-				internal_set_minimum_width (num)
+				ev_set_minimum_width (num)
 			end
 		end
 
@@ -286,22 +368,19 @@ feature -- Basic operation
 		do
 			if comctl32_version >= version_471 then
 					-- New version using API available starting with IE4.
-				internal_set_minimum_height (get_max_height)
+				ev_set_minimum_height (get_max_height)
 			else
-					-- No API available, we only guess the right value...
-				internal_set_minimum_height (buttons_height + 6)
+					-- No API available, we can only guess the right value...
+				ev_set_minimum_height (buttons_height + 4)
 			end
 		end
 
 	compute_minimum_size is
 			-- Recompute both the minimum_width and then
 			-- minimum_height of `Current'.
-		local
-			num: INTEGER
 		do
-			num := separator_count
-			num := (count - num) * buttons_width + num * separator_width
-			internal_set_minimum_size (num, buttons_height + 6)
+			compute_minimum_height
+			compute_minimum_width
 		end
 
 	internal_reset_button (but: EV_TOOL_BAR_BUTTON_IMP) is
@@ -310,7 +389,7 @@ feature -- Basic operation
 			-- button as the text or the pixmap. Yet, it should only be a 
 			-- Temporary implementation. For now, no message is available to 
 			-- change the text of a button. But this implementation should
-			-- be changes as soon as windows allow a more direct way to 
+			-- be changed as soon as windows allow a more direct way to 
 			-- change an attribute.
 		local
 			an_index: INTEGER
@@ -335,45 +414,272 @@ feature -- Basic operation
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos', `y_pos' and `button' to the
-			-- appropriate event item.
+			-- appropriate event item. Called on a pointer button press.
+		local
+			pre_drop_it, post_drop_it: EV_TOOL_BAR_BUTTON_IMP
+			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
+			item_press_actions_called: BOOLEAN
+			pt: WEL_POINT
+		do
+			pre_drop_it := find_item_at_position (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+
+			if pre_drop_it /= Void and not transport_executing
+				and not item_is_in_pnd then
+				radio_button ?= pre_drop_it
+				if radio_button /= Void and button = 1 and 
+					radio_button.is_sensitive then
+					-- We check `button' as the radio button is only
+					-- selected if the button is equal to 1.
+					-- If another button is pressed, we do not need to
+					-- unselect the selected button from the group.
+					radio_button.update_radio_states
+				end
+				if pre_drop_it.pointer_button_press_actions_internal
+					/= Void then
+					pre_drop_it.interface.pointer_button_press_actions.call
+						([x_pos - child_x (pre_drop_it.interface), y_pos,
+						button, 0.0, 0.0, 0.0, pt.x, pt.y])
+				end
+					-- We record that the press actions have been called.
+				item_press_actions_called := True
+			end
+				--| The pre_drop_it.parent /= Void is to check that the item that
+				--| was originally clicked on, has not been removed during the press actions.
+				--| If the parent is now void then it has, and there is no need to continue
+				--| with `pnd_press'.
+			if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
+				not parent_is_pnd_source and pre_drop_it.parent /= Void then
+				pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+			elseif pnd_item_source /= Void then
+				pnd_item_source.pnd_press (
+					x_pos, y_pos, button, pt.x, pt.y)
+			end
+
+			if item_is_pnd_source_at_entry = item_is_pnd_source then
+				pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+			end
+
+			if not press_actions_called then
+				interface.pointer_button_press_actions.call
+					([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
+					
+			post_drop_it := find_item_at_position (x_pos, y_pos)
+
+				-- If there is an item where the button press was recieved,
+				-- and it has not changed from the start of this procedure
+				-- then call `pointer_button_press_actions'. 
+				--| Internal_propagate_pointer_press in
+				--| EV_MULTI_COLUMN_LIST_IMP has a fuller explanation.
+			if not item_press_actions_called then
+				if post_drop_it /= Void and pre_drop_it = post_drop_it then
+					radio_button ?= post_drop_it
+					if radio_button /= Void and button = 1 and 
+						radio_button.is_sensitive then
+						-- We check `button' as the radio button is only
+						-- selected if the button is equal to 1.
+						-- If another button is pressed, we do not need to
+						-- unselect the selected button from the group.
+						radio_button.update_radio_states
+					end
+					post_drop_it.interface.pointer_button_press_actions.call
+							([x_pos - child_x (post_drop_it.interface), y_pos,
+							button, 0.0, 0.0, 0.0, pt.x, pt.y])
+				end
+			end
+		end
+
+	internal_propagate_pointer_double_press
+		(keys, x_pos, y_pos, button: INTEGER) is
+			-- Propagate `keys', `x_pos', `y_pos' and `button' to the
+			-- appropriate event item. Called on a pointer button double click.
 		local
 			it: EV_TOOL_BAR_BUTTON_IMP
-			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
 			pt: WEL_POINT
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-				if it /= Void and it.is_transport_enabled and
-				not parent_is_pnd_source then
-					it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-				elseif pnd_item_source /= Void then
-					pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-				end
 			if it /= Void then
-				radio_button ?= it
-				if radio_button /= Void and button = 1 and 
-					radio_button.is_sensitive then
-					-- We check `button' as the radio button is only selected
-					-- if the button is equal to 1. If another button is
-					-- pressed, we do not need to unselect the selected
-					-- button from the group.
-					radio_button.update_radio_states
-				end
-				it.interface.pointer_button_press_actions.call
+				it.interface.pointer_double_press_actions.call
 				([x_pos - child_x (it.interface), y_pos, button, 0.0, 0.0, 0.0,
 				pt.x, pt.y])
-				it.interface.select_actions.call ([])
+			end
+		end
+		
+feature {EV_ANY_I}
+
+	update_for_pick_and_drop (starting: BOOLEAN) is
+			-- Pick and drop status has changed so update appearence of
+			-- all children.
+		do
+			from
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				ev_children.item.update_for_pick_and_drop (starting)
+				ev_children.forth
+			end
+		end
+		
+	
+feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
+
+	button_associated_with_id (command_id: INTEGER): EV_TOOL_BAR_BUTTON_IMP is
+			-- `Result' is button associated with `command_id'.
+		local
+			found: BOOLEAN
+			local_children: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+		do
+			local_children := ev_children
+			from
+				local_children.start
+			until
+				found or else local_children.after
+			loop
+				Result ?= local_children.item
+				found := Result /= Void and then Result.id = command_id
+				local_children.forth
+			end
+			check
+				button_with_command_id_exists: Result /= Void
 			end
 		end
 
+	on_button_clicked (command_id: INTEGER) is
+			-- Execute `select_actions' of EV_TOOL_BAR_BUTTON_IMP associated
+			-- with `command_id'.
+		require
+			valid_command_id: command_id > 0
+		local
+			but: EV_TOOL_BAR_BUTTON_IMP
+			toggle_but: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+		do
+				-- Assign button associated with `command_id' to but.
+			but := button_associated_with_id (command_id)
+
+				-- Update the state of the toggle button 
+				-- (if it's a toggle button)
+			toggle_but ?= but
+			if toggle_but /= Void then
+				toggle_but.update_selected (button_checked  (command_id))
+			end
+
+				-- Call the actions.
+			but.interface.select_actions.call ([])
+		end
+
+	button_tooltip_text (command_id: INTEGER): STRING is
+			--	`Result' is tooltip text for button with `command_id'.
+		local
+			but: EV_TOOL_BAR_BUTTON_IMP
+		do
+			but := button_associated_with_id (command_id)
+			Result := but.tooltip
+		end
+
+feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
+
+	default_imagelist: EV_IMAGE_LIST_IMP
+			-- "Default" image list associated with this toolbar.
+
+	hot_imagelist: EV_IMAGE_LIST_IMP
+			-- "Hot" image list associated with this toolbar.
+
+	setup_image_list (pixmap_width :INTEGER; pixmap_height :INTEGER) is
+			-- Create the image list and associate it
+			-- to `Current' if not already associated.
+		require
+			imageslists_are_void: default_imagelist = Void and hot_imagelist = Void
+		do
+			default_imagelist := get_toolbar_default_imagelist_with_size (pixmap_width, pixmap_height)
+			hot_imagelist := get_toolbar_hot_imagelist_with_size (pixmap_width, pixmap_height)
+			set_image_list (default_imagelist)
+			set_hot_image_list (hot_imagelist)
+		ensure
+			imagelists_not_void: default_imagelist /= Void and hot_imagelist /= Void
+		end
+
+	remove_image_list is
+			-- Destroy the image list and remove it
+			-- from `Current'.
+		require
+			imagelists_not_void: default_imagelist /= Void and hot_imagelist /= Void
+		do
+				-- Destroy the image list.
+			destroy_imagelist (default_imagelist)
+			destroy_imagelist (hot_imagelist)
+			default_imagelist := Void
+			hot_imagelist := Void
+
+				-- Remove the image list from the list.
+			set_image_list (Void)
+			set_hot_image_list (Void)
+		ensure
+			imageslists_are_void: default_imagelist = Void and hot_imagelist = Void
+ 		end
+
 feature {NONE} -- Implementation
 
-	item_type: EV_TOOL_BAR_BUTTON_IMP is
-			-- An empty feature to give a type.
-			-- We don't use the genericity because it is
-			-- too complicated with the multi-platform design.
-			-- Need to be redefined.
+	update_buttons_with_no_text is
+			-- Update display of all buttons with text = Void.
+		local
+			a_cursor: CURSOR
+			but: EV_TOOL_BAR_SEPARATOR_IMP
 		do
+			a_cursor := ev_children.cursor
+			from
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				if ev_children.item.text = Void then
+					but ?= ev_children.item
+					if but = Void then
+						internal_reset_button (ev_children.item)
+					end
+				end
+				ev_children.forth
+			end
+			ev_children.go_to (a_cursor)
+		end
+	a_child_has_text: BOOLEAN is
+			-- Does a child of `Current' have a text set?
+		local
+			a_cursor: CURSOR
+		do
+			a_cursor := ev_children.cursor
+			from
+				ev_children.start
+			until
+				ev_children.off or Result = True
+			loop
+				if ev_children.item.text /= Void then
+					Result := True
+				end
+				ev_children.forth
+			end
+			ev_children.go_to (a_cursor)
+		end
+	
+	children_with_text: INTEGER is
+			-- Does a child of `Current' have a text set?
+		local
+			a_cursor: CURSOR
+		do
+			a_cursor := ev_children.cursor
+			from
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				if ev_children.item.text /= Void then
+					Result := Result + 1
+				end
+				ev_children.forth
+			end
+			ev_children.go_to (a_cursor)
 		end
 
 	separator_count: INTEGER is
@@ -402,106 +708,6 @@ feature {NONE} -- Implementation
 			ev_children.go_i_th (original_index)
 		end
 
-feature {NONE} -- Implementation
-
-	add_hot_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Add `a_pixmap' to the toolbar image list.
-			-- The pixmap is resized if needed to fit into the 
-			-- image list.
-		require
-			a_pixmap_not_void: a_pixmap /= Void
-		local
-			mask_bitmap		: WEL_BITMAP
-			bitmap			: WEL_BITMAP
-			graphres		: WEL_GRAPHICAL_RESOURCE
-			resized_pixmap	: EV_PIXMAP
-			pixmap_imp		: EV_PIXMAP_IMP_STATE
-		do
-			pixmap_imp ?= a_pixmap.implementation
-
-				-- Try to get the icon
-			graphres := pixmap_imp.icon
-				
-				-- If there is no icon, try a cursor
-			if graphres = Void then
-				graphres := pixmap_imp.cursor
-			end
-
-			if graphres /= Void then
-					-- Add the icon to image_list and set image_index.
-				add_hot_icon (graphres)
-			else
-				if (pixmap_imp.height /= bitmaps_height) or 
-				   (pixmap_imp.width /= bitmaps_width)
-				then
-						-- We use a_pixmap as interface to access `ev_clone'
-					resized_pixmap := a_pixmap.ev_clone (a_pixmap)
-					resized_pixmap.stretch (
-						bitmaps_width,
-						bitmaps_height
-						)
-					pixmap_imp ?= resized_pixmap.implementation
-				end
-
-				bitmap := pixmap_imp.bitmap
-				mask_bitmap := pixmap_imp.mask_bitmap
-				if mask_bitmap /= Void then
-					add_hot_masked_bitmap(bitmap, mask_bitmap)
-				else
-					add_hot_bitmap(bitmap)
-				end
-			end
-		end
-
-	add_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Add `a_pixmap' to the toolbar image list.
-			-- The pixmap is resized if needed to fit into the 
-			-- image list.
-		require
-			a_pixmap_not_void: a_pixmap /= Void
-		local
-			mask_bitmap		: WEL_BITMAP
-			bitmap			: WEL_BITMAP
-			graphres		: WEL_GRAPHICAL_RESOURCE
-			resized_pixmap	: EV_PIXMAP
-			pixmap_imp		: EV_PIXMAP_IMP_STATE
-		do
-			pixmap_imp ?= a_pixmap.implementation
-
-				-- Try to get the icon
-			graphres := pixmap_imp.icon
-				
-				-- If there is no icon, try a cursor
-			if graphres = Void then
-				graphres := pixmap_imp.cursor
-			end
-
-			if graphres /= Void then
-					-- Add the icon to image_list and set image_index.
-				add_icon (graphres)
-			else
-				if (pixmap_imp.height /= bitmaps_height) or 
-				   (pixmap_imp.width /= bitmaps_width)
-				then
-						-- We use a_pixmap as interface to access `ev_clone'
-					resized_pixmap := a_pixmap.ev_clone (a_pixmap)
-					resized_pixmap.stretch (
-						bitmaps_width,
-						bitmaps_height
-						)
-					pixmap_imp ?= resized_pixmap.implementation
-				end
-
-				bitmap := pixmap_imp.bitmap
-				mask_bitmap := pixmap_imp.mask_bitmap
-				if mask_bitmap /= Void then
-					add_masked_bitmap(bitmap, mask_bitmap)
-				else
-					add_bitmap(bitmap)
-				end
-			end
-		end
-
 feature {NONE} -- WEL Implementation
 
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
@@ -509,7 +715,7 @@ feature {NONE} -- WEL Implementation
 			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
 		do
-			bar.move_and_resize (a_x, a_y, a_width, height, repaint)
+			bar.move_and_resize (a_x, a_y, a_width, height - 4, repaint)
 			reposition
 		end
 
@@ -517,7 +723,7 @@ feature {NONE} -- WEL Implementation
 			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
 		do
-			bar.resize (a_width, height)
+			bar.resize (a_width, height - 4)
 			reposition
 		end
 
@@ -527,53 +733,10 @@ feature {NONE} -- WEL Implementation
 			bar.move (a_x, a_y)
 		end
 
-feature {NONE} -- WEL Implementation
-
 	wel_set_parent (a_parent: WEL_WINDOW) is
 			-- Assign `a_parent' as the parent of `Current'. 
 		do
 			bar.set_parent (a_parent)
-		end
-
-	default_process_message (msg, wparam, lparam: INTEGER) is
-			-- Process `msg' which has not been processed by
-			-- `process_message'.
-		do
-			if msg = Wm_ncpaint then
-				on_wm_ncpaint (wparam)
-			end
-		end
-
-	on_wm_ncpaint (wparam: INTEGER) is
-			-- Wm_ncpaint message (NON-CLIENT area PAINT)
-			-- Draw the part that is below the toolbar
-			-- i.e. the separation line.
-		require
-			exists: exists
-		local
-			dc: WEL_WINDOW_DC
-			color: WEL_COLOR_REF
-			pen: WEL_PEN
-			cur_width: INTEGER
-		do
-			cur_width := wel_width
-			create dc.make (Current)
-			dc.get
-
-			create color.make_system (Color_btnshadow)
-			create pen.make_solid (1, color)
-			dc.select_pen (pen)
-			dc.line (-1, y_position, cur_width, y_position)
-			dc.unselect_pen
-
-			create color.make_system (Color_btnhighlight)
-			create pen.make_solid (1, color)
-			dc.select_pen (pen)
-			dc.line (-1, y_position + 1, cur_width, y_position + 1)
-			dc.unselect_pen
-
-			dc.quick_release
-			disable_default_processing
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
@@ -593,14 +756,14 @@ feature {NONE} -- WEL Implementation
 			if pnd_item_source /= Void then
 				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed
 		do
-			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
+			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
 	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -614,6 +777,28 @@ feature {NONE} -- WEL Implementation
 			it ?= find_item_at_position (x_pos, y_pos)  
 			if it /= Void then 
 				disable_default_processing
+			end
+			Precursor {EV_ITEM_LIST_IMP} (keys, x_pos, y_pos)
+		end
+
+	default_style: INTEGER is
+			-- Default style used to create the control
+		local
+			Ccs_constants: WEL_CCS_CONSTANTS
+		once
+			create Ccs_constants
+
+			Result := 
+				Ws_visible + 
+				Ws_child + 
+				Ws_clipchildren +
+				Ws_clipsiblings +
+				Tbstyle_tooltips + 
+				Ccs_constants.Ccs_nodivider
+
+				-- Add the flat style if available.
+			if comctl32_version >= version_470 then
+				Result := Result + Tbstyle_flat
 			end
 		end
 
@@ -649,15 +834,31 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 		do
 			r ?= w.implementation
 			if r /= Void then
-				if not radio_group.empty then
+				if not radio_group.is_empty then
 					r.disable_select
 				end
 				r.set_radio_group (radio_group)
 			end
 		end
 
+	add_button (w: EV_TOOL_BAR_ITEM) is
+			-- Called when `w' has been added to `Current'.
+		require
+			w_not_void: w /= Void
+		local
+			button_imp: EV_TOOL_BAR_BUTTON_IMP
+		do
+			button_imp ?= w.implementation
+			check
+				implementation_not_void: button_imp /= Void
+			end
+			if not button_imp.is_sensitive then
+				disable_button (button_imp.id)
+			end
+		end
+
 	remove_radio_button (w: EV_TOOL_BAR_ITEM) is
-			-- Called when `w' has beedn removed from `Current'.
+			-- Called when `w' has been removed from `Current'.
 		require
 			w_not_void: w /= Void
 		local
@@ -767,36 +968,233 @@ feature {EV_ANY_I}
 
 end -- class EV_TOOL_BAR_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.67  2000/06/09 01:49:44  manus
---| Merged version 1.24.4.8  from DEVEL branch to trunc
+--| Revision 1.68  2001/06/07 23:08:17  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
---| Revision 1.66  2000/06/07 17:28:01  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.24.4.59  2001/05/25 17:35:40  rogers
+--| Removed unused local variables from insert_item.
+--|
+--| Revision 1.24.4.58  2001/05/22 22:02:47  rogers
+--| Added update_buttons_with_no_text, a_child_has_text, and
+--| children_with_text. These features are used to fix the bug (Internal bug
+--| tracking system 2566) in which buttons without texts would display the
+--| text of their neighbours. Modified insert_item to fix this bug.
+--|
+--| Revision 1.24.4.57  2001/05/22 18:28:31  rogers
+--| Fixed bug in insert_item. `Current' will now correctly handle buttons with
+--| no text. Previously, if you had buttons with both text and no test in `
+--| `Current', the buttons that were supposed to have no text would
+--| be displayed with the text of another button.
+--|
+--| Revision 1.24.4.56  2001/03/16 19:06:04  rogers
+--| Redefined update_for_pick_and_drop.
+--|
+--| Revision 1.24.4.55  2001/02/15 01:26:39  rogers
+--| Fixed bug in internal_propagate_pointer_press. We now check that
+--| `pre_drop_mcl_row' is still parented before calling `pnd_press' on
+--| `pre_drop_mcl_row'. This is because a button press can cause the item to be
+--| removed.
+--|
+--| Revision 1.24.4.54  2001/02/02 00:47:46  rogers
+--| On_key_down now calls process_tab_key before Precursor. This ensures that
+--| any tab movement we do in our implementation can be overriden by the user
+--| with key_press_actions.
+--|
+--| Revision 1.24.4.53  2001/01/26 23:18:45  rogers
+--| Undefined on_sys_key_down inherited from WEL.
+--|
+--| Revision 1.24.4.52  2001/01/09 19:07:42  rogers
+--| Undefined default_process_message from WEL.
+--|
+--| Revision 1.24.4.51  2000/11/29 00:38:20  rogers
+--| Changed empty to is_empty.
+--|
+--| Revision 1.24.4.50  2000/11/14 18:19:35  rogers
+--| Renamed has_capture inherited from WEL as wel_has_capture.
+--|
+--| Revision 1.24.4.49  2000/11/09 21:39:35  rogers
+--| Removed unreferenced variables from insert_item.
+--|
+--| Revision 1.24.4.48  2000/11/09 16:54:40  pichery
+--| - Added shared imagelist.
+--| - Changed pixmap handling, it is now done as in EV_LIST_IMP
+--|   and EV_TREE_IMP. i.e. much of the work is done in
+--|   EV_TOOL_BAR_BUTTON_IMP.
+--| - Cosmetics
+--|
+--| Revision 1.24.4.47  2000/11/06 17:54:42  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.24.4.46  2000/10/31 16:27:12  rogers
+--| Fixed bug with deselection of tool_bar_radio_buttons.
+--|
+--| Revision 1.24.4.45  2000/10/25 23:34:50  rogers
+--| Modified internal_propagate_pointer_press so that the button press events
+--| are recieved in the correct order in conjunction with the pick/drag and
+--| drop. Correct order is before when starting a pick and after when ending
+--| a pick.
+--|
+--| Revision 1.24.4.44  2000/10/24 19:56:31  rogers
+--| Fixed bug in internal_propagate_pointer_press if you were in PND and had
+--| dropped on an item and remoced that item from `Current' in the drop
+--| actions.
+--|
+--| Revision 1.24.4.43  2000/10/12 15:50:27  pichery
+--| Added reference tracking for GDI objects to decrease
+--| the number of GDI objects alive.
+--|
+--| Revision 1.24.4.42  2000/10/11 00:01:49  raphaels
+--| Added `on_desactivate' to list of undefined features from WEL_WINDOW.
+--|
+--| Revision 1.24.4.41  2000/09/18 18:29:01  rogers
+--| Redefined x_position and y_position as the fact that `Current' is always
+--| inside an EV_INTERNAL_TOOL_BAR_IMP was not taken into account correctly.
+--|
+--| Revision 1.24.4.40  2000/09/13 22:09:20  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.24.4.39  2000/08/23 16:15:51  rogers
+--| Removed unreferenced locals from enable_sensitive and disable_sensitive.
+--|
+--| Revision 1.24.4.38  2000/08/22 16:19:47  rogers
+--| Removed unecessary fixme. Comment, formatting.
+--|
+--| Revision 1.24.4.37  2000/08/17 16:33:47  rogers
+--| Removed item_type as it is no longer used. Comments.
+--|
+--| Revision 1.24.4.36  2000/08/17 16:20:28  rogers
+--| Removed redefinition of x_position and y_position as it is no longer
+--| necessary.
+--|
+--| Revision 1.24.4.35  2000/08/17 00:27:38  rogers
+--| Added set_insensitive. Enable_sensitive and disable_sensitive now both
+--| use this feature.
+--|
+--| Revision 1.24.4.34  2000/08/15 19:10:33  brendel
+--| Now all buttons in toolbar are not only disabled when its parent is,
+--| but also have their gray masked pixmap displayed.
+--|
+--| The new `is_sensitive' behaviour is not yet implemented.
+--|
+--| Revision 1.24.4.33  2000/08/11 18:29:46  rogers
+--| Fixed copyright clauses. Now use ! instead of |.
+--|
+--| Revision 1.24.4.32  2000/08/09 20:57:13  oconnor
+--| use ev_clone instead of clone as per instructions of manus
+--|
+--| Revision 1.24.4.31  2000/08/09 00:26:42  rogers
+--| Removed commented code and unreferenced variables from x_position and
+--| y_position. The code had originally added to fix problems when the
+--| tool bar was parented by a split area. Now that split area is platform
+--| dependent again, this code was no longer required.
+--|
+--| Revision 1.24.4.30  2000/08/08 20:44:37  rogers
+--| Replaced all calls to ev_clone with calls to clone.
+--|
+--| Revision 1.24.4.29  2000/08/08 02:50:40  manus
+--| Updated inheritance with new WEL messages handling
+--| New resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--|
+--| Revision 1.24.4.28  2000/07/25 23:24:43  rogers
+--| x_position and y_position had a fix for EV_SPLIT_AREA. EV_SPLIT_AREA is
+--| being re-implemented so this fix does not work now. It may also be no
+--| longer necessary.
+--|
+--| Revision 1.24.4.27  2000/07/21 00:01:24  rogers
+--| Added button_tooltip_text to return the tooltip text of a button identified
+--| with a command_id.
+--|
+--| Revision 1.24.4.25  2000/07/12 19:49:58  rogers
+--| Removed debugging output.
+--|
+--| Revision 1.24.4.24  2000/07/12 19:32:54  rogers
+--| Now redefine x_position and y_position from EV_PRIMITIVE_IMP. `Current' is
+--| always contained inside EV_INTERNAL_TOOL_BAR_IMP, and x_position and
+--| y_position need to take this into account.
+--|
+--| Revision 1.24.4.23  2000/07/12 16:06:34  rogers
+--| Removed debugging output.
+--|
+--| Revision 1.24.4.22  2000/07/12 16:05:22  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.24.4.21  2000/06/22 19:06:22  pichery
+--| - Updated the state of the toggle button when it is pressed or
+--| released.
+--|
+--| Revision 1.24.4.20  2000/06/21 21:34:26  manus
+--| Cosmetics
+--|
+--| Revision 1.24.4.19  2000/06/19 22:10:39  rogers
+--| Removed undefinition of integrate_changes as it is no longer inherited
+--| from ev_sizeable_imp.
+--|
+--| Revision 1.24.4.18  2000/06/17 07:58:33  pichery
+--| Fixed bug in `compute_minimum_size'
+--|
+--| Revision 1.24.4.17  2000/06/16 07:17:44  pichery
+--| Removed the drawing of the separator on the top
+--| of the Toolbar
+--| Made some speed optimizations.
+--|
+--| Revision 1.24.4.16  2000/06/15 23:33:43  rogers
+--| Removed code from set_minimum_size which would only set the
+--| minimum_size if it was not smaller that the sum of the children.
+--| This behaviour was incorrect.
+--|
+--| Revision 1.24.4.15  2000/06/13 18:34:28  rogers
+--| Removed undefintion of remove_command.
+--|
+--| Revision 1.24.4.14  2000/06/13 03:59:40  pichery
+--| Removed the drawing of the separator.
+--|
+--| Revision 1.24.4.13  2000/06/12 18:11:20  rogers
+--| Corrected type of argument for add_button.
+--|
+--| Revision 1.24.4.12  2000/06/12 17:23:56  rogers
+--| Added add_button which is extended into the new_item_actions. This
+--| disables the button as required when a button has been parented in
+--| `Current'.
+--|
+--| Revision 1.24.4.11  2000/06/09 23:19:24  rogers
+--| Fixed internal_propagate_pointer_press. It was previously calling
+--| pointer_button_press_actions instead of pointer_double_press_actions.
+--|
+--| Revision 1.24.4.10  2000/06/09 20:58:47  manus
+--| Cosmetics.
+--| Added `on_button_clicked' that performs the button `select_actions' when we
+--| click on it. It is not done on `button_left_down' as it was done before.
+--|
+--| Revision 1.24.4.9  2000/06/09 20:20:54  rogers
+--| Added internal_propagate_pointer_press. Comments. Formatting.
 --|
 --| Revision 1.24.4.8  2000/06/05 20:43:14  manus
 --| Update code with new signature of `notify_change'.
---| Removed call to `set_button_size' because the call can only be performed only once before
+--| Removed call to `set_button_size' because the call can only be performed
+--| only once before
 --| anything is put in the toolbar.
 --|
 --| Revision 1.24.4.7  2000/05/31 23:27:47  rogers
@@ -811,8 +1209,15 @@ end -- class EV_TOOL_BAR_IMP
 --| Redone the pixmap handling.
 --|
 --| Revision 1.24.4.4  2000/05/03 22:35:05  brendel
---| Revision 1.65  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.24.4.3  2000/05/03 22:21:42  pichery
+--| - Replaced calls to `width'/`height' to calls to
+--|   `wel_width'/`wel_height'.
+--| - Cosmetics / Optimizations using local variables
+--|
+--| Revision 1.24.4.2  2000/05/03 19:09:51  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.64  2000/04/27 23:14:44  rogers
 --| Undefined on_left_button_up from EV_PRIMITIVE_IMP.

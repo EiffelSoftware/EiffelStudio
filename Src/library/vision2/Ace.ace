@@ -1,0 +1,12 @@
+-- Eiffel Vision Ace file for `use' in a system Ace file.
+-- The system Ace file should contain a line like this:
+-- all vision: "$EIFFEL/library/vision" use "Vision.ace" end
+
+exclude
+	"mswin";
+	"obsolete";
+default
+	assertion (all)
+option
+	assertion (ensure): EV_COLOR, EV_COLOR_IMP
+end

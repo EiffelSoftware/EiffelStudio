@@ -25,6 +25,8 @@ inherit
 			interface
 		end
 
+	EV_BUTTON_ACTION_SEQUENCES_I
+
 feature -- Access
 
 	is_default_push_button: BOOLEAN is
@@ -38,8 +40,6 @@ feature -- Status Setting
 	enable_default_push_button is
 			-- Set the style of the button corresponding
 			-- to the default push button.
-		require
-			is_not_default_push_button: not is_default_push_button
 		deferred
 		ensure
 			is_default_push_button: is_default_push_button
@@ -48,11 +48,18 @@ feature -- Status Setting
 	disable_default_push_button is
 			-- Remove the style of the button corresponding
 			-- to the default push button.
-		require
-			is_default_push_button: is_default_push_button
 		deferred
 		ensure
 			is_not_default_push_button: not is_default_push_button
+		end
+
+	enable_can_default is
+			-- Allow the style of the button to be changed to the
+			-- default push button if tabbed to by the user
+			-- (GTK implementation needed only)
+		require
+			is_not_default_push_button: not is_default_push_button
+		deferred
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -84,6 +91,21 @@ end -- class EV_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.23.4.4  2001/02/06 20:59:24  pichery
+--| Removed abusive require clause.
+--|
+--| Revision 1.23.4.3  2000/07/24 21:30:48  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.23.4.2  2000/05/04 00:18:00  king
+--| Added enable_can_default
+--|
+--| Revision 1.23.4.1  2000/05/03 19:09:06  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.26  2000/04/29 03:16:24  pichery
 --| Added feature `is_default_push_button',
 --| `enable/disable_push_button'

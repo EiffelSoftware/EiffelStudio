@@ -1,11 +1,10 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Eiffel Vision dialog. Mswindows implementation."
+	description: "Eiffel Vision dialog. Mswindows implementation (hidden window)."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_DIALOG_IMP
 
 inherit
@@ -13,119 +12,404 @@ inherit
 		undefine
 			propagate_background_color,
 			propagate_foreground_color,
-			last_call_was_destroy
+			lock_update,
+			unlock_update
 		redefine
 			interface
 		end
 
 	EV_TITLED_WINDOW_IMP
 		redefine
-			default_style,
-			default_ex_style,
 			interface,
-			on_get_min_max_info,
-			on_wm_close,
-			show
+			make,
+			show,
+			enable_modal,
+			disable_modal,
+			process_message,
+			set_x_position,
+			set_y_position,
+			set_position
 		end
 
 create
-	make
+	make,
+	make_with_real_dialog
 
 feature {NONE} -- Initialization
 
-	--| FIXME replace destroy agent with "cancel" result agent.
-	--| FIXME Default is_modal
-
-feature {NONE} -- Externals
-
-	show_modal is
-			-- Show and wait until window is closed.
+	make (an_interface: like interface) is
+			-- Create `Current' with interface `an_interface'.
 		do
-			if is_modal then
-				show
-				block
-			else
-				enable_modal
-				show
-				block
-				disable_modal			
-			end
+			internal_class_name := new_class_name + "_AS_DIALOG"
+			base_make (an_interface)
+			make_top ("EV_DIALOG_WINDOW")
+			create accel_list.make (10)
+			apply_center_dialog := True
 		end
-	
-	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
-			-- Called by WEL to request min/max size of window.
-			-- Is called just before move and/or resize.
+
+	make_with_real_dialog (other_imp: EV_DIALOG_IMP_COMMON) is
+			-- Create `Current' using attributes of `other_imp'.
+		require
+			other_imp_not_void: other_imp /= Void
 		local
-			max_size, max_position: WEL_POINT
+			app_imp: EV_APPLICATION_IMP
 		do
-				-- Prevent the maximize state.
-			Precursor (min_max_info)
-			create max_size.make (width, height)
-			create max_position.make (x_position, y_position)
- 			min_max_info.set_max_size (max_size)
-			min_max_info.set_max_position (max_position)
+			apply_center_dialog := False
+
+			make (other_imp.interface)
+
+				-- Copy the attributes from the dialog to the window
+			copy_from_real_dialog (other_imp)
+
+				-- Move the children
+			move_children (other_imp)
+
+				-- Destroy other.
+			other_imp.destroy_implementation
+
+				-- Add this dialog as root window.
+			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
+			app_imp.add_root_window (Current)
 		end
 
 feature -- Status Report
 
 	is_closeable: BOOLEAN
-			-- Is the window closeable by the user?
+			-- Is `Current' closeable by the user?
 			-- (Through a clik on the Window Menu, or by
-			-- pressing ALT-F4)
+			-- pressing ALT-F4).
 
 feature -- Status Setting
-
-	show is
-			-- Request that `Current' be displayed when its parent is.
-		do
-				-- Before displaying current dialog we force a size computation
-				-- that way the dialog displays at first with correct size.
-			compute_minimum_size
-			Precursor {EV_TITLED_WINDOW_IMP}
-		end
 	
+	enable_modal is
+			-- Set the dialog to be modal.
+		do
+			is_modal := True
+		end
+
+	disable_modal is
+			-- Set the dialog not to be modal.
+		do
+			is_modal := False
+		end
+
 	enable_closeable is
-			-- Set the window to be closeable by the user
+			-- Set `Current' to be closeable by the user.
 			-- (Through a clik on the Window Menu, or by
-			-- pressing ALT-F4)
+			-- pressing ALT-F4).
 		do
 			is_closeable := True
-			set_style (default_style + Ws_sysmenu)
 		end
 
 	disable_closeable is
-			-- Set the window not to be closeable by the user
+			-- Set `Current'to be non closeable by the user
 		do
 			is_closeable := False
-			set_style (default_style)
+		end
+		
+feature -- Element change
+
+	set_x_position (a_x: INTEGER) is
+			-- Set `x_position' with `a_x'
+		do
+			Precursor (a_x)
+			apply_center_dialog := False
 		end
 
-feature {NONE} -- WEL Implementation
-	
-	on_wm_close is
-			-- User clicked on "close" ('X').
+	set_y_position (a_y: INTEGER) is
+			-- Set `y_position' with `a_y'
 		do
-			if is_closeable then
-				interface.close_actions.call ([])
+			Precursor (a_y)
+			apply_center_dialog := False
+		end
+
+	set_position (new_x_position: INTEGER; new_y_position: INTEGER) is
+			-- Put at horizontal position `new_x_position' and at
+			-- vertical position `new_y_position' relative to parent.
+		do
+			Precursor (new_x_position, new_y_position)
+			apply_center_dialog := False
+		end		
+
+feature -- Basic operations
+
+	show_modal_to_window (a_parent_window: EV_WINDOW) is
+			-- Show `Current' and wait until window is closed.
+		do
+			call_show_actions := True
+			parent_window := a_parent_window
+			promote_to_modal_dialog
+			interface.implementation.show_modal_to_window (a_parent_window)
+		end
+
+	show_relative_to_window (a_parent_window: EV_WINDOW) is
+			-- Show `Current' with respect to `a_parent_window'.
+		do
+			call_show_actions := True
+			parent_window := a_parent_window
+			promote_to_modeless_dialog
+			interface.implementation.show_relative_to_window (a_parent_window)
+		end
+
+	show is
+			-- Show `Current' if not already displayed.
+		local
+			button_imp: EV_BUTTON_IMP
+		do
+			if not is_displayed then
+				set_text (internal_title)
+				update_style
+				if parent_window /= Void and then apply_center_dialog then
+					center_dialog
+					apply_center_dialog := False
+				end
+				
+					-- Set the focus to the `default_push_button' if any
+				if default_push_button /= Void and then 
+					default_push_button.is_show_requested and then
+					default_push_button.is_sensitive
+				then
+					button_imp ?= interface.default_push_button.implementation
+					button_imp.enable_default_push_button
+					button_imp.set_focus
+				end	
+				Precursor {EV_TITLED_WINDOW_IMP}
+					-- Calling update style causes on_set_focus to be called
+					-- before the children are correctly displayed in `Current'.
+					-- This means that the `focus_in_actions' will be fired before
+					-- the show actions are called in this case. Is there a way to avoid this?		
+				if call_show_actions then
+					if show_actions_internal /= Void then
+						show_actions_internal.call ([])
+					end
+					call_show_actions := False
+				end
 			end
-			on_wm_close_executed := True
-				-- Do not actually close the window.
-			set_default_processing (False)
 		end
 
-	default_style: INTEGER is
-			-- By default we don't show the "Window Menu"
+feature {NONE} -- Implementation
+
+	move_children (other_imp: EV_DIALOG_IMP_COMMON)is
+			-- Move the children to the dialog or the window, depending
+			-- on which is currently selected in `wel_item'.
+		local
+			loc_item_imp: EV_WIDGET_IMP
 		do
-			Result := Precursor - ws_sysmenu
+			loc_item_imp ?= other_imp.item_imp
+			if loc_item_imp /= Void then
+				loc_item_imp.set_top_level_window_imp (Current)
+				loc_item_imp.wel_set_parent (Current)
+			end
 		end
 
-	default_ex_style: INTEGER is
+	update_style is
+			-- Update the style of the window accordingly to the
+			-- options set (`user_can_resize', `is_closeable', ...)
+			-- and set the pixmap.
+		local
+			new_style: INTEGER
+			bit_op: WEL_BIT_OPERATIONS
 		do
-			Result :=  Ws_ex_controlparent
-				+ Ws_ex_toolwindow
+				-- Change the style of the window.
+			create bit_op
+			new_style := style
+			if user_can_resize then
+				new_style := bit_op.set_flag (new_style, Ws_thickframe)
+				new_style := bit_op.set_flag (new_style, Ws_maximizebox)
+			else
+				new_style := bit_op.clear_flag (new_style, Ws_thickframe)
+				new_style := bit_op.clear_flag (new_style, Ws_maximizebox)
+			end
+			if is_closeable then
+				new_style := bit_op.set_flag (new_style, Ws_sysmenu)
+			else
+				new_style := bit_op.clear_flag (new_style, Ws_sysmenu)
+			end
+			new_style := bit_op.clear_flag (new_style, Ws_minimizebox)
+			set_style (new_style)
 		end
+
+	center_dialog is
+				-- Center the dialog relative to the parent window.
+		require
+			parent_window /= Void
+		local
+			x_pos, y_pos: INTEGER
+			a_screen: EV_SCREEN
+			rescued: INTEGER
+		do
+			if rescued = 0 then
+				x_pos := parent_window.x_position + (parent_window.width - width) // 2
+				y_pos := parent_window.y_position + (parent_window.height - height) // 2
+			end
+			if (x_pos < 0 or y_pos < 0) or (rescued = 1) then
+				create a_screen
+				x_pos := (a_screen.width - width) // 2
+				y_pos := (a_screen.height - height) // 2
+			end
+			if (rescued < 2) then
+				set_position (x_pos, y_pos)
+			end
+		rescue
+			rescued := rescued + 1
+			retry
+		end
+
+feature {EV_DIALOG_I} -- Implementation
+
+	apply_center_dialog: BOOLEAN
+			-- Should `center_dialog' be called?
+
+	parent_window: EV_WINDOW
+			-- Parent window if any, Void otherwise
 
 	interface: EV_DIALOG
+			-- Interface for `Current'
+
+	destroy_implementation is
+			-- Destroy `Current' but does not wipe out the children.
+		local
+			app_i: EV_APPLICATION_I
+			app_imp: EV_APPLICATION_IMP
+		do
+			app_i := (create {EV_ENVIRONMENT}).application.implementation
+			app_imp ?= app_i
+			check
+				implementation_not_void: app_imp /= void
+			end
+			app_imp.remove_root_window (Current)
+
+			wel_destroy_window
+			is_destroyed := True
+		end
+
+feature {NONE} -- Implementation
+
+	promote_to_modal_dialog is
+			-- Promote the current implementation to
+			-- EV_DIALOG_IMP_MODAL which allows modality
+		local
+			modal_dialog_imp: EV_DIALOG_IMP_MODAL
+		do
+			create modal_dialog_imp.make_with_dialog_window (Current)
+			interface.replace_implementation (modal_dialog_imp)
+		end
+
+	promote_to_modeless_dialog is
+			-- Promote the current implementation to
+			-- EV_DIALOG_IMP_MODELESS which allows modality
+		local
+			modeless_dialog_imp: EV_DIALOG_IMP_MODELESS
+		do
+			create modeless_dialog_imp.make_with_dialog_window (Current)
+			interface.replace_implementation (modeless_dialog_imp)
+		end
+
+	copy_from_real_dialog (other_imp: EV_DIALOG_IMP_COMMON) is
+			-- Fill current with `other_imp' content.
+		do
+			accel_list := other_imp.accel_list
+			accelerators := other_imp.accelerators
+			accelerators_internal := other_imp.accelerators_internal
+			accept_cursor := other_imp.accept_cursor
+			actual_drop_target_agent := other_imp.actual_drop_target_agent
+			awaiting_movement := other_imp.awaiting_movement
+			background_color_imp := other_imp.background_color_imp
+			background_pixmap_imp := other_imp.background_pixmap_imp
+			base_make_called := other_imp.base_make_called
+			child_cell := other_imp.child_cell
+			close_request_actions_internal := other_imp.close_request_actions_internal
+			commands := other_imp.commands
+			conforming_pick_actions_internal := other_imp.conforming_pick_actions_internal
+			cursor_pixmap := other_imp.cursor_pixmap
+			deny_cursor := other_imp.deny_cursor
+			drop_actions_internal := other_imp.drop_actions_internal
+			focus_in_actions_internal := other_imp.focus_in_actions_internal
+			focus_out_actions_internal := other_imp.focus_out_actions_internal
+			foreground_color_imp := other_imp.foreground_color_imp
+			has_heavy_capture := other_imp.has_heavy_capture
+			help_enabled := other_imp.help_enabled
+			id := other_imp.id
+			internal_height := other_imp.internal_height
+			internal_help_context := other_imp.internal_help_context
+			internal_icon_name := other_imp.internal_icon_name
+			internal_non_sensitive := other_imp.internal_non_sensitive
+			internal_pebble_positioning_enabled := other_imp.internal_pebble_positioning_enabled
+			internal_pick_x := other_imp.internal_pick_x
+			internal_pick_y := other_imp.internal_pick_y
+			internal_title := other_imp.internal_title
+			internal_width := other_imp.internal_width
+			is_closeable := other_imp.is_closeable
+			is_destroyed := other_imp.is_destroyed
+			is_dnd_in_transport := other_imp.is_dnd_in_transport
+			is_in_min_height := other_imp.is_in_min_height
+			is_in_min_width := other_imp.is_in_min_width
+			is_minheight_recomputation_needed := other_imp.is_minheight_recomputation_needed
+			is_minwidth_recomputation_needed := other_imp.is_minwidth_recomputation_needed
+			is_modal := other_imp.is_modal
+			is_notify_originator := other_imp.is_notify_originator
+			is_pnd_in_transport := other_imp.is_pnd_in_transport
+			is_transport_enabled := other_imp.is_transport_enabled
+			item := other_imp.item
+			key_press_actions_internal := other_imp.key_press_actions_internal
+			key_press_string_actions_internal := other_imp.key_press_string_actions_internal
+			key_release_actions_internal := other_imp.key_release_actions_internal
+			last_pointed_target := other_imp.last_pointed_target
+			lower_bar := other_imp.lower_bar
+			maximum_height := other_imp.maximum_height
+			maximum_width := other_imp.maximum_width
+			move_actions_internal := other_imp.move_actions_internal
+			new_item_actions_internal := other_imp.new_item_actions_internal
+			pebble := other_imp.pebble
+			pebble_function := other_imp.pebble_function
+			pick_actions_internal := other_imp.pick_actions_internal
+			pick_x := other_imp.pick_x
+			pick_y := other_imp.pick_y
+			pnd_stored_cursor := other_imp.pnd_stored_cursor
+			pointer_button_press_actions_internal := other_imp.pointer_button_press_actions_internal
+			pointer_button_release_actions_internal := other_imp.pointer_button_release_actions_internal
+			pointer_double_press_actions_internal := other_imp.pointer_double_press_actions_internal
+			pointer_enter_actions_internal := other_imp.pointer_enter_actions_internal
+			pointer_leave_actions_internal := other_imp.pointer_leave_actions_internal
+			pointer_motion_actions_internal := other_imp.pointer_motion_actions_internal
+			pointer_x := other_imp.pointer_x
+			pointer_y := other_imp.pointer_y
+			press_action := other_imp.press_action
+			radio_group := other_imp.radio_group
+			release_action := other_imp.release_action
+			remove_item_actions := other_imp.remove_item_actions
+			resize_actions_internal := other_imp.resize_actions_internal
+			rubber_band_is_drawn := other_imp.rubber_band_is_drawn
+			scroller := other_imp.scroller
+			shared := other_imp.shared
+			upper_bar := other_imp.upper_bar
+			user_can_resize := other_imp.user_can_resize
+			user_interface_mode := other_imp.user_interface_mode
+			apply_center_dialog := other_imp.apply_center_dialog
+			call_show_actions := other_imp.call_show_actions
+
+			set_position (other_imp.x_position, other_imp.y_position)
+		end
+
+	process_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: INTEGER): INTEGER is
+			-- Process all message plus `WM_INITDIALOG'.
+		local
+			button_actions: EV_NOTIFY_ACTION_SEQUENCE
+			cancel_button: EV_BUTTON
+		do
+			if msg = Wm_close then
+					-- Simulate a click on the default_cancel_button
+				cancel_button := interface.default_cancel_button
+				if cancel_button /= Void then
+					button_actions := cancel_button.select_actions
+					if button_actions /= Void then
+						button_actions.call ([])
+					end
+				end
+			else
+				Result := Precursor {EV_TITLED_WINDOW_IMP} (hwnd, msg, wparam, lparam)
+			end
+		end
 
 end -- class EV_DIALOG_IMP
 
@@ -144,84 +428,3 @@ end -- class EV_DIALOG_IMP
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.18  2000/06/09 01:23:52  manus
---| Merged version 1.6.8.2 from DEVEL branch to HEAD.
---|
---| Revision 1.17  2000/06/07 17:27:59  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.16  2000/05/13 01:10:36  pichery
---| Fixed bugs.
---|
---| Revision 1.6.8.2  2000/05/07 03:51:02  manus
---| Added `show' redefinition in context of dialog to force a computation of
---| minimum size before displaying it.
---|
---| Revision 1.6.8.1  2000/05/03 19:09:28  oconnor
---| mergred from HEAD
---|
---| Revision 1.15  2000/05/01 19:52:09  pichery
---| Removed feature `block' (now implemented in
---| EV_TITLED_WINDOW_IMP).
---|
---| Revision 1.14  2000/04/29 03:31:33  pichery
---| New dialog implementation
---|
---| Revision 1.13  2000/04/20 18:27:50  brendel
---| Block now also ends when window is destroyed.
---|
---| Revision 1.12  2000/04/20 16:29:15  brendel
---| Uncommented imp of show_modal.
---|
---| Revision 1.11  2000/04/19 00:40:52  brendel
---| Revised. enable/disable modal are still to be implemented.
---|
---| Revision 1.10  2000/04/04 19:29:50  rogers
---| Redefined initialize, to give the dialog a minimum size, to
---| fix the packing problem. Only a temporary solution.
---|
---| Revision 1.9  2000/02/29 17:59:02  rogers
---| Undefined last_call_was_destroy  inherited from EV_DIALOG_I as last_call_from_destroy is now re-defined in EV_WINDOW_IMP. Needs fixing.
---|
---| Revision 1.8  2000/02/19 05:45:00  oconnor
---| released
---|
---| Revision 1.7  2000/02/14 11:40:42  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.6.10.7  2000/02/08 07:21:03  brendel
---| Minor changes to run through compiler.
---| Still needs major revision.
---|
---| Revision 1.6.10.6  2000/02/01 23:25:35  brendel
---| Removed undefine of set_default_minimum_size.
---|
---| Revision 1.6.10.5  2000/01/27 19:30:20  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.6.10.4  2000/01/27 18:08:23  brendel
---| Added blocking_window and set_blocking_window.
---| Still experimenting with default_options.
---|
---| Revision 1.6.10.3  2000/01/26 18:34:33  brendel
---| Implemented all features.
---|
---| Revision 1.6.10.2  2000/01/26 02:10:47  brendel
---| Added features block and show_modal.
---|
---| Revision 1.6.10.1  1999/11/24 17:30:26  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.6.6.3  1999/11/02 17:20:09  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

@@ -18,13 +18,14 @@ inherit
 		end
 
 create
-	default_create,
-	make_for_test
+	default_create
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_HORIZONTAL_SEPARATOR_I
 			-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
@@ -49,52 +50,3 @@ end -- class EV_HORIZONTAL_SEPARATOR
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.10  2000/03/21 02:11:00  oconnor
---| comments and formatting
---|
---| Revision 1.9  2000/03/01 20:28:53  king
---| Corrected export clauses for implementation and create_imp/act_seq
---|
---| Revision 1.8  2000/03/01 03:30:06  oconnor
---| added make_for_test
---|
---| Revision 1.7  2000/02/29 19:20:23  oconnor
---| removed simicolons from indexing
---|
---| Revision 1.6  2000/02/29 18:09:10  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.5  2000/02/22 18:39:51  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.4  2000/02/14 11:40:52  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.3.6.5  2000/01/28 22:24:24  oconnor
---| released
---|
---| Revision 1.3.6.4  2000/01/27 19:30:55  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.3.6.3  2000/01/15 02:32:12  oconnor
---| formatting
---|
---| Revision 1.3.6.2  2000/01/11 18:44:06  rogers
---| altered to comply with the major Vision2 changes. removed make and added
---| create implementation.
---|
---| Revision 1.3.6.1  1999/11/24 17:30:54  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.3.2.2  1999/11/02 17:20:13  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

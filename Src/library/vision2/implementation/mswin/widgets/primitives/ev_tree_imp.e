@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"Eiffel Vision tree. Mswindows implementation."
@@ -17,26 +16,25 @@ inherit
 			pixmaps_size_changed
 		end
 
-	EV_ITEM_EVENTS_CONSTANTS_IMP
-		rename
-			command_count as item_event_command_count
-		end
-
 	EV_PRIMITIVE_IMP
 		undefine
 			on_right_button_down,
 			on_left_button_down,
 			on_middle_button_down,
 			on_left_button_up,
+			on_left_button_double_click,
+			on_middle_button_double_click,
+			on_right_button_double_click,
 			pnd_press
 		redefine
 			on_mouse_move,
 			on_key_down,
+			on_char,
 			interface,
 			initialize
 		end
 
-	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_NODE]
+	EV_ITEM_LIST_IMP [EV_TREE_NODE]
 		undefine
 			item_by_data
 		redefine
@@ -46,50 +44,31 @@ inherit
 
 	WEL_TREE_VIEW
 		rename
-			make as wel_make,
-			parent as wel_parent,
-			set_parent as wel_set_parent,
-			shown as is_displayed,
-			destroy as wel_destroy,
-			font as wel_font,
-			set_font as wel_set_font,
-			selected_item as wel_selected_item,
-			insert_item as wel_insert_item,
-			count as total_count,
-			item as wel_item,
-			move as wel_move,
-			enabled as is_sensitive, 
-			width as wel_width,
-			height as wel_height,
-			x as x_position,
-			y as y_position,
-			resize as wel_resize,
-			move_and_resize as wel_move_and_resize 
+			make as wel_make, parent as wel_parent,
+			set_parent as wel_set_parent, shown as is_displayed,
+			destroy as wel_destroy, font as wel_font,
+			set_font as wel_set_font, selected_item as wel_selected_item,
+			insert_item as wel_insert_item, count as total_count,
+			item as wel_item, move as wel_move, enabled as is_sensitive, 
+			width as wel_width, height as wel_height, x as x_position,
+			y as y_position, resize as wel_resize,
+			move_and_resize as wel_move_and_resize,
+			has_capture as wel_has_capture,
+			set_tooltip as wel_set_tooltip
 		undefine
-			window_process_message,
-			remove_command,
-			set_width,
-			set_height,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_set_focus,
-			on_kill_focus,
-			on_key_down,
-			on_char,
-			on_key_up,
-			on_set_cursor,
-			show,
-			hide,
-			on_size
+			set_width, set_height, on_left_button_down,
+			on_middle_button_down, on_right_button_down,
+			on_left_button_up, on_middle_button_up,
+			on_right_button_up, on_left_button_double_click,
+			on_middle_button_double_click, on_right_button_double_click,
+			on_mouse_move, on_set_focus, on_kill_focus,
+			on_desactivate, on_key_down, on_char, on_key_up,
+			on_set_cursor, show, hide, on_size, x_position, y_position,
+			on_sys_key_down, default_process_message, on_sys_key_up
 		redefine
-			default_style,
-			on_tvn_selchanged,
-			on_tvn_itemexpanded
+			default_style, on_tvn_selchanged, on_tvn_itemexpanded,
+			on_tvn_selchanging, on_erase_background, collapse_item,
+			expand_item
 		end
 
 	WEL_TVHT_CONSTANTS
@@ -102,13 +81,25 @@ inherit
 			{NONE} all
 		end
 
+	WEL_TVAF_CONSTANTS
+		export
+			{NONE} all
+		end
+	
+	EV_SHARED_IMAGE_LIST_IMP
+		export
+			{NONE} all
+		end
+
+	EV_TREE_ACTION_SEQUENCES_IMP
+
 creation
 	make
 
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a new tree.
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
@@ -118,9 +109,9 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Do post creation initialization.
 		do
-			{EV_PRIMITIVE_IMP} Precursor
-			{EV_ARRAYED_LIST_ITEM_HOLDER_IMP} Precursor
-			{EV_TREE_I} Precursor
+			Precursor {EV_PRIMITIVE_IMP}
+			Precursor {EV_ITEM_LIST_IMP}
+			Precursor {EV_TREE_I}
 			create all_ev_children.make (1)
 
 			is_initialized := True
@@ -129,10 +120,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	all_ev_children: HASH_TABLE [EV_TREE_NODE_IMP, POINTER]
-			-- Children of the tree Classified by their h_item
+			-- Children of `Current' Classified by their h_item
 
 	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
-			-- List of the direct children of the tree.
+			-- List of the direct children of `Current'.
 
 	selected_item: EV_TREE_NODE is
 			-- Currently selected item.
@@ -163,7 +154,7 @@ feature -- Basic operations
 			if par = default_pointer then
 				struct.set_root
 			else
-				struct.set_parent (par)
+					struct.set_parent (par)
 			end
 			struct.set_insert_after (after)
 			struct.set_tree_view_item (item_imp)
@@ -190,11 +181,11 @@ feature -- Basic operations
 		end
 
 	general_remove_item (item_imp: EV_TREE_NODE_IMP) is
-			-- Remove the given item, if it has any children, it store them in
-			-- the item.
+			-- Remove `item_imp' from `Current'.
 		local
 			c: ARRAYED_LIST [EV_TREE_NODE_IMP]
 		do
+			removing_item := True
 			if item_imp.is_parent then
 				from
 					c := get_children (item_imp)
@@ -212,12 +203,13 @@ feature -- Basic operations
 	
 				-- Then, we redraw the tree
 			invalidate
+			removing_item := False
 		end
 
 	get_children (item_imp: EV_TREE_NODE_IMP): 
-	ARRAYED_LIST [EV_TREE_NODE_IMP] is
-			-- List of the direct children of the tree-item.
-			-- If the item is Void, it returns the children of the tree.
+		ARRAYED_LIST [EV_TREE_NODE_IMP] is
+			-- List of the direct children of `item_imp'.
+			-- If the `item_imp' is Void, it returns the children of the tree.
 		local
 			handle: INTEGER
 			hwnd: POINTER
@@ -259,7 +251,7 @@ feature {EV_TREE_NODE_I} -- Implementation
 		end
 
 	remove_item (item_imp: EV_TREE_NODE_IMP) is
-			-- Remove `item_imp' from the children.
+			-- Remove `item_imp' from `Current'.
 		do
 			general_remove_item (item_imp)
 					-- Now explicitly remove the item from ev_children
@@ -306,8 +298,8 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_NODE_IMP is
-			-- Find the item at the given position.
-			-- Position is relative to the toolbar.
+			-- Find the item at `x_pos', `y_pos' pixel coordinates
+			-- within `Current' (Origin of coordinates is top left).
 		local
 			pt: WEL_POINT
 			info: WEL_TV_HITTESTINFO
@@ -322,18 +314,26 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+feature {NONE} -- Implementation
+
+		-- This is assigned `True' at the start of general_remove_item, and
+		-- assigned `False' at the end. When removing a selected item, Windows
+		-- automatically selects the next item. If we override
+		-- on_tvn_selchanging when `removing_item' is `True' then this stops the
+		-- selections occuring and matches GTk's behaviour.
+	removing_item: BOOLEAN
+
 feature {EV_ANY_I} -- WEL Implementation
 
 	image_list: EV_IMAGE_LIST_IMP
 			-- WEL image list to store all images required by items.
 
-	
 	setup_image_list is
 			-- Create the image list and associate it
-			-- to the control if it's not already done.
+			-- to `Current' if it's not already done.
 		do
 				-- Create image list with all images 16 by 16 pixels
-			create image_list.make_with_size (
+			image_list := get_imagelist_with_size (
 				pixmaps_width, 
 				pixmaps_height
 				)
@@ -346,12 +346,12 @@ feature {EV_ANY_I} -- WEL Implementation
 
 	remove_image_list is
 			-- Destroy the image list and remove it
-			-- from the control if it's not already done.
+			-- from `Current' if it's not already done.
 		require
 			image_list_not_void: image_list /= Void
 		do
-				-- Destroy the image list.
-			image_list.destroy
+				-- Remove the image list.
+			destroy_imagelist (image_list)
 			image_list := Void
 
 				-- Remove the image list from the multicolumn list.
@@ -362,7 +362,73 @@ feature {EV_ANY_I} -- WEL Implementation
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
-			-- event.
+			-- event. Called on a pointer button press.
+		local
+			pre_drop_it, post_drop_it: EV_TREE_NODE_IMP
+			pt: WEL_POINT
+			offsets: TUPLE [INTEGER, INTEGER]
+			item_press_actions_called: BOOLEAN
+		do
+			pre_drop_it := find_item_at_position (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+
+			if pre_drop_it /= Void and not transport_executing
+				and not item_is_in_pnd then
+				if pre_drop_it.pointer_button_press_actions_internal
+					/= Void then
+					offsets := pre_drop_it.relative_position
+					pre_drop_it.pointer_button_press_actions.call
+					([x_pos - offsets.integer_arrayed @ 1 + 1,
+					y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0,
+					pt.x, pt.y])
+				end
+					-- We record that the press actions have been called.
+				item_press_actions_called := True
+			end
+				--| The pre_drop_it.parent /= Void is to check that the item that
+				--| was originally clicked on, has not been removed during the press actions.
+				--| If the parent is now void then it has, and there is no need to continue
+				--| with `pnd_press'.
+			if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
+				not parent_is_pnd_source and pre_drop_it.parent /= Void then
+				pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+			elseif pnd_item_source /= Void then 
+				pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+			end
+
+			if item_is_pnd_source_at_entry = item_is_pnd_source then
+				pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+			end
+
+			if not press_actions_called and call_press_event then
+				interface.pointer_button_press_actions.call
+					([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
+
+			post_drop_it := find_item_at_position (x_pos, y_pos)
+
+				-- If there is an item where the button press was recieved,
+				-- and it has not changed from the start of this procedure
+				-- then call `pointer_button_press_actions'. 
+				--| Internal_propagate_pointer_press in EV_MULTI_COLUMN_LIST_IMP
+				--| has a fuller explanation.
+			if not item_press_actions_called then
+				if post_drop_it /= Void and pre_drop_it = post_drop_it and call_press_event then
+					offsets := post_drop_it.relative_position
+					post_drop_it.pointer_button_press_actions.call
+						([x_pos - offsets.integer_arrayed @ 1 + 1,
+						y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0,
+						0.0, pt.x, pt.y])
+				end
+			end
+				-- Reset `call_press_event'.
+			keep_press_event
+		end
+
+	internal_propagate_pointer_double_press
+		(keys, x_pos, y_pos, button: INTEGER) is
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
+			-- event. Called on a pointer button double press.
 		local
 			it: EV_TREE_NODE_IMP
 			pt: WEL_POINT
@@ -370,45 +436,51 @@ feature {EV_ANY_I} -- WEL Implementation
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			if it /= Void and it.is_transport_enabled and
-				not parent_is_pnd_source then
-				it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			elseif pnd_item_source /= Void then 
-				pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			end
-
 			if it /= Void then
 				offsets := it.relative_position
-				it.interface.pointer_button_press_actions.call
+				it.pointer_double_press_actions.call
 					([x_pos - offsets.integer_arrayed @ 1 + 1,
-				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0,
-				pt.x, pt.y])
+					y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0,
+					pt.x, pt.y])
 			end
 		end
 
+
 	default_style: INTEGER is
-			-- Default style used to create the control
+			-- Default style used to create `Current'
 		do
 			Result := Ws_child + Ws_visible + Ws_group
 				+ Ws_tabstop + Ws_border + Tvs_haslines
 				+ Tvs_hasbuttons + Tvs_linesatroot
-				+ Tvs_showselalways
+				+ Tvs_showselalways + Tvs_infotip
+		end
+
+	on_tvn_selchanging (info: WEL_NM_TREE_VIEW) is
+		do
+				-- If we are removing the selected item then we set the return
+				-- value to 1 (True) which stops windows from selecting the next
+				-- item in `Current'.
+			if removing_item then
+				wel_parent.set_message_return_value (1)
+			end
 		end
 
 	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
-			-- selection has changed from one item to another.
+			-- Selection has changed from one item to another.
 		local
 			clist: HASH_TABLE [EV_TREE_NODE_IMP, POINTER]
 			p: POINTER
 			elem: EV_TREE_NODE_IMP
 		do
 			clist := all_ev_children
+
 			p := info.old_item.h_item
 			if p /= default_pointer then
 				elem := clist.item (p)
 				if elem /= Void then
-					elem.interface.deselect_actions.call ([])
-					interface.deselect_actions.call ([elem.interface])
+						-- Call the deselect actions on `elem'.
+					elem.deselect_actions.call ([])
+					deselect_actions.call ([elem.interface])
 				end
 			end
 
@@ -416,30 +488,83 @@ feature {EV_ANY_I} -- WEL Implementation
 			if p /= default_pointer then
 				elem := clist.item (p)
 				if elem /= Void then
-					elem.interface.select_actions.call ([])
-					interface.select_actions.call ([elem.interface])
+						-- Call the select_actions on `elem'.
+					elem.select_actions.call ([])
+					select_actions.call ([elem.interface])
 				end
 			end
 		end
+
+	expand_called_manually: BOOLEAN
+		-- Are we within `expand_item' or `collapse_item'?
+		--| This is used to stop on_tvn_itemexpanded calling `expand_actions'
+		--| or `collapse_actions' again when the notification is generated by
+		--| a call from `expand_item' or `collapse_item'.
+		--| When we call Tvm_Expand on an item,
+		--| the TVIS_EXPANDEDONCE state flag is set which stops
+		--| on_tvn_item_expanded notifications being generated again.
+		--| Could not find an easy way to fix this, so this is why this
+		--| boolean is required and the redefinitions of `expand_item'
+		--| and `collapse_item'. If this was not the case then we could
+		--| simply always use the tvn_itemexpanded notification with no
+		--| redefinition of `expand_item' or `collapse_item'.
+		--|See Tvm_expand in MSDN for better explanation. Julian.
+
+	expand_item (an_item: WEL_TREE_VIEW_ITEM) is
+			-- Expand the given item.
+			--| Set `expand_called_manually' to true for duration of this
+			--| feature. See comment for `expand_called_manually'.
+		local
+			tree_item: EV_TREE_NODE_IMP
+		do
+			expand_called_manually := True
+			tree_item ?= an_item
+			if not is_expanded (tree_item) then
+				cwin_send_message (wel_item, Tvm_expand, Tve_expand,
+					cwel_pointer_to_integer (an_item.h_item))
+				tree_item.interface.expand_actions.call ([])
+			end
+			expand_called_manually := False
+		end
+
+	collapse_item (an_item: WEL_TREE_VIEW_ITEM) is
+			-- Collapse the given item.
+			--| Set `expand_called_manually' to true for duration of this
+			--| feature. See comment for `expand_called_manually'.
+		local
+			tree_item: EV_TREE_NODE_IMP
+		do
+			expand_called_manually := True
+			tree_item ?= an_item
+			if is_expanded (tree_item) then
+				cwin_send_message (wel_item, Tvm_expand, Tve_collapse,
+					cwel_pointer_to_integer (an_item.h_item))
+				tree_item.interface.collapse_actions.call ([])
+			end
+			expand_called_manually := False
+		end
+
 
 	on_tvn_itemexpanded (info: WEL_NM_TREE_VIEW) is
 			-- a parent item's list of child items has expanded
 			-- or collapsed.
 		do
-			if info.action = Tve_collapse then
-				(all_ev_children @ info.new_item.h_item).interface.
-					collapse_actions.call ([])
-			elseif info.action = Tve_expand then
-				(all_ev_children @ info.new_item.h_item).interface.
-					expand_actions.call ([])
+			if not expand_called_manually then
+				if info.action = Tve_collapse then
+					(all_ev_children @ info.new_item.h_item).interface.
+						collapse_actions.call ([])
+				elseif info.action = Tve_expand then
+					(all_ev_children @ info.new_item.h_item).interface.
+						expand_actions.call ([])
+				end
 			end
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- A key has been pressed
+			-- A key has been pressed.
 		do
-			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
+			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
 	on_char (character_code, key_data: INTEGER) is
@@ -447,6 +572,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			-- Avoid an unconvenient `beep' when the user
 			-- tab to another control.
 		do
+			Precursor {EV_PRIMITIVE_IMP} (character_code, key_data)
 			if not has_focus then
 				disable_default_processing
 			end
@@ -463,7 +589,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
 				offsets := it.relative_position
-				it.interface.pointer_motion_actions.call (
+				it.pointer_motion_actions.call (
 					[x_pos - offsets.integer_arrayed @ 1 + 1,
 				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x,
 					pt.y])
@@ -471,7 +597,17 @@ feature {EV_ANY_I} -- WEL Implementation
 			if pnd_item_source /= Void then
 				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
+		end
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+		do
+			disable_default_processing
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -497,7 +633,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 	mouse_message_x (lparam: INTEGER): INTEGER is
 			-- Encapsulation of the c_mouse_message_x function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
+			-- c_mouse_message_x deferred but it does not work because
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_x (lparam)
@@ -506,7 +642,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 	mouse_message_y (lparam: INTEGER): INTEGER is
 			-- Encapsulation of the c_mouse_message_x function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
+			-- c_mouse_message_x deferred but it does not work because
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
@@ -515,7 +651,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is
 			-- Encapsulation of the cwin_show_window function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
+			-- c_mouse_message_x deferred but it does not work because
 			-- it would be implemented by an external.
 		do
 			cwin_show_window (hwnd, cmd_show)
@@ -527,29 +663,152 @@ feature {EV_ANY_I}
 
 end -- class EV_TREE_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.70  2000/06/07 17:28:01  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.71  2001/06/07 23:08:17  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.32.4.38  2001/02/19 19:25:30  rogers
+--| Renamed removing_selected_item to removing_item. Modified the timing of
+--| setting this variable. This fixes a bug where selecting an item, calling
+--| wipe_out, rebuilding the tree, and then selecting an item would select the
+--| first item in the tree, not the one clicked on. Improved comments.
+--|
+--| Revision 1.32.4.37  2001/02/14 23:57:06  rogers
+--| Fixed bug in internal_propagate_pointer_press. We now check that
+--| `pre_drop_it' is still parented before calling `pnd_press' on
+--| `pre_drop_it'. This is because a button press can cause the item to be
+--| removed.
+--|
+--| Revision 1.32.4.36  2001/02/02 00:47:24  rogers
+--| On_key_down now calls process_tab_key before Precursor. This ensures that
+--| any tab movement we do in our implementation can be overriden by the user
+--| with key_press_actions.
+--|
+--| Revision 1.32.4.35  2001/01/26 23:18:18  rogers
+--| Undefined on_sys_key_down inherited from WEL.
+--|
+--| Revision 1.32.4.34  2001/01/09 19:07:06  rogers
+--| Undefined default_process_message from WEL.
+--|
+--| Revision 1.32.4.33  2000/12/29 00:43:56  rogers
+--| Internal_propagate_pointer_press now only calls the
+--| pointer_button_press_actions if a pnd is running if `call_press_events'.
+--|
+--| Revision 1.32.4.32  2000/12/19 01:27:07  rogers
+--| Renamed set_tooltip inherited from wel_tree_view as wel_set_tooltip.
+--|
+--| Revision 1.32.4.30  2000/11/09 16:50:45  pichery
+--| - Added shared imagelist.
+--| - Cosmetics
+--|
+--| Revision 1.32.4.29  2000/11/06 20:05:53  rogers
+--| Added Tvs_infotip to default_style. This causes a tooltip to be displayed
+--| if the text of an item cannot be viewed completely in the tree.
+--|
+--| Revision 1.32.4.27  2000/10/25 23:26:50  rogers
+--| Modified internal_propagate_pointer_press so that the button press
+--| events are recieved in the correct order in conjunction with the
+--| pick/drag and drop. Correct order is before when starting a pick and after
+--| when ending a pick.
+--|
+--| Revision 1.32.4.26  2000/10/24 20:15:01  rogers
+--| Fixed bug in internal_propagate_pointer_pree if you were in PND and had
+--| dropped on an item and removed that item from `Current' in the drop
+--| actions.
+--|
+--| Revision 1.32.4.25  2000/10/17 23:57:58  rogers
+--| Corrected typo in create button1
+--|
+--| Revision 1.32.4.24  2000/10/17 23:42:06  rogers
+--| On_char now calls precursor which calls key_press_string_actions correctly.
+--|
+--| Revision 1.32.4.23  2000/10/11 00:01:49  raphaels
+--| Added `on_desactivate' to list of undefined features from WEL_WINDOW.
+--|
+--| Revision 1.32.4.22  2000/10/04 22:44:32  rogers
+--| Redefined expand_item and collapse_item to fix bug in calling of items
+--| expand and collapse action sequences. See comment for
+--| `expand_called_manually' for further explanation.
+--|
+--| Revision 1.32.4.21  2000/09/13 22:09:20  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.32.4.20  2000/09/08 00:00:26  manus
+--| Removed tree view flickering when resizing them.
+--|
+--| Revision 1.32.4.19  2000/08/11 18:29:32  rogers
+--| Fixed copyright clauses. Now use ! instead of |.
+--|
+--| Revision 1.32.4.18  2000/08/10 17:05:02  rogers
+--| Fixed bug in general_remove_item. Whenever an item contained in `Current'
+--| is removed, then removing_selected_item will be assigned `True', and
+--| the select/deselect actions will never be called.
+--|
+--| Revision 1.32.4.17  2000/08/09 21:21:40  rogers
+--| Redefined on_tvn_selchanging. Added removing_selected_item to hold whether
+--| the selected item is being removed. This fixes a bug in the behaviour
+--| when the selected item is removed. No item is now automatically selected,
+--| and the deselect actions are no longer called. The behaviour is now
+--| identical on both platforms.
+--|
+--| Revision 1.32.4.16  2000/08/08 02:42:14  manus
+--| Updated inheritance with new WEL messages handling
+--|
+--| Revision 1.32.4.15  2000/08/02 22:49:31  rogers
+--| Changed inheritance from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_NODE] to
+--| EV_ITEM_LIST_IMP [EV_TREE_NODE]. Precursor call in initialize now
+--| reflects this change.
+--|
+--| Revision 1.32.4.14  2000/07/26 22:34:12  rogers
+--| All action sequences are no longer called through the interface.
+--| Internal_propagate_pointer_double_press has been fixed. It now calls the
+--| correct action sequence.
+--|
+--| Revision 1.32.4.13  2000/07/24 23:19:41  rogers
+--| Now inherits EV_TREE_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.32.4.12  2000/07/21 20:10:29  rogers
+--| Undone previous commit changes. Please ignore last commit log.
+--|
+--| Revision 1.32.4.11  2000/07/21 19:37:17  rogers
+--| Removed redefined destroy as it is no longer necessary.
+--|
+--| Revision 1.32.4.10  2000/07/12 16:03:55  rogers
+--| Undefined x_position and y_position from WEL, as they are now inherited
+--| from EV_WIDGET_IMP.
+--|
+--| Revision 1.32.4.9  2000/06/19 21:14:07  rogers
+--| Removed inheritance from EV_ITEM_EVENTS_CONSTANTS. Removed FIXME
+--| NOT_REVIEWED. Comments, formatting.
+--|
+--| Revision 1.32.4.8  2000/06/13 18:34:08  rogers
+--| Removed undefintion of remove_command and renaming of command_count.
+--|
+--| Revision 1.32.4.7  2000/06/09 20:57:02  manus
+--| Removed useless undefinition of `on_size'
+--|
+--| Revision 1.32.4.6  2000/06/09 20:16:54  rogers
+--| Added internal_propagate_pointer_double_press. Comments. Formatting.
 --|
 --| Revision 1.32.4.5  2000/05/27 01:55:52  pichery
 --| Cosmetics
@@ -563,8 +822,10 @@ end -- class EV_TREE_IMP
 --| presses acted as a right click.
 --|
 --| Revision 1.32.4.2  2000/05/03 22:35:05  brendel
---| Revision 1.69  2000/05/03 20:13:28  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.32.4.1  2000/05/03 19:09:51  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.68  2000/04/27 23:14:20  rogers
 --| Undefined on_left_button_up from EV_PRIMITIVE_IMP.

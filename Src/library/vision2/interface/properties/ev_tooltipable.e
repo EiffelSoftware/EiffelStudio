@@ -11,16 +11,17 @@ deferred class
 
 inherit
 	EV_ANY
-		undefine
-			create_action_sequences
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 	
 feature -- Access
 
 	tooltip: STRING is
 			-- Tooltip displayed on `Current'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.tooltip
 		ensure
@@ -33,8 +34,9 @@ feature -- Element change
 	set_tooltip (a_tooltip: STRING) is
 			-- Assign `a_tooltip' to `tooltip'.
 		require
+			not_destroyed: not is_destroyed
 			tooltip: a_tooltip /= Void
-			a_tooltip_not_empty: not a_tooltip.empty
+			a_tooltip_not_empty: not a_tooltip.is_empty
 		do
 			implementation.set_tooltip (a_tooltip)
 		ensure
@@ -43,10 +45,20 @@ feature -- Element change
 
 	remove_tooltip is
 			-- Make `tooltip' `Void'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.remove_tooltip
 		ensure
 			tooltip_removed: tooltip = Void
+		end
+
+feature {NONE} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_ANY} and tooltip = Void
 		end
 
 feature {EV_TOOLTIPABLE_I} -- Implementation
@@ -71,25 +83,3 @@ end -- class EV_TOOLTIPABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.3  2000/06/07 17:28:07  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.2.2.2  2000/05/10 23:03:05  king
---| Integrated inital tooltipable changes
---|
---| Revision 1.2.2.1  2000/05/03 19:10:03  oconnor
---| mergred from HEAD
---|
---| Revision 1.2  2000/05/02 22:00:38  brendel
---| Added CVS log.
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

@@ -13,6 +13,8 @@ inherit
 			interface
 		end
 
+	EV_GAUGE_ACTION_SEQUENCES_I
+
 feature -- Access
 
 	value: INTEGER is
@@ -30,28 +32,20 @@ feature -- Access
 		deferred
 		end
 
-	minimum: INTEGER is
-			-- Lowest value of the gauge.
-		deferred
-		end
-
-	maximum: INTEGER is
-			-- Highest value of the gauge.
-		deferred
-		end
-
-	range: INTEGER_INTERVAL is
-			-- Get `minimum' and `maximum' as interval.
-		deferred
-		end
+	value_range: ACTIVE_INTEGER_INTERVAL
+			-- Range of `value'.
 
 feature -- Status report
 
 	proportion: REAL is
 			-- Relative position of `value' in `range'. Range: [0, 1].
+		local
+			u, l: INTEGER
 		do
-			if maximum > minimum then
-				Result := value / (maximum - minimum)
+			u := value_range.upper
+			l := value_range.lower
+			if u /= l then
+				Result := (value - l) / (u - l)
 			else
 				--| By definition:
 				Result := 0.0
@@ -65,7 +59,7 @@ feature -- Status setting
 		deferred
 		ensure
 			incremented: value = old value + step
-				or else value = maximum
+				or else value = value_range.upper
 		end
 
 	step_backward is
@@ -73,7 +67,7 @@ feature -- Status setting
 		deferred
 		ensure
 			decremented: value = old value - step
-				or else value = minimum
+				or else value = value_range.lower
 		end
 
 	leap_forward is
@@ -81,7 +75,7 @@ feature -- Status setting
 		deferred
 		ensure
 			incremented: value = old value + leap
-				or else value = maximum
+				or else value = value_range.upper
 		end
 
 	leap_backward is
@@ -89,7 +83,7 @@ feature -- Status setting
 		deferred
 		ensure
 			decremented: value = old value - leap
-				or else value = minimum
+				or else value = value_range.lower
 		end
 
 feature -- Element change
@@ -97,8 +91,7 @@ feature -- Element change
 	set_value (a_value: INTEGER) is
 			-- Set `value' to `a_value'.
 		require
-			a_value_within_bounds: a_value >= minimum
-				and then a_value <= maximum
+			value_in_range: value_range.has (a_value)
 		deferred
 		ensure
 			assigned: value = a_value
@@ -122,74 +115,29 @@ feature -- Element change
 			assigned: leap = a_leap
 		end
 
-	set_minimum (a_minimum: INTEGER) is
-			-- Set `minimum' to `a_minimum'.
-		require
-			a_minimum_not_greater_than_maximum:
-				a_minimum <= maximum
-			a_minimum_not_smaller_than_value:
-				a_minimum <= value			
-		deferred
-		ensure
-			assigned: minimum = a_minimum
-		end
-
-	set_maximum (a_maximum: INTEGER) is
-			-- Set `maximum' to `a_maximum'.
-		require
-			a_maximum_not_smaller_than_maximum:
-				a_maximum >= minimum
-			a_maximum_not_smaller_than_value:
-				a_maximum >= value			
-		deferred
-		ensure
-			assigned: maximum = a_maximum
-		end
-
-	set_range (a_range: INTEGER_INTERVAL) is
-			-- Set `range' to `a_range'.
-		require
-			a_range_upper_greater_than_or_equal_to_a_range_lower:
-				a_range.upper >= a_range.lower
-			value_within_bounds:
-				value >= a_range.lower and then value <= a_range.upper
-		deferred
-		ensure
-			minimum_assigned: minimum = a_range.lower
-			maximum_assigned: maximum = a_range.upper
-			assigned: range.is_equal (a_range)
-		end
-
-	reset_with_range (a_range: INTEGER_INTERVAL) is
-			-- Set `range' to `a_range'.
-			-- Set `value' to `a_range.lower'.
-		require
-			a_range_upper_greater_than_or_equal_to_a_range_lower:
-				a_range.upper >= a_range.lower
-		deferred
-		ensure
-			value_assigned: value = a_range.lower
-			minimum_assigned: minimum = a_range.lower
-			maximum_assigned: maximum = a_range.upper
-			assigned: range.is_equal (a_range)
-		end
-
 feature -- Status setting
 
 	set_proportion (a_proportion: REAL) is
 			-- Move `value' to `a_proportion' within `range'.
 		require
 			a_proportion_within_range: a_proportion >= 0 and a_proportion <= 1
+		local
+			u, l: INTEGER
 		do
-			if maximum /= minimum then
-				set_value (((maximum - minimum) * a_proportion).rounded
-					+ minimum)
+			u := value_range.upper
+			l := value_range.lower
+			if u /= l then
+				set_value (((u - l) * a_proportion).rounded + l)
 			end
 		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GAUGE
+
+invariant
+
+	value_range_not_void: is_usable implies value_range /= Void
 
 end -- class EV_GAUGE_I
 
@@ -214,6 +162,27 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.4.6  2001/02/16 00:10:51  rogers
+--| Replaced is_useable with is_usable.
+--|
+--| Revision 1.3.4.5  2000/09/13 17:17:28  oconnor
+--| updated for modified EV_GAUGE
+--|
+--| Revision 1.3.4.4  2000/07/24 21:30:48  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.3.4.3  2000/06/20 17:51:14  rogers
+--| Fixed proportion to use maximum_user_setting.
+--|
+--| Revision 1.3.4.2  2000/06/17 00:01:30  rogers
+--| Fixed calculation of proportion.
+--|
+--| Revision 1.3.4.1  2000/05/03 19:09:06  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/04/20 00:37:48  rogers
 --| Fixed formula used in proportion.
 --|

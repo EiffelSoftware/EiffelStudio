@@ -40,6 +40,12 @@ end -- class EV_CHECK_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.4.1  2000/05/03 19:09:06  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/02/25 21:28:15  brendel
 --| Formatting.
 --|

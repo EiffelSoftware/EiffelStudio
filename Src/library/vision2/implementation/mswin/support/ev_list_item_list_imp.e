@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: "Eiffel Vision list item list. Mswindows implementation."
 	status: "See notice at end of class"
@@ -19,12 +18,66 @@ inherit
 			interface
 		end
 
+	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP
+
 feature {EV_ANY_I} -- Access
 
 	ev_children: ARRAYED_LIST [EV_LIST_ITEM_IMP]
-			-- List of the children
+			-- List of the children.
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
+
+	image_list: EV_IMAGE_LIST_IMP
+			-- Image list to store all images required by items.
+
+	setup_image_list is
+			-- Create the image list and associate it
+			-- to `Current' if not already associated.
+		deferred
+		end
+	
+	remove_image_list is
+			-- disassociate `image_list' from `Current'.
+		deferred
+		end
+
+	pixmaps_size_changed is
+			-- The size of the displayed pixmaps has just
+			-- changed.
+		local
+			pixmap: EV_PIXMAP
+			cur: CURSOR
+		do
+				-- We only do this if there are images associated with
+				-- `Current'.
+			if image_list /= Void then
+					
+					-- Rebuild the image list.
+				remove_image_list
+				setup_image_list
+
+					-- Save cursor position
+				cur := ev_children.cursor
+
+					-- Insert the image of each list item
+					-- back into the image list.
+				from
+					ev_children.start
+				until
+					ev_children.after
+				loop
+					pixmap := ev_children.item.pixmap
+					if pixmap /= Void then
+						ev_children.item.set_pixmap_in_parent
+					end
+					ev_children.forth
+				end		
+					-- Restore saved_position
+				ev_children.go_to (cur)
+			end
+		ensure then
+			child_index_consistent: old ev_children.index = ev_children.index
+		end
 
 	internal_is_selected (item_imp: EV_LIST_ITEM_IMP): BOOLEAN is
 			-- Is `item_imp' selected in the list?
@@ -42,7 +95,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 		end
 
 	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
-			-- Return the index of `item_imp' in the list.
+			-- `Result' is index of `item_imp' in the list.
 		require
 			item_imp_not_void: item_imp /= Void
 			ev_children_has_item: ev_children.has (item_imp)
@@ -55,29 +108,49 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 		end
 
    	get_item_position (an_index: INTEGER): WEL_POINT is
-   			-- Retrieves the position of the zero-based `index'-th item.
+   			-- Retrieves the position of the zero-based `an_index'-th item.
    		deferred
    		end
+
+feature {EV_ANY_I} -- Implementation
+
+	set_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position, image_index: INTEGER) is
+			-- Set pixmap of `an_item' at position `position' in `Current'
+			-- to the `image_index'th image in `image_list'.
+		deferred
+		end
+
+	remove_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position: INTEGER) is
+			-- Remove pixmap of `an_item' located at position `position' in
+			-- `Current'.
+		deferred
+		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
 	top_index: INTEGER is
-			-- Index of item at displayed at top of list.
+			-- Index of item displayed at the top of `Current'.
 		deferred
 		end
 	
 	visible_count: INTEGER is
-   			-- Number of items that can be displayed.
+   			-- Number of items that can be displayed at once.
 		deferred
 		end
 
 	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
-			-- Insert `item_imp' at `an_index'.
+			-- Insert `item_imp' at `an_index' position.
 		deferred
 		end
 
 	remove_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Remove `item_imp'.
+		deferred
+		end
+
+	refresh_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Refresh current so that it take into account 
+			-- changes made in `item_imp' 
 		deferred
 		end
 
@@ -135,8 +208,33 @@ end -- class EV_LIST_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.7  2000/06/07 17:27:57  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.8  2001/06/07 23:08:13  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.2.10  2000/08/21 20:27:21  rogers
+--| Added remove_pixmap_of_child as deferred.
+--|
+--| Revision 1.6.2.8  2000/07/28 02:42:06  pichery
+--| Fixed bug in `set_text' of EV_LIST_ITEM_IMP (changes
+--| were not reflected in the parent if the item was already in a
+--| list).
+--|
+--| Revision 1.6.2.7  2000/07/24 23:58:12  rogers
+--| Now inherits EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.6.2.6  2000/07/18 20:40:59  rogers
+--| Added pixmaps_size_changed. This was previously identical in both
+--| EV_COMBO_BOX_IMP and Ev_LIST_IMP.
+--|
+--| Revision 1.6.2.5  2000/07/17 18:06:10  rogers
+--| Added remove_image_list as deferred.
+--|
+--| Revision 1.6.2.4  2000/07/14 17:47:07  rogers
+--| Added image_list for association of pixmaps, and added setup_image_list
+--| as deferred.
+--|
+--| Revision 1.6.2.3  2000/06/12 23:04:50  rogers
+--| Removed FIXME NOT_REVIEWED. COmments, formatting.
 --|
 --| Revision 1.6.2.2  2000/05/10 20:01:02  king
 --| Integrated interface

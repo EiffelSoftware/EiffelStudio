@@ -13,7 +13,8 @@ inherit
 	
 	EV_COLORIZABLE_I
 		redefine
-			interface
+			interface,
+			set_default_colors
 		end
 
 	EV_ANY_IMP
@@ -34,9 +35,8 @@ feature -- Access
 					--| for the 5 gtk states, since normal state is at the 
 					--| front we just treat is as: GdkColor* bg_state_normal
 			end
-			color := C.gtk_style_struct_bg (
-				C.gtk_widget_struct_style (colorizable_object)
-			)
+			color := background_color_pointer
+
 			create Result
 			Result.set_rgb_with_16_bit (
 				C.gdk_color_struct_red (color),
@@ -54,9 +54,7 @@ feature -- Access
 				normal_color_at_head_of_array: C.GTK_STATE_NORMAL_ENUM = 0 
 					--| See `background_color'
 			end
-			color := C.gtk_style_struct_fg (
-				C.gtk_widget_struct_style (colorizable_object)
-			)
+			color := foreground_color_pointer
 			create Result
 			Result.set_rgb_with_16_bit (
 				C.gdk_color_struct_red (color),
@@ -71,7 +69,7 @@ feature -- Status setting
 	set_background_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `foreground_color'
 		do
-			real_set_background_color (colorizable_object, a_color)
+			real_set_background_color (visual_widget, a_color)
 		end
 
 	real_set_background_color (a_c_object: POINTER; a_color: EV_COLOR) is
@@ -85,7 +83,7 @@ feature -- Status setting
 		local
 			style: POINTER
 			color: POINTER
-			r, g, b, nr, ng, nb, m: INTEGER
+			r, g, b, nr, ng, nb, m, mx: INTEGER
 		do
 			style := C.gtk_widget_struct_style (a_c_object)
 			color := C.gtk_style_struct_bg (a_c_object)
@@ -95,7 +93,8 @@ feature -- Status setting
 			if
 				C.gdk_color_struct_red (color) /= r or else
 				C.gdk_color_struct_green (color) /= g or else
-				C.gdk_color_struct_blue (color) /= b
+				C.gdk_color_struct_blue (color) /= b or else
+				(r = 0 and g = 0 and b = 0)
 			then
 				m := a_color.Max_16_bit
 				style := C.gtk_style_copy (style)
@@ -132,14 +131,16 @@ feature -- Status setting
 					--| Set selected state color to reverse.
 				color := C.gtk_style_struct_bg (style)
 					 + (C.GTK_STATE_SELECTED_ENUM * C.c_gdk_color_struct_size)
-				nr := m - r;
-				ng := m - g;
-				nb := m - b//2;
-				C.set_gdk_color_struct_red (color, nr)
-				C.set_gdk_color_struct_green (color, ng)
-				C.set_gdk_color_struct_blue (color, nb)
-					--| Don't touch insensitive state color
-					--| (C.GTK_STATE_INSENSITIVE_ENUM)
+				C.set_gdk_color_struct_red   (color, m - r)
+				C.set_gdk_color_struct_green (color, m - g)
+				C.set_gdk_color_struct_blue  (color, m - b//2)
+					--| Set the insensitive state color.
+				color := C.gtk_style_struct_bg (style)
+					 + (C.GTK_STATE_INSENSITIVE_ENUM * C.c_gdk_color_struct_size)
+				mx := r.max (g).max (b)
+				C.set_gdk_color_struct_red   (color, mx + ((r - mx)//4))
+				C.set_gdk_color_struct_green (color, mx + ((g - mx)//4))
+				C.set_gdk_color_struct_blue  (color, mx + ((b - mx)//4))
 
 				C.gtk_widget_set_style (a_c_object, style)
 				C.gtk_style_unref (style)
@@ -149,7 +150,7 @@ feature -- Status setting
 	set_foreground_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `foreground_color'
 		do
-			real_set_foreground_color (colorizable_object, a_color)
+			real_set_foreground_color (visual_widget, a_color)
 		end
 
 	real_set_foreground_color (a_c_object: POINTER; a_color: EV_COLOR) is
@@ -173,7 +174,8 @@ feature -- Status setting
 			if
 				C.gdk_color_struct_red (color) /= r or else
 				C.gdk_color_struct_green (color) /= g or else
-				C.gdk_color_struct_blue (color) /= b
+				C.gdk_color_struct_blue (color) /= b or else
+				(r = 0 and g = 0 and b = 0)
 			then
 				m := a_color.Max_16_bit
 				style := C.gtk_style_copy (style)
@@ -209,12 +211,30 @@ feature -- Status setting
 			end
 		end
 
+	set_default_colors is
+			-- Set foreground and background color to their default values.
+			--| FIXME This implementation is quite fast :)
+			--| But it may be incorrect in some cases.
+			--| (Need to check)
+		do
+		end	
+
 feature {NONE} -- Implementation
 
-	colorizable_object: POINTER is
-			-- Pointer to the object to be colored
+	background_color_pointer: POINTER is
+			-- Pointer to bg color for `a_widget'.
 		do
-			Result := c_object
+			Result := C.gtk_style_struct_bg (
+				C.gtk_widget_struct_style (visual_widget)
+			)
+		end
+
+	foreground_color_pointer: POINTER is
+			-- Pointer to fg color for `a_widget'.
+		do
+			Result := C.gtk_style_struct_fg (
+				C.gtk_widget_struct_style (visual_widget)
+			)
 		end
 
 	Prelight_scale: REAL is 1.0909488
@@ -250,8 +270,24 @@ end -- EV_COLORIZABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.2  2000/06/07 17:27:33  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.3  2001/06/07 23:08:04  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.2.7  2000/09/18 18:07:42  oconnor
+--| Implemented desaturated version of base color as insensitive color.
+--|
+--| Revision 1.1.2.6  2000/08/30 16:18:16  oconnor
+--| fixed problem where setting color of a new object to black failed
+--| cv: ----------------------------------------------------------------------
+--|
+--| Revision 1.1.2.5  2000/08/16 18:42:45  king
+--| Abstracted fg/bg_color_pointer to allow for easy change
+--|
+--| Revision 1.1.2.4  2000/08/08 00:03:11  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.1.2.3  2000/06/27 23:41:36  king
+--| Now using visual_widget instead of colorizable_object
 --|
 --| Revision 1.1.2.2  2000/05/16 00:24:48  king
 --| Added colorizable_object function to return pointer to colorable object

@@ -423,8 +423,8 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.2  2001/06/07 18:29:53  rogers
---| Removed.
+--| Revision 1.3  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
 --| Revision 1.1.2.10  2001/05/29 18:43:02  manus
 --| Authorized export of certain features of EV_PICK_AND_DROPABLE_I to EV_WIDGET_I

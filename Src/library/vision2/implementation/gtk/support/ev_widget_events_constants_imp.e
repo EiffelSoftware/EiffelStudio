@@ -206,6 +206,12 @@ end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.9.2.1  2000/05/03 19:08:43  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/02/14 11:40:30  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -35,7 +35,7 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			foreground_color_assigned: foreground_color.is_equal (a_color)
+			foreground_color_assigned: is_initialized implies interface.implementation.foreground_color.is_equal (a_color)
 		end
 
 	set_background_color (a_color: like background_color) is
@@ -44,19 +44,14 @@ feature -- Element change
 			a_color_not_void: a_color /= Void
 		deferred
 		ensure
-			background_color_assigned: background_color.is_equal (a_color)
+			background_color_assigned: is_initialized implies interface.implementation.background_color.is_equal (a_color)
 		end
 
 feature -- Status setting
 
 	set_default_colors is
 			-- Set foreground and background color to their default values.
-		local
-			a_default_colors: EV_DEFAULT_COLORS
-		do
-			create a_default_colors
-			set_background_color (a_default_colors.default_background_color)
-			set_foreground_color (a_default_colors.default_foreground_color)
+		deferred
 		end	
 
 feature {EV_ANY_I} -- Implementation
@@ -86,8 +81,26 @@ end -- class EV_COLORIZABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.2  2000/06/07 17:27:45  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.3  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.1.2.6  2000/10/27 01:28:28  manus
+--| `set_default_colors' is now obsolet, so that it can be defined in an efficient manner
+--| by platform independent classes.
+--|
+--| Revision 1.1.2.5  2000/10/09 18:04:11  king
+--| Altered postconds of *_color to prevent failure on object initialization
+--|
+--| Revision 1.1.2.4  2000/09/29 20:32:43  manus
+--| Changed post-condition for consistency since `implementation' can change on the fly, we
+--| always have to rely on the `interface' one.
+--|
+--| Revision 1.1.2.3  2000/07/25 17:52:55  king
+--| Altered invalid color assignment postcond interface.implementation call
+--|
+--| Revision 1.1.2.2  2000/07/21 22:11:38  pichery
+--| Changed postconditons to work with EV_PIXMAP multiple
+--| implementation on windows.
 --|
 --| Revision 1.1.2.1  2000/05/12 17:51:52  king
 --| Initial

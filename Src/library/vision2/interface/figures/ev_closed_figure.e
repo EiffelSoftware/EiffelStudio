@@ -1,8 +1,8 @@
 indexing
 	description:
-		"Closed figures like ellipse and polygon.%
-		%May be filled with a color."
+		"Closed figures filled with `background_color'."
 	status: "See notice at end of class"
+	keywords: "figure, atomic, filled, closed"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,51 +12,51 @@ deferred class
 inherit
 	EV_ATOMIC_FIGURE
 		redefine
-			make_for_test
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Create with default attributes.
+		do
+			set_background_color (Default_colors.Yellow)
+			Precursor
 		end
 
 feature -- Access
 
-	fill_color: EV_COLOR
-			-- The background color of the figure.
-			-- If it is Void do not fill the figure.
-
-	fill_style: INTEGER
-			-- There is something like fill-style too...
-			--| FIXME To be implemented
-
-	make_for_test is
-			-- Create interesting.
-		do
-			Precursor
-			set_fill_color (create {EV_COLOR}.make_with_rgb (
-				random_real / 2 + 0.5,
-				random_real / 2 + 0.5,
-				random_real / 2 + 0.5))
-		end
+	background_color: EV_COLOR
+			-- Color used to fill `Current'.
 
 feature -- Status report
 
 	is_filled: BOOLEAN is
-			-- Is this figure filled with a color?
+			-- Is this figure filled?
 		do
-			Result := fill_color /= Void
+			Result := background_color /= Void
 		end
 
 feature -- Status setting
 
-	set_fill_color (color: EV_COLOR) is
-			-- Set fill-color to `color'.
+	set_background_color (a_color: EV_COLOR) is
+			-- Set `background_color' to `a_color'.
 		require
-			color_exists: color /= Void
+			a_color_exists: a_color /= Void
 		do
-			fill_color := color
+			background_color := a_color
+			invalidate
+		ensure
+			background_color_assigned: background_color = a_color
 		end
 
-	remove_fill_color is
+	remove_background_color is
 			-- Do not fill this figure.
 		do
-			fill_color := Void
+			background_color := Void
+			invalidate
+		ensure
+			background_color_removed: background_color = Void
 		end
 
 end -- class EV_CLOSED_FIGURE
@@ -76,41 +76,3 @@ end -- class EV_CLOSED_FIGURE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.8  2000/04/27 22:13:15  brendel
---| Changed to a brighter color.
---|
---| Revision 1.7  2000/04/27 19:10:50  brendel
---| Centralized testing code.
---|
---| Revision 1.6  2000/02/29 18:09:07  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.5  2000/02/22 18:39:46  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.4  2000/02/14 11:40:46  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.2.4.3.2.3  2000/01/28 22:32:33  brendel
---| Removed "Not for release".
---|
---| Revision 1.2.4.3.2.2  2000/01/27 19:30:33  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.2.4.3.2.1  1999/11/24 17:30:37  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.2.2.2  1999/11/02 17:20:10  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

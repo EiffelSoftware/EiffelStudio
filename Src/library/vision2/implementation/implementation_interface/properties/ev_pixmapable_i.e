@@ -67,8 +67,8 @@ end -- class EV_PIXMAPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.16  2000/06/07 17:27:45  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.17  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
 --|
 --| Revision 1.13.4.2  2000/05/09 20:30:38  king
 --| Added post cond to remove pixmap

@@ -15,10 +15,18 @@ create
 
 feature -- Initialization
 
+	make_and_launch is
+		do
+			default_create
+			prepare
+			launch
+		end
+
 	prepare is
 		local
-			hbox_test, vbox_test: EV_LIST_TEST [EV_WIDGET]
+			--hbox_test, vbox_test: EV_LIST_TEST [EV_WIDGET]
 		do
+			create first_window
 			first_window.set_title ("EV_BOX test")
 			post_launch_actions.extend (~do_tests)
 			--(create {MEMORY}).collection_off
@@ -29,7 +37,7 @@ feature -- Initialization
 			hbox_test, vbox_test, sb_test, nb_test, fixed_test : EV_LIST_TEST [EV_WIDGET]
 			list_test, tb_test, mcl_test: EV_LIST_TEST [EV_ITEM]
 			tree_test, ti_test, menu_test, mb_test: EV_LIST_TEST [EV_ITEM]
-			cb_test: EV_LIST_TEST [EV_ITEM]
+			--cb_test: EV_LIST_TEST [EV_ITEM]
 		do
 			create fixed_test.make ("EV_FIXED", ~fixed_list_generator, ~item_generator)
 			create hbox_test.make ("EV_HORIZONTAL_BOX", ~hbox_list_generator, ~item_generator)
@@ -37,7 +45,6 @@ feature -- Initialization
 			create nb_test.make ("EV_NOTEBOOK", ~notebook_list_generator, ~item_generator)
 			create list_test.make ("EV_LIST", ~list_list_generator, ~list_item_generator)
 			create tb_test.make ("EV_TOOL_BAR", ~tb_list_generator, ~tb_item_generator)
-			create sb_test.make ("EV_STATUS_BAR", ~sb_list_generator, ~sb_item_generator)
 			create mcl_test.make ("EV_MULTI_COLUMN_LIST", ~mcl_list_generator, ~mcl_item_generator)
 
 			create tree_test.make ("EV_TREE", ~tree_generator, ~tree_item_generator)
@@ -144,11 +151,6 @@ feature -- Initialization
 			create Result
 		end
 
-	sb_item_generator: EV_STATUS_BAR_ITEM is
-		do
-			create Result
-		end
-
 	sb_list_generator: EV_STATUS_BAR is
 		do
 			create Result
@@ -194,9 +196,6 @@ feature -- Initialization
 			create Result
 		end
 
-	first_window: EV_TITLED_WINDOW is
-		once
-			create Result
-		end
+	first_window: EV_TITLED_WINDOW
 
 end -- class TEST_TEST

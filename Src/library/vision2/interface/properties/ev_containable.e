@@ -11,14 +11,13 @@ deferred class
 
 inherit
 	EV_ANY
-		undefine
-			create_action_sequences
-		end
 	
 feature -- Status report
 
 	parent: EV_ANY is
 			-- The parent that `Current' is contained within, if any.
+		require
+			not_destroyed: not is_destroyed
 		deferred
 		end
 
@@ -39,19 +38,3 @@ end -- class EV_CONTAINABLE
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.2  2000/06/07 17:28:07  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.1.2.1  2000/05/13 00:03:40  king
---| Initial
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

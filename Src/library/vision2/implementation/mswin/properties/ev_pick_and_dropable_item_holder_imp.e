@@ -28,18 +28,29 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			when
 				Ev_pnd_start_transport
 			then
-					start_transport (a_x, a_y, a_button, 0, 0, 0.5,
-						a_screen_x, a_screen_y)
+				start_transport (a_x, a_y, a_button, 0, 0, 0.5,
+					a_screen_x, a_screen_y)
+					-- We must only set the parent source to true if
+					-- the P/DND and drop has just started.
+				if (a_button = 1 and mode_is_drag_and_drop) or
+					(a_button = 3 and mode_is_pick_and_drop) then
 					set_parent_source_true
+				end
 			when
 				Ev_pnd_end_transport
 			then
-				end_transport (a_x, a_y, a_button)
+				end_transport (a_x, a_y, a_button, 0, 0, 0.5,
+						a_screen_x, a_screen_y)
+					-- If the user cancelled a pick and drop with the left
+					-- button then we need to make sure that the
+					-- pointer_button_press_actions are not called on
+					-- `Current' or an item at the current
+					-- pointer position.
+				if a_button = 1 then
+					discard_press_event
+				end
 				set_parent_source_false
 			else
-				if a_button = 1 then
-					top_level_window_imp.move_to_foreground
-				end
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
@@ -54,7 +65,28 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 		do
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 2)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_button_press_actions.call
+				([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+		end
+
+	press_actions_called: BOOLEAN
+		-- Have `pointer_button_press_actions' been called on `Current'? 
+
+	item_is_pnd_source_at_entry: BOOLEAN
+		-- Is an item the source of a pick/drag and drop?
+		-- updated every time entering `on_right_button_down'.
+		-- or `on_left_button_down.
+
+	item_is_in_pnd: BOOLEAN is
+		do
+			if pnd_item_source /= Void then
+				if pnd_item_source.is_pnd_in_transport then
+					Result := True
+				end
+				if pnd_item_source.is_dnd_in_transport then
+					Result := True
+				end
+			end
 		end
 
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -62,16 +94,21 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		local
 			pt: WEL_POINT
-			item_is_pnd_source_at_entry: BOOLEAN
 		do
 			item_is_pnd_source_at_entry := item_is_pnd_source
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
-			if item_is_pnd_source = item_is_pnd_source_at_entry then
-				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			if (not item_is_pnd_source and not is_pnd_in_transport
+				and not is_dnd_in_transport) or (item_is_pnd_source and not
+				pnd_item_source.is_pnd_in_transport and not
+				pnd_item_source.is_dnd_in_transport) then
+				interface.pointer_button_press_actions.call
+					([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+				press_actions_called := True
 			end
-			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])	
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
+			press_actions_called := False
+			item_is_pnd_source_at_entry := False
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -79,16 +116,27 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		local
 			pt: WEL_POINT
-			item_is_pnd_source_at_entry: BOOLEAN
 		do
-			item_is_pnd_source_at_entry := item_is_pnd_source
+				-- If a pick/drag and drop is currently executing then
+				-- we are now cancelling it. We do not want the default
+				-- processing to be carried out on `Current'. i.e. if this is
+				-- happening in a list, cancelling over an item would have
+				-- selected the item.
+			if pnd_item_source /= Void or parent_is_pnd_source then
+				disable_default_processing
+			end
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
-			if item_is_pnd_source = item_is_pnd_source_at_entry then
-				pnd_press (x_pos, y_pos, 1, pt.x, pt.y)
+			if not (item_is_pnd_source and not is_pnd_in_transport and not
+				is_dnd_in_transport) or (item_is_pnd_source and not
+				pnd_item_source.is_pnd_in_transport and not
+				pnd_item_source.is_dnd_in_transport) then
+				interface.pointer_button_press_actions.call
+					([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+				press_actions_called := True
 			end
-			interface.pointer_button_press_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])	
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
+			press_actions_called := False
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -102,8 +150,45 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				pnd_item_source.check_drag_and_drop_release (x_pos, y_pos)
 			elseif parent_is_pnd_source then
 				check_drag_and_drop_release (x_pos, y_pos)
+				parent_is_pnd_source := False
 			end
-			interface.pointer_button_release_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_button_release_actions.call
+				([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+		end
+
+
+	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the right button is double clicked.
+		do
+			button_double_click_received (keys, x_pos, y_pos, 1)
+		end
+
+	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the right button is double clicked.
+		do
+			button_double_click_received (keys, x_pos, y_pos, 2)
+		end
+
+	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the right button is double clicked.
+		do
+			button_double_click_received (keys, x_pos, y_pos, 3)
+		end
+
+	button_double_click_received (keys, x_pos, y_pos, a_button: INTEGER) is
+			-- Handle a double click from button `a_button'.
+		local
+			pt: WEL_POINT
+		do
+			create pt.make (x_pos, y_pos)
+				-- Assign the screen coordinates of the click to `pt'
+			pt := client_to_screen (x_pos, y_pos)
+				-- Propagate the double click event to the appropriate item.
+			internal_propagate_pointer_double_press
+				(keys, x_pos, y_pos, a_button)
+				-- Call pointer_double_press_actions on `Current'.
+			interface.pointer_double_press_actions.call
+				([x_pos, y_pos, a_button, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	client_to_screen (x_pos, y_pos: INTEGER): WEL_POINT is
@@ -114,9 +199,50 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 		deferred
 		end
 
+	internal_propagate_pointer_double_press (
+		keys, x_pos, y_pos, button: INTEGER) is
+		deferred
+		end
+
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_ITEM_IMP is
+			-- `Result' is item at pixel position `x_pos', `y_pos'.
+		deferred
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset of `Current' relative to screen.
+		deferred
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset of `Current' relative to screen.
+		deferred
+		end
+
 	interface: EV_WIDGET
 
 feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
+	
+	call_press_event: BOOLEAN
+			-- Should we call the press event or ignore it due to the
+			-- pick and drop?
+			--| For example, if you start a pick and drop in an EV_LIST, move
+			--| the mouse over an item and cancel the pick and drop with the
+			--| left button, we do not want the pointer_button_press_actions
+			--| to be called for that item as we are not pressing the item but
+			--| cancelling the PND instead. 
+
+	discard_press_event is
+			-- Assign `True' to `call_press_event'.
+		do
+			call_press_event := False
+		end
+
+	keep_press_event is
+			-- Assign `True' to `call_press_event'.
+		do
+			call_press_event := True
+		end
 
 	parent_is_pnd_source : BOOLEAN
 			-- PND started in the widget.
@@ -157,6 +283,14 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 			item_is_pnd_source := False
 		end
 
+feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Deferred
+
+	disable_default_processing is
+			-- Disable default window processing.
+		deferred
+		end
+
+
 	top_level_window_imp: EV_WINDOW_IMP is
 		deferred
 		end
@@ -190,3 +324,84 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 		end
 
 end -- class EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.11  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.9.2.20  2001/02/08 18:06:14  rogers
+--| Removed uneeded call to move_to_foreground.
+--|
+--| Revision 1.9.2.19  2001/02/06 02:03:52  rogers
+--| Added find_item_at_position, screen_x and screen_y as deferred.
+--|
+--| Revision 1.9.2.18  2001/01/05 23:10:50  rogers
+--| Removed disable_default_processing from on_left_button_up. This was
+--| completely unecessary and causing many problems with select_actions.
+--|
+--| Revision 1.9.2.17  2001/01/02 19:19:27  rogers
+--| Formatting to 80 columns.
+--|
+--| Revision 1.9.2.16  2000/12/29 18:15:16  rogers
+--| Now when cancelling a pick and drop, the default processing for the
+--| widget is turned off. Added disable_default_processing as deferred.
+--|
+--| Revision 1.9.2.15  2000/12/29 00:35:14  rogers
+--| Pnd_press now calls discard_press_event on `pnd_original_parent' if the
+--| left button is pressed. Added call_press_event, discard_press_event and
+--| keep_press_event.
+--|
+--| Revision 1.9.2.14  2000/11/27 19:11:40  rogers
+--| Removed call_press_event, discard_press_event and keep_press_event as all
+--| pick_and_dropable widgetes will need these functions. They are being moved
+--| into EV_PICK_AND_DROPABLE_IMP.
+--|
+--| Revision 1.9.2.13  2000/11/02 23:25:55  rogers
+--| Corrected button comparison mistake in pnd_press.
+--|
+--| Revision 1.9.2.12  2000/11/02 19:08:31  rogers
+--| Corrected button_value passed from on_left_button_down.
+--|
+--| Revision 1.9.2.11  2000/11/02 17:52:45  rogers
+--| Pressing any button apart from the right will raise `Current' to the
+--| foreground. The exception is pressing the left button when drag and drop is
+--| enabled on `Current'.
+--|
+--| Revision 1.9.2.9  2000/10/26 00:20:28  rogers
+--| Corrected bugs in on_left_button_down and on_right_button_down.
+--|
+--| Revision 1.9.2.8  2000/10/25 23:16:02  rogers
+--| Please ignore last log message. Should have read:
+--| Major change to pick and drop with items. The events are now called before
+--| a pick/drag and drop is started or after a pick/drag and drop is completed
+--| where as before, they were alwasy called after. As well as modifications to
+--| existing routines, added press_actions_called, item_is_pnd_source_at_entry,
+--| item_is_in_pnd, call press_event, discard_event and keep_press_event to
+--| keep track of the pick/drag and drop status.
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------
+
+

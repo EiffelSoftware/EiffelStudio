@@ -14,6 +14,8 @@ inherit
 			interface
 		end
 
+	EV_NOTEBOOK_ACTION_SEQUENCES_I
+
 feature {EV_NOTEBOOK} -- Access
 
 	item_text (an_item: like item): STRING is
@@ -83,14 +85,14 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_I} -- Implementation
 			-- functionality implemented by `Current'
 
 invariant
-	tab_position_within_range: is_useable implies
+	tab_position_within_range: is_usable implies
 		tab_position = interface.Tab_left or
 		tab_position = interface.Tab_right or
 		tab_position = interface.Tab_bottom or
 		tab_position = interface.Tab_top
-		selected_item_not_void: is_useable and count > 0 implies selected_item /= Void
+		selected_item_not_void: is_usable and count > 0 implies selected_item /= Void
 		selected_item_index_within_range:
-			is_useable and count > 0 implies (
+			is_usable and count > 0 implies (
 			selected_item_index >= interface.index_of (interface.first, 1) and
 			selected_item_index <= interface.index_of (interface.last, 1) )
 		selected_item_is_i_th_of_selected_item_index:
@@ -123,6 +125,18 @@ end -- class EV_NOTEBOOK_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.13.4.3  2001/02/16 00:12:49  rogers
+--| Replaced is_useable with is_usable.
+--|
+--| Revision 1.13.4.2  2000/07/24 21:30:47  oconnor
+--| inherit action sequences _I class
+--|
+--| Revision 1.13.4.1  2000/05/03 19:09:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.16  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

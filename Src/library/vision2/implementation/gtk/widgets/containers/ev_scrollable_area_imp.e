@@ -9,6 +9,9 @@ class
 	
 inherit
 	EV_SCROLLABLE_AREA_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
 		redefine
 			interface
 		end
@@ -20,7 +23,8 @@ inherit
 			interface,
 			make,
 			replace,
-			item
+			item,
+			visual_widget
 		end
 	
 create
@@ -32,21 +36,16 @@ feature {NONE} -- Initialization
                         -- Initialize.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			scroll_window := (
-				C.gtk_scrolled_window_new (NULL, NULL)
-			)
-			C.gtk_widget_show (scroll_window)
-			C.gtk_container_add (c_object, scroll_window)
+			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
 
 			set_scrolling_policy (C.GTK_POLICY_ALWAYS_ENUM, C.GTK_POLICY_ALWAYS_ENUM)
 
-			set_horizontal_step (1)
-			set_vertical_step (1)
+			set_horizontal_step (10)
+			set_vertical_step (10)
 
 			viewport := C.gtk_viewport_new (NULL, NULL)
 			C.gtk_widget_show (viewport)
-			C.gtk_container_add (scroll_window, viewport)
+			C.gtk_container_add (c_object, viewport)
 		end
 
 feature -- Access
@@ -156,19 +155,21 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	scroll_window: POINTER
-			-- Pointer to the gtk scrolling window.
+	visual_widget: POINTER is
+		do
+			Result := viewport
+		end
 
 	horizontal_adjustment: POINTER is
 			-- Pointer to the adjustment struct of the hscrollbar
 		do
-			Result := C.gtk_scrolled_window_get_hadjustment (scroll_window)
+			Result := C.gtk_scrolled_window_get_hadjustment (c_object)
 		end
 
 	vertical_adjustment: POINTER is
 			-- Pointer to the adjustment struct of the vscrollbar
 		do
-			Result := C.gtk_scrolled_window_get_vadjustment (scroll_window)
+			Result := C.gtk_scrolled_window_get_vadjustment (c_object)
 		end
 
 	horizontal_policy: INTEGER
@@ -181,7 +182,7 @@ feature {NONE} -- Implementation
 			-- Set the policy for both scrollbars.
 		do
 			C.gtk_scrolled_window_set_policy (
-				scroll_window,
+				c_object,
 				hscrollpol,
 				vscrollpol
 			)
@@ -218,6 +219,41 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2001/06/07 23:08:06  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.4.8  2000/12/15 20:07:22  king
+--| Altered step values to meet with invariant
+--|
+--| Revision 1.8.4.7  2000/10/27 16:54:42  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.8.4.6  2000/09/18 18:06:43  oconnor
+--| reimplemented propogate_[fore|back]ground_color for speeeeed
+--|
+--| Revision 1.8.4.5  2000/08/28 16:35:20  king
+--| Removed event_widget
+--|
+--| Revision 1.8.4.4  2000/08/08 00:03:14  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.8.4.3  2000/06/29 02:12:04  king
+--| Redefined visual widget to viewport
+--|
+--| Revision 1.8.4.2  2000/06/28 00:35:22  king
+--| Removed event_box as c_object
+--|
+--| Revision 1.8.4.1  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.13  2000/05/02 18:55:28  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

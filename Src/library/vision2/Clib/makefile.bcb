@@ -1,0 +1,30 @@
+# vision2.lib - Makefile for Microsoft C
+
+CC = bcc32.exe
+# Debug version
+#CFLAGS = -c -Zi -W4 \
+#	-I..\spec\include \
+#	-I$(VISION_PRERELEASE)\libpng \
+#	-I$(VISION_PRERELEASE)\zlib \
+#	-I$(ISE_EIFFEL)\bench\spec\windows\include
+
+# Release version
+CFLAGS = -c -O1 \
+	-I..\spec\include \
+	-I$(ISE_EIFFEL)\C_library\libpng \
+	-I$(ISE_EIFFEL)\C_library\zlib \
+	-I$(ISE_EIFFEL)\bench\spec\windows\include
+
+.c.obj:
+	$(CC) $(CFLAGS) $<
+
+OBJ = load_pixmap.obj
+
+vision2.lib: $(OBJ)
+	if exist $@ del $@
+	lib /OUT:$@ $(OBJ)
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
+	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
+	copy $@ ..\spec\bcb\lib
+	del $@
+	del *.obj

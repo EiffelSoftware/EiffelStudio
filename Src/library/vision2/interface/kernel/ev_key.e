@@ -63,8 +63,8 @@ feature -- Status report
 			Result := code >= Key_a and then code <= Key_z
 		end
 
-	is_keypad: BOOLEAN is
-			-- Is `code' a key on the keypad?
+	is_numpad: BOOLEAN is
+			-- Is `code' a key on the numpad?
 		do
 			Result := code >= Key_numpad_0 and then code <= Key_numpad_decimal
 		end
@@ -82,26 +82,28 @@ feature -- Status report
 		end
 
 	is_arrow: BOOLEAN is
-			-- Is `code' a function key?
+			-- Is `code' an arrow key?
 		do
 			Result := code >= Key_up and then code <= Key_right
 		end
 
-feature -- Contract support
-
-	is_valid_accelerator: BOOLEAN is
-			-- Is `code' accepted as accelerator key code?
-		do
-			Result := True
-			--| All current key constants are valid.
-		end
-
-feature -- Standard Output
+feature -- Standard output
 
 	out: STRING is
 			-- Readable representation of `code'.
 		do
 			Result := key_strings @ code
+		end
+		
+feature -- Obsolete
+
+	is_valid_accelerator: BOOLEAN is
+			-- Is `code' accepted as accelerator key code?
+		Obsolete
+			"All current keys are valid accelerators."
+		do
+			Result := True
+			--| All current key constants are valid.
 		end
 
 invariant
@@ -124,19 +126,3 @@ end -- class EV_KEY
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.2  2000/03/17 18:43:41  brendel
---| *** empty log message ***
---|
---| Revision 1.1  2000/03/15 19:39:18  brendel
---| Initial.
---|
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

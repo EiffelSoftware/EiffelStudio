@@ -41,33 +41,29 @@ feature -- Access
 		deferred
 		end
 
-	preferred_face: STRING is
-			-- Preferred user font.
+	preferred_faces: ACTIVE_LIST [STRING]
+			-- Preferred user fonts.
 			-- `family' will be ignored when not Void.
-		deferred
-		end 
 
 feature -- Element change
 
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
-		a_preferred_face: STRING) is
+		a_preferred_faces: like preferred_faces) is
 			-- Set `a_family', `a_weight', `a_shape' `a_height' and
-			-- `a_preferred_face' at the same time for speed.
+			-- `a_preferred_faces' at the same time for speed.
 		require
 			a_family_valid: valid_family (a_family)
 			a_weight_valid: valid_weight (a_weight)
 			a_shape_valid: valid_shape (a_shape)
 			a_height_bigger_than_zero: a_height > 0
+			a_preferred_faces_not_void: a_preferred_faces /= Void
 		do
+			preferred_faces := a_preferred_faces
+			update_font_face
 			set_family (a_family)
 			set_weight (a_weight)
 			set_shape (a_shape)
 			set_height (a_height)
-			if a_preferred_face /= Void then
-				set_preferred_face (a_preferred_face)
-			else
-				remove_preferred_face
-			end
 		end
 
 	set_family (a_family: INTEGER) is
@@ -104,22 +100,6 @@ feature -- Element change
 		deferred
 		ensure
 			height_assigned: height = a_height
-		end
-
-	set_preferred_face (a_preferred_face: STRING) is
-			-- Set `a_preferred_face' as preferred font face.
-		require
-			a_preferred_face_not_void: a_preferred_face /= Void
-		deferred
-		ensure
-			preferred_face_assigned: preferred_face = a_preferred_face
-		end
-
-	remove_preferred_face is
-			-- Set `a_preferred_face' to Void.
-		deferred
-		ensure
-			preferred_face_void: preferred_face = Void
 		end
 
 feature -- Status report
@@ -179,31 +159,55 @@ feature -- Status report
 			-- Can characters in the font have different sizes?
 		deferred
 		end
- 
-feature -- Obsolete
 
-	system_name: STRING is
-			-- Platform dependent font name.
-		deferred
+	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+			-- `Result' is [width, height] in pixels of `a_string' in the
+			-- current font, taking into account line breaks ('%N').
+		require
+			a_string_not_void: a_string /= Void
+		local
+			cur_width, cur_height: INTEGER
+			index, n: INTEGER
+			s: STRING
+		do
+			from
+				n := 1
+			until
+				n > a_string.count
+			loop
+				index := a_string.index_of ('%N', n)
+				if index > 0 then
+					s := a_string.substring (n, index - 1)
+					n := index + 1
+				else
+					s := a_string.substring (n, a_string.count)
+					n := a_string.count + 1
+				end
+				cur_width := cur_width.max (string_width (s))
+				cur_height := cur_height + height
+			end
+			Result := [cur_width, cur_height]
 		end
-
- 	is_standard: BOOLEAN is
- 			-- Is the font standard and informations available (except for name) ?
-		deferred
- 		end
 
 feature {EV_FONT_I} -- Implementation
 
 	interface: EV_FONT
 
+	update_font_face is
+			-- Update the font face according to `preferred_faces' and `family'.
+		deferred
+		ensure
+			name_not_void: name /= Void
+		end
+
 invariant
-	family_valid: valid_family (family)
-	weight_valid: valid_weight (weight)
-	shape_valid: valid_shape (shape)
-	height_bigger_than_zero: height > 0
-	ascent_bigger_than_zero: ascent > 0
-	descent_bigger_than_zero: descent > 0
-	width_of_empty_string_equals_zero: string_width("") = 0
+	family_valid: is_initialized implies valid_family (family)
+	weight_valid: is_initialized implies valid_weight (weight)
+	shape_valid: is_initialized implies valid_shape (shape)
+	height_bigger_than_zero: is_initialized implies height > 0
+	ascent_bigger_than_zero: is_initialized implies ascent > 0
+	descent_bigger_than_zero: is_initialized implies descent > 0
+	width_of_empty_string_equals_zero: is_initialized implies string_width("") = 0
 
 	--| FIXME  IEK Does not hold true in gtk for all fonts.
 	--horizontal_resolution_bigger_than_zero: horizontal_resolution > 0
@@ -232,6 +236,38 @@ end -- class EV_FONT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.4.9  2001/01/25 17:28:39  rogers
+--| Set values calls `update_font_face' before setting other attributes.
+--|
+--| Revision 1.10.4.8  2000/10/16 14:16:56  pichery
+--| Removed obsolete features
+--|
+--| Revision 1.10.4.7  2000/09/07 22:34:16  king
+--| Added is_initialized to font invariants
+--|
+--| Revision 1.10.4.6  2000/08/17 22:01:24  rogers
+--| Comments, formatting.
+--|
+--| Revision 1.10.4.5  2000/06/25 18:00:54  brendel
+--| Added string_size, in a platform independent way.
+--|
+--| Revision 1.10.4.4  2000/06/19 17:45:50  king
+--| Added post cond to update_face_name
+--|
+--| Revision 1.10.4.3  2000/06/17 08:21:17  pichery
+--| Fixed small bug. The face was not updated after
+--| a call on `set_values'.
+--|
+--| Revision 1.10.4.2  2000/06/15 03:37:37  pichery
+--| Replaced `preferred_face' with
+--| `preferred_faces'
+--|
+--| Revision 1.10.4.1  2000/05/03 19:08:56  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/03/28 21:48:14  brendel
 --| Added set_values, to be redefined by toolkits for speed.
 --|
@@ -260,7 +296,8 @@ end -- class EV_FONT_I
 --| Removed commented out invariant.
 --|
 --| Revision 1.10.6.5  2000/01/10 20:17:15  rogers
---| Removed pre-condition from string_width as the string can now be Void. An count of 0 on the string, will have Void returned.
+--| Removed pre-condition from string_width as the string can now be Void.
+--| An count of 0 on the string, will have Void returned.
 --|
 --| Revision 1.10.6.4  2000/01/10 19:14:06  king
 --| Changed interface.
@@ -269,7 +306,8 @@ end -- class EV_FONT_I
 --| set_name is now obsolete.
 --|
 --| Revision 1.10.6.3  2000/01/10 17:17:43  rogers
---| Removed pre-condition on string width, for compilation purposes. This is only temporary as font is be re-worked currently.
+--| Removed pre-condition on string width, for compilation purposes.
+--| This is only temporary as font is be re-worked currently.
 --|
 --| Revision 1.10.6.2  1999/11/30 22:50:47  oconnor
 --| Redefined interface to more refined type

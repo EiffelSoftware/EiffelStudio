@@ -16,7 +16,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Initialize.
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			wel_make
@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
+			-- Initialize `Current'.
 		do
 			is_initialized := True
 		end
@@ -34,9 +35,10 @@ feature -- Access
 	file_name: STRING is
 			-- Full name of currently selected file including path.
 		do
-			if selected_button /= Void
-					and then selected_button.is_equal ("OK") then
+			if selected then
 				Result := wel_file_name
+			else
+				Result := Void
 			end
 		end
 
@@ -51,20 +53,22 @@ feature -- Status report
 	file_title: STRING is
 			-- `file_name' without its path.
 		do
-			if file_name /= Void then
-				Result := file_name.mirrored
-				Result.head (Result.index_of ('\', 1) - 1)
-				Result.mirror
+			Result := file_name
+			if Result /= Void then
+				Result := Result.substring (
+					Result.last_index_of ('\', Result.count) + 1,
+					Result.count)
 			end
 		end
 
 	file_path: STRING is
 			-- Path of `file_name'.
 		do
-			if file_name /= Void then
-				Result := clone (file_name)
-				Result.head (Result.count -
-					Result.mirrored.index_of ('\', 1) + 1)
+			Result := file_name
+			if Result /= Void then
+				Result := Result.substring (
+					1,
+					Result.last_index_of ('\', Result.count) - 1)
 			end
 		end
 
@@ -72,12 +76,26 @@ feature -- Element change
 
 	set_filter (a_filter: STRING) is
 			-- Set `a_filter' as new filter.
+		local
+			filter_name: STRING
 		do
 			filter := clone (a_filter)
-			if filter.is_equal ("*.*") then
+			filter_name := clone (a_filter)
+			if
+				filter_name.count >= 3 and
+				filter_name.item (1) = '*' and
+				filter_name.item (2) = '.'
+			then
+				filter_name.tail (filter_name.count - 2)
+				filter_name.put (filter_name.item (1).upper, 1)
+				filter_name.append (" Files (")
+				filter_name.append (a_filter)
+				filter_name.append (")")
+			end
+			if a_filter.is_equal ("*.*") then
 				wel_set_filter (<<"All files">>, <<"*.*">>)
 			else
-				wel_set_filter (<<filter, "All files">>, <<filter, "*.*">>)
+				wel_set_filter (<<filter_name, "All files">>, <<a_filter, "*.*">>)
 			end
 			wel_set_filter_index (0)
 		end
@@ -123,27 +141,56 @@ feature -- Deferred
 
 end -- class EV_FILE_DIALOG_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/07 23:08:14  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.8.7  2001/04/05 22:19:36  pichery
+--| Fixed obvious bug with `file_title' (if `file_name' was "D:\Eiffel50\test.ace",
+--| `file_title' was returning "Eiffel50\test.ace" instead of "test.ace")
+--|
+--| Revision 1.5.8.6  2001/03/27 21:16:41  manus
+--| Made `set_filter_name' more user friendly in its output. If the user specifies
+--| `*.ace' we will display in the filter field `Ace Files (*.ace)'. The next thing
+--| to do will be to retrieve that information from the registry keys (not yet done).
+--|
+--| Revision 1.5.8.5  2001/02/06 02:13:12  manus
+--| Improved efficiency of `file_title' and `file_path'.
+--| In `file_path' does not include the final `\' because most routines
+--| that check existence of directory will fail.
+--|
+--| Revision 1.5.8.4  2001/02/01 19:04:45  rogers
+--| File name is now returned correctly.
+--|
+--| Revision 1.5.8.3  2000/12/22 23:32:37  rogers
+--| Comments.
+--|
+--| Revision 1.5.8.2  2000/08/11 18:58:26  rogers
+--| Fixed copyright clauses. Now use ! instead of |.
+--|
+--| Revision 1.5.8.1  2000/05/03 19:09:21  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/03/07 01:53:25  brendel
 --| Released
 --|

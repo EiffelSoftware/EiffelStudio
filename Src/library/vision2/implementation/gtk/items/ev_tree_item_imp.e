@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision tree item. GTK+ implementation."
 	status: "See notice at end of class"
@@ -49,8 +48,11 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.56  2000/06/07 17:27:29  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.57  2001/06/07 23:08:02  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.28.4.7  2000/09/06 23:18:39  king
+--| Reviewed
 --|
 --| Revision 1.28.4.6  2000/05/16 16:58:41  oconnor
 --| moved bulk to ev_tree_node_i.e

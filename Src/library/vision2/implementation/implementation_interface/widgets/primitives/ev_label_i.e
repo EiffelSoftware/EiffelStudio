@@ -19,6 +19,11 @@ inherit
 			interface
 		end
 
+	EV_FONTABLE_I
+		redefine
+			interface
+		end
+
 feature {EV_ANY_I} -- implementation
 
 	interface: EV_LABEL	
@@ -48,6 +53,15 @@ end --class EV_LABEL_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.13.4.2  2000/07/28 17:57:36  king
+--| Label now inherits from EV_FONTABLE
+--|
+--| Revision 1.13.4.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

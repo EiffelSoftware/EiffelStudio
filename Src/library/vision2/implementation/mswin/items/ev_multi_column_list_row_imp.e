@@ -30,6 +30,8 @@ inherit
 			on_parented
 		end
 
+	EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES_IMP
+
 create
 	make
 
@@ -106,29 +108,38 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.44  2000/06/07 17:27:52  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.45  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.15.4.6  2000/08/11 19:17:41  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.15.4.5  2000/07/24 22:46:30  rogers
+--| Now inherits EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES_IMP.
+--|
+--| Revision 1.15.4.4  2000/07/13 23:38:38  rogers
+--| Date in information at end.
 --|
 --| Revision 1.15.4.3  2000/05/18 23:09:35  rogers
 --| Set_parent renamed to set_parent_imp and now takes a parameter of type

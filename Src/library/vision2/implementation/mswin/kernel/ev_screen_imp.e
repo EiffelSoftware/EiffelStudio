@@ -15,7 +15,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface
+			interface, destroy
 		end
 
 	WEL_INPUT_EVENT
@@ -59,6 +59,23 @@ feature -- Status report
 			create Result.set (wel_point.x, wel_point.y)
 		end
 
+	widget_at_position (x, y: INTEGER): EV_WIDGET is
+			-- Widget at position (`x', `y') if any.
+		local
+			wel_point: WEL_POINT
+			widget_imp: EV_WIDGET_IMP
+		do
+				-- Assign the cursor position to `wel_point'.
+			create wel_point.make (x, y)
+				-- Retrieve WEL_WINDOW at `wel_point'.
+			widget_imp ?= wel_point.window_at
+				-- If there is a window at `wel_point'.
+			if widget_imp /= Void then
+					-- Result is interface of `widget_imp'.
+				Result := widget_imp.interface
+			end
+		end
+
 feature -- Basic operation
 
 	set_pointer_position (x, y: INTEGER) is
@@ -76,6 +93,16 @@ feature -- Basic operation
 			
 			send_mouse_absolute_move (abs_x, abs_y)
 		end
+
+	set_default_colors is
+			-- Set foreground and background color to their default values.
+		local
+			a_default_colors: EV_STOCK_COLORS
+		do
+			create a_default_colors
+			set_background_color (a_default_colors.default_background_color)
+			set_foreground_color (a_default_colors.default_foreground_color)
+		end	
 
 	fake_pointer_button_press (a_button: INTEGER) is
 			-- Simulate the user pressing a `a_button'
@@ -143,8 +170,7 @@ feature -- Status setting
 			-- Destroy actual object.
 		do
 			dc.release
-			is_destroyed := True
-			destroy_just_called := True
+			{EV_DRAWABLE_IMP} Precursor
 		end
 
 feature -- Implementation
@@ -168,29 +194,47 @@ feature {NONE} -- Constants
 
 end -- class EV_SCREEN_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.16  2000/06/07 17:28:02  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.17  2001/06/07 23:08:17  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.3.8.8  2000/11/06 19:37:12  king
+--| Accounted for default to stock name change
+--|
+--| Revision 1.3.8.7  2000/10/27 02:44:03  manus
+--| Defined `set_default_colors' to have a sensible correct value.
+--|
+--| Revision 1.3.8.6  2000/10/16 14:43:53  pichery
+--| Improved `destroy'
+--|
+--| Revision 1.3.8.5  2000/10/06 22:57:23  raphaels
+--| Cosmetics.
+--|
+--| Revision 1.3.8.4  2000/10/06 22:30:05  rogers
+--| Implemented widget_at_position.
+--|
+--| Revision 1.3.8.3  2000/08/11 18:26:43  rogers
+--| Fixed copyright clauses. Now use ! instead of |.
 --|
 --| Revision 1.3.8.2  2000/05/30 16:07:46  rogers
 --| Removed unreferenced variables.

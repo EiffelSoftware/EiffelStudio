@@ -62,28 +62,9 @@ EIF_REFERENCE generize (EIF_OBJECT g_item)
 	return eif_access (g_item);
 }
 
-void enable_motion_notify (GtkWidget *widg)
-{
-	gint event_flags;
-
-	event_flags = gtk_widget_get_events(GTK_WIDGET(widg));
-	event_flags &= GDK_POINTER_MOTION_MASK;
-	if (event_flags != GDK_POINTER_MOTION_MASK)
-		gtk_widget_add_events (GTK_WIDGET(widg), GDK_POINTER_MOTION_MASK);
-}
-
-void c_gtk_widget_set_all_events (GtkObject * win)
-{
-	gint event_flags;
-
- 	event_flags = gtk_widget_get_events(GTK_WIDGET(win));
- 	event_flags = event_flags | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK | GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_FOCUS_CHANGE_MASK;
-	gtk_widget_set_events (GTK_WIDGET(win), event_flags);
-}
-
-
 void c_gtk_window_set_modal (GtkWindow* window, gboolean modal)
 {
 	gtk_signal_connect_object(GTK_OBJECT(window),"show",GTK_SIGNAL_FUNC(gtk_grab_add),GTK_OBJECT(window));
 	gtk_signal_connect_object(GTK_OBJECT(window),"hide",GTK_SIGNAL_FUNC(gtk_grab_remove),GTK_OBJECT(window));
 }
+

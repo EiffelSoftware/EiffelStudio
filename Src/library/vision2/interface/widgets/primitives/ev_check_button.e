@@ -20,13 +20,14 @@ inherit
 
 create
 	default_create,
-	make_with_text,
-	make_for_test
+	make_with_text
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_CHECK_BUTTON_I
 			-- Responsible for interaction with the native graphics toolkit.
+			
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
@@ -51,45 +52,3 @@ end -- class EV_CHECK_BUTTON
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.14  2000/03/21 01:53:00  oconnor
---| comments and formatting
---|
---| Revision 1.13  2000/03/01 03:30:06  oconnor
---| added make_for_test
---|
---| Revision 1.12  2000/02/25 21:28:16  brendel
---| Formatting.
---|
---| Revision 1.11  2000/02/22 18:39:51  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.10  2000/02/14 11:40:52  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.9.6.5  2000/01/28 20:00:19  oconnor
---| released
---|
---| Revision 1.9.6.4  2000/01/27 19:30:54  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.9.6.3  2000/01/19 08:16:07  oconnor
---| formatting and comments
---|
---| Revision 1.9.6.2  1999/12/23 01:39:34  king
---| Implemented to fit in with new structure
---|
---| Revision 1.9.6.1  1999/11/24 17:30:53  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.9.2.2  1999/11/02 17:20:13  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

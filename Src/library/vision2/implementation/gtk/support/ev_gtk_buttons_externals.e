@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "External C functions for accessing gtk.%
 		% Those are used by buttons.";
@@ -34,6 +33,15 @@ end -- class EV_GTK_BUTTONS_EXTERNALS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2001/06/07 23:08:05  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.2  2000/09/06 23:18:42  king
+--| Reviewed
+--|
+--| Revision 1.6.4.1  2000/05/03 19:08:43  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

@@ -97,8 +97,8 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_PIXMAPABLE
 
 invariant
-	pixmap_box_not_null: is_useable implies pixmap_box /= NULL
-	pixmap_box_has_parent: is_useable implies
+	pixmap_box_not_null: is_usable implies pixmap_box /= NULL
+	pixmap_box_has_parent: is_usable implies
 		C.gtk_widget_struct_parent (pixmap_box) /= NULL
 
 end -- EV_PIXMAPABLE_IMP
@@ -124,8 +124,11 @@ end -- EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.25  2000/06/07 17:27:33  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.26  2001/06/07 23:08:04  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.13.4.3  2001/02/16 00:31:27  rogers
+--| Replaced is_useable with is_usable.
 --|
 --| Revision 1.13.4.2  2000/06/05 16:44:57  manus
 --| Cosmetics on new lines

@@ -95,7 +95,6 @@ feature -- Element change
 				C.gdk_cursor_destroy (c_object)
 			end
 			is_destroyed := True
-			destroy_just_called := True
 			code := 0
 			pixmap := Void
 		end
@@ -136,8 +135,11 @@ end -- class EV_CURSOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.11  2000/06/07 17:27:30  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.12  2001/06/07 23:08:03  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.2.4  2001/05/18 18:46:08  king
+--| Updated for destroy_just_called
 --|
 --| Revision 1.5.2.3  2000/05/04 19:26:40  king
 --| Made obsolete

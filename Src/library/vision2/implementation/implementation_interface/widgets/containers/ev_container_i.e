@@ -13,6 +13,8 @@ inherit
 		redefine
 			interface
 		end
+	
+	EV_CONTAINER_ACTION_SEQUENCES_I
 
 feature -- Access
 
@@ -66,19 +68,30 @@ feature -- Basic operations
 		local
 			l: LINEAR [EV_WIDGET]
 			c: EV_CONTAINER
+			cs: CURSOR_STRUCTURE [EV_WIDGET]
+			cur: CURSOR
+			fg: EV_COLOR
 		do
 			l := interface.linear_representation
+			cs ?= l
+			if cs /= Void then
+				cur := cs.cursor
+			end
 			from
 				l.start
+				fg := foreground_color
 			until
 				l.after
 			loop
-				l.item.set_foreground_color (foreground_color)
+				l.item.set_foreground_color (fg)
 				c ?= l.item
 				if c /= Void then
 					c.propagate_foreground_color
 				end
 				l.forth
+			end
+			if cs /= Void then
+				cs.go_to (cur)
 			end
 		ensure
 			foreground_color_propagated: interface.foreground_color_propagated
@@ -90,19 +103,30 @@ feature -- Basic operations
 		local
 			l: LINEAR [EV_WIDGET]
 			c: EV_CONTAINER
+			cs: CURSOR_STRUCTURE [EV_WIDGET]
+			cur: CURSOR
+			bg: EV_COLOR
 		do
 			l := interface.linear_representation
+			cs ?= l
+			if cs /= Void then
+				cur := cs.cursor
+			end
 			from
 				l.start
+				bg := background_color
 			until
 				l.after
 			loop
-				l.item.set_background_color (background_color)
+				l.item.set_background_color (bg)
 				c ?= l.item
 				if c /= Void then
 					c.propagate_background_color
 				end
 				l.forth
+			end
+			if cs /= Void then
+				cs.go_to (cur)
 			end
 		ensure
 			background_color_propagated: interface.background_color_propagated
@@ -142,6 +166,21 @@ end -- class EV_CONTAINER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.8.4.4  2000/09/18 18:13:15  oconnor
+--| Optimized color propogation to grab the color once instead of many times.
+--|
+--| Revision 1.8.4.3  2000/09/06 23:42:18  oconnor
+--| added new_item_actions to ev_container
+--|
+--| Revision 1.8.4.2  2000/09/04 18:19:15  oconnor
+--| added cursor safety to iteration features
+--|
+--| Revision 1.8.4.1  2000/05/03 19:09:04  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.13  2000/04/29 03:07:42  pichery
 --| Cosmetics
 --|

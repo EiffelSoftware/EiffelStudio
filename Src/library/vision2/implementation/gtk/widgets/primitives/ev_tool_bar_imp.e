@@ -24,7 +24,8 @@ inherit
 			item_by_data
 		redefine
 			interface,
-			add_to_container
+			add_to_container,
+			list_widget
 		end
 
 create
@@ -36,7 +37,10 @@ feature {NONE} -- Implementation
 			-- Create the tool-bar.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_hbox_new (False, 0))
+			set_c_object (C.gtk_event_box_new)
+			list_widget := C.gtk_hbox_new (False, 0)
+			C.gtk_container_add (c_object, list_widget)
+			C.gtk_widget_show (list_widget)
 		end
 
 feature -- Implementation
@@ -120,6 +124,9 @@ feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
+	list_widget: POINTER
+			-- Pointer to the gtkhbox (toolbar) as c_object is event box.
+
 	interface: EV_TOOL_BAR
 
 end -- class EV_TOOL_BAR_IMP
@@ -145,6 +152,38 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.4.7  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.10.4.6  2000/08/28 18:22:29  king
+--| Adding to event box before showing
+--|
+--| Revision 1.10.4.5  2000/08/28 18:15:14  king
+--| visual_widget now c_object
+--|
+--| Revision 1.10.4.4  2000/08/08 00:03:16  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.10.4.3  2000/06/30 18:54:20  king
+--| Redefining visual widget to point to hbox
+--|
+--| Revision 1.10.4.2  2000/06/26 16:46:08  king
+--| hbox is now in event box for tool bar to receive events
+--|
+--| Revision 1.10.4.1  2000/05/03 19:08:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.21  2000/05/02 18:55:30  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

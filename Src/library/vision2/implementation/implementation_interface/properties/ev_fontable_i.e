@@ -17,7 +17,7 @@ inherit
 feature -- Access
 
 	font: EV_FONT is
-			-- Typface appearance for `Current'.
+			-- Typeface appearance for `Current'.
 		deferred
 		ensure
 			not_void: Result /= Void
@@ -31,7 +31,7 @@ feature -- Element change
 			a_font_not_void: a_font /= Void
 		deferred
 		ensure
-			font_assigned: font.is_equal (a_font)
+			assigned: is_usable implies font.is_equal (a_font)
 		end
 
 feature {NONE} -- Implementation
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			-- functionality implemented by `Current'
 
 invariant
-	font_not_void: font /= Void
+	font_not_void: is_usable implies font /= Void
 
 end -- class EV_FONTABLE_I
 
@@ -66,6 +66,28 @@ end -- class EV_FONTABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.6  2001/02/16 00:18:38  rogers
+--| Replaced is_useable with is_usable.
+--|
+--| Revision 1.6.4.5  2000/09/12 23:02:20  rogers
+--| Invariant now includes is_useable.
+--|
+--| Revision 1.6.4.4  2000/09/08 19:24:22  manus
+--| We are not using `interface.font' in post-condition of `set_font' since the interface garantee the
+--| bridge pattern, we just use `font'.
+--|
+--| Revision 1.6.4.3  2000/08/29 17:25:33  king
+--| Corrected spelling in comment
+--|
+--| Revision 1.6.4.2  2000/08/18 19:47:12  king
+--| Updated postcondition to account for implementation object change
+--|
+--| Revision 1.6.4.1  2000/05/03 19:08:59  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/02/22 18:39:41  oconnor
 --| updated copyright date and formatting
 --|

@@ -17,15 +17,6 @@ inherit
 		redefine
 			interface
 		end
-	
-feature -- Status setting
-
-	toggle is
-			-- Invert the value of `is_selected'.
-		deferred
-		ensure
-			is_selected_changed: is_selected /= old is_selected
-		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -54,8 +45,11 @@ end -- class EV_TOGGLE_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.15  2000/06/07 17:27:50  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.16  2001/06/07 23:08:10  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.2.3  2001/05/14 18:36:38  rogers
+--| Removed toggle as no longer needed.
 --|
 --| Revision 1.10.2.2  2000/05/09 20:31:08  king
 --| Integrated selectable/deselectable

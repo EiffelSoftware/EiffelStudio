@@ -7,7 +7,6 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_PRIMITIVE_IMP
 	
 inherit
@@ -53,8 +52,25 @@ end -- class EV_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.9  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.10  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.6.4.5  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.6.4.4  2000/10/09 21:09:01  oconnor
+--| cosmetics
+--|
+--| Revision 1.6.4.3  2000/08/08 00:03:15  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
 --|
 --| Revision 1.6.4.2  2000/05/10 23:02:59  king
 --| Integrated inital tooltipable changes
@@ -86,7 +102,6 @@ end -- class EV_PRIMITIVE_IMP
 --|
 --| Revision 1.6.2.2  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

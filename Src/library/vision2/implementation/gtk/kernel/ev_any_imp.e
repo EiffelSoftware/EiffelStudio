@@ -66,17 +66,35 @@ feature {EV_ANY_I} -- Access
 
 feature {EV_ANY, EV_ANY_IMP} -- Command
 
+	disconnect_all_signals is
+		local
+			i, l: INTEGER
+		do
+			l := signal_ids.count
+			from i := 1 until i > l loop
+				C.gtk_signal_disconnect (c_object, signal_ids.i_th (i))
+				i := i + 1
+			end
+		end
+
 	destroy is
 			-- Destroy `c_object'.
 			-- Render `Current' unusable.
+		local
+			i, l: INTEGER
 		do
-			debug ("EV_GTK_DEBUG")
+			debug ("EV_GTK_DESTROY")
 				safe_print (generator + ".destroy")
 			end
+			l := action_sequences.count
+			from i := 1 until i > l loop
+				action_sequences.i_th (i).block
+				i := i + 1
+			end
+			is_destroyed := True
+			disconnect_all_signals
 			C.gtk_object_destroy (c_object)
 			c_object := NULL
-			is_destroyed := True
-			destroy_just_called := True
 		ensure then
 			c_object_detached: c_object = NULL
 		end
@@ -92,12 +110,30 @@ feature {EV_ANY_I} -- Event handling
 			-- Use `translate' to convert GTK+ event data to TUPLE.
 		require
 			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.empty
+			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
 		do
-			real_signal_connect (c_object, a_signal_name, an_agent, translate)
+			real_signal_connect (visual_widget, a_signal_name, an_agent, translate)
 		ensure
 			signal_connection_id_positive: last_signal_connection_id > 0
+		end
+
+	signal_connect_true (
+		a_signal_name: STRING;
+		an_agent: PROCEDURE [ANY, TUPLE]
+		) is
+			-- Connect `an_agent' to `a_signal_name'.
+			-- Use `translate' to convert GTK+ event data to TUPLE.
+		require
+			a_signal_name_not_void: a_signal_name /= Void
+			a_signal_name_not_empty: not a_signal_name.is_empty
+			an_agent_not_void: an_agent /= Void
+		do
+			c_signal_connect_true (
+				c_object,
+				eiffel_to_c (a_signal_name),
+				an_agent
+			)
 		end
 
 	real_signal_connect (
@@ -109,27 +145,59 @@ feature {EV_ANY_I} -- Event handling
 			-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 			-- Use `translate' to convert GTK+ event data to TUPLE.
 		require
-			a_c_object_not_void: a_c_object /= Void
+			a_c_object_not_void: a_c_object /= NULL
 			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.empty
+			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
 		do
 			if translate /= Void then
 				last_signal_connection_id := c_signal_connect (
 					a_c_object,
-					eiffel_to_c(a_signal_name),
+					eiffel_to_c (a_signal_name),
 					~translate_and_call (an_agent, translate, ?, ?)
 				)
 			else
 				last_signal_connection_id := c_signal_connect (
 					a_c_object,
-					eiffel_to_c(a_signal_name),
+					eiffel_to_c (a_signal_name),
 					an_agent
 				)
 			end
+			signal_ids.extend (last_signal_connection_id)
 		ensure
 			signal_connection_id_positive: last_signal_connection_id > 0
 		end
+	
+	signal_ids: ARRAYED_LIST [INTEGER] is
+			-- Ids of GTK signal connections.
+		do
+			if opo_signal_ids = Void then
+				create opo_signal_ids.make (2)
+			end
+			Result := opo_signal_ids
+		ensure
+			Result /= Void
+		end
+
+	opo_signal_ids: ARRAYED_LIST [INTEGER]
+			-- Once per object for implmentation for `signal_ids'.
+	
+	action_sequences: ARRAYED_LIST [ACTION_SEQUENCE [TUPLE]] is
+			-- Action sequences connected to GTK signals.
+		do
+			if opo_action_sequences = Void then
+				create opo_action_sequences.make (2)
+			end
+			Result := opo_action_sequences
+		ensure
+			Result /= Void
+		end
+
+	opo_action_sequences: ARRAYED_LIST [ACTION_SEQUENCE [TUPLE]]
+			-- Once per object for implmentation for `action_sequences'.
+
+
+	f_of_tuple_type_id: INTEGER is once Result := dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]}) end
 
 	translate_and_call (
 		an_agent: PROCEDURE [ANY, TUPLE];
@@ -144,11 +212,8 @@ feature {EV_ANY_I} -- Event handling
 			translate_not_void: translate /= Void
 		local
 			t: TUPLE []
-			f_of_tuple_type_id: INTEGER
-			--FIXME make this an attribut or somthign to make it faster
+			gdk_event: POINTER
 		do
-			f_of_tuple_type_id := 
-				dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]})
 			t := translate.item ([n_args, args])
 			--FIXME
 			if t /= Void then
@@ -162,6 +227,14 @@ feature {EV_ANY_I} -- Event handling
 				else	
 					an_agent.call (t)
 				end
+			else
+				gdk_event := gtk_value_pointer (args)
+				if 
+					gdk_event = NULL or else
+					C.gdk_event_any_struct_type (gdk_event) /= C.GDK_3BUTTON_PRESS_ENUM
+				then
+					print ("FIXME " + an_agent.generating_type + " in " + generating_type + " not called%N")
+				end
 			end
 		end
 
@@ -173,7 +246,8 @@ feature {EV_ANY_I} -- Event handling
 		require
 			a_connection_id_positive: a_connection_id > 0
 		do
-			C.gtk_signal_disconnect (c_object, a_connection_id)
+			C.gtk_signal_disconnect (visual_widget, a_connection_id)
+			signal_ids.prune_all (a_connection_id)
 		end
 
 	connect_signal_to_actions (
@@ -185,11 +259,11 @@ feature {EV_ANY_I} -- Event handling
 			-- Use `translate' to convert GTK+ event data to TUPLE.
 		require
 			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.empty
+			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_action_sequence_not_void: an_action_sequence /= Void
 		do
 			real_connect_signal_to_actions (
-				c_object,
+				visual_widget,
 				a_signal_name,
 				an_action_sequence,
 				translate
@@ -206,9 +280,9 @@ feature {EV_ANY_I} -- Event handling
 			-- Use `translate' to convert GTK+ event data to TUPLE.
 			-- Connection delayed until `an_actions_sequence' is not empty.
 		require
-			a_c_object_not_void: a_c_object /= Void
+			a_c_object_not_void: a_c_object /= NULL
 			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.empty
+			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_action_sequence_not_void: an_action_sequence /= Void
 		do
 			an_action_sequence.not_empty_actions.extend (
@@ -219,7 +293,7 @@ feature {EV_ANY_I} -- Event handling
 					translate
 				)
 			)
-			if not an_action_sequence.empty then
+			if not an_action_sequence.is_empty then
 				connect_signal_to_actions_now (
 					a_c_object,
 					a_signal_name,
@@ -227,6 +301,7 @@ feature {EV_ANY_I} -- Event handling
 					translate
 				)
 			end
+			action_sequences.extend (an_action_sequence)
 		end
 
 	connect_signal_to_actions_now (
@@ -249,7 +324,7 @@ feature {EV_ANY_I} -- Event handling
 			disconnect_agent := ~signal_disconnect (last_signal_connection_id)
 			an_action_sequence.empty_actions.extend (disconnect_agent)
 			an_action_sequence.empty_actions.extend (
-				kamikaze_agent (an_action_sequence, disconnect_agent)
+				kamikaze_agent (an_action_sequence.empty_actions, disconnect_agent)
 			)
 		end
 
@@ -312,7 +387,7 @@ feature {EV_ANY_I} -- Event handling
 			key: EV_KEY
 		do
 			if n_args /= 1 then
-			--	print ("********** /= 1 nargs *********%N");
+				print ("********** /= 1 nargs *********%N");
 			else
 			gdk_event := gtk_value_pointer (args)
 			--print (C.gdk_event_any_struct_type (gdk_event).out + "%N");
@@ -402,8 +477,8 @@ feature {EV_ANY_I} -- Event handling
 				keyval := C.gdk_event_key_struct_keyval (gdk_event)
 				if valid_gtk_code (keyval) then
 					create key.make_with_code (key_code_from_gtk (keyval))
-					Result := [ key	]
 				end
+				Result := [ key ]
 			when
 				Gdk_enter_notify_enum,
 				Gdk_leave_notify_enum
@@ -492,8 +567,9 @@ feature {NONE} -- Implementation
 	dispose is
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
-			--| Use the localy gtk_object_destroy defined below to avoid making
-			--| a dot call to C.gtk_object_destroy which is not allowed here.
+			--| Use the localy gtk_object_unref defined below to avoid making
+			--| a dot call to C.gtk_object_unref which is not allowed here.
+			--| Same for gtk_signal_disconnect_by_data.
 		do
 			-- FIXME this may not be safe!
 			--debug ("EV_GTK_DEBUG")
@@ -501,11 +577,11 @@ feature {NONE} -- Implementation
 			--end
 			if c_object /= NULL then
 				gtk_signal_disconnect_by_data (c_object, object_id)
-				gtk_object_unref (c_object)
-				--| FIXME IEK When gtk_object_unref calls gtk_object_destroy
-				-- for the `root' window, the ref count is still above zero.
+					--| This is the signal attached in ev_any_imp.c
+					--| used for GC/Ref-Counting interaction.
+				gtk_object_destroy (c_object)
 			end
-			Precursor
+			Precursor {IDENTIFIED}
 		end
 
 	c_object_dispose is
@@ -518,11 +594,29 @@ feature {NONE} -- Implementation
 			end
 			c_object := NULL
 			is_destroyed := True
-			destroy_just_called := True
 		ensure
 			is_destroyed_set: is_destroyed
-			destroy_just_called_set: destroy_just_called
 			c_object_detached: c_object = NULL
+		end
+
+	visual_widget: POINTER is
+			-- Pointer to the widget viewed by user.
+		do
+			Result := c_object
+		end
+
+	default_gtk_window: POINTER is
+			-- Pointer to a default GtkWindow.
+		once
+			Result := C.gtk_window_new (C.Gtk_window_toplevel_enum)
+			C.gtk_widget_realize (Result)
+		end
+
+	default_gdk_window: POINTER is
+			-- Pointer to a default GdkWindow that may be used to
+			-- access default visual information (color depth).
+		do
+			Result := C.gtk_widget_struct_window (default_gtk_window)
 		end
 
 feature {NONE} -- External implementation
@@ -562,9 +656,18 @@ feature {NONE} -- External implementation
 			"c_ev_gtk_callback_marshal_signal_connect"
 		end
 
-	gtk_object_unref (a_c_object: POINTER) is
+	c_signal_connect_true (a_c_object: POINTER; a_signal_name: POINTER;
+		an_agent: PROCEDURE [ANY, TUPLE]) is
+			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
+		external
+			"C (GtkObject*, gchar*, EIF_OBJECT)| %"ev_gtk_callback_marshal.h%""
+		alias
+			"c_ev_gtk_callback_marshal_signal_connect_true"
+		end
+
+	gtk_object_destroy (a_c_object: POINTER) is
 			-- Only for use in dispose.
-			-- (Dispose cannot call C.gtk_object_unref)
+			-- (Dispose cannot call C.gtk_object_destroy)
         	external
             		"C (GtkObject*) | <gtk/gtk.h>"
         	end
@@ -583,8 +686,6 @@ feature {NONE} -- External implementation
 		end
 
 invariant
-	c_object_only_null_when_destroyed:
-		is_destroyed = (c_object = NULL)
 	c_invariant: c_object /= NULL implies c_invariant (c_object)
 	c_object_coupled: c_object /= NULL implies
 		eif_object_from_c (c_object) = Current
@@ -594,6 +695,8 @@ end -- class EV_ANY_IMP
 
 --|-----------------------------------------------------------------------------
 --| Scheme for Eiffel GC / GTK RC cooperation (with a twist).
+--|
+--| See diagram: ev_any_imp.fig
 --| 
 --| This describes the interaction between the ISE garbage collector[1] (GC) and
 --| the GTK+ reference counter[3] (RC). Eiffel objects get collected some time
@@ -636,8 +739,8 @@ end -- class EV_ANY_IMP
 --|     eif_wean to release it's reference so that if there are no other Eiffel
 --|     references to it, it is destroyed.
 --|
---| Toplevel widgets like Windows are considered to be always parented, that is,
---| they are always at the mercy of the GTK RC.
+--| Toplevel widgets like Windows are considered to be not parentable, that is,
+--| they are always at the mercy of the Eiffel GC.
 --| 
 --| `c_object_dispose' is connected to the GTK object "destroy" signal and marks
 --|  the Eiffel object as `is_destroyed'.
@@ -694,8 +797,84 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.12  2000/06/07 17:27:30  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.13  2001/06/07 23:08:02  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.11.2.25  2001/05/18 17:52:15  king
+--| Removed destroy_just_called code
+--|
+--| Revision 1.11.2.24  2001/05/15 18:51:43  king
+--| Removed invariant that would fail on gtk callback activated by a dotcall
+--|
+--| Revision 1.11.2.23  2001/04/18 18:27:08  king
+--| Refactored a disconnect_all_signals from destroy
+--|
+--| Revision 1.11.2.22  2001/04/17 17:07:20  king
+--| Commented out signal disconnection
+--|
+--| Revision 1.11.2.21  2001/04/12 16:12:41  king
+--| Removed key error message
+--|
+--| Revision 1.11.2.20  2000/12/18 10:00:47  manus
+--| Cosmetics on Precursor
+--| Cosmetics for CVS log
+--|
+--| Revision 1.11.2.19  2000/12/15 19:39:58  king
+--| Changed .empty to .is_empty
+--|
+--| Revision 1.11.2.18  2000/09/18 18:05:41  oconnor
+--| Keep track of actions sequences connected to GTK and block them all
+--| on destroy. This prevents a call arising from the same signal that caused
+--| the destroy from happening after destroy (see no_calls_after_destroy).
+--|
+--| Call gtk_object_destroy instead of just gtk_object_unref when we are done
+--| with a C object. There seems to be some internal places in GTK that hold
+--| refs longer than they should (tooltips is an example being debated on the
+--| mailing list) an explicit destroy assures us that everything is cleaned
+--| up nicely.
+--|
+--| Revision 1.11.2.17  2000/09/12 19:03:29  king
+--| Added default_gtk_window
+--|
+--| Revision 1.11.2.16  2000/09/08 18:33:35  oconnor
+--| disconnect signals on destroy
+--|
+--| Revision 1.11.2.15  2000/09/07 22:33:05  king
+--| Corrected pointer precondition to compare with NULL, not Void
+--|
+--| Revision 1.11.2.14  2000/08/28 19:06:37  king
+--| Added invalid key support
+--|
+--| Revision 1.11.2.13  2000/08/28 16:32:13  king
+--| Event_widget not needed, converted to visual widget
+--|
+--| Revision 1.11.2.12  2000/08/16 19:44:33  king
+--| Preventing event output error from sometimes sig segging
+--|
+--| Revision 1.11.2.11  2000/08/09 19:08:09  king
+--| Added signal_connect_true
+--|
+--| Revision 1.11.2.10  2000/08/03 21:38:35  king
+--| Uncommented code that prevents warning on 3button press
+--|
+--| Revision 1.11.2.9  2000/07/24 21:34:58  oconnor
+--| made f_of_typle_type_id once
+--|
+--| Revision 1.11.2.8  2000/06/27 23:39:21  king
+--| Added event_widget and visual_widget
+--|
+--| Revision 1.11.2.7  2000/06/20 21:41:16  oconnor
+--| Fixed GTK assertion on exit problem.
+--| GtkWindow widgets were not reference protected.
+--|
+--| Revision 1.11.2.6  2000/06/19 21:38:39  oconnor
+--| retargeted kamikaze
+--|
+--| Revision 1.11.2.5  2000/06/13 23:58:13  king
+--| Added code to prevent fixme printout on unhandled gdk_button3_click
+--|
+--| Revision 1.11.2.4  2000/06/08 01:05:05  king
+--| Added error output to unhandled events
 --|
 --| Revision 1.11.2.3  2000/05/24 00:43:19  king
 --| Added fixme comment to dispose

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision accelerator. GTK+ implementation."
 	status: "See notice at end of class"
@@ -37,9 +36,10 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
+			create actions_internal
 			connect_signal_to_actions (
 				"pressed",
-				interface.actions,
+				actions_internal,
 				Void
 			)
 			is_initialized := True
@@ -81,13 +81,13 @@ feature {NONE} -- Implementation
 	modifier_mask: INTEGER is
 			-- The mask consisting of alt, shift and control keys.
 		do
-			if control_key then
+			if control_required then
 				Result := C.GDK_CONTROL_MASK_ENUM
 			end
-			if alt_key then
+			if alt_required then
 				Result := Result + C.GDK_MOD1_MASK_ENUM
 			end
-			if shift_key then
+			if shift_required then
 				Result := Result + C.GDK_SHIFT_MASK_ENUM
 			end
 		end
@@ -107,13 +107,13 @@ feature -- Access
 			-- Representation of the character that must be entered
 			-- by the user. See class EV_KEY_CODE
 
-	shift_key: BOOLEAN
+	shift_required: BOOLEAN
 			-- Must the shift key be pressed?
 
-	alt_key: BOOLEAN
+	alt_required: BOOLEAN
 			-- Must the alt key be pressed?
 
-	control_key: BOOLEAN
+	control_required: BOOLEAN
 			-- Must the control key be pressed?
 
 feature -- Element change
@@ -126,51 +126,51 @@ feature -- Element change
 			add_accel
 		end
 
-	enable_shift_key is
+	enable_shift_required is
 			-- "Shift" must be pressed for the key combination.
 		do
 			remove_accel
-			shift_key := True
+			shift_required := True
 			add_accel
 		end
 
-	disable_shift_key is
+	disable_shift_required is
 			-- "Shift" is not part of the key combination.
 		do
 			remove_accel
-			shift_key := False
+			shift_required := False
 			add_accel
 		end
 
-	enable_alt_key is
+	enable_alt_required is
 			-- "Alt" must be pressed for the key combination.
 		do
 			remove_accel
-			alt_key := True
+			alt_required := True
 			add_accel
 		end
 
-	disable_alt_key is
+	disable_alt_required is
 			-- "Alt" is not part of the key combination.
 		do
 			remove_accel
-			alt_key := False
+			alt_required := False
 			add_accel
 		end
 
-	enable_control_key is
+	enable_control_required is
 			-- "Control" must be pressed for the key combination.
 		do
 			remove_accel
-			control_key := True
+			control_required := True
 			add_accel
 		end
 
-	disable_control_key is
+	disable_control_required is
 			-- "Control" is not part of the key combination.
 		do
 			remove_accel
-			control_key := False
+			control_required := False
 			add_accel
 		end
 
@@ -197,8 +197,17 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.11  2000/06/07 17:27:30  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.12  2001/06/07 23:08:02  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.10.2.5  2000/09/08 16:54:32  king
+--| Accounted for feature name changes
+--|
+--| Revision 1.10.2.4  2000/09/06 23:18:40  king
+--| Reviewed
+--|
+--| Revision 1.10.2.3  2000/08/16 19:40:35  king
+--| Fixed bug on default creation
 --|
 --| Revision 1.10.2.2  2000/05/24 00:48:28  king
 --| Made enumeration calls uppercase

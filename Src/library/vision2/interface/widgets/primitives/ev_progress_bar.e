@@ -13,13 +13,16 @@ deferred class
 inherit
 	EV_GAUGE
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 
 feature -- Status report
 
 	is_segmented: BOOLEAN is
 			-- Is display segmented?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_segmented
 		ensure
@@ -30,6 +33,8 @@ feature -- Status setting
 
 	enable_segmentation is
 			-- Divide display of bar into segments.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.enable_segmentation
 		ensure
@@ -38,10 +43,20 @@ feature -- Status setting
 
 	disable_segmentation is
 			-- Display continuous bar.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.disable_segmentation
 		ensure
 			not_is_segmented: not is_segmented
+		end
+
+feature {NONE} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_GAUGE} and is_segmented
 		end
 
 feature {NONE} -- Implementation
@@ -66,52 +81,3 @@ end -- class EV_PROGRESS_BAR
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.11  2000/04/13 18:01:57  brendel
---| Removed set_proportion since it is now in EV_GAUGE.
---|
---| Revision 1.10  2000/03/21 19:10:39  oconnor
---| comments, formatting
---|
---| Revision 1.9  2000/02/29 18:09:10  oconnor
---| reformatted indexing cluase
---|
---| Revision 1.8  2000/02/22 18:39:52  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.7  2000/02/16 03:53:07  brendel
---| Added invariant for proportion, which states that whenever maximum
---| = minimum, proportion should be 0.0.
---|
---| Revision 1.6  2000/02/14 11:40:53  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.5.6.5  2000/01/31 21:30:50  brendel
---| Revised.
---|
---| Revision 1.5.6.4  2000/01/28 22:24:25  oconnor
---| released
---|
---| Revision 1.5.6.3  2000/01/27 19:30:56  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.5.6.2  2000/01/17 19:08:49  oconnor
---| changed percentage to proportion, set_segmented to enable_segmentation
---|
---| Revision 1.5.6.1  1999/11/24 17:30:55  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.5.2.3  1999/11/04 23:10:55  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.5.2.2  1999/11/02 17:20:13  oconnor
---| Added CVS log, redoing creation sequence
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

@@ -15,17 +15,21 @@ creation
 
 feature -- Access
 
-	first_window: EV_RADIO_MENU_TEST_WINDOW is
-			--
-		once
-			create Result.make
+	make_and_launch is
+		do
+			default_create
+			prepare
+			launch
 		end
+
+	first_window: EV_RADIO_MENU_TEST_WINDOW
 
 	prepare is
 		do
 		--	first_window.show
 		--	destroy
+			create first_window.make
 			post_launch_actions.extend (~destroy)
 		end
 
-end -- class ROOT_CLASS
+end -- class EV_RADIO_MENU_TEST

@@ -1,75 +1,186 @@
-Looked at:
-    kernel
-    support
-    properties
-    widgets/uncommon_widgets
-    widgets/containers
-    widgets/primitives
+================================================================================
+RELEASE CRITICAL ITEMS
+================================================================================
 
-To look at:
-    widgets/common_dialogs
-    figures
-    events
-    pick_and_drop
-    
-To delete: 
-    ev_composed_item.e
-    ev_separator_item.e
-    ev_gtk_callback_marshal.e
+TO DO:
+======
 
-To be revised:
-    ev_multi_column_list_row.e
-    ev_text.e (PR 2219)
-    ev_text_format.e
-    ev_simple_item.e
+- Reorganize directory structure.
 
-    ev_dynamic_table.e
-    ev_fixed.e
-    ev_password_field.e
-    ev_scrollable_text.e
-    ev_dynamic_tree_item.e
+- Clean up C external code.
 
-To do:
-- Fix radio grouping in menus on GTK.
-- Splitter cursor in EV_SPLIT_AREA.
-- Redo windows dialog implementation.
-- The event `expose_actions' is triggered twice on a container when a window
-  is resized. !! This makes resizing take twice as long!!
-- Load different file formats in GTK EV_PIXMAP_IMP.
-- Fix key release events on GTK.
-- Fix key as string action sequence.
-- Check for things that could inherit textable (frame, menu, simple item)
-- Add EV_SELECTABLE AND EV_DESELECTABLE where deselect inherits select.
-- Add EV_SENSITIVE??
-- Test circular parenting contracts for items and widgets.
-- Check export of stuff int _I and _IMP, nothing should be exported to all,
-  export to EV_ANY and EV_ANY_I is the most open anything should be.
-- How would you do a windowless app?
+- Further review of figures cluster.
+  (Feature names like `angle_rel_to' are a bad smell.)
+
+
+TO FIX/INVESTIGATE/COMPLETE:
+===========================
+
+- Text editor capture behaves differently from diagram tool capture in bench.
+
+- Check consistency of show_modal enable/disable modal features.
+  Define explicit behavior for modal windows/dialogs and test both platforms.
+
+- Postscript projector and print dialogs to be completed.
+
+- Pixmap saving to be completed, includes fixing alpha support in EV_COLOR.
+  (Potentially hard on both platforms)
+
+- Pixmap loading needs to be revised so that load_from_buffer and load_from_file
+  work the same way. (GEL implementor should check progress of GdkPixbuf on the
+  GTK mailing list)
+  (Potentially hard on both platforms)
+
+- Implement pixmap is_equal (awaiting on agent comparison functionality in base).
+
+- EV_RELATIVE_POINT.notify_of_position_change: Remove object_id from list
+
+- Stock cursors and pixmaps to be designed and stored in eiffel files.
+  (Base64 encoding should be put into base library and used for this)
+
+- EV_COLOR.delta: test on different platforms/color depths/system loads.
+
+- EV_COLOR alpha channel integration (2d -IK)
+
+- (GEL) Tooltips only displayed on lowest widget in a vertical box of widgets.
+
+- (GEL) Tree: After minimizing trees stop working in bench. GtkCritical errors.
+
+- (GEL) Make sure selected item in a list (and mc-list) is always visible. 
+
+- (WEL) Implement PND for combo-box and menu. (Fairly difficult - JR)
+
+- (WEL) Implement tooltips on trees. (Quite hard. - JR)
+
+- (WEL) Some destruction order problems (no_calls_after_destroy invariant)
+
+TO ADD:
+=======
+
+- EV_FIGURE_WIDGET
+  An EV_FIGURE that has features `set_widget (a_widget: EV_WIDGET)',
+  `widget: EV_WIDGET' and `remove_widget'. The projector should draw the
+  widget at with the upper left corner at the (x,y) position of the figure
+  and with the widget's minimum (width, height).
+  The best implementation seems to be this: The projector will have an
+  EV_FIXED with an EV_DRAWABLE in it. Normal figures will be drawn into the
+  drawable as usual. EV_FIGURE_WIDGETs will be placed in the appropriate
+  places in the EV_FIXED so as to appear over the normally drawn figures.
+  This will mean that the widgets will always obscure other figures but that
+  is something we can live with (it is not important to the customer who needs
+  this feature)
+
+
+TO TEST:
+========
+
+- PND on all widgets and items
+
+- Tooltips on all tooltipable classes.
+
+
+================================================================================
+NON RELEASE CRITICAL ITEMS
+================================================================================
+
+TO DO:
+======
+
+- Speed optimization.
+
+- Resource usage optimization.
+
+- Brainstorm new action sequences.
+  parented_actions? displayed_actions?....
+
+- Further review of dialog behaviour.
+
+
+TO FIX/INVESTIGATE/COMPLETE:
+===========================
+
+- ev_font.e Fonts need to be reviewed WRT addition of convenience features
+  Points functionality needs to be added to interface (2d - IK)
+
+- Fix broken EV_FIGURE_MATH `distance_from_line' and `point_on_segment' (2d - IK)
+
+- Implement EV_FIGURE `intersects' (3h - IK)
+
+- Implement EV_FIGURE_ARC, EV_FIGURE_PIE_SLICE, EV_FIGURE_POLYLINE,
+  EV_FIGURE_RECTANGLE, EV_FIGURE_TEXT `position_on_figure' (3d - IK)
+
+- Implement EV_RELATIVE_POINT `angle_rel_to' (4h - IK)
+
+- Make filters in file dialog more flexible. (Combo box of filters)
+
+- Find a nice way to display a wait cursor and ignore input while processing.
+
+- Small windows in bench (eg class selection window) have inconsistent resizing
+  behavior across platforms.
+
+- Add destroy_actions in EV_WIDGET and make sure it works for all descendants.
+
+- EV_DIALOG PR:2231 Dialogs need to have a minimum size so we can control the
+  appearance. We need to have control of the size that is not totally
+  dependent on the amount of text in the message. - Keith Soper
+
 - Check places that have is_equal in postcondition, mabey add "and /=".
-- Check that dialogs close when clicked.
-- Check that set_focus works everywhere.
-- Check contracts for colors with respect to the fact that the colour requested
-  is not always the color returned. (ie on 8 bit displays)
-- Test combo box on windows.
-- Check PND for all items on GTK.
-- Look into recursive radio events problem.
-- Look into destroyed tree item problem.
-- Test all state variables in non-parented widgets.
-- Rename titled_window_imp.e <-> window_imp.e
+
+- (WEL) Implement EV_ALIGNMENT.
+
+- (WEL) Implement features like changing title/position for dialogs:
+        color font open save directory.
+
+- (WEL) EV_TEXT_IMP  Selecting text using shift and page down. When
+        reaching the last page, the cursor is not moved to the last position
+		of the text. May be tricky but should not be too hard. - JR
+
+- (WEL) EV_COMBO_BOX_IMP One fixme on internal_propagate_pointer_press which
+        I believe stops the pick and drop and possibly the items from
+		receiving mouse events properly. -JR
+
+- (WEL) EV_INPUT_DEVICE_DIALOG to open control panel for whatever funky input
+        device is installed (it graphics tablet, CAD puck...)
+
+- (WEL) EV_MENU_IMP - One fixme saying that either the text or the pixmap can
+        be displayed although not both at the same time which is the desired
+		behavior. I would think this is a difficult problem to solve without
+		drawing the menu ourselves, which we definitely do not want to do. - JR
+
+- (GEL) EV_WINDOW, Can postcondition of minimize/restore be implemented?
+
+- (GEL) EV_WINDOW, Should set size features be requests since they are
+        implemented through WM hints?
 
 
-Feature/Bug requests:
-- EV_LABEL.vertical align_text_center. (jfiat@capgemini.fr)
-- EV_MULTI_COLUMN_LIST double click. (jfiat@capgemini.fr)
-- Link up to windows scroll bar width settings. (pichery@eiffel.com, PR 2390)
-- popup (message, help_anchor: STRING;
-    <<["ok",~ok_action];["toto",~do_toto];["tata",Void];>>
-  ) (pascalf@eiffel.com)
-- Print dialog. (pascalf@eiffel.com)
-- Is it possible to sort data in a multiple column list ? Is it possible to
-  set editable the cells of the list ? (jsireude@capgemini.fr, PR 2456) 
+TO ADD:
+=======
 
+- minimize/maximize action sequences.
+
+- Calendar widget.
+
+- Color/Font widgets (not dialogs)
+
+- Date/time entry field using EV_AGGREGATE widget.
+
+- Tk style packing container.
+
+- Handle box widgets
+
+- Ruler widget
+
+
+TO TEST:
+========
+
+- Every feature of every class in a range of different states.
+
+    
+================================================================================
 Status:                                                    
+================================================================================
+
 .   not implemented
 o   incomplete
 *   complete
@@ -77,12 +188,13 @@ X   complete but found to have bugs
 -   NA
 (Note the TEST column will be used later)
 
+
                                                         IF   WEL   GEL   TEST
   Base:                                        
     kernel/ev_any.e                                     *    -     *     .
     properties/ev_drawable.e                            *    *     *     .
     properties/ev_drawable_constants.e                  *    *     *     .
-    properties/ev_fontable.e                            *    *     o     .
+    properties/ev_fontable.e                            *    *     *     .
     properties/ev_pick_and_dropable.e                   o    o 2   o 1   .
     properties/ev_pixmapable.e                          *    *     *     .
     properties/ev_textable.e                            *    *     *     .
@@ -100,8 +212,7 @@ X   complete but found to have bugs
     kernel/keys.def                                     o    -     -     .
     kernel/ev_color.e                                   *    *     *     .
     kernel/ev_coordinates.e                             *    -     -     .
-    kernel/ev_cursor.e                                  o    o 3   o     .
-    kernel/ev_cursor_code.e                             o    *     o     .
+    kernel/ev_cursor.e                                  o    -	   -     .
     kernel/ev_font.e                                    o    *     *     .
     kernel/ev_rectangle.e                               o    -     -     .
     kernel/ev_timeout.e                                 *    *     *     .
@@ -118,15 +229,15 @@ X   complete but found to have bugs
     widgets/primitives/ev_select_button.e               *    *     *     .
     widgets/primitives/ev_check_button.e                *    *     *     .
     widgets/primitives/ev_option_button.e               *    *     *     .
-    widgets/primitives/ev_radio_button.e                *    *     o .1  .
+    widgets/primitives/ev_radio_button.e                *    *     *  .
     widgets/primitives/ev_toggle_button.e               *    *     *     .
  
   Misc widgets:
-    widgets/primitives/ev_combo_box.e                   *    o     o 1   .
+    widgets/primitives/ev_combo_box.e                   *    o     *   .
     widgets/primitives/ev_text_component.e              o    *     *     .
     widgets/primitives/ev_text_field.e                  *    *     *     .
     widgets/primitives/ev_label.e                       *    *     *     .
-    widgets/primitives/ev_drawing_area.e                *    *     o     .
+    widgets/primitives/ev_drawing_area.e                *    *     *     .
     widgets/primitives/ev_separator.e                   *    *     *     .
     widgets/primitives/ev_horizontal_separator.e        *    *     *     .
     widgets/primitives/ev_vertical_separator.e          *    *     *     .
@@ -166,8 +277,8 @@ X   complete but found to have bugs
     widgets/containers/ev_window.e                      *    o 2   o     .
     widgets/containers/ev_dialog.e                      o    *     *     .
     widgets/containers/ev_titled_window.e               o    *     o     .
-    widgets/containers/ev_viewport.e                    *    *     o     .
-    widgets/containers/ev_scrollable_area.e             *    *     o     .
+    widgets/containers/ev_viewport.e                    *    *     *     .
+    widgets/containers/ev_scrollable_area.e             *    *     *     .
     widgets/containers/ev_widget_list.e                 *    *     *     .
     widgets/containers/ev_dynamic_list_cursor.e         *    *     *     .
     widgets/containers/ev_notebook.e                    *    *     *     .
@@ -180,13 +291,13 @@ X   complete but found to have bugs
     widgets/containers/ev_vertical_split_area.e         o    -     -     .
 
   Menu:
-    widgets/uncommon_widgets/ev_menu.e                  *    *     o     .
+    widgets/uncommon_widgets/ev_menu.e                  *    *     *     .
     widgets/uncommon_widgets/ev_menu_bar.e              *    *     *     .
-    widgets/containers/ev_menu_item_list.e              o    *     o     .
+    widgets/containers/ev_menu_item_list.e              o    *     *     .
     items/ev_menu_item.e                                o    *     *     .
     items/ev_check_menu_item.e                          *    *     *     .
     items/ev_menu_separator.e                           *    *     *     .
-    items/ev_radio_menu_item.e                          *    *     o     .
+    items/ev_radio_menu_item.e                          *    *     *     .
     items/ev_select_menu_item.e                         *    *     *     .
 
   Status bar:
@@ -197,7 +308,7 @@ X   complete but found to have bugs
     widgets/primitives/ev_tool_bar.e                    o    *     *     .
     items/ev_tool_bar_item.e                            *    *     *     .
     items/ev_tool_bar_button.e                          o    *     *     .
-    items/ev_tool_bar_radio_button.e                    *    *     o     .
+    items/ev_tool_bar_radio_button.e                    *    *     *     .
     items/ev_tool_bar_separator.e                       *    .     *     .
     items/ev_tool_bar_toggle_button.e                   *    o     *     .
 
@@ -211,8 +322,54 @@ X   complete but found to have bugs
     items/ev_list_item.e                                *    *     *     .
 
   Multi column list:
-    widgets/primitives/ev_multi_column_list.e           *    *     o     .
-    items/ev_multi_column_list_row.e                    *    *     o     .
+    widgets/primitives/ev_multi_column_list.e           *    *     *     .
+    items/ev_multi_column_list_row.e                    *    *     *     .
 
                                                  totals        17
 
+
+================================================================================
+Prerelease customers:
+================================================================================
+
+	richieb@calfp.com
+	KSoper@sprynet.com
+	tony.williams@northampton.ac.uk
+	jimmy.johnson@dcandr.ang.af.mil
+	hiebertd@XonTech.com
+	jfiat@capgemini.fr
+	mhoward@axarosenberg.com
+	dhollen@ISI.EDU
+	osmond@emc.com
+	gwongso@capgemini.fr
+	jsireude@capgemini.fr
+	niall@cuc.ucc.ie
+	paco@enea.se
+	zador@free.fr
+	eric.fafchamps@groupes.be
+	mgacsaly@axarosenberg.com
+	jsmall@rogare.com
+	asoto@cawtech.com
+	wbuc44@cbot.com
+	jfharrigan@fedex.com
+	eirik@otp.no
+	manus@eiffel.com
+	bmeyer@eiffel.com
+	sleblond@capgemini.fr
+	chee@eiffel.com
+	vision2@eiffel.com
+	solal@eiffel.com
+	Leila.AITKACIAHMED@enst-bretagne.fr
+	Volkan_Arslan@gmx.net
+	peter@objectshop.co.za
+	Bolstad.Mark@epa.gov
+	rprenot@execpc.com
+	manfred@conae.gov.ar
+	RichardMouli@mac.com
+	leadbetter@northampton.ac.uk
+	guy.fokou@groupes.be
+	chris@ucmb.ulb.ac.be
+	victor_y_chu@hotmail.com
+	gsantos@synricity.com
+
+================================================================================

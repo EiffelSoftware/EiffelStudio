@@ -72,6 +72,12 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.4.1  2000/05/03 19:08:52  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.13  2000/04/26 23:49:03  king
 --| Corrected external call to zero-based positioning
 --|

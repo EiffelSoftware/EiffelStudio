@@ -19,6 +19,8 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is this menu item checked?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_selected
 		ensure
@@ -29,6 +31,8 @@ feature -- Status setting
 
 	enable_select is
 			-- Set `is_selected' `True'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.enable_select
 		ensure
@@ -57,19 +61,3 @@ end -- class EV_SELECT_MENU_ITEM
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.2  2000/03/24 03:10:22  oconnor
---| formatting and comments
---|
---| Revision 1.1  2000/02/24 20:29:09  brendel
---| Initial revision. Needed for rearranged radio-item inheritance structure.
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------
-

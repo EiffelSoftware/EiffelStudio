@@ -19,7 +19,8 @@ deferred class
 inherit
 	ANY
 		redefine
-			default_create
+			default_create,
+			copy
 		end
 	
 feature {EV_ANY} -- Initialization
@@ -28,11 +29,10 @@ feature {EV_ANY} -- Initialization
 --| Creation sequence for all Vision2 objects is like this:
 --|
 --| - Default_create is defined once in EV_ANY.
---| - Create_action_sequences and create_implementation are defined in
---|   descendants, default_create calls them.
+--| - create_implementation is defined in descendants, default_create calls them
 --| - After it is created, initialize is called on the implementation, this will
 --|   do extra setup work but need not be redefined in every descendant.
---|   (Probably redefined in EV_WIDGET_IMP but not to many other places)
+--|   (Probably redefined in EV_WIDGET_IMP but not too many other places)
 --|   Next default_create calls initialize on Current.
 --|
 --| `default_create' must be called during creation to satisfy the invariant.
@@ -40,9 +40,9 @@ feature {EV_ANY} -- Initialization
 --| initialized default object and any special convenience creation features
 --| will call default_create then do their extra work.
 --|
---| The postcondition of `default_create' checks `is_in_deafult_state', this
+--| The postcondition of `default_create' checks `is_in_default_state', this
 --| returns True by default but should be redefined by decendants to check for
---| propper initial results from class queries.
+--| proper initial results from class queries.
 --|-----------------------------------------------------------------------------
 
 	frozen default_create is
@@ -56,8 +56,10 @@ feature {EV_ANY} -- Initialization
 					--| objects is not allowed unless a
 					--| special purpose feature is provided.
 			end
+			check
+				application_exists: application_exists
+			end
 			default_create_called := True
-			create_action_sequences
 			create_implementation
 			implementation.initialize
 			initialize
@@ -89,7 +91,7 @@ feature -- Status Report
 			bridge_ok: Result = implementation.is_destroyed
 		end
 
-feature {EV_ANY} -- Status Report
+feature -- Status Report
 
 	default_create_called: BOOLEAN
 			-- Has `default_create' been called?
@@ -133,17 +135,6 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {EV_ANY} -- Implementation
 
-	create_action_sequences is 
-			-- Create action sequence objects.
-			-- Should only be called from `default_create'
-			-- Must be defined in each descendant to create the
-			-- appropriate objects.
-			-- Each redefinition should call `Precursor'.
-		require
-			implementation_not_already_created: implementation = Void
-		do
-		end
-
 	create_implementation is 
 			-- Create `implementation'.
 			-- Must be defined in each descendant to create the
@@ -171,8 +162,23 @@ feature {EV_ANY} -- Implementation
 
 	is_initialized: BOOLEAN
 			-- Has `Current' been initialized properly?
+			
+feature --
 
-feature {EV_ANY} -- Contract support
+	copy (other: like Current) is
+			-- 
+		do
+			check
+				cannot_copy_this_vision2_class: False
+			end
+			-- Copy is not permitted for most Vision2 classes.
+			-- The following Vision2 classes may be copied :-
+				-- EV_FONT
+				-- EV_COLOR
+				-- EV_PIXMAP
+		end
+
+feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default sate.
@@ -189,82 +195,19 @@ feature {EV_ANY} -- Contract support
 			Result := True
 		end
 
-	is_useable: BOOLEAN is
-			-- Is `Current' useable?
+feature {EV_ANY} -- Contract support
+
+	is_usable: BOOLEAN is
+			-- Is `Current' usable?
 		do
 			Result := is_initialized and not is_destroyed
 		end
 
-	action_sequences: HASH_TABLE [ACTION_SEQUENCE [TUPLE], STRING] is
-			-- Linear structure containing action sequences.
-		local
-			internal: INTERNAL
-			i: INTEGER
-			aseq: ACTION_SEQUENCE [TUPLE]
+	application_exists: BOOLEAN is
+			-- Does the application exist? This is used to stop
+			-- manipulation of widgets before an application is created.
 		do
-			create internal
-			create Result.make (10)
-			from
-				i := 1
-			until
-				i > internal.field_count (Current)
-			loop
-				aseq ?= internal.field (i, Current)
-				if aseq /= Void then
-					Result.force (aseq, internal.field_name (i, Current))
-				end
-				i := i + 1
-			end
-		end
-
-	action_sequence_test_widget: EV_WIDGET is
-			-- Widget for testing action sequences.
-		local
-			box: EV_VERTICAL_BOX
-			label: EV_LABEL
-			aseqs: HASH_TABLE [ACTION_SEQUENCE [TUPLE], STRING]
-			ev_as: EV_ACTION_SEQUENCE [TUPLE]
-		do
-			create box
-			Result := box
-			from
-				aseqs := action_sequences
-				aseqs.start
-			until
-				aseqs.after
-			loop
-				create label.make_with_text (aseqs.key_for_iteration)
-				label.align_text_left
-				box.extend (label)
-				ev_as ?= aseqs.item_for_iteration
-				if ev_as /= Void then
-					ev_as.force_extend (label~align_text_right)
-				end
-				aseqs.forth
-			end
-		end
-
-feature -- Duplication
-
-	frozen ev_clone (other: EV_ANY): like other is
-			-- Void if `other' is void; otherwise new object
-			-- equal to `other'
-			--
-			-- For non-void `other', `clone' calls `default_create'
-			-- and then `copy'
-			-- to change copying/cloning semantics, redefine `copy'.
-		local
-			temp: BOOLEAN
-		do
-			if other /= Void then
-				temp := c_check_assert (False)
-				Result ?= c_standard_clone ($other)
-				Result.default_create
-				Result.copy (other)
-				temp := c_check_assert (temp)
-			end
-		ensure
-			equal: equal (Result, other)
+			Result := (create {EV_ENVIRONMENT}).application /= Void
 		end
 
 invariant
@@ -290,7 +233,6 @@ end -- class EV_ANY
 --| The implementation interface should really be generated from the interface.
 --|
 --| The following features of the bridge patter are not used in Eiffel Vision.
---| - Subsitiution of different implementations for one interface at runtime.
 --| - Hiding of propritary implementation through delivery of interface source
 --|   but only compiled implementations. (Not applicable in Eiffel)
 --| - Protection of clients from relinking due to implementation changes.
@@ -314,131 +256,3 @@ end -- class EV_ANY
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-
---|-----------------------------------------------------------------------------
---| CVS log
---|-----------------------------------------------------------------------------
---|
---| $Log$
---| Revision 1.19  2000/06/07 17:28:06  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.7.4.2  2000/05/05 22:25:48  pichery
---| Added feature `ev_clone'.
---|
---| Revision 1.7.4.1  2000/05/03 19:09:59  oconnor
---| mergred from HEAD
---|
---| Revision 1.18  2000/04/12 01:38:54  pichery
---| when changing implementation, the
---| old implementation still has a reference
---| on the interface, but it is no more
---| initialized.
---|
---| Revision 1.17  2000/04/11 17:55:47  oconnor
---| oops
---|
---| Revision 1.16  2000/04/11 17:29:06  oconnor
---| added replace_implementation
---|
---| Revision 1.15  2000/03/16 01:08:34  oconnor
---| added comments about bridge pattern
---|
---| Revision 1.14  2000/03/02 21:04:12  oconnor
---| Removed second comment about initialize not being needed.
---|
---| Revision 1.13  2000/03/02 21:00:01  oconnor
---| Removed FIXME about possible removal from initialize,
---| initialize is needed by platform independant widgets
---| and by users wishing to subclass vision classes.
---|
---| Revision 1.12  2000/03/01 03:18:27  oconnor
---| reverted last commit which was in error
---|
---| Revision 1.10  2000/02/22 18:39:48  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.9  2000/02/15 18:45:33  oconnor
---| added beginings of actions sequence testing system
---|
---| Revision 1.8  2000/02/14 11:40:47  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.7.6.21  2000/01/27 23:32:25  oconnor
---| released
---|
---| Revision 1.7.6.20  2000/01/27 19:30:39  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.7.6.19  2000/01/27 02:36:08  brendel
---| Removed frozen from `initialize'.
---|
---| Revision 1.7.6.18  2000/01/15 01:56:39  oconnor
---| formatting
---|
---| Revision 1.7.6.17  1999/12/16 09:24:30  oconnor
---| added is_useable = is_initialized and not is_destroyed
---|
---| Revision 1.7.6.16  1999/12/16 02:20:57  oconnor
---| extended creation sequence comment
---|
---| Revision 1.7.6.15  1999/12/16 02:18:14  oconnor
---| improved comment on is_in_default_state
---|
---| Revision 1.7.6.14  1999/12/16 02:13:52  oconnor
---| added comment to is_in_default_state
---|
---| Revision 1.7.6.13  1999/12/16 02:00:25  oconnor
---| added is_in_default_state: BOOLEAN feature to check initiali state
---|
---| Revision 1.7.6.12  1999/12/15 05:21:44  oconnor
---| formatting
---|
---| Revision 1.7.6.11  1999/12/15 00:24:54  oconnor
---| formatting tweak
---|
---| Revision 1.7.6.10  1999/12/07 20:48:01  oconnor
---| added frozen to initialize, no one should use it
---|
---| Revision 1.7.6.9  1999/12/01 01:49:36  oconnor
---| formatting
---|
---| Revision 1.7.6.8  1999/12/01 01:46:52  oconnor
---| spelink
---|
---| Revision 1.7.6.7  1999/12/01 01:02:12  oconnor
---| layout tweak
---|
---| Revision 1.7.6.6  1999/12/01 00:59:28  oconnor
---| improved layout and variable names
---|
---| Revision 1.7.6.5  1999/12/01 00:48:51  oconnor
---| improved comments
---|
---| Revision 1.7.6.4  1999/11/24 22:40:03  oconnor
---| improved comments
---|
---| Revision 1.7.6.3  1999/11/24 17:30:43  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.7.6.2  1999/11/24 00:13:11  oconnor
---| merged new comment from REVIEW_BRANCH
---|
---| Revision 1.7.6.1  1999/11/23 23:18:00  oconnor
---| merged from REVIEW BRANCH
---|
---| Revision 1.7.2.8  1999/11/23 02:10:49  oconnor
---| added create_action_sequences
---|
---| Revision 1.7.2.7  1999/11/04 23:07:14  oconnor
---| strengthend is_coupled invariant, added destroy feature
---|
---| Revision 1.7.2.6  1999/11/02 17:20:11  oconnor
---| Added CVS log, redoing creation sequence
---|
---| Revision 1.7.2.5  1999/10/14 21:58:20  oconnor
---| tweaked cvs log
---|
---|-----------------------------------------------------------------------------
---| End of CVS log
---|-----------------------------------------------------------------------------

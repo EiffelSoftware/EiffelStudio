@@ -14,7 +14,9 @@ inherit
 		redefine
 			interface,
 			initialize,
-			item
+			item,
+			call_pebble_function,
+			update_child
 		end
 
 	EV_PRIMITIVE_IMP
@@ -22,13 +24,20 @@ inherit
 			enable_transport,
 			disable_transport,
 			pre_pick_steps,
+			call_pebble_function,
 			post_drop_steps,
 			start_transport_filter,
 			initialize,
 			pointer_over_widget,
 			interface,
 			destroy,
-			colorizable_object
+			visual_widget,
+			able_to_transport,
+			ready_for_pnd_menu,
+			set_to_drag_and_drop,
+			button_press_switch,
+			create_pointer_motion_actions,
+			disconnect_all_signals
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -40,8 +49,12 @@ inherit
 			add_to_container,
 			destroy,
 			list_widget,
-			interface
+			interface,
+			visual_widget,
+			disconnect_all_signals
 		end
+
+	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
 
 create
 	make
@@ -54,25 +67,68 @@ feature {NONE} -- Initialization
 			-- By default, a list allow only one selection.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			scroll_window := (
-				C.gtk_scrolled_window_new (
-					NULL, 
-					NULL
-				)
-			)
+			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
 			C.gtk_scrolled_window_set_policy (
-				scroll_window,
+				c_object,
 				C.GTK_POLICY_AUTOMATIC_ENUM,
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
-			C.gtk_widget_show (scroll_window)
-			C.gtk_container_add (c_object, scroll_window)
+			visual_widget := C.gtk_event_box_new
+			C.gtk_widget_show (visual_widget)
+			C.gtk_scrolled_window_add_with_viewport (c_object, visual_widget)
 			create ev_children.make (0)
 			set_row_height (15)
 				-- create a list with one column
 			create_list (1)
 		end
+
+	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+			-- Create a pointer_motion action sequence.
+		do
+			create Result
+		end
+
+	button_press_switch (
+			a_type: INTEGER;
+			a_x, a_y, a_button: INTEGER;
+			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+			a_screen_x, a_screen_y: INTEGER)
+		is
+		local
+			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
+				INTEGER, INTEGER]
+
+			a_row_number: INTEGER
+			clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
+				a_screen_x, a_screen_y]
+			a_row_number := (a_y // row_height) + 1
+			if a_row_number <= count then
+				clicked_row := ev_children @ a_row_number
+			end
+			if a_type = C.GDK_BUTTON_PRESS_ENUM then
+				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
+					pointer_button_press_actions_internal.call (t)
+				end
+				if
+					clicked_row /= Void and then 
+					clicked_row.pointer_button_press_actions_internal /= Void
+				then
+					clicked_row.pointer_button_press_actions_internal.call (t)
+				end
+			elseif a_type = C.GDK_2BUTTON_PRESS_ENUM and not is_transport_enabled then
+				if pointer_double_press_actions_internal /= Void then
+					pointer_double_press_actions_internal.call (t)
+				end
+				if
+					clicked_row /= Void and then 
+					clicked_row.pointer_double_press_actions_internal /= Void
+				then
+					clicked_row.pointer_double_press_actions_internal.call (t)
+				end
+			end
+        	end
 
 	create_list (a_columns: INTEGER) is
 			-- Create the clist with `a_columns' columns.
@@ -86,11 +142,17 @@ feature {NONE} -- Initialization
 			temp_alignment, default_alignment: EV_TEXT_ALIGNMENT
 			temp_alignment_code: INTEGER
 			p: POINTER
+			is_multiple_selected: BOOLEAN
 		do
+			
 			old_list_widget := list_widget
+			if old_list_widget /= NULL then
+				is_multiple_selected := multiple_selection_enabled
+			end
 			create default_alignment
 			
 			list_widget := C.gtk_clist_new (a_columns)
+			disable_multiple_selection
 		
 			real_signal_connect (
 				list_widget,
@@ -110,6 +172,12 @@ feature {NONE} -- Initialization
 				~column_click_callback,
 				~gtk_value_int_to_tuple
 			)
+			real_signal_connect (
+				list_widget,
+				"resize_column",
+				~column_resize_callback,
+				~column_resize_callback_translate
+			)				
 			
 			if row_height > 0 then
 				set_row_height (row_height)		
@@ -178,50 +246,106 @@ feature {NONE} -- Initialization
 			end
 			
 			if old_list_widget /= NULL then
-				C.gtk_container_remove (scroll_window, old_list_widget)
+				C.gtk_container_remove (visual_widget, old_list_widget)
 			end
-			C.gtk_container_add (scroll_window, list_widget)
+			C.gtk_container_add (visual_widget, list_widget)
+			if is_multiple_selected then
+				enable_multiple_selection
+			end
 		end
 
 	select_callback (int: TUPLE [INTEGER]) is
 		local
 			temp_int: INTEGER_REF
 			a_position: INTEGER
-			an_item: EV_MULTI_COLUMN_LIST_ROW
+			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			temp_int ?= int.item (1)
 			a_position := temp_int.item + 1
 
-			an_item := (ev_children @ a_position).interface
-			an_item.select_actions.call ([])
-			interface.select_actions.call ([an_item])
+			an_item := (ev_children @ a_position)
+			if an_item.select_actions_internal /= Void then
+				an_item.select_actions_internal.call ([])
+			end
+			if select_actions_internal /= Void then
+				select_actions_internal.call ([an_item.interface])
+			end
 		end
 
 	deselect_callback (int: TUPLE [INTEGER]) is
 		local
 			temp_int: INTEGER_REF
 			a_position: INTEGER
-			an_item: EV_MULTI_COLUMN_LIST_ROW
+			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			temp_int ?= int.item (1)
 			a_position := temp_int.item + 1
-
-			an_item := (ev_children @ a_position).interface
-			an_item.deselect_actions.call ([])
-			interface.deselect_actions.call ([an_item])
+			an_item := (ev_children @ a_position)
+			if an_item.deselect_actions_internal /= Void then
+				an_item.deselect_actions_internal.call ([])
+			end
+			if deselect_actions_internal /= Void then
+				deselect_actions_internal.call ([an_item.interface])
+			end
 		end
 
 	column_click_callback (int: INTEGER) is
 		do
-			-- FIXME IEK Should include column number somewhere.
-			interface.column_click_actions.call ([])
+			if column_title_click_actions_internal /= Void then
+				column_title_click_actions_internal.call ([int + 1])
+			end
+		end
+
+	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE is
+		local
+			gtkarg2: POINTER
+		do
+			gtkarg2 := gtk_args_array_i_th (args, 1)
+			Result := [gtk_value_int (args) + 1, gtk_value_int (gtkarg2)]
+			-- Column is zero based in gtk.
+		end
+
+	column_resize_callback (int: TUPLE [INTEGER]) is
+		local
+			temp_col, temp_wid: INTEGER_REF
+		do
+			temp_col ?= int.item (1)
+			-- Set column width array to new width.
+			if (temp_col.item) <= column_count and column_widths /= Void then
+				temp_wid ?= int.item (2)
+				update_column_width (temp_wid.item, temp_col.item)
+			end
 		end
 
 	initialize is
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_MULTI_COLUMN_LIST_I} Precursor
-		end	
+			real_signal_connect (visual_widget, "motion_notify_event", ~motion_handler, Default_translate)
+			connect_button_press_switch
+			disable_multiple_selection
+		end
+
+	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
+		local
+			t: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
+			a_row_number: INTEGER
+			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+			t := [a_x, a_y, a_a, a_b, a_c, a_d, a_e]
+			if pointer_motion_actions_internal /= Void then
+				pointer_motion_actions_internal.call (t)
+			end
+			if a_y > y_coord_offset then
+				a_row_number := ((a_y - y_coord_offset) // row_height) + 1
+				if a_row_number <= count then
+					a_row_imp := ev_children @ a_row_number
+					if a_row_imp.pointer_motion_actions_internal /= Void then
+						a_row_imp.pointer_motion_actions_internal.call (t)
+					end
+				end
+			end
+		end
 
 feature -- Access
 
@@ -231,13 +355,6 @@ feature -- Access
 			if list_widget /= NULL then
 				Result := C.gtk_clist_struct_columns (list_widget)
 			end
-		end
-
-	gtk_clist_struct_columns (a_clist: POINTER): INTEGER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
-		alias
-			"columns"
 		end
 
 	rows, count: INTEGER is
@@ -348,7 +465,7 @@ feature -- Status report
 feature -- Status setting
 
 	destroy is
-		-- Destroy screen widget implementation and EV_LIST_ITEM objects
+			-- Destroy screen widget implementation and EV_LIST_ITEM objects
 		do
 			clear_items
 			{EV_PRIMITIVE_IMP} Precursor 
@@ -383,7 +500,7 @@ feature -- Status setting
 		do
 			C.gtk_clist_set_selection_mode (
 				list_widget,
-				C.GTK_SELECTION_SINGLE_ENUM
+				C.GTK_SELECTION_BROWSE_ENUM
 			)	
 		end
 
@@ -404,6 +521,17 @@ feature -- Status setting
 		do
 			if list_widget /= NULL then
 				C.gtk_clist_unselect_all (list_widget)
+			end
+		end
+
+	resize_column_to_content (a_column: INTEGER) is
+			-- Resize column `a_column' to width of its widest text.
+		do
+			if list_widget /= NULL then
+				column_width_changed (
+					C.gtk_clist_optimal_column_width (list_widget, a_column - 1),
+					a_column
+				)
 			end
 		end
 
@@ -476,26 +604,65 @@ feature {EV_APPLICATION_IMP} -- Implementation
 		local
 			gdkwin_parent, gdkwin_parent_parent: POINTER
 			clist_parent: POINTER
-			a_row: INTEGER
 		do
-			gdkwin_parent := C.gdk_window_get_parent (a_gdkwin)
-			if gdkwin_parent /= NULL then
-				gdkwin_parent_parent := C.gdk_window_get_parent (gdkwin_parent)
-			end
-			clist_parent := C.gdk_window_get_parent (
-				C.gtk_clist_struct_clist_window (list_widget)
-			)
-			Result := gdkwin_parent = clist_parent or
-				gdkwin_parent_parent = clist_parent
+			if is_displayed then
+				gdkwin_parent := C.gdk_window_get_parent (a_gdkwin)
+				if gdkwin_parent /= NULL then
+					gdkwin_parent_parent := C.gdk_window_get_parent (gdkwin_parent)
+				end
+				clist_parent := C.gdk_window_get_parent (
+					C.gtk_clist_struct_clist_window (list_widget)
+				)
+				Result := gdkwin_parent = clist_parent or
+					gdkwin_parent_parent = clist_parent
 
-			if clist_parent = gdkwin_parent then
-				if row_from_y_coord (a_y) /= 0 then
-					Result := False
+				if clist_parent = gdkwin_parent then
+					if row_from_y_coord (a_y) /= 0 then
+						Result := False
+					end
 				end
 			end
 		end
 
 feature -- Implementation
+
+	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
+		do
+			C.gtk_clist_freeze (list_widget)
+			Precursor {EV_MULTI_COLUMN_LIST_I} (child, a_row)
+			C.gtk_clist_thaw (list_widget)
+		end
+
+	set_to_drag_and_drop: BOOLEAN is
+		do
+			if pnd_row_imp /= Void then
+				Result := pnd_row_imp.mode_is_drag_and_drop
+			else
+				Result := mode_is_drag_and_drop
+			end
+		end
+
+	able_to_transport (a_button: INTEGER): BOOLEAN is
+			-- Is list or row able to transport PND data using `a_button'.
+		do
+			if pnd_row_imp /= Void then
+				Result := (pnd_row_imp.mode_is_drag_and_drop and a_button = 1) or
+				(pnd_row_imp.mode_is_pick_and_drop and a_button = 3)
+			else
+				Result := (mode_is_drag_and_drop and a_button = 1) or
+				(mode_is_pick_and_drop and a_button = 3)
+			end
+		end
+
+	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN is
+			-- Is list or row able to display PND menu using `a_button'
+		do
+			if pnd_row_imp /= Void then
+				Result := pnd_row_imp.mode_is_target_menu and then a_button = 3
+			else
+				Result := mode_is_target_menu and then a_button = 3
+			end
+		end
 
 	enable_transport is
 		do
@@ -541,7 +708,8 @@ feature -- Implementation
 					connect_pnd_callback
 				end
 			elseif not a_enable_flag and pebble = Void then
-				disable_transport
+				disable_transport_signals
+				is_transport_enabled := False
 			end
 		end
 
@@ -559,7 +727,7 @@ feature -- Implementation
 
 			if a_row_index > 0 then
 				pnd_row_imp := ev_children.i_th (a_row_index)
-				if not pnd_row_imp.is_transport_enabled then
+				if not pnd_row_imp.able_to_transport (a_button) then
 					pnd_row_imp := Void
 				end
 			end
@@ -582,6 +750,22 @@ feature -- Implementation
 			-- Returns data to be transported by PND mechanism.
 
 	temp_accept_cursor, temp_deny_cursor: EV_CURSOR
+
+	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+			-- Set `pebble' using `pebble_function' if present.
+		do
+			temp_pebble := pebble
+			temp_pebble_function := pebble_function
+			if pnd_row_imp /= Void then
+				pebble := pnd_row_imp.pebble
+				pebble_function := pnd_row_imp.pebble_function
+			end
+
+			if pebble_function /= Void then
+				pebble_function.call ([a_x, a_y]);
+				pebble := pebble_function.last_result
+			end		
+		end
 	
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
@@ -595,30 +779,20 @@ feature -- Implementation
 				app_imp_not_void: app_imp /= Void
 			end
 
-			temp_pebble := pebble
-			temp_pebble_function := pebble_function
 			temp_accept_cursor := accept_cursor
 			temp_deny_cursor := deny_cursor
-
-			if pnd_row_imp /= Void then
-
-				pebble := pnd_row_imp.pebble
-				pebble_function := pnd_row_imp.pebble_function
-			end
-
-			if pebble_function /= Void then
-				pebble_function.call ([a_x, a_y]);
-				pebble := pebble_function.last_result
-			end
-
 			app_imp.on_pick (pebble)
 
 			if pnd_row_imp /= Void then
-				pnd_row_imp.interface.pick_actions.call ([a_x, a_y])
+				if pnd_row_imp.pick_actions_internal /= Void then
+					pnd_row_imp.pick_actions_internal.call ([a_x, a_y])
+				end
 				accept_cursor := pnd_row_imp.accept_cursor
 				deny_cursor := pnd_row_imp.deny_cursor
 			else
-				interface.pick_actions.call ([a_x, a_y])
+				if pick_actions_internal /= Void then
+					pick_actions_internal.call ([a_x, a_y])
+				end
 			end
 
 			if accept_cursor = Void then
@@ -631,9 +805,38 @@ feature -- Implementation
 
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
-			if pick_x = 0 and pick_y = 0 then
-				pick_x := a_screen_x
-				pick_y := a_screen_y
+
+			if pnd_row_imp = Void then
+				if (pick_x = 0 and then pick_y = 0) then
+					x_origin := a_screen_x
+					y_origin := a_screen_y
+				else
+					if pick_x > width then
+						pick_x := width
+					end
+					if pick_y > height then
+						pick_y := height
+					end
+					x_origin := pick_x + (a_screen_x - a_x)
+					y_origin := pick_y + (a_screen_y - a_y)
+				end
+			else
+				if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
+					x_origin := a_screen_x
+					y_origin := a_screen_y
+				else
+					if pick_x > width then
+						pick_x := width
+					end
+					if pick_y > row_height then
+						pick_y := row_height
+					end
+					x_origin := pnd_row_imp.pick_x + (a_screen_x - a_x)
+					y_origin := 
+						pnd_row_imp.pick_y +
+						(a_screen_y - a_y) + 
+						((ev_children.index_of (pnd_row_imp, 1) - 1) * row_height)
+				end
 			end
 		end
 
@@ -643,6 +846,13 @@ feature -- Implementation
 			env: EV_ENVIRONMENT
 			app_imp: EV_APPLICATION_IMP
 		do
+			if pnd_row_imp /= Void then
+				if pnd_row_imp.mode_is_pick_and_drop then
+					signal_emit_stop (visual_widget, "button-press-event")
+				end
+			elseif mode_is_pick_and_drop then
+					signal_emit_stop (visual_widget, "button-press-event")
+			end
 			create env
 			app_imp ?= env.application.implementation
 			check
@@ -650,13 +860,13 @@ feature -- Implementation
 			end
 
 			app_imp.on_drop (pebble)
-			pick_x := 0 --| FIXME IEK This wipes out user setting of pick position
-			pick_y := 0
+			x_origin := 0
+			y_origin := 0
 			last_pointed_target := Void	
 
 			if pebble_function /= Void then
 				if pnd_row_imp /= Void then
-					--| FIXME IEK Make row pebble void.
+					pnd_row_imp.set_pebble_void
 				else
 					temp_pebble := Void
 				end
@@ -680,19 +890,32 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	row_from_y_coord (a_y: INTEGER): INTEGER is
 			-- Returns the row at relative coordinate `a_y'.
-		local
-			v_adjust: POINTER
 		do
-			v_adjust :=  C.gtk_scrolled_window_get_vadjustment (scroll_window)
-			Result := C.gtk_adjustment_struct_value (v_adjust).rounded
-			Result := a_y + Result
-			Result := Result // (row_height + 1) + 1
+			Result := a_y // (row_height + 1) + 1
 			if Result > ev_children.count then
 				Result := 0
 			end
 		end
 
 feature {NONE} -- Implementation
+
+	y_coord_offset: INTEGER is
+			-- Used for altering y coord to detect motion on rows.
+		do
+			if title_shown then
+				Result := 27
+				--| FIXME IEK Need to fetch the value from gtk.
+			else
+				Result := 4
+			end
+		end
+
+	gtk_clist_struct_columns (a_clist: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
+		alias
+			"columns"
+		end
 
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
 			-- Tuple containing integer value from first of `args'.
@@ -714,7 +937,7 @@ feature {NONE} -- Implementation
 					a_row - 1,
 					a_column - 1,
 					eiffel_to_c (a_text),
-					0,
+					3,
 					C.gtk_pixmap_struct_pixmap (pixmap_imp.gtk_pixmap),
 					C.gtk_pixmap_struct_mask (pixmap_imp.gtk_pixmap)
 				)
@@ -744,10 +967,7 @@ feature {NONE} -- Implementation
 	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Add `v' to the list.
 		local
-			an_index: INTEGER
-			column_i: INTEGER
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
-			a_curs: CURSOR
 			p: POINTER
 			dummy: INTEGER
 		do
@@ -789,7 +1009,6 @@ feature {NONE} -- Implementation
 			-- Move `v' to `a_position' in Current.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
-			temp_position: INTEGER
 			temp_list: like ev_children
 			a_counter: INTEGER
 		do
@@ -839,12 +1058,11 @@ feature {NONE} -- Implementation
 	row_height: INTEGER
 		-- Value used to store row height if list isn't yet created.
 
-	scroll_window: POINTER
-		-- Pointer to the scrollable window tree is in.
+	visual_widget: POINTER
 
-	colorizable_object: POINTER is
+	disconnect_all_signals is
 		do
-			Result := list_widget
+			--| FIXME
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -876,8 +1094,100 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.72  2000/06/07 17:27:39  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.73  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.20.4.40  2001/05/18 18:18:52  king
+--| Cosmetics
+--|
+--| Revision 1.20.4.39  2001/05/10 22:18:30  king
+--| Fixed PND bugs, changed single selection to browse, increased pixtext offset
+--|
+--| Revision 1.20.4.38  2001/04/18 18:32:59  king
+--| Redefined disconnect_all_signals to prevent gtk warnings
+--|
+--| Revision 1.20.4.37  2001/04/17 00:12:14  king
+--| Fixed pnd bug when widget isn't displayed
+--|
+--| Revision 1.20.4.36  2000/12/02 01:24:33  king
+--| Implemented resize_column_to_content
+--|
+--| Revision 1.20.4.35  2000/11/29 19:59:35  king
+--| Removed unused locals
+--|
+--| Revision 1.20.4.34  2000/11/29 00:55:27  king
+--| Implemented column widths updating
+--|
+--| Revision 1.20.4.33  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.20.4.32  2000/10/25 23:14:36  king
+--| Corrected button actions sequence calling
+--|
+--| Revision 1.20.4.31  2000/10/12 19:26:01  king
+--| Now always connecting button press switch for row AS calls
+--|
+--| Revision 1.20.4.30  2000/09/13 21:46:43  king
+--| Implemented row motion AS handling
+--|
+--| Revision 1.20.4.28  2000/08/28 16:43:18  king
+--| Removed event_widget
+--|
+--| Revision 1.20.4.27  2000/08/16 19:46:37  king
+--| Changed external export clause to {NONE}
+--|
+--| Revision 1.20.4.26  2000/08/08 00:03:15  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.20.4.25  2000/08/03 23:18:54  king
+--| Using internal column_click & pick_actions
+--|
+--| Revision 1.20.4.24  2000/07/31 18:57:29  king
+--| Removed unused local variables
+--|
+--| Revision 1.20.4.23  2000/07/29 00:40:27  king
+--| Implemented select callback to prevent AS instantiation
+--|
+--| Revision 1.20.4.22  2000/07/25 20:27:20  king
+--| Redefining call_pebble_function
+--|
+--| Revision 1.20.4.21  2000/07/24 21:36:10  oconnor
+--| inherit action sequences _IMP class
+--|
+--| Revision 1.20.4.20  2000/07/19 18:56:39  king
+--| Removed redundant fixme
+--|
+--| Revision 1.20.4.19  2000/06/27 23:44:17  king
+--| Integrated ev_any_imp changes, implemented row pick position functionality
+--|
+--| Revision 1.20.4.18  2000/06/26 23:11:52  king
+--| Added PND pick coord functionality for rows
+--|
+--| Revision 1.20.4.16  2000/06/26 17:27:20  king
+--| Removed testing output, doh
+--|
+--| Revision 1.20.4.15  2000/06/26 00:24:21  king
+--| Implemented pnd modes for rows
+--|
+--| Revision 1.20.4.14  2000/06/25 20:46:31  king
+--| Now using x,y_origin for PND
+--|
+--| Revision 1.20.4.13  2000/06/25 19:05:19  king
+--| Implemented call_pebble_function
+--|
+--| Revision 1.20.4.12  2000/06/22 00:04:40  king
+--| Now calling new column title click action sequence
+--|
+--| Revision 1.20.4.11  2000/06/21 20:58:10  oconnor
+--| Do nothing if pebble_function returns Void.
 --|
 --| Revision 1.20.4.10  2000/05/30 22:24:30  king
 --| Added reordering comment

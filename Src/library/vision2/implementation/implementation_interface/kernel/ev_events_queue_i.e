@@ -42,6 +42,12 @@ end -- class EV_EVENTS_QUEUE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/07 23:08:08  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.2.4.1  2000/05/03 19:08:56  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

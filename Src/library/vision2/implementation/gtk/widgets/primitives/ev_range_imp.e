@@ -15,10 +15,14 @@ inherit
 
 	EV_GAUGE_IMP
 		redefine
-			interface
+			interface,
+			visual_widget
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	visual_widget: POINTER
+			-- Pointer to the GtkRange widget.
 
 	interface: EV_RANGE
 
@@ -45,6 +49,29 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2001/06/07 23:08:07  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.4.4  2000/10/27 16:54:44  manus
+--| Removed undefinition of `set_default_colors' since now the one from EV_COLORIZABLE_IMP is
+--| deferred.
+--| However, there might be a problem with the definition of `set_default_colors' in the following
+--| classes:
+--| - EV_TITLED_WINDOW_IMP
+--| - EV_WINDOW_IMP
+--| - EV_TEXT_COMPONENT_IMP
+--| - EV_LIST_ITEM_LIST_IMP
+--| - EV_SPIN_BUTTON_IMP
+--|
+--| Revision 1.4.4.3  2000/08/08 00:03:15  oconnor
+--| Redefined set_default_colors to do nothing in EV_COLORIZABLE_IMP.
+--|
+--| Revision 1.4.4.2  2000/08/03 22:08:39  king
+--| Redefining visual_widget to be an attribute
+--|
+--| Revision 1.4.4.1  2000/05/03 19:08:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.9  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

@@ -1,9 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"EiffelVision notebook, Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,16 +12,14 @@ inherit
 	EV_NOTEBOOK_I
 		redefine	
 			interface,
-			is_useable
+			is_usable
 		select
 			interface
 		end
 
 	EV_WIDGET_LIST_IMP
-		rename
-			on_set_focus as widget_on_set_focus
 		undefine
-			is_useable,
+			is_usable,
 			count
 		redefine
 			enable_sensitive,
@@ -32,9 +28,8 @@ inherit
 			compute_minimum_width,
 			compute_minimum_height,
 			compute_minimum_size,
-			notify_change,
 			on_key_down,
-			notebook_parent,
+			on_size,
 			interface,
 			child_added,
 			initialize,
@@ -47,7 +42,7 @@ inherit
 		rename
 			interface as ev_fontable_imp_interface
 		undefine
-			is_useable
+			is_usable
 		redefine
 			set_font
 		end
@@ -55,7 +50,7 @@ inherit
 	WEL_TAB_CONTROL
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
@@ -69,38 +64,51 @@ inherit
 			y as y_position,
 			move as wel_move,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			move_and_resize as wel_move_and_resize,
+			on_desactivate as wel_on_desactivate,
+			has_capture as wel_has_capture
 		undefine
-			window_process_message,
-			remove_command,
 			set_width,
 			set_height,
 			on_left_button_down,
+			on_middle_button_down,
 			on_right_button_down,
 			on_left_button_up,
+			on_middle_button_up,
 			on_right_button_up,
 			on_left_button_double_click,
+			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
 			on_key_up,
-			on_kill_focus,
 			on_set_cursor,
 			on_draw_item,
 			on_color_control,
+			on_set_focus,
+			on_kill_focus,
 			on_wm_vscroll,
 			on_wm_hscroll,
 			on_key_down,
+			on_char,
 			show,
 			hide,
 			on_destroy,
-			on_size
+			on_size,
+			background_brush,
+			x_position,
+			y_position,
+			on_sys_key_down,
+			on_sys_key_up,
+			on_notify,
+			default_process_message
 		redefine
-			default_ex_style,
 			default_style,
-			adjust_items,
+			default_ex_style,
 			hide_current_selection,
 			show_current_selection,
-			on_tcn_selchange
+			on_tcn_selchange,
+			wel_move_and_resize,
+			wel_resize
 		end
 
 	WEL_TCIF_CONSTANTS
@@ -113,6 +121,8 @@ inherit
 			{NONE} all
 		end
 
+	EV_NOTEBOOK_ACTION_SEQUENCES_IMP
+
 creation
 	make
 
@@ -120,48 +130,34 @@ creation
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create an empty notebook.
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
-		--	create ev_children.make (3)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
 			tab_pos := interface.tab_top
 			index := 0
 		end
 
 	initialize is
-			-- Initialize notebook
+			-- Initialize `Current'.
 		do
 			Precursor {EV_WIDGET_LIST_IMP}
 			create ev_children.make (2)
 			check_notebook_assertions := True
 		end
 
-feature -- Access
-
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
+feature {AV_ANY_I} --  Access
 
 	top_level_window_imp: EV_WINDOW_IMP
-			-- Top level window that contains the current widget.
+			-- Top level window that contains `Current'.
 
 	tab_pos: INTEGER
 			-- Actual position of the tabs.
 
-feature -- Status report
+feature {EV_ANY_I} -- Status report
 
 	current_page: INTEGER is
-			-- One-based index of the currently opened page
+			-- One-based index of the currently opened page.
 		do
 			Result := current_selection + 1
 		end
@@ -180,30 +176,31 @@ feature -- Status report
 			end
 		end
 
-feature -- Status setting
+feature {EV_ANY_I} -- Status setting
 
 	set_default_minimum_size is
 			-- Set the current minimum size.
 		do
-			set_font (font)
+			internal_set_font
 			if tab_pos = interface.Tab_top
 					or else tab_pos = interface.Tab_bottom then
-				internal_set_minimum_height (tab_height)
+				ev_set_minimum_height (tab_height)
 			else
-				internal_set_minimum_width (tab_height)
+				ev_set_minimum_width (tab_height)
 			end
 		end
 	
 	set_tab_position (pos: INTEGER) is
-			-- set position of tabs (left, right, top or bottom)
+			-- set position of tabs (left, right, top or bottom) according
+			-- to value of `pos'.
 		local
 			ww: EV_WIDGET_IMP
 		do
  			tab_pos := pos
  			set_style (basic_style)
-			set_font (font)
+			internal_set_font
 			ww ?= selected_window
-			notify_change (1 + 2, ww)
+			notify_change (Nc_minsize, ww)
 		end
 
 	set_current_page (an_index: INTEGER) is
@@ -214,7 +211,7 @@ feature -- Status setting
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
-   			-- `flag'.
+   			-- `flag', otherwise make sensitive.
 		local
 			counter: INTEGER
 			child_imp: EV_WIDGET_IMP
@@ -253,19 +250,7 @@ feature -- Status setting
 			Precursor
 		end
 
-feature -- Element change
-
-	set_page_title (an_index: INTEGER; str: STRING) is
-			-- Set the label of the `an_index' page of the notebook.
-			-- The first page is the page number 1.
-		local
-			a_wel_item: WEL_TAB_CONTROL_ITEM
-		do
-			a_wel_item := get_item (an_index - 1)
-			a_wel_item.set_text (str)
-			delete_item (an_index - 1)
-			insert_item (an_index - 1, a_wel_item)
-		end
+feature {EV_ANY_I} -- Element change
 	
 	append_page (child_imp: EV_WIDGET_IMP; label: STRING) is
 		-- Add a new page for notebook containing 'child_imp' with tab 
@@ -275,11 +260,11 @@ feature -- Element change
 			ww: WEL_WINDOW
 		do
 			ww ?= child_imp
-			!! a_wel_item.make
+			create a_wel_item.make
 			a_wel_item.set_text (label)
 			a_wel_item.set_window (ww)
 			insert_item (count, a_wel_item)
-			notify_change (2 + 1, child_imp)
+			notify_change (Nc_minsize, child_imp)
 		end
 
 	set_font (f: EV_FONT) is
@@ -287,26 +272,14 @@ feature -- Element change
 			-- When the tabs are vertical, we set back the default font
 			-- by using `cwin_send_message' (feature not implemented in WEL)
 			-- because vertical fonts doesn't work with everything.
-		local
-			local_font_windows: EV_FONT_IMP
 		do
-			if (tab_pos = interface.Tab_top)
-				or else (tab_pos = interface.Tab_bottom) then
-				private_font := f
-				local_font_windows ?= private_font.implementation
-				check
-					valid_font: local_font_windows /= Void
-				end
-				wel_set_font (local_font_windows.wel_font)
-			else
-				cwin_send_message (wel_item, wm_setfont, 0,
-					cwin_make_long (1, 0))
-			end
+			private_font := f
+			internal_set_font
 		end
 
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
-			-- of the widget.
+			-- of `Current'.
 		local
 			counter: INTEGER
 			child_imp: EV_WIDGET_IMP
@@ -326,10 +299,11 @@ feature -- Element change
 			end
 		end
 
-feature -- Basic operation
+feature {EV_ANY_I} -- Basic operation
 
 	get_child_index (a_child: EV_WIDGET_IMP): INTEGER is
-			-- Return the index of the children in the notebook.
+			-- `Result' is 1 based index of `a_child' in `Current' or 0 if not
+			-- contained.
 		require
 			valid_child: is_child (a_child)
 		local
@@ -349,26 +323,10 @@ feature -- Basic operation
 			end
 		end
 
-	notify_change (type: INTEGER; child: EV_WIDGET_IMP) is
-			-- Size notification
-		do
-			if get_child_index (child) = current_page then
-				Precursor {EV_WIDGET_LIST_IMP} (type, child)
-			end
-		end
-
 feature -- Assertion features
 
-	add_child_ok: BOOLEAN is
-			-- True, if it is ok to add a child to
-			-- container. With a notebook, it is 
-			-- always ok.
-		do
-			Result := True
-		end
-
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Is `a_child' a child of the container?
+			-- Is `a_child' a child of `Current'?
 			-- We cannot use the usual context.
 			-- A child is a child if the notebook is
 			-- its parent.
@@ -403,77 +361,62 @@ feature {NONE} -- Implementation
 			hwnd: POINTER
 			window: WEL_WINDOW
 		do
-			hwnd := next_dlgtabitem (wel_item, default_pointer, direction)
+			hwnd := next_dlgtabitem (top_level_window_imp.wel_item,
+				wel_item, direction)
 			window := window_of_item (hwnd)
 			window.set_focus
 		end
-
 
 	process_tab_key (virtual_key: INTEGER) is
 			-- Process a tab or arrow key press to give the focus to the next
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control need to process this kind of keys.
-		local
-			tab_control: WEL_TAB_CONTROL_ITEM
-			window: WEL_WINDOW
 		do
 			if virtual_key = Vk_tab then
-				if key_down (Vk_shift) then
-					tab_action (False)
-				else
-					tab_control := get_item (current_selection)
-					window ?= tab_control.window
-					window.set_focus
-				end
+				tab_action (not key_down (Vk_shift))
 			end
 		end
 
 	compute_minimum_width is
-			-- Recompute the minimum_width of the object.
+			-- Recompute the minimum_width of `Current'.
 		local
-			counter: INTEGER
 			child_imp: EV_WIDGET_IMP
-			rect: WEL_RECT
-			value: INTEGER
+			counter, nb, value: INTEGER
 		do
 			from
-				counter := 0
-				value := 0
-				rect := sheet_rect
+				nb := count
 			until
-				counter = count
+				counter = nb
 			loop
 				child_imp ?= get_item (counter).window
 				check
 					valid_cast: child_imp /= Void
 				end
-				if child_imp.minimum_width > value then
-					value := child_imp.minimum_width
-				end
+				value := child_imp.minimum_width.max (value)
 				counter := counter + 1
 			end
 
-			-- We found the biggest child
-			if tab_pos = interface.Tab_right
-					or else tab_pos = interface.Tab_left then
-				internal_set_minimum_width (value + tab_height + 2)
+				-- We found the biggest child.
+			if
+				tab_pos = interface.Tab_right
+				or else tab_pos = interface.Tab_left
+			then
+				ev_set_minimum_width (value + tab_height + 4)
 			else
-				internal_set_minimum_width (value + 6)
+				ev_set_minimum_width (value + 6)
 			end
 		end
 
 	compute_minimum_height is
-			-- Recompute the minimum_width of the object.
+			-- Recompute the minimum_height of `Current'.
 		local
 			counter: INTEGER
 			child_imp: EV_WIDGET_IMP
-			rect: WEL_RECT
 			value: INTEGER
 		do
 			from
 				counter := 0
 				value := 0
-				rect := sheet_rect
 			until
 				counter = count
 			loop
@@ -481,34 +424,32 @@ feature {NONE} -- Implementation
 				check
 					valid_cast: child_imp /= Void
 				end
-				if child_imp.minimum_height > value then
-					value := child_imp.minimum_height
-				end
+				value := child_imp.minimum_height.max (value)
 				counter := counter + 1
 			end
 
-				-- We found the biggest child
-			if tab_pos = interface.Tab_top
-					or else tab_pos = interface.Tab_bottom then
-				internal_set_minimum_height (value + tab_height + 2)
+				-- We found the biggest child.
+			if
+				tab_pos = interface.Tab_top
+				or else tab_pos = interface.Tab_bottom
+			then
+				ev_set_minimum_height (value + tab_height + 4)
 			else
-				internal_set_minimum_height (value + 6)
+				ev_set_minimum_height (value + 6)
 			end
 		end
 
 	compute_minimum_size is
 			-- Recompute both the minimum_width and then
-			-- minimum_height of the object.
+			-- minimum_height of `Current'.
 		local
 			counter: INTEGER
 			child_imp: EV_WIDGET_IMP
-			rect: WEL_RECT
 			mw, mh: INTEGER
 		do
 			from
 				counter := 0
 				mw := 0; mh := 0
-				rect := sheet_rect
 			until
 				counter = count
 			loop
@@ -516,78 +457,63 @@ feature {NONE} -- Implementation
 				check
 					valid_cast: child_imp /= Void
 				end
-				if child_imp.minimum_width > mw then
-					mw := child_imp.minimum_width
-				end
-				if child_imp.minimum_height > mh then
-					mh := child_imp.minimum_height
-				end
+				mw := child_imp.minimum_width.max (mw)
+				mh := child_imp.minimum_height.max (mh)
 				counter := counter + 1
 			end
 
-			-- We found the biggest child
-			if tab_pos = interface.Tab_top
-					or else tab_pos = interface.Tab_bottom then
-				internal_set_minimum_size (mw + 6, mh + tab_height + 2)
-			elseif tab_pos = interface.Tab_left
-					or else tab_pos = interface.Tab_right then
-				internal_set_minimum_size (mw + tab_height + 2, mh + 6)
+			-- We found the biggest child.
+			if
+				tab_pos = interface.Tab_top
+				or else tab_pos = interface.Tab_bottom
+			then
+				ev_set_minimum_size (mw + 6, mh + tab_height + 4)
+			elseif
+				tab_pos = interface.Tab_left
+				or else tab_pos = interface.Tab_right
+			then
+				ev_set_minimum_size (mw + tab_height + 4, mh + 6)
 			end
 		end
 
-	notebook_parent: ARRAYED_LIST[EV_NOTEBOOK_IMP] is
-			-- if current widget has a parent then search
-			-- recursively for the ancestors of type notebook.
-			-- If an ancestor of type notebook is found then add
-			-- it to the list.
-			
+	ev_apply_new_size (a_x_position, a_y_position,
+				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+				-- Apply new size when minimum size changed but not size.
+		local
+			counter: INTEGER
+			child_imp: EV_WIDGET_IMP
+			tab_rect: WEL_RECT
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.notebook_parent
-				if Result = Void then
-					create Result.make (1)
+			from
+				counter := 0
+				tab_rect := sheet_rect
+			until
+				counter = count
+			loop
+				child_imp ?= (get_item (counter)).window
+				check
+					valid_cast: child_imp /= Void
 				end
-				Result.extend(Current)
+				child_imp.ev_apply_new_size (tab_rect.x, tab_rect.y,
+					tab_rect.width, tab_rect.height, True)
+				counter := counter + 1
 			end
 		end
 
 feature {NONE} -- WEL Implementation
 
-	adjust_items is
-			-- Adjust the size of the windows of the items
-			-- to the current size.
-		local
-			counter: INTEGER
-			child_imp: EV_WIDGET_IMP
-			rect: WEL_RECT
-		do
-			from
-				counter := 0
-				rect := sheet_rect
-			until
-				counter = count
-			loop
-				child_imp ?= get_item (counter).window
-				check
-					child_imp_not_void: child_imp /= Void
-				end
-				child_imp.set_move_and_size (rect.left, rect.top, rect.width,
-					rect.height)
-				counter := counter + 1
-			end
-		end
-
  	default_style: INTEGER is
- 			-- Default style used to create the control
+ 			-- Default windows style used to create `Current'.
 		do
 			Result := Ws_child + Ws_group + Ws_tabstop 
 				+ Ws_visible + Ws_clipchildren + Ws_clipsiblings
-				+ Tcs_singleline -- + Tcs_focusonbuttondown
+				+ Tcs_singleline
 		end
 
-	default_ex_style: INTEGER is
+ 	default_ex_style: INTEGER is
+ 			-- Default windows style used to create `Current'.
 		do
-			Result := 0 --Ws_ex_controlparent
+			Result := Ws_ex_controlparent
 		end
 
  	basic_style: INTEGER is
@@ -610,7 +536,7 @@ feature {NONE} -- WEL Implementation
  		end
 
 	tab_height: INTEGER is
-			-- The height of the tabs in `Tab_top' ot `Tab_bottom' status,
+			-- The height of the tabs in `Tab_top' or `Tab_bottom' status,
 			-- the width of the tabs otherwise.
 		do
 			
@@ -628,7 +554,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	hide_current_selection is
-			-- Hide the current selected page.
+			-- Hide the currently selected page.
 		local
 			ww: EV_WIDGET_IMP
 		do
@@ -639,7 +565,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	show_current_selection is
-			-- Show the current selected page.
+			-- Show the currently selected page.
 			-- Do not use directly show, because there is no use to notify
 			-- back the parent. Though, if there was any change done on the
 			-- child, it should be reset directly on the child.
@@ -648,7 +574,24 @@ feature {NONE} -- WEL Implementation
 		do
 			ww ?= selected_window
 			if ww /= Void and then ww.exists then
+				ww.wel_move_and_resize (ww.x_position, ww.y_position,
+					ww.width, ww.height, True)
 				ww.show_window (ww.wel_item, Sw_show)
+			end
+		end
+
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- `Current' has been resized.
+		local
+			child_imp: EV_WIDGET_IMP
+			tab_rect: WEL_RECT
+		do
+			Precursor {EV_WIDGET_LIST_IMP} (size_type, a_width, a_height)
+			child_imp ?= selected_window
+			if child_imp /= Void then
+				tab_rect := sheet_rect
+				child_imp.set_move_and_size (tab_rect.x, tab_rect.y,
+					tab_rect.width, tab_rect.height)
 			end
 		end
 
@@ -657,21 +600,46 @@ feature {NONE} -- WEL Implementation
 			-- Shows the current selected page by default.
 		local
 			ww: EV_WIDGET_IMP
+			tab_rect: WEL_RECT
 		do
 			show_current_selection
+
+				-- New sizes have been computed, simply apply them
+			tab_rect := sheet_rect
 			ww ?= selected_window
-			notify_change (2 + 1, ww)
-			interface.selection_actions.call ([])			
+			ww.ev_move_and_resize (tab_rect.x, tab_rect.y,
+							tab_rect.width, tab_rect.height, True)
+
+			if selection_actions_internal /= Void then
+				selection_actions_internal.call ([])
+			end
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- A key has been pressed
+			-- A key has been pressed.
 		do
-			{EV_WIDGET_LIST_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
+			Precursor {EV_WIDGET_LIST_IMP} (virtual_key, key_data)
 		end
 
 	interface: EV_NOTEBOOK
+
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+			repaint: BOOLEAN) is
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
+		do
+			cwin_move_window (wel_item, a_x, a_y,
+				a_width, a_height, repaint)
+		end
+
+	wel_resize (a_width, a_height: INTEGER) is
+			-- Resize the window with `a_width', `a_height'.
+		do
+			cwin_set_window_pos (wel_item, default_pointer,
+				0, 0, a_width, a_height,
+				Swp_nomove + Swp_nozorder + Swp_noactivate)
+		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
@@ -755,24 +723,25 @@ feature {NONE} -- Feature that should be directly implemented by externals
 		end
 
 	check_notebook_assertions: BOOLEAN
+		-- Are assertions for `Current' from Ev_NOTEBOOK_I going to be checked?
 
 	disable_notebook_assertions is
-			-- Effectively turn of assertions in EV_NOTEBOOK_I
+			-- Effectively turn of assertions from EV_NOTEBOOK_I
 		do
 			check_notebook_assertions := False
 		end
 
 	enable_notebook_assertions is
-			-- Effectively turn on assertions in EV_NOTEBOOK_I
+			-- Effectively turn on assertions from EV_NOTEBOOK_I
 		do
 			check_notebook_assertions := True
 		end
 
-	is_useable: BOOLEAN is
-			-- Is the notebook useable
+	is_usable: BOOLEAN is
+			-- Is `Current' usable?
 		do
 			if check_notebook_assertions then
-				Result := {EV_NOTEBOOK_I} Precursor
+				Result := Precursor {EV_NOTEBOOK_I}
 			end
 		end
 
@@ -782,7 +751,7 @@ feature {NONE} -- Implementation
 			-- Internal list of children.
 
 	i_th (i: INTEGER): EV_WIDGET is
-			-- Item at `i'-th position.
+			-- `Result' is item at `i'-th position.
 		local
 			wel_win: WEL_WINDOW
 			v_imp: EV_WIDGET_IMP
@@ -821,7 +790,7 @@ feature {NONE} -- Implementation
 			insert_item (i - 1, wel_tci)
 			v_imp.wel_set_parent (Current)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
-			notify_change (2 + 1, v_imp)
+			notify_change (Nc_minsize, v_imp)
 		end
 
 	remove_i_th (i: INTEGER) is
@@ -851,28 +820,7 @@ feature {NONE} -- Implementation
 			delete_item (i - 1)
 			v_imp.wel_set_parent (Default_parent)
 			enable_notebook_assertions
-			notify_change (2 + 1, v_imp)
-		end
-
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite. In this container, `child' is the
-			-- child of the container whose page is currently selected.
-		do
-			--|FIXME Julian Why is this needed?
-		end
-
-	remove_child (a_child: EV_WIDGET_IMP) is
-			-- Remove the given child from the children of
-			-- the container.
-		local
-			an_index: INTEGER
-			ww: EV_WIDGET_IMP
-		do
-			an_index := get_child_index (a_child)
-			delete_item (an_index - 1)
-			a_child.set_parent (Void)
-			ww ?= selected_window
-			notify_change (2 + 1, ww)
+			notify_change (Nc_minsize, v_imp)
 		end
 
 feature {NONE} -- Implementation
@@ -884,7 +832,7 @@ feature {NONE} -- Implementation
 		end
 
 	select_item (v: like item) is
-			-- Select page containing `v'
+			-- Select page containing `v'.
 		local
 			an_index: INTEGER
 			child_imp: EV_WIDGET_IMP
@@ -903,10 +851,10 @@ feature {NONE} -- Implementation
 		do
 			item_imp ?= v.implementation
 			child_index := get_child_index (item_imp)
-			a_wel_item := get_item (child_index - 1)
+			create a_wel_item.make
 			a_wel_item.set_text (a_text)
-			delete_item (child_index - 1)
-			insert_item (child_index - 1, a_wel_item)	
+			a_wel_item.set_mask (Tcif_text)
+			update_item (child_index - 1, a_wel_item)
 		end
 
 	item_text (v: like item): STRING is
@@ -932,52 +880,175 @@ feature {NONE} -- Implementation
 				Result := child_imp.interface
 			end
 		end
-	
+
+feature {NONE} -- Font implementation
+
+	internal_set_font is
+			-- Set actual font.
+		local
+			local_font_windows: EV_FONT_IMP
+		do
+			if
+				(tab_pos = interface.Tab_top)
+				or else (tab_pos = interface.Tab_bottom)
+			then
+				if private_font /= Void then
+					local_font_windows ?= private_font.implementation
+					check
+						valid_font: local_font_windows /= Void
+					end
+					wel_set_font (local_font_windows.wel_font)
+				else
+					set_default_font
+				end
+			else
+				cwin_send_message (wel_item, Wm_setfont, 0,
+					cwin_make_long (1, 0))
+			end
+		end
+
 end -- EV_NOTEBOOK_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.57  2000/06/07 17:27:59  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.58  2001/06/07 23:08:15  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.41.4.36  2001/05/26 23:51:09  manus
+--| Removed comments.
+--|
+--| Revision 1.41.4.35  2001/03/04 22:29:43  pichery
+--| Used `update_item' instead of delete+insert
+--|
+--| Revision 1.41.4.34  2001/02/15 23:54:20  rogers
+--| Replaced is_useable with usable.
+--|
+--| Revision 1.41.4.33  2001/02/02 00:53:34  rogers
+--| On_key_down now calls process_tab_key before Precursor. This ensures that
+--| any tab movement we do in our implementation can be overriden by the user
+--| with key_press_actions.
+--|
+--| Revision 1.41.4.32  2001/01/26 23:34:07  rogers
+--| Removed undefinition of on_sys_key_down as this is already done in the
+--| ancestor EV_WEL_CONTROL_CONTAINER_IMP.
+--|
+--| Revision 1.41.4.31  2001/01/09 19:05:42  rogers
+--| Undefined default_process_message from WEL.
+--|
+--| Revision 1.41.4.30  2000/12/04 23:12:57  rogers
+--| Formatting to 80 columns.
+--|
+--| Revision 1.41.4.29  2000/11/27 20:21:37  rogers
+--| Undefined on_notify from WEL_TAB_CONTROL as we now use the version
+--| inherited from EV_CONTAINER_IMP.
+--|
+--| Revision 1.41.4.26  2000/11/06 18:02:25  rogers
+--| Undefined on_sys_key_down from wel. Version from EV_WIDGET_IMP is now used.
+--|
+--| Revision 1.41.4.25  2000/10/20 01:26:59  manus
+--| Removed non-used local variable `rect' in minimum sizes recomputation. Changed the minimum
+--| sizes to add `4' instead of `2' pixels on the size that have the tabs. Why `4' instead of `2'
+--| I don't know, but if you don't 2 pixels of the contents are missing. I haven't find their
+--| meaning yet.
+--|
+--| Revision 1.41.4.24  2000/10/11 23:36:49  raphaels
+--| Added rename clause for `on_activate' from WEL.
+--|
+--| Revision 1.41.4.23  2000/10/05 22:07:05  rogers
+--| Removed set_page_title as it is redundent.
+--|
+--| Revision 1.41.4.22  2000/10/05 20:28:47  manus
+--| Removed special notebook handling for `Tab' action. Now it will never stop on tab buttons
+--| but this is better than completely loosing the focus.
+--|
+--| Revision 1.41.4.21  2000/09/19 15:36:41  rogers
+--| Removed unreferenced variable from set_font.
+--|
+--| Revision 1.41.4.20  2000/09/13 22:11:59  rogers
+--| Changed the style of Precursor.
+--|
+--| Revision 1.41.4.19  2000/09/13 18:21:47  manus
+--| Improved font usage in Notebook.
+--|
+--| Revision 1.41.4.18  2000/09/13 15:51:02  manus
+--| Redefinition of `set_font' take into consideration if user set the font or not. If he did not
+--| we simply call `set_default_font' that will not use any GDI resource.
+--|
+--| Revision 1.41.4.17  2000/08/11 20:29:50  rogers
+--| removed fixme NOT_REVIEWED. Comments, formatting. Fixed copyright clause
+--| at end of file.
+--|
+--| Revision 1.41.4.16  2000/08/09 23:15:09  manus
+--| `on_size' can be called when there is no child in the widget, meaning that
+--| you should not call `set_move_and_size' on a child that does not exist.
+--|
+--| Revision 1.41.4.15  2000/08/08 16:08:47  manus
+--| Updated inheritance with new WEL messages handling
+--| New resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--| No more wel_window_parent hack.
+--| No more special redefinition of `notify_change'.
+--|
+--| Revision 1.41.4.14  2000/08/04 20:22:09  rogers
+--| All action sequence calls through the interface have been replaced with
+--| calls to the internal action sequences.
+--|
+--| Revision 1.41.4.13  2000/07/24 23:17:49  rogers
+--| Now inherits EV_NOTEBOOK_ACTION_SREQUENCES_IMP.
+--|
+--| Revision 1.41.4.12  2000/07/21 23:05:28  rogers
+--| Removed add_child and add_child_ok as no longer used in Vision2.
+--|
+--| Revision 1.41.4.11  2000/07/21 18:55:23  rogers
+--| Removed romve_child as it is no longer needed in Vision2.
+--|
+--| Revision 1.41.4.10  2000/07/12 16:23:59  rogers
+--| Undefined x_position and y_position inherited from WEL, as they are now
+--| inherited from EV_WIDGET_IMP.
+--|
+--| Revision 1.41.4.9  2000/06/13 18:38:30  rogers
+--| Removed undefintion of remove_command.
 --|
 --| Revision 1.41.4.8  2000/06/05 17:36:48  manus
---| Fixed a small typo in conformance of `selected_window' with second parameter of
---| `notify_change'.
+--| Fixed a small typo in conformance of `selected_window' with second
+--| parameter of `notify_change'.
 --|
 --| Revision 1.41.4.7  2000/06/05 17:24:10  manus
---| 1 - New ìmplementation of `notify_change' that takes an extra parameter: the child that
---| requested the size change notification. In the case of a NOTEBOOK, we will take into
---| the account the `notify_change' action only if the child that requested it is the child
---| whose tab is selected. Otherwise we do nothing.
+--| 1 - New ìmplementation of `notify_change' that takes an extra parameter:
+--| the child that requested the size change notification. In the case of a
+--| NOTEBOOK, we will take into the account the `notify_change' action only if
+--| the child that requested it is the child whose tab is selected.
+--|Otherwise we do nothing.
 --|
---| 2 - Updated all call to `notify_change' to conform the new signature by passing the correct
---| child.
+--| 2 - Updated all call to `notify_change' to conform the new signature by
+--| passing the correct child.
 --|
---| 3 - Improved use of `get_item' and use new `selected_window' coming from WEL_TAB_CONTROL
---| whenever possible.
+--| 3 - Improved use of `get_item' and use new `selected_window' coming from
+--| WEL_TAB_CONTROL whenever possible.
 --|
---| 4 - `show_current_selection' does not resize its content anymore because we make the
---| assumption that the size won't change from one window to another. This improves performance
---| but it also fixes a bug where `sheet_rect' was not returning a correct sized rectangle.
+--| 4 - `show_current_selection' does not resize its content anymore because we
+--| make the assumption that the size won't change from one window to another.
+--| This improves performance but it also fixes a bug where `sheet_rect' was not
+--| returning a correctl sized rectangle.
 --|
 --| Revision 1.41.4.6  2000/05/30 16:03:35  rogers
 --| Removed unreferenced variables.
@@ -994,11 +1065,14 @@ end -- EV_NOTEBOOK_IMP
 --| Ev_children is now updated in insert_i_th and remove.
 --|
 --| Revision 1.41.4.2  2000/05/03 22:35:02  brendel
---|
 --| Fixed resize_actions.
 --|
+--| Revision 1.41.4.1  2000/05/03 19:09:36  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.55  2000/04/28 21:53:45  rogers
---| Connected selection_actions,  as selecting a tab by clicking did not call them.
+--| Connected selection_actions,  as selecting a tab by clicking did not call
+--| them.
 --|
 --| Revision 1.54  2000/04/28 21:42:54  rogers
 --| Fixed child resizing bug when new tab is selected.

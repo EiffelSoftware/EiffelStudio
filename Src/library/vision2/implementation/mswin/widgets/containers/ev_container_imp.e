@@ -19,12 +19,38 @@ inherit
 		end
 
 	EV_WIDGET_IMP
+		undefine
+			minimum_width,
+			minimum_height,
+			initialize_sizeable,
+			ev_apply_new_size
 		redefine
 			interface,
-			initialize
+			initialize,
+			destroy,
+			default_process_message
 		end
 
-	WEL_SB_CONSTANTS
+	EV_CONTAINER_ACTION_SEQUENCES_IMP
+
+	EV_SHARED_GDI_OBJECTS
+
+	WEL_TVN_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_HWND_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_SWP_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_LIST_VIEW_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -35,11 +61,13 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'. Precusor and create new_item_actions.
 		do
 			create radio_group.make
-			create new_item_actions.make ("new_item", <<"widget">>)
+			new_item_actions.extend (~disable_widget_sensitivity)
 			new_item_actions.extend (~add_radio_button)
-			create remove_item_actions.make ("remove_item", <<"widget">>)
+			new_item_actions.extend (~update_tab_ordering_for_dialog)
+			create remove_item_actions
+			remove_item_actions.extend (~enable_widget_sensitivity)
 			remove_item_actions.extend (~remove_radio_button)
-			{EV_WIDGET_IMP} Precursor
+			Precursor {EV_WIDGET_IMP}
 		end
 
 feature -- Access
@@ -62,14 +90,22 @@ feature -- Access
 			-- Width of the client area of container.
 			-- `Result' in pixels.
 		do
-			Result := client_rect.width
+			if is_show_requested then
+				Result := client_rect.width
+			else
+				Result := child_cell.width
+			end
 		end
 
 	client_height: INTEGER is
 			-- Height of the client area of container
 			-- `Result' in pixels.
 		do
-			Result := client_rect.height
+			if is_show_requested then
+				Result := client_rect.height
+			else
+				Result := child_cell.height
+			end
 		end
 
 	background_pixmap_imp: EV_PIXMAP_IMP
@@ -116,6 +152,20 @@ feature -- Assertion test
 			Result := is_child (a_child)
 		end
 
+feature -- Status setting
+
+	destroy is
+			-- Destroy `Current', but set the parent sensitive
+			-- in case it was set insensitive by the child.
+		do
+			if parent_imp /= Void then
+				parent_imp.interface.prune (Current.interface)
+			end
+			interface.wipe_out
+			wel_destroy
+			is_destroyed := True
+		end
+
 feature {NONE} -- WEL Implementation
 
 	on_draw_item (control_id: INTEGER; draw_item: WEL_DRAW_ITEM_STRUCT) is
@@ -127,7 +177,15 @@ feature {NONE} -- WEL Implementation
 			--| This is empty as there are currently no controls that
 			--| are owner drawn. If some are added then code to handle
 			--| their re-drawing should be called from here.
+		require
+			draw_item_valid: draw_item /= Void
+		local
+			label_imp: EV_LABEL_IMP
 		do
+			label_imp ?= draw_item.window_item
+			if label_imp /= Void then
+				label_imp.on_draw_item (draw_item)
+			end
 		end
 
 	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
@@ -140,24 +198,45 @@ feature {NONE} -- WEL Implementation
 			-- 2. a backgound brush to be returned to the system.
 		local
 			brush: WEL_BRUSH
+			w: EV_WIDGET_IMP
 		do
-			paint_dc.set_text_color (control.foreground_color)
-			paint_dc.set_background_color (control.background_color)
-			!! brush.make_solid (control.background_color)
-			set_message_return_value (brush.to_integer)
-			disable_default_processing
+			w ?= control
+			check
+					-- Everything inherits from EV_WIDGET.
+				is_a_widget: w /= Void
+			end
+			if w.background_color_imp /= Void or 
+				w.foreground_color_imp /= Void
+			then
+					-- Not the default color, we need to do something here
+					-- to apply `background_color' to `control'.
+				paint_dc.set_text_color (control.foreground_color)
+				paint_dc.set_background_color (control.background_color)
+				brush := allocated_brushes.get (Void, control.background_color)
+				debug ("WEL")
+					io.putstring (
+						"Warning, there is no `decrement_reference'%Nfor the %
+						%previous brush%N")
+				end
+				set_message_return_value (brush.to_integer)
+				disable_default_processing
+			end
 		end
 
    	background_brush: WEL_BRUSH is
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
    			-- By default there is no background  
+   		local
+   			tmp_bitmap: WEL_BITMAP
 		do
  			if exists then
 				if background_pixmap_imp /= Void then
-					create Result.make_by_pattern (background_pixmap_imp.bitmap)
-				elseif background_color_imp /= Void then
-					create Result.make_solid (background_color_imp)
+					tmp_bitmap := background_pixmap_imp.get_bitmap
+					create Result.make_by_pattern (tmp_bitmap)
+					tmp_bitmap.decrement_reference
+				else
+					create Result.make_solid (wel_background_color)
 				end
  			end
  		end
@@ -170,18 +249,21 @@ feature {NONE} -- WEL Implementation
  		do
 			-- To avoid the commands to be call two times, we check that
 			-- it is not a call for a end of scroll
-			if cwin_lo_word (wparam) /= Sb_endscroll then
+			if cwin_lo_word (wparam) /= Wel_sb_constants.Sb_endscroll then
 	 			p := get_wm_vscroll_hwnd (wparam, lparam)
 	 			if p /= default_pointer then
 	 				-- The message comes from a gauge,
  					gauge ?= window_of_item (p)
-						if gauge /= Void then
-	 						check
+					if gauge /= Void then
+	 					check
  							gauge_exists: gauge.exists
  						end
 						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam),
 							get_wm_vscroll_pos (wparam, lparam))
- 						gauge.interface.change_actions.call ([])
+						if gauge.change_actions_internal /= Void then
+	 						gauge.change_actions_internal.call
+								([gauge.interface.value])
+						end
  					end
  				else
  					-- The message comes from a window scroll bar
@@ -199,7 +281,7 @@ feature {NONE} -- WEL Implementation
  		do
 			-- To avoid the commands to be call two times, we check that
 			-- it is not a call for a end of scroll
-			if cwin_lo_word (wparam) /= Sb_endscroll then
+			if cwin_lo_word (wparam) /= Wel_sb_constants.Sb_endscroll then
 	 			p := get_wm_hscroll_hwnd (wparam, lparam)
 	 			if p /= default_pointer then
 	 				-- The message comes from a gauge
@@ -210,7 +292,10 @@ feature {NONE} -- WEL Implementation
 	 					end
 						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam),
 							get_wm_vscroll_pos (wparam, lparam))
-	 					gauge.interface.change_actions.call ([])
+						if gauge.change_actions_internal /= Void then
+		 					gauge.change_actions_internal.call
+								([gauge.interface.value])
+						end
 	 				end
 				else
  					-- The message comes from a window scroll bar
@@ -227,8 +312,80 @@ feature {NONE} -- WEL Implementation
 		do
 		end
 
-feature {NONE} -- Implementation : deferred features
+	on_notify (a_control_id: INTEGER; info: WEL_NMHDR) is
+		local
+			tooltip_text: WEL_TOOLTIP_TEXT
+			tvinfotip: WEL_NM_TREE_VIEW_GETINFOTIP
+			temp_node: EV_TREE_NODE_IMP
+			tree: EV_TREE_IMP
+			tooltip: WEL_TOOLTIP
+		do
+			if info.code = Tvn_getinfotip then
+					-- Create the relevent WEL_TOOLTIP_TEXT.
+				create tooltip_text.make_by_nmhdr (info)
+					-- Retrieve tree view get info tip structure.
+				create tvinfotip.make_by_pointer (tooltip_text.item)
 
+				tree ?= info.window_from
+				tooltip ?= tree.get_tooltip
+					-- Bring the tooltip to the front.
+					-- For some reason without this, it is shown behind 
+					-- the window.
+				tooltip.set_z_order (Hwnd_top)
+
+				tree.all_ev_children.search (tvinfotip.hitem)
+				if tree.all_ev_children.found then
+					temp_node := tree.all_ev_children.found_item
+					if temp_node.tooltip /= Void and 
+						not temp_node.tooltip.is_empty
+					then
+							-- Assign tooltip text to `tooltip_text'.
+						tooltip_text.set_text (temp_node.tooltip)
+					end
+				end
+			elseif info.code = Lvn_marqueebegin then
+					-- A message has been received from an EV_LIST notifying
+					-- us that a bounding box selection is beginning. We
+					-- return 1 to override this behaviour.
+				set_message_return_value (1)
+			end
+		end
+		
+	update_tab_ordering_for_dialog (w: EV_WIDGET) is
+			-- If `Current' is an EV_DIALOG_IMP_MODAL or an 
+			-- EV_DIALOG_IMP_MODELESS
+			-- Then we must recursively reverse the tab order of the children.
+		local
+			common: EV_DIALOG_IMP_COMMON
+			widget_imp: EV_WIDGET_IMP
+		do
+			common ?= top_level_window_imp
+			widget_imp ?= w.implementation
+			check
+				widget_imp_not_void: widget_imp /= Void
+			end
+				--| This should only be called after `widget_imp' has been parented
+				--| So `Parent_imp' should never ben Void.
+			check
+				parent_not_void: widget_imp.parent_imp /= Void
+			end
+			if common /= Void then
+				common.modify_tab_order (widget_imp.parent_imp)
+			end
+		end
+
+feature {EV_CONTAINER_IMP} -- Implementation
+
+	adjust_tab_ordering (ordered_widgets: ARRAYED_LIST [WEL_WINDOW]; 
+				widget_depths: ARRAYED_LIST [INTEGER]; depth: INTEGER) is
+			-- Adjust tab ordering of children in `Current'.
+			-- used when `Current' is a child of an EV_DIALOG_IMP_MODAL
+			-- or an EV_DIALOG_IMP_MODELESS.
+		deferred
+		end
+
+feature {NONE} -- Implementation : deferred features
+		
 	client_rect: WEL_RECT is
 		deferred
 		end
@@ -238,10 +395,6 @@ feature {NONE} -- Implementation : deferred features
 		end
 
 	set_message_return_value (v: INTEGER) is
-		deferred
-		end
-
-	window_of_item (hwnd: POINTER): WEL_WINDOW is
 		deferred
 		end
 
@@ -291,28 +444,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 
 feature {EV_ANY_I} -- Implementation
 
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite.
-		require
-			valid_child: child_imp /= Void
-			not_already_child: not is_child (child_imp)
-			add_child_ok: add_child_ok
-		deferred
-		ensure
-			child_added: child_added (child_imp)
-		end
-
-	remove_child (child_imp: EV_WIDGET_IMP) is
-			-- Remove the given child from the children of `Current'.
-		deferred
-		end
-
-	add_child_ok: BOOLEAN is
-			-- Used in the precondition of 'add_child'. True, if it is ok to
-			-- add a child to `Current'.
-		deferred
-		end
-
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
 			-- Is `a_child' a child of `Current'?
 		deferred
@@ -352,7 +483,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		do
 			r ?= w.implementation
 			if r /= Void then
-				if not radio_group.empty then
+				if not radio_group.is_empty then
 					r.set_unchecked
 				end
 				r.set_radio_group (radio_group)
@@ -375,6 +506,43 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			end
 		end
 
+	enable_widget_sensitivity (w: EV_WIDGET) is
+			-- Called every time a widget is removed from `Current'.
+			--| If `Current' is disabled and `w' has never been disabled
+			--| through the interface then we must enable `w' again.
+			--| If a widget is placed in a container that has sensitivity
+			--| disabled then we disable the widget also. We must however,
+			--| return the widget to it's original state when it is removed.
+			--| Hence this function.
+		local
+			w_imp: EV_WIDGET_IMP
+		do
+			w_imp ?= w.implementation
+			check
+				widget_imp_not_void: w_imp /= Void
+			end
+			if not interface.implementation.is_sensitive then
+				if not w_imp.internal_non_sensitive then
+					w_imp.enable_sensitive
+				end
+			end
+		end
+
+	disable_widget_sensitivity (w: EV_WIDGET) is
+			-- Called every time a widget is added to `Current'.
+			--| If `Current' is disabled then we must disable `w'.
+		local
+			w_imp: EV_WIDGET_IMP
+		do
+			w_imp ?= w.implementation
+			check
+				widget_imp_not_void: w_imp /= Void
+			end
+			if not interface.implementation.is_sensitive then
+				w_imp.disable_sensitive
+			end
+		end
+		
 feature -- Status setting
 
 	connect_radio_grouping (a_container: EV_CONTAINER) is
@@ -396,7 +564,7 @@ feature -- Status setting
 					from
 						l.start
 					until
-						l.empty
+						l.is_empty
 					loop
 						add_radio_button (l.item.interface)
 					end
@@ -407,47 +575,202 @@ feature -- Status setting
 
 feature -- Event handling
 
-	new_item_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
-			-- Actions to be performed after an item is added.
-
 	remove_item_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
 			-- Actions to be performed before an item is removed.
 
+feature {NONE} -- Implementation
+
+	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Process `msg' which has not been processed by
+			-- `process_message'.
+		local
+			draw_item_struct: WEL_DRAW_ITEM_STRUCT
+		do
+			if msg = Wm_drawitem then
+				create draw_item_struct.make_by_pointer (
+					integer_to_pointer (lparam))
+				on_draw_item (wparam, draw_item_struct)
+			else
+				Precursor (msg, wparam, lparam)
+			end
+		end
+
+	wel_sb_constants: WEL_SB_CONSTANTS is
+			-- Access to SB_xxx constants.
+		once
+			create Result
+		end
+
+feature {NONE} -- Externals
+
+	integer_to_pointer (i: INTEGER): POINTER is
+			-- Converts an integer `i' to a pointer
+		external
+			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
+		alias
+			"cwel_integer_to_pointer"
+		end
+
 invariant
-	new_item_actions_not_void: is_useable implies new_item_actions /= Void
-	remove_item_actions_not_void: is_useable implies remove_item_actions /= Void
+	new_item_actions_not_void: is_usable implies new_item_actions /= Void
+	remove_item_actions_not_void: is_usable implies remove_item_actions /= Void
 
 end -- class EV_CONTAINER_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.54  2000/06/07 17:27:59  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.55  2001/06/07 23:08:14  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.34.8.36  2001/05/27 20:36:27  pichery
+--| - Redefined `default_process_message' so that it calls `on_draw_item'
+--|   which was already defined but not referenced anywhere.
+--| - Implemented `on_draw_item' so that it calls EV_LABEL_IMP.on_draw_item.
+--| - Cosmetics
+--| - Formatting to 80 characters
+--|
+--| Revision 1.34.8.35  2001/05/18 16:26:38  rogers
+--| Removed destroy_just_called.
+--|
+--| Revision 1.34.8.34  2001/03/29 18:38:10  rogers
+--| Exported adjust_tab_ordering to {EV_CONTAINER_IMP}.
+--|
+--| Revision 1.34.8.33  2001/03/29 18:25:09  rogers
+--| Renamed update_tab_for_dialog to update_tab_ordering_for_dialog.
+--| Renamed reverse_tab_order to adjust_tab_ordering.
+--|
+--| Revision 1.34.8.32  2001/03/29 01:12:55  rogers
+--| Added update_tab_for_dialog which is added to `new_item_actions'.
+--|
+--| Revision 1.34.8.31  2001/03/28 21:45:15  rogers
+--| Changed signature of reverse_tab_order.
+--|
+--| Revision 1.34.8.30  2001/03/28 19:22:08  rogers
+--| Added reverse_tab_order as deferred.
+--|
+--| Revision 1.34.8.29  2001/03/04 22:25:50  pichery
+--| - renammed `bitmap' into `get_bitmap'
+--|
+--| Revision 1.34.8.28  2001/02/23 23:42:41  pichery
+--| Added tight reference tracking for wel_bitmaps.
+--|
+--| Revision 1.34.8.27  2001/02/16 01:18:50  andrew
+--| Changed spelling of is_useable in invariant to is_usable
+--|
+--| Revision 1.34.8.26  2001/02/03 21:22:02  pichery
+--| Fixed bug with new dialog implementation based on the state pattern.
+--|
+--| Revision 1.34.8.25  2000/12/18 23:59:27  rogers
+--| On_notify now handles tooltip notifications from tree items. Now inherits
+--| WEL_TVN_CONSTANTS, WEL_HWND_CONSTANTS and WEL_SWP_CONSTANTS.
+--|
+--| Revision 1.34.8.21  2000/11/09 23:39:44  manus
+--| Redefined `destroy' so that we `wipe_out' current container of all its
+--| children if any before destroying the C objects. This solves a bug where
+--| you want to reuse some widgets which belonged to `Current'.
+--|
+--| Revision 1.34.8.20  2000/11/07 23:02:27  rogers
+--| Added update_tooltip which updates the tooltip information for a widget
+--| after it has been added to `Current'. Update_tooltip has been added to
+--| `new_item_actions'. Comments, formatting.
+--|
+--| Revision 1.34.8.19  2000/11/01 01:57:38  manus
+--| `client_width' and `client_height' always go through `client_rect'. It
+--| solves some problems with first resizing done by Windows when showing a
+--| window.
+--|
+--| Revision 1.34.8.18  2000/10/27 02:14:25  manus
+--| Removed inheritance from WEL_SB_constants, since there is now a once for
+--| accessing the constants. Redefined `background_brush' to make sure it takes
+--| the background color from the new defined `wel_background_color' which is
+--| always the color set by Windows, unless set by user. Modified
+--| `on_color_control' so that it checks if `background_color_imp' is Void or
+--| not. If it is Void, nothing has to be done, Windows will give the correct
+--| color, if not Void, we give Windows our color.
+--|
+--| Revision 1.34.8.17  2000/10/16 14:32:09  pichery
+--| Added comments to signal a possible bug.
+--|
+--| Revision 1.34.8.16  2000/10/10 23:58:25  raphaels
+--| `window_of_item' is now inherited from WEL_WINDOWS_ROUTINES
+--|
+--| Revision 1.34.8.15  2000/10/06 00:03:16  king
+--| Resolved obsolete AS call
+--|
+--| Revision 1.34.8.14  2000/09/13 18:24:02  manus
+--| Added EV_SHARED_GDI_OBJECTS that keeps track of most of brushes and pens
+--| allocated in Vision2. Now EV_SHARED_GDI_OJECTS is a heir to EV_DRAWABLE_IMP
+--| and EV_CONTAINER_IMP. The first, we just move the onces to the heir, for the
+--| second we use them in `on_color_control' in order to reuse brushes
+--| that are created since we cannot delete them right after their use.
+--|
+--| Revision 1.34.8.13  2000/09/07 02:37:07  manus
+--| Updated `new_item_actions' creation and declaration with the new event class
+--| EV_CONTAINER_ACTION_SEQUENCES_I.
+--|
+--| Revision 1.34.8.12  2000/09/06 23:42:20  oconnor
+--| added new_item_actions to ev_container
+--|
+--| Revision 1.34.8.11  2000/08/16 22:39:37  rogers
+--| Added disable_widget_sensitivity and added it to the new_item_actions.
+--|
+--| Revision 1.34.8.10  2000/08/15 23:31:31  rogers
+--| Added enable_widget_sensitivity and placed this in the remove_item_actions.
+--| Now when a widget is removed from `Current', it will be made sensitive
+--| if it was made non sensitive as an effect from `Current' being non
+--| sensitive.
+--|
+--| Revision 1.34.8.9  2000/08/11 18:57:20  rogers
+--| Fixed copyright clauses. Now use ! instead of |. Formatting.
+--|
+--| Revision 1.34.8.8  2000/08/08 03:13:35  manus
+--| New resizing policy by calling `ev_' instead of `internal_', see
+--|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
+--| `client_width' and `client_height' have been redefined to match new sizing
+--|implementation. Cosmetics
+--|
+--| Revision 1.34.8.7  2000/08/04 16:51:46  rogers
+--| All calls to action sequences made through a widgets interface are now
+--| made directly on the internal actions of that widget.
+--|
+--| Revision 1.34.8.6  2000/07/25 00:52:25  rogers
+--| Removed arguments to make procedure of action_sequences.
+--|
+--| Revision 1.34.8.5  2000/07/21 23:04:19  rogers
+--| Removed add_child and add_child_ok as no longer used in Vision2.
+--|
+--| Revision 1.34.8.4  2000/07/21 18:45:08  rogers
+--| Removed remove_child as it is now redundent in Vision2.
+--|
+--| Revision 1.34.8.3  2000/06/22 19:08:58  rogers
+--| Change actions from EV_GAUGE now return the integer value of the gauge.
+--| On_wm_hscroll and On_wm_vscroll now pass the current value of the gauge
+--| to the gauges change_actions.
 --|
 --| Revision 1.34.8.2  2000/05/09 00:57:04  manus
 --| Update WEL recent changes:
 --| - rename `windows.item (p)' by `window_of_item (p)'.
---| - Add new deferred routine `window_of_item' which replaces `windows' previously
---|   defined.
+--| - Add new deferred routine `window_of_item' which replaces `windows'
+--| previously defined.
 --|
 --| Revision 1.34.8.1  2000/05/03 19:09:26  oconnor
 --| mergred from HEAD

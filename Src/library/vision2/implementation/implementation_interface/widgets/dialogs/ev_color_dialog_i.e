@@ -1,7 +1,6 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
-	description: "EiffelVision color selection dialog, implementation interface."
+	description: "EiffelVision color selection dialog %
+		%implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,41 +9,23 @@ deferred class
 	EV_COLOR_DIALOG_I
 
 inherit
-	EV_SELECTION_DIALOG_I
+	EV_STANDARD_DIALOG_I
 
 feature -- Access
 
 	color: EV_COLOR is
-			-- Current selected color
-		require
+			-- Currently selected color.
 		deferred
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature -- Element change
 
-	select_color (a_color: EV_COLOR) is
-			-- Select `a_color'.
+	set_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `color'.
 		require
-			valid_color: is_valid (color)
-		deferred
-		end
-
-feature -- Event - command association
-
-	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "Help" button is pressed.
-		require
-			valid_command: cmd /= Void
-		deferred
-		end
-
-feature -- Event -- removing command association
-
-	remove_help_commands is
-			-- Empty the list of commands to be executed when
-			-- "Help" button is pressed.
-		require
+			a_color_not_void: a_color /= Void
 		deferred
 		end
 
@@ -71,6 +52,25 @@ end -- class EV_COLOR_DIALOG_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/07 23:08:09  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.4.4.5  2000/08/14 17:59:00  rogers
+--| Removed fixme not_reviewed. Comments.
+--|
+--| Revision 1.4.4.4  2000/08/14 17:42:29  rogers
+--| Removed fixme not for release.
+--|
+--| Revision 1.4.4.3  2000/07/20 18:56:47  king
+--| select_color->set_color
+--|
+--| Revision 1.4.4.2  2000/06/21 19:08:37  rogers
+--| Now inherits from EV_STANDARD_DIALOG_I instead of EV_SELECTION_DIALOG_I.
+--| Removed old command association."
+--|
+--| Revision 1.4.4.1  2000/05/03 19:09:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

@@ -30,6 +30,9 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.check_button (id)
 			end
+			if select_actions_internal /= Void then
+				select_actions_internal.call ([])
+			end
 		end
 
 	disable_select is
@@ -38,6 +41,9 @@ feature -- Status setting
 			is_selected := False
 			if parent_imp /= Void then
 				parent_imp.uncheck_button (id)
+			end
+			if select_actions_internal /= Void then	
+				select_actions_internal.call ([])
 			end
 		end
 
@@ -50,31 +56,55 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_TOGGLE_BUTTON
 
+feature {EV_TOOL_BAR_IMP} -- Status setting
+
+	update_selected (new_is_selected: BOOLEAN) is
+			-- Update the state of the selection according to
+			-- Windows report.
+		do
+			is_selected := new_is_selected
+		end
+
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.19  2000/06/07 17:27:52  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.20  2001/06/07 23:08:12  rogers
+--| Merged DEVEL branch into Main trunc.
+--|
+--| Revision 1.5.2.6  2000/08/11 19:16:21  rogers
+--| Fixed copyright clause. Now use ! instead of |.
+--|
+--| Revision 1.5.2.5  2000/08/02 00:06:20  rogers
+--| Corrected enable_select and disable_Select so that select_actions are
+--| called even when the widget is not parented.
+--|
+--| Revision 1.5.2.4  2000/08/01 23:10:12  rogers
+--| Fixed calling of select_actions. Enable_select and disable_select
+--| previously did not call the select actions.
+--|
+--| Revision 1.5.2.3  2000/06/22 19:15:01  pichery
+--| - Updated the state of the toggle button when it is pressed or
+--| released.
 --|
 --| Revision 1.5.2.2  2000/05/09 21:23:41  king
 --| Implemented to fit in with new selectable abstract class

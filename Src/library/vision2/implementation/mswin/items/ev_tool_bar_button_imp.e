@@ -195,9 +195,9 @@ feature -- Status setting
 		end
 
 	set_tooltip (a_tooltip: STRING) is
-			-- Assign `a_tooltip' to `tooltip'.
+			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
-			tooltip := clone (a_tooltip)
+			internal_tooltip_string := clone (a_tooltip)
 		end
 
 

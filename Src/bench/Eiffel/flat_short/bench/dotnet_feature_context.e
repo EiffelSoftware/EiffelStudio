@@ -21,7 +21,12 @@ inherit
 		redefine
 			initialize
 		end
-		
+	
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_from_entity
@@ -74,6 +79,7 @@ feature {NONE} -- Initialization
 				Precursor
 				declared_type := current_feature.declared_type
 				name_of_current_feature := clone (current_feature.eiffel_name)
+				dotnet_name_of_current_feature := clone (current_feature.dotnet_eiffel_name)
 				create ast.make (current_feature)
 				is_valid := True
 			else
@@ -108,6 +114,10 @@ feature {NONE} -- Property
 	is_valid: BOOLEAN
 			-- Does Current contain valid feature to format?
 
+	use_dotnet_name_only: BOOLEAN
+			-- Only display the .NET name of the feature
+			-- Used for Eiffel ENViSioN!
+
 feature -- Status Report
 
 	is_inherited: BOOLEAN is
@@ -136,6 +146,12 @@ feature -- Execution
 
 feature -- Element change
 
+	set_use_dotnet_name_only is
+			-- Set `use_dotnet_name_only' to True
+		do
+			use_dotnet_name_only := True
+		end
+		
 	prepare_for_feature (a_dn_entity: CONSUMED_ENTITY) is
 			-- Prepare for formatting of feature found in 'dn_entity'.
 		require
@@ -168,74 +184,54 @@ feature -- Element change
 			begin
 			new_expression
 			set_separator (ti_comma)
-			
-			if class_c /= Void then
-					-- Feature should be clickable
-				if class_c.feature_table.has (name_of_current_feature) then
-					l_feature ?= class_c.feature_table.item (name_of_current_feature).api_feature (class_c.class_id)
-				else
-					l_txt := create {LOCAL_TEXT}.make (name_of_current_feature)
-				end		
+			text.add_new_line
+			text.add_indent
+			if current_feature.is_frozen then
+					-- Check if feature is frozen.
+				text.add (Ti_frozen_keyword)
+				text.add_space
 			end
-			
+			if current_feature.is_deferred then
+					-- Check if feature is deferred.
+				text.add (Ti_deferred_keyword)
+				text.add_space
+			end
+			if current_feature.is_infix then
+					-- Check if feature is infix.
+				text.add (Ti_infix_keyword)
+				text.add_space
+				text.add_string ("%"")
+				l_is_str := True
+			elseif current_feature.is_prefix then
+					-- Check if feature is prefix.
+				text.add (Ti_prefix_keyword)
+				text.add_space
+				text.add_string ("%"")
+				l_is_str := True
+			end
+			if class_c /= Void and then class_c.feature_table.has (name_of_current_feature) then
+				-- Feature should be clickable
+				l_feature ?= class_c.feature_table.item (name_of_current_feature).api_feature (class_c.class_id)
+			end		
 			if l_feature /= Void then
-				text.add_new_line
-				text.add_indent
-				if current_feature.is_frozen or l_feature.is_frozen then
-						-- Check if feature is frozen.
-					text.add (Ti_frozen_keyword)
-					text.add_space
-				end
-				if current_feature.is_deferred or l_feature.is_deferred then
-						-- Check if feature is deferred.
-					text.add (Ti_deferred_keyword)
-					text.add_space
-				end
-				if current_feature.is_infix or l_feature.is_infix then
-						-- Check if feature is infix.
-					text.add (Ti_infix_keyword)
-					text.add_space
-					text.add_string ("%"")
-					l_is_str := True
-				elseif current_feature.is_prefix or l_feature.is_prefix then
-						-- Check if feature is prefix.
-					text.add (Ti_prefix_keyword)
-					text.add_space
-					text.add_string ("%"")
-					l_is_str := True
-				end	
-				text.add_feature (l_feature, name_of_current_feature)
-				if l_is_str then
-					text.add_string ("%"")
+				text.add_feature (l_feature, dotnet_name_of_current_feature)
+				if not use_dotnet_name_only then				
+					text.add_char (',')
+					text.add_new_line
+					text.add_feature (l_feature, name_of_current_feature)
 				end
 			else
-				l_txt := create {LOCAL_TEXT}.make (name_of_current_feature)
-				text.add_new_line
-				text.add_indent
-				if current_feature.is_deferred then
-					text.add_string (Ti_deferred_keyword.image)
-					text.add_space
-				end
-				if current_feature.is_frozen then
-					text.add_string (Ti_frozen_keyword.image)
-					text.add_space
-				end
-				if current_feature.is_infix then
-					text.add_string (Ti_infix_keyword.image)
-					text.add_space
-					text.add_string ("%"")
-					l_is_str := True
-				elseif current_feature.is_prefix then
-					text.add_string (Ti_prefix_keyword.image)
-					text.add_space
-					text.add_string ("%"")
-					l_is_str := True
-				end
+				create {LOCAL_TEXT} l_txt.make (dotnet_name_of_current_feature)
 				text.add (l_txt)
-				if l_is_str then
-					text.add_string ("%"")
+				if not use_dotnet_name_only then				
+					text.add_char (',')
+					text.add_new_line
+					text.add (create {LOCAL_TEXT}.make (name_of_current_feature))
 				end
-			end	
+			end
+			if l_is_str then
+				text.add_string ("%"")
+			end
 			
 			put_signature
 			put_comments
@@ -268,8 +264,8 @@ feature {NONE} -- Element Change
 				loop
 					l_c_arg := arguments.item (l_cnt)
 					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
-
-					if l_char_count > 60 then
+					
+					if not use_dotnet_name_only and l_char_count > 60 then
 						text.add_new_line
 						text.add_indents (4)
 						l_char_count := 0
@@ -322,6 +318,9 @@ feature {NONE} -- Element Change
 			l_summary, l_return_info: ARRAYED_LIST [STRING]
 			l_c_arg: CONSUMED_ARGUMENT
 			l_cnt: INTEGER
+			l_id: INTEGER
+			l_overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
+			l_temp: STRING
 		do
 			create l_parsed_arguments.make_empty
 			l_constructor ?= current_feature
@@ -377,6 +376,41 @@ feature {NONE} -- Element Change
 				end	
 			end
 			
+			-- Tell if feature is overloaded and or static
+			if class_c /= Void then
+				l_overloaded_names := class_c.feature_table.overloaded_names
+				if l_overloaded_names /= Void then
+					l_id := names_heap.id_of (current_feature.dotnet_eiffel_name)
+					if l_id > 0 then
+						l_overloaded_names.search (l_id)
+						if l_overloaded_names.found then
+							text.add_new_line
+							text.add_indents (3)
+							text.add_comment ("-- (+")
+							l_cnt := l_overloaded_names.found_item.count - 1
+							text.add_comment (l_cnt.out)
+							if l_cnt > 1 then
+								text.add_comment (" overloads")
+							else
+								text.add_comment (" overload")
+							end
+							if current_feature.is_static then
+								text.add_comment (", static)")
+							else
+								text.add_comment (")")
+							end
+						end
+					end
+				end
+			end
+			if (class_c = Void or l_overloaded_names = Void or else not l_overloaded_names.found) and current_feature.is_static then
+				text.add_new_line
+				text.add_indents (3)
+				text.add_comment ("-- (static)")
+			end
+
+			put_origin_comment
+
 			if l_member_info /= Void then
 					-- Write returned member type information to class/feature text.
 				l_summary := parse_summary (l_member_info.summary)
@@ -396,8 +430,6 @@ feature {NONE} -- Element Change
 				l_parameter_information := l_member_info.parameters
 				if not l_parameter_information.is_empty then
 					put_argument_comments (l_parameter_information)
-				else
-					new_line
 				end	
 	
 				l_return_info := parse_summary (l_member_info.returns)
@@ -405,10 +437,10 @@ feature {NONE} -- Element Change
 						-- Return Type comments.	
 					text.add_new_line
 					text.add_indents (3)
-					text.add_comment ("-- Return Type Information")
+					text.add_comment ("-- ")
 					text.add_new_line
 					text.add_indents (3)
-					text.add_comment ("-- -----------------------")
+					text.add_comment ("-- Return:")
 					from
 						l_return_info.start
 					until
@@ -417,6 +449,7 @@ feature {NONE} -- Element Change
 						text.add_new_line
 						text.add_indents (3)
 						text.add_comment ("-- ")
+						text.add_indents (1)
 						text.add_comment (l_return_info.item)
 						l_return_info.forth
 					end
@@ -429,7 +462,6 @@ feature {NONE} -- Element Change
 				text.add_comment ("Description unavailable.")
 				new_line
 			end
-			put_origin_comment
 		end
 	
 	put_origin_comment is
@@ -437,11 +469,11 @@ feature {NONE} -- Element Change
 			-- ancestor class.
 		do
 			if is_inherited then
+				text.add_new_line
 				text.add_indents (3)
 				text.add_comment ("-- from (")
 				text.add_class (class_i.type_from_consumed_type (declared_type))
 				text.add_char (')')
-				new_line
 			end
 		end		
 	
@@ -456,53 +488,57 @@ feature {NONE} -- Element Change
 			l_string: STRING
 		do
 			text.add_new_line
+			text.add_indents (3)
+			text.add_comment ("--")
 			text.add_new_line
 			text.add_indents (3)
-			text.add_comment ("-- Argument Information ")
-			text.add_new_line
-			text.add_indents (3)
-			text.add_comment ("-- -------------------- ")
+			if a_param_info.count > 1 then
+				text.add_comment ("-- Arguments:")
+			else
+				text.add_comment ("-- Argument:")			
+			end
 			l_max_count := max_length (a_param_info)
+			from
+				a_param_info.start
+			until
+				a_param_info.after
+			loop
+				text.add_new_line
+				text.add_indents (3)
+				text.add_comment ("-- ")
+				text.add_indents (1)
+				create l_string.make_from_string (a_param_info.item.name)
+				l_string.prune_all_leading (' ')
+				text.add_comment (l_string + ": ")
+
+				l_summary := parse_summary (a_param_info.item.description)
 				from
-					a_param_info.start
+					l_summary.start
 				until
-					a_param_info.after
+					l_summary.after
 				loop
-					text.add_new_line
-					text.add_indents (3)
-					text.add_comment ("-- ")
-					create l_string.make_from_string (a_param_info.item.name)
-					l_string.prune_all_leading (' ')
-					text.add_comment (l_string + ": ")
-
-					l_summary := parse_summary (a_param_info.item.description)
-					from
-						l_summary.start
-					until
-						l_summary.after
-					loop
-						if l_next_line then
-							create l_string.make (l_max_count + 1)
-							l_string.fill_character (' ')
-							text.add_new_line
-							text.add_indents (3)
-							text.add_comment ("-- ")
+					if l_next_line then
+						create l_string.make (l_max_count + 1)
+						l_string.fill_character (' ')
+						text.add_new_line
+						text.add_indents (3)
+						text.add_comment ("-- ")
+						text.add_indents (1)
+						text.add_string (l_string)
+					else
+						if (l_max_count - a_param_info.item.name.count > 0) then
+							create l_string.make_filled (' ', l_max_count - a_param_info.item.name.count)
 							text.add_string (l_string)
-						else
-							if (l_max_count - a_param_info.item.name.count > 0) then
-								create l_string.make_filled (' ', l_max_count - a_param_info.item.name.count)
-								text.add_string (l_string)
-							end
-							l_next_line := not l_next_line
 						end
-						text.add_comment (l_summary.item)
-						l_summary.forth
+						l_next_line := not l_next_line
 					end
-
-					l_next_line := False
-					a_param_info.forth
+					text.add_comment (l_summary.item)
+					l_summary.forth
 				end
-			new_line
+
+				l_next_line := False
+				a_param_info.forth
+			end
 		end			
 				
 	parse_summary (a_summary: STRING): ARRAYED_LIST [STRING] is
@@ -558,7 +594,7 @@ feature {NONE} -- Element Change
 		local
 			l_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 		do
-			l_entities := a_consumed_type.entities
+			l_entities := a_consumed_type.flat_entities
 			from 
 				l_entities.start
 			until

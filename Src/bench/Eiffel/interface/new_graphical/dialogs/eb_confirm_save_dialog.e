@@ -21,7 +21,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_and_launch (ed: EB_EDITOR; a_caller: EB_CONFIRM_SAVE_CALLBACK) is
+	make_and_launch (ed: like tool; a_caller: EB_CONFIRM_SAVE_CALLBACK) is
 			-- Initialize and popup the dialog
 		do
 			init_command (ed)

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			resource_files_parser: RESOURCE_FILES_PARSER;
 		once
 			create resource_table.make (20)
-			create resource_files_parser.make ("bench")
+			create resource_files_parser.make (Short_studio_name)
 				
 				-- Read `general' file
 			resource_files_parser.parse_files (resource_table)

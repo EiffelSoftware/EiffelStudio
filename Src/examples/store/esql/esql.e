@@ -92,6 +92,7 @@ feature
 							-- and display them
 							base_selection.load_result
 						end
+						base_selection.terminate
 					elseif not tmp_string.is_equal ("exit") then
 						-- The user updates the database
 						base_update.modify (tmp_string)

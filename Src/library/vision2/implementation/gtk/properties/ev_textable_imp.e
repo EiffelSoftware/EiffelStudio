@@ -8,10 +8,10 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	EV_TEXT_CONTAINER_IMP
+	EV_TEXTABLE_IMP
 	
 inherit
-	EV_TEXT_CONTAINER_I
+	EV_TEXTABLE_I
 	
 	EV_FONTABLE_IMP
 	

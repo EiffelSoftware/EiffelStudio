@@ -9,11 +9,11 @@ indexing
 	
 deferred class
 	
-	EV_PIXMAP_CONTAINER_IMP
+	EV_PIXMAPABLE_IMP
 	
 inherit
 	
-	EV_PIXMAP_CONTAINER_I
+	EV_PIXMAPABLE_I
 
 	EV_CONTAINER_IMP
 		redefine
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
         label_widget: POINTER 
                         -- gtk widget of the label inside the button
 
-end -- EV_PIXMAP_CONTAINER_IMP
+end -- EV_PIXMAPABLE_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

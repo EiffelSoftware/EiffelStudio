@@ -353,11 +353,13 @@ rt_private int cid_to_dtype(EIF_TYPE_ID cid)
  * Field access (attributes)
  */
 
+
 rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret)
 {
 	/* Like eif_attribute, but perform a type checking between the type	
 	 * given by "type_int" and the actual type of the attribute.
 	 * Return EIF_WRONG_TYPE, if this fails.
+	 * Should be preceded by *(EIF_TYPE*). 
 	 */
 
 	void *addr;
@@ -459,6 +461,18 @@ rt_private int locate(char *object, char *name)
 
 	return i;			/* Index in the attribute array */
 }
+
+	/* Obsolete */
+
+rt_public void *old_eifaddr(EIF_REFERENCE object, char *name) 
+{
+	/* Old "eif_addr" with previous signature. This function has been
+	 * added for compatibility purpose. 
+	 */
+
+	int ret;
+	return eifaddr (object, name, &ret);
+}	/* old_eifaddr */
 
 /*
  * Bit field handling

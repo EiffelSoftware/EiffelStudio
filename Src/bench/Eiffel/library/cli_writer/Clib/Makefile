@@ -29,11 +29,9 @@ cli_writer.obj: cli_writer.cpp ise_cache_manager.idl cli_writer.h Makefile
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_writer.cpp
 
 cli_debugger.obj: cli_debugger.cpp  cli_debugger.h Makefile
-	midl -notlb -header cordebug.h cordebug.idl
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_debugger.cpp 
 
 cli_debugger_callback.obj:  cli_debugger_callback.cpp cli_debugger_callback.h Makefile
-	midl -notlb -header cordebug.h cordebug.idl
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_debugger_callback.cpp
 
 OBJ_WRITER = cli_writer.obj ise_vs_fusion_support.obj ise_cache_manager.obj

@@ -32,7 +32,7 @@ feature {AST_FACTORY} -- Initialization
 
 feature -- Attributes
 
-	bits_value: INTEGER_AS
+	bits_value: INTEGER_CONSTANT
 			-- Bits value
 
 feature -- Comparison

@@ -118,11 +118,8 @@ feature -- Basic Operations
 		
 	Freeze_command_name: STRING is
 			-- Retrieve environment variable `a_env'.
-		local
-			freeze_command: STRING
 		once
-			freeze_command := Eiffel_project.Freeze_command_name
-			Result := freeze_command + ".exe"
+			Result := (create {PLATFORM_CONSTANTS}).Finish_freezing_script
 		end
 		
 	Freeze_command_arguments: STRING is

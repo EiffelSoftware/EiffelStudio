@@ -364,9 +364,13 @@ feature -- Once request
 					--| and we know the good CLASS_TYPE as
 				l_icd_frame := eifnet_debugger.current_stack_icor_debug_frame
 				l_icd_dv_result := l_eifnet_debugger.once_function_value_on_icd_class (l_icd_frame, l_icd_class, l_adapted_class_type, a_feat)
-				if l_icd_dv_result /= Void then
-					Result := debug_value_from_icdv (l_icd_dv_result)
-					Result.set_name (a_feat.name)
+				if l_eifnet_debugger.last_once_available then
+					if l_icd_dv_result /= Void then
+						Result := debug_value_from_icdv (l_icd_dv_result)
+						Result.set_name (a_feat.name)
+					end
+				else
+					Result := error_value (a_feat.name , "Could not retrieve information")
 				end
 			end
 

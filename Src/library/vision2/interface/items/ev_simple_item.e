@@ -19,6 +19,7 @@ inherit
 			create_action_sequences
 		end
 
+	--| FIXME Menu items and separators are not PND-able
 	EV_PICK_AND_DROPABLE
 		redefine
 			implementation,
@@ -72,6 +73,9 @@ end -- class EV_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/27 23:52:50  brendel
+--| Added FIXME that menu items are not PND-able.
+--|
 --| Revision 1.23  2000/03/24 03:10:22  oconnor
 --| formatting and comments
 --|

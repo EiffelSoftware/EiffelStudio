@@ -316,93 +316,69 @@ feature -- Status report
 
 feature -- Element change
 
-	insert_row (a_row: EV_GRID_ROW; i: INTEGER) is
+	insert_new_row (a_index: INTEGER) is
+			-- Insert a new row at index `a_index'.
+		require
+			not_destroyed: not is_destroyed
+			i_positive: a_index > 0
+		do
+			implementation.insert_new_row (a_index)
+		ensure
+			row_count_set: row_count = old row_count + 1
+		end
+
+	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
 			-- Insert `a_row' between rows `i' and `i+1'
 		require
 			not_destroyed: not is_destroyed
-			a_row_not_void: a_row /= Void
-			a_row_not_parented: a_row.parent = Void
 			i_positive: i > 0
 			i_less_than_row_count: i <= row_count
+			a_parent_row_not_void: a_parent_row /= Void
+			a_parent_row_in_current: a_parent_row.parent = Current
 		do
-			implementation.insert_row (a_row, i)
+			implementation.insert_new_row_parented (i, a_parent_row)
 		ensure
 			row_count_set: row_count = old row_count + 1
-			row_i_unchanged: row (i) = old row (i)
-			row_inserted: row (i + 1) = a_row
-			row_i_plus_one_shifted:
-				(i < old row_count) implies (row (i + 2) = old row (i + 1))
-			row_parented: a_row.parent /= Void
+			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
 		end
 
-	insert_row_parented (a_row: EV_GRID_ROW; i: INTEGER; a_parent_row: EV_GRID_ROW) is
-			-- Insert `a_row' between rows `i' and `i+1'
+	insert_new_column (a_index: INTEGER) is
+			-- Insert a new column at index `a_index'.
 		require
 			not_destroyed: not is_destroyed
-			a_row_not_void: a_row /= Void
-			a_row_not_parented: a_row.parent = Void
-			i_positive: i > 0
-			i_less_than_row_count: i <= row_count
-			a_parent_row: a_parent_row /= Void
+			i_positive: a_index > 0
 		do
-			implementation.insert_row_parented (a_row, i, a_parent_row)
-		ensure
-			row_count_set: row_count = old row_count + 1
-			row_i_unchanged: row (i) = old row (i)
-			row_inserted: row (i + 1) = a_row
-			row_i_plus_one_shifted:
-				(i < old row_count) implies (row (i + 2) = old row (i + 1))
-			row_parented: a_row.parent_row = a_parent_row
-		end
-
-	insert_column (a_column: EV_GRID_COLUMN; i: INTEGER) is
-			-- Insert `a_column' between columns `i' and `i+1'
-		require
-			not_destroyed: not is_destroyed
-			a_column_not_void: a_column /= Void
-			a_column_not_parented: a_column.parent = Void
-			i_positive: i > 0
-			i_less_than_column_count: i <= column_count
-		do
-			implementation.insert_column (a_column, i)
+			implementation.insert_new_column (a_index)
 		ensure
 			column_count_set: column_count = old column_count + 1
-			column_i_unchanged: column (i) = old column (i)
-			column_inserted: column (i + 1) = a_column
-			column_i_plus_one_shifted:
-				(i < old column_count) implies (column (i + 2) = old column (i + 1))
-			column_parented: a_column.parent /= Void
 		end
 
-	set_row (a_row: EV_GRID_ROW; i: INTEGER) is
-			-- Replace column `i' by `a_row'
+	move_row (i, j: INTEGER) is
+			-- Move row at index `i' to index `j'
 		require
 			not_destroyed: not is_destroyed
-			a_row_not_void: a_row /= Void
-			a_row_not_parented: a_row.parent = Void
 			i_positive: i > 0
+			j_positive: j > 0
 			i_less_than_row_count: i <= row_count
+			j_less_than_row_count: j <= row_count
 		do
-			implementation.set_row (a_row, i)
+			implementation.move_row (i, j)
 		ensure
-			inserted: row (i) = a_row
-			a_row_parented: a_row.parent /= Void
+			moved: row (j) = old row (i) and then row (j) /= row (i)
 		end
 
-	set_column (a_column: EV_GRID_COLUMN; i: INTEGER) is
-			-- Replace column at position `i' by `a_column'
+	move_column (i, j: INTEGER) is
+			-- Move row at index `i' to index `j'
 		require
 			not_destroyed: not is_destroyed
-			a_column_not_void: a_column /= Void
-			a_column_not_parented: a_column.parent = Void
 			i_positive: i > 0
 			i_less_than_column_count: i <= column_count
+			j_less_than_column_count: j <= column_count
 		do
-			implementation.set_column (a_column, i)
+			implementation.move_column (i, j)
 		ensure
-			inserted: column (i) = a_column
-			a_column_parented: a_column.parent /= Void
-		end
+			moved: column (j) = old column (i) and then column (j) /= column (i)
+		end	
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
 			-- Replace grid item at position (`a_column', `a_row') with `a_item'

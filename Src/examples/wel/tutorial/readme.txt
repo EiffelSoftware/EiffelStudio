@@ -12,3 +12,6 @@ Directory `step5': Changing line thickness
 Directory `step6': Repainting a window
 Directory `step7': Adding a menu
 Directory `step8': Storing the drawing in a file
+
+This tutorial is also available on our WEB site at:
+http://www.eiffel.com/doc/manuals/technology/wel/tutorial/index.html

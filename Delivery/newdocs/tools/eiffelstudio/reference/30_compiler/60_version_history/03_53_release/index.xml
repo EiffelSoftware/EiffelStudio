@@ -163,36 +163,9 @@
 				</code> of expanded type.
 			</item>
 			<item>Fixed incorrect C code generation in final mode when creating a complex object which contains expanded objects that have expanded           objects.</item>
-			<item>Fixed random crash issue in finalized applications due to incorrect memory management when you have code similar to:</item>
-			<paragraph>
-				<code>
-					<feature_name>f</feature_name>
-				</code> (g:
-				<code>
-					<class_name>STRING</class_name>
-				</code>):
-				<code>
-					<class_name>ANY</class_name>
-				</code>
-				<code>
-					<keyword>is</keyword>
-				</code>
-				<code>
-					<keyword>do</keyword>
-				</code> Result :=
-				<code>
-					<keyword>create</keyword>
-				</code> {
-				<code>
-					<class_name>STRING</class_name>
-				</code>}.
-				<code>
-					<feature_name>make_from_string</feature_name>
-				</code> (g)
-				<code>
-					<keyword>end</keyword>
-				</code>
-			</paragraph>
+			<item>Fixed random crash issue in finalized applications due to incorrect memory management when you have code similar to:
+				<code_block>			</code_block>
+			</item>
 			<item>Fixed issue with
 				<code>
 					<feature_name>deep_equal</feature_name>

@@ -19,8 +19,8 @@
 			<item>For .NET, allow calling of overloaded features for a .NET classes           to be called without using disambiguated names. Disambiguated names           are still needed when redefining inherited features from .NET classes.</item>
 			<item>Support for inclusion of .NET resources within Eiffel assemblies.</item>
 			<item>Launch C compilation when needed if 
-				<equoted>-c_compile</equoted> option is           specified on the 
-				<equoted>ec</equoted> command line.
+				"-c_compile" option is specified on the 
+				"ec" command line.
 			</item>
 		</list>
 		<heading>

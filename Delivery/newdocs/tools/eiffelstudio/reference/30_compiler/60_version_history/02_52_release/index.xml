@@ -19,32 +19,36 @@
 						<item>Eiffel classes cannot inherit from non-Eiffel .NET classes (but they can be clients).</item>
 						<item>No support for `expanded' keyword.</item>
 					</list>
-					<item>.NET generation now supports assembly signing in enterprise edition.</item>
-					<item>.NET generation now supports precompiled libraries.</item>
-					<item>Supports for manifest integer constants of different sizes, i.e. you can now assign for example the value `8' to a location of type
-						<code>
-							<class_name>INTEGER_8</class_name>
-						</code>,
-						<code>
-							<class_name>INTEGER_16</class_name>
-						</code>,
-						<code>
-							<class_name>INTEGER</class_name>
-						</code> or
-						<code>
-							<class_name>INTEGER_64</class_name>
-						</code>, however you can only assign the value `254' to a location of type
-						<code>
-							<class_name>INTEGER_16</class_name>
-						</code>,
-						<code>
-							<class_name>INTEGER</class_name>
-						</code> or
-						<code>
-							<class_name>INTEGER_64</class_name>
-						</code>.
-					</item>
 				</paragraph>
+				</item></list>
+					<list ordered="false">
+						<item>.NET generation now supports assembly signing in enterprise edition.</item>
+						<item>.NET generation now supports precompiled libraries.</item>
+						<item>Supports for manifest integer constants of different sizes, i.e. you can now assign for example the value `8' to a location of type 
+							<code>
+								<class_name>INTEGER_8</class_name>
+							</code>, 
+							<code>
+								<class_name>INTEGER_16</class_name>
+							</code>, 
+							<code>
+								<class_name>INTEGER</class_name>
+							</code> or 
+							<code>
+								<class_name>INTEGER_64</class_name>
+							</code>, however you can only assign the value `254' to a location of type 
+							<code>
+								<class_name>INTEGER_16</class_name>
+							</code>, 
+							<code>
+								<class_name>INTEGER</class_name>
+							</code> or
+							<code>
+								<class_name>INTEGER_64</class_name>
+							</code>.
+						</item>
+					</list>
+
 				<heading>
 					<size>2</size>Improvements
 				</heading>
@@ -59,31 +63,31 @@
 					<item>One cannot create an instance of a basic expanded class (
 						<code>
 							<class_name>BOOLEAN</class_name>
-						</code>,
+						</code>, 
 						<code>
 							<class_name>CHARACTER</class_name>
-						</code>,
+						</code>, 
 						<code>
 							<class_name>INTEGER_8</class_name>
-						</code>,
+						</code>, 
 						<code>
 							<class_name>INTEGER_16</class_name>
-						</code>,
+						</code>, 
 						<code>
 							<class_name>INTEGER</class_name>
-						</code>,
+						</code>, 
 						<code>
 							<class_name>INTEGER_64</class_name>
-						</code>,
+						</code>, 
 						<code>
 							<class_name>POINTER</class_name>
-						</code>,
+						</code>, 
 						<code>
 							<class_name>REAL</class_name>
-						</code>,
+						</code>, 
 						<code>
 							<class_name>DOUBLE</class_name>
-						</code>), you will now get a
+						</code>), you will now get a 
 						<compiler_error>VGCC(6)</compiler_error> error. Instead directly assign to it, or create an instance of its corresponding _REF class.
 					</item>
 				</list>
@@ -105,6 +109,4 @@
 						<compiler_error>VAPE </compiler_error> errors are checked against call to infix and prefix features.
 					</item>
 				</list>
-			</item>
-		</list>
 	</paragraph></document>

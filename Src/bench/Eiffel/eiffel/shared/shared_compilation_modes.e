@@ -1,6 +1,6 @@
 indexing
-	description: "Status of current compilation.";
-	date: "$Date$";
+	description: "Status of current compilation."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class

@@ -27,20 +27,18 @@ feature {NONE} -- Initialization
 			exists
 		end
 
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
+
 feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size of LARGE_INTEGER structure
 		do
 			Result := c_size_of_large_integer 
-		end
-
-feature {NONE} -- Initialization
-
-	make_from_pointer (a_pointer: POINTER) is
-			-- Make from pointer.
-		do
-			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals 

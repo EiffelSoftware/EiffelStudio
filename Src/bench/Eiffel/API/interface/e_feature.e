@@ -76,6 +76,10 @@ feature -- Properties
 	is_prefix: BOOLEAN;
 			-- Is the feature a prefixed one ?
 
+	obsolete_message: STRING;
+			-- Obsolete message
+			-- (Void if Current is not obsolete)
+
 	is_normal: BOOLEAN is
 			-- Is a normal feature?
 		do
@@ -130,6 +134,12 @@ feature -- Properties
 			-- Is the current feature an external one ?
 		do
 			-- Do nothing
+		end;
+
+	is_obsolete: BOOLEAN is
+			-- Is Current feature obsolete?
+		do
+			Result := obsolete_message /= Void
 		end;
 
 	has_precondition: BOOLEAN is
@@ -368,56 +378,6 @@ feature -- Access
 					and then Result.sorted
 		end 
 
-feature -- Setting
-
-	set_written_in (i: INTEGER) is
-			-- Set `written_in' to `i'.
-		do
-			written_in := i;
-		end;
-
-	set_body_id (i: INTEGER) is
-			-- Assign `i' to `body_id'.
-		do
-			body_id := i;
-		end;
-
-	set_is_origin (b: BOOLEAN) is
-			-- Assign `b' to `is_origin'.
-		do
-			is_origin := b;
-		end;
-
-	set_export_status (e: EXPORT_I) is
-			-- Assign `e' to `export_status'.
-		do
-			export_status := e;
-		end;
-
-	set_is_frozen (b: BOOLEAN) is
-			-- Assign `b' to `is_frozen'.
-		do
-			is_frozen := b;
-		end;
-
-	set_is_infix (b: BOOLEAN) is
-			-- Assign `b' to `is_infix'.
-		do
-			is_infix := b;
-		end;
-
-	set_is_prefix (b: BOOLEAN) is
-			-- Assign `b' to `is_prefix'.
-		do
-			is_prefix := b;
-		end;
-
-	set_rout_id_set (set: like rout_id_set) is
-			-- Assign `set' to `rout_id_set'.
-		do
-			rout_id_set := set;
-		end;
-
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -562,12 +522,60 @@ feature {NONE} -- Implementation
 	is_dynamic: BOOLEAN;
 			-- Is the feature dynamic?
 
-feature {FEATURE_I}
+feature {FEATURE_I} -- Setting
 
 	set_is_dynamic (b: BOOLEAN) is
 			-- Set `is_dynamic' to `b'
 		do
 			is_dynamic := b
+		end;
+
+	set_written_in (i: INTEGER) is
+			-- Set `written_in' to `i'.
+		do
+			written_in := i;
+		end;
+
+	set_body_id (i: INTEGER) is
+			-- Assign `i' to `body_id'.
+		do
+			body_id := i;
+		end;
+
+	set_is_origin (b: BOOLEAN) is
+			-- Assign `b' to `is_origin'.
+		do
+			is_origin := b;
+		end;
+
+	set_export_status (e: EXPORT_I) is
+			-- Assign `e' to `export_status'.
+		do
+			export_status := e;
+		end;
+
+	set_is_frozen (b: BOOLEAN) is
+			-- Assign `b' to `is_frozen'.
+		do
+			is_frozen := b;
+		end;
+
+	set_is_infix (b: BOOLEAN) is
+			-- Assign `b' to `is_infix'.
+		do
+			is_infix := b;
+		end;
+
+	set_is_prefix (b: BOOLEAN) is
+			-- Assign `b' to `is_prefix'.
+		do
+			is_prefix := b;
+		end;
+
+	set_rout_id_set (set: like rout_id_set) is
+			-- Assign `set' to `rout_id_set'.
+		do
+			rout_id_set := set;
 		end;
 
 end -- class E_FEATURE

@@ -11,10 +11,6 @@ inherit
 
 	IPC_SHARED;
 	SHARED_EIFFEL_PROJECT;
-	SHARED_WORKBENCH
-		export
-			{NONE} all
-		end;
 	PROJECT_CONTEXT
 		export
 			{NONE} all
@@ -98,7 +94,7 @@ feature -- Execution
 				Eiffel_project.call_finish_freezing (True)
 			elseif 
 				not project_tool.initialized or else 
-				System.system_name = Void 
+				Eiffel_System.name = Void 
 			then
 				debug_window.clear_window;
 				debug_window.put_string ("System not compiled%N");
@@ -113,9 +109,13 @@ end;
 				!!makefile_sh_name.make_from_string (Workbench_generation_path);
 				makefile_sh_name.set_file_name (Makefile_SH);
 
-				!! uf.make (Application.name);
+				!! uf.make (Eiffel_system.application_name (True));
 				!! make_f.make (makefile_sh_name);
-					--!! FIXME: ****************************************
+--!! FIXME: melt_only (no check for Makefile.SH)
+--!! FIXME: ****************************************
+--!! FIXME: ****************************************
+--!! FIXME: ****************************************
+
 				if uf.exists then
 					if make_f.exists and then make_f.date > uf.date then
 							-- The Makefile file is more recent than the 

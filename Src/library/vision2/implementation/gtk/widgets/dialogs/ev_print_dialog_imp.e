@@ -192,6 +192,7 @@ feature {NONE} -- Initialization
 			enable_closeable
 			minimum_from_page := 1
 			maximum_to_page := 1
+			disable_user_resize
 			is_initialized := True
 		end
 

@@ -960,19 +960,38 @@ feature {NONE} -- Debug information
 
 	show_id_dialog is
 			-- Show a dialog permitting enty of a particular object id to be viewed.
+		require
+			is_in_debug_mode: system_status.is_in_debug_mode
 		local
 			dialog: EV_DIALOG
 			text_field: EV_TEXT_FIELD
+			vertical_box: EV_VERTICAL_BOX
+			instance_viewer: GB_INSTANCE_VIEWER
+			horizontal_box: EV_HORIZONTAL_BOX
+			close_button: EV_BUTTON
 		do
 			create dialog
+			create vertical_box
 			create text_field
-			dialog.extend (text_field)
+			dialog.extend (vertical_box)
 			text_field.return_actions.extend (agent highlight_object (text_field))
 			text_field.return_actions.extend (agent dialog.hide)
+			create instance_viewer.make_with_object_and_parent (object, vertical_box)
+			vertical_box.extend (text_field)
+			vertical_box.disable_item_expand (text_field)
+			create horizontal_box
+			vertical_box.extend (horizontal_box)
+			vertical_box.disable_item_expand (horizontal_box)
+			horizontal_box.extend (create {EV_CELL})
+			create close_button.make_with_text ("Close")
+			close_button.select_actions.extend (agent dialog.destroy)
+			horizontal_box.extend (close_button)
+			horizontal_box.disable_item_expand (close_button)
+			dialog.set_default_cancel_button (close_button)
+			dialog.set_minimum_size (640, 480)
 			dialog.show_modal_to_window (parent_window (Current))
 		end
-		
-		
+
 	highlight_object (text_field: EV_TEXT_FIELD) is
 			-- Ensure `an_object' is highlighted object in `Current'.
 			-- Only if `an_object' is contained in the structure of `Current', and

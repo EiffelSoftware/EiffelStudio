@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			-- Create the spin button.
 		do
 			base_make (an_interface)
-			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 5, 0)
+			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 10, 10)
 			set_c_object (C.gtk_spin_button_new (adjustment, 0, 0))
 
 			-- Set the entry widget from EV_TEXT_FIELD
@@ -79,6 +79,10 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/15 16:34:31  brendel
+--| Fixed bug in initialization found after adding `is_in_default_state' in
+--| interface classes.
+--|
 --| Revision 1.6  2000/02/14 11:40:33  oconnor
 --| merged changes from prerelease_20000214
 --|

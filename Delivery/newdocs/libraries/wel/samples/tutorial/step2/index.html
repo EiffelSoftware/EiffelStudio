@@ -4,12 +4,14 @@
 	<HEAD>
 		<TITLE>Step2</TITLE>
 		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Tutorial, Step2">
 	</HEAD>
 
 	<BODY>
 		<H1>Tutorial Step 2</H1>
 		<p>This sample shows you how to respond to an event occurring within
-        your application. It also demonstrates a <A CLASS="eclass" HREF="/libraries/wel/support/wel_msg_box.html">WEL_MSG_BOX</A>.</p>
+        your application. It also demonstrates the use of a <A CLASS="eclass" HREF="/libraries/wel/support/wel_msg_box.html">WEL_MSG_BOX</A> and how to redefine
+		<A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_composite_window.html#f_closeable">closeable</A> from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_composite_window.html">WEL_COMPOSITE_WINDOW</A>.</p>
 		<CENTER><IMG SRC="step2.png" ALT="step2" /></CENTER><BR><BR>
 		<H2>Compiling</H2>
 		<P>
@@ -28,8 +30,13 @@
 			After you launch the sample, You should see a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> displayed. If you click the
 			left mouse button in the client area of the window, a <A CLASS="eclass" HREF="/libraries/wel/support/wel_msg_box.html">WEL_MSG_BOX</A> will appear, notifying you of your click.</P>
 		<H2>Under the Hood</H2>
-		<P>This system is a demonstration of how to connect an event to one of the common message hooks available within WEL. See Common message hooks for more information.
+		<P>This system is a demonstration of how to connect an event to one of the common message hooks available within WEL. See <A HREF="/libraries/wel/10_concepts.html#common_message_hooks">Common message hooks</A> for more information.
+		In this example, <A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_left_button_down">on_left_button_down</A> has been redefined from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A> to display a 
+		<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box_chart.html">WEL_MSG_BOX</A> containing notification of the event occuring.
 		</P>
+		<P>If you look at <A CLASS="efeature" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window#f_closeable">closeable</A> from <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window_chart.html">MAIN_WINDOW</A>, you will see
+		that it has been redefined to display a <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box_chart.html">WEL_MSG_BOX</A> and the result from this message box is used to generate the return value of <A CLASS="efeature" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window#f_closeable">closeable</A>.
+		Only if this Result is True, then the user will be able to close the window.
 		<P>This sample contains the following classes:
 			<UL>
 				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/tutorial_step2_chart.html">TUTORIAL_STEP2</A>
@@ -37,7 +44,8 @@
 			</UL>
 		</P>
 		<P CLASS="note">
-			<B>Note:</b> <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window_chart.html">MAIN_WINDOW</A> contains many features but nearly all of these are features are inherited from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/WEL_FRAME_WINDOW_CHART.html">WEL_FRAME_WINDOW</A>.	
+			<B>Note:</b>If you follow the link to <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window_chart.html">MAIN_WINDOW</A> you will see that it contains many features, but nearly all of these are inherited from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/WEL_FRAME_WINDOW_CHART.html">WEL_FRAME_WINDOW</A>.	
 		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/10_concepts.html#common_message_hooks">Common message hooks</A><BR></P>
 	</BODY>
 </HTML>

@@ -140,6 +140,11 @@ feature {NONE} -- GTK C functions for toolbars
 	gtk_toolbar_set_tooltips (t: POINTER; fl: BOOLEAN) is
 		external "C | <gtk/gtk.h>"
 		end
+
+	gtk_toolbar_insert_widget (tb, but, txt, privtxt: POINTER; pos: INTEGER) is
+		external
+			"C (GtkTooltips *, GtkButton*, const char *, const char *, gint) | <gtk/gtk.h>"
+		end
 	
 feature {NONE} -- GTK C functions for gtkeditable
 

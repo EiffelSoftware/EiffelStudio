@@ -54,9 +54,7 @@ feature -- Access
 			-- from `objects.first'.
 		do
 			tooltip_entry.change_actions.block
-			
 			tooltip_entry.set_text (first.tooltip)
-			
 			tooltip_entry.change_actions.resume
 		end
 		

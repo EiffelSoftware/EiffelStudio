@@ -179,7 +179,12 @@ feature {NONE} -- debugger behavior
 		local
 			execution_stopped: BOOLEAN			
 		do
-			Eifnet_debugger_info.init_current_callstack
+				--| Refresh CallStack info
+			if Eifnet_debugger_info.last_managed_callback_is_exit_process then
+				Eifnet_debugger_info.reset_current_callstack
+			else
+				Eifnet_debugger_info.init_current_callstack
+			end
 			if Eifnet_debugger_info.last_managed_callback_is_breakpoint then
 				execution_stopped := execution_stopped_on_end_of_breakpoint_callback
 			elseif Eifnet_debugger_info.last_managed_callback_is_step_complete then
@@ -279,6 +284,9 @@ feature {NONE} -- debugger behavior
 			l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
 		do
 			l_current_stack_info := Eifnet_debugger_info.current_stack_info
+			debug ("debugger_trace_callstack")
+				Eifnet_debugger_info.debug_display_current_callstack_info			
+			end
 			
 				--| If we were stepping ...
 			debug ("DEBUGGER_TRACE_STEPPING")
@@ -294,6 +302,11 @@ feature {NONE} -- debugger behavior
 				and then Eifnet_debugger_info.is_current_state_same_as_previous
 			then
 				Eifnet_debugger_info.Application.imp_dotnet.step_into
+			elseif
+				Eifnet_debugger_info.last_control_mode_is_stop
+			then
+				-- FIXME jfiat: special case for Stop now ...
+				Result := True
 			else
 				l_class_token := l_current_stack_info.current_class_token
 				l_module_name := l_current_stack_info.current_module_name
@@ -625,7 +638,7 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_create_thread)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
-				set_last_thread_by_pointer (p_thread)
+				add_managed_thread_by_pointer (p_thread)
 				end_of_managed_callback_without_stopping (Cst_managed_cb_create_thread)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_create_thread)
@@ -645,7 +658,7 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_exit_thread)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
-				reset_last_thread_by_pointer (p_thread)
+				remove_managed_thread_by_pointer (p_thread)				
 				end_of_managed_callback_without_stopping (Cst_managed_cb_exit_thread)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_exit_thread)

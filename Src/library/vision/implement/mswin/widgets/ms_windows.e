@@ -16,18 +16,22 @@ inherit
 	WEL_APPLICATION
 		rename
 			make as wel_make,
-			accelerators as wel_accelerators,
 			main_window as wel_main_window
+		undefine
+			accelerators
 		redefine
-			idle_action
+			idle_action,
+			message_loop
 		end
 
 	MAIN_WINDOW_MANAGER_WINDOWS
 		rename
-			make as wel_make,
-			accelerators as wel_accelerators
+			make as wel_make
+		undefine
+			accelerators
 		redefine
-			idle_action
+			idle_action,
+			message_loop
 		select
 			main_window
 		end
@@ -35,6 +39,8 @@ inherit
 	TASK_MANAGER_WINDOWS
 
 	GLOBAL_CURSOR_MANAGER
+
+	ACCELERATOR_MANAGER_WINDOWS
 
 creation
 
@@ -163,6 +169,8 @@ feature
 		do
 		end
 
+feature {NONE} -- Implementation
+
 	idle_action is
 			-- Action to perform when the system is idle
 		do
@@ -175,6 +183,57 @@ feature
 			loop
 				tasks.item.execute
 				tasks.forth
+			end
+		end
+
+	message_loop is
+			-- Windows message loop
+		local
+			msg: WEL_MSG
+			accel: WEL_ACCELERATORS
+			main_w: WEL_WINDOW
+			done: BOOLEAN
+			dlg: POINTER
+		do
+			from
+				accel := accelerators
+				main_w := application_main_window
+				!! msg.make
+			until
+				done
+			loop
+				msg.peek_all
+				if msg.last_boolean_result then
+					if msg.quit then
+						done := True
+					else
+						dlg := cwin_get_last_active_popup (main_window.wel_item)
+						if dlg /= main_window.wel_item or is_dialog then
+							msg.process_dialog_message (dlg)
+							if not msg.last_boolean_result then
+								msg.translate
+								msg.dispatch
+							end
+						else
+							if accel.exists then
+								msg.translate_accelerator (main_w, accel)
+							end
+							if
+								not msg.last_boolean_result or else
+								not accel.exists
+							then
+								msg.translate
+								msg.dispatch
+							end
+						end
+					end
+				else
+					if idle_action_enabled then
+						idle_action
+					else
+						msg.wait
+					end
+				end
 			end
 		end
 

@@ -42,11 +42,9 @@ feature {NONE} -- Implementation
 		end
 
 	iterate is
-            -- Loop the application.
+		-- Loop the application.
+		-- Already done by WEL : do nothing.
         do
-			check
-				not_called: False
-			end
         end
 
 	exit is

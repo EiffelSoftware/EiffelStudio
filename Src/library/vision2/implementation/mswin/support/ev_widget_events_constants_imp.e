@@ -53,67 +53,71 @@ feature -- General events for widgets
 	Cmd_leave_notify: INTEGER is 14
 			-- The pointer of the mouse leaved the widget
 
-	Cmd_expose: INTEGER is 15
-			-- The widget is exposed after having been hidden
-			-- by the user or behind a windows.
-
-	Cmd_destroy: INTEGER is 16
+	Cmd_destroy: INTEGER is 15
 			-- The widget is destroyed
 
-	Cmd_get_focus: INTEGER is 17
+	Cmd_get_focus: INTEGER is 16
 			-- The widget gets the focus.
 
-	Cmd_loose_focus: INTEGER is 18
+	Cmd_loose_focus: INTEGER is 17
 			-- The widget looses the focus.
 
 feature -- Events for buttons
 
-	Cmd_click: INTEGER is 19
+	Cmd_click: INTEGER is 18
 			-- The button widget is clicked
 
-	Cmd_toggle: INTEGER is 20
+	Cmd_toggle: INTEGER is 19
 			-- The 2 state button change its state
 
 feature -- Events for list and mc-list
 
-	Cmd_selection: INTEGER is 19
+	Cmd_selection: INTEGER is 18
 			-- The selection of the list has changed
 
-	Cmd_column_click: INTEGER is 20
+	Cmd_column_click: INTEGER is 19
 			-- The user double clicked on an item
 
 feature -- Events for windows
 
+	Cmd_size: INTEGER is 18
+			-- The window has been resized
+
 	Cmd_close: INTEGER is 19
 			-- The window has been closed
 
-	Cmd_size: INTEGER is 20
-			-- The window has been resized
-
-	Cmd_move: INTEGER is 21
+	Cmd_move: INTEGER is 20
 			-- The window has moved
+
+feature -- Event for drawing area
+
+--	Cmd_size: INTEGER is 18
+--			-- The drawing has been resized
+
+	Cmd_paint: INTEGER is 19
+			-- The drawing need to be repainted.
 
 feature -- Event for text_components
 
---	Cmd_selection: INTEGER is 19
+--	Cmd_selection: INTEGER is 18
 			-- The text inside the component is modified by the
 			-- user
 
-	Cmd_activate: INTEGER is 20
+	Cmd_activate: INTEGER is 19
 			-- The text inside the componant is going to be
 			-- update after a change of the user.
 
-	Cmd_change: INTEGER is 21
+	Cmd_change: INTEGER is 20
 			-- The text in the text container have changed.
 
 feature -- Event for notebook
 
-	Cmd_switch: INTEGER is 19
+	Cmd_switch: INTEGER is 18
 			-- The user has switch between two pages of a notebook.
 
 feature -- Upper constants value
 
-	command_count: INTEGER is 21
+	command_count: INTEGER is 20
 			-- Number of different events.
 
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP

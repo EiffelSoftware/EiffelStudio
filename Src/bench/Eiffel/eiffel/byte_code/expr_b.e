@@ -58,7 +58,15 @@ feature -- Il code generation
 				if a_type.is_basic and then not target_type.is_external then
 					generate_il_eiffel_metamorphose (a_type)
 				else
-					il_generator.generate_metamorphose (a_type)
+					if a_type.is_expanded and a_type.same_as (target_type) then
+						context.add_local (a_type)
+						local_number := context.local_list.count
+						il_generator.put_dummy_local_info (a_type, local_number)
+						il_generator.generate_local_assignment (local_number)
+						il_generator.generate_local_address (local_number)	
+					else
+						il_generator.generate_metamorphose (a_type)
+					end
 				end
 			end
 		end

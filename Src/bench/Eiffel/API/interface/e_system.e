@@ -12,7 +12,6 @@ inherit
 	SHARED_WORKBENCH;
 	COMPILER_EXPORTER;
 	SHARED_INST_CONTEXT;
-	SHARED_MELT_ONLY;
 	PROJECT_CONTEXT
 
 creation
@@ -184,19 +183,15 @@ feature -- Access
 		local
 			temp: STRING
 		do
-			if melt_only then
-				Result := (Precompilation_driver)
+			!! temp.make (0);
+			temp.append (name);
+			temp.append (Executable_suffix);
+			if workbench_mode then
+				!! Result.make_from_string (Workbench_generation_path);
 			else
-				!! temp.make (0);
-				temp.append (name);
-				temp.append (Executable_suffix);
-				if workbench_mode then
-					!! Result.make_from_string (Workbench_generation_path);
-				else
-					!! Result.make_from_string (Final_generation_path);
-				end;
-				Result.set_file_name (temp);
+				!! Result.make_from_string (Final_generation_path);
 			end;
+			Result.set_file_name (temp);
 		end;
 
 	is_precompiled: BOOLEAN is

@@ -689,7 +689,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 					-- We do not wish to remove any minimized items contained in `upper_box',
 					-- only the cells added during call to `initialize_docking_areas'.
 					-- Therefore, we check that they are cells with data to qualify this.
-					cell ?= all_holders.item.first
+					cell ?= all_holders.item.upper_box.first
 					if cell /= Void and then cell.data /= Void then
 						all_holders.item.upper_box.start
 						all_holders.item.upper_box.remove

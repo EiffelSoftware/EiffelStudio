@@ -53,7 +53,7 @@ to indicate indirect(also called Eiffel or protected) address.
 #include "eif_cecil.h"
 #include "eif_hector.h"
 #include "eif_macros.h"
-#include "object_id.h"
+#include "eif_object_id.h"
 #include "eif_timer.h"
 
 /*----------------------------------------------------------*/

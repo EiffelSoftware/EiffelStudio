@@ -176,12 +176,12 @@ rt_shared struct dbglobalinfo d_globaldata = {
 
 #ifdef EIF_THREADS
 /*
-doc:	<attribute name="db_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:	<attribute name="db_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="private">
 doc:		<summary>Ensure that only one thread is stopped at a time in EiffelStudio debugger.</summary>
 doc:		<thread_safety>Safe as initialized in `dbreak_create_table'.</thread_safety>
 doc:	</attribute>
 */
-rt_shared EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against concurrent accesses */
+rt_private EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against concurrent accesses */
 #endif /* EIF_THREADS */
 
 #ifdef EIF_THREADS
@@ -212,6 +212,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index); /* Brea
 rt_public void set_breakpoint_count(int num);	/* Sets the n breakpoint to stop at*/
 rt_public void dbreak_create_table(void);
 rt_public void dbreak_free_table(void);
+rt_private void safe_dbreak (int why);
 rt_private void set_breakpoint_in_table(int body_id, uint32 offset);
 rt_private void remove_breakpoint_in_table(int body_id, uint32 offset);
 rt_private int is_dbreak_set(int body_id, uint32 offset);
@@ -546,7 +547,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 			{
 				d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
 				d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
-				dbreak(PG_STEP);				/* Stop the application because we stepped */
+				safe_dbreak(PG_STEP);				/* Stop the application because we stepped */
 
 				/* update previous value for next call (if it's a nested call) */
 				previous_bodyid = bodyid;
@@ -562,7 +563,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 			{
 					/* We may have detected a stack overflow */
 				already_warned = 1;
-				dbreak (PG_OVERFLOW);
+				safe_dbreak (PG_OVERFLOW);
 					/* update previous value for next call (if it's a nested call) */
 				previous_bodyid = bodyid;
 				previous_break_index = break_index;
@@ -572,7 +573,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 			{
 				d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
 				d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
-				dbreak(PG_BREAK);
+				safe_dbreak(PG_BREAK);
 					/* update previous value for next call (if it's a nested call) */
 				previous_bodyid = bodyid;
 				previous_break_index = break_index;
@@ -619,7 +620,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 			d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not
 												   already cleared */
 			d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
-			dbreak(PG_STEP);		 			/* stop the application */
+			safe_dbreak(PG_STEP);		 			/* stop the application */
 		}
 
 		/* we don't test the other case: breakpoint & interruption to avoid
@@ -633,6 +634,16 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 *************************************************************************************************************************/
 
 rt_shared void dbreak(EIF_CONTEXT int why)
+	/* Safe entry point for multithreaded application */
+{
+	DBGMTX_LOCK;
+
+	safe_dbreak(why);
+
+	DBGMTX_UNLOCK;
+}
+
+rt_private void safe_dbreak (int why)
 {
 	/* Program execution stopped. The run-time context is saved and the
 	 * application is put in a server mode, where it listens for workbench
@@ -643,8 +654,6 @@ rt_shared void dbreak(EIF_CONTEXT int why)
 
 	REQUIRE("is debugging", debug_mode);
 
-	DBGMTX_LOCK;
-
 #ifdef NEVER
 	dserver();
 #else
@@ -652,8 +661,6 @@ rt_shared void dbreak(EIF_CONTEXT int why)
 	dserver();					/* Put application in server mode */
 	esresume();					/* Restore run-time context */
 #endif
-
-	DBGMTX_UNLOCK;
 
 	/* Returning from this routine will resume execution where it stopped */
 }

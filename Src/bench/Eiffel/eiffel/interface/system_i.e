@@ -3157,16 +3157,16 @@ feature -- Dispose routine
 			Result := memory_class_i.compiled_class
 		end
 
-	memory_descendants: LINKED_LIST [CLASS_C] is
+	memory_descendants: SEARCH_TABLE [CLASS_C] is
 			-- Memory descendants.
 		once
-			!! Result.make
+			!! Result.make (50)
 			if memory_class /= Void then
 				formulate_mem_descendants (memory_class, Result)
 			end
 		end
  
-	formulate_mem_descendants (c: CLASS_C; desc: LINKED_LIST [CLASS_C]) is
+	formulate_mem_descendants (c: CLASS_C; desc: SEARCH_TABLE [CLASS_C]) is
 			-- Formulate descendants of class MEMORY. 
 		local
 			descendants: LINKED_LIST [CLASS_C]
@@ -3179,8 +3179,7 @@ feature -- Dispose routine
 				descendants.after
 			loop
 				d := descendants.item
-				desc.extend (d)
-				desc.forth
+				desc.put (d)
 				formulate_mem_descendants (d, desc)
 				descendants.forth
 			end

@@ -313,6 +313,17 @@ feature {NONE} -- Implementation
 						message_output.add_warning (Current, Generation_Successful)
 					end
 
+					-- Generating Ace and Resource files
+					if not shared_wizard_environment.abort then
+						if Shared_wizard_environment.server then
+							compiler.generate_ace_file (Server)
+							compiler.generate_resource_file (Server)
+						else
+							compiler.generate_ace_file (Client)
+							compiler.generate_resource_file (Client)
+						end
+					end
+
 					-- Compiling generated C code
 					if Shared_wizard_environment.compile_c then
 						message_output.add_title (Current, Compilation_title)
@@ -341,13 +352,8 @@ feature {NONE} -- Implementation
 							compiler.compile_folder (Clib_folder_name)
 							compiler.link_all (Clib_folder_name, CLib_name)
 						end
-						if not shared_wizard_environment.abort then
-							if Shared_wizard_environment.server then
-								compiler.generate_ace_file (Server)
-							else
-								compiler.generate_ace_file (Client)
-							end
-						end
+
+						-- Compiling Eiffel
 						if not Shared_wizard_environment.abort and Shared_wizard_environment.compile_eiffel then
 							if Shared_wizard_environment.client then
 								progress_report.set_title (Eiffel_compilation_title)

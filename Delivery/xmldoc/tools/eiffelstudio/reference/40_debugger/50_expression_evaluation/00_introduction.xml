@@ -19,6 +19,18 @@
 				<label>list of expressions</label>
 			</link>.
 		</paragraph>
+		<paragraph>	
+			If you keep the mouse cursor over the context cell of line, you get a tooltip describing the expression result.
+		</paragraph>
+		<paragraph>
+			You can disable the evaluation of the selected expression by clicking on 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_on_off_very_small_color.png</url>
+			</image> , then the context value will display 'disabled'.
+		</paragraph>
+		<paragraph>
+			If the expression has an error, or if the evaluation raised an exception, you can have better description	 by double-clicking on the expression row.
+		</paragraph>
 		<warning>
 			<bold>Caution</bold>: During the evaluation of an expression, all features that are necessary to obtain the result are called. Therefore, you should avoid calling queries that have side-effects, since doing so may alter the program execution. The Eiffel methodology recommends not to define side-effects queries anyway.
 		</warning>

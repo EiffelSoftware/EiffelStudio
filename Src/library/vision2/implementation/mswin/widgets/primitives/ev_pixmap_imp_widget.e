@@ -170,8 +170,23 @@ feature -- Loading/Saving
 			-- Exceptions "Unable to retrieve icon information", 
 			--            "Unable to load the file"
 		do
+				-- If we have already loaded, an icon, then
+				-- we need to remove `internal_mask_bitmap' as it is
+				-- only required for icons. Problem occurs, if you call
+				-- `set_with_named_file' twice, firstly with an icon, and
+				-- then a png file, without the following line, then the
+				-- png would be corrupted/system crash.
+			if internal_mask_bitmap /= Void then
+				internal_mask_bitmap.decrement_reference
+				internal_mask_bitmap := Void	
+			end
 			Precursor (file_name)
 			update_display
+				-- We must now connect the paint bitmap agent to
+				-- the expose actions, so the new pixmap can be drawn.
+			if not interface.expose_actions.has (paint_bitmap_agent) then
+				interface.expose_actions.extend (paint_bitmap_agent)
+			end
 		end
 
  	set_with_default is
@@ -622,7 +637,7 @@ feature {NONE} -- Private Implementation
 		end
 	
 	on_orphaned is
-			-- `Current' has just been added to a container
+			-- `Current' has just been removed from a container
 		do
 			parented := False
 			interface.expose_actions.prune_all (paint_bitmap_agent)

@@ -6,7 +6,7 @@ root
 
 default
 	assertion (all);
-	precompiled ("$EIFFEL_SRC\library\base")
+	precompiled ("$EIFFEL_SRC\library\aces\vision2")
 
 cluster 
 
@@ -21,7 +21,7 @@ cluster
 			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "clib"; "spec"; "extra"
 		end
 	
-	all lex:		"$EIFFEL_SRC\library\lex\lex"
+	all lex:		"$EIFFEL_SRC\library\lex"
 		exclude
 			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
 		end

@@ -6,7 +6,7 @@ root
 
 default
 	assertion (all);
-	precompiled ("$EIFFEL_SRC\library\base")
+	precompiled ("$EIFFEL_SRC\library\aces\wel")
 
 cluster 
 

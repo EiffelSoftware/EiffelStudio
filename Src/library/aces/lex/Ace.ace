@@ -6,7 +6,7 @@ root
 
 default
 	assertion (all);
-	precompiled ("$EIFFEL_SRC\library\base")
+	precompiled ("$EIFFEL_SRC\library\aces\base")
 
 cluster 
 
@@ -21,4 +21,6 @@ cluster
 			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "Clib"
 		end
 	
+	all parse:		"$EIFFEL_SRC\library\parse"
+
 end -- system base

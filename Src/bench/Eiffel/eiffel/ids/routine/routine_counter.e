@@ -3,7 +3,6 @@
 class ROUTINE_COUNTER
 
 inherit
-
 	COMPILER_COUNTER
 		rename
 			make as old_make,
@@ -13,7 +12,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Initialization

@@ -3,11 +3,11 @@
 class INHERIT_INFO 
 
 inherit
-
 	COMPARABLE
 		undefine
 			is_equal
-		end;
+		end
+
 	SHARED_WORKBENCH
 	
 feature 
@@ -42,9 +42,7 @@ feature
 	infix "<" (other: INHERIT_INFO): BOOLEAN is
 			-- Is `other' greater than Current ?
 		do
-			Result := a_feature.body_id
-						<
-						other.a_feature.body_id;
+			Result := a_feature.body_id < other.a_feature.body_id;
 		end;
 
 	inherited_assertion: BOOLEAN is
@@ -68,12 +66,12 @@ feature
 
 	trace is
 		do
-if a_feature/= Void and then a_feature.written_class > System.any_class.compiled_class then
-io.error.putstring ("set a feature in inherit info%N");
-			a_feature.trace;
-io.error.putstring (a_feature.generator);
-			io.new_line;
-end;
+			if a_feature/= Void and then a_feature.written_class > System.any_class.compiled_class then
+				io.error.putstring ("set a feature in inherit info%N")
+				a_feature.trace
+				io.error.putstring (a_feature.generator)
+				io.new_line
+			end
 		end
 			
 end

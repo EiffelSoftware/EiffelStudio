@@ -390,10 +390,8 @@ feature -- Contexts
 
 	generate_plug_declarations (plug_file: INDENT_FILE; table_prefix: STRING) is
 		do
-			generate_feature_table
-				(plug_file, "eif_lower_table", lower_rout_id, table_prefix);
-			generate_feature_table
-				(plug_file, "eif_area_table", area_rout_id, table_prefix);
+			generate_feature_table (plug_file, "eif_lower_table", lower_rout_id, table_prefix);
+			generate_feature_table (plug_file, "eif_area_table", area_rout_id, table_prefix);
 		end;
 
 	generate_feature_table (plug_file: INDENT_FILE; table_name: STRING;

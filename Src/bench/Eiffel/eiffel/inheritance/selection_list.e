@@ -1,17 +1,21 @@
 class SELECTION_LIST 
 	
 inherit
-
-	SORTED_TWO_WAY_LIST [INHERIT_INFO];
-	SHARED_WORKBENCH;
-	SHARED_ERROR_HANDLER;
-	SHARED_SELECTED;
-	SHARED_ORIGIN_TABLE;
-	SHARED_INHERITED;
 	COMPILER_EXPORTER
 
-creation
+	SORTED_TWO_WAY_LIST [INHERIT_INFO]
 
+	SHARED_WORKBENCH
+
+	SHARED_ERROR_HANDLER
+
+	SHARED_SELECTED
+
+	SHARED_ORIGIN_TABLE
+
+	SHARED_INHERITED
+
+creation
 	make
 	
 feature 
@@ -34,8 +38,8 @@ feature
 				detect_replication (parents, new_t);
 			end;
 			first_feature := first.a_feature;
-			if 	one_body_only
-				and then
+			if one_body_only
+			and then
 				(	first_feature.written_class.generics = Void
 					or else
 					same_parent_type
@@ -156,8 +160,7 @@ end;
 				else
 					instantiator := info.parent.parent_type;
 				end;
-				to_compair := to_compair.instantiation_in
-													(instantiator, written_id);
+				to_compair := to_compair.instantiation_in (instantiator, written_id);
 				go_i_th (2);
 			until
 				after or else not Result
@@ -170,8 +173,7 @@ end;
 				else
 					instantiator := info.parent.parent_type;
 				end;
-				written_type := written_type.instantiation_in
-													(instantiator, written_id);
+				written_type := written_type.instantiation_in (instantiator, written_id);
 				Result := written_type.is_deep_equal (to_compair);
 				forth;
 			end;
@@ -273,8 +275,7 @@ end;
 					else
 						instantiator := info_parent.parent_type;
 					end;
-					to_compair := to_compair.instantiation_in
-													(instantiator, written_id);
+					to_compair := to_compair.instantiation_in (instantiator, written_id);
 				end;
 			end;
 			
@@ -308,8 +309,7 @@ end;
 							--instantiator := info_parent.parent_type;
 						--end;
 						--written_type := written_actual_type.duplicate;
-						--written_type := written_type.instantiation_in
-														--(instantiator, written_id);
+						--written_type := written_type.instantiation_in (instantiator, written_id);
 						--cond := to_compair.same_as (written_type);
 					--end;
 					--if cond then

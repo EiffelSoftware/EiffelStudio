@@ -50,14 +50,12 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		require
 			non_void_source: a_source /= Void
 		local
-			l_routine: CODE_MEMBER_REFERENCE
 			l_target_object: SYSTEM_DLL_CODE_EXPRESSION
 		do
 			l_target_object := a_source.target_object
 			if l_target_object /= Void then
 				code_dom_generator.generate_expression_from_dom (l_target_object)
-				l_routine := last_expression.type.member_from_name (a_source.method_name)
-				set_last_expression (create {CODE_ROUTINE_REFERENCE_EXPRESSION}.make (l_routine, last_expression))
+				set_last_expression (create {CODE_ROUTINE_REFERENCE_EXPRESSION}.make (a_source.method_name, last_expression))
 			else
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_target_object, ["method reference expression"])
 				set_last_expression (Empty_expression)

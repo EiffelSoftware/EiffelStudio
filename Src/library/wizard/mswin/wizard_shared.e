@@ -65,6 +65,12 @@ feature -- Access
 			Result := wizard_source +"\resources"
 		end
 
+	pixmap_extension: STRING is
+			-- Extension used for pixmaps.
+		once
+			Result := "bmp"
+		end
+
 	pixmap: EV_PIXMAP is
 			-- Pixmap on which can be displayed a picture which 
 			-- goes with the state.

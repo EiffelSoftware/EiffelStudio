@@ -109,7 +109,7 @@ feature -- Access
 					Result or else i > count
 				loop
 					a_class := classes.item(i)
-					if not a_class.is_precompiled and then not a_class.is_external then
+					if a_class /= Void and then not a_class.is_precompiled and then not a_class.is_external then
 						-- We don't need to query external classes.
 						Result := classes.item (i).lace_class.date_has_changed
 					end

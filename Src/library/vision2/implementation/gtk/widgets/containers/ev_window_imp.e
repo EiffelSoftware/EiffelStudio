@@ -16,8 +16,7 @@ inherit
 		
 	EV_WINDOW_IMP
 		undefine
-			set_default_colors,
-			has_parent
+			set_default_colors
 		redefine
 			interface,
 			make
@@ -273,6 +272,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/06/07 18:16:05  oconnor
+--| removed has_parent from inheritance clause
+--|
 --| Revision 1.46  2000/06/07 17:27:38  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

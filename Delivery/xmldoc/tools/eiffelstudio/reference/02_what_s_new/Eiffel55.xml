@@ -50,6 +50,11 @@
 			<item>Improved performance of <class_name>FILE</class_name> objects creation by not allocating the <feature_name>last_string</feature_name> internal buffer until it is needed.</item>
 			<item>On Windows, removed side effects of <feature_name>put</feature_name> from <class_name>EXECUTION_ENVIRONMENT</class_name>. Before it was setting also some registry keys, now it only set the environment variable for the running process and its children when launched.</item>
 			<item>Allowed zero sized <class_name>MANAGED_POINTER</class_name>. Allowed <class_name>MANAGED_POINTER</class_name> to share a pointer rather than doing a full memory copy at creation time.</item>
+			<item>Fixed issue with agents where GC did not collect passed arguments to <feature_name>call</feature_name> or <feature_name>item</feature_name> from <class_name>ROUTINE</class_name>/<class_name>FUNCTION</class_name>. Thus arguments stayed alive until the next call to <feature_name>call</feature_name> or <feature_name>item</feature_name>.</item>
+		</list>
+		<heading><size>3</size>EiffelNet</heading>
+		<list ordered="false">
+			<item>Added <feature_name>close_socket</feature_name> in <class_name>SOCKET</class_name> which only close the socket for the current process. It will not close it for all processes which are using this socket (e.g. obtained after a fork on Unix platform).</item>
 		</list>
 		<heading><size>3</size>EiffelTime</heading>
 		<list ordered="false">

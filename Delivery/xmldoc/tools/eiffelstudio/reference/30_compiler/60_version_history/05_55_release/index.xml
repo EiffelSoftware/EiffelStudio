@@ -9,6 +9,7 @@
 			<item>Made <code><keyword>Void,</keyword></code> previously a feature of <code><class_name>ANY</class_name></code>, a keyword. This prevents the renaming of <code><feature_name>Void</feature_name></code> into <code><feature_name>not_void</feature_name></code> previously possible when it was a routine of <code><class_name>ANY</class_name></code>.</item>			
 			<item>Added support for reference and expanded constraints on a formal generic parameter.</item>
 			<item>Added support for Microsoft .NET 2.0 runtime.</item>
+			<item>Allowed agent creation on infix or prefix routines.</item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">

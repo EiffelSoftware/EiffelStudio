@@ -512,9 +512,10 @@ RT_LNK int fcount;
  *  RTOF(x) returns the offset of expanded 'x' within enclosing object
  *  RTEO(x) returns the address of the enclosing object for expanded 'x'
  */
-#define	RTMS(s)			makestr(s,strlen(s))
-#define	RTMS_EX(s,c)	makestr(s,c)
+#define	RTMS(s)			makestr_with_hash(s,strlen(s),0)
+#define	RTMS_EX(s,c)	makestr_with_hash(s,c,0)
 #define	RTMS_EX_H(s,c,h)	makestr_with_hash(s,c,h)
+#define RTMS_EX_O(s,c)	makestr_with_hash_as_old(s,c,0)
 
 #if defined(WORKBENCH) || defined(EIF_THREADS)
 #define RTOMS(b,n)	(EIF_oms[(b)][(n)])
@@ -539,7 +540,7 @@ RT_LNK int fcount;
 			rs = *rsp; \
 			if (!rs) { \
 				register_oms (rsp); \
-				rs = RTMS_EX(s,c); \
+				rs = RTMS_EX_O(s,c); \
 				*rsp = rs; \
 			} \
 			r = rs; \
@@ -554,7 +555,7 @@ RT_LNK int fcount;
 			rsp = &RTOMS(b,n); \
 			if (!(*rsp)) { \
 				register_oms (rsp); \
-				*rsp = RTMS_EX(s,c); \
+				*rsp = RTMS_EX_O(s,c); \
 			} \
 		}
 #endif

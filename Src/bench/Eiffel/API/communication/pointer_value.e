@@ -46,11 +46,11 @@ feature -- Access
 
 feature -- Output
 
-	 append_type_and_value (cw: CLICK_WINDOW) is 
+	 append_type_and_value (ow: OUTPUT_WINDOW) is 
 		do 
-			dynamic_class.append_clickable_name (cw)
-			cw.put_string (" = C pointer ");
-			cw.put_string (value)
+			dynamic_class.append_name (ow)
+			ow.put_string (" = C pointer ");
+			ow.put_string (value)
 		end;
 
 end -- class POINTER_VALUE

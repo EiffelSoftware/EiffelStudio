@@ -21,14 +21,6 @@ feature -- Properties
 	name: STRING
 			-- Name of attribute or argument or local
 
-	feature_stone: FEATURE_NAME_STONE is
-			-- Feature stone for attribute
-		require
-			is_attribute: is_attribute
-		do
-			!! Result.make (name, e_class)
-		end;
-
 feature -- Access
 
 	dynamic_class: E_CLASS is
@@ -57,34 +49,34 @@ feature -- Comparison
 
 feature -- Output
 
-	append_to (cw: CLICK_WINDOW; indent: INTEGER) is
-			-- Append `Current' to `cw' printing the name, type
+	append_to (ow: OUTPUT_WINDOW; indent: INTEGER) is
+			-- Append `Current' to `ow' printing the name, type
 			-- and its value.
 		require
-			valid_cw: cw /= Void;
+			valid_ow: ow /= Void;
 			valid_indent: indent >= 0;
 			valid_name: name /= Void
 		do
-			append_tabs (cw, indent);
+			append_tabs (ow, indent);
 			if is_attribute then
-				cw.put_clickable_string (feature_stone, name)
+				ow.put_feature_name (name, e_class)
 			else
-				cw.put_string (name)
+				ow.put_string (name)
 			end;
-			cw.put_string (": ");
-			append_type_and_value (cw);
-			cw.new_line
+			ow.put_string (": ");
+			append_type_and_value (ow);
+			ow.new_line
 		end;
 
-	append_type_and_value (cw: CLICK_WINDOW) is 
-			-- Append value of Current to `cw'.
+	append_type_and_value (ow: OUTPUT_WINDOW) is 
+			-- Append value of Current to `ow'.
 		require
-			valid_cw: cw /= Void;
+			valid_ow: ow /= Void;
 			valid_name: name /= Void
 		deferred 
 		end;
 
-feature {ONCE_REQUEST, CALL_INFO, ATTR_REQUEST, EXPANDED_VALUE, SPECIAL_VALUE}
+feature {ONCE_REQUEST, CALL_STACK_ELEMENT, ATTR_REQUEST, EXPANDED_VALUE, SPECIAL_VALUE}
 
 	set_hector_addr is
 			-- Convert the physical addresses received from the application
@@ -105,10 +97,10 @@ feature {RECV_VALUE} -- Setting
 
 feature {NONE} -- Implementation
 
-	append_tabs (cw: CLICK_WINDOW; indent: INTEGER) is
-			-- Append `indent' tabulation character to `cw'.
+	append_tabs (ow: OUTPUT_WINDOW; indent: INTEGER) is
+			-- Append `indent' tabulation character to `ow'.
 		require
-			cw_exists: cw /= Void;
+			ow: ow /= Void;
 			indent_positive: indent >= 0
 		local
 			i: INTEGER
@@ -118,7 +110,7 @@ feature {NONE} -- Implementation
 			until
 				i > indent
 			loop
-				cw.put_string ("%T");
+				ow.put_string ("%T");
 				i := i + 1
 			end
 		end;

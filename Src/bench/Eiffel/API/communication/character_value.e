@@ -48,13 +48,13 @@ feature -- Access
 
 feature -- Output
 
-	 append_type_and_value (cw: CLICK_WINDOW) is 
+	 append_type_and_value (ow: OUTPUT_WINDOW) is 
 		do 
-			dynamic_class.append_clickable_name (cw)
-			cw.put_string (" = ");
-			cw.put_char ('%'');
-			cw.put_string (char_text (value));
-			cw.put_char ('%'')
+			dynamic_class.append_name (ow)
+			ow.put_string (" = ");
+			ow.put_char ('%'');
+			ow.put_string (char_text (value));
+			ow.put_char ('%'')
 		end;
 
 end -- class CHARACTER_VALUE

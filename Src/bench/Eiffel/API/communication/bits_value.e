@@ -65,13 +65,13 @@ feature -- Access
 
 feature -- Output
 
-	append_type_and_value (cw: CLICK_WINDOW) is 
+	append_type_and_value (ow: OUTPUT_WINDOW) is
 		do 
-			cw.put_clickable_string (dynamic_class.stone, "BIT");
-			cw.put_string (" ");
-			cw.put_int (value.count - 1);
-			cw.put_string (" = ");
-			cw.put_string (value)
+			ow.put_class (dynamic_class, "BIT");
+			ow.put_string (" ");
+			ow.put_int (value.count - 1);
+			ow.put_string (" = ");
+			ow.put_string (value)
 		end;
 
 feature {NONE} -- Implementation

@@ -10,6 +10,8 @@ inherit
 	CALLBACK_INTERFACE
 
 	CACHE_ERRORS
+	
+	CACHE_SETTINGS
 		
 	SAFE_ASSEMBLY_LOADER
 		export
@@ -456,6 +458,7 @@ feature {NONE} -- Implementation
 			l_key: STRING
 			l_culture: STRING
 			l_is_in_gac: BOOLEAN
+			folder_name: STRING
 		do
 			l_assembly := load_from_gac_or_path (a_path)
 			if l_assembly /= Void then
@@ -476,7 +479,16 @@ feature {NONE} -- Implementation
 					l_is_in_gac := True
 				end
 				
-				create Result.make (a_id, l_name.name, l_name.version.to_string, l_culture, l_key, a_path, l_assembly.location, l_is_in_gac)
+				if concervative_mode then
+					folder_name := a_id.twin
+				else
+					create folder_name.make (l_name.name.length + a_id.count + 1)
+					folder_name.append (l_name.name)
+					folder_name.append_character ('!')
+					folder_name.append (a_id)				
+				end
+				
+				create Result.make (a_id, folder_name, l_name.name, l_name.version.to_string, l_culture, l_key, a_path, l_assembly.location, l_is_in_gac)
 			end
 		ensure
 			non_void_result: Result /= Void

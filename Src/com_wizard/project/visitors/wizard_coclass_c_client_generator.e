@@ -22,7 +22,12 @@ inherit
 
 	WIZARD_COMPONENT_C_CLIENT_GENERATOR
 
-feature -- Implementation
+feature -- Access
+
+	dispatch_interface: BOOLEAN
+			-- Is coclass contained dispatch interface?
+
+feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate c client for coclass.
@@ -100,56 +105,11 @@ feature {NONE} -- Implementation
 	process_interfaces (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Process inherited interfaces
 		local
-			a_name, tmp_string: STRING
-			data_member: WIZARD_WRITER_C_MEMBER
-			interface_descriptors: LIST[WIZARD_INTERFACE_DESCRIPTOR]
+			interface_processor: WIZARD_COCLASS_INTERFACE_C_CLIENT_PROCESSOR
 		do
-			interface_descriptors := a_coclass_descriptor.interface_descriptors
-
-			-- Find all the features and properties in inherited interfaces
-			if not interface_descriptors.empty then
-				from
-					interface_descriptors.start
-				until
-					interface_descriptors.off
-				loop
-					-- Add  import header files
-					cpp_class_writer.add_import (interface_descriptors.item.c_header_file_name)
-					cpp_class_writer.add_other_source (iid_definition (interface_descriptors.item.name, interface_descriptors.item.guid))
-
-					-- Add data member
-					create data_member.make
-					data_member.set_comment (Interface_pointer_comment)
-
-					-- Variable name
-					tmp_string := clone (Interface_variable_prepend)
-					tmp_string.append (interface_descriptors.item.c_type_name)
-					data_member.set_name (tmp_string)
-
-					-- Variable type
-					tmp_string := clone (interface_descriptors.item.c_type_name)
-					tmp_string.append (Space)
-					tmp_string.append (Asterisk)
-					data_member.set_result_type (tmp_string)
-
-					cpp_class_writer.add_member (data_member, Private)
-
-					-- Find all features and properties
-					a_name := interface_descriptors.item.c_type_name
-					interface_names.extend (a_name)
-
-					if 
-						interface_descriptors.item.dispinterface and 
-						not  interface_descriptors.item.dual 
-					then
-						dispatch_interface := True
-					end
-
-					generate_functions_and_properties (a_coclass_descriptor, interface_descriptors.item, interface_descriptors.item.name)
-
-					interface_descriptors.forth
-				end
-			end
+			create interface_processor.make (a_coclass_descriptor, Current)
+			interface_processor.process_interfaces
+			dispatch_interface := interface_processor.dispatch_interface
 		end
 
 	destructor (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): STRING is

@@ -5,7 +5,7 @@ class CLASS_COUNTER
 inherit
 	COMPILER_COUNTER
 
-creation
+create
 	make
 
 feature -- Access

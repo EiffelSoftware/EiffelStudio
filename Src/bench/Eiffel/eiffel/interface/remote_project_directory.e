@@ -37,15 +37,28 @@ feature {NONE} -- Initialization
 			-- Create a remote project directory object.
 		do
 			dollar_name := dn;
+			has_precompiled_preobj := True;
 			directory_make (Environ.interpreted_string (dn))
 		end
 
-feature -- Status
+feature -- Status report
 
 	is_valid: BOOLEAN;
 		-- Is Current a valid project directory
 		-- Set by the check routines `check_precompiled'
 		-- and `check_project'
+
+	has_precompiled_preobj: BOOLEAN
+			-- Does a `preobj' file exist for the current precompiled project?
+			-- This file might not exist as a result of merging precompilations
+
+feature -- Status setting
+
+	set_has_precompiled_preobj (b: BOOLEAN) is
+			-- Set `has_precompiled_preobj' to `b'.
+		do
+			has_precompiled_preobj := b
+		end
 
 feature -- Access
 
@@ -117,7 +130,10 @@ feature -- Check
 				-- EIFGEN/W_code/driver and EIFGEN/W_code/preobj.o
 				-- should be present. If they are not, issue a warning.
 			check_precompiled_optional (<<Eiffelgen, W_code>>, Driver);
-			check_precompiled_optional (<<Eiffelgen, W_code>>, Preobj);
+			if has_precompiled_preobj then
+				check_precompiled_optional (<<Eiffelgen, W_code>>, Preobj)
+			end;
+			check_precompiled_optional (<<Eiffelgen, W_code>>, Descobj)
 		end
 
 	check_extendible is

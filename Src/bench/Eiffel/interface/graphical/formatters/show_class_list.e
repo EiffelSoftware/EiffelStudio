@@ -5,7 +5,6 @@ class SHOW_CLASS_LIST
 
 inherit
 
-	SHARED_WORKBENCH;
 	LONG_FORMATTER
 		redefine
 			dark_symbol, display_temp_header, post_fix

@@ -665,29 +665,29 @@ void print_config() {
 	RESOURCE *tmp_host;
 	RESOURCE_LEVEL *tmp_grp;
 	
-	printf("------------------------------ Configure Table --------------------------------\n");
+	printf(CURPROMPT1);
 
-	printf("Remote Servers:\n");
+	printf(CURPROMPT2);
 	for(tmp_ser=_concur_rem_sers; tmp_ser; tmp_ser=tmp_ser->next) {
 		printf("<%s, %s, %d>\n", tmp_ser->name, tmp_ser->host, tmp_ser->port);
 	}
 
-	printf("\nNet Work Resources:\n");
+	printf(CURPROMPT3);
 	for(tmp_grp=_concur_host_groups; tmp_grp; tmp_grp=tmp_grp->next) {
-		printf("In Group <%s>:\n", tmp_grp->name);
+		printf(CURPROMPT4, tmp_grp->name);
 		for(tmp_host=tmp_grp->host_list; tmp_host; tmp_host=tmp_host->next) {
-			printf("	<%s, %d, %s, %s>\n", (*tmp_host).host, (*tmp_host).capability, (*tmp_host).directory, (*tmp_host).executable);
+			printf("    <%s, %d, %s, %s>\n", (*tmp_host).host, (*tmp_host).capability, (*tmp_host).directory, (*tmp_host).executable);
 		}
 	}
 
 	if (_concur_group_index && _concur_host_index)
-		printf("\nCursor is on \n<%s, %d, %s, %s>\nof group <%s> with count: %d.\n", _concur_host_index->host, _concur_host_index->capability, _concur_host_index->directory, _concur_host_index->executable, _concur_group_index->name, _concur_resource_count);
+		printf(CURPROMPT5, _concur_host_index->host, _concur_host_index->capability, _concur_host_index->directory, _concur_host_index->executable, _concur_group_index->name, _concur_resource_count);
 	else
-		printf("\nInvalid Cursor. \n");
+		printf(CURPROMPT6);
 
-	printf("\nDefault Port for External Server: %d;   Default Instance: %d\n", _concur_default_port, _concur_default_instance);
+	printf(CURPROMPT7, _concur_default_port, _concur_default_instance);
 
-	printf("-------------------------------------------------------------------------------\n");
+	printf(CURPROMPT8);
 
 }
 

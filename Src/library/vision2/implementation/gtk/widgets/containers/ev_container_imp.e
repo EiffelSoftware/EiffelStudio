@@ -121,21 +121,11 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 	child_packing_changed (the_child: EV_WIDGET_IMP) is
 			-- changed the settings of his child `the_child'
+		require
+			child_resize_type_value_ok: ((the_child.resize_type >=0) and (the_child.resize_type <=3))
 		do
 			c_gtk_box_set_child_options (widget, the_child.widget, the_child.expandable, False)
 		end
-
---	child_expand_changed (the_child: EV_WIDGET_IMP) is
---		deferred	
---		end
-
---	child_vertresize_changed (the_child: EV_WIDGET_IMP) is
---		deferred	
---		end
-
---	child_horiresize_changed (the_child: EV_WIDGET_IMP) is
---		deferred	
---		end
 
 end -- class EV_CONTAINER_IMP
 

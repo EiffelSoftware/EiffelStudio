@@ -270,7 +270,13 @@ Wizard1_Bitmap          BITMAP  DISCARDABLE     "Wizard1.bmp"
 Wizard2_Bitmap          BITMAP  DISCARDABLE     "Wizard2.bmp"
 Wizard3_Bitmap          BITMAP  DISCARDABLE     "Wizard3.bmp"
 Wizard4_Bitmap          BITMAP  DISCARDABLE     "Wizard4.bmp"
-Wizard_Icon             BITMAP  DISCARDABLE     "Wizard.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+1 ICON "Wizard.ico"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////

@@ -56,7 +56,8 @@ inherit
 			set_text as wel_set_text,
 			text as wel_text,
 			has_capture as wel_has_capture,
-			text_length as wel_text_length
+			text_length as wel_text_length,
+			line_count as wel_line_count
 		undefine
 			set_width,
 			set_height,
@@ -94,7 +95,6 @@ inherit
 			on_en_change,
 			enable,
 			disable,
-			line_count,
 			background_brush
 		end
 
@@ -159,12 +159,6 @@ feature -- Status Report
 			-- is on.
 		do
 			Result := wel_current_line_number + 1
-		end
-	
-	line_count: INTEGER is
-			-- Number of lines of text in `Current'.
-		do
-			Result := ({WEL_MULTIPLE_LINE_EDIT} Precursor  ) + 1
 		end
 
 	first_position_from_line_number (a_line: INTEGER): INTEGER is	

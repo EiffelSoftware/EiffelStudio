@@ -40,6 +40,7 @@ feature -- Initialization
 
 			quick_compilation := options.get_boolean ("quick_compilation", True)
 			if quick_compilation then
+				io.put_string ("Preparing C compilation...%N")
 				launch_quick_compilation
 			end
 		end

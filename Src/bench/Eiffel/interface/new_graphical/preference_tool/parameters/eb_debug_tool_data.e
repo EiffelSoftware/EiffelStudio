@@ -41,6 +41,16 @@ feature -- Access
 			Result := integer_resource_value ("interrupt_every_n_instructions", 1)
 		end
 
+	debug_output_evaluation_enabled: BOOLEAN is
+		do
+			Result := boolean_resource_value ("debug_output_evaluation", True)			
+		end
+
+	generating_type_evaluation_enabled: BOOLEAN is
+		do
+			Result := boolean_resource_value ("generating_type_evaluation", True)			
+		end
+
 	min_slice: INTEGER is
 			-- From which attribute number should special objects be displayed?
 		do

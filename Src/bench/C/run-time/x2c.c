@@ -215,8 +215,9 @@ struct parse *locate(char *name)
 	 */
 
 	int i;
+	static const int sz_ratio = sizeof (parser) / sizeof(struct parse);
 
-	for (i = 0; i < sizeof(parser) / sizeof(struct parse); i++) {
+	for (i = 0; i < sz_ratio; i++) {
 		if (0 == strcmp(parser[i].c_macro, name))
 			return &parser[i];
 	}

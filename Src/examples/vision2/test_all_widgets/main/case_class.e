@@ -1,0 +1,27 @@
+indexing
+	description: "Objects that ..."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	CASE_CLASS
+
+feature -- Access
+
+	a2: EV_HISTORY
+	a3: EV_ROUTINE_COMMAND
+	a4: EV_UNDOABLE_COMMAND
+	a5: EV_TUPLE_ARGUMENT
+
+	b1: EV_DIALOG
+	b2: EV_FILE_SELECTION_DIALOG
+	b3: EV_FILE_SAVE_DIALOG
+	b4: EV_FILE_OPEN_DIALOG
+	b5: EV_PRINT_DIALOG
+	b6: EV_COLOR_SELECTION_DIALOG
+	b7: EV_DIRECTORY_SELECTION_DIALOG
+	b8: EV_FONT_SELECTION_DIALOG
+	b9: EV_STANDARD_DIALOG
+
+end -- CASE_CLASS

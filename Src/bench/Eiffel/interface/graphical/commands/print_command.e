@@ -44,10 +44,12 @@ feature -- Execution
 	work (argument: ANY) is
 			-- Popup the print dialog.
 		do
-			if print_window = Void then
-				!! print_window;
-			end;
-			print_window.popup (Current)
+			if Project_tool.initialized then
+				if print_window = Void then
+					!! print_window;
+				end;
+				print_window.popup (Current)
+			end
 		end;
 
 feature -- Close window

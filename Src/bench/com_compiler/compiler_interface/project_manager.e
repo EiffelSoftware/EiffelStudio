@@ -55,7 +55,26 @@ feature -- Access
 		do
 			Result := compiler.is_successful
 		end
-
+		
+	project_has_updated: BOOLEAN is
+			-- Have the project files been updated since last compilation.
+		local
+			classes: ARRAY [CLASS_C]
+			i, count: INTEGER
+		do
+			if Eiffel_system.Workbench.successful then
+				classes := Eiffel_system.Workbench.system.classes.sorted_classes
+				count := classes.count
+				from
+					i := 1
+				until
+					Result or else i > count
+				loop
+					Result := classes.item (i).lace_class.date_has_changed
+					i := i + 1
+				end
+			end	
+		end	
 
 	project_file_name: STRING is
 			-- Full path to .epr file.

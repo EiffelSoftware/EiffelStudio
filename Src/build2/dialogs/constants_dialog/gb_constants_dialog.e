@@ -130,6 +130,7 @@ feature {NONE} -- Initialization
 				-- The default selected constants type is STRING.
 			constants_list.enable_multiple_selection
 			constants_list.set_column_titles (<<"Name", "Type", "Value">>)
+			set_icon_pixmap (icon)
 		end
 		
 feature -- Access
@@ -475,7 +476,10 @@ feature {NONE} -- Implementation
 			elseif directory_constant /= Void then
 				create directory_dialog
 				directory_dialog.set_title (select_directory_location_modify_string + directory_constant.name + "%"")
-				directory_dialog.set_start_directory (directory_constant.value)
+				if (create {DIRECTORY}.make (directory_constant.value)).exists then
+						-- Only set the start directory if it is a valid directory.
+					directory_dialog.set_start_directory (directory_constant.value)
+				end
 				directory_dialog.show_modal_to_window (Current)
 				if not directory_dialog.directory.is_empty then
 					directory_constant.modify_value (directory_dialog.directory)

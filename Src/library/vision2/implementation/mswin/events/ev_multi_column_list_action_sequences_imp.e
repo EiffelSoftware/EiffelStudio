@@ -32,8 +32,8 @@ feature -- Event handling
 			create Result
 		end
 
-	create_column_resize_actions: EV_COLUMN_ACTION_SEQUENCE is
-			-- Create a column_resize action sequence.
+	create_column_resized_actions: EV_COLUMN_ACTION_SEQUENCE is
+			-- Create a column_resized action sequence.
 		do
 			create Result
 		end

@@ -17,27 +17,27 @@ GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index);
 void enable_ev_gtk_log (int a_mode);
 
 /* XPM */
-static char * information_pixmap_xpm[];
-static char *error_pixmap_xpm[];
-static char *question_pixmap_xpm[];
-static char *warning_pixmap_xpm[];
-static char *no_collate_pixmap_xpm[];
-static char *collate_pixmap_xpm[];
-static char *landscape_pixmap_xpm[];
-static char *portrait_pixmap_xpm[];
-static char *busy_cursor_xpm[];
-static char *crosshair_cursor_xpm[];
-static char *help_cursor_xpm[];
-static char *ibeam_cursor_xpm[];
-static char *no_cursor_xpm[];
-static char *sizeall_cursor_xpm[];
-static char *sizenesw_cursor_xpm[];
-static char *sizens_cursor_xpm[];
-static char *sizenwse_cursor_xpm[];
-static char *sizewe_cursor_xpm[];
-static char *standard_cursor_xpm[];
-static char *uparrow_cursor_xpm[];
-static char *wait_cursor_xpm[];
+char * information_pixmap_xpm[];
+char *error_pixmap_xpm[];
+char *question_pixmap_xpm[];
+char *warning_pixmap_xpm[];
+char *no_collate_pixmap_xpm[];
+char *collate_pixmap_xpm[];
+char *landscape_pixmap_xpm[];
+char *portrait_pixmap_xpm[];
+char *busy_cursor_xpm[];
+char *crosshair_cursor_xpm[];
+char *help_cursor_xpm[];
+char *ibeam_cursor_xpm[];
+char *no_cursor_xpm[];
+char *sizeall_cursor_xpm[];
+char *sizenesw_cursor_xpm[];
+char *sizens_cursor_xpm[];
+char *sizenwse_cursor_xpm[];
+char *sizewe_cursor_xpm[];
+char *standard_cursor_xpm[];
+char *uparrow_cursor_xpm[];
+char *wait_cursor_xpm[];
 
 #endif
 
@@ -62,6 +62,9 @@ static char *wait_cursor_xpm[];
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.11  2001/10/15 23:35:21  king
+// Removed static declaration on xpms
+//
 // Revision 1.10  2001/10/15 22:30:27  manus
 // Moved pixmap definitions from header to c file
 //

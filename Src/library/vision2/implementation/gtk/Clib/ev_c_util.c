@@ -93,7 +93,7 @@ void enable_ev_gtk_log (int a_mode)
 
 
 /* XPM */
-static char * information_pixmap_xpm[] = {
+char * information_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 4 1",
 /* colors */
@@ -138,7 +138,7 @@ static char * information_pixmap_xpm[] = {
 
 
 /* XPM */
-static char *error_pixmap_xpm[] = {
+char *error_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 17 1",
 /* colors */
@@ -196,7 +196,7 @@ static char *error_pixmap_xpm[] = {
 
 
 /* XPM */
-static char *question_pixmap_xpm[] = {
+char *question_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 24 1",
 /* colors */
@@ -261,7 +261,7 @@ static char *question_pixmap_xpm[] = {
 
 
 /* XPM */
-static char *warning_pixmap_xpm[] = {
+char *warning_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 17 1",
 /* colors */
@@ -318,7 +318,7 @@ static char *warning_pixmap_xpm[] = {
 };
 
 /* XPM */
-static char *no_collate_pixmap_xpm[] = {
+char *no_collate_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "66 32 3 1",
 /* colors */
@@ -361,7 +361,7 @@ static char *no_collate_pixmap_xpm[] = {
 };
 
 /* XPM */
-static char *collate_pixmap_xpm[] = {
+char *collate_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "66 32 3 1",
 /* colors */
@@ -404,7 +404,7 @@ static char *collate_pixmap_xpm[] = {
 };
 
 /* XPM */
-static char *landscape_pixmap_xpm[] = {
+char *landscape_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "21 21 3 1",
 /* colors */
@@ -436,7 +436,7 @@ static char *landscape_pixmap_xpm[] = {
 };
 
 /* XPM */
-static char *portrait_pixmap_xpm[] = {
+char *portrait_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "21 21 3 1",
 /* colors */
@@ -468,7 +468,7 @@ static char *portrait_pixmap_xpm[] = {
 };
 
 /* XPM */
-static char *busy_cursor_xpm[] = {
+char *busy_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -511,7 +511,7 @@ static char *busy_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *crosshair_cursor_xpm[] = {
+char *crosshair_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -554,7 +554,7 @@ static char *crosshair_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *help_cursor_xpm[] = {
+char *help_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -597,7 +597,7 @@ static char *help_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *ibeam_cursor_xpm[] = {
+char *ibeam_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -640,7 +640,7 @@ static char *ibeam_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *no_cursor_xpm[] = {
+char *no_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -683,7 +683,7 @@ static char *no_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *sizeall_cursor_xpm[] = {
+char *sizeall_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -726,7 +726,7 @@ static char *sizeall_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *sizenesw_cursor_xpm[] = {
+char *sizenesw_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -769,7 +769,7 @@ static char *sizenesw_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *sizens_cursor_xpm[] = {
+char *sizens_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -812,7 +812,7 @@ static char *sizens_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *sizenwse_cursor_xpm[] = {
+char *sizenwse_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -855,7 +855,7 @@ static char *sizenwse_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *sizewe_cursor_xpm[] = {
+char *sizewe_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -898,7 +898,7 @@ static char *sizewe_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *standard_cursor_xpm[] = {
+char *standard_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -941,7 +941,7 @@ static char *standard_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *uparrow_cursor_xpm[] = {
+char *uparrow_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -984,7 +984,7 @@ static char *uparrow_cursor_xpm[] = {
 };
 
 /* XPM */
-static char *wait_cursor_xpm[] = {
+char *wait_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
@@ -1049,6 +1049,9 @@ static char *wait_cursor_xpm[] = {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.13  2001/10/15 23:35:20  king
+// Removed static declaration on xpms
+//
 // Revision 1.12  2001/10/15 23:04:14  manus
 // Updated cursors
 //

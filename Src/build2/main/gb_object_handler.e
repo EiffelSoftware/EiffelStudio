@@ -843,19 +843,19 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 			old_builder_window, new_builder_window: EV_TITLED_WINDOW
 			old_builder_contents: EV_WIDGET
 			locked_in_here: BOOLEAN
+			old_window_selector_item: GB_WINDOW_SELECTOR_ITEM
 		do
 			if ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
 				locked_in_here := True
 				parent_window (Layout_constructor).lock_update
 			end
-			store_layout_constructor
 			titled_window_object ?= an_object
 				-- We must handle windows as a special case,
 				-- as they are built by Build and are not completely dynamic
 				-- like other objects.
 				
 			if titled_window_object = Void then
-				
+				store_layout_constructor
 				parent_object := an_object.parent_object
 				table_parent_object ?= parent_object
 				
@@ -879,10 +879,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 					height := widget.height
 				end
 				original_position := parent_object.layout_item.index_of (an_object.layout_item, 1)
-				an_object.unparent
-				
-				
-				
+				an_object.unparent	
 				
 				create store
 				create load
@@ -936,14 +933,16 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				
 					-- We now perform any deferred building that is required.
 				Deferred_builder.build
+				
+				restore_layout_constructor
 			else
 					-- We must handle windows as a special case. Store the contents.
 				old_contents := titled_window_object.object.item
 				old_window ?= titled_window_object.object				
 				old_builder_contents := titled_window_object.display_object.child.item
 				old_builder_window ?= titled_window_object.display_object.child
-				
-					
+				old_window_selector_item ?= titled_window_object.window_selector_item
+
 				create store
 				create load
 				element := new_root_element ("item", "prefix")
@@ -951,8 +950,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
 				
 				titled_window_object.update_objects
-				--load.rebuild_window (element)
-				load.build_window (element, "")
+				load.rebuild_window (titled_window_object, element)
 				
 				new_window := titled_window_object.object
 				new_builder_window ?= titled_window_object.display_object.child
@@ -970,6 +968,8 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				end
 				old_window.destroy
 				
+				titled_window_object.set_window_selector_item (old_window_selector_item)
+				
 				new_builder_window.set_position (old_builder_window.x_position, old_builder_window.y_position)
 				new_builder_window.set_size (old_builder_window.width.max (new_builder_window.minimum_width), old_builder_window.height.max (new_builder_window.minimum_height))
 				if old_builder_window.is_displayed then
@@ -977,7 +977,6 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				end
 				old_builder_window.destroy
 			end
-			restore_layout_constructor
 			if locked_in_here then
 				parent_window (Layout_constructor).unlock_update
 			end

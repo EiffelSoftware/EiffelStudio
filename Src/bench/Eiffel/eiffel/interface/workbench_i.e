@@ -25,6 +25,8 @@ inherit
 			system_defined as eiffel_system_defined
 		end
 
+	SHARED_ID
+
 feature -- Attributes
 
 	universe: UNIVERSE_I;
@@ -147,13 +149,18 @@ feature -- Commands
 
 				if Compilation_modes.is_quick_melt then
 					record_changed_classes
-				else
+				else 
 					Lace.recompile;
 				end;
 
 				System.recompile;
 
 				Compilation_modes.reset_modes;
+
+					-- If the compilation is successful we are going to print the warnings only
+					-- If there was an error during the compilation, this feature won't never be called
+					-- and the Error_handler.trace from the rescue clause will print the warnings
+				Error_handler.trace_warnings
 			else
 
 				retried := False
@@ -195,18 +202,14 @@ feature -- Commands
 			-- Change a class of the system.
 		require
 			good_argument: cl /= Void;
-		local
-			class_to_recompile: CLASS_C;
 		do
 			add_class_to_recompile (cl);
 
 				-- Mark the class syntactically changed
 			cl.set_changed (True);
 
-			class_to_recompile := cl.compiled_class;
-
 				-- Syntax analysis must be done
-			pass1_controler.insert_new_class (class_to_recompile);
+			pass1_controler.insert_new_class (cl.compiled_class);
 		end;
 		
 	record_changed_classes is
@@ -216,16 +219,21 @@ feature -- Commands
 			classes: ARRAY [CLASS_C];
 			classc: CLASS_C;
 			classi: CLASS_I;
-			i, c: INTEGER
+			i,c : INTEGER
 		do
-			Degree_output.put_start_degree_6 (0)
-			classes := System.project_classes;
 			from
-				c := classes.count;
+				Degree_output.put_start_degree_6 (0)
+
+					-- Get the array with all the classes in the system
+				classes := System.project_classes;
+
+					-- Get the number of element in the array
+				c := System.class_counter.item (Normal_compilation).count
 				i := 1
 			until
 				i > c
 			loop
+					-- We are looking to all the classes of a Normal compilation
 				classc := classes.item (i)
 				if classc /= Void then
 					classi := classc.lace_class;
@@ -233,7 +241,7 @@ feature -- Commands
 						change_class (classi);
 						classi.set_date	
 					end
-				end;
+				end
 				i := i + 1
 			end;
 		end;

@@ -153,7 +153,9 @@ feature -- Basic operations
 					else
 						if Application.is_dotnet then
 							--| not working in case of not registered object
-							nat_dv ?= Application.imp_dotnet.kept_object_item (l_addr)
+							if application.imp_dotnet.know_about_kept_object (l_addr) then
+								nat_dv ?= Application.imp_dotnet.kept_object_item (l_addr)
+							end
 							Result := nat_dv /= Void
 						else
 							obj := tool.get_object_display_parameters (l_addr)
@@ -442,7 +444,7 @@ feature {NONE} -- Implementation
 						--| FIXME jfiat [2003/10/08 - 18:19] Not very nice design ..
 					if Application.is_dotnet then
 						if application.imp_dotnet.know_about_kept_object (l_st_addr) then
-							abs_dv := Application.imp_dotnet.kept_object_item (l_st_addr)							
+							abs_dv := Application.imp_dotnet.kept_object_item (l_st_addr)
 						end
 						str_dv ?= abs_dv
 						if str_dv /= Void then

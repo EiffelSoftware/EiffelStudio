@@ -364,7 +364,7 @@ feature {NONE} -- Implement .NET feature
 			if h /= Void then
 				Result := h.hash_code
 			else
-				Result := feature {ISE_RUNTIME}.hash_code (Current)
+				Result := Precursor {SYSTEM_OBJECT}
 			end
 		end
 		

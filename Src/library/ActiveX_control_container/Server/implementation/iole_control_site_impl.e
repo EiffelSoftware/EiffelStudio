@@ -11,26 +11,28 @@ inherit
 
 	OLE_CONTROL_PROXY
 
+	ECOM_EXCEPTION
+
 feature -- Basic Operations
 
 	on_control_info_changed is
 			-- No description available.
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 	lock_in_place_active (f_lock: INTEGER) is
 			-- No description available.
 			-- `f_lock' [in].  
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 	get_extended_control (pp_disp: CELL [ECOM_INTERFACE]) is
-			-- No description available.
+			-- Requests an IDispatch pointer to the extended control.
 			-- `pp_disp' [out].  
 		do
-			-- Put Implementation here.
+			pp_disp.put (dispatch)
 		end
 
 	transform_coords (p_ptl_himetric: X_POINTL_RECORD; p_ptf_container: TAG_POINTF_RECORD; dw_flags: INTEGER) is
@@ -39,7 +41,7 @@ feature -- Basic Operations
 			-- `p_ptf_container' [in, out].  
 			-- `dw_flags' [in].  
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 	translate_accelerator (p_msg: TAG_MSG_RECORD; grf_modifiers: INTEGER) is
@@ -47,20 +49,20 @@ feature -- Basic Operations
 			-- `p_msg' [in].  
 			-- `grf_modifiers' [in].  
 		do
-			-- Put Implementation here.
+			trigger (S_false)
 		end
 
 	on_focus (f_got_focus: INTEGER) is
 			-- No description available.
 			-- `f_got_focus' [in].  
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 	show_property_frame is
 			-- No description available.
 		do
-			-- Put Implementation here.
+			trigger (E_notimpl)
 		end
 
 

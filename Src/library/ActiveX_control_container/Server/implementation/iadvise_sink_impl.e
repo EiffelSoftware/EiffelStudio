@@ -8,44 +8,42 @@ deferred class
 
 inherit
 	IADVISE_SINK_INTERFACE
-
-	OLE_CONTROL_PROXY
 	
 feature -- Basic Operations
 
-	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]) is
-			-- No description available.
+	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: CELL [WIRE_STGMEDIUM_ALIAS]) is
+			-- Advises that data has changed.
 			-- `p_formatetc' [in].  
 			-- `p_stgmed' [in].  
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 	on_view_change (dw_aspect: INTEGER; lindex: INTEGER) is
-			-- No description available.
+			-- Advises that view of object has changed.
 			-- `dw_aspect' [in].  
 			-- `lindex' [in].  
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 	on_rename (pmk: IMONIKER_INTERFACE) is
-			-- No description available.
+			-- Advises that name of object has changed.
 			-- `pmk' [in].  
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 	on_save is
-			-- No description available.
+			-- Advises that object has been saved to disk.
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 	on_close is
-			-- No description available.
+			-- Advises that object has been closed.
 		do
-			-- Put Implementation here.
+			-- No Implementation.
 		end
 
 

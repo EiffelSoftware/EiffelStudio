@@ -10,6 +10,8 @@ inherit
 	IOLE_CONTAINER_INTERFACE
 
 	OLE_CONTROL_PROXY
+	
+	ECOM_EXCEPTION
 
 feature -- Basic Operations
 
@@ -20,24 +22,35 @@ feature -- Basic Operations
 			-- `pch_eaten' [out].  
 			-- `ppmk_out' [out].  
 		do
-			-- Put Implementation here.
+			trigger (E_notimpl)
 		end
 
 	enum_objects (grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE]) is
-			-- No description available.
+			-- Enumerates objects in a container.
 			-- `grf_flags' [in].  
 			-- `ppenum' [out].  
+		local
+			enumeration: IENUM_UNKNOWN_IMPL_STUB
+			list: LINKED_LIST [ECOM_INTERFACE]
 		do
-			-- Put Implementation here.
+			create list.make
+			list.put (unknown_control)
+			create enumeration.make (list)
+			ppenum.put (enumeration)
 		end
 
 	lock_container (f_lock: INTEGER) is
-			-- No description available.
+			-- Keeps container running until explicitly released.
 			-- `f_lock' [in].  
 		do
-			-- Put Implementation here.
+			m_locked := f_lock.to_boolean
 		end
 
 
+feature {NONE} -- Implementation
+
+	m_locked: BOOLEAN
+			-- Is container locked?
+			
 end -- IOLE_CONTAINER_IMPL
 

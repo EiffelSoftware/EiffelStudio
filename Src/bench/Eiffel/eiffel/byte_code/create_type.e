@@ -1,4 +1,7 @@
--- Creation with an hardwired dynamic type.
+indexing
+	description: "Creation with an hardwired dynamic type."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CREATE_TYPE 
 
@@ -10,7 +13,7 @@ inherit
 	
 feature -- Access
 
-	type: TYPE_I;
+	type: TYPE_I
 			-- Type to create
 
 feature -- Update 
@@ -18,43 +21,26 @@ feature -- Update
 	set_type (t: TYPE_I) is
 			-- Assign `t' to `type'.
 		do
-			type := t;
-		end;
+			type := t
+		end
 
 feature -- C code generation
 
 	analyze is
-
+			-- Analyze of generated code.
 		do
 			if is_generic then
+					-- We always need current object when it
+					-- is generic.
 				context.mark_current_used
 			end
-		end;
+		end
 	
 	generate is
-			-- Generate the creation type
-		local
-			cl_type_i: CL_TYPE_I;
-			gen_type_i: GEN_TYPE_I;
-			buffer: GENERATION_BUFFER;
+			-- Generate creation type.
 		do
-			cl_type_i ?= context.creation_type (type);
-			gen_type_i ?= cl_type_i;
-
-			buffer := context.buffer;
-
-			if gen_type_i /= Void then
-				buffer.putstring ("typres");
-			else
-				if context.workbench_mode then
-					buffer.putstring ("RTUD(");
-					buffer.generate_type_id (cl_type_i.associated_class_type.static_type_id)
-					buffer.putchar (')');
-				else
-					buffer.putint (cl_type_i.type_id - 1);
-				end;
-			end;
-		end;
+			generate_cid (context.buffer, not context.workbench_mode)
+		end
 
 feature -- IL code generation
 
@@ -65,6 +51,7 @@ feature -- IL code generation
 		do
 			cl_type_i ?= context.creation_type (type)
 			il_generator.create_object (cl_type_i)
+			il_generator.duplicate_top
 		end
 
 feature -- Byte code generation
@@ -72,21 +59,21 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a hardcoded creation type
 		local
-			cl_type_i: CL_TYPE_I;
+			cl_type_i: CL_TYPE_I
 			gen_type : GEN_TYPE_I
 		do
-			ba.append (Bc_ctype);
-			cl_type_i ?= context.creation_type (type);
-			gen_type  ?= cl_type_i;
-			ba.append_short_integer (cl_type_i.type_id - 1);
+			ba.append (Bc_ctype)
+			cl_type_i ?= context.creation_type (type)
+			gen_type  ?= cl_type_i
+			ba.append_short_integer (cl_type_i.type_id - 1)
 
 			if gen_type /= Void then
 				ba.append_short_integer (context.current_type.generated_id (False))
 				gen_type.make_gen_type_byte_code (ba, True)
 			end
 
-			ba.append_short_integer (-1);
-		end;
+			ba.append_short_integer (-1)
+		end
 
 feature -- Generic conformance
 
@@ -103,47 +90,47 @@ feature -- Generic conformance
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
-
+			-- Generate creation type.
 		local
-			cl_type_i : CL_TYPE_I;
+			cl_type_i : CL_TYPE_I
 			gen_type  : GEN_TYPE_I
 		do
-			cl_type_i ?= context.creation_type (type);
-			gen_type  ?= cl_type_i;
+			cl_type_i ?= context.creation_type (type)
+			gen_type  ?= cl_type_i
 
 			if gen_type /= Void then
-				buffer.putstring ("typres");
+				buffer.putstring ("typres")
 			else
-				if context.workbench_mode then
+				if final_mode then
+					buffer.putint (cl_type_i.type_id - 1)
+				else
 					buffer.putstring ("RTUD(")
 					buffer.generate_type_id (cl_type_i.associated_class_type.static_type_id)
 					buffer.putchar (')')
-				else
-					buffer.putint (cl_type_i.type_id - 1);
 				end
 			end
-		end;
+		end
 
 	type_to_create : CL_TYPE_I is
 		do
 			Result ?= context.creation_type (type)
-		end;
+		end
 
 feature -- Assignment attempt
 
 	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
-
+			-- Generate computed type of creation for assignment attempt.
 		local
 			cl_type_i : CL_TYPE_I
 		do
 			cl_type_i ?= context.creation_type (type)
 
-			if context.workbench_mode then
+			if final_mode then
+				buffer.putint (cl_type_i.type_id - 1)
+			else
 				buffer.putstring ("RTUD(")
 				buffer.generate_type_id (cl_type_i.associated_class_type.static_type_id)
 				buffer.putchar (')')
-			else
-				buffer.putint (cl_type_i.type_id - 1)
 			end
 		end
 
@@ -151,9 +138,10 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring (generator);
-			io.error.putstring ("  ");
-			type.trace;
-			io.error.new_line;
+			io.error.putstring (generator)
+			io.error.putstring ("  ")
+			type.trace
+			io.error.new_line
 		end
-end
+
+end -- class CREATE_TYPE

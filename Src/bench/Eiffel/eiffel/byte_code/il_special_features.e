@@ -257,8 +257,20 @@ feature -- IL code generation
 				generate_set_item (feat, type, parameters)
 
 			when is_digit_type then
-				il_generator.generate_is_digit
+				il_generator.generate_is_query_on_character ("IsDigit")
+				
+			when is_lower_type then
+				il_generator.generate_is_query_on_character ("IsLower")
+				
+			when is_upper_type then
+				il_generator.generate_is_query_on_character ("IsUpper")
 
+			when lower_type then
+				il_generator.generate_upper_lower (False)
+				
+			when upper_type then
+				il_generator.generate_upper_lower (True)
+				
 			when twin_type then
 					-- Nothing to do, top of the stack has correct value
 				
@@ -329,6 +341,10 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
  			Result.put (generator_type, generating_type_name_id)
  			Result.put (three_way_comparison_type, three_way_comparison_name_id)
 			Result.put (twin_type, twin_name_id)
+			Result.put (upper_type, upper_name_id)
+			Result.put (lower_type, lower_name_id)
+			Result.put (is_upper_type, is_upper_name_id)
+			Result.put (is_lower_type, is_lower_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (memory_copy, memory_copy_name_id)
@@ -386,7 +402,11 @@ feature -- Fast access to feature name
 	as_natural_16_type: INTEGER is 45
 	as_natural_32_type: INTEGER is 46
 	as_natural_64_type: INTEGER is 47
-	max_type_id: INTEGER is 47
+	lower_type: INTEGER is 48
+	upper_type: INTEGER is 49
+	is_lower_type: INTEGER is 50
+	is_upper_type: INTEGER is 51
+	max_type_id: INTEGER is 51
 
 feature {NONE} -- IL code generation
 

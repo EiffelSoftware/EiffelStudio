@@ -748,7 +748,7 @@ feature -- Line Info for debugging
 feature -- Compilation error handling
 
 	last_error: STRING is
-			-- Last exception which occured during IL generation
+			-- Last exception which occurred during IL generation
 		do
 			Result := ""
 		end

@@ -29,7 +29,7 @@ feature
 			Result := type.solved_type (feat_table, f)
 		rescue
 			if Rescue_status.is_like_exception then
-					-- Cycle in anchor type or unvalid anchor: the
+					-- Cycle in anchored type or unvalid anchor: the
 					-- exception is raise in routine `solved_type' of
 					-- classes LIKE_ID_AS, LIKE_FEATURE and LIKE_ARGUMENT
 				Rescue_status.set_is_like_exception (False)
@@ -66,7 +66,7 @@ feature
 			if Rescue_status.is_like_exception or else 
 				Rescue_status.is_error_exception
 			then
-					-- Cycle in anchor type or unvalid anchor: the
+					-- Cycle in anchored type or unvalid anchor: the
 					-- exception is raise in routine `solved_type' of
 					-- classes LIKE_ID_AS, LIKE_FEATURE and LIKE_ARGUMENT
 				retry

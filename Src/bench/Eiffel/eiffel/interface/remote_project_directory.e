@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Directory for an eiffelbench project.%
+		"Directory for an EiffelStudio project.%
 		%This represents the directory in which the%
 		%EIFGEN directory resides.";
 	date: "$Date$";

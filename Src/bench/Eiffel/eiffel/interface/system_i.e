@@ -1848,7 +1848,7 @@ feature {NONE} -- Implementation
 								-- the list of new externals in inherit_table. Same thing
 								-- if it has to be removed
 							if not ext.encapsulated then
-								Externals.remove_occurence (ext.external_name)
+								Externals.remove_occurrence (ext.external_name)
 							end
 						end
 						ftable.forth

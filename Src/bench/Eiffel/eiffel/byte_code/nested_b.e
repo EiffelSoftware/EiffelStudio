@@ -117,7 +117,7 @@ feature -- IL code generation
 					-- If we have a constant or a static external call,
 					-- we can forget about the generation of `target' only
 					-- if it is not a routine call. If the generation
-					-- of `target' occured, we need to pop from
+					-- of `target' occurred, we need to pop from
 					-- execution stack the value returned by `target'
 					-- because it is not needed to perform the call to `message'.
 				is_target_generated := (not target.is_predefined and

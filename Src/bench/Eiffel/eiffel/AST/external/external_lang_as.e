@@ -341,7 +341,7 @@ end
 		end
 
 	raise_external_error (msg: STRING; start_p: INTEGER; end_p: INTEGER) is
-			-- Raises error occured while parsing
+			-- Raises error occurred while parsing
 		local
 			ext_error: EXTERNAL_SYNTAX_ERROR
 			line_start: INTEGER

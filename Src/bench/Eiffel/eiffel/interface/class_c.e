@@ -941,7 +941,7 @@ end
 									if new_suppliers = Void then
 										new_suppliers := suppliers.same_suppliers
 									end
-									new_suppliers.remove_occurence (f_suppliers)
+									new_suppliers.remove_occurrence (f_suppliers)
 									dependances.remove (feature_i.body_index)
 								end
 										
@@ -966,7 +966,7 @@ end
 								if new_suppliers = Void then
 									new_suppliers := suppliers.same_suppliers
 								end
-								new_suppliers.add_occurence (f_suppliers)
+								new_suppliers.add_occurrence (f_suppliers)
 
 									-- Byte code processing
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
@@ -1060,7 +1060,7 @@ end
 					new_suppliers := suppliers.same_suppliers
 				end
 				if f_suppliers /= Void then
-					new_suppliers.remove_occurence (f_suppliers)
+					new_suppliers.remove_occurrence (f_suppliers)
 				end
 				invariant_feature := Void
 			else
@@ -1098,7 +1098,7 @@ end
 							if new_suppliers = Void then
 								new_suppliers := suppliers.same_suppliers
 							end
-							new_suppliers.remove_occurence (f_suppliers)
+							new_suppliers.remove_occurrence (f_suppliers)
 							if old_invariant_body_index /= 0 then
 								dependances.remove (old_invariant_body_index)
 							end
@@ -1111,7 +1111,7 @@ end
 						if new_suppliers = Void then
 							new_suppliers := suppliers.same_suppliers
 						end
-						new_suppliers.add_occurence (f_suppliers)
+						new_suppliers.add_occurrence (f_suppliers)
 
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring ("%TByte code for invariant%N")
@@ -1149,7 +1149,7 @@ end
 						if new_suppliers = Void then
 							new_suppliers := suppliers.same_suppliers
 						end
-						new_suppliers.remove_occurence (f_suppliers)
+						new_suppliers.remove_occurrence (f_suppliers)
 					end
 					dependances.remove (feature_body_index)
 					if
@@ -1250,7 +1250,7 @@ end
 --
 --			if propagators.invariant_removed then
 --				dependances.remove ("_inv_")
---				new_suppliers.remove_occurence (f_suppliers)
+--				new_suppliers.remove_occurrence (f_suppliers)
 --				invariant_feature := Void
 --			else
 --				invariant_changed := propagators.invariant_changed
@@ -1291,12 +1291,12 @@ end
 --						not Error_handler.new_error
 --					then
 --						if f_suppliers /= Void then
---							new_suppliers.remove_occurence (f_suppliers)
+--							new_suppliers.remove_occurrence (f_suppliers)
 --							dependances.remove ("_inv_")
 --						end
 --						f_suppliers := clone (ast_context.supplier_ids)
 --						dependances.put (f_suppliers, "_inv_")
---						new_suppliers.add_occurence (f_suppliers)
+--						new_suppliers.add_occurrence (f_suppliers)
 --
 --debug ("ACTIVITY")
 --	io.error.putstring ("%TByte code for invariant%N")

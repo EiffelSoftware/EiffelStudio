@@ -85,8 +85,8 @@ feature -- Access
 	file_pointer: POINTER
 			-- File pointer as required in C
 
-	occurence: INTEGER
-			-- Occurence of the file in the server control
+	occurrence: INTEGER
+			-- Occurrence of the file in the server control
 
 	number_of_objects: INTEGER
 			-- Number of objects stored in this file including dead
@@ -103,30 +103,30 @@ feature -- Access
 			Result := file_fd (file_pointer)
 		end
 
-	add_occurence is
-			-- Add one occurence.
+	add_occurrence is
+			-- Add one occurrence.
 		do
-			occurence := occurence + 1
+			occurrence := occurrence + 1
 			number_of_objects := number_of_objects + 1
 		end
 
-	remove_occurence is
-			-- Remove one occurence and remove current file from
-			-- the server controler if null occurence
+	remove_occurrence is
+			-- Remove one occurrence and remove current file from
+			-- the server controler if null occurrence
 			--|Note: If occurrence goes down to 0 the file
 			--|is not removed from disk straight away, since that
 			--|might render a Project irretrievable after an interrupted
 			--|compilation. Instead, the file will be removed at the end of a succesful
 			--|compilation by the server controller.
 		require
-			positive_occurence: occurence > 0
+			positive_occurrence: occurrence > 0
 		do
-			occurence := occurence - 1
-			if occurence = 0 then
+			occurrence := occurrence - 1
+			if occurrence = 0 then
 				Server_controler.forget_file (Current)
 			end
 		ensure
-			occurence = 0 implies (not is_open)
+			occurrence = 0 implies (not is_open)
 		end
 
 feature -- Status setting
@@ -279,8 +279,8 @@ feature -- Status report
 			-- Does the file need purging?
 		do
 			Result := not (precompiled) and then
-				(occurence = 0 or else
-				occurence / number_of_objects < .25)
+				(occurrence = 0 or else
+				occurrence / number_of_objects < .25)
 debug ("SERVER")
 	trace
 	io.error.putstring ("Need purging: ")
@@ -320,8 +320,8 @@ feature -- Debug
 			io.error.putint (file_id)
 			io.error.putstring ("%Nnb objects: ")
 			io.error.putint (number_of_objects)
-			io.error.putstring ("%Noccurence: ")
-			io.error.putint (occurence)
+			io.error.putstring ("%Noccurrence: ")
+			io.error.putint (occurrence)
 			io.error.putstring ("%Nsize: ")
 			io.error.putint (last_offset)
 			io.error.putstring ("%Nneed_purging: ")

@@ -90,7 +90,7 @@ feature {NONE} -- Internal generation
 			buf.putstring (dll_name)
 			buf.putstring (");")
 			buf.new_line
-			buf.putstring ("if (a_result == NULL) eraise(%"Can not load library%",EN_PROG);")
+			buf.putstring ("if (a_result == NULL) eraise(%"Cannot load library%",EN_PROG);")
 			buf.new_line
 			buf.putstring ("fp = (EIF_POINTER) GetProcAddress(a_result,")
 			if dll_index > -1 then 
@@ -104,7 +104,7 @@ feature {NONE} -- Internal generation
 			end
 			buf.putstring (");")
 			buf.new_line
-			buf.putstring ("if (fp == NULL) eraise(%"Can not find entry point")
+			buf.putstring ("if (fp == NULL) eraise(%"Cannot find entry point")
 			if dll_index > -1 then
 				buf.putstring (" at index ")
 				buf.putint (dll_index)

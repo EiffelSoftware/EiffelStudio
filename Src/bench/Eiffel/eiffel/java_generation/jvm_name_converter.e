@@ -25,7 +25,7 @@ feature {NONE}
 		end
 			
 	hack_rename (a: STRING) is
-			-- dirty hack to rename occurences of "System.Object" to "java/lang/Object"
+			-- dirty hack to rename occurrences of "System.Object" to "java/lang/Object"
 			-- This is needed because of "System.Object" is hardcoded in
 			-- the compiler (this will be removed at some point and then
 			-- this hack can go away as well)

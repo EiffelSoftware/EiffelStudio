@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 			pixmaps: GB_SHARED_PIXMAPS
 		do
 			create item.make_with_text (a_text)
+			item.set_data (Current)
 			type := "EV_" + a_text
 				-- We must now add the correct pixmap.
 			create pixmaps

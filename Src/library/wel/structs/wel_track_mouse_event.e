@@ -96,49 +96,49 @@ feature {NONE} -- Externals
 
 	c_size_of_trackmouseevent: INTEGER is
 		external
-			"C [macro <trackmouseevent.h>]"
+			"C [macro %"trackmouseevent.h%"]"
 		alias
 			"sizeof (TRACKMOUSEEVENT)"
 		end
 
 	cwel_trackmouseevent_get_cbsize (ptr: POINTER): INTEGER is
 		external
-			"C [macro <trackmouseevent.h>] (TRACKMOUSEEVENT*): EIF_INTEGER"
+			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*): EIF_INTEGER"
 		end
 
 	cwel_trackmouseevent_get_hwndtrack (ptr: POINTER): POINTER is
 		external
-			"C [macro <trackmouseevent.h>] (TRACKMOUSEEVENT*): EIF_POINTER"
+			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*): EIF_POINTER"
 		end
 
 	cwel_trackmouseevent_get_dwflags (ptr: POINTER): INTEGER is
 		external
-			"C [macro <trackmouseevent.h>] (TRACKMOUSEEVENT*): EIF_INTEGER"
+			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*): EIF_INTEGER"
 		end
 
 	cwel_trackmouseevent_get_dwhovertime (ptr: POINTER): INTEGER is
 		external
-			"C [macro <trackmouseevent.h>] (TRACKMOUSEEVENT*): EIF_INTEGER"
+			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*): EIF_INTEGER"
 		end
 
 	cwel_trackmouseevent_set_cbsize (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <trackmouseevent.h>] (TRACKMOUSEEVENT*, int)"
+			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*, DWORD)"
 		end
 
 	cwel_trackmouseevent_set_hwndtrack (ptr, window: POINTER) is
 		external
-			"C [macro <trackmouseevent.h>] (TRACKMOUSEEVENT*, EIF_POINTER)"
+			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*, HWND)"
 		end
 
 	cwel_trackmouseevent_set_dwflags (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <trackmouseevent.h>] (TRACKMOUSEEVENT*, int)" 
+			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*, DWORD)" 
 		end
 
 	cwel_trackmouseevent_set_dwhovertime (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro <trackmouseevent.h>] (TRACKMOUSEEVENT*, int)" 
+			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*, DWORD)" 
 		end
 
 end -- class WEL_TRACK_MOUSE_EVENT

@@ -1,14 +1,12 @@
 indexing
-
-	description:
-		"References to special objects, for direct access to arrays and strings";
-
+	description: "References to special objects, for direct access to arrays and strings";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TO_SPECIAL [T] creation
+class TO_SPECIAL [T]
 
+creation
 	make_area
 
 feature -- Access

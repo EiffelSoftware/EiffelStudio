@@ -3365,7 +3365,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 		</Padding>
 	<Border><Constant>small_padding</Constant>
 		</Border>
-	<Is_item_expanded>0000</Is_item_expanded>
+	<Is_item_expanded>000</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -3476,22 +3476,6 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_DESELECTABLE></EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE><Text><![CDATA[Generate debugging information?]]></Text>
-	</EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-</item>
-<item type="EV_CHECK_BUTTON"><Internal_properties>
-	<id>72</id>
-	<name>client_check_button</name>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_FONTABLE></EV_FONTABLE>
-<EV_DESELECTABLE></EV_DESELECTABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Client of windows?]]></Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -3739,7 +3723,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_FONTABLE><Family>3</Family>
 	<Weight>7</Weight>
 	<Shape>10</Shape>
-	<Height>19</Height>
+	<Height_in_points>14</Height_in_points>
 	<Preferred_family>Microsoft Sans Serif</Preferred_family>
 	</EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -3797,7 +3781,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 <EV_FONTABLE><Family>3</Family>
 	<Weight>7</Weight>
 	<Shape>10</Shape>
-	<Height>13</Height>
+	<Height_in_points>10</Height_in_points>
 	<Preferred_family>Microsoft Sans Serif</Preferred_family>
 	</EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>

@@ -14,17 +14,12 @@ feature -- Removal
 
 	delete is
 			-- Delete the current gdi object
-		require
-			exists: exists
 		local
-			g: POINTER
+			p: POINTER
 		do
-				-- Protect the call to DeleteObject, because
-				-- delete can be called by the GC so without
-				-- assertions.
-			if item /= g then
+			if item /= p then
 				cwin_delete_object (item)
-				item := g
+				item := p
 			end
 		ensure
 			not_exists: not exists

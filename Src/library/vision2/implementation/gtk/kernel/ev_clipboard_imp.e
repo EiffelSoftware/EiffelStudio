@@ -29,7 +29,7 @@ feature {NONE}-- Initialization
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_text_new (NULL, NULL))
+			set_c_object (gtk_text_new (NULL, NULL))
 		end
 
 	initialize is
@@ -78,9 +78,29 @@ feature -- Status Setting
 			end
 			create a_gs.make (clip_text)
 			C.gtk_editable_delete_text (clipboard_widget, 0, -1)
-			C.gtk_text_insert (clipboard_widget, NULL, NULL, NULL, a_gs.item, -1)
+			gtk_text_insert (clipboard_widget, NULL, NULL, NULL, a_gs.item, -1)
 			C.gtk_editable_select_region (clipboard_widget, 0, -1)
 			C.gtk_editable_copy_clipboard (clipboard_widget)
+		end
+		
+feature {NONE} -- Externals
+
+	gtk_text_new (a_hadj: POINTER; a_vadj: POINTER): POINTER is
+                        -- GtkWidget* gtk_text_new             (GtkAdjustment *hadj,
+                        --                                   GtkAdjustment *vadj);
+		external
+			"C (GtkAdjustment*, GtkAdjustment*): GtkWidget* | <gtk/gtk.h>"
+		end
+		
+	gtk_text_insert (a_text: POINTER; a_font: POINTER; a_fore: POINTER; a_back: POINTER; a_chars: POINTER; a_length: INTEGER) is
+			-- void       gtk_text_insert          (GtkText       *text,
+			-- 				     GdkFont       *font,
+			-- 				     GdkColor      *fore,
+			-- 				     GdkColor      *back,
+			-- 				     const char    *chars,
+			-- 				     gint           length);
+		external
+			"C (GtkText*, GdkFont*, GdkColor*, GdkColor*, char*, gint) | <gtk/gtk.h>"
 		end
 
 feature {EV_ANY_I}

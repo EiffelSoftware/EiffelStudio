@@ -41,11 +41,6 @@ inherit
 			initialize
 		end
 
-	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
-		redefine
-			interface
-		end
-
 	WEL_TREE_VIEW
 		rename
 			make as wel_make,
@@ -540,6 +535,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.63  2000/04/11 16:56:50  rogers
+--| Removed direct inheritance from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.62  2000/04/10 18:31:59  brendel
 --| Modified creation sequence.
 --|

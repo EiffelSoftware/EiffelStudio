@@ -50,11 +50,6 @@ inherit
 			interface,
 			initialize
 		end
-
-	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
-		redefine
-			interface
-		end
 	
 	WEL_FLAT_TOOL_BAR
 		rename
@@ -733,6 +728,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/04/11 16:58:05  rogers
+--| Removed direct inheritance from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.48  2000/04/06 18:42:46  rogers
 --| Internal_propagate_pointer_press, and on_mouse move now pass the
 --| correct y_position within the child.

@@ -19,11 +19,6 @@ inherit
 			initialize,
 			interface
 		end
-
-	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
-		redefine
-			interface
-		end
 	
 	EV_PRIMITIVE_IMP
 		undefine
@@ -588,6 +583,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.63  2000/04/11 16:59:51  rogers
+--| Removed direct inheritance from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.62  2000/04/05 21:16:12  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

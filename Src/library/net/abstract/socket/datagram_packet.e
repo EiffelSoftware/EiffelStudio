@@ -91,8 +91,8 @@ feature -- Status_setting
 	set_packet_number (n: INTEGER) is
 			-- set the packet number for this packet
 		require
-			number_big_enough: n >= -2147483648			-- -2^31
-			number_small_enough: n < 2147483647			-- 2^31 - 1
+			number_big_enough: n >= c_int32_min
+			number_small_enough: n <= c_int32_max
 		do
 			c_set_number ($data, n)
 		ensure
@@ -137,6 +137,24 @@ feature {NONE} -- Externals
 			-- get the data from the data area
 		external
 			"C"
+		end
+
+feature -- Externals
+
+	c_int32_min: INTEGER is
+			-- Min value for a signed integer 32 bits
+		external
+			"C [macro %"portable.h%"]"
+		alias
+			"INT32_MIN"
+		end
+
+	c_int32_max: INTEGER is
+			-- Max value for signed integer 32 bits
+		external
+			"C [macro %"portable.h%"]"
+		alias
+			"INT32_MAX"
 		end
 
 end -- class DATAGRAM_PACKET

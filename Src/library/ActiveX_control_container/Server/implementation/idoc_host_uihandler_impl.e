@@ -194,7 +194,11 @@ feature -- Basic Operations
 			if external_ui_handler /= Void then
 				external_ui_handler.get_option_key_path (pch_key, dw)
 			else
-				pch_key.put (clone (m_option_key_path))
+				if m_option_key_path /= Void then
+					pch_key.put (clone (m_option_key_path))
+				else
+					trigger (S_false)
+				end
 			end
 		end
 

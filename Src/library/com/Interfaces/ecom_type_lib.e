@@ -24,7 +24,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_from_name (file_name: FILE_NAME) is
+	make_from_name (file_name: STRING) is
 			-- Load type library with `file_name'.
 		require
 			non_void_file_name: file_name /= Void

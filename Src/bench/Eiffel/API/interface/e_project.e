@@ -526,8 +526,6 @@ feature -- Update
 			-- Call `finish_freezing' after freezing
 			-- an eiffel project in W_code or F_wode
 			-- depending on the value `workbench_mode'
-		require
-			able_to_compile: able_to_compile;
 		local
 			path: STRING
 		do

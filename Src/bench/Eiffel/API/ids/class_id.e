@@ -46,14 +46,11 @@ feature {COMPILER_EXPORTER} -- Access
 			end
 		end
 
-	generated_id: STRING is
-			-- Textual representation of class id
-			-- used in generated C code
+	generated_id (f: INDENT_FILE) is
+			-- Generate textual representation of class id
+			-- in generated C code
 		do
-			!! Result.make (5)
-			Result.append_integer (id)
-		ensure
-			generated_id_not_void: Result /= Void
+			f.putint (id)
 		end
 
 	associated_class: CLASS_C is

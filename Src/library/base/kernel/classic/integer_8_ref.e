@@ -67,6 +67,10 @@ feature -- Access
 			Result := c_ascii_char (item) 
 		end
 
+	Min_value: INTEGER_16 is -128
+	Max_value: INTEGER_16 is 127
+			-- Minimum and Maximum value hold in `item'.
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

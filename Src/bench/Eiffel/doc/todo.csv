@@ -34,7 +34,7 @@ interface,,,,,,,
 ,3,"When manually editing the Ace file, the project settings dialog should vanish automatically",Xavier,INT0030,,
 ,3,Add cluster too complex in the project settings dialog,Arnaud,INT0031,,
 ,3,"Need for a standard tools menu, where external executables can be launched",Arnaud,INT0032,,
-
+,3,Add a cell separator in toolbars,R. Osmond,INT0033,Fixer,1
 
 
 
@@ -62,7 +62,7 @@ Formats,,,,,,
 
 
 
-debugger,,,,
+debugger,,,,,,
 ,5,Feature evaluation,Arnaud,DBG0001,,
 ,4,debug_output feature used to display objects in the debugger,Xavier,DBG0002,,
 ,4,STRING viewer in the object tool,Xavier,DBG0003,Xavier,2
@@ -85,12 +85,12 @@ debugger,,,,
 
 
 
-editor,,,,
-,3,"Improve pick in inheritance clauses (redefine, rename)",Xavier,EDT0001
-,4,Make it possible to drag the selection (copy/paste),Xavier,EDT0002
-,4,Improve auto-completion in new lines,Xavier,EDT0003
-,2,"Emacs integration with COM on Windows, Netscape on Linux",Arnaud,EDT0004
-,3,"Add ""Add setter feature""",Arnaud,EDT0005
+editor,,,,,,
+,3,"Improve pick in inheritance clauses (redefine, rename)",Xavier,EDT0001,,
+,4,Make it possible to drag the selection (copy/paste),Xavier,EDT0002,,
+,4,Improve auto-completion in new lines,Xavier,EDT0003,,
+,2,"Emacs integration with COM on Windows, Netscape on Linux",Arnaud,EDT0004,,
+,3,"Add ""Add setter feature""",Arnaud,EDT0005,,
 
 
 

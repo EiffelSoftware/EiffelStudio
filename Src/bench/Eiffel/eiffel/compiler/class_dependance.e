@@ -69,6 +69,26 @@ feature
 			System.depend_server.remove_correspondance (bid)
 			{EXTEND_TABLE} Precursor (bid)
 		end
+
+	item_of_name (n: STRING): FEATURE_DEPENDANCE is
+			-- to find the dependances of a feature from its name
+		local
+			feature_found: BOOLEAN	
+		do
+			from
+				start
+			until
+				after or else feature_found
+			loop
+				feature_found := item_for_iteration.feature_name.is_equal (n)
+				if not feature_found then
+					forth
+				end
+			end	
+			if feature_found then
+				Result := item_for_iteration
+			end
+		end
 			
 	updated_id (i: BODY_ID): BODY_ID is
 			-- give the newest id corresponding to body id 'i'

@@ -28,9 +28,12 @@ feature -- Access
 			-- `Result' is WINFORMS_CONTROL contained in `Current'.
 		require
 			not_destroyed: not is_destroyed
+		local
+			l_wel_winform_container: WEL_WINFORM_CONTAINER
 		do
-			if wel_winform_container /= Void then
-				Result := wel_winform_container.winform
+			l_wel_winform_container ?= wel_item
+			if l_wel_winform_container /= Void then
+				Result := l_wel_winform_container.winform
 			end
 		end
 	
@@ -66,9 +69,11 @@ feature -- Status setting
 			not_destroyed: not is_destroyed
 			writeable: writable
 			a_window_not_void: a_window /= Void
+		local
+			l_wel_winform_container: WEL_WINFORM_CONTAINER
 		do
-			create wel_winform_container.make (implementation_window, a_window)
-			wel_replace (wel_winform_container)
+			create l_wel_winform_container.make (implementation_window, a_window)
+			wel_replace (l_wel_winform_container)
 		end
 		
 	extend (an_item: like item) is
@@ -88,11 +93,5 @@ feature -- Status setting
 		ensure
 			v_not_contained: not has (v)
 		end
-
-feature {NONE} -- Implementation
-
-	wel_winform_container: WEL_WINFORM_CONTAINER
-			-- Container that holds underlying Winforms control.
-			-- Can be Void when not item has been inserted.
 
 end -- class EV_WINFORM_CONTAINER

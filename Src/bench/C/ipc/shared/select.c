@@ -33,9 +33,9 @@ private void (*callback[NOFILE])();		/* Call backs on a per-fd basis */
 /* The select mask is updated every time a file descriptor is added or removed,
  * as well as the maximum file descriptor number to be used for the select call.
  */
-private struct fd_mask rd_mask;			/* Read mask */
-private struct fd_mask rd_tmask;		/* Temporary mask */
-private struct fd_mask read_mask;		/* Mask used for select (altered) */
+private fd_set rd_mask;			/* Read mask */
+private fd_set rd_tmask;		/* Temporary mask */
+private fd_set read_mask;		/* Mask used for select (altered) */
 private int nfds = 0;					/* Number of fd to be selected */
 
 /* The global variable s_errno is used to record error conditions from this
@@ -264,9 +264,6 @@ int f;
  * Perform select system call.
  */
 
-#undef NULL
-#define NULL (struct fd_mask *) 0
-
 public int do_select(timeout)
 struct timeval *timeout;
 {
@@ -317,11 +314,11 @@ struct timeval *timeout;
 				first_timeout.tv_usec = TMP_TIMEOUT;
 			} else
 				bcopy(timeout, &first_timeout, sizeof(struct timeval));
-			bcopy(&rd_tmask, &read_mask, sizeof(struct fd_mask));
-			nfd = select(nfds, &read_mask, NULL, NULL, &first_timeout);
+			bcopy(&rd_tmask, &read_mask, sizeof(fd_set));
+			nfd = select(nfds, &read_mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &first_timeout);
 		} else {
-			bcopy(&rd_mask, &read_mask, sizeof(struct fd_mask));
-			nfd = select(nfds, &read_mask, NULL, NULL, timeout);
+			bcopy(&rd_mask, &read_mask, sizeof(fd_set));
+			nfd = select(nfds, &read_mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, timeout);
 		}
 
 		if (nfd == -1)
@@ -332,7 +329,7 @@ struct timeval *timeout;
 				continue;				/* Re-issue the system call */
 
 		if (isfirst) {
-			bcopy(&rd_tmask, &rd_tmask, sizeof(struct fd_mask));
+			bcopy(&rd_tmask, &rd_tmask, sizeof(fd_set));
 			isfirst = 0;
 			if (nfd == 0 && timeout == (struct timeval *) 0)
 				continue;				/* First select timed out */

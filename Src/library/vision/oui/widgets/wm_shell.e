@@ -298,7 +298,8 @@ feature -- Icon representing shell
 			-- Set `icon_pixmap' to `a_pixmap'.
 		require
 			exists: not destroyed;
-			not_a_pixmap_void: a_pixmap /= Void
+			not_a_pixmap_void: a_pixmap /= Void;
+			valid_a_pixmap: a_pixmap.is_valid
 		do
 			implementation.set_icon_pixmap (a_pixmap)
 		end;

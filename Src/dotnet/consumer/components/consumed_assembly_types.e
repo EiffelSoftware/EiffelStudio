@@ -50,7 +50,12 @@ feature -- Access
 				i > count
 			loop
 				name := dotnet_names.item (i)
-				l_index := name.last_index_of ('.', name.count)
+				if name /= Void then
+					-- `name' may be Void if basic types are encountered in mscorlib types.xml.
+					l_index := name.last_index_of ('.', name.count)
+				else
+					l_index := 0
+				end
 				namespace := Void
 				if l_index > 0 then
 					namespace := name.substring (1, l_index - 1)
@@ -70,6 +75,8 @@ feature -- Access
 				Result.put (l_namespaces.item, l_namespaces.index)
 				l_namespaces.forth
 			end
+			Result.compare_objects
+			-- We compare by object to satisfy assertions.
 		end
 	
 	namespace_types (namespace_name: STRING): ARRAY [INTEGER] is
@@ -90,10 +97,12 @@ feature -- Access
 				i > count
 			loop
 				name := dotnet_names.item (i)
-				l_index := name.substring_index (namespace_name, 1)
-				if l_index = 1 and then name.substring (namespace_name.count, name.count).occurrences ('.') = 1 then
-					l_types_index.extend (i)
-					types_count := types_count + 1
+				if name /= Void then
+					l_index := name.substring_index (namespace_name, 1)
+					if l_index = 1 and then name.substring (namespace_name.count, name.count).occurrences ('.') = 1 then
+						l_types_index.extend (i)
+						types_count := types_count + 1
+					end
 				end
 				i := i + 1
 			end

@@ -145,6 +145,16 @@ feature -- Access
 		end
 		
 feature -- Basic operation
+
+	clear is
+			-- Remove `component' from `Current' if exists.
+		do
+			display_widget := Void
+			builder_widget := Void
+			component := Void
+			component_holder.wipe_out
+		end
+		
 		
 	set_component (a_component: GB_COMPONENT) is
 			-- Assign `a_component' to `Current'

@@ -147,15 +147,16 @@ rt_public char *portable_retrieve(EIF_INTEGER file_desc, int (*char_read_functio
 	/* Retrieve object store in file `filename' */
 
 	EIF_GET_CONTEXT
-	char *retrieved;
-	char rt_type;
+	char *retrieved = (char *) 0;
+	char rt_type = (char) 0;
+	int pos = 0;
 
 	/* Reset nb_recorded */
 	nb_recorded = 0;
 
 	/* Open file */
 	r_fides = file_desc;
-
+	
 	/* Read the kind of stored hierachy */
 	if (char_read_function(&rt_type, sizeof (char)) < sizeof (char))
 		eio();

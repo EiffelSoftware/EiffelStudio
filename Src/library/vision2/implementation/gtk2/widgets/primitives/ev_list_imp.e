@@ -112,6 +112,7 @@ feature -- Access
 					a_int_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
 					Result := (child_array @ (mp.read_integer_32 (0) + 1))
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
 					feature {EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
 			end
 		end
@@ -144,6 +145,7 @@ feature -- Access
 					Result.extend ((child_array @ (mp.read_integer_32 (0) + 1)))
 					a_tree_path_list := feature {EV_GTK_EXTERNALS}.glist_struct_next (a_tree_path_list)
 				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
 				feature {EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
 			end
 		end

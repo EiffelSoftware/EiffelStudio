@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 				l_icd_class := l_icd_module.get_class_from_token (l_class_token)
 				if not l_icd_module.last_call_succeed or else l_icd_class = Void then
 					l_icd_module := Void
-					print("Wrong Module ...%N")
+					print("[ERROR] eStudio got confused with Module ...%N")
 				end
 			end
 			

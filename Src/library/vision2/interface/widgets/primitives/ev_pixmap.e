@@ -67,6 +67,12 @@ feature -- Comparison
 					width = other.width and
 					height = other.height
 				)
+if Result = False then
+io.putstring ("width ="+width.out+"%N")
+io.putstring ("height ="+width.out+"%N")
+io.putstring ("other.width ="+other.width.out+"%N")
+io.putstring ("other.height ="+other.height.out+"%N")
+end
 			end
 		end
 
@@ -164,7 +170,7 @@ feature {NONE} -- Implementation
 			create expose_actions
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_IMAGE_LIST_IMP} -- Implementation
 
 	implementation: EV_PIXMAP_I
 			-- Responsible for interaction with the native graphics toolkit.
@@ -201,6 +207,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/26 04:03:23  pichery
+--| Changed export clause for `implementation'.
+--|
 --| Revision 1.29  2000/04/13 18:48:38  pichery
 --| cosmetics
 --|

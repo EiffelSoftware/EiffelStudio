@@ -1,0 +1,3 @@
+Error: Call to .NET overloaded feature is ambiguous between following features.
+What to do: Make sure to disambiguate call by providing more explicit type for
+   arguments of feature call, or to use the disambiguated name.

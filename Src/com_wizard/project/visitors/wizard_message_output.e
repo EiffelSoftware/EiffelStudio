@@ -23,11 +23,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		end
-
 create
 	set_output
 

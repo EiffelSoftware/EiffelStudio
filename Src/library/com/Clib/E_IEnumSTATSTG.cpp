@@ -28,9 +28,9 @@ E_IEnumSTATSTG::E_IEnumSTATSTG (IEnumSTATSTG * p)
 };
 //-------------------------------------------------------------------------
 
-STATSTG * E_IEnumSTATSTG::ccom_next ()
+STATSTG * E_IEnumSTATSTG::ccom_next_item ()
 
-// Retrieves the next item in the enumeration sequence. 
+// Retrieves the next item in the enumeration sequence.
 {
 	HRESULT hr;
 	STATSTG  * p_statstg;
@@ -38,7 +38,7 @@ STATSTG * E_IEnumSTATSTG::ccom_next ()
 	p_statstg = (STATSTG *)calloc (1, sizeof (STATSTG));
 	hr = pIEnum->Next(1, p_statstg, NULL);
 	if (hr != S_OK)
-	{		
+	{
 		free (p_statstg);
 		p_statstg = NULL;
 	}
@@ -48,12 +48,12 @@ STATSTG * E_IEnumSTATSTG::ccom_next ()
 
 void E_IEnumSTATSTG::ccom_skip(ULONG n)
 
-// Skips over the next `n' elements in the enumeration sequence. 
+// Skips over the next `n' elements in the enumeration sequence.
 {
 	HRESULT hr;
 	hr = pIEnum->Skip(n);
 	if (hr != S_OK)
-	{	
+	{
 		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
@@ -62,7 +62,7 @@ void E_IEnumSTATSTG::ccom_skip(ULONG n)
 
 void E_IEnumSTATSTG::ccom_reset()
 
-// Resets the enumeration sequence to the beginning. 
+// Resets the enumeration sequence to the beginning.
 {
 	HRESULT hr;
 	hr = pIEnum->Reset();
@@ -76,17 +76,17 @@ void E_IEnumSTATSTG::ccom_reset()
 
 IEnumSTATSTG * E_IEnumSTATSTG::ccom_clone()
 
-// Creates another enumerator that contains the same enumeration 
-// state as the current one. Using this function, a client can 
-// record a particular point in the enumeration sequence, and then 
-// return to that point at a later time. The new enumerator supports 
-// the same interface as the original one. 
+// Creates another enumerator that contains the same enumeration
+// state as the current one. Using this function, a client can
+// record a particular point in the enumeration sequence, and then
+// return to that point at a later time. The new enumerator supports
+// the same interface as the original one.
 {
 	HRESULT hr;
 	IEnumSTATSTG * pIEnum_cloned;
 
 	hr = pIEnum->Clone(&pIEnum_cloned);
-	
+
 	if (hr != S_OK)
 	{
 		//Formatter  f;

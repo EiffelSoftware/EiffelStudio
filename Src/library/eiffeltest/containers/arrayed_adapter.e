@@ -3,7 +3,6 @@ indexing
 		"Adapter from ARRAYED_LIST to BASIC"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

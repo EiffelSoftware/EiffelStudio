@@ -3,7 +3,6 @@ indexing
 		"Log facilities logging test results into a file"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

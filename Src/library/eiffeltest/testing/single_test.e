@@ -3,7 +3,6 @@ indexing
 		"Testable components consisting out of a single test"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

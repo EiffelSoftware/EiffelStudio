@@ -3,7 +3,6 @@ indexing
 		"Factories that create object instances via a string key"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

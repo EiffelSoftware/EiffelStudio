@@ -3,7 +3,6 @@ indexing
 		"Constants for test result states"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

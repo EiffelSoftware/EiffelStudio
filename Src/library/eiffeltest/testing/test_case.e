@@ -3,7 +3,6 @@ indexing
 		"Test cases that consist of a complete test and produce a result"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,6 @@ indexing
 		"Facility for generating pseudo-random numbers"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

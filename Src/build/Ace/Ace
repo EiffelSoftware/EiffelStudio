@@ -7,96 +7,91 @@ root
 default
 
 	assertion (require);
-	exception_stack_managed(yes);
 
 cluster
 
-	root_cluster:	   "$BUILD/Main";
-	kernel:			 "$BUILD/../library/base/kernel";
-	support:			"$BUILD/../library/base/support";
-	access:			 "$BUILD/../library/base/structures/access";
-	cursors:			"$BUILD/../library/base/structures/cursors";
-	dispenser:		  "$BUILD/../library/base/structures/dispenser";
-	list:			   "$BUILD/../library/base/structures/list";
-	sort:			   "$BUILD/../library/base/structures/sort";
-	storage:			"$BUILD/../library/base/structures/storage";
-	traversing:		 "$BUILD/../library/base/structures/traversing";
-	table:			  "$BUILD/../library/base/structures/table";
+	root_cluster:	"$BUILD/Main";
 
-	graph_kernel:	   "$BUILD/../library/vision/oui/kernel";
-	graph_commands:	 "$BUILD/../library/vision/oui/commands";
-	graph_oui_widgets:  "$BUILD/../library/vision/oui/widgets";
-	tools:			  "$BUILD/../library/vision/tools";
-	graph_X:			"$BUILD/../library/vision/implement/X";
-	graph_toolkit:	  "$BUILD/../library/vision/implement/toolkit";
-	graph_resources:	"$BUILD/../library/vision/implement/motif/Resources";
-	graph_widgets:	  "$BUILD/../library/vision/implement/motif/widgets";
-	graph_figures:	  "$BUILD/../library/vision/figures";
+	catalog:		"$BUILD/Catalog";
+	catalog_commands: "$BUILD/Catalog/Commands";
 
+	utility:		"$BUILD/Utility";
+	constants:		"$BUILD/Constants";
+	shared:			"$BUILD/Shared";
+	icon:			"$BUILD/Icon";
+	structures:		"$BUILD/Structures";
+	windows:		"$BUILD/Windows";
+	windowMgr:		"$BUILD/WindowMgr";
 
-	catalog:			"$BUILD/Catalog";
-	catalog_commands:   "$BUILD/Catalog/Commands";
-	utility:			"$BUILD/Utility";
-	constants:		  "$BUILD/Constants";
-	icon:			   "$BUILD/Icon";
-	structures:		 "$BUILD/Structures";
-	windows:			"$BUILD/Windows";
-	windowMgr:		  "$BUILD/WindowMgr";
+	storage_command:"$BUILD/Storage/Command";
+	storage_context:"$BUILD/Storage/Context";
+	storage_control:"$BUILD/Storage/Control";
+	storage_function:"$BUILD/Storage/Function";
+	storage_app:	"$BUILD/Storage/Application";
 
-
-	storage_command:	"$BUILD/Storage/Command";
-	storage_context:	"$BUILD/Storage/Context";
-	storage_control:	"$BUILD/Storage/Control";
-	storage_function:   "$BUILD/Storage/Function";
-	storage_app:		"$BUILD/Storage/Application";
-
-
-	generation:		 "$BUILD/Generation";
+	generation:		"$BUILD/Generation";
 
 	transport_common:	"$BUILD/Transport/common";
 	transport_specific:	"$BUILD/Transport/$TOOLKIT";
 
 	context_commands:   "$BUILD/Context/Commands";
-	context_editor:	 "$BUILD/Context/Editor";
-	context_catalog:	"$BUILD/Context/Catalog";
+	context_editor:	 	"$BUILD/Context/Editor";
+	context_catalog: 	"$BUILD/Context/Catalog";
 	context_widgets:	"$BUILD/Context/Widgets";
 	context_newWidgets: "$BUILD/Context/NewWidgets";
-	context_tree:	   "$BUILD/Context/Tree";
-
+	context_tree:	   	"$BUILD/Context/Tree";
 
 	app_control:		"$BUILD/Application/Control";
-	app_commands:	   "$BUILD/Application/Commands";
+	app_commands:	   	"$BUILD/Application/Commands";
 
-	event:			  "$BUILD/Event";
+	event:			  	"$BUILD/Event";
 
 	function_commands:  "$BUILD/Function/Commands";
 	function_editor:	"$BUILD/Function/Editor";
 	function_functions: "$BUILD/Function/Functions";
-	function_holes:	 "$BUILD/Function/Holes";
+	function_holes:	 	"$BUILD/Function/Holes";
 	function_stones:	"$BUILD/Function/Stones";
 	function_iconbox:   "$BUILD/Function/IconBox";
 
 
 	command_catalog:	"$BUILD/Command/Catalog";
 	command_commands:   "$BUILD/Command/Commands";
-	command_editor:	 "$BUILD/Command/Editor";
-	command_predef:	 "$BUILD/Command/Predef";
-	command_stone:	  "$BUILD/Command/Stones";
+	command_editor:	 	"$BUILD/Command/Editor";
+	command_predef:	 	"$BUILD/Command/Predef";
+	command_stone:	  	"$BUILD/Command/Stones";
 	command_instance:   "$BUILD/Command/Instance";
 
-
-	liman_common:	   "$BUILD/liman/common";
+	liman_common:	   	"$BUILD/liman/common";
 	liman_build:		"$BUILD/liman/build";
+
+-- libraries
+
+	kernel:			"$EIFFEL3/library/base/kernel";
+	support:		"$EIFFEL3/library/base/support";
+	access:			"$EIFFEL3/library/base/structures/access";
+	cursors:		"$EIFFEL3/library/base/structures/cursors";
+	dispenser:		"$EIFFEL3/library/base/structures/dispenser";
+	list:			"$EIFFEL3/library/base/structures/list";
+	sort:			"$EIFFEL3/library/base/structures/sort";
+	storage:		"$EIFFEL3/library/base/structures/storage";
+	traversing:		"$EIFFEL3/library/base/structures/traversing";
+	table:			"$EIFFEL3/library/base/structures/table";
+
+	graph_kernel:	"$EIFFEL3/library/vision/oui/kernel";
+	graph_commands:	"$EIFFEL3/library/vision/oui/commands";
+	graph_oui_widgets: "$EIFFEL3/library/vision/oui/widgets";
+	graph_oui_tools:    "$EIFFEL3/library/vision/tools";
+	graph_X:		"$EIFFEL3/library/vision/implement/X";
+	graph_toolkit:	"$EIFFEL3/library/vision/implement/toolkit";
+	graph_resources:"$EIFFEL3/library/vision/implement/motif/Resources";
+	graph_widgets:	"$EIFFEL3/library/vision/implement/motif/widgets";
+	graph_figures:	"$EIFFEL3/library/vision/figures";
 
 external
 
 	object:
 		"$(EIFFEL3)/library/vision/spec/$(PLATFORM)/lib/Xt.a";
 		"$(EIFFEL3)/library/vision/spec/$(PLATFORM)/lib/motif_Clib.a";
-		"$(BUILD)/Clib/Motif/efb.a";
-		"$(BENCH)/C/liman/client/libliman.a";
-		"$(BENCH)/C/liman/shared/libshared.a";
-		"$(BENCH)/C/idrs/libidr.a";
 		"-lXm -lXt -lX11"
 
 end

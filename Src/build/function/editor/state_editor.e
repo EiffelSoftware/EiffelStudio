@@ -122,6 +122,30 @@ feature
 			set_icon_name (tmp)
 		end;
 
+	update_context_name (c: CONTEXT) is
+			-- Update context name in Current editor for 
+			-- context `c'.
+		local
+			finished: BOOLEAN;
+			old_cur: CURSOR;
+			icons: LINKED_LIST [FUNC_CON_IS]
+		do
+			icons := input_list.icons;
+			old_cur := icons.cursor;
+			from
+				icons.start
+			until
+				icons.after or else finished
+			loop
+				if icons.item.data = c then
+					finished := True;
+					icons.item.update_label_text
+				end;
+				icons.forth
+			end;
+			icons.go_to (old_cur);
+		end;
+
 feature {NONE}
 
 	focus_label: FOCUS_LABEL is

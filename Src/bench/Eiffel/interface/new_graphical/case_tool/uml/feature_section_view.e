@@ -55,13 +55,15 @@ feature {NONE} -- Initialize
 			e_feature: E_FEATURE
 			visibility: STRING
 			once_line: EV_MODEL_LINE
+			signature: STRING
+			f_names: EIFFEL_LIST [FEATURE_NAME]
 		do
 			default_create
 			
 			create feature_group
 			
 			attr_height := 0
-			create section_text.make_with_text ("+" + a_fs.features.count.out + " <<" + a_fs.name + ">>")
+			create section_text.make_with_text (" <<" + a_fs.name + ">>")
 			section_text.set_pointer_style (default_pixmaps.standard_cursor)
 			section_text.pointer_button_press_actions.extend (agent on_section_press)
 			section_text.pointer_double_press_actions.force_extend (agent on_double_press)
@@ -88,21 +90,35 @@ feature {NONE} -- Initialize
 				
 				e_feature := a_fs.class_c.feature_with_name (l_feature.feature_name)
 				
-				create txt.make_with_text (visibility + full_name_compiled (e_feature))
+				signature := full_signature_compiled (e_feature)
+				
+				from
+					f_names := e_feature.ast.feature_names
+					f_names.start
+				until
+					f_names.after
+				loop
+					create txt.make_with_text (visibility + f_names.item.visual_name + signature)
 
-				txt.set_pebble (create {FEATURE_STONE}.make (e_feature))
-				txt.set_accept_cursor (cursors.cur_feature)
-				txt.set_deny_cursor (cursors.cur_x_feature)
-				txt.set_point_position (point_x, point_y + attr_height)
-				attr_height := attr_height + txt.height
-				feature_group.extend (txt)
-				if e_feature.is_once then
-					create once_line
-					feature_group.extend (once_line)
+					txt.set_pebble (create {FEATURE_STONE}.make (e_feature))
+					txt.set_accept_cursor (cursors.cur_feature)
+					txt.set_deny_cursor (cursors.cur_x_feature)
+					txt.set_point_position (point_x, point_y + attr_height)
+					attr_height := attr_height + txt.height
+					feature_group.extend (txt)
+					if e_feature.is_once then
+						create once_line
+						feature_group.extend (once_line)
+					end
+					features_count := features_count + 1
+					f_names.forth
 				end
+
 				l_features.forth
 			end
 			extend (feature_group)
+			
+			section_text.set_text ("+" + features_count.out + section_text.text)
 			feature_section := a_fs
 			container := a_container
 			is_expanded := False
@@ -155,7 +171,7 @@ feature -- Element change
 		require
 			is_expanded: is_expanded
 		do
-			section_text.set_text ("+" + feature_section.features.count.out + " <<" + feature_section.name + ">>")
+			section_text.set_text ("+" + features_count.out + " <<" + feature_section.name + ">>")
 			feature_group.hide
 			disable_pick_and_drop
 			is_expanded := False
@@ -165,6 +181,9 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	features_count: INTEGER 
+			-- Number of features in section.
 
 	set_features_text_properties (txt: EV_MODEL_TEXT) is
 			-- Set properties of `txt' according to standarts.

@@ -206,6 +206,8 @@ feature -- Basic operations
 			tool_bar_imp: EV_TOOL_BAR_IMP
 			temp_index: INTEGER
 			original_parent: EV_DOCKABLE_TARGET
+			widget: EV_WIDGET
+			original_tool_bar: EV_TOOL_BAR
 		do
 			dockable_target := closest_dockable_target
 				-- Note that if the parent is not a dialog, then we do not destroy the dialog.
@@ -342,8 +344,22 @@ feature -- Basic operations
 						-- remove the source of the dock and replace
 						-- the temporary separator.
 					if insert_sep.parent /= Void then
+						original_tool_bar ?= item_source_being_docked.parent
+						check
+							original_tool_bar_not_void: original_tool_bar /= Void
+						end
 						unparent_source_being_docked
-						replace_insert_sep	
+						replace_insert_sep
+							
+							-- We have to ensure that a tool bar button does not become
+							-- selected as a result of the transport ending.
+						if original_tool_bar = tool_bar then
+							tool_bar_imp ?= tool_bar.implementation
+							check
+								tool_bar_imp_not_void: tool_bar_imp /= Void
+							end
+							tool_bar_imp.block_selection_for_docking
+						end
 					else
 					
 					-- Now handle the insertion/removal of separators.
@@ -387,6 +403,21 @@ feature -- Basic operations
 					end
 				end
 				end
+				end
+			end
+			
+					-- We must also enable any action sequences that had been blocked.
+			widget ?= source_being_docked.interface
+			if widget /= Void then
+				widget.pointer_motion_actions.resume
+			else
+				tool_bar_button ?= source_being_docked.interface
+				if tool_bar_button /= Void then
+					tool_bar_button.pointer_motion_actions.resume
+				else
+					check
+						type_not_supported: False
+					end
 				end
 			end
 			
@@ -543,10 +574,28 @@ feature {NONE} -- Implementation
 			-- to execute the dragging. `a_screen_x' and `a_screen_y' are
 			-- the coordinates of the mouse relative to `Current' when the transport
 			-- began.
+		local
+			widget: EV_WIDGET
+			tool_bar_button: EV_TOOL_BAR_BUTTON
 		do
 			if dock_started_actions_internal /= Void then
 				dock_started_actions_internal.call ([])
 			end
+				-- Now block the motion actions from the interface
+			widget ?= source
+			if widget /= Void then
+				widget.pointer_motion_actions.block
+			else
+				tool_bar_button ?= source
+				if tool_bar_button /= Void then
+					tool_bar_button.pointer_motion_actions.block
+				else
+					check
+						type_not_supported: False
+					end
+				end
+			end
+			
 			if source.real_source /= Void then
 				source_being_docked ?= source.real_source.implementation
 			else

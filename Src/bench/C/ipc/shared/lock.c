@@ -43,8 +43,6 @@ extern int errno;						/* System error status */
 extern int usleep(unsigned int);		/* Current time */
 #endif
 
-extern Time_t time(Time_t *t);					/* Current time */
-
 rt_public int lock_file(char *file)
            						/* Where lockfile should be written */
 {

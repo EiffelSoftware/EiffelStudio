@@ -746,7 +746,7 @@ feature {NONE} -- Implementation
 				if pos = -1 then
 					wel_add_string (s)
 				else
-					wel_insert_string_at (s, pos)
+					wel_insert_string_at (s, pos - 1)
 				end
 			end
 			-- Change the selection, if added element affected it

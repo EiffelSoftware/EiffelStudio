@@ -40,7 +40,7 @@ such as:</p>
 
 <p>You can also specify a cryptographic key for your application so that the compiled assembly
 can be added to the Global Assembly Cache (GAC).  Alternatively, if you wish to create a new
-for your assembly then the 'Generate' key will automatically generate one.</p>
+cryptographic key for your assembly then the 'Generate' key will automatically generate one.</p>
 
 <p>&nbsp;</p>
 
@@ -59,6 +59,223 @@ for your assembly then the 'Generate' key will automatically generate one.</p>
 </ul>
 
 <p>&nbsp;</p>
+
+<h2><a name="naming"></a>Class and feature naming</h2>
+
+<p>&nbsp;</p>
+
+The standard naming conventions for .NET and Eiffel are different.&nbsp; To accommodate
+this difference Eiffel Studio provides a number of options to the developer,
+allowing for consistent naming of classes and features within and between .NET
+systems.&nbsp; To illustrate this we shall consider a system using the
+EiffelBase library and focus on the CURSOR class.&nbsp; The base cluster is
+included in the project settings Cluster tab as shown below, where $ISE_EIFFEL
+is the environment variable pointing to the location of Eiffel on your hard
+disk.
+<p>&nbsp;</p>
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/dotnet_base_path.png" align="middle" width="290" height="160"></p>
+<p>&nbsp;</p>
+<p>The CURSOR class is located at '$ISE_EIFFEL\library\base\structures\cursors'.&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+
+<ul>
+  <li>Follow .NET naming guidelines: this option determines whether the
+    generated .NET code uses the Eiffel or .NET naming convention.&nbsp; Using
+    Ildasm, the IL disassemble tool provided with the .NET Framework, we can see
+    the difference between them.&nbsp; The Eiffel naming convention uses
+    uppercase characters for all classes whereas the .NET nomenclature uses the Camel Case
+    style.&nbsp; Note that this option is only available in a non-compiled
+    system.&nbsp; Once the system has been compiled the naming standard is thus
+    fixed for the project.</li>
+</ul>
+
+<p align="center">
+
+<img border="0" src="../../../../images/eiffelstudio/project_settings/naming_guidelines_unchecked.png">
+<p>&nbsp;</p>
+<p align="center">
+<img border="0" src="../../../../images/eiffelstudio/project_settings/ildasm_no_dotnet_naming.png">
+<p>&nbsp;</p>
+<p align="center">
+<img border="0" src="../../../../images/eiffelstudio/project_settings/naming_guidelines_checked.png" width="173" height="18">
+<p>&nbsp;</p>
+<p align="center">
+<img border="0" src="../../../../images/eiffelstudio/project_settings/ildasm_dotnet_naming.png">
+
+<p>&nbsp;
+
+<ul>
+  <li>Use cluster names and Use full cluster names:&nbsp; These options dictate
+    how a class is known to the system.&nbsp; In our CURSOR example there are 4
+    main scenarios.&nbsp; For a quick overview of all scenarios refer to the
+    table at the bottom of the page.&nbsp; If neither box is selected we just have
+    'CURSOR' or 'Cursor' (depending on whether the .NET naming guidelines are
+    used),
+    as seen above.&nbsp; If 'Use cluster names' is checked then the cluster name
+    is pre-pended to the class name, so 'CURSOR' now becomes 'base.CURSOR'. </li>
+</ul>
+
+<p align="center">
+<img border="0" src="../../../../images/eiffelstudio/project_settings/use_cluster_names.png">
+
+
+<p align="left">
+&nbsp;
+<p align="left" style="margin-left: 30">
+If 'Use full cluster names' is selected then the full cluster name is pre-pended
+to the class name, so it thus becomes 'base.structures.cursors.CURSOR'.
+
+<p>&nbsp;</p>
+<p align="center">
+<img border="0" src="../../../../images/eiffelstudio/project_settings/use_full_cluster_names.png">
+
+<p align="left" style="margin-left: 30">
+&nbsp;
+<p align="left" style="margin-left: 30">
+The final scenario is where a namespace has been defined for the cluster in the
+Clusters tab of the Project Settings.&nbsp; In this situation the namespace overrides
+the name of the cluster.&nbsp; In the example below the namespace name 'MyBaseNameSpace'
+is used so the resulting name is 'MyBaseNameSpace.structures.cursors.CURSOR'.
+<p align="left" style="margin-left: 30">
+&nbsp;
+<p align="center">
+<img border="0" src="../../../../images/eiffelstudio/project_settings/use_namespace_name.png">
+
+
+
+<p align="center">&nbsp;</p>
+<h2 align="left">Naming Scenarios</h2>
+<p>This table shows how the class name generation is affected by the naming
+options using the CURSOR class found in '$ISE_EIFFEL\library\base\structures\cursors'
+as an example.</p>
+<p>&nbsp;</p>
+<div align="center">
+  <center>
+  <table border="1" width="100%" height="353">
+    <tr>
+      <td width="25%" height="27"><b>Use .NET naming guidelines</b></td>
+      <td width="25%" height="27"><b>Use cluster names</b></td>
+      <td width="25%" height="27"><b>Use full cluster names</b></td>
+      <td width="25%" height="27"><b>Namespace Name</b></td>
+      <td width="25%" height="27"><b>Generated Name</b></td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">(empty)</td>
+      <td width="25%" height="14">CURSOR</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">(empty)</td>
+      <td width="25%" height="14">Cursor</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">(empty)</td>
+      <td width="25%" height="14">base.CURSOR</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">(empty)</td>
+      <td width="25%" height="14">Base.Cursor</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">(empty)</td>
+      <td width="25%" height="14">structures.cursors.CURSOR</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">(empty)</td>
+      <td width="25%" height="14">Structures.Cursors.Cursor</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">(empty)</td>
+      <td width="25%" height="14">base.structures.cursors.CURSOR</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">(empty)</td>
+      <td width="25%" height="14">Base.Structures.Cursors.CURSOR</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">MyNameSpace</td>
+      <td width="25%" height="14">MyNameSpace.Cursor</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">MyNameSpace</td>
+      <td width="25%" height="14">MyNameSpace.CURSOR</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">MyNameSpace</td>
+      <td width="25%" height="14">MyNameSpace.Cursor</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">MyNameSpace</td>
+      <td width="25%" height="14">MyNameSpace.CURSOR</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">MyNameSpace</td>
+      <td width="25%" height="14">MyNameSpace.structures.cursors.Cursor</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">MyNameSpace</td>
+      <td width="25%" height="14">MyNameSpace.structures.cursors.CURSOR</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">no</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">MyNameSpace</td>
+      <td width="25%" height="14">MyNameSpace.structures.cursors.CURSOR</td>
+    </tr>
+    <tr>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">yes</td>
+      <td width="25%" height="14">MyNameSpace</td>
+      <td width="25%" height="14">MyNameSpace.Structures.Cursors.Cursor</td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+
 
 </body>
 

@@ -8,6 +8,8 @@ class
 	TEXT_AREA_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_TEXT
 		redefine
 			make

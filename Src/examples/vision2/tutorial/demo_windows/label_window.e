@@ -8,6 +8,8 @@ class
 	LABEL_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_LABEL
 		redefine
 			make

@@ -8,6 +8,8 @@ class
 	MULTI_COLUMN_LIST_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_MULTI_COLUMN_LIST
 		redefine
 			make

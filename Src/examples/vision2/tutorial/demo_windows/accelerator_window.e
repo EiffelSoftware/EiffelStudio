@@ -8,6 +8,8 @@ class
 	ACCELERATOR_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_DYNAMIC_TABLE
 		redefine
 			make
@@ -22,7 +24,6 @@ feature {NONE} -- Initialization
 			-- Create the demo in `par'.
 		local
 			cmd: EV_ROUTINE_COMMAND
-			frame: EV_FRAME
 			color: EV_BASIC_COLORS
 			acc: EV_ACCELERATOR
 			code: EV_KEY_CODE
@@ -64,7 +65,7 @@ feature {NONE} -- Initialization
 			frame.set_foreground_color (color.red)
 			!! vbox.make (frame)
 			vbox.set_spacing (5)
-			!! lab4.make_with_text (vbox, "Doesn't work yet.")
+			create lab4.make (vbox)
 			lab4.set_editable (False)
 			!! but.make_with_text (vbox, "Choose")
 			but.set_expand (False)
@@ -79,6 +80,12 @@ feature -- Access
 	lab1, lab2, lab3, lab4: EV_TEXT
 			-- Labels to show the action
 
+	frame: EV_FRAME
+			-- A frame for the accelerator
+
+	dialog: EV_ACCELERATOR_DIALOG
+			-- A dialog to choose an accelerator
+
 feature -- Execution features
 
 	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
@@ -86,7 +93,7 @@ feature -- Execution features
 		do
 			lab2.set_text ("")
 			lab3.set_text ("")
---			lab4.set_text ("")
+			lab4.set_text ("")
 			lab1.set_text ("[Ctrl+S] pressed")
 		end
 
@@ -95,7 +102,7 @@ feature -- Execution features
 		do
 			lab1.set_text ("")
 			lab3.set_text ("")
---			lab4.set_text ("")
+			lab4.set_text ("")
 			lab2.set_text ("[F2] pressed")
 		end
 
@@ -104,7 +111,7 @@ feature -- Execution features
 		do
 			lab1.set_text ("")
 			lab2.set_text ("")
---			lab4.set_text ("")
+			lab4.set_text ("")
 			lab3.set_text ("[F2] pressed")
 		end
 
@@ -117,10 +124,22 @@ feature -- Execution features
 			lab4.set_text ("You did it !")
 		end
 
+	execute5 (arg: EV_ARGUMENT; data: EV_KEY_EVENT_DATA) is
+			-- Executed when we press the first button
+		local
+			cmd: EV_ROUTINE_COMMAND
+		do
+			!! cmd.make (~execute4)
+			if accelerator /= Void then
+				frame.remove_accelerator_commands (accelerator)
+			end
+			accelerator := dialog.accelerators.first
+			frame.add_accelerator_command (accelerator, cmd, arg)
+		end
+
 	execute_button (arg: EV_ARGUMENT; data: EV_KEY_EVENT_DATA) is
 			-- Executed when we press the first button
 		local
-			dialog: EV_ACCELERATOR_DIALOG
 			action: LINKED_LIST [STRING]
 			cmd: EV_ROUTINE_COMMAND
 		do
@@ -128,11 +147,8 @@ feature -- Execution features
 			action.extend ("Your accelerator")
 			!! dialog.make_with_actions (parent, action)
 			dialog.show
---			dialog.add_ok_command (cmd, Void)
---			!! cmd.make (~execute4)
---			lab4.remove_accelerator_commands (accelerator)
---			accelerator := dialog.accelerators.first
---			lab4.add_accelerator_command (accelerator, cmd, arg)
+			!! cmd.make (~execute5)
+			dialog.add_ok_command (cmd, Void)
 		end
 
 	accelerator: EV_ACCELERATOR

@@ -10,8 +10,10 @@ class
 inherit
 	EV_BUTTON
 		redefine
-			make
+			make,
+			set_parent
 		end
+
 	DEMO_WINDOW
 
 creation
@@ -43,6 +45,7 @@ feature -- Execution features
 			-- Executed when we press the first button
 		local
 			cmd: EV_ROUTINE_COMMAND
+			item: DEMO_ITEM [WINDOW_WINDOW]
 		do
 			if current_widget = Void then
 				!! current_widget.make_top_level
@@ -53,9 +56,15 @@ feature -- Execution features
 				current_widget.set_height(480)
 				current_widget.set_minimum_width(400)
 				current_widget.set_minimum_height(320)
+
+				-- We create the action window ansset the button
+				-- sensitive again
 				set_container_tabs
 				tab_list.extend (window_tab)
 				create action_window.make (current_widget, tab_list)
+				create item.make_with_title (Void, "", "")
+				item.action_button.set_insensitive (False)
+				item.destroy
 			end
 			current_widget.show
 		end
@@ -64,6 +73,18 @@ feature -- Execution features
 			-- Executed when the window is closed
 		do
 			current_widget.hide
+		end
+
+feature {NONE} -- Implementation
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			{EV_BUTTON} Precursor (par)
+			if current_widget /= Void then
+				current_widget.hide
+			end
 		end
 
 end -- class WINDOW_WINDOW

@@ -8,6 +8,8 @@ class
 	RICH_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_RICH_TEXT
 		redefine
 			make

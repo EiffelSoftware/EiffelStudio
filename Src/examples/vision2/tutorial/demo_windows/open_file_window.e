@@ -8,6 +8,8 @@ class
 	OPEN_FILE_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_BUTTON
 		redefine
 			make

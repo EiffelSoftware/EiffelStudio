@@ -8,11 +8,12 @@ class
 	BUTTON_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_VERTICAL_BOX
 		redefine
 			make
 		end
-	DEMO_WINDOW
 
 	PIXMAP_PATH
 
@@ -34,15 +35,12 @@ feature {NONE} -- Initialization
 			!! b1.make_with_text (Current, "Button")
 
 			!! b2.make (Current)
-			create pixmap.make_from_file (pixmap_path ("save.bmp"))
+			create pixmap.make_from_file (pixmap_path ("save"))
 			b2.set_pixmap (pixmap)
-
 			!! toggle_b.make_with_text (Current, "Toggle Button")
-
 			!! check_b.make_with_text (Current, "Check Button")
 			!! check_b.make_with_text (Current, "Check 2")
 			check_b.set_pixmap (pixmap)
-
 			!! frame.make_with_text (Current, "Frame")
 			!! box.make (frame)
 			!! radio1_b.make_with_text (box, "Radio 1")
@@ -50,9 +48,7 @@ feature {NONE} -- Initialization
 			radio2_b.set_pixmap (pixmap)
 			!! radio3_b.make_with_text (box, "Radio 3")
 
-
-				--Sets the tabs for the action window
-			
+			--Sets the tabs for the action window
 			set_primitive_tabs
 			create action_window.make(Current,tab_list)
 		end
@@ -66,7 +62,8 @@ feature -- Access
 	radio2_b: EV_RADIO_BUTTON
 	radio3_b: EV_RADIO_BUTTON
 	frame: EV_FRAME
-	box: EV_VERTICAL_BOX	
+	box: EV_VERTICAL_BOX
+	
 end -- class BUTTON_WINDOW
 
 --|----------------------------------------------------------------

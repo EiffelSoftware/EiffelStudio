@@ -8,6 +8,8 @@ class
 	ACCELERATOR_SELECTION_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_BUTTON
 		redefine
 			make

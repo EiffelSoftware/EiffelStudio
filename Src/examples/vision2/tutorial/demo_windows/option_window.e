@@ -8,6 +8,8 @@ class
 	OPTION_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_OPTION_BUTTON
 		redefine
 			make

@@ -10,8 +10,10 @@ class
 inherit
 	EV_BUTTON
 		redefine
-			make
+			make,
+			set_parent
 		end
+
 	DEMO_WINDOW
 
 creation
@@ -36,8 +38,6 @@ feature -- Access
 
 	current_widget: EV_DIALOG
 		-- The window
-	
-	temp_window: EV_WINDOW
 
 feature -- Execution features
 
@@ -45,15 +45,31 @@ feature -- Execution features
 			-- Executed when we press the first button
 		local
 			cmd: EV_ROUTINE_COMMAND
+			temp_window: EV_WINDOW
+			label: EV_LABEL
+			button: EV_BUTTON
+			item: DEMO_ITEM [WINDOW_WINDOW]
 		do
 			if current_widget = Void then
 				create temp_window.make_top_level
-				create current_widget.make(temp_window)
-				current_widget.set_title("Dialog Window")
+				create current_widget.make (temp_window)
+				current_widget.set_title ("Dialog Window")
 				create cmd.make (~hide_dialog)
 				current_widget.add_close_command (cmd, Void)
+
+				-- We customize the dialog
+				create label.make_with_text (current_widget.display_area, "A customized dialog.")
+				create button.make_with_text (current_widget.action_area, "OK")
+				create button.make_with_text (current_widget.action_area, "Cancel")
+				create button.make_with_text (current_widget.action_area, "Help")
+
+				-- We create the action_window
 				set_container_tabs
+				tab_list.extend (window_tab)
 				create action_window.make (current_widget, tab_list)
+				create item.make_with_title (Void, "", "")
+				item.action_button.set_insensitive (False)
+				item.destroy
 			end
 			current_widget.show
 		end
@@ -64,6 +80,18 @@ feature -- Execution features
 		do
 			current_widget.hide
 		end	
+
+feature {NONE} -- Implementation
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			{EV_BUTTON} Precursor (par)
+			if current_widget /= Void then
+				current_widget.hide
+			end
+		end
 
 end -- class DIALOG_WINDOW
 

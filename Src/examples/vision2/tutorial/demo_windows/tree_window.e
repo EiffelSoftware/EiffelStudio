@@ -8,6 +8,8 @@ class
 	TREE_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_TREE
 		redefine
 			make
@@ -23,17 +25,21 @@ feature {NONE} -- Initialization
 			cmd: EV_ROUTINE_COMMAND
 		do
 			{EV_TREE} Precursor (par)
-			!! tree_item1.make_with_text (Current, "Item")
-			!! tree_item2.make_with_text (tree_item1, "Item 2")
-			!! tree_item1.make_with_text (Current, "Item 3")
-			!! tree_item1.make_with_text (Current, "Item 4")
-			!! tree_item3.make_with_text (tree_item1, "Item 5")
-			!! tree_item2.make_with_text (tree_item1, "Item 6")
+			tree_item1 := create_item (Current, "Item")
+			tree_item2 := create_item (tree_item1, "Item 2")
+			tree_item1 := create_item (Current, "Item 3")
+			tree_item1 := create_item (Current, "Item 4")
+			tree_item3 := create_item (tree_item1, "Item 5")
+			tree_item2 := create_item (tree_item1, "Item 6")
+			create action_item.make_with_text (tree_item2, "Click Me !")
+
+			-- Once everything done, we expand the sub-tree we want
 			tree_item1.set_expand (True)
-			!! tree_item1.make_with_text (tree_item2, "Click Me !")
 			tree_item2.set_expand (True)
-			!! cmd.make (~execute1)
-			tree_item1.add_select_command (cmd, Void)
+
+			-- We add a command on an item.
+			create cmd.make (~execute1)
+			action_item.add_select_command (cmd, Void)
 		end
 
 feature -- Access
@@ -46,6 +52,24 @@ feature -- Access
 
 	tree_item3: EV_TREE_ITEM
 			-- an item
+
+	action_item: EV_TREE_ITEM
+			-- a tree item that moves.
+feature -- Basic operation
+
+	create_item (par: EV_TREE_ITEM_HOLDER; txt: STRING): EV_TREE_ITEM is
+				-- Create an item with pick and drop facilities.
+		local
+			type: EV_PND_TYPE
+		do
+			create Result.make_with_text (par, txt)
+
+			-- You want pick and drop ?
+			Result.activate_pick_and_drop (Void, Void)
+			create type.make
+			Result.set_data_type (type)
+			Result.set_transported_data ("Bonjour")
+		end
 
 feature -- Execution features
 

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			pix: EV_PIXMAP
 		do
 			{EV_SCROLLABLE_AREA} Precursor (par)
-			create pix.make_from_file (pixmap_path ("SevenFalls.bmp"))
+			create pix.make_from_file (pixmap_path ("isepower"))
 			create ta.make_with_pixmap (Current, pix)
 
 				-- Sets the tabs for the action window

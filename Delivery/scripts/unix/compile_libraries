@@ -38,6 +38,11 @@ remtrace Compile the Eiffel libraries C code
 remtrace event
 cd $INITIAL_DIR/library/event/Clib
 default_make
+if [ -d "$INITIAL_DIR/library/exml" ]; then
+	remtrace exml
+	cd $INITIAL_DIR/library/exml/compiler_specific/ise/clib
+	default_make
+fi
 remtrace net
 cd $INITIAL_DIR/library/net/Clib
 default_make

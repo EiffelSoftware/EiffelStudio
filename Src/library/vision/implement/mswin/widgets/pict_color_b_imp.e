@@ -250,10 +250,7 @@ feature {NONE} -- Implementation
 				else
 					a_dc.draw_bitmap (bitmap, 3, 3, internal_width, internal_height)
 				end
-				bitmap := Void
-					--| Free all generated C objects during the display by calling
-					--| the GC.
-				collect
+				bitmap.delete
 			end
 		end
 
@@ -278,10 +275,7 @@ feature {NONE} -- Implementation
 				else
 					a_dc.draw_bitmap (bitmap, 2, 2, internal_width, internal_height)
 				end
-				bitmap := Void
-					--| Free all generated C objects during the display by calling
-					--| the GC.
-				collect
+				bitmap.delete
 			end
 		end
 

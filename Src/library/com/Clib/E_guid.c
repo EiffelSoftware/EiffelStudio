@@ -14,11 +14,9 @@
 #include "E_guid.h"
   
 //------------------------------------------------------------------
-EIF_POINTER ccom_generate_guid ()
+void ccom_generate_guid (GUID *guid)
 {
-	GUID a_guid;
-	CoCreateGuid (&a_guid);
-	return &a_guid;
+	CoCreateGuid (guid);
 }
 
 EIF_POINTER ccom_guid_to_wide_string (GUID * guid)

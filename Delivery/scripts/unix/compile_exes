@@ -124,6 +124,8 @@ fullrd $INSTALL_DIR/studio/help/defaults/unix
 
 
 cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libfinalized.a
+mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libwkbench.a
 cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 if [ "$MULTIPLE_EDITIONS" ]; then
 	fullrf $EXPORT_DIR/free_rt/libebench.a

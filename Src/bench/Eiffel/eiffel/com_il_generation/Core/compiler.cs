@@ -1028,8 +1028,8 @@ feature -- Generation Structure
 					MethodIL = Override.GetILGenerator();
 					GenerateCurrent ();
 					GenerateArgument (1);
-					generate_cast (ParentMethod.parameter_type_ids [0],
-						Method.parameter_type_ids [0]);
+					generate_cast (ParentMethod.return_type_id,
+						Method.return_type_id);
 					MethodIL.Emit (OpCodes.Callvirt, Method.setter_builder);
 					MethodIL.Emit (OpCodes.Ret);
 

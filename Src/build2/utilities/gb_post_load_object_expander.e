@@ -24,16 +24,19 @@ feature -- Basic operations
 	expand_all_registered_objects is
 			-- Expand all relevent representations of all objects in
 			-- `expanded_objects', and leave `expanded_objects' empty.
+		local
+			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			from
 				expanded_objects.start
 			until
 				expanded_objects.off
 			loop
-			--	if expanded_objects.item.layout_item.is_expandable then
-					expanded_objects.item.layout_item.expand	
-					expanded_objects.remove
-			--	end
+				layout_item := expanded_objects.item.layout_item
+				if layout_item.is_expandable and layout_item.parent_tree /= Void then
+					layout_item.expand	
+				end
+				expanded_objects.remove
 			end
 		ensure
 			expanded_objects_empty: expanded_objects.is_empty

@@ -23,13 +23,18 @@ creation
 	make_open_read_write, make_create_read_write,
 	make_open_read_append
 
-
 feature -- Status report
 
 	is_plain_text: BOOLEAN is
 			-- Is file reserved for text (character sequences)? (Yes)
 		do
 			Result := true
+		end
+
+	support_storable: BOOLEAN is
+			-- Can medium be used to store an Eiffel structure?
+		do
+			Result := False
 		end
 
 feature -- Output
@@ -88,6 +93,49 @@ feature -- Input
 		do
 			last_double := file_gd (file_pointer)
 		end;
+
+feature -- Access
+
+	retrieved: ANY is
+			-- Retrieved object structure
+			-- To access resulting object under correct type,
+			-- use assignment attempt.
+			-- Will raise an exception (code `Retrieve_exception')
+			-- if content is not a stored Eiffel structure.
+		do
+			-- Precondition `support_storable' is always False
+		end
+
+feature -- Element change
+ 
+	basic_store (object: ANY) is
+			-- Produce an external representation of the
+			-- entire object structure reachable from `object'.
+			-- Retrievable within current system only.
+		do
+			-- Precondition `support_storable' is always False
+		end;
+ 
+	general_store (object: ANY) is
+			-- Produce an external representation of the
+			-- entire object structure reachable from `object'.
+			-- Retrievable from other systems for same platform
+			-- (machine architecture).
+			--| This feature may use a visible name of a class written
+			--| in the `visible' clause of the Ace file. This makes it
+			--| possible to overcome class name clashes.
+		do
+			-- Precondition `support_storable' is always False
+		end
+ 
+	independent_store (object: ANY) is
+			-- Produce an external representation of the
+			-- entire object structure reachable from `object'.
+			-- Retrievable from other systems for the same or other
+			-- platform (machine architecture).
+		do
+			-- Precondition `support_storable' is always False
+		end
 
 feature {NONE} -- Implementation
 

@@ -16,32 +16,32 @@ inherit
 
 feature -- Access
 
-	retrieved (file: IO_MEDIUM): STORABLE is
+	retrieved (medium: IO_MEDIUM): ANY is
 			-- Retrieved object structure, from external
-			-- representation previously stored in `file'.
+			-- representation previously stored in `medium'.
 			-- To access resulting object under correct type,
 			-- use assignment attempt.
 			-- Will raise an exception (code `Retrieve_exception')
-			-- if file content is not a `STORABLE' structure.
+			-- if medium content is not a stored Eiffel structure.
 		require
-			file_not_void: file /= Void;
-			file_exists: file.exists;
-			file_is_open_read: file.is_open_read
-			file_is_binary: not file.is_plain_text
+			medium_not_void: medium /= Void;
+			medium_exists: medium.exists;
+			medium_is_open_read: medium.is_open_read
+			medium_supports_storable: medium.support_storable
 		do
-			Result := c_retrieved (file.handle, file.storage_type)
+			Result := medium.retrieved
 		ensure
 			Result_exists: Result /= Void
 		end
 
-	retrieve_by_name (file_name: STRING): STORABLE is
+	retrieve_by_name (file_name: STRING): ANY is
 			-- Retrieve object structure, from external
 			-- representation previously stored in a file
 			-- called `file_name'.
 			-- To access resulting object under correct type,
 			-- use assignment attempt.
 			-- Will raise an exception (code `Retrieve_exception')
-			-- if file content is not a `STORABLE' structure.
+			-- if file content is not a stored Eiffel structure.
 			-- Will return Void if the file does not exist or
 			-- is not readable.
 		require
@@ -53,28 +53,28 @@ feature -- Access
 			!!file.make (file_name)
 			if file.exists and then file.is_readable then
 				file.open_read
-				Result := c_retrieved (file.descriptor, file.storage_type)
+				Result := file.retrieved
 				file.close
 			end
 		end
 
 feature -- Element change
 
-	basic_store (file: IO_MEDIUM) is
-			-- Produce on `file' an external representation of the
+	basic_store (medium: IO_MEDIUM) is
+			-- Produce on `medium' an external representation of the
 			-- entire object structure reachable from current object.
 			-- Retrievable within current system only.
 		require
-			file_not_void: file /= Void;
-			file_exists: file.exists;
-			file_is_open_write: file.is_open_write
-			file_is_binary: not file.is_plain_text
+			medium_not_void: medium /= Void;
+			medium_exists: medium.exists;
+			medium_is_open_write: medium.is_open_write
+			medium_supports_storable: medium.support_storable
 		do
-			c_basic_store (file.handle, $Current, file.storage_type)
+			medium.basic_store (Current)
 		end;
 
-	general_store (file: IO_MEDIUM) is
-			-- Produce on `file' an external representation of the
+	general_store (medium: IO_MEDIUM) is
+			-- Produce on `medium' an external representation of the
 			-- entire object structure reachable from current object.
 			-- Retrievable from other systems for same platform
 			-- (machine architecture).
@@ -82,26 +82,26 @@ feature -- Element change
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
 		require
-			file_not_void: file /= Void;
-			file_exists: file.exists;
-			file_is_open_write: file.is_open_write
-			file_is_binary: not file.is_plain_text
+			medium_not_void: medium /= Void;
+			medium_exists: medium.exists;
+			medium_is_open_write: medium.is_open_write
+			medium_supports_storable: medium.support_storable
 		do
-			c_general_store (file.handle, $Current, file.storage_type)
+			medium.general_store (Current)
 		end
 
-	independent_store (file: IO_MEDIUM) is
-			-- Produce on `file' an external representation of the
+	independent_store (medium: IO_MEDIUM) is
+			-- Produce on `medium' an external representation of the
 			-- entire object structure reachable from current object.
 			-- Retrievable from other systems for the same or other
 			-- platform (machine architecture).
 		require
-			file_not_void: file /= Void;
-			file_exists: file.exists;
-			file_is_open_write: file.is_open_write
-			file_is_binary: not file.is_plain_text
+			medium_not_void: medium /= Void;
+			medium_exists: medium.exists;
+			medium_is_open_write: medium.is_open_write
+			medium_supports_storable: medium.support_storable
 		do
-			c_independent_store (file.handle, $Current, file.storage_type)
+			medium.independent_store (Current)
 		end
 
 	store_by_name (file_name: STRING) is
@@ -121,51 +121,13 @@ feature -- Element change
 			if (file.exists and then file.is_writable) or else
 				(file.is_creatable) then
 				file.open_write
-				c_general_store (file.descriptor, $Current, file.storage_type)
+				file.general_store (Current)
 				file.close
 			else
 				a := ("write permission failure").to_c
 				eraise ($a, Io_exception)
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	c_retrieved (file_handle: INTEGER; file_storage_type: CHARACTER): STORABLE is
-			-- Object structured retrieved from file of pointer
-			-- `file_ptr'
-		external
-			"C"
-		alias
-			"eretrieve"
-		end;
-
-	c_basic_store (file_handle: INTEGER; object: POINTER; file_storage_type: CHARACTER) is
-			-- Store object structure reachable form current object
-			-- in file pointer `file_ptr'.
-		external
-			"C"
-		alias
-			"estore"
-		end;
-
-	c_general_store (file_handle: INTEGER; object: POINTER; file_storage_type: CHARACTER) is
-			-- Store object structure reachable form current object
-			-- in file pointer `file_ptr'.
-		external
-			"C"
-		alias
-			"eestore"
-		end;
-
-	c_independent_store (file_handle: INTEGER; object: POINTER; file_storag_type: CHARACTER) is
-			-- Store object structure reachable form current object
-			-- in file pointer `file_ptr'.
-		external
-			"C"
-		alias
-			"sstore"
-		end;
 
 end -- class STORABLE
 

@@ -1,0 +1,44 @@
+//--------------------------------------------------------------------------
+//
+//  EiffelCOM
+//  Copyright (C) Interactive Software Engineering, 1999.
+//
+//  File: dispsum.idl
+//
+//  Contents: dispsum interface definition
+//
+//
+//--------------------------------------------------------------------------
+
+import "oaidl.idl";
+
+[
+	uuid(9A383B80-AA39-11d2-B961-00403392AC95), 
+	version(1.0)
+]
+dispinterface dispsum {
+	properties:
+	  
+	methods:
+		[id(1)] int sum (int arg1, int arg2);		
+};
+
+[
+	uuid(0B72E240-AA36-11D2-B961-00403392AC95),
+	helpstring ("EiffelCOM ActivX example"),
+	version (1.0), 
+	control
+]
+library SUMlib
+{
+	importlib ("stdole32.tlb");
+	
+	[
+		uuid(2DB76EC0-9672-11D2-B961-00403392AC95),
+		control
+	]
+	coclass sum
+	{
+		interface dispsum;
+	}
+}

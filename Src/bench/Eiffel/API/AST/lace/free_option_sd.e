@@ -68,18 +68,20 @@ feature -- Properties
 	arguments,
 	array_optimization,
 	check_vape,
-	collect,
 	console_application,
 	dead_code,
 	document,
 	dynamic_runtime,
 	exception_stack_managed,
+	force_recompile,
+	generate_eac_metadata,
 	msil_generation,
 	msil_generation_type,
 	msil_culture,
 	msil_version,
 	msil_assembly_compatibility,
 	msil_full_name,
+	namespace,
 	il_verifiable,
 	cls_compliant,
 	dotnet_naming_convention,
@@ -93,10 +95,10 @@ feature -- Properties
 	profile,
 	server_file_size,
 	shared_library_definition,
+	use_cluster_name_as_namespace,
+	use_all_cluster_name_as_namespace,
 	working_directory,
-	force_recompile,
-	generate_eac_metadata: INTEGER is unique
-	free_option_count: INTEGER is 35
+	free_option_count: INTEGER is unique
 
 feature -- Access
 
@@ -136,39 +138,41 @@ feature {NONE} -- Codes and names.
 	option_codes: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			!!Result.make (free_option_count);
-			Result.force (dead_code, "dead_code_removal");
-			Result.force (array_optimization, "array_optimization");
-			Result.force (inlining, "inlining");
-			Result.force (inlining_size, "inlining_size");
-			Result.force (collect, "collect");
-			Result.force (exception_stack_managed, "exception_trace");
-			Result.force (profile, "profile");
-			Result.force (override_cluster, "override_cluster");
+			create Result.make (free_option_count);
 			Result.force (address_expression, "address_expression");
-			Result.force (document, "document");
-			Result.force (line_generation, "line_generation")
-			Result.force (multithreaded, "multithreaded")
-			Result.force (dynamic_runtime, "dynamic_runtime")
-			Result.force (console_application, "console_application")
-			Result.force (shared_library_definition, "shared_library_definition")
-			Result.force (check_vape, "check_vape");
-			Result.force (server_file_size, "server_file_size");
-			Result.force (java_generation, "java_generation")
-			Result.force (msil_generation, "msil_generation");
-			Result.force (msil_generation_type, "msil_generation_type");
-			Result.force (msil_culture, "msil_culture");
-			Result.force (msil_version, "msil_version");
-			Result.force (il_verifiable, "il_verifiable");
-			Result.force (msil_assembly_compatibility, "msil_assembly_compatibility");
-			Result.force (msil_full_name, "msil_full_name");
-			Result.force (ise_gc_runtime, "ise_gc_runtime");
 			Result.force (arguments, "arguments");
-			Result.force (working_directory, "working_directory");
+			Result.force (array_optimization, "array_optimization");
+			Result.force (check_vape, "check_vape");
+			Result.force (console_application, "console_application")
+			Result.force (cls_compliant, "cls_compliant")
+			Result.force (dead_code, "dead_code_removal");
+			Result.force (document, "document");
+			Result.force (dotnet_naming_convention, "dotnet_naming_convention")
+			Result.force (dynamic_runtime, "dynamic_runtime")
+			Result.force (exception_stack_managed, "exception_trace");
 			Result.force (force_recompile, "force_recompile");
 			Result.force (generate_eac_metadata, "generate_eac_metadata");
-			Result.force (cls_compliant, "cls_compliant")
-			Result.force (dotnet_naming_convention, "dotnet_naming_convention")
+			Result.force (il_verifiable, "il_verifiable");
+			Result.force (inlining, "inlining");
+			Result.force (inlining_size, "inlining_size");
+			Result.force (ise_gc_runtime, "ise_gc_runtime");
+			Result.force (java_generation, "java_generation")
+			Result.force (line_generation, "line_generation")
+			Result.force (msil_assembly_compatibility, "msil_assembly_compatibility");
+			Result.force (msil_culture, "msil_culture");
+			Result.force (msil_full_name, "msil_full_name");
+			Result.force (msil_generation, "msil_generation");
+			Result.force (msil_generation_type, "msil_generation_type");
+			Result.force (msil_version, "msil_version");
+			Result.force (multithreaded, "multithreaded")
+			Result.force (namespace, "namespace")
+			Result.force (override_cluster, "override_cluster");
+			Result.force (profile, "profile");
+			Result.force (server_file_size, "server_file_size");
+			Result.force (shared_library_definition, "shared_library_definition")
+			Result.force (working_directory, "working_directory");
+			Result.force (use_cluster_name_as_namespace, "use_cluster_name_as_namespace")
+			Result.force (use_all_cluster_name_as_namespace, "use_all_cluster_name_as_namespace") 
 		end
 
 feature {COMPILER_EXPORTER}
@@ -197,7 +201,6 @@ feature {COMPILER_EXPORTER}
 	process_system_level_options (value: OPT_VAL_SD) is
 		local
 			error_found: BOOLEAN;
-			vd37: VD37;
 			i: INTEGER;
 			string_value: STRING;
 			path: DIRECTORY_NAME
@@ -278,10 +281,6 @@ feature {COMPILER_EXPORTER}
 					else
 						error_found := True;
 					end;
-
-				when collect then
-					create vd37;
-					Error_handler.insert_warning (vd37);
 
 				when exception_stack_managed then
 					if value.is_no then
@@ -460,7 +459,7 @@ feature {COMPILER_EXPORTER}
 
 				when document then
 					string_value := value.value;
-					!! path.make_from_string (string_value);
+					create path.make_from_string (string_value);
 					if path.is_valid then
 						System.set_document_path (path)
 					else

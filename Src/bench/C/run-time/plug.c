@@ -436,40 +436,52 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 	RT_GC_WEAN(obj);
 }
 
-#ifndef WORKBENCH
+/*
+doc:	<routine name="cr_exp" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Create a new expanded object of type `type' and call its associated creation procedure.</summary>
+doc:		<param name="type" type="uint32">An Eiffel expanded object type.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
 
 EIF_REFERENCE cr_exp(uint32 type)
 	/* Create an instance of expanded object of dynamic type id `type'. */
 {
+	EIF_GET_CONTEXT
 	EIF_REFERENCE result;
-	void *(*creation_procedure)(EIF_REFERENCE);	/* Initialization routine to be called */
 
 	result = RTLN(type);
+	RT_GC_PROTECT(result);	/* Protect address in case it moves */
+	init_exp (result);
+	RT_GC_WEAN(result);            /* Remove protection */
 
-	creation_procedure = (void *(*) (EIF_REFERENCE)) egc_exp_create[Deif_bid(type)];
-	if (creation_procedure) {
-		EIF_GET_CONTEXT
-		RT_GC_PROTECT(result);	/* Protect address in case it moves */
-		creation_procedure (result);
-		RT_GC_WEAN(result);            /* Remove protection */
-	}
 	return result;
 }
 
-#else
+/*
+doc:	<routine name="init_exp" return_type="void" export="public">
+doc:		<summary>Initialize object `obj' by calling associated creation procedure.</summary>
+doc:		<param name="obj" type="EIF_REFERENCE">An Eiffel expanded object.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
 
-EIF_REFERENCE cr_exp(uint32 type)
-										/* Dynamic type */
+void init_exp (EIF_REFERENCE obj)
 {
-	/* Creates expanded object of type `type'. If it has
-	 * a creation routine then call it.
-	 */
+#ifndef WORKBENCH
+	void *(*creation_procedure)(EIF_REFERENCE);	/* Initialization routine to be called */
 
-	EIF_REFERENCE result;
+	creation_procedure = (void *(*) (EIF_REFERENCE)) egc_exp_create[Dtype(obj)];
+	if (creation_procedure) {
+		creation_procedure (obj);
+	}
+#else
+	int dtype = Dtype(obj);
 	register1 struct cnode *exp_desc;	/* Expanded object description */
+	exp_desc = &System(Dtype(obj));
 
-	result = emalloc(type);
-	exp_desc = &System(Deif_bid(type));
 	if (exp_desc->cn_routids) {
 		int32 feature_id;              	/* Creation procedure feature id */
 		int32 static_id;               	/* Creation procedure static id */
@@ -477,10 +489,7 @@ EIF_REFERENCE cr_exp(uint32 type)
 		feature_id = exp_desc->cn_creation_id;
 		static_id = exp_desc->cn_static_id;	
 		if (feature_id) {					/* Call creation routine */
-			EIF_GET_CONTEXT
-			RT_GC_PROTECT(result);	/* Protect address in case it moves */
-			wexp(static_id, feature_id, Deif_bid(type), result);
-			RT_GC_WEAN(result);            /* Remove protection */
+			wexp(static_id, feature_id, dtype, obj);
 		}
 	} else {							/* precompiled creation routine */
 		int32 origin;					/* Origin class id */       
@@ -489,15 +498,13 @@ EIF_REFERENCE cr_exp(uint32 type)
 		origin = exp_desc->cn_creation_id;
 		offset = exp_desc->cn_static_id;
 		if (origin) {						/* Call creation routine */
-			EIF_GET_CONTEXT
-			RT_GC_PROTECT(result);	/* Protect address in case it moves */
-			wpexp(origin, offset, Deif_bid(type), result);
-			RT_GC_WEAN(result);            /* Remove protection */
+			wpexp(origin, offset, dtype, obj);
 		}
 	}
-	return result;
+#endif
 }
 
+#ifdef WORKBENCH
 /*
  * Standard initialization routine for composite objects in
  * workbench mode

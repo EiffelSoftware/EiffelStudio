@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 			s_system_data.set_class_view_number (Old_case_info.class_view_number);
 			s_system_data.set_class_id_number (System.class_counter.total_count);
 			s_system_data.set_cluster_view_number (Old_case_info.cluster_view_number);
-			s_system_data.set_list_class_with_string(system)
+			set_list_class_with_string(s_system_data)
 			Case_file_server.tmp_save_system (s_system_data);
 			Reverse_engineering_window.put_case_message 
 				("Saving EiffelCase project to CASEGEN directory.");
@@ -357,6 +357,44 @@ feature {NONE} -- Implementation
 			end;
 			output_window.new_line
 		end;
+
+	set_list_class_with_string (s_system_data: S_SYSTEM_DATA) is
+		local
+			a_class: CLASS_C
+			i, j, nb: INTEGER
+			class_array: ARRAY [CLASS_C]
+			classes: CLASS_C_SERVER
+			cl_counter : CLASS_COUNTER
+			dummy : S_SYSTEM_DATA_DUMMY
+			hyper_system_classes: HASH_TABLE [STRING, INTEGER]
+		do
+			classes := system.classes
+			cl_counter := system.class_counter
+			!! hyper_system_classes.make(classes.count)
+			!! dummy.make
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				class_array := classes.item_for_iteration
+				nb := cl_counter.item (classes.key_for_iteration).count
+				from
+					j := 1
+				until
+					j > nb
+				loop
+					a_class := class_array.item (j)
+					j := j + 1
+					if a_class /= Void then
+						hyper_system_classes.put (clone(a_class.lace_class.name),
+							dummy.class_id(a_class.id))
+					end
+				end
+				classes.forth
+			end
+			s_system_data.set_hyper (hyper_system_classes)
+		end
 
 	remove_old_classes is
 			-- Remove class information from disk which have been

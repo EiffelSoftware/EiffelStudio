@@ -89,14 +89,14 @@ feature {CASE_CLUSTER_INFO}
 			if fi.exists then
 				fi.open_read
 				fi.read_line
-				st := clone ( fi.last_string)
+				st := fi.last_string
 				if st.is_integer then
 					s_class_data.set_x ( st.to_integer )
 				else
 					error2 := TRUE
 				end
 				fi.read_line
-				st := clone (fi.last_string)
+				st := fi.last_string
 				if st.is_integer then
 					s_class_data.set_y ( st.to_integer)
 				else
@@ -105,7 +105,7 @@ feature {CASE_CLUSTER_INFO}
 				fi.read_line
 				s_class_data.set_color (fi.last_string)
 				fi.read_line
-				s_class_data.set_hidden ( fi.last_string)
+				s_class_data.set_hidden (fi.last_string.to_boolean)
 				add_handles_to_links(fi)
 				fi.close
 			end

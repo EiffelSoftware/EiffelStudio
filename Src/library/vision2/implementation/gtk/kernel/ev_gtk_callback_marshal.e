@@ -189,7 +189,8 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 				Result := dimension_tuple
 			when
 				Gdk_button_press_enum,
-				Gdk_2button_press_enum
+				Gdk_2button_press_enum,
+				Gdk_3button_press_enum
 			then
 				Result := [
 					feature {EV_GTK_EXTERNALS}.gdk_event_button_struct_type (gdk_event),
@@ -217,12 +218,6 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
 					feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				]
-
-			when
-				Gdk_3button_press_enum
-			then
-					-- gdk_event type GdkEventButton
-					-- Ignored
 			when
 				Gdk_key_press_enum,
 				Gdk_key_release_enum

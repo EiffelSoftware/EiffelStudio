@@ -32,7 +32,7 @@
 			<item>
 				<bold>Windows</bold>
 				<list ordered="false">
-					<item/>
+					<item><bold>EV_MULTI_COLUMN_LIST_IMP</bold> - calling `column_width' after calling `resize_column_to_content' did not return the correct result but instead the previously set column width.</item>
 				</list>
 			</item>
 			<item>

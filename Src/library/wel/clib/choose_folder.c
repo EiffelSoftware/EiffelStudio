@@ -25,6 +25,7 @@ int CALLBACK cwel_browse_callback_proc(HWND hwnd, UINT uMsg, LPARAM lParam, LPAR
 struct EIF_BROWSE {
 	LPBROWSEINFO info;
 	LPTSTR name;
+	int cancelled;
 };
 
 rt_private DWORD WINAPI c_browse_for_folder (LPVOID param)
@@ -47,36 +48,39 @@ rt_private DWORD WINAPI c_browse_for_folder (LPVOID param)
 				imalloc->lpVtbl->Free (imalloc, id_list);
 			}
 		}
+	} else {
+		browse->cancelled = 1;
 	}
 
 		/* No need for COM anymore */
 	CoUninitialize();
 	ExitThread(0);
 
-	return 0; 
+	return 0;
 }
 
-void cwel_sh_browse_for_folder (LPBROWSEINFO info, LPTSTR name)
+int cwel_sh_browse_for_folder (LPBROWSEINFO info, LPTSTR name)
 	/* Create new thread in which dialog will be shown with proper appartment setting
 	 * for COM. See documentation for SHBrowseForFolder. */
 {
 	DWORD dwThreadId;
 	struct EIF_BROWSE browse_info;
-	HANDLE hThread; 
+	HANDLE hThread;
 	DWORD res;
 	MSG msg;
 
 	browse_info.info = info;
 	browse_info.name = name;
+	browse_info.cancelled = 0;
 
-	hThread = CreateThread( 
+	hThread = CreateThread(
 		NULL,			/* default security attributes */
 		0,				/* use default stack size */
 		c_browse_for_folder,		/* thread function */
 		&browse_info,	/* argument to thread function */
 		0,				/* use default creation flags */
 		&dwThreadId);	/* returns the thread identifier */
- 
+
 		/* Check the return value for success. */
 	if (hThread) {
 			/* The following code enable us to wait until user close
@@ -102,6 +106,8 @@ void cwel_sh_browse_for_folder (LPBROWSEINFO info, LPTSTR name)
 			/* No need for the Handle anymore. */
 		CloseHandle(hThread);
 	}
+
+	return browse_info.cancelled;
 }
 
 /*

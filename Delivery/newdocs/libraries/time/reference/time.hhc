@@ -1,4 +1,4 @@
-	<LI><OBJECT type="text/sitemap"><param name="Name" value="reference"><param name="Local" value="libraries\time\reference\index.html"></OBJECT>
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="EiffelTime Reference"><param name="Local" value="libraries\time\reference\index.html"></OBJECT>
 	<UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="ABSOLUTE"><param name="Local" value="libraries\time\reference\absolute_chart.html"></OBJECT>
 		<UL>

@@ -15,10 +15,19 @@ inherit
 		end
 
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 
 	GB_SHARED_HISTORY
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -78,12 +87,21 @@ feature {NONE} -- Implementation
 			object_not_void: an_object /= Void
 		local
 			command_delete: GB_COMMAND_DELETE_OBJECT
+			command_delete_window: GB_COMMAND_DELETE_WINDOW_OBJECT
 			delete_position: INTEGER
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			delete_position := an_object.parent_object.layout_item.index_of (an_object.layout_item, 1)
-			create command_delete.make (an_object.parent_object, an_object, delete_position)
-			history.cut_off_at_current_position
-			command_delete.execute
+			titled_window_object ?= an_object
+			if titled_window_object = Void then
+				delete_position := an_object.parent_object.layout_item.index_of (an_object.layout_item, 1)
+				create command_delete.make (an_object.parent_object, an_object, delete_position)
+				history.cut_off_at_current_position
+				command_delete.execute
+			else
+				create command_delete_window.make (titled_window_object)
+				history.cut_off_at_current_position
+				command_delete_window.execute
+			end
 			--| FIXME we have not really performed the delete, as the object still exists.
 			--| Need to clean up.
 		end
@@ -103,7 +121,7 @@ feature {NONE} -- Implementation
 			-- is by looking at the parent of the object. If it is Void then
 			-- we should not be deleting the object.
 		do
-			Result := an_object.parent_object /= Void
+			Result := an_object.layout_item /= Void--an_object.parent_object /= Void
 		end
 
 end -- class GB_DELETE_OBJECT

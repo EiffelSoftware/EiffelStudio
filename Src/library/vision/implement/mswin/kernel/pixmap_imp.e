@@ -66,6 +66,8 @@ feature -- Input
 		local
 			file: RAW_FILE
 			xbm: X_BITMAP_WINDOWS
+			msg_temp: STRING
+			msg_box: WEL_MSG_BOX
 		do
 			!! file.make (a_file_name)
 			is_valid := false
@@ -95,22 +97,32 @@ feature -- Input
 					elseif file.laststring.is_equal ("%U%U") or file.laststring.is_equal ("RI") then
 						-- Icon, cursor or ANI cursor
 					else
-						io.error.putstring ("Unable to determine type for pixmap is file ")
-						io.error.putstring (a_file_name)
-						io.error.new_line
+						!! msg_temp.make (0)
+						msg_temp.append ("Unable to determine type for pixmap is file ")
+						msg_temp.append (a_file_name)
+						msg_temp.append (".%N")
+						!! msg_box.make
+						msg_box.error_message_box (Void, msg_temp, "Error") 
 					end
 				else
-					io.error.putstring ("Unable to read pixmap ")
-					io.error.putstring (a_file_name)
-					io.error.new_line
+					!! msg_temp.make (0)
+					msg_temp.append ("Unable to read pixmap ")
+					msg_temp.append (a_file_name)
+					msg_temp.append (".%N")
+					!! msg_box.make
+					msg_box.error_message_box (Void, msg_temp, "Error") 
 				end
 				if hot_x = 0 and then hot_y = 0 then
 					hot_x := width // 2
 					hot_y := height // 2
 				end
 			else
-				io.error.putstring ("Unable to read pixmap ")
-				io.error.putstring (a_file_name)
+				!! msg_temp.make (0)
+				msg_temp.append ("Pixmap file ")
+				msg_temp.append (a_file_name)
+				msg_temp.append (" doesn't exist.%N")
+				!! msg_box.make
+				msg_box.warning_message_box (Void, msg_temp, "Warning") 
 			end
 			last_operation_correct := is_valid
 		end

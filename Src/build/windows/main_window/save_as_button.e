@@ -3,7 +3,7 @@ inherit
 
 	CREATE_PROJ_BUTTON
 		redefine
-			focus_string, symbol, popup_window
+			focus_string, symbol, popup_window, app_not_save_qu
 		end;
 	WINDOWS;
 
@@ -23,6 +23,10 @@ feature {NONE} -- Focusable
 			Result := Pixmaps.save_as_pixmap
 		end;
 
+	app_not_save_qu: STRING is
+		do
+			Result := Messages.save_as_project_qu
+		end;
 
 	popup_window is
 		local

@@ -122,6 +122,7 @@ feature
 			-- Print expression value
 		local
 			target_type, source_type: TYPE_I;
+			l_basic: BASIC_I
 			target_ctype, source_ctype: TYPE_C;
 			cast_generated: BOOLEAN;
 			buf: GENERATION_BUFFER
@@ -135,19 +136,29 @@ feature
 					-- The callee is responsible for cloning the reference.
 				expression.print_register;
 			elseif target_type.is_basic then
-					-- Ensure correct value in case the target is a double
-					-- and the source an int.
-				target_ctype := target_type.c_type;
-				source_ctype := source_type.c_type;
-				if source_ctype.level /= target_ctype.level then
-					cast_generated := True;
-					target_ctype.generate_cast (buf);
-					buf.putchar('(');
-				end;
-				expression.print_register;
-				if cast_generated then
-					buf.putchar(')');
-				end;
+				if source_type.is_none then
+						-- We pass `Void' as argument of a routine which expects a basic type,
+						-- since the exception is triggered before the call (see `generate')
+						-- our goal is to generate code that compiles, therefore we generate
+						-- the value by default.
+					l_basic ?= target_type
+					check l_basic_not_void: l_basic /= Void end
+					l_basic.generate_default_value (buf)
+				else
+						-- Ensure correct value in case the target is a double
+						-- and the source an int.
+					target_ctype := target_type.c_type;
+					source_ctype := source_type.c_type;
+					if source_ctype.level /= target_ctype.level then
+						cast_generated := True;
+						target_ctype.generate_cast (buf);
+						buf.putchar('(');
+					end;
+					expression.print_register;
+					if cast_generated then
+						buf.putchar(')');
+					end;
+				end
 			else
 					-- In that case, we have been careful not to propagate any
 					-- 'No_register' value. However, this does not mean there

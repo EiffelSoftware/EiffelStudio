@@ -665,8 +665,6 @@ feature -- Element change
 
 	put_origin_comment is
 			-- Put original comment.
-		local
-			c: CLASS_C
 		do
 			if global_adapt.source_enclosing_class 
 				/= global_adapt.target_enclosing_class
@@ -674,8 +672,7 @@ feature -- Element change
 				put_text_item (ti_Dashdash)
 				text.add_space
 				put_comment_text ("(from ")
-				c := global_adapt.source_enclosing_class
-				put_classi (c.lace_class)
+				put_classi (global_adapt.source_enclosing_class.lace_class)
 				put_comment_text (")")
 				new_line
 			end
@@ -1030,7 +1027,6 @@ feature -- Implementation
 			item: BASIC_TEXT
 			f_name: STRING
 			adapt: like local_adapt
-			c: CLASS_C
 		do
 			if format.dot_needed then
 				text.add (ti_Dot)
@@ -1047,8 +1043,7 @@ feature -- Implementation
 				feature_i := adapt.target_feature
 				f_name := adapt.final_name
 				if feature_i /= Void and then in_bench_mode then
-					c := adapt.target_class
-					!FEATURE_TEXT! item.make (feature_i.api_feature (c.id), f_name)
+					!FEATURE_TEXT! item.make (feature_i.api_feature (adapt.target_class.id), f_name)
 				else			
 					!! item.make (f_name)
 				end
@@ -1090,7 +1085,6 @@ feature -- Implementation
 			f_name: STRING
 			adapt: like local_adapt
 			is_key: BOOLEAN
-			c: CLASS_C
 		do
 			if is_for_case then
 				if not tabs_emitted then
@@ -1113,22 +1107,19 @@ feature -- Implementation
 				end
 				last_was_printed := True
 				if feature_i /= Void and then in_bench_mode then
-					c := adapt.target_class
-					!! ot.make (feature_i.api_feature (c.id), f_name)
+					!! ot.make (feature_i.api_feature (adapt.target_class.id), f_name)
 					if is_key then
 						ot.set_is_keyword
 					end
 					item := ot
-					text.insert_two (format.insertion_point, item, ti_Space)
 				else
 					if is_key then
 						!KEYWORD_TEXT! item.make (f_name)
 					else
 						!SYMBOL_TEXT! item.make (f_name)
 					end
-					text.go_to (format.insertion_point)
-					text.add (item)
 				end
+				text.insert_two (format.insertion_point, item, ti_Space)
 				last_was_printed := True
 			end
 		end
@@ -1188,7 +1179,6 @@ feature -- Implementation
 			item: BASIC_TEXT
 			ot: OPERATOR_TEXT
 			is_key: BOOLEAN
-			c: CLASS_C
 		do
 			f_name := adapt.final_name
 				-- Use source feature for stone.
@@ -1197,8 +1187,7 @@ feature -- Implementation
 			end
 			feature_i := adapt.target_feature
 			if feature_i /= Void and then in_bench_mode then
-				c := adapt.target_class
-				!! ot.make (feature_i.api_feature (c.id), f_name)
+				!! ot.make (feature_i.api_feature (adapt.target_class.id), f_name)
 				if is_key then
 					ot.set_is_keyword
 				end

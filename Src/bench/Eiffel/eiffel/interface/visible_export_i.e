@@ -18,7 +18,7 @@ feature
 			-- Is feature name `feat_name' visible in context 
 			-- of class `class_id'?
 		local
-			creators: EXTEND_TABLE [EXPORT_I, STRING]
+			creators: HASH_TABLE [EXPORT_I, STRING]
 		do
 			Result := feat.export_status.is_all
 			if not Result then

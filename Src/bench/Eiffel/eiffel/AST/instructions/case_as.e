@@ -82,19 +82,60 @@ feature {NONE} -- Type check, byte code production, dead code removal
 	byte_node: CASE_B is
 			-- Associated byte code
 		local
-			tmp: BYTE_LIST [BYTE_NODE]
-			tmp2: BYTE_LIST [BYTE_NODE]
+			intervals: SORTABLE_ARRAY [INTERVAL_B]
+			interval_b: INTERVAL_B
+			next_interval_b: INTERVAL_B
+			tmp: BYTE_LIST [INTERVAL_B]
+			i: INTEGER
+			j: INTEGER
+			n: INTEGER
 		do
-			tmp := interval.byte_node
-			tmp := tmp.remove_voids
-			if compound /= Void then
-				tmp2 := compound.byte_node
+				-- Collect all intervals in an array
+			from
+				n := interval.count
+				i := n
+				j := n + 1
+				create intervals.make (1, i)
+			until
+				i <= 0
+			loop
+				interval_b := interval.i_th (i).byte_node
+				if interval_b /= Void then
+					j := j - 1
+					intervals.put (interval_b, j)
+				end
+				i := i - 1
 			end
-			if tmp /= Void then
+			if j <= n then
+					-- Array of intervals is not empty
+					-- Remove voids (if any)
+				intervals.conservative_resize (j, n)
+					-- Sort an array
+				intervals.sort
+					-- Copy intervals to `tmp' merging adjacent intervals
+				from
+					create tmp.make (n - j + 1)
+					interval_b := intervals.item (j)
+					tmp.extend (interval_b)
+					j := j + 1
+				until
+					j > n
+				loop
+					next_interval_b := intervals.item (j)
+					if interval_b.upper.is_next (next_interval_b.lower) then
+							-- Merge intervals
+						interval_b.set_upper (next_interval_b.upper)
+					else
+							-- Add new interval
+						interval_b := next_interval_b
+						tmp.extend (interval_b)
+					end
+					j := j + 1
+				end
 				create Result
 				Result.set_interval (tmp)
 				if compound /= Void then
-					Result.set_compound (tmp2)
+					Result.set_compound (compound.byte_node)
 				end
 				Result.set_line_number (line_number)
 			end

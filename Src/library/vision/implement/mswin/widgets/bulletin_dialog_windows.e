@@ -44,6 +44,7 @@ inherit
 			set_enclosing_size,
 			resize_for_shell,
 			default_style,
+			default_ex_style,
 			destroy,
 			height,
 			minimal_height,

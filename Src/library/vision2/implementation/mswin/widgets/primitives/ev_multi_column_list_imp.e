@@ -27,7 +27,8 @@ inherit
 			on_left_button_double_click,
 			on_middle_button_double_click,
 			on_right_button_double_click,
-			pnd_press
+			pnd_press,
+			escape_pnd
 		redefine
 			on_mouse_move,
 			on_key_down,
@@ -1188,6 +1189,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.102  2001/06/14 00:09:13  rogers
+--| Undefined the version of escape_pnd inherited from EV_PRIMITIVE_IMP.
+--|
 --| Revision 1.101  2001/06/07 23:08:16  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -25,7 +25,8 @@ inherit
 			on_left_button_double_click,
 			on_middle_button_double_click,
 			on_right_button_double_click,
-			pnd_press
+			pnd_press,
+			escape_pnd
 		redefine
 			on_mouse_move,
 			on_key_down,
@@ -684,6 +685,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.72  2001/06/14 00:09:14  rogers
+--| Undefined the version of escape_pnd inherited from EV_PRIMITIVE_IMP.
+--|
 --| Revision 1.71  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

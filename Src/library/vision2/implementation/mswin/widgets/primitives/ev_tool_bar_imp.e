@@ -18,7 +18,7 @@ inherit
 			on_right_button_down, on_left_button_down, on_middle_button_down,
  			on_left_button_up, on_left_button_double_click,
  			on_middle_button_double_click, on_right_button_double_click,
- 			minimum_width, minimum_height, pnd_press
+ 			minimum_width, minimum_height, pnd_press, escape_pnd
 		redefine
 			parent_imp, wel_move_and_resize, on_mouse_move, on_key_down,
 			destroy, interface, initialize, on_left_button_double_click,
@@ -989,6 +989,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.69  2001/06/14 00:09:13  rogers
+--| Undefined the version of escape_pnd inherited from EV_PRIMITIVE_IMP.
+--|
 --| Revision 1.68  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

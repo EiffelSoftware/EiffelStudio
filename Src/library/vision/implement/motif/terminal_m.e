@@ -4,11 +4,19 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TERMINAL_M 
+deferred class TERMINAL_M 
 
 inherit 
 
+	FONTABLE_M
+		rename
+			set_font as unused_set_font,
+			font as unused_font
+		end;
 	BULLETIN_M
+		undefine
+			update_other_bg_color, update_other_fg_color
+		end
 
 feature {TERMINAL_OUI}
 
@@ -19,127 +27,107 @@ feature {TERMINAL_OUI}
 
 feature 
 
-	is_font_defined (font_name: STRING): BOOLEAN is
-			-- Is `font_name' defined for current message?
-		require
-			font_name_not_void: not (font_name = Void)
-		do
-		end; -- is_font_defined
-
-	set_label_font (a_font_name: STRING) is
+	set_label_font (a_font: FONT) is
 			-- Set font of every labels to `a_font_name'.
-		require
-			font_name_not_void: not (a_font_name = Void);
-			font_name_defined: is_font_defined (a_font_name)
 		local
-			new_font_pointer: POINTER
+			font_implementation: FONT_X
 		do
-			if not a_font_name.is_equal (label_font_name) then
-				new_font_pointer := resource_font (a_font_name, MlabelFontList, label_font_pointer);
-				if new_font_pointer /= label_font_pointer then
-					label_font_name := clone (a_font_name);
-					label_font_pointer := new_font_pointer
-				end
-			end
-		end; -- set_label_font
+			if label_font /= Void then
+				font_implementation ?= label_font.implementation;
+				font_implementation.remove_object (Current)
+			end;
+			label_font := a_font;
+			font_implementation ?= a_font.implementation;
+			font_implementation.put_object (Current);
+			update_label_font (font_implementation.resource (screen))
+		end;
 
-	set_button_font (a_font_name: STRING) is
+	set_button_font (a_font: FONT) is
 			-- Set font of every buttons to `a_font_name'.
-		require
-			font_name_not_void: not (a_font_name = Void);
-			font_name_defined: is_font_defined (a_font_name)
 		local
-			new_font_pointer: POINTER
+			font_implementation: FONT_X
 		do
-			if not a_font_name.is_equal (button_font_name) then
-				new_font_pointer := resource_font (a_font_name, MbuttonFontList, button_font_pointer);
-				if new_font_pointer /= button_font_pointer then
-					button_font_name := clone (a_font_name);
-					button_font_pointer := new_font_pointer
-				end
-			end
-		end; -- set_button_font
+			if button_font /= Void then
+				font_implementation ?= button_font.implementation;
+				font_implementation.remove_object (Current)
+			end;
+			button_font := a_font;
+			font_implementation ?= a_font.implementation;
+			font_implementation.put_object (Current);
+			update_button_font (font_implementation.resource (screen))
+		end;
 
-	set_text_font (a_font_name: STRING) is
+	set_text_font (a_font: FONT) is
 			-- Set font of every text to `a_font_name'.
-		require
-			font_name_not_void: not (a_font_name = Void);
-			font_name_defined: is_font_defined (a_font_name)
 		local
-			new_font_pointer: POINTER
+			font_implementation: FONT_X
 		do
-			if not a_font_name.is_equal (text_font_name) then
-				new_font_pointer := resource_font (a_font_name, MtextFontList, text_font_pointer);
-				if new_font_pointer /= text_font_pointer then
-					text_font_name := clone (a_font_name);
-					text_font_pointer := new_font_pointer
-				end
-			end
-		end; -- set_text_font
-
-	
-feature {NONE}
-
-	label_font_name: STRING;
-			-- Font name specified for labels
-
-	button_font_name: STRING;
-			-- Font name specified for buttons
-
-	text_font_name: STRING;
-			-- Font name specified for text
-
-	label_font_pointer: POINTER;
-			-- Font pointer of label font
-
-	button_font_pointer: POINTER;
-			-- Font pointer of button font
-
-	text_font_pointer: POINTER;
-			-- Font pointer of text font
-
+			if text_font /= Void then
+				font_implementation ?= text_font.implementation;
+				font_implementation.remove_object (Current)
+			end;
+			text_font := a_font;
+			font_implementation ?= a_font.implementation;
+			font_implementation.put_object (Current);
+			update_text_font (font_implementation.resource (screen))
+		end; 
 	
 feature 
 
-	label_font: STRING is
+	label_font: FONT;
 			-- Font name specified for labels
-		do
-			Result := label_font_name
-		end; -- label_font
 
-	button_font: STRING is
-			-- Font name specified for buttons
-		do
-			Result := button_font_name
-		end; -- button_font_name
+	button_font: FONT;
+			-- Font specified for buttons
 
-	text_font: STRING is
-			-- Font name specified for text
-		do
-			Result := text_font_name
-		end; -- text_font
-
+	text_font: FONT;
+			-- Font specified for text
 	
+feature {NONE} -- Setting fonts
+
+	update_text_font (f_ptr: POINTER) is
+		require
+			valid_f_ptr: f_ptr /= default_pointer
+		deferred
+		end;
+
+	update_label_font (f_ptr: POINTER) is
+		require
+			valid_f_ptr: f_ptr /= default_pointer
+		deferred
+		end;
+
+	update_button_font (f_ptr: POINTER) is
+		require
+			valid_f_ptr: f_ptr /= default_pointer
+		deferred
+		end;
+
 feature {NONE}
 
-	resource_font (a_font_name: STRING; a_font_resource: STRING; old_font_pointer: POINTER): POINTER is
-			-- Return a font pointer using name `font_name',  resource `a_font_resource'
-			-- and font_pointer `old_font_pointer'
+	set_primitive_font (w: POINTER; f_ptr: POINTER) is
+			-- Set primitive widget `w' to f_ptr (C type
+			-- is FontStruct).
 		require
-			font_name_not_void: not (a_font_name = Void);
-			font_resource_not_void: not (a_font_resource = Void)
-		local
-			ext_name_font, ext_name: ANY
+			valid_pointers: w /= default_pointer and then	
+					f_ptr /= default_pointer
 		do
-			ext_name_font := a_font_name.to_c;
-			ext_name := a_font_resource.to_c;
-			Result := get_font (screen_object, old_font_pointer, $ext_name_font, $ext_name)
-		end
+			set_motif_font (w, f_ptr, 
+					resource_name.to_c);
+		end;
+
+feature {NONE} -- Fontable_m features
+
+	resource_name: STRING is "fontList";
 
 feature {NONE} -- External features
 
-	get_font (scr_obj, old_font_ptr: POINTER; name1, name2: POINTER): POINTER is
-			-- (Have no idea on why the old_font_ptr is passed down)
+	xm_set_children_fg_color (pixel, widget: POINTER) is
+		external
+			"C"
+		end;
+
+	xm_set_children_bg_color (pixel, widget: POINTER) is
 		external
 			"C"
 		end;

@@ -11,7 +11,14 @@ feature {NONE}
 			Result := init_project_directory
 		end;
 
+	Precompilation_directory: PROJECT_DIR is
+			-- Shared precompilation directory
+		once
+			Result := init_precompilation_directory
+		end;
+
 	init_project_directory: PROJECT_DIR is do end;
+	init_precompilation_directory: PROJECT_DIR is do end;
 
 	Generation_path: STRING is
 			-- Path to the generation directory
@@ -55,6 +62,23 @@ feature {NONE}
 			Result.append (storing_name)
 		end;
 
-	storing_name: STRING is "/.workbench"
+	storing_name: STRING is "/.workbench";
+
+	Precompilation_path: STRING is
+			-- Path to the precompilation directory
+		once
+			!!Result.make (Precompilation_directory.name.count + 6);
+			Result.append (Precompilation_directory.name);
+			Result.append ("/COMP")
+		end;
+
+	Precompilation_file_name: STRING is
+			-- Full name of the file where the precompiled 
+			-- workbench is stored
+		once
+			!!Result.make (Precompilation_directory.name.count + 8);
+			Result.append (Precompilation_directory.name);
+			Result.append (storing_name)
+		end;
 
 end

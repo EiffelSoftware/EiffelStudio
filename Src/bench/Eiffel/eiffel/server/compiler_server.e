@@ -90,7 +90,9 @@ feature
 			info, old_info: SERVER_INFO;
 		do
 			server_file := Server_controler.file_of_id (current_id);
-			if server_file.count > Size_limit then
+			if (server_file.count > Size_limit) or else
+				server_file.precompiled
+			then 
 				set_current_id;
 				server_file := Server_controler.file_of_id (current_id);
 			end;

@@ -186,6 +186,9 @@ feature
 	max_class_id: INTEGER;
 			-- Greater class id: computed by class CLASS_SORTER
 
+	max_precompiled_id: INTEGER;
+			-- Greatest precompiled class id
+
 	freeze_set1: LINKED_SET [INTEGER];
 			-- List of class ids for which a source C compilation is
 			-- needed when freezing.
@@ -240,6 +243,9 @@ feature
 
 	current_class: CLASS_C;
 			-- Current processed class
+
+	precompilation: BOOLEAN;
+			-- Are we currently doing a precompilation?
 
 	make is
 			-- Create the system.
@@ -406,92 +412,94 @@ end;
 			types: TYPE_LIST;
 			local_cursor: LINKABLE [SUPPLIER_CLASS];
 		do
+			if (a_class.id > max_precompiled_id) then
 debug ("ACTIVITY");
 	io.error.putstring ("%TRemoving class ");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
 end;
-				-- Update control flags of the topological sort
-			moved := True;
+					-- Update control flags of the topological sort
+				moved := True;
 
-				-- Remove type check relations
-			if a_class.parents /= Void then
-				a_class.remove_relations;
-			end;
+					-- Remove type check relations
+				if a_class.parents /= Void then
+					a_class.remove_relations;
+				end;
 
-				-- Remove class `a_class' from the lists of changed classes
-			pass1_controler.remove_class (a_class);
-			pass2_controler.remove_class (a_class);
-			pass3_controler.remove_class (a_class);
-			pass4_controler.remove_class (a_class);
+					-- Remove class `a_class' from the lists of changed classes
+				pass1_controler.remove_class (a_class);
+				pass2_controler.remove_class (a_class);
+				pass3_controler.remove_class (a_class);
+				pass4_controler.remove_class (a_class);
 
-				-- Mark the class to remove uncompiled
-			a_class.lace_class.set_compiled_class (Void);
+					-- Mark the class to remove uncompiled
+				a_class.lace_class.set_compiled_class (Void);
+		
+					-- Remove its types
+				from
+					types := a_class.types;
+					types.start
+				until
+					types.offright
+				loop
+					class_types.put (Void, types.item.type_id);
+					types.forth;
+				end;
 
-				-- Remove its types
-			from
-				types := a_class.types;
-				types.start
-			until
-				types.offright
-			loop
-				class_types.put (Void, types.item.type_id);
-				types.forth;
-			end;
-
-				-- Remove if from the servers
-			id := a_class.id;
+					-- Remove if from the servers
+				id := a_class.id;
 
 debug ("ACTIVITY");
 	io.error.putstring ("%TRemoving id from servers: ");
 	io.error.putint (id);
 	io.error.new_line;
 end;
-			Tmp_ast_server.remove (id);
-			Tmp_feat_tbl_server.remove (id);
-			Tmp_class_info_server.remove (id);
-			Tmp_inv_ast_server.remove (id);
-			Tmp_depend_server.remove (id);
-			Tmp_m_rout_id_server.remove (id);
-			Tmp_m_desc_server.remove (id);
+				Tmp_ast_server.remove (id);
+				Tmp_feat_tbl_server.remove (id);
+				Tmp_class_info_server.remove (id);
+				Tmp_inv_ast_server.remove (id);
+				Tmp_depend_server.remove (id);
+				Tmp_m_rout_id_server.remove (id);
+				Tmp_m_desc_server.remove (id);
 
-			freeze_set1.remove_item (id);
-			freeze_set2.remove_item (id);
-			melted_set.remove_item (id);
-			id_array.put (Void, id);
+				freeze_set1.remove_item (id);
+				freeze_set2.remove_item (id);
+				melted_set.remove_item (id);
+				id_array.put (Void, id);
 
-				-- Remove client/supplier syntactical relations
-				-- and remove classes recursively
-			from
-				local_cursor := a_class.syntactical_suppliers.first_element;
-				if root_class /= Void then
-					compiled_root_class := root_class.compiled_class
+					-- Remove client/supplier syntactical relations
+					-- and remove classes recursively
+				from
+					local_cursor := a_class.syntactical_suppliers.first_element;
+					if root_class /= Void then
+						compiled_root_class := root_class.compiled_class
+					end;
+				until
+					local_cursor = Void
+				loop
+					supplier := local_cursor.item.supplier;
+					supplier_clients := supplier.syntactical_clients;
+					supplier_clients.start;
+					supplier_clients.search_same (a_class);
+					check
+						not_after: not supplier_clients.after
+					end;
+					supplier_clients.remove;
+					if
+						supplier_clients.empty and then
+							-- The root class is not removed
+							-- true only if the root class has changed and
+							-- was a client for a removed class
+						supplier /= compiled_root_class and then
+							-- Cannot propagate for a protected class
+						supplier.id > protected_classes and then
+							-- A recursion may occur when removing a cluster
+						id_array.item (supplier.id) /= Void
+					then
+						remove_class (supplier);
+					end;
+					local_cursor := local_cursor.right
 				end;
-			until
-				local_cursor = Void
-			loop
-				supplier := local_cursor.item.supplier;
-				supplier_clients := supplier.syntactical_clients;
-				supplier_clients.start;
-				supplier_clients.search_same (a_class);
-				check
-					not_after: not supplier_clients.after
-				end;
-				supplier_clients.remove;
-				if
-					supplier_clients.empty and then
-						-- The root class is not removed
-						-- true only if the root class has changed and
-						-- was a client for a removed class
-					supplier /= compiled_root_class and then
-						-- Cannot propagate for a protected class
-					supplier.id > protected_classes and then
-						-- A recursion may occur when removing a cluster
-					id_array.item (supplier.id) /= Void
-				then
-					remove_class (supplier);
-				end;
-				local_cursor := local_cursor.right
 			end;
 		end;
 
@@ -572,7 +580,11 @@ feature -- Recompilation
 			root_class_c: CLASS_C;
 		do
 				-- Recompilation initialization
-			init_recompilation;
+			if not precompilation then
+				init_recompilation;
+			else
+				init_precompilation
+			end;
 
 				-- First time stamp and removal of useless classes
 			Time_checker.time_check;
@@ -604,12 +616,16 @@ end;
 				new_class := False
 			end;
 
-				-- The root class is not generic
-			root_class_c := root_class.compiled_class;
-			root_class_c.check_non_genericity_of_root_class;
+			if not precompilation then
+					-- The root class is not generic
+				root_class_c := root_class.compiled_class;
+				root_class_c.check_non_genericity_of_root_class;
+			end;
 
-				-- Remove useless classes i.e classes without syntactical clients
-			remove_useless_classes;
+			if not precompilation then
+					-- Remove useless classes i.e classes without syntactical clients
+				remove_useless_classes;
+			end;
 
 				-- Topological sort and building of the conformance
 				-- table (if new classes have been added by first pass
@@ -647,13 +663,17 @@ end;
 				-- heirs after
 			process_pass (pass2_controler);
 
-			root_class_c.check_root_class_creators;
+			if not precompilation then
+				root_class_c.check_root_class_creators;
+			end;
 
 				-- Byte code production and type checking
 			process_pass (pass3_controler);
 
-				-- Externals incrementality
-			freeze := freeze or else not externals.equiv;
+			if not precompilation then
+					-- Externals incrementality
+				freeze := freeze or else not externals.equiv;
+			end;
 
 				-- Process the type system
 			process_type_system;
@@ -862,21 +882,26 @@ io.error.putstring (a_class.class_name);
 io.error.putstring ("%N");
 end;
 					-- Process skeleton(s) for `a_class'.
-				a_class.process_skeleton;
+				if
+					(not precompilation) or else
+					a_class.has_types
+				then
+					a_class.process_skeleton;
 
-				check
-					has_class_type: not a_class.types.empty
+					check
+						has_class_type: not a_class.types.empty
+					end;
+					if a_class.types.first.is_changed then
+							-- Skeleton of the class has changed: the
+							-- `changed_skeletons' list is sorted in reversal order
+							-- i.e descendants first.
+						changed_skeletons.start;
+						changed_skeletons.add_left (a_class);
+					end;
+						-- Check valididty of special classes ARRAY, STRING,
+						-- TO_SPECIAL, SPECIAL
+					a_class.check_validity;
 				end;
-				if a_class.types.first.is_changed then
-						-- Skeleton of the class has changed: the
-						-- `changed_skeletons' list is sorted in reversal order
-						-- i.e descendants first.
-					changed_skeletons.start;
-					changed_skeletons.add_left (a_class);
-				end;
-					-- Check valididty of special classes ARRAY, STRING,
-					-- TO_SPECIAL, SPECIAL
-				a_class.check_validity;
 
 				local_cursor := local_cursor.right;
 			end;
@@ -1031,6 +1056,8 @@ end;
 
 				-- Write first the number of class types now available
 			write_int (file_pointer, type_id_counter.value);
+				-- Write the number of classes now available
+			write_int (file_pointer, class_counter.value);
 
 debug ("ACTIVITY")
 	io.error.putstring ("%Tfeature tables%N");
@@ -2522,6 +2549,9 @@ feature -- Main file generation
 					-- Set C variable `scount'.
 				Main_file.putstring ("%Tscount = ");
 				Main_file.putint (type_id_counter.value);
+					-- Set C variable `ccount'.
+				Main_file.putstring (";%N%Tccount = ");
+				Main_file.putint (class_counter.value);
 					-- Set C variable `dcount'.
 				Main_file.putstring (";%N%Tdcount = ");
 				Main_file.putint (dispatch_table.count);
@@ -2778,6 +2808,34 @@ feature -- Conveniences
 			root_class_name /= Void;
 		do
 			Result := root_cluster.classes.item (root_class_name);
+		end;
+
+feature -- Precompilation
+
+	set_precompilation (b: BOOLEAN) is
+			-- Set `precompilation' to `b'
+		do
+			precompilation := b
+		end;
+
+	init_precompilation is
+			-- Initialization before a precompilation.
+		do
+			if not general_class.compiled then
+				init;
+				Workbench.change_all
+			end;
+			freeze := True;
+		end;
+
+	save_precompilation_info is
+			-- Save usefull values for inclusion of
+			-- precompiled code.
+		local
+			i: INTEGER
+		do
+			server_controler.save_precompiled_id;
+			max_precompiled_id := class_counter.value;
 		end;
 
 feature -- Debug purpose

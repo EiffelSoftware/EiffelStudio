@@ -75,9 +75,11 @@ feature
 			until
 				i > nb
 			loop
-				f := files.item (i);
-				if f /= Void and then f.file_info.size = 0 then
-					remove_file (f);
+				if (i > last_precompiled_id) then
+					f := files.item (i);
+					if f /= Void and then f.file_info.size = 0 then
+						remove_file (f);
+					end;
 				end;
 				i := i + 1
 			end
@@ -144,6 +146,51 @@ feature
 			loop
 				item.close;
 				remove;
+			end;
+		end;
+
+feature -- Precompilation
+
+	last_precompiled_id: INTEGER;
+			-- Last id corresponding to a precompiled
+			-- server file
+
+	save_precompiled_id is
+			-- Save the value of last precompiled server file
+			-- id after a precompilation
+			--|require: System.precompilation
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := 1;
+				nb := files.count
+			until
+				i > nb
+			loop
+				if files.item (i) /= Void then
+					files.item (i).set_precompiled;
+					last_precompiled_id := i
+				end;
+				i := i + 1
+			end;
+		end;
+
+	init is
+			-- Update the path names of the various server files
+		local
+			i, nb: INTEGER;
+		do
+			from
+				i := 1;
+				nb := files.count;
+			until
+				i > nb
+			loop
+				if files.item (i) /= Void then
+					files.item (i).update_path (i <= last_precompiled_id)
+				end;
+				i := i + 1
 			end;
 		end;
 

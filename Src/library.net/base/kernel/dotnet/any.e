@@ -371,9 +371,6 @@ feature -- Basic operations
 			-- Result = Result.default
 		end
 
-	frozen Void: NONE
-			-- Void reference
-
 feature {NONE} -- Disposal
 
 	frozen finalize is

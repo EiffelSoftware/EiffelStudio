@@ -17,7 +17,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	c_create_empty_rs_container (a_type_id, pred_oid, rel_oid: INTEGER): MT_RS_CONTAINABLE is
+	c_create_empty_rs_container (name: POINTER; pred_oid, rel_oid: INTEGER): MT_RS_CONTAINABLE is
 		external
 			"C"
 		end

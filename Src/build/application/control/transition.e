@@ -16,7 +16,7 @@ feature
 			Shared_app_graph.put (temp_trans, element)
 		end; -- init_element
 
-	all_transitions (source: STATE): TRAN_NAME_LIST is
+	all_transitions (source: BUILD_STATE): TRAN_NAME_LIST is
 			-- All labels name and their destination 
 			-- graph element names from `source'	
 		require
@@ -122,7 +122,7 @@ feature
 			end;
 		end; -- remove_transition
 
-	selected_labels (s, d: STATE): SORTED_TWO_WAY_LIST [STRING] is 
+	selected_labels (s, d: BUILD_STATE): SORTED_TWO_WAY_LIST [STRING] is 
 			-- List of the transitions betwee `s' and `d'.
 		local
 			dest_name: STRING;

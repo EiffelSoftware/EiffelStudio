@@ -145,7 +145,7 @@ feature {NONE} -- Execute
 			temp: STATE_CIRCLE;
 			x0, x1, y0, y1: INTEGER;
 			lines: APP_LINES;
-			state: STATE;
+			state: BUILD_STATE;
 			cloned_move: APP_MOVE_FIGURE
 		do 
 			if argument = move_action then

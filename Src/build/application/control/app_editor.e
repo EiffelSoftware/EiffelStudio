@@ -149,7 +149,7 @@ feature -- Drawing area
 		local
 			circle: STATE_CIRCLE;
 			point: COORD_XY_FIG;
-			state: STATE
+			state: BUILD_STATE
 		do
 			!!state.make;
 			state.set_internal_name ("");
@@ -209,7 +209,7 @@ feature -- Drawing area
 			drawing_area.set_size (w, h)
 		end;
 
-	set_initial_state (s: STATE) is
+	set_initial_state (s: BUILD_STATE) is
 			-- Set `a_circle' to init_state_circle and update
 			-- initial_state of the transition graph.
 		require
@@ -237,7 +237,7 @@ feature -- Drawing area
 			Shared_app_graph.set_initial_state (initial_state_circle.data)
 		end; 
 	
-	update_circle_text (s: STATE) is
+	update_circle_text (s: BUILD_STATE) is
 		local
 			eds: LINKED_LIST [STATE_EDITOR];
 		do
@@ -279,7 +279,7 @@ feature -- Drawing area
 			end;	
 		end;
 
-	update_selected (s: STATE) is
+	update_selected (s: BUILD_STATE) is
 			-- Update the selected_cirlce using `s'.
 			-- Then display the state list.
 		local
@@ -311,7 +311,7 @@ feature {NONE}
 	curr_trans: ARRAYED_LIST [TRAN_NAME] is
 			-- All the  transitions of a selected state in alphabetical order
 		local
-			state: STATE
+			state: BUILD_STATE
 			a_sorted_list: SORTED_TWO_WAY_LIST [TRAN_NAME]
 		do
 			!! Result.make (0)
@@ -382,7 +382,7 @@ feature {STATE_LINE}
 	popup_labels_window (l: STATE_LINE) is
 			-- Popup a window with a list of labels for `line'.
 		local
-			source, dest: STATE;
+			source, dest: BUILD_STATE;
 		do
 			source ?= l.source.data;
 			dest ?= l.destination.data;

@@ -7,7 +7,7 @@ feature {NONE}
 		deferred
 		end;
 
-	find_figure (state: STATE) is
+	find_figure (state: BUILD_STATE) is
 			-- Move figures cursor to position 
 			-- where figure data
 			-- is equal to `state'; go off right if none.

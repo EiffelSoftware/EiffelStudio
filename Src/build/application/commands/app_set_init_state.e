@@ -16,16 +16,16 @@ feature
 
 feature {NONE}
 
-	old_init_state: STATE;
+	old_init_state: BUILD_STATE;
 
-	init_state: STATE;
+	init_state: BUILD_STATE;
 
 	c_name: STRING is
 		do
 			Result := Command_names.app_set_initial_state_cmd_name
 		end;
 
-	work (a_state: STATE) is
+	work (a_state: BUILD_STATE) is
 		do
 			init_state := a_state;
 			old_init_state := application_editor.initial_state_circle.data;

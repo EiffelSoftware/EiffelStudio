@@ -49,7 +49,7 @@ feature -- Creation
 	
 feature 
 
-	data: STATE;
+	data: BUILD_STATE;
 			-- Current data
 
 feature {NONE} -- Stone

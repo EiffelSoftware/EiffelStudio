@@ -62,6 +62,12 @@ feature -- Access
 			Result.append_character ('%N')
 		end
 
+	need_dummy: BOOLEAN is
+			-- Does statement require dummy local variable?
+		do
+			Result := False
+		end
+
 invariant
 	non_void_expression: expression /= Void
 

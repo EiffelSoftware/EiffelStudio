@@ -36,6 +36,12 @@ feature -- Access
 			Result := comment.code
 		end
 
+	need_dummy: BOOLEAN is
+			-- Does statement require dummy local variable?
+		do
+			Result := False
+		end
+		
 invariant
 	non_void_comment: comment /= Void
 

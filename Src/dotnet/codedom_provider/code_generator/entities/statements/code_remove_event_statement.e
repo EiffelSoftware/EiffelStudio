@@ -8,10 +8,8 @@ class
 
 inherit
 	CODE_STATEMENT
+
 	CODE_EVENT_METHOD_KIND
-		undefine
-			is_equal
-		end
 
 create
 	make
@@ -53,10 +51,18 @@ feature -- Access
 			Result.append (")%N")
 		end
 
+	need_dummy: BOOLEAN is
+			-- Does statement require dummy local variable?
+		do
+			Result := False
+		end
+		
 feature {NONE} -- Implementation
 
 	remover_eiffel_name: STRING is
 			-- Eiffel name of adder method
+		require
+			is_in_code_generation: current_state = Code_generation
 		local
 			l_name: STRING
 		do

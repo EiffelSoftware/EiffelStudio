@@ -34,33 +34,20 @@ feature -- Access
 	init_expression: CODE_EXPRESSION
 			-- Initialization expression
 
-feature -- Code generation
-
-	declaration_statement: STRING is
-			-- | Result := "`name': TYPE"
-			-- Eiffel code of variable declaration statement
+	need_dummy: BOOLEAN is
+			-- Does statement require dummy local variable?
 		do
-			create Result.make (120)
-			Result.append (indent_string) 
-			Result.append (variable.eiffel_name)
-			Result.append (": ")
-			Result.append (variable.type.eiffel_name)
-			Result.append_character ('%N')
-		ensure
-			non_void_result: Result /= Void
-			not_empty_result: not Result.is_empty
+			Result := False
 		end
+
+feature -- Code generation
 
 	code: STRING is
 			-- Result := "`name' := `init_expression'"
 			-- OR Result := "Result := `init_expression'" if expression is `CODE_CAST_EXPRESSION'.
 			-- OR Result := "" if no `init_expression' = Void
 			-- Eiffel code of variable declaration statement
-		local
-			l_dummy_variable: BOOLEAN
 		do
-			l_dummy_variable := dummy_variable
-
 			if init_expression /= Void then
 				create Result.make (160)
 				Result.append (indent_string)
@@ -72,10 +59,19 @@ feature -- Code generation
 			else
 				create Result.make_empty
 			end
-
-			set_dummy_variable (l_dummy_variable)
 		end
 
+	declaration_code: STRING is
+			-- Result := "name: TYPE"
+		do
+			create Result.make (100)
+			Result.append (Indent_string)
+			Result.append (variable.eiffel_name)
+			Result.append (": ")
+			Result.append (variable.type.eiffel_name)
+			Result.append ("%N")
+		end
+		
 invariant
 	non_void_variable: variable /= Void
 	

@@ -498,8 +498,8 @@ feature {NONE} -- Implementation (move)
 			if world.selected_figures.is_empty then
 				world.context_editor.history.register_named_undoable (
 						Interface_names.t_Diagram_move_class_cmd,
-						[<<agent set_port_position (port_x, port_y), agent ce.restart_force_directed, agent apply_right_angles>>],
-						[<<agent set_port_position (saved_x, saved_y), agent ce.restart_force_directed, agent apply_right_angles>>])
+						[<<agent set_port_position (port_x, port_y), agent ce.restart_force_directed, agent apply_right_angles_if_needed>>],
+						[<<agent set_port_position (saved_x, saved_y), agent ce.restart_force_directed, agent apply_right_angles_if_needed>>])
 			else
 				l_selected_figures := world.selected_figures.twin
 				l_selected_figures.prune_all (Current)
@@ -507,8 +507,8 @@ feature {NONE} -- Implementation (move)
 				offset_y := port_y - saved_y
 				world.context_editor.history.register_named_undoable (
 					interface_names.t_diagram_move_class_cmd,
-					[<<agent set_port_position (port_x, port_y), agent move_figures_for (l_selected_figures, offset_x, offset_y), agent ce.restart_force_directed, agent apply_right_angles>>],                       
-					[<<agent set_port_position (saved_x, saved_y), agent move_figures_for (l_selected_figures, -offset_x, -offset_y), agent ce.restart_force_directed, agent apply_right_angles>>])
+					[<<agent set_port_position (port_x, port_y), agent move_figures_for (l_selected_figures, offset_x, offset_y), agent ce.restart_force_directed>>],                       
+					[<<agent set_port_position (saved_x, saved_y), agent move_figures_for (l_selected_figures, -offset_x, -offset_y), agent ce.restart_force_directed>>])
 			end
 			if world.context_editor.is_force_directed_used then
 				set_is_fixed (True)
@@ -535,6 +535,9 @@ feature {NONE} -- Implementation (move)
 					l_linkable.set_is_fixed (True)
 				end
 				figures.forth
+			end
+			if world.is_right_angles then
+				world.apply_right_angles
 			end
 		end
 		
@@ -568,13 +571,12 @@ feature {NONE} -- Implementation (move)
 			set_is_fixed (was_fixed)
 		end
 		
-	apply_right_anlges is
+	apply_right_angles_if_needed is
 			-- Apply right angles to world if `is_right_angles'.
 		do
 			if world.is_right_angles then
 				world.apply_right_angles
 			end
 		end
-		
-		
+
 end -- class EIFFEL_CLASS_FIGURE

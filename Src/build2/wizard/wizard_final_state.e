@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 	final_message: STRING is
 		do
 			Result := "Clicking 'Finish' will generate a new Eiffel Vision2%
-			%%Nproject with the following information : %N%N" +
+			%%Nproject corresponding to the following information : %N%N" +
 			"Project location : " + system_status.current_project_settings.project_location +
 			"%N%NProject name : " + system_status.current_project_settings.project_name +
 			"%NApplication class name : " + system_status.current_project_settings.application_class_name +

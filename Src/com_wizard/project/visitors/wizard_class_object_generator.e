@@ -235,6 +235,7 @@ feature {NONE} -- Implementations
 			tmp_body.append (Zero)
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (New_line_tab_tab)
+			
 			tmp_body.append (Return)
 			tmp_body.append (Space)
 			tmp_body.append (E_pointer)
@@ -245,16 +246,25 @@ feature {NONE} -- Implementations
 			tmp_body.append (Zero)
 			tmp_body.append (Semicolon)
 			tmp_body.append (New_line_tab)
+			
 			tmp_body.append (If_keyword)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append ("pIunknown")
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (New_line_tab_tab)
+			
 			tmp_body.append (Return)
 			tmp_body.append (Space)
 			tmp_body.append (Class_e_noaggregation)
 			tmp_body.append (Semicolon)
 			tmp_body.append (New_line_tab)
+			if 
+				coclass_descriptor.namespace /= Void and then
+				not coclass_descriptor.namespace.empty
+			then
+				tmp_body.append (coclass_descriptor.namespace)
+				tmp_body.append ("::")
+			end
 			tmp_body.append (coclass_descriptor.c_type_name)
 			tmp_body.append (Space)
 			tmp_body.append (Asterisk)
@@ -262,18 +272,27 @@ feature {NONE} -- Implementations
 			tmp_body.append (Space_equal_space)
 			tmp_body.append (New)
 			tmp_body.append (Space)
+			if 
+				coclass_descriptor.namespace /= Void and then
+				not coclass_descriptor.namespace.empty
+			then
+				tmp_body.append (coclass_descriptor.namespace)
+				tmp_body.append ("::")
+			end
 			tmp_body.append (coclass_descriptor.c_type_name)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Type_id)
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Semicolon)
 			tmp_body.append (New_line_tab)
+			
 			tmp_body.append (If_keyword)
 			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append ("!")
 			tmp_body.append (Tmp_object_pointer)
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (New_line_tab_tab)
+			
 			tmp_body.append (Return)
 			tmp_body.append (Space)
 			tmp_body.append (E_out_of_memory)
@@ -282,6 +301,7 @@ feature {NONE} -- Implementations
 			tmp_body.append (Tmp_object_pointer)
 			tmp_body.append (Add_reference_function)
 			tmp_body.append (New_line_tab)
+			
 			tmp_body.append (Hresult)
 			tmp_body.append (Space)
 			tmp_body.append (Tmp_clause)
@@ -297,9 +317,11 @@ feature {NONE} -- Implementations
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Semicolon)
 			tmp_body.append (New_line_tab)
+			
 			tmp_body.append (Tmp_object_pointer)
 			tmp_body.append (Release_function)
 			tmp_body.append (New_line_tab)
+			
 			tmp_body.append (Return)
 			tmp_body.append (Space)
 			tmp_body.append (Tmp_clause)

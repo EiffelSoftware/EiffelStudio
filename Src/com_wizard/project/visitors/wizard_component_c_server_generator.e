@@ -49,6 +49,7 @@ feature -- Basic Operations
 		do
 			create cpp_class_writer.make
 			cpp_class_writer.set_name (a_component.c_type_name)
+			cpp_class_writer.set_namespace (a_component.namespace)
 			cpp_class_writer.set_header (a_component.description)
 			cpp_class_writer.set_header_file_name (a_component.c_header_file_name)
 			cpp_class_writer.add_import (Ecom_server_rt_globals_h)

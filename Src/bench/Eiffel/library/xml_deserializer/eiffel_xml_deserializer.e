@@ -126,7 +126,7 @@ feature {NONE} -- Object retrieval from node.
 				l_file_name.append_character ('b')
 				create l_raw_file.make_open_write (l_file_name)
 				l_is_open := True
-				l_raw_file.basic_store (an_obj)
+				l_raw_file.independent_store (an_obj)
 				l_raw_file.close
 			else
 				if l_is_open then

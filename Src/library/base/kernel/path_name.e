@@ -125,7 +125,9 @@ feature -- Comparison
 			o_area: like area;
 			i: INTEGER
 		do
-			if other.count = count then
+			if other = Current then
+				Result := True
+			elseif other.count = count then
 				o_area := other.area
 				Result := eif_path_name_compare ($area, $o_area, count)
 			end

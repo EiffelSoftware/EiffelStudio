@@ -14,6 +14,7 @@
 */
 
 #include "eif_config.h"
+#include "ipcvms.h"	/* only affects VMS */
 #include "eif_portable.h"
 #include <stdio.h>
 #include <errno.h>
@@ -234,7 +235,8 @@ rt_public int net_send(int cs, char *buf, int size)
 		}
 	}
 
-#else
+#else  /* (not) EIF_WIN32 */
+
 	Signal_t (*oldpipe)();
 
 	oldpipe = signal(SIGPIPE, (void (*)(int)) broken);	/* Trap SIGPIPE within this function */
@@ -252,7 +254,13 @@ rt_public int net_send(int cs, char *buf, int size)
 		error = write(cs, buf, amount);
 		if (error == -1){
 			if (errno != EINTR){
+#ifdef EIF_VMS
+				printf ("%s: net_send: write failed. fdesc = %i, errno = %i (VMS %i)\n", 
+					ipcvms_get_progname(NULL), cs, errno, vaxc$errno);
+				perror (" ");
+#else
 				printf ("net_send: write failed. fdesc = %i, errno = %i\n", cs,  errno);
+#endif
 				return -1;
 			}
 			else
@@ -262,7 +270,7 @@ rt_public int net_send(int cs, char *buf, int size)
 
 	signal(SIGPIPE, oldpipe);	/* restore default handler */
 
-#endif
+#endif /* EIF_WIN32 */
 	return 0;
 }
 

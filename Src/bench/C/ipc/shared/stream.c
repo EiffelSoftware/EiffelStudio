@@ -22,6 +22,7 @@
 */
 
 #include "eif_config.h"
+#include "ipcvms.h"		/* only affects VMS */
 #include "eif_portable.h"
 #include "stream.h"
 

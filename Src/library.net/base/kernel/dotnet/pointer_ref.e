@@ -24,7 +24,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := item.to_integer_32.abs
+			Result := item.to_integer_32.hash_code
 		end
 
 feature -- Element change

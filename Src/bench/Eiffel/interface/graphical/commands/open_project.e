@@ -43,8 +43,8 @@ feature -- Callbacks
 
 	open_project (argument: ANY) is
 		do
-			name_chooser.set_window (text_window);
-			name_chooser.call (Current)
+			last_name_chooser.set_window (text_window);
+			last_name_chooser.call (Current)
 		end;
 
 feature -- Status report
@@ -66,12 +66,14 @@ feature {NONE} -- Implementation
 		do
 
 			if not project_tool.initialized then
-				name_chooser.set_directory_selection;
-				name_chooser.hide_file_selection_list;
-				name_chooser.hide_file_selection_label;
-				name_chooser.set_title (l_Select_a_directory)
-				if argument = name_chooser then
-					dir_name := clone (name_chooser.selected_file);
+				name_chooser (text_window).set_directory_selection;
+				last_name_chooser.hide_file_selection_list;
+				last_name_chooser.hide_file_selection_label;
+				last_name_chooser.set_title (l_Select_a_directory)
+				if argument = project_tool.text_window then
+					open_project (argument)
+				else
+					dir_name := clone (last_name_chooser.selected_file);
 					if dir_name.empty then
 						warner (text_window).custom_call (Current,
 							w_Directory_not_exist (dir_name), 
@@ -85,13 +87,11 @@ feature {NONE} -- Implementation
 						end;
 						!!project_dir.make (dir_name);
 						make_project (project_dir);
-						name_chooser.set_file_selection;
-						name_chooser.set_title (l_Select_a_file);
-						name_chooser.show_file_selection_list;
-						name_chooser.show_file_selection_label;
+						last_name_chooser.set_file_selection;
+						last_name_chooser.set_title (l_Select_a_file);
+						last_name_chooser.show_file_selection_list;
+						last_name_chooser.show_file_selection_label;
 					end
-				else
-					open_project (argument);
 				end
 			end
 		end;

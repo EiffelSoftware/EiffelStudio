@@ -36,8 +36,8 @@ feature {NONE} -- Implementation
 			f: RAW_FILE;
 			temp: STRING
 		do
-			if argument = name_chooser then
-				fn := clone (name_chooser.selected_file);
+			if argument /= Void and then argument = last_name_chooser then
+				fn := clone (last_name_chooser.selected_file);
 				if not fn.empty then
 					!! f.make (fn);
 					if
@@ -62,8 +62,8 @@ feature {NONE} -- Implementation
 				if text_window.changed then
 					warner (text_window).call (Current, l_File_changed)
 				else
-					name_chooser.set_window (text_window);
-					name_chooser.call (Current) 
+					name_chooser (text_window).set_window (text_window);
+					last_name_chooser.call (Current) 
 				end
 			end
 		end;

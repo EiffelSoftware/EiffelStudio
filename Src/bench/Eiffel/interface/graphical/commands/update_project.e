@@ -47,8 +47,8 @@ feature -- Callbacks
 
 	warner_ok (argument: ANY) is
 		do
-			name_chooser.set_window (text_window);
-			name_chooser.call (Current)
+			name_chooser (text_window).set_window (text_window);
+			last_name_chooser.call (Current)
 		end;
 
 feature -- Properties
@@ -341,8 +341,8 @@ feature {NONE} -- Implementation; Execution
 						choose_template
 					elseif arg = last_warner then
 						warner_ok (arg);
-					elseif arg = name_chooser then
-						fn := clone (name_chooser.selected_file);
+					elseif arg = last_name_chooser then
+						fn := clone (last_name_chooser.selected_file);
 						if not fn.empty then
 							!! f.make (fn);
 							if

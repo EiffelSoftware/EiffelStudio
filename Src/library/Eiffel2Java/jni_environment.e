@@ -47,7 +47,6 @@ feature
 	find_class_pointer (name: STRING): POINTER is
 			-- find class pointer only (used during creation in descendants)
 		local
-			cls: JAVA_CLASS
 			name_to_c: ANY
 		do
 			name_to_c := name.to_c

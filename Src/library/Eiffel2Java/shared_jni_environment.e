@@ -12,7 +12,6 @@ feature
 			-- returns the standard JNI enviroment. It uses the value of
 			-- CLASS_PATH environment variable to initialize the JVM
 		local
-			cpp: POINTER
 			class_path: STRING
 			jvm: JAVA_VM
 			ex: EXCEPTIONS

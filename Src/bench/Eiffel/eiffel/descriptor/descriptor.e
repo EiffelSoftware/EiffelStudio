@@ -78,7 +78,7 @@ feature -- Generation
 			else
 				Result.append ("%T{(int16) ");
 				Result.append_integer (invariant_entry.real_body_index);
-				Result.append (", -1},%N");
+				Result.append (", (int16) -1},%N");
 			end;
 
 			from

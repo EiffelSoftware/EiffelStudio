@@ -21,7 +21,7 @@ feature
 	make is
 			-- Load the rich edit DLL.
 		do
-			dll_make (rich_edit_dll_name)
+			make_permanent (rich_edit_dll_name)
 		end
 
 feature {NONE} -- Implementation

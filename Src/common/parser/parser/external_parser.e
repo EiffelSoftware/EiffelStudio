@@ -1802,7 +1802,7 @@ end
 	yy_do_action_41 is
 			--|#line <not available> "external.y"
 		local
-			yyval9: EIFFEL_LIST [EXTERNAL_TYPE_AS]
+			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
 		do
 --|#line <not available> "external.y"
 debug ("GEYACC")
@@ -1836,7 +1836,7 @@ end
 	yy_do_action_42 is
 			--|#line <not available> "external.y"
 		local
-			yyval9: EIFFEL_LIST [EXTERNAL_TYPE_AS]
+			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
 		do
 --|#line <not available> "external.y"
 debug ("GEYACC")
@@ -1853,7 +1853,7 @@ end
 	yy_do_action_43 is
 			--|#line <not available> "external.y"
 		local
-			yyval9: EIFFEL_LIST [EXTERNAL_TYPE_AS]
+			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
 		do
 --|#line <not available> "external.y"
 debug ("GEYACC")
@@ -1871,7 +1871,7 @@ end
 	yy_do_action_44 is
 			--|#line <not available> "external.y"
 		local
-			yyval9: EIFFEL_LIST [EXTERNAL_TYPE_AS]
+			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
 		do
 --|#line <not available> "external.y"
 debug ("GEYACC")
@@ -1905,7 +1905,7 @@ end
 	yy_do_action_45 is
 			--|#line <not available> "external.y"
 		local
-			yyval9: EIFFEL_LIST [EXTERNAL_TYPE_AS]
+			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
 		do
 --|#line <not available> "external.y"
 debug ("GEYACC")
@@ -1922,14 +1922,14 @@ end
 	yy_do_action_46 is
 			--|#line <not available> "external.y"
 		local
-			yyval9: EIFFEL_LIST [EXTERNAL_TYPE_AS]
+			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
 		do
 --|#line <not available> "external.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'external.y' at line <not available>")
 end
 
-			create {EIFFEL_LIST [EXTERNAL_TYPE_AS]} yyval9.make (Argument_list_initial_size)
+			create {ARRAYED_LIST [EXTERNAL_TYPE_AS]} yyval9.make (Argument_list_initial_size)
 			yyval9.extend (yyvs4.item (yyvsp4))
 		
 if yy_parsing_status = yyContinue then
@@ -1959,7 +1959,7 @@ end
 	yy_do_action_47 is
 			--|#line <not available> "external.y"
 		local
-			yyval9: EIFFEL_LIST [EXTERNAL_TYPE_AS]
+			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
 		do
 --|#line <not available> "external.y"
 debug ("GEYACC")
@@ -3095,8 +3095,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines8: KL_SPECIAL_ROUTINES [USE_LIST_AS]
 			-- Routines that ought to be in SPECIAL [USE_LIST_AS]
 
-	yyvs9: SPECIAL [EIFFEL_LIST [EXTERNAL_TYPE_AS]]
-			-- Stack for semantic values of type EIFFEL_LIST [EXTERNAL_TYPE_AS]
+	yyvs9: SPECIAL [ARRAYED_LIST [EXTERNAL_TYPE_AS]]
+			-- Stack for semantic values of type ARRAYED_LIST [EXTERNAL_TYPE_AS]
 
 	yyvsc9: INTEGER
 			-- Capacity of semantic value stack `yyvs9'
@@ -3104,8 +3104,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp9: INTEGER
 			-- Top of semantic value stack `yyvs9'
 
-	yyspecial_routines9: KL_SPECIAL_ROUTINES [EIFFEL_LIST [EXTERNAL_TYPE_AS]]
-			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [EXTERNAL_TYPE_AS]]
+	yyspecial_routines9: KL_SPECIAL_ROUTINES [ARRAYED_LIST [EXTERNAL_TYPE_AS]]
+			-- Routines that ought to be in SPECIAL [ARRAYED_LIST [EXTERNAL_TYPE_AS]]
 
 feature {NONE} -- Constants
 

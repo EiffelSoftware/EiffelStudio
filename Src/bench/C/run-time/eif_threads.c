@@ -360,9 +360,9 @@ rt_public void eif_thr_exit(void)
 	EIF_MUTEX_UNLOCK(eif_thr_context->children_mutex, "Unlock parent mutex");
 
 	reclaim ();						/* Free all allocated memory chunks */
-	free (eif_thr_context->tid);	/* Thread id of the current thread */
-	free (eif_thr_context);			/* Thread context passed by parent */
-	free (eif_globals);				/* Global variables specific to the current
+	eif_free (eif_thr_context->tid);	/* Thread id of the current thread */
+	eif_free (eif_thr_context);			/* Thread context passed by parent */
+	eif_free (eif_globals);				/* Global variables specific to the current
 									 * thread of the run-time */
 
 	EIF_THR_EXIT(0);

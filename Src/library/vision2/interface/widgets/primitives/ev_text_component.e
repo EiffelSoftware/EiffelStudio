@@ -98,7 +98,7 @@ feature -- Status report
 		end
 
 	selection_end: INTEGER is
-			-- Index of last character selected
+			-- Index of last character selected.
 		require
 			not_destroyed: not is_destroyed
 			has_selection: has_selection

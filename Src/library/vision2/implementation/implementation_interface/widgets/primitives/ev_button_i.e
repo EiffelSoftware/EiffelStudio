@@ -25,6 +25,36 @@ inherit
 			interface
 		end
 
+feature -- Access
+
+	is_default_push_button: BOOLEAN is
+			-- Is this button currently a default push button 
+			-- for a particular container?
+		deferred
+		end
+
+feature -- Status Setting
+
+	enable_default_push_button is
+			-- Set the style of the button corresponding
+			-- to the default push button.
+		require
+			is_not_default_push_button: not is_default_push_button
+		deferred
+		ensure
+			is_default_push_button: is_default_push_button
+		end
+
+	disable_default_push_button is
+			-- Remove the style of the button corresponding
+			-- to the default push button.
+		require
+			is_default_push_button: is_default_push_button
+		deferred
+		ensure
+			is_not_default_push_button: not is_default_push_button
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_BUTTON
@@ -54,6 +84,10 @@ end -- class EV_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/29 03:16:24  pichery
+--| Added feature `is_default_push_button',
+--| `enable/disable_push_button'
+--|
 --| Revision 1.25  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

@@ -500,7 +500,7 @@ feature -- Generation Structure
 			l_host: CLR_HOST
 		do
 				--| Initialize recording of IL Information used for eStudio .NET debugger			
-			Il_debug_info_recorder.init_recording_session
+			Il_debug_info_recorder.init_recording_session (debug_mode)
 			
 				--| beginning of assembly generation
 			location_path := location
@@ -1742,7 +1742,7 @@ feature -- Features info
 					l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
 				end
 
-				if l_is_attribute then
+				if is_debug_info_enabled and l_is_attribute then
 					Il_debug_info_recorder.set_record_context (l_is_attribute, is_static, in_interface)
 					Il_debug_info_recorder.record_il_feature_info (current_module, current_class_type, feat, current_class_token, l_meth_token)
 				end
@@ -2221,13 +2221,15 @@ feature -- IL Generation
 					end
 					l_sequence_point_list.extend ([dbg_offsets_count, dbg_offsets, dbg_start_lines,
 						dbg_start_columns, dbg_end_lines, dbg_end_columns, feat.written_in])
+
+
+						--| feature is not attribute |--
+						-- we assume the feature concerned by `generate_feature_code' 
+						-- here are static and not in_interface
+					Il_debug_info_recorder.set_record_context (False, True, False)	
+					Il_debug_info_recorder.record_il_feature_info (current_module, 
+								current_class_type, feat, current_class_token, l_meth_token)
 				end
-				
-				--| feature is not attribute |--
-				-- we assume the feature concerned by `generate_feature_code' 
-				-- here are static and not in_interface
-				Il_debug_info_recorder.set_record_context (False, True, False)	
-				Il_debug_info_recorder.record_il_feature_info (current_module, current_class_type, feat, current_class_token, l_meth_token)
 			end
 		end
 
@@ -4313,8 +4315,10 @@ feature -- Line info
 		require
 			valid_n: n > 0
 		do
-			Il_debug_info_recorder.ignore_next_debug_info
-			put_line_info (n)
+			if is_debug_info_enabled then
+				Il_debug_info_recorder.ignore_next_debug_info
+				put_line_info (n)			
+			end
 		end
 
 	put_debug_info (location: TOKEN_LOCATION) is
@@ -4347,8 +4351,10 @@ feature -- Line info
 		require
 			location_not_void: location /= Void
 		do
-			Il_debug_info_recorder.ignore_next_debug_info
-			put_debug_info (location)
+			if is_debug_info_enabled then
+				Il_debug_info_recorder.ignore_next_debug_info
+				put_debug_info (location)				
+			end
 		end		
 
 	flush_sequence_points (a_class_type: CLASS_TYPE) is

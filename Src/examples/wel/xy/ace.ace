@@ -9,7 +9,7 @@ default
 	precompiled ("$EIFFEL3\precomp\spec\$PLATFORM\wel");
 
 cluster 
-	root_cluster:		".";
+	root_cluster:		"$EIFFEL3\examples\wel\xy";
 
 	-- WEL
 	wel_constants:		"$EIFFEL3\library\wel\consts";
@@ -38,7 +38,7 @@ cluster
 	tree:			"$EIFFEL3\library\base\structures\tree";
 
 external
-	include_path:		"$(EIFFEL3)\library\wel\include";
+	include_path:		"$(EIFFEL3)\library\wel\spec\windows\include";
 	object: 		"$(EIFFEL3)\library\wel\spec\$(PLATFORM)\lib\wel.lib"
 
 end -- system app

@@ -120,5 +120,6 @@ feature {NONE}
 	separate_type_as: INTEGER is 161
 	precursor_as: INTEGER is 164
 	creation_expr_as: INTEGER is 165
+	routine_creation_as: INTEGER is 166
 
 end

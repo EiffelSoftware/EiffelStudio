@@ -38,7 +38,11 @@ feature -- Type check, byte code, dead code removal and formatter
 			-- Type check a manifest array
 		local
 			i, nb: INTEGER
-			multi_type: MULTI_TYPE_A
+			array_type: GEN_TYPE_A
+			generics: ARRAY [TYPE_A]
+			lowest_type, element_type: TYPE_A
+			cl_type_a: CL_TYPE_A
+			done: BOOLEAN
 		do
 			context.begin_expression
 				-- Type check expression list
@@ -47,34 +51,58 @@ feature -- Type check, byte code, dead code removal and formatter
 			from
 				nb := expressions.count
 				i := nb
-				!!multi_type.make (nb)
+				
+					-- Take last element in manifest array and let's suppose
+					-- it is the lowest type.
+				lowest_type := context.item
 			until
 				i < 1
 			loop
-				multi_type.put (context.item, i)
+					-- If ANY is the common ancestor, there is no need to search
+					-- for one, we simply pop the remaining types.
+				if not done then
+						-- Let's try to find the type to which everyone conforms to.
+						-- If not found it will be ANY.
+					element_type := context.item
+					if lowest_type.conform_to (element_type) then
+						lowest_type := element_type
+					elseif element_type.conform_to (lowest_type) then
+					else
+						done := True
+						create cl_type_a
+						cl_type_a.set_base_class_id (System.any_id)
+						lowest_type := cl_type_a
+					end
+				end
 				context.pop (1)
 				i := i - 1
 			end
+
+				-- Create valid ARRAY type
+			create generics.make (1, 1)
+			generics.put (lowest_type, 1)
+			create array_type.make (generics)
+			array_type.set_base_class_id (System.array_id)
+
 				-- Update type stack
-			context.replace (multi_type)
-				-- Update the multi type stack
-			multi_line.insert (multi_type)
+			context.replace (array_type)
+				-- Update array-line stack
+			context.array_line.insert (array_type)
 		end
 
 	byte_node: ARRAY_CONST_B is
 			-- Byte code for a manifest array
+		local
+			array_line: LINE [GEN_TYPE_A]
 		do
-			!!Result
+			create Result
 			Result.set_expressions (expressions.byte_node)
-			Result.set_type (multi_line.item.type_i)
-				-- Update the multi_type stack
-			multi_line.forth
-		end
-
-	multi_line: LINE [MULTI_TYPE_A] is
-			-- Mutli type stack
-		once
-			Result := context.multi_line
+			
+			array_line := context.array_line
+			Result.set_type (array_line.item.type_i)
+			
+				-- Update the array-line stack
+			array_line.forth
 		end
 
 feature	-- Replication
@@ -95,11 +123,11 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (ti_L_array)
-			ctxt.set_separator (ti_Comma)
+			ctxt.put_text_item (ti_l_array)
+			ctxt.set_separator (ti_comma)
 			ctxt.set_space_between_tokens
 			ctxt.format_ast (expressions)
-			ctxt.put_text_item_without_tabs (ti_R_array)
+			ctxt.put_text_item_without_tabs (ti_r_array)
 		end
 
 	string_value: STRING is ""

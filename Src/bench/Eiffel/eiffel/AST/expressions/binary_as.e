@@ -116,6 +116,7 @@ feature -- Type check, byte code and dead code removal
 			vhne					: VHNE
 			vuex					: VUEX
 			vape: VAPE
+			int_a: INTEGER_A
 		do
 				-- First type check the left operand
 			left.type_check
@@ -191,26 +192,26 @@ feature -- Type check, byte code and dead code removal
 			last_constrained := context.last_constrained_type
 
 				-- Process of the balancing rule
-			balance_in_effect := numeric_balance
-									(left_constrained, last_constrained)
-			bit_balance_in_effect := bit_balance
-									(left_constrained, last_constrained)
+			balance_in_effect := numeric_balance (left_constrained, last_constrained)
+			bit_balance_in_effect := bit_balance (left_constrained, last_constrained)
 
-			if not (
-				balance_in_effect
-				or else
-				bit_balance_in_effect
-				or else
-				current_context.conform_to (infix_arg_type)
-			) then
-					-- No conformance on argument of infix 
-				!!vwoe1
-				context.init_error (vwoe1)
-				vwoe1.set_other_class (last_class)
-				vwoe1.set_op_name (infix_function_name)
-				vwoe1.set_formal_type (infix_arg_type)
-				vwoe1.set_actual_type (current_context)
-				Error_handler.insert_error (vwoe1)
+			if
+				not balance_in_effect and then not bit_balance_in_effect
+				and then not current_context.conform_to (infix_arg_type)
+			then
+				if infix_arg_type.is_integer and then current_context.is_integer then
+					int_a ?= current_context
+					create {INTEGER_A} infix_arg_type.make (int_a.size)					
+				else
+						-- No conformance on argument of infix 
+					create vwoe1
+					context.init_error (vwoe1)
+					vwoe1.set_other_class (last_class)
+					vwoe1.set_op_name (infix_function_name)
+					vwoe1.set_formal_type (infix_arg_type)
+					vwoe1.set_actual_type (current_context)
+					Error_handler.insert_error (vwoe1)
+				end
 			end
 
 				-- Add type to `parameters' in case we will need it later.
@@ -219,30 +220,19 @@ feature -- Type check, byte code and dead code removal
 				-- Update the type stack: instantiate result type of the
 				-- infixed feature
 			infix_type ?= infix_function.type
-			if	last_constrained.is_bits
-				and then
-				infix_type.is_like_current
-			then
+			if last_constrained.is_bits and then infix_type.is_like_current then
 					-- For non-balanced features of symbolic class BIT_REF
 					-- like infix "^" or infix "#"
 				infix_type := left_type
 			else
 					-- Usual case
 				infix_type := infix_type.conformance_type
-				infix_type := infix_type.instantiation_in
-										(left_type, left_id).actual_type
+				infix_type := infix_type.instantiation_in (left_type, left_id).actual_type
 			end
 
 			context.pop (2)
-			if 	(balance_in_effect and then balanced_result)
-				or else
-				bit_balance_in_effect
-			then
-				if
-					left_constrained.heaviest (last_constrained)
-					=
-					left_constrained
-				then
+			if (balance_in_effect and then balanced_result) or else bit_balance_in_effect then
+				if left_constrained.heaviest (last_constrained) = left_constrained then
 					infix_type := left_type
 				else
 					infix_type := current_context

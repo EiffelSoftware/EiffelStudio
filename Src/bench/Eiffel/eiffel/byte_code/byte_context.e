@@ -93,7 +93,7 @@ feature -- Access
 	local_vars: ARRAY [BOOLEAN]
 			-- Local variables used have their flag set to True.
 
-	local_index_table: EXTEND_TABLE [INTEGER, STRING]
+	local_index_table: HASH_TABLE [INTEGER, STRING]
 			-- Index in local variable array (C code) for a given register
 
 	associated_register_table: HASH_TABLE [REGISTRABLE, STRING]
@@ -993,7 +993,7 @@ feature -- Setting
 		local
 			nb_refs: INTEGER	-- Total number of references to be pushed
 			nb_exp: INTEGER	-- Expanded argument number for cloning
-			hash_table: EXTEND_TABLE [INTEGER, STRING]
+			hash_table: HASH_TABLE [INTEGER, STRING]
 			associated: HASH_TABLE [REGISTRABLE, STRING]
 			rname: STRING
 			position: INTEGER

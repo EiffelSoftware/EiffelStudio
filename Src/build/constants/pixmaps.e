@@ -196,6 +196,11 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("generate")
 		end;
 
+	generated_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("generated")
+		end
+
 	Geometry_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("geometry")
@@ -370,6 +375,11 @@ feature -- General Pixmaps
 		once
 			Result := symbol_file_content ("sgeneral")
 		end;
+
+	Selected_generated_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sgenerated")
+		end
 
 	Selected_geometry_pixmap: PIXMAP is
 		once

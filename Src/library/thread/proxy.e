@@ -59,7 +59,7 @@ feature {NONE} -- Externals
 	set_proxy (obj: SHARED_OBJECT): POINTER is
 			-- Attach `obj' to proxy.
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		alias
 			"eif_thr_proxy_set"
 		end
@@ -67,7 +67,7 @@ feature {NONE} -- Externals
 	access_proxy (p: POINTER): SHARED_OBJECT is
 			-- Retrieve attached object.
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		alias
 			"eif_thr_proxy_access"
 		end
@@ -75,7 +75,7 @@ feature {NONE} -- Externals
 	dispose_proxy (p: POINTER) is
 			-- Release attached  object.
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		alias
 			"eif_thr_proxy_dispose"
 		end

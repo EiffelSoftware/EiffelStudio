@@ -14,7 +14,7 @@ feature -- Basic operations
 			-- The calling thread yields its execution in favor
 			-- of another thread.
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		alias
 			"eif_thr_yield"
 		end
@@ -23,7 +23,7 @@ feature -- Basic operations
 			-- The calling thread waits for all other threads to
 			-- terminate.
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		alias
 			"eif_thr_join_all"
 		end

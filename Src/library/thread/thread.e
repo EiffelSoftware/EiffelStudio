@@ -30,7 +30,7 @@ feature -- Basic operations
 	exit is
 			-- Exit calling thread.
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		alias
 			"eif_thr_exit"
 		end
@@ -47,7 +47,7 @@ feature {NONE} -- Externals
 	create_thread (current_obj: like Current; init_func: POINTER) is
 			-- Initialize and start thread.
 		external
-			"C"
+			"C | %"eif_threads.h%""
 		alias
 			"eif_thr_create"
 		end

@@ -170,9 +170,9 @@ feature -- Commands
 			l_help_generator: HELP_GENERATOR
 			l_constants: APPLICATION_CONSTANTS
 			l_help_project: HELP_PROJECT
-			l_help_toc: DOCUMENT_TOC
 			l_html_directory, l_help_directory: DIRECTORY
 			l_output_file: PLAIN_TEXT_FILE
+			l_toc: XML_TABLE_OF_CONTENTS
 		do
 			l_project := Shared_project
 			l_project.load (project_file)
@@ -200,14 +200,14 @@ feature -- Commands
 			if file_generation_type.is_equal ("xml2html") or file_generation_type.is_equal ("xml2help") then
 				l_output_file.putstring ("%NConverting XML to HTML in " + l_constants.temporary_html_directory + ":-%N")
 				if output_filter_type = Void or output_filter_type.is_equal ("/all") then
-					l_constants.set_output_filter (l_constants.All_filter)
+--					l_constants.set_output_filter (l_constants.All_filter)
 				elseif output_filter_type.is_equal ("studio") then
-					l_constants.set_output_filter (l_constants.Studio_filter)
+--					l_constants.set_output_filter (l_constants.Studio_filter)
 				elseif output_filter_type.is_equal ("envision") then
-					l_constants.set_output_filter (l_constants.Envision_filter)
+--					l_constants.set_output_filter (l_constants.Envision_filter)
 				end
 				l_output_file.close
-				create l_html_generator.make (l_project, create {DIRECTORY_NAME}.make_from_string (l_html_directory.name))
+				create l_html_generator.make (l_toc.files, create {DIRECTORY_NAME}.make_from_string (l_html_directory.name))
 				l_html_generator.generate
 			end
 			
@@ -223,20 +223,20 @@ feature -- Commands
 				l_help_directory.create_dir
 				
 						-- Build TOC from XML
-				l_constants.set_include_skipped_sub_directories (True)
-				l_constants.set_include_empty_directories (False)
-				l_constants.set_include_directories_no_index (False)
-				l_constants.set_make_index_root (True)
-				l_constants.set_html_location (l_constants.Temporary_html_directory)
-				create l_help_toc.make (l_project.preferences.root_directory)
+				-- Create TOC
+				create l_toc.make_from_directory (create {DIRECTORY}.make (l_project.root_directory))
+--				l_constants.set_include_skipped_sub_directories (True)
+--				l_constants.set_include_empty_directories (False)
+--				l_constants.set_include_directories_no_index (False)
+--				l_constants.set_make_index_root (True)
+--				l_constants.set_html_location (l_constants.Temporary_html_directory)
+				create l_toc.make_from_directory (create {DIRECTORY}.make (l_project.root_directory))
 				
 						-- Generate Help from TOC
 				if help_generation_type.is_equal ("mshtml") then
-					l_help_project := create {HTML_HELP_PROJECT}.make_from_toc
-						(l_help_directory, l_project.preferences.name, l_help_toc)
+					l_help_project := create {HTML_HELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
 				elseif help_generation_type.is_equal ("vsip") then
-					l_help_project := create {MSHELP_PROJECT}.make_from_toc
-						(l_help_directory, l_project.preferences.name, l_help_toc)
+					l_help_project := create {MSHELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
 				else
 					-- TO DO: Web Help
 				end
@@ -259,7 +259,7 @@ feature {NONE} -- Commands
 			io.put_string ((create {MESSAGE_CONSTANTS}).command_read_line)
 			io.read_character
 			if io.last_character /= Void then
-				feature {ENVIRONMENT}.exit (0)	
+--				feature {ENVIRONMENT}.exit (0)	
 			end
 		end		
 

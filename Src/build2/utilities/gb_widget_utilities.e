@@ -73,6 +73,7 @@ feature -- Basic operations
 			end
 		end
 		
+		
 	unparent_ev_object (ev_object: EV_ANY) is
 			-- Remove `ev_object' from its parent.
 		local
@@ -80,6 +81,8 @@ feature -- Basic operations
 			container: EV_CONTAINER
 			widget: EV_WIDGET
 			containable: EV_CONTAINABLE
+			menu_bar: EV_MENU_BAR
+			titled_window: EV_TITLED_WINDOW
 		do
 			containable ?= ev_object
 			check
@@ -93,13 +96,22 @@ feature -- Basic operations
 				end
 				dynamic_list.prune (containable)
 			else
-				container ?= containable.parent
-				widget ?= containable
-				check
-					container_not_void: container /= Void
-					widget_not_void: widget /= Void
+				menu_bar ?= containable
+				if menu_bar /= Void then
+					titled_window ?= containable.parent
+					check
+						titled_window_not_void: titled_window /= Void
+					end
+					titled_window.remove_menu_bar
+				else
+					container ?= containable.parent
+					widget ?= containable
+					check
+						container_not_void: container /= Void
+						widget_not_void: widget /= Void
+					end
+					container.prune (widget)
 				end
-				container.prune (widget)
 			end
 			check
 				containable_unparented: containable.parent = Void

@@ -13,6 +13,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_GWL_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	output_debug_string (s: STRING) is
@@ -68,7 +73,7 @@ feature -- Basic operations
 			cwin_show_cursor (False)
 		end
 
-	set_cursor_position (x, y: INTEGER) is
+	set_cursor_position_absolute (x, y: INTEGER) is
 			-- Set the cursor position to `x', `y'.
 		do
 			cwin_set_cursor_position (x, y)
@@ -94,6 +99,15 @@ feature -- Basic operations
 
 feature -- Status report
 
+	window_of_item (hwnd: POINTER): WEL_WINDOW is
+			-- Retrieve Eiffel object associated with `hwnd' pointer.
+		local
+			object_id: INTEGER
+		do
+			object_id := cwin_get_window_long (hwnd, gwl_userdata)
+			Result := eif_id_object (object_id)
+		end
+		
 	key_state (virtual_key: INTEGER): BOOLEAN is
 		obsolete "Use key_down or key_locked instead"
 		do
@@ -167,6 +181,12 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
+	foreground_window: WEL_WINDOW is
+			-- Foreground window (window with focus)
+		do
+			Result := window_of_item (cwin_get_foreground_window)
+		end
+		
 feature {NONE} -- Implementation
 
 	wr_main_args: WEL_MAIN_ARGUMENTS is
@@ -266,6 +286,34 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (LPSTR, UINT): EIF_INTEGER"
 		alias
 			"GetWindowsDirectory"
+		end
+
+	cwin_get_foreground_window: POINTER is
+			-- SDK GetForegroundWindow
+		external
+			"C [macro %"wel.h%"]: EIF_POINTER"
+		alias
+			"GetForegroundWindow()"
+		end
+
+	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is
+			-- SDK GetWindowLong
+		external
+			"C [macro %"wel.h%"] (HWND, int): EIF_INTEGER"
+		alias
+			"GetWindowLong"
+		end
+
+	eif_id_object (an_id: INTEGER): WEL_WINDOW is
+			-- Object associated with `an_id'
+		external
+			"C | %"eif_object_id.h%""
+		end
+
+	eif_object_id (an_object: ANY): INTEGER is
+			-- New identifier for `an_object'
+		external
+			"C | %"eif_object_id.h%""
 		end
 
 end -- class WEL_WINDOWS_ROUTINES

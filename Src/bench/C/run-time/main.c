@@ -10,6 +10,10 @@
 	Therein lie paths I would not have dared treading alone.
 */
 
+/*
+doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initialization of runtime">
+*/
+
 #include "eif_portable.h"
 
 #include <stdio.h>
@@ -72,7 +76,26 @@ rt_private void display_non_commercial(void);
 
 #endif
 
-rt_public int eif_no_reclaim = 0;			/* Call reclaim on termination. */
+/*
+doc:	<attribute name="eif_no_reclaim" return_type="int" export="public">
+doc:		<summary>Tell if runtime should reclaim all objects at the very end of execution.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized once in `eif_alloc_init'.</synchronization>
+doc:	</attribute>
+*/
+rt_public int eif_no_reclaim = 0;
+
+/*
+doc:	<attribute name="cc_for_speed" return_type="int" export="public">
+doc:		<summary>Is runtime memory allocation optimized for speed or for memory. Default value is `1' (speed), except on some platforms where it is not supported or if scavenging is disabled.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>MEMORY</eiffel_classes>
+doc:		<fixme>Update done in `memory.c' are not thread safe.</fixme>
+doc:	</attribute>
+*/
 #if defined VXWORKS
 	/* when eif_malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
@@ -85,31 +108,148 @@ rt_public int cc_for_speed = 1;			/* Fast memory allocation */
 #endif	/* EIF_NO_SCAVENGING */
 #endif	/* VXWORKS */
 
-rt_public char *ename;						/* Eiffel program's name */
-
 #ifndef VXWORKS  /* In the case of VxWorks, the declaration and 
 					initialization of scount is added by finish_freezing
 					to the file E1/ececil.c (paulv) */
+/*
+doc:	<attribute name="scount" return_type="int" export="public">
+doc:		<summary>Number of dynamic types in system.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `eplug.c' from generated C code.</synchronization>
+doc:	</attribute>
+*/
 rt_public int scount;						/* Number of dynamic types */
 #endif
 
+/*
+doc:	<attribute name="esystem" return_type="struct cnode *" export="public">
+doc:		<summary>Description of types in current system.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<indexing>Dynamic type.</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized here in `main.c' and updated once in `update' from `update.c'.</synchronization>
+doc:	</attribute>
+*/
 rt_public struct cnode *esystem;			/* Eiffel system */
-rt_public struct conform **co_table;		/* Eiffel conformance table */
 
 #ifdef WORKBENCH
-rt_public int ccount;						/* Number of classes */
-rt_public int fcount;						/* Number of frozen dynamic types */
-rt_public int32 **ecall;					/* Routine id arrays */
-rt_public struct rout_info *eorg_table;	/* Routine origin/offset table */
-rt_public unsigned char **melt;						/* Byte code array */
-rt_public uint32 eif_nb_features;				/* Nb of features in frozen system */
-rt_public int *mpatidtab;					/* Table of pattern id's indexed by body id's */
-rt_public struct eif_opt *eoption;			/* Option table */
+/*
+doc:	<attribute name="ccount" return_type="int" export="public">
+doc:		<summary>Number of classes.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in compiler generated `einit.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_public int ccount;
+
+/*
+doc:	<attribute name="fcount" return_type="int" export="public">
+doc:		<summary>Number of frozen dynamic types. Same as `scount' when system is completely frozen.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `main.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_public int fcount;
+
+/*
+doc:	<attribute name="ecall" return_type="int32 **" export="shared">
+doc:		<summary>Routine ID arrays. Used for workbench mode only. Array of routine IDs per class indexed by their feature_id.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<indexing>First index is by class_id, second by feature_id</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `main.c', updated in `update.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_shared int32 **ecall;
+
+/*
+doc:	<attribute name="eorg_table" return_type="struct rout_info *" export="shared">
+doc:		<summary>Routine origin/offset table.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `main.c', updated in `update.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_shared struct rout_info *eorg_table;
+
+/*
+doc:	<attribute name="melt" return_type="unsigned char **" export="shared">
+doc:		<summary>Byte code array. For each body_id, we store address in melted code array.</summary>
+doc:		<access>Read/Write once</access>\
+doc:		<indexing>Body_id</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since updated in `update.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_shared unsigned char **melt;
+
+/*
+doc:	<attribute name="eif_nb_features" return_type="uint32" export="public">
+doc:		<summary>Number of features in frozen system. Correspond to count of generated `egc_frozen_init'.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in compiler generated `einit.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_public uint32 eif_nb_features;
+
+/*
+doc:	<attribute name="eoption" return_type="struct eif_opt *" export="public">
+doc:		<summary>Option table. Store assertion and profiling option per dynamic type.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>Dtype</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `main.c' and updated in `update.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_public struct eif_opt *eoption;
+
+/*
+doc:	<attribute name="mpatidtab" return_type="int *" export="shared">
+doc:		<summary>Table of pattern ID for a given body_id.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<indexing>Body_id</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since updated in `update.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_shared int *mpatidtab;
+
+/*
+doc:	<attribute name="pattern" return_type="struct p_interface *" export="public">
+doc:		<summary>Pattern table indexed by pattern ID. It is a vtable of `toi' (from C to melted code) and `toc' (from melted code to C code) routines</summary>
+doc:		<access>Read/Write once</access>
+doc:		<indexing>Pattern_id</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `main.c'.</synchronization>
+doc:	</attribute>
+*/
 rt_public struct p_interface *pattern;		/* Pattern table */
 #else
+/*
+doc:	<attribute name="esize" return_type="long *" export="public">
+doc:		<summary>Size of objects indexed by dynamic type for finalized mode only. Done this way to avoid page fault by loading large `esystem' table.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<indexing>Dtype</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `main.c'.</synchronization>
+doc:	</attribute>
+*/
 rt_public long *esize;						/* Size of objects */
+
+/*
+doc:	<attribute name="nbref" return_type="long *" export="public">
+doc:		<summary>Number of references per dynamic type for finalized mode only. Done this way to avoid page fault by loading large `esystem' table.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<indexing>Dtype</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `main.c'.</synchronization>
+doc:	</attribute>
+*/
 rt_public long *nbref;						/* Gives # of references */
-/*#define exvec() exft()		*/			/* No stack dump in final mode */
 #endif
 
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
@@ -118,21 +258,70 @@ rt_public void failure(void);					/* The Eiffel exectution failed */
 rt_private Signal_t emergency(int sig);			/* Emergency exit */
 rt_public unsigned TIMEOUT;     /* Time out for interprocess communications */
 
-long EIF_once_count = 0;	/* Total nr. of once routines */
-long EIF_bonce_count = 0;	/* Nr. of once routines in bytecode */
+/*
+doc:	<attribute name="EIF_once_count" return_type="long" export="public">
+doc:		<summary>Total number of once routines (computed by compiler).</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized at beginning with EIF_Minitxxx routines in generated code.</synchronization>
+doc:	</attribute>
+*/
+rt_public long EIF_once_count = 0;
+
+/*
+doc:	<attribute name="EIF_bonce_count" return_type="long" export="shared">
+doc:		<summary>Number of once routines in bytecode.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized either to 0 or updated in `update.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_shared long EIF_bonce_count = 0;
 
 #ifndef EIF_THREADS
-rt_public int in_assertion = 0;			/* Is an assertion being evaluated ? */
-rt_public EIF_REFERENCE *EIF_once_values = (EIF_REFERENCE *) 0;	/* Array to save value of
-																   each computed once */
+/*
+doc:	<attribute name="in_assertion" return_type="int" export="public">
+doc:		<summary>Is an assertion being evaluated? Used to avoid recursive calls on assertions.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
+rt_public int in_assertion = 0;
+
+/*
+doc:	<attribute name="EIF_once_values" return_type="EIF_REFERENCE *" export="public">
+doc:		<summary>Array to save value of each computed once. It is used to store once per thread values.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>By once key.</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REFERENCE *EIF_once_values = NULL;
+
 #endif /* EIF_THREADS */
 
-/* This variable records whether the workbench application was launched via
- * the ised wrapper (i.e. in debug mode) or not.  */
+/*
+doc:	<attribute name="debug_mode" return_type="int" export="public">
+doc:		<summary>This variable records whether the workbench application was launched via the ised wrapper (i.e. in debug mode) or not.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by `winit' at the beginning and only one thread can modify `debug_mode' while debugging.</synchronization>
+doc:	</attribute>
+*/
 rt_public int debug_mode = 0;	/* Assume not in debug mode */
 
-rt_public char *starting_working_directory;	/* Store working directory during session,
-											   ie where to put output files from runtime */
+/*
+doc:	<attribute name="starting_working_directory" return_type="char *" export="public">
+doc:		<summary>Store working directory during session, ie where to put output files from runtime</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized once in `eif_rtinit'.</synchronization>
+doc:		<fixme>Memory is allocated, we do chdir, but we never fill its content?</fixme>
+doc:	</attribute>
+*/
+rt_public char *starting_working_directory;
 
 rt_private void display_reminder (void);	/* display reminder of license */
 
@@ -368,27 +557,6 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 	starting_working_directory = (char *) eif_malloc (PATH_MAX + 1);
 
-#ifdef EIF_WIN32
-		/* Get the current working directory, ie the one where we
-		 * are going to save the ouput files */
-	if (getcwd(starting_working_directory, PATH_MAX) == NULL)
-		print_err_msg(stderr, "Unable to get the current working directory.\n");
-
-	_fmode = O_BINARY;
-	GetModuleFileName (NULL, module_name, 255);
-
-	ename = strrchr (module_name, '\\');
-	if (ename++ == (char *) 0)
-		ename = module_name;
-#elif defined(VXWORKS)
-	ename = "eiffelvx";
-#else
-	ename = rindex(argv[0], '/');		/* Only last name if '/' found */
-
-	if (ename++ == (char *) 0)			/* There was no '/' in the name */
-		ename = argv[0];				/* Program name is the filename */
-#endif
-
 	ufill();							/* Get urgent memory chunks */
 
 #if defined (DEBUG) && ! defined (VXWORKS)
@@ -420,7 +588,6 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	esystem = egc_fsystem;
 	ecall = egc_fcall;
 	eoption = egc_foption;
-	co_table = egc_fco_table;
 	eif_par_table = egc_partab;
 	eif_par_table_size = egc_partab_size;
 	eorg_table = egc_forg_table;
@@ -471,7 +638,6 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	 * Initialize the finalized system with the static data structures.
 	 */
 	esystem = egc_fsystem;
-	co_table = egc_fco_table;
 	eif_par_table = egc_partab;
 	eif_par_table_size = egc_partab_size;
 	eif_gen_conf_init (eif_par_table_size);
@@ -546,7 +712,7 @@ rt_private Signal_t emergency(int sig)
 	 */
 	
 	print_err_msg(stderr, "\n\n%s: PANIC: caught signal #%d (%s) -- Giving up...\n",
-		ename, sig, signame(sig));
+		egc_system_name, sig, signame(sig));
 
 	exit(2);							/* Really abnormal termination */
 
@@ -631,3 +797,6 @@ rt_private void display_non_commercial(void)
 }
 #endif // NON_COMMERCIAL && WORKBENCH
 
+/*
+doc:</file>
+*/

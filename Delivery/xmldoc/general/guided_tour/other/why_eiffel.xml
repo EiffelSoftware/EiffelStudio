@@ -16,9 +16,6 @@
 		<paragraph>(After an article in the special Eiffel issue of the 
 			<italic>Journal of Object-Oriented Programming</italic>, May 1996.  )
 			<line_break></line_break>
-			<line_break></line_break>
-			<line_break></line_break>
-			<line_break></line_break>
 		</paragraph>
 		<paragraph>Over its ten-year life Eiffel has evolved into one of the most usable software development environments available today.  Other articles discuss its theoretical contributions.  This one addresses a more mundane subject: how practical software projects can benefit, today, from the power of Eiffel.  In so doing it will largely rely on published assessments from both Eiffel users and book authors.  In fact a quotation from one of the best-known books in the object-oriented field -- 
 			<italic>Object-Oriented Modeling and Design</italic> by James Rumbaugh and his colleagues, the text that introduced the OMT O-O analysis method -- provides a good start:
@@ -157,7 +154,6 @@
 			<italic>In a far-away country, a missionary was scolding the natives.   "You should not go around naked, showing your body like this!".   One day a young girl spoke back, pointing at him: "But you, Father, you are also showing a part of your body!".   "But of course", the missionary said in a dignified tone; "That is my face".   The girl replied: "So you see, Father, it is really the same thing.   Only, with us, everything is the face".   </italic>
 		</paragraph>
 		<paragraph>So it is with Eiffel too.  Everything is the face.  
-			<line_break></line_break>
 			<line_break></line_break>
 		</paragraph>
 		<paragraph>Hundreds of thousands of people have now been exposed to Eiffel through books, through courses, through hearing about other people's successes, and most importantly (for the most fortunate among them) through using it to complete a project on time, within budget, and to the satisfaction of their customers.  Shouldn't your next project use Eiffel too?</paragraph>

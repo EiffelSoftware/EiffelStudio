@@ -1,7 +1,5 @@
 <document title="Getting started with the Eiffel method and language" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>
@@ -53,7 +51,7 @@
 			<link>
 				<url>http://www.eiffel.com/doc/#etl</url>
 				<label>Eiffel: The Language</label>
-			</link>.  (These two links require Web access.  )
+			</link>.  (These two links require Web access)
 		</paragraph>
 		<heading>
 			<size>2</size>Other introductory documentation

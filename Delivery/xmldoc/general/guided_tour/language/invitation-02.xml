@@ -5,8 +5,6 @@
 				<envision_location>Eiffel, The Language\Tutorials\Invitation to Eiffel</envision_location>
 				<envision_pseudo_name>10</envision_pseudo_name>
 				<envision_title>What Must I Know First?</envision_title>
-				<studio_location></studio_location>
-				<studio_title></studio_title>
 			</toc>
 		</help>
 	</meta_data>
@@ -15,7 +13,7 @@
 			<size>1</size>
 			<content>1  What Must I KnowFirst?</content>
 		</heading>
-		<paragraph>This Invitation assumes that you have some experience of software development, but that's all.  Previous exposure to object technology is notrequired.  If you've had it, it will help; but if it has all been to notations like UML or programming languages like C++ and Java, you should not let it guide your study of this Invitation.Although Eiffel shares a number of properties with these other approaches, it takes a fresh path to object technology, based on a small number of simple, far-reaching concepts.</paragraph>
-		<paragraph>Once you are familiar with the basic ideas you may want to try them with EiffelStudio, which provides a direct implementation of the Eiffel concepts, available ina completely portable way across Windows, Linux, many versions of Unix and VMS.  </paragraph>
+		<paragraph>This Invitation assumes that you have some experience of software development, but that's all.  Previous exposure to object technology is not required.  If you've had it, it will help; but if it has all been to notations like UML or programming languages like C++ and Java, you should not let it guide your study of this Invitation. Although Eiffel shares a number of properties with these other approaches, it takes a fresh path to object technology, based on a small number of simple, far-reaching concepts.</paragraph>
+		<paragraph>Once you are familiar with the basic ideas you may want to try them with EiffelStudio, which provides a direct implementation of the Eiffel concepts, available in a completely portable way across Windows, Linux, many versions of Unix and VMS.  </paragraph>
 	</paragraph>
 </document>

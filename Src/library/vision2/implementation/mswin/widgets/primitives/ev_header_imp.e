@@ -155,9 +155,7 @@ feature -- Element change
 			-- Insert `item_imp' at `an_index'.
 		do
 			insert_header_item (item_imp, an_index - 1)
-			if item_imp.pixmap /= Void then
-				set_item_pixmap (item_imp, item_imp.pixmap)
-			end
+			item_imp.set_pixmap_in_parent
 		end
 		
 feature -- Removal
@@ -193,28 +191,15 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 	image_list: EV_IMAGE_LIST_IMP
 		-- Image list associated with `Current'.
 		-- `Void' if none.
-		
-	set_item_pixmap (v: EV_HEADER_ITEM_IMP; a_pixmap: EV_PIXMAP) is
-			-- Assign `a_text' to the label for `an_item'.
-		require else
-			has_an_item: has (v.interface)
+
+	setup_image_list is 
+			-- Create the image list and associate it
+			-- to `Current' if not already associated.
 		do
-			if a_pixmap /= Void then
-				if image_list = Void then
-						-- If no image list is associated with `Current', retrieve
-						-- and associate one.
-					image_list := get_imagelist_with_size (pixmaps_width, pixmaps_height)
-					set_image_list (image_list)
-				end
-				image_list.add_pixmap (a_pixmap)
-					-- Set the `iimage' to the index of the image to be used
-					-- from the image list.
-				v.set_iimage (image_list.last_position)
-			else
-				v.set_mask (clear_flag (v.mask, feature {WEL_HDI_CONSTANTS}.hdi_image))
-				v.set_format (clear_flag (v.format, feature {WEL_HDF_CONSTANTS}.hdf_image))
-			end
-			refresh_item (v)
+			image_list := get_imagelist_with_size (pixmaps_width, pixmaps_height)
+			set_image_list (image_list)
+		ensure then
+			image_list_not_void: image_list /= Void
 		end
 		
 	pixmaps_size_changed is
@@ -235,11 +220,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 				ev_children.off
 			loop
 				l_item := ev_children.item	
-				if l_item.pixmap_imp /= Void then
-					set_item_pixmap (l_item, l_item.pixmap_imp.interface)
-				else
-					set_item_pixmap (l_item, Void)
-				end
+				l_item.set_pixmap_in_parent
 				ev_children.forth
 			end
 			ev_children.go_to (l_cursor)
@@ -471,9 +452,6 @@ feature {NONE} -- Implementation
 		do
 			cwin_show_window (hwnd, cmd_show)
 		end
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end -- class EV_HEADER_IMP
 

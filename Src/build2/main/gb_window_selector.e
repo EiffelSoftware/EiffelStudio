@@ -513,7 +513,7 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 					end
 				end
 			end
-			if dialog.cancelled then
+			if dialog /= Void and then dialog.cancelled then
 					-- The adition of the new object has been cancelled so we can delete
 					-- the object as it is not to be used.
 				object_handler.mark_as_deleted (an_object)

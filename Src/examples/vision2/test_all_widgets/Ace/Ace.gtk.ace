@@ -41,13 +41,12 @@ cluster
 -- EiffelVision
 
 	-- Interface
-        -- Vision:                 	"$EIFFEL4/library/vision";
-        vision:                 			"/boston/aitkaci/vision2";
+        vision:                 			"$EIFFEL4/library/vision2";
 	vision_kernel (vision):        			"$/interface/kernel";
 	vision_support (vision):       			"$/interface/support";
 	vision_properties (vision):			"$/interface/properties";
-	vision_user_data (vision):			"$/interface/user_data";
 	vision_items (vision):				"$/interface/items";
+	vision_pnd (vision):				"$/interface/pick_and_drop";
 	vision_widgets (vision):        		"$/interface/widgets";
 	vision_primitives (vision_widgets):     	"$/primitives";
 	vision_containers (vision_widgets):     	"$/containers";
@@ -63,6 +62,7 @@ cluster
 	vision_ii_support (vision_ii):			"$/support";
     	vision_ii_properties (vision_ii):   		"$/properties";
 	vision_ii_items (vision_ii):			"$/items";
+	vision_ii_pnd (vision_ii):			"$/pick_and_drop";
 	vision_ii_widgets (vision_ii):			"$/widgets";
 	vision_ii_primitives (vision_ii_widgets):	"$/primitives";
 	vision_ii_containers (vision_ii_widgets):	"$/containers";
@@ -76,7 +76,7 @@ cluster
 	vision_gtk_support (vision_gtk):        		"$/support";
 	vision_gtk_properties (vision_gtk):     		"$/properties";
 	vision_gtk_items (vision_gtk):				"$/items";
-	vision_gtk_user_data (vision_gtk):      		"$/user_data";
+	vision_gtk_pnd (vision_gtk):				"$/pick_and_drop";
 	vision_gtk_widgets (vision_gtk):       			"$/widgets";
 	vision_gtk_primitives (vision_gtk_widgets):		"$/primitives";
 	vision_gtk_containers (vision_gtk_widgets):		"$/containers";
@@ -87,9 +87,9 @@ cluster
 external
 
 	include_path:
- 		"/boston/aitkaci/vision2/implementation/gtk/Clib `gtk-config --cflags`";
+ 		"$EIFFEL4/library/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
         object:
- 		"/boston/aitkaci/vision2/implementation/gtk/Clib/gtk_eiffel.o",
+ 		"$(EIFFEL4)/library/vision2/implementation/gtk/spec/$(PLATFORM)/gtk_eiffel.o",
 		"`gtk-config --libs`"
 
 end

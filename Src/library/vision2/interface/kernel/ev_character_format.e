@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new character format object.
 		do
-			!EV_CHARACTER_FORMAT_IMP! implementation.make
+			create {EV_CHARACTER_FORMAT_IMP} implementation.make
 			implementation.set_interface (Current)
 		end
 

@@ -134,7 +134,7 @@ feature -- User input events
 		deferred
 		end
 
-feature {EV_ANY_I} -- Initialization
+feature {EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE} -- Initialization
 
 	init_drop_actions (a_drop_actions: EV_PND_ACTION_SEQUENCE) is
 			-- Setup drop action sequence.

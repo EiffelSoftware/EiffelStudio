@@ -341,7 +341,7 @@ feature {NONE} -- Update
 				Result.set_file_name (file)
 				Result.add_extension ("ico")
 			else
-				if False and Eiffel_platform.as_lower.is_equal ("windows") then
+				if Eiffel_platform.as_lower.is_equal ("windows") then
 					create Result.make_from_string (Icon_path)
 					Result.set_file_name (file)
 					Result.add_extension ("ico")

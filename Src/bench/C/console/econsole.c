@@ -439,7 +439,7 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	r = vsprintf (s,StrFmt, ap);
 	va_end (ap);
 
-	if (save_exception_trace)
+	if (exception_trace_string)
 		{
 		for (c=exception_trace_string+strlen(exception_trace_string), sc = s; *sc; sc++, c++)
 			if (*sc != '\n')

@@ -134,8 +134,16 @@ debug("PROFILE_CONVERT")
 	io.error.putstring ("Will use `independent_store'.");
 	io.error.new_line
 end;
-			!! out_file_name.make_from_string (Profiler_path);
-			out_file_name.set_file_name (profilename);
+
+-- FIXME: WE should do something like
+-- !! out_file_name.make_from_string (profiler_path);
+-- out_file_name.set_file_name (profilename.extract_name);
+-- in order to put the `profinfo.pfi' in the correct directory
+-- out_file_name.add_extension (Dot_profile_information);
+--
+-- The problem is that no extract_name feature exists in FILE_NAME
+-- FIXME
+			!! out_file_name.make_from_string (profilename);
 			out_file_name.add_extension (Dot_profile_information);
 			!! file.make (out_file_name);
 			if (file.exists and then file.is_writable) or else

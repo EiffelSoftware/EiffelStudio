@@ -34,6 +34,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -48,11 +53,15 @@ feature {NONE} -- Initialization
 
 				-- Create notebook & pages.
 			create notebook
-			create editor.make_with_tool (Current)
+			if has_case then
+				create editor.make_with_tool (Current)
+			end
 			create class_view.make_with_tool (development_window, Current)
 			create feature_view.make_with_tool (development_window, Current)
 			create output_view.make (development_window, Current)
-			create metrics.make (development_window, Current)
+			if has_metrics then
+				create metrics.make (development_window, Current)
+			end
 
 			if not Eiffel_project.workbench.is_already_compiled then
 				on_project_unloaded
@@ -61,15 +70,33 @@ feature {NONE} -- Initialization
 			end
 				-- Set pages of the notebook.
 			notebook.extend (output_view.widget)
-			notebook.extend (editor.widget)
+			if has_case then
+				notebook.extend (editor.widget)
+				diagram_index := 2
+			else
+				diagram_index := -1
+			end
 			notebook.extend (class_view.widget)
 			notebook.extend (feature_view.widget)
-			notebook.extend (metrics.widget)
+			if has_metrics then
+				notebook.extend (metrics.widget)
+				if has_case then
+					metric_index := 5
+				else
+					metric_index := 4
+				end
+			else
+				metric_index := -1
+			end
 			notebook.set_item_text (output_view.widget, interface_names.l_Tab_output)
-			notebook.set_item_text (editor.widget, interface_names.l_Tab_diagram)
+			if has_case then
+				notebook.set_item_text (editor.widget, interface_names.l_Tab_diagram)
+			end
 			notebook.set_item_text (class_view.widget, interface_names.l_Tab_class_info)
 			notebook.set_item_text (feature_view.widget, interface_names.l_Tab_feature_info)
-			notebook.set_item_text (metrics.widget, interface_names.l_Tab_metrics)
+			if has_metrics then
+				notebook.set_item_text (metrics.widget, interface_names.l_Tab_metrics)
+			end
 			notebook.set_tab_position (notebook.Tab_bottom)
 			notebook.selection_actions.extend (~on_tab_changed)
 			notebook.set_minimum_size (500, 200)
@@ -185,8 +212,10 @@ feature -- Status setting
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			history_manager.synchronize
-				-- Inform metric of classes recompilation.
-			metrics.set_recompiled (True)
+			if has_metrics then
+					-- Inform metric of classes recompilation.
+				metrics.set_recompiled (True)
+			end
 			conv_dev ?= manager
 			if conv_dev /= Void then
 				if not conv_dev.unified_stone then
@@ -208,7 +237,9 @@ feature -- Status setting
 	refresh is
 			-- Class has changed in `development_window'.
 		do
-			editor.synchronize
+			if has_case then
+				editor.synchronize
+			end
 			class_view.refresh
 			feature_view.refresh
 		end
@@ -246,10 +277,14 @@ feature -- Status setting
 	on_project_loaded is
 			-- A new project has been loaded. Enable all controls.
 		do
-			editor.widget.enable_sensitive
+			if has_case then
+				editor.widget.enable_sensitive
+			end
 			class_view.widget.enable_sensitive
 			feature_view.widget.enable_sensitive
-			metrics.widget.enable_sensitive
+			if has_metrics then
+				metrics.widget.enable_sensitive
+			end
 		end
 
 	on_project_unloaded is
@@ -257,10 +292,14 @@ feature -- Status setting
 			-- Disable all control contained in the context tool
 			-- (output window excepted).
 		do
-			editor.widget.disable_sensitive
+			if has_case then
+				editor.widget.disable_sensitive
+			end
 			class_view.widget.disable_sensitive
 			feature_view.widget.disable_sensitive
-			metrics.widget.disable_sensitive
+			if has_metrics then
+				metrics.widget.disable_sensitive
+			end
 		end
 
 	set_focus is
@@ -271,13 +310,13 @@ feature -- Status setting
 			sit := notebook.selected_item
 			if sit = output_view.widget then
 				output_view.set_focus
-			elseif sit = editor.widget then
+			elseif has_case and then sit = editor.widget then
 				editor.set_focus
 			elseif sit = class_view.widget then
 				class_view.set_focus
 			elseif sit = feature_view.widget then
 				feature_view.set_focus
-			elseif sit = metrics.widget then
+			elseif has_metrics and then sit = metrics.widget then
 				metrics.set_focus
 			end
 		end
@@ -298,10 +337,14 @@ feature -- Memory management
 			output_view.recycle
 			class_view.recycle
 			feature_view.recycle
-				-- Save the diagram
-			editor.store
-			editor.recycle
-			metrics.recycle
+			if has_case then
+					-- Save the diagram
+				editor.store
+				editor.recycle
+			end
+			if has_metrics then
+				metrics.recycle
+			end
 			explorer_bar_item.recycle
 			notebook.selection_actions.block
 			notebook.destroy
@@ -339,9 +382,13 @@ feature -- Stone management
 			debugger_manager.set_stone (a_stone)
 			feature_view.set_stone (a_stone)
 			class_view.set_stone (a_stone)
-			editor.set_stone (a_stone)
+			if has_case then
+				editor.set_stone (a_stone)
+			end
 			stone := a_stone
-			metrics.set_stone (a_stone)
+			if has_metrics then
+				metrics.set_stone (a_stone)
+			end
 		end
 
 	advanced_set_stone (a_stone: STONE) is
@@ -352,7 +399,7 @@ feature -- Stone management
 			ind: INTEGER
 		do
 			ind := notebook.selected_item_index
-			if ind /= 2 and ind /= 5 then
+			if ind /= diagram_index and ind /= metric_index then
 					-- Do not switch tabs if we're in the diagram tool or the metric tool.
 				conv_fst ?= a_stone
 				if conv_fst /= Void then
@@ -372,29 +419,41 @@ feature {NONE} -- Implementation
 	header_box: EV_HORIZONTAL_BOX
 			-- Box that contains the address_manager header_info when the context tool is separated from the development window.
 
+	diagram_index: INTEGER
+			-- Index of the diagram tool in the notebook.
+
+	metric_index: INTEGER
+			-- Index of the metrics in the notebook.
+
 	on_tab_changed is
 			-- User selected a different tab.
 		do
-			if notebook.selected_item = editor.widget then
+			if has_case and then notebook.selected_item = editor.widget then
 				output_view.on_deselect
 				is_diagram_selected := True
 				editor.on_select
 				class_view.on_deselect
 				feature_view.on_deselect
-				metrics.on_deselect
+				if has_metrics then
+					metrics.on_deselect
+				end
 			elseif notebook.selected_item = class_view.widget then
 				output_view.on_deselect
 				is_diagram_selected := False
 				class_view.on_select
 				feature_view.on_deselect
-				metrics.on_deselect
+				if has_metrics then
+					metrics.on_deselect
+				end
 			elseif notebook.selected_item = feature_view.widget then
 				output_view.on_deselect
 				is_diagram_selected := False
 				feature_view.on_select
 				class_view.on_deselect
-				metrics.on_deselect
-			elseif notebook.selected_item = metrics.widget then
+				if has_metrics then
+					metrics.on_deselect
+				end
+			elseif has_metrics and then notebook.selected_item = metrics.widget then
 				output_view.on_deselect
 				is_diagram_selected := False
 				class_view.on_deselect
@@ -405,13 +464,17 @@ feature {NONE} -- Implementation
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
-				metrics.on_deselect
+				if has_metrics then
+					metrics.on_deselect
+				end
 			else
 				output_view.on_deselect
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
-				metrics.on_deselect
+				if has_metrics then
+					metrics.on_deselect
+				end
 			end
 		end
 

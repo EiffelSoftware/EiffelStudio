@@ -55,7 +55,7 @@ feature -- Type check, byte code and dead code removal
 			veen2a: VEEN2A
 		do
 				-- Error if in procedure or invariant
-			error_found := context.level2
+			error_found := context.is_checking_invariant
 			if not error_found then
 				feat_type := context.feature_type
 				error_found := feat_type.conform_to (Void_type)
@@ -68,7 +68,7 @@ feature -- Type check, byte code and dead code removal
 					-- Cannot go on here
 				Error_handler.raise_error
 			else
-				if context.level4 then
+				if context.is_checking_precondition then
 						-- Result entity in precondition
 					create veen2a
 					context.init_error (veen2a)

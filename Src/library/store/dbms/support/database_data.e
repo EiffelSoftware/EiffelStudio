@@ -166,28 +166,6 @@ feature -- Element change
 					end
 					f_string.append (database_string)
 
-				-- DATE type
-				elseif value_type.item (ind) = Date_type_database then
-					if f_any = Void then
-						create f_date.make_now
-						value.put (f_date, ind)
-					else
-						f_date ?= f_any
-						if f_date = Void then
-							create f_date.make_now
-							value.put (f_date, ind)
-						end
-					end
-					if db_spec.get_date_data (no_descriptor, ind) = 1 then
-						create time.make (db_spec.get_hour (no_descriptor, ind), db_spec.get_min (no_descriptor, ind), db_spec.get_sec (no_descriptor, ind))
-						create date.make_month_day_year (db_spec.get_month (no_descriptor, ind), db_spec.get_day (no_descriptor, ind), db_spec.get_year (no_descriptor, ind))
-						f_date.set_time (time)
-						f_date.set_date (date)
-					else
-						value.put (Void, ind)
-				--		f_date.copy (db_default_null_value.datetime_value)
-					end
-
 				elseif not db_spec.is_null_data (no_descriptor, ind) then
 
 					-- INTEGER type
@@ -218,18 +196,39 @@ feature -- Element change
 						end
 						f_double.set_item (db_spec.get_float_data (no_descriptor, ind))
 
-          			  	-- REAL type
- 		               	elseif value_type.item (ind) = Real_type_database then
- 		               	    	if f_any = Void then
-              		       	   	create f_real
+					-- DATE type
+					elseif value_type.item (ind) = Date_type_database then
+						if f_any = Void then
+							create f_date.make_now
+							value.put (f_date, ind)
+						else
+							f_date ?= f_any
+							if f_date = Void then
+								create f_date.make_now
+								value.put (f_date, ind)
+							end
+						end
+						if db_spec.get_date_data (no_descriptor, ind) = 1 then
+							create time.make (db_spec.get_hour (no_descriptor, ind), db_spec.get_min (no_descriptor, ind), db_spec.get_sec (no_descriptor, ind))
+							create date.make_month_day_year (db_spec.get_month (no_descriptor, ind), db_spec.get_day (no_descriptor, ind), db_spec.get_year (no_descriptor, ind))
+							f_date.set_time (time)
+							f_date.set_date (date)
+						else
+							value.put (Void, ind)
+						end
+
+          			-- REAL type
+		           	elseif value_type.item (ind) = Real_type_database then
+ 		            	if f_any = Void then
+							create f_real
 							value.put (f_real, ind)
 						else
 							f_real ?= f_any
-    		                    			if f_real = Void then
-        	                    				create f_real
-            	                				value.put (f_real, ind)
-                	        			end
-                    				end
+    		                if f_real = Void then
+        	                    create f_real
+            	               	value.put (f_real, ind)
+                	   		end
+           				end
 						f_real.set_item (db_spec.get_real_data (no_descriptor, ind))
 
 					-- BOOLEAN type
@@ -249,7 +248,6 @@ feature -- Element change
 				else
 					value.put (Void, ind)
 				end
-
 				ind := ind + 1
 			end
 		end

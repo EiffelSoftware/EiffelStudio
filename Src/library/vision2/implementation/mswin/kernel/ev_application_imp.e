@@ -10,19 +10,113 @@ class
 	EV_APPLICATION_IMP
 	
 inherit
+	EV_APPLICATION_I
+
+	EV_ACCELERATOR_HANDLER_IMP
+		rename
+			application as wrong_application
+		redefine
+			accelerator_table,
+			on_accelerator_command,
+			execute_accel_command
+		end
+
  	WEL_APPLICATION
  		rename
- 			make as wel_make
+ 			make as wel_make,
+			application_main_window as main_window
 		redefine
-			init_application
+			main_window,
+			init_application,
+			accelerators
  		end
-
-	EV_APPLICATION_I
 
 creation
 	make
 
-feature {NONE} -- Implemenation dlls
+feature {NONE} -- Initialization
+
+	make is
+			-- Create the application.
+		do
+			set_application (Current)
+			create_dispatcher
+			init_instance
+			init_application
+		end
+
+	launch (interface: EV_APPLICATION) is
+			-- Launch the main window and the application.
+		do
+			main_window ?= interface.main_window.implementation
+			main_window.application.put (Current)
+			set_application_main_window (main_window)
+			interface.init_accelerators
+			if runable then
+				run
+			end
+		end
+
+feature -- Access
+
+	main_window: EV_WINDOW_IMP
+
+feature -- Accelerators - command association
+
+	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when `acc' is completed by the user.
+		do
+			add_accel_command (acc, cmd, arg)
+		end
+
+	remove_accelerator_commands (acc: EV_ACCELERATOR) is
+			-- Empty the list of commands to be executed when
+			-- `acc' is completed by the user.
+		do
+			remove_accel_commands (acc)
+		end
+
+feature -- Basic operation
+
+	exit is
+			-- Exit the application
+		do
+			main_window.destroy
+		end
+
+feature -- Implementation
+
+	accelerator_table: EV_ACCELERATOR_TABLE_IMP is
+			-- Table that memories and passes the accelerators to the
+			-- system. In this table, all the accelerators are unique.
+		do
+			Result := main_window.accelerator_table
+		end
+
+	execute_accel_command (id: INTEGER; data: EV_EVENT_DATA) is
+			-- Execute the command that correspond to the accelerator
+			-- represented by id.
+			-- If there are no command, it calls the execution of the
+			-- parent.
+		local
+			list: LINKED_LIST [EV_INTERNAL_COMMAND]
+			i: INTEGER
+		do
+			if accelerator_list /= Void and then accelerator_list.has (id) then
+				list := (accelerator_list @ id)
+				from
+					i := 1
+				until
+					i > list.count
+				loop
+					(list @ i).execute (data)
+					i := i + 1
+				end
+			end
+		end
+
+feature {NONE} -- WEL Implemenation
 
 	common_control_dll: WEL_COMMON_CONTROLS_DLL
 			-- Needed for the common controls.
@@ -30,12 +124,14 @@ feature {NONE} -- Implemenation dlls
 	rich_edit_dll: WEL_RICH_EDIT_DLL
 			-- Needed if the user want to open a rich edit.
 
-feature {NONE} -- Implementation
-
-	make (interf: EV_APPLICATION) is
+	accelerators: EV_ACCELERATOR_TABLE_IMP is
+			-- Application's accelerators
 		do
-			interface := interf
-			wel_make
+			if accelerator_table.empty then
+				Result := Void
+			else
+				Result := accelerator_table
+			end
 		end
 
 	init_application is
@@ -45,33 +141,48 @@ feature {NONE} -- Implementation
 			!! rich_edit_dll.make
 		end
 
+feature {NONE} -- Inapplicable
+
 	iterate is
-		-- Loop the application.
-		-- Already done by WEL : do nothing.
+			-- Loop the application.
+			-- Already done by WEL : do nothing.
         do
+			check
+				Do_nothing: True
+			end
         end
 
-	exit is
-			-- Exit
+	on_accelerator_command (id: INTEGER) is
+			-- The `acelerator_id' has been activated.
 		do
 			check
-				not_called: False
+				Inapplicable: False
 			end
 		end
 
-	interface: EV_APPLICATION
-
-feature -- Implementation
-	
-	main_window: WEL_FRAME_WINDOW is
-		local
-			window_imp: EV_WINDOW_IMP
-		once
-			window_imp ?= interface.main_window.implementation
+	parent_imp: EV_CONTAINER_IMP is
+			-- Parent of the current widget.
+		do
 			check
-				window_imp /= Void
+				Inapplicable: False
 			end
-			Result := window_imp
+		end
+
+	wrong_application: CELL [EV_APPLICATION_IMP] is
+			-- The current application. Needed for the
+			-- accelerators.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
+	focus_on_widget: CELL [EV_WIDGET_IMP] is
+			-- Widget that currently have the focus.
+		do
+			check
+				Inapplicable: False
+			end
 		end
 
 end -- class EV_APPLICATION_IMP

@@ -131,7 +131,7 @@ feature -- Formatter
 				end;	
 				i := i + 1
 			end;
-			if not not_first then
+			if l_count > 0 and then not not_first then
 				ctxt.rollback;
 			else
 				ctxt.commit;
@@ -171,7 +171,7 @@ feature -- Formatter
 				end;	
 				i := i - 1
 			end;
-			if not not_first then
+			if i > 0 and then not not_first then
 				ctxt.rollback;
 			else
 				ctxt.commit;

@@ -60,15 +60,17 @@ feature -- formatter
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
-			i: INTEGER
+			value_area: SPECIAL [CHARACTER];
+			i, value_count: INTEGER;
 		do
 			ctxt.put_text_item (ti_Double_quote);
 			from
-				i := 1
+				value_area := value.area;
+				value_count := value.count
 			until
-				i > value.count
+				i >= value_count
 			loop
-				ctxt.put_string (char_text (value.item (i)));
+				ctxt.put_string (char_text (value_area.item (i)));
 				i := i + 1
 			end;
 			ctxt.put_text_item (ti_Double_quote);

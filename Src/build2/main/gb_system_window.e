@@ -65,35 +65,6 @@ feature -- Actions
 			command_handler.update
 		end
 		
-feature -- Content initialization
-
-	initialize_content is
-			-- Initialize content of Window.
-		do
-				-- Clean previously entered data
-			reset_content			
-		end
-
-	check_content is
-			-- Check content of Ace file and if valid set `root_ast'.
-		local
-			is_incorrect: BOOLEAN
-			error_dialog: EV_WARNING_DIALOG
-		do
-
-		end
-
-	is_content_valid: BOOLEAN
-			-- Is content of retrieved Ace file correct?
-
-	has_content: BOOLEAN
-			-- Has an ace file been specified?
-
-	reset_content is
-			-- Delete all entered information.
-		do
-		end
-		
 feature -- Basic operation
 
 	display_project_information is
@@ -208,10 +179,6 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Implementation
-
-	default_ace_file_name: STRING is "Ace.ace"
-			-- Default ace file name.
-
 
 	tab_list: ARRAYED_LIST [GB_SYSTEM_TAB] is
 			-- List of available tab in Current.

@@ -8,8 +8,8 @@ root
 	APPLICATION (root_cluster): "make"
 
 default
+	assertion (require)
 	-- assertion (all)
-	assertion (no)
 	dead_code_removal (yes)
 
 cluster

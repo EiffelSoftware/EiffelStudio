@@ -25,6 +25,7 @@
 #include "eif_hector.h"
 #include "eif_garcol.h"
 #include "rt_macros.h"
+#include "rt_gen_types.h"
 #include "x2c.h"		/* For macro LNGPAD */
 #include <string.h>
 #include "rt_assert.h"
@@ -46,6 +47,7 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset);			/* Duplication with aging tests */
 rt_private EIF_REFERENCE spclone(register EIF_REFERENCE source);/* Clone for special object */
 rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE target);
+rt_private void tuple_copy(register EIF_REFERENCE source, register EIF_REFERENCE target);
 
 #ifndef lint
 rt_private char *rcsid =
@@ -60,12 +62,18 @@ rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 
   	REQUIRE ("source not null", source);
 
-	if (flags & EO_SPEC) 
-		return spclone (source);
-	else if ((int16)(flags & EO_TYPE) == (int16) egc_bit_dtype)
+	if (flags & EO_SPEC) {
+		if (flags & EO_TUPLE) {
+				/* We simply create a new instance of the same type */
+			return RTLNT(flags & EO_TYPE);
+		} else {
+			return spclone (source);
+		}
+	} else if ((int16)(flags & EO_TYPE) == (int16) egc_bit_dtype) {
 		return b_clone(source);
-	else
+	} else {
 		return emalloc(flags & EO_TYPE);
+	}
 }
 
 rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE target)
@@ -81,12 +89,17 @@ rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE targe
 	REQUIRE ("target_not_null", target);
 	REQUIRE ("Same type", Dftype(source) == Dftype(target));
 
-	if (flags & EO_SPEC)
-		spcopy(source, target);
-	else if ((int16)(flags & EO_TYPE) == (int16) egc_bit_dtype)
+	if (flags & EO_SPEC) {
+		if (flags & EO_TUPLE) {
+			tuple_copy(source, target);
+		} else {
+			spcopy(source, target);
+		}
+	} else if ((int16)(flags & EO_TYPE) == (int16) egc_bit_dtype) {
 		b_copy(source, target);
-	else
+	} else {
 		eif_std_ref_copy(source, target);
+	}
 
 	ENSURE ("equals", eequal (target, source));
 }
@@ -263,6 +276,9 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	EIF_REFERENCE *hash_zone;				/* Hash table entry recording duplication */
 	EIF_REFERENCE clone;					/* Where clone is allocated */
 
+	REQUIRE("source not null", source);
+	REQUIRE("enclosing not null", enclosing);
+
 	zone = HEADER(source);			/* Where eif_malloc stores its information */
 	flags = zone->ov_flags;			/* Eiffel flags */
 
@@ -326,6 +342,9 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int o
 	union overhead *zone;
 	EIF_INTEGER count, elem_size;
 
+	REQUIRE("source not null", source);
+	REQUIRE("enclsoing not null", enclosing);
+
 	zone = HEADER(source);
 	flags = zone->ov_flags;
 
@@ -365,7 +384,23 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int o
 		 * themselves have expanded objects) and also to deep clone them.
 		 */
 
-		if (!(flags & EO_COMP))	{	/* Special object filled with references */
+		if (flags & EO_TUPLE) {
+			EIF_TYPED_ELEMENT * l_target = (EIF_TYPED_ELEMENT *) clone;
+			EIF_TYPED_ELEMENT * l_source = (EIF_TYPED_ELEMENT *) source;
+				/* Don't forget that first element of TUPLE is just a placeholder
+				 * to avoid offset computation from Eiffel code */
+			l_target++;
+			l_source++;
+			count--;
+			for (; count > 0; count--, l_target++, l_source++) {
+				if (eif_tuple_item_type(l_source) == EIF_REFERENCE_CODE) {
+					c_field = eif_reference_tuple_item(l_target);
+					if (c_field) {
+						rdeepclone(c_field, (EIF_REFERENCE) &eif_reference_tuple_item(l_target), 0);
+					}
+				}
+			}
+		} else if (!(flags & EO_COMP))	{	/* Special object filled with references */
 			for (offset = 0; count > 0; count--, offset += REFSIZ) {
 				c_field = *(EIF_REFERENCE *) (clone + offset);
 				/* Iteration on non void references and Eiffel references */
@@ -461,9 +496,8 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE target)
 {
 	/* Copy a special Eiffel object into another one. It assumes that
-	 * `source' and `target' are not NULL. Precondition of redefined
-	 * feature `copy' of class SPECIAL ensures that the count of
-	 * `source' is greater than `target'.
+	 * `source' and `target' are not NULL and that count of `target' is greater
+	 * than count of `source'.
 	 */
 
 	uint32 field_size;
@@ -471,6 +505,50 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 
 	REQUIRE ("source not null", source);
 	REQUIRE ("target not null", target);
+	REQUIRE ("source is special", HEADER(source)->ov_flags & EO_SPEC);
+	REQUIRE ("target is special", HEADER(source)->ov_flags & EO_SPEC);
+	REQUIRE ("target_count_greater", RT_SPECIAL_COUNT(target) >= RT_SPECIAL_COUNT(source));
+
+	/* Evaluation of the size field to copy */
+	field_size = (HEADER(target)->ov_size & B_SIZE) - LNGPAD_2;
+
+	memmove(target, source, field_size);			/* Block copy */
+
+#ifdef ISE_GC
+	/* Ok, normally we would have to perform age tests, by scanning the special
+	 * object, looking for new objects. But a special object can be really big,
+	 * and can also contain some expanded objects, which should be traversed
+	 * to see if they contain any new objects. Ok, that's enough! This is a
+	 * GC problem and is normally performed by the GC. So, if the special object
+	 * is old and contains some references, I am automatically inserting it
+	 * in the remembered set. The GC will remove it from there at the next
+	 * cycle, if necessary--RAM.
+	 */
+
+	flags = HEADER(target)->ov_flags;
+	CHECK ("Not forwarded", !(HEADER (target)->ov_flags & B_FWD));
+	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
+			/* May it hold new references? */
+			eremb(target);	/* Remember it, even if not needed, to fasten
+								copying process. */
+#endif /* ISE_GC */
+}
+
+rt_private void tuple_copy(register EIF_REFERENCE source, register EIF_REFERENCE target)
+{
+	/* Copy a tuple Eiffel object into another one. It assumes that
+	 * `source' and `target' are not NULL and that count of `target' is the same
+	 * as count of `source'.
+	 */
+
+	uint32 field_size;
+	uint32 flags;
+
+	REQUIRE ("source not null", source);
+	REQUIRE ("target not null", target);
+	REQUIRE ("source is tuple", HEADER(source)->ov_flags & EO_SPEC);
+	REQUIRE ("target is tuple", HEADER(source)->ov_flags & EO_SPEC);
+	REQUIRE ("same count", RT_SPECIAL_COUNT(target) == RT_SPECIAL_COUNT(source));
 
 	/* Evaluation of the size field to copy */
 	field_size = (HEADER(target)->ov_size & B_SIZE) - LNGPAD_2;
@@ -643,6 +721,8 @@ rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGE
 	REQUIRE ("target not null", target);
 	REQUIRE ("Special object", HEADER (source)->ov_flags & EO_SPEC);
 	REQUIRE ("Special object", HEADER (target)->ov_flags & EO_SPEC);
+	REQUIRE ("Not tuple object", !(HEADER (source)->ov_flags & EO_TUPLE));
+	REQUIRE ("Not tuple object", !(HEADER (target)->ov_flags & EO_TUPLE));
 	REQUIRE ("start position valid", (start >= 0) && (start < RT_SPECIAL_COUNT(source)));
 	REQUIRE ("end position valid", (end >= 0) && (end < RT_SPECIAL_COUNT(source)));
 	REQUIRE ("valid bounds", (start <= end) || (start == end + 1));

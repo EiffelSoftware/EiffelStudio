@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Implementation interface for dockable source."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,6 +19,8 @@ inherit
 feature -- Access
 
 	original_parent_position: INTEGER
+		-- Original position in parent. Required
+		-- to restore widget later.
 	
 	is_dock_executing: BOOLEAN is
 			-- Is `Current' in the process of a dockable transport?
@@ -46,8 +47,6 @@ feature -- Access
 		do
 			Result := not not_external_docking_enabled
 		end
-
-feature -- Measurement
 
 feature -- Status report
 
@@ -180,22 +179,6 @@ feature -- Status setting
 		ensure
 			not_externally_dockable: not is_external_docking_enabled
 		end
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
 
 feature -- Basic operations
 			
@@ -471,14 +454,11 @@ feature -- Basic operations
 		ensure
 			dockable_dialog_destroyed: dockable_dialog.is_destroyed
 		end
-		
-
-feature -- Obsolete
 
 feature -- Inapplicable
 
 	drag_cursor: EV_CURSOR is
-			--
+			-- Cursor used when `Current' is being transported.
 		local
 			--pixmap: EV_PIXMAP
 		once
@@ -504,8 +484,6 @@ feature {NONE} -- Implementation
 		do
 			Result ?= source_being_docked
 		end
-		
-		
 
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is
 			-- `Result' is widget implementation at current
@@ -541,7 +519,6 @@ feature {NONE} -- Implementation
 				Result := tool_bar.index_of (a_tool_bar_button.interface, 1)
 			end
 		end
-		
 
 	initialize_transport (a_screen_x, a_screen_y: INTEGER; source: EV_DOCKABLE_SOURCE) is
 			-- Store platform independent settings required
@@ -560,7 +537,6 @@ feature {NONE} -- Implementation
 		ensure
 			source_being_docked_set: source_being_docked /= Void
 		end
-		
 
 	move_dialog_to_pointer (dialog: EV_DOCKABLE_DIALOG) is
 			-- Move dialog to pointer position, so it is positioned
@@ -613,16 +589,10 @@ feature {NONE} -- Implementation
 						 -- remove `insert_label' if the pointed target has changed
 						container ?= target 
 						if container /= Void then
-			--				if insert_label.parent /= container then
-			--					remove_insert_label
-			--				end
-
-						--	veto_result := True
 							if target.veto_dock_function /= Void then
 								veto_result := True
 							end
 							from
-							--	target.veto_dock_function = Void 
 								counter := 0
 							until
 								target = Void or (target /= Void and then target.veto_dock_function = Void) or 
@@ -649,11 +619,8 @@ feature {NONE} -- Implementation
 								cell ?= container.implementation
 	
 							end
-						--	if not veto_result then
-						--	end
 						end
 					end
-					--| FIXME Handle all supported types
 					if vertical_box /= Void then
 						insert_position := vertical_box.insertion_position
 						if insert_position /= -1 then
@@ -767,7 +734,7 @@ feature {NONE} -- Implementation
 					check
 						not_parented: item_source_being_docked.parent = Void
 					end
-				end
+				end 
 			end
 			
 		replace_insert_label is
@@ -781,7 +748,7 @@ feature {NONE} -- Implementation
 			do
 				box ?= insert_label.parent
 				if box /= Void then
-					box.put_i_th (widget_source_being_docked.interface, box.index_of (insert_label, 1))--insert_index)
+					box.put_i_th (widget_source_being_docked.interface, box.index_of (insert_label, 1))
 				end
 				cell ?= insert_label.parent
 				if cell /= Void then
@@ -816,7 +783,6 @@ feature {NONE} -- Implementation
 				insert_sep_not_parented: insert_sep.parent = Void
 				parent_swapped: old insert_sep.parent = item_source_being_docked.parent
 			end
-			
 
 feature {EV_ANY_I} -- Implementation
 

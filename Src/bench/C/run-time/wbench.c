@@ -25,6 +25,44 @@
 
 private struct as_info *rec_waslist();		/* Recursion */
 
+public char *(*wdisp(routine_id, dyn_type))()
+int32 routine_id;
+int dyn_type;
+{
+	/* Function pointer associated to Eiffel feature of routine id
+	 * `routined_id' accessed in Eiffel dunamic type `dyn_type'.
+	 * Return a function pointer.
+	 */
+
+	struct ca_info *info;
+	uint32 body_id;
+
+	nstcall = 0;	/* No invariant check */
+	info = &((struct ca_info *) Table(routine_id))[dyn_type];
+	body_id = dispatch[info->ca_id];
+
+#ifdef DEBUG
+	dprintf(2)(
+		"\tcall [fid: %d stat: %d dyn: %d] rout_id: %ld bidx: %ld bid: %ld\n",
+		feature_id, static_type, dyn_type, rout_id, info->ca_id, body_id);
+#endif
+	if (body_id < zeroc) {
+		return frozen[body_id];		/* Frozen feature */
+	}
+	else {
+		IC = melt[body_id - zeroc];	/* Position byte code to interpret */
+		info = &((struct ca_info *) Table(routine_id))[mem_dtype];
+					/* If memory is compiled into the system, we know that dispose 
+					 * will have a pattern (a procedure with no arguments). If a dispose 
+					 * was melted in the descendent there would be no corresponding
+					 * pattern. The pattern for the dispose routine in class MEMORY
+					 * will be the same in the descendant regardless if the routine
+					 * has a corresponding pattern in that descendant. 
+					 */
+		return pattern[info->ca_pattern_id].toi;
+	}
+}
+
 public char *(*wfeat(static_type, feature_id, dyn_type))()
 int static_type, dyn_type;
 int32 feature_id;

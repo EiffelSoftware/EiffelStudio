@@ -361,6 +361,13 @@ private void cnode_updt()
 	wread(&node->cn_deferred, 1);		/* Deferred flag */
 	wread(&node->cn_composite, 1);		/* Composite flag */
 	node->cn_creation_id = wint32();	/* Creation feature id */
+	node->static_id = wint32();			/* Static id of Class */
+	node->dispose_id = wint32();		/* Dispose routine id */
+#ifdef DEBUG
+	dprintf(2)("\tcreation_id = %ld\n", node->cn_creation_id);
+	dprintf(2)("\tstatic_id = %ld\n", node->static_id);
+	dprintf(2)("\tdispose_id = %ld\n", node->dispose_id);
+#endif
 }
 
 private void routid_updt()

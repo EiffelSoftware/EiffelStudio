@@ -70,6 +70,7 @@ extern struct item *opop();			/* Remove value from operational stack */
 extern struct item *otop();			/* Top of the stack */
 extern struct item *ivalue();		/* Value request from current routine */
 extern void sync_registers();		/* Resynchronize registers on routine */
+extern void callexp();				/* Call creation routine of expanded */
 
 /* Requesting values via ivalue() */
 #define IV_LOCAL	0				/* Nth local wanted */

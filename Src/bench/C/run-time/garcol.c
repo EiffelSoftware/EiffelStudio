@@ -122,6 +122,8 @@ public struct stack once_set = {			/* Once functions */
 	(char **) 0,			/* st_end */
 };
 
+private char *OLD_IC;
+
 /* Array used to store the number of objects used, indexed by object's age.
  * This is used when computing the demographic feedback-mediated tenuring
  * threshold for the next step (generation collcetion). The size_table array
@@ -1706,6 +1708,7 @@ private int sweep_from_space()
 	register5 void (*dispose)();		/* Dispose function, if any */
 	char *base;							/* First address of 'from' space */
 	int size;							/* Size of current object */
+	char gc_status;                     /* Saved GC status */
 
 	base = ps_from.sc_arena;
 	zone = (union overhead *) base;		/* Start of from space */
@@ -1791,9 +1794,16 @@ private int sweep_from_space()
 				dispose =
 					Dispose(zone->ov_flags & EO_TYPE);	/* Dispose ptr */
 				if (dispose != (void (*)()) 0) {		/* Exists ? */
+#ifdef WORKBENCH
+					OLD_IC = IC;						/* Save interpreter counter */
+#endif
+					gc_status = g_data.status;      /* Save GC current status */
 					g_data.status |= GC_STOP;			/* Stop GC */
 					(dispose)((char *) (zone + 1));		/* Call it */
-					g_data.status &= ~GC_STOP;			/* Restart GC */
+					g_data.status = gc_status;			/* Restart GC */
+#ifdef WORKBENCH
+					IC = OLD_IC;						/* Restore interpreter counter */
+#endif
 				}
 			}
 		} else {
@@ -1866,9 +1876,16 @@ private int sweep_from_space()
 					dispose =
 						Dispose(next->ov_flags & EO_TYPE);	/* Dispose ptr */
 					if (dispose != (void (*)()) 0) {		/* Exists ? */
+#ifdef WORKBENCH
+						OLD_IC = IC;						/* Save interpreter counter */
+#endif
+						gc_status = g_data.status;      /* Save GC current status */
 						g_data.status |= GC_STOP;			/* Stop GC */
 						(dispose)((char *) (next + 1));		/* Call it */
-						g_data.status &= ~GC_STOP;			/* Restart GC */
+						g_data.status = gc_status;			/* Restore previous GC status */
+#ifdef WORKBENCH
+						IC = OLD_IC;						/* Restore interpreter counter */
+#endif
 					}
 
 					m_data.ml_over -= OVERHEAD;		/* Memory accounting */
@@ -3201,12 +3218,22 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 	 * freed AFTER dispose has been called...
 	 */
 
+	char gc_status;					/* Saved GC status */
 	register2 void (*dispose)();	/* The dispose function's pointer */
 
-	if ((dispose = Dispose(zone->ov_flags & EO_TYPE)) != (void (*)()) 0) {
+	dispose = Dispose(zone->ov_flags & EO_TYPE);
+
+	if (dispose != (void (*)()) 0) {
+#ifdef WORKBENCH
+		OLD_IC = IC;					/* Save interpreter counter */
+#endif
+		gc_status = g_data.status;		/* Save GC status */
 		g_data.status |= GC_STOP;		/* Stop GC */
 		(dispose)((char *) (zone + 1));	/* Call 'dispose' with LISP notation */
-		g_data.status &= ~GC_STOP;		/* Restart GC */
+		g_data.status = gc_status;		/* Restore previous GC status */
+#ifdef WORKBENCH
+		IC = OLD_IC;					/* Restore interpreter counter */
+#endif
 	}
 
 #ifdef DEBUG

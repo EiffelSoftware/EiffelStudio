@@ -42,12 +42,16 @@ extern char *striparr();			/* Build an Eiffel ARRAY[ANY] object for strip*/
 extern int str_dtype;				/* Dynamic type for string */
 extern int bit_dtype;				/* Dynamic type for bit */
 extern int arr_dtype;				/* Dynamic type for ARRAY[ANY] */
+extern int mem_dtype;				/* Dynamic type for memory */
 extern void (*strmake)();			/* STRING creation feature */
 extern void (*strset)();			/* STRING `set_count' feature */
 extern void (*arrmake)();			/* STRING creation feature */
 
 #ifdef WORKBENCH
 extern void wstdinit();				/* Composite objects initialization */
+extern char *(*wdisp())();			/* Composite objects initialization */
+extern char *(*dispose_routine())();/* Dispose routine */
+extern char *cr_exp();				/* Creation of expanded objects */
 #endif
 
 /*
@@ -67,11 +71,15 @@ extern char *(**ecreate)();			/* Initialization routines */
 #define References(type)	nbref[type]	 	/* # of references */
 #define Size(type)			esize[type]	 	/* Object's size */
 #define Dispose(type)		edispose[type]	/* Dispose routine */
+#define Disp_rout(type) 	Dispose(type)	/* Does type have disp routine */
 #define Create(type)		ecreate[type]	/* Initialization routine */
 #else
 #define References(type)	esystem[type].nb_ref
 #define Size(type)			esystem[type].size
-#define Dispose(type)		esystem[type].dispose
+#define Disp_rout(type)		esystem[type].dispose_id
+											/* Does type have disp routine ? */
+#define Dispose(type) ((void (*)()) dispose_routine(type));
+											/* Dispose routine */
 #define Create(type)		\
 	(esystem[type].cn_composite ? (char *(*)()) wstdinit : (char *(*)()) 0)
 #endif

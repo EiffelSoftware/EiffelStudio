@@ -37,7 +37,10 @@
  *  RTLB(x) allocated a new bit object of size 'x'
  *  RTUD keep dynamic type  for refreezing
  *  RTCB(x) clones bit `x'
+ *  RTLX(x) allocates an expanded object (with possible in invocation
+ *		of the creation routine) of type `x'
  *  RTXB(x,y) copies bit `x' to `y'
+ *  RTMB(x) creates bit from string value 
  *  RTEB(x,y) are bits `x' and `y' equal?
  */
 #define RTLN(x) emalloc(x)
@@ -48,6 +51,7 @@
 #define RTEB(x,y) b_equal(x,y)
 #ifdef WORKBENCH
 #define RTUD(x) fdtypes[x]  /* Updated dynamic type */
+#define RTLX(x)	cr_exp(x)
 #endif
 
 /* Macro used for object cloning:

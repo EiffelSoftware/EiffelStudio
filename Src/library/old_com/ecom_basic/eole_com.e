@@ -11,6 +11,8 @@ class
 	
 inherit
 	EOLE_CLSCTX
+
+	EOLE_GUID
 	
 	EOLE_REGISTER_FLAGS
 

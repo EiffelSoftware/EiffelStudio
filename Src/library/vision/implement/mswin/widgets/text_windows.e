@@ -153,6 +153,11 @@ feature -- Initialization
 				if is_multi_line_mode then
 					set_top_character_position (private_top_character_position)
 				end
+				if not managed then
+					wel_hide
+				elseif parent.shown then
+					shown := true
+				end
 			end
 		end
 
@@ -480,14 +485,17 @@ feature -- Status setting
 
 	set_cursor_position (pos: INTEGER) is
 			-- Set cursor_position to pos.
-			--| Will unselect any active selection
-			--| since the cursor is always at the end
-			--| of a selection under Windows
+			--| Will not move the cursor if a selection
+			--| is active.
 		do
-			if exists then
-				set_caret_position (eiffel_position_to_windows (pos))
-			else
-				private_cursor_position := pos
+			if not has_selection then
+				if exists then
+					enable_scroll_caret_at_selection
+					set_caret_position (eiffel_position_to_windows (pos))
+					disable_scroll_caret_at_selection
+				else
+					private_cursor_position := pos
+				end
 			end
 		end
 
@@ -558,7 +566,7 @@ feature -- Status setting
 			if exists then
 				top_pos := top_character_position
 				wel_set_selection (eiffel_position_to_windows
-					(first), eiffel_position_to_windows (last))
+					(first) - 1, eiffel_position_to_windows (last) - 1)
 				set_top_character_position (top_pos)
 			end
 		end

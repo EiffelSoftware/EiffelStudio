@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_menu_bar_new)
 			C.gtk_widget_show (c_object)
+			list_widget := c_object
 		end
 
 	initialize is
@@ -62,6 +63,9 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/06 02:05:13  brendel
+--| Added initialization of list_widget.
+--|
 --| Revision 1.7  2000/04/05 21:16:10  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

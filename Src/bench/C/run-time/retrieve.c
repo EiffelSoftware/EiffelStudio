@@ -637,9 +637,9 @@ rt_private void grow_mismatch_table (void)
 	RT_GET_CONTEXT
 	mismatches->capacity *= 2;
 	mismatches->objects = eif_protect (
-			sprealloc (eif_wean (mismatches->objects), mismatches->capacity));
+		sprealloc (eif_wean (mismatches->objects), mismatches->capacity));
 	mismatches->values = eif_protect (
-			sprealloc (eif_wean (mismatches->values), mismatches->capacity));
+		sprealloc (eif_wean (mismatches->values), mismatches->capacity));
 }
 
 rt_private void free_mismatch_table (mismatch_table *table)
@@ -713,28 +713,30 @@ rt_private void set_mismatch_information (
 		EIF_REFERENCE object, EIF_REFERENCE values, type_table *conversions)
 {
 	RT_GET_CONTEXT
-	EIF_OBJECT vals_i = eif_protect (values);
-	int16 new_type = Dtype (object);
-	type_descriptor *conv = type_description_for_new (conversions, new_type);
+	EIF_GET_CONTEXT
+	int16 new_dtype = Dtype (object);
+	int16 new_dftype = Dftype (object);
+	type_descriptor *conv = type_description_for_new (conversions, new_dtype);
 	EIF_REFERENCE class_name;
 	int i;
 
 	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
+
+	RT_GC_PROTECT(values);
+
 	mismatch_information_initialize (eif_access (mismatch_information_object));
 
 	/* Store class name in table */
-	class_name = eif_gen_typename_of_type ((int16) Dftype (object));
-	mismatch_information_add (
-			eif_access (mismatch_information_object), class_name, "class");
+	class_name = eif_gen_typename_of_type (new_dftype);
+	mismatch_information_add (eif_access (mismatch_information_object), class_name, "class");
 
 	/* Store atribute values in table */
 	for (i=0; i<conv->attribute_count; i++) {
 		attribute_detail *att = conv->attributes + i;
-		EIF_REFERENCE old_value = ((EIF_REFERENCE *) eif_access (vals_i))[i];
-		mismatch_information_add (
-				eif_access (mismatch_information_object), old_value, att->name);
+		EIF_REFERENCE old_value = ((EIF_REFERENCE *) values)[i];
+		mismatch_information_add (eif_access (mismatch_information_object), old_value, att->name);
 	}
-	eif_wean (vals_i);
+	RT_GC_WEAN(values);
 }
 
 rt_private void correct_object_mismatch (
@@ -766,27 +768,29 @@ rt_private void correct_object_mismatch (
 rt_private void correct_one_mismatch (
 		EIF_REFERENCE object, EIF_REFERENCE values, type_table *conversions)
 {
+	EIF_GET_CONTEXT
 	uint32 flags = HEADER (object)->ov_flags;
 	EIF_INTEGER count = RT_SPECIAL_COUNT (values);
-	EIF_OBJECT obj_i = eif_protect (object);
-	EIF_OBJECT vals_i = eif_protect (values);
+
+	RT_GC_PROTECT(object);
+	RT_GC_PROTECT(values);
 
 #ifdef RECOVERABLE_DEBUG
-	printf ("Correcting %s [%p]\n", EIF_OBJECT_TYPE (eif_access (obj_i)),
-			eif_access (obj_i));
+	printf ("Correcting %s [%p]\n", EIF_OBJECT_TYPE (object),
+			object);
 #endif
 	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
 	if (flags & EO_TUPLE) {
-		correct_object_mismatch (eif_access (obj_i), eif_access (vals_i), conversions);
+		correct_object_mismatch (object, values, conversions);
 	} else if (flags & EO_SPEC) {
 		EIF_INTEGER i;
-		EIF_INTEGER ocount = RT_SPECIAL_COUNT (eif_access (obj_i));
-		EIF_INTEGER oelem_size = RT_SPECIAL_ELEM_SIZE (eif_access (obj_i));
+		EIF_INTEGER ocount = RT_SPECIAL_COUNT (object);
+		EIF_INTEGER oelem_size = RT_SPECIAL_ELEM_SIZE (object);
 		CHECK ("Consistent length", ocount == count);
 		for (i=0; i<ocount; i++) {
 			EIF_REFERENCE ref = (EIF_REFERENCE) (
-					(char *) eif_access (obj_i) + OVERHEAD + (i * oelem_size));
-			EIF_REFERENCE vals = ((EIF_REFERENCE *) eif_access (vals_i))[i];
+					(char *) object + OVERHEAD + (i * oelem_size));
+			EIF_REFERENCE vals = ((EIF_REFERENCE *) values)[i];
 			correct_object_mismatch (ref, vals, conversions);
 		}
 	}
@@ -796,26 +800,24 @@ rt_private void correct_one_mismatch (
 		long i;
 		CHECK ("Not too short", count == num_attr || count == num_attr + 1);
 		for (i=0; i<num_attr; i++) {
-			EIF_REFERENCE vals = ((EIF_REFERENCE *) eif_access (vals_i))[i];
+			EIF_REFERENCE vals = ((EIF_REFERENCE *) values)[i];
 			if (vals != NULL) {
 				long attrib_offset;
 				EIF_REFERENCE ref;
 				CHECK ("Expanded attribute", System (dtype).cn_types[i] & SK_EXP);
 				attrib_offset = get_offset (dtype, i);
-				ref = (char *) eif_access (obj_i) + attrib_offset;
+				ref = (char *) object + attrib_offset;
 				correct_object_mismatch (ref, vals, conversions);
 			}
 		}
 		if (count == num_attr + 1) {
-			EIF_REFERENCE vals = ((EIF_REFERENCE *) eif_access (vals_i))[num_attr];
-			correct_object_mismatch (eif_access (obj_i), vals, conversions);
+			EIF_REFERENCE vals = ((EIF_REFERENCE *) values)[num_attr];
+			correct_object_mismatch (object, vals, conversions);
 		}
+	} else {
+		correct_object_mismatch (object, values, conversions);
 	}
-	else {
-		correct_object_mismatch (eif_access (obj_i), eif_access (vals_i), conversions);
-	}
-	eif_wean (obj_i);
-	eif_wean (vals_i);
+	RT_GC_WEAN_N(2);
 }
 
 /* Calls `correct_mismatch' on all objects contained in `mm'.
@@ -1826,8 +1828,13 @@ rt_private void add_mismatch (EIF_REFERENCE object, EIF_REFERENCE old_values)
 #ifdef ISE_GC
 	REQUIRE ("No GC", g_data.status & GC_STOP);
 #endif
-	if (mismatches->count == mismatches->capacity)
+	if (mismatches->count == mismatches->capacity) {
+		EIF_GET_CONTEXT
+		RT_GC_PROTECT(object);
+		RT_GC_PROTECT(old_values);
 		grow_mismatch_table ();
+		RT_GC_WEAN_N(2);
+	}
 
 	spec = eif_access (mismatches->values);
 	((EIF_REFERENCE *) spec)[mismatches->count] = old_values;
@@ -2573,7 +2580,18 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 		eise_io("Independent retrieve: unable to read number of different Eiffel types.");
 	if (sscanf(r_buffer,"%d\n", &old_count) != 1)
 		eise_io("Independent retrieve: unable to read number of different Eiffel types.");
-	/* create a correspondance table */
+
+			/* We need to make sure that `dtypes' and `spec_elm_size' arrays are large enough
+			 * to store all types in retrieving system. */
+	if (old_count < eif_par_table2_size) {
+			/* We use `eif_par_table2_size' as it will give us a correct size in
+			 * both workbench/melted/finalized mode of the number of dynamic types
+			 * FIXME: Manu 06/24/2004: Maybe we ought to have a query that would
+			 * represent this value without being specific to generic conformance. */
+		old_count = eif_par_table2_size + 1;
+	}
+
+		/* create a correspondance table */
 	dtypes = (int *) eif_rt_xmalloc(old_count * sizeof(int), C_T, GC_OFF);
 	if (dtypes == (int *)0)
 		xraise (EN_MEM);
@@ -3215,7 +3233,18 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		eise_io ("Independent retrieve: unable to read number of different Eiffel types.");
 	if (sscanf (r_buffer,"%d\n", &old_count) != 1)
 		eise_io ("Independent retrieve: unable to read number of different Eiffel types.");
-	/* create a correspondance table */
+
+			/* We need to make sure that `dtypes' and `spec_elm_size' arrays are large enough
+			 * to store all types in retrieving system. */
+	if (old_count < eif_par_table2_size) {
+			/* We use `eif_par_table2_size' as it will give us a correct size in
+			 * both workbench/melted/finalized mode of the number of dynamic types
+			 * FIXME: Manu 06/24/2004: Maybe we ought to have a query that would
+			 * represent this value without being specific to generic conformance. */
+		old_count = eif_par_table2_size + 1;
+	}
+
+		/* create a correspondance table */
 	dtypes = (int *) eif_rt_xmalloc (old_count * sizeof(int), C_T, GC_OFF);
 	if (dtypes == NULL)
 		xraise (EN_MEM);
@@ -3781,19 +3810,14 @@ rt_private void rread_header (EIF_CONTEXT_NOARG)
 	printf ("-- Reading header: %d types\n", type_count);
 #endif
 
-	if (rt_kind_version < INDEPENDENT_STORE_5_5) {
-			/* We need to make sure that `dtypes' array is large enough
-			 * to store basic types ids. */
-		if (egc_bool_dtype > old_max_types) old_max_types = egc_bool_dtype;
-		if (egc_int8_dtype > old_max_types) old_max_types = egc_int8_dtype;
-		if (egc_int16_dtype > old_max_types) old_max_types = egc_int16_dtype;
-		if (egc_int32_dtype > old_max_types) old_max_types = egc_int32_dtype;
-		if (egc_int64_dtype > old_max_types) old_max_types = egc_int64_dtype;
-		if (egc_real_dtype > old_max_types) old_max_types = egc_real_dtype;
-		if (egc_doub_dtype > old_max_types) old_max_types = egc_doub_dtype;
-		if (egc_char_dtype > old_max_types) old_max_types = egc_char_dtype;
-		if (egc_wchar_dtype > old_max_types) old_max_types = egc_wchar_dtype;
-		if (egc_point_dtype > old_max_types) old_max_types = egc_point_dtype;
+			/* We need to make sure that `dtypes' and `spec_elm_size' arrays are large enough
+			 * to store all types in retrieving system. */
+	if (old_max_types < eif_par_table2_size) {
+			/* We use `eif_par_table2_size' as it will give us a correct size in
+			 * both workbench/melted/finalized mode of the number of dynamic types
+			 * FIXME: Manu 06/24/2004: Maybe we ought to have a query that would
+			 * represent this value without being specific to generic conformance. */
+		old_max_types = eif_par_table2_size + 1;
 	}
 
 	spec_elm_size = (uint32 *) eif_rt_xmalloc (old_max_types * sizeof (uint32), C_T, GC_OFF);
@@ -4347,6 +4371,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 		EIF_REFERENCE object, uint32 new_flags, uint32 old_flags, long expanded_offset)
 {
 	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
 	EIF_REFERENCE old_values = NULL;
 	EIF_REFERENCE comp_values = NULL;
@@ -4373,16 +4398,13 @@ rt_private EIF_REFERENCE object_rread_attributes (
 		print_object_summary ("      ", object, expanded_offset, old_flags);
 #endif
 
-	if (mismatched)
-	{
+	RT_GC_PROTECT(object);
+	if (mismatched) {
 		old_values = new_spref (num_attrib);
-		if (old_values == NULL)
-			xraise (EN_MEM);
-
+		RT_GC_PROTECT(old_values);
 		if (new_flags & EO_COMP) {
 			comp_values = new_spref (new_num_attrib + 1);
-			if (comp_values == NULL)
-				xraise (EN_MEM);
+			RT_GC_PROTECT(comp_values);
 			((EIF_REFERENCE *) comp_values)[new_num_attrib] = old_values;
 			RTAR (comp_values, old_values);
 		}
@@ -4535,10 +4557,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				if (attr_address != NULL && old_vals != NULL) {
 					/* Expanded attribute is mismatched */
 					if (comp_values == NULL) {
-						/* Current composite object is not mismatched */
+							/* Current composite object is not mismatched */
 						comp_values = new_spref (new_num_attrib);
-						if (comp_values == NULL)
-							xraise (EN_MEM);
+						RT_GC_PROTECT(comp_values);
 					}
 					((EIF_REFERENCE *) comp_values)[new_attrib_index] = old_vals;
 					RTAR (comp_values, old_vals);
@@ -4546,20 +4567,39 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				break;
 			}
 			default:
+					/* Since an exception is being thrown make sure to free our Eiffel
+					 * objects from the GC update. */
+				if (comp_values) {
+					RT_GC_WEAN(comp_values);
+				}
+				if (old_value) {
+					RT_GC_WEAN(old_value);
+				}
+				RT_GC_WEAN(object);
 				eise_io ("Recoverable retrieve: not a supported object.");
 		}
 		if (mismatched && old_value != NULL ) {
 			((EIF_REFERENCE *) old_values)[i] = old_value;
-			if ((old_attrib_type & SK_HEAD) == SK_REF)
+			if ((old_attrib_type & SK_HEAD) == SK_REF) {
 				update_reference (old_values, (EIF_REFERENCE *) old_values + i);
-			else
+			} else {
 				RTAR (old_values, old_value);
+			}
 		}
 	}
 	if (comp_values != NULL)
 		result = comp_values;
 	else if (old_values != NULL)
 		result = old_values;
+
+	if (comp_values) {
+		RT_GC_WEAN(comp_values);
+	}
+	if (old_values) {
+		RT_GC_WEAN(old_values);
+	}
+	RT_GC_WEAN (object);
+
 	return result;
 }
 
@@ -4582,8 +4622,12 @@ rt_private EIF_REFERENCE object_rread_special_expanded (EIF_REFERENCE object, EI
 	conv = type_description (old_flags & EO_TYPE);
 	new_type = conv->new_type;
 	new_flags = new_type | (old_flags & EO_UPPER);
-	if (conv->mismatched)
+	if (conv->mismatched) {
+		EIF_GET_CONTEXT
+		RT_GC_PROTECT(object);
 		result = new_spref (count);
+		RT_GC_WEAN(object);
+	}
 #ifndef WORKBENCH
 	l_has_references = References (Deif_bid(new_type)) > 0;
 #endif

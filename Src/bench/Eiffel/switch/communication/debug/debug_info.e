@@ -506,7 +506,7 @@ feature {ONCE_REQUEST}
 			body_id := f.body_id;
 			if sent_debuggables.has (body_id) then
 					-- `f' has been supermelted.
-				Result := sent_debuggables.item (body_id).first.real_body_id
+				Result := sent_debuggables.found_item.first.real_body_id
 			else
 				Result := f.real_body_id
 			end
@@ -632,10 +632,7 @@ feature {EWB_REQUEST}
 			bp: BREAKPOINT
 		do
 			set_all_breakables;
-			if 
-				has_feature (f) and then 
-				not once_debuggables.has (f.body_id) 
-			then
+			if has_feature (f) and then not once_debuggables.has (f.body_id) then
 					-- If the supermelted byte code of a once routine has 
 					-- not been sent to the application (because it had 
 					-- already been called at that time) we don't sent its
@@ -827,11 +824,11 @@ feature {APPLICATION_EXECUTION, NONE}
 		do
 			body_id := f.body_id;
 			if new_debuggables.has (body_id) then
-				Result := new_debuggables.item (body_id);
+				Result := new_debuggables.found_item
 			elseif once_debuggables.has (body_id) then
-				Result := once_debuggables.item (body_id)
+				Result := once_debuggables.found_item
 			else
-				Result := sent_debuggables.item (body_id);
+				Result := sent_debuggables.item (body_id)
 			end;
 		ensure
 			Result /= Void

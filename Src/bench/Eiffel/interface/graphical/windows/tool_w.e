@@ -168,6 +168,11 @@ feature -- Access
 		do
 		end;
 
+	able_to_edit: BOOLEAN is
+			-- Are we able to edit the text?
+		do
+		end;
+
 feature -- Window Implementation
 
 	display is
@@ -708,16 +713,32 @@ feature {PROJECT_W} -- Implementation
 		end;
 
 	build_print_menu_entry is
-			-- Create a print command to be inserted into a menu.
+			-- Create a print command to be inserted into file menu.
 		require
 			valid_file_menu: file_menu /= Void
 		local
 			print_cmd: PRINT_COMMAND;
 			print_menu_entry: EB_MENU_ENTRY;
+			sep: SEPARATOR
 		do
 			!! print_cmd.make (Current);
 			!! print_menu_entry.make (print_cmd, file_menu);
-			!! print_cmd_holder.make_plain (print_cmd)
+			!! print_cmd_holder.make_plain (print_cmd);
+			!! sep.make (Interface_names.t_Empty, file_menu)
+		end;
+
+	build_save_as_menu_entry is
+			-- Create a save_as command to be inserted into file menu.
+		require
+			valid_file_menu: file_menu /= Void
+		local
+			save_as_cmd: SAVE_AS_FILE;
+			save_as_menu_entry: EB_MENU_ENTRY;
+			sep: SEPARATOR
+		do
+			!! save_as_cmd.make (Current);
+			!! save_as_menu_entry.make (save_as_cmd, file_menu);
+			!! sep.make (Interface_names.t_Empty, file_menu)
 		end;
 
 	init_text_window is

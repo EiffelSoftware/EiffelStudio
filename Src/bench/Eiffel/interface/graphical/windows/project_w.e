@@ -368,6 +368,9 @@ feature -- Pulldown Menus
 	open_explain_menu: MENU_PULL;
 			-- Menu for open explain tools
 
+	file_feature_menu: MENU_PULL;
+			-- File menu specific for the feature part
+
 	edit_feature_menu: MENU_PULL;
 			-- Edit menu specific for the feature part
 
@@ -376,6 +379,9 @@ feature -- Pulldown Menus
 
 	format_feature_menu: MENU_PULL;
 			-- Format menu specific for the feature part
+
+	file_object_menu: MENU_PULL;
+			-- File menu specific for the object part
 
 	edit_object_menu: MENU_PULL;
 			-- Edit menu specific for the object part
@@ -750,10 +756,14 @@ feature -- Graphical Interface
 				--| Creation of empty menus that are disabled goes here,
 				--| for we want to create the object and / or feature portion
 				--| on demand and not on purpose.
+			!! file_feature_menu.make (Interface_names.m_Feature, file_menu);
+			file_feature_menu.button.set_insensitive;
 			!! edit_feature_menu.make (Interface_names.m_Feature, edit_menu);
 			edit_feature_menu.button.set_insensitive;
 			!! edit_object_menu.make (Interface_names.m_Object, edit_menu);
 			edit_object_menu.button.set_insensitive;
+			!! file_object_menu.make (Interface_names.m_Object, file_menu);
+			file_object_menu.button.set_insensitive;
 
 			!! sep.make (Interface_names.t_Empty, edit_menu);
 
@@ -1028,7 +1038,7 @@ feature -- Graphical Interface
 			!! debug_quit_button.make (debug_quit_cmd, format_bar);
 			debug_quit_button.set_action ("!c<Btn1Down>", debug_quit_cmd, debug_quit_cmd.kill_it);
 			!! debug_quit_menu_entry.make_button_only (debug_quit_cmd, debug_menu);
-			debug_quit_button.add_activate_action (debug_quit_cmd, debug_quit_cmd.kill_it);
+			debug_quit_menu_entry.add_activate_action (debug_quit_cmd, debug_quit_cmd.kill_it);
 			!! debug_quit_cmd_holder.make (debug_quit_cmd, debug_quit_button, debug_quit_menu_entry);
 
 			!! sep.make (new_name, debug_menu)
@@ -1474,6 +1484,7 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 				edit_menu.button.set_insensitive;
 			end;
 
+			file_feature_menu.button.set_insensitive;
 			edit_feature_menu.button.set_insensitive;
 			special_feature_menu.button.set_insensitive;
 			format_feature_menu.button.set_insensitive;
@@ -1491,7 +1502,10 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			!! mp.set_watch_cursor;
 			if feature_part = Void then
 				feature_form.unmanage;
-				!! feature_part.form_create (feature_form, edit_feature_menu, format_feature_menu,
+				!! feature_part.form_create (feature_form, 
+						file_feature_menu, 
+						edit_feature_menu, 
+						format_feature_menu,
 						special_feature_menu);
 				feature_height := 
 					Project_resources.debugger_feature_height.actual_value;
@@ -1501,6 +1515,7 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 
 			shown_portions := shown_portions + 1;
 
+			file_feature_menu.button.set_sensitive;
 			edit_feature_menu.button.set_sensitive;
 			special_feature_menu.button.set_sensitive;
 			format_feature_menu.button.set_sensitive;
@@ -1557,6 +1572,7 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 				edit_menu.button.set_insensitive;
 			end;
 
+			file_object_menu.button.set_insensitive;
 			edit_object_menu.button.set_insensitive;
 			special_object_menu.button.set_insensitive;
 			format_object_menu.button.set_insensitive;
@@ -1575,7 +1591,11 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 		do
 			!! mp.set_watch_cursor;
 			if object_part = Void then
-				!! object_part.form_create (object_form, edit_object_menu, format_object_menu,
+				!! object_part.form_create (
+						object_form, 
+						file_object_menu, 
+						edit_object_menu, 
+						format_object_menu,
 						special_object_menu);
 				object_height := 
 					Project_resources.debugger_object_height.actual_value;
@@ -1586,6 +1606,7 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			shown_portions := shown_portions + 1;
 			new_pos := 6 // shown_portions;
 
+			file_object_menu.button.set_sensitive;
 			edit_object_menu.button.set_sensitive;
 			special_object_menu.button.set_sensitive;
 			format_object_menu.button.set_sensitive;

@@ -20,14 +20,12 @@ feature
 	duplication: like Current;
 			-- Duplication of current array
 
-	
 	make is
 		do
 			extend_table_make (Chunk);
 			make_duplication;
 		end;
 
-	
 	Chunk: INTEGER is 50;
 			-- Array chunk
 

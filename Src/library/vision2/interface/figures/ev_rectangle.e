@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			interior.set_no_op_mode
 			width := 1
 			height := 1
-			create orientation.make (0)
+			create orientation.make_radians (0)
 		end 
 
 	make_from_closure (cl: EV_CLOSURE) is

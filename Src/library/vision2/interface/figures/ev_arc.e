@@ -40,8 +40,8 @@ feature -- Initialization
 			init_fig (Void)
 			{EV_PATH} Precursor
 			create center.make
-			create angle1.make_in_degrees (0)
-			create angle2.make_in_degrees (0)
+			create angle1.make_degrees (0)
+			create angle2.make_degrees (0)
 		end
 
 feature -- Access

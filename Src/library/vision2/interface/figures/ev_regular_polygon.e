@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			interior.set_no_op_mode
 			radius := 0
 			number_of_sides := 3
-			create orientation.make (0)
+			create orientation.make_radians (0)
 		end
 
 feature -- Access 
@@ -69,7 +69,7 @@ feature -- Access
 		local
 			angle: EV_ANGLE
 		do
-			create angle.make_in_degrees (180 / number_of_sides)
+			create angle.make_degrees (180 / number_of_sides)
 			Result := (2 * radius / (cos(angle))).truncated_to_integer
 		end
 
@@ -132,7 +132,7 @@ feature -- Element change
 		local
 			angle: EV_ANGLE
 		do
-			create angle.make_in_degrees (180.0 / number_of_sides)
+			create angle.make_radians (180.0 / number_of_sides)
 			radius := (a_size*cos (angle)/2).truncated_to_integer
 			set_modified
 		ensure
@@ -185,7 +185,7 @@ feature -- Output
 				until
 					i >= number_of_sides
 				loop
-					create angle.make_in_degrees ((i * (360 // number_of_sides) + orientation.degrees.truncated_to_integer) \\ 360)
+					create angle.make_degrees ((i * (360 // number_of_sides) + orientation.degrees.truncated_to_integer) \\ 360)
 					create a_point.set (center.x + (radius *
 										cos (angle)).truncated_to_integer,
 									center.y + (radius *

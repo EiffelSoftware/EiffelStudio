@@ -1128,7 +1128,7 @@ feature {NONE} -- Implementation
 		require
 			an_object_not_void: an_object /= Void
 		do
-			Result := an_object.associated_top_level_object = 0
+			Result := not an_object.is_instance_of_top_level_object
 		end
 		
 	check_for_object_delete (a_key: EV_KEY) is

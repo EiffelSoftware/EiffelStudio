@@ -52,6 +52,7 @@ feature
 			item_imp: EV_WIDGET_IMP
 		do
 			item_imp ?= an_item.implementation
+			item_imp.set_parent_imp (Current)
 			check item_imp_not_void: item_imp /= Void end
 			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_immediate_enum)
 			C.gtk_paned_pack1 (c_object, item_imp.c_object, False, False)
@@ -68,6 +69,7 @@ feature
 			item_imp: EV_WIDGET_IMP
 		do
 			item_imp ?= an_item.implementation
+			item_imp.set_parent_imp (Current)
 			check item_imp_not_void: item_imp /= Void end
 			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_immediate_enum)
 			C.gtk_paned_pack2 (c_object, item_imp.c_object, True, False)
@@ -85,6 +87,7 @@ feature
 		do
 			if has (an_item) and then an_item /= Void then
 				item_imp ?= an_item.implementation
+				item_imp.set_parent_imp (Void)
 				check item_imp_not_void: item_imp /= Void end
 				C.gtk_container_remove (c_object, item_imp.c_object)
 				if an_item = first then

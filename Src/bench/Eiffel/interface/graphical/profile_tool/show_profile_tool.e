@@ -8,25 +8,25 @@ indexing
 class SHOW_PROFILE_TOOL
 
 inherit
-	PIXMAP_COMMAND
-		rename
-			init as make
-		end
 
-creation
-	make
+	EB_CONSTANTS;
+	ISE_COMMAND;
+	WINDOWS
 
 feature {NONE} -- Execution
 
 	work (arg: ANY) is
 		local
-			mp: MOUSE_PTR
+			mp: MOUSE_PTR;
+			p_tool: like profile_tool
 		do
-			!! mp.set_watch_cursor;
-			!! profile_tool.make (Current);
+			if profile_tool = Void then
+				!! mp.set_watch_cursor;
+				!! p_tool.make (Current);
+				profile_tool_cell.put (p_tool);
+				mp.restore
+			end;	
 			profile_tool.display;
-			profile_tool.raise;
-			mp.restore
 		end
 
 feature -- Properties
@@ -47,22 +47,12 @@ feature -- Properties
 		do
 		end;
 
-	symbol: PIXMAP is
-		do
-		end
-
-feature {NONE} -- Properties
-
-	profile_tool: PROFILE_TOOL;
-			-- The profile tool
-
 feature {PROFILE_TOOL} -- Implementation
 
 	done_profiling is
 			-- The profile has been closed.
 		do
-			profile_tool.destroy;
-			profile_tool := Void
+			profile_tool.hide;
 		end
 
 end -- class SHOW_PROFILE_TOOL

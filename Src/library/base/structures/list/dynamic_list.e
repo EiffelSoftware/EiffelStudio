@@ -114,8 +114,6 @@ feature -- Removal
 	remove_left is
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
-		require else
-			not_before: not before
 		deferred
 		end
 

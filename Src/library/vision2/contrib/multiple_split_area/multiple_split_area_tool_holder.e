@@ -114,9 +114,12 @@ feature {NONE} -- Initialization
 			tool.parent.prune_all (tool)
 			dialog.destroy
 			parent_window (parent_area).lock_update
-			parent_area.insert_widget (tool, display_name, 1)
+			parent_area.insert_widget (tool, display_name, original_parent_position)
 			parent_window (parent_area).unlock_update
 		end
+		
+	original_parent_position: INTEGER
+		-- Original position of `Current' in `parent_area' at creation time.
 
 feature -- Basic operation
 
@@ -165,17 +168,15 @@ feature -- Access
 			maximized := False
 		end
 		
-	reset_minimize_button is
-			-- Restore original pixmap to `minimize_button'.
-		do
---			minimize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)			
-		end
-		
-	reset_maximize_button is
-			-- Restore original pixmap to `maximize_button'.
-		do
---			maximize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
-		end
+--	reset_minimize_button is
+--			-- Restore original pixmap to `minimize_button'.
+--		do
+--		end
+--		
+--	reset_maximize_button is
+--			-- Restore original pixmap to `maximize_button'.
+--		do
+--		end
 		
 	disable_minimize_button is
 			--
@@ -212,6 +213,9 @@ feature -- Access
 		end
 		
 feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
+
+	parent_area: MULTIPLE_SPLIT_AREA
+		-- Parent of `Current'.
 		
 	restore_height: INTEGER
 		-- Height to restore to `Current'.
@@ -235,6 +239,17 @@ feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
 		end
 		
 		
+	update_position_in_parent is
+			-- Assign position of `Current' in `parent_area' to `original_parent_position'.
+			-- This is used when restoring after a dockable dialog containing `Current' is
+			-- closed.
+		require
+			parent_area_not_void: parent_area /= Void
+		do
+			original_parent_position := parent_area.all_holders.index_of (Current, 1)
+		ensure
+			result_valid: original_parent_position >= 1 and original_parent_position <= parent_area.all_holders.count
+		end
 		
 
 feature {NONE} -- Implementation
@@ -276,21 +291,11 @@ feature {NONE} -- Implementation
 
 	minimize is
 			-- Minimize `Current' if not minimized, restore otherwise.
-		local
---			split_parent: EV_SPLIT_AREA
 		do
 			parent_window (parent_area).lock_update
 			minimized := not minimized
 			if minimized then
-		--		split_parent ?= parent
-		--		check
-		--			parented_in_split_area: split_parent /= Void
-		--		end
-			--	if split_parent.first = Current or split_parent.count = 1 then
-					set_restore_height (height)
-			--	else
-			--		set_restore_height (split_parent.first.height)
-			--	end
+				set_restore_height (height)
 				parent_area.minimize_tool (Current)
 				minimize_button.set_pixmap (parent_area.restore_pixmap)
 				minimize_button.set_tooltip ("Restore")
@@ -369,8 +374,6 @@ feature {GB_TOOL_HOLDER} -- Implementation
 	maximize_tooltip: STRING is "Maximize"
 	
 	close_tooltip: STRING is "Close"
-	
-	parent_area: MULTIPLE_SPLIT_AREA
 	
 	minimum_size_cell: EV_CELL
 

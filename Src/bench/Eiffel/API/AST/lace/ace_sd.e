@@ -851,6 +851,7 @@ feature {NONE} -- Incrementality
 			system.set_dotnet_naming_convention (False)
 			System.set_use_cluster_as_namespace (True)
 			System.set_use_all_cluster_as_namespace (True)
+			System.set_check_generic_creation_constraint (True)
 		end
 
 end -- class ACE_SD

@@ -690,7 +690,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- there is one which can be checked ,i.e. when `to_check' conforms
 						-- to `constraint_type'.
 					formal_dec_as := associated_class.generics.i_th (i)
-					if formal_dec_as.has_creation_constraint then
+					if formal_dec_as.has_creation_constraint and system.check_generic_creation_constraint then
 							-- If we are not in degree 3 (i.e. 4), we cannot have a
 							-- complete check since if we are currently checking an attribute
 							-- of TEST declared as A [TOTO], maybe TOTO has not yet been recompiled?
@@ -756,6 +756,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- Check that declaration of generic class is conform to
 				-- defined creation constraint.
 		require
+			formal_dec_as_not_void: formal_dec_as /= Void
 			creation_constraint_exists: formal_dec_as.has_creation_constraint
 		local
 			formal_type_dec_as: FORMAL_DEC_AS

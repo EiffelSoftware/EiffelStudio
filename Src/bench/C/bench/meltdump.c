@@ -223,6 +223,7 @@ static  void    prepare_types ()
 		while (i--)
 			(void) rshort ();
 
+		(void) rshort(); /* Skeleton flags */
 		i = acount;
 
 		while (i--)
@@ -230,8 +231,6 @@ static  void    prepare_types ()
 
 		(void) rlong ();
 		(void) rlong ();
-		(void) rchar ();
-		(void) rchar ();
 		(void) ruint32 ();
 		
 		ctype = rlong ();
@@ -258,7 +257,6 @@ static  void    prepare_types ()
 
 		ctype_names [ctype] = dname;
 
-		(void) rchar ();
 	}
 }
 /*------------------------------------------------------------------*/
@@ -408,41 +406,28 @@ static  void    analyze_cnodes ()
 		while (i--)
 		{
 			pid = rshort ();
-			fprintf (mfp,"   Parent id      : %d\n", (int) pid);
+			fprintf (mfp,"   Parent id       : %d\n", (int) pid);
 		}
 
-		fprintf (mfp,"Attribute ids         : %ld\n", acount);
+		fprintf (mfp,"Flags are          : 0x%x\n", (int) rshort ());
+
+		fprintf (mfp,"Attribute ids      : %ld\n", acount);
 
 		i = acount;
 
 		while (i--)
 		{
-			fprintf (mfp,"    Id            : %ld\n", ruint32 ());                
+			fprintf (mfp,"    Id             : %ld\n", ruint32 ());                
 		}
 
-		fprintf (mfp,"Reference number    : %ld\n", rlong ());
-		fprintf (mfp,"Node size           : %ld\n", rlong ());
+		fprintf (mfp,"Reference number   : %ld\n", rlong ());
+		fprintf (mfp,"Node size          : %ld\n", rlong ());
 
-		if (rchar ())
-			fprintf (mfp,"Deferred            : YES\n");
-		else
-			fprintf (mfp,"Deferred            : No\n");
-
-		if (rchar ())
-			fprintf (mfp,"Composite           : YES\n");
-		else
-			fprintf (mfp,"Composite           : No\n");
-
-		fprintf (mfp,"Creation id         : %ld\n", ruint32 ());
+		fprintf (mfp,"Creation id        : %ld\n", ruint32 ());
 
 		ctype = rlong ();
 
-		fprintf (mfp,"Class type          : %ld\n", ctype);
-
-		if (rchar ())
-			fprintf (mfp,"Disposed            : YES\n");
-		else
-			fprintf (mfp,"Disposed            : No\n");
+		fprintf (mfp,"Class type         : %ld\n", ctype);
 
 		print_line ();
 	}

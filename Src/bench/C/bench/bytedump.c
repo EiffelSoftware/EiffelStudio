@@ -688,10 +688,13 @@ static  void    print_instructions ()
 			case  BC_CREATE :
 				/* Kind of creation */
 
-					/* Do we need to duplicate top object? */
+					/* Do we need to duplicate top object or is it a BIT type creation? */
 				cval = bchar ();
 
-				if (cval == (char) 1) {
+				if (cval == BC_BIT) {
+					fprintf (ofp, " (BC_BIT %d)", blong());	
+					break;
+				} else if (cval == (char) 1) {
 					fprintf (ofp," dup_top_object ");
 				}
 
@@ -762,10 +765,6 @@ static  void    print_instructions ()
 				fprintf (ofp,"fid %d ", (int) bshort ());
 				/* Nr. of items */
 				fprintf (ofp,"%ld", blong ());
-				if (bshort())
-					fprintf (ofp, " Tuple");
-				else
-					fprintf (ofp, " Array");
 				break;
 			case  BC_PARRAY :   /* Have to check this */
 				/* Manifest array precompiled */
@@ -778,10 +777,6 @@ static  void    print_instructions ()
 				print_cid ();
 				/* Nr. of items */
 				fprintf (ofp,"%ld", blong ());
-				if (bshort())
-					fprintf (ofp, " Tuple");
-				else
-					fprintf (ofp, " Array");
 				break;
 
 			case BC_TUPLE:
@@ -1131,8 +1126,6 @@ static  void    print_instructions ()
 				fprintf (ofp,"\"%s\" ", bstr (-1));
 				break;
 			case  BC_END_STRIP :
-				/* Static type */
-				print_ctype (bshort ());
 				/* Dynamic type */
 				print_ctype (bshort ());
 				/* Nr. of items */
@@ -1272,7 +1265,7 @@ static  void    print_dtype (int cid, uint32 type)
 static  void    print_ctype (short type)
 
 {
-	if (type <= ctype_max)
+	if ((type >= 0) && (type <= ctype_max))
 		fprintf (ofp, " [%d : %s]", (int) type, ctype_names [type]);
 	else
 		fprintf (ofp, " [%d : ?]", (int) type);

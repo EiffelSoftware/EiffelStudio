@@ -98,7 +98,7 @@ feature -- Status report
 	is_debug_info_enabled: BOOLEAN
 			-- Are we generating debug information?
 
-feature {IL_MODULE} -- Access
+feature {IL_WINDOWS_GENERATOR} -- Access
 
 	is_single_inheritance_implementation: BOOLEAN is
 			-- Is current generation of type SINGLE_IL_CODE_GENERATOR?
@@ -117,7 +117,7 @@ feature {IL_CODE_GENERATOR, IL_MODULE} -- Access
 			-- Is current module generated as just a single module?
 			-- Case of precompiled libraries or finalized systems.
 
-feature {NONE} -- Access
+feature {IL_WINDOWS_GENERATOR} -- Access
 
 	main_module: IL_MODULE
 			-- Module containing assembly manifest.
@@ -208,9 +208,6 @@ feature {NONE} -- Access
 
 	is_cls_compliant: BOOLEAN
 			-- Does code generation generate CLS compliant code?
-
-	object_type_id, any_type_id: INTEGER
-			-- Type id of SYSTEM_OBJECT and ANY class.
 
 	assembly_name: STRING
 			-- Name of current assembly.
@@ -375,26 +372,6 @@ feature -- Settings
 			once_generation := v
 		ensure
 			once_generation_set: once_generation = v
-		end
-
-	set_object_type_id (an_id: INTEGER) is
-			-- Set `object_type_id' to `an_id'.
-		require
-			valid_id: an_id > 0
-		do
-			object_type_id := an_id
-		ensure
-			object_type_id_set: object_type_id = an_id
-		end
-
-	set_any_type_id (an_id: INTEGER) is
-			-- Set `any_type_id' to `an_id'.
-		require
-			valid_id: an_id > 0
-		do
-			any_type_id := an_id
-		ensure
-			any_type_id_set: any_type_id = an_id
 		end
 
 	set_current_module_with (a_class_type: CLASS_TYPE) is
@@ -629,8 +606,12 @@ feature -- Generation Structure
 			l_uni_string: UNI_STRING
 			l_module: IL_MODULE
 			l_token, l_file_token: INTEGER
+			l_any_wrapper: IL_ANY_WRAPPER
 		do
 			current_module := main_module
+
+			create l_any_wrapper.make (System.any_class.compiled_class)
+			l_any_wrapper.generate
 
 			if not is_single_module then
 				from
@@ -1050,7 +1031,8 @@ feature -- Class info
 
 	define_runtime_features (class_type: CLASS_TYPE) is
 			-- Define all features needed by ISE .NET runtime. It generates
-			-- `____class_name', `$$____type', `____set_type' and `____type'.
+			-- `____class_name', `$$____type', `____set_type', `____type',
+			-- `____copy', `____is_equal' and `____standard_twin'.
 		require
 			class_type_not_void: class_type /= Void
 		local
@@ -1168,6 +1150,65 @@ feature -- Class info
 				start_new_body (l_meth_token)
 				generate_current
 				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld, l_type_field_token)
+				generate_return
+				method_writer.write_current_body
+
+					-- Define `____standard_twin'
+				l_sig.reset
+				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+				l_sig.set_parameter_count (0)
+				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+
+				uni_string.set_string ("____standard_twin")
+				l_meth_token := md_emit.define_method (uni_string,
+					l_class_token, l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+
+				start_new_body (l_meth_token)
+					-- If `current_class_type' is expanded, cloning is done by compiler.
+				if not class_type.is_expanded then
+					generate_current
+					method_body.put_call (feature {MD_OPCODES}.Call, current_module.memberwise_clone_token,
+						0, True)
+					generate_check_cast (Void, class_type.type)
+				end
+				generate_return
+				method_writer.write_current_body
+
+					-- Define `____copy'
+				l_sig.reset
+				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+				l_sig.set_parameter_count (1)
+				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+				l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+
+				uni_string.set_string ("____copy")
+				l_meth_token := md_emit.define_method (uni_string,
+					l_class_token, l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+
+				start_new_body (l_meth_token)
+				generate_current
+				generate_argument (1)
+				generate_check_cast (Void, any_type)
+				internal_generate_feature_access (any_type_id, copy_feat_id, 1, False, True)
+				generate_return
+				method_writer.write_current_body
+
+					-- Define `____is_equal'
+				l_sig.reset
+				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+				l_sig.set_parameter_count (1)
+				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+				l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+
+				uni_string.set_string ("____is_equal")
+				l_meth_token := md_emit.define_method (uni_string,
+					l_class_token, l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+
+				start_new_body (l_meth_token)
+				generate_current
+				generate_argument (1)
+				generate_check_cast (Void, any_type)
+				internal_generate_feature_access (any_type_id, is_equal_feat_id, 1, True, True)
 				generate_return
 				method_writer.write_current_body
 			end
@@ -3007,6 +3048,18 @@ feature -- Variables access
 			end
 		end
 
+	generate_any_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
+			is_function, is_virtual: BOOLEAN)
+		is
+			-- Generate access to feature of `a_feature_id' in `type_i'.
+		require
+			type_i_not_void: type_i /= Void
+			positive_feature_id: a_feature_id > 0
+		do
+			internal_generate_feature_access (type_i.static_type_id, a_feature_id, nb,
+				is_function, True)
+		end
+
 	generate_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
 			is_function, is_virtual: BOOLEAN)
 		is
@@ -4034,6 +4087,18 @@ feature -- Constants generation
 			method_body.put_opcode (feature {MD_OPCODES}.Ldnull)
 		end
 
+	put_manifest_string_from_system_string_local (n: INTEGER) is
+			-- Create a manifest string by using local at position `n' which 
+			-- should be of type SYSTEM_STRING.
+		require
+			valid_n: n >= 0
+		do
+			create_object (string_implementation_id)
+			duplicate_top
+			generate_local (n)
+			internal_generate_feature_access (string_type_id, string_make_feat_id, 1, False, True)
+		end
+	
 	put_manifest_string (s: STRING) is
 			-- Put `s' on IL stack.
 		require
@@ -4512,6 +4577,15 @@ feature -- Convenience
 			end
 		end
 
+	generate_call_on_void_target_exception is
+			-- Generate call on void target exception.
+		do
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				runtime_class_name,
+				"generate_call_on_void_target_exception",
+				static_type, <<>>, Void, False)
+		end
+		
 feature -- Generic conformance
 
 	generate_class_type_instance (cl_type: CL_TYPE_I) is
@@ -4759,6 +4833,36 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 				feature_table.item_id (feature {PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
 		ensure
 			string_make_feat_id_positive: Result > 0
+		end
+
+	any_type: CL_TYPE_I is
+			-- Type of ANY
+		once
+			Result := system.any_class.compiled_class.actual_type.type_i
+		end
+		
+	any_type_id: INTEGER is
+			-- Type of ANY interface.
+		once
+			Result := any_type.static_type_id
+		end
+
+	is_equal_feat_id: INTEGER is
+			-- Feature ID of `is_equal' of ANY.
+		once
+			Result := System.any_class.compiled_class.
+				feature_table.item_id (feature {PREDEFINED_NAMES}.is_equal_name_id).feature_id
+		ensure
+			is_equal_feat_id_positive: Result > 0
+		end
+
+	copy_feat_id: INTEGER is
+			-- Feature ID of `copy' of ANY.
+		once
+			Result := System.any_class.compiled_class.
+				feature_table.item_id (feature {PREDEFINED_NAMES}.copy_name_id).feature_id
+		ensure
+			copy_feat_id_positive: Result > 0
 		end
 
 feature {IL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition

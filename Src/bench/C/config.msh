@@ -22,8 +22,8 @@ mtccflags='-W3 $debug -nologo -MT -DEIF_THREADS'
 output_libraries='standard mtstandard'
 #-- DLL:
 #--------
-#ccflags='-DEIF_MAKE_DLL -W3 -nologo $debug -DISE_GC'
-#mtccflags='-DEIF_MAKE_DLL -W3 -nologo $debug -MT -DEIF_THREADS -DISE_GC'
+#ccflags='-DEIF_MAKE_DLL -W3 -nologo $debug'
+#mtccflags='-DEIF_MAKE_DLL -W3 -nologo $debug -MT -DEIF_THREADS'
 #output_libraries='dll mtdll'
 #
 #

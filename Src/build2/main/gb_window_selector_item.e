@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 				-- Make `Current' available from `an_object'.
 			an_object.set_window_selector_item (Current)
 			tree_item.select_actions.extend (agent window_selector.selected_window_changed (Current))
-			tree_item.drop_actions.extend (agent object.add_new_object)
+			tree_item.drop_actions.extend (agent object.handle_object_drop)
 			tree_item.drop_actions.set_veto_pebble_function (agent object.can_add_child)
 		ensure
 			object_set: object = an_object
@@ -120,7 +120,7 @@ feature --{NONE} -- Implementation
 			if application.ctrl_pressed then
 				new_object_editor (object)
 			else
-				Result := object
+				Result := create {GB_STANDARD_OBJECT_STONE}.make_with_object (object)
 			end
 		end
 		

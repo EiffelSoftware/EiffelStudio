@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			set_icon_pixmap (icon)
 				-- Set up cancel actions on `Current'.
 			fake_cancel_button (Current, agent show_hide_component_viewer_command.execute)
-			component_button.drop_actions.extend (agent set_component (?))
+			component_button.drop_actions.extend (agent handle_component_drop)
 			display_view_enabled := True
 		end
 		
@@ -348,6 +348,15 @@ feature {NONE} -- Implementation
 		ensure
 			objects_not_changed: object_handler.objects.is_equal (old object_handler.objects)
 		end
+		
+	handle_component_drop (component_stone: GB_COMPONENT_OBJECT_STONE) is
+			-- Respond to a drop of `component_stone'.
+		require
+			component_stone_not_void: component_stone /= Void
+		do
+			set_component (component_stone.component)
+		end
+		
 		
 		
 end -- class GB_COMPONENT_VIEWER

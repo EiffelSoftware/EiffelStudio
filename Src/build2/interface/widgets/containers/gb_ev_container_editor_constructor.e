@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			-- Nothing to do here.
 		end
 
-	new_merge (an_object: GB_OBJECT) is
+	new_merge (object_stone: GB_STANDARD_OBJECT_STONE) is
 			-- Merge radio group of `an_object' with `Current'.
 		deferred
 		end
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	veto_merge (an_object: GB_CONTAINER_OBJECT): BOOLEAN is
+	veto_merge (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN is
 			-- Stop invalid radio_group_merges.
 			-- An object may not be dropped if it is the same object that
 			-- `Current' represents, or it is already merged to the object
@@ -134,9 +134,9 @@ feature {NONE} -- Implementation
 		local
 			container_object: GB_CONTAINER_OBJECT
 		do
-			if an_object.object /= Void then
-				container_object ?= an_object
-				if container_object /= Void and then object /= an_object then
+			if object_stone.object.object /= Void then
+				container_object ?= object_stone.object
+				if container_object /= Void and then object /= object_stone.object then
 					if (first.merged_radio_button_groups = Void) then
 						Result := True
 					elseif not first.merged_radio_button_groups.has (container_object.object) then

@@ -180,7 +180,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 
 feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 
-	new_merge (an_object: GB_CONTAINER_OBJECT) is
+	new_merge (object_stone: GB_STANDARD_OBJECT_STONE) is
 			-- Merge radio group of `an_object' with `Current'.
 		local
 			container: EV_CONTAINER
@@ -188,7 +188,12 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 			counter: INTEGER
 			radio_group_link: GB_RADIO_GROUP_LINK
 			other_object: GB_OBJECT
+			an_object: GB_CONTAINER_OBJECT
 		do
+			an_object ?= object_stone.object
+			check
+				an_object_not_void: an_object /= Void
+			end
 			create radio_group_link
 			radio_group_link.set_pebble (radio_group_link)
 			radio_group_link.set_object (an_object)

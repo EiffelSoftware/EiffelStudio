@@ -9,92 +9,72 @@ class
 
 feature -- Access
 
-	Uds_alignleft: INTEGER is
+	Uds_alignleft: INTEGER is 8
 			-- Positions the up-down control next to the left edge
 			-- of the buddy window. The buddy window is moved to the
 			-- right and its width decreased to accommodate the
 			-- width of the up-down control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UDS_ALIGNLEFT"
-		end
+			--
+			-- Declared in Windows as UDS_ALIGNLEFT
 
-	Uds_alignright: INTEGER is
+	Uds_alignright: INTEGER is 4
 			-- Positions the up-down control next to the right edge
 			-- of the buddy window. The width of the buddy window is
 			-- decreased to accommodate the width of the up-down
 			-- control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UDS_ALIGNRIGHT"
-		end
+			--
+			-- Declared in Windows as UDS_ALIGNRIGHT
 
-	Uds_arrowkeys: INTEGER is
+	Uds_arrowkeys: INTEGER is 32
 			-- Causes the up-down control to increment and
 			-- decrement the position when the UP ARROW and DOWN
 			-- ARROW keys are pressed.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UDS_ARROWKEYS"
-		end
+			--
+			-- Declared in Windows as UDS_ARROWKEYS
 
-	Uds_autobuddy: INTEGER is
+	Uds_autobuddy: INTEGER is 16
 			-- Automatically selects the previous window in the
 			-- Z order as the up-down control's buddy window.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UDS_AUTOBUDDY"
-		end
+			--
+			-- Declared in Windows as UDS_AUTOBUDDY
 
-	Uds_horz: INTEGER is
+	Uds_horz: INTEGER is 64
 			-- Causes the up-down control's arrows to point left
 			-- and right instead of up and down.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UDS_HORZ"
-		end
+			--
+			-- Declared in Windows as UDS_HORZ
 
-	Uds_hottrack: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UDS_HOTTRACK"
-		end
+	Uds_hottrack: INTEGER is 256
+			-- Causes the control to exhibit "hot tracking" behavior. That 
+			-- is, it highlights the UP ARROW and DOWN ARROW on the control 
+			-- as the pointer passes over them. This style requires 
+			-- Microsoft® Windows® 98 or Windows® 2000. If the system is 
+			-- running Windows® 95 or Windows NT® 4.0, the flag is ignored. 
+			-- To check whether hot tracking is enabled, call 
+			-- SystemParametersInfo. 
+			--
+			-- Declared in Windows as UDS_HOTTRACK
 
-	Uds_nothousands: INTEGER is
+	Uds_nothousands: INTEGER is 128
 			-- Does not insert a thousands separator between every
 			-- three decimal digits.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UDS_NOTHOUSANDS"
-		end
+			--
+			-- Declared in Windows as UDS_NOTHOUSANDS
 
-	Uds_setbuddyint: INTEGER is
+	Uds_setbuddyint: INTEGER is 2
 			-- Causes the up-down control to set the text of the
 			-- buddy window (using the WM_SETTEXT message) when the
 			-- position changes. The text consists of the position
 			-- formatted as a decimal or hexadecimal string.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UDS_SETBUDDYINT"
-		end
+			--
+			-- Declared in Windows as UDS_SETBUDDYINT
 
-	Uds_wrap: INTEGER is
+	Uds_wrap: INTEGER is 1
 			-- Causes the position to "wrap" if it is incremented
 			-- or decremented beyond the ending or beginning of the
 			-- range.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"UDS_WRAP"
-		end
+			--
+			-- Declared in Windows as UDS_WRAP
 
 end -- class WEL_UDS_CONSTANTS
 

@@ -75,8 +75,8 @@ feature -- Execution
 				rcw := routine_custom_window (popup_parent);
 				rcw.set_window (popup_parent);
 				rcw.call (Current,
-						l_Showstops,
-						l_Non_clickable_showstops,
+						Interface_names.l_Showstops,
+						Interface_names.l_Non_clickable_showstops,
 						do_flat)
 			else
 				old_execute (arg)
@@ -103,24 +103,24 @@ feature -- Formatting
 					end;
 					if e_feature.body_id = Void then
 							--FIXME need specify error message
-						message := w_Cannot_debug_feature
+						message := Warning_messages.w_Cannot_debug_feature
 					elseif e_feature.is_external then
-						message := w_Cannot_debug_externals
+						message := Warning_messages.w_Cannot_debug_externals
 					elseif e_feature.is_deferred then
-						message := w_Cannot_debug_deferreds
+						message := Warning_messages.w_Cannot_debug_deferreds
 					elseif e_feature.is_unique then
-						message := w_Cannot_debug_uniques
+						message := Warning_messages.w_Cannot_debug_uniques
 					elseif e_feature.is_constant then
-						message := w_Cannot_debug_constants
+						message := Warning_messages.w_Cannot_debug_constants
 					elseif e_feature.is_attribute then
-						message := w_Cannot_debug_attributes
+						message := Warning_messages.w_Cannot_debug_attributes
 					elseif not e_feature.written_class.is_debuggable then
-						message := w_Cannot_debug_feature
+						message := Warning_messages.w_Cannot_debug_feature
 					else
 							-- Has to be dle!!!
 							-- DLE temporary constraint:
 							-- Cannot debug routines from the DC-set.
-						message := w_Cannot_debug_dynamics
+						message := Warning_messages.w_Cannot_debug_dynamics
 					end;
 					warner (popup_parent).gotcha_call (message)
 				end;
@@ -135,13 +135,13 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Pixmap for the button.
 		once
-			Result := bm_Breakpoint
+			Result := Pixmaps.bm_Breakpoint
 		end; -- symbol
 
 	dark_symbol: PIXMAP is
 			-- Dark version of `symbol'.
 		once
-			Result := bm_Dark_breakpoint
+			Result := Pixmaps.bm_Dark_breakpoint
 		end;
 
 feature -- Status setting
@@ -184,19 +184,34 @@ feature {NONE} -- Access
 			-- Name for he command.
 		do
 			if do_flat then
-				Result := l_Showstops
+				Result := Interface_names.f_Showstops
 			else
-				Result := l_Non_clickable_showstops
+				Result := Interface_names.f_Non_clickable_showstops
 			end
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			if do_flat then
+				Result := Interface_names.m_Showstops
+			else
+				Result := Interface_names.m_Non_clickable_showstops
+			end
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 			-- Part of the title.
 		do
 			if do_flat then
-				Result := l_Stoppoints_of
+				Result := Interface_names.t_Stoppoints_of
 			else
-				Result := l_Non_clickable_stoppoints_of
+				Result := Interface_names.t_Non_clickable_stoppoints_of
 			end
 		end;
 

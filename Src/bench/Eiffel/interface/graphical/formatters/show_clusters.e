@@ -22,24 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showclusters 
+			Result := Pixmaps.bm_Showclusters 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showclusters 
+			Result := Pixmaps.bm_Dark_showclusters 
 		end;
  
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showclusters
+			Result := Interface_names.f_Showclusters
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showclusters
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Clusters_of
+			Result := Interface_names.t_Clusters_of
 		end;
 
 	post_fix: STRING is "clu";

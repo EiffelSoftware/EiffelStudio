@@ -22,24 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showstatistics 
+			Result := Pixmaps.bm_Showstatistics 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showstatistics
+			Result := Pixmaps.bm_Dark_showstatistics
 		end;
  
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showstatistics
+			Result := Interface_names.f_Showstatistics
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showstatistics
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Statistics_of
+			Result := Interface_names.t_Statistics_of
 		end;
 
 	post_fix: STRING is "sta";

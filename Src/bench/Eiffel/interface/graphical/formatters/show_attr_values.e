@@ -27,25 +27,36 @@ feature -- Properties
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Showattributes 
+			Result := Pixmaps.bm_Showattributes 
 		end;
 	
 	dark_symbol: PIXMAP is 
 			-- Dark version of `symbol'.
 		once 
-			Result := bm_Dark_showattributes 
+			Result := Pixmaps.bm_Dark_showattributes 
 		end;
 	
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showattributes
+			Result := Interface_names.f_Showattributes
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showattributes
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Attrvalues_of
+			Result := Interface_names.t_Attrvalues_of
 		end;
 
 	create_structured_text (object: OBJECT_STONE): STRUCTURED_TEXT is
@@ -60,9 +71,9 @@ feature {NONE} -- Properties
 		do
 			status := Application.status;
 			if status = Void then
-				warner (popup_parent).gotcha_call (w_System_not_running)
+				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_running)
 			elseif not status.is_stopped then
-				warner (popup_parent).gotcha_call (w_System_not_stopped)
+				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
 				!! Result.make;
 				!! obj.make (object.object_address,

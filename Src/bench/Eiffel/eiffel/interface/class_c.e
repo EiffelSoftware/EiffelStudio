@@ -143,14 +143,6 @@ feature -- Access
 	changed4: BOOLEAN
 			-- Has the class a new class type ?
 
-	is_generated: BOOLEAN is
-			-- Is current class to be generated in IL code generation?
-		require
-			il_generation: System.il_generation
-		do
-			Result := not is_external and not is_precompiled
-		end
-
 	is_generic: BOOLEAN is
 			-- Is current class generic?
 		do

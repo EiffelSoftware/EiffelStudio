@@ -42,6 +42,7 @@
 /* Function declarations */
 rt_private int cid_to_dtype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */
 rt_private int locate(char *object, char *name);			/* Locate attribute by name in skeleton */
+rt_public int eiflocate (EIF_OBJ object, char *name);
 
 #ifndef lint
 rt_private char *rcsid =
@@ -60,7 +61,7 @@ rt_shared unsigned char eif_ignore_invisible = (unsigned char) 0;
  * Exception handling
  */
 
-rt_public void eifvisexp (void) {
+rt_public void eifvisex (void) {
     /* Enable the visible exception */
 
     EIF_GET_CONTEXT
@@ -68,7 +69,7 @@ rt_public void eifvisexp (void) {
     EIF_END_GET_CONTEXT
 }
 
-rt_public void eifuvisexp (void)  {
+rt_public void eifuvisex (void)  {
     /* Disable visible exception */
 
     EIF_GET_CONTEXT
@@ -487,6 +488,12 @@ rt_public char *eifaddr(char *object, char *name)
 	CAttrOffs(offset,rout_id,dtype);
 	return object + offset;
 #endif
+}
+
+rt_public int eiflocate (EIF_OBJ object, char *name) {
+    /* Return the index of attribute `name' in EIF_OBJ `object' */
+
+    return locate (eif_access (object), name);
 }
 
 rt_private int locate(char *object, char *name)

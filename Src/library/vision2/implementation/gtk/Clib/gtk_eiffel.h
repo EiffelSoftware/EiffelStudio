@@ -343,8 +343,11 @@ EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget);
  gtk_text functions
 ==============================================================================*/
 
-/* Insert a text in a text-area widget. */
+/* Insert a text in a text widget. */
 void c_gtk_text_insert (GtkWidget *widget, const char *txt);
+
+/* Insert a text in a rich-text widget with font, colors. */
+void c_gtk_text_full_insert (GtkWidget *widget, GdkFont *font, int r, int g, int b, const char *txt, gint length);
 
 /*==============================================================================
  gtk_box functions
@@ -408,11 +411,11 @@ void c_gtk_style_default_bg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* 
 	((((GtkStyle*)p)->base[GTK_STATE_NORMAL].blue)/257)
 */
 
-#endif /* _GTK_EIFFEL_H_INCLUDED_ */
-
 /*==============================================================================
  End of file
 ==============================================================================*/
+
+#endif /* _GTK_EIFFEL_H_INCLUDED_ */
 
 /*|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

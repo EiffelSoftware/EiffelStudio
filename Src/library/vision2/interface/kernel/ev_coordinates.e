@@ -9,57 +9,98 @@ class
 	EV_COORDINATE
 
 inherit
-	ANY
-		redefine
-			out
-		end
+	DEBUG_OUTPUT
 
 create
 	default_create,
-	set
+	set,
+	make,
+	make_with_position,
+	make_precise
+	
+feature -- Initialization
+
+	make, set, make_with_position, set_position (a_x: like x; a_y: like y) is
+			-- Create an EV_COORDINATE at position (`a_x', `a_y').
+		do
+			x_precise := a_x
+			y_precise := a_y
+		ensure
+			x_set: x = a_x
+			y_set: y = a_y
+		end
+		
+	make_precise, set_precise (a_x: like x_precise; a_y: like y_precise) is
+			-- Create an EV_COORDINATE at position (`a_x', `a_y')
+		do
+			x_precise := a_x
+			y_precise := a_y
+		ensure
+			x_set: x_precise = a_x
+			y_set: y_precise = a_y			
+		end
+		
 
 feature -- Access
 
-	x: INTEGER
+	x, x_abs: INTEGER is
 			-- Horizontal position.
-
-	y: INTEGER
+		do
+			Result := x_precise.truncated_to_integer
+		end
+			
+	y, y_abs: INTEGER is
 			-- Vertical position.
+		do
+			Result := y_precise.truncated_to_integer
+		end
+			
+	x_precise: DOUBLE
+			-- The precise horizontal position.
+	
+	y_precise: DOUBLE
+			-- The precise vertival position.
 
 feature -- Element change
 
-	set (a_x, a_y: INTEGER) is
-			-- Assign `a_x' to `x' and `a_y' to `y'.
-		do
-			x := a_x
-			y := a_y
-		ensure
-			x_assigned: x = a_x
-			y_assigned: y = a_y
-		end
-
-	set_x (a_x: INTEGER) is
+	set_x (a_x: like x) is
 			-- Assign `a_x' to `x'.
 		do
-			x := a_x
+			x_precise := a_x
 		ensure
-			x_assigned: x = a_x
+			x_set: x = a_x
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: like y) is
 			-- Assign `a_y' to `y'.
 		do
-			y := a_y
+			y_precise := a_y
 		ensure
-			y_assigned: y = a_y
+			y_set: y = a_y
+		end
+		
+	set_x_precise (a_x: like x_precise) is
+			-- Assign `a_x' to `x'.
+		do
+			x_precise := a_x
+		ensure
+			x_set: x_precise = a_x
+		end
+
+	set_y_precise (a_y: like y_precise) is
+			-- Assign `a_y' to `y'.
+		do
+			y_precise := a_y
+		ensure
+			y_set: y_precise = a_y
 		end
 		
 feature -- Output
 
-	out: STRING is
+	debug_output: STRING is
 			-- Textual representation.
 		do
-			Result := "(X: " + x.out + ", Y: " + y.out + ")"
+			Result := "(" + x.out + ", " + y.out + ")"
 		end
 
 end -- class EV_COORDINATES

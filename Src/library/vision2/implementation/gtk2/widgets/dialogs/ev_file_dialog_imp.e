@@ -85,6 +85,12 @@ feature -- Access
 	filter: STRING
 			-- Filter currently applied to file list.
 
+	selected_filter_index: INTEGER is
+			-- One based index of selected filter within `filters', or
+			-- zero if no filters set.
+		do
+		end
+
 	start_directory: STRING
 			-- Base directory where browsing will start.
 
@@ -231,7 +237,7 @@ feature {NONE} -- Implementation
 			filter_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			if not filters.empty then
+			if not filters.is_empty then
 				remove_file_filters
 			end
 			from
@@ -249,11 +255,9 @@ feature {NONE} -- Implementation
 						feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (filter_ptr, a_cs.item)
 						from
 							filter_string_list.start
-							print ("Filter description " + current_filter_description + "%N")
 						until
 							filter_string_list.off
 						loop
-							print (filter_string_list.item + "%N")
 							create a_cs.make (filter_string_list.item)
 							feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (filter_ptr, a_cs.item)
 							filter_string_list.forth

@@ -103,7 +103,13 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				constants_button.select_actions.block
 				constants_button.enable_select
 				constants_button.select_actions.resume
+				if list_item /= Void then
+					list_item.deselect_actions.block
+				end
 				switch_constants_mode
+				if list_item /= Void then
+					list_item.deselect_actions.resume
+				end
 				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
 				check
 					list_item_not_void: list_item /= Void
@@ -111,7 +117,6 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				list_item.select_actions.block
 				list_item.enable_select
 				list_item.select_actions.resume
-				last_selected_constant := Constants.all_constants.item (constant_context.constant.name)
 			else
 				constants_button.select_actions.block
 				constants_button.disable_select
@@ -138,12 +143,6 @@ feature {NONE} -- Implementation
 
 	validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
-		
-	last_selected_constant: GB_CONSTANT
-		-- Last constant that was selected in `Current'.
-		-- Must be stored so that when a user switches from using a constant,
-		-- to an actual value, we can remove the constant from the object.
-		-- Note that this will be set, if `Current' is built with a constant.
 
 	execute_agent (new_value: STRING) is
 			-- call `execution_agent'.
@@ -238,7 +237,8 @@ feature {NONE} -- Implementation
 			else
 				constants_combo_box.hide
 				entry_widget.show
-				remove_selected_constant
+				constants_combo_box.remove_selection
+				--remove_selected_constant
 			end
 		end
 		
@@ -268,10 +268,10 @@ feature {NONE} -- Implementation
 						string_constants.item = internal_gb_ev_any.object.constants.item (lookup_string).constant then
 						constants_button.enable_select
 						list_item.enable_select
-						last_selected_constant ?= list_item.data
 					end
 				end
 				list_item.select_actions.extend (agent list_item_selected (list_item))
+				list_item.deselect_actions.extend (agent list_item_deselected (list_item))
 				string_constants.forth
 			end
 		end
@@ -290,48 +290,28 @@ feature {NONE} -- Implementation
 				validate_agent.call ([constant.value])
 			
 				if validate_agent.last_result then
-					remove_selected_constant
 					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_type)
 					constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
 					execute_agent (constant.value)
-					last_selected_constant := constant
 				else
 					constants_combo_box.first.enable_select
 				end
 			end
 		end
-
-	remove_selected_constant is
-			-- Update `object' and `last_selected_constant' to reflect the
-			-- fact that a user is no longer referencing `last_selected_constant'.
+		
+	list_item_deselected (list_item: EV_LIST_ITEM) is
+			-- `list_item' has been deselected from `constants_combo_box'.
 		local
 			constant: GB_STRING_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
 		do
-			if last_selected_constant /= Void then
-				constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
-				if constant_context /= Void then
-					constant ?= constant_context.constant
-					if not constants_combo_box.is_displayed then
-							-- Now assign the value of `last_selected_item' to the control, but only
-							-- if `constants_combo_box' is not displayed, meaning that a user has just
-							-- changed from constants to non constants.
-						validate_agent.call ([constant.value])			
-						if validate_agent.last_result then
-							execute_agent (constant.value)
-							text_entry.set_text (constant.value.out)
-						end
-					end
-					constant_context.destroy
-				end
-			last_selected_constant := Void
+			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
+			if constant_context /= Void then
+				constant ?= constant_context.constant
+				text_entry.set_text (constant.value_as_string)
+				constant_context.destroy
 			end
-		end
-		
-	list_item_deselected (list_item: EV_LIST_ITEM) is
-			-- `list_item' has been deselected from `constants_combo_box'.
-		do
 		end
 
 end -- class GB_STRING_INPUT_FIELD

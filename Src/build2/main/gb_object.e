@@ -784,7 +784,6 @@ feature {GB_BUILDER_WINDOW} -- Implementation
 					counter := counter + 1
 				end
 			end
-			digit_checker.end_processing
 		end
 		
 	add_new_component_wrapper (a_component: GB_COMPONENT) is

@@ -90,11 +90,11 @@ feature -- Status report
 	is_specified: BOOLEAN is True
 			-- Is the font specified ?
 
-	is_standard: BOOLEAN
-			-- Is the font standard and information available ?
+	is_standard: BOOLEAN is True
+			-- Is the font standard and information available?
 
 	is_valid: BOOLEAN is
-			-- Is the font valid in `a_widget''s display ?
+			-- Is the font valid in `a_widget''s display?
 		do
 			Result := wel_font /= Void and wel_font.exists
 		end

@@ -3,8 +3,7 @@ indexing
 	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
-
+	
 class
 	WEL_LVS_EX_CONSTANTS
 

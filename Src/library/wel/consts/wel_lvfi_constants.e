@@ -3,7 +3,6 @@ indexing
 	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	note		: "Used in WEL_LIST_VIEW_SEARCH_INFO"
 
 class

@@ -1,6 +1,5 @@
 indexing
 	description	: "Tree View State Image List (TVSIL) constants."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"

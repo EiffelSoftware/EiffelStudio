@@ -101,16 +101,10 @@ inherit
 			wel_move_and_resize,
 			on_menu_command,
 			on_wm_close,
-			show,
 			on_accelerator_command
 		end
 
-	WEL_MA_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_SIZE_CONSTANTS
+	WEL_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -211,9 +205,6 @@ feature -- Access
 		do
 			Result := Void
 		end
-
-	blocking_window: EV_WINDOW
-			-- Window this dialog is a transient for.
 
 	is_modal: BOOLEAN
 			-- Must the window be closed before application continues?
@@ -425,6 +416,7 @@ feature -- Element change
 			-- "Top most"
 		local
 			loc_ex_style: INTEGER
+			app_imp: EV_APPLICATION_IMP
 		do
 				-- Change the `ex_style' of the window to turn
 				-- it into top most.
@@ -434,6 +426,10 @@ feature -- Element change
 				set_ex_style (loc_ex_style)
 			end
 			set_ex_style (default_ex_style + Ws_ex_topmost)
+
+				-- Set the window to be the blocking window
+			app_imp ?= Environment.application.implementation
+			app_imp.set_blocking_window (Current)
 			is_modal := True
 		end
 
@@ -443,6 +439,7 @@ feature -- Element change
 			-- default style.
 		local
 			loc_ex_style: INTEGER
+			app_imp: EV_APPLICATION_IMP
 		do
 				-- Remove the TopMost flag only it is not part
 				-- of `default_ex_style'.
@@ -453,14 +450,11 @@ feature -- Element change
 				loc_ex_style := clear_flag (loc_ex_style, Ws_ex_topmost)
 				set_ex_style (loc_ex_style)
 			end
-			is_modal := False
-		end
 
-	set_blocking_window (a_window: EV_WINDOW) is
-			-- Set as transient for `a_window'.
-		do
-			--| FIXME Needs reviewing like en/dis-able_modal.
-			blocking_window := a_window
+				-- Set the window not to be a blocking window anymore
+			app_imp ?= Environment.application.implementation
+			app_imp.remove_blocking_window (Current)
+			is_modal := False
 		end
 
 feature -- Resizing
@@ -510,24 +504,33 @@ feature -- Resizing
 
 feature -- Basic operations
 
-	show is
-			-- Show dialog.
-		do
-			{WEL_FRAME_WINDOW} Precursor
-			if is_modal then
-				block
-			end
-		end
+--| Change of behavior, `show' now does not perform
+--| the block. It's up to the user to call `block'
+--| if he wants to.
+--|
+--|	show is
+--|			-- Show dialog.
+--|		do
+--|			{WEL_FRAME_WINDOW} Precursor
+--|
+--|			if is_modal then
+--|				block
+--|			end
+--|		end
 
 	block is
 			-- Wait until window is closed by the user.
 		local
-			modal_emul: EV_MODAL_EMULATION_IMP
+			app: EV_APPLICATION
 		do
-			create modal_emul.make_with_window (Current)
-			modal_emul.block
-		end
+			app := Environment.application
 
+				-- Wait until window is closed.
+			from until is_destroyed or else not is_show_requested loop
+				app.process_events
+				app.sleep (100)
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -842,7 +845,7 @@ feature {NONE} -- Implementation
 		local
 			sb_imp: EV_WIDGET_IMP
 		do
-			if size_type /= size_minimized then
+			if size_type /= Wel_window_constants.Size_minimized then
 				if item /= Void then
 					item_imp.parent_ask_resize (client_width, client_height)
 				end
@@ -878,17 +881,17 @@ feature {NONE} -- Implementation
 			w := horizontal_resizable
 			h := vertical_resizable
 			if w and h then
-				!! min_track.make (internal_minimum_width, internal_minimum_height)
-				!! max_track.make (maximum_width, maximum_height)
+				create min_track.make (internal_minimum_width, internal_minimum_height)
+				create max_track.make (maximum_width, maximum_height)
 			elseif w then
-				!! min_track.make (internal_minimum_width, height)
-				!! max_track.make (maximum_width, height)
+				create min_track.make (internal_minimum_width, height)
+				create max_track.make (maximum_width, height)
 			elseif h then
-				!! min_track.make (width, internal_minimum_height)
-				!! max_track.make (width, maximum_height)
+				create min_track.make (width, internal_minimum_height)
+				create max_track.make (width, maximum_height)
 			else
-				!! min_track.make (width, height)
-				!! max_track.make (width, height)
+				create min_track.make (width, height)
+				create max_track.make (width, height)
 			end
 			min_max_info.set_min_track_size (min_track)
 			min_max_info.set_max_track_size (max_track)
@@ -913,7 +916,7 @@ feature {NONE} -- Implementation
 		do
 			msg := cwin_hi_word (lparam)
 			if msg = Wm_rbuttondown then
-				set_message_return_value (Ma_noactivate)
+				set_message_return_value (Wel_input_constants.Ma_noactivate)
 			end
 		end
 
@@ -1026,6 +1029,14 @@ feature -- Implementation
 
 	interface: EV_WINDOW
 
+feature {NONE} -- Constants
+
+	Environment: EV_ENVIRONMENT is
+			-- Global caracteristics of the system.
+		once
+			create Result
+		end
+
 end -- class EV_WINDOW_IMP
 
 --!-----------------------------------------------------------------------------
@@ -1050,6 +1061,11 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/05/03 00:33:36  pichery
+--| - Changed constants retrieval
+--| - Changed `show' implementation (does not block
+--|   anymore even when `is_modal' is set)
+--|
 --| Revision 1.45  2000/05/01 19:38:03  pichery
 --| Changed the implementation of `enable_modal'
 --| and `disable_modal'.

@@ -398,6 +398,12 @@ rt_shared void initsig(void)
 	sig_stk.s_pending = '\0';		/* No signals pending yet */
 
 	for (sig = 1; sig < NSIG; sig++) {
+#if defined EIF_LINUXTHREADS
+	  if ((sig != SIGUSR1) && (sig != SIGUSR2))	/* Used by LinuxThreads implementation */
+#endif
+#if defined EIF_PCTHREADS
+	  if (sig != SIGVTALRM)				/* Used by PCThread implementation */
+#endif
 		old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
 		if (old == SIG_IGN)
 			sig_ign[sig] = 1;			/* Signal was ignored by default */
@@ -700,8 +706,8 @@ rt_private struct sig_desc sig_name[] = {
 #ifdef SIGXFSZ
 	{ 28, SIGXFSZ, "File size limit exceeded" },
 #endif
-#ifdef SIGVTALARM
-	{ 29, SIGVTALARM, "Virtual time alarm" },
+#ifdef SIGVTALRM
+	{ 29, SIGVTALRM, "Virtual time alarm" },
 #endif
 #ifdef SIGPWR
 	{ 30, SIGPWR, "Power-fail" },

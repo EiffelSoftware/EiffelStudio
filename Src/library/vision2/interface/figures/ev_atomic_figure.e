@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	foreground_color: EV_COLOR
-			-- The color of text, lines, etc.
+			-- Color of text, lines, etc.
 
 	line_width: INTEGER
 			-- Thickness of lines.

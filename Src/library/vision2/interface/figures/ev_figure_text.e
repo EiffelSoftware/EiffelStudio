@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING
-			-- The text that is displayed.
+			-- Text that is displayed.
 
 	font: EV_FONT
 			-- Typeface `text' is displayed in.
@@ -100,9 +100,8 @@ feature -- Status setting
 feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
+			-- Is (`x', `y') on this figure?
 		do
-				--| FIXME Rotation!
 			update_dimensions
 			Result := point_on_rectangle (x, y, point.x_abs, point.y_abs,
 				point.x_abs + width, point.y_abs + height)

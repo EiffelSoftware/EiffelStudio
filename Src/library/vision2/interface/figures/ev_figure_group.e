@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 feature -- Status setting
 
 	snap_to_grid is
-			-- Move all move handles the most nearby point on the grid.
+			-- Move all move handles to most nearby point on the grid.
 		require
 			world_not_void: world /= Void
 			grid_enabled: world.grid_enabled
@@ -155,7 +155,7 @@ feature -- Status report
 feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
+			-- Is (`x', `y') on this figure?
 			-- Always returns `False', but descendants can override
 			-- it to improve efficiency.
 		do
@@ -275,7 +275,7 @@ feature -- List operations
 feature {NONE} -- Implementation
 
 	change_group (other: like Current) is
-			-- Change the group of all figures in `other' to Current.
+			-- Change group of all figures in `other' to Current.
 			-- Used by `merge_left' and `merge_right'.
 		local
 			n: INTEGER

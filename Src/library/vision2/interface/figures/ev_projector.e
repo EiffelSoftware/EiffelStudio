@@ -36,7 +36,7 @@ feature -- Status setting
 feature -- Access
 
 	world: EV_FIGURE_WORLD
-			-- The figure-world that will be projected.
+			-- Figure-world that will be projected.
 
 invariant
 	world_exists: world /= Void

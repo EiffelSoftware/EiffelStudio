@@ -39,7 +39,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_positions (x1, y1, x2, y2: INTEGER) is
-			-- Create on (x1, y1)-(x2, y2).
+			-- Create on (x1, y1) - (x2, y2).
 		do
 			default_create
 			point_a.set_position (x1, y1)
@@ -63,7 +63,7 @@ feature -- Element change
 feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
+			-- Is (`x', `y') on this figure?
 		do
 			Result := point_on_segment (x, y,
 				point_a.x_abs, point_a.y_abs,
@@ -73,6 +73,7 @@ feature -- Events
 feature {NONE} -- Implementation
 
 	bounding_box: EV_RECTANGLE is
+			-- Smallest orthogonal rectangular area `Current' fits in.		
 		local
 			p: EV_RELATIVE_POINT
 		do

@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		end
 
 	draw_grid is
-			-- Draw the grid on the canvas.
+			-- Draw grid on canvas.
 		do
 			add_ps ("%%Drawing PS Grid")
 			add_ps ("gsave")
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 feature -- Basic operations
 
 	project is
-			-- Make a standard projection of the world on the device.
+			-- Make standard projection of world on device.
 		do
 			if not is_projecting then
 				is_projecting := True

@@ -47,12 +47,12 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	pixmap: EV_PIXMAP
-			-- The pixmap that is displayed.
+			-- Ppixmap that is displayed.
 
 feature -- Status report
 
 	width: INTEGER is
-			-- The width of the pixmap.
+			-- Width of pixmap.
 		do
 			Result := pixmap.width
 		ensure
@@ -60,7 +60,7 @@ feature -- Status report
 		end
 
 	height: INTEGER is
-			-- The height of the pixmap.
+			-- Height of Pixmap.
 		do
 			Result := pixmap.height
 		ensure
@@ -74,7 +74,7 @@ feature -- Status report
 feature -- Status setting
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Set the pixmap to `a_pixmap'.
+			-- Set `pixmap' to `a_pixmap'.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		do
@@ -88,7 +88,7 @@ feature -- Status setting
 feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
+			-- Is (`x', `y') on this figure?
 		local
 			ax, ay: INTEGER
 		do

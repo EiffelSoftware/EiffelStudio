@@ -60,7 +60,7 @@ feature -- Access
 			-- Bottom boundary.
 
 	real_position_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], TUPLE [INTEGER, INTEGER]]
-			-- User defined function that translates the actual coordinates to
+			-- User defined function that translates actual coordinates to
 			-- the coordinates `Current' will be displayed on.
 
 feature -- Status report

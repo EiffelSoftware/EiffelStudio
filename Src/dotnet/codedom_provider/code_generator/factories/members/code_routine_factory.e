@@ -264,10 +264,7 @@ feature {NONE} -- Routine Initialization
 				end
 
 				current_feature.set_result_type (Type_reference_factory.type_reference_from_reference (a_source.type))
-
-				if a_source.attributes /= Void then
-					initialize_member_status (a_source.attributes)
-				end
+				initialize_member_status (a_source.attributes)
 
 				if a_source.custom_attributes /= Void then
 					initialize_custom_attributes (a_source.custom_attributes)
@@ -299,10 +296,7 @@ feature {NONE} -- Routine Initialization
 				end
 
 				current_feature.set_result_type (None_type_reference)
-
-				if a_source.attributes /= Void then
-					initialize_member_status (a_source.attributes)
-				end
+				initialize_member_status (a_source.attributes)
 
 				if a_source.custom_attributes /= Void then
 					initialize_custom_attributes (a_source.custom_attributes)
@@ -331,9 +325,7 @@ feature {NONE} -- Routine Initialization
 			non_void_source: a_source /= Void
 			non_void_routine: current_routine /= Void
 		do
-			if a_source.attributes /= Void then
-				initialize_member_status (a_source.attributes)
-			end
+			initialize_member_status (a_source.attributes)
 
 			if a_source.custom_attributes /= Void then
 				initialize_custom_attributes (a_source.custom_attributes)

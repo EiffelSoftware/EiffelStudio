@@ -634,6 +634,32 @@ feature -- Element change
 			index := index - 1
 		end
 		
+	move (i: INTEGER) is
+			-- Move cursor `i' positions. The cursor
+			-- may end up `off' if the absolute value of `i'
+			-- is too big.
+		local
+			counter: INTEGER
+		do
+			if i > 0 then
+				from
+				until
+					(counter = i) or else after
+				loop
+					forth
+					counter := counter + 1
+				end
+			elseif i < 0 then
+				from
+				until
+					(counter = i) or else before
+				loop
+					back
+					counter := counter - 1
+				end
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	internal_item_list: ARRAYED_LIST [EV_WIDGET]

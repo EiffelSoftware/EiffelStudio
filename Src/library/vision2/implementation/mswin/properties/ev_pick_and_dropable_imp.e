@@ -198,7 +198,12 @@ feature {EV_ANY_I} -- Implementation
 				if pebble_function /= Void then
 					pebble := pebble_function.last_result
 				end
-				if pebble /= Void then
+				if pebble /= Void and application_imp.pick_and_drop_source = Void then
+					-- Note that we check there is not a pick and drop source currently executing.
+					-- If you drop on to a widget that is also a source and call `process_events' from the
+					-- `drop_actions', this causes the transport to start. The above check prevents this
+					-- from occurring.
+					
 					if mode_is_pick_and_drop and a_button = 3 then
 						real_start_transport (a_x, a_y, a_button, a_x_tilt,
 							a_y_tilt, a_pressure, a_screen_x, a_screen_y)
@@ -367,11 +372,7 @@ feature {EV_ANY_I} -- Implementation
 				text_component.disable_context_menu
 			end
 
-				-- Update `application_imp' to reflect end of transport.
 			create env
-			application_imp.transport_ended
-			application_imp.set_transport_just_ended
-
 			if
 				(a_button = 3 and is_pnd_in_transport) or
 				(a_button = 1 and is_dnd_in_transport)
@@ -398,6 +399,14 @@ feature {EV_ANY_I} -- Implementation
 			else
 				env.application.cancel_actions.call ([pebble])
 			end
+
+				-- Update `application_imp' to reflect end of transport.
+				-- We call `transport_ended' after calling the `drop_actions' as if this is not done,
+				-- dropping on to a widget that is also a source and calling `process_events' from the
+				-- `drop_actions', causes the transport to start.
+			application_imp.transport_ended
+			application_imp.set_transport_just_ended
+	
 			abstract_pick_and_dropable ?= target
 			check
 				abstract_pick_and_dropable_correct: target /= Void implies abstract_pick_and_dropable /= Void

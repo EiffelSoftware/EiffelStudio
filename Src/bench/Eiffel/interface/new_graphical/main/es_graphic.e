@@ -88,6 +88,8 @@ feature {NONE} -- Initialization
 			else
 				post_launch_actions.extend (agent license.check_activation_while_running (agent prepare))
 			end
+				-- Make sure any uncaught exceptions are handled
+			uncaught_exception_actions.extend (agent handle_exception)
 		end
 
 feature {NONE} -- Implementation (preparation of all widgets)
@@ -196,6 +198,67 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			if create_project_dialog.success and then create_project_dialog.compile_project then
 				first_window.Melt_project_cmd.execute
 			end
+		end
+
+feature {NONE} -- Exception handling
+
+	handle_exception (a_exception: EXCEPTION) is
+			-- Handle the exception `a_exception'
+		do
+				-- Attempt to salvage any open files
+			try_to_save_files
+				-- Raise exception dialog
+			clean_exit (a_exception.trace_as_string)
+		end
+
+	parent_for_dialog: EV_WINDOW is
+			-- Retrieve or create a parent for `show_modal_to_window'	 
+		local	 
+			dev_window: EB_DEVELOPMENT_WINDOW	 
+		do	 
+			dev_window := Window_manager.last_focused_development_window	 
+			if dev_window /= Void then	 
+				Result := dev_window.window	 
+			else	 
+				create Result	 
+			end
+		end
+
+	try_to_save_files is
+			-- In case of a crash, try to make a backup of all edited files.
+		local
+			wd: EV_WARNING_DIALOG
+			retried: BOOLEAN
+		do
+			if not retried then
+				if window_manager.has_modified_windows then
+					create wd.make_with_text (warning_messages.w_crashed)
+					wd.show_modal_to_window (parent_for_dialog)
+					window_manager.backup_all
+					if window_manager.not_backuped = 0 then
+						create wd.make_with_text (warning_messages.w_backup_succeeded)
+						wd.show_modal_to_window (parent_for_dialog)
+					else
+						create wd.make_with_text (warning_messages.w_backup_partial (window_manager.not_backuped))
+						wd.show_modal_to_window (parent_for_dialog)
+					end
+				end
+			else
+				create wd.make_with_text (warning_messages.w_backup_failed)
+				wd.show_modal_to_window (parent_for_dialog)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	clean_exit (trace: STRING) is
+			-- Perform clean quit of $EiffelGraphicalCompiler$
+		local
+			error_dlg: EB_EXCEPTION_DIALOG
+		do
+			create error_dlg.make (trace)
+			error_dlg.show_modal_to_window (parent_for_dialog)
 		end
 		
 end -- class ES_GRAPHIC

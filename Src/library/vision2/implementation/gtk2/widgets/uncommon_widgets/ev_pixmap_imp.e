@@ -157,9 +157,18 @@ feature -- Element change
 			-- Stretch the image to fit in size `a_x' by `a_y'.
 		local
 			a_gdkpix, a_gdkmask, a_gdkpixbuf: POINTER
+			a_scale_type: INTEGER
 		do
 			a_gdkpixbuf := pixbuf_from_drawable
-			a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
+			
+			if width <= 16 and then height <= 16 then
+					-- For small images this method scales better
+				a_scale_type := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_nearest
+			else
+					-- For larger images this mode provides better scaling
+				a_scale_type := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear
+			end
+			a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, a_scale_type)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_gdkpixbuf, $a_gdkpix, $a_gdkmask, 255)
 			set_pixmap (a_gdkpix, a_gdkmask)
 			feature {EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)

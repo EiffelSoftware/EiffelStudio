@@ -1,17 +1,18 @@
 indexing
-	description: "Implemented `IEnumCluster' Interface."
+	description: "Implemented `IEnumAssemblyr' Interface."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IMPORTED_ASSEMBLIES_ENUMERATOR
+	ASSEMBLY_ENUMERATOR
 
 inherit
-	IENUM_IMPORTED_ASSEMBLIES_INTERFACE
+	IENUM_ASSEMBLY_INTERFACE
 
 	ECOM_STUB
 
-	IENUM_STUB [STRING]
+	IENUM_STUB [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]
+
 
 create 
 	make
@@ -29,7 +30,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: like Current): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEnumImportedAssemblies_impl_stub %"ecom_eiffel_compiler_IEnumImportedAssemblies_impl_stub_s.h%"](EIF_OBJECT)"
+			"C++ [new ecom_eiffel_compiler::IEnumAssembly_impl_stub %"ecom_eiffel_compiler_IEnumAssembly_impl_stub_s.h%"](EIF_OBJECT)"
 		end
 
-end -- class IMPORTED_ASSEMBLIES_ENUMERATOR
+end -- class ASSEMBLY_ENUMERATOR

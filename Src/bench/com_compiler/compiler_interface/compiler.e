@@ -19,7 +19,7 @@ inherit
 			freeze_command_arguments,
 			remove_file_locks
 		end
-		
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -76,7 +76,8 @@ feature -- Basic Operations
 			if not rescued then
 				if not Eiffel_project.is_compiling then
 					Eiffel_project.melt
-					if Eiffel_project.Workbench.successful then
+
+				if Eiffel_project.Workbench.successful then
 						is_successful := True					
 					else
 					end

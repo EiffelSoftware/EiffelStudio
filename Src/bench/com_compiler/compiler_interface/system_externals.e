@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SYSTEM_EXTERNALS
+	SYSTEM_EXTERNAL
 
 feature -- Access
 
@@ -48,4 +48,5 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-end -- class SYSTEM_EXTERNALS
+end -- class SYSTEM_EXTERNAL
+

@@ -9,6 +9,7 @@ class
 inherit
 	IEIFFEL_SYSTEM_CLUSTERS_IMPL_STUB
 		redefine
+			is_valid_name,
 			cluster_properties_by_id,
 			cluster_properties,
 			remove_cluster,
@@ -167,7 +168,9 @@ feature -- Basic Operations
 			-- Add a cluster to the project.
 			-- `cluster_name' [in].  
 			-- `parent_name' [in].  
-			-- `cluster_path' [in].  
+			-- `cluster_path' [in].
+		require else
+			invalid_cluster_name: is_valid_name (cluster_name);
 		local
 			cluster_sd: CLUSTER_SD
 			parent_id: ID_SD
@@ -220,8 +223,57 @@ feature -- Basic Operations
 				clusters_impl.forth
 			end
 		end
-		
 
+	is_valid_name (a_name: STRING): BOOLEAN is
+			-- Checks to see if the cluster name is valid.
+		local
+			i: INTEGER
+		do
+			Result := true
+			
+			if a_name.is_empty then
+				Result := false
+			end
+			
+			-- check for illegal characters
+			from 
+				i := 1
+			until
+				i > a_name.count or Result = false
+			loop
+				inspect a_name.item (i)
+				when 'A'..'Z', 'a'..'z' then
+					Result := true
+				when '0'..'9', '_' then
+					if i > 1 then
+						Result := true
+					else
+						Result := false
+					end
+				else
+					Result := false
+				end
+				i := i + 1
+			end
+			
+			-- check the reserved words
+			if Result = true then
+				if ace_accesser /= Void then
+					from
+						ace_accesser.reserved_keywords.start
+					until
+						ace_accesser.reserved_keywords.after or Result = false
+					loop
+						if ace_accesser.reserved_keywords.item.is_equal (a_name) then
+							Result := false
+						end	
+						ace_accesser.reserved_keywords.forth
+					end
+					
+				end
+			end
+		end	
+		
 	cluster_properties (cluster_name: STRING): CLUSTER_PROPERTIES is
 			-- Cluster properties.
 			-- `cluster_name' [in].  
@@ -242,6 +294,8 @@ feature -- Element change
 			-- Renames and cluster
 			-- 'a_name' [in]
 			-- 'a_new_name' [in]
+		require else
+			invalid_cluster_name: is_valid_name (a_new_name);
 		local
 			cluster: CLUSTER_PROPERTIES
 			replaced: BOOLEAN

@@ -10,6 +10,7 @@ inherit
 	IEIFFEL_PROJECT_PROPERTIES_IMPL_STUB
 		redefine
 			system_name,
+			default_namespace,
 			root_class_name,
 			creation_routine,
 			evaluate_require,
@@ -19,13 +20,13 @@ inherit
 			evaluate_invariant,
 			debug_info,
 			clusters,
-			include_paths,
-			object_files,
+			externals,
+			assemblies,
 			compilation_type,
 			console_application,
-			assemblies,
 			apply,
 			set_system_name,
+			set_default_namespace,
 			set_root_class_name,
 			set_creation_routine,
 			set_evaluate_require,
@@ -36,12 +37,6 @@ inherit
 			set_compilation_type,
 			set_console_application,
 			set_debug_info,
-			add_assembly,
-			remove_assembly,
-			add_include_path,
-			remove_include_path,
-			add_object_file,
-			remove_object_file,
 			update_project_ace_file,
 			synchronize_with_project_ace_file
 		end
@@ -94,6 +89,14 @@ feature -- Access
 		do
 			if is_valid then
 				Result := ace.system_name
+			end
+		end
+		
+	default_namespace: STRING is
+			-- Default namespace
+		do
+			if is_valid then
+				Result := ace.default_namespace
 			end
 		end
 	
@@ -160,13 +163,25 @@ feature -- Access
 				Result := ace.line_generation
 			end
 		end
-
+		
 	clusters: SYSTEM_CLUSTERS is
 			-- List of clusters in current project (list of IEiffelClusterProperties*).
 		do
 			create Result.make (ace)
 		end
-
+		
+	externals: SYSTEM_EXTERNALS is
+			-- List of the externals in the current project (IEiffelExternalProperties*)
+		do
+			create Result.make (ace)
+		end
+		
+	assemblies: SYSTEM_ASSEMBLIES is
+			-- System assemblies
+		do
+			create Result.make (ace)
+		end
+		
 	compilation_type: INTEGER is
 			-- IL Compilation type.
 		local
@@ -194,81 +209,7 @@ feature -- Access
 			end
 		end
 		
-	assemblies: IMPORTED_ASSEMBLIES_ENUMERATOR is
-			-- Imported assemblies.
-			-- Void if none.
-		local
-			res: ARRAYED_LIST [STRING]
-			ace_res: LINKED_LIST [STRING]
-		do
-			if is_valid then
-				ace_res := ace.assemblies
-				if ace_res /= Void and then not ace_res.is_empty then
-					create res.make (ace_res.count)
-					from
-						ace_res.start
-					until
-						ace_res.after
-					loop
-						res.extend (ace_res.item)
-						ace_res.forth
-					end
-				end
-				if res /= Void then
-					create Result.make (res)
-				end
-			end
-		end
-		
-	include_paths: INCLUDE_PATHS_ENUMERATOR is
-			-- retrieve a enum of the included paths in the project
-		local
-			res: ARRAYED_LIST [STRING]
-			ace_res: LINKED_LIST [STRING]
-		do
-			if is_valid then
-				ace_res := ace.include_paths
-				if ace_res /= Void and then not ace_res.is_empty then
-					create res.make (ace_res.count)
-					from
-						ace_res.start
-					until
-						ace_res.after
-					loop
-						res.extend (ace_res.item)
-						ace_res.forth
-					end
-				end
-				if res /= Void then
-					create Result.make (res)
-				end
-			end
-		end
-		
-	object_files: OBJECT_FILES_ENUMERATOR is
-			-- retireve a enum of the object files in the project
-		local
-			res: ARRAYED_LIST [STRING]
-			ace_res: LINKED_LIST [STRING]
-		do
-			if is_valid then
-				ace_res := ace.object_files
-				if ace_res /= Void and then not ace_res.is_empty then
-					create res.make (ace_res.count)
-					from
-						ace_res.start
-					until
-						ace_res.after
-					loop
-						res.extend (ace_res.item)
-						ace_res.forth
-					end
-				end
-				if res /= Void then
-					create Result.make (res)
-				end
-			end
-		end
+
 		
 feature -- Element change
 
@@ -278,16 +219,29 @@ feature -- Element change
 			if is_valid then
 				if return_value /= Void and then not return_value.is_empty then
 					ace.set_system_name (return_value)
+					dirty := true
 				end
 			end
 		end
-
+		
+	set_default_namespace (return_value: STRING) is
+			-- Assign `return_value' to system name.
+		do
+			if is_valid then
+				if return_value /= Void and then not return_value.is_empty then
+					ace.set_default_namespace (return_value)
+					dirty := true
+				end
+			end
+		end
+		
 	set_root_class_name (return_value: STRING) is
 			-- Assign `return_value' to root class name.
 		do
 			if is_valid then
 				if return_value /= Void and then not return_value.is_empty then
 					ace.set_root_class_name (return_value)
+					dirty := true
 				end
 			end
 		end
@@ -298,6 +252,7 @@ feature -- Element change
 			if is_valid then
 				if return_value /= Void and then not return_value.is_empty then
 					ace.set_creation_routine_name (return_value)
+					dirty := true
 				end
 			end
 		end
@@ -307,6 +262,7 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (return_value, evaluate_ensure, evaluate_check, evaluate_loop, evaluate_invariant)
+				dirty := true
 			end
 		end
 
@@ -315,6 +271,7 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (evaluate_require, return_value, evaluate_check, evaluate_loop, evaluate_invariant)
+				dirty := true
 			end
 		end
 
@@ -323,6 +280,7 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (evaluate_require, evaluate_ensure, return_value, evaluate_loop, evaluate_invariant)
+				dirty := true
 			end
 		end
 
@@ -331,6 +289,7 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (evaluate_require, evaluate_ensure, evaluate_check, return_value, evaluate_invariant)
+				dirty := true
 			end
 		end
 
@@ -339,6 +298,7 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (evaluate_require, evaluate_ensure, evaluate_check, evaluate_loop, return_value)
+				dirty := true
 			end
 		end
 
@@ -354,6 +314,7 @@ feature -- Element change
 				elseif return_value = enum.eif_compt_is_library then
 					ace.set_il_generation_type (ace.Il_generation_dll)
 				end
+				dirty := true
 			end
 		end
 
@@ -362,6 +323,7 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_console_application (return_value)
+				dirty := true
 			end
 		end
 		
@@ -370,51 +332,9 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_line_generation (return_value)
+				dirty := true
 			end
 		end
-
-	add_assembly (assembly_path: STRING) is
-			-- Add an assembly to the project.
-		do
-			if is_valid then
-				if assembly_path /= Void and then not assembly_path.is_empty then
-					ace.add_assembly (assembly_path)
-				end
-			end
-		end
-
-	remove_assembly (assembly_path: STRING) is
-			-- Remove an assembly from the project.
-		do
-			if is_valid then
-				if assembly_path /= Void and then not assembly_path.is_empty then
-					ace.remove_assembly (assembly_path)
-				end				
-			end
-		end
-		
-	add_include_path (include_path: STRING) is
-			-- add an include path to the project
-		do
-		end
-		
-	remove_include_path (include_path: STRING) is
-			-- remove an include path from the project
-		do
-		end
-		
-	add_object_file (object_file: STRING) is
-			-- add an object file to the project
-		do
-		end
-		
-	remove_object_file (object_file: STRING) is
-			-- remove an object file from the project
-		do
-		end
-		
-		
-		
 		
 feature -- Status report
 
@@ -430,7 +350,12 @@ feature -- Basic operations
 			-- Apply changes.
 		do
 			if is_valid then
+				-- TODO: check if clusters/externals/assemblies are dirty and then apply if so
+				clusters.store
+				externals.store
+				assemblies.store
 				ace.apply
+				dirty := false
 			end
 		end
 
@@ -466,6 +391,9 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	dirty: BOOLEAN
+			-- are the project setting dirty and require saving?
 
 	ace: ACE_FILE_ACCESSER
 			-- Access to the Ace file.

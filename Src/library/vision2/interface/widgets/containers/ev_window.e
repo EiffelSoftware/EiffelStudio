@@ -16,8 +16,8 @@ inherit
 			{NONE} set_parent
 		redefine
 			implementation,
-			show,
 			parent,
+			show,
 			widget_make
 		end
 
@@ -154,14 +154,6 @@ feature -- Status report
 
 feature -- Status setting
 
-	show is
-			-- Make the window visible on the screen
-		require else
-			exists: not destroyed
-		do
-			implementation.show
-		end
-
 	forbid_resize is
 			-- Forbid the resize of the window.
 		require
@@ -212,6 +204,15 @@ feature -- Status setting
 			implementation.set_modal
 		end
 
+	show is
+		 	-- Make widget visible on the screen. (default)
+			-- Redefined of show from EV_WIDGET because
+			-- a window can have no parent (ex: main_window)
+		require else
+			exists: not destroyed
+		do
+			implementation.show
+		end
 
 feature -- Element change
 

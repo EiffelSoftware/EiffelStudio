@@ -26,7 +26,8 @@ feature {NONE} -- Initialization
         make (par: EV_CONTAINER) is
                         -- Create a fixed widget. 
 		do
-			widget := gtk_fixed_new ()
+			widget := gtk_fixed_new
+			show
 		end	
 	
 end

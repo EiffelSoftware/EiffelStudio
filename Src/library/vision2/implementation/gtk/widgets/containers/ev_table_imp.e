@@ -26,6 +26,7 @@ feature {NONE} -- Implementation
                         -- parent.
 		do
 			widget := gtk_table_new (0, 0, Default_homogeneous)
+			show
 		end
 
 feature -- Status report

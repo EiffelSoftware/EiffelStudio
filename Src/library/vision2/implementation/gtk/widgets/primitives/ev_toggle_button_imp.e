@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
                         -- Create a gtk toggle button.
 		do
                         widget := gtk_toggle_button_new
+			show
 			initialize 
                 end
 	

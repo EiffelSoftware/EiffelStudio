@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
                 do
                         widget := gtk_text_new (Default_pointer, 
 						Default_pointer)
+			show
 			gtk_text_set_editable (widget, True)
                 end
 

@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 		do
 			widget := gtk_button_new
+			show
 			initialize
 		end
 	
@@ -42,6 +43,7 @@ feature {NONE} -- Initialization
 			-- Common initialization for buttons
 		do
 			box := gtk_hbox_new (False, 0)
+			gtk_widget_show (box)
 			gtk_container_add (GTK_CONTAINER (widget), box)
 		end			
 	

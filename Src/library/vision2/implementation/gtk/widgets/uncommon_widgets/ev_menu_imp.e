@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 	
 class
-	EV_MENU_IMP
+	EV_MENU_IMP 
 	
 inherit
 	EV_MENU_I
@@ -60,8 +60,7 @@ feature {NONE} -- Implementation
 			check
 				correct_imp: item_imp /= Void
 			end
-			gtk_menu_append (GTK_MENU(widget), item_imp.widget)
-			gtk_widget_show (item_imp.widget)
+			gtk_menu_append (widget, item_imp.widget)
 		end
 
 --	add_menu_item_pointer (item_p: POINTER) is

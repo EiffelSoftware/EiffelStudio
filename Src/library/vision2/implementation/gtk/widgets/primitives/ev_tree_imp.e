@@ -11,9 +11,6 @@ inherit
 	EV_TREE_I
 
 	EV_PRIMITIVE_IMP
-		undefine
-			show
-		end
 
 	EV_TREE_ITEM_CONTAINER_IMP
 
@@ -26,6 +23,7 @@ feature {NONE} -- Initialization
 			-- Create an empty Tree.
 		do
 			widget := gtk_tree_new
+			show
 		end
 
 feature -- Event : command association

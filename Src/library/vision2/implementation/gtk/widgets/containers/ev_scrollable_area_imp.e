@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_scrolled_window_new ( Default_pointer, 
 							    Default_pointer)
+			show
 			gtk_scrolled_window_set_policy (gtk_scrolled_window (widget), 
 							gtk_policy_automatic, 
 							gtk_policy_automatic)

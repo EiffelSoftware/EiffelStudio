@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			-- By default, a list allow only one selection.
 		do
 			widget := gtk_clist_new (col_nb)
+			show
 			show_title_row
 			!! ev_children.make (0)
 		end

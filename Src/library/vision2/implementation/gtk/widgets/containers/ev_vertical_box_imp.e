@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
                         -- Create a fixed widget. 
 		do
 			widget := gtk_vbox_new (Default_homogeneous, Default_spacing)
+			show
 		end	
 	
 feature {EV_BOX} -- Implementation

@@ -8,7 +8,7 @@ inherit
 		end
 
 feature
-
+	
 	change_id (new_value, old_value: H) is
 		local
 			sf: SERVER_INFO;
@@ -54,24 +54,22 @@ debug ("SERVER")
 	io.putstring (generator);
 	io.new_line;
 end;
+			an_id := updated_id (id (t))
+			t.set_id (an_id);
 
-			t.set_id (updated_id (id (t)));
-
-			an_id := id (t);
 				-- Put `t' in cache if not full
 			old_item := cache.item_id (an_id);
 			if old_item = Void then
 					-- No previous item of id `t.id'
-				if cache.is_full then
-					to_remove := cache.item;
-					id_to_remove := id (to_remove);
+				cache.force (t)
+				to_remove := cache.last_removed_item
+				if to_remove /= Void then 
+					id_to_remove := id (to_remove)
 					if delayed.has (id_to_remove) then
-						write (to_remove);
-						delayed.remove (id_to_remove);
-					end;
-					cache.remove;
-				end;
-				cache.put (t);
+						write (to_remove)
+						delayed.remove (id_to_remove)
+					end
+				end
 			else
 					-- There is a previous item and routine `item_id' 
 					-- reorganized the cache
@@ -91,6 +89,14 @@ end;
 		do
 			real_id := updated_id (an_id);
 			Result := cache.item_id (real_id);
+Debug ("CACHE_COMPILER")
+	io.putstring (generator)
+	if Result = Void then
+		io.putstring ("On the disk...%N")
+	else
+		io.putstring ("In the cache...%N")
+	end
+end
 			if Result = Void then
 					-- Id not avaible in memory
 				info := tbl_item (real_id);
@@ -100,18 +106,16 @@ end;
 				end;
 				Result := retrieve_all (server_file.descriptor, info.position);
 					-- Insert it in the queue
-				if cache.is_full then
-						-- If cache is full, oldest is removed
-					to_remove := cache.item;
-					id_to_remove := id (to_remove);
-					if delayed.has (id_to_remove) then
-						write (to_remove);
-						delayed.remove (id_to_remove);
-					end;
-					cache.remove;
-				end;
 				Result.set_id (real_id);
-				cache.put (Result);
+				cache.force (Result)
+				to_remove := cache.last_removed_item
+				if to_remove /= Void then 
+					id_to_remove := id (to_remove)
+					if delayed.has (id_to_remove) then
+						write (to_remove)
+						delayed.remove (id_to_remove)
+					end
+				end				
 			end;
 		end;
 
@@ -144,27 +148,25 @@ end;
 	flush is
 			-- Flush server
 		local
-			nb_iter, nb: INTEGER;
-			id_to_remove: H;
-			to_remove: T;
+			c: cache [T, H]	
+			to_remove: T
+			id_to_remove: H
 		do
 			from
-				nb := cache.count;
-				nb_iter := 1;
+				c := cache
+				c.start
 			until
-				nb_iter > nb
+				c.after
 			loop
-				to_remove := cache.item;
-				id_to_remove := id (to_remove);
-				cache.remove;
+				to_remove := c.item_for_iteration
+				id_to_remove := id (to_remove)
 				if delayed.has (id_to_remove) then
-					write (to_remove);
-					delayed.remove (id_to_remove);
-				end;
-				cache.put (to_remove);
-				nb_iter := nb_iter + 1;
-			end;
-		end;
+					write (to_remove)
+					delayed.remove (id_to_remove)
+				end
+				c.forth
+			end
+		end
 
 	has (an_id: H): BOOLEAN is
 			-- Has the server an item of id `an_id' ?

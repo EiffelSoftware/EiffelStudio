@@ -1,3 +1,4 @@
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
 		"Eiffel Vision tooltipable. GTK+ implementation."
@@ -70,6 +71,9 @@ end -- EV_TOOLTIPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/05/05 16:39:32  king
+--| Added not for release
+--|
 --| Revision 1.2  2000/05/05 16:36:17  king
 --| Corrected set_tooltip
 --|

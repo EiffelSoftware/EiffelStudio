@@ -36,19 +36,19 @@ feature -- Basic Operations
 			found_item := Void
 			Inst_context.set_cluster (class_i.cluster)
 			l_targets := target.split ('.')
+			l_targets.finish
+			if l_targets.item.is_empty then
+				l_targets.remove
+			end
 			if feature_i /= void then
-				if l_targets.count = 1 then
+				qualified_call := l_targets.count > 1
+				if not qualified_call then
 					found_item := completion_feature_from_name (target)
 					if found_item = Void then
 						found_item := uncompiled_completion_feature (target)
 						found := found_item /= Void
 					end
 				else
-					if l_targets.last.is_empty then
-						l_targets.finish
-						l_targets.remove
-					end
-					qualified_call := l_targets.count > 1
 					l_targets.finish
 					l_lookup_name := l_targets.item
 					l_targets.remove
@@ -56,7 +56,7 @@ feature -- Basic Operations
 					if l_target_type /= void and then not l_target_type.is_void then
 						l_targets.start
 						l_targets.remove
-						feature_table := recursive_lookup (l_target_type, l_targets, feature_table)
+						feature_table := recursive_lookup (l_target_type, l_targets, feature_table, True)
 						if feature_table /= void then
 							found_item := completion_feature_from_name (l_lookup_name)
 						end

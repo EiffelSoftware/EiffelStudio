@@ -48,6 +48,7 @@ feature -- Type check, byte code and dead code removal
 			creators: EXTEND_TABLE [EXPORT_I, STRING];
 			depend_unit: DEPEND_UNIT;
 			vgcc1: VGCC1;
+			vgcc11: VGCC11;
 			vgcc2: VGCC2;
 			vgcc3: VGCC3;
 			vgcc31: VGCC31;
@@ -61,8 +62,7 @@ feature -- Type check, byte code and dead code removal
 			formal_dec: FORMAL_DEC_AS_B
 			formal_position: INTEGER
 			constraint_type: TYPE_A
-			class_type: CL_TYPE_A
-			valid_formal_creation: BOOLEAN
+			is_formal_creation: BOOLEAN
 		do
 				-- Init the type stack
 			context.begin_expression;
@@ -80,9 +80,9 @@ feature -- Type check, byte code and dead code removal
 
 			creation_type := context.item;
 				-- Entity to create can only be an attribute, a local variable
-				-- or Result
+				-- a constraint generic parameter with creation clause or Result
 			if not access.is_creatable then
-				!!vgcc7;
+				!! vgcc7;
 				context.init_error (vgcc7);
 				vgcc7.set_target_name (target.access_name);
 				vgcc7.set_type (creation_type);
@@ -92,31 +92,27 @@ feature -- Type check, byte code and dead code removal
 			end;
 
 			if creation_type.is_formal then
+					-- Cannot be Void
 				formal_type ?= creation_type
 				formal_position := formal_type.position
 					-- Get the corresponding constraint type of the current class
 				formal_dec := context.a_class.generics.i_th (formal_position)
-				if formal_dec.constraint /= Void then
-					constraint_type := formal_dec.constraint_type
-					class_type ?= constraint_type
-					if class_type /= Void then
-						creation_type := class_type
-						valid_formal_creation := True
-					end
+				if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
+					creation_type := formal_dec.constraint_type
+					is_formal_creation := True
+				else
+						-- An entity of type a formal generic parameter cannot be
+						-- created here because there is no creation routine constraints
+					!! vgcc1;
+					context.init_error (vgcc1);
+					vgcc1.set_target_name (target.access_name);
+					Error_handler.insert_error (vgcc1);					
 				end
-			else
-				valid_formal_creation := True
 			end
 
-			if not valid_formal_creation then
-					-- An entity of type a formal generic parameter cannot be
-					-- created here because there is no creation routine constraints
-				!!vgcc1;
-				context.init_error (vgcc1);
-				vgcc1.set_target_name (target.access_name);
-				vgcc1.set_type (creation_type);
-				Error_handler.insert_error (vgcc1);
-			elseif 	creation_type.is_none
+			Error_handler.checksum;
+
+			if 	creation_type.is_none
 					--or else
 					--creation_type.is_expanded
 					--or else
@@ -189,7 +185,7 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.checksum;
 
 				creation_class := creation_type.associated_class;
-				if creation_class.is_deferred then
+				if creation_class.is_deferred and then not is_formal_creation then
 						-- Associated class cannot be deferred
 					!!vgcc2;
 					context.init_error (vgcc2);
@@ -203,50 +199,72 @@ feature -- Type check, byte code and dead code removal
 						-- Type check the call: note that the creation
 						-- type is on the type stack
 					call.type_check;
-	
-						-- Check if creation routine is non-once procedure
 					feature_name := call.feature_name;
-					if
-						 not creation_class.valid_creation_procedure (feature_name)
-					then
-						!!vgcc5;
-						context.init_error (vgcc5);
-						vgcc5.set_target_name (target.access_name);
-						vgcc5.set_type (creation_type);
-						a_feature := creation_class.feature_table.item (feature_name);
-						vgcc5.set_creation_feature (a_feature);
-						Error_handler.insert_error (vgcc5);
-					else
-						export_status := creation_class.creators.item
-															(feature_name);
-						if not export_status.valid_for (context.a_class) then
-								-- Creation procedure is not exported
-							!!vgcc5;
+
+					if not is_formal_creation then
+							-- Check if creation routine is non-once procedure
+						if
+							not creation_class.valid_creation_procedure (feature_name)
+						then
+							!! vgcc5;
 							context.init_error (vgcc5);
 							vgcc5.set_target_name (target.access_name);
 							vgcc5.set_type (creation_type);
 							a_feature := creation_class.feature_table.item (feature_name);
 							vgcc5.set_creation_feature (a_feature);
 							Error_handler.insert_error (vgcc5);
+						else
+							export_status := creation_class.creators.item (feature_name);
+							if not export_status.valid_for (context.a_class) then
+									-- Creation procedure is not exported
+								!!vgcc5;
+								context.init_error (vgcc5);
+								vgcc5.set_target_name (target.access_name);
+								vgcc5.set_type (creation_type);
+								a_feature := creation_class.feature_table.item (feature_name);
+								vgcc5.set_creation_feature (a_feature);
+								Error_handler.insert_error (vgcc5);
+							end;
 						end;
-					end;
-				else
-					creators := creation_class.creators;
-					if (creators = Void) then
-					elseif creators.empty then
-						!!vgcc5;
-						context.init_error (vgcc5);
-						vgcc5.set_target_name (target.access_name);
-						vgcc5.set_type (creation_type);
-						vgcc5.set_creation_feature (Void);
-						Error_handler.insert_error (vgcc5);
 					else
-						!!vgcc4;
-						context.init_error (vgcc4);
-						vgcc4.set_target_name (target.access_name);
-						vgcc4.set_type (creation_type);
-						Error_handler.insert_error (vgcc4);
-					end;
+							-- Check that the creation feature used for creating the generic
+							-- parameter has been listed in the constraint for the generic
+							-- parameter.
+						if not formal_dec.has_creation_feature_name (feature_name) then
+							!! vgcc11;
+							context.init_error (vgcc11);
+							vgcc11.set_target_name (target.access_name);
+							a_feature := creation_class.feature_table.item (feature_name);
+							vgcc11.set_creation_feature (a_feature);
+							Error_handler.insert_error (vgcc11);
+						end
+					end
+				else
+					if not is_formal_creation then
+						creators := creation_class.creators;
+						if (creators = Void) then
+						elseif creators.empty then
+							!!vgcc5;
+							context.init_error (vgcc5);
+							vgcc5.set_target_name (target.access_name);
+							vgcc5.set_type (creation_type);
+							vgcc5.set_creation_feature (Void);
+							Error_handler.insert_error (vgcc5);
+						else
+							!!vgcc4;
+							context.init_error (vgcc4);
+							vgcc4.set_target_name (target.access_name);
+							vgcc4.set_type (creation_type);
+							Error_handler.insert_error (vgcc4);
+						end;
+					else
+							-- An entity of type a formal generic parameter cannot be
+							-- created here because we need a creation routine call
+						!! vgcc1;
+						context.init_error (vgcc1);
+						vgcc1.set_target_name (target.access_name);
+						Error_handler.insert_error (vgcc1);				
+					end
 				end;
 			end;
 			Error_handler.checksum;

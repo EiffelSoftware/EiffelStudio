@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	clip_region: EV_RECTANGLE
+	clip_region: EV_CLIP
 			-- Exposed region
 
 	exposes_to_come: INTEGER
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Element change	
 	
-	set_clip_region (clip: EV_RECTANGLE) is
+	set_clip_region (clip: EV_CLIP) is
 		do
 			clip_region := clip
 		end 

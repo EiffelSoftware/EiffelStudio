@@ -40,6 +40,7 @@ feature
 		do
 			sorted_set_make
 			!!suppliers.make
+			compare_objects
 		end;
 
 	wipe_out is 

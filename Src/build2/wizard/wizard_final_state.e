@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			output_file_name.extend (wizard_completion_file_name)
 			create output_file.make_open_write (output_file_name)
 			output_file.start
-			output_file.putstring (system_status.current_project_settings.main_window_class_name + class_implementation_extension + ".e")
+			output_file.putstring ((system_status.current_project_settings.main_window_class_name + class_implementation_extension + ".e").as_lower)
 			output_file.close
 			
 			--| Add here the action of your wizard.

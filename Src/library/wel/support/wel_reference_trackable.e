@@ -177,12 +177,10 @@ feature {NONE} -- Removal
 			destroyed: not exists
 		end
 
-feature {EV_IMAGE_LIST_IMP} -- Implementation
+feature {NONE} -- Implementation
 
 	internal_object_id: INTEGER
 			-- Object ID of Current if recorded.
-
-feature {ANY} -- Implementation
 
 	internal_number_id: INTEGER
 			-- Debugging purpose

@@ -268,14 +268,23 @@ feature {NONE} -- Implementation
 			--| enable_multiple_selection has been changed.
 		local
 			wel_win: WEL_WINDOW
+			old_x_position, old_y_position, old_width, old_height: INTEGER
 		do
 			wel_win ?= parent_imp
+			old_x_position := x_position
+			old_y_position := y_position
+			old_width := width
+			old_height := height
+				-- We store existing attributes required to re-create `Current'.
 			wel_destroy
+				-- Destroy the old windows object.
 			internal_window_make (wel_win, Void, default_style,
-				x_position, y_position, width, height, 0,
+				old_x_position, old_y_position, old_width, old_height, 0,
 			    Default_pointer)
+				-- Create a new windows object with the stored attributes.
 			id := 0
 			internal_copy_list
+				-- Update the contents of the new windows object.
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
@@ -564,6 +573,11 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/04/05 18:35:07  rogers
+--| Recreate_list now correctly stores the existing attributes
+--| of the windows object before destroying it, and then creating
+--| a new object with these attributes.
+--|
 --| Revision 1.59  2000/03/31 19:07:44  rogers
 --| Remove FIXME as it has been fixed.
 --| Internal_propagate_pointer_press now propagates correct button.

@@ -330,6 +330,7 @@ feature {NONE} -- Implementation
 				-- We do not build a new control if it already exists.
 			if snap_button = Void then
 				create snap_button.make_with_text ("Snap to grid")
+				snap_button.enable_select
 			else
 				snap_button.parent.prune_all (snap_button)
 			end

@@ -55,6 +55,8 @@ feature
 			f.exdent;
 				-- Detach this block
 			f.new_line;
+			f.putstring ("PResult = (");
+			type_i.c_type.generate (f);
 			if context.result_used then
 				if real_type(result_type).c_type.is_pointer then
 						-- Record once by allocating room in once_set stack.
@@ -62,22 +64,16 @@ feature
 						-- only if it is a reference. This will raise an
 						-- exception if the address cannot be recorded and
 						-- 'PResult' won't be set via the key.
-					f.putstring ("PResult = (");
-					type_i.c_type.generate (f);
 					f.putstring ("*) RTOC(0);");
 				else
 					-- If not a reference, we need to allocate some place
 					-- where to store the Result (We can't store Result
 					-- directly, since it might be 0...)
-					f.putstring ("PResult = (");
-					type_i.c_type.generate (f);
 					f.putstring ("*) cmalloc(sizeof(");
 					type_i.c_type.generate (f);
 					f.putstring ("*));");
 				end;
 			else
-				f.putstring ("PResult = (");
-				type_i.c_type.generate (f);
 				f.putstring ("*) 1;");
 			end;
 			f.new_line;

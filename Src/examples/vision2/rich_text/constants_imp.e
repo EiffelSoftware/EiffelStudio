@@ -135,16 +135,6 @@ feature -- Access
 			Result := 50
 		end
 
-	center_alignment_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (rich_text_example_root)
-			a_file_name.set_file_name ("center_alignment.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
 	font_selection_combo_box_width: INTEGER is 
 			-- `Result' is INTEGER constant named font_selection_combo_box_width.
 		once
@@ -155,6 +145,16 @@ feature -- Access
 			-- `Result' is DIRECTORY constant named `rich_text_example_root'.
 		once
 			Result := "E:\projects\rich_text"
+		end
+
+	center_alignment_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("center_alignment.png")
+			set_with_named_file (Result, a_file_name)
 		end
 
 
@@ -176,7 +176,7 @@ feature -- Access
 			name_valid: a_name /= Void and not a_name.is_empty
 			has_constant (a_name)
 		do
-			Result := clone (all_constants.item (a_name))
+			Result := (all_constants.item (a_name)).twin
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -190,7 +190,7 @@ feature -- Access
 		local
 			l_string: STRING
 		do
-			l_string := clone (all_constants.item (a_name))
+			l_string := (all_constants.item (a_name)).twin
 			check
 				is_integer: l_string.is_integer
 			end
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 				Result := content.substring (1, new_line_index)
 				content.keep_tail (content.count - new_line_index)
 			else
-				Result := clone (content)
+				Result := content.twin
 				content.keep_head (0)
 			end
 		ensure

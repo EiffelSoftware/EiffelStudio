@@ -77,18 +77,14 @@ public class GENERIC_CONFORMANCE {
 		EIFFEL_TYPE_INFO Result;
 		ConstructorInfo constructor;
 
-		der = an_obj.____type ();
+			// Get the constructor of the type of `an_obj' and create a new
+			// instance.
+		constructor = an_obj.GetType ().GetConstructor (Type.EmptyTypes);
+		Result = (EIFFEL_TYPE_INFO) constructor.Invoke (null);
 
-		if (der == null) {
-				// It is not a generic type, so we can simply find its type through
-				// Reflection and then gets its constructor.
-			constructor = an_obj.GetType ().GetConstructor (Type.EmptyTypes);
-			Result = (EIFFEL_TYPE_INFO) constructor.Invoke (null);
-		} else {
-				// It is a generic type, so we can simply find its type through
-				// its RuntimeTypeHandle and then gets its constructor.
-			constructor = Type.GetTypeFromHandle (der.type.type).GetConstructor (Type.EmptyTypes);
-			Result = (EIFFEL_TYPE_INFO) constructor.Invoke (null);
+			// If it is a generic type, we also need to set its type.
+		der = an_obj.____type ();
+		if (der != null) {
 			Result.____set_type (der);
 		}
 		return Result;

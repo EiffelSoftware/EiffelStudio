@@ -28,13 +28,8 @@ feature -- Access
 					Server_controler.open_file (server_file)
 				end
 				Result := partial_retrieve (server_file.descriptor, info.position, info.object_count)
-					-- Insert it in the queue
-				if cache.is_full then
-						-- If cache is full, oldest is removed
-					cache.remove
-				end
 				Result.set_id (real_id)
-				cache.put (Result)
+				cache.force (Result)
 			end
 		end
 

@@ -604,7 +604,7 @@ feature -- External
 		end
 
 	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
-			-- is last retrieved data null? 
+			-- Is last retrieved data null? 
 		do
 			Result := odbc_is_null_data (no_descriptor, ind)
 		end

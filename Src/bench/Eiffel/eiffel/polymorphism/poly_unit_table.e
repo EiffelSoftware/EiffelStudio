@@ -4,10 +4,7 @@ deferred class POLY_UNIT_TABLE [T -> POLY_UNIT]
 
 inherit
 
-	SORTED_TWO_WAY_LIST [T]
-		redefine
-			add
-		end;
+	SORTED_TWO_WAY_LIST [T];
 	IDABLE
 		rename
 			id as rout_id,
@@ -48,25 +45,6 @@ feature
 					forth
 				end;
 			end;
-		end;
-
-	add (v: T) is
-			-- Add polymorphic unit `u' to current table.
-		local
-			not_empty: BOOLEAN
-		do
-			not_empty := not empty;
-			if not_empty then
-				search_after (v)
-			end;
-			if off or else not item.id.is_equal (v.id) then
-				put_left (v);
-				if not_empty then
-					back
-				end
-			else
-				active.put (v)
-			end
 		end;
 
 	substract (other: like Current) is

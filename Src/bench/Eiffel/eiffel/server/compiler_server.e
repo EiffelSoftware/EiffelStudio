@@ -23,7 +23,6 @@ inherit
 			item as tbl_item,
 			put as tbl_put,
 			remove as tbl_remove,
-			change_key as tbl_change_key,
 			has as tbl_has
 		redefine
 			copy, is_equal

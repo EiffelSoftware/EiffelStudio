@@ -101,9 +101,6 @@ feature -- Execution
 				!! assert_server.make_for_feature (target_feat, f_ast);
 				init_feature_context (source_feat, target_feat, f_ast);
 				indent;
-				if written_in_class.lace_class.hide_implementation then	
-					set_is_short
-				end;
 				f_ast.format (Current);
 				commit;
 			else

@@ -176,19 +176,12 @@ feature -- Properties
 			-- Is the Current format doing a flat-short?
 		local
 			f: FEATURE_I
-			written_in: CLASS_C
 		do
 			Result := is_short
 			if not Result then
 				f := global_adapt.target_enclosing_feature
 				if f /= Void then
-					written_in := f.written_class
-					if 
-						written_in.is_precompiled and then 
-						written_in.lace_class.hide_implementation 
-					then
-						Result := True
-					end
+					Result := f.written_class.is_precompiled
 				end
 			end
 		end

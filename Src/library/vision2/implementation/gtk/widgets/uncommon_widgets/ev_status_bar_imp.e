@@ -22,6 +22,8 @@ inherit
 			set_background_color
 		end
 
+	EV_ITEM_HOLDER_IMP
+
 creation
 	make
 
@@ -59,6 +61,13 @@ feature -- Access
 	count: INTEGER is
 		do
 			Result := ev_children.count
+		end
+
+	get_item (index: INTEGER): EV_ITEM is
+			-- Give the item of the list at the zero-base
+			-- `index'.
+		do
+			Result ?= (ev_children.i_th (index)).interface
 		end
 
 feature -- Element change
@@ -130,6 +139,18 @@ feature -- Element change
 				child.set_foreground_color (color)
 				array.forth
 			end
+		end
+
+	clear_items is
+			-- Clear all the items of the list.
+		do
+		end
+
+feature -- Basic operations
+
+	find_item_by_data (data: ANY): EV_ITEM is
+			-- Find a child with data equal to `data'.
+		do
 		end
 
 end -- class EV_STATUS_BAR_IMP

@@ -1272,5 +1272,9 @@ feature -- Warning messages
 
 	w_Command_needs_cluster: STRING is "This command requires a cluster name.%N%
 									%It cannot be executed."
+									
+	w_Finalize_precompile: STRING is    ".NET precompiled libraries can be finalized to create%N%
+									%an optimized version as well as a workbench version.%N%
+									%Would you like to create a finalized verion?"
 
 end -- class WARNING_MESSAGES

@@ -28,6 +28,7 @@ feature -- Initialization
 		local
 			hbox_test, vbox_test, nb_test : EV_LIST_TEST [EV_WIDGET]
 			list_test, tb_test, sb_test, mcl_test: EV_LIST_TEST [EV_ITEM]
+			tree_test, ti_test, menu_test, mb_test: EV_LIST_TEST [EV_ITEM]
 		do
 			create hbox_test.make ("EV_HORIZONTAL_BOX", ~hbox_list_generator, ~item_generator)
 			create vbox_test.make ("EV_VERTICAL_BOX", ~vbox_list_generator, ~item_generator)
@@ -37,10 +38,10 @@ feature -- Initialization
 			create sb_test.make ("EV_STATUS_BAR", ~sb_list_generator, ~sb_item_generator)
 			create mcl_test.make ("EV_MULTI_COLUMN_LIST", ~mcl_list_generator, ~mcl_item_generator)
 
-			create mcl_test.make ("EV_TREE", ~tree_generator, ~tree_item_generator)
-			create mcl_test.make ("EV_TREE_ITEM", ~tree_item_generator, ~tree_item_generator)
-			create mcl_test.make ("EV_MENU", ~menu_generator, ~menu_item_generator)
-			create mcl_test.make ("EV_MENU_BAR", ~menu_bar_generator, ~menu_generator)
+			create tree_test.make ("EV_TREE", ~tree_generator, ~tree_item_generator)
+			create ti_test.make ("EV_TREE_ITEM", ~tree_item_generator, ~tree_item_generator)
+			create menu_test.make ("EV_MENU", ~menu_generator, ~menu_item_generator)
+			create mb_test.make ("EV_MENU_BAR", ~menu_bar_generator, ~menu_generator)
 
 			hbox_test.execute
 
@@ -57,6 +58,14 @@ feature -- Initialization
 			print (sb_test.description + "%N")
 			mcl_test.execute
 			print (mcl_test.description + "%N")
+			tree_test.execute
+			print (mcl_test.description + "%N")
+			ti_test.execute
+			print (mcl_test.description + "%N")
+			menu_test.execute
+			print (mcl_test.description + "%N")
+			mb_test.execute
+			print (mcl_test.description + "%N")
 			if
 				hbox_test.test_successful and
 				vbox_test.test_successful and
@@ -64,7 +73,11 @@ feature -- Initialization
 				list_test.test_successful and
 				tb_test.test_successful and
 				sb_test.test_successful and
-				mcl_test.test_successful
+				mcl_test.test_successful and
+				tree_test.test_successful and
+				ti_test.test_successful and
+				menu_test.test_successful and
+				mb_test.test_successful
 			then
 				destroy
 			else

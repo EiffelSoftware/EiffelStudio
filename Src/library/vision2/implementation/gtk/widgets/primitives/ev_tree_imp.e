@@ -33,7 +33,6 @@ inherit
 			pre_pick_steps,
 			post_drop_steps,
 			call_pebble_function,
-			pointer_over_widget,
 			visual_widget
 		end
 
@@ -54,6 +53,8 @@ inherit
 		end
 
 	EV_TREE_ACTION_SEQUENCES_IMP
+	
+	EV_PND_DEFERRED_ITEM_PARENT
 
 create
 	make
@@ -232,35 +233,6 @@ feature {NONE} -- Initialization
 			if a_row_imp /= Void then
 				if a_row_imp.pointer_motion_actions_internal /= Void then
 					a_row_imp.pointer_motion_actions_internal.call (t)
-				end
-			end
-		end
-		
-feature {EV_APPLICATION_IMP} -- Implementation
-
-	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-			-- Is mouse pointer hovering above list.
-		local
-			gdkwin_parent, gdkwin_parent_parent: POINTER
-			clist_parent: POINTER
-			pnd_row: EV_TREE_NODE_IMP
-		do
-			if is_displayed then
-				gdkwin_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (a_gdkwin)
-				if gdkwin_parent /= NULL then
-					gdkwin_parent_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (gdkwin_parent)
-				end
-				clist_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (
-					feature {EV_GTK_EXTERNALS}.gtk_clist_struct_clist_window (list_widget)
-				)
-				Result := gdkwin_parent = clist_parent or
-					gdkwin_parent_parent = clist_parent
-
-				if clist_parent = gdkwin_parent then
-					pnd_row := row_from_y_coord (a_y)
-					if pnd_row /= Void and then pnd_row.drop_actions_internal /= Void then
-						Result := False
-					end
 				end
 			end
 		end

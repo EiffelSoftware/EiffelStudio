@@ -12,7 +12,7 @@ feature {NONE}
 	Project_tool: PROJECT_W is
 			-- Main and unique control window
 		once
-			!!Result
+			!! Result.make_empty
 		end;
 
 	Focus_label: FOCUS_LABEL_I is

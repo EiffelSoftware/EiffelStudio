@@ -58,7 +58,7 @@ while (<>) {
 		$gtk_code = shift (@fields);
 		$gdk_ext = $gtk_code;
 		$gtk_code =~ tr/[A-Z]/[a-z]/;
-		$gtk_code = "$gtk_code\_enum";
+		$gtk_code = "${gtk_code}_keysym";
 		
 		$wel_code = shift (@fields);
 
@@ -297,6 +297,9 @@ close (OH);
 #===============================================================================
 #
 # $Log$
+# Revision 1.9  2000/04/04 20:36:37  oconnor
+# renamed *_enum to *_keysym to avoid clash with GEL
+#
 # Revision 1.8  2000/03/21 01:56:43  brendel
 # Fixed HASH_TABLE.
 #

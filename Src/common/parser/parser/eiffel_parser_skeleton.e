@@ -339,7 +339,8 @@ feature {NONE} -- Actions
 			click_ast: CLICK_AST
 		do
 			click_ast := f.second
-			Result := new_feature_as (f.first, b, i, click_ast.start_position, current_position.start_position)
+			Result := new_feature_as (f.first, b, i, click_ast.start_line_number,
+				click_ast.start_position, current_position.start_position)
 			click_ast.set_node (Result)
 		ensure
 			feature_declaration_not_void: Result /= Void
@@ -651,7 +652,8 @@ feature {NONE} -- Clickable factory
 		local
 			click_ast: CLICK_AST
 		do
-			click_ast := new_click_ast (Dummy_clickable_as, current_position.start_position, current_position.end_position)
+			click_ast := new_click_ast (Dummy_clickable_as, current_position.line_number,
+				current_position.start_position, current_position.end_position)
 			click_list.extend (click_ast)
 			!! Result
 			Result.set_first (an_id)
@@ -670,7 +672,8 @@ feature {NONE} -- Clickable factory
 		local
 			click_ast: CLICK_AST
 		do
-			click_ast := new_click_ast (Dummy_clickable_as, current_position.start_position, current_position.end_position)
+			click_ast := new_click_ast (Dummy_clickable_as, current_position.line_number,
+				current_position.start_position, current_position.end_position)
 			click_list.extend (click_ast)
 			!! Result
 			Result.set_first (a_string)

@@ -240,7 +240,7 @@ feature -- Measurement
 feature -- Basic operations
 
 	propagate_foreground_color is
-			-- Propagate `foreground_color' to all children.
+			-- Propagate `foreground_color' recursively, to all children.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -250,7 +250,7 @@ feature -- Basic operations
 		end
 
 	propagate_background_color is
-			-- Propagate `background_color' to all children.
+			-- Propagate `background_color' recursively, to all children.
 		require
 			not_destroyed: not is_destroyed
 		do

@@ -685,7 +685,7 @@ end;
 				i > prof_options.output_names.count
 			loop
 				if prof_options.output_names.item (i).is_equal ("featurename") then
-					st.add_string (item.function.out);
+					item.function.append_to (st);
 					st.add_indent
 				elseif prof_options.output_names.item (i).is_equal ("calls") then
 					st.add_string (item.number_of_calls.out)

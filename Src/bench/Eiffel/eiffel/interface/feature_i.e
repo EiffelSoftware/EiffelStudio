@@ -883,6 +883,9 @@ end
 			System.onbidt.put (new_body_id, old_body_id)
 			!!changed_body_id_info.make (is_code_replicated, body_index, new_body_id)
 			System.changed_body_ids.force (changed_body_id_info, old_body_id)
+			if depend_server.has (written_in) then
+				depend_server.item (written_in).replace_key (new_body_id, old_body_id)
+			end
 		end
 	
 feature -- Polymorphism

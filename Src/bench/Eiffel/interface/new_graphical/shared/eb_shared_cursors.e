@@ -154,13 +154,8 @@ feature {NONE}
 					-- Initialize the pathname & load the file
 				create full_path.make_from_string (Cursor_path)
 				full_path.set_file_name (fn)
-				if Platform_constants.is_windows then
-					full_path.add_extension ("ico")
-					Result.set_with_named_file (full_path)
-				else
-					full_path.add_extension ("png")
-					Result.set_with_named_file (full_path)
-				end
+				full_path.add_extension ("png")
+				Result.set_with_named_file (full_path)
 			else
 				io.error.put_string ("Warning: cannot read pixmap file ")
 				io.error.put_string (full_path)

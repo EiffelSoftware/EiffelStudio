@@ -78,7 +78,15 @@ void wel_set_editstream_procedure_address(EIF_POINTER _value_)
 void wel_set_editstream_object(EIF_OBJ _value_) 
 {
 		WGTCX
-		wel_editstream_object = (EIF_OBJ) eif_adopt (_value_);
+		if (wel_editstream_object != NULL) 
+				eif_wean (wel_editstream_object);
+		wel_editstream_object = (EIF_OBJ) eif_adopt (_value_); 
+		
+			/* We need to do `eif_wean' here and NOT in the
+			 * `dispose' routine of `WEL_RICH_EDIT_STREAM' because
+			 * otherwise this objects are not collected since
+			 * we need to call `eif_wean' on an object to allow the
+			 * collection */
 }
 
 void wel_release_editstream_object() 
@@ -105,6 +113,14 @@ void wel_set_editstream_in(EIF_BOOLEAN _value_)
 		wel_editstream_in = (EIF_BOOLEAN) _value_;
 }
 
+#else
+
+void wel_set_editstream_object(EIF_POINTER _value_)
+{
+		if (wel_editstream_object != NULL) 
+			eif_wean (wel_editstream_object);
+		wel_editstream_object = (EIF_OBJ) eif_adopt (_value_);
+}
 
 #endif
 

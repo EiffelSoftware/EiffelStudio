@@ -881,7 +881,7 @@ feature {NONE} -- Implementation
 			-- Called when the window is resized.
 			-- Resize the child if it exists.
 		local
-			sb_imp: EV_WIDGET_IMP
+			bar_imp: EV_VERTICAL_BOX_IMP
 		do
 			if size_type /= Wel_window_constants.Size_minimized then
 				if not interface.upper_bar.empty then
@@ -897,7 +897,7 @@ feature {NONE} -- Implementation
 				if not interface.lower_bar.empty then
 					bar_imp ?= interface.lower_bar.implementation
 					check
-						sb_imp_not_void: sb_imp /= Void
+						bar_imp_not_void: bar_imp /= Void
 					end
 					bar_imp.set_move_and_size (0,
 						client_y + client_height + 1,
@@ -1165,6 +1165,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/06/08 20:51:23  rogers
+--| Replaced references of sb_imp with bar_imp which is an EV_VERTICAL_BOX_IMP.
+--|
 --| Revision 1.50  2000/06/08 20:48:06  rogers
 --| Removed dimensions set, and item from WEL is now renamed as wel_item.
 --|

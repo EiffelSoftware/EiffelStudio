@@ -66,6 +66,12 @@ feature -- Conveniences
 			-- Do nothing
 		end;
 
+	is_body_equiv (other: like Current): BOOLEAN is
+			-- Are the values of Current and other the
+			-- same?
+		do
+			Result := deep_equal (value, other.value)
+		end;
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.

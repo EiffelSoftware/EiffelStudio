@@ -236,6 +236,9 @@ private void mark_op_stack();		/* Marks operational stack */
 private void mark_ex_stack();		/* Marks the exception stacks */
 
 extern struct opstack op_stack;		/* Operational stack */
+#define DISP(x,y) call_disp(x,y)
+#else
+#define DISP(x,y) (Dispose(x))(y)
 #endif
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
@@ -1705,7 +1708,7 @@ private int sweep_from_space()
 	register2 union overhead *next;		/* Address of next block */
 	register3 uint32 flags;				/* Malloc flags and size infos */
 	register4 char *end;				/* First address beyond from space */
-	register5 void (*dispose)();		/* Dispose function, if any */
+	register5 uint32 dtype;				/* Dynamic type of object */
 	char *base;							/* First address of 'from' space */
 	int size;							/* Size of current object */
 	char gc_status;                     /* Saved GC status */
@@ -1791,19 +1794,12 @@ private int sweep_from_space()
 			 */
 
 			if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
-				dispose =
-					Dispose(zone->ov_flags & EO_TYPE);	/* Dispose ptr */
-				if (dispose != (void (*)()) 0) {		/* Exists ? */
-#ifdef WORKBENCH
-					OLD_IC = IC;						/* Save interpreter counter */
-#endif
-					gc_status = g_data.status;      /* Save GC current status */
+				dtype = zone->ov_flags & EO_TYPE;		/* Dispose ptr */
+				if (Disp_rout(dtype)) {					/* Exists ? */
+					gc_status = g_data.status;      	/* Save GC current status */
 					g_data.status |= GC_STOP;			/* Stop GC */
-					(dispose)((char *) (zone + 1));		/* Call it */
+					DISP(dtype, (char *) (zone + 1));	/* Call it */
 					g_data.status = gc_status;			/* Restart GC */
-#ifdef WORKBENCH
-					IC = OLD_IC;						/* Restore interpreter counter */
-#endif
 				}
 			}
 		} else {
@@ -1873,19 +1869,12 @@ private int sweep_from_space()
 				 */
 
 				if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
-					dispose =
-						Dispose(next->ov_flags & EO_TYPE);	/* Dispose ptr */
-					if (dispose != (void (*)()) 0) {		/* Exists ? */
-#ifdef WORKBENCH
-						OLD_IC = IC;						/* Save interpreter counter */
-#endif
+					dtype = zone->ov_flags & EO_TYPE;	/* Dispose ptr */
+					if (Disp_rout(dtype)) {				/* Exists ? */
 						gc_status = g_data.status;      /* Save GC current status */
-						g_data.status |= GC_STOP;			/* Stop GC */
-						(dispose)((char *) (next + 1));		/* Call it */
-						g_data.status = gc_status;			/* Restore previous GC status */
-#ifdef WORKBENCH
-						IC = OLD_IC;						/* Restore interpreter counter */
-#endif
+						g_data.status |= GC_STOP;		/* Stop GC */
+						DISP(dtype,(char *) (zone + 1));/* Call it */
+						g_data.status = gc_status;		/* Restore previous GC status */
 					}
 
 					m_data.ml_over -= OVERHEAD;		/* Memory accounting */
@@ -2233,8 +2222,16 @@ struct sc_zone *to;
 	if (zone->ov_flags & EO_EXP) {
 		/* Compute original object's address (before scavenge) */
 		zone = (union overhead *) ((char *) zone - (zone->ov_size & B_SIZE));
+		if (!(zone->ov_size & B_FWD))	/* Father object not processed yet */
+			return root;				/* Leave expanded here for now */
+										/* BUG fix - DINOV */
 		new = zone->ov_fwd;			/* Data space of the scavenged object */
 		exp = new + (root - (char *) (zone + 1));	/* New data space */
+#ifdef DEBUG
+	dprintf(2)("expanded object: %x, new father object: %x, old father object: %x\n",	
+		exp, new, zone + 1);
+	flush;
+#endif
 		return exp;					/* This is the new location of expaded */
 	}
 
@@ -2493,11 +2490,12 @@ char *root;
 	 * The function returns the address of the (possibly moved) object.
 	 */
 
-	union overhead *zone;		/* Malloc info zone fields */
+	union overhead *zone,*z2;		/* Malloc info zone fields */
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
 	uint32 size;				/* Size of items (for array of expanded) */
 	char **object;				/* Sub-objects scanned */
+struct cnode *sk;
 
 	/* If 'root' is a void reference, return immediately */
 	if (root == (char *) 0)
@@ -2555,6 +2553,8 @@ char *root;
 	 * The new objects outside the scavenge zone carry the EO_NEW mark.
 	 */
 	if (!(flags & EO_OLD) || (flags & EO_EXP)) {
+sk = &System (zone->ov_flags & EO_TYPE);
+		z2 = zone;
 		root = gscavenge(root);			/* Generation scavenging */
 		zone = HEADER(root);			/* Update zone */
 		flags = zone->ov_flags;			/* And Eiffel flags */
@@ -2821,6 +2821,7 @@ private void update_moved_set()
 	register3 union overhead *zone;	/* Referenced object's header */
 	register4 struct stchunk *s;	/* To walk through each stack's chunk */
 	register5 uint32 flags;			/* Used only if GC_FAST */
+	register6 char *addr;           /* Object's address */
 	struct stack new_stack;			/* The new stack built from the old one */
 	int done = 0;					/* Top of stack not reached yet */
 
@@ -2879,6 +2880,9 @@ private void update_moved_set()
 				done = 1;						/* Reached end of stack */
 			}
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
+				addr = *obj;					/* Get stack item value */
+				if (addr == (char *) 0)			/* Freed object? */
+					continue;					/* Remove it from stack */
 				zone = HEADER(*obj);			/* Referenced object */
 				flags = zone->ov_flags;			/* Get Eiffel flags */
 				if (flags & EO_MARK) {			/* Object is alive? */
@@ -2901,6 +2905,9 @@ private void update_moved_set()
 				done = 1;						/* Reached end of stack */
 			}
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
+				addr = *obj;					/* Get stack item value */
+				if (addr == (char *) 0)
+					continue;	
 				zone = HEADER(*obj);			/* Referenced object */
 				if (EO_MOVED == (zone->ov_flags & EO_MOVED))
 					epush(&new_stack, zone+1);	/* Remains "as is" */
@@ -2980,6 +2987,8 @@ private void update_rem_set()
 
 		for (; n > 0; n--, object++) {
 			current = *object;				/* Save that for later perusal */
+			if (current == (char *) 0)		/* Reached a freed object */
+				continue;					/* Remove it from stack */
 			zone = HEADER(current);			/* Object's header */
 
 #ifdef DEBUG
@@ -3219,26 +3228,24 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 	 */
 
 	char gc_status;					/* Saved GC status */
-	register2 void (*dispose)();	/* The dispose function's pointer */
+	register2 uint32 dtype;			/* Dynamic type of object */
 
-	dispose = Dispose(zone->ov_flags & EO_TYPE);
+	if (!(zone->ov_size & B_BUSY)) 	/* Object freed ? */
+		return;						/* Yes, then return -- NEED TO CHECK WITH
+									 * RAM - DINOV */
 
-	if (dispose != (void (*)()) 0) {
-#ifdef WORKBENCH
-		OLD_IC = IC;					/* Save interpreter counter */
-#endif
+	dtype = Dtype((zone + 1)); 
+
+	if (Disp_rout(dtype)) {
 		gc_status = g_data.status;		/* Save GC status */
 		g_data.status |= GC_STOP;		/* Stop GC */
-		(dispose)((char *) (zone + 1));	/* Call 'dispose' with LISP notation */
+		DISP(dtype,(char *) (zone + 1));/* Call 'dispose' */
 		g_data.status = gc_status;		/* Restore previous GC status */
-#ifdef WORKBENCH
-		IC = OLD_IC;					/* Restore interpreter counter */
-#endif
 	}
 
 #ifdef DEBUG
 	dprintf(8)("gfree: freeing object 0x%x, DT = %d\n",
-		zone + 1, Dtype(zone + 1));
+		zone + 1, dtype);
 	flush;
 #endif
 

@@ -598,4 +598,27 @@ file.putstring ("' */");
 			end;
 		end;
 
+	trace_replications is
+			-- Debug purpose
+		local
+			it: FEATURE_I
+		do
+			io.error.putstring ("Feature table for ");
+			io.error.putstring (associated_class.class_name);
+			io.error.new_line;
+			from
+				start;
+			until
+				offright
+			loop
+				io.error.putstring ("%Tfeature name: ");
+				it := item_for_iteration;
+				io.error.putstring (it.feature_name);
+				io.error.new_line;
+				io.error.putstring (it.generator);
+				io.error.new_line;
+				forth;
+			end;
+		end;
+
 end

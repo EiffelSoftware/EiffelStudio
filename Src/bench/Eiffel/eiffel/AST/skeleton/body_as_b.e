@@ -188,29 +188,51 @@ feature -- New feature description
 		end;
 
 	is_body_equiv (other: like Current): BOOLEAN is
-			-- Is the current feature equivalent to `other' ?
+			-- Is the body of current feature equivalent to 
+			-- body of `other' ?
 		do
-			Result := 	deep_equal (arguments, other.arguments) and then
-						deep_equal (type, other.type);
-			if Result and then content /= Void then
-				Result := content.is_body_equiv (other.content);
-			else
-				Result := Result and then True;
+			Result := deep_equal (type, other.type) and then
+					deep_equal (arguments, other.arguments);
+			if Result then
+				if (content = Void) and (other.content = Void) then
+				elseif (content = Void) or else (other.content = Void) then
+					Result := False
+				elseif (content.is_constant = other.content.is_constant) then
+						-- The two objects are of the same type.
+						-- There is no global typing problem.
+					Result := content.is_body_equiv (other.content)
+				end;
 			end;
 		end;
  
 	is_assertion_equiv (other: like Current): BOOLEAN is
-			-- Is the current feature equivalent to `other' ?
+			-- Is the assertion of Current feature equivalent to 
+			-- assertion of `other' ?
+			--|Note: This test is valid since assertions are generated
+			--|along with the body code. The assertions will be re-generated
+			--|whenever the body has changed. Therefore it is not necessary to
+			--|consider the cases in which one of the contents is a ROUTINE_AS 
+			--|and the other a CONSTANT_AS (The True value is actually returned
+			--|but we don't care.
+			--|Non-constant attributes have a Void content. In any case 
+			--|involving at least on attribute, the True value is retuned:
+			--|   . If they are both attributes, the assertions are equivalent
+			--|   . If only on is an attribute, we don't care since the bodies will
+			--|     not be equivalent anyway.
+			--|The best way to understand all this, is to draw a two-dimensional
+			--|table, for all possible combinations of the values (CONSTANT_AS,
+			--|ROUTINE_AS, Void) of content and other.content)
+		local
+			r1, r2: ROUTINE_AS
 		do
-			if content /= Void then
-				if other.content = Void then -- It is an attribute
-					Result := False
-				else
-					Result := content.is_assertion_equiv (other.content);
-				end;
+			r1 ?= content; r2 ?= other.content;
+			if 
+				(r1 /= Void) and then (r2 /= Void)
+			then
+				Result := r1.is_assertion_equiv (r2)
 			else
 				Result := True
-			end;
+			end
 		end;
 				
 feature -- Debugger

@@ -155,6 +155,12 @@ feature
 			end;
 				-- Precondition check generation
 			generate_precondition;
+			if 
+				Context.has_chained_prec
+			then
+				-- For chained precondition (to implement or else...)
+				Context.generate_body_label
+			end;
 				-- Generate old variables
 			generate_old_variables;
 			if rescue_clause /= Void then
@@ -162,12 +168,6 @@ feature
 					-- rescue clause
 				generated_file.putstring ("RTEJ;");
 				generated_file.new_line;
-			end;
-			if 
-				Context.has_chained_prec
-			then
-				-- For chained precondition (to implement or else...)
-				Context.generate_body_label
 			end;
 				-- Generate local expanded variable creations
 			generate_expanded_variables;

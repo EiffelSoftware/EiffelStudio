@@ -9,7 +9,7 @@ inherit
 			is_require_else, is_ensure_then,
 			has_precondition, has_postcondition, has_rescue,
 			type_check, byte_node, check_local_names,
-			find_breakable, format, is_assertion_equiv, is_body_equiv
+			find_breakable, format
 		end;
 	SHARED_INSTANTIATOR;
 	SHARED_CONSTRAINT_ERROR;
@@ -56,6 +56,8 @@ feature -- Conveniences
 	is_require_else: BOOLEAN is
 			-- Is the precondition block of the content preceeded by
 			-- `require else' ?
+			--|Note: It is valid to not include a precondition in 
+			--|a redefined feature (it is equivalent to "require else False")
 		do
 			Result := precondition = Void or else precondition.is_else;
 		end;
@@ -63,6 +65,8 @@ feature -- Conveniences
 	is_ensure_then: BOOLEAN is
 			-- Is the postcondition block of the content preceeded by
 			-- `ensure then' ?
+			--|Note: It is valid to not include a postcondition in 
+			--|a redefined feature (it is equivalent to "ensure then True"
 		do
 			Result := postcondition = Void or else postcondition.is_then;
 		end;
@@ -443,11 +447,10 @@ feature -- Equivalent
         require else
             valid_other: other /= Void
         do
-            Result :=   deep_equal (obsolete_message, other.obsolete_message) and then
+			Result := 	deep_equal (routine_body, other.routine_body) and then
                         deep_equal (locals, other.locals) and then
-                        deep_equal (routine_body, other.routine_body) and
-then
-                        deep_equal (rescue_clause, other.rescue_clause)
+                        deep_equal (rescue_clause, other.rescue_clause) and then
+            			deep_equal (obsolete_message, other.obsolete_message)
         end;
  
     is_assertion_equiv (other: like Current): BOOLEAN is

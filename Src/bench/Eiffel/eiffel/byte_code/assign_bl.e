@@ -468,20 +468,10 @@ feature
 			if how /= Copy_assignment then
 				if how = Simple_assignment or need_aging_tests then
 					if is_bit_assignment then
-						if target.is_result then
-							-- If the target is a Result then clone 
-							-- source. This is a special case because
-							-- I could not set the default value of
-							-- a Result bit (DINOV).
-							target.print_register;	
-							generated_file.putstring (" = RTCB(");
-						else
-							-- Otherwize, copy bit since I know that
-							-- bits (other than Result) have a 
-							-- default value.
-							generated_file.putstring ("RTXB(");
-							source_print_register;
-						end;
+						-- Otherwize, copy bit since I know that
+						-- bits have a default value.
+						generated_file.putstring ("RTXB(");
+						source_print_register;
 					else
 						target.print_register;
 						generated_file.putstring (" = ");
@@ -508,14 +498,9 @@ feature
 				else
 					if how = Simple_assignment or need_aging_tests then
 						if is_bit_assignment then
-							if target.is_result then
-								source_print_register;
-								generated_file.putchar (')');
-							else
-								generated_file.putstring (", ");
-								target.print_register;
-								generated_file.putchar (')');
-							end
+							generated_file.putstring (", ");
+							target.print_register;
+							generated_file.putchar (')');
 						else
 							source_print_register;
 						end;

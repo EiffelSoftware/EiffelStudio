@@ -11,7 +11,7 @@ deferred class
 
 inherit
 
-	MATH_CONST
+	DOUBLE_MATH
 		export
 			{NONE} all
 		end;
@@ -70,9 +70,9 @@ feature -- Output
 			bitmap_implementation: PIXMAP_X
 		do
 			bitmap_implementation ?= a_pixmap.implementation;
-            x_copy_area (display_handle, 
+			x_copy_area (display_handle, 
 				bitmap_implementation.identifier, window, graphic_context,
-                0, 0, bitmap_implementation.width, bitmap_implementation.height, 
+				0, 0, bitmap_implementation.width, bitmap_implementation.height, 
 				a_point.x, a_point.y)
 		end;
 
@@ -83,32 +83,49 @@ feature -- Output
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
 			-- and with an orientation of `orientation'.
 		local
-			x0, y0, x1, y1: INTEGER
+			x0, y0, x1, y1: INTEGER;
+			double_x0, double_y0, double_x1, double_y1: DOUBLE;
+			loc_arc_points: ARRAYED_LIST [MEL_POINT];
+			mel_center: MEL_POINT
 		do
 			if radius1 = radius2 then
-				if arc_style /= -1 then
-					x0 := (center.x+radius1*d_cos (angle1+orientation)).truncated_to_integer;
-					y0 := (center.y-radius1*d_sin (angle1+orientation)).truncated_to_integer;
-					x1 := (center.x+radius1*d_cos (angle1+orientation+angle2)).truncated_to_integer;
-					y1 := (center.y-radius1*d_sin (angle1+orientation+angle2)).truncated_to_integer;
+				if arc_style /= -1 then 
+					double_x0 := center.x + radius1 * cosine ((angle1 + orientation) * deg_rad_rate);					
+					double_y0 := center.y - radius1 * sine ((angle1 + orientation) * deg_rad_rate);
+					double_x1 := center.x + radius1 * cosine ((angle1 + orientation + angle2) * deg_rad_rate);
+					double_y1 := center.y - radius1 * sine ((angle1 + orientation + angle2) * deg_rad_rate);
+					x0 := double_x0.truncated_to_integer;
+					y0 := double_y0.truncated_to_integer;
+					x1 := double_x1.truncated_to_integer;
+					y1 := double_y1.truncated_to_integer;
 					join_lines (center, x0, y0, x1, y1, arc_style)
 				end;
 				mel_draw_arc (Current, center.x-radius1, center.y-radius1, 
 						2*radius1, 2*radius1, angle_x (angle1+orientation), angle_x (angle2))
 			elseif orientation = 0.0 then
 				if arc_style /= -1 then
-					x0 := (center.x+radius1*d_cos (angle1)).truncated_to_integer;
-					y0 := (center.y-radius2*d_sin (angle1)).truncated_to_integer;
-					x1 := (center.x+radius1*d_cos (angle1+angle2)).truncated_to_integer;
-					y1 := (center.y-radius2*d_sin (angle1+angle2)).truncated_to_integer;
+					double_x0 := center.x + radius1 * cosine (angle1 * deg_rad_rate);
+					double_y0 := center.y - radius2 * sine (angle1 * deg_rad_rate);
+					double_x1 := center.x + radius1 * cosine ((angle1 + angle2) * deg_rad_rate);
+					double_y1 := center.y - radius2 * sine ((angle1 + angle2) * deg_rad_rate);
+					x0 := double_x0.truncated_to_integer;
+					y0 := double_y0.truncated_to_integer;
+					x1 := double_x1.truncated_to_integer;
+					y1 := double_y1.truncated_to_integer;
 					join_lines (center, x0, y0, x1, y1, arc_style)
 				end;
 				mel_draw_arc (Current, center.x-radius1, center.y-radius2,
 						2*radius1, 2*radius2, angle_x (angle1), angle_x (angle2))
 			else
-				c_draw_arc (display_handle, window, graphic_context, 
-						center.x, center.y, radius1, radius2, 
-						angle_x (angle1), angle_x (angle2), angle_x (orientation), arc_style)
+				loc_arc_points := arc_points (center, radius1, radius2, angle1, angle2, orientation);
+				if arc_style = 0 then
+					loc_arc_points.extend (loc_arc_points.first)
+				elseif arc_style = 1 then
+					!!mel_center.make (center.x, center.y);
+					loc_arc_points.extend (mel_center);
+					loc_arc_points.extend (loc_arc_points.first)
+				end;
+				draw_lines (Current, loc_arc_points, True)
 			end
 		end;
 
@@ -130,13 +147,13 @@ feature -- Output
 			y1 := point1.y;
 			x2 := point2.x;
 			y2 := point2.y;
-			if abs (y2-y1) > abs (x2-x1) then
-				coord1 := x1-(y1*(x2-x1)) // (y2-y1);
-				coord2 := x1+((height-y1)*(x2-x1)) // (y2-y1);
+			if abs (y2 - y1) > abs (x2 - x1) then
+				coord1 := x1 - (y1 * (x2 - x1)) // (y2 - y1);
+				coord2 := x1 + ((height - y1) * (x2 - x1)) // (y2 - y1);
 				draw_line (Current, coord1, 0, coord2, height)
 			else
-				coord1 := y1-(x1*(y2-y1)) // (x2-x1);
-				coord2 := y1+((width-x1)*(y2-y1)) // (x2-x1);
+				coord1 := y1 - (x1 * (y2 - y1)) // (x2 - x1);
+				coord2 := y1 + ((width - x1) * (y2 - y1)) // (x2 - x1);
 				draw_line (Current, 0, coord1, width, coord2)
 			end
 		end;
@@ -190,17 +207,19 @@ feature -- Output
 	draw_rectangle (center: COORD_XY; r_width, r_height: INTEGER; orientation: REAL) is
 			-- Draw a rectangle whose center is `center' and
 			-- whose size is `r_width' and `r_height'.
+		local
+			r_points: ARRAYED_LIST [MEL_POINT];
 		do
 			if (orientation = 0.0) or (orientation = 180.0) then
-				mel_draw_rectangle (Current, center.x-(r_width // 2), 
-						center.y -(r_height // 2), r_width-1, r_height-1);
+				mel_draw_rectangle (Current, center.x - (r_width // 2),
+				center.y - (r_height // 2), r_width - 1, r_height - 1);
 			elseif (orientation = 90.0) or (orientation = 270.0) then
-				mel_draw_rectangle (Current, center.x-(r_height // 2),
-						center.y-(r_width // 2), r_height-1, r_width-1)
+				mel_draw_rectangle (Current, center.x - (r_height // 2),
+				center.y - (r_width // 2), r_height - 1, r_width - 1)
 			else
-				c_draw_rectangle (display_handle, window, graphic_context, 
-						center.x, center.y, r_width // 2, r_height // 2, 
-						(orientation*64).truncated_to_integer)
+				r_points := rectangle_points (center, r_width, r_height, orientation);
+				r_points.extend (r_points.first);
+				draw_lines (Current, r_points, True)
 			end
 		end;
 
@@ -214,27 +233,34 @@ feature -- Output
 			-- Draw text
 		do
 			draw_string (Current, base.x, base.y, text)
-		end;
-
+		end;			
+			
 	fill_arc (center: COORD_XY; radius1, radius2: INTEGER; 
 				angle1, angle2, orientation: REAL; arc_style: INTEGER) is
 			-- Fill an arc centered in (`x', `y') with a great radius of
 			-- `radius1' and a small radius of `radius2'
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
 			-- and with an orientation of `orientation'.
+		local
+			loc_arc_points: ARRAYED_LIST [MEL_POINT];
+			mel_center: MEL_POINT
 		do
 			if radius1 = radius2 then
 				set_arc_style (arc_style);
-				mel_fill_arc (Current, center.x-radius1, center.y-radius1,
-						2*radius1, 2*radius1, angle_x (angle1+orientation), angle_x (angle2))
+				mel_fill_arc (Current, center.x - radius1, center.y - radius1,
+						2 * radius1, 2 * radius1, angle_x (angle1 + orientation), angle_x (angle2))
 			elseif orientation = 0.0 then
 				set_arc_style (arc_style);
-				mel_fill_arc (Current, center.x-radius1, center.y-radius2,
-					2*radius1, 2*radius2, angle_x (angle1), angle_x (angle2))
+				mel_fill_arc (Current, center.x - radius1, center.y - radius2,
+					2 * radius1, 2 * radius2, angle_x (angle1), angle_x (angle2))
 			else
-				c_fill_arc (display_handle, window, graphic_context, 
-					center.x, center.y, radius1, radius2, 
-					angle_x (angle1), angle_x (angle2), angle_x (orientation), arc_style)
+				loc_arc_points := arc_points (center, radius1, radius2, angle1, angle2, orientation);
+				if arc_style = 1 then
+					!!mel_center.make (center.x, center.y);
+					loc_arc_points.extend (mel_center);
+					loc_arc_points.extend (loc_arc_points.first)
+				end
+				mel_fill_polygon (Current, loc_arc_points, Complex,True)
 			end
 		end;
 
@@ -272,25 +298,24 @@ feature -- Output
 			half_width := r_width // 2;
 			half_height := r_height // 2;
 			if (orientation = 0.0) or (orientation = 180.0) then
-				mel_fill_rectangle (Current, center.x-half_width, 
-					center.y-half_height, r_width, r_height)
+				mel_fill_rectangle (Current, center.x - half_width, 
+					center.y - half_height, r_width, r_height)
 			elseif (orientation = 90.0) or (orientation = 270.0) then
-				mel_fill_rectangle (Current, center.x-half_height,
-					center.y-half_width, r_height, r_width)
+				mel_fill_rectangle (Current, center.x - half_height,
+					center.y - half_width, r_height, r_width)
 			else
-				c_fill_rectangle (display_handle, window, graphic_context, 
-					center.x, center.y, half_width, half_height, 
-					(orientation*64).truncated_to_integer)
+				mel_fill_polygon (Current, rectangle_points (center, r_width, r_height, orientation), Complex, True)
 			end
 		end;
 
-feature {NONE} -- Implementatin
+
+feature {NONE} -- Implementation
 
 	n_64_units: INTEGER is 64;
 			-- 64 units
 
 	n_360_degrees: INTEGER is 23040;
-			-- 360 degrees in 64ths of a degree (64*360)
+			-- 360 degrees in 64ths of a degree (64 * 360)
 
 	height: INTEGER is
 			-- Height of drawing area
@@ -304,7 +329,7 @@ feature {NONE} -- Implementatin
 
 	angle_x (angle: REAL): INTEGER is
 			-- Convert `angle' in an integer in 64th of degree
-			-- (angle_x (360) = 360*64)
+			-- (angle_x (360) = 360 * 64)
 		do
 			Result := (n_64_units*angle).truncated_to_integer;
 			if Result > n_360_degrees then
@@ -330,40 +355,78 @@ feature {NONE} -- Implementatin
 			end
 		end;
 
-feature {NONE} -- External features
-
-	c_fill_rectangle (dspl_pointer, wndw_obj, gc: POINTER; val1, val2,
-					val3, val4, orient: INTEGER) is
-		external
-			"C"
+	arc_points (center: COORD_XY; radius1, radius2: INTEGER; 
+				angle1, angle2, orientation: REAL): ARRAYED_LIST [MEL_POINT] is
+			-- Returns the list of an arbitrary number of ordonated points composing the arc
+		local
+			seg_count, loop_angle, angle_inc, sino, coso, ell_x, ell_y, rot_x, rot_y: DOUBLE;
+			point_count, i, loop_upper_bound, center_x, center_y: INTEGER;
+			a_point: MEL_POINT;
+			points_area: SPECIAL [MEL_POINT];
+			array: ARRAY [MEL_POINT]
+		do
+			coso := cosine (- orientation * deg_rad_rate);
+			sino := sine (- orientation * deg_rad_rate);
+			center_x := center.x;
+			center_y := center.y;
+			seg_count:= 4 * radius1.max(radius2) * angle2 * deg_rad_rate;
+			point_count := seg_count.rounded + 1;
+			angle_inc := - angle2 * deg_rad_rate / (point_count - 1);
+			!!Result.make_filled (point_count);
+			array := Result;
+			points_area := array.area;
+			loop_upper_bound := point_count - 1;
+			from
+				i := 0
+			until
+				i > loop_upper_bound
+			loop
+				ell_x := radius1 * cosine (loop_angle);
+				ell_y := radius2 * sine (loop_angle);
+				rot_x := center_x + ell_x * coso - ell_y * sino;
+				rot_y := center_y + ell_x * sino + ell_y * coso;
+				!!a_point.make (rot_x.rounded, rot_y.rounded);
+				points_area.put (a_point, i);
+				loop_angle := loop_angle + angle_inc;
+				i := i + 1
+			end
 		end;
 
-	c_fill_arc (dspl_pointer, wndw_obj, gc: POINTER; val1, val2,
-					val3, val4, angle1, angle2, angle3, orient: INTEGER) is
-		external
-			"C"
-		end;
+	deg_rad_rate: DOUBLE is
+			-- degrees into radians conversion constant
+		once
+			Result := Pi / 180
+		end
 
-	c_draw_rectangle (dspl_pointer, wndw_obj, gc: POINTER; val1, val2,
-					val3, val4, orient: INTEGER) is
-		external
-			"C"
-		end;
-
-	d_sin (v: REAL): REAL is
-		external
-			"C"
-		end;
-
-	d_cos (v: REAL): REAL is
-		external
-			"C"
-		end;
-
-	c_draw_arc (dspl_pointer, wndw_obj, gc: POINTER; val1, val2,
-					val3, val4, angle1, angle2, angle3, style: INTEGER) is
-		external
-			"C"
+	rectangle_points (center: COORD_XY; r_width, r_height: INTEGER; orientation: REAL): ARRAYED_LIST [MEL_POINT] is
+			-- Returns the 4 points composing the rectangle
+		local
+			coso, sino, point_x, point_y, half_r_width_coso, half_r_width_sino, half_r_height_coso, half_r_height_sino: DOUBLE
+			a_point: MEL_POINT
+		do
+			!! Result.make (4);
+			coso := cosine (- orientation * Pi / 180); -- Ys are downward under Motif
+			sino := sine (- orientation * Pi / 180);
+			half_r_width_coso := r_width * coso / 2;
+			half_r_width_sino := r_width * sino / 2;
+			half_r_height_coso := r_height * coso / 2;
+			half_r_height_sino := r_height * sino / 2;
+			point_x := center.x + half_r_width_coso - half_r_height_sino;
+			point_y := center.y + half_r_width_sino + half_r_height_coso;
+			!! a_point.make (point_x.rounded, point_y.rounded);
+			Result.extend (a_point);
+			point_x := center.x - half_r_width_coso - half_r_height_sino;
+			point_y := center.y - half_r_width_sino + half_r_height_coso;
+			!! a_point.make (point_x.rounded, point_y.rounded);
+			Result.extend (a_point);
+			point_x := center.x - half_r_width_coso + half_r_height_sino;
+			point_y := center.y - half_r_width_sino - half_r_height_coso;
+			!! a_point.make (point_x.rounded, point_y.rounded);
+			Result.extend (a_point);
+			point_x := center.x + half_r_width_coso + half_r_height_sino;
+			point_y := center.y + half_r_width_sino - half_r_height_coso;
+			!! a_point.make (point_x.rounded, point_y.rounded);
+			Result.extend (a_point)
 		end;
 
 end -- class DRAWING_X

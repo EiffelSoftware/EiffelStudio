@@ -526,7 +526,7 @@ feature -- Action
 				if file_name /= Void and then not file_name.is_empty then
 					create file.make (file_name)
 					if file.exists then
-						file.open_read_write
+						file.open_read
 						file.start
 						file.read_stream (file.count)
 						s := file.last_string

@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 			label.set_horizontal_resize (False)
 			label.set_center_alignment
 			label.set_minimum_width (100)
-			font := label.font
-			font.set_height (30)
-			label.set_font (font)
-			label.set_default_minimum_size
+			--font := label.font
+			--font.set_height (30)
+			--label.set_font (font)
+			--label.set_default_minimum_size
 
 			create sep.make (Current)
 			create hbox.make (Current)
@@ -98,7 +98,7 @@ feature -- Execution features
 		do
 			destroy_timeout (Void, Void)
 			create cmd.make (~timeout_action)
-			create timeout.make (150, cmd, Void)
+			create timeout.make (1500, cmd, Void)
 		end
 
 	destroy_timeout (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is

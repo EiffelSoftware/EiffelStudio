@@ -470,7 +470,7 @@ feature -- Implementation
 					rcw ?= form_child_list.item.widget
 					if rcw /= Void then
 						if not rcw.mapping then
-							rcw.map_widgets
+							rcw.map_widgets (rcw.width, rcw.height)
 						end
 					end
 				end

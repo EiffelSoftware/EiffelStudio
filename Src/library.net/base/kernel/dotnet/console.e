@@ -32,7 +32,7 @@ class CONSOLE inherit
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			close, dispose, end_of_file, back, next_line,
 			read_integer, read_double, readint, readdouble, read_character,
-			readchar
+			readchar, flush
 		end
 
 create {STD_FILES}
@@ -62,6 +62,20 @@ feature -- Initialization
 			make (fn)
 			internal_swrite := feature {SYSTEM_CONSOLE}.error
 			set_write_mode
+		end
+
+feature -- Element change
+
+	flush is
+			-- Flush buffered data to disk.
+			-- Note that there is no guarantee that the operating
+			-- system will physically write the data to the disk.
+			-- At least it will end up in the buffer cache,
+			-- making the data visible to other processes.
+		do
+			if internal_swrite /= Void then
+				internal_swrite.flush
+			end
 		end
 
 feature -- Status report

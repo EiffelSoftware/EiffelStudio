@@ -52,7 +52,7 @@ feature -- Debug
 			io.put_string ("%N")		
 		end
 	
-feature {EV_KEY_EVENT_DATA_I} -- Element change
+feature {EV_KEY_EVENT_DATA_I, EV_WIDGET_IMP} -- Element change
 	
 	set_state (new_state: INTEGER) is
 		do

@@ -60,9 +60,8 @@ feature {NONE} -- Implementation
 		do
 			Result := routine
 		end
-	
 
-feature {EV_WIDGET_I} -- Element change
+feature {EV_WIDGET_I, EV_EVENT_HANDLER_IMP} -- Element change
 
  	set_event_data (data: EV_EVENT_DATA) is
  			-- Set `event_data' to `data'.

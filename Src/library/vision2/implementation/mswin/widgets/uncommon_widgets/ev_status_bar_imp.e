@@ -31,7 +31,7 @@ inherit
 	WEL_STATUS_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			shown as is_displayed,
 			destroy as wel_destroy,
@@ -92,7 +92,20 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
+
 	ev_children: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 			-- List of the children
 
@@ -427,6 +440,9 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/29 20:26:48  brendel
+--| Workaround for compiler bug. See code.
+--|
 --| Revision 1.23  2000/03/24 19:23:36  rogers
 --| Redefined initialize from EV_ITEM_LIST_IMP.
 --|

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		do
 			parent := a_parent
 			resource_id := an_id
-			!! dialog_children.make
+			create dialog_children.make
 		ensure
 			parent_set: parent = a_parent
 			resource_id_set: resource_id = an_id
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		do
 			parent := a_parent
 			resource_name := clone (a_name)
-			!! dialog_children.make
+			create dialog_children.make
 		ensure
 			parent_set: parent = a_parent
 			resource_name_set: resource_name.is_equal (a_name)

@@ -61,11 +61,11 @@ feature -- Status report
 		local
 			buffer: STRING
 		do
-			!! Result.make_with_index (index)
+			create Result.make_with_index (index)
 			Result.set_mask (Cbeif_text + Cbeif_image
 				+ Cbeif_selectedimage + Cbeif_overlay
 				+ Cbeif_indent + Cbeif_lparam)
-			!! buffer.make (buffer_size)
+			create buffer.make (buffer_size)
 			buffer.fill_blank
 			Result.set_text (buffer)
 			Result.set_cchtextmax (buffer_size)
@@ -127,7 +127,7 @@ feature -- Element change
 		local
 			citem: WEL_COMBO_BOX_EX_ITEM
 		do
-			!! citem.make_with_index (index)
+			create citem.make_with_index (index)
 			citem.set_text (a_string)
 			insert_item (citem)
 		end
@@ -219,15 +219,15 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 		do
 			code := notification_info.code
 			if code = Cben_insertitem then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_cben_insert_item (nm_info.comboboxex_item)
 			elseif code = Cben_deleteitem then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_cben_delete_item (nm_info.comboboxex_item)
 			elseif code = Cben_beginedit then
 				on_cben_beginedit_item
 			elseif code = Cben_endedit then
-				!! nm_end_info.make_by_nmhdr (notification_info)
+				create nm_end_info.make_by_nmhdr (notification_info)
 				on_cben_endedit_item (nm_end_info)
 			end
 		end
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwin_comboex_class)
 		end
 

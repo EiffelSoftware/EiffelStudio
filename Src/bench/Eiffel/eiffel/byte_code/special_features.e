@@ -520,17 +520,32 @@ feature {NONE} -- C code generation
 		do
 			inspect
 				type_of_basic
-			when character_type, integer_type, real_type, double_type then
-				buffer.putchar ('(')
-				target.print_register
-				buffer.putchar ('>')
-				parameter.print_register
-				buffer.putchar ('?')
-				target.print_register
-				buffer.putchar (':')
-				parameter.print_register
-				buffer.putchar (')')
+			when character_type then
+				if is_wide then
+					buffer.putstring ("eif_max_wide_char (")
+				else
+					buffer.putstring ("eif_max_char (")
+				end
+			when integer_type then
+				inspect integer_size
+				when 8 then buffer.putstring ("eif_max_int8 (")
+				when 16 then buffer.putstring ("eif_max_int16 (")
+				when 32 then buffer.putstring ("eif_max_int32 (")					
+				when 64 then buffer.putstring ("eif_max_int64 (")
+				end
+			when real_type then
+				buffer.putstring ("eif_max_real (")
+			when Double_type then
+				buffer.putstring ("eif_max_double (")
 			end
+			
+			target.print_register
+			buffer.putchar (',')
+			parameter.print_register
+			buffer.putchar (')')
+
+				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_min (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target, parameter: REGISTRABLE) is
@@ -543,17 +558,32 @@ feature {NONE} -- C code generation
 		do
 			inspect
 				type_of_basic
-			when character_type, integer_type, real_type, double_type then
-				buffer.putchar ('(')
-				target.print_register
-				buffer.putchar ('<')
-				parameter.print_register
-				buffer.putchar ('?')
-				target.print_register
-				buffer.putchar (':')
-				parameter.print_register
-				buffer.putchar (')')
+			when character_type then
+				if is_wide then
+					buffer.putstring ("eif_min_wide_char (")
+				else
+					buffer.putstring ("eif_min_char (")
+				end
+			when integer_type then
+				inspect integer_size
+				when 8 then buffer.putstring ("eif_min_int8 (")
+				when 16 then buffer.putstring ("eif_min_int16 (")
+				when 32 then buffer.putstring ("eif_min_int32 (")					
+				when 64 then buffer.putstring ("eif_min_int64 (")
+				end
+			when real_type then
+				buffer.putstring ("eif_min_real (")
+			when Double_type then
+				buffer.putstring ("eif_min_double (")
 			end
+			
+			target.print_register
+			buffer.putchar (',')
+			parameter.print_register
+			buffer.putchar (')')
+
+				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_abs (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE) is
@@ -565,16 +595,24 @@ feature {NONE} -- C code generation
 		do
 			inspect
 				type_of_basic
-			when integer_type, real_type, double_type then
-				buffer.putchar ('(')
-				target.print_register
-				buffer.putstring (" > 0 ? ")
-				target.print_register
-				buffer.putchar (':')
-				buffer.putchar ('-')
-				target.print_register
-				buffer.putchar (')')					
+			when integer_type then
+				inspect integer_size
+				when 8 then buffer.putstring ("eif_abs_int8 (")
+				when 16 then buffer.putstring ("eif_abs_int16 (")
+				when 32 then buffer.putstring ("eif_abs_int32 (")					
+				when 64 then buffer.putstring ("eif_abs_int64 (")
+				end
+			when real_type then
+				buffer.putstring ("eif_abs_real (")
+			when Double_type then
+				buffer.putstring ("eif_abs_double (")
 			end
+			
+			target.print_register
+			buffer.putchar (')')
+
+				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_memory_routine (buffer: GENERATION_BUFFER; f_type: INTEGER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is

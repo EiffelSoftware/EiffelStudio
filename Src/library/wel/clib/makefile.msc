@@ -6,7 +6,7 @@ CFLAGS = -c -O2 -I$(EIFFEL3)\library\wel\spec\windows\include -I$(EIFFEL3)\bench
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = disptchr.obj enumfont.obj
+OBJ = disptchr.obj enumfont.obj misc.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
@@ -17,3 +17,4 @@ wel.lib: $(OBJ)
 	del $@
 	del disptchr.obj
 	del enumfont.obj
+	del misc.obj

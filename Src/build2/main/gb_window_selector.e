@@ -149,10 +149,10 @@ feature {NONE} -- Implementation
 			-- Create `Current' in correct default state.
 		do
 			create widget
-			create children.make (50)
+			common_make
 			widget.set_minimum_height (tool_minimum_height)
 			widget.drop_actions.set_veto_pebble_function (agent veto_drop)
-			widget.drop_actions.extend (agent add_new_object)			
+			widget.drop_actions.extend (agent add_new_object (?, Current))			
 			widget.key_press_actions.extend (agent check_for_object_delete)
 			widget.select_actions.extend (agent tool_bar.update_select_root_window_command)
 		end
@@ -328,7 +328,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			if all_objects.count >= 1 then
 				if all_objects.count = a_directory.count then
 						-- Move the root window out of the directory, as it may not be deleted.
-					add_new_object (object_handler.root_window_object)
+					add_new_object (object_handler.root_window_object, window_selector)
 				else
 						-- If the currently selected window is contained within the structure of
 						-- `a_directory', we must unselect it first to prevent us selecting windows
@@ -434,9 +434,8 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementati
 
 feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 
-	add_new_object (an_object: GB_OBJECT) is
+	add_new_object (an_object: GB_OBJECT; parent_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
 			-- Add an associated window item for `window_object'.
-			-- Added at root level of `Current', not in a directory.
 		require
 			an_object_not_void: an_object /= Void
 		local
@@ -446,6 +445,7 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			dialog: GB_NAMING_DIALOG
 			all_top_level_names: HASH_TABLE [STRING, STRING]
 			command_convert_to_top_level: GB_COMMAND_CONVERT_TO_TOP_LEVEL
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			create all_top_level_names.make (50)
 			objects.do_all (agent add_object_name_to_hash_table (?, all_top_level_names))
@@ -458,23 +458,30 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 					if an_object.window_selector_item.parent /= Void then
 							-- Do nothing if attempting to move from `Current' to `Current'.
 						if an_object.window_selector_item.parent /= Current then
-							create command_move_window.make (an_object, Void)
+							directory_item ?= parent_item
+							create command_move_window.make (an_object, directory_item)
 							command_move_window.execute
+							if directory_item /= Void then
+								directory_item.expand
+							end
 						end
 					end
 				else
 					if an_object.layout_item = Void then
 						window_object ?= an_object
-						if window_object /= void then
+						if window_object /= Void then
 							object_handler.add_new_window (window_object)
 						else
 							object_handler.add_new_object (an_object)
 						end
-						create command_add_window.make (an_object, Void)
+
+						directory_item ?= parent_item
+						create command_add_window.make (an_object, directory_item)
+				
 						an_object.set_name (dialog.name.as_lower)
 						command_add_window.execute
 					else
-						create command_convert_to_top_level.make (an_object, dialog.name.as_lower)
+						create command_convert_to_top_level.make (an_object, parent_item, dialog.name.as_lower)
 						command_convert_to_top_level.execute	
 					end
 				end

@@ -12,7 +12,7 @@ inherit
 		rename
 			make as form_make
 		redefine
-			associated_resource
+			associated_resource, validate
 		end
 
 creation
@@ -36,7 +36,18 @@ feature -- Validation
 	validate is
 			-- Validate Current's new value.
 		do
-			is_resource_valid := True
+			if text /= Void then
+				if not text.text.empty then
+					is_resource_valid := associated_resource.is_valid (text.text)
+				else
+					is_resource_valid := True
+				end
+			else
+				is_resource_valid := True
+			end
+			if not is_resource_valid then
+				raise_warner ("a string")
+			end
 		end
 
 feature {PREFERENCE_CATEGORY} -- User Interface
@@ -47,7 +58,8 @@ feature {PREFERENCE_CATEGORY} -- User Interface
 			init;
 			text.enable_resize_width;
 			text.set_text (associated_resource.value);
-			text.set_single_line_mode
+			text.set_rows (5);
+			text.hide_horizontal_scrollbar
 		end
 
 feature {PREFERENCE_CATEGORY} -- Access
@@ -61,34 +73,21 @@ feature {PREFERENCE_CATEGORY} -- Access
 			if text = Void or else ar.value.is_equal (text.text) then
 					--| text /= Void means: text has been displayed
 					--| and thus the user could have changed the value.
-				store (ar.value, file)
+				if ar.value @ 1 /= '%"' then
+					file.putchar ('%"')
+				end
+				file.putstring (ar.value)
+				if ar.value @ ar.value.count /= '%"' then
+					file.putchar ('%"')
+				end
 			else
-				store (text.text, file)
-			end
-		end;
-
-	store (str: STRING; file: PLAIN_TEXT_FILE) is
-			-- Store `str' in `file', surround `str' with
-			-- quotes if and only if `str' contains either a ` '
-			-- or a `%T'.
-		require
-			str_not_void: str /= Void;
-			file_not_void: file /= Void;
-			file_is_open_write: file.is_open_write
-		local
-			spaced: BOOLEAN
-		do
-			if
-				str.count = 0 or else
-				str.index_of (' ', 1) > 0 or else
-				str.index_of ('%T', 1) > 0
-			then
-				file.putchar('%"');
-				spaced := True
-			end;
-			file.putstring (str);
-			if spaced then
-				file.putchar ('%"');
+				if text.text @ 1 /= '%"' then
+					file.putchar ('%"')
+				end
+				file.putstring (text.text)
+				if text.text @ text.text.count /= '%"' then
+					file.putchar ('%"')
+				end
 			end
 		end;
 
@@ -134,7 +133,7 @@ feature {NONE} -- Properties
 	associated_resource: STRING_RESOURCE;
 			-- Resource Current represnts
 
-	text: TEXT
+	text: SCROLLED_T
 			-- Edit box to represent Current's value
 
 end -- class STRING_PREF_RES

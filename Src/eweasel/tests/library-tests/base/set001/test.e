@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			from
 				i := 1
 			until
-				i > 2
+				i > Implementations
 			loop
 				create_string_sets (i)
 				fill_string_sets (False, False)
@@ -56,6 +56,11 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 		end
+
+feature {NONE} -- Constants
+
+	Implementations: INTEGER is 2
+			-- Number of implemetations
 
 feature {NONE} -- Implementation
 
@@ -83,7 +88,7 @@ feature {NONE} -- Implementation
 			-- Create string sets using the implementation determined by
 			-- `impl'.
 		require
-			defined_implementation: 1 <= impl and impl <= 2
+			defined_implementation: 1 <= impl and impl <= Implementations
 		do
 			inspect
 				impl
@@ -137,7 +142,7 @@ feature {NONE} -- Implementation
 				obj_set1.put (o)
 				create o.make (5)
 				obj_set1.put (o)
-				if obj_comparison then create o.make (5)end
+				if obj_comparison then create o.make (5) end
 				obj_set2.put (o)
 				create o.make (2)
 				obj_set2.put (o)

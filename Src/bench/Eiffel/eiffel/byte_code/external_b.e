@@ -170,7 +170,7 @@ feature -- Byte code generation
 				loop
 					pos := pos + 1;
 					parameter_b ?= parameters.item;
-					if parameter_b.is_hector then
+					if parameter_b /= Void and then parameter_b.is_hector then
 						hector_b ?= parameter_b.expression;
 						if hector_b /= Void then
 							hector_b.make_protected_byte_code (ba, parameters.count - pos);
@@ -426,7 +426,7 @@ feature -- Concurrent Eiffel
 							if loc_idx /= -1 then
 								buf.putstring ("l[");
 								buf.putint (context.ref_var_used + loc_idx);
-								buf.putstring ("] = (char *)0;");
+								buf.putstring ("] = (EIF_REFERENCE) 0;");
 								buf.new_line;
 							end
 						end

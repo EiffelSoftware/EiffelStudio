@@ -39,7 +39,10 @@ inherit
 			first_position_from_line_number,
 			last_position_from_line_number,
 			caret_position,
-			set_caret_position
+			set_caret_position,
+			select_region,
+			selection_start,
+			selection_end
 		select
 			wel_line_index,
 			wel_item,
@@ -322,6 +325,20 @@ feature -- Status report
 			--| This position is used for insertions.
 		do
 			internal_set_caret_position (pos - 1)
+		end
+		
+	selection_start: INTEGER is
+			-- Index of first character selected.
+		do
+			Result := wel_selection_start + 1
+		end
+
+	selection_end: INTEGER is
+			-- Index of last character selected.
+		local
+			new_lines_to_end: INTEGER
+		do
+			Result := wel_selection_end
 		end
 
 feature -- Status setting
@@ -813,6 +830,22 @@ feature -- Status setting
 		do
 			Precursor {WEL_RICH_EDIT} (stream)
 			update_tab_positions (1)
+		end
+		
+	select_region (start_pos, end_pos: INTEGER) is
+			-- Select (hilight) text between 
+			-- 'start_pos' and 'end_pos'
+		local
+			actual_start, actual_end: INTEGER
+		do
+			if start_pos < end_pos then
+				actual_start := start_pos
+				actual_end := end_pos
+			else
+				actual_start := end_pos
+				actual_end := start_pos
+			end
+			set_selection (actual_start - 1, actual_end)
 		end
 		
 feature {NONE} -- Implementation

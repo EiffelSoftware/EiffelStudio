@@ -21,12 +21,50 @@ feature -- Status report
 	platform: INTEGER is
 		deferred
 		end
+		
+feature {EV_ENVIRONMENT} -- Status report
+		
+	application: EV_APPLICATION is
+			-- Single application object for system.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := application_cell.item
+		ensure
+			Result = application_cell.item
+		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ENVIRONMENT
             -- Provides a common user interface to platform dependent
             -- functionality implemented by `Current'
+            
+feature {EV_APPLICATION_I} -- Access
+
+	set_application (an_application: EV_APPLICATION) is
+			-- Specify `an_application' as the single application object for the
+			-- system. Must be called exactly once from EV_APPLICATION's
+			-- creation procedure.
+		require
+			not_destroyed: not is_destroyed
+			application_not_already_set: application = Void
+		do
+			application_cell.put (an_application)
+		ensure
+			application_assigned: application = an_application
+		end
+
+feature {NONE} -- Implementation
+
+	Application_cell: CELL [EV_APPLICATION] is
+			-- A global cell where `item' is the single application object for
+			-- the system.
+		require
+			not_destroyed: not is_destroyed
+		once
+			create Result.put (Void)
+		end
 
 feature -- Command
 
@@ -59,6 +97,11 @@ end -- class EV_ENVIRONMENT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/13 19:08:43  rogers
+--| Added `set_application', `Application_cell' and `application'. These
+--| were in the interface, but as they are only used for implementatation,
+--| they have been moved here to hide them from users of vision2.
+--|
 --| Revision 1.4  2001/06/07 23:08:08  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -67,56 +67,6 @@ feature -- Status
 			valid: Result implies (type >= 1 and type <= 26)
 		end
 
-feature -- IL code generation
-
-	generate_il (type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
-			-- Generate IL code sequence that will be used with basic types.
-		require
-			il_generation: System.il_generation
-			valid_function_type: valid_function_type (function_type)
-			type_not_void: type /= Void
-			is_basic_or_is_enum: type.is_basic or else type.is_enum
---			is_basic_implies_integer: type.is_basic implies type.is_long
-		local
-			f_type: INTEGER
-		do
-			f_type := function_type
-			inspect f_type
-			when bit_and_type..bit_shift_right_type then
-				if parameters /= Void then
-					parameters.generate_il
-				end
-				generate_il_operation_code (f_type)
-			when bit_test_type then
-				check
-					parameters_not_void: parameters /= Void
-					valid_count: parameters.count = 1
-				end
-				il_generator.put_integer_32_constant (1)
-				parameters.i_th (1).generate_il
-				generate_il_operation_code (bit_shift_left_type)
-				generate_il_operation_code (bit_and_type)
-			when equal_type then
-				if parameters /= Void then
-					parameters.generate_il
-				end
-				il_generator.generate_binary_operator (il_eq)
-			when zero_type then
-				il_generator.put_default_value (type)
-			when one_type then
-				il_generator.put_integer_constant (type, 1)
-			when to_integer_8_type then
-				il_generator.convert_to_integer_8
-			when to_integer_16_type then
-				il_generator.convert_to_integer_16
-			when to_integer_32_type then
-				il_generator.convert_to_integer_32
-			when to_integer_64_type then
-				il_generator.convert_to_integer_64
-			else
-			end
-		end
-
 feature -- Byte code special generation
 
 	make_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
@@ -246,6 +196,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_8_type, "to_integer_8")
 			Result.put (to_integer_16_type, "to_integer_16")
 			Result.put (to_integer_32_type, "to_integer")
+			Result.put (to_integer_32_type, "to_integer_32")
 			Result.put (to_integer_64_type, "to_integer_64")
 			Result.put (offset_type, "_infix_plus")
 			Result.put (default_type, "default")
@@ -299,6 +250,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_8_type, "to_integer_8")
 			Result.put (to_integer_16_type, "to_integer_16")
 			Result.put (to_integer_32_type, "to_integer")
+			Result.put (to_integer_32_type, "to_integer_32")
 			Result.put (to_integer_64_type, "to_integer_64")
 --			Result.put (set_item_type, "set_item")
 		end
@@ -331,32 +283,6 @@ feature {NONE} -- Fast access to feature name
 	to_integer_8_type: INTEGER is 24
 	to_integer_16_type: INTEGER is 25
 	to_integer_64_type: INTEGER is 26
-
-feature {NONE} -- IL code generation
-
-	generate_il_operation_code (op: INTEGER) is
-			-- Make byte code for call on bit operations from INTEGER.
-		do
- 			inspect
- 				op
- 			when bit_and_type then
-				il_generator.generate_binary_operator (il_and)
- 			when bit_or_type then
-				il_generator.generate_binary_operator (il_or)
-			when bit_xor_type then
- 				il_generator.generate_binary_operator (il_xor)
- 			when bit_not_type then
-				il_generator.generate_unary_operator (il_bitwise_not)
-			when bit_shift_left_type then
-				il_generator.generate_binary_operator (il_shl)
- 			when bit_shift_right_type then
-				il_generator.generate_binary_operator (il_shr)
-			else
-				check
-					not_implemented_yet: False
-				end
-			end
-		end
 
 feature {NONE} -- Byte code generation
 

@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 					accel_group := feature {EV_GTK_EXTERNALS}.gtk_menu_get_accel_group (list_widget)
 				end
 				menu_imp ?= an_item_imp
-				if menu_imp = Void then
+				if menu_imp = Void and then accel_group /= NULL then
 					create a_cs.make ("activate")
 					feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (an_item_imp.c_object,
 						a_cs.item,
@@ -121,7 +121,8 @@ feature {NONE} -- Implementation
 						an_item_imp.key,
 						0,
 						0)
-				else
+				elseif accel_group /= NULL then
+					
 					create a_cs.make ("activate_item")
 					feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (menu_imp.c_object,
 						a_cs.item,

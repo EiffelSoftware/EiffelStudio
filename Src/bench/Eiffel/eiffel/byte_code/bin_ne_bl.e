@@ -7,7 +7,25 @@ inherit
 			left_register, set_left_register,
 			right_register, set_right_register
 		end;
+
+create
+	make
 	
+feature {NONE} -- Initialization
+
+	make (a_left: like left; a_right: like right) is
+			-- Create new BIN_NE_BL instance with `a_left' and `a_right'.
+		require
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
+		do
+			left := a_left
+			right := a_right
+		ensure
+			left_set: left = a_left
+			right_set: right = a_right
+		end
+		
 feature
 
 	left_register: REGISTRABLE;
@@ -26,13 +44,6 @@ feature
 			-- Assign `r' to `right_register'
 		do
 			right_register := r;
-		end;
-
-	fill_from (b: BIN_NE_B) is
-			-- Fill `Current' from `b'
-		do
-			left := b.left.enlarged;
-			right := b.right.enlarged;
 		end;
 
 end

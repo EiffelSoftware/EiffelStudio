@@ -1131,7 +1131,7 @@ feature {NONE} -- WEL Implementation
 			Result := Ws_child + Ws_visible + Ws_group 
 				+ Ws_tabstop + Ws_border + Ws_clipchildren
 				+ Lvs_report + Lvs_showselalways + Lvs_singlesel
-				+ Ws_clipsiblings
+				+ Ws_clipsiblings + Lvs_shareimagelists
 		end
 
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is

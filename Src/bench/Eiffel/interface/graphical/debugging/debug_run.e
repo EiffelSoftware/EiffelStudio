@@ -15,7 +15,10 @@ inherit
 		export
 			{NONE} all
 		end;
-	ICONED_COMMAND;
+	ICONED_COMMAND
+		redefine
+			text_window
+		end;
 	SHARED_DEBUG;
 	OBJECT_ADDR
 
@@ -27,20 +30,24 @@ creation
 	
 feature 
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (c: COMPOSITE; a_text_window: PROJECT_TEXT) is
 		do
 			init (c, a_text_window);
 			!!run_request.make (Rqst_application);
 			!!cont_request.make (Rqst_cont);
 			!!argument_window.make (c, Current);
-			!!specify_args;
 			add_button_click_action (3, Current, specify_args);
+			set_action ("!c<Btn1Down>", Current, melt_and_run)
 		end;
 	
+	text_window: PROJECT_TEXT;
+
 feature 
 
 	argument_window: ARGUMENT_W;
-	specify_args: ANY;
+
+	specify_args: ANY is once !!Result end;
+	melt_and_run: ANY is once !!Result end;
 
 	close is
 		do
@@ -55,17 +62,27 @@ feature
 			status: BOOLEAN;
 			uf: RAW_FILE;
 			make_f: PLAIN_TEXT_FILE;
-			message: STRING;
 			kept_objects: LINKED_SET [STRING];
-			debug_text: TEXT_WINDOW
+			debug_text: TEXT_WINDOW;
+			ready_to_run: BOOLEAN
 		do
-			if Run_info.is_running then
-				if Run_info.is_stopped then
-						-- Application is running. Continue execution.
+			if argument = melt_and_run then
+				text_window.tool.update_command.execute (text_window);
+				ready_to_run := Lace.file_name /= Void and 
+						Workbench.successfull and not System.freezing_occurred
+			else
+				ready_to_run := true
+			end;
+			if not ready_to_run then
+					-- Do nothing
+			elseif Run_info.is_running then
+					-- Application is running. Continue execution.
 debug
 	io.error.putstring (generator);
 	io.error.putstring (": Contine execution%N");
 end;
+
+				if Run_info.is_stopped then
 						-- Ask the application to wean objects the
 						-- debugger doesn't need anymore.
 					kept_objects := window_manager.object_win_mgr.objects_kept;
@@ -123,12 +140,10 @@ end;
 						if uf.exists then
 							if make_f.exists and then make_f.date > uf.date then
 									-- The Makefile file is more recent than the application
-								!!message.make (0);
-								message.append (Makefile_SH);
-								message.append (" is more recent than the system.%N%
-												%Do you want to compile the generated C code?");
 								warner.set_window (text_window);
-								warner.custom_call (Current, message, " OK ", Void, "Cancel");
+								warner.custom_call (Current, 
+										w_Makefile_more_recent (Makefile_SH), 
+										" OK ", Void, "Cancel")
 							else
 								application_name.extend (' ');
 								application_name.append (argument_window.argument_list);
@@ -138,16 +153,16 @@ end;
 						elseif make_f.exists then
 								-- There is no application
 							warner.set_window (text_window);
-							warner.custom_call (Current, "No system was generated.%N%
-										%Do you want to compile the generated C code?", " OK ", Void, "Cancel");
+							warner.custom_call (Current, w_No_system_generated,
+										" OK ", Void, "Cancel");
 						else
 							warner.set_window (text_window);
-							warner.gotcha_call ("You must compile a system first%N");
+							warner.gotcha_call (w_Must_compile_first)
 						end;
 					end
-				end
-			end;
-			Run_info.set_is_stopped (False);
+				end;
+				Run_info.set_is_stopped (False)
+			end
 		end;
 
 feature 

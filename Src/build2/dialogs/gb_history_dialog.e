@@ -22,6 +22,11 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_ACCESSIBLE_COMMAND_HANDLER
+		undefine
+			default_create, copy
+		end
 
 create
 	default_create
@@ -49,7 +54,7 @@ feature -- Initialization
 			set_default_size_for_button (close_button)
 			horizontal_box.extend (close_button)
 			set_default_push_button (close_button)
-			close_button.select_actions.extend (agent hide)
+			close_button.select_actions.extend (agent close_window)
 			set_minimum_size (250, 250)
 		end
 		
@@ -120,6 +125,14 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 		
 		
 feature {NONE} -- Implementation
+
+	close_window is
+			-- Close `Current' and do any required processing.
+		do
+			hide
+			command_handler.update
+		end
+		
 
 	item_selected is
 			-- Peform processing when `an_item' has been selected.

@@ -19,7 +19,8 @@ feature -- basic Operations
 		do
 			title.set_text ("Location Error")
 			message.set_text (
-				"The directory you have choosen doesn't exist and the Wizard cannot create it.%N%
+				"The directory you have choosen doesn't exist%N%
+				%and the Wizard cannot create it.%N%
 				%%N%
 				%Click Back and choose another directory.")
 		end

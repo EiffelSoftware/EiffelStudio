@@ -132,7 +132,6 @@ end;
 		require else
 			Valid_parameters: (parameters /= Void);
 			One_parameter: parameters.count = 1;
-			Special_rout_found: special_routines.found;
 		local
 			expr: EXPR_B;
 		do

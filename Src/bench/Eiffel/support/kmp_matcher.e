@@ -121,7 +121,7 @@ feature -- Search
 
 	find_matching_indices is
 			-- All indices in `text' which matches the
-			-- very next occurence of `pattern'.
+			-- very next occurrence of `pattern'.
 		local
 			text_count, pattern_count, i: INTEGER
 			text_area, pattern_area: SPECIAL [CHARACTER]

@@ -342,12 +342,12 @@ feature -- Properties
 			local_workbench.change_class (character_class)
 			local_workbench.change_class (special_class)
 			local_workbench.change_class (pointer_class)
+			local_workbench.change_class (array_class)
 
 			if not il_generation then
 				local_workbench.change_class (tuple_class)
 				local_workbench.change_class (wide_char_class)
 				local_workbench.change_class (to_special_class)
-				local_workbench.change_class (array_class)
 				local_workbench.change_class (bit_class)
 				local_workbench.change_class (routine_class)
 				local_workbench.change_class (procedure_class)
@@ -384,12 +384,12 @@ feature -- Properties
 			string_class.compiled_class.record_precompiled_class_in_system
 			special_class.compiled_class.record_precompiled_class_in_system
 			pointer_class.compiled_class.record_precompiled_class_in_system
+			array_class.compiled_class.record_precompiled_class_in_system
 
 			if not il_generation then
 				tuple_class.compiled_class.record_precompiled_class_in_system
 				wide_char_class.compiled_class.record_precompiled_class_in_system
 				to_special_class.compiled_class.record_precompiled_class_in_system
-				array_class.compiled_class.record_precompiled_class_in_system
 				bit_class.compiled_class.record_precompiled_class_in_system
 				routine_class.compiled_class.record_precompiled_class_in_system
 				procedure_class.compiled_class.record_precompiled_class_in_system
@@ -999,12 +999,12 @@ end
 			string_class.compiled_class.mark_class (marked_classes)
 			special_class.compiled_class.mark_class (marked_classes)
 			pointer_class.compiled_class.mark_class (marked_classes)
+			array_class.compiled_class.mark_class (marked_classes)
 
 			if not il_generation then
 				tuple_class.compiled_class.mark_class (marked_classes)
 				wide_char_class.compiled_class.mark_class (marked_classes)
 				to_special_class.compiled_class.mark_class (marked_classes)
-				array_class.compiled_class.mark_class (marked_classes)
 				bit_class.compiled_class.mark_class (marked_classes)
 				routine_class.compiled_class.mark_class (marked_classes)
 				procedure_class.compiled_class.mark_class (marked_classes)

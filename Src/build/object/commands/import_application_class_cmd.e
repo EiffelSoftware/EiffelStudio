@@ -135,7 +135,8 @@ feature {NONE} -- Implementation
 			if class_name.has (':') or class_name.has ('(') or class_name.has (')') then
 				display_error_message
 			else
-				if current_application_class /= Void and not class_list.empty then
+				if not class_list.empty
+				and then current_application_class /= Void then
 					cmd_list := current_application_class.command_list
 					from
 						cmd_list.start

@@ -16,8 +16,10 @@ create
 feature -- Initialization
 
 	sb_x, sb_y: EV_SPIN_BUTTON
+			-- Gauges that control offset of `vp'.
 
 	vp: EV_VIEWPORT
+			-- Example object.
 
 	prepare is
 			-- Pack `first_window'.
@@ -53,12 +55,12 @@ feature -- Initialization
 		end
 
 	on_geometry (x, y, w, h: INTEGER) is
-			-- Window resized/moved.
+			-- Window resized.
 		do
 			sb_x.set_value (0)
-			sb_x.set_maximum ((vp.item.width - vp.client_width).max (0))
+			sb_x.set_maximum ((vp.item_width - vp.client_width).max (0))
 			sb_y.set_value (0)
-			sb_y.set_maximum ((vp.item.height - vp.client_height).max (0))
+			sb_y.set_maximum ((vp.item_height - vp.client_height).max (0))
 		end
 
 	on_sb_x_changed is
@@ -74,7 +76,7 @@ feature -- Initialization
 		end
 
 	first_window: EV_TITLED_WINDOW is
-			-- Window containing viewport and scr. area.
+			-- Window containing viewport and scrollable area.
 		once
 			create Result.make_with_title ("Viewport example")
 		end

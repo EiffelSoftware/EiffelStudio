@@ -112,7 +112,7 @@ feature
 						buf.putstring ("(EIF_POINTER) ")
 						buf.putstring (internal_name)
 
-						if equal (class_id, type.base_id) then
+						if not equal (class_id, type.base_id) then
 								-- Current addressed feature has not been generated in
 								-- current generated class, so we need to 
 								-- remember extern declarations

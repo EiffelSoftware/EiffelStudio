@@ -44,10 +44,41 @@ inherit
 			dispose
 		end
 	
+	WEL_UNIT_CONVERSION
+		export
+			{NONE} all
+		end
+	
 	DVASPECT_ENUM
+		export
+			{NONE} all
+		end
 	
 	HIT_RESULT_ENUM
-		
+		export
+			{NONE} all
+		end
+	
+	OLEIVERB_ENUM
+		export
+			{NONE} all
+		end
+
+	WEL_GW_CONSTANTS
+		export
+			{NONE} all
+		end
+	
+	WEL_RASTER_OPERATIONS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_OCM_CONSTANTS
+		export
+			{NONE} all
+		end
+	
 feature -- Basic Operations
 
 	get_window (phwnd: CELL [POINTER]) is
@@ -322,7 +353,15 @@ feature -- Basic Operations
 			-- background is erased. If this parameter is FALSE, 
 			-- the background remains unchanged. 
 		do
-			wel_invalidate_rect (p_rect.wel_rect, f_erase.to_boolean)
+			if p_rect /= Void and then p_rect.exists then
+				wel_invalidate_rect (p_rect.wel_rect, f_erase.to_boolean)
+			else
+				if f_erase.to_boolean then
+					invalidate
+				else
+					invalidate_without_background
+				end
+			end
 		end
 
 	invalidate_rgn (h_rgn: POINTER; f_erase: INTEGER) is
@@ -366,30 +405,94 @@ feature -- Basic Operations
 		do
 			pl_result.set_item (call_default_window_procedure (msg, w_param, l_param))
 		end
-
+	
+	is_child (a_window: WEL_WINDOW): BOOLEAN is
+			-- Is `a_window' child of `Current'.
+		do
+			Result := cwin_is_child (wel_item, a_window.item)
+		end
+		
 feature {NONE} -- Messages
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
+		local
+			a_size_in_pixel: WEL_SIZE
+			a_size_in_himetric: WEL_SIZE
+			psizel: TAG_SIZEL_RECORD
 		do
-			check 
-				non_void_position: m_position /= Void
+			if 
+				m_position = Void
+			then
+				create m_position.make
 			end
 			m_position.set_right (m_position.left + a_width)
 			m_position.set_bottom (m_position.top + a_height)
 			
+			create a_size_in_pixel
+			a_size_in_pixel.set_width (a_width)
+			a_size_in_pixel.set_height (a_height)
+			a_size_in_himetric := pixel_to_himetric (a_size_in_pixel)
 			
+			create psizel.make_from_pointer (a_size_in_himetric.item)
+			if
+				ole_object /= Void
+			then
+				ole_object.set_extent (Dvaspect_content, psizel)
+			end
+			if ole_in_place_object /= Void then
+				ole_in_place_object.set_object_rects (m_position, m_position)
+			end
+			if m_windowless then
+				invalidate
+			end
 		end
 
 	on_set_focus is
 			-- Wm_setfocus message
+		local
+			hwnd: POINTER
+			a_client_side: IOLE_CLIENT_SITE_IMPL_PROXY
 		do
+			m_have_focus := True
+			if ole_object /= Void and m_place_active then
+				a_client_side := client_side
+				if a_client_side /= Void then
+					ole_object.do_verb (Oleiverb_uiactivate, 
+										Void, 
+										a_client_side,
+										0,
+										wel_item,
+										m_position)
+				end
+			end
+			if
+				not m_windowless and
+				not is_child (focused_window)
+			then
+				hwnd := cwin_get_window (item, Gw_child)
+				cwin_set_focus (hwnd)
+			end
 		end
 
+	client_side: IOLE_CLIENT_SITE_IMPL_PROXY is
+			-- IOleClientSite interface of `Current'.
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				create Result.make_from_other (Current)
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 	on_kill_focus is
 			-- Wm_killfocus message
 		do
+			m_have_focus := False
 		end
 		
 	on_mouse_message (msg, wparam, lparam: INTEGER): INTEGER is
@@ -411,19 +514,98 @@ feature {NONE} -- Messages
 	on_destroy is
 			-- Wm_destroy message.
 			-- The window is about to be destroyed.
+		local
+			a_client_side: IOLE_CLIENT_SITE_IMPL_PROXY
 		do
+			a_client_side := client_side
+			release_all
 		end
 
 	reflect_notifications (msg, wparam, lparam: INTEGER): INTEGER is
-			-- 
-		require
+			-- Reflect notifications.
 		local
-			child_handle: POINTER
+			child_window: WEL_WINDOW
+			nmhdr: WEL_NMHDR
+			draw_item_struct: WEL_DRAW_ITEM_STRUCT
+			measure_item_struct: WEL_MEASURE_ITEM_STRUCT
+			compare_item_struct: WEL_COMPARE_ITEM_STRUCT
+			delete_item_struct: WEL_DELETE_ITEM_STRUCT
 		do
-		ensure
+			inspect msg
+			when Wm_notify then
+				if lparam /= Void then
+					create nmhdr.make_by_pointer (cwel_integer_to_pointer (lparam))
+					child_window := nmhdr.window_from 
+				end
+			when Wm_parentnotify then
+				if 
+					wparam = Wm_create or
+					wparam = Wm_destroy
+				then
+					if lparam /= 0 then
+						child_window := window_of_item (cwel_integer_to_pointer (lparam))
+					end
+				else
+					child_window := window_of_item (cwin_get_dlg_item (wel_item, wparam))
+				end
+			when Wm_drawitem then
+				if 
+					wparam /= 0 and
+					lparam /= 0
+				then
+					create draw_item_struct.make_by_pointer (cwel_integer_to_pointer (lparam))
+					child_window := draw_item_struct.window_item
+				end
+			when Wm_measureitem then
+				if 
+					wparam /= 0 and
+					lparam /= 0
+				then
+					create measure_item_struct.make_by_pointer (cwel_integer_to_pointer (lparam))
+					child_window := window_of_item (cwin_get_dlg_item (wel_item, measure_item_struct.ctl_id))
+				end
+			when Wm_compareitem then
+				if 
+					wparam /= 0 and
+					lparam /= 0
+				then
+					create compare_item_struct.make_by_pointer (cwel_integer_to_pointer (lparam))
+					child_window := window_of_item (cwin_get_dlg_item (wel_item, compare_item_struct.ctl_id))
+				end
+			when Wm_deleteitem then
+				if 
+					wparam /= 0 and
+					lparam /= 0
+				then
+					create delete_item_struct.make_by_pointer (cwel_integer_to_pointer (lparam))
+					child_window := window_of_item (cwin_get_dlg_item (wel_item, delete_item_struct.ctl_id))
+				end
+			else
+				if 
+					msg = Wm_command or
+					msg = Wm_vkeytoitem or
+					msg = Wm_chartoitem or
+					msg = Wm_hscroll or
+					msg = Wm_vscroll or
+					msg = Wm_ctlcolorbtn or
+					msg = Wm_ctlcolordlg or
+					msg = Wm_ctlcoloredit or
+					msg = Wm_ctlcolorlistbox or
+					msg = Wm_ctlcolormsgbox or
+					msg = Wm_ctlcolorscrollbar or
+					msg = Wm_ctlcolorstatic 
+				then
+					if lparam /= 0 then
+						child_window := window_of_item (cwel_integer_to_pointer (lparam))
+					end
+				end
+			end
+			if child_window /= Void then
+				cwin_send_message (child_window.item, Ocm__base + msg, wparam, lparam)
+			end
 		end
 
-	on_wm_paint (wparam: INTEGER) is
+	on_wm_paint is
 			-- Wm_paint message.
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and
 			-- passed to the `on_paint' routine.
@@ -436,31 +618,79 @@ feature {NONE} -- Messages
 		local
 			paint_dc: WEL_PAINT_DC
 		do
-			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
+			create paint_dc.make (Current)
 			paint_dc.get
-			on_paint (paint_dc, paint_dc.paint_struct.rect_paint)
+			if paint_dc.exists then
+				on_paint (paint_dc, paint_dc.paint_struct.rect_paint)
+			end
 			paint_dc.release
 		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_paint message.
-			-- May be redefined to paint something on
-			-- the `paint_dc'. `invalid_rect' defines
-			-- the invalid rectangle of the client area that
-			-- needs to be repainted.
 		require
 			paint_dc_not_void: paint_dc /= Void
 			paint_dc_exists: paint_dc.exists
 			invalid_rect_not_void: invalid_rect /= Void
+		local
+			a_client_rect: WEL_RECT
+			a_brush: WEL_BRUSH
+			a_bitmap: WEL_BITMAP
+			compatible_dc: WEL_MEMORY_DC
+			a_position: X_RECTL_RECORD
 		do
+			if 
+				view_object = Void 
+			then
+				create a_brush.make_solid (background_color)
+				paint_dc.fill_rect (client_rect, a_brush)
+				a_brush.delete
+			elseif 
+				m_windowless 
+			then
+				a_client_rect := client_rect
+				create a_bitmap.make_compatible (paint_dc, a_client_rect.width, a_client_rect.height)
+				create compatible_dc.make_by_dc (paint_dc)
+				
+				compatible_dc.select_bitmap (a_bitmap)
+				create a_brush.make_solid (background_color)
+				paint_dc.fill_rect (a_client_rect, a_brush)
+				a_brush.delete
+				
+				create a_position.make_from_pointer (m_position.item)
+				view_object.draw (Dvaspect_content, 
+									-1, 
+									0, 
+									Void, 
+									0, 
+									compatible_dc.to_integer, 
+									a_position,
+									a_position)
+									
+				paint_dc.bit_blt (0, 
+									0, 
+									a_client_rect.width, 
+									a_client_rect.height, 
+									compatible_dc,
+									0,
+									0,
+									Srccopy)
+				
+				compatible_dc.unselect_bitmap
+				a_bitmap.delete
+				compatible_dc.delete
+			end
 		end
 	
 	on_forward_message (lparam: INTEGER) is
-			-- 
-		require
-			
+			-- Forward message to control.
+		local
+			lpmsg: TAG_MSG_RECORD
 		do
-			
+			create lpmsg.make_from_pointer (cwel_integer_to_pointer (lparam))
+			if ole_in_place_active_object /= Void then
+				ole_in_place_active_object.translate_accelerator (lpmsg)
+			end
 		end
 		
 feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
@@ -534,7 +764,7 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 			end
 			inspect msg
 			when Wm_paint then
-				on_wm_paint (wparam)
+				on_wm_paint
 			when Wm_forwardmsg then
 				on_forward_message (lparam)
 			else
@@ -586,6 +816,7 @@ feature {NONE} -- Implementation
 		end
 	
 feature {NONE} -- Externals
+
 	Wm_forwardmsg: INTEGER is 895
 
 	ole_lock_running (an_ole_object: POINTER; 
@@ -598,6 +829,13 @@ feature {NONE} -- Externals
 			"OleLockRunning"
 		end
 
+	cwin_is_child (hwnd: POINTER; child_hwnd: POINTER): BOOLEAN is
+			-- SDK IsChild
+		external
+			"C macro signature (HWND, HWND): EIF_BOOLEAN use %"wel.h%" "
+		alias
+			"IsChild"
+		end
 	
 end -- IOLE_IN_PLACE_SITE_WINDOWLESS_IMPL
 

@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			right_list.set_column_titles (<<l_name, l_literal_value, l_status, l_type>>)
 			right_list.resize_actions.force_extend (agent autosize_list_columns)
 			right_list.pointer_double_press_actions.force_extend (agent on_list_double_clicked)
+			right_list.column_title_click_actions.extend (agent column_clicked (?))
 			
 			close_request_actions.extend (agent on_cancel)
 			set_button.select_actions.extend (agent on_set_resource)
@@ -55,6 +56,7 @@ feature {NONE} -- Initialization
 			ok_button.select_actions.extend (agent on_close)
 			restore_button.select_actions.extend (agent on_restore)
 			show	
+			last_selected_column := 1
 		end
 
 	user_initialization is
@@ -269,7 +271,7 @@ feature {NONE} -- Implementation
 				l_sorted_preferences.sort
 				
 					-- Generate a root node
-				create it.make_with_text (root_node_text)
+				create it.make_with_text (formatted_name (root_node_text))
 				if root_icon /= Void then
 					it.set_pixmap (root_icon)
 				end
@@ -277,15 +279,16 @@ feature {NONE} -- Implementation
 				l_pref_hash.put (it, root_node_text)
 				left_list.extend (it)
 				
+					-- Traverse the preferences in the system
 				from
 					l_sorted_preferences.finish
 				until
 					l_sorted_preferences.before
 				loop
-					l_pref_name := l_sorted_preferences.item					
+					l_pref_name := l_sorted_preferences.item
 					l_pref_hash.put (it, l_pref_name)
 					if l_pref_name.has ('.') then
-						  -- Build parent nodes	
+						  -- Build parent nodes	as this preference is of the form 'a.b.c' so we must build 'a' and 'b'.
 						l_pref_parent_full_name := l_pref_name.substring (1, l_pref_name.last_index_of ('.', l_pref_name.count) - 1)
 						if l_pref_parent_full_name.has ('.') then
 							from			
@@ -302,17 +305,17 @@ feature {NONE} -- Implementation
 									l_pref_parent_name.extend ('.')
 								end	
 								l_pref_parent_name.append (l_pref_parent_short_name)	
-								l_index := l_index + 1										
-								create l_parent.make_with_text (l_pref_parent_short_name)
+								l_index := l_index + 1								
+								create l_parent.make_with_text (formatted_name (l_pref_parent_short_name))
 								if folder_icon /= Void then
 									l_parent.set_pixmap (folder_icon)
-								end
-								l_parent.select_actions.extend (agent fill_right_list (l_pref_parent_name))
+								end								
+								l_parent.select_actions.extend (agent fill_right_list (l_pref_parent_name.twin))
 								if not l_pref_hash.has (l_pref_parent_name) then
 									l_pref_hash.put (l_parent, l_pref_parent_name.twin)	
 									if l_prev_parent_name /= Void then																			
 										l_pref_hash.item (l_prev_parent_name).put_front (l_parent)																			
-									else										
+									else
 										l_pref_hash.item (root_node_text).put_front (l_parent)
 									end
 								end																								
@@ -320,23 +323,25 @@ feature {NONE} -- Implementation
 								l_node_count := l_node_count + 1
 							end
 						else
+								-- We reach the end of building parent, so here we build 'a'.
 							if not l_pref_hash.has (l_pref_parent_full_name) then
-								create l_parent.make_with_text (l_pref_parent_full_name)
+								create l_parent.make_with_text (formatted_name (l_pref_parent_full_name))
 									if folder_icon /= Void then
 										l_parent.set_pixmap (folder_icon)
 									end
-								l_parent.select_actions.extend (agent fill_right_list (l_pref_parent_full_name))
+								l_parent.select_actions.extend (agent fill_right_list (l_pref_parent_full_name.twin))
 								l_pref_hash.put (l_parent, l_pref_parent_full_name.twin)						
 								l_pref_hash.item (root_node_text).put_front (l_parent)
+								l_prev_parent_name := Void
 							end		
 						end						
 					elseif not l_pref_hash.has (l_pref_name) then						
 							-- Add as child to root node
-						create it.make_with_text (l_pref_name)
+						create it.make_with_text (formatted_name (l_pref_name))
 						if folder_icon /= Void then
 							it.set_pixmap (folder_icon)
 						end
-						it.select_actions.extend (agent fill_right_list (l_pref_name))
+						it.select_actions.extend (agent fill_right_list (l_pref_name.twin))
 						l_pref_hash.item (root_node_text).put_front (it)
 					end
 					l_sorted_preferences.back
@@ -371,30 +376,33 @@ feature {NONE} -- Implementation
 				if should_display_preference (l_pref_name, a_pref_name) and l_pref_name.count > a_pref_name.count then					
 					l_resource := preferences.resources.item (l_pref_name)
 					
-					check
-						resource_not_void: l_resource /= Void
-					end
-					
-					create it
-					if l_resource.name /= Void then
-						if show_full_resource_name then
-							it.extend (l_resource.name)								
-						else
-							it.extend (formatted_name (short_resource_name (l_resource.name)))
+					if show_hidden_preferences or (not show_hidden_preferences and then not l_resource.is_hidden) then
+
+						check
+							resource_not_void: l_resource /= Void
 						end
-					else
-						it.extend ("")	
+						
+						create it
+						if l_resource.name /= Void then
+							if show_full_resource_name then
+								it.extend (l_resource.name)								
+							else
+								it.extend (formatted_name (short_resource_name (l_resource.name)))
+							end
+						else
+							it.extend ("")	
+						end
+						it.extend (l_resource.string_value)
+						it.set_data (l_resource)
+						if l_resource.is_default_value then						
+							it.extend (default_value)
+						else
+							it.extend (user_value)
+						end
+						it.extend (l_resource.string_type)
+						it.select_actions.extend (agent on_item_selected (l_resource))
+						right_list.extend (it)
 					end
-					it.extend (l_resource.string_value)
-					it.set_data (l_resource)
-					if l_resource.is_default_value then						
-						it.extend (default_value)
-					else
-						it.extend (user_value)
-					end
-					it.extend (l_resource.string_type)
-					it.select_actions.extend (agent on_item_selected (l_resource))
-					right_list.extend (it)
 				end
 				l_names.forth
 			end
@@ -507,6 +515,66 @@ feature {NONE} -- Implementation
 			Result.replace_substring (Result.item (1).upper.out, 1, 1)
 		end		
 	
+	column_clicked (a_column: INTEGER) is
+			-- Called by `column_title_click_actions' of `right_list'.
+		do
+			perform_sort (a_column)
+		end
+		
+	perform_sort (a_column: INTEGER) is
+			-- Perform sort of information displayed in `constants_list',
+			-- sorted by column index `a_column', 
+		local
+			sorter: DS_ARRAY_QUICK_SORTER [EV_MULTI_COLUMN_LIST_ROW]
+			comparator: MULTI_COLUMN_LIST_ROW_STRING_COMPARATOR
+			l_preferences: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+		do
+			if last_selected_column = a_column then
+					-- Reverse the sort if this column has already been clicked.
+				reverse_sort := not reverse_sort
+			else
+				reverse_sort := False
+			end
+			last_selected_column := a_column
+
+				-- Lock window updates, and display a wait cursor.
+			right_list.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)			
+			
+			create l_preferences.make (right_list.count)
+				-- Place all items in `l_preferences' ready for sorting.
+			from
+				right_list.start
+			until
+				right_list.count = l_preferences.count
+			loop
+				l_preferences.force (right_list.i_th (l_preferences.count + 1))
+			end
+			
+				-- Initialize `sorter' and `comparator'
+			create comparator
+			comparator.set_sort_column (a_column)
+			create sorter.make (comparator)
+			if reverse_sort then
+				sorter.reverse_sort (l_preferences)	
+			else
+				sorter.sort (l_preferences)
+			end
+	
+				-- Clear `constants_list' and rebuild rows in sorted order.		
+			right_list.wipe_out
+			from
+				l_preferences.start
+			until
+				l_preferences.off
+			loop
+				right_list.extend (l_preferences.item)
+				l_preferences.forth
+			end
+			
+				-- Restore cursor.
+			left_list.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
+		end
+	
 feature {NONE} -- Private attributes
 
 	show_full_resource_name: BOOLEAN
@@ -526,6 +594,12 @@ feature {NONE} -- Private attributes
 	root_icon: EV_PIXMAP
 	
 	folder_icon: EV_PIXMAP
+	
+	last_selected_column: INTEGER
+		-- Last column selected by user.
+	
+	reverse_sort: BOOLEAN
+		-- Should sort opertion be reversed?
 
 invariant
 	has_preferences: preferences /= Void

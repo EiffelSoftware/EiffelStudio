@@ -41,6 +41,21 @@ feature -- Access
 			has_result_if_known: resource_widgets.has (a_resource.generating_resource_type) implies Result /= Void
 		end
 
+feature -- Query
+
+	show_hidden_preferences: BOOLEAN
+			-- Should preferences marked as hidden by visible in this view?		
+
+feature -- Status Setting
+
+	set_show_hidden_preferences (a_flag: BOOLEAN) is
+			-- Set `show_hidden_preferences'.
+		do
+			show_hidden_preferences := a_flag
+		ensure
+			value_set: show_hidden_preferences = a_flag
+		end		
+
 feature -- Commands
 
 	register_resource_widget (a_resource_widget: PREFERENCE_WIDGET) is

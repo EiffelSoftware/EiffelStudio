@@ -230,8 +230,8 @@ feature -- Resource
 		
 feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW} -- Implementation
 
-	default_values: HASH_TABLE [TUPLE [STRING, STRING], STRING] is
-			-- Hash table of known preference default values.  [[Description, Value], Name].
+	default_values: HASH_TABLE [TUPLE [STRING, STRING, BOOLEAN], STRING] is
+			-- Hash table of known preference default values.  [[Description, Value, Hidden], Name].
 		once
 			create Result.make (2)
 		ensure
@@ -316,6 +316,7 @@ feature {NONE} -- Implementation
 			pref_name, 
 			pref_description,
 			pref_value: STRING
+			pref_hidden,
 			retried: BOOLEAN
 		do
 			if not retried then				
@@ -338,13 +339,21 @@ feature {NONE} -- Implementation
 										-- No description specified
 									pref_description := ""
 								end
+								
+								l_attribute := node.attribute_by_name ("HIDDEN")
+								if l_attribute /= Void then
+									pref_hidden := l_attribute.value.as_lower.is_equal ("true")
+								else
+									pref_hidden := False
+								end
+								
 								if node.elements /= Void and then not node.elements.is_empty then								
 									sub_node := node.elements.item (1)	
 								
 									if sub_node /= Void then
 										-- Found preference default value								
 										pref_value := sub_node.text									
-										default_values.put ([pref_description, pref_value], pref_name)
+										default_values.put ([pref_description, pref_value, pref_hidden], pref_name)
 									end
 								end
 							end

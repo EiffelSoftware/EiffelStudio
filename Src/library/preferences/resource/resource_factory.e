@@ -26,6 +26,7 @@ feature -- Commands
 			l_fullname,
 			l_value,
 			l_desc: STRING
+			l_hidden: BOOLEAN_REF
 		do		
 			l_fullname := a_name					
 			if preferences.session_values.has (l_fullname) then				
@@ -38,7 +39,9 @@ feature -- Commands
 				if l_value = Void then
 					l_value := ""
 				end
-				create Result.make_from_string_value (a_manager, a_name, l_value)		
+				create Result.make_from_string_value (a_manager, a_name, l_value)
+				l_hidden ?= preferences.default_values.item (l_fullname).item (3)
+				Result.set_hidden (l_hidden.item)
 			else				
 					-- Create with `a_value'.
 				create Result.make (a_manager, a_name, a_fallback_value)

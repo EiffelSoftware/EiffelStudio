@@ -12,9 +12,26 @@ deferred class
 
 inherit
 	EV_ITEM_LIST [EV_MENU_ITEM]
+		redefine
+			create_action_sequences
+		end
 
-	--| FIXME redefine add-functions of itemlist since the submenu's may
-	--| not have a parent yet.
+feature {NONE} -- Initialization
+
+	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
+		do
+			{EV_ITEM_LIST} Precursor
+			create item_select_actions
+		end
+
+feature -- Event handling
+
+	item_select_actions: EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
+			-- Actions to be performed when a menu item is selected.
+
+invariant
+	item_select_actions_not_void: is_useable implies item_select_actions /= Void
 
 end -- class EV_MENU_ITEM_LIST
 
@@ -39,6 +56,10 @@ end -- class EV_MENU_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/22 21:34:12  brendel
+--| Moved item_select_actions up to menu item list, because it also
+--| applies to menu bars.
+--|
 --| Revision 1.5  2000/03/17 23:50:41  oconnor
 --| formatting
 --|

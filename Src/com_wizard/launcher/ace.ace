@@ -1,0 +1,31 @@
+system
+	"com_wizard_launcher"
+
+root
+	ROOT_CLASS: make
+
+default
+	assertion (require)
+	console_application (no)
+
+cluster
+	root_cluster:		"$EIFFEL_SRC\com_wizard\com_wizard_launcher"
+
+	library base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; 
+		end
+
+	library wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"CVS"; "Clib"; 
+		end
+
+external
+	include_path:
+		"$EIFFEL_SRC\library\wel\spec\windows\include"
+
+	object:
+		"E:\library\wel\spec\msc\lib\wel.lib"
+
+end

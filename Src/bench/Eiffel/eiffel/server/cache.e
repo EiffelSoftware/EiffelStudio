@@ -19,16 +19,18 @@ feature -- Initialisation
 		local
 			i: INTEGER
 			array: ARRAY [H_CELL[T]]
+			s: INTEGER
 		do
-			size := Cache_size
+			s := Cache_size
 			count := 0
-			make_area (size)
-			!! array_count.make (0, size - 1)
-			!! history.make (size)
-			!! index.make (0, size - 1)
+			size := s
+			make_area (s)
+			!! array_count.make (0, s - 1)
+			!! history.make (s)
+			!! index.make (0, s - 1)
 			from 
 			until
-				i = size
+				i = s
 			loop
 				!! array.make (1, 5)
 				area.put (array, i)

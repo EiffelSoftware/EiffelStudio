@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			-- Get class id from database and fills its name.
 		require
 			string_not_void: a_class_name /= Void
-			string_not_empty: not a_class_name.empty
+			string_not_empty: not a_class_name.is_empty
 		local
 			class_name_to_c: ANY
 		do

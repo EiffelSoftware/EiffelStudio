@@ -23,7 +23,7 @@ feature {MT_ENTRYPOINT} -- Implementation
 			-- Open Stream.
 		require
 			index_name_not_void: index_name /= Void
-			index_name_not_empty: not index_name.empty
+			index_name_not_empty: not index_name.is_empty
 			direction_is_direct_or_reverse: direction = Mt_Direct or else direction = Mt_Reverse
 			index_criteria_supplied: crit_start_array /= Void and crit_end_array /= Void
 		local

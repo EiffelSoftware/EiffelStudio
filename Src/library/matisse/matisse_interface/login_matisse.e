@@ -12,7 +12,7 @@ feature -- Status setting
 			-- Set host name and database name before connection becomes possible.
 		 require
 			arguments_not_void: h_name /= Void and d_name /= Void
-			arguments_not_empty: not ( h_name.empty or d_name.empty)
+			arguments_not_empty: not ( h_name.is_empty or d_name.is_empty)
 		do
 			host_name := clone (h_name)
 			database_name := clone (d_name)

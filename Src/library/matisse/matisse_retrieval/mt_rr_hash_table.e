@@ -147,7 +147,7 @@ feature {MT_HASH_TABLE} -- Loading & storing successors
 					if has_default_att.get_boolean (Current) then
 						!! rel.make_from_names ("void_key_obj_value", "HASH_TABLE")
 						succ ?= successors (rel)
-						if succ.empty then
+						if succ.is_empty then
 							ht_force (default_value, default_key)
 						else
 							ht_force (succ.item (succ.lower), default_key)

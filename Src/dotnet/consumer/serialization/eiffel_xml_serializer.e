@@ -44,7 +44,7 @@ feature -- Basic Operations
 			retried: BOOLEAN
 			r: SYSTEM_RANDOM
 		do
-			create serialized_references.make
+			create serialized_references.make_1 (25)
 			last_error := No_error
 			last_error_context := Void
 			if not retried then
@@ -233,13 +233,14 @@ feature {NONE} -- Implementation
 			valid_tab_count: tab_count >= 0
 			non_void_file: f /= Void
 		local
-			i: INTEGER
+			i, nb, dtype: INTEGER
 		do
-			if serialized_references.has (obj) then
+			if serialized_references.contains (obj) then
 				last_error := Cycle_error
 				last_error_context := "Field " + obj.generating_type + " with value " + obj.out
 			else
-				serialized_references.extend (obj)
+				serialized_references.add (obj, obj)
+				dtype := dynamic_type (obj)
 				write_tabs (f, tab_count)
 				f.write_string (Open_reference_field)
 				f.write_string (parent_field.to_cil)
@@ -251,10 +252,11 @@ feature {NONE} -- Implementation
 				f.write_string (New_line)
 				from
 					i := 2
+					nb := field_count_of_type (dtype)
 				until
-					i > field_count (obj)
+					i > nb
 				loop
-					internal_serialize (field_name (i, obj), field (i, obj), tab_count + 1, f)						
+					internal_serialize (field_name_of_type (i, dtype), field_of_type (i, obj, dtype), tab_count + 1, f)						
 					i := i + 1
 				end
 				write_tabs (f, tab_count)
@@ -268,7 +270,7 @@ feature {NONE} -- Implementation
 			Result := ("<?xml version=%"1.0%"?>%N").to_cil	
 		end
 	
-	serialized_references: LINKED_LIST [ANY]
+	serialized_references: HASHTABLE
 			-- Serialized object references
 	
 	write (name: STRING; a: ANY; prefix_text, suffix: SYSTEM_STRING; tab_count: INTEGER; f: TEXT_WRITER) is

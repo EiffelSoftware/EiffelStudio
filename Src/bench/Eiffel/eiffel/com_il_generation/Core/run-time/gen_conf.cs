@@ -42,10 +42,8 @@ public class GENERIC_CONFORMANCE {
 		TYPE a_type,
 		EIFFEL_TYPE_INFO a_current
 	)
-		// Give an Eiffel generated object type `obj' and its associated type array
-		// information `type_array' generate if not yet done a new EIFFEL_DERIVATION
-		// object and assign it to `obj'. We use `current' in case some research needs
-		// to be done in current context.
+		// Create new instance of `a_type' in context of `a_current' object.
+		// Handles creation of class type as well as creation of formal generic parameter.
 	{
 		CLASS_TYPE type_to_create;
 		GENERIC_TYPE computed_type;
@@ -63,7 +61,7 @@ public class GENERIC_CONFORMANCE {
 
 			// Properly initializes `Result'.
 		if (type_to_create is GENERIC_TYPE) {
-			computed_type = (GENERIC_TYPE) a_type.evaluated_type (a_current);
+			computed_type = (GENERIC_TYPE) type_to_create;
 			derivation = new EIFFEL_DERIVATION (computed_type, computed_type.nb_generics,
 				(CLASS_TYPE []) computed_type.type_array);
 			Result.____set_type (derivation);

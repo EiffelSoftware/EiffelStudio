@@ -13,7 +13,9 @@
 
 #include "eif_config.h"
 #include "eif_portable.h"	/* must come before <stdlib.h> for VMS */
-
+#ifdef VXWORKS
+#include <envLib.h>
+#endif
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

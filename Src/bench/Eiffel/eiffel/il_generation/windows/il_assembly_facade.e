@@ -78,12 +78,14 @@ feature -- Cursor Movement
 		require
 			exists: exists
 		do
+			pos := pos + 1
 			if not after then
-				pos := pos + 1
 				item := assemblies.i_th (pos)
+			else
+				item := Void
 			end
 		ensure
-			moved: not old after implies old pos = pos - 1
+			moved: pos = old pos + 1
 		end
 
 	go_i_th (i_th: INTEGER) is
@@ -101,7 +103,7 @@ feature -- Status Report
 		require
 			exists: exists
 		do
-			Result := (pos + 1) = (assemblies.count - 1)
+			Result := pos = assemblies.count
 		end
 		
 	signed (a_loc: STRING): BOOLEAN is

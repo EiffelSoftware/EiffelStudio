@@ -203,7 +203,7 @@ Class_declaration:
 	;
 
 Pushing_id:
-	TE_ID
+		TE_ID
 		{
 		$$ = click_list_push ();
 		click_list_set (create_id (token_str), $$);
@@ -306,7 +306,9 @@ Feature_clause:
 Clients: /* empty */	
 			{$$ = NULL;}
 	|	 Client_list
-			{$$ = create_node1(CLIENT_AS,$1);}
+			{
+			$$ = create_node1(CLIENT_AS,$1);
+			}
 	;
 
 Client_list:			TE_LCURLY TE_RCURLY
@@ -1076,7 +1078,8 @@ Creation_clause:			TE_CREATION
 	|						TE_CREATION Client_list 
 								{
 									$$ = create_node1(CLIENT_AS,$2);
-									$$ = create_node2(CREATE_AS,$$,NULL);								}
+									$$ = create_node2(CREATE_AS,$$,NULL);
+								}
 	;
 
 Creation:					TE_BANG Creation_type TE_BANG Creation_target Creation_call
@@ -1260,10 +1263,16 @@ Call_on_precursor:			A_precursor TE_DOT Remote_call
 
 A_precursor:				TE_PRECURSOR Parameters
 								{$$ = create_node2(PRECURSOR_AS,NULL,$2);}
-	|						TE_LCURLY Identifier TE_RCURLY TE_PRECURSOR Parameters
-								{$$ = create_node2(PRECURSOR_AS,$2,$5);}
-	|						TE_LCURLY TE_LCURLY Identifier TE_RCURLY TE_RCURLY TE_PRECURSOR Parameters
-								{$$ = create_node2(PRECURSOR_AS,$3,$7);}
+	|						TE_LCURLY Pushing_id TE_RCURLY TE_PRECURSOR Parameters
+								{
+								$$ = create_node2(PRECURSOR_AS,click_list_elem ($<value>2),$5);
+								click_list_set ($$, $<value>2);
+								}
+	|						TE_LCURLY TE_LCURLY Pushing_id TE_RCURLY TE_RCURLY TE_PRECURSOR Parameters
+								{
+								$$ = create_node2(PRECURSOR_AS,click_list_elem ($<value>3),$7);
+								click_list_set ($$, $<value>3);
+								}
 	;
 
 Remote_call:				Call_on_feature_access
@@ -1325,7 +1334,7 @@ Manifest_expression_list:	/* empty */
  * etc
  */
 
-Identifier:				TE_ID
+Identifier:		TE_ID
 				{
 				$$ = create_id(token_str);
 				}

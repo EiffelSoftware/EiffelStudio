@@ -113,6 +113,7 @@ feature -- Access
 				internal_method.get_is_static,
 				internal_method.get_is_abstract,
 				internal_method.get_is_public,
+				is_property_or_event,
 				referenced_type_from_type (internal_method.get_declaring_type))		
 		end
 	
@@ -133,6 +134,7 @@ feature -- Access
 				is_infix,
 				is_prefix,
 				internal_method.get_is_public,
+				is_property_or_event,
 				referenced_type_from_type (internal_method.get_declaring_type))			
 		end
 		
@@ -163,6 +165,26 @@ feature {METHOD_SOLVER} -- Implementation
 
 feature {NONE} -- Implementation
 
+	is_property_or_event: BOOLEAN is
+			-- Is `internal_method' a property or event related feature?
+		require
+			non_void_internal_method: internal_method /= Void
+		do
+			Result := internal_method.get_is_special_name and (
+				dotnet_name.substring_index ("set_", 1) = 1 or
+				dotnet_name.substring_index ("get_", 1) = 1 or
+				dotnet_name.substring_index ("add_", 1) = 1 or
+				dotnet_name.substring_index ("remove_", 1) = 1 or
+				dotnet_name.substring_index ("raise_", 1) = 1)
+		ensure
+			definition: Result implies internal_method.get_is_special_name and (
+					dotnet_name.substring_index ("set_", 1) = 1 or
+					dotnet_name.substring_index ("get_", 1) = 1 or
+					dotnet_name.substring_index ("add_", 1) = 1 or
+					dotnet_name.substring_index ("remove_", 1) = 1 or
+					dotnet_name.substring_index ("raise_", 1) = 1)
+		end
+		
 	Void_type: TYPE is
 			-- Void .NET type
 		once

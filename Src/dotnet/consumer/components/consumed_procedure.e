@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (en, dn: STRING; args: like arguments; froz, static, defer, pub: BOOLEAN;
+	make (en, dn: STRING; args: like arguments; froz, static, defer, pub, poe: BOOLEAN;
 			a_type: CONSUMED_REFERENCED_TYPE)
 		is
 			-- Initialize consumed method.
@@ -41,6 +41,9 @@ feature {NONE} -- Initialization
 			if defer then
 				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_deferred
 			end
+			if poe then
+				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_property_or_event				
+			end
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
@@ -49,6 +52,7 @@ feature {NONE} -- Initialization
 			is_static_set: is_static = static
 			is_deferred_set: is_deferred = defer
 			is_public_set: is_public = pub
+			is_property_or_event_set: is_property_or_event = poe
 			declared_type_set: declared_type = a_type
 		end
 		

@@ -21,7 +21,7 @@ create
 feature {NONE} -- Initialization
 
 	make (t: TYPE; en: STRING) is
-			-- Initialize type consumer for `type' with eiffel name `en'.
+			-- Initialize type consumer for type `t' with eiffel name `en'.
 		require
 			non_void_type: t /= Void
 			non_void_eiffel_name: en /= Void
@@ -93,6 +93,13 @@ feature {NONE} -- Initialization
 					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
 					feature {BINDING_FLAGS}.non_public)
 			end
+			
+			internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
+					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+			internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
+					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
 			internal_constructors := t.get_constructors
 			internal_referenced_type := referenced_type_from_type (t)
 		ensure
@@ -116,7 +123,8 @@ feature -- Basic Operation
 
 	initialize is
 			-- Initialize `consumed_type.functions', `consumed_type.procedures',
-			-- `consumed_type.fields' and `consumed_type.constructors'.
+			-- `consumed_type.fields', `consumed_type.constructors',
+			-- `consumed_type.properties' and `consumed_type.events'.
 		require
 			not_initialized: not initialized
 		local
@@ -130,6 +138,8 @@ feature -- Basic Operation
 			member: MEMBER_INFO	
 			overload_solver: OVERLOAD_SOLVER
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]
+			l_events: ARRAY [CONSUMED_EVENT]
+			l_properties: ARRAY [CONSUMED_PROPERTY]
 		do
 			check
 				non_void_internal_members: internal_members /= Void
@@ -180,6 +190,30 @@ feature -- Basic Operation
 				i := i + 1
 			end
 
+			from
+				i := 0
+				nb := internal_properties.count
+				create l_properties.make (1, internal_properties.count)
+			until
+				i = nb
+			loop
+				l_properties.put (consumed_property (internal_properties.item (i)), i + 1)
+				i := i + 1
+			end
+
+			from
+				i := 0
+				nb := internal_events.count
+				create l_events.make (1, internal_events.count)
+			until
+				i = nb
+			loop
+				l_events.put (consumed_event (internal_events.item (i)), i + 1)
+				i := i + 1
+			end
+
+			consumed_type.set_properties (l_properties)
+			consumed_type.set_events (l_events)
 			consumed_type.set_constructors (solved_constructors (tc))
 			consumed_type.set_fields (fields)
 			overload_solver.set_reserved_names (reserved_names)
@@ -210,6 +244,8 @@ feature -- Basic Operation
 			non_void_fields: consumed_type.fields /= Void
 			non_void_procedures: consumed_type.procedures /= Void
 			non_void_functions: consumed_type.functions /= Void
+			non_void_properties: consumed_type.properties /= Void
+			non_void_events: consumed_type.events /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -253,6 +289,84 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	consumed_property (info: PROPERTY_INFO): CONSUMED_PROPERTY is
+			-- Process property `info'.
+		require
+			non_void_property_info: info /= Void
+		local
+			dotnet_name: STRING
+		do
+			create dotnet_name.make_from_cil (info.get_name)
+			create Result.make (
+				formatted_feature_name (dotnet_name),
+				dotnet_name,
+				True,
+				info.get_can_read,
+				info.get_can_write,
+				referenced_type_from_type (info.get_property_type),
+				referenced_type_from_type (info.get_declaring_type))				
+		ensure
+			non_void_property: Result /= Void
+		end
+		
+	consumed_event (info: EVENT_INFO): CONSUMED_EVENT is
+			-- Process event `info'.
+		require
+			non_void_event_info: info /= Void
+		local
+			l_add_method, l_remove_method, l_raise_method: METHOD_INFO
+			dotnet_name: STRING
+			l_raiser: CONSUMED_PROCEDURE
+			l_args: ARRAY [CONSUMED_ARGUMENT]
+			l_dotnet_args: NATIVE_ARRAY [PARAMETER_INFO]
+			i, nb: INTEGER
+		do
+			l_add_method := info.get_add_method
+			l_remove_method := info.get_remove_method
+			l_raise_method := info.get_raise_method
+			if l_raise_method /= Void then
+				l_dotnet_args := l_raise_method.get_parameters
+				nb := l_dotnet_args.get_length
+				create l_args.make (1, nb + 1)
+				from
+					i := 0
+				until
+					i = nb
+				loop
+					create dotnet_name.make_from_cil (l_dotnet_args.item (i).get_name)
+					l_args.put (create {CONSUMED_ARGUMENT}.make (
+									dotnet_name,
+									formatted_variable_name (dotnet_name),
+									referenced_type_from_type (l_dotnet_args.item (i).get_parameter_type),
+									False), i + 1)
+					i := i + 1
+				end
+				create dotnet_name.make_from_cil (l_raise_method.get_name)
+				create l_raiser.make (
+					formatted_feature_name (dotnet_name),
+					dotnet_name,
+					l_args,
+					l_raise_method.get_is_final,
+					l_raise_method.get_is_static,
+					l_raise_method.get_is_abstract,
+					l_raise_method.get_is_public,
+					True,
+					referenced_type_from_type (l_raise_method.get_declaring_type))
+			end
+			create dotnet_name.make_from_cil (info.get_name)
+			create Result.make (
+				formatted_feature_name (dotnet_name),
+				dotnet_name,
+				True,
+				(l_add_method /= Void),
+				(l_remove_method /= Void),
+				referenced_type_from_type (l_add_method.get_parameters.item (0).get_parameter_type),
+				l_raiser,
+				referenced_type_from_type (info.get_declaring_type))
+		ensure
+			non_void_event: Result /= Void
+		end
+		
 	solved_constructors (
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]): ARRAY [CONSUMED_CONSTRUCTOR]
 		is
@@ -346,6 +460,12 @@ feature {NONE} -- Implementation
 		
 	internal_members: NATIVE_ARRAY [MEMBER_INFO]
 			-- Type members used to initialize `features'
+
+	internal_properties: NATIVE_ARRAY [PROPERTY_INFO]
+			-- Properties from type and parents
+
+	internal_events: NATIVE_ARRAY [EVENT_INFO]
+			-- Events from type and parents
 
 	internal_constructors: NATIVE_ARRAY [CONSTRUCTOR_INFO]
 			-- Constructors of .NET type
@@ -454,6 +574,7 @@ feature {NONE} -- Added features for ENUM types.
 				True,	-- is_infix
 				False,	-- is_prefix
 				True,	-- is_public
+				False,	-- is_property_or_event
 				enum_type)
 			Result.set_is_artificially_added (True)				
 		end
@@ -475,6 +596,7 @@ feature {NONE} -- Added features for ENUM types.
 				True,	-- is_infix
 				False,	-- is_prefix
 				True,	-- is_public
+				False,	-- is_property_or_event
 				enum_type)
 			Result.set_is_artificially_added (True)
 		end
@@ -494,6 +616,7 @@ feature {NONE} -- Added features for ENUM types.
 				True,	-- is_infix
 				False,	-- is_prefix
 				True,	-- is_public
+				False,	-- is_property_or_event
 				enum_type)
 			Result.set_is_artificially_added (True)				
 		end

@@ -196,10 +196,15 @@ feature -- Element Settings
 
 	add_method (meth: METHOD_INFO) is
 			-- Include `meth' in overload solving process.
+			-- Remove `get_' for properties getters.
 		local
 			name: STRING
 		do
-			create name.make_from_cil (meth.get_name)
+			if meth.get_is_special_name and meth.get_name.starts_with (("get_").to_cil) then
+				create name.make_from_cil (meth.get_name.substring (4))
+			else
+				create name.make_from_cil (meth.get_name)
+			end
 			method_table.search (name)
 			if not method_table.found then
 				method_table.put (create {SORTED_TWO_WAY_LIST [METHOD_SOLVER]}.make, name)

@@ -12,7 +12,7 @@ inherit
 			make as entity_make
 		redefine
 			dotnet_name,
-			is_static, is_deferred, is_public, is_artificially_added,
+			is_static, is_deferred, is_public, is_artificially_added, is_property_or_event,
 			set_is_public
 		end
 
@@ -77,7 +77,14 @@ feature -- Status report
 			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_artificially_added =
 				feature {FEATURE_ATTRIBUTE}.Is_artificially_added
 		end
-				
+	
+	is_property_or_event: BOOLEAN is
+			-- Is feature property or event related?
+		do
+			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_property_or_event =
+				feature {FEATURE_ATTRIBUTE}.Is_property_or_event
+		end
+		
 feature -- Settings
 
 	set_is_public (pub: like is_public) is

@@ -78,7 +78,13 @@ feature -- Access
 
 	interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
 			-- Implemented interfaces
-			
+	
+	properties: ARRAY [CONSUMED_PROPERTY]
+			-- Properties
+	
+	events: ARRAY [CONSUMED_EVENT]
+			-- Events
+
 	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All constructors, fields, procedures and functions implemented by type.
 		require
@@ -168,6 +174,26 @@ feature {TYPE_CONSUMER} -- Element settings
 			constructors_set: constructors = cons
 		end
 
+	set_properties (prop: like properties) is
+			-- Set `properties' with `prop'.
+		require
+			non_void_properties: prop /= Void
+		do
+			properties := prop
+		ensure
+			properties_set: properties = prop
+		end
+	
+	set_events (ev: like events) is
+			-- Set `events' with `ev'.
+		require
+			non_void_events: ev /= Void
+		do
+			events := ev
+		ensure
+			events_set: events = ev
+		end
+		
 feature {NONE} -- Internal
 
 	internal_flags: INTEGER

@@ -503,7 +503,6 @@ feature -- Removal
 			index := count + 1
 		end;
 		
-				
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is

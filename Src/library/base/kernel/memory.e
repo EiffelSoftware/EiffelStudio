@@ -128,7 +128,6 @@ feature -- Status setting
 			gc_monitoring (false);
 		end;
 
-
 	set_memory_threshold (value: INTEGER) is
 			-- Set a new `memory_threshold'.
 		require
@@ -139,7 +138,6 @@ feature -- Status setting
 			"mem_tset"
 		end;
 	
-
 	set_collection_period (value: INTEGER) is
 			-- Set `collection_period'.
 		require
@@ -149,7 +147,6 @@ feature -- Status setting
 		alias
 			"mem_pset"
 		end;
-
 
 feature -- Removal
 
@@ -204,7 +201,6 @@ feature -- Removal
 			"plsc"
 		end;
 
-	
 feature {NONE} -- Implementation
 
 	gc_monitoring (flag: BOOLEAN) is

@@ -20,7 +20,6 @@ feature -- Access
 			Result := log (v)/ log (2.0)
 		end;
  
-
 	cosine (v: REAL): REAL is
 			-- Trigonometric cosine of radian `v' approximated
 			-- in the range [-pi/4, +pi/4]

@@ -94,7 +94,7 @@ feature -- Basic operations
 			correct_zero: (n = 0) = (Result = 0);
 			correct_positive: (n > 0) = (Result = +1)
 		end;
-		
+
 	max (n1, n2: INTEGER): INTEGER is
 			-- Maximum of `n1' and `n2'
 		obsolete "Replace max (a, b) with a.max (b)"
@@ -129,7 +129,7 @@ feature -- Basic operations
 			correct_zero: (r = 0) = (Result = 0);
 			correct_positive: (r > 0) = (Result = +1)
 		end;
-		
+
 	rmax (r1, r2: REAL): REAL is
 			-- Maximum of `r1' and `r2'
 		obsolete "Replace rmax (a, b) with a.max (b)"
@@ -155,7 +155,7 @@ feature -- Basic operations
 		alias
 			"bointdiv"
 		end;
-	
+
 	up_int_div (n1, n2: INTEGER): INTEGER is
 			-- Least upper bound of the integer division
 			-- of `n1' by `n2'

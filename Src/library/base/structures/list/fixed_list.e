@@ -97,7 +97,6 @@ feature -- Access
 			Result := area.item (index - 1)
 		end;
 		
-		
 	first: G is
             -- Item at first position
 		do

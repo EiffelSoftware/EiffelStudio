@@ -66,8 +66,6 @@ feature -- Access
 			lastentry := dir_next (directory_pointer);
 		end;
 
-	
-
 	name: STRING;
 			-- Directory name
 

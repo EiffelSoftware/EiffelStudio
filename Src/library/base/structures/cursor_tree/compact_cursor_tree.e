@@ -452,7 +452,6 @@ feature -- Element change
 			end
 		end;
 
-			
 	extend (v: G) is
 		local
 			new, index, next: INTEGER;

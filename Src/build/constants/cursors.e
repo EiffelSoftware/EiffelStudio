@@ -9,57 +9,57 @@ feature
 
 	Application_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("application.curs")
+			Result := cursor_file_content ("applictn.cur")
 		end;
 
 	Behavior_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("behavior.curs")
+			Result := cursor_file_content ("behavior.cur")
 		end;
 
 	Color_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("color.curs")
+			Result := cursor_file_content ("color.cur")
 		end;
 
 	Command_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("command.curs")
+			Result := cursor_file_content ("command.cur")
 		end;
 
 	Command_instance_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("cmd_instance.curs")
+			Result := cursor_file_content ("cmd_inst.cur")
 		end;
 
 	Context_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("context.curs")
+			Result := cursor_file_content ("context.cur")
 		end;
 
 	Event_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("event.curs")
+			Result := cursor_file_content ("event.cur")
 		end;
 
 	Label_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("label.curs")
+			Result := cursor_file_content ("label.cur")
 		end;
 
 	State_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("state.curs")
+			Result := cursor_file_content ("state.cur")
 		end;
 
 	Transition_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("transition.curs")
+			Result := cursor_file_content ("transitn.cur")
 		end;
 
 	Type_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("type.curs")
+			Result := cursor_file_content ("type.cur")
 		end;
 
 feature -- Context Cursors
@@ -134,12 +134,19 @@ feature {NONE}
 			!! p.make;
 			p.read_from_file (full_name);
 			!! Result.make;
-			if p.is_valid then
-				Result.set_pixmap (p, p);
+			if full_name.is_valid then
+				if p.is_valid then
+					Result.set_pixmap (p, p);
+				else
+					io.error.putstring ("EiffelBuild: Can not read bitmap file%N");
+					io.error.putstring (full_name);
+					io.error.putstring (".%N");
+				end
 			else
-				io.error.putstring ("EiffelBuild: Can not read bitmap file%N");
+				io.error.putstring ("Warning: ");
 				io.error.putstring (full_name);
-				io.error.putstring (".%N");
+				io.error.putstring (" is an invalid file name.");
+				io.error.new_line;
 			end;
 		end
 

@@ -29,62 +29,47 @@ extern "C" {
 
 namespace ecom_control_library 
 {
-	typedef ecom_control_library::_userCLIPFORMAT * wireCLIPFORMAT;
+  typedef ecom_control_library::_userCLIPFORMAT * wireCLIPFORMAT;
 }
 
 namespace ecom_control_library 
 {
-	typedef ecom_control_library::_userSTGMEDIUM * wireASYNC_STGMEDIUM;
+  typedef void * wireHACCEL;
 }
 
 namespace ecom_control_library 
 {
-	typedef ecom_control_library::_userSTGMEDIUM * wireSTGMEDIUM;
+  typedef void * wireHWND;
 }
 
 namespace ecom_control_library 
 {
-	typedef ecom_control_library::_userFLAG_STGMEDIUM * wireFLAG_STGMEDIUM;
+  typedef void * wireHMENU;
 }
 
 namespace ecom_control_library 
 {
-	typedef void * wireHACCEL;
+  typedef ecom_control_library::_userHGLOBAL * wireHGLOBAL;
 }
 
 namespace ecom_control_library 
 {
-	typedef void * wireHWND;
+  typedef void * wireHDC;
 }
 
 namespace ecom_control_library 
 {
-	typedef void * wireHMENU;
+  typedef ecom_control_library::tagRemSNB * wireSNB;
 }
 
 namespace ecom_control_library 
 {
-	typedef ecom_control_library::_userHGLOBAL * wireHGLOBAL;
+  typedef ULONG DWORD1;
 }
 
 namespace ecom_control_library 
 {
-	typedef void * wireHDC;
-}
-
-namespace ecom_control_library 
-{
-	typedef ecom_control_library::tagRemSNB * wireSNB;
-}
-
-namespace ecom_control_library 
-{
-	typedef ULONG DWORD1;
-}
-
-namespace ecom_control_library 
-{
-	typedef ecom_control_library::_userHPALETTE * wireHPALETTE;
+  typedef ecom_control_library::_userHPALETTE * wireHPALETTE;
 }
 #ifdef __cplusplus
 }

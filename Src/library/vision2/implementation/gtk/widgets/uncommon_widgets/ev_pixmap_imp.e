@@ -213,6 +213,13 @@ feature -- Element change
 			data_type = Loadpixmap_rgb_data
 		local
 			gdkpix, gdkmask: POINTER
+			i, j: INTEGER
+			pix: CHARACTER
+			p, pixp: POINTER
+			bitmap: POINTER
+			maskgc: POINTER
+			color: POINTER
+			bool: BOOLEAN
 		do
 			if error_code /= Loadpixmap_error_noerror then
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
@@ -234,6 +241,37 @@ feature -- Element change
 				rgb_data,
 				pixmap_width * 3
 			)
+			gdkmask := C.gdk_pixmap_new (
+				NULL,
+				pixmap_width,
+				pixmap_height,
+				1	
+			)
+			maskgc := C.gdk_gc_new (gdkmask)
+			check maskgc /= NULL end
+			C.gdk_draw_rectangle (gdkmask, maskgc, 1, 0, 0, pixmap_width, pixmap_height)
+
+			color := C.c_gdk_color_struct_allocate
+			bool := C.gdk_color_white (system_colormap, color)
+			C.gdk_gc_set_foreground (maskgc, color)
+
+			p := alpha_data
+			pixp := p2p ($pix)
+			from i := 0 until i >= pixmap_height loop
+				from j := 0 until j >= pixmap_width loop
+					pixp.memory_copy (p, 1)
+					if pix.code > 0 then
+						C.gdk_draw_point (gdkmask, maskgc, j, i)
+					else 
+					end
+					p := p + 1
+					j := j + 1
+				end
+				i := i + 1
+			end
+
+			C.gdk_gc_destroy (maskgc)
+			C.c_gdk_color_struct_free (color)
 			set_pixmap (gdkpix, gdkmask)
 		end
 
@@ -263,6 +301,7 @@ feature -- Element change
 
 			C.c_gdk_color_struct_free (fg)
 			C.c_gdk_color_struct_free (bg)
+			
 			set_pixmap (gdkpix, gdkmask)
 		end	
 
@@ -411,6 +450,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/14 16:53:50  oconnor
+--| initial implementation of loading mask for pixmap
+--|
 --| Revision 1.29  2000/04/12 18:53:43  oconnor
 --| removed obsolete ref to EV_COMPOSED_ITEM_IMP
 --|

@@ -85,7 +85,13 @@ feature {NONE}-- Initialization
 			create l_cell_3
 			create l_horizontal_box_5
 			create test_class_display
+			create flat_short_display_parent
 			create flat_short_display
+			create l_frame_1
+			create l_horizontal_box_6
+			create search_field
+			create search_button
+			create match_case_button
 			
 				-- Build_widget_structure.
 			set_menu_bar (l_menu_bar_1)
@@ -147,7 +153,13 @@ feature {NONE}-- Initialization
 			l_vertical_box_6.extend (l_cell_3)
 			l_vertical_split_area_1.extend (l_horizontal_box_5)
 			l_horizontal_box_5.extend (test_class_display)
-			main_notebook.extend (flat_short_display)
+			main_notebook.extend (flat_short_display_parent)
+			flat_short_display_parent.extend (flat_short_display)
+			flat_short_display_parent.extend (l_frame_1)
+			l_frame_1.extend (l_horizontal_box_6)
+			l_horizontal_box_6.extend (search_field)
+			l_horizontal_box_6.extend (search_button)
+			l_horizontal_box_6.extend (match_case_button)
 			
 				-- Initialize properties of all widgets.
 			
@@ -184,7 +196,7 @@ feature {NONE}-- Initialization
 			l_label_1.align_text_left
 			main_notebook.set_item_text (main_notebook_properties_item, "Properties")
 			main_notebook.set_item_text (main_notebook_tests, "Tests")
-			main_notebook.set_item_text (flat_short_display, "Documentation")
+			main_notebook.set_item_text (flat_short_display_parent, "Documentation")
 			main_notebook_properties_item.disable_item_expand (l_vertical_box_5)
 			l_vertical_box_3.disable_item_expand (scrollable_parent)
 			scrollable_widget_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
@@ -227,6 +239,17 @@ feature {NONE}-- Initialization
 			l_vertical_box_6.disable_item_expand (generation_button)
 			generation_button.set_text ("Generate Test Application")
 			test_class_display.disable_edit
+			flat_short_display_parent.disable_item_expand (l_frame_1)
+			flat_short_display.disable_edit
+			l_frame_1.set_text ("Search")
+			l_horizontal_box_6.set_padding_width (10)
+			l_horizontal_box_6.set_border_width (2)
+			l_horizontal_box_6.disable_item_expand (search_field)
+			l_horizontal_box_6.disable_item_expand (search_button)
+			l_horizontal_box_6.disable_item_expand (match_case_button)
+			search_field.set_minimum_width (120)
+			search_button.set_text ("Search")
+			match_case_button.set_text ("Match Case")
 			
 				--Connect events.
 			close_request_actions.extend (agent close_test)
@@ -234,6 +257,8 @@ feature {NONE}-- Initialization
 			l_notebook_1.selection_actions.extend (agent clear_events)
 			select_all.select_actions.extend (agent select_all_events)
 			clear_all.select_actions.extend (agent clear_all_events)
+			search_button.select_actions.extend (agent start_search)
+			match_case_button.select_actions.extend (agent update_case_matching)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
@@ -261,10 +286,11 @@ feature {NONE} -- Implementation
 	file_generate, file_exit, help_about: EV_MENU_ITEM
 	l_menu_separator_1: EV_MENU_SEPARATOR
 	l_vertical_box_1, l_vertical_box_2, main_box, l_vertical_box_3, vertical_spacing_box, 
-	l_vertical_box_4, l_vertical_box_5, l_vertical_box_6: EV_VERTICAL_BOX
+	l_vertical_box_4, l_vertical_box_5, l_vertical_box_6, flat_short_display_parent: EV_VERTICAL_BOX
 	l_horizontal_separator_1, l_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 	l_horizontal_box_1, main_notebook_properties_item, horizontal_spacing_box, l_horizontal_box_2, 
-	l_horizontal_box_3, main_notebook_tests, l_horizontal_box_4, l_horizontal_box_5: EV_HORIZONTAL_BOX
+	l_horizontal_box_3, main_notebook_tests, l_horizontal_box_4, l_horizontal_box_5, 
+	l_horizontal_box_6: EV_HORIZONTAL_BOX
 	l_tool_bar_1, l_tool_bar_2, l_tool_bar_3, l_tool_bar_4: EV_TOOL_BAR
 	generate_button: EV_TOOL_BAR_BUTTON
 	l_cell_1, l_cell_2, widget_selector_parent, left_spacing_cell, top_spacing_cell, 
@@ -275,13 +301,15 @@ feature {NONE} -- Implementation
 	main_split_area: EV_HORIZONTAL_SPLIT_AREA
 	l_label_1: EV_LABEL
 	main_notebook, l_notebook_1: EV_NOTEBOOK
-	scrollable_parent: EV_FRAME
+	scrollable_parent, l_frame_1: EV_FRAME
 	scrollable_widget_area: EV_SCROLLABLE_AREA
 	event_output: EV_LIST
 	event_selector_list: EV_CHECKABLE_LIST
-	select_all, clear_all, generation_button: EV_BUTTON
+	select_all, clear_all, generation_button, search_button: EV_BUTTON
 	l_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA
 	test_class_display, flat_short_display: EV_TEXT
+	search_field: EV_TEXT_FIELD
+	match_case_button: EV_CHECK_BUTTON
 	
 	close_test is
 			-- Called by `close_request_actions' of `Current'.
@@ -300,6 +328,16 @@ feature {NONE} -- Implementation
 	
 	clear_all_events is
 			-- Called by `select_actions' of `clear_all'.
+		deferred
+		end
+	
+	start_search is
+			-- Called by `select_actions' of `search_button'.
+		deferred
+		end
+	
+	update_case_matching is
+			-- Called by `select_actions' of `match_case_button'.
 		deferred
 		end
 	

@@ -19,16 +19,13 @@ feature
 			exec: EXECUTION_ENVIRONMENT
 		once
 			create exec
-
 				-- First obtain the value of the CLASSPATH environment 
 				-- variable
-			cpp := $(exec.get ("CLASSPATH").to_c)
-			if cpp = default_pointer then
+			class_path := exec.get ("CLASSPATH")
+			if class_path = void or else class_path.count = 0 then
 				!!ex
 				ex.raise ("Can't get CLASSPATH")
 			end
-			!!class_path.make (100)
-			class_path.from_c (cpp)
 			debug ("java")
 				io.putstring ("CLASSPATH=")
 				io.putstring (class_path)

@@ -164,6 +164,12 @@ feature -- Properties
 			!! Result
 		end
 
+	dynamic_lib: E_DYNAMIC_LIB is
+			-- Eiffel Dynamic Lib
+		once
+			!! Result
+		end
+
 	project_directory: PROJECT_DIRECTORY
 			-- Information about the project files structures
 
@@ -618,8 +624,6 @@ feature -- Output
 					--| Prepare informations to store
 				Comp_system.server_controler.wipe_out
 				saved_workbench := workbench
-
-
 				!! file_name.make_from_string (Project_directory.name);
 				if Compilation_modes.is_precompiling then 
 					file_name.extend (eiffelgen);

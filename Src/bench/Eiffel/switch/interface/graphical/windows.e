@@ -35,6 +35,16 @@ feature {NONE}
 	is_system_tool_created: BOOLEAN
 			-- To know if the system tool has been created.
 
+	Dynamic_lib_tool: DYNAMIC_LIB_W is
+			-- Unique assembly tool
+		once
+			!! Result.make (ewb_display)
+			is_dynamic_lib_tool_created := True
+		end
+
+	is_dynamic_lib_tool_created: BOOLEAN
+			-- To know if the Dynamic_lib tool has been created.
+
 	name_chooser (popup_parent: COMPOSITE): NAME_CHOOSER_W is
 			-- File selection window
 		require

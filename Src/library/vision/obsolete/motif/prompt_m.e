@@ -62,7 +62,7 @@ feature -- Status Report
 		do
 			t := text_string;
 			Result := t.to_eiffel_string;
-			t.free
+			t.destroy
 		end;
 
 feature -- Status Setting
@@ -75,7 +75,7 @@ feature -- Status Setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_apply_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_cancel_label (a_label: STRING) is
@@ -86,7 +86,7 @@ feature -- Status Setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_cancel_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_help_label (a_label: STRING) is
@@ -97,7 +97,7 @@ feature -- Status Setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_help_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_ok_label (a_label: STRING) is
@@ -108,7 +108,7 @@ feature -- Status Setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_ok_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_selection_label (a_label: STRING) is
@@ -119,7 +119,7 @@ feature -- Status Setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_apply_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_selection_text (a_text: STRING) is
@@ -129,7 +129,7 @@ feature -- Status Setting
 		do
 			!! ms.make_default_l_to_r (a_text);
 			set_text_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 feature -- Display

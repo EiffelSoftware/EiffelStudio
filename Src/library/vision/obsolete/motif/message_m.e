@@ -80,7 +80,7 @@ feature -- Status setting
 		do
 			!! ms.make_default_l_to_r (a_message);
 			set_message_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_cancel_label (a_label: STRING) is
@@ -91,7 +91,7 @@ feature -- Status setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_cancel_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_help_label (a_label: STRING) is
@@ -102,7 +102,7 @@ feature -- Status setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_help_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 	set_ok_label (a_label: STRING) is
@@ -113,7 +113,7 @@ feature -- Status setting
 		do
 			!! ms.make_default_l_to_r (a_label);
 			set_ok_label_string (ms);
-			ms.free
+			ms.destroy
 		end;
 
 feature -- Display

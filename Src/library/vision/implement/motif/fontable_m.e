@@ -99,11 +99,11 @@ feature {NONE} -- Implementation
 				!! a_font_list.append_entry (an_entry);
 				if a_font_list.is_valid then
 					set_font_list (a_font_list);
-					a_font_list.free
+					a_font_list.destroy
 				else
 					io.error.putstring ("Warning can not allocate font%N");
 				end;
-				an_entry.free
+				an_entry.destroy
 			else
 				io.error.putstring ("Warning can not allocate font%N");
 			end

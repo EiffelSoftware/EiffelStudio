@@ -154,13 +154,80 @@ feature -- Byte code generation
 	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
 			-- Generate byte code for a feature call. If not `flag', generate
 			-- an invariant check before the call.
+		local
+			i, pos, nb_expr_address: INTEGER
+			param: EXPR_B
+			has_hector: BOOLEAN
+			parameter_b: PARAMETER_B
+			hector_b: HECTOR_B
+			expr_address_b: EXPR_ADDRESS_B
 		do
 			if parameters /= Void then
-				parameters.make_byte_code (ba);
-			end;
-			standard_make_code (ba, flag);
+					-- Generate the expression address byte code
+				from
+					parameters.start
+				until
+					parameters.after
+				loop
+					parameter_b ?= parameters.item
+					if parameter_b.is_hector then
+						has_hector := True
+						expr_address_b ?= parameter_b.expression
+						if expr_address_b /= Void and then expr_address_b.is_protected then
+							expr_address_b.generate_expression_byte_code (ba)
+							nb_expr_address := nb_expr_address + 1
+						end
+					end
+					parameters.forth
+				end
+
+					-- Generate byte code for parameters
+				from
+					parameters.start
+				until
+					parameters.after
+				loop
+					param := parameters.item
+					param.make_byte_code (ba)
+					parameters.forth
+				end
+			end
+
+			if has_hector then
+				from
+					parameters.start
+				until
+					parameters.after
+				loop
+					pos := pos + 1
+					parameter_b ?= parameters.item
+					if parameter_b.is_hector then
+						hector_b ?= parameter_b.expression
+						if hector_b /= Void then
+							hector_b.make_protected_byte_code (ba, parameters.count - pos)
+						else
+								-- Cannot be Void
+							expr_address_b ?= parameter_b.expression
+							if expr_address_b.is_protected then
+								i := i + 1
+								expr_address_b.make_protected_byte_code (ba,
+									parameters.count - pos,
+									parameters.count + nb_expr_address - i)
+							end
+						end
+					end
+					parameters.forth
+				end
+			end
+
+			standard_make_code (ba, flag)
 			make_java_typecode (ba)
-		end;
+
+			if nb_expr_address > 0 then
+				ba.append (Bc_pop)
+				ba.append_uint32_integer (nb_expr_address)
+			end
+		end
 
 	make_special_byte_code (ba: BYTE_ARRAY) is
 			-- Make byte code for special calls.

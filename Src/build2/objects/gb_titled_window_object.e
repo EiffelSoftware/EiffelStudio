@@ -206,6 +206,7 @@ feature -- Access
 				check
 					child_is_window: display_object_window /= Void
 				end
+				add_child (menu_object, 1)
 				display_object_window.set_menu_bar (menu_object.display_object)
 				if not layout_item.has (menu_object.layout_item) then
 					layout_item.start
@@ -214,7 +215,6 @@ feature -- Access
 						layout_item.expand	
 					end
 				end
-				add_child (menu_object, 1)
 			else
 				widget ?= an_object.object
 				check
@@ -229,7 +229,7 @@ feature -- Access
 				if not layout_item.has (an_object.layout_item) then
 					layout_item.extend (an_object.layout_item)
 				end
-				add_child (an_object, children.count)
+				add_child (an_object, children.count + 1)
 			end
 		end
 		

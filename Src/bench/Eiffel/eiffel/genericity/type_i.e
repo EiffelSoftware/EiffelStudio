@@ -123,11 +123,14 @@ feature -- Status report
 		deferred
 		end
 
-	il_type_name: STRING is
+	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class type in IL generation.
 		require
 			in_il_generation: System.il_generation
 		deferred
+		ensure
+			il_type_name_not_void: Result /= Void
+			il_type_name_not_empty: not Result.is_empty
 		end
 
 	is_valid: BOOLEAN is

@@ -48,7 +48,7 @@ feature
 			buffer.putstring ("void")
 		end
 
-	il_type_name: STRING is
+	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class type.
 		once
 			Result := "void"

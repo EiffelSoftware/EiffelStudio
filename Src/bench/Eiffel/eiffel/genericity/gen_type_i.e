@@ -216,14 +216,14 @@ feature -- Access
 			end
 		end
 
-	il_type_name: STRING is
+	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class
 		local
 			i, count: INTEGER
 			sep, tmp: STRING
 			l_meta: like meta_generic
 		do
-			Result := Precursor {CL_TYPE_I}
+			Result := clone (base_class.name)
 
 			l_meta := meta_generic
 
@@ -237,13 +237,15 @@ feature -- Access
 					i > count
 				loop
 					Result.append (sep)
-					tmp := clone (l_meta.item (i).il_type_name)
+					tmp := clone (l_meta.item (i).il_type_name (a_prefix))
 					tmp.remove_head (tmp.last_index_of ('.', tmp.count))
 					tmp.to_lower
 					Result.append (tmp)
 					i := i + 1
 				end
 			end
+			
+			Result := internal_il_type_name (Result, a_prefix)
 		end
 
 	append_signature (st: STRUCTURED_TEXT) is

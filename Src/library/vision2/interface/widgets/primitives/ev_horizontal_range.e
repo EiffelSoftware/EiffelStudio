@@ -4,8 +4,8 @@ indexing
 		%current `value' and allows it to be adjusted"
 	appearance:
 		"+-------------+%N%
-		"|  |#|        |%N%
-		"+-------------+"
+		%|  |#|        |%N%
+		%+-------------+"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,6 +58,9 @@ end -- class EV_HORIZONTAL_RANGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/21 16:36:25  oconnor
+--| syntax tweaks
+--|
 --| Revision 1.7  2000/03/21 02:09:57  oconnor
 --| comments and formatting
 --|

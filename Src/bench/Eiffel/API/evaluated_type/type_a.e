@@ -90,6 +90,12 @@ feature -- Properties
 			-- Do nothing
 		end;
 
+	is_separate: BOOLEAN is
+			-- Is the current actual type a separate one ?
+		do
+			-- Do nothing
+		end;
+
 	is_none: BOOLEAN is
 			-- Is the current actual type a none type ?
 		do

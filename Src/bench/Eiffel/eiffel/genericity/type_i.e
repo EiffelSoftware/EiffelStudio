@@ -112,6 +112,12 @@ feature
 			-- Do nothing
 		end;
 
+	is_separate: BOOLEAN is
+			-- Is the type a separate one ?
+		do
+			-- Do nothing
+		end;
+
 	is_feature_pointer: BOOLEAN is
 			-- Is the type a feature pointer one ?
 		do

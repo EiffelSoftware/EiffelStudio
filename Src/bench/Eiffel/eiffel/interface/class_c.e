@@ -158,6 +158,12 @@ feature
 	is_expanded: BOOLEAN;
 			-- Is the class expanded ?
 
+	is_separate: BOOLEAN is
+			-- Is the class separate ?
+		do
+			Result := e_class.is_separate
+		end
+
 	has_expanded: BOOLEAN;
 			-- Does the class use expanded ?
 
@@ -1542,6 +1548,7 @@ feature -- Class initialization
 			parent_c: PARENT_C;
 			ve04: VE04;
 			old_is_expanded: BOOLEAN;
+			old_is_separate: BOOLEAN;
 			old_is_deferred: BOOLEAN;
 			a_client: CLASS_C;
 			changed_status: BOOLEAN;
@@ -1604,6 +1611,14 @@ feature -- Class initialization
 				changed_status := True;
 				changed_expanded := True;
 			end;
+
+				-- Separate mark
+			old_is_separate := is_separate;
+			e_class.set_is_separate (ast.is_separate);
+
+			--if (old_is_separate) then
+				--FIXME
+			--end
 
 			if changed_status then
 				pass2_controler.add_changed_status (Current);

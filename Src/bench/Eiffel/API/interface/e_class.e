@@ -87,6 +87,9 @@ feature -- Properties
 	is_expanded: BOOLEAN;
 			-- Is the class expanded ?
 
+	is_separate: BOOLEAN;
+			-- Is the class separate ?
+
 	obsolete_message: STRING;
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
@@ -430,6 +433,12 @@ feature {CLASS_C, CLASS_SORTER} -- Setting
 			-- Assign `b' to `is_expanded'.
 		do
 			is_expanded := b;
+		end;
+
+	set_is_separate (b: BOOLEAN) is
+			-- Assign `b' to `is_separate'.
+		do
+			is_separate := b;
 		end;
 
 	set_id (i: like id) is

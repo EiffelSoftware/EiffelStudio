@@ -151,7 +151,6 @@ feature -- Generation Structure
 		#endif
 		try {
 			assembly.Save (FileName);
-			LastException = new ApplicationException ("No Error.");
 			CleanUp();
 		}
 		catch (Exception error) {
@@ -542,10 +541,14 @@ feature -- Generation Structure
 /* Error Handling */
 
 	public string LastError() {
-		string Message = LastException.Message;
-		if ((LastException.Source != null)&& (LastException.Source.Length > 0)) {
-			Message += "\nSource: ";
-			Message += LastException.Source;
+		string Message = null;
+
+		if (LastException != null) {
+			Message = LastException.Message;
+			if ((LastException.Source != null)&& (LastException.Source.Length > 0)) {
+				Message += "\nSource: ";
+				Message += LastException.Source;
+			}
 		}
 		return Message;
 	}
@@ -1987,6 +1990,7 @@ feature -- Generation Structure
 		Result = null;
 		CAFactory = null;
 		FileName = null;
+		LastException = null;
 	}
 
 /*
@@ -2184,7 +2188,7 @@ feature -- Statics
 	internal static String Setter_prefix = "_set_";
 	
 	// Last exception
-	internal static Exception LastException = new System.ApplicationException();
+	internal static Exception LastException = null;
 
 	// Internal counter for MethodImpl
 	private static int counter = 0;

@@ -69,23 +69,22 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new tree.
 		do
-			wel_make (default_parent.item, 0, 0, 0, 0, 0)
+			wel_make (default_parent, 0, 0, 0, 0, 0)
 			!! ev_children.make (1)
 		end
 
 feature -- Access
 
-	ev_children: HASH_TABLE [EV_TREE_ITEM_IMP, INTEGER]
+	ev_children: HASH_TABLE [EV_TREE_ITEM_IMP, POINTER]
 			-- Children of the tree Classified by their h_item
 
 	selected_item: EV_TREE_ITEM is
 			-- Item which is currently selected.
 		local
-			handle: INTEGER
+			handle: POINTER
 		do
 			if selected then
-				handle := cwin_send_message_result (item, Tvm_getnextitem,
-					Tvgn_caret, 0)
+				handle := cwel_integer_to_pointer (cwin_send_message_result (item, Tvm_getnextitem, Tvgn_caret, 0))
 				Result ?= (ev_children @ handle).interface
 			else
 				Result := Void
@@ -145,14 +144,14 @@ feature {NONE} -- WEL Implementation
 			-- Propagate `event_id' to the goood item.
 		local
 			pt: WEL_POINT
-			handle: INTEGER
+			handle: POINTER
 			info: WEL_TV_HITTESTINFO
 		do
 			create pt.make (x_pos, y_pos)
 			create info.make_with_point (pt)
 			cwin_send_message (item, Tvm_hittest, 0, info.to_integer)
 			if flag_set (info.flags, Tvht_onitemlabel) or flag_set (info.flags, Tvht_onitemicon) then
-				handle := cwel_pointer_to_integer (info.hitem)
+				handle := info.hitem
 				if ev_children.has (handle) then
 					(ev_children @ handle).execute_command (event_id, ev_data)
 				end
@@ -162,7 +161,7 @@ feature {NONE} -- WEL Implementation
 	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
 			-- Selection has changed from one item to another.
 		local
-			clist: HASH_TABLE [EV_TREE_ITEM_IMP, INTEGER]
+			clist: HASH_TABLE [EV_TREE_ITEM_IMP, POINTER]
 		do
 			clist := ev_children
 			if clist @ info.old_item.h_item /= Void then

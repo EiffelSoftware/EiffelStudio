@@ -1,7 +1,7 @@
 indexing
 
 	description:
-			"Composite for command entry.";
+		"Composite for command entry.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -59,10 +59,13 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			!! Result.make_from_existing (get_xm_string_table (screen_object, XmNhistoryItems),
-						history_item_count)
+			!! Result.make_from_existing 
+				(get_xm_string_table (screen_object, XmNhistoryItems),
+						history_item_count);
+			Result.set_shared
 		ensure
-			history_items_not_void: Result /= Void
+			valid_Result: Result /= Void and then Result.is_valid;
+			Result_is_shared: Result.shared
 		end;
 
 	history_item_count: INTEGER is
@@ -123,11 +126,9 @@ feature -- Status setting
 			-- Set `history_items' to `a_list'.
 		require
 			exists: not is_destroyed;
-			a_list_exists: a_list /= Void and then not a_list.is_destroyed
+			valid_list: a_list /= Void and then a_list.is_valid
 		do
 			set_xm_string_table (screen_object, XmNhistoryItems, a_list.handle)
-		ensure
-			history_items_set: history_items.is_equal (a_list)
 		end;
 
 	set_history_item_count (a_count: INTEGER) is

@@ -60,7 +60,7 @@ feature
 					deb := debug_info.new_debuggables;
 					deb.start
 				until
-					deb.offright or else
+					deb.after or else
 					not Result
 				loop
 					deb_l := deb.item_for_iteration;

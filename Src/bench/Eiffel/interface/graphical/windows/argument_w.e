@@ -26,7 +26,7 @@ feature
 
 	close is
 		do
-			if is_poped_up then
+			if is_popped_up then
 				popdown
 			end
 		end;

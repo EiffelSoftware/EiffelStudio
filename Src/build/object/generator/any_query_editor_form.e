@@ -71,7 +71,6 @@ feature {NONE} -- GUI
 	attach_all is
 			-- Perform attachments.
 		do
- 			attach_top (query_label, 8)
  			attach_top (procedure_label, 8)
  			attach_top (procedure_opt_pull, 5)
 			attach_top (query_label, 5)
@@ -99,7 +98,7 @@ feature {NONE} -- GUI
  			attach_right (separator, 0)
  			attach_bottom (separator, 0)
 			
-			bottom_form.attach_left (select_label, 5)
+			bottom_form.attach_left (select_label, 10)
 			bottom_form.attach_top (select_label, 5)
 			bottom_form.attach_top (add_menu_label, 5)
 			bottom_form.attach_left_widget (select_label, add_menu_label, 50)
@@ -111,12 +110,11 @@ feature {NONE} -- GUI
 			bottom_form.attach_top_widget (menu_text_field, menu_choice_sc_l, 10)
 			bottom_form.attach_top_widget (menu_text_field, menu_choice_label, 10)
 			bottom_form.attach_top_widget (menu_choice_label, delete_button, 10)
-			bottom_form.attach_left (select_label, 10)
 			bottom_form.attach_left_widget (select_radio_box, menu_choice_label, 10)
 			bottom_form.attach_left_widget (select_radio_box, delete_button, 20)
-			bottom_form.attach_left_widget (add_menu_label, menu_text_field, 30)
-			bottom_form.attach_left_widget (menu_choice_label, menu_choice_sc_l, 5)
-			bottom_form.attach_left_widget (delete_button, menu_choice_sc_l, 20)
+			bottom_form.attach_left_widget (add_menu_label, menu_text_field, 24)
+			bottom_form.attach_left_widget (menu_choice_label, menu_choice_sc_l, 3)
+			bottom_form.attach_left_widget (delete_button, menu_choice_sc_l, 18)
 			bottom_form.attach_right (menu_choice_sc_l, 0)
 			bottom_form.attach_right (menu_text_field, 0)
 		end	
@@ -128,9 +126,9 @@ feature {NONE} -- GUI
 		do
 			query_label.set_text (query.value)
 			!! error_message.make (0)
-			error_message.append ("Incorrect %"")
+			error_message.append ("Incorrect `")
 			error_message.append (query.query_name)
-			error_message.append ("%" field")
+			error_message.append ("' field.")
 			test_text_field.set_text(error_message)
 			update_procedure_opt_pull
 		end
@@ -220,25 +218,26 @@ feature {NONE} -- Heuristic
 			possible_command_list: LINKED_LIST [APPLICATION_COMMAND]
 		do
 			possible_command_list := sort_possible_commands (current_application_class.command_list)
-			from 
-				possible_command_list.start
-			until
-				possible_command_list.after
-			loop
-				!! menu_entry.make (possible_command_list.item, procedure_opt_pull)
-				possible_command_list.forth
-			end
 			if not possible_command_list.empty then
+				from 
+					possible_command_list.start
+				until
+					possible_command_list.after
+				loop
+					!! menu_entry.make (possible_command_list.item, procedure_opt_pull)
+					possible_command_list.forth
+				end
+--			if not possible_command_list.empty then
 				procedure_opt_pull.set_selected_button (menu_entry)
 			end
 		end
 
+
 	sort_possible_commands (cmd_list: LINKED_LIST [APPLICATION_COMMAND]): LINKED_LIST [APPLICATION_COMMAND] is
-			-- Sort `cmd_list' and return the list of compatible commands.
+			-- Sort `cmd_list' and return the list of compatible commands
+			-- beginning with that containing the name of the query.
 		local
-			inserted: BOOLEAN
-			best_command: APPLICATION_COMMAND
-			matching: INTEGER
+			command: APPLICATION_COMMAND
 		do
 			!! Result.make
 			from 
@@ -246,12 +245,17 @@ feature {NONE} -- Heuristic
 			until
 				cmd_list.after
 			loop
-				if cmd_list.item.argument_type.is_equal (query.query_type) then
-					Result.extend (cmd_list.item)
+				command := cmd_list.item 
+				if command.argument_type.is_equal (query.query_type) then
+					if command.command_name.substring_index (query.query_name, 1) > 0 then
+					Result.extend (command)
+					else
+					Result.put_front (command)
+					end
 				end
 				cmd_list.forth
 			end
-		end
+		end	
 
 feature -- Execution
 
@@ -443,9 +447,11 @@ feature -- Command generation
 				actual_argument.append (extension_to_add)
 				Result.append (eiffel_setting (actual_argument))
 				if test_toggle_b.state and not procedure.precondition_list.empty then
-					Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tio.put_string (%"")
+					Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tdisplay_error_message (%"")
 					Result.append (test_text_field.text)
-					Result.append ("%")%N%T%T%T%Tend%N")
+					Result.append ("%", ")
+					Result.append (parent_perm_wind)
+					Result.append (")%N%T%T%T%Tend%N")
 				end	
 				Result.append ("%T%T%Telse%N%T%T%T%T")
 				!! actual_argument.make (0)
@@ -456,9 +462,11 @@ feature -- Command generation
 				actual_argument.append (extension_to_add)
 				Result.append (eiffel_setting (actual_argument))
 				if test_toggle_b.state and not procedure.precondition_list.empty then
-					Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tio.put_string (%"")
+					Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tdisplay_error_message (%"")
 					Result.append (test_text_field.text)
-					Result.append ("%")%N%T%T%T%Tend%N")
+					Result.append ("%", ")
+					Result.append (parent_perm_wind)
+					Result.append (")%N%T%T%T%Tend%N")
 				end	
 				Result.append ("%T%T%Tend%N")
 			elseif text_field_name /= Void then
@@ -479,9 +487,11 @@ feature -- Command generation
 				Result.append (eiffel_setting (actual_argument))
 			end
 			if test_toggle_b.state and not procedure.precondition_list.empty and not is_both then
-				Result.append ("%T%T%Telse%N%T%T%T%Tio.put_string (%"")
+				Result.append ("%T%T%Telse%N%T%T%T%Tdisplay_error_message (%"")
 				Result.append (test_text_field.text)
-				Result.append ("%")%N%T%T%Tend%N")
+				Result.append ("%", ")
+				Result.append (parent_perm_wind)
+				Result.append (")%N%T%T%Tend%N")
 			end		
 		end
 

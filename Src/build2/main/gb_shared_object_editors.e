@@ -104,18 +104,6 @@ feature {NONE} -- Implementation
 			no_floating_editors: floating_object_editors.is_empty
 		end
 		
-		
---			if editor = docked_object_editor then
---						editor.make_empty
---					else
---						window_parent := editor.window_parent
---						editor.destroy
---						window_parent.destroy
---						--| FIXME should this be `editors' prune?
---						--| if not, then we may not even need the argument anymore.
---						floating_object_editors.prune (editor)
---					end
-		
 	force_name_change_completion_on_all_editors is
 			-- Force all object editors that are editing an object
 			-- to update their object to use either the newly enterd name

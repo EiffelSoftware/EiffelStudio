@@ -147,6 +147,9 @@ feature {NONE} -- Implementation
 
 	set_client_result_type_and_signature is
 			-- Set ccom client feature signature
+		require
+			non_void_func_desc: func_desc /= Void
+			non_void_ccom_feature_writer: ccom_feature_writer /= Void
 		do
 			if func_desc.arguments /= Void and not func_desc.arguments.empty then
 				ccom_feature_writer.set_signature (set_result_type_and_signature)

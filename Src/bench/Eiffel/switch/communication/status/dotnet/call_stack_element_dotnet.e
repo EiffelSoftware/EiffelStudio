@@ -238,40 +238,44 @@ feature {NONE} -- Implementation
 			l_class: ICOR_DEBUG_CLASS
 			l_module: ICOR_DEBUG_MODULE
 			l_icd_th: ICOR_DEBUG_THREAD
+			retried: BOOLEAN
 		do
--- FIXME jfiat 2004-07-08: maybe optimize by calling directly external on pointer
---			l_function := icd_il_frame.get_function
-			
-			icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
-			if icd_il_frame /= Void then
-				icd_il_frame.add_ref
-				l_function := icd_il_frame.get_function
-				icd_il_frame.clean_on_dispose
-			end
-
-			if l_function = Void then
-					--| FIXME jfiat: Nasty fix, since we use the top level stack frame
-				l_icd_th := application.imp_dotnet.eifnet_debugger.icor_debug_thread
-				icd_frame := l_icd_th.get_active_frame
+			if not retried then
 				icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
-				l_function := icd_il_frame.get_function
-				icd_il_frame.clean_on_dispose
-				icd_frame.clean_on_dispose
-			end
+				if icd_il_frame /= Void then
+					icd_il_frame.add_ref
+					l_function := icd_il_frame.get_function
+					icd_il_frame.clean_on_dispose
+				end
 
-			if l_function /= Void then
-				private_dotnet_feature_token := l_function.get_token		
-				l_class := l_function.get_class
-				l_module := l_function.get_module
-				
-				private_dotnet_class_token := l_class.get_token
-				private_dotnet_module_name := l_module.module_name
-				private_dotnet_module_filename := l_module.get_name
+				if l_function = Void then
+						--| FIXME jfiat: Nasty fix, since we use the top level stack frame
+					l_icd_th := application.imp_dotnet.eifnet_debugger.icor_debug_thread
+					icd_frame := l_icd_th.get_active_frame
+					icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
+					l_function := icd_il_frame.get_function
+					icd_il_frame.clean_on_dispose
+					icd_frame.clean_on_dispose
+				end
 
+				if l_function /= Void then
+					private_dotnet_feature_token := l_function.get_token		
+					l_class := l_function.get_class
+					l_module := l_function.get_module
+					
+					private_dotnet_class_token := l_class.get_token
+					private_dotnet_module_name := l_module.module_name
+					private_dotnet_module_filename := l_module.get_name
+				end
+				dotnet_initialized := True
+			else
+				dotnet_initialized := True
 			end
-			dotnet_initialized := True
 		ensure
 			dotnet_initialized
+		rescue
+			retried := True
+			retry
 		end
 
 	initialize_stack_for_current_object is

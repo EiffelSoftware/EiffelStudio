@@ -23,8 +23,6 @@ feature {NONE} -- Initialization
 			-- Call `initialize_components'.
 		require
 			non_void_a_dtp: a_dtp /= Void
-		local
-			return: SYSTEM_OBJECT
 		do
 			initialize_components
 			dtp := a_dtp
@@ -61,7 +59,6 @@ feature -- Implementation
 	initialize_components is
 			-- Initialize all window components.
 		local
-			l_array: NATIVE_ARRAY [SYSTEM_STRING]
 			l_point: DRAWING_POINT
 			l_size: DRAWING_SIZE
 		do

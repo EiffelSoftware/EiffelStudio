@@ -1,20 +1,14 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Class for building lexical analyzers from regular expressions.
 
 indexing
 
+	description:
+		"Mechanisms for building lexical analyzers from regular expressions."
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class METALEX
-
-inherit
+class METALEX inherit
 
 	HIGH_BUILDER
 		redefine
@@ -106,17 +100,17 @@ feature {NONE}
 			from
 				id := 1;
 				token_file.readword;
-				token_name := token_file.laststring.duplicate;
+				token_name := clone (token_file.laststring);
 				token_file.readline;
-				regular := token_file.laststring.duplicate
+				regular := clone (token_file.laststring);
 			until
 				token_name.is_equal ("--")
 			loop
 				put_expression (regular, id, token_name);
 				token_file.readword;
-				token_name := token_file.laststring.duplicate;
+				token_name := clone (token_file.laststring);
 				token_file.readline;
-				regular := token_file.laststring.duplicate;
+				regular := clone (token_file.laststring);
 				id := id + 1
 			end
 		end; -- record_atomics
@@ -133,13 +127,13 @@ feature {NONE}
 					-- corresponds to the last type recorded.
 				keyword_type := token_type_list.last;
 				token_file.readword;
-				keyword_name := token_file.laststring.duplicate
+				keyword_name := clone (token_file.laststring);
 			until
 				token_file.end_of_file
 			loop
 				put_keyword (keyword_name, keyword_type);
 				token_file.readword;
-				keyword_name := token_file.laststring.duplicate
+				keyword_name := clone (token_file.laststring)
 			end
 		end; -- record_keywords
 
@@ -163,7 +157,7 @@ feature {NONE}
 			message.append ("Metalex, construct ");
 			message.append (construct);
 			message.append (", error in format near: ``");
-			message.append_character (description.item (error_position));
+			message.extend (description.item (error_position));
 			message.append ("''%N(");
 			message.append (error_position.out);
 			message.append ("-th significant character of the description).%N");
@@ -171,7 +165,7 @@ feature {NONE}
 				message.append (mes)
 			else
 				message.append ("``");
-				message.append_character (expected);
+				message.extend (expected);
 				message.append ("'' expected.")
 			end;
 			message.append ("%NParsing of the grammar stopped.%N");
@@ -184,3 +178,17 @@ invariant
 	cursor_not_too_far: cursor <= description_length
 
 end -- METALEX
+ 
+
+--|----------------------------------------------------------------
+--| EiffelLex: library of reusable components for ISE Eiffel 3,
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

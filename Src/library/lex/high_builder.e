@@ -1,22 +1,14 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- This class provides tools to build a lexical analyzer,
--- by using regular expression description like:
--- 'a'..'z', '+'|'-', ->("*/"),..
-
 indexing
 
+	description:
+		"Mechanisms for building lexical analyzers from regular expressions. %
+		%This class may be used as ancestor by classes needing its facilities.";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class HIGH_BUILDER
-
-inherit
+class HIGH_BUILDER inherit
 
 	LEX_BUILDER
 		export
@@ -35,8 +27,8 @@ feature
 		require
 			source_long_enough: s.count > 0
 		do
-			description := s.duplicate;
-			description.append_character ('%/001/');
+			description := clone (s);
+			description.extend ('%/001/');
 			remove_separators;
 			cursor := 0;
 			if not parsing_stopped then
@@ -568,13 +560,13 @@ feature {NONE}
 				current_char := description.item (cursor);
 				if back_slashed then
 					if current_char = 'n' then
-						last_string.append_character ('%N')
+						last_string.extend ('%N')
 					elseif current_char = '"' then
-						last_string.append_character ('"')
+						last_string.extend ('"')
 					elseif current_char = '\' then
-						last_string.append_character ('\')
+						last_string.extend ('\')
 					elseif current_char = '%'' then
-						last_string.append_character ('%'')
+						last_string.extend ('%'')
 					else
 						raise_error (cursor, '%U', "Unexpected character.")
 					end;
@@ -586,7 +578,7 @@ feature {NONE}
 				elseif current_char = '%/001/' then
 					raise_error (cursor, '"', "")
 				else
-					last_string.append_character (current_char)
+					last_string.extend (current_char)
 				end
 			end;
 			if not parsing_stopped then
@@ -779,7 +771,7 @@ feature {NONE}
 				error_position := description_length - 1
 			end;
 			message.append ("Error in format near: ``");
-			message.append_character (description.item (error_position));
+			message.extend (description.item (error_position));
 			message.append ("''%N(");
 			message.append (error_position.out);
 			message.append ("-th significant character of the description).%N");
@@ -787,10 +779,10 @@ feature {NONE}
 				message.append (mes)
 			else
 				message.append ("``");
-				message.append_character (expected);
+				message.extend (expected);
 				message.append ("'' expected.")
 			end;
-			message.append_character ('%N');
+			message.extend ('%N');
 			error_list.add_message (message);
 			parsing_stopped := true
 		end -- raise_error
@@ -800,3 +792,17 @@ invariant
 	cursor_not_too_far: cursor <= description_length
 
 end -- class HIGH_BUILDER
+ 
+
+--|----------------------------------------------------------------
+--| EiffelLex: library of reusable components for ISE Eiffel 3,
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

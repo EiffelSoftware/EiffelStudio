@@ -1,20 +1,14 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Non-deterministic finite state automata
 
 indexing
 
+	description:
+		"Non-deterministic finite state automata";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class NFA
-
-inherit
+deferred class NFA inherit
 
 	AUTOMATON
 
@@ -162,7 +156,7 @@ feature {NONE}
 	new_number: INTEGER;
 			-- Used to search a set in sets_list
 
-	set_tree: FIXED_TREE [INTEGER];
+	set_tree: ARRAYED_TREE [INTEGER];
 			-- Used to search a set in sets_list:
 			-- This tree is built by "search_in_tree" and
 			-- contains the same informations as sets_list,
@@ -224,7 +218,7 @@ feature {NONE}
 			set_no_empty: not set.empty
 		local
 			index, last_index: INTEGER;
-			current_tree, new_tree: FIXED_TREE [INTEGER]
+			current_tree, new_tree: ARRAYED_TREE [INTEGER]
 		do
 			debug
 				set.print;
@@ -283,3 +277,17 @@ feature {NONE}
 		end -- initial_final_designation
 
 end -- class NFA
+ 
+
+--|----------------------------------------------------------------
+--| EiffelLex: library of reusable components for ISE Eiffel 3,
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

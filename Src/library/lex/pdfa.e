@@ -1,35 +1,15 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Partially deterministic finite state automata,
--- Used for the regular expressions
-
--- These PDFA have a very special structure.
--- They are NFA but for each state, only one successor is
--- possible, if the input is different of epsilon,
--- and this successor is the following state.
--- For the epsilon transitions each state can have as many
--- successors as possible.
--- Thus, the structure is different for the epsilons transitions,
--- which are recorded in an ARRAY [LINKED_LIST [INTEGER]],
--- and for the others transitions, which are recorded, for
--- each input, in a FIX_INT_SET.
-
--- For the use in a regular expression context, keywords
--- can be associated with Current.
-
 indexing
 
+	description:
+		"Partially deterministic finite state automata";
+	comment:
+		"See comment at end of class";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class PDFA
-
-inherit
+class PDFA inherit
 
 	ARRAY [LINKED_LIST [INTEGER]]
 		rename
@@ -40,12 +20,12 @@ inherit
 
 	NFA
 		undefine
-			twin
+			consistent, copy, setup, is_equal
 		end;
 
 	ASCII
 		undefine
-			twin
+			consistent, copy, setup, is_equal
 		end
 
 creation
@@ -421,3 +401,33 @@ feature {NONE}
 		end -- set_state
 
 end -- class PDFA
+
+-- These PDFA have a very special structure.
+-- They are NFA but for each state, only one successor is
+-- possible, if the input is different of epsilon,
+-- and this successor is the following state.
+-- For the epsilon transitions each state can have as many
+-- successors as possible.
+-- Thus, the structure is different for the epsilons transitions,
+-- which are recorded in an ARRAY [LINKED_LIST [INTEGER]],
+-- and for the others transitions, which are recorded, for
+-- each input, in a FIX_INT_SET.
+
+-- For the use in a regular expression context, keywords
+-- can be associated with Current.
+
+
+ 
+
+--|----------------------------------------------------------------
+--| EiffelLex: library of reusable components for ISE Eiffel 3,
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

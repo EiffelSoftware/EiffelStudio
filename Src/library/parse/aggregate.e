@@ -1,22 +1,15 @@
---|---------------------------------------------------------------
---|   Copyright (C) 1993 Interactive Software Engineering, Inc. --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
-
--- Constructs whose specimens are obtained
--- by concatenating specimens of constructs
--- of zero or more specified constructs
-
 indexing
 
+	description:
+		"Constructs whose specimens are obtained %
+		%by concatenating specimens of constructs %
+		%of zero or more specified constructs";
+
+	copyright: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class AGGREGATE 
-
-inherit
+deferred class AGGREGATE inherit
 
 	CONSTRUCT
 		rename
@@ -25,16 +18,7 @@ inherit
 			commit
 		end
 
-feature {NONE}
-
-	commit_value: INTEGER;
-			-- Threshold of successfully parsed subconstructs
-			-- above which the construct is commited
-
-	has_commit: BOOLEAN
-			-- Is current aggregate committed?
-
-feature 
+feature -- Semantics 
 
 	commit is
 			-- If this construct is one among several possible ones,
@@ -46,7 +30,15 @@ feature
 			commit_value := production.index - 1
 		end -- commit
 
-feature {NONE}
+feature {NONE} -- Implementation
+
+	commit_value: INTEGER;
+			-- Threshold of successfully parsed subconstructs
+			-- above which the construct is commited
+
+	has_commit: BOOLEAN
+			-- Is current aggregate committed?
+
 
 	expand is
 			-- Expand the next field of the aggregate.
@@ -135,7 +127,7 @@ feature {CONSTRUCT}
 			not_optional_found, b: BOOLEAN
 		do
 			if not check_recursion_list.has (production) then
-				check_recursion_list.put_left (production);
+				check_recursion_list.add_left (production);
 				if print_mode.item then
 					print_children
 				end;
@@ -196,3 +188,17 @@ feature {NONE}
 		end
 
 end -- class AGGREGATE
+ 
+
+--|----------------------------------------------------------------
+--| EiffelParse: library of reusable components for ISE Eiffel 3,
+--| Copyright (C) 1986, 1990, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

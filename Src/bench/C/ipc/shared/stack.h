@@ -56,7 +56,7 @@ struct dump {
 #define DMP_VOID	4			/* No more arguments or locals to be sent. */
 
 /* Visible routine */
-extern void send_stack(eif_stream s);	/* Send a stack dump to ewb */
+extern void send_stack(eif_stream s, uint32 nb_elems);	/* Send a stack dump to ewb */
 extern void send_stack_variables(eif_stream s, int where); /* dump the locals/arguments for a given feature on stack */
 extern void send_once_result(eif_stream s, uint32 body_id, int arg_num); /* Send result of once function to ewb */
 

@@ -417,7 +417,9 @@ rt_public void send_run_request(long int code, char *buf, long int len)
 */
 }
 
-void request_dump (void) {
-	send_rqst_1 (DUMP, 2L /* ST_FULL */);
+void request_dump (int elem_nb) {
+		/* Retrieve the elem_nb first elements from the call stack. *
+		 * Passing -1 retrieves the whole call stack. */
+	send_rqst_1 (DUMP, elem_nb);
 }
 

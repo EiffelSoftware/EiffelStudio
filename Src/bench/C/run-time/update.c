@@ -35,6 +35,7 @@ public long mcount;					/* Size of melting table */
 
 /* For debugging */
 #define dprintf(n)	  if (DEBUG & (n)) printf
+/*#define DEBUG 3		/**/
 
 extern void wread();
 
@@ -81,7 +82,7 @@ strcat(filename, "/.UPDT");
 #endif
 
 if ((fil = fopen(filename, "r")) == (FILE *) 0) {
-	fprintf(stderr, "ISE Eiffel3: could not open .UPDT file\n");
+	fprintf(stderr, "Error: could not open Eiffel .UPDT file\n");
 	exit(0);
 }
 	xfree (filename);
@@ -161,7 +162,7 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 		enomem();
 
 	while ((body_id = wlong()) != -1) {
-if (body_id < 0 ) {printf ("body_id == %d\n", body_id); }
+if (body_id < 0 ) {printf (""); }
 		bsize = wlong();
 		pattern_id = wlong();
 if (body_id >= 0)
@@ -222,7 +223,7 @@ int nbytes;
 	dprintf(8)("Reading %d bytes at %d%\n", nbytes, ftell(fil));
 #endif
 	if (nbytes != fread(buffer, sizeof(char), nbytes, fil)) {
-		fprintf(stderr, "ISE Eiffel3: error while reading .UPDT file\n");
+		fprintf(stderr, "Error: could not read Eiffel .UPDT file\n");
 		exit(0);
 	}
 #ifdef DEBUG

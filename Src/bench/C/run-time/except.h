@@ -212,9 +212,10 @@ extern struct ex_vect *exnext();	/* Read next eif_trace item from bottom */
 extern struct ex_vect *extop();	/* Top of Eiffel stack */
 
 /* Eiffel interface with class EXCEPTIONS */
-extern long eecode();			/* Original exception code */
-extern char *eetag();			/* Original exception tag */
-extern long ecode();			/* Last exception code */
-extern char *etag();			/* Last exception tag */
+extern long eeocode();			/* Original exception code */
+extern char *eeotag();			/* Original exception tag */
+extern long eelcode();			/* Last exception code */
+extern char *eeltag();			/* Last exception tag */
+extern void eetrace();
 
 #endif

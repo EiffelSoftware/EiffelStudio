@@ -21,7 +21,7 @@
 /* This variable records whether the workbench application was launched via
  * the ised wrapper (i.e. in debug mode) or not.
  */
-private int debug_mode = 0;	/* Assume not in debug mode */
+public int debug_mode = 0;	/* Assume not in debug mode */
 
 extern char *ename;			/* Eiffel executable base name (run-time var) */
 

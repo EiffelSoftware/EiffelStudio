@@ -56,4 +56,13 @@ extern void trapsig();			/* Set a trap for most of the signals */
 #define SIGBLOCK	esigblk++
 #define SIGRESUME	if (--esigblk == 0 && signal_pending) esdpch()
 
+/* Eiffel interface with class UNIX_SIGNALS */
+extern long esigmap();		/* Mapping between constants and signal numbers */
+extern char *esigname();	/* Signal description */
+extern long esignum();		/* Signal number */
+extern void esigcatch();	/* Catch signal */
+extern void esigignore();	/* Ignore signal */
+extern char esigiscaught();	/* Is signal caught? */
+extern char esigdefined();	/* Is signal defined? */
+
 #endif

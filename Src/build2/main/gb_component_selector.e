@@ -18,19 +18,33 @@ inherit
 		
 	GB_DEFAULT_STATE
 	
+	GB_STORABLE_TOOL
+		undefine
+			default_create, is_equal, copy
+		end
+	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 		
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
 		
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
 		
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
@@ -47,6 +61,17 @@ feature {NONE} -- Initialization
 			drop_actions.extend (agent add_new_component)
 			drop_actions.set_veto_pebble_function (agent is_valid_object)
 		end
+		
+feature -- Access
+
+	tool_bar: EV_TOOL_BAR is
+			-- A tool bar containing all buttons associated with `Current'.
+		do
+			create Result
+		end
+		
+	name: STRING is "Component Selector"
+			-- Full name used to represent `Current'.
 
 feature -- Basic operation
 		

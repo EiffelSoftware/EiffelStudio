@@ -190,30 +190,31 @@ feature {NONE} -- Implementation
 			l_done: BOOLEAN
 		do
 			l_name := a_url
-			
-			from
-				l_start_pos := 1
-			until
-				l_done
-			loop
-				l_slash_index := l_name.index_of ('/', l_start_pos)
-				if l_slash_index > 0 then
-					l_next_char := l_name.item (l_slash_index + 1)					
-					l_start_pos := l_slash_index + 1
-					l_done := l_next_char /= '.'
-				else
-					l_done := True
+			if not l_name.has_substring ("http://") and then l_name.has_substring ("mailto:") then			
+				from
+					l_start_pos := 1
+				until
+					l_done
+				loop
+					l_slash_index := l_name.index_of ('/', l_start_pos)
+					if l_slash_index > 0 then
+						l_next_char := l_name.item (l_slash_index + 1)					
+						l_start_pos := l_slash_index + 1
+						l_done := l_next_char /= '.'
+					else
+						l_done := True
+					end
 				end
+				
+				if l_next_char /= Void and then l_next_char /= '.' then
+					l_slash_index := l_name.index_of ('/', l_start_pos)
+					if l_slash_index > 0 then
+						l_name.insert_string ("/reference", l_slash_index)
+						l_name.prepend ("../")
+					end
+				end			
+				l_name.replace_substring_all (".xml", ".html")
 			end
-			
-			if l_next_char /= Void and then l_next_char /= '.' then
-				l_slash_index := l_name.index_of ('/', l_start_pos)
-				if l_slash_index > 0 then
-					l_name.insert_string ("/reference", l_slash_index)
-					l_name.prepend ("../")
-				end
-			end			
-			l_name.replace_substring_all (".xml", ".html")
 			Result := l_name
 		end		
 		

@@ -32,6 +32,9 @@ feature -- Attributes
 	ignore: LINKED_LIST [CLUSTER_I];
 			-- Cluster to ignore
 
+	old_cluster: CLUSTER_I;
+			-- Old version of the cluster
+
 feature -- Conveniences
 
 	set_date (i: INTEGER) is
@@ -44,6 +47,12 @@ feature -- Conveniences
 			-- Assign `s' to `cluster_name'.
 		do
 			cluster_name := s;
+		end;
+
+	set_old_cluster (c: CLUSTER_I) is
+			-- Assign `c' to `old_cluster'.
+		do
+			old_cluster := c;
 		end;
 
 feature -- Creation feature
@@ -118,7 +127,7 @@ feature -- Creation feature
 				retry;
 		end;
 
-	fill (cluster_file: DIRECTORY; old_cluster: CLUSTER_I) is
+	fill (cluster_file: DIRECTORY) is
 			-- Fill the cluster name table with what is found in the path. If 
 			-- `old_cluster' exists, fill current with it.
 		require
@@ -217,13 +226,93 @@ feature -- Creation feature
 							end;
 						end;
 					end;
-	
+
 					cluster_file.readentry;
 					file_name := cluster_file.lastentry;
 				end;
 				cluster_file.close;
 			end;
 			Error_handler.checksum;
+		end;
+
+	remove_class (a_class: CLASS_I) is
+			-- Remove a class from the cluster (Exclude clause)
+			-- Remove the CLASS_C if the class was compiled before
+			-- and propagate recompilation of the clients.
+		do
+			remove_class_from_system (a_class);
+		end;
+
+	remove_class_from_system (a_class: CLASS_I) is
+			-- Remove a class_c that is not present is the system any more
+		local
+			class_c: CLASS_C;
+			clients: LINKED_LIST [CLASS_C];
+		do
+			classes.remove (a_class.class_name);
+
+			class_c := a_class.compiled_class;
+			if class_c /= Void then
+					-- If a_class has already be compiled,
+					-- all its clients must recheck their suppliers
+
+				clients := class_c.clients;
+				from
+					clients.start
+				until
+					clients.after
+				loop
+						-- recompile the client
+						-- to be changed (the parsing of the file is not needed
+						-- unless the client has been changed)
+					Workbench.change_class (clients.item.lace_class);
+					clients.forth;
+				end;
+
+					-- remove class_c from the system
+				System.remove_class (class_c);
+			end;
+		end;
+
+	process_removed_classes is
+			-- Check if some classes have disapeared since last compilation
+			-- and remove them from the system
+		local
+			old_classes: like classes;
+			old_class: CLASS_I;
+		do
+			if old_cluster /= Void then
+				from
+					old_classes := old_cluster.classes;
+					old_classes.start
+				until
+					old_classes.offright
+				loop
+					old_class := old_classes.item_for_iteration;
+					if not classes.has (old_class.class_name) then
+						-- the class has been removed
+						remove_class_from_system (old_class);
+					end;
+					old_classes.forth;
+				end;
+
+					-- Remove the reference to `old_cluster'
+				old_cluster := Void;
+			end;
+		end;
+
+	remove_cluster is
+			-- Remove all the classes from the current cluster
+			-- i.e. the cluster has been removed from the system
+		do
+			from
+				classes.start
+			until
+				classes.offright
+			loop
+				remove_class_from_system (classes.item_for_iteration);
+				classes.forth
+			end;
 		end;
 
 	insert_cluster_to_ignore (c: CLUSTER_I) is

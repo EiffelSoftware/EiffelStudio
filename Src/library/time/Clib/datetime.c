@@ -63,7 +63,11 @@ EIF_INTEGER c_second_now ()
 
 EIF_INTEGER c_millisecond_now ()
 {
-	return ((EIF_INTEGER)(date_time_fine.millitm));
+#ifdef EIF_WIN32
+  return ((EIF_INTEGER)(date_time_fine.millitm));
+#else
+  return ((EIF_INTEGER)(date_time_fine.millitm - 1));
+#endif
 }
 
 EIF_INTEGER c_make_date (EIF_INTEGER d, EIF_INTEGER m, EIF_INTEGER y)

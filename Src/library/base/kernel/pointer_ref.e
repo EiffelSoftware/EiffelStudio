@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 	c_hashcode (p: POINTER): INTEGER is
 			-- Hash code value of `p'
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		alias
 			"conv_pi"
 		end;

@@ -14,10 +14,18 @@ class PLATFORM inherit
 
 feature -- Access
 
+	Boolean_bits: INTEGER is
+			-- Number of bits in a value of type `BOOLEAN'
+		external
+			"C [macro %"eif_misc.h%"]"
+		alias
+			"esbool_size"
+		end;
+
 	Character_bits: INTEGER is
 			-- Number of bits in a value of type `CHARACTER'
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		alias
 			"eschar_size"
 		end;
@@ -25,7 +33,7 @@ feature -- Access
 	Integer_bits: INTEGER is
 			-- Number of bits in a value of type `INTEGER'
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		alias
 			"esint_size"
 		end;
@@ -33,7 +41,7 @@ feature -- Access
 	Real_bits: INTEGER is
 			-- Number of bits in a value of type `REAL'
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		alias
 			"esreal_size"
 		end;
@@ -41,9 +49,17 @@ feature -- Access
 	Double_bits: INTEGER is
 			-- Number of bits in a value of type `DOUBLE'
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		alias
 			"esdouble_size"
+		end;
+
+	Pointer_bits: INTEGER is
+			-- Number of bits in a value of type `POINTER'
+		external
+			"C [macro %"eif_misc.h%"]"
+		alias
+			"esptr_size"
 		end;
 
 	Operating_environment: OPERATING_ENVIRONMENT is

@@ -293,11 +293,11 @@ feature {NONE} -- Implementation
 
 	c_ascii_char (code: INTEGER) : CHARACTER is
 			-- Character associated to integer value
-        external
-            "C | %"eif_misc.h%""
+		external
+			"C [macro %"eif_misc.h%"]"
 		alias
 			"chconv"
-    end
+		end
 
 	one_ref: INTEGER_REF is
 			-- Neutral element for "*" and "/"

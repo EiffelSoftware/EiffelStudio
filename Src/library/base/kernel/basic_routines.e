@@ -14,7 +14,7 @@ feature -- Conversion
 	charconv (i: INTEGER): CHARACTER is
 			-- Character corresponding to ascii code `i'
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		alias
 			"chconv"
 		end;

@@ -8,14 +8,20 @@ indexing
 class SYNTAX_ERROR
 
 inherit
-
 	ERROR
 		redefine
 			trace
-		end;
+		end
+
 	SHARED_WORKBENCH
+		undefine
+			is_equal
+		end
 
 	SHARED_EIFFEL_PARSER
+		undefine
+			is_equal
+		end
 
 creation {ERROR_HANDLER}
 

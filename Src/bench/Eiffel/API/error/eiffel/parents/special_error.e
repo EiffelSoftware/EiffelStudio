@@ -16,6 +16,8 @@ inherit
 	SPECIAL_CONST
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 creation {CLASS_C}

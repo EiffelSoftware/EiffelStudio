@@ -14,6 +14,9 @@ inherit
 			build_explain, is_defined
 		end;
 	SHARED_WORKBENCH
+		undefine
+			is_equal
+		end
 
 feature -- Properties
 

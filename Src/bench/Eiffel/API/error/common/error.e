@@ -8,12 +8,12 @@ indexing
 deferred class ERROR
 
 inherit
-
-	EIFFEL_ENV;
-	COMPARABLE
+	EIFFEL_ENV
 		undefine
 			is_equal
-		end;
+		end
+
+	COMPARABLE
 
 feature -- Properties 
 

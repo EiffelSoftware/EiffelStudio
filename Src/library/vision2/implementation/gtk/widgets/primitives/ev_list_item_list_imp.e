@@ -79,8 +79,6 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
-		local
-			temp_sig_id: INTEGER
 		do
 			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor

@@ -17,7 +17,6 @@ inherit
 		
 	EV_WIDGET_IMP
 		redefine
-			parent_ask_resize,
 			set_insensitive
 		end
 			
@@ -68,16 +67,6 @@ feature -- Element change
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation
-
-	parent_ask_resize (new_width, new_height: INTEGER) is
-			-- When the parent asks the resize, it's not 
-			-- necessary to send him back the information
-		do
-			{EV_WIDGET_IMP} Precursor (new_width, new_height)
-			if child /= Void then
-				child.parent_ask_resize (client_width, client_height)
-			end
-		end
 	
 	child_width_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the size of the container because of the child.

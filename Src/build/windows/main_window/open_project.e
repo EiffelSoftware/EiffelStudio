@@ -46,44 +46,48 @@ feature
 			char := proj_dir.item (proj_dir.count)
 			if char = Environment.directory_separator then
 				proj_dir.remove (proj_dir.count)
-			end	
-			!! dir.make (proj_dir)
-			if dir.exists then
-				!! bpdir.make 
-				bpdir.extend (Environment.storage_directory)
-				bpdir.extend (Environment.Groups_name)
-				!! groups_file.make (bpdir)
-				if groups_file.exists then
-					!! storage_name.make_from_string (Environment.storage_directory)
-					storage_name.set_file_name (Environment.interface_file_name)
-					!! storage_file.make (storage_name)
+			end
+			if proj_dir.empty then
+				handle_error (Messages.empty_project_name_er, Void)
+			else	
+				!! dir.make (proj_dir)
+				if dir.exists then
+					!! bpdir.make 
+					bpdir.extend (Environment.storage_directory)
+					bpdir.extend (Environment.Groups_name)
+					!! groups_file.make (bpdir)
+					if groups_file.exists then
+						!! storage_name.make_from_string (Environment.storage_directory)
+						storage_name.set_file_name (Environment.interface_file_name)
+						!! storage_file.make (storage_name)
 
-					!! restore_name.make_from_string 
-						(Environment.restore_directory)
-					restore_name.set_file_name (Environment.interface_file_name)
-					!! restore_file.make (restore_name)
+						!! restore_name.make_from_string 
+							(Environment.restore_directory)
+						restore_name.set_file_name (Environment.interface_file_name)
+						!! restore_file.make (restore_name)
 
-					if 
-						restore_file.exists and then
-						restore_file.date >= storage_file.date 
-					then
-						question_box.popup (Current, 
-							Messages.retrieve_crash_qu, Void)
+						if 
+							restore_file.exists and then
+							restore_file.date >= storage_file.date 
+						then
+							question_box.popup (Current, 
+								Messages.retrieve_crash_qu, Void)
+						else
+							retrieve_project (Environment.storage_directory)
+							history_window.set_saved_application
+						end
 					else
-						retrieve_project (Environment.storage_directory)
-						history_window.set_saved_application
+						to_create_project := True
+						question_box.popup_with_labels (Current,
+							Messages.not_eb_project_qu, 
+							Environment.project_directory,
+							Widget_names.create_name,
+							Widget_names.new_choice_name,
+							Void)
 					end
 				else
-					to_create_project := True
-					question_box.popup_with_labels (Current,
-						Messages.not_eb_project_qu, 
-						Environment.project_directory,
-						Widget_names.create_name,
-						Widget_names.new_choice_name,
-						Void)
+					handle_error (Messages.eb_project_not_exists_er, proj_dir)
 				end
-			else
-				handle_error (Messages.eb_project_not_exists_er, proj_dir)
 			end
 		end
 

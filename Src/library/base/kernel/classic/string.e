@@ -1513,7 +1513,7 @@ feature -- Conversion
 			l_area: like area
 			l_character: CHARACTER
 			i, nb: INTEGER
-			l_is_negatif: BOOLEAN
+			l_is_negative: BOOLEAN
 		do
 			from
 				l_area := area
@@ -1525,11 +1525,11 @@ feature -- Conversion
 				if l_character.is_digit then
 					Result := (Result * 10) + l_character.code - 48
 				elseif l_character = '-' then
-					l_is_negatif := True
+					l_is_negative := True
 				end
 				i := i + 1
 			end
-			if l_is_negatif then
+			if l_is_negative then
 				Result := - Result
 			end
 		end

@@ -1015,9 +1015,9 @@ end
 		local
 			buf: GENERATION_BUFFER
 		do
-			if context.dt_current > 1 then
+			if context.dftype_current > 1 then
 				buf := buffer
-				buf.putstring ("dtype = Dftype(Current);")
+				buf.putstring ("dftype = Dftype(Current);")
 				buf.new_line
 			end
 		end

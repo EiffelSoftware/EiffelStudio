@@ -23,6 +23,7 @@ inherit
 			infix "-",
 			infix "*",
 			infix "/",
+			infix "^",
 			prefix "+",
 			prefix "-",
 			infix "//",
@@ -83,6 +84,12 @@ feature -- Basic operation
 
 	infix "\\" (other: INTEGER): INTEGER is
 			-- Remainder of the integer division of Current by `other'
+		do
+			-- Built-in
+		end;
+
+	infix "^" (other: INTEGER): INTEGER is
+			-- Integer power of Current by `other'
 		do
 			-- Built-in
 		end;

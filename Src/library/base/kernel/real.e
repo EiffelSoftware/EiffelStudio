@@ -23,6 +23,7 @@ inherit
 			infix "-",
 			infix "*",
 			infix "/",
+			infix "^",
 			prefix "+",
 			prefix "-"
 		end
@@ -60,6 +61,12 @@ feature -- Basic operation
 		do
 			-- Built-in
 		end; -- infix "/"
+
+	infix "^" (other: REAL): REAL is
+			-- Power of `Current' by `other'
+		do
+			-- Built-in
+		end; -- infix "^"
 
 	prefix "+": REAL is
 			-- Unary addition applied to `Current'

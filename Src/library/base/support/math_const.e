@@ -11,12 +11,12 @@ class MATH_CONST
 
 feature  {NONE} -- Access
 
-    Pi: REAL is 3.14159265358979323846;
+    Pi: DOUBLE is 3.14159265358979323846;
 
-    Sqrt2: REAL is 1.41421356237309504880;
+    Sqrt2: DOUBLE is 1.41421356237309504880;
             -- Square root of 2
 
-    Euler: REAL is 2.7182818284590452354;
+    Euler: DOUBLE is 2.7182818284590452354;
             -- Logarithm base
 
 end -- class MATH_CONST

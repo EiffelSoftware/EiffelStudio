@@ -23,6 +23,7 @@ inherit
 			infix "-",
 			infix "*",
 			infix "/",
+			infix "^",
 			prefix "+",
 			prefix "-"
 		end
@@ -57,6 +58,12 @@ feature -- Basic operation
 
 	infix "/" (other: DOUBLE): DOUBLE is
 			-- Division of `Current' by `other'
+		do
+			-- Built-in
+		end;
+
+	infix "^" (other: DOUBLE): DOUBLE is
+			-- Power of `Current' by `other'
 		do
 			-- Built-in
 		end;

@@ -63,11 +63,6 @@ feature {NONE} -- Initialization
 
 			-- The following is a hack to satisfy implementation invariants.
 			set_c_object (text_label)
-			box := C.gtk_hbox_new (False, 0)
-			C.gtk_box_pack_start (box, text_label, True, True, 0)
-			C.gtk_widget_hide (text_label)
-			C.gtk_box_pack_end (box, pixmap_box, True, False, 0)
-			C.gtk_widget_hide (pixmap_box)
 			create ev_children.make (0)
 		end
 
@@ -141,16 +136,16 @@ feature -- PND
 	enable_transport is 
 		do
 			is_transport_enabled := True
-			if parent_imp /= Void then
-				--parent_imp.update_pnd_status
+			if parent_tree_imp /= Void then
+				parent_tree_imp.update_pnd_status
 			end
 		end
 
 	disable_transport is
 		do
 			is_transport_enabled := False
-			if parent_imp /= Void then
-				--parent_imp.update_pnd_status
+			if parent_tree_imp /= Void then
+				parent_tree_imp.update_pnd_status
 			end
 		end
 
@@ -427,6 +422,13 @@ feature {NONE} -- Implementation
 
 feature {EV_ITEM_LIST_IMP} -- Implementation
 
+--	dispose is
+--			-- 
+--		do
+--			Precursor
+--		end
+		
+
 	list_widget: POINTER 
 			-- Pointer to the items own gtktree.
 
@@ -454,6 +456,9 @@ end -- class EV_TREE_NODE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/06/21 22:30:35  king
+--| Now updating parent pnd status
+--|
 --| Revision 1.3  2001/06/07 23:08:02  rogers
 --| Merged DEVEL branch into Main trunc.
 --|
